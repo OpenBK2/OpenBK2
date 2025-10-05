@@ -145,7 +145,7 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 	*pTime = 0;
 	int nGun = -1;
 	
-	list< SWeaponPathInfo > pathInfo666( 0 );
+	std::list< SWeaponPathInfo > pathInfo666( 0 );
 	const SWeaponRPGStats *pWStats = pOwner->GetGun(0)->GetWeapon();
 	int i = 0;
 	do

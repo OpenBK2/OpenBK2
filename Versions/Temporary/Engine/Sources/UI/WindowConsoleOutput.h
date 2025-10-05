@@ -13,7 +13,7 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	struct SColorString
 	{
 	public:
-		wstring szString;
+		std::wstring szString;
 		DWORD dwColor;
 		CPtr<IML> pGfxText;
 		
@@ -26,7 +26,7 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	CPtr<NDb::SWindowConsoleOutput> pInstance;
 	CPtr<IML> pUpperSign;
 
-	typedef vector<SColorString> CColorStrings;
+	typedef std::vector<SColorString> CColorStrings;
 	CColorStrings vectorOfStrings;		//все строчки в консоли
 
 	int nBeginString;						//начальная отображаемая строка из списка строк
@@ -40,7 +40,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	void Visit( struct IUIVisitor *pVisitor );
 
-	void AddString( const wstring &szString, const DWORD color  );
+	void AddString( const std::wstring &szString, const DWORD color  );
 	void Scroll( const int bUp );
 	void ToBegin();
 	void ToEnd();

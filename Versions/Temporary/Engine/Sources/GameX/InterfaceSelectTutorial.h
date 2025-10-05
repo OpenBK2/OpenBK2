@@ -15,7 +15,7 @@ private:
 	{
 		ZDATA
 		CDBPtr<NDb::SMapInfo> pMapInfo;
-		wstring wszDifficulty;
+		std::wstring wszDifficulty;
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		CPtr<ITextView> pDifficultyView;
@@ -35,7 +35,7 @@ private:
 	CPtr<ITextView> pMissionSeasonView;
 	CPtr<IScrollableContainer> pMissionDescCont;
 	CPtr<ITextView> pMissionDescView;
-	vector<SMapInfo> maps;
+	std::vector<SMapInfo> maps;
 	CPtr<IWindow> pMissionDescItemBlock;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pPlayBtn); f.Add(4,&pMissionsPanel); f.Add(5,&pMinimapPanel); f.Add(6,&pMissionDescPanel); f.Add(7,&pMissionsCont); f.Add(8,&pMissionsItemWnd); f.Add(9,&pMinimap); f.Add(10,&pMissionNameView); f.Add(11,&pMissionSeasonView); f.Add(12,&pMissionDescCont); f.Add(13,&pMissionDescView); f.Add(14,&maps); f.Add(15,&pMissionDescItemBlock); return 0; }
 private:
@@ -52,8 +52,8 @@ public:
 	bool Init();
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 
 public:
 	bool StepLocal( bool bAppActive );

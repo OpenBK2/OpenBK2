@@ -47,7 +47,7 @@ public:
 	//
 	BYTE nParamInd;
 	//
-	vector<SWaveParams> waveParams;
+	std::vector<SWaveParams> waveParams;
 
 	SWaterNode() : bIsLargeAlpha(false) {}
 	void SetAlpha( float _f ) { nAlpha = Clamp( Float2Int( _f * 255.0f ), 0, 255 ); }
@@ -83,7 +83,7 @@ protected:
 	//bool NeedUpdate() { return false; }
 public:
 	NMeshData::SMeshDataTex2 data;
-	vector<STriangle> realTrgs;
+	std::vector<STriangle> realTrgs;
 	//
 	CVisWaterPatch( const CWaterController *pContr, CFuncBase<STime> *_pTimer,
 		const bool _bUseWaves, const float fMinRad, const float fMaxRad, const NDb::STwoSidedLight *_pLight,
@@ -105,39 +105,39 @@ class CWaterController
 	};
 	//
 	CObj<NGScene::IGameView> pGScene;
-	vector<CVisWaterPatchHolder> waterPatches;
+	std::vector<CVisWaterPatchHolder> waterPatches;
 	//
 	CPtr<CFuncBase<STime> > pTimer;
-	vector<CObj<CObjectBase> > shaderWaterPatches;
+	std::vector<CObj<CObjectBase> > shaderWaterPatches;
 
 protected:
 	void ProcessWavesDistribution( CArray2D<CPtr<SWaterNode> > *pWaterNodes );
-	void SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const vector<NWaterStuff::SSurfBorder> &waterBorders );
-	void CreatePatches( const vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes );
+	void SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const std::vector<NWaterStuff::SSurfBorder> &waterBorders );
+	void CreatePatches( const std::vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes );
 
 	void InitSilentWater( const CArray2D<BYTE> &seaMap,
-												const vector<NWaterStuff::SWaterParams> &_waterParams,
-												const vector<NWaterStuff::SSurfBorder> &waterBorders,
+												const std::vector<NWaterStuff::SWaterParams> &_waterParams,
+												const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 												NGScene::IGameView *_pGScene,
 												const NDb::SWater *pWater );
 
 	void InitOceanWater( const CArray2D<BYTE> &seaMap,
-												const vector<NWaterStuff::SWaterParams> &_waterParams,
-												const vector<NWaterStuff::SSurfBorder> &waterBorders,
+												const std::vector<NWaterStuff::SWaterParams> &_waterParams,
+												const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 												NGScene::IGameView *_pGScene,
 												const NDb::SWater *pWater,
 												float fWinterDirection );
 
 public:
 	//CDBPtr<NDb::SWater> pDesc;
-	vector<SWaveType> waves;
-	vector<CArray2D<SColor24> > noises;
+	std::vector<SWaveType> waves;
+	std::vector<CArray2D<SColor24> > noises;
 
 	//
 	CWaterController() {}
 	void Init(	const float fAngle, const CArray2D<BYTE> &seaMap,
-							const vector<NWaterStuff::SWaterParams> &waterParams,
-							const vector<NWaterStuff::SSurfBorder> &waterBorders,
+							const std::vector<NWaterStuff::SWaterParams> &waterParams,
+							const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 							NGScene::IGameView *_pGScene,
 							//CArray2D<BYTE> &waterBottomMap,
 							const NDb::SWater *pWater );

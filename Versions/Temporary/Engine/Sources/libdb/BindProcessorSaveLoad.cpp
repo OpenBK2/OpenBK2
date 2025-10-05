@@ -25,9 +25,9 @@ static bool LoadRefFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, const 
 {
 	if ( const NXml::SXmlAttribute *pAttribute = pNode->GetHRefAttribute() )
 	{
-		const string szAttrVal = pAttribute->value.ToString();
-		string szResult;
-		string szString = szAttrVal.substr( 0, szAttrVal.rfind( '#' ) );
+		const std::string szAttrVal = pAttribute->value.ToString();
+		std::string szResult;
+		std::string szString = szAttrVal.substr( 0, szAttrVal.rfind( '#' ) );
 		NStr::UTF8ToMBCS( &szString, szString );
 		NFile::MakeFullPath( &szResult, szString, GetFileName(dbidParent) );
 		NFile::NormalizePath( &szResult );
@@ -42,8 +42,8 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 {
 	if ( const NXml::SXmlAttribute *pAttribute = pNode->GetHRefAttribute() )
 	{
-		string szResult;
-		string szString = pAttribute->value.ToString();
+		std::string szResult;
+		std::string szString = pAttribute->value.ToString();
 		NXml::ConvertToString( &szString );
 		NStr::UTF8ToMBCS( &szString, szString );
 		NFile::MakeFullPath( &szResult, szString, GetFileName(dbidParent) );
@@ -52,8 +52,8 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 	}
 	else
 	{
-		string szTemp;
-		string szValue = pNode->GetValue().ToString();
+		std::string szTemp;
+		std::string szValue = pNode->GetValue().ToString();
 		NXml::ConvertToString( &szValue );
 		NStr::UTF8ToMBCS( &szTemp, szValue );
 		*pRes = szTemp;
@@ -62,7 +62,7 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 
 bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, 
 														  const NTypeDef::STypeStructBase::SField &field, 
-															const string &szFullFieldName, IObjMan *pParent )
+															const std::string &szFullFieldName, IObjMan *pParent )
 {
 	if ( field.pType->eType == NTypeDef::TYPE_TYPE_REF )
 		LoadRefFromNode( pRes, pNode, pParent->GetDBID() );
@@ -70,7 +70,7 @@ bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode,
 		LoadFilePathFromNode( pRes, pNode, pParent->GetDBID() );
 	else
 	{
-		string szValue = pNode->GetValue().ToString();
+		std::string szValue = pNode->GetValue().ToString();
 		if ( field.pType->eType == NTypeDef::TYPE_TYPE_STRING || field.pType->eType == NTypeDef::TYPE_TYPE_WSTRING )
 			NXml::ConvertToString( &szValue );
 
@@ -80,7 +80,7 @@ bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode,
 	return true;
 }
 
-bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pBaseNode, IObjMan *pParent )
+bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pBaseNode, IObjMan *pParent )
 {
 	if ( pType->pBaseType )
 	{
@@ -90,7 +90,7 @@ bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase
 	//
 	for ( NTypeDef::STypeStructBase::CFieldsList::const_iterator itField = pType->fields.begin(); itField != pType->fields.end(); ++itField )
 	{
-		const string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
+		const std::string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
 		const NXml::CXmlNode *pNode = pBaseNode->FindChild( itField->szName.c_str() );
 		//
 		if ( itField->pType->IsSimpleType() )
@@ -133,7 +133,7 @@ bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase
 		{
 			if ( pNode )
 			{
-				const vector<const NXml::CXmlNode*> &nodes = pNode->GetNodes();
+				const std::vector<const NXml::CXmlNode*> &nodes = pNode->GetNodes();
 				const int nSize = nodes.size();
 				Remove( szFullFieldName, 0, -1 );
 				if ( nSize > 0 )
@@ -182,14 +182,14 @@ bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase
 
 static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const CDBID &dbidParent )
 {
-	string szRelPath;
+	std::string szRelPath;
 	if ( value.GetType() == CVariant::VT_DBID )
 	{
-		const string szClassTypeName = NDb::GetClassTypeName( value.GetDBID() );
+		const std::string szClassTypeName = NDb::GetClassTypeName( value.GetDBID() );
 		if ( !szClassTypeName.empty() )
 		{
-			const string szFullFileName = GetFileName( value.GetDBID() );
-			const string szParentFileName = GetFileName( dbidParent );
+			const std::string szFullFileName = GetFileName( value.GetDBID() );
+			const std::string szParentFileName = GetFileName( dbidParent );
 			NFile::MakeRelativePath( &szRelPath, szFullFileName, szParentFileName );
 			NFile::NormalizePath( &szRelPath );
 			NStr::MBCSToUTF8( &szRelPath, szRelPath );
@@ -202,7 +202,7 @@ static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const 
 
 static void SaveFilePathToNode( NLXML::CXMLNode *pNode, const CVariant &value, const CDBID &dbidParent )
 {
-	string szRelPath, szTemp;
+	std::string szRelPath, szTemp;
 	NStr::MBCSToUTF8( &szTemp, value.GetStr() );
 	NFile::MakeRelativePath( &szRelPath, szTemp, GetFileName(dbidParent) );
 	NFile::NormalizePath( &szRelPath );
@@ -218,14 +218,14 @@ bool SaveSimpleValueToNode( const CVariant &value, NLXML::CXMLElement *pElement,
 		SaveFilePathToNode( pElement, value, pParent->GetDBID() );
 	else
 	{
-		string szRes;
+		std::string szRes;
 		field.pType->ToString( &szRes, value );
 		pElement->SetText( szRes );
 	}
 	return true;
 }
 
-bool SBindProcessor::SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pBaseNode, IObjMan *pParent )
+bool SBindProcessor::SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pBaseNode, IObjMan *pParent )
 {
 	if ( pType->pBaseType )
 	{
@@ -235,7 +235,7 @@ bool SBindProcessor::SaveXML( const string &szAddName, NTypeDef::STypeStructBase
 	//
 	for ( NTypeDef::STypeStructBase::CFieldsList::const_iterator itField = pType->fields.begin(); itField != pType->fields.end(); ++itField )
 	{
-		const string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
+		const std::string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
 		NLXML::CXMLElement *pElement = new NLXML::CXMLElement();
 		checked_cast<NLXML::CXMLElement*>(pBaseNode)->AddChild( pElement );
 		pElement->SetValue( itField->szName );
@@ -299,7 +299,7 @@ bool SBindProcessor::SaveXML( const string &szAddName, NTypeDef::STypeStructBase
 	return true;
 }
 
-bool SBindProcessor::SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType )
+bool SBindProcessor::SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 {
 	if ( pType->pBaseType )
 	{
@@ -309,7 +309,7 @@ bool SBindProcessor::SetDefault( const string &szAddName, NTypeDef::STypeStructB
 	//
 	for ( NTypeDef::STypeStructBase::CFieldsList::const_iterator itField = pType->fields.begin(); itField != pType->fields.end(); ++itField )
 	{
-		const string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
+		const std::string szFullFieldName = szAddName.empty() ? itField->szName : szAddName + "." + itField->szName;
 		if ( itField->pType->IsSimpleType() )
 		{
 			NI_VERIFY( SetValue( szFullFieldName, itField->GetDefaultValue() ) != false,
@@ -322,7 +322,7 @@ bool SBindProcessor::SetDefault( const string &szAddName, NTypeDef::STypeStructB
 		}
 		else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_ARRAY )
 		{
-			for ( vector< CObj<NTypeDef::SConstraints> >::const_iterator itConstraint = itField->constraints.begin(); 
+			for ( std::vector< CObj<NTypeDef::SConstraints> >::const_iterator itConstraint = itField->constraints.begin();
 				itConstraint != itField->constraints.end(); ++itConstraint )
 			{
 				if ( const NTypeDef::SConstraintsArrayMinMax *pConstraints = dynamic_cast_ptr<const NTypeDef::SConstraintsArrayMinMax *>(*itConstraint) )

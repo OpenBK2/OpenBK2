@@ -17,7 +17,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EUnitSpecialAbility eValue )
+std::string EnumToString( NDb::EUnitSpecialAbility eValue )
 {
 	switch ( eValue )
 	{
@@ -150,7 +150,7 @@ string EnumToString( NDb::EUnitSpecialAbility eValue )
 	}
 }
 
-NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const string &szValue )
+NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const std::string &szValue )
 {
 	if ( szValue == "ABILITY_NOT_ABILITY" )
 		return NDb::ABILITY_NOT_ABILITY;
@@ -279,7 +279,7 @@ NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const string
 	return NDb::ABILITY_NOT_ABILITY;
 }
 
-string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
+std::string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
 {
 	switch ( eValue )
 	{
@@ -292,7 +292,7 @@ string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
 	}
 }
 
-NDb::EUnitSpecialAbilityGroup NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( const string &szValue )
+NDb::EUnitSpecialAbilityGroup NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( const std::string &szValue )
 {
 	if ( szValue == "ABILITY_GROUP_NOGROUP" )
 		return NDb::ABILITY_GROUP_NOGROUP;
@@ -375,7 +375,7 @@ DWORD SUnitSpecialAblityDesc::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EArmorDirection eValue )
+std::string EnumToString( NDb::EArmorDirection eValue )
 {
 	switch ( eValue )
 	{
@@ -396,7 +396,7 @@ string EnumToString( NDb::EArmorDirection eValue )
 	}
 }
 
-NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const string &szValue )
+NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const std::string &szValue )
 {
 	if ( szValue == "RPG_FRONT" )
 		return NDb::RPG_FRONT;
@@ -413,7 +413,7 @@ NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const string &szValu
 	return NDb::RPG_FRONT;
 }
 
-string EnumToString( NDb::EObjGameType eValue )
+std::string EnumToString( NDb::EObjGameType eValue )
 {
 	switch ( eValue )
 	{
@@ -462,7 +462,7 @@ string EnumToString( NDb::EObjGameType eValue )
 	}
 }
 
-NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const string &szValue )
+NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const std::string &szValue )
 {
 	if ( szValue == "SGVOGT_UNKNOWN" )
 		return NDb::SGVOGT_UNKNOWN;
@@ -507,7 +507,7 @@ NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const string &szValue )
 	return NDb::SGVOGT_UNKNOWN;
 }
 
-string EnumToString( NDb::EObjectVisType eValue )
+std::string EnumToString( NDb::EObjectVisType eValue )
 {
 	switch ( eValue )
 	{
@@ -520,7 +520,7 @@ string EnumToString( NDb::EObjectVisType eValue )
 	}
 }
 
-NDb::EObjectVisType NDb::StringToEnum_NDb_EObjectVisType( const string &szValue )
+NDb::EObjectVisType NDb::StringToEnum_NDb_EObjectVisType( const std::string &szValue )
 {
 	if ( szValue == "SGVOT_MESH" )
 		return NDb::SGVOT_MESH;
@@ -611,7 +611,7 @@ int SComplexEffect::operator&( IBinSaver &saver )
 
 
 
-void SSeasonEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSeasonEffect::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "SeasonToUse", (BYTE*)&eSeasonToUse - pThis, sizeof(eSeasonToUse), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "SceneEffect", (BYTE*)&pSceneEffect - pThis, sizeof(pSceneEffect), NTypeDef::TYPE_TYPE_REF );
@@ -710,7 +710,7 @@ int SAckSetRPGStats::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::ESelectionType eValue )
+std::string EnumToString( NDb::ESelectionType eValue )
 {
 	switch ( eValue )
 	{
@@ -729,7 +729,7 @@ string EnumToString( NDb::ESelectionType eValue )
 	}
 }
 
-NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const string &szValue )
+NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const std::string &szValue )
 {
 	if ( szValue == "SELECTION_TYPE_GROUND" )
 		return NDb::SELECTION_TYPE_GROUND;
@@ -745,18 +745,18 @@ NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const string &szValue 
 }
 
 
-void SAttachedLightEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAttachedLightEffect::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Rot", &qRot, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "FlarePos", &vFlarePos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Rot", &qRot, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "FlarePos", &vFlarePos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "FlareSize", (BYTE*)&fFlareSize - pThis, sizeof(fFlareSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PointLightPos", &vPointLightPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PointLightPos", &vPointLightPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "PointLightSize", (BYTE*)&fPointLightSize - pThis, sizeof(fPointLightSize), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ConeLength", (BYTE*)&fConeLength - pThis, sizeof(fConeLength), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ConeSize", (BYTE*)&fConeSize - pThis, sizeof(fConeSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Colour", &vColour, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Colour", &vColour, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "AdditionalEffect", (BYTE*)&pAdditionalEffect - pThis, sizeof(pAdditionalEffect), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "OnAtDay", (BYTE*)&bOnAtDay - pThis, sizeof(bOnAtDay), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "OnAtNight", (BYTE*)&bOnAtNight - pThis, sizeof(bOnAtNight), NTypeDef::TYPE_TYPE_BOOL );
@@ -823,7 +823,7 @@ DWORD SAttachedLightEffect::CalcCheckSum() const
 
 
 
-void SIconsSetParams::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SIconsSetParams::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Custom", (BYTE*)&bCustom - pThis, sizeof(bCustom), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Raising", (BYTE*)&fRaising - pThis, sizeof(fRaising), NTypeDef::TYPE_TYPE_FLOAT );
@@ -865,7 +865,7 @@ DWORD SIconsSetParams::CalcCheckSum() const
 
 
 
-void SHPObjectRPGStats::SByteArray2::SByteArray1::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHPObjectRPGStats::SByteArray2::SByteArray1::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "data", &data, pThis );
 }
@@ -901,7 +901,7 @@ DWORD SHPObjectRPGStats::SByteArray2::SByteArray1::CalcCheckSum() const
 
 
 
-void SHPObjectRPGStats::SByteArray2::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHPObjectRPGStats::SByteArray2::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "data", &data, pThis );
 }
@@ -937,7 +937,7 @@ DWORD SHPObjectRPGStats::SByteArray2::CalcCheckSum() const
 
 
 
-void SHPObjectRPGStats::SDefenseRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHPObjectRPGStats::SDefenseRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ArmorMin", (BYTE*)&nArmorMin - pThis, sizeof(nArmorMin), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ArmorMax", (BYTE*)&nArmorMax - pThis, sizeof(nArmorMax), NTypeDef::TYPE_TYPE_INT );
@@ -979,7 +979,7 @@ DWORD SHPObjectRPGStats::SDefenseRPGStats::CalcCheckSum() const
 
 
 
-void SHPObjectRPGStats::SDamageLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHPObjectRPGStats::SDamageLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
@@ -1024,10 +1024,10 @@ DWORD SHPObjectRPGStats::SDamageLevel::CalcCheckSum() const
 
 
 
-void SHPObjectRPGStats::SModelSurfacePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHPObjectRPGStats::SModelSurfacePoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Orient", &vOrient, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Orient", &vOrient, pThis );
 }
 
 int SHPObjectRPGStats::SModelSurfacePoint::operator&( IXmlSaver &saver )
@@ -1082,7 +1082,7 @@ void SHPObjectRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "LightEffects", &lightEffects, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "SurfacePoints", &surfacePoints, pThis );
 	NMetaInfo::ReportMetaInfo( "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "IconsSetParams", &iconsSetParams, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "IconsSetParams", &iconsSetParams, pThis );
 }
 
 int SHPObjectRPGStats::operator&( IXmlSaver &saver )
@@ -1255,7 +1255,7 @@ DWORD SStaticObjectRPGStats::CalcCheckSum() const
 
 
 
-void SCraterSet::SSingleSeasonCraters::SCraterDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCraterSet::SSingleSeasonCraters::SCraterDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
@@ -1294,7 +1294,7 @@ DWORD SCraterSet::SSingleSeasonCraters::SCraterDesc::CalcCheckSum() const
 
 
 
-void SCraterSet::SSingleSeasonCraters::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCraterSet::SSingleSeasonCraters::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Craters", &craters, pThis );
@@ -1402,7 +1402,7 @@ int SProjectile::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
+std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 {
 	switch ( eValue )
 	{
@@ -1429,7 +1429,7 @@ string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 	}
 }
 
-NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const string &szValue )
+NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const std::string &szValue )
 {
 	if ( szValue == "TRAJECTORY_LINE" )
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
@@ -1452,7 +1452,7 @@ NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGSt
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
 }
 
-string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue )
+std::string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue )
 {
 	switch ( eValue )
 	{
@@ -1467,7 +1467,7 @@ string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue )
 	}
 }
 
-NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const string &szValue )
+NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const std::string &szValue )
 {
 	if ( szValue == "DAMAGE_HEALTH" )
 		return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
@@ -1479,7 +1479,7 @@ NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGS
 }
 
 
-void SWeaponRPGStats::SShell::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWeaponRPGStats::SShell::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageType", (BYTE*)&eDamageType - pThis, sizeof(eDamageType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Piercing", (BYTE*)&nPiercing - pThis, sizeof(nPiercing), NTypeDef::TYPE_TYPE_INT );
@@ -1598,7 +1598,7 @@ DWORD SWeaponRPGStats::SShell::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
+std::string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
 {
 	switch ( eValue )
 	{
@@ -1639,7 +1639,7 @@ string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
 	}
 }
 
-NDb::SWeaponRPGStats::EWeaponType NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const string &szValue )
+NDb::SWeaponRPGStats::EWeaponType NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const std::string &szValue )
 {
 	if ( szValue == "WEAPON_PISTOL" )
 		return NDb::SWeaponRPGStats::WEAPON_PISTOL;
@@ -1757,12 +1757,12 @@ DWORD SWeaponRPGStats::CalcCheckSum() const
 
 
 
-void SBaseGunRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBaseGunRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Weapon", (BYTE*)&pWeapon - pThis, sizeof(pWeapon), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedGunVisObj", (BYTE*)&pAttachedGunVisObj - pThis, sizeof(pAttachedGunVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedGunLocator", (BYTE*)&szAttachedGunLocator - pThis, sizeof(szAttachedGunLocator), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "ShootPointOffset", &vShootPointOffset, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "ShootPointOffset", &vShootPointOffset, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "ShootEffectInvert", (BYTE*)&bShootEffectInvert - pThis, sizeof(bShootEffectInvert), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "IsPrimary", (BYTE*)&bIsPrimary - pThis, sizeof(bIsPrimary), NTypeDef::TYPE_TYPE_BOOL );
@@ -1823,7 +1823,7 @@ DWORD SBaseGunRPGStats::CalcCheckSum() const
 
 
 
-void SDynamicDebrisSet::SDynamicDebrisDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SDynamicDebrisSet::SDynamicDebrisDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
@@ -1891,11 +1891,11 @@ int SDynamicDebrisSet::operator&( IBinSaver &saver )
 
 
 
-void SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 }
@@ -1939,7 +1939,7 @@ DWORD SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::CalcCheckSum() cons
 
 
 
-void SObjectBaseRPGStats::SDynamicDebris::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SObjectBaseRPGStats::SDynamicDebris::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Debris", (BYTE*)&pDebris - pThis, sizeof(pDebris), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Masks", &masks, pThis );
@@ -1978,7 +1978,7 @@ DWORD SObjectBaseRPGStats::SDynamicDebris::CalcCheckSum() const
 
 
 
-void SObjectBaseRPGStats::SAmbientSound::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SObjectBaseRPGStats::SAmbientSound::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "SoundDesc", (BYTE*)&pSoundDesc - pThis, sizeof(pSoundDesc), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
@@ -2025,13 +2025,13 @@ void SObjectBaseRPGStats::ReportMetaInfo() const
 	SStaticObjectRPGStats::ReportMetaInfo();
 
 	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportStructMetaInfo( "DynamicDebris", &dynamicDebris, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "PassProfile", &passProfile, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Origin", &vOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "DynamicDebris", &dynamicDebris, pThis );
+	NMetaInfo::ReportStructMetaInfo( "passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( "PassProfile", &passProfile, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Origin", &vOrigin, pThis );
 	NMetaInfo::ReportMetaInfo( "UsePassabilityForVisibility", (BYTE*)&bUsePassabilityForVisibility - pThis, sizeof(bUsePassabilityForVisibility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( "visibility", &visibility, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "VisOrigin", &vVisOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "visibility", &visibility, pThis );
+	NMetaInfo::ReportStructMetaInfo( "VisOrigin", &vVisOrigin, pThis );
 	NMetaInfo::ReportMetaInfo( "AmbientSound", (BYTE*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "CycledSound", (BYTE*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "AmbientSounds", &ambientSounds, pThis );
@@ -2115,12 +2115,12 @@ DWORD SObjectBaseRPGStats::CalcCheckSum() const
 
 
 
-void STerraObjSetRPGStats::SSegment::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void STerraObjSetRPGStats::SSegment::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis );
 }
 
 int STerraObjSetRPGStats::SSegment::operator&( IXmlSaver &saver )
@@ -2256,7 +2256,7 @@ DWORD SObjectRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EBuildingType eValue )
+std::string EnumToString( NDb::EBuildingType eValue )
 {
 	switch ( eValue )
 	{
@@ -2273,7 +2273,7 @@ string EnumToString( NDb::EBuildingType eValue )
 	}
 }
 
-NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const string &szValue )
+NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const std::string &szValue )
 {
 	if ( szValue == "TYPE_BULDING" )
 		return NDb::TYPE_BULDING;
@@ -2286,7 +2286,7 @@ NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const string &szValue )
 	return NDb::TYPE_BULDING;
 }
 
-string EnumToString( NDb::EDesignBuildingType eValue )
+std::string EnumToString( NDb::EDesignBuildingType eValue )
 {
 	switch ( eValue )
 	{
@@ -2303,7 +2303,7 @@ string EnumToString( NDb::EDesignBuildingType eValue )
 	}
 }
 
-NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const string &szValue )
+NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const std::string &szValue )
 {
 	if ( szValue == "BUILDING_TYPE_UNKNOWN" )
 		return NDb::BUILDING_TYPE_UNKNOWN;
@@ -2317,7 +2317,7 @@ NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const string
 }
 
 
-void SSlotDamageLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSlotDamageLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
@@ -2359,7 +2359,7 @@ DWORD SSlotDamageLevel::CalcCheckSum() const
 
 
 
-void SWindowInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWindowInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DayObj", (BYTE*)&pDayObj - pThis, sizeof(pDayObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "NightObj", (BYTE*)&pNightObj - pThis, sizeof(pNightObj), NTypeDef::TYPE_TYPE_REF );
@@ -2413,9 +2413,9 @@ DWORD SWindowInfo::CalcCheckSum() const
 
 
 
-void SBuildingRPGStats::SEntrance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBuildingRPGStats::SEntrance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Stormable", (BYTE*)&bStormable - pThis, sizeof(bStormable), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (BYTE*)&nDir - pThis, sizeof(nDir), NTypeDef::TYPE_TYPE_INT );
 }
@@ -2455,20 +2455,20 @@ DWORD SBuildingRPGStats::SEntrance::CalcCheckSum() const
 
 
 
-void SBuildingRPGStats::SSlot::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBuildingRPGStats::SSlot::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "NumFirePlaces", (BYTE*)&nNumFirePlaces - pThis, sizeof(nNumFirePlaces), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "DamageCenter", &vDamageCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Rot", &qRot, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "DamageCenter", &vDamageCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Rot", &qRot, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Angle", (BYTE*)&fAngle - pThis, sizeof(fAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Coverage", (BYTE*)&fCoverage - pThis, sizeof(fCoverage), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Gun", &gun, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Gun", &gun, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "RotationSpeed", (BYTE*)&fRotationSpeed - pThis, sizeof(fRotationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Window", &window, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "WindowScale", &vWindowScale, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Window", &window, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "WindowScale", &vWindowScale, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "SoldierStatsModifier", (BYTE*)&pSoldierStatsModifier - pThis, sizeof(pSoldierStatsModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "SightMultiplier", (BYTE*)&fSightMultiplier - pThis, sizeof(fSightMultiplier), NTypeDef::TYPE_TYPE_FLOAT );
 }
@@ -2530,14 +2530,14 @@ DWORD SBuildingRPGStats::SSlot::CalcCheckSum() const
 
 
 
-void SBuildingRPGStats::SFirePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBuildingRPGStats::SFirePoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalAngle", (BYTE*)&fVerticalAngle - pThis, sizeof(fVerticalAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "FireEffect", (BYTE*)&szFireEffect - pThis, sizeof(szFireEffect), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Coverage", (BYTE*)&fCoverage - pThis, sizeof(fCoverage), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis );
 }
 
 int SBuildingRPGStats::SFirePoint::operator&( IXmlSaver &saver )
@@ -2581,12 +2581,12 @@ DWORD SBuildingRPGStats::SFirePoint::CalcCheckSum() const
 
 
 
-void SBuildingRPGStats::SDirectionExplosion::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBuildingRPGStats::SDirectionExplosion::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalAngle", (BYTE*)&fVerticalAngle - pThis, sizeof(fVerticalAngle), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis );
 }
 
 int SBuildingRPGStats::SDirectionExplosion::operator&( IXmlSaver &saver )
@@ -2711,7 +2711,7 @@ DWORD SBuildingRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
+std::string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
 {
 	switch ( eValue )
 	{
@@ -2724,7 +2724,7 @@ string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
 	}
 }
 
-NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( const string &szValue )
+NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( const std::string &szValue )
 {
 	if ( szValue == "VERTICAL" )
 		return NDb::SBridgeRPGStats::VERTICAL;
@@ -2733,7 +2733,7 @@ NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirectio
 	return NDb::SBridgeRPGStats::VERTICAL;
 }
 
-string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue )
+std::string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue )
 {
 	switch ( eValue )
 	{
@@ -2746,7 +2746,7 @@ string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue
 	}
 }
 
-NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const string &szValue )
+NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const std::string &szValue )
 {
 	if ( szValue == "SLAB" )
 		return NDb::SBridgeRPGStats::SSegmentRPGStats::SLAB;
@@ -2756,15 +2756,15 @@ NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBrid
 }
 
 
-void SBridgeRPGStats::SSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SSegmentRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "UsePassabilityForVisibility", (BYTE*)&bUsePassabilityForVisibility - pThis, sizeof(bUsePassabilityForVisibility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "RelPos", &vRelPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "RelPos", &vRelPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "FrameIndex", (BYTE*)&nFrameIndex - pThis, sizeof(nFrameIndex), NTypeDef::TYPE_TYPE_INT );
 }
@@ -2816,7 +2816,7 @@ DWORD SBridgeRPGStats::SSegmentRPGStats::CalcCheckSum() const
 
 
 
-void SBridgeRPGStats::SSpan::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SSpan::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Slab", (BYTE*)&nSlab - pThis, sizeof(nSlab), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "BackGirder", (BYTE*)&nBackGirder - pThis, sizeof(nBackGirder), NTypeDef::TYPE_TYPE_INT );
@@ -2864,7 +2864,7 @@ DWORD SBridgeRPGStats::SSpan::CalcCheckSum() const
 
 
 
-void SBridgeRPGStats::SDamageState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SDamageState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "spans", &spans, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "begins", &begins, pThis );
@@ -2909,13 +2909,13 @@ DWORD SBridgeRPGStats::SDamageState::CalcCheckSum() const
 
 
 
-void SBridgeRPGStats::SBridgeFirePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SBridgeFirePoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalAngle", (BYTE*)&fVerticalAngle - pThis, sizeof(fVerticalAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "FireEffect", (BYTE*)&szFireEffect - pThis, sizeof(szFireEffect), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis );
 }
 
 int SBridgeRPGStats::SBridgeFirePoint::operator&( IXmlSaver &saver )
@@ -2957,13 +2957,13 @@ DWORD SBridgeRPGStats::SBridgeFirePoint::CalcCheckSum() const
 
 
 
-void SBridgeRPGStats::SBridgeDirectionExplosion::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SBridgeDirectionExplosion::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalAngle", (BYTE*)&fVerticalAngle - pThis, sizeof(fVerticalAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "FireEffect", (BYTE*)&szFireEffect - pThis, sizeof(szFireEffect), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis );
 }
 
 int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IXmlSaver &saver )
@@ -3005,7 +3005,7 @@ DWORD SBridgeRPGStats::SBridgeDirectionExplosion::CalcCheckSum() const
 
 
 
-void SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisObjects", &visObjects, pThis );
@@ -3047,11 +3047,11 @@ DWORD SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::CalcCheckSum() cons
 
 
 
-void SBridgeRPGStats::SElementRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBridgeRPGStats::SElementRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "DamageStates", &damageStates, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisualObjects", &visualObjects, pThis );
 }
@@ -3101,8 +3101,8 @@ void SBridgeRPGStats::ReportMetaInfo() const
 	SStaticObjectRPGStats::ReportMetaInfo();
 
 	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportStructMetaInfo( "Center", &center, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "End", &end, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Center", &center, pThis );
+	NMetaInfo::ReportStructMetaInfo( "End", &end, pThis );
 	NMetaInfo::ReportMetaInfo( "Height", (BYTE*)&fHeight - pThis, sizeof(fHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "direction", (BYTE*)&edirection - pThis, sizeof(edirection), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructArrayMetaInfo( "segments", &segments, pThis );
@@ -3171,7 +3171,7 @@ DWORD SBridgeRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EEntrenchSegmType eValue )
+std::string EnumToString( NDb::EEntrenchSegmType eValue )
 {
 	switch ( eValue )
 	{
@@ -3188,7 +3188,7 @@ string EnumToString( NDb::EEntrenchSegmType eValue )
 	}
 }
 
-NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const string &szValue )
+NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const std::string &szValue )
 {
 	if ( szValue == "EST_LINE" )
 		return NDb::EST_LINE;
@@ -3202,11 +3202,11 @@ NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const string &sz
 }
 
 
-void SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBCenter", &vAABBCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBHalfSize", &vAABBHalfSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBCenter", &vAABBCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBHalfSize", &vAABBHalfSize, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Coverage", (BYTE*)&fCoverage - pThis, sizeof(fCoverage), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "fireplaces", &fireplaces, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -3311,7 +3311,7 @@ DWORD SEntrenchmentRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EFenceDirection eValue )
+std::string EnumToString( NDb::EFenceDirection eValue )
 {
 	switch ( eValue )
 	{
@@ -3328,7 +3328,7 @@ string EnumToString( NDb::EFenceDirection eValue )
 	}
 }
 
-NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const string &szValue )
+NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const std::string &szValue )
 {
 	if ( szValue == "FENCE_DIRECTION_0" )
 		return NDb::FENCE_DIRECTION_0;
@@ -3341,7 +3341,7 @@ NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const string &szValu
 	return NDb::FENCE_DIRECTION_0;
 }
 
-string EnumToString( NDb::EFenceDamageType eValue )
+std::string EnumToString( NDb::EFenceDamageType eValue )
 {
 	switch ( eValue )
 	{
@@ -3358,7 +3358,7 @@ string EnumToString( NDb::EFenceDamageType eValue )
 	}
 }
 
-NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const string &szValue )
+NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const std::string &szValue )
 {
 	if ( szValue == "FENCE_TYPE_NORMAL" )
 		return NDb::FENCE_TYPE_NORMAL;
@@ -3371,7 +3371,7 @@ NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const string &szVa
 	return NDb::FENCE_TYPE_NORMAL;
 }
 
-string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
+std::string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
 {
 	switch ( eValue )
 	{
@@ -3384,7 +3384,7 @@ string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
 	}
 }
 
-NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const string &szValue )
+NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const std::string &szValue )
 {
 	if ( szValue == "FENCE_PLACE_ON_TERRAIN" )
 		return NDb::SFenceRPGStats::FENCE_PLACE_ON_TERRAIN;
@@ -3394,12 +3394,12 @@ NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EF
 }
 
 
-void SFenceRPGStats::SFenceSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFenceRPGStats::SFenceSegmentRPGStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "SpriteIndex", (BYTE*)&nSpriteIndex - pThis, sizeof(nSpriteIndex), NTypeDef::TYPE_TYPE_INT );
 }
 
@@ -3442,7 +3442,7 @@ DWORD SFenceRPGStats::SFenceSegmentRPGStats::CalcCheckSum() const
 
 
 
-void SFenceRPGStats::SDir::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFenceRPGStats::SDir::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "centers", &centers, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "ldamages", &ldamages, pThis );
@@ -3487,13 +3487,13 @@ DWORD SFenceRPGStats::SDir::CalcCheckSum() const
 
 
 
-void SFenceRPGStats::SSegments::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFenceRPGStats::SSegments::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisObjes", &visObjes, pThis );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PassProfile", &passProfile, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PassProfile", &passProfile, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "UsePassabilityForVisibility", (BYTE*)&bUsePassabilityForVisibility - pThis, sizeof(bUsePassabilityForVisibility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis );
 }
 
 int SFenceRPGStats::SSegments::operator&( IXmlSaver &saver )
@@ -3544,10 +3544,10 @@ void SFenceRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "stats", &stats, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "dirs", &dirs, pThis );
 	NMetaInfo::ReportMetaInfo( "PlacementType", (BYTE*)&ePlacementType - pThis, sizeof(ePlacementType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportStructMetaInfo( "CenterSegments", &centerSegments, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "DamagedSegments", &damagedSegments, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "DamagedSegmentsOtherSide", &damagedSegmentsOtherSide, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "DestroyedSegments", &destroyedSegments, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "CenterSegments", &centerSegments, pThis );
+	NMetaInfo::ReportStructMetaInfo( "DamagedSegments", &damagedSegments, pThis );
+	NMetaInfo::ReportStructMetaInfo( "DamagedSegmentsOtherSide", &damagedSegmentsOtherSide, pThis );
+	NMetaInfo::ReportStructMetaInfo( "DestroyedSegments", &destroyedSegments, pThis );
 	NMetaInfo::ReportMetaInfo( "FenceHeight", (BYTE*)&fFenceHeight - pThis, sizeof(fFenceHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -3599,7 +3599,7 @@ DWORD SFenceRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EMineType eValue )
+std::string EnumToString( NDb::EMineType eValue )
 {
 	switch ( eValue )
 	{
@@ -3618,7 +3618,7 @@ string EnumToString( NDb::EMineType eValue )
 	}
 }
 
-NDb::EMineType NDb::StringToEnum_NDb_EMineType( const string &szValue )
+NDb::EMineType NDb::StringToEnum_NDb_EMineType( const std::string &szValue )
 {
 	if ( szValue == "MT_INFANTRY" )
 		return NDb::MT_INFANTRY;
@@ -3693,7 +3693,7 @@ DWORD SMineRPGStats::CalcCheckSum() const
 
 
 
-void SAnimDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAnimDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Length", (BYTE*)&nLength - pThis, sizeof(nLength), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&nAction - pThis, sizeof(nAction), NTypeDef::TYPE_TYPE_INT );
@@ -3744,7 +3744,7 @@ DWORD SAnimDesc::CalcCheckSum() const
 
 
 
-void Svector_AnimDescs::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void Svector_AnimDescs::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "anims", &anims, pThis );
 }
@@ -3787,8 +3787,8 @@ void SUnitActions::ReportMetaInfo() const
 	BYTE *pThis = (BYTE*)this;
 	NMetaInfo::ReportMetaInfo( "availCommands", (BYTE*)&availCommands - pThis, sizeof(availCommands), NTypeDef::TYPE_TYPE_BINARY );
 	NMetaInfo::ReportMetaInfo( "availExposures", (BYTE*)&availExposures - pThis, sizeof(availExposures), NTypeDef::TYPE_TYPE_BINARY );
-	NMetaInfo::ReportStructMetaInfo( "availUserActions", &availUserActions, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "availUserExposures", &availUserExposures, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "availUserActions", &availUserActions, pThis );
+	NMetaInfo::ReportStructMetaInfo( "availUserExposures", &availUserExposures, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SpecialAbilities", &specialAbilities, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -3832,7 +3832,7 @@ DWORD SUnitActions::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EDBUnitRPGType eValue )
+std::string EnumToString( NDb::EDBUnitRPGType eValue )
 {
 	switch ( eValue )
 	{
@@ -3917,7 +3917,7 @@ string EnumToString( NDb::EDBUnitRPGType eValue )
 	}
 }
 
-NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const string &szValue )
+NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const std::string &szValue )
 {
 	if ( szValue == "DB_RPG_TYPE_SOLDIER" )
 		return NDb::DB_RPG_TYPE_SOLDIER;
@@ -3998,7 +3998,7 @@ NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const string &szValue 
 	return NDb::DB_RPG_TYPE_SOLDIER;
 }
 
-string EnumToString( NDb::EUnitPoliticalSide eValue )
+std::string EnumToString( NDb::EUnitPoliticalSide eValue )
 {
 	switch ( eValue )
 	{
@@ -4019,7 +4019,7 @@ string EnumToString( NDb::EUnitPoliticalSide eValue )
 	}
 }
 
-NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const string &szValue )
+NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const std::string &szValue )
 {
 	if ( szValue == "POLITICAL_SIDE_UNKNOWN" )
 		return NDb::POLITICAL_SIDE_UNKNOWN;
@@ -4036,7 +4036,7 @@ NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const string &
 	return NDb::POLITICAL_SIDE_UNKNOWN;
 }
 
-string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
+std::string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
 {
 	switch ( eValue )
 	{
@@ -4061,7 +4061,7 @@ string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
 	}
 }
 
-NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( const string &szValue )
+NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( const std::string &szValue )
 {
 	if ( szValue == "EFUT_UNKNOWN" )
 		return NDb::EFUT_UNKNOWN;
@@ -4083,7 +4083,7 @@ NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitTy
 }
 
 
-void SBoundCircle::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBoundCircle::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (BYTE*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "IsRound", (BYTE*)&bIsRound - pThis, sizeof(bIsRound), NTypeDef::TYPE_TYPE_BOOL );
@@ -4122,10 +4122,10 @@ DWORD SBoundCircle::CalcCheckSum() const
 
 
 
-void SUnitBaseRPGStats::SAABBDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUnitBaseRPGStats::SAABBDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis );
 }
 
 int SUnitBaseRPGStats::SAABBDesc::operator&( IXmlSaver &saver )
@@ -4187,9 +4187,9 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "BoundTileRadius", (BYTE*)&nBoundTileRadius - pThis, sizeof(nBoundTileRadius), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "Weight", (BYTE*)&fWeight - pThis, sizeof(fWeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Price", (BYTE*)&fPrice - pThis, sizeof(fPrice), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( "AABBCenter", &vAABBCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "AABBHalfSize", &vAABBHalfSize, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "BoundCircle", &boundCircle, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "AABBCenter", &vAABBCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( "AABBHalfSize", &vAABBHalfSize, pThis );
+	NMetaInfo::ReportStructMetaInfo( "BoundCircle", &boundCircle, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "aabb_as", &aabb_as, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "aabb_ds", &aabb_ds, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "animdescs", &animdescs, pThis );
@@ -4303,10 +4303,10 @@ void SArmorPatternPlacement::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "ArmorPatternPlacement", typeID, sizeof(*this) );
 
 	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportStructMetaInfo( "FrontPos", &ptFrontPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "SidePos", &ptSidePos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "BackPos", &ptBackPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "TopPos", &ptTopPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "FrontPos", &ptFrontPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( "SidePos", &ptSidePos, pThis );
+	NMetaInfo::ReportStructMetaInfo( "BackPos", &ptBackPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( "TopPos", &ptTopPos, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -4362,7 +4362,7 @@ int SArmorPattern::operator&( IBinSaver &saver )
 
 
 
-void SInfantryRPGStats::SInfantryGun::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SInfantryRPGStats::SInfantryGun::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SBaseGunRPGStats::ReportMetaInfo( szAddName, pThis );
 
@@ -4467,9 +4467,9 @@ DWORD SInfantryRPGStats::CalcCheckSum() const
 
 
 
-void SBoardedMechUnitPosition::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBoardedMechUnitPosition::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 }
 
@@ -4506,7 +4506,7 @@ DWORD SBoardedMechUnitPosition::CalcCheckSum() const
 
 
 
-void SGunnersVector::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SGunnersVector::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "gunners", &gunners, pThis );
 }
@@ -4541,7 +4541,7 @@ DWORD SGunnersVector::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EDesignUnitType eValue )
+std::string EnumToString( NDb::EDesignUnitType eValue )
 {
 	switch ( eValue )
 	{
@@ -4608,7 +4608,7 @@ string EnumToString( NDb::EDesignUnitType eValue )
 	}
 }
 
-NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const string &szValue )
+NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const std::string &szValue )
 {
 	if ( szValue == "UNIT_TYPE_UNKNOWN" )
 		return NDb::UNIT_TYPE_UNKNOWN;
@@ -4672,12 +4672,12 @@ NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const string &szValu
 }
 
 
-void SMechUnitRPGStats::SMechUnitGun::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SMechUnitGun::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SBaseGunRPGStats::ReportMetaInfo( szAddName, pThis );
 
 	NMetaInfo::ReportMetaInfo( szAddName + "ShootPoint", (BYTE*)&szShootPoint - pThis, sizeof(szShootPoint), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AIShootPointPos", &vAIShootPointPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AIShootPointPos", &vAIShootPointPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Recoil", (BYTE*)&bRecoil - pThis, sizeof(bRecoil), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "RecoilLength", (BYTE*)&fRecoilLength - pThis, sizeof(fRecoilLength), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "recoilTime", (BYTE*)&nrecoilTime - pThis, sizeof(nrecoilTime), NTypeDef::TYPE_TYPE_INT );
@@ -4739,7 +4739,7 @@ DWORD SMechUnitRPGStats::SMechUnitGun::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SConstraint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SConstraint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
@@ -4778,17 +4778,17 @@ DWORD SMechUnitRPGStats::SConstraint::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SPlatform::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SPlatform::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "RecoilShakeAngle", (BYTE*)&fRecoilShakeAngle - pThis, sizeof(fRecoilShakeAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HorizontalRotationSpeed", (BYTE*)&fHorizontalRotationSpeed - pThis, sizeof(fHorizontalRotationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalRotationSpeed", (BYTE*)&fVerticalRotationSpeed - pThis, sizeof(fVerticalRotationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ModelPart", (BYTE*)&nModelPart - pThis, sizeof(nModelPart), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "constraint", &constraint, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "constraintVertical", &constraintVertical, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "constraint", &constraint, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "constraintVertical", &constraintVertical, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "GunCarriageParts", (BYTE*)&nGunCarriageParts - pThis, sizeof(nGunCarriageParts), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "RotatePoint", (BYTE*)&szRotatePoint - pThis, sizeof(szRotatePoint), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AIRotatePointPos", &vAIRotatePointPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AIRotatePointPos", &vAIRotatePointPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedPlatformVisObj", (BYTE*)&pAttachedPlatformVisObj - pThis, sizeof(pAttachedPlatformVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedPlatformLocator", (BYTE*)&szAttachedPlatformLocator - pThis, sizeof(szAttachedPlatformLocator), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "ParentPlatform", (BYTE*)&nParentPlatform - pThis, sizeof(nParentPlatform), NTypeDef::TYPE_TYPE_INT );
@@ -4850,7 +4850,7 @@ DWORD SMechUnitRPGStats::SPlatform::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SArmor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SArmor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
@@ -4889,7 +4889,7 @@ DWORD SMechUnitRPGStats::SArmor::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SJoggingParams::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SJoggingParams::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Period1", (BYTE*)&fPeriod1 - pThis, sizeof(fPeriod1), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Period2", (BYTE*)&fPeriod2 - pThis, sizeof(fPeriod2), NTypeDef::TYPE_TYPE_FLOAT );
@@ -4940,7 +4940,7 @@ DWORD SMechUnitRPGStats::SJoggingParams::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SSlotInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SSlotInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedLocator", (BYTE*)&szAttachedLocator - pThis, sizeof(szAttachedLocator), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "AttachedVisObjects", &attachedVisObjects, pThis );
@@ -4979,7 +4979,7 @@ DWORD SMechUnitRPGStats::SSlotInfo::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SShipEffects::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SShipEffects::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "BoardSideEffect", (BYTE*)&pBoardSideEffect - pThis, sizeof(pBoardSideEffect), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "BoardSideLocators", &boardSideLocators, pThis );
@@ -5024,7 +5024,7 @@ DWORD SMechUnitRPGStats::SShipEffects::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SSmokeTrailEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SSmokeTrailEffect::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Interval", (BYTE*)&fInterval - pThis, sizeof(fInterval), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5066,9 +5066,9 @@ DWORD SMechUnitRPGStats::SSmokeTrailEffect::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SCameraPlacement::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnitRPGStats::SCameraPlacement::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (BYTE*)&fDistance - pThis, sizeof(fDistance), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Pitch", (BYTE*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Yaw", (BYTE*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5133,14 +5133,14 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "peoplePointIndices", &peoplePointIndices, pThis );
 	NMetaInfo::ReportMetaInfo( "FatalitySmokePoint", (BYTE*)&szFatalitySmokePoint - pThis, sizeof(szFatalitySmokePoint), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "ShootDustPoint", (BYTE*)&szShootDustPoint - pThis, sizeof(szShootDustPoint), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "TowPoint", &vTowPoint, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "EntrancePoint", &vEntrancePoint, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "TowPoint", &vTowPoint, pThis );
+	NMetaInfo::ReportStructMetaInfo( "EntrancePoint", &vEntrancePoint, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "PeoplePoints", &peoplePoints, pThis );
-	NMetaInfo::ReportStructMetaInfo( "AmmoPoint", &vAmmoPoint, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "AmmoPoint", &vAmmoPoint, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Gunners", &gunners, pThis );
-	NMetaInfo::ReportStructMetaInfo( "HookPoint", &vHookPoint, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "FrontWheel", &vFrontWheel, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "BackWheel", &vBackWheel, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "HookPoint", &vHookPoint, pThis );
+	NMetaInfo::ReportStructMetaInfo( "FrontWheel", &vFrontWheel, pThis );
+	NMetaInfo::ReportStructMetaInfo( "BackWheel", &vBackWheel, pThis );
 	NMetaInfo::ReportMetaInfo( "EffectDiesel", (BYTE*)&pEffectDiesel - pThis, sizeof(pEffectDiesel), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "EffectWheelDust", (BYTE*)&pEffectWheelDust - pThis, sizeof(pEffectWheelDust), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "EffectWheelSplash", (BYTE*)&pEffectWheelSplash - pThis, sizeof(pEffectWheelSplash), NTypeDef::TYPE_TYPE_REF );
@@ -5150,9 +5150,9 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "EffectShootDust", (BYTE*)&pEffectShootDust - pThis, sizeof(pEffectShootDust), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "EffectEntrenching", (BYTE*)&pEffectEntrenching - pThis, sizeof(pEffectEntrenching), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "EffectDisappear", (BYTE*)&pEffectDisappear - pThis, sizeof(pEffectDisappear), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "jx", &jx, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "jy", &jy, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "jz", &jz, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "jx", &jx, pThis );
+	NMetaInfo::ReportStructMetaInfo( "jy", &jy, pThis );
+	NMetaInfo::ReportStructMetaInfo( "jz", &jz, pThis );
 	NMetaInfo::ReportMetaInfo( "LeavesTracks", (BYTE*)&bLeavesTracks - pThis, sizeof(bLeavesTracks), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "TrackWidth", (BYTE*)&fTrackWidth - pThis, sizeof(fTrackWidth), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "TrackOffset", (BYTE*)&fTrackOffset - pThis, sizeof(fTrackOffset), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5180,7 +5180,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "AllowedPlaneManuvers", &allowedPlaneManuvers, pThis );
 	NMetaInfo::ReportMetaInfo( "AnimableModel", (BYTE*)&pAnimableModel - pThis, sizeof(pAnimableModel), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "TransportableModel", (BYTE*)&pTransportableModel - pThis, sizeof(pTransportableModel), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "ShipEffects", &shipEffects, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "ShipEffects", &shipEffects, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "BoardedMechUnitPosition", &boardedMechUnitPosition, pThis );
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
@@ -5346,7 +5346,7 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EEvent eValue )
+std::string EnumToString( NDb::EEvent eValue )
 {
 	switch ( eValue )
 	{
@@ -5357,14 +5357,14 @@ string EnumToString( NDb::EEvent eValue )
 	}
 }
 
-NDb::EEvent NDb::StringToEnum_NDb_EEvent( const string &szValue )
+NDb::EEvent NDb::StringToEnum_NDb_EEvent( const std::string &szValue )
 {
 	if ( szValue == "HIT_NEAR" )
 		return NDb::HIT_NEAR;
 	return NDb::HIT_NEAR;
 }
 
-string EnumToString( NDb::EDesignSquadType eValue )
+std::string EnumToString( NDb::EDesignSquadType eValue )
 {
 	switch ( eValue )
 	{
@@ -5387,7 +5387,7 @@ string EnumToString( NDb::EDesignSquadType eValue )
 	}
 }
 
-NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const string &szValue )
+NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const std::string &szValue )
 {
 	if ( szValue == "SQUAD_TYPE_UNKNOWN" )
 		return NDb::SQUAD_TYPE_UNKNOWN;
@@ -5406,7 +5406,7 @@ NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const string &szVa
 	return NDb::SQUAD_TYPE_UNKNOWN;
 }
 
-string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
+std::string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
 {
 	switch ( eValue )
 	{
@@ -5433,7 +5433,7 @@ string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
 	}
 }
 
-NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( const string &szValue )
+NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( const std::string &szValue )
 {
 	if ( szValue == "RIFLEMANS" )
 		return NDb::SSquadRPGStats::RIFLEMANS;
@@ -5457,9 +5457,9 @@ NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType(
 }
 
 
-void SSquadRPGStats::SFormation::SEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSquadRPGStats::SFormation::SEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (BYTE*)&fDir - pThis, sizeof(fDir), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
@@ -5495,7 +5495,7 @@ DWORD SSquadRPGStats::SFormation::SEntry::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue )
+std::string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue )
 {
 	switch ( eValue )
 	{
@@ -5514,7 +5514,7 @@ string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue 
 	}
 }
 
-NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const string &szValue )
+NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const std::string &szValue )
 {
 	if ( szValue == "DEFAULT" )
 		return NDb::SSquadRPGStats::SFormation::DEFAULT;
@@ -5530,7 +5530,7 @@ NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquad
 }
 
 
-void SSquadRPGStats::SFormation::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSquadRPGStats::SFormation::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "type", (BYTE*)&etype - pThis, sizeof(etype), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "order", &order, pThis );
@@ -5609,8 +5609,8 @@ void SSquadRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "formations", &formations, pThis );
 	NMetaInfo::ReportMetaInfo( "availCommands", (BYTE*)&availCommands - pThis, sizeof(availCommands), NTypeDef::TYPE_TYPE_BINARY );
 	NMetaInfo::ReportMetaInfo( "availExposures", (BYTE*)&availExposures - pThis, sizeof(availExposures), NTypeDef::TYPE_TYPE_BINARY );
-	NMetaInfo::ReportStructMetaInfo( "availUserActions", &availUserActions, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "availUserExposures", &availUserExposures, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "availUserActions", &availUserActions, pThis );
+	NMetaInfo::ReportStructMetaInfo( "availUserExposures", &availUserExposures, pThis );
 	NMetaInfo::ReportMetaInfo( "ReinforcementPrice", (BYTE*)&fReinforcementPrice - pThis, sizeof(fReinforcementPrice), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "EntrenchCover", (BYTE*)&fEntrenchCover - pThis, sizeof(fEntrenchCover), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
@@ -5669,7 +5669,7 @@ DWORD SSquadRPGStats::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EReinforcementType eValue )
+std::string EnumToString( NDb::EReinforcementType eValue )
 {
 	switch ( eValue )
 	{
@@ -5722,7 +5722,7 @@ string EnumToString( NDb::EReinforcementType eValue )
 	}
 }
 
-NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const string &szValue )
+NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const std::string &szValue )
 {
 	if ( szValue == "RT_MAIN_INFANTRY" )
 		return NDb::RT_MAIN_INFANTRY;
@@ -5772,7 +5772,7 @@ NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const string &
 }
 
 
-void SReinforcementEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinforcementEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (BYTE*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (BYTE*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
@@ -5817,9 +5817,9 @@ DWORD SReinforcementEntry::CalcCheckSum() const
 
 
 
-void SDeployTemplate::SDeployTemplateEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SDeployTemplate::SDeployTemplateEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 }
 
@@ -6012,7 +6012,7 @@ DWORD SPlayerRank::CalcCheckSum() const
 
 
 
-void SReinforcementTypeInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinforcementTypeInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -6095,7 +6095,7 @@ DWORD SReinforcementTypes::CalcCheckSum() const
 
 
 
-void SAIExpLevel::SLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAIExpLevel::SLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Experience", (BYTE*)&fExperience - pThis, sizeof(fExperience), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "StatsBonus", (BYTE*)&pStatsBonus - pThis, sizeof(pStatsBonus), NTypeDef::TYPE_TYPE_REF );
@@ -6181,7 +6181,7 @@ DWORD SAIExpLevel::CalcCheckSum() const
 
 
 
-void SUnitStatsModifier::SParameterModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUnitStatsModifier::SParameterModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AddBonus", (BYTE*)&fAddBonus - pThis, sizeof(fAddBonus), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "MultBonus", (BYTE*)&fMultBonus - pThis, sizeof(fMultBonus), NTypeDef::TYPE_TYPE_FLOAT );

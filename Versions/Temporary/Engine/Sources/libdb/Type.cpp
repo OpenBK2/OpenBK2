@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Type.h"
 
-NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const string &szName )
+NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string &szName )
 {
 	if ( szName == "TYPE_TYPE_UNKNOWN" )
 		return NDb::NTypeDef::TYPE_TYPE_UNKNOWN;

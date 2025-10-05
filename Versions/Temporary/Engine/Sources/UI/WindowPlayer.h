@@ -11,7 +11,7 @@ class CWindowPlayer : public CWindow, public IPlayer
 	
 	struct SMovie
 	{
-		string szFileName;							// short file name (with respect to 'data' subdir)
+		std::string szFileName;							// short file name (with respect to 'data' subdir)
 		bool bCanSkipMovie;									// can we this movie with mouse/SPACE/ENTER/[ESC] buttons
 		bool bCanSkipSequence;							// we can skip all movies sequence with ESC button
 		bool bSlideShowMode;						// "SlideShow" mode (wait for complete loading of each frame)
@@ -23,7 +23,7 @@ class CWindowPlayer : public CWindow, public IPlayer
 		int operator&( IBinSaver &saver );
 	};
 
-	vector<SMovie> movies;						// all movies to play
+	std::vector<SMovie> movies;						// all movies to play
 	int nCurrMovie;												// current movie to play
 	bool bPaused;
 	CDGPtr<NGScene::IVideoPlayer> pPlayer;
@@ -43,7 +43,7 @@ public:
 	virtual void Visit( struct IUIVisitor *pVisitor );
 
 	//IPlayer{
-	virtual void SetSequence( const string &szFileName );
+	virtual void SetSequence( const std::string &szFileName );
 	virtual void Play();
 	virtual bool Stop();
 	virtual bool Pause( bool bPause );

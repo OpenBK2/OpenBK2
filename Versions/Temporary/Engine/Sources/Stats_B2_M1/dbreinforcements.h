@@ -17,13 +17,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< int > data;
+		std::vector< int > data;
 
 		SIntArray() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -43,7 +43,7 @@ namespace NDb
 			nGroupID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -55,7 +55,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SReinforcementGroupInfoEntry > infos;
+		std::vector< SReinforcementGroupInfoEntry > infos;
 
 		#include "include_reinforcementgroupinfo.h"
 
@@ -63,7 +63,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -84,7 +84,7 @@ namespace NDb
 			vPosition( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -96,13 +96,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SReinforcementMaskEntry > positions;
+		std::vector< SReinforcementMaskEntry > positions;
 
 		SReinforcementMask() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -128,7 +128,7 @@ namespace NDb
 			eType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -148,7 +148,7 @@ namespace NDb
 			eType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -164,7 +164,7 @@ namespace NDb
 		CVec2 vAviationPosition;
 		int nDirection;
 		CDBPtr< SDeployTemplate > pTemplate;
-		vector< STypedDeployTemplate > typedTemplates;
+		std::vector< STypedDeployTemplate > typedTemplates;
 		bool bIsDefault;
 		bool b___delete_from_here_to_the_end;
 		EReinforcementType eType;
@@ -183,7 +183,7 @@ namespace NDb
 			nPositionID( 1 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -196,13 +196,13 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		CDBPtr< SReinforcement > pReinforcement;
-		string szName;
+		std::string szName;
 
 		SScriptReinforcementEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -226,7 +226,7 @@ namespace NDb
 			nGivenReinforcementPointID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );

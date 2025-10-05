@@ -3,7 +3,7 @@
 namespace NLang
 {
 	const char* GetParsingFileName();
-	bool OpenFile( const string &szFileName );
+	bool OpenFile( const std::string &szFileName );
 	int ReadData( char *pBuf, int nMaxSize );
 }
 

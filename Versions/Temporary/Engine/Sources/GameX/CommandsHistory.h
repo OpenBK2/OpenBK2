@@ -9,15 +9,15 @@
 struct IAILogicCommandB2;
 struct IRandomSeed;
 typedef uLong CLogType;
-typedef hash_map<int/*#entry*/,CLogType> ChecksumLog; 
-typedef hash_map<int/*#segment*/, pair<CLogType,ChecksumLog> > CSegmentChecksum;
-typedef hash_map<int, list<CPtr<IAILogicCommandB2> > > CHistory;
+typedef std::unordered_map<int/*#entry*/,CLogType> ChecksumLog;
+typedef std::unordered_map<int/*#segment*/, std::pair<CLogType,ChecksumLog> > CSegmentChecksum;
+typedef std::unordered_map<int, std::list<CPtr<IAILogicCommandB2> > > CHistory;
 
 struct SMultiplayerReplayInfo
 {
 	ZDATA
 		CDBPtr<NDb::SMapInfo> pMap;
-		vector<SMPSlot> slots;
+		std::vector<SMPSlot> slots;
 		int nTechLevel;
 		int nTimeLimit;
 		int nCaptureTime;
@@ -63,13 +63,13 @@ class CCommandsHistory : public ICommandsHistory
 	bool IsFinished( const CSegmentChecksum &_segmentChecksum, const int nGameTime ) const;
 	bool IsSegmentLogDiffer( const int nGameTime, const int nEntry, const unsigned long ulChecksum, const CSegmentChecksum &_segmentChecksum );
 	bool IsEntryQualified( int nEntry ) const;
-	const bool SerializeHistory( const string &szFileName, const bool bRead );
+	const bool SerializeHistory( const std::string &szFileName, const bool bRead );
 public:
 	CCommandsHistory();
 
 	void StartNewGame( const NDb::SMapInfo *_pMap );
-	bool LoadHistory( const string &szFileName );
-	bool SaveReplay( const string &szFileName, const SB2GameSpecificData &gameDesc, const vector<SMPSlot> &slots, const int nWinningSide );
+	bool LoadHistory( const std::string &szFileName );
+	bool SaveReplay( const std::string &szFileName, const SB2GameSpecificData &gameDesc, const std::vector<SMPSlot> &slots, const int nWinningSide );
 
 	const NDb::SMapInfo *GetMap() const { return replayInfo.pMap; }
 

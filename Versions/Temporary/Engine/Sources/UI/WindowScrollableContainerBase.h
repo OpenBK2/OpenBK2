@@ -17,8 +17,8 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	//{dynamic data
 	struct SElement
 	{
-		string szName;
-		string szNegativeSelection;
+		std::string szName;
+		std::string szNegativeSelection;
 		bool bSelectable;
 		int nPos;																// pChild's position inside control
 		SElement() {  }
@@ -66,7 +66,7 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	CObj<CWindowScrollBar> pScrollBar;	
 	CObj<CWindowSimple> pBorder;  // for clipping
 	CObj<CWindowSimple> pContainer;  // contains elements
-	typedef vector<SElement> CElements;
+	typedef std::vector<SElement> CElements;
 	CElements elements;
 	//}
 
@@ -81,7 +81,7 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	void SelectWithSelection( IWindow *pElement, IWindow * _pSelection );
 	void PreSelect( IWindow *pElement );
 protected:
-	CWindow* GetElement( const string &szName );
+	CWindow* GetElement( const std::string &szName );
 	void Resort( IWindowSorter *pSorter );
 	void RemoveItems();
 	bool IsHorisontal() const;
@@ -109,7 +109,7 @@ public:
 	virtual void Clicked( struct IWindow *pWho, int nButton );
 	void DoubleClicked( struct IWindow *pWho, int nButton );
 	virtual IWindow *GetSelectedItem() const { return pSelected; }
-	virtual IWindow *GetItem( const string &szName );
+	virtual IWindow *GetItem( const std::string &szName );
 	virtual IWindow *GetItem( const int nItem );
 	virtual int GetItemNumber( IWindow *pElement );
 	virtual void EnsureElementVisible( IWindow *pElement );

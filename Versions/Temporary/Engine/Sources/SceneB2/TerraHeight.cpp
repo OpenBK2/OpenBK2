@@ -203,7 +203,7 @@ CVec3 CTerraGen::GetTerraNorm( const CVec3 &vPos ) const
 	const CVec3fEx vSrc( vPos, 0 );
 
 	const STerrainInfo::STile &tile = terrainInfo.tiles[nTileY][nTileX];
-	for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+	for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 	{
 		const CVec3fEx &v1 = tile.vertices[it->i1];
 		const CVec3fEx &v2 = tile.vertices[it->i2];

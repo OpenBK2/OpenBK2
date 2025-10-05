@@ -82,10 +82,10 @@ class CTGARawLoader
 {
 	static bool LoadLocal( TOutColor *pColors, const int nNumElements, const TConvertor &convertor, CDataStream *pStream, SInt2Type<0> *pp )
 	{
-		vector<TInColor> buffer( nNumElements );
+		std::vector<TInColor> buffer( nNumElements );
 		const int nBytesToRead = nNumElements * sizeof( TInColor );
 		pStream->Read( &(buffer[0]), nBytesToRead );
-		for ( vector<TInColor>::const_iterator it = buffer.begin(); it != buffer.end(); ++it )
+		for ( std::vector<TInColor>::const_iterator it = buffer.begin(); it != buffer.end(); ++it )
 			*pColors++ = convertor( *it );
 		return true;
 	}

@@ -22,7 +22,7 @@ extern CStaticObjects theStatObjs;
 
 void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( CExistingObject *pObj )
 {
-	list<SObjTileInfo> lockTiles;
+	std::list<SObjTileInfo> lockTiles;
 	pObj->CreateLockedTilesInfo( &lockTiles );
 
 	const SStaticObjectRPGStats *pStats = dynamic_cast<const SStaticObjectRPGStats*>(pObj->GetStats());
@@ -42,7 +42,7 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( CExistingObject *pOb
 	pObj->Delete();
 }
 
-void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit, const list<SObjTileInfo> &tiles, const bool bCantCrushForSomeTime )
+void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit, const std::list<SObjTileInfo> &tiles, const bool bCantCrushForSomeTime )
 {
 	if ( pUnit->IsLockingTiles() )
 	{
@@ -73,12 +73,12 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit
 }
 
 CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex, 
-																								  const list<SObjTileInfo> &tiles, const bool _bDestructByTracks, 
+																								  const std::list<SObjTileInfo> &tiles, const bool _bDestructByTracks,
 																									CUpdatableObj* _pDeadObj, CObjectProfile *_pPassProfile )
 : CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE ), pDeadObj( _pDeadObj ), 
 	tilesToLock( tiles ), eType( ESOT_FAKE_CORPSE ), pPassProfile( _pPassProfile ), bDestructByTracks( _bDestructByTracks )
 {
-	for ( list<SObjTileInfo>::iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
+	for ( std::list<SObjTileInfo>::iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
 		it->lockInfo = bDestructByTracks ? EAIClasses( it->lockInfo & ( ~EAC_TRACK ) ) : EAIClasses( it->lockInfo );
 }
 
@@ -97,7 +97,7 @@ void CFakeCorpseStaticObject::LockTiles()
 	GetTerrain()->AddStaticObjectTiles( tilesToLock );
 }
 
-void CFakeCorpseStaticObject::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
+void CFakeCorpseStaticObject::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
 	*pTiles = tilesToLock;
 }
@@ -107,9 +107,9 @@ void CFakeCorpseStaticObject::UnlockTiles()
 	GetTerrain()->RemoveStaticObjectTiles( tilesToLock );
 }
 
-void CFakeCorpseStaticObject::GetCoveredTiles( list<SVector> *pTiles ) const
+void CFakeCorpseStaticObject::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
-	for ( list<SObjTileInfo>::const_iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
+	for ( std::list<SObjTileInfo>::const_iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
 	{
 		if ( it->lockInfo )
 			pTiles->push_back( it->tile );

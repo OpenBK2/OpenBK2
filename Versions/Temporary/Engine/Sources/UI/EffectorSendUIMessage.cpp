@@ -20,11 +20,11 @@ int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
+void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
 {
 	const NDb::SUISSendUIMessage *pCmd( checked_cast<const NDb::SUISSendUIMessage*>( _pCmd ) );
-	CParam<string> messageID( pCmd->szMessageID );
-	CParam<string> param( pCmd->szParam );
+	CParam<std::string> messageID( pCmd->szMessageID );
+	CParam<std::string> param( pCmd->szParam );
 	CParam<int> forwardParam( pCmd->nForwardParam );
 	CParam<int> backParam( pCmd->nBackParam );
 	szAnimatedWindow = _szAnimatedWindow;

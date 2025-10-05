@@ -34,31 +34,31 @@ struct SUserData
 	//
 	struct SMayaExportData
 	{
-		typedef hash_map<string, string> CGrannyExportSettingsMap;
+		typedef std::unordered_map<std::string, std::string> CGrannyExportSettingsMap;
 
 		CGrannyExportSettingsMap grannyExportSettings;
 		//// TODO{ remove it
-		string szAIGeomSettingsFileName;
-		string szGeomSettingsFileName;
-		string szGeomAttributesSettingsFileName;
-		string szAnimSettingsFileName;
-		string szSkeletonSettingsFileName;
-		string szMaterialsSettingsFileName;
+		std::string szAIGeomSettingsFileName;
+		std::string szGeomSettingsFileName;
+		std::string szGeomAttributesSettingsFileName;
+		std::string szAnimSettingsFileName;
+		std::string szSkeletonSettingsFileName;
+		std::string szMaterialsSettingsFileName;
 		//// TODO}
 		// interactive maya response timeout. 0 means no timeout
 		int nMayaResponseTimeout;
 		// interactive maya will restart every nMayaExecutionQuota query executions. 0 means no restarts ever
 		int nMayaExecutionQuota;
-		string szMayaExportPath;
-		string szMayaVersionPath;
-		string szMayaScriptPath;
-		string szStartupScript;
-		string szOldPluginFileName;
-		string szOldPluginName;
-		string szToolFileName;
-		string szLogFileName;
-		string szScriptFileName;
-		string szOldPluginParticleFixYZOption;
+		std::string szMayaExportPath;
+		std::string szMayaVersionPath;
+		std::string szMayaScriptPath;
+		std::string szStartupScript;
+		std::string szOldPluginFileName;
+		std::string szOldPluginName;
+		std::string szToolFileName;
+		std::string szLogFileName;
+		std::string szScriptFileName;
+		std::string szOldPluginParticleFixYZOption;
 
 		SMayaExportData()
 			: nMayaResponseTimeout(0), nMayaExecutionQuota(0)
@@ -96,11 +96,11 @@ struct SUserData
 	{
 		//typedef hash_map<string, string> CBrowsePathMap;
 		// CRAP{ HASH_SET
-		typedef hash_map<string, DWORD> CExpandedPropertySet;
-		typedef hash_map<string, DWORD> CExpandedObjectSet;
+		typedef std::unordered_map<std::string, DWORD> CExpandedPropertySet;
+		typedef std::unordered_map<std::string, DWORD> CExpandedObjectSet;
 		// CRAP} HASH_SET
-		string szCurrentObject;										// объект выделенный в таблице
-		string szCurrentProperty;									// свойство выделенное у объекта
+		std::string szCurrentObject;										// объект выделенный в таблице
+		std::string szCurrentProperty;									// свойство выделенное у объекта
 		//CBrowsePathMap browsePathMap;						// пути для диалогов OpenFile и т.д.
 		CExpandedPropertySet expandedPropertySet;	// открытые ветки в Property Control
 		CExpandedObjectSet expandedObjectSet;			// открытые ветки в дереве обьектов
@@ -122,20 +122,20 @@ struct SUserData
 			return 0;
 		}
 	};
-	typedef list<string> CRecentList;
-	typedef vector<COLORREF> CColorList;
-	typedef hash_map<string, SObjectTypeData> CObjectTypeDataMap;
-	typedef hash_map<string, string> CBuildDataTypeNameMap;
-	typedef hash_map<string, string> CObjectDBTypeMap;
-	typedef hash_map<string, string> CFilePathMap;
-	typedef hash_map<string, string> CRefPathMap;
+	typedef std::list<std::string> CRecentList;
+	typedef std::vector<COLORREF> CColorList;
+	typedef std::unordered_map<std::string, SObjectTypeData> CObjectTypeDataMap;
+	typedef std::unordered_map<std::string, std::string> CBuildDataTypeNameMap;
+	typedef std::unordered_map<std::string, std::string> CObjectDBTypeMap;
+	typedef std::unordered_map<std::string, std::string> CFilePathMap;
+	typedef std::unordered_map<std::string, std::string> CRefPathMap;
 
 	// данные не изменемые из программы и не сохраняющиеся в файл
 	struct SConstUserData
 	{
 		struct SPropertyControlData
 		{
-			string szLUAKeyWordsFileName;
+			std::string szLUAKeyWordsFileName;
 			// serializing...
 			int operator&( IXmlSaver &xs )
 			{
@@ -146,9 +146,9 @@ struct SUserData
 
 		struct SObjectTypeData
 		{
-			string szEditorSettingsFileName;				// имя файла с настройками редактора, если не задан генерируется по умолчанию 
-			string szExporterSettingsFileName;			// имя файла с настройками экспортера, если не задан генерируется по умолчанию
-			string szBuilderSettingsFileName;				// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
+			std::string szEditorSettingsFileName;				// имя файла с настройками редактора, если не задан генерируется по умолчанию
+			std::string szExporterSettingsFileName;			// имя файла с настройками экспортера, если не задан генерируется по умолчанию
+			std::string szBuilderSettingsFileName;				// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
 
 			// serializing...
 			int operator&( IXmlSaver &xs )
@@ -159,10 +159,10 @@ struct SUserData
 				return 0;
 			}
 		};
-		typedef hash_map<string, SObjectTypeData> CObjectTypeDataMap;
+		typedef std::unordered_map<std::string, SObjectTypeData> CObjectTypeDataMap;
 
-		string szVersion;
-		string szApplicationTitle;
+		std::string szVersion;
+		std::string szApplicationTitle;
 		// поля необходимые для работы Property Control
 		SPropertyControlData propertyControlData;
 		// maya export settings (pathes, scripts, etc.)
@@ -170,15 +170,15 @@ struct SUserData
 		// Object types' specific configuration files
 		CObjectTypeDataMap objectTypeData;
 		// Имя типа объекта, используемое в особом режиме редактора, как основной тип редактируемых объектов
-		string szMainObjectType;
+		std::string szMainObjectType;
 		// Object GUID property
-		string szGUIDName;
+		std::string szGUIDName;
 		// Common Folders
-		string szExportSourceFolder;					// Исходники для binary resources
-		string szExportDestinationFolder;			// Текущее место складывания binary resource при экспорте
-		string szDataStorageFolder;						// Основной каталог resources "..\\Data", (для конфигурационных файлов)
-		string szStartFolder;									// Стартовый каталог программы
-		string szObjectRecordIDsFolder;				// folder with object record IDs .ini file
+		std::string szExportSourceFolder;					// Исходники для binary resources
+		std::string szExportDestinationFolder;			// Текущее место складывания binary resource при экспорте
+		std::string szDataStorageFolder;						// Основной каталог resources "..\\Data", (для конфигурационных файлов)
+		std::string szStartFolder;									// Стартовый каталог программы
+		std::string szObjectRecordIDsFolder;				// folder with object record IDs .ini file
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -204,17 +204,17 @@ struct SUserData
 	CRecentList recentResourceList;						// resent list for next and previous objects
 	CColorList colorList;											// custom colors in color dialog
 	CTableSetMap tableSetMap;									// visible tables
-	hash_map<int, string> szCurrentTableMap;	// current table
-	vector<int> tableHeaderWidthList;					// table header width values
-	vector<int> tableLinkHeaderWidthList;			// тоже самое но для диалога ObjectLink
+	std::unordered_map<int, std::string> szCurrentTableMap;	// current table
+	std::vector<int> tableHeaderWidthList;					// table header width values
+	std::vector<int> tableLinkHeaderWidthList;			// тоже самое но для диалога ObjectLink
 	// User Module (project-specific module)
 	//vector<string> userModuleFileNamesList;	// list of project specific modules to load at editor start
-	string szUserModuleFileName;							// project specific module to load at editor start
+	std::string szUserModuleFileName;							// project specific module to load at editor start
 	//
 	CObjectTypeDataMap objectTypeDataMap;
 	CBuildDataTypeNameMap buildDataTypeNameMap;
 	//Search Parameters
-	string szLastSearchedText;
+	std::string szLastSearchedText;
 	CDBID dbidMainOptions;
 	// Maya export
 	SMayaExportData mayaExportData;
@@ -226,18 +226,18 @@ struct SUserData
 	CFilePathMap filePathMap;							// пути для диалогов OpenFile и т.д.
 	CRefPathMap refPathMap;								// пути для диалогов RefLink и т.д.
 	//
-	string szDebugParam;
+	std::string szDebugParam;
 	//
-	list<int> gdbBrowserIDList;						// список окон с каталогами
+	std::list<int> gdbBrowserIDList;						// список окон с каталогами
 	int nFocusedGDBBrowserID;							// текущее активное окно с каталогамми
 	//
-	string szOpenedMODFolder;
+	std::string szOpenedMODFolder;
 	//
 	struct SPCSelectionData
 	{
 		CVariant value;
 	};
-	typedef CControlSelection<string, SPCSelectionData> CPCSelection;
+	typedef CControlSelection<std::string, SPCSelectionData> CPCSelection;
 	CPCSelection pcSelection;
 	//
 	bool bShowLogMessages;
@@ -277,7 +277,7 @@ struct SUserData
 		xs.Add( "ShowLogErrors", &bShowLogErrors );
 		xs.Add( "OpenedMODFolder", &szOpenedMODFolder );
 		//
-		if ( xs.IsReading() ) 
+		if ( xs.IsReading() )
 		{
 			if ( dbidMainOptions.IsEmpty() )
 				dbidMainOptions = CDBID( "Editor/EditorOptions.xdb" );
@@ -286,7 +286,7 @@ struct SUserData
 		return 0;
 	}
 
-	const string GetPath( ENormalizePathType type )
+	const std::string GetPath( ENormalizePathType type )
 	{
 		switch ( type )
 		{
@@ -301,23 +301,23 @@ struct SUserData
 			default:
 				break;
 		}
-		return string();
+		return std::string();
 	}
 
 	// Установить путь в соответствии с указанными свойствами
 	// для однозначности: если указан начальный путь то наличие проверяется только по указанному пути
 	// true		- имя существует в указанном каталоге ( поверка производится только при bExists = true )
 	// false	- имя не существует в указанном каталоге ( поверка производится только при bExists = true )
-	bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, ENormalizePathType type, bool *pbAbsolutePath )
+	bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, ENormalizePathType type, bool *pbAbsolutePath )
 	{
-		string szPathPrefix = GetPath( type );
+		std::string szPathPrefix = GetPath( type );
 		return ::NormalizePath( pszPath, bFile, bExists, bReturnAbsolutePath, szPathPrefix, pbAbsolutePath );
 	}
 	//
 	template<class TSettings>
-	bool SerializeSettings( TSettings &rSettings, const string &rszTypeName, ESettingsType settingsType, ESerializeType serializeType )
+	bool SerializeSettings( TSettings &rSettings, const std::string &rszTypeName, ESettingsType settingsType, ESerializeType serializeType )
 	{
-		string szSettingsFileName;
+		std::string szSettingsFileName;
 		switch ( settingsType )
 		{
 			case EDITOR_SETTINGS:

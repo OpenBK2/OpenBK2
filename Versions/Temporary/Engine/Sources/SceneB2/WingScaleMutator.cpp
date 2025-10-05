@@ -3,14 +3,14 @@
 #include "vendor/granny/include/granny.h"
 #include "WingScaleMutator.h"
 
-bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const string &szScaledWingPrefix, const string &szStaticWingName )
+bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName )
 {
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
 	if ( pGetBone )
 	{
-		vector<string> names;
+		std::vector<std::string> names;
 		pGetBone->GetBoneNames( &names );
-		for ( vector<string>::const_iterator it = names.begin(); it != names.end(); ++it )
+		for ( std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it )
 		{
 			if ( strnicmp( it->c_str(), szScaledWingPrefix.c_str(), szScaledWingPrefix.length() ) == 0 )
 				scaledWings.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
@@ -24,7 +24,7 @@ bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const string &szSca
 
 void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {
-	for ( vector<int>::const_iterator it = scaledWings.begin(); it != scaledWings.end(); ++it )
+	for ( std::vector<int>::const_iterator it = scaledWings.begin(); it != scaledWings.end(); ++it )
 	{
 		granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, *it );
 		pRootTransform->ScaleShear[0][0] = fScale;

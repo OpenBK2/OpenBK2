@@ -13,7 +13,7 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 		// temporary variables
 		CVec2 vLastValidatedPoint;
 
-		list<CCirclePath> circles;
+		std::list<CCirclePath> circles;
 
 		bool bSmoothTurn;
 		bool bSkipNextSegment;

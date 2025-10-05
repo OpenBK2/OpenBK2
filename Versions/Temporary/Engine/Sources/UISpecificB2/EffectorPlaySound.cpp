@@ -19,7 +19,7 @@ bool CEffectorPlaySound::IsFinished() const
 	return bFinished;
 }
 
-void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
+void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
 { 
 	const NDb::SUISPlaySound *pCmd( checked_cast<const NDb::SUISPlaySound*>( _pCmd ) );
 	CParam<CDBPtr<NDb::SComplexSoundDesc> > pS( pCmd->pSoundToPlay );

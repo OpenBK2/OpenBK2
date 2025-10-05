@@ -127,7 +127,7 @@ CVisualNotifications::CVisualNotifications( IWindow *pParent, IMiniMap *_pMiniMa
 		const NDb::SGameRoot *pRoot = InterfaceState()->GetGameRoot();
 		if ( pRoot )
 		{
-			for ( vector< CDBPtr< NDb::SNotification > >::const_iterator it = pRoot->notifications.begin();
+			for ( std::vector< CDBPtr< NDb::SNotification > >::const_iterator it = pRoot->notifications.begin();
 				it != pRoot->notifications.end(); ++it )
 			{
 				const NDb::SNotification *pNotification = *it;
@@ -252,8 +252,8 @@ void CVisualNotifications::Step( const NTimer::STime nDeltaGameTime, bool bAppAc
 
 void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 {
-	vector< IMiniMap::SFigure > figures;
-	for ( list< SNotification >::iterator it = notifications.begin(); it != notifications.end(); )
+	std::vector< IMiniMap::SFigure > figures;
+	for ( std::list< SNotification >::iterator it = notifications.begin(); it != notifications.end(); )
 	{
 		SNotification &notification = *it;
 		
@@ -300,13 +300,13 @@ void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 
 void CVisualNotifications::AddNotification( int nID, const CVec2 &vPos, NDb::ENotificationType eType )
 {
-	static wstring wszEmpty;
+	static std::wstring wszEmpty;
 	AddNotificationMain( nID, vPos, eType, wszEmpty );
 	AddNotificationMinimap( nID, vPos, eType );
 }
 
 void CVisualNotifications::AddNotificationMain( int nID, const CVec2 &vPos, NDb::ENotificationType eType, 
-	const wstring &wszCustomText )
+	const std::wstring &wszCustomText )
 {
 	CEntries::const_iterator it = entries.find( eType );
 	if ( it == entries.end() )
@@ -361,20 +361,20 @@ void CVisualNotifications::AddObjectivePointers( int nID )
 	if ( pST->IsDynamicObjective( nID ) )
 		return;
 	
-	vector<CVec3> places;
+	std::vector<CVec3> places;
 	pST->GetObjectivePlaces( nID, &places );
 
 	AddPointerModels( nID, places );
 }
 
-void CVisualNotifications::AddPointerModels( int nID, const vector<CVec3> &places )
+void CVisualNotifications::AddPointerModels( int nID, const std::vector<CVec3> &places )
 {
-	hash_map<int,SMapPointers>::iterator it = pointers.find( nID );
+	std::unordered_map<int,SMapPointers>::iterator it = pointers.find( nID );
 	if ( it != pointers.end() )
 		return;
 
-	it = pointers.insert( pair<int, SMapPointers>( nID, SMapPointers() ) ).first;
-	vector<SMapPointer> &mapPointers = it->second;
+	it = pointers.insert( std::pair<int, SMapPointers>( nID, SMapPointers() ) ).first;
+	std::vector<SMapPointer> &mapPointers = it->second;
 
 	mapPointers.resize( places.size() );
 	for ( int i = 0; i < mapPointers.size(); ++i )
@@ -397,11 +397,11 @@ void CVisualNotifications::AddPointerModels( int nID, const vector<CVec3> &place
 
 void CVisualNotifications::RemoveObjectivePointers( int nID )
 {
-	hash_map<int,SMapPointers>::iterator it = pointers.find( nID );
+	std::unordered_map<int,SMapPointers>::iterator it = pointers.find( nID );
 	if ( it == pointers.end() )
 		return;
 
-	vector<SMapPointer> &mapPointers = it->second;
+	std::vector<SMapPointer> &mapPointers = it->second;
 	for ( int i = 0; i < mapPointers.size(); ++i )
 	{
 		SMapPointer &pointer = mapPointers[i];
@@ -417,12 +417,12 @@ void CVisualNotifications::UpdateObjectivePointers( int nID )
 	if ( !pObjective )
 		return;
 
-	hash_map<int,SMapPointers>::iterator it = pointers.find( nID );
+	std::unordered_map<int,SMapPointers>::iterator it = pointers.find( nID );
 	if ( it == pointers.end() )
 		return;
 		
-	vector<SMapPointer> &mapPointers = it->second;
-	vector<CVec3> places;
+	std::vector<SMapPointer> &mapPointers = it->second;
+	std::vector<CVec3> places;
 	Singleton<IScenarioTracker>()->GetObjectivePlaces( nID, &places );
 
 	if ( places.size() != mapPointers.size() )
@@ -435,7 +435,7 @@ void CVisualNotifications::UpdateObjectivePointers( int nID )
 	it = pointers.find( nID );
 	if ( it == pointers.end() )
 		return;
-	vector<SMapPointer> &mapPointers2 = it->second;
+	std::vector<SMapPointer> &mapPointers2 = it->second;
 	if ( places.size() == mapPointers2.size() )
 	{
 		for ( int i = 0; i < places.size(); ++i )
@@ -453,12 +453,12 @@ void CVisualNotifications::AddObjectiveNotification( int nID, NDb::ENotification
 		return;
 	//
 
-	wstring wszCustomText;
+	std::wstring wszCustomText;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pObjective->,Header) )
 		wszCustomText = GET_TEXT_PRE(pObjective->,Header);
 	AddNotificationMain( nID, VNULL2, eType, wszCustomText );
 	
-	for ( vector< CVec2 >::const_iterator it = pObjective->mapPositions.begin(); 
+	for ( std::vector< CVec2 >::const_iterator it = pObjective->mapPositions.begin();
 		it != pObjective->mapPositions.end(); ++it )
 	{
 		AddNotificationMinimap( nID, *it, eType );
@@ -674,7 +674,7 @@ void CVisualNotifications::UpdateMarkers()
 	if ( !pMiniMap || NGlobal::GetVar("game_mode_editor", 0) != 0 )
 		return;
 		
-	vector<IMiniMap::SMarker> markers;
+	std::vector<IMiniMap::SMarker> markers;
 
 	const NDb::STexture *pNeutral = InterfaceState()->GetTextureEntry( "TX_MINIMAP_KEY_OBJECT_NEUTRAL" );
 	const NDb::STexture *pFriend = InterfaceState()->GetTextureEntry( "TX_MINIMAP_KEY_OBJECT_FRIEND" );
@@ -695,7 +695,7 @@ void CVisualNotifications::UpdateMarkers()
 		pSelected = pMPConsts->diplomacyInfo[nFriendSide]->pMinimapKeyObjectIconSelected;
 	}*/
 
-	for ( hash_map<int, CPtr<CMapObj> >::const_iterator it = keyObjects.begin(); it != keyObjects.end(); ++it )
+	for ( std::unordered_map<int, CPtr<CMapObj> >::const_iterator it = keyObjects.begin(); it != keyObjects.end(); ++it )
 	{
 		CMapObj *pMO = it->second;
 		
@@ -744,7 +744,7 @@ void CVisualNotifications::UpdateMarkers()
 		if ( !bShowObjectives && eState != EMOS_RECEIVED )
 			continue;
 
-		vector<CVec3> places;
+		std::vector<CVec3> places;
 		bool bPlaces = Singleton<IScenarioTracker>()->GetObjectivePlaces( nID, &places);
 		if ( bPlaces )
 		{
@@ -782,9 +782,9 @@ void CVisualNotifications::UpdateMarkers()
 	pMiniMap->SetMarkers( markers );
 }
 
-void CVisualNotifications::OnBtn( const string &szSender, bool bRightBtn )
+void CVisualNotifications::OnBtn( const std::string &szSender, bool bRightBtn )
 {
-	for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); ++it )
+	for ( std::list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); ++it )
 	{
 		SEvent *pEvent = *it;
 		
@@ -845,7 +845,7 @@ void CVisualNotifications::InitEvents( IWindow *_pParent )
 	if ( const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot() )
 	{
 		dbEvents.resize( NDb::NEVT_COUNT );
-		for ( vector< CDBPtr< NDb::SNotificationEvent > >::const_iterator it = pGameRoot->notificationEvents.begin();
+		for ( std::vector< CDBPtr< NDb::SNotificationEvent > >::const_iterator it = pGameRoot->notificationEvents.begin();
 			it != pGameRoot->notificationEvents.end(); ++it )
 		{
 			if ( const NDb::SNotificationEvent *pDBEvent = *it )
@@ -891,7 +891,7 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 		pIconWnd->SetTexture( pDBEvent->pTexture );
 	if ( pDescView )
 	{
-		wstring wszFormat = InterfaceState()->GetMissionConsoleMLTag();
+		std::wstring wszFormat = InterfaceState()->GetMissionConsoleMLTag();
 		pDescView->SetText( pDescView->GetDBText() + wszFormat + pEvent->wszText );
 	}
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBEvent->,Tooltip) )
@@ -909,7 +909,7 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 void CVisualNotifications::UpdateEvents( float fDeltaTime )
 {
 	int nCount = 0;
-	for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
+	for ( std::list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
 	{
 		SEvent *pEvent = *it;
 
@@ -927,7 +927,7 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 	
 	if ( nCount > nMaxEventCount )
 	{
-		for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
+		for ( std::list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
 		{
 			if ( nCount <= nMaxEventCount )
 				break;
@@ -952,7 +952,7 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 void CVisualNotifications::RearrangeEvents()
 {
 	int nPos = nEventBottom - nEventItemHeight;
-	for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); ++it )
+	for ( std::list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); ++it )
 	{
 		SEvent *pEvent = *it;
 		
@@ -1016,7 +1016,7 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			const int nLocalPlayer = 0;
 
-			vector<CInterfaceArmyBranchDlg::SBranch> branches;
+			std::vector<CInterfaceArmyBranchDlg::SBranch> branches;
 
 			for ( int i = 0; i < NDb::_RT_NONE; ++i )
 			{
@@ -1068,7 +1068,7 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 			const int nLocalPlayer = 0;
 			const NDb::SReinforcement *pReinf = Singleton<IScenarioTracker>()->GetReinforcement( 
 				nLocalPlayer, (NDb::EReinforcementType)( pEvent->nID ) );
-			wstring wszText = InterfaceState()->GetTextEntry( "T_NOTIFICATIONS_LEVELUP_HEADER" );
+			std::wstring wszText = InterfaceState()->GetTextEntry( "T_NOTIFICATIONS_LEVELUP_HEADER" );
 			if ( pReinf )
 			{
 				if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
@@ -1180,7 +1180,7 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 void CVisualNotifications::RemoveEvent( NDb::ENotificationEventType eEventType, int nID )
 {
 	bool bRemove = false;
-	for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
+	for ( std::list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); )
 	{
 		SEvent *pEvent = *it;
 		
@@ -1316,7 +1316,7 @@ void CVisualNotifications::PlaceMarker( const CVec2 &vPos )
 	bShowMPMarker = true;
 	vMPMarkerPos = vPos;
 
-	vector<CVec3> places;
+	std::vector<CVec3> places;
 	places.resize( 1, CVec3( vPos, Singleton<IAILogic>()->GetZ( vPos ) ) );
 	RemoveObjectivePointers( MP_MARKER_POINTER_ID );
 	AddPointerModels( MP_MARKER_POINTER_ID, places );

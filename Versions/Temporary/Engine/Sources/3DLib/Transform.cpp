@@ -663,7 +663,7 @@ bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter,
 			Get().forward.RotateHVectorTransposed( &vClipPlane, viewFrustrum[k] );
 			if ( !ClipPolygon( *pSrc, vClipPlane, pDst ) )
 				goto NextPolygon;
-			swap( pSrc, pDst );
+			std::swap( pSrc, pDst );
 		}
 		return true; // intersects
 NextPolygon: ;

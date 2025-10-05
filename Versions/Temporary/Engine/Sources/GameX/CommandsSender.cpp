@@ -7,6 +7,8 @@
 #include "Main/MainLoop.h"
 #include "ScenarioTracker.h"
 
+#include <algorithm>
+
 #ifndef _FINALRELEASE
 static int AUTOSAVE_ID = 0;
 #endif
@@ -24,12 +26,12 @@ CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -
 }
 
 // register group of units to AI
-int CCommandsSender::CommandRegisterGroup( const vector<int> &_vIDs )
+int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 {
 	if ( !bHistoryPlaying )
 	{
-		vector<int> vIDs = _vIDs;
-		sort( vIDs.begin(), vIDs.end() );
+		std::vector<int> vIDs = _vIDs;
+		std::sort( vIDs.begin(), vIDs.end() );
 
 		if ( !Singleton<IAILogic>()->NeedNewGroupNumber() && vIDs == lastGroup )
 			return nLastGroupID;

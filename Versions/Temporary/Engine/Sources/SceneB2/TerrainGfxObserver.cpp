@@ -8,9 +8,9 @@
 
 static bool bDisableRivers = false;
 
-bool HasVSO( const int nID, const vector<NDb::SVSOInstance> &instances )
+bool HasVSO( const int nID, const std::vector<NDb::SVSOInstance> &instances )
 {
-	for ( vector<NDb::SVSOInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
 			return true;
@@ -18,9 +18,9 @@ bool HasVSO( const int nID, const vector<NDb::SVSOInstance> &instances )
 	return false;
 }
 
-bool HasSpotVSO( const int nID, const vector<NDb::STerrainSpotInstance> &instances )
+bool HasSpotVSO( const int nID, const std::vector<NDb::STerrainSpotInstance> &instances )
 {
-	for ( vector<NDb::STerrainSpotInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
+	for ( std::vector<NDb::STerrainSpotInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
 	{
 		if ( it->nSpotID == nID )
 			return true;
@@ -29,9 +29,9 @@ bool HasSpotVSO( const int nID, const vector<NDb::STerrainSpotInstance> &instanc
 }
 
 template <class TYPE>
-bool RemoveVSO( const int nID, vector<TYPE> &vsos )
+bool RemoveVSO( const int nID, std::vector<TYPE> &vsos )
 {
-	for ( vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
+	for ( std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
 		if ( it->GetID() == nID ) 
 		{
@@ -43,9 +43,9 @@ bool RemoveVSO( const int nID, vector<TYPE> &vsos )
 }
 
 template <class TYPE>
-bool UpdateVSO( const int nVSOID, vector<TYPE> &vsos, NGScene::IGameView *pGameView )
+bool UpdateVSO( const int nVSOID, std::vector<TYPE> &vsos, NGScene::IGameView *pGameView )
 {
-	for ( vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
+	for ( std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
 		if ( it->GetID() == nVSOID ) 
 		{
@@ -56,9 +56,9 @@ bool UpdateVSO( const int nVSOID, vector<TYPE> &vsos, NGScene::IGameView *pGameV
 	return false;
 }
 
-void CSceneTerrain::UpdatePatchGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd )
+void CSceneTerrain::UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd )
 {
-	vector<NMeshData::SMeshData> &meshData = *pMeshData;
+	std::vector<NMeshData::SMeshData> &meshData = *pMeshData;
 	patches[nPatchInd].resize( meshData.size() );
 
 	SFBTransform placement;
@@ -82,9 +82,9 @@ void CSceneTerrain::UpdatePatchGeometry( vector<NMeshData::SMeshData> *pMeshData
 	}
 }
 
-void CSceneTerrain::UpdateBorderGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nBorderID )
+void CSceneTerrain::UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nBorderID )
 {
-	vector<NMeshData::SMeshData> &meshData = *pMeshData;
+	std::vector<NMeshData::SMeshData> &meshData = *pMeshData;
 	terraBorders[nBorderID].resize( meshData.size() );
 
 	SFBTransform placement;
@@ -143,7 +143,7 @@ void CSceneTerrain::AddRoad( SRoadGFXInfo *pGfxInfo )
 bool CSceneTerrain::UpdateRoad( const int nVSOID )
 {
 	bool bResult = false;
-	for ( vector<CRoad>::iterator it = roads.begin(); it != roads.end(); ++it )
+	for ( std::vector<CRoad>::iterator it = roads.begin(); it != roads.end(); ++it )
 	{
 		if ( it->GetID() == nVSOID ) 
 		{
@@ -157,7 +157,7 @@ bool CSceneTerrain::UpdateRoad( const int nVSOID )
 
 void CSceneTerrain::RemoveRoad( const int nVSOID )
 {
-	for ( vector<CRoad>::iterator it = roads.begin(); it != roads.end(); )
+	for ( std::vector<CRoad>::iterator it = roads.begin(); it != roads.end(); )
 	{
 		if ( it->GetID() == nVSOID )
 			it = roads.erase( it );
@@ -180,7 +180,7 @@ void CSceneTerrain::AddPeak( SPeakGFXInfo *pGfxInfo )
 
 bool CSceneTerrain::UpdatePeak( const int nVSOID )
 {
-	for ( vector<CPeak>::iterator it = peaks.begin(); it != peaks.end(); ++it )
+	for ( std::vector<CPeak>::iterator it = peaks.begin(); it != peaks.end(); ++it )
 	{
 		if ( it->GetID() == nVSOID ) 
 		{
@@ -217,7 +217,7 @@ void CSceneTerrain::AddFoot( SFootGFXInfo *pGfxInfo )
 bool CSceneTerrain::UpdateFoot( const int nVSOID )
 {
 	bool bFlag = false;
-	for ( vector<CFoot>::iterator it = foots.begin(); it != foots.end(); ++it )
+	for ( std::vector<CFoot>::iterator it = foots.begin(); it != foots.end(); ++it )
 	{
 		if ( it->GetID() == nVSOID ) 
 		{
@@ -230,7 +230,7 @@ bool CSceneTerrain::UpdateFoot( const int nVSOID )
 
 void CSceneTerrain::RemoveFoot( const int nVSOID )
 {
-	for ( vector<CFoot>::iterator it = foots.begin(); it != foots.end(); )
+	for ( std::vector<CFoot>::iterator it = foots.begin(); it != foots.end(); )
 	{
 		if ( it->GetID() == nVSOID )
 			it = foots.erase( it );

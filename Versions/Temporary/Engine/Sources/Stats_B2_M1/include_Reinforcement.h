@@ -13,7 +13,7 @@ const bool IsAviation() const
 
 const bool HasPlanes() const
 {
-	for( vector<SReinforcementEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+	for( std::vector<SReinforcementEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
 		const SReinforcementEntry &entry = *it;
 		if ( !entry.pMechUnit )

@@ -1,8 +1,8 @@
 int GetSizeX() const { return data.empty() ? 0 : data[0].data.size(); }
 int GetSizeY() const { return data.size(); }
 
-const vector<int> &operator[]( const int nIndex ) const { return data[nIndex].data; }
-vector<int> &operator[]( const int nIndex ) { return data[nIndex].data; }
+const std::vector<int> &operator[]( const int nIndex ) const { return data[nIndex].data; }
+std::vector<int> &operator[]( const int nIndex ) { return data[nIndex].data; }
 void SetSizes( const int nSizeX, const int nSizeY )
 {
 	data.resize( nSizeY );
@@ -25,7 +25,7 @@ void PostLoad( bool bInEditor )
 		if ( !bInEditor )
 		{
 			const int nSizeY = GetSizeY();
-			vector<SByteArray1> newData( nSizeX );
+			std::vector<SByteArray1> newData( nSizeX );
 			for ( int i = 0; i < nSizeX; ++i )
 				newData[i].data.resize( nSizeY );
 			//

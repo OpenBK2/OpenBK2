@@ -48,15 +48,15 @@ struct SSimpleInterval
 		: pSrc(&_src), fEnter(_fEnter), fExit(_fExit), nUserID(_nUserID) {}
 };
 
-void SortSimpleIntervals( vector<SSimpleInterval> *pRes );
-void SortIntervals( vector<SInterval> *pRes );
-void FillIntersectionResults( vector<SInterval> *pRes,
-	vector<SInterval::SCrossPoint> *pEnter, 
-	vector<SInterval::SCrossPoint> *pExit,
+void SortSimpleIntervals( std::vector<SSimpleInterval> *pRes );
+void SortIntervals( std::vector<SInterval> *pRes );
+void FillIntersectionResults( std::vector<SInterval> *pRes,
+	std::vector<SInterval::SCrossPoint> *pEnter,
+	std::vector<SInterval::SCrossPoint> *pExit,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain );
-void FillIntersectionResults( vector<SSimpleInterval> *pRes,
-	vector<float> *pEnter, 
-	vector<float> *pExit,
+void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
+	std::vector<float> *pEnter,
+	std::vector<float> *pExit,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain );
 
 }

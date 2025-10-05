@@ -50,7 +50,7 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission, CReinforcem
 
 	// find out what reinforcement types are allowed in this map
 	pMissionReinf->clear();
-	for( vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pCurMission->players[nPlayer].reinforcementTypes.begin();
+	for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pCurMission->players[nPlayer].reinforcementTypes.begin();
 		it != pCurMission->players[nPlayer].reinforcementTypes.end(); ++it )
 	{
 		if ( *it )
@@ -146,7 +146,7 @@ void CScenarioTracker::MapStart()
 
 	if ( !pChapter && pMission )			// Map started directly
 	{
-		for( vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[0].reinforcementTypes.begin();
+		for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[0].reinforcementTypes.begin();
 			it != pMission->players[0].reinforcementTypes.end(); ++it )
 		{
 			NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player 0" ) );
@@ -156,7 +156,7 @@ void CScenarioTracker::MapStart()
 
 		if ( nMainEnemy >= 0 )
 		{
-			for( vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[nMainEnemy].reinforcementTypes.begin();
+			for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[nMainEnemy].reinforcementTypes.begin();
 				it != pMission->players[nMainEnemy].reinforcementTypes.end(); ++it )
 			{
 				NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player %d", nMainEnemy ) );
@@ -237,7 +237,7 @@ void CScenarioTracker::CustomMissionStart( const NDb::SMapInfo * _pMission, int 
 	//pLastMission = 0;
 	bMissionWon = false;
 	bIsTutorial = bTutorial;
-	nDifficulty = Clamp( _nDifficulty, 0, _pMission ? _pMission->customDifficultyLevels.size() - 1 : 0 );
+	nDifficulty = Clamp<int>( _nDifficulty, 0, _pMission ? _pMission->customDifficultyLevels.size() - 1 : 0 );
 
 	MapStart();
 }
@@ -523,7 +523,7 @@ int CScenarioTracker::GetMissionRecommendedReinfCalls() const
 {
 	if ( pChapter && pMission )
 	{
-		for ( vector< NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin(); 
+		for ( std::vector< NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin();
 			it != pChapter->missionPath.end(); ++it )
 		{
 			const NDb::SMissionEnableInfo &info = *it;
@@ -548,12 +548,12 @@ bool CScenarioTracker::IsOnlyRecommendedReinfCalls() const
 
 void CScenarioTracker::ClearMissionScriptVars()
 {
-	const string szPrefix = "temp.";
-	vector<string> globalVars;
+	const std::string szPrefix = "temp.";
+	std::vector<std::string> globalVars;
 	NGlobal::GetIDList( &globalVars );
-	for ( vector<string>::iterator it = globalVars.begin(); it != globalVars.end(); ++it )
+	for ( std::vector<std::string>::iterator it = globalVars.begin(); it != globalVars.end(); ++it )
 	{
-		const string &szName = *it;
+		const std::string &szName = *it;
 		if ( szName.compare( 0, szPrefix.size(), szPrefix ) == 0 )
 		{
 			NGlobal::RemoveVar( szName );
@@ -568,7 +568,7 @@ void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 
 	_pMissions->clear();
 
-	hash_map<CDBID/*mission dbid*/,int/*nMissions to enable*/> missionsToEnable;
+	std::unordered_map<CDBID/*mission dbid*/,int/*nMissions to enable*/> missionsToEnable;
 	for ( int i = 0; i < pChapter->missionPath.size(); ++i )
 	{
 		const NDb::SMapInfo *pMap = pChapter->missionPath[i].pMap;
@@ -672,7 +672,7 @@ void CScenarioTracker::CampaignStart( const NDb::SCampaign *_pCampaign, const in
 
 	if ( pCampaign )
 	{
-		nDifficulty = Clamp( _nDifficulty, 0, pCampaign->difficultyLevels.size() - 1 );
+		nDifficulty = Clamp<int>( _nDifficulty, 0, pCampaign->difficultyLevels.size() - 1 );
 
 		freeLeaders.resize( pCampaign->leaders.size() );
 		for ( int i = 0; i < pCampaign->leaders.size(); ++i )
@@ -896,7 +896,7 @@ float CScenarioTracker::GetReinforcementXPForLevel( NDb::EReinforcementType eTyp
 			continue;
 		if ( pLevels->eDBType != eType )
 			continue;
-		int nCheckedLevel = Min( pLevels->levels.size() - 1, nLevel );
+		int nCheckedLevel = Min<int>( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
 			break;
 
@@ -960,13 +960,13 @@ void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjective
 
 	if ( objectives[nID] == EMOS_WAITING && eState != EMOS_WAITING )
 	{
-		vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
+		std::vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
 		if ( it == known_objectives.end() )
 			known_objectives.push_back( nID );
 	}
 	else if ( objectives[nID] != EMOS_WAITING && eState == EMOS_WAITING )
 	{
-		vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
+		std::vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
 		if ( it != known_objectives.end() )
 			known_objectives.erase( it );
 	}
@@ -979,7 +979,7 @@ void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjective
 	objectives[nID] = eState;
 }
 
-bool CScenarioTracker::GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const
+bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
 {
 	CObjectivesObjects::const_iterator it = objectivesObjects.find( nID );
 	if ( it != objectivesObjects.end() )
@@ -1017,10 +1017,10 @@ bool CScenarioTracker::GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) con
 	return true;
 }
 
-void CScenarioTracker::SetObjectiveObjects( int nID, const vector< CMapObj* > &objects )
+void CScenarioTracker::SetObjectiveObjects( int nID, const std::vector< CMapObj* > &objects )
 {
-	objectivesObjects.resize( objects.size() );
-	CObjectivesObjects::iterator it = objectivesObjects.insert( pair< int, CObjectiveObjects >( nID, CObjectiveObjects() ) ).first;
+	objectivesObjects.rehash( objects.size() );
+	CObjectivesObjects::iterator it = objectivesObjects.insert( std::pair< int, CObjectiveObjects >( nID, CObjectiveObjects() ) ).first;
 	CObjectiveObjects &objectiveObjects = it->second;
 	objectiveObjects.resize( objects.size() );
 	for ( int i = 0; i < objects.size(); ++i )
@@ -1046,7 +1046,7 @@ IScenarioTracker::EReinforcementState CScenarioTracker::GetReinforcementEnableSt
 		return ERS_DISABLED;
 }
 
-void CScenarioTracker::GetChapterCurrentReinforcements( vector<SChapterReinf> *pReinf, int nPlayer ) const
+void CScenarioTracker::GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const
 {
 	if ( nPlayer == 0 )
 		*pReinf = chapterCurrentReinfs;
@@ -1103,7 +1103,7 @@ void CScenarioTracker::SearchPotentialReinforcements()
 		else if ( playerReinfPotential[i] == ERS_NOT_ENABLED )
 		{
 			EReinforcementState eState = ERS_DISABLED;
-			for( vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = GetCurrentMission()->players[0].reinforcementTypes.begin();
+			for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = GetCurrentMission()->players[0].reinforcementTypes.begin();
 				it != GetCurrentMission()->players[0].reinforcementTypes.end(); ++it )
 			{
 				NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player 0" ));
@@ -1795,11 +1795,11 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetLeaderModifier( int nPlayer,
 		return 0;
 
 	NI_ASSERT( 0 <= it->second.info.nRank && it->second.info.nRank < pCampaign->leaderRanks.size(), StrFmt( "Rank index (%d) out of range (0..%d)", it->second.info.nRank, pCampaign->leaderRanks.size() ) );
-	const int nRank = Clamp( it->second.info.nRank, 0, pCampaign->leaderRanks.size()-1 );
+	const int nRank = Clamp<int>( it->second.info.nRank, 0, pCampaign->leaderRanks.size()-1 );
 	return pCampaign->leaderRanks[nRank].pStatsBonus;
 }
 
-const wstring& CScenarioTracker::GetLeaderRankName( int nRank ) const
+const std::wstring& CScenarioTracker::GetLeaderRankName( int nRank ) const
 {
 	if ( pCampaign )
 	{
@@ -1811,7 +1811,7 @@ const wstring& CScenarioTracker::GetLeaderRankName( int nRank ) const
 		}
 	}
 	
-	static wstring wszEmpty;
+	static std::wstring wszEmpty;
 	return wszEmpty;
 }
 
@@ -1862,7 +1862,7 @@ bool CScenarioTracker::GiveXPToPlayer( const int nPlayer, const int nXP )
 	return false;
 }
 
-void CScenarioTracker::GetAllMissionStats( vector<const SMissionStats*> *pMissions ) const
+void CScenarioTracker::GetAllMissionStats( std::vector<const SMissionStats*> *pMissions ) const
 {
 	if ( !pMissions )
 		return;
@@ -1910,9 +1910,9 @@ void CScenarioTracker::GetLastVisiblePlayerStatsExp( float *pCareer, float *pNex
 	*pNextRank = fLastVisiblePlayerStatsExpNextRank;
 }
 
-wstring CScenarioTracker::GetReinfName( NDb::EReinforcementType eType ) const
+std::wstring CScenarioTracker::GetReinfName( NDb::EReinforcementType eType ) const
 {
-	wstring wszReinf;
+	std::wstring wszReinf;
 	if ( eType == NDb::_RT_NONE )
 		return wszReinf;
 
@@ -1940,7 +1940,7 @@ const NDb::SUnitStatsModifier* CScenarioTracker::GetPlayerChapterModifier( NDb::
 
 }
 
-static void AddPromotions( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void AddPromotions( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() ) 

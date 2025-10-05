@@ -10,8 +10,8 @@ namespace NDb
 namespace NObjectIDAllocator
 {
 
-static string s_szObjectIDFolderName;
-void SetObjectRecordIDsFolderName( const string &szFolderName )
+static std::string s_szObjectIDFolderName;
+void SetObjectRecordIDsFolderName( const std::string &szFolderName )
 {
 	s_szObjectIDFolderName = szFolderName;
 }
@@ -21,7 +21,7 @@ class CFileLockHolder
 	HANDLE lock;
 
 public:
-	CFileLockHolder( const string &szFileLockName )
+	CFileLockHolder( const std::string &szFileLockName )
 	{
 		do
 		{
@@ -39,17 +39,17 @@ public:
 
 };
 
-int AllocateNewObjectID( const string &szClassTypeName )
+int AllocateNewObjectID( const std::string &szClassTypeName )
 {
 	if ( s_szObjectIDFolderName.empty() )
 		return -1;
-	string szFolderName = s_szObjectIDFolderName;
+	std::string szFolderName = s_szObjectIDFolderName;
 	if ( szFolderName[szFolderName.size() - 1] != '\\' && szFolderName[szFolderName.size() - 1] != '/' )
 		szFolderName += '\\';
 	// create lock
 	CFileLockHolder fileLockHolder( szFolderName + "ObjectIDs.lock" );
 	// allocate new object ID
-	const string szFileName = szFolderName + "ObjectIDs.ini";
+	const std::string szFileName = szFolderName + "ObjectIDs.ini";
 	char buffer[1024];
 	GetPrivateProfileString( "ClassTypeIDs", szClassTypeName.c_str(), "1000000", buffer, 1024, szFileName.c_str() );
 	const int nObjectRecordID = buffer[0] == 0 ? 1000000 : NStr::ToInt( buffer );

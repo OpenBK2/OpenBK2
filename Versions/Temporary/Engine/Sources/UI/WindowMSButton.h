@@ -122,12 +122,12 @@ class CWindowMSButton : public CWindow, public IButton
 	CPtr<NDb::SWindowMSButton> pInstance;
 	CDBPtr<NDb::SWindowMSButtonShared> pShared;
 	
-	vector<CButtonState> states;
+	std::vector<CButtonState> states;
 	//vector<CObj<IWindow> > wins;
 	// dynamic data
 	//IButtonNotify * pButtonNotify;
 	CPtr<IButtonNotify> pButtonNotify;
-	vector<int> bPressed;
+	std::vector<int> bPressed;
 	bool bMouseEntered;
 	int nAnimationID;
 	// end dynamic data
@@ -139,7 +139,7 @@ class CWindowMSButton : public CWindow, public IButton
 	NDb::EButtonSubstateType eOrigSubState;
 
 //	CObj<class CPlacedText> pPlacedText;
-	wstring wszCustomText;
+	std::wstring wszCustomText;
 private:
 	void OnEnter( const int nButton );
 	void OnLeave( const int nButton );
@@ -163,12 +163,12 @@ protected:
 	}
 
 	//{ overrided
-	const wstring& GetDBFormatText() const;
-	const wstring& GetDBInstanceText() const;
+	const std::wstring& GetDBFormatText() const;
+	const std::wstring& GetDBInstanceText() const;
 	const NDb::SWindowPlacement* GetDBTextPlacement() const;
 	//}
 public:
-	void SetTextString( const wstring &wszText );
+	void SetTextString( const std::wstring &wszText );
 	void SetOutline( const CDBID &outlineType );
 	void Visit( struct IUIVisitor *pVisitor );
 
@@ -199,7 +199,7 @@ public:
 	class CButtonGroup* GetButtonGroup();
 	void SetButtonGroup( const int nGroup );
 	void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect );
-	int GetState( const string &szName );
+	int GetState( const std::string &szName );
 	void SetTexture( const struct NDb::STexture *pDesc );
 
 	//enabled / disabled

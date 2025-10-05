@@ -70,12 +70,12 @@ void CICTestScreen::Configure( const char *pszConfig )
 }
 
 
-void StartTestScreen( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() ) 
 	{
-		const string szVal = NStr::ToMBCS( paramsSet[0] );
+		const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 		NMainLoop::Command( ML_COMMAND_TEST_SCREEN, szVal.c_str() );
 	}
 #endif //_FINALRELEASE

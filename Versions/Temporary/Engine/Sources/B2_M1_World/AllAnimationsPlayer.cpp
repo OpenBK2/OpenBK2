@@ -4,7 +4,7 @@
 #include "MapObj.h"
 #include "Main/GameTimer.h"
 
-CAllAnimationsPlayer::CAllAnimationsPlayer( const hash_map<int, CObj<CMapObj> > &_objects )
+CAllAnimationsPlayer::CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj> > &_objects )
 : objects( _objects ), bSwitchToNextAnimation( true )
 {
 }
@@ -12,15 +12,15 @@ CAllAnimationsPlayer::CAllAnimationsPlayer( const hash_map<int, CObj<CMapObj> > 
 void CAllAnimationsPlayer::Update()
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
-	list<int> toDelete;
-	for ( hash_map<int, CObj<CMapObj> >::iterator iter = objects.begin(); iter != objects.end(); ++iter )
+	std::list<int> toDelete;
+	for ( std::unordered_map<int, CObj<CMapObj> >::iterator iter = objects.begin(); iter != objects.end(); ++iter )
 	{
 		SAnimationInfo &animInfo = playingAnimations[iter->first];
 		if ( bSwitchToNextAnimation || ( animInfo.nStartNextAnimTime < curTime && !animInfo.bLooped ) )
 		{
 			CMapObj *pObj = iter->second;
 
-			pair<int, bool> animDuration;
+			std::pair<int, bool> animDuration;
 			int nStartAnim = animInfo.nAnimation;
 			do
 			{

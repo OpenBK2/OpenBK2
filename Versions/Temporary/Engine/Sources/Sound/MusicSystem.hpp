@@ -34,11 +34,11 @@ class CMusicSystem : public IMusicSystem
 
 
 	int nPlayList;
-	vector<CPtr<CPlayList> > playlists;
+	std::vector<CPtr<CPlayList> > playlists;
 	CPtr<CTrack> pVoiceTrack;
-	vector<float> volumes;
-	vector<int> pauses;
-	vector<int> channels;
+	std::vector<float> volumes;
+	std::vector<int> pauses;
+	std::vector<int> channels;
 
 	CFades fades;
 	int nDesiredPlayList;

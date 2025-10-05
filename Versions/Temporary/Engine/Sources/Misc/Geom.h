@@ -257,8 +257,8 @@ struct SVector
 			return VNULL2;
 	}
 	//
-	void TurnLeft()	 { swap( x, y ); x = -x; }
-	void TurnRight() { swap( x, y ); y = -y; }
+	void TurnLeft()	 { std::swap( x, y ); x = -x; }
+	void TurnRight() { std::swap( x, y ); y = -y; }
 
 	void TurnLeftUntilAxis()
 	{

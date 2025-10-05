@@ -6,6 +6,8 @@
 #include "System/Commands.h"
 #include "System/VFSOperations.h"
 
+#include <algorithm>
+
 
 //#include <VTuneAPI.h>
 //#pragma comment (lib, "vtuneapi.lib")
@@ -267,7 +269,7 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 		ord.nPrevNum = k;
 		ord.nPriority = pDesc->pTerraSet->terraTypes[k]->pMaterial->nPriority;
 	}
-	sort( tilesOrder.begin(), tilesOrder.end() );
+	std::sort( tilesOrder.begin(), tilesOrder.end() );
 
 	const int nBlurX1 = max( nX1 - DEF_TILES_BLUR_FILTER_HX, 0 );
 	const int nBlurY1 = max( nY1 - DEF_TILES_BLUR_FILTER_HX, 0 );

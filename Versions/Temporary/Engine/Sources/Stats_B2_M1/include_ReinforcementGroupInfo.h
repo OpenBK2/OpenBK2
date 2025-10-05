@@ -1,6 +1,6 @@
 int GetGroupById( const int scriptID ) const
 {
-	for ( vector< SReinforcementGroupInfoEntry >::const_iterator it = infos.begin(); it != infos.end(); ++it )
+	for ( std::vector< SReinforcementGroupInfoEntry >::const_iterator it = infos.begin(); it != infos.end(); ++it )
 	{
 		int i = 0; 
 		while( i < it->groupsVector.data.size() && it->groupsVector.data[i] != scriptID )
@@ -10,7 +10,7 @@ int GetGroupById( const int scriptID ) const
 	}
 	return -1;
 
-/*	for( hash_map< int, vector<int> >::const_iterator it = groups.begin(); it != groups.end(); ++it )
+/*	for( hash_map< int, std::vector<int> >::const_iterator it = groups.begin(); it != groups.end(); ++it )
 	{
 		int i = 0;
 		while ( i < it->second.size() && it->second[i] != scriptID )

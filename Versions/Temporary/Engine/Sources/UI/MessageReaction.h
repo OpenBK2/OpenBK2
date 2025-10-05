@@ -6,15 +6,15 @@
 
 #include "IMessageReaction.h"
 
-typedef vector< CPtr<IMessageReactionB2> > CMessageSequence;
-typedef vector< CDBPtr<NDb::SUIDesc> > CMessageSequienceDesc;
+typedef std::vector< CPtr<IMessageReactionB2> > CMessageSequence;
+typedef std::vector< CDBPtr<NDb::SUIDesc> > CMessageSequienceDesc;
 
 
 // 1 check (branches) and sequience of atim reactions for each branch
 class CMessageReactionB2 : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CMessageReactionB2 );
-	typedef hash_map<int/*custom check return*/, CMessageSequence> CMessageSequences;
+	typedef std::unordered_map<int/*custom check return*/, CMessageSequence> CMessageSequences;
 
 	CPtr<IMessageCheck> pCheck;
 	CMessageSequences branches;

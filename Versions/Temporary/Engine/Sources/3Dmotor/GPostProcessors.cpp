@@ -7,7 +7,7 @@
 namespace NGScene
 {
 
-static void DoRender( NGfx::CRenderContext *pRC, const vector<IPostProcess::SObject> &render )
+static void DoRender( NGfx::CRenderContext *pRC, const std::vector<IPostProcess::SObject> &render )
 {
 	for ( int k = 0; k < render.size(); ++k )
 	{
@@ -60,21 +60,21 @@ void RenderPostProcess( NGfx::CRenderContext *pRC, const SPostProcessData &data 
 
 // CPostColorer
 
-void CPostColorer::Render( SPostProcessData *pDst, const vector<SObject> &render )
+void CPostColorer::Render( SPostProcessData *pDst, const std::vector<SObject> &render )
 {
 	pColor.Refresh();
 	const CVec4 &vColor = pColor->GetValue();
-	vector<IPostProcess::SObject> &dst = pDst->postColorer[ vColor ];
+	std::vector<IPostProcess::SObject> &dst = pDst->postColorer[ vColor ];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
 
 // COccludedColorer
 
-void COccludedColorer::Render( SPostProcessData *pDst, const vector<SObject> &render )
+void COccludedColorer::Render( SPostProcessData *pDst, const std::vector<SObject> &render )
 {
 	pColor.Refresh();
 	const CVec4 &vColor = pColor->GetValue();
-	vector<IPostProcess::SObject> &dst = pDst->occluded[ vColor ];
+	std::vector<IPostProcess::SObject> &dst = pDst->occluded[ vColor ];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
 

@@ -18,7 +18,7 @@ static const int SMALL_PATH_TILES_COUNT = MAX_PATH_TILES_COUNT/4;
 //стандартный сдвиг точек на статическом пути
 static const int STATIC_PATH_SHIFT = 10;
 // p.s. максимальное количество тайлов, которое можно записать - MAX_PATH_TILES_COUNT - ( 2 x MAX_LOOK_FORWARD_POINTS )
-static vector<SVector> pathBuffer( MAX_PATH_TILES_COUNT );
+static std::vector<SVector> pathBuffer( MAX_PATH_TILES_COUNT );
 
 #define INVALID_TILE SVector( -1, -1 )
 
@@ -268,10 +268,10 @@ void CStandartPath2::Shift( const int _nShift )
 	}
 }
 
-void CStandartPath2::InsertTiles( const list<SVector> &tiles )
+void CStandartPath2::InsertTiles( const std::list<SVector> &tiles )
 {
 	insTiles.clear();
-	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		insTiles.push_back( *it );
 	nCurInsTile = 0;
 }
@@ -318,7 +318,7 @@ void CStandartPath2::RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater
 
 void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) const
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 
 	if ( IsFinished() )
 		return;

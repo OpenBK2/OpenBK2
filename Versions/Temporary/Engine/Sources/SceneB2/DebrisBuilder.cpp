@@ -42,7 +42,7 @@ static void SmoothMaskMedium( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
 	// init noises
-	vector<CNoiseAccessor> smoothNoises;
+	std::vector<CNoiseAccessor> smoothNoises;
 	smoothNoises.reserve( 2 );
 	const unsigned char nSmoothNoise = 9;
 	for ( int k = 0; k < 2; ++k )
@@ -106,13 +106,13 @@ static void SmoothMaskBlur( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, 
 	}
 }
 
-void CTerraGen::CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+void CTerraGen::CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
 															const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 															const NDebrisBuilder::EMaskSmoothType smoothType )
 {
 	// load model
-	vector<CVec3> verts;
-	vector<STriangle> trgs;
+	std::vector<CVec3> verts;
+	std::vector<STriangle> trgs;
 	CVec3 vMin, vMax;
 	LoadGrannyModel( szFileName, &verts, &trgs, &vMin, &vMax );
 	if ( verts.empty() || trgs.empty() )
@@ -161,7 +161,7 @@ void CTerraGen::CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, 
 
 	const float fDist = maskType != NDebrisBuilder::MASK_DYNAMIC ? DEF_DEBRIS_HEIGHT_DISPERSION : ( vMax.z - vMin.z ) + DEF_DEBRIS_HEIGHT_DISPERSION;
 
-	for ( vector<STriangle>::const_iterator it = trgs.begin(); it != trgs.end(); ++it )
+	for ( std::vector<STriangle>::const_iterator it = trgs.begin(); it != trgs.end(); ++it )
 	{
 		const int x1 = Clamp( int((verts[it->i1].x - vMin.x) * fScaleCoeffX) + nTexOffs, 0, mask.GetSizeX() - 1 );
 		const int y1 = Clamp( int((verts[it->i1].y - vMin.y) * fScaleCoeffY) + nTexOffs, 0, mask.GetSizeY() - 1 );

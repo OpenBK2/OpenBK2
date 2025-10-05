@@ -4,7 +4,7 @@
 #include "SceneInternal.h"
 #include "Main/GameTimer.h"
 
-IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const string &szBoneName )
+IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const std::string &szBoneName )
 {
 	// try to find the bone in attached objects
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
@@ -31,7 +31,7 @@ IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const string &s
 	return 0;
 }
 
-NAnimation::ISkeletonAnimator* CScene::GetAnimator( const int nTargetID, const string &szBoneName )
+NAnimation::ISkeletonAnimator* CScene::GetAnimator( const int nTargetID, const std::string &szBoneName )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nTargetID );
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -53,7 +53,7 @@ CFuncBase<SBound> *CScene::GetObjectBounder( const int nID )
 	return pos == data[eScene]->visObjects.end() ? 0 : pos->second->GetBounder();
 }
 
-CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const string &szBoneName )
+CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const std::string &szBoneName )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nTargetID );
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -69,7 +69,7 @@ CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const 
 	return 0;
 }
 
-bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime time,
+bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime time,
 															CFuncBase<SFBTransform> **pTransform, int *pnBoneIndex, const bool bConstantOffset )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nTargetID, szBoneName );
@@ -139,7 +139,7 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 		break;
 	case ESAT_REPLACE_ON_BONE:
 		{
-			list<int> toErase;
+			std::list<int> toErase;
 			for ( SModelVisObjDesc::TAttachOfOneType::iterator it = attaches.begin(); it != attaches.end(); ++it )
 			{
 				IAttachedObject *pAttachedObj = it->second;
@@ -150,7 +150,7 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 				}
 			}
 
-			for ( list<int>::iterator iter = toErase.begin(); iter != toErase.end(); ++iter )
+			for ( std::list<int>::iterator iter = toErase.begin(); iter != toErase.end(); ++iter )
 				attaches.erase( *iter );
 		}
 
@@ -165,7 +165,7 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 	return true;
 }
 
-void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset )
+void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;
@@ -251,7 +251,7 @@ void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, CFuncBas
 	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
 }
 
-void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical )
+void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;
@@ -261,7 +261,7 @@ void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const st
 	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
 }
 
-void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
+void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;

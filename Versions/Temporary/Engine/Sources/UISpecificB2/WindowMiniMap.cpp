@@ -326,7 +326,7 @@ bool CWindowMiniMap::ScreenToMap( const CVec2 &vPos, CVec2 *pvRes )
 
 	if ( vPos.x < screenToMap.GetSizeX() && vPos.y < screenToMap.GetSizeY() && vPos.x >= 0 && vPos.y >= 0 )
 	{
-		const pair<CVec2, bool> & result = screenToMap[(int)vPos.y][(int)vPos.x];
+		const std::pair<CVec2, bool> & result = screenToMap[(int)vPos.y][(int)vPos.x];
 		*pvRes = result.first;
 		return result.second;
 	}
@@ -616,7 +616,7 @@ bool CWindowMiniMap::IsActiveArea( const CVec2 &vPos ) const
 	CVec2 vSize( rect.GetSizeX(), rect.GetSizeY() );
 	CVec2 vCenter( vSize * 0.5f );
 
-	vector<CVec2> poligon;
+	std::vector<CVec2> poligon;
 	poligon.resize( 4 );
 	poligon[0] = rotableTransform.RotateBackgroundPos( CVec2( -vRotableBackgroundSize.x / 2, -vRotableBackgroundSize.y / 2 ) ) + vCenter;
 	poligon[1] = rotableTransform.RotateBackgroundPos( CVec2( vRotableBackgroundSize.x / 2, -vRotableBackgroundSize.y / 2 ) ) + vCenter;
@@ -820,7 +820,7 @@ bool CWindowMiniMap::MsgMouseMoveEmit( const SGameMessage &msg )
 	return false;
 }
 
-void CWindowMiniMap::SetUnits( const vector< SMiniMapUnitInfo > &vUnits )
+void CWindowMiniMap::SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits )
 {
 	pUnitsLayer->Clear();
 	if ( !playerColors.empty() )
@@ -888,7 +888,7 @@ void CWindowMiniMap::SetWarFog( const CArray2D<BYTE> *pWarFogInfo )
 	}
 }
 
-void CWindowMiniMap::SetMarkers( const vector<SMarker> &_markers )
+void CWindowMiniMap::SetMarkers( const std::vector<SMarker> &_markers )
 {
 	markers.clear();
 	markers.resize( _markers.size() );
@@ -903,7 +903,7 @@ void CWindowMiniMap::SetMarkers( const vector<SMarker> &_markers )
 	}
 }
 
-void CWindowMiniMap::SetFigures( const vector<SFigure> &figures )
+void CWindowMiniMap::SetFigures( const std::vector<SFigure> &figures )
 {
 	pFiguresLayer->Clear();
 	for ( int i = 0; i < figures.size(); ++i )
@@ -971,7 +971,7 @@ void CWindowMiniMap::SetRangeInfo( const int nUnitID, const SShootAreas &rangeIn
 	// Calculate minimap squash ratio
 	float fY2XRatio = float( GetPlacement().GetSizeY() ) / GetPlacement().GetSizeX();
 	// Draw ranges
-	for ( list<SShootArea>::const_iterator it = rangeInfo.areas.begin(); it != rangeInfo.areas.end(); ++it )
+	for ( std::list<SShootArea>::const_iterator it = rangeInfo.areas.begin(); it != rangeInfo.areas.end(); ++it )
 	{
 		const SShootArea &area = *it;
 		CDrawMiniMapPixelFunctional funcDrawPixel( pRangesLayer, 0xFF000000 | area.GetColor(), &maskMiniMap );
@@ -1055,7 +1055,7 @@ CVec2 CWindowMiniMap::GetAIToScreen( const CVec2 &vPos ) const
 	return vScreenPos;
 }
 
-void CWindowMiniMap::SetViewport( const vector< CVec2 > &vPoints )
+void CWindowMiniMap::SetViewport( const std::vector< CVec2 > &vPoints )
 {
 	NI_VERIFY( vPoints.size() >= 4, "Wrong call", return );
 	if ( bRotable )

@@ -23,8 +23,8 @@ struct SPriorityGroupPosition
 	ZDATA
 	int nCount;
 	CVec2 vUnitSize;
-	vector<CVec2> vCells;
-	vector< CPtr<CCommonUnit> > vUnits;
+	std::vector<CVec2> vCells;
+	std::vector< CPtr<CCommonUnit> > vUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCount); f.Add(3,&vUnitSize); f.Add(4,&vCells); f.Add(5,&vUnits); return 0; }
 public:
 	SPriorityGroupPosition() : nCount( 0 ), vUnitSize( VNULL2 ) {}
@@ -32,9 +32,9 @@ public:
 	SPriorityGroupPosition( const float x, const float y ) : nCount( 1 ), vUnitSize( x, y ) {}
 };
 
-typedef hash_map< int, SPriorityGroupPosition > CPriorityGroupMap;
-typedef list< SUnitListInfo > CUnitsList;
-typedef hash_map< int, vector<CVec2> > CCellsMap;
+typedef std::unordered_map< int, SPriorityGroupPosition > CPriorityGroupMap;
+typedef std::list< SUnitListInfo > CUnitsList;
+typedef std::unordered_map< int, std::vector<CVec2> > CCellsMap;
 
 class CGroupMoveExecutorEvent : public CExecutorEvent
 {
@@ -104,7 +104,7 @@ class CGroupMoveExecutor : public CExecutor
 public:
 	CGroupMoveExecutor() : CExecutor( TID_MOVE_BY_FORMATION, 1 )	{}
 
-	const bool Init( const vector<CCommonUnit*> &units, const struct SAIUnitCmd &cmd );
+	const bool Init( const std::vector<CCommonUnit*> &units, const struct SAIUnitCmd &cmd );
 
 	virtual bool IsExecutorValid() const { return true; }
 	virtual int Segment();

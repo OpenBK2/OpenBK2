@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SWCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWCActionsPriority::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "SelfActions", &selfActions, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "FriendActions", &friendActions, pThis );
@@ -56,7 +56,7 @@ DWORD SWCActionsPriority::CalcCheckSum() const
 
 
 
-void SM1WCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SM1WCActionsPriority::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "SelfActions", &selfActions, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "FriendActions", &friendActions, pThis );
@@ -101,7 +101,7 @@ DWORD SM1WCActionsPriority::CalcCheckSum() const
 
 
 
-void SCursor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCursor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "FileName", (BYTE*)&szFileName - pThis, sizeof(szFileName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
@@ -143,7 +143,7 @@ DWORD SCursor::CalcCheckSum() const
 
 
 
-void SAckParameter::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAckParameter::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AckType", (BYTE*)&eAckType - pThis, sizeof(eAckType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "AckClass", (BYTE*)&eAckClass - pThis, sizeof(eAckClass), NTypeDef::TYPE_TYPE_ENUM );
@@ -191,7 +191,7 @@ DWORD SAckParameter::CalcCheckSum() const
 
 
 
-void SAckManagerConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAckManagerConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MinAckRadius", (BYTE*)&nMinAckRadius - pThis, sizeof(nMinAckRadius), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "MaxAckRadius", (BYTE*)&nMaxAckRadius - pThis, sizeof(nMaxAckRadius), NTypeDef::TYPE_TYPE_INT );
@@ -236,7 +236,7 @@ DWORD SAckManagerConsts::CalcCheckSum() const
 
 
 
-void SMapCommandAck::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapCommandAck::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "ShowTime", (BYTE*)&fShowTime - pThis, sizeof(fShowTime), NTypeDef::TYPE_TYPE_FLOAT );
@@ -275,7 +275,7 @@ DWORD SMapCommandAck::CalcCheckSum() const
 
 
 
-void SClientGameConsts::SMechUnitIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SClientGameConsts::SMechUnitIconsSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
@@ -320,7 +320,7 @@ DWORD SClientGameConsts::SMechUnitIconsSet::CalcCheckSum() const
 
 
 
-void SClientGameConsts::SSquadIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SClientGameConsts::SSquadIconsSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
@@ -365,7 +365,7 @@ DWORD SClientGameConsts::SSquadIconsSet::CalcCheckSum() const
 
 
 
-void SClientGameConsts::SBuildingIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SClientGameConsts::SBuildingIconsSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
@@ -410,7 +410,7 @@ DWORD SClientGameConsts::SBuildingIconsSet::CalcCheckSum() const
 
 
 
-void SClientGameConsts::SPassengerIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SClientGameConsts::SPassengerIconsSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );

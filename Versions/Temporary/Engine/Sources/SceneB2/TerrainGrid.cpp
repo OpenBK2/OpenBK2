@@ -7,7 +7,7 @@ static const CVec4 CLR_CENTER = CVec4(0.8f, 0.8f, 0.8f, 1.0f);
 static const CVec4 CLR_BORDER = CVec4(1.0f, 1.0f, 1.0f, 1.0f);
 static const bool bGridDepthTest = false;
 
-static void CreatePolylineForOnePatch( vector<CVec3> *pVertices, vector<WORD> *pIndicesCenter, vector<WORD> *pIndicesBorder, 
+static void CreatePolylineForOnePatch( std::vector<CVec3> *pVertices, std::vector<WORD> *pIndicesCenter, std::vector<WORD> *pIndicesBorder,
 																			 const int nStartX, const int nStartY, const int fTileSizeInAIUnits, const int nNumTilesInPatch )
 {
 	// create vertices
@@ -71,7 +71,7 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 	}
 	else if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
 	{
-		vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
+		std::vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
 		CPtr<NGScene::IGameView> pGScene = data[eScene]->GetGScene();
 		
 		const int nNumPatchesX = data[eScene]->pTerraManager->GetDesc()->nNumPatchesX;
@@ -85,8 +85,8 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 		{
 			for ( int x = 0; x < nNumPatchesX; ++x )
 			{
-				vector<CVec3> vertices;
-				vector<WORD> indicesCenter, indicesBorder;
+				std::vector<CVec3> vertices;
+				std::vector<WORD> indicesCenter, indicesBorder;
 				const int nStartX = x * nNumTilesInPatch;
 				const int nStartY = y * nNumTilesInPatch;
 				CreatePolylineForOnePatch( &vertices, &indicesCenter, &indicesBorder, nStartX, nStartY, fTileSizeInAIUnits, nNumTilesInPatch );
@@ -112,7 +112,7 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 {
 	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
 	{
-		vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
+		std::vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
 		CPtr<NGScene::IGameView> pGScene = data[eScene]->GetGScene();
 
 		const int nNumPatchesX = data[eScene]->pTerraManager->GetDesc()->nNumPatchesX;
@@ -141,8 +141,8 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 		{
 			for ( int x = nMinUpdX; x <= nMaxUpdX; ++x )
 			{
-				vector<CVec3> vertices;
-				vector<WORD> indicesCenter, indicesBorder;
+				std::vector<CVec3> vertices;
+				std::vector<WORD> indicesCenter, indicesBorder;
 				const int nStartX = x * nTilesInPatchCount;
 				const int nStartY = y * nTilesInPatchCount;
 

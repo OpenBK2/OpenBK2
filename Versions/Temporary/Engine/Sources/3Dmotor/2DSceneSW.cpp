@@ -53,7 +53,7 @@ struct STextureIterator
 	int nMip;
 	const T *pMip;
 
-	void Init( float fU, float fV, float fDU, float fDV, const vector< CArray2D<T> > &tex )
+	void Init( float fU, float fV, float fDU, float fDV, const std::vector< CArray2D<T> > &tex )
 	{
 		int nXSize = tex[0].GetSizeX(), nYSize = tex[0].GetSizeY();
 		nMip = 0;
@@ -80,7 +80,7 @@ struct STextureIterator
 	}
 	// slow variant for special rare case
 	template<class TT>
-	__forceinline const TT& Fetch( const vector< CArray2D<TT> > &tex )
+	__forceinline const TT& Fetch( const std::vector< CArray2D<TT> > &tex )
 	{
 		const TT *pData = &tex[nMip][0][0];
 		const TT &r = pData[((nV>>nVShift)&nVMask) + ((nU>>16)&nUMask) ];
@@ -473,7 +473,7 @@ class CSW2DScene: public ISW2DScene
 	OBJECT_BASIC_METHODS(CSW2DScene);
 private:
 	ZDATA
-	list< CPtr<ISWRects> > rects;
+	std::list< CPtr<ISWRects> > rects;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&rects); return 0; }
 
 	template<class T, class TSet>
@@ -646,8 +646,8 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 			NGfx::CTextureLock<NGfx::SPixel4444> lock( pTarget, nMip, NGfx::INPLACE );
 			StartHiColorConvert4444();
 			int nSizeX = lock.GetSizeX();
-			vector<NGfx::SPixel4444> colorBuf;
-			vector<NGfx::SPixel8888> srcColorBuf;
+			std::vector<NGfx::SPixel4444> colorBuf;
+			std::vector<NGfx::SPixel8888> srcColorBuf;
 			for ( int y = 0; y < lock.GetSizeY(); ++y )
 			{
 				if ( nSizeX & 1 )

@@ -73,7 +73,7 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	ZDATA
 		CDGPtr< CFuncBase<SFBTransform> > pBaseTransform;
 		int nTargetID;
-		string szBoneName;
+		std::string szBoneName;
 		bool bNeedCalcMatrix;
 		SHMatrix mMultiplier;
 		CDGPtr< CConstantOffsetTransform > pParentTransform;
@@ -85,8 +85,8 @@ protected:
 
 public:
 	CConstantOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ), bNeedCalcMatrix( true ) {}
-	CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform );
-	CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform );
+	CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform );
+	CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform );
 };
 
 // fixed offset from the center of the parent object

@@ -89,7 +89,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 			mapInfo.pNameView = GetChildChecked<ITextView>( mapInfo.pWnd, "NameView", true );
 			mapInfo.pDifficultyView = GetChildChecked<ITextView>( mapInfo.pWnd, "Difficulty", true );
 
-			wstring wszName;
+			std::wstring wszName;
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LocalizedName) )
 				wszName = GET_TEXT_PRE(mapInfo.pMapInfo->,LocalizedName);
 			if ( mapInfo.pNameView )
@@ -118,7 +118,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 	Select( nRecommendedMission );
 }
 
-bool CInterfaceSelectTutorial::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceSelectTutorial::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_play" )
 		return OnPlay();
@@ -130,7 +130,7 @@ bool CInterfaceSelectTutorial::Execute( const string &szSender, const string &sz
 	return false;
 }
 
-int CInterfaceSelectTutorial::Check( const string &szCheckName ) const
+int CInterfaceSelectTutorial::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -185,17 +185,17 @@ bool CInterfaceSelectTutorial::OnSelect()
 				pMinimap->SetTexture( pTexture );
 			}
 
-			wstring wszName;
+			std::wstring wszName;
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LocalizedName) )
 				wszName = GET_TEXT_PRE(mapInfo.pMapInfo->,LocalizedName);
 			if ( pMissionNameView )
 				pMissionNameView->SetText( pMissionNameView->GetDBText() + wszName );
 
-			wstring wszSeason = InterfaceState()->GetSeasonName( mapInfo.pMapInfo->eSeason );
+			std::wstring wszSeason = InterfaceState()->GetSeasonName( mapInfo.pMapInfo->eSeason );
 			if ( pMissionSeasonView )
 				pMissionSeasonView->SetText( pMissionSeasonView->GetDBText() + wszSeason );
 
-			wstring wszDesc;
+			std::wstring wszDesc;
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LoadingDescription) )
 				wszDesc = GET_TEXT_PRE(mapInfo.pMapInfo->,LoadingDescription);
 			if ( pMissionDescView )

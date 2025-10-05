@@ -28,7 +28,7 @@ bBonusApplied( false ), eStatus( EUS_UNDEFINED )
 
 void CExecutorUnitBonus::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> unitEvents;
+	std::vector<EExecutorEventID> unitEvents;
 
 	unitEvents.push_back( EID_ABILITY_ACTIVATE );
 	unitEvents.push_back( EID_ABILITY_ENABLE );

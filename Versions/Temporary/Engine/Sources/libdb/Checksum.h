@@ -15,9 +15,9 @@ class CCheckSum
 	
 	char __cdecl TestType(...) { return 0; }	
 	template<class T1>
-		int __cdecl TestType( vector<T1>* ) { return 0; }
-	int __cdecl TestType( string* ) { return 0; }
-	int __cdecl TestType( wstring* ) { return 0; }
+		int __cdecl TestType( std::vector<T1>* ) { return 0; }
+	int __cdecl TestType( std::string* ) { return 0; }
+	int __cdecl TestType( std::wstring* ) { return 0; }
 
 	template<class T>
 	void DataCheckSum( T *p, const int nLen )
@@ -52,7 +52,7 @@ public:
 	}
 	
 	template<class T>
-	CCheckSum& operator<<( const vector<T> &vec )
+	CCheckSum& operator<<( const std::vector<T> &vec )
 	{
 		const int nSize = vec.size();
 		DataCheckSum( &nSize, sizeof( nSize ) );
@@ -65,14 +65,14 @@ public:
 			DataCheckSum( &(vec[0]), vec.size() * sizeof(T) );
 		else
 		{
-			for ( vector<T>::const_iterator iter = vec.begin(); iter != vec.end(); ++iter )
+			for ( std::vector<T>::const_iterator iter = vec.begin(); iter != vec.end(); ++iter )
 				(*this) << *iter;
 		}
 
 		return *this;
 	}
 
-	CCheckSum& operator<<( const string &sz )
+	CCheckSum& operator<<( const std::string &sz )
 	{
 		const int nSize = sz.size();
 		DataCheckSum( &nSize, sizeof(nSize) );
@@ -82,7 +82,7 @@ public:
 		return *this;
 	}
 
-	CCheckSum& operator<<( const wstring &wsz ) 
+	CCheckSum& operator<<( const std::wstring &wsz )
 	{
 		const int nSize = wsz.size();
 		DataCheckSum( &nSize, sizeof( nSize ) );

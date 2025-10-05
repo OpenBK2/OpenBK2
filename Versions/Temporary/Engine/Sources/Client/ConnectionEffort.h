@@ -14,7 +14,7 @@ enum EConnEffort
 class CConnectionEffort : public CPacketProcessor
 {
 protected:
-	void SendBreakThroughPacket( const string &szIP, const int nPort );
+	void SendBreakThroughPacket( const std::string &szIP, const int nPort );
 public:
 	enum EState { ES_CONNECTING, ES_SUCCESS, ES_FAILED };
 
@@ -30,9 +30,9 @@ namespace NEffortsFactory
 	CConnectionEffort* CreateFirstClientEffort( const int nMyServerID, const int nClientServerID, class CNet *pNet, const int nTimeOut );
 	CConnectionEffort* CreateFirstServerEffort
 	( const int nMyServerID, const int nClientServerID,
-		const string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet );
+		const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet );
 
-	void SetServerInfo( const string &szServerIP, const int nServerPort, const int nGameNetVersion );
+	void SetServerInfo( const std::string &szServerIP, const int nServerPort, const int nGameNetVersion );
 }
 
 

@@ -37,7 +37,7 @@ void CAntiArtilleryManager::Segment()
 	{
 		if ( !antiArtilleries[i].empty() )
 		{
-			list<int> aa2Delete;
+			std::list<int> aa2Delete;
 			for ( CAntiArtilleries::iterator iter = antiArtilleries[i].begin(); iter != antiArtilleries[i].end(); ++iter )
 			{
 				bool bDelete = true;
@@ -58,7 +58,7 @@ void CAntiArtilleryManager::Segment()
 					aa2Delete.push_back( *iter );
 			}
 
-			for ( list<int>::iterator iter = aa2Delete.begin(); iter != aa2Delete.end(); ++iter )
+			for ( std::list<int>::iterator iter = aa2Delete.begin(); iter != aa2Delete.end(); ++iter )
 				antiArtilleries[i].erase( *iter );
 		}
 	}

@@ -57,26 +57,26 @@ private:
 	void UpdateInteriorLogin();
 	void UpdateInteriorRegister();
 	void UpdateInteriorRecover();
-	bool IsEmailValid( const wstring &wszEmail );
+	bool IsEmailValid( const std::wstring &wszEmail );
 
 	//{
 	bool OnConnectResultMessage( SMPUIConnectResultMessage *pMsg );
 	//}
 
 	//{
-	bool OnBackReaction( const string &szSender );
-	bool OnLoginReaction( const string &szSender );
+	bool OnBackReaction( const std::string &szSender );
+	bool OnLoginReaction( const std::string &szSender );
 	bool OnLoginRegister();
 	bool OnLoginRecovery();
 
-	bool OnRegisterReaction( const string &szSender );
+	bool OnRegisterReaction( const std::string &szSender );
 
-	bool OnRegisterOkReaction( const string &szSender );
-	bool OnRegisterCancelReaction( const string &szSender );
-	bool CheckRegistrationData( string &szReason );
+	bool OnRegisterOkReaction( const std::string &szSender );
+	bool OnRegisterCancelReaction( const std::string &szSender );
+	bool CheckRegistrationData( std::string &szReason );
 
-	bool OnRecoveryOkReaction( const string &szSender );
-	bool OnRecoveryCancelReaction( const string &szSender );
+	bool OnRecoveryOkReaction( const std::string &szSender );
+	bool OnRecoveryCancelReaction( const std::string &szSender );
 	//}
 protected:
 	~CInterfaceNivalNet();
@@ -89,8 +89,8 @@ public:
 	void AfterLoad();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

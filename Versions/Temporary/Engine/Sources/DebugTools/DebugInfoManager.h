@@ -36,7 +36,7 @@ struct IDebugInfoManager : public CObjectBase
 {
 	enum { tidTypeID = 0x31160C80 };
 
-	virtual int CreateMarker( const int nID, const vector<SVector> &tiles, const NDebugInfo::EColor eColor ) = 0;
+	virtual int CreateMarker( const int nID, const std::vector<SVector> &tiles, const NDebugInfo::EColor eColor ) = 0;
 	virtual int CreateCircle( const int nID, const CCircle &circle, const NDebugInfo::EColor eColor ) = 0;
 	virtual int CreateSegment( const int nID, const CSegment &segment, const int nThickness, const NDebugInfo::EColor eColor ) = 0;
 	virtual void DeleteObject( const int nID ) = 0;

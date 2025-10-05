@@ -219,7 +219,7 @@ class CGMOReg
 	CBind bind;
 	CObj<IGMObserver> pObserver;
 public:
-	CGMOReg( const string &szEventName, IGMObserver *_pObserver ) : bind( szEventName ), pObserver(_pObserver) {}
+	CGMOReg( const std::string &szEventName, IGMObserver *_pObserver ) : bind( szEventName ), pObserver(_pObserver) {}
 	bool ProcessEvent( const SGameMessage &event, CObjectBase *pThis )
 	{
 		if ( bind.ProcessEvent( event ) )
@@ -231,85 +231,85 @@ public:
 class CGMORegContainer
 {
 protected:
-	vector<NInput::CGMOReg> eventRegisters;
+	std::vector<NInput::CGMOReg> eventRegisters;
 public:
 	// void member function observer registration
 	template <typename TObj, typename TMsg>
-		void AddObserver( const string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg ) )
+		void AddObserver( const std::string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg ) )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver<TObj, TMsg>( _pfnMemFun );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TObj, typename TMsg, class T1>
-		void AddObserver( const string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
+		void AddObserver( const std::string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver1<TObj, TMsg, T1>( _pfnMemFun, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TObj, typename TMsg, class T1, class T2>
-		void AddObserver( const string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T1 _p2 ), T1 _p1, T2 _p2 )
+		void AddObserver( const std::string &szMsgName, void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T1 _p2 ), T1 _p1, T2 _p2 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver2<TObj, TMsg, T1, T2>( _pfnMemFun, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	// bool member function observer registration
 	template <typename TObj, typename TMsg>
-		void AddObserver( const string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
+		void AddObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver<TObj, TMsg>( _pfnMemFun );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TObj, typename TMsg, class T1>
-		void AddObserver( const string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
+		void AddObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver1<TObj, TMsg, T1>( _pfnMemFun, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TObj, typename TMsg, class T1, class T2>
-		void AddObserver( const string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T1 _p2 ), T1 _p1, T2 _p2 )
+		void AddObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T1 _p2 ), T1 _p1, T2 _p2 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver2<TObj, TMsg, T1, T2>( _pfnMemFun, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	// void global function observer registration
 	template <typename TMsg>
-		void AddObserver( const string &szMsgName, void (*_pfnFunc)( const TMsg &msg ) )
+		void AddObserver( const std::string &szMsgName, void (*_pfnFunc)( const TMsg &msg ) )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunObserver<TMsg>( _pfnFunc );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TMsg, class T1>
-		void AddObserver( const string &szMsgName, void (*_pfnFunc)( const TMsg &msg, T1 _p1 ), T1 _p1 )
+		void AddObserver( const std::string &szMsgName, void (*_pfnFunc)( const TMsg &msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunObserver1<TMsg, T1>( _pfnFunc, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TMsg, class T1, class T2>
-		void AddObserver( const string &szMsgName, void (*_pfnFunc)( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
+		void AddObserver( const std::string &szMsgName, void (*_pfnFunc)( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunObserver2<TMsg, T1, T2>( _pfnFunc, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	// bool global function observer registration
 	template <typename TMsg>
-		void AddObserver( const string &szMsgName, bool (*_pfnFunc)( const TMsg &msg ) )
+		void AddObserver( const std::string &szMsgName, bool (*_pfnFunc)( const TMsg &msg ) )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver<TMsg>( _pfnFunc );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TMsg, class T1>
-		void AddObserver( const string &szMsgName, bool (*_pfnFunc)( const TMsg &msg, T1 _p1 ), T1 _p1 )
+		void AddObserver( const std::string &szMsgName, bool (*_pfnFunc)( const TMsg &msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver1<TMsg, T1>( _pfnFunc, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
 	template <typename TMsg, class T1, class T2>
-		void AddObserver( const string &szMsgName, bool (*_pfnFunc)( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
+		void AddObserver( const std::string &szMsgName, bool (*_pfnFunc)( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver2<TMsg, T1, T2>( _pfnFunc, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
-	virtual void AddRawObserver( const string &szMsgName, IGMObserver *pObserver )
+	virtual void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver )
 	{
 		eventRegisters.insert( eventRegisters.begin(), NInput::CGMOReg(szMsgName, pObserver) );
 	}

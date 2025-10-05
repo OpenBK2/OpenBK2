@@ -23,12 +23,12 @@ struct IConsoleBuffer : public CObjectBase
 		int nStream;
 		int nSequenceID;
 		bool bPersistent;
-		wstring szText;
+		std::wstring szText;
 		DWORD dwColor;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nStream); f.Add(3,&nSequenceID); f.Add(4,&bPersistent); f.Add(5,&szText); f.Add(6,&dwColor); return 0; }
 	};
 	// write string to console's stream
-	virtual void Write( const int nStreamID, const wstring &szString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
+	virtual void Write( const int nStreamID, const std::wstring &szString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
 	// write string to console's stream. doesn't support any locales - just for english text
 	virtual void WriteASCII( const int nStreamID, const char *pszString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
 	virtual void SetLogfile( const char *pszFilename ) = 0;
@@ -46,9 +46,9 @@ enum
 	PIPE_CHAT			= 4,					// chat string
 };
 // bPersistentMsg - if pipe dump to console is enabled this parameter will be forwarded to console
-SYSTEM_EXPORT void WriteToPipe( int nPipe, const string &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-SYSTEM_EXPORT void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-SYSTEM_EXPORT bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor );
-SYSTEM_EXPORT bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::string &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::wstring &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::string *pRes, DWORD *pDWColor );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::wstring *pRes, DWORD *pDWColor );
 SYSTEM_EXPORT void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );
 

@@ -13,9 +13,9 @@ struct SMeshData
     triangles.reserve( nTrgsReserve );
   }
   //
-	vector<NGScene::SVertex> vertices;
-	vector<STriangle> triangles;
-  vector<NGScene::CObjectInfo::SStream> attributes;
+	std::vector<NGScene::SVertex> vertices;
+	std::vector<STriangle> triangles;
+  std::vector<NGScene::CObjectInfo::SStream> attributes;
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -37,10 +37,10 @@ struct SMeshDataTex2
     secondTex.reserve( nSecondTexReserve );
   }
   //
-  vector<NGScene::SVertex> vertices;
-  vector<STriangle> triangles;
-  vector<CVec2> secondTex;
-  vector<NGScene::CObjectInfo::SStream> attributes;
+  std::vector<NGScene::SVertex> vertices;
+  std::vector<STriangle> triangles;
+  std::vector<CVec2> secondTex;
+  std::vector<NGScene::CObjectInfo::SStream> attributes;
   //
   int operator&( IBinSaver &saver )
   {

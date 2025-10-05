@@ -10,7 +10,7 @@ CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION, 
 	NDb::ABILITY_ENTRENCH_SELF )
 {
-	for ( int i = 0; i < Min ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
+	for ( int i = 0; i < Min<int> ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
 		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 
@@ -118,7 +118,7 @@ bool CExecutorSoldierEntrench::IsExecutorValid() const
 
 void CExecutorSoldierEntrench::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> events;
+	std::vector<EExecutorEventID> events;
 	events.push_back( EID_ABILITY_ACTIVATE );
 	events.push_back( EID_ABILITY_DEACTIVATE );
 	events.push_back( EID_NEW_COMMAND_RECIEVED );

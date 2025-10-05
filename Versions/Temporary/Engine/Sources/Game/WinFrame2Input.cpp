@@ -21,7 +21,7 @@ void CWinToInputMessageConverter::Do()
 	NWinFrame::SWindowsMsg wMsg;
 	while ( NWinFrame::GetMessage( &wMsg ) )
 	{
-		string szGameMessage;
+		std::string szGameMessage;
 		int nParam1 = 0;
 		int nParam2 = 0;
 		int nCount = 0;

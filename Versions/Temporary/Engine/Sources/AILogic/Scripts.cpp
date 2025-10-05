@@ -76,7 +76,7 @@ CScriptGroups CScripts::groups;
 CDBPtr<NDb::SMapInfo> CScripts::pMapInfo;
 CAttackGroup CScripts::attackGroups;
 static bool bScriptTimeCalculate;
-list<CObj<CAIUnit> > CScripts::rememberedUnits;
+std::list<CObj<CAIUnit> > CScripts::rememberedUnits;
 START_REGISTER(Scripts)
 REGISTER_VAR_EX( "script_time_calculate",	NGlobal::VarBoolHandler, &bScriptTimeCalculate, false, STORAGE_NONE );
 FINISH_REGISTER
@@ -85,17 +85,17 @@ FINISH_REGISTER
 #define CHECK_ERROR( bCond, message, script )																												\
 if ( !(bCond) )																																												\
 {																																																			\
-	pScripts->OutScriptError( ( string("Script error. ") + string(message) ).c_str() );				\
+	pScripts->OutScriptError( ( std::string("Script error. ") + std::string(message) ).c_str() );				\
 	return ( script.GetPushCount() );																																									\
 }
 
 
-static const string Convert2Param( Script::Object &object )
+static const std::string Convert2Param( Script::Object &object )
 {
 	if ( object.IsNumber() )
 		return object.GetString();
 	else
-		return string("\"") + object.GetString() + "\"";
+		return std::string("\"") + object.GetString() + "\"";
 }
 
 class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
@@ -103,7 +103,7 @@ class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
 	Script *pScript;
 	const NDb::SScriptArea *pArea;
 	int nUnits;
-	hash_map<int, bool> squads;
+	std::unordered_map<int, bool> squads;
 
 public:
 	CUnitsInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea ) 
@@ -166,8 +166,8 @@ int CScripts::GlobeCommand( struct lua_State *pState )
 		Script script( pState );
 		CHECK_ERROR( script.GetObject( 1 ).IsString(), "GlobeCommand: the 1st parameter is not a string", script );
 
-		string szFuncCall = "";
-		szFuncCall = string(script.GetObject( 1 ).GetString()) + "(";
+		std::string szFuncCall = "";
+		szFuncCall = std::string(script.GetObject( 1 ).GetString()) + "(";
 
 		if ( script.GetTop() >= 2 )
 			szFuncCall += Convert2Param( script.GetObject( 2 ) );
@@ -417,7 +417,7 @@ void CScripts::Init( const SMapInfo *_pMapInfo )
 	reinforcsIter = suspendedReinforcs.begin();
 
 	pMapInfo = _pMapInfo;
-	for ( vector< SBattlePosition >::const_iterator iter = pMapInfo->reservePositionsList.begin(); iter != pMapInfo->reservePositionsList.end(); ++iter )
+	for ( std::vector< SBattlePosition >::const_iterator iter = pMapInfo->reservePositionsList.begin(); iter != pMapInfo->reservePositionsList.end(); ++iter )
 	{
 		reservePositions[iter->nArtilleryLinkID] = iter->nTruckLinkID;
 		reservePositions[iter->nTruckLinkID] = iter->nArtilleryLinkID;
@@ -446,11 +446,11 @@ void CScripts::InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen )
 		areas[scriptAreas[i].szName] = scriptAreas[i];
 }
 
-void CScripts::RunScriptFromFile( const string &szScriptFileName )
+void CScripts::RunScriptFromFile( const std::string &szScriptFileName )
 {
 	if ( szScriptFileName.empty() )
 		return;
-	string szScriptText;
+	std::string szScriptText;
 	CFileStream stream( NVFS::GetMainVFS(), szScriptFileName );
 	if ( stream.IsOk() )
 	{
@@ -465,7 +465,7 @@ void CScripts::RunScriptFromFile( const string &szScriptFileName )
 		pScript->RunScript( szScriptText.c_str() );
 }
 
-void CScripts::Load( const string &szScriptFileName, const NDb::SAIGameConsts *pConsts )
+void CScripts::Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts )
 {
 	pScript = CreateScriptWrapper();
 	pScript->Init();
@@ -883,12 +883,12 @@ bool CScripts::CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &v
 
 	const CVec2 vCenter( mapObject.vPos.x + vShift.x, mapObject.vPos.y + vShift.y );
 
-	list<CVec2> centers;
+	std::list<CVec2> centers;
 	theUnitCreation.GetCentersOfAllFormationUnits( pStats, vCenter, mapObject.nDir, mapObject.nFrameIndex, -1, &centers );
 
 	SMapObjectInfo soldierMapObject;
 	soldierMapObject.pObject = pStats->members[0];
-	for ( list<CVec2>::iterator iter = centers.begin(); iter != centers.end(); ++iter )
+	for ( std::list<CVec2>::iterator iter = centers.begin(); iter != centers.end(); ++iter )
 	{
 		soldierMapObject.vPos = CVec3(*iter, 0 );
 		if ( !CanUnitLand( soldierMapObject ) )
@@ -968,7 +968,7 @@ void CScripts::LandSuspendedReiforcements()
 				CVec2 vShift( VNULL2 );
 				if ( CanLandWithShift( reinforcsIter->mapObject, &vShift ) )
 				{
-					hash_set<int> candidates;
+					std::unordered_set<int> candidates;
 					const int nLink = reinforcsIter->mapObject.link.nLinkID;
 					candidates.insert( nLink );
 					CReinfList candObjects;
@@ -1037,7 +1037,7 @@ void CScripts::Segment()
 	{
 		bool bOldShowScriptErrors = bShowErrors;
 		bShowErrors = true;
-		string szCommand;
+		std::string szCommand;
 		while ( ReadFromPipe( PIPE_SCRIPT_CMDS, &szCommand, 0 ) )
 		{
 			CallScriptFunction( szCommand.c_str() );
@@ -1053,7 +1053,7 @@ void CScripts::Segment()
 
 	if ( bScriptTimeCalculate )
 	{
-		static vector<double> times( 20 );
+		static std::vector<double> times( 20 );
 		static int nCurrentPos = -1;
 		static bool bCollected = false;
 
@@ -1103,7 +1103,7 @@ void CScripts::DelInvalidBegin( const int targetId )
 		}
 
 		int nDeleted;
-		for( hash_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			const int nUniqueId = it->first;
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
@@ -1121,7 +1121,7 @@ void CScripts::DelInvalidUnits( const int scriptId )
 {
 	if ( groups.find( scriptId ) != groups.end() )
 	{
-		list<CPtr<CUpdatableObj> >::iterator iter = groups[scriptId].begin();
+		std::list<CPtr<CUpdatableObj> >::iterator iter = groups[scriptId].begin();
 		while ( iter != groups[scriptId].end() )
 		{
 			CUpdatableObj *pObj = *iter;
@@ -1131,8 +1131,8 @@ void CScripts::DelInvalidUnits( const int scriptId )
 				++iter;
 		}
 
-		list<int> deleted;
-		for( hash_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		std::list<int> deleted;
+		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			const int nUniqueId = it->first;
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
@@ -1273,7 +1273,7 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 		if ( script.GetObject( 2 ).IsNumber() )
 		{
 			const int nPlayer	= script.GetObject( 2 );
-			for ( list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
+			for ( std::list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
 					it != pScripts->groups[nScriptID].end(); ++it )
 			{
 				if ( (*it)->GetPlayer() == nPlayer )
@@ -1282,7 +1282,7 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 		}
 		else
 		{
-			for ( list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
+			for ( std::list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
 						it != pScripts->groups[nScriptID].end(); ++it )
 			{
 				if ( (*it)->IsAlive() )
@@ -1296,10 +1296,10 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 	return 1;
 }
 
-void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, hash_map<int, int> *pOld2NewLinks )
+void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_map<int, int> *pOld2NewLinks )
 {
 	// set new links (not intersected with existing)
-	list<int> freeLinks;
+	std::list<int> freeLinks;
 	CLinkObject::GetFreeLinks( &freeLinks, pReinf->size() );
 	for ( CReinfList::iterator iter = pReinf->begin(); iter != pReinf->end(); ++iter )
 	{
@@ -1318,10 +1318,10 @@ void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, hash_map<int, int
 
 void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec2 &vShift )
 {
-	hash_map<int, int> old2NewLinks;
+	std::unordered_map<int, int> old2NewLinks;
 	SetNewLinksToReinforcement( pReinf, &old2NewLinks );
 
-	list<CCommonUnit*> pUnits;
+	std::list<CCommonUnit*> pUnits;
 
 	// land reinforcement
 
@@ -1372,11 +1372,11 @@ void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec
 	theSupremeBeing.GiveNewUnitsToGenerals( pUnits );
 }
 
-void CScripts::SendShowReinoforcementPlacementFeedback( list<CVec2> *pCenters )
+void CScripts::SendShowReinoforcementPlacementFeedback( std::list<CVec2> *pCenters )
 {
 	CVec2 vMostLeftCenter = pCenters->front();
 
-	for ( list<CVec2>::iterator iter = pCenters->begin(); iter != pCenters->end(); ++iter )
+	for ( std::list<CVec2>::iterator iter = pCenters->begin(); iter != pCenters->end(); ++iter )
 	{
 		if ( vMostLeftCenter.x > iter->x )
 			vMostLeftCenter = *iter;
@@ -1385,7 +1385,7 @@ void CScripts::SendShowReinoforcementPlacementFeedback( list<CVec2> *pCenters )
 	int nUnits = 0;
 	CVec2 vGroupCenter( VNULL2 );
 
-	list<CVec2>::iterator iter = pCenters->begin();
+	std::list<CVec2>::iterator iter = pCenters->begin();
 	while ( iter != pCenters->end() )
 	{
 		if ( fabs2( vMostLeftCenter - (*iter) ) < sqr( SConsts::REINFORCEMENT_GROUP_DISTANCE ) )
@@ -1415,7 +1415,7 @@ int CScripts::LandReinforcementOLD( struct lua_State *state )
 
 	WORD playersOfReinforcement = 0;
 	bool bSendAck = false;
-	list<CVec2> centers;
+	std::list<CVec2> centers;
 	for ( CReinfList::iterator iter = pScripts->reinforcs[nRein].begin(); iter != pScripts->reinforcs[nRein].end(); ++iter )
 	{
 		const int nPlayer = iter->mapObject.nPlayer;
@@ -1524,7 +1524,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 	const float fDispersion = script.GetObject( 3 ).IsNumber() ? script.GetObject( 3 ) : 0.0f;
 
 	int nGroup = -1;
-	list< pair<CCommonUnit*, int> > oldUnitsGroups;
+	std::list< std::pair<CCommonUnit*, int> > oldUnitsGroups;
 
 	SAIUnitCmd command;
 	const bool bValid = ParseCommand( &command, script, b2NdParamIsScriptID );
@@ -1539,19 +1539,19 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 			{
 				pScripts->DelInvalidUnits( scriptId );
 				// group registration
-				vector<int> objIDs( pScripts->groups[scriptId].size() );
+				std::vector<int> objIDs( pScripts->groups[scriptId].size() );
 				int nLen = 0;
-				for ( list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[scriptId].begin(); iter != pScripts->groups[scriptId].end(); ++iter )
+				for ( std::list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[scriptId].begin(); iter != pScripts->groups[scriptId].end(); ++iter )
 				{
 					CHECK_ERROR( dynamic_cast_ptr<CCommonUnit*>(*iter) != 0, "Can't give command to non-unit", script );
 					CCommonUnit *pUnit = dynamic_cast_ptr<CCommonUnit*>(*iter);
 					objIDs[nLen++] = pUnit->GetUniqueId();
-					oldUnitsGroups.push_back( pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
+					oldUnitsGroups.push_back( std::pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
 				}
 				
 				if ( fDispersion != 0.0f ) // apply dispersion to command
 				{
-					vector<int> id(1);
+					std::vector<int> id(1);
 					SAIUnitCmd tmpCmd( command );
 					for ( int i = 0; i < objIDs.size(); ++i )
 					{
@@ -1579,9 +1579,9 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 			CCommonUnit *pUnit = checked_cast<CCommonUnit*>( CLinkObject::GetObjectByUniqueId(nUniqueID) );
 			if ( pUnit )
 			{
-				vector<int> units( 1 );
+				std::vector<int> units( 1 );
 				units[0] = pUnit->GetUniqueId();
-				oldUnitsGroups.push_back( pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
+				oldUnitsGroups.push_back( std::pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
 				nGroup = Singleton<IAILogic>()->GenerateGroupNumber();
 				Singleton<IAILogic>()->RegisterGroup( units, nGroup );
 				if ( fDispersion != 0.0f )
@@ -1607,7 +1607,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 		}
 	}
 
-	for ( list< pair<CCommonUnit*, int> >::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end(); ++iter )
+	for ( std::list< std::pair<CCommonUnit*, int> >::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end(); ++iter )
 		theGroupLogic.AddUnitToGroup( iter->first, iter->second );
 
 	return 0;
@@ -1635,7 +1635,7 @@ class CUnitsEnumerator : public IEnumerator
 {
 	Script *pScript;
 	int nResult;
-	hash_set<int> squads;
+	std::unordered_set<int> squads;
 public:
 	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}
 	bool AddUnit( CAIUnit *pUnit )
@@ -1646,7 +1646,7 @@ public:
 			if ( squads.find( nSquadID ) == squads.end() )
 			{
 				++nResult;
-				squads[nSquadID] = true;
+				squads.emplace(nSquadID);
 			}
 		}
 		else
@@ -1802,7 +1802,7 @@ int CScripts::IsSomeUnitInArea( struct lua_State *state )
 	}
 	else
 	{
-		const string szName = script.GetObject( 2 );
+		const std::string szName = script.GetObject( 2 );
 		const bool bCountPlanes = script.GetObject( 3 ).IsNumber() ? script.GetObject( 3 ) : true;
 		CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNUnitsInArea: wrong script area name (%s)", szName.c_str() ), script );
 		const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -1838,7 +1838,7 @@ int CScripts::GetNUnitsInArea( struct lua_State *state )
 	else
 	{
 		CHECK_ERROR( script.GetObject( 2 ).IsString( ), "GetNUnitsInArea: the second parameter is not a string", script );
-		const string szName = script.GetObject( 2 );
+		const std::string szName = script.GetObject( 2 );
 		CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNUnitsInArea: wrong script area name (%s)", szName.c_str() ), script );
 
 		const bool bCountPlanes = script.GetObject( 3 ).IsNumber() ? script.GetObject( 3 ) : true;
@@ -1859,7 +1859,7 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 	float fR = 0;
 	CVec2 vCenter( VNULL2 );
 	const int nScriptGroup = script.GetObject( 1 );
-	string szName;
+	std::string szName;
 	bool bCountPlanes;
 	bool bCircle = false;
 
@@ -1901,7 +1901,7 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 		if ( bCircle )
 		{
 			// CRAP{ ??? static objects ??? dynamic_cast
-			for ( list< CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptGroup].begin(); iter != pScripts->groups[nScriptGroup].end(); ++iter )
+			for ( std::list< CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptGroup].begin(); iter != pScripts->groups[nScriptGroup].end(); ++iter )
 			{
 				if ( CFormation *pFormation = dynamic_cast_ptr<CFormation*>( *iter ) )
 				{
@@ -1930,7 +1930,7 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 			SRect areaRect;
 			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs(area.vAABBHalfSize.x), fabs(area.vAABBHalfSize.y) );
 			// CRAP{ ??? static objects ??? dynamic_cast
-			for ( list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptGroup].begin(); iter != pScripts->groups[nScriptGroup].end(); ++iter )
+			for ( std::list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptGroup].begin(); iter != pScripts->groups[nScriptGroup].end(); ++iter )
 			{
 				if ( CFormation *pFormation = dynamic_cast_ptr<CFormation*>( *iter ) )
 				{
@@ -2020,7 +2020,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 	const int nUniqueID = script.GetObject( 1 );
 	const int nPlayer = script.GetObject( 2 );
 
-	hash_map<int,bool> ids;
+	std::unordered_map<int,bool> ids;
 
 	if ( CLinkObject::IsLinkObjectExists( nUniqueID ) )
 	{
@@ -2052,7 +2052,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 		}
 	}
 
-	for ( hash_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+	for ( std::unordered_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
 		script.PushNumber( it->first );	
 	return ids.size();
 }
@@ -2363,7 +2363,7 @@ int CScripts::GetNUnitsInPlayerUF( struct lua_State *state )
 	return 1;
 }
 
-void GetTraceFormatResult( Script *pScript, string *pResult )
+void GetTraceFormatResult( Script *pScript, std::string *pResult )
 {
 	Script &script = *pScript;
 
@@ -2413,7 +2413,7 @@ int CScripts::Trace( struct lua_State *state )
 		NI_ASSERT( script.GetObject( i ).IsNil() ? script.GetObject( i ) != 0 : true, "NILL value passed, check sintaxis" );
 		CHECK_ERROR( script.GetObject( i ).IsNumber(  ), StrFmt( "Trace: the %d parameter is not a number", i ), script );
 	}
-	string result;	
+	std::string result;
 	GetTraceFormatResult( &script, &result );
 
 	pScripts->pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, result.c_str(), 0xff00ff00 );
@@ -2430,10 +2430,10 @@ int CScripts::DisplayTrace( struct lua_State *state )
 	for ( int i = 2; i <= script.GetTop(); ++i )
 		CHECK_ERROR( script.GetObject( i ).IsNumber( ), StrFmt( "DisplayTrace: the %d parameter is not a number", i ), script );
 
-	string result;	
+	std::string result;
 	GetTraceFormatResult( &script, &result );
 
-	const string szSeasonName = NStr::ToMBCS( NGlobal::GetVar( "World.Season", "" ) );
+	const std::string szSeasonName = NStr::ToMBCS( NGlobal::GetVar( "World.Season", "" ) );
 	const DWORD dwColor = NGlobal::GetVar( ("Scene.Colors." + szSeasonName + ".Text.Chat.Color").c_str(), int(0xffffffff) );
 	CONSOLE_BUFFER_LOG2( PIPE_CHAT, result.c_str(), dwColor, false );
 
@@ -2453,7 +2453,7 @@ int CScripts::ChangeFormation( struct lua_State *state )
 	CHECK_ERROR( pScripts->groups.find( nScriptID ) != pScripts->groups.end(), StrFmt( "ChangeFormationOrder: wrong script id (%d)", nScriptID ), script );
 	pScripts->DelInvalidUnits( nScriptID );
 
-	for ( list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptID].begin(); iter != pScripts->groups[nScriptID].end(); ++iter )
+	for ( std::list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptID].begin(); iter != pScripts->groups[nScriptID].end(); ++iter )
 	{
 		if ( CFormation *pFormation = dynamic_cast_ptr<CFormation*>(*iter) )
 		{
@@ -2567,7 +2567,7 @@ int CScripts::SetCatchArtFlag( struct lua_State *pState )
 	{
 		pScripts->DelInvalidUnits( nScriptID );
 		CScriptGroups::iterator pos = pScripts->groups.find( nScriptID );
-		for ( list<CPtr<CUpdatableObj> >::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
+		for ( std::list<CPtr<CUpdatableObj> >::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
 		{
 			if ( CDynamicCast<CFormation> pFormation = *it )
 				pFormation->SetCatchArtFlag( dwCatchArtFlag );
@@ -2608,10 +2608,10 @@ int CScripts::DamageObject( struct lua_State *pState )
 	}
 	else if ( CFormation *pFormation = dynamic_cast<CFormation*>(pUpdatableObj) )
 	{
-		list<CSoldier*> soldiers;
+		std::list<CSoldier*> soldiers;
 		for ( int i = 0; i < pFormation->Size(); ++i )
 			soldiers.push_back( (*pFormation)[i] );
-		for ( list<CSoldier*>::iterator iter = soldiers.begin(); iter != soldiers.end(); ++iter )
+		for ( std::list<CSoldier*>::iterator iter = soldiers.begin(); iter != soldiers.end(); ++iter )
 		{
 			CSoldier *pSoldier = *iter;
 
@@ -2859,7 +2859,7 @@ int CScripts::AskClient( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "AskClient: first parameter isn't a string", script );
-	string szRequest = script.GetObject( 1 );
+	std::string szRequest = script.GetObject( 1 );
 
 	Singleton<IConsoleBuffer>()->WriteASCII( PIPE_CONSOLE_CMDS, szRequest.c_str() );
 
@@ -2905,7 +2905,7 @@ int CScripts::ChangeSelection( struct lua_State *pState )
 
 	if ( pScripts->groups.find( nScriptID ) != pScripts->groups.end() )
 	{
-		for ( list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptID].begin(); iter != pScripts->groups[nScriptID].end(); ++iter )
+		for ( std::list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nScriptID].begin(); iter != pScripts->groups[nScriptID].end(); ++iter )
 			updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_SELECTION, *iter, nParam );
 	}
 
@@ -2917,7 +2917,7 @@ int CScripts::ReturnScriptIDs( struct lua_State *pState )
 	Script script( pState );
 
 	const int nReturns = script.GetTop();
-	hash_set<int> selectedUnits;
+	std::unordered_set<int> selectedUnits;
 	for ( int i = 1; i <= nReturns; ++i )
 	{
 		NI_ASSERT( script.GetObject( i ).IsNumber(  ), "ReturnScriptIDs: %d parameter isn't a number" );
@@ -2935,7 +2935,7 @@ int CScripts::ReturnScriptIDs( struct lua_State *pState )
 
 	while ( !selectedUnits.empty() )
 	{
-		const int nScriptID = selectedUnits.begin()->first;
+		const int nScriptID = *selectedUnits.begin();
 		selectedUnits.erase( nScriptID );
 
 		pScripts->CallScriptFunction( StrFmt( "GetSelectedUnitsFeedBack( %d )", nScriptID ) );
@@ -2995,7 +2995,7 @@ int CScripts::GetScriptAreaParams( struct lua_State *pState )
 {
 	Script script( pState );
 
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetScriptAreaParams: wrong script area name (%s)", szName.c_str() ), script );
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3104,7 +3104,7 @@ int CScripts::ViewZone( struct lua_State *pState )
 		CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "ViewZone: the first parameter is not a string", script );
 		CHECK_ERROR( script.GetObject( 2 ).IsNumber(  ), "ViewZone: the second parameter is not a number", script );
 
-		const string szName = script.GetObject( 1 );
+		const std::string szName = script.GetObject( 1 );
 		const int nShow = script.GetObject( 2 );
 
 		CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "ViewZone: wrong script area name (%s)", szName.c_str() ), script );
@@ -3167,7 +3167,7 @@ int CScripts::GetNMinesInScriptArea( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "GetNMinesInScriptArea: the second parameter is not a string", script );
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNMinesInScriptArea: wrong script area name (%s)", szName.c_str() ), script );
 
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3189,7 +3189,7 @@ int CScripts::GetNTrenchesInScriptArea( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "GetNTrenchesInScriptArea: the second parameter is not a string", script );
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNTrenchesInScriptArea: wrong script area name (%s)", szName.c_str() ), script );
 
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3211,7 +3211,7 @@ int CScripts::GetNFencesInScriptArea( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString( ), "GetNFencesInScriptArea: the second parameter is not a string", script );
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNFencesInScriptArea: wrong script area name (%s)", szName.c_str() ), script );
 
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3233,7 +3233,7 @@ int CScripts::GetNAntitankInScriptArea( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "GetNAntitankInScriptArea: the second parameter is not a string", script );
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNAntitankInScriptArea: wrong script area name (%s)", szName.c_str() ), script );
 
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3255,7 +3255,7 @@ int CScripts::GetNAPFencesInScriptArea( struct lua_State *pState )
 	Script script( pState );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(   ), "GetNAPFencesInScriptArea: the second parameter is not a string", script );
-	const string szName = script.GetObject( 1 );
+	const std::string szName = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNAPFencesInScriptArea: wrong script area name (%s)", szName.c_str() ), script );
 
 	const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -3277,7 +3277,7 @@ int CScripts::Password( struct lua_State *pState )
 	Script script( pState );
 
 	if (script.GetObject( 1 ).IsString(  ) )
-		theCheats.CheckPassword( string(script.GetObject( 1 )) );
+		theCheats.CheckPassword( std::string(script.GetObject( 1 ).GetString()) );
 
 	return 0;
 }
@@ -3302,7 +3302,7 @@ int CScripts::GetNUnitsOfType( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject( 1 ).IsString(  ), "GetNUnitsOfType: first parameters isn't a string", script );
 	CHECK_ERROR( script.GetObject( 2 ).IsNumber(  ), "GetNUnitsOfType: second parameters isn't a number", script );
 
-	const string szType = script.GetObject( 1 );
+	const std::string szType = script.GetObject( 1 );
 	const int nParty = script.GetObject( 2 );
 
 	CHECK_ERROR( nParty >= 0 && nParty < 3, StrFmt( "GetNUnitsOfType: wrong number of party (%d)", nParty ), script );
@@ -3329,7 +3329,7 @@ int CScripts::GetMapSize( struct lua_State *pState )
 int CScripts::CheckMissionBonus( struct lua_State *pState )
 {
 	Script script( pState );
-	const string szBonus = script.GetObject( 1 );
+	const std::string szBonus = script.GetObject( 1 );
 	
 	bool bRes = 0; // pTracker->GetBonusStatus( szBonus );
 	
@@ -3385,7 +3385,7 @@ int CScripts::GetUnitListInArea( struct lua_State *state )
 	{
 		CHECK_ERROR( script.GetObject( 2 ).IsString( ), "GetUnitListInArea: the second parameter is not a string", script );
 
-		const string szName = script.GetObject( 2 );
+		const std::string szName = script.GetObject( 2 );
 		const bool bCountPlanes = script.GetObject( 3 ).IsNumber() ? script.GetObject( 3 ) : true;
 
 		CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetNUnitsInArea: wrong script area name (%s)", szName.c_str() ), script );
@@ -3405,7 +3405,7 @@ int CScripts::IsUnitInArea( struct lua_State *state )
 
 	CHECK_ERROR( script.GetObject( 1 ).IsNumber( ), "GetUnitListInArea: the first parameter is not a number", script );
 	const int nPlayer = script.GetObject( 1 );
-	string szName;
+	std::string szName;
 	float fR ( 0 );
 	CVec2 vCenter( VNULL2 );
 	bool bCircle = false;
@@ -3533,7 +3533,7 @@ int CScripts::GetFreeArtillery( struct lua_State *state )
 	float fRadius = 0.0f;
 	if ( script.GetObject( 1 ).IsString() )
 	{
-		const string szName = script.GetObject( 1 );
+		const std::string szName = script.GetObject( 1 );
 		CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "GetFreeArtillery: wrong script area name (%s)", szName.c_str() ), script );
 		const NDb::SScriptArea &area = pScripts->areas[szName];
 		CHECK_ERROR( area.eType == NDb::EAT_CIRCLE, StrFmt( "GetFreeArtillery: wrong script area (%s) must be EAT_CIRCLE", szName.c_str() ), script );
@@ -3549,7 +3549,7 @@ int CScripts::GetFreeArtillery( struct lua_State *state )
 	else
 		CHECK_ERROR( false, "GetFreeArtillery: wrong params: GetFreeArtillery( ScriptArea | [ x, y, radius ] )", script );
 
-	vector<CPtr<CArtillery > > artilleries;
+	std::vector<CPtr<CArtillery > > artilleries;
 	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CArtillery *pArtillery = dynamic_cast<CArtillery*>( *iter );
@@ -3561,7 +3561,7 @@ int CScripts::GetFreeArtillery( struct lua_State *state )
 	}
 	sort( artilleries.begin(), artilleries.end(), SArtillerySort( vCenter ) );
 
-	for ( vector<CPtr<CArtillery > >::const_iterator it = artilleries.begin(); it != artilleries.end(); ++it )
+	for ( std::vector<CPtr<CArtillery > >::const_iterator it = artilleries.begin(); it != artilleries.end(); ++it )
 	{
 		script.PushNumber( (*it)->GetUniqueID() );
 	}
@@ -3629,7 +3629,7 @@ int CScripts::LandReinforcementFromMap( struct lua_State *state )
 	else
 	{
 		CHECK_ERROR( script.GetObject( 2 ).IsString(), "LandReinforcementFromMap: the second parameter is not a ReinfName", script );
-		const string szName = script.GetObject( 2 ).GetString();
+		const std::string szName = script.GetObject( 2 ).GetString();
 		for ( int i = 0; i < pMapInfo->players[nPlayer].scriptReinforcementsTextID.size(); ++i )
 		{
 			if ( szName == pMapInfo->players[nPlayer].scriptReinforcementsTextID[i].szName )
@@ -3800,7 +3800,7 @@ int CScripts::GameMesage( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject( 1 ).IsString(), "GameMesage: the first parameter is not a number", script );
 	CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "GameMesage: the second parameter is not a number", script );
 	CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "GameMesage: the 3rd parameter is not a number", script );
-	const string szEventName = script.GetObject( 1 ).GetString();
+	const std::string szEventName = script.GetObject( 1 ).GetString();
 	
 	NInput::PostEvent( szEventName, float(script.GetObject( 2 ).GetNumber()), float(script.GetObject( 3 ).GetNumber()) );
 	//IGameEvent * pEvent = Singleton<IInput>()->GetEvent( szEventName );
@@ -3967,7 +3967,7 @@ void CScripts::SendUpdateToObjects( int nScriptID, EActionNotify eUpdateType, in
 
 	CScriptGroup &scriptGroup = pScripts->groups[nScriptID];
 
-	for ( list<CPtr<CUpdatableObj> >::iterator it = scriptGroup.begin(); it!= scriptGroup.end(); ++it )
+	for ( std::list<CPtr<CUpdatableObj> >::iterator it = scriptGroup.begin(); it!= scriptGroup.end(); ++it )
 		updater.AddUpdate( 0, eUpdateType, *it, nParam );
 
 	return;
@@ -4041,7 +4041,7 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 		}
 		else if ( !script.GetObject( 3 ).IsNumberOnly() )
 		{
-			const string szName = script.GetObject( 3 ).GetString();
+			const std::string szName = script.GetObject( 3 ).GetString();
 			CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(), StrFmt( "WaitForGroupInArea: wrong script area name (%s)", szName.c_str() ), script );
 			
 			const NDb::SScriptArea &area = pScripts->areas[szName];
@@ -4106,8 +4106,8 @@ int CScripts::SCRunTime( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject(1).IsString(), "SCRunTime: parameter 1 isn't Camera Name", script );
 	CHECK_ERROR( script.GetObject(2).IsString(), "SCRunTime: parameter 2 isn't Camera Name", script );
 	CHECK_ERROR( script.GetObject(3).IsNumber(), "SCRunTime: parameter 3 isn't Time", script );
-	const string szStart = script.GetObject(1);
-	const string szFinish = script.GetObject(2);
+	const std::string szStart = script.GetObject(1);
+	const std::string szFinish = script.GetObject(2);
 	pUpdate->szStartCam = szStart;
 	pUpdate->szFinishCam = szFinish;
 	pUpdate->fTime = float(script.GetObject(3).GetNumber());
@@ -4176,8 +4176,8 @@ int CScripts::SCRunSpeed( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject(1).IsString(), "SCRunSpeed: parameter 1 isn't Camera Name", script );
 	CHECK_ERROR( script.GetObject(2).IsString(), "SCRunSpeed: parameter 2 isn't Camera Name", script );
 	CHECK_ERROR( script.GetObject(3).IsNumber(), "SCRunSpeed: parameter 3 isn't Speed", script );
-	const string szStart = script.GetObject(1);
-	const string szFinish = script.GetObject(2);
+	const std::string szStart = script.GetObject(1);
+	const std::string szFinish = script.GetObject(2);
 	pUpdate->szStartCam = szStart;
 	pUpdate->szFinishCam = szFinish;
 	pUpdate->fLinSpeed = float(script.GetObject(3).GetNumber());
@@ -4251,7 +4251,7 @@ int CScripts::SCStartMovie( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject(1).IsNumber(), "SCStartMovie: the 1st parameter should be integer (movie index)", script )
 	const int nMovieIndex = script.GetObject(1).GetNumber();
 
-	string szCallbackFuncName = "";
+	std::string szCallbackFuncName = "";
 	if ( script.GetTop() > 1 )
 		szCallbackFuncName = script.GetObject(2).GetString();
 
@@ -4420,7 +4420,7 @@ int CScripts::UnitCanSee( struct lua_State *pState )
 		if ( pScripts->groups.find( nTargetID ) != pScripts->groups.end() )
 		{
 			pScripts->DelInvalidUnits( nTargetID );
-			for ( list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nTargetID].begin(); iter != pScripts->groups[nTargetID].end(); ++iter )
+			for ( std::list<CPtr<CUpdatableObj> >::iterator iter = pScripts->groups[nTargetID].begin(); iter != pScripts->groups[nTargetID].end(); ++iter )
 			{
 				CDynamicCast<CCommonUnit> pUnit( *iter );
 				if ( pLooker && pUnit && pUnit->IsVisible( pLooker->GetParty() ) && 
@@ -4610,7 +4610,7 @@ int CScripts::SetLeader( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject(2).IsString(), "SetLeader: parameter 2 isn't a name", script );
 
 	NDb::EReinforcementType eType = (NDb::EReinforcementType)( (int)( script.GetObject( 1 ) ) );
-	wstring wszName = NStr::ToUnicode( script.GetObject( 2 ).GetString() );
+	std::wstring wszName = NStr::ToUnicode( script.GetObject( 2 ).GetString() );
 	Singleton<IAIScenarioTracker>()->DebugAssignLeader( eType, wszName );
 #endif //_FINALRELEASE
 
@@ -4688,7 +4688,7 @@ void CScripts::RemoveUnit( CAIUnit * pUnit )
 int CScripts::RemoveAllUnitsTmp( struct lua_State *pState )
 {
 	Script script( pState );
-	hash_map<int, bool> excluded;
+	std::unordered_map<int, bool> excluded;
 	for ( int i = 1; script.GetObject( i ).IsNumber(); ++i )
 		excluded[script.GetObject(i).GetNumber()] = true;
 
@@ -4699,14 +4699,14 @@ int CScripts::RemoveAllUnitsTmp( struct lua_State *pState )
 			rememberedUnits.push_back( pUnit );
 	}
 
-	for ( list<CObj<CAIUnit> >::iterator it = rememberedUnits.begin(); it != rememberedUnits.end(); ++it )
+	for ( std::list<CObj<CAIUnit> >::iterator it = rememberedUnits.begin(); it != rememberedUnits.end(); ++it )
 		RemoveUnit( *it );
 	return 0;
 }
 
 int CScripts::ReturnAllUnits( struct lua_State *pState )
 {
-	for ( list<CObj<CAIUnit> >::iterator it = rememberedUnits.begin(); it != rememberedUnits.end(); )
+	for ( std::list<CObj<CAIUnit> >::iterator it = rememberedUnits.begin(); it != rememberedUnits.end(); )
 	{
 		CObj<CAIUnit> pUnit = *it;
 		it = rememberedUnits.erase( it );
@@ -4753,7 +4753,7 @@ int CScripts::SetDynamicObjectiveScriptGroup( struct lua_State *pState )
 	{
 		pScripts->DelInvalidUnits( nScriptID );
 
-		for ( list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
+		for ( std::list<CPtr<CUpdatableObj> >::iterator it = pScripts->groups[nScriptID].begin();
 			it != pScripts->groups[nScriptID].end(); ++it )
 		{
 			if ( (*it)->IsAlive() )
@@ -4805,7 +4805,7 @@ int CScripts::AddAmmoToAllUnits( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "AddAmmoToAllUnits: parameter 1 isn't a player number", script );
 	CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "AddAmmoToAllUnits: parameter 2 isn't a number", script );
 	const int nPlayer = script.GetObject( 1 ).GetNumber();
-	vector<int> ammoToAdd;
+	std::vector<int> ammoToAdd;
 	for ( int nParam = 2; script.GetObject( nParam ).IsNumber(); ++nParam )
 	{
 		ammoToAdd.push_back( script.GetObject( nParam ).GetNumber() );

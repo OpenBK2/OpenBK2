@@ -47,7 +47,7 @@ namespace NDb
 				eType( ICONTYPE_NONE )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -55,7 +55,7 @@ namespace NDb
 		};
 		CDBPtr< SMaterial > pMaterialZCheck;
 		CDBPtr< SMaterial > pMaterialNonZCheck;
-		vector< SIconType > icons;
+		std::vector< SIconType > icons;
 
 		SIconsSet() { }
 		//
@@ -118,17 +118,17 @@ namespace NDb
 				nPriority( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		CDBPtr< STexture > pTexture;
-		vector< CTRect<float> > hpBarBorders;
-		vector< CTRect<float> > hpBarColors;
-		vector< SVisObjIcon > icons;
-		vector< float > hpBarRanges;
+		std::vector< CTRect<float> > hpBarBorders;
+		std::vector< CTRect<float> > hpBarColors;
+		std::vector< SVisObjIcon > icons;
+		std::vector< float > hpBarRanges;
 
 		SVisObjIconsSet() { }
 		//
@@ -144,29 +144,29 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue );
-	SIconsSet::SIconType::EIconTypeEnum StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const string &szValue );
+	std::string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue );
+	SIconsSet::SIconType::EIconTypeEnum StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SIconsSet::SIconType::EIconTypeEnum>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SIconsSet::SIconType::EIconTypeEnum ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( szValue ); }
+	static std::string ToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SIconsSet::SIconType::EIconTypeEnum ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue );
-	SVisObjIconsSet::SVisObjIcon::EVisObjIconType StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const string &szValue );
+	std::string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue );
+	SVisObjIconsSet::SVisObjIcon::EVisObjIconType StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( szValue ); }
+	static std::string ToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( szValue ); }
 };
 

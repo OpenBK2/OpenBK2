@@ -16,7 +16,7 @@ class CBridgeCreation : public CLongObjectCreation
 
 	ZDATA_(CLongObjectCreation)
 	CObj<CFullBridge> pFullBridge;
-	vector< CObj<CBridgeSpan> > spans;
+	std::vector< CObj<CBridgeSpan> > spans;
 	CVec2 vStartPoint;
 	CLine2 line;
 	int nCurIndex;
@@ -28,7 +28,7 @@ public:
 	CBridgeCreation() : CLongObjectCreation( - 1, false ) {  }
 	CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit *pUnit, const bool bAllowAIModification );
 
-	static CVec2 SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit );
+	static CVec2 SortBridgeSpans( std::vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit );
 
 	//specific
 	const CVec2 & GetStartPoint() const;	// куда посылать грузовик
@@ -48,7 +48,7 @@ public:
 	void LockNext() { }
 	void LockCannotBuild() { }
 	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) { return true; } 
-	void GetUnitsPreventing( list< CPtr<CAIUnit> > * units ){}
+	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units ){}
 	virtual bool IsCheatPath() const { return true; }
 };
 

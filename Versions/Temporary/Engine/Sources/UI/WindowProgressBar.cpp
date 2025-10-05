@@ -122,7 +122,7 @@ void CWindowMultiTextureProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDe
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowMultiTextureProgressBarShared *>( pDesc->pShared );
 	parts.reserve( pShared->states.size() );
-	for ( vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin(); 
+	for ( std::vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin();
 		it != pShared->states.end(); ++it )
 	{
 		const NDb::SMultiTextureProgressBarSharedState &state = *it;
@@ -167,12 +167,12 @@ bool CWindowMultiTextureProgressBar::IsSolid() const
 	return pInstance->bSolid;
 }
 
-void CWindowMultiTextureProgressBar::GetPositions( vector<float> *pPositions ) const
+void CWindowMultiTextureProgressBar::GetPositions( std::vector<float> *pPositions ) const
 {
 	*pPositions = pInstance->progresses;
 }
 
-void CWindowMultiTextureProgressBar::SetPositions( const vector<float> &positions, bool bSolid )
+void CWindowMultiTextureProgressBar::SetPositions( const std::vector<float> &positions, bool bSolid )
 {
 	NI_ASSERT( !positions.empty(), "Not enough values for multi texture progress bar" );
 	pInstance->progresses = positions;
@@ -182,7 +182,7 @@ void CWindowMultiTextureProgressBar::SetPositions( const vector<float> &position
 int CWindowMultiTextureProgressBar::FindStateIndex( float fProgress )
 {
 	int nIndex = 0;
-	for ( vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin(); 
+	for ( std::vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin();
 		it != pShared->states.end(); ++it, ++nIndex )
 	{
 		const NDb::SMultiTextureProgressBarSharedState &state = *it;

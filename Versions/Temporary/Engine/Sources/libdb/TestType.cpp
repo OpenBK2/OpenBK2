@@ -5,7 +5,7 @@ using namespace NDb::NTypeDef;
 namespace NTest
 {
 
-typedef hash_map<string, CObj<STypeDef> > CSimpleTypesMap;
+typedef std::unordered_map<std::string, CObj<STypeDef> > CSimpleTypesMap;
 static CSimpleTypesMap simpleTypes;
 struct SSimpleTypesAutoMagic
 {
@@ -34,14 +34,14 @@ struct SSimpleTypesAutoMagic
 	}
 };
 static SSimpleTypesAutoMagic aSSimpleTypesAutoMagic;
-STypeDef* GetSimpleType( const string &szName )
+STypeDef* GetSimpleType( const std::string &szName )
 {
 	CSimpleTypesMap::iterator pos = simpleTypes.find( szName );
 	NI_ASSERT( pos != simpleTypes.end(), StrFmt("Unknown type \"%s\"", szName.c_str()) );
 	return pos != simpleTypes.end() ? pos->second : 0;
 }
 
-void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
+void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 {
 	//
 	// Weapon

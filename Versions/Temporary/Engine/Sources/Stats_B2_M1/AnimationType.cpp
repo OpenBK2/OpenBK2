@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EAnimationType eValue )
+std::string EnumToString( NDb::EAnimationType eValue )
 {
 	switch ( eValue )
 	{
@@ -107,7 +107,7 @@ string EnumToString( NDb::EAnimationType eValue )
 	}
 }
 
-NDb::EAnimationType NDb::StringToEnum_NDb_EAnimationType( const string &szValue )
+NDb::EAnimationType NDb::StringToEnum_NDb_EAnimationType( const std::string &szValue )
 {
 	if ( szValue == "ANIMATION_UNKNOWN" )
 		return NDb::ANIMATION_UNKNOWN;

@@ -34,7 +34,7 @@ namespace NDb
 			nAddPromotion( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -57,7 +57,7 @@ namespace NDb
 			nExpNeeded( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -79,7 +79,7 @@ namespace NDb
 			nStartingChapter( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -107,17 +107,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< CDBPtr< SChapter > > chapters;
+		std::vector< CDBPtr< SChapter > > chapters;
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedDescFileRef;
 		NFile::CFilePath szScriptFileRef;
-		vector< SUIScreenEntry > screens;
+		std::vector< SUIScreenEntry > screens;
 		CDBPtr< STexture > pTextureNotStarted;
 		CDBPtr< STexture > pTextureCompleted;
 		CDBPtr< STexture > pTextureNotStartedSelected;
@@ -126,19 +126,19 @@ namespace NDb
 		CDBPtr< STexture > pTextureMenuBackground;
 		CDBPtr< STexture > pTextureMenuIcon;
 		CDBPtr< STexture > pTextureChapterFinishBonus;
-		vector< SRankExperience > rankExperiences;
-		vector< SLeaderExpLevel > leaderRanks;
-		vector< SLeader > leaders;
-		vector< CDBPtr< SDifficultyLevel > > difficultyLevels;
+		std::vector< SRankExperience > rankExperiences;
+		std::vector< SLeaderExpLevel > leaderRanks;
+		std::vector< SLeader > leaders;
+		std::vector< CDBPtr< SDifficultyLevel > > difficultyLevels;
 		NFile::CFilePath szIntroMovie;
 		NFile::CFilePath szOutroMovie;
 		CDBPtr< SReinforcementTypes > pReinforcementTypes;
 		CDBPtr< SMapMusic > pIntermissionMusic;
 		CDBPtr< STexture > pSaveLoadFlag;
-		vector< SMedalConditions > medalsForChapter;
-		vector< SMedalConditions > medalsForKills;
-		vector< SMedalConditions > medalsForTactics;
-		vector< SMedalConditions > medalsForEconomy;
+		std::vector< SMedalConditions > medalsForChapter;
+		std::vector< SMedalConditions > medalsForKills;
+		std::vector< SMedalConditions > medalsForTactics;
+		std::vector< SMedalConditions > medalsForEconomy;
 		CDBPtr< SMedal > pMedalForMunchkinism;
 
 		#include "include_Campaign.h"
@@ -175,7 +175,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -194,7 +194,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -253,8 +253,8 @@ namespace NDb
 		CVec2 vPlaceOnChapterMap;
 		int nMissionsToEnable;
 		EMissionEnableType eMissionEnableType;
-		vector< CDBPtr< SChapterBonus > > reward;
-		vector< SEnemyEntry > expectedEnemy;
+		std::vector< CDBPtr< SChapterBonus > > reward;
+		std::vector< SEnemyEntry > expectedEnemy;
 		int nRecommendedCalls;
 		float fPotentialIncomplete;
 		float fPotentialComplete;
@@ -283,7 +283,7 @@ namespace NDb
 			vEndOffset( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -305,7 +305,7 @@ namespace NDb
 			nQuantity( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -317,13 +317,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SReinforcement > > reinforcements;
+		std::vector< CDBPtr< SReinforcement > > reinforcements;
 
 		SBaseReinforcements() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -352,7 +352,7 @@ namespace NDb
 			eReinforcementType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -402,11 +402,11 @@ namespace NDb
 		NFile::CFilePath szLocalizedNameSaveLoadFileRef;
 		NFile::CFilePath szLocalizedDateFileRef;
 		NFile::CFilePath szLocalizedDescriptionFileRef;
-		vector< SMissionEnableInfo > missionPath;
+		std::vector< SMissionEnableInfo > missionPath;
 		NFile::CFilePath szScriptFileRef;
 		bool bUseMapReinforcements;
-		vector< SBaseReinforcements > basePlayerReinforcements;
-		vector< SUnitClassEntry > reinforcementModifiers;
+		std::vector< SBaseReinforcements > basePlayerReinforcements;
+		std::vector< SUnitClassEntry > reinforcementModifiers;
 		CDBPtr< STexture > pMapPicture;
 		NFile::CFilePath szSeaNoiseMask;
 		NFile::CFilePath szDifferentColourMap;
@@ -416,7 +416,7 @@ namespace NDb
 		float fMainStrikePower;
 		int nReinforcementCalls;
 		CDBPtr< SMapInfo > pDetailsMap;
-		vector< CDBPtr< STexture > > arrowTextures;
+		std::vector< CDBPtr< STexture > > arrowTextures;
 		NFile::CFilePath szIntroMovie;
 		SChapterGeneralInfo general;
 
@@ -473,85 +473,85 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EMissionEnableType eValue );
-	EMissionEnableType StringToEnum_NDb_EMissionEnableType( const string &szValue );
+	std::string EnumToString( NDb::EMissionEnableType eValue );
+	EMissionEnableType StringToEnum_NDb_EMissionEnableType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMissionEnableType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMissionEnableType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMissionEnableType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionEnableType( szValue ); }
+	static std::string ToString( NDb::EMissionEnableType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMissionEnableType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMissionEnableType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMissionType eValue );
-	EMissionType StringToEnum_NDb_EMissionType( const string &szValue );
+	std::string EnumToString( NDb::EMissionType eValue );
+	EMissionType StringToEnum_NDb_EMissionType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMissionType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMissionType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMissionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionType( szValue ); }
+	static std::string ToString( NDb::EMissionType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMissionType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMissionType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMissionWeather eValue );
-	EMissionWeather StringToEnum_NDb_EMissionWeather( const string &szValue );
+	std::string EnumToString( NDb::EMissionWeather eValue );
+	EMissionWeather StringToEnum_NDb_EMissionWeather( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMissionWeather>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMissionWeather eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMissionWeather ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionWeather( szValue ); }
+	static std::string ToString( NDb::EMissionWeather eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMissionWeather ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMissionWeather( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMissionDayTime eValue );
-	EMissionDayTime StringToEnum_NDb_EMissionDayTime( const string &szValue );
+	std::string EnumToString( NDb::EMissionDayTime eValue );
+	EMissionDayTime StringToEnum_NDb_EMissionDayTime( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMissionDayTime>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMissionDayTime eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMissionDayTime ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionDayTime( szValue ); }
+	static std::string ToString( NDb::EMissionDayTime eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMissionDayTime ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMissionDayTime( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMissionDifficulty eValue );
-	EMissionDifficulty StringToEnum_NDb_EMissionDifficulty( const string &szValue );
+	std::string EnumToString( NDb::EMissionDifficulty eValue );
+	EMissionDifficulty StringToEnum_NDb_EMissionDifficulty( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMissionDifficulty>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMissionDifficulty eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMissionDifficulty ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionDifficulty( szValue ); }
+	static std::string ToString( NDb::EMissionDifficulty eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMissionDifficulty ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMissionDifficulty( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EChapterBonusType eValue );
-	EChapterBonusType StringToEnum_NDb_EChapterBonusType( const string &szValue );
+	std::string EnumToString( NDb::EChapterBonusType eValue );
+	EChapterBonusType StringToEnum_NDb_EChapterBonusType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EChapterBonusType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EChapterBonusType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EChapterBonusType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EChapterBonusType( szValue ); }
+	static std::string ToString( NDb::EChapterBonusType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EChapterBonusType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EChapterBonusType( szValue ); }
 };
 

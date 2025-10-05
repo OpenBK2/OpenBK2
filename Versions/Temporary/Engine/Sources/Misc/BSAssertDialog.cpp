@@ -23,15 +23,15 @@ struct SAssertionDlgParams
 {
 	const char *pszFileName;
 	int nLineNumber;
-	string szCondition;
-	string szDescription;
-	const vector<SCallStackEntry> &entries;
+	std::string szCondition;
+	std::string szDescription;
+	const std::vector<SCallStackEntry> &entries;
 	SIgnoresList &ignores;
 	const char *pszExtInfo;
 	//
 	SAssertionDlgParams( const char *pszNewFileName, int nNewLineNumber, 
 		const char *pszNewCondition, const char *pszNewDescription, 
-		const vector<SCallStackEntry> &_entries, SIgnoresList &newIgnores, const char *szExtInfo )
+		const std::vector<SCallStackEntry> &_entries, SIgnoresList &newIgnores, const char *szExtInfo )
 		: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ), 
 		szCondition( pszNewCondition ), szDescription( pszNewDescription ), 
 		entries(_entries), ignores( newIgnores ), pszExtInfo( szExtInfo ) {  }
@@ -40,12 +40,12 @@ struct SAssertionDlgParams
 EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszFileName, int nLineNumber,
 																		const char *_pszCondition, const char *_pszDescription, 
-																		const vector<SCallStackEntry> &entries, SIgnoresList &ignores,
+																		const std::vector<SCallStackEntry> &entries, SIgnoresList &ignores,
 																		const char *pszExtInfo )
 {
 	char szLineNumber[64];
 	itoa( nLineNumber, szLineNumber, 10 );
-	string szDescription = string( pszFileName ) + "(" + szLineNumber + "): " + _pszDescription;
+	std::string szDescription = std::string( pszFileName ) + "(" + szLineNumber + "): " + _pszDescription;
 
 	WriteReportToFile( "error.txt", _pszCondition, szDescription.c_str(), entries );
 	// remember old cursor before dialog box call

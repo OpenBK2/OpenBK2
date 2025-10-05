@@ -39,7 +39,7 @@ namespace NDb
 				bCyclic( false )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );

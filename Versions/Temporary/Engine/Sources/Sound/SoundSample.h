@@ -19,7 +19,7 @@ public:
 	~CSoundSample();
 	int operator&( IBinSaver &saver );
 #if !defined(_FINALRELEASE)
-	string GetName() const { return dbidSound.ToString(); }
+	std::string GetName() const { return dbidSound.ToString(); }
 #endif
 	//
 	FSOUND_SAMPLE* GetInternalContainer();

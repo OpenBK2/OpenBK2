@@ -10,9 +10,9 @@ struct IResourceManager : CObjectBase
 	//
 	struct SDBConfig
 	{
-		string szSrcFilePath;
-		string szDstFilePath;
-		string szObjectRecordIDsPath;
+		std::string szSrcFilePath;
+		std::string szDstFilePath;
+		std::string szObjectRecordIDsPath;
 	};
 
 	// starts up ResourceManager, return true if it has been bootstrapped and ready
@@ -21,12 +21,12 @@ struct IResourceManager : CObjectBase
 	//get manipulator for key-referenced types
 	virtual IManipulator* CreateTableManipulator() = 0;
 	//get manipulator for objects tree structure (arg - type name)
-	virtual IManipulator* CreateFolderManipulator( const string &szTypeName ) = 0;
+	virtual IManipulator* CreateFolderManipulator( const std::string &szTypeName ) = 0;
 	virtual IManipulator* CreateFolderManipulator( int nID ) = 0;
 	//get db object manipulator
-	virtual IManipulator* CreateObjectManipulator( const string &szTypeName, const string &szObjectName ) = 0;
-	virtual IManipulator* CreateObjectManipulator( const string &szTypeName, const CDBID &rCDBID ) = 0;
-	virtual IManipulator* CreateObjectManipulator( const string &szObjectName ) = 0;
+	virtual IManipulator* CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName ) = 0;
+	virtual IManipulator* CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID ) = 0;
+	virtual IManipulator* CreateObjectManipulator( const std::string &szObjectName ) = 0;
 	virtual IManipulator* CreateObjectManipulator( const CDBID &rCDBID ) = 0;
 
 
@@ -40,10 +40,10 @@ struct IResourceManager : CObjectBase
 //		DB_MAIN
 //	};
  
-	virtual void FillReferencingObjects( bool *bServiceIsReady, const string &szTypeName, const string &szObjectName, list<string> &results ) = 0;
+	virtual void FillReferencingObjects( bool *bServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results ) = 0;
 	virtual void ResetCache() = 0;
 
-	virtual void SetDataDir( const string &dataDir ) {}
+	virtual void SetDataDir( const std::string &dataDir ) {}
 
 	virtual void SyncDB()    = 0;
 	virtual bool CanSyncDB() = 0;

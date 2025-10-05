@@ -19,15 +19,15 @@ private:
 	void MsgOnMultiplayerPause( const SGameMessage &msg );
 
 	bool OnLagInfoMessage( SMPUILagInfoMessage *pMsg );
-	void AddPlayerLine( const string &szName, const int nTime );
+	void AddPlayerLine( const std::string &szName, const int nTime );
 public:
 	CInterfaceMPWaitPlayers();
 
 	bool Init();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 	int operator&( IBinSaver &f ) { return 0; }
 };

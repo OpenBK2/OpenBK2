@@ -43,7 +43,7 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 	}
 }
 
-const bool CCommandsHistory::SerializeHistory( const string &szFileName, const bool bRead )
+const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, const bool bRead )
 {
 	CFileStream streamMain( StrFmt( "%s%s%s", NSaveLoad::GetReplayPath().c_str(), szFileName.c_str(), NSaveLoad::REPLAY_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaverMain = CreateBinSaver( &streamMain, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
@@ -62,7 +62,7 @@ const bool CCommandsHistory::SerializeHistory( const string &szFileName, const b
 	return true;
 }
 
-bool CCommandsHistory::LoadHistory( const string &szFileName )
+bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 {
 	if ( !SerializeHistory( szFileName, true ) )
 		return false;
@@ -107,7 +107,7 @@ bool CCommandsHistory::LoadHistory( const string &szFileName )
 	return true;
 }
 
-bool CCommandsHistory::SaveReplay( const string &szFileName, const SB2GameSpecificData &gameDesc, const vector<SMPSlot> &slots, const int nWinningSide )
+bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameSpecificData &gameDesc, const std::vector<SMPSlot> &slots, const int nWinningSide )
 {
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
 	replayInfo.nCaptureTime = gameDesc.nCaptureTime;;
@@ -154,7 +154,7 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 			bCanAddCommand = false;
 			if ( loadedHistory.find( nSegment ) != loadedHistory.end() )
 			{
-				for ( list< CPtr<IAILogicCommandB2> >::iterator iter = loadedHistory[nSegment].begin(); iter != loadedHistory[nSegment].end(); ++iter )
+				for ( std::list< CPtr<IAILogicCommandB2> >::iterator iter = loadedHistory[nSegment].begin(); iter != loadedHistory[nSegment].end(); ++iter )
 					pTranceiver->SendCommand( *iter );
 			}
 			bCanAddCommand = true;

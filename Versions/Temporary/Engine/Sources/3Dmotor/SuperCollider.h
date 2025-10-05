@@ -52,23 +52,23 @@ protected:
 		
 		SVelocity( const CVec3 &a ): vel(a), normVel(a) { fVel = fabs(vel); Normalize( &normVel ); }
 	};
-	vector<SGlobalTriangle> tris;
-	vector<STriangleSegments> trisSegments; // CRAP - most of the time this data is not used
-	vector<CVec3> points;
+	std::vector<SGlobalTriangle> tris;
+	std::vector<STriangleSegments> trisSegments; // CRAP - most of the time this data is not used
+	std::vector<CVec3> points;
 	CVolumeContainer volume;
 
 	// returns distance to collision and triangle point to collide (pIntersect)
 	float CollideSphereTriangle( const SSphere &sphere, const SVelocity &velocity,
 		const SGlobalTriangle &tri, CVec3 *pIntersect );
 	bool DoesTriSphereIntersect( const CVec3 &ptCenter, float fR, const SGlobalTriangle &tri );
-	void AddEntity( const SHMatrix &pos, const vector<CVec3> &_points, const vector<STriangle> &tris, int nUserDataIndex );
+	void AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_points, const std::vector<STriangle> &tris, int nUserDataIndex );
 public:
 };
 
 template<class TUserData>
 class CUserCollider: public CSuperCollider
 {
-	vector<TUserData> userData;
+	std::vector<TUserData> userData;
 public:
 	void PrepareCollider( const SBound &b, float fLeng )
 	{
@@ -78,7 +78,7 @@ public:
 		userData.clear();
 		volume.Init( b.s.ptCenter - b.ptHalfBox, b.s.ptCenter + b.ptHalfBox, fLeng );
 	}
-	void AddEntity( const SHMatrix &pos, const vector<CVec3> &_points, const vector<STriangle> &tris, const TUserData &ud )
+	void AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_points, const std::vector<STriangle> &tris, const TUserData &ud )
 	{
 		int nUserDataIndex = userData.size();
 		userData.push_back( ud );
@@ -93,7 +93,7 @@ public:
 		b.BoxExInit( sphere.ptCenter + vel * 0.5f, ptHalfBox );
 		b.Extend( sphere.fRadius );
 		volume.Fetch( b );
-		const vector<int> &fetchRes = volume.GetFetchBuffer();
+		const std::vector<int> &fetchRes = volume.GetFetchBuffer();
 		//nCollidedTris = fetchBufferArray.size();
 		SVelocity velocity( vel );
 		for ( int i = 0; i < volume.GetFetchedNum(); ++i )
@@ -114,7 +114,7 @@ public:
 		SBound b;
 		b.SphereInit( ptCenter, fR );
 		volume.Fetch( b );
-		const vector<int> &fetchRes = volume.GetFetchBuffer();
+		const std::vector<int> &fetchRes = volume.GetFetchBuffer();
 		for ( int i = 0; i < volume.GetFetchedNum(); ++i )
 		{
 			const SGlobalTriangle &t = tris[ fetchRes[i] ];

@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SUISoundEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUISoundEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Sound", (BYTE*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
@@ -50,7 +50,7 @@ DWORD SUISoundEntry::CalcCheckSum() const
 
 
 
-void SMainMenuBackground::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMainMenuBackground::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Map", (BYTE*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (BYTE*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
@@ -89,7 +89,7 @@ DWORD SMainMenuBackground::CalcCheckSum() const
 
 
 
-void SHallOfFameRecord::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SHallOfFameRecord::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Score", (BYTE*)&nScore - pThis, sizeof(nScore), NTypeDef::TYPE_TYPE_INT );
@@ -128,7 +128,7 @@ DWORD SHallOfFameRecord::CalcCheckSum() const
 
 
 
-void SGameRoot::STutorialMap::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SGameRoot::STutorialMap::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MapInfo", (BYTE*)&pMapInfo - pThis, sizeof(pMapInfo), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "DifficultyFileRef", (BYTE*)&szDifficultyFileRef - pThis, sizeof(szDifficultyFileRef), NTypeDef::TYPE_TYPE_STRING );

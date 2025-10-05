@@ -25,8 +25,8 @@ public:
 	void MsgQuickLoad( const SGameMessage &msg );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

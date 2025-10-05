@@ -99,7 +99,7 @@ void CAckTracker::RegisterRTT( float _fRTT )
 	}
 }
 
-void CAckTracker::Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT )
+void CAckTracker::Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT )
 {
 	pRolled->resize( 0 );
 	pErased->resize( 0 );
@@ -116,7 +116,7 @@ void CAckTracker::Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, 
 	fRTTDiscard = Max( fRTTDiscard, 0.1f );
 	fRTTDiscard = Min( fRTTDiscard, fMaxRTT );
 	// roll back updates that are out of estimated rtt
-	list<CUpdate>::iterator it, itmp;
+	std::list<CUpdate>::iterator it, itmp;
 	for ( it = sentUpdates.begin(); it != sentUpdates.end(); )
 	{
 		double fCrap = it->fTimeCreated;
@@ -152,9 +152,9 @@ void CAckTracker::Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, 
 }
 
 // receive single ack, search for this packet and ack it
-void CAckTracker::ReceiveAck( vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
+void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 {
-	list<CUpdate>::iterator i;
+	std::list<CUpdate>::iterator i;
 	for ( i = sentUpdates.begin(); i != sentUpdates.end(); )
 	{
 		if ( ( i->nPktNumber ) == nPkt )
@@ -195,7 +195,7 @@ void CAckTracker::ReceiveAck( vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 }
 
 // pair to SendPktAcks()
-void CAckTracker::ReceivePktAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
+void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
 	DWORD dwBits, dwNewAckBits;
 	PACKET_ID nLast;
@@ -248,7 +248,7 @@ bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
 	nPktLastReceived = Max( nPktLastReceived, nPkt );
 	// check for duplicate (for economy on rcvList mostly, because ack maybe already be sent
 	// and duplication will not be detected)
-	for ( vector<UPDATE_ID>::iterator k = receivedPkts.begin(); k != receivedPkts.end(); ++k )
+	for ( std::vector<UPDATE_ID>::iterator k = receivedPkts.begin(); k != receivedPkts.end(); ++k )
 	{
 		if ( *k == nPkt )
 		{
@@ -261,7 +261,7 @@ bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
 	return true;
 }
 
-bool CAckTracker::ReadAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
+bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
 	PACKET_ID nReceived;
 	UPDATE_ID nCurUpdate;
@@ -302,7 +302,7 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 	for ( i = 1; i <= 32; i++ )
 	{
 		nTest--;
-		vector<UPDATE_ID>::iterator k;
+		std::vector<UPDATE_ID>::iterator k;
 		k = find( receivedPkts.begin(), receivedPkts.end(), nTest );
 		if ( k != receivedPkts.end() )
 			dwBits |= 1 << (i-1);
@@ -332,7 +332,7 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	// acks on received packets
 	SendPktAcks( pBits );
 	
-	CUpdate &update = *sentUpdates.insert( sentUpdates.end() );
+	CUpdate &update = sentUpdates.emplace_back();
 	update.fTimeCreated = fCurrentTime;
 	update.nPktNumber = nPktCurrent; 
 	update.bOnTheWindowEdge = nFlyPackets + 1 > fWindow;
@@ -345,7 +345,7 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 void CAckTracker::PacketLost( PACKET_ID pktID )
 {
 	bool bFound = false;
-	list<CUpdate>::iterator it;
+	std::list<CUpdate>::iterator it;
 	for ( it = sentUpdates.begin(); it != sentUpdates.end(); )
 	{
 		if ( it->nPktNumber == pktID )

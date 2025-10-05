@@ -31,10 +31,10 @@ class CMOUnitHelicopter :public CMOUnit
 	ZDATA_( CMOUnit )
 		CDBPtr<NDb::SMechUnitRPGStats> pStats;
 		CDBPtr<NDb::SM1UnitHelicopter> pHelicopterStats;
-		vector< CPtr<CMOSelectable> > vPassangers;
-		vector<SPropellerInfo> vPropellers;
+		std::vector< CPtr<CMOSelectable> > vPassangers;
+		std::vector<SPropellerInfo> vPropellers;
 		float fPropSpeed;
-		vector< CObj<CSmokeTrailEffect> > smokeTrails;
+		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		bool bMove;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
 public:
@@ -60,7 +60,7 @@ public:
 	bool Load( struct IMOUnit *pMO, bool bEnter );
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() {}
-	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const;
 	int GetPassangersCount() const { return vPassangers.size(); }
 	int GetFreePlaces() const;
 	int GetFreeMechPlaces() const;

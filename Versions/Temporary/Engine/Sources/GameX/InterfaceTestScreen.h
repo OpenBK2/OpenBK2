@@ -13,8 +13,8 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CInterfaceScreenBase *)this); f.Add(2,&dbid); return 0; }
 protected:
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction ) { return false; }
-	int Check( const string &szCheckName ) const { return 0; }
+	bool Execute( const std::string &szSender, const std::string &szReaction ) { return false; }
+	int Check( const std::string &szCheckName ) const { return 0; }
 	//}
 	//{
 	bool StepLocal( bool bAppActive );

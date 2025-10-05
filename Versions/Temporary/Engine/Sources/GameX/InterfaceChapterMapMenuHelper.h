@@ -16,7 +16,7 @@ public:
 	struct SArrow
 	{
 		ZDATA
-		vector<CVec2> points;
+		std::vector<CVec2> points;
 		float fWidth;
 		CDBPtr<NDb::STexture> pTexture;
 		int nDependIndex;
@@ -35,7 +35,7 @@ public:
 		ZDATA
 		ZSKIP //int nX;
 		ZSKIP //int nY;
-		vector<SArrow> arrows;
+		std::vector<SArrow> arrows;
 		float fPotentialIncomplete;
 		float fPotentialComplete;
 		CPtr<IWindow> pWnd;
@@ -50,7 +50,7 @@ public:
 	
 	ZDATA
 	CVec2 vMainStrike;
-	vector<SMission> missions;
+	std::vector<SMission> missions;
 	CVec2 vDetailsCoeff;
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
 	CDBPtr<NDb::SChapter> pChapter;

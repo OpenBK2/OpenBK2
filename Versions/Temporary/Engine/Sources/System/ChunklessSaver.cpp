@@ -72,7 +72,7 @@ class CChunklessSerializer : public IBinSaver
 			pRes->Write( pData, nSize );
 		}
 	}
-	virtual void DataChunkString( string &data )
+	virtual void DataChunkString( std::string &data )
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
@@ -92,7 +92,7 @@ class CChunklessSerializer : public IBinSaver
 				pRes->Write( &data[0], nSize );
 		}
 	}
-	virtual void DataChunkString( wstring &data )
+	virtual void DataChunkString( std::wstring &data )
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )

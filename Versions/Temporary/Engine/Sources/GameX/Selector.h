@@ -3,9 +3,9 @@
 #include "B2_M1_World/MapObj.h"
 #include "Selector.h"
 
-typedef	list< CPtr<CMOSelectable> > CMapObjectsList;
-typedef vector< pair<int, int> > CUnitGroups;
-typedef vector< CPtr<CMOSelectable> > CMapObjectsVector;
+typedef	std::list< CPtr<CMOSelectable> > CMapObjectsList;
+typedef std::vector< std::pair<int, int> > CUnitGroups;
+typedef std::vector< CPtr<CMOSelectable> > CMapObjectsVector;
 struct SShootAreas;
 
 enum ESelectionState
@@ -96,11 +96,11 @@ private:
 	static CUserActions MakeMultiClassActions();
 	static bool IsAllUnitsCommand( EActionCommand eCommand );
 
-	static void GetActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
-	static void GetPossibleActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects );
-	static void GetEnabledActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
-	static void GetDisabledActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
-	static int GetAbilityTier( const vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction );
+	static void GetActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
+	static void GetPossibleActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects );
+	static void GetEnabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
+	static void GetDisabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
+	static int GetAbilityTier( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction );
 private:
 	struct SObjectsSort
 	{
@@ -132,10 +132,10 @@ private:
 		ZSKIP //CPtr<CMOSelectable> pSO;
 		ZSKIP //int nIndex;
 		ZSKIP //int nCount;
-		vector< CPtr<CMOSelectable> > objects;
+		std::vector< CPtr<CMOSelectable> > objects;
 		ZEND int operator&( IBinSaver &f ) { f.Add(5,&objects); return 0; }
 	};
-	typedef vector< SSlot > CSlotVector;
+	typedef std::vector< SSlot > CSlotVector;
 
 	struct SSameSlotCompare
 	{
@@ -177,7 +177,7 @@ private:
 	//
 	CMapObjectsVector				objList;
 	CMapObjectsList					newObjList;
-	vector<SSelectionGroup>	groups;
+	std::vector<SSelectionGroup>	groups;
 	ESelectionState					eSelectionState;
 	CUnitGroups							vAbilityGroups;
 	int											nCurrentAbilityGroup;
@@ -193,7 +193,7 @@ private:
 	CPtr<CMapObj>						pPreselectedObject;
 	CSlotVector							slots;
 	//SSlot										superActive;
-	vector< CPtr<CMOSelectable> > superActives;
+	std::vector< CPtr<CMOSelectable> > superActives;
 	// optimisation
 	bool bNeedUpdateSelectedUnits;
 	bool bNeedUpdatePreselectedObject;
@@ -208,7 +208,7 @@ private:
 	void CalcSlots( CSlotVector *pSlots, const CMapObjectsVector &objects ) const;
 	bool CanAddObject( CMOSelectable *pSO ) const;
 	int CalcAbilityGroups();
-	void UpdateAbilityIcons( const vector< CPtr<CMOSelectable> > &objects ) const;
+	void UpdateAbilityIcons( const std::vector< CPtr<CMOSelectable> > &objects ) const;
 	
 	// уведомим об изменениях самой селекции
 	void SendUpdateSelection();
@@ -234,10 +234,10 @@ public:
 	void Segment();
 	//
 	int GetSelection() const	{ return objList.size(); }
-	int GetSelection( vector<CMOSelectable*> *pBuffer ) const;
+	int GetSelection( std::vector<CMOSelectable*> *pBuffer ) const;
 	// возвращает все объекты, имеющие собственные координаты
 	// на экране (разбивая подразделения на юниты при необходимости)
-	void GetSelectionMembers( vector<CMOSelectable*> *pBuffer ) const; 
+	void GetSelectionMembers( std::vector<CMOSelectable*> *pBuffer ) const;
 	//
 	bool CanSelect( const CMapObj *pMO ) const { return (pMO && pMO->CanSelect()); }
   
@@ -269,7 +269,7 @@ public:
 	int FindSelectionGroup( CMOSelectable *pMO ) const;
 	// возвращает все объекты в группе, имеющие собственные координаты
 	// на экране (разбивая подразделения на юниты при необходимости)
-	void GetGroupMembers( int nIndex, vector<CMOSelectable*> *pMembers );
+	void GetGroupMembers( int nIndex, std::vector<CMOSelectable*> *pMembers );
 
 	bool DoGroupCommand( class CCommandsSender *pCommandsSender, const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );
 	bool DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );

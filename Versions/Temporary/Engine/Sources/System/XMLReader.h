@@ -17,14 +17,14 @@ struct SXmlValue
 
 	SXmlValue() : pszBegin( 0 ), nSize( 0 ) { }
 
-	const string ToString() const { return string( pszBegin, nSize ); }
+	const std::string ToString() const { return std::string( pszBegin, nSize ); }
 };
 
-inline bool operator==( const SXmlValue &val, const string &str )
+inline bool operator==( const SXmlValue &val, const std::string &str )
 {
 	return val.nSize == str.size() && strncmp( val.pszBegin, str.c_str(), val.nSize ) == 0;
 }
-inline bool operator==( const string &str, const SXmlValue &val )
+inline bool operator==( const std::string &str, const SXmlValue &val )
 {
 	return val.nSize == str.size() && strncmp( val.pszBegin, str.c_str(), val.nSize ) == 0;
 }
@@ -51,8 +51,8 @@ struct SXmlAttribute
 
 class SYSTEM_EXPORT CXmlNode
 {
-	vector<const SXmlAttribute*> attributes;
-	vector<const CXmlNode*> nodes;
+	std::vector<const SXmlAttribute*> attributes;
+	std::vector<const CXmlNode*> nodes;
 	SXmlValue name;
 	SXmlValue value;
 
@@ -74,8 +74,8 @@ public:
 	const SXmlValue& GetValue() const { return value; }
 	const SXmlValue& GetName() const { return name; }
 
-	const vector<const SXmlAttribute*>& GetAttributes() const { return attributes; }
-	const vector<const CXmlNode*>& GetNodes() const { return nodes; }
+	const std::vector<const SXmlAttribute*>& GetAttributes() const { return attributes; }
+	const std::vector<const CXmlNode*>& GetNodes() const { return nodes; }
 
 	const CXmlNode* FindChild( const char *pszChild ) const;
 

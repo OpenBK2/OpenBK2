@@ -7,7 +7,7 @@
 namespace NGScene
 {
 
-vector<CPtr<IPrecache> > precacheUpdateList;
+std::vector<CPtr<IPrecache> > precacheUpdateList;
 void LoadPrecached()
 {
 	for ( int k = 0; k < precacheUpdateList.size(); ++k )
@@ -24,7 +24,7 @@ void AddToPrecachedUpdate( IPrecache *pAdd )
 	precacheUpdateList.push_back( pAdd );
 }
 
-inline string GetFileResourceName( const char *pszResName, int nFileID )
+inline std::string GetFileResourceName( const char *pszResName, int nFileID )
 {
 	if ( nFileID == 0 )
 		return pszResName;
@@ -33,7 +33,7 @@ inline string GetFileResourceName( const char *pszResName, int nFileID )
 	return szBuf;
 }
 
-inline string GetFileResourceUidName( const char *pszResName, const GUID &fileUID )
+inline std::string GetFileResourceUidName( const char *pszResName, const GUID &fileUID )
 {
 	if ( NBinResources::IsEmptyGUID( fileUID ) )
 		return pszResName;
@@ -80,7 +80,7 @@ static void TypeReq( const char *pszResName, int nID )
 
 struct SDoesExistKey
 {
-	string szRes;
+	std::string szRes;
 	SResKey<int> key;
 
 	SDoesExistKey() {}
@@ -89,9 +89,9 @@ struct SDoesExistKey
 inline bool operator ==( const SDoesExistKey &a, const SDoesExistKey &b ) { return a.szRes == b.szRes && a.key == b.key; }
 struct SDoesExistKeyHash
 {
-	int operator()( const SDoesExistKey &a ) const { return hash<string>()( a.szRes ) ^ hash<SResKey<int> >()( a.key ); }
+	int operator()( const SDoesExistKey &a ) const { return std::hash<std::string>()( a.szRes ) ^ std::hash<SResKey<int> >()( a.key ); }
 };
-typedef hash_map<SDoesExistKey, bool, SDoesExistKeyHash> TDoesExistHash;
+typedef std::unordered_map<SDoesExistKey, bool, SDoesExistKeyHash> TDoesExistHash;
 static TDoesExistHash deh;
 bool CResourceFileOpener::DoesExist( const char *pszResName, const SResKey<int> &key )
 {
@@ -132,7 +132,7 @@ void CFileRequest::Read()
 		return;
 	NWin32Helper::CCriticalSectionLock l( readResource );
 	bIsFileReading = true;
-	const string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid ) : GetFileResourceName( pszResName, nID );
+	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid ) : GetFileResourceName( pszResName, nID );
 	
 	CFileStream f( NVFS::GetMainVFS(), szResourceName );
 	if ( f.IsOk() )
@@ -150,8 +150,8 @@ void CFileRequest::Read()
 static NWin32Helper::CCriticalSection reqQueue, pendingCheck;
 static NWin32Helper::CEvent newRequest;
 static HANDLE hLoaderThread;
-static list<CPtr<CFileRequest> > holdRequests;
-static list<CFileRequest*> requests;
+static std::list<CPtr<CFileRequest> > holdRequests;
+static std::list<CFileRequest*> requests;
 static HANDLE hEventEnableLoadingThread = INVALID_HANDLE_VALUE;
 
 // STARFORCE{

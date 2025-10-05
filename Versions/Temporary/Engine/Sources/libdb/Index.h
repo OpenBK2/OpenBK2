@@ -5,7 +5,7 @@ namespace NDb
 
 struct SFullTypeHeader : public STypeObjectHeader
 {
-	string szFileName;
+	std::string szFileName;
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -15,7 +15,7 @@ struct SFullTypeHeader : public STypeObjectHeader
 	}
 };
 
-inline bool LoadIndexData( vector<SFullTypeHeader> *pRes, CDataStream *pStream )
+inline bool LoadIndexData( std::vector<SFullTypeHeader> *pRes, CDataStream *pStream )
 {
 	if ( pStream && pStream->IsOk() )
 	{

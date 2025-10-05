@@ -19,7 +19,7 @@ class CGroupMover : public CAIObjectBase
 			SSubGroupUnitInfo() : vPosition( VNULL2 ) {}
 			SSubGroupUnitInfo( CCommonUnit *_pUnit ) : pUnit( _pUnit ), vPosition( VNULL2 ) {}
 		};
-		typedef hash_map<int, SSubGroupUnitInfo> TSubGroupUnits;
+		typedef std::unordered_map<int, SSubGroupUnitInfo> TSubGroupUnits;
 		struct SSubGroupPathInfo
 		{
 			ZDATA
@@ -32,7 +32,7 @@ class CGroupMover : public CAIObjectBase
 			SSubGroupPathInfo() : timeCalced( 0 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), nBoundTileRadius( 0 ) {}
 			IStaticPath* CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint );
 		};
-		typedef hash_map<EAIClasses, SSubGroupPathInfo, SEnumHash> TSubGroupsPaths;
+		typedef std::unordered_map<EAIClasses, SSubGroupPathInfo, SEnumHash> TSubGroupsPaths;
 		ZDATA
 			TSubGroupUnits units; // units's ID -> SSubGroupUnitInfo
 			TSubGroupsPaths paths;
@@ -46,8 +46,8 @@ class CGroupMover : public CAIObjectBase
 		IStaticPath* CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint );
 	};
 	
-	typedef hash_map<int, CPtr<CCommonUnit> > TGroup; // unit's ID -> unit
-	typedef vector<SSubGroup> TSubGroups;
+	typedef std::unordered_map<int, CPtr<CCommonUnit> > TGroup; // unit's ID -> unit
+	typedef std::vector<SSubGroup> TSubGroups;
 	OBJECT_NOCOPY_METHODS( CGroupMover )
 	ZDATA
 		CVec2 vPosition;

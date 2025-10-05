@@ -4,7 +4,7 @@
 namespace NDBWrap
 {
 
-const wstring& GetReinfXPLevelName( int nLevel )
+const std::wstring& GetReinfXPLevelName( int nLevel )
 {
 	switch ( nLevel )
 	{
@@ -21,7 +21,7 @@ const wstring& GetReinfXPLevelName( int nLevel )
 			return InterfaceState()->GetTextEntry( "T_REINF_EXP_LEVEL_NAME_04" );
 	};
 
-	static wstring wszEmpty;
+	static std::wstring wszEmpty;
 	return wszEmpty;
 }
 
@@ -29,7 +29,7 @@ float GetLeaderRankExp( const NDb::SCampaign *pCampaign, int nRank )
 {
 	if ( pCampaign && !pCampaign->leaderRanks.empty() )
 	{
-		int nIndex = Min( nRank, pCampaign->leaderRanks.size() - 1 );
+		int nIndex = Min<int>( nRank, pCampaign->leaderRanks.size() - 1 );
 		float fRequiredXP = pCampaign->leaderRanks[nIndex].nExpNeeded;
 		return fRequiredXP;
 	}

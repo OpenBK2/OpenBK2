@@ -7,7 +7,7 @@ template<class T>
 class CObjectSet : public CObjectBase
 {
 public:
-	vector< CObj<T> > parts;
+	std::vector< CObj<T> > parts;
 	//
 	void AddPart( T *pPart ) { parts.push_back( pPart ); }
 	int operator&( CStructureSaver &f ) { f.Add( 1, &parts );	return 0; }

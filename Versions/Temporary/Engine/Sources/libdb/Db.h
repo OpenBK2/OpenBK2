@@ -29,9 +29,9 @@ class CResource *GetObject( const CDBID &dbid );
 //! does object exist?
 bool DoesObjectExist( const CDBID &dbid );
 //! retrieve class type name for requested object
-LIBDB_EXPORT string GetClassTypeName( const CDBID &dbid );
+LIBDB_EXPORT std::string GetClassTypeName( const CDBID &dbid );
 //! retrieve all objects by type
-bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID );
+bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
 
 //! check, that DBID correctly composed (NOTE: this doesn't check for object existance!)
 bool IsDBIDValid( const CDBID &dbid );

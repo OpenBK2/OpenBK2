@@ -194,11 +194,11 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	return true;
 }
 
-void CommandGfxUpdate( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void CommandGfxUpdate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetModeFromConfig( false, lastUserRTInfo );
 }
-void CommandGfxRecreate( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void CommandGfxRecreate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetModeFromConfig( true, lastUserRTInfo );
 }

@@ -46,7 +46,7 @@ IMPUIMessageHandler* MakeMPUIMessageHandler( TObj *pObj, TMFn pMFn )
 
 class CMPUIMessageTranslator
 {
-	typedef hash_map< EMPUIMessageType, CPtr<IMPUIMessageHandler>, SEnumHash > CHandlers;
+	typedef std::unordered_map< EMPUIMessageType, CPtr<IMPUIMessageHandler>, SEnumHash > CHandlers;
 
 	CHandlers handlers;
 protected:
@@ -61,7 +61,7 @@ public:
 
 class CMPUIMessageProcessor : public CMPUIMessageTranslator
 {
-	typedef list< CPtr<SMPUIMessage> > CMessages;
+	typedef std::list< CPtr<SMPUIMessage> > CMessages;
 	
 	CMessages messages;
 protected:

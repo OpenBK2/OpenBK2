@@ -18,7 +18,7 @@ namespace NMetaInfo
 
 struct SMetaInfo
 {
-	list< CPtr<SStructMetaInfo> > structsStack;
+	std::list< CPtr<SStructMetaInfo> > structsStack;
 	CMetaInfoMap knownTypes;
 };
 static SMetaInfo *s_pMetaInfo = 0;
@@ -71,7 +71,7 @@ void StartRegister()
 // **
 // ************************************************************************************************************************ //
 
-void StartMetaInfoReport( const string &szTypeName, const int nTypeID, const int nStructSize )
+void StartMetaInfoReport( const std::string &szTypeName, const int nTypeID, const int nStructSize )
 {
 	StartRegister();
 	if ( s_pMetaInfo->structsStack.empty() )
@@ -96,13 +96,13 @@ void FinishMetaInfoReport()
 	//	DebugTrace( "Report finished" );
 }
 
-void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType )
+void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType )
 {
 	s_pMetaInfo->structsStack.back()->AddField( szName, nPtrShift, nSizeof, eType );
 	//	DebugTrace( "\tField \"%s\" of type %d with shift %d and size %d", szName.c_str(), eType, nPtrShift, nSizeof );
 }
 
-void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType, 
+void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType,
 										int nContainedSize, NTypeDef::ETypeType eContainedType )
 {
 	//	DebugTrace( "\tArray-Field \"%s\" of type %d (contained type %d of size %d) with shift %d and size %d", 

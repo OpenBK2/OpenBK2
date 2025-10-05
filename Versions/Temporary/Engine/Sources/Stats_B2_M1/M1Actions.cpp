@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EM1Action eValue )
+std::string EnumToString( NDb::EM1Action eValue )
 {
 	switch ( eValue )
 	{
@@ -53,7 +53,7 @@ string EnumToString( NDb::EM1Action eValue )
 	}
 }
 
-NDb::EM1Action NDb::StringToEnum_NDb_EM1Action( const string &szValue )
+NDb::EM1Action NDb::StringToEnum_NDb_EM1Action( const std::string &szValue )
 {
 	if ( szValue == "M1_ACTION_UNKNOWN" )
 		return NDb::M1_ACTION_UNKNOWN;

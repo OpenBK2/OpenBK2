@@ -6,7 +6,7 @@ struct SRect
 	WORD nXShift, nYShift;
 	WORD nXSize, nYSize;
 };
-void PackRects( vector<SRect> *pRes, CTPoint<int> *pSize );
+void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize );
 
 }
 

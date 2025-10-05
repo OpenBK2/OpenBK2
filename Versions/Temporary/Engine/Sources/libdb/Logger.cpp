@@ -14,9 +14,9 @@ CLogger::~CLogger()
 	delete pStream;
 }
 
-void CLogger::WriteLog( const string &szLog, bool bAppendNL )
+void CLogger::WriteLog( const std::string &szLog, bool bAppendNL )
 {
-	string szResult = GetStackTrace() + szLog;
+	std::string szResult = GetStackTrace() + szLog;
 	if ( bAppendNL )
 	{
 		szResult += "\n";
@@ -44,7 +44,7 @@ void CLogger::Finalize()
 	pStream = 0;
 }
 
-void CLogger::PushStack( const string &szLevel )
+void CLogger::PushStack( const std::string &szLevel )
 {
 	stkTrace.push_back( szLevel );
 }
@@ -54,10 +54,10 @@ void CLogger::PopStack()
 	stkTrace.pop_back();
 }
 
-string CLogger::GetStackTrace() const
+std::string CLogger::GetStackTrace() const
 {
-	string szResult = "";
-	for ( list<string>::const_iterator it = stkTrace.begin(); it != stkTrace.end(); ++it )
+	std::string szResult = "";
+	for ( std::list<std::string>::const_iterator it = stkTrace.begin(); it != stkTrace.end(); ++it )
 		szResult += *it + ":";
 	return szResult;
 }

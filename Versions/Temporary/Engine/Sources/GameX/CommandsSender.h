@@ -10,7 +10,7 @@ class CCommandsSender : public CObjectBase
 	ZDATA
 		bool bHistoryPlaying;
 		CPtr<ITransceiver> pTransciver;
-		vector<int> lastGroup;
+		std::vector<int> lastGroup;
 		int nLastGroupID;
 		SAIUnitCmd lastCommand;
 		NTimer::STime lastCommandTime;
@@ -23,7 +23,7 @@ public:
 
 	void ResetGroup() { lastGroup.clear(); bGroupChanged = true; }
 	// register group of units to AI
-	virtual int CommandRegisterGroup( const vector<int> &vIDs );
+	virtual int CommandRegisterGroup( const std::vector<int> &vIDs );
 	// unregister group
 	virtual void CommandUnregisterGroup( const WORD wGroup );
 	// send command to group of units

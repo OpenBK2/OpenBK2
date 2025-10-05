@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void STankPitInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void STankPitInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "sandBagTankPits", &sandBagTankPits, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "digTankPits", &digTankPits, pThis );
@@ -50,7 +50,7 @@ DWORD STankPitInfo::CalcCheckSum() const
 
 
 
-void SCommonInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCommonInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "antitankObjects", &antitankObjects, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "APFence", (BYTE*)&pAPFence - pThis, sizeof(pAPFence), NTypeDef::TYPE_TYPE_REF );
@@ -143,7 +143,7 @@ DWORD SCommonInfo::CalcCheckSum() const
 
 
 
-void SWarFogConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWarFogConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MaxRadius", (BYTE*)&nMaxRadius - pThis, sizeof(nMaxRadius), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UseHeights", (BYTE*)&bUseHeights - pThis, sizeof(bUseHeights), NTypeDef::TYPE_TYPE_BOOL );
@@ -188,7 +188,7 @@ DWORD SWarFogConsts::CalcCheckSum() const
 
 
 
-void SReinforcementRemap::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinforcementRemap::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ReinfType", (BYTE*)&eReinfType - pThis, sizeof(eReinfType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "UnitRPGType", (BYTE*)&eUnitRPGType - pThis, sizeof(eUnitRPGType), NTypeDef::TYPE_TYPE_ENUM );
@@ -227,7 +227,7 @@ DWORD SReinforcementRemap::CalcCheckSum() const
 
 
 
-void SReinforcementExpediency::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinforcementExpediency::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Expediency", &expediency, pThis );
 }
@@ -263,7 +263,7 @@ DWORD SReinforcementExpediency::CalcCheckSum() const
 
 
 
-void SUnitTypePriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUnitTypePriority::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "UnitType", (BYTE*)&eUnitType - pThis, sizeof(eUnitType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
@@ -302,7 +302,7 @@ DWORD SUnitTypePriority::CalcCheckSum() const
 
 
 
-void SReinfRecycleTime::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinfRecycleTime::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Time", (BYTE*)&nTime - pThis, sizeof(nTime), NTypeDef::TYPE_TYPE_INT );
@@ -341,7 +341,7 @@ DWORD SReinfRecycleTime::CalcCheckSum() const
 
 
 
-void SAIGameConsts::SCommonScriptEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAIGameConsts::SCommonScriptEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ScriptFileRef", (BYTE*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
 }

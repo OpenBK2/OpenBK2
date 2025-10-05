@@ -8,7 +8,7 @@ extern CDiplomacy theDipl;
 
 class CLineIter
 {
-	struct Cells : public list<SVector>
+	struct Cells : public std::list<SVector>
 	{
 		bool operator() ( long x, long y ) ;
 	};
@@ -38,7 +38,7 @@ class CIter
 {
 	T geomIter;
 	int nCurParty, nParties, nCellId, iter;
-	vector<BYTE> parties;
+	std::vector<BYTE> parties;
 
 	public: virtual int operator&( IBinSaver &saver ) {  saver.Add( 1, &geomIter ); saver.Add( 2, &nCurParty ); saver.Add( 3, &nParties ); saver.Add( 4, &nCellId ); saver.Add( 5, &iter ); saver.Add( 6, &parties ); return 0; } private:
 public:
@@ -98,8 +98,8 @@ ZDATA
 	int iter;
 	int nCurParty;
 	int nParties;
-	vector<BYTE> parties;
-	hash_set<int> visitedUnits;
+	std::vector<BYTE> parties;
+	std::unordered_set<int> visitedUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&iter); f.Add(3,&nCurParty); f.Add(4,&nParties); f.Add(5,&parties); f.Add(6,&visitedUnits); return 0; }
 public:
 	CGlobalIter() : parties( 3/*SAIConsts::MAX_NUM_OF_PARTIES*/ ) { }
@@ -116,7 +116,7 @@ class CPlanesIter
 {
 	private: int operator&( IBinSaver &saver ); private:
 
-	list< CObj<CAviation> >::iterator iter;
+	std::list< CObj<CAviation> >::iterator iter;
 public:
 	CPlanesIter();
 

@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SPolygon2D::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPolygon2D::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "verts", &verts, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Fake", (BYTE*)&nFake - pThis, sizeof(nFake), NTypeDef::TYPE_TYPE_INT );
@@ -50,7 +50,7 @@ DWORD SPolygon2D::CalcCheckSum() const
 
 
 
-void SPassProfile::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPassProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "polygons", &polygons, pThis );
 }

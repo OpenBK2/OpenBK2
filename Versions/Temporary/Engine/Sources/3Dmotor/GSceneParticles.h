@@ -29,7 +29,7 @@ protected:
 	};
 	ZDATA
 	SParticleOrientationInfo orientation;
-	vector<SEffectInfo> effects;
+	std::vector<SEffectInfo> effects;
 	SParticleLightInfo pl;
 	int nSkipParticles;
 	SBoundCalcer bc, bcPart;
@@ -66,7 +66,7 @@ public:
 		*pLM = pl;
 	}
 	virtual void FreeWriteBuffer() = 0;
-	virtual void SampleWarFog( const vector<CVec3> &vPos, vector<float> *pRes ) 
+	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
 	{ 
 		if ( pRootOutput )
 			pRootOutput->SampleWarFog( vPos, pRes );
@@ -265,11 +265,11 @@ public:
 	}
 };
 
-class CParticlesTriList : public CFuncBase<vector<NGfx::STriangleList> >
+class CParticlesTriList : public CFuncBase<std::vector<NGfx::STriangleList> >
 {
 	OBJECT_BASIC_METHODS(CParticlesTriList);
 	ZDATA
-	vector<int> particles;
+	std::vector<int> particles;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&particles); return 0; }
 	bool bNeedUpdate;
 protected: 

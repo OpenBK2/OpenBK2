@@ -18,7 +18,7 @@ namespace
 #define DAMAGE_EFFECT_PROBABILITY 30
 #define WINDOW_BREAK_PROBABILITY 50
 
-typedef hash_map< NDb::EDesignBuildingType, SIconsSetInfo, SEnumHash > CIconsSet;
+typedef std::unordered_map< NDb::EDesignBuildingType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
@@ -65,7 +65,7 @@ CMOBuilding::CMOBuilding() :
 
 bool CMOBuilding::IsInside( const int nID )
 {
-	for ( vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
 	{
 		if ( (*it)->GetID() == nID )
 			return true;
@@ -337,10 +337,10 @@ bool CMOBuilding::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 	return true;
 }
 
-void CMOBuilding::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
+void CMOBuilding::GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
 		pBuffer->push_back( (*it) );
 }
 
@@ -358,7 +358,7 @@ bool CMOBuilding::NeedShowInterrior() const
 IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 { 
 	nCurrentAmmo = 0;
-	for ( vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
+	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
 	{
 		const SAINotifyRPGStats::SWeaponAmmo &updateAmmo = *it;
 		nCurrentAmmo += updateAmmo.nAmmo;
@@ -465,7 +465,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 	return 0;
 }
 
-IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate )
+IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float fDamage, const std::list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate )
 {
 	if ( projectilesAlreadyHit.find( nProjectileID ) != projectilesAlreadyHit.end() )
 		return 0;
@@ -475,7 +475,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	projectilesAlreadyHit.insert( nProjectileID );
 	
 	int nSlot = -1;
-	for ( list<int>::const_iterator iter = probableHitAttached.begin(); iter != probableHitAttached.end() && nSlot == -1; ++iter )
+	for ( std::list<int>::const_iterator iter = probableHitAttached.begin(); iter != probableHitAttached.end() && nSlot == -1; ++iter )
 	{
 		const int nHitObj = *iter;
 		for ( int i = 0; i < attachedObjects.size() && nSlot == -1; ++i )
@@ -483,7 +483,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 			CAttachedObjIDs &attaches = attachedObjects[i];
 			for ( CAttachedObjIDs::iterator attachIter = attaches.begin(); attachIter != attaches.end() && nSlot == -1; ++attachIter )
 			{
-				pair< int, int > &attach = *attachIter;
+				std::pair< int, int > &attach = *attachIter;
 				if ( attach.second == nHitObj )
 					nSlot = attach.first;
 			}
@@ -534,7 +534,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 				else if ( nNewIndex != nOldIndex )
 				{
 					RemoveSubObjectsFromSlot( i, ESSOT_LIGHT );
-					const vector<NDb::SSlotDamageLevel> &levels = ( attachedWindows[i] == EWS_DAY ) ? GetStats()->slots[i].window.dayDamageLevels : GetStats()->slots[i].window.nightDamageLevels;
+					const std::vector<NDb::SSlotDamageLevel> &levels = ( attachedWindows[i] == EWS_DAY ) ? GetStats()->slots[i].window.dayDamageLevels : GetStats()->slots[i].window.nightDamageLevels;
 					const NDb::SComplexEffect *pEffect = levels[nNewIndex].pDamageEffect;
 
 					DetachWindow( i, eSeason );
@@ -731,7 +731,7 @@ const int CMOBuilding::GetSlotHPIndex( const int nWindow, const EWindowState eSt
 	if ( eState != EWS_DESTROYED )  
 	{
 		const float fHPRatio = attachedObjectsHP[nWindow] / GetStats()->slots[nWindow].window.fMaxHP;
-		const vector<NDb::SSlotDamageLevel> &levels = ( eState == EWS_DAY ) ? GetStats()->slots[nWindow].window.dayDamageLevels : GetStats()->slots[nWindow].window.nightDamageLevels;
+		const std::vector<NDb::SSlotDamageLevel> &levels = ( eState == EWS_DAY ) ? GetStats()->slots[nWindow].window.dayDamageLevels : GetStats()->slots[nWindow].window.nightDamageLevels;
 		if ( levels.empty() || levels.front().fDamageHP < fHPRatio )
 			return -1;
 		if ( fHPRatio <= levels.back().fDamageHP )
@@ -806,7 +806,7 @@ const int CMOBuilding::AttachWindow( const int nWindow, const NDb::ESeason eSeas
 
 const int CMOBuilding::BreakWindow( const int nWindow, const NDb::ESeason eSeason )
 {
-	const vector<NDb::SBuildingRPGStats::SSlot> &slots = GetStats()->slots;
+	const std::vector<NDb::SBuildingRPGStats::SSlot> &slots = GetStats()->slots;
 	NI_ASSERT( nWindow < slots.size(), StrFmt( "Wrong number of window (%d), building %s, total slots %d", nWindow, GetStats()->GetDBID().ToString().c_str(), slots.size() ) );
 
 	if ( nWindow < slots.size() && attachedWindows[nWindow] != EWS_DESTROYED )
@@ -913,7 +913,7 @@ void CMOBuilding::AttachEffectToSlot( const int nSlot, const ESceneSubObjType eT
 		RemoveSubObjectsFromSlot( nSlot, eType );
 
 		CAttachedObjIDs &attaches = attachedObjects[eType];
-		attaches.push_front();
+		attaches.emplace_front();
 		CAttachedObjIDs::iterator itAttach = attaches.begin();
 		itAttach->first = nSlot;
 		itAttach->second = Scene()->AddEffect( OBJECT_ID_GENERATE, pEffect, _time, mPos );
@@ -966,7 +966,7 @@ const int CMOBuilding::AttachSubObjectToSlot( const int nSlot, const ESceneSubOb
 	MakeSlotPos( GetCenter(), GetOrientation(), GetStats()->slots[nSlot].vPos, GetStats()->slots[nSlot].qRot, GetStats()->slots[nSlot].vWindowScale, &mPos );
 	CAttachedObjIDs &attaches = attachedObjects[eType];
 
-	attaches.push_front();
+	attaches.emplace_front();
 	CAttachedObjIDs::iterator itAttach = attaches.begin();
 	itAttach->first = nSlot;
 	const int nResult = Scene()->AddObject( OBJECT_ID_GENERATE, pSubModel, mPos, OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC, 0, false );

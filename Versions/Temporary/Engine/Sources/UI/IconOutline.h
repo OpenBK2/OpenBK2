@@ -34,7 +34,7 @@ struct SFormattingInfo
 	struct SCmd
 	{
 		ZDATA
-		wstring szText;
+		std::wstring szText;
 		CVec2 vPos;
 		CVec2 vSize;
 		DWORD dwColor;
@@ -46,7 +46,7 @@ struct SFormattingInfo
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szText); f.Add(3,&vPos); f.Add(4,&vSize); f.Add(5,&dwColor); f.Add(6,&pTexture); f.Add(7,&nOutlineType); f.Add(8,&nFlags); f.Add(9,&nChainX); f.Add(10,&type); return 0; }
 
 		SCmd() : type(ELEM_TEXT), vPos(0,0), vSize(0,0), dwColor(0), nFlags(0), nChainX(-1) {}
-		SCmd( const wstring &_szText, const CVec2 &_vPos, int _nFlags ) 
+		SCmd( const std::wstring &_szText, const CVec2 &_vPos, int _nFlags )
 			: type(ELEM_TEXT), vPos(_vPos), vSize(0,0), dwColor(0), szText(_szText), nFlags(_nFlags), nChainX(-1) {}
 		SCmd( const NDb::STexture *_pTexture, const CVec2 &_vPos, const CVec2 &_vSize, DWORD _dwColor ) 
 			: type(ELEM_PICTURE), pTexture(_pTexture), vPos(_vPos), vSize(_vSize), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
@@ -61,10 +61,10 @@ struct SFormattingInfo
 	};
 
 	ZDATA
-	vector<SCmd> cmds;
+	std::vector<SCmd> cmds;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&cmds); return 0; }
 	bool operator==( const SFormattingInfo &a ) const { return cmds == a.cmds;}
-	void AddText( const wstring &_szText, const CVec2 &_vPos = CVec2(0,0), int _nFlags = 0 ) { cmds.push_back( SCmd( _szText, _vPos, _nFlags ) ); }
+	void AddText( const std::wstring &_szText, const CVec2 &_vPos = CVec2(0,0), int _nFlags = 0 ) { cmds.push_back( SCmd( _szText, _vPos, _nFlags ) ); }
 	void AddPicture( const NDb::STexture *_pTexture, const CVec2 &_vPos = CVec2(0,0), const CVec2 &_vSize = CVec2(0,0), DWORD _dwColor = 0xffffffff )
 	{
 		cmds.push_back( SCmd( _pTexture, _vPos, _vSize, _dwColor ) );
@@ -79,7 +79,7 @@ class CIconOutliner : public CPtrFuncBase<NGfx::CTexture>
 	OBJECT_NOCOPY_METHODS(CIconOutliner);
 	ZDATA
 	SFormattingInfo fmt, fmtProcessed;
-	vector<CObj<IML> > gfxTexts;
+	std::vector<CObj<IML> > gfxTexts;
 	bool bNeedUpdate;
 	NGfx::ETextureUsage eUsage;
 	CDBID nOutlineType;
@@ -94,7 +94,7 @@ public:
 	
 	const CTPoint<int> &GetSize() { return size; };
 	void SetFormat( const SFormattingInfo &_fmt );
-	void SetText( const wstring &wszText )
+	void SetText( const std::wstring &wszText )
 	{
 		SFormattingInfo inf;
 		inf.AddText( wszText );

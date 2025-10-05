@@ -26,7 +26,7 @@ CCursor::~CCursor()
 	modes.clear();
 }
 
-void CCursor::RegisterMode( const int nMode, const string &szFileName )
+void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 {
 //	NI_ASSERT( modes.find(nMode) == modes.end(), StrFmt("Cursor mode %d already registered", nMode) );
 	if ( szFileName.empty() || szFileName == " " )
@@ -128,9 +128,9 @@ int CCursor::operator&( IBinSaver &saver )
 	if ( saver.IsReading() ) 
 	{
 		modes.clear();
-		hash_map<int, string> modesFilesCopy = modesFiles;
+		std::unordered_map<int, std::string> modesFilesCopy = modesFiles;
 		modesFiles.clear();
-		for ( hash_map<int, string>::iterator iter = modesFilesCopy.begin(); iter != modesFilesCopy.end(); ++iter )
+		for ( std::unordered_map<int, std::string>::iterator iter = modesFilesCopy.begin(); iter != modesFilesCopy.end(); ++iter )
 			RegisterMode( iter->first, iter->second );
 
 		Show( bShow );

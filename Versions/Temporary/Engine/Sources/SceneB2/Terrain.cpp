@@ -31,7 +31,7 @@ void CPrecipice::CreatePatches( NGScene::IGameView *pGView )
 	// create ridge patches
 	patches.resize( 0 );
 	patches.reserve( pInfo->patches.size() );
-	for ( vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
+	for ( std::vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
 	{
 		SPrecipicePatchHolder patch;
 		patch.pPatch = new CMeshDataPatch( &(*it) );
@@ -70,9 +70,9 @@ void CPeak::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 
 	for ( int g = 0; g < pInfo->patches.size(); ++g )
 	{
-		vector<NMeshData::SMeshDataTex2> &patchesArr = pInfo->patches[g];
+		std::vector<NMeshData::SMeshDataTex2> &patchesArr = pInfo->patches[g];
 		const int nSize = min( patchesArr.size(), pTerraDesc->pTerraSet->terraTypes.size() );
-		vector<SPeakPatchHolder> &visPatches = patches[g];
+		std::vector<SPeakPatchHolder> &visPatches = patches[g];
 		for ( int i = 0; i < nSize; ++i )
 		{
 			NMeshData::SMeshDataTex2 &data = patchesArr[i];
@@ -95,7 +95,7 @@ void CFoot::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 	Identity( &placement.backward );
 	patches.resize( 0 );
 	patches.reserve( pInfo->patches.size() );
-	for ( vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
+	for ( std::vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
 	{
 		patches.push_back( SFootPatchHolder() );
 		patches.back().pPatch = new CMeshDataPatch( &(*it) );
@@ -115,7 +115,7 @@ void CRiverPatch::Recalc()
 		objData.verts = pInfo->vertices;
 		//objData.secondTex.resize( pInfo->vertices.size() );
 		const int nTime = pTimer->GetValue();
-		for ( vector<NGScene::SVertex>::iterator it = objData.verts.begin(); it != objData.verts.end(); ++it ) 
+		for ( std::vector<NGScene::SVertex>::iterator it = objData.verts.begin(); it != objData.verts.end(); ++it )
 			it->tex.y -= nTime * fStreamSpeed / 1000.0f; // hz why minus must present
 		objData.geometry = pInfo->triangles;
 		pValue->AssignFast( &objData );
@@ -151,7 +151,7 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			CCSBound *pBound = new CCSBound();
 			// calc bound
 			CVec3 vMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-			for ( vector<NGScene::SVertex>::const_iterator it = pInfo->waterPatches[i].vertices.begin(); it != pInfo->waterPatches[i].vertices.end(); ++it )
+			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->waterPatches[i].vertices.begin(); it != pInfo->waterPatches[i].vertices.end(); ++it )
 			{
 				vMin.Minimize( it->pos );
 				vMax.Maximize( it->pos );
@@ -182,7 +182,7 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			CCSBound *pBound = new CCSBound();
 			// calc bound
 			CVec3 vMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-			for ( vector<NGScene::SVertex>::const_iterator it = pInfo->water2Patches[i].vertices.begin(); it != pInfo->water2Patches[i].vertices.end(); ++it )
+			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->water2Patches[i].vertices.begin(); it != pInfo->water2Patches[i].vertices.end(); ++it )
 			{
 				vMin.Minimize( it->pos );
 				vMax.Maximize( it->pos );
@@ -285,9 +285,9 @@ void CSceneTerrain::HideTerrain( bool bHide )
 {
 	if ( bHide )
 	{
-		for ( vector<vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
+		for ( std::vector<std::vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
 		{
-			for ( vector<STerrainPatchHolder>::iterator it = itPatchesArr->begin(); it != itPatchesArr->end(); ++it )
+			for ( std::vector<STerrainPatchHolder>::iterator it = itPatchesArr->begin(); it != itPatchesArr->end(); ++it )
 			{
 				it->pHolder = 0;
 			}
@@ -301,7 +301,7 @@ void CSceneTerrain::HideTerrain( bool bHide )
 		Identity( &placement.forward );
 		Identity( &placement.backward );
 
-		for ( vector<vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
+		for ( std::vector<std::vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
 		{
 			for ( int k = 0; k < itPatchesArr->size(); ++k )
 			{

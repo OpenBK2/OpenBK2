@@ -27,7 +27,7 @@ class CFullScreenFader : public IFullScreenFader
 	bool bFadeInterfaces;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&startTime); f.Add(3,&fDuration); f.Add(4,&fStartValue); f.Add(5,&fEndValue); f.Add(6,&bFadeInterfaces); return 0; }
 
-	list<SColorModificatorDescr> colorModificatos;
+	std::list<SColorModificatorDescr> colorModificatos;
 	//
 public:
 	CFullScreenFader(): startTime( 0 ), fDuration( 0.0f ), fStartValue( 1.0f ), fEndValue( 1.0f ), bFadeInterfaces( true ) {}
@@ -78,7 +78,7 @@ float CFullScreenFader::GetValue( const NTimer::STime &currentTime )
 void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces )
 {
 	// ApplyModificators
-	for ( list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
+	for ( std::list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
 	{
 		if ( bAfterDrawingInterfaces != it->bModifyInterfaces )
 			continue;
@@ -128,7 +128,7 @@ void CFullScreenFader::AddColorModificator( CFuncBase<CVec3> *pColor, bool bModi
 
 void CFullScreenFader::RemoveColorModificator( CFuncBase<CVec3> *pColor )
 {
-	for ( list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
+	for ( std::list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
 	{
 		if ( it->pModificator == pColor )
 		{

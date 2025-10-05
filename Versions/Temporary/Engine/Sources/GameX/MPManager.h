@@ -47,7 +47,7 @@ public:
 	//{ CPacketProcessor
 	bool Segment();
 	//}
-	bool SaveReplay( const string &szFileName ) { return pCurrentNetMode->SaveReplay( szFileName ); }
+	bool SaveReplay( const std::string &szFileName ) { return pCurrentNetMode->SaveReplay( szFileName ); }
 	//void UpdateInfoForReplay( SMultiplayerReplayInfo *pReplayInfo ) { pCurrentNetMode->UpdateInfoForReplay( pReplayInfo ); }
 };
 

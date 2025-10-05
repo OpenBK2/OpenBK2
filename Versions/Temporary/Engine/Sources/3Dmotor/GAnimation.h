@@ -20,7 +20,7 @@ private:
 		STime tEnd;
 	};
 	ZDATA
-	vector<SBoneTimePose> positions;
+	std::vector<SBoneTimePose> positions;
 	bool bEnabled;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&positions); f.Add(3,&bEnabled); return 0; }
@@ -69,7 +69,7 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&tStartTime); f.Add(5,&fSpeed); f.Add(6,&fWeight); f.Add(7,&bFadeIn); f.Add(8,&bFadeOut); f.Add(9,&tFadeDuration); f.Add(10,&hAnimation); f.Add(13,&tEndTime); f.Add(14,&nLoopCount); return 0; }
 		CDGPtr<CPtrFuncBase<CGrannyFileInfo> > pAnimFileLoader;
 		granny_control *pControl;
-		vector<STrackChannelBinding> scalarTracks;
+		std::vector<STrackChannelBinding> scalarTracks;
 		granny_text_track *pAnnotationTrack;
 	};
 
@@ -77,19 +77,19 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	{
 		float fValue;
 		float fWeight;
-		string szName;
+		std::string szName;
 		bool bBinded;
 	};
 	struct SChannelByName
 	{
-		const string &szName;
-		SChannelByName( const string &_szName ) : szName(_szName) {}
+		const std::string &szName;
+		SChannelByName( const std::string &_szName ) : szName(_szName) {}
 		bool operator()( const SScalarChannel &channel )
 		{
 			return (channel.szName == szName);
 		}
 	};
-	vector<SScalarChannel> scalarChannels;
+	std::vector<SScalarChannel> scalarChannels;
 
 	OBJECT_NOCOPY_METHODS(CSkeletonAnimator);
 	SGrannySkeletonHandle skeletonH;
@@ -101,9 +101,9 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	granny_world_pose *pGlobalPose;
 	int nBones;
 	CObj<IAnimMutator> pSpecMutator;
-	vector<SSimpleBoneMutator> boneMutators;
+	std::vector<SSimpleBoneMutator> boneMutators;
 	bool bBoneMutatorsEnabled;
-	vector<SAnimationHolder> animHolders;
+	std::vector<SAnimationHolder> animHolders;
 	SAnimID nAnimWithMovement;
 	float fGlobalMovementSpeed;                     // in meters per second.
 	float fTransitHalfDuration;                     // in seconds
@@ -147,11 +147,11 @@ public:
 
 	// IGetBone
 	virtual int GetBoneIndex( const char *pszName );
-	virtual void GetBoneNames( vector<string> *pBoneNames );
+	virtual void GetBoneNames( std::vector<std::string> *pBoneNames );
 
 	// IChannelAnimator -- arbitrary scalar channel animation support
 	virtual int GetChannelCount();
-	virtual int GetChannelIndex( const string &szName );
+	virtual int GetChannelIndex( const std::string &szName );
 	virtual float GetChannelValue( int nChannelIndex );
 
 	// ISkeletonAnimator
@@ -164,8 +164,8 @@ public:
 	virtual void FadeOutAllAnimations( const STime &tDuration );
 	virtual void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed );
 	virtual float GetDuration( const SAnimID animID );
-	virtual unsigned int GetMarkTimes( vector<float> *pResult, const SAnimID animID, const string &szMarkName );
-	virtual unsigned int EnumMarks( vector<string> *pResult, const SAnimID animID );
+	virtual unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName );
+	virtual unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID animID );
 	virtual void SetSpeedFactor( const SAnimID animID, float fSpeed );
 	virtual void SetLocalTime( const SAnimID animID, const STime tTime );
 	virtual void SetEndTime( const SAnimID animID, const STime tEndTime );
@@ -177,9 +177,9 @@ public:
 	virtual void SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed );
 
 	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart, 
-		const vector<SDesiredBoneMove> &boneMutation );
+		const std::vector<SDesiredBoneMove> &boneMutation );
 	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart, 
-		const vector<SDesiredBoneMove> &boneMutation );
+		const std::vector<SDesiredBoneMove> &boneMutation );
 	virtual void SetSpecialMutator( IAnimMutator *pMutator );
 
 	virtual bool GetBonePosition( const char *pszBoneName, CVec3 *pResTranslation );
@@ -188,7 +188,7 @@ public:
 	virtual bool GetBonePosition( int nBoneIndex, SHMatrix *pRes );
 	virtual bool GetLocalBonePosition( const char *pszBoneName, SHMatrix *pLocalPos );
 	
-	virtual CFuncBase<SFBTransform>* CreateTransform( const string &szBoneName );
+	virtual CFuncBase<SFBTransform>* CreateTransform( const std::string &szBoneName );
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex );
 
 	bool HasSkeleton() const { return pSkeleton != 0; }

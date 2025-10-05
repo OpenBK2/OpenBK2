@@ -24,19 +24,19 @@ class CWinVFS : public IVFS
 		bool IsChecked() const { return bChecked; }
 		//
 		DWORD GetCheckTime() const { return dwCheckTime; }
-		virtual CDataStream* OpenStream( const string &szPathName ) = 0;
-		virtual bool GetStats( SFileStats *pStats, const string &szPathName ) const = 0;
+		virtual CDataStream* OpenStream( const std::string &szPathName ) = 0;
+		virtual bool GetStats( SFileStats *pStats, const std::string &szPathName ) const = 0;
 	};
 	//
 	class CWinFileEntry : public CFileEntry
 	{
-		const string &szBasePath;
+		const std::string &szBasePath;
 	public:
-		CWinFileEntry( const DWORD _dwCheckTime, const string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
+		CWinFileEntry( const DWORD _dwCheckTime, const std::string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
 		// мы не храним имя файла, а передаём его в виде параметра, т.к. оно итак хранится в hash_map от storage, 
 		// а эту хрень вызывают только здесь и только я... (теперь уже не только ты -)
-		CDataStream* OpenStream( const string &szPathName );
-		bool GetStats( SFileStats *pStats, const string &szPathName ) const;
+		CDataStream* OpenStream( const std::string &szPathName );
+		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const;
 	};
 
 	class CZipFileEntry : public CFileEntry
@@ -46,8 +46,8 @@ class CWinVFS : public IVFS
 	public:
 		CZipFileEntry( const DWORD _dwCheckTime, CZipFile &_zipfile, const int _nIndex )
 			: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex ) {}
-			CDataStream* OpenStream( const string &szPathName ) { return zipfile.OpenFile( nIndex ); }
-			bool GetStats( SFileStats *pStats, const string &szPathName ) const
+			CDataStream* OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
+			bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
 			{
 				if ( pStats == 0 ) 
 					return false;
@@ -61,10 +61,10 @@ class CWinVFS : public IVFS
 	//! functional for adding/registering win files to storage
 	class CWinFileAdder
 	{
-		const string &szBasePath;
+		const std::string &szBasePath;
 		CWinVFS *pVFS;
 	public:
-		CWinFileAdder( const string &_szBasePath, CWinVFS *_pVFS ) : szBasePath(_szBasePath), pVFS(_pVFS) {}
+		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS ) : szBasePath(_szBasePath), pVFS(_pVFS) {}
 		//
 		void operator()( NFile::CFileIterator &it ) const
 		{
@@ -88,43 +88,43 @@ class CWinVFS : public IVFS
 			}
 		}
 	};
-	typedef list<CObj<CZipFile> > CZipFilesList;
+	typedef std::list<CObj<CZipFile> > CZipFilesList;
 	CZipFilesList zipFiles;
-	typedef hash_map<NFile::CFilePath, CFileEntry*> CStreamEntriesMap;
+	typedef std::unordered_map<NFile::CFilePath, CFileEntry*> CStreamEntriesMap;
 	CStreamEntriesMap streamEntriesMap;
 	NFile::CFilePath szBasePath;
 	bool bAllWinFilesChecked;
 	bool bArchiveOnly;
 	//
-	CDataStream *OpenFileDirect( const string &szPath );
+	CDataStream *OpenFileDirect( const std::string &szPath );
 	// only for relative path!
 	CFileEntry *UpdateFileEntry( const NFile::CFilePath &szPath );
 	//
 	CWinVFS() { }
 public:
-	CWinVFS( const string &szBasePath );
+	CWinVFS( const std::string &szBasePath );
 	~CWinVFS();
 	//
-	CDataStream* OpenFile( const string &szPath );
-	bool DoesFileExist( const string &szPath );
-	bool GetFileStats( SFileStats *pStats, const string &szPath );
-	void GetAllFileNames( vector<string> *pFileNames, const string &rszFolder );
+	CDataStream* OpenFile( const std::string &szPath );
+	bool DoesFileExist( const std::string &szPath );
+	bool GetFileStats( SFileStats *pStats, const std::string &szPath );
+	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder );
 
-	void GetFileFullName( const string &szPath );
+	void GetFileFullName( const std::string &szPath );
 };
 
 class CWinFileCreator : public IFileCreator
 {
 	OBJECT_NOCOPY_METHODS( CWinFileCreator )
 
-	const string szBasePath;
+	const std::string szBasePath;
 
 	CWinFileCreator() { }
 public:
-	CWinFileCreator( const string &szBasePath );
+	CWinFileCreator( const std::string &szBasePath );
 
-	CDataStream* CreateFile( const string &szPath );
-	bool RemoveFile( const string &szPath );
+	CDataStream* CreateFile( const std::string &szPath );
+	bool RemoveFile( const std::string &szPath );
 };
 
 }

@@ -12,12 +12,12 @@ class CAckManager
 {
 	public: int operator&( IBinSaver &saver ); private:;
 
-	typedef pair<CPtr<CAIUnit>, bool> CUnitBoredPresence;
-	typedef hash_map< int/*unit unique ID */, CUnitBoredPresence> CBoredPresence;
-	typedef hash_map<int, CBoredPresence> CAckTypeBoredPrecence;
+	typedef std::pair<CPtr<CAIUnit>, bool> CUnitBoredPresence;
+	typedef std::unordered_map< int/*unit unique ID */, CUnitBoredPresence> CBoredPresence;
+	typedef std::unordered_map<int, CBoredPresence> CAckTypeBoredPrecence;
 	CAckTypeBoredPrecence bored;
 
-	typedef vector<SAIAcknowledgment> CAcknowledgments;
+	typedef std::vector<SAIAcknowledgment> CAcknowledgments;
 	int ackIndex;													// for giving acks to client - counter
 	CAcknowledgments acknowledgements;		// накапливает Acknolegments идущие от AI
 

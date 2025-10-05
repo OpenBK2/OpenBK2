@@ -10,7 +10,7 @@
 namespace
 {
 
-typedef hash_map< NDb::EDesignSquadType, SIconsSetInfo, SEnumHash > CIconsSet;
+typedef std::unordered_map< NDb::EDesignSquadType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
@@ -147,7 +147,7 @@ bool CMOSquad::IsInSquad( struct IMOUnit *pUnit )
 	return false;
 }
 
-void CMOSquad::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
+void CMOSquad::GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -230,7 +230,7 @@ void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_2 );
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_3 );
 		const NDb::SSquadRPGStats* pSt = checked_cast<const NDb::SSquadRPGStats*>(GetStats());
-		for (vector< NDb::SSquadRPGStats::SFormation >::const_iterator it = pSt->formations.begin(); it != pSt->formations.end(); ++it )
+		for (std::vector< NDb::SSquadRPGStats::SFormation >::const_iterator it = pSt->formations.begin(); it != pSt->formations.end(); ++it )
 		{
 			switch ( it->etype )
 			{
@@ -281,10 +281,10 @@ void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct I
 {
 	CPtr<IMOContainer> pTransport = units.empty() ? 0 : checked_cast_ptr<CMOUnitInfantry*>( units.front() )->GetTransport();
 	
-	vector< CPtr<IMOUnit> > toDissapear;
+	std::vector< CPtr<IMOUnit> > toDissapear;
 	toDissapear.resize( units.size() );
 	copy( units.begin(), units.end(), toDissapear.begin() );
-	for ( vector< CPtr<IMOUnit> >::const_iterator it = toDissapear.begin(); it != toDissapear.end(); ++it )
+	for ( std::vector< CPtr<IMOUnit> >::const_iterator it = toDissapear.begin(); it != toDissapear.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		pUnit->AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );

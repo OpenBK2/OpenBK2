@@ -34,7 +34,7 @@ void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture 
 	NGfx::CalcTexCoords( &pRes->vUVs[3], fUStart, fVFinish );//fVStart );
 }
 
-static void GetGrassTexturePlace( vector<STransparentTexturePlace> *pRes, int nGrass, NGfx::CTexture *pTex )
+static void GetGrassTexturePlace( std::vector<STransparentTexturePlace> *pRes, int nGrass, NGfx::CTexture *pTex )
 {
 	STransparentTexturePlace toSplit;
 	GetTransparentTexturePlace( &toSplit, pTex, 0 );
@@ -70,8 +70,8 @@ static void GetGrassTexturePlace( vector<STransparentTexturePlace> *pRes, int nG
 	}
 }
 
-static void InitTexturePlaces( vector<STransparentTexturePlace> *pRes, 
-	const vector<CObj<CPtrFuncBase<NGfx::CTexture> > > &tex )
+static void InitTexturePlaces( std::vector<STransparentTexturePlace> *pRes,
+	const std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > &tex )
 {
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
@@ -124,7 +124,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			particlesFrames.resize( frames.size(), -1 );
 		}
 
-		static vector<bool> isFrameCached;
+		static std::vector<bool> isFrameCached;
 		isFrameCached.resize( frames.size() );
 		for ( int iFrame = 0; iFrame < frames.size(); ++iFrame )
 		{
@@ -135,7 +135,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 				{
 					transforms[iFrame].swap( transforms[iTransformedFrame] );
 					doneTransforms[iFrame].swap( doneTransforms[iTransformedFrame] );
-					swap( particlesFrames[iFrame], particlesFrames[iTransformedFrame] );
+					std::swap( particlesFrames[iFrame], particlesFrames[iTransformedFrame] );
 					bFound = true;;
 					break;
 				}				
@@ -156,7 +156,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 	}
 
 	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
-	vector<STransparentTexturePlace> texturePlaces( textures.size() );
+	std::vector<STransparentTexturePlace> texturePlaces( textures.size() );
 	InitTexturePlaces( &texturePlaces, textures );
 	
 	bool bDoWrap = vWrap.x != 0;
@@ -169,9 +169,9 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			vWrapCenter -= vDir * ( vWrapCenter.z / vDir.z );
 	}
 
-	static vector<char> filterParticles;
-	static vector<float> warfog;
-	static vector<CVec3> positions;
+	static std::vector<char> filterParticles;
+	static std::vector<float> warfog;
+	static std::vector<CVec3> positions;
 		int nParticles = pParticles->nParticles;
 	if ( filterParticles.size() < nParticles )
 		filterParticles.resize( nParticles );
@@ -229,7 +229,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		// in case filtering is enabled form packet for filter and perform it
 		if ( pFilter )
 		{
-			static vector<char> filter;
+			static std::vector<char> filter;
 			pFilter->FilterParticles( positions, filterParticles, &filter );
 			nDst = 0;
 			int nRes = 0;
@@ -251,7 +251,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		int nWarFogStepMask;
 		if ( bSampleCenterWarfog )
 		{
-			vector<CVec3> cp( 1 );
+			std::vector<CVec3> cp( 1 );
 			cp[0] = transform.GetTranslation();
 			pRender->SampleWarFog( positions, &warfog );
 			nWarFogStepMask = 0;
@@ -348,7 +348,7 @@ static float fRainDropShifts[4][2] = { { 0, 0 }, {FP_DROP_W,0}, {FP_DROP_W, FP_D
 void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 {
 	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
-	vector<STransparentTexturePlace> texturePlaces( textures.size() );
+	std::vector<STransparentTexturePlace> texturePlaces( textures.size() );
 	InitTexturePlaces( &texturePlaces, textures );
 	for ( int nParticle = 0; nParticle < positions.size(); ++nParticle )
 	{

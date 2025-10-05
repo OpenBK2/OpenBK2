@@ -36,7 +36,7 @@ MAIN_EXPORT bool StepApp( bool bActive ); // return false on exit state
 MAIN_EXPORT void ResetStack();
 MAIN_EXPORT void Command( IInterfaceCommand *pCommand );
 MAIN_EXPORT void Command( int nCommandID, const char *pszConfiguration );
-MAIN_EXPORT const string& GetBaseDir();
+MAIN_EXPORT const std::string& GetBaseDir();
 void InitMainLoop();
 MAIN_EXPORT void PushInterface( IInterfaceBase *pInterface );
 MAIN_EXPORT void PopInterface();
@@ -59,11 +59,11 @@ struct IFilesInspector : public CObjectBase
 {
 	enum { tidTypeID = 0x10075C03 };
 	// add new entry
-	virtual bool AddEntry( const string &szName, struct IFilesInspectorEntry *pEntry ) = 0;
+	virtual bool AddEntry( const std::string &szName, struct IFilesInspectorEntry *pEntry ) = 0;
 	// remove entry
-	virtual bool RemoveEntry( const string &szName ) = 0;
+	virtual bool RemoveEntry( const std::string &szName ) = 0;
 	// get entry
-	virtual struct IFilesInspectorEntry* GetEntry( const string &szName ) = 0;
+	virtual struct IFilesInspectorEntry* GetEntry( const std::string &szName ) = 0;
 	// clear all entries
 	virtual void Clear() = 0;
 };
@@ -71,7 +71,7 @@ struct IFilesInspector : public CObjectBase
 struct IFilesInspectorEntry : public CObjectBase
 {
 	// inspect one stream name
-	virtual void InspectStream( const string &szName ) = 0;
+	virtual void InspectStream( const std::string &szName ) = 0;
 	// clear entry
 	virtual void Clear() = 0;
 };

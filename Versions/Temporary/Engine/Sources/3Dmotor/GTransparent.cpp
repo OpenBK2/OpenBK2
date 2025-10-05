@@ -10,6 +10,8 @@
 #include "3DLib/GGeometry.h"
 #include "GRenderExecute.h"
 
+#include <algorithm>
+
 namespace NGScene
 {
 const int N_RESERVE_DEPTH_BUFFER = 4096;
@@ -65,7 +67,7 @@ STransparentInfo* CTransparentRenderer::AddFragment()
 		sourcePtrs.resize( sourcePtrs.size() + N_RESERVE_DEPTH_BUFFER * 2 );
 	}
 	infoStartIdx.push_back( nElementPtr );
-	return &*infos.insert( infos.end() ); 
+	return &infos.emplace_back();
 }
 
 void CTransparentRenderer::AllocParticlesWriteBuffer()
@@ -193,7 +195,7 @@ void CTransparentRenderer::AddParticle( const CVec3 vPos[4], DWORD dwColor, cons
 		AddParticleOverflow( vPos, dwColor, tPlace, fDepth );
 }
 
-void CTransparentRenderer::SampleWarFog( const vector<CVec3> &vPos, vector<float> *pRes )
+void CTransparentRenderer::SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
 {
 	if ( !pLightState )
 	{
@@ -219,7 +221,7 @@ void CTransparentRenderer::AddElement( SRenderGeometryInfo *pGeometry, IMaterial
 	++nElementPtr;
 }
 
-static void DoRadixSort( const vector<float> &src, vector<int> *pRes )
+static void DoRadixSort( const std::vector<float> &src, std::vector<int> *pRes )
 {
 	if ( !src.empty() )
     ::DoRadixSort( &src[0], src.size(), pRes );
@@ -257,26 +259,26 @@ static void SetParticlesEffect( const STransparentRenderContext &trc )
 	}
 }
 
-static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTransform, IVBCombiner *_pCombiner, int nPart, const NGfx::STriangleList &sList )
+static void ReorderTransparent( std::vector<STriangle> *pRet, const SFBTransform &sTransform, IVBCombiner *_pCombiner, int nPart, const NGfx::STriangleList &sList )
 {
 	CDGPtr<IVBCombiner> pCombiner = _pCombiner;
 	pCombiner.Refresh();
-	CDGPtr<CFuncBase<vector<CPtr<IPart> > > > pParts = _pCombiner->GetCombiner();
+	CDGPtr<CFuncBase<std::vector<CPtr<IPart> > > > pParts = _pCombiner->GetCombiner();
 	pParts.Refresh();
-	const vector<CPtr<IPart> > &parts = pParts->GetValue();
+	const std::vector<CPtr<IPart> > &parts = pParts->GetValue();
 	IPart *pPart = parts[nPart];
 	pPart->RefreshObjectInfo();
 	CObjectInfo *pInfo = pPart->GetObjectInfo();
 	////
-	vector<CVec3> holdPos;
-	const vector<CVec3> *pTransofmedPos = &pPart->xformedPositions;
+	std::vector<CVec3> holdPos;
+	const std::vector<CVec3> *pTransofmedPos = &pPart->xformedPositions;
 	if ( pTransofmedPos->empty() )
 	{
 		TransformPart( pPart, &holdPos, 0 );
 		pTransofmedPos = &holdPos;
 	}
-	const vector<CVec3> &xfpos = *pTransofmedPos;
-	vector<float> pointsDepth( xfpos.size() );
+	const std::vector<CVec3> &xfpos = *pTransofmedPos;
+	std::vector<float> pointsDepth( xfpos.size() );
 	const CVec4 &vW = sTransform.forward.w;
 	for ( int nTemp = 0; nTemp < xfpos.size(); ++nTemp )
 	{
@@ -284,8 +286,8 @@ static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTr
 		pointsDepth[nTemp] = vW.x * v.x + vW.y * v.y + vW.z * v.z + vW.w;
 	}
 	////
-	vector<float> depths( sList.nTris );
-	const vector<WORD> &posIndices = pInfo->GetPositionIndices();
+	std::vector<float> depths( sList.nTris );
+	const std::vector<WORD> &posIndices = pInfo->GetPositionIndices();
 	for ( int nTemp = 0; nTemp < sList.nTris; ++nTemp )
 	{
 		const STriangle &sTri = sList.pTri[nTemp];
@@ -300,7 +302,7 @@ static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTr
 		depths[nTemp] = fZ1 + fZ2 + fZ3;
 	}
 	////
-	vector<int> sorted;
+	std::vector<int> sorted;
 	DoRadixSort( depths, &sorted );
 	pRet->resize( sorted.size() );
 	for ( int nTemp = 0; nTemp < sorted.size(); ++nTemp )
@@ -313,10 +315,10 @@ static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTr
 const int N_UNUSED_SRC_PTR = 0xffffffff & ~N_OVER_SRC_INFO;
 class CPreciseTranspRender
 {
-	vector<STransparentInfo> &infos;
-	vector<float> &depths;
-	vector<int> &sourcePtrs;
-	vector<STriangle> tris;
+	std::vector<STransparentInfo> &infos;
+	std::vector<float> &depths;
+	std::vector<int> &sourcePtrs;
+	std::vector<STriangle> tris;
 	unsigned int nCurrentSrc, nCurrentBase;
 	NGfx::CRenderContext *pRC;
 	SMaterialParams currentMaterial;
@@ -336,7 +338,7 @@ class CPreciseTranspRender
 		tris.resize( 0 );
 		nCurrentSrc = N_UNUSED_SRC_PTR;
 	}
-	void MarkOverdrawParticles( const vector<int> &sorted )
+	void MarkOverdrawParticles( const std::vector<int> &sorted )
 	{
 		for ( int k = sorted.size() - 1; k >= 0; --k )
 		{
@@ -347,15 +349,15 @@ class CPreciseTranspRender
 		}
 	}
 public:
-	CPreciseTranspRender( NGfx::CRenderContext *_pRC, vector<STransparentInfo> *pInfos, vector<float> *pDepths, 
-		vector<int> *pSrcPtrs ) : infos(*pInfos), depths(*pDepths), sourcePtrs(*pSrcPtrs), pRC(_pRC)
+	CPreciseTranspRender( NGfx::CRenderContext *_pRC, std::vector<STransparentInfo> *pInfos, std::vector<float> *pDepths,
+		std::vector<int> *pSrcPtrs ) : infos(*pInfos), depths(*pDepths), sourcePtrs(*pSrcPtrs), pRC(_pRC)
 	{
 	}
 	void Render( const STransparentRenderContext &trc )
 	{
 		SetParticlesEffect( trc );
 		currentMaterial.Clear();
-		vector<int> sorted;
+		std::vector<int> sorted;
 		DoRadixSort( depths, &sorted );
 		nCurrentSrc = N_UNUSED_SRC_PTR;
 		// mark overdraw particles with special source
@@ -380,10 +382,10 @@ public:
 				SRenderGeometryInfo *pGeometry = info.pObjectInfo->pGeometry;
 				pGeometry->pVertices.Refresh();
 				pGeometry->pTriLists[TLT_GEOM].Refresh();
-				const vector<NGfx::STriangleList> &tris = pGeometry->pTriLists[TLT_GEOM]->GetValue();
+				const std::vector<NGfx::STriangleList> &tris = pGeometry->pTriLists[TLT_GEOM]->GetValue();
 				if ( !tris.empty() && tris[info.nOffset].nTris != 0 )
 				{
-					vector<STriangle> sorted;
+					std::vector<STriangle> sorted;
 					NGfx::STriangleList sSortedList( tris[ info.nOffset ] );
 					ReorderTransparent( &sorted, pRC->GetTransform(), pGeometry->pVertices, info.nOffset, tris[ info.nOffset ] );
 					if ( !sorted.empty() )
@@ -423,8 +425,8 @@ public:
 
 struct SCmpFragments
 {
-	const vector<STransparentInfo> &infos;
-	SCmpFragments( const vector<STransparentInfo> &_infos ) : infos(_infos) {}
+	const std::vector<STransparentInfo> &infos;
+	SCmpFragments( const std::vector<STransparentInfo> &_infos ) : infos(_infos) {}
 	bool operator()( int n1, int n2 )
 	{
 		return infos[n1].fDepth < infos[n2].fDepth;
@@ -456,11 +458,11 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 	}
 	else
 	{
-		vector<int> fragments;
+		std::vector<int> fragments;
 		fragments.resize( infos.size() );
 		for ( int k = 0; k < fragments.size(); ++k )
 			fragments[k] = k;
-		sort( fragments.begin(), fragments.end(), SCmpFragments( infos ) );
+		std::sort( fragments.begin(), fragments.end(), SCmpFragments( infos ) );
 		for ( int k = 0; k < fragments.size(); ++k )
 		{
 			int nFragment = fragments[k];
@@ -472,10 +474,10 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 				SRenderGeometryInfo *pGeometry = info.pObjectInfo->pGeometry;
 				pGeometry->pVertices.Refresh();
 				pGeometry->pTriLists[TLT_GEOM].Refresh();
-				const vector<NGfx::STriangleList> &tris = pGeometry->pTriLists[TLT_GEOM]->GetValue();
+				const std::vector<NGfx::STriangleList> &tris = pGeometry->pTriLists[TLT_GEOM]->GetValue();
 				if ( !tris.empty() )
 				{
-					vector<STriangle> sorted;
+					std::vector<STriangle> sorted;
 					NGfx::STriangleList sSortedList( tris[ info.nOffset ] );
 					ReorderTransparent( &sorted, trc.pRC->GetTransform(), pGeometry->pVertices, info.nOffset, tris[ info.nOffset ] );
 					sSortedList.pTri = &sorted[0];
@@ -499,7 +501,7 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 				else
 					rc.SetDepth( NGfx::DEPTH_TESTONLY );
 
-				vector<int> particles( nParticles );
+				std::vector<int> particles( nParticles );
 				for ( int i = 0; i < particles.size(); ++i )
 					particles[i] = i;
 				::DoRadixSort( &depths[ nStart ], nParticles, &particles );

@@ -89,7 +89,7 @@ void CPassMarkersDraw::SetPassMarkers( const NDebugInfo::EColor color, const EAI
 void CPassMarkersDraw::DrawPassabilities()
 {
 	STerrainModeSetter modeSetter( ELM_ALL, pTerrain );
-	vector<SVector> tiles[MARKERS_COLORS_COUNT];
+	std::vector<SVector> tiles[MARKERS_COLORS_COUNT];
 
 	for ( int x = 0; x < pAIMap->GetSizeX(); ++x )
 	{
@@ -112,7 +112,7 @@ void CPassMarkersDraw::DrawPassabilities()
 
 	if ( NPassMarkers::s_bShowWater )
 	{
-		vector<SVector> water;
+		std::vector<SVector> water;
 		for ( int x = 0; x < pAIMap->GetSizeX(); ++x )
 		{
 			for ( int y = 0; y < pAIMap->GetSizeY(); ++y )

@@ -75,7 +75,7 @@ void CInterfacePlayerStats::MakeInterior()
 		if ( pPlayerRankPicture )
 			pPlayerRankPicture->SetTexture( pRank->pStrap );
 
-		wstring wszRank;
+		std::wstring wszRank;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pRank->,RankName) )
 			wszRank = GET_TEXT_PRE(pRank->,RankName);
 		if ( pRankNameView )
@@ -100,7 +100,7 @@ void CInterfacePlayerStats::MakeInterior()
 	nInGameTime = nInGameTime / 60;
 	int nHour = nInGameTime;
 //	wstring wszInGameTime = NStr::ToUnicode( StrFmt( "%2d : %02d : %02d", nHour, nMin, nSec ) );
-	wstring wszInGameTime;
+	std::wstring wszInGameTime;
 	if ( IScreen *pScreen = GetScreen() )
 	{
 		wszInGameTime = NStr::ToUnicode( StrFmt( "%2d", nHour ) );
@@ -123,19 +123,19 @@ void CInterfacePlayerStats::MakeInterior()
 
 	ExpProgressStep();
 
-	wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d", 
+	std::wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d",
 		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pNextRankProgressView )
 		pNextRankProgressView->SetText( pNextRankProgressView->GetDBText() + wszRankHP );
 
-	vector<const IScenarioTracker::SMissionStats*> missions;
+	std::vector<const IScenarioTracker::SMissionStats*> missions;
 	pST->GetAllMissionStats( &missions );
 	for ( int i = 0; i < missions.size(); ++i )
 	{
 		const IScenarioTracker::SMissionStats *pMission = missions[i];
 		
-		for ( list< CDBPtr<NDb::SMedal> >::const_iterator it = pMission->medals.begin(); it != pMission->medals.end(); ++it )
+		for ( std::list< CDBPtr<NDb::SMedal> >::const_iterator it = pMission->medals.begin(); it != pMission->medals.end(); ++it )
 		{
 			const NDb::SMedal *pMedal = *it;
 			if ( !pMedal )	
@@ -171,7 +171,7 @@ void CInterfacePlayerStats::MakeInterior()
 		}
 	}
 	
-	wstring wszFavoriteReinf;
+	std::wstring wszFavoriteReinf;
 	if ( IScreen *pScreen = GetScreen() )
 		wszFavoriteReinf = pScreen->GetTextEntry( "T_NO_FAVORITE_REINF" );
 	NDb::EReinforcementType eType = pST->GetFavoriteReinf();
@@ -219,7 +219,7 @@ bool CInterfacePlayerStats::StepLocal( bool bAppActive )
 	return bResult;
 }
 
-bool CInterfacePlayerStats::Execute( const string &szSender, const string &szReaction )
+bool CInterfacePlayerStats::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
 		return OnMenuBack();
@@ -229,7 +229,7 @@ bool CInterfacePlayerStats::Execute( const string &szSender, const string &szRea
 	return false;
 }
 
-int CInterfacePlayerStats::Check( const string &szCheckName ) const
+int CInterfacePlayerStats::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

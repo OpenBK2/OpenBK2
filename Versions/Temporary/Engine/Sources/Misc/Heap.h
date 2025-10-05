@@ -4,7 +4,7 @@ template <class T, class TCmp>
 class CSortedVector
 {
 	TCmp cmp;
-	typedef vector<T> CTElements;
+	typedef std::vector<T> CTElements;
 	CTElements elements;
 public:
 	void Reserve( const size_t size ) { elements.reserve( size ); }
@@ -17,14 +17,15 @@ public:
 	}
 	void Remove( const T& el )
 	{
-		CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
-		for( CTElements::iterator rem = it; rem != elements.end(); ++rem ) 
+		typename CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
+		for( typename CTElements::iterator rem = it; rem != elements.end(); )
 		{
 			if ( *rem == el )
 			{
 				elements.erase( rem );
 				break;
 			}
+			++rem;
 		}
 	}
 	const T& operator[]( const int n ) const { return elements[n]; }
@@ -56,7 +57,7 @@ class CHeap
 	TWillSwap WillSwap;
 	
 	// нумерация элементов от 1!
-	vector<T> heap;
+	std::vector<T> heap;
 	int nEl;
 
 	// перебалансирует, начиная с эл. k и вверх
@@ -112,7 +113,7 @@ int CHeap<T, TCmp, TWillSwap>::Balance( int k )
 	while ( k > 1 && cmp( heap[k / 2], heap[k] ) )
 	{
 		WillSwap( heap[k], heap[k/2], k-1, k/2-1 );
-		swap( heap[k], heap[k/2] );
+		std::swap( heap[k], heap[k/2] );
 		k /= 2;
 	}
 
@@ -147,14 +148,14 @@ void CHeap<T, TCmp, TWillSwap>::Erase( const int n )
 		if ( cmp( heap[2*k], heap[2*k + 1 ] ) )
 		{
 			WillSwap( heap[k], heap[2*k + 1], k-1, 2*k );
-			swap( heap[k], heap[2*k + 1] );
+			std::swap( heap[k], heap[2*k + 1] );
 			k *= 2;
 			++k;
 		}
 		else
 		{
 			WillSwap( heap[k], heap[2*k], k-1, 2*k-1 );
-			swap( heap[k], heap[2*k] );
+			std::swap( heap[k], heap[2*k] );
 			k *= 2;
 		}
 	}
@@ -162,7 +163,7 @@ void CHeap<T, TCmp, TWillSwap>::Erase( const int n )
 	if ( k > 0 && 2*k + 1 > nEl && 2 * k <= nEl && cmp( heap[k], heap[2*k] ) )
 	{
 		WillSwap( heap[k], heap[2*k], k-1, 2*k-1 );
-		swap( heap[k], heap[2*k] );
+		std::swap( heap[k], heap[2*k] );
 	}
 }
 

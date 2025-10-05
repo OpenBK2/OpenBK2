@@ -11,8 +11,8 @@ bool CListControlSorterMapSize::Compare( IWindow *pSubItem1, IWindow *pSubItem2 
 	IListControlItem *p2 = dynamic_cast<IListControlItem*>( pSubItem2 );
 	IWindow *pColumnItem1 = p1->GetSubItem( nColumn );
 	IWindow *pColumnItem2 = p2->GetSubItem( nColumn );
-	string szItem1;
-	string szItem2;
+	std::string szItem1;
+	std::string szItem2;
 
 	ITextView *pTextItem1 = dynamic_cast<ITextView*>( pColumnItem1 );
 	if ( pTextItem1 )
@@ -26,7 +26,7 @@ bool CListControlSorterMapSize::Compare( IWindow *pSubItem1, IWindow *pSubItem2 
 	else
 		szItem2 = NStr::ToMBCS( pColumnItem2->GetTextString() );
 
-	vector<string> tokens;
+	std::vector<std::string> tokens;
 	int nSize1 = 0;
 	NStr::SplitString( szItem1, &tokens, 'x' );
 	if ( tokens.size() > 1 )

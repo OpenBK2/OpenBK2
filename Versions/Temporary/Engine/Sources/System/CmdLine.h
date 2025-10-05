@@ -21,28 +21,28 @@ private:
 	template <class TYPE> class CObserver;
 	struct SObserver
 	{
-		string szName;
-		string szDescription;
+		std::string szName;
+		std::string szDescription;
 		CObj<IObserver> pObserver;
 	};
-	typedef list<SObserver> CObserversList;
+	typedef std::list<SObserver> CObserversList;
 	CObserversList observers;
-	string szHeader;
+	std::string szHeader;
 	//
 	const SObserver *Find( const char *pszName ) const;
 	bool AddOptionInternal( const char *pszName, IObserver *pObserver, const char *pszDescription );
 	// observer with external value
 	IObserver *MakeIntObserver( int *pRes ) const;
 	IObserver *MakeFloatObserver( float *pRes ) const;
-	IObserver *MakeStringObserver( string *pRes ) const;
-	IObserver *MakeWStringObserver( wstring *pRes ) const;
+	IObserver *MakeStringObserver( std::string *pRes ) const;
+	IObserver *MakeWStringObserver( std::wstring *pRes ) const;
 	// observer with internal value
 	IObserver *MakeIntObserver( int *pRes, const int &setval ) const;
 	IObserver *MakeFloatObserver( float *pRes, const float &setval ) const;
-	IObserver *MakeStringObserver( string *pRes, const string &setval ) const;
-	IObserver *MakeWStringObserver( wstring *pRes, const wstring &setval ) const;
+	IObserver *MakeStringObserver( std::string *pRes, const std::string &setval ) const;
+	IObserver *MakeWStringObserver( std::wstring *pRes, const std::wstring &setval ) const;
 public:
-	CCmdLine( const string &_szHeader ): szHeader( _szHeader ) {}
+	CCmdLine( const std::string &_szHeader ): szHeader( _szHeader ) {}
 	// add option with internal value
 	// common case for enums only!
 	template <class TVal>
@@ -62,12 +62,12 @@ public:
 		return AddOptionInternal( pszName, MakeFloatObserver(pRes, setval), pszDescription );
 	}
 	template <>
-		bool AddOption<string>( const char *pszName, string *pRes, const string &setval, const char *pszDescription )
+		bool AddOption<std::string>( const char *pszName, std::string *pRes, const std::string &setval, const char *pszDescription )
 	{
 		return AddOptionInternal( pszName, MakeStringObserver(pRes, setval), pszDescription );
 	}
 	template <>
-		bool AddOption<wstring>( const char *pszName, wstring *pRes, const wstring &setval, const char *pszDescription )
+		bool AddOption<std::wstring>( const char *pszName, std::wstring *pRes, const std::wstring &setval, const char *pszDescription )
 	{
 		return AddOptionInternal( pszName, MakeWStringObserver(pRes, setval), pszDescription );
 	}
@@ -90,17 +90,17 @@ public:
 		return AddOptionInternal( pszName, MakeFloatObserver(pRes), pszDescription );
 	}
 	template <>
-		bool AddOption<string>( const char *pszName, string *pRes, const char *pszDescription )
+		bool AddOption<std::string>( const char *pszName, std::string *pRes, const char *pszDescription )
 	{
 		return AddOptionInternal( pszName, MakeStringObserver(pRes), pszDescription );
 	}
 	template <>
-		bool AddOption<wstring>( const char *pszName, wstring *pRes, const char *pszDescription )
+		bool AddOption<std::wstring>( const char *pszName, std::wstring *pRes, const char *pszDescription )
 	{
 		return AddOptionInternal( pszName, MakeWStringObserver(pRes), pszDescription );
 	}
 	//! process command line
-	EProcessResult Process( const vector<string> &args ) const;
+	EProcessResult Process( const std::vector<std::string> &args ) const;
 	EProcessResult Process( const char *pszCommandLine ) const;
 	EProcessResult Process( int argc, char *argv[] ) const;
 	//! print usage help
@@ -108,7 +108,7 @@ public:
 	//! print copyright info
 	int PrintHeader() const;
 	//! get help string for option 'pszName'
-	string GetHelp( const char *pszName ) const;
+	std::string GetHelp( const char *pszName ) const;
 };
 
 }

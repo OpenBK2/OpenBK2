@@ -10,7 +10,7 @@ struct SLuaParams
 	int n;
 	float f;
 	bool b;
-	string s;
+	std::string s;
 	CPtr<CObjectBase> p;
 };
 //
@@ -70,7 +70,7 @@ public:
 		double GetNumber() const			{ return lua_tonumber(GetState(), m_stackIndex);  }
 		const char* GetString() const		{ return lua_tostring(GetState(), m_stackIndex);  }
 		operator const char *() const		{ return GetString(); }
-		operator string () const			{ return string( GetString() ); }
+		operator std::string () const			{ return std::string( GetString() ); }
 		int StrLen() const					{ return lua_strlen(GetState(), m_stackIndex);  }
 		CFunction GetCFunction() const		{ return lua_tocfunction(GetState(), m_stackIndex);  }
 		CObjectBase* GetUserData() const			{ return lua_touserdata(GetState(), m_stackIndex);  }
@@ -147,7 +147,7 @@ public:
 		TableIterator First()	{ m_parent->PushNil(); m_parent->PushNil(); return Next(); }
 		TableIterator Next()	{ m_parent->Pop(); return lua_next( GetState(), m_stackIndex ); }
 		Object GetEntryValue( TableIterator i )	{ return m_parent->GetObject( m_parent->GetTop() ); }
-		string GetEntryName( TableIterator i )	{ return m_parent->GetObject( m_parent->GetTop() - 1 ).GetString(); }
+		std::string GetEntryName( TableIterator i )	{ return m_parent->GetObject( m_parent->GetTop() - 1 ).GetString(); }
 
 		ObjectReference GetRef( bool needLock = true )
 		{
@@ -268,7 +268,7 @@ public:
 
 	// Helper function
 	void Pop(int amount = 1)					{  lua_pop(m_state, amount);  }
-	bool CheckArgs( const char *szArgList, const string &sFuncName, vector<SLuaParams> *pParams, bool bLog );
+	bool CheckArgs( const char *szArgList, const std::string &sFuncName, std::vector<SLuaParams> *pParams, bool bLog );
 
 	
 	int  RegisterNewTag( const SRegFunction *pList );
@@ -294,9 +294,9 @@ public:
 	void ConfigSetReal(const char* section, const char* entry, double value);
 	void ConfigSetString(const char* section, const char* entry, const char* value);
 
-	string GetObjectAsText( const char* name, bool bDecorateOutput );
-	string GetObjectAsText( const char* name, Object value, bool bDecorateOutput, unsigned int indentLevel = 0 );
-	string GetStateAsText();
+	std::string GetObjectAsText( const char* name, bool bDecorateOutput );
+	std::string GetObjectAsText( const char* name, Object value, bool bDecorateOutput, unsigned int indentLevel = 0 );
+	std::string GetStateAsText();
 
 	operator lua_State*()						{  return m_state;  }
 	lua_State* GetState() const					{  return m_state;  }

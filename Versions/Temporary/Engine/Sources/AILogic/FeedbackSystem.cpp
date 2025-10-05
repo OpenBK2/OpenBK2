@@ -3,7 +3,7 @@
 #include "NewUpdater.h"
 
 
-typedef hash_map<EFeedBack, NTimer::STime, SEnumHash> TFeedBackTimes;
+typedef std::unordered_map<EFeedBack, NTimer::STime, SEnumHash> TFeedBackTimes;
 static TFeedBackTimes feedBackTimes;
 static const NTimer::STime feedBackDefaultTime = 20000;
 

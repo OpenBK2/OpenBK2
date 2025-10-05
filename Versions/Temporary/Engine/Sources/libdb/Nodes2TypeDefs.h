@@ -19,7 +19,7 @@ struct SNodesHash
 	int operator()( NDb::NTypeDef::STypeDef *pNode ) const;
 };
 
-typedef hash_map< NLang::CLangNode*, CObj<NDb::NTypeDef::STypeDef>, SNodesHash > CNodes2TypeDefs;
-typedef hash_map<NDb::NTypeDef::STypeDef*, CPtr<NDb::NTypeDef::STypeDef>, SNodesHash> CClasses2Refs;
+typedef std::unordered_map< NLang::CLangNode*, CObj<NDb::NTypeDef::STypeDef>, SNodesHash > CNodes2TypeDefs;
+typedef std::unordered_map<NDb::NTypeDef::STypeDef*, CPtr<NDb::NTypeDef::STypeDef>, SNodesHash> CClasses2Refs;
 
 

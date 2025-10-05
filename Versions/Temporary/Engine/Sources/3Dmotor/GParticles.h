@@ -34,7 +34,7 @@ private:
 	CDGPtr< CFuncBase<SFBTransform> > pPlacement;
 	CDGPtr< CPtrFuncBase<CParticlesInfo> > pInfo;
 public:
-	vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textureIDs;
+	std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textureIDs;
 private:
 	CObj<IParticleFilter> pFilter;
 	bool bLeaveParticlesWhereStarted;

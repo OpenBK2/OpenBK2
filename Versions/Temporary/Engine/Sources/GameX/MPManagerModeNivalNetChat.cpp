@@ -18,7 +18,7 @@ void CMPManagerModeNivalNet::RequestChatChannels( DWORD dwVersion )
 
 bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 {
-	wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
+	std::wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
 
 	if ( eState == EGS_LOBBY || eState == EGS_LADDER_WAIT_CLIENTS || eState == EGS_LOBBY_WAIT_LADDER )
 	{
@@ -88,14 +88,14 @@ bool CMPManagerModeNivalNet::OnChatChannelsListPacket( class CChatChannelsListPa
 	if ( pPacket->bIsFullUpdate )
 		chatChannels.clear();
 
-	for ( list<string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
+	for ( std::list<std::string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
 		chatChannels.insert( *it );
 
-	for ( list<string>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
+	for ( std::list<std::string>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
 		chatChannels.erase( *it );
 
 	SMPUIChatChannelListMessage *pChannelsMsg = new SMPUIChatChannelListMessage;
-	for ( hash_set<string>::iterator it = chatChannels.begin(); it != chatChannels.end(); ++it )
+	for ( std::unordered_set<std::string>::iterator it = chatChannels.begin(); it != chatChannels.end(); ++it )
 		pChannelsMsg->channels.push_back( *it );
 
 	PushMessage( pChannelsMsg );
@@ -109,7 +109,7 @@ bool CMPManagerModeNivalNet::OnChatChannelClientsPacket( class CChatChannelClien
 	SMPUIChatChannelNicksMessage *pMsg = new SMPUIChatChannelNicksMessage;
 	pMsg->eType = SMPUIChatChannelNicksMessage::ELT_CHAT;
 
-	for ( list<SIDNickPair>::iterator it = pPacket->clientsList.begin(); it != pPacket->clientsList.end(); ++it )
+	for ( std::list<SIDNickPair>::iterator it = pPacket->clientsList.begin(); it != pPacket->clientsList.end(); ++it )
 	{
 		SIDNickPair &nick = *it;
 		pMsg->nicks.push_back( nick.szNick );
@@ -131,18 +131,18 @@ bool CMPManagerModeNivalNet::OnChatIgnoreFriendListPacket( class CChatIgnoreFrie
 {
 	SMPUIChatChannelNicksMessage *pMsg = new SMPUIChatChannelNicksMessage;
 	pMsg->eType = SMPUIChatChannelNicksMessage::ELT_FRIEND;
-	for ( list<string>::iterator it = pPacket->friendList.begin(); it != pPacket->friendList.end(); ++it )
+	for ( std::list<std::string>::iterator it = pPacket->friendList.begin(); it != pPacket->friendList.end(); ++it )
 	{
-		string &nick = *it;
+		std::string &nick = *it;
 		pMsg->nicks.push_back( nick );
 	}
 	PushMessage( pMsg );
 
 	pMsg = new SMPUIChatChannelNicksMessage;
 	pMsg->eType = SMPUIChatChannelNicksMessage::ELT_IGNORE;
-	for ( list<string>::iterator it = pPacket->ignoreList.begin(); it != pPacket->ignoreList.end(); ++it )
+	for ( std::list<std::string>::iterator it = pPacket->ignoreList.begin(); it != pPacket->ignoreList.end(); ++it )
 	{
-		string &nick = *it;
+		std::string &nick = *it;
 		pMsg->nicks.push_back( nick );
 	}
 	PushMessage( pMsg );

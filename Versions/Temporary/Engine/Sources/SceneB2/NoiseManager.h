@@ -36,7 +36,7 @@ class CNoiseManager
 {
 	struct SNoiseStored
 	{
-		string szFileName;
+		std::string szFileName;
 		//
 		//
 		int operator&( IXmlSaver &saver )
@@ -53,12 +53,12 @@ class CNoiseManager
 
 	struct SLoadedNoise
 	{
-		string szFileName;
+		std::string szFileName;
 		CArray2D<BYTE> noise;
 		BYTE bLoaded;
 	};
 
-	vector<SLoadedNoise> noises;
+	std::vector<SLoadedNoise> noises;
 
 	void LoadNoise( unsigned int nNoiseNum );
 
@@ -66,7 +66,7 @@ public:
 	CNoiseManager();
 
 	CNoiseAccessor GetNoise( unsigned int nNoiseNum );
-	CNoiseAccessor GetNoise( const string &szName );
+	CNoiseAccessor GetNoise( const std::string &szName );
 };
 
 

@@ -27,7 +27,7 @@ inline float GetHeightInv( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p
 
 
 template <class THeightCalc>
-inline bool GetIncRidgeHeight( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
+inline bool GetIncRidgeHeight( const CVec2 &v, const std::vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
 	*pIncHeight = 0.0f;
 	int nCount = 0;
@@ -57,7 +57,7 @@ inline bool GetIncRidgeHeight( const CVec2 &v, const vector<CVec3fEx> &ridge, fl
 
 
 template <class THeightCalc>
-inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
+inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const std::vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
 	*pIncHeight = 0.0f;
 	bool bFlag = false;
@@ -82,7 +82,7 @@ inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const vector<CVec3fEx> &rid
 
 
 template <class THeightCalc>
-inline bool GetIncRidgeHeightMinLaw( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
+inline bool GetIncRidgeHeightMinLaw( const CVec2 &v, const std::vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
 	*pIncHeight = FP_MAX_VALUE;
 	bool bFlag = false;
@@ -112,7 +112,7 @@ inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &ver
 {
 	CVec3 vNorm;
 
-	for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+	for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 	{
 		const CVec3 v1( tile.vertices[it->i1].x, tile.vertices[it->i1].y, max(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) );
 		const CVec3 v2( tile.vertices[it->i2].x, tile.vertices[it->i2].y, max(tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f) );

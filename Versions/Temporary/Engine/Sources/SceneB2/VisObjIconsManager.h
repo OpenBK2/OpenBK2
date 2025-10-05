@@ -34,8 +34,8 @@ public:
 		float fDepth;
 		DWORD nColor;
 		float fAddHeight;
-		vector<int> icons;
-		vector<SHPBar> hpBars;
+		std::vector<int> icons;
+		std::vector<SHPBar> hpBars;
 		int nIconGroup;
 		int nIconLevelup;
 		int nIconDamagedBuilding;
@@ -58,12 +58,12 @@ private:
 		bool operator < ( const SSingleIcon &v ) const { return nPriority < v.nPriority; }
 	};
 	//
-	hash_map<int, int> type2VectorHash; // hash from EIconTypeEnum to singleIcons index
-	vector<CTRect<float> > hpBarTexCoords;
-	vector<float> hpBarRanges;
-	vector<SSingleIcon> singleIcons;
+	std::unordered_map<int, int> type2VectorHash; // hash from EIconTypeEnum to singleIcons index
+	std::vector<CTRect<float> > hpBarTexCoords;
+	std::vector<float> hpBarRanges;
+	std::vector<SSingleIcon> singleIcons;
 	//list<SObjIcon> objIcons; // icons data
-	typedef hash_map<int, SObjIcon> CObjIconsHash;
+	typedef std::unordered_map<int, SObjIcon> CObjIconsHash;
 	CObjIconsHash objIcons;
 	CDBPtr<NDb::STexture> pTexture;
 	CRectLayout rectLayout;

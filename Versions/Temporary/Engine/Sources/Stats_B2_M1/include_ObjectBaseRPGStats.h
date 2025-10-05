@@ -42,7 +42,7 @@ virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 virtual const NDb::SComplexSoundDesc* GetAmbientSoundDesc( const NDb::ESeason season, const NDb::EDayNight daytime ) const
 {
 	const int nDayTimeMask = 0x01 << (int)daytime;
-	for ( vector<SAmbientSound>::const_iterator it = ambientSounds.begin(); it != ambientSounds.end(); ++it )
+	for ( std::vector<SAmbientSound>::const_iterator it = ambientSounds.begin(); it != ambientSounds.end(); ++it )
 	{
 		if ( it->eSeason == season && ( it->nDayTime & nDayTimeMask ) == nDayTimeMask )
 			return it->pSoundDesc;

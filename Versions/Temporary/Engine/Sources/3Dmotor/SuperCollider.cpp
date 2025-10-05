@@ -194,12 +194,12 @@ bool CSuperCollider::DoesTriSphereIntersect( const CVec3 &ptCenter, float fR, co
 	return NCollider::DoesTriSphereIntersect( points[tri.n1], points[tri.n2], points[tri.n3], ptCenter, fR );
 }
 
-void CSuperCollider::AddEntity( const SHMatrix &pos, const vector<CVec3> &_points, 
-	const vector<STriangle> &_tris, int nUserDataIndex )
+void CSuperCollider::AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_points,
+	const std::vector<STriangle> &_tris, int nUserDataIndex )
 {
 	int nStartIndex = points.size();
 	points.resize( points.size() + _points.size() );
-	vector<CVolumeContainer::SIntCoords> clipped;
+	std::vector<CVolumeContainer::SIntCoords> clipped;
 	clipped.resize( _points.size() );
 	for ( int k = 0; k < _points.size(); ++k )
 	{

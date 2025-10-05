@@ -24,17 +24,17 @@ public:
 	static const NTimer::STime &GetCurTime();		// чтобы не передавать всюду
 	// для определения лежит ли звук в пределах карты
 	static bool IsInBounds( const int x, const int y, const int z );
-	typedef list< SUpdatedCell > CUpdatedCells; 
+	typedef std::list< SUpdatedCell > CUpdatedCells;
 public:
-	typedef list< CPtr<ISound> > CSamplesList;
-	typedef list< CPtr<CSound> > CSoundsList;
-	typedef hash_map<CDBPtr<NDb::SSoundDesc>/*subst name*/, CSoundsList, SDBPtrHash> CHearableSounds;
-	typedef hash_map<CDBPtr<NDb::SSoundDesc>/*sound name*/, CDBPtr<NDb::SSoundDesc>/*subst name*/, SDBPtrHash> CSoundSubstTable;
+	typedef std::list< CPtr<ISound> > CSamplesList;
+	typedef std::list< CPtr<CSound> > CSoundsList;
+	typedef std::unordered_map<CDBPtr<NDb::SSoundDesc>/*subst name*/, CSoundsList, SDBPtrHash> CHearableSounds;
+	typedef std::unordered_map<CDBPtr<NDb::SSoundDesc>/*sound name*/, CDBPtr<NDb::SSoundDesc>/*subst name*/, SDBPtrHash> CSoundSubstTable;
 
-	typedef vector< CArray2D< CPtr<CSoundCell> > > CSoundCellsInBounds;
+	typedef std::vector< CArray2D< CPtr<CSoundCell> > > CSoundCellsInBounds;
 
-	typedef hash_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsOutOfBounds;
-	typedef hash_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsWithSound;
+	typedef std::unordered_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsOutOfBounds;
+	typedef std::unordered_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsWithSound;
 
 	// для сбора звуков, которые слышны в клетке и сортировки их по
 	// звукам их заменяющим
@@ -57,7 +57,7 @@ private:
 	enum ESoundSceneMode eSoundSceneMode;
 	bool bMapInitted;
 	CFreeIds freeIDs;											// таблица ID звуков
-	typedef hash_map< WORD, SIntThree > CSoundIDs;
+	typedef std::unordered_map< WORD, SIntThree > CSoundIDs;
 	CSoundIDs soundIDs;			// в какой клетке находится звук.
 
 	CPtr<ISFX> pSFX;
@@ -73,8 +73,8 @@ private:
 	CSoundSubstTable substTable;					// таблица замены звуков
 
 	CHearableSounds interfaceSounds;					// звуки от интерфейса
-	hash_set<int> finishedInterfaceSounds;
-	hash_set<int> deletedInterfaceSounds;
+	std::unordered_set<int> finishedInterfaceSounds;
+	std::unordered_set<int> deletedInterfaceSounds;
 
 	CTerrainSounds terrainSounds;
 	CMapSounds mapSounds;
@@ -157,10 +157,10 @@ class CSoundScene3D : public ISoundScene
 	OBJECT_NOCOPY_METHODS( CSoundScene3D );
 
 
-	typedef pair<CPtr<ISound>, NTimer::STime> CSoundWithStartTime;
-	typedef hash_map<int, CSoundWithStartTime > CMovingSounds;
-	typedef hash_map<int, CSoundWithStartTime > CInterfaceSounds;
-	typedef list<CSoundWithStartTime > CForgottenSounds;
+	typedef std::pair<CPtr<ISound>, NTimer::STime> CSoundWithStartTime;
+	typedef std::unordered_map<int, CSoundWithStartTime > CMovingSounds;
+	typedef std::unordered_map<int, CSoundWithStartTime > CInterfaceSounds;
+	typedef std::list<CSoundWithStartTime > CForgottenSounds;
 
 	CForgottenSounds::iterator currentUnderUpdate;
 
@@ -228,7 +228,7 @@ class CSoundScene : public ISoundScene
 	ESoundSceneMode eMode;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScene); f.Add(3,&eMode); return 0; }
 
-	typedef hash_map<WORD, CDGPtr<CFuncBase<CVec3>, CPtr<CFuncBase<CVec3> > > > CDynamicSoundsMap;
+	typedef std::unordered_map<WORD, CDGPtr<CFuncBase<CVec3>, CPtr<CFuncBase<CVec3> > > > CDynamicSoundsMap;
 	CDynamicSoundsMap dynamicSounds;
 
 public:

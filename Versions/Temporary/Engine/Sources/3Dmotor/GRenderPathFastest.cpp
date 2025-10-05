@@ -62,7 +62,7 @@ static void MakeDepthRenderInfo( SPerspDirectionalDepthInfo *pRes, const SPerspD
 static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
 	SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
-	const vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
@@ -88,7 +88,7 @@ static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
 								   SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
-	const vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
@@ -391,7 +391,7 @@ static void Render( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pR
 	const SLightInfo &lightInfo, SRenderPathContext *pRPC )
 {
 	CRenderCmdList lightOps;
-	const vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( scene.IsFilteredFragment( i ) )
@@ -438,8 +438,8 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 	float fZ=0.0f, fDiv = 0.00001f;
 
 	// Calculating bounding box for materials which are need the reflection texture
-	const vector<SRenderFragmentInfo *> &fragments = scene.GetFragments();
-	for ( vector<SRenderFragmentInfo *>::const_iterator iFragment = fragments.begin();
+	const std::vector<SRenderFragmentInfo *> &fragments = scene.GetFragments();
+	for ( std::vector<SRenderFragmentInfo *>::const_iterator iFragment = fragments.begin();
 			iFragment != fragments.end();
 			++iFragment )
 	{
@@ -458,7 +458,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 			SRenderGeometryInfo *pGeometryInfo = scene.GetGeometryInfo( element.nGeometry );
 			pGeometryInfo->pVertices.Refresh();
 
-			const vector<SSphere> &bounds = pGeometryInfo->pVertices->GetBounds();
+			const std::vector<SSphere> &bounds = pGeometryInfo->pVertices->GetBounds();
 			int nFlags = element.nFlags;
 
 			for ( int k = 0; k < 32; ++k )

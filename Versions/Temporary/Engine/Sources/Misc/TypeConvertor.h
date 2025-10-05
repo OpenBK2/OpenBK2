@@ -5,22 +5,22 @@
 #define STRING_ENUM_ADD_PTR(TypeConverter,eEnum) (*TypeConverter)[#eEnum] = eEnum;
 #define STRING_ENUM_ADD(TypeConverter,eEnum) TypeConverter.Add( #eEnum, eEnum );
 
-template < class T1, class T2, class TH1 = hash<T1>, class TH2 = hash<T2> >
+template < class T1, class T2, class TH1 = std::hash<T1>, class TH2 = std::hash<T2> >
 class CTypeConvertor
 {
 protected: // сериализовать хочется.
-	hash_map<T1, T2, TH1> t1_t2;
-	hash_map<T2, T1, TH2> t2_t1;
+	std::unordered_map<T1, T2, TH1> t1_t2;
+	std::unordered_map<T2, T1, TH2> t2_t1;
 	//
 	const T1& GetType1( const T2 &t2 ) const
 	{
-		hash_map<T2, T1, TH2>::const_iterator pos = t2_t1.find( t2 );
+		std::unordered_map<T2, T1, TH2>::const_iterator pos = t2_t1.find( t2 );
 		NI_ASSERT( pos != t2_t1.end(), "Can't find type1 from type2" );
 		return pos->second;
 	}
 	const T2& GetType2( const T1 &t1 ) const
 	{
-		hash_map<T1, T2, TH1>::const_iterator pos = t1_t2.find( t1 );
+		std::unordered_map<T1, T2, TH1>::const_iterator pos = t1_t2.find( t1 );
 		NI_ASSERT( pos != t1_t2.end(), "Can't find type2 from type1" );
 		return pos->second;
 	}

@@ -121,7 +121,7 @@ static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBa
 	if ( field.pType->eType == TYPE_TYPE_REF )
 	{
 		const STypeRef *pTypeRef = checked_cast_ptr<const STypeRef *>( field.pType );
-		vector<const STypeClass *> classes;
+		std::vector<const STypeClass *> classes;
 		pTypeRef->GetRefTypesList( &classes );
 		for ( int i = 0; i < classes.size(); ++i )
 			pDesc->refTypes[classes[i]->szTypeName] = classes[i]->nClassTypeID;
@@ -130,7 +130,7 @@ static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBa
 	return true;
 }
 
-UINT CObjectManipulatorWrapper::GetID( const string &rszName ) const
+UINT CObjectManipulatorWrapper::GetID( const std::string &rszName ) const
 {
 	return INVALID_NODE_ID;
 }
@@ -140,7 +140,7 @@ CDBID CObjectManipulatorWrapper::GetDBID() const
 	return pObjMan->GetDBID();
 }
 
-bool CObjectManipulatorWrapper::GetType( const string &rszName, string *pszType ) const
+bool CObjectManipulatorWrapper::GetType( const std::string &rszName, std::string *pszType ) const
 {
 	if ( pszType == 0 )
 		return false;
@@ -162,7 +162,7 @@ IManipulatorIterator *CObjectManipulatorWrapper::Iterate( bool bShowHidden, ECac
 	return new CObjectManipulatorIteratorWrapper( pObjMan->CreateIterator(bShowHidden) );
 }
 
-typedef hash_map<void *, SPropertyDesc, SDefaultPtrHash> CPropertyDescMap;
+typedef std::unordered_map<void *, SPropertyDesc, SDefaultPtrHash> CPropertyDescMap;
 static CPropertyDescMap s_propertyDescMap;
 const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {
@@ -174,7 +174,7 @@ const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 	return pDesc;
 }
 
-const SIteratorDesc *CObjectManipulatorWrapper::GetDesc( const string &szName ) const
+const SIteratorDesc *CObjectManipulatorWrapper::GetDesc( const std::string &szName ) const
 {
 	const STypeStructBase::SField *pField = pObjMan->GetDesc( szName );
 	if ( pField == 0 )
@@ -182,7 +182,7 @@ const SIteratorDesc *CObjectManipulatorWrapper::GetDesc( const string &szName ) 
 	return GetPropertyDesc( pField );
 }
 
-bool CObjectManipulatorWrapper::GetValue( const string &szName, CVariant *pValue ) const
+bool CObjectManipulatorWrapper::GetValue( const std::string &szName, CVariant *pValue ) const
 {
 	if ( pObjMan->GetValue( szName, pValue ) != false )
 	{
@@ -190,7 +190,7 @@ bool CObjectManipulatorWrapper::GetValue( const string &szName, CVariant *pValue
 		if ( pValue->GetType() == CVariant::VT_DBID )
 		{
 			const CDBID &dbid = pValue->GetDBID().ToString();
-			string szString = pValue->GetDBID().ToString();
+			std::string szString = pValue->GetDBID().ToString();
 			NStr::ReplaceAllChars( &szString, '/', '\\' );
 			*pValue = CDBID(szString);
 		}
@@ -201,23 +201,23 @@ bool CObjectManipulatorWrapper::GetValue( const string &szName, CVariant *pValue
 		return false;
 }
 
-bool CObjectManipulatorWrapper::SetValue( const string &szName, const CVariant &value )
+bool CObjectManipulatorWrapper::SetValue( const std::string &szName, const CVariant &value )
 {
 	return pObjMan->SetValue( szName, value );
 }
 
-bool CObjectManipulatorWrapper::CheckValue( const string &szName, const CVariant &value, bool *pResult ) const
+bool CObjectManipulatorWrapper::CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const
 {
 	*pResult = true;
 	return true;
 }
 
-bool CObjectManipulatorWrapper::InsertNode( const string &szName, int nNodeIndex )
+bool CObjectManipulatorWrapper::InsertNode( const std::string &szName, int nNodeIndex )
 {
 	return pObjMan->Insert( szName, nNodeIndex, 1, true );
 }
 
-bool CObjectManipulatorWrapper::RemoveNode( const string &szName, int nNodeIndex )
+bool CObjectManipulatorWrapper::RemoveNode( const std::string &szName, int nNodeIndex )
 {
 	if ( nNodeIndex == NODE_REMOVEALL_INDEX )
 		return pObjMan->Remove( szName, 0, -1 );
@@ -225,13 +225,13 @@ bool CObjectManipulatorWrapper::RemoveNode( const string &szName, int nNodeIndex
 		return pObjMan->Remove( szName, nNodeIndex, 1 );
 }
 
-bool CObjectManipulatorWrapper::RemoveNodeByID( const string &szName, int nNodeID )
+bool CObjectManipulatorWrapper::RemoveNodeByID( const std::string &szName, int nNodeID )
 {
 	NI_ASSERT( false, "Feature RemoveNodeByID() can't be realized in this wrapper!" );
 	return false;
 }
 
-bool CObjectManipulatorWrapper::IsNameExists( const string &rszName ) const
+bool CObjectManipulatorWrapper::IsNameExists( const std::string &rszName ) const
 {
 	return pObjMan->GetDesc( rszName ) != 0;
 }
@@ -241,7 +241,7 @@ void CObjectManipulatorWrapper::ClearCache()
 {
 }
 
-bool CObjectManipulatorWrapper::GetName( UINT nID, string *pszName ) const 
+bool CObjectManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
 { 
 	if ( nID != -1 )
 		return false;
@@ -274,13 +274,13 @@ bool CObjectManipulatorIteratorWrapper::IsEnd() const
 	return pIterator->IsEnd();
 }
 
-bool CObjectManipulatorIteratorWrapper::GetName( string *pszName ) const
+bool CObjectManipulatorIteratorWrapper::GetName( std::string *pszName ) const
 {
 	*pszName = pIterator->GetName();
 	return true;
 }
 
-bool CObjectManipulatorIteratorWrapper::GetType( string *pszType ) const
+bool CObjectManipulatorIteratorWrapper::GetType( std::string *pszType ) const
 {
 	const SPropertyDesc *pDesc = static_cast<const SPropertyDesc*>( GetDesc() );
 	NI_ASSERT( pDesc != 0, "Unable to get property desc" );

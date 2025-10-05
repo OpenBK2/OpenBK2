@@ -35,15 +35,15 @@ namespace NDb
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EM1Action eValue );
-	STATS_B2_M1_EXPORT EM1Action StringToEnum_NDb_EM1Action( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EM1Action eValue );
+	STATS_B2_M1_EXPORT EM1Action StringToEnum_NDb_EM1Action( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EM1Action>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EM1Action eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EM1Action ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EM1Action( szValue ); }
+	static std::string ToString( NDb::EM1Action eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EM1Action ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EM1Action( szValue ); }
 };
 

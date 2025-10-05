@@ -52,7 +52,7 @@ void CGausianBlurEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *p
 	pRC->SetTexture( 0, pTex, FILTER_LINEAR );
 }
 
-NGfx::CTexture* ApplyFiltersBase( NGfx::CTexture *pSrc, const CTRect<float> &srcRect, const CTRect<float> &rectRegDS, const vector<CPtr<I2DEffect> > &filters )
+NGfx::CTexture* ApplyFiltersBase( NGfx::CTexture *pSrc, const CTRect<float> &srcRect, const CTRect<float> &rectRegDS, const std::vector<CPtr<I2DEffect> > &filters )
 {
 	CTRect<float> rectReg;
 	NGfx::GetRegisterSize( &rectReg );
@@ -85,7 +85,7 @@ NGfx::CTexture* ApplyFiltersBase( NGfx::CTexture *pSrc, const CTRect<float> &src
 	return pSrc;
 }
 
-void ApplyFilters( int nDownSample, const vector<CPtr<I2DEffect> > &filters )
+void ApplyFilters( int nDownSample, const std::vector<CPtr<I2DEffect> > &filters )
 {
 	if ( filters.empty() )
 		return;
@@ -104,7 +104,7 @@ void ApplyFilters( int nDownSample, const vector<CPtr<I2DEffect> > &filters )
 	NGfx::CopyTexture( rc, CVec2( rectReg.Width(), rectReg.Height() ), rectReg, pSrc, rectRegDS );
 }
 
-void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int nDownSample, const vector<CPtr<I2DEffect> > &filters )
+void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int nDownSample, const std::vector<CPtr<I2DEffect> > &filters )
 {
 	if ( filters.empty() )
 		return;

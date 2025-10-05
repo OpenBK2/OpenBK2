@@ -17,9 +17,9 @@ virtual void PostLoad( bool bInEditor )
 	if ( bInEditor )
 		return;
 	float fDenominator = 0;
-	for ( vector<SSoundStats>::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
+	for ( std::vector<SSoundStats>::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
 		fDenominator += it->fProbability;
 	fDenominator = 1.0f / fDenominator;
-	for ( vector<SSoundStats>::iterator it = sounds.begin(); it != sounds.end(); ++it )
+	for ( std::vector<SSoundStats>::iterator it = sounds.begin(); it != sounds.end(); ++it )
 		it->fProbability *= fDenominator;
 }

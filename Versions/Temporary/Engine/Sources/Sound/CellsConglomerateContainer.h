@@ -4,9 +4,9 @@
 #include "IntPair.h"
 
 
-typedef list<SIntThree/*hearable cell coordinate*/> CHearableCells;
+typedef std::list<SIntThree/*hearable cell coordinate*/> CHearableCells;
 typedef CArray2D<CHearableCells> CConglomerate;
-typedef vector<CConglomerate> CConglomerates;
+typedef std::vector<CConglomerate> CConglomerates;
 
 
 class CCellsConglomerateContainer
@@ -39,7 +39,7 @@ class CCellsConglomerateContainer
 
 	static const int MAX_RANK;					// maximum allowed rank
 	int nMaxRank;												// current rank
-	vector<CConglomerates> conglomeratesHeight;
+	std::vector<CConglomerates> conglomeratesHeight;
 	bool bInitted;
 	// do not need to store phs map in levels less than nMinZ
 	int nMinZ;

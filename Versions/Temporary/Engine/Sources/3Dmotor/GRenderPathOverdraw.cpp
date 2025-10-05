@@ -10,7 +10,7 @@ void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene )
 {
 	CRenderCmdList lightOps;
-	const vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( scene.IsFilteredFragment( k ) )

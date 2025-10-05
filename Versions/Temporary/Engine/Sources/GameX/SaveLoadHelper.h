@@ -44,7 +44,7 @@ struct SSaveInfo
 	bool bFromChapter; // save from chaper screen
 	ZSKIP //string szSaveName;
 	bool bAutoSave;
-	wstring wszSaveName;
+	std::wstring wszSaveName;
 
 	ZSKIP// CDBPtr< NDb::SText > pCampaignName;
 	ZSKIP// CDBPtr< NDb::SText > pChapterName;
@@ -56,12 +56,12 @@ struct SSaveInfo
 	CArray2D<NGfx::SPixel8888> screenShot;
 	ZSKIP// CDBPtr< NDb::SText > pMissionLoadingDesc;
 	//
-	wstring wszCampaignName;
-	wstring wszChapterName;
-	wstring wszChapterDesc;
-	wstring wszMissionName;
-	wstring wszMissionDesc;
-	wstring wszMissionLoadingDesc;
+	std::wstring wszCampaignName;
+	std::wstring wszChapterName;
+	std::wstring wszChapterDesc;
+	std::wstring wszMissionName;
+	std::wstring wszMissionDesc;
+	std::wstring wszMissionLoadingDesc;
 	
 	NFile::CFilePath szMODPath;
 
@@ -69,18 +69,18 @@ struct SSaveInfo
 
 	SSaveInfo();
 	
-	void Read( const string &szFullFileName );
-	void Write( const string &szFullFileName, const wstring &wszSaveName, bool bQuickSave, bool bAutoSave, bool bFromChapter );
-	void Rename( const string &szFullFileName, const wstring &wszNewSaveName );
+	void Read( const std::string &szFullFileName );
+	void Write( const std::string &szFullFileName, const std::wstring &wszSaveName, bool bQuickSave, bool bAutoSave, bool bFromChapter );
+	void Rename( const std::string &szFullFileName, const std::wstring &wszNewSaveName );
 	const NDb::STexture* GetPlayerIcon( const NDb::SMapInfo *pMapInfo, int nPlayer ) const;
 	void GenerateInfo();
 	//
-	const wstring &GetCampaignName() const { return wszCampaignName; }
-	const wstring &GetChapterName() const { return wszChapterName; }
-	const wstring &GetChapterDesc() const { return wszChapterDesc; }
-	const wstring &GetMissionName() const { return wszMissionName; }
-	const wstring &GetMissionDesc() const { return wszMissionDesc; }
-	const wstring &GetMissionLoadingDesc() const { return wszMissionLoadingDesc; }
+	const std::wstring &GetCampaignName() const { return wszCampaignName; }
+	const std::wstring &GetChapterName() const { return wszChapterName; }
+	const std::wstring &GetChapterDesc() const { return wszChapterDesc; }
+	const std::wstring &GetMissionName() const { return wszMissionName; }
+	const std::wstring &GetMissionDesc() const { return wszMissionDesc; }
+	const std::wstring &GetMissionLoadingDesc() const { return wszMissionLoadingDesc; }
 
 	//
 	
@@ -90,10 +90,10 @@ struct SSaveInfo
 struct SSavegameEntry 
 {
 	ZDATA
-	wstring					wszName;
-	string					szFileName;
-	string					szInfoFileName;
-	string					szFileTitle;			//without path or extension
+	std::wstring					wszName;
+	std::string					szFileName;
+	std::string					szInfoFileName;
+	std::string					szFileTitle;			//without path or extension
 	SYSTEMTIME			time;
 	CPtr< IWindow >	pWindow;
 	SSaveInfo				info;
@@ -101,46 +101,46 @@ struct SSavegameEntry
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&szFileName); f.Add(4,&szInfoFileName); f.Add(5,&szFileTitle); f.Add(6,&time); f.Add(7,&pWindow); f.Add(8,&info); f.Add(9,&nID); return 0; }
 };
 
-typedef vector< SSavegameEntry >	CSaveList;
+typedef std::vector< SSavegameEntry >	CSaveList;
 
 struct SWaitLoadData
 {
 	ZDATA
 	ZSKIP //CDBPtr<NDb::STexture> pMinimap;
-	wstring wszDesc;
+	std::wstring wszDesc;
 	bool bChapter;
 	CDBID dbidMinimap;
 	ZEND int operator&( IBinSaver &f ) { f.Add(3,&wszDesc); f.Add(4,&bChapter); f.Add(5,&dbidMinimap); return 0; }
 	
-	void Set( const NDb::STexture *pMinimap, const wstring &wszDesc, bool bChapter );
+	void Set( const NDb::STexture *pMinimap, const std::wstring &wszDesc, bool bChapter );
 	void Reset();
 };
 
 extern SWaitLoadData g_WaitLoadData;
 
-string GetSavePath();
+std::string GetSavePath();
 void GetSaveList( CSaveList *pSaves, int *pnLastID );
 bool IsSaveListEmpty();
-string GetUniqueFileName( const CSaveList &saves );
-void MakeUniqueSave( const wstring &wszUserName, bool bQuickSave, bool bAutoSave, bool bFromChapter );
+std::string GetUniqueFileName( const CSaveList &saves );
+void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAutoSave, bool bFromChapter );
 
 // replays
 
 struct SReplayInfo
 {
 	ZDATA
-		string szFileName;
+		std::string szFileName;
 		SYSTEMTIME timeFile;
 		SMultiplayerReplayInfo replayInfo;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szFileName); f.Add(3,&timeFile); f.Add(4,&replayInfo); return 0; }
 };
 
-typedef vector<SReplayInfo> CReplays;
+typedef std::vector<SReplayInfo> CReplays;
 
-string GetReplayPath();
-bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const string &szFileName, const bool bRead );
+std::string GetReplayPath();
+bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const std::string &szFileName, const bool bRead );
 void GetReplayList( CReplays *pReplays );
-bool DeleteReplay( const string &szFileName );
+bool DeleteReplay( const std::string &szFileName );
 
 } //NSaveLoad
 

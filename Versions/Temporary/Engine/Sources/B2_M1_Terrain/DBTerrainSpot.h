@@ -42,14 +42,14 @@ namespace NDb
 	public:
 		CDBPtr< STerrainSpotDesc > pDescriptor;
 		int nSpotID;
-		vector< CVec2 > points;
+		std::vector< CVec2 > points;
 
 		STerrainSpotInstance() :
 			__dwCheckSum( 0 ),
 			nSpotID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );

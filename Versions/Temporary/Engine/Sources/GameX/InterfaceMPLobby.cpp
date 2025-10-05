@@ -78,7 +78,7 @@ void CInterfaceMPLobby::InitControls()
 	pPostMessage = GetChildChecked<IButton>( pMain, "ButtonPostMessage", true );
 }
 
-bool CInterfaceMPLobby::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPLobby::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBackReaction();
@@ -140,7 +140,7 @@ bool CInterfaceMPLobby::OnLadderGameReaction()
 	return true;
 }
 
-int CInterfaceMPLobby::Check( const string &szCheckName ) const
+int CInterfaceMPLobby::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -163,7 +163,7 @@ bool CInterfaceMPLobby::OnCustomGameReaction()
 	return true;
 }
 
-bool CInterfaceMPLobby::OnClientMenu( const string &szSender )
+bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 {
 	// Ignore for myself
 	bool bOwnInfo = ( NStr::ToUnicode( szSender ) == NGlobal::GetVar( "Multiplayer.PlayerName", L"Player" ).GetString() );
@@ -185,7 +185,7 @@ bool CInterfaceMPLobby::OnClientMenu( const string &szSender )
 	int nStatusCode = GetButtonState( szSelectedClient );
 	if ( pStatusButton )
 		pStatusButton->SetState( nStatusCode );
-	string szStatusCode;
+	std::string szStatusCode;
 	switch ( nStatusCode )
 	{
 	case 1:
@@ -381,7 +381,7 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 			pWaitingForLadder->ShowWindow( false );
 			timeStartWaiting = 0;
 			bLadderGameFound = false;
-			wstring wszReason = GetScreen()->GetTextEntry( "LADDER_GAME_CANCELLED" );
+			std::wstring wszReason = GetScreen()->GetTextEntry( "LADDER_GAME_CANCELLED" );
 			if ( wszReason.length() > 0 )
 				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
 		}
@@ -400,7 +400,7 @@ bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 			int nElapsedMin = nElapsedSec / 60;
 			nElapsedSec %= 60;
 
-			wstring wszText = pWaitingForLadder->GetDBText() + NStr::ToUnicode( StrFmt( " %d:%02d", nElapsedMin, nElapsedSec ) );
+			std::wstring wszText = pWaitingForLadder->GetDBText() + NStr::ToUnicode( StrFmt( " %d:%02d", nElapsedMin, nElapsedSec ) );
 			if ( bLadderGameFound )
 				wszText = wszText + GetScreen()->GetTextEntry( "T_LADDER_GAME_FOUND" );
 			pWaitingForLadder->SetText( wszText );

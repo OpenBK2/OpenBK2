@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EMPGameType eValue )
+std::string EnumToString( NDb::EMPGameType eValue )
 {
 	switch ( eValue )
 	{
@@ -23,7 +23,7 @@ string EnumToString( NDb::EMPGameType eValue )
 	}
 }
 
-NDb::EMPGameType NDb::StringToEnum_NDb_EMPGameType( const string &szValue )
+NDb::EMPGameType NDb::StringToEnum_NDb_EMPGameType( const std::string &szValue )
 {
 	if ( szValue == "MP_GT_STANDARD" )
 		return NDb::MP_GT_STANDARD;
@@ -33,7 +33,7 @@ NDb::EMPGameType NDb::StringToEnum_NDb_EMPGameType( const string &szValue )
 }
 
 
-void SMPMapInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMPMapInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "GameTypes", &gameTypes, pThis );
 }
@@ -69,7 +69,7 @@ DWORD SMPMapInfo::CalcCheckSum() const
 
 
 
-void SCameraPlacement::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCameraPlacement::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Yaw", (BYTE*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
@@ -117,7 +117,7 @@ DWORD SCameraPlacement::CalcCheckSum() const
 
 
 
-void SScriptCameraPlacement::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptCameraPlacement::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
@@ -165,7 +165,7 @@ DWORD SScriptCameraPlacement::CalcCheckSum() const
 
 
 
-void SScriptMovieKey::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptMovieKey::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "IsTangentIn", (BYTE*)&bIsTangentIn - pThis, sizeof(bIsTangentIn), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "IsTangentOut", (BYTE*)&bIsTangentOut - pThis, sizeof(bIsTangentOut), NTypeDef::TYPE_TYPE_BOOL );
@@ -210,7 +210,7 @@ DWORD SScriptMovieKey::CalcCheckSum() const
 
 
 
-void SScriptMovieKeyPos::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptMovieKeyPos::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SScriptMovieKey::ReportMetaInfo( szAddName, pThis );
 
@@ -250,7 +250,7 @@ DWORD SScriptMovieKeyPos::CalcCheckSum() const
 
 
 
-void SScriptMovieKeyFollow::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptMovieKeyFollow::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SScriptMovieKey::ReportMetaInfo( szAddName, pThis );
 
@@ -290,7 +290,7 @@ DWORD SScriptMovieKeyFollow::CalcCheckSum() const
 
 
 
-void SScriptMovieSequence::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptMovieSequence::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "posKeys", &posKeys, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "followKeys", &followKeys, pThis );
@@ -329,7 +329,7 @@ DWORD SScriptMovieSequence::CalcCheckSum() const
 
 
 
-void SScriptMovies::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptMovies::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ScriptCameraPlacements", &scriptCameraPlacements, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ScriptMovieSequences", &scriptMovieSequences, pThis );
@@ -486,7 +486,7 @@ int SMissionObjective::operator&( IBinSaver &saver )
 
 
 
-void SMapObjectInfo::SLinkInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapObjectInfo::SLinkInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (BYTE*)&nLinkID - pThis, sizeof(nLinkID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkWith", (BYTE*)&nLinkWith - pThis, sizeof(nLinkWith), NTypeDef::TYPE_TYPE_INT );
@@ -528,7 +528,7 @@ DWORD SMapObjectInfo::SLinkInfo::CalcCheckSum() const
 
 
 
-void SMapObjectInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapObjectInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (BYTE*)&nDir - pThis, sizeof(nDir), NTypeDef::TYPE_TYPE_INT );
@@ -588,7 +588,7 @@ DWORD SMapObjectInfo::CalcCheckSum() const
 
 
 
-void SEntrenchmentInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SEntrenchmentInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "sections", &sections, pThis );
 }
@@ -623,7 +623,7 @@ DWORD SEntrenchmentInfo::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EScriptAreaTypes eValue )
+std::string EnumToString( NDb::EScriptAreaTypes eValue )
 {
 	switch ( eValue )
 	{
@@ -636,7 +636,7 @@ string EnumToString( NDb::EScriptAreaTypes eValue )
 	}
 }
 
-NDb::EScriptAreaTypes NDb::StringToEnum_NDb_EScriptAreaTypes( const string &szValue )
+NDb::EScriptAreaTypes NDb::StringToEnum_NDb_EScriptAreaTypes( const std::string &szValue )
 {
 	if ( szValue == "EAT_RECTANGLE" )
 		return NDb::EAT_RECTANGLE;
@@ -646,7 +646,7 @@ NDb::EScriptAreaTypes NDb::StringToEnum_NDb_EScriptAreaTypes( const string &szVa
 }
 
 
-void SScriptArea::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScriptArea::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
@@ -694,7 +694,7 @@ DWORD SScriptArea::CalcCheckSum() const
 
 
 
-void SAIStartCommand::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAIStartCommand::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "CmdType", (BYTE*)&nCmdType - pThis, sizeof(nCmdType), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "unitLinkIDs", &unitLinkIDs, pThis );
@@ -745,7 +745,7 @@ DWORD SAIStartCommand::CalcCheckSum() const
 
 
 
-void SBattlePosition::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBattlePosition::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ArtilleryLinkID", (BYTE*)&nArtilleryLinkID - pThis, sizeof(nArtilleryLinkID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "TruckLinkID", (BYTE*)&nTruckLinkID - pThis, sizeof(nTruckLinkID), NTypeDef::TYPE_TYPE_INT );
@@ -787,7 +787,7 @@ DWORD SBattlePosition::CalcCheckSum() const
 
 
 
-void SMapSoundInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapSoundInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "sound", (BYTE*)&psound - pThis, sizeof(psound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -826,7 +826,7 @@ DWORD SMapSoundInfo::CalcCheckSum() const
 
 
 
-void SEditAreaInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SEditAreaInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Points", &points, pThis );
@@ -864,7 +864,7 @@ DWORD SEditAreaInfo::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EParcelType eValue )
+std::string EnumToString( NDb::EParcelType eValue )
 {
 	switch ( eValue )
 	{
@@ -879,7 +879,7 @@ string EnumToString( NDb::EParcelType eValue )
 	}
 }
 
-NDb::EParcelType NDb::StringToEnum_NDb_EParcelType( const string &szValue )
+NDb::EParcelType NDb::StringToEnum_NDb_EParcelType( const std::string &szValue )
 {
 	if ( szValue == "EPATCH_UNKNOWN" )
 		return NDb::EPATCH_UNKNOWN;
@@ -891,7 +891,7 @@ NDb::EParcelType NDb::StringToEnum_NDb_EParcelType( const string &szValue )
 }
 
 
-void SReinforcePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinforcePoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
@@ -930,7 +930,7 @@ DWORD SReinforcePoint::CalcCheckSum() const
 
 
 
-void SAIGeneralParcel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAIGeneralParcel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "reinforcePoints", &reinforcePoints, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -984,7 +984,7 @@ DWORD SAIGeneralParcel::CalcCheckSum() const
 
 
 
-void SAIGeneralSide::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAIGeneralSide::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "mobileScriptIDs", &mobileScriptIDs, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "parcels", &parcels, pThis );
@@ -1026,7 +1026,7 @@ DWORD SAIGeneralSide::CalcCheckSum() const
 
 
 
-void SBonusInstance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBonusInstance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (BYTE*)&nLinkID - pThis, sizeof(nLinkID), NTypeDef::TYPE_TYPE_INT );
 }
@@ -1062,7 +1062,7 @@ DWORD SBonusInstance::CalcCheckSum() const
 
 
 
-void SBuildingBonuses::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBuildingBonuses::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "PointID", (BYTE*)&nPointID - pThis, sizeof(nPointID), NTypeDef::TYPE_TYPE_INT );
 }
@@ -1098,7 +1098,7 @@ DWORD SBuildingBonuses::CalcCheckSum() const
 
 
 
-void SPlayerBonusData::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlayerBonusData::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (BYTE*)&nLinkID - pThis, sizeof(nLinkID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "PlayerBonuses", &playerBonuses, pThis );
@@ -1139,7 +1139,7 @@ DWORD SPlayerBonusData::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::ESuperWeaponType eValue )
+std::string EnumToString( NDb::ESuperWeaponType eValue )
 {
 	switch ( eValue )
 	{
@@ -1154,7 +1154,7 @@ string EnumToString( NDb::ESuperWeaponType eValue )
 	}
 }
 
-NDb::ESuperWeaponType NDb::StringToEnum_NDb_ESuperWeaponType( const string &szValue )
+NDb::ESuperWeaponType NDb::StringToEnum_NDb_ESuperWeaponType( const std::string &szValue )
 {
 	if ( szValue == "SUPER_WEAPON_BOMBER" )
 		return NDb::SUPER_WEAPON_BOMBER;
@@ -1166,7 +1166,7 @@ NDb::ESuperWeaponType NDb::StringToEnum_NDb_ESuperWeaponType( const string &szVa
 }
 
 
-void SMapPlayerInfo::SDeployPosition::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapPlayerInfo::SDeployPosition::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
@@ -1205,7 +1205,7 @@ DWORD SMapPlayerInfo::SDeployPosition::CalcCheckSum() const
 
 
 
-void SMapPlayerInfo::SSuperWeaponInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapPlayerInfo::SSuperWeaponInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "SuperWeaponType", (BYTE*)&eSuperWeaponType - pThis, sizeof(eSuperWeaponType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Count", (BYTE*)&nCount - pThis, sizeof(nCount), NTypeDef::TYPE_TYPE_INT );
@@ -1250,7 +1250,7 @@ DWORD SMapPlayerInfo::SSuperWeaponInfo::CalcCheckSum() const
 
 
 
-void SMapPlayerInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapPlayerInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Camera", &camera, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "general", &general, pThis ); 
@@ -1538,7 +1538,7 @@ DWORD SMultiplayerMap::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EBonusType eValue )
+std::string EnumToString( NDb::EBonusType eValue )
 {
 	switch ( eValue )
 	{
@@ -1551,7 +1551,7 @@ string EnumToString( NDb::EBonusType eValue )
 	}
 }
 
-NDb::EBonusType NDb::StringToEnum_NDb_EBonusType( const string &szValue )
+NDb::EBonusType NDb::StringToEnum_NDb_EBonusType( const std::string &szValue )
 {
 	if ( szValue == "BT_REPLACE_REINFORCEMENT" )
 		return NDb::BT_REPLACE_REINFORCEMENT;
@@ -1780,7 +1780,7 @@ DWORD SAddReinforcementCalls::CalcCheckSum() const
 
 
 
-void SStartUnisAvalabiltyEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SStartUnisAvalabiltyEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "StartReinforcmentType", (BYTE*)&eStartReinforcmentType - pThis, sizeof(eStartReinforcmentType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Number", (BYTE*)&nNumber - pThis, sizeof(nNumber), NTypeDef::TYPE_TYPE_INT );

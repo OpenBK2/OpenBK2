@@ -9,7 +9,7 @@
 namespace NCompileCLike
 {
 
-bool Compile( vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc, 
+bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc,
 						 CNodes2TypeDefs *pNodes2TypeDefs, NLang::CNamespace *pRootNN )
 {
 	CPtr<CVisitor> pVisitor = new CVisitor( pTypes, pTermTypesDesc );

@@ -19,8 +19,8 @@ public:
 		~CReactions()	{ }
 		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface ) 
 			: pScreen( _pScreen ), pInterface( _pInterface ) { }
-			bool Execute( const string &szSender, const string &szReaction );
-			int Check( const string &szCheckName ) const;
+			bool Execute( const std::string &szSender, const std::string &szReaction );
+			int Check( const std::string &szCheckName ) const;
 
 			int operator&( IBinSaver &saver )
 			{

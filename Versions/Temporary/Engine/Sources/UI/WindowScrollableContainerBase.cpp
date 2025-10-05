@@ -154,7 +154,7 @@ void CWindowScrollableContainerBase::RemoveItems()
 
 void CWindowScrollableContainerBase::Remove( IWindow * pRemove )
 {
-	for ( CElements::iterator el = elements.begin(); el != elements.end(); ++el )
+	for ( CElements::iterator el = elements.begin(); el != elements.end(); )
 	{
 		if ( el->szName == dynamic_cast<CWindow*>(pRemove)->GetName() )
 		{
@@ -162,6 +162,7 @@ void CWindowScrollableContainerBase::Remove( IWindow * pRemove )
 			RemoveElement( dynamic_cast<CWindow*>( pRemove ) );			
 			break;
 		}
+		++el;
 	}
 }
 
@@ -390,7 +391,7 @@ void CWindowScrollableContainerBase::Init()
 	UpdateSelectionPosition( pSelection, pSelected );
 }
 
-CWindow* CWindowScrollableContainerBase::GetElement( const string &szName )
+CWindow* CWindowScrollableContainerBase::GetElement( const std::string &szName )
 {
 	return dynamic_cast<CWindow*>(pContainer->GetChild( szName, false ));
 }
@@ -474,7 +475,7 @@ void CWindowScrollableContainerBase::Clicked( struct IWindow *pWho, int nButton 
 		Select( pWho );
 }
 
-IWindow * CWindowScrollableContainerBase::GetItem( const string &szName ) 
+IWindow * CWindowScrollableContainerBase::GetItem( const std::string &szName )
 { 
 	return pContainer->GetChild( szName, false ); 
 }

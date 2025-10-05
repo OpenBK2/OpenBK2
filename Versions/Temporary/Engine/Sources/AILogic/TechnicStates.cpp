@@ -133,20 +133,20 @@ struct SVectorHash
 		return (v.x * 65535) + v.y;
 	}
 };
-typedef hash_map<SVector, bool, SVectorHash> CSVectorHash;
+typedef std::unordered_map<SVector, bool, SVectorHash> CSVectorHash;
 
 void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WORD wDirExclude )
 {
 	// криво! как-то нужно подумать и написать получше
-	list<SVector> tilesUnderRect;
+	std::list<SVector> tilesUnderRect;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tilesUnderRect );
 
 	CSVectorHash tilesUnderRect1;
-	for ( list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
+	for ( std::list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
 		tilesUnderRect1[*i] = true;
 
 	CSVectorHash adjustedTiles;
-	for ( list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
+	for ( std::list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
 	{
 		if ( tilesUnderRect1.find( SVector(i->x+1, i->y) ) == tilesUnderRect1.end() )
 			adjustedTiles[ SVector(i->x+1, i->y) ];
@@ -164,7 +164,7 @@ void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WO
 	for ( CSVectorHash::iterator i = adjustedTiles.begin(); i != adjustedTiles.end(); ++i )
 		tiles.push_back( i->first );
 
-	for ( list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); )
+	for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); )
 	{
 		const CVec2 vec = GetAIMap()->GetPointByTile( *it );
 		const WORD wDirToTile = GetDirectionByVector( vec - rect.center );
@@ -195,11 +195,11 @@ void CMechUnitEntrenchSelfState::Segment()
 			pUnit->UnlockTiles();
 			// determine weather we can build tank pit from sand bags or can hull doun into ground
 			const SRect unitRect = pUnit->GetUnitRect();
-			list<SVector> unitTiles;
+			std::list<SVector> unitTiles;
 			GetAIMap()->GetTilesCoveredByRect( unitRect, &unitTiles );
 
 			bool bCanDig = true;
-			for ( list<SVector>::iterator i = unitTiles.begin(); i != unitTiles.end(); ++i )
+			for ( std::list<SVector>::iterator i = unitTiles.begin(); i != unitTiles.end(); ++i )
 			{
 				if ( !GetTerrain()->CanDigEntrenchment( i->x, i->y ) )
 				{
@@ -229,7 +229,7 @@ void CMechUnitEntrenchSelfState::Segment()
 			
 			// проверить, не залоканы ли тайлы под TankPit
 			bool bCanAdd = true;
-			for ( list<SObjTileInfo> ::iterator i = tiles.begin(); i != tiles.end(); ++i )
+			for ( std::list<SObjTileInfo> ::iterator i = tiles.begin(); i != tiles.end(); ++i )
 			{
 				if ( GetTerrain()->IsLocked( i->tile, EAC_TERRAIN ) )
 				{
@@ -259,7 +259,7 @@ void CMechUnitEntrenchSelfState::Segment()
 			}
 			float fCoeff = 1.0f;
 			int nDefaultTime = SConsts::ENTRENCH_SELF_TIME;
-			for ( int i = 0; i < Min ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
+			for ( int i = 0; i < Min<int> ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 			{
 				const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
 				if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 

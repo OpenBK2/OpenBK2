@@ -53,14 +53,14 @@ void CSupremeBeing::Init( const NDb::SMapInfo* pMapInfo )
 			const int nParty = theDipl.GetNParty( i );
 			if ( generals.find( nParty )  == generals.end() && nParty == 1 )
 			{
-				generals.insert( pair<int, CPtr<CGeneral> >( nParty, new CGeneral( nParty ) ) );
+				generals.insert( std::pair<int, CPtr<CGeneral> >( nParty, new CGeneral( nParty ) ) );
 				generals[nParty]->Init( pMapInfo->players[i].general );
 			}
 		}
 	}
 }
 
-void CSupremeBeing::GiveNewUnitsToGenerals( const list<CCommonUnit*> &pUnits, bool bFromReinforcement )
+void CSupremeBeing::GiveNewUnitsToGenerals( const std::list<CCommonUnit*> &pUnits, bool bFromReinforcement )
 {
 	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
 	{

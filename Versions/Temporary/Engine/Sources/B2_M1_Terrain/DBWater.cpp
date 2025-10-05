@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SAnimatedTexture::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAnimatedTexture::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesX", (BYTE*)&nNumFramesX - pThis, sizeof(nNumFramesX), NTypeDef::TYPE_TYPE_INT );
@@ -87,7 +87,7 @@ int SWaterSet::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::SWater::EWaterType eValue )
+std::string EnumToString( NDb::SWater::EWaterType eValue )
 {
 	switch ( eValue )
 	{
@@ -106,7 +106,7 @@ string EnumToString( NDb::SWater::EWaterType eValue )
 	}
 }
 
-NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const string &szValue )
+NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const std::string &szValue )
 {
 	if ( szValue == "WT_OCEAN" )
 		return NDb::SWater::WT_OCEAN;
@@ -122,7 +122,7 @@ NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const string &s
 }
 
 
-void SWater::SWaterWaveType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWater::SWaterWaveType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (BYTE*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Period", (BYTE*)&fPeriod - pThis, sizeof(fPeriod), NTypeDef::TYPE_TYPE_FLOAT );

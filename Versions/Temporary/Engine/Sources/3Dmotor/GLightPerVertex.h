@@ -34,7 +34,7 @@ struct SPerVertexLightState
 	// fWarFogBlend == 1 - use new, == 0 - use old
 	float fWarFogScale, fWarFogBlend;
 	bool bWarFogUseOnlyNew;
-	vector<SPointLightInfo> dynamicPointLights, staticPointLights;
+	std::vector<SPointLightInfo> dynamicPointLights, staticPointLights;
 	CVec3 vAmbientColor, vLightColor, vSunDir;
 	ZSKIP
 	CVec3 vDymanicLightsModification;
@@ -63,11 +63,11 @@ struct SCacheLightingInfo
 	bool bMultiplyOnTransparency, bSkipStaticPointLights, bTranslucent;
 	CVec3 vTranslucentColor;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bReplaceWithDirectional); f.Add(3,&bDoNotCacheLighting); f.Add(4,&bSkipLighting); f.Add(5,&bSelfIllum); f.Add(6,&bMultiplyOnTransparency); f.Add(7,&bSkipStaticPointLights); f.Add(8,&bTranslucent); f.Add(9,&vTranslucentColor); return 0; }
-	vector<NGfx::SMMXWord> pointLight;
-	vector<int> pointLightIDs;
-	vector<DWORD> colors, shadowColors;
+	std::vector<NGfx::SMMXWord> pointLight;
+	std::vector<int> pointLightIDs;
+	std::vector<DWORD> colors, shadowColors;
 	int nDirectionalLightID;
-	vector<unsigned char> warFogNew, warFogOld;
+	std::vector<unsigned char> warFogNew, warFogOld;
 	int nWarFogNewID, nWarFogOldID;
 
 	SCacheLightingInfo() : bReplaceWithDirectional( false ), bDoNotCacheLighting(false), bSkipLighting(false), bSelfIllum(false), bMultiplyOnTransparency(true), bSkipStaticPointLights(false), bTranslucent(false), vTranslucentColor(0,0,0) { Clear(); }
@@ -76,14 +76,14 @@ struct SCacheLightingInfo
 
 struct SUVInfo;
 void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
-	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes, 
-	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor, 
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
-void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, vector<float> *pRes );
+void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &ls, std::vector<float> *pRes );
 
 }
 

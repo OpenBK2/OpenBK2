@@ -30,17 +30,17 @@ bool VariantToEnum( int *pRes, const CVariant &value, NTypeDef::STypeDef *pType 
 
 bool EnumToVariant( CVariant *pRes, int nValue, NTypeDef::STypeDef *pType )
 {
-	string szValue;
+	std::string szValue;
 	pType->ToString( &szValue, CVariant(nValue) );
 	*pRes = szValue;
 	return true;
 }
 
 // CRAP{ legacy - remove it ASAP
-void CutTypeNameFromRef( string *pRes, const string &szRefName )
+void CutTypeNameFromRef( std::string *pRes, const std::string &szRefName )
 {
 	const int nPos = szRefName.find( ':' );
-	if ( nPos == string::npos )
+	if ( nPos == std::string::npos )
 	{
 		if ( pRes != &szRefName )
 			*pRes = szRefName;
@@ -52,7 +52,7 @@ void CutTypeNameFromRef( string *pRes, const string &szRefName )
 
 CDBID GetDBIDFromValue( const CVariant &value )
 {
-	string szNewRefName;
+	std::string szNewRefName;
 	switch ( value.GetType() )
 	{
 	case CVariant::VT_DBID:
@@ -108,13 +108,13 @@ bool SStructMetaInfo::SField::SetValueToStructBool( const CVariant &value, BYTE 
 bool SStructMetaInfo::SField::SetValueToStructString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
-	*((string*)pData) = value.GetStr();
+	*((std::string*)pData) = value.GetStr();
 	return true;
 }
 bool SStructMetaInfo::SField::SetValueToStructWString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
-	*((wstring*)pData) = value.GetWStringRecode();
+	*((std::wstring*)pData) = value.GetWStringRecode();
 	return true;
 }
 bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
@@ -211,13 +211,13 @@ bool SStructMetaInfo::SField::GetValueFromStructBool( CVariant *pValue, BYTE *pT
 bool SStructMetaInfo::SField::GetValueFromStructString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
-	*pValue = *((string*)pData);
+	*pValue = *((std::string*)pData);
 	return true;
 }
 bool SStructMetaInfo::SField::GetValueFromStructWString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
-	*pValue = *((wstring*)pData);
+	*pValue = *((std::wstring*)pData);
 	return true;
 }
 bool SStructMetaInfo::SField::GetValueFromStructGUIDorBinary( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const

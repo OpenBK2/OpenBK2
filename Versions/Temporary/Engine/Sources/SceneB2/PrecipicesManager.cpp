@@ -2,6 +2,8 @@
 
 #include "GenTerrain.h"
 
+#include <algorithm>
+
 int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 															const float fMin, const float fMax,
 															const int nID,
@@ -9,7 +11,7 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 															const float fRandX, const float fRandY )
 {
 	int nCount = 0;
-	for ( vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
 	{
 		if ( fabs2( vPos - it->vPos ) < DEF_EPS )
 		{
@@ -41,7 +43,7 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 	node.precs.push_back( nID );
 	node.verts.resize( 0 );
 	terrainInfo.precNodes.push_back( node );
-	AddUnique( &updatedPrecNodes, terrainInfo.precNodes.size() - 1 );
+	AddUnique( &updatedPrecNodes, static_cast<int>(terrainInfo.precNodes.size() - 1) );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
 
@@ -51,7 +53,7 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 																	 const float fRandY1, const float fRandY2 )
 {
 	int nCount = 0;
-	for ( vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
 	{
 		if ( fabs2( vPos - it->vPos ) < DEF_EPS )
 		{
@@ -85,7 +87,7 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 	node.precs.push_back( nID2 );
 	node.verts.resize( 0 );
 	terrainInfo.precNodes.push_back( node );
-	AddUnique( &updatedPrecNodes, terrainInfo.precNodes.size() - 1 );
+	AddUnique( &updatedPrecNodes, static_cast<int>(terrainInfo.precNodes.size() - 1) );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
 
@@ -146,7 +148,7 @@ inline void InitPrecipiceFromPrecipice( STerrainInfo::SPrecipice &dstPrec, const
 
 STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
 {
-	for ( list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
 	{
 		if ( it->nID == nID )
 			return &(*it);
@@ -155,8 +157,8 @@ STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
 	return 0;
 }
 
-void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &posArr, const vector<float> &heightsArr,
-																				 const vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale,
+void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr,
+																				 const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale,
 																				 const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial,
 																				 const float fDepth, const float fDepthRand, const float fRandX, const float fRandY,
 																				 const bool bHasPeak )
@@ -208,9 +210,9 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &pos
 
 	STerrainInfo::SPrecipice oldPrecipice, resPrecipice;
 	float fDist;
-	vector<SPrecipiceIntersect> precInters( 8 );
+	std::vector<SPrecipiceIntersect> precInters( 8 );
 
-	for ( list<STerrainInfo::SPrecipice>::iterator itPrecipice = terrainInfo.precipices.begin(); itPrecipice != terrainInfo.precipices.end(); ++itPrecipice )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrecipice = terrainInfo.precipices.begin(); itPrecipice != terrainInfo.precipices.end(); ++itPrecipice )
 	{
 		if ( IsBBIntersect(itPrecipice->vMin, itPrecipice->vMax, addPrec.vMin, addPrec.vMax) )
 		{
@@ -415,8 +417,8 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &pos
 
 				AddToPrecipice( oldPrecipice, *itPrecipice, i - 1 );
 
-				sort( precInters.begin(), precInters.end() );
-				for ( vector<SPrecipiceIntersect>::const_iterator it = precInters.begin(); it != precInters.end(); ++it )
+				std::sort( precInters.begin(), precInters.end() );
+				for ( std::vector<SPrecipiceIntersect>::const_iterator it = precInters.begin(); it != precInters.end(); ++it )
 					AddToPrecipice( oldPrecipice, it->nNode, it->vNorm, it->fMinHeight, it->fMaxHeight );
 			}
 
@@ -430,14 +432,14 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &pos
 void CTerraGen::UpdateAllNeededPrecipices()
 {
 	// add intersectors to update queue
-	static vector<int> resUpdated( 128 );
+	static std::vector<int> resUpdated( 128 );
 	resUpdated = updatedPrecipices;
-	for ( vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
+	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
 		const STerrainInfo::SPrecipice *pPrec = FindPrecipice( *it );
 		if ( pPrec )
 		{
-			for ( vector<int>::const_iterator itInters = pPrec->intersectors.begin(); itInters != pPrec->intersectors.end(); ++itInters )
+			for ( std::vector<int>::const_iterator itInters = pPrec->intersectors.begin(); itInters != pPrec->intersectors.end(); ++itInters )
 			{
 				if ( *itInters < 0x20000 )
 					AddUnique( &resUpdated, *itInters );
@@ -449,7 +451,7 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	updatedPrecipices.swap( resUpdated );
 
 	// remove all updated precipices
-	for ( vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
+	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
 		RemovePrecipiceFromCollector( *it, true );
 		if ( *it > 0xffff )
@@ -457,7 +459,7 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	}
 
 	// add all updated precipices
-	for ( vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
+	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
 		// crag
 		if ( *it < 0x10000 )
@@ -496,13 +498,13 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	}
 
 	// create all vertices in nodes
-	for ( vector<int>::const_iterator it = updatedPrecNodes.begin(); it != updatedPrecNodes.end(); ++it )
+	for ( std::vector<int>::const_iterator it = updatedPrecNodes.begin(); it != updatedPrecNodes.end(); ++it )
 		CreateVerticesInPrecipiceNode( &(terrainInfo.precNodes[*it]), *it );
 	updatedPrecNodes.resize( 0 );
 
 	// create all meshes
 	STerrainInfo::SPrecipice *pPrec;
-	for ( vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
+	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
 		if ( pPrec = FindPrecipice(*it) )
 			CreatePrecipiceMesh( pPrec, true );
@@ -517,13 +519,13 @@ void CTerraGen::UpdateAllNeededPrecipices()
 
 void CTerraGen::RemapPrecipices()
 {
-	vector<int> precMap( terrainInfo.precNodes.size() );
+	std::vector<int> precMap( terrainInfo.precNodes.size() );
 	fill( precMap.begin(), precMap.end(), -1 );
-	vector<STerrainInfo::SPrecipiceNode> newNodes;
+	std::vector<STerrainInfo::SPrecipiceNode> newNodes;
 	newNodes.reserve( terrainInfo.precNodes.size() );
 	newNodes.resize( 0 );
 	int nInd = 0;
-	for ( vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nInd )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nInd )
 	{
 		if ( it->nCount > 0 )
 		{
@@ -532,9 +534,9 @@ void CTerraGen::RemapPrecipices()
 		}
 	}
 	terrainInfo.precNodes = newNodes;
-	for ( list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
 	{
-		for ( vector<int>::iterator it = itPrec->nodes.begin(); it != itPrec->nodes.end(); ++it )
+		for ( std::vector<int>::iterator it = itPrec->nodes.begin(); it != itPrec->nodes.end(); ++it )
 		{
 			*it = precMap[*it];
 			if ( *it < 0 )

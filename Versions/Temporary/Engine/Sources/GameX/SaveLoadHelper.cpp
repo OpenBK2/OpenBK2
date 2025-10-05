@@ -36,17 +36,17 @@ const char* REPLAY_NAME_PREFIX = "replay_";
 
 SWaitLoadData g_WaitLoadData;
 
-string GetSavePath()
+std::string GetSavePath()
 {
-	string szProfileDir = NProfile::GetCurrentProfileDir();
+	std::string szProfileDir = NProfile::GetCurrentProfileDir();
 	if ( !szProfileDir.empty() && szProfileDir[szProfileDir.size() - 1] != '\\')
 		szProfileDir += '\\';
 	return szProfileDir + "Saves\\";
 }
 
-string GetReplayPath()
+std::string GetReplayPath()
 {
-	string szProfileDir = NProfile::GetCurrentProfileDir();
+	std::string szProfileDir = NProfile::GetCurrentProfileDir();
 	if ( !szProfileDir.empty() && szProfileDir[szProfileDir.size() - 1] != '\\')
 		szProfileDir += '\\';
 	return szProfileDir + "Replays\\";
@@ -62,7 +62,7 @@ SSaveInfo::SSaveInfo() :
 {
 }
 
-void SSaveInfo::Read( const string &szFullFileName )
+void SSaveInfo::Read( const std::string &szFullFileName )
 {
 	CFileStream stream( szFullFileName, CFileStream::WIN_READ_ONLY );
 	if ( !stream.IsOk() )
@@ -77,7 +77,7 @@ void SSaveInfo::Read( const string &szFullFileName )
 	}
 }
 
-void SSaveInfo::Write( const string &szFullFileName, const wstring &_wszSaveName, bool _bQuickSave, bool _bAutoSave, bool _bFromChapter )
+void SSaveInfo::Write( const std::string &szFullFileName, const std::wstring &_wszSaveName, bool _bQuickSave, bool _bAutoSave, bool _bFromChapter )
 {
 	if ( _bQuickSave )
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
@@ -188,7 +188,7 @@ void SSaveInfo::GenerateInfo()
 	}
 }
 
-void SSaveInfo::Rename( const string &szFullFileName, const wstring &wszNewSaveName )
+void SSaveInfo::Rename( const std::string &szFullFileName, const std::wstring &wszNewSaveName )
 {
 	{
 		CFileStream stream( szFullFileName, CFileStream::WIN_READ_ONLY );
@@ -228,7 +228,7 @@ const NDb::STexture* SSaveInfo::GetPlayerIcon( const NDb::SMapInfo *pMapInfo, in
 
 void SSaveInfo::SetLoadInfo()
 {
-	wstring wszDesc;
+	std::wstring wszDesc;
 	if ( bFromChapter )
 		wszDesc = wszChapterDesc;
 	else
@@ -251,15 +251,15 @@ void SSaveInfo::SetLoadInfo()
 void GetSaveList( CSaveList *pSaves, int *pnLastID )
 {
 	// Get Saved Games list
-	string szPath = GetSavePath();
-	list<string>								names;
+	std::string szPath = GetSavePath();
+	std::list<std::string>								names;
 	WIN32_FILE_ATTRIBUTE_DATA		fileAttr;
 	FILETIME										fileTimeLocal;
 	int													nNamePos, nExtPos;
 
 	NFile::GetDirectoryFiles( szPath.c_str(), "*.sav", &names, false );
 	pSaves->clear();
-	for ( list<string>::iterator it = names.begin(); it != names.end(); ++it )			// fill in elements
+	for ( std::list<std::string>::iterator it = names.begin(); it != names.end(); ++it )			// fill in elements
 	{
 		SSavegameEntry sg;
 		sg.szFileName = *it;
@@ -269,7 +269,7 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 		// Get file title (w/o path or extension)
 		nNamePos = sg.szFileName.rfind( '\\' );
 		nExtPos = sg.szFileName.rfind( '.' );
-		if ( (nNamePos != string::npos) && (nExtPos != string::npos) && (nExtPos > nNamePos) )
+		if ( (nNamePos != std::string::npos) && (nExtPos != std::string::npos) && (nExtPos > nNamePos) )
 		{
 			sg.szFileTitle = sg.szFileName.substr( nNamePos + 1, nExtPos - nNamePos - 1);
 		} else {
@@ -299,15 +299,15 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 bool IsSaveListEmpty()
 {
 	// Get Saved Games list
-	string szPath = GetSavePath();
-	list<string> names;
+	std::string szPath = GetSavePath();
+	std::list<std::string> names;
 
 	NFile::GetDirectoryFiles( szPath.c_str(), "*.sav", &names, false );
 	
 	return names.empty();
 }
 
-string GetUniqueFileName( const CSaveList &saves )
+std::string GetUniqueFileName( const CSaveList &saves )
 {
 	int nIndex = 0;
 	for ( int i = 0; i < saves.size(); ++i )
@@ -318,7 +318,7 @@ string GetUniqueFileName( const CSaveList &saves )
 		int nFileIndex = 0;
 		if ( nLen < save.szFileTitle.size() )
 		{
-			string szText = save.szFileTitle.substr( nLen );
+			std::string szText = save.szFileTitle.substr( nLen );
 			NStr::TrimLeft( szText, '0' );
 			nFileIndex = NStr::ToInt( szText );
 		}
@@ -329,7 +329,7 @@ string GetUniqueFileName( const CSaveList &saves )
 
 // SWaitLoadData
 
-void SWaitLoadData::Set( const NDb::STexture *_pMinimap, const wstring &_wszDesc, bool _bChapter )
+void SWaitLoadData::Set( const NDb::STexture *_pMinimap, const std::wstring &_wszDesc, bool _bChapter )
 {
 	dbidMinimap = _pMinimap ? _pMinimap->GetDBID() : "";
 	wszDesc = _wszDesc;
@@ -341,13 +341,13 @@ void SWaitLoadData::Reset()
 	dbidMinimap = "";
 }
 
-void MakeUniqueSave( const wstring &wszUserName, bool bQuickSave, bool bAutoSave, bool bFromChapter )
+void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAutoSave, bool bFromChapter )
 {
 	CSaveList saves;
 	int nLastID = 0;
 	GetSaveList( &saves, &nLastID );
 
-	string szName = GetUniqueFileName( saves );
+	std::string szName = GetUniqueFileName( saves );
 	for ( CSaveList::iterator it = saves.begin(); it != saves.end(); ++it )
 	{
 		if ( it->wszName == wszUserName )
@@ -370,7 +370,7 @@ void MakeUniqueSave( const wstring &wszUserName, bool bQuickSave, bool bAutoSave
 
 // replay serialization helpers
 
-bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const string &szFileName, const bool bRead )
+bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const std::string &szFileName, const bool bRead )
 {
 	CFileStream file( StrFmt( "%s%s%s", GetReplayPath().c_str(), szFileName.c_str(), REPLAY_INFO_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &file, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
@@ -385,19 +385,19 @@ void GetReplayList( CReplays *pReplays )
 	if ( !pReplays )
 		return;
 
-	const string szPath = GetReplayPath();
+	const std::string szPath = GetReplayPath();
 
-	list<string> names;
+	std::list<std::string> names;
 	NFile::GetDirectoryFiles( szPath.c_str(), StrFmt( "*%s", REPLAY_INFO_EXTENSION ), &names, false );
 	pReplays->clear();
-	for ( list<string>::iterator it = names.begin(); it != names.end(); ++it )
+	for ( std::list<std::string>::iterator it = names.begin(); it != names.end(); ++it )
 	{
 		SReplayInfo replay;
-		const string szFullFileName = *it;
+		const std::string szFullFileName = *it;
 
 		const int nNamePos = szFullFileName.rfind( '\\' );
 		const int nExtPos = szFullFileName.rfind( '.' );
-		if ( (nNamePos != string::npos) && (nExtPos != string::npos) && (nExtPos > nNamePos) )
+		if ( (nNamePos != std::string::npos) && (nExtPos != std::string::npos) && (nExtPos > nNamePos) )
 		{
 			replay.szFileName = szFullFileName.substr( nNamePos + 1, nExtPos - nNamePos - 1);
 			if ( NFile::DoesFileExist( szPath + replay.szFileName + REPLAY_EXTENSION ) )
@@ -416,10 +416,10 @@ void GetReplayList( CReplays *pReplays )
 	}
 }
 
-bool DeleteReplay( const string &szFileName )
+bool DeleteReplay( const std::string &szFileName )
 {
-	const string szReplayFile = GetReplayPath() + szFileName + REPLAY_EXTENSION;
-	const string szReplayInfoFile = GetReplayPath() + szFileName + REPLAY_INFO_EXTENSION;
+	const std::string szReplayFile = GetReplayPath() + szFileName + REPLAY_EXTENSION;
+	const std::string szReplayInfoFile = GetReplayPath() + szFileName + REPLAY_INFO_EXTENSION;
 	const bool bResult1 = DeleteFile( szReplayFile.c_str() );
 	const bool bResult2 = DeleteFile( szReplayInfoFile.c_str() );
 	return bResult1 && bResult2;

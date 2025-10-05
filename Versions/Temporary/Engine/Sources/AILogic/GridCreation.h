@@ -3,7 +3,7 @@
 
 class CSortedGridUnits
 {
-	vector<class CCommonUnit*> units;
+	std::vector<class CCommonUnit*> units;
 	int nUnits;
 
 	CVec2 vAverageDir;
@@ -14,8 +14,8 @@ class CSortedGridUnits
 		bool operator()( const int a, const int b ) const;
 	};
 
-	vector<int> sortedUnitsNums;
-	vector<CVec2> rotatedUnitsCoord;
+	std::vector<int> sortedUnitsNums;
+	std::vector<CVec2> rotatedUnitsCoord;
 
 	bool bSorted;
 public:
@@ -45,14 +45,14 @@ class CGrid
 		bool operator()( const int a, const int b ) const;
 	};
 	
-	typedef vector<int> CSortedColumns;
+	typedef std::vector<int> CSortedColumns;
 	ZDATA
 	CSortedColumns sortedColumns;
-	vector<float> columns;
+	std::vector<float> columns;
 
 	CVec2 vCenter;
 
-	vector<CVec2> newCenters;
+	std::vector<CVec2> newCenters;
 	float fMaxWidth;
 
 	CSortedGridUnits sortedUnits;

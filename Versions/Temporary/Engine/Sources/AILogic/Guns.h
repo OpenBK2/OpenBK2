@@ -54,7 +54,7 @@ class CBasicGun : public CBasicGunCRAPSaver
 {
 
 	enum EShootState { EST_TURNING, EST_AIMING, WAIT_FOR_ACTION_POINT, EST_SHOOTING, EST_REST };
-	typedef list< CPtr<CBasicGun> > CParallelGuns;
+	typedef std::list< CPtr<CBasicGun> > CParallelGuns;
 
 	ZDATA_(CBasicGunCRAPSaver)
 protected:

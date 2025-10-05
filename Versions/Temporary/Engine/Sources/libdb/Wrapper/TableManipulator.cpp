@@ -3,7 +3,7 @@
 #include "TableManipulator.h"
 
 
-CTableManipulatorWrapper::CTableManipulatorWrapper( vector<STypeClass *> &classes )
+CTableManipulatorWrapper::CTableManipulatorWrapper( std::vector<STypeClass *> &classes )
 {
 	for ( int i = 0; i < classes.size(); ++i )
 	{
@@ -20,7 +20,7 @@ IManipulatorIterator* CTableManipulatorWrapper::Iterate( bool bShowHidden, ECach
 	return new CTableManipulatorIteratorWrapper( this, bShowHidden );
 }
 
-const STypeClass* CTableManipulatorWrapper::GetType( const string &szName ) const
+const STypeClass* CTableManipulatorWrapper::GetType( const std::string &szName ) const
 {
 	CNamesMap::const_iterator pos = namesMap.find( szName );
 	return pos == namesMap.end() ? 0 : pos->second;
@@ -32,7 +32,7 @@ const STypeClass* CTableManipulatorWrapper::GetType( int nTypeID ) const
 	return pos == idsMap.end() ? 0 : pos->second;
 }
 
-UINT CTableManipulatorWrapper::GetID( const string &szName ) const
+UINT CTableManipulatorWrapper::GetID( const std::string &szName ) const
 {
 	const STypeClass *pType = GetType( szName );
 	if ( pType )
@@ -45,7 +45,7 @@ UINT CTableManipulatorWrapper::GetID( const string &szName ) const
 }
 
 
-bool CTableManipulatorWrapper::GetName( UINT nID, string *pszName ) const
+bool CTableManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
 {
 	const STypeClass *pType = GetType( nID );
 	if ( pType )
@@ -57,7 +57,7 @@ bool CTableManipulatorWrapper::GetName( UINT nID, string *pszName ) const
 }
 
 
-bool CTableManipulatorWrapper::GetValue( const string &szName, CVariant *pValue ) const
+bool CTableManipulatorWrapper::GetValue( const std::string &szName, CVariant *pValue ) const
 {
 	const STypeClass *pType = GetType( szName );
 	if ( pType )
@@ -69,7 +69,7 @@ bool CTableManipulatorWrapper::GetValue( const string &szName, CVariant *pValue 
 }
 
 
-bool CTableManipulatorWrapper::IsNameExists( const string &rszName ) const
+bool CTableManipulatorWrapper::IsNameExists( const std::string &rszName ) const
 {
 	return namesMap.find( rszName ) != namesMap.end();
 }
@@ -121,7 +121,7 @@ bool CTableManipulatorIteratorWrapper::IsEnd() const
 	return itCurrType == pTableMan->namesMap.end();
 }
 
-bool CTableManipulatorIteratorWrapper::GetName( string *pszName ) const
+bool CTableManipulatorIteratorWrapper::GetName( std::string *pszName ) const
 {
 	if ( !IsEnd() )
 	{

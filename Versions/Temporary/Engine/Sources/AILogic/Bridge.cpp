@@ -84,7 +84,7 @@ CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, c
 	GetPassability( &pass );
 
 	// под всем мостом запретить строить окопы.
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetCoveredTiles( &tiles );
 	GetTerrain()->AddUndigableTiles( tiles );
 
@@ -118,7 +118,7 @@ void CBridgeSpan::GetTilesForVisibility( CTilesSet *pTiles ) const
 		pFullBridge->GetTilesForVisibility( pTiles );
 }
 
-void CBridgeSpan::GetCoveredTiles( list<SVector> *pTiles ) const
+void CBridgeSpan::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	SRect rect;
 	GetBoundRect( &rect );
@@ -206,7 +206,7 @@ void CBridgeSpan::SetHeights()
 #ifndef _FINALRELEASE
 void CBridgeSpan::DisplayBridgeTiles()
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 
 	//Get tiles
 	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
@@ -230,7 +230,7 @@ void CBridgeSpan::DisplayBridgeTiles()
 }
 #endif
 
-void CBridgeSpan::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
+void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
 	pTiles->clear();
 
@@ -294,7 +294,7 @@ void CBridgeSpan::RealLockTiles()
 
 	const EAIClasses aiClass = (EAIClasses)pStats->nAIPassabilityClass;
 
-	list<SObjTileInfo> unlockTiles;
+	std::list<SObjTileInfo> unlockTiles;
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 	{
 		for ( int y = pass.GetMinY(); y < pass.GetMaxY(); y += SConsts::TILE_SIZE )
@@ -315,7 +315,7 @@ void CBridgeSpan::RealLockTiles()
 	}
 	GetTerrain()->RemoveStaticObjectTilesForBridge( unlockTiles );
 
-	list<SObjTileInfo> lockTiles;
+	std::list<SObjTileInfo> lockTiles;
 	CreateLockedTilesInfo( &lockTiles );
 	GetTerrain()->AddStaticObjectTiles( lockTiles );
 }
@@ -332,8 +332,8 @@ void CBridgeSpan::UnlockTiles()
 			pFullBridge->NeedRepair();
 	}
 
-	list<SObjTileInfo> unlockTiles;
-	for ( list<SObjTileInfo>::iterator it = oldTilesInfo.begin(); it != oldTilesInfo.end(); ++it )
+	std::list<SObjTileInfo> unlockTiles;
+	for ( std::list<SObjTileInfo>::iterator it = oldTilesInfo.begin(); it != oldTilesInfo.end(); ++it )
 		unlockTiles.push_back( SObjTileInfo( it->tile, EAC_ANY ) );
 
 	GetTerrain()->RemoveStaticObjectTiles( unlockTiles );
@@ -391,9 +391,9 @@ void CBridgeSpan::Die( const float fDamage )
 	const CVec2 vAABBHalfSize( ( pass.GetMaxX() - pass.GetMinX() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS, 
 		( pass.GetMaxY() - pass.GetMinY() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS );
 
-	list<CAIUnit*> deadUnits;
+	std::list<CAIUnit*> deadUnits;
 
-	list<CExistingObject*> deadObjects;
+	std::list<CExistingObject*> deadObjects;
 	{
 		STerrainModeSetter terrainMode( ELM_STATIC, GetTerrain() );
 		for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, rectCenter, Max( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
@@ -420,7 +420,7 @@ void CBridgeSpan::Die( const float fDamage )
 		}
 	}
 
-	for ( list<CAIUnit*>::iterator iter = deadUnits.begin(); iter != deadUnits.end(); ++iter )
+	for ( std::list<CAIUnit*>::iterator iter = deadUnits.begin(); iter != deadUnits.end(); ++iter )
 	{
 		CAIUnit *pUnit = *iter;
 		theStatistics.UnitDead( pUnit );
@@ -428,7 +428,7 @@ void CBridgeSpan::Die( const float fDamage )
 	}
 
 	bDeletingAround = true;
-	for ( list<CExistingObject*>::iterator it = deadObjects.begin(); it != deadObjects.end(); ++it )
+	for ( std::list<CExistingObject*>::iterator it = deadObjects.begin(); it != deadObjects.end(); ++it )
 	{
 		CExistingObject *pObj = *it;
 		if ( pObj->IsAlive() )
@@ -495,8 +495,8 @@ struct SOnlyDirNeed
 class CTilesColl
 {
 public:
-	list<SVector> *pTiles;
-	CTilesColl( list<SVector> *_pTiles ) : pTiles( _pTiles ) { }
+	std::list<SVector> *pTiles;
+	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) { }
 
 	void operator()( const int x, const int y )
 	{ 
@@ -505,7 +505,7 @@ public:
 	}
 };
 
-static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, const WORD wDir, SOnlyDirNeed need )
+static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const WORD wDir, SOnlyDirNeed need )
 {
 	CTilesColl a( pTiles );
 
@@ -562,9 +562,9 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 	SOnlyDirNeed a;
 	GetTilesUnderRectSide( rect, &tiles, wDir + 65535/2, a );
 
-	list<SObjTileInfo> tilesInfo;
+	std::list<SObjTileInfo> tilesInfo;
 	// разлокать
-	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		const EAIClasses lockInfo = GetTerrain()->GetTileLockInfo( *it );
 		formerTiles.push_back( lockInfo );
@@ -575,7 +575,7 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
 	// залокать для всех
-	for ( list<SObjTileInfo>::iterator iter = tilesInfo.begin(); iter != tilesInfo.end(); ++iter )
+	for ( std::list<SObjTileInfo>::iterator iter = tilesInfo.begin(); iter != tilesInfo.end(); ++iter )
 		iter->lockInfo = EAC_TERRAIN;
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
 }
@@ -583,15 +583,15 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 void CFullBridge::SSpanLock::Unlock()
 {
 	// разлокать для всех
-	list<SObjTileInfo> tilesInfo;
-	for ( list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	std::list<SObjTileInfo> tilesInfo;
+	for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		tilesInfo.push_back( SObjTileInfo( *iter, EAC_TERRAIN ) );
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
 	// залокать как было
-	list<EAIClasses>::const_iterator lockedIter = formerTiles.begin();
-	list<SObjTileInfo>::iterator tilesInfoIter = tilesInfo.begin();
-	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	std::list<EAIClasses>::const_iterator lockedIter = formerTiles.begin();
+	std::list<SObjTileInfo>::iterator tilesInfoIter = tilesInfo.begin();
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		tilesInfoIter->lockInfo = *lockedIter;
 		++lockedIter;
@@ -623,7 +623,7 @@ void CFullBridge::AddSpan( CBridgeSpan *pSpan )
 
 void CFullBridge::SpanBuilt( CBridgeSpan * pSpan )
 {
-	for ( list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
+	for ( std::list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
 	{
 		if ( *it == pSpan )
 		{
@@ -652,7 +652,7 @@ void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, c
 		bGivingDamage = true;
 		const float fNewHPPercent = pDamagedSpan->GetHitPoints() / pDamagedSpan->GetStats()->fMaxHP;
 
-		for ( list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
+		for ( std::list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
 		{
 			CBridgeSpan *pSpan = *iter;
 			if ( pSpan != pDamagedSpan )
@@ -706,11 +706,11 @@ const int CFullBridge::GetNSpans() const
 	return nSpans;
 }
 
-void CFullBridge::EnumSpans( vector< CObj<CBridgeSpan> > *pSpans )
+void CFullBridge::EnumSpans( std::vector< CObj<CBridgeSpan> > *pSpans )
 {
-	for ( list<CBridgeSpan*>::iterator it = spans.begin(); it != spans.end(); ++it )
+	for ( std::list<CBridgeSpan*>::iterator it = spans.begin(); it != spans.end(); ++it )
 		pSpans->push_back( *it );
-	for ( list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
+	for ( std::list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
 		pSpans->push_back( *it );
 }
 
@@ -730,20 +730,20 @@ const bool CFullBridge::IsVisible( const BYTE cParty ) const
 
 void CFullBridge::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
-	for ( list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+	for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
 		(*it)->GetTilesForVisibilityInternal( pTiles );
 }
 
 void CFullBridge::InitEntireBridge()
 {
-	hash_set<int> ids;
-	for ( list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+	std::unordered_set<int> ids;
+	for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
 		ids.insert( (*it)->GetUniqueId() );
 	theWarFog.ReplaceStaticObjects( GetUniqueId(), ids );
 
 	if ( bLockingBridge )
 	{
-		for ( list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+		for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
 			(*it)->RealLockTiles();
 	}
 }

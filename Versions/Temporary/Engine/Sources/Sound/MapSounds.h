@@ -31,13 +31,13 @@ public:
 		{
 		public: int operator&( IBinSaver &saver ); private:;
 		public:
-			hash_map<WORD,CVec3> instanceIDs;
+			std::unordered_map<WORD,CVec3> instanceIDs;
 			int nCount;
 			SMapSounds() : nCount( 0 ) {  }
 		};
 		struct SMaxCountPredicate
 		{
-			bool operator()( const pair<WORD,SMapSounds> &s1, const pair<WORD,SMapSounds> &s2 ) const
+			bool operator()( const std::pair<WORD,SMapSounds> &s1, const std::pair<WORD,SMapSounds> &s2 ) const
 			{ return s1.second.nCount > s2.second.nCount; }
 		};
 
@@ -55,7 +55,7 @@ public:
 		SPlaying playingSound;										// текущий незацикленный звук
 
 		// по типам звука списки
-		typedef hash_map<WORD, SMapSounds> CellSounds;
+		typedef std::unordered_map<WORD, SMapSounds> CellSounds;
 		CellSounds cellSounds;
 		CellSounds cellLoopedSounds;
 		NTimer::STime timeNextRun;			// время следующего проигрыша звука
@@ -76,7 +76,7 @@ public:
 	// 2d map of sound cells (all sounds are assumed on ground)
 	CArray2D<CMapSoundCell> mapCells;
 	// cell - sound instance id
-	hash_map<WORD, SIntThree> cells;
+	std::unordered_map<WORD, SIntThree> cells;
 
 	struct ISoundScene * pSoundScene;
 	NTimer::STime timeNextUpdate;

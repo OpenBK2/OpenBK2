@@ -15,7 +15,7 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 	struct SItem
 	{
 		CObj<CWindowMSButton> pItem;
-		typedef list<CObj<IWindow> > CSubItems;
+		typedef std::list<CObj<IWindow> > CSubItems;
 		CSubItems subitems;
 		bool bCollapsed;
 		SItem() { }
@@ -29,7 +29,7 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 			return 0;
 		}
 	};
-	vector<SItem> items;
+	std::vector<SItem> items;
 	//} dinamic data
 	CPtr<NDb::SWindow1LvlTreeControl> pInstance;
 	CDBPtr<NDb::SWindow1LvlTreeControlShared> pShared;

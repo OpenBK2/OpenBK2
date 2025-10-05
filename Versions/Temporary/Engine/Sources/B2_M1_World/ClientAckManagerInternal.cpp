@@ -218,7 +218,7 @@ void CClientAckManager::InitConsts()
 	ACK_BORED_INTERVAL = 5000;
 	ACK_BORED_INTERVAL_RANDOM = 5000;
 
-	const vector<NDb::SAckParameter> &params ( pConsts->acksParameters );
+	const std::vector<NDb::SAckParameter> &params ( pConsts->acksParameters );
 	for ( int i = 0; i < params.size(); ++i )
 		acksInfo[params[i].eAckType] = i;
 }
@@ -377,7 +377,7 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 
 	if ( pGameTimer->GetPauseType() == -1 )
 	{
-		for ( hash_map<int, CBoredUnitsContainer>::iterator it = boredUnits.begin(); it != boredUnits.end(); ++it )
+		for ( std::unordered_map<int, CBoredUnitsContainer>::iterator it = boredUnits.begin(); it != boredUnits.end(); ++it )
 		{
 			const NDb::EUnitAckType eType = static_cast<NDb::EUnitAckType>( (*it).first );
 			if ( GetParam( eType ) )
@@ -434,7 +434,7 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 						while ( debugAckNames[i].eAckType != NDb::ACK_NONE && debugAckNames[i].eAckType != addedAck.eAck )
 							++i;
 
-						string szMessage;
+						std::string szMessage;
 						if ( debugAckNames[i].eAckType != addedAck.eAck )
 							szMessage = StrFmt( "unknown ack %d", addedAck.eAck );
 						else
@@ -464,9 +464,9 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSo
 			UnregisterAck( &ack );
 			pSoundScene->RemoveSound( ack.wSoundID );
 		}
+		unitAcks.erase(it);
 	}
-
-	unitAcks.erase( it );
+	
 
 	for ( BoredUnits::iterator it = boredUnits.begin(); it != boredUnits.end(); ++it )
 		it->second.DelUnit( pTipaUnit );

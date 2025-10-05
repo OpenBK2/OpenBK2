@@ -1,7 +1,7 @@
 WORD wDivingAngle;
 WORD wClimbingAngle;
 WORD wTiltAngle;
-hash_map</*enum EManuverID*/int, bool> manuverMap;
+std::unordered_map</*enum EManuverID*/int, bool> manuverMap;
 
 virtual void ToAIUnits( bool bInEditor );
 //
@@ -18,7 +18,7 @@ bool HasMoveStopSound() const { return pSoundMoveStop != 0; }
 
 virtual const float GetTurnRadius() const { return fTurnRadius; }
 //
-const vector<CVec2>* GetGunners( const int nMode ) const { return nMode < gunners.size() ? &(gunners[nMode].gunners) : 0; }
+const std::vector<CVec2>* GetGunners( const int nMode ) const { return nMode < gunners.size() ? &(gunners[nMode].gunners) : 0; }
 //
 
 #include "include_constructorinfo.h"
@@ -33,7 +33,7 @@ virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
 {
 	if ( ConstructorInfo() )
 	{
-		const vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
+		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
 			return (*pPlatforms)[nPlatform].gunIndexes.size();
 	}
@@ -44,7 +44,7 @@ const SPlatform& GetPlatform( const int nUniqueID, const int nPlatform ) const
 {
 	if ( ConstructorInfo() )
 	{
-		const vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
+		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
 			return platforms[(*pPlatforms)[nPlatform].nPlatformIndex] ;
 	}
@@ -55,7 +55,7 @@ const int GetPlatformsSize( const int nUniqueID ) const
 {
 	if ( ConstructorInfo() )
 	{
-		const vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
+		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
 			return pPlatforms->size();
 	}

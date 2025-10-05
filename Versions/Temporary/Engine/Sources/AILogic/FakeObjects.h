@@ -7,7 +7,7 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	OBJECT_BASIC_METHODS( CFakeCorpseStaticObject );
 
 	ZDATA_( CCommonStaticObject )
-		list<SObjTileInfo> tilesToLock;
+		std::list<SObjTileInfo> tilesToLock;
 		CObj<CUpdatableObj> pDeadObj;
 		EStaticObjType eType;
 		CPtr<CObjectProfile> pPassProfile;
@@ -16,12 +16,12 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 
 	//
 	CFakeCorpseStaticObject( const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex,
-													 const list<SObjTileInfo> &tiles, const bool bDestructByTracks,
+													 const std::list<SObjTileInfo> &tiles, const bool bDestructByTracks,
 													 CUpdatableObj* pDeadObj, CObjectProfile *pPassProfile );
 	CFakeCorpseStaticObject() { }
 public:
 	static void CreateFakeCorpseStaticObject( class CExistingObject *pObj );
-	static void CreateFakeCorpseStaticObject( class CAIUnit *pUnit, const list<SObjTileInfo> &tiles, const bool bCantCrushForSomeTime );
+	static void CreateFakeCorpseStaticObject( class CAIUnit *pUnit, const std::list<SObjTileInfo> &tiles, const bool bCantCrushForSomeTime );
 
 	virtual void Init() { }
 
@@ -30,10 +30,10 @@ public:
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return bDestructByTracks && (eClass & EAC_TRACK); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void LockTiles();
 	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles );
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
 	virtual void SetTransparencies() {}
 	virtual void RemoveTransparencies() {}
 	virtual void RestoreTransparenciesImmidiately() {}

@@ -147,43 +147,43 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::ENotificationType eValue );
-	ENotificationType StringToEnum_NDb_ENotificationType( const string &szValue );
+	std::string EnumToString( NDb::ENotificationType eValue );
+	ENotificationType StringToEnum_NDb_ENotificationType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ENotificationType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ENotificationType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ENotificationType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ENotificationType( szValue ); }
+	static std::string ToString( NDb::ENotificationType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ENotificationType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ENotificationType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMinimapFigureType eValue );
-	EMinimapFigureType StringToEnum_NDb_EMinimapFigureType( const string &szValue );
+	std::string EnumToString( NDb::EMinimapFigureType eValue );
+	EMinimapFigureType StringToEnum_NDb_EMinimapFigureType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMinimapFigureType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMinimapFigureType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMinimapFigureType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMinimapFigureType( szValue ); }
+	static std::string ToString( NDb::EMinimapFigureType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMinimapFigureType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMinimapFigureType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::ENotificationEventType eValue );
-	ENotificationEventType StringToEnum_NDb_ENotificationEventType( const string &szValue );
+	std::string EnumToString( NDb::ENotificationEventType eValue );
+	ENotificationEventType StringToEnum_NDb_ENotificationEventType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ENotificationEventType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ENotificationEventType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ENotificationEventType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ENotificationEventType( szValue ); }
+	static std::string ToString( NDb::ENotificationEventType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ENotificationEventType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ENotificationEventType( szValue ); }
 };
 

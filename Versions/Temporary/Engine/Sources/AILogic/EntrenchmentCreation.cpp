@@ -83,10 +83,10 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * p
 	{
 		// check part
 		const SRect rect = CEntrenchmentPart::CalcBoundRect( vPoints[i], wAngle, pRPG->segments[parts[i]->GetFrameIndex()] );
-		list<SVector> tiles;
+		std::list<SVector> tiles;
 		GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
 		bool bPossibleBecauseOfTiles = true;
-		for ( list<SVector>::iterator it = tiles.begin(); it!= tiles.end(); ++it )
+		for ( std::list<SVector>::iterator it = tiles.begin(); it!= tiles.end(); ++it )
 		{
 			if ( !CanDigTile( *it ) )
 				pUpdate->impossibleToBuildTiles.push_back( CVec2(it->x, it->y) );
@@ -235,7 +235,7 @@ void CEntrenchmentCreation::BuildNext()
 	}
 	
 
-	vector<CObjectBase*> vEntr;
+	std::vector<CObjectBase*> vEntr;
 	
 	vEntr.push_back( pBeginTerminator );
 
@@ -276,7 +276,7 @@ void CEntrenchmentCreation::BuildAll( const int _nMinIndex, const int _nMaxIndex
 	}
 
 	CDBPtr<SEntrenchmentRPGStats> pRPG = theUnitCreation.GetEntrenchment();
-	vector<CObjectBase*> vEntr;
+	std::vector<CObjectBase*> vEntr;
 
 	const int nTermInd = pRPG->GetTerminatorIndex( 0 );
 	pEndTerminator = AddElement( pRPG, CVec3( vPoints[nMaxIndex], 0.0f ), wAngle, nTermInd, GetPlayer() );
@@ -299,7 +299,7 @@ void CEntrenchmentCreation::CalcTilesUnder()
 	GetTilesUnderForIndex( &tilesUnder, GetCurIndex() );
 }
 
-void CEntrenchmentCreation::GetTilesUnderForIndex( list<SVector> *pTiles, const int _nIndex ) const
+void CEntrenchmentCreation::GetTilesUnderForIndex( std::list<SVector> *pTiles, const int _nIndex ) const
 {
 	const int nIndex = _nIndex + nStartIndex;
 	if ( parts[nIndex] )
@@ -318,12 +318,12 @@ void CEntrenchmentCreation::CreateNewEndTerminator()
 		pNewEndTerminator = 0;
 }
 
-void CEntrenchmentCreation::GetUnitsPreventing( list< CPtr<CAIUnit> > *units )
+void CEntrenchmentCreation::GetUnitsPreventing( std::list< CPtr<CAIUnit> > *units )
 {
 	return GetUnitsPreventingByIndex( units, GetCurIndex() );
 }
 
-void CEntrenchmentCreation::GetUnitsPreventingByIndex( list< CPtr<CAIUnit> > *units, const int _nIndex )
+void CEntrenchmentCreation::GetUnitsPreventingByIndex( std::list< CPtr<CAIUnit> > *units, const int _nIndex )
 {
 	const int nIndex = _nIndex + nStartIndex;
 	SRect r1, r2, r3 ;
@@ -423,7 +423,7 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 	}
 
 	// теперь проверить, можно ли строить
-	for ( list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
 			return false;
@@ -461,11 +461,11 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 		}
 	}
 
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetTilesUnderForIndex( &tiles, nIndex - nStartIndex );
 
 	// теперь проверить, можно ли строить
-	for ( list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
 			return false;
@@ -516,10 +516,10 @@ bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVe
 	if ( !CanDigBecauseOfOtherTrenches( rect, pt ) )
 		return false;
 
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
 	bool bPossible = true;
-	for ( list<SVector>::iterator i = tiles.begin(); i!= tiles.end(); ++i )
+	for ( std::list<SVector>::iterator i = tiles.begin(); i!= tiles.end(); ++i )
 	{
 		if ( !CanDigTile( *i ) )
 		{

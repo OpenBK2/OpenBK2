@@ -40,9 +40,9 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		}
 	};
 	//! набор положений внутри группы
-	typedef vector<SCellInfo> CCells;
+	typedef std::vector<SCellInfo> CCells;
 	//! связь между набором положений и типом (priority) юнитов
-	typedef hash_map< int, CCells > CPriorityCells;
+	typedef std::unordered_map< int, CCells > CPriorityCells;
 	//
 	struct SGeometry
 	{
@@ -91,11 +91,11 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 				return unitInfo1.nPriority > unitInfo2.nPriority;
 		}
 	};
-	typedef hash_map< int, SUnitInfo > CUnitsMap;
+	typedef std::unordered_map< int, SUnitInfo > CUnitsMap;
   //
 	OBJECT_BASIC_METHODS( CGroupSmoothPath )
 	ZDATA_( CStandartSmoothPathBasis )
-		vector<SGeometry> geometries;
+		std::vector<SGeometry> geometries;
 		CUnitsMap units;
 		int nCurrentGeometry;
 		int nUnitsCount;
@@ -128,7 +128,7 @@ public:
 	bool AddUnit( CBasePathUnit *pUnit, const int nPriority );
 	bool DeleteUnit( CBasePathUnit *pUnit );
 
-	void AddGeometry( const vector<SGeometryCellInfo> &cells );
+	void AddGeometry( const std::vector<SGeometryCellInfo> &cells );
 	void AlignGeometriesToCenter();
 
 	const int GetUnitsCount() const { return nUnitsCount; }

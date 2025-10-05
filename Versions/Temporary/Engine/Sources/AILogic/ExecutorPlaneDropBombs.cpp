@@ -84,7 +84,7 @@ bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 
 void CExecutorPlaneDropBombsObject::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> events;
+	std::vector<EExecutorEventID> events;
 	events.push_back( EID_ABILITY_ACTIVATE );
 	events.push_back( EID_ABILITY_ACTIVATE_AUTOCAST );
 	events.push_back( EID_ABILITY_DEACTIVATE_AUTOCAST );

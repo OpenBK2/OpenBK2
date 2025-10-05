@@ -18,7 +18,7 @@ private:
 	void RegisterObservers();
 
 	//{
-	bool OnCloseReaction( const string &szSender );
+	bool OnCloseReaction( const std::string &szSender );
 	//}
 protected:
 	~CInterfaceHelp();
@@ -31,13 +31,13 @@ public:
 	void AfterLoad();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 
 	bool StepLocal( bool bAppActive );
 
-	void MakeInterior( const wstring &wszHeader, const wstring &wszDesc );
+	void MakeInterior( const std::wstring &wszHeader, const std::wstring &wszDesc );
 };
 
 class CICHelp : public CInterfaceCommandBase<CInterfaceHelp>
@@ -45,7 +45,7 @@ class CICHelp : public CInterfaceCommandBase<CInterfaceHelp>
 	OBJECT_BASIC_METHODS( CICHelp );
 
 	ZDATA_(CInterfaceCommandBase<CInterfaceHelp>)
-	string szInterfaceType;
+	std::string szInterfaceType;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceHelp>*)this); f.Add(2,&szInterfaceType); return 0; }
 	//
 	void PreCreate();

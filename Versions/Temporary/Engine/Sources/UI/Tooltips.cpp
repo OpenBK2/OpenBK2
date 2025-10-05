@@ -77,7 +77,7 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 	}
 }
 
-IWindow *CTooltips::CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen )
+IWindow *CTooltips::CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen )
 {
 	if ( nContext == -1 )
 		return new CWindowTooltip( wszTooltipText );

@@ -3,9 +3,9 @@ virtual void ToAIUnits( bool bInEditor )
 	eGameType = SGVOGT_SQUAD;
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
 	// check changesByEvent and remove invalid entries
-	for ( vector<SFormation>::iterator itFormation = formations.begin(); itFormation != formations.end(); ++itFormation )
+	for ( std::vector<SFormation>::iterator itFormation = formations.begin(); itFormation != formations.end(); ++itFormation )
 	{
-		for ( vector<int>::iterator itChange = itFormation->changesByEvent.begin(); itChange != itFormation->changesByEvent.end(); )
+		for ( std::vector<int>::iterator itChange = itFormation->changesByEvent.begin(); itChange != itFormation->changesByEvent.end(); )
 		{
 			if ( *itChange >= formations.size() )
 				itChange = itFormation->changesByEvent.erase( itChange );
@@ -14,10 +14,10 @@ virtual void ToAIUnits( bool bInEditor )
 		}
 	}
 	// check for orders and resize it to fit members size for each formation
-	for ( vector<SSquadRPGStats::SFormation>::iterator it = formations.begin(); it != formations.end(); ++it ) 
+	for ( std::vector<SSquadRPGStats::SFormation>::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
 		const int nOldSize = it->order.size();
-		for ( vector< CDBPtr<SInfantryRPGStats> >::iterator itMember = members.begin(); itMember != members.end(); )
+		for ( std::vector< CDBPtr<SInfantryRPGStats> >::iterator itMember = members.begin(); itMember != members.end(); )
 		{
 			if ( (*itMember) == 0 )
 				itMember = members.erase( itMember );

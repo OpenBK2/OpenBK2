@@ -29,8 +29,8 @@ void CTerraGen::GenerateTerrain()
 	terrainNorms.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	terrainNorms.FillEvery( V3_AXIS_Z );
 
-	vector<NDb::STerrainAIProperties> params;
-	for ( vector< CDBPtr<NDb::STGTerraType> >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
+	std::vector<NDb::STerrainAIProperties> params;
+	for ( std::vector< CDBPtr<NDb::STGTerraType> >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
 		params.push_back( (*it)->aIProperty );
 
 	SetTerraTypesToAI( params );
@@ -97,7 +97,7 @@ union uF2I
 };
 
 
-static void PackFloatArrToRaw( vector<BYTE> *pDst, const float *pData, const int nLength )
+static void PackFloatArrToRaw( std::vector<BYTE> *pDst, const float *pData, const int nLength )
 {
 	pDst->reserve( 256 );
 	pDst->resize( 0 );
@@ -128,10 +128,10 @@ static void PackFloatArrToRaw( vector<BYTE> *pDst, const float *pData, const int
 }
 
 
-static void UnpackRawToFloatArr( float *pData, const int nLength, const vector<BYTE> &src )
+static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vector<BYTE> &src )
 {
 	int k = 0;
-	vector<BYTE>::const_iterator it = src.begin();
+	std::vector<BYTE>::const_iterator it = src.begin();
 	uF2I uf2i;
 
 	while ( (k < nLength) && (it != src.end()) )
@@ -168,7 +168,7 @@ static void UnpackRawToFloatArr( float *pData, const int nLength, const vector<B
 void CTerraGen::OptimizeTerrainInfo()
 {
 	// fix bugs in tiles
-	vector<STriangle> trgs;
+	std::vector<STriangle> trgs;
 	trgs.reserve( 512 );
 	for ( int g = 0; g < terrainInfo.tiles.GetSizeY(); ++g )
 	{
@@ -178,7 +178,7 @@ void CTerraGen::OptimizeTerrainInfo()
 			trgs.resize( 0 );
 			const CVec2 vMin( (float)i * DEF_TILE_SIZE - DEF_EPS, (float)g * DEF_TILE_SIZE - DEF_EPS );
 			const CVec2 vMax( (float)( i + 1 ) * DEF_TILE_SIZE + DEF_EPS, (float)( g + 1 ) * DEF_TILE_SIZE + DEF_EPS );
-			for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				if ( (IsInsideBB(CVec2(tile.vertices[it->i1].x, tile.vertices[it->i1].y), vMin, vMax)) &&
 						 (IsInsideBB(CVec2(tile.vertices[it->i2].x, tile.vertices[it->i2].y), vMin, vMax)) &&
@@ -214,12 +214,12 @@ void CTerraGen::OptimizeTerrainInfo()
 				//	terrainInfo.optimizedTiles.back().vertices.push_back( GetVec3( *itVert ) );
 				//terrainInfo.optimizedTiles.back().addHeights = tile.addHeights;
 
-				vector<STerrainInfo::SOptimizedTile>::iterator itAdd = terrainInfo.optimizedTiles.insert( terrainInfo.optimizedTiles.end(), STerrainInfo::SOptimizedTile() );
+				std::vector<STerrainInfo::SOptimizedTile>::iterator itAdd = terrainInfo.optimizedTiles.insert( terrainInfo.optimizedTiles.end(), STerrainInfo::SOptimizedTile() );
 				itAdd->nIndex = g * terrainInfo.tiles.GetSizeX() + i;
 				itAdd->triangles = tile.triangles;
 				itAdd->vertices.reserve( tile.vertices.size() );
 				itAdd->vertices.resize( 0 );
-				for ( vector<CVec3fEx>::const_iterator itVert = tile.vertices.begin(); itVert != tile.vertices.end(); ++itVert )
+				for ( std::vector<CVec3fEx>::const_iterator itVert = tile.vertices.begin(); itVert != tile.vertices.end(); ++itVert )
 					itAdd->vertices.push_back( itVert->GetVec3() );
 				itAdd->addHeights = tile.addHeights;
 			}
@@ -295,7 +295,7 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 	{
 		terrainInfo.tiles.SetSizes( pDesc->nNumPatchesX * DEF_PATCH_SIZE, pDesc->nNumPatchesY * DEF_PATCH_SIZE );
 
-		for ( vector<STerrainInfo::SOptimizedTile>::const_iterator it = terrainInfo.optimizedTiles.begin(); it != terrainInfo.optimizedTiles.end(); ++it )
+		for ( std::vector<STerrainInfo::SOptimizedTile>::const_iterator it = terrainInfo.optimizedTiles.begin(); it != terrainInfo.optimizedTiles.end(); ++it )
 		{
 			const int nIndX = it->nIndex % terrainInfo.tiles.GetSizeX();
 			const int nIndY = it->nIndex / terrainInfo.tiles.GetSizeX();
@@ -306,7 +306,7 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 				tile.triangles = it->triangles;
 				tile.vertices.reserve( it->vertices.size() );
 				tile.vertices.resize( 0 );
-				for ( vector<CVec3>::const_iterator itVert = it->vertices.begin(); itVert != it->vertices.end(); ++itVert )
+				for ( std::vector<CVec3>::const_iterator itVert = it->vertices.begin(); itVert != it->vertices.end(); ++itVert )
 					tile.vertices.push_back( CVec3fEx(*itVert, 0) );
 				tile.addHeights = it->addHeights;
 			}

@@ -54,7 +54,7 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 	DWORD dwNumColors = GetDWord( 46, header );
 	DWORD dwWidth = GetDWord( 18, header );
 	DWORD dwHeight = GetDWord( 22, header );
-	vector<DWORD> image( dwWidth * dwHeight );
+	std::vector<DWORD> image( dwWidth * dwHeight );
 	// load image
 	if ( wNumPlanes != 1 )
 		return false;
@@ -80,7 +80,7 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 		if ( dwCompression == 0 )           // unpacked values
 		{
       int nEndOfLineSkip = (dwFileSize - 54 - dwNumColors*4) / dwHeight - dwWidth;
-			vector<BYTE> dataline( dwWidth );
+			std::vector<BYTE> dataline( dwWidth );
 			// image data pointer must point to the last line of the image
 			pImageData = &(image[0]) + dwWidth*dwHeight - dwWidth - 1;
 			//
@@ -91,7 +91,7 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 				pStream->Read( &(dataline[0]), dwWidth );
 				pImageData = &(image[0]) + ( dwHeight - i - 1 ) * dwWidth;
 				// convert image from palette to ARGB
-				for ( vector<BYTE>::const_iterator pos = dataline.begin(); pos != dataline.end(); ++pos )
+				for ( std::vector<BYTE>::const_iterator pos = dataline.begin(); pos != dataline.end(); ++pos )
 					*pImageData++ = palette[ *pos ];
 				// skip 'left' bytes
 				if ( nEndOfLineSkip )
@@ -100,7 +100,7 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 		}
 		else if ( dwCompression == 1 )      // RLE packing
 		{
-			vector<BYTE> imagedata( dwWidth * dwHeight );
+			std::vector<BYTE> imagedata( dwWidth * dwHeight );
 			bool bDone = false;
       BYTE *d = &(imagedata[0]);
       DWORD x = 0, y = dwHeight - 1;
@@ -146,7 +146,7 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
       }
 			// depalettize image
 			pImageData = &( image[0] );
-			for ( vector<BYTE>::const_iterator pos = imagedata.begin(); pos != imagedata.end(); ++pos )
+			for ( std::vector<BYTE>::const_iterator pos = imagedata.begin(); pos != imagedata.end(); ++pos )
 				*pImageData++ = palette[ *pos ];
 		}
 	}

@@ -11,7 +11,7 @@ IProgrammedReactionsAndChecks
 	friend class CClientListViewer;
 	OBJECT_NOCOPY_METHODS( CInterfaceMPLobby ); 
 
-	typedef hash_map< string, CPtr<CClientListData> > CChatClientsList;
+	typedef std::unordered_map< std::string, CPtr<CClientListData> > CChatClientsList;
 
 	ZDATA_(CInterfaceMPScreenBase) 
 	CPtr<IWindow> pMain; 
@@ -24,7 +24,7 @@ IProgrammedReactionsAndChecks
 	CPtr<IButton>							pChannelsButton; 
  
 	bool bJoiningChannel; 
-	string szCurrentChannel; 
+	std::string szCurrentChannel;
 	// } Chat 
  
 	// Nicks { 
@@ -33,7 +33,7 @@ IProgrammedReactionsAndChecks
 	CChatClientsList chatFriends;
 	CChatClientsList chatIgnores;
 	CPtr<IWindow> pClientInfoWindow;
-	string szSelectedClient;
+	std::string szSelectedClient;
 	CPtr<CClientListData> pSelection;
 	bool bShowingFriends;
 	// } Nicks 
@@ -76,7 +76,7 @@ private:
 	bool OnChatHideChannels(); 
 	//  } Chat 
 	//  { Clients
-	bool OnClientMenu( const string &szSender );
+	bool OnClientMenu( const std::string &szSender );
 	bool OnClientInfoClose( const bool bApply );
 	bool OnClientInfoFriendChange();
 	bool OnClientInfoIgnoreChange();
@@ -85,14 +85,14 @@ private:
 	//}  
  
 	void InitControls(); 
-	void TryToJoinChatChannel( const string &szChannel );
+	void TryToJoinChatChannel( const std::string &szChannel );
 	void RebuildClientList();
-	int GetButtonState( const string &szNick );
+	int GetButtonState( const std::string &szNick );
 
 protected: 
 	//{ IProgrammedReactonsAndChecks 
-	bool Execute( const string &szSender, const string &szReaction ); 
-	int Check( const string &szCheckName ) const;	 
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//} 
  
 public: 

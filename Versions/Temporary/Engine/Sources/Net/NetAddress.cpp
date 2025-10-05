@@ -15,12 +15,12 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 	
 	nameRemote.sin_family = AF_INET;
 	// extract port number from address
-	string szAddr = pszHost;
+	std::string szAddr = pszHost;
 	nIdx = szAddr.find( ':' );
 	if ( nIdx != -1 )
 	{
 		//nPort = atoi( string( szAddr, nIdx + 1 ).c_str() );
-		const string szPort( szAddr.c_str() + nIdx + 1 );
+		const std::string szPort( szAddr.c_str() + nIdx + 1 );
 		nPort = atoi( szPort.c_str() );
 		//string( szAddr, 0, nIdx );
 		szAddr.resize( nIdx );
@@ -39,7 +39,7 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 	return true;
 }
 
-string CNodeAddress::GetName( bool bResolve ) const
+std::string CNodeAddress::GetName( bool bResolve ) const
 {
   sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
 	

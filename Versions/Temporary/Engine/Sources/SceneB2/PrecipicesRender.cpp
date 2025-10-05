@@ -31,7 +31,7 @@ CVec3 CTerraGen::GetSmoothPrecipiceNorm( const CVec2 &vPos )
 {
 	float fWeight = 0.0f;
 	CVec3 vNorm(0, 0, 0);
-	for ( vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it )
 	{
 		if ( it->nCount > 0 )
 		{
@@ -75,7 +75,7 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 		}
 	}
 	// add new vertex
-	vector<CVec3>::iterator itFind = pNode->verts.begin();
+	std::vector<CVec3>::iterator itFind = pNode->verts.begin();
 	for ( ; itFind != pNode->verts.end(); ++itFind )
 	{
 		if ( itFind->z < fHeight )
@@ -143,7 +143,7 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 
 	// create intermidiate vertices
 	const float fCoeff = (float)( nVertsNum - 1 ) / ( pNode->fMaxHeight - pNode->fMinHeight );
-	for ( list<int>::const_iterator itUsePrecID = pNode->precs.begin(); itUsePrecID != pNode->precs.end(); ++itUsePrecID )
+	for ( std::list<int>::const_iterator itUsePrecID = pNode->precs.begin(); itUsePrecID != pNode->precs.end(); ++itUsePrecID )
 	{
 		const STerrainInfo::SPrecipice *pPrec = FindPrecipice( *itUsePrecID );
 		if ( !pPrec )
@@ -186,11 +186,11 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	gfxInfo.nID = pCurPrec->nID;
 	gfxInfo.pMaterial = pCurPrec->pMaterial;
 
-	vector<NGScene::SVertex> vertices;
+	std::vector<NGScene::SVertex> vertices;
 	vertices.reserve( 256 );
 	vertices.resize( 0 );
 
-	vector<STriangleEx> triangles;
+	std::vector<STriangleEx> triangles;
 	triangles.reserve( 256 );
 	triangles.resize( 0 );
 
@@ -202,16 +202,16 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 	fTexX = 0.0f;
 
-	static vector<STerrainInfo::SVSOPoint> peakPoints(256);
+	static std::vector<STerrainInfo::SVSOPoint> peakPoints(256);
 	peakPoints.resize( 0 );
 	STerrainInfo::SPeak peak;
 	//peak.nID = ( pCurPrec->nExcludeRiverID >= 0 ) ? ( pCurPrec->nID | 0xf0000 ) : pCurPrec->nID;
 	peak.nID = pCurPrec->nID;
 
-	vector<int> nodeVertsNum( pCurPrec->nodes.size() );
+	std::vector<int> nodeVertsNum( pCurPrec->nodes.size() );
 	fill( nodeVertsNum.begin(), nodeVertsNum.end(), 0 );
 
-	vector<int> nodeTrgsNum( pCurPrec->nodes.size() - 1 );
+	std::vector<int> nodeTrgsNum( pCurPrec->nodes.size() - 1 );
 	fill( nodeTrgsNum.begin(), nodeTrgsNum.end(), 0 );
 
 	int nPrevFind1 = -1, nPrevFind2 = -1;
@@ -401,7 +401,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			}*/
 			if ( nCurVertsNum > 0 )
 			{
-				vector<STerrainInfo::SVSOPoint>::iterator itPeak = peakPoints.insert( peakPoints.end(), STerrainInfo::SVSOPoint() );
+				std::vector<STerrainInfo::SVSOPoint>::iterator itPeak = peakPoints.insert( peakPoints.end(), STerrainInfo::SVSOPoint() );
 				//itPeak->vPos.Set( node.vPos.x, node.vPos.y, node.verts[nFind1].z );
 				itPeak->vPos = node.verts[nFind1];
 				itPeak->vNorm = node.nCount > 0 ? ( node.vNorm / node.nCount ) : node.vNorm;
@@ -448,9 +448,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	{
 		peak.vBBMin.Set( FP_MAX_VALUE, FP_MAX_VALUE );
 		peak.vBBMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE );
-		for ( vector< vector<STerrainInfo::SVSOPoint> >::const_iterator itArr = peak.points.begin(); itArr != peak.points.end(); ++itArr )
+		for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itArr = peak.points.begin(); itArr != peak.points.end(); ++itArr )
 		{
-			for ( vector<STerrainInfo::SVSOPoint>::const_iterator it = itArr->begin(); it != itArr->end(); ++it )
+			for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator it = itArr->begin(); it != itArr->end(); ++it )
 			{
 				const CVec2 vPos( it->vPos.x, it->vPos.y );
 				peak.vBBMin.Minimize( vPos );
@@ -459,19 +459,19 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 		}
 		if ( !(pCurPrec->bHasNotPeak) )
 		{
-			list<STerrainInfo::SPeak>::const_iterator itAddPeak = terrainInfo.peaks.insert( terrainInfo.peaks.end(), peak );
+			std::list<STerrainInfo::SPeak>::const_iterator itAddPeak = terrainInfo.peaks.insert( terrainInfo.peaks.end(), peak );
 			AddPeak( *itAddPeak );
 		}
 		peak.points.resize( 0 );
 	}
 
 	// create smooth normals
-	vector<CVec3> precipiceNorms( vertices.size() );
-	vector<int> precipiceNormsCounts( vertices.size() );
+	std::vector<CVec3> precipiceNorms( vertices.size() );
+	std::vector<int> precipiceNormsCounts( vertices.size() );
 	fill( precipiceNorms.begin(), precipiceNorms.end(), CVec3(0, 0, 0) );
 	fill( precipiceNormsCounts.begin(), precipiceNormsCounts.end(), 0 );
 	CVec3 vNorm;
-	for ( vector<STriangleEx>::const_iterator itTrg = triangles.begin(); itTrg != triangles.end(); ++itTrg )
+	for ( std::vector<STriangleEx>::const_iterator itTrg = triangles.begin(); itTrg != triangles.end(); ++itTrg )
 	{
 		GetTrueNormal( &vNorm, vertices[itTrg->i1].pos, vertices[itTrg->i2].pos, vertices[itTrg->i3].pos );
 		vNorm = -vNorm; // because using of anticlockwise orientation
@@ -545,11 +545,11 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 {
-	static vector<BYTE> nodesHash( 2048 );
+	static std::vector<BYTE> nodesHash( 2048 );
 	nodesHash.resize( terrainInfo.precNodes.size() );
 	fill( nodesHash.begin(), nodesHash.end(), 0 );
 
-	for ( list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
 	{
 		if ( itPrec->nID == nID )
 		{
@@ -581,7 +581,7 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	}
 
 	// remove gfx info
-	for ( list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
+	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
 	{
 		if ( it->nID == nID )
 		{
@@ -602,9 +602,9 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	if ( !bFast )
 	{
 		// remove from intersectors
-		for ( list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+		for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
 		{
-			vector<int>::iterator itFind = find( itPrec->intersectors.begin(), itPrec->intersectors.end(), nID );
+			std::vector<int>::iterator itFind = find( itPrec->intersectors.begin(), itPrec->intersectors.end(), nID );
 			if ( itFind != itPrec->intersectors.end() )
 				itPrec->intersectors.erase( itFind );
 		}

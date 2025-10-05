@@ -19,10 +19,10 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 		CPtr<IWindow> pFlagWnd;
 		CPtr<ITextView> pNameView;
 		CPtr<ITextView> pSizeView;
-		wstring wszName;
-		wstring wszSize;
-		wstring wszSeason;
-		wstring wszDesc;
+		std::wstring wszName;
+		std::wstring wszSize;
+		std::wstring wszSeason;
+		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMapInfo); f.Add(3,&pWnd); f.Add(4,&pFlagWnd); f.Add(5,&pNameView); f.Add(6,&pSizeView); f.Add(7,&wszName); f.Add(8,&wszSize); f.Add(9,&wszSeason); f.Add(10,&wszDesc); return 0; }
 	};
 	
@@ -41,7 +41,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IMiniMap> pMinimap;
 	CPtr<IComboBox> pDifficultyComboBox;
 	CPtr<IButton> pPlayBtn;
-	vector<SMission> missions;
+	std::vector<SMission> missions;
 	CPtr<IWindow> pMissionDescItemHeader;
 	CPtr<ITextView> pMissionDescItemNameView;
 	CPtr<ITextView> pMissionDescItemSeasonView;
@@ -65,8 +65,8 @@ public:
 	bool Init();
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 
 public:
 	bool StepLocal( bool bAppActive );

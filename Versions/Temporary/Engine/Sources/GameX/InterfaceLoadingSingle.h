@@ -15,7 +15,7 @@ class CProgressHookHelper : public IProgressHookB2
 	};
 	
 	ZDATA
-	vector<SRange> ranges;
+	std::vector<SRange> ranges;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&ranges); return 0; }
 protected:
 	// returns a position in the whole progress
@@ -55,7 +55,7 @@ private:
 protected:
 	~CInterfaceLoadingBase();
 
-	void InitInternal( const string &szScreenName );
+	void InitInternal( const std::string &szScreenName );
 
 	void MakeInterior();
 	void UpdateInterior();
@@ -96,11 +96,11 @@ private:
 protected:
 	~CInterfaceLoadingSingle2D();
 
-	void MakeInterior( const NDb::STexture *pTexture, const wstring &wszDesc, const wstring &wszCitation, bool bChapter );
+	void MakeInterior( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter );
 	void ShowOnEnterMoveEffect();
 public:
 	CInterfaceLoadingSingle2D();
-	CInterfaceLoadingSingle2D( const NDb::STexture *pTexture, const wstring &wszDesc, const wstring &wszCitation, bool bChapter );
+	CInterfaceLoadingSingle2D( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter );
 	
 	//{ IProgressHookB2
 	void RunFinishScreen();
@@ -122,8 +122,8 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 	ZDATA_(CInterfaceScreenBase)
 	EUIState eUIState;
 	CPtr<ITextView> pPressKeyView;
-	wstring wszPressKeyFormat1;
-	wstring wszPressKeyFormat2;
+	std::wstring wszPressKeyFormat1;
+	std::wstring wszPressKeyFormat2;
 	bool bFormat1;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&eUIState); f.Add(3,&pPressKeyView); f.Add(4,&wszPressKeyFormat1); f.Add(5,&wszPressKeyFormat2); f.Add(6,&bFormat1); return 0; }
 	
@@ -145,8 +145,8 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 	
 	bool IsModal() { return false; }

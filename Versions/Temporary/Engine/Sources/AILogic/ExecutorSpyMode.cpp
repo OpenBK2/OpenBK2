@@ -68,7 +68,7 @@ void CExecutorSpyMode::SwitchModel( const NDb::SHPObjectRPGStats *pStats )
 
 void CExecutorSpyMode::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> unitEvents;
+	std::vector<EExecutorEventID> unitEvents;
 
 	unitEvents.push_back( EID_ABILITY_SET_TARGET );
 

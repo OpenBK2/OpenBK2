@@ -53,8 +53,8 @@ struct IVisualNotifications : public CObjectBase
 	struct SObjective
 	{
 		ZDATA
-		wstring wszHeader;
-		wstring wszDesc;
+		std::wstring wszHeader;
+		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszHeader); f.Add(3,&wszDesc); return 0; }
 	};
 	
@@ -63,9 +63,9 @@ struct IVisualNotifications : public CObjectBase
 		ZDATA
 		int nID;
 		NDb::ENotificationEventType eEventType;
-		vector<CVec2> positions;
-		vector<int> ids; // misc info
-		vector< CPtr<CMapObj> > objects;
+		std::vector<CVec2> positions;
+		std::vector<int> ids; // misc info
+		std::vector< CPtr<CMapObj> > objects;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&eEventType); f.Add(4,&positions); f.Add(5,&ids); f.Add(6,&objects); return 0; }
 	};
 
@@ -73,7 +73,7 @@ struct IVisualNotifications : public CObjectBase
 	virtual bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return false; }
 	virtual void Step( const NTimer::STime nDeltaTime, bool bAppActive ) = 0;
 	
-	virtual void OnBtn( const string &szSender, bool bRightBtn ) {}
+	virtual void OnBtn( const std::string &szSender, bool bRightBtn ) {}
 	
 	virtual void OnEvent( const SEventParams &params ) {}
 	virtual void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) {}

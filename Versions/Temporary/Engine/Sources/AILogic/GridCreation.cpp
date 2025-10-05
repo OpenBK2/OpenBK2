@@ -6,6 +6,8 @@
 
 #include "Misc/Checker.h"
 
+#include <algorithm>
+
 extern CGroupLogic theGroupLogic;
 
 const float STANDART_HEIGHT = 250.0f;
@@ -83,7 +85,7 @@ void CSortedGridUnits::Sort()
 		rotatedUnitsCoord[i].y -= fMinCoord;
 
 	SUnitsCompare cmp;
-	sort( sortedUnitsNums.begin(), sortedUnitsNums.end(), cmp );
+	std::sort( sortedUnitsNums.begin(), sortedUnitsNums.end(), cmp );
 
 	bSorted = true;
 }
@@ -206,7 +208,7 @@ void CGrid::CreateGrid()
 		columns[nColumn] -= GetRowHeight( vAABBHalfSize.y );
 
 		sortedColumns.push_back( nColumn );
-		sort( sortedColumns.begin(), sortedColumns.end(), compare );
+		std::sort( sortedColumns.begin(), sortedColumns.end(), compare );
 
 		fHeight = Max( fHeight, static_cast<float>(fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y )) );
 		fWidth = Max( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber(i)].x + vAABBHalfSize.x );

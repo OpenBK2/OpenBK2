@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SUIScreenEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUIScreenEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Screen", (BYTE*)&pScreen - pThis, sizeof(pScreen), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
@@ -59,7 +59,7 @@ DWORD SUIScreenEntry::CalcCheckSum() const
 
 
 
-void SUITextEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUITextEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (BYTE*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
@@ -98,7 +98,7 @@ DWORD SUITextEntry::CalcCheckSum() const
 
 
 
-void SUITextureEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUITextureEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (BYTE*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );

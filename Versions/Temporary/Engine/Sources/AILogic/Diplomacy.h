@@ -8,16 +8,16 @@ class CDiplomacy
 	public: int operator&( IBinSaver &saver ); private:;
 	
 	// 0, 1 - игровые стороны, 2 - нейтралы
-	vector<int> playerParty;
+	std::vector<int> playerParty;
 	int nMyNumber;
 
-	vector<int> isPlayerExist;
+	std::vector<int> isPlayerExist;
 
 	bool bNetGame;
 public:
 	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) { }
 	
-	void Load( const vector<int> &playerParty );
+	void Load( const std::vector<int> &playerParty );
 	void SetNPlayers( const int nPlayers ) { playerParty.resize( nPlayers + 1, 0 ); playerParty[nPlayers] = 2; }
 
 	void Clear() { }

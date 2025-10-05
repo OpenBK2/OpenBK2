@@ -9,7 +9,7 @@
 class CDBID
 {
 	ZDATA
-		string szKeyName;
+		std::string szKeyName;
 		ZSKIP;
 		DWORD dwHashKey;
 public:
@@ -30,7 +30,7 @@ private:
 		const char chr1 = (chr & mask) | ('/' & (~mask));
 		return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 	}
-	inline bool CompareEqual( const string &szOtherKeyName ) const
+	inline bool CompareEqual( const std::string &szOtherKeyName ) const
 	{
 		const int nSize = szOtherKeyName.size();
 		if ( nSize != szKeyName.size() )
@@ -46,7 +46,7 @@ private:
 	unsigned int MakeHashKey() const 
 	{ 
 		unsigned int __uHashKey = 0; 
-		for ( string::const_iterator it = szKeyName.begin(); it != szKeyName.end(); ++it )
+		for ( std::string::const_iterator it = szKeyName.begin(); it != szKeyName.end(); ++it )
 			__uHashKey = 5*__uHashKey + ConvertChar( *it );
 		return __uHashKey;
 	}
@@ -54,7 +54,7 @@ private:
 public:
 	CDBID(): dwHashKey(0) {}
 	CDBID( const char *_pszKeyName ): szKeyName( _pszKeyName ), dwHashKey( MakeHashKey() ) {}
-	CDBID( const string &_szKeyName ): szKeyName( _szKeyName ), dwHashKey( MakeHashKey() ) {}
+	CDBID( const std::string &_szKeyName ): szKeyName( _szKeyName ), dwHashKey( MakeHashKey() ) {}
 	CDBID( const CDBID &dbid ): szKeyName( dbid.szKeyName ), dwHashKey(dbid.dwHashKey) {}
 	//
 	const CDBID &operator=( const CDBID &dbid )
@@ -87,19 +87,16 @@ public:
 		return nSize1 < nSize2;
 	}
 	//
-	const string &ToString() const { return szKeyName; }
+	const std::string &ToString() const { return szKeyName; }
 	unsigned int GetHashKey() const { return dwHashKey; }
 	inline bool IsEmpty() const { return szKeyName.empty(); }
 	inline void Clear() { szKeyName.clear(); dwHashKey = 0; }
 };
 
-namespace nstl
+template<> struct std::hash<CDBID>
 {
-	template<> struct hash<CDBID>
-	{
-		size_t operator()( const CDBID &dbid ) const { return dbid.GetHashKey(); }
-	};
-}
+	size_t operator()( const CDBID &dbid ) const { return dbid.GetHashKey(); }
+};
 
 namespace NDb
 {
@@ -144,7 +141,7 @@ namespace NDb
 	//
 	SYSTEM_EXPORT IDBIterator *CreateDBIterator( int nTypeID );
 	// add database resource file
-	void AddResources( const string &szFile );
+	void AddResources( const std::string &szFile );
 	// finish adding - resolve all references
 	void FinishAddResources();
 	// clear database resources
@@ -154,10 +151,10 @@ namespace NDb
 	SYSTEM_EXPORT CResource *(GetObject)( const CDBID &dbid );
 	//
 	void SetDBMode( EDBMode eMode );
-	inline const string &GetFileName( const CDBID &dbid ) { return dbid.ToString(); }
-	inline string GetFolderName( const CDBID &dbid )
+	inline const std::string &GetFileName( const CDBID &dbid ) { return dbid.ToString(); }
+	inline std::string GetFolderName( const CDBID &dbid )
 	{
-		const string &szFileName = NDb::GetFileName( dbid );
+		const std::string &szFileName = NDb::GetFileName( dbid );
 		int nPos = szFileName.size();
 		while ( --nPos >= 0 )
 		{
@@ -238,7 +235,7 @@ public:
 	{
 		if ( saver.IsReading() )
 		{
-			string szString;
+			std::string szString;
 			saver.Add( 3, &szString );
 			if ( !szString.empty() )	// new DBPtr
 			{
@@ -253,7 +250,7 @@ public:
 		else
 		{
 			// always save new DBPtr
-			string szString;
+			std::string szString;
 			if ( pObj )
 				szString = CastToDBResource(pObj.GetPtr())->GetDBID().ToString();
 			saver.Add( 3, &szString );

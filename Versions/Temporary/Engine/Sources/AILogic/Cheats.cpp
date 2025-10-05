@@ -11,7 +11,7 @@ SCheats theCheats;
 extern CDiplomacy theDipl;
 bool g_bDontShowWarFog;
 
-void CheatsPassword( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void CheatsPassword( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
 		return;
@@ -119,7 +119,7 @@ BYTE s_cKey2[s_nKey2Length] = { /* [REMOVED_SECRET_KEY] */ };
 //uLong ulPass = 3702409162;
 uLong ulPass = 0; /* [REMOVED_SECRET_PASSWORD_HASH] */
 
-const unsigned long SCheats::MakeCheckSum( const string &_szPassword )
+const unsigned long SCheats::MakeCheckSum( const std::string &_szPassword )
 {
 /*
 //	string szPassword = "123456";
@@ -136,9 +136,9 @@ const unsigned long SCheats::MakeCheckSum( const string &_szPassword )
 	return 0;
 }
 
-void SCheats::CheckPassword( const string &szPassword )
+void SCheats::CheckPassword( const std::string &szPassword )
 {
-	vector<BYTE> checksum;
+	std::vector<BYTE> checksum;
 	checksum.reserve( 100 );
 	checksum.insert( checksum.end(), szPassword.begin(), szPassword.end() );
 	checksum.insert( checksum.end(), s_cKey2, s_cKey2 + s_nKey2Length );

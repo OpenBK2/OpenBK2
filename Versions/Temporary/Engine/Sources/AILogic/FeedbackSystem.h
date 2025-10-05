@@ -13,7 +13,7 @@ struct SEFBHash
 	int operator()( const EFeedBack & eFB ) const { return int ( eFB ); }
 };
 
-typedef pair<int,int> CIDAndParam;
+typedef std::pair<int,int> CIDAndParam;
 
 class CFeedBackSystem
 {
@@ -25,15 +25,15 @@ class CFeedBackSystem
 		CVec2 vCenter;
 		int nClientID;				// id to remove feedback from client
 		NTimer::STime timeToForget;
-		vector<CIDAndParam> objectIDs;
+		std::vector<CIDAndParam> objectIDs;
 		ZEND int operator&( IBinSaver &f ) { f.Add(3,&timeNextTalk); f.Add(4,&vCenter); f.Add(5,&nClientID); f.Add(6,&timeToForget); f.Add(7,&objectIDs); return 0; }
 	public:
 		SFeedBackCell( ) : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
 		SFeedBackCell( const CVec2 &_vCenter ) 
 			: vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
 	};
-	typedef list<SFeedBackCell> CCells;
-	typedef hash_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
+	typedef std::list<SFeedBackCell> CCells;
+	typedef std::unordered_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
 
 	CFeedbacks feedbacks;
 	CFreeIds clientIDs;

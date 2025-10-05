@@ -8,7 +8,7 @@
 namespace NDebugInfo
 {
 
-void UpdateEntry( const string &szName, const string &szValue, const DWORD dwColor )
+void UpdateEntry( const std::string &szName, const std::string &szValue, const DWORD dwColor )
 {
 	IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
 	if ( pDebug )

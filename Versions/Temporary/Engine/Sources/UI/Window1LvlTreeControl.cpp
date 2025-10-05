@@ -76,7 +76,7 @@ void CWindow1LvlTreeControl::Collapse( CWindow1LvlTreeControl::SItem *pContainer
 
 CWindow1LvlTreeControl::SItem * CWindow1LvlTreeControl::GetContainer( IWindow* pCont )
 {
-	for ( vector<SItem>::iterator it = items.begin(); it != items.end(); ++it )
+	for ( std::vector<SItem>::iterator it = items.begin(); it != items.end(); ++it )
 	{
 		if ( it->pItem == pCont )
 		{

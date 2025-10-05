@@ -31,7 +31,7 @@ public:
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
 	// show icons of the passangers
 	void UpdatePassangers() {}
-	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const;
 	int GetPassangersCount() const { return units.size(); }
 	// get free places
 	int GetFreePlaces() const { return 0; }

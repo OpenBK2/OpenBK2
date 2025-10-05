@@ -24,7 +24,7 @@ class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
 	static float fTimeOut;
 
 	bool bDebugNetPaused;
-	list< CPtr<CNetPacket> > pausePackets;
+	std::list< CPtr<CNetPacket> > pausePackets;
 	int nTimeOut;
 
 	void SendZipped( const int nClientID, const CMemoryStream &memStream );
@@ -46,7 +46,7 @@ public:
 	const int GetState() const;
 	const int GetRejectReason() const;
 
-	const string GetIP( const int nClientID ) const;
+	const std::string GetIP( const int nClientID ) const;
 	const int GetPort( const int nClientID ) const;
 
 	void SendPacket( CNetPacket *pPacket );

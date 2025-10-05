@@ -37,7 +37,7 @@ struct IAILogic : public ICommonB2M1AI
 	virtual void ToggleWarFog( const bool bWarFog ) = 0;
 	virtual int GetMiniMapWarFogSizeX() const = 0;
 	virtual int GetMiniMapWarFogSizeY() const = 0;
-	virtual const bool GetMiniMapUnitsInfo( vector< SMiniMapUnitInfo > &vUnits ) = 0;
+	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
 	virtual bool GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime ) = 0;
 
 	virtual bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) = 0;
@@ -53,7 +53,7 @@ struct IAILogic : public ICommonB2M1AI
 	virtual const DWORD GetNormal( const CVec2 &vPoint ) const  = 0;
 	virtual struct ITerraAIObserver* CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
-	virtual void RegisterGroup( const vector<int> &vIDs, const int nGroup ) = 0;
+	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer ) = 0;
@@ -61,7 +61,7 @@ struct IAILogic : public ICommonB2M1AI
 
 	virtual void RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished = false ) = 0;
 
-	virtual void ShowAreas( const vector<int> &units, enum EActionNotify &eAction, bool bShow ) = 0;
+	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eAction, bool bShow ) = 0;
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas ) = 0;
 
 	virtual const int WAR_FOG_FULL_UPDATE() const = 0;

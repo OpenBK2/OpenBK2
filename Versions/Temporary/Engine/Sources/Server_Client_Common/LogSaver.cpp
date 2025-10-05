@@ -11,7 +11,7 @@ static int N_SAVELOAD_VERSION = 2;
 class CLogSaver : public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS( CLogSaver );
-	string *pszLog;
+	std::string *pszLog;
 
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
 	virtual void FinishChunk() { }
@@ -35,11 +35,11 @@ class CLogSaver : public IBinSaver
 			break;
 		}
 	}
-	virtual void DataChunkString( string &data )
+	virtual void DataChunkString( std::string &data )
 	{
 		*pszLog += " \"" + data + "\"";
 	}
-	virtual void DataChunkString( wstring &data )
+	virtual void DataChunkString( std::wstring &data )
 	{
 		*pszLog += " \"" + NStr::ToMBCS( data ) + "\"";
 	}
@@ -48,8 +48,8 @@ class CLogSaver : public IBinSaver
 	{
 		if ( pObject )
 		{
-			string szObj = typeid( *pObject ).name();
-			const string szBegin( szObj.begin(), szObj.begin() + 5 );
+			std::string szObj = typeid( *pObject ).name();
+			const std::string szBegin( szObj.begin(), szObj.begin() + 5 );
 			if ( szBegin == "class" )
 				szObj.erase( szObj.begin(), szObj.begin() + 7 );
 
@@ -73,10 +73,10 @@ public:
 	virtual bool IsReading() { return false; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
 	CLogSaver() : pszLog( 0 ) {}
-	CLogSaver( string *_pszLog ) : pszLog( _pszLog ) {}
+	CLogSaver( std::string *_pszLog ) : pszLog( _pszLog ) {}
 };
 
-IBinSaver* CreateLogSaver( string *pszLog )
+IBinSaver* CreateLogSaver( std::string *pszLog )
 {
 	return new CLogSaver( pszLog );
 }

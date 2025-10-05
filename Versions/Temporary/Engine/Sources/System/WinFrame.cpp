@@ -13,7 +13,7 @@ static ATOM atomWndClassName = 0;                // atom window class name ident
 static volatile bool bExit = false;
 static volatile bool bActive = true;
 static CCriticalSection msgs;
-static list< SWindowsMsg > msgList;
+static std::list< SWindowsMsg > msgList;
 static HCURSOR hCursor;
 static bool bManageCursor = true;
 static bool s_bMinimizeOnDeactivate = true;
@@ -122,7 +122,7 @@ static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, DWORD dwFlags )
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
 	CCriticalSectionLock lock( msgs );
-	SWindowsMsg &m = *msgList.insert( msgList.end() );
+	SWindowsMsg &m = msgList.emplace_back();
 	m.time = time;
 	m.msg = msg;
 	m.x = x;

@@ -1391,12 +1391,12 @@ void CFormationBuildLongObjectState::Segment()
 	}
 }
 
-void CFormationBuildLongObjectState::SendUnitsAway( list<CPtr<CAIUnit> > *pUnitsPreventing )
+void CFormationBuildLongObjectState::SendUnitsAway( std::list<CPtr<CAIUnit> > *pUnitsPreventing )
 {
 	CLine2 line = pCreation->GetCurLine();
 	CVec2 vAway( line.a, line.b );
 	Normalize( &vAway );
-	for ( list<CPtr<CAIUnit> >::iterator it = pUnitsPreventing->begin(); it != pUnitsPreventing->end(); ++it )
+	for ( std::list<CPtr<CAIUnit> >::iterator it = pUnitsPreventing->begin(); it != pUnitsPreventing->end(); ++it )
 	{
 		CAIUnit * pUnit = *it;
 		int nSign = - line.GetSign( pUnit->GetCenterPlain() );
@@ -1507,7 +1507,7 @@ void CFormationBuildEntrenchmentState::Segment()
 		{
 			for ( int i = pCreation->GetCurIndex(); i < nMaxIndex; ++i )
 			{
-				list<CPtr<CAIUnit> > unitsPreventing;
+				std::list<CPtr<CAIUnit> > unitsPreventing;
 				pCreation->GetUnitsPreventingByIndex( &unitsPreventing, i );
 				if ( !unitsPreventing.empty() )
 					SendUnitsAway( &unitsPreventing );
@@ -1561,13 +1561,13 @@ void CFormationBuildEntrenchmentState::Segment()
 	}
 }
 
-void CFormationBuildEntrenchmentState::SendUnitsAway( list<CPtr<CAIUnit> > *pUnitsPreventing )
+void CFormationBuildEntrenchmentState::SendUnitsAway( std::list<CPtr<CAIUnit> > *pUnitsPreventing )
 {
 	CLine2 line( vStartPoint, vEndPoint );
 	CVec2 vAway = vEndPoint - vStartPoint;
 	vAway = CVec2( vAway.y, -vAway.x );
 	Normalize( &vAway );
-	for ( list<CPtr<CAIUnit> >::iterator it = pUnitsPreventing->begin(); it != pUnitsPreventing->end(); ++it )
+	for ( std::list<CPtr<CAIUnit> >::iterator it = pUnitsPreventing->begin(); it != pUnitsPreventing->end(); ++it )
 	{
 		CAIUnit * pUnit = *it;
 		int nSign = line.GetSign( pUnit->GetCenterPlain() );
@@ -1911,7 +1911,7 @@ void CFormationGunCrewState::RecountPoints( const CVec2 &vGunDir, const CVec2 &v
 
 	// свободных слать только если они слишком далеко от точек, где должны быть
 	int i = 0;
-	for ( list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
+	for ( std::list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
 	{
 		const CVec2 freePoint( -pStats->vAABBHalfSize.y + pStats->vAABBCenter.y - SConsts::TILE_SIZE, i * SConsts::TILE_SIZE/2 );	
 		const CVec2 vServePoint = vCenter + ( freePoint ^ vGunDir );
@@ -2231,7 +2231,7 @@ int CFormationGunCrewState::CheckThatAreOnPlace()
 		}
 	}
 
-	for ( list<SUnit>::iterator it = freeUnits.begin(); it != freeUnits.end(); )
+	for ( std::list<SUnit>::iterator it = freeUnits.begin(); it != freeUnits.end(); )
 	{
 		SUnit crewUnit( *it );
 		if ( crewUnit.IsAlive() )
@@ -2337,7 +2337,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 	}
 	
 	// послать свободных по обычному пути
-	for ( list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
+	for ( std::list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
 	{
 		const CVec2 &vServePoint =  (*it).vServePoint ;
 		const CVec2 vCenter =  (*it).pUnit->GetCenterPlain() ;
@@ -2596,7 +2596,7 @@ CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormati
 			const bool bUseOfficer = pCrew->Size() >= pUnit->Size();
 
 			// do not use officer if possible.
-			vector< CPtr<CSoldier> > soldiersToUse;
+			std::vector< CPtr<CSoldier> > soldiersToUse;
 			
 			for ( int i = 0; i < pUnit->Size(); ++i )
 			{
@@ -2606,7 +2606,7 @@ CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormati
 			
 			// place soldier from crew on their place
 //			const int nSize = pCrew->Size();
-			vector< CPtr<CSoldier> > soldiersToDelete;
+			std::vector< CPtr<CSoldier> > soldiersToDelete;
 			for ( int i = 0; i < pCrew->Size(); ++i )
 			{
 				if ( i >= soldiersToUse.size() )

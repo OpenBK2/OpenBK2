@@ -188,7 +188,7 @@ bool CLinksManagerCommon::Send( const CNodeAddress &dst, CMemoryStream &pkt ) co
 		return true;
 
 #ifdef NET_TEST_APPLICATION
-	static vector<SPacket> pktQueue[10];
+	static std::vector<SPacket> pktQueue[10];
 	if ( bEmulateWeakNetwork )
 	{
 		if ( rand() <= RAND_MAX * fLostRate )

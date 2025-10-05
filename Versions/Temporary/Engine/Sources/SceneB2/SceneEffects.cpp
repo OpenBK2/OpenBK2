@@ -69,7 +69,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	}
 }
 
-void CScene::AddEffect( const int nID, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
+void CScene::AddEffect( const int nID, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
 	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return );
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nID );

@@ -9,7 +9,7 @@ class CICExitGame : public IInterfaceCommand
 public:
 	void Exec()
 	{
-		wstring wszCommand = NGlobal::GetVar( "main_loop_on_exit_command", L"" );
+		std::wstring wszCommand = NGlobal::GetVar( "main_loop_on_exit_command", L"" );
 		if ( !wszCommand.empty() )
 		{
 			NGlobal::ProcessCommand( wszCommand );
@@ -35,8 +35,8 @@ public:
 
 IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode )
 {
-	vector<SBinSaverExternalObject> external;
-	vector<int> singletonIDs;
+	std::vector<SBinSaverExternalObject> external;
+	std::vector<int> singletonIDs;
 	NSingleton::GetAllSingletonIDs( &singletonIDs );
 	for ( int k = 0; k < singletonIDs.size(); ++k )
 	{
@@ -47,10 +47,10 @@ IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode )
 	return CreateBinSaver( pStream, mode, external );
 }
 
-IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, vector< CPtr<IDebugSaveCheckObj> > &checkers )
+IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<IDebugSaveCheckObj> > &checkers )
 {
-	vector<SBinSaverExternalObject> external;
-	vector<int> singletonIDs;
+	std::vector<SBinSaverExternalObject> external;
+	std::vector<int> singletonIDs;
 	NSingleton::GetAllSingletonIDs( &singletonIDs );
 	for ( int k = 0; k < singletonIDs.size(); ++k )
 	{
@@ -64,7 +64,7 @@ IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, vector< CPtr<IDebu
 
 
 
-static string GetSavePathName( const string &szName )
+static std::string GetSavePathName( const std::string &szName )
 {
 	return NProfile::GetCurrentProfileDir() + "Saves\\" + szName + ".sav";
 }
@@ -74,7 +74,7 @@ class CICSave : public CICSaveBase
 	OBJECT_NOCOPY_METHODS( CICSave );
 public:
 	CICSave() {}
-	CICSave( const string &szFileName ) : CICSaveBase( szFileName ) {}
+	CICSave( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
 
 #ifndef _FINALRELEASE
 	void OnProgress( EStage eStage )
@@ -83,7 +83,7 @@ public:
 		{
 			case STG_START:
 			{
-				const string szReport = StrFmt( "Saving at \"%s\"...", GetSavePathName( GetFileName() ).c_str() );
+				const std::string szReport = StrFmt( "Saving at \"%s\"...", GetSavePathName( GetFileName() ).c_str() );
 				WriteToPipe( PIPE_CHAT, szReport.c_str(), 0xffff0000 );
 			}
 			break;
@@ -105,7 +105,7 @@ class CICLoad : public CICLoadBase
 	OBJECT_NOCOPY_METHODS( CICLoad );
 public:
 	CICLoad() {}
-	CICLoad( const string &szFileName ) : CICLoadBase( szFileName ) {}
+	CICLoad( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
 
 #ifndef _FINALRELEASE
 	void OnProgress( EStage eStage )
@@ -140,7 +140,7 @@ CICLoadBase::CICLoadBase()
 {
 }
 
-CICLoadBase::CICLoadBase( const string &_szFileName ) :
+CICLoadBase::CICLoadBase( const std::string &_szFileName ) :
 	szFileName(_szFileName)
 {
 }
@@ -152,7 +152,7 @@ void CICLoadBase::Configure( const char *pszConfig )
 
 void CICLoadBase::Exec()
 {
-	const string szPathName = GetSavePathName( szFileName );
+	const std::string szPathName = GetSavePathName( szFileName );
 	if ( !NVFS::DoesWinFileExist( szPathName ) )
 		return;
 	OnProgress( STG_START );
@@ -177,7 +177,7 @@ CICSaveBase::CICSaveBase()
 {
 }
 
-CICSaveBase::CICSaveBase( const string &_szFileName ) : 
+CICSaveBase::CICSaveBase( const std::string &_szFileName ) :
 	szFileName( _szFileName )
 {
 }
@@ -187,7 +187,7 @@ void CICSaveBase::Configure( const char *pszConfig )
 	szFileName = pszConfig;
 }
 
-const string CICSaveBase::GetPathName()
+const std::string CICSaveBase::GetPathName()
 {
 	return GetSavePathName( szFileName );
 }
@@ -213,11 +213,11 @@ IInterfaceCommand *CreateICExitGame()
 {
 	return new CICExitGame;
 }
-IInterfaceCommand *CreateICLoad( const string &szName )
+IInterfaceCommand *CreateICLoad( const std::string &szName )
 {
 	return new CICLoad( szName );
 }
-IInterfaceCommand *CreateICSave( const string &szName )
+IInterfaceCommand *CreateICSave( const std::string &szName )
 {
 	return new CICSave( szName );
 }
@@ -230,12 +230,12 @@ IInterfaceCommand *CreateICFinalExitGame()
 	return new CICFinalExitGame();
 }
 
-static void CmdExit( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdExit( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( CreateICExitGame() );
 }
 
-static void CmdFinalExit( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdFinalExit( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( CreateICFinalExitGame() );
 }

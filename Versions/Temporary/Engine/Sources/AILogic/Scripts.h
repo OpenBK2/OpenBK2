@@ -27,9 +27,9 @@ struct IScriptAreaEnumerator : public IEnumerator
 	virtual const NDb::SScriptArea &GetArea() const = 0;
 };
 
-typedef list<CPtr<CUpdatableObj> > CScriptGroup;
-typedef hash_map<int, CScriptGroup > CScriptGroups;
-typedef hash_map<int/*attackGroupID*/, int/*ExecutorID*/> CAttackGroup;
+typedef std::list<CPtr<CUpdatableObj> > CScriptGroup;
+typedef std::unordered_map<int, CScriptGroup > CScriptGroups;
+typedef std::unordered_map<int/*attackGroupID*/, int/*ExecutorID*/> CAttackGroup;
 
 class CScripts
 {
@@ -44,7 +44,7 @@ class CScripts
 		NTimer::STime lastUpdate;
 		int nRepetitions;
 
-		string szName;
+		std::string szName;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&period); f.Add(3,&lastUpdate); f.Add(4,&nRepetitions); f.Add(5,&szName); return 0; }
 
 		SScriptInfo() : period( 0 ), lastUpdate( 0 ), nRepetitions( -1 ), szName( "" ) {}
@@ -68,28 +68,28 @@ class CScripts
 		SReinforcementObject( const SMapObjectInfo &_mapObject, const SHPObjectRPGStats *_pStats/*, IScenarioUnit *_pScenarioUnit*/ )
 			: mapObject( _mapObject ), pStats( _pStats )/*, pScenarioUnit( _pScenarioUnit ) */{ }
 	};
-	typedef list<SReinforcementObject> CReinfList;
-	hash_map<int, CReinfList> reinforcs;
+	typedef std::list<SReinforcementObject> CReinfList;
+	std::unordered_map<int, CReinfList> reinforcs;
 	// отложенные (некуда поставить) подкрепления
 	CReinfList suspendedReinforcs;
 	CReinfList::iterator reinforcsIter;
 	NTimer::STime lastTimeToCheckSuspendedReinforcs;
 
-	hash_map<int, int> reservePositions;
+	std::unordered_map<int, int> reservePositions;
 
 	// юнит - номер скриптовой группы
-	hash_map< int, int> groupUnits;
+	std::unordered_map< int, int> groupUnits;
 	
 	// для сегмента
-	hash_map<int, SScriptInfo>::iterator segmIter;
+	std::unordered_map<int, SScriptInfo>::iterator segmIter;
 
-	hash_map<string, NDb::SScriptArea> areas;
+	std::unordered_map<std::string, NDb::SScriptArea> areas;
 
 	CPtr<IConsoleBuffer> pConsole;
 	bool bShowErrors;
 	static CDBPtr<NDb::SMapInfo> pMapInfo;
 	static CAttackGroup attackGroups;
-	static list<CObj<CAIUnit> > rememberedUnits;
+	static std::list<CObj<CAIUnit> > rememberedUnits;
 	
 	//
 	// удалить все невалидные юниты в начале данной группы
@@ -99,7 +99,7 @@ class CScripts
 	void OutScriptError( const char *pszString );
 
 	// проставить новые линки подкреплению
-	void SetNewLinksToReinforcement( CReinfList *pReinf, hash_map<int, int> *pOld2NewLinks );
+	void SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_map<int, int> *pOld2NewLinks );
 	//
 	bool CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift );
 	bool CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
@@ -119,7 +119,7 @@ class CScripts
 	};
 	int GetCheckObjectsInScriptArea( const NDb::SScriptArea &area, const struct ICheckObjects &check );
 	
-	void SendShowReinoforcementPlacementFeedback( list<CVec2> *pCenters );
+	void SendShowReinoforcementPlacementFeedback( std::list<CVec2> *pCenters );
 
 	static void EnumUnitsInScriptArea( IScriptAreaEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes );
 	static void EnumUnitsInRect( IEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes, const SRect &rect );
@@ -132,7 +132,7 @@ class CScripts
 	static void AttackGroupAddUnit( class CCommonUnit * pUnit, int nAttackGroupID );
 	static void RemoveUnit( CAIUnit * pUnit );
 	//
-	void RunScriptFromFile( const string &szScriptFileName );
+	void RunScriptFromFile( const std::string &szScriptFileName );
 public:
 	~CScripts();
 	static void RegisterScriptForSaveLoad();
@@ -146,7 +146,7 @@ public:
 	void Init( const NDb::SMapInfo* pMapInfo );
 	void Clear();
 	void InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen );
-	void Load( const string &szScriptFileName, const NDb::SAIGameConsts *pConsts );
+	void Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts );
 
 	void Segment();
 

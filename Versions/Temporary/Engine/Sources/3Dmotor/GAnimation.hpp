@@ -47,8 +47,8 @@ struct ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChanne
 	virtual void FadeOutAllAnimations( const STime &tDuration ) = 0;
 	virtual void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed ) = 0; // warning, doesn't affect mutators!
 	virtual float GetDuration( const SAnimID animID ) = 0;
-	virtual unsigned int GetMarkTimes( vector<float> *pResult, const SAnimID animID, const string &szMarkName ) = 0;
-	virtual unsigned int EnumMarks( vector<string> *pResult, const SAnimID animID ) = 0;
+	virtual unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName ) = 0;
+	virtual unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID animID ) = 0;
 	virtual void SetSpeedFactor( const SAnimID animID, float fSpeed ) = 0; // warning, doesn't affect mutators!
 	virtual void SetLocalTime( const SAnimID animID, const STime tTime ) = 0;
 	virtual void SetEndTime( const SAnimID animID, const STime tEndTime ) = 0;
@@ -77,12 +77,12 @@ struct ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChanne
 			: tDuration(_tDuration), finalRot(_finalRot), finalPos(_finalPos) {}
 	};
 	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart, 
-		const vector<SDesiredBoneMove> &boneMutation ) = 0;
+		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
 	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart, 
-		const vector<SDesiredBoneMove> &boneMutation ) = 0;
+		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
 	virtual void SetSpecialMutator( IAnimMutator *pMutator ) = 0;
 	
-	virtual CFuncBase<SFBTransform>* CreateTransform( const string &szBoneName ) = 0;
+	virtual CFuncBase<SFBTransform>* CreateTransform( const std::string &szBoneName ) = 0;
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex ) = 0;
 };
 

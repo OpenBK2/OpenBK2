@@ -225,7 +225,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 {
-	wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
+	std::wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		SMPSlot &slot = slots[i];

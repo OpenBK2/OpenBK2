@@ -35,7 +35,7 @@ class CTexShare
 		int nResolution;
 		int nPixelFormatID;
 	};
-	typedef hash_map<string, STexInfo> CTexHash;
+	typedef std::unordered_map<std::string, STexInfo> CTexHash;
 	CTexHash textureHash;
 
 	void Refresh()
@@ -49,7 +49,7 @@ class CTexShare
 		}
 	}
 public:
-	T *GetTexture( const string &sz )
+	T *GetTexture( const std::string &sz )
 	{
 		CTexHash::iterator i = textureHash.find( sz );
 		if ( i == textureHash.end() )
@@ -64,7 +64,7 @@ public:
 		}
 		return i->second.pTex;
 	}
-	void Init( const vector<SUserRTInfo::STex> &rtInfo, NGfx::SRenderTargetsInfo::CRTHash *pRes )
+	void Init( const std::vector<SUserRTInfo::STex> &rtInfo, NGfx::SRenderTargetsInfo::CRTHash *pRes )
 	{
 		textureHash.clear();
 		for ( int k = 0; k < rtInfo.size(); ++k )

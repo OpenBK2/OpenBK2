@@ -13,7 +13,7 @@ struct SLightmapInfo
 
 struct SLMLOD
 {
-	vector<NRectPacker::SRect> lmaps;
+	std::vector<NRectPacker::SRect> lmaps;
 	CTPoint<int> lmSize;  // in pixels
 };
 
@@ -41,10 +41,10 @@ class CSquarePacker
 		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, WORD _nXSize, WORD _nYSize )
 			: n1(_n1), n2(_n2), n3(_n3), bInverse(_bInverse), nFirst(_nFirst), nFirst1(0), bInverse1(false),nXSize(_nXSize), nYSize(_nYSize){}
 	};
-	vector<STriInfo> squares;
+	std::vector<STriInfo> squares;
 	const CObjectInfo::SData &info;
 	float fTexelsPerMeter;
-	typedef hash_map<SEdgeInfo, int, SEdgeInfoHash> CEdgesHash;
+	typedef std::unordered_map<SEdgeInfo, int, SEdgeInfoHash> CEdgesHash;
 	CEdgesHash edgesInfo;
 	int nMaxSize;
 
@@ -55,7 +55,7 @@ public:
 	{
 	}
 	void AddTriangle( int n1, int n2, int n3 );
-	void Build( SLMLOD *pLMLOD, vector<SLightmapInfo> *pLMaps );
+	void Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps );
 };
 
 // round either to pow2 or pow2 + prev_pow2
@@ -86,8 +86,8 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 	bool bInverse = false;
 	if ( fSize31 > fSize21 )
 	{
-		swap( fSize21, fSize31 );
-		swap( n2, n3 );
+		std::swap( fSize21, fSize31 );
+		std::swap( n2, n3 );
 		bInverse = true;
 	}
 	// add to storage
@@ -100,7 +100,7 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 	nYSize = Min( nYSize, nXSize );
 	if ( nXSize == nYSize && n2 > n3 )
 	{
-		swap( n2, n3 );
+		std::swap( n2, n3 );
 		bInverse = !bInverse;
 	}
 	SEdgeInfo edge;
@@ -114,7 +114,7 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 		STriInfo &tri = squares[i->second];
 		if ( tri.n2 != n2 )
 		{
-			swap( n2, n3 );
+			std::swap( n2, n3 );
 			bInverse = !bInverse;
 		}
 		ASSERT( tri.n2 == n2 && tri.n3 == n3 );
@@ -125,7 +125,7 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 		return;
 	}
 	if ( nXSize != nYSize )
-		swap( edge.nU, edge.nV );
+		std::swap( edge.nU, edge.nV );
 	edgesInfo[edge] = squares.size();
 	squares.push_back( STriInfo( n1, n2, n3, bInverse, nFirst, nXSize, nYSize ) );
 }
@@ -155,10 +155,10 @@ void CSquarePacker::AddTriangle( int n1, int n2, int n3 )
 	}
 }
 
-void CSquarePacker::Build( SLMLOD *pLMLOD, vector<SLightmapInfo> *pLMaps )
+void CSquarePacker::Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps )
 {
 	SLMLOD &lmLOD = *pLMLOD;
-	vector<SLightmapInfo> &lmaps = *pLMaps;
+	std::vector<SLightmapInfo> &lmaps = *pLMaps;
 	lmaps.resize( squares.size() );
 	lmLOD.lmaps.resize( squares.size() );
 	for ( int i = 0; i < squares.size(); ++i )
@@ -209,8 +209,8 @@ static void CopyVertex( SVertex *pDst, CVec2 *pSecondTex, const SVertex &src, co
 	*pSecondTex = NGfx::GetTexCoords( lm );//tex;
 }
 
-static void GenVertices( vector<SVertex> *pRes, vector<CVec2> *pSecondTex, const vector<SVertex> &src,
-	const SLMLOD &lmLOD, const vector<SLightmapInfo> &lmaps, int nLMSize, const CTPoint<int> &_shift,
+static void GenVertices( std::vector<SVertex> *pRes, std::vector<CVec2> *pSecondTex, const std::vector<SVertex> &src,
+	const SLMLOD &lmLOD, const std::vector<SLightmapInfo> &lmaps, int nLMSize, const CTPoint<int> &_shift,
 	float fLMUVShift )
 {
 	// hard times - lm vertex buffer is required
@@ -271,13 +271,13 @@ static void GenVertices( vector<SVertex> *pRes, vector<CVec2> *pSecondTex, const
 	}
 }
 
-static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLMSize, SLMLOD *pLOD, vector<SLightmapInfo> *pLMaps )
+static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLMSize, SLMLOD *pLOD, std::vector<SLightmapInfo> *pLMaps )
 {
 	SLMLOD &lmLOD = *pLOD;
-	vector<SLightmapInfo> &lmaps = *pLMaps;
+	std::vector<SLightmapInfo> &lmaps = *pLMaps;
 
 	// calc lightmaps
-	vector<STriangle> tris = src.geometry;
+	std::vector<STriangle> tris = src.geometry;
 	CSquarePacker packer( nLMSize, src, fLMResolution );
 	for ( int k = 0; k < tris.size(); ++k )
 		packer.AddTriangle( tris[k].i1, tris[k].i2, tris[k].i3 );
@@ -289,10 +289,10 @@ void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjec
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift )
 {
 	SLMLOD lmLOD;
-	vector<SLightmapInfo> lmaps;
+	std::vector<SLightmapInfo> lmaps;
 	BuildLM( src, fLMResolution, nLMSize, &lmLOD, &lmaps );
 
-	vector<STriangle> lmTris;
+	std::vector<STriangle> lmTris;
 	for ( int k = 0; k < lmaps.size(); ++k )
 	{
 		int nOffset = k * 4;
@@ -316,13 +316,13 @@ void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjec
 }
 
 void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src, 
-	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, vector<SLMQuad> *pQuads )
+	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, std::vector<SLMQuad> *pQuads )
 {
 	SLMLOD lmLOD;
-	vector<SLightmapInfo> lmaps;
+	std::vector<SLightmapInfo> lmaps;
 	BuildLM( src, fLMResolution, nLMSize, &lmLOD, &lmaps );
 
-	vector<STriangle> lmTris;
+	std::vector<STriangle> lmTris;
 	lmTris.resize( lmaps.size() * 2 );
 	for ( int k = 0; k < lmaps.size(); ++k )
 	{
@@ -359,10 +359,10 @@ void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CO
 void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 {
 	pRes->geometry = src.GetGeometry();
-	const vector<CVec3> &pos = src.GetPositions();
-	const vector<SUVInfo> &verts = src.GetVertices();
-	const vector<SRealVertexWeight> &weights = src.GetWeights();
-	const vector<WORD> &posIndices = src.GetPositionIndices();
+	const std::vector<CVec3> &pos = src.GetPositions();
+	const std::vector<SUVInfo> &verts = src.GetVertices();
+	const std::vector<SRealVertexWeight> &weights = src.GetWeights();
+	const std::vector<WORD> &posIndices = src.GetPositionIndices();
 	pRes->verts.resize( verts.size() );
 	for ( int k = 0; k < verts.size(); ++k )
 	{

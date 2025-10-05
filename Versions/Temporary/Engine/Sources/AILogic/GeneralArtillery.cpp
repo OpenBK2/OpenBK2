@@ -101,7 +101,7 @@ void CGeneralArtillery::Segment()
 			++iter;
 	}
 
-	list<CGeneralArtilleryTask>::iterator iter = tasks.begin();
+	std::list<CGeneralArtilleryTask>::iterator iter = tasks.begin();
 	while ( iter != tasks.end() )
 	{
 		if ( iter->IsTaskFinished() )
@@ -130,7 +130,7 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 
 int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter, const float fRadius, bool bIsAntiArtilleryFight, const int nCellNumber )
 {
-	list<CAIUnit*> bombardmentUnits;
+	std::list<CAIUnit*> bombardmentUnits;
 	// сформировать список атакующей артиллерии
 	int nMaxUnits = Min( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) );
 	int cnt = 0;
@@ -310,13 +310,13 @@ CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_p
 //*											CGeneralArtilleryTask												*
 //*******************************************************************
 
-CGeneralArtilleryTask::CGeneralArtilleryTask( CGeneralArtillery *_pOwner, list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int _nCellNumber )
+CGeneralArtilleryTask::CGeneralArtilleryTask( CGeneralArtillery *_pOwner, std::list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int _nCellNumber )
 : pOwner( _pOwner ), bIsAntiArtilleryFight( bAntiArtilleryFight ),
 	bBombardmentFinished( false ), eState( EBS_START ), vBombardmentCenter( vCenter ),
 	fBombardmentRadius( fRadius ), timeToSendAntiArtilleryAck( 0 ),
 	nCellNumber( _nCellNumber )
 {
-	for ( list<CAIUnit*>::iterator iter = givenUnits.begin(); iter != givenUnits.end(); ++iter )
+	for ( std::list<CAIUnit*>::iterator iter = givenUnits.begin(); iter != givenUnits.end(); ++iter )
 	{
 		bombardmentUnits.push_back( SBombardmentUnitState( *iter ) );
 	}
@@ -332,7 +332,7 @@ void CGeneralArtilleryTask::SetBombardmentFinished()
 
 void CGeneralArtilleryTask::CheckEscapingUnits()
 {
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
 	{
 		if ( iter->pGoToPosition )
 		{
@@ -356,7 +356,7 @@ void CGeneralArtilleryTask::StartBombardment()
 	const float fShift = ( nUnits == 0 ) ? 0.0f : fBombardmentRadius / 2.0f;
 	WORD wDir = 0;
 
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter, wDir += 65536.0f / float(nUnits) )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter, wDir += 65536.0f / float(nUnits) )
 	{
 		const CVec2 vCenter = vBombardmentCenter + GetVectorByDirection( wDir ) * fShift;
 		CAIUnit *pUnit = iter->pUnit;
@@ -381,7 +381,7 @@ void CGeneralArtilleryTask::StartBombardment()
 void CGeneralArtilleryTask::GoingToBattle()
 {
 	bool bFinished = true;
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 	{
 		if ( iter->pGoToPosition )
 		{
@@ -417,7 +417,7 @@ void CGeneralArtilleryTask::GoingToBattle()
 		eState = EBS_ROTATING;
 		startRotatingTime = curTime;
 
-		for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 		{
 			if ( iter->pGoToPosition == 0 )
 			{
@@ -442,7 +442,7 @@ void CGeneralArtilleryTask::Rotating()
 		{
 			startRotatingTime = 0;
 
-			for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
@@ -454,7 +454,7 @@ void CGeneralArtilleryTask::Rotating()
 		}
 		else
 		{
-			for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
@@ -469,7 +469,7 @@ void CGeneralArtilleryTask::Rotating()
 			eState = EBS_FIRING;
 			NTimer::STime maxTimeToShoot = 0;
 			CalculateTimeToSendAntiArtilleryAck();
-			for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
@@ -498,7 +498,7 @@ void CGeneralArtilleryTask::Firing()
 	{
 		eState = EBS_ESCAPING;
 		
-		for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 		{
 			if ( !iter->pGoToPosition )
 				iter->pGoToPosition = new CGeneralArtilleryGoToPosition( iter->pUnit, iter->vReservePosition, true );
@@ -509,7 +509,7 @@ void CGeneralArtilleryTask::Firing()
 void CGeneralArtilleryTask::Escaping()
 {
 	bool bFinished = true;
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
 	{
 		iter->pGoToPosition->Segment();
 		if ( iter->pGoToPosition->IsFinished() )
@@ -533,7 +533,7 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 	vAntiArtilleryAckCenter = VNULL2;
 	int cnt = 0;
 	NTimer::STime maxTimeToWait = 0;
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 	{
 		if ( !iter->pGoToPosition )
 		{
@@ -564,7 +564,7 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 
 void CGeneralArtilleryTask::Segment()
 {
-	for ( list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); )
 	{
 		CPtr<CAIUnit> pUnit = iter->pUnit;
 

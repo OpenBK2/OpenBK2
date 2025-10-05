@@ -295,6 +295,7 @@ void AutoDetectVideoConfig()
 	else
 	{
 		// select texture mode
+
 		float fLVM = systemInfo.fLVMTextureMemory;
 		float fAGP = systemInfo.fAGPTextureMemory;
 		if ( fLVM < 32 )
@@ -407,7 +408,7 @@ void SetFSAAMode( EConfigValue eMode )
 	ApplyCfgValues( fsaaConfig, ARRAY_SIZE( fsaaConfig ), eMode );
 }
 
-static void CommandGfxAutodetect( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandGfxAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	AutoDetectVideoConfig();
 }

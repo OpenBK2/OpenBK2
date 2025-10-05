@@ -9,8 +9,8 @@ namespace NFontGen
 
 static bool DrawFont( HDC hdc, const CFontInfo &fi )
 {
-	const vector<ABC> &abc = fi.GetABC();
-	const vector<WORD> &chars = fi.GetMBCSChars();
+	const std::vector<ABC> &abc = fi.GetABC();
+	const std::vector<WORD> &chars = fi.GetMBCSChars();
 	const TEXTMETRIC &tm = fi.GetTextMetrics();
 	const CTPoint<int> textureSize = fi.GetTextureSize();
 	//
@@ -86,7 +86,7 @@ void CreateFontFormat( CFontFormatInfo *pRes, const CFontInfo &fi )
 	pRes->cCharSet         = tm.tmCharSet;
 	pRes->wDefaultChar     = tm.tmDefaultChar;
 	// kerning pairs
-	const vector<KERNINGPAIR> &kps = fi.GetKerningPairs();
+	const std::vector<KERNINGPAIR> &kps = fi.GetKerningPairs();
 	for ( int i = 0; i < kps.size(); ++i )
 	{
 		DWORD dwFirst = fi.Translate( kps[i].wFirst );
@@ -95,8 +95,8 @@ void CreateFontFormat( CFontFormatInfo *pRes, const CFontInfo &fi )
 	}
 	// convert this structures to the STFLetterFull array
 	int x = 0, y = 0;
-	const vector<WORD> &chars = fi.GetMBCSChars();
-	const vector<ABC> &abc = fi.GetABC();
+	const std::vector<WORD> &chars = fi.GetMBCSChars();
+	const std::vector<ABC> &abc = fi.GetABC();
 	const CTPoint<int> textureSize = fi.GetTextureSize();
 	for ( int i = 0; i < chars.size(); ++i )
 	{

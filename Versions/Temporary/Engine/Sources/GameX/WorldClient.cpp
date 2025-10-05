@@ -130,18 +130,18 @@ struct CWorldClient::SUISelection
 		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Wrong call" ); return 0; }
 	};
 	
-	vector<SObject> objects;
+	std::vector<SObject> objects;
 	CVec2 vCenter;
 	CVec2 vMovePos;
 	CVec2 vRotatePos;
 	
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Wrong call" ); return 0; }
 	
-	void CalcCurrentState( const vector<CMOSelectable*> &selection );
+	void CalcCurrentState( const std::vector<CMOSelectable*> &selection );
 	void CalcTargetState( const CVec2 &vMovePos, const CVec2 &vStartRotatePos, const CVec2 &vFinishRotatePos );
 };
 
-void CWorldClient::SUISelection::CalcCurrentState( const vector<CMOSelectable*> &selection )
+void CWorldClient::SUISelection::CalcCurrentState( const std::vector<CMOSelectable*> &selection )
 {
 	objects.clear();
 	objects.reserve( selection.size() );
@@ -166,7 +166,7 @@ void CWorldClient::SUISelection::CalcCurrentState( const vector<CMOSelectable*> 
 		{
 			if ( CDynamicCast<IMOSquad> pSquad = object.pMO )
 			{
-				vector<CMOSelectable*> members;
+				std::vector<CMOSelectable*> members;
 				pSquad->GetPassangers( &members );
 
 				object.vPos = VNULL2;
@@ -541,7 +541,7 @@ void CWorldClient::LoadMap( const NDb::SMapInfo *_pMapInfo )
 	const int nSizeX = pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH;
 	const int nSizeY = pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH;
 	pTerraManager->SetAIObserver( pAI->CreateTerraAIObserver( nSizeX, nSizeY ) );
-	const string szMapFilePath = NDb::GetFolderName( pMapInfo->GetDBID() );
+	const std::string szMapFilePath = NDb::GetFolderName( pMapInfo->GetDBID() );
 	NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath );
 
 	ISoundScene *pSoundScene = Singleton<ISoundScene>();
@@ -985,7 +985,7 @@ void CWorldClient::DoAction( USER_ACTION pfnAction, NDb::EUserAction eUserAction
 
 void CWorldClient::ShowSelectionDst( const CVec2 &vTarget )
 {
-	vector<CMOSelectable*> selection;
+	std::vector<CMOSelectable*> selection;
 	pSelector->GetSelection( &selection );
 
 	SUISelection uiSelection;
@@ -1005,7 +1005,7 @@ void CWorldClient::ShowSelectionDst( const CVec2 &vTarget )
 void CWorldClient::ShowSelectionDst( SUISelection *pUISelection, const CVec2 &vMovePos, 
 	const CVec2 &vStartDirPos, const CVec2 &vFinishDirPos, bool bFadeOut )
 {
-	vector<CMOSelectable*> selection;
+	std::vector<CMOSelectable*> selection;
 	pSelector->GetSelection( &selection );
 
 	pUISelection->CalcCurrentState( selection );
@@ -1037,7 +1037,7 @@ void CWorldClient::GotoSelectionDst( SUISelection *pUISelection )
 		SUISelection::SObject &object = pUISelection->objects[i];
 
 		{
-		vector<int> buffer;
+		std::vector<int> buffer;
 		buffer.push_back( object.pMO->GetID() );
 
 		SAIUnitCmd command( ACTION_COMMAND_MOVE_TO );
@@ -1049,7 +1049,7 @@ void CWorldClient::GotoSelectionDst( SUISelection *pUISelection )
 
 		if ( !pCommandsSender->LastCommandSkipped() )
 		{
-		vector<int> buffer;
+		std::vector<int> buffer;
 		buffer.push_back( object.pMO->GetID() );
 
 		SAIUnitCmd command( ACTION_COMMAND_ROTATE_TO );
@@ -1106,11 +1106,11 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 {
 	if ( msg.nParam1 & SA_SELECT_BY_RECT )
 	{
-		list<int> ids;
-		list<CMapObj*> objects;
+		std::list<int> ids;
+		std::list<CMapObj*> objects;
 		int nCurrentSelectionRate = 0;
 		Scene()->PickObjects( ids, vSelectionFirstPoint, vSelectionLastPoint, IScene::PO_CENTER_INSIDE );
-		for ( list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
+		for ( std::list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
 		{
 			CMapObj *pMO = GetMapObj( *it );
 			if ( pMO && pSelector->CanSelect( pMO ) )
@@ -1138,7 +1138,7 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 		if ( (msg.nParam1 & SA_PREVIOS_SELECTION) == SA_CLEAR_IF_NEW_NOT_EMPTY )
 			pSelector->Empty();
 
-		for ( list<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
+		for ( std::list<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
 		{
 			CMOSelectable *pMOSel = checked_cast< CMOSelectable * >( *it );
 			pSelector->Select( pMOSel, true );
@@ -1174,14 +1174,14 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 			pSelector->Select( pMOSel, true );
 			if ( msg.nParam1 & SA_ONE_TYPE )	
 			{
-				list<int> ids;
+				std::list<int> ids;
 				if ( msg.nParam1 & SA_ON_WORLD )
 					GetObjects( &ids );
 				else
 					Scene()->PickObjects( ids, CVec2( 0, 0 ), Scene()->GetScreenRect(), IScene::PO_CENTER_INSIDE );
 					
-				list<CMapObj*> objects;
-				for ( list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
+				std::list<CMapObj*> objects;
+				for ( std::list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
 				{
 					CMapObj *pMO = GetMapObj( *it );
 					if ( pMO && pSelector->CanSelect( pMO ) && CSelector::IsSameType( pMOSel, pMO ) )
@@ -1190,7 +1190,7 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 					}
 				}
 				
-				for ( list<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
+				for ( std::list<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
 				{
 					CMOSelectable *pMOSel = checked_cast< CMOSelectable * >( *it );
 					pSelector->Select( pMOSel, true );
@@ -1310,17 +1310,17 @@ void CWorldClient::MsgDoAction( const SGameMessage &msg )
 	DoAction( vPos, false, (EKeyboardFlags)( msg.nParam2 ) );
 }
 
-bool CWorldClient::PickMapObj( const CVec2 &vPos, list<int> *pPickObjects )
+bool CWorldClient::PickMapObj( const CVec2 &vPos, std::list<int> *pPickObjects )
 {
 	if ( vPos != vLastPickPos || GameTimer()->GetGameTime() != lastPickTime )
 	{
-		list<int> pickObjects;
+		std::list<int> pickObjects;
 		Scene()->PickObjects( pickObjects, vPos );
 
-		vector<SPickObject> aliveObjects;
+		std::vector<SPickObject> aliveObjects;
 		aliveObjects.reserve( 20 );
 		int nOrder = 0;
-		for ( list<int>::iterator it = pickObjects.begin(); it != pickObjects.end(); ++it )
+		for ( std::list<int>::iterator it = pickObjects.begin(); it != pickObjects.end(); ++it )
 		{
 			CMapObj *pMO = GetMapObj( *it );
 			if ( pMO && ( pMO->IsAlive() || dynamic_cast<CMOBridge*>(pMO) != 0 ) )
@@ -1340,7 +1340,7 @@ bool CWorldClient::PickMapObj( const CVec2 &vPos, list<int> *pPickObjects )
 		sort( aliveObjects.begin(), aliveObjects.end(), SMapObjectLessFunctional() );
 
 		lastPickObjects.clear();
-		for ( vector<SPickObject>::iterator it = aliveObjects.begin(); it != aliveObjects.end(); ++it ) 
+		for ( std::vector<SPickObject>::iterator it = aliveObjects.begin(); it != aliveObjects.end(); ++it )
 		{
 			SPickObject &pickObj = *it;
 			if ( CMOEntrenchmentPart *pMOPart = dynamic_cast<CMOEntrenchmentPart*>( pickObj.pMO ) )
@@ -1360,13 +1360,13 @@ bool CWorldClient::PickMapObj( const CVec2 &vPos, list<int> *pPickObjects )
 
 CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction eAction )
 {
-	list<int> objects;
+	std::list<int> objects;
 	if ( !PickMapObj( vPos, &objects ) )
 		return 0;
 	else 
 	{
 		CUserActions actions;
-		for ( list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
+		for ( std::list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
 		{
 			if ( CMapObj *pObj = GetMapObj( *it ) )
 			{
@@ -1382,7 +1382,7 @@ CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction 
 
 CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos )
 {
-	list<int> objects;
+	std::list<int> objects;
 	if ( !PickMapObj( vPos, &objects ) )
 		return 0;
 	else 
@@ -1665,7 +1665,7 @@ void CWorldClient::MsgCenterSelectionGroup( const SGameMessage &msg, int nParam 
 	if ( eActionMode != EAM_SELECT )
 		return;
 
-	vector<CMOSelectable*> members;
+	std::vector<CMOSelectable*> members;
 	pSelector->GetGroupMembers( nParam, &members );
 
 	CenterSelectionGroupPrivate( members );
@@ -1676,7 +1676,7 @@ void CWorldClient::MsgCenterCurrentSelection( const SGameMessage &msg )
 	CenterSelectedUnit();
 }
 
-void CWorldClient::CenterSelectionGroupPrivate( const vector<CMOSelectable*> &group )
+void CWorldClient::CenterSelectionGroupPrivate( const std::vector<CMOSelectable*> &group )
 {
 	// TODO: надо сделать нормальное центрирование, чтобv в поле видимости (лучше в центр) попадал хотя бv один _нит
 	
@@ -1684,7 +1684,7 @@ void CWorldClient::CenterSelectionGroupPrivate( const vector<CMOSelectable*> &gr
 		return;
 
 	CVec3 vCenter( 0.0f, 0.0f, 0.0f );
-	for ( vector<CMOSelectable*>::const_iterator it = group.begin(); it != group.end(); ++it )
+	for ( std::vector<CMOSelectable*>::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		CVec3 vPos;
@@ -1707,7 +1707,7 @@ bool CWorldClient::IsActiveOwnAvia() const
 	return !ownAvia.empty();
 }	
 
-void CWorldClient::GetOwnAvia( vector<CMapObj*> *pObjects ) const
+void CWorldClient::GetOwnAvia( std::vector<CMapObj*> *pObjects ) const
 {
 	pObjects->clear();
 	pObjects->reserve( ownAvia.size() );
@@ -1794,7 +1794,7 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 {
 	if ( !s_bFadeMode )
 	{
-		Scene()->SetFadedObjects( list<int>() );
+		Scene()->SetFadedObjects( std::list<int>() );
 	}
 	else
 	{
@@ -1804,7 +1804,7 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 		CVec2 vScreenPos1 = vPos + CVec2( -nX, -nY );
 		CVec2 vScreenPos2 = vPos + CVec2( nX, nY );
 
-		list<int> obstacles;
+		std::list<int> obstacles;
 		Scene()->GetObstacleObjects( &obstacles, vScreenPos1, vScreenPos2, SCanSelectObjectFilter(this, pSelector), SObstacleObjectFilter(this) );
 		
 		Scene()->SetFadedObjects( obstacles );
@@ -1816,7 +1816,7 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 	}
 	else
 	{
-		list<int> coveredList;
+		std::list<int> coveredList;
 		Scene()->GetCoveredObjects( &coveredList, SCoveredObjectFilter(this), SObstacleObjectFilter(this) );
 
 		//{ CRAP - just for experiment
@@ -1828,12 +1828,12 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 			CVec2 vScreenPos1 = vPos + CVec2( -nX, -nY );
 			CVec2 vScreenPos2 = vPos + CVec2( nX, nY );
 
-			list<int> nearObjects;
+			std::list<int> nearObjects;
 			Scene()->PickObjects( nearObjects, vScreenPos1, vScreenPos2, IScene::PO_CENTER_INSIDE, IScene::EPOC_OBJECTS );
 			
-			for ( list<int>::iterator it = coveredList.begin(); it != coveredList.end(); )
+			for ( std::list<int>::iterator it = coveredList.begin(); it != coveredList.end(); )
 			{
-				list<int>::const_iterator itNearObjects = find( nearObjects.begin(), nearObjects.end(), *it );
+				std::list<int>::const_iterator itNearObjects = find( nearObjects.begin(), nearObjects.end(), *it );
 				if ( itNearObjects == nearObjects.end() )
 					it = coveredList.erase( it );
 				else
@@ -1844,19 +1844,19 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 		{
 			for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 			{
-				hash_map< int, int > &units = xrayUnits[nPlayer];
+				std::unordered_map< int, int > &units = xrayUnits[nPlayer];
 				units.clear();
 			}
 		}
 		//}
 
-		for ( list<int>::iterator it = coveredList.begin(); it != coveredList.end(); ++it )
+		for ( std::list<int>::iterator it = coveredList.begin(); it != coveredList.end(); ++it )
 		{
 			CMapObj *pCurMO = GetMapObj( *it );
 			int nPlayer = pCurMO->GetPlayer();
 			if ( nPlayer >= 0 && nPlayer < xrayUnits.size() )
 			{
-				hash_map< int, int > &units = xrayUnits[nPlayer];
+				std::unordered_map< int, int > &units = xrayUnits[nPlayer];
 				units[*it] = 0; // reset unit's timer
 			}
 		}
@@ -1865,10 +1865,10 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 
 		for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 		{
-			hash_map< int, int > &units = xrayUnits[nPlayer];
+			std::unordered_map< int, int > &units = xrayUnits[nPlayer];
 
-			list<int> objects;
-			for ( hash_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
+			std::list<int> objects;
+			for ( std::unordered_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
 			{
 				objects.push_back( it->first );
 			}
@@ -1939,7 +1939,7 @@ bool CWorldClient::IsObstacleObject( CMapObj *pMO ) const
 	return true;
 }
 
-void CWorldClient::SetMinimapColors( const vector<CVec4> &_minimapColors )
+void CWorldClient::SetMinimapColors( const std::vector<CVec4> &_minimapColors )
 {
 	minimapColors = _minimapColors;
 }
@@ -2075,9 +2075,9 @@ void CWorldClient::PlayAllAnimations( const SGameMessage &msg )
 
 void CWorldClient::UpdateIcons()
 {
-	vector<CMapObj*> objects;
+	std::vector<CMapObj*> objects;
 	GetObjects( &objects );
-	for ( vector<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector<CMapObj*>::iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMapObj *pMO = *it;
 		pMO->UpdateIcons();
@@ -2149,7 +2149,7 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			const IScenarioTracker::SLeaderInfo *pLeader = pST->GetLeaderInfo( 
 				(NDb::EReinforcementType)( pUpdate->info.nParam ) );
-			for ( vector<int>::const_iterator it = pParam->unitIDs.begin(); it != pParam->unitIDs.end(); ++it )
+			for ( std::vector<int>::const_iterator it = pParam->unitIDs.begin(); it != pParam->unitIDs.end(); ++it )
 			{
 				int nID = *it;
 				
@@ -2523,7 +2523,7 @@ void CWorldClient::SetOnMinimap( bool _bOnMinimap )
 	}
 }
 
-void CWorldClient::GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMaxSize )
+void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize )
 {
 	ITerraManager * pTerraManager = Scene()->GetTerraManager();
 	CVec3 vPos;
@@ -2536,7 +2536,7 @@ void CWorldClient::GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMa
 																							 (vPos.y - fRadius) / VIS_TILE_SIZE, 
 																							 (vPos.x + fRadius) / VIS_TILE_SIZE,
 																							 (vPos.y + fRadius) / VIS_TILE_SIZE );
-	hash_map<int, SSoundTerrainInfo> infos;
+	std::unordered_map<int, SSoundTerrainInfo> infos;
 	for ( int x = 0; x < areaTypes.GetSizeX(); ++x )
 	{
 		for ( int y = 0; y < areaTypes.GetSizeY(); ++y )
@@ -2548,7 +2548,7 @@ void CWorldClient::GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMa
 	}
 	pData->resize( infos.size() );
 	int i = 0;
-	for ( hash_map<int, SSoundTerrainInfo>::const_iterator it = infos.begin(); it != infos.end(); ++it )
+	for ( std::unordered_map<int, SSoundTerrainInfo>::const_iterator it = infos.begin(); it != infos.end(); ++it )
 	{
 		(*pData)[i].fWeight = it->second.fWeight;
 		(*pData)[i].vPos = it->second.vPos / it->second.fWeight;
@@ -2560,7 +2560,7 @@ void CWorldClient::GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMa
 	sort( pData->begin(), pData->end(), prMassSort );
 	// удалить все с нулевой массой
 	SSoundTerrainInfo::CPrZeroMass prZeroMass;
-	vector<SSoundTerrainInfo>::iterator firstZeromass = find_if( pData->begin(), pData->end(), prZeroMass );
+	std::vector<SSoundTerrainInfo>::iterator firstZeromass = find_if( pData->begin(), pData->end(), prZeroMass );
 	int nSize = Min( nMaxSize, firstZeromass - pData->begin() );
 	pData->resize( nSize );
 	// оставшееся отсортировать по TerrainType
@@ -2578,7 +2578,7 @@ const NDb::SComplexSoundDesc * CWorldClient::GetTerrainSound( int nTerrainType )
 {
 	ITerraManager * pTerraManager = Scene()->GetTerraManager();
 	// ask terrain stats about sounds
-	const vector<CDBPtr<NDb::STGTerraType> > &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
+	const std::vector<CDBPtr<NDb::STGTerraType> > &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
 	if ( nTerrainType >= terraTypes.size() )
 		return 0;
 	return terraTypes[nTerrainType]->pSound;
@@ -2588,7 +2588,7 @@ const NDb::SComplexSoundDesc * CWorldClient::GetTerrainCycleSound( int nTerrainT
 {
 	ITerraManager * pTerraManager = Scene()->GetTerraManager();
 	// ask terrain stats about sounds
-	const vector<CDBPtr<NDb::STGTerraType> > &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
+	const std::vector<CDBPtr<NDb::STGTerraType> > &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
 	if ( nTerrainType >= terraTypes.size() )
 		return 0;
 	return terraTypes[nTerrainType]->pCycledSound;
@@ -2669,7 +2669,7 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 	pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, false );
 	Scene()->ClearMarkers( ESMT_SHOOT_AREA, -1 );
 
-	vector<CMOSelectable*> prevSelection;
+	std::vector<CMOSelectable*> prevSelection;
 	if ( eActionMode == EAM_SELECT )
 		pSelector->GetSelectionMembers( &prevSelection );
 
@@ -2683,7 +2683,7 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 
 	if ( eActionMode == EAM_SELECT )
 	{
-		vector<CMOSelectable*> selection;
+		std::vector<CMOSelectable*> selection;
 		pSelector->GetSelectionMembers( &selection );
 
 		if ( selection == prevSelection )
@@ -2700,7 +2700,7 @@ void CWorldClient::CenterSelectedUnit()
 {
 	if ( eActionMode == EAM_SELECT )
 	{
-		vector<CMOSelectable*> selection;
+		std::vector<CMOSelectable*> selection;
 		pSelector->GetSelectionMembers( &selection );
 
 		if ( !selection.empty() )
@@ -2708,9 +2708,9 @@ void CWorldClient::CenterSelectedUnit()
 	}
 }
 
-void CWorldClient::GetCameraByName( NCamera::CCameraPlacement *pCamera, const string &rszName ) const
+void CWorldClient::GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const
 {
-	for ( vector<NDb::SScriptCameraPlacement>::const_iterator it = pMapInfo->scriptMovies.scriptCameraPlacements.begin(); it < pMapInfo->scriptMovies.scriptCameraPlacements.end(); ++it )
+	for ( std::vector<NDb::SScriptCameraPlacement>::const_iterator it = pMapInfo->scriptMovies.scriptCameraPlacements.begin(); it < pMapInfo->scriptMovies.scriptCameraPlacements.end(); ++it )
 	{
 		const NDb::SScriptCameraPlacement &cameraPos = (*it);
 		if ( cameraPos.szName == rszName )
@@ -2726,7 +2726,7 @@ void CWorldClient::GetCameraByName( NCamera::CCameraPlacement *pCamera, const st
 
 void CWorldClient::GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const
 {
-	for ( vector<NDb::SMapObjectInfo>::const_iterator it = pMapInfo->objects.begin(); it < pMapInfo->objects.end(); ++it )
+	for ( std::vector<NDb::SMapObjectInfo>::const_iterator it = pMapInfo->objects.begin(); it < pMapInfo->objects.end(); ++it )
 	{
 		const NDb::SMapObjectInfo &object = (*it);
 		if ( object.nScriptID == nScriptID )
@@ -2811,7 +2811,7 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 		nID = 0;
 	//}
 	
-	vector< CMapObj* > objects;
+	std::vector< CMapObj* > objects;
 	objects.reserve( pParam->unitIDs.size() );
 	for ( int i = 0; i < pParam->unitIDs.size(); ++i )
 	{
@@ -2842,7 +2842,7 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 
 void CWorldClient::UpdateUnitIcons( float fDeltaTime )
 {
-	list<int> removed;
+	std::list<int> removed;
 	for ( CUnitIconMap::iterator it = unitIcons.begin(); it != unitIcons.end(); ++it )
 	{
 		SUnitIcon &unitIcon = it->second;
@@ -2855,7 +2855,7 @@ void CWorldClient::UpdateUnitIcons( float fDeltaTime )
 			removed.push_back( it->first );
 		}
 	}
-	for ( list<int>::iterator it = removed.begin(); it != removed.end(); ++it )
+	for ( std::list<int>::iterator it = removed.begin(); it != removed.end(); ++it )
 	{
 		unitIcons.erase( *it );
 	}
@@ -2865,22 +2865,22 @@ void CWorldClient::UpdateXRayUnits( int nDeltaTime )
 {
 	for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 	{
-		hash_map< int, int > &units = xrayUnits[nPlayer];
+		std::unordered_map< int, int > &units = xrayUnits[nPlayer];
 		if ( !IsXRayMode() )
 		{
 			units.clear();
 			continue;
 		}
 		
-		vector<int> toRemoveUnits;
+		std::vector<int> toRemoveUnits;
 		toRemoveUnits.reserve( units.size() );
-		for ( hash_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
+		for ( std::unordered_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
 		{
 			it->second += nDeltaTime;
 			if ( it->second > MAX_XRAY_TIME )
 				toRemoveUnits.push_back( it->first );
 		}
-		for ( vector<int>::iterator it = toRemoveUnits.begin(); it != toRemoveUnits.end(); ++it )
+		for ( std::vector<int>::iterator it = toRemoveUnits.begin(); it != toRemoveUnits.end(); ++it )
 		{
 			units.erase( *it );
 		}
@@ -2943,7 +2943,7 @@ REGISTER_SAVELOAD_CLASS( 0x10078340, CWorldClient );
 #include "System/Commands.h"
 #ifndef _FINALRELEASE
 
-static void CommandDumpMaxes( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandDumpMaxes( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 2 )
 	{
@@ -2953,7 +2953,7 @@ static void CommandDumpMaxes( const string &szID, const vector<wstring> &paramsS
 		return;
 	}
 
-	string szParam;
+	std::string szParam;
 
 	NStr::ToMBCS( &szParam, paramsSet[1] );
 	NStr::ToLowerASCII( &szParam );
@@ -2980,7 +2980,7 @@ static void CommandDumpMaxes( const string &szID, const vector<wstring> &paramsS
 	Scene()->GetTerraManager()->GetAIObserver()->DumpMaxes( szParam, (int)aiClass );
 }
 
-static void CommandPassMarker( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandPassMarker( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 2 || paramsSet.size() > 4 )
 	{
@@ -2992,7 +2992,7 @@ static void CommandPassMarker( const string &szID, const vector<wstring> &params
 		return;
 	}
 
-	string szParam;
+	std::string szParam;
 	NStr::ToMBCS( &szParam, paramsSet[0] );
 	NStr::ToLowerASCII( &szParam );
 	NDebugInfo::EColor color = NDebugInfo::GREEN;

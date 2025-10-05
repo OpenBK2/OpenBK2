@@ -8,16 +8,16 @@ class SERVER_CLIENT_COMMON_EXPORT CNetLogger : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CNetLogger );
 
-	hash_map<string, FILE*> logs;
+	std::unordered_map<std::string, FILE*> logs;
 public:
 	enum { tidTypeID = 0x30134C00 };
 
 	~CNetLogger();
 
-	void OpenLogFile( const string &szNick );
-	void CloseLogFile( const string &szNick );
+	void OpenLogFile( const std::string &szNick );
+	void CloseLogFile( const std::string &szNick );
 
-	void Log( const string &szNick, const string &szLog );
+	void Log( const std::string &szNick, const std::string &szLog );
 };
 
 SERVER_CLIENT_COMMON_EXPORT CNetLogger* GetNetLogger();

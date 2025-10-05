@@ -127,14 +127,14 @@ class CMeshAnimStuff
 {
 	const NDb::SModel *pModel;
 	CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation;
-	vector<CPtr<CFuncBase<float> > > *pTransparencyAnimations;
+	std::vector<CPtr<CFuncBase<float> > > *pTransparencyAnimations;
 public:
-	CMeshAnimStuff( const NDb::SModel *pM, CFuncBase<NAnimation::SGrannySkeletonPose> *pA, vector<CPtr<CFuncBase<float> > > *pTA = 0 ) :
+	CMeshAnimStuff( const NDb::SModel *pM, CFuncBase<NAnimation::SGrannySkeletonPose> *pA, std::vector<CPtr<CFuncBase<float> > > *pTA = 0 ) :
 		pModel(pM), pAnimation(pA), pTransparencyAnimations(pTA) {}
 	CMeshAnimStuff( void * ) : pModel(0), pAnimation(0), pTransparencyAnimations(0) {}
 		const NDb::SModel *GetModel() const { return pModel; }
 	CFuncBase<NAnimation::SGrannySkeletonPose> *GetAnimation() const { return pAnimation; }
-	vector<CPtr<CFuncBase<float> > > *GetTransparencyAnimations() const { return pTransparencyAnimations; }
+	std::vector<CPtr<CFuncBase<float> > > *GetTransparencyAnimations() const { return pTransparencyAnimations; }
 };
 
 class IGameView : public CObjectBase
@@ -167,7 +167,7 @@ public:
 	struct SMeshInfo
 	{
 		ZDATA
-		vector<SPartInfo> parts;
+		std::vector<SPartInfo> parts;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&parts); return 0; }
 	};
 	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial ) = 0;
@@ -182,7 +182,7 @@ public:
 	virtual CObjectBase* CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime, const SFBTransform &place, const SRoomInfo &_g = SRoomInfo(),
 		IFader *pFader = 0, IParticleFilter *pFilter = 0 ) = 0;
 	virtual CObjectBase* CreateRain( const NDb::SParticleInstance *pInstance, CFuncBase<STime> *pTime, IParticleFilter *pFilter, const SRoomInfo &_g = SRoomInfo() ) = 0;
-	virtual CPolyline* CreatePolyline( const vector<CVec3> &points, const vector<unsigned short> &indices, const CVec4 &color, bool bDepthTest ) = 0;
+	virtual CPolyline* CreatePolyline( const std::vector<CVec3> &points, const std::vector<unsigned short> &indices, const CVec4 &color, bool bDepthTest ) = 0;
 	virtual CObjectBase* Precache( const NDb::SModel *pModel ) = 0;
 	virtual void Precache( const NDb::SEffect *pEffect ) = 0;
 	virtual void LoadEverything() = 0;
@@ -195,9 +195,9 @@ public:
 	virtual CObjectBase* AddFlare( CFuncBase<CVec3> *pOrigin, CFuncBase<STime> *pTime, int nFloor, float fFlareRadius, const NDb::STexture *pFlareTexture, float fOnTime, float fOffTime ) = 0;
 	virtual CObjectBase* AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, CFuncBase<CVec2> *pSize, const CVec2 &vMaxSize, const NDb::STexture *pTexture, int nFloor ) = 0;
 	virtual CObjectBase* AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, const CVec2 &sSize, const NDb::STexture *pTexture, int nFloor ) = 0;
-	virtual CObjectBase* AddPostFilter( const vector<CObjectBase*> &target, IPostProcess *pEffect ) = 0;
+	virtual CObjectBase* AddPostFilter( const std::vector<CObjectBase*> &target, IPostProcess *pEffect ) = 0;
 	virtual CObjectBase* AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, float fRadius, const NDb::STexture *pMask, bool bLightmapOnly = false ) = 0;
-	virtual CDecalTarget* CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info ) = 0;
+	virtual CDecalTarget* CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info ) = 0;
 	virtual CObjectBase* AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial ) = 0;
 	virtual CDecalFader* AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial, STime tFadeInStart, STime tFadeInEnd, STime tFadeOutStart, STime tFadeOutEnd, CFuncBase<STime> *pTime ) = 0;
 	virtual void SetWarFogBlend( float fBlend ) = 0;
@@ -251,10 +251,10 @@ void ReloadTexture( const NDb::STexture *p );
 
 CLightmapsHolder *CalcLightmaps( IGameView *pScene, CObjectBase *pUser, int nUserID, const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder);
 void ApplyLightmaps( IGameView *pScene, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD );
-void CollectAllParts( vector<CObjectBase*> *pRes, IGameView *_pView );
+void CollectAllParts( std::vector<CObjectBase*> *pRes, IGameView *_pView );
 CObjectBase *GetPartGeometry( CObjectBase *pB );
 
-void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResult,
+void CreateAnimatedTransparencyChannels( std::vector<CPtr<CFuncBase<float> > > *pResult,
 		const IGameView::SMeshInfo &meshInfo, const NDb::SModel *pModel,
 		NAnimation::ISkeletonAnimator *pAnimator
 		);

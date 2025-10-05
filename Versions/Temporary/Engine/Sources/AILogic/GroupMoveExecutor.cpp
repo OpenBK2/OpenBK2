@@ -10,6 +10,8 @@
 #include "Common_RTS_AI/StaticPathInternal.h"
 #include "System/Commands.h"
 
+#include <algorithm>
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
 
 REGISTER_SAVELOAD_CLASS( 0x31130B40, CGroupMoveExecutor );
@@ -84,7 +86,7 @@ void DebugTraceMarkStaticPath( const IStaticPath *_pPath )
 
 	if ( pPath )
 	{
-		vector<SVector> tiles;
+		std::vector<SVector> tiles;
 		tiles.reserve( pPath->GetLength() );
 		for ( int i = 0; i < pPath->GetLength(); ++i )
 			tiles.push_back( pPath->GetTile( i ) );
@@ -139,7 +141,7 @@ void CGroupMoveExecutor::FinishState( const int nUnitID )
 	}
 }
 
-const bool CGroupMoveExecutor::Init( const vector<CCommonUnit*> &_units, const struct SAIUnitCmd &cmd )
+const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, const struct SAIUnitCmd &cmd )
 {
 	vFinishPoint = cmd.vPos;
 
@@ -154,7 +156,7 @@ const bool CGroupMoveExecutor::Init( const vector<CCommonUnit*> &_units, const s
 	cells.clear();
 	fMaxGroupSpeed = FP_MAX_VALUE;
 
-	for ( vector<CCommonUnit*>::const_iterator it = _units.begin(); it != _units.end(); ++it )
+	for ( std::vector<CCommonUnit*>::const_iterator it = _units.begin(); it != _units.end(); ++it )
 	{
 		CCommonUnit *pUnit = *it;
 		vGroupCenter += pUnit->GetCenterPlain();
@@ -203,7 +205,7 @@ const bool CGroupMoveExecutor::Init( const vector<CCommonUnit*> &_units, const s
 			Normalize( &vFinishPathDirection );
 			Normalize( &vStartPathDirection );
 
-			sort( units.begin(), units.end(), SUnitsSortByPriority( vGroupCenter, vStartPathDirection ) );
+			units.sort( SUnitsSortByPriority( vGroupCenter, vStartPathDirection ) );
 
 			CalcPositions( vFinishPathDirection );
 			RecalcDestination();
@@ -241,7 +243,7 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 	// подсчет количества юнитов в каждой приоритеной группе, предварительное формирование точек назначения
 	cells.clear();
 	const CVec2 vPerpDirection( vDirection.y, -vDirection.x );
-	vector<int> priorityValues;
+	std::vector<int> priorityValues;
 	float fGroupWidth = 0.0f;
 	float fMaxHeight = 0.0f;
 	int nMaxColumnSize = 1;
@@ -278,18 +280,18 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 		pos->second.vUnits.push_back( it->pUnit );
 	}
 	// окончательное формирование точек назначения
-	sort( priorityValues.begin(), priorityValues.end() );
+	std::sort( priorityValues.begin(), priorityValues.end() );
 	float fSubGroupPosition = -fGroupWidth/2;
 	const CVec2 vUnitShift = fMaxHeight * vPerpDirection;
 	const CVec2 vGroupShift = -0.5 * (fMaxHeight * nMaxColumnSize ) * vPerpDirection;
-	for ( vector<int>::iterator it = priorityValues.begin(); it != priorityValues.end(); ++it )
+	for ( std::vector<int>::iterator it = priorityValues.begin(); it != priorityValues.end(); ++it )
 	{
-		vector<CVec2> vCells;
+		std::vector<CVec2> vCells;
 		CPriorityGroupMap::iterator pos = priorityGroups.find( *it );
 		const float fSubGroupWidth = pos->second.vCells.back().y + pos->second.vUnitSize.y;
 		fSubGroupPosition += fSubGroupWidth/2;
 		const CVec2 vSubGroupDest = fSubGroupPosition * vDirection;
-		for ( vector<CVec2>::iterator itUnitPos = pos->second.vCells.begin(); itUnitPos != pos->second.vCells.end(); ++itUnitPos )
+		for ( std::vector<CVec2>::iterator itUnitPos = pos->second.vCells.begin(); itUnitPos != pos->second.vCells.end(); ++itUnitPos )
 		{
 			const CVec2 vNewUnitPos( vSubGroupDest + vGroupShift + itUnitPos->x * vUnitShift - itUnitPos->y * vDirection );
 			vCells.push_back( vNewUnitPos );
@@ -391,7 +393,7 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 	DeleteDeadUnits();
 	if ( !units.empty() )
 	{
-		sort( units.begin(), units.end(), SUnitsSortByDirection( vGroupCenter, vStartPathDirection ) );
+		units.sort( SUnitsSortByDirection( vGroupCenter, vStartPathDirection ) );
 		const CVec2 vPerpPathDirection( vStartPathDirection.y, -vStartPathDirection.x );
 		CUnitsList away_units;
 		int nAwayUnitsCount = 0;
@@ -491,7 +493,7 @@ void CGroupMoveExecutor::DeleteUnitFromList( const int nUnitID )
 
 bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 {
-	sort( units.begin(), units.end(), SUnitsSortByPriority( vGroupCenter, vStartPathDirection ) );
+	units.sort( SUnitsSortByPriority( vGroupCenter, vStartPathDirection ) );
 	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 	{
 		if ( it->pUnit->GetUniqueID() == nUnitID )

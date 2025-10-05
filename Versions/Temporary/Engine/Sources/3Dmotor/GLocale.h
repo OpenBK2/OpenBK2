@@ -21,11 +21,11 @@ struct SFont
 {
 	ZDATA
 	int nSize;
-	string szName;
+	std::string szName;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); return 0; }
 
 	SFont() {}
-	SFont( int _nSize, const string &_szName ): nSize( _nSize ), szName( _szName ) {}
+	SFont( int _nSize, const std::string &_szName ): nSize( _nSize ), szName( _szName ) {}
 };
 
 //! Описание шрифта
@@ -56,7 +56,7 @@ class _3DMOTOR_EXPORT CTextLocaleInfo: public CObjectBase
 private:
 	ZDATA
 	CVec2 vScreenRect;
-	vector< CObj<CFontInfo> > fonts;
+	std::vector< CObj<CFontInfo> > fonts;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&vScreenRect); f.Add(3,&fonts); return 0; }
 
 protected:

@@ -9,13 +9,13 @@ namespace NBind
 {
 
 // mask manipulator
-IObjMan *SBindProcessor::CreateManipulator( const string &szName, IObjMan *pParent )
+IObjMan *SBindProcessor::CreateManipulator( const std::string &szName, IObjMan *pParent )
 {
 	if ( szName.empty() )
 		return pParent;
 	// array element mask manipulator
 	const int nArrayIndexStartPos = szName.find( '[' );
-	if ( nArrayIndexStartPos != string::npos )
+	if ( nArrayIndexStartPos != std::string::npos )
 	{
 		SArrayCallParams callParams;
 		if ( ExtractArrayCallParams( szName, nArrayIndexStartPos, &callParams ) == false )
@@ -48,18 +48,18 @@ IObjMan *SBindProcessor::CreateManipulator( const string &szName, IObjMan *pPare
 	}
 }
 
-IObjManIterator *SBindProcessor::CreateIterator( const string &_szAddName, NTypeDef::STypeStructBase *_pType, 
+IObjManIterator *SBindProcessor::CreateIterator( const std::string &_szAddName, NTypeDef::STypeStructBase *_pType,
 																								 IObjMan *pParent, bool bShowHidden )
 {
 	return new CStructIterator( _szAddName, _pType, pParent, bShowHidden );
 }
 
-bool SBindProcessor::ExtractArrayCallParams( const string &szName, int nArrayIndexStartPos, SArrayCallParams *pCallParams )
+bool SBindProcessor::ExtractArrayCallParams( const std::string &szName, int nArrayIndexStartPos, SArrayCallParams *pCallParams )
 {
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName.substr(0, nArrayIndexStartPos - 1) );
 	NI_VERIFY( pos != pMetaInfo->fields.end(), "Can't find array field", return false );
 	const int nArrayIndexFinishPos = szName.find( ']', nArrayIndexStartPos );
-	NI_VERIFY( nArrayIndexFinishPos != string::npos, "Can't find array index finish position tag", return false );
+	NI_VERIFY( nArrayIndexFinishPos != std::string::npos, "Can't find array index finish position tag", return false );
 	int nArrayIndex = 0;
 	for ( int i = nArrayIndexStartPos + 1; i < nArrayIndexFinishPos; ++i )
 		nArrayIndex = nArrayIndex * 10 + szName[i] - '0';
@@ -74,7 +74,7 @@ bool SBindProcessor::ExtractArrayCallParams( const string &szName, int nArrayInd
 	//
 	const int nBinaryShift = pos->second.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
-		pCallParams->pRawVector = reinterpret_cast<vector<BYTE>*>( pThis + nBinaryShift );
+		pCallParams->pRawVector = reinterpret_cast<std::vector<BYTE>*>( pThis + nBinaryShift );
 	//
 	pCallParams->pUValue = &( ownValues[ pos->second.GetOwnValueIndex() ] );
 	pCallParams->pContained = pos->second.pContained;
@@ -82,12 +82,12 @@ bool SBindProcessor::ExtractArrayCallParams( const string &szName, int nArrayInd
 	return true;
 }
 
-bool SBindProcessor::GetArrayRequisites( const string &szName, SArrayRequisites *pReqs )
+bool SBindProcessor::GetArrayRequisites( const std::string &szName, SArrayRequisites *pReqs )
 {
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	const int nBinaryShift = pos->second.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
-		pReqs->pRawVector = reinterpret_cast<vector<BYTE>*>( pThis + nBinaryShift );
+		pReqs->pRawVector = reinterpret_cast<std::vector<BYTE>*>( pThis + nBinaryShift );
 	//
 	pReqs->pUValue = &( ownValues[ pos->second.GetOwnValueIndex() ] );
 	pReqs->pContained = pos->second.pContained;
@@ -95,10 +95,10 @@ bool SBindProcessor::GetArrayRequisites( const string &szName, SArrayRequisites 
 	return true;
 }
 
-bool SBindProcessor::InitArrayElementBindProcessor( SBindProcessor *pProc, string *pszRestName, const string &szName )
+bool SBindProcessor::InitArrayElementBindProcessor( SBindProcessor *pProc, std::string *pszRestName, const std::string &szName )
 {
 	const int nArrayIndexStartPos = szName.find( '[' );
-	if ( nArrayIndexStartPos != string::npos )
+	if ( nArrayIndexStartPos != std::string::npos )
 	{
 		SArrayCallParams callParams;
 		if ( ExtractArrayCallParams( szName, nArrayIndexStartPos, &callParams ) == false )
@@ -111,7 +111,7 @@ bool SBindProcessor::InitArrayElementBindProcessor( SBindProcessor *pProc, strin
 		return false;
 }
 
-bool SBindProcessor::SetValue( const string &szName, const CVariant &value )
+bool SBindProcessor::SetValue( const std::string &szName, const CVariant &value )
 {
 	if ( szName.empty() )
 	{
@@ -123,7 +123,7 @@ bool SBindProcessor::SetValue( const string &szName, const CVariant &value )
 	if ( pos == pMetaInfo->fields.end() )
 	{
 		SBindProcessor bindProcessor;
-		string szRestName;
+		std::string szRestName;
 		if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
 			return bindProcessor.SetValue( szRestName, value );
 		else
@@ -136,7 +136,7 @@ bool SBindProcessor::SetValue( const string &szName, const CVariant &value )
 		return (pos->second.*pos->second.pfnSetValue)( value, pThis, ownValues );
 }
 
-bool SBindProcessor::GetValue( const string &szName, CVariant *pValue )
+bool SBindProcessor::GetValue( const std::string &szName, CVariant *pValue )
 {
 	if ( szName.empty() )
 	{
@@ -148,7 +148,7 @@ bool SBindProcessor::GetValue( const string &szName, CVariant *pValue )
 	if ( pos == pMetaInfo->fields.end() )
 	{
 		SBindProcessor bindProcessor;
-		string szRestName;
+		std::string szRestName;
 		if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
 			return bindProcessor.GetValue( szRestName, pValue );
 		else
@@ -161,13 +161,13 @@ bool SBindProcessor::GetValue( const string &szName, CVariant *pValue )
 		return (pos->second.*pos->second.pfnGetValue)( pValue, pThis, ownValues );
 }
 
-bool SBindProcessor::Insert( const string &szName, const int nPos, const int nAmount, bool bSetDefault )
+bool SBindProcessor::Insert( const std::string &szName, const int nPos, const int nAmount, bool bSetDefault )
 {
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	if ( pos == pMetaInfo->fields.end() )
 	{
 		SBindProcessor bindProcessor;
-		string szRestName;
+		std::string szRestName;
 		if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
 			return bindProcessor.Insert( szRestName, nPos, nAmount, bSetDefault );
 		else
@@ -185,13 +185,13 @@ bool SBindProcessor::Insert( const string &szName, const int nPos, const int nAm
 	}
 }
 
-bool SBindProcessor::Remove( const string &szName, const int nPos, const int nAmount )
+bool SBindProcessor::Remove( const std::string &szName, const int nPos, const int nAmount )
 {
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	if ( pos == pMetaInfo->fields.end() )
 	{
 		SBindProcessor bindProcessor;
-		string szRestName;
+		std::string szRestName;
 		if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
 			return bindProcessor.Remove( szRestName, nPos, nAmount );
 		else
@@ -209,7 +209,7 @@ bool SBindProcessor::Remove( const string &szName, const int nPos, const int nAm
 	}
 }
 
-CBindArray *SBindProcessor::GetBindArray( const string &szName )
+CBindArray *SBindProcessor::GetBindArray( const std::string &szName )
 {
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	// TODO{ add here ptr processing
@@ -224,7 +224,7 @@ CBindArray *SBindProcessor::GetBindArray( const string &szName )
 
 }
 
-const NTypeDef::STypeStructBase::SField *FindField( const string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct )
+const NTypeDef::STypeStructBase::SField *FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct )
 {
 	if ( pStruct->pBaseType )
 	{
@@ -233,7 +233,7 @@ const NTypeDef::STypeStructBase::SField *FindField( const string &szFullFieldNam
 	}
 	//
 	const int nPos = szFullFieldName.find( '.', nCurrPos );
-	if ( nPos == string::npos )
+	if ( nPos == std::string::npos )
 	{
 		for ( NTypeDef::STypeStructBase::CFieldsList::const_iterator it = pStruct->fields.begin(); it != pStruct->fields.end(); ++it )
 		{

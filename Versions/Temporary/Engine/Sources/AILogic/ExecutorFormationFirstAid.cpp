@@ -81,7 +81,7 @@ bool CExecutorFormationFirstAid::IsExecutorValid() const
 
 void CExecutorFormationFirstAid::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> events;
+	std::vector<EExecutorEventID> events;
 	events.push_back( EID_ABILITY_ACTIVATE );
 	events.push_back( EID_ABILITY_DEACTIVATE );
 	events.push_back( EID_ABILITY_ACTIVATE_AUTOCAST );

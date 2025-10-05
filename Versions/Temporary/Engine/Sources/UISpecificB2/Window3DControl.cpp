@@ -56,7 +56,7 @@ void CWindow3DControl::InitByDesc( const struct NDb::SUIDesc *pDesc )
 	CWindow::InitByDesc( pDesc );
 }
 
-void CWindow3DControl::SetObjects( const vector<SObject> &_objects )
+void CWindow3DControl::SetObjects( const std::vector<SObject> &_objects )
 {
 	if ( objects != _objects )
 	{

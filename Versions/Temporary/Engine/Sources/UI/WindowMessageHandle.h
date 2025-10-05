@@ -21,7 +21,7 @@ public:
 };
 
 // handle map is used by all macros
-#define HM_TYPE hash_map<string,CUIMessageHandler>
+#define HM_TYPE std::unordered_map<std::string,CUIMessageHandler>
 #define DECLARE_HANDLE_MAP static HM_TYPE handleMap;
 #define IMPLEMENT_HANDLE_MAP(ClassName) HM_TYPE ClassName::handleMap; 
 

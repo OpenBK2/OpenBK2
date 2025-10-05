@@ -36,7 +36,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -48,14 +48,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SReinforcement > > reinforcements;
+		std::vector< CDBPtr< SReinforcement > > reinforcements;
 		CDBPtr< SReinforcement > pStartingUnits;
 
 		STechLevelReinfSet() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -76,7 +76,7 @@ namespace NDb
 			nLevel( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -92,9 +92,9 @@ namespace NDb
 		CDBPtr< SPartyDependentInfo > pPartyInfo;
 		CDBPtr< STexture > pListItemIcon;
 		EHistoricalSide eHistoricalSide;
-		vector< STechLevelReinfSet > techLevels;
-		vector< SLadderRank > ladderRanks;
-		vector< CDBPtr< SMedal > > medals;
+		std::vector< STechLevelReinfSet > techLevels;
+		std::vector< SLadderRank > ladderRanks;
+		std::vector< CDBPtr< SMedal > > medals;
 
 		#include "include_MultiplayerSide.h"
 
@@ -103,7 +103,7 @@ namespace NDb
 			eHistoricalSide( HS_ALLIES )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -132,18 +132,18 @@ namespace NDb
 				nColor( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SMultiplayerTechLevel > techLevels;
-		vector< SMultiplayerSide > sides;
+		std::vector< SMultiplayerTechLevel > techLevels;
+		std::vector< SMultiplayerSide > sides;
 		CDBPtr< STexture > pRandomCountryIcon;
-		vector< CDBPtr< SPartyDependentInfo > > diplomacyInfo;
-		vector< CDBPtr< SAIExpLevel > > expLevels;
-		vector< SPlayerColor > playerColorInfos;
+		std::vector< CDBPtr< SPartyDependentInfo > > diplomacyInfo;
+		std::vector< CDBPtr< SAIExpLevel > > expLevels;
+		std::vector< SPlayerColor > playerColorInfos;
 		CVec2 vReinfCounterRecycle;
 		int nTimeUserMPPause;
 		int nTimeUserMPLag;
@@ -167,15 +167,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EHistoricalSide eValue );
-	EHistoricalSide StringToEnum_NDb_EHistoricalSide( const string &szValue );
+	std::string EnumToString( NDb::EHistoricalSide eValue );
+	EHistoricalSide StringToEnum_NDb_EHistoricalSide( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EHistoricalSide>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EHistoricalSide eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EHistoricalSide ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EHistoricalSide( szValue ); }
+	static std::string ToString( NDb::EHistoricalSide eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EHistoricalSide ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EHistoricalSide( szValue ); }
 };
 

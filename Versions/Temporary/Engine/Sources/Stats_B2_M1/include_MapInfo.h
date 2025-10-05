@@ -25,6 +25,6 @@ virtual void PostLoad( bool bInEditor )
 		}
 	}
 	//
-	for ( vector<SMapPlayerInfo>::iterator it = players.begin(); it != players.end(); ++it )
+	for ( std::vector<SMapPlayerInfo>::iterator it = players.begin(); it != players.end(); ++it )
 		it->PostLoad( bInEditor );
 }

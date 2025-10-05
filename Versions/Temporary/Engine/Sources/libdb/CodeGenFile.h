@@ -24,18 +24,18 @@ class CFile : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CFile );
 
-	string szName;
-	list<string> includes;
-	list<string> hExternalIncludes;
-	list<string> cppExternalIncludes;
+	std::string szName;
+	std::list<std::string> includes;
+	std::list<std::string> hExternalIncludes;
+	std::list<std::string> cppExternalIncludes;
 	CObj<CNamespace> pNamespace;
 public:
 	CFile() { }
-	CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
-	const string &GetName() const { return szName; }
+	const std::string &GetName() const { return szName; }
 
-	void GenerateCode( const string &szRootDir );
+	void GenerateCode( const std::string &szRootDir );
 	int operator&( IXmlSaver &saver );
 };
 

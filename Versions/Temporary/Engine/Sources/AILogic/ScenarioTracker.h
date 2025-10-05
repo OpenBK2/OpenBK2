@@ -77,7 +77,7 @@ struct IAIScenarioTracker : public CObjectBase
 	// Key buildings (flags)
 	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) = 0;
 	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ) = 0;		// return side (0..2)
-	virtual const pair<int,int> GetKeyBuildingSummary() = 0;	// first = 0th side, second = 1st side buldings
+	virtual const std::pair<int,int> GetKeyBuildingSummary() = 0;	// first = 0th side, second = 1st side buldings
 	virtual const float GetRecycleSpeedCoeff( const int nSide ) = 0;
 	virtual const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer ) { return 0; }
 
@@ -86,7 +86,7 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType ) = 0;		// 0 if no leader
 
 	// Debug
-	virtual bool DebugAssignLeader( NDb::EReinforcementType eReinf, const wstring &wszName ) { return false; }
+	virtual bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName ) { return false; }
 
 	virtual bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int nXP ) = 0;		// Give to reinf and player
 	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP ) = 0;														// Give to player only

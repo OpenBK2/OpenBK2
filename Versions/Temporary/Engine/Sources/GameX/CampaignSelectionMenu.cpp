@@ -31,11 +31,11 @@ class CTextData : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CTextData )
 public:
 	ZDATA
-	wstring szText;
+	std::wstring szText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szText); return 0; }
 	
 	CTextData() {}
-	CTextData( const wstring &_szText ) { szText = _szText; }
+	CTextData( const std::wstring &_szText ) { szText = _szText; }
 };
 
 class CListItemTextViewer : public IDataViewer
@@ -104,7 +104,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	if ( !pGameRoot )
 		return;
 
-	int nCampaignCount = Min( MAX_CAMPAIGN_COUNT, pGameRoot->campaigns.size() );
+	int nCampaignCount = Min<int>( MAX_CAMPAIGN_COUNT, pGameRoot->campaigns.size() );
 	switch ( nCampaignCount )
 	{
 		case 1:
@@ -133,7 +133,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	// additional test campaigns
 	bool bAllowTestCampaigns = NGlobal::GetVar( "allow_test_campaigns", 0 ) != 0;
 	if ( bAllowTestCampaigns )
-		nCampaignCount = Min( 5, pGameRoot->campaigns.size() );
+		nCampaignCount = Min<int>( 5, pGameRoot->campaigns.size() );
 	if ( nCampaignCount >= 4 )
 		AddCampaignWindow( 3, 3 );
 	if ( nCampaignCount >= 5 )
@@ -176,13 +176,13 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 		if ( campaign.pPictureWnd )
 			campaign.pPictureWnd->SetTexture( pPicture );
 
-		wstring wszName;
+		std::wstring wszName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBCampaign->,LocalizedName) )
 			wszName = GET_TEXT_PRE(pDBCampaign->,LocalizedName);
 		if ( campaign.pNameView )
 			campaign.pNameView->SetText( campaign.pNameView->GetDBText() + wszName );
 
-		wstring wszDesc;
+		std::wstring wszDesc;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBCampaign->,LocalizedDesc) )
 			wszDesc = GET_TEXT_PRE(pDBCampaign->,LocalizedDesc);
 		if ( campaign.pDescView )
@@ -230,7 +230,7 @@ void CInterfaceCampaignSelectionMenu::AddCampaignWindow( int nWndIndex, int nCam
 	campaigns.push_back( campaign );
 }
 
-bool CInterfaceCampaignSelectionMenu::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceCampaignSelectionMenu::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_select_campaign" )
 		return OnSelectCampaign( szSender );
@@ -244,7 +244,7 @@ bool CInterfaceCampaignSelectionMenu::Execute( const string &szSender, const str
 	return false;
 }
 
-int CInterfaceCampaignSelectionMenu::Check( const string &szCheckName ) const
+int CInterfaceCampaignSelectionMenu::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -277,7 +277,7 @@ bool CInterfaceCampaignSelectionMenu::IsModal()
 	return false;
 }
 
-bool CInterfaceCampaignSelectionMenu::OnSelectCampaign( const string &szSender )
+bool CInterfaceCampaignSelectionMenu::OnSelectCampaign( const std::string &szSender )
 {
 	for ( int i = 0; i < campaigns.size(); ++i )
 	{
@@ -312,9 +312,9 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 		// 0 = USA
 		// 1 = Germany
 		// 2 = USSR
-		const string szMissionGlobalVarName = StrFmt( "DEMO_MISSION_%d_%d", nSelected, nDifficulty );
-		wstring wszCommand = NGlobal::GetVar( szMissionGlobalVarName );
-		string szCommand = NStr::ToMBCS( wszCommand );
+		const std::string szMissionGlobalVarName = StrFmt( "DEMO_MISSION_%d_%d", nSelected, nDifficulty );
+		std::wstring wszCommand = NGlobal::GetVar( szMissionGlobalVarName );
+		std::string szCommand = NStr::ToMBCS( wszCommand );
 		NStr::TrimBoth( szCommand, '\"' );
 		wszCommand = NStr::ToUnicode( szCommand );
 
@@ -428,7 +428,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 
 void CInterfaceCampaignSelectionMenu::AddDifficultyLevel( const NDb::SDifficultyLevel *pDifficultyLevel )
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE(pDifficultyLevel->,LocalizedName) )
 		wszText = GET_TEXT_PRE(pDifficultyLevel->,LocalizedName);
 	else
@@ -454,7 +454,7 @@ void CICCampaignSelectionMenu::Configure( const char *pszConfig )
 }
 
 
-void CampaignSelectionNothing( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void CampaignSelectionNothing( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	// do nothing
 }
@@ -481,13 +481,13 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // уберем подложку с миссией
 
-	string szIntro = pCampaignDB->szIntroMovie;
+	std::string szIntro = pCampaignDB->szIntroMovie;
 	if ( szIntro.empty() )
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		if ( s_bCampaignAutostartMission )
 		{
-			wstring wszCommand = NStr::ToUnicode( "chapter_map_autostart_mission" );
+			std::wstring wszCommand = NStr::ToUnicode( "chapter_map_autostart_mission" );
 			NGlobal::ProcessCommand( wszCommand );
 		}
 		else
@@ -503,24 +503,24 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 	}
 }
 
-void BackAndChapterMapAutostartMission( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void BackAndChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NGlobal::ProcessCommand( L"chapter_map_autostart_mission" );
 }
 
-void BackAndChapterMap( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void BackAndChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NGlobal::ProcessCommand( L"chapter_map" );
 }
 
-void DemoCampaignSelectionMenu( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void DemoCampaignSelectionMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	const bool bContinue = NGlobal::GetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 ) != 0;
 	if ( bContinue )
 	{
-		const string szParam = "Movies\\demo_outro.xml;demo_campaign_selection_menu";
+		const std::string szParam = "Movies\\demo_outro.xml;demo_campaign_selection_menu";
 
 		NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szParam.c_str() );

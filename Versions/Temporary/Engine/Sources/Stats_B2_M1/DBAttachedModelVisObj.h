@@ -27,17 +27,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		CDBPtr< SVisObj > pvisualObject;
-		vector< SSDamageLevel > damageLevels;
+		std::vector< SSDamageLevel > damageLevels;
 		CDBPtr< SVisObj > pAnimableModel;
 		CDBPtr< SVisObj > pTransportableModel;
-		vector< Svector_AnimDescs > animdescs;
+		std::vector< Svector_AnimDescs > animdescs;
 
 		SAttachedModelVisObj() { }
 		//

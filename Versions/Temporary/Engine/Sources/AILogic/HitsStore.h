@@ -4,7 +4,7 @@
 class CHitsStore
 {
 	ZDATA
-	vector<CArray2D<BYTE> > hits;
+	std::vector<CArray2D<BYTE> > hits;
 	BYTE curIndex;
 	NTimer::STime timeOfIndexBegin;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&hits); f.Add(3,&curIndex); f.Add(4,&timeOfIndexBegin); return 0; }

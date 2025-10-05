@@ -367,7 +367,7 @@ IStaticPath* CMechAttackUnitState::BestSidePath()
 			}
 		}
 
-		swap( posDir.x, posDir.y );
+		std::swap( posDir.x, posDir.y );
 		posDir.x *= -1;
 	}
 
@@ -1149,7 +1149,7 @@ void CCommonAmbushState::CommonState()
 		}
 		else
 		{
-			list< CPtr<CCommonUnit> > groupUnits;
+			std::list< CPtr<CCommonUnit> > groupUnits;
 			for ( int iter = theGroupLogic.BeginGroup( nSpecialGroup ); iter != theGroupLogic.EndGroup(); iter = theGroupLogic.Next( iter ) )
 				groupUnits.push_back( theGroupLogic.GetGroupUnit( iter ) );
 			
@@ -1158,7 +1158,7 @@ void CCommonAmbushState::CommonState()
 			else
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP_THIS_ACTION ), pUnit, false );
 
-			for ( list< CPtr<CCommonUnit> >::iterator iter = groupUnits.begin(); iter != groupUnits.end(); ++iter )
+			for ( std::list< CPtr<CCommonUnit> >::iterator iter = groupUnits.begin(); iter != groupUnits.end(); ++iter )
 			{
 				CCommonUnit *pGroupUnit = *iter;
 				if ( pUnit != pGroupUnit && IsValidObj( pGroupUnit ) && pGroupUnit->GetState()->GetName() == EUSN_AMBUSH )
@@ -1744,7 +1744,7 @@ IUnitState *CCommonPatrolState::Instance( CCommonUnit *pUnit, CVec2 &vTarget )
 		bNoMoreCommands = true;
 	}
 
-	vector<CVec2> &points = thePatrolWaypoints[nID];
+	std::vector<CVec2> &points = thePatrolWaypoints[nID];
 	points.push_back( vTarget );
 
 	if ( bLastPatrolCommand ) 

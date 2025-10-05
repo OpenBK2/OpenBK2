@@ -14,12 +14,12 @@
 
 namespace NGScene
 {
-hash_set<string>  objects;
+std::unordered_set<std::string>  objects;
 static bool bChessLM = false;
 static bool bDumpLM = false;
-static string szIntDirectoryName;
+static std::string szIntDirectoryName;
 
-void SetDumpDirectory(const string &szDirectoryName)
+void SetDumpDirectory(const std::string &szDirectoryName)
 {
 	objects.clear();
 	szIntDirectoryName = szDirectoryName;
@@ -253,7 +253,7 @@ void CLMGeometryGen::Recalc()
 	else
 	{
 		MakeLMGeometry( &lmData, &lmSize, data, fLMResolution, N_LM_TEXTURE_SIZE, shift );
-		string szDest = ( szIntDirectoryName + pML->GetString() );
+		std::string szDest = ( szIntDirectoryName + pML->GetString() );
 		const char *str = szDest.c_str();
 		pValue->Assign( lmData, true );
 		if( bDumpLM )

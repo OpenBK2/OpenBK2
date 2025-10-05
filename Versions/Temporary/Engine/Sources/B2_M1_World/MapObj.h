@@ -31,7 +31,7 @@ extern float FADED_ICON_ALPHA;
 struct IMOUnit;
 struct IMOContainer;
 
-typedef list< CPtr<IMOUnit> >CUnitsList;
+typedef std::list< CPtr<IMOUnit> >CUnitsList;
 
 struct SAIBasicUpdate;
 namespace NDb
@@ -63,7 +63,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 		CDBPtr<NDb::SWeaponRPGStats> pWeaponID;
 		int nCount;
 		bool bPrimary;
-		wstring szLocalizedName;
+		std::wstring szLocalizedName;
 		int nDamage;
 		int nPenetration;
 		int nAmmo;
@@ -77,7 +77,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	};
 
 	ZDATA
-	wstring szLocalizedName;
+	std::wstring szLocalizedName;
 
 	int nHP;
 	int nMaxHP;
@@ -88,8 +88,8 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	ZSKIP //int nPrimaryGunCount;
 	ZSKIP //int nSecondaryGunCount;
 
-	vector<int> armors;
-	vector<SWeapon> weapons;
+	std::vector<int> armors;
+	std::vector<SWeapon> weapons;
 
 	CDBPtr< NDb::SArmorPattern > pArmorPattern;
 	
@@ -127,7 +127,7 @@ struct SAbilityInfo
 	SAbilityInfo( SAbilitySwitchState _abilityState, float	_fParam ):
 	abilityState( _abilityState ), fParam( _fParam ) {}
 };
-typedef hash_map< NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash > CAbilityInfo;
+typedef std::unordered_map< NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash > CAbilityInfo;
 
 B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbility, const SAbilityInfo &abilityInfo );
 B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities );
@@ -136,7 +136,7 @@ inline const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeas
 {
 	if ( pVisObj )
 	{
-		for ( vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
+		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
 			if ( it->eSeason == eSeason ) 
 				return it->pModel;
@@ -150,7 +150,7 @@ inline const NDb::SModel* GetExactLowLevelModel( const NDb::SVisObj *pVisObj, ND
 {
 	if ( pVisObj )
 	{
-		for ( vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
+		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
 			if ( it->eSeason == eSeason ) 
 				return it->pLowLevelModel;
@@ -195,7 +195,7 @@ class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 	bool bLoopedAnimation;
 	bool bIsSilentlyDead;
 
-	vector<WORD> attachedSounds;
+	std::vector<WORD> attachedSounds;
 	//
 	bool bHasMoveAnimation;
 	float fAnimationSpeed;
@@ -295,7 +295,7 @@ public:
 	virtual IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, struct ISoundScene *pSoundScene  ) { return 0; }
 	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) = 0;
 
-	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate ) { return 0; }
+	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const std::list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate ) { return 0; }
 	virtual void AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn, const NTimer::STime &currTime, IScene *pScene, const bool bHorTurn ) {}
 	virtual bool AIUpdateDiplomacy( const struct SAINotifyDiplomacy &diplomacy );
 	virtual bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update ) { return false; }
@@ -304,7 +304,7 @@ public:
 	void AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer::STime startTime );
 	// for animations testing
 	// returns: if nAnimation >= number of anims, when -1, else <length of animation, is anim looped>
-	pair<int,bool> PlayAnimation( const int nAnimation ); 
+	std::pair<int,bool> PlayAnimation( const int nAnimation );
 	// get all actions for unit, so we know visible buttons
 	virtual void GetActions( CUserActions *pActions, EActionsType eActions ) const = 0;
 	// get all possible actions for object
@@ -451,8 +451,8 @@ public:
 	// show icons of the passangers
 	virtual void UpdatePassangers() = 0;
 	// get all passangers from container.
-	virtual void GetPassangers( vector<CMOSelectable*> *pBuffer ) const = 0;
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const;
+	virtual void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const = 0;
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const;
 	
 	virtual int GetPassangersCount() const = 0;
 	// get free places
@@ -531,7 +531,7 @@ void PlaceCrater( const NDb::SCraterSet *pCrater, NDb::ESeason eSeason, const CV
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos );
 void PlaySoundEffect( const int nID, const NDb::SComplexSoundDesc *pEffect, NTimer::STime timeStart, const CVec3 &vPos );
-void PlayComplexEffect( const int nID, const string &szBoneName, ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode );
+void PlayComplexEffect( const int nID, const std::string &szBoneName, ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode );
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, NDb::ESeason eSeason );
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot, NDb::ESeason eSeason );
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace, NDb::ESeason eSeason );

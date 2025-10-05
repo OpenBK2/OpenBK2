@@ -114,7 +114,7 @@ void CXMLChunkSaver::Finish()
 		if ( !toStore.empty() && StartChunk( "SharedClasses", 0 ) != false )
 		{
 			int nCounter = 1;
-			for ( list< CPtr<CXmlResource> >::iterator it = toStore.begin(); it != toStore.end(); ++it, ++nCounter )
+			for ( std::list< CPtr<CXmlResource> >::iterator it = toStore.begin(); it != toStore.end(); ++it, ++nCounter )
 			{
 				CPtr<CXmlResource> pElement = *it;
 				int nClassTypeID = NObjectFactory::GetObjectTypeID( pElement );
@@ -147,7 +147,7 @@ bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 	{
 		if ( nChunkNumber > 0 )	// elements container
 		{
-			const vector<const NXml::CXmlNode*> &nodes = pReadNode->GetNodes();
+			const std::vector<const NXml::CXmlNode*> &nodes = pReadNode->GetNodes();
 			if ( nChunkNumber - 1 < nodes.size() )
 			{
 				const NXml::CXmlNode *pNode = nodes[nChunkNumber - 1];
@@ -504,7 +504,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	if ( idChunk != 0 && StartChunk(idChunk, nChunkNumber) == false )
 		return false;
 	NI_ASSERT( nSize > 0, "Wrong size passed" );
-	string szString;
+	std::string szString;
 	if ( IsReading() ) 
 	{
 		DataChunkString( szString );
@@ -534,7 +534,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, GUID *pgData, int nChunk
 		return false;
 	//
 	bool bRetVal = false;
-	string szValue;
+	std::string szValue;
 	if ( IsReading() )
 	{
 		if ( DataChunkString(szValue) )
@@ -560,10 +560,10 @@ bool CXMLChunkSaver::DataChunkDBID( CDBID *pDBID )
 		{
 			if ( const NXml::SXmlAttribute *pAttrib = pReadNode->GetHRefAttribute() )
 			{
-				const string szRef = pAttrib->value.ToString();
+				const std::string szRef = pAttrib->value.ToString();
 				if ( !szRef.empty() )
 				{
-					string szDBID = szRef.substr( 0, szRef.rfind('#') );
+					std::string szDBID = szRef.substr( 0, szRef.rfind('#') );
 					if ( !szDBID.empty() )
 					{
 						NStr::UTF8ToMBCS( &szDBID, szDBID );
@@ -597,10 +597,10 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 	{
 		if ( pReadNode )
 		{
-			string szFilePath;
+			std::string szFilePath;
 			if ( const NXml::SXmlAttribute *pAttrib = pReadNode->GetHRefAttribute() )
 			{
-				const string szRefValue = pAttrib->value.ToString();
+				const std::string szRefValue = pAttrib->value.ToString();
 				if ( !szRefValue.empty() )
 				{
 					if ( szRefValue[0] == '/' || szRefValue[0] == '\\' )
@@ -626,7 +626,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 	{
 		if ( pCurrNode )
 		{
-			string szFilePath;
+			std::string szFilePath;
 			NStr::MBCSToUTF8( &szFilePath, *pFilePath );
 			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( HREF_ATTRIBUTE_NAME, "/" + szFilePath );
 			return true;
@@ -635,7 +635,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 	return true;
 }
 
-bool CXMLChunkSaver::DataChunkString( string &data )
+bool CXMLChunkSaver::DataChunkString( std::string &data )
 {
 	if ( IsReading() ) 
 	{
@@ -655,13 +655,13 @@ bool CXMLChunkSaver::DataChunkString( string &data )
 	return false;
 }
 
-bool CXMLChunkSaver::DataChunkString( wstring &data )
+bool CXMLChunkSaver::DataChunkString( std::wstring &data )
 {
 	if ( IsReading() ) 
 	{
 		if ( pReadNode )
 		{
-			string szData = pReadNode->GetValue().ToString();
+			std::string szData = pReadNode->GetValue().ToString();
 			NXml::ConvertToString( &szData );
 			NStr::UTF8ToUnicode( &data, szData );
 			return true;
@@ -669,7 +669,7 @@ bool CXMLChunkSaver::DataChunkString( wstring &data )
 	}
 	else if ( pCurrNode ) 
 	{
-		string szString;
+		std::string szString;
 		NStr::UnicodeToUTF8( &szString, data );
 		checked_cast<CXMLElement*>(pCurrNode)->SetText( szString );
 		return true;
@@ -695,9 +695,9 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 
 void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid ) 
 { 
-	string szFileName = NDb::GetFileName( dbid ); 
+	std::string szFileName = NDb::GetFileName( dbid );
 	NStr::ReplaceAllChars( &szFileName, '\\', '/' );
-	const string szObjectPath = szFileName.substr( 0, szFileName.rfind('/') + 1 ); 
+	const std::string szObjectPath = szFileName.substr( 0, szFileName.rfind('/') + 1 );
 	objectNamesStack.clear();
 	objectNamesStack.push_back( szObjectPath );
 	szCurrObjectPath = szObjectPath;
@@ -705,9 +705,9 @@ void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid )
 
 void CXMLChunkSaver::PushCurrentObject( const CDBID &dbid )
 {
-	string szFileName = NDb::GetFileName( dbid ); 
+	std::string szFileName = NDb::GetFileName( dbid );
 	NStr::ReplaceAllChars( &szFileName, '\\', '/' );
-	const string szObjectPath = szFileName.substr( 0, szFileName.rfind('/') + 1 ); 
+	const std::string szObjectPath = szFileName.substr( 0, szFileName.rfind('/') + 1 );
 	objectNamesStack.push_back( szObjectPath );
 	szCurrObjectPath = szObjectPath;
 }
@@ -807,7 +807,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, float *pData )
 	return false;
 }
 
-bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
+bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 {
 	if ( IsReading() )
 	{
@@ -817,7 +817,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
 			{
 				if ( const NXml::SXmlAttribute *pAttribute = pReadNode->GetHRefAttribute() )
 				{
-					string szHRef = pAttribute->value.ToString();
+					std::string szHRef = pAttribute->value.ToString();
 					if ( !szHRef.empty() )
 					{
 						NStr::UTF8ToMBCS( &szHRef, szHRef );
@@ -842,7 +842,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
 	{
 		if ( pCurrNode )
 		{
-			string szVal;
+			std::string szVal;
 			NStr::MBCSToUTF8( &szVal, *pData );
 			if ( strcmp(attrName, HREF_ATTRIBUTE_NAME) == 0 )
 				checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, "/" + szVal );
@@ -854,7 +854,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
 	return false;
 }
 
-bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, wstring *pData )
+bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::wstring *pData )
 {
 	if ( IsReading() )
 	{
@@ -871,7 +871,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, wstring *pData )
 	{
 		if ( pCurrNode )
 		{
-			string szRes;
+			std::string szRes;
 			NStr::UnicodeToUTF8( &szRes, *pData );
 			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, szRes );
 		}

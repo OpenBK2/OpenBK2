@@ -29,7 +29,7 @@ public:
 
 // CInterfaceMissionBase
 
-CInterfaceMissionBase::CInterfaceMissionBase( const string &szInterfaceType, const string &szBindSection ) :
+CInterfaceMissionBase::CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection ) :
 	CInterfaceScreenBase( szInterfaceType, szBindSection ), bFrozen( false )
 {
 }

@@ -158,11 +158,11 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 
 	if ( pTarget && pTarget->IsRefValid() && bTraceTargetIntersection )
 	{
-		list<IScene::SPickObjInfo> objects;
-		list<int> attached;
+		std::list<IScene::SPickObjInfo> objects;
+		std::list<int> attached;
 		Scene()->PickAllObjects( GetCenter(), projPlacement.vPlacement, &objects, &attached );
 
-		list<IScene::SPickObjInfo>::iterator iter = objects.begin();
+		std::list<IScene::SPickObjInfo>::iterator iter = objects.begin();
 		while ( iter != objects.end() && iter->nObjID != pTarget->GetID() )
 			++iter;
 		if ( iter != objects.end() )

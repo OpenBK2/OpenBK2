@@ -8,7 +8,7 @@ namespace NWaterStuff
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SSurfBorder
 	{
-		vector<NDb::SVSOPoint> points;
+		std::vector<NDb::SVSOPoint> points;
 		CDBPtr<NDb::SMaterial> pSurfMaterial;
 	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ namespace NWaterStuff
 		CDBPtr<NDb::STwoSidedLight> pLight;
 		int nNumFramesX;
 		int nNumFramesY;
-		string szNoiseFileName;
+		std::string szNoiseFileName;
 		float fNoiseCoeff;
 		int nSeaMapIndex; // filled during water initialization
 		NDb::SWater::EWaterType eWaterType;

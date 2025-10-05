@@ -39,7 +39,7 @@ class CPredictedAntiAviationFire
 		SAAS_FINISHED_TASK,
 	};
 	class CAIUnit *pUnit;
-	typedef list<int> Guns;
+	typedef std::list<int> Guns;
 
 	ZDATA
 		ZSKIP

@@ -37,7 +37,7 @@ void CExecutorContainer::Init()
 
 void CExecutorContainer::AddSleeping( CExecutor *pExecutor )
 {
-	sleeping.insert( pair<CPtr<CExecutor>, bool>(pExecutor,true) );
+	sleeping.insert( std::pair<CPtr<CExecutor>, bool>(pExecutor,true) );
 }
 
 void CExecutorContainer::Add( CExecutor *pExecutor )

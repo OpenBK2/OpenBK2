@@ -21,8 +21,8 @@ struct SSceneObjIconInfo
 	float fHPBarAdditionalValue; // 2-color main hitbar
 	int nHPBarAdditionalColorIndex;
 	
-	vector<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType> icons;
-	vector<SHitbar> smallHitbars;
+	std::vector<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType> icons;
+	std::vector<SHitbar> smallHitbars;
 	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconGroup;
 	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconLevelup;
 	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconDamagedBuilding;

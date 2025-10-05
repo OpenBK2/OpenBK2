@@ -29,7 +29,7 @@ class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager
 	SVector lastEnemyTile;
 	SAIAngle wLastEnemyDir;
 
-	vector<float> fProb;
+	std::vector<float> fProb;
 	EAttackType eAttackType;
 	BYTE nBestSide;
 	
@@ -408,12 +408,12 @@ public:
 
 struct SPatrolWaypoints
 {
-	typedef vector<CVec2> CPatrolPoints;
-	typedef hash_map<int /*Unit ID*/, CPatrolPoints> CPatrolPointsMap;
+	typedef std::vector<CVec2> CPatrolPoints;
+	typedef std::unordered_map<int /*Unit ID*/, CPatrolPoints> CPatrolPointsMap;
 
 	CPatrolPointsMap points;
 
-	vector<CVec2> &operator[]( const int nUnitID ) { return points[ nUnitID ]; }
+	std::vector<CVec2> &operator[]( const int nUnitID ) { return points[ nUnitID ]; }
 	const bool HasPoints( const int nUnitID ) { return ( points.find( nUnitID ) != points.end() ); }
 
 	void Clear() { points.clear(); }

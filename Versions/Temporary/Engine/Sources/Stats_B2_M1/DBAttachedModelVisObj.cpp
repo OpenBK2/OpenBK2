@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SAttachedModelVisObj::SSDamageLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAttachedModelVisObj::SSDamageLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 }

@@ -34,7 +34,7 @@ struct SExpProgressRank
 	float fCur;
 	float fTarget;
 	float fStep;
-	vector<float> levels;
+	std::vector<float> levels;
 	int nNextLevel;
 	float fCurLevelExp;
 	float fTargetLevelExp;
@@ -52,7 +52,7 @@ struct SExpProgressRank
 };
 
 void InitRoller( IPlayer *pRoller );
-void PlayRollerAnim( vector<IPlayer*> &rollers, int nStart, int nEnd, float fRollerTime );
+void PlayRollerAnim( std::vector<IPlayer*> &rollers, int nStart, int nEnd, float fRollerTime );
 
 } //namespace NUIElementsHelper
 

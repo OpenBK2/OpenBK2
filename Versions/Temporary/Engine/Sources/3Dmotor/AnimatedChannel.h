@@ -20,7 +20,7 @@ namespace NAnimation
 	private:
 		ZDATA
 		CDGPtr<ISkeletonAnimator> pAnimator;
-		string szChannelName;
+		std::string szChannelName;
 		int nChannelID;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimator); f.Add(3,&szChannelName); f.Add(4,&nChannelID); return 0; }
 
@@ -43,7 +43,7 @@ namespace NAnimation
 		}
 
 	public:
-		CAnimatedChannel( ISkeletonAnimator *_pAnimator, const string &_szChannelName, float fDefaultValue = 0.f )
+		CAnimatedChannel( ISkeletonAnimator *_pAnimator, const std::string &_szChannelName, float fDefaultValue = 0.f )
 			: CFuncBase<float>(fDefaultValue), pAnimator(_pAnimator), szChannelName(_szChannelName), nChannelID(INVALID_CHANNEL_ID)
 		{
 		}

@@ -21,7 +21,7 @@
 namespace
 {
 
-typedef hash_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
+typedef std::unordered_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
@@ -61,7 +61,7 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 
 bool CMOUnitMechanical::IsInside( const int nID )
 {
-	for ( vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
 	{
 		if ( (*it)->GetID() == nID )
 			return true;
@@ -392,7 +392,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		}
 		else if ( gun.bRecoil )
 		{
-			vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutator;
+			std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutator;
 			mutator.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove( gun.nrecoilTime, QNULL, CVec3( 0, -gun.fRecoilLength, 0 ) ) );
 			mutator.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove( gun.nRecoilShakeTime - gun.nrecoilTime, QNULL, VNULL3 ) );
 
@@ -406,7 +406,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 			mLocalShoot.RotateVector( &vRot, V3_AXIS_X );
 
 			CQuat qRecoil( gun.fRecoilShakeAngle, vRot );
-			vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutatorBasis;
+			std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutatorBasis;
 			mutatorBasis.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)(gun.nRecoilShakeTime)*0.1, qRecoil ) );
 			mutatorBasis.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)(gun.nRecoilShakeTime)*0.9, QNULL ) );
 			pAnimator->SetBoneMutator( 0, currTime, mutatorBasis ); // 0 as const char *
@@ -450,13 +450,13 @@ void CMOUnitMechanical::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon
 void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn, const NTimer::STime &currTime, IScene *pScene, const bool bHorTurn )
 {
 	CQuat qRotTurret;
-	vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutator;
+	std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutator;
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	const int nID = GetID();
 	const NDb::SMechUnitRPGStats::SPlatform &platform = pStats->GetPlatform( nID, turn.nPlantform );
 	if ( bHorTurn )
 	{
-		const string szBoneName = platform.pAttachedPlatformVisObj ? platform.szAttachedPlatformLocator : platform.szRotatePoint;
+		const std::string szBoneName = platform.pAttachedPlatformVisObj ? platform.szAttachedPlatformLocator : platform.szRotatePoint;
 		if ( !szBoneName.empty() ) 
 		{
 			NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, szBoneName );
@@ -475,7 +475,7 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 		for ( int i = 0; i < pStats->GetGunsSize( nID, turn.nPlantform ); ++i )
 		{
 			const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( nID, turn.nPlantform, i );
-			const string szBoneName = gun.pAttachedGunVisObj ? gun.szAttachedGunLocator : gun.szRotatePoint;
+			const std::string szBoneName = gun.pAttachedGunVisObj ? gun.szAttachedGunLocator : gun.szRotatePoint;
 
 			if ( !szBoneName.empty() )
 			{
@@ -681,7 +681,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		GetPlacement( &vPos, &qRot, &vScale );
 		AI2Vis( &vPos );
 		const NTimer::STime currTime = GameTimer()->GetGameTime();
-		for ( vector< CObj<CSmokeTrailEffect> >::iterator it = smokeTrails.begin(); it != smokeTrails.end(); ++it )
+		for ( std::vector< CObj<CSmokeTrailEffect> >::iterator it = smokeTrails.begin(); it != smokeTrails.end(); ++it )
 			(*it)->UpdatePlacement( vPos, qRot, currTime, IsVisible() );
 	}
 }
@@ -811,7 +811,7 @@ bool CMOUnitMechanical::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 	return true;
 }
 
-void CMOUnitMechanical::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
+void CMOUnitMechanical::GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
 	pBuffer->resize( vPassangers.size() );
@@ -864,7 +864,7 @@ void CMOUnitMechanical::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 }
 
 const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
-	const NDb::SModel *pModel, const vector<NDb::Svector_AnimDescs> &animdescs, 
+	const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 	const NDb::EAnimationType eAnimType, const int nAnimID )
 {
 	if ( pModel && pModel->pSkeleton )
@@ -880,7 +880,7 @@ const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 	return 0;
 }
 
-void CMOUnitMechanical::PlayAnimDescForAttached( IAttachedObject *pObject, const vector<NDb::Svector_AnimDescs> &animdescs,
+void CMOUnitMechanical::PlayAnimDescForAttached( IAttachedObject *pObject, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 																								const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID )
 {
 	if ( pObject )
@@ -1025,7 +1025,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 				{
 					NAnimation::ISkeletonAnimator *pDeathAnimator = 0;
 
-					string szLocator;
+					std::string szLocator;
 					if ( !pStats->damagePoints.empty() )
 					{
 						szLocator = pStats->damagePoints[NWin32Random::Random(pStats->damagePoints.size())];
@@ -1068,7 +1068,7 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 		AI2Vis( &vPos );
 		NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 		const SHMatrix mPlacement( vPos, qRot );
-		for ( vector<NDb::SMechUnitRPGStats::SSmokeTrailEffect>::const_iterator it = pStats->smokeTrails.begin(); it != pStats->smokeTrails.end(); ++it )
+		for ( std::vector<NDb::SMechUnitRPGStats::SSmokeTrailEffect>::const_iterator it = pStats->smokeTrails.begin(); it != pStats->smokeTrails.end(); ++it )
 		{
 			SHMatrix mLocalPos;
 			CalcRelativePos( &mLocalPos, mPlacement, it->szLocatorName, pAnimator );

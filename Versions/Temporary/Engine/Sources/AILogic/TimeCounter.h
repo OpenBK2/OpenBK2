@@ -7,17 +7,17 @@ namespace NAI
 {
 class CTimeCounter
 {
-	vector<double> counters;
-	vector<NHPTimer::STime> startTimes;
-	vector<string> names;
+	std::vector<double> counters;
+	std::vector<NHPTimer::STime> startTimes;
+	std::vector<std::string> names;
 
-	hash_map<string, double> szCounters;
-	hash_map<string, NHPTimer::STime> szStartTimes;
+	std::unordered_map<std::string, double> szCounters;
+	std::unordered_map<std::string, NHPTimer::STime> szStartTimes;
 
 	NTimer::STime printTime;
 	int nMaxIndex;
 
-	vector<float> variables;
+	std::vector<float> variables;
 	int nMaxVar;
 public:
 	CTimeCounter();
@@ -25,11 +25,11 @@ public:
 	// bStart true - начать counter, false - закончить
 	void Count( const int nName, const bool bStart );
 	// медленный и неточный, bStart true - начать counter, false - закончить
-	void Count( const string &szName, const bool bStart );
+	void Count( const std::string &szName, const bool bStart );
 
 	void PrintCounters();
 
-	void RegisterCounter( const int nName, const string &szName );
+	void RegisterCounter( const int nName, const std::string &szName );
 
 	void ChangeVar( const int nIndex, const float fChange );
 	void SetVar( const int nIndex, const float fValue );

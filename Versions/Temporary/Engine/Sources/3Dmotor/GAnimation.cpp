@@ -629,7 +629,7 @@ float CSkeletonAnimator::GetDuration( const SAnimID animID )
 }
 
 
-unsigned int CSkeletonAnimator::GetMarkTimes( vector<float> *pResult, const SAnimID animID, const string &szMarkName )
+unsigned int CSkeletonAnimator::GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName )
 {
 	ASSERT( pResult );
 	pResult->clear();
@@ -659,7 +659,7 @@ unsigned int CSkeletonAnimator::GetMarkTimes( vector<float> *pResult, const SAni
 }
 
 
-unsigned int CSkeletonAnimator::EnumMarks( vector<string> *pResult, const SAnimID animID )
+unsigned int CSkeletonAnimator::EnumMarks( std::vector<std::string> *pResult, const SAnimID animID )
 {
 	ASSERT( pResult );
 	pResult->clear();
@@ -672,13 +672,13 @@ unsigned int CSkeletonAnimator::EnumMarks( vector<string> *pResult, const SAnimI
 	SAnimationHolder &h = animHolders[ animID ];
 	if ( h.pAnnotationTrack )
 	{
-		vector<string> &marks = *pResult;
+		std::vector<std::string> &marks = *pResult;
 
 		const granny_text_track *pTrack = h.pAnnotationTrack;
 		for ( int i = 0; i < pTrack->EntryCount; ++i )
 		{
 			const granny_text_track_entry &entry = pTrack->Entries[i];
-			vector<string>::iterator markIt = find( marks.begin(), marks.end(), entry.Text );
+			std::vector<std::string>::iterator markIt = find( marks.begin(), marks.end(), entry.Text );
 			if ( markIt == marks.end() )
 			{
 				marks.push_back( entry.Text );
@@ -752,7 +752,7 @@ int CSkeletonAnimator::GetBoneIndex( const char *pszName )
 		return -1;
 }
 
-void CSkeletonAnimator::GetBoneNames( vector<string> *pBoneNames )
+void CSkeletonAnimator::GetBoneNames( std::vector<std::string> *pBoneNames )
 {
 	if ( pSkeleton )
 	{
@@ -763,7 +763,7 @@ void CSkeletonAnimator::GetBoneNames( vector<string> *pBoneNames )
 }
 
 void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tStart, 
-	const vector<SDesiredBoneMove> &boneMutation )
+	const std::vector<SDesiredBoneMove> &boneMutation )
 {
 	Touch();
 	int nBoneIndex;
@@ -773,7 +773,7 @@ void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tS
 }
 
 void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStart, 
-																			 const vector<SDesiredBoneMove> &boneMutation )
+																			 const std::vector<SDesiredBoneMove> &boneMutation )
 {
 	Touch();
 	if ( nBoneIndex < 0 || nBoneIndex >= nBones ) 
@@ -882,11 +882,11 @@ int CSkeletonAnimator::GetChannelCount()
 	return scalarChannels.size();
 }
 
-int CSkeletonAnimator::GetChannelIndex( const string &szName )
+int CSkeletonAnimator::GetChannelIndex( const std::string &szName )
 {
 	CheckJustLoaded();
 
-	vector<SScalarChannel>::iterator channelIt = find_if( scalarChannels.begin(), scalarChannels.end(), SChannelByName(szName) );
+	std::vector<SScalarChannel>::iterator channelIt = find_if( scalarChannels.begin(), scalarChannels.end(), SChannelByName(szName) );
 	if ( channelIt != scalarChannels.end() )
 	{
 		const int nChannelIndex = distance( scalarChannels.begin(), channelIt );
@@ -897,7 +897,7 @@ int CSkeletonAnimator::GetChannelIndex( const string &szName )
 	// Чтобы избавиться от повторных запросов и повторных поисков по символьному имени,
 	// создаём неактивный scalarChannel "на вырост".
 	int nChannelIndex = scalarChannels.size();
-	SScalarChannel &channel = scalarChannels.push_back();
+	SScalarChannel &channel = scalarChannels.emplace_back();
 	channel.szName = szName;
 	channel.bBinded = false;
 
@@ -926,7 +926,7 @@ void CSkeletonAnimator::RecoverAnimHolder( SAnimID animID )
 		FadeOut( h.tFadeDuration, animID );
 }
 
-CFuncBase<SFBTransform>* CSkeletonAnimator::CreateTransform( const string &szBoneName )
+CFuncBase<SFBTransform>* CSkeletonAnimator::CreateTransform( const std::string &szBoneName )
 {
 	CheckJustLoaded();
 	int nBoneIndex = GetBoneIndex( szBoneName.c_str() );
@@ -991,7 +991,7 @@ void CSkeletonAnimator::FreezeAllMutators()
 	for ( int i = 0; i < boneMutators.size(); ++i )
 	{
 		if ( boneMutators[i].IsEnabled() )
-			SetBoneMutator( i, tStart, vector<SDesiredBoneMove>() );
+			SetBoneMutator( i, tStart, std::vector<SDesiredBoneMove>() );
 	}
 }
 

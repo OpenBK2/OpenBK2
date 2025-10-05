@@ -35,14 +35,14 @@ private:
 		SInitializedWord( int _nValue ) : nValue ( _nValue ) {}
 	};
 
-	typedef hash_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
+	typedef std::unordered_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
 	CIDsRemap idsRemap;
 	// все юниты, распределённые по дипл. сторонам
 	CListsSet< CObj<CAIUnit> > units;
-	hash_map< int, CObj<CFormation> > formations;
-	vector<int> sizes;
+	std::unordered_map< int, CObj<CFormation> > formations;
+	std::vector<int> sizes;
 	// самолёты
-	list< CObj<CAviation> > planes;
+	std::list< CObj<CAviation> > planes;
 	// все операции проводятся с большими ячейками
 
 	int nBigCellsSizeX, nBigCellsSizeY;
@@ -52,14 +52,14 @@ private:
 	// номер ячейки
 	CArray2D<WORD> nCell;
 	// список юнитов для каждой из ячеек, 0 - not visible for enemy, 1 - visible for enemy
-	vector< CListsSet<SInitializedWord> > unitsInCells;
+	std::vector< CListsSet<SInitializedWord> > unitsInCells;
 	// позиция юнита в ячейках
 	struct SUnitPosition
 	{
 		int nCellID; int nUnitPos; SVector cell;
 		SUnitPosition() : nCellID(0), nUnitPos(0), cell( 0, 0 ) { }
 	};
-	vector<SUnitPosition> posUnitInCell;
+	std::vector<SUnitPosition> posUnitInCell;
 
 	enum { N_CELLS_LEVELS = 3 };
 	CArray2D<WORD> numUnits[2][N_CELLS_LEVELS][3][2];
@@ -67,14 +67,14 @@ private:
 	// для нумерации ячеек
 	CFreeIds cellsIds;
 	// для сериализации
-	hash_map< int, SVector > cellIdToCoord;
+	std::unordered_map< int, SVector > cellIdToCoord;
 
 
 	// CRAP{ for debug
-	hash_set<int> unitsInCellsSet;
+	std::unordered_set<int> unitsInCellsSet;
 	// CRAP}
 	
-	vector< hash_map<int, int> > nUnitsOfType;
+	std::vector< std::unordered_map<int, int> > nUnitsOfType;
 	
 	//
 	void AddUnitToConcreteCell( class CAIUnit* pUnit, const SVector &cell, bool bWithLeveledCelles );

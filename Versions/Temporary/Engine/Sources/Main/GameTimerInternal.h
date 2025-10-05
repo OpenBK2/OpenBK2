@@ -11,7 +11,7 @@ class CGameTimer : public IGameTimer
 {
 	OBJECT_BASIC_METHODS( CGameTimer );
 	//
-	typedef list<int> CPauseTypes;
+	typedef std::list<int> CPauseTypes;
 	//
 	CScaleTimer timerGame;								// game timer
 	CScaleTimer timerAbs;									// absolute timer

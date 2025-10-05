@@ -13,6 +13,8 @@
 #include "WaterController.h"
 #include "System/VFSOperations.h"
 
+#include <algorithm>
+
 #define DEF_WATER_PATCH_SIZE_X 6
 #define DEF_WATER_PATCH_SIZE_Y 6
 
@@ -111,14 +113,14 @@ struct SAnimWaterMaterialKey
 };
 static NGScene::CAnimWaterMaterial * GetAnimatedMaterial( const SAnimWaterMaterialKey &animWaterKey )
 {
-	static vector< pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial> > > animMaterials;
+	static std::vector< std::pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial> > > animMaterials;
 	for ( int iMaterial = 0; iMaterial < animMaterials.size(); ++iMaterial )
 	{
 		if ( animMaterials[iMaterial].first == animWaterKey  && IsValid( animMaterials[iMaterial].second ) )
 			return animMaterials[iMaterial].second;
 	}
 
-	animMaterials.push_back( pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial> >() );
+	animMaterials.push_back( std::pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial> >() );
 	animMaterials.back().first = animWaterKey;
 	animMaterials.back().second = new NGScene::CAnimWaterMaterial( animWaterKey.pTex, animWaterKey.pSecondTex, animWaterKey.nPriority, animWaterKey.pTime, 
 		animWaterKey.bProjectOnTerrain, animWaterKey.nNumFramesX, animWaterKey.nNumFramesY, animWaterKey.bApplyFog, animWaterKey.bAddPlaced, animWaterKey.bDrawHorses );
@@ -193,7 +195,7 @@ inline void RotateVector( CVec2 *vRotPos, const CVec2 &vPos, const CVec2 &vCente
 	vRotPos->y = ( vPos.x - vCenter.x ) * fSinAng + ( vPos.y - vCenter.y ) * fCosAng + vCenter.y;
 }
 
-inline int FindRealIndex( const CVec2i &val, const vector<CVec2i> &arr )
+inline int FindRealIndex( const CVec2i &val, const std::vector<CVec2i> &arr )
 {
 	for ( int i = 0; i < arr.size(); ++i )
 	{
@@ -304,12 +306,12 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode> > *pW
 				continue;
 
 			SWaterNode *pCurNode = waterNodes[g][i];
-			sort( pCurNode->waveParams.begin(), pCurNode->waveParams.end() );			
+			std::sort( pCurNode->waveParams.begin(), pCurNode->waveParams.end() );
 		}
 	}
 }
 
-inline int FindWaterParamInd( int nInd, const vector<NWaterStuff::SWaterParams> &params )
+inline int FindWaterParamInd( int nInd, const std::vector<NWaterStuff::SWaterParams> &params )
 {
 	for ( int k = 0; k < params.size(); ++k )
 	{
@@ -321,8 +323,8 @@ inline int FindWaterParamInd( int nInd, const vector<NWaterStuff::SWaterParams> 
 
 void CWaterController::Init(	const float fAngle,
 															const CArray2D<BYTE> &seaMap,
-															const vector<NWaterStuff::SWaterParams> &_waterParams,
-															const vector<NWaterStuff::SSurfBorder> &waterBorders,
+															const std::vector<NWaterStuff::SWaterParams> &_waterParams,
+															const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 															NGScene::IGameView *_pGScene,
 															//CArray2D<BYTE> &waterBottomMap,
 															const NDb::SWater *pWater )
@@ -335,12 +337,12 @@ void CWaterController::Init(	const float fAngle,
 
 	pGScene = _pGScene;
 
-	vector<NWaterStuff::SWaterParams> waterParams( _waterParams );
+	std::vector<NWaterStuff::SWaterParams> waterParams( _waterParams );
 	for ( int k = 0; k < waterParams.size(); ++k )
 		waterParams[k].nSeaMapIndex = k + 1;
 
-	vector<NWaterStuff::SWaterParams> silentWaterParams, oceanWaterParams;
-	for ( vector<NWaterStuff::SWaterParams>::const_iterator it = waterParams.begin(); it != waterParams.end(); ++it )
+	std::vector<NWaterStuff::SWaterParams> silentWaterParams, oceanWaterParams;
+	for ( std::vector<NWaterStuff::SWaterParams>::const_iterator it = waterParams.begin(); it != waterParams.end(); ++it )
 	{
 		if ( it->bUseWaves )
 			oceanWaterParams.push_back( *it );
@@ -393,10 +395,10 @@ static bool IsInnerPoint( const CArray2D<CPtr<SWaterNode> > &rWaterNodes, int nY
 	return bResult;
 }
 
-void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const vector<NWaterStuff::SSurfBorder> &waterBorders )
+void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const std::vector<NWaterStuff::SSurfBorder> &waterBorders )
 {
 	CVec3 vBBMin, vBBMax;
-	static vector<CVec3fEx> coastPoints( 4096 );
+	static std::vector<CVec3fEx> coastPoints( 4096 );
 	SWaterAlphaSmoothProfile waterAlphaSmoothProfile;
 	float fAlpha;
 	int nInd;
@@ -407,7 +409,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, con
 
 	for ( int k = 0; k < waterBorders.size(); ++k )
 	{
-		const vector<NDb::SVSOPoint> &curBorder = waterBorders[k].points;
+		const std::vector<NDb::SVSOPoint> &curBorder = waterBorders[k].points;
 
 		if ( curBorder.size() < 2 )
 			continue;
@@ -451,7 +453,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, con
 
 		vBBMin.Set( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
 		vBBMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-		for ( vector<CVec3fEx>::const_iterator it = coastPoints.begin(); it != coastPoints.end(); ++it )
+		for ( std::vector<CVec3fEx>::const_iterator it = coastPoints.begin(); it != coastPoints.end(); ++it )
 		{
 			const CVec3 vPos( it->x, it->y, 0 );
 			vBBMin.Minimize( vPos );
@@ -534,7 +536,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, con
 	}
 }
 
-void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes )
+void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes )
 {
 	// Identity transform
 	SFBTransform idPlace;
@@ -543,7 +545,7 @@ void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &w
 
 	waterPatches.resize( 0 );
 
-	vector<BYTE> useParams( 256 );
+	std::vector<BYTE> useParams( 256 );
 
 	// Divide water nodes to patches
 	const int nPatchesX = waterNodes.GetSizeX() / DEF_WATER_PATCH_SIZE_X + ( (waterNodes.GetSizeX() % DEF_WATER_PATCH_SIZE_X) ? 1 : 0 );
@@ -576,7 +578,7 @@ void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &w
 				continue;
 
 			// Create patch for current water param
-			for ( vector<BYTE>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
+			for ( std::vector<BYTE>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
 			{				
 				const NWaterStuff::SWaterParams &curParams = waterParams[*it];
 				const float fTexCoordOffsX = 1.0f / curParams.nNumFramesX;
@@ -869,7 +871,7 @@ void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &w
 	}
 }
 
-static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &seaMap, const vector<NWaterStuff::SSurfBorder> &borders )
+static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &seaMap, const std::vector<NWaterStuff::SSurfBorder> &borders )
 {
 	NI_VERIFY( pAlphaMap, "Invalid pointer", return )
 
@@ -877,12 +879,12 @@ static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &sea
 	pAlphaMap->FillEvery( 0xff );
 
 	float fAlpha;
-	static vector<CVec3fEx> coastPoints( 4096 );
+	static std::vector<CVec3fEx> coastPoints( 4096 );
 	SWaterAlphaSmoothProfile waterAlphaSmoothProfile;
 
 	for ( int k = 0; k < borders.size(); ++k )
 	{
-		const vector<NDb::SVSOPoint> &curBorder = borders[k].points;
+		const std::vector<NDb::SVSOPoint> &curBorder = borders[k].points;
 		if ( curBorder.size() < 2 )
 			continue;
 		const bool bNeedCycle = ( fabs(curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x) < DEF_EPS ) &&
@@ -924,7 +926,7 @@ static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &sea
 
 		CVec3 vBBMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
 		CVec3 vBBMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-		for ( vector<CVec3fEx>::const_iterator it = coastPoints.begin(); it != coastPoints.end(); ++it )
+		for ( std::vector<CVec3fEx>::const_iterator it = coastPoints.begin(); it != coastPoints.end(); ++it )
 		{
 			const CVec3 vPos( it->x, it->y, 0 );
 			vBBMin.Minimize( vPos );
@@ -981,7 +983,7 @@ public:
 	}
 };
 
-typedef hash_map<int, int> CVertsHash;
+typedef std::unordered_map<int, int> CVertsHash;
 
 static CArray2D<float> randOffsets;
 
@@ -1163,8 +1165,8 @@ void CShaderWater::Recalc()
 }
 
 void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
-																				const vector<NWaterStuff::SWaterParams> &waterParams,
-																				const vector<NWaterStuff::SSurfBorder> &waterBorders,
+																				const std::vector<NWaterStuff::SWaterParams> &waterParams,
+																				const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 																				NGScene::IGameView *_pGScene,
 																				const NDb::SWater *pWater )
 {
@@ -1228,15 +1230,15 @@ void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
 }
 
 void CWaterController::InitOceanWater( const CArray2D<BYTE> &seaMap,
-																			 const vector<NWaterStuff::SWaterParams> &waterParams,
-																			 const vector<NWaterStuff::SSurfBorder> &waterBorders,
+																			 const std::vector<NWaterStuff::SWaterParams> &waterParams,
+																			 const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 																			 NGScene::IGameView *_pGScene,
 																			 const NDb::SWater *pWater,
 																			 float fWinterDirection )
 {
 	// init waves
 	waves.resize( DEF_WAVES_NUM );
-	for ( vector<SWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )
+	for ( std::vector<SWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )
 	{
 		it->fAmplitude = DEF_WAVES_AMPLITUDE;
 		it->fDeepWaveNumber = DEF_WAVES_DEEP_WAVE_NUMBER;

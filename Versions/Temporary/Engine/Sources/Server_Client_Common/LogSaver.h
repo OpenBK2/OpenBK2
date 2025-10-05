@@ -1,5 +1,5 @@
 #pragma once
 
-IBinSaver* CreateLogSaver( string *pszLog );
+IBinSaver* CreateLogSaver( std::string *pszLog );
 
 

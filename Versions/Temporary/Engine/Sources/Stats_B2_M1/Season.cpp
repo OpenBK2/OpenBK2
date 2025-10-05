@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::ESeason eValue )
+std::string EnumToString( NDb::ESeason eValue )
 {
 	switch ( eValue )
 	{
@@ -31,7 +31,7 @@ string EnumToString( NDb::ESeason eValue )
 	}
 }
 
-NDb::ESeason NDb::StringToEnum_NDb_ESeason( const string &szValue )
+NDb::ESeason NDb::StringToEnum_NDb_ESeason( const std::string &szValue )
 {
 	if ( szValue == "SEASON_WINTER" )
 		return NDb::SEASON_WINTER;
@@ -48,7 +48,7 @@ NDb::ESeason NDb::StringToEnum_NDb_ESeason( const string &szValue )
 	return NDb::SEASON_WINTER;
 }
 
-string EnumToString( NDb::EDayNight eValue )
+std::string EnumToString( NDb::EDayNight eValue )
 {
 	switch ( eValue )
 	{
@@ -65,7 +65,7 @@ string EnumToString( NDb::EDayNight eValue )
 	}
 }
 
-NDb::EDayNight NDb::StringToEnum_NDb_EDayNight( const string &szValue )
+NDb::EDayNight NDb::StringToEnum_NDb_EDayNight( const std::string &szValue )
 {
 	if ( szValue == "DAY_MORNING" )
 		return NDb::DAY_MORNING;

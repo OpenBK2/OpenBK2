@@ -17,7 +17,7 @@ static void OnThrashing();
 
 // INew2DTexAllocCallback
 
-static list<INew2DTexAllocCallback*> alloc2Dcallback;
+static std::list<INew2DTexAllocCallback*> alloc2Dcallback;
 INew2DTexAllocCallback::INew2DTexAllocCallback()
 {
 	alloc2Dcallback.push_back( this );
@@ -30,12 +30,12 @@ INew2DTexAllocCallback::~INew2DTexAllocCallback()
 
 static void InformNew2DTextureAlloc()
 {
-	for ( list<INew2DTexAllocCallback*>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
+	for ( std::list<INew2DTexAllocCallback*>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
 		(*i)->NewTextureWasAllocated();
 }
 
 
-static list<CPtr<CLockable> > lockableList;
+static std::list<CPtr<CLockable> > lockableList;
 bool bWasLinearBufferLock;
 
 template <class T>
@@ -48,7 +48,7 @@ T* RegisterDXBuffer( T *p )
 void FreeLinearBuffers()
 {
 	EraseInvalidRefs( &lockableList );
-	for ( list<CPtr<CLockable> >::iterator i = lockableList.begin(); i != lockableList.end(); )
+	for ( std::list<CPtr<CLockable> >::iterator i = lockableList.begin(); i != lockableList.end(); )
 	{
 		CLockable *p = *i;
 		if ( IsValid( p ) )
@@ -78,9 +78,9 @@ class CLinearBuffer : public CObjectBase
 	bool bAccountQueueDepth;
 	struct SBuffersPerFrame
 	{
-		vector<CObj<TUserObject> > data;
+		std::vector<CObj<TUserObject> > data;
 	};
-	list<SBuffersPerFrame> frames;
+	std::list<SBuffersPerFrame> frames;
 public:
 	CLinearBuffer() {}
 	CLinearBuffer( int _nSize, int _nStride, int _nFormatID, ETrueBufferUsage usage ) : nFormatID(_nFormatID), nStride(_nStride), bIsThrashing(false)
@@ -93,7 +93,7 @@ public:
 		root.nSize = nFibSize;
 		root.nShift = 0;
 		pCache->AddRoot( root );
-		frames.push_front();
+		frames.emplace_front();
 		if ( usage == DYNAMIC )
 		{
 			//bFlushBufferOnNewFrame = true;
@@ -175,7 +175,8 @@ public:
 		int nReserve = 10;
 		if ( !frames.empty() )
 			nReserve = frames.front().data.size() + 64;
-		frames.insert( frames.begin() )->data.reserve( nReserve );
+		frames.emplace_front();
+		frames.front().data.reserve(nReserve);
 		// remove all elements for dynamic buffer
 		if ( bFlushBufferOnNewFrame )
 			pCache->Clear();
@@ -206,7 +207,7 @@ public:
 	void DrawRU( CTexture *pTarget )
 	{
 		CTextureLock<SPixel8888> tl( pTarget, 0, INPLACE );
-		vector<CCache::SStatePlace> places;
+		std::vector<CCache::SStatePlace> places;
 		pCache->GetState( &places );
 		for ( int y = 0; y < tl.GetSizeY(); ++y )
 			for ( int x = 0; x < tl.GetSizeX(); ++x )
@@ -308,7 +309,7 @@ class CTriListWrapper;
 class CTriListWrapperHandle
 {
 	int nSlowCheck;
-	list<CMObj<CTriListWrapper> > wrappers;
+	std::list<CMObj<CTriListWrapper> > wrappers;
 public:
 	template<class T>
 	CTriListWrapper* NewWrapper( T *pThis, int nTris )
@@ -325,7 +326,7 @@ public:
 class CTriListCore: public ILinearBuffer, public CTriList, public CTriListWrapperHandle
 {
 	OBJECT_NOCOPY_METHODS(CTriListCore);
-	vector<S3DTriangle> data;
+	std::vector<S3DTriangle> data;
 	int nSize;
 public:
 	CTriListCore( int _nSize = 0 ) : data(_nSize), nSize(_nSize) {}
@@ -336,7 +337,7 @@ public:
 	virtual void* Lock() { return &data[0]; }
 	virtual void Unlock() {}
 
-	virtual const vector<S3DTriangle>& GetTris() const { return data; }
+	virtual const std::vector<S3DTriangle>& GetTris() const { return data; }
 	virtual int GetTrisNumber() const { return GetSize(); }
 	virtual CTriListWrapper* CreateWrapper( int nTris ) { return NewWrapper( this, nTris ); }
 	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) { ASSERT( 0 ); }
@@ -386,7 +387,7 @@ class CTriListWrapper: public CTriList, public ISomeBuffer
 public:
 	CTriListWrapper() {}
 	CTriListWrapper( ISomeBuffer *_p, int _nTris ): pParent(_p), nTris(_nTris) {}
-	virtual const vector<S3DTriangle>& GetTris() const { return dynamic_cast<CTriList*>(pParent.GetPtr())->GetTris(); }
+	virtual const std::vector<S3DTriangle>& GetTris() const { return dynamic_cast<CTriList*>(pParent.GetPtr())->GetTris(); }
 	virtual int GetTrisNumber() const { return nTris; }
 	int GetFormatID() const { ASSERT( IsValid( pParent ) ); return pParent->GetFormatID(); }
 	void SetSize( int _nSize ) { ASSERT( IsValid( pParent ) && _nSize <= pParent->GetSize() ); nTris = _nSize; }
@@ -505,7 +506,7 @@ class CSurfaceRing: public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CSurfaceRing );
 public:
-	vector< CObj<CSysTexture> > textures;
+	std::vector< CObj<CSysTexture> > textures;
 	int nCurrent;
 	//
 	CSurfaceRing() { ASSERT( 0 ); }
@@ -558,7 +559,7 @@ struct SD3DFormatHash
 {
 	int operator()( D3DFORMAT f ) const { return (int)f; }
 };
-typedef hash_map<D3DFORMAT, CPtr<CSurfaceRing>, SD3DFormatHash > CFormatRingMap;
+typedef std::unordered_map<D3DFORMAT, CPtr<CSurfaceRing>, SD3DFormatHash > CFormatRingMap;
 static CFormatRingMap sysTextures;
 
 CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_rect, EAccess _access, D3DFORMAT format, IDirect3DTexture9 *_pTexture )
@@ -863,7 +864,7 @@ public:
 	void DrawRU()
 	{
 		CTextureLock<SPixel8888> tl( pTexture, 0, INPLACE );
-		vector<CCache::SStatePlace> places;
+		std::vector<CCache::SStatePlace> places;
 		pCache->GetState( &places );
 		for ( int y = 0; y < tl.GetSizeY(); ++y )
 			for ( int x = 0; x < tl.GetSizeX(); ++x )
@@ -909,7 +910,7 @@ class CLRUBuffersSet
 
 		STex( TBuf *_pTB ): pTB(_pTB) {}
 	};
-	list<STex> textures;
+	std::list<STex> textures;
 protected:
 	void AddBuffer( TBuf *_pTB ) { textures.push_back( STex( _pTB ) ); }
 	virtual THandle* CreateHandle( TBuf *p ) = 0;
@@ -917,7 +918,7 @@ public:
 	void Clear() { textures.clear(); }
 	void Walk()
 	{
-		for ( list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( std::list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			ASSERT( IsValid( i->pTB ) );
 			if ( !IsValid( i->pTexture ) )
@@ -929,7 +930,7 @@ public:
 		// pick best
 		NCache::MRU_TYPE nBest = nCurrentFrame - 1; //MRU_LAST;
 		STex *pBest = 0;
-		for ( list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( std::list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			if ( !IsValid( i->pTexture ) )
 			{
@@ -1312,16 +1313,16 @@ struct SGeometryTypeHash
 
 
 // all DX buffers
-static list< CMObj<CObjectBase> > lostable;
-static list< CMObj<CObjectBase> > managed;
-typedef hash_map<CPtr<CTB>, CObj<CTexture>, SPtrHash> CTexContainerHash;
+static std::list< CMObj<CObjectBase> > lostable;
+static std::list< CMObj<CObjectBase> > managed;
+typedef std::unordered_map<CPtr<CTB>, CObj<CTexture>, SPtrHash> CTexContainerHash;
 static CTexContainerHash texContainers;
-typedef hash_map<SRenderTargetDesc, CTextureBuffersSet, SRTDescHash> CRTCache;
+typedef std::unordered_map<SRenderTargetDesc, CTextureBuffersSet, SRTDescHash> CRTCache;
 static CRTCache rtCache;
-typedef hash_map<SRenderTargetDesc, CCubemapBufferSet, SRTDescHash> CCMCache;
+typedef std::unordered_map<SRenderTargetDesc, CCubemapBufferSet, SRTDescHash> CCMCache;
 static CCMCache cmCache;
 static CTextureCache textureCache, transparentCache;
-typedef hash_map<SGeometryType, CObj<CGeometryBuffer>,SGeometryTypeHash > CGeometryCacheHash;
+typedef std::unordered_map<SGeometryType, CObj<CGeometryBuffer>,SGeometryTypeHash > CGeometryCacheHash;
 static CGeometryCacheHash geometries;
 static CDynamicTrisIndices32 dynamicTris32;
 static CDynamicTrisIndices16 dynamicTris16;
@@ -1626,7 +1627,7 @@ struct STextureSizeHash
 {
 	int operator()( const STextureSize &a ) const { return ( a.nXSize ^ ( a.nYSize << 9 ) ) * a.nMips; }
 };
-typedef hash_map<STextureSize, CObj<CTexture>, STextureSizeHash> CTextureMipHash;
+typedef std::unordered_map<STextureSize, CObj<CTexture>, STextureSizeHash> CTextureMipHash;
 static CTextureMipHash mipDrawTextures;
 static CTexture *MakeMipDrawTexture( CTexture *pTex )
 {
@@ -1716,7 +1717,7 @@ void AddPrimitiveGeometry( CGeometry *pGeom, CTriList *pTriList, int nBaseVertex
 	pGeom->DoTouch();
 	ASSERT( nBaseVertex >= 0 && nVertices > 0 );
 	ASSERT( nBaseVertex + nVertices <= pGeom->GetVBSize());
-	const vector<S3DTriangle> &tris = pTriList->GetTris();
+	const std::vector<S3DTriangle> &tris = pTriList->GetTris();
 	int nTris = pTriList->GetTrisNumber();
 	int nVBStart = pGeom->GetVBStart() + nBaseVertex, nVBSize = nVertices;
 	if ( bBan32BitIndices )
@@ -1868,7 +1869,7 @@ void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *_pSr
 int CalcTouchedTextureSize()
 {
 	int nRes = 0;
-	for ( list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
@@ -1880,7 +1881,7 @@ int CalcTouchedTextureSize()
 int CalcTotalTextureSize( int *pnTexturesCount )
 {
 	int nRes = 0, nCount = 0;
-	for ( list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) )
@@ -1897,7 +1898,7 @@ int CalcTotalTextureSize( int *pnTexturesCount )
 int CalcTouchedTextureSizeNotSetMip( int nMip )
 {
 	int nRes = 0;
-	for ( list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
@@ -1908,7 +1909,7 @@ int CalcTouchedTextureSizeNotSetMip( int nMip )
 
 void SetLODToAllTextures( int nLOD )
 {
-	for ( list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) )
@@ -1985,7 +1986,7 @@ void TypeStats( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 		csSystem << " ok" << endl;
 }
 
-static void ShowCacheStats( const string &szID, const vector<wstring> &szParams, void *pContext )
+static void ShowCacheStats( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
 	{
@@ -1997,11 +1998,11 @@ static void ShowCacheStats( const string &szID, const vector<wstring> &szParams,
 		TypeStats( i->second.GetPtr() );
 	}
 }
-static void ShowFill2D( const string &szID, const vector<wstring> &szParams, void *pContext )
+static void ShowFill2D( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	bFill2d = !bFill2d;
 }
-static void ShowFillTransp( const string &szID, const vector<wstring> &szParams, void *pContext )
+static void ShowFillTransp( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	bFillTransp = !bFillTransp;
 }

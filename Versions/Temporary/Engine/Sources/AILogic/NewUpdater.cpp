@@ -10,6 +10,8 @@
 #include "Artillery.h"
 #include "Soldier.h"
 
+#include <algorithm>
+
 //#define N_GRIDCELL_SIZE 8
 
 CEventUpdater updater;
@@ -19,7 +21,7 @@ extern SCheats theCheats;
 
 //CUpdateData
 
-hash_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
+std::unordered_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
 REGISTER_SAVELOAD_CLASS_NM( 0x110B2C80, CUpdateData , CEventUpdater );
 //REGISTER_SAVELOAD_CLASS_NM( 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
 
@@ -82,7 +84,7 @@ void CEventUpdater::CUpdateData::Init()
 
 SAIBasicUpdate* CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
 {
-	hash_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
+	std::unordered_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
 	if ( it != clientTransformers.end() )
 	{
 		SAIBasicUpdate *pUpdate = it->second->Transform( this, nReturnTime );
@@ -171,7 +173,7 @@ CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 	{
 		if ( pStats->animdescs.size() <= nAnimation )
 			nAnimation = NDb::ANIMATION_IDLE;
-		const vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
+		const std::vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
 		if ( !anims.empty() )
 		{
 			if ( pStats->GetTypeID() == NDb::SInfantryRPGStats::typeID )
@@ -222,7 +224,7 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	CUpdateData *pData = new CUpdateData( nTime, nCounter, eUpdateType, pObj, nParam );
 	
 	// animation processing
-	static vector<CPtr<CUpdateData> > updatesBush(3);
+	static std::vector<CPtr<CUpdateData> > updatesBush(3);
 	updatesBush.resize(0);
 
 	updatesBush.push_back( pData );
@@ -306,17 +308,17 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		pObj->GetTilesForVisibility( &tiles );
 		for ( CTilesSet::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
-			for ( vector< CPtr<CUpdateData> >::iterator itUpdate = updatesBush.begin(); itUpdate != updatesBush.end(); ++itUpdate )
+			for ( std::vector< CPtr<CUpdateData> >::iterator itUpdate = updatesBush.begin(); itUpdate != updatesBush.end(); ++itUpdate )
 				InsertSuspendedUpdate( *itUpdate, *it );
 		}
 	}
 	else
 	{
-		for ( vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+		for ( std::vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
 			pendingUpdates.push_back( *it );
 	}
 
-	for ( vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+	for ( std::vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
 		updatesHash[pObj].push_back( *it );
 
 	updatesBush.resize(0);
@@ -337,8 +339,8 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 		CUpdateMap::iterator it = updatesHash.find( pObj );
 		if ( it != updatesHash.end() )
 		{
-			list< CPtr< CUpdateData > > &lst = it->second;
-			for ( list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
+			std::list< CPtr< CUpdateData > > &lst = it->second;
+			for ( std::list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
 			{
 				pData = *iit;
 				if ( eUpdateType == ACTION_NOTIFY_NONE || pData->eUpdateType == eUpdateType )
@@ -357,8 +359,8 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 	{
 		for ( CUpdateMap::iterator it = updatesHash.begin(); it != updatesHash.end(); )
 		{
-			list< CPtr< CUpdateData > > &lst = it->second;
-			for ( list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
+			std::list< CPtr< CUpdateData > > &lst = it->second;
+			for ( std::list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
 			{
 				pData = *iit;
 				if ( eUpdateType == ACTION_NOTIFY_NONE || pData->eUpdateType == eUpdateType )
@@ -422,7 +424,7 @@ void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
 	nCounter = 0;
 	if ( bShowAreas )
 	{
-		for ( list< CPtr<CUpdatableObj> >::iterator it = shootGroupUnits.begin(); it != shootGroupUnits.end(); ++it )
+		for ( std::list< CPtr<CUpdatableObj> >::iterator it = shootGroupUnits.begin(); it != shootGroupUnits.end(); ++it )
 			updater.AddUpdate( 0, eAreaType, it->GetPtr(), -1 );
 	}
 	shootGroupUnits.clear();
@@ -444,7 +446,7 @@ void CEventUpdater::PumpUpdates()
 	bool bSuspendableUpdatesChanged = false;
 	CUpdateData *pUpdate;
 	// find updates, that became visible
-	for ( hash_set<SVector, STilesHash>::const_iterator it = visibleTiles.begin(); it != visibleTiles.end(); ++it )
+	for ( std::unordered_set<SVector, STilesHash>::const_iterator it = visibleTiles.begin(); it != visibleTiles.end(); ++it )
 	{
 		TUpdatesList &lst = suspended[(*it).y][(*it).x];
 		for ( TUpdatesList::const_iterator lit = lst.begin(); lit != lst.end(); ++lit )
@@ -576,15 +578,15 @@ struct SUpdateInfo
 	SUpdateInfo() : nValidCount( 0 ), nInvalidCount( 0 ) {}
 };
 
-typedef hash_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info
+typedef std::unordered_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info
 
-typedef hash_map<int, TDumpUpdatesHash> TDumpObjectsHash; // object id (-1 for invalid) -> object's updates
+typedef std::unordered_map<int, TDumpUpdatesHash> TDumpObjectsHash; // object id (-1 for invalid) -> object's updates
 
 void CEventUpdater::DumpSizes()
 {
 	TDumpUpdatesHash allUpdates;
 	TDumpObjectsHash objects;
-	vector<int> objectsID;
+	std::vector<int> objectsID;
 
 	for ( int x = 0; x < suspended.GetSizeX(); ++x )
 	{
@@ -617,10 +619,10 @@ void CEventUpdater::DumpSizes()
 			}
 		}
 	}
-	sort( objectsID.begin(), objectsID.end() );
+	std::sort( objectsID.begin(), objectsID.end() );
 
-	string str1 = "Unit";
-	string str2 = "Total";
+	std::string str1 = "Unit";
+	std::string str2 = "Total";
 	for ( TDumpUpdatesHash::const_iterator itUpd = allUpdates.begin(); itUpd != allUpdates.end(); ++itUpd )
 	{
 		str1 = str1 + StrFmt( "\t0x%04x", itUpd->first );
@@ -628,9 +630,9 @@ void CEventUpdater::DumpSizes()
 	}
 
 	DebugTrace( str1.c_str() );
-	for ( vector<int>::const_iterator it = objectsID.begin(); it != objectsID.end(); ++it )
+	for ( std::vector<int>::const_iterator it = objectsID.begin(); it != objectsID.end(); ++it )
 	{
-		string str;
+		std::string str;
 		if ( *it == -1 )
 			str = "Invalid";
 		else

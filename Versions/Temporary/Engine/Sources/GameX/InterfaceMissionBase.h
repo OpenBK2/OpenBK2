@@ -27,7 +27,7 @@ protected:
 
 	~CInterfaceMissionBase();
 public:	
-	CInterfaceMissionBase( const string &szInterfaceType, const string &szBindSection );
+	CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection );
 
 	void OnGetFocus( bool bFocus );
 	bool StepLocal( bool bAppActive );

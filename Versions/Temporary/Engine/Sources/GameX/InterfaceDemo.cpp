@@ -42,12 +42,12 @@ bool CInterfaceDemo::Init()
 	return true;
 }
 
-bool CInterfaceDemo::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceDemo::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
 
-int CInterfaceDemo::Check( const string &szCheckName ) const
+int CInterfaceDemo::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -95,7 +95,7 @@ void CInterfaceDemo::LoadSequence()
 	}
 }
 
-bool CInterfaceDemo::LoadImage( const string &szFileName )
+bool CInterfaceDemo::LoadImage( const std::string &szFileName )
 {
 	CFileStream stream( NVFS::GetMainVFS(), szFileName );
 	bool bResult = stream.IsOk();
@@ -156,12 +156,12 @@ void CICInterfaceDemo::Configure( const char *pszConfig )
 	}
 }
 
-void DemoScreen( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void DemoScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_DEMO_SCREEN, "" );
 }
 
-void DemoScreenFinal( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void DemoScreenFinal( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( !s_bExit )
 	{

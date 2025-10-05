@@ -5,7 +5,7 @@
 
 namespace NWinCursor
 {
-	SYSTEM_EXPORT HCURSOR (LoadCursor)( const string &szFileName );
+	SYSTEM_EXPORT HCURSOR (LoadCursor)( const std::string &szFileName );
 }
 
 

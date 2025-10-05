@@ -13,11 +13,11 @@ class CStormableObject
 
 	ZDATA
 	CListsSet< CPtr<CSoldier> > attackers; // атакующие для каждой из сторон
-	vector<int> nAttackers; // количество атакующих для каждой из сторон
+	std::vector<int> nAttackers; // количество атакующих для каждой из сторон
 	int nActiveAttackers;				 // количество тех атакующих, которые уже участвуют в бое
 	bool bAttackers;						 // есть ли атакующие
 
-	vector<NTimer::STime> startTimes;
+	std::vector<NTimer::STime> startTimes;
 
 	NTimer::STime lastSegment;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&attackers); f.Add(3,&nAttackers); f.Add(4,&nActiveAttackers); f.Add(5,&bAttackers); f.Add(6,&startTimes); f.Add(7,&lastSegment); return 0; }

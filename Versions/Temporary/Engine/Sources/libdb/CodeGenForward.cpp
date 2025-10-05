@@ -16,7 +16,7 @@ CForwardDefinition::CForwardDefinition( NLang::CTypeNode *pTypeNode, const CNode
 	pType = GetRealType( iter->second );
 }
 
-void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
+void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
 		return;

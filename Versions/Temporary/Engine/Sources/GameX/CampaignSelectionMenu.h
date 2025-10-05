@@ -30,18 +30,18 @@ private:
 		CPtr<ITextView> pNameView;
 		CPtr<IScrollableContainer> pDescCont;
 		CPtr<ITextView> pDescView;
-		string szBtnName;
+		std::string szBtnName;
 		int nDBCampaign;
 		CPtr<IWindow> pBackgroundWnd;
-		string szOutro;
+		std::string szOutro;
 		EPlay ePlay;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pBtn); f.Add(4,&pPictureWnd); f.Add(5,&pNameView); f.Add(6,&pDescCont); f.Add(7,&pDescView); f.Add(8,&szBtnName); f.Add(9,&nDBCampaign); f.Add(10,&pBackgroundWnd); f.Add(11,&szOutro); f.Add(12,&ePlay); return 0; }
 	};
 private:
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
-	vector< CPtr<IWindow> > campaignWnds;
-	vector<SCampaign> campaigns;
+	std::vector< CPtr<IWindow> > campaignWnds;
+	std::vector<SCampaign> campaigns;
 	int nSelected;
 	ZSKIP //vector< CPtr<IButton> > playButtons;
 	EPlay ePlay;
@@ -50,7 +50,7 @@ private:
 	CPtr<IButton> pPlayOutroBtn;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&campaignWnds); f.Add(4,&campaigns); f.Add(5,&nSelected); f.Add(7,&ePlay); f.Add(8,&pDifficulty); f.Add(9,&pPlayBtn); f.Add(10,&pPlayOutroBtn); return 0; }
 private:
-	bool OnSelectCampaign( const string &szSender );
+	bool OnSelectCampaign( const std::string &szSender );
 	bool OnBack();
 	bool OnPlay();
 	bool OnPlayOutro();
@@ -63,8 +63,8 @@ public:
 	CInterfaceCampaignSelectionMenu();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 
 	bool Init();

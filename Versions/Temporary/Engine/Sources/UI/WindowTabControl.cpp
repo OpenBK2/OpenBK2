@@ -137,9 +137,9 @@ void CWindowTabControl::Init()
 	}
 }
 
-const string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pTab )
+const std::string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pTab )
 {
-	tabNames.resize( Max( tabNames.size(), nTab + 1 ) );
+	tabNames.resize( Max<int>( tabNames.size(), nTab + 1 ) );
 	if ( tabNames[nTab].empty() || pTab )
 	{
 		if ( pTab )
@@ -155,7 +155,7 @@ const string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pTab )
 	return tabNames[nTab];
 }
 
-void CWindowTabControl::AddTab( const wstring &szButtonName, CWindow *pTab )
+void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab )
 {
 	// if we have buttons, add button
 	
@@ -183,7 +183,7 @@ void CWindowTabControl::AddTab( const wstring &szButtonName, CWindow *pTab )
 	++nTabNumber;
 }
 
-void CWindowTabControl::AddTab( const wstring &szButtonName )
+void CWindowTabControl::AddTab( const std::wstring &szButtonName )
 {
 	// add container
 	CWindow * pNewTab = checked_cast<CWindow*>( CUIFactory::MakeWindow( pShared->pContainerSample ) );

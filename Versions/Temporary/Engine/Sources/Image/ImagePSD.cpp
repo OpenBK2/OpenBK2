@@ -11,13 +11,13 @@ enum EStreamSeek
 namespace NImage
 {
 	// Storage type for RLE-lines-like data
-	typedef vector<char> CData1D;
+	typedef std::vector<char> CData1D;
 
 	// Storage type for RLE-channel-like data
-	typedef vector<CData1D> CData2D;
+	typedef std::vector<CData1D> CData2D;
 
 	// Storage type for RLE-image-like data
-	typedef vector<CData2D> CData3D;
+	typedef std::vector<CData2D> CData3D;
 
 	class CReadPSD
 	{
@@ -271,7 +271,7 @@ namespace NImage
 			PSimg2D = rPS.GetRAWimage( nChannels, nHeight, nWidth );
 		}
 
-		vector<DWORD> image;
+		std::vector<DWORD> image;
 		image.resize( nSize );
 
 		for ( int i = 0; i < nSize; ++i )

@@ -15,8 +15,8 @@ class CCombatEstimator
 			:time( time ), fDamage( fDamage ) { }
 	};
 
-	typedef hash_set<int> CRegisteredUnits;
-	typedef list<SShellInfo> CShellTimes;
+	typedef std::unordered_set<int> CRegisteredUnits;
+	typedef std::list<SShellInfo> CShellTimes;
 ZDATA
 	float fDamage;
 	CRegisteredUnits registeredMechUnits;			// вражескте юниты (не пехота)с ненулевой текущей скоростью

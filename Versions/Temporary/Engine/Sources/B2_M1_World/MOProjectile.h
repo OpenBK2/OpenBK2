@@ -50,7 +50,7 @@ public:
 
 	void SetM1Info( CMapObj *_pTarget, const NDb::SWeaponRPGStats *pWeapon, int nShell, bool bTraceTargetIntersection, float fDamage );
 
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 };
 

@@ -55,10 +55,10 @@ class CSoldier : public CAIUnit
 	NTimer::STime nextPathSegmTime;
 	NTimer::STime nextLogicSegmTime;
 	
-	list< CPtr<CMineStaticObject> > detonatableCharges;
-	pair<int,int> numControlledCharges;
-	pair<int,int> numBlastingCharges;
-	pair<int,int> numLandMines;
+	std::list< CPtr<CMineStaticObject> > detonatableCharges;
+	std::pair<int,int> numControlledCharges;
+	std::pair<int,int> numBlastingCharges;
+	std::pair<int,int> numLandMines;
 
 	bool bBeingHealed;
 	public:

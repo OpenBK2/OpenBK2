@@ -10,7 +10,7 @@
 
 #include <zconf.h>
 
-void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const string &szAnimatedWindow )
+void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const std::string &szAnimatedWindow )
 { 
 	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move*>( _pCmd ) );
 	NI_VERIFY( pCmd, "no command", return );

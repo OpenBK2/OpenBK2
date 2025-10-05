@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "aiInterval.h"
+
+#include <algorithm>
+
 namespace NAI
 {
 
@@ -13,13 +16,13 @@ static bool CmpFloat( const float &a, const float &b )
 }
 template<class T, class TFunc, class TCompare>
 void CalcResult( 
-	vector<T> *pEnter, 
-	vector<T> *pExit, 
+	std::vector<T> *pEnter,
+	std::vector<T> *pExit,
 	bool bTerrain,
 	TFunc make, TCompare compare )
 {
-	vector<T> &enter = *pEnter;
-	vector<T> &exit = *pExit;
+	std::vector<T> &enter = *pEnter;
+	std::vector<T> &exit = *pExit;
 	if ( !bTerrain )
 	{
 		if ( enter.size() != exit.size() )
@@ -49,15 +52,15 @@ void CalcResult(
 static SInterval::SCrossPoint MakeCross( float f ) { return SInterval::SCrossPoint( f, CVec3(0,0,1) ); }
 static float MakeFloat( float f ) { return f; }
 
-void FillIntersectionResults( vector<SInterval> *pRes,
-	vector<SInterval::SCrossPoint> *pEnter,
-	vector<SInterval::SCrossPoint> *pExit,
+void FillIntersectionResults( std::vector<SInterval> *pRes,
+	std::vector<SInterval::SCrossPoint> *pEnter,
+	std::vector<SInterval::SCrossPoint> *pExit,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain )
 {
-	vector<SInterval::SCrossPoint> &enter = *pEnter;
-	vector<SInterval::SCrossPoint> &exit = *pExit;
-	sort( enter.begin(), enter.end(), CmpCrosses );
-	sort( exit.begin(), exit.end(), CmpCrosses );
+	std::vector<SInterval::SCrossPoint> &enter = *pEnter;
+	std::vector<SInterval::SCrossPoint> &exit = *pExit;
+	std::sort( enter.begin(), enter.end(), CmpCrosses );
+	std::sort( exit.begin(), exit.end(), CmpCrosses );
 	CalcResult( &enter, &exit, bTerrain, MakeCross, CmpCrosses );
 	for ( int i = 0; i < Min( enter.size(), exit.size() ); ++i )
 	{
@@ -70,15 +73,15 @@ void FillIntersectionResults( vector<SInterval> *pRes,
 	}
 }	
 
-void FillIntersectionResults( vector<SSimpleInterval> *pRes,
-	vector<float> *pEnter, 
-	vector<float> *pExit,
+void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
+	std::vector<float> *pEnter,
+	std::vector<float> *pExit,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain )
 {
-	vector<float> &enter = *pEnter;
-	vector<float> &exit = *pExit;
-	sort( enter.begin(), enter.end() );
-	sort( exit.begin(), exit.end() );
+	std::vector<float> &enter = *pEnter;
+	std::vector<float> &exit = *pExit;
+	std::sort( enter.begin(), enter.end() );
+	std::sort( exit.begin(), exit.end() );
 	CalcResult( &enter, &exit, bTerrain, MakeFloat, CmpFloat );
 	for ( int i = 0; i < Min( enter.size(), exit.size() ); ++i )
 	{
@@ -92,9 +95,9 @@ static bool CompareSimpleIntervals( const SSimpleInterval &i1, const SSimpleInte
 	return i1.fEnter < i2.fEnter;
 }
 
-void SortSimpleIntervals( vector<SSimpleInterval> *pRes )
+void SortSimpleIntervals( std::vector<SSimpleInterval> *pRes )
 {
-	sort( pRes->begin(), pRes->end(), CompareSimpleIntervals );
+	std::sort( pRes->begin(), pRes->end(), CompareSimpleIntervals );
 }
 
 static bool CompareIntervals( const SInterval &a, const SInterval &b )
@@ -102,9 +105,9 @@ static bool CompareIntervals( const SInterval &a, const SInterval &b )
 	return a.enter.fT < b.enter.fT;
 }
 
-void SortIntervals( vector<SInterval> *pRes )
+void SortIntervals( std::vector<SInterval> *pRes )
 {
-	sort( pRes->begin(), pRes->end(), CompareIntervals );
+	std::sort( pRes->begin(), pRes->end(), CompareIntervals );
 }
 
 }

@@ -147,7 +147,7 @@ static int checkname (LexState *ls) {
 
 static int luaI_registerlocalvar (LexState *ls, TString *varname) {
   Proto *f = ls->fs->f;
-	LocVar &res = *f->locvars.insert( f->locvars.end() );
+	LocVar &res = f->locvars.emplace_back();
 	res.varname = varname;
   return f->locvars.size() - 1;
 }

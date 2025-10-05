@@ -33,7 +33,7 @@ CTypeDefinition::CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2Type
 	NI_ASSERT( !pType->GetTypeName().empty(), "type with empty name" );
 }
 
-static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *pEnum, const string &szTabs, const string &szQualifiedName )
+static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *pEnum, const std::string &szTabs, const std::string &szQualifiedName )
 {
 	pCode->h << endl;
 
@@ -49,9 +49,9 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	}
 	pCode->h << szTabs + "};" << endl;
 
-	const string szFullQualifiedName = szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pEnum, 0 );
+	const std::string szFullQualifiedName = szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pEnum, 0 );
 
-	string szUnderlinedName( szFullQualifiedName );
+	std::string szUnderlinedName( szFullQualifiedName );
 	int nCnt = 0;
 	int i = 0;
 	while ( i < szUnderlinedName.size() )
@@ -69,8 +69,8 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	szUnderlinedName.resize( nCnt );
 	szUnderlinedName = "NDb::StringToEnum_" + szUnderlinedName;
 
-	const string szQualifiedNameWithoutNDB = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
-	const string szUnderlinedNameWithoutNDB = szUnderlinedName.substr( 5, szUnderlinedName.size() );
+	const std::string szQualifiedNameWithoutNDB = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
+	const std::string szUnderlinedNameWithoutNDB = szUnderlinedName.substr( 5, szUnderlinedName.size() );
 	pCode->hEOF << separator;
 	pCode->hEOF << "namespace NDb" << endl;
 	pCode->hEOF << "{" << endl;
@@ -124,9 +124,9 @@ enum EStructType
 	EST_CLASS_TERMINAL,
 };
 
-static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const string &szFullQualifiedName )
+static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const std::string &szFullQualifiedName )
 {
-	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
+	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
 	if ( eType != EST_STRUCT )
 		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo() const" << endl;
 	else
@@ -164,8 +164,8 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 			continue;
 
 		NDb::NTypeDef::STypeDef *pFieldType = field.pType;
-		const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
-		const string szParamsPrefix = eType == EST_STRUCT ? "szAddName + " : "";
+		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+		const std::string szParamsPrefix = eType == EST_STRUCT ? "szAddName + " : "";
 		switch ( pFieldType->eType )
 		{
 		case NDb::NTypeDef::TYPE_TYPE_ARRAY:
@@ -183,7 +183,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 			pCode->cpp << tab << "NMetaInfo::ReportStructMetaInfo( " << szParamsPrefix << qcomma << field.szName << qcomma << ", &" << szCodeFieldName << ", pThis ); " << endl;
 			break;
 		default:
-			const string szEnumTypeName = 
+			const std::string szEnumTypeName =
 				pFieldType->eType == NDb::NTypeDef::TYPE_TYPE_CLASS ?
 				SKnownEnum<NDb::NTypeDef::ETypeType>::ToString( NDb::NTypeDef::TYPE_TYPE_REF ) :
 			SKnownEnum<NDb::NTypeDef::ETypeType>::ToString( pFieldType->eType );
@@ -198,15 +198,15 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 	pCode->cpp << "}" << endl;
 }
 
-static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const string &szFullQualifiedName )
+static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const std::string &szFullQualifiedName )
 {
-	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
+	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
 	pCode->cpp << "int " << szQualifiedName << "::operator&( IXmlSaver &saver )" << endl;
 	pCode->cpp << "{" << endl;
 
 	if ( eType == EST_CLASS_TERMINAL )
 		pCode->cpp << tab << "NMetaInfo::STerminalClassReporter reporter( this, saver );" << endl;
-	
+
 	if ( pStructBase->pBaseType != 0 )
 		pCode->cpp << tab << "saver.AddTypedSuper( (" << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 ) << "*)(this) );" << endl;
 
@@ -216,7 +216,7 @@ static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 		if ( IsNoCode( field ) )
 			continue;
 
-		const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		pCode->cpp << tab << "saver.Add( " << qcomma << field.szName << qcomma << ", &" << szCodeFieldName << " );" << endl;
 	}
 	pCode->cpp << endl;
@@ -233,9 +233,9 @@ struct SFieldSort
 	}
 };
 
-static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const string &szFullQualifiedName )
+static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szFullQualifiedName )
 {
-	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
+	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
 	pCode->cpp << "int " << szQualifiedName << "::operator&( IBinSaver &saver )" << endl;
 	pCode->cpp << "{" << endl;
 
@@ -251,7 +251,7 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 		if ( IsNoCode( field ) )
 			continue;
 
-		const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		pCode->cpp << tab << "saver.Add( " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
 	}
 
@@ -291,9 +291,9 @@ static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 	return false;
 }
 
-static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const string &szFullQualifiedName )
+static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szFullQualifiedName )
 {
-	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
+	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
 	pCode->cpp << "DWORD " << szQualifiedName <<"::CalcCheckSum() const" << endl;
 	pCode->cpp << "{" << endl;
 
@@ -336,7 +336,7 @@ static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 		}
 		bStartedWriteCheckSum = true;
 
-		const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		pCode->cpp << " << " << szCodeFieldName;
 	}
 
@@ -353,7 +353,7 @@ static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 	pCode->cpp << "}" << endl;
 }
 
-static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const string &szFullQualifiedName )
+static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const std::string &szFullQualifiedName )
 {
 	pCode->cpp << endl;
 
@@ -375,7 +375,7 @@ static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode, NDb::NTypeDef
 	pCode->cpp << separator;
 }
 
-static hash_map<string, string> defaultValues;
+static std::unordered_map<std::string, std::string> defaultValues;
 struct SSetDefaultValues
 {
 	SSetDefaultValues()
@@ -391,14 +391,14 @@ struct SSetDefaultValues
 
 } setDefaultValues;
 
-static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const string &szTabs )
+static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szTabs )
 {
 	pCode->h << szTabs << tab << NHungarian::GetTypeNameInCode( pStructBase, 0 ) << "() ";
 	if ( pStructBase->fields.empty() )
 		pCode->h << "{ }" << endl;
 	else
 	{
-		bool bFirst = true;		
+		bool bFirst = true;
 		if ( !IsNoCheckSum( pStructBase ) )
 		{
 			pCode->h << ":" << endl << szTabs << tab << tab << "__dwCheckSum( 0 )";
@@ -412,13 +412,13 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 
 			if ( field.defaultValue.IsNull() && field.complexDefaultValue.IsNull() )
 			{
-				const string szFieldTypeName = field.pType->GetTypeName();
+				const std::string szFieldTypeName = field.pType->GetTypeName();
 				bool bHasDefaultValue =
 					defaultValues.find( szFieldTypeName ) != defaultValues.end() ||
 					field.pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM;
 				if ( bHasDefaultValue )
 				{
-					const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+					const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 					if ( bFirst )
 					{
 						bFirst = false;
@@ -427,7 +427,7 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 					else
 						pCode->h << "," << endl;
 
-					string szValue;
+					std::string szValue;
 					if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
 					{
 						CDynamicCast<NDb::NTypeDef::STypeEnum> pEnum = field.pType;
@@ -442,13 +442,13 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 			else
 			{
 				const CVariant &value = field.defaultValue.IsNull() ? field.complexDefaultValue : field.defaultValue;
-				string szValue;
+				std::string szValue;
 				if ( value.GetType() == CVariant::VT_STR )
 				{
 					if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM || field.defaultValue.IsNull() )
 						szValue = value.GetStr();
 					else
-						szValue = string("\"") + value.GetStr() + "\"";
+						szValue = std::string("\"") + value.GetStr() + "\"";
 				}
 				else if ( value.GetType() == CVariant::VT_WSTR )
 				{
@@ -461,7 +461,7 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 				if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_REF )
 					szValue = "NDb::Get(CDBID(" + szValue + "))";
 
-				const string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
+				const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 				if ( bFirst )
 				{
 					bFirst = false;
@@ -484,24 +484,24 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 	}
 }
 
-static void GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttributes *pAttr, const string &szTabs )
+static void GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttributes *pAttr, const std::string &szTabs )
 {
 	if ( pAttr == 0 )
 		return;
 
-	hash_map<string, CVariant> &attr = pAttr->attributes;
-	hash_map<string, CVariant>::iterator iter = attr.find( "type_defs" );
+	std::unordered_map<std::string, CVariant> &attr = pAttr->attributes;
+	std::unordered_map<std::string, CVariant>::iterator iter = attr.find( "type_defs" );
 	if ( iter == attr.end() )
 		return;
 
-	const string szTypeDefs = iter->second.GetStr();
-	vector<string> typedefs;
+	const std::string szTypeDefs = iter->second.GetStr();
+	std::vector<std::string> typedefs;
 	NStr::SplitString( szTypeDefs, &typedefs, ';' );
 	for ( int i = 0; i < typedefs.size() - 1; i += 2 )
 		pCode->h << szTabs << "typedef " << typedefs[i] << " " << typedefs[i+1] << ";" << endl;
 }
 
-static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const string &szTabs, ICode *pNamespace, const string &szQualifiedName )
+static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const std::string &szTabs, ICode *pNamespace, const std::string &szQualifiedName )
 {
 	pCode->h << endl;
 
@@ -538,14 +538,14 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 	pCode->h << szTabs << "};" << endl;
 }
 
-static void GenerateStruct( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const string &szTabs, ICode *pNamespace, const string &szQualifiedName )
+static void GenerateStruct( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const std::string &szTabs, ICode *pNamespace, const std::string &szQualifiedName )
 {
-	const string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pStruct, 0 ) );
+	const std::string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pStruct, 0 ) );
 	GenerateStructHFileAndNestedTypes( pCode, pStruct, szTabs, pNamespace, szNewQualifiedName );
 	GenerateBaseStructCPPFile( pCode, pStruct, EST_STRUCT, szNewQualifiedName );
 }
 
-static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const string &szTabs, ICode *pNamespace, const bool bTerminal, const string &szQualifiedName )
+static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const std::string &szTabs, ICode *pNamespace, const bool bTerminal, const std::string &szQualifiedName )
 {
 	pCode->h << endl;
 
@@ -597,9 +597,9 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 	pCode->h << szTabs << "};" << endl;
 }
 
-static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const string &szTabs, ICode *pNamespace, const bool bTerminal, const string &szQualifiedName )
+static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const std::string &szTabs, ICode *pNamespace, const bool bTerminal, const std::string &szQualifiedName )
 {
-	const string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pClass, 0 ) );
+	const std::string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pClass, 0 ) );
 	GenerateClassHFileAndNestedTypes( pCode, pClass, szTabs, pNamespace, bTerminal, szNewQualifiedName );
 	GenerateBaseStructCPPFile( pCode, pClass, bTerminal ? EST_CLASS_TERMINAL : EST_CLASS_NOT_TERMINAL, szNewQualifiedName );
 
@@ -609,7 +609,7 @@ static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass
 		pCode->cppEOF << "BASIC_REGISTER_DATABASE_CLASS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 }
 
-void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
+void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
 		return;

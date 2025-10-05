@@ -51,7 +51,7 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 	NI_VERIFY( pItem, "Wrong window", return );
 	CDynamicCast<CTextData> pInfo = pData;
 
-	wstring wszText = L"";
+	std::wstring wszText = L"";
 	if ( pInfo )
 		wszText = pInfo->wszText;	
 

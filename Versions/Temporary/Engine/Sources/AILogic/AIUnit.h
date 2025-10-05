@@ -42,9 +42,9 @@ class CAIUnit: public CCommonUnit
 
 	SAIAngle wWisibility;											// informatin about visibility for every player
 	NTimer::STime lastAckTime;
-	vector<int> visible4Party;
-	vector<NTimer::STime> lastTimeOfVis;
-	vector<int> bCountToDissapear;
+	std::vector<int> visible4Party;
+	std::vector<NTimer::STime> lastTimeOfVis;
+	std::vector<int> bCountToDissapear;
 
 	float fTakenDamagePower;
 	int nGrenades;
@@ -70,7 +70,7 @@ class CAIUnit: public CCommonUnit
 	NDb::EReinforcementType eReinforcementType;
 	bool bRestInside; // mech unit inside mech unit
 	SUnitProfile unitProfile;
-	list< CPtr<CAIUnit> > targetsCache;
+	std::list< CPtr<CAIUnit> > targetsCache;
 	NTimer::STime realScanDuration;
 	NTimer::STime lastScanTime;
 protected:

@@ -14,7 +14,7 @@ namespace NML
 class CReflowState: public IReflowState
 {
 private:
-	typedef list<CPtr<IVisReflowObject> > TVisObjects;
+	typedef std::list<CPtr<IVisReflowObject> > TVisObjects;
 	struct SRange
 	{
 		float fValue;
@@ -47,7 +47,7 @@ private:
 	float fLineHeight;
 	SRange rangeLeft, rangeRight;
 	TVisObjects line, lineLeft, lineRight;
-	list<SLine> lines;
+	std::list<SLine> lines;
 	CTPoint<float> size;
 
 protected:
@@ -139,7 +139,7 @@ void CReflowState::Finalize()
 	if ( !line.empty() )
 		CreateLine( true );
 
-	for ( list<SLine>::iterator iTemp = lines.begin(); iTemp != lines.end(); ++iTemp )
+	for ( std::list<SLine>::iterator iTemp = lines.begin(); iTemp != lines.end(); ++iTemp )
 	{
 		SLine &line = *iTemp;
 
@@ -257,7 +257,7 @@ class CReflowLayout: public IReflowLayout
 {
 	OBJECT_BASIC_METHODS(CReflowLayout)
 private:
-	typedef list<CPtr<IReflowObject> > TObjects;
+	typedef std::list<CPtr<IReflowObject> > TObjects;
 	ZDATA
 	TObjects objects;
 	CTPoint<float> size;
@@ -271,7 +271,7 @@ public:
 	void Generate( NGScene::ILayoutFakeView *pView, float fWidth );
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
@@ -314,7 +314,7 @@ void CReflowLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float
 	}
 }
 
-void CReflowLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window )
+void CReflowLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window )
 {
 	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{

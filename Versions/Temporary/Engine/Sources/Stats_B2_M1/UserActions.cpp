@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EUserAction eValue )
+std::string EnumToString( NDb::EUserAction eValue )
 {
 	switch ( eValue )
 	{
@@ -211,7 +211,7 @@ string EnumToString( NDb::EUserAction eValue )
 	}
 }
 
-NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const string &szValue )
+NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const std::string &szValue )
 {
 	if ( szValue == "USER_ACTION_UNKNOWN" )
 		return NDb::USER_ACTION_UNKNOWN;
@@ -408,7 +408,7 @@ NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const string &szValue )
 	return NDb::USER_ACTION_UNKNOWN;
 }
 
-string EnumToString( NDb::ESpecialAbilityParam eValue )
+std::string EnumToString( NDb::ESpecialAbilityParam eValue )
 {
 	switch ( eValue )
 	{
@@ -425,7 +425,7 @@ string EnumToString( NDb::ESpecialAbilityParam eValue )
 	}
 }
 
-NDb::ESpecialAbilityParam NDb::StringToEnum_NDb_ESpecialAbilityParam( const string &szValue )
+NDb::ESpecialAbilityParam NDb::StringToEnum_NDb_ESpecialAbilityParam( const std::string &szValue )
 {
 	if ( szValue == "PARAM_ABILITY_ON" )
 		return NDb::PARAM_ABILITY_ON;

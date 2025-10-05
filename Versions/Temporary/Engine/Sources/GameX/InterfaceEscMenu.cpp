@@ -10,7 +10,7 @@
 
 // CInterfaceEscMenu::CReactions
 
-bool CInterfaceEscMenu::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_save" )
 	{
@@ -61,7 +61,7 @@ CInterfaceEscMenu::~CInterfaceEscMenu()
 {
 }
 
-int CInterfaceEscMenu::CReactions::Check( const string &szCheckName ) const
+int CInterfaceEscMenu::CReactions::Check( const std::string &szCheckName ) const
 {
 	if ( szCheckName == "IsMultiplayer" )
 	{
@@ -197,7 +197,7 @@ void CInterfaceEscMenu::MsgTryExitMainMenu( const SGameMessage &msg )
 
 	bool bCustomMission = Singleton<IScenarioTracker>()->IsCustomMission();
 	IScenarioTracker::EGameType eType = Singleton<IScenarioTracker>()->GetGameType();
-	wstring wszMsg = InterfaceState()->GetTextEntry( eType != IScenarioTracker::EGT_SINGLE ? 
+	std::wstring wszMsg = InterfaceState()->GetTextEntry( eType != IScenarioTracker::EGT_SINGLE ?
 		"T_MP_ESCAPE_MENU_SURRENDER" : (!bCustomMission ? "T_ESCAPE_MENU_EXIT_CHAPTER_MAP_QUESTION" : 
 		"T_ESCAPE_MENU_EXIT_MAIN_MENU_QUESTION") );
 
@@ -253,7 +253,7 @@ void CInterfaceEscMenu::MsgOptionsMenu( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_OPTIONS_MENU, "" );
 }
 
-void CInterfaceEscMenu::OnSave( const string &szSender )
+void CInterfaceEscMenu::OnSave( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_SUPPRESS_ENABLE_FOCUS, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -261,7 +261,7 @@ void CInterfaceEscMenu::OnSave( const string &szSender )
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "save" );
 }
 
-void CInterfaceEscMenu::OnLoad( const string &szSender )
+void CInterfaceEscMenu::OnLoad( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_SUPPRESS_ENABLE_FOCUS, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -269,7 +269,7 @@ void CInterfaceEscMenu::OnLoad( const string &szSender )
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "load" );
 }
 
-bool CInterfaceEscMenu::OnRestartMission( const string &szSender )
+bool CInterfaceEscMenu::OnRestartMission( const std::string &szSender )
 {
 	eMode = EMODE_RESTART_MISSION;
 
@@ -280,7 +280,7 @@ bool CInterfaceEscMenu::OnRestartMission( const string &szSender )
 	return true;
 }
 
-bool CInterfaceEscMenu::OnEndMissionSubMenu( const string &szSender )
+bool CInterfaceEscMenu::OnEndMissionSubMenu( const std::string &szSender )
 {
 	if ( pEscMenu )
 		pEscMenu->ShowWindow( false );
@@ -309,14 +309,14 @@ bool CInterfaceEscMenu::OnEndMissionSubMenu( const string &szSender )
 	return true;
 }
 
-bool CInterfaceEscMenu::OnEndMissionReturnToGame( const string &szSender )
+bool CInterfaceEscMenu::OnEndMissionReturnToGame( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	
 	return true;
 }
 
-bool CInterfaceEscMenu::OnMenuBack( const string &szSender )
+bool CInterfaceEscMenu::OnMenuBack( const std::string &szSender )
 {
 	if ( pEscMenu )
 		pEscMenu->ShowWindow( true );
@@ -326,7 +326,7 @@ bool CInterfaceEscMenu::OnMenuBack( const string &szSender )
 	return true;
 }
 
-bool CInterfaceEscMenu::OnMPMenuBack( const string &szSender )
+bool CInterfaceEscMenu::OnMPMenuBack( const std::string &szSender )
 {
 	if ( pMPEscMenu )
 		pMPEscMenu->ShowWindow( true );

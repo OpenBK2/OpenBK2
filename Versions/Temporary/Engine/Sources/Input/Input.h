@@ -49,9 +49,9 @@ bool GetMessage( SMessage *pMsg );
 INPUT_EXPORT bool IsDInputDiscardableKey( const SMessage &mMsg );
 INPUT_EXPORT STime GetLastEventTime();
 	
-INPUT_EXPORT int GetControlID( const string &sCommand );
+INPUT_EXPORT int GetControlID( const std::string &sCommand );
 void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity );
-INPUT_EXPORT string GetControlLocalName( int nAction );
+INPUT_EXPORT std::string GetControlLocalName( int nAction );
 
 void StartSaveInput( CDataStream *pStream );
 void StopSaveInput();
@@ -59,7 +59,7 @@ void StartEmulateInput( CDataStream *pStream );
 void StopEmulateInput();
 bool IsMouseDisabledDebug();
 //
-INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
+INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
 
 };
 

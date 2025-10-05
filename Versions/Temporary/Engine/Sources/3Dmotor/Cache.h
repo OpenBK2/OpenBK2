@@ -26,7 +26,7 @@ public:
 	};
 private:
 	ZDATA
-	vector<T> buffer;
+	std::vector<T> buffer;
 	pointer nFree, nLast;
 public:
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&buffer); f.Add(3,&nFree); f.Add(4,&nLast); return 0; }
@@ -125,7 +125,7 @@ class CGatheringCache: public CObjectBase
 	Alloc alloc;
 	MRU_TYPE nCurrentRU, nLatestAllocRU;
 	bool bThrashing;
-	vector<pointer> nodes;
+	std::vector<pointer> nodes;
 public:
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&alloc); f.Add(3,&nCurrentRU); f.Add(4,&nLatestAllocRU); f.Add(5,&bThrashing); f.Add(6,&nodes); return 0; }
 private:
@@ -472,7 +472,7 @@ public:
 		SStatePlace() {}
 		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU ) : place(_e), pUser(_p), nMRU(_nMRU) {}
 	};
-	void GetState( vector<SStatePlace> *pState )
+	void GetState( std::vector<SStatePlace> *pState )
 	{
 		for ( int k = 0; k < nodes.size(); ++k )
 		{

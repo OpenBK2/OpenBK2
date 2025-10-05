@@ -17,9 +17,9 @@ class CConnectServerProcessor : public CPacketProcessor
 	CPtr<class CNet> pServer;
 	bool bCheckConnect;
 
-	string szNick, szPassword;
-	string szCDKey;
-	string szEMail;
+	std::string szNick, szPassword;
+	std::string szCDKey;
+	std::string szEMail;
 
 	enum EConnectType { ECT_LOGIN, ECT_REGISTER, ECT_FORGOT_PASSWORD };
 	EConnectType eConnectType;

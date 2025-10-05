@@ -75,7 +75,7 @@ public:
 	{ }
 
 	virtual bool IsFinished() const { return bFinished; }
-	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow );
+	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow );
 	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
 	virtual void Visit( struct IUIVisitor *pVisitor ) { }
 	virtual void Reverse();

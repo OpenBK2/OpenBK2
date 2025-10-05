@@ -11,7 +11,7 @@
 //#define _PROFILER
 namespace NTest
 {
-	void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
+	void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
 }
 
 namespace NDb
@@ -52,9 +52,9 @@ class CGameDatabase : public CBasicDatabase
 		CObj<CResource> pObj;
 	};
 	//
-	typedef hash_map<CDBID, SElement> CElementsMap;
+	typedef std::unordered_map<CDBID, SElement> CElementsMap;
 	CElementsMap elementsMap;
-	typedef hash_map<string, int> CName2TypeIDMap;
+	typedef std::unordered_map<std::string, int> CName2TypeIDMap;
 	CName2TypeIDMap name2typeIDmap;
 	bool bIndexChanged;
 	//
@@ -80,24 +80,24 @@ public:
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
 	bool SaveChangedIndex();
-	bool RegisterResourceFile( const string &szFileName );
-	bool IsFileRegistered( const string &szFileName );
+	bool RegisterResourceFile( const std::string &szFileName );
+	bool IsFileRegistered( const std::string &szFileName );
 	void SetLoadDepth( int nLoadDepth ) { s_nMaxLoadDepth = nLoadDepth; }
 	//
 	CResource *GetObject( const CDBID &dbid );
 	// editor-specific functionality
 	IObjMan *GetManipulator( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return 0; }
-	IObjMan *CreateNewObject( const string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return 0; }
-	bool AddNewObject( const string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	IObjMan *CreateNewObject( const std::string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return 0; }
+	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	bool RemoveObject( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	void MarkChanged( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }
 	void SaveChanges();
 	void DropCachedResources() { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }
-	bool GetClassesList( vector<NTypeDef::STypeClass*> *pRes ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID );
-	string GetClassTypeName( const CDBID &_dbid )
+	bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
+	std::string GetClassTypeName( const CDBID &_dbid )
 	{
 		if ( const SElement *pElement = GetElement(_dbid) )
 			return pElement->typeHeader.szClassTypeName;
@@ -125,7 +125,7 @@ void CGameDatabase::RegisterObject( const SFullTypeHeader &hdr )
 
 bool CGameDatabase::LoadTypesMap()
 {
-	vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
+	std::vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
 //	NTest::CreateTestTypes( &topLevelTypes );
 	CFileStream stream( GetVFS(), TYPES_FILE_NAME );
 	if ( stream.IsOk() )
@@ -136,7 +136,7 @@ bool CGameDatabase::LoadTypesMap()
 		}
 	}
 	// build typeName => typeID map
-	for ( vector< CObj<NDb::NTypeDef::STypeDef> >::const_iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
+	for ( std::vector< CObj<NDb::NTypeDef::STypeDef> >::const_iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
 	{
 		if ( (*it)->eType == NDb::NTypeDef::TYPE_TYPE_CLASS )
 		{
@@ -158,7 +158,7 @@ bool CGameDatabase::SaveChangedIndex()
 			if ( CPtr<IBinSaver> pSaver = CreateBinSaver(&stream, SAVER_MODE_WRITE) )
 			{
 				// save changed index
-				vector<SFullTypeHeader> objectsIndex( elementsMap.size() );
+				std::vector<SFullTypeHeader> objectsIndex( elementsMap.size() );
 				int i = 0;
 				for ( CElementsMap::const_iterator it = elementsMap.begin(); it != elementsMap.end(); ++it, ++i )
 				{
@@ -189,7 +189,7 @@ bool CGameDatabase::DoesObjectExist( const CDBID &dbid )
 		return RegisterResourceFile( GetFileName(dbid) );
 }
 
-bool CGameDatabase::RegisterResourceFile( const string &szFileName )
+bool CGameDatabase::RegisterResourceFile( const std::string &szFileName )
 {
 //	CDBID dbid, _dbid( szFileName );
 //	NormalizeDBID( &dbid, _dbid );
@@ -205,7 +205,7 @@ bool CGameDatabase::RegisterResourceFile( const string &szFileName )
 	return true;
 }
 
-bool CGameDatabase::IsFileRegistered( const string &szFileName )
+bool CGameDatabase::IsFileRegistered( const std::string &szFileName )
 {
 	CDBID dbid( szFileName );
 	return elementsMap.find( dbid ) != elementsMap.end();
@@ -251,7 +251,7 @@ static int nObjLoaded = 0;
 
 class CProfiler
 {
-	const string szObjName;
+	const std::string szObjName;
 	const DWORD dwStartTime;
 public:
 	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetTickCount() ) { }
@@ -337,9 +337,9 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 	}
 }
 
-bool CGameDatabase::GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID )
+bool CGameDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID )
 {
-	string szClassTypeName;
+	std::string szClassTypeName;
 	// first, find class type name
 	for ( CName2TypeIDMap::const_iterator it = name2typeIDmap.begin(); it != name2typeIDmap.end(); ++it )
 	{

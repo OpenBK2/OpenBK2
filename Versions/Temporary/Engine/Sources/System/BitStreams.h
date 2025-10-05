@@ -38,7 +38,7 @@ public:
 	// result of read/write beyond data range is not determined
 	void Read( void *pDest, unsigned int nSize ) { memcpy( pDest, pCurrent, nSize ); pCurrent += nSize; CheckCurrentR(); }
 	void Write( const void *pSrc, unsigned int nSize ) { memcpy( pCurrent, pSrc, nSize ); pCurrent += nSize; CheckCurrentW(); }
-	void ReadCString( string &res ) { int nLeng = strlen( (char*)pCurrent ); res.assign( (char*)pCurrent, nLeng ); pCurrent += nLeng + 1; CheckCurrentR(); }
+	void ReadCString( std::string &res ) { int nLeng = strlen( (char*)pCurrent ); res.assign( (char*)pCurrent, nLeng ); pCurrent += nLeng + 1; CheckCurrentR(); }
 	void WriteCString( const char *pSrc ) { int nLeng = strlen( pSrc ); memcpy( pCurrent, pSrc, nLeng + 1 ); pCurrent += nLeng + 1; CheckCurrentW(); }
 	void FlushBits() { if ( nBitsCount ) { nBitsCount = 0; if ( pBitPtr ) pBitPtr[0] = (char)nBits; } }
 	// not more then 24 bits per call
@@ -53,8 +53,8 @@ public:
 	//
 	template <class T> inline void Write( const T &a ) { Write( &a, sizeof(a) ); }
 	template <class T> inline void Read( T &a ) { Read( &a, sizeof(a) ); }
-	template<> inline void Write<string>( const string &a ) { WriteCString( a.c_str() ); }
-	template<> inline void Read<string>( string &a ) { ReadCString( a ); }
+	template<> inline void Write<std::string>( const std::string &a ) { WriteCString( a.c_str() ); }
+	template<> inline void Read<std::string>( std::string &a ) { ReadCString( a ); }
 
 	friend class CBitEmbedded;
 };

@@ -20,7 +20,7 @@ namespace NDb
 			bAttached( true )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -33,14 +33,14 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		bool bAttached;
-		vector< SDBGunsProfile > guns;
+		std::vector< SDBGunsProfile > guns;
 
 		SDBPlatformsProfile() :
 			__dwCheckSum( 0 ),
 			bAttached( true )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -55,8 +55,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SDBPlatformsProfile > platforms;
-		vector< int > slots;
+		std::vector< SDBPlatformsProfile > platforms;
+		std::vector< int > slots;
 
 		SDBConstructorProfile() :
 			__dwCheckSum( 0 )

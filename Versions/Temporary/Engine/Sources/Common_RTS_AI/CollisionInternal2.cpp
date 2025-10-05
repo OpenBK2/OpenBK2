@@ -10,6 +10,8 @@
 #include "Misc/Geom.h"
 #include "System/RandomGen.h"
 
+#include <algorithm>
+
 static const float SPEED_TIME = 2;
 static const float MIN_SPEED_LENGTH = 1.5f;
 static const float FULL_SPEED_TIME = 5;
@@ -20,9 +22,9 @@ static const float PASS_ONE_ANOTHER_COEFF = 0.25f;
 // find intersection of two segments, return -1 x -1 if segments not intersected
 static const float FAR_INTERSECTION_DIST = 400.0f;
 
-static string szTempString;
+static std::string szTempString;
 
-const string &GetCollideTypeName( const NCollision::ECollideType eType )
+const std::string &GetCollideTypeName( const NCollision::ECollideType eType )
 {
 	if ( eType & NCollision::ECT_FIRST )
 		szTempString = "ECT_FIRST";
@@ -493,23 +495,23 @@ const bool CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, C
 
 void CCollisionsCollector::HandOutCollisions( CAIMap *pAIMap )
 {
-	vector<int> sorted;
+	std::vector<int> sorted;
 	for ( TCollisions::const_iterator it = collisions.begin(); it != collisions.end(); ++it ) 
 		sorted.push_back( it->first );
-	sort( sorted.begin(), sorted.end(), SSortCollisions( this ) );
-	for ( vector<int>::const_iterator it = sorted.begin(); it != sorted.end(); ++it )
+	std::sort( sorted.begin(), sorted.end(), SSortCollisions( this ) );
+	for ( std::vector<int>::const_iterator it = sorted.begin(); it != sorted.end(); ++it )
 	{
 		TCollisions::iterator pos = collisions.find( *it );
 		if ( pos != collisions.end() )
 		{
 			CBasePathUnit *pUnit = pos->second.pUnit->GetUnit();
-			vector<SPusherInfo> &pushers =  pos->second.pushers;
-			sort( pushers.begin(), pushers.end(), SPushersSort() );
+			std::vector<SPusherInfo> &pushers =  pos->second.pushers;
+			std::sort( pushers.begin(), pushers.end(), SPushersSort() );
 			if ( pUnit->IsInfantry() )
 				FindWayForInfantry( pUnit, pushers[0].pUnit->GetUnit(), pAIMap );
 			else
 			{
-				for ( vector<SPusherInfo>::const_iterator itPusher = pushers.begin(); itPusher != pushers.end(); ++ itPusher )
+				for ( std::vector<SPusherInfo>::const_iterator itPusher = pushers.begin(); itPusher != pushers.end(); ++ itPusher )
 				{
 					CBasePathUnit *pPusher = itPusher->pUnit->GetUnit();
 					const NCollision::ECollideType eCollideType = itPusher->eCollideType;

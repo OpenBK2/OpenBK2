@@ -15,13 +15,13 @@ namespace NCodeGen
 class CFieldDefinition : public ICode
 {
 	OBJECT_NOCOPY_METHODS( CFieldDefinition )
-	string szFieldName;
+	std::string szFieldName;
 	CPtr<NDb::NTypeDef::STypeDef> pType;
 public:
 	CFieldDefinition() { }
 	CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
-	virtual void GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName );
+	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName );
 
 	int operator&( IXmlSaver &saver )
 	{

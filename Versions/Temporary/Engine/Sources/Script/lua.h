@@ -191,7 +191,7 @@ void lua_register( lua_State *L, const char *name, lua_CFunction f );
 
 
 // additional registration needed to serialize C functions
-void lua_RegisterFunc ( lua_CFunction func, const string& id );
+void lua_RegisterFunc ( lua_CFunction func, const std::string& id );
 
 
 /* 
@@ -219,12 +219,12 @@ struct SLUAError
 	struct SLUAStackTrace
 	{
 		int nDepth;
-		string szSource;
-		string szFunctionName;
+		std::string szSource;
+		std::string szFunctionName;
 		int nDefinedAtLine;
 	};
-	string szError;
-	vector< SLUAStackTrace > stack;
+	std::string szError;
+	std::vector< SLUAStackTrace > stack;
 };
 
 namespace NScript

@@ -14,11 +14,11 @@ public:
 		/** is it full update or not? */
 		bool bFullUpdate;
 		/** removed clinets */
-		list<int> removed;
+		std::list<int> removed;
 		/** added clients */
-		list<SCustomLobbyClientInfo> added;
+		std::list<SCustomLobbyClientInfo> added;
 		/** changed clients */
-		list<SCustomLobbyClientInfo> changed;
+		std::list<SCustomLobbyClientInfo> changed;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); f.Add(3,&bFullUpdate); f.Add(4,&removed); f.Add(5,&added); f.Add(6,&changed); return 0; }
 
 	CCustomLobbyClientsPacket() { }

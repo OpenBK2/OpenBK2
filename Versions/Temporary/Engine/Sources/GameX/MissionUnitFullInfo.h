@@ -78,15 +78,15 @@ class CMissionUnitFullInfo : public CObjectBase
 	ZSKIP //CPtr<IWindow> pHPSquad;
 	ZSKIP //CPtr<IWindow> pHPView;
 	
-	vector<SWeaponItem> weaponItems;
+	std::vector<SWeaponItem> weaponItems;
 	ZSKIP //SSupplyItem supplyCalls;
 	ZSKIP //SSupplyItem supplyCount;
 	ZSKIP //SSupplyItem supplyTime;
 	
 	ZSKIP //vector< CPtr<IWindow> > memberButtons;
 	
-	vector<int> armors;
-	vector<NUnitFullInfo::SWeapon> weapons;
+	std::vector<int> armors;
+	std::vector<NUnitFullInfo::SWeapon> weapons;
 	
 	EType eType;
 	CPtr<IWindow> pWeaponsWnd;
@@ -98,7 +98,7 @@ class CMissionUnitFullInfo : public CObjectBase
 	CPtr<ITextView> pWeaponFullDamage;
 	CPtr<ITextView> pWeaponFullPenetration;
 	CPtr<ITextView> pWeaponFullAmmo;
-	vector<IWindow3DControl::SObject> objects;
+	std::vector<IWindow3DControl::SObject> objects;
 	NDb::ESeason eSeason;
 	
 	CDBPtr<NDb::SHPObjectRPGStats> pBaseStats;
@@ -119,17 +119,17 @@ class CMissionUnitFullInfo : public CObjectBase
 	CPtr<ITextView> pArmorTopView;
 	
 	CPtr<ITextView> pSuppliesCountView;
-	wstring wszLocalizedName;
+	std::wstring wszLocalizedName;
 	
-	vector<SMember> members;
-	vector<SViewMember> viewMembers;
+	std::vector<SMember> members;
+	std::vector<SViewMember> viewMembers;
 	ZSKIP //vector<SHP> hps;
 	CPtr<ITextView> pHPView;
 	ZSKIP //CPtr<IMultiTextureProgressBar> pHPBarUnit;
 	CPtr<ITextView> pSuppliesCountInfinite;
 	CPtr<IWindow> pHitbarPanel;
 
-	vector<SHP> hps;
+	std::vector<SHP> hps;
 	
 	CPtr<IWindow> pFuelPanel;
 	CPtr<IProgressBar> pFuelBar;
@@ -137,8 +137,8 @@ class CMissionUnitFullInfo : public CObjectBase
 	CPtr<IProgressBar> pHPBarUnit;
 	int nPlayer;
 	
-	wstring wszTooltipMemberInTransport;
-	wstring wszTooltipMemberInBuilding;
+	std::wstring wszTooltipMemberInTransport;
+	std::wstring wszTooltipMemberInBuilding;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pName); f.Add(11,&weaponItems); f.Add(16,&armors); f.Add(17,&weapons); f.Add(18,&eType); f.Add(19,&pWeaponsWnd); f.Add(20,&pSuppliesWnd); f.Add(21,&pMembersWnd); f.Add(22,&pFlagWnd); f.Add(23,&p3DCtrl); f.Add(24,&pWeaponFullName); f.Add(25,&pWeaponFullDamage); f.Add(26,&pWeaponFullPenetration); f.Add(27,&pWeaponFullAmmo); f.Add(28,&objects); f.Add(29,&eSeason); f.Add(30,&pBaseStats); f.Add(31,&pBaseMO); f.Add(32,&pSelStats); f.Add(33,&pSelMO); f.Add(34,&nSelWeapon); f.Add(35,&nSelMember); f.Add(36,&nCurSupplies); f.Add(37,&nMaxSupplies); f.Add(38,&pKeyObjectTexture); f.Add(39,&pArmorsWnd); f.Add(40,&pArmorFrontView); f.Add(41,&pArmorSide1View); f.Add(42,&pArmorSide2View); f.Add(43,&pArmorBackView); f.Add(44,&pArmorTopView); f.Add(45,&pSuppliesCountView); f.Add(46,&wszLocalizedName); f.Add(47,&members); f.Add(48,&viewMembers); f.Add(50,&pHPView); f.Add(52,&pSuppliesCountInfinite); f.Add(53,&pHitbarPanel); f.Add(54,&hps); f.Add(55,&pFuelPanel); f.Add(56,&pFuelBar); f.Add(57,&fFuel); f.Add(58,&pHPBarUnit); f.Add(59,&nPlayer); f.Add(60,&wszTooltipMemberInTransport); f.Add(61,&wszTooltipMemberInBuilding); return 0; }
 private:
 	void InitPrivate( IWindow *pInfo, IWindow *pAppearance, EType eType );
@@ -151,7 +151,7 @@ private:
 	void UpdateWeaponsAmmo( const struct SObjectStatus &status );
 
 	void MakeName();
-	void MakeMembers( vector<SMember> *pMembers );
+	void MakeMembers( std::vector<SMember> *pMembers );
 	
 	void MakeCurrentWeapons();
 	void MakeCurrentArmor();
@@ -192,11 +192,11 @@ public:
 	void UpdateObject( CMapObj *pMO );
 	void UpdateMembers( bool bCanLeave );
 
-	void OnClickMember( const string &szSender );
-	void OnMemberOverOn( const string &szSender );
-	void OnMemberOverOff( const string &szSender );
-	void OnWeaponOverOn( const string &szSender );
-	void OnWeaponOverOff( const string &szSender );
+	void OnClickMember( const std::string &szSender );
+	void OnMemberOverOn( const std::string &szSender );
+	void OnMemberOverOff( const std::string &szSender );
+	void OnWeaponOverOn( const std::string &szSender );
+	void OnWeaponOverOff( const std::string &szSender );
 };
 
 

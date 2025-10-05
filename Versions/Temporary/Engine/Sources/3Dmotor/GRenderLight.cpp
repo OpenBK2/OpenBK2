@@ -183,7 +183,7 @@ void CLightStateNode::Recalc()
 	value.ResetStaticLights();
 	if ( IsValid(pDirectionalLight) )
 		pDirectionalLight->AddToState( &value );
-	for ( vector< CPtr<ILight> >::iterator k = lights.begin(); k != lights.end(); ++k )
+	for ( std::vector< CPtr<ILight> >::iterator k = lights.begin(); k != lights.end(); ++k )
 	{
 		ILight *pLight = *k;
 //		if ( pLight->CheckCulling( pClipTS ) )

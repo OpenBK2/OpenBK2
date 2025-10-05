@@ -72,12 +72,12 @@ class CTerraGen : public CObjectBase
 	CExplosionsManager explosionsManager;
 	CDynamicDebrisManager dynamicDebrisManager;
 	//
-	CArray2D<vector<int> > terraExplosionsHash;
+	CArray2D<std::vector<int> > terraExplosionsHash;
 	CArray2D<BYTE> terraExplosionsHeights;
 	//
-	vector<int> needAddFoots;
-	vector<int> updatedPrecipices;
-	vector<int> updatedPrecNodes;
+	std::vector<int> needAddFoots;
+	std::vector<int> updatedPrecipices;
+	std::vector<int> updatedPrecNodes;
 
 	struct SExplosionHistory
 	{
@@ -87,18 +87,18 @@ class CTerraGen : public CObjectBase
 		CDBPtr<NDb::SMaterial> pMaterial;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vMin); f.Add(3,&vMax); f.Add(4,&pMaterial); return 0; }
 	};
-	vector<SExplosionHistory> explosionsHistory;
+	std::vector<SExplosionHistory> explosionsHistory;
 	//
 	struct SEntrenchmentHistory
 	{
 		ZDATA
-		vector<CVec2> ctrlPoints;
+		std::vector<CVec2> ctrlPoints;
 		float fWidth;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&ctrlPoints); f.Add(3,&fWidth); return 0; }
 	};
-	vector<SEntrenchmentHistory> entrenchmentsHistory;
+	std::vector<SEntrenchmentHistory> entrenchmentsHistory;
 	//
-	vector<CArray2D<BYTE> > tileTerraMasks;
+	std::vector<CArray2D<BYTE> > tileTerraMasks;
 	CVec3 vPreLightDir;
 	CVec2i vTexModMin, vTexModMax;
 	CArray2D<BYTE> texModCheck;
@@ -106,7 +106,7 @@ class CTerraGen : public CObjectBase
 	CArray2D<BYTE> needTexExportAfterGeomModifying;
 	CVec2i vGeomModAreaMin, vGeomModAreaMax;
 
-	vector<NWaterStuff::SWaterParams> waterParams;
+	std::vector<NWaterStuff::SWaterParams> waterParams;
 	//
 	struct STileOrder
 	{
@@ -115,7 +115,7 @@ class CTerraGen : public CObjectBase
 		//
 		bool operator < ( const STileOrder &v ) const { return nPriority < v.nPriority; }
 	};
-	vector<STileOrder> tilesOrder;
+	std::vector<STileOrder> tilesOrder;
 
 	bool LoadTerrainInfo( CDataStream *pStream );
 	void SaveTerrainInfo( CDataStream *pStream );
@@ -167,8 +167,8 @@ class CTerraGen : public CObjectBase
 	CVec3 GetTerraNormFast( const float x, const float y, const int nTileX, const int nTileY ) const;
 	CVec3 FindNormalInVertex( const CVec3 &vVert, const int nTileX, const int nTileY ) const;
 	//
-	void MakeHole(	const vector<CVec3fEx> &samples, const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, const bool bLeftHeighten = true );
-	void MakeHoleOnTile(	const vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten );
+	void MakeHole(	const std::vector<CVec3fEx> &samples, const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, const bool bLeftHeighten = true );
+	void MakeHoleOnTile(	const std::vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten );
 	//
 	void UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo *pGfxInfo, const NDb::SVSOInstance *pInstance );
 	//
@@ -196,7 +196,7 @@ class CTerraGen : public CObjectBase
 	//
 	void CalcTerraVertexData( NGScene::SVertex *pVert, const CVec3 &vPos, const int nTileX, const int nTileY, const int nPatchX, const int nPatchY, const CVec3 *pRealPos, const CVec3 *pRealNorm, const bool bNeedFaster ) const;
 	int AddUniqueVertex(	NMeshData::SMeshData *pMeshData, NMeshData::SMeshDataTex2 *pTexData, const CVec2 &vSecTex, const BYTE cAlpha, NGScene::SVertex *pVert, const bool bNeedFaster ) const;
-	void AddTileTriangle( vector<NMeshData::SMeshData> *pMeshData, vector<NMeshData::SMeshDataTex2> *pTexData, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const int nTileX, const int nTileY, const int nPatchX, const int nPatchY, const CVec3 *pRealPos1, const CVec3 *pRealPos2, const CVec3 *pRealPos3, const CVec3 *pRealNorm1, const CVec3 *pRealNorm2, const CVec3 *pRealNorm3,	const bool bNeedFaster ) const;
+	void AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData, std::vector<NMeshData::SMeshDataTex2> *pTexData, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const int nTileX, const int nTileY, const int nPatchX, const int nPatchY, const CVec3 *pRealPos1, const CVec3 *pRealPos2, const CVec3 *pRealPos3, const CVec3 *pRealNorm1, const CVec3 *pRealNorm2, const CVec3 *pRealNorm3,	const bool bNeedFaster ) const;
 	//
 	void UpdateAlphaByPosition( NGScene::SVertex *pVertex );
 	void RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch );
@@ -215,15 +215,15 @@ class CTerraGen : public CObjectBase
 	void PutAllFeaturesToAI() const;
 	void UpdateAITerraTypes( const bool bForceUpdateAll );
 	bool IsPointOnBridge( float x, float y ) const;
-	void SetTerraTypesToAI( const vector<NDb::STerrainAIProperties> &params ) const;
+	void SetTerraTypesToAI( const std::vector<NDb::STerrainAIProperties> &params ) const;
 	void PutAllWaterToAI() const;
 
 	// TERRAINFO VSOs
-	void CollectAllCragsAndRiversInArea( vector<int> *pColCrags, vector<int> *pColRivers, const CVec2i &vBBMin, const CVec2i &vBBMax, const int nExcludeCragID, const int nExcludeRiverID );
+	void CollectAllCragsAndRiversInArea( std::vector<int> *pColCrags, std::vector<int> *pColRivers, const CVec2i &vBBMin, const CVec2i &vBBMax, const int nExcludeCragID, const int nExcludeRiverID );
 	void UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2i &vMax );
-	void UpdateCragsAndRiversInArea( const vector<int> &updCrags, const vector<int> &updRivers, const CVec2i &vBBMin, const CVec2i &vBBMax );
+	void UpdateCragsAndRiversInArea( const std::vector<int> &updCrags, const std::vector<int> &updRivers, const CVec2i &vBBMin, const CVec2i &vBBMax );
 	//
-	void ConvertVSOPointsFromAIToVisAndPutOnTerrain( vector<NDb::SVSOPoint> *pDstPoints, const vector<NDb::SVSOPoint> &srcPoints );
+	void ConvertVSOPointsFromAIToVisAndPutOnTerrain( std::vector<NDb::SVSOPoint> *pDstPoints, const std::vector<NDb::SVSOPoint> &srcPoints );
 
 	// CRAGS
 	const NDb::SVSOInstance* FindCrag( int nID ) const;
@@ -234,8 +234,8 @@ class CTerraGen : public CObjectBase
 	void PutAllCragsOnTerrain();
 	void RemoveCragInfo( const int nVSOID );
 	void CragManipulator( const STerrainInfo::SCrag *pCrag, const bool bRemove );
-	void CragsPushPointLR( vector<CVec3fEx> *pLeft, vector<CVec3fEx> *pRight, const STerrainInfo::SVSOPoint &point, CVec3 *pVMin, CVec3 *pVMax, const int nID );
-	void CragsPushExactPoint( vector<STerrainInfo::SVSOPoint> *pArray, const STerrainInfo::SVSOPoint &p1, const STerrainInfo::SVSOPoint &p2, const float t1, const float t2, const int nID, const bool bStart );
+	void CragsPushPointLR( std::vector<CVec3fEx> *pLeft, std::vector<CVec3fEx> *pRight, const STerrainInfo::SVSOPoint &point, CVec3 *pVMin, CVec3 *pVMax, const int nID );
+	void CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArray, const STerrainInfo::SVSOPoint &p1, const STerrainInfo::SVSOPoint &p2, const float t1, const float t2, const int nID, const bool bStart );
 
 	// RIVERS
 	const NDb::SVSOInstance* FindRiver( int nID ) const;
@@ -254,14 +254,14 @@ class CTerraGen : public CObjectBase
 	
 	// ROADS
 	const NDb::SVSOInstance* FindRoad( int nID ) const;
-	void AddRoad( NMeshData::SMeshData *pPatch, const vector<NGScene::SVertex> &verts, const vector<STriangle> &trgs );
+	void AddRoad( NMeshData::SMeshData *pPatch, const std::vector<NGScene::SVertex> &verts, const std::vector<STriangle> &trgs );
 	void AddAllRoads();
 	void RemoveAllRoads();
 	void ProjectQuadOnTerrain(	const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec3 &v4, const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4, const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4, NMeshData::SMeshData *pData );
 	void ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const float fAlpha1, const float fAlpha2, const float fAlpha3, NMeshData::SMeshData *pData );
-	int CalcTexAndAddRoadVertex(	const CVec3 &vert, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec3 &v4, const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4, const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4, const int nTileX, const int nTileY, vector<NGScene::SVertex> *pVerts );
+	int CalcTexAndAddRoadVertex(	const CVec3 &vert, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec3 &v4, const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4, const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4, const int nTileX, const int nTileY, std::vector<NGScene::SVertex> *pVerts );
 	void ProjectRoadLayer(	const NDb::SVSOPoint &point1, const NDb::SVSOPoint &point2, const float fMinTexX, const float fMaxTexX, const float fPrevDist, const float fNextTexY, const float fTexY, NMeshData::SMeshData *pCurPatch, const float fOrgTexX, const float fTexXD );
-	void CreateRoadGfx( const NDb::SVSOInstance *pInstance, const vector<NDb::SVSOPoint> &points );
+	void CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::vector<NDb::SVSOPoint> &points );
 
 	// PEAKS
 	void AddPeak( const STerrainInfo::SPeak &peak );
@@ -269,8 +269,8 @@ class CTerraGen : public CObjectBase
 	void RemovePeakInfo( const int nVSOID );
 	void RemovePeakGfxInfo( const int nVSOID );
 	void UpdateNeededPeaks();
-	void PeaksProjectTrgOnTiles( vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vBase1, const CVec3 &vBase2, const CVec3 &vBase3 );
-	void PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *firstArrPos, const CVec3 &v1, const CVec3 &v2 );
+	void PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vBase1, const CVec3 &vBase2, const CVec3 &vBase3 );
+	void PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *firstArrPos, const CVec3 &v1, const CVec3 &v2 );
 	
 	// FOOTS
 	void AddFoot( const STerrainInfo::SFoot &foot );
@@ -285,7 +285,7 @@ class CTerraGen : public CObjectBase
 	void CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const bool bNeedRiversClamping );
 	void RemovePrecipiceFromCollector( const int nID, const bool bFast );
 	CVec3 GetSmoothPrecipiceNorm( const CVec2 &vPos );
-	void AddPrecipiceToCollector( const int nID, const vector<CVec3> &posArr, const vector<float> &heightsArr, const vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale, const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial, const float fDepth, const float fDepthRand, const float fRandX, const float fRandY, const bool bHasPeak );
+	void AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr, const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale, const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial, const float fDepth, const float fDepthRand, const float fRandX, const float fRandY, const bool bHasPeak );
 	//
 	void CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *pPrec );
 	void AddToPrecipiceUpdateQueue( const int nID );
@@ -350,7 +350,7 @@ public:
 	void AddCrag( const NDb::SVSOInstance *pInstance );
 	void UpdateCrag( const int nVSOID );
 	void RemoveCrag( const int nVSOID );
-	bool GetCragPrecVerts( vector<CVec3> *pVerts, int nVSOId );
+	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId );
 
 	// RIVERS
 	void AddRiver( const NDb::SVSOInstance *pInstance );
@@ -363,11 +363,11 @@ public:
 	void RemoveTerraSpot( const int nSpotID );
 
 	// OTHERS
-	void AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth, const bool bWriteHistory = true );
+	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth, const bool bWriteHistory = true );
 	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial, const bool bWriteHistory = true );
 	void AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const float fAngle, const int nSmoothRad, const NDb::SMaterial *pMaterial );
 	void AddTrack( const int nID, const float fFadingSpeed, const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4, const CVec2 &vNorm, const float _fWidth, const float fAplha, CTracksManager *pTracksManager );
-	void CreateDebris(	const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin, const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius, const NDebrisBuilder::EMaskSmoothType smoothType );
+	void CreateDebris(	const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin, const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius, const NDebrisBuilder::EMaskSmoothType smoothType );
 
 	// AI
   void UpdateAIInfo();

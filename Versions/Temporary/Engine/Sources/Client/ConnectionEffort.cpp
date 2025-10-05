@@ -6,7 +6,7 @@
 
 BASIC_REGISTER_CLASS( CConnectionEffort );
 
-void CConnectionEffort::SendBreakThroughPacket( const string &szIP, const int nPort )
+void CConnectionEffort::SendBreakThroughPacket( const std::string &szIP, const int nPort )
 {
 	if ( CPtr<NNet::ILinksManager> pLinks = NNet::CreateClientLinksManager() )
 	{
@@ -23,11 +23,11 @@ void CConnectionEffort::SendBreakThroughPacket( const string &szIP, const int nP
 namespace NEffortsFactory
 {
 
-static string szServerIP = "";
+static std::string szServerIP = "";
 static int nServerPort = 0;
 static int nGameNetVersion = 0;
 
-void SetServerInfo( const string &_szServerIP, const int _nServerPort, const int _nGameNetVersion )
+void SetServerInfo( const std::string &_szServerIP, const int _nServerPort, const int _nGameNetVersion )
 {
 	szServerIP = _szServerIP;
 	nServerPort = _nServerPort;
@@ -40,7 +40,7 @@ CConnectionEffort* CreateFirstClientEffort( const int nMyServerID, const int nCl
 }
 
 CConnectionEffort* CreateFirstServerEffort( const int nMyServerID, const int nClientServerID, 
-	const string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet )
+	const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet )
 {
 	return new CSimpleServerEffort( nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet );
 }

@@ -4,15 +4,15 @@
 struct SPipeMessage
 {
 	ZDATA
-	wstring sz;
+	std::wstring sz;
 	DWORD dwColor;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&sz); f.Add(3,&dwColor); return 0; }
 };
 struct SPipeChannel
 {
 	ZDATA
-	vector<int> copyToStreams;
-	list<SPipeMessage> msgs;
+	std::vector<int> copyToStreams;
+	std::list<SPipeMessage> msgs;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&copyToStreams); f.Add(3,&msgs); return 0; }
 };
 
@@ -21,9 +21,9 @@ class CConsoleBuffer : public IConsoleBuffer
 {
 	OBJECT_NOCOPY_METHODS( CConsoleBuffer );
 	//
-	vector<SConsoleLine> lines;
-	string szLogFileName;						// log file name
-	hash_map<int, SPipeChannel> pipes;
+	std::vector<SConsoleLine> lines;
+	std::string szLogFileName;						// log file name
+	std::unordered_map<int, SPipeChannel> pipes;
 	int nSlowCompress;
 
 	int CConsoleBuffer::operator&( IBinSaver &saver )
@@ -45,7 +45,7 @@ class CConsoleBuffer : public IConsoleBuffer
 public:
 	CConsoleBuffer() : szLogFileName("console_log.txt"), nSlowCompress(0) {}
 	// write string to console's stream
-	void Write( const int nStreamID, const wstring &szString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false );
+	void Write( const int nStreamID, const std::wstring &szString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false );
 	// write string to console's stream. doesn't support any locales - just for english text
 	void WriteASCII( const int nStreamID, const char *pszString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false );
 	void SetLogfile( const char *pszFilename ) { szLogFileName = pszFilename; }

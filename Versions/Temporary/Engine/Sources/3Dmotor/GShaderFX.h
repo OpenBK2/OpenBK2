@@ -19,7 +19,7 @@ private:
 
 public:
 	CPixelShader() {}
-	CPixelShader( const string &szName );
+	CPixelShader( const std::string &szName );
 	~CPixelShader();
 
 	void Begin();
@@ -36,15 +36,15 @@ private:
 
 public:
 	CVertexShader() {}
-	CVertexShader( const string &szName );
+	CVertexShader( const std::string &szName );
 
 	void Use();
 };
 
 bool InitShaderFX();
 void DoneShaderFX();
-CPixelShader* CreatePixelShader( const string &szName );
-CVertexShader* CreateVertexShader( const string &szName );
+CPixelShader* CreatePixelShader( const std::string &szName );
+CVertexShader* CreateVertexShader( const std::string &szName );
 
 } // NAMESPACE
 

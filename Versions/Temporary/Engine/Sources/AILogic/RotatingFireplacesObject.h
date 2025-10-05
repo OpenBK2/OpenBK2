@@ -15,7 +15,7 @@ class CRotatingFireplacesObject
 	};
 
 	ZDATA
-	list<SUnitInfo> units;
+	std::list<SUnitInfo> units;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&units); return 0; }
 	//
 	bool IsBetterToGoToFireplace( class CSoldier *pSoldier, const int nFireplace ) const;

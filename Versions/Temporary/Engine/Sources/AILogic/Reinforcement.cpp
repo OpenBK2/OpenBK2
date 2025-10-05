@@ -7,7 +7,7 @@
 namespace NReinforcement
 {
 
-static hash_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType> reinfTypes;
+static std::unordered_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType> reinfTypes;
 
 // reinf.type X beats reinf.type Y with effectiveness eV[X][Y]  (0..1)
 // 0 is completely inefficient, 1 is "eliminates without losses", 0.5 is "balance each other"
@@ -26,7 +26,7 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 	expediencyValues.FillZero();
 	for ( int i = 0; i < _pConsts->reinfExpediency.size(); ++i )
 	{
-		const vector<float> &expSet = _pConsts->reinfExpediency[i].expediency;
+		const std::vector<float> &expSet = _pConsts->reinfExpediency[i].expediency;
 		int nSize = expSet.size();
 		for ( int j = 0; j < nSize; ++j )
 		{
@@ -41,7 +41,7 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 
 const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUnitRPGType eType )
 {
-	hash_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( eType );
+	std::unordered_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( eType );
 	if ( pos == reinfTypes.end() )
 	{
 		NI_ASSERT( 0, StrFmt( "Reinforcement type not found for NDb::EUnitRPGType: %d", eType ) );
@@ -52,7 +52,7 @@ const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUni
 
 const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eUnitRpgType )
 {
-	hash_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( int(ReMapRPGType(eUnitRpgType)) );
+	std::unordered_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( int(ReMapRPGType(eUnitRpgType)) );
 	if ( pos != reinfTypes.end() )
 		return pos->second;
 	NI_ASSERT( 0, StrFmt( "Reinforcement type not found for NDb::EDBUnitRPGType: %d", eUnitRpgType ) );

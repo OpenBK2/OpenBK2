@@ -496,7 +496,7 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 		else
 			scriptAreas.erase( scriptArea.szName );
 
-		vector<SVector> tiles;
+		std::vector<SVector> tiles;
 		if ( scriptArea.eType == EAT_RECTANGLE )
 		{
 			SRect rect;
@@ -508,12 +508,12 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 
 		if ( bOpen )
 		{
-			for ( vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 				areasOpenTiles.SetData( it->x, it->y );
 		}
 		else
 		{
-			for ( vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 				areasOpenTiles.RemoveData( it->x, it->y );
 		}
 	}
@@ -539,7 +539,7 @@ void CGlobalWarFog::RemoveStaticObjectTile( const SVector &vTile, const int nObj
 	}
 }
 
-void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const hash_set<int> &oldIDs )
+void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const std::unordered_set<int> &oldIDs )
 {
 	for ( int x = 0; x < GetSizeX(); ++x )
 	{
@@ -656,7 +656,7 @@ void CGlobalWarFog::DumpWarFog()
 */
 }
 
-static void DumpWarFog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void DumpWarFog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	theWarFog.DumpWarFog();
 }

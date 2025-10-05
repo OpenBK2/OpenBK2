@@ -119,7 +119,7 @@ void CCamera::SwitchAutoPositioning( const bool bAllowAutoPositioning )
 		pMouseMutator->SwitchAutoPositioning( bAllowAutoPositioning );
 }
 
-void CCamera::SwitchManualScrolling( const string &szLocker, const bool bManualOn )
+void CCamera::SwitchManualScrolling( const std::string &szLocker, const bool bManualOn )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SwitchManualScrolling( szLocker, bManualOn );
@@ -268,7 +268,7 @@ void CCamera::Update()
 	if ( !earthquakes.empty() ) 
 	{
 		float fVal = 0;
-		for ( list<NCamera::SEarthQuake>::iterator it = earthquakes.begin(); it != earthquakes.end(); )
+		for ( std::list<NCamera::SEarthQuake>::iterator it = earthquakes.begin(); it != earthquakes.end(); )
 		{
 			const float fTime = it->fTime / 1000.0f;
 			fVal += exp( -fTime*it->fAttenuation ) * cos( s_fQuakePeriod*FP_2PI*fTime ) * it->fAmplitude;
@@ -664,7 +664,7 @@ ICamera* CreateCamera()
 }
 
 // set_camera_pitch_limits min max ave asp msp
-static void SetCameraLimits( NCamera::ELimitsType eType, const vector<wstring> &szParams )
+static void SetCameraLimits( NCamera::ELimitsType eType, const std::vector<std::wstring> &szParams )
 {
 	if ( szParams.size() != 5 ) 
 	{
@@ -682,22 +682,22 @@ static void SetCameraLimits( NCamera::ELimitsType eType, const vector<wstring> &
 	Camera()->SetLimits( eType, limits );
 }
 
-static void CmdSetCameraPitchLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSetCameraPitchLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_PITCH, paramsSet );
 }
 
-static void CmdSetCameraYawLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSetCameraYawLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_YAW, paramsSet );
 }
 
-static void CmdSetCameraDistanceLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSetCameraDistanceLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_DISTANCE, paramsSet );
 }
 
-static void CmdResetCameraToDefault( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdResetCameraToDefault( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	Camera()->ResetToDefault();
 }

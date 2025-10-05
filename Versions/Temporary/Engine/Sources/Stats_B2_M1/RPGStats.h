@@ -228,9 +228,9 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szKeyName;
-		string szParentName;
-		string szStatsType;
+		std::string szKeyName;
+		std::string szParentName;
+		std::string szStatsType;
 		EObjectVisType eVisType;
 		EObjGameType eGameType;
 
@@ -255,7 +255,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x15096402 };
 		CDBPtr< SEffect > pSceneEffect;
-		vector< CDBPtr< SEffect > > sceneEffects;
+		std::vector< CDBPtr< SEffect > > sceneEffects;
 		CDBPtr< SComplexSoundDesc > pSoundEffect;
 
 		#include "include_complexeffect.h"
@@ -284,7 +284,7 @@ namespace NDb
 			eSeasonToUse( SEASON_WINTER )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -297,7 +297,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x110CEC40 };
 		CDBPtr< SComplexSoundDesc > pSoundEffect;
-		vector< SSeasonEffect > seasons;
+		std::vector< SSeasonEffect > seasons;
 
 		SComplexSeasonedEffect() { }
 		//
@@ -315,7 +315,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SAckSetRPGStats )
 	public:
 		enum { typeID = 0x1106AC40 };
-		vector< SAckType > types;
+		std::vector< SAckType > types;
 		int nVoiceNumber;
 
 		#include "include_acksetrpgstats.h"
@@ -347,7 +347,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szLocatorName;
+		std::string szLocatorName;
 		CVec3 vPos;
 		CQuat qRot;
 		CVec3 vFlarePos;
@@ -378,7 +378,7 @@ namespace NDb
 			bOnAtNight( true )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -401,7 +401,7 @@ namespace NDb
 			fHPBarLen( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -426,19 +426,19 @@ namespace NDb
 			private:
 				mutable DWORD __dwCheckSum;
 			public:
-				vector< int > data;
+				std::vector< int > data;
 
 				SByteArray1() :
 					__dwCheckSum( 0 )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
 				DWORD CalcCheckSum() const;
 			};
-			vector< SByteArray1 > data;
+			std::vector< SByteArray1 > data;
 
 			#include "include_ByteArray2.h"
 
@@ -446,7 +446,7 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -469,7 +469,7 @@ namespace NDb
 				fSilhouette( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -491,7 +491,7 @@ namespace NDb
 				fDamageHP( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -512,16 +512,16 @@ namespace NDb
 				vOrient( VNULL4 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		float fMaxHP;
-		vector< SDamageLevel > damageLevels;
+		std::vector< SDamageLevel > damageLevels;
 		float fRepairCost;
-		vector< SDefenseRPGStats > defences;
+		std::vector< SDefenseRPGStats > defences;
 		CDBPtr< SVisObj > pvisualObject;
 		CDBPtr< SVisObj > pinfoVisualObject;
 		CDBPtr< STexture > pIconTexture;
@@ -529,8 +529,8 @@ namespace NDb
 		NFile::CFilePath szLocalizedNameFileRef;
 		float fSelectionScale;
 		ESelectionType eSelectionType;
-		vector< SAttachedLightEffect > lightEffects;
-		vector< SModelSurfacePoint > surfacePoints;
+		std::vector< SAttachedLightEffect > lightEffects;
+		std::vector< SModelSurfacePoint > surfacePoints;
 		CDBPtr< SIconsSet > pIconsSet;
 		SIconsSetParams iconsSetParams;
 
@@ -634,27 +634,27 @@ namespace NDb
 					fScale( 0.0500f )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
 				DWORD CalcCheckSum() const;
 			};
 			ESeason eSeason;
-			vector< SCraterDesc > craters;
+			std::vector< SCraterDesc > craters;
 
 			SSingleSeasonCraters() :
 				__dwCheckSum( 0 ),
 				eSeason( SEASON_WINTER )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SSingleSeasonCraters > craters;
+		std::vector< SSingleSeasonCraters > craters;
 
 		SCraterSet() { }
 		//
@@ -674,11 +674,11 @@ namespace NDb
 		enum { typeID = 0x300C3B80 };
 		CDBPtr< SModel > pModel;
 		CDBPtr< SComplexEffect > pSmokyExhaustEffect;
-		string szSmokyEffectLocator;
+		std::string szSmokyEffectLocator;
 		float fSmokyExhaustEffectInterval;
 		CDBPtr< SComplexEffect > pAttachedEffect;
 		CDBPtr< SComplexEffect > pEffectBeforeHit;
-		string szAttachedEffectLocator;
+		std::string szAttachedEffectLocator;
 
 		SProjectile() :
 			fSmokyExhaustEffectInterval( 2 )
@@ -743,7 +743,7 @@ namespace NDb
 			float fDetonationPower;
 			ETrajectoryType etrajectory;
 			float fBrokeTrackProbability;
-			string szFireSound;
+			std::string szFireSound;
 			CDBPtr< SComplexEffect > pEffectGunFire;
 			CDBPtr< SComplexEffect > pEffectTrajectory;
 			CDBPtr< SComplexEffect > pEffectHitDirect;
@@ -780,7 +780,7 @@ namespace NDb
 				fRelaxTime( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -816,7 +816,7 @@ namespace NDb
 		int nCeiling;
 		float fRevealRadius;
 		float fDeltaAngle;
-		vector< SShell > shells;
+		std::vector< SShell > shells;
 		CDBPtr< SVisObj > pVisObj;
 		NFile::CFilePath szLocalizedNameFileRef;
 
@@ -851,7 +851,7 @@ namespace NDb
 	public:
 		CDBPtr< SWeaponRPGStats > pWeapon;
 		CDBPtr< SAttachedModelVisObj > pAttachedGunVisObj;
-		string szAttachedGunLocator;
+		std::string szAttachedGunLocator;
 		CVec3 vShootPointOffset;
 		bool bShootEffectInvert;
 		int nPriority;
@@ -875,7 +875,7 @@ namespace NDb
 			bTargetAAOnly( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -903,13 +903,13 @@ namespace NDb
 				fWidth( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SDynamicDebrisDesc > debris;
+		std::vector< SDynamicDebrisDesc > debris;
 
 		SDynamicDebrisSet() { }
 		//
@@ -954,20 +954,20 @@ namespace NDb
 					fWidth( 0.0f )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
 				DWORD CalcCheckSum() const;
 			};
 			CDBPtr< SDynamicDebrisSet > pDebris;
-			vector< SDynamicMaskDesc > masks;
+			std::vector< SDynamicMaskDesc > masks;
 
 			SDynamicDebris() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -989,7 +989,7 @@ namespace NDb
 				nDayTime( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1004,8 +1004,8 @@ namespace NDb
 		CVec2 vVisOrigin;
 		CDBPtr< SComplexSoundDesc > pAmbientSound;
 		CDBPtr< SComplexSoundDesc > pCycledSound;
-		vector< SAmbientSound > ambientSounds;
-		vector< CDBPtr< SComplexSoundDesc > > cycledSoundTimed;
+		std::vector< SAmbientSound > ambientSounds;
+		std::vector< CDBPtr< SComplexSoundDesc > > cycledSoundTimed;
 		bool bCanFall;
 		int nObjectHeight;
 		CDBPtr< SComplexEffect > pFallEffect;
@@ -1062,15 +1062,15 @@ namespace NDb
 				vVisOrigin( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SSegment > segments;
-		vector< int > fronts;
-		vector< int > backs;
+		std::vector< SSegment > segments;
+		std::vector< int > fronts;
+		std::vector< int > backs;
 
 		#include "include_terraobjsetrpgstats.h"
 
@@ -1095,7 +1095,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< string > specificJoints;
+		std::vector< std::string > specificJoints;
 		bool bHideForPerformance;
 
 		SObjectRPGStats() :
@@ -1142,7 +1142,7 @@ namespace NDb
 			fDamageHP( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1158,8 +1158,8 @@ namespace NDb
 		CDBPtr< SVisObj > pNightObj;
 		CDBPtr< SVisObj > pDestroyedObj;
 		CDBPtr< SComplexEffect > pDestroyEffect;
-		vector< SSlotDamageLevel > dayDamageLevels;
-		vector< SSlotDamageLevel > nightDamageLevels;
+		std::vector< SSlotDamageLevel > dayDamageLevels;
+		std::vector< SSlotDamageLevel > nightDamageLevels;
 		float fMaxHP;
 
 		SWindowInfo() :
@@ -1167,7 +1167,7 @@ namespace NDb
 			fMaxHP( 100 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1201,7 +1201,7 @@ namespace NDb
 				nDir( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1213,7 +1213,7 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			string szLocatorName;
+			std::string szLocatorName;
 			int nNumFirePlaces;
 			CVec3 vPos;
 			CVec3 vDamageCenter;
@@ -1244,7 +1244,7 @@ namespace NDb
 				fSightMultiplier( 1 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1259,7 +1259,7 @@ namespace NDb
 			CVec3 vPos;
 			float fDirection;
 			float fVerticalAngle;
-			string szFireEffect;
+			std::string szFireEffect;
 			float fCoverage;
 			CVec2 vPicturePosition;
 
@@ -1274,7 +1274,7 @@ namespace NDb
 				vPicturePosition( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1301,7 +1301,7 @@ namespace NDb
 				vPicturePosition( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1311,11 +1311,11 @@ namespace NDb
 		int nRestSlots;
 		int nMedicalSlots;
 		CDBPtr< SWeaponRPGStats > pPrimaryGun;
-		vector< SSlot > slots;
-		vector< SEntrance > entrances;
-		vector< SFirePoint > firePoints;
-		vector< SFirePoint > smokePoints;
-		vector< SDirectionExplosion > dirExplosions;
+		std::vector< SSlot > slots;
+		std::vector< SEntrance > entrances;
+		std::vector< SFirePoint > firePoints;
+		std::vector< SFirePoint > smokePoints;
+		std::vector< SDirectionExplosion > dirExplosions;
 		float fSightMultiplier;
 		CDBPtr< SUnitStatsModifier > pSoldierStatsModifier;
 		EDesignBuildingType eBuildingType;
@@ -1393,7 +1393,7 @@ namespace NDb
 				nFrameIndex( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1420,7 +1420,7 @@ namespace NDb
 				fLength( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1432,16 +1432,16 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			vector< SSpan > spans;
-			vector< int > begins;
-			vector< int > lines;
-			vector< int > ends;
+			std::vector< SSpan > spans;
+			std::vector< int > begins;
+			std::vector< int > lines;
+			std::vector< int > ends;
 
 			SDamageState() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1456,7 +1456,7 @@ namespace NDb
 			CVec2 vPos;
 			float fDirection;
 			float fVerticalAngle;
-			string szFireEffect;
+			std::string szFireEffect;
 			CVec2 vPicturePosition;
 
 			#include "include_bridgerpgstats_firepoint.h"
@@ -1469,7 +1469,7 @@ namespace NDb
 				vPicturePosition( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1484,7 +1484,7 @@ namespace NDb
 			CVec2 vPos;
 			float fDirection;
 			float fVerticalAngle;
-			string szFireEffect;
+			std::string szFireEffect;
 			CVec2 vPicturePosition;
 
 			#include "include_bridgerpgstats_directionexplosion.h"
@@ -1497,7 +1497,7 @@ namespace NDb
 				vPicturePosition( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1516,7 +1516,7 @@ namespace NDb
 				mutable DWORD __dwCheckSum;
 			public:
 				float fDamageHP;
-				vector< CDBPtr< SVisObj > > visObjects;
+				std::vector< CDBPtr< SVisObj > > visObjects;
 				CDBPtr< SComplexEffect > pSmokeEffect;
 
 				SBridgeDamageState() :
@@ -1524,7 +1524,7 @@ namespace NDb
 					fDamageHP( 0.0f )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
@@ -1533,8 +1533,8 @@ namespace NDb
 			SByteArray2 passability;
 			CVec2 vOrigin;
 			CVec2 vSize;
-			vector< SBridgeDamageState > damageStates;
-			vector< CDBPtr< SVisObj > > visualObjects;
+			std::vector< SBridgeDamageState > damageStates;
+			std::vector< CDBPtr< SVisObj > > visualObjects;
 
 			SElementRPGStats() :
 				__dwCheckSum( 0 ),
@@ -1542,7 +1542,7 @@ namespace NDb
 				vSize( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1552,13 +1552,13 @@ namespace NDb
 		SElementRPGStats end;
 		float fHeight;
 		EDirection edirection;
-		vector< SSegmentRPGStats > segments;
-		vector< SDamageState > states;
-		vector< SBridgeFirePoint > firePoints;
-		vector< SBridgeFirePoint > smokePoints;
-		string szSmokeEffect;
-		vector< SBridgeDirectionExplosion > dirExplosions;
-		string szDirExplosionEffect;
+		std::vector< SSegmentRPGStats > segments;
+		std::vector< SDamageState > states;
+		std::vector< SBridgeFirePoint > firePoints;
+		std::vector< SBridgeFirePoint > smokePoints;
+		std::string szSmokeEffect;
+		std::vector< SBridgeDirectionExplosion > dirExplosions;
+		std::string szDirExplosionEffect;
 		float fSightMultiplier;
 
 		#include "include_bridgerpgstats.h"
@@ -1605,7 +1605,7 @@ namespace NDb
 			CVec2 vAABBCenter;
 			CVec3 vAABBHalfSize;
 			float fCoverage;
-			vector< CVec2 > fireplaces;
+			std::vector< CVec2 > fireplaces;
 			EEntrenchSegmType eType;
 
 			#include "include_entrenchmentrpgstats_segmentrpgstats.h"
@@ -1618,17 +1618,17 @@ namespace NDb
 				eType( EST_LINE )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SEntrenchSegmentRPGStats > segments;
-		vector< int > lines;
-		vector< int > fireplaces;
-		vector< int > terminators;
-		vector< int > arcs;
+		std::vector< SEntrenchSegmentRPGStats > segments;
+		std::vector< int > lines;
+		std::vector< int > fireplaces;
+		std::vector< int > terminators;
+		std::vector< int > arcs;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 
 		#include "include_entrenchmentrpgstats.h"
@@ -1697,7 +1697,7 @@ namespace NDb
 				nSpriteIndex( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1709,16 +1709,16 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			vector< int > centers;
-			vector< int > ldamages;
-			vector< int > rdamages;
-			vector< int > cdamages;
+			std::vector< int > centers;
+			std::vector< int > ldamages;
+			std::vector< int > rdamages;
+			std::vector< int > cdamages;
 
 			SDir() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -1730,7 +1730,7 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			vector< CDBPtr< SVisObj > > visObjes;
+			std::vector< CDBPtr< SVisObj > > visObjes;
 			SByteArray2 passability;
 			SPassProfile passProfile;
 			bool bUsePassabilityForVisibility;
@@ -1742,14 +1742,14 @@ namespace NDb
 				vOrigin( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SFenceSegmentRPGStats > stats;
-		vector< SDir > dirs;
+		std::vector< SFenceSegmentRPGStats > stats;
+		std::vector< SDir > dirs;
 		EFencePlacementMode ePlacementType;
 		SSegments centerSegments;
 		SSegments damagedSegments;
@@ -1794,7 +1794,7 @@ namespace NDb
 		CDBPtr< SWeaponRPGStats > pWeapon;
 		EMineType etype;
 		float fWeight;
-		string szFlagModel;
+		std::string szFlagModel;
 		int nTriggerRange;
 		bool bRangeDetonator;
 
@@ -1836,7 +1836,7 @@ namespace NDb
 			nAABB_D( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1848,13 +1848,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SAnimDesc > anims;
+		std::vector< SAnimDesc > anims;
 
 		Svector_AnimDescs() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1873,7 +1873,7 @@ namespace NDb
 		CUserCommands availExposures;
 		CUserActions availUserActions;
 		CUserActions availUserExposures;
-		vector< CDBPtr< SUnitSpecialAblityDesc > > specialAbilities;
+		std::vector< CDBPtr< SUnitSpecialAblityDesc > > specialAbilities;
 
 		#include "include_unitbaserpgstats_actions.h"
 
@@ -1968,7 +1968,7 @@ namespace NDb
 			bIsRound( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1998,7 +1998,7 @@ namespace NDb
 				vHalfSize( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2012,7 +2012,7 @@ namespace NDb
 		NFile::CFilePath szFullDescriptionFileRef;
 		EEncyclopediaFilterUnitType eEncyclopediaFilterUnitType;
 		int nAIPassabilityClass;
-		vector< CDBPtr< SAckSetRPGStats > > acksNames;
+		std::vector< CDBPtr< SAckSetRPGStats > > acksNames;
 		float fSight;
 		float fSightPower;
 		float fSpeed;
@@ -2028,9 +2028,9 @@ namespace NDb
 		CVec2 vAABBCenter;
 		CVec2 vAABBHalfSize;
 		SBoundCircle boundCircle;
-		vector< SAABBDesc > aabb_as;
-		vector< SAABBDesc > aabb_ds;
-		vector< Svector_AnimDescs > animdescs;
+		std::vector< SAABBDesc > aabb_as;
+		std::vector< SAABBDesc > aabb_ds;
+		std::vector< Svector_AnimDescs > animdescs;
 		float fSmallAABBCoeff;
 		CDBPtr< SUnitActions > pActions;
 		float fUninstallTransport;
@@ -2134,20 +2134,20 @@ namespace NDb
 				nFake( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SInfantryGun > guns;
+		std::vector< SInfantryGun > guns;
 		bool bCanAttackUp;
 		bool bCanAttackDown;
 		float fRunSpeed;
 		float fCrawlSpeed;
-		vector< int > animtimes;
+		std::vector< int > animtimes;
 		float fArmor;
-		string szGunBoneName;
+		std::string szGunBoneName;
 
 		#include "include_infantryrpgstats.h"
 
@@ -2183,7 +2183,7 @@ namespace NDb
 			nDirection( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -2195,13 +2195,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CVec2 > gunners;
+		std::vector< CVec2 > gunners;
 
 		SGunnersVector() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -2255,15 +2255,15 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			string szShootPoint;
+			std::string szShootPoint;
 			CVec3 vAIShootPointPos;
 			bool bRecoil;
 			float fRecoilLength;
 			int nrecoilTime;
 			int nRecoilShakeTime;
 			float fRecoilShakeAngle;
-			string szRecoilPoint;
-			string szRotatePoint;
+			std::string szRecoilPoint;
+			std::string szRotatePoint;
 			int nModelPart;
 
 			SMechUnitGun() :
@@ -2277,7 +2277,7 @@ namespace NDb
 				nModelPart( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2300,7 +2300,7 @@ namespace NDb
 				fMax( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2319,12 +2319,12 @@ namespace NDb
 			SConstraint constraint;
 			SConstraint constraintVertical;
 			int nGunCarriageParts;
-			string szRotatePoint;
+			std::string szRotatePoint;
 			CVec3 vAIRotatePointPos;
 			CDBPtr< SAttachedModelVisObj > pAttachedPlatformVisObj;
-			string szAttachedPlatformLocator;
+			std::string szAttachedPlatformLocator;
 			int nParentPlatform;
-			vector< SMechUnitGun > guns;
+			std::vector< SMechUnitGun > guns;
 
 			#include "include_mechunitrpgstats_platform.h"
 
@@ -2339,7 +2339,7 @@ namespace NDb
 				nParentPlatform( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2362,7 +2362,7 @@ namespace NDb
 				fMax( 120 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2391,7 +2391,7 @@ namespace NDb
 				fPhaze2( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2403,14 +2403,14 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			string szAttachedLocator;
-			vector< CDBPtr< SAttachedModelVisObj > > attachedVisObjects;
+			std::string szAttachedLocator;
+			std::vector< CDBPtr< SAttachedModelVisObj > > attachedVisObjects;
 
 			SSlotInfo() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2423,15 +2423,15 @@ namespace NDb
 			mutable DWORD __dwCheckSum;
 		public:
 			CDBPtr< SComplexEffect > pBoardSideEffect;
-			vector< string > boardSideLocators;
+			std::vector< std::string > boardSideLocators;
 			CDBPtr< SComplexEffect > pRastrumEffect;
-			vector< string > rastrumLocators;
+			std::vector< std::string > rastrumLocators;
 
 			SShipEffects() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2443,7 +2443,7 @@ namespace NDb
 		private:
 			mutable DWORD __dwCheckSum;
 		public:
-			string szLocatorName;
+			std::string szLocatorName;
 			float fInterval;
 			CDBPtr< SComplexEffect > pEffect;
 
@@ -2452,7 +2452,7 @@ namespace NDb
 				fInterval( 2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -2479,30 +2479,30 @@ namespace NDb
 				fFov( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		EDesignUnitType eUnitType;
-		vector< SPlatform > platforms;
-		vector< SSlotInfo > slots;
-		vector< SArmor > armors;
+		std::vector< SPlatform > platforms;
+		std::vector< SSlotInfo > slots;
+		std::vector< SArmor > armors;
 		float fTowingForce;
 		int nCrew;
 		int nPassangers;
 		float fTurnRadius;
-		vector< string > exhaustPoints;
-		vector< string > damagePoints;
-		vector< int > peoplePointIndices;
-		string szFatalitySmokePoint;
-		string szShootDustPoint;
+		std::vector< std::string > exhaustPoints;
+		std::vector< std::string > damagePoints;
+		std::vector< int > peoplePointIndices;
+		std::string szFatalitySmokePoint;
+		std::string szShootDustPoint;
 		CVec2 vTowPoint;
 		CVec2 vEntrancePoint;
-		vector< CVec2 > peoplePoints;
+		std::vector< CVec2 > peoplePoints;
 		CVec2 vAmmoPoint;
-		vector< SGunnersVector > gunners;
+		std::vector< SGunnersVector > gunners;
 		CVec2 vHookPoint;
 		CVec2 vFrontWheel;
 		CVec2 vBackWheel;
@@ -2511,7 +2511,7 @@ namespace NDb
 		CDBPtr< SComplexSeasonedEffect > pEffectWheelSplash;
 		CDBPtr< SComplexEffect > pEffectSmoke;
 		CDBPtr< SComplexEffect > pEffectFatality;
-		vector< SSmokeTrailEffect > smokeTrails;
+		std::vector< SSmokeTrailEffect > smokeTrails;
 		CDBPtr< SComplexSeasonedEffect > pEffectShootDust;
 		CDBPtr< SComplexSeasonedEffect > pEffectEntrenching;
 		CDBPtr< SComplexEffect > pEffectDisappear;
@@ -2542,11 +2542,11 @@ namespace NDb
 		CDBPtr< SCraterSet > pdeathCraters;
 		float fReinforcementPrice;
 		float fFuel;
-		vector< EManuverID > allowedPlaneManuvers;
+		std::vector< EManuverID > allowedPlaneManuvers;
 		CDBPtr< SVisObj > pAnimableModel;
 		CDBPtr< SVisObj > pTransportableModel;
 		SShipEffects shipEffects;
-		vector< SBoardedMechUnitPosition > boardedMechUnitPosition;
+		std::vector< SBoardedMechUnitPosition > boardedMechUnitPosition;
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 
@@ -2654,7 +2654,7 @@ namespace NDb
 					fDir( 0.0f )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
@@ -2670,10 +2670,10 @@ namespace NDb
 				SNEAK = 4,
 			};
 			EFormationMoveType etype;
-			vector< SEntry > order;
+			std::vector< SEntry > order;
 			int nLieFlag;
 			CDBPtr< SUnitStatsModifier > pStatsModifiers;
-			vector< int > changesByEvent;
+			std::vector< int > changesByEvent;
 			float fSpeedBonus;
 			float fDispersionBonus;
 			float fFireRateBonus;
@@ -2695,17 +2695,17 @@ namespace NDb
 				fVisibleBonus( 1 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		EDesignSquadType eSquadType;
-		string szIcon;
+		std::string szIcon;
 		ESquadType etype;
-		vector< CDBPtr< SInfantryRPGStats > > members;
-		vector< SFormation > formations;
+		std::vector< CDBPtr< SInfantryRPGStats > > members;
+		std::vector< SFormation > formations;
 		CUserCommands availCommands;
 		CUserCommands availExposures;
 		CUserActions availUserActions;
@@ -2774,7 +2774,7 @@ namespace NDb
 			nLinkWith( -1 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -2804,13 +2804,13 @@ namespace NDb
 				nDirection( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SDeployTemplateEntry > entries;
+		std::vector< SDeployTemplateEntry > entries;
 		bool bIsDefault;
 		EReinforcementType eReinforcementType;
 
@@ -2840,9 +2840,9 @@ namespace NDb
 		EReinforcementType eType;
 		CDBPtr< STexture > pIconTexture;
 		NFile::CFilePath szLocalizedNameFileRef;
-		vector< SReinforcementEntry > entries;
+		std::vector< SReinforcementEntry > entries;
 		NFile::CFilePath szTooltipFileRef;
-		vector< CDBPtr< SMechUnitRPGStats > > transports;
+		std::vector< CDBPtr< SMechUnitRPGStats > > transports;
 		NFile::CFilePath szLocalizedDescFileRef;
 		CDBPtr< SDeployTemplate > pTemplateOverride;
 
@@ -2906,7 +2906,7 @@ namespace NDb
 			eUserAction( USER_ACTION_REINF_COMMON )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -2921,7 +2921,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SReinforcementTypeInfo > typeInfo;
+		std::vector< SReinforcementTypeInfo > typeInfo;
 
 		SReinforcementTypes() :
 			__dwCheckSum( 0 )
@@ -2958,15 +2958,15 @@ namespace NDb
 				fExperience( 1 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		string szTypeName;
+		std::string szTypeName;
 		EReinforcementType eDBType;
-		vector< SLevel > levels;
+		std::vector< SLevel > levels;
 
 		#include "include_aiexplevel.h"
 
@@ -3011,7 +3011,7 @@ namespace NDb
 				nZeroCount( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -3053,379 +3053,379 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EUnitSpecialAbility eValue );
-	EUnitSpecialAbility StringToEnum_NDb_EUnitSpecialAbility( const string &szValue );
+	std::string EnumToString( NDb::EUnitSpecialAbility eValue );
+	EUnitSpecialAbility StringToEnum_NDb_EUnitSpecialAbility( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EUnitSpecialAbility>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EUnitSpecialAbility eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EUnitSpecialAbility ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbility( szValue ); }
+	static std::string ToString( NDb::EUnitSpecialAbility eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EUnitSpecialAbility ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbility( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EUnitSpecialAbilityGroup eValue );
-	EUnitSpecialAbilityGroup StringToEnum_NDb_EUnitSpecialAbilityGroup( const string &szValue );
+	std::string EnumToString( NDb::EUnitSpecialAbilityGroup eValue );
+	EUnitSpecialAbilityGroup StringToEnum_NDb_EUnitSpecialAbilityGroup( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EUnitSpecialAbilityGroup>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EUnitSpecialAbilityGroup eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EUnitSpecialAbilityGroup ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( szValue ); }
+	static std::string ToString( NDb::EUnitSpecialAbilityGroup eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EUnitSpecialAbilityGroup ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EArmorDirection eValue );
-	EArmorDirection StringToEnum_NDb_EArmorDirection( const string &szValue );
+	std::string EnumToString( NDb::EArmorDirection eValue );
+	EArmorDirection StringToEnum_NDb_EArmorDirection( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EArmorDirection>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EArmorDirection eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EArmorDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EArmorDirection( szValue ); }
+	static std::string ToString( NDb::EArmorDirection eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EArmorDirection ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EArmorDirection( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EObjGameType eValue );
-	EObjGameType StringToEnum_NDb_EObjGameType( const string &szValue );
+	std::string EnumToString( NDb::EObjGameType eValue );
+	EObjGameType StringToEnum_NDb_EObjGameType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EObjGameType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EObjGameType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EObjGameType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EObjGameType( szValue ); }
+	static std::string ToString( NDb::EObjGameType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EObjGameType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EObjGameType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EObjectVisType eValue );
-	EObjectVisType StringToEnum_NDb_EObjectVisType( const string &szValue );
+	std::string EnumToString( NDb::EObjectVisType eValue );
+	EObjectVisType StringToEnum_NDb_EObjectVisType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EObjectVisType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EObjectVisType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EObjectVisType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EObjectVisType( szValue ); }
+	static std::string ToString( NDb::EObjectVisType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EObjectVisType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EObjectVisType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::ESelectionType eValue );
-	ESelectionType StringToEnum_NDb_ESelectionType( const string &szValue );
+	std::string EnumToString( NDb::ESelectionType eValue );
+	ESelectionType StringToEnum_NDb_ESelectionType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESelectionType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESelectionType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESelectionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESelectionType( szValue ); }
+	static std::string ToString( NDb::ESelectionType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESelectionType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESelectionType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue );
-	SWeaponRPGStats::SShell::ETrajectoryType StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const string &szValue );
+	std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue );
+	SWeaponRPGStats::SShell::ETrajectoryType StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::SShell::ETrajectoryType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SWeaponRPGStats::SShell::ETrajectoryType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( szValue ); }
+	static std::string ToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SWeaponRPGStats::SShell::ETrajectoryType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue );
-	SWeaponRPGStats::SShell::EShellDamageType StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const string &szValue );
+	std::string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue );
+	SWeaponRPGStats::SShell::EShellDamageType StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::SShell::EShellDamageType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SWeaponRPGStats::SShell::EShellDamageType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( szValue ); }
+	static std::string ToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SWeaponRPGStats::SShell::EShellDamageType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue );
-	SWeaponRPGStats::EWeaponType StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const string &szValue );
+	std::string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue );
+	SWeaponRPGStats::EWeaponType StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::EWeaponType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SWeaponRPGStats::EWeaponType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SWeaponRPGStats::EWeaponType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( szValue ); }
+	static std::string ToString( NDb::SWeaponRPGStats::EWeaponType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SWeaponRPGStats::EWeaponType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EBuildingType eValue );
-	EBuildingType StringToEnum_NDb_EBuildingType( const string &szValue );
+	std::string EnumToString( NDb::EBuildingType eValue );
+	EBuildingType StringToEnum_NDb_EBuildingType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EBuildingType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EBuildingType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EBuildingType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EBuildingType( szValue ); }
+	static std::string ToString( NDb::EBuildingType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EBuildingType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EBuildingType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EDesignBuildingType eValue );
-	EDesignBuildingType StringToEnum_NDb_EDesignBuildingType( const string &szValue );
+	std::string EnumToString( NDb::EDesignBuildingType eValue );
+	EDesignBuildingType StringToEnum_NDb_EDesignBuildingType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EDesignBuildingType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EDesignBuildingType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EDesignBuildingType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignBuildingType( szValue ); }
+	static std::string ToString( NDb::EDesignBuildingType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EDesignBuildingType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDesignBuildingType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SBridgeRPGStats::EDirection eValue );
-	SBridgeRPGStats::EDirection StringToEnum_NDb_SBridgeRPGStats_EDirection( const string &szValue );
+	std::string EnumToString( NDb::SBridgeRPGStats::EDirection eValue );
+	SBridgeRPGStats::EDirection StringToEnum_NDb_SBridgeRPGStats_EDirection( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SBridgeRPGStats::EDirection>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SBridgeRPGStats::EDirection eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SBridgeRPGStats::EDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( szValue ); }
+	static std::string ToString( NDb::SBridgeRPGStats::EDirection eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SBridgeRPGStats::EDirection ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue );
-	SBridgeRPGStats::SSegmentRPGStats::ESegmentType StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const string &szValue );
+	std::string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue );
+	SBridgeRPGStats::SSegmentRPGStats::ESegmentType StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( szValue ); }
+	static std::string ToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EEntrenchSegmType eValue );
-	EEntrenchSegmType StringToEnum_NDb_EEntrenchSegmType( const string &szValue );
+	std::string EnumToString( NDb::EEntrenchSegmType eValue );
+	EEntrenchSegmType StringToEnum_NDb_EEntrenchSegmType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EEntrenchSegmType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EEntrenchSegmType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EEntrenchSegmType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEntrenchSegmType( szValue ); }
+	static std::string ToString( NDb::EEntrenchSegmType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EEntrenchSegmType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EEntrenchSegmType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EFenceDirection eValue );
-	EFenceDirection StringToEnum_NDb_EFenceDirection( const string &szValue );
+	std::string EnumToString( NDb::EFenceDirection eValue );
+	EFenceDirection StringToEnum_NDb_EFenceDirection( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EFenceDirection>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EFenceDirection eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EFenceDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EFenceDirection( szValue ); }
+	static std::string ToString( NDb::EFenceDirection eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EFenceDirection ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EFenceDirection( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EFenceDamageType eValue );
-	EFenceDamageType StringToEnum_NDb_EFenceDamageType( const string &szValue );
+	std::string EnumToString( NDb::EFenceDamageType eValue );
+	EFenceDamageType StringToEnum_NDb_EFenceDamageType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EFenceDamageType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EFenceDamageType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EFenceDamageType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EFenceDamageType( szValue ); }
+	static std::string ToString( NDb::EFenceDamageType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EFenceDamageType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EFenceDamageType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue );
-	SFenceRPGStats::EFencePlacementMode StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const string &szValue );
+	std::string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue );
+	SFenceRPGStats::EFencePlacementMode StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SFenceRPGStats::EFencePlacementMode>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SFenceRPGStats::EFencePlacementMode eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SFenceRPGStats::EFencePlacementMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( szValue ); }
+	static std::string ToString( NDb::SFenceRPGStats::EFencePlacementMode eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SFenceRPGStats::EFencePlacementMode ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EMineType eValue );
-	EMineType StringToEnum_NDb_EMineType( const string &szValue );
+	std::string EnumToString( NDb::EMineType eValue );
+	EMineType StringToEnum_NDb_EMineType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMineType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMineType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMineType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMineType( szValue ); }
+	static std::string ToString( NDb::EMineType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMineType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMineType( szValue ); }
 };
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EDBUnitRPGType eValue );
-	STATS_B2_M1_EXPORT EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EDBUnitRPGType eValue );
+	STATS_B2_M1_EXPORT EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EDBUnitRPGType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EDBUnitRPGType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EDBUnitRPGType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDBUnitRPGType( szValue ); }
+	static std::string ToString( NDb::EDBUnitRPGType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EDBUnitRPGType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDBUnitRPGType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EUnitPoliticalSide eValue );
-	EUnitPoliticalSide StringToEnum_NDb_EUnitPoliticalSide( const string &szValue );
+	std::string EnumToString( NDb::EUnitPoliticalSide eValue );
+	EUnitPoliticalSide StringToEnum_NDb_EUnitPoliticalSide( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EUnitPoliticalSide>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EUnitPoliticalSide eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EUnitPoliticalSide ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitPoliticalSide( szValue ); }
+	static std::string ToString( NDb::EUnitPoliticalSide eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EUnitPoliticalSide ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EUnitPoliticalSide( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EEncyclopediaFilterUnitType eValue );
-	EEncyclopediaFilterUnitType StringToEnum_NDb_EEncyclopediaFilterUnitType( const string &szValue );
+	std::string EnumToString( NDb::EEncyclopediaFilterUnitType eValue );
+	EEncyclopediaFilterUnitType StringToEnum_NDb_EEncyclopediaFilterUnitType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EEncyclopediaFilterUnitType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EEncyclopediaFilterUnitType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EEncyclopediaFilterUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( szValue ); }
+	static std::string ToString( NDb::EEncyclopediaFilterUnitType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EEncyclopediaFilterUnitType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( szValue ); }
 };
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EDesignUnitType eValue );
-	STATS_B2_M1_EXPORT EDesignUnitType StringToEnum_NDb_EDesignUnitType( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EDesignUnitType eValue );
+	STATS_B2_M1_EXPORT EDesignUnitType StringToEnum_NDb_EDesignUnitType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EDesignUnitType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EDesignUnitType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EDesignUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignUnitType( szValue ); }
+	static std::string ToString( NDb::EDesignUnitType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EDesignUnitType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDesignUnitType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EEvent eValue );
-	EEvent StringToEnum_NDb_EEvent( const string &szValue );
+	std::string EnumToString( NDb::EEvent eValue );
+	EEvent StringToEnum_NDb_EEvent( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EEvent>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EEvent eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EEvent ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEvent( szValue ); }
+	static std::string ToString( NDb::EEvent eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EEvent ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EEvent( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EDesignSquadType eValue );
-	EDesignSquadType StringToEnum_NDb_EDesignSquadType( const string &szValue );
+	std::string EnumToString( NDb::EDesignSquadType eValue );
+	EDesignSquadType StringToEnum_NDb_EDesignSquadType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EDesignSquadType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EDesignSquadType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EDesignSquadType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignSquadType( szValue ); }
+	static std::string ToString( NDb::EDesignSquadType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EDesignSquadType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDesignSquadType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SSquadRPGStats::ESquadType eValue );
-	SSquadRPGStats::ESquadType StringToEnum_NDb_SSquadRPGStats_ESquadType( const string &szValue );
+	std::string EnumToString( NDb::SSquadRPGStats::ESquadType eValue );
+	SSquadRPGStats::ESquadType StringToEnum_NDb_SSquadRPGStats_ESquadType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SSquadRPGStats::ESquadType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SSquadRPGStats::ESquadType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SSquadRPGStats::ESquadType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( szValue ); }
+	static std::string ToString( NDb::SSquadRPGStats::ESquadType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SSquadRPGStats::ESquadType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue );
-	SSquadRPGStats::SFormation::EFormationMoveType StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const string &szValue );
+	std::string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue );
+	SSquadRPGStats::SFormation::EFormationMoveType StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SSquadRPGStats::SFormation::EFormationMoveType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SSquadRPGStats::SFormation::EFormationMoveType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( szValue ); }
+	static std::string ToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SSquadRPGStats::SFormation::EFormationMoveType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( szValue ); }
 };
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EReinforcementType eValue );
-	STATS_B2_M1_EXPORT EReinforcementType StringToEnum_NDb_EReinforcementType( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EReinforcementType eValue );
+	STATS_B2_M1_EXPORT EReinforcementType StringToEnum_NDb_EReinforcementType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EReinforcementType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EReinforcementType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EReinforcementType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EReinforcementType( szValue ); }
+	static std::string ToString( NDb::EReinforcementType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EReinforcementType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EReinforcementType( szValue ); }
 };
 

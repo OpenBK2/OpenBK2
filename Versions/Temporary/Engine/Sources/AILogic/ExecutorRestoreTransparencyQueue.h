@@ -7,9 +7,9 @@ class CExecutorRestoreTransparencyQueue :	public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorRestoreTransparencyQueue)
 	
-	typedef hash_map<int, bool> CObjectsToRestore;
-	typedef hash_map<CVec2, bool, SVec2Hash> CObjectsToAskAround;
-	typedef list<int> CObjectsQueue;
+	typedef std::unordered_map<int, bool> CObjectsToRestore;
+	typedef std::unordered_map<CVec2, bool, SVec2Hash> CObjectsToAskAround;
+	typedef std::list<int> CObjectsQueue;
 
 	ZDATA_(CExecutor)
 	CObjectsToAskAround objectsToAskAround;

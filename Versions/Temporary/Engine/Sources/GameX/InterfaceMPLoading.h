@@ -10,11 +10,11 @@ public:
 
 	struct SPlayer
 	{
-		wstring wszName;
+		std::wstring wszName;
 		const NDb::STexture *pSideListItemIcon;
 		const NDb::STexture *pSideMinimapIcon;
 		int nLevel;
-		wstring wszRank;
+		std::wstring wszRank;
 		int nPlayerIndex;
 		int nTeam;
 		CVec2 vMinimapPos;
@@ -36,9 +36,9 @@ public:
 		CVec2 vMapAISize;
 		const NDb::STexture *pMapPicture;
 		const NDb::STexture *pMinimap;
-		wstring wszMapName;
-		wstring wszGameType;
-		vector<SPlayer> players;
+		std::wstring wszMapName;
+		std::wstring wszGameType;
+		std::vector<SPlayer> players;
 
 		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Should not be serialized" ); return 0; }
 		

@@ -42,12 +42,12 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	template <class TContainter>
 		inline bool ProcessLineTiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask );
 
-	vector<SVector> &GetTilesForCircle( const float fRadius );
-	void AddTile( const SVector &tile, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
-	void Add8TilesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
-	void AddLinesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
-	void Add8TilesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
-	void AddLinesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	std::vector<SVector> &GetTilesForCircle( const float fRadius );
+	void AddTile( const SVector &tile, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	void Add8TilesEven( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	void AddLinesEven( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	void Add8TilesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	void AddLinesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
 	SVector GetOffset( const WORD wAngle, const int nDiameter );
 	bool IsLocked( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked( const SVector &tile, const EAIClasses aiClass ) const;

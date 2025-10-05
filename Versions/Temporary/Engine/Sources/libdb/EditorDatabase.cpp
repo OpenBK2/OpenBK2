@@ -59,10 +59,10 @@ class CEditorDatabase : public CBasicDatabase
 		STypeObjectHeader typeHeader;
 		CObj<NBind::CBindStruct> pBind;
 	};
-	typedef hash_map<CDBID, SElement> CElementsMap;
+	typedef std::unordered_map<CDBID, SElement> CElementsMap;
 	CElementsMap elementsMap;							// objects map
 	bool bIndexChanged;										// index was changed during elements manipulation
-	typedef hash_map<string, CObj<NTypeDef::STypeDef> > CTypesMap;
+	typedef std::unordered_map<std::string, CObj<NTypeDef::STypeDef> > CTypesMap;
 	CTypesMap typesMap;										// type definitions
 	NMetaInfo::CMetaInfoMap metaInfoMap;
 	//
@@ -72,12 +72,12 @@ class CEditorDatabase : public CBasicDatabase
 	bool ReallyRegisterResourceFile( const CDBID &dbid );
 	//
 	const SElement *GetElement( const CDBID &_dbid );
-	int GetClassTypeID( const string &szClassTypeName );
+	int GetClassTypeID( const std::string &szClassTypeName );
 	NBind::CBindStruct *CreateNewBind( const STypeObjectHeader &header );
 	//! get raw struct meta info w/o linking with type defs
-	NMetaInfo::SStructMetaInfo *GetRawStructMetaInfo( const string &szTypeName );
+	NMetaInfo::SStructMetaInfo *GetRawStructMetaInfo( const std::string &szTypeName );
 	//! get struct meta info, linked with type defs (link if necessary)
-	NMetaInfo::SStructMetaInfo *GetStructMetaInfo( const string &szTypeName );
+	NMetaInfo::SStructMetaInfo *GetStructMetaInfo( const std::string &szTypeName );
 	//! check object exist (register it from storage if necessary)
 	bool DoesObjectExist( const CDBID &dbid );
 	//
@@ -94,8 +94,8 @@ public:
 	CEditorDatabase(): bIndexChanged( false ) {}
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
-	bool RegisterResourceFile( const string &szFileName );
-	virtual bool IsFileRegistered( const string &szFileName );
+	bool RegisterResourceFile( const std::string &szFileName );
+	virtual bool IsFileRegistered( const std::string &szFileName );
 	void SetLoadDepth( int nLoadDepth ) { NI_ASSERT( false, "this functionality are for game only" ) }
 	//
 	IObjMan *GetManipulator( const CDBID &dbid ) { return GetObjManInternal( dbid ); }
@@ -104,8 +104,8 @@ public:
 		IObjMan *pObjMan = GetObjManInternal( dbid );
 		return pObjMan == 0 ? 0 : pObjMan->GetObject();
 	}
-	IObjMan *CreateNewObject( const string &szClassTypeName );
-	bool AddNewObject( const string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
+	IObjMan *CreateNewObject( const std::string &szClassTypeName );
+	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
 	bool RemoveObject( const CDBID &dbid );
 	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
 	//
@@ -114,11 +114,11 @@ public:
 	bool SaveChangedIndex();
 	void DropCachedResources();
 	//
-	bool GetClassesList( vector<NTypeDef::STypeClass*> *pRes );
-	bool GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName );
-	bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID );
+	bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
+	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
+	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
 	//
-	string GetClassTypeName( const CDBID &_dbid )
+	std::string GetClassTypeName( const CDBID &_dbid )
 	{
 		if ( const SElement *pElement = GetElement( _dbid ) )
 			return pElement->typeHeader.szClassTypeName;
@@ -163,7 +163,7 @@ bool CEditorDatabase::SaveChangedIndex()
 			if ( CPtr<IBinSaver> pSaver = CreateBinSaver(&stream, SAVER_MODE_WRITE) )
 			{
 				// save changed index
-				vector<SFullTypeHeader> objectsIndex( elementsMap.size() );
+				std::vector<SFullTypeHeader> objectsIndex( elementsMap.size() );
 				int i = 0;
 				for ( CElementsMap::const_iterator it = elementsMap.begin(); it != elementsMap.end(); ++it, ++i )
 				{
@@ -186,7 +186,7 @@ bool CEditorDatabase::SaveChangedIndex()
 
 bool CEditorDatabase::LoadTypesMap()
 {
-	vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
+	std::vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
 	CFileStream stream( GetVFS(), TYPES_FILE_NAME );
 	if ( stream.IsOk() )
 	{
@@ -201,7 +201,7 @@ bool CEditorDatabase::LoadTypesMap()
 	if ( topLevelTypes.empty() )
 		theLogger.WriteLog( StrFmt("WARNING: %s has loaded but contain no types", TYPES_FILE_NAME) );
 	//
-	for ( vector< CObj<NDb::NTypeDef::STypeDef> >::iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
+	for ( std::vector< CObj<NDb::NTypeDef::STypeDef> >::iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
 	{
 		if ( (*it)->eType == NDb::NTypeDef::TYPE_TYPE_CLASS )
 		{
@@ -224,7 +224,7 @@ const CEditorDatabase::SElement *CEditorDatabase::GetElement( const CDBID &_dbid
 	return &( elementsMap[dbid] );
 }
 
-int CEditorDatabase::GetClassTypeID( const string &szClassTypeName )
+int CEditorDatabase::GetClassTypeID( const std::string &szClassTypeName )
 {
 	for ( CTypesMap::const_iterator it = typesMap.begin(); it != typesMap.end(); ++it )
 	{
@@ -234,7 +234,7 @@ int CEditorDatabase::GetClassTypeID( const string &szClassTypeName )
 	return -1;
 }
 
-NMetaInfo::SStructMetaInfo *CEditorDatabase::GetRawStructMetaInfo( const string &szTypeName )
+NMetaInfo::SStructMetaInfo *CEditorDatabase::GetRawStructMetaInfo( const std::string &szTypeName )
 {
 	NMetaInfo::CMetaInfoMap::iterator pos = metaInfoMap.find( szTypeName );
 	if ( pos == metaInfoMap.end() )
@@ -245,7 +245,7 @@ NMetaInfo::SStructMetaInfo *CEditorDatabase::GetRawStructMetaInfo( const string 
 	return pos->second;
 }
 
-NMetaInfo::SStructMetaInfo *CEditorDatabase::GetStructMetaInfo( const string &szTypeName )
+NMetaInfo::SStructMetaInfo *CEditorDatabase::GetStructMetaInfo( const std::string &szTypeName )
 {
 	NMetaInfo::SStructMetaInfo *pMetaInfo = GetRawStructMetaInfo( szTypeName );
 	// link struct meta info with type meta info
@@ -269,7 +269,7 @@ bool CEditorDatabase::DoesObjectExist( const CDBID &dbid )
 		return RegisterResourceFile( GetFileName(dbid) );
 }
 
-bool CEditorDatabase::IsFileRegistered( const string &szFileName )
+bool CEditorDatabase::IsFileRegistered( const std::string &szFileName )
 {
 	CDBID dbid, _dbid( szFileName );
 	NormalizeDBID( &dbid, _dbid );
@@ -277,7 +277,7 @@ bool CEditorDatabase::IsFileRegistered( const string &szFileName )
 	return elementsMap.find( dbid ) != elementsMap.end();
 }
 
-bool CEditorDatabase::RegisterResourceFile( const string &szFileName )
+bool CEditorDatabase::RegisterResourceFile( const std::string &szFileName )
 {
 	CDBID dbid, _dbid( szFileName );
 	NormalizeDBID( &dbid, _dbid );
@@ -365,7 +365,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 	NI_VERIFY( pBind->IsLoaded() == false, StrFmt("Trying to load already loaded object \"%s\"", dbid.ToString().c_str()), return true );
 	//
 	pBind->SetDBID( dbid );
-	const string szFileName = GetFileName( dbid );
+	const std::string szFileName = GetFileName( dbid );
 	CFileStream stream( GetVFS(), szFileName );
 	NI_VERIFY( stream.IsOk(), StrFmt("Can't open stream \"%s\" to load db object", szFileName.c_str()), return false );
 
@@ -382,11 +382,11 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 	// load attributes and objectID
 	{
 		int nObjectRecordID = -1;
-		const vector<const NXml::SXmlAttribute*> &attributes = pRootElement->GetAttributes();
-		for ( vector<const NXml::SXmlAttribute*>::const_iterator itAttribute = attributes.begin(); itAttribute != attributes.end(); ++itAttribute )
+		const std::vector<const NXml::SXmlAttribute*> &attributes = pRootElement->GetAttributes();
+		for ( std::vector<const NXml::SXmlAttribute*>::const_iterator itAttribute = attributes.begin(); itAttribute != attributes.end(); ++itAttribute )
 		{
 			const NXml::SXmlAttribute *pAttr = *itAttribute;
-			wstring wszUnicodeAttribute;
+			std::wstring wszUnicodeAttribute;
 			NStr::UTF8ToUnicode( &wszUnicodeAttribute, pAttr->value.ToString() );
 			pBind->SetAttribute( pAttr->name.ToString(), wszUnicodeAttribute );
 		}
@@ -399,7 +399,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 	return true;
 }
 
-IObjMan *CEditorDatabase::CreateNewObject( const string &szClassTypeName )
+IObjMan *CEditorDatabase::CreateNewObject( const std::string &szClassTypeName )
 {
 	NMetaInfo::SStructMetaInfo *pMetaInfo = GetStructMetaInfo( szClassTypeName );
 	NI_VERIFY( pMetaInfo != 0 && pMetaInfo->pStructTypeDef != 0, "Can't get struct meta info", return 0 );
@@ -424,7 +424,7 @@ void CEditorDatabase::AddNewObjectInternal( const CDBID &dbid, IObjMan *pObjMan 
 	pBind->SetDBID( dbid );
 }
 
-bool CEditorDatabase::AddNewObject( const string &szFilePath, const CDBID &_dbid, IObjMan *pObjMan )
+bool CEditorDatabase::AddNewObject( const std::string &szFilePath, const CDBID &_dbid, IObjMan *pObjMan )
 {
 	NI_VERIFY( IsDBIDValid(_dbid), "Invalid DBID - can't add new object!", return false );
 	//
@@ -468,17 +468,17 @@ bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew
 	if ( pReferencedObj == 0 )
 		return false;
 	//
-	vector<CDBID> refObjs;
+	std::vector<CDBID> refObjs;
 	if ( NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>() )
 	{
-		const string szFileName = GetFileName( dbidOld );
+		const std::string szFileName = GetFileName( dbidOld );
 		while ( pClient->GetReferencingObjects( szFileName, &refObjs ) == 
 			NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY ) ;
 	}
 	else
 		return false;
 	// get all changed objects to force load and set them as changed
-	for ( vector<CDBID>::const_iterator it = refObjs.begin(); it != refObjs.end(); ++it )
+	for ( std::vector<CDBID>::const_iterator it = refObjs.begin(); it != refObjs.end(); ++it )
 	{
 		GetManipulator( *it );
 		MarkChanged( *it );
@@ -511,7 +511,7 @@ void CEditorDatabase::SaveChanges()
 	{
 		if ( itElement->second.pBind && (itElement->second.pBind->IsChanged() || itElement->second.pBind->IsNew()) )
 		{
-			const string szFileName = GetFileName( itElement->first );
+			const std::string szFileName = GetFileName( itElement->first );
 			CFileStream fileStream( GetFileCreator(), szFileName );
 			if ( fileStream.IsOk() )
 			{
@@ -520,13 +520,13 @@ void CEditorDatabase::SaveChanges()
 				NLXML::CXMLDeclaration *pDeclaration = new NLXML::CXMLDeclaration();
 				xmlDocument.AddChild( pDeclaration );
 				// create root element and set attributes
-				const string &szTypeName = itElement->second.pBind->GetTypeName();
+				const std::string &szTypeName = itElement->second.pBind->GetTypeName();
 				const NBind::CAttributesList &attributes = itElement->second.pBind->GetAttributes();
 				NLXML::CXMLElement *pBaseNode = new NLXML::CXMLElement();
 				pBaseNode->SetValue( itElement->second.pBind->GetTypeName() );
 				for ( NBind::CAttributesList::const_iterator itAttribute = attributes.begin(); itAttribute != attributes.end(); ++itAttribute )
 				{
-					string szUTF8Attribute;
+					std::string szUTF8Attribute;
 					NStr::UnicodeToUTF8( &szUTF8Attribute, itAttribute->second );
 					pBaseNode->SetAttribute( itAttribute->first, szUTF8Attribute );
 				}
@@ -559,14 +559,14 @@ void CEditorDatabase::DropCachedResources()
 {
 	{
 		// collect new unsaved objects to remove it
-		list<CDBID> newObjects;
+		std::list<CDBID> newObjects;
 		for ( CElementsMap::iterator it = elementsMap.begin(); it != elementsMap.end(); ++it )
 		{
 			if ( it->second.pBind && it->second.pBind->IsNew() )
 				newObjects.push_back( it->first );
 		}
 		// remove new unsaved objects
-		for ( list<CDBID>::const_iterator it = newObjects.begin(); it != newObjects.end(); ++it )
+		for ( std::list<CDBID>::const_iterator it = newObjects.begin(); it != newObjects.end(); ++it )
 			RemoveObjectInternal( *it );
 	}
 	// reload all changed resources
@@ -592,7 +592,7 @@ void CEditorDatabase::DropCachedResources()
 // **
 // ************************************************************************************************************************ //
 
-bool CEditorDatabase::GetClassesList( vector<NTypeDef::STypeClass*> *pRes )
+bool CEditorDatabase::GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes )
 {
 	pRes->resize( 0 );
 	pRes->reserve( typesMap.size() );
@@ -604,10 +604,10 @@ bool CEditorDatabase::GetClassesList( vector<NTypeDef::STypeClass*> *pRes )
 	return !pRes->empty();
 }
 
-bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID )
+bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID )
 {
 	// first, find class type name
-	string szClassTypeName;
+	std::string szClassTypeName;
 	for ( CTypesMap::const_iterator it = typesMap.begin(); it != typesMap.end(); ++it )
 	{
 		if ( it->second->eType == NTypeDef::TYPE_TYPE_CLASS )
@@ -624,7 +624,7 @@ bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const int nClassTypeI
 	return GetObjectsList( pRes, szClassTypeName );
 }
 
-bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName )
+bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName )
 {
 	if ( szClassTypeName.empty() )
 	{

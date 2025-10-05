@@ -7,12 +7,12 @@ class CLoginPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLoginPacket );
 public:
 	ZDATA
-		string szNick;
-		string szPassword;
+		std::string szNick;
+		std::string szPassword;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&szPassword); return 0; }
 
 	CLoginPacket() { }
-	CLoginPacket( const int nClient, const string &_szNick, const string &_szPassword )
+	CLoginPacket( const int nClient, const std::string &_szNick, const std::string &_szPassword )
 		: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword ) {}
 };
 
@@ -21,14 +21,14 @@ class CRegisterPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CRegisterPacket )
 public:
 	ZDATA
-		string szNick;
-		string szPassword;
-		string szCDKey;
-		string szEmail;
+		std::string szNick;
+		std::string szPassword;
+		std::string szCDKey;
+		std::string szEmail;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&szPassword); f.Add(4,&szCDKey); f.Add(5,&szEmail); return 0; }
 
 	CRegisterPacket() { }
-	CRegisterPacket( const int nClient, const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail )
+	CRegisterPacket( const int nClient, const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail )
 		: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword ), szCDKey( _szCDKey ), szEmail( _szEmail ) {}
 };
 
@@ -37,12 +37,12 @@ class CForgottenPasswordPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CForgottenPasswordPacket )
 public:
 	ZDATA
-		string szNick;
-		string szEMail;
+		std::string szNick;
+		std::string szEMail;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&szEMail); return 0; }
 
 	CForgottenPasswordPacket() {}
-	CForgottenPasswordPacket( const string &_szNick, const string &_szEMail )
+	CForgottenPasswordPacket( const std::string &_szNick, const std::string &_szEMail )
 		: CNetPacket( 0 ), szNick( _szNick ), szEMail( _szEMail ) {}
 };
 
@@ -81,17 +81,17 @@ public:
 	enum EConnectType { ECT_LOGIN, ECT_REGISTER };
 	ZDATA
 		int nPrime1, nPrime2;
-		string szNick;
-		string szPassword;
-		string szCDKey;
-		string szEmail;
+		std::string szNick;
+		std::string szPassword;
+		std::string szCDKey;
+		std::string szEmail;
 		EConnectType eConnectType;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nPrime1); f.Add(3,&nPrime2); f.Add(4,&szNick); f.Add(5,&szPassword); f.Add(6,&szCDKey); f.Add(7,&szEmail); f.Add(8,&eConnectType); return 0; }
 
 	CCheckConnectAnswerPacket() { }
 	CCheckConnectAnswerPacket( const int _nPrime1, const int _nPrime2,
 			const EConnectType _eConnectType, 
-			const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail )
+			const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail )
 		: nPrime1( _nPrime1 ), nPrime2( _nPrime2 ),
 			eConnectType( _eConnectType ), szNick( _szNick ), szPassword( _szPassword ),
 			szCDKey( _szCDKey ), szEmail( _szEmail ) { }

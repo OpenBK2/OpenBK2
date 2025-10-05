@@ -66,11 +66,11 @@ class CConnectGamePacket : public CNetPacket
 public:
 	ZDATA
 		int nGameID;
-		string szPassword;
+		std::string szPassword;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&szPassword); return 0; }
 
 	CConnectGamePacket() { }
-	CConnectGamePacket( const int nClientID, const int _nGameID, const string &_szPassword )
+	CConnectGamePacket( const int nClientID, const int _nGameID, const std::string &_szPassword )
 		: CNetPacket( nClientID ), nGameID( _nGameID ), szPassword( _szPassword ) { }
 };
 
@@ -228,9 +228,9 @@ public:
 	ZDATA
 		DWORD dwVersion;
 		bool bFullUpdate;
-		list<int> removed;
-		list<SGameInfo> added;
-		list<SGameInfo> changed;
+		std::list<int> removed;
+		std::list<SGameInfo> added;
+		std::list<SGameInfo> changed;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); f.Add(3,&bFullUpdate); f.Add(4,&removed); f.Add(5,&added); f.Add(6,&changed); return 0; }
 
 	CLobbyGamesPacket() { }
@@ -244,11 +244,11 @@ class CGameTestBroadcastMsg : public CNetPacket
 public:
 	ZDATA
 		int nNumber;
-	string szStr;
+	std::string szStr;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nNumber); f.Add(3,&szStr); return 0; }
 
 	CGameTestBroadcastMsg() { }
-	CGameTestBroadcastMsg( const int _nNumber, const string &_szStr )
+	CGameTestBroadcastMsg( const int _nNumber, const std::string &_szStr )
 		: nNumber( _nNumber ), szStr( _szStr ) { }
 };
 
@@ -259,11 +259,11 @@ class CGameTestDirectMsg : public CNetPacket
 public:
 	ZDATA
 		int nNumber;
-	string szStr;
+	std::string szStr;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nNumber); f.Add(3,&szStr); return 0; }
 
 	CGameTestDirectMsg() { }
-	CGameTestDirectMsg( const int nClientID, const int _nNumber, const string &_szStr )
+	CGameTestDirectMsg( const int nClientID, const int _nNumber, const std::string &_szStr )
 		: CNetPacket( nClientID ), nNumber( _nNumber ), szStr( _szStr ) { }
 };
 
@@ -319,7 +319,7 @@ class CAnswerConnectGame : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CAnswerConnectGame )
 public:
 	ZDATA
-		list<int> clients;
+		std::list<int> clients;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&clients); return 0; }
 
 	CAnswerConnectGame() { }
@@ -332,13 +332,13 @@ class CClientGameConnectInfo : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CClientGameConnectInfo )
 public:
 	ZDATA
-		string szIP;
+		std::string szIP;
 		int nPort;
 		int nClient2Connect;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szIP); f.Add(3,&nPort); f.Add(4,&nClient2Connect); return 0; }
 
 	CClientGameConnectInfo() { }
-	CClientGameConnectInfo( const int nClientID, const string &_szIP, const int _nPort, const int _nClient2Connect )
+	CClientGameConnectInfo( const int nClientID, const std::string &_szIP, const int _nPort, const int _nClient2Connect )
 		: CNetPacket( nClientID ), szIP( _szIP ), nPort( _nPort ), nClient2Connect( _nClient2Connect ) { }
 };
 
@@ -348,13 +348,13 @@ class CClientWantToConnect : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CClientWantToConnect )
 public:
 	ZDATA
-		string szIP;
+		std::string szIP;
 		int nPort;
 		int nWantedClient;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szIP); f.Add(3,&nPort); f.Add(4,&nWantedClient); return 0; }
 
 	CClientWantToConnect() { }
-	CClientWantToConnect( const int nClientID, const int _nWantedClient, const string &_szIP, const int _nPort )
+	CClientWantToConnect( const int nClientID, const int _nWantedClient, const std::string &_szIP, const int _nPort )
 		: CNetPacket( nClientID ), nWantedClient( _nWantedClient ), szIP( _szIP ), nPort( _nPort ) { }
 };
 

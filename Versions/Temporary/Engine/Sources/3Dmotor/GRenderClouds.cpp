@@ -10,7 +10,7 @@ namespace NGScene
 {
 static CObj<NGfx::CGeometry> pCloudGrid;
 static NGfx::STriangleList cloudTris;
-static vector<STriangle> cloudTrisBuf;
+static std::vector<STriangle> cloudTrisBuf;
 
 const int N_GRID_SIZE = 64;
 static void RefreshGeometry()

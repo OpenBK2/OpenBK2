@@ -24,7 +24,7 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	bool bHost;
 	NTimer::STime timeNextGameHeartbeat;
 	SAutoUpdate updateChannels;
-	hash_set<string> chatChannels;
+	std::unordered_set<std::string> chatChannels;
 	int nLadderCountry;
 	bool bLadderGame;
 	bool bHistoricity;
@@ -63,7 +63,7 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	void ProcessLadderWaitForClients();
 	int DetermineLadderCountry( const int nInitial, const NDb::EHistoricalSide eSide );
 	void SendLadderGameAftermath( const SLadderStatistics &oldStats, const SLadderStatistics &newStats );
-	const int GetRankFromLevel( const int nRace, const int nLevel, wstring *pwszOut );
+	const int GetRankFromLevel( const int nRace, const int nLevel, std::wstring *pwszOut );
 	void ExtractGameInfo( SNetGameInfo *pDst, const struct SGameInfo &src );
 
 	//{ Messages

@@ -59,7 +59,7 @@ private:
 	CMemoryStream pwd;
 	EState state;
 	int nLastReject;
-	list<SAcceptedLogin> acceptedList;
+	std::list<SAcceptedLogin> acceptedList;
 	int nClientIDTrack;
 	int nSelfClientID;
 	CNodeAddressSet serverLocalAddr;

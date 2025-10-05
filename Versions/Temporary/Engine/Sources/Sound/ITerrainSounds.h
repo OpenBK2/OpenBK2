@@ -16,7 +16,7 @@ struct ITerrainSounds : public virtual CObjectBase
 	//virtual int GetNTerrainCycleSounds( int nTerrainType ) = 0;
 	virtual const NDb::SComplexSoundDesc * GetTerrainCycleSound( int nTerrainType ) = 0;
 	// scans trough visible terrain and returns data about it
-	virtual void GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMaxSize ) = 0;
+	virtual void GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize ) = 0;
 	//returns relative volume of all sounds for specific terrain
 	virtual float GetSoundVolume( int nTerrainType ) const = 0 ;
 };

@@ -10,17 +10,17 @@ class SYSTEM_EXPORT CFileIterator
 {
 	HANDLE hFind;													// find file handle of the last search result
 	WIN32_FIND_DATA findinfo;							// last search info
-	string szPath;                   // path to the file
-	string szMask;
+	std::string szPath;                   // path to the file
+	std::string szMask;
 
 	bool IsValid() const { return hFind != INVALID_HANDLE_VALUE; }
 	CFileIterator( const CFileIterator &a ) {}
 	void operator=( const CFileIterator &a ) {}
 	bool Close();
-	const CFileIterator& FindFirstFile( const string &szMask );
+	const CFileIterator& FindFirstFile( const std::string &szMask );
 public:
 	CFileIterator() : hFind( INVALID_HANDLE_VALUE ) {  }
-	CFileIterator( const string &szMask ) { FindFirstFile( szMask ); }
+	CFileIterator( const std::string &szMask ) { FindFirstFile( szMask ); }
 	~CFileIterator() { Close(); }
 	// file enumeration
 	const CFileIterator& Next();
@@ -46,18 +46,18 @@ public:
 	// file length
 	int GetLength() const { return findinfo.nFileSizeLow; }
 	// file name (title + ext), full path (absolute path + name)
-	string GetFileName() const { return findinfo.cFileName; }
-	string GetFullName() const { return szPath + findinfo.cFileName; }
-	const string& GetBasePath() const { return szPath; }
-	const string& GetBaseMask() const { return szMask; }
+	std::string GetFileName() const { return findinfo.cFileName; }
+	std::string GetFullName() const { return szPath + findinfo.cFileName; }
+	const std::string& GetBasePath() const { return szPath; }
+	const std::string& GetBaseMask() const { return szMask; }
 };
 
 // enumerate all files by mask.
 // при рекурсивной енумерации сначала входим в директорию, а потом только получаем её имя (при выходе из рекурсии)
 template <class TEnumFunc>
-void EnumerateFiles( const string &szStartDir, const char *pszMask, TEnumFunc callback, bool bRecurse )
+void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFunc callback, bool bRecurse )
 {
-	string szDir = szStartDir;
+	std::string szDir = szStartDir;
 	// iterate throug all files by mask
 	for ( CFileIterator it( (szDir + pszMask).c_str() ); !it.IsEnd(); ++it )
 	{
@@ -78,30 +78,30 @@ void EnumerateFiles( const string &szStartDir, const char *pszMask, TEnumFunc ca
 	}
 }
 
-void GetDirectoryDirs( const char *pszDirName, list<string> *pNames, bool bRecursive = true );
-SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, list<string> *pNames, bool bRecurse = true );
+void GetDirectoryDirs( const char *pszDirName, std::list<std::string> *pNames, bool bRecursive = true );
+SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse = true );
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive );
-SYSTEM_EXPORT void DeleteDirectory( const string &szDir );
+SYSTEM_EXPORT void DeleteDirectory( const std::string &szDir );
 
-SYSTEM_EXPORT bool DoesFileExist( const string &szFileName );
-bool DoesFolderExist( const string &szFolderName );bool IsValidFileName( const string &szFileName );
+SYSTEM_EXPORT bool DoesFileExist( const std::string &szFileName );
+bool DoesFolderExist( const std::string &szFolderName );bool IsValidFileName( const std::string &szFileName );
 // is valid win32 file name
-SYSTEM_EXPORT bool IsValidDirName( const string &szName );
+SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
-bool CopyFile( const string &szSrcName, const string &szDstName );
+bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
 
-SYSTEM_EXPORT string GetFullName( const string &szPath );
-SYSTEM_EXPORT void GetFullName( string *pResult, const string &szPath );
+SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
+SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );
 
-string GetTempPath();
-string GetTempFileName();
+std::string GetTempPath();
+std::string GetTempFileName();
 
-string GetCurrDir();
-string GetNormalizedCurrDir();
-void SetCurrDir( const string &szDir );
+std::string GetCurrDir();
+std::string GetNormalizedCurrDir();
+void SetCurrDir( const std::string &szDir );
 class CCurrDirHolder
 {
-	string szDir;
+	std::string szDir;
 public:
 	CCurrDirHolder() { szDir = GetCurrDir(); }
 	~CCurrDirHolder() { SetCurrDir( szDir ); }

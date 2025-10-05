@@ -20,11 +20,11 @@ class CDifficultyLevel
 
 
 
-	vector< CArray2D<float> > coeff;
+	std::vector< CArray2D<float> > coeff;
 
-	vector<string> levelsNames;
-	vector<string> coeffNames;
-	vector<string> partiesNames;
+	std::vector<std::string> levelsNames;
+	std::vector<std::string> coeffNames;
+	std::vector<std::string> partiesNames;
 public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(2,&nLevel); f.Add(3,&nCheatLevel); f.Add(4,&coeff); f.Add(5,&levelsNames); f.Add(6,&coeffNames); f.Add(7,&partiesNames); return 0; }
 		void OnSerialize( IBinSaver &f );

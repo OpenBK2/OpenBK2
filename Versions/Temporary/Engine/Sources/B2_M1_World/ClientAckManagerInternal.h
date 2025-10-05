@@ -12,7 +12,7 @@ namespace NDb
 	struct SComplexSoundDesc;
 }
 
-typedef hash_map< int/*AckType*/, int/*index in consts*/ > CUnitAcksInfo;
+typedef std::unordered_map< int/*AckType*/, int/*index in consts*/ > CUnitAcksInfo;
 
 class CClientAckManager : public IClientAckManager
 {
@@ -22,7 +22,7 @@ class CClientAckManager : public IClientAckManager
 	//
 	class CBoredUnitsContainer
 	{
-		typedef hash_map<CPtr<IMOUnit>, bool, SPtrHash> CBoredUnits;
+		typedef std::unordered_map<CPtr<IMOUnit>, bool, SPtrHash> CBoredUnits;
 		CBoredUnits boredUnits;							
 		int nCounter;												// для оптимизации - размер boredUnits
 		NTimer::STime timeLastBored;				// time for last bored sound
@@ -56,7 +56,7 @@ class CClientAckManager : public IClientAckManager
 		int operator&( IBinSaver &saver );
 		bool operator==( const SAck & ack ) const { return eAck == ack.eAck; }
 	};
-	typedef list< SAck > CAcks;
+	typedef std::list< SAck > CAcks;
 	//	
 	struct SUnitAck
 	{
@@ -80,9 +80,9 @@ class CClientAckManager : public IClientAckManager
 			: vPos( _vPos ), pSound( _pSound ), timeSinceStart( nTimeSinceStart ) {  }
 	};
 	//
-	typedef hash_map< int, NTimer::STime > CUnitAcksPresence;
-	typedef hash_map< CPtr<IMOUnit>, SUnitAck, SDefaultPtrHash > CUnitsAcks;
-	typedef list< SDeathAck > CDeathAcks;
+	typedef std::unordered_map< int, NTimer::STime > CUnitAcksPresence;
+	typedef std::unordered_map< CPtr<IMOUnit>, SUnitAck, SDefaultPtrHash > CUnitsAcks;
+	typedef std::list< SDeathAck > CDeathAcks;
 
 	//для выбора заданного типа асков
 	class CAckPredicate
@@ -104,7 +104,7 @@ class CClientAckManager : public IClientAckManager
 	int nSelectionCounter;
 
 	// тут инфо о юнитах, зарегистрированных в bored состояниях
-	typedef hash_map<int, CBoredUnitsContainer> BoredUnits;
+	typedef std::unordered_map<int, CBoredUnitsContainer> BoredUnits;
 	BoredUnits boredUnits;	
 
 	CUnitAcksPresence acksPresence;				// наличие в даный момент в звучании данного Ack'а 
@@ -114,7 +114,7 @@ class CClientAckManager : public IClientAckManager
 
 	// не сериалайзится.
 	CUnitAcksInfo			acksInfo;						// данные об Ack'ах
-	hash_map<string,int> loadHelper;
+	std::unordered_map<std::string,int> loadHelper;
 	// константы
 	int TIME_ACK_WAIT;
 	int NUM_SELECTIONS_BEFORE_F_OFF;

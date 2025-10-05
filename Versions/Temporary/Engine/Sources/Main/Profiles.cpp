@@ -9,7 +9,7 @@
 
 namespace NProfile
 {
-static string GetProfileRootDir()
+static std::string GetProfileRootDir()
 {
 	return NMainLoop::GetBaseDir() + "Profiles\\";
 }
@@ -20,15 +20,15 @@ static string GetProfileRootDir()
 // in game installation in Profiles\\ directory there should be only this profile and correct localized 
 // default player name should be specified in global.cfg (then during first run settings will be loaded 
 // from szDefaultProfileName and then will be saved to normal profile dir)
-static string szDefaultProfileName = "default_profile";
-static bool IsDefaultProfileName( const string &szName )
+static std::string szDefaultProfileName = "default_profile";
+static bool IsDefaultProfileName( const std::string &szName )
 {
-	string szLowName;
+	std::string szLowName;
 	NStr::ToLower( &szLowName, szName );
 	return szLowName == szDefaultProfileName;
 }
 
-static wstring GetProfileName( const string &szDir, const string &_szDirName )
+static std::wstring GetProfileName( const std::string &szDir, const std::string &_szDirName )
 {
 	CFileStream stream( szDir + "\\" + _szDirName + "\\name.txt", CFileStream::WIN_READ_ONLY );
 	if  ( stream.IsOk() )
@@ -40,7 +40,7 @@ static wstring GetProfileName( const string &szDir, const string &_szDirName )
 			int len = Min( ARRAY_SIZE(buffer)-1, nLength / sizeof( wchar_t ) );
 			stream.Read( buffer, len * sizeof( wchar_t ) );
 			buffer[len] = 0;
-			wstring szName;
+			std::wstring szName;
 			szName.assign( &buffer[1], Max( 0, len - 1 ) );
 			return szName;
 		}
@@ -48,18 +48,18 @@ static wstring GetProfileName( const string &szDir, const string &_szDirName )
 	return NStr::ToUnicode( _szDirName );
 }
 
-string GetDefaultProfileDir()
+std::string GetDefaultProfileDir()
 {
-	string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "\\";
+	std::string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "\\";
 	return szDefaultDir;
 }
 
 // if such profile dir does not exist it will be created
-static string GetProfileDir( const wstring &szName )
+static std::string GetProfileDir( const std::wstring &szName )
 {
-	string szRoot = GetProfileRootDir();
-	string szResDir;
-	string szNameAscii = NStr::ToMBCS( szName );
+	std::string szRoot = GetProfileRootDir();
+	std::string szResDir;
+	std::string szNameAscii = NStr::ToMBCS( szName );
 	if ( NFile::IsValidDirName( szNameAscii ) && !IsDefaultProfileName( szNameAscii ) )
 	{
 		szResDir = szRoot + szNameAscii + "\\";
@@ -107,7 +107,7 @@ static void OnProfileChange()
 	NGlobal::ProcessCommand( L"autodetect" ); 
 }
 
-static void LoadUserConfig( const string &szProfileDir )
+static void LoadUserConfig( const std::string &szProfileDir )
 {
 	NInput::SetSection( "" );
 	NGlobal::LoadConfig( szProfileDir + "user.cfg", STORAGE_USER );
@@ -120,7 +120,7 @@ void LoadProfile()
 {
 	NGlobal::LoadConfig( GetProfileRootDir() + "global.cfg", STORAGE_GLOBAL );
 	OnProfileChange();
-	string szProfileDir = GetProfileDir( GetCurrentProfileName() );	
+	std::string szProfileDir = GetProfileDir( GetCurrentProfileName() );
 	if ( NFile::DoesFileExist( szProfileDir + "user.cfg" ) )
 		LoadUserConfig( szProfileDir );
 	else
@@ -129,18 +129,18 @@ void LoadProfile()
 
 void SaveProfile()
 {
-	string szGlobalCfg = GetProfileRootDir() + "global.cfg";
-	string szUserCfg = GetProfileDir( GetCurrentProfileName() ) + "user.cfg";
+	std::string szGlobalCfg = GetProfileRootDir() + "global.cfg";
+	std::string szUserCfg = GetProfileDir( GetCurrentProfileName() ) + "user.cfg";
 	NGlobal::SaveAllVars( szGlobalCfg, szUserCfg );
 }
 
-bool AddProfile( const wstring &szName )
+bool AddProfile( const std::wstring &szName )
 {
 	GetProfileDir( szName );
 	return true;
 }
 
-void ChangeProfile( const wstring &szProfile )
+void ChangeProfile( const std::wstring &szProfile )
 {
 	SaveProfile();
 	NGlobal::SetVar( "profile_name", szProfile );
@@ -149,9 +149,9 @@ void ChangeProfile( const wstring &szProfile )
 	LoadUserConfig( GetProfileDir( GetCurrentProfileName() ) );
 }
 
-bool RemoveProfile( const wstring &szProfile )
+bool RemoveProfile( const std::wstring &szProfile )
 {
-	string szDir = GetProfileDir( szProfile );
+	std::string szDir = GetProfileDir( szProfile );
 	NFile::DeleteDirectory( szDir );
 	return true;
 }
@@ -164,9 +164,9 @@ void ResetToDefault()
 	SaveProfile();
 }
 
-void GetAllProfiles( vector<wstring> *pRes )
+void GetAllProfiles( std::vector<std::wstring> *pRes )
 {
-	string szRoot = GetProfileRootDir();
+	std::string szRoot = GetProfileRootDir();
 	pRes->resize( 0 );
 	for ( NFile::CFileIterator it( ( szRoot + "*.*" ) ); !it.IsEnd(); ++it )
 	{
@@ -178,17 +178,17 @@ void GetAllProfiles( vector<wstring> *pRes )
 	}
 }
 
-wstring GetCurrentProfileName()
+std::wstring GetCurrentProfileName()
 {
 	return NGlobal::GetVar( "profile_name", "default" );
 }
 
-string GetCurrentProfileDir()
+std::string GetCurrentProfileDir()
 {
 	return GetProfileDir( GetCurrentProfileName() );
 }
 
-static void RemoveProfile( const string &szID, const vector<wstring> &szParams, void *pContext )
+static void RemoveProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
 		RemoveProfile( szParams[0] );
@@ -196,7 +196,7 @@ static void RemoveProfile( const string &szID, const vector<wstring> &szParams, 
 		csSystem << "Usage : remove_profile <user name>" << endl;
 }
 
-static void ChangeProfile( const string &szID, const vector<wstring> &szParams, void *pContext )
+static void ChangeProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
 		ChangeProfile( szParams[0] );

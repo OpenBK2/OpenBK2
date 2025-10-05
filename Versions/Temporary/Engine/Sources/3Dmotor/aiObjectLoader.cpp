@@ -13,7 +13,7 @@ namespace NAI
 {
 	static CBasicShare<CDBPtr<NDb::SAIGeometry>, NAnimation::CGrannyAIGeomLoader, SDBPtrHash> shareGrannyAIGeometries(116);
 
-static CVec3 CalcMassCenter( vector<SMassSphere> &spheres )
+static CVec3 CalcMassCenter( std::vector<SMassSphere> &spheres )
 {
 	float fMassSum = 0;
 	CVec3 massCenter = VNULL3;
@@ -38,8 +38,8 @@ void CLoadAIGeometryFromA5Exporter::Recalc()
 	if ( !file.IsOk() )
 		return;
 
-	vector<CVec3> points;
-	vector<STriangle> tris;
+	std::vector<CVec3> points;
+	std::vector<STriangle> tris;
 	//vector<CPtr<CPrecalcSpheres> > precalc;
 
 	CStoredPieceMap pieces;
@@ -52,7 +52,7 @@ void CLoadAIGeometryFromA5Exporter::Recalc()
 	if ( pieces.empty() )
 	{
 		//ASSERT( pPrecalc );
-		pValue->AddPiece( 0, points, tris, 0, vector<SJunction>(), true );//, precalc );
+		pValue->AddPiece( 0, points, tris, 0, std::vector<SJunction>(), true );//, precalc );
 	}
 	else
 	{
@@ -76,12 +76,12 @@ void CLoadAIGeometryFromGranny::Recalc()
 		granny_file_info *pFI = pData->GetValue()->GetData();
 		for ( int i = 0; i < pFI->MeshCount; ++i )
 		{
-			vector<CVec3> points;
-			vector<STriangle> tris;	
+			std::vector<CVec3> points;
+			std::vector<STriangle> tris;
 			granny_mesh *pMesh = pFI->Meshes[i];
 			NGScene::ConvertAIGeomVerticesFromGranny( pMesh, &points );
 			NGScene::ConvertAIGeomTrisFromGranny( pMesh, &tris );
-			pValue->AddPiece( i, points, tris, 0, vector<SJunction>(), true );
+			pValue->AddPiece( i, points, tris, 0, std::vector<SJunction>(), true );
 		}
 		pValue->CalcBound();
 	}
@@ -96,8 +96,8 @@ void CLoadAIGeometryFromGranny::SetKey( const NDb::SAIGeometry *pGeometry )
 
 struct SMergePoints
 {
-	vector<CVec3> points;
-	vector<STriangle> tris;
+	std::vector<CVec3> points;
+	std::vector<STriangle> tris;
 
 	int GetPointIndex( const CVec3 &a )
 	{
@@ -119,8 +119,8 @@ void CMemGeometryInfo::Recalc()
 {
 	pValue = new CGeometryInfo;
 	SMergePoints p;
-	const vector<CVec3> &points = pMemObject->GetPoints();
-	const vector<STriangle> &tris = pMemObject->GetTris();
+	const std::vector<CVec3> &points = pMemObject->GetPoints();
+	const std::vector<STriangle> &tris = pMemObject->GetTris();
 	for ( int k = 0; k < tris.size(); ++k )
 		p.AddTriangle( points[tris[k].i1], points[tris[k].i2], points[tris[k].i3] );
 	pValue->AddPiece( -1, p.points, p.tris, 0 );
@@ -131,9 +131,9 @@ void CMemGeometryInfo::Recalc()
 
 struct SStoredSkin
 {
-	vector<CVec3> points;
-	vector<STriangle> tris;
-	vector<NGScene::SLoadVertexWeight> weights;
+	std::vector<CVec3> points;
+	std::vector<STriangle> tris;
+	std::vector<NGScene::SLoadVertexWeight> weights;
 
 	int operator&( CStructureSaver &f )
 	{ 
@@ -143,7 +143,7 @@ struct SStoredSkin
 		return 0;
 	}
 };
-typedef hash_map<int, SStoredSkin> CBodypartsStoredHash;
+typedef std::unordered_map<int, SStoredSkin> CBodypartsStoredHash;
 
 void CFileSkinPointsLoadFromA5Exporter::Recalc()
 {
@@ -177,9 +177,9 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 		for ( int i = 0; i < pFI->MeshCount; ++i )
 		{
 			granny_mesh *pMesh = pFI->Meshes[i];
-			vector<CVec3> &pts = pValue->parts[i].points;
+			std::vector<CVec3> &pts = pValue->parts[i].points;
 			NGScene::ConvertAIGeomVerticesFromGranny( pMesh, &pts );
-			vector<STriangle> tris;	
+			std::vector<STriangle> tris;
 			NGScene::ConvertAIGeomTrisFromGranny( pMesh, &tris );
 			pValue->parts[i].edges.GenerateEdgeList( tris, pts );
 			granny_skeleton *pSkeleton = NGScene::FindFirstAppropriateModel( pFI, pMesh )->Skeleton;

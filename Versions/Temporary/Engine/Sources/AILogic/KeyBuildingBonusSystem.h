@@ -9,7 +9,7 @@ namespace NDb
 
 class CKeyBuildingBonusSystem
 {
-	typedef hash_map<int/*nLinkID*/, NDb::SPlayerBonusData> CBuildingBonuses;
+	typedef std::unordered_map<int/*nLinkID*/, NDb::SPlayerBonusData> CBuildingBonuses;
 	ZDATA
 	CBuildingBonuses buildingBonuses;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&buildingBonuses); return 0; }

@@ -15,9 +15,9 @@ class CLIENT_EXPORT CLANClient : public IServerClient
 {
 	OBJECT_NOCOPY_METHODS( CLANClient );
 
-	list<int> clients;
+	std::list<int> clients;
 	CObj<NNet::IDriver> pNetDriver;
-	list< CPtr<class CNetPacket> > packets;
+	std::list< CPtr<class CNetPacket> > packets;
 	bool bTryingConnect;
 
 public:

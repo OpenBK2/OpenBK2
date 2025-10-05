@@ -13,16 +13,16 @@
 
 class CAckTuning 
 {
-	typedef hash_map<string, int> CPlayedAcks;
+	typedef std::unordered_map<std::string, int> CPlayedAcks;
 	ZDATA
 	CPlayedAcks playedAcks;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&playedAcks); return 0; }
 
 	bool bInitted;
 public:
-	void SaveAsText( const string &szFile )
+	void SaveAsText( const std::string &szFile )
 	{
-		string szResultFile = szFile.c_str();
+		std::string szResultFile = szFile.c_str();
 		FILE *pFile = fopen( szResultFile.c_str(), "w" );
 		if ( pFile == 0 )
 		{
@@ -55,7 +55,7 @@ public:
 	CAckTuning() : bInitted( false )
 	{
 	}
-	void Add( const string &szAck )
+	void Add( const std::string &szAck )
 	{
 		if ( !bInitted )
 		{

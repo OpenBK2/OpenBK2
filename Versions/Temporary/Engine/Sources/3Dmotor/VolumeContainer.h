@@ -6,15 +6,15 @@ class CVolumeContainer
 {
 	struct SLevelContainers
 	{
-		vector<vector<int> > tris;
+		std::vector<std::vector<int> > tris;
 	};
 	CVec3 ptMin;//, ptMax;  // bounding volume for all triangles
-	vector<SLevelContainers> volumeData;
-	vector<int> fetchMark;
+	std::vector<SLevelContainers> volumeData;
+	std::vector<int> fetchMark;
 	float fSize1x, fSize1y, fSize1z;
 	int nLastFetch;
-	static vector<int> fetchBufferArray;
-	vector<int> *pFetched;
+	static std::vector<int> fetchBufferArray;
+	std::vector<int> *pFetched;
 	int nFetched;
 
 public:
@@ -36,12 +36,12 @@ public:
 	void GetCoords( SIntCoords *pRes, const CVec3 &src );
 	void MakeVolume( SVolumeBounds *pRes, const SIntCoords &a, const SIntCoords &b, const SIntCoords &c );
 	void MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const SBound &bound );
-	void MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const vector<CVec3> &coords );
+	void MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const std::vector<CVec3> &coords );
 	bool IsOut( const SVolumeBounds &t );
 	void ClipVolume( SVolumeBounds *pRes );
 	void Fetch( const SBound &b );
 	void Add( const SVolumeBounds &b, int nData );
-	const vector<int>& GetFetchBuffer() const { return *pFetched; }
+	const std::vector<int>& GetFetchBuffer() const { return *pFetched; }
 	int GetFetchedNum() { return nFetched; }
 };
 

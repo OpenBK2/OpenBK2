@@ -8,7 +8,7 @@ bool CEffectorDirectRunReaction::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
+void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
 { 
 	szAnimatedWindow = _szAnimatedWindow;
 	const NDb::SUISDirectRunReaction *pCmd( checked_cast<const NDb::SUISDirectRunReaction*>( _pCmd ) );

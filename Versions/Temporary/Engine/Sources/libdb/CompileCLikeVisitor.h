@@ -22,14 +22,14 @@ class CVisitor: public NLang::IVisitor
 {
 	OBJECT_NOCOPY_METHODS( CVisitor );
 
-	vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes;
+	std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes;
 
 	CPtr<NDb::NTypeDef::STypeDef> pCreatedType;
 	CVariant attr;
 	NDb::NTypeDef::STypeStructBase::SField field;
 	NDb::NTypeDef::STypeEnum::SEnumEntry enumEntry;
 	CObj<NDb::NTypeDef::SAttributes> pFromFieldTypeDefAttr;
-	list< CPtr<NDb::NTypeDef::STypeStructBase> > namespaces;
+	std::list< CPtr<NDb::NTypeDef::STypeStructBase> > namespaces;
 
 	CNodes2TypeDefs nodes2TypeDefs;
 	CPtr<NDb::NTypeDef::CTerminalTypesDescriptor> pTermTypesDesc;
@@ -53,7 +53,7 @@ class CVisitor: public NLang::IVisitor
 	void ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pStruct );
 public:
 	CVisitor() : pTypes( 0 ), bFailed( false ) { }
-	CVisitor( vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CVisitor( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
 	virtual void Visit( NLang::CBaseTypeNode *pBaseTypeNode );
 	virtual void Visit( NLang::CComplexTypeNode *pComplexTypeNode );

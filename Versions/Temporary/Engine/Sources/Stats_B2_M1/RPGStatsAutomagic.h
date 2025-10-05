@@ -24,12 +24,12 @@ class CRPGStatsAutomagic : public IRPGStatsAutomagic
 {
 	OBJECT_BASIC_METHODS( CRPGStatsAutomagic );
 
-	typedef hash_map<int, string> CI2SMap;
-	typedef hash_map<string, int> CS2IMap;
+	typedef std::unordered_map<int, std::string> CI2SMap;
+	typedef std::unordered_map<std::string, int> CS2IMap;
 	//
 	CI2SMap i2s;
 	CS2IMap s2i;
-	string szUnknown;
+	std::string szUnknown;
 	//
 public:
 	CRPGStatsAutomagic();

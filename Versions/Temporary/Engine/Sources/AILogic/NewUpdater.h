@@ -222,7 +222,7 @@ public:
 		};
 	private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		static hash_map< int, CPtr<IUpdateTransformer> > clientTransformers;
+		static std::unordered_map< int, CPtr<IUpdateTransformer> > clientTransformers;
 
 	protected:
 		CUpdateData() {}
@@ -271,19 +271,19 @@ public:
 		}
 	};
 private:
-	typedef list<CPtr<CUpdateData> > TUpdatesList;
+	typedef std::list<CPtr<CUpdateData> > TUpdatesList;
 	typedef CArray2D<TUpdatesList> TUpdatesByCells;
 
 	TUpdatesByCells suspended;
 	void InsertSuspendedUpdate( CUpdateData* pUpdate, const SVector &_vPosition );
 	//ready-to-go updates
-	typedef list< CPtr< CUpdateData > > CUpdateList;
+	typedef std::list< CPtr< CUpdateData > > CUpdateList;
 	CUpdateList pendingUpdates;
 	CUpdateList pendingSuspendableUpdates;
 	CUpdateList interpolatableUpdates;
 	CUpdateList::iterator pendingIt;
 	//basic updates catalog
-	typedef hash_map< CPtr<CUpdatableObj>, CUpdateList, SDefaultPtrHash > CUpdateMap;
+	typedef std::unordered_map< CPtr<CUpdatableObj>, CUpdateList, SDefaultPtrHash > CUpdateMap;
 	CUpdateMap updatesHash;
 	//current segment time
 	NTimer::STime nTime;
@@ -294,13 +294,13 @@ private:
 	//player's party
 	int nMyParty;
 	//visible tiles registrator
-	hash_set<SVector, STilesHash> visibleTiles;
+	std::unordered_set<SVector, STilesHash> visibleTiles;
 	//legacy
 	bool bShowAreas;
 	EActionNotify eAreaType;
-	list< CPtr<CUpdatableObj> > shootGroupUnits;
+	std::list< CPtr<CUpdatableObj> > shootGroupUnits;
 
-	hash_set<int> updatedPlacements;
+	std::unordered_set<int> updatedPlacements;
 	NTimer::STime lastTimeUpTo;
 
 	void DestroyContents();	

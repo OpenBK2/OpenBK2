@@ -13,9 +13,9 @@ const WORD  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разни
 
 class CPushTileFunctional
 {
-	list<SVector> *pTiles;
+	std::list<SVector> *pTiles;
 public:
-	CPushTileFunctional( list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
+	CPushTileFunctional( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
 
 	bool operator()( const SVector tile )
 	{
@@ -40,10 +40,10 @@ public:
 class CCheckTileFunctionalWithMark
 {
 	CBasePathUnit *pUnit;
-	vector<SVector> *pTiles;
+	std::vector<SVector> *pTiles;
 	CTerrain *pTerrain;
 public:
-	CCheckTileFunctionalWithMark( CBasePathUnit *_pUnit, vector<SVector> *_pTiles, CTerrain *_pTerrain )
+	CCheckTileFunctionalWithMark( CBasePathUnit *_pUnit, std::vector<SVector> *_pTiles, CTerrain *_pTerrain )
 		: pUnit( _pUnit ), pTiles( _pTiles ), pTerrain( _pTerrain ) {}
 
 	bool operator()( const SVector tile )
@@ -224,7 +224,7 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 
 		if ( bres.GetDirection() == tile && ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) != FREE_NONE ) )
 		{
-			list<SVector> insertedTiles;
+			std::list<SVector> insertedTiles;
 
 			bres.Init( tile, GetAIMap()->GetTile( GetSplineLastPoint() ) );
 			while ( bres.GetDirection() != tile )
@@ -437,9 +437,9 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 			const SVector unitTileCenter = GetAIMap()->GetTile( vCenter );
 			const int nBoundTileRadius = GetUnit()->GetBoundTileRadius();
 
-			list<SObjTileInfo> tiles;
+			std::list<SObjTileInfo> tiles;
 			GetAIMap()->GetTilesCoveredByRect( unitRect, &tiles );
-			list<SObjTileInfo>::iterator iter = tiles.begin();
+			std::list<SObjTileInfo>::iterator iter = tiles.begin();
 			while ( iter != tiles.end() )
 			{
 				const SVector &tile = iter->tile;

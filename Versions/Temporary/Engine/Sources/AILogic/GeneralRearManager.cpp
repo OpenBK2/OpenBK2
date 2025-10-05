@@ -142,7 +142,7 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 	const NDb::SUnitBaseRPGStats	*pUnitStats = pUnit->GetStats();
 	NDb::EDBUnitRPGType						eUType = pUnitStats->eDBtype;
 	NDb::EReinforcementType				eRType = pUnit->GetReinforcementType();
-	vector<float>									effects( NDb::_RT_NONE, 0.0f );
+	std::vector<float>									effects( NDb::_RT_NONE, 0.0f );
 	float	fTypeMult = pUnitStats->fPrice;				//Type multiplier, to compensate for infantry numbers and valuable units
 
 	if ( pUnit->GetStats()->IsInfantry() )

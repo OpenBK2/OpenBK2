@@ -194,7 +194,7 @@ class CTextureLock
 {
 	I2DBufferLock *pLock;
 	NGfx::EAccess access;
-	vector<void*> raws;
+	std::vector<void*> raws;
 	int nXSize, nYSize, nStride;
 	typedef TPixel Element;
 	
@@ -204,7 +204,7 @@ class CTextureLock
 	{
 		char *pStart = (char*)pLock->GetBuffer();
 		raws.resize( Max( 1, nYSize ) );
-		vector<void*>::iterator tek = raws.begin(), fin = raws.end();
+		std::vector<void*>::iterator tek = raws.begin(), fin = raws.end();
 		while ( tek != fin )
 		{
 			*tek++ = pStart;

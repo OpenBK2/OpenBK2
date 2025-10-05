@@ -121,7 +121,7 @@ void CSmokeScreen::RemoveTransparencies()
 	}*/
 }
 
-void CSmokeScreen::GetCoveredTiles( list<SVector> *pTiles ) const
+void CSmokeScreen::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	pTiles->clear();
 	const int nTilesR = fRadius / SConsts::TILE_SIZE + 1;

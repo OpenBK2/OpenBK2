@@ -13,7 +13,7 @@ namespace NDb
 
 struct SPrecipiceGFXInfo
 {
-	vector<NMeshData::SMeshData> patches;
+	std::vector<NMeshData::SMeshData> patches;
 	CDBPtr<NDb::SMaterial> pMaterial;
 	int nID;
 	//
@@ -33,7 +33,7 @@ struct SRoadGFXInfo
 {
 	enum ERoadPart{ CENTER, LEFT_BORDER, RIGHT_BORDER };
 	//
-	vector<NMeshData::SMeshData> patches;
+	std::vector<NMeshData::SMeshData> patches;
 	CDBPtr<NDb::SRoadDesc> pDesc;
 	int nID;
 	ERoadPart ePart;
@@ -55,7 +55,7 @@ struct SRoadGFXInfo
 
 struct SCragGFXInfo
 {
-	vector<NMeshData::SMeshData> patches;
+	std::vector<NMeshData::SMeshData> patches;
 	CDBPtr<NDb::SCragDesc> pDesc;
 	int nID;
 	//
@@ -72,7 +72,7 @@ struct SCragGFXInfo
 
 struct SPeakGFXInfo
 {
-	vector<vector<NMeshData::SMeshDataTex2> > patches;
+	std::vector<std::vector<NMeshData::SMeshDataTex2> > patches;
 	int nID;
 	//
 	bool operator == ( const SPeakGFXInfo &v ) const { return nID == v.nID; }
@@ -87,7 +87,7 @@ struct SPeakGFXInfo
 
 struct SFootGFXInfo
 {
-	vector<NMeshData::SMeshData> patches;
+	std::vector<NMeshData::SMeshData> patches;
 	CDBPtr<NDb::SMaterial> pMaterial;
 	int nID;
 	//
@@ -102,11 +102,11 @@ struct SFootGFXInfo
 
 struct SRiverGFXInfo
 {
-	vector<NMeshData::SMeshData> waterPatches;
-	vector<NMeshData::SMeshData> bottomPatches;
+	std::vector<NMeshData::SMeshData> waterPatches;
+	std::vector<NMeshData::SMeshData> bottomPatches;
 	CDBPtr<NDb::SRiverDesc> pDesc;
 	int nID;
-	vector<NMeshData::SMeshData> water2Patches;
+	std::vector<NMeshData::SMeshData> water2Patches;
 	//
 	bool operator == ( const SRiverGFXInfo &v )const { return nID == v.nID; }
 	//
@@ -140,15 +140,15 @@ struct STerraSpotGFXInfo
 
 struct STerrainGfxInfo
 {
-	vector<vector<NMeshData::SMeshData> > terraPatches;
-	vector<vector<NMeshData::SMeshData> > terraBorders;
+	std::vector<std::vector<NMeshData::SMeshData> > terraPatches;
+	std::vector<std::vector<NMeshData::SMeshData> > terraBorders;
 
-	list<SRoadGFXInfo> roads;
-	list<SRiverGFXInfo> rivers;
-	list<STerraSpotGFXInfo> terraspots;
-	list<SPrecipiceGFXInfo> precipices;
-	list<SPeakGFXInfo> peaks;
-	list<SFootGFXInfo> foots;
+	std::list<SRoadGFXInfo> roads;
+	std::list<SRiverGFXInfo> rivers;
+	std::list<STerraSpotGFXInfo> terraspots;
+	std::list<SPrecipiceGFXInfo> precipices;
+	std::list<SPeakGFXInfo> peaks;
+	std::list<SFootGFXInfo> foots;
 	//
 	int operator&( IBinSaver &saver )
 	{

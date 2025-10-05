@@ -65,13 +65,13 @@ public:
 struct SGrannyFileLoaderInfo
 {
 	ZDATA
-	string szResName;
+	std::string szResName;
 	int nID;
 	bool bAllowDelayedLoad;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szResName); f.Add(3,&nID); f.Add(4,&bAllowDelayedLoad); return 0; }
 	//
 	SGrannyFileLoaderInfo() : nID(-1), bAllowDelayedLoad(false) {}
-	SGrannyFileLoaderInfo( const string &_szResName, int _nID, bool _bAllowDelayedLoad ) : szResName(_szResName), nID(_nID), bAllowDelayedLoad(_bAllowDelayedLoad) {}
+	SGrannyFileLoaderInfo( const std::string &_szResName, int _nID, bool _bAllowDelayedLoad ) : szResName(_szResName), nID(_nID), bAllowDelayedLoad(_bAllowDelayedLoad) {}
 	bool operator == ( const SGrannyFileLoaderInfo &s ) const { return s.nID == nID && s.szResName == szResName && s.bAllowDelayedLoad == bAllowDelayedLoad; }
 };
 /*
@@ -93,7 +93,7 @@ struct SGrannyFileLoaderInfoHash
 {
 	int operator() ( const SResKey<SGrannyFileLoaderInfo> &k ) const
 	{
-		return __stl_hash_string( k.tKey.szResName.c_str() ) ^ k.tKey.nID;
+		return std::hash<std::string>()( k.tKey.szResName.c_str() ) ^ k.tKey.nID;
 	}
 };
 
@@ -119,7 +119,7 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	CDGPtr<CGrannyMemFileLoader> pGrannyFile;
 	SPartAndSkeletonKey key;
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pSkeletonFileInfo;
-	string sLightMapped;
+	std::string sLightMapped;
 	bool   bLightMapped;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGrannyFile); f.Add(3,&key); f.Add(4,&pSkeletonFileInfo); f.Add(5,&sLightMapped); f.Add(6,&bLightMapped); return 0; }
 protected:
@@ -139,7 +139,7 @@ public:
 	{
 		return bLightMapped;
 	}
-	const string &GetString()const
+	const std::string &GetString()const
 	{
 		return sLightMapped;
 	}
@@ -154,20 +154,20 @@ public:
 };
 
 
-void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, vector<CVec3> *pRes );
-void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, vector<STriangle> *pRes );
-void ConvertWeightsFromGranny( const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex, vector<SVertexWeight> *pWeights, int nVertices );
+void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, std::vector<CVec3> *pRes );
+void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, std::vector<STriangle> *pRes );
+void ConvertWeightsFromGranny( const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex, std::vector<SVertexWeight> *pWeights, int nVertices );
 granny_model *FindFirstAppropriateModel( granny_file_info *pData, granny_mesh *pMesh );
 
 
 const char * ConvertWeightsFromGrannyEx(
 							  const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex,
-							  vector<SVertexWeight> *pWeights, int nVertices );
+							  std::vector<SVertexWeight> *pWeights, int nVertices );
 
 
-void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<NGScene::SVertex> *pVerts );
+void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vector<NGScene::SVertex> *pVerts );
 
-void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<STriangle> *pGeometry );
+void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vector<STriangle> *pGeometry );
 
 bool EndsWith( const char *pszA, const char *pszB );
 

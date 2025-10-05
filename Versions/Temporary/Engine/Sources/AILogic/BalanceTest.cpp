@@ -18,12 +18,12 @@ extern SCheats theCheats;
 
 namespace NReinforcement
 {
-	void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vector<NDb::SReinforcementEntry> &entries,
-		const vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
-		list< pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates );
+	void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
+		const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
+		std::list< std::pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates );
 }
 
-void CBalanceTest::AllignSizes( string *szTitle, string *szSide0, string *szSide1, int nAdd )
+void CBalanceTest::AllignSizes( std::string *szTitle, std::string *szSide0, std::string *szSide1, int nAdd )
 {
 	const int nMaxSize = Max( szTitle->size(), Max( szSide0->size(), szSide1->size() ) ) + nAdd;
 	szTitle->resize( nMaxSize, ' ' );
@@ -33,7 +33,7 @@ void CBalanceTest::AllignSizes( string *szTitle, string *szSide0, string *szSide
 
 void CBalanceTest::PrintBalanceTestData()
 {
-	string szResultFile = "balance_test.txt";
+	std::string szResultFile = "balance_test.txt";
 	FILE *pFile = fopen( szResultFile.c_str(), "w+" );
 	if ( pFile == 0 )
 	{
@@ -41,8 +41,8 @@ void CBalanceTest::PrintBalanceTestData()
 		return;
 	}
 
-	string szTitle;
-	string szSide[2];
+	std::string szTitle;
+	std::string szSide[2];
 
 	szTitle += "| Name";
 	szSide[0] += "| ";
@@ -51,8 +51,8 @@ void CBalanceTest::PrintBalanceTestData()
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 	{
 		bool bIsMech = NGlobal::GetVar( StrFmt( "balance_params_is_mech_%i", nPlayer ), true );
-		const string szDBID = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
-		const wstring wszName = bIsMech ? 
+		const std::string szDBID = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
+		const std::wstring wszName = bIsMech ?
 			NText::GetText( NDb::Get<SMechUnitRPGStats>(szDBID)->szLocalizedNameFileRef ) :
 			NText::GetText( NDb::Get<SSquadRPGStats>(szDBID)->szLocalizedNameFileRef );
 		if ( !wszName.empty() )
@@ -82,17 +82,17 @@ void CBalanceTest::PrintBalanceTestData()
 	szSide[1] += shoot[1] ? "| Yes" : "| No";
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
-	vector<int> nVictories( 2, 0 );
-	vector<int> nDamagedTotal( 2, 0	);
-	vector<int> nFullHealthTotal( 2, 0 );
-	vector<int> nDeadTotal( 2, 0 );
+	std::vector<int> nVictories( 2, 0 );
+	std::vector<int> nDamagedTotal( 2, 0	);
+	std::vector<int> nFullHealthTotal( 2, 0 );
+	std::vector<int> nDeadTotal( 2, 0 );
 
 
 	for ( int nIteration = 0; nIteration < NGlobal::GetVar( "balance_test_n_iteration", 0 ); ++nIteration )
 	{
 		szTitle += StrFmt( "| #%i", nIteration );
 
-		vector<bool> bCanBeVictory( 2, false );
+		std::vector<bool> bCanBeVictory( 2, false );
 
 		for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 		{
@@ -141,7 +141,7 @@ void CBalanceTest::PrintBalanceTestData()
 	szSide[0] += "|";
 	szSide[1] += "|";
 
-	string szSeparator;
+	std::string szSeparator;
 	szSeparator.resize( szTitle.size(), '-' );
 	fprintf( pFile, "\n" );
 	fprintf( pFile, szSeparator.c_str() );
@@ -236,7 +236,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 	int nLinkIndex = 1;
 
 	theCheats.SetTurnOffWarFog( NGlobal::GetVar( "balance_params_warfog", 0 ) );
-	vector<CVec2> vEnemyPoint( 2 );
+	std::vector<CVec2> vEnemyPoint( 2 );
 
 	NI_ASSERT( pMapInfo->players.size() >= 3, "MAP error: need 2 players and neutral" );
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
@@ -250,11 +250,11 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 	{
 		bool bIsMech = NGlobal::GetVar( StrFmt( "balance_params_is_mech_%i", nPlayer ), true );
 		int nPoint = NGlobal::GetVar( StrFmt( "balance_params_point_%i", nPlayer ), 0 );
-		const string szUnit = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
+		const std::string szUnit = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
 		int nQuantity = NGlobal::GetVar( StrFmt( "balance_params_quantity_%i", nPlayer ), 0 );
 		bool bSwarm = NGlobal::GetVar( StrFmt( "balance_params_is_moving_%i", nPlayer ), 0 );
 
-		vector<NDb::SReinforcementEntry> entries;
+		std::vector<NDb::SReinforcementEntry> entries;
 		entries.resize( nQuantity );
 
 		const NDb::SSquadRPGStats *pSquad = bIsMech ? 0 : NDb::Get<NDb::SSquadRPGStats>( szUnit );
@@ -268,7 +268,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 			entries[i].pSquad = pSquad;
 		}
 
-		list<pair<int, CObjectBase*> > objects;
+		std::list<std::pair<int, CObjectBase*> > objects;
 
 		NReinforcement::PlaceReinforcement( _RT_NONE, nPlayer, entries,
 			pMapInfo->players[nPlayer].reinforcementPoints[nPoint].pTemplate->entries,
@@ -276,8 +276,8 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 			pMapInfo->players[nPlayer].reinforcementPoints[nPoint].nDirection,
 			&objects, -1, -1, false );
 
-		vector<int> ids;
-		for ( list< pair<int, CObjectBase*> >::iterator it = objects.begin(); it != objects.end(); ++it )
+		std::vector<int> ids;
+		for ( std::list< std::pair<int, CObjectBase*> >::iterator it = objects.begin(); it != objects.end(); ++it )
 		{
 			CCommonUnit * pUnit = checked_cast<CCommonUnit*>( it->second );
 			if ( pUnit->IsEmptyCmdQueue() )
@@ -317,7 +317,7 @@ void CBalanceTest::SegmentBalanceTest()
 
 	bool bFinishIteration = false;
 	// check if both sides are alive
-	vector<bool> bAlive( 3, false );
+	std::vector<bool> bAlive( 3, false );
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		if ( IsValidObj( (*iter) ) )
@@ -362,7 +362,7 @@ const NDb::SUnitStatsModifier * CBalanceTest::GetModifier( int nPlayer ) const
 	if ( !bTest )
 		return 0;
 
-	const string szDBID = NStr::ToMBCS( NGlobal::GetVar( nPlayer == 0 ? "balance_params_stats_modifier_0" : "balance_params_stats_modifier_1", "" ).GetString() );
+	const std::string szDBID = NStr::ToMBCS( NGlobal::GetVar( nPlayer == 0 ? "balance_params_stats_modifier_0" : "balance_params_stats_modifier_1", "" ).GetString() );
 	if ( szDBID.empty() )
 		return NDb::Get<NDb::SUnitStatsModifier>( szDBID );
 	return 0;

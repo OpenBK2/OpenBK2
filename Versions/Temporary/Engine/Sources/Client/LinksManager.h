@@ -9,7 +9,7 @@ class CGameLinksManager : public CLinksManagerCommon
 {
 	OBJECT_NOCOPY_METHODS( CGameLinksManager );
 
-	list<sockaddr> bannedAddresses;
+	std::list<sockaddr> bannedAddresses;
 protected:
 	virtual bool IsGoodAddress( const sockaddr &addr ) const;
 public:

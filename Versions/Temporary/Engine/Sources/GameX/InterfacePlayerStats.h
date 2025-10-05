@@ -15,8 +15,8 @@ private:
 		CPtr<ITextView> pNameView;
 		CDBPtr<NDb::STexture> pIcon;
 		CDBPtr<NDb::STexture> pPicture;
-		wstring wszName;
-		wstring wszDesc;
+		std::wstring wszName;
+		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(5,&pIcon); f.Add(6,&pPicture); f.Add(7,&wszName); f.Add(8,&wszDesc); return 0; }
 	};
 	
@@ -40,7 +40,7 @@ private:
 	CPtr<IWindow> pMedalPicture;
 	CPtr<ITextView> pMedalDescView;
 
-	vector<SMedal> medals;
+	std::vector<SMedal> medals;
 	CPtr<IScrollableContainer> pMedalCont;
 	CPtr<IWindow> pMedalItem;
 	CPtr<ITextView> pRankNameView;
@@ -72,8 +72,8 @@ public:
 	bool StepLocal( bool bAppActive );
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

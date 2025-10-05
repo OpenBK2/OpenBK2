@@ -17,8 +17,8 @@ class CTrackObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
   CPtr<CTracksManager> pTrackManager;
   int nID;
   NGScene::CObjectInfo::SData data;
-  vector<NMeshData::SMeshData> tracksBuf;
-  vector<int> startTimes;
+  std::vector<NMeshData::SMeshData> tracksBuf;
+  std::vector<int> startTimes;
   int nStartInd, nFinalInd;
   float fFadingSpeed;
   bool bNeedUpdate;
@@ -74,12 +74,12 @@ class B2_M1_TERRAIN_EXPORT CTracksManager : public CObjectBase
   CDGPtr< CFuncBase<STime> > pTimer;
   CObj<NGScene::IGameView> pGScene;
   //
-  vector<int> freeTracks;
-  vector<STrackObj> tracks;
-  vector<int> delQueue;
-  vector<int> updatedTracks;
+  std::vector<int> freeTracks;
+  std::vector<STrackObj> tracks;
+  std::vector<int> delQueue;
+  std::vector<int> updatedTracks;
   //
-  typedef hash_map<int, int> CTracksMap;
+  typedef std::unordered_map<int, int> CTracksMap;
   CTracksMap tracksMap;
 	//
 	CDBPtr<NDb::SMaterial> pTracksMaterial;

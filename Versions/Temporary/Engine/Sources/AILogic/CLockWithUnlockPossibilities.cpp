@@ -36,7 +36,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 		int i = 0;
 		bool bPossible = true;
 		bAIClass = _bAIClass;
-		for ( list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+		for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 		{
 			BYTE b = GetTerrain()->GetTileLockInfo( (*it) );
 			formerTilesType[i] = b;
@@ -55,8 +55,8 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 			Unlock();
 
 			// все по-новому залочить
-			list<SObjTileInfo> tilesInfo;
-			for ( list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+			std::list<SObjTileInfo> tilesInfo;
+			for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 				tilesInfo.push_back( SObjTileInfo( *it, EAC_ANY ) );
 
 			GetTerrain()->AddStaticObjectTiles( tilesInfo );
@@ -67,8 +67,8 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 		if ( pathTiles.size() != 0 ) // что-то лочили
 		{
 			//разлочить 
-			list<SObjTileInfo> tilesInfo;
-			for ( list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+			std::list<SObjTileInfo> tilesInfo;
+			for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 				tilesInfo.push_back( SObjTileInfo( *it, EAC_ANY ) );
 
 			GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
@@ -89,8 +89,8 @@ void CLockWithUnlockPossibilities::Lock()
 	BYTE aiClass=0;
 	bool aiAnyExists = false;
 
-	list<SObjTileInfo> tilesInfo;
-	for ( list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+	std::list<SObjTileInfo> tilesInfo;
+	for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 	{
 //		GetTerrain()->LockTile( (*it), formerTilesType[i] );
 		tilesInfo.push_back( SObjTileInfo(*it, formerTilesType[i]) );
@@ -109,8 +109,8 @@ void CLockWithUnlockPossibilities::Unlock()
 	BYTE aiClass=0;
 	bool aiAnyExists = false;
 
-	list<SObjTileInfo> tilesInfo;
-	for ( list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+	std::list<SObjTileInfo> tilesInfo;
+	for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 	{
 //		GetTerrain()->UnlockTile( (*it), formerTilesType[i] );
 		tilesInfo.push_back( SObjTileInfo(*it, formerTilesType[i]) );

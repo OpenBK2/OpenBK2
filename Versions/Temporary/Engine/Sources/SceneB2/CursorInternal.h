@@ -7,10 +7,10 @@ class CCursor : public ICursor
 {
 	OBJECT_NOCOPY_METHODS( CCursor )
 	//
-	typedef hash_map<int, HCURSOR> CModesMap;
+	typedef std::unordered_map<int, HCURSOR> CModesMap;
 	CModesMap modes;											// registered modes
 	
-	hash_map<int, string> modesFiles;
+	std::unordered_map<int, std::string> modesFiles;
 	//
 	int nCurrMode;												// current cursor mode
 	HCURSOR hCurrCursor;									// current cursor
@@ -26,7 +26,7 @@ public:
 	CCursor();
 	bool Init() { return true; }
 	// cursor mode
-	void RegisterMode( const int nMode, const string &szFileName );
+	void RegisterMode( const int nMode, const std::string &szFileName );
 	bool SetMode( const int nMode );
 	void OnSetCursor();
 	// show/hide cursor

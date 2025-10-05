@@ -6,7 +6,6 @@
 #include "SceneB2/Cursor.h"
 #include "Sound/MusicSystem.h"
 #include "SaveLoadHelper.h"
-#include "Misc/nalgoritm.h"
 #include "3Dmotor/FrameTransition.h"
 #include "System/Commands.h"
 #include "InterfaceState.h"
@@ -20,6 +19,8 @@
 #include "System/Text.h"
 #include "UI/SceneClassIDs.h"
 #include "3Dmotor/ScreenShot.h"
+
+#include <algorithm>
 
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;
@@ -42,7 +43,7 @@ const float ROLLER_TIME = 2.0f;
 
 const wchar_t* DYNAMIC_TAG_REINF_TYPE = L"reinf_type";
 
-bool CInterfaceChapterMapMenu::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceChapterMapMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "reaction_on_target_select" )
 	{
@@ -151,7 +152,7 @@ CInterfaceChapterMapMenu::~CInterfaceChapterMapMenu()
 	pReactions = 0;
 }
 
-int CInterfaceChapterMapMenu::CReactions::Check( const string &szCheckName ) const
+int CInterfaceChapterMapMenu::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -192,7 +193,7 @@ bool CInterfaceChapterMapMenu::Init()
 			const NDb::SChapter *pChapter = Singleton<IScenarioTracker>()->GetCurrentChapter();
 			if ( pChapter )
 			{
-				string szParam = pChapter->szIntroMovie;
+				std::string szParam = pChapter->szIntroMovie;
 				if ( !szParam.empty() )
 				{
 					szParam += ";chapter_map_after_intro_movie";
@@ -231,7 +232,7 @@ bool CInterfaceChapterMapMenu::Init()
 
 		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
 
-		string szParam = pCampaign->szOutroMovie;
+		std::string szParam = pCampaign->szOutroMovie;
 		szParam += ";chapter_map_outro";
 		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szParam.c_str() );
 
@@ -459,7 +460,7 @@ void CInterfaceChapterMapMenu::FadeMapElements( float fFade )
 
 		if ( target.pWindow )
 			target.pWindow->SetFadeValue( fFade );
-		for ( vector< SReward >::iterator iReward = target.rewards.begin(); 
+		for ( std::vector< SReward >::iterator iReward = target.rewards.begin();
 			iReward != target.rewards.end(); ++iReward )
 		{
 			SReward &reward = *iReward;
@@ -759,7 +760,7 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 
 		// Display bonus reinfs
 		const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
-		const int nBonuses = Min( mission.reward.size(), 4 );
+		const int nBonuses = Min<int>( mission.reward.size(), 4 );
 		for ( int i = 0; i < 4; ++i )
 		{
 			if ( bonusButtons[i].pButton )
@@ -778,15 +779,15 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 					if ( bonusButtons[i].pButton )
 					{
 						const int nLocalPlayer = 0;
-						vector<IScenarioTracker::SChapterReinf> reinfs;
+						std::vector<IScenarioTracker::SChapterReinf> reinfs;
 						Singleton<IScenarioTracker>()->GetChapterCurrentReinforcements( &reinfs, nLocalPlayer );
 						bool bBonus = (reinfs[targets[nIndex].rewardDescs[i]->eReinforcementType].eState != IScenarioTracker::ERS_ENABLED);
-						wstring wszPrefix;
+						std::wstring wszPrefix;
 						if ( IScreen *pScreen = GetScreen() )
 							wszPrefix = pScreen->GetTextEntry( bBonus ? "T_REWARD_BONUS" : "T_REWARD_UPGRADE" );
 
-						vector< pair<wstring, wstring> > params;
-						params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_REINF_TYPE, MakeTooltip( pReinf ) ) );
+						std::vector< std::pair<std::wstring, std::wstring> > params;
+						params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_REINF_TYPE, MakeTooltip( pReinf ) ) );
 						SetDynamicTooltip( bonusButtons[i].pButton, wszPrefix, params );
 					}
 
@@ -913,8 +914,8 @@ int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 					reinfButtons[i].pIcon->SetTexture( reinfButtons[i].pDefaultTexture );
 
 				// Compose Tooltip
-				vector< pair<wstring, wstring> > params;
-				params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_REINF_TYPE, MakeTooltip( pReinf ) ) );
+				std::vector< std::pair<std::wstring, std::wstring> > params;
+				params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_REINF_TYPE, MakeTooltip( pReinf ) ) );
 				SetDynamicTooltip( reinfButtons[i].pButton, wszReinfAvailablePrefix, params );
 
 				if ( reinfButtons[i].pUnknownWnd )
@@ -932,8 +933,8 @@ int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 				reinfButtons[i].pButton->SetState( 1 );
 				reinfButtons[i].pIcon->ShowWindow( true );
 
-				vector< pair<wstring, wstring> > params;
-				params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_REINF_TYPE, reinfButtons[i].wszDefaultTooltip ) );
+				std::vector< std::pair<std::wstring, std::wstring> > params;
+				params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_REINF_TYPE, reinfButtons[i].wszDefaultTooltip ) );
 				SetDynamicTooltip( reinfButtons[i].pButton, wszReinfNotEnabledPrefix, params );
 
 				if ( reinfButtons[i].pDisabledTexture )
@@ -1046,9 +1047,9 @@ struct STmpReinfEntry
 	}
 };
 
-const wstring CInterfaceChapterMapMenu::MakeTooltip( const NDb::SReinforcement *pReinf )
+const std::wstring CInterfaceChapterMapMenu::MakeTooltip( const NDb::SReinforcement *pReinf )
 {
-	wstring wszTooltip = L"";
+	std::wstring wszTooltip = L"";
 	//CRAP
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
 		wszTooltip = GET_TEXT_PRE(pReinf->,LocalizedName);
@@ -1100,7 +1101,7 @@ const wstring CInterfaceChapterMapMenu::MakeTooltip( const NDb::SReinforcement *
 	return wszTooltip;
 }
 
-void CInterfaceChapterMapMenu::OnTargetSelect( const string &szSender )
+void CInterfaceChapterMapMenu::OnTargetSelect( const std::string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
 	{
@@ -1113,7 +1114,7 @@ void CInterfaceChapterMapMenu::OnTargetSelect( const string &szSender )
 //	SelectTarget( -1 );
 }
 
-bool CInterfaceChapterMapMenu::OnTargetDblClick( const string &szSender )
+bool CInterfaceChapterMapMenu::OnTargetDblClick( const std::string &szSender )
 {
 	if ( nSelectedMission >= 0 && targets[nSelectedMission].pWindow->GetName() == szSender &&
 		pPlay && pPlay->IsEnabled() )
@@ -1131,11 +1132,11 @@ void CInterfaceChapterMapMenu::DoAutoSave()
 
 	if ( const NDb::SMapInfo *pLastMission = Singleton<IScenarioTracker>()->GetLastMission() )
 	{
-		wstring wszMissionName;
+		std::wstring wszMissionName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pLastMission->,LocalizedName) )
 			wszMissionName = GET_TEXT_PRE(pLastMission->,LocalizedName);
 
-		wstring wszName = InterfaceState()->GetTextEntry( "T_AUTO_SAVE_NAME" );
+		std::wstring wszName = InterfaceState()->GetTextEntry( "T_AUTO_SAVE_NAME" );
 		if ( !wszName.empty() )
 		{
 			Draw( 0 );
@@ -1145,7 +1146,7 @@ void CInterfaceChapterMapMenu::DoAutoSave()
 	}
 }
 
-void CInterfaceChapterMapMenu::OnPopupClicked( const string &szSender )
+void CInterfaceChapterMapMenu::OnPopupClicked( const std::string &szSender )
 {
 	for( int i = 0; i < bonusButtons.size(); ++i )
 	{
@@ -1157,7 +1158,7 @@ void CInterfaceChapterMapMenu::OnPopupClicked( const string &szSender )
 //			if ( pNew )
 //				pCurrent = Singleton<IScenarioTracker>()->GetReinforcement( 0, pNew->eType );
 
-			vector<IScenarioTracker::SChapterReinf> chapterReinfs;
+			std::vector<IScenarioTracker::SChapterReinf> chapterReinfs;
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			pST->GetChapterCurrentReinforcements( &chapterReinfs, pST->GetLocalPlayer() );
 			for ( int i = 0; i < chapterReinfs.size(); ++i )
@@ -1204,7 +1205,7 @@ void CInterfaceChapterMapMenu::OnPopupClicked( const string &szSender )
 	NI_ASSERT( false, "popup_clicked received from unknown item" );
 }
 
-bool CInterfaceChapterMapMenu::OnFixBonus( const string &szSender )
+bool CInterfaceChapterMapMenu::OnFixBonus( const std::string &szSender )
 {
 	bool bFound = false;
 	for( int i = 0; i < reinfButtons.size(); ++i )
@@ -1299,7 +1300,7 @@ void CInterfaceChapterMapMenu::HideChildren( IWindow *pParent )
 
 void CInterfaceChapterMapMenu::PlayReinfRollerAnim( int nStart, int nEnd )
 {
-	vector<IPlayer*> rollers;
+	std::vector<IPlayer*> rollers;
 	rollers.push_back( pReinfRoller1 );
 	rollers.push_back( pReinfRoller2 );
 	rollers.push_back( pReinfRoller3 );
@@ -1309,14 +1310,14 @@ void CInterfaceChapterMapMenu::PlayReinfRollerAnim( int nStart, int nEnd )
 
 void CInterfaceChapterMapMenu::PlayMissionRollerAnim( int nStart, int nEnd )
 {
-	vector<IPlayer*> rollers;
+	std::vector<IPlayer*> rollers;
 	rollers.push_back( pMissionReinfRoller2 );
 	rollers.push_back( pMissionReinfRoller1 );
 	
 	NUIElementsHelper::PlayRollerAnim( rollers, nStart, nEnd, ROLLER_TIME );
 }
 
-bool CInterfaceChapterMapMenu::OnTargetOver( const string &szSender )
+bool CInterfaceChapterMapMenu::OnTargetOver( const std::string &szSender )
 {
 	return true;
 	for ( int i = 0; i < targets.size(); ++i )
@@ -1332,7 +1333,7 @@ bool CInterfaceChapterMapMenu::OnTargetOver( const string &szSender )
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnTargetPushed( const string &szSender )
+bool CInterfaceChapterMapMenu::OnTargetPushed( const std::string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
 	{
@@ -1347,7 +1348,7 @@ bool CInterfaceChapterMapMenu::OnTargetPushed( const string &szSender )
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnTargetPushedBack( const string &szSender )
+bool CInterfaceChapterMapMenu::OnTargetPushedBack( const std::string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
 	{
@@ -1384,21 +1385,21 @@ void CInterfaceChapterMapMenu::UpdateRecommendedButton( STarget &target, bool bP
 	}
 }
 
-bool CInterfaceChapterMapMenu::OnReinfUpgradeDialogClose( const string &szSender )
+bool CInterfaceChapterMapMenu::OnReinfUpgradeDialogClose( const std::string &szSender )
 {
 	pReinfUpgrade->Hide();
 	pReinfComposition->Hide();
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnReinfUpgradeUnitBtn( const string &szSender )
+bool CInterfaceChapterMapMenu::OnReinfUpgradeUnitBtn( const std::string &szSender )
 {
 	pReinfUpgrade->UnitBtnPressed( szSender );
 	pReinfComposition->UnitBtnPressed( szSender );
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnChapterDescDlgClose( const string &szSender )
+bool CInterfaceChapterMapMenu::OnChapterDescDlgClose( const std::string &szSender )
 {
 	pChapterDescDlg->Hide();
 	bInitialDialogVisible = false;
@@ -1408,13 +1409,13 @@ bool CInterfaceChapterMapMenu::OnChapterDescDlgClose( const string &szSender )
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnMissionDescDlgClose( const string &szSender )
+bool CInterfaceChapterMapMenu::OnMissionDescDlgClose( const std::string &szSender )
 {
 	pMissionDescDlg->Hide();
 	return true;
 }
 
-bool CInterfaceChapterMapMenu::OnShowMissionDesc( const string &szSender )
+bool CInterfaceChapterMapMenu::OnShowMissionDesc( const std::string &szSender )
 {
 	if ( nSelectedMission >= 0 )
 	{
@@ -1484,7 +1485,7 @@ void CICChapterMapMenu::Configure( const char *pszConfig )
 
 #endif // _SINGLE_DEMO
 
-void ChapterMapOutro( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ChapterMapOutro( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
 
@@ -1492,12 +1493,12 @@ void ChapterMapOutro( const string &szID, const vector<wstring> &paramsSet, void
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
 
-void ChapterMap( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 }
 
-void ChapterMapAutostartMission( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST->IsChapterActive() )
@@ -1537,7 +1538,7 @@ void ChapterMapAutostartMission( const string &szID, const vector<wstring> &para
 	}
 }
 
-void ChapterMapAfterIntroMovie( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ChapterMapAfterIntroMovie( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	// start chapter music
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();

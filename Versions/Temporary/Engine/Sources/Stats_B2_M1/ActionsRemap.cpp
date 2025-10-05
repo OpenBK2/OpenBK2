@@ -148,33 +148,33 @@ static const int abilityToActionCommand[][2] =
 	{ -1, -1 },
 };
 
-static hash_map< EActionCommand,					 NDb::EUnitSpecialAbility, SEnumHash > mapCommandToAbility;
-static hash_map< NDb::EUnitSpecialAbility, EActionCommand,           SEnumHash > mapAbilityToCommand;
-static hash_map< EActionCommand,           NDb::EUserAction,         SEnumHash > mapCommandToAction;
-static hash_map< NDb::EUserAction,				 EActionCommand,           SEnumHash > mapActionToCommand;
-static vector< NDb::EUserAction > mapAbilityToAction;
+static std::unordered_map< EActionCommand,					 NDb::EUnitSpecialAbility, SEnumHash > mapCommandToAbility;
+static std::unordered_map< NDb::EUnitSpecialAbility, EActionCommand,           SEnumHash > mapAbilityToCommand;
+static std::unordered_map< EActionCommand,           NDb::EUserAction,         SEnumHash > mapCommandToAction;
+static std::unordered_map< NDb::EUserAction,				 EActionCommand,           SEnumHash > mapActionToCommand;
+static std::vector< NDb::EUserAction > mapAbilityToAction;
 
 NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand )
 {
-	hash_map< EActionCommand, NDb::EUnitSpecialAbility, SEnumHash >::const_iterator pos = mapCommandToAbility.find( actionCommand );
+	std::unordered_map< EActionCommand, NDb::EUnitSpecialAbility, SEnumHash >::const_iterator pos = mapCommandToAbility.find( actionCommand );
 	return pos != mapCommandToAbility.end() ? pos->second : NDb::ABILITY_NOT_ABILITY;
 }
 
 EActionCommand GetCommandByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
-	hash_map< NDb::EUnitSpecialAbility, EActionCommand, SEnumHash >::const_iterator pos = mapAbilityToCommand.find( specialAbility );
+	std::unordered_map< NDb::EUnitSpecialAbility, EActionCommand, SEnumHash >::const_iterator pos = mapAbilityToCommand.find( specialAbility );
 	return pos != mapAbilityToCommand.end() ? pos->second : (EActionCommand)-1;
 }
 
 EActionCommand GetCommandByAction( NDb::EUserAction action )
 {
-	hash_map< NDb::EUserAction, EActionCommand, SEnumHash >::const_iterator pos = mapActionToCommand.find( action );
+	std::unordered_map< NDb::EUserAction, EActionCommand, SEnumHash >::const_iterator pos = mapActionToCommand.find( action );
 	return pos != mapActionToCommand.end() ? pos->second : (EActionCommand)-1;
 }
 
 NDb::EUserAction GetActionByCommand( EActionCommand actionCommand )
 {
-	hash_map< EActionCommand, NDb::EUserAction, SEnumHash >::const_iterator pos = mapCommandToAction.find( actionCommand );
+	std::unordered_map< EActionCommand, NDb::EUserAction, SEnumHash >::const_iterator pos = mapCommandToAction.find( actionCommand );
 	return pos != mapCommandToAction.end() ? pos->second : NDb::USER_ACTION_UNKNOWN;
 }
 

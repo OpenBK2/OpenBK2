@@ -25,7 +25,7 @@ struct SMemBuilderVertexHash
 
 class CMemObjectBuilder
 {
-	typedef hash_map<SMemBuilderVertex, int, SMemBuilderVertexHash> CPointsHash;
+	typedef std::unordered_map<SMemBuilderVertex, int, SMemBuilderVertexHash> CPointsHash;
 	CPointsHash points;
 	CMemObject *p;
 public:
@@ -81,8 +81,8 @@ void CMemObjectBuilder::AddSphereTriangle( const CVec3 &a, const CVec3 &b, const
 
 void CMemObject::CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSided )
 {
-	vector<CVec3> points;
-	vector<STriangle> tris;
+	std::vector<CVec3> points;
+	std::vector<STriangle> tris;
 	//
 	points.resize( 8 );
 	points[0] = CVec3( base.x,          base.y,          base.z );
@@ -144,7 +144,7 @@ void CMemObject::CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs )
 		resPoints[i] = resPoints[i] * fRadius + ptCenter;
 }
 
-void CMemObject::CreatePolyline( const vector<CVec3> &points )
+void CMemObject::CreatePolyline( const std::vector<CVec3> &points )
 {
 	resPoints = points;
 	bPolyLine = true;
@@ -160,15 +160,15 @@ struct SMOTessPoint
 };
 typedef CVec2 TTriangle[3];
 
-void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
+void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 {
 	if ( points.size() < 3 )
 		return;
 	
-	vector<CVec3> vert;
+	std::vector<CVec3> vert;
 	vert.resize( points.size() );
 
-	list<SMOTessPoint> poly;
+	std::list<SMOTessPoint> poly;
 	for ( int i = 0; i < points.size(); i++ )
 	{
 		const CVec2 &vPrev2 = points[ (i-1 + points.size()) % points.size() ];
@@ -185,16 +185,16 @@ void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 
 	bool bTryAgain = true;
 	float fRange = -FP_EPSILON;
-	vector<STriangle> tris;
+	std::vector<STriangle> tris;
 	while( poly.size() > 2 )	
 	{
 		bool bRemoved = false;
-		list<SMOTessPoint>::iterator iPrev, iPrev2;
+		std::list<SMOTessPoint>::iterator iPrev, iPrev2;
 		iPrev = poly.end();
 		iPrev--;
 		iPrev2 = iPrev;
 		iPrev2--;
-		for ( list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iPrev2 = iPrev, iPrev = i, ++i )
+		for ( std::list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iPrev2 = iPrev, iPrev = i, ++i )
 		{
 			const SMOTessPoint &prev = *iPrev2;
 			const SMOTessPoint &temp = *iPrev;
@@ -204,7 +204,7 @@ void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 				continue;
 
 			bool bHasInside = false;
-			vector<CVec2> vTri( 3 );
+			std::vector<CVec2> vTri( 3 );
 			vTri[0] = prev.vPoint;
 			vTri[1] = temp.vPoint;
 			vTri[2] = next.vPoint;
@@ -235,12 +235,12 @@ void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 		}
 		if ( bRemoved )
 		{
-			list<SMOTessPoint>::iterator iPrev, iPrev2;
+			std::list<SMOTessPoint>::iterator iPrev, iPrev2;
 			iPrev = poly.end();
 			iPrev--;
 			iPrev2 = iPrev;
 			iPrev2--;
-			for ( list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iPrev2 = iPrev, iPrev = i, ++i )
+			for ( std::list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iPrev2 = iPrev, iPrev = i, ++i )
 			{
 				SMOTessPoint &temp = *iPrev;
 				const SMOTessPoint &prev = *iPrev2;
@@ -268,7 +268,7 @@ void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float fRadius, int nSubs, bool bClose )
 {
 	CMemObjectBuilder b( this );
-	vector<CVec3> base;
+	std::vector<CVec3> base;
 	++nSubs;
 
 	const float fStep = FP_PI2 / nSubs + 0.001;
@@ -377,7 +377,7 @@ void CMemObject::Clear()
 	bPolyLine = false;
 }
 
-void CMemObject::Create( const vector<CVec3> &points, const vector<STriangle> &tris )
+void CMemObject::Create( const std::vector<CVec3> &points, const std::vector<STriangle> &tris )
 {
 	Clear();
 	CMemObjectBuilder b( this );

@@ -51,7 +51,7 @@ struct TString
 {
 private:
 	ZDATA
-	string str;
+	std::string str;
 public:
 	int marked;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&str); f.Add(3,&marked); return 0; }
@@ -62,7 +62,7 @@ public:
 	int size() const { return str.size(); }
 	int IsMarked() { return marked; }
 	const char* c_str() const { return str.c_str(); }
-	const string& GetStr() const { return str; }
+	const std::string& GetStr() const { return str; }
 
 	bool operator==( const TString &other ) const
 	{
@@ -163,7 +163,7 @@ struct TStringHash
 {
 	int operator()( const TString &str ) const
 	{
-		hash<string> comparer;
+		std::hash<std::string> comparer;
 		return comparer(str.str);
 	}
 };
@@ -182,20 +182,20 @@ struct LocVar
 
 struct Proto {
 	bool bCreated;
-  vector<Number> numbers;  /* Number numbers used by the function */
-  vector<int> protos;  /* functions' defined inside the function, indices */
-  vector<Instruction> code;
+  std::vector<Number> numbers;  /* Number numbers used by the function */
+  std::vector<int> protos;  /* functions' defined inside the function, indices */
+  std::vector<Instruction> code;
   short numparams;
   short is_vararg;
   short maxstacksize;
   short marked;
   /* debug information */
-  vector<int> lineinfo;  /* map from opcodes to source lines */
-  vector<LocVar> locvars;  /* information about local variables */
+  std::vector<int> lineinfo;  /* map from opcodes to source lines */
+  std::vector<LocVar> locvars;  /* information about local variables */
 
-	vector<TString *> strings;  /* strings used by the function */
+	std::vector<TString *> strings;  /* strings used by the function */
 #ifdef LUA_DEBUG
-	string source;
+	std::string source;
 #endif
   int lineDefined;
 
@@ -214,7 +214,7 @@ struct Closure {
   short isC;  /* 0 for Lua functions, 1 for C functions */
 
 	struct Closure *mark;  /* marked closures (point to itself when not marked) */
-  vector<TObject> upvalues;
+  std::vector<TObject> upvalues;
 
 	Closure() : mark(this), isC(0) { f.c = 0; }
 	int operator&( IBinSaver &f );
@@ -233,7 +233,7 @@ struct ObjectHash
 				break;
 			case LUA_TSTRING:
 				{
-					hash<string> hh;
+					std::hash<std::string> hh;
 					h = hh( key.GetS()->GetStr() );
 				}
 				break;
@@ -256,7 +256,7 @@ struct ObjectHash
 
 struct Hash 
 {
-	typedef hash_map<TObject, TObject, ObjectHash> CObjHash;
+	typedef std::unordered_map<TObject, TObject, ObjectHash> CObjHash;
   struct Hash *mark;  /* marked tables (point to itself when not marked) */
 
 	ZDATA

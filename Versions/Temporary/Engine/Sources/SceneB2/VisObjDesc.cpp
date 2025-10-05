@@ -11,7 +11,7 @@
 #include "VisObjIconsManager.h"
 
 static bool s_bGeomAABB = false;
-vector<int> SModelVisObjDesc::n2Attach;
+std::vector<int> SModelVisObjDesc::n2Attach;
 
 
 class CAnimObjBounder : public CFuncBase<SBound>
@@ -58,7 +58,7 @@ void SModelVisObjDesc::Visit( IAIVisitor *pVisitor )
 		pVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetPlacement().forward, 0, 0, 1 );
 }
 
-void SModelVisObjDesc::FillBBPoints( vector<CVec3> &bbPoints, vector<WORD> &bbIndices )
+void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<WORD> &bbIndices )
 {
 	if ( pModel != 0 && pModel->pGeometry != 0 )
 	{
@@ -93,9 +93,9 @@ void SModelVisObjDesc::FillBBPoints( vector<CVec3> &bbPoints, vector<WORD> &bbIn
 
 void SModelVisObjDesc::UpdateBBPolyLine( NGScene::IGameView *pGScene )
 {
-	vector<CVec3> bbPoints( 8 );
-	vector<WORD> bbIndices( 24 );
-	vector<CVec3> transformedBBPoints( 8 );
+	std::vector<CVec3> bbPoints( 8 );
+	std::vector<WORD> bbIndices( 24 );
+	std::vector<CVec3> transformedBBPoints( 8 );
 	FillBBPoints( bbPoints, bbIndices );
 	if ( pModel != 0 )
 	{
@@ -416,7 +416,7 @@ void SAnimatedVisObjDescBase::ChangeModel( const NDb::SModel *pNewModel, CCSTime
 		pAnimator->SetGlobalTransform( pTransform );
 		// reset all attached objects in the case of animator change
 		attachedObjects.clear();
-		attachedObjects.resize( __ESSOT_COUNTER ); 
+		attachedObjects.reserve( __ESSOT_COUNTER );
 	}
 	pModel = pNewModel;
 	ClearObject();

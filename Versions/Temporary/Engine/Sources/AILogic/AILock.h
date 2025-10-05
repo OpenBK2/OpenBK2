@@ -18,26 +18,26 @@ struct SStaticObjectLockInfo
 {
 	bool bNewLockingWay;
 	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > oldLock;
-	const vector<SVector> *pNewLock;
+	const std::vector<SVector> *pNewLock;
 	CArray2D<BYTE> &lockInfo;
-	list<SObjTileInfo> &lockedTiles;
+	std::list<SObjTileInfo> &lockedTiles;
 
-	SStaticObjectLockInfo ( CArray2D<BYTE> &_lockInfo, list<SObjTileInfo> &_lockedTiles )
+	SStaticObjectLockInfo ( CArray2D<BYTE> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
 		: lockInfo( _lockInfo ), lockedTiles( _lockedTiles ), bNewLockingWay( true ), pNewLock( 0 )
 	{
 	}
 };
 
 template <class TAccess>
-void CreateStaticObjectLockedTilesInfo( list<SObjTileInfo> *pTiles, 
-	vector<SEntranceData> &entrances, 
+void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
+	std::vector<SEntranceData> &entrances,
 	EAIClasses ePassClass, 
 	SStaticObjectLockInfo &lockInfo,
 	TAccess & access )
 {
 	pTiles->clear();
 
-	hash_set<SVector, STilesHash> entranceTiles;
+	std::unordered_set<SVector, STilesHash> entranceTiles;
 	int nEntrances = entrances.size();
 	for ( int i = 0; i < nEntrances; ++i )
 	{
@@ -84,7 +84,7 @@ void CreateStaticObjectLockedTilesInfo( list<SObjTileInfo> *pTiles,
 	}
 	else if ( lockInfo.pNewLock )
 	{
-		const vector<SVector> &tiles = *lockInfo.pNewLock;
+		const std::vector<SVector> &tiles = *lockInfo.pNewLock;
 		lockInfo.lockedTiles.clear();
 		for ( int i = 0; i < tiles.size(); ++i )
 		{

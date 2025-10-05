@@ -6,9 +6,9 @@
 
 
 
-hash_map<int, CObjectBase*> & GetStorage()
+std::unordered_map<int, CObjectBase*> & GetStorage()
 {
-	static hash_map<int, CObjectBase*> storage;
+	static std::unordered_map<int, CObjectBase*> storage;
 	return storage;
 }
 
@@ -19,7 +19,7 @@ void AddObject( int nObject, CObjectBase * p )
 
 void CheckAIObjectBase( int nObj )
 {
-	hash_map<int, CObjectBase*>::iterator pos = GetStorage().find( nObj );
+	std::unordered_map<int, CObjectBase*>::iterator pos = GetStorage().find( nObj );
 	if ( pos != GetStorage().end() )
 	{
 		CCheckSumSaver saver;
@@ -30,7 +30,7 @@ void CheckAIObjectBase( int nObj )
 void CheckAIObjectBase()
 {
 	CCheckSumSaver saver;
-	for ( hash_map<int, CObjectBase*>::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
+	for ( std::unordered_map<int, CObjectBase*>::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
 		(it->second)->operator&( saver );
 }
 /*
@@ -160,12 +160,12 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	++nCount;
 }
 
-void CCheckSumSaver::DataChunkString( string &data )
+void CCheckSumSaver::DataChunkString( std::string &data )
 {
 	//*checkSumString = adler32( *checkSumString, (const BYTE*)(data.c_str()), data.size() * sizeof( string::value_type ) );
 }
 
-void CCheckSumSaver::DataChunkString( wstring &data )
+void CCheckSumSaver::DataChunkString( std::wstring &data )
 {
 	//z*checkSumString = adler32( *checkSumString, (const BYTE*)(data.c_str()), data.size() * sizeof( wstring::value_type ) );
 }

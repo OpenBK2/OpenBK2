@@ -42,7 +42,7 @@ DWORD SM1UnitSpecific::CalcCheckSum() const
 
 
 
-void SM1UnitHelicopter::SHelicopterAxis::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SM1UnitHelicopter::SHelicopterAxis::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Scaled", (BYTE*)&pScaled - pThis, sizeof(pScaled), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dynamic", (BYTE*)&pDynamic - pThis, sizeof(pDynamic), NTypeDef::TYPE_TYPE_REF );

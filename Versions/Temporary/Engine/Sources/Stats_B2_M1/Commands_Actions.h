@@ -109,7 +109,7 @@ public:
 	void SetActions( const DWORD _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }
 	DWORD* GetBuffer() { return &(actions[0]); }
 	//
-	void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+	void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 };
 
 

@@ -4,7 +4,7 @@
 
 int nID = 0;
 bool bConsoleUpdated = false;
-list<SConsoleLine> consoleLines;
+std::list<SConsoleLine> consoleLines;
 
 CLogStream csSystem( CONSOLE_STREAM_CONSOLE );	// Ответы на консольные комманды
 CLogStream csScript( CONSOLE_STREAM_CONSOLE );//CONSOLE_STREAM_SCRIPT );		// сообщения скрипта
@@ -17,6 +17,16 @@ CLogStream& CLogStream::operator<< ( const bool &bVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += bVal ? L"<green>true<white>" : L"<red>false<white>";
+	return *this;
+}
+
+CLogStream& CLogStream::operator<< ( const std::size_t &nVal )
+{
+	wchar_t wszBuffer[1024];
+
+	bConsoleUpdated = true;
+	swprintf( wszBuffer, L"%d", nVal );
+	wsStreamBuffer = wsStreamBuffer + wszBuffer;
 	return *this;
 }
 
@@ -61,7 +71,7 @@ CLogStream& CLogStream::operator<< ( const char* szText )
 	if ( nLen > 0 )
 	{
 		wszText[nLen] = 0;
-		*this << wstring( wszText );
+		*this << std::wstring( wszText );
 	}
 
 	return *this;
@@ -71,12 +81,12 @@ CLogStream& CLogStream::operator<< ( const wchar_t* szText )
 {
 	bConsoleUpdated = true;
 
-	*this << wstring( szText );
+	*this << std::wstring( szText );
 
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const wstring &szText )
+CLogStream& CLogStream::operator<< ( const std::wstring &szText )
 {
 	bConsoleUpdated = true;
 	for ( int nTemp = 0; nTemp < szText.length(); nTemp++ )

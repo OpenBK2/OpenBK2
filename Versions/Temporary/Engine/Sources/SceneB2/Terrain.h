@@ -33,7 +33,7 @@ typedef SPatchHolder<CMeshDataPatch> SPrecipicePatchHolder;
 class CPrecipice
 {
 	SPrecipiceGFXInfo *pInfo; // graphics data (meshes for patches)
-	vector<SPrecipicePatchHolder> patches; // engine's ready graphics data
+	std::vector<SPrecipicePatchHolder> patches; // engine's ready graphics data
 	int nID;
 public:
 	CPrecipice(): pInfo( 0 ) {}
@@ -61,7 +61,7 @@ typedef SPatchHolder<CPeakPatch> SPeakPatchHolder;
 class CPeak
 {
 	SPeakGFXInfo *pInfo;						// graphics data (meshes for patches)
-	vector<vector<SPeakPatchHolder> > patches;			// engine's ready graphics data
+	std::vector<std::vector<SPeakPatchHolder> > patches;			// engine's ready graphics data
 	int nID;
 public:
 	CPeak(): pInfo( 0 ) {}
@@ -80,7 +80,7 @@ typedef SPatchHolder<CMeshDataPatch> SFootPatchHolder;
 class CFoot
 {
 	SFootGFXInfo *pInfo;						// graphics data (meshes for patches)
-	vector<SFootPatchHolder> patches;			// engine's ready graphics data
+	std::vector<SFootPatchHolder> patches;			// engine's ready graphics data
 	int nID;
 public:
 	CFoot(): pInfo( 0 ) {}
@@ -113,9 +113,9 @@ class CRiver
 {
 	const SRiverGFXInfo *pInfo;						// graphics data (meshes for patches)
 	int nID;
-	vector<SRiverPatchHolder> waterPatches;
-	vector<SRiverPatchHolder> water2Patches;
-	vector<SRiverPatchHolder> bottomPatches;
+	std::vector<SRiverPatchHolder> waterPatches;
+	std::vector<SRiverPatchHolder> water2Patches;
+	std::vector<SRiverPatchHolder> bottomPatches;
 	CDGPtr< CFuncBase<STime> > pTimer;
 public:
 	CRiver(): pInfo( 0 ) {}
@@ -135,7 +135,7 @@ typedef SPatchHolder<CMeshDataPatch> SRoadPatchHolder;
 class CRoad
 {
 	SRoadGFXInfo *pInfo;						// graphics data (meshes for patches)
-	vector<SRoadPatchHolder> patches;			// engine's ready graphics data
+	std::vector<SRoadPatchHolder> patches;			// engine's ready graphics data
 	int nID;
 public:
 	CRoad(): pInfo( 0 ) {}
@@ -177,15 +177,15 @@ class CSceneTerrain : public ITerraGfxObserver
 	CPtr<NGScene::IGameView> pGameView;
 	CDBPtr<NDb::STerrain> pDBDesc;
 	CPtr< CFuncBase<STime> > pAbsTimer;
-	vector<vector<STerrainPatchHolder> > patches;
-	vector<vector<STerrainPatchHolder> > terraBorders;
+	std::vector<std::vector<STerrainPatchHolder> > patches;
+	std::vector<std::vector<STerrainPatchHolder> > terraBorders;
 	//vector<CCrag> crags;
-	vector<CRiver> rivers;
-	vector<CRoad> roads;
-	vector<CTerraSpot> terraspots;
-	vector<CPrecipice> precipices;
-	vector<CPeak> peaks;
-	vector<CFoot> foots;
+	std::vector<CRiver> rivers;
+	std::vector<CRoad> roads;
+	std::vector<CTerraSpot> terraspots;
+	std::vector<CPrecipice> precipices;
+	std::vector<CPeak> peaks;
+	std::vector<CFoot> foots;
 //	CObj<CWater> pWater;
 	//
 	const NDb::SVSOInstance* FindCragDescInstance( int nID ) const;
@@ -196,8 +196,8 @@ class CSceneTerrain : public ITerraGfxObserver
 	void UpdateRoadGfxInfoPtr();
 	//
 	// terrain itself
-	void UpdatePatchGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd );
-	void UpdateBorderGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nBorderID );
+	void UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd );
+	void UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nBorderID );
 	// road
 	void AddRoad( SRoadGFXInfo *pRoadGfxInfo );
 	bool UpdateRoad( const int nVSOID );

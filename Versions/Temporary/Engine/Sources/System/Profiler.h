@@ -4,7 +4,7 @@ namespace NProfiler
 {
 class CProfiler
 {
-	string szFile;
+	std::string szFile;
 	int nLine;
 	DWORD dwStartTime;
 public:

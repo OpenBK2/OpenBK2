@@ -28,13 +28,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< EMPGameType > gameTypes;
+		std::vector< EMPGameType > gameTypes;
 
 		SMPMapInfo() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -86,7 +86,7 @@ namespace NDb
 			bUseAnchorOnly( true )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -98,7 +98,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		CVec3 vPosition;
 		float fYaw;
 		float fPitch;
@@ -112,7 +112,7 @@ namespace NDb
 			fFOV( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -126,7 +126,7 @@ namespace NDb
 	public:
 		bool bIsTangentIn;
 		bool bIsTangentOut;
-		string szKeyParam;
+		std::string szKeyParam;
 		float fStartTime;
 
 		SScriptMovieKey() :
@@ -136,7 +136,7 @@ namespace NDb
 			fStartTime( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -155,7 +155,7 @@ namespace NDb
 			nPositionIndex( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -174,7 +174,7 @@ namespace NDb
 			nObjectScriptID( -1 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -186,8 +186,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SScriptMovieKeyPos > posKeys;
-		vector< SScriptMovieKeyFollow > followKeys;
+		std::vector< SScriptMovieKeyPos > posKeys;
+		std::vector< SScriptMovieKeyFollow > followKeys;
 
 		#include "include_scriptmoviesequence.h"
 
@@ -195,7 +195,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -207,8 +207,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SScriptCameraPlacement > scriptCameraPlacements;
-		vector< SScriptMovieSequence > scriptMovieSequences;
+		std::vector< SScriptCameraPlacement > scriptCameraPlacements;
+		std::vector< SScriptMovieSequence > scriptMovieSequences;
 
 		#include "include_scriptmovies.h"
 
@@ -216,7 +216,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -231,7 +231,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szGeneralPartyName;
+		std::string szGeneralPartyName;
 		CDBPtr< SSquadRPGStats > pGunCrewSquad;
 		CDBPtr< SSquadRPGStats > pHowitzerGunCrewSquad;
 		CDBPtr< SSquadRPGStats > pHeavyMachinegunSquad;
@@ -269,7 +269,7 @@ namespace NDb
 		NFile::CFilePath szBriefingFileRef;
 		NFile::CFilePath szDescriptionFileRef;
 		bool bIsPrimary;
-		vector< CVec2 > mapPositions;
+		std::vector< CVec2 > mapPositions;
 		int nExperience;
 
 		#include "include_MissionObjective.h"
@@ -310,7 +310,7 @@ namespace NDb
 				bIntention( false )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -336,7 +336,7 @@ namespace NDb
 			nFrameIndex( -1 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -348,13 +348,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SIntArray > sections;
+		std::vector< SIntArray > sections;
 
 		SEntrenchmentInfo() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -373,7 +373,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		EScriptAreaTypes eType;
-		string szName;
+		std::string szName;
 		CVec2 vCenter;
 		CVec2 vAABBHalfSize;
 		float fR;
@@ -386,7 +386,7 @@ namespace NDb
 			fR( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -399,7 +399,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		int nCmdType;
-		vector< int > unitLinkIDs;
+		std::vector< int > unitLinkIDs;
 		int nLinkID;
 		CVec2 vPos;
 		bool bFromExplosion;
@@ -416,7 +416,7 @@ namespace NDb
 			fNumber( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -439,7 +439,7 @@ namespace NDb
 			vPos( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -459,7 +459,7 @@ namespace NDb
 			vPos( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -471,14 +471,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
-		vector< CVec2 > points;
+		std::string szName;
+		std::vector< CVec2 > points;
 
 		SEditAreaInfo() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -508,7 +508,7 @@ namespace NDb
 			fDirection( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -520,7 +520,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SReinforcePoint > reinforcePoints;
+		std::vector< SReinforcePoint > reinforcePoints;
 		EParcelType eType;
 		CVec2 vCenter;
 		float fRadius;
@@ -540,7 +540,7 @@ namespace NDb
 			nMinUnitsToReinforce( 3 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -552,8 +552,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< int > mobileScriptIDs;
-		vector< SAIGeneralParcel > parcels;
+		std::vector< int > mobileScriptIDs;
+		std::vector< SAIGeneralParcel > parcels;
 		int nMaxMobileTanks;
 
 		SAIGeneralSide() :
@@ -561,7 +561,7 @@ namespace NDb
 			nMaxMobileTanks( 20 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -580,7 +580,7 @@ namespace NDb
 			nLinkID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -599,7 +599,7 @@ namespace NDb
 			nPointID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -612,7 +612,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		int nLinkID;
-		vector< SBuildingBonuses > playerBonuses;
+		std::vector< SBuildingBonuses > playerBonuses;
 		bool bStorage;
 
 		SPlayerBonusData() :
@@ -621,7 +621,7 @@ namespace NDb
 			bStorage( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -655,7 +655,7 @@ namespace NDb
 				nDirection( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -680,7 +680,7 @@ namespace NDb
 				fFlyTime( 0.0000f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -689,16 +689,16 @@ namespace NDb
 		SCameraPlacement camera;
 		SAIGeneralSide general;
 		CDBPtr< SPartyDependentInfo > pPartyInfo;
-		vector< SReinforcementPosition > reinforcementPoints;
-		vector< CDBPtr< SReinforcement > > reinforcementTypes;
+		std::vector< SReinforcementPosition > reinforcementPoints;
+		std::vector< CDBPtr< SReinforcement > > reinforcementTypes;
 		CDBPtr< SPlayerRank > pDefaultRank;
 		int nDiplomacySide;
 		float fRecycleTimeCoefficient;
 		int nReinforcementCalls;
 		NFile::CFilePath szLocalizedPlayerNameFileRef;
 		CVec2 vMPStartPos;
-		vector< CDBPtr< SReinforcement > > scriptReinforcements;
-		vector< SScriptReinforcementEntry > scriptReinforcementsTextID;
+		std::vector< CDBPtr< SReinforcement > > scriptReinforcements;
+		std::vector< SScriptReinforcementEntry > scriptReinforcementsTextID;
 		SSuperWeaponInfo superWeapon;
 
 		#include "include_MapPlayerInfo.h"
@@ -711,7 +711,7 @@ namespace NDb
 			vMPStartPos( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -729,43 +729,43 @@ namespace NDb
 		NFile::CFilePath szMapDesignerFileRef;
 		CVec2 vNorthPoint;
 		int nNortType;
-		vector< SMapPlayerInfo > players;
-		vector< SMapObjectInfo > objects;
+		std::vector< SMapPlayerInfo > players;
+		std::vector< SMapObjectInfo > objects;
 		ESeason eSeason;
 		EDayNight eDayTime;
-		vector< int > diplomacies;
-		vector< SEntrenchmentInfo > entrenchments;
-		vector< SIntArray > bridges;
-		vector< SMapObjectInfo > scenarioObjects;
+		std::vector< int > diplomacies;
+		std::vector< SEntrenchmentInfo > entrenchments;
+		std::vector< SIntArray > bridges;
+		std::vector< SMapObjectInfo > scenarioObjects;
 		SReinforcementGroupInfo reinforcements;
 		NFile::CFilePath szScriptFileRef;
-		vector< SScriptArea > scriptAreas;
-		vector< SAIStartCommand > startCommandsList;
-		vector< SBattlePosition > reservePositionsList;
-		vector< SMapSoundInfo > soundsList;
+		std::vector< SScriptArea > scriptAreas;
+		std::vector< SAIStartCommand > startCommandsList;
+		std::vector< SBattlePosition > reservePositionsList;
+		std::vector< SMapSoundInfo > soundsList;
 		CDBPtr< SComplexSoundDesc > pForestCircleSound;
 		CDBPtr< SComplexSoundDesc > pForestAmbientSounds;
 		int nMapType;
 		int nAttackingSide;
-		vector< SPlayerBonusData > playerBonusObjects;
-		vector< CDBPtr< SMissionBonus > > bonuses;
+		std::vector< SPlayerBonusData > playerBonusObjects;
+		std::vector< CDBPtr< SMissionBonus > > bonuses;
 		CDBPtr< SMaterial > pMiniMap;
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedDescriptionFileRef;
 		NFile::CFilePath szLoadingDescriptionFileRef;
 		CDBPtr< STexture > pLoadingPicture;
-		vector< SCameraPlacement > cameraPositions;
+		std::vector< SCameraPlacement > cameraPositions;
 		SScriptMovies scriptMovies;
-		vector< CVec2 > finalPositions;
-		vector< CDBPtr< SMissionObjective > > objectives;
+		std::vector< CVec2 > finalPositions;
+		std::vector< CDBPtr< SMissionObjective > > objectives;
 		CDBPtr< SMapMusic > pMusic;
 		CDBPtr< SMapMusic > pMusicWin;
 		CDBPtr< SMapMusic > pMusicLost;
 		SMPMapInfo mPInfo;
 		int nBorderLockSize;
 		int nBorderCameraSize;
-		vector< CDBPtr< SComplexEffect > > scriptEffects;
-		vector< CDBPtr< SDifficultyLevel > > customDifficultyLevels;
+		std::vector< CDBPtr< SComplexEffect > > scriptEffects;
+		std::vector< CDBPtr< SDifficultyLevel > > customDifficultyLevels;
 
 		#include "include_mapinfo.h"
 
@@ -955,7 +955,7 @@ namespace NDb
 			nNumber( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -997,71 +997,71 @@ namespace NDb
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EMPGameType eValue );
-	STATS_B2_M1_EXPORT EMPGameType StringToEnum_NDb_EMPGameType( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EMPGameType eValue );
+	STATS_B2_M1_EXPORT EMPGameType StringToEnum_NDb_EMPGameType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMPGameType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMPGameType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMPGameType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMPGameType( szValue ); }
+	static std::string ToString( NDb::EMPGameType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMPGameType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMPGameType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EScriptAreaTypes eValue );
-	EScriptAreaTypes StringToEnum_NDb_EScriptAreaTypes( const string &szValue );
+	std::string EnumToString( NDb::EScriptAreaTypes eValue );
+	EScriptAreaTypes StringToEnum_NDb_EScriptAreaTypes( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EScriptAreaTypes>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EScriptAreaTypes eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EScriptAreaTypes ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EScriptAreaTypes( szValue ); }
+	static std::string ToString( NDb::EScriptAreaTypes eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EScriptAreaTypes ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EScriptAreaTypes( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EParcelType eValue );
-	EParcelType StringToEnum_NDb_EParcelType( const string &szValue );
+	std::string EnumToString( NDb::EParcelType eValue );
+	EParcelType StringToEnum_NDb_EParcelType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EParcelType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EParcelType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EParcelType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EParcelType( szValue ); }
+	static std::string ToString( NDb::EParcelType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EParcelType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EParcelType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::ESuperWeaponType eValue );
-	ESuperWeaponType StringToEnum_NDb_ESuperWeaponType( const string &szValue );
+	std::string EnumToString( NDb::ESuperWeaponType eValue );
+	ESuperWeaponType StringToEnum_NDb_ESuperWeaponType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESuperWeaponType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESuperWeaponType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESuperWeaponType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESuperWeaponType( szValue ); }
+	static std::string ToString( NDb::ESuperWeaponType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESuperWeaponType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESuperWeaponType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EBonusType eValue );
-	EBonusType StringToEnum_NDb_EBonusType( const string &szValue );
+	std::string EnumToString( NDb::EBonusType eValue );
+	EBonusType StringToEnum_NDb_EBonusType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EBonusType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EBonusType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EBonusType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EBonusType( szValue ); }
+	static std::string ToString( NDb::EBonusType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EBonusType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EBonusType( szValue ); }
 };
 

@@ -27,7 +27,7 @@ void CScene::PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos )
 	Vis2AI( pvPos );
 }
 
-void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SPickObjInfo> *pPickedObjects, list<int> *pPickedAttached )
+void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::list<SPickObjInfo> *pPickedObjects, std::list<int> *pPickedAttached )
 {
 	CVec3 vPos1, vPos2;
 	AI2Vis( &vPos1, vAIPos1 );
@@ -40,9 +40,9 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SP
 	CRay ray( vPos1, vDir );
 	const float fLength = fabs( vDir );
 
-	vector<NAI::SInterval> intervals;
+	std::vector<NAI::SInterval> intervals;
 	data[eScene]->pAIMap->Trace( ray, &intervals, 1 );
-	for ( vector<NAI::SInterval>::const_iterator it = intervals.begin(); it != intervals.end(); ++it )
+	for ( std::vector<NAI::SInterval>::const_iterator it = intervals.begin(); it != intervals.end(); ++it )
 	{
 		const NAI::SInterval &interval = *it;
 		if ( interval.enter.fT > fLength )
@@ -75,7 +75,7 @@ inline float GetGridPosition( float fPosition, int nGridSize )
 	return min( (int)(fPosition*nGridSize), nGridSize-1 );
 }
 
-void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )
+void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
 		return;
@@ -89,9 +89,9 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const
 	ray.ptOrigin = vOrig;
 	ray.ptDir = vDir;
 
-	vector<NAI::SInterval> intervals;
+	std::vector<NAI::SInterval> intervals;
 	data[eScene]->pAIMap->Trace( ray, &intervals, 1 );
-	for ( vector<NAI::SInterval>::const_iterator it = intervals.begin(); it != intervals.end(); ++it )
+	for ( std::vector<NAI::SInterval>::const_iterator it = intervals.begin(); it != intervals.end(); ++it )
 	{
 		const NAI::SInterval &interval = *it;
 		CDynamicCast<const SVisObjDescBase> pVisObjDescBase = interval.pSrc->pUserData;
@@ -143,7 +143,7 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const
 	return;
 }
 
-void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
+void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
 												 EPickObjects eRadiusCoeff, const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
@@ -155,10 +155,10 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, cons
 	CVec2 vPosMax( vScreenPos2.x/vScreenRect.x, vScreenPos2.y/vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
-		swap( vPosMin.x, vPosMax.x );
+		std::swap( vPosMin.x, vPosMax.x );
 
 	if ( vPosMin.y > vPosMax.y )
-		swap( vPosMin.y, vPosMax.y );
+		std::swap( vPosMin.y, vPosMax.y );
 
 	if ( vPosMin.x < 0.0f )
 		vPosMin.x = 0.0f;
@@ -181,7 +181,7 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, cons
 	int nMaxY = GetGridPosition( (1.0f-vPosMin.y), fastRender.resGrid.GetSizeY() );
 
 	// Processing results
-	static vector<const CObjectBase*> foundObjects;
+	static std::vector<const CObjectBase*> foundObjects;
 	foundObjects.resize( 0 );
 
 	for ( int iY = nMinY; iY <= nMaxY; ++iY )
@@ -218,7 +218,7 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, cons
 	}
 } 
 
-void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
+void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
 {
 	if ( fastRender.resGrid.IsEmpty() )
 		return;
@@ -229,10 +229,10 @@ void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScre
 	CVec2 vPosMax( vScreenPos2.x/vScreenRect.x, vScreenPos2.y/vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
-		swap( vPosMin.x, vPosMax.x );
+		std::swap( vPosMin.x, vPosMax.x );
 
 	if ( vPosMin.y > vPosMax.y )
-		swap( vPosMin.y, vPosMax.y );
+		std::swap( vPosMin.y, vPosMax.y );
 
 	if ( vPosMin.x < 0.0f )
 		vPosMin.x = 0.0f;
@@ -255,7 +255,7 @@ void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScre
 	int nMaxY = GetGridPosition( (1.0f-vPosMin.y), fastRender.resGrid.GetSizeY() );
 
 	// Processing results
-	hash_set<int> foundObjects;
+	std::unordered_set<int> foundObjects;
 
 	for ( int iY = nMinY; iY <= nMaxY; ++iY )
 	{
@@ -300,9 +300,9 @@ void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScre
 	return;
 }
 
-void CScene::GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
+void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
 {
-	hash_set<int> foundObjects;
+	std::unordered_set<int> foundObjects;
 	for ( int iY = 0; iY < fastRender.resGrid.GetSizeY(); ++iY )
 	{
 		for ( int iX = 0; iX < fastRender.resGrid.GetSizeX(); ++iX )

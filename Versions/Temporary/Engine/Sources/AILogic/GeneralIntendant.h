@@ -9,10 +9,10 @@ class CResupplyCellInfo : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS(CResupplyCellInfo);
 
-	typedef hash_map< int/*Unique ID*/, BYTE > CResupplyInfo;
+	typedef std::unordered_map< int/*Unique ID*/, BYTE > CResupplyInfo;
 	ZDATA
 	CResupplyInfo resupplyInfo;
-	vector<float> resupplyCount; 
+	std::vector<float> resupplyCount;
 	float fCount;													// whole weight
 	BYTE cMarkedUnderSupply;							// indicates that this cell is under supply
 	SVector vCell;												// coordinates of the cell ( in GetGeneralCell )
@@ -61,7 +61,7 @@ public:
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CBuilding;
-typedef list< CPtr<CBuilding> > Storages;
+typedef std::list< CPtr<CBuilding> > Storages;
 
 class CGeneralTaskToDefendStorage : public IGeneralTask, public IWorkerEnumerator
 {
@@ -209,7 +209,7 @@ class CFreeArtilleryHolder : public CAIObjectBase
 		SArtilleryInfo() : pArtillery( 0 ), pCatchingFormation( 0 ) {}
 		SArtilleryInfo( CArtillery * _pArtillery ) : pArtillery( _pArtillery ), pCatchingFormation( 0 ) {}
 	};
-	typedef hash_map<int, SArtilleryInfo> TArtilleries;
+	typedef std::unordered_map<int, SArtilleryInfo> TArtilleries;
 	OBJECT_NOCOPY_METHODS( CFreeArtilleryHolder );
 	TArtilleries::iterator itCurrent;
 	NTimer::STime timeFromReset;
@@ -250,9 +250,9 @@ public:
 	};
 private:
 	
-	typedef hash_map< SVector, CPtr<CResupplyCellInfo>, SVectorHash > ResupplyCells;
-	typedef hash_map< /*Unique ID*/ int, CPtr<CEnemyRememberer> > CFreeArtillery;
-	typedef pair<CVec2, WORD> CPosition;
+	typedef std::unordered_map< SVector, CPtr<CResupplyCellInfo>, SVectorHash > ResupplyCells;
+	typedef std::unordered_map< /*Unique ID*/ int, CPtr<CEnemyRememberer> > CFreeArtillery;
+	typedef std::pair<CVec2, WORD> CPosition;
 
 	ZDATA_(CCommander)
 	CPtr<CCommander> pGeneral;
@@ -265,7 +265,7 @@ private:
 
 	// storages (tasks to defend storages)
 	CommonUnits resupplyTrucks;
-	vector<CPosition> vPositions;
+	std::vector<CPosition> vPositions;
 	int nCurPosition;
 	bool bInitedByParcel;
 

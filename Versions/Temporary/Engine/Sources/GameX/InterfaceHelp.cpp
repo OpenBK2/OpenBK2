@@ -28,7 +28,7 @@ bool CInterfaceHelp::Init()
 	return true;
 }
 
-void CInterfaceHelp::MakeInterior( const wstring &wszHeader, const wstring &wszDesc )
+void CInterfaceHelp::MakeInterior( const std::wstring &wszHeader, const std::wstring &wszDesc )
 {
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	pHeader = GetChildChecked<ITextView>( pMain, "Header", true );
@@ -60,7 +60,7 @@ void CInterfaceHelp::OnGetFocus( bool bFocus )
 	}
 }
 
-bool CInterfaceHelp::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceHelp::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "close" )
 		return OnCloseReaction( szSender );
@@ -68,12 +68,12 @@ bool CInterfaceHelp::Execute( const string &szSender, const string &szReaction )
 	return false;
 }
 
-int CInterfaceHelp::Check( const string &szCheckName ) const
+int CInterfaceHelp::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 
-bool CInterfaceHelp::OnCloseReaction( const string &szSender )
+bool CInterfaceHelp::OnCloseReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	
@@ -111,8 +111,8 @@ void CICHelp::PostCreate( IInterface *pInterface )
 	const NDb::SUIScreenEntry *pEntry = InterfaceState()->GetScreenEntry( szInterfaceType );
 	if ( pEntry && (CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpHeader) || CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpDesc)))
 	{
-		wstring szHeader;
-		wstring szDesc;
+		std::wstring szHeader;
+		std::wstring szDesc;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpHeader) )
 			szHeader = GET_TEXT_PRE(pEntry->,HelpHeader);
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpDesc) )

@@ -196,13 +196,13 @@ struct SSceneData : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( SSceneData )
 public:		
-	typedef hash_map<int, CObj<SVisObjDescBase> > CVisObjectsMap;
-	typedef list< CObj<IWindow> > CScreens; // obsolete
-	typedef list< CObj<CObjectBase> > CMarkersList;
-	typedef hash_map< int, CMarkersList > CMarkersHash;
-	typedef hash_map<int, CObj<NGScene::CPolyline> > CPolylinesMap;
-	typedef hash_map<int, CSceneIconHolder> CSceneIconsMap;
-	typedef hash_map< int, CObj<SVisObjSelectionHandler> > CSelectionMap;
+	typedef std::unordered_map<int, CObj<SVisObjDescBase> > CVisObjectsMap;
+	typedef std::list< CObj<IWindow> > CScreens; // obsolete
+	typedef std::list< CObj<CObjectBase> > CMarkersList;
+	typedef std::unordered_map< int, CMarkersList > CMarkersHash;
+	typedef std::unordered_map<int, CObj<NGScene::CPolyline> > CPolylinesMap;
+	typedef std::unordered_map<int, CSceneIconHolder> CSceneIconsMap;
+	typedef std::unordered_map< int, CObj<SVisObjSelectionHandler> > CSelectionMap;
 	
 	struct SScreenData
 	{
@@ -227,7 +227,7 @@ public:
 			return pScreen == _pScreen;
 		}
 	};
-	typedef list<SScreenData> CScreensData;
+	typedef std::list<SScreenData> CScreensData;
 	
 	enum EAIGeomMode
 	{
@@ -241,20 +241,20 @@ public:
 		CDGPtr<CCSTime> pAbsTimer;
 		CDGPtr<CCSTime> pGameTimer;
 		CVisObjectsMap visObjects;
-		hash_map<int, bool> showModes;
-		hash_map<int, bool> fadeModes;
+		std::unordered_map<int, bool> showModes;
+		std::unordered_map<int, bool> fadeModes;
 		CScreens screens; // obsolete
 		int nLastFreeID;
 		bool bEnableStatistics;
 		CObj<CTerrainManager> pTerraManager;
 		CObj<CTracksManager> pTracksManager;
-		vector<CMarkersHash> markers;
+		std::vector<CMarkersHash> markers;
 		CSceneIconsMap iconsMap;
-		vector<CVisObjReflectionInfoHolder> visObjReflections;
+		std::vector<CVisObjReflectionInfoHolder> visObjReflections;
 		CObj<CWindController> pWindController;
 		CObj<CVisObjIconsManager> pVisObjIconsManager;
 		ZSKIP //CVisObjectsMap interfaceVisObjects; 
-		hash_map<int, int> attachIDToMapObjID;
+		std::unordered_map<int, int> attachIDToMapObjID;
 		CPtr<CWeatherVisual> pWeather;
 		ZSKIP
 		CDBPtr<NDb::SAmbientLight> pSceneAmbientLight;
@@ -268,7 +268,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAbsTimer); f.Add(3,&pGameTimer); f.Add(4,&visObjects); f.Add(5,&showModes); f.Add(6,&fadeModes); f.Add(7,&screens); f.Add(8,&nLastFreeID); f.Add(9,&bEnableStatistics); f.Add(10,&pTerraManager); f.Add(11,&pTracksManager); f.Add(12,&markers); f.Add(13,&iconsMap); f.Add(14,&visObjReflections); f.Add(15,&pWindController); f.Add(16,&pVisObjIconsManager); f.Add(18,&attachIDToMapObjID); f.Add(19,&pWeather); f.Add(21,&pSceneAmbientLight); f.Add(22,&pInterfaceAmbientLight); f.Add(23,&bIsInternal); f.Add(24,&screensData); f.Add(27,&pScreenFader); OnSerialize( f ); return 0; }
 
 	CObj<CObjectBase> pWeatherSceneObject;
-	list< CObj<CObjectBase> > postEffects;
+	std::list< CObj<CObjectBase> > postEffects;
 
 	CSelectionMap selectionHandlers; // don't serialize
 	int nFreeSelectionID; // don't serialize
@@ -293,7 +293,7 @@ public:
 		}
 	}
 
-	vector< CObj<CObjectBase> > vAIMapMeshes;
+	std::vector< CObj<CObjectBase> > vAIMapMeshes;
 	EAIGeomMode eAIGeomMode;
 
 private:
@@ -312,7 +312,7 @@ public:
 	CObj<NAI::IAIMap> pIconAIMap;
 
 	CPolylinesMap polylines;
-	vector< CObj<NGScene::CPolyline> > terrainGrid;
+	std::vector< CObj<NGScene::CPolyline> > terrainGrid;
 	//
 	//
 	CDBPtr<NDb::SSceneConsts> pSceneConsts;
@@ -346,11 +346,11 @@ class CScene : public IScene
 
 	NInput::CGMORegContainer observers;
 
-	typedef hash_map< int, CPtr<NAIVisInfo::CDebugObject> > CDebugInfoObjects;
+	typedef std::unordered_map< int, CPtr<NAIVisInfo::CDebugObject> > CDebugInfoObjects;
 	CDebugInfoObjects debugInfoObjects;
 
 	ZDATA
-		vector< CObj<SSceneData> > data;
+		std::vector< CObj<SSceneData> > data;
 		EScene eScene;
 		bool bEditorMode;
 		NTimer::STime timeBadWeatherLeft;
@@ -381,7 +381,7 @@ protected:
 											 const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection );
 	int AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale, 
 												 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection );
-	int AddIndexedPolylineInternal( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
+	int AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
 
 	//	AddObject with client-calculated matrix
 	int AddStaticObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
@@ -401,14 +401,14 @@ protected:
 	void FadeObject( int nID, bool bFade );
 	void FadeObject( int nID, float fFade );
 	//
-	virtual void GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle );
-	virtual void GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle );
+	virtual void GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle );
+	virtual void GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle );
 	//
 	void AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pModel, const SHMatrix &matr );
 	//
-	CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const string &szBoneName );
+	CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const std::string &szBoneName );
 	//	
-	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime timeStart,
+	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime timeStart,
 												CFuncBase<SFBTransform> **pTransrform, int *pnBoneIndex, const bool bConstantOffset );
 	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const ESceneAttachMode eMode, const NTimer::STime timeStart,
 												CFuncBase<SFBTransform> **pTransrform, const CVec3 &vOffset );
@@ -434,7 +434,7 @@ protected:
 
 	CFuncBase<SBound> *GetObjectBounder( const int nID );
 
-	IAttachedObject *GetAttachedObject( const int nTargetID, const string &szBoneName );
+	IAttachedObject *GetAttachedObject( const int nTargetID, const std::string &szBoneName );
 
 	CObjectBase* CreateCircle( CFuncBase<SFBTransform> *pTransform, float fRadius, const CVec3 &vColor, float fWidth );
 public:
@@ -469,24 +469,24 @@ public:
 	bool ChangeModel( const int nObjectID, const NDb::SModel *pModel );
 	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nID, bool bRefreshAnimator = true );
 	virtual NAnimation::ISkeletonAnimator *GetInterfaceObjAnimator( IWindow *pScreen, const int nID );
-	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nTargetID, const string &szBoneName );
-	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset );
+	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nTargetID, const std::string &szBoneName );
+	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset );
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const CVec3 &vOffset );
 	virtual struct IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
 
 	virtual void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType );
 	virtual void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
 
-	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical = false );
+	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical = false );
 	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, CFuncBase<SFBTransform> *pTransform, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, const int nBoneIndex = -1, bool bVertical = false );
-	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode );
+	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode );
 	// Attach light FX: to animated (with bone name) and to static objects (without bone name)
 	virtual void AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEffect *pLight, NTimer::STime timeStart, ESceneAttachMode eMode, const bool bInEditor = false, int nHoldID = -1 );
 
 	// add effect to scene. returns new ID
 	int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
 	int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
-	void AddEffect( const int nID, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
+	void AddEffect( const int nID, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
 
 	void StopEffectGeneration( const int nID, NTimer::STime time );
 
@@ -517,8 +517,8 @@ public:
 	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial );
 	void AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial );
 	// polyline
-	int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
+	int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
+	int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
 	void RemovePolyline( const int nID );
 
 	// shoot areas
@@ -535,11 +535,11 @@ public:
 	void PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos );
 	void PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos );
 	// pick objects; if objects is attached to CMOObj, then returns CMOObj ID
-	void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass );
-	void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
+	void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass );
+	void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
 		EPickObjects eRadiusCoeff, const EPickObjectsClass ePickObjsClass );
 
-	virtual void PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SPickObjInfo> *pPickedObjects, list<int> *pPickedAttached );
+	virtual void PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::list<SPickObjInfo> *pPickedObjects, std::list<int> *pPickedAttached );
 
 	// set scene light (re-light all scene)
 	void SetLight( const NDb::SAmbientLight *pLight );
@@ -565,11 +565,11 @@ public:
 	//
 	CVec2 GetScreenRect();
 	void ShowObject( const int nID, const bool bShow );
-	void SetFadedObjects( const list<int> &objects );
-	void SetFadedObjects( const list<int> &objects, float fFade );
-	void GetObstacleObjects( list<int> *pObstacles, const list<int> &objects, const CVec2 &vScreenPos );
+	void SetFadedObjects( const std::list<int> &objects );
+	void SetFadedObjects( const std::list<int> &objects, float fFade );
+	void GetObstacleObjects( std::list<int> *pObstacles, const std::list<int> &objects, const CVec2 &vScreenPos );
 	void ClearPostEffectObjects();
-	void AddPostEffectObjects( const list<int> &objects, const CVec4 &vColor );
+	void AddPostEffectObjects( const std::list<int> &objects, const CVec4 &vColor );
 
 	// msg processing
 	virtual bool ProcessEvent( const SGameMessage &msg );

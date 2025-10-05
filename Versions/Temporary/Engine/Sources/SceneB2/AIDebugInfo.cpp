@@ -122,8 +122,8 @@ namespace NAIVisInfo
 			vCurPoint = vNextPoint;
 		}
 
-		vector<CVec2> aiVerts( segmentsSplice.size() * 4 );
-		vector<STriangle> tris( segmentsSplice.size() * 2 );
+		std::vector<CVec2> aiVerts( segmentsSplice.size() * 4 );
+		std::vector<STriangle> tris( segmentsSplice.size() * 2 );
 
 		for ( int i = 0; i < segmentsSplice.size(); ++i )
 		{
@@ -166,8 +166,8 @@ namespace NAIVisInfo
 		static CVec2 vTurn( F_AI_TURN_X, F_AI_TURN_Y );
 		CVec2 vDir( aiCircle.r, 0.0f );
 
-		vector<CVec2> aiVerts( N_SPLICE * 3 );
-		vector<STriangle> tris( N_SPLICE );
+		std::vector<CVec2> aiVerts( N_SPLICE * 3 );
+		std::vector<STriangle> tris( N_SPLICE );
 
 		for ( int i = 0; i < N_SPLICE; ++i )
 		{
@@ -192,17 +192,17 @@ namespace NAIVisInfo
 	// * CDebugMarker
 	// ************************************************************************************************************************ //
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CDebugMarker::Init( const vector<SVector> &tiles, const int nStart, const int nEnd )
+	void CDebugMarker::Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd )
 	{
 		SetPosition( tiles, nStart, nEnd );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CDebugMarker::SetPosition( const vector<SVector> &tiles, const int nStart, const int nEnd )
+	void CDebugMarker::SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd )
 	{
 		SetNeedUpdate( true );
 
-		vector<CVec2> aiVerts( (nEnd - nStart) * 4 );
-		vector<STriangle> tris( (nEnd - nStart) * 2 );
+		std::vector<CVec2> aiVerts( (nEnd - nStart) * 4 );
+		std::vector<STriangle> tris( (nEnd - nStart) * 2 );
 
 		int cnt = 0;
 		for ( int i = nStart; i < nEnd; ++i )
@@ -233,21 +233,21 @@ namespace NAIVisInfo
 	// * CDebugMarkers
 	// ************************************************************************************************************************ //
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CDebugMarkers::Init( const vector<SVector> &tiles )
+	void CDebugMarkers::Init( const std::vector<SVector> &tiles )
 	{
 		SetPosition( tiles );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CDebugMarkers::SetPosition( const vector<SVector> &tiles )
+	void CDebugMarkers::SetPosition( const std::vector<SVector> &tiles )
 	{
 		markers.clear();
 
 		const int nPatchX = MAXIMUM_MAP_SIZE / AI_TILE_SIZE;
 		const int nPatchY = MAXIMUM_MAP_SIZE / AI_TILE_SIZE;
-		CArray2D< vector<SVector> > patches;
+		CArray2D< std::vector<SVector> > patches;
 		patches.SetSizes( nPatchX, nPatchY );
 
-		for ( vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+		for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			const int nTileX = it->x / AI_TILE_SIZE;
 			const int nTileY = it->y / AI_TILE_SIZE;

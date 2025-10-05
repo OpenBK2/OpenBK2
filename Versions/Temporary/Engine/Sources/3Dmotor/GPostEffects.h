@@ -37,8 +37,8 @@ public:
 	void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
 
-void ApplyFilters( int nDownSample, const vector<CPtr<I2DEffect> > &filters );
-void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int nDownSample, const vector<CPtr<I2DEffect> > &filters );
+void ApplyFilters( int nDownSample, const std::vector<CPtr<I2DEffect> > &filters );
+void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int nDownSample, const std::vector<CPtr<I2DEffect> > &filters );
 
 }
 

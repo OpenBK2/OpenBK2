@@ -50,7 +50,7 @@ int CExecutorAttackGroup::Segment()
 
 void CExecutorAttackGroup::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> events;
+	std::vector<EExecutorEventID> events;
 
 	events.push_back( EID_ATTACKGROUP_ADD_UNIT );
 	events.push_back( EID_ATTACKGROUP_ATTACK );

@@ -26,7 +26,7 @@ bool CInterfaceArmyBranchDlg::Init()
 	return true;
 }
 
-void CInterfaceArmyBranchDlg::SetParams( const vector<CInterfaceArmyBranchDlg::SBranch> &_branches )
+void CInterfaceArmyBranchDlg::SetParams( const std::vector<CInterfaceArmyBranchDlg::SBranch> &_branches )
 {
 	branches = _branches;
 	
@@ -176,7 +176,7 @@ bool CInterfaceArmyBranchDlg::OnRight()
 	return true;
 }
 
-bool CInterfaceArmyBranchDlg::OnSelect( const string &szSender )
+bool CInterfaceArmyBranchDlg::OnSelect( const std::string &szSender )
 {
 	for ( int i = 0; i < visSlots.size(); ++i )
 	{
@@ -192,7 +192,7 @@ bool CInterfaceArmyBranchDlg::OnSelect( const string &szSender )
 	return true;
 }
 
-bool CInterfaceArmyBranchDlg::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceArmyBranchDlg::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "dialog_army_branch_close" )
 		return OnClose();
@@ -206,14 +206,14 @@ bool CInterfaceArmyBranchDlg::Execute( const string &szSender, const string &szR
 	return false;
 }
 
-int CInterfaceArmyBranchDlg::Check( const string &szCheckName ) const
+int CInterfaceArmyBranchDlg::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 
 // CICArmyBranchDlg
 
-CICArmyBranchDlg::CICArmyBranchDlg( const vector<CInterfaceArmyBranchDlg::SBranch> &_branches )
+CICArmyBranchDlg::CICArmyBranchDlg( const std::vector<CInterfaceArmyBranchDlg::SBranch> &_branches )
 {
 	branches = _branches;
 }

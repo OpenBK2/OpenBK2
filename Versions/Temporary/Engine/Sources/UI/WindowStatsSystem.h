@@ -8,7 +8,7 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 	OBJECT_BASIC_METHODS( CWindowStatsSystem )
 	struct SColorString
 	{
-		wstring szString;
+		std::wstring szString;
 		DWORD dwColor;
 		CPtr<IML> pGfxText;
 
@@ -22,14 +22,14 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 	CDBPtr<NDb::SWindowStatsSystemShared> pShared;
 	CPtr<NDb::SWindowStatsSystem> pInstance;
 
-	typedef hash_map<wstring, SColorString> CEntries;
+	typedef std::unordered_map<std::wstring, SColorString> CEntries;
 	CEntries entries;
 
 public:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	void UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor );
+	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor );
 	void Visit( struct IUIVisitor *pVisitor );
 
 	int operator&( IBinSaver &saver )

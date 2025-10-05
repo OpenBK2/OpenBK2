@@ -6,14 +6,14 @@
 #include "Scene.h"
 
 void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,
-																 const vector<string> &leafNames, int _nEffectID, const CVec3 &vPos,
+																 const std::vector<std::string> &leafNames, int _nEffectID, const CVec3 &vPos,
 																 float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart )
 {
 	fEndAngle = _fEndAngle;
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
-	for ( vector<string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
+	for ( std::vector<std::string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
 	{
-		leafBones.push_back();
+		leafBones.emplace_back();
 		leafBones.back().nBoneIndex = pGetBone->GetBoneIndex( it->c_str() );
 		NI_ASSERT( leafBones.back().nBoneIndex != -1, StrFmt( "Wrong bone name: %s", it->c_str() ) );
 		leafBones.back().fMaxRotAngle = NWin32Random::Random( -1.0f, 1.0f ) * FP_PI * 0.25f;
@@ -93,7 +93,7 @@ void CTreeFallingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 
 	granny_transform *pTransform = GrannyGetLocalPoseTransform( pPose, 0 );
 	TransformRootBone( pTransform, qRot );
-	for ( list<SLeafMutatorData>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
+	for ( std::list<SLeafMutatorData>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
 		if ( it->nBoneIndex == -1 )
 			continue;

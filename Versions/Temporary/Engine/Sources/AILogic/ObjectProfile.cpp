@@ -15,9 +15,9 @@ FINISH_REGISTER
 
 struct STilesCollector
 {
-	hash_set<SVector, STilesHash> *pTilesUnder;
+	std::unordered_set<SVector, STilesHash> *pTilesUnder;
 
-	STilesCollector( hash_set<SVector, STilesHash> *_pTilesUnder )
+	STilesCollector( std::unordered_set<SVector, STilesHash> *_pTilesUnder )
 		: pTilesUnder( _pTilesUnder ) { }
 
 	void operator()( const int x, const int y )
@@ -48,7 +48,7 @@ void CObjectProfile::AddCentersOfSmallPolygons()
 {
 	for ( int k = 0; k < profile.polygons.size(); ++k )
 	{
-		const vector<CVec2> &points = profile.polygons[k].verts;
+		const std::vector<CVec2> &points = profile.polygons[k].verts;
 
 		CVec2 vMassCenter( VNULL2 );
 		for ( int i = 0; i < points.size() - 1; ++i )
@@ -165,7 +165,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 	AddCentersOfSmallPolygons();
 
 	tilesUnderVector.reserve( tilesUnder.size() );
-	for ( hash_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
+	for ( std::unordered_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
 		tilesUnderVector.push_back( *iter );
 }
 
@@ -221,7 +221,7 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 
 	for ( int k = 0; k < profile.polygons.size(); ++k )
 	{
-		const vector<CVec2> &points = profile.polygons[k].verts;
+		const std::vector<CVec2> &points = profile.polygons[k].verts;
 
 		int nCount = 0;
 		for ( int i = 0; i < points.size() - 1; ++i )
@@ -269,7 +269,7 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 	
 	for ( int k = 0; k < profile.polygons.size(); ++k )
 	{
-		const vector<CVec2> &points = profile.polygons[k].verts;
+		const std::vector<CVec2> &points = profile.polygons[k].verts;
 		for ( int i = 0; i < points.size() - 1; ++i )
 		{
 			const CVec2 vPoint = vCenter + (points[i] ^ vRotation);

@@ -35,10 +35,10 @@ private:
 	bool bFinished;
 	int nCyclePoints;
 
-	vector<SVector> stopPoints, addPoints;
+	std::vector<SVector> stopPoints, addPoints;
 	int mapBufIndex;
 	CArray2D<BYTE> mapBuf;
-	vector<int> cyclePoints, segmBegin;
+	std::vector<int> cyclePoints, segmBegin;
 	bool bPathFound;
 
 	int nBestDist;

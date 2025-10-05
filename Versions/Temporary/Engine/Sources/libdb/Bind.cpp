@@ -53,7 +53,7 @@ void CBindStruct::SetChanged()
 	}
 }
 
-wstring CBindStruct::GetAttribute( const string &szName ) const
+std::wstring CBindStruct::GetAttribute( const std::string &szName ) const
 {
 	for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
 	{
@@ -63,7 +63,7 @@ wstring CBindStruct::GetAttribute( const string &szName ) const
 	return L"";
 }
 
-void CBindStruct::SetAttribute( const string &szName, const wstring &szValue )
+void CBindStruct::SetAttribute( const std::string &szName, const std::wstring &szValue )
 {
 	// first, try to find existing attribute
 	for ( CAttributesList::iterator it = attributes.begin(); it != attributes.end(); ++it )
@@ -75,7 +75,7 @@ void CBindStruct::SetAttribute( const string &szName, const wstring &szValue )
 		}
 	}
 	// add new one
-	attributes.push_back( pair<string, wstring>(szName, szValue) );
+	attributes.push_back( std::pair<std::string, std::wstring>(szName, szValue) );
 }
 
 // ************************************************************************************************************************ //
@@ -100,9 +100,9 @@ bool CStructIterator::GotoNextFieldInLevels()
 	return true;
 }
 
-bool CStructIterator::AddLevel( const string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct )
+bool CStructIterator::AddLevel( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct )
 {
-	list<SLevel>::iterator pos = levels.insert( levels.end(), SLevel() );
+	std::list<SLevel>::iterator pos = levels.insert( levels.end(), SLevel() );
 	pos->szAddName = _szAddName;
 	pos->pTypeStruct = _pTypeStruct;
 	if ( _pTypeStruct->pBaseType != 0 )

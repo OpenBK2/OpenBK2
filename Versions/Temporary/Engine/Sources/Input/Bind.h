@@ -13,9 +13,9 @@ namespace NInput
 struct SGameMessage
 {
 	NInput::SMessage mMessage;
-	vector<NInput::SCommand*> commands;
+	std::vector<NInput::SCommand*> commands;
 #ifndef _FINALRELEASE
-	string szEventName;
+	std::string szEventName;
 #endif
 	// general-purpose params
 	struct  
@@ -40,19 +40,19 @@ enum EMappingType
 
 struct SBind
 {
-	string szSection;
+	std::string szSection;
 	EMappingType eType;
-	vector<string> controlsSet;
+	std::vector<std::string> controlsSet;
 };
 class INPUT_EXPORT CBind
 {
 	float fDelta;
 	SCommand* pBindCommand;
 #ifndef _FINALRELEASE
-	string szBindName;
+	std::string szBindName;
 #endif
 public:
-	CBind( const string &sCmd );
+	CBind( const std::string &sCmd );
 
 	bool IsActive() const;
 	float GetDelta();
@@ -61,25 +61,25 @@ public:
 	bool ProcessEvent( const SGameMessage &eEvent );
 };
 
-const vector<string>& GetSections();
-INPUT_EXPORT void SetSection( const string &_szSection, bool bUpdate = true );
-INPUT_EXPORT void SetSection( const vector<string> &sections, bool bUpdate = true );
+const std::vector<std::string>& GetSections();
+INPUT_EXPORT void SetSection( const std::string &_szSection, bool bUpdate = true );
+INPUT_EXPORT void SetSection( const std::vector<std::string> &sections, bool bUpdate = true );
 
-void Bind( const string &szCmd, const SBind &sCmdBind );
-void Unbind( const string &szCmd );
-INPUT_EXPORT void GetBind( const string &szCmd, list<SBind> *pRes );
+void Bind( const std::string &szCmd, const SBind &sCmdBind );
+void Unbind( const std::string &szCmd );
+INPUT_EXPORT void GetBind( const std::string &szCmd, std::list<SBind> *pRes );
 void UpdateBinds();
 
-float GetControlCoeff( const string &szControl );
-void SetControlCoeff( const string &szControl, float fCoeff );
+float GetControlCoeff( const std::string &szControl );
+void SetControlCoeff( const std::string &szControl, float fCoeff );
 
-float GetCommandCoeff( const string &szControl );
-void SetCommandCoeff( const string &szControl, float fCoeff );
+float GetCommandCoeff( const std::string &szControl );
+void SetCommandCoeff( const std::string &szControl, float fCoeff );
 
 INPUT_EXPORT bool GetEvent( SGameMessage *pGameMessage );
-void MakeEvent( SGameMessage *pMSG,  const string &szGameMessage, int nParam1, int nParam2, EControlType ct );
-INPUT_EXPORT void PostEvent( const string &szGameMessage, int nParam1, int nParam2 );
-INPUT_EXPORT void PostWinEvent( const string &szGameMessage, int nParam1, int nParam2 );
+void MakeEvent( SGameMessage *pMSG,  const std::string &szGameMessage, int nParam1, int nParam2, EControlType ct );
+INPUT_EXPORT void PostEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
+INPUT_EXPORT void PostWinEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
 void PurgeEvents();
 INPUT_EXPORT void PurgeUIEvents();
 

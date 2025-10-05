@@ -199,10 +199,10 @@ void CPlayerReinforcement::AddCallReinforcementCommand( NDb::EReinforcementType 
 	commands.push_back( SCallReinforcementCommand(eType, vPoint ) );
 }
 
-void CPlayerReinforcement::SendReinforcementToPoint( list< pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam )
+void CPlayerReinforcement::SendReinforcementToPoint( std::list< std::pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam )
 {
-	vector<int> ids;
-	for ( list< pair<int, CObjectBase*> >::iterator it = objects.begin(); it != objects.end(); ++it )
+	std::vector<int> ids;
+	for ( std::list< std::pair<int, CObjectBase*> >::iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CCommonUnit * pUnit = checked_cast<CCommonUnit*>( it->second );
 		if ( pUnit->IsEmptyCmdQueue() )
@@ -266,7 +266,7 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, con
 	}
 	else
 	{
-		list< pair<int, CObjectBase*> > objects;
+		std::list< std::pair<int, CObjectBase*> > objects;
 		CallReinforcement( eType, nPointID, nScriptID, &objects, bOnWater, vPoint );
 		if ( bOnWater && !bAviation )
 			return;
@@ -297,7 +297,7 @@ void CPlayerReinforcement::UpdateButtonsAfterCall( const NDb::EReinforcementType
 	UpdateReinfButtonState( false, timeReinfButtonEnable, 0.0f );
 }
 
-void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, list< pair<int, CObjectBase*> > *pObjects, const bool bOnWater, const CVec2 &vTarget )
+void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bOnWater, const CVec2 &vTarget )
 {
 	if ( !GetScenarioTracker() )
 		return;
@@ -409,7 +409,7 @@ void CPlayerReinforcement::CallSuperWeapon()
 	const CVec2 vDeployPoint = pos->second.first.vAviationPosition;
 	const WORD wDirection = GetDirectionByVector( vTarget - vDeployPoint );
 	CDBPtr<NDb::SDeployTemplate> pTemplate = GetDeployTemplate( pos->second.first, NDb::RT_SUPER_WEAPON );
-	list< pair<int, CObjectBase*> > objects;
+	std::list< std::pair<int, CObjectBase*> > objects;
 	NReinforcement::PlaceSingleLandReinforcement( nPlayer, pReinforcement, pReinforcement->eType, pTemplate, vDeployPoint, wDirection, -1, &objects, nSuperWeaponShotsLeft != nSuperWeaponShots );
 	SendReinforcementToPoint( objects, NDb::RT_SUPER_WEAPON, vTarget, false, superWeaponType == NDb::SUPER_WEAPON_BOMBER ? 0.0f : 1.0f );
 
@@ -609,7 +609,7 @@ bool CPlayerReinforcement::CanCallNow() const
 
 int CPlayerReinforcement::GetRandomPointID() const
 {
-	vector<int> pointIDs;
+	std::vector<int> pointIDs;
 	for ( CPositions::const_iterator it = positions.begin(); it != positions.end(); ++it )
 	{
 		if ( it->second.second )
@@ -780,13 +780,13 @@ void CPlayerReinforcementArray::InitPlayerReinforcementArray( const NDb::SMapInf
 
 int CPlayerReinforcementArray::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, (vector<CPlayerReinforcement>*)(this) );
+	saver.Add( 1, (std::vector<CPlayerReinforcement>*)(this) );
 	return 0;
 }
 
 void CPlayerReinforcementArray::Segment()
 {
-	for ( vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
+	for ( std::vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
 		it->Segment();
 }
 
@@ -798,7 +798,7 @@ void CPlayerReinforcementArray::SetRecycleCoeff( const int nPlayer, const float 
 
 void CPlayerReinforcementArray::PlaceInitialUnits()
 {
-	for ( vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
+	for ( std::vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
 		it->PlaceInitialUnits();
 }
 

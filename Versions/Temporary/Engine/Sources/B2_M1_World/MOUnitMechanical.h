@@ -21,18 +21,18 @@ class CMOUnitMechanical : public CMOUnit
 	ZDATA_( CMOUnit )
 		ZONSERIALIZE
 		bool bArtilleryHooked;
-		vector< CPtr<CMOSelectable> > vPassangers;
+		std::vector< CPtr<CMOSelectable> > vPassangers;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
 		bool bMoved;
-		vector<CVec3> lastTrackPoints;
-		vector<CVec3> trackPoints;
+		std::vector<CVec3> lastTrackPoints;
+		std::vector<CVec3> trackPoints;
 		float fTrackWidth;
 		WORD wLastTrackDir;
 		int nLastTrackTime;
 		bool bForwardMoving;
 		CPtr<IMOContainer> pTransport;
 		bool bTrackBroken;
-		vector< CObj<CSmokeTrailEffect> > smokeTrails;
+		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		CPtr<IMOUnit> pOneFromCrew;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); return 0; }
@@ -44,13 +44,13 @@ private:
 	int GetMechPassangersCount() const;
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
 	const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2( 
-		const NDb::SModel *pModel, const vector<NDb::Svector_AnimDescs> &animdescs, 
+		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 		const NDb::EAnimationType eAnimType, const int nAnimID );
 
 	void PlayAnimDesc( NAnimation::ISkeletonAnimator *pAnimator, const NDb::SModel *pModel, 
-										 const vector<NDb::Svector_AnimDescs> &animdescs,
+										 const std::vector<NDb::Svector_AnimDescs> &animdescs,
 										 const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID );
-	void PlayAnimDescForAttached( IAttachedObject *pObject, const vector<NDb::Svector_AnimDescs> &animdescs,
+	void PlayAnimDescForAttached( IAttachedObject *pObject, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 																const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID );
 protected:
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc );
@@ -63,7 +63,7 @@ public:
 	bool Load( struct IMOUnit *pMO, bool bEnter );
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() { }
-	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const;
 	int GetPassangersCount() const { return vPassangers.size(); }
 	int GetFreePlaces() const;
 	int GetFreeMechPlaces() const;

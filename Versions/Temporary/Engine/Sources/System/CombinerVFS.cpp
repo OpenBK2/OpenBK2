@@ -3,10 +3,12 @@
 #include "CombinerVFS.h"
 #include "FilePath.h"
 
+#include <algorithm>
+
 namespace NVFS
 {
 
-CDataStream *CCombinerVFS::OpenFile( const string &szPath )
+CDataStream *CCombinerVFS::OpenFile( const std::string &szPath )
 {
 	for ( int i = vfses.size() - 1; i >= 0; --i )
 	{
@@ -16,7 +18,7 @@ CDataStream *CCombinerVFS::OpenFile( const string &szPath )
 	return 0;
 }
 
-bool CCombinerVFS::DoesFileExist( const string &szPath )
+bool CCombinerVFS::DoesFileExist( const std::string &szPath )
 {
 	for ( int i = vfses.size() - 1; i >= 0; --i )
 	{
@@ -26,7 +28,7 @@ bool CCombinerVFS::DoesFileExist( const string &szPath )
 	return false;
 }
 
-bool CCombinerVFS::GetFileStats( SFileStats *pStats, const string &szPath )
+bool CCombinerVFS::GetFileStats( SFileStats *pStats, const std::string &szPath )
 {
 	for ( int i = vfses.size() - 1; i >= 0; --i )
 	{
@@ -36,16 +38,16 @@ bool CCombinerVFS::GetFileStats( SFileStats *pStats, const string &szPath )
 	return false;
 }
 
-void CCombinerVFS::GetAllFileNames( vector<string> *pFileNames, const string &rszFolder )
+void CCombinerVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder )
 {
 	// compose filenames from all VFSes
-	typedef hash_map<NFile::CFilePath, int> CHashSet;
+	typedef std::unordered_map<NFile::CFilePath, int> CHashSet;
 	CHashSet hashset;
 	for ( int i = vfses.size() - 1; i >= 0; --i )
 	{
-		vector<string> fileNames;
+		std::vector<std::string> fileNames;
 		vfses[i]->GetAllFileNames( &fileNames, rszFolder );
-		for ( vector<string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it )
+		for ( std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it )
 			hashset[*it] = 1;
 	}
 	// sort before return
@@ -53,10 +55,10 @@ void CCombinerVFS::GetAllFileNames( vector<string> *pFileNames, const string &rs
 	pFileNames->reserve( hashset.size() );
 	for ( CHashSet::const_iterator it = hashset.begin(); it != hashset.end(); ++it )
 		pFileNames->push_back( it->first );
-	sort( pFileNames->begin(), pFileNames->end() );
+	std::sort( pFileNames->begin(), pFileNames->end() );
 }
 
-void CCombinerVFS::SetVFSList( const vector< CObj<IVFS> > &vfsList ) 
+void CCombinerVFS::SetVFSList( const std::vector< CObj<IVFS> > &vfsList )
 { 
 	vfses.clear(); 
 	vfses = vfsList; 

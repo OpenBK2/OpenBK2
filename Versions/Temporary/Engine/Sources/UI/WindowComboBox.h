@@ -13,7 +13,7 @@ class CWindowComboBox : public CWindow, public IComboBox,
 {
 	OBJECT_BASIC_METHODS(CWindowComboBox);
 
-	typedef vector< CPtr<IListControlItem> > CItems;
+	typedef std::vector< CPtr<IListControlItem> > CItems;
 	
 	ZDATA_(CWindow)
 	CDBPtr<NDb::SWindowComboBoxShared> pShared;

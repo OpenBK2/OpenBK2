@@ -21,7 +21,7 @@ struct SPrevPathParams
 };
 
 struct IPathFraction;
-typedef list<CPtr<IPathFraction> > CPathList;
+typedef std::list<CPtr<IPathFraction> > CPathList;
 
 //	IPathFraction 
 

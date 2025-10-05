@@ -104,7 +104,7 @@ struct SShootArea
 struct SShootAreas
 {
 	// выводить - последовательно, накладывая друг на друга, сначала areas[0], потом areas[1] и т.д.
-	list<SShootArea> areas;
+	std::list<SShootArea> areas;
 
 	virtual int operator&( struct IBinSaver &saver )
 	{

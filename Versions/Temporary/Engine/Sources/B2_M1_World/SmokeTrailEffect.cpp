@@ -61,7 +61,7 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 	fTimeLastUpdate = fTime;
 }
 
-void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator )
+void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const std::string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator )
 {
 	SHMatrix mBoneLocalPos;
 	if ( szBoneName.empty() || pAnimator == 0 || pAnimator->GetLocalBonePosition( szBoneName.c_str(), &mBoneLocalPos ) == false )

@@ -86,11 +86,11 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 
 			if ( pLevels->eDBType == eKillerType )
 			{
-				int nXPLevel = Min( pLevels->levels.size() - 1, nOldLevel );
+				int nXPLevel = Min<int>( pLevels->levels.size() - 1, nOldLevel );
 				if ( nXPLevel >= 0 )
 					pOldBonus = pLevels->levels[nXPLevel].pStatsBonus;
 
-				nXPLevel = Min( pLevels->levels.size() - 1, nNewLevel );
+				nXPLevel = Min<int>( pLevels->levels.size() - 1, nNewLevel );
 				if ( nXPLevel >= 0 )
 					pNewBonus = pLevels->levels[nXPLevel].pStatsBonus;
 

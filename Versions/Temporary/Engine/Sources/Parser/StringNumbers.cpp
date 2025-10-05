@@ -6,7 +6,7 @@
 namespace NStr
 {
 
-bool IsInt( const string &szVal )
+bool IsInt( const std::string &szVal )
 {
 	if ( szVal.empty() )
 		return false;
@@ -25,7 +25,7 @@ bool IsInt( const string &szVal )
 	return true;
 }
 
-bool IsFloat( const string &szVal )
+bool IsFloat( const std::string &szVal )
 {
 	if ( szVal.empty() )
 		return false;

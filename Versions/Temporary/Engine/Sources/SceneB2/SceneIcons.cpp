@@ -76,7 +76,7 @@ void CSceneIconInfo::CreateIcon( const int _nID, const CVec3 &_vCenter, const CV
 	CalcCompactVector( &texV, CVec3( 0, 1, 0 ) );
 	NGfx::SCompactVector norm;
 	CalcCompactVector( &norm, CVec3( 0, 0, 1 ) );
-	for ( vector<NGScene::SVertex>::iterator it = data.vertices.begin(); it != data.vertices.end(); ++it )
+	for ( std::vector<NGScene::SVertex>::iterator it = data.vertices.begin(); it != data.vertices.end(); ++it )
 	{
 		it->texU = texU;
 		it->texV = texV;

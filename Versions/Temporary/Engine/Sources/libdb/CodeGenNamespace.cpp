@@ -33,15 +33,15 @@ CNamespace::CNamespace( NLang::CNamespace *pNM, const CNodes2TypeDefs &nodes2Typ
 	badIncludes = pNM->GetBadIncludes();
 }
 
-void CNamespace::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
+void CNamespace::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
 {
-	for ( list< CObj<ICode> >::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
+	for ( std::list< CObj<ICode> >::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
 		(*iter)->GenerateCode( pCode, szTabs + "\t", pParentType, szQualifiedName );
 
 	if ( !badIncludes.empty() )
 	{
 		pCode->h << endl;
-		for ( list<string>::iterator iter = badIncludes.begin(); iter != badIncludes.end(); ++iter )
+		for ( std::list<std::string>::iterator iter = badIncludes.begin(); iter != badIncludes.end(); ++iter )
 			pCode->h << szTabs << tab << "#include " << qcomma << *iter << qcomma << endl;
 	}
 }

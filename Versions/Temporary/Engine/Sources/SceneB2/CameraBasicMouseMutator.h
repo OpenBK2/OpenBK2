@@ -62,7 +62,7 @@ namespace NCamera
 		float fScrollSpeedX;						// border scrolling
 		float fScrollSpeedY;
 		bool bAutoPositioning;								// allow camera automatically return to bounds
-		hash_map<string, bool> manualLockers;	// allow reaction on manual scrolling
+		std::unordered_map<std::string, bool> manualLockers;	// allow reaction on manual scrolling
 		bool bWasUpdated;								// camera was updated from input
 		bool bWasUpdatedExternally;			// camera was updated from external
 		float fYawSpeed;
@@ -112,7 +112,7 @@ namespace NCamera
 		void GetLimits( const NCamera::ELimitsType eLimitsType, NCamera::SCameraLimits *pLimits );
 		void SetAnchorLimits( const CTRect<float> &vLimits );
 		void SwitchAutoPositioning( const bool bAllowAutoPositioning );
-		void SwitchManualScrolling( const string &szLocker, const bool bManualOn );
+		void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn );
 		const CVec3 GetListener() const;
 		void SetAnchor( const CVec3 &_vAnchor ) { vAnchor = _vAnchor; }
 		const CVec3& GetAnchor() const { return vAnchor; }

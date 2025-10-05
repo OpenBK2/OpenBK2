@@ -143,11 +143,11 @@ void CRandomGenerator::Init()
 // --------------------------- FillRandRsl() ---------------------------------------------------------------
 const int N_FROM_START = 1024;
 
-BOOL CRandomGenerator::RecFindFile( string &szFoundName, const char *pszBaseMask, int nToFind, int* pnTotFinded )
+BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBaseMask, int nToFind, int* pnTotFinded )
 {
 	WIN32_FIND_DATA ff;
 	HANDLE hf = FindFirstFile( pszBaseMask, &ff );
-	string szPath( pszBaseMask );
+	std::string szPath( pszBaseMask );
 	szPath = szPath.substr( 0, szPath.length() - 3 );
 	if ( hf != INVALID_HANDLE_VALUE )
 	{
@@ -189,7 +189,7 @@ void CRandomGenerator::FillRandRsl()
 		randrsl[k] = n;
 		n = n * 124325 + 12341289;
 	}
-	string szFoundName;
+	std::string szFoundName;
 	for ( int nSafe = 0; nSafe < 10; ++nSafe )
 	{
 		int nTotFinded = 0;

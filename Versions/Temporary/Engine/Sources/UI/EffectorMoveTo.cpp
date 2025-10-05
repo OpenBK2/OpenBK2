@@ -25,12 +25,12 @@ int CEffectorMoveTo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
+void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
 { 
 	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo*>( _pCmd ) );
 	CParam<CVec2> vOffset( pCmd->vOffset );
 	CParam<float> moveTime( pCmd->fMoveTime );
-	CParam<string> elementToMove( pCmd->szElementToMove );
+	CParam<std::string> elementToMove( pCmd->szElementToMove );
 	if ( pContext )
 	{
 		vOffset.Merge( pContext->vOffset );
@@ -39,7 +39,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	}
 	else if ( !szAnimatedWindow.empty() )
 	{
-		CParam<string> szAnimated( szAnimatedWindow );
+		CParam<std::string> szAnimated( szAnimatedWindow );
 		elementToMove.Merge( szAnimated );
 	}
 	NI_ASSERT( vOffset.IsValid(), "OFFSET is invalid" );
@@ -78,7 +78,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 
 void CEffectorMoveTo::Reverse()
 {
-	pair<CVec2,int> res( GetCur() );
+	std::pair<CVec2,int> res( GetCur() );
 	bForward = !bForward;
 			
 	const CVec2 vTmp( vMoveFrom );
@@ -93,9 +93,9 @@ void CEffectorMoveTo::Reverse()
 	bFinished = false;
 }
 
-const pair<CVec2,int> CEffectorMoveTo::GetCur() const
+const std::pair<CVec2,int> CEffectorMoveTo::GetCur() const
 {
-	pair<CVec2,int> res;
+	std::pair<CVec2,int> res;
 	if ( fElapsedTime >= fMoveTime )
 	{
 		res.first = vMoveOffset + vMoveFrom;
@@ -113,7 +113,7 @@ const int CEffectorMoveTo::Segment( const int timeDiff, struct IScreen *pScreen,
 {
 	const float fFormerElapsedTime = fElapsedTime;
 	fElapsedTime += timeDiff;
-	const pair<CVec2,int> res( GetCur() );
+	const std::pair<CVec2,int> res( GetCur() );
 
 	if ( res.first == vMoveOffset + vMoveFrom )
 	{

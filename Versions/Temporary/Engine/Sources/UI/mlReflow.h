@@ -82,7 +82,7 @@ public:
 	virtual void SetPosition( const CTPoint<float> &sPosition ) = 0;
 
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) = 0;
-	virtual void Render( list<CTRect<float> > *pRender, const CTPoint<float> &globalPosition, const CTRect<float> &window ) = 0;
+	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &globalPosition, const CTRect<float> &window ) = 0;
 
 	virtual const CTPoint<float>& GetSize() const = 0;
 };
@@ -97,7 +97,7 @@ public:
 	virtual void Generate( NGScene::ILayoutFakeView *pView, float fWidth ) = 0;
 
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) = 0;
-	virtual void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) = 0;
+	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) = 0;
 
 	virtual const CTPoint<float>& GetSize() const = 0;
 };

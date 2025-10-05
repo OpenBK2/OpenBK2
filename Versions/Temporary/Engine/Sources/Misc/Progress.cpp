@@ -4,23 +4,23 @@ namespace NProgressHook
 {
 struct SLockInfo
 {
-	string szFileName;
+	std::string szFileName;
 	int nLine;
 	DWORD dwTime;
 
 	SLockInfo() : nLine( 0 ), dwTime( 0 ) { }
-	SLockInfo( const string &_szFileName, const int _nLine, const DWORD _dwTime )
+	SLockInfo( const std::string &_szFileName, const int _nLine, const DWORD _dwTime )
 		: szFileName( _szFileName ), nLine( _nLine ), dwTime( _dwTime ) { }
 };
 
-static list<SLockInfo> locks;
+static std::list<SLockInfo> locks;
 
-void DebugLock( const string &szFileName, const int nLine )
+void DebugLock( const std::string &szFileName, const int nLine )
 {
 	locks.push_back( SLockInfo( szFileName, nLine, GetTickCount() ) );
 }
 
-void DebugUnLock( const string &szFileName, const int nLine )
+void DebugUnLock( const std::string &szFileName, const int nLine )
 {
 	NI_VERIFY( !locks.empty(), "wrong lock/unlock sequence", return );
 	const DWORD dwTime = GetTickCount();

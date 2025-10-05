@@ -221,7 +221,7 @@ struct SInputDevice
 	int nID;
 	bool bPoll;
 	bool bNeedResync;
-	string szName;
+	std::string szName;
 	DWORD dwDevType;
 	DWORD dwFormatSize;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiDevice;
@@ -232,8 +232,8 @@ struct SInputDeviceEnum
 {
 	int nID;
 	int nNumControls;
-	string szName;
-	vector<DIOBJECTDATAFORMAT> vectorObjects;
+	std::string szName;
+	std::vector<DIOBJECTDATAFORMAT> vectorObjects;
 
 	SInputDeviceEnum(): nID( 0 ), nNumControls( 0 ), szName( "" ) {}
 };
@@ -249,12 +249,12 @@ struct SInputDataFormat
 	BYTE  bButton[32];
 };
 
-typedef vector<SInputEvent> CEventList;
-typedef vector<SInputDevice> CDevicesList;
+typedef std::vector<SInputEvent> CEventList;
+typedef std::vector<SInputDevice> CDevicesList;
 ///
-static hash_map<string, int> nameIDs;
-static hash_map<DWORD, SKey> actionIDs;
-static hash_map<int, string> idNames;
+static std::unordered_map<std::string, int> nameIDs;
+static std::unordered_map<DWORD, SKey> actionIDs;
+static std::unordered_map<int, std::string> idNames;
 ///
 static int nCounter[4] = { 0, 0, 0, 0 };
 static HWND hWindow = 0;
@@ -267,7 +267,7 @@ static NWin32Helper::com_ptr<IDirectInput8> pdiInput;
 ///
 static STime sLastEventTime = 0;
 static CEventList events;
-static list<SMessage> messages;
+static std::list<SMessage> messages;
 ///
 static bool SetCoopLevel();
 static bool SetFocus( bool bFocus );
@@ -580,12 +580,12 @@ void PumpMessages( bool bFocus )
 
 static void ResyncDevice( const SInputDevice &sDevice )
 {
-	vector<BYTE> sBuffer;
+	std::vector<BYTE> sBuffer;
 	sBuffer.resize( sDevice.dwFormatSize );
 
 	sDevice.pdiDevice->GetDeviceState( sDevice.dwFormatSize, &( sBuffer[0] ) );
 
-	for ( hash_map<DWORD, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); iTemp++ )
+	for ( std::unordered_map<DWORD, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); iTemp++ )
 	{
 		SKey &sKey = iTemp->second;
 		if ( sKey.nDevType == GET_DIDEVICE_TYPE( sDevice.dwDevType ) )
@@ -662,7 +662,7 @@ STime GetLastEventTime()
 	return sLastEventTime;
 }
 
-int GetControlID( const string &sCommand )
+int GetControlID( const std::string &sCommand )
 {
 	if ( nameIDs.find( sCommand ) == nameIDs.end() )
 		return -1;
@@ -716,7 +716,7 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 	return;
 }
 
-string GetControlLocalName( int nAction )
+std::string GetControlLocalName( int nAction )
 {
 	if ( actionIDs.find( nAction ) == actionIDs.end() )
 		return "";
@@ -905,7 +905,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	if( FAILED(hRes) )
 		return;
 
-	for ( vector<DIOBJECTDATAFORMAT>::iterator iTemp = sDeviceEnum.vectorObjects.begin(); iTemp != sDeviceEnum.vectorObjects.end(); iTemp++ )
+	for ( std::vector<DIOBJECTDATAFORMAT>::iterator iTemp = sDeviceEnum.vectorObjects.begin(); iTemp != sDeviceEnum.vectorObjects.end(); iTemp++ )
 	{
 		if ( ( iTemp->dwType & DIDFT_AXIS ) == 0 )
 			continue;
@@ -951,7 +951,7 @@ static void AddDeviceKeys( int nID, int nDevType )
 			// add dbl clk event
 			if ( key.cType == CT_KEY )
 			{
-				string szName = string( key.pszName ) + "_DBLCLK";
+				std::string szName = std::string( key.pszName ) + "_DBLCLK";
 				AddDeviceKey( nID, nDevType, key.nDevAction | DIK_DBLCLK_MODIFIER,  key.cType, szName.c_str() );
 			}
 		}
@@ -980,7 +980,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	SInputDeviceEnum *psDeviceEnum = static_cast<SInputDeviceEnum*>(pContext);
 	ASSERT( psDeviceEnum != 0 );
 
-	string szControlName;
+	std::string szControlName;
 	EControlType eType = CT_KEY;
 	DIOBJECTDATAFORMAT diObjectFormat;
 
@@ -1128,7 +1128,7 @@ bool IsMouseDisabledDebug()
 }
 
 
-bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
+bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
 {
 	NI_ASSERT( pszGameMessage != 0, "Wrong Parameter: pszGameMessage == 0" );
 	NI_ASSERT( pnParam1 != 0, "Wrong Parameter: pnParam1 == 0" );
@@ -1138,8 +1138,8 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMe
 	//
 	if ( rWindowMsg.msg == NWinFrame::SWindowsMsg::CHAR )
 	{
-		const string szCharBuffer = string() + (char)( rWindowMsg.nKey );
-		wstring wszCharBuffer;
+		const std::string szCharBuffer = std::string() + (char)( rWindowMsg.nKey );
+		std::wstring wszCharBuffer;
 		NStr::ToUnicode( &wszCharBuffer, szCharBuffer );
 		if ( wszCharBuffer.size() == 1 )
 		{

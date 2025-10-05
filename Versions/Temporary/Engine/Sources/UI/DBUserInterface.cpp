@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EPositionAllign eValue )
+std::string EnumToString( NDb::EPositionAllign eValue )
 {
 	switch ( eValue )
 	{
@@ -27,7 +27,7 @@ string EnumToString( NDb::EPositionAllign eValue )
 	}
 }
 
-NDb::EPositionAllign NDb::StringToEnum_NDb_EPositionAllign( const string &szValue )
+NDb::EPositionAllign NDb::StringToEnum_NDb_EPositionAllign( const std::string &szValue )
 {
 	if ( szValue == "EPA_LOW_END" )
 		return NDb::EPA_LOW_END;
@@ -78,7 +78,7 @@ DWORD SUIDesc::CalcCheckSum() const
 
 
 
-void SUICommandBase::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUICommandBase::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam1", &szParam1, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam2", &szParam2, pThis ); 
@@ -123,7 +123,7 @@ DWORD SUICommandBase::CalcCheckSum() const
 
 
 
-void SBUIMessage::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBUIMessage::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MessageID", (BYTE*)&szMessageID - pThis, sizeof(szMessageID), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "StringParam", (BYTE*)&szStringParam - pThis, sizeof(szStringParam), NTypeDef::TYPE_TYPE_STRING );
@@ -403,7 +403,7 @@ int SUISDirectRunReaction::operator&( IBinSaver &saver )
 
 
 
-void SUIStateSequence::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUIStateSequence::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Commands", &commands, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Reversable", (BYTE*)&bReversable - pThis, sizeof(bReversable), NTypeDef::TYPE_TYPE_BOOL );
@@ -547,7 +547,7 @@ int SBackgroundSimpleTexture::operator&( IBinSaver &saver )
 
 
 
-void SSubRect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSubRect::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &ptSize, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Maps", &rcMaps, pThis ); 
@@ -717,7 +717,7 @@ DWORD SWindowBaseDesc::CalcCheckSum() const
 
 
 
-void SGameMessageReaction::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SGameMessageReaction::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "GameMessage", (BYTE*)&szGameMessage - pThis, sizeof(szGameMessage), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "LogicalReaction", (BYTE*)&szLogicalReaction - pThis, sizeof(szLogicalReaction), NTypeDef::TYPE_TYPE_STRING );
@@ -765,7 +765,7 @@ DWORD SGameMessageReaction::CalcCheckSum() const
 
 
 
-void SWindowPlacement::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWindowPlacement::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &position, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "VerAllign", &verAllign, pThis ); 
@@ -816,7 +816,7 @@ DWORD SWindowPlacement::CalcCheckSum() const
 
 
 
-void SWindowFlags::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWindowFlags::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Transparent", (BYTE*)&bTransparent - pThis, sizeof(bTransparent), NTypeDef::TYPE_TYPE_BOOL );
 }
@@ -1121,7 +1121,7 @@ int SWindowSimple::operator&( IBinSaver &saver )
 
 
 
-void SMessageSequence::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMessageSequence::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "data", &data, pThis );
 }
@@ -1157,7 +1157,7 @@ DWORD SMessageSequence::CalcCheckSum() const
 
 
 
-void SMessageSequienceEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMessageSequienceEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "CustomCheckReturn", (BYTE*)&nCustomCheckReturn - pThis, sizeof(nCustomCheckReturn), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequience", &sequience, pThis ); 
@@ -1548,7 +1548,7 @@ int SARSwitchTab::operator&( IBinSaver &saver )
 
 
 
-void SReactionSequenceEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReactionSequenceEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Reaction", (BYTE*)&pReaction - pThis, sizeof(pReaction), NTypeDef::TYPE_TYPE_REF );
@@ -1587,7 +1587,7 @@ DWORD SReactionSequenceEntry::CalcCheckSum() const
 
 
 
-void SMessageReactionsDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMessageReactionsDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "reactions", &reactions, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "ScriptFileRef", (BYTE*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -1626,7 +1626,7 @@ DWORD SMessageReactionsDesc::CalcCheckSum() const
 
 
 
-void SCommandSequienceEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCommandSequienceEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequence", &sequence, pThis ); 
@@ -1665,7 +1665,7 @@ DWORD SCommandSequienceEntry::CalcCheckSum() const
 
 
 
-void SScreenTextEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScreenTextEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -1838,7 +1838,7 @@ int SWindowProgressBar::operator&( IBinSaver &saver )
 
 
 
-void SProgressBarTextureInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SProgressBarTextureInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MaxValue", (BYTE*)&nMaxValue - pThis, sizeof(nMaxValue), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
@@ -1877,7 +1877,7 @@ DWORD SProgressBarTextureInfo::CalcCheckSum() const
 
 
 
-void SMultiTextureProgressBarSharedState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMultiTextureProgressBarSharedState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Value", (BYTE*)&fValue - pThis, sizeof(fValue), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Background", (BYTE*)&pBackground - pThis, sizeof(pBackground), NTypeDef::TYPE_TYPE_REF );
@@ -2168,7 +2168,7 @@ int SWindowPlayer::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::ETextEntryType eValue )
+std::string EnumToString( NDb::ETextEntryType eValue )
 {
 	switch ( eValue )
 	{
@@ -2187,7 +2187,7 @@ string EnumToString( NDb::ETextEntryType eValue )
 	}
 }
 
-NDb::ETextEntryType NDb::StringToEnum_NDb_ETextEntryType( const string &szValue )
+NDb::ETextEntryType NDb::StringToEnum_NDb_ETextEntryType( const std::string &szValue )
 {
 	if ( szValue == "ETET_ALL" )
 		return NDb::ETET_ALL;
@@ -2899,7 +2899,7 @@ int SWindowTabControlShared::operator&( IBinSaver &saver )
 
 
 
-void SWindowTabControl::STab::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWindowTabControl::STab::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "TabContainer", (BYTE*)&pTabContainer - pThis, sizeof(pTabContainer), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "ButtonName", (BYTE*)&szButtonName - pThis, sizeof(szButtonName), NTypeDef::TYPE_TYPE_STRING );
@@ -3036,7 +3036,7 @@ int SWindowComboBox::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::EButtonSubstateType eValue )
+std::string EnumToString( NDb::EButtonSubstateType eValue )
 {
 	switch ( eValue )
 	{
@@ -3055,7 +3055,7 @@ string EnumToString( NDb::EButtonSubstateType eValue )
 	}
 }
 
-NDb::EButtonSubstateType NDb::StringToEnum_NDb_EButtonSubstateType( const string &szValue )
+NDb::EButtonSubstateType NDb::StringToEnum_NDb_EButtonSubstateType( const std::string &szValue )
 {
 	if ( szValue == "BST_NORMAL" )
 		return NDb::BST_NORMAL;
@@ -3070,7 +3070,7 @@ NDb::EButtonSubstateType NDb::StringToEnum_NDb_EButtonSubstateType( const string
 	return NDb::BST_NORMAL;
 }
 
-string EnumToString( NDb::EButtonChangeStateType eValue )
+std::string EnumToString( NDb::EButtonChangeStateType eValue )
 {
 	switch ( eValue )
 	{
@@ -3083,7 +3083,7 @@ string EnumToString( NDb::EButtonChangeStateType eValue )
 	}
 }
 
-NDb::EButtonChangeStateType NDb::StringToEnum_NDb_EButtonChangeStateType( const string &szValue )
+NDb::EButtonChangeStateType NDb::StringToEnum_NDb_EButtonChangeStateType( const std::string &szValue )
 {
 	if ( szValue == "BCST_ON_PUSH" )
 		return NDb::BCST_ON_PUSH;
@@ -3093,7 +3093,7 @@ NDb::EButtonChangeStateType NDb::StringToEnum_NDb_EButtonChangeStateType( const 
 }
 
 
-void SButtonVisualSubState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SButtonVisualSubState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Background", (BYTE*)&pBackground - pThis, sizeof(pBackground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Foreground", (BYTE*)&pForeground - pThis, sizeof(pForeground), NTypeDef::TYPE_TYPE_REF );
@@ -3141,7 +3141,7 @@ DWORD SButtonVisualSubState::CalcCheckSum() const
 
 
 
-void SButtonVisualState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SButtonVisualState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Normal", &normal, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "MouseOver", &mouseOver, pThis ); 
@@ -3195,7 +3195,7 @@ DWORD SButtonVisualState::CalcCheckSum() const
 
 
 
-void SButtonLogicalState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SButtonLogicalState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MessageOnEnterState", (BYTE*)&szMessageOnEnterState - pThis, sizeof(szMessageOnEnterState), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "CommandsOnEnterState", &commandsOnEnterState, pThis ); 

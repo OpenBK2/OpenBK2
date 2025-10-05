@@ -2,7 +2,7 @@
 
 struct IGlobeScriptHandler : public CObjectBase
 {
-	virtual const int CallGlobeScriptFunction( const string &szFuncCall ) = 0;
+	virtual const int CallGlobeScriptFunction( const std::string &szFuncCall ) = 0;
 };
 
 

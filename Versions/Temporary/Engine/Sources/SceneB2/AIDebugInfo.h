@@ -16,8 +16,8 @@ namespace NAIVisInfo
 		CObj<CObjectBase> pMesh;
 		CDBPtr<NDb::SMaterial> pMaterial;
 
-		vector<CVec2> aiVerts;
-		vector<STriangle> tris;
+		std::vector<CVec2> aiVerts;
+		std::vector<STriangle> tris;
 
 		bool bNeedUpdate;
 	protected:
@@ -31,8 +31,8 @@ namespace NAIVisInfo
 		void InitEngineInfo( const NDb::SMaterial *pColor );
 		void Invalidate();
 
-		void SetVerts( vector<CVec2> &_aiVerts ) { aiVerts = _aiVerts; }
-		void SetTris( vector<STriangle> &_aiTris ) { tris = _aiTris; }
+		void SetVerts( std::vector<CVec2> &_aiVerts ) { aiVerts = _aiVerts; }
+		void SetTris( std::vector<STriangle> &_aiTris ) { tris = _aiTris; }
 
 		void SetNeedUpdate( const bool _bNeedUpdate ) { bNeedUpdate = _bNeedUpdate; }
 	};
@@ -47,8 +47,8 @@ namespace NAIVisInfo
 		void InitEngineInfo( const NDb::SMaterial *pColor ) { pEngineInfo->InitEngineInfo( pColor ); }
 		void SetNeedUpdate( const bool bNeedUpdate ) { pEngineInfo->SetNeedUpdate( bNeedUpdate ); }
 
-		void SetVerts( vector<CVec2> &aiVerts ) { pEngineInfo->SetVerts( aiVerts ); }
-		void SetTris( vector<STriangle> &aiTris ) { pEngineInfo->SetTris( aiTris ); }
+		void SetVerts( std::vector<CVec2> &aiVerts ) { pEngineInfo->SetVerts( aiVerts ); }
+		void SetTris( std::vector<STriangle> &aiTris ) { pEngineInfo->SetTris( aiTris ); }
 	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	class CDebugObject : public CObjectBase
@@ -64,7 +64,7 @@ namespace NAIVisInfo
 		static const float F_MIN_AI_THICKNESS;
 		static const float F_AI_SPLICE_LEN;
 
-		vector<CSegment> segmentsSplice;
+		std::vector<CSegment> segmentsSplice;
 
 		float fThick;
 		CVec2 vDirPerp;
@@ -93,9 +93,9 @@ namespace NAIVisInfo
 	{
 		OBJECT_BASIC_METHODS( CDebugMarker );
 	public:
-		void Init( const vector<SVector> &tiles ) { Init( tiles, 0, tiles.size() ); }
-		void Init( const vector<SVector> &tiles, const int nStart, const int nEnd );
-		void SetPosition( const vector<SVector> &tiles, const int nStart, const int nEnd );
+		void Init( const std::vector<SVector> &tiles ) { Init( tiles, 0, tiles.size() ); }
+		void Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
+		void SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
 
 		void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
 	};
@@ -104,11 +104,11 @@ namespace NAIVisInfo
 	{
 		OBJECT_BASIC_METHODS( CDebugMarkers );
 
-		typedef vector< CPtr<CDebugMarker> > TMarkers;
+		typedef std::vector< CPtr<CDebugMarker> > TMarkers;
 		TMarkers markers;
 	public:
-		void Init( const vector<SVector> &tiles );
-		void SetPosition( const vector<SVector> &tiles );
+		void Init( const std::vector<SVector> &tiles );
+		void SetPosition( const std::vector<SVector> &tiles );
 
 		void SetColor( const NDb::SMaterial *pColor );
 	};

@@ -122,7 +122,7 @@ WORD CGroupLogic::GetPlayerByGroupNumber( const WORD wGroup )
 
 void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup )
 {
-	vector<int> aviaIndexes( nLen, 0 );
+	std::vector<int> aviaIndexes( nLen, 0 );
 	CVec2 vPos = VNULL2;
 	int nAvia = 0;
 	for ( int i = 0; i < nLen; ++i )
@@ -192,7 +192,7 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 	}
 }
 
-void CGroupLogic::RegisterGroup( const vector<int> &vIDs, const WORD wGroup )
+void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const WORD wGroup )
 {
 	typedef CObjectBase* LPObjectBase;
 	LPObjectBase *objects = new LPObjectBase[ vIDs.size() ];
@@ -289,8 +289,8 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	int numColumns = ceil( ( fMaxY - fMinY ) / SConsts::GROUP_DISTANCE );
 	numRows = Max( numRows, 1 );
 	numColumns = Max( numColumns, 1 );
-	vector<CVec2> centers( numRows * numColumns );
-	vector<int> nums( numRows * numColumns );
+	std::vector<CVec2> centers( numRows * numColumns );
+	std::vector<int> nums( numRows * numColumns );
 
 	memset( &(centers[0]), 0, centers.size() * sizeof( SVector ) );
 	memset( &(nums[0]), 0, nums.size() * sizeof( int ) );
@@ -382,7 +382,7 @@ void CGroupLogic::EraseFromAmbushGroups( const SAIUnitCmd &command, const WORD w
 
 void CGroupLogic::CreateAmbushGroup( const WORD wGroup )
 {
-	ambushGroups.push_front();
+	ambushGroups.emplace_front();
 	for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
 	{
 		CCommonUnit *pUnit = groupUnits.GetEl( i );
@@ -394,17 +394,17 @@ void CGroupLogic::CreateAmbushGroup( const WORD wGroup )
 
 void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 {
-	list< pair<CCommonUnit*, int> > oldUnitsGroups;
+	std::list< std::pair<CCommonUnit*, int> > oldUnitsGroups;
 	
-	vector<int> objects;
+	std::vector<int> objects;
 	int nLen = 0;
-	for ( list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
+	for ( std::list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
 	{
 		CCommonUnit *pUnit = checked_cast<CCommonUnit*>( CLinkObject::GetObjectByUniqueIdSafe( innerIter->nUniqueId ) );
 		innerIter->bGivenCommandToRestore = false;
 		objects.push_back( pUnit->GetUniqueId() );
 
-		oldUnitsGroups.push_back( pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
+		oldUnitsGroups.push_back( std::pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
 	}
 
 	const int nGroup = GetSpecialGroupNumberByID( groupIds.Get() );
@@ -414,7 +414,7 @@ void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 	Singleton<IAILogic>()->GroupCommand( &command, nGroup, false );
 	Singleton<IAILogic>()->UnregisterGroup( nGroup );
 
-	for ( list< pair<CCommonUnit*, int> >::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end(); ++iter )
+	for ( std::list< std::pair<CCommonUnit*, int> >::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end(); ++iter )
 		theGroupLogic.AddUnitToGroup( iter->first, iter->second );
 }
 
@@ -422,7 +422,7 @@ void CGroupLogic::UnitSetToAmbush( CCommonUnit *pUnit )
 {
 	for ( CAmbushGroups::iterator iter = ambushGroups.begin(); iter != ambushGroups.end(); ++iter )
 	{
-		for ( list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
+		for ( std::list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
 		{
 			const int nUniqueID = innerIter->nUniqueId;
 			CLinkObject *pObject = CLinkObject::GetObjectByUniqueIdSafe( nUniqueID );
@@ -441,13 +441,13 @@ void CGroupLogic::ProcessAmbushGroups()
 	if ( lastAmbushCheck + 5000 < curTime )
 	{
 		lastAmbushCheck = curTime;
-		hash_set<int> checkedUnits;
+		std::unordered_set<int> checkedUnits;
 
 		CAmbushGroups::iterator iter = ambushGroups.begin();
 		while ( iter != ambushGroups.end() )
 		{
 			bool bCanSetToAmbush = true;
-			list<SAmbushInfo>::iterator innerIter = iter->begin();
+			std::list<SAmbushInfo>::iterator innerIter = iter->begin();
 			while ( innerIter != iter->end() )
 			{
 				const int nUniqueId = innerIter->nUniqueId;
@@ -562,7 +562,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 			CreateAmbushGroup( wGroup );
 		}*/
 		
-		vector<CCommonUnit*> groups( groupUnits.GetSize( wGroup ) );
+		std::vector<CCommonUnit*> groups( groupUnits.GetSize( wGroup ) );
 
 		int nGroupsIter = 0;
 		for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -599,7 +599,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 		else
 		{
 			CPtr<CAICommand> pCommand = new CAICommand( command );
-			for ( vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
 				pCommand->AddUnit( pUnit );
@@ -612,7 +612,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 				if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO )
 				{
 					fDesGroupSpeed = FP_MAX_VALUE;
-					for ( vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+					for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 					{
 						CCommonUnit *pUnit = *iter;
 
@@ -620,13 +620,13 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 							fDesGroupSpeed = pUnit->GetMaxPossibleSpeed();
 					}
 				}
-				for ( vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+				for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
           (*iter)->SetDesiredSpeed( fDesGroupSpeed );
 			}
 
-			hash_set<int> memFormationIDs;
+			std::unordered_set<int> memFormationIDs;
 			//DebugTrace( "Command from AI: %s", pCommand->IsFromAI() ? "true" : "false" );
-			for ( vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
 
@@ -744,7 +744,7 @@ void CGroupLogic::Segment()
 	NI_ASSERT( (_MCW_RC  & _control87( 0, 0 )) == 0, "something changed processor control word" );
 }
 
-void CGroupLogic::UpdateAllAreas( const vector<int> &units, const EActionNotify eAction )
+void CGroupLogic::UpdateAllAreas( const std::vector<int> &units, const EActionNotify eAction )
 {
 	for ( int i = 0; i < units.size(); ++i )
 	{

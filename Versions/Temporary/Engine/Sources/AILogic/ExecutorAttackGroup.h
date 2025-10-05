@@ -12,7 +12,7 @@ class CExecutorAttackGroup :	public CExecutor
 		EAGS_SWARM,
 		EAGS_END,
 	};
-	typedef list<CPtr<CCommonUnit> > CAttackGroupUnits;
+	typedef std::list<CPtr<CCommonUnit> > CAttackGroupUnits;
 	OBJECT_BASIC_METHODS( CExecutorAttackGroup );
 	ZDATA_(CExecutor)
 	int nGroupID;

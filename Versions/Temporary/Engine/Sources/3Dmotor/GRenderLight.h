@@ -99,7 +99,7 @@ class CLightStateNode : public CFuncBase<SPerVertexLightState>
 	OBJECT_BASIC_METHODS(CLightStateNode);
 	ZDATA
 	CDGPtr<CDirectionalLight> pDirectionalLight;
-	vector< CPtr<ILight> > lights, dynamicLights;
+	std::vector< CPtr<ILight> > lights, dynamicLights;
 	bool bForceRecalc;
 	bool bSmthHasChanged;
 	ZONSERIALIZE

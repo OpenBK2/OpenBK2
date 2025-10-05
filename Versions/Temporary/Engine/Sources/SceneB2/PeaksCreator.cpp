@@ -3,6 +3,8 @@
 #include "3Dmotor/DBScene.h"
 #include "GenTerrain.h"
 
+#include <algorithm>
+
 #define DEF_PENDENT_WIDTH ( DEF_TILE_SIZE * 0.1125f )
 #define DEF_PENDENT_PART1_NUM 3
 #define DEF_PENDENT_PART2_NUM 2
@@ -13,13 +15,13 @@
 #define DEF_PENDENT_PART1_ANGLE_COEFF ( DEF_PEAK_PENDENT_MAX_ANGLE / ( DEF_PENDENT_PART1_NUM - 1 ) )
 #define DEF_PEAK_PATCH_SIZE 8
 
-inline void CheckTileInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, const float x1, const float y1, const float x2, const float y2 )
+inline void CheckTileInsidingAndPush( std::vector<CVec3> *pInters, const CVec3 &v, const float x1, const float y1, const float x2, const float y2 )
 {
 	if ( (v.x > (x1 - DEF_EPS)) && (v.x < (x2 + DEF_EPS)) && (v.y > (y1 - DEF_EPS)) && (v.y < (y2 + DEF_EPS)) )
 		pInters->push_back( v );
 }
 
-inline void CheckTrgInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
+inline void CheckTrgInsidingAndPush( std::vector<CVec3> *pInters, const CVec3 &v, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
 {
 	CVec2 vBary;
 	GetBaryCoords( v, v1, v2, v3, &vBary );
@@ -27,7 +29,7 @@ inline void CheckTrgInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, con
 		AddUnique( pInters, v );
 }
 
-inline void CheckVerticalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
+inline void CheckVerticalIntersectAndPush( std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
 																					 const float fY, const float fX1, const float fX2 )
 {
 	if ( fabs(v2.y - v1.y) > EPS_VALUE )
@@ -44,7 +46,7 @@ inline void CheckVerticalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &
 	}
 }
 
-inline void CheckHorizontalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
+inline void CheckHorizontalIntersectAndPush( std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
 																						 const float fX, const float fY1, const float fY2 )
 {
 	if ( fabs(v2.x - v1.x) > EPS_VALUE )
@@ -96,7 +98,7 @@ inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t
 	return n;
 }
 
-void CTerraGen::PeaksProjectTrgOnTiles( vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
+void CTerraGen::PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
 																	 const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3,
 																	 const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3,
 																	 const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3,
@@ -273,7 +275,7 @@ inline bool FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3
 	return FindNearestVertexInTile( pRes, pAddHeight, v, tiles, nx, ny, nx, ny );
 }
 
-void CTerraGen::PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *pInters, const CVec3 &v1, const CVec3 &v2 )
+void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInters, const CVec3 &v1, const CVec3 &v2 )
 {
 	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
 		return;
@@ -315,8 +317,8 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *pInters, co
 	{
 		for ( int i = nX1; i <= nX2; ++i )
 		{
-			vector<CVec3fEx> &verts = terrainInfo.tiles[g][i].vertices;
-			vector<float> &addHeights = terrainInfo.tiles[g][i].addHeights;
+			std::vector<CVec3fEx> &verts = terrainInfo.tiles[g][i].vertices;
+			std::vector<float> &addHeights = terrainInfo.tiles[g][i].addHeights;
 			for ( int k = 0; k < verts.size(); ++k )
 			{
 				CVec3fEx &curVert = verts[k];
@@ -366,7 +368,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *pInters, co
 		}
 	}*/
 
-	sort( pInters->begin(), pInters->end() );
+	std::sort( pInters->begin(), pInters->end() );
 
 /*	firstArrPos.push_back( v1 );
 
@@ -383,9 +385,9 @@ inline void RotateRealPos( CVec3 &pRealPos, const CVec3 &vSrcPos, const CVec3 &v
 	pRealPos.z = vSrcPos.z - fSinAng * fWidth;
 }
 
-inline void ClearDataArr( vector<NMeshData::SMeshDataTex2> &pDataArr )
+inline void ClearDataArr( std::vector<NMeshData::SMeshDataTex2> &pDataArr )
 {
-	for ( vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
+	for ( std::vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
 	{
 		it->vertices.resize( 0 );
 		it->triangles.resize( 0 );
@@ -394,9 +396,9 @@ inline void ClearDataArr( vector<NMeshData::SMeshDataTex2> &pDataArr )
 	}
 }
 
-inline void ReleaseUnusedAttribues( vector<NMeshData::SMeshDataTex2> &pDataArr )
+inline void ReleaseUnusedAttribues( std::vector<NMeshData::SMeshDataTex2> &pDataArr )
 {
-	for ( vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
+	for ( std::vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
 	{
 		if ( it->attributes[0].data.empty() )
 			it->attributes.resize( 0 );
@@ -413,8 +415,8 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	gfxInfo.patches.reserve( 16 );
 	gfxInfo.patches.resize( 0 );
 
-	vector<NMeshData::SMeshDataTex2> dataArr( pDesc->pTerraSet->terraTypes.size() );
-	for ( vector<NMeshData::SMeshDataTex2>::iterator it = dataArr.begin(); it != dataArr.end(); ++it )
+	std::vector<NMeshData::SMeshDataTex2> dataArr( pDesc->pTerraSet->terraTypes.size() );
+	for ( std::vector<NMeshData::SMeshDataTex2>::iterator it = dataArr.begin(); it != dataArr.end(); ++it )
 	{
 		it->vertices.reserve( 256 );
 		it->triangles.reserve( 256 );
@@ -432,12 +434,12 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 																	 pDesc->pTerraSet->terraTypes[0]->pPeakMaterial->pBump->nWidth;
 
 	int nPatchesCount;
-	vector<SIntersectPoint> firstArrPos;
+	std::vector<SIntersectPoint> firstArrPos;
 	firstArrPos.reserve( 16 );
 	CVec3 vPos1, vPos2;
 	float fAddHeight1, fAddHeight2;
 
-	for ( vector< vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = peak.points.begin(); itPointsArr != peak.points.end(); ++itPointsArr )
+	for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = peak.points.begin(); itPointsArr != peak.points.end(); ++itPointsArr )
 	{
 		ClearDataArr( dataArr );
 		nPatchesCount = 0;
@@ -565,13 +567,13 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 
 void CTerraGen::AddAllPeaks()
 {
-	for ( list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
+	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
 		AddPeak( *it );
 }
 
 void CTerraGen::RemovePeakInfo( const int nVSOID )
 {
-	for ( list<STerrainInfo::SPeak>::iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
+	for ( std::list<STerrainInfo::SPeak>::iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
 	{
 		if ( it->nID == nVSOID )
 		{
@@ -586,7 +588,7 @@ void CTerraGen::RemovePeakInfo( const int nVSOID )
 
 void CTerraGen::RemovePeakGfxInfo( const int nVSOID )
 {
-	for ( list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
+	for ( std::list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
 	{
 		if ( it->nID == nVSOID )
 		{
@@ -607,7 +609,7 @@ void CTerraGen::UpdateNeededPeaks()
 	const CVec2 vMin( (float)vTexModMin.x * DEF_TILE_SIZE, (float)vTexModMin.y * DEF_TILE_SIZE );
 	const CVec2 vMax( (float)(vTexModMax.x + 1) * DEF_TILE_SIZE, (float)(vTexModMax.y + 1) * DEF_TILE_SIZE );
 
-	for ( list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
+	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
 	{
 		if ( (it->vBBMax.x >= vMin.x) && (it->vBBMax.y >= vMin.y) && (it->vBBMin.x <= vMax.x) && (it->vBBMin.y <= vMax.y) )
 		{

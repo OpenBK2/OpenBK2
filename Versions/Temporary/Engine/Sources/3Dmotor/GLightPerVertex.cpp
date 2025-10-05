@@ -7,6 +7,8 @@
 #include "GSSETransform.h"
 #include "3DLib/Bound.h"
 
+#include <algorithm>
+
 template<class T>
 inline bool operator==( const CArray2D<T> &a, const CArray2D<T> &b )
 {
@@ -82,7 +84,7 @@ static bool CmpPL( const SPerVertexLightState::SPointLightInfo &a, const SPerVer
 }
 void SPerVertexLightState::SortPointLights()
 {
-	sort( staticPointLights.begin(), staticPointLights.end(), CmpPL );
+	std::sort( staticPointLights.begin(), staticPointLights.end(), CmpPL );
 }
 
 void SPerVertexLightState::SetWarFogBlend( float _fBlend )
@@ -123,7 +125,7 @@ bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float
 	return bRes;
 }
 
-static void MultiplyOnColor( vector<DWORD> *pRes, const vector<DWORD> &mult )
+static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> &mult )
 {
 	if ( mult.empty() )
 		return;
@@ -152,11 +154,11 @@ static void MultiplyOnColor( vector<DWORD> *pRes, const vector<DWORD> &mult )
 // calc colors
 
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x * b.x, a.y * b.y, a.z * b.z ); }
-static void CalcDirectionaLighting( 
-	const vector<CVec3> &srcPos, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, 
+static void CalcDirectionaLighting(
+	const std::vector<CVec3> &srcPos, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
 	const SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
-	vector<DWORD> *pResColors, vector<DWORD> *pResShadow )
+	std::vector<DWORD> *pResColors, std::vector<DWORD> *pResShadow )
 {
 	pResColors->resize( posIndices.size() );
 	pResShadow->resize( posIndices.size() );
@@ -242,7 +244,7 @@ static void CalcDirectionaLighting(
 
 // sample fog of war array with bilinear filteration and store result to pRes
 #pragma warning( disable : 4799 )
-static void SampleWarFogInt( const vector<int> &intCoords, const CArray2D<unsigned char> &fog, vector<unsigned char> *_pRes, int nVertices )
+static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
 {
 	ASSERT( fog.GetSizeX() == fog.GetSizeY() );
 	ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
@@ -277,10 +279,10 @@ static void SampleWarFogInt( const vector<int> &intCoords, const CArray2D<unsign
 }
 #pragma warning( default : 4799 )
 
-static void SampleWarFog( const vector<CVec3> &srcPos, float fScale, vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
-	vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
+static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
+	std::vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
 {
-	if ( srcPos.empty() ) 
+	if ( srcPos.empty() )
 		return;
 	int nVertices = srcPos.size();
 	if ( _pRes1->size() < nVertices )
@@ -288,7 +290,7 @@ static void SampleWarFog( const vector<CVec3> &srcPos, float fScale, vector<unsi
 	if ( _pRes2 && _pRes2->size() < nVertices )
 		_pRes2->resize( nVertices );
 
-	static vector<int> tmp;
+	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
 		tmp.resize( nVertices * 2 );
 
@@ -325,7 +327,7 @@ lp:
 const float F_PL_RADIUS2 = 64;
 const float F_PL_MIN_DISTANCE_NORMALIZED = 0.25f;
 const int N_PL_ATTENUATION_SCALE = 8191;
-static void CalcPointLightAttenuation( vector<NGfx::SMMXWord> *pRes, const vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
+static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
 {
 	int nSize = srcPos.size();
 	pRes->resize( nSize );
@@ -344,7 +346,7 @@ static void CalcPointLightAttenuation( vector<NGfx::SMMXWord> *pRes, const vecto
 	}
 }
 
-static void CalcPointLightAttenuationSSE( vector<NGfx::SMMXWord> *pRes, const vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
+static void CalcPointLightAttenuationSSE( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
 {
 	int nSize = srcPos.size();
 	pRes->resize( nSize );
@@ -423,9 +425,9 @@ static void CalcPointLightAttenuationSSE( vector<NGfx::SMMXWord> *pRes, const ve
 	__asm emms
 }
 
-static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes, 
-	const vector<NGfx::SMMXWord> &attenuation, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, 
+static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+	const std::vector<NGfx::SMMXWord> &attenuation, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
 	const CVec3 &_vColor )
 {
 	NGfx::SMMXWord shift, lightColor, shift1;
@@ -487,7 +489,7 @@ static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes,
 	__asm emms
 }
 
-static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes, 
+static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const NGfx::SMMXWord &attenuation, const SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
 {
 	NGfx::SMMXWord shift, lightColor, shift1;
@@ -562,7 +564,7 @@ static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes,
 	__asm emms
 }
 
-static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vector<NGfx::SMMXWord> &add )
+static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
 {
 	ASSERT( pRes->size() >= add.size() );
 	ASSERT( src.size() >= add.size() );
@@ -570,7 +572,7 @@ static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vect
 	DWORD *pResPtr = &(*pRes)[0];
 	const DWORD *pSrcPtr = &src[0];
 	const NGfx::SMMXWord *pAdd = &add[0];
-	__asm 
+	__asm
 	{
 		pxor mm7, mm7
 		pcmpeqw mm6, mm6
@@ -626,8 +628,8 @@ static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vect
 			mov dwColor, eax
 			//emms
 		}
-		//DWORD dwTest = NGfx::GetDWORDColor( GetOutputColor( 
-		//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) + 
+		//DWORD dwTest = NGfx::GetDWORDColor( GetOutputColor(
+		//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
 		//	CVec4( add[k], 0 )
 		//	) );
 		*pResPtr = dwColor;
@@ -635,13 +637,13 @@ static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vect
 	__asm emms
 }
 
-static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,  
-	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, 
-	vector<NGfx::SMMXWord> *pColors,
+static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
+	std::vector<NGfx::SMMXWord> *pColors,
 	SCacheLightingInfo *pCache, const SBound &bv )
 {
-	static vector<NGfx::SMMXWord> attenuation;
+	static std::vector<NGfx::SMMXWord> attenuation;
 	if ( pCache->bReplaceWithDirectional )
 	{
 		float fScale = F_PL_RADIUS2 / sqr( p.fRadius );
@@ -674,16 +676,16 @@ struct SPVLightCalcer
 	int nWarFogMask;
 	unsigned char cFogHold;
 	unsigned char *pWarFogNew, *pWarFogOld;
-	vector<DWORD> *pColors, *pShadowColors;
-	static vector<DWORD> colorsHold, shadowColorsHold;
-	static vector<NGfx::SMMXWord> pointColors;
-	static vector<unsigned char> warFogNewHold, warFogOldHold;
+	std::vector<DWORD> *pColors, *pShadowColors;
+	static std::vector<DWORD> colorsHold, shadowColorsHold;
+	static std::vector<NGfx::SMMXWord> pointColors;
+	static std::vector<unsigned char> warFogNewHold, warFogOldHold;
 
 	SPVLightCalcer() : pWarFogNew(0), pWarFogOld(0), pColors(0), pShadowColors(0) {}
 
 	void CalcLight(
-		const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-		const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,
+		const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+		const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
 		const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv )
 	{
 		//NHPTimer::STime tStart, tFinish;
@@ -693,7 +695,7 @@ struct SPVLightCalcer
 		if ( !pCache->bSkipLighting )
 		{
 			// determine affecting point lights
-			vector<int> pl, plIdx, dynplIdx;
+			std::vector<int> pl, plIdx, dynplIdx;
 			if ( !pCache->bSkipStaticPointLights )
 			{
 				for ( int k = 0; k < ls.staticPointLights.size(); ++k )
@@ -707,7 +709,7 @@ struct SPVLightCalcer
 			}
 
 			// decide if cache succeeded
-			if ( 
+			if (
 				pCache->nDirectionalLightID == ls.nDirectionalID &&
 				pCache->pointLightIDs == pl )
 			{
@@ -739,7 +741,7 @@ struct SPVLightCalcer
 				// calc point lights
 				if ( !pl.empty() )
 				{
-					vector<NGfx::SMMXWord> *pPointColors = &pCache->pointLight;
+					std::vector<NGfx::SMMXWord> *pPointColors = &pCache->pointLight;
 					if ( pl != pCache->pointLightIDs )
 					{
 						if ( pCache->bDoNotCacheLighting )
@@ -799,7 +801,7 @@ struct SPVLightCalcer
 		// fetch warfog
 		if ( ls.warFogNew.GetSizeX() > 1 )
 		{
-			vector<unsigned char> *pNew, *pOld;
+			std::vector<unsigned char> *pNew, *pOld;
 			if ( pCache->bDoNotCacheLighting || pCache->bReplaceWithDirectional )
 			{
 				pNew = &warFogNewHold;
@@ -812,13 +814,13 @@ struct SPVLightCalcer
 				if ( ls.nWarFogOldID != pCache->nWarFogOldID && ls.nWarFogOldID == pCache->nWarFogNewID )
 				{
 					pCache->warFogOld.swap( pCache->warFogNew );
-					swap( pCache->nWarFogNewID, pCache->nWarFogOldID );
+					std::swap( pCache->nWarFogNewID, pCache->nWarFogOldID );
 				}
 			}
 
 			if ( pCache->bReplaceWithDirectional )
 			{
-				vector<CVec3> src(1);
+				std::vector<CVec3> src(1);
 				src[0] = bv.s.ptCenter;
 				SampleWarFog( src, ls.fWarFogScale, pNew, ls.warFogNew, pOld, ls.warFogOld  );
 				nWarFogMask = 0;
@@ -868,7 +870,7 @@ struct SPVLightCalcer
 	}
 };
 
-void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, vector<float> *pRes )
+void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &ls, std::vector<float> *pRes )
 {
 	if ( ls.warFogNew.GetSizeX() <= 1 )
 	{
@@ -877,7 +879,7 @@ void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, ve
 	}
 	if ( pRes->size() < vPos.size() )
 		pRes->resize( vPos.size() );
-	vector<unsigned char> newFog, oldFog;
+	std::vector<unsigned char> newFog, oldFog;
 	SampleWarFog( vPos, ls.fWarFogScale, &newFog, ls.warFogNew, &oldFog, ls.warFogOld  );
 	float fBlend = ls.GetWarFogBlend();
 	float fN = fBlend * ( 1 / 255.0f ), fO = ( 1 - fBlend ) * ( 1 / 255.0f );
@@ -888,13 +890,13 @@ void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, ve
 	}
 }
 
-vector<DWORD> SPVLightCalcer::colorsHold, SPVLightCalcer::shadowColorsHold;
-vector<NGfx::SMMXWord> SPVLightCalcer::pointColors;
-vector<unsigned char> SPVLightCalcer::warFogNewHold, SPVLightCalcer::warFogOldHold;
+std::vector<DWORD> SPVLightCalcer::colorsHold, SPVLightCalcer::shadowColorsHold;
+std::vector<NGfx::SMMXWord> SPVLightCalcer::pointColors;
+std::vector<unsigned char> SPVLightCalcer::warFogNewHold, SPVLightCalcer::warFogOldHold;
 
-void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
-	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,
+void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv )
 {
 	if ( posIndices.empty() )
@@ -961,8 +963,8 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );
 }
 
-static void ScaleColors( vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride, 
-	unsigned char *pScale, int nScaleMask, const vector<WORD> &posIndices, const vector<NGfx::SCompactVector> &transp,
+static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
+	unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
 	bool bMultiplyOnTransparency )
 {
 	int nSize = posIndices.size();
@@ -1015,9 +1017,9 @@ static void ScaleColors( vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride
 	__asm emms
 }
 
-void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes, 
-	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
-	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,
+void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv )
 {
 	if ( posIndices.empty() )

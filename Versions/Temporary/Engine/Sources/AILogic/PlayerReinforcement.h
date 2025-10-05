@@ -8,9 +8,9 @@ class CCommonUnit;
 // sends updates to client
 class CPlayerReinforcement
 {
-	typedef hash_map<int, pair<NDb::SReinforcementPosition,bool> > CPositions;
-	typedef hash_map<int/*EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CInfos;
-	typedef hash_map<int/*EReinforcementType*/, NTimer::STime> CRecycleTimes;
+	typedef std::unordered_map<int, std::pair<NDb::SReinforcementPosition,bool> > CPositions;
+	typedef std::unordered_map<int/*EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CInfos;
+	typedef std::unordered_map<int/*EReinforcementType*/, NTimer::STime> CRecycleTimes;
 
 	struct SCallReinforcementCommand
 	{
@@ -46,7 +46,7 @@ class CPlayerReinforcement
 		ZONSERIALIZE
 		int nMapReinforcementBonus;
 		float fRecycleTimeCoeff;
-		vector<SCallReinforcementCommand> commands;
+		std::vector<SCallReinforcementCommand> commands;
 		NTimer::STime timeToCall;		// current full recycle time without coeff
 		float fStoredProgress;			// for the case when progress stops and restarts
 		NTimer::STime timeReinfIncrease;
@@ -82,7 +82,7 @@ private:
 	void UpdateDeletePosition( int nUniqueID ) const;
 	void AddPosition( const NDb::SReinforcementPosition &point, int nID, bool bEnabled );
 	
-	void SendReinforcementToPoint( list< pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam );
+	void SendReinforcementToPoint( std::list< std::pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam );
 public:
 	
 	CPlayerReinforcement();
@@ -92,7 +92,7 @@ public:
 	void EnablePosition( int nPositionID, bool bEnable );
 	const NDb::SReinforcementPosition * GetPosition( int nPositionID ) const;
 	void InitPlayerReinforcement( int nPlayer, const NDb::SMapInfo * pMapInfo, const NDb::SAIGameConsts *_pConsts );
-	void CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, list< pair<int, CObjectBase*> > *pObjects, const bool bOnWater = false, const CVec2 &vTarget = VNULL2 );
+	void CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bOnWater = false, const CVec2 &vTarget = VNULL2 );
 	void CallReinforcement( NDb::EReinforcementType eType, const CVec2 &vPoint, int nScriptID );
 	void CallSuperWeapon();
 	void ShotSuperWeapon();
@@ -117,7 +117,7 @@ public:
 	void GiveReinforcementCalls( int nCalls, bool bResetCounter );		// Adjust calls number (add/subtract) externally
 };
 
-class CPlayerReinforcementArray : public vector<CPlayerReinforcement>
+class CPlayerReinforcementArray : public std::vector<CPlayerReinforcement>
 {
 public:
 	void Segment();

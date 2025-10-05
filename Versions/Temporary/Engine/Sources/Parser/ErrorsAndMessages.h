@@ -8,7 +8,7 @@
 	CDynamicCast< TDesiredType > pNode = pRawNode ? pRawNode : 0;\
 	if ( pNode == 0 )\
 	{\
-		string szError = StrFmt( "%s expected, %s recieved\n", #TDesiredType, typeid( *pNode ).name() );\
+		std::string szError = StrFmt( "%s expected, %s recieved\n", #TDesiredType, typeid( *pNode ).name() );\
 		NErrors::ShowErrorNoLine( szError );\
 		{ statement; }\
 	}\
@@ -16,9 +16,9 @@
 
 namespace NErrors
 {
-	PARSER_EXPORT void ShowWarningNoLine( const string &szWarning );
-	void ShowError( const string &szError );
-	PARSER_EXPORT void ShowErrorNoLine( const string &szError );
+	PARSER_EXPORT void ShowWarningNoLine( const std::string &szWarning );
+	void ShowError( const std::string &szError );
+	PARSER_EXPORT void ShowErrorNoLine( const std::string &szError );
 }
 
 #define VERIFY( x, user_text, statement )\

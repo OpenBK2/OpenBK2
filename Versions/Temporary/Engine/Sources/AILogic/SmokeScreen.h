@@ -47,12 +47,12 @@ public:
 
 	virtual void LockTiles() { }
 	virtual void UnlockTiles()  { }
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles ) { pTiles->clear(); }
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) { pTiles->clear(); }
 	virtual void SetTransparencies();
 	virtual void RemoveTransparencies();
 	virtual void RestoreTransparenciesImmidiately ();
 
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) {}
 	virtual const CVec3& GetCenter() const { return vCenter; }

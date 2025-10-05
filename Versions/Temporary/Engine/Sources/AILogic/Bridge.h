@@ -7,10 +7,10 @@ class CFullBridge;
 // remember in what order bridges applied heigths and ensures heights removal in reverse order.
 class CBridgeHeightRemover
 {
-	typedef list<int/*heightID*/> CHeightsOrder;
+	typedef std::list<int/*heightID*/> CHeightsOrder;
 	ZDATA
 	CHeightsOrder heightsOrder;
-	hash_map<int/*heightID*/, bool> heightToRemove;
+	std::unordered_map<int/*heightID*/, bool> heightToRemove;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&heightsOrder); f.Add(3,&heightToRemove); return 0; }
 	void RegisterOrder( const int nHeightID );
@@ -31,7 +31,7 @@ class CBridgeSpan : public CGivenPassabilityStObject
 	bool bNewBuilt;												// этот мост построили во время тгры
 	bool bLocked;													// залочены ли тайл
 
-	list<SObjTileInfo> oldTilesInfo;      // информация о залоканых тайлах, где теперь стоит мост
+	std::list<SObjTileInfo> oldTilesInfo;      // информация о залоканых тайлах, где теперь стоит мост
 	int nOldHeightsID;										// информация о высотах, где теперь стоит мост
 
 	// умирает данный сегмент, начинает удалять все вокруг.
@@ -40,7 +40,7 @@ class CBridgeSpan : public CGivenPassabilityStObject
 	int nScriptID;
 
 	//DEBUG{
-	vector<CPtr<CObjectBase> > segments;
+	std::vector<CPtr<CObjectBase> > segments;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pStats); f.Add(4,&pFullBridge); f.Add(5,&bNewBuilt); f.Add(6,&bLocked); f.Add(7,&oldTilesInfo); f.Add(8,&nOldHeightsID); f.Add(9,&bDeletingAround); f.Add(10,&nScriptID); f.Add(11,&segments); return 0; }
 #ifndef _FINALRELEASE
@@ -67,7 +67,7 @@ public:
 	virtual void LockTiles(); // here we just copy lock info to internal array
 	void RealLockTiles(); // here we real lock tiles
 	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles );
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
 
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual bool IsPointInside( const CVec2 &point ) const;
@@ -88,7 +88,7 @@ public:
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void SetTransparencies();
 	virtual void RemoveTransparencies();
 
@@ -104,8 +104,8 @@ class CFullBridge : public CLinkObject
 	OBJECT_BASIC_METHODS( CFullBridge );
 	public: int operator&( IBinSaver &saver ); private:
 	
-	list<CBridgeSpan*> spans;					// построенные части моста
-	list<CBridgeSpan*> projectedSpans;	// части моста, которые находятся в проекте
+	std::list<CBridgeSpan*> spans;					// построенные части моста
+	std::list<CBridgeSpan*> projectedSpans;	// части моста, которые находятся в проекте
 
 	bool bGivingDamage;
 public:
@@ -113,8 +113,8 @@ public:
 	{
 		OBJECT_BASIC_METHODS( SSpanLock );
 public: int operator&( IBinSaver &saver ); private:
-		list<SVector> tiles;
-		list<EAIClasses> formerTiles;
+		std::list<SVector> tiles;
+		std::list<EAIClasses> formerTiles;
 		CBridgeSpan * pSpan;
 	public:
 		//
@@ -124,7 +124,7 @@ public: int operator&( IBinSaver &saver ); private:
 		const CBridgeSpan * GetSpan() const { return pSpan; }
 	};
 private:
-	typedef list< CPtr<SSpanLock> > LockedSpans;
+	typedef std::list< CPtr<SSpanLock> > LockedSpans;
 	LockedSpans lockedSpans;
 	int nSpans;														//full number of bridge spans
 	bool bLockingBridge;
@@ -140,7 +140,7 @@ public:
 	void AddSpan( CBridgeSpan *pSpan );
 	void DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 
-	void EnumSpans( vector< CObj<CBridgeSpan> > *pSpans );
+	void EnumSpans( std::vector< CObj<CBridgeSpan> > *pSpans );
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	const bool IsVisible( const BYTE cParty ) const;
 

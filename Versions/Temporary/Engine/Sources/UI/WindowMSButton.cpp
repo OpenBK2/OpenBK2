@@ -111,7 +111,7 @@ void CWindowMSButton::AfterLoad()
 	CWindow::AfterLoad();
 }
 
-const wstring& CWindowMSButton::GetDBFormatText() const
+const std::wstring& CWindowMSButton::GetDBFormatText() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
@@ -122,7 +122,7 @@ const wstring& CWindowMSButton::GetDBFormatText() const
 	return CWindow::GetDBFormatText();
 }
 
-const wstring& CWindowMSButton::GetDBInstanceText() const
+const std::wstring& CWindowMSButton::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->, Text) )
 		return GET_TEXT_PRE(pInstance->, Text);
@@ -489,7 +489,7 @@ void CWindowMSButton::SetState( const int nState )
 	SwitchSubState( NDb::BST_NORMAL );
 }
 
-void CWindowMSButton::SetTextString( const wstring &wszText )
+void CWindowMSButton::SetTextString( const std::wstring &wszText )
 {
 	wszCustomText = wszText;
 /*	for ( int i = 0; i < states.size(); ++i )
@@ -544,7 +544,7 @@ void CWindowMSButton::SetEffectSubState( const NDb::EButtonSubstateType _eSubSta
 	SwitchSubStatePrivate();
 }
 
-int CWindowMSButton::GetState( const string &szName )
+int CWindowMSButton::GetState( const std::string &szName )
 {
 	int nCount = pInstance->buttonStates.size();
 	for ( int i = 0; i < nCount; ++i )
@@ -578,7 +578,7 @@ void CWindowMSButton::SetTexture( const struct NDb::STexture *pDesc )
 
 void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( !wszCustomText.empty() )
 	{
 		wszText = wszCustomText;

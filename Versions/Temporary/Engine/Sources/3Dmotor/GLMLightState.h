@@ -41,9 +41,9 @@ public:
 			: vColor(_vColor), vCenter(_vCenter), fRadius(_fR) {}//, bCastShadow(_bCastShadow) {}
 	};
 	ZDATA
-	vector<SSemiPointLight> semiPoints;
-	vector<SPointLight> points;
-	vector<CVec3> skyDirections;
+	std::vector<SSemiPointLight> semiPoints;
+	std::vector<SPointLight> points;
+	std::vector<CVec3> skyDirections;
 	CVec3 vAmbientColor;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&semiPoints); f.Add(3,&points); f.Add(4,&skyDirections); f.Add(5,&vAmbientColor); return 0; }
 

@@ -139,17 +139,17 @@ struct IScene : public CObjectBase
 	// CRAP - ugly, should to pass a special object to screen
 	virtual NAnimation::ISkeletonAnimator *GetInterfaceObjAnimator( IWindow *pScreen, const int nID ) = 0;
 	// get animator of nTargetID object or it's subobject with bone szBoneName
-	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nTargetID, const string &szBoneName ) = 0;
+	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nTargetID, const std::string &szBoneName ) = 0;
 
-	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset ) = 0;
+	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset ) = 0;
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const CVec3 &vOffset ) = 0;
 	virtual struct IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) = 0;
 	virtual void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType ) = 0;
 	virtual void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) = 0;
 
-	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical = false ) = 0;
+	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical = false ) = 0;
 	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, CFuncBase<SFBTransform> *pTransform, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, const int nBoneIndex = -1, bool bVertical = false ) = 0;
-	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode ) = 0;
+	virtual void AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode ) = 0;
 
 	// Attach light FX: to animated (with bone name) and to static objects (without bone name)
 	virtual void AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEffect *pLight, NTimer::STime timeStart, ESceneAttachMode eMode, const bool bInEditor = false, int nHoldID = -1 ) = 0;
@@ -157,7 +157,7 @@ struct IScene : public CObjectBase
 	// add effect to scene. returns new ID
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace ) = 0;
-	virtual void AddEffect( const int nID, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace ) = 0;
+	virtual void AddEffect( const int nID, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace ) = 0;
 	virtual int AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR ) = 0;
 	virtual bool GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const = 0;
 
@@ -188,15 +188,15 @@ struct IScene : public CObjectBase
 	virtual void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial ) = 0;
 	virtual void AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial ) = 0;
 	// polyline
-	virtual int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
-	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
 	virtual void RemovePolyline( const int nID ) = 0;
 	// picks
 	virtual void PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos ) = 0;
 	virtual void PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos ) = 0;
 	// pick objects; if objects is attached to CMOObj, then returns CMOObj ID
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass = EPOC_OBJECTS ) = 0;
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass = EPOC_OBJECTS ) = 0;
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
 		EPickObjects eRadiusCoeff, const EPickObjectsClass ePickObjsClass = EPOC_OBJECTS ) = 0;
 
 	struct SPickObjInfo
@@ -206,7 +206,7 @@ struct IScene : public CObjectBase
 		CVec3 vNormal;
 	};
 
-	virtual void PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SPickObjInfo> *pPickedObjects, list<int> *pPickedAttached ) = 0;
+	virtual void PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::list<SPickObjInfo> *pPickedObjects, std::list<int> *pPickedAttached ) = 0;
 	//
 	virtual void Draw( NGScene::CRTPtr *pTarget ) = 0;
 	// Sound Scene
@@ -228,14 +228,14 @@ struct IScene : public CObjectBase
 	virtual CVec2 GetScreenRect() = 0;
 	//
 	virtual void ShowObject( const int nID, const bool bShow ) = 0;
-	virtual void SetFadedObjects( const list<int> &objects ) = 0;
-	virtual void SetFadedObjects( const list<int> &objects, float fFade ) = 0;
+	virtual void SetFadedObjects( const std::list<int> &objects ) = 0;
+	virtual void SetFadedObjects( const std::list<int> &objects, float fFade ) = 0;
 
-	virtual void GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle ) = 0;
-	virtual void GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle ) = 0;
+	virtual void GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle ) = 0;
+	virtual void GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle ) = 0;
 
 	virtual void ClearPostEffectObjects() = 0;
-	virtual void AddPostEffectObjects( const list<int> &objects, const CVec4 &vColor ) = 0;
+	virtual void AddPostEffectObjects( const std::list<int> &objects, const CVec4 &vColor ) = 0;
 
 	// msg processing
 	virtual bool ProcessEvent( const SGameMessage &msg ) = 0;

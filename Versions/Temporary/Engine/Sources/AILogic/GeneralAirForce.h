@@ -22,7 +22,7 @@ class CGeneralAirForce : public CCommander
 		bool operator()( const CVec2 &v1, const CVec2 &v2 ) {	return fabs2(v1-v2) < sqr(SConsts::PLANE_GUARD_STATE_RADIUS/2); }
 	};
 
-	typedef hash_map< int, CPtr<CEnemyRememberer> > AntiAviation;
+	typedef std::unordered_map< int, CPtr<CEnemyRememberer> > AntiAviation;
 
 	struct IEnemyContainer *pEnemyContainer;
 
@@ -36,19 +36,19 @@ class CGeneralAirForce : public CCommander
 
 	ZDATA_(CCommander)
 	int nParty;
-	vector<int> players;							// номера игроков, которые находятся под управлением 
+	std::vector<int> players;							// номера игроков, которые находятся под управлением
 	CFreeIds requestsID;
 
 	AntiAviation antiAviation;
 
-	vector<CPtr<CAIUnit> > createdAviation;
+	std::vector<CPtr<CAIUnit> > createdAviation;
 	NTimer::STime timeWaitForReinforceSystem;
 	EForceType nCurrentRequest;									// current aviation, that general is wating for
 	bool bOurTurn;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); f.Add(2,&nParty); f.Add(3,&players); f.Add(4,&requestsID); f.Add(5,&antiAviation); f.Add(6,&createdAviation); f.Add(7,&timeWaitForReinforceSystem); f.Add(8,&nCurrentRequest); f.Add(9,&bOurTurn); return 0; }
 public:
-	typedef hash_map< int /*request ID*/, SSupportInfo > Requests;
-	typedef hash_map<int, Requests> RequestsByForceType;
+	typedef std::unordered_map< int /*request ID*/, SSupportInfo > Requests;
+	typedef std::unordered_map<int, Requests> RequestsByForceType;
 private:
 
 	RequestsByForceType requests;
@@ -58,7 +58,7 @@ private:
 	void CallReinforcement( const int nPlayer, NDb::EReinforcementType eType, RequestsByForceType *pRequests, EForceType eForceType );
 	void GiveOrders( const int nPlayer );
 
-	void LaunchPlane( EForceType eType, const list<CVec2> &vPoints, const int nPlayer );
+	void LaunchPlane( EForceType eType, const std::list<CVec2> &vPoints, const int nPlayer );
 
 	// returns 0 if line is safe to fly.
 	// otherwize returns severty( how many planes will die while flying by this line )

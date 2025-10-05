@@ -33,7 +33,7 @@ public:
 	virtual void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
 	virtual void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
 
-	virtual void InsertTiles( const list<SVector> &tiles ) {};
+	virtual void InsertTiles( const std::list<SVector> &tiles ) {};
 
 	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const { return pUnit->CanGoBackward(); }
 	virtual const bool ShouldCheckTurn() const { return false; }

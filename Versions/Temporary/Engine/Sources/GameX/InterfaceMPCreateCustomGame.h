@@ -15,8 +15,8 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	struct SMPMapInfo					//Here "game" is equivalent to "server"
 	{
 		ZDATA
-		wstring wszMapName;
-		wstring wszGameType;
+		std::wstring wszMapName;
+		std::wstring wszGameType;
 		int nMapSizeX;
 		int nMapSizeY;
 		int nPlayersMax;
@@ -45,7 +45,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	//--------------
 
 
-	typedef vector<SMPMapInfo> CMPMaps;
+	typedef std::vector<SMPMapInfo> CMPMaps;
 
 	ZDATA_(CInterfaceMPScreenBase)
 		CPtr<IWindow> pMain;
@@ -83,8 +83,8 @@ private:
 	void SliderPosition( const float fPosition, CWindow *pWho );
 
 	//{
-	bool OnBackReaction( const string &szSender );
-	bool OnCreateGameReaction( const string &szSender );
+	bool OnBackReaction( const std::string &szSender );
+	bool OnCreateGameReaction( const std::string &szSender );
 	bool OnSelectMapReaction();
 	bool OnSessionEnter();
 	bool OnShowAdvanced( const bool bShow );
@@ -102,8 +102,8 @@ public:
 	void AfterLoad();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;	
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	void FillMapData();
 	//}
 };

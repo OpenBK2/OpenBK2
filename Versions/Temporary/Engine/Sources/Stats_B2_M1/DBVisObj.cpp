@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SVisObj::SSingleObj::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVisObj::SSingleObj::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Model", (BYTE*)&pModel - pThis, sizeof(pModel), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "LowLevelModel", (BYTE*)&pLowLevelModel - pThis, sizeof(pLowLevelModel), NTypeDef::TYPE_TYPE_REF );

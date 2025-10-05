@@ -1,5 +1,5 @@
 #include "stdafx.h"
 #include "tempbuffer.h"
 
-vector<BYTE> buffer( 32 );
+std::vector<BYTE> buffer( 32 );
 

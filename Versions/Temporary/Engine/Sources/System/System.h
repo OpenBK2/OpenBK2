@@ -78,7 +78,7 @@ namespace NSingleton
 	SYSTEM_EXPORT void UnRegisterSingleton( const int nTypeID );
 	SYSTEM_EXPORT void DoneSingletons();
 	SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
-	SYSTEM_EXPORT void GetAllSingletonIDs( vector<int> *pRes );
+	SYSTEM_EXPORT void GetAllSingletonIDs( std::vector<int> *pRes );
 };
 // получить singleton по ID из глобального хранилища.
 // singleton должен иметь enum с одним полем 'tidTypeID', которое содержит его константу

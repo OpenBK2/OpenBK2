@@ -27,7 +27,7 @@ struct IPath : public CAIObjectBase
 	//! пересчитать путь из новой точки ( vPoint )
 	virtual void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) = 0;
 	//! добавить тайлы в начало пути
-	virtual void InsertTiles( const list<SVector> &tiles ) = 0;
+	virtual void InsertTiles( const std::list<SVector> &tiles ) = 0;
 	//! можно ли проехать весь путь задом
 	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const = 0;
 	virtual const bool ShouldCheckTurn() const = 0;

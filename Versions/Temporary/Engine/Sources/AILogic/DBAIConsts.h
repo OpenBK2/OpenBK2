@@ -30,14 +30,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SMechUnitRPGStats > > sandBagTankPits;
-		vector< CDBPtr< SMechUnitRPGStats > > digTankPits;
+		std::vector< CDBPtr< SMechUnitRPGStats > > sandBagTankPits;
+		std::vector< CDBPtr< SMechUnitRPGStats > > digTankPits;
 
 		STankPitInfo() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -49,7 +49,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SObjectBaseRPGStats > > antitankObjects;
+		std::vector< CDBPtr< SObjectBaseRPGStats > > antitankObjects;
 		CDBPtr< SFenceRPGStats > pAPFence;
 		CDBPtr< SMineRPGStats > pMineUniversal;
 		CDBPtr< SMineRPGStats > pMineAT;
@@ -62,7 +62,7 @@ namespace NDb
 		CDBPtr< SMechUnitRPGStats > pG152mmML20Stats;
 		CDBPtr< SSquadRPGStats > pSingleUnitFormation;
 		CDBPtr< SStaticObjectRPGStats > pShellBox;
-		vector< CDBPtr< SAIExpLevel > > expLevels;
+		std::vector< CDBPtr< SAIExpLevel > > expLevels;
 		float fExpReinfDistributionCoeff;
 		float fExpCommanderDistributionCoeff;
 		float fExpCommanderUnitPenaltyCoeff;
@@ -78,7 +78,7 @@ namespace NDb
 			fExpCommanderPenaltyCoeff( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -103,7 +103,7 @@ namespace NDb
 			fUnitHeight( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -124,7 +124,7 @@ namespace NDb
 			eUnitRPGType( DB_RPG_TYPE_SOLDIER )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -136,13 +136,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< float > expediency;
+		std::vector< float > expediency;
 
 		SReinforcementExpediency() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -163,7 +163,7 @@ namespace NDb
 			nPriority( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -184,7 +184,7 @@ namespace NDb
 			nTime( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -211,28 +211,28 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		STankPitInfo tankPits;
-		vector< CDBPtr< SMechUnitRPGStats > > foxHoles;
+		std::vector< CDBPtr< SMechUnitRPGStats > > foxHoles;
 		SCommonInfo common;
-		vector< CDBPtr< SManuverDescriptor > > planeManuvers;
+		std::vector< CDBPtr< SManuverDescriptor > > planeManuvers;
 		SWarFogConsts warFog;
-		vector< SCommonScriptEntry > commonScriptFileRefs;
-		vector< SReinforcementRemap > reinforcementTypes;
-		vector< SReinforcementExpediency > reinfExpediency;
-		vector< SUnitTypePriority > unitTypesPriorities;
+		std::vector< SCommonScriptEntry > commonScriptFileRefs;
+		std::vector< SReinforcementRemap > reinforcementTypes;
+		std::vector< SReinforcementExpediency > reinfExpediency;
+		std::vector< SUnitTypePriority > unitTypesPriorities;
 		CDBPtr< SVisObj > pParachute;
 		int nRemoveParachuteTime;
-		vector< SReinfRecycleTime > reinforcementRecycleTime;
+		std::vector< SReinfRecycleTime > reinforcementRecycleTime;
 		CDBPtr< SWeaponRPGStats > pAviationGroundCrashExplosion;
 		CDBPtr< SWeaponRPGStats > pFlamethrowerDeathExplotion;
 		int nGroundCrashPlaneSize;
-		vector< STypedDeployTemplate > typedTemplates;
+		std::vector< STypedDeployTemplate > typedTemplates;
 
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),

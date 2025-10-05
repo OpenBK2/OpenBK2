@@ -20,8 +20,8 @@ static void CalcDU( T *pRes, const CVec3 &vNormal )
 
 // CMemObjectInfo
 
-CMemObjectInfo::CMemObjectInfo( const vector<STriangle> &_tris, const vector<CVec3> &_points, 
-	const vector<CVec3> &_normals ) : tris(_tris), points(_points), normals(_normals)
+CMemObjectInfo::CMemObjectInfo( const std::vector<STriangle> &_tris, const std::vector<CVec3> &_points,
+	const std::vector<CVec3> &_normals ) : tris(_tris), points(_points), normals(_normals)
 {
 }
 

@@ -23,7 +23,7 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
 : szString( pszStr ), dwColor( col ) 
 {  
-	const wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
+	const std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
 	pGfxText = CreateML();
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( szText, 0 );
@@ -41,7 +41,7 @@ int CWindowConsoleOutput::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CWindowConsoleOutput::AddString( const wstring &szString, const DWORD color )
+void CWindowConsoleOutput::AddString( const std::wstring &szString, const DWORD color )
 {
 	int nSizeX;
 	GetPlacement( 0, 0, &nSizeX, 0 );

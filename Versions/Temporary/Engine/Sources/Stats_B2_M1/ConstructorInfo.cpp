@@ -2,11 +2,12 @@
 
 #include "DBConstructorProfile.h"
 #include "ConstructorInfo.h"
-#include "Misc/nalgoritm.h"
 
-bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const vector<SUnitPlatform> **pPlatforms )
+#include <algorithm>
+
+bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const std::vector<SUnitPlatform> **pPlatforms )
 {
-	hash_map<int, vector<SUnitPlatform> >::iterator posUnits = units.find( nUniqueID );
+	std::unordered_map<int, std::vector<SUnitPlatform> >::iterator posUnits = units.find( nUniqueID );
 	if ( posUnits == units.end() )
 		return false;
 	*pPlatforms = &(posUnits->second);
@@ -15,7 +16,7 @@ bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const vector<SUnit
 }
 
 template<class T>
-static void ConstructPlatforms( vector<CConstructorInfo::SUnitPlatform> *pPlatforms, const T *pProfile )
+static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms, const T *pProfile )
 {
 	pPlatforms->reserve( pProfile->platforms.size() );
 	for ( int i = 0; i < pProfile->platforms.size(); ++i )
@@ -23,7 +24,7 @@ static void ConstructPlatforms( vector<CConstructorInfo::SUnitPlatform> *pPlatfo
 		if ( pProfile->platforms[i].bAttached )
 		{
 			CConstructorInfo::SUnitPlatform &platform = 
-				pPlatforms->size() <= i ? *(pPlatforms->insert( pPlatforms->end() )) :
+				pPlatforms->size() <= i ? pPlatforms->emplace_back() :
 				(*pPlatforms)[i].nPlatformIndex > i ? *(pPlatforms->insert( pPlatforms->begin() + i, CConstructorInfo::SUnitPlatform() )) : (*pPlatforms)[i];
 
 			NI_VERIFY( platform.nPlatformIndex == -1 || platform.nPlatformIndex == i, "Wrong platform index", return );
@@ -57,19 +58,19 @@ void CConstructorInfo::ApplyProfile( const int nUniqueID, const NDb::SDBConstruc
 {
 	NI_VERIFY( nUniqueID != -1, "id -1 is reserved for internal use", return );
 
-	vector<SUnitPlatform> &platforms = units[nUniqueID];
+	std::vector<SUnitPlatform> &platforms = units[nUniqueID];
 
 	ConstructPlatforms( &platforms, pProfile );
 	if ( !pProfile->slots.empty() )
 	{
-		vector<int> profileSlots( pProfile->slots );
+		std::vector<int> profileSlots( pProfile->slots );
 		sort( profileSlots.begin(), profileSlots.end() );
-		vector<int> oldSlots( slots[nUniqueID] );
+		std::vector<int> oldSlots( slots[nUniqueID] );
 
 		slots[nUniqueID].clear();
 		slots[nUniqueID].resize( profileSlots.size() + oldSlots.size(), -1 );
 
-		vector<int>::iterator iter = merge( oldSlots.begin(), oldSlots.end(), profileSlots.begin(), profileSlots.end(), slots[nUniqueID].begin() );
+		std::vector<int>::iterator iter = merge( oldSlots.begin(), oldSlots.end(), profileSlots.begin(), profileSlots.end(), slots[nUniqueID].begin() );
 		slots[nUniqueID].erase( iter, slots[nUniqueID].end() );
 	}
 }
@@ -86,7 +87,7 @@ CObjectBase* CConstructorInfo::GetPlayerUnit( const int nUniqueID )
 
 int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 {
-	hash_map<int, vector<int> >::const_iterator pos = slots.find( nUniqueID );
+	std::unordered_map<int, std::vector<int> >::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
 		return 0;
 	else
@@ -95,7 +96,7 @@ int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 
 int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) const
 {
-	hash_map<int, vector<int> >::const_iterator pos = slots.find( nUniqueID );
+	std::unordered_map<int, std::vector<int> >::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
 		return -1;
 	else if ( nSlot < 0 || nSlot >= pos->second.size() )

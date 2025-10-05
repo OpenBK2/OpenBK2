@@ -45,7 +45,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 	
 	if ( pMapInfo )
 	{
-		wstring wszName;
+		std::wstring wszName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedName) )
 			wszName = GET_TEXT_PRE(pMapInfo->,LocalizedName);
 		if ( wszName.empty() )
@@ -62,7 +62,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 
 	if ( pMapInfo )
 	{
-		wstring wszMissionDesc;
+		std::wstring wszMissionDesc;
 		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LoadingDescription) )
 			wszMissionDesc = GET_TEXT_PRE(pMapInfo->,LoadingDescription);
 		if ( pMissionDescView )
@@ -79,7 +79,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 	
 	if ( pMapInfo )
 	{
-		wstring wszDesc;
+		std::wstring wszDesc;
 		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedDescription) )
 			wszDesc = GET_TEXT_PRE(pMapInfo->,LocalizedDescription);
 		if ( pObjectivesView )
@@ -106,7 +106,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 		SetMainWindowTexture( pMainWnd, InterfaceState()->GetMenuBackgroundTexture() );
 }
 
-bool CInterfaceMissionBriefing::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMissionBriefing::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
 		return OnBack();
@@ -116,7 +116,7 @@ bool CInterfaceMissionBriefing::Execute( const string &szSender, const string &s
 	return false;
 }
 
-int CInterfaceMissionBriefing::Check( const string &szCheckName ) const
+int CInterfaceMissionBriefing::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

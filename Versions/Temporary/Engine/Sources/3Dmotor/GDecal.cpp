@@ -13,7 +13,7 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 	// create target geometry
 	if ( !pTarget->parts.empty() )
 	{
-		vector<CPtr<ISomePart> > &parts = pTarget->parts;
+		std::vector<CPtr<ISomePart> > &parts = pTarget->parts;
 		for ( int k = 0; k < parts.size(); ++k )
 		{
 			ISomePart *pPart = parts[k];
@@ -50,7 +50,7 @@ CDecal::~CDecal()
 }
 
 template<class T>
-static void WalkVector( vector<T> *pRes )
+static void WalkVector( std::vector<T> *pRes )
 {
 	int nRes = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
@@ -73,7 +73,7 @@ bool CDecal::OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &
 	if ( i != pTarget->srcPositions.end() )
 		pRes = pScene->CreateDecal( pNew, i->second, pTarget->mapInfo, pMaterial );
 	else
-		pRes = pScene->CreateDecal( pNew, vector<CVec3>(), pTarget->mapInfo, pMaterial );
+		pRes = pScene->CreateDecal( pNew, std::vector<CVec3>(), pTarget->mapInfo, pMaterial );
 	if ( !pRes )
 		return false;
 	if ( ( pNew->decals.size() & 31 ) == 0 )
@@ -99,7 +99,7 @@ void CDecalsManager::OnCreate( ISomePart *pNew )
 	if ( i != decalsPerUser.end() )
 	{
 		// add decal on each CDecal
-		vector<CPtr<CDecal> > &decals = i->second;
+		std::vector<CPtr<CDecal> > &decals = i->second;
 		for ( int k = 0; k < decals.size(); ++k )
 		{
 			ASSERT( IsValid(decals[k]) );
@@ -109,7 +109,7 @@ void CDecalsManager::OnCreate( ISomePart *pNew )
 	}
 }
 
-CDecalTarget* CDecalsManager::CreateDecalTarget( const vector<CObjectBase*> &_targets, const SDecalMappingInfo &_info )
+CDecalTarget* CDecalsManager::CreateDecalTarget( const std::vector<CObjectBase*> &_targets, const SDecalMappingInfo &_info )
 {
 	CDecalTarget *pRes = new CDecalTarget( _info );
 	CObjectBaseSet targets;
@@ -132,11 +132,11 @@ CDecal* CDecalsManager::CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial
 void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 {
 	ASSERT( IsValid( pTarget ) );
-	const vector<SDecalTargetPart> &targetParts = pTarget->targetParts;
+	const std::vector<SDecalTargetPart> &targetParts = pTarget->targetParts;
 	for ( int k = 0; k < targetParts.size(); ++k )
 	{
 		bool bFound = false;
-		vector<CPtr<CDecal> > &decals = decalsPerUser[ targetParts[k] ];
+		std::vector<CPtr<CDecal> > &decals = decalsPerUser[ targetParts[k] ];
 		for ( int i = 0; i < decals.size(); ++i )
 		{
 			if ( decals[i] == pDecal )
@@ -153,13 +153,13 @@ void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 void CDecalsManager::Unregister( CDecal *pDecal, CDecalTarget *pTarget )
 {
 	ASSERT( IsValid( pTarget ) );
-	const vector<SDecalTargetPart> &targetParts = pTarget->targetParts;
+	const std::vector<SDecalTargetPart> &targetParts = pTarget->targetParts;
 	for ( int k = 0; k < targetParts.size(); ++k )
 	{
 		CPerUserHash::iterator i = decalsPerUser.find( targetParts[k] );
 		if ( i == decalsPerUser.end() )
 			continue;
-		vector<CPtr<CDecal> > &d = i->second;
+		std::vector<CPtr<CDecal> > &d = i->second;
 		int nRes = 0;
 		for ( int m = 0; m < d.size(); ++m )
 		{
@@ -177,7 +177,7 @@ void CDecalsManager::Walk()
 {
 	for ( CPerUserHash::iterator i = decalsPerUser.begin(); i != decalsPerUser.end(); ++i )
 	{
-		vector<CPtr<CDecal> > &r = i->second;
+		std::vector<CPtr<CDecal> > &r = i->second;
 		for ( int k = 0; k < r.size(); ++k )
 		{
 			if ( IsValid(r[k]) )

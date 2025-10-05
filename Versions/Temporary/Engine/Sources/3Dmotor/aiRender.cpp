@@ -52,7 +52,7 @@ void CFastRenderer::GetCoordsClamped( const CVec3 &v, float *pX, float *pY )
 	*pY = Clamp( vRes.y - 0.5f, (float)region.y1, region.y2 - 2.001f ) - region.y1;
 }
 
-void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits, int x, int y ) const
+void CFastRenderer::GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits, int x, int y ) const
 {
 	for( SResult *p = resGrid[y][x]; p; p = p->pNext )
 	{
@@ -85,7 +85,7 @@ void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits, in
 	}
 }
 
-void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits ) const
+void CFastRenderer::GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits ) const
 {
 	pEnters->resize( 0 );
 	pExits->resize( 0 );
@@ -259,8 +259,8 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 	++nTraceFrame;
 
 	// project points
-	static vector<SProjectedPoint> projected;
-	static vector<CVec3> flatProjected;
+	static std::vector<SProjectedPoint> projected;
+	static std::vector<CVec3> flatProjected;
 	//vector<CVec4> projectedP;
 	if ( bPerspective )
 	{
@@ -313,8 +313,8 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 		}
 	}
 	// rasterize every triangle
-	const vector<SEdge> &edges = e.tris.edges;
-	const vector<STriangle> &mesh = e.tris.mesh;
+	const std::vector<SEdge> &edges = e.tris.edges;
+	const std::vector<STriangle> &mesh = e.tris.mesh;
 	for ( int i = 0; i < mesh.size(); ++i )
 	{
 		int i1, i2, i3;
@@ -500,7 +500,7 @@ void CFastRenderer::ReduceTerrain()
 	}
 }
 
-void CFastRenderer::TraceEntity( const vector<SConvexHull> &hulls, bool bTerrain )
+void CFastRenderer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain )
 {
 }
 

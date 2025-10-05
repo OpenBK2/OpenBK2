@@ -31,10 +31,10 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SModel )
 	public:
 		enum { typeID = 0x12069B88 };
-		vector< CDBPtr< SMaterial > > materials;
+		std::vector< CDBPtr< SMaterial > > materials;
 		CDBPtr< SGeometry > pGeometry;
 		CDBPtr< SSkeleton > pSkeleton;
-		vector< CDBPtr< SAnimBase > > animations;
+		std::vector< CDBPtr< SAnimBase > > animations;
 		float fWindPower;
 
 		SModel() :
@@ -167,7 +167,7 @@ namespace NDb
 			fScale( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -179,7 +179,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SSunFlares )
 	public:
 		enum { typeID = 0xB4406170 };
-		vector< SSunFlare > flares;
+		std::vector< SSunFlare > flares;
 		CDBPtr< STexture > pOverBright;
 
 		SSunFlares() { }
@@ -371,7 +371,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SSkeleton )
 	public:
 		enum { typeID = 0x12069B8A };
-		vector< CDBPtr< SAnimBase > > animations;
+		std::vector< CDBPtr< SAnimBase > > animations;
 		GUID uid;
 
 		SSkeleton() { }
@@ -411,7 +411,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SAnimLight )
 	public:
 		enum { typeID = 0x1206A301 };
-		string szSelectNode;
+		std::string szSelectNode;
 		GUID uid;
 
 		SAnimLight() { }
@@ -511,7 +511,7 @@ namespace NDb
 		float fEndCycle;
 		int nCycleCount;
 		CVec2 vPivot;
-		vector< CDBPtr< STexture > > textures;
+		std::vector< CDBPtr< STexture > > textures;
 		bool bIsCrown;
 		EStatic eStatic;
 		bool bDoesCastShadow;
@@ -585,9 +585,9 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SEffect )
 	public:
 		enum { typeID = 0x12069B83 };
-		vector< CDBPtr< SParticleInstance > > instances;
-		vector< CDBPtr< SLightInstance > > lights;
-		vector< CDBPtr< SModelInstance > > models;
+		std::vector< CDBPtr< SParticleInstance > > instances;
+		std::vector< CDBPtr< SLightInstance > > lights;
+		std::vector< CDBPtr< SModelInstance > > models;
 		bool bWindAffected;
 		float fWindPower;
 		float fDuration;
@@ -673,8 +673,8 @@ namespace NDb
 		bool bAntialiased;
 		EPitch ePitch;
 		ECharset eCharset;
-		string szFaceName;
-		string szName;
+		std::string szFaceName;
+		std::string szName;
 		NFile::CFilePath szCharactersFile;
 
 		SFont() :
@@ -733,10 +733,10 @@ namespace NDb
 		CVec3 vCenter;
 		CDBPtr< SAIGeometry > pAIGeometry;
 		int nNumMeshes;
-		vector< int > materialQuantities;
-		vector< string > meshNames;
-		vector< int > meshAnimated;
-		vector< int > meshWindAffected;
+		std::vector< int > materialQuantities;
+		std::vector< std::string > meshNames;
+		std::vector< int > meshAnimated;
+		std::vector< int > meshWindAffected;
 
 		SGeometry() :
 			vSize( VNULL3 ),
@@ -879,183 +879,183 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EConvertionType eValue );
-	EConvertionType StringToEnum_NDb_EConvertionType( const string &szValue );
+	std::string EnumToString( NDb::EConvertionType eValue );
+	EConvertionType StringToEnum_NDb_EConvertionType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EConvertionType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EConvertionType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EConvertionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EConvertionType( szValue ); }
+	static std::string ToString( NDb::EConvertionType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EConvertionType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EConvertionType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::STexture::EType eValue );
-	STexture::EType StringToEnum_NDb_STexture_EType( const string &szValue );
+	std::string EnumToString( NDb::STexture::EType eValue );
+	STexture::EType StringToEnum_NDb_STexture_EType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::STexture::EType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::STexture::EType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::STexture::EType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EType( szValue ); }
+	static std::string ToString( NDb::STexture::EType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::STexture::EType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_STexture_EType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::STexture::EAddrType eValue );
-	STexture::EAddrType StringToEnum_NDb_STexture_EAddrType( const string &szValue );
+	std::string EnumToString( NDb::STexture::EAddrType eValue );
+	STexture::EAddrType StringToEnum_NDb_STexture_EAddrType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::STexture::EAddrType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::STexture::EAddrType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::STexture::EAddrType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EAddrType( szValue ); }
+	static std::string ToString( NDb::STexture::EAddrType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::STexture::EAddrType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_STexture_EAddrType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::STexture::EFormat eValue );
-	STexture::EFormat StringToEnum_NDb_STexture_EFormat( const string &szValue );
+	std::string EnumToString( NDb::STexture::EFormat eValue );
+	STexture::EFormat StringToEnum_NDb_STexture_EFormat( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::STexture::EFormat>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::STexture::EFormat eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::STexture::EFormat ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EFormat( szValue ); }
+	static std::string ToString( NDb::STexture::EFormat eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::STexture::EFormat ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_STexture_EFormat( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SParticleInstance::ELight eValue );
-	SParticleInstance::ELight StringToEnum_NDb_SParticleInstance_ELight( const string &szValue );
+	std::string EnumToString( NDb::SParticleInstance::ELight eValue );
+	SParticleInstance::ELight StringToEnum_NDb_SParticleInstance_ELight( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SParticleInstance::ELight>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SParticleInstance::ELight eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SParticleInstance::ELight ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_ELight( szValue ); }
+	static std::string ToString( NDb::SParticleInstance::ELight eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SParticleInstance::ELight ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_ELight( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SParticleInstance::EStatic eValue );
-	SParticleInstance::EStatic StringToEnum_NDb_SParticleInstance_EStatic( const string &szValue );
+	std::string EnumToString( NDb::SParticleInstance::EStatic eValue );
+	SParticleInstance::EStatic StringToEnum_NDb_SParticleInstance_EStatic( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SParticleInstance::EStatic>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SParticleInstance::EStatic eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SParticleInstance::EStatic ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_EStatic( szValue ); }
+	static std::string ToString( NDb::SParticleInstance::EStatic eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SParticleInstance::EStatic ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_EStatic( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SFont::EPitch eValue );
-	SFont::EPitch StringToEnum_NDb_SFont_EPitch( const string &szValue );
+	std::string EnumToString( NDb::SFont::EPitch eValue );
+	SFont::EPitch StringToEnum_NDb_SFont_EPitch( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SFont::EPitch>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SFont::EPitch eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SFont::EPitch ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFont_EPitch( szValue ); }
+	static std::string ToString( NDb::SFont::EPitch eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SFont::EPitch ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SFont_EPitch( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SFont::ECharset eValue );
-	SFont::ECharset StringToEnum_NDb_SFont_ECharset( const string &szValue );
+	std::string EnumToString( NDb::SFont::ECharset eValue );
+	SFont::ECharset StringToEnum_NDb_SFont_ECharset( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SFont::ECharset>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SFont::ECharset eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SFont::ECharset ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFont_ECharset( szValue ); }
+	static std::string ToString( NDb::SFont::ECharset eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SFont::ECharset ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SFont_ECharset( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EAddressMode eValue );
-	EAddressMode StringToEnum_NDb_EAddressMode( const string &szValue );
+	std::string EnumToString( NDb::EAddressMode eValue );
+	EAddressMode StringToEnum_NDb_EAddressMode( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EAddressMode>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EAddressMode eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EAddressMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAddressMode( szValue ); }
+	static std::string ToString( NDb::EAddressMode eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EAddressMode ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EAddressMode( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SMaterial::ELightingMode eValue );
-	SMaterial::ELightingMode StringToEnum_NDb_SMaterial_ELightingMode( const string &szValue );
+	std::string EnumToString( NDb::SMaterial::ELightingMode eValue );
+	SMaterial::ELightingMode StringToEnum_NDb_SMaterial_ELightingMode( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SMaterial::ELightingMode>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SMaterial::ELightingMode eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SMaterial::ELightingMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_ELightingMode( szValue ); }
+	static std::string ToString( NDb::SMaterial::ELightingMode eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SMaterial::ELightingMode ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_ELightingMode( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SMaterial::EEffect eValue );
-	SMaterial::EEffect StringToEnum_NDb_SMaterial_EEffect( const string &szValue );
+	std::string EnumToString( NDb::SMaterial::EEffect eValue );
+	SMaterial::EEffect StringToEnum_NDb_SMaterial_EEffect( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SMaterial::EEffect>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SMaterial::EEffect eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SMaterial::EEffect ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EEffect( szValue ); }
+	static std::string ToString( NDb::SMaterial::EEffect eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SMaterial::EEffect ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EEffect( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SMaterial::EAlphaMode eValue );
-	SMaterial::EAlphaMode StringToEnum_NDb_SMaterial_EAlphaMode( const string &szValue );
+	std::string EnumToString( NDb::SMaterial::EAlphaMode eValue );
+	SMaterial::EAlphaMode StringToEnum_NDb_SMaterial_EAlphaMode( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SMaterial::EAlphaMode>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SMaterial::EAlphaMode eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SMaterial::EAlphaMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EAlphaMode( szValue ); }
+	static std::string ToString( NDb::SMaterial::EAlphaMode eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SMaterial::EAlphaMode ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EAlphaMode( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::SMaterial::EDynamicMode eValue );
-	SMaterial::EDynamicMode StringToEnum_NDb_SMaterial_EDynamicMode( const string &szValue );
+	std::string EnumToString( NDb::SMaterial::EDynamicMode eValue );
+	SMaterial::EDynamicMode StringToEnum_NDb_SMaterial_EDynamicMode( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SMaterial::EDynamicMode>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SMaterial::EDynamicMode eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SMaterial::EDynamicMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EDynamicMode( szValue ); }
+	static std::string ToString( NDb::SMaterial::EDynamicMode eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SMaterial::EDynamicMode ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EDynamicMode( szValue ); }
 };
 

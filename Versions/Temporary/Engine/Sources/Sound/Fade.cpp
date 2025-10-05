@@ -112,12 +112,14 @@ bool CFade::IsFinished() const
 void CFades::Update()
 {
 	// fades
-	for ( CFades::iterator it = begin(); it != end(); ++it )
+	for ( CFades::iterator it = begin(); it != end(); )
 	{
 		if ( (*it)->IsFinished() )
 			it = erase( it );
-		else
+		else {
 			(*it)->Segment();
+			++it;
+		}
 	}
 }
 }

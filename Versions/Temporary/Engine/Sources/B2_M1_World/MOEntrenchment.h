@@ -59,7 +59,7 @@ public:
 	virtual void Select( bool bSelect ) { NI_ASSERT( !bSelect, "Selecting entrenchment!" ); }
 	virtual bool CanSelect() const { return false; }
 	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );
@@ -69,7 +69,7 @@ class CMOEntrenchment : public CMOSelectable
 {
 	OBJECT_NOCOPY_METHODS( CMOEntrenchment );
 	
-	typedef list< CPtr<CMOEntrenchmentPart> > CPartsList;
+	typedef std::list< CPtr<CMOEntrenchmentPart> > CPartsList;
 	CPartsList parts;
 public:
 	CMOEntrenchment() {};
@@ -99,7 +99,7 @@ public:
 	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
 
 	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const;
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );

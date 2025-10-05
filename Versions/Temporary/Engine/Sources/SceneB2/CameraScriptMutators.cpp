@@ -249,7 +249,7 @@ CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
 
 	cameraQuats.resize( 0 );
-	for ( vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	for ( std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
 																												itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end(); ++itPosKey )
 	{
 		NI_VERIFY( (itPosKey->nPositionIndex >= 0) &&
@@ -289,7 +289,7 @@ void CScriptMoviesMutatorHolder::Recalc()
 	{
 		fCurrTime = fSpeedCoeff * ((float)(timeCurrent) - movieStartTime)/1000.0f;
 
-		vector<NDb::SScriptMovieKeyPos>::const_iterator itEnd = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+		std::vector<NDb::SScriptMovieKeyPos>::const_iterator itEnd = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 		--itEnd;
 		const float f1 = itEnd->fStartTime;
 
@@ -318,8 +318,8 @@ void CScriptMoviesMutatorHolder::Recalc()
 		int nStartPos = 0;
 		int nFinishPos = 0;
 
-		vector<NDb::SScriptMovieKeyPos>::const_iterator itKeyPosPrev = movieKeys.posKeys.begin();
-		vector<NDb::SScriptMovieKeyPos>::const_iterator itKeyPos = itKeyPosPrev;
+		std::vector<NDb::SScriptMovieKeyPos>::const_iterator itKeyPosPrev = movieKeys.posKeys.begin();
+		std::vector<NDb::SScriptMovieKeyPos>::const_iterator itKeyPos = itKeyPosPrev;
 		++itKeyPos;
 		int i = 0;
 
@@ -438,8 +438,8 @@ float CScriptMoviesMutatorHolder::GetLength() const
 						 (nMovieIndex >= 0) &&
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return 0.0f )
 
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 	--itPosKeyLast;
 
 	return ( itPosKeyLast->fStartTime - itPosKeyFirst->fStartTime );
@@ -468,7 +468,7 @@ void CScriptMoviesMutatorHolder::JumpFirstKey()
 						 (nMovieIndex >= 0) &&
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
 
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
 
 	SetTime( itPosKeyFirst->fStartTime );
 }
@@ -480,7 +480,7 @@ void CScriptMoviesMutatorHolder::JumpLastKey()
 						 (nMovieIndex >= 0) &&
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
 
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 	--itPosKeyLast;
 
 	SetTime( itPosKeyLast->fStartTime );
@@ -493,8 +493,8 @@ void CScriptMoviesMutatorHolder::StepNextKey()
 						 (nMovieIndex >= 0) &&
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
 
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
 	++itPosKey;
 
 	while ( itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end() )
@@ -517,8 +517,8 @@ void CScriptMoviesMutatorHolder::StepPrevKey()
 						 (nMovieIndex >= 0) &&
 						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
 
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
-	vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
 	++itPosKey;
 
 	while ( itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end() )
@@ -535,7 +535,7 @@ void CScriptMoviesMutatorHolder::StepPrevKey()
 }
 
 
-void CScriptMoviesMutatorHolder::SetCallbackFuncName( const string &_szCallbackFuncName )
+void CScriptMoviesMutatorHolder::SetCallbackFuncName( const std::string &_szCallbackFuncName )
 {
 	szCallbackFuncName = _szCallbackFuncName;
 }

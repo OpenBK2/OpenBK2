@@ -196,8 +196,8 @@ public:                                                                         
 	TPtrName() {}                                                                      \
 	TPtrName( T *_ptr ): CBase( _ptr ) {}                                              \
 	TPtrName( const TPtrName &a ): CBase( a ) {}                                       \
-	TPtrName& operator=( T *_ptr ) { Set( _ptr ); return *this; }                      \
-	TPtrName& operator=( const TPtrName &a ) { SetObject( a.Get() ); return *this; }   \
+	TPtrName& operator=( T *_ptr ) { CBase::Set( _ptr ); return *this; }                      \
+	TPtrName& operator=( const TPtrName &a ) { CBase::SetObject( a.Get() ); return *this; }   \
 	int operator&( IBinSaver &f ) { return (*(CBase*)this) & (f); }                    \
 };
 #ifdef STUPID_VISUAL_ASSIST
@@ -234,7 +234,7 @@ template<class TContainer>
 inline bool EraseInvalidRefs( TContainer *pData )
 {
 	bool bRes = false;
-	for ( TContainer::iterator i = pData->begin(); i != pData->end(); )
+	for ( typename TContainer::iterator i = pData->begin(); i != pData->end(); )
 	{
 		if ( IsValid( *i ) )
 			++i;

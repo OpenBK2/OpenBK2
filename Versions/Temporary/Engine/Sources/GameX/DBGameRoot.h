@@ -29,14 +29,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szType;
+		std::string szType;
 		CDBPtr< SComplexSoundDesc > pSound;
 
 		SUISoundEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -55,7 +55,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -75,7 +75,7 @@ namespace NDb
 			nScore( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -103,33 +103,33 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		CDBPtr< SGameConsts > pConsts;
-		vector< CDBPtr< SCampaign > > campaigns;
-		vector< STutorialMap > tutorialMaps;
+		std::vector< CDBPtr< SCampaign > > campaigns;
+		std::vector< STutorialMap > tutorialMaps;
 		CDBPtr< SWindowScreen > pScreenVideoPlayer;
-		vector< SUIScreenEntry > screens;
-		vector< CDBPtr< STextEntry > > textEntries;
-		vector< CDBPtr< SFont > > fonts;
-		vector< SUISoundEntry > sounds;
-		vector< SUITextureEntry > textures;
+		std::vector< SUIScreenEntry > screens;
+		std::vector< CDBPtr< STextEntry > > textEntries;
+		std::vector< CDBPtr< SFont > > fonts;
+		std::vector< SUISoundEntry > sounds;
+		std::vector< SUITextureEntry > textures;
 		CDBPtr< SOptionSystem > pGameOptions;
 		SMainMenuBackground mainMenuBackground;
 		CDBPtr< STexture > pInterfacesBackground;
-		vector< CDBPtr< SNotification > > notifications;
-		vector< CDBPtr< SNotificationEvent > > notificationEvents;
+		std::vector< CDBPtr< SNotification > > notifications;
+		std::vector< CDBPtr< SNotificationEvent > > notificationEvents;
 		NFile::CFilePath szIntroMovie;
-		vector< CDBPtr< SMechUnitRPGStats > > encyclopediaMechUnits;
-		vector< NFile::CFilePath > citationFileRefs;
-		vector< CDBPtr< SMultiplayerMap > > multiplayerMaps;
+		std::vector< CDBPtr< SMechUnitRPGStats > > encyclopediaMechUnits;
+		std::vector< NFile::CFilePath > citationFileRefs;
+		std::vector< CDBPtr< SMultiplayerMap > > multiplayerMaps;
 		CDBPtr< SMultiplayerMap > pTestMap;
 		CDBPtr< SMapMusic > pMainMenuMusic;
-		vector< SHallOfFameRecord > hallOfFameDefaultRecords;
+		std::vector< SHallOfFameRecord > hallOfFameDefaultRecords;
 
 		#include "include_GameRoot.h"
 

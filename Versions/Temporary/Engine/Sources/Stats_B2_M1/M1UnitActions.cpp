@@ -183,7 +183,7 @@ DWORD SM1UnitActionTransform::CalcCheckSum() const
 
 
 
-void SM1ParameterModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SM1ParameterModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MultParam", (BYTE*)&fMultParam - pThis, sizeof(fMultParam), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "AddParam", (BYTE*)&fAddParam - pThis, sizeof(fAddParam), NTypeDef::TYPE_TYPE_FLOAT );
@@ -222,7 +222,7 @@ DWORD SM1ParameterModifier::CalcCheckSum() const
 
 
 
-void SShellStatsModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SShellStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "damage", &damage, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "piercing", &piercing, pThis ); 
@@ -261,7 +261,7 @@ DWORD SShellStatsModifier::CalcCheckSum() const
 
 
 
-void SWeaponStatsModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWeaponStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "range", &range, pThis ); 
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "shells", &shells, pThis );
@@ -300,7 +300,7 @@ DWORD SWeaponStatsModifier::CalcCheckSum() const
 
 
 
-void SPlatformWeaponsStatsModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlatformWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Guns", &guns, pThis );
 }
@@ -336,7 +336,7 @@ DWORD SPlatformWeaponsStatsModifier::CalcCheckSum() const
 
 
 
-void SWeaponsStatsModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Platforms", &platforms, pThis );
 }

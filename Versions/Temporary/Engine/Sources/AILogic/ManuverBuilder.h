@@ -11,12 +11,12 @@ namespace NDb
 //	CManuverBuilder ::
 
 
-typedef list<int> CManuverIndices;
-typedef hash_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
+typedef std::list<int> CManuverIndices;
+typedef std::unordered_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
 class CManuverBuilder 
 {
 	static CManuverStateDesc state;				// temprorary value, used inside CreateManuver()
-	static vector<int> suitableIndeces;
+	static std::vector<int> suitableIndeces;
 	static CManuvers manuvers;
 
 	struct SGRoundAttackTarget
@@ -24,7 +24,7 @@ class CManuverBuilder
 		ZDATA
 		int nMaxAttakers;
 		SAIAngle wStartAngle;
-		vector<int> attackers;
+		std::vector<int> attackers;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nMaxAttakers); f.Add(3,&wStartAngle); f.Add(4,&attackers); return 0; }
 		WORD GetAngle( int nAttacker ) const
 		{
@@ -39,9 +39,9 @@ class CManuverBuilder
 		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random(65535) ) { }
 	};
 
-	typedef hash_map<int, SGRoundAttackTarget> CGroundAttacks;
-	typedef vector<pair<int,CVec3> > CAttackerOffsets;
-	typedef hash_map<int, CAttackerOffsets> CAviaAttacks; 
+	typedef std::unordered_map<int, SGRoundAttackTarget> CGroundAttacks;
+	typedef std::vector<std::pair<int,CVec3> > CAttackerOffsets;
+	typedef std::unordered_map<int, CAttackerOffsets> CAviaAttacks;
 	
 	ZDATA
 	CDBPtr<NDb::SAIGameConsts> pConsts;

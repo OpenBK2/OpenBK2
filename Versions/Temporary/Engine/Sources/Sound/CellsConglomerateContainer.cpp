@@ -125,7 +125,7 @@ template <class TEnumerator>
 											 const int nMaxRank, 
 											 const SIntThree &vCenter,
 											 const int _nRadius, 
-											 vector<CConglomerates> *pConglHeght )
+											 std::vector<CConglomerates> *pConglHeght )
 {
 	if ( _nRadius )
 	{

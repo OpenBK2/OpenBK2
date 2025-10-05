@@ -30,13 +30,13 @@ static CVec3 vCamDirs[6] =
 	CVec3( 0,-1, 0 ),
 	CVec3( 0, 0,-1 )
 };
-static vector< CObj<CObjectBase> > nodes;
+static std::vector< CObj<CObjectBase> > nodes;
 
 const zbuf_type N_HZ_MAX = 65535;
 class CHZBuffer : public IHZBuffer
 {
 	OBJECT_BASIC_METHODS(CHZBuffer);
-	vector<CArray2D<zbuf_type> > depthBuffer;
+	std::vector<CArray2D<zbuf_type> > depthBuffer;
 	float fZBufScale;
 public:
 	void Initialize( int nXSize, int nYSize, float _fZBufScale )
@@ -240,7 +240,7 @@ class CPartsRender: public CRasterizer<CPartsRender>
 	float fZBufScale;
 	CObj<CHZBuffer> pHZBuffer;
 	CArray2D<unsigned short> indexBuffer;
-	vector<int> refCount;
+	std::vector<int> refCount;
 	
 	bool DoRenderBackface() const { return false; }
 
@@ -331,10 +331,10 @@ public:
 	friend class CRasterizer<CPartsRender>;
 };
 
-static int CountParts( const list<SRenderPartSet> &l )
+static int CountParts( const std::list<SRenderPartSet> &l )
 {
 	int nRes = 0;
-	for ( list<SRenderPartSet>::const_iterator i = l.begin(); i != l.end(); ++i )
+	for ( std::list<SRenderPartSet>::const_iterator i = l.begin(); i != l.end(); ++i )
 		nRes += i->pParts->size();
 	return nRes;
 }
@@ -352,10 +352,10 @@ struct SCompareRPS
 		return false;
 	}
 };
-static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pTS, list<SRenderPartSet> *pListParts,
+static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pTS, std::list<SRenderPartSet> *pListParts,
 	float fDensityLimit, float fMaxR2, CHZBuffer *pHZOptimize )
 {
-	list<SRenderPartSet> &listParts = *pListParts;
+	std::list<SRenderPartSet> &listParts = *pListParts;
 	SHMatrix sRes;
 	sRes = pTS->Get().forward;
 	sRes.x = ( sRes.x * 0.5f + sRes.w * 0.5f ) * pr.GetWidth();
@@ -366,7 +366,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 	int nIDCounter = 0;
 	int nPrevFloorMask = 0;
 	bool bFirstPass = true;
-	for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 
@@ -378,7 +378,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 			bFirstPass = false;
 		}
 
-		const vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
 		for ( int nPart = 0; nPart < rps.pParts->size(); ++nPart )
 		{
 			pr.SetCurrentID( ++nIDCounter );
@@ -408,11 +408,11 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 					continue;
 			}
 			
-			vector<CVec3> points;
-			vector<STriangle> tris;
+			std::vector<CVec3> points;
+			std::vector<STriangle> tris;
 			TransformPart( pPart, &points, &tris );
 			
-			static vector<SProjectedPoint> verticesSet;
+			static std::vector<SProjectedPoint> verticesSet;
 			if ( points.size() > verticesSet.size() )
 				verticesSet.resize( points.size() );
 			for ( int nVert = 0; nVert < points.size(); nVert++ )
@@ -434,7 +434,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 }
 
 void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
-	list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
+	std::list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
 {
 	CPartsRender pr( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT, F_ZBUF_SCALE_LOW );
 	nodes.clear();
@@ -448,7 +448,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		sTransform.MakeProjective( CVec2( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT ), 90, 0.1f, fRadius * 2.0f );
 		sTransform.SetCamera( cameraTransf );
 	
-		list<SRenderPartSet> listParts;
+		std::list<SRenderPartSet> listParts;
 		pRender->FormPartList( &sTransform, &listParts, eType, mask );
 		pr.InitZBuffer( sTransform.GetProjection().forward, fRadius );
 		RenderStuff( pr, pRender, &sTransform, &listParts, 0, 0, 0 );
@@ -457,10 +457,10 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		pHZ->BuildHZ();
 
 		int nID = 0;
-		for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+		for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 		{
 			SRenderPartSet &rps = *i, *pDst = 0;
-			for ( list<SRenderPartSet>::iterator k = pRes->begin(); k != pRes->end(); ++k )
+			for ( std::list<SRenderPartSet>::iterator k = pRes->begin(); k != pRes->end(); ++k )
 			{
 				if ( k->pNode == rps.pNode )
 				{
@@ -470,7 +470,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 			}
 			if ( !pDst )
 				pDst = &*pRes->insert( pRes->end(), SRenderPartSet( rps.pNode, rps.pParts, rps.pGeometry, rps.nFloorMask ) );
-			const vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
+			const std::vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
 			for ( int k = 0; k < rps.pParts->size(); ++k )
 			{
 				nID++;
@@ -526,7 +526,7 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	CObj<IHZBuffer> *pHZBuffer )
 {
 	CPartsRender pr( Clamp( (int)screenSize.x / 2, 4, 400 ), Clamp( (int)screenSize.y / 2, 4, 300 ), F_ZBUF_SCALE );
-	list<SRenderPartSet> listParts;
+	std::list<SRenderPartSet> listParts;
 	pRender->FormPartList( pTS, &listParts,IRender::DT_STATIC, _mask );
 	pr.FastInitZBuffer();
 	CHZBuffer *pHZ = pr.GetHZBuffer();
@@ -536,11 +536,11 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	*pHZBuffer = pHZ;
 
 	int nID = 0;
-	for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		CIgnorePartsHash::iterator res = pIgnore->end();
-		const vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
 		for ( int k = 0; k < rps.pParts->size(); ++k )
 		{
 			++nID;
@@ -571,7 +571,7 @@ void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
 	CObj<IHZBuffer> *pHZBuffer )
 {
 	CPartsRender pr( Clamp( (int)screenSize.x / 2, 4, 400 ), Clamp( (int)screenSize.y / 2, 4, 300 ), F_ZBUF_SCALE );
-	list<SRenderPartSet> listParts;
+	std::list<SRenderPartSet> listParts;
 	pRender->FormPartList( pTS, &listParts,IRender::DT_STATIC, _mask );
 	pr.FastInitZBuffer();
 	CHZBuffer *pHZ = pr.GetHZBuffer();
@@ -581,11 +581,11 @@ void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
 	*pHZBuffer = pHZ;
 
 	int nID = 0;
-	for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		CIgnorePartsHash::iterator res = pIgnore->end();
-		const vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
 		for ( int k = 0; k < rps.pParts->size(); ++k )
 		{
 			++nID;
@@ -632,12 +632,12 @@ class CShadowVolumeBuilder
 
 	CVec3 vCenter;
 	float fRadius, fHullRadius;
-	vector<CVec3> &resPoints;
-	vector<STriangle> &resTris;
+	std::vector<CVec3> &resPoints;
+	std::vector<STriangle> &resTris;
 
-	typedef hash_map<CVec3, int, SVec3Hash> CPointHash;
+	typedef std::unordered_map<CVec3, int, SVec3Hash> CPointHash;
 	CPointHash pointHash;
-	vector<STriangle> tris;
+	std::vector<STriangle> tris;
 
 	int AddPoint( const CVec3 &a );
 	int AddBackPoint( const CVec3 &a );
@@ -645,7 +645,7 @@ class CShadowVolumeBuilder
 	void AddEdge( int n1, int n2 );
 	float CalcPointNorm( const CVec3 &p1 );
 public:
-	CShadowVolumeBuilder( const CVec3 &_vCenter, float _fRadius, vector<CVec3> *_pResPoints, vector<STriangle> *_pResTris )
+	CShadowVolumeBuilder( const CVec3 &_vCenter, float _fRadius, std::vector<CVec3> *_pResPoints, std::vector<STriangle> *_pResTris )
 		: vCenter(_vCenter), fRadius(_fRadius), resPoints(*_pResPoints), resTris(*_pResTris), fHullRadius(_fRadius * FP_SQRT_3)
 	{ 
 		resPoints.resize( 0 );
@@ -783,7 +783,7 @@ struct SEdgeHash
 {
 	int operator()( const SEdge &a ) const { return ( a.nStart << 10 ) ^ a.nFinish; }
 };
-typedef hash_map<SEdge, int, SEdgeHash> CEdgesHash;
+typedef std::unordered_map<SEdge, int, SEdgeHash> CEdgesHash;
 
 struct SEdgeTracker
 {
@@ -868,13 +868,13 @@ void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const 
 
 
 void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCenter, 
-	float fRadius, vector<STriangle> *pTris, 
-	vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
+	float fRadius, std::vector<STriangle> *pTris,
+	std::vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
 	float *pHullRadius,
 	CIgnorePartsHash *pIgnore )
 {
 	CShadowVolumeBuilder shadowBuilder( vCenter, fRadius, pVertices, pTris );
-	list<SRenderPartSet> listParts;
+	std::list<SRenderPartSet> listParts;
 
 	if ( pIgnore )
 		pIgnore->clear();
@@ -883,7 +883,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 		GeneratePartList( pRender, vCenter, fRadius, &listParts, eType, mask );
 		if ( pIgnore )
 		{
-			for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+			for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 			{
 				SRenderPartSet &rps = *i;
 				// if there are skipped parts, fill them with 1
@@ -905,7 +905,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 	//pList->clear();
 	//pVertices->clear();
 	//pCoverFaces->clear();
-	for ( list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		for ( int k = 0; k < rps.pParts->size(); ++k )
@@ -916,8 +916,8 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 			if ( !IsValid( pPart ) )
 				continue;
 
-			vector<CVec3> points;
-			vector<STriangle> tris;
+			std::vector<CVec3> points;
+			std::vector<STriangle> tris;
 			TransformPart( pPart, &points, &tris );
 
 			for( int nTriIndex = 0; nTriIndex != tris.size(); nTriIndex++ )

@@ -300,7 +300,7 @@ void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType,
 	}
 }
 
-void GenerateMipLevelsAndPrepareForCompression( vector<CArray2D<DWORD> > *pMips, const CArray2D<CVec4> &srcImage, 
+void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<DWORD> > *pMips, const CArray2D<CVec4> &srcImage,
 																								EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, 
 																								bool bWrapX, bool bWrapY, float fMappingSize )
 {
@@ -333,8 +333,8 @@ void GenerateMipLevelsAndPrepareForCompression( vector<CArray2D<DWORD> > *pMips,
 // **
 // ************************************************************************************************************************ //
 
-static void WriteDDS( IDirect3DDevice9 *pDevice, const string &szFileName, NGfx::EPixelFormat ePixelFormat, 
-	const vector<CArray2D<DWORD> > &mips )
+static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
+	const std::vector<CArray2D<DWORD> > &mips )
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
@@ -391,22 +391,22 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const string &szFileName, NGfx:
 	}
 }
 
-static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const string &szFileName, const CArray2D<CVec4> &srcImage, 
+static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<CVec4> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
-	vector<CArray2D<DWORD> > mips;
+	std::vector<CArray2D<DWORD> > mips;
 	GenerateMipLevelsAndPrepareForCompression( &mips, srcImage, eImageType, ePixelFormat, 
 		                                         _nNumMipLevels, bWrapX, bWrapY, fMappingSize );
 
 	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
 
-static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const string &szFileName, const CArray2D<DWORD> &srcImage, 
+static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<DWORD> &srcImage,
 	NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels )
 {
 	int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
 
-	vector<CArray2D<DWORD> > mips;
+	std::vector<CArray2D<DWORD> > mips;
 	mips.resize( nNumMipLevels );
 	mips[0] = srcImage;
 
@@ -422,7 +422,7 @@ static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const string &szFileName
 }
 
 #define DEF_INV_255 ( 1.0f / 255 )
-void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const string &szFileName, const CArray2D<DWORD> &srcImage,
+void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<DWORD> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
 	if ( pDevice == NULL )

@@ -169,7 +169,7 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 	{
 		lastUpdateTime = CSoundScene2D::GetCurTime();
 		vListener = vNewListener;
-		vector<SSoundTerrainInfo> pInfo;
+		std::vector<SSoundTerrainInfo> pInfo;
 		pTerrain->GetTerrainMassData( &pInfo, SSoundSceneConsts::SS_AMBIENT_TERRAIN_SOUNDS );
 		const int nSize = pInfo.size();
 

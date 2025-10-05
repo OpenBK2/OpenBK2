@@ -32,12 +32,12 @@ struct SAttributes : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( SAttributes );
 public:
-	hash_map<string, CVariant> attributes;
+	std::unordered_map<std::string, CVariant> attributes;
 
 	SAttributes() { }
-	SAttributes( const hash_map<string, CVariant> &_attributes ) : attributes( _attributes ) { }
+	SAttributes( const std::unordered_map<std::string, CVariant> &_attributes ) : attributes( _attributes ) { }
 	//
-	bool HashAttribute( const string &szName ) const { return attributes.find( szName ) != attributes.end(); }
+	bool HashAttribute( const std::string &szName ) const { return attributes.find( szName ) != attributes.end(); }
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -63,11 +63,11 @@ struct STypeDef : public CXmlResource
 	virtual EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_UNKNOWN; }
 	virtual bool IsSimpleType() const = 0;
 	virtual int GetTypeSize() const { return 0; }
-	virtual const string GetTypeName() const = 0;
+	virtual const std::string GetTypeName() const = 0;
 	//
-	virtual void ToString( string *pRes, const CVariant &value ) const {  }
-	string ToString( const CVariant &value ) const { string szRes; ToString(&szRes, value); return szRes; }
-	virtual void FromString( CVariant *pRes, const string &szValue ) const {  }
+	virtual void ToString( std::string *pRes, const CVariant &value ) const {  }
+	std::string ToString( const CVariant &value ) const { std::string szRes; ToString(&szRes, value); return szRes; }
+	virtual void FromString( CVariant *pRes, const std::string &szValue ) const {  }
 	virtual SAttributes* GetAttributes() const { return 0; }
 	//
 	int operator&( IXmlSaver &saver )
@@ -109,10 +109,10 @@ public:
 	//
 	CVariant GetDefaultValue() const { return 0; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_INT_INPUT; }
-	const string GetTypeName() const { return "int"; }
+	const std::string GetTypeName() const { return "int"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -129,10 +129,10 @@ public:
 	//
 	CVariant GetDefaultValue() const { return 0; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_FLOAT_INPUT; }
-	const string GetTypeName() const { return "float"; }
+	const std::string GetTypeName() const { return "float"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -150,10 +150,10 @@ public:
 	CVariant GetDefaultValue() const { return false; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_BOOL_COMBO; }
 	int GetTypeSize() const { return 1; }
-	const string GetTypeName() const { return "bool"; }
+	const std::string GetTypeName() const { return "bool"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -170,11 +170,11 @@ public:
 	//
 	CVariant GetDefaultValue() const { return ""; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_INPUT; }
-	int GetTypeSize() const { return sizeof(string); }
-	const string GetTypeName() const { return "string"; }
+	int GetTypeSize() const { return sizeof(std::string); }
+	const std::string GetTypeName() const { return "string"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -191,11 +191,11 @@ public:
 	//
 	CVariant GetDefaultValue() const { return L""; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_INPUT; }
-	int GetTypeSize() const { return sizeof(wstring); }
-	const string GetTypeName() const { return "wstring"; }
+	int GetTypeSize() const { return sizeof(std::wstring); }
+	const std::string GetTypeName() const { return "wstring"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -213,10 +213,10 @@ public:
 	CVariant GetDefaultValue() const;
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_GUID; }
 	int GetTypeSize() const { return sizeof(GUID); }
-	const string GetTypeName() const { return "GUID"; }
+	const std::string GetTypeName() const { return "GUID"; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -230,21 +230,21 @@ struct STypeBinary : public STypeSimple
 {
 	OBJECT_NOCOPY_METHODS( STypeBinary );
 public:
-	string szTypeName;
+	std::string szTypeName;
 	int nBinaryObjectSize;								// size of binary object
 	CObj<SAttributes> pAttributes;
 	//
 	STypeBinary(): STypeSimple( TYPE_TYPE_BINARY ), nBinaryObjectSize( 0 ) {}
-	STypeBinary( const string &_szTypeName ): STypeSimple( TYPE_TYPE_BINARY ), szTypeName( _szTypeName ), nBinaryObjectSize( 0 ) {}
+	STypeBinary( const std::string &_szTypeName ): STypeSimple( TYPE_TYPE_BINARY ), szTypeName( _szTypeName ), nBinaryObjectSize( 0 ) {}
 	//
 	CVariant GetDefaultValue() const;
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_BIT_FIELD; }
 	int GetTypeSize() const { return nBinaryObjectSize; }
-	const string GetTypeName() const { return szTypeName; }
+	const std::string GetTypeName() const { return szTypeName; }
 	virtual SAttributes* GetAttributes() const { return pAttributes; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -263,11 +263,11 @@ struct STypeEnum : public STypeSimple
 public:
 	struct SEnumEntry
 	{
-		string szName;
+		std::string szName;
 		int nVal;
 		//
 		SEnumEntry(): nVal( -1 ) {}
-		SEnumEntry( const string &_szName, int _nVal ): szName( _szName ), nVal( _nVal ) {}
+		SEnumEntry( const std::string &_szName, int _nVal ): szName( _szName ), nVal( _nVal ) {}
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -276,20 +276,20 @@ public:
 			return 0;
 		}
 	};
-	string szTypeName;
+	std::string szTypeName;
 	CObj<SAttributes> pAttributes;
-	vector<SEnumEntry> entries;
+	std::vector<SEnumEntry> entries;
 	//
 	STypeEnum(): STypeSimple( TYPE_TYPE_ENUM ) {}
-	STypeEnum( const string &_szTypeName ): STypeSimple( TYPE_TYPE_ENUM ), szTypeName( _szTypeName ) {}
+	STypeEnum( const std::string &_szTypeName ): STypeSimple( TYPE_TYPE_ENUM ), szTypeName( _szTypeName ) {}
 	//
 	CVariant GetDefaultValue() const { return entries[0].szName; }
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_COMBO; }
 	int GetTypeSize() const { return 4; }
-	const string GetTypeName() const { return szTypeName; }
+	const std::string GetTypeName() const { return szTypeName; }
 	//
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	virtual SAttributes* GetAttributes() const { return pAttributes; }
 	//
 	int operator&( IXmlSaver &saver )
@@ -316,10 +316,10 @@ struct STypeStructBase : public STypeDef
 	struct SField
 	{
 		CPtr<STypeDef> pType;								// field type
-		string szName;											// field name
+		std::string szName;											// field name
 		int nChunkID;												// chunkID (for binary serialization)
-		wstring wszDesc;										// field description
-		vector< CObj<SConstraints> > constraints;		// constraints
+		std::wstring wszDesc;										// field description
+		std::vector< CObj<SConstraints> > constraints;		// constraints
 		CObj<SAttributes> pAttributes;			// attributes
 		CVariant defaultValue;							// default value - for simple type fields only!
 
@@ -330,8 +330,8 @@ struct STypeStructBase : public STypeDef
 		bool CheckValueCorrect( const CVariant &value ) const;
 		EEditorType GetEditorType() const;
 		CVariant GetDefaultValue() const;
-		bool HasAttribute( const string &szName ) const;
-		const CVariant *GetAttribute( const string &szName ) const;
+		bool HasAttribute( const std::string &szName ) const;
+		const CVariant *GetAttribute( const std::string &szName ) const;
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -348,24 +348,24 @@ struct STypeStructBase : public STypeDef
 		}
 	};
 	//
-	string szTypeName;										// complex type user-defined name
+	std::string szTypeName;										// complex type user-defined name
 	CObj<SAttributes> pAttributes;				// complex type support attributes
 	CObj<STypeStructBase> pBaseType;			// base type name
-	typedef vector< CObj<STypeDef> > CNestedTypesList;
+	typedef std::vector< CObj<STypeDef> > CNestedTypesList;
 	CNestedTypesList nestedTypes;					// all nested types
-	typedef vector<SField> CFieldsList;
+	typedef std::vector<SField> CFieldsList;
 	CFieldsList fields;										// complex type's fields
 	//
-	STypeStructBase( ETypeType _eType, const string &_szTypeName ): STypeDef( _eType ), szTypeName( _szTypeName ) {}
+	STypeStructBase( ETypeType _eType, const std::string &_szTypeName ): STypeDef( _eType ), szTypeName( _szTypeName ) {}
 	//
 	bool IsSimpleType() const { return false; }
-	const string GetTypeName() const { return szTypeName; }
+	const std::string GetTypeName() const { return szTypeName; }
 	//
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_UNKNOWN; }
 	void AddField( STypeDef *pType, 
-		             const string &szName, 
+		             const std::string &szName,
 								 const int nChunkID, 
-								 const wstring &wszDesc, 
+								 const std::wstring &wszDesc,
 		             SConstraints *pConstraints, 
 								 SAttributes *pAttributes,
 								 const CVariant &_vtDefVal = CVariant() );
@@ -388,7 +388,7 @@ struct STypeStruct : public STypeStructBase
 	OBJECT_NOCOPY_METHODS( STypeStruct );
 public:
 	STypeStruct(): STypeStructBase( TYPE_TYPE_STRUCT, "" ) {}
-	STypeStruct( const string &_szTypeName ): STypeStructBase( TYPE_TYPE_STRUCT, _szTypeName ) {}
+	STypeStruct( const std::string &_szTypeName ): STypeStructBase( TYPE_TYPE_STRUCT, _szTypeName ) {}
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -402,11 +402,11 @@ struct STypeClass : public STypeStructBase
 	OBJECT_NOCOPY_METHODS( STypeClass );
 public:
 	int nClassTypeID;
-	typedef vector< CPtr<STypeClass> > CDerivedTerminalTypesList;
+	typedef std::vector< CPtr<STypeClass> > CDerivedTerminalTypesList;
 	CDerivedTerminalTypesList derivedTerminalTypes;
 	//
 	STypeClass(): STypeStructBase( TYPE_TYPE_CLASS, "" ), nClassTypeID(-1) {}
-	STypeClass( const string &_szTypeName ): STypeStructBase( TYPE_TYPE_CLASS, _szTypeName ), nClassTypeID(-1) {}
+	STypeClass( const std::string &_szTypeName ): STypeStructBase( TYPE_TYPE_CLASS, _szTypeName ), nClassTypeID(-1) {}
 	//
 	void RegisterTerminalType( STypeClass *pClass = 0 );
 	//
@@ -436,9 +436,9 @@ public:
 	STypeArray( STypeDef *pType ): STypeDef( TYPE_TYPE_ARRAY ) { field.pType = pType; }
 	//
 	bool IsSimpleType() const { return false; }
-	const string GetTypeName() const { return "array"; }
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	const std::string GetTypeName() const { return "array"; }
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -462,11 +462,11 @@ public:
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_NEW_MULTI_REF; }
 	virtual CVariant GetDefaultValue() const { return CVariant(); }
 	int GetTypeSize() const { return sizeof(CDBPtr<CResource>); }
-	const string GetTypeName() const { return "ref"; }
-	void ToString( string *pRes, const CVariant &value ) const;
-	void FromString( CVariant *pRes, const string &szValue ) const;
+	const std::string GetTypeName() const { return "ref"; }
+	void ToString( std::string *pRes, const CVariant &value ) const;
+	void FromString( CVariant *pRes, const std::string &szValue ) const;
 	//
-	void GetRefTypesList( vector<const STypeClass *> *pTypesList ) const;
+	void GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const;
 	bool CheckRefType( const int nClassTypeID ) const;
 	//
 	int operator&( IXmlSaver &saver )
@@ -533,10 +533,10 @@ struct SConstraintsValuesList : public SConstraints
 {
 	OBJECT_NOCOPY_METHODS( SConstraintsValuesList );
 public:
-	vector<TYPE> values;
+	std::vector<TYPE> values;
 	//
 	SConstraintsValuesList() {}
-	SConstraintsValuesList( const vector<TYPE> &_values ): values( _values ) {}
+	SConstraintsValuesList( const std::vector<TYPE> &_values ): values( _values ) {}
 	//
 	bool CheckValueCorrect( const CVariant &value ) const 
 	{
@@ -590,7 +590,7 @@ struct SConstraintsString : public SConstraints
 {
 	OBJECT_NOCOPY_METHODS( SConstraintsString );
 public:
-	string szRegExp;
+	std::string szRegExp;
 	//
 	bool CheckValueCorrect( const CVariant &value ) const 
 	{

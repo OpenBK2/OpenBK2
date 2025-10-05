@@ -1,7 +1,7 @@
 void PostLoad( bool bInEditor )
 {
 	// remove empty reinforcements from PlayerInfo
-	for ( vector<CDBPtr<SReinforcement> >::iterator it = reinforcementTypes.begin(); it != reinforcementTypes.end(); )
+	for ( std::vector<CDBPtr<SReinforcement> >::iterator it = reinforcementTypes.begin(); it != reinforcementTypes.end(); )
 	{
 		if ( (*it) == 0 )
 		{

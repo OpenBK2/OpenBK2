@@ -282,7 +282,7 @@ bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pS
 	{
 		const bool bForceThickLock = dynamic_cast<const SFenceRPGStats*>( pStats ) != 0;
 		CPtr<CObjectProfile> pPassProfile = new CObjectProfile( pStats->GetPassProfile( nFrameIndex ), CVec3( vPos, 0.0f ), wDir, bForceThickLock );
-		const vector<SVector> &tiles = pPassProfile->GetTilesUnder();
+		const std::vector<SVector> &tiles = pPassProfile->GetTilesUnder();
 		for ( int i = 0; i < tiles.size(); ++i )
 		{
 			if ( GetTerrain()->IsLocked( tiles[i], EAC_TERRAIN ) )
@@ -360,9 +360,9 @@ void CGivenPassabilityStObject::GetRPGStats( SAINotifyRPGStats *pStats )
 	pStats->time = curTime;
 }
 
-void CGivenPassabilityStObject::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
+void CGivenPassabilityStObject::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
-	vector<NLock::SEntranceData> entrances;
+	std::vector<NLock::SEntranceData> entrances;
 	int nEntrances = GetNEntrancePoints();
 	entrances.resize( nEntrances );
 	for ( int i = 0; i < nEntrances; ++i )
@@ -386,7 +386,7 @@ void CGivenPassabilityStObject::CreateLockedTilesInfo( list<SObjTileInfo> *pTile
 
 void CGivenPassabilityStObject::LockTiles()
 {
-	list<SObjTileInfo> tiles;
+	std::list<SObjTileInfo> tiles;
 	CreateLockedTilesInfo( &tiles );
 	GetTerrain()->AddStaticObjectTiles( tiles );
 
@@ -404,7 +404,7 @@ void CGivenPassabilityStObject::UnlockTiles()
 		GetPassability( &pass );
 
 		const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
-		list<SObjTileInfo> tiles;
+		std::list<SObjTileInfo> tiles;
 		
 		// object lock mast changed since save created
 		if ( pass.GetMaxX() - pass.GetMinX() >= lockInfo.GetSizeX() ||
@@ -444,7 +444,7 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 	GetVisibility( &pass );
 
 	const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
-	list<SObjTileInfo> tiles;
+	std::list<SObjTileInfo> tiles;
 
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 	{
@@ -470,7 +470,7 @@ void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 	GetVisibility( &pass );
 
 	const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
-	list<SObjTileInfo> tiles;
+	std::list<SObjTileInfo> tiles;
 
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 	{
@@ -539,7 +539,7 @@ bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 	}
 }
 
-void CGivenPassabilityStObject::GetCoveredTiles( list<SVector> *pTiles ) const
+void CGivenPassabilityStObject::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	if ( g_bNewLock == 0 || GetPassProfile() == 0 )
 	{
@@ -564,7 +564,7 @@ void CGivenPassabilityStObject::GetCoveredTiles( list<SVector> *pTiles ) const
 	}
 	else
 	{
-		const vector<SVector> &tiles = GetPassProfile()->GetTilesUnder();
+		const std::vector<SVector> &tiles = GetPassProfile()->GetTilesUnder();
 		pTiles->clear();
 		pTiles->assign( tiles.begin(), tiles.end() );
 	}
@@ -572,7 +572,7 @@ void CGivenPassabilityStObject::GetCoveredTiles( list<SVector> *pTiles ) const
 
 const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) const
 {
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetCoveredTiles( &tiles );
 	CVec2 vBestPoint;
 	CVec2 vMidPoint( 0, 0 );
@@ -583,7 +583,7 @@ const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) co
 	{
 		float fMinDist2 = -1.0f;
 		int nTiles = 0;
-		for ( list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		for ( std::list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		{
 			++nTiles;
 			const CVec2 vIteratingPoint = AICellsTiles::GetPointByTile( *iter );

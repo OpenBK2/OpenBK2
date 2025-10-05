@@ -39,14 +39,14 @@ struct IInterfaceState : public CObjectBase
 	virtual const NDb::SGameRoot* GetGameRoot() const = 0;
 	virtual const NDb::SUIConstsB2* GetUIConsts() const = 0;
 
-	virtual CDBID GetScreenEntryDBID( const string &szName ) const = 0;
-	virtual const NDb::SUIScreenEntry* GetScreenEntry( const string &szName ) const = 0;
-	virtual const wstring& GetTextEntry( const string &szTextID ) const = 0;
-	virtual const NDb::SComplexSoundDesc* GetSoundEntry( const string &szName )	const = 0;
-	virtual const NDb::STexture* GetTextureEntry( const string &szID ) const = 0;
-	virtual const wstring& GetMPGameType( enum NDb::EMPGameType eType ) const = 0;
-	virtual wstring GetSeasonName( enum NDb::ESeason eSeason ) const = 0;
-	virtual wstring GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const = 0;
+	virtual CDBID GetScreenEntryDBID( const std::string &szName ) const = 0;
+	virtual const NDb::SUIScreenEntry* GetScreenEntry( const std::string &szName ) const = 0;
+	virtual const std::wstring& GetTextEntry( const std::string &szTextID ) const = 0;
+	virtual const NDb::SComplexSoundDesc* GetSoundEntry( const std::string &szName )	const = 0;
+	virtual const NDb::STexture* GetTextureEntry( const std::string &szID ) const = 0;
+	virtual const std::wstring& GetMPGameType( enum NDb::EMPGameType eType ) const = 0;
+	virtual std::wstring GetSeasonName( enum NDb::ESeason eSeason ) const = 0;
+	virtual std::wstring GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const = 0;
 
 	virtual NGScene::CScreenshotTexture* GetScreenShotTexture() = 0;
 
@@ -59,9 +59,9 @@ struct IInterfaceState : public CObjectBase
 	
 	//{ mission console
 	virtual void SetMissionConsoleColor( DWORD dwColor ) = 0;
-	virtual void WriteToMissionConsole( const wstring &wszText ) = 0;
-	virtual void WriteToMissionConsoleSelected( const wstring &wszText ) = 0;
-	virtual wstring GetMissionConsoleMLTag() const = 0;
+	virtual void WriteToMissionConsole( const std::wstring &wszText ) = 0;
+	virtual void WriteToMissionConsoleSelected( const std::wstring &wszText ) = 0;
+	virtual std::wstring GetMissionConsoleMLTag() const = 0;
 	//}
 	
 	virtual bool IsSuppressEnableFocus() const = 0;
@@ -69,7 +69,7 @@ struct IInterfaceState : public CObjectBase
 
 	// closing interfaces in a bunch
 	virtual void SendCommandsToCloseAllIncluding( struct IInterfaceBase * pLastInterfaceToClose ) = 0;
-	virtual void SendCommandsToCloseAllIncluding( const string &szInterfaceID ) = 0;
+	virtual void SendCommandsToCloseAllIncluding( const std::string &szInterfaceID ) = 0;
 	
 	virtual void MakeScenarioTracker( EScenarioTrackerType eType ) = 0;
 	virtual void VerifyScenarioTracker( EScenarioTrackerType eType ) const = 0; // sanity check
@@ -85,20 +85,20 @@ struct IInterfaceState : public CObjectBase
 	
 	virtual const NDb::STexture* GetMenuBackgroundTexture() const = 0;
 
-	virtual wstring GetRandomCitation() = 0;
+	virtual std::wstring GetRandomCitation() = 0;
 	
-	virtual int GetAndRegisterIDForMLHandler( const vector< pair<wstring, wstring> > &params ) = 0;
+	virtual int GetAndRegisterIDForMLHandler( const std::vector< std::pair<std::wstring, std::wstring> > &params ) = 0;
 	virtual void UnregisterIDForMLHandler( int nID ) = 0;
-	virtual const wstring& ExpandMLTag( const wstring &wszTag, int nIDForHandler ) const = 0;
+	virtual const std::wstring& ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const = 0;
 	
 	// push/pop mp chat messages with tags (color etc.)
 	//
-	virtual void AddMPChatMessage( const wstring &wszText ) = 0;
-	virtual wstring GetMPChatMessage() = 0;
+	virtual void AddMPChatMessage( const std::wstring &wszText ) = 0;
+	virtual std::wstring GetMPChatMessage() = 0;
 	virtual void ClearMPChatMessages() = 0;
 
 	// проверяет текст, заменяя запрещенные вхождения на спец. символы
-	virtual wstring FilterMPChatText( const wstring &wszText ) = 0;
+	virtual std::wstring FilterMPChatText( const std::wstring &wszText ) = 0;
 	
 	virtual int GetTutorialRecommendedMission() const = 0;
 	virtual void MarkTutorialRecommendedMission( int nMission ) = 0;

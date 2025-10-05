@@ -92,7 +92,7 @@ void CVisSurfPatch::Recalc()
 }
 
 
-static void AddPoints( const CVec2 &vWind, const vector<NDb::SVSOPoint> &points, CVisSurfPatch *pCurPatch )
+static void AddPoints( const CVec2 &vWind, const std::vector<NDb::SVSOPoint> &points, CVisSurfPatch *pCurPatch )
 {
 	NGScene::SVertex vert;
 	vert.texU.dw = 0xffffffff;
@@ -197,11 +197,11 @@ static void AddPoints( const CVec2 &vWind, const vector<NDb::SVSOPoint> &points,
 }
 
 
-void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene )
+void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const std::vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene )
 {
 	pGScene = _pGScene;
 
-	static vector<NDb::SVSOPoint> points( 1024 );
+	static std::vector<NDb::SVSOPoint> points( 1024 );
 	CVisSurfPatch *pCurPatch;
 
 	CVec2 vBBMin, vBBMax;
@@ -211,14 +211,14 @@ void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const ve
 	surfPatches.resize( 0 );
 	surfPatchesBounds.resize( 0 );
 
-	for ( vector<NWaterStuff::SSurfBorder>::const_iterator it = borders.begin(); it != borders.end(); ++it )
+	for ( std::vector<NWaterStuff::SSurfBorder>::const_iterator it = borders.begin(); it != borders.end(); ++it )
 	{
 		points = it->points;
 
 		vBBMin.Set( FP_MAX_VALUE, FP_MAX_VALUE );
 		vBBMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE );
 
-		for ( vector<NDb::SVSOPoint>::iterator it = points.begin(); it != points.end(); ++it )
+		for ( std::vector<NDb::SVSOPoint>::iterator it = points.begin(); it != points.end(); ++it )
 		{
 			AI2Vis( &(it->vPos) );
 			//it->vPos += it->vNorm * DEF_WATER_BLENDING_DIST * 0.5f;

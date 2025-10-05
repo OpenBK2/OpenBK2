@@ -38,15 +38,15 @@ class CPerPolyDecal : public CPtrFuncBase<CObjectInfo>
 	ZDATA
 	CPtr<IPart> pPart;
 	CObjectInfo::SData data;
-	vector<CVec3> srcPositions;
+	std::vector<CVec3> srcPositions;
 public:
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pPart); f.Add(3,&data); f.Add(4,&srcPositions); return 0; }
 protected:
 	virtual void Recalc();
-	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions ) = 0;
+	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions ) = 0;
 public:
 	CPerPolyDecal() {}
-	CPerPolyDecal( IPart *pPart, const vector<CVec3> &_srcPositions );
+	CPerPolyDecal( IPart *pPart, const std::vector<CVec3> &_srcPositions );
 };
 
 class CExplosionDecalGeometry : public CPerPolyDecal
@@ -58,10 +58,10 @@ class CExplosionDecalGeometry : public CPerPolyDecal
 public:
 	ZEND int operator&( CStructureSaver &f ) { f.Add(1,(CPerPolyDecal*)this); f.Add(2,&vOrigin); f.Add(3,&fSize); f.Add(4,&fRotation); return 0; }
 protected:
-	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions );
+	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions );
 public:
 	CExplosionDecalGeometry() {}
-	CExplosionDecalGeometry( IPart *_pPart, const vector<CVec3> &positions, const CVec3 &_vOrigin, float _fSize, float _fRotation )
+	CExplosionDecalGeometry( IPart *_pPart, const std::vector<CVec3> &positions, const CVec3 &_vOrigin, float _fSize, float _fRotation )
 		: CPerPolyDecal(_pPart, positions), vOrigin(_vOrigin), fSize(_fSize), fRotation(_fRotation) {}
 };
 
@@ -76,10 +76,10 @@ class CPerPolyDecalGeometry: public CPerPolyDecal
 public:
 	ZEND int operator&( CStructureSaver &f ) { f.Add(1,(CPerPolyDecal*)this); f.Add(2,&vOrigin); f.Add(3,&vNormal); f.Add(4,&vSize); f.Add(5,&fRotation); f.Add(6,&vShift); return 0; }
 protected:
-	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions );
+	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions );
 public:
 	CPerPolyDecalGeometry() {}
-	CPerPolyDecalGeometry( IPart *_pPart, const vector<CVec3> &positions,
+	CPerPolyDecalGeometry( IPart *_pPart, const std::vector<CVec3> &positions,
 		const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fRotation, const CVec2 &_vShift = VNULL2 )
 		: CPerPolyDecal(_pPart, positions), vOrigin(_vOrigin), vNormal(_vNormal), vSize(_vSize), fRotation(_fRotation), vShift(_vShift) {}
 };

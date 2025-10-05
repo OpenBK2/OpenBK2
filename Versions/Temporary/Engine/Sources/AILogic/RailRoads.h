@@ -7,7 +7,7 @@ struct SRailRoadSystem
 	{
 		ZDATA
 		CDBPtr<SVSODesc>	pDescriptor;
-		vector<SVSOPoint> points;
+		std::vector<SVSOPoint> points;
 		float							fPointLength;					// Length between two points
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pDescriptor); f.Add(3,&points); f.Add(4,&fPointLength); return 0; }
 
@@ -15,7 +15,7 @@ struct SRailRoadSystem
 		const CVec2 GetPoint( const float fPos ) const;
 		const float GetTrackLength() const { return ( points.size() - 1 ) * fPointLength; }
 	};
-	typedef vector< SRRInstance > CRRSegments;
+	typedef std::vector< SRRInstance > CRRSegments;
 	ZDATA
 	CRRSegments segments;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&segments); return 0; }

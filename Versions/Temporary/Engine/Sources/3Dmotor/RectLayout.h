@@ -37,7 +37,7 @@ public:
 			:fX(_fX), fY(_fY), fSizeX( _fSizeX ), fSizeY( _fSizeY ), sTex(_sTex), sColor(_sColor) {}
 	};
 	ZDATA
-	vector<SRect> rects;
+	std::vector<SRect> rects;
 	float fZ;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&rects); f.Add(3,&fZ); return 0; }
 	//

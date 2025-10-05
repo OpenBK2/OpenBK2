@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SAnimAABB::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAnimAABB::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis ); 

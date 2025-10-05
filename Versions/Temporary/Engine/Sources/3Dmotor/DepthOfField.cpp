@@ -70,7 +70,7 @@ void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pSce
 		rc.ClearBuffers( 0x00ffffff );
 
 		CRenderCmdList lightOps;
-		const vector<SRenderFragmentInfo*> &fragments = pScene->GetFragments();
+		const std::vector<SRenderFragmentInfo*> &fragments = pScene->GetFragments();
 
 		for ( int k = 0; k < fragments.size(); ++k )
 		{
@@ -97,7 +97,7 @@ void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pSce
 			const int nHeight = rectReg.Height();
 			CTRect<float> rectRegDS( 0, 0, nWidth, nHeight );
 
-			vector<CPtr<NGfx::I2DEffect> > filters;
+			std::vector<CPtr<NGfx::I2DEffect> > filters;
 			filters.push_back( new CDepthOfFieldEffect( NGfx::GetRegisterTexture( 0 ), NGfx::GetRegisterTexture( 1 ), nWidth, nHeight ) );
 
 			CTRect<float> rectSrc( rectReg ), rectDst( rectRegDS );

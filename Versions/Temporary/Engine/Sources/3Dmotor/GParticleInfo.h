@@ -71,7 +71,7 @@ public:
 	const CVec3& GetDepth() const { return GetOrientationInfo().vDepth; }
 	virtual void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tex,
 		float fDepth ) = 0;
-	virtual void SampleWarFog( const vector<CVec3> &vPos, vector<float> *pRes ) = 0;
+	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) = 0;
 };
 
 class IParticleFilter;
@@ -80,7 +80,7 @@ class CParticleEffect : public CObjectBase
 public:
 	bool bEnd; // true if effect finished
 	int nGrassSize;
-	vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textures;
+	std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textures;
 	CObj<IParticleFilter> pFilter;
 
 	// function should be const but it is impossible due to DGPtrs presence
@@ -109,15 +109,15 @@ public:
 	float fScale;
 	bool bLeaveParticlesWhereStarted, bSampleCenterWarfog;
 
-	vector<vector<SHMatrix> > transforms;
-	vector<vector<char> > doneTransforms;
-	vector<int> particlesFrames;
+	std::vector<std::vector<SHMatrix> > transforms;
+	std::vector<std::vector<char> > doneTransforms;
+	std::vector<int> particlesFrames;
 
 	float fTStopGeneration;
 	int nStopCycle;
 
 	SHMatrix transform;
-	vector<SParticleFrame> frames;
+	std::vector<SParticleFrame> frames;
 	CDGPtr< CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo> > > pInfo;
 	CVec2 vWrap;
 
@@ -135,9 +135,9 @@ class CRainParticleEffect : public CParticleEffect
 	OBJECT_BASIC_METHODS(CRainParticleEffect );
 	void AddParticles( IParticleOutput *pRender );
 public:
-	vector<CVec3> positions;
-	vector<char> faces;
-	vector<CVec3> directions;
+	std::vector<CVec3> positions;
+	std::vector<char> faces;
+	std::vector<CVec3> directions;
 //	CDGPtr< CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo> > > pInfo;
 };
 

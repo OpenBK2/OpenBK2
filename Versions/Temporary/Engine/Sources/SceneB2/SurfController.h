@@ -28,7 +28,7 @@ protected:
 	bool NeedUpdate() { return pTimer == 0 ? bUpdate : pTimer.Refresh(); }
 public:
 	NMeshData::SMeshData data;
-	vector<float> texYOffsets;
+	std::vector<float> texYOffsets;
 	//
 	CVisSurfPatch( CFuncBase<STime> *_pTimer, const CVec2 &vBounds )
 		: bUpdate( true ), pTimer( _pTimer ), vMaxMapCoords( vBounds ) {}
@@ -38,13 +38,13 @@ typedef NMeshData::SPatchHolder<CVisSurfPatch> CVisSurfPatchHolder;
 class CSurfController
 {
 	CObj<NGScene::IGameView> pGScene;
-	vector<CVisSurfPatchHolder> surfPatches;
-	vector<CObj<CCSBound> > surfPatchesBounds;
+	std::vector<CVisSurfPatchHolder> surfPatches;
+	std::vector<CObj<CCSBound> > surfPatchesBounds;
 	//
 	CPtr<CFuncBase<STime> > pTimer;
 public:
 	CSurfController() {}
-	void Init( const float fAngle, const CVec2i &vMapSize, const vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene );
+	void Init( const float fAngle, const CVec2i &vMapSize, const std::vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene );
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
 };
 

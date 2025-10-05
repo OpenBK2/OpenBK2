@@ -28,10 +28,10 @@ class COMMON_RTS_AI_EXPORT CStandartPath2 : public IPath
 		CVec2 vShift;
 		SVector vShiftTile;
 
-		vector<SVector> insTiles;
+		std::vector<SVector> insTiles;
 		int nCurInsTile;
 
-		vector<SVector> pathTiles;
+		std::vector<SVector> pathTiles;
 		int nCurPathTile;
 		int nLastPathTile;
 
@@ -70,7 +70,7 @@ public:
 	//! пересчитать путь из новой точки ( vPoint )
 	void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile );
 	//! добавить тайлы в начало пути, для нормального продолжения после InsertTiles необходимо вызвать RecoverPath
-	void InsertTiles( const list<SVector> &tiles );
+	void InsertTiles( const std::list<SVector> &tiles );
 	//! можно ли проехать весь путь задом
 	const bool CanGoBackward( const CBasePathUnit *pUnit ) const;
   //! необходимо проверить можно ли развернуться для того, что бы ехать по данному пути

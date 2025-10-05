@@ -191,7 +191,7 @@ bool CMOEntrenchment::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdat
 
 void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, const bool bDigBySegment /*= false*/ )
 { 
-	vector<CVec2> pts;
+	std::vector<CVec2> pts;
 	CVec2	vStart, vEnd;
 	float fWidth = 0.0f;
 

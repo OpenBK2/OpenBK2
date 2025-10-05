@@ -10,7 +10,7 @@
 struct SLogEntry
 {
 	ZDATA
-	string szName;
+	std::string szName;
 	bool bLooped;
 	int nStartPos;
 	unsigned long nStartTime;
@@ -23,7 +23,7 @@ struct SLogEntry
 class CPlayLog
 {
 	ZDATA
-	vector<SLogEntry> log;
+	std::vector<SLogEntry> log;
 	int nCurPos;
 	bool bLogIsFull;
 	
@@ -35,14 +35,14 @@ class CPlayLog
 public:
 	CPlayLog();
 	void ClearLog();
-	void Add( const string &szName, bool bLooped, int nStartPos );
-	void SaveToFile( const string &szFilename );
-	void PlayFile( const string &szFileName, int nMaxSize );
+	void Add( const std::string &szName, bool bLooped, int nStartPos );
+	void SaveToFile( const std::string &szFilename );
+	void PlayFile( const std::string &szFileName, int nMaxSize );
 };
 #endif 
 
-typedef hash_map<ISound*, int, SDefaultPtrHash> CSoundChannelMap;
-typedef hash_map<int, CPtr<ISound> > CChannelSoundMap;
+typedef std::unordered_map<ISound*, int, SDefaultPtrHash> CSoundChannelMap;
+typedef std::unordered_map<int, CPtr<ISound> > CChannelSoundMap;
 
 class CSoundEngine : public ISFX
 {
@@ -50,14 +50,14 @@ class CSoundEngine : public ISFX
 	//
 	struct SDriverInfo
 	{
-		string szDriverName;
+		std::string szDriverName;
 		bool isHardware3DAccelerated;				// this driver supports hardware accelerated 3d sound.
 		bool supportEAXReverb;							// this driver supports EAX reverb
 		bool supportReverb;									// this driver supports EAX2/A3D3 reverb  
 		bool supportEAX3;										// this driver supports EAX3
 	};
 	// initialization info - drivers
-	typedef vector<SDriverInfo> CDriversInfo;
+	typedef std::vector<SDriverInfo> CDriversInfo;
 	CDriversInfo drivers;									// [0] is default driver
 	//
 	NTimer::STime timeLastUpdate;

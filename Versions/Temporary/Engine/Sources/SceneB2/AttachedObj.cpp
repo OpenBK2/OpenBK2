@@ -224,7 +224,7 @@ void CAttachedLightEffectTransform::Recalc()
 
 // CConstantOffsetTransform
 
-CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform )
+CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform )
 	: pBaseTransform( _pBaseTransform ),
 	nTargetID( _nTargetID ),
 	szBoneName( _szBoneName ),
@@ -234,7 +234,7 @@ CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const 
 	Identity( &mMultiplier );
 }
 
-CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName,
+CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName,
 																									  CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform )
 	: pBaseTransform( _pBaseTransform ),
 	nTargetID( _nTargetID ),
@@ -256,7 +256,7 @@ void CConstantOffsetTransform::Recalc()
 			bNeedCalcMatrix = false;
 		if ( pParentTransform )
 		{
-			string szParentBone = pParentTransform->szBoneName;
+			std::string szParentBone = pParentTransform->szBoneName;
 			NAnimation::ISkeletonAnimator *pParentAnimator = Scene()->GetAnimator( nTargetID, szParentBone );
 			SHMatrix mParent;
 

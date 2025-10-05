@@ -21,6 +21,8 @@
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
+#include <algorithm>
+
 extern NAI::CTimeCounter timeCounter;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
@@ -360,7 +362,7 @@ void CResupplyCellInfo::AddUnitResupply( CCommonUnit *pUnit, const enum EResuppl
 
 		// if this unit doesn't exist, create it.
 		if ( resupplyInfo.find( nID ) == resupplyInfo.end() )
-			resupplyInfo.insert( pair<int,BYTE>( nID,0) );
+			resupplyInfo.insert( std::pair<int,BYTE>( nID,0) );
 
 		if ( !(resupplyInfo[nID] & (1<<eType)) )
 		{
@@ -908,13 +910,13 @@ void CGeneralIntendant::Segment()
 	if ( !cellsWithRequests.empty() && cResupplyPossible ) 
 	{
 		// prioritize tasks to resupply
-		vector< CPtr<CResupplyCellInfo> > cellsToSort;
+		std::vector< CPtr<CResupplyCellInfo> > cellsToSort;
 		cellsToSort.resize( cellsWithRequests.size() );
 		int i = 0;
 		for ( ResupplyCells::iterator it = cellsWithRequests.begin(); it != cellsWithRequests.end(); ++it )
 			cellsToSort[i++] = it->second;
 		CResupplyCellInfo::SSortByResupplyMaskPredicate pr( cResupplyPossible );
-		sort( cellsToSort.begin(), cellsToSort.end(), pr );
+		std::sort( cellsToSort.begin(), cellsToSort.end(), pr );
 		// done, cellsToSort now contains prioritized tasks
 
 		// check if some arrays need some kind of resupply.

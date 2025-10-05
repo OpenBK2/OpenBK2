@@ -12,7 +12,7 @@ struct SVec4Hash
 };
 struct SPostProcessData
 {
-	typedef hash_map<CVec4, vector<IPostProcess::SObject>, SVec4Hash > CColorHash;
+	typedef std::unordered_map<CVec4, std::vector<IPostProcess::SObject>, SVec4Hash > CColorHash;
 	CColorHash postColorer;
 	CColorHash occluded;
 };
@@ -26,7 +26,7 @@ class CPostColorer : public IPostProcess
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pColor); return 0; }
 public:
 	CPostColorer( CFuncBase<CVec4> *_p = 0 ) : pColor(_p) {}
-	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render );
+	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };
 
 class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
@@ -37,7 +37,7 @@ class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pColor); return 0; }
 public:
 	COccludedColorer( CFuncBase<CVec4> *_p = 0 ) : pColor(_p) {}
-	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render );
+	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };
 
 }

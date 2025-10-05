@@ -186,7 +186,7 @@ bool CWindowListHeader::OnMouseMove( const CVec2 &vPos, const int nButton )
 	return false;
 }
 
-pair<int,bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos ) const
+std::pair<int,bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos ) const
 {
 	CTRect<float> rc;
 	FillWindowRect( &rc );
@@ -200,11 +200,11 @@ pair<int,bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos ) cons
 		if ( abs(nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
 		{
 			if ( nXSoFar < nX && nNextX < nX && i+1 < columnSizes.size() ) // next column is very narrow or 0
-				return pair<int,bool>( i+1, true );
-			return pair<int,bool>( i, false );
+				return std::pair<int,bool>( i+1, true );
+			return std::pair<int,bool>( i, false );
 		}
 	}
-	return pair<int,bool>( -1, false );
+	return std::pair<int,bool>( -1, false );
 }
 
 void CWindowListHeader::UpdateSortButton()
@@ -344,7 +344,7 @@ void CWindowListItem::MakeInterior( const int nColumns )
 	}
 }
 
-void CWindowListItem::SetColumnSizes( const vector<int> &sizes )
+void CWindowListItem::SetColumnSizes( const std::vector<int> &sizes )
 {
 	int nPosSoFar = 0;
 	for ( int i = 0; i < sizes.size(); ++i )
@@ -471,7 +471,7 @@ void CWindowListCtrl::RemoveItem( IListControlItem *pItem )
 	}
 }
 
-void CWindowListCtrl::ColumnsResized( const vector<int> &sizes )
+void CWindowListCtrl::ColumnsResized( const std::vector<int> &sizes )
 {
 	for ( CItems::iterator it = items.begin(); it != items.end(); ++it )
 	{

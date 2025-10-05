@@ -12,7 +12,7 @@
 // **
 // ************************************************************************************************************************ //
 
-CRegisterGroupCommand::CRegisterGroupCommand( const vector<int> &vIDs, const int _nID )
+CRegisterGroupCommand::CRegisterGroupCommand( const std::vector<int> &vIDs, const int _nID )
 : nID( _nID ), unitsIDs( vIDs )
 {
 }

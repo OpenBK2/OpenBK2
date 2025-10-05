@@ -30,6 +30,6 @@ namespace NGScene
 		int frame_;
 	};
 	
-	UI_EXPORT IVideoPlayer * CreateVideoPlayer(string filename, int flags);
+	UI_EXPORT IVideoPlayer * CreateVideoPlayer(std::string filename, int flags);
 }
 

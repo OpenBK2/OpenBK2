@@ -20,7 +20,7 @@ namespace NDb
 
 namespace NGScene
 {
-typedef vector<SHMatrix> SSkeletonMatrices;
+typedef std::vector<SHMatrix> SSkeletonMatrices;
 }
 
 namespace NAnimation
@@ -52,7 +52,7 @@ CPtrFuncBase<CGrannyFileInfo> *GetSkeletonFileInfo( const NDb::SSkeleton *pSkele
 struct IGetBone
 {
 	virtual int GetBoneIndex( const char *pszName ) = 0;
-	virtual void GetBoneNames( vector<string> *pBoneNames ) = 0;
+	virtual void GetBoneNames( std::vector<std::string> *pBoneNames ) = 0;
 };
 
 }

@@ -22,7 +22,7 @@ class CWindowConsole : public CWindow, public IConsole
 	{
 	public:
 		ZDATA
-		wstring szString;
+		std::wstring szString;
 		DWORD dwColor;
 		CPtr<IML> pGfxText;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szString); f.Add(3,&dwColor); f.Add(4,&pGfxText); return 0; }
@@ -31,9 +31,9 @@ class CWindowConsole : public CWindow, public IConsole
 		SColorString( const wchar_t *pszStr, DWORD col, const int nWidth );
 	};
 	
-	typedef vector<wstring> CVectorOfStrings;
-	typedef vector<SColorString> CVectorOfColorStrings;
-	typedef hash_set<string> CConsoleFunctions;
+	typedef std::vector<std::wstring> CVectorOfStrings;
+	typedef std::vector<SColorString> CVectorOfColorStrings;
+	typedef std::unordered_set<std::string> CConsoleFunctions;
 	
 	ZDATA_ (CWindow)
 	CDBPtr<NDb::SWindowConsoleShared> pShared;
@@ -50,7 +50,7 @@ class CWindowConsole : public CWindow, public IConsole
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pShared); f.Add(3,&pInstance); f.Add(4,&pUpperSign); f.Add(5,&vectorOfStrings); f.Add(6,&vectorOfCommands); f.Add(7,&consoleFunctions); f.Add(8,&pEditLine); f.Add(9,&currTime); f.Add(10,&nBeginString); f.Add(11,&nBeginCommand); f.Add(12,&nConsoleSequenceID); return 0; }
 
 	//это дело вызывается после считывания новой комманды из буфера
-	void ParseCommand( const wstring &szCommand );
+	void ParseCommand( const std::wstring &szCommand );
 	void ReadConsoleStrings();
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }

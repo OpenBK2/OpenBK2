@@ -236,7 +236,7 @@ void CInterfaceSingleStatistic::MakeCustomMissionStatistics()
 	const int nLocalPlayer = pST->GetLocalPlayer();
 
 	int nTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_TIME );
-	wstring wszTime = GetFormattedTime( nTime );
+	std::wstring wszTime = GetFormattedTime( nTime );
 	if ( pMissionTimeView )
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + wszTime );
 	if ( pCampaignTimeView )
@@ -257,19 +257,19 @@ void CInterfaceSingleStatistic::MakeCampaignStatistics()
 
 	ExpProgressStep();
 
-	wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d", 
+	std::wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d",
 		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pExpView )
 		pExpView->SetText( pExpView->GetDBText() + wszRankHP );
 
 	int nTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_TIME );
-	wstring wszTime = GetFormattedTime( nTime );
+	std::wstring wszTime = GetFormattedTime( nTime );
 	if ( pMissionTimeView )
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + wszTime );
 
 	int nCampaignTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_TIME );
-	wstring wszCampaignTime = GetFormattedTime( nCampaignTime );
+	std::wstring wszCampaignTime = GetFormattedTime( nCampaignTime );
 	if ( pCampaignTimeView )
 		pCampaignTimeView->SetText( pCampaignTimeView->GetDBText() + wszCampaignTime );
 
@@ -342,14 +342,14 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb::SMapPlayerInfo &dbPlayer, 
 	bool bPlayer, bool bChapter )
 {
-	wstring wszPlayerName;
+	std::wstring wszPlayerName;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(dbPlayer.,LocalizedPlayerName) )
 		wszPlayerName = GET_TEXT_PRE(dbPlayer.,LocalizedPlayerName);
 	if ( bPlayer && wszPlayerName.empty() )
 		wszPlayerName = NGlobal::GetVar( "profile_name", L"" );
 
-	wstring wszRankTag;
-	wstring wszPlayerRank;
+	std::wstring wszRankTag;
+	std::wstring wszPlayerRank;
 	if ( bPlayer && bChapter )
 	{
 		IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -367,9 +367,9 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb
 	}
 	if ( !wszRankTag.empty() )
 	{
-		vector< pair<wstring, wstring> > params;
-		params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_PLAYER_NAME, wszPlayerName ) );
-		params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_PLAYER_RANK, wszPlayerRank ) );
+		std::vector< std::pair<std::wstring, std::wstring> > params;
+		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_PLAYER_NAME, wszPlayerName ) );
+		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_PLAYER_RANK, wszPlayerRank ) );
 		SetDynamicTextView( player.pNameView, params );
 		if ( player.pNameView )
 			player.pNameView->SetText( wszRankTag );
@@ -424,7 +424,7 @@ void CInterfaceSingleStatistic::MakeReinf()
 			reinf.pIconWnd->SetTexture( pReinf->pIconTexture );
 		if ( reinf.pBtn )
 		{
-			wstring wszTooltip;
+			std::wstring wszTooltip;
 			if ( bUpgrade )
 				wszTooltip = GetScreen()->GetTextEntry( "TOOLTIP_PREFIX_UPGRADE" );
 			else
@@ -437,7 +437,7 @@ void CInterfaceSingleStatistic::MakeReinf()
 
 		if ( reinf.pNameView )
 		{
-			wstring wszName;
+			std::wstring wszName;
 			if ( bUpgrade )
 				wszName = GetScreen()->GetTextEntry( "T_PREFIX_UPGRADE" );
 			else
@@ -452,7 +452,7 @@ void CInterfaceSingleStatistic::MakeReinf()
 	}
 }
 
-bool CInterfaceSingleStatistic::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceSingleStatistic::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_next" )
 		return OnMenuNext();
@@ -485,7 +485,7 @@ bool CInterfaceSingleStatistic::Execute( const string &szSender, const string &s
 	return false;
 }
 
-int CInterfaceSingleStatistic::Check( const string &szCheckName ) const
+int CInterfaceSingleStatistic::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -661,7 +661,7 @@ bool CInterfaceSingleStatistic::OnNewRankDialogClose()
 	return true;
 }
 
-bool CInterfaceSingleStatistic::OnReinfClick( const string &szSender )
+bool CInterfaceSingleStatistic::OnReinfClick( const std::string &szSender )
 {
 	for ( int i = 0; i < reinfs.size(); ++i )
 	{
@@ -686,7 +686,7 @@ bool CInterfaceSingleStatistic::OnChapterReinfClose()
 	return true;
 }
 
-bool CInterfaceSingleStatistic::OnChapterReinfUnitBtn( const string &szSender )
+bool CInterfaceSingleStatistic::OnChapterReinfUnitBtn( const std::string &szSender )
 {
 	pChapterReinfUpgrade->UnitBtnPressed( szSender );
 	
@@ -704,7 +704,7 @@ void CInterfaceSingleStatistic::NextMenu()
 
 		NGlobal::SetVar( "DEMO_MODE_CONTINUE_MOVIE", 1 );
 
-		const string szParam = "Movies\\demo_outro.xml;demo_campaign_selection_menu";
+		const std::string szParam = "Movies\\demo_outro.xml;demo_campaign_selection_menu";
 
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szParam.c_str() );
@@ -734,9 +734,9 @@ void CInterfaceSingleStatistic::NextMenu()
 	}
 }
 
-wstring CInterfaceSingleStatistic::GetFormattedTime( int nTime ) const
+std::wstring CInterfaceSingleStatistic::GetFormattedTime( int nTime ) const
 {
-	wstring wszTime = NStr::ToUnicode( StrFmt( "%d", nTime % 60 ) ) + wszTime3;
+	std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d", nTime % 60 ) ) + wszTime3;
 	nTime /= 60;
 	if ( nTime > 0 )
 	{
@@ -804,7 +804,7 @@ void CInterfaceSingleStatistic::ShowNewRank( const NDb::SPlayerRank *pRank )
 	if ( pNewRankIconWnd )
 		pNewRankIconWnd->SetTexture( pRank ? pRank->pStrap : 0 );
 
-	wstring wszRank;
+	std::wstring wszRank;
 	if ( pRank && CHECK_TEXT_NOT_EMPTY_PRE(pRank->,RankName) )
 		wszRank = GET_TEXT_PRE(pRank->,RankName);
 	if ( pNewRankView )
@@ -819,13 +819,13 @@ void CInterfaceSingleStatistic::ShowMedal( const NDb::SMedal *pMedal )
 	if ( pMedalIconWnd )
 		pMedalIconWnd->SetTexture( pMedal ? pMedal->pPictureTexture : 0 );
 		
-	wstring wszName;
+	std::wstring wszName;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedName) )
 		wszName = GET_TEXT_PRE(pMedal->,LocalizedName);
 	if ( pMedalNameView )
 		pMedalNameView->SetText( pMedalNameView->GetDBText() + wszName );
 		
-	wstring wszDesc;
+	std::wstring wszDesc;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedDesc) )
 		wszDesc = GET_TEXT_PRE(pMedal->,LocalizedDesc);
 	if ( pMedalDescView )

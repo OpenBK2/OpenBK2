@@ -215,7 +215,7 @@ void lua_pushnumber (lua_State *L, double n) {
 
 
 void lua_pushlstring (lua_State *L, const char *s, size_t len) {
-	string szSemi( s, len );
+	std::string szSemi( s, len );
   LObj(L, L->pCT->top)->SetS( luaS_newlstr(L, szSemi.c_str()) );
   api_incr_top(L);
 }

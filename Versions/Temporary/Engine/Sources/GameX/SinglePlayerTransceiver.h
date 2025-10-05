@@ -37,7 +37,7 @@ public:
 	// client commands
 	void CommandClientTogglePause();
 	void CommandClientSpeed( int nChange );
-	void CommandClientDropPlayer( const wstring &szPlayerNick ) {}
+	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
 	void CommandTimeOut( bool bSet ) {}
 
 	ICheckSumLog *GetCheckSumLogger() { return pCmdsHistory; }

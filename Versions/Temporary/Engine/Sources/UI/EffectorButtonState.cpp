@@ -21,7 +21,7 @@ bool CEffectorButtonState::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
+void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
 { 
 	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate*>( _pCmd ) );
 	eSubstate = pCmd->eSubstate;

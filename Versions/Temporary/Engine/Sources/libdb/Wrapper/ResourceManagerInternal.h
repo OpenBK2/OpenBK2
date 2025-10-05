@@ -5,8 +5,8 @@ class CResourceManagerWrapper : public IResourceManager
 {
 	OBJECT_NOCOPY_METHODS( CResourceManagerWrapper )
 	//
-	string szSrcPath;
-	string szDstPath;
+	std::string szSrcPath;
+	std::string szDstPath;
 
 
 public:
@@ -15,27 +15,27 @@ public:
 
 	// IResourceManager
 	IManipulator* CreateTableManipulator();
-	IManipulator* CreateFolderManipulator( const string &szName );
+	IManipulator* CreateFolderManipulator( const std::string &szName );
 	IManipulator* CreateFolderManipulator( int nID );
-	IManipulator* CreateObjectManipulator( const string &szTypeName, const string &szObjectName );
-	IManipulator* CreateObjectManipulator( const string &szTypeName, int nID );
+	IManipulator* CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName );
+	IManipulator* CreateObjectManipulator( const std::string &szTypeName, int nID );
 	IManipulator* CreateObjectManipulator( int nTypeID, int nID );
-	IManipulator* CreateObjectManipulator( const string &szTypeName, const CDBID &rCDBID );
-	IManipulator* CreateObjectManipulator( const string &szObjectName );
+	IManipulator* CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID );
+	IManipulator* CreateObjectManipulator( const std::string &szObjectName );
 	IManipulator* CreateObjectManipulator( const CDBID &rCDBID );
 
 	bool SerializeObject( CDataStream *pStream, int nTypeID, int nObjectID );
-	void SerializeObjects( const string &szFile );
-	void SerializeObjects( const string &szFile, const string &szTypeName, const string &szRootObject );
+	void SerializeObjects( const std::string &szFile );
+	void SerializeObjects( const std::string &szFile, const std::string &szTypeName, const std::string &szRootObject );
 
 	void SetConfig( const SDBConfig &config );
 
-	void SetDefControls( const string &szFileName );
-	void FillReferencingObjects( bool *pServiceIsReady, const string &szTypeName, const string &szObjectName, list<string> &results );
-	bool HasReferencingObjects( bool *pServiceIsReady, const string &szTypeName, int nObjectID );
+	void SetDefControls( const std::string &szFileName );
+	void FillReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results );
+	bool HasReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, int nObjectID );
 	void ResetCache();
 
-	virtual void SetDataDir( const string &szDataDir );
+	virtual void SetDataDir( const std::string &szDataDir );
 
 	virtual void SyncDB();
 	virtual bool CanSyncDB();

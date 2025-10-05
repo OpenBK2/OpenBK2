@@ -11,8 +11,8 @@ public:
 	typedef const type_info *VFT;
 private:
 	typedef T* (*newFunc)();
-	typedef hash_map<int, newFunc> CTypeNewHash;                // typeID->newFunc()
-	typedef hash_map<VFT, int, SDefaultPtrHash> CTypeIndexHash; // vftable->typeID
+	typedef std::unordered_map<int, newFunc> CTypeNewHash;                // typeID->newFunc()
+	typedef std::unordered_map<VFT, int, SDefaultPtrHash> CTypeIndexHash; // vftable->typeID
 
 	CTypeIndexHash typeIndex;
 	CTypeNewHash typeInfo;
@@ -46,7 +46,7 @@ public:
 	void UnregisterTypeBase( int nTypeID, VFT vft )
 	{
 		typeInfo.erase( nTypeID );
-		vector<VFT> toErase;
+		std::vector<VFT> toErase;
 		for ( CTypeIndexHash::iterator i = typeIndex.begin(); i != typeIndex.end(); ++i )
 		{
 			if ( *i->first == *vft )
@@ -65,7 +65,7 @@ public:
 	}
 	T* CreateObject( int nTypeID ) 
 	{ 
-		CTypeNewHash::iterator i = typeInfo.find( nTypeID );
+		typename CTypeNewHash::iterator i = typeInfo.find( nTypeID );
 		if ( i == typeInfo.end() )
 			return 0;
 		newFunc f = i->second;

@@ -16,7 +16,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 		ZDATA
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
-		vector<CVec2> mapPositions;
+		std::vector<CVec2> mapPositions;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pNameView); f.Add(4,&mapPositions); return 0; }
 	};
 
@@ -51,8 +51,8 @@ public:
 	bool Init();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

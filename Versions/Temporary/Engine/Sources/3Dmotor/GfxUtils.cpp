@@ -7,7 +7,7 @@ namespace NGfx
 
 // universal rects buffer
 
-static vector<STriangle> universalRectsBuffer;
+static std::vector<STriangle> universalRectsBuffer;
 
 static void RefreshUniversalRectTrisBuffer()
 {

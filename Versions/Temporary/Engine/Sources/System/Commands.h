@@ -6,25 +6,25 @@ namespace NGlobal
 {
 
 // global var set value handlers storing variable value to specified in pContext place in bool/int/float format
-SYSTEM_EXPORT void VarBoolHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-SYSTEM_EXPORT void VarIntHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-SYSTEM_EXPORT void VarFloatHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-SYSTEM_EXPORT void VarWStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-SYSTEM_EXPORT void VarStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarIntHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarFloatHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarWStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext );
 
 // helper class for temporary command registration
 class CCmd
 {
 	void *pContext;
-	string szID;
+	std::string szID;
 	CmdHandler pHandler;
 	int nID;
 
 public:
-	CCmd( const string &szID, CmdHandler pHandler, void *pContext );
+	CCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
 	~CCmd();
 
-	void Run( const vector<wstring> &paramsSet );
+	void Run( const std::vector<std::wstring> &paramsSet );
 };
 
 }

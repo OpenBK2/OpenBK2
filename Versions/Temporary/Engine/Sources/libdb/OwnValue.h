@@ -12,8 +12,8 @@ union UValue
 	int nValue;
 	float fValue;
 	bool bValue;
-	string *pString;
-	wstring *pWString;
+	std::string *pString;
+	std::wstring *pWString;
 	GUID *pGUID;
 	void *pBLOB;
 	CBindArray *pArray;

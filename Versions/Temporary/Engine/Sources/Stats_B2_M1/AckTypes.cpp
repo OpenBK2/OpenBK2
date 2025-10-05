@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EUnitAckType eValue )
+std::string EnumToString( NDb::EUnitAckType eValue )
 {
 	switch ( eValue )
 	{
@@ -159,7 +159,7 @@ string EnumToString( NDb::EUnitAckType eValue )
 	}
 }
 
-NDb::EUnitAckType NDb::StringToEnum_NDb_EUnitAckType( const string &szValue )
+NDb::EUnitAckType NDb::StringToEnum_NDb_EUnitAckType( const std::string &szValue )
 {
 	if ( szValue == "ACK_NONE" )
 		return NDb::ACK_NONE;
@@ -304,7 +304,7 @@ NDb::EUnitAckType NDb::StringToEnum_NDb_EUnitAckType( const string &szValue )
 	return NDb::ACK_NONE;
 }
 
-string EnumToString( NDb::EAckClass eValue )
+std::string EnumToString( NDb::EAckClass eValue )
 {
 	switch ( eValue )
 	{
@@ -323,7 +323,7 @@ string EnumToString( NDb::EAckClass eValue )
 	}
 }
 
-NDb::EAckClass NDb::StringToEnum_NDb_EAckClass( const string &szValue )
+NDb::EAckClass NDb::StringToEnum_NDb_EAckClass( const std::string &szValue )
 {
 	if ( szValue == "ACKT_POSITIVE" )
 		return NDb::ACKT_POSITIVE;
@@ -338,7 +338,7 @@ NDb::EAckClass NDb::StringToEnum_NDb_EAckClass( const string &szValue )
 	return NDb::ACKT_POSITIVE;
 }
 
-string EnumToString( NDb::EAckPosition eValue )
+std::string EnumToString( NDb::EAckPosition eValue )
 {
 	switch ( eValue )
 	{
@@ -351,7 +351,7 @@ string EnumToString( NDb::EAckPosition eValue )
 	}
 }
 
-NDb::EAckPosition NDb::StringToEnum_NDb_EAckPosition( const string &szValue )
+NDb::EAckPosition NDb::StringToEnum_NDb_EAckPosition( const std::string &szValue )
 {
 	if ( szValue == "ACK_POS_UNIT" )
 		return NDb::ACK_POS_UNIT;
@@ -361,7 +361,7 @@ NDb::EAckPosition NDb::StringToEnum_NDb_EAckPosition( const string &szValue )
 }
 
 
-void SAckType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SAckType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AckType", (BYTE*)&eAckType - pThis, sizeof(eAckType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Ack", (BYTE*)&pAck - pThis, sizeof(pAck), NTypeDef::TYPE_TYPE_REF );

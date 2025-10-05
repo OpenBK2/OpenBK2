@@ -67,7 +67,7 @@ void CParticleAnimator::Recalc()
 		value.bEnd = false;
 		return;
 	}
-	vector<float> fTimes;
+	std::vector<float> fTimes;
 	if ( pInstance->fEndCycle == 0 )
 	{
 		if ( pInstance->nCycleCount )

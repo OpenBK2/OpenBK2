@@ -16,7 +16,7 @@ BASIC_REGISTER_CLASS( CSimpleServerEffort );
 //*******************************************************************
 
 CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nClientServerID,
-	CNet *_pNet, const string &szServerIP, const int nServerPort, const int _nGameNetVersion, const int _nTimeOut )
+	CNet *_pNet, const std::string &szServerIP, const int nServerPort, const int _nGameNetVersion, const int _nTimeOut )
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), nGameNetVersion( _nGameNetVersion ),
 	pNet( _pNet ), eState( ES_CONNECTING ), eSubState( ECONNECT_SERVER ), nTimeOut( _nTimeOut )
 {
@@ -163,7 +163,7 @@ CConnectionEffort* CSimpleClientEffort::CreateNextEffort( const int nOurGameID )
 //*                     CSimpleServerEffort                         *
 //*******************************************************************
 
-CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nClientServerID, const string &_szClientIP, const int _nClientPort, CNet *_pNet, CNet *_pAcceptGamersNet )
+CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nClientServerID, const std::string &_szClientIP, const int _nClientPort, CNet *_pNet, CNet *_pAcceptGamersNet )
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), pNet( _pNet ), eState( ES_CONNECTING ),
 	szClientIP( _szClientIP ), nClientPort( _nClientPort ), pAcceptGamersNet( _pAcceptGamersNet )
 {

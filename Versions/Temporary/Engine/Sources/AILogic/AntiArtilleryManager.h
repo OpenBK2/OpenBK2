@@ -7,9 +7,9 @@ class CAntiArtillery;
 class CAntiArtilleryManager
 {
 	// круги от выстрелов от собственной артиллерии для каждой из сторон
-	typedef hash_set<int> CAntiArtilleries;
+	typedef std::unordered_set<int> CAntiArtilleries;
 	ZDATA
-	vector<CAntiArtilleries> antiArtilleries;
+	std::vector<CAntiArtilleries> antiArtilleries;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&antiArtilleries); return 0; }
 	static bool IsHeardForParty( CAntiArtillery *pAntiArt, const int nParty );
 public:

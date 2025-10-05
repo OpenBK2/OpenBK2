@@ -11,8 +11,8 @@ class CLockWithUnlockPossibilities
 	void Lock();
 
 	ZDATA
-	vector<BYTE> formerTilesType;
-	list<SVector> pathTiles;
+	std::vector<BYTE> formerTilesType;
+	std::list<SVector> pathTiles;
 
 	bool bLocked;
 	BYTE bAIClass; //

@@ -148,11 +148,11 @@ class CUIVisitor : public IUIVisitor
 	CObj<NGScene::I2DGameView> pGFX;
 	//
 	CTRect<float> rcClip;
-	list< CTRect<float> > rcStoredClip;
+	std::list< CTRect<float> > rcStoredClip;
 	bool bClipApplied;
 	bool bLowerLevel;
 	//
-	typedef list< CPtr<IUIVisitorCmd> > CCommandsList;
+	typedef std::list< CPtr<IUIVisitorCmd> > CCommandsList;
 	CCommandsList upperLevelCommands;
 	//
 	virtual void ClipRestore()

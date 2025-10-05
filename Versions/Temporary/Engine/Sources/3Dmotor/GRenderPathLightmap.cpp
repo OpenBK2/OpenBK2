@@ -9,7 +9,7 @@ void RenderShowLightmap( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 {
 	SLightInfo lightInfo;
 	CRenderCmdList lightOps;
-	const vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( scene.IsFilteredFragment( i ) )

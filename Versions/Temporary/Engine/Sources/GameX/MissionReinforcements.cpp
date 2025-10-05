@@ -183,7 +183,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
 	{
-		for ( vector< const NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin(); 
+		for ( std::vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin();
 			it != pUIConsts->reinfButtons.end(); ++it )
 		{
 			const NDb::SReinfButton &button = *it;
@@ -313,7 +313,7 @@ void CMissionReinf::Update()
 	UpdateReinfsVisual();
 }
 
-void CMissionReinf::Select( const string &szSender )
+void CMissionReinf::Select( const std::string &szSender )
 {
 	NDb::EReinforcementType eType = NDb::_RT_NONE;
 	CNameToTypes::iterator it = nameToTypes.find( szSender );
@@ -328,7 +328,7 @@ void CMissionReinf::Select( const string &szSender )
 	Select( eType );
 }
 
-void CMissionReinf::SelectDblClick( const string &szSender )
+void CMissionReinf::SelectDblClick( const std::string &szSender )
 {
 	Call( CVec2( -1.0f, -1.0f ) );
 }
@@ -378,7 +378,7 @@ void CMissionReinf::UpdateForcedAction()
 	NDb::EUserAction eUserAction = NDb::USER_ACTION_REINF_COMMON;
 	if ( const NDb::SReinforcementTypes *pReinfTypes = GetReinfTypes() )
 	{
-		for ( vector< NDb::SReinforcementTypeInfo >::const_iterator it = pReinfTypes->typeInfo.begin(); 
+		for ( std::vector< NDb::SReinforcementTypeInfo >::const_iterator it = pReinfTypes->typeInfo.begin();
 			it != pReinfTypes->typeInfo.end(); ++it )
 		{
 			const NDb::SReinforcementTypeInfo &info = *it;
@@ -427,9 +427,9 @@ void CMissionReinf::Close( bool bForced )
 	pNotifications->Notify( EVNT_SELECT_KEY_POINT, -1, VNULL2 );
 }
 
-void CMissionReinf::ShowUnitInfo( const string &szSender )
+void CMissionReinf::ShowUnitInfo( const std::string &szSender )
 {
-	for ( vector< SUnitInfo >::const_iterator it = units.begin(); it != units.end(); ++it )
+	for ( std::vector< SUnitInfo >::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
 		const SUnitInfo &info = *it;
 		if ( info.pButton && info.pButton->GetName() == szSender )
@@ -442,7 +442,7 @@ void CMissionReinf::ShowUnitInfo( const string &szSender )
 	}
 }
 
-NDb::EReinforcementType CMissionReinf::FindReinfInfo( const string &szName )
+NDb::EReinforcementType CMissionReinf::FindReinfInfo( const std::string &szName )
 {
 	for ( CReinfInfos::iterator iInfo = reinfInfos.begin(); iInfo != reinfInfos.end(); ++iInfo )
 	{
@@ -530,13 +530,13 @@ void CMissionReinf::UnitFullInfoBack()
 		pUnitFullInfo->SetReinfUnit( 0 );
 }
 
-void CMissionReinf::MouseOverForward( const string &szSender )
+void CMissionReinf::MouseOverForward( const std::string &szSender )
 {
 	ePreSelected = FindReinfInfo( szSender );
 	UpdateReinfInfo();
 }
 
-void CMissionReinf::MouseOverBackward( const string &szSender )
+void CMissionReinf::MouseOverBackward( const std::string &szSender )
 {
 	ePreSelected = NDb::_RT_NONE;
 	UpdateReinfInfo();
@@ -590,7 +590,7 @@ void CMissionReinf::Show()
 
 	if ( IsEnabled() )
 	{
-		wstring wszText = InterfaceState()->GetTextEntry( "T_REINF_OPEN" );
+		std::wstring wszText = InterfaceState()->GetTextEntry( "T_REINF_OPEN" );
 		InterfaceState()->WriteToMissionConsole( wszText );
 	}
 		
@@ -624,7 +624,7 @@ void CMissionReinf::UpdateEnable()
 	if ( nCount == IAIScenarioTracker::INFINITE_CALLS )
 		nCount = 99;
 
-	vector<IPlayer*> rollers;
+	std::vector<IPlayer*> rollers;
 	rollers.push_back( pRoller2 );
 	rollers.push_back( pRoller1 );
 	if ( nPrevReinfCount != nCount )
@@ -638,7 +638,7 @@ void CMissionReinf::UpdateEnable()
 		{
 			int nMinutes = nSeconds / 60;
 			nSeconds = nSeconds % 60;
-			wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + NStr::ToUnicode( StrFmt( "%d:%02d", nMinutes, nSeconds ) );
+			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + NStr::ToUnicode( StrFmt( "%d:%02d", nMinutes, nSeconds ) );
 			pRoller1->SetTooltip( wszTooltip );
 			pRoller2->SetTooltip( wszTooltip );
 		}
@@ -758,7 +758,7 @@ void CMissionReinf::UpdateMPReinfsXPAndLevel()
 			info.pXPBarBg->ShowWindow( info.pReinf != 0 );
 
 		const int nLocalPlayer = pST->GetLocalPlayer();
-		wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
+		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(pContext->,Tooltip) )
@@ -826,7 +826,7 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 			info.pXPBarBg->ShowWindow( info.pReinf != 0 && bIsLeader );
 
 		const int nLocalPlayer = 0;
-		wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
+		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(pContext->,Tooltip) )
@@ -898,7 +898,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 	}
 	else
 	{
-		vector<STmpReinfEntry> tmpReinfEntries;
+		std::vector<STmpReinfEntry> tmpReinfEntries;
 		for ( int i = 0; i < pReinf->entries.size(); ++i )
 		{
 			const NDb::SReinforcementEntry &entry = pReinf->entries[i];
@@ -914,12 +914,12 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 		}
 
 		// merge dupe
-		for ( vector<STmpReinfEntry>::iterator it = tmpReinfEntries.begin(); it != tmpReinfEntries.end(); ++it )
+		for ( std::vector<STmpReinfEntry>::iterator it = tmpReinfEntries.begin(); it != tmpReinfEntries.end(); ++it )
 		{
 			STmpReinfEntry &tmpReinfEntry = *it;
 			while ( true )
 			{
-				vector<STmpReinfEntry>::iterator it2 = it;
+				std::vector<STmpReinfEntry>::iterator it2 = it;
 				it2 = find( ++it2, tmpReinfEntries.end(), tmpReinfEntry );
 				if ( it2 != tmpReinfEntries.end() )
 				{
@@ -1017,7 +1017,7 @@ void CMissionReinf::Call( const CVec2 &vPos )
 
 void CMissionReinf::CallNoReinf()
 {
-	wstring wszText = InterfaceState()->GetTextEntry( "T_REINF_CANT_CALL" );
+	std::wstring wszText = InterfaceState()->GetTextEntry( "T_REINF_CANT_CALL" );
 	InterfaceState()->WriteToMissionConsole( wszText );
 }
 
@@ -1055,27 +1055,27 @@ const NDb::SReinforcementTypes* CMissionReinf::GetReinfTypes() const
 	return 0;
 }
 
-void CMissionReinf::OnClickFullInfoMember( const string &szSender )
+void CMissionReinf::OnClickFullInfoMember( const std::string &szSender )
 {
 	pUnitFullInfo->OnClickMember( szSender );
 }
 
-void CMissionReinf::OnFullInfoMemberOverOn( const string &szSender )
+void CMissionReinf::OnFullInfoMemberOverOn( const std::string &szSender )
 {
 	pUnitFullInfo->OnMemberOverOn( szSender );
 }
 
-void CMissionReinf::OnFullInfoMemberOverOff( const string &szSender )
+void CMissionReinf::OnFullInfoMemberOverOff( const std::string &szSender )
 {
 	pUnitFullInfo->OnMemberOverOff( szSender );
 }
 
-void CMissionReinf::OnFullInfoWeaponOverOn( const string &szSender )
+void CMissionReinf::OnFullInfoWeaponOverOn( const std::string &szSender )
 {
 	pUnitFullInfo->OnWeaponOverOn( szSender );
 }
 
-void CMissionReinf::OnFullInfoWeaponOverOff( const string &szSender )
+void CMissionReinf::OnFullInfoWeaponOverOff( const std::string &szSender )
 {
 	pUnitFullInfo->OnWeaponOverOff( szSender );
 }
@@ -1184,7 +1184,7 @@ void CMissionReinf::AfterLoad()
 {
 	pRoller1->Stop();
 	pRoller2->Stop();
-	vector<IPlayer*> rollers;
+	std::vector<IPlayer*> rollers;
 	rollers.push_back( pRoller2 );
 	rollers.push_back( pRoller1 );
 	NUIElementsHelper::PlayRollerAnim( rollers, nPrevReinfCount, nPrevReinfCount, 0 );

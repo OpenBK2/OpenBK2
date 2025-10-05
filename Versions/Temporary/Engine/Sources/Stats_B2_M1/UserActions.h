@@ -122,29 +122,29 @@ namespace NDb
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::EUserAction eValue );
-	STATS_B2_M1_EXPORT EUserAction StringToEnum_NDb_EUserAction( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EUserAction eValue );
+	STATS_B2_M1_EXPORT EUserAction StringToEnum_NDb_EUserAction( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EUserAction>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EUserAction eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EUserAction ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUserAction( szValue ); }
+	static std::string ToString( NDb::EUserAction eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EUserAction ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EUserAction( szValue ); }
 };
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::ESpecialAbilityParam eValue );
-	STATS_B2_M1_EXPORT ESpecialAbilityParam StringToEnum_NDb_ESpecialAbilityParam( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::ESpecialAbilityParam eValue );
+	STATS_B2_M1_EXPORT ESpecialAbilityParam StringToEnum_NDb_ESpecialAbilityParam( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESpecialAbilityParam>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESpecialAbilityParam eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESpecialAbilityParam ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESpecialAbilityParam( szValue ); }
+	static std::string ToString( NDb::ESpecialAbilityParam eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESpecialAbilityParam ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESpecialAbilityParam( szValue ); }
 };
 

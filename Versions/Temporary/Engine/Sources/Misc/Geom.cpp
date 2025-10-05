@@ -25,7 +25,7 @@ const WORD GetDirectionByVector( float x, float y )
 	{
 		add = 0.0f;
 
-		swap( x, y );
+		std::swap( x, y );
 		y = -y;
 	}
 	else if ( y <= 0 && x < 0 )
@@ -39,7 +39,7 @@ const WORD GetDirectionByVector( float x, float y )
 	{
 		add = 32768.0f;
 		
-		swap( x, y );
+		std::swap( x, y );
 		x = -x;
 	}
 		
@@ -66,7 +66,7 @@ const CVec2 GetVectorByDirection( const WORD dir )
 	if ( dir < 16384 )
 	{
 		result.y = -result.y;
-		swap( result.x, result.y );
+		std::swap( result.x, result.y );
 	}
 	else if ( dir < 32768 )
 	{
@@ -76,7 +76,7 @@ const CVec2 GetVectorByDirection( const WORD dir )
 	else if ( dir < 49152 )
 	{
 		result.x = -result.x;
-		swap( result.x, result.y );
+		std::swap( result.x, result.y );
 	}
 
 	Normalize( &result );

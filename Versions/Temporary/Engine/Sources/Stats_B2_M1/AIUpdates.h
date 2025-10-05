@@ -246,7 +246,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIShootAreaUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)	
-		vector<SShootAreas> info;		
+		std::vector<SShootAreas> info;
 		int nObjID;				
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nObjID); return 0; }
 };
@@ -517,8 +517,8 @@ struct SScriptCameraRunUpdate : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SScriptCameraRunUpdate )
 public:
 	ZDATA_( SAIBasicUpdate )
-		string szStartCam;
-		string szFinishCam;
+		std::string szStartCam;
+		std::string szFinishCam;
 		float fTime;
 		float fLinSpeed;
 		float fAngle;
@@ -529,7 +529,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&szStartCam); f.Add(3,&szFinishCam); f.Add(4,&fTime); f.Add(5,&fLinSpeed); f.Add(6,&fAngle); f.Add(7,&nTargetID); f.Add(8,&fSpline1); f.Add(9,&fSpline2); f.Add(10,&eRunType); return 0; }
 public:
 	SScriptCameraRunUpdate() {}
-	SScriptCameraRunUpdate( const string &_szStartCam, const string &_szFinshCam, float _fTime )
+	SScriptCameraRunUpdate( const std::string &_szStartCam, const std::string &_szFinshCam, float _fTime )
 		: szStartCam( _szStartCam ),
 		szFinishCam( _szFinshCam ),
 		fTime( _fTime )
@@ -558,7 +558,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 		int nMovieIndex;
 	bool bLoopPlayback;
-	string szCallbackFuncName;
+	std::string szCallbackFuncName;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&nMovieIndex); f.Add(3,&bLoopPlayback); f.Add(4,&szCallbackFuncName); return 0; }
 public:
 	SScriptCameraStartMovieUpdate() {}
@@ -613,9 +613,9 @@ struct SAIObjectsUnderConstructionUpdate : public SAIBasicUpdate
 	// if bSet == false - delete all objects under construction, all other fields are ignored.
 public:
 	bool bSet;															
-	vector<SObjectUnderConstruction> objects;
-	vector<CVec2> impossibleToBuildTiles;
-	vector<CVec2> buildTiles;
+	std::vector<SObjectUnderConstruction> objects;
+	std::vector<CVec2> impossibleToBuildTiles;
+	std::vector<CVec2> buildTiles;
 	bool bCanBuild;
 public: 
 	int operator&( IBinSaver &f ) 
@@ -693,12 +693,12 @@ struct SChatMessageUpdate : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SChatMessageUpdate );
 public:
 	ZDATA_( SAIBasicUpdate )
-		wstring wszMessage;
+		std::wstring wszMessage;
 		DWORD dwColor;
 		bool bAnotherChat;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&wszMessage); f.Add(3,&dwColor); f.Add(4,&bAnotherChat); return 0; }
 	SChatMessageUpdate() {}
-	SChatMessageUpdate( const wstring &_wszMessage, const DWORD &_dwColor, const bool &_bAnotherChat ) 
+	SChatMessageUpdate( const std::wstring &_wszMessage, const DWORD &_dwColor, const bool &_bAnotherChat )
 		: wszMessage( _wszMessage ), dwColor( _dwColor ), bAnotherChat( _bAnotherChat ) {}
 
 	REGISTER_TO_UPDATES

@@ -133,7 +133,7 @@ class CTriListWrapper;
 class CTriList: virtual public CObjectBase
 {
 public:
-	virtual const vector<S3DTriangle>& GetTris() const = 0;
+	virtual const std::vector<S3DTriangle>& GetTris() const = 0;
 	virtual int GetTrisNumber() const = 0;
 	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) = 0;
 	virtual CTriListWrapper* CreateWrapper( int nTris ) = 0;

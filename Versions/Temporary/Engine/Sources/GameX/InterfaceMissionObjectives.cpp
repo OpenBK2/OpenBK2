@@ -12,11 +12,11 @@
 const int N_OBJECTIVES_ROW_COUNT = 8;
 const int MISSION_BRIEFING_ID = 1000000;
 
-bool CInterfaceMissionObjectives::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMissionObjectives::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "select_objective" )
 	{
-		int i = NStr::ToInt( szSender.substr( string( "ObjectiveItemButton" ).size() ) );
+		int i = NStr::ToInt( szSender.substr( std::string( "ObjectiveItemButton" ).size() ) );
 		NI_VERIFY( i >= 0, "Incorrect window name", return true );
 		pInterface->UpdateObjectives( i );
 		return true;
@@ -24,7 +24,7 @@ bool CInterfaceMissionObjectives::CReactions::Execute( const string &szSender, c
 	return false;
 }
 
-int CInterfaceMissionObjectives::CReactions::Check( const string &szCheckName ) const
+int CInterfaceMissionObjectives::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

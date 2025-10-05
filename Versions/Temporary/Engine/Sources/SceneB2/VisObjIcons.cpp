@@ -84,8 +84,8 @@ inline void AddSingleIcon( CVisObjIconInfo *pIconInfo, const float x1, const flo
 													const CTRect<float> &rcRect, NGScene::SVertex &vert )
 {
 	const CVec3 &vPos = pIconInfo->vCenter;
-	vector<NGScene::SVertex> &vertices = pIconInfo->data.vertices;
-	vector<STriangle> &triangles = pIconInfo->data.triangles;
+	std::vector<NGScene::SVertex> &vertices = pIconInfo->data.vertices;
+	std::vector<STriangle> &triangles = pIconInfo->data.triangles;
 	const int nVertsOffs = vertices.size();
 	vert.pos.Set( vPos.x + x1, vPos.y, vPos.z + y1 );
 	vert.tex.Set( rcRect.GetLeftBottom().x, rcRect.GetLeftBottom().y );
@@ -133,7 +133,7 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 
 	int nInd;
 
-	for ( vector<SPresentIcon>::const_iterator it = icons.begin(); it != icons.end(); ++it )
+	for ( std::vector<SPresentIcon>::const_iterator it = icons.begin(); it != icons.end(); ++it )
 	{
 		vert.normal.w = it->cAlpha;
 		for ( int i = 0; i < pIconSet->icons.size(); ++i )
@@ -202,7 +202,7 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 	const CVec3 vIconPos( vPos.x, vPos.y, vPos.z + fObjHeight + fIconAddHeight + fIconHalfWidth/* * ( 1.0f + DEF_ICON_ADD_HEIGHT_SCALE )*/ );
 	const CVec3 vCurDiffer = vIconPos - iconHolder.pPatch->vCenter;
 
-	for ( vector<NGScene::SVertex>::iterator it = iconHolder.pPatch->data.vertices.begin(); it != iconHolder.pPatch->data.vertices.end(); ++it )
+	for ( std::vector<NGScene::SVertex>::iterator it = iconHolder.pPatch->data.vertices.begin(); it != iconHolder.pPatch->data.vertices.end(); ++it )
 		it->pos += vCurDiffer;
 
 	iconHolder.pPatch->vCenter = vIconPos;

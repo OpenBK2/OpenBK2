@@ -29,8 +29,8 @@ public:
 			pScreen( _pScreen ), pInterface( _pInterface ) { }
 		~CReactions()	{ }
 		
-		bool Execute( const string &szSender, const string &szReaction );
-		int Check( const string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction );
+		int Check( const std::string &szCheckName ) const;
 	};
 	
 	enum ESortModes
@@ -70,7 +70,7 @@ private:
 	CObj<CReactions> pReactions;
 
 	EConfirmAction eConfirmAction;
-	string				szPath;
+	std::string				szPath;
 	NSaveLoad::CSaveList			saves;
 
 	CObj<CBackgroundMutableTexture>	pScreenShotTexture;
@@ -130,7 +130,7 @@ protected:
 	void MsgSelectPrev( const SGameMessage &msg );
 	void MsgSelectNext( const SGameMessage &msg );
 	
-	void OnSelectionChange( const string &szSender );
+	void OnSelectionChange( const std::string &szSender );
 	
 	void FillSaveList( const ESortModes nSortMode );
 	void DoSaveGame();
@@ -151,7 +151,7 @@ public:
 
 	bool ProcessEvent( const SGameMessage &msg );
 
-	void SetMode( const string &szMode );
+	void SetMode( const std::string &szMode );
 
 public:
 	bool StepLocal( bool bAppActive );
@@ -162,7 +162,7 @@ class CICInterfaceSaveLoad : public CInterfaceCommandBase<CInterfaceSaveLoadMenu
 	OBJECT_BASIC_METHODS( CICInterfaceSaveLoad );
 	
 	ZDATA_(CInterfaceCommandBase<CInterfaceSaveLoadMenu>)
-	string szMode;
+	std::string szMode;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceSaveLoadMenu>*)this); f.Add(2,&szMode); return 0; }
 	//
 	void PreCreate();

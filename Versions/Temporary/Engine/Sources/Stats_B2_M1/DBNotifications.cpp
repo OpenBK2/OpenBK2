@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::ENotificationType eValue )
+std::string EnumToString( NDb::ENotificationType eValue )
 {
 	switch ( eValue )
 	{
@@ -55,7 +55,7 @@ string EnumToString( NDb::ENotificationType eValue )
 	}
 }
 
-NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const string &szValue )
+NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const std::string &szValue )
 {
 	if ( szValue == "NTF_OBJECTIVE_RECEIVED" )
 		return NDb::NTF_OBJECTIVE_RECEIVED;
@@ -96,7 +96,7 @@ NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const string &sz
 	return NDb::NTF_OBJECTIVE_RECEIVED;
 }
 
-string EnumToString( NDb::EMinimapFigureType eValue )
+std::string EnumToString( NDb::EMinimapFigureType eValue )
 {
 	switch ( eValue )
 	{
@@ -111,7 +111,7 @@ string EnumToString( NDb::EMinimapFigureType eValue )
 	}
 }
 
-NDb::EMinimapFigureType NDb::StringToEnum_NDb_EMinimapFigureType( const string &szValue )
+NDb::EMinimapFigureType NDb::StringToEnum_NDb_EMinimapFigureType( const std::string &szValue )
 {
 	if ( szValue == "MFT_TRIANGLE" )
 		return NDb::MFT_TRIANGLE;
@@ -172,7 +172,7 @@ int SNotification::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::ENotificationEventType eValue )
+std::string EnumToString( NDb::ENotificationEventType eValue )
 {
 	switch ( eValue )
 	{
@@ -231,7 +231,7 @@ string EnumToString( NDb::ENotificationEventType eValue )
 	}
 }
 
-NDb::ENotificationEventType NDb::StringToEnum_NDb_ENotificationEventType( const string &szValue )
+NDb::ENotificationEventType NDb::StringToEnum_NDb_ENotificationEventType( const std::string &szValue )
 {
 	if ( szValue == "NEVT_OBJECTIVE_COMPLETED" )
 		return NDb::NEVT_OBJECTIVE_COMPLETED;

@@ -19,7 +19,7 @@ CFieldDefinition::CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2Typ
 	NHungarian::ConvertToShortName( &szFieldName, pVarNode->GetName(), pType->eType, pType->GetAttributes() );
 }
 
-void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
+void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
 {
 	NI_VERIFY( pParentType != 0, "Wrong field definition", return );
 
@@ -61,7 +61,7 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, 
 		++nBrackets;
 	}
 
-	const string szTypeName = NHungarian::GetTypeNameInCode( pVarType, &field );
+	const std::string szTypeName = NHungarian::GetTypeNameInCode( pVarType, &field );
 	NI_ASSERT( szTypeName != "", "empty type name" );
 
 	pCode->h << szTypeName;
@@ -71,7 +71,7 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, 
 		--nBrackets;
 	}
 
-	const string szFieldNameInCode = NHungarian::GetFieldNameInCode( field );
+	const std::string szFieldNameInCode = NHungarian::GetFieldNameInCode( field );
 	pCode->h << " " << szFieldNameInCode << ";" << endl;
 }
 

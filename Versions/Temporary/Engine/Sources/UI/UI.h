@@ -66,7 +66,7 @@ struct IUIInitialization : public CObjectBase
 
 	virtual void SetUIConsts( const struct NDb::SUIGameConsts *pConsts ) = 0;
 	// default handlers for custom ML tags
-	virtual void SetMLHandler( const wstring &wsTAG, struct IMLHandler *pHandler ) = 0;
+	virtual void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler ) = 0;
 	virtual struct IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 	virtual struct IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
 																										const NDb::SUIGameConsts *pConsts, 
@@ -107,7 +107,7 @@ struct SWindowAnimationContext : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SWindowAnimationContext );
 
-	CParam<string> szAnimatedWindow;
+	CParam<std::string> szAnimatedWindow;
 public:
 
 	int operator&( IBinSaver &saver )
@@ -125,17 +125,17 @@ public:
 	//for MoveTo
 	CParam<CVec2> vOffset;
 	CParam<float> fMoveTime;
-	CParam<string> szElementToMove;
+	CParam<std::string> szElementToMove;
 	// for SoundCommand
 	CParam<CDBPtr<NDb::SComplexSoundDesc> > pSoundToPlay;
 	//
 	// for RunReaction
-	CParam<string> szReactionForward;
-	CParam<string> szReactionBack;
+	CParam<std::string> szReactionForward;
+	CParam<std::string> szReactionBack;
 	//
 	// for SendUIMessage
-	CParam<string> szMessageID;
-	CParam<string> szParam;
+	CParam<std::string> szMessageID;
+	CParam<std::string> szParam;
 	CParam<int> nForwardParam;
 	CParam<int> nBackParam;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vOffset); f.Add(3,&fMoveTime); f.Add(4,&szElementToMove); f.Add(5,&pSoundToPlay); f.Add(6,&szReactionForward); f.Add(7,&szReactionBack); f.Add(8,&szMessageID); f.Add(9,&szParam); f.Add(10,&nForwardParam); f.Add(11,&nBackParam); return 0; }
@@ -205,8 +205,8 @@ struct IWindow : virtual public CObjectBase
 	//
 	virtual bool IsInside( const CVec2 &vPos ) const = 0;
 	//
-	virtual const wstring &GetDBTooltipStr() const { static wstring wszEmpty; return wszEmpty; } // old function, need to be removed
-	virtual void SetTooltip( const wstring &wszTooltip ) { };
+	virtual const std::wstring &GetDBTooltipStr() const { static std::wstring wszEmpty; return wszEmpty; } // old function, need to be removed
+	virtual void SetTooltip( const std::wstring &wszTooltip ) { };
 	virtual void SetTooltipIDForMLHandler( int nID ) = 0;
 	virtual int GetTooltipIDForMLHandler() const = 0;
 	virtual void SetTooltip( IWindow *pTooltipWindow ) { }
@@ -215,8 +215,8 @@ struct IWindow : virtual public CObjectBase
 	virtual void AddChild( IWindow *pWnd, bool bDoReposition = false ) = 0;
 	virtual int GetNumChildren() = 0;
 	virtual IWindow *GetChild( int nIndex ) =0;
-	virtual IWindow* GetChild( const string &_szName, const bool bRecursive = false ) = 0;
-	virtual IWindow* GetVisibleChild( const string &_szName, const bool bRecursive = false ) = 0;
+	virtual IWindow* GetChild( const std::string &_szName, const bool bRecursive = false ) = 0;
+	virtual IWindow* GetVisibleChild( const std::string &_szName, const bool bRecursive = false ) = 0;
 	// copy background from another window to this window
 	virtual void CopyBackground( const IWindow *pSrcWnd ) = 0;
 	// assign background texture for window
@@ -225,9 +225,9 @@ struct IWindow : virtual public CObjectBase
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 	virtual void RegisterObservers() = 0;
 	virtual void SetOutline( const CDBID &outlineType=CDBID() ) {}
-	virtual void SetTextString( const wstring &szText ) = 0;
+	virtual void SetTextString( const std::wstring &szText ) = 0;
 	virtual const wchar_t *GetTextString() const = 0;
-	virtual wstring GetDBText() const = 0;
+	virtual std::wstring GetDBText() const = 0;
 	// get access to window context. may return 0 if window doesn't have context.
 	virtual SWindowContext * GetContext() = 0;
 	virtual void Init() = 0;
@@ -239,8 +239,8 @@ struct IWindow : virtual public CObjectBase
 	virtual const struct NDb::SWindowShared * GetSharedDesc() const = 0;
 	virtual void RemoveChild( IWindow *_pChild ) = 0;
 	virtual IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) = 0;
-	virtual const string& GetName() const = 0;
-	virtual void SetName( const string &szName ) = 0;
+	virtual const std::string& GetName() const = 0;
+	virtual void SetName( const std::string &szName ) = 0;
 	// must be called after load from binary file
 	virtual void AfterLoad() { }
 
@@ -259,7 +259,7 @@ struct IConsole : virtual public IWindow
 // console strings (add to bottom, scroll automatically to the top)
 struct IConsoleOutput : virtual public IWindow
 {
-	virtual void AddString( const wstring &szString, const DWORD color  ) = 0;
+	virtual void AddString( const std::wstring &szString, const DWORD color  ) = 0;
 	virtual void Scroll( const int bUp ) = 0;
 	virtual void ToBegin() = 0;
 	virtual void ToEnd() = 0;
@@ -268,7 +268,7 @@ struct IConsoleOutput : virtual public IWindow
 
 struct IStatsSystemWindow : virtual public IWindow
 {
-	virtual void UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor ) = 0;
+	virtual void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor ) = 0;
 };
 
 struct IButtonNotify : virtual public CObjectBase
@@ -302,7 +302,7 @@ struct IButton : virtual public IWindow
 	virtual void SetOutline( const CDBID &outlineType ) = 0;
 	virtual void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect ) = 0;
 	// Returns state index or -1
-	virtual int GetState( const string &szName ) = 0;
+	virtual int GetState( const std::string &szName ) = 0;
 };
 // edit line
 struct IEditLine : virtual public IWindow
@@ -316,9 +316,9 @@ struct IEditLine : virtual public IWindow
 struct ITextView : virtual public IWindow
 {
 	// we can retrieve pure formatting info etc.
-	virtual const wstring& GetText() const = 0;
+	virtual const std::wstring& GetText() const = 0;
 	// return true if height of window is updated
-	virtual bool SetText( const wstring &szText ) = 0;
+	virtual bool SetText( const std::wstring &szText ) = 0;
 	virtual void SetWidth( const int nWidth ) = 0;
 	virtual const CTPoint<int> GetSize() const = 0;
 	virtual void SetIDForMLHandler( int nID ) = 0;
@@ -356,13 +356,13 @@ struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 {
 	//{ for compatibility with old sources
 	virtual bool NeedFlags() const { return false; }
-	virtual bool Execute( const string &szSender, const string &szReaction ) { return false; }
-	virtual int Check( const string &szCheckName ) const { return 0; }
+	virtual bool Execute( const std::string &szSender, const std::string &szReaction ) { return false; }
+	virtual int Check( const std::string &szCheckName ) const { return 0; }
 	//}
 
 	// new method, use it in new code
-	virtual bool Execute( const string &szSender, const string &szReaction, WORD wKeyboardFlags ) { return false; }
-	virtual int Check( const string &szCheckName, WORD wKeyboardFlags ) const { return 0; }
+	virtual bool Execute( const std::string &szSender, const std::string &szReaction, WORD wKeyboardFlags ) { return false; }
+	virtual int Check( const std::string &szCheckName, WORD wKeyboardFlags ) const { return 0; }
 };
 
 // specific screen funcitonality
@@ -374,27 +374,27 @@ struct IScreen : virtual public IWindow
 	virtual void SetReactionsAndChecks( IProgrammedReactionsAndChecks *pReactionsAndChecks ) = 0;
 	virtual void UpdateResolution() = 0;
 	// set child window text
-	virtual void SetWindowText( const string &szWindowName, const wstring &szText ) = 0;
+	virtual void SetWindowText( const std::string &szWindowName, const std::wstring &szText ) = 0;
 
 	virtual void SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView ) = 0;
 	virtual NGScene::IGameView *GetInterface3DView() = 0;
 
-	virtual bool RunReaction( const string &szSender, const string &szReactionName ) = 0;
-	virtual bool RunReaction( const string &szSender, const NDb::SUIDesc *pReaction ) = 0;
+	virtual bool RunReaction( const std::string &szSender, const std::string &szReactionName ) = 0;
+	virtual bool RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction ) = 0;
 	
 	// run animation sequience on provided window. return ID of animation
 	virtual int /*AnimationID*/RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow ) = 0;
 	virtual void RunAnimationSequienceBack( const int nAnimationID ) = 0;
 
 	// run szCmdSeq effect. if ID provided, then wait untill effect with this ID is finished, then run szCmdSeq.
-	virtual void RunStateCommandSequience( const string &szCmdSeq, struct IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 ) = 0;
+	virtual void RunStateCommandSequience( const std::string &szCmdSeq, struct IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 ) = 0;
 	// instantly undo command sequence (run in backward direction)
-	virtual void UndoStateCommandSequence( const string &szCmdSeq ) = 0;
+	virtual void UndoStateCommandSequence( const std::string &szCmdSeq ) = 0;
 
 	// 
-	virtual void RegisterEffect( const string &szEffect, const struct NDb::SUIStateSequence &cmds ) = 0;
-	virtual void RegisterEffect( const string &szEffect, const vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable ) = 0;
-	virtual void RegisterReaction( const string &szReactionKey, struct IMessageReactionB2 *pReaction ) = 0;
+	virtual void RegisterEffect( const std::string &szEffect, const struct NDb::SUIStateSequence &cmds ) = 0;
+	virtual void RegisterEffect( const std::string &szEffect, const std::vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable ) = 0;
+	virtual void RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction ) = 0;
 
 	virtual void RegisterToSegment( struct IWindow *pWnd, const bool bRegister ) = 0;
 	virtual bool IsRegisteredToSegment( struct IWindow *pWnd ) const = 0;
@@ -402,17 +402,17 @@ struct IScreen : virtual public IWindow
 	virtual void SetScreenSize( const CTRect<float> &rcScreen ) = 0;
 
 	virtual IWindow* AddElement( const struct NDb::SUIDesc *pDesc ) = 0;
-	virtual IWindow* GetElement( const string &szName, const bool bRecursive = false ) = 0;
-	virtual IWindow* GetVisibleElement( const string &szName, const bool bRecursive = false ) = 0;
+	virtual IWindow* GetElement( const std::string &szName, const bool bRecursive = false ) = 0;
+	virtual IWindow* GetVisibleElement( const std::string &szName, const bool bRecursive = false ) = 0;
 	
 	virtual void SetTooltipContext( const int nContext ) = 0;
-	virtual IWindow *CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner ) = 0;
+	virtual IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner ) = 0;
 
 	virtual void ProcessUIMessage( const struct SBUIMessage &cmd ) = 0;
 	virtual void Reposition( IWindow *pWindow = 0 ) = 0;
 	virtual class CButtonGroup * CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent ) = 0;
 
-	virtual const wstring &GetTextEntry( const string &szName ) const = 0; // Get "misc texts" entry by name
+	virtual const std::wstring &GetTextEntry( const std::string &szName ) const = 0; // Get "misc texts" entry by name
 };
 
 // may contain any number of windows. scrolls them if needed
@@ -424,7 +424,7 @@ struct IScrollableContainer : virtual public IWindow
 	virtual void Update() = 0;
 	virtual void Select( IWindow *pElement ) = 0;
 	virtual IWindow *GetSelectedItem() const = 0;
-	virtual IWindow *GetItem( const string &szName ) = 0;
+	virtual IWindow *GetItem( const std::string &szName ) = 0;
 	virtual void EnsureElementVisible( IWindow *pElement ) = 0;
 	virtual int GetItemNumber( IWindow *pElement ) = 0;
 	virtual void RemoveItems() = 0;			//remove all
@@ -456,15 +456,15 @@ struct IProgressBar : virtual public IWindow
 struct IMultiTextureProgressBar : virtual public IWindow
 {
 	virtual bool IsSolid() const = 0;
-	virtual void GetPositions( vector<float> *pPositions ) const = 0;
-	virtual void SetPositions( const vector<float> &positions, bool bSolid ) = 0;
+	virtual void GetPositions( std::vector<float> *pPositions ) const = 0;
+	virtual void SetPositions( const std::vector<float> &positions, bool bSolid ) = 0;
 };
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct ITooltip : virtual public IWindow
 {
 	// return position on screen
 	// set GlobalVar( "TOOLTIP_X" & "TOOLTIP_Y" )
-	virtual void InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const wstring &szText, 
+	virtual void InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const std::wstring &szText,
 		IScreen *pScreen, const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler ) = 0;
 };
 
@@ -474,7 +474,7 @@ struct ITabControl : virtual public IWindow
 	virtual void SetActive( const int nTab ) = 0;
 	virtual int GetActive() const = 0;
 	// provide button name. it is ignored if no buttons in tab control.
-	virtual void AddTab( const wstring &szButtonName ) = 0;
+	virtual void AddTab( const std::wstring &szButtonName ) = 0;
 	virtual void AddElement( const int nTab, IWindow *pWnd ) = 0;
 };
 
@@ -490,7 +490,7 @@ struct IUIEffector : public CObjectBase
 	// effect is finished
 	virtual bool IsFinished() const = 0;
 	// configure effect with commad
-	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) = 0;
+	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow ) = 0;
 	// reversed effect ( that effect + effect->Reverse() = NULL );
 	virtual void Reverse() = 0;
 };
@@ -565,7 +565,7 @@ UI_EXPORT IDebugSingleton *CreateDebugSingleton();
 
 struct IPlayer : virtual public IWindow
 {
-	virtual void SetSequence( const string &szFileName ) = 0;
+	virtual void SetSequence( const std::string &szFileName ) = 0;
 	virtual void Play() = 0;
 	virtual bool Stop() = 0;
 	virtual bool Pause( bool bPause ) = 0;
@@ -603,7 +603,7 @@ struct IComboBox : virtual public IWindow
 
 // выдает предупреждение при отсутствии окна нужного типа
 template<class TCheck>
-inline TCheck* GetChildChecked( IWindow *pParent, const string &szName, const bool bRecursive )
+inline TCheck* GetChildChecked( IWindow *pParent, const std::string &szName, const bool bRecursive )
 {
 	if ( !pParent )
 		return 0;

@@ -69,7 +69,7 @@ bool CCommonStaticPath::MergePath( IStaticPath *pAppendant, const int _nStartTil
 
 int CCommonStaticPath::MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	for ( int i = 0; i < nLen; ++i )
 		tiles.push_back( path[i] );
 

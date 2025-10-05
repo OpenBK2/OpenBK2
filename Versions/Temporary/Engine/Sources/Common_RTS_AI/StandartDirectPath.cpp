@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "StandartDirectPath.h"
 
-void CStandartDirectPath::Init( const vector<SVector> &_tiles, const int nTileSize )
+void CStandartDirectPath::Init( const std::vector<SVector> &_tiles, const int nTileSize )
 {
 	tiles.clear();
 
-	for ( vector<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
+	for ( std::vector<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
 		tiles.push_back( *it );
 
 	nCurrentTile = 0;
@@ -17,11 +17,11 @@ void CStandartDirectPath::Init( const vector<SVector> &_tiles, const int nTileSi
 	}
 }
 
-void CStandartDirectPath::InsertTiles( const list<SVector> &_tiles )
+void CStandartDirectPath::InsertTiles( const std::list<SVector> &_tiles )
 {
 	tiles.clear();
 
-	for ( list<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
 		tiles.push_back( *it );
 
 	nCurrentTile = 0;

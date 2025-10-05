@@ -24,7 +24,7 @@ public:
 			{
 			}
 		};
-		typedef list<SSoundInfo> CCycledSounds;
+		typedef std::list<SSoundInfo> CCycledSounds;
 		CVec3 vSoundPos;									// placement of nonCycleSound
 
 		CCycledSounds cycledSounds;				//cycle sounds from that terrain
@@ -64,7 +64,7 @@ private:
 	CPtr<ISFX> pSFX;
 	CVec3 vListener;									//to determine weather coordinates changed
 	// for every terrain there will be separate sound
-	typedef hash_map< BYTE, CTerrainSound > CSounds;
+	typedef std::unordered_map< BYTE, CTerrainSound > CSounds;
 	CSounds terrainSounds;
 	CPtr<ITerrainSounds> pTerrain;						// to get terrain sounds
 	NTimer::STime lastUpdateTime;

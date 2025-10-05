@@ -23,7 +23,7 @@ bool s_bUICommonShowWarnings;
 
 BASIC_REGISTER_CLASS(CWindow);
 
-void CUIMORegConttainer::AddRawObserver( const string &szMsgName, IGMObserver *pObserver )
+void CUIMORegConttainer::AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver )
 {
 	CUIFactory::RegisterMessage( szMsgName );
 	eventRegisters.insert( eventRegisters.begin(), NInput::CGMOReg(szMsgName, pObserver) );
@@ -92,7 +92,7 @@ void CWindow::AfterLoad()
 		drawOrder[i]->AfterLoad();
 }
 
-int CWindow::RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const string &szCommanEffect, 
+int CWindow::RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const std::string &szCommanEffect,
 																			 const bool bWaitOnGraphics, const bool bForward )
 {
 	IScreen *pScreen = GetScreen();
@@ -128,7 +128,7 @@ void CWindow::SetOutline( const CDBID &_outlineType )
 	nOutlineType = _outlineType;	
 }
 
-void CWindow::SetTextString( const wstring &szText )
+void CWindow::SetTextString( const std::wstring &szText )
 {
 /*	NI_ASSERT( pTextString != 0, "attempt to set text to window that doesn't allow it" );
 	if ( pTextString )
@@ -156,7 +156,7 @@ void CWindow::GameMessageSink( const struct SGameMessage &msg, int nMessageType 
 	NI_ASSERT( nMessageType < pWindowStats->gameMessageReactions.size(), "registed on unknown message and recieved it" );
 
 	// CRAP{ wrong default value
-	string szLogicalReaction =
+	std::string szLogicalReaction =
 		pWindowStats->gameMessageReactions[nMessageType].szLogicalReaction == " " ? "" : pWindowStats->gameMessageReactions[nMessageType].szLogicalReaction;
 	// CRAP}
 
@@ -190,9 +190,9 @@ void CWindow::SetForeground( IWindowPart *_pForeground )
 		pForeground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
 }
 
-const wstring& CWindow::GetDBFormatText() const
+const std::wstring& CWindow::GetDBFormatText() const
 {
-	static wstring szEmpty;
+	static std::wstring szEmpty;
 
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )	
 	{
@@ -203,9 +203,9 @@ const wstring& CWindow::GetDBFormatText() const
 	return szEmpty;
 }
 
-const wstring& CWindow::GetDBInstanceText() const
+const std::wstring& CWindow::GetDBInstanceText() const
 {
-	static wstring szEmpty;
+	static std::wstring szEmpty;
 
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )
 	{
@@ -216,7 +216,7 @@ const wstring& CWindow::GetDBInstanceText() const
 	return szEmpty;
 }
 
-wstring CWindow::GetDBText() const
+std::wstring CWindow::GetDBText() const
 {
 	return GetDBFormatText() + GetDBInstanceText();
 }
@@ -397,12 +397,12 @@ void CWindow::SetPriority( int n )
 	GetInstance()->nPriority = n;
 }
 
-const string& CWindow::GetName() const 
+const std::string& CWindow::GetName() const
 { 
 	return GetInstance()->szName; 
 }
 
-void CWindow::SetName( const string &_szName )
+void CWindow::SetName( const std::string &_szName )
 {
 	GetInstance()->szName = _szName;
 }
@@ -414,7 +414,7 @@ void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	if ( pShared )
 	{
-		for ( vector<CDBPtr<NDb::SUIDesc> >::const_iterator it = pShared->children.begin(); it != pShared->children.end(); ++it )
+		for ( std::vector<CDBPtr<NDb::SUIDesc> >::const_iterator it = pShared->children.begin(); it != pShared->children.end(); ++it )
 		{
 			IWindow *pWindow = CUIFactory::MakeWindow( *it );
 			AddChild( pWindow, false );
@@ -619,7 +619,7 @@ void CWindow::RemoveChild( IWindow *_pChild )
 	}
 }
 
-void CWindow::RemoveChild( const string &szChildName )
+void CWindow::RemoveChild( const std::string &szChildName )
 {
 	CWindow *pChild = dynamic_cast<CWindow*>(GetChild( szChildName, false ));
 	RemoveChild( pChild );
@@ -633,7 +633,7 @@ void CWindow::Close()
 		ASSERT( 0 );
 }
 
-int CWindow::CheckNamedChildrenCount( const string &szName, bool bRecursive )
+int CWindow::CheckNamedChildrenCount( const std::string &szName, bool bRecursive )
 {
 	int nCount = 0;
 	for ( int i = 0; i < drawOrder.Size(); ++i )
@@ -662,7 +662,7 @@ IWindow *CWindow::GetChild( int nIndex )
 	return drawOrder[nIndex];
 }
 
-IWindow* CWindow::GetChild( const string &_szName, const bool bRecursive )
+IWindow* CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() ) 
 		return 0;
@@ -680,7 +680,7 @@ IWindow* CWindow::GetChild( const string &_szName, const bool bRecursive )
 #endif
 	for ( int i = 0; i < drawOrder.Size(); ++i )
 	{
-		string dbg = drawOrder[i]->GetName();
+		std::string dbg = drawOrder[i]->GetName();
 		if ( _szName == drawOrder[i]->GetName() )
 			return drawOrder[i];
 	}
@@ -697,7 +697,7 @@ IWindow* CWindow::GetChild( const string &_szName, const bool bRecursive )
 	return 0;
 }
 
-IWindow* CWindow::GetVisibleChild( const string &_szName, const bool bRecursive )
+IWindow* CWindow::GetVisibleChild( const std::string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() ) 
 		return 0;
@@ -739,7 +739,7 @@ IWindow* CWindow::GetChild( const int _nTypeID, const int _nID, const bool bRecu
 	return 0;
 }
 
-CWindow* CWindow::GetDeepChild( const string &_szName )
+CWindow* CWindow::GetDeepChild( const std::string &_szName )
 {
 	CWindow *pRet = dynamic_cast<CWindow*>(GetChild( _szName, false ));
 	if ( !pRet ) // not immidiate child
@@ -936,7 +936,7 @@ IWindow *CWindow::DemandTooltip()
 
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(GetInstance()->,Tooltip) )
 	{
-		const wstring wszDbTooltip = GET_TEXT_PRE(GetInstance()->,Tooltip);
+		const std::wstring wszDbTooltip = GET_TEXT_PRE(GetInstance()->,Tooltip);
 		pCustomTooltip = pScreen->CreateTooltipWindow( wszDbTooltip, this );
 		return pCustomTooltip;
 	}
@@ -944,16 +944,16 @@ IWindow *CWindow::DemandTooltip()
 	return 0;
 }
 
-const wstring& CWindow::GetDBTooltipStr() const
+const std::wstring& CWindow::GetDBTooltipStr() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(GetInstance()->,Tooltip) )
 		return GET_TEXT_PRE(GetInstance()->,Tooltip);
 
-	static wstring wszEmpty;
+	static std::wstring wszEmpty;
 	return wszEmpty;
 }
 
-void CWindow::SetTooltip( const wstring &wszTooltip )
+void CWindow::SetTooltip( const std::wstring &wszTooltip )
 {
 	pCustomTooltip = 0;
 	// can't create tooltip window now because pScreen might be zero, create tooltip later

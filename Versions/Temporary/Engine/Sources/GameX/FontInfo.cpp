@@ -7,7 +7,7 @@ namespace NFontGen
 
 WORD CFontInfo::Translate( WORD code ) const
 {
-	hash_map<WORD, WORD>::const_iterator pos = translate.find( code );
+	std::unordered_map<WORD, WORD>::const_iterator pos = translate.find( code );
 	return pos != translate.end() ? pos->second : 0xffff;
 }
 
@@ -45,7 +45,7 @@ struct SKerningPairZeroFunctional
 	bool operator()( const KERNINGPAIR &kp ) const { return kp.iKernAmount == 0; } 
 };
 //
-bool CFontInfo::MeasureFont( HDC hdc, vector<WORD> *pChars )
+bool CFontInfo::MeasureFont( HDC hdc, std::vector<WORD> *pChars )
 {
 	::GetTextMetrics( hdc, &tm );
 	sort( pChars->begin(), pChars->end() );
@@ -121,7 +121,7 @@ static bool IsWinXPOrLater()
 	return (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && ( osvi.dwMajorVersion > 4 ) && ( osvi.dwMinorVersion > 0 );
 }
 
-bool CFontInfo::LoadFontInfo( const SSourceParams &_source, vector<WORD> *pChars, HWND hWnd )
+bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<WORD> *pChars, HWND hWnd )
 {
 	source = _source;
 	if ( hFont )
@@ -151,11 +151,11 @@ bool CFontInfo::LoadFontInfo( const SSourceParams &_source, vector<WORD> *pChars
 		ASSERT( bRetVal == TRUE );
 		NStr::SetCodePage( cs.ciACP );
 		// form string
-		string szCharacters;
+		std::string szCharacters;
 		szCharacters.resize( pChars->size() );
 		for ( int i = 0; i != pChars->size(); ++i )
 			szCharacters[i] = (*pChars)[i];
-		wstring szUNICODE;
+		std::wstring szUNICODE;
 		NStr::ToUnicode( &szUNICODE, szCharacters );
 		// create re-map table
 		for ( int i = 0; i != pChars->size(); ++i )

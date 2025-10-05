@@ -106,7 +106,7 @@ static SCharRange sCharRanges[] =
 
 int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD dwFontType, LPARAM lParam )
 {
-	vector<WORD> *pChars = (vector<WORD>*)lParam;
+	std::vector<WORD> *pChars = (std::vector<WORD>*)lParam;
 
 	printf( "\nFont: %S %S %S", lpelfe->elfFullName, lpelfe->elfStyle, lpelfe->elfScript );
 	if ( dwFontType == TRUETYPE_FONTTYPE )
@@ -139,13 +139,13 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 	return TRUE;
 }
 
-bool GetFontCharsForCharset( vector<WORD> *pChars, HDC hDC, const string &szFaceName, DWORD dwCharSet )
+bool GetFontCharsForCharset( std::vector<WORD> *pChars, HDC hDC, const std::string &szFaceName, DWORD dwCharSet )
 {
 	LOGFONT sLogFont;
 	memset( &sLogFont, 0, sizeof( LOGFONT ) );
 	sLogFont.lfCharSet = dwCharSet;
 	sLogFont.lfPitchAndFamily = 0;
-	memcpy( sLogFont.lfFaceName, szFaceName.c_str(), Min(szFaceName.size() + 1, LF_FACESIZE) );
+	memcpy( sLogFont.lfFaceName, szFaceName.c_str(), Min<size_t>(szFaceName.size() + 1, LF_FACESIZE) );
 	EnumFontFamiliesEx( hDC, &sLogFont, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)pChars, 0 );
 	//
 	return !pChars->empty();

@@ -63,7 +63,7 @@ void CSinglePlayerTransceiver::DoSegments()
 {
 	// just skip all net chat in single-player mode
 	IConsoleBuffer *pBuffer = Singleton<IConsoleBuffer>();
-	wstring szString;
+	std::wstring szString;
 	while ( ReadFromPipe( PIPE_NET_CHAT, &szString, 0 ) )
 	{
 		DebugTrace( "Got type: %S\n", szString.c_str() );

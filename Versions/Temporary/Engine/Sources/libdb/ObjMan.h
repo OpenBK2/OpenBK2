@@ -17,51 +17,51 @@ struct IObjMan : public CObjectBase
 	//
 	virtual void SetChanged() = 0;
 	// create mask manipulator for sub-struct, array, array element, etc.
-	virtual IObjMan *CreateManipulator( const string &szBaseName ) = 0;
+	virtual IObjMan *CreateManipulator( const std::string &szBaseName ) = 0;
 	// create iterator to iterate through all object's properties
 	virtual IObjManIterator *CreateIterator( bool bShowHidden = false ) = 0;
 	// get full 'add name' for this manipulator
-	virtual string GetFullName() const = 0;
+	virtual std::string GetFullName() const = 0;
 	// main fields manipulation functions
-	virtual bool SetValue( const string &szName, const CVariant &value ) = 0;
-	virtual bool GetValue( const string &szName, CVariant *pValue ) = 0;
+	virtual bool SetValue( const std::string &szName, const CVariant &value ) = 0;
+	virtual bool GetValue( const std::string &szName, CVariant *pValue ) = 0;
 	// array-specific functions
-	virtual bool Insert( const string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) = 0;
-	virtual bool Remove( const string &szName, const int nPos, const int nAmount = 1 ) = 0;
+	virtual bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) = 0;
+	virtual bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 ) = 0;
 	// get property field descriptor by name
-	virtual const NTypeDef::STypeStructBase::SField *GetDesc( const string &szFullFieldName ) const = 0;
+	virtual const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const = 0;
 	// direct access to embedded struct (if it is)
 	virtual CResource *GetObject() = 0;
 	//
 	virtual const CDBID &GetDBID() const = 0;
 	// additional custom attributes
-	virtual wstring GetAttribute( const string &szName ) const = 0;
-	virtual void SetAttribute( const string &szName, const wstring &szValue ) = 0;
+	virtual std::wstring GetAttribute( const std::string &szName ) const = 0;
+	virtual void SetAttribute( const std::string &szName, const std::wstring &szValue ) = 0;
 
 	//
 	// fields manipulation helper functions
 	//
 	// 'set' family
 	template <class TYPE>
-		bool SetValue( const string &szName, const TYPE &value )
+		bool SetValue( const std::string &szName, const TYPE &value )
 	{
 		return SetValue( szName, CVariant( value ) );
 	}
 	template <>
-		bool SetValue<CVec2>( const string &szName, const CVec2 &value )
+		bool SetValue<CVec2>( const std::string &szName, const CVec2 &value )
 	{
 		return SetValue( szName + ".x", CVariant( value.x ) ) &&
 			SetValue( szName + ".y", CVariant( value.y ) );
 	}
 	template <>
-		bool SetValue<CVec3>( const string &szName, const CVec3 &value )
+		bool SetValue<CVec3>( const std::string &szName, const CVec3 &value )
 	{
 		return SetValue( szName + ".x", CVariant( value.x ) ) &&
 			SetValue( szName + ".y", CVariant( value.y ) ) &&
 			SetValue( szName + ".z", CVariant( value.z ) );
 	}
 	template <>
-		bool SetValue<CVec4>( const string &szName, const CVec4 &value )
+		bool SetValue<CVec4>( const std::string &szName, const CVec4 &value )
 	{
 		return SetValue( szName + ".x", CVariant( value.x ) ) &&
 			SetValue( szName + ".y", CVariant( value.y ) ) &&
@@ -69,13 +69,13 @@ struct IObjMan : public CObjectBase
 			SetValue( szName + ".w", CVariant( value.w ) );
 	}
 	template <>
-		bool SetValue<CQuat>( const string &szName, const CQuat &value )
+		bool SetValue<CQuat>( const std::string &szName, const CQuat &value )
 	{
 		return SetValue( szName, value.GetInternalVector() );
 	}
 	//
 	template <template <typename TYPE> class TContainer, typename TValue>
-		bool SetValue( const string &szName, const TContainer<TValue> &container )
+		bool SetValue( const std::string &szName, const TContainer<TValue> &container )
 	{
 		if ( SetValue( szName, int( container.size() ) ) == false )
 			return false;
@@ -88,18 +88,18 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool SetValue<basic_string, char>( const string &szName, const basic_string<char> &value )
+		bool SetValue<std::basic_string, char>( const std::string &szName, const std::basic_string<char> &value )
 	{
 		return SetValue( szName, CVariant( value ) );
 	}
 	template <>
-		bool SetValue<basic_string, wchar_t>( const string &szName, const basic_string<wchar_t> &value )
+		bool SetValue<std::basic_string, wchar_t>( const std::string &szName, const std::basic_string<wchar_t> &value )
 	{
 		return SetValue( szName, CVariant( value ) );
 	}
 	// 'get' family
 	template <class TYPE>
-		bool GetValue( const string &szName, TYPE *pValue )
+		bool GetValue( const std::string &szName, TYPE *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
@@ -108,7 +108,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<string>( const string &szName, string *pValue )
+		bool GetValue<std::string>( const std::string &szName, std::string *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
@@ -117,7 +117,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<wstring>( const string &szName, wstring *pValue )
+		bool GetValue<std::wstring>( const std::string &szName, std::wstring *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
@@ -126,7 +126,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<GUID>( const string &szName, GUID *pValue )
+		bool GetValue<GUID>( const std::string &szName, GUID *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
@@ -136,7 +136,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<CDBID>( const string &szName, CDBID *pValue )
+		bool GetValue<CDBID>( const std::string &szName, CDBID *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
@@ -145,7 +145,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<CVec2>( const string &szName, CVec2 *pValue )
+		bool GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName + ".x", &value ) == false )
@@ -157,7 +157,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<CVec3>( const string &szName, CVec3 *pValue )
+		bool GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName + ".x", &value ) == false )
@@ -172,7 +172,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<CVec4>( const string &szName, CVec4 *pValue )
+		bool GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName + ".x", &value ) == false )
@@ -190,7 +190,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<CQuat>( const string &szName, CQuat *pValue )
+		bool GetValue<CQuat>( const std::string &szName, CQuat *pValue )
 	{
 		CVec4 vRes;
 		if ( GetValue(szName, &vRes) == false )
@@ -200,7 +200,7 @@ struct IObjMan : public CObjectBase
 	}
 	//
 	template <template <typename TYPE> class TContainer, typename TValue>
-		bool GetValue( const string &szName, TContainer<TValue> *pContainer )
+		bool GetValue( const std::string &szName, TContainer<TValue> *pContainer )
 	{
 		int nSize = 0;
 		if ( GetValue( szName, &nSize ) == false )
@@ -215,7 +215,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<basic_string, char>( const string &szName, basic_string<char> *pValue )
+		bool GetValue<std::basic_string, char>( const std::string &szName, std::basic_string<char> *pValue )
 	{
 		CVariant var;
 		if ( GetValue( szName, &var ) == false )
@@ -224,7 +224,7 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<basic_string, wchar_t>( const string &szName, basic_string<wchar_t> *pValue )
+		bool GetValue<std::basic_string, wchar_t>( const std::string &szName, std::basic_string<wchar_t> *pValue )
 	{
 		CVariant var;
 		if ( GetValue( szName, &var ) == false )

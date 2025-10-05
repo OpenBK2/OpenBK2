@@ -32,9 +32,9 @@ int CForegroundTextString::GetOptimalWidth() const
 	return ScreenToVirtualX( pGfxText->GetSize().x );
 }
 
-const wstring& CForegroundTextString::GetDBInstanceText() const
+const std::wstring& CForegroundTextString::GetDBInstanceText() const
 {
-	static wstring szEmpty;
+	static std::wstring szEmpty;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->,TextString) )
 		return GET_TEXT_PRE(pInstance->,TextString);
 	else if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,TextString) )
@@ -43,21 +43,21 @@ const wstring& CForegroundTextString::GetDBInstanceText() const
 		return szEmpty;
 }
 
-const wstring& CForegroundTextString::GetDBFormatText() const
+const std::wstring& CForegroundTextString::GetDBFormatText() const
 {
-	static wstring szEmpty;
+	static std::wstring szEmpty;
 	if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,FormatString) )
 		return GET_TEXT_PRE(pInstance->pShared->,FormatString);
 	else 
 		return szEmpty;
 }
 
-const wstring & CForegroundTextString::GetText() const
+const std::wstring & CForegroundTextString::GetText() const
 {
 	return wszCustomText;
 }
 
-void CForegroundTextString::SetText( const wstring &_szText ) 
+void CForegroundTextString::SetText( const std::wstring &_szText )
 { 
 	wszCustomText = _szText;
 	InitText();
@@ -135,7 +135,7 @@ void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 	}
 }
 
-void CPlacedText::SetText( const wstring &_wszText )
+void CPlacedText::SetText( const std::wstring &_wszText )
 {
 	if ( wszText == _wszText )
 		return;

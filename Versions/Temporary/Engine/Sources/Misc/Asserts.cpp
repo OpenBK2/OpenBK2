@@ -6,7 +6,7 @@
 #include "BSUInit.h"
 
 
-static void TypeDebugTrace( const char *buff, const char *pszWhat, const vector<SCallStackEntry> &entries )
+static void TypeDebugTrace( const char *buff, const char *pszWhat, const std::vector<SCallStackEntry> &entries )
 {
 	OutputDebugString( "*********************************************************************************************************\n" );
 	OutputDebugString( buff );
@@ -138,7 +138,7 @@ static LONG __stdcall CrashHandlerFilter( EXCEPTION_POINTERS *pExPtrs )
 {
 	char buff[1024];
 	// first, get stack trace...
-	vector<SCallStackEntry> entries;
+	std::vector<SCallStackEntry> entries;
 	entries.resize( 1000 );
 	int nEntries = CollectCallStack( pExPtrs, &entries[0], entries.size() );
 	entries.resize( nEntries );
@@ -182,7 +182,7 @@ EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDesc
 	if ( IsIgnore( ignores, pszFileName, nLineNumber ) )
 		return BSU_IGNORE;
 	//
-	vector<SCallStackEntry> entries;
+	std::vector<SCallStackEntry> entries;
 	{
 		entries.resize( 1000 );
 		int nEntries = CollectCallStack( &entries[0], entries.size() );

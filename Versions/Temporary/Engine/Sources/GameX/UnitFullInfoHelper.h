@@ -47,7 +47,7 @@ struct SWeapon
 	CDBPtr<NDb::SWeaponRPGStats> pWeapon;
 	int nCount;
 	bool bPrimary;
-	wstring wszLocalizedName;
+	std::wstring wszLocalizedName;
 	int nDamage;
 	int nPenetration;
 	int nAmmo;
@@ -75,8 +75,8 @@ struct SHP
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fFraction); f.Add(3,&nHP); return 0; }
 };
 
-void MakeWeapons( vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats );
-void MakeArmors( vector<int> &armors, const NDb::SHPObjectRPGStats *pStats );
+void MakeWeapons( std::vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats );
+void MakeArmors( std::vector<int> &armors, const NDb::SHPObjectRPGStats *pStats );
 int MakeHP( const NDb::SHPObjectRPGStats *pStats );
 
 const NDb::SAnimB2* FindAnimation( const NDb::SInfantryRPGStats *pStats );

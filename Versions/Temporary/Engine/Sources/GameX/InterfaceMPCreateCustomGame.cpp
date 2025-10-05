@@ -60,7 +60,7 @@ void CInterfaceMPCreateCustomGame::RegisterObservers()
 
 void CInterfaceMPCreateCustomGame::FillMapData()
 {
-	vector<CDBID> mpMapDBIDs;
+	std::vector<CDBID> mpMapDBIDs;
 	NCustom::GetMultiplayerMaps( &mpMapDBIDs );
 
 	for ( int i = 0; i < mpMapDBIDs.size(); ++i )
@@ -179,7 +179,7 @@ void CInterfaceMPCreateCustomGame::SliderPosition( const float fPosition, CWindo
 		return;	
 	int nPos = fPosition; // 
 	int nShown = nPos - pSliderGameSpeed->GetNSpecialPositions() / 2;
-	wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( StrFmt("  %+d", nShown ) );
+	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( StrFmt("  %+d", nShown ) );
 	pGameSpeedText->SetText( newtext );
 }
 
@@ -237,7 +237,7 @@ void CInterfaceMPCreateCustomGame::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
-bool CInterfaceMPCreateCustomGame::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPCreateCustomGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_session_name_change" )
 		return CheckEnableCreateButton();
@@ -263,12 +263,12 @@ bool CInterfaceMPCreateCustomGame::Execute( const string &szSender, const string
 	return false;
 }
 
-int CInterfaceMPCreateCustomGame::Check( const string &szCheckName ) const
+int CInterfaceMPCreateCustomGame::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 ///////////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////////
-bool CInterfaceMPCreateCustomGame::OnBackReaction( const string &szSender )
+bool CInterfaceMPCreateCustomGame::OnBackReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MP_CUSTOM_GAME_MENU, "" );
@@ -280,7 +280,7 @@ bool CInterfaceMPCreateCustomGame::OnBackReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const string &szSender )
+bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSender )
 {
 	if ( !pSelected )
 		return true;
@@ -300,7 +300,7 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const string &szSender 
 	pCreateMsg->specificInfo.pMPMap = pSelected;
 	pCreateMsg->info.nPlayersMax = pSelected->nPlayers - pNumPlayersBox->GetSelectedIndex();
 
-	wstring wszTime = L"???";
+	std::wstring wszTime = L"???";
 	if ( pTimeLimit )
 		wszTime = pTimeLimit->GetText();
 	int nTime = NStr::ToInt( NStr::ToMBCS ( wszTime ) );
@@ -325,7 +325,7 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const string &szSender 
 	int nCaptureTime = NStr::ToInt( NStr::ToMBCS ( wszTime ) );
 	pCreateMsg->specificInfo.nCaptureTime = nCaptureTime;
 
-	string szPassword = NStr::ToMBCS( pAdvancedPassword->GetText() );
+	std::string szPassword = NStr::ToMBCS( pAdvancedPassword->GetText() );
 	pCreateMsg->info.bPwdReq = ( !szPassword.empty() );
 	pCreateMsg->szPassword = szPassword;
 
@@ -347,7 +347,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	bool bEnableCreate = false;
 	bool bEnableGameType = false;
 	bool bEnableNumPlayers = false;	
-	wstring wszName = L"";
+	std::wstring wszName = L"";
 	CDBPtr <NDb::STexture> pMiniMapTexture = 0;
 
 	CPtr<IMiniMap> pWindowMiniMap = GetChildChecked<IMiniMap>( pMain, "Minimap", true );
@@ -425,7 +425,7 @@ void CInterfaceMPCreateCustomGame::AfterLoad()
 
 bool CInterfaceMPCreateCustomGame::CheckEnableCreateButton()
 {
-	wstring wszSessionName = pSessionName->GetText();
+	std::wstring wszSessionName = pSessionName->GetText();
 	pButtonCreateGame->Enable( pSelected != 0 && !wszSessionName.empty() );
 	return true;
 }

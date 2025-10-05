@@ -61,15 +61,15 @@ class CFileSkinPoints : public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CFileSkinPoints);
 public:
-	vector<SMassSphere> spheres;
+	std::vector<SMassSphere> spheres;
 	CVec3 massCenter;
 	struct SBodypart
 	{
-		vector<CVec3> points;
+		std::vector<CVec3> points;
 		CEdgesInfo edges;
-		vector<NGScene::SVertexWeight> weights;
+		std::vector<NGScene::SVertexWeight> weights;
 	};
-	typedef hash_map<int, SBodypart> CBodypartsHash;
+	typedef std::unordered_map<int, SBodypart> CBodypartsHash;
 	CBodypartsHash parts;
 };
 

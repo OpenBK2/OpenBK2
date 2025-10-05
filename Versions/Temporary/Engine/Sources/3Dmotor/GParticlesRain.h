@@ -17,7 +17,7 @@ private:
 	CDGPtr<CFuncBase<CVec4> > pCamera;
 	CObj<IParticleFilter> pFilter;
 public:
-	vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textureIDs;
+	std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textureIDs;
 private:
 	STime tStart;
 public:

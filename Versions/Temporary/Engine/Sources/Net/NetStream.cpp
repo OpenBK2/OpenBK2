@@ -52,7 +52,7 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 			nMaxSize = Min( nMaxSize, 255 );
 			int nSize = Min( nMaxSize, channelOutBuf.GetSize() );
 			
-			SChannelBlock &block = *channelOutFlyList.insert( channelOutFlyList.end() );
+			SChannelBlock &block = channelOutFlyList.emplace_back();
 			block.nOffset = nChannelOutputOffset;
 			block.nLength = nSize;
 			channelOutBuf.Read( block.cData, nSize );
@@ -141,7 +141,7 @@ void CStreamTracker::ReadMsg( CBitStream &bits )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CStreamTracker::Rollback( const vector<PACKET_ID> &pkts )
+void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 {
 	for ( int it = 0; it < pkts.size(); ++it )
 	{
@@ -163,25 +163,25 @@ void CStreamTracker::Rollback( const vector<PACKET_ID> &pkts )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CStreamTracker::Erase( const vector<PACKET_ID> &pkts )
+void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 {
 	for ( int i = 0; i < pkts.size(); ++i )
 	{
 		PACKET_ID nPkt = pkts[i];
-		hash_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
+		std::unordered_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
 		if ( k != reassign.end() )
 			reassign.erase( k );
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CStreamTracker::Commit( const vector<PACKET_ID> &pkts )
+void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 {
 	for ( int i = 0; i < pkts.size(); ++i )
 	{
 		PACKET_ID nPkt = pkts[i];
 		for(;;)
 		{
-			hash_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
+			std::unordered_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
 			if ( k == reassign.end() )
 				break;
 #ifdef LOG

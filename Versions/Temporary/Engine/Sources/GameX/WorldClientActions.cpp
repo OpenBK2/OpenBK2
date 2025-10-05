@@ -195,11 +195,11 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 		case NDb::SInfantryRPGStats::typeID:
 			if ( pSelector->GetSelectionState() == ssBuilding )
 			{
-				vector< CMOSelectable* >selection;
+				std::vector< CMOSelectable* >selection;
 				pSelector->GetSelection( &selection );
 				const int nBuildingID = (*(selection.begin()))->GetID();
 
-				vector<int> squad;
+				std::vector<int> squad;
 				const IMOUnit *pUnit = dynamic_cast<const IMOUnit *>( pMO );
 				if ( !pUnit )
 					return false;
@@ -241,15 +241,15 @@ bool CWorldClient::ActionLeave( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 {
 	if ( pSelector->GetSelectionState() == ssBuilding )
 	{
-		vector< CMOSelectable* >selection;
+		std::vector< CMOSelectable* >selection;
 		pSelector->GetSelection( &selection );
 
-		for ( vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
-			vector<CMOSelectable*> passengers;
+			std::vector<CMOSelectable*> passengers;
 			pContainer->GetPassangers( &passengers );
-			vector<int> units;
+			std::vector<int> units;
 			units.resize( passengers.size() );
 			for ( int i = 0; i < passengers.size(); ++i )
 			{
@@ -275,19 +275,19 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 {
 	if ( pSelector->GetSelectionState() == ssBuilding )
 	{
-		vector< CMOSelectable* >selection;
+		std::vector< CMOSelectable* >selection;
 		pSelector->GetSelection( &selection );
-		for ( vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
 
-			vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable*> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() ) 
 				return false;
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
-			vector<int> units;
+			std::vector<int> units;
 			units.push_back( nUnitIndex );
 
 			const int groupID = pCommandsSender->CommandRegisterGroup( units );
@@ -304,20 +304,20 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 	{
 //		return PerformGroupAction( ACTION_COMMAND_UNLOAD, CVec2( 300.0f, 300.0f ) ,(float)ALP_POSITION_INVALID, GetPlaceInQueue() );
 
-		vector< CMOSelectable* >selection;
+		std::vector< CMOSelectable* >selection;
 		pSelector->GetSelection( &selection );
-		for ( vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
 
-			vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable*> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() ) 
 				return false;
 				
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
-			vector<int> group;
+			std::vector<int> group;
 			group.push_back( pContainer->GetID() );
 
 			SAIUnitCmd command( ACTION_COMMAND_UNLOAD );

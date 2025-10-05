@@ -36,7 +36,7 @@ struct SDiscretePos
 	void MakeMatrix( SFBTransform *pRes ) const;
 	void MoveAndRotate( CVec3 *pPoint ) const;
 	void InvMoveAndRotate( CVec3 *pPoint ) const;
-	void MoveAndRotate( vector<CVec3> *pPoints ) const;
+	void MoveAndRotate( std::vector<CVec3> *pPoints ) const;
 	CFBTransform* GetTransform() const;
 };
 
@@ -83,7 +83,7 @@ inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 	switch ( nRotation )
 	{
 		case SDiscretePos::TURN_90:
-			swap( p->x, p->y );
+			std::swap( p->x, p->y );
 			FP_BITS( p->x ) ^= 0x80000000;
 			break;
 		case SDiscretePos::TURN_180:
@@ -91,7 +91,7 @@ inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 			FP_BITS( p->y ) ^= 0x80000000;
 			break;
 		case SDiscretePos::TURN_270:
-			swap( p->x, p->y );
+			std::swap( p->x, p->y );
 			FP_BITS( p->y ) ^= 0x80000000;
 			break;
 		case SDiscretePos::FLIP:
@@ -100,7 +100,7 @@ inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 	*p += ptMove;
 }
 
-inline void SDiscretePos::MoveAndRotate( vector<CVec3> *pPoints ) const
+inline void SDiscretePos::MoveAndRotate( std::vector<CVec3> *pPoints ) const
 {
 	ASSERT( pPoints );
 	for ( int i = 0; i < pPoints->size(); ++i )

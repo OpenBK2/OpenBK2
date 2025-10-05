@@ -11,11 +11,11 @@ class CBalanceTest
 	CDBPtr<NDb::SMapInfo> pBalanceMapInfo;
 	NTimer::STime timeBalanceStart;
 	bool bTest;
-	vector<int> shoot;
+	std::vector<int> shoot;
 
 	void PrintBalanceTestData();
 	void CollectBalanceTestData( int nIteration );
-	void AllignSizes( string *szTitle, string *szSide0, string *szSide1, int nAdd = 0 );
+	void AllignSizes( std::string *szTitle, std::string *szSide0, std::string *szSide1, int nAdd = 0 );
 public:
 	CBalanceTest() : bTest( false ), shoot( 3, false ) { }
 	void Clear() { bTest = false; }

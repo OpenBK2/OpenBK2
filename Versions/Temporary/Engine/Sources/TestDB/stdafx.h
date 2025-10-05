@@ -39,20 +39,12 @@
 #pragma warning( disable: 4273)
 #endif
 
-#include "Misc/nlist.h"
-#pragma component( mintypeinfo, off )
-#include "Misc/nstring.h"
-#include "Misc/nvector.h"
-#pragma component( mintypeinfo, on )
-#include "Misc/nhash_map.h"
-#include "Misc/nhash_set.h"
-#include "Misc/nset.h"
-#pragma component( mintypeinfo, off )
-//#pragma warning( disable : 4503 4018 4786 4800 4290 4146 4244 4284 4267 )
-
-using namespace nstl;
-
-#include "Misc/nhelpdebug.h"
+#include <list>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
 
 namespace NTimer
 {

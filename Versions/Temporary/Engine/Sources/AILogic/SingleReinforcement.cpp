@@ -41,14 +41,14 @@ bool PositionLocked( const CVec2 &vPos, const int nBoundTileRadius, const EAICla
 
 CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius, const EAIClasses aiClass )
 {
-	list<SObjTileInfo> tiles;
+	std::list<SObjTileInfo> tiles;
 
 	for ( CUnitsIter<0,0> it( 0, ANY_PARTY, vDefaultPos, nBoundTileRadius * FIND_POSITION_STEP * AI_TILE_SIZE ); !it.IsFinished(); it.Iterate() )
 	{
 		CAIUnit *pUnit = *it;
 		if ( IsValid( pUnit ) )
 		{
-			vector<SObjTileInfo> tempTiles;
+			std::vector<SObjTileInfo> tempTiles;
 			const SUnitProfile &profile = pUnit->GetUnitProfile();
 			if ( profile.bRect )
 				GetAIMap()->GetTilesCoveredByRect( profile.rect, &tempTiles );
@@ -86,9 +86,9 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 	return vResult;
 }
 
-void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vector<NDb::SReinforcementEntry> &entries,
-	const vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
-	list< pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates )
+void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
+	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
+	std::list< std::pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates )
 {
 	if ( !bDisableUpdates )
 	{
@@ -98,12 +98,12 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vect
 	}
 
 	LinkInfo links;
-	list<CCommonUnit*> units;
+	std::list<CCommonUnit*> units;
 
-	list<int> freeLinks;
+	std::list<int> freeLinks;
 	CLinkObject::GetFreeLinks( &freeLinks, entries.size() );
-	list<int>::const_iterator itLink = freeLinks.begin();
-	hash_map<int,int> linksDistrib;
+	std::list<int>::const_iterator itLink = freeLinks.begin();
+	std::unordered_map<int,int> linksDistrib;
 	for ( int i = 0; i < entries.size(); ++i )
 	{
 		NI_ASSERT( i < pos.size(), StrFmt( "MAP DESIGN: not enough positions in deploy mask, need %i, unit not deployed", i+1 )  );
@@ -182,7 +182,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vect
 			CObjectBase *pObj = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->AddObject( nUniqueID, info, &links, false, pStats, eType );
 			if ( pObj )
 			{
-				pObjects->push_back( pair<int, CObjectBase*>( i, pObj ) );
+				pObjects->push_back( std::pair<int, CObjectBase*>( i, pObj ) );
 
 				if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>( pObj ) )
 				{
@@ -215,7 +215,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vect
 		( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES || eType == NDb::RT_RECON ) )
 	{
 		CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
-		for ( list<CCommonUnit*>::iterator it = units.begin(); it != units.end(); ++it )
+		for ( std::list<CCommonUnit*>::iterator it = units.begin(); it != units.end(); ++it )
 			pParam->unitIDs.push_back( (*it)->GetUniqueID() );
 
 		if ( !bDisableUpdates )
@@ -226,16 +226,16 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vect
 	theSupremeBeing.GiveNewUnitsToGenerals( units, true );
 }
 
-void PlaceSingleLandReinforcement( EReinforcementType eType, const int nPlayer, const vector<NDb::SReinforcementEntry> &entries,
-	const int nForceID,	const vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const WORD wDirection )
+void PlaceSingleLandReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
+	const int nForceID,	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const WORD wDirection )
 {
-	list< pair<int, CObjectBase*> > objects;
+	std::list< std::pair<int, CObjectBase*> > objects;
 	PlaceReinforcement( eType, nPlayer, entries, position, vPosition, wDirection, &objects, nForceID, -1, false );
 }
 
 void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const EReinforcementType eType,
 	const NDb::SDeployTemplate *pTemplate, const CVec2 &vPosition, WORD wDirection, const int nScriptID,
-	list< pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates )
+	std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates )
 {
 	CDBPtr<NDb::SDeployTemplate> pFinalTemplate = pTemplate;
 
@@ -246,8 +246,8 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 	if ( pFinalTemplate == 0 )
 		return;
 
-	list< pair<int, CObjectBase*> > objects;
-	list< pair<int, CObjectBase*> > *pObjectsLocal = pObjects == 0 ? &objects : pObjects;
+	std::list< std::pair<int, CObjectBase*> > objects;
+	std::list< std::pair<int, CObjectBase*> > *pObjectsLocal = pObjects == 0 ? &objects : pObjects;
 	PlaceReinforcement( eType, nPlayer, pReinf->entries, pFinalTemplate->entries, vPosition, wDirection, pObjectsLocal, -1, nScriptID, bDisableUpdates );
 
 	/*list<CCommonUnit*> units;
@@ -266,7 +266,7 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const NDb::SDeployTemplate *pTemplate,
 																	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget )
 {
-	vector<NDb::SReinforcementEntry> entries;
+	std::vector<NDb::SReinforcementEntry> entries;
 	int nMinLink = 0;
 	entries.resize( pReinf->transports.size() + pReinf->entries.size() );
 
@@ -304,13 +304,13 @@ void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *
 		}
 	}
 
-	list< pair<int, CObjectBase*> > objects;
+	std::list< std::pair<int, CObjectBase*> > objects;
 	PlaceReinforcement( pReinf->eType, nPlayer, entries, pTemplate->entries, vPosition, wDirection, &objects, -1, nScriptID, false );
 
 	// Make a list of transports
-	list<CAIUnit*> ships;
+	std::list<CAIUnit*> ships;
 	int i = 0;
-	for ( list< pair<int, CObjectBase*> >::iterator iter = objects.begin(); iter != objects.end(); ++iter, ++i )
+	for ( std::list< std::pair<int, CObjectBase*> >::iterator iter = objects.begin(); iter != objects.end(); ++iter, ++i )
 	{
 		CObjectBase *pObj = iter->second;
 		CAIUnit *pUnit = dynamic_cast<CAIUnit*>( pObj );

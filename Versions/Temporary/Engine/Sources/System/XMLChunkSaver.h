@@ -19,23 +19,23 @@ class CXMLChunkSaver : public IXmlSaver
 	CObj<NXml::CXmlReader> pXmlReader;
 	const NXml::CXmlNode *pReadNode;
 
-	vector<const NXml::CXmlNode*> readChunkLevels;
+	std::vector<const NXml::CXmlNode*> readChunkLevels;
 	int nCurChunkLevel;
 
 	CXMLDocument document;
 	CDataStream *pDstStream;
 	CXMLMultiNode *pCurrNode;
-	typedef list<CXMLMultiNode*> CChunksList;
+	typedef std::list<CXMLMultiNode*> CChunksList;
 	CChunksList chunkLevels;
 	bool bReading;
-	string szCurrObjectPath;
-	list<string> objectNamesStack;
+	std::string szCurrObjectPath;
+	std::list<std::string> objectNamesStack;
 	//
-	typedef hash_map<void*,CPtr<CXmlResource>,SDefaultPtrHash> CObjectsHash;
+	typedef std::unordered_map<void*,CPtr<CXmlResource>,SDefaultPtrHash> CObjectsHash;
 	CObjectsHash objects;
-	typedef hash_map<void*,bool,SDefaultPtrHash> CPObjectsHash;
+	typedef std::unordered_map<void*,bool,SDefaultPtrHash> CPObjectsHash;
 	CPObjectsHash storedObjects;
-	list< CPtr<CXmlResource> > toStore;
+	std::list< CPtr<CXmlResource> > toStore;
 	//
 	void PushReadChunkLevel( const NXml::CXmlNode *pNode );
 	void PopReadChunkLevel();
@@ -51,19 +51,19 @@ class CXMLChunkSaver : public IXmlSaver
 	bool DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber );
 	bool DataChunkDBID( CDBID *pDBID );
 	bool DataChunkFilePath( NFile::CFilePath *pFilePath );
-	bool DataChunkString( string &data );
-	bool DataChunkString( wstring &data );
+	bool DataChunkString( std::string &data );
+	bool DataChunkString( std::wstring &data );
 	//
 	void ReportCurrentObject( const CDBID &dbid );
 	void PushCurrentObject( const CDBID &dbid );
 	void PopCurrentObject();
-	const string &GetCurrObjectPath() const { return szCurrObjectPath; }
+	const std::string &GetCurrObjectPath() const { return szCurrObjectPath; }
 	//
 	bool AddAttribute( const chunk_id attrName, bool *pData );
 	bool AddAttribute( const chunk_id attrName, int *pData );
 	bool AddAttribute( const chunk_id attrName, float *pData );
-	bool AddAttribute( const chunk_id attrName, string *pData );
-	bool AddAttribute( const chunk_id attrName, wstring *pData );
+	bool AddAttribute( const chunk_id attrName, std::string *pData );
+	bool AddAttribute( const chunk_id attrName, std::wstring *pData );
 	//
 	void StoreObject( CObjectBase *pObject );
 	CObjectBase* LoadObject();

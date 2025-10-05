@@ -69,7 +69,7 @@ void CMessageReactionB2::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SMessageReactionComplex *pDesc = checked_cast<const NDb::SMessageReactionComplex*>( _pDesc );
 
-	for ( vector<NDb::SMessageSequienceEntry>::const_iterator it = pDesc->branches.begin(); it != pDesc->branches.end(); ++it )
+	for ( std::vector<NDb::SMessageSequienceEntry>::const_iterator it = pDesc->branches.begin(); it != pDesc->branches.end(); ++it )
 		InitSequienceByDesc( &branches[it->nCustomCheckReturn], it->sequience.data );
 	
 	pCheck = CUIFactory::MakeCheck( pDesc->pConditionCheck );

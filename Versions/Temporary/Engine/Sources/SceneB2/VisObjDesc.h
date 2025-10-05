@@ -53,8 +53,8 @@ public:
 
 struct SModelVisObjDesc : public SVisObjDescBase
 {
-	typedef hash_map< int, CObj<struct IAttachedObject> > TAttachOfOneType;
-	typedef hash_map<int, TAttachOfOneType> CAttaches;
+	typedef std::unordered_map< int, CObj<struct IAttachedObject> > TAttachOfOneType;
+	typedef std::unordered_map<int, TAttachOfOneType> CAttaches;
 	ZDATA_( SVisObjDescBase )
 		CDBPtr<NDb::SModel> pModel;
 		SVisObjSelection selection;
@@ -66,7 +66,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 		CObj<CObjectBase> pCircle;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SVisObjDescBase *)this); f.Add(2,&pModel); f.Add(3,&selection); f.Add(4,&bSelected); f.Add(5,&fFade); f.Add(6,&attachedObjects); f.Add(8,&pLowLevelModel); f.Add(9,&pCircle); return 0; }
 
-	static vector<int> n2Attach;
+	static std::vector<int> n2Attach;
 	CObj<CObjectBase> pObjLowLevel;
 	
 	CSyncSrcBind<IVisObj> srcBind;
@@ -79,7 +79,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	}
 
 	void SetFade( float _fFade ) { fFade = _fFade; }
-	void FillBBPoints( vector<CVec3> &bbPoints, vector<WORD> &bbIndices );
+	void FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<WORD> &bbIndices );
 	void UpdateBBPolyLine( NGScene::IGameView *pGScene );
 	void UpdateSrcBind();
 	//

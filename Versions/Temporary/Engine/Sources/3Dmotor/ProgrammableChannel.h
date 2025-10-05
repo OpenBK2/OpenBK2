@@ -26,7 +26,7 @@ private:
 	};
 	ZDATA
 		CDGPtr< CFuncBase<STime> > pTime;
-	vector<SSegment> segments;
+	std::vector<SSegment> segments;
 	float fDefaultValue;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTime); f.Add(3,&segments); f.Add(4,&fDefaultValue); return 0; }
 
@@ -67,7 +67,7 @@ public:
 
 	void AddSegment( STime startTime, STime endTime, float fValue )
 	{
-		SSegment &segment = segments.push_back();
+		SSegment &segment = segments.emplace_back();
 		segment.tStartTime = startTime;
 		segment.tEndTime = endTime;
 		segment.fValue = fValue;

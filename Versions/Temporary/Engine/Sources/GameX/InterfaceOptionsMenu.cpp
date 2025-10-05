@@ -21,7 +21,7 @@
 const int ITEM_DELTA_X = 3;
 const int ITEM_DELTA_Y = 3;
 
-int FindStateByValue( const string &szValue, const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry )
+int FindStateByValue( const std::string &szValue, const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry )
 {
 	for ( int i = 0; i < entry.states.size(); ++i )
 	{
@@ -57,7 +57,7 @@ int FindStateByValue( const string &szValue, const NDb::SOptionSystem::SOptionsC
 
 // CInterfaceOptionsMenu::CReactions
 
-bool CInterfaceOptionsMenu::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceOptionsMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_category_select" )
 	{
@@ -77,7 +77,7 @@ bool CInterfaceOptionsMenu::CReactions::Execute( const string &szSender, const s
 	return false;
 }
 
-int CInterfaceOptionsMenu::CReactions::Check( const string &szCheckName ) const
+int CInterfaceOptionsMenu::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -246,7 +246,7 @@ bool CInterfaceOptionsMenu::StepLocal( bool bAppActive )
 void CInterfaceOptionsMenu::ChangeResolution()
 {
 	CVec2 vScreenSize = Scene()->GetScreenRect();
-	const wstring wszResolution = NStr::ToUnicode( StrFmt( "%dx%d", int(vScreenSize.x), int(vScreenSize.y) ) );
+	const std::wstring wszResolution = NStr::ToUnicode( StrFmt( "%dx%d", int(vScreenSize.x), int(vScreenSize.y) ) );
 
 	bool bGFXOptionsChanged = false;
 	for ( int i = 0; i < options.size(); ++i )
@@ -273,12 +273,12 @@ void CInterfaceOptionsMenu::ChangeResolution()
 
 			if ( entry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER )
 			{
-				NGlobal::ProcessCommand( wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", options[i].fSliderPosition ) ) );
+				NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", options[i].fSliderPosition ) ) );
 				options[i].fSliderPosition = NGlobal::GetVar( "gfx_quality" );
 			}
 			else
 			{
-				NGlobal::ProcessCommand( wstring( L"set_quality " ) + NStr::ToUnicode( options[i].szCurrentValue ) );
+				NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( options[i].szCurrentValue ) );
 				options[i].szCurrentValue = NStr::ToMBCS( NGlobal::GetVar( "gfx_quality" ).GetString() );
 			}
 			break;
@@ -296,7 +296,7 @@ void CInterfaceOptionsMenu::ChangeResolution()
 
 void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 {
-	wstring wszUnicode;
+	std::wstring wszUnicode;
 	int nItemX, nItemY, nItemSX, nItemSY;
 	int nWidthAll, nWidthLeft, nWidthRight;
 
@@ -451,7 +451,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 					if ( pOption->szProgName == "gfx_resolution" )
 					{
 						const NGlobal::CValue resolutionValue = NGlobal::GetVar( "gfx_resolution", "1024x768" );
-						const string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
+						const std::string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
 						pOptionControl->SetTextString( NStr::ToUnicode( szCurrentMode ) );
 						pOptionControl->SetTooltip( GET_TEXT_PRE(pEntry.states[0].,Tooltip) );
 						NGlobal::SetVar( "gfx_resolution", szCurrentMode );
@@ -475,7 +475,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 	}
 }
 
-void CInterfaceOptionsMenu::OnSelectCategory( const string &szSender )
+void CInterfaceOptionsMenu::OnSelectCategory( const std::string &szSender )
 {
 	CommitEditLineChanges();
 
@@ -490,13 +490,13 @@ void CInterfaceOptionsMenu::OnSelectCategory( const string &szSender )
 	SelectCategory( -1, false );
 }
 
-void CInterfaceOptionsMenu::OnControlChange( const string &szSender )
+void CInterfaceOptionsMenu::OnControlChange( const std::string &szSender )
 {
 	IButton					*pButtonControl;
 	IWindow					*pWindow;
 	IEditLine				*pEditLineControl;
 	SOptionInstance *pOption;
-	string					szMBCS;
+	std::string					szMBCS;
 
 	for ( int i = 0; i < options.size(); ++i )			//Cycle for all options in the current category
 	{
@@ -539,18 +539,18 @@ void CInterfaceOptionsMenu::OnControlChange( const string &szSender )
 				pButtonControl = dynamic_cast<IButton*>( pWindow );
 				if ( pOption->szProgName == "gfx_resolution" )
 				{
-					list<NGfx::SVideoMode> modeList;
+					std::list<NGfx::SVideoMode> modeList;
 					NGfx::GetModesList( &modeList, ( NGlobal::GetVar( "gfx_16bit_mode", 0 ) == 1 ) ? 16 : 32 );
-					list<string> resolutions;
-					for ( list<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
+					std::list<std::string> resolutions;
+					for ( std::list<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
 					{
 						if ( it->nXSize > 600 && it->nYSize > 450 )
 							resolutions.push_back( StrFmt( "%dx%d", it->nXSize, it->nYSize ) );
 					}
 					const NGlobal::CValue resolutionValue = NGlobal::GetVar( "gfx_resolution", "1024x768" );
-					const string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
-					list<string>::iterator nextModeIt = resolutions.end();
-					for ( list<string>::iterator it = resolutions.begin(); it != resolutions.end(); ++it )
+					const std::string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
+					std::list<std::string>::iterator nextModeIt = resolutions.end();
+					for ( std::list<std::string>::iterator it = resolutions.begin(); it != resolutions.end(); ++it )
 					{
 						if ( *it == szCurrentMode )
 						{
@@ -561,7 +561,7 @@ void CInterfaceOptionsMenu::OnControlChange( const string &szSender )
 					}
 					if ( nextModeIt == resolutions.end() )
 						nextModeIt = resolutions.begin();
-					const string szResolution = *nextModeIt;
+					const std::string szResolution = *nextModeIt;
 					pWindow->SetTextString( NStr::ToUnicode( szResolution ) );
 					pWindow->SetTooltip( GET_TEXT_PRE(entry.states[0].,Tooltip) );
 					NGlobal::SetVar( "gfx_resolution", szResolution );
@@ -617,7 +617,7 @@ void CInterfaceOptionsMenu::CommitEditLineChanges()
 	IWindow					*pWindow;
 	IEditLine				*pEditLineControl;
 	SOptionInstance *pOption;
-	string					szMBCS;
+	std::string					szMBCS;
 
 	if ( nSelectedCategory == -1 )
 		return;
@@ -701,7 +701,7 @@ bool CInterfaceOptionsMenu::ProcessEvent( const SGameMessage &msg )
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }
 
-void CInterfaceOptionsMenu::SetMode( const string &szMode )
+void CInterfaceOptionsMenu::SetMode( const std::string &szMode )
 {
 	if ( szMode == "mp_filters" ) 
 		screenMode = MODE_FILTERS;
@@ -728,12 +728,12 @@ void CICOptionsMenu::Configure( const char *pszConfig )
 }
 
 static float s_fQuality = -1.0f;
-static void CommandQuality( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandQuality( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
 		return;
 
-	string szParam;
+	std::string szParam;
 	NStr::ToMBCS( &szParam, paramsSet[0] );
 
 	float fParam = -1;
@@ -776,8 +776,8 @@ static void CommandQuality( const string &szID, const vector<wstring> &paramsSet
 		ASSERT( nNumValues == pQualityOption->sliderValues[iSliderVariable].values.size() );
 
 		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue &sliderVariable = pQualityOption->sliderValues[iSliderVariable];
-		const string &szProgName = sliderVariable.szProgName;
-		const wstring wszValue = NStr::ToUnicode( sliderVariable.values[nValue] );
+		const std::string &szProgName = sliderVariable.szProgName;
+		const std::wstring wszValue = NStr::ToUnicode( sliderVariable.values[nValue] );
 
 		NGlobal::SetVar( szProgName, wszValue );
 	}
@@ -785,12 +785,12 @@ static void CommandQuality( const string &szID, const vector<wstring> &paramsSet
 	NGlobal::SetVar( "gfx_quality", fParam );
 }
 
-static void CommandAutodetect( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( NGlobal::GetVar( "game_mode_editor", 0 ) != 0 )
 	{
 		// For editor should be the hightest quality
-		NGlobal::ProcessCommand( wstring( L"set_quality 1" ) );
+		NGlobal::ProcessCommand( std::wstring( L"set_quality 1" ) );
 		return;
 	}
 
@@ -805,7 +805,7 @@ static void CommandAutodetect( const string &szID, const vector<wstring> &params
 	fPerfomance = min( fPerfomance, max( 0, (performanceInfo.fTriangleRate - 5.0f)/5.0f ) );
 	fPerfomance = Clamp( fPerfomance, 0.0f, 1.0f );
 
-	NGlobal::ProcessCommand( wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", fPerfomance ) ) );
+	NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", fPerfomance ) ) );
 }
 
 START_REGISTER(CInterfaceOptionsMenu)

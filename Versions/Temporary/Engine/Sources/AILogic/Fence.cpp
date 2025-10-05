@@ -38,7 +38,7 @@ void CFence::InitDirectionInfo()
 {
 	const int nDir = ConvertToNAngle( GetDir() );
 
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetCoveredTiles( &tiles );
 
 	// "rigth tile" - tile under object center
@@ -50,7 +50,7 @@ void CFence::InitDirectionInfo()
 	const SVector vOtherEndTile( AICellsTiles::GetTile( vOtherEnd ) );
 
 	bool bFound = false;
-	for ( list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	for ( std::list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		const SVector &tile = *iter;
 		if ( tile == vOtherEndTile ) 
@@ -120,7 +120,7 @@ void CFence::Delete()
 		LockTiles();
 	}
 
-	for ( list< CPtr<CFence> >::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
+	for ( std::list< CPtr<CFence> >::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
 		(*it)->DamagePartially( this );
 }
 

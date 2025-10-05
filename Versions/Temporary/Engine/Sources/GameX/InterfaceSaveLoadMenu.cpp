@@ -12,7 +12,7 @@
 
 // CInterfaceSaveLoadMenu::CReactions
 
-bool CInterfaceSaveLoadMenu::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceSaveLoadMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_selection_change" )
 	{
@@ -22,7 +22,7 @@ bool CInterfaceSaveLoadMenu::CReactions::Execute( const string &szSender, const 
 	return false;
 }
 
-int CInterfaceSaveLoadMenu::CReactions::Check( const string &szCheckName ) const
+int CInterfaceSaveLoadMenu::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -36,8 +36,8 @@ bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegame
 	if ( save1.info.bAutoSave != save2.info.bAutoSave )
 		return save1.info.bAutoSave;
 
-	wstring wszName1 = save1.wszName;
-	wstring wszName2 = save2.wszName;
+	std::wstring wszName1 = save1.wszName;
+	std::wstring wszName2 = save2.wszName;
 	transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower ); 
 	transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower ); 
 
@@ -228,7 +228,7 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		if ( pName )
 			pName->SetText( pName->GetDBText() + save.wszName );
 		
-		wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d %02d:%02d", 
+		std::wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d %02d:%02d",
 			save.time.wDay, save.time.wMonth, save.time.wYear,
 			save.time.wHour, save.time.wMinute ) );
 		if ( pDate )
@@ -295,7 +295,7 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 				DeleteFile( saves[nSelected].szInfoFileName.c_str() );		//Result is irrelevant
 
 				//Delete screen entry
-				NSaveLoad::CSaveList::iterator it = &(saves[nSelected]);
+				NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;
 				saves.erase( it );
 				//nSelected = -1;
 				//Rebuild list
@@ -384,7 +384,7 @@ void CInterfaceSaveLoadMenu::MsgLoad( const SGameMessage &msg )
 void CInterfaceSaveLoadMenu::MsgSave( const SGameMessage &msg )
 {
 	//Get EditLine contents
-	wstring wszSaveName = pEditLine ? pEditLine->GetText() : L"";
+	std::wstring wszSaveName = pEditLine ? pEditLine->GetText() : L"";
 
 	if ( wszSaveName.empty() )
 	{
@@ -418,7 +418,7 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 	NSaveLoad::SSavegameEntry sg;
 	
 	//Get EditLine contents
-	wstring wszSaveName = pEditLine ? pEditLine->GetText() : L"";
+	std::wstring wszSaveName = pEditLine ? pEditLine->GetText() : L"";
 	nSelected = -1;
 	for ( int i = 0; i < saves.size(); ++i )
 	{
@@ -443,7 +443,7 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 		DeleteFile( saves[nSelected].szInfoFileName.c_str() );		//Result is irrelevant
 
 		//Delete screen entry
-		NSaveLoad::CSaveList::iterator it = &(saves[nSelected]);
+		NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;
 		saves.erase( it );
 	}
 	else
@@ -475,7 +475,7 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 		NInput::PostEvent( "menu_return_from_subscreen", 0, 0 );
 }
 
-void CInterfaceSaveLoadMenu::SetMode( const string &szMode )
+void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 {
 	ePrevInterface = EPI_ANY;
 	bLoadMode = true;
@@ -568,7 +568,7 @@ void CInterfaceSaveLoadMenu::SetMode( const string &szMode )
 	}
 }
 
-void CInterfaceSaveLoadMenu::OnSelectionChange( const string &szSender )
+void CInterfaceSaveLoadMenu::OnSelectionChange( const std::string &szSender )
 {
 	nSelected = -1;
 	IWindow *pSelection = pSaveList ? pSaveList->GetSelectedItem() : 0;
@@ -588,11 +588,11 @@ void CInterfaceSaveLoadMenu::OnSelectionChange( const string &szSender )
 
 void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &info )
 {
-	wstring wszCampaign;
-	wstring wszChapter;
-	wstring wszMission;
-	wstring wszBriefing;
-	wstring wszChapterBriefing;
+	std::wstring wszCampaign;
+	std::wstring wszChapter;
+	std::wstring wszMission;
+	std::wstring wszBriefing;
+	std::wstring wszChapterBriefing;
 
   //Campaign
 	wszCampaign = info.GetCampaignName();

@@ -38,7 +38,7 @@ public:
 	bool Load( struct IMOUnit *pMO, bool bEnter ) { return false; }
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
 	void UpdatePassangers() { }
-	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const {}
+	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const {}
 	int GetPassangersCount() const { return 0; }
 	int GetFreePlaces() const { return 0; }
 	int GetFreeMechPlaces() const { return 0; }

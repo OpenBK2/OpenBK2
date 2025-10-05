@@ -72,7 +72,7 @@ void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coo
 	}
 }
 
-void PlanePathTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	CVec3 x0( 7073.2544f, 1606.7415f, 1149.9806f );
 	CVec3 x1( 7313.3174f, 3108.7656f, 1150.0000f );
@@ -96,7 +96,7 @@ void PlanePathTest( const string &szID, const vector<wstring> &paramsSet, void *
 	
 	const float fAtom = 30;
 	float fPathLenght = pCP->GetLength();
-	vector<CVec3> points;
+	std::vector<CVec3> points;
 	for ( float fCur = 0; fCur < fPathLenght; fCur += fAtom )
 		points.push_back( pCP->GetPoint( fCur ) );
 

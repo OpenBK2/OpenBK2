@@ -5,11 +5,11 @@
 namespace NLXML
 {
 
-static const string szEntityAmp		= "amp;";		// '&'
-static const string szEntityLt		= "lt;";		// '<'
-static const string szEntityGt		= "gt;";		// '>'
-static const string szEntityQuot	= "quot;";	// '\"'
-static const string szEntityApos	= "apos;";	// '\''
+static const std::string szEntityAmp		= "amp;";		// '&'
+static const std::string szEntityLt		= "lt;";		// '<'
+static const std::string szEntityGt		= "gt;";		// '>'
+static const std::string szEntityQuot	= "quot;";	// '\"'
+static const std::string szEntityApos	= "apos;";	// '\''
 
 // ************************************************************************************************************************ //
 // **
@@ -19,7 +19,7 @@ static const string szEntityApos	= "apos;";	// '\''
 // **
 // ************************************************************************************************************************ //
 
-void CWriteStream::WriteChecked( const string &str )
+void CWriteStream::WriteChecked( const std::string &str )
 {
 	int i = 0;
 	while( i < str.length() )
@@ -134,7 +134,7 @@ const char* GetEntity( const char *p, char *pValue )
 	return p;
 }
 
-const char* ReadName( const char *p, string *pszName )
+const char* ReadName( const char *p, std::string *pszName )
 {
 	pszName->clear();
 	ASSERT( p );
@@ -153,8 +153,8 @@ const char* ReadName( const char *p, string *pszName )
 	return 0;
 }
 
-const char* ReadText( string *pszText, const char *pszBegin, const char *pszEnd, 
-										  const string &szEndTag, const bool bTrimWhiteSpace )
+const char* ReadText( std::string *pszText, const char *pszBegin, const char *pszEnd,
+										  const std::string &szEndTag, const bool bTrimWhiteSpace )
 {
   pszText->clear();
 	CStringComposer buffer;

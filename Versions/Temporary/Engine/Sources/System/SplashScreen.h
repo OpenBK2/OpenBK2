@@ -6,7 +6,7 @@
 namespace NSplash
 {
 
-SYSTEM_EXPORT CObjectBase *CreateSplashScreen( const string &_szImageFileName, bool bTopMost );
+SYSTEM_EXPORT CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopMost );
 
 }
 

@@ -26,8 +26,8 @@ namespace NTypeDef
 
 class COldTypeIDs
 {
-	typedef hash_map<int, CDBID> CRecordID2DBIDMap;
-	typedef hash_map< int, CRecordID2DBIDMap> COldTypesMap;
+	typedef std::unordered_map<int, CDBID> CRecordID2DBIDMap;
+	typedef std::unordered_map< int, CRecordID2DBIDMap> COldTypesMap;
 	COldTypesMap oldTypesMap;
 public:
 	bool RegisterOldType( const int nTypeID, const int nRecordID, const CDBID &dbid )
@@ -51,7 +51,7 @@ public:
 		COldTypesMap::const_iterator posType = oldTypesMap.find( nTypeID );
 		if ( posType == oldTypesMap.end() )
 			return 0;
-		hash_map<int, CDBID>::const_iterator posDBID = posType->second.find( nRecordID );
+		std::unordered_map<int, CDBID>::const_iterator posDBID = posType->second.find( nRecordID );
 		if ( posDBID == posType->second.end() )
 			return 0;
 		return &( posDBID->second );
@@ -82,16 +82,16 @@ public:
 	CBasicDatabase(): bDataChanged( false ) {}
 	//
 	virtual bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) = 0;
-	virtual bool RegisterResourceFile( const string &szFileName ) = 0;
-	virtual bool IsFileRegistered( const string &szFileName ) = 0;
+	virtual bool RegisterResourceFile( const std::string &szFileName ) = 0;
+	virtual bool IsFileRegistered( const std::string &szFileName ) = 0;
 	virtual void SetLoadDepth( int nLoadDepth ) = 0;
 	//
 	virtual IObjMan *GetManipulator( const CDBID &dbid ) = 0;
 	virtual CResource *GetObject( const CDBID &dbid ) = 0;
 	virtual bool DoesObjectExist( const CDBID &dbid ) = 0;
 	//
-	virtual IObjMan *CreateNewObject( const string &szClassTypeName ) = 0;
-	virtual bool AddNewObject( const string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) = 0;
+	virtual IObjMan *CreateNewObject( const std::string &szClassTypeName ) = 0;
+	virtual bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) = 0;
 	virtual bool RemoveObject( const CDBID &dbid ) = 0;
 	virtual bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) = 0;
 	//
@@ -100,12 +100,12 @@ public:
 	virtual void DropCachedResources() = 0;
 	//
 	// retrieve all terminal classes list
-	virtual bool GetClassesList( vector<NTypeDef::STypeClass*> *pRes ) = 0;
+	virtual bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes ) = 0;
 	// retrieve all objects by type
-	virtual bool GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName ) = 0;
-	virtual bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID ) = 0;
+	virtual bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) = 0;
+	virtual bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID ) = 0;
 	// retrieve class type name for requested object
-	virtual string GetClassTypeName( const CDBID &dbid ) = 0;
+	virtual std::string GetClassTypeName( const CDBID &dbid ) = 0;
 	// changed DB objects - checks and reports
 	void SetDataChanged() { bDataChanged = true; }
 	void SetDataChanged( const CDBID &dbid ) { SetDataChanged(); ReportObjectChanged(dbid); }

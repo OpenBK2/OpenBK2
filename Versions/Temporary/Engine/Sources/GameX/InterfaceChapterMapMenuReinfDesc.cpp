@@ -184,7 +184,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SMechUnitRPGStats *pMec
 	ReinfDescMakeUnitInfo();
 }
 
-void CInterfaceChapterMapMenu::OnReinfDescItem( const string &szSender )
+void CInterfaceChapterMapMenu::OnReinfDescItem( const std::string &szSender )
 {
 	for ( int i = 0; i < reinfDescUnits.size(); ++i )
 	{
@@ -355,7 +355,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	ITextView *pUnitPiercing = GetChildChecked<ITextView>( GetCurrentReinfDescPopup(), "UnitParamsPiercing", true );
 	IButton *pEncyclopedia = GetChildChecked<IButton>( GetCurrentReinfDescPopup(), "ReinfDescEncyclopedia", true );
 
-	wstring wszUnitName = L"";
+	std::wstring wszUnitName = L"";
 	int nHP = 0;
 	int nArmor = 0;
 	int nDamage = 0;
@@ -572,10 +572,10 @@ void CInterfaceChapterMapMenu::ReinfDescSelectReinf( int nIndex )
 		pButtonScrollRight->Enable( false );
 }
 
-bool CInterfaceChapterMapMenu::OnMouseOverReinf( const string &szSender, bool bEnter )
+bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bool bEnter )
 {
 	const int nLocalPlayer = 0;
-	vector<IScenarioTracker::SChapterReinf> reinfs;
+	std::vector<IScenarioTracker::SChapterReinf> reinfs;
 	Singleton<IScenarioTracker>()->GetChapterCurrentReinforcements( &reinfs, nLocalPlayer );
 
 	for( int nRType = 0; nRType < reinfButtons.size(); ++nRType )

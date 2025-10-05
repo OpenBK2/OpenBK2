@@ -10,9 +10,9 @@ SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 //#define CALC_SIZE
 
 #ifdef CALC_SIZE
-typedef hash_map<string, int> TObjSizes;
+typedef std::unordered_map<std::string, int> TObjSizes;
 static TObjSizes objSizes;
-static string szWhoSaved;
+static std::string szWhoSaved;
 #endif
 
 typedef IBinSaver::chunk_id chunk_id;
@@ -367,7 +367,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 #ifdef CALC_SIZE
 	if ( pObject )
 	{
-		string szObjectName = typeid(*pObject).name();
+		std::string szObjectName = typeid(*pObject).name();
 	}
 #endif
 }
@@ -409,7 +409,7 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 {
 	SChunkLevel &last = chunks.back();
-	chunks.push_back();
+	chunks.emplace_back();
 	if ( IsReading() ) 
 	{
 		bool bRes = GetShortChunk( last, idChunk, chunks.back(), nChunkNumber );
@@ -456,7 +456,7 @@ int CStructureSaver::CountChunks( const chunk_id idChunk )
 	return CountShortChunks( chunks.back(), idChunk );
 }
 
-void CStructureSaver::Start( const vector<SBinSaverExternalObject> &ext )
+void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 {
 #ifdef CALC_SIZE
 	objSizes.clear();
@@ -469,7 +469,7 @@ void CStructureSaver::Start( const vector<SBinSaverExternalObject> &ext )
 	chunks.clear();
 	obj.Clear();
 	data.Clear();
-	chunks.push_back();
+	chunks.emplace_back();
 	if ( bIsReading )
 	{
 		CMemoryStream version, compress;
@@ -551,7 +551,7 @@ void CStructureSaver::Start( const vector<SBinSaverExternalObject> &ext )
 					// check if there are any unsaved fields
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
 					{
-						static vector<const type_info*> ignores;
+						static std::vector<const type_info*> ignores;
 						bool bPerformCheck = true;
 						const type_info &ti = typeid( *pObject );
 						for ( int k = 0; k < ignores.size(); ++k )
@@ -693,18 +693,18 @@ void CStructureSaver::Finish()
 	chunks.clear();
 }
 
-IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext )
+IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext )
 {
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, mode, ext );
 }
 
-IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &checkers )
+IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const std::vector<SBinSaverExternalObject> &external, std::vector< CPtr<IDebugSaveCheckObj> > &checkers )
 {
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, SAVER_MODE_WRITE, external, checkers );
 }
 
 #ifdef CALC_SIZE
-static void Size( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void Size( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	int nSize = 0;
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
@@ -715,7 +715,7 @@ static void Size( const string &szID, const vector<wstring> &paramsSet, void *pC
 	DbgTrc( "save_size %d", nSize );
 }
 
-static void ObjSizes( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void ObjSizes( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
 		DbgTrc( "%s\t%d", iter->first.c_str(), iter->second );

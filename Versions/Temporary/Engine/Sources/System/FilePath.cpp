@@ -21,7 +21,7 @@ __forceinline char ConvertChar( const char chr )
 	return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 }
 
-static int FindLastSlash( const string &szFullFilePath )
+static int FindLastSlash( const std::string &szFullFilePath )
 {
 	int i = szFullFilePath.size();
 	while ( --i >= 0 )
@@ -29,7 +29,7 @@ static int FindLastSlash( const string &szFullFilePath )
 		if ( IsFolderSeparator(szFullFilePath[i]) )
 			return i;
 	}
-	return string::npos;
+	return std::string::npos;
 }
 
 // ************************************************************************************************************************ //
@@ -40,33 +40,33 @@ static int FindLastSlash( const string &szFullFilePath )
 // **
 // ************************************************************************************************************************ //
 
-string GetFilePath( const string &szFullFilePath )
+std::string GetFilePath( const std::string &szFullFilePath )
 {
 	const int nPos = FindLastSlash( szFullFilePath );
-	return nPos != string::npos ? szFullFilePath.substr( 0, nPos + 1 ) : "";
+	return nPos != std::string::npos ? szFullFilePath.substr( 0, nPos + 1 ) : "";
 }
 
-string GetFileName( const string &szFullFilePath )
+std::string GetFileName( const std::string &szFullFilePath )
 {
 	const int nPos = FindLastSlash( szFullFilePath );
-	return nPos != string::npos ? szFullFilePath.substr( nPos + 1 ) : szFullFilePath;
+	return nPos != std::string::npos ? szFullFilePath.substr( nPos + 1 ) : szFullFilePath;
 }
 
-string GetFileTitle( const string &szFullFilePath )
+std::string GetFileTitle( const std::string &szFullFilePath )
 {
-	const string szFileName = GetFileName( szFullFilePath );
+	const std::string szFileName = GetFileName( szFullFilePath );
 	const int nPos = szFileName.rfind( '.' );
-	return nPos != string::npos ? szFileName.substr( 0, nPos ) : szFileName;
+	return nPos != std::string::npos ? szFileName.substr( 0, nPos ) : szFileName;
 }
 
-string GetFileExt( const string &szFullFilePath )
+std::string GetFileExt( const std::string &szFullFilePath )
 {
-	const string szFileName = GetFileName( szFullFilePath );
+	const std::string szFileName = GetFileName( szFullFilePath );
 	const int nPos = szFileName.rfind( '.' );
-	return nPos != string::npos ? szFileName.substr( nPos ) : "";
+	return nPos != std::string::npos ? szFileName.substr( nPos ) : "";
 }
 
-string CutFileExt( const string &szFullFilePath, const char *pszExt )
+std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 {
 	if ( szFullFilePath.empty() )
 		return szFullFilePath;
@@ -85,22 +85,22 @@ string CutFileExt( const string &szFullFilePath, const char *pszExt )
 	{
 		const int nPos = szFullFilePath.rfind( '.' );
 		const int nCmpSize = szFullFilePath.size() - (nPos + 1);
-		if ( nPos != string::npos && ComparePathEq(nPos + 1, nCmpSize, szFullFilePath, 0, strlen(pszExt), pszExt) != false )
+		if ( nPos != std::string::npos && ComparePathEq(nPos + 1, nCmpSize, szFullFilePath, 0, strlen(pszExt), pszExt) != false )
 			return szFullFilePath.substr( 0, nPos );
 		return  szFullFilePath;
 	}
 }
 
-static int FindNextSlash( const string &szFullFilePath, const int nStartPos )
+static int FindNextSlash( const std::string &szFullFilePath, const int nStartPos )
 {
 	for ( int i = nStartPos; i < szFullFilePath.size(); ++i )
 	{
 		if ( IsFolderSeparator(szFullFilePath[i]) )
 			return i;
 	}
-	return string::npos;
+	return std::string::npos;
 }
-void SplitPath( list<string> *pRes, const string &szFullFilePath )
+void SplitPath( std::list<std::string> *pRes, const std::string &szFullFilePath )
 {
 	int nLastPos = 0;
 	do
@@ -108,7 +108,7 @@ void SplitPath( list<string> *pRes, const string &szFullFilePath )
 		const int nPos = FindNextSlash( szFullFilePath, nLastPos );
 		pRes->push_back( szFullFilePath.substr( nLastPos, nPos - nLastPos ) );
 		nLastPos = nPos + 1;
-	} while( nLastPos != (string::npos + 1) );
+	} while( nLastPos != (std::string::npos + 1) );
 }
 
 // ************************************************************************************************************************ //
@@ -127,8 +127,8 @@ __forceinline char ConvertCharASCII( const char chr )
 	return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 }
 
-bool ComparePathEq( const int nStart1, const int nLength1, const string &szPath1, 
-									  const int nStart2, const int nLength2, const string &szPath2 )
+bool ComparePathEq( const int nStart1, const int nLength1, const std::string &szPath1,
+									  const int nStart2, const int nLength2, const std::string &szPath2 )
 {
 	if ( nLength1 != nLength2 )
 		return false;
@@ -147,8 +147,8 @@ bool ComparePathEq( const int nStart1, const int nLength1, const string &szPath1
 	return true;
 }
 
-bool ComparePathLt( const int nStart1, const int nLength1, const string &szPath1, 
-									 const int nStart2, const int nLength2, const string &szPath2 )
+bool ComparePathLt( const int nStart1, const int nLength1, const std::string &szPath1,
+									 const int nStart2, const int nLength2, const std::string &szPath2 )
 {
 	if ( nLength1 < nLength2 )
 		return true;
@@ -168,12 +168,12 @@ bool ComparePathLt( const int nStart1, const int nLength1, const string &szPath1
 	return true;
 }
 
-bool IsPathRelative( const string &szPath )
+bool IsPathRelative( const std::string &szPath )
 {
 	return !IsFolderSeparator(szPath[0]) && (szPath[1] != ':');
 }
 
-void MakeRelativePath( string *pRes, const string &szFullPath, const string &szParentPath )
+void MakeRelativePath( std::string *pRes, const std::string &szFullPath, const std::string &szParentPath )
 {
 	if ( szFullPath.empty() )
 	{
@@ -182,13 +182,13 @@ void MakeRelativePath( string *pRes, const string &szFullPath, const string &szP
 	}
 	//
 	const int nPos = FindLastSlash( szParentPath );
-	if ( nPos != string::npos && ComparePathEq(0, nPos + 1, szParentPath, 0, nPos + 1, szFullPath) )
+	if ( nPos != std::string::npos && ComparePathEq(0, nPos + 1, szParentPath, 0, nPos + 1, szFullPath) )
 		*pRes = szFullPath.c_str() + nPos + 1;
 	else
 		*pRes = '/' + szFullPath;
 }
 
-void MakeFullPath( string *pRes, const string &szRelativePath, const string &szParentPath )
+void MakeFullPath( std::string *pRes, const std::string &szRelativePath, const std::string &szParentPath )
 {
 	if ( szRelativePath.empty() )
 	{
@@ -206,14 +206,14 @@ void MakeFullPath( string *pRes, const string &szRelativePath, const string &szP
 	else	// relative to parent's path
 	{
 		const int nPos = FindLastSlash( szParentPath );
-		if ( nPos != string::npos )
+		if ( nPos != std::string::npos )
 			*pRes = szParentPath.substr( 0, nPos ) + "/" + szRelativePath;
 		else
 			*pRes = szRelativePath;
 	}
 }
 
-void NormalizePath( string *pRes, const string &szFilePath )
+void NormalizePath( std::string *pRes, const std::string &szFilePath )
 {
 	const int nSize = szFilePath.size();
 	pRes->resize( szFilePath.size() );
@@ -221,38 +221,38 @@ void NormalizePath( string *pRes, const string &szFilePath )
 		(*pRes)[i] = ConvertFolderSeparator( szFilePath[i] );
 }
 
-void AppendSlash( string *pFilePath, const char cSlash )
+void AppendSlash( std::string *pFilePath, const char cSlash )
 {
-	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) ) 
+	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) )
 		(*pFilePath) += cSlash;
 }
-void RemoveSlash( string *pFilePath, const char cSlash )
+void RemoveSlash( std::string *pFilePath, const char cSlash )
 {
-	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) ) 
+	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) )
 		pFilePath->resize( pFilePath->size() - 1 );
 }
-void ConvertSlashes( string *pFilePath, const char cFrom, const char cTo )
+void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo )
 {
-	for ( string::iterator it = pFilePath->begin(); it != pFilePath->end(); ++it )
+	for ( std::string::iterator it = pFilePath->begin(); it != pFilePath->end(); ++it )
 	{
-		if ( *it == cFrom ) 
+		if ( *it == cFrom )
 			*it = cTo;
 	}
 }
 
-void CreatePath( const string &_szFullPath )
-{	
+void CreatePath( const std::string &_szFullPath )
+{
 	static char buffer[1024];
-	string szFullPath = _szFullPath;
+	std::string szFullPath = _szFullPath;
 	NStr::ReplaceAllChars( &szFullPath, '/', '\\' );
 	// remember current directory
 	GetCurrentDirectory( 1024, buffer );
 	// create entire path dir by dir
-	string szDir;
+	std::string szDir;
 	for ( NStr::CStringIterator<char> it(szFullPath, '\\'); !it.IsEnd(); it.Next() )
 	{
 		it.Get( &szDir );
-		if ( !szDir.empty() ) 
+		if ( !szDir.empty() )
 		{
 			CreateDirectory( szDir.c_str(), 0 );
 			SetCurrentDirectory( (szDir + "\\").c_str() );
@@ -266,7 +266,7 @@ void CreatePath( const string &_szFullPath )
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
@@ -274,15 +274,15 @@ void CreatePath( const string &_szFullPath )
 
 int CFilePath::MakeHashKey() const
 {
-	unsigned int uHashKey = 0; 
-	for ( string::const_iterator it = this->begin(); it != this->end(); ++it )
+	unsigned int uHashKey = 0;
+	for ( std::string::const_iterator it = this->begin(); it != this->end(); ++it )
 		uHashKey = 5*uHashKey + ConvertChar( *it );
 	return uHashKey;
 }
 
 int CFilePath::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, (string*)this );
+	saver.Add( 1, (std::string*)this );
 	return 0;
 }
 

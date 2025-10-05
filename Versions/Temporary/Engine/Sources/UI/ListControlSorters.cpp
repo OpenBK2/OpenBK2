@@ -9,8 +9,8 @@ bool CListControlSorterAlphabet::Compare( IWindow *pSubItem1, IWindow *pSubItem2
 	IListControlItem *p2 = dynamic_cast<IListControlItem*>( pSubItem2 );
 	IWindow *pColumnItem1 = p1->GetSubItem( nColumn );
 	IWindow *pColumnItem2 = p2->GetSubItem( nColumn );
-	wstring wszItem1;
-	wstring wszItem2;
+	std::wstring wszItem1;
+	std::wstring wszItem2;
 
 	ITextView *pTextItem1 = dynamic_cast<ITextView*>( pColumnItem1 );
 	if ( pTextItem1 )

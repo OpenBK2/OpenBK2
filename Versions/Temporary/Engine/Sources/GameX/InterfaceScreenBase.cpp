@@ -26,7 +26,7 @@ namespace NISB
 	static CVec2 vCursorStoredPos = VNULL2;
 };
 
-bool AddUIScreen( IScreen *pWindowScreen, const string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions )
+bool AddUIScreen( IScreen *pWindowScreen, const std::string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions )
 {
 	IScreen *pScr = dynamic_cast<IScreen*>( pWindowScreen );
 	if ( pScr == 0 )
@@ -44,7 +44,7 @@ bool AddUIScreen( IScreen *pWindowScreen, const string &szScreenEntryName, IProg
 	return true;
 }
 
-CInterfaceScreenBase::CInterfaceScreenBase( const string &_szInterfaceType, const string &_szBindSection )
+CInterfaceScreenBase::CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection )
 : szInterfaceType( _szInterfaceType ), szBindSection( _szBindSection ),
 	bShowScreenOnGetFocus( false ), bIsTransparent( true )
 {
@@ -87,7 +87,7 @@ CInterfaceScreenBase::~CInterfaceScreenBase()
 		Scene()->RemoveScreen( pScreen );
 		pScreen = 0;
 	}
-	for ( hash_map<int,bool>::iterator it = registeredIDsForMLHandler.begin(); it != registeredIDsForMLHandler.end(); ++it )
+	for ( std::unordered_map<int,bool>::iterator it = registeredIDsForMLHandler.begin(); it != registeredIDsForMLHandler.end(); ++it )
 	{
 		int nID = it->first;
 		InterfaceState()->UnregisterIDForMLHandler( nID );
@@ -447,7 +447,7 @@ void CInterfaceScreenBase::AddScreen( struct IProgrammedReactionsAndChecks *pRea
 
 void CInterfaceScreenBase::FillVersionWindow()
 {
-	wstring wszVersionInfo = NGlobal::GetVar( "version.info", "" ).GetString();
+	std::wstring wszVersionInfo = NGlobal::GetVar( "version.info", "" ).GetString();
 	wszVersionInfo = L"<color=green>" + wszVersionInfo;
 	pVersionWindow->SetText( wszVersionInfo );
 }
@@ -461,12 +461,12 @@ bool CInterfaceScreenBase::CheckedShowHelpScreen( bool bForced )
 		const NDb::SUIScreenEntry *pEntry = InterfaceState()->GetScreenEntry( szInterfaceType );
 		if ( pEntry )
 		{
-			bool bVisited = NGlobal::GetVar( string( "HelpScreen." ) + szInterfaceType, 0 ) != 0;
+			bool bVisited = NGlobal::GetVar( std::string( "HelpScreen." ) + szInterfaceType, 0 ) != 0;
 			if ( (CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpHeader) || CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpDesc)) && (bForced || !bVisited) )
 			{
 				if ( !pEntry->bHelpNoMultiplayer || Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 				{
-					NGlobal::SetVar( string( "HelpScreen." ) + szInterfaceType, 1, STORAGE_USER );
+					NGlobal::SetVar( std::string( "HelpScreen." ) + szInterfaceType, 1, STORAGE_USER );
 					NMainLoop::Command( ML_COMMAND_HELP_SCREEN, szInterfaceType.c_str() );
 					return true;
 				}
@@ -480,15 +480,15 @@ void CInterfaceScreenBase::SetVersionWindowAfterLoad()
 {
 	if ( pVersionWindow )
 	{
-		wstring wszOldBuildInfo = pVersionWindow->GetText();
+		std::wstring wszOldBuildInfo = pVersionWindow->GetText();
 		const int nPos = wszOldBuildInfo.find( L"\n\nLoaded from " );
-		if ( nPos != wstring::npos )
+		if ( nPos != std::wstring::npos )
 			wszOldBuildInfo.erase( nPos, wszOldBuildInfo.size() );
 
 		FillVersionWindow();
-		const wstring wszNowBuildInfo = pVersionWindow->GetText();
+		const std::wstring wszNowBuildInfo = pVersionWindow->GetText();
 
-		const wstring wszBuildInfo = wszNowBuildInfo + L"\n\nLoaded from " + wszOldBuildInfo;
+		const std::wstring wszBuildInfo = wszNowBuildInfo + L"\n\nLoaded from " + wszOldBuildInfo;
 		pVersionWindow->SetWidth( 500 );
 		pVersionWindow->SetText( wszBuildInfo );
 		pVersionWindow->SetWidth( pVersionWindow->GetSize().x + 10 );
@@ -507,7 +507,7 @@ void CInterfaceScreenBase::HideUnfocusedScreen()
 	}
 }
 
-void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView, const vector< pair<wstring, wstring> > &params )
+void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView, const std::vector< std::pair<std::wstring, std::wstring> > &params )
 {
 	if ( pView )
 	{
@@ -520,7 +520,7 @@ void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView, const vector< p
 	}
 }
 
-void CInterfaceScreenBase::SetDynamicTooltip( IWindow *pWnd, const wstring &wszTooltip, const vector< pair<wstring, wstring> > &params )
+void CInterfaceScreenBase::SetDynamicTooltip( IWindow *pWnd, const std::wstring &wszTooltip, const std::vector< std::pair<std::wstring, std::wstring> > &params )
 {
 	if ( pWnd )
 	{
@@ -543,8 +543,8 @@ void CInterfaceScreenBase::SetMainWindowTexture( IWindow *pMainWindow, const NDb
 
 int CInterfaceScreenBase::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, const_cast<string*>( &szInterfaceType ) );
-	saver.Add( 2, const_cast<string*>( &szBindSection ) );
+	saver.Add( 1, const_cast<std::string*>( &szInterfaceType ) );
+	saver.Add( 2, const_cast<std::string*>( &szBindSection ) );
 	saver.Add( 3, &pScreen );
 	saver.Add( 4, &pVersionWindow );
 	saver.Add( 5, &bInFocus );
@@ -559,12 +559,12 @@ int CInterfaceScreenBase::operator&( IBinSaver &saver )
 namespace NInterface
 {
 
-static void CmdStartInterface ( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdStartInterface ( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
 		return;
 
-	string res;
+	std::string res;
 	NStr::ToMBCS( &res, paramsSet[0] );
 
 	NGlobal::SetVar( "MainMenuDBID", NStr::ToInt( res ) );

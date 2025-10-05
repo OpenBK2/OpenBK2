@@ -14,7 +14,7 @@ private:
 	struct SUnit
 	{
 		ZDATA
-		string szBtnName;
+		std::string szBtnName;
 		CPtr<IButton> pBtn;
 		CPtr<IWindow> pIcon;
 		CDBPtr<NDb::SHPObjectRPGStats> pDBStats;
@@ -63,7 +63,7 @@ private:
 	
 	CObj<IDataViewer> pReinfViewer;
 	
-	vector< CObj<CReinfData> > reinforcements;
+	std::vector< CObj<CReinfData> > reinforcements;
 	ZSKIP //int nPromotionsAvailable;
 	ZSKIP //int nSelection;
 	CPtr<CReinfData> pSelection;
@@ -89,7 +89,7 @@ private:
 	ZSKIP //vector< SUnit > reinfInfoUnits;
 	ZSKIP //CDBPtr<NDb::SHPObjectRPGStats> pSelectedUnit;
 	ZSKIP //CPtr<IWindow> pReinfInfoLeaderIcon;
-	vector<SVisAbility> visAbilities;
+	std::vector<SVisAbility> visAbilities;
 	
 	ZSKIP //bool bIgnoreNextMenuBack;
 	ZSKIP //int nEffectCounter;
@@ -125,7 +125,7 @@ private:
 	CPtr<IWindow> pAutoAssignDlg;
 	CPtr<IWindow> pUndoPromotionsDlg;
 	CPtr<IWindow> pUndoAllPromotionsDlg;
-	wstring wszChangedValueTag;
+	std::wstring wszChangedValueTag;
 	CPtr<ITextView> pLeaderRankLabel;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&pRightPanel); f.Add(8,&pReinfList); f.Add(9,&pPromotionsView); f.Add(10,&pLeaderNameView); f.Add(18,&pLeaderExpBar); f.Add(19,&pLeaderRankView); f.Add(20,&pLeaderSpecView); f.Add(21,&pLeaderKilledView); f.Add(22,&pLeaderLostView); f.Add(24,&pReinfViewer); f.Add(25,&reinforcements); f.Add(28,&pSelection); f.Add(29,&pLeaderExpWnd); f.Add(30,&pAssignLeaderDlg); f.Add(31,&pAssignLeaderEdit); f.Add(32,&generateLeaderInfo); f.Add(33,&pReinfInfoNameView); f.Add(34,&pReinfInfoIcon); f.Add(50,&visAbilities); f.Add(58,&pLeftPanel); f.Add(59,&pTopPanel); f.Add(60,&pBottomPanel); f.Add(62,&pCommanderInfoBlock); f.Add(63,&pReinfCurrentBlock); f.Add(64,&pPictureBlock); f.Add(65,&pPromoteCommanderView); f.Add(66,&pPermanentCommanderWnd); f.Add(67,&pPermanentCommanderIcon); f.Add(68,&pSelectCommanderBtn); f.Add(69,&pSelectCommanderIcon); f.Add(70,&pUnselectCommanderBtn); f.Add(71,&pUnselectCommanderIcon); f.Add(72,&pProfileUnitNameView); f.Add(73,&pProfileUnitExpView); f.Add(74,&pUndoBtn); f.Add(75,&nAssignmentCount); f.Add(76,&pAutoAssignDlg); f.Add(77,&pUndoPromotionsDlg); f.Add(78,&pUndoAllPromotionsDlg); f.Add(79,&wszChangedValueTag); f.Add(80,&pLeaderRankLabel); return 0; }
 
@@ -171,8 +171,8 @@ public:
 	bool StepLocal( bool bAppActive );
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

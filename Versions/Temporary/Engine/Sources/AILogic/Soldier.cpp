@@ -441,7 +441,7 @@ void CSoldier::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *
 	numControlledCharges.second = 0;
 	numLandMines.first = 0;
 	numLandMines.second = 0;
-	for ( vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = pStats->GetActions()->specialAbilities.begin(); it != pStats->GetActions()->specialAbilities.end(); ++it )
+	for ( std::vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = pStats->GetActions()->specialAbilities.begin(); it != pStats->GetActions()->specialAbilities.end(); ++it )
 	{
 		const NDb::SUnitSpecialAblityDesc *pSA = *it;
 		int nCharges; 
@@ -471,7 +471,7 @@ void CSoldier::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *
 
 void CSoldier::DetonateCharges()
 {
-	for ( list< CPtr<CMineStaticObject> >::iterator it = detonatableCharges.begin(); it != detonatableCharges.end(); ++it )
+	for ( std::list< CPtr<CMineStaticObject> >::iterator it = detonatableCharges.begin(); it != detonatableCharges.end(); ++it )
 	{
 		CPtr<CMineStaticObject> pMine = *it;
 		if ( IsValidObj( pMine ) )
@@ -485,7 +485,7 @@ void CSoldier::DetonateCharges()
 
 void CSoldier::UsedCharge( NDb::EUnitSpecialAbility eType, CMineStaticObject *pMine )
 {
-	pair<int,int> *pNumbers = 0;
+	std::pair<int,int> *pNumbers = 0;
 	switch ( eType )
 	{
 	case NDb::ABILITY_PLACE_CHARGE:
@@ -803,7 +803,7 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 			{
 				if ( pMemberStats->GetActions()->specialAbilities[ j ]->eName == NDb::ABILITY_DETONATE )
 				{
-					for ( list< CPtr<CMineStaticObject> >::iterator it = detonatableCharges.begin(); it != detonatableCharges.end(); ++it )
+					for ( std::list< CPtr<CMineStaticObject> >::iterator it = detonatableCharges.begin(); it != detonatableCharges.end(); ++it )
 					{
 						CMineStaticObject *pCharge = *it;
 						pFormationMember->detonatableCharges.push_back( pCharge );
@@ -1415,7 +1415,7 @@ void CSniper::Segment()
 		lastVisibilityCheck = curTime;
 		bVisible = false;
 		const float fMaxVisRadius = 30 * SConsts::TILE_SIZE;
-		hash_set<SVector, STilesHash> visitedTiles;
+		std::unordered_set<SVector, STilesHash> visitedTiles;
 
 		//SSniperTrace sniperTracer( this );
 		const SVector curCenterTile( GetCenterTile() );

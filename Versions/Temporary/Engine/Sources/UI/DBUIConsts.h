@@ -24,7 +24,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x15087B80 };
 		CDBPtr< SWindowTooltip > pWindow;
-		vector< CDBPtr< SUIStateBase > > appearCommands;
+		std::vector< CDBPtr< SUIStateBase > > appearCommands;
 		int nMouseMaxOffsetToAppear;
 		int nAppearDelay;
 		int nSingleLineWidth;
@@ -52,7 +52,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< STooltipContext > > contexts;
+		std::vector< CDBPtr< STooltipContext > > contexts;
 		CDBPtr< SWindowConsole > pConsole;
 		CDBPtr< SWindowSimple > pDebugInfo;
 		CDBPtr< SWindowStatsSystem > pStatsWindow;

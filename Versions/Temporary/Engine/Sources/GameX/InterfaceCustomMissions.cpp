@@ -18,11 +18,11 @@ class CDifficultyData : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CDifficultyData )
 public:
 	ZDATA
-	wstring wszText;
+	std::wstring wszText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
 	
 	CDifficultyData() {}
-	CDifficultyData( const wstring &_wszText ) { wszText = _wszText; }
+	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
 };
 
 class CDifficultyTextViewer : public IDataViewer
@@ -42,7 +42,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 	CDynamicCast<ITextView> pView = pItem->GetSubItem( 0 );
 	NI_VERIFY( pView, "Wrong window", return );
 	
-	wstring wszText;
+	std::wstring wszText;
 	if ( pData )
 	{
 		CDynamicCast<CDifficultyData> pText = pData;
@@ -114,7 +114,7 @@ void CInterfaceCustomMissions::MakeInterior()
 	if ( pDifficultyComboBox )
 		pDifficultyComboBox->SetViewer( new CDifficultyTextViewer() );
 
-	vector<CDBID> dbIDs;
+	std::vector<CDBID> dbIDs;
 	NCustom::GetCustomMissions( &dbIDs );
 	for ( int i = 0; i < dbIDs.size(); ++i )
 	{
@@ -206,7 +206,7 @@ const CInterfaceCustomMissions::SMission* CInterfaceCustomMissions::FindSelected
 	return 0;
 }
 
-bool CInterfaceCustomMissions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceCustomMissions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
 		return OnBack();
@@ -220,7 +220,7 @@ bool CInterfaceCustomMissions::Execute( const string &szSender, const string &sz
 	return false;
 }
 
-int CInterfaceCustomMissions::Check( const string &szCheckName ) const
+int CInterfaceCustomMissions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -344,7 +344,7 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 		return;
 	}
 	
-	const vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pMission->pMapInfo->customDifficultyLevels;
+	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pMission->pMapInfo->customDifficultyLevels;
 
 	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty : 
 		Max( 0, Min( CUSTOM_MISSION_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );

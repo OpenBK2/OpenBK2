@@ -16,6 +16,8 @@
 //#include "..\System\GlobalVars.h"
 #include "System/Commands.h"
 
+#include <algorithm>
+
 static bool s_bShowAllObjectsInfo = false;
 static bool s_bShowBuildingsInfo = false;
 
@@ -208,16 +210,16 @@ void CSelector::AddObj( CMOSelectable *pSO )
 		return;
 
 	objList.push_back( pSO );
-	sort( objList.begin(), objList.end(), SObjectsSort() );
+	std::sort( objList.begin(), objList.end(), SObjectsSort() );
 	CalcSlots();
 
-	NGlobal::SetVar( "temp.TutorialOnly.SelectedUnits", slots.size() );
+	NGlobal::SetVar( "temp.TutorialOnly.SelectedUnits", static_cast<int>(slots.size()) );
 
 #ifndef _FINALRELEASE
 	const int nDisplay = NGlobal::GetVar( "display_selection_ids", 0 );
 	if ( nDisplay )
 	{
-		string szResult = "Selction IDs: ";
+		std::string szResult = "Selction IDs: ";
 		for ( int i = 0; i < objList.size(); ++i )
 			szResult += StrFmt( "%i   ", objList[i]->GetID() );
 		Singleton<IStatSystem>()->UpdateEntry( "SelectionIDs", szResult.c_str() );
@@ -393,7 +395,7 @@ void CSelector::UpdateSelection( const bool bPreserveGroup, bool bKeepNumbers )
 				if ( nCount != 0 )
 				{
 					bUnloadMode = true;
-					vAbilityGroups.push_back( pair<int, int>( 0, 0 ) );
+					vAbilityGroups.push_back( std::pair<int, int>( 0, 0 ) );
 					SendUpdateSelectionInterior();
 					SetSelectionGroup( 0 );
 					return;
@@ -423,7 +425,7 @@ int CSelector::CalcAbilityGroups()
 			actionsFirst = actions;
 		else if ( actionsFirst != actions )
 		{
-			vAbilityGroups.push_back( pair<int, int>( nFirst, nIndex-1 ) );
+			vAbilityGroups.push_back( std::pair<int, int>( nFirst, nIndex-1 ) );
 			if ( uaCurrentAbility == actionsFirst )
 				nSame = vAbilityGroups.size()-1;
 			actionsFirst = actions;
@@ -432,16 +434,16 @@ int CSelector::CalcAbilityGroups()
 		nIndex++;
 	}
 
-	vAbilityGroups.push_back( pair<int, int>( nFirst, nIndex-1 ) );
+	vAbilityGroups.push_back( std::pair<int, int>( nFirst, nIndex-1 ) );
 	if ( uaCurrentAbility == actionsFirst )
 		nSame = vAbilityGroups.size()-1;
 	return nSame;
 }
 
-void CSelector::UpdateAbilityIcons( const vector< CPtr<CMOSelectable> > &objects ) const
+void CSelector::UpdateAbilityIcons( const std::vector< CPtr<CMOSelectable> > &objects ) const
 {
 	CAbilityInfo allAbilities;
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 
@@ -564,12 +566,12 @@ void CSelector::UpdateUnitsIcons( bool bPreselection )
 	
 	if ( bShowInterrior )
 	{
-		vector<CMOSelectable*> units;
+		std::vector<CMOSelectable*> units;
 		IMOContainer *pContainer = checked_cast<IMOContainer *>(pMO);
 		pContainer->GetPassangers( &units );
 		if ( !units.empty() )
 		{
-			for ( vector<CMOSelectable*>::iterator it = units.begin(); it != units.end(); ++it )
+			for ( std::vector<CMOSelectable*>::iterator it = units.begin(); it != units.end(); ++it )
 				NInput::PostEvent( "update_icon", (*it)->GetID(), 1 );
 			bUnloadMode = true;
 			NInput::PostEvent( "mission_update_unit_stats", units.front()->GetID(), 0 );
@@ -787,7 +789,7 @@ int CSelector::FindSelectionGroup( CMOSelectable *pMO ) const
 	return nIndex;
 }
 
-void CSelector::GetGroupMembers( int nIndex, vector<CMOSelectable*> *pMembers )
+void CSelector::GetGroupMembers( int nIndex, std::vector<CMOSelectable*> *pMembers )
 {
 	pMembers->clear();
 	for ( CMapObjectsList::const_iterator it = groups[nIndex].GetList().begin(); 
@@ -796,9 +798,9 @@ void CSelector::GetGroupMembers( int nIndex, vector<CMOSelectable*> *pMembers )
 		CMOSelectable *pSO = *it;
 		if ( CDynamicCast<IMOSquad> pSquad = pSO )
 		{
-			vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable*> passangers;
 			pSquad->GetPassangers( &passangers );
-			for ( vector<CMOSelectable*>::iterator iPass = passangers.begin(); iPass != passangers.end(); ++iPass )
+			for ( std::vector<CMOSelectable*>::iterator iPass = passangers.begin(); iPass != passangers.end(); ++iPass )
 			{
 				CMOSelectable *pPassanger = *iPass;
 				pMembers->push_back( pPassanger );
@@ -819,7 +821,7 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 
 	const bool bAllUnitsCommand = IsAllUnitsCommand( pCommand->nCmdType );
 
-	vector<int> buffer;
+	std::vector<int> buffer;
 	buffer.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
 	const int nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
 	const int nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
@@ -827,7 +829,7 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 	for ( int i = nBegin; i <= nEnd; ++i )
 	{
 		SSlot &slot = slots[i];
-		for ( vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
+		for ( std::vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
 		{
 			CMOSelectable *pSO = *it;
 			
@@ -848,7 +850,7 @@ bool CSelector::DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, 
 
 	const bool bAllUnitsCommand = IsAllUnitsCommand( pCommand->nCmdType );
 
-	vector<int> buffer;
+	std::vector<int> buffer;
 	buffer.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
 	const int nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
 	const int nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
@@ -856,7 +858,7 @@ bool CSelector::DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, 
 	for ( int i = nBegin; i <= nEnd; ++i )
 	{
 		SSlot &slot = slots[i];
-		for ( vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
+		for ( std::vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
 		{
 			CMOSelectable *pMO = *it;
 
@@ -880,7 +882,7 @@ bool CSelector::DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, 
 
 void CSelector::SetShowAreas( EActionNotify eType, bool bOn )
 {
-	vector<int> buffer;
+	std::vector<int> buffer;
 	buffer.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
 	if ( !bOn )
 	{
@@ -893,7 +895,7 @@ void CSelector::SetShowAreas( EActionNotify eType, bool bOn )
 		CMOSelectable *pSO = objList[i];
 		if ( CDynamicCast<CMOBuilding> pMOBuilding = pSO )
 		{
-			vector<CMOSelectable*> passengers;
+			std::vector<CMOSelectable*> passengers;
 			pMOBuilding->GetPassangers( &passengers );
 			for ( int j = 0; j < passengers.size(); ++j )
 			{
@@ -918,7 +920,7 @@ void CSelector::GetAreas( SShootAreas *pAreas )
 	}
 }
 
-int CSelector::GetSelection( vector<CMOSelectable*> *pBuffer ) const
+int CSelector::GetSelection( std::vector<CMOSelectable*> *pBuffer ) const
 {
 	int nResult = 0;
 	for ( CMapObjectsVector::const_iterator it = objList.begin(); it != objList.end(); ++it )
@@ -930,7 +932,7 @@ int CSelector::GetSelection( vector<CMOSelectable*> *pBuffer ) const
 	return nResult;
 }
 
-void CSelector::GetSelectionMembers( vector<CMOSelectable*> *pBuffer ) const
+void CSelector::GetSelectionMembers( std::vector<CMOSelectable*> *pBuffer ) const
 {
 	if ( !pBuffer )
 		return;
@@ -940,9 +942,9 @@ void CSelector::GetSelectionMembers( vector<CMOSelectable*> *pBuffer ) const
 		CMOSelectable *pSO = *it;
 		if ( CDynamicCast<IMOSquad> pSquad = pSO )
 		{
-			vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable*> passangers;
 			pSquad->GetPassangers( &passangers );
-			for ( vector<CMOSelectable*>::iterator iPass = passangers.begin(); iPass != passangers.end(); ++iPass )
+			for ( std::vector<CMOSelectable*>::iterator iPass = passangers.begin(); iPass != passangers.end(); ++iPass )
 			{
 				CMOSelectable *pPassanger = *iPass;
 				pBuffer->push_back( pPassanger );
@@ -1044,9 +1046,9 @@ int CSelector::FindObjectGroup( CMOSelectable *pMO ) const
 	return -1;
 }
 
-void CSelector::GetActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
+void CSelector::GetActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
 {
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		CUserActions actions;
@@ -1058,9 +1060,9 @@ void CSelector::GetActions( CUserActions *pActions, const vector< CPtr<CMOSelect
 	}
 }
 
-void CSelector::GetPossibleActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects )
+void CSelector::GetPossibleActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects )
 {
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		CUserActions actions;
@@ -1072,9 +1074,9 @@ void CSelector::GetPossibleActions( CUserActions *pActions, const vector< CPtr<C
 	}
 }
 
-void CSelector::GetEnabledActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
+void CSelector::GetEnabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
 {
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		CUserActions actions;
@@ -1089,9 +1091,9 @@ void CSelector::GetEnabledActions( CUserActions *pActions, const vector< CPtr<CM
 	*pActions &= actions;
 }
 
-void CSelector::GetDisabledActions( CUserActions *pActions, const vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
+void CSelector::GetDisabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions )
 {
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		CUserActions actions;
@@ -1100,9 +1102,9 @@ void CSelector::GetDisabledActions( CUserActions *pActions, const vector< CPtr<C
 	}
 }
 
-int CSelector::GetAbilityTier( const vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction )
+int CSelector::GetAbilityTier( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction )
 {
-	for ( vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
 		int nTier = pSO->GetAbilityTier( eAction );
@@ -1157,7 +1159,7 @@ void CSelector::SelectSameSlots( const int nSlot )
 
 	if ( nAbilityGroup == nCurrentAbilityGroup && objList.size() != 1 && nSlot < slots.size() )
 	{
-		vector< CPtr<CMOSelectable> > tmpObjects;
+		std::vector< CPtr<CMOSelectable> > tmpObjects;
 		tmpObjects.resize( slots[nSlot].objects.size() );
 		for ( int i = 0; i < slots[nSlot].objects.size(); ++i ) 
 		{
@@ -1183,7 +1185,7 @@ void CSelector::SelectSameType( int nSlot )
 
 	CMOSelectable *pMO = slots[nSlot].objects.front();
 
-	vector< CPtr<CMOSelectable> > tmpObjects;
+	std::vector< CPtr<CMOSelectable> > tmpObjects;
 	tmpObjects.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
@@ -1226,8 +1228,8 @@ void CSelector::UnselectSlot( int nSlot )
 {
 	if ( nSlot >= 0 && nSlot < slots.size() )
 	{
-		vector< CPtr<CMOSelectable> > objects = slots[nSlot].objects;
-		for ( vector< CPtr<CMOSelectable> >::iterator it = objects.begin(); it != objects.end(); ++it )
+		std::vector< CPtr<CMOSelectable> > objects = slots[nSlot].objects;
+		for ( std::vector< CPtr<CMOSelectable> >::iterator it = objects.begin(); it != objects.end(); ++it )
 		{
 			CMOSelectable *pSO = *it;
 			Select( pSO, false );
@@ -1309,7 +1311,7 @@ bool CSelector::IsActive( const CMOSelectable *pMO ) const
 	for ( int i = vAbilityGroups[nCurrentAbilityGroup].first; i <=  vAbilityGroups[nCurrentAbilityGroup].second; ++i )
 	{
 		const SSlot &slot = slots[i];
-		for ( vector< CPtr<CMOSelectable> >::const_iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
+		for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
 		{
 			const CMOSelectable *pSO = *it;
 			if ( pSO == pMO )
@@ -1366,9 +1368,9 @@ void CSelector::FilterActions( CUserActions *pActionsBy, CMapObj *pMO ) const
 
 void CSelector::AfterLoad()
 {
-	vector<CMOSelectable*> units;
+	std::vector<CMOSelectable*> units;
 	GetSelection( &units );
-	for ( vector<CMOSelectable*>::iterator it = units.begin(); it != units.end(); ++it )
+	for ( std::vector<CMOSelectable*>::iterator it = units.begin(); it != units.end(); ++it )
 		(*it)->Select( true );
 
 	SetPreselection( 0 );

@@ -41,8 +41,8 @@ public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCountry); f.Add(3,&nTeam); return 0; }
 	};
 	ZDATA
-	vector<SShortSlotInfo> slots;
-	vector<BYTE> slotRehash;
+	std::vector<SShortSlotInfo> slots;
+	std::vector<BYTE> slotRehash;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&slots); f.Add(3,&slotRehash); return 0; }
 
 	CB2GameRoomStartGamePacket() {}

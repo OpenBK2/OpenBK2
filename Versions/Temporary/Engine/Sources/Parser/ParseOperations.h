@@ -10,7 +10,7 @@ namespace NLang
 	void NextStep();
 	void NullStep();
 
-	const string GetBaseFileName();
+	const std::string GetBaseFileName();
 
 	void AddDef( CLangNode *pNode );
 	void OpenNewNamespace( CLangNode *pRawVisibleTypes );
@@ -19,52 +19,52 @@ namespace NLang
 	void AddAttrToComplexTypeNode( CLangNode *pNode, CLangNode *pAttrList );
 	void AddNamespaceToComplexTypeNode( CLangNode *pNode, CLangNode *pNamespace );
 
-	CLangNode* CreateComplexTypeNode( const string &szTypeName, bool bClass );
+	CLangNode* CreateComplexTypeNode( const std::string &szTypeName, bool bClass );
 	void AddParentsOfComplexType( CLangNode *pNode, CLangNode *pParentsList );
 
-	CLangNode* CreateParentsList( const string &szFirstTypeName );
-	void AddParentToParentsList( CLangNode *pComplexTypeList, const string &szTypeName );
+	CLangNode* CreateParentsList( const std::string &szFirstTypeName );
+	void AddParentToParentsList( CLangNode *pComplexTypeList, const std::string &szTypeName );
 
 	CLangNode* GetCurrentNamespace();
 	void AddTypeToNamespace( CLangNode *pNamespace, CLangNode *pType );
 	void AddVarListToNamespace( CLangNode *pNamespace, CLangNode *pVarList );
-	void AddBadIncludeToNamespace( CLangNode *pNamespace, const string &szInclude );
+	void AddBadIncludeToNamespace( CLangNode *pNamespace, const std::string &szInclude );
 
-	void SetTypeToVars( CLangNode *pVarListNode, const string &szTypeName );
-	void SetRndTypeToVars( CLangNode *pVarListNode, const string &szTypeName );
+	void SetTypeToVars( CLangNode *pVarListNode, const std::string &szTypeName );
+	void SetRndTypeToVars( CLangNode *pVarListNode, const std::string &szTypeName );
 	void SetAttrToVars( CLangNode *pVarListNode, CLangNode *pAttrListNode );
 
 	CLangNode* CreateVarListNode( CLangNode *pVar );
 	void AddVarToVarListNode( CLangNode *pVarListNode, CLangNode *pVar );
-	CLangNode* CreateVar( const string &szVarName, const string &szMinAmount, const string &szMaxAmount );
+	CLangNode* CreateVar( const std::string &szVarName, const std::string &szMinAmount, const std::string &szMaxAmount );
 
-	void SetEnumValueToVarNode( CLangNode *pVarNode, const string &szValue );
-	void SetDefValueToVarNode( CLangNode *pVarNode, const string &szValue, bool bStringValue );
-	void SetDefWStrValueToVarNode( CLangNode *pVarNode, const string &szValue );
-	void SetComplexDefaultValueToVarNode( CLangNode *pVarNode, const string &szValue );
+	void SetEnumValueToVarNode( CLangNode *pVarNode, const std::string &szValue );
+	void SetDefValueToVarNode( CLangNode *pVarNode, const std::string &szValue, bool bStringValue );
+	void SetDefWStrValueToVarNode( CLangNode *pVarNode, const std::string &szValue );
+	void SetComplexDefaultValueToVarNode( CLangNode *pVarNode, const std::string &szValue );
 	void SetVarToPointer( CLangNode *pRawVar );
 
 	CLangNode* CreateAttrListNode( CLangNode *pAttrNode );
 	void MergeAttrList( CLangNode *pAttrListNode, CLangNode *pAttrListNode1 );
 	void AddAttrEntry( CLangNode *pAttrListNode, CLangNode *pAttrNode );
-	CLangNode* CreateAttrDef( const string &szAttrName, const string &szAttrValue, bool bStringValue );
+	CLangNode* CreateAttrDef( const std::string &szAttrName, const std::string &szAttrValue, bool bStringValue );
 
-	CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szReferencedTypeName, const string &szTypeName, bool bPointer );
+	CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const std::string &szReferencedTypeName, const std::string &szTypeName, bool bPointer );
 
-	void SetNameToEnumNode( CLangNode *pEnumNode, const string &szName );
+	void SetNameToEnumNode( CLangNode *pEnumNode, const std::string &szName );
 	CLangNode* CreateEnumNode( CLangNode *pEnumEntryNode );
 	void AddEnumEntry( CLangNode *pEnumNode, CLangNode *pEnumEntryNode );
 	void AddAttrToEnumNode( CLangNode *pEnumNode, CLangNode *pAttrList );
 
-	CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefaultValue, bool bDefaultValueNumber );
+	CLangNode* CreateEnumEntryNode( const std::string &szEntryName, const std::string &szDefaultValue, bool bDefaultValueNumber );
 
-	CLangNode* CreateBaseTypeNode( const string &szTypeName, bool bIsClass );
+	CLangNode* CreateBaseTypeNode( const std::string &szTypeName, bool bIsClass );
 
-	CLangNode* CreateForwardEnumNode( const string &szEnumName );
-	CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass );
+	CLangNode* CreateForwardEnumNode( const std::string &szEnumName );
+	CLangNode* CreateForwardComplexType( const std::string &szTypeName, bool bIsClass );
 
 	CLangNode* CreateAttributeDefNode( ESimpleType eType );
-	void SetNameToAttrDef( CLangNode *pNode, const string &szName );
+	void SetNameToAttrDef( CLangNode *pNode, const std::string &szName );
 
 	bool IsEqualDefs( CLangNode *pNode1, CLangNode *pNode2 );
 }

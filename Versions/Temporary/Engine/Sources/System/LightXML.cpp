@@ -46,13 +46,13 @@ const char* CXMLAttribute::Parse( const char *pszBegin, const char *pszEnd )
 	if ( *p == '\'' )
 	{
 		++p;
-		static const string szEndTag = "\'";
+		static const std::string szEndTag = "\'";
 		p = ReadText( &szValue, p, pszEnd, szEndTag, false );
 	}
 	else if ( *p == '"' )
 	{
 		++p;
-		static const string szEndTag = "\"";
+		static const std::string szEndTag = "\"";
 		p = ReadText( &szValue, p, pszEnd, szEndTag, false );
 	}
 	else
@@ -73,7 +73,7 @@ const char* CXMLAttribute::Parse( const char *pszBegin, const char *pszEnd )
 
 void CXMLAttribute::Store( NLXML_STREAM &stream ) const
 {
-	if ( szValue.find('\"') != string::npos )
+	if ( szValue.find('\"') != std::string::npos )
 	{
 		stream.WriteChecked( szName );
 		stream << "='";
@@ -158,7 +158,7 @@ CXMLNode* CXMLMultiNode::Identify( const char *pszBegin, const char *pszEnd )
 	return pNode;
 }
 
-void CXMLMultiNode::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLMultiNode::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	for ( CNodesList::const_iterator it = children.begin(); it != children.end(); ++it )
 	{
@@ -168,9 +168,9 @@ void CXMLMultiNode::Store( NLXML_STREAM &stream, const string &szIndention ) con
 	}
 }
 
-CXMLNode* CXMLMultiNode::FindChild( const string &_szValue ) const
+CXMLNode* CXMLMultiNode::FindChild( const std::string &_szValue ) const
 {
-	const DWORD dwChildHashCode = hash<string>()( _szValue );
+	const DWORD dwChildHashCode = std::hash<std::string>()( _szValue );
 	// try optimized search from optimal search position
 	for ( CNodesList::const_iterator it = posOptimal; it != children.end(); ++it )
 	{
@@ -213,7 +213,7 @@ CXMLElement::~CXMLElement()
 {
 }
 
-void CXMLElement::SetAttributeLocal( const string &szName, const string &szValue )
+void CXMLElement::SetAttributeLocal( const std::string &szName, const std::string &szValue )
 {
 	CAttributesMap::iterator pos = attrmap.find( szName );
 	if ( pos != attrmap.end() ) 
@@ -229,18 +229,18 @@ void CXMLElement::SetAttribute( const CXMLAttribute &attr )
 {
 	SetAttributeLocal( attr.GetName(), attr.GetValue() );
 }
-void CXMLElement::SetAttribute( const string &szName, const CToStringConvertor &value )
+void CXMLElement::SetAttribute( const std::string &szName, const CToStringConvertor &value )
 {
 	SetAttributeLocal( szName, value );
 }
 
-const CXMLAttribute* CXMLElement::GetAttribute( const string &szName ) const
+const CXMLAttribute* CXMLElement::GetAttribute( const std::string &szName ) const
 {
 	CAttributesMap::const_iterator pos = attrmap.find( szName );
 	return pos != attrmap.end() ? pos->second : 0;
 }
 
-void CXMLElement::RemoveAttribute( const string &szName )
+void CXMLElement::RemoveAttribute( const std::string &szName )
 {
 	CAttributesMap::iterator pos = attrmap.find( szName );	
 	if ( pos != attrmap.end() ) 
@@ -312,7 +312,7 @@ const char* CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 	if ( !p || !*p )
 		return 0;
 
-	const string szEndTag = "</" + szValue + ">";
+	const std::string szEndTag = "</" + szValue + ">";
 	// Check for and read attributes. Also look for an empty tag or an end tag.
 	while ( p && *p )
 	{
@@ -358,7 +358,7 @@ const char* CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 	return p;
 }
 
-void CXMLElement::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLElement::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	stream << "<" << szValue;
 	for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
@@ -369,7 +369,7 @@ void CXMLElement::Store( NLXML_STREAM &stream, const string &szIndention ) const
 	// If this node has children or text, give it a closing tag. Else make it an empty tag.
 	if ( HasChildren() ) 
 	{
-		string szNextIndention = szIndention + szTab;
+		std::string szNextIndention = szIndention + szTab;
 		stream << ">";
 		stream << szEndOfLine;
 		if ( !szText.empty() )
@@ -411,13 +411,13 @@ CXMLText::~CXMLText()
 const char* CXMLText::Parse( const char *pszBegin, const char *pszEnd )
 {
 	szValue.clear();
-	static const string szEndTag = "<";
+	static const std::string szEndTag = "<";
 	const char *p = ReadText( &szValue, pszBegin, pszEnd, szEndTag, false );
 	//
 	return p != 0 ? p - 1 : 0; // don't truncate the '<'
 }
 
-void CXMLText::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLText::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	stream.WriteChecked( szValue );
 }
@@ -450,12 +450,12 @@ const char* CXMLComment::Parse( const char *pszBegin, const char *pszEnd )
 		return 0;
 	}
 	p += 4; // strlen( "<!--" )
-	static string szCommentEndTag = "-->";
+	static std::string szCommentEndTag = "-->";
 	p = ReadText( &szValue, p, pszEnd, szCommentEndTag, false );
 	return p;
 }
 
-void CXMLComment::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLComment::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	stream << "<!--";
 	stream.WriteChecked( szValue );
@@ -534,7 +534,7 @@ const char* CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
 	return 0;
 }
 
-void CXMLDeclaration::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLDeclaration::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	stream << "<?xml ";
 	//
@@ -598,7 +598,7 @@ const char* CXMLUnknown::Parse( const char *pszBegin, const char *pszEnd )
 	return *p == '>' ? p + 1 : p;
 }
 
-void CXMLUnknown::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLUnknown::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	stream << "<" << szValue << ">";		// Don't use entities hear! It is unknown.
 }
@@ -646,7 +646,7 @@ const char* CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
 	return p;
 }
 
-void CXMLDocument::Store( NLXML_STREAM &stream, const string &szIndention ) const
+void CXMLDocument::Store( NLXML_STREAM &stream, const std::string &szIndention ) const
 {
 	for ( CXMLMultiNode::const_iterator it = begin(); it != end(); ++it )
 	{

@@ -258,7 +258,7 @@ int CWaterPatch::Process( const long nTime )
 	// find maximum and minimum heights
 	float fMaxHeight = -FP_MAX_VALUE;
 	float fMinHeight = FP_MAX_VALUE;
-	for ( vector<SGridType>::const_iterator it = grid.begin(); it != grid.end(); ++it )
+	for ( std::vector<SGridType>::const_iterator it = grid.begin(); it != grid.end(); ++it )
 	{
 		if ( it->z < fMinHeight )
 			fMinHeight = it->z;
@@ -639,7 +639,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 
 	// init waves
 	waves.resize( DEF_WAVES_NUM );
-	for ( vector<SWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )
+	for ( std::vector<SWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )
 	{
 		it->fAmplitude = DEF_WAVES_AMPLITUDE;
 		it->fDeepWaveNumber = DEF_WAVES_DEEP_WAVE_NUMBER;
@@ -794,8 +794,8 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 	}
 
 	// init water geometry buffers
-	vector<STriangle> trgs;
-	vector<STriangle> trgs2;
+	std::vector<STriangle> trgs;
+	std::vector<STriangle> trgs2;
 	STriangle curTrg;
 	for ( int k = 0; k < 2; ++k ) 
 	{

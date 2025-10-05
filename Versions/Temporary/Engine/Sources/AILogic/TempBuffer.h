@@ -9,7 +9,7 @@
 // **
 // ************************************************************************************************************************ //
 
-extern vector<BYTE> buffer;
+extern std::vector<BYTE> buffer;
 
 template< class TYPE> 
 TYPE* GetLocalTempBuffer( int nAmount ) 

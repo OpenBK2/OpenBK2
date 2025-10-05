@@ -14,11 +14,11 @@
 
 static int nConsoleSize = 100;
 
-void ShowStatsWindow( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
 		return;
-	const string szVal = NStr::ToMBCS( paramsSet[0] );
+	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 
 	if ( nVal == 1)
@@ -27,11 +27,11 @@ void ShowStatsWindow( const string &szID, const vector<wstring> &paramsSet, void
 		Singleton<IDebugSingleton>()->ShowStatsWindow( false );
 }
 
-void ShowDebugInfo( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
 		return;
-	const string szVal = NStr::ToMBCS( paramsSet[0] );
+	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 	if ( nVal == 1 )
 		Singleton<IDebugSingleton>()->ShowDebugInfo( true );
@@ -61,7 +61,7 @@ CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginStri
 CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
 : szString( pszStr ), dwColor( col ) 
 {  
-	const wstring szText = pszStr;
+	const std::wstring szText = pszStr;
 	pGfxText = CreateML();
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( szText, 0 );
@@ -144,7 +144,7 @@ void CWindowConsole::Segment( const int timeDiff )
 	IConsoleBuffer *pBuffer = Singleton<IConsoleBuffer>();
 	ReadConsoleStrings();
 	// read commands
-	wstring szCmd;
+	std::wstring szCmd;
 	DWORD color = 0;
 	while ( ReadFromPipe( PIPE_CONSOLE_CMDS, &szCmd, &color ) )
 	{
@@ -221,16 +221,16 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 	//Autocomplete instead of tabulate
 	if( msg.nParam1==VK_TAB )
 	{
-		wstring wsInput( pEditLine->GetText() );
+		std::wstring wsInput( pEditLine->GetText() );
 		if ( !wsInput.empty() )
 		{
-			vector<string> varsSet;
+			std::vector<std::string> varsSet;
 			NGlobal::GetIDList( &varsSet );
 
-			list<wstring> resultList;
+			std::list<std::wstring> resultList;
 			for ( int nTemp = 0; nTemp < varsSet.size(); nTemp++ )
 			{
-				wstring wsTemp = NStr::ToUnicode( varsSet[nTemp] );
+				std::wstring wsTemp = NStr::ToUnicode( varsSet[nTemp] );
 				if ( wsTemp.length() < wsInput.length() )
 					continue;
 
@@ -240,12 +240,12 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 
 			if ( resultList.size() > 1 )
 			{
-				wstring wsSamePart( resultList.front() );
+				std::wstring wsSamePart( resultList.front() );
 
 				csSystem << CC_BLUE << L"Commands( " << (int)resultList.size() << L" ):" << endl;
-				for ( list<wstring>::const_iterator iTemp = resultList.begin(); iTemp != resultList.end(); iTemp++ )
+				for ( std::list<std::wstring>::const_iterator iTemp = resultList.begin(); iTemp != resultList.end(); iTemp++ )
 				{
-					wstring wsNewSame( wsSamePart );
+					std::wstring wsNewSame( wsSamePart );
 					for ( int nTemp = 0; nTemp < Min( iTemp->length(), wsSamePart.length() ); nTemp++ )
 					{
 						if ( (*iTemp)[nTemp] == wsSamePart[nTemp] )
@@ -265,7 +265,7 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 			}
 			else if ( resultList.size() == 1 )
 			{
-				wstring wsTemp( resultList.front() + L" " );
+				std::wstring wsTemp( resultList.front() + L" " );
 				pEditLine->SetText( wsTemp.c_str() );
 				//pEditLine->SetCursorPosition( wsTemp.length() + 1 );
 			}
@@ -453,10 +453,10 @@ bool CWindowConsole::OnShowConsole( const struct SGameMessage &msg )
 	return true;
 }
 
-void CWindowConsole::ParseCommand( const wstring &szExtCommand )
+void CWindowConsole::ParseCommand( const std::wstring &szExtCommand )
 {
 	nBeginCommand = -1;
-	string szCommandString;
+	std::string szCommandString;
 	NStr::ToMBCS( &szCommandString, szExtCommand );
 	NStr::TrimLeft( szCommandString );
 	if ( szCommandString.empty() )

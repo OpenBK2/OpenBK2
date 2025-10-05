@@ -63,7 +63,7 @@ void CLANTester::Start()
 	bStarted = true;
 }
 
-void CLANTester::NewGameFound( const int nID, const string &szName )
+void CLANTester::NewGameFound( const int nID, const std::string &szName )
 {
 	if ( bIsServer )
 		return;
@@ -88,7 +88,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 		{
 			for ( int i = 1; i < nMySlot; ++i ) // Потому что слот 0 - это создатель игры. Он всегда готов:)
 			{
-				hash_map<int,bool>::iterator it = gameClientsReady.find( i );
+				std::unordered_map<int,bool>::iterator it = gameClientsReady.find( i );
 				if ( it == gameClientsReady.end() || !it->second )
 					return;
 			}
@@ -108,7 +108,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 		}
 		else
 		{
-			for ( hash_map<int,bool>::iterator it = gameClientsReady.begin(); it != gameClientsReady.end(); ++it )
+			for ( std::unordered_map<int,bool>::iterator it = gameClientsReady.begin(); it != gameClientsReady.end(); ++it )
 			{
 				if ( !it->second )
 					return;
@@ -144,12 +144,12 @@ void CLANTester::CreateGame()
 	pMPManager->AddUIMessage( pCreateMsg );
 }
 
-void CLANTester::RunShellCommand( const wstring &wszCommand  )
+void CLANTester::RunShellCommand( const std::wstring &wszCommand  )
 {
 #ifdef LAN_TEST_ENABLED
 	if ( wszCommand != L"" )
 	{
-		vector<TCHAR> winCommand( wszCommand.begin(), wszCommand.end() );
+		std::vector<TCHAR> winCommand( wszCommand.begin(), wszCommand.end() );
 		winCommand.push_back( '\0' );
 		ShellExecute( 0, "open", &( winCommand[0] ), "", "", SW_SHOWNORMAL );
 	}	
@@ -158,21 +158,21 @@ void CLANTester::RunShellCommand( const wstring &wszCommand  )
 
 void CLANTester::EndGame()
 {
-	wstring wszCommand = NGlobal::GetVar( "LANTEST.ExecuteOnEnd", "" );
+	std::wstring wszCommand = NGlobal::GetVar( "LANTEST.ExecuteOnEnd", "" );
 	RunShellCommand( wszCommand );
 	NMainLoop::Command( CreateICExitGame() );
 }
 
 void CLANTester::AsyncDetected()
 {
-	wstring wszCommand = NGlobal::GetVar( "LANTEST.ExecuteOnAsync", "" );
+	std::wstring wszCommand = NGlobal::GetVar( "LANTEST.ExecuteOnAsync", "" );
 	RunShellCommand( wszCommand );
 	NMainLoop::Command( CreateICExitGame() );
 }
 
 #ifdef LAN_TEST_ENABLED
 
-void StartLanTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void StartLanTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	CDynamicCast<CMPManager> pMPManager = Singleton<IMPToUIManager>();
 	if ( pMPManager )

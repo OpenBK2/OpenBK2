@@ -347,8 +347,8 @@ static void callgcTMudata (lua_State *L)
   ++L->nGCAvoid;
   for ( int tag = L->TMtable.size() - 1; tag >= 0; --tag ) 
 	{ 
-		list<int> &collect = L->TMtable[tag].collected;
-		for ( list<int>::iterator i = collect.begin(); i != collect.end(); ++i )
+		std::list<int> &collect = L->TMtable[tag].collected;
+		for ( std::list<int>::iterator i = collect.begin(); i != collect.end(); ++i )
 		{
 	    int udata = *i;
       o.SetUData( udata );

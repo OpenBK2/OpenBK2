@@ -16,9 +16,9 @@ namespace NTypeDef
 //! get object manipulator for given object. NOTE: for editor mode only!
 IObjMan *GetManipulator( const CDBID &dbid );
 //! create new object for further edit. NOTE: for editor mode only!
-IObjMan *CreateNewObject( const string &szClassTypeName );
+IObjMan *CreateNewObject( const std::string &szClassTypeName );
 //! register new object, created with CreateNewObject() function, in database
-bool AddNewObject( const string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
+bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
 //! remove object from database
 bool RemoveObject( const CDBID &dbid );
 //! rename object in database
@@ -32,12 +32,12 @@ void DropCachedResources();
 //! check, have we changed DB objects?
 bool HasChangedObjects();
 //! retrieve all terminal classes list
-bool GetClassesList( vector<NTypeDef::STypeClass*> *pRes );
+bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
 //! retrieve all objects by type
-bool GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName );
+bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
 
-bool RegisterResourceFile( const string &szFileName );
-bool IsFileRegistered( const string &szFileName );
+bool RegisterResourceFile( const std::string &szFileName );
+bool IsFileRegistered( const std::string &szFileName );
 //! add database observer
 void AddDbObserver( IDbObserver *pObserver );
 

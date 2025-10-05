@@ -8,21 +8,21 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CRegisterGroupCommand );
 	//
 	ZDATA
-		vector<int> unitsIDs;					// IDs of all obejcts in group
+		std::vector<int> unitsIDs;					// IDs of all obejcts in group
 	WORD nID;														// ID of the group
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitsIDs); f.Add(3,&nID); return 0; }
 public:
 	CRegisterGroupCommand() { }
-	CRegisterGroupCommand( const vector<int> &vIDs, const int nID  );
+	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID  );
 	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const WORD wID, IAILogic *pAILogic );
 	//
 	void Execute();
 	//
 	bool NeedToBeStored() const { return true; }
 #ifndef _FINALRELEASE
-	virtual string GetDebugInfo() const
+	virtual std::string GetDebugInfo() const
 	{
-		string szDebug;
+		std::string szDebug;
 		StrFmt( "GroupID = %i, UnitIDs: ", nID );
 		for ( int i = 0; i < unitsIDs.size(); ++i )
 			szDebug += StrFmt( "%i, ", unitsIDs[i] );
@@ -47,7 +47,7 @@ public:
 	//
 	bool NeedToBeStored() const { return true; }
 #ifndef _FINALRELEASE
-	virtual string GetDebugInfo() const
+	virtual std::string GetDebugInfo() const
 	{
 		return StrFmt( "UnregisterGroup %i", nGroup );
 	}
@@ -72,7 +72,7 @@ public:
 	//
 	bool NeedToBeStored() const { return true; }
 #ifndef _FINALRELEASE
-	virtual string GetDebugInfo() const
+	virtual std::string GetDebugInfo() const
 	{
 		return StrFmt( "GroupCommand CmdID %i, GroupID %i, (%f,%f)", int(command.nCmdType), wGroup, command.vPos.x, command.vPos.y  );
 	}
@@ -97,7 +97,7 @@ public:
 	//
 	bool NeedToBeStored() const { return true; }
 #ifndef _FINALRELEASE
-	virtual string GetDebugInfo() const
+	virtual std::string GetDebugInfo() const
 	{
 		return StrFmt( "UnitCommand CmdID %i, Player %i, (%f,%f)", int(command.nCmdType), nPlayer, command.vPos.x, command.vPos.y  );
 	}

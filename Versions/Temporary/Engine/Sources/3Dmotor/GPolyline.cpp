@@ -8,7 +8,7 @@ namespace NGScene
 
 // CMemGeometry
 
-CMemGeometry::CMemGeometry( const vector<CVec3> &_points ) : points(_points)
+CMemGeometry::CMemGeometry( const std::vector<CVec3> &_points ) : points(_points)
 {
 }
 

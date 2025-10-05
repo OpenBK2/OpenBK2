@@ -12,7 +12,7 @@ struct IDBWatcherClient : public CObjectBase
 		FAILED = 1,
 		SERVICE_NOT_READY = 2
 	};
-	virtual EResult GetReferencingObjects( const string &szName, vector<CDBID> *pReferencingObjs ) = 0;
+	virtual EResult GetReferencingObjects( const std::string &szName, std::vector<CDBID> *pReferencingObjs ) = 0;
 };
 
 void RegisterSingleton();

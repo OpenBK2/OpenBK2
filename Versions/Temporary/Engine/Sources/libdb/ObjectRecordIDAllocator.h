@@ -5,8 +5,8 @@ namespace NDb
 namespace NObjectIDAllocator
 {
 
-void SetObjectRecordIDsFolderName( const string &szFolderName );
-int AllocateNewObjectID( const string &szClassTypeName );
+void SetObjectRecordIDsFolderName( const std::string &szFolderName );
+int AllocateNewObjectID( const std::string &szClassTypeName );
 
 }
 }

@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "RectPacker.h"
 
+#include <algorithm>
+
 namespace NRectPacker
 {
 
 struct SRectOrder
 {
-	const vector<SRect> &s;
-	SRectOrder( const vector<SRect> &_s ) : s(_s) {}
+	const std::vector<SRect> &s;
+	SRectOrder( const std::vector<SRect> &_s ) : s(_s) {}
 	bool operator()( int a, int b )
 	{
 		return s[a].nYSize > s[b].nYSize || ( s[a].nYSize == s[b].nYSize && s[a].nXSize > s[b].nXSize );
@@ -17,24 +19,24 @@ struct SRectOrder
 struct SStripe
 {
 	int nXShift, nYShift, nHeight;
-	vector<int> rects;
+	std::vector<int> rects;
 };
 
 struct SStripeBuilder
 {
-	vector<SRect> &res;
-	vector<int> indices;
-	vector<char> taken;
-	vector<SStripe> stripes;
+	std::vector<SRect> &res;
+	std::vector<int> indices;
+	std::vector<char> taken;
+	std::vector<SStripe> stripes;
 	int nWidth;
 	int nTotalHeight;
 
-	SStripeBuilder( vector<SRect> &_res )
+	SStripeBuilder( std::vector<SRect> &_res )
 		: res(_res), indices(_res.size())
 	{
 		for ( int k = 0; k < indices.size(); ++k )
 			indices[k] = k;
-		sort( indices.begin(), indices.end(), SRectOrder( res ) );
+		std::sort( indices.begin(), indices.end(), SRectOrder( res ) );
 	}
 	void FillStripe( SStripe *pRes, int nStartFrom )
 	{
@@ -90,7 +92,7 @@ struct SStripeBuilder
 			ASSERT( r.nXSize <= nWidth );
 			if ( nXShift + r.nXSize > nWidth )
 				continue;
-			SStripe &stripe = *stripes.insert( stripes.end() );
+			SStripe &stripe = stripes.emplace_back();
 			stripe.nXShift = nXShift;
 			stripe.nYShift = nYShift;
 			stripe.nHeight = r.nYSize;
@@ -160,7 +162,7 @@ struct SStripeBuilder
 	}
 };
 
-void PackRects( vector<SRect> *pRes, CTPoint<int> *pSize )
+void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize )
 {
 	/*for ( int k = 0; k < pRes->size(); ++k )
 	{

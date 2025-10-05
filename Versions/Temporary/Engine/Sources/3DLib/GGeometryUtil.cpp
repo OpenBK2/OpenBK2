@@ -11,7 +11,7 @@ namespace NGScene
 
 // CTriVertexCacheOptimizer
 
-void CTriVertexCacheOptimizer::CountVertices( const vector<STriangle> &tris )
+void CTriVertexCacheOptimizer::CountVertices( const std::vector<STriangle> &tris )
 {
 	int nMax = 0;
 	for ( int k = 0; k < tris.size(); ++k )
@@ -19,7 +19,7 @@ void CTriVertexCacheOptimizer::CountVertices( const vector<STriangle> &tris )
 	nVertices = nMax + 1;
 }
 
-void CTriVertexCacheOptimizer::Init( const vector<STriangle> &tris )
+void CTriVertexCacheOptimizer::Init( const std::vector<STriangle> &tris )
 {
 	tpvIndex.resize( nVertices + 1 );
 	freeLinks.resize( 0 );
@@ -42,7 +42,7 @@ void CTriVertexCacheOptimizer::Init( const vector<STriangle> &tris )
 	for ( int k = 1; k < tpvIndex.size(); ++k )
 		tpvIndex[k] = tpvIndex[k-1] + freeLinks[k-1];
 	triPerVertex.resize( tpvIndex.back() );
-	vector<int> writePtr( tpvIndex );
+	std::vector<int> writePtr( tpvIndex );
 	for ( int k = 0; k < tris.size(); ++k )
 	{
 		const STriangle &t = tris[k];
@@ -58,7 +58,7 @@ void CTriVertexCacheOptimizer::Init( const vector<STriangle> &tris )
 	outPrevPos.resize( ( tris.size() + 100 ) * 3 );
 }
 
-int CTriVertexCacheOptimizer::SearchBest( const vector<STriangle> &tris )
+int CTriVertexCacheOptimizer::SearchBest( const std::vector<STriangle> &tris )
 {
 	++nTryCount;
 	SBestSearch bs( this, tris );
@@ -96,7 +96,7 @@ int CTriVertexCacheOptimizer::SearchBest( const vector<STriangle> &tris )
 	return bs.nBestIdx;
 }
 
-void CTriVertexCacheOptimizer::MeasureEfficiency( const vector<STriangle> &tris )
+void CTriVertexCacheOptimizer::MeasureEfficiency( const std::vector<STriangle> &tris )
 {
 	SVxCache<10> cache;
 	int nMisses = 0, nTotal = 0;
@@ -154,7 +154,7 @@ void CTriVertexCacheOptimizer::ReverseVertex()
 	--nOutPrevPosSize;
 }
 
-int CTriVertexCacheOptimizer::CountNotCachedFL( const vector<STriangle> &tris, int nVertex )
+int CTriVertexCacheOptimizer::CountNotCachedFL( const std::vector<STriangle> &tris, int nVertex )
 {
 	/*#ifdef _DEBUG
 	int nChk = 0;
@@ -182,9 +182,9 @@ int CTriVertexCacheOptimizer::CountNotCachedFL( const vector<STriangle> &tris, i
 	return nRes;
 }
 
-void CTriVertexCacheOptimizer::OptimizeVertexOrder( vector<STriangle> &tris, int *pnResVerts, vector<WORD> *pVertexReorder )
+void CTriVertexCacheOptimizer::OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<WORD> *pVertexReorder )
 {
-	vector<WORD> &position = *pVertexReorder;
+	std::vector<WORD> &position = *pVertexReorder;
 	position.resize(0);
 	position.resize( nVertices, 0xffff );
 	WORD nPos = 0;
@@ -208,7 +208,7 @@ void CTriVertexCacheOptimizer::OptimizeVertexOrder( vector<STriangle> &tris, int
 	ASSERT( nPos <= position.size() );
 }
 
-void CTriVertexCacheOptimizer::Optimize( vector<STriangle> *pTris, vector<WORD> *pVertexReorder, int *pnResVerts, int _nVCacheSize )
+void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris, std::vector<WORD> *pVertexReorder, int *pnResVerts, int _nVCacheSize )
 {
 	nVCacheSize = _nVCacheSize;
 	/*vector<STriangle> tt;
@@ -233,7 +233,7 @@ void CTriVertexCacheOptimizer::Optimize( vector<STriangle> *pTris, vector<WORD> 
 	CountVertices( *pTris );
 	Init( *pTris );
 	// form result
-	vector<STriangle> res;
+	std::vector<STriangle> res;
 	for ( int k = 0; k < pTris->size(); ++k )
 	{
 		// search for a best candidate

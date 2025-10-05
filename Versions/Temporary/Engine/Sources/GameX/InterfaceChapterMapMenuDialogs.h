@@ -17,11 +17,11 @@ struct SChapterReinfBase : public CObjectBase
 		CDBPtr<NDb::SMechUnitRPGStats> pMechUnit;
 		CDBPtr<NDb::SSquadRPGStats> pSquad;
 		int nCount;
-		wstring wszName;
-		vector<NUnitFullInfo::SWeapon> weapons;
-		vector<int> armors;
+		std::wstring wszName;
+		std::vector<NUnitFullInfo::SWeapon> weapons;
+		std::vector<int> armors;
 		int nHP;
-		vector<IWindow3DControl::SObject> objects3D;
+		std::vector<IWindow3DControl::SObject> objects3D;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMechUnit); f.Add(3,&pSquad); f.Add(4,&nCount); f.Add(5,&wszName); f.Add(6,&weapons); f.Add(7,&armors); f.Add(8,&nHP); f.Add(9,&objects3D); return 0; }
 
 		bool operator()( const SUnitData &data ) const
@@ -35,7 +35,7 @@ struct SChapterReinfBase : public CObjectBase
 	public:
 		ZDATA
 		CPtr<IWindow> pWnd;
-		string szBtnName;
+		std::string szBtnName;
 		CPtr<IWindow> pAppearanceWnd;
 		CPtr<IWindow> pUnknownWnd;
 		CPtr<IWindow> pNoneWnd;
@@ -61,7 +61,7 @@ struct SChapterReinfBase : public CObjectBase
 	public:
 		~SUnit();
 		
-		void InitControls( IWindow *pWnd, const string &szBtnName, int nBaseIndex );
+		void InitControls( IWindow *pWnd, const std::string &szBtnName, int nBaseIndex );
 		void ShowSelection( bool bShow );
 		void SetUnknown();
 		void SetNone();
@@ -81,13 +81,13 @@ struct SChapterReinfBase : public CObjectBase
 	
 	ZDATA
 	CPtr<ITextView> pUnitNameView;
-	vector<SUnitWeapon> weapons;
+	std::vector<SUnitWeapon> weapons;
 	CPtr<ITextView> pUnitSupplyLabel;
 	CPtr<ITextView> pUnitSupplyView;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnitNameView); f.Add(3,&weapons); f.Add(4,&pUnitSupplyLabel); f.Add(5,&pUnitSupplyView); return 0; }
 protected:
 	void ShowUnitInfo( SUnit *pUnit );
-	void MakeReinfData( vector<SUnitData> &units, const NDb::SReinforcement *pReinf );
+	void MakeReinfData( std::vector<SUnitData> &units, const NDb::SReinforcement *pReinf );
 	void InitUnitInfoControls( IWindow *pBaseWnd );
 };
 
@@ -112,7 +112,7 @@ public:
 	CPtr<IWindow> pLineTemplate;
 	CPtr<IScrollableContainer> pContainer;
 
-	vector<SUpgradeLine> lines;
+	std::vector<SUpgradeLine> lines;
 	CPtr<SUnit> pSelectedUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SChapterReinfBase*)this); f.Add(2,&pBaseWnd); f.Add(3,&pUpgradePanel); f.Add(4,&pReinfIconWnd); f.Add(5,&pReinfHeaderView); f.Add(6,&pLineTemplate); f.Add(7,&pContainer); f.Add(8,&lines); f.Add(9,&pSelectedUnit); return 0; }
 private:
@@ -120,7 +120,7 @@ private:
 public:
 	void InitControls( IWindow *pBaseWnd );
 	void ShowReinf( const NDb::SReinforcement *pOldReinf, const NDb::SReinforcement *pNewReinf );
-	void UnitBtnPressed( const string &szSender );
+	void UnitBtnPressed( const std::string &szSender );
 	void Hide();
 };
 
@@ -134,7 +134,7 @@ public:
 	CPtr<IWindow> pReinfIconWnd;
 	CPtr<ITextView> pReinfHeaderView;
 	
-	vector< CObj<SUnit> > units;
+	std::vector< CObj<SUnit> > units;
 	CPtr<SUnit> pSelectedUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SChapterReinfBase*)this); f.Add(2,&pBaseWnd); f.Add(3,&pCompositionPanel); f.Add(4,&pReinfIconWnd); f.Add(5,&pReinfHeaderView); f.Add(6,&units); f.Add(7,&pSelectedUnit); return 0; }
 private:
@@ -142,7 +142,7 @@ private:
 public:
 	void InitControls( IWindow *pBaseWnd );
 	void ShowReinf( const NDb::SReinforcement *pReinf );
-	void UnitBtnPressed( const string &szSender );
+	void UnitBtnPressed( const std::string &szSender );
 	void Hide();
 };
 

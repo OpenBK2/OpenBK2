@@ -15,7 +15,7 @@ struct ITerraAIObserver : public CObjectBase
 {
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) = 0;
 	//
-	virtual void SetTerraTypes( const vector<NDb::STerrainAIProperties> &params ) = 0;
+	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params ) = 0;
 	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types ) = 0;
 	virtual void AddRoad( const NDb::SVSOInstance *pInstance ) = 0;
 	virtual void AddRiver( const NDb::SVSOInstance *pInstance ) = 0;
@@ -35,7 +35,7 @@ struct ITerraAIObserver : public CObjectBase
 	virtual void ToggleShowPassability() { }
 	virtual void DrawPassabilities() const = 0;
 	virtual void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius ) { }
-	virtual void DumpMaxes( const string &szFileName, const int aiClass ) { }
+	virtual void DumpMaxes( const std::string &szFileName, const int aiClass ) { }
 	virtual bool IsPassabilityOn() const { return false; }
 	virtual bool IsBridge( const int nX, const int nY ) const { return false; }
 };

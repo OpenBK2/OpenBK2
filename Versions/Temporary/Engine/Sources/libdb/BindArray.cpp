@@ -23,15 +23,15 @@ class CArrayElementManipulator : public IArrayElementManipulator, public ILoadab
 	//
 	CPtr<NMetaInfo::SStructMetaInfo> pContained;	// contained type
 	CPtr<NTypeDef::STypeArray> pTypeArray;				// array type def
-	vector<BYTE> *pRawVector;							// raw data vector
+	std::vector<BYTE> *pRawVector;							// raw data vector
 	CBindArray *pBindArray;								// bind array of the parent array :)
 	CObj<IObjMan> pParent;								// parent object
-	string szAddName;											// additional name (for complete name restructuring)
+	std::string szAddName;											// additional name (for complete name restructuring)
 	int nIndex;														// array element index
 	//
 	CArrayElementManipulator() {}
 public:
-	CArrayElementManipulator( const int _nIndex, const string &_szAddName, vector<BYTE> *_pRawVector, 
+	CArrayElementManipulator( const int _nIndex, const std::string &_szAddName, std::vector<BYTE> *_pRawVector,
 		NMetaInfo::SStructMetaInfo *_pContained, NTypeDef::STypeArray *_pTypeArray, IObjMan *_pParent, CBindArray *_pBindArray )
 		: pContained( _pContained ), pTypeArray( _pTypeArray ), pRawVector( _pRawVector ), pBindArray( _pBindArray ), 
 		  pParent( _pParent ), szAddName( _szAddName ), nIndex( _nIndex ) 
@@ -60,7 +60,7 @@ public:
 	//
 	void SetChanged() { pParent->SetChanged(); }
 	//
-	IObjMan *CreateManipulator( const string &szName )
+	IObjMan *CreateManipulator( const std::string &szName )
 	{
 		if ( szName.empty() )
 			return this;
@@ -70,9 +70,9 @@ public:
 		else
 			return 0;
 	}
-	string GetFullName() const 
+	std::string GetFullName() const
 	{
-		string szFullName = pParent->GetFullName();
+		std::string szFullName = pParent->GetFullName();
 		if ( !szFullName.empty() )
 		{
 			if ( !szAddName.empty() )
@@ -84,7 +84,7 @@ public:
 		return !szFullName.empty() ? szFullName + StrFmt( ".[%d]", nIndex ) : StrFmt( "[%d]", nIndex );
 	}
 	// main fields manipulation functions
-	bool SetValue( const string &szName, const CVariant &value ) 
+	bool SetValue( const std::string &szName, const CVariant &value )
 	{ 
 		SetChanged();
 		SBindProcessor bindProcessor;
@@ -93,7 +93,7 @@ public:
 		else 
 			return false;
 	}
-	bool GetValue( const string &szName, CVariant *pValue )
+	bool GetValue( const std::string &szName, CVariant *pValue )
 	{
 		SBindProcessor bindProcessor;
 		if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -102,7 +102,7 @@ public:
 			return false;
 	}
 	// array-specific functions
-	bool Insert( const string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
+	bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
 	{
 		SetChanged();
 		if ( szName.empty() )
@@ -116,7 +116,7 @@ public:
 				return false;
 		}
 	}
-	bool Remove( const string &szName, const int nPos, const int nAmount = 1 )
+	bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 )
 	{
 		SetChanged();
 		if ( szName.empty() )
@@ -131,7 +131,7 @@ public:
 		}
 	}
 	// get property field descriptor by name
-	const NTypeDef::STypeStructBase::SField *GetDesc( const string &szFullFieldName ) const
+	const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const
 	{
 		if ( szFullFieldName.empty() )
 			return &( pTypeArray->field );
@@ -142,10 +142,10 @@ public:
 	CResource *GetObject() { return pParent->GetObject(); }
 	const CDBID &GetDBID() const { return pParent->GetDBID(); }
 	// additional custom attributes
-	wstring GetAttribute( const string &szName ) const { return pParent->GetAttribute( szName ); }
-	void SetAttribute( const string &szName, const wstring &szValue ) { pParent->SetAttribute( szName, szValue ); }
+	std::wstring GetAttribute( const std::string &szName ) const { return pParent->GetAttribute( szName ); }
+	void SetAttribute( const std::string &szName, const std::wstring &szValue ) { pParent->SetAttribute( szName, szValue ); }
 	//
-	bool LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode )
+	bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode )
 	{
 		SBindProcessor bindProcessor;
 		if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -153,7 +153,7 @@ public:
 		else
 			return false;
 	}
-	bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
+	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
 	{
 		SBindProcessor bindProcessor;
 		if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -161,7 +161,7 @@ public:
 		else
 			return false;
 	}
-	bool SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType )
+	bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 	{
 		SetChanged();
 		SBindProcessor bindProcessor;
@@ -180,21 +180,21 @@ public:
 // **
 // ************************************************************************************************************************ //
 
-IObjMan *CBindArray::CreateManipulator( const int nIndex, const string &szAddName, vector<BYTE> *pRawVector, 
+IObjMan *CBindArray::CreateManipulator( const int nIndex, const std::string &szAddName, std::vector<BYTE> *pRawVector,
 																			  NMetaInfo::SStructMetaInfo *pContained, NTypeDef::STypeArray *pTypeArray,
 																			  IObjMan *pParent )
 {
 	return new CArrayElementManipulator( nIndex, szAddName, pRawVector, pContained, pTypeArray, pParent, this );
 }
 
-IObjManIterator *CBindArray::CreateIterator( const int nIndex, const string &szAddName, 
+IObjManIterator *CBindArray::CreateIterator( const int nIndex, const std::string &szAddName,
 																             NTypeDef::STypeArray *pTypeArray, IObjMan *pParent, bool bShowHidden )
 {
 	return new CArrayIterator( nIndex, szAddName, pTypeArray, pParent, bShowHidden );
 }
 
 bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
-	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	const int nStructSize = pContained->singleField.main.size != 0 ? pContained->singleField.main.size : pContained->nStructSize;
 	if ( pContained->nNumCodeValues == 0 )
@@ -220,7 +220,7 @@ int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *
 	const int nBinaryShift = field.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
 	{
-		const int nSize = reinterpret_cast<vector<BYTE>*>( pThis + field.GetBinaryShift() )->size() / int( field.contained.size );
+		const int nSize = reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() )->size() / int( field.contained.size );
 #ifndef _FINALRELEASE
 		if ( field.pContained->nNumOwnValues != 0 )
 		{
@@ -252,7 +252,7 @@ bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SS
 	// resize code elements
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		vector<BYTE> &rawVector = *( reinterpret_cast<vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
+		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
 		const int nOldRawSize = nSize * nElementSize;
 		const int nNewRawSize = ( nSize + nAmount ) * nElementSize;
 		const int nOldDataPos = nPos * nElementSize;
@@ -327,7 +327,7 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 	BYTE *pNewData = 0;
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		vector<BYTE> &rawVector = *( reinterpret_cast<vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
+		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
 		pNewData = &( rawVector[nElementSize * nPos] );
 	}
 	// destruct elements
@@ -337,7 +337,7 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 	// shift rest code values
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		vector<BYTE> &rawVector = *( reinterpret_cast<vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
+		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
 		BYTE *pDataRestBegin = &( rawVector[nElementSize * (nPos + nAmount) - 1] ) + 1;
 		BYTE *pDataRestEnd = &( rawVector[nElementSize * nSize - 1] ) + 1;
 		if ( pDataRestBegin < pDataRestEnd )
@@ -353,8 +353,8 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 	return true;
 }
 
-bool CBindArray::SetValue( const string &szRestName, const int nIndex, const CVariant &value, 
-	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+bool CBindArray::SetValue( const std::string &szRestName, const int nIndex, const CVariant &value,
+	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	SBindProcessor bindProcessor;
 	if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -363,8 +363,8 @@ bool CBindArray::SetValue( const string &szRestName, const int nIndex, const CVa
 		return false;
 }
 
-bool CBindArray::GetValue( const string &szRestName, const int nIndex, CVariant *pValue, 
-	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+bool CBindArray::GetValue( const std::string &szRestName, const int nIndex, CVariant *pValue,
+	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	SBindProcessor bindProcessor;
 	if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -393,7 +393,7 @@ void CBindArray::RemoveArrayElementManipulator( IArrayElementManipulator *pArrEl
 // **
 // ************************************************************************************************************************ //
 
-CArrayIterator::CArrayIterator( const int nIndex, const string &_szAddName, NTypeDef::STypeArray *_pTypeArray, 
+CArrayIterator::CArrayIterator( const int nIndex, const std::string &_szAddName, NTypeDef::STypeArray *_pTypeArray,
 																IObjMan *_pParent, bool _bShowHidden )
 : szAddName( _szAddName ), pTypeArray( _pTypeArray ), pParent( _pParent ), nCurrElementIndex( nIndex ), bArrayElementLocked( true )
 {
@@ -421,7 +421,7 @@ CArrayIterator::CArrayIterator( const int nIndex, const string &_szAddName, NTyp
 		if ( nNumArrayElements > 0 )
 		{
 			NTypeDef::STypeStructBase *pTypeStruct = checked_cast_ptr<NTypeDef::STypeStructBase *>( pTypeArray->field.pType );
-			const string szFieldName = szAddName.empty() ? "" : szAddName + ".[0].";
+			const std::string szFieldName = szAddName.empty() ? "" : szAddName + ".[0].";
 			pIterator = new CStructIterator( szFieldName, pTypeStruct, pParent, bShowHidden );
 		}
 	}
@@ -439,7 +439,7 @@ bool CArrayIterator::Next()
 			if ( nCurrElementIndex < nNumArrayElements )
 			{
 				NTypeDef::STypeStructBase *pTypeStruct = checked_cast_ptr<NTypeDef::STypeStructBase *>( pTypeArray->field.pType );
-				const string szFieldName = szAddName.empty() ? "" : szAddName + StrFmt(".[%d].", nCurrElementIndex);
+				const std::string szFieldName = szAddName.empty() ? "" : szAddName + StrFmt(".[%d].", nCurrElementIndex);
 				pIterator = new CStructIterator( szFieldName, pTypeStruct, pParent, bShowHidden );
 				return !pIterator->IsEnd();
 			}
@@ -473,7 +473,7 @@ bool CArrayIterator::IsEnd() const
 		return false;
 }
 
-string CArrayIterator::GetName() const
+std::string CArrayIterator::GetName() const
 {
 	if ( pTypeArray->field.pType->IsSimpleType() || pIterator == 0 )
 		return szAddName.empty() ? "" : szAddName + StrFmt(".[%d]", nCurrElementIndex);

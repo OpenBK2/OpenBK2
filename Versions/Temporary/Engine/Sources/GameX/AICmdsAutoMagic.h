@@ -7,8 +7,8 @@ class CAICmdsAutomagic : public IAICmdsAutoMagic
 	OBJECT_BASIC_METHODS( CAICmdsAutomagic );
 
 	ZDATA
-		hash_map<int, BYTE> msg2byte;
-	vector<int> byte2msg;
+		std::unordered_map<int, BYTE> msg2byte;
+	std::vector<int> byte2msg;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&msg2byte); f.Add(3,&byte2msg); return 0; }
 public:	
 	CAICmdsAutomagic();

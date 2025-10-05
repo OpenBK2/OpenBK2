@@ -68,17 +68,17 @@ struct IDriver : public CObjectBase
 	struct SGameInfo
 	{
 		ZDATA
-		wstring wszServerName;
+		std::wstring wszServerName;
 		long nHostPort;
-		wstring wszMapName;
-		string szGameType;
+		std::wstring wszMapName;
+		std::string szGameType;
 		int nCurPlayers, nMaxPlayers;
 		EServerGameMode eGameMode;
 
 		bool bPasswordRequired;
 		
-		string szModName;
-		string szModVersion;
+		std::string szModName;
+		std::string szModVersion;
 		
 		CMemoryStream gameSettings;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszServerName); f.Add(3,&nHostPort); f.Add(4,&wszMapName); f.Add(5,&szGameType); f.Add(6,&nCurPlayers); f.Add(7,&nMaxPlayers); f.Add(8,&eGameMode); f.Add(9,&bPasswordRequired); f.Add(10,&szModName); f.Add(11,&szModVersion); f.Add(12,&gameSettings); return 0; }
@@ -117,7 +117,7 @@ struct IDriver : public CObjectBase
 	// kick player 'nClient'
 	virtual void Kick( int nClient ) = 0;
 	// get next message
-	virtual bool GetMessage( EMessage *pMsg, int *pClientID, vector<int> *pReceived, CMemoryStream *pPkt ) = 0;
+	virtual bool GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt ) = 0;
 	// ping of the client, -1 if client doesn't exist
 	virtual const float GetPing( const int nClientID ) = 0;
 	// time since last message was received from this client
@@ -132,7 +132,7 @@ struct IDriver : public CObjectBase
 	virtual void UnpauseNet() {}
 	virtual void SetLag( const NTimer::STime period ) {}
 
-	virtual const string GetIP( const int nClientID ) = 0;
+	virtual const std::string GetIP( const int nClientID ) = 0;
 	virtual const int GetPort( const int nClientID ) = 0;
 	
 	// for debug

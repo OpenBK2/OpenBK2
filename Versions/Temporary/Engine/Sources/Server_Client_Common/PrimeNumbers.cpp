@@ -8,7 +8,7 @@ CPrimeNumbers::CPrimeNumbers()
 {
 	numbers.resize( N_NUMBERS );
 
-	vector<BYTE> canBePrime;
+	std::vector<BYTE> canBePrime;
 	canBePrime.resize( N_NUMBERS * 50, 1 );
 
 	int nFound = 0;

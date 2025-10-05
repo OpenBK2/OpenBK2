@@ -44,11 +44,11 @@ public:
 	void OnResetTimer();
 };
 
-class CFades : public list<CPtr<CFade> >
+class CFades : public std::list<CPtr<CFade> >
 {
 	ZDATA_( list<CPtr<CFade> > )
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( list<CPtr<CFade> > *)this); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( std::list<CPtr<CFade> > *)this); return 0; }
 public:
 	void Update();
 };

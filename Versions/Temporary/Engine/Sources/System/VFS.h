@@ -29,28 +29,28 @@ struct SFileStats
 struct IVFS : public CObjectBase
 {
 	//! Open file to read data
-	virtual CDataStream* OpenFile( const string &szPath ) = 0;
+	virtual CDataStream* OpenFile( const std::string &szPath ) = 0;
 	//! Check does file exist
-	virtual bool DoesFileExist( const string &szPath ) = 0;
+	virtual bool DoesFileExist( const std::string &szPath ) = 0;
 	//! Retrieve file stats. \return Returns false in the case file doesn't exist
-	virtual bool GetFileStats( SFileStats *pStats, const string &szPath ) = 0;
+	virtual bool GetFileStats( SFileStats *pStats, const std::string &szPath ) = 0;
 	//! Retrieve all files list from the storage
-	virtual void GetAllFileNames( vector<string> *pFileNames, const string &rszFolder ) = 0;
+	virtual void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder ) = 0;
 };
 
 struct ICombinerVFS : public IVFS
 {
-	virtual const vector< CObj<IVFS> > &GetVFSList() const = 0;
-	virtual void SetVFSList( const vector< CObj<IVFS> > &vfsList ) = 0;
+	virtual const std::vector< CObj<IVFS> > &GetVFSList() const = 0;
+	virtual void SetVFSList( const std::vector< CObj<IVFS> > &vfsList ) = 0;
 };
 SYSTEM_EXPORT ICombinerVFS *CreateCombinerVFS( IVFS *pVFS );
 
 struct IFileCreator : public CObjectBase
 {
 	//! Open existing file (with truncation) to write or create new one if does not exist
-	virtual CDataStream* CreateFile( const string &szPath ) = 0;
+	virtual CDataStream* CreateFile( const std::string &szPath ) = 0;
 	//! Delete existing file
-	virtual bool RemoveFile( const string &szPath ) = 0;
+	virtual bool RemoveFile( const std::string &szPath ) = 0;
 };
 
 }

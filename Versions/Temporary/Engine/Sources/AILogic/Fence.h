@@ -11,7 +11,7 @@ class CFence : public CCommonStaticObject
 		SVector leftTile, rightTile;
 		NDb::SFenceRPGStats::ETypesOfLife eLifeType;
 		// соседние заборы
-		list< CPtr<CFence> > neighFences;
+		std::list< CPtr<CFence> > neighFences;
 		int nCreator;													// diplomacy of creator
 		bool bSuspendAppear;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&pStats); f.Add(3,&leftTile); f.Add(4,&rightTile); f.Add(5,&eLifeType); f.Add(6,&neighFences); f.Add(7,&nCreator); f.Add(8,&bSuspendAppear); return 0; }

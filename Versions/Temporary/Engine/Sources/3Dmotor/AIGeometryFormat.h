@@ -4,11 +4,11 @@
 
 struct SStoredPiece
 {
-	vector<STriangle> tris;
-	vector<CVec3> verts;		
-	vector<NGScene::SLoadVertexWeight> weights;
+	std::vector<STriangle> tris;
+	std::vector<CVec3> verts;
+	std::vector<NGScene::SLoadVertexWeight> weights;
 	float fVolume;
-	vector<NAI::SJunction> juncs;
+	std::vector<NAI::SJunction> juncs;
 	//vector<CPtr<NAI::CPrecalcSpheres> > precalc;
 
 	int operator&( CStructureSaver &f )
@@ -23,7 +23,7 @@ struct SStoredPiece
 	}
 };
 
-typedef hash_map<int, SStoredPiece > CStoredPieceMap;
+typedef std::unordered_map<int, SStoredPiece > CStoredPieceMap;
 const int N_PIECES_CHUNK = 4;
 
 

@@ -1,18 +1,20 @@
 #pragma once
 #include "Misc_export.h"
 
+#include <algorithm>
+
 namespace NStr
 {
 
 // слить последовательность строк в одну строку, элементы последовательности
 // должны уметь приводиться к string
 template< class It >
-string Join( It first, It last, const string &szSeparator = " " )
+std::string Join( It first, It last, const std::string &szSeparator = " " )
 {
 	if ( first != last )
 	{
 		It cur = first;
-		string szRes = *(cur++);
+		std::string szRes = *(cur++);
 
 		while ( cur != last )
 		{
@@ -28,65 +30,65 @@ string Join( It first, It last, const string &szSeparator = " " )
 
 
 // разделить строку на массив строк по заданному разделителю
-MISC_EXPORT void SplitString( const string &szString, vector<string> *pVector, const char cSeparator );
-MISC_EXPORT void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator );
+MISC_EXPORT void SplitString( const std::string &szString, std::vector<std::string> *pVector, const char cSeparator );
+MISC_EXPORT void SplitString( const std::wstring &szString, std::vector<std::wstring> *pVector, const wchar_t cSeparator );
 // разделить строку на массив строк по заданному разделителю с учётом скобок любой вложенности
-MISC_EXPORT void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator );
-MISC_EXPORT void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector, const wchar_t cSeparator );
+MISC_EXPORT void SplitStringWithMultipleBrackets( const std::string &szString, std::vector<std::string> &szVector, const char cSeparator );
+MISC_EXPORT void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector, const wchar_t cSeparator );
 // отрезать все символы 'cTrim'
 // отрезать все 'cTrim' слева
-inline void TrimLeft( string &szString, const char cTrim ) { szString.erase( 0, szString.find_first_not_of( cTrim ) ); }
+inline void TrimLeft( std::string &szString, const char cTrim ) { szString.erase( 0, szString.find_first_not_of( cTrim ) ); }
 // отрезать все 'pszTrim' слева
-inline void TrimLeft( string &szString, const char *pszTrim ) { szString.erase( 0, szString.find_first_not_of( pszTrim ) ); }
+inline void TrimLeft( std::string &szString, const char *pszTrim ) { szString.erase( 0, szString.find_first_not_of( pszTrim ) ); }
 // отрезать все whitespaces слева
-inline void TrimLeft( string &szString ) { TrimLeft(szString, " \t\n\r"); } 
+inline void TrimLeft( std::string &szString ) { TrimLeft(szString, " \t\n\r"); }
 // отрезать все 'pszTrim' справа
-MISC_EXPORT void TrimRight( string &szString, const char *pszTrim );
+MISC_EXPORT void TrimRight( std::string &szString, const char *pszTrim );
 // отрезать все 'cTrim' справа
-MISC_EXPORT void TrimRight( string &szString, const char cTrim );
+MISC_EXPORT void TrimRight( std::string &szString, const char cTrim );
 // отрезать все whitespaces справа
-inline void TrimRight( string &szString ) { TrimRight(szString, " \t\n\r"); }
+inline void TrimRight( std::string &szString ) { TrimRight(szString, " \t\n\r"); }
 // отрезать все 'pszTrim' с обоих концов
-inline void TrimBoth( string &szString, const char *pszTrim ) { TrimLeft( szString, pszTrim ); TrimRight( szString, pszTrim ); }
+inline void TrimBoth( std::string &szString, const char *pszTrim ) { TrimLeft( szString, pszTrim ); TrimRight( szString, pszTrim ); }
 // отрезать все 'cTrim' с обоих концов
-inline void TrimBoth( string &szString, const char cTrim ) { TrimLeft( szString, cTrim ); TrimRight( szString, cTrim ); }
+inline void TrimBoth( std::string &szString, const char cTrim ) { TrimLeft( szString, cTrim ); TrimRight( szString, cTrim ); }
 // отрезать все whitespaces с обоих концов
-inline void TrimBoth( string &szString ) { TrimBoth(szString, " \t\n\r"); }
+inline void TrimBoth( std::string &szString ) { TrimBoth(szString, " \t\n\r"); }
 // вырезать все символы 'cTrim' из строки
-void TrimInside( string &szString, const char *pszTrim );
-inline void TrimInside( string &szString, const char cTrim ) { szString.erase( remove(szString.begin(), szString.end(), cTrim), szString.end() ); }
-inline void TrimInside( string &szString ) { TrimInside(szString, " \t\n\r"); }
+void TrimInside( std::string &szString, const char *pszTrim );
+inline void TrimInside( std::string &szString, const char cTrim ) { szString.erase( remove(szString.begin(), szString.end(), cTrim), szString.end() ); }
+inline void TrimInside( std::string &szString ) { TrimInside(szString, " \t\n\r"); }
 
 template<class T>
-void FastSearch( const char *pszBegin, const int nSize, const string &szSample, vector<int> *pFoundEntriesPos, T charsComparer );
+void FastSearch( const char *pszBegin, const int nSize, const std::string &szSample, std::vector<int> *pFoundEntriesPos, T charsComparer );
 
 template<class T>
-int FastSerachFirst( const char *pszBegin, const string &szSample, T charsComparer );
+int FastSerachFirst( const char *pszBegin, const std::string &szSample, T charsComparer );
 
 template<class T>
-int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer );
+int SerachFirst( const char *pszBegin, const std::string &szSample, T charsComparer );
 
 // привести к верхнему или нижнему регистру
 // MSVCMustDie_* are required to keep compiler happy when default calling conversion is __fastcall
-inline int MSVCMustDie_tolower( int a ) { return tolower(a); } 
+inline int MSVCMustDie_tolower( int a ) { return tolower(a); }
 inline int MSVCMustDie_toupper( int a ) { return toupper(a); }
-inline void ToLower( string *pRes )
-{ 
-	transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_tolower ); 
+inline void ToLower( std::string *pRes )
+{
+	std::transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_tolower );
 }
-inline void ToLower( string *pRes, const string &szString )
-{ 
+inline void ToLower( std::string *pRes, const std::string &szString )
+{
 	pRes->resize( szString.size() );
-	transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_tolower ); 
+	std::transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_tolower );
 }
-inline void ToUpper( string *pRes )
-{ 
-	transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_toupper ); 
+inline void ToUpper( std::string *pRes )
+{
+	std::transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_toupper );
 }
-inline void ToUpper( string *pRes, const string &szString )
-{ 
+inline void ToUpper( std::string *pRes, const std::string &szString )
+{
 	pRes->resize( szString.size() );
-	transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_toupper ); 
+	transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_toupper );
 }
 
 // to upper
@@ -94,13 +96,13 @@ __forceinline char ASCII_toupper( const char chr ) { return chr >= 'a' && chr <=
 
 // упрощённая и ускоренная версия tolower - работает только на первой половине кодовой таблицы!
 __forceinline char ASCII_tolower( const char chr ) { return chr - ( ('A' - 'a') & ( (('A' - chr - 1) & (chr - 'Z' - 1)) >> 7 ) ); }
-inline void ToLowerASCII( string *pRes )
-{ 
-	for ( string::iterator it = pRes->begin(); it != pRes->end(); ++it )
+inline void ToLowerASCII( std::string *pRes )
+{
+	for ( std::string::iterator it = pRes->begin(); it != pRes->end(); ++it )
 		*it = ASCII_tolower( *it );
 }
-inline void ToLowerASCII( string *pRes, const string &szString )
-{ 
+inline void ToLowerASCII( std::string *pRes, const std::string &szString )
+{
 	const int nSize = szString.size();
 	pRes->resize( nSize );
 	for ( int i = 0; i < nSize; ++i )
@@ -109,14 +111,14 @@ inline void ToLowerASCII( string *pRes, const string &szString )
 
 // convert 'string', which represents integer value in any radix (oct, dec, hex) to 'int'
 MISC_EXPORT int ToInt( const char *pszString );
-inline int ToInt( const string &szString ) { return ToInt( szString.c_str() ); }
+inline int ToInt( const std::string &szString ) { return ToInt( szString.c_str() ); }
 unsigned long ToULong( const char *pszString );
-inline unsigned long ToULong( const string &szString ) { return ToULong( szString.c_str() ); }
+inline unsigned long ToULong( const std::string &szString ) { return ToULong( szString.c_str() ); }
 // convert 'string', which represents FP value to 'float' and 'double'
 MISC_EXPORT float ToFloat( const char *pszString );
-inline float ToFloat( const string &szString ) { return ToFloat( szString.c_str() ); }
+inline float ToFloat( const std::string &szString ) { return ToFloat( szString.c_str() ); }
 double ToDouble( const char *pszString );
-inline double ToDouble( const string &szString ) { return ToDouble( szString.c_str() ); }
+inline double ToDouble( const std::string &szString ) { return ToDouble( szString.c_str() ); }
 
 // является ли строка представлением числа
 inline bool IsBinDigit( const char cChar ) { return ( (cChar == '0') && (cChar == '1') ); }
@@ -124,9 +126,9 @@ inline bool IsOctDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <
 inline bool IsDecDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '9') ); }
 inline bool IsHexDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '9') ) || ( (cChar >= 'a') && (cChar <= 'f') ) || ( (cChar >= 'A') && (cChar <= 'F') ); }
 inline bool IsSign( const char cChar ) { return ( (cChar == '-') || (cChar == '+') ); }
-MISC_EXPORT bool IsDecNumber( const string &szString );
-bool IsOctNumber( const string &szString );
-MISC_EXPORT bool IsHexNumber( const string &szString );
+MISC_EXPORT bool IsDecNumber( const std::string &szString );
+bool IsOctNumber( const std::string &szString );
+MISC_EXPORT bool IsHexNumber( const std::string &szString );
 
 // перевод string => bin и обратно
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
@@ -137,37 +139,37 @@ __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 {
 	if ( chr >= 'a' )
 		return chr - 'a' + 10;
-	else if ( chr >= 'A' ) 
+	else if ( chr >= 'A' )
 		return chr - 'A' + 10;
 	else
 		return chr - '0';
 }
 
 // перевод UNICODE => UTF-8 и обратно
-MISC_EXPORT void UnicodeToUTF8( string *pRes, const wstring &szString );
-MISC_EXPORT void UTF8ToUnicode( wstring *pRes, const string &szString );
+MISC_EXPORT void UnicodeToUTF8( std::string *pRes, const std::wstring &szString );
+MISC_EXPORT void UTF8ToUnicode( std::wstring *pRes, const std::string &szString );
 
 // перевод MBCS => Unicode и обратно
 MISC_EXPORT void SetCodePage( const int nCodePage );
-MISC_EXPORT void ToMBCS( string *pRes, const wstring &szSrc );
-inline string ToMBCS( const wstring &szSrc ) { string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
-MISC_EXPORT void ToUnicode( wstring *pRes, const string &szSrc );
-inline wstring ToUnicode( const string &szSrc ) { wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
+MISC_EXPORT void ToMBCS( std::string *pRes, const std::wstring &szSrc );
+inline std::string ToMBCS( const std::wstring &szSrc ) { std::string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
+MISC_EXPORT void ToUnicode( std::wstring *pRes, const std::string &szSrc );
+inline std::wstring ToUnicode( const std::string &szSrc ) { std::wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
 
 // перевод MBCS => UTF-8 и обратно
-MISC_EXPORT void UTF8ToMBCS( string *pRes, const string &szSrc );
-MISC_EXPORT void MBCSToUTF8( string *pRes, const string &szSrc );
+MISC_EXPORT void UTF8ToMBCS( std::string *pRes, const std::string &szSrc );
+MISC_EXPORT void MBCSToUTF8( std::string *pRes, const std::string &szSrc );
 
 // GUID => string conversion
-MISC_EXPORT void GUID2String( string *pString, const GUID &guid );
-MISC_EXPORT void String2GUID( const string &szString, GUID *pGuid );
+MISC_EXPORT void GUID2String( std::string *pString, const GUID &guid );
+MISC_EXPORT void String2GUID( const std::string &szString, GUID *pGuid );
 
 template <class TChar>
-void ReplaceAllChars( basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )
+void ReplaceAllChars( std::basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )
 {
-	for ( basic_string<TChar>::iterator it = pString->begin(); it != pString->end(); ++it )
+	for ( typename std::basic_string<TChar>::iterator it = pString->begin(); it != pString->end(); ++it )
 	{
-		if ( *it == tFrom ) 
+		if ( *it == tFrom )
 			*it = tTo;
 	}
 }
@@ -222,7 +224,7 @@ struct SBracketsTest
 	}
 	static __forceinline TChar GetClose( const TChar chr )
 	{
-		switch ( chr ) 
+		switch ( chr )
 		{
 			case '('	:	return TChar( ')' );
 			case '['	:	return TChar( ']' );
@@ -246,7 +248,7 @@ struct SBracketsQuoteTest
 	}
 	static __forceinline TChar GetClose( const char chr )
 	{
-		switch ( chr ) 
+		switch ( chr )
 		{
 			case '('	:	return TChar( ')'  );
 			case '['	:	return TChar( ']'  );
@@ -263,7 +265,7 @@ template <class TChar, class TBrackets = SBracketsTest<TChar> >
 class CBracketSeparator
 {
 	const TChar cSeparator;								// separator char
-	vector<TChar> stc;										// close brackets stack
+	std::vector<TChar> stc;										// close brackets stack
 public:
 	CBracketSeparator( const TChar _chr )
 		: cSeparator( _chr ) { stc.reserve(32); }
@@ -287,7 +289,7 @@ public:
 	}
 };
 
-template <class TChar, class TStorage = basic_string<TChar>, class TSeparator = CCharSeparator<TChar> >
+template <class TChar, class TStorage = std::basic_string<TChar>, class TSeparator = CCharSeparator<TChar> >
 class CStringIterator
 {
 	TStorage szInput;											// input string
@@ -297,7 +299,7 @@ class CStringIterator
 public:
 	CStringIterator( const TChar *pszString, const TChar cSeparator )
 		: szInput( pszString ), nPrevPos( -1 ), nCurrPos( -1 ), separator( cSeparator ) { Next(); }
-	CStringIterator( const basic_string<TChar> &szString, const TChar cSeparator )
+	CStringIterator( const std::basic_string<TChar> &szString, const TChar cSeparator )
 		: szInput( szString ), nPrevPos( -1 ), nCurrPos( -1 ), separator( cSeparator ) { Next(); }
 	// iterate to next tag position
 	void Next()
@@ -305,7 +307,7 @@ public:
 		nPrevPos = nCurrPos + 1;
 		for ( int i = nPrevPos; i < szInput.size(); ++i )
 		{
-			if ( separator(szInput[i]) ) 
+			if ( separator(szInput[i]) )
 			{
 				nCurrPos = i;
 				return;
@@ -314,18 +316,18 @@ public:
 		nCurrPos = szInput.size();
 	}
 	// are we finished iteration?
-	bool IsEnd() const 
-	{ 
-		return nPrevPos > nCurrPos; 
+	bool IsEnd() const
+	{
+		return nPrevPos > nCurrPos;
 	}
 	//
-	basic_string<TChar> Get() const 
-	{ 
-		return szInput.substr(nPrevPos, nCurrPos - nPrevPos); 
-	}
-	void Get( basic_string<TChar> *pString )
+	std::basic_string<TChar> Get() const
 	{
-		if ( nCurrPos > nPrevPos ) 
+		return szInput.substr(nPrevPos, nCurrPos - nPrevPos);
+	}
+	void Get( std::basic_string<TChar> *pString )
+	{
+		if ( nCurrPos > nPrevPos )
 		{
 			pString->resize( nCurrPos - nPrevPos );
 			memcpy( &((*pString)[0]), &(szInput[nPrevPos]), (nCurrPos - nPrevPos) * sizeof(TChar) );
@@ -343,9 +345,9 @@ namespace NImplementation
 	{
 		const char *pszBegin;
 		const int nLength;
-		const string &szSample;
+		const std::string &szSample;
 
-		SSearchStr( const char *_pszBegin, const int _nLength, const string &_szSample )
+		SSearchStr( const char *_pszBegin, const int _nLength, const std::string &_szSample )
 			: pszBegin( _pszBegin ), nLength( _nLength ), szSample( _szSample ) { }
 
 		const char operator[]( const int nIndex ) const
@@ -363,7 +365,7 @@ namespace NImplementation
 	struct SPrefixesArray
 	{
 		const int nSampleSize;
-		vector<int> sizes;
+		std::vector<int> sizes;
 
 		SPrefixesArray( const int _nSampleSize ) : nSampleSize( _nSampleSize ), sizes( nSampleSize + 2, 0 ) { }
 		int& operator[]( const int nIndex )
@@ -373,7 +375,7 @@ namespace NImplementation
 	};
 }
 template<class T>
-void FastSearch( const char *pszBegin, const int nSize, const string &szSample, vector<int> *pFoundEntriesPos, T charsComparer )
+void FastSearch( const char *pszBegin, const int nSize, const std::string &szSample, std::vector<int> *pFoundEntriesPos, T charsComparer )
 {
 	if ( nSize == 0 || szSample.empty() )
 		return;
@@ -409,7 +411,7 @@ void FastSearch( const char *pszBegin, const int nSize, const string &szSample, 
 }
 
 template<class T>
-int FastSerachFirst( const char *pszBegin, const string &szSample, T charsComparer )
+int FastSerachFirst( const char *pszBegin, const std::string &szSample, T charsComparer )
 {
 	const int nSize = strlen( pszBegin );
 	if ( nSize == 0 || szSample.empty() )
@@ -442,7 +444,7 @@ int FastSerachFirst( const char *pszBegin, const string &szSample, T charsCompar
 }
 
 template<class T>
-int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer )
+int SerachFirst( const char *pszBegin, const std::string &szSample, T charsComparer )
 {
 	const int nStringSize = strlen( pszBegin );
 	const int nPatternSize = szSample.size();

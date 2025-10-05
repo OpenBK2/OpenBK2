@@ -11,22 +11,22 @@
 namespace NCodeGen
 {
 
-static const string CutRootDir( const string &szFileName, const string &szRootDir )
+static const std::string CutRootDir( const std::string &szFileName, const std::string &szRootDir )
 {
 	return szFileName.substr( szRootDir.size(), szFileName.size() );
 }
 
-static const string GetIncludeRefName( const vector<string> &splittedFileDirs, const string &szRootDir, const string &szFullIncludeName )
+static const std::string GetIncludeRefName( const std::vector<std::string> &splittedFileDirs, const std::string &szRootDir, const std::string &szFullIncludeName )
 {
-	const string szIncludeName = CutRootDir( szFullIncludeName, szRootDir );
-	vector<string> inclDirs;
+	const std::string szIncludeName = CutRootDir( szFullIncludeName, szRootDir );
+	std::vector<std::string> inclDirs;
 	NStr::SplitString( szIncludeName, &inclDirs, '/' );
-	const string szInclFileName = inclDirs.back();
+	const std::string szInclFileName = inclDirs.back();
 	if ( szInclFileName != "base.h" && szInclFileName != "game.h" )
 	{
 		inclDirs.pop_back();
 
-		string szRefIncludeName = "";
+		std::string szRefIncludeName = "";
 		int nFirstNotEqualDir = 0;
 		while ( nFirstNotEqualDir < splittedFileDirs.size() && nFirstNotEqualDir < inclDirs.size() && splittedFileDirs[nFirstNotEqualDir] == inclDirs[nFirstNotEqualDir] )
 			++nFirstNotEqualDir;
@@ -42,24 +42,24 @@ static const string GetIncludeRefName( const vector<string> &splittedFileDirs, c
 	return "";
 }
 
-CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
+CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	szName = CutRootDir( pFileNode->GetName(), szRootDir );
 	szName = szName.substr( 0, szName.size() - NFile::GetFileExt( szName ).size() );
-	vector<string> dirs;
+	std::vector<std::string> dirs;
 	NStr::SplitString( szName, &dirs, '/' );
 	dirs.pop_back();
 	for ( NLang::CFileNode::TIncludesIter iter = pFileNode->BeginIncludes(); iter != pFileNode->EndIncludes(); ++iter )
 	{
-		string szIncludeRefName = GetIncludeRefName( dirs, szRootDir, iter->first );
-		const string szExt = NFile::GetFileExt( szIncludeRefName );
+		std::string szIncludeRefName = GetIncludeRefName( dirs, szRootDir, iter->first );
+		const std::string szExt = NFile::GetFileExt( szIncludeRefName );
 		if ( szExt == ".cll" )
 			szIncludeRefName = szIncludeRefName.substr( 0, szIncludeRefName.size() - szExt.size() ) + ".h";
 		if ( !szIncludeRefName.empty() && szIncludeRefName != "../base.h" && szIncludeRefName != "../game.h" )
 			includes.push_back( szIncludeRefName );
 	}
 
-	sort( includes.begin(), includes.end() );
+	includes.sort();
 
 	hExternalIncludes = pFileNode->GetHExternalIncludes();
 	cppExternalIncludes = pFileNode->GetCPPExternalIncludes();
@@ -67,32 +67,32 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 	pNamespace = new CNamespace( pFileNode->GetNamespace(), nodes2TypeDefs, pTermTypesDesc );
 }
 
-void CFile::GenerateCode( const string &szRootDir )
+void CFile::GenerateCode( const std::string &szRootDir )
 {
-	const string szFullHFileName = szRootDir + szName + ".h";
+	const std::string szFullHFileName = szRootDir + szName + ".h";
 	CFileStream hStream( szFullHFileName, CFileStream::WIN_CREATE);
-	const string szFullCppFileName = szRootDir + szName + ".cpp";
+	const std::string szFullCppFileName = szRootDir + szName + ".cpp";
 	CFileStream cppStream( szFullCppFileName, CFileStream::WIN_CREATE );
 
 	if ( hStream.IsOk() && cppStream.IsOk() )
 	{
-		string szHFile, szCPPFile, szEOF, szCPPEOF;
+		std::string szHFile, szCPPFile, szEOF, szCPPEOF;
 		ICode::SCodeStreams code( &szHFile, &szCPPFile, &szEOF, &szCPPEOF );
 
 		code.h << "#pragma once" << endl;
 		code.h << separator;
 		code.h << "// automatically generated file, don't change manually!" << endl << endl;
 
-		for ( list<string>::iterator iter = includes.begin(); iter != includes.end(); ++iter )
+		for ( std::list<std::string>::iterator iter = includes.begin(); iter != includes.end(); ++iter )
 			code.h <<  "#include " << qcomma << *iter << qcomma << endl;
-		for ( list<string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
+		for ( std::list<std::string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
 			code.h << "#include " << qcomma << *iter << qcomma << endl;
 		code.h << separator;
 		code.h << "struct IXmlSaver;" << endl;
 		code.h << separator;
 
 		int i = szFullHFileName.size() - 1;
-		string szShortHFileName = "";
+		std::string szShortHFileName = "";
 		while ( szFullHFileName[i] != '/' && i >= 0 )
 		{
 			szShortHFileName = szFullHFileName[i] + szShortHFileName;
@@ -104,7 +104,7 @@ void CFile::GenerateCode( const string &szRootDir )
 		code.cpp << "#include " << qcomma << "../libdb/Checksum.h" << qcomma << endl;
 		code.cpp << "#include " << qcomma << "../System/XmlSaver.h" << qcomma << endl;
 		code.cpp << "#include " << qcomma << szShortHFileName << qcomma << endl;
-		for ( list<string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
+		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
 			code.cpp << "#include " << qcomma << *iter << qcomma << endl;
 		code.cpp << separator;
 		code.cpp << "namespace NDb" << endl;

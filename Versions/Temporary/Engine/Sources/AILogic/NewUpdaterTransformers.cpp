@@ -205,7 +205,7 @@ SAIBasicUpdate* CEventUpdater::CUpdateData::CRangeAreaUpdateTransformer::Transfo
 {
 	SAIShootAreaUpdate *pData = new SAIShootAreaUpdate;
 	pData->info.resize( 1 );
-	construct( static_cast<SShootAreas*>( &(pData->info[0]) ) );
+	new ( &pData->info[0] ) SShootAreas();
 	pUpdate->pObj->GetRangeArea( &(pData->info[0]) );
 	pData->nObjID = pUpdate->pObj->GetUniqueId();
 	pData->eUpdateType = pUpdate->eUpdateType;

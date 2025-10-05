@@ -1154,7 +1154,7 @@ IUnitState* CTransportRepairBridgeState::Instance( class CAITransportUnit *pTran
 CTransportRepairBridgeState::CTransportRepairBridgeState( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge )
 : CTransportBuildState( pTransport, VNULL2 ), pBridgeToRepair( pFullBridge ), bSentToBuildPoint( false )
 {
-	vector< CObj<CBridgeSpan> > spans;
+	std::vector< CObj<CBridgeSpan> > spans;
 	pBridgeToRepair->GetFullBridge()->EnumSpans( &spans );
 	SetStartPoint( CBridgeCreation::SortBridgeSpans( &spans, pTransport ) );
 	SetStatus( EUS_REPAIR_OBJECT );

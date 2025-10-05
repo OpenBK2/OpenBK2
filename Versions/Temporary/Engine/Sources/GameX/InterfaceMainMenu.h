@@ -29,10 +29,10 @@ private:
 	void MsgSinglePlayer( const SGameMessage &msg );
 	void MsgQuickLoad( const SGameMessage &msg );
 	
-	void OnMultiplayer( const string &szSender );
-	void OnCustomCampaign( const string &szSender );
-	void OnLoadMod( const string &szSender );
-	void OnHallOfFame( const string &szSender );
+	void OnMultiplayer( const std::string &szSender );
+	void OnCustomCampaign( const std::string &szSender );
+	void OnLoadMod( const std::string &szSender );
+	void OnHallOfFame( const std::string &szSender );
 
 public:	
 	CInterfaceMainMenu();
@@ -53,7 +53,7 @@ class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 	OBJECT_BASIC_METHODS( CICMainMenu );
 	
 	ZDATA_(CInterfaceCommandBase<CInterfaceMainMenu>)
-	string szConfig;
+	std::string szConfig;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMainMenu>*)this); f.Add(2,&szConfig); return 0; }
 private:
 	void PreCreate();

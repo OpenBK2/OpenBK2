@@ -23,9 +23,9 @@ public:
 	// all packets are considered to be of same size
 	bool CanSend(); 
 	bool NeedSend() const;
-	void Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT );
+	void Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT );
 	PACKET_ID WrtieAcks( CBitStream *pBits, int nPktSize );
-	bool ReadAcks( vector<PACKET_ID> *acked, CBitStream &bits );
+	bool ReadAcks( std::vector<PACKET_ID> *acked, CBitStream &bits );
 	void PacketLost( PACKET_ID pktID );
 
 private:
@@ -34,7 +34,7 @@ private:
 	UPDATE_ID nPktHighCounter; // high part of packet counter
 	//
 	// info on received pkts (acks on them should be sent)
-	vector<UPDATE_ID> receivedPkts;
+	std::vector<UPDATE_ID> receivedPkts;
 	// acknowledgements on packets cache
 	DWORD dwAckedBits;
 	PACKET_ID nAckedLast;
@@ -67,12 +67,12 @@ private:
 		bool bOnTheWindowEdge;
 	};
 	// info on sent update packets
-	list< CUpdate > sentUpdates, rolledUpdates;    // unacknowledged updates
+	std::list< CUpdate > sentUpdates, rolledUpdates;    // unacknowledged updates
 	
 	void RegisterRTT( float fRTT );
 	void SendPktAcks( CBitStream *pBits );
-	void ReceiveAck( vector<PACKET_ID> *pAcked, PACKET_ID nPkt );
-	void ReceivePktAcks( vector<PACKET_ID> *pAcked, CBitStream &bits );
+	void ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt );
+	void ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits );
 	bool CheckRecvPacketNumber( UPDATE_ID nPkt );
 };
 

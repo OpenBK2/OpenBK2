@@ -91,8 +91,8 @@ public:
 	~CReactions(); 
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 	
 	bool IsEffectFinished() const { return bIsEffectFinished; }
@@ -153,7 +153,7 @@ CInterfaceLoadingBase::CReactions::~CReactions()
 {
 }
 
-bool CInterfaceLoadingBase::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceLoadingBase::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "effect_finished" )
 	{
@@ -164,7 +164,7 @@ bool CInterfaceLoadingBase::CReactions::Execute( const string &szSender, const s
 	return false;
 }
 
-int CInterfaceLoadingBase::CReactions::Check( const string &szCheckName ) const
+int CInterfaceLoadingBase::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -192,7 +192,7 @@ CInterfaceLoadingBase::~CInterfaceLoadingBase()
 	pScreen = 0;
 }
 
-void CInterfaceLoadingBase::InitInternal( const string &szScreenName )
+void CInterfaceLoadingBase::InitInternal( const std::string &szScreenName )
 {
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
@@ -348,7 +348,7 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D()
 	ShowOnEnterMoveEffect();
 }
 
-CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMinimap, const wstring &wszDesc, const wstring &wszCitation, bool bChapter )
+CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMinimap, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter )
 {
 	InitInternal( "LoadingSingle" );
 	MakeInterior( pMinimap, wszDesc, wszCitation, bChapter );
@@ -366,7 +366,7 @@ CInterfaceLoadingSingle2D::~CInterfaceLoadingSingle2D()
 		RunFinishScreen();
 }
 
-void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture, const wstring &wszDesc, const wstring &wszCitation, bool bChapter )
+void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter )
 {
 	IWindow *pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
 
@@ -572,7 +572,7 @@ bool CInterfaceLoadingSingleFinished::StepLocal( bool bAppActive )
 
 void CInterfaceLoadingSingleFinished::ShowPressKey( bool bFormat1 )
 {
-	wstring wszFormat;
+	std::wstring wszFormat;
 	if ( bFormat1 )
 		wszFormat = wszPressKeyFormat1;
 	else
@@ -581,7 +581,7 @@ void CInterfaceLoadingSingleFinished::ShowPressKey( bool bFormat1 )
 		pPressKeyView->SetText( wszFormat + pPressKeyView->GetDBText() );
 }
 
-bool CInterfaceLoadingSingleFinished::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceLoadingSingleFinished::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "effect_finished" )
 	{
@@ -592,7 +592,7 @@ bool CInterfaceLoadingSingleFinished::Execute( const string &szSender, const str
 	return false;
 }
 
-int CInterfaceLoadingSingleFinished::Check( const string &szCheckName ) const
+int CInterfaceLoadingSingleFinished::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

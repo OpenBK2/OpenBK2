@@ -39,7 +39,7 @@ const float TEXT_VIEW_NICE_X2Y = 2.0f;
 
 // CInterfaceMessageBox
 
-bool CInterfaceMessageBox::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMessageBox::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
@@ -61,7 +61,7 @@ CInterfaceMessageBox::~CInterfaceMessageBox()
 		Scene()->RemoveScreen( pScreen );
 }
 
-int CInterfaceMessageBox::CReactions::Check( const string &szCheckName ) const
+int CInterfaceMessageBox::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -80,7 +80,7 @@ bool CInterfaceMessageBox::Init()
 	return true;
 }
 
-void CInterfaceMessageBox::SetParams( const string &szName, const wstring &szText )
+void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstring &szText )
 {
 	IWindow *pWindow = pScreen->GetChild( szName, true );
 	NI_ASSERT( pWindow, StrFmt( "Main window: '%s' for message box not found", szName.c_str() ) );
@@ -139,7 +139,7 @@ bool CInterfaceMessageBox::ProcessEvent( const SGameMessage &msg )
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }
 
-void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const wstring &szText, int nMinX )
+void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const std::wstring &szText, int nMinX )
 {
 	pTextView->SetText( pTextView->GetDBText() + szText );
 	pTextView->SetWidth( nMinX );
@@ -180,17 +180,17 @@ void CICMessageBox::Configure( const char *pszConfig )
 	{
 		const char *p = strchr( pCurrPos, ':' );
 		NI_ASSERT( p , StrFmt( "incorrect string format: %s", pszConfig ) );
-		string s( pCurrPos, p - pCurrPos );
+		std::string s( pCurrPos, p - pCurrPos );
 		if ( s == "type" )
 		{
 			const char *p2 = strchr( p + 1, ';' );
 			NI_ASSERT( p2 , StrFmt( "incorrect string format: %s", pszConfig ) );
-			szMainWindowName = string( p + 1, p2 - (p + 1) );
+			szMainWindowName = std::string( p + 1, p2 - (p + 1) );
 			pCurrPos = p2 + 1;
 		}
 		else if ( s == "text" )
 		{
-			NStr::ToUnicode( &szText, string( p + 1 ) );
+			NStr::ToUnicode( &szText, std::string( p + 1 ) );
 			break;
 		}
 		else
@@ -200,9 +200,9 @@ void CICMessageBox::Configure( const char *pszConfig )
 	}
 }
 
-string CICMessageBox::MakeConfigString( const string &MessageBoxType, const wstring &szText )
+std::string CICMessageBox::MakeConfigString( const std::string &MessageBoxType, const std::wstring &szText )
 {
-	string szConfig = "type:";
+	std::string szConfig = "type:";
 	szConfig += MessageBoxType + ";text:" + NStr::ToMBCS( szText );
 	return szConfig;
 }

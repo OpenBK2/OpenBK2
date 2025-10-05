@@ -2,8 +2,8 @@
 
 class CAAFeedBacks
 {
-	typedef list<int/*Planes unique id*/> CTargetList;
-	typedef hash_map<int/*AA Unique ID*/,CTargetList>  CAAFeedBacksList;
+	typedef std::list<int/*Planes unique id*/> CTargetList;
+	typedef std::unordered_map<int/*AA Unique ID*/,CTargetList>  CAAFeedBacksList;
 
 	CAAFeedBacksList feedbacks;
 public:

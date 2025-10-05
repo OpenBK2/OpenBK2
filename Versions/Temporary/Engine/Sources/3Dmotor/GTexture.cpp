@@ -152,9 +152,9 @@ static bool RealLoadTexture( TRes *pTexture, TStream *pStream, const SDDSHeader 
 	return true;
 }
 
-static NGfx::EPixelFormat SelectFormat( const vector<NGfx::SPixel8888> &data )
+static NGfx::EPixelFormat SelectFormat( const std::vector<NGfx::SPixel8888> &data )
 {
-	vector<int> counts( 256, 0 );
+	std::vector<int> counts( 256, 0 );
 	for ( int k = 0; k < data.size(); ++k )
 		++counts[ data[k].a ];
 	if ( counts[255] == data.size() )
@@ -169,7 +169,7 @@ static NGfx::SPixel1555 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel1555
 static NGfx::SPixel4444 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel4444 *p = 0 ) { return NGfx::SPixel4444( src.r >> 4, src.g >> 4, src.b >> 4, src.a >> 4 ); }
 
 template<class T>
-static void ConvertTo16Bit( const vector<NGfx::SPixel8888> &data, NGfx::CTexture *pTexture, int nLevel, int nSizeX, int nSizeY, NGfx::EPixelFormat format )
+static void ConvertTo16Bit( const std::vector<NGfx::SPixel8888> &data, NGfx::CTexture *pTexture, int nLevel, int nSizeX, int nSizeY, NGfx::EPixelFormat format )
 {
 	NGfx::CTextureLock<T> lock( pTexture, nLevel, NGfx::INPLACE );
 	ASSERT( lock.GetSizeX() >= nSizeX );
@@ -201,7 +201,7 @@ static NGfx::CTexture* LoadConvertTo16Bit( CDataStream *pStream, const SDDSHeade
 	{
 		if ( pTexBuffer && k >= pTexBuffer->GetNumMipLevels() )
 			break;
-		vector<NGfx::SPixel8888> data;
+		std::vector<NGfx::SPixel8888> data;
 		data.resize( nSizeX * nSizeY );
 		pStream->Read( &data[0], data.size() * sizeof(data[0]) );
 		if ( k == 0 )
@@ -382,10 +382,10 @@ bool CFileTexture::NeedUpdate()
 
 // CFileCubeTexture
 
-static string GetID( const NDb::STexture *p ) { if (p) return p->szDestName; return ""; }
+static std::string GetID( const NDb::STexture *p ) { if (p) return p->szDestName; return ""; }
 void CFileCubeTexture::Recalc()
 {
-	string szTextureIDs[6];// = {0,0,0,0,0,0};
+	std::string szTextureIDs[6];// = {0,0,0,0,0,0};
 	const NDb::SCubeTexture *pTex = GetKey().tKey;
 	ASSERT( pTex );
 	if ( pTex )

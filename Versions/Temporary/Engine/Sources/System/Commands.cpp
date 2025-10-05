@@ -8,7 +8,7 @@ namespace NGlobal
 
 // Dependent command
 
-CCmd::CCmd( const string &_szID, CmdHandler _pHandler, void *_pContext ):
+CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler, void *_pContext ):
 	szID( _szID ), pHandler( _pHandler ), pContext( _pContext )
 {
 	nID = RegisterCmd( szID, pHandler, pContext );
@@ -19,13 +19,13 @@ CCmd::~CCmd()
 	UnregisterCmd( szID, nID );
 }
 
-void CCmd::Run( const vector<wstring> &paramsSet )
+void CCmd::Run( const std::vector<std::wstring> &paramsSet )
 {
 	pHandler( szID, paramsSet, pContext );
 }
 
 
-void VarBoolHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	bool *pFlag = (bool*)pContext;
 
@@ -34,27 +34,27 @@ void VarBoolHandler( const string &szID, const NGlobal::CValue &sValue, void *pC
 		*pFlag = true;
 }
 
-void VarIntHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarIntHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	int *pValue = (int*)pContext;
 	*pValue = Float2Int( sValue.GetFloat() );
 }
 
-void VarFloatHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarFloatHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	float *pValue = (float*)pContext;
 	*pValue = sValue.GetFloat();
 }
 
-void VarWStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarWStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
-	wstring *pValue = (wstring*)pContext;
+	std::wstring *pValue = (std::wstring*)pContext;
 	*pValue = sValue.GetString();
 }
 
-void VarStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
-	string *pValue = (string*)pContext;
+	std::string *pValue = (std::string*)pContext;
 	*pValue = NStr::ToMBCS( sValue.GetString() );
 }
 

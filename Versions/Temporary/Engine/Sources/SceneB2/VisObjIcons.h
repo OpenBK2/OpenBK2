@@ -22,8 +22,8 @@ protected:
 public:
 	NMeshData::SMeshData data;
 	CVec3 vCenter;
-	vector<CVec2> iconsSizesMin;
-	vector<CVec2> iconsSizesMax;
+	std::vector<CVec2> iconsSizesMin;
+	std::vector<CVec2> iconsSizesMax;
 	//
 	CVisObjIconInfo( ICamera *_pCamera ) : pCamera( _pCamera ), bUpdate( true ) {}
 	//
@@ -66,7 +66,7 @@ struct SVisObjIcons
 
 	CObj<CCSBound> pBound;
 	CVisObjIconHolder iconHolder;
-	vector<SPresentIcon> icons;
+	std::vector<SPresentIcon> icons;
 	float fIconHalfWidth;
 	float fIconAddHeight;
 	//

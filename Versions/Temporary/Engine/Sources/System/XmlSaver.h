@@ -29,13 +29,13 @@ private:
 	template<class T1>
 		int __cdecl TestDataPath( CArray2D<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( basic_string<T1>* ) { return 0; }
+		int __cdecl TestDataPath( std::basic_string<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( vector<T1>* ) { return 0; }
+		int __cdecl TestDataPath( std::vector<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( list<T1>* ) { return 0; }
+		int __cdecl TestDataPath( std::list<T1>* ) { return 0; }
 	template<class T1, class T2, class T3>
-		int __cdecl TestDataPath( hash_map<T1, T2, T3>* ) { return 0; }
+		int __cdecl TestDataPath( std::unordered_map<T1, T2, T3>* ) { return 0; }
 	// add boolean built-in type
 	template <class TYPE>
 		void AddBoolData( chunk_id idChunk, TYPE *pData, int nChunkNumber ) 
@@ -78,7 +78,7 @@ private:
 		{
 			if ( StartChunk(idChunk, nChunkNumber) != false )
 			{
-				string szValue;
+				std::string szValue;
 				if ( IsReading() )
 				{
 					DataChunkString( szValue );
@@ -188,7 +188,7 @@ private:
 			FinishChunk();
 		}
 	template <class T, class T1>
-		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, basic_string<T1> *pStr ) 
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::basic_string<T1> *pStr )
 		{
 			if ( !StartChunk(idChunk, nChunkNumber) )
 				return;
@@ -207,7 +207,7 @@ private:
 			FinishChunk();
 		}
 	template <class T, class T1>
-		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, vector<T1> *pVec ) 
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::vector<T1> *pVec )
 		{
 			if ( !StartChunk(idChunk, nChunkNumber) )
 				return;
@@ -220,23 +220,23 @@ private:
 			FinishChunk();
 		}
 	template <class T, class T1>
-		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, list<T1> *pList ) 
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::list<T1> *pList )
 	{
 		if ( !StartChunk(idChunk, nChunkNumber) )
 			return;
-		list<T1> &data = *pList;
+		std::list<T1> &data = *pList;
 		if ( IsReading() )
 		{
 			pList->clear();
 			pList->insert( data.begin(), CountChunks(), T1() );
 		}
 		int i = 1;
-		for ( list<T1>::iterator it = data.begin(); it != data.end(); ++it, ++i )
+		for ( typename std::list<T1>::iterator it = data.begin(); it != data.end(); ++it, ++i )
 			Add( "Item", &(*it), i );
 		FinishChunk();
 	}
 	template<class T,class T1, class T2, class T3>
-		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, hash_map<T1,T2,T3> *pHash ) 
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_map<T1,T2,T3> *pHash )
 		{
 			if ( !StartChunk(idChunk, nChunkNumber) )
 				return;
@@ -244,7 +244,7 @@ private:
 			FinishChunk();
 		}
 	template <class T, class T1, class T2> 
-		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, pair<T1, T2> *pData ) 
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::pair<T1, T2> *pData )
 		{
 			if ( !StartChunk(idChunk, nChunkNumber) )
 				return;
@@ -354,7 +354,7 @@ private:
 		}
 	// vector
 	template <class T> 
-		void DoVector( vector<T> &data )
+		void DoVector( std::vector<T> &data )
 		{
 			int i, nSize;
 			if ( IsReading() )
@@ -368,7 +368,7 @@ private:
 				Add( "Item", &data[i], i + 1 );
 		}
 	template <class T> 
-		void DoDataVector( vector<T> &data )
+		void DoDataVector( std::vector<T> &data )
 		{
 			int nSize = data.size();
 			Add( "Size", &nSize );
@@ -382,13 +382,13 @@ private:
 		}
 	// hash_map
 	template <class T1, class T2, class T3> 
-		void DoHashMap( hash_map<T1, T2, T3> &data )
+		void DoHashMap( std::unordered_map<T1, T2, T3> &data )
 		{
 			if ( IsReading() )
 			{
 				data.clear();
 				const int nSize = CountChunks();
-				vector<T1> indices;
+				std::vector<T1> indices;
 				indices.resize( nSize );
 				for ( int i = 0; i < nSize; ++i )
 				{
@@ -403,7 +403,7 @@ private:
 			else
 			{
 				int i = 1;
-				for ( hash_map<T1, T2, T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+				for ( typename std::unordered_map<T1, T2, T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
 				{
 					if ( StartChunk("Item", i) ) 
 					{
@@ -454,8 +454,8 @@ private:
 	virtual bool DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber ) = 0;
 	virtual bool DataChunkDBID( CDBID *pDBID ) = 0;
 	virtual bool DataChunkFilePath( NFile::CFilePath *pFilePath ) = 0;
-	virtual bool DataChunkString( string &data ) = 0;
-	virtual bool DataChunkString( wstring &data ) = 0;
+	virtual bool DataChunkString( std::string &data ) = 0;
+	virtual bool DataChunkString( std::wstring &data ) = 0;
 	//
 	virtual void StoreObject( CObjectBase *pObject ) = 0;
 	virtual CObjectBase* LoadObject() = 0;
@@ -468,8 +468,8 @@ public:
 	virtual bool AddAttribute( const chunk_id attrName, bool *pData ) = 0;
 	virtual bool AddAttribute( const chunk_id attrName, int *pData ) = 0;
 	virtual bool AddAttribute( const chunk_id attrName, float *pData ) = 0;
-	virtual bool AddAttribute( const chunk_id attrName, string *pData ) = 0;
-	virtual bool AddAttribute( const chunk_id attrName, wstring *pData ) = 0;
+	virtual bool AddAttribute( const chunk_id attrName, std::string *pData ) = 0;
+	virtual bool AddAttribute( const chunk_id attrName, std::wstring *pData ) = 0;
 	// add raw data of specified size (in bytes)
 	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 0 ) { DataChunk( idChunk, pData, nSize, nChunkNumber ); }
 	// main add function - add all structures/classes/datas through it

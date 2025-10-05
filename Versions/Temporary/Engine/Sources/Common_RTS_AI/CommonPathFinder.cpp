@@ -1102,7 +1102,7 @@ int CCommonPathFinder::operator&( IBinSaver &saver )
 
 void CCommonPathFinder::MarkPathTiles()
 {
-	vector<SVector> terrainTiles;
+	std::vector<SVector> terrainTiles;
 
 	for ( int i = 0; i < GetPathLength(); ++i )
 		terrainTiles.push_back( addPoints[i] );
@@ -1112,7 +1112,7 @@ void CCommonPathFinder::MarkPathTiles()
 
 void CCommonPathFinder::MarkPoints()
 {
-	vector<SVector> add, stop;
+	std::vector<SVector> add, stop;
 	add.reserve( nLength );
 	stop.reserve( nLength );
 

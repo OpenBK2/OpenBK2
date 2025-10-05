@@ -14,8 +14,8 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	{
 		ZDATA
 		int					nServerID;
-		string			szSessionName;
-		string			szMapName;
+		std::string			szSessionName;
+		std::string			szMapName;
 		int					nPlayers;
 		int					nPlayersMax;
 		int					nPing;
@@ -60,7 +60,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 		CPtr<IListControlItem> pItem;
 		SMPGameInfo info;
 	};
-	typedef hash_map<int/*serverID*/, SGameEntry > CMPGameListItems;
+	typedef std::unordered_map<int/*serverID*/, SGameEntry > CMPGameListItems;
 
 	CPtr<IWindow> pMain;
 	CMPGameListItems items;
@@ -75,7 +75,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	SFilterData filter;
 	CPtr<IWindow> pPasswordPopup;
 	CPtr<IEditLine> pPasswordEdit;
-	wstring wszPassword;
+	std::wstring wszPassword;
 	CPtr<IWindow> pGettingListPopup;
 	CPtr<IButton> pRefresh;
 private:
@@ -89,21 +89,21 @@ private:
 	bool OnUpdateGameList( SMPUIGameListMessage *pMsg );
 
 	//{
-	bool OnBackReaction( const string &szSender );
+	bool OnBackReaction( const std::string &szSender );
 	
-	bool OnJoinGameReaction( const string &szSender );
+	bool OnJoinGameReaction( const std::string &szSender );
 
-	bool OnFiltersReaction( const string &szSender );
-	bool OnLoadGameReaction( const string &szSender );
-	bool OnCreateGameReaction( const string &szSender );
+	bool OnFiltersReaction( const std::string &szSender );
+	bool OnLoadGameReaction( const std::string &szSender );
+	bool OnCreateGameReaction( const std::string &szSender );
 
-	bool OnRefreshReaction( const string &szSender );
-	bool OnSelectGameReaction( const string &szSender );
-	bool OnCancelFilters( const string &szSender );
-	bool OnOkFilters( const string &szSender );	
+	bool OnRefreshReaction( const std::string &szSender );
+	bool OnSelectGameReaction( const std::string &szSender );
+	bool OnCancelFilters( const std::string &szSender );
+	bool OnOkFilters( const std::string &szSender );
 
-	bool OnPasswordOk( const string &szSender );
-	bool OnPasswordCancel( const string &szSender );
+	bool OnPasswordOk( const std::string &szSender );
+	bool OnPasswordCancel( const std::string &szSender );
 	//}
 protected:
 	~CInterfaceMPCustomGame();
@@ -116,8 +116,8 @@ public:
 	void AfterLoad();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;	
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 	void SetFiltersData();
 };

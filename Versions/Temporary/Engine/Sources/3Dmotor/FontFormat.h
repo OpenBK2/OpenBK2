@@ -21,8 +21,8 @@ struct STFCharacter
 class CFontFormatInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CFontFormatInfo );
-	typedef hash_map<WORD, STFCharacter> CCharacterMap;
-	typedef hash_map<DWORD, int> CKernMap;
+	typedef std::unordered_map<WORD, STFCharacter> CCharacterMap;
+	typedef std::unordered_map<DWORD, int> CKernMap;
 	//
   CCharacterMap chars;                  // all available characters map
   CKernMap kerns;                       // kerning pairs for the characters in the font.

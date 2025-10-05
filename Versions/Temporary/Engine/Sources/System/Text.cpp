@@ -5,10 +5,10 @@
 
 namespace NText
 {
-typedef hash_map<NFile::CFilePath, wstring> CUnicodeTextMap;
+typedef std::unordered_map<NFile::CFilePath, std::wstring> CUnicodeTextMap;
 static CUnicodeTextMap unicodeTextMap;
 
-bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream )
+bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream )
 {
 	if ( pStream->IsOk() )
 	{
@@ -35,7 +35,7 @@ bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream )
 	}
 }
 
-bool LoadUnicodeText( wstring *pwszRes, const string &szFileName )
+bool LoadUnicodeText( std::wstring *pwszRes, const std::string &szFileName )
 {
 	if ( szFileName.empty() )
 		return false;
@@ -43,14 +43,14 @@ bool LoadUnicodeText( wstring *pwszRes, const string &szFileName )
 	return LoadUnicodeText( pwszRes, &stream );
 }
 
-const wstring &GetText( const string &szTextFileName )
+const std::wstring &GetText( const std::string &szTextFileName )
 {
 	const NFile::CFilePath filePath = szTextFileName;
 	CUnicodeTextMap::const_iterator pos = unicodeTextMap.find( filePath );
 	if ( pos != unicodeTextMap.end() )
 		return pos->second;
 	//
-	wstring wszText;
+	std::wstring wszText;
 	if ( LoadUnicodeText(&wszText, filePath) == false )
 		unicodeTextMap[filePath] = L"";
 	else
@@ -59,10 +59,10 @@ const wstring &GetText( const string &szTextFileName )
 	return unicodeTextMap[filePath];
 }
 
-void Reload( const string &szTextFileName )
+void Reload( const std::string &szTextFileName )
 {
 	const NFile::CFilePath filePath = szTextFileName;
-	wstring wszText;
+	std::wstring wszText;
 	if ( LoadUnicodeText(&wszText, filePath) == false )
 		unicodeTextMap[filePath] = L"";
 	else

@@ -2,7 +2,7 @@
 
 #include "lstate.h"
 
-typedef string CLuaFuncID; 
+typedef std::string CLuaFuncID;
 extern lua_State *pLUASaverState;
 
 void lua_RegisterFunc( lua_CFunction func, const CLuaFuncID& id );

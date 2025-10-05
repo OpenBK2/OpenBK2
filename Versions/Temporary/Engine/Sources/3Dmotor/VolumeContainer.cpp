@@ -2,7 +2,7 @@
 #include "VolumeContainer.h"
 namespace NCollider
 {
-vector<int> fetchBufferArray;
+std::vector<int> fetchBufferArray;
 SSkipColliderAnalyzer skipAnalyzer;
 
 // CVolumeContainer
@@ -41,7 +41,7 @@ void CVolumeContainer::GetCoords( SIntCoords *pRes, const CVec3 &src )
 	pRes->z = Float2Int( ( src.z - ptMin.z ) * fSize1z - 0.5f );
 }
 
-vector<int> CVolumeContainer::fetchBufferArray;
+std::vector<int> CVolumeContainer::fetchBufferArray;
 void CVolumeContainer::Fetch( const SBound &bound )
 {
 	if ( volumeData.size() == 1 )
@@ -81,8 +81,8 @@ void CVolumeContainer::Fetch( const SBound &bound )
 				for ( int nX = nX1; nX <= nX2; ++nX )
 				{
 					int nIdx = nYZIdx + nX, nLastFetchReg = nLastFetch;
-					vector<int> &data = level.tris[nIdx];
-					for ( vector<int>::iterator i = data.begin(), iEnd = data.end(); i != iEnd; ++i )
+					std::vector<int> &data = level.tris[nIdx];
+					for ( std::vector<int>::iterator i = data.begin(), iEnd = data.end(); i != iEnd; ++i )
 					{
 						int nRes = *i;
 						ASSERT( nRes < fetchMark.size() );
@@ -148,7 +148,7 @@ void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, con
 	EnlargeVolumeBounds( pRes, pos, bound.s.ptCenter + bound.ptHalfBox );
 }
 
-void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const vector<CVec3> &coords )
+void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const std::vector<CVec3> &coords )
 {
 	ASSERT( coords.size() > 0 );
 	InitFirstPt( pRes, pos, coords[0] );

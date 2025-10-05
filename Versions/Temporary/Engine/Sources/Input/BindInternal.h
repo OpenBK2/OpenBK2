@@ -164,7 +164,7 @@ struct SActionInfo
 	bool bActive;
 	float fCoeff;
 	float fGranularity;
-	string szName;
+	std::string szName;
 	EControlType eType;
 
 	SActionInfo(): eState( STATE_DEFAULT ), bActive( false ), fCoeff( 1.0f ), fGranularity( 1.0f ), eType( CT_UNKNOWN ) {}
@@ -175,12 +175,12 @@ struct SMapping
 	int nPower;
 	bool bActive;
 	bool bDisabled;
-	string szSection;
-	vector<int> actionsSet;
-	vector<int> fullActionsSet;
+	std::string szSection;
+	std::vector<int> actionsSet;
+	std::vector<int> fullActionsSet;
 	EMappingType mType;
 	SAccumulator sAccumulator;
-	list<vector<int> > blockingGroupsSet;
+	std::list<std::vector<int> > blockingGroupsSet;
 
 	SMapping(): nPower( 0 ), bActive( false ), bDisabled( true ), mType( MTYPE_UNKNOWN ) {}
 };
@@ -192,7 +192,7 @@ struct SCommand
 	float fSpeed;
 	DWORD dwTime;
 	float fCoeff;
-	list<SMapping> mappingsList;
+	std::list<SMapping> mappingsList;
 
 	SCommand(): bActive(false), fCoeff( 1.0f ), fDelta( 0.0f ), fSpeed( 0.0f ), dwTime( 0 ) {}
 };

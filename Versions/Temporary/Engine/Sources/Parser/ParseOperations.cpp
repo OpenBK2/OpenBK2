@@ -13,7 +13,7 @@
 int yyparse( void );
 
 extern int yydebug;			/*  nonzero means print parse trace	*/
-static string szYYFileName;
+static std::string szYYFileName;
 extern int nyyLineNumber;
 
 extern int nyyLineNumber;
@@ -35,7 +35,7 @@ void AddFile( const NFile::CFileIterator &iter )
 {
 	if ( !iter.IsDirectory() )
 	{
-		string szFileName = iter.GetFullName();
+		std::string szFileName = iter.GetFullName();
 		nyyLineNumber = 1;
 		NStr::ReplaceAllChars( &szFileName, '\\', '/' );
 
@@ -44,16 +44,16 @@ void AddFile( const NFile::CFileIterator &iter )
 	}
 }
 
-static string szBaseFileName;
-const string GetBaseFileName()
+static std::string szBaseFileName;
+const std::string GetBaseFileName()
 {
 	return szBaseFileName;
 }
 
-bool Parse( const string &_szDir, const string &szFileMask, bool _bInTestMode )
+bool Parse( const std::string &_szDir, const std::string &szFileMask, bool _bInTestMode )
 {
 	bInTestMode = _bInTestMode;
-	string szDir = _szDir;
+	std::string szDir = _szDir;
 	NLang::NullStep();
 
 	if ( szDir[szDir.size() - 1] != '/' && szDir[szDir.size() - 1] != '\\' )
@@ -65,7 +65,7 @@ bool Parse( const string &_szDir, const string &szFileMask, bool _bInTestMode )
 
 	if ( !bInTestMode )
 		printf( "lexer...\n" );
-	
+
 	NFile::ConvertSlashes( &szDir, '/', '\\' );
 	if ( szDir[szDir.size() - 1] != '\\' )
 		szDir += '\\';
@@ -95,7 +95,7 @@ bool Parse( const string &_szDir, const string &szFileMask, bool _bInTestMode )
 	return byySuccess;
 }
 
-bool Parse( const vector<string> &files, const string &_szBaseFileName )
+bool Parse( const std::vector<std::string> &files, const std::string &_szBaseFileName )
 {
 	NLang::NullStep();
 	yydebug = 0;
@@ -106,7 +106,7 @@ bool Parse( const vector<string> &files, const string &_szBaseFileName )
 	NStr::ToLower( &szBaseFileName );
 	for ( int i = 0; i < files.size() && byySuccess; ++i )
 	{
-		string szFile = files[i];
+		std::string szFile = files[i];
 
 		nyyLineNumber = 1;
 		NStr::ReplaceAllChars( &szFile, '\\', '/' );
@@ -144,7 +144,7 @@ void NullStep()
 	nStep = 0;
 }
 
-bool CheckEnumEntryNotExist( const string &szEnumEntryName )
+bool CheckEnumEntryNotExist( const std::string &szEnumEntryName )
 {
 	CFileNode *pFile = GetCurFileNode();
 
@@ -161,7 +161,7 @@ bool CheckEnumEntryNotExist( const string &szEnumEntryName )
 //*												Variables                                 *
 //*******************************************************************
 
-void SetTypeToVars( CLangNode *pRawVarListNode, const string &szTypeName )
+void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 {
 	CHECK_TYPE( CNodesList<CVariable>, pRawVarListNode, return );
 	CDynamicCast< CNodesList<CVariable> > pVarListNode = pRawVarListNode;
@@ -183,8 +183,8 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const string &szTypeName )
 	CDynamicCast<CTypeDefNode> pTypeDefNode = pRawType;
 	CTypeNode *pRealType = pTypeDefNode ? pTypeDefNode->GetReferencedType( true ) : pType;
 
-	list< CPtr<CVariable> > &varList = pVarListNode->GetNodes();
-	for ( list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
+	std::list< CPtr<CVariable> > &varList = pVarListNode->GetNodes();
+	for ( std::list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
 	{
 		CVariable *pVar = *iter;
 
@@ -232,7 +232,7 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const string &szTypeName )
 	}
 }
 
-void ConstructRndType( const string &szRefType, const string &szFlagType, const string &szCodeTypeName )
+void ConstructRndType( const std::string &szRefType, const std::string &szFlagType, const std::string &szCodeTypeName )
 {
 	CPtr<CLangNode> pTypeNode = CreateComplexTypeNode( szCodeTypeName, false );
 	NLang::OpenNewNamespace( 0 );
@@ -271,7 +271,7 @@ void ConstructRndType( const string &szRefType, const string &szFlagType, const 
 
 		AddTypeToNamespace( pTypeNodeNamespace, pElementType );
 
-		const string szTypeDefs = StrFmt( "%s;TRefType;%s;EFlagType", szRefType.c_str(), szFlagType.c_str() );
+		const std::string szTypeDefs = StrFmt( "%s;TRefType;%s;EFlagType", szRefType.c_str(), szFlagType.c_str() );
 		CPtr<CLangNode> pTypeDefs = NLang::CreateAttrDef( "type_defs", szTypeDefs, true );
 		CPtr<CLangNode> pAttributes = NLang::CreateAttrListNode( pTypeDefs );
 		NLang::AddAttrToComplexTypeNode( pTypeNode, pAttributes );
@@ -286,12 +286,12 @@ void ConstructRndType( const string &szRefType, const string &szFlagType, const 
 	AddDef( pTypeNode );
 }
 
-void SetRndTypeToVars( CLangNode *pVarListNode, const string &szTypeName )
+void SetRndTypeToVars( CLangNode *pVarListNode, const std::string &szTypeName )
 {
 	const int nPos = szTypeName.find( "$" );
-	const string szRefType = nPos == string::npos ? szTypeName : szTypeName.substr( 0, nPos );
-	const string szFlagType = nPos == string::npos ? "int" : szTypeName.substr( nPos + 1, szTypeName.size() );
-	const string szCodeTypeName = "SRnd_" + szRefType + "_" + szFlagType;
+	const std::string szRefType = nPos == std::string::npos ? szTypeName : szTypeName.substr( 0, nPos );
+	const std::string szFlagType = nPos == std::string::npos ? "int" : szTypeName.substr( nPos + 1, szTypeName.size() );
+	const std::string szCodeTypeName = "SRnd_" + szRefType + "_" + szFlagType;
 
 	CFileNode *pFile = GetCurFileNode();
 	CLangNode *pRawType = pFile->FindDef( szCodeTypeName, false );
@@ -311,10 +311,10 @@ void SetRndTypeToVars( CLangNode *pVarListNode, const string &szTypeName )
 			CLangNode *pFlagType = pFile->FindDef( szFlagType, false );
 			VERIFY( pFlagType != 0, StrFmt( "can't find definition of enum %s", szFlagType.c_str() ), return );
 			CDynamicCast<CEnumNode> pEnumFlagType = pFlagType;
-			VERIFY( pEnumFlagType != 0, StrFmt( "type %s isn't enum,\n%s(%d) see definition", 
+			VERIFY( pEnumFlagType != 0, StrFmt( "type %s isn't enum,\n%s(%d) see definition",
 																					szFlagType.c_str(), pFlagType->GetFile().c_str(), pFlagType->GetLine() ), return );
 		}
-		
+
 		ConstructRndType( szRefType, szFlagType, szCodeTypeName );
 		SetTypeToVars( pVarListNode, szCodeTypeName );
 	}
@@ -331,8 +331,8 @@ void SetAttrToVars( CLangNode *pRawVarListNode, CLangNode *pRawAttrListNode )
 	CHECK_TYPE( CNodesList<CAttributeNode>, pRawAttrListNode, return );
 	CDynamicCast< CNodesList<CAttributeNode> > pAttrListNode = pRawAttrListNode;
 
-	list< CPtr<CVariable> > &varList = pVarListNode->GetNodes();
-	for ( list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
+	std::list< CPtr<CVariable> > &varList = pVarListNode->GetNodes();
+	for ( std::list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
 	{
 		CVariable *pNode = *iter;
 		pNode->SetAttrList( pAttrListNode );
@@ -343,7 +343,7 @@ void AddVarToVarListNode( CLangNode *pRawVarListNode, CLangNode *pRawVar )
 {
 	if ( pRawVar == 0 )
 		return;
-	
+
 	CHECK_TYPE( CNodesList<CVariable>, pRawVarListNode, return );
 	CDynamicCast< CNodesList<CVariable> > pVarListNode = pRawVarListNode;
 
@@ -369,7 +369,7 @@ void SetVarToPointer( CLangNode *pRawVar )
 	pVar->SetVarToPointer();
 }
 
-void SetDefValueToVarNode( CLangNode *pRawVarNode, const string &szValue, bool bStringValue )
+void SetDefValueToVarNode( CLangNode *pRawVarNode, const std::string &szValue, bool bStringValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
 	CDynamicCast<CVariable> pVarNode = pRawVarNode;
@@ -377,7 +377,7 @@ void SetDefValueToVarNode( CLangNode *pRawVarNode, const string &szValue, bool b
 	pVarNode->SetDefault( szValue, bStringValue );
 }
 
-void SetComplexDefaultValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
+void SetComplexDefaultValueToVarNode( CLangNode *pRawVarNode, const std::string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
 	CDynamicCast<CVariable> pVarNode = pRawVarNode;
@@ -385,7 +385,7 @@ void SetComplexDefaultValueToVarNode( CLangNode *pRawVarNode, const string &szVa
 	pVarNode->SetComplexDefault( szValue );
 }
 
-void SetDefWStrValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
+void SetDefWStrValueToVarNode( CLangNode *pRawVarNode, const std::string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
 	CDynamicCast<CVariable> pVarNode = pRawVarNode;
@@ -393,7 +393,7 @@ void SetDefWStrValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 	pVarNode->SetDefaultWStr( szValue );
 }
 
-void SetEnumValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
+void SetEnumValueToVarNode( CLangNode *pRawVarNode, const std::string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
 	CDynamicCast<CVariable> pVarNode = pRawVarNode;
@@ -401,12 +401,12 @@ void SetEnumValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 	pVarNode->SetDefaultEnum( szValue );
 }
 
-CLangNode* CreateVarNode( const string &szVarName )
+CLangNode* CreateVarNode( const std::string &szVarName )
 {
 	return new CVariableNode( szVarName, GetParsingFileName(), nyyLineNumber );
 }
 
-CLangNode* CreateVectorNode( const string &szVectorName, const string &szMinAmount, const string &szMaxAmount )
+CLangNode* CreateVectorNode( const std::string &szVectorName, const std::string &szMinAmount, const std::string &szMaxAmount )
 {
 	int nMinAmount = NStr::ToInt( szMinAmount );
 	VERIFY( nMinAmount >= 0, StrFmt( "wrong array lower bound %d", nMinAmount ), return 0 );
@@ -424,7 +424,7 @@ CLangNode* CreateVectorNode( const string &szVectorName, const string &szMinAmou
 	return new CVectorNode( szVectorName, nMinAmount, nMaxAmount, GetParsingFileName(), nyyLineNumber );
 }
 
-CLangNode* CreateVar( const string &szVarName, const string &szMinAmount, const string &szMaxAmount )
+CLangNode* CreateVar( const std::string &szVarName, const std::string &szMinAmount, const std::string &szMaxAmount )
 {
 	CheckEnumEntryNotExist( szVarName );
 	return szMinAmount == "" ? CreateVarNode( szVarName ) : CreateVectorNode( szVarName, szMinAmount, szMaxAmount);
@@ -450,15 +450,15 @@ void AddVarListToNamespace( CLangNode *pRawNamespace, CLangNode *pRawVarList )
 	CHECK_TYPE( CNodesList<CVariable>, pRawVarList, return );
 	CDynamicCast< CNodesList<CVariable> > pVarList = pRawVarList;
 
-	list< CPtr<CVariable> > &varList = pVarList->GetNodes();
-	for ( list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
+	std::list< CPtr<CVariable> > &varList = pVarList->GetNodes();
+	for ( std::list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )
 	{
 		CVariable *pNode = *iter;
 		pNamespace->AddInsideDef( pNode );
 	}
 }
 
-void AddBadIncludeToNamespace( CLangNode *pRawNamespace, const string &szInclude )
+void AddBadIncludeToNamespace( CLangNode *pRawNamespace, const std::string &szInclude )
 {
 	CHECK_TYPE( CNamespace, pRawNamespace, return );
 	CDynamicCast<CNamespace> pNamespace = pRawNamespace;
@@ -475,7 +475,7 @@ CLangNode* GetCurrentNamespace()
 //*                     Complex Type                                *
 //*******************************************************************
 
-void AddParentToParentsList( CLangNode *pRawComplexTypeList, const string &szTypeName )
+void AddParentToParentsList( CLangNode *pRawComplexTypeList, const std::string &szTypeName )
 {
 	CHECK_TYPE( CNodesList<CComplexTypeNode>, pRawComplexTypeList, return );
 	CDynamicCast< CNodesList<CComplexTypeNode> > pComplexTypeList = pRawComplexTypeList;
@@ -493,7 +493,7 @@ void AddParentToParentsList( CLangNode *pRawComplexTypeList, const string &szTyp
 		VERIFY( pTypeNode != 0, StrFmt( "wrong parent %s type, struct or class expected", szTypeName.c_str() ), return );
 	}
 
-	for ( list< CPtr<CComplexTypeNode> >::const_iterator iter = pComplexTypeList->GetNodes().begin(); iter != pComplexTypeList->GetNodes().end(); ++iter )
+	for ( std::list< CPtr<CComplexTypeNode> >::const_iterator iter = pComplexTypeList->GetNodes().begin(); iter != pComplexTypeList->GetNodes().end(); ++iter )
 	{
 		CComplexTypeNode *pParent = *iter;
 		VERIFY( pParent->GetName() != szTypeName,
@@ -504,7 +504,7 @@ void AddParentToParentsList( CLangNode *pRawComplexTypeList, const string &szTyp
 	pComplexTypeList->AddNode( pTypeNode.GetPtr() );
 }
 
-CLangNode* CreateParentsList( const string &szFirstTypeName )
+CLangNode* CreateParentsList( const std::string &szFirstTypeName )
 {
 	CNodesList<CComplexTypeNode> *pList = new CNodesList<CComplexTypeNode>();
 	AddParentToParentsList( pList, szFirstTypeName );
@@ -534,7 +534,7 @@ void AddNamespaceToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawNamespac
 {
 	if ( pRawNamespace == 0 || pRawNode == 0 )
 		return;
-	
+
 	CHECK_TYPE( CComplexTypeNode, pRawNode, return );
 	CDynamicCast<CComplexTypeNode> pNode = pRawNode;
 
@@ -548,7 +548,7 @@ void AddAttrToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawAttrList )
 {
 	if ( pRawAttrList == 0 )
 		return;
-	
+
 	CHECK_TYPE( CComplexTypeNode, pRawNode, return );
 	CDynamicCast<CComplexTypeNode> pNode = pRawNode;
 
@@ -566,10 +566,10 @@ void AddParentsOfComplexType( CLangNode *pRawNode, CLangNode *pRawParentsList )
 	CHECK_TYPE( CNodesList<CComplexTypeNode>, pRawParentsList, return );
 	CDynamicCast< CNodesList<CComplexTypeNode> > pParentsList = pRawParentsList;
 
-	for ( list< CPtr<CComplexTypeNode> >::const_iterator iter = pParentsList->GetNodes().begin(); iter != pParentsList->GetNodes().end(); ++iter )
+	for ( std::list< CPtr<CComplexTypeNode> >::const_iterator iter = pParentsList->GetNodes().begin(); iter != pParentsList->GetNodes().end(); ++iter )
 	{
 		CComplexTypeNode *pParent = *iter;
-		VERIFY( pParent->IsClass() == pNode->IsClass(), 
+		VERIFY( pParent->IsClass() == pNode->IsClass(),
 						StrFmt( "wrong parent %s of type %s (class <-> struct)", pParent->GetName().c_str(), pNode->GetName().c_str() ),
 						return );
 	}
@@ -577,12 +577,12 @@ void AddParentsOfComplexType( CLangNode *pRawNode, CLangNode *pRawParentsList )
 	pNode->AddParents( pParentsList );
 }
 
-CLangNode* CreateComplexTypeNode( const string &szTypeName, bool bClass )
+CLangNode* CreateComplexTypeNode( const std::string &szTypeName, bool bClass )
 {
 	CheckEnumEntryNotExist( szTypeName );
 
 	CLangNode *pResult = new CComplexTypeNode( szTypeName, bClass, false, GetParsingFileName(), nyyLineNumber );
-	
+
 	CFileNode *pFile = GetCurFileNode();
 	CLangNode *pTypeNode = pFile->FindDef( szTypeName, true );
 	VERIFY( pTypeNode == 0, StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pTypeNode->GetFile().c_str(), pTypeNode->GetLine() ), return 0 );
@@ -593,10 +593,10 @@ CLangNode* CreateComplexTypeNode( const string &szTypeName, bool bClass )
 	return pResult;
 }
 
-CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass )
+CLangNode* CreateForwardComplexType( const std::string &szTypeName, bool bIsClass )
 {
 	CFileNode *pFile = GetCurFileNode();
-	CLangNode *pResult = new CComplexTypeNode( szTypeName, bIsClass, true, GetParsingFileName(), nyyLineNumber ); 
+	CLangNode *pResult = new CComplexTypeNode( szTypeName, bIsClass, true, GetParsingFileName(), nyyLineNumber );
 
 	CLangNode *pNode = pFile->FindDef( szTypeName, true );
 	if ( pNode )
@@ -607,7 +607,7 @@ CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass )
 		VERIFY( IsEqualDefs( pNodeForward, pResult ), StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pNodeForward->GetFile().c_str(), pNodeForward->GetLine() ), return 0 );
 
 	CheckEnumEntryNotExist( szTypeName );
-	
+
 	return pResult;
 }
 
@@ -615,7 +615,7 @@ CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass )
 //*													TypeDef																	*
 //*******************************************************************
 
-CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szReferencedTypeName, const string &szTypeName, bool bPointer )
+CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const std::string &szReferencedTypeName, const std::string &szTypeName, bool bPointer )
 {
 	if ( pRawAttrListNode )
 		CHECK_TYPE( CNodesList<CAttributeNode>, pRawAttrListNode, return 0 );
@@ -634,7 +634,7 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szRefer
 	if ( pNode )
 	{
 		CDynamicCast<CTypeNode> pTypeNode = pNode;
-		VERIFY( pTypeNode != 0, 
+		VERIFY( pTypeNode != 0,
 						StrFmt( "%s cannot be overloaded as typedef, \n	%s(%d): see declaration of %s",
 						szReferencedTypeName.c_str(), pTypeNode->GetFile().c_str(), pTypeNode->GetLine(), szReferencedTypeName.c_str() ),
 						return 0 );
@@ -683,14 +683,14 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szRefer
 void MergeAttrList( CLangNode *pRawAttrListNode1, CLangNode *pRawAttrListNode2 )
 {
 	CPtr<CLangNode> pNode = pRawAttrListNode2;
-	
+
 	CHECK_TYPE( CNodesList<CAttributeNode>, pRawAttrListNode1, return );
 	CDynamicCast< CNodesList<CAttributeNode> > pAttrListNode1 = pRawAttrListNode1;
 
 	CHECK_TYPE( CNodesList<CAttributeNode>, pRawAttrListNode2, return );
 	CDynamicCast< CNodesList<CAttributeNode> > pAttrListNode2 = pRawAttrListNode2;
 
-	for ( list< CPtr<CAttributeNode> >::const_iterator iter = pAttrListNode2->GetNodes().begin(); iter != pAttrListNode2->GetNodes().end(); ++iter )
+	for ( std::list< CPtr<CAttributeNode> >::const_iterator iter = pAttrListNode2->GetNodes().begin(); iter != pAttrListNode2->GetNodes().end(); ++iter )
 	{
 		CAttributeNode *pNode = *iter;
 
@@ -717,7 +717,7 @@ void AddAttrEntry( CLangNode *pRawAttrListNode, CLangNode *pRawAttrNode )
 CLangNode* CreateAttrListNode( CLangNode *pRawAttrNode )
 {
 	CNodesList<CAttributeNode> *pListNode = new CNodesList<CAttributeNode>();
-	
+
 	if ( pRawAttrNode )
 	{
 		CHECK_TYPE( CAttributeNode, pRawAttrNode, return pListNode );
@@ -728,11 +728,11 @@ CLangNode* CreateAttrListNode( CLangNode *pRawAttrNode )
 	return pListNode;
 }
 
-CLangNode* CreateAttrDef( const string &szAttrName, const string &szRawAttrValue, bool bStringValue )
+CLangNode* CreateAttrDef( const std::string &szAttrName, const std::string &szRawAttrValue, bool bStringValue )
 {
 	CFileNode *pCurFileNode = GetCurFileNode();
 
-	string szAttrValue( szRawAttrValue );
+	std::string szAttrValue( szRawAttrValue );
 	if ( szAttrName == "comments" && !szAttrValue.empty() && szAttrValue[szAttrValue.size() - 1] == 13 )
 		szAttrValue.pop_back();
 
@@ -748,7 +748,7 @@ CLangNode* CreateAttrDef( const string &szAttrName, const string &szRawAttrValue
 	{
 		VERIFY( IsTypesEqual( pNode->GetType(), pAttrDef->GetType() ) ||
 						pAttrDef->GetType() == EST_BOOL && pNode->GetType() == EST_NOTYPE,
-							StrFmt( "wrong attribute \"%s\" of type \"%s\", \"%s\" expected", 
+							StrFmt( "wrong attribute \"%s\" of type \"%s\", \"%s\" expected",
 							szAttrName.c_str(), GetTypeName( pNode->GetType() ), GetTypeName( pAttrDef->GetType() ) ), return 0 );
 	}
 
@@ -759,7 +759,7 @@ CLangNode* CreateAttrDef( const string &szAttrName, const string &szRawAttrValue
 //*                     Enums                                       *
 //*******************************************************************
 
-CLangNode* CreateForwardEnumNode( const string &szEnumName )
+CLangNode* CreateForwardEnumNode( const std::string &szEnumName )
 {
 	CFileNode *pFile = GetCurFileNode();
 	CLangNode *pNode = pFile->FindDef( szEnumName, true );
@@ -775,11 +775,11 @@ CLangNode* CreateForwardEnumNode( const string &szEnumName )
 		CDynamicCast<CEnumNode> pEnum = pForwardNode;
 		VERIFY( pEnum != 0, StrFmt( "type %s redifinition, see %s(%d)", szEnumName.c_str(), pForwardNode->GetFile().c_str(), pForwardNode->GetLine() ), return 0 );
 	}
-	
+
 	return new CEnumNode( szEnumName, true, GetParsingFileName(), nyyLineNumber );
 }
 
-void SetNameToEnumNode( CLangNode *pRawEnumNode, const string &szName )
+void SetNameToEnumNode( CLangNode *pRawEnumNode, const std::string &szName )
 {
 	CHECK_TYPE( CEnumNode, pRawEnumNode, return );
 	CDynamicCast<CEnumNode> pNode = pRawEnumNode;
@@ -792,8 +792,8 @@ CLangNode* CreateEnumNode( CLangNode *pEnumEntryNode )
 
 	if ( pEnumEntryNode != 0 )
 		AddEnumEntry( pNode, pEnumEntryNode );
-	
-	return pNode;	
+
+	return pNode;
 }
 
 void AddEnumEntry( CLangNode *pRawEnumNode, CLangNode *pRawEnumEntryNode )
@@ -847,7 +847,7 @@ void AddAttrToEnumNode( CLangNode *pRawEnumNode, CLangNode *pRawAttrList )
 	pEnumNode->AddAttributes( pAttrList );
 }
 
-CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefaultValue, bool bDefaultValueNumber )
+CLangNode* CreateEnumEntryNode( const std::string &szEntryName, const std::string &szDefaultValue, bool bDefaultValueNumber )
 {
 	if ( szDefaultValue == "" )
 		return new CEnumEntryNode( szEntryName, GetParsingFileName(), nyyLineNumber );
@@ -855,7 +855,7 @@ CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefau
 	{
 		if ( bDefaultValueNumber )
 		{
-			VERIFY( NStr::IsInt( szDefaultValue ) || NStr::IsHexNumber( szDefaultValue ), 
+			VERIFY( NStr::IsInt( szDefaultValue ) || NStr::IsHexNumber( szDefaultValue ),
 							StrFmt( "value %s of enum entry is not a number", szDefaultValue ),
 							return new CEnumEntryNode( szEntryName, GetParsingFileName(), nyyLineNumber ) );
 
@@ -879,8 +879,8 @@ CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefau
 //*                     BaseType                                    *
 //*******************************************************************
 
-CLangNode* CreateBaseTypeNode( const string &szTypeName, bool bIsClass )
-{ 
+CLangNode* CreateBaseTypeNode( const std::string &szTypeName, bool bIsClass )
+{
 	return new CBaseTypeNode( szTypeName, bIsClass, GetParsingFileName(), nyyLineNumber );
 }
 
@@ -893,7 +893,7 @@ CLangNode* CreateAttributeDefNode( ESimpleType eType )
 	return new CAttributeDefNode( eType, GetParsingFileName(), nyyLineNumber );
 }
 
-void SetNameToAttrDef( CLangNode *pRawNode, const string &szName )
+void SetNameToAttrDef( CLangNode *pRawNode, const std::string &szName )
 {
 	CHECK_TYPE( CAttributeDefNode, pRawNode, return );
 

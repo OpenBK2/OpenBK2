@@ -32,9 +32,9 @@
 
 // for profiling
 #include "TimeCounter.h"
-#include "Misc/nalgoritm.h"
 #include "FeedBackSystem.h"
 
+#include <algorithm>
 
 REGISTER_SAVELOAD_CLASS( 0x1108D444, CTank );
 REGISTER_SAVELOAD_CLASS( 0x1108D445, CAITransportUnit );
@@ -298,7 +298,7 @@ void CMilitaryCar::PrepareToDelete()
 	while ( GetNPassengers() )
 		GetPassenger( 0 )->Die( false, 0 );
 
-	for ( vector<CPtr<CAIUnit> >::iterator it = onBoard.begin(); it != onBoard.end(); ++it )
+	for ( std::vector<CPtr<CAIUnit> >::iterator it = onBoard.begin(); it != onBoard.end(); ++it )
 	{
 		if ( IsValidObj( *it ) )
 			(*it)->Die( false, 0 );
@@ -308,7 +308,7 @@ void CMilitaryCar::PrepareToDelete()
 
 void CMilitaryCar::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType )
 {
-	for ( list<CPtr<CSoldier> >::const_iterator iter = pass.begin(); iter != pass.end(); ++iter )
+	for ( std::list<CPtr<CSoldier> >::const_iterator iter = pass.begin(); iter != pass.end(); ++iter )
 	{
 		CAIUnit *pUnit = *iter;
 		
@@ -354,7 +354,7 @@ void CMilitaryCar::Segment()
 	
 	// CRAR{ соптимизировать!, не посылать, если координаты не изменились
 	int i = 0;
-	for ( list<CPtr<CSoldier> >::iterator iter = pass.begin(); iter != pass.end(); ++iter, ++i )
+	for ( std::list<CPtr<CSoldier> >::iterator iter = pass.begin(); iter != pass.end(); ++iter, ++i )
 	{
 		CSoldier *pSoldier = *iter;
 		const CVec2 vPassCoord( GetPassengerCoordinates( i ) );
@@ -386,7 +386,7 @@ CSoldier* CMilitaryCar::GetPassenger( const int n )
 {
 	NI_ASSERT( n < pass.size(), "Wrong number of passenger" );
 
-	list< CPtr<CSoldier> >::iterator pos = pass.begin();
+	std::list< CPtr<CSoldier> >::iterator pos = pass.begin();
 	advance( pos, n );
 	return *pos;
 }
@@ -399,7 +399,7 @@ void CMilitaryCar::ClearAllPassengers()
 void CMilitaryCar::DelPassenger( const int n )
 {
 	CheckRange( pass, n );
-	list< CPtr<CSoldier> >::iterator pos = pass.begin();
+	std::list< CPtr<CSoldier> >::iterator pos = pass.begin();
 	advance( pos, n );
 	(*pos)->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
 	pass.erase( pos );
@@ -462,7 +462,7 @@ CBasicGun* CMilitaryCar::GetFirstArtilleryGun() const
 
 void CMilitaryCar::GetRangeArea( SShootAreas *pRangeArea ) const
 {
-	construct( pRangeArea );	
+	new ( pRangeArea ) SShootArea();
 	if ( GetState()->GetName() == EUSN_RANGING )
 	{
 		CCircle rangeCircle;
@@ -816,7 +816,7 @@ void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit *
 	//kill loaders in transport
 	if ( pLoaderSquad && pLoaderSquad->IsRefValid() && pLoaderSquad->IsAlive() )
 	{
-		list<CSoldier*> soldiersInside;
+		std::list<CSoldier*> soldiersInside;
 		const int nSize = pLoaderSquad->Size();
 		for ( int i = 0; i < nSize; ++i )
 		{

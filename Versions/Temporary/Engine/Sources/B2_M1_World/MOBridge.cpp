@@ -88,7 +88,7 @@ int CMOBridge::GetDamagedState( float fHP ) const
 const NDb::SVisObj* CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
 {
 	*pnDamagedState = GetDamagedState( fHP );
-	const vector< CDBPtr<NDb::SVisObj> > &objects = *pnDamagedState == -1 ? GetElement().visualObjects : GetElement().damageStates[*pnDamagedState].visObjects;
+	const std::vector< CDBPtr<NDb::SVisObj> > &objects = *pnDamagedState == -1 ? GetElement().visualObjects : GetElement().damageStates[*pnDamagedState].visObjects;
 	if ( nRandomSpan == -1 )
 	{
 		if ( objects.size() == 1 )
@@ -120,7 +120,7 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 	NI_ASSERT( pSkeleton, StrFmt( "No Skeleton for destroyed Bridge state (object %d)", GetID() ) );
 	if ( !pSkeleton )
 		return;
-	vector< const NDb::SAnimB2* > deathAnims;
+	std::vector< const NDb::SAnimB2* > deathAnims;
 	deathAnims.reserve( pSkeleton->animations.size() );
 	for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 	{

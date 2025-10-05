@@ -178,7 +178,7 @@ void CScene::UpdateSelectionHandlers()
 {
 	NTimer::STime timeCurrent = GetAbsTimer()->GetValue();
 	
-	vector<int> obsoletes;
+	std::vector<int> obsoletes;
 	obsoletes.reserve( 100 );
 	for ( SSceneData::CSelectionMap::iterator it = data[eScene]->selectionHandlers.begin(); 
 		it != data[eScene]->selectionHandlers.end(); ++it )

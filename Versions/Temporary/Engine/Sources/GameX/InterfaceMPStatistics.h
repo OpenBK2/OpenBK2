@@ -14,7 +14,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 
 	struct SPlayerItemData
 	{
-		wstring wszName;
+		std::wstring wszName;
 		int nCountry;
 		DWORD dwColour;
 		int nTeam;
@@ -42,11 +42,11 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 
 	CPtr<IWindow> pMedalPopup;
 	CPtr<IWindow> pRankPopup;
-	vector< CDBPtr<NDb::SMedal> > medals;
+	std::vector< CDBPtr<NDb::SMedal> > medals;
 	int nNextMedal;
 
-	list<SPlayerItemData> wonTeam;
-	list<SPlayerItemData> lostTeam;
+	std::list<SPlayerItemData> wonTeam;
+	std::list<SPlayerItemData> lostTeam;
 	CPtr<IWindow> pWaiting;
 
 	// Switchable
@@ -66,8 +66,8 @@ private:
 	void MakeInterior();
 	void FillTeams();
 	void PopulateList();
-	void AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, list<SPlayerItemData> &team );
-	void AddPlayerItemsToList( list<SPlayerItemData> &team );
+	void AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, std::list<SPlayerItemData> &team );
+	void AddPlayerItemsToList( std::list<SPlayerItemData> &team );
 
 	void MsgNext( const SGameMessage &msg );
 
@@ -83,8 +83,8 @@ public:
 	bool Init();
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

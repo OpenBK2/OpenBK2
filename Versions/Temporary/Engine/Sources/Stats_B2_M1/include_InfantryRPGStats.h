@@ -21,7 +21,7 @@ virtual const SInfantryGun& GetGun( const int nUniqueID, const int nPlatform, co
 
 virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
 {
-	const vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
+	const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 	return 
 		ConstructorInfo() && ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) ?
 		(*pPlatforms)[nPlatform].gunIndexes.size() : guns.size();

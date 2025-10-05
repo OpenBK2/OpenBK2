@@ -6,7 +6,7 @@ enum
 	ENTRENCHMENT_ARC				= 0x00000008
 };
 
-int GetIndexLocal( int nIndex, const vector<int> &indices, const char *pszName, int *pCurRandomSeed = 0 ) const
+int GetIndexLocal( int nIndex, const std::vector<int> &indices, const char *pszName, int *pCurRandomSeed = 0 ) const
 {
 	//NI_VERIFY( !indices.empty() && (nIndex < indices.size()), StrFmt("Can't find any \"%s\" segment for entrenchment", pszName), return -1 );
 	if ( nIndex == -1 )

@@ -10,13 +10,13 @@
 #include "GeneralConsts.h"
 #include "StaticObjects.h"
 #include "TempBuffer.h"
-#include "Misc/nalgoritm.h"
 #include "UnitsIterators2.h"
 #include "UnitCreation.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "UnitStates.h"
 #include "B2AI.h"
 
+#include <algorithm>
 
 extern CSupremeBeing theSupremeBeing;
 extern CStaticObjects theStaticObjects;
@@ -475,7 +475,7 @@ void CGeneralTaskToHoldReinforcement::Segment()
 {
 	if ( SGeneralHelper::RemoveDead( &tanksFree ) )
 	{
-		list< CPtr<CCommonUnit> > removed;
+		std::list< CPtr<CCommonUnit> > removed;
 		for ( UnitsPositions::iterator it = unitsPositions.begin(); it != unitsPositions.end(); ++it )
 		{
 			CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first );

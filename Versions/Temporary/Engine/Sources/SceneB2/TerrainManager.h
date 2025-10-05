@@ -58,9 +58,9 @@ public:
 	void UpdateTerraSpot( const int nSpotID );
 	void RemoveTerraSpot( const int nSpotID );
 	//
-	void AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth );
+	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth );
 	//
-	void CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+	void CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
 										 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 										 const NDebrisBuilder::EMaskSmoothType smoothType );
 	// selection
@@ -84,7 +84,7 @@ public:
 	float GetTerraHeightFast( const int nTileX, const int nTileY ) const;
 	float GetRealTerraHeightFast( const int nTileX, const int nTileY ) const;
 	//
-	bool GetCragPrecVerts( vector<CVec3> *pVerts, int nVSOId ) { return pTerraGen->GetCragPrecVerts( pVerts, nVSOId ); }
+	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId ) { return pTerraGen->GetCragPrecVerts( pVerts, nVSOId ); }
 	//
 	void UpdateRiversDepthes();
 	//

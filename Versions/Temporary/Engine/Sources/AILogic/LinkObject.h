@@ -39,7 +39,7 @@ public:
 	static bool IsLinkObjectExists( const int nUniqueID );
 	
 	// даёт nSize свободных линков
-	static void GetFreeLinks( list<int> *pLinks, const int nSize );
+	static void GetFreeLinks( std::list<int> *pLinks, const int nSize );
 	
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
@@ -56,11 +56,11 @@ inline T* GetObjectByUniqueIdSafe( const int nUniqueID )
 
 struct SLinkObjData
 {
-	vector< CObj<CLinkObject> > link2object;
-	list<int> deletedObjects;
-	list<int> deletedUniqueObjects;
+	std::vector< CObj<CLinkObject> > link2object;
+	std::list<int> deletedObjects;
+	std::list<int> deletedUniqueObjects;
 
-	hash_map< int, CObj<CLinkObject> > unitsID2object;
+	std::unordered_map< int, CObj<CLinkObject> > unitsID2object;
 	int nCurUniqueID;
 	SLinkObjData() : nCurUniqueID( 0 ) {  }
 };

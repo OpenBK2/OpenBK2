@@ -161,12 +161,12 @@ void CInterfaceWinLoose::InterfaceStateStep( float fTime )
 	}
 }
 
-bool CInterfaceWinLoose::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceWinLoose::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
 
-int CInterfaceWinLoose::Check( const string &szCheckName ) const
+int CInterfaceWinLoose::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

@@ -108,7 +108,7 @@ void CPlayList::Segment()
 	fades.Update();
 
 	// tracks and pauses
-	for ( CElements::iterator it = elements.begin(); it != elements.end(); ++it )
+	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
 		if ( (*it)->IsFinished() )
 			it = elements.erase( it );
@@ -169,7 +169,7 @@ void CPlayList::FadeIn()
 
 void CPlayList::OnResetTimer()
 {
-	for ( CElements::iterator it = elements.begin(); it != elements.end(); ++it )
+	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
 		if ( (*it)->IsFinished() )
 			it = elements.erase( it );

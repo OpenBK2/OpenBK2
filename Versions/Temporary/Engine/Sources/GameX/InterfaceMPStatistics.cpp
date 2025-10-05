@@ -80,7 +80,7 @@ void CInterfaceMPStatistics::MakeInterior()
 	if ( pMissionTimeView )
 	{
 		int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(), IScenarioTracker::ESK_TIME );
-		string szText = StrFmt( "%02d", nTime % 60 );
+		std::string szText = StrFmt( "%02d", nTime % 60 );
 		nTime = nTime / 60;
 		szText = StrFmt( "%02d:", nTime % 60 ) + szText;
 		nTime = nTime / 60;
@@ -141,7 +141,7 @@ void CInterfaceMPStatistics::FillTeams()
 	}
 }
 
-void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, list<SPlayerItemData> &team )
+void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, std::list<SPlayerItemData> &team )
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	SPlayerItemData item;
@@ -158,7 +158,7 @@ void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplay
 	item.nScore = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_SCORE );
 
 	// Insert it appropriately
-	list<SPlayerItemData>::iterator it = team.begin();
+	std::list<SPlayerItemData>::iterator it = team.begin();
 
 	while ( it != team.end() && (*it).nScore > item.nScore )
 		++it;
@@ -191,9 +191,9 @@ void CInterfaceMPStatistics::PopulateList()
 	AddPlayerItemsToList( lostTeam );
 }
 
-void CInterfaceMPStatistics::AddPlayerItemsToList( list<SPlayerItemData> &team )
+void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &team )
 {
-	for ( list<SPlayerItemData>::iterator it = team.begin(); it != team.end(); ++it )
+	for ( std::list<SPlayerItemData>::iterator it = team.begin(); it != team.end(); ++it )
 	{
 		SPlayerItemData &item = *it;
 
@@ -230,7 +230,7 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( list<SPlayerItemData> &team )
 	}
 }
 
-bool CInterfaceMPStatistics::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPStatistics::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_close" )
 		return OnClosePopup();
@@ -241,7 +241,7 @@ bool CInterfaceMPStatistics::Execute( const string &szSender, const string &szRe
 	return false;
 }
 
-int CInterfaceMPStatistics::Check( const string &szCheckName ) const
+int CInterfaceMPStatistics::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

@@ -12,8 +12,8 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		CPtr<IWindow> pCheckedWnd;
-		wstring wszName;
-		wstring wszDesc;
+		std::wstring wszName;
+		std::wstring wszDesc;
 		NFile::CFilePath szFullFolderPath;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pNameView); f.Add(4,&pCheckedWnd); f.Add(5,&wszName); f.Add(6,&wszDesc); f.Add(7,&szFullFolderPath); return 0; }
 	};
@@ -32,15 +32,15 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 	CPtr<ITextView> pModNameView;
 	CPtr<IButton> pDefaultBtn;
 	CPtr<IButton> pAcceptBtn;
-	vector<SMod> mods;
-	wstring wszModDefaultName;
-	wstring wszModDefaultDesc;
+	std::vector<SMod> mods;
+	std::wstring wszModDefaultName;
+	std::wstring wszModDefaultDesc;
 	CPtr<IWindow> pPrevCheckedWnd;
 	int nInitialMod;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pTopPanel); f.Add(4,&pBottomPanel); f.Add(5,&pModsListPanel); f.Add(6,&pModDescPanel); f.Add(7,&pModsListCont); f.Add(8,&pModsListItemTemplate); f.Add(9,&pModDescCont); f.Add(10,&pModDescView); f.Add(11,&pModNameView); f.Add(12,&pDefaultBtn); f.Add(13,&pAcceptBtn); f.Add(14,&mods); f.Add(15,&wszModDefaultName); f.Add(16,&wszModDefaultDesc); f.Add(17,&pPrevCheckedWnd); f.Add(18,&nInitialMod); return 0; }
 private:
 	void MakeInterior();
-	void AddMod( const wstring &wszName, const wstring &wszDesc, const NFile::CFilePath &szFullFolderPath );
+	void AddMod( const std::wstring &wszName, const std::wstring &wszDesc, const NFile::CFilePath &szFullFolderPath );
 	const SMod* FindSelected() const;
 	
 	bool OnBack();
@@ -58,8 +58,8 @@ public:
 	bool Init();
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 
 public:
 	bool StepLocal( bool bAppActive );

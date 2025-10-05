@@ -14,8 +14,8 @@ class CSupportAAGun;
 // просто военная машинка, базовый класс
 class CMilitaryCar : public CAIUnit
 {
-	typedef hash_map<int/*unitID*/, int/*board number*/> CBoardOrder;
-	typedef hash_map<int/*turret UniqueID*/, CObj<CSupportAAGun> > CSupportAAGuns;
+	typedef std::unordered_map<int/*unitID*/, int/*board number*/> CBoardOrder;
+	typedef std::unordered_map<int/*turret UniqueID*/, CObj<CSupportAAGun> > CSupportAAGuns;
 
 
 	ZDATA_(CAIUnit)
@@ -25,18 +25,18 @@ class CMilitaryCar : public CAIUnit
 	CPtr<CUnitGuns> pGuns;
 
 	// вращающаяся пушка
-	vector< CObj<CTurret> > turrets;
+	std::vector< CObj<CTurret> > turrets;
 	
 	// пассажиры
-	list<CPtr<CSoldier> > pass;
+	std::list<CPtr<CSoldier> > pass;
 	
 	CPtr<CFormation> pLockingUnit;
 	float fDispersionBonus;
 	NTimer::STime timeLastHeal;						// последнее время лечения
 	
 	// mech units, currently On The Way to board
-	hash_map<int, CPtr<CAIUnit> > boarding;
-	vector<CPtr<CAIUnit> > onBoard;
+	std::unordered_map<int, CPtr<CAIUnit> > boarding;
+	std::vector<CPtr<CAIUnit> > onBoard;
 	CBoardOrder boardOrder;
 	bool bCanUnload;								// if entrance point is locked - disable unload 
 
@@ -210,7 +210,7 @@ public:
 class CAITransportUnit : public CMilitaryCar
 {
 	OBJECT_BASIC_METHODS( CAITransportUnit );
-	typedef list< CPtr<CFormation> > CExternLoaders;
+	typedef std::list< CPtr<CFormation> > CExternLoaders;
 
 	ZDATA_(CMilitaryCar)
 	float fResursUnits; // количество RU, которые есть у грузовичка

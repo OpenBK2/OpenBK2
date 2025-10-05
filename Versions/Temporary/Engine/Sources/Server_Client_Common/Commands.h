@@ -68,75 +68,75 @@ class CCommands : public CCommandsBase
 {
 	OBJECT_NOCOPY_METHODS( CCommands );
 
-	typedef void (CCommands::*PARSE_CMD_FUNC)( vector<string> &szWords, SCommand *pCmd );
-	hash_map<int, PARSE_CMD_FUNC> parseCmdFuncs;
+	typedef void (CCommands::*PARSE_CMD_FUNC)( std::vector<std::string> &szWords, SCommand *pCmd );
+	std::unordered_map<int, PARSE_CMD_FUNC> parseCmdFuncs;
 	bool bServer;
 
 	//
-	const EServerClientCommands FindCmd( const string &szCommand );
+	const EServerClientCommands FindCmd( const std::string &szCommand );
 
 	// client
-	void ParseLoginServer( vector<string> &szWords, SCommand *pCmd );
-	void ParseRegisterServer( vector<string> &szWords, SCommand *pCmd );
-	void ParseEnterLobby( vector<string> &szWords, SCommand *pCmd );
-	void ParseLeaveLobby( vector<string> &szWords, SCommand *pCmd );
-	void ParseSetClientState( vector<string> &szWords, SCommand *pCmd );
-	void ParseClientGetLobbyClients( vector<string> &szWords, SCommand *pCmd );
-	void ParseCreateGame( vector<string> &szWords, SCommand *pCmd );
-	void ParseKillGame( vector<string> &szWords, SCommand *pCmd );
-	void ParseSendGameInfo( vector<string> &szWords, SCommand *pCmd );
-	void ParseGetLobbyGames( vector<string> &szWords, SCommand *pCmd );
-	void ParseLeaveGame( vector<string> &szWords, SCommand *pCmd );
-	void ParseConnectGame( vector<string> &szWords, SCommand *pCmd );
-	void ParseGameBroadcast( vector<string> &szWords, SCommand *pCmd );
-	void ParseGameDirect( vector<string> &szWords, SCommand *pCmd );
-	void ParseGameKickClient( vector<string> &szWords, SCommand *pCmd );
-	void ParseDirectMsg( vector<string> &szWords, SCommand *pCmd );
-	void ParseShowGameClients( vector<string> &szWords, SCommand *pCmd );
-	void ParseSpecGameInfo( vector<string> &szWords, SCommand *pCmd );
-	void ParsePauseServerConn( vector<string> &szWords, SCommand *pCmd );
-	void ParsePauseAccept( vector<string> &szWords, SCommand *pCmd );
-	void ParsePauseConnect( vector<string> &szWords, SCommand *pCmd );
-	void ParsePauseClient( vector<string> &szWords, SCommand *pCmd );
+	void ParseLoginServer( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseRegisterServer( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseEnterLobby( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseLeaveLobby( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseSetClientState( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseClientGetLobbyClients( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseCreateGame( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseKillGame( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseSendGameInfo( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseGetLobbyGames( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseLeaveGame( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseConnectGame( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseGameBroadcast( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseGameDirect( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseGameKickClient( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseDirectMsg( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseShowGameClients( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseSpecGameInfo( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParsePauseServerConn( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParsePauseAccept( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParsePauseConnect( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParsePauseClient( std::vector<std::string> &szWords, SCommand *pCmd );
 
-	void ParseChatLobby( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatPrivate( vector<string> &szWords, SCommand *pCmd );
-	void ParseAFK( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatJoin( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatChannels( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatIgnore( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatFriend( vector<string> &szWords, SCommand *pCmd );
-	void ParseChatWhere( vector<string> &szWords, SCommand *pCmd ); 
+	void ParseChatLobby( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatPrivate( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseAFK( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatJoin( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatChannels( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatIgnore( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatFriend( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseChatWhere( std::vector<std::string> &szWords, SCommand *pCmd );
 
-	void ParseLadderTest( vector<string> &szWords, SCommand *pCmd );
-	void ParseLadderWin( vector<string> &szWords, SCommand *pCmd );
-	void ParseLadderInfo( vector<string> &szWords, SCommand *pCmd );
+	void ParseLadderTest( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseLadderWin( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseLadderInfo( std::vector<std::string> &szWords, SCommand *pCmd );
 
-	void ParseForgotPassword( vector<string> &szWords, SCommand *pCmd );
-	void ParsePing( vector<string> &szWords, SCommand *pCmd );
-	void ParseMultiTest( vector<string> &szWords, SCommand *pCmd );
+	void ParseForgotPassword( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParsePing( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseMultiTest( std::vector<std::string> &szWords, SCommand *pCmd );
 	// server
-	void ParseClientsList( vector<string> &szWords, SCommand *pCmd );
-	void ParseClientState( vector<string> &szWords, SCommand *pCmd );
-	void ParseKick( vector<string> &szWords, SCommand *pCmd );
-	void ParseGames( vector<string> &szWords, SCommand *pCmd );
-	void ParseReloadConfig( vector<string> &szWords, SCommand *pCmd );
-	void ParseShowStatistics( vector<string> &szWords, SCommand *pCmd );
-	void ParseBroadcast( vector<string> &szWords, SCommand *pCmd );
+	void ParseClientsList( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseClientState( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseKick( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseGames( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseReloadConfig( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseShowStatistics( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseBroadcast( std::vector<std::string> &szWords, SCommand *pCmd );
 
-	void ParseShowLobbies( vector<string> &szWords, SCommand *pCmd );
-	void ParseHelp( vector<string> &szWords, SCommand *pCmd );
+	void ParseShowLobbies( std::vector<std::string> &szWords, SCommand *pCmd );
+	void ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd );
 
-	string szErrorMsg;
-	void SetErrorMsg( const string &_szMsg ) { szErrorMsg = _szMsg; }
-	const string& GetErrorMsg() const { return szErrorMsg; }
+	std::string szErrorMsg;
+	void SetErrorMsg( const std::string &_szMsg ) { szErrorMsg = _szMsg; }
+	const std::string& GetErrorMsg() const { return szErrorMsg; }
 
 public:
 	CCommands() : bServer( false ) { }
 	CCommands( const bool bServer );
 
-	virtual void GetStringCommands( vector<string> *pCommands );
-	virtual bool LineEntered( const string &szLine, string *pszErr );
+	virtual void GetStringCommands( std::vector<std::string> *pCommands );
+	virtual bool LineEntered( const std::string &szLine, std::string *pszErr );
 };
 
 

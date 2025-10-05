@@ -6,7 +6,7 @@ struct IDbObserver;
 
 class CDbObserverContainer
 {
-	typedef list< CPtr<IDbObserver> > CObserversList;
+	typedef std::list< CPtr<IDbObserver> > CObserversList;
 	CObserversList observers;
 protected:
 	void ReportObjectChanged( const CDBID &dbid );

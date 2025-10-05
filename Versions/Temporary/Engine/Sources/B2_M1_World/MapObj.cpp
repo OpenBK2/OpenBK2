@@ -56,7 +56,7 @@ void SObjectStatus::Clear()
 
 void SObjectStatus::AddWeapon( const SWeapon &weapon )
 {
-	vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
+	std::vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
 	if ( it != weapons.end() )
 	{
 		SWeapon &current = *it;
@@ -413,7 +413,7 @@ const NDb::SAnimB2* CMapObj::GetAnimation( const int _nAnimation )
 		if ( pStats->animdescs.size() <= nAnimation )
 			return 0;
 
-		const vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
+		const std::vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
 		if ( anims.empty() )
 			return 0;
 
@@ -468,7 +468,7 @@ void CMapObj::AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer:
 	}
 }
 
-pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
+std::pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nID );
 
@@ -489,14 +489,14 @@ pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 				SetLoopedAnimation( false );
 
 				if ( AddAnimation( pAnimation, startTime, pAnimator ) )
-					return pair<int,bool>( pAnimation->nLength, pAnimation->bLooped );
+					return std::pair<int,bool>( pAnimation->nLength, pAnimation->bLooped );
 			}
 			
-			return pair<int,bool>( 0, false );
+			return std::pair<int,bool>( 0, false );
 		}
 	}
 
-	return pair<int,bool>( -1, false );
+	return std::pair<int,bool>( -1, false );
 }
 
 void CMapObj::GetStatus( SObjectStatus *pStatus ) const
@@ -576,7 +576,7 @@ NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUse
 	CUserActions actions = actionsBy;
 	actions &= *pActionsWith;
 	
-	const vector<NDb::EUserAction> &priority = IsFriend() ? pClient->actionsPriority.friendActions : 
+	const std::vector<NDb::EUserAction> &priority = IsFriend() ? pClient->actionsPriority.friendActions :
 	( IsEnemy() ? pClient->actionsPriority.enemyActions : pClient->actionsPriority.neutralActions );
 	for ( int i = 0; i < priority.size(); ++i )
 	{
@@ -784,9 +784,9 @@ IMOContainer* CMOSelectable::GetTopContainer() const
 
 // IMOContainer
 
-void IMOContainer::GetPassangers( vector<IB2MapObj*> *pPassangers ) const
+void IMOContainer::GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const
 {
-	vector<CMOSelectable*> passangers;
+	std::vector<CMOSelectable*> passangers;
 	GetPassangers( &passangers );
 	pPassangers->resize( passangers.size() );
 	for ( int i = 0; i < passangers.size(); ++i )
@@ -799,7 +799,7 @@ void IMOContainer::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 
 	if ( iconInfo.bIsMainHitbar )
 	{
-		vector<CMOSelectable*> passengers;
+		std::vector<CMOSelectable*> passengers;
 		GetPassangers( &passengers );
 		iconInfo.smallHitbars.reserve( passengers.size() );
 		const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
@@ -955,7 +955,7 @@ int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer
 	return -1;
 }
 
-void PlayComplexEffect( const int nID, const string &szBoneName, ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
+void PlayComplexEffect( const int nID, const std::string &szBoneName, ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
 	if ( pEffect->pSoundEffect )

@@ -8,8 +8,8 @@ class CPathFractionComposite : public CPathFractionComplexBase
 {
 	OBJECT_BASIC_METHODS( CPathFractionComposite )
 ZDATA_(CPathFractionComplexBase)
-	vector<CVec3> points;
-	vector<CVec3> normales;
+	std::vector<CVec3> points;
+	std::vector<CVec3> normales;
 	int nIndex;															// point index
 	
 	float fSplineProgress;									// move by spline (0..1)

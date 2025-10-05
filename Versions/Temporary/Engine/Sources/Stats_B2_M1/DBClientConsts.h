@@ -21,16 +21,16 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< EUserAction > selfActions;
-		vector< EUserAction > friendActions;
-		vector< EUserAction > enemyActions;
-		vector< EUserAction > neutralActions;
+		std::vector< EUserAction > selfActions;
+		std::vector< EUserAction > friendActions;
+		std::vector< EUserAction > enemyActions;
+		std::vector< EUserAction > neutralActions;
 
 		SWCActionsPriority() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -42,16 +42,16 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< EM1Action > selfActions;
-		vector< EM1Action > friendActions;
-		vector< EM1Action > enemyActions;
-		vector< EM1Action > neutralActions;
+		std::vector< EM1Action > selfActions;
+		std::vector< EM1Action > friendActions;
+		std::vector< EM1Action > enemyActions;
+		std::vector< EM1Action > neutralActions;
 
 		SM1WCActionsPriority() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -73,7 +73,7 @@ namespace NDb
 			eM1Action( M1_ACTION_UNKNOWN )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -101,7 +101,7 @@ namespace NDb
 			ePosition( ACK_POS_UNIT )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -126,7 +126,7 @@ namespace NDb
 			nNumSelectionsBeforeAnnoyed( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -146,7 +146,7 @@ namespace NDb
 			fShowTime( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -179,7 +179,7 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -203,7 +203,7 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -227,7 +227,7 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -247,21 +247,21 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
 		CDBPtr< SCameraLimits > pCamera;
-		vector< SCursor > cursors;
+		std::vector< SCursor > cursors;
 		SWCActionsPriority actionsPriority;
 		SM1WCActionsPriority m1ActionsPriority;
-		vector< SAckParameter > acksParameters;
+		std::vector< SAckParameter > acksParameters;
 		SAckManagerConsts ackConsts;
-		vector< SMechUnitIconsSet > mechUnitIconsSets;
-		vector< SSquadIconsSet > squadIconsSets;
-		vector< SBuildingIconsSet > buildingIconsSets;
+		std::vector< SMechUnitIconsSet > mechUnitIconsSets;
+		std::vector< SSquadIconsSet > squadIconsSets;
+		std::vector< SBuildingIconsSet > buildingIconsSets;
 		SPassengerIconsSet passengerIconsSet;
 		SMapCommandAck mapCommandAck;
 		SMapCommandAck mapCommandAckDir;

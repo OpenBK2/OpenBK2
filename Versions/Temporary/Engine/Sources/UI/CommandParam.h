@@ -2,18 +2,18 @@
 
 
 template <class TParamType>
-class CParam : public pair<TParamType,bool>
+class CParam : public std::pair<TParamType,bool>
 {
-	typedef pair<TParamType,bool> TParent;
+	typedef std::pair<TParamType,bool> TParent;
 public:
 	CParam() { second = false; }
-	CParam( const TParamType &par ) : pair<TParamType,bool>( par, true ){  }
-	const CParam &operator=( const TParamType &par ) { pair<TParamType,bool>::operator =( pair<TParamType,bool>( par, true ) ); return *this; }
+	CParam( const TParamType &par ) : std::pair<TParamType,bool>( par, true ){  }
+	const CParam &operator=( const TParamType &par ) { std::pair<TParamType,bool>::operator =( std::pair<TParamType,bool>( par, true ) ); return *this; }
 
 	void Merge( const CParam &par )
 	{
 		if ( !IsValid() )
-			pair<TParamType,bool>::operator=( par );
+			std::pair<TParamType,bool>::operator=( par );
 	}
 
 	bool IsValid() const { return second; }

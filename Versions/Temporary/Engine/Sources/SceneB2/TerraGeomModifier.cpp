@@ -230,7 +230,7 @@ void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const i
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
 			STerrainInfo::STile &curTile = terrainInfo.tiles[g][i];
-			for ( vector<CVec3fEx>::iterator it = curTile.vertices.begin(); it != curTile.vertices.end(); ++it )
+			for ( std::vector<CVec3fEx>::iterator it = curTile.vertices.begin(); it != curTile.vertices.end(); ++it )
 			{
 				it->z = GetTerraHeight( it->x, it->y, i, g );
 			}

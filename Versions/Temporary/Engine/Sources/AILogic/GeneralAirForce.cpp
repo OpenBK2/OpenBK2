@@ -12,9 +12,11 @@
 #include "GlobalWarFog.h"
 #include "GeneralConsts.h"
 #include "B2AI.h"
-#include "Misc/nalgoritm.h"
 #include "PlayerREinforcement.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
+
+#include <algorithm>
+#include <random>
 
 extern CPlayerReinforcementArray theReinfArray;
 // time to wait for reinforcement system to process aviation call 
@@ -109,7 +111,7 @@ void CGeneralAirForce::Segment()
 				bOurTurn = false;
 		}
 	}
-	list<int> deleted;
+	std::list<int> deleted;
 	for ( AntiAviation::iterator it = antiAviation.begin(); antiAviation.end() != it; ++it )
 	{
 		if ( it->second->IsTimeToForget() )
@@ -156,7 +158,7 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 	if ( nCurrentRequest == -1 )
 		return;
 
-	list<CVec2> vPoints;
+	std::list<CVec2> vPoints;
 	Requests *pRequest = &requests[nCurrentRequest];
 	
 	for ( Requests::iterator it = pRequest->begin(); it != pRequest->end(); ++it )
@@ -166,14 +168,14 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 
 	// проредить.
 	SSameEnemyPointPredicate pr1;
-	list<CVec2>::iterator firstSame = unique( vPoints.begin(), vPoints.end(), pr1 );
+	std::list<CVec2>::iterator firstSame = unique( vPoints.begin(), vPoints.end(), pr1 );
 	vPoints.erase( firstSame, vPoints.end() );
 
 	const float fFlyHeight( pSamplePlane->GetZ() );
 
 	// проверить каждую линию на безопасность.
 	CVec2 vCurStartPoint = pSamplePlane->GetCenterPlain();
-	for ( list<CVec2>::iterator it = vPoints.begin(); it != vPoints.end();  )
+	for ( std::list<CVec2>::iterator it = vPoints.begin(); it != vPoints.end();  )
 	{
 		if ( 0 == CheckLineForSafety( vCurStartPoint, *it, fFlyHeight ) )
 		{
@@ -253,7 +255,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 	return 0;
 }
 
-void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints, const int nPlayer )
+void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vPoints, const int nPlayer )
 {
 	bOurTurn = false;
 
@@ -261,7 +263,7 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints
 		return;
 	
 	SAIUnitCmd cmd;
-	list<CVec2>::const_iterator it = vPoints.begin();
+	std::list<CVec2>::const_iterator it = vPoints.begin();
 	const int nGroupID = Singleton<IAILogic>()->GenerateGroupNumber();
 	cmd.fNumber = 0;	// allow unit creation disable planes.
 
@@ -282,7 +284,7 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints
 		break;
 	}
 
-	vector<int> ids;
+	std::vector<int> ids;
 	for ( int i = 0; i < createdAviation.size(); ++i )
 		ids.push_back( createdAviation[i]->GetUniqueId() );
 	Singleton<IAILogic>()->RegisterGroup( ids, nGroupID );
@@ -303,7 +305,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	const float fSizeY = GetAIMap()->GetSizeY();
 	const int nParty = theDipl.GetNParty( nPlayer );
 
-	vector<CVec2> points;
+	std::vector<CVec2> points;
 	
 	const int nStep = Max( 2.0f, fSizeX / SGeneralConsts::SCOUT_POINTS );
 
@@ -315,8 +317,10 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 				points.push_back( CVec2( x, y ) );
 		}
 	}
-	SGeneralHelper::SRandomFunctor pr;
-	random_shuffle( points.begin(), points.end(), pr );
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	std::shuffle( points.begin(), points.end(), g );
 	if ( points.empty() )
 	{
 		bOurTurn = false;
@@ -336,7 +340,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	const CVec2 vAppearPoint( pSamplePlane->GetCenterPlain() );
 	const float fFlyHeight( pSamplePlane->GetZ() );
 	
-	list<CVec2> vPointsToFly;
+	std::list<CVec2> vPointsToFly;
 	const float fCheckRadius = Min( static_cast<int>( SGeneralConsts::SCOUT_FREE_POINT ),
 																	static_cast<int>( nStep * SConsts::TILE_SIZE ) );
 	
@@ -375,13 +379,13 @@ int /*request ID*/CGeneralAirForce::RequestForSupport( const CVec2 &vSupportCent
 {
 	if ( nResistanceCellNumber != -1 )
 	{
-		list<int> delRequest;
+		std::list<int> delRequest;
 		for ( Requests::iterator iter = requests[eType].begin(); iter != requests[eType].end(); ++iter )
 		{
 			if ( iter->second.nResistanceCellNumber != -1 )
 				delRequest.push_back( iter->first );
 		}
-		for ( list<int>::iterator iter = delRequest.begin(); iter != delRequest.end(); ++iter )
+		for ( std::list<int>::iterator iter = delRequest.begin(); iter != delRequest.end(); ++iter )
 			CancelRequest( *iter, eType );
 	}
 

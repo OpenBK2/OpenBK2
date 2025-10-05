@@ -19,7 +19,7 @@ namespace NMusicSystem
 class CPlayList : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CPlayList )
-	typedef list<CPtr<IPlayListElement> > CElements;
+	typedef std::list<CPtr<IPlayListElement> > CElements;
 
 	enum EPlayListState
 	{

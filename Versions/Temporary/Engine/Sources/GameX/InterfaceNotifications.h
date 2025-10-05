@@ -15,7 +15,7 @@ class CVisualNotifications : public IVisualNotifications
 {
 	OBJECT_NOCOPY_METHODS( CVisualNotifications );
 	
-	typedef hash_map< NDb::ENotificationType, CDBPtr<NDb::SNotification>, SEnumHash > CEntries;
+	typedef std::unordered_map< NDb::ENotificationType, CDBPtr<NDb::SNotification>, SEnumHash > CEntries;
 	
 	struct SNotification
 	{
@@ -49,11 +49,11 @@ public:
 		CPtr<IWindow> pItemWnd;
 		CDBPtr<NDb::SNotificationEvent> pDBEvent;
 		float fVisibleTime;
-		string szName;
-		vector<CVec2> positions;
+		std::string szName;
+		std::vector<CVec2> positions;
 		int nID;
-		vector< CPtr<CMapObj> > objects;
-		wstring wszText;
+		std::vector< CPtr<CMapObj> > objects;
+		std::wstring wszText;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pItemWnd); f.Add(3,&pDBEvent); f.Add(4,&fVisibleTime); f.Add(5,&szName); f.Add(6,&positions); f.Add(7,&nID); f.Add(8,&objects); f.Add(9,&wszText); return 0; }
 	};
 private:
@@ -72,7 +72,7 @@ private:
 		void Remove();
 		void Move( const CVec3 &vPos );
 	};
-	typedef vector<SMapPointer> SMapPointers;
+	typedef std::vector<SMapPointer> SMapPointers;
 
 	ZDATA
 	CPtr< IMiniMap > pMiniMap;
@@ -82,9 +82,9 @@ private:
 	bool bShowObjectives;
 	bool bNewObjective;
 	float fNewObjectiveTime;
-	list< SNotification >	notifications;
+	std::list< SNotification >	notifications;
 	CEntries entries;
-	hash_map<int, CPtr<CMapObj> > keyObjects;
+	std::unordered_map<int, CPtr<CMapObj> > keyObjects;
 	ZSKIP //list<int> newObjectives;
 	ZSKIP //bool bIsObjectiveNotifyActive;
 	ZSKIP//SObjective newObjectiveInfo;
@@ -96,25 +96,25 @@ private:
 	CPtr<IWindow> pParent;
 	CPtr<IWindow> pItemTemplateWnd;
 
-	list< CObj<SEvent> > events;
+	std::list< CObj<SEvent> > events;
 	int nFreeEvent;
 	int nMaxEventCount;
 	int nEventItemHeight;
 	int nEventBottom;
 	
-	vector< CDBPtr<NDb::SNotificationEvent> > dbEvents;
+	std::vector< CDBPtr<NDb::SNotificationEvent> > dbEvents;
 	bool bEventTimerStopped;
 	
 	CVec3 vLastCameraPos;
 	
 	int nLastFreeID;
-	vector<int> freeIDs;
-	hash_map<int,SMapPointers> pointers;
+	std::vector<int> freeIDs;
+	std::unordered_map<int,SMapPointers> pointers;
 	CPtr<IAILogic> pAI;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMiniMap); f.Add(3,&vMapSize); f.Add(4,&nSelectedID); f.Add(5,&bShowObjectives); f.Add(6,&bNewObjective); f.Add(7,&fNewObjectiveTime); f.Add(8,&notifications); f.Add(9,&entries); f.Add(10,&keyObjects); f.Add(16,&nSelectedKeyObject); f.Add(18,&pParent); f.Add(19,&pItemTemplateWnd); f.Add(20,&events); f.Add(21,&nFreeEvent); f.Add(22,&nMaxEventCount); f.Add(23,&nEventItemHeight); f.Add(24,&nEventBottom); f.Add(25,&dbEvents); f.Add(26,&bEventTimerStopped); f.Add(27,&vLastCameraPos); f.Add(28,&nLastFreeID); f.Add(29,&freeIDs); f.Add(30,&pointers); f.Add(31,&pAI); return 0; }
 
 	NTimer::STime nAbsTime;
-	vector < NTimer::STime > textMessageTimes;
+	std::vector < NTimer::STime > textMessageTimes;
 	CVec2 vMPMarkerPos;
 	bool bShowMPMarker;
 	NTimer::STime timeMarkerExpire;
@@ -153,10 +153,10 @@ private:
 	
 	void AddNotification( int nID, const CVec2 &vPos, NDb::ENotificationType eType );
 	void AddNotificationMain( int nID, const CVec2 &vPos, NDb::ENotificationType eType, 
-		const wstring &wszCustomText );
+		const std::wstring &wszCustomText );
 	void AddNotificationMinimap( int nID, const CVec2 &vPos, NDb::ENotificationType eType );
 	void AddObjectivePointers( int nID );
-	void AddPointerModels( int nID, const vector<CVec3> &places );
+	void AddPointerModels( int nID, const std::vector<CVec3> &places );
 	void RemoveObjectivePointers( int nID );
 	void UpdateObjectivePointers( int nID );
 	void AddObjectiveNotification( int nID, NDb::ENotificationType eType );
@@ -189,7 +189,7 @@ public:
 	bool Notify( EVisualNotification eType, CMapObj *pMO );
 	void Step( const NTimer::STime nDeltaGameTime, bool bAppActive );
 
-	void OnBtn( const string &szSender, bool bRightBtn );
+	void OnBtn( const std::string &szSender, bool bRightBtn );
 
 	void OnEvent( const SEventParams &params );
 	void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID );

@@ -19,7 +19,7 @@ struct SAIBasicUpdate;
 struct ICheckSumLog;
 struct ICollisionsCollector;
 
-typedef hash_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
+typedef std::unordered_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
 
 class CAILogic : public IAILogic
 {
@@ -31,19 +31,19 @@ class CAILogic : public IAILogic
 	bool bFirstTime;
 	
 	// мосты
-	typedef list< list<CPtr<CBridgeSpan> > > Bridges;
+	typedef std::list< std::list<CPtr<CBridgeSpan> > > Bridges;
 	Bridges bridges;
 	CAITimer timer;
 
 	//
-	list< CObj<CCommonUnit> > garbage;
+	std::list< CObj<CCommonUnit> > garbage;
 
 	// скрипты
 	CScripts scripts;
 	bool bMissionLoaded;
 	
-	vector< SAIStartCommand > startCmds;
-	vector< SBattlePosition > reservePositions;
+	std::vector< SAIStartCommand > startCmds;
+	std::vector< SBattlePosition > reservePositions;
 
 	NTimer::STime nextCheckSumTime;
 	NTimer::STime periodToCheckSum;
@@ -54,7 +54,7 @@ class CAILogic : public IAILogic
 
 	CPtr<ICheckSumLog> pCheckSumLog;
 	
-	typedef hash_set<CDBPtr<SMechUnitRPGStats>, SDefaultPtrHash> CAvailTrucks;
+	typedef std::unordered_set<CDBPtr<SMechUnitRPGStats>, SDefaultPtrHash> CAvailTrucks;
 	CAvailTrucks availableTrucks;
 	
 	CPtr<IProgressHook> pProgress;
@@ -114,15 +114,15 @@ public:
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer );
 
 	virtual const int GenerateGroupNumber();
-	virtual void RegisterGroup( const vector<int> &vIDs, const int nGroup );
+	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup );
 	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup );
 	virtual void UnregisterGroup( const int nGroup );
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue );
 	
-	virtual void ShowAreas( const vector<int> &units, enum EActionNotify &eType, bool bShow );
+	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow );
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas );
 	
-	virtual const bool GetMiniMapUnitsInfo( vector< SMiniMapUnitInfo > &vUnits );
+	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits );
 	virtual bool GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime );
 	virtual int GetMiniMapWarFogSizeX() const;
 	virtual int GetMiniMapWarFogSizeY() const;
@@ -136,14 +136,14 @@ public:
 	CObjectBase* AddObject( const int nUniqueID, const SMapObjectInfo &object, LinkInfo *linksInfo, bool bInitialization, const SHPObjectRPGStats *pPassedStats, NDb::EReinforcementType eType = _RT_NONE );
 
 	void InitLinks( LinkInfo &linksInfo );
-	void LoadEntrenchments( const vector<struct SEntrenchmentInfo> &entrenchments );
-	void LoadBridges( const vector< NDb::SIntArray > &bridgesInfo );
+	void LoadEntrenchments( const std::vector<struct SEntrenchmentInfo> &entrenchments );
+	void LoadBridges( const std::vector< NDb::SIntArray > &bridgesInfo );
 
 	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber );
 	virtual void SetNPlayers( const int nPlayers );
 	virtual void SetNetGame( const bool bNetGame );
 	
-	virtual bool SubstituteUniqueIDs( const vector<int> &vIDs );
+	virtual bool SubstituteUniqueIDs( const std::vector<int> &vIDs );
 	virtual bool SubstituteUniqueIDs( CObjectBase **pUnitsBuffer, const int nLen );
 
 	bool UpdateAcknowledgment( SAIAcknowledgment &pAck );
@@ -156,8 +156,8 @@ public:
 	virtual bool ToggleShow( const int nShowType );
 
 	virtual bool IsCombatSituation();
-	void InitStartCommands( const LinkInfo &linksInfo, hash_map<int, int> &old2NewLinks );
-	void InitReservePositions( hash_map<int, int> &old2NewLinks );
+	void InitStartCommands( const LinkInfo &linksInfo, std::unordered_map<int, int> &old2NewLinks );
+	void InitReservePositions( std::unordered_map<int, int> &old2NewLinks );
 	
 	bool IsSegment() const { return bSegment; }
 	

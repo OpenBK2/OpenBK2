@@ -20,9 +20,9 @@ namespace NGameX
 namespace NMOD
 {
 
-void ReadMODInfo( SMOD *pMOD, const string &_szFullFolderName )
+void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 {
-	string szFullFolderName = _szFullFolderName;
+	std::string szFullFolderName = _szFullFolderName;
 	if ( !szFullFolderName.empty() && szFullFolderName[szFullFolderName.size() - 1] != '\\' )
 		szFullFolderName += '\\';
 	//
@@ -40,9 +40,9 @@ void ReadMODInfo( SMOD *pMOD, const string &_szFullFolderName )
 	}
 }
 
-void GetAllMODs( vector<SMOD> *pMODs )
+void GetAllMODs( std::vector<SMOD> *pMODs )
 {
-	const string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
+	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
 	// iterate through all files by mask
 	for ( NFile::CFileIterator it( (szMODsBaseDir + "*.*").c_str() ); !it.IsEnd(); ++it )
 	{
@@ -67,7 +67,7 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile:
 	if ( pMainFileCreator == 0 )
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
 	//
-	vector< CObj<NVFS::IVFS> > vfses = pMainVFS->GetVFSList();
+	std::vector< CObj<NVFS::IVFS> > vfses = pMainVFS->GetVFSList();
 	if ( vfses.empty() )
 		vfses.push_back( NVFS::CreateWinVFS(szBaseResourcePath) );
 	// remove all VFSes but one (base storage VFS)
@@ -154,7 +154,7 @@ NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 		return path;
 	if ( !IsPathRelative( path ) )
 		return path;
-	const string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
+	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
 	NFile::CFilePath pathAbsolute;
 	MakeFullPath( &pathAbsolute, path, szMODsBaseDir );
 	NormalizePath( &pathAbsolute, pathAbsolute );

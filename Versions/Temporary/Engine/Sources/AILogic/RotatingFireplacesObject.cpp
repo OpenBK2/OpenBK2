@@ -8,13 +8,13 @@ extern NTimer::STime curTime;
 
 void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplace )
 {
-	list<SUnitInfo>::iterator iter = units.begin();
+	std::list<SUnitInfo>::iterator iter = units.begin();
 	while ( iter != units.end() && iter->pSoldier != pSoldier )
 		++iter;
 
 	if ( iter == units.end() )
 	{
-		units.push_back();
+		units.emplace_back();
 		iter = units.end();
 		--iter;
 	}
@@ -40,7 +40,7 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 
 void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
 {
-	list<SUnitInfo>::iterator iter = units.begin();
+	std::list<SUnitInfo>::iterator iter = units.begin();
 	while ( iter != units.end() && iter->pSoldier != pSoldier )
 		++iter;
 
@@ -107,7 +107,7 @@ void CRotatingFireplacesObject::Segment()
 {
 	if ( GetNFirePlaces() != 0 )
 	{
-		list<SUnitInfo>::iterator iter = units.begin();
+		std::list<SUnitInfo>::iterator iter = units.begin();
 		bool bChanged = false;
 		while ( !bChanged && iter != units.end() )
 		{

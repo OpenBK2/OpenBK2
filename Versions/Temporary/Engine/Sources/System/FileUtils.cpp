@@ -23,12 +23,12 @@ static char buffer[BUFFER_SIZE];
 // **
 // ************************************************************************************************************************ //
 
-const CFileIterator& CFileIterator::FindFirstFile( const string &_szMask )
+const CFileIterator& CFileIterator::FindFirstFile( const std::string &_szMask )
 {
 	szPath = _szMask;
 	NStr::ReplaceAllChars( &szPath, '/', '\\' );
 	int pos = szPath.rfind( '\\' );
-	if ( pos == string::npos )
+	if ( pos == std::string::npos )
 	{
 		szMask = _szMask;
 		szPath.clear();
@@ -104,7 +104,7 @@ void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive 
 	EnumerateFiles( pszStartDir, pszMask, CDeleteFiles(true, false), bRecursive );
 }
 
-void DeleteDirectory( const string &szDir )
+void DeleteDirectory( const std::string &szDir )
 {
 	EnumerateFiles( szDir, "*.*", CDeleteFiles(true, true), true );
 	RemoveDirectory( szDir.c_str() );
@@ -112,11 +112,11 @@ void DeleteDirectory( const string &szDir )
 
 class CDirFileEnum
 {
-	list<string> *pNames;			// store names here
+	std::list<std::string> *pNames;			// store names here
 	bool bDir;														// enumerate dirs
 	bool bFile;														// enumerate files
 public:
-	CDirFileEnum( list<string> *_pNames, bool _bDir, bool _bFile ) 
+	CDirFileEnum( std::list<std::string> *_pNames, bool _bDir, bool _bFile )
 		: pNames( _pNames ), bDir( _bDir ), bFile( _bFile ) {  }
 	void operator()( const CFileIterator &it )
 	{
@@ -129,11 +129,11 @@ public:
 			pNames->push_back( it.GetFullName() );
 	}
 };
-void GetDirectoryDirs( const char *pszDirName, list<string> *pNames, bool bRecursive )
+void GetDirectoryDirs( const char *pszDirName, std::list<std::string> *pNames, bool bRecursive )
 {
 	EnumerateFiles( pszDirName, "*.*", CDirFileEnum(pNames, true, false), bRecursive );
 }
-void GetDirectoryFiles( const char *pszDirName, const char *pszMask, list<string> *pNames, bool bRecurse )
+void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse )
 {
 	EnumerateFiles( pszDirName, pszMask, CDirFileEnum(pNames, false, true), bRecurse );
 }
@@ -164,7 +164,7 @@ double GetFreeDiskSpace( const char *pszDrive )
 	return ( bRetVal == 0 ? 0 : fRetVal );
 }
 
-bool DoesFileExist( const string &szFileName )
+bool DoesFileExist( const std::string &szFileName )
 {
 	//return _access( szFileName.c_str(), 0 ) != -1;
 	HANDLE hFile = ::CreateFile( szFileName.c_str(), GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
@@ -174,7 +174,7 @@ bool DoesFileExist( const string &szFileName )
 	return true;
 }
 
-bool DoesFolderExist( const string &szFolderName )
+bool DoesFolderExist( const std::string &szFolderName )
 {
 	//return _access( szFileName.c_str(), 0 ) != -1;
 	HANDLE hFile = ::CreateFile( szFolderName.c_str(), GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0 );
@@ -184,7 +184,7 @@ bool DoesFolderExist( const string &szFolderName )
 	return true;
 }
 
-bool IsValidFileName( const string &szFileName )
+bool IsValidFileName( const std::string &szFileName )
 {
 	const char *pszFileName = szFileName.c_str();
 	const char *_pszFileName = max( strrchr( pszFileName, '\\' ), strrchr( pszFileName, '/' ) );
@@ -204,9 +204,9 @@ static const char *pszWrongNames[] = {
 };
 
 // is valid win32 file name
-bool IsValidDirName( const string &_szName )
+bool IsValidDirName( const std::string &_szName )
 {
-	string szName = _szName;
+	std::string szName = _szName;
 	if ( szName.empty() || szName.size() > 250 )
 		return false;
 	NStr::ToLower( &szName );
@@ -224,20 +224,20 @@ bool IsValidDirName( const string &_szName )
 	return true;
 }
 
-bool CopyFile( const string &szSrcName, const string &szDstName )
+bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
 {
 	CreatePath( GetFilePath( szDstName ) );
 	return ::CopyFile( szSrcName.c_str(), szDstName.c_str(), false ) != 0;
 }
 
-string GetFullName( const string &szPath )
+std::string GetFullName( const std::string &szPath )
 {
 	char *pszBufferFileName = 0;
 	GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
 	return buffer;
 }
 
-void GetFullName( string *pResult, const string &szPath )
+void GetFullName( std::string *pResult, const std::string &szPath )
 {
 	char *pszBufferFileName = 0;
 	const DWORD dwLength = GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
@@ -245,7 +245,7 @@ void GetFullName( string *pResult, const string &szPath )
 	memcpy( &((*pResult)[0]), buffer, dwLength );
 }
 
-string GetTempPath()
+std::string GetTempPath()
 {
 	int nLength = ::GetTempPath( BUFFER_SIZE, buffer );
 	if ( nLength == 0 )
@@ -258,31 +258,31 @@ string GetTempPath()
 	buffer[nLength] = 0;
 	return buffer;
 }
-string GetTempFileName()
+std::string GetTempFileName()
 {
 	GUID guid;
 	::CoCreateGuid( &guid );
-	string szFileName;
+	std::string szFileName;
 	NStr::GUID2String( &szFileName, guid );
 	return GetTempPath() + szFileName;
 }
 
-string GetCurrDir()
+std::string GetCurrDir()
 {
 	char buffer[1024];
 	const int nLen = GetCurrentDirectory( 1024, buffer );
 	return nLen == 0 ? "" : buffer;
 }
 
-string GetNormalizedCurrDir()
+std::string GetNormalizedCurrDir()
 {
-	string szCurrDir = GetCurrDir();
+	std::string szCurrDir = GetCurrDir();
 	NFile::NormalizePath( &szCurrDir );
 	NFile::AppendSlash( &szCurrDir, '/' );
 	return szCurrDir;
 }
 
-void SetCurrDir( const string &szDir )
+void SetCurrDir( const std::string &szDir )
 {
 	SetCurrentDirectory( szDir.c_str() );
 }

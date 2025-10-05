@@ -9,7 +9,7 @@ class CButtonGroup : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CButtonGroup )
 
-	typedef hash_set< CPtr<CWindowMSButton>, SDefaultPtrHash > CButtons;
+	typedef std::unordered_set< CPtr<CWindowMSButton>, SDefaultPtrHash > CButtons;
 	CButtons buttons;
 	CPtr<IWindow> pPressed;
 

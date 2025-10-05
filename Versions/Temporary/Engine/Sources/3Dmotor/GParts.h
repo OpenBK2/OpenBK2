@@ -47,7 +47,7 @@ class ISomePart : public IPart
 	SPerPartVariables vars;
 public:
 	CPtr<CCombinedPart> pOwner;
-	vector<CObj<CObjectBase> > decals;
+	std::vector<CObj<CObjectBase> > decals;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IPart*)this); f.Add(2,&group); f.Add(3,&vars); f.Add(4,&pOwner); f.Add(5,&decals); return 0; }
 private:
 	void SetCacheLightFlags();
@@ -95,17 +95,17 @@ class CStaticAnimatedPart : public ISomePart
 {
 	OBJECT_NOCOPY_METHODS(CStaticAnimatedPart);
 	ZDATA_(ISomePart)
-	CDGPtr<CFuncBase< vector<SHMatrix> > > pAnimation;
-	CDGPtr<CFuncBase< vector<NGfx::SCompactTransformer> > > pMMXAnimation;
+	CDGPtr<CFuncBase< std::vector<SHMatrix> > > pAnimation;
+	CDGPtr<CFuncBase< std::vector<NGfx::SCompactTransformer> > > pMMXAnimation;
 	SBound bv;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(ISomePart*)this); f.Add(2,&pAnimation); f.Add(3,&pMMXAnimation); f.Add(4,&bv); return 0; }
 public:
 	CStaticAnimatedPart() {}
-	CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< vector<SHMatrix> > *pAnim, CFuncBase<vector<NGfx::SCompactTransformer> > *pMMXAnim, 
+	CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *pAnim, CFuncBase<std::vector<NGfx::SCompactTransformer> > *pMMXAnim,
 		const SBound &_bv, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
 	virtual ETransformType GetTransformType() const { return TT_SINGLE_SKIN; }
-	virtual const vector<SHMatrix>& GetAnimation() { pAnimation.Refresh(); return pAnimation->GetValue(); }
-	virtual const vector<NGfx::SCompactTransformer>& GetMMXAnimation() { pMMXAnimation.Refresh(); return pMMXAnimation->GetValue(); }
+	virtual const std::vector<SHMatrix>& GetAnimation() { pAnimation.Refresh(); return pAnimation->GetValue(); }
+	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { pMMXAnimation.Refresh(); return pMMXAnimation->GetValue(); }
 	const SBound &GetBound() const { return bv; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices ) p->AddHandle( pAnimation ); }
 };
@@ -184,18 +184,18 @@ class CAnimatedPart : public CAnimatedBoundPart
 {
 	OBJECT_NOCOPY_METHODS( CAnimatedPart );
 	ZDATA_(CAnimatedBoundPart)
-	CDGPtr<CFuncBase< vector<SHMatrix> > > pAnimation;
-	CDGPtr<CFuncBase< vector<NGfx::SCompactTransformer> > > pMMXAnimation;
+	CDGPtr<CFuncBase< std::vector<SHMatrix> > > pAnimation;
+	CDGPtr<CFuncBase< std::vector<NGfx::SCompactTransformer> > > pMMXAnimation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAnimatedBoundPart*)this); f.Add(2,&pAnimation); f.Add(3,&pMMXAnimation); return 0; }
 public:
 	CAnimatedPart() {}
-	CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< vector<SHMatrix> > *pAnim, CFuncBase<vector<NGfx::SCompactTransformer> > *pMMXAnim, 
+	CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *pAnim, CFuncBase<std::vector<NGfx::SCompactTransformer> > *pMMXAnim,
 		CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
 	virtual ETransformType GetTransformType() const { return TT_SINGLE_SKIN; }
-	virtual const vector<SHMatrix>& GetAnimation() { pAnimation.Refresh(); return pAnimation->GetValue(); }
-	virtual const vector<NGfx::SCompactTransformer>& GetMMXAnimation() { pMMXAnimation.Refresh(); return pMMXAnimation->GetValue(); }
-	virtual CFuncBase< vector<SHMatrix> >* GetAnimationNode() { return pAnimation; }
-	virtual CFuncBase< vector<NGfx::SCompactTransformer> >* GetMMXAnimationNode() { return pMMXAnimation; }
+	virtual const std::vector<SHMatrix>& GetAnimation() { pAnimation.Refresh(); return pAnimation->GetValue(); }
+	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { pMMXAnimation.Refresh(); return pMMXAnimation->GetValue(); }
+	virtual CFuncBase< std::vector<SHMatrix> >* GetAnimationNode() { return pAnimation; }
+	virtual CFuncBase< std::vector<NGfx::SCompactTransformer> >* GetMMXAnimationNode() { return pMMXAnimation; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices ) p->AddHandle( pAnimation ); }
 };
 
@@ -246,8 +246,8 @@ private:
 	CPartFlags lastNewFlags;
 	int nIgnoreMark;
 	CPartFlags ignoredParts;
-	vector<SPartInfo> parts;
-	vector<SMaterialInfo> materials;
+	std::vector<SPartInfo> parts;
+	std::vector<SMaterialInfo> materials;
 	CObj<CFuncBase<SPerVertexLightState> > pPervertexLightState;
 	bool bRecalcPartInfo;
 	bool bIsDynamic;
@@ -265,7 +265,7 @@ public:
 	int GetMaterialsNumber() const { return materials.size(); }
 	int GetFloorMask() const { return nFloorMask; }
 	const SMaterialInfo& GetMaterial( int n ) const { return materials[n]; }
-	const vector<SPartInfo>& GetPartsInfo() const { return parts; }
+	const std::vector<SPartInfo>& GetPartsInfo() const { return parts; }
 	void UpdatePartInfo();
 	const CPartFlags& GetIgnoredParts() const { return ignoredParts; }
 	void PartHasChanged() { bRecalcPartInfo = true; }
@@ -280,11 +280,11 @@ public:
 	struct SPerMaterialHolder
 	{
 		ZDATA
-		vector<CObj<CCombinedPart> > transparent, normal;
-		list<CPtr<CCombinedPart> > elements;
+		std::vector<CObj<CCombinedPart> > transparent, normal;
+		std::list<CPtr<CCombinedPart> > elements;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&transparent); f.Add(3,&normal); f.Add(4,&elements); return 0; }
 
-		CCombinedPart* AllocCombinerPart( vector<CObj<CCombinedPart> > *pRes, int nFloorMask, SFullStaticTrackers *pTrackers, bool bIsDynamic )
+		CCombinedPart* AllocCombinerPart( std::vector<CObj<CCombinedPart> > *pRes, int nFloorMask, SFullStaticTrackers *pTrackers, bool bIsDynamic )
 		{
 			for ( int k = 0; k < pRes->size(); ++k )
 			{
@@ -306,7 +306,7 @@ public:
 		}
 		bool IsEmpty() const
 		{
-			for ( list<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
+			for ( std::list<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
 			{
 				ASSERT( IsValid( *i ) );
 				if ( (*i)->GetCombiner()->GetSize() != 0 )
@@ -319,10 +319,10 @@ public:
 	{
 		ZDATA
 		int nLastFrame;
-		vector< CPtr<CDynamicGeometryPart> > dynamicFrags;
-		vector< CPtr<CAnimatedBoundPart> > animatedParts;
-		vector< CPtr<CDynamicPart> > movingParts;
-		vector< CPtr<CParticles> > particles;
+		std::vector< CPtr<CDynamicGeometryPart> > dynamicFrags;
+		std::vector< CPtr<CAnimatedBoundPart> > animatedParts;
+		std::vector< CPtr<CDynamicPart> > movingParts;
+		std::vector< CPtr<CParticles> > particles;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLastFrame); f.Add(3,&dynamicFrags); f.Add(4,&animatedParts); f.Add(5,&movingParts); f.Add(6,&particles); return 0; }
 		SUpdatableObjects() : nLastFrame(0) {}
 		bool IsEmpty();
@@ -331,7 +331,7 @@ public:
 	//
 	ZDATA_(CParent)
 	SPerMaterialHolder staticParts, dynamicParts;
-	list<CPtr<CParticles> > particles;
+	std::list<CPtr<CParticles> > particles;
 	SUpdatableObjects updatable;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CParent*)this); f.Add(2,&staticParts); f.Add(3,&dynamicParts); f.Add(4,&particles); f.Add(5,&updatable); return 0; }
 

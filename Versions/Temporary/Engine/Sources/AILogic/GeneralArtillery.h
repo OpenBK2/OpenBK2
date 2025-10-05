@@ -74,7 +74,7 @@ class CGeneralArtilleryTask
 
 	EBombardmentState eState;
 
-	list<SBombardmentUnitState> bombardmentUnits;
+	std::list<SBombardmentUnitState> bombardmentUnits;
 
 	int nCellNumber;
 public: 
@@ -100,7 +100,7 @@ public:
 	void SetBombardmentFinished();
 public:
 	CGeneralArtilleryTask() : bBombardmentFinished( true ), bIsAntiArtilleryFight( false ) { }
-	CGeneralArtilleryTask( CGeneralArtillery *pOwner, list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int nCellNumber );
+	CGeneralArtilleryTask( CGeneralArtillery *pOwner, std::list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int nCellNumber );
 
 	void Segment();
 
@@ -111,14 +111,14 @@ class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 {
 	OBJECT_BASIC_METHODS( CGeneralArtillery );
 	
-	typedef list< CPtr<CAIUnit> > CUnitsList;
+	typedef std::list< CPtr<CAIUnit> > CUnitsList;
 
 	ZDATA
 	CPtr<CGeneral> pOwner;
 	CUnitsList freeUnits;
 	CUnitsList trucks;
 
-	list<CGeneralArtilleryTask> tasks;
+	std::list<CGeneralArtilleryTask> tasks;
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&freeUnits); f.Add(4,&trucks); f.Add(5,&tasks); return 0; }
 	void OnSerialize( IBinSaver &saver );

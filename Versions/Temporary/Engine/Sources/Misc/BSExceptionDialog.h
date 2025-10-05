@@ -5,6 +5,5 @@ namespace NBSU
 {
 	EBSUReport __cdecl ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 		const char *pszCondition, const char *pszDescription, 
-		const vector<SCallStackEntry> &entries, const char *pszExtInfo );
+		const std::vector<SCallStackEntry> &entries, const char *pszExtInfo );
 }
-

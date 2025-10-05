@@ -14,7 +14,7 @@
 #include "GetConsts.h"
 #include "Server_Client_Common/GamePackets.h"
 
-static wstring s_wszMultiplayerName;
+static std::wstring s_wszMultiplayerName;
 
 REGISTER_SAVELOAD_CLASS( 0x19245AC0, CSlotNumberPacket );
 REGISTER_SAVELOAD_CLASS( 0x19260C00, CB2GameLostPacket );
@@ -121,7 +121,7 @@ bool CMPManagerMode::Segment()
 	return true;
 }
 
-const bool CMPManagerMode::SaveReplay( const string &szFileName )
+const bool CMPManagerMode::SaveReplay( const std::string &szFileName )
 {
 	if ( IsValid( pCommandsHistory ) )
 	{
@@ -196,7 +196,7 @@ void CMPManagerMode::ShowWaitWindow( bool bShow )
 	bWaitWindowShown = bShow;
 }
 
-void CMPManagerMode::OnCriticalNetworkError( const wstring &wszMessage )
+void CMPManagerMode::OnCriticalNetworkError( const std::wstring &wszMessage )
 {
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
@@ -223,7 +223,7 @@ void CMPManagerMode::SendStartGamePacket()
 	pClient->SendGamePacket( pStartPkt, true );
 }
 
-void CMPManagerMode::AddGameInfoForUI( list<SUIGameInfo> *pList, const SNetGameInfo &src )
+void CMPManagerMode::AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &src )
 {
 	SUIGameInfo newGame;
 	newGame.nGameID = src.nGameID;

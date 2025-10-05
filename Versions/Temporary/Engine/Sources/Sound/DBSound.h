@@ -42,13 +42,13 @@ namespace NDb
 				esoundType( NORMAL )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SSoundStats > sounds;
+		std::vector< SSoundStats > sounds;
 		bool bLooped;
 
 		#include "include_complexsounddesc.h"
@@ -69,15 +69,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::ESoundType eValue );
-	ESoundType StringToEnum_NDb_ESoundType( const string &szValue );
+	std::string EnumToString( NDb::ESoundType eValue );
+	ESoundType StringToEnum_NDb_ESoundType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESoundType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESoundType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESoundType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESoundType( szValue ); }
+	static std::string ToString( NDb::ESoundType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESoundType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESoundType( szValue ); }
 };
 

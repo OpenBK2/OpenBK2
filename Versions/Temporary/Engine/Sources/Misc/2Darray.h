@@ -124,10 +124,10 @@ public:
 	void FillEvery( const T &a ) { for ( int i = 0; i < nXSize * nYSize; i++ ) data[i] = a; }
 	void Swap( CArray2D<T> &arr )
 	{
-		swap( data, arr.data );
-		swap( pData, arr.pData );
-		swap( nXSize, arr.nXSize );
-		swap( nYSize, arr.nYSize );
+		std::swap( data, arr.data );
+		std::swap( pData, arr.pData );
+		std::swap( nXSize, arr.nXSize );
+		std::swap( nYSize, arr.nYSize );
 	}
 };
 
@@ -156,7 +156,7 @@ template<class T>
 class CArray3D
 {
 	ZDATA
-		vector<T> data;
+		std::vector<T> data;
 	int nXSize, nYSize, nZSize, nXYSize;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&data); f.Add(3,&nXSize); f.Add(4,&nYSize); f.Add(5,&nZSize); f.Add(6,&nXYSize); return 0; }

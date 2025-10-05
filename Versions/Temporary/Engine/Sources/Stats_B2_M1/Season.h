@@ -32,29 +32,29 @@ namespace NDb
 
 namespace NDb
 {
-	STATS_B2_M1_EXPORT string EnumToString( NDb::ESeason eValue );
-	STATS_B2_M1_EXPORT ESeason StringToEnum_NDb_ESeason( const string &szValue );
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::ESeason eValue );
+	STATS_B2_M1_EXPORT ESeason StringToEnum_NDb_ESeason( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESeason>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESeason eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESeason ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESeason( szValue ); }
+	static std::string ToString( NDb::ESeason eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESeason ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESeason( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EDayNight eValue );
-	EDayNight StringToEnum_NDb_EDayNight( const string &szValue );
+	std::string EnumToString( NDb::EDayNight eValue );
+	EDayNight StringToEnum_NDb_EDayNight( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EDayNight>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EDayNight eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EDayNight ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDayNight( szValue ); }
+	static std::string ToString( NDb::EDayNight eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EDayNight ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDayNight( szValue ); }
 };
 

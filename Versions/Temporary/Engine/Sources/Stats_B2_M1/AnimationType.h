@@ -59,15 +59,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EAnimationType eValue );
-	EAnimationType StringToEnum_NDb_EAnimationType( const string &szValue );
+	std::string EnumToString( NDb::EAnimationType eValue );
+	EAnimationType StringToEnum_NDb_EAnimationType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EAnimationType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EAnimationType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EAnimationType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAnimationType( szValue ); }
+	static std::string ToString( NDb::EAnimationType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EAnimationType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EAnimationType( szValue ); }
 };
 

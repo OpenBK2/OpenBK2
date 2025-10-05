@@ -7,8 +7,10 @@
 #include "Misc/StrProc.h"
 #include "UIFactory.h"
 #include "SceneClassIDs.h"
-#include "Misc/nalgoritm.h"
 #include "Input/GameMessage.h"
+
+#include <algorithm>
+
 #ifndef _FINALRELEASE
 #define CONSOLE_BUFFER_LOG(n,s)	WriteToPipe( n, s )
 #define CONSOLE_BUFFER_LOG1(n,s,c)	WriteToPipe( n, s, c )

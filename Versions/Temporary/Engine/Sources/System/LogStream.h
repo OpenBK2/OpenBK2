@@ -19,19 +19,20 @@ enum EConsoleColor
 
 class SYSTEM_EXPORT CLogStream
 {
-	wstring wsStreamBuffer;
+	std::wstring wsStreamBuffer;
 	const int nStream;
 public:
 	CLogStream( const int _nStream ): nStream( _nStream )	{}
-		
+
+	CLogStream& operator<< ( const std::size_t &n );
 	CLogStream& operator<< ( const int &n );
 	CLogStream& operator<< ( const long &l );
 	CLogStream& operator<< ( const double &d );
 	CLogStream& operator<< ( const bool &bVal );
 	CLogStream& operator<< ( const char* szText );
 	CLogStream& operator<< ( const wchar_t* szText );
-	CLogStream& operator<< ( const wstring &szText );
-	CLogStream& operator<< ( const string &szText ) { operator<<(szText.c_str()); return *this; }
+	CLogStream& operator<< ( const std::wstring &szText );
+	CLogStream& operator<< ( const std::string &szText ) { operator<<(szText.c_str()); return *this; }
 	CLogStream& operator<< ( const EConsoleColor &eColor );
 	
 	CLogStream& operator<< ( CLogStream& (*Func)( CLogStream& csStream ) );
@@ -43,9 +44,9 @@ struct SConsoleLine
 	const int nStream;
 
 	bool bCommand;
-	wstring szText;
+	std::wstring szText;
 	
-	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const wstring &_szText )
+	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const std::wstring &_szText )
 		: nID( _nID ), nStream( _nStream ), bCommand( _bCommand ), szText( _szText ) {}
 };
 

@@ -63,7 +63,7 @@ bool CDecalFader::Update( void *p )
 
 	const float fVal = GetFadeValue( tCurrent );
 
-	vector<CMObj<CObjectBase> > &decals = pDecal->GetDecals();
+	std::vector<CMObj<CObjectBase> > &decals = pDecal->GetDecals();
 	for ( int i = 0; i < decals.size(); ++i )
 	{
 		CDynamicCast<ISomePart> pPart = decals[i];

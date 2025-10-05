@@ -31,7 +31,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 				{
 					// unload passengers
 
-					hash_map<int, bool> formations;
+					std::unordered_map<int, bool> formations;
 					for ( int i = 0; i < pUnit->GetNPassengers(); ++i )
 					{
 						CSoldier *pPass = pUnit->GetPassenger( i );
@@ -42,7 +42,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 					int nTowedGunCrewID = -1;
 					if ( pUnit->GetTowedArtillery() && pUnit->GetTowedArtillery()->GetCrew() )
 						nTowedGunCrewID = pUnit->GetTowedArtillery()->GetCrew()->GetUniqueId();
-					for ( hash_map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
+					for ( std::unordered_map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
 					{
 						if ( it->first != nTowedGunCrewID )
 						{

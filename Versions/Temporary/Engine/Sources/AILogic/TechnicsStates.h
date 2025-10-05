@@ -52,7 +52,7 @@ class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelpe
 
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
-	list<SObjTileInfo> tiles;											// locked tiles under tank pit that being built
+	std::list<SObjTileInfo> tiles;											// locked tiles under tank pit that being built
 	CVec2 vHalfSize;											// half size of tank pit
 	CDBPtr<SMechUnitRPGStats> pStats;		// stats of tank pit
 	int nDBIndex;													// db index of tank pit

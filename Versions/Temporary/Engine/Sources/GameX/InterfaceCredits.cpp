@@ -11,12 +11,12 @@
 
 #include <zconf.h>
 
-bool CInterfaceCredits::CReactions::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceCredits::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
 
-int CInterfaceCredits::CReactions::Check( const string &szCheckName ) const
+int CInterfaceCredits::CReactions::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

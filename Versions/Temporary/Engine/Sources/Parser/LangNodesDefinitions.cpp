@@ -13,7 +13,7 @@ namespace NLang
 template <typename T>
 struct SListOperations
 {
-	typedef list< CPtr<T> > TList;
+	typedef std::list< CPtr<T> > TList;
 	static TList emptyList;
 
 	typename TList::const_iterator	Begin( CNodesList<T> *pNodesList )
@@ -45,9 +45,9 @@ CNamespace::TLangNodeIter CNamespace::DefsEnd() const
 	return insideDefs.end();
 }
 
-CAttributeDefNode* CNamespace::FindInsideAttrDef( const string &szAttrDef )
+CAttributeDefNode* CNamespace::FindInsideAttrDef( const std::string &szAttrDef )
 {
-	hash_map<string, CObj<CAttributeDefNode> >::iterator iter = insideAttrs.find( szAttrDef );
+	std::unordered_map<std::string, CObj<CAttributeDefNode> >::iterator iter = insideAttrs.find( szAttrDef );
 	return iter == insideAttrs.end() ? 0 : iter->second;
 }
 
@@ -57,9 +57,9 @@ void CNamespace::AddInsideAttrDef( CAttributeDefNode *pAttrDefNode )
 	insideDefList.push_back( pAttrDefNode );
 }
 
-CTypeNode* CNamespace::FindForward( const string &szTypeName )
+CTypeNode* CNamespace::FindForward( const std::string &szTypeName )
 {
-	hash_map<string, list< CObj<CTypeNode> > >::iterator iter = insideForwards.find( szTypeName );
+	std::unordered_map<std::string, std::list< CObj<CTypeNode> > >::iterator iter = insideForwards.find( szTypeName );
 	return iter == insideForwards.end() ? 0 : iter->second.back();
 }
 
@@ -81,15 +81,15 @@ void CNamespace::AddInsideDef( CLangNode *pNode )
 	insideDefList.push_back( pNode );
 }
 
-CLangNode* CNamespace::FindInsideDef( const string &szDefName )
+CLangNode* CNamespace::FindInsideDef( const std::string &szDefName )
 {
-	hash_map<string, CObj<CLangNode> >::iterator iter = insideDefs.find( szDefName );
+	std::unordered_map<std::string, CObj<CLangNode> >::iterator iter = insideDefs.find( szDefName );
 	if ( iter == insideDefs.end() )
 	{
 		if ( pVisibleTypes )
 		{
-			list< CPtr<CComplexTypeNode> > &visTypes = pVisibleTypes->GetNodes();
-			for ( list< CPtr<CComplexTypeNode> >::iterator iter = visTypes.begin(); iter != visTypes.end(); ++iter )
+			std::list< CPtr<CComplexTypeNode> > &visTypes = pVisibleTypes->GetNodes();
+			for ( std::list< CPtr<CComplexTypeNode> >::iterator iter = visTypes.begin(); iter != visTypes.end(); ++iter )
 			{
 				CComplexTypeNode *pTypeNode = *iter;
 				if ( pTypeNode->GetName() == szDefName )
@@ -110,14 +110,14 @@ CLangNode* CNamespace::FindInsideDef( const string &szDefName )
     return iter->second;
 }
 
-void CNamespace::MergeFiles( CNamespace *pNM, const string &szFileName )
+void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 {
 	if ( files.find( szFileName ) != files.end() )
 		return;
 	// merge insideDefs
-	for ( hash_map<string, CObj<CLangNode> >::iterator iter = pNM->insideDefs.begin(); iter != pNM->insideDefs.end(); ++iter )
+	for ( std::unordered_map<std::string, CObj<CLangNode> >::iterator iter = pNM->insideDefs.begin(); iter != pNM->insideDefs.end(); ++iter )
 	{
-		const string &szDefName = iter->first;
+		const std::string &szDefName = iter->first;
 		CLangNode *pNode = iter->second;
 		if ( files.find( pNode->GetFile() ) != files.end() )
 			continue;
@@ -141,9 +141,9 @@ void CNamespace::MergeFiles( CNamespace *pNM, const string &szFileName )
 	}
 
 	// merge insideAttrs
-	for ( hash_map<string, CObj<CAttributeDefNode> >::iterator iter = pNM->insideAttrs.begin(); iter != pNM->insideAttrs.end(); ++iter )
+	for ( std::unordered_map<std::string, CObj<CAttributeDefNode> >::iterator iter = pNM->insideAttrs.begin(); iter != pNM->insideAttrs.end(); ++iter )
 	{
-		const string szAttrrDefName = iter->first;
+		const std::string szAttrrDefName = iter->first;
 		CAttributeDefNode *pAttr = iter->second;
 
 		if ( files.find( pAttr->GetFile() ) != files.end() )
@@ -160,15 +160,15 @@ void CNamespace::MergeFiles( CNamespace *pNM, const string &szFileName )
 	}
 
 	// merge insideForwards
-	for ( hash_map<string, list< CObj<CTypeNode> > >::iterator iter = pNM->insideForwards.begin(); iter != pNM->insideForwards.end(); ++iter )
+	for ( std::unordered_map<std::string, std::list< CObj<CTypeNode> > >::iterator iter = pNM->insideForwards.begin(); iter != pNM->insideForwards.end(); ++iter )
 	{
-		const string szForwardName = iter->first;
-		list< CObj<CTypeNode> > &forwList = iter->second;
+		const std::string szForwardName = iter->first;
+		std::list< CObj<CTypeNode> > &forwList = iter->second;
 		VERIFY( !forwList.empty(), "empty forwards list", return );
 
 		if ( insideForwards.find( szForwardName ) != insideForwards.end() )
 		{
-			list< CObj<CTypeNode> > &ourForwList = insideForwards[szForwardName];
+			std::list< CObj<CTypeNode> > &ourForwList = insideForwards[szForwardName];
 			VERIFY_NOLINE( !ourForwList.empty(), "empty forwards list", return );
 
 			CTypeNode *pType = forwList.front();
@@ -181,9 +181,9 @@ void CNamespace::MergeFiles( CNamespace *pNM, const string &szFileName )
 											return );
 		}
 
-		list< CObj<CTypeNode> > &ourForwList = insideForwards[szForwardName];
-		list< CObj<CTypeNode> > forwToMerge;
-		for ( list< CObj<CTypeNode> >::iterator forwardIter = forwList.begin(); forwardIter != forwList.end(); ++forwardIter )
+		std::list< CObj<CTypeNode> > &ourForwList = insideForwards[szForwardName];
+		std::list< CObj<CTypeNode> > forwToMerge;
+		for ( std::list< CObj<CTypeNode> >::iterator forwardIter = forwList.begin(); forwardIter != forwList.end(); ++forwardIter )
 		{
 			CTypeNode *pNode = *forwardIter;
 			if ( files.find( pNode->GetFile() ) == files.end() )
@@ -193,7 +193,7 @@ void CNamespace::MergeFiles( CNamespace *pNM, const string &szFileName )
 	}
 
 	files.insert( szFileName );
-	for ( hash_set<string>::iterator iter = pNM->files.begin(); iter != pNM->files.end(); ++iter )
+	for ( std::unordered_set<std::string>::iterator iter = pNM->files.begin(); iter != pNM->files.end(); ++iter )
 		files.insert( *iter );
 }
 
@@ -201,8 +201,8 @@ void CNamespace::ResolveForwards()
 {
 	for ( TForwards::iterator iter = insideForwards.begin(); iter != insideForwards.end(); ++iter )
 	{
-		const string &szName = iter->first;
-		list< CObj<CTypeNode> > &forwards = iter->second;
+		const std::string &szName = iter->first;
+		std::list< CObj<CTypeNode> > &forwards = iter->second;
 		NI_VERIFY( !forwards.empty(), "empty forwards", return )
 
 		CTypeNode *pForwardNode = forwards.front();
@@ -220,7 +220,7 @@ void CNamespace::ResolveForwards()
 			pRealType->GetFile().c_str(), pRealType->GetLine() ),
 			return );
 
-		for ( list< CObj<CTypeNode> >::iterator iterList = forwards.begin(); iterList != forwards.end(); ++iterList )
+		for ( std::list< CObj<CTypeNode> >::iterator iterList = forwards.begin(); iterList != forwards.end(); ++iterList )
 		{
 			CTypeNode *pForwardNode = *iterList;
 			pForwardNode->SetRealType( pRealType );
@@ -228,11 +228,11 @@ void CNamespace::ResolveForwards()
 	}
 }
 
-CEnumEntryNode* CNamespace::FindEnumEntry( const string &szEnumEntry ) const
+CEnumEntryNode* CNamespace::FindEnumEntry( const std::string &szEnumEntry ) const
 {
-	for ( hash_map<string, CObj<CLangNode> >::const_iterator iter = insideDefs.begin(); iter != insideDefs.end(); ++iter )
+	for ( std::unordered_map<std::string, CObj<CLangNode> >::const_iterator iter = insideDefs.begin(); iter != insideDefs.end(); ++iter )
 	{
-		const string &szDefName = iter->first;
+		const std::string &szDefName = iter->first;
 		CLangNode *pDef = iter->second;
 
 		CDynamicCast<CEnumNode> pEnumNode = pDef;
@@ -362,10 +362,10 @@ CEnumNode::TAttrIter CEnumNode::AttrEnd() const
 	return SListOperations<CAttributeNode>().End( pAttrList );
 }
 
-CEnumEntryNode* CEnumNode::GetEnumEntry( const string &szEntryName ) const
+CEnumEntryNode* CEnumNode::GetEnumEntry( const std::string &szEntryName ) const
 {
-	const list< CPtr<CEnumEntryNode> > &entries = pEntriesList->GetNodes();
-	for ( list< CPtr<CEnumEntryNode> >::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
+	const std::list< CPtr<CEnumEntryNode> > &entries = pEntriesList->GetNodes();
+	for ( std::list< CPtr<CEnumEntryNode> >::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
 	{
 		CEnumEntryNode *pEntry = *iter;
 		if ( pEntry->GetName() == szEntryName )
@@ -377,8 +377,8 @@ CEnumEntryNode* CEnumNode::GetEnumEntry( const string &szEntryName ) const
 
 CEnumEntryNode* CEnumNode::FindAnyWithCrossedEntries( CNamespace *pNM ) const
 {
-	const list< CPtr<CEnumEntryNode> > &entries = pEntriesList->GetNodes();
-	for ( list< CPtr<CEnumEntryNode> >::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
+	const std::list< CPtr<CEnumEntryNode> > &entries = pEntriesList->GetNodes();
+	for ( std::list< CPtr<CEnumEntryNode> >::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
 	{
 		CEnumEntryNode *pEntry = *iter;
 		CEnumEntryNode *pEntryInNM = pNM->FindEnumEntry( pEntry->GetName() );

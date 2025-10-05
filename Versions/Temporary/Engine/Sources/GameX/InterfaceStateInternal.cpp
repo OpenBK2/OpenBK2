@@ -24,7 +24,7 @@ class CCustomMLHandler: public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CCustomMLHandler );
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 REGISTER_SAVELOAD_CLASS( 0x300C8D43, CCampaignState )
@@ -40,9 +40,9 @@ IInterfaceState* CreateInterfaceState()
 
 struct SScreenEntryEqual
 {
-	string szName;
+	std::string szName;
 	
-	SScreenEntryEqual( const string &_szName ) { szName = _szName; }
+	SScreenEntryEqual( const std::string &_szName ) { szName = _szName; }
 	bool operator()( const NDb::SUIScreenEntry &value ) const
 	{
 		return szName == value.szType;
@@ -51,9 +51,9 @@ struct SScreenEntryEqual
 
 struct STextEntryEqual
 {
-	string szTextID;
+	std::string szTextID;
 	
-	STextEntryEqual( const string &_szTextID ) { szTextID = _szTextID; }
+	STextEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
 	bool operator()( const CDBPtr< NDb::STextEntry > &value ) const
 	{
 		NI_VERIFY( value, "NULL text entry find", return false );
@@ -63,9 +63,9 @@ struct STextEntryEqual
 
 struct STagEntryEqual
 {
-	string szName;
+	std::string szName;
 	
-	STagEntryEqual( const string &_szName ) { szName = _szName; }
+	STagEntryEqual( const std::string &_szName ) { szName = _szName; }
 	bool operator()( const NDb::SMLTag &value ) const
 	{
 		return szName == value.szName;
@@ -74,9 +74,9 @@ struct STagEntryEqual
 
 struct SSoundEntryEqual
 {
-	string szTextID;
+	std::string szTextID;
 	
-	SSoundEntryEqual( const string &_szTextID ) { szTextID = _szTextID; }
+	SSoundEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
 	bool operator()( const NDb::SUISoundEntry &value ) const
 	{
 		return szTextID == value.szType;
@@ -85,9 +85,9 @@ struct SSoundEntryEqual
 
 struct STextureEntryEqual
 {
-	string szID;
+	std::string szID;
 	
-	STextureEntryEqual( const string &_szID ) { szID = _szID; }
+	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
 	bool operator()( const NDb::SUITextureEntry &value ) const
 	{
 		return szID == value.szTextID;
@@ -108,18 +108,18 @@ const CDBID &CCampaignState::GetDBID() const
 	return dbidCampaign;
 }
 
-string CCampaignState::GetProfileVarAbbr( const string &szName ) const
+std::string CCampaignState::GetProfileVarAbbr( const std::string &szName ) const
 {
 	return StrFmt( "Campaign.%s.%s", dbidCampaign.ToString().c_str(), szName.c_str() );
 }
 
-int CCampaignState::GetProfileVar( const string &szName, const int nDefault ) const
+int CCampaignState::GetProfileVar( const std::string &szName, const int nDefault ) const
 {
 	int nValue = NGlobal::GetVar( GetProfileVarAbbr( szName ), nDefault );
 	return nValue;
 }
 
-void CCampaignState::SetProfileVar( const string &szName, const int nValue )
+void CCampaignState::SetProfileVar( const std::string &szName, const int nValue )
 {
 	NGlobal::SetVar( GetProfileVarAbbr( szName ), nValue, STORAGE_USER );
 }
@@ -174,7 +174,7 @@ void CInterfaceState::InitForbiddenWords()
 	bForbiddenWordsInitialized = true;
 
 	wszForbiddenReplacement = FORBIDDEN_REPLACEMENT;
-	wstring wszForbiddenWords;
+	std::wstring wszForbiddenWords;
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( pUIConsts )
 	{
@@ -191,9 +191,9 @@ void CInterfaceState::InitForbiddenWords()
 			continue;
 		}
 		int nFound = wszForbiddenWords.find( 0x0d, nPos );
-		if ( nFound == wstring::npos )
+		if ( nFound == std::wstring::npos )
 			nFound = wszForbiddenWords.size();
-		wstring wszWord = wszForbiddenWords.substr( nPos, nFound - nPos );
+		std::wstring wszWord = wszForbiddenWords.substr( nPos, nFound - nPos );
 		nPos = nFound;
 		while ( !wszWord.empty() && wszWord[wszWord.size() - 1] == L' ' )
 		{
@@ -218,7 +218,7 @@ const NDb::SUIConstsB2* CInterfaceState::GetUIConsts() const
 	return pUIConsts;
 }
 
-CDBID CInterfaceState::GetScreenEntryDBID( const string &szName ) const
+CDBID CInterfaceState::GetScreenEntryDBID( const std::string &szName ) const
 {
 //	const int nID = NGlobal::GetVar( ("screenID_" + szName).c_str(), -1 );
 //	if ( nID != -1 )
@@ -229,10 +229,10 @@ CDBID CInterfaceState::GetScreenEntryDBID( const string &szName ) const
 	return CDBID();
 }
 
-const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const string &szName ) const
+const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const std::string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	vector<NDb::SUIScreenEntry>::const_iterator it = find_if( pGameRoot->screens.begin(), pGameRoot->screens.end(), 
+	std::vector<NDb::SUIScreenEntry>::const_iterator it = find_if( pGameRoot->screens.begin(), pGameRoot->screens.end(),
 		SScreenEntryEqual( szName ) );
 	if ( it != pGameRoot->screens.end() )
 	{
@@ -243,24 +243,24 @@ const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const string &szName
 	return 0;
 }
 
-const wstring& CInterfaceState::GetTextEntry( const string &szTextID ) const
+const std::wstring& CInterfaceState::GetTextEntry( const std::string &szTextID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	vector< CDBPtr< NDb::STextEntry > >::const_iterator it = find_if( pGameRoot->textEntries.begin(), pGameRoot->textEntries.end(), 
+	std::vector< CDBPtr< NDb::STextEntry > >::const_iterator it = find_if( pGameRoot->textEntries.begin(), pGameRoot->textEntries.end(),
 		STextEntryEqual( szTextID ) );
 	if ( it != pGameRoot->textEntries.end() )
 	{
 		return GET_TEXT_PRE( (*it)->,Text);
 	}
 	NI_ASSERT( 0, StrFmt( "text entry '%s' not found", szTextID.c_str() ) );
-	static wstring empty;
+	static std::wstring empty;
 	return empty;
 }
 
-const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const string &szName ) const
+const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const std::string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	vector<NDb::SUISoundEntry>::const_iterator it = find_if( pGameRoot->sounds.begin(), pGameRoot->sounds.end(), 
+	std::vector<NDb::SUISoundEntry>::const_iterator it = find_if( pGameRoot->sounds.begin(), pGameRoot->sounds.end(),
 		SSoundEntryEqual( szName ) );
 	if ( it != pGameRoot->sounds.end() )
 	{
@@ -270,10 +270,10 @@ const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const string &szNa
 	return 0;
 }
 
-const NDb::STexture* CInterfaceState::GetTextureEntry( const string &szID ) const
+const NDb::STexture* CInterfaceState::GetTextureEntry( const std::string &szID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	vector<NDb::SUITextureEntry>::const_iterator it = find_if( pGameRoot->textures.begin(), pGameRoot->textures.end(), 
+	std::vector<NDb::SUITextureEntry>::const_iterator it = find_if( pGameRoot->textures.begin(), pGameRoot->textures.end(),
 		STextureEntryEqual( szID ) );
 	if ( it != pGameRoot->textures.end() )
 	{
@@ -283,15 +283,15 @@ const NDb::STexture* CInterfaceState::GetTextureEntry( const string &szID ) cons
 	return 0;
 }
 
-const wstring& CInterfaceState::GetMLTag( const wstring &wszName ) const
+const std::wstring& CInterfaceState::GetMLTag( const std::wstring &wszName ) const
 {
-	static wstring empty;
+	static std::wstring empty;
 
-	string szName = NStr::ToMBCS( wszName );
+	std::string szName = NStr::ToMBCS( wszName );
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
 		return empty;
-	vector<NDb::SMLTag>::const_iterator it = find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(), 
+	std::vector<NDb::SMLTag>::const_iterator it = find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(),
 		STagEntryEqual( szName ) );
 	if ( it != pUIConsts->tags.end() )
 	{
@@ -302,14 +302,14 @@ const wstring& CInterfaceState::GetMLTag( const wstring &wszName ) const
 	return empty;
 }
 
-const wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const
+const std::wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const
 {
-	static wstring wszEmpty;
+	static std::wstring wszEmpty;
 
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
 		return wszEmpty;
-	for ( vector< NDb::SMPLocalizedGameType >::const_iterator it = pUIConsts->mPLocalizedGameTypes.begin();
+	for ( std::vector< NDb::SMPLocalizedGameType >::const_iterator it = pUIConsts->mPLocalizedGameTypes.begin();
 		it != pUIConsts->mPLocalizedGameTypes.end(); ++it )
 	{
 		const NDb::SMPLocalizedGameType &gameType = *it;
@@ -323,9 +323,9 @@ const wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) con
 	return wszEmpty;
 }
 
-wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
+std::wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 {
-	wstring wszEmpty;
+	std::wstring wszEmpty;
 
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
@@ -336,7 +336,7 @@ wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 		const NDb::SUIConstsB2::SSeasonName &season = pUIConsts->seasonNames[i];
 		if ( season.eSeason == eSeason )
 		{
-			wstring wszName;
+			std::wstring wszName;
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(season.,Name) )
 				wszName = GET_TEXT_PRE(season.,Name);
 			return wszName;
@@ -346,14 +346,14 @@ wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 	return wszEmpty;
 }
 
-wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const
+std::wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const
 {
-	wstring wszEmpty;
+	std::wstring wszEmpty;
 
 	if ( !pMapInfo )
 		return wszEmpty; 
 		
-	wstring wszSize = NStr::ToUnicode( StrFmt( "%dx%d", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
+	std::wstring wszSize = NStr::ToUnicode( StrFmt( "%dx%d", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
 	return wszSize;
 }
 
@@ -411,23 +411,23 @@ void CInterfaceState::SetMissionConsoleColor( DWORD dwColor )
 	dwMissionChatColor = dwColor;
 }
 
-void CInterfaceState::WriteToMissionConsole( const wstring &wszText )
+void CInterfaceState::WriteToMissionConsole( const std::wstring &wszText )
 {
 	WriteToPipe( PIPE_CHAT, wszText, dwMissionChatColor );
 }
 
-void CInterfaceState::WriteToMissionConsoleSelected( const wstring &wszText )
+void CInterfaceState::WriteToMissionConsoleSelected( const std::wstring &wszText )
 {
 	WriteToPipe( PIPE_CHAT, wszText, 0xFFFF0000 );
 }
 
-wstring CInterfaceState::GetMissionConsoleMLTag() const
+std::wstring CInterfaceState::GetMissionConsoleMLTag() const
 {
-	wstring wszText = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwMissionChatColor ) );
+	std::wstring wszText = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwMissionChatColor ) );
 	return wszText;
 }
 
-void CInterfaceState::SendCommandsToCloseAllIncluding( const string &szInterfaceID )
+void CInterfaceState::SendCommandsToCloseAllIncluding( const std::string &szInterfaceID )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
 	{
@@ -457,26 +457,26 @@ void CInterfaceState::SendCommandsToBringOnTop( IInterfaceBase * pNewTop )
 struct SVar
 {
 	ZDATA
-	string szName;
+	std::string szName;
 	NGlobal::CValue value;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&value); return 0; }
 	
 	SVar() {}
-	SVar( const string &_szName, const NGlobal::CValue &_value ) :
+	SVar( const std::string &_szName, const NGlobal::CValue &_value ) :
 		szName( _szName ), value( _value ) {}
 };
 
 void CInterfaceState::OnSerialize( IBinSaver &saver )
 {
-	vector< pair<string, NGlobal::CValue> > vars;
-	vector< SVar > vars2; // используем вспомогательный массив, поскольку vector< pair<> > сериализовать нельзя
+	std::vector< std::pair<std::string, NGlobal::CValue> > vars;
+	std::vector< SVar > vars2; // используем вспомогательный массив, поскольку vector< pair<> > сериализовать нельзя
 	if ( !saver.IsReading() )
 	{
 		NGlobal::GetVarsByClass( &vars, STORAGE_SAVE );
 		vars2.reserve( vars.size() );
-		for ( vector< pair<string, NGlobal::CValue> >::const_iterator it = vars.begin(); it != vars.end(); ++it )
+		for ( std::vector< std::pair<std::string, NGlobal::CValue> >::const_iterator it = vars.begin(); it != vars.end(); ++it )
 		{
-			const pair<string, NGlobal::CValue> var = *it;
+			const std::pair<std::string, NGlobal::CValue> var = *it;
 			vars2.push_back( SVar( var.first, var.second ) );
 		}
 	}
@@ -486,7 +486,7 @@ void CInterfaceState::OnSerialize( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 		NGlobal::ResetVarsToDefault( STORAGE_SAVE );
-		for ( vector< SVar >::const_iterator it = vars2.begin(); it != vars2.end(); ++it  )
+		for ( std::vector< SVar >::const_iterator it = vars2.begin(); it != vars2.end(); ++it  )
 		{
 			const SVar &var = *it;
 			NGlobal::SetVar( var.szName, var.value, STORAGE_SAVE );
@@ -576,9 +576,9 @@ const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 	return pBackground;
 }
 
-wstring CInterfaceState::GetRandomCitation()
+std::wstring CInterfaceState::GetRandomCitation()
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
 	{
 		NWin32Random::Seed( GetTickCount() );
@@ -589,7 +589,7 @@ wstring CInterfaceState::GetRandomCitation()
 	return wszText;
 }
 
-int CInterfaceState::GetAndRegisterIDForMLHandler( const vector< pair<wstring, wstring> > &params )
+int CInterfaceState::GetAndRegisterIDForMLHandler( const std::vector< std::pair<std::wstring, std::wstring> > &params )
 {
 	int nID;
 	if ( !freeIDsForMLHandler.empty() )
@@ -612,22 +612,22 @@ void CInterfaceState::UnregisterIDForMLHandler( int nID )
 		freeIDsForMLHandler.push_back( nID );
 }
 
-const wstring& CInterfaceState::ExpandMLTag( const wstring &wszTag, int nIDForHandler ) const
+const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const
 {
 	if ( !wszTag.empty() && wszTag[0] == L'%' )
 	{
 		if ( nIDForHandler >= 0 )
 		{
-			wstring wszDynamicTag = wszTag.substr( 1 );
+			std::wstring wszDynamicTag = wszTag.substr( 1 );
 			
 			if ( !wszDynamicTag.empty() )
 			{
-				const vector< pair<wstring, wstring> > &params = GetParamsForMLHandler( nIDForHandler );
+				const std::vector< std::pair<std::wstring, std::wstring> > &params = GetParamsForMLHandler( nIDForHandler );
 
 				// find tag by name
 				for ( int i = 0; i < params.size(); ++i )
 				{
-					const pair<wstring, wstring> &param = params[i];
+					const std::pair<std::wstring, std::wstring> &param = params[i];
 					if ( param.first == wszDynamicTag )
 						return param.second;
 				}
@@ -639,41 +639,41 @@ const wstring& CInterfaceState::ExpandMLTag( const wstring &wszTag, int nIDForHa
 			}
 		}
 #ifdef _FINALRELEASE
-		static wstring wszEmpty;
+		static std::wstring wszEmpty;
 		return wszEmpty;
 #else
 		// can't use NI_ASSERT for dynamic tags
-		static wstring wszUndefined;
+		static std::wstring wszUndefined;
 		wszUndefined = wszTag;
 		return wszUndefined;
 #endif //_FINALRELEASE
 	}
 	
-	const wstring &wszText = GetMLTag( wszTag );
+	const std::wstring &wszText = GetMLTag( wszTag );
 	return wszText;
 }
 
-const vector< pair<wstring, wstring> >& CInterfaceState::GetParamsForMLHandler( int nID ) const
+const std::vector< std::pair<std::wstring, std::wstring> >& CInterfaceState::GetParamsForMLHandler( int nID ) const
 {
-	static vector< pair<wstring, wstring> > emptyParams;
+	static std::vector< std::pair<std::wstring, std::wstring> > emptyParams;
 
 	CParamsForMLHandler::const_iterator it = paramsForMLHandler.find( nID );
 	if ( it != paramsForMLHandler.end() )
 	{
-		const vector< pair<wstring, wstring> > &params = it->second;
+		const std::vector< std::pair<std::wstring, std::wstring> > &params = it->second;
 		return params;
 	}
 	return emptyParams;
 }
 
-void CInterfaceState::AddMPChatMessage( const wstring &wszText )
+void CInterfaceState::AddMPChatMessage( const std::wstring &wszText )
 {
 	mpChatMessages.push_back( wszText );
 }
 
-wstring CInterfaceState::GetMPChatMessage()
+std::wstring CInterfaceState::GetMPChatMessage()
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( !mpChatMessages.empty() )
 	{
 		wszText = mpChatMessages.front();
@@ -687,14 +687,14 @@ void CInterfaceState::ClearMPChatMessages()
 	mpChatMessages.clear();
 }
 
-wstring CInterfaceState::FilterMPChatText( const wstring &_wszText )
+std::wstring CInterfaceState::FilterMPChatText( const std::wstring &_wszText )
 {
 	InitForbiddenWords();
 
-	wstring wszText = _wszText;
-	string szText = NStr::ToMBCS( wszText );
+	std::wstring wszText = _wszText;
+	std::string szText = NStr::ToMBCS( wszText );
 	NStr::ToLower( &szText );
-	const wstring wszTextLow = NStr::ToUnicode( szText );
+	const std::wstring wszTextLow = NStr::ToUnicode( szText );
 	int nPos = 0;
 	while ( nPos < wszText.size() )
 	{
@@ -702,7 +702,7 @@ wstring CInterfaceState::FilterMPChatText( const wstring &_wszText )
 		bool bReplaced = false;
 		for ( int i = 0; i < forbiddenWords.size(); ++i )
 		{
-			const wstring &wszForbiddenWord = forbiddenWords[i];
+			const std::wstring &wszForbiddenWord = forbiddenWords[i];
 			if ( nTailSize >= wszForbiddenWord.size() )
 			{
 				if ( memcmp( &wszForbiddenWord[0], &wszTextLow[nPos], wszForbiddenWord.size() * sizeof( wchar_t ) ) == 0 )
@@ -711,7 +711,7 @@ wstring CInterfaceState::FilterMPChatText( const wstring &_wszText )
 					int nForbiddenCount = wszForbiddenWord.size();
 					while ( nForbiddenCount > 0 )
 					{
-						int nCount = Min( nForbiddenCount, wszForbiddenReplacement.size() );
+						int nCount = Min<int>( nForbiddenCount, wszForbiddenReplacement.size() );
 						memcpy( &wszText[nPos], &wszForbiddenReplacement[0], nCount * sizeof( wchar_t ) );
 						nPos += nCount;
 						nForbiddenCount -= nCount;
@@ -744,24 +744,24 @@ void CInterfaceState::ApplyTutorialRecommendedMission()
 
 // CCustomMLHandler
 
-void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
-	vector<wstring>::const_iterator it = paramsSet.begin();
+	std::vector<std::wstring>::const_iterator it = paramsSet.begin();
 	if ( it == paramsSet.end() )
 		return;
 	++it;
-	wstring wszName;
+	std::wstring wszName;
 	for ( ; it != paramsSet.end(); ++it )
 	{
 		wszName += *it;
 	}
-	const wstring &wszText = InterfaceState()->ExpandMLTag( wszName, pIML->GetIDForHandler() );
+	const std::wstring &wszText = InterfaceState()->ExpandMLTag( wszName, pIML->GetIDForHandler() );
 	if ( !wszText.empty() )
 		pIML->GetStream()->InsertString( wszText );
 }
 
 
-static int GetDifficultyFromName( const string &szName )
+static int GetDifficultyFromName( const std::string &szName )
 {
 	if ( NStr::IsDecNumber(szName) )
 		return NStr::ToInt( szName );
@@ -777,9 +777,9 @@ static int GetDifficultyFromName( const string &szName )
 		return 0;	// default = easy
 }
 
-int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex, const string &_szMissionName )
+int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex, const std::string &_szMissionName )
 {
-	string szMissionName = _szMissionName;
+	std::string szMissionName = _szMissionName;
 	NStr::TrimBoth( szMissionName, '\"' );
 	//
 	if ( NStr::IsDecNumber(szMissionName) )
@@ -801,15 +801,15 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 	return 0;
 }
 
-CDBID GetCampaignDBIDFromName( const string &_szName )
+CDBID GetCampaignDBIDFromName( const std::string &_szName )
 {
-	string szName = _szName;
+	std::string szName = _szName;
 	NStr::TrimBoth( szName, '\"' );
 	NI_VERIFY( !NStr::IsDecNumber(szName), "Deprecated way to identify resource! Use DBID instead!", return CDBID() );
 	return CDBID( szName );
 }
 
-void StartSingleMission( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void StartSingleMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NI_VERIFY( paramsSet.size() >= 3, "Not enough params for 'mission' commmand (mission <campaign_id> <chapter number 0..> <mission number 0..> [<difficulty level 0..>])", return );
 

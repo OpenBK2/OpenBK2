@@ -236,9 +236,9 @@ public:
 	//
 	bool HasRegisters() const { return targetMode == RTM_REGISTERS; }
 	// functions to be used in effect initialisation
-	void SetPixelShader( const string &szName );
+	void SetPixelShader( const std::string &szName );
 	void SetPixelShader( const SPShader &pShader );
-	void SetVertexShader( const string &szName );
+	void SetVertexShader( const std::string &szName );
 	void SetVertexShader( const SVShader &pShader );
 
 

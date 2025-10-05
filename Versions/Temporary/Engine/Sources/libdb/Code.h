@@ -25,11 +25,11 @@ struct ICode : public CXmlResource
 		CStrStream hEOF;
 		CStrStream cppEOF;
 
-		SCodeStreams( string *pszHFile, string *pszCPPFile, string *pszHEOFFile, string *pszCPPEOFFile )
+		SCodeStreams( std::string *pszHFile, std::string *pszCPPFile, std::string *pszHEOFFile, std::string *pszCPPEOFFile )
 			: h( pszHFile ), cpp( pszCPPFile ), hEOF( pszHEOFFile ), cppEOF( pszCPPEOFFile ) { }
 	};
 	
-	virtual void GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName ) = 0;
+	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName ) = 0;
 };
 
 }

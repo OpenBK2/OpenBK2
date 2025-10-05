@@ -1,7 +1,7 @@
 #pragma once
 
 
-template <class TID, class TData, class TIDHash = hash<TID> >
+template <class TID, class TData, class TIDHash = std::hash<TID> >
 class CControlSelection
 {
 private:
@@ -12,7 +12,7 @@ private:
 	};
 	//
 public:
-	typedef hash_map<TID, SControlSelectionData, TIDHash> CControlSelectionDataMap;
+	typedef std::unordered_map<TID, SControlSelectionData, TIDHash> CControlSelectionDataMap;
 private:
 	CControlSelectionDataMap controlSelectionDataMap;
 	//

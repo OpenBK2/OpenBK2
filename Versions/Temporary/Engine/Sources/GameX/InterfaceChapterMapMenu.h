@@ -35,8 +35,8 @@ public:
 		}
 		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface ) : 
 			pScreen( _pScreen ), pInterface( _pInterface ) {   }
-		virtual bool Execute( const string &szSender, const string &szReaction );
-		virtual int Check( const string &szCheckName ) const;
+		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
+		virtual int Check( const std::string &szCheckName ) const;
 
 		int operator&( IBinSaver &saver )
 		{
@@ -70,14 +70,14 @@ private:
 		int nRecommendedX;
 		int nRecommendedY;
 		CPtr<IButton> pWindow;
-		vector< CDBPtr<NDb::SChapterBonus> > rewardDescs;
-		vector<SReward> rewards;
+		std::vector< CDBPtr<NDb::SChapterBonus> > rewardDescs;
+		std::vector<SReward> rewards;
 		CPtr<IWindow> pBonusIcon;
 		int nPriority;					// Recommended order of missions
 		CVec2 vEndOffset;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pDBInfo); f.Add(3,&eState); f.Add(4,&nCalls); f.Add(5,&nX); f.Add(6,&nY); f.Add(7,&fValue0); f.Add(8,&fValue1); f.Add(9,&pFlame); f.Add(10,&pCompleted); f.Add(11,&pRecommended); f.Add(12,&nRecommendedX); f.Add(13,&nRecommendedY); f.Add(14,&pWindow); f.Add(15,&rewardDescs); f.Add(16,&rewards); f.Add(17,&pBonusIcon); f.Add(18,&nPriority); f.Add(19,&vEndOffset); return 0; }
 	};
-	typedef vector< STarget > CTargets;
+	typedef std::vector< STarget > CTargets;
 
 	// Simpler reinf button (for mission bonuses and enemy forces)
 	struct SReinfButtonDesc
@@ -92,7 +92,7 @@ private:
 		CPtr<IWindow> pBonusWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pButton); f.Add(3,&pIcon); f.Add(4,&pReinforcement); f.Add(5,&pMechUnit); f.Add(6,&pSquad); f.Add(7,&nQuantity); f.Add(8,&pBonusWnd); return 0; }
 	};
-	typedef vector< SReinfButtonDesc > CReinfButtonList;
+	typedef std::vector< SReinfButtonDesc > CReinfButtonList;
 
 	// More complex reinf button (for active army)
 	struct SReinfRemapItem : public SReinfButtonDesc
@@ -100,11 +100,11 @@ private:
 		ZDATA_( SReinfButtonDesc )
 		CDBPtr<NDb::STexture> pDefaultTexture;
 		CDBPtr<NDb::STexture> pDisabledTexture;
-		wstring wszDefaultTooltip;
+		std::wstring wszDefaultTooltip;
 		CPtr<IWindow> pUnknownWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,( SReinfButtonDesc *)this); f.Add(2,&pDefaultTexture); f.Add(3,&pDisabledTexture); f.Add(4,&wszDefaultTooltip); f.Add(5,&pUnknownWnd); return 0; }
 	};
-	typedef vector< SReinfRemapItem > CReinfRemap;
+	typedef std::vector< SReinfRemapItem > CReinfRemap;
 
 	enum EUIState
 	{
@@ -150,7 +150,7 @@ private:
 	EReinfDescWindowState eReinfDescState;
 	SReinfButtonDesc reinfDescSingleItem;
 	CPtr<IWindow> pReinfDescReinfArea;
-	vector< CDBPtr<NDb::SReinforcement> > oldReinfs;
+	std::vector< CDBPtr<NDb::SReinforcement> > oldReinfs;
 	int nSelectedReinf;
 	int nButtonStep;
 	int nFirstButtonPosX;
@@ -181,9 +181,9 @@ private:
 
 	CReinfRemap reinfButtons;
 
-	wstring wszReinfNotEnabledPrefix;
-	wstring wszReinfDisabledPrefix;
-	wstring wszReinfAvailablePrefix;
+	std::wstring wszReinfNotEnabledPrefix;
+	std::wstring wszReinfDisabledPrefix;
+	std::wstring wszReinfAvailablePrefix;
 
 	EUIState eUIState;
 
@@ -260,12 +260,12 @@ private:
 	void ExpandMap( float fProgress );
 	void UpdateUIState();
 
-	bool OnReinfUpgradeDialogClose( const string &szSender );
-	bool OnReinfUpgradeUnitBtn( const string &szSender );
+	bool OnReinfUpgradeDialogClose( const std::string &szSender );
+	bool OnReinfUpgradeUnitBtn( const std::string &szSender );
 	
-	bool OnChapterDescDlgClose( const string &szSender );
-	bool OnMissionDescDlgClose( const string &szSender );
-	bool OnShowMissionDesc( const string &szSender );
+	bool OnChapterDescDlgClose( const std::string &szSender );
+	bool OnMissionDescDlgClose( const std::string &szSender );
+	bool OnShowMissionDesc( const std::string &szSender );
 	
 	void HideDialogs();
 protected:
@@ -282,17 +282,17 @@ protected:
 	bool OnPlayerStats();
 	bool OnSaveGame();
 	
-	void OnTargetSelect( const string &szSender );
-	bool OnTargetDblClick( const string &szSender );
-	void OnPopupClicked( const string &szSender );
-	bool OnMouseOverReinf( const string &szSender, bool bEnter );
-	bool OnFixBonus( const string &szSender );
+	void OnTargetSelect( const std::string &szSender );
+	bool OnTargetDblClick( const std::string &szSender );
+	void OnPopupClicked( const std::string &szSender );
+	bool OnMouseOverReinf( const std::string &szSender, bool bEnter );
+	bool OnFixBonus( const std::string &szSender );
 
 	// ReinfDesc{
 	void ShowReinfDesc( const NDb::SReinforcement *pReinf );			// Display one reinf
 	void ShowReinfDesc( const NDb::SMechUnitRPGStats *pMech, const NDb::SSquadRPGStats *pSquad );				// Display one enemy
 	void ShowReinfDesc( const NDb::SReinforcement *pReinf, const NDb::SReinforcement *pReinfUpg );			// Display one reinf upgrade
-	void OnReinfDescItem( const string &szSender );		// Reinforcement or unit selected
+	void OnReinfDescItem( const std::string &szSender );		// Reinforcement or unit selected
 	void OnReinfDescOK();
 	void OnReinfDescEncyclopedia();
 	IWindow *GetCurrentReinfDescPopup();
@@ -303,9 +303,9 @@ protected:
 	void ReinfDescScrollLeft();
 	void ReinfDescProcessScroll( const int nStep );
 	void ReinfDescSelectReinf( int nIndex );
-	bool OnTargetOver( const string &szSender );
-	bool OnTargetPushed( const string &szSender );
-	bool OnTargetPushedBack( const string &szSender );
+	bool OnTargetOver( const std::string &szSender );
+	bool OnTargetPushed( const std::string &szSender );
+	bool OnTargetPushedBack( const std::string &szSender );
 	// }ReinfDesc
 
 	// Init{
@@ -321,7 +321,7 @@ protected:
 	int MakeArmyInfo( bool bShow = true );
 	void MakeChapterInfo();
 	void SwitchTargetState( int nTarget, bool bSelected );
-	const wstring MakeTooltip( const NDb::SReinforcement *pReinf );
+	const std::wstring MakeTooltip( const NDb::SReinforcement *pReinf );
 	void ShowAllRewards( bool bShow );
 	void PlayReinfRollerAnim( int _nStart, int _nEnd );
 	void PlayMissionRollerAnim( int _nStart, int _nEnd );

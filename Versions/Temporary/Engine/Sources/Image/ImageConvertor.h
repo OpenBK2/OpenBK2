@@ -87,7 +87,7 @@ class CPaletteConvertor
 };
 template <> class CPaletteConvertor<DWORD>
 {
-	vector<DWORD> palette;
+	std::vector<DWORD> palette;
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
@@ -99,10 +99,10 @@ public:
 				break;
 			case 24:
 				{
-					vector<SColor24> palette24( nColorMapLength );
+					std::vector<SColor24> palette24( nColorMapLength );
 					pStream->Read( &(palette24[0]), sizeof(SColor24) * palette24.size() );
 					palette.reserve( nColorMapLength );
-					for ( vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+					for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
 						palette.push_back( 0xff000000 | (DWORD(it->r) << 16) | (DWORD(it->g) << 8) | DWORD(it->b) );
 				}
 				break;
@@ -116,7 +116,7 @@ public:
 };
 template <> class CPaletteConvertor<SColor24>
 {
-	vector<SColor24> palette;
+	std::vector<SColor24> palette;
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
@@ -124,11 +124,11 @@ public:
 		{
 			case 32:
 				{
-					vector<DWORD> palette32( nColorMapLength );
+					std::vector<DWORD> palette32( nColorMapLength );
 					pStream->Read( &(palette32[0]), sizeof(DWORD) * palette32.size() );
 					palette.resize( nColorMapLength );
 					int i = 0;
-					for ( vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it, ++i )
+					for ( std::vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it, ++i )
 					{
 						palette[i].r = GetR( *it );
 						palette[i].g = GetG( *it );
@@ -150,7 +150,7 @@ public:
 };
 template <> class CPaletteConvertor<BYTE>
 {
-	vector<BYTE> palette;
+	std::vector<BYTE> palette;
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
@@ -158,19 +158,19 @@ public:
 		{
 			case 32:
 				{
-					vector<DWORD> palette32( nColorMapLength );
+					std::vector<DWORD> palette32( nColorMapLength );
 					pStream->Read( &(palette32[0]), sizeof(DWORD) * palette32.size() );
 					palette.reserve( nColorMapLength );
-					for ( vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
+					for ( std::vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
 						palette.push_back( MakeGray(GetR(*it), GetG(*it), GetB(*it)) );
 				}
 				break;
 			case 24:
 				{
-					vector<SColor24> palette24( nColorMapLength );
+					std::vector<SColor24> palette24( nColorMapLength );
 					pStream->Read( &(palette24[0]), sizeof(SColor24) * palette24.size() );
 					palette.reserve( nColorMapLength );
-					for ( vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+					for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
 						palette.push_back( MakeGray(it->r, it->g, it->b) );
 				}
 				break;
@@ -184,7 +184,7 @@ public:
 };
 template <> class CPaletteConvertor<CVec4>
 {
-	vector<CVec4> palette;
+	std::vector<CVec4> palette;
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
@@ -192,19 +192,19 @@ public:
 		{
 			case 32:
 				{
-					vector<DWORD> palette32( nColorMapLength );
+					std::vector<DWORD> palette32( nColorMapLength );
 					pStream->Read( &(palette32[0]), sizeof(DWORD) * palette32.size() );
 					palette.reserve( nColorMapLength );
-					for ( vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
+					for ( std::vector<DWORD>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
 						palette.push_back( CVec4(GetR(*it) / 255.0f, GetG(*it) / 255.0f, GetB(*it) / 255.0f, GetA(*it) / 255.0f) );
 				}
 				break;
 			case 24:
 				{
-					vector<SColor24> palette24( nColorMapLength );
+					std::vector<SColor24> palette24( nColorMapLength );
 					pStream->Read( &(palette24[0]), sizeof(SColor24) * palette24.size() );
 					palette.reserve( nColorMapLength );
-					for ( vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+					for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
 						palette.push_back( CVec4(it->r / 255.0f, it->g / 255.0f, it->b / 255.0f, 1.0f) );
 				}
 				break;
@@ -293,7 +293,7 @@ inline void FlipY( CArray2D<TColor> &data, int nBegin, int nEnd )
 	{
 		for ( int x = 0; x < data.GetSizeX(); ++x )
 		{
-			swap( data[nEnd][x], data[nBegin][x] );
+			std::swap( data[nEnd][x], data[nBegin][x] );
 		}
 		--nEnd;
 		++nBegin;
@@ -313,7 +313,7 @@ inline void FlipX( CArray2D<TColor> &data, int nBegin, int nEnd )
 	{
 		for ( int y = 0; y < data.GetSizeY(); ++y )
 		{
-			swap( data[y][nEnd], data[y][nBegin] );
+			std::swap( data[y][nEnd], data[y][nBegin] );
 		}
 		--nEnd;
 		++nBegin;

@@ -5,25 +5,25 @@ namespace NLog
 
 struct ILogDumper : public CObjectBase
 {
-	virtual void Dump( const wstring &wszString ) = 0;
+	virtual void Dump( const std::wstring &wszString ) = 0;
 };
-ILogDumper *CreateFileDumper( const string &szFullFileName );
+ILogDumper *CreateFileDumper( const std::string &szFullFileName );
 ILogDumper *CreateDebugDumper();
 ILogDumper *CreateAssertDumper();
 
 class CLogger
 {
-	const string szLoggerName;
-	typedef vector<CObj<ILogDumper> > CDumpersList;
+	const std::string szLoggerName;
+	typedef std::vector<CObj<ILogDumper> > CDumpersList;
 	CDumpersList dumpers;
-	wstring wszLogBuffer;
+	std::wstring wszLogBuffer;
 	CLogger *pParent;
 	//
 	CLogger *GetParent() const { return pParent; }
-	const string &GetLoggerLocalName() const { return szLoggerName; }
-	string GetLoggerFullName() const;
+	const std::string &GetLoggerLocalName() const { return szLoggerName; }
+	std::string GetLoggerFullName() const;
 public:
-	CLogger( const string &_szLoggerName, CLogger *_pParent ): szLoggerName( _szLoggerName ), pParent( _pParent ) {}
+	CLogger( const std::string &_szLoggerName, CLogger *_pParent ): szLoggerName( _szLoggerName ), pParent( _pParent ) {}
 	~CLogger() { Dump(); }
 	//
 	CLogger &operator<<( const int nVal );
@@ -33,13 +33,13 @@ public:
 	CLogger &operator<<( const char cVal );
 	CLogger &operator<<( const wchar_t wcVal );
 	CLogger &operator<<( const char *pszText );
-	CLogger &operator<<( const string &szText );
+	CLogger &operator<<( const std::string &szText );
 	CLogger &operator<<( const wchar_t *pwszText );
-	CLogger &operator<<( const wstring &wszText );
+	CLogger &operator<<( const std::wstring &wszText );
 	//
 	CLogger &operator<< ( CLogger &(*Func)( CLogger &logStream ) ) { return Func( *this ); }
 	CLogger &Dump();
-	bool Dump( const string &szChildLoggerFullName, const wstring &wszString );
+	bool Dump( const std::string &szChildLoggerFullName, const std::wstring &wszString );
 	//
 	void AddDumper( ILogDumper *pDumper ) { dumpers.push_back( pDumper ); }
 };

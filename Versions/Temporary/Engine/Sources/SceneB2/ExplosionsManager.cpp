@@ -36,7 +36,7 @@ int CExplosionsManager::AddExplosion( const NMeshData::SMeshData &_data, const N
 
 void CExplosionsManager::RemoveExplosion( const int nID )
 {
-	for ( list<SExplosionObj>::iterator it = explosions.begin(); it != explosions.end(); )
+	for ( std::list<SExplosionObj>::iterator it = explosions.begin(); it != explosions.end(); )
 	{
 		if ( it->nID == nID )
 			it = explosions.erase( it );

@@ -30,8 +30,8 @@ const int NIVAL_NET_PORT = 4200;
 
 #define HEARTBEAT_PERIOD 5000
 #define GAMES_REFRESH_PERIOD 5000
-static wstring s_wszStoredLogin = L"";
-static wstring s_wszStoredPassword = L"";
+static std::wstring s_wszStoredLogin = L"";
+static std::wstring s_wszStoredPassword = L"";
 
 REGISTER_SAVELOAD_CLASS( 0x192444C0, CMPManagerModeNivalNet );
 START_REGISTER(NivalNetGVars)
@@ -132,7 +132,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 {
 	if ( eState != EGS_JOINING )
 		return;
-	string szDebugOut = "+++ CheckJoinConditions: ";
+	std::string szDebugOut = "+++ CheckJoinConditions: ";
 	if ( nGameID == -1 )
 		szDebugOut += "no_GameID ";
 	if ( nOwnSlot == -1 )
@@ -305,7 +305,7 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 void CMPManagerModeNivalNet::CreateServerClient()
 {
 	pClient = 0;
-	string szNivalNetIP = NStr::ToMBCS( NGlobal::GetVar( "NivalNetIP", NIVAL_NET_IP ) );
+	std::string szNivalNetIP = NStr::ToMBCS( NGlobal::GetVar( "NivalNetIP", NIVAL_NET_IP ) );
 	int nNivalNetPort = NGlobal::GetVar( "NivalNetPort", NIVAL_NET_PORT );
 	pClient = new CServerClient( szNivalNetIP.c_str(), NGlobal::GetVar( "NetGameVersion", 1 ), nNivalNetPort, 30 );
 	CNet::SetTimeOut( 20.0f );
@@ -339,7 +339,7 @@ void CMPManagerModeNivalNet::SendGameStatistics()
 		pPkt->unitsLost[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
 		pPkt->playerUnitEff[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_TACTICAL_EFFICIENCY );
 		pPkt->playerKeyPointEff[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_STRATEGIC_EFFICIENCY );
-		vector<int> reinfCallsByType;
+		std::vector<int> reinfCallsByType;
 		pScenarioTracker->GetReinforcementCallsInfo( i, &reinfCallsByType );
 		pPkt->reinfUsed[slot.nClientID] = reinfCallsByType;
 	}
@@ -423,12 +423,12 @@ void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &o
 	PushMessage( pMsg );
 }
 
-const int CMPManagerModeNivalNet::GetRankFromLevel( const int nRace, const int nLevel, wstring *pwszOut )
+const int CMPManagerModeNivalNet::GetRankFromLevel( const int nRace, const int nLevel, std::wstring *pwszOut )
 {
 	if ( pwszOut )
 		*pwszOut = L"-";
 	int nResult = 0;
-	const vector<NDb::SLadderRank> &ranks = pMPConsts->sides[nRace].ladderRanks;
+	const std::vector<NDb::SLadderRank> &ranks = pMPConsts->sides[nRace].ladderRanks;
 	for ( int i = 0; i < ranks.size(); ++i )
 	{
 		if ( ranks[i].nLevel > nLevel )
@@ -703,7 +703,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 	}
 
 	// Process new games
-	for ( list<SGameInfo>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
+	for ( std::list<SGameInfo>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
 	{
 		SGameInfo &game = *it;
 
@@ -719,7 +719,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 	if ( !pPacket->bFullUpdate )
 	{
 		// Process changes
-		for ( list<SGameInfo>::iterator it = pPacket->changed.begin(); it != pPacket->changed.end(); ++it )
+		for ( std::list<SGameInfo>::iterator it = pPacket->changed.begin(); it != pPacket->changed.end(); ++it )
 		{
 			SGameInfo &game = *it;
 
@@ -740,7 +740,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 			AddGameInfoForUI( &(pGamesMsg->gamesAddChange), ownGame );
 		}
 		// Process deletes
-		for ( list<int>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
+		for ( std::list<int>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
 		{
 			CNetGameList::iterator itGame = games.begin();
 			for ( ; itGame != games.end() && itGame->nGameID != *it; ++itGame )
@@ -925,7 +925,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	gameDesc.nCaptureTime = 30;
 
 	DebugTrace( "+++ LadderInvite: game %d, teams %d-%d, map %d, TL %d", nGameID, nTeam1Size, nTeam2Size, pPacket->nMapID, pPacket->nTechLevel );
-	string szDebugLadder = "+++ Ladder Teams: ";
+	std::string szDebugLadder = "+++ Ladder Teams: ";
 
 	bGameRoomInit = false;
 	slots.clear();
@@ -934,7 +934,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	nOwnSlot = -1;
 	NDb::EHistoricalSide eMySide = NDb::HS_ALLIES;
 	szDebugLadder += "Team1 (Allies) - ";
-	for ( list<int>::iterator it = pPacket->team1.begin(); it != pPacket->team1.end(); ++it, ++nSlot )
+	for ( std::list<int>::iterator it = pPacket->team1.begin(); it != pPacket->team1.end(); ++it, ++nSlot )
 	{
 		SMPSlot &slot = slots[nSlot];
 		slot.nClientID = *it;
@@ -949,7 +949,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 		szDebugLadder += StrFmt( "%d, ", slot.nClientID );
 	}
 	szDebugLadder += "Team2 (Axis) - ";
-	for ( list<int>::iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it, ++nSlot )
+	for ( std::list<int>::iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it, ++nSlot )
 	{
 		SMPSlot &slot = slots[nSlot];
 		slot.nClientID = *it;
@@ -981,7 +981,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 
 	if ( pendingClients.size() > 0 )
 	{
-		for ( list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
+		for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
 			ClientAssignNewClient( *it );
 
 		pendingClients.clear();
@@ -1024,7 +1024,7 @@ bool CMPManagerModeNivalNet::OnSystemBroadcastPacket( class CSystemBroadcastPack
 	if ( pPacket->wszText.length() == 0 )
 		return true;
 
-	wstring wszMsg = InterfaceState()->GetTextEntry( "NIVAL_NET_BROADCAST_HEADER" );
+	std::wstring wszMsg = InterfaceState()->GetTextEntry( "NIVAL_NET_BROADCAST_HEADER" );
 	wszMsg += L"<br>" + pPacket->wszText;
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMsg ).c_str() );

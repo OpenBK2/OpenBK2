@@ -48,7 +48,7 @@ struct SRenderParam
 	void Set( const T &_a ) { if ( _a == value ) return; value = _a; Apply( _a ); }
 	void DoApply() { Apply( value ); }
 };
-typedef hash_map<int, NWin32Helper::com_ptr<IDirect3DSurface9> > CDepthHash;
+typedef std::unordered_map<int, NWin32Helper::com_ptr<IDirect3DSurface9> > CDepthHash;
 
 const int N_MAX_REGISTERS =	5;
 const int N_MAX_ALLOWED_LAG = 10;
@@ -82,14 +82,14 @@ const int N_RENDER_STATES = 210;
 const int N_TSS_STATES = 33;
 const int N_SAMPLER_STATES = 14;
 static DWORD renderStates[210], tssStates[8][33], samplerStates[8][14];
-static vector<CMObj<CQuery> > queries;
+static std::vector<CMObj<CQuery> > queries;
 static bool bDoesSupportOcclusionQueries = false, bDoesSupportEventQueries = false;
-static list<CObj<IQuery> > lagQueries;
+static std::list<CObj<IQuery> > lagQueries;
 static int nMaxLag = 1;
 static float fRegisterResolution = 1;
 
-typedef hash_map<string, CObj<CPixelShader> > TPixelShaders;
-typedef hash_map<string, CObj<CVertexShader> > TVertexShaders;
+typedef std::unordered_map<std::string, CObj<CPixelShader> > TPixelShaders;
+typedef std::unordered_map<std::string, CObj<CVertexShader> > TVertexShaders;
 static TPixelShaders hlslPixelShaders;
 static TVertexShaders hlslVertexShaders;
 
@@ -1188,7 +1188,7 @@ void CRenderContext::SetPixelShader( const SPShader &s )
 	pCurrentPixelShader = 0;
 }
 
-void CRenderContext::SetPixelShader( const string &szName )
+void CRenderContext::SetPixelShader( const std::string &szName )
 {
 	ASSERT( pOutstandingStream == 0 );
 
@@ -1217,7 +1217,7 @@ void CRenderContext::SetVertexShader( const SVShader &s )
 }
 
 
-void CRenderContext::SetVertexShader( const string &szName )
+void CRenderContext::SetVertexShader( const std::string &szName )
 {
 	ASSERT( !bTnLDevice );
 	ASSERT( pOutstandingStream == 0 );

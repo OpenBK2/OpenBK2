@@ -203,7 +203,7 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 		}
 		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT || hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 		{
-			vector<SFileHeader>::iterator posFileHeader = papDir.insert( papDir.end(), SFileHeader() );
+			std::vector<SFileHeader>::iterator posFileHeader = papDir.insert( papDir.end(), SFileHeader() );
 			posFileHeader->Init( hdr );
 			//
 			pfh += sizeof(hdr) + hdr.wFileNameLen + hdr.wExtraLen + hdr.wCommentLen;
@@ -221,7 +221,7 @@ CZipFile::~CZipFile()
 		mmf.UnmapFile();
 }
 
-void CZipFile::GetFileName( int nIndex, string *pString ) const
+void CZipFile::GetFileName( int nIndex, std::string *pString ) const
 {
 	*pString = papDir[nIndex].pszFileName;
 }

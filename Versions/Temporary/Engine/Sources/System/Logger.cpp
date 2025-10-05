@@ -16,11 +16,11 @@ class CFileDumper : public ILogDumper
 {
 	OBJECT_BASIC_METHODS( CFileDumper );
 	//
-	const string szFullFileName;
+	const std::string szFullFileName;
 	CFileDumper() {}
 public:
-	CFileDumper( const string &_szFullFileName ): szFullFileName( _szFullFileName ) {}
-	void Dump( const wstring &wszString )
+	CFileDumper( const std::string &_szFullFileName ): szFullFileName( _szFullFileName ) {}
+	void Dump( const std::wstring &wszString )
 	{
 		if ( FILE *f = fopen(szFullFileName.c_str(), "a") )
 		{
@@ -35,12 +35,12 @@ public:
 		}
 	}
 };
-ILogDumper *CreateFileDumper( const string &szFullFileName ) { return new CFileDumper( szFullFileName ); }
+ILogDumper *CreateFileDumper( const std::string &szFullFileName ) { return new CFileDumper( szFullFileName ); }
 
 class CDebugDumper : public ILogDumper
 {
 	OBJECT_BASIC_METHODS( CDebugDumper );
-	void Dump( const wstring &wszString )
+	void Dump( const std::wstring &wszString )
 	{
 		char szBuffer[1024];
 		int nLength = WideCharToMultiByte( GetACP(), 0, wszString.c_str(), wszString.length(), szBuffer, 1024, 0, 0 );
@@ -130,7 +130,7 @@ CLogger &CLogger::operator<<( const char *pszText )
 	return *this;
 }
 
-CLogger &CLogger::operator<<( const string &szText )
+CLogger &CLogger::operator<<( const std::string &szText )
 {
 	return ( *this << szText.c_str() );
 }
@@ -141,15 +141,15 @@ CLogger &CLogger::operator<<( const wchar_t *pwszText )
 	return *this;
 }
 
-CLogger& CLogger::operator<<( const wstring &wszText )
+CLogger& CLogger::operator<<( const std::wstring &wszText )
 {
 	wszLogBuffer += wszText;
 	return *this;
 }
 
-string CLogger::GetLoggerFullName() const
+std::string CLogger::GetLoggerFullName() const
 {
-	string szName = GetLoggerLocalName();
+	std::string szName = GetLoggerLocalName();
 	const CLogger *pParent = this;
 	while ( pParent = pParent->GetParent() )
 		szName = pParent->GetLoggerLocalName() + "." + szName;
@@ -166,7 +166,7 @@ CLogger &CLogger::Dump()
 	return *this;
 }
 
-bool CLogger::Dump( const string &szLoggerFullName, const wstring &wszString )
+bool CLogger::Dump( const std::string &szLoggerFullName, const std::wstring &wszString )
 {
 	for ( CDumpersList::iterator it = dumpers.begin(); it != dumpers.end(); ++it )
 	{

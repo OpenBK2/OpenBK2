@@ -25,7 +25,7 @@ public:
 		VT_MULTIVARIANT
 	};
 
-	typedef hash_map<CDBID, CVariant> CMultiVariantMap;
+	typedef std::unordered_map<CDBID, CVariant> CMultiVariantMap;
 private:
 	EVariantType m_eType;
 
@@ -117,8 +117,8 @@ private:
 		int m_int;
 		bool m_bool;
 		SBlob *m_pblob;
-		string *m_pstr;
-		wstring *m_pwstr;
+		std::string *m_pstr;
+		std::wstring *m_pwstr;
 		CDBID *m_dbid;
 		SMultiVariant *m_pmvar;
 	};
@@ -142,10 +142,10 @@ public:
 	//конструкторы с приведением типов
 	CVariant( const int nVal )          : m_eType( VT_INT ), m_int( nVal ) {}
 	CVariant( const float fVal )        : m_eType( VT_FLOAT ), m_float(fVal) {}
-	CVariant( const string &szVal )     : m_eType( VT_STR ), m_pstr( new string(szVal) ) {}
-	CVariant( const char *pszVal )			: m_eType( VT_STR ), m_pstr( new string(pszVal) ) {}
-	CVariant( const wstring &wszVal )   : m_eType( VT_WSTR ), m_pwstr( new wstring(wszVal) ) {}
-	CVariant( const wchar_t *pwszVal )	: m_eType( VT_WSTR ), m_pwstr( new wstring(pwszVal) ) {}
+	CVariant( const std::string &szVal )     : m_eType( VT_STR ), m_pstr( new std::string(szVal) ) {}
+	CVariant( const char *pszVal )			: m_eType( VT_STR ), m_pstr( new std::string(pszVal) ) {}
+	CVariant( const std::wstring &wszVal )   : m_eType( VT_WSTR ), m_pwstr( new std::wstring(wszVal) ) {}
+	CVariant( const wchar_t *pwszVal )	: m_eType( VT_WSTR ), m_pwstr( new std::wstring(pwszVal) ) {}
 	CVariant( const bool bVal )         : m_eType( VT_BOOL ), m_bool( bVal ) {}
 	CVariant( const CDBID &dbid )				: m_eType( VT_DBID ), m_dbid( new CDBID(dbid) ) {}
 	//
@@ -190,10 +190,10 @@ public:
 	const CDBID &GetDBID() const;
 	const void      *GetPtr() const;
 	const CMultiVariantMap* GetMultiVariant() const;
-	bool ToText( string *pszText ) const;
+	bool ToText( std::string *pszText ) const;
 	// CRAP{ special function to cross get MBCS <=> UNICODE
-	string GetStringRecode() const;
-	wstring GetWStringRecode() const;
+	std::string GetStringRecode() const;
+	std::wstring GetWStringRecode() const;
 	// CRAP}
 
 	size_t GetBlobSize() const;

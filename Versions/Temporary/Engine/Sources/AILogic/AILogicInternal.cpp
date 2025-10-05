@@ -512,7 +512,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 {
-	list<int> transports;
+	std::list<int> transports;
 //	ConstructorInfo() = Singleton<CConstructorInfo>();
 	for ( int i = 0; i < pMapInfo->objects.size(); ++i )
 	{
@@ -564,7 +564,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		}
 	}
 
-	for ( list<int>::iterator iter = transports.begin(); iter != transports.end(); ++iter )
+	for ( std::list<int>::iterator iter = transports.begin(); iter != transports.end(); ++iter )
 	{
 		const SMapObjectInfo &mapObj = pMapInfo->objects[*iter];
 		const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats*>( mapObj.pObject );
@@ -787,7 +787,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 	}
 } 
 
-void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments )
+void CAILogic::LoadEntrenchments( const std::vector<SEntrenchmentInfo> &entrenchments )
 {
 	// по окопам
 	for ( int i = 0; i < entrenchments.size(); ++i )
@@ -796,7 +796,7 @@ void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments
 		CPtr<CFullEntrenchment> pFullEntrenchment = new CFullEntrenchment();
 		for ( int j = 0; j < entrenchments[i].sections.size(); ++j )
 		{
-			vector<CObjectBase*> segments;
+			std::vector<CObjectBase*> segments;
 			for ( int k = 0; k < entrenchments[i].sections[j].data.size(); ++k )
 			{
 				const int nLink = entrenchments[i].sections[j].data[k];
@@ -813,12 +813,12 @@ void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments
 	}
 }
 
-void CAILogic::LoadBridges( const vector< NDb::SIntArray > &bridgesInfo )
+void CAILogic::LoadBridges( const std::vector< NDb::SIntArray > &bridgesInfo )
 {
 	// по мостам
 	for ( int i = 0; i < bridgesInfo.size(); ++i )
 	{
-		list<CPtr<CBridgeSpan> > bridge;
+		std::list<CPtr<CBridgeSpan> > bridge;
 		// по пролётам
 		CPtr<CFullBridge> pFullBridge = new CFullBridge;
 		for ( int j = 0; j < bridgesInfo[i].data.size(); ++j )
@@ -857,12 +857,12 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 
 void CAILogic::InitStartCommands()
 {
-	for ( vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
+	for ( std::vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
 	{
 		if ( !iter->unitLinkIDs.empty() )
 		{
 			const int nSize = iter->unitLinkIDs.size();
-			vector<CObjectBase*> unitsBuffer( nSize );
+			std::vector<CObjectBase*> unitsBuffer( nSize );
 			for ( int i = 0; i < nSize; ++i )
 				unitsBuffer[i] = CLinkObject::GetObjectByLink( iter->unitLinkIDs[i] );
 
@@ -871,15 +871,15 @@ void CAILogic::InitStartCommands()
 	}
 }
 
-void CAILogic::InitStartCommands( const LinkInfo &linksInfo, hash_map<int, int> &old2NewLinks )
+void CAILogic::InitStartCommands( const LinkInfo &linksInfo, std::unordered_map<int, int> &old2NewLinks )
 {
-	for ( vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
+	for ( std::vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
 	{
 		if ( !iter->unitLinkIDs.empty() )
 		{
 			int nActuallyUnits = 0;			
 			const int nSize = iter->unitLinkIDs.size();
-			vector<CObjectBase*> unitsBuffer( nSize );
+			std::vector<CObjectBase*> unitsBuffer( nSize );
 			for ( int i = 0; i < nSize; ++i )
 			{
 				const int nLink = iter->unitLinkIDs[i];
@@ -899,7 +899,7 @@ void CAILogic::InitStartCommands( const LinkInfo &linksInfo, hash_map<int, int> 
 
 void CAILogic::InitReservePositions()
 {
-	for ( vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
+	for ( std::vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
 	{
 		CLinkObject *pLinkObject = CLinkObject::GetObjectByLink( iter->nArtilleryLinkID );
 		if ( pLinkObject && pLinkObject->IsRefValid() && pLinkObject->IsAlive() )
@@ -919,9 +919,9 @@ void CAILogic::InitReservePositions()
 	}
 }
 
-void CAILogic::InitReservePositions( hash_map<int, int> &old2NewLinks )
+void CAILogic::InitReservePositions( std::unordered_map<int, int> &old2NewLinks )
 {
-	for ( vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
+	for ( std::vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
 	{
 		const int nArtilleryLink = iter->nArtilleryLinkID;
 		if ( old2NewLinks.find( nArtilleryLink ) != old2NewLinks.end() )
@@ -1098,7 +1098,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	// init general
 	if ( !theDipl.IsNetGame() )
 	{
-		list<CCommonUnit*> pUnits;
+		std::list<CCommonUnit*> pUnits;
 		for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 			pUnits.push_back( *iter );
 
@@ -1332,7 +1332,7 @@ const int CAILogic::GenerateGroupNumber()
 	return theGroupLogic.GenerateGroupNumber();
 }
 
-void CAILogic::RegisterGroup( const vector<int> &vIDs, const int nGroup )
+void CAILogic::RegisterGroup( const std::vector<int> &vIDs, const int nGroup )
 {
 	theGroupLogic.RegisterGroup( vIDs, nGroup );
 }
@@ -1362,7 +1362,7 @@ bool CAILogic::CanShowVisibilities() const
 	return curTime >= SConsts::AI_SEGMENT_DURATION * SConsts::SHOW_ALL_TIME_COEFF;
 }
 
-const bool CAILogic::GetMiniMapUnitsInfo( vector< SMiniMapUnitInfo > &vUnits )
+const bool CAILogic::GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits )
 {
 	if ( curTime >= timeLastMiniMapUpdateUnits && ( !theDipl.IsNetGame() || bNetGameStarted ) )
 	{
@@ -1413,7 +1413,7 @@ int CAILogic::GetMiniMapWarFogSizeY() const
 	return theWarFog.GetSizeY();
 }
 
-void CAILogic::ShowAreas( const vector<int> &units, EActionNotify &eType, bool bShow )
+void CAILogic::ShowAreas( const std::vector<int> &units, EActionNotify &eType, bool bShow )
 {
 	if ( bShow && units.size() > 0 )
 	{
@@ -1439,7 +1439,7 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 	if ( pAIUnit )
 	{
 		pAIUnit->GetShootAreas( &unitAreas, &nAreas );
-		for ( list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
+		for ( std::list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
 			pAreas->areas.push_back( *it );
 	}
 	else
@@ -1451,7 +1451,7 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
 			(*pFormation)[i]->GetShootAreas( &unitAreas, &nAreas );
-			for ( list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
+			for ( std::list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
 				pAreas->areas.push_back( *it );
 		}
 	}
@@ -1507,7 +1507,7 @@ void CAILogic::SetNetGame( const bool bNetGame )
 	theDipl.SetNetGame( bNetGame );
 }
 
-bool CAILogic::SubstituteUniqueIDs( const vector<int> &vIDs )
+bool CAILogic::SubstituteUniqueIDs( const std::vector<int> &vIDs )
 {
 	typedef CObjectBase* LPObjectBase;
 	LPObjectBase *objects = new LPObjectBase[ vIDs.size() ];
@@ -1621,7 +1621,7 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 			}
 		}
 		
-		list<CCommonUnit*> playerUnits;
+		std::list<CCommonUnit*> playerUnits;
 		for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CCommonUnit *pUnit = *iter;
@@ -1629,7 +1629,7 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 				playerUnits.push_back( pUnit );
 		}
 
-		for ( list<CCommonUnit*>::iterator iter = playerUnits.begin(); iter != playerUnits.end(); ++iter )
+		for ( std::list<CCommonUnit*>::iterator iter = playerUnits.begin(); iter != playerUnits.end(); ++iter )
 		{
 			CCommonUnit *pUnit = *iter;
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
@@ -1767,9 +1767,9 @@ const bool CAILogic::HasPlayerNoUnits( const int nPlayer ) const
 	return true;
 }
 
-static bool ConverWStingToInt( int *pValue, const wstring &wszString, const int nMin, const int nMax )
+static bool ConverWStingToInt( int *pValue, const std::wstring &wszString, const int nMin, const int nMax )
 {
-	string szParam;
+	std::string szParam;
 
 	NStr::ToMBCS( &szParam, wszString );
 	if ( !NStr::IsDecNumber( szParam ) )
@@ -1786,7 +1786,7 @@ static bool ConverWStingToInt( int *pValue, const wstring &wszString, const int 
 	return true;
 }
 
-static void PathfinderTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void PathfinderTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	const int nMaxX = GetAIMap()->GetSizeX();
 	const int nMaxY = GetAIMap()->GetSizeY();
@@ -1813,7 +1813,7 @@ static void PathfinderTest( const string &szID, const vector<wstring> &paramsSet
 	}
 }
 
-static void CommandCheckPath( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandCheckPath( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 7 )
 	{
@@ -1838,7 +1838,7 @@ static void CommandCheckPath( const string &szID, const vector<wstring> &paramsS
 	if ( !ConverWStingToInt( &(vFinishTile.y), paramsSet[4], 0, GetAIMap()->GetSizeY() ) )
 		return;
 
-	string szParam;
+	std::string szParam;
 
 	NStr::ToMBCS( &szParam, paramsSet[5] );
 	NStr::ToLowerASCII( &szParam );
@@ -1868,8 +1868,8 @@ static void CommandCheckPath( const string &szID, const vector<wstring> &paramsS
 	CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
 	pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, GetAIMap()->GetPointByTile( vStartTile ), GetAIMap()->GetPointByTile( vFinishTile ), vStartTile, GetAIMap() );
 	CPtr<IStaticPath> pPath = pPathFinder->CreatePath( true );
-	vector<SVector> realPath;
-	vector<SVector> smoothPath;
+	std::vector<SVector> realPath;
+	std::vector<SVector> smoothPath;
 
 	if ( !pPathFinder->IsPathFound() )
 	{
@@ -1903,7 +1903,7 @@ static void CommandCheckPath( const string &szID, const vector<wstring> &paramsS
 	GetAIMap()->GetTerrain()->DumpMaxes( ELM_STATIC, aiClass, "debug_images\\" + szParam + ".tga", realPath, smoothPath, true );
 }
 
-static void DumpWarFogHeights( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void DumpWarFogHeights( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 5 )
 	{
@@ -1929,7 +1929,7 @@ static void DumpWarFogHeights( const string &szID, const vector<wstring> &params
 	const CVec2 vStartPoint( vStartTile.x, vStartTile.y );
 	const CVec2 vFinishPoint( vFinishTile.x, vFinishTile.y );
 
-	string szParam;
+	std::string szParam;
 	NStr::ToMBCS( &szParam, paramsSet[0] );
 	NStr::ToLowerASCII( &szParam );
 	//theWarFog.DebugTraceRay( "debug_images\\warfog\\" + szParam + ".tga", vStartPoint, vFinishPoint );

@@ -20,9 +20,9 @@ SEntityInfo entities[] =
 	{ 0, 0 }
 };
 
-void ConvertToString( string *pStr )
+void ConvertToString( std::string *pStr )
 {
-	string &str = *pStr;
+	std::string &str = *pStr;
 	
 	int i = 0;
 	int nCnt = 0;

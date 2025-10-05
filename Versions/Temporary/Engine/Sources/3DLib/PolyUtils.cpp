@@ -2,6 +2,8 @@
 #include "PolyUtils.h"
 #include "Ring.h"
 
+#include <algorithm>
+
 // CONST
 
 #pragma optimize( "p", on )
@@ -24,7 +26,7 @@ const int
 
 // CODE
 
-bool IsPolygonInverse( const vector<CVec2> &vPolygon )
+bool IsPolygonInverse( const std::vector<CVec2> &vPolygon )
 {
 	float fSquare = 0;
 
@@ -40,7 +42,7 @@ bool IsPolygonInverse( const vector<CVec2> &vPolygon )
 	return fSquare > 0;
 }
 
-bool IsPointInPolygon( const vector<CVec2> &vPolygon, const CVec2 &vPoint )
+bool IsPointInPolygon( const std::vector<CVec2> &vPolygon, const CVec2 &vPoint )
 {
 	bool bInside = false;
 	
@@ -166,13 +168,13 @@ ELineDispos IntersectLines( const CVec2 &vLine1Beg, const CVec2 &vLine1End, cons
 	const CVec2 *p2b = &vLine2Beg;
 	const CVec2 *p2e = &vLine2End;
 	if ( IsMore( *p1e, *p1b ) )
-		swap( p1b, p1e );
+		std::swap( p1b, p1e );
 	if ( IsMore( *p2e, *p2b ) )
-		swap( p2b, p2e );
+		std::swap( p2b, p2e );
 	if ( IsMore( *p1b, *p2b ) )
 	{
-		swap( p1b, p2b );
-		swap( p1e, p2e );
+		std::swap( p1b, p2b );
+		std::swap( p1e, p2e );
 	}
 	return TrueIntersectLines( *p1b, *p1e, *p2b, *p2e, pvRes );
 }
@@ -229,8 +231,8 @@ protected:
 	{
 		int nFlags;
 		CRing<SEdge>::iterator iSharedEdge;
-		list<SPoint>::iterator iBegPoint;
-		list<SPoint>::iterator iEndPoint;
+		std::list<SPoint>::iterator iBegPoint;
+		std::list<SPoint>::iterator iEndPoint;
 		EPolygon polygon;
 
 		SEdge(): nFlags( CLIP_UNKNOWN ) {}
@@ -252,32 +254,32 @@ protected:
 	struct SLinkSet
 	{
 		float fAngle;
-		vector<SLink> links;
+		std::vector<SLink> links;
 	};
 	
-	list<SPoint> listPoints;
-	list<SPolygon> listPolygons;
-	list<SPolygon> listClipPolygons;
+	std::list<SPoint> listPoints;
+	std::list<SPolygon> listPolygons;
+	std::list<SPolygon> listClipPolygons;
 	
 	void ShowInfo();
 
-	void AddPolygon( const vector<CVec2> &inPolygon, SPolygon *psPolygon, EPolygon polygon );
-	void AddPolygonsList( const TPolygonsList &polyList, list<SPolygon> *pRes, EPolygon polygon );
+	void AddPolygon( const std::vector<CVec2> &inPolygon, SPolygon *psPolygon, EPolygon polygon );
+	void AddPolygonsList( const TPolygonsList &polyList, std::list<SPolygon> *pRes, EPolygon polygon );
 
 	void ClearMarks( SPolygon *psPolygon );
 	void MakeLinks( EPolygon eType, SPolygon *psPolygon );
 	void SortLinks();
 	void DeletePeerEdges( SPolygon *psPolygon );
-	void MakeFlags( SPolygon *psPolygon, list<SPolygon> *pContPolygons );
-	list<SPoint>::iterator InsertPoint( const CVec2 &vPoint );
-	void InsertEdge( SPolygon *pResult, const SEdge &edge, vector<CVec2> *pCrossPoints );
+	void MakeFlags( SPolygon *psPolygon, std::list<SPolygon> *pContPolygons );
+	std::list<SPoint>::iterator InsertPoint( const CVec2 &vPoint );
+	void InsertEdge( SPolygon *pResult, const SEdge &edge, std::vector<CVec2> *pCrossPoints );
 	//void InsertPointOnLine( const CVec2 &vPoint, list<CRing<SEdge>::iterator> *pListSplits, SPolygon *pResPolygon );
 	void FindIntersections( const SPolygon &sPolygon, const SPolygon &sClipPolygon, SPolygon *psResult );
 	bool IsPointInPolygon( const CVec2 &vPoint, const SPolygon &polygon );
 
 	bool EdgeRule( EOper eOp, EPolygon ePoly, const SEdge &sEdge, EDir *peDir );
 	void JumpLink( EOper eOp, SPolygon *psPolygon, CRing<SEdge>::iterator *piEdge, EDir *pcDir );
-	void CollectPolygons( EOper eOp, EPolygon eType, SPolygon *psPolygon, list< vector<CVec2> > *psList );
+	void CollectPolygons( EOper eOp, EPolygon eType, SPolygon *psPolygon, std::list< std::vector<CVec2> > *psList );
 		
 	void DumpEdge( const SEdge &sEdge );
 	void DumpPolygon( const SPolygon &sPolygon );
@@ -322,10 +324,10 @@ void CPolyClipper::SetPolygons( const TPolygonsList &sourceList, const TPolygons
 	AddPolygonsList( sourceList, &listPolygons, POLY_SOURCE );
 	AddPolygonsList( sourceClipList, &listClipPolygons, POLY_CLIPPOLY );
 
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 	{
 		SPolygon &sInPolygon = *iTemp;
-		for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+		for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		{
 			SPolygon &sInClipPolygon = *iTemp;
 
@@ -338,40 +340,40 @@ void CPolyClipper::SetPolygons( const TPolygonsList &sourceList, const TPolygons
 		}
 	}
 
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 		DeletePeerEdges( &*iTemp );
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		DeletePeerEdges( &*iTemp );
 
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 		MakeLinks( POLY_SOURCE, &(*iTemp) );
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		MakeLinks( POLY_CLIPPOLY, &(*iTemp) );
 
 	SortLinks();
 
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 	{
 		SPolygon &sInPolygon = *iTemp;
 		MakeFlags( &sInPolygon, &listClipPolygons );
 	}
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 	{
 		SPolygon &sInClipPolygon = *iTemp;
 		MakeFlags( &sInClipPolygon, &listPolygons );
 	}
 }
 
-void CPolyClipper::Boolean( EOper eOp, list< vector<CVec2> > *pListPolygons )
+void CPolyClipper::Boolean( EOper eOp, std::list< std::vector<CVec2> > *pListPolygons )
 {
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 		ClearMarks( &(*iTemp) );
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		ClearMarks( &(*iTemp) );
 
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 		CollectPolygons( eOp, POLY_SOURCE, &(*iTemp), pListPolygons );
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		CollectPolygons( eOp, POLY_CLIPPOLY, &(*iTemp), pListPolygons );
 }
 
@@ -395,7 +397,7 @@ bool CPolyClipper::IsPointInPolygon( const CVec2 &vPoint, const SPolygon &sPolyg
 	return bInside;
 }
 
-void CPolyClipper::AddPolygon( const vector<CVec2> &inPolygon, SPolygon *psPolygon, EPolygon polygon )
+void CPolyClipper::AddPolygon( const std::vector<CVec2> &inPolygon, SPolygon *psPolygon, EPolygon polygon )
 {
 	psPolygon->listEdges.clear();
 
@@ -405,7 +407,7 @@ void CPolyClipper::AddPolygon( const vector<CVec2> &inPolygon, SPolygon *psPolyg
 		const CVec2 &vEndPoint = inPolygon[ ( nTemp + 1 ) % inPolygon.size() ];
 
 		bool bBegSet = false, bEndSet = false;
-		list<SPoint>::iterator iBegPoint, iEndPoint;
+		std::list<SPoint>::iterator iBegPoint, iEndPoint;
 		iBegPoint = InsertPoint( vBegPoint );
 		iEndPoint = InsertPoint( vEndPoint );
 
@@ -423,11 +425,11 @@ void CPolyClipper::AddPolygon( const vector<CVec2> &inPolygon, SPolygon *psPolyg
 	}
 }
 
-void CPolyClipper::AddPolygonsList( const TPolygonsList &polyList, list<SPolygon> *pRes, EPolygon polygon )
+void CPolyClipper::AddPolygonsList( const TPolygonsList &polyList, std::list<SPolygon> *pRes, EPolygon polygon )
 {
 	for ( TPolygonsList::const_iterator iTemp = polyList.begin(); iTemp != polyList.end(); iTemp++ )
 	{
-		SPolygon &sPoly = *pRes->insert( pRes->end() );
+		SPolygon &sPoly = pRes->emplace_back();
 		AddPolygon( *iTemp, &sPoly, polygon );
 		sPoly.bInverse = IsPolygonInverse( *iTemp );
 	}
@@ -462,15 +464,15 @@ static float GetAngleDif( float a, float b )
 
 void CPolyClipper::SortLinks()
 {
-	for ( list<SPoint>::iterator iPoint = listPoints.begin(); iPoint != listPoints.end(); iPoint++ )
+	for ( std::list<SPoint>::iterator iPoint = listPoints.begin(); iPoint != listPoints.end(); iPoint++ )
 	{
-		vector<SLink> vSortedLinks( iPoint->listLinks.size() );
+		std::vector<SLink> vSortedLinks( iPoint->listLinks.size() );
 
 		int nLink;
 		CRing<SLink>::iterator iLink = iPoint->listLinks.begin();
 		for ( nLink = 0; nLink < iPoint->listLinks.size(); nLink++, iLink++ )
 			vSortedLinks[nLink] = *iLink;
-		sort( vSortedLinks.begin(), vSortedLinks.end(), SSortLinks() );
+		std::sort( vSortedLinks.begin(), vSortedLinks.end(), SSortLinks() );
 		//ASSERT( !vSortedLinks.empty() );
 		if ( vSortedLinks.empty() )
 			continue;
@@ -488,7 +490,7 @@ void CPolyClipper::SortLinks()
 		if ( bIsCrossPoint )
 		{
 			// group edges by angle
-			vector<SLinkSet> links;
+			std::vector<SLinkSet> links;
 			for ( int k = 0; k < vSortedLinks.size(); ++k )
 			{
 				if ( !links.empty() && GetAngleDif( links.back().fAngle, vSortedLinks[k].fAngle ) < 0.01f )
@@ -497,13 +499,13 @@ void CPolyClipper::SortLinks()
 				}
 				else
 				{
-					SLinkSet &ls = *links.insert( links.end() );
+					SLinkSet &ls = links.emplace_back();
 					ls.fAngle = vSortedLinks[k].fAngle;
 					ls.links.push_back( vSortedLinks[k] );
 				}
 			}
 			// for each incident edge set inside or outside flags
-			vector<int> vCountSrc( links.size() ), vCountClip( links.size() );
+			std::vector<int> vCountSrc( links.size() ), vCountClip( links.size() );
 			int nCountSrc = 0, nMinCountSrc = 1000, nMaxCountSrc = -1000;
 			int nCountClip = 0, nMinCountClip = 1000, nMaxCountClip = -1000;
 			for ( int k = 0; k < links.size(); ++k )
@@ -595,10 +597,10 @@ void CPolyClipper::DeletePeerEdges( SPolygon *psPolygon )
 	}
 }
 
-void CPolyClipper::MakeFlags( SPolygon *psPolygon, list<SPolygon> *pContPolygons )
+void CPolyClipper::MakeFlags( SPolygon *psPolygon, std::list<SPolygon> *pContPolygons )
 {
 	// loop through points & search for same
-	for ( list<SPolygon>::iterator i = pContPolygons->begin(); i != pContPolygons->end(); ++i )
+	for ( std::list<SPolygon>::iterator i = pContPolygons->begin(); i != pContPolygons->end(); ++i )
 	{
 		SPolygon &contPolygon = *i;
 		CRing<SEdge>::iterator iPolyEdge = psPolygon->listEdges.begin();
@@ -673,7 +675,7 @@ void CPolyClipper::MakeFlags( SPolygon *psPolygon, list<SPolygon> *pContPolygons
 			const CVec2 &vPolyLineEnd = iPolyEdge->iEndPoint->vPoint;
 			CVec2 vTest( 0.5f * ( vPolyLineBeg + vPolyLineEnd ) );
 			bool bTestRet = false, bIsInHole = false;
-			for ( list<SPolygon>::iterator i = pContPolygons->begin(); i != pContPolygons->end(); ++i )
+			for ( std::list<SPolygon>::iterator i = pContPolygons->begin(); i != pContPolygons->end(); ++i )
 			{
 				SPolygon &contPolygon = *i;
 				if ( contPolygon.bInverse )
@@ -688,10 +690,10 @@ void CPolyClipper::MakeFlags( SPolygon *psPolygon, list<SPolygon> *pContPolygons
 }
 
 const float F_GRID = 4096;
-list<CPolyClipper::SPoint>::iterator CPolyClipper::InsertPoint( const CVec2 &_vPoint )
+std::list<CPolyClipper::SPoint>::iterator CPolyClipper::InsertPoint( const CVec2 &_vPoint )
 {
 	CVec2 vPoint( Float2Int( _vPoint.x * F_GRID ) * (1/F_GRID), Float2Int( _vPoint.y * F_GRID ) * (1/F_GRID) );
-	for ( list<SPoint>::iterator iTemp = listPoints.begin(); iTemp != listPoints.end(); ++iTemp )
+	for ( std::list<SPoint>::iterator iTemp = listPoints.begin(); iTemp != listPoints.end(); ++iTemp )
 	{
 		if ( iTemp->vPoint == vPoint )
 			return iTemp;
@@ -709,12 +711,12 @@ struct SCrossSort
 		return Dot( a, vDir ) < Dot( b, vDir );
 	}
 };
-void CPolyClipper::InsertEdge( SPolygon *pResult, const SEdge &_edge, vector<CVec2> *pCrossPoints )
+void CPolyClipper::InsertEdge( SPolygon *pResult, const SEdge &_edge, std::vector<CVec2> *pCrossPoints )
 {
 	const CVec2 &vStart = _edge.iBegPoint->vPoint;
 	const CVec2 &vEnd = _edge.iEndPoint->vPoint;
 	sort( pCrossPoints->begin(), pCrossPoints->end(), SCrossSort( vEnd - vStart ) );
-	list<SPoint>::iterator iPrev = _edge.iBegPoint;
+	std::list<SPoint>::iterator iPrev = _edge.iBegPoint;
 	SEdge edge(_edge);
 	for ( int k = 0; k < pCrossPoints->size(); ++k )
 	{
@@ -743,7 +745,7 @@ void CPolyClipper::FindIntersections( const SPolygon &sPolygon, const SPolygon &
 		
 		//list<CRing<SEdge>::iterator> listSplits;
 		//listSplits.push_back( sResPolygon.listEdges.add( *iPolyEdge ) );
-		vector<CVec2> crossPoints;
+		std::vector<CVec2> crossPoints;
 		
 		CRing<SEdge>::const_iterator iClipEdge = sClipPolygon.listEdges.begin();
 		for ( int nClip = 0; nClip < sClipPolygon.listEdges.size(); nClip++, iClipEdge++ )
@@ -828,7 +830,7 @@ bool CPolyClipper::EdgeRule( EOper eOp, EPolygon ePoly, const SEdge &sEdge, EDir
 
 void CPolyClipper::JumpLink( EOper eOp, SPolygon *psPolygon, CRing<SEdge>::iterator *piEdge, EDir *pcDir )
 {
-	list<SPoint>::iterator iPoint;
+	std::list<SPoint>::iterator iPoint;
 	if ( *pcDir == DIR_FORWARD )
 		iPoint = (*piEdge)->iEndPoint;
 	else
@@ -906,16 +908,16 @@ void CPolyClipper::JumpLink( EOper eOp, SPolygon *psPolygon, CRing<SEdge>::itera
 	}while ( iTempLink != iEdgeLink );
 
 	//DebugTrace( "Source:\n" );
-	for ( list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 		DumpPolygon( *iTemp );
 	//DebugTrace( "Clip:\n" );
-	for ( list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+	for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
 		DumpPolygon( *iTemp );
 	//DebugTrace( "ERROR: Can't find jump-link for point %f %f\n", iPoint->vPoint.x, iPoint->vPoint.y );
 	//ASSERT( 0 );
 }
 
-void CPolyClipper::CollectPolygons( EOper eOp, EPolygon eType, SPolygon *psPolygon, list< vector<CVec2> > *psList )
+void CPolyClipper::CollectPolygons( EOper eOp, EPolygon eType, SPolygon *psPolygon, std::list< std::vector<CVec2> > *psList )
 {
 	CRing<SEdge>::iterator iEdge = psPolygon->listEdges.begin();
 	for ( int nTemp = 0; nTemp < psPolygon->listEdges.size(); nTemp++, iEdge++ )
@@ -924,7 +926,7 @@ void CPolyClipper::CollectPolygons( EOper eOp, EPolygon eType, SPolygon *psPolyg
 		if ( ( ( iEdge->nFlags & (CLIP_MARK|CLIP_DELETE)	) != 0 ) || !EdgeRule( eOp, eType, *iEdge, &eDir ) )
 			continue;
 
-		vector<CVec2> vResult;
+		std::vector<CVec2> vResult;
 		CRing<SEdge>::iterator iTemp = iEdge;
 		
 		do

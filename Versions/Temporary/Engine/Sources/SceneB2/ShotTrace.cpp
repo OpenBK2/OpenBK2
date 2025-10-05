@@ -60,7 +60,7 @@ void CShotTraceObj::Recalc()
 	data.verts[3].tex = CVec2( 0, 1 );
 
 	//
-	for ( vector<NGScene::SVertex>::iterator itVert = data.verts.begin(); itVert != data.verts.end(); ++itVert )
+	for ( std::vector<NGScene::SVertex>::iterator itVert = data.verts.begin(); itVert != data.verts.end(); ++itVert )
 	{
 		CalcCompactVector( &(itVert->normal), V3_AXIS_Z );
 		itVert->normal.w = 255;	// absolutely opaque

@@ -12,9 +12,9 @@ const DWORD IGNORE_ALL      = 0x00000010;
 const DWORD IGNORE_LOG      = 0x00000020;
 struct SIgnoresEntry
 {
-	string szCondition;
-	string szFunctionName;
-	string szFileName;
+	std::string szCondition;
+	std::string szFunctionName;
+	std::string szFileName;
 	int nLineNumber;
 	DWORD dwFlags;
 	//
@@ -26,7 +26,7 @@ struct SIgnoresEntry
 			( dwFlags == ig.dwFlags         ) );
 	}
 };
-typedef list<SIgnoresEntry> SIgnoresList;
+typedef std::list<SIgnoresEntry> SIgnoresList;
 
 bool IsIgnore( const SIgnoresList &ignores, const char *pszFileName, int nLineNumber );
 }

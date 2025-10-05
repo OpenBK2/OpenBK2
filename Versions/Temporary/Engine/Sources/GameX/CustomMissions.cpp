@@ -8,14 +8,14 @@
 namespace NCustom
 {
 
-void GetObjectsFromFolderByType( vector<CDBID> *pDBIDs, const NFile::CFilePath &path, const string &szType )
+void GetObjectsFromFolderByType( std::vector<CDBID> *pDBIDs, const NFile::CFilePath &path, const std::string &szType )
 {
-	vector<string> filenames;
+	std::vector<std::string> filenames;
 	NVFS::GetMainVFS()->GetAllFileNames( &filenames, path );
 	//
 	pDBIDs->reserve( filenames.size() );
-	const string szXDB = ".xdb";
-	for ( vector<string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
+	const std::string szXDB = ".xdb";
+	for ( std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
 	{
 		NFile::CFilePath filePath = *it;
 		if ( filePath.size() > 4 && NFile::ComparePathEq(filePath.size() - 4, 4, filePath, 0, 4, szXDB) )
@@ -27,17 +27,17 @@ void GetObjectsFromFolderByType( vector<CDBID> *pDBIDs, const NFile::CFilePath &
 	}
 }
 
-void GetCustomMissions( vector<CDBID> *pDBIDs )
+void GetCustomMissions( std::vector<CDBID> *pDBIDs )
 {
 	GetObjectsFromFolderByType( pDBIDs, CUSTOM_MISSIONS_FOLDER, "MapInfo" );
 }
 
-void GetCustomCampaigns( vector<CDBID> *pDBIDs )
+void GetCustomCampaigns( std::vector<CDBID> *pDBIDs )
 {
 	GetObjectsFromFolderByType( pDBIDs, CUSTOM_CAMPAIGNS_FOLDER, "Campaign" );
 }
 
-void GetMultiplayerMaps( vector<CDBID> *pDBIDs )
+void GetMultiplayerMaps( std::vector<CDBID> *pDBIDs )
 {
 	GetObjectsFromFolderByType( pDBIDs, MULTIPLAYER_MAPS_FOLDER, "MultiplayerMap" );
 }

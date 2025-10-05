@@ -7,8 +7,8 @@ void CLineMesh::Recalc()
 	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 	NGScene::CObjectInfo::SData objData;
-	vector<NGScene::SVertex> verts;
-	vector<STriangle> tris;
+	std::vector<NGScene::SVertex> verts;
+	std::vector<STriangle> tris;
 	BuildLine( objData.verts, tris );
 	objData.geometry = tris;
 	pValue->Assign( &objData, true );
@@ -19,7 +19,7 @@ CLineMesh::CLineMesh( const CVec2 &_vStart, const CVec2 &_vEnd, CTerrainManager 
 {
 }
 
-void CLineMesh::BuildLine( vector<NGScene::SVertex> &verts, vector<STriangle> &tris )
+void CLineMesh::BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris )
 {
 	const float fLength = fabs( vEnd - vStart );
 	const int nSegments = int( fLength / 4.0f );

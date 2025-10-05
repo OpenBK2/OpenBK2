@@ -78,7 +78,7 @@ bool CInterfaceMainMenu::Init()
 
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
-	wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
+	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
 	if ( pVersionView )
 		pVersionView->SetText( pVersionView->GetDBText() + wszVersion );
 #endif
@@ -184,7 +184,7 @@ void CInterfaceMainMenu::MsgCreditsScreen( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_CREDITS, "" );
 }
 
-void CInterfaceMainMenu::OnHallOfFame( const string &szSender )
+void CInterfaceMainMenu::OnHallOfFame( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "options_menu_end" );
 	NMainLoop::Command( ML_COMMAND_SHOW_HALL_OF_FAME, "" );
@@ -281,19 +281,19 @@ void CInterfaceMainMenu::MsgTutorialMenu( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_SELECT_TUTORIAL, "" );
 }
 
-void CInterfaceMainMenu::OnMultiplayer( const string &szSender )
+void CInterfaceMainMenu::OnMultiplayer( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MULTIPLAYER_MENU, "" );
 }
 
-void CInterfaceMainMenu::OnCustomCampaign( const string &szSender )
+void CInterfaceMainMenu::OnCustomCampaign( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_CUSTOM_CAMPAIGN, "" );
 }
 
-void CInterfaceMainMenu::OnLoadMod( const string &szSender )
+void CInterfaceMainMenu::OnLoadMod( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_LOAD_MOD, "" );
@@ -304,8 +304,8 @@ void CInterfaceMainMenu::MsgSinglePlayer( const SGameMessage &msg )
 	if ( bVisited )
 		return;
 
-	wstring wszProfileName = NProfile::GetCurrentProfileName();
-	wstring wszDefaultProfileName;
+	std::wstring wszProfileName = NProfile::GetCurrentProfileName();
+	std::wstring wszDefaultProfileName;
 	if ( IScreen *pScreen = GetScreen() )
 		wszDefaultProfileName = pScreen->GetTextEntry( "T_DEFAULT_PROFILE_NAME" );
 	if ( wszProfileName != wszDefaultProfileName )
@@ -351,17 +351,17 @@ void CICMainMenu::Configure( const char *pszConfig )
 }
 
 
-void StartMainMenu( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() ) 
 	{
-		const string szVal = NStr::ToMBCS( paramsSet[0] );
+		const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 		NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", szVal.c_str()  );
 	}
 	if ( paramsSet.size() >= 2 )
 	{
-		const string szVal = NStr::ToMBCS( paramsSet[1] );
+		const std::string szVal = NStr::ToMBCS( paramsSet[1] );
 		NGlobal::SetVar( "CRAP.MainMenu.CampaignMap", szVal.c_str()  );
 	}
 #endif
@@ -376,7 +376,7 @@ void StartMainMenu( const string &szID, const vector<wstring> &paramsSet, void *
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
 
-void StartMainMenuIntro( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void StartMainMenuIntro( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
 	NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", "" );
@@ -387,7 +387,7 @@ void StartMainMenuIntro( const string &szID, const vector<wstring> &paramsSet, v
 	{
 		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
 
-		string szText = pRoot->szIntroMovie;
+		std::string szText = pRoot->szIntroMovie;
 		const bool bDemo = ( NGlobal::GetVar( "DEMO_MODE", 0 ) != 0 ) || ( NGlobal::GetVar( "MP_DEMO", 0 ) != 0 );
 		if ( bDemo )
 		{

@@ -67,7 +67,7 @@ void IPart::SetObjectInfoNode( CPtrFuncBase<CObjectInfo> *p )
 bool CAnimationWatch::NeedUpdate() 
 {
 	bool bCombiner = pCombiner.Refresh();
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	if ( bCombiner )
 	{
 		TWatchSet oldWatch;
@@ -81,12 +81,12 @@ bool CAnimationWatch::NeedUpdate()
 				indices.push_back( k );
 		}
 		// sync with previous trackers
-		hash_map<void*, int, SDefaultPtrHash> old;
+		std::unordered_map<void*, int, SDefaultPtrHash> old;
 		for ( int k = 0; k < oldWatch.size(); ++k )
 			old[ oldWatch[k] ] = k;
 		for ( int k = 0; k < watch.size(); ++k )
 		{
-			hash_map<void*, int, SDefaultPtrHash>::iterator i = old.find( watch[k] );
+			std::unordered_map<void*, int, SDefaultPtrHash>::iterator i = old.find( watch[k] );
 			if ( i != old.end() )
 				watch[k].Sync( oldWatch[ i->second ] );
 		}
@@ -121,9 +121,9 @@ void CPerMaterialCombiner::Recalc()
 	bHasChanged = false;
 	if ( value.size() < 4 )
 		return;
-	vector< CPtr<IPart> > res( value );
-	vector<int> sorted( res.size() );
-	vector<unsigned int> sortValues( res.size() );
+	std::vector< CPtr<IPart> > res( value );
+	std::vector<int> sorted( res.size() );
+	std::vector<unsigned int> sortValues( res.size() );
 	for ( int k = 0; k < res.size(); ++k )
 		sortValues[k] = res[k]->GetSortValue();
 	::DoRadixSort( (const unsigned int*) &sortValues[0], res.size(), &sorted );
@@ -140,7 +140,7 @@ void CPerMaterialCombiner::AddPart( IPart *pPart )
 
 void CPerMaterialCombiner::RemovePart( IPart *pPart )
 {
-	vector< CPtr<IPart> >::iterator i = find( value.begin(), value.end(), pPart );
+	std::vector< CPtr<IPart> >::iterator i = find( value.begin(), value.end(), pPart );
 	if ( i == value.end() )
 		return;
 	value.erase( i );
@@ -165,13 +165,13 @@ int CPerMaterialCombiner::operator&( CStructureSaver &f )
 
 void CMMXAnimationMatrices::Recalc()
 {
-	const vector<SHMatrix> &blends = pAnimation->GetValue();
+	const std::vector<SHMatrix> &blends = pAnimation->GetValue();
 	value.resize( blends.size() );
 	for ( int k = 0; k < value.size(); ++k )
 		Assign( &value[k], blends[k] );
 }
 
-CFuncBase<vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<vector<SHMatrix> > *pAnim )
+CFuncBase<std::vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<std::vector<SHMatrix> > *pAnim )
 {
 	return new CMMXAnimationMatrices( pAnim );
 }
@@ -181,8 +181,8 @@ static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompa
 	//CVec3 vRes;
 	m.RotateVectorTransposed( pRes, NGfx::GetVector( src ) );
 	Normalize( pRes );
-/*  //NGfx::SCompactVector *pRes	
-	NGfx::SCompactVector test; 
+/*  //NGfx::SCompactVector *pRes
+	NGfx::SCompactVector test;
 	NGfx::CalcCompactVector( &test, vRes );
 	NGfx::SCompactTransformer transformer;
 	AssignTransposed( &transformer, m );
@@ -190,7 +190,7 @@ static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompa
 	ASSERT( fabs( NGfx::GetVector(test) - NGfx::GetVector(*pRes) ) < 0.02f )*/
 }
 
-static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m )
+static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m )
 {
 	int nCount = srcPos.size();
 	if ( nCount > 3 && bIsSSEPresent )
@@ -202,7 +202,7 @@ static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const S
 	}
 }
 
-static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const SRealVertexWeight *pWeight, const vector<SHMatrix> &blends )
+static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SRealVertexWeight *pWeight, const std::vector<SHMatrix> &blends )
 {
 	int nCount = srcPos.size();
 	if ( nCount > 0 && bIsSSEPresent && (((int)(&blends[0]))&0xf) == 0 )
@@ -238,14 +238,14 @@ static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const S
 }
 
 template <class T>
-inline void CalcPerVertexLight( T *pRes, CObjectInfo *p, const vector<CVec3> &srcPos, const SUVInfo *pSrc,
-	const vector<NGfx::SCompactVector> &normals, const SPerVertexLightState &ls, SCacheLightingInfo *pCache,
+inline void CalcPerVertexLight( T *pRes, CObjectInfo *p, const std::vector<CVec3> &srcPos, const SUVInfo *pSrc,
+	const std::vector<NGfx::SCompactVector> &normals, const SPerVertexLightState &ls, SCacheLightingInfo *pCache,
 	const SBound &bv )
 {
 	CalcPerVertexLight( pRes, srcPos, pSrc, p->GetPositionIndices(), normals, p->GetAttribute( GATTR_VERTEX_COLOR ), ls, pCache, bv );
 }
 
-static vector<NGfx::SCompactVector> xformedNormals;
+static std::vector<NGfx::SCompactVector> xformedNormals;
 template<class TParam>
 struct STGenericTransformer
 {
@@ -255,7 +255,7 @@ struct STGenericTransformer
 
 	STGenericTransformer( const SPerVertexLightState &_ls ) : ls(_ls) {}
 	void CopyTransform( CObjectInfo *pObjInfo, const SUVInfo *pSrc, int nVertices,
-		SCacheLightingInfo *pCache, const SBound &bv, 
+		SCacheLightingInfo *pCache, const SBound &bv,
 		TRes *pRes )
 	{
 		xformedNormals.resize( nVertices );
@@ -263,8 +263,8 @@ struct STGenericTransformer
 			xformedNormals[k] = pSrc[k].normal;
 		CalcPerVertexLight( pRes, pObjInfo, pObjInfo->GetPositions(), pSrc, xformedNormals, ls, pCache, bv );
 	}
-	void SimpleTransform( CObjectInfo *pObjInfo, const vector<CVec3> &transformed, const SUVInfo *pSrc, int nVertices,
-		SCacheLightingInfo *pCache, const SBound &bv, 
+	void SimpleTransform( CObjectInfo *pObjInfo, const std::vector<CVec3> &transformed, const SUVInfo *pSrc, int nVertices,
+		SCacheLightingInfo *pCache, const SBound &bv,
 		const SFBTransform &trans, TRes *pRes )
 	{
 		SMMXFixups fixups;
@@ -279,9 +279,9 @@ struct STGenericTransformer
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
 	}
-	void SingleSkinTransform( CObjectInfo *pObjInfo, const vector<CVec3> &transformed, const SUVInfo *_pSrc, int nVerties,
-		SCacheLightingInfo *pCache, const SBound &bv, 
-		const SRealVertexWeight *_pWeight, const vector<SHMatrix> &blends, const vector<NGfx::SCompactTransformer> &matrices, TRes *pRes )
+	void SingleSkinTransform( CObjectInfo *pObjInfo, const std::vector<CVec3> &transformed, const SUVInfo *_pSrc, int nVerties,
+		SCacheLightingInfo *pCache, const SBound &bv,
+		const SRealVertexWeight *_pWeight, const std::vector<SHMatrix> &blends, const std::vector<NGfx::SCompactTransformer> &matrices, TRes *pRes )
 	{
 		if ( blends.empty() )
 		{
@@ -293,7 +293,7 @@ struct STGenericTransformer
 		CreateFixups( &fixups );
 		int k = 0;
 
-		const vector<WORD> &posIndices = pObjInfo->GetPositionIndices();
+		const std::vector<WORD> &posIndices = pObjInfo->GetPositionIndices();
 		ASSERT( nVerties == posIndices.size() );
 		xformedNormals.resize( posIndices.size() );
 		const SUVInfo *pSrc = _pSrc;
@@ -319,7 +319,7 @@ struct STGenericTransformer
 				const NGfx::SCompactTransformer &blend3 = matrices[ pWeight->cBoneIndices[2] ];
 				BYTE nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
 				MMXTransformVector3( &xformedNormals[k], &pSrc->normal, &fixups, &blend1, nW1, &blend2, nW2, &blend3, nW3 );
-			}	
+			}
 		}
 		_asm emms;
 
@@ -331,27 +331,27 @@ struct SGenericPosTransformer
 {
 	typedef CVec3 TRes;
 	enum E { PASS_MMX_BLENDS = 0 };
-	
+
 	void CopyTransform( CObjectInfo *pObjInfo, const SUVInfo *pSrc, int nSize,
-		SCacheLightingInfo *pCache, const SBound &bv, 
+		SCacheLightingInfo *pCache, const SBound &bv,
 		TRes *pRes )
 	{
-		const vector<CVec3> &srcPos = pObjInfo->GetPositions();
+		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
 		for ( int k = 0; k < srcPos.size(); ++k )
 			pRes[k] = srcPos[k];
 	}
-	void SimpleTransform( CObjectInfo *pObjInfo, const vector<CVec3> &_fake, const SUVInfo *pSrc, int nVertices,
-		SCacheLightingInfo *pCache, const SBound &bv, 
+	void SimpleTransform( CObjectInfo *pObjInfo, const std::vector<CVec3> &_fake, const SUVInfo *pSrc, int nVertices,
+		SCacheLightingInfo *pCache, const SBound &bv,
 		const SFBTransform &trans, TRes *pRes )
 	{
-		const vector<CVec3> &srcPos = pObjInfo->GetPositions();
+		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
 		TransformPosition( srcPos, pRes, trans.forward );
 	}
-	void SingleSkinTransform( CObjectInfo *pObjInfo, const vector<CVec3> &_fake, const SUVInfo *pSrc, int nVertices,
-		SCacheLightingInfo *pCache, const SBound &bv, 
-		const SRealVertexWeight *pWeight, const vector<SHMatrix> &blends, const vector<NGfx::SCompactTransformer> &matrices, TRes *pRes )
+	void SingleSkinTransform( CObjectInfo *pObjInfo, const std::vector<CVec3> &_fake, const SUVInfo *pSrc, int nVertices,
+		SCacheLightingInfo *pCache, const SBound &bv,
+		const SRealVertexWeight *pWeight, const std::vector<SHMatrix> &blends, const std::vector<NGfx::SCompactTransformer> &matrices, TRes *pRes )
 	{
-		const vector<CVec3> &srcPos = pObjInfo->GetPositions();
+		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
 		if ( blends.empty() )
 		{
 			ASSERT(0);
@@ -366,12 +366,12 @@ struct SPartTransformer : public T
 {
 	SPartTransformer() {}
 	SPartTransformer( const SPerVertexLightState &_ls ) : T(_ls) {}
-	int DoTransform( IPart *p, typename T::TRes *pRes, const vector<CVec3> &transformed )
+	int DoTransform( IPart *p, typename T::TRes *pRes, const std::vector<CVec3> &transformed )
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
 		if ( !pObjInfo )
 			return 0;
-		const vector<SUVInfo> &srcVerts = pObjInfo->GetVertices();
+		const std::vector<SUVInfo> &srcVerts = pObjInfo->GetVertices();
 		if ( srcVerts.empty() )
 			return 0;
 		SBound bv;
@@ -379,7 +379,7 @@ struct SPartTransformer : public T
 		switch ( p->GetTransformType() )
 		{
 		case TT_NONE:
-			CopyTransform( pObjInfo, &srcVerts[0], srcVerts.size(), 
+			CopyTransform( pObjInfo, &srcVerts[0], srcVerts.size(),
 				&p->cacheLighting, bv,
 				pRes );
 			break;
@@ -396,7 +396,7 @@ struct SPartTransformer : public T
 			else
 				SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 					&p->cacheLighting, bv,
-					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), *(vector<NGfx::SCompactTransformer>*)0, pRes );
+					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), *(std::vector<NGfx::SCompactTransformer>*)0, pRes );
 			break;
 		default:
 			ASSERT(0);
@@ -447,11 +447,11 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 	NGfx::CBufferLock<TVertex> geom;
 	int nVert;
 
-	STGfxCacheTransformer( CObj<NGfx::CGeometry> *pGeom, int nTotal, const SPerVertexLightState &_ls, NGfx::EBufferUsage usage ) 
-		: TParent(_ls), geom( pGeom, nTotal, usage ), nVert(0) 
+	STGfxCacheTransformer( CObj<NGfx::CGeometry> *pGeom, int nTotal, const SPerVertexLightState &_ls, NGfx::EBufferUsage usage )
+		: TParent(_ls), geom( pGeom, nTotal, usage ), nVert(0)
 	{
 	}
-	void Transform( IPart *p, const vector<CVec3> &transformed )
+	void Transform( IPart *p, const std::vector<CVec3> &transformed )
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
 		if ( !pObjInfo )
@@ -486,7 +486,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 typedef STGfxCacheTransformer<SGfxVertex> SGfxCacheTransformer;
 typedef STGfxCacheTransformer<STnLVertex> STnlCacheTransformer;
 
-void TransformPart( IPart *p, vector<CVec3> *pRes, vector<STriangle> *pTris )
+void TransformPart( IPart *p, std::vector<CVec3> *pRes, std::vector<STriangle> *pTris )
 {
 	p->RefreshObjectInfo();
 	CObjectInfo *pObjInfo = p->GetObjectInfo();
@@ -503,7 +503,7 @@ void TransformPart( IPart *p, vector<CVec3> *pRes, vector<STriangle> *pTris )
 
 void CVBCombiner::XFormPosition()
 {
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	partBVs.resize( parts.size() );
 
 	SBoundCalcer bcAll;
@@ -516,7 +516,7 @@ void CVBCombiner::XFormPosition()
 		if ( !pObjInfo )
 			continue;
 		// xform
-		vector<CVec3> *pRes = &pPart->xformedPositions;
+		std::vector<CVec3> *pRes = &pPart->xformedPositions;
 		int nSize = pObjInfo->GetPositions().size();
 		if ( nSize != pRes->size() )
 		{
@@ -553,7 +553,7 @@ void CVBCombiner::XFormPosition()
 template<class TTrans>
 void CVBCombiner::SimpleTransform( TTrans *p )
 {
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	TTrans &trans = *p;
 	for ( int i = 0; i < parts.size(); ++i )
 	{
@@ -570,11 +570,11 @@ void CVBCombiner::DoRecalc()
 		XFormPosition();
 	bNeedRecalc = false;
 	ASSERT( NGfx::N_VEC_FULL_TEX_SIZE == N_VERTEX_TEX_SIZE );
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	partBVs.resize( parts.size() );
-	vector< CPtr<IPart> >::const_iterator i = parts.begin();
+	std::vector< CPtr<IPart> >::const_iterator i = parts.begin();
 	int nVerts = 0, nPositions = 0;
-	
+
 	for ( ; i != parts.end(); ++i )
 	{
 		(*i)->RefreshObjectInfo();
@@ -606,12 +606,12 @@ void CVBCombiner::DoRecalc()
 	}
 }
 
-bool CVBCombiner::NeedUpdate() 
-{ 
+bool CVBCombiner::NeedUpdate()
+{
 	bool bLightState = pLightState.Refresh();
 	if ( bLightState )
 	{
-		const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+		const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 		for ( int i = 0; i < parts.size(); ++i )
 		{
 			if ( parts[i] )
@@ -632,24 +632,24 @@ void CVBCombiner::FreeMemory()
 {
 	if ( bDroppedXForm )
 		return;
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	for ( int i = 0; i < parts.size(); ++i )
 	{
 		if ( parts[i] )
 			parts[i]->ResetCachedTransform();
 	}
-	bDroppedXForm = true;				
+	bDroppedXForm = true;
 }
 
 // CIBCombiner
 
 void CIBCombiner::Recalc()
 {
-	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
+	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
 	//vector< CPtr<IPart> >::const_iterator i;// = parts.begin();
 	value.resize( parts.size() );
 	int nTotalTris = 0;
-	vector<char> bIs2Sided( parts.size(), (char)0 );
+	std::vector<char> bIs2Sided( parts.size(), (char)0 );
 	for ( int i = 0; i < parts.size(); ++i )//i = parts.begin(); i != parts.end(); ++i )
 	{
 		parts[i]->RefreshObjectInfo();
@@ -682,7 +682,7 @@ void CIBCombiner::Recalc()
 			nLargeOffset += nOffset;
 			nOffset = 0;
 		}
-		vector<STriangle> tris;
+		std::vector<STriangle> tris;
 		if ( ibt == IBTT_POSITIONS )
 			pObjInfo->GetVxPositionTriangles( &tris );
 		else if ( ibt == IBTT_VERTICES )
@@ -699,7 +699,7 @@ void CIBCombiner::Recalc()
 		unsigned short nUseOffset = nOffset;
 		if ( b2Sided )
 		{
-			for ( vector<STriangle>::iterator k = tris.begin(), kEnd = tris.end(); k != kEnd; ++k )
+			for ( std::vector<STriangle>::iterator k = tris.begin(), kEnd = tris.end(); k != kEnd; ++k )
 			{
 				STriangle &tDest = *pFill++, &tSrc = *k;
 				tDest.i1 = tSrc.i1 + nUseOffset;
@@ -707,7 +707,7 @@ void CIBCombiner::Recalc()
 				tDest.i3 = tSrc.i2 + nUseOffset;
 			}
 		}
-		for ( vector<STriangle>::iterator k = tris.begin(), kEnd = tris.end(); k != kEnd; ++k )
+		for ( std::vector<STriangle>::iterator k = tris.begin(), kEnd = tris.end(); k != kEnd; ++k )
 		{
 			STriangle &tDest = *pFill++, &tSrc = *k;
 			tDest.i1 = tSrc.i1 + nUseOffset;

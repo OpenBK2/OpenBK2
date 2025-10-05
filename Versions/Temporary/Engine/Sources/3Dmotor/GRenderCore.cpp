@@ -64,7 +64,7 @@ void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
 	}
 }
 
-void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv )
+void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<std::vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv )
 {
 	SRenderGeometryInfo *pGeom = geometryInfos.Alloc();
 	pGeom->pTriLists[TLT_POSITION] = pTris;
@@ -118,7 +118,7 @@ bool CSceneFragments::HasSelectedFragments() const
 	return true;
 }
 
-void CSceneFragments::HideGeometry( const vector<CPartFlags> &flags )
+void CSceneFragments::HideGeometry( const std::vector<CPartFlags> &flags )
 {
 	int n = Min( geometries.size(), flags.size() );
 	if ( filterGeometry.empty() )
@@ -186,7 +186,7 @@ EFragmentsSplit SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, S
 	EFragmentsSplit res = GetIntersectLevel( bv, pStatic->bv );
 	if ( res == FST_SPLIT )
 	{
-		const vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
 		for ( int k = 0; k < bounds.size(); ++k )
 		{
 			if ( !pRes->IsSet( k ) )
@@ -207,7 +207,7 @@ EFragmentsSplit SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRender
 		pTS->PopClipHint();
 		return FST_ACCEPT;
 	}
-	const vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
+	const std::vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
 	for ( int k = 0; k < bounds.size(); ++k )
 	{
 		if ( !pRes->IsSet( k ) )
@@ -225,7 +225,7 @@ EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGe
 	EFragmentsSplit res = GetIntersectLevel( bound, pStatic->bv );
 	if ( res == FST_SPLIT )
 	{
-		const vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
 /*		CPartFlags res1 = *pRes;
 		for ( int k = 0; k < bounds.size(); ++k )
 		{
@@ -261,7 +261,7 @@ EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGe
 	return res;
 }
 
-void SIgnorePartsInfo::Init( const CPartFlags &_flags, const vector<CPtr<IPart> > *pParts )
+void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IPart> > *pParts )
 {
 	flags = _flags;
 	ignore.resize( pParts->size() );
@@ -295,8 +295,8 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 	if ( ipi.pTrackCombiner != 0 && ipi.pTrackCombiner.Refresh() )
 	{
 		ipi.flags.TakeAll();
-		const vector< CPtr<IPart> > &parts = ipi.pTrackCombiner->GetValue();
-		typedef hash_map<IPart*, bool, SRawPtrHash> CPtrSet;
+		const std::vector< CPtr<IPart> > &parts = ipi.pTrackCombiner->GetValue();
+		typedef std::unordered_map<IPart*, bool, SRawPtrHash> CPtrSet;
 		CPtrSet ignore;
 		int nDst = 0;
 		for ( int k = 0; k < ipi.ignore.size(); ++k )
@@ -309,7 +309,7 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 			++nDst;
 		}
 		ipi.ignore.resize( nDst );
-		const vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
+		const std::vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
 		for ( int k = 0; k < parts.size(); ++k )
 		{
 			if ( ignore.find( parts[k] ) != ignore.end() )
@@ -330,7 +330,7 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 	CRenderCmdList::UParameter _p3,
 	int nStencilOp )
 {
-	const vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
+	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
 	for ( int k = bTakeLitParticles ? 0 : 1; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )

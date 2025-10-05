@@ -1,12 +1,12 @@
 #pragma once
 
 
-typedef hash_map<CDBID, int> CObjectNameSet;	// важно наличие
-typedef list<CDBID> CObjectNameList;					// важна последовательность
+typedef std::unordered_map<CDBID, int> CObjectNameSet;	// важно наличие
+typedef std::list<CDBID> CObjectNameList;					// важна последовательность
 
 struct SObjectSet
 {
-	string szObjectTypeName;
+	std::string szObjectTypeName;
 	CObjectNameSet objectNameSet;
 
 	inline void Clear()
@@ -20,7 +20,7 @@ struct SObjectSet
 // 
 struct SSelectionSet
 {
-	string szObjectTypeName;
+	std::string szObjectTypeName;
 	CObjectNameList objectNameList;
 
 	inline void Clear()
@@ -46,13 +46,13 @@ struct IController : public CObjectBase
 	// Получить краткое описание
 	virtual void GetDescription( CString *pstrDescription ) const = 0;
 	// Если Undo Operation временная, то ее можно удалить по этому ID
-	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) const = 0;
+	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const = 0;
 };
 
 
 // Управляющий операциями Undo
 // Складывает из в буфера и умеет из перекладывать
-typedef list<CString> CDescriptionList;
+typedef std::list<CString> CDescriptionList;
 struct IControllerContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C2 };
@@ -72,7 +72,7 @@ struct IControllerContainer : public CObjectBase
 	//Получить список описаний
 	virtual int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const = 0;
 	// Удалить временные Undo Operations
-	virtual int RemoveTemporaryControllers( const string &rszTemporaryLabel ) = 0;
+	virtual int RemoveTemporaryControllers( const std::string &rszTemporaryLabel ) = 0;
 };
 
 

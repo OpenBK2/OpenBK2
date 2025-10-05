@@ -159,7 +159,7 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadiu
 		return false;
 	}
 */
-	vector<SVector> tiles = GetTilesForCircle( fRadius );
+	std::vector<SVector> tiles = GetTilesForCircle( fRadius );
 	for ( int i = 0; i < tiles.size(); ++i )
 	{
 		if ( N )

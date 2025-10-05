@@ -26,7 +26,7 @@ namespace NAnimation
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// this is very primitive for now -- it's get first available text track
-	const granny_text_track * GetTextTrack( const granny_animation *pAnimation, const string &szTrackName )
+	const granny_text_track * GetTextTrack( const granny_animation *pAnimation, const std::string &szTrackName )
 	{
 		if ( pAnimation->TrackGroupCount > 0 && pAnimation->TrackGroups[0]->TextTrackCount > 0 )
 		{
@@ -36,7 +36,7 @@ namespace NAnimation
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	unsigned int GetMarkTimes( vector<float> *pResult, const SAnimHandle &animHandle, const string &szTrackName, const string &szMarkName )
+	unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimHandle &animHandle, const std::string &szTrackName, const std::string &szMarkName )
 	{
 		CDGPtr<CPtrFuncBase<CGrannyFileInfo> > pGrannyFileLoader = shareAnimations.Get( animHandle.pAnimFile );
 		pGrannyFileLoader.Refresh();

@@ -77,9 +77,9 @@ bool CAIMap::IsRectInside( const SRect &rect ) const
 				 IsPointInside( rect.v3 ) && IsPointInside( rect.v4 );
 }
 
-static vector< vector<SVector> > circleTiles;
+static std::vector< std::vector<SVector> > circleTiles;
 
-void CAIMap::AddTile( const SVector &tile, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
+void CAIMap::AddTile( const SVector &tile, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	if ( !mask.GetData( tile.x + nMaxRadius, tile.y + nMaxRadius ) )
 	{
@@ -88,7 +88,7 @@ void CAIMap::AddTile( const SVector &tile, vector<SVector> &tiles, CArray2D1Bit 
 	}
 }
 
-void CAIMap::Add8TilesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
+void CAIMap::Add8TilesEven( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	AddTile( SVector( vOffset.x,     vOffset.y     ), tiles, mask, nMaxRadius );
 	AddTile( SVector( 1 - vOffset.x, vOffset.y     ), tiles, mask, nMaxRadius );
@@ -101,7 +101,7 @@ void CAIMap::Add8TilesEven( const SVector vOffset, vector<SVector> &tiles, CArra
 	AddTile( SVector( 1 - vOffset.y, 1 - vOffset.x ), tiles, mask, nMaxRadius );
 }
 
-void CAIMap::AddLinesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
+void CAIMap::AddLinesEven( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	CBres bres;
 	bres.InitPoint( SVector( 1, 1 ), vOffset );
@@ -116,7 +116,7 @@ void CAIMap::AddLinesEven( const SVector vOffset, vector<SVector> &tiles, CArray
 	while ( curOffset != vOffset );
 }
 
-void CAIMap::Add8TilesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
+void CAIMap::Add8TilesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	AddTile( SVector( vOffset.x,  vOffset.y  ), tiles, mask, nMaxRadius );
 	AddTile( SVector( -vOffset.x, vOffset.y  ), tiles, mask, nMaxRadius );
@@ -129,7 +129,7 @@ void CAIMap::Add8TilesOdd( const SVector vOffset, vector<SVector> &tiles, CArray
 	AddTile( SVector( -vOffset.y, -vOffset.x ), tiles, mask, nMaxRadius );
 }
 
-void CAIMap::AddLinesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
+void CAIMap::AddLinesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	CBres bres;
 	bres.InitPoint( SVector( 0, 0 ), vOffset );
@@ -157,7 +157,7 @@ void CAIMap::RecreateCircles()
 	circleTiles.clear();
 	//circleTiles.reserve( 2*nMaxRadius );
 
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	circleTiles.push_back( tiles );
 
 	tiles.push_back( SVector( 0, 0 ) );
@@ -199,7 +199,7 @@ void CAIMap::RecreateCircles()
 	}
 }
 
-vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
+std::vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
 {
 	const int nDiameter = 2.0f*fRadius/GetTileSize();
 
@@ -211,12 +211,12 @@ vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
 
 bool CAIMap::IsRectOnLockedTiles( const SRect &rect, const EAIClasses aiClass )
 {
-	return ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, (list<SVector>*)0, aiClass, SGenericNumber<0>() );
+	return ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, (std::list<SVector>*)0, aiClass, SGenericNumber<0>() );
 }
 
 bool CAIMap::IsCircleOnLockedTiles( const CCircle &circle, const EAIClasses aiClass )
 {
-	return ProcessCircleTiles( circle.center, circle.r, (list<SVector>*)0, aiClass, SGenericNumber<0>() );
+	return ProcessCircleTiles( circle.center, circle.r, (std::list<SVector>*)0, aiClass, SGenericNumber<0>() );
 }
 
 bool CAIMap::IsLocked( const int x, const int y, const EAIClasses aiClass ) const

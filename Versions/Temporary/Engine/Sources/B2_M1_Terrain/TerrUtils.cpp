@@ -4,21 +4,23 @@
 #include "System/FastMath.h"
 #include "TerrUtils.h"
 
+#include <algorithm>
+
 CVec3dEx CVec3fEx::GetVec3dEx() const { return CVec3dEx( (double)x, (double)y, (double)z, flag ); }
 CVec3fEx CVec3dEx::GetVec3fEx() const { return CVec3fEx( (float)x, (float)y, (float)z, flag ); }
 
-void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb::SVSOPoint> &points, const bool bSetFlag )
+void AttachIntersection( std::vector<NDb::SVSOPoint> *pIntersection, const std::vector<NDb::SVSOPoint> &points, const bool bSetFlag )
 {
 	if ( pIntersection->size() < 2 )
 		return;
 
-	static vector<SIntersectPoint> inters(16);
-	static vector<NDb::SVSOPoint> newPoints(128);
+	static std::vector<SIntersectPoint> inters(16);
+	static std::vector<NDb::SVSOPoint> newPoints(128);
 
 	newPoints.resize( 0 );
 
-	vector<NDb::SVSOPoint>::const_iterator itCurPoint = pIntersection->begin();
-	vector<NDb::SVSOPoint>::const_iterator itNextPoint = itCurPoint;
+	std::vector<NDb::SVSOPoint>::const_iterator itCurPoint = pIntersection->begin();
+	std::vector<NDb::SVSOPoint>::const_iterator itNextPoint = itCurPoint;
 	++itNextPoint;
 
 	NDb::SVSOPoint addPoint;
@@ -29,8 +31,8 @@ void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb
 		inters.resize( 0 );
 		GetIntersection( &inters, points, itCurPoint->vPos, itNextPoint->vPos );
 		newPoints.push_back( *itCurPoint );
-		sort( inters.begin(), inters.end() );
-		for ( vector<SIntersectPoint>::const_iterator it = inters.begin(); it != inters.end(); ++it )
+		std::sort( inters.begin(), inters.end() );
+		for ( std::vector<SIntersectPoint>::const_iterator it = inters.begin(); it != inters.end(); ++it )
 		{
 			addPoint.vPos = it->vPoint;
 			addPoint.vNorm = itCurPoint->vNorm + ( itNextPoint->vNorm - itCurPoint->vNorm ) * it->fDist;
@@ -50,7 +52,7 @@ void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb
 }
 
 
-bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders )
+bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders )
 {
 	int nLeftInters = 0, nRightInters = 0;
 	double fFirstX = -FP_MAX_VALUE, fLastX = -FP_MAX_VALUE;
@@ -103,7 +105,7 @@ bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeB
 }
 
 // whether "rV" is outside of "rPoly"
-bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
+bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 {
 	//return (!IsInside(rPoly, rV));	/// why not?
 
@@ -156,7 +158,7 @@ bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 	return ( (!(nLeftInters & 1)) || (!(nRightInters & 1)) );
 }
 
-void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
+void GetIntersection( std::vector<CVec3dEx> *pIntersection, const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
 	for ( int i = 0; i < rPoly.size(); ++i )
 	{
@@ -178,7 +180,7 @@ void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &r
 	}
 }
 
-void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
+void GetIntersection( std::vector<SIntersectPoint> *pIntersection, const std::vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
 {
 	for ( int i = 0; i < rPoly.size(); ++i )
 	{
@@ -200,13 +202,13 @@ void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3
 	}
 }
 
-void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
+void GetIntersection( std::vector<SIntersectPoint> *pIntersection, const std::vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
 {
 	if ( rPoly.size() < 2 )
 		return;
 
-	vector<NDb::SVSOPoint>::const_iterator itVec1 = rPoly.begin();
-	vector<NDb::SVSOPoint>::const_iterator itVec2 = itVec1;
+	std::vector<NDb::SVSOPoint>::const_iterator itVec1 = rPoly.begin();
+	std::vector<NDb::SVSOPoint>::const_iterator itVec2 = itVec1;
 	++itVec2;
 	for ( ; itVec2 != rPoly.end(); ++itVec1, ++itVec2 )
 	{
@@ -231,7 +233,7 @@ void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::
 	}
 }
 
-void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
+void GetBorderIntersection( std::vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
 {
 	for ( int g = 0; g < 3; ++g )
 	{
@@ -261,7 +263,7 @@ void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleE
 }
 
 //	whether the "rV1-rV2" segment does intersect the "rPoly"
-bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
+bool IsIntersect( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
 	for ( int i = 0; i < rPoly.size(); ++i )
 	{
@@ -281,9 +283,9 @@ bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec
 }
 
 //	whether the "rV1-rV2" segment does intersect the mesh triangle
-bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 )
+bool IsIntersect( const std::vector<STriangle> &rTriangles, const std::vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
-	for ( vector<STriangle>::const_iterator it = rTriangles.begin(); it != rTriangles.end(); ++it )
+	for ( std::vector<STriangle>::const_iterator it = rTriangles.begin(); it != rTriangles.end(); ++it )
 	{
 		if ( IsIntersect(rVerts[it->i1], rVerts[it->i2], rV1, rV2) )
 			return true;
@@ -295,9 +297,9 @@ bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &r
 	return false;
 }
 
-static vector<BYTE> flags( 64 );
+static std::vector<BYTE> flags( 64 );
 static CArray2D<CVec3> normVects( 64, 64 );
-void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints )
+void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> &rSourcePoints )
 {
 	pResPoints->resize( 0 );
 	if ( rSourcePoints.empty() )
@@ -368,11 +370,11 @@ void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePo
 }
 
 //	get the result triangles of the intersection
-void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
+void GetIntersectionTriangles( std::vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
 {
 	pIntersection->clear();
 
-	vector<CVec3> intersectionPoints( 6 );
+	std::vector<CVec3> intersectionPoints( 6 );
 	intersectionPoints.clear();
 	GetBorderIntersection( &intersectionPoints, rTriangle1, rTriangle2 );
 
@@ -413,7 +415,7 @@ bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, boo
 	//	{CRAP !!! create faster method !!! /CRAP}
 	//	what about CW/CCW ?
 	
-	vector<CVec3dEx> trianglePoly( 3 );
+	std::vector<CVec3dEx> trianglePoly( 3 );
 	trianglePoly.clear();
 
 	trianglePoly.push_back( rTriangle.points[0].GetVec3fEx() );

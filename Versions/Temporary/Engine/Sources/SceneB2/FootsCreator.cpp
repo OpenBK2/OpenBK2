@@ -33,7 +33,7 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 
 	int nPatchesCount;
 
-	for ( vector< vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = foot.points.begin(); itPointsArr != foot.points.end(); ++itPointsArr )
+	for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = foot.points.begin(); itPointsArr != foot.points.end(); ++itPointsArr )
 	{
 		fFootTexX = 0.0f;
 
@@ -110,9 +110,9 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 
 void CTerraGen::AddAllNeededFoots()
 {
-	for ( vector<int>::const_iterator it = needAddFoots.begin(); it != needAddFoots.end(); ++it )
+	for ( std::vector<int>::const_iterator it = needAddFoots.begin(); it != needAddFoots.end(); ++it )
 	{
-		for ( list<STerrainInfo::SFoot>::const_iterator itFoot = terrainInfo.foots.begin(); itFoot !=	terrainInfo.foots.end(); ++itFoot )
+		for ( std::list<STerrainInfo::SFoot>::const_iterator itFoot = terrainInfo.foots.begin(); itFoot !=	terrainInfo.foots.end(); ++itFoot )
 		{
 			if ( *it == itFoot->nID )
 				AddFoot( *itFoot );
@@ -136,7 +136,7 @@ void CTerraGen::RemoveFoot( const int nVSOID )
 
 void CTerraGen::RemoveFootInfo( const int nVSOID )
 {
-	for ( list<STerrainInfo::SFoot>::iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); )
+	for ( std::list<STerrainInfo::SFoot>::iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); )
 	{
 		if ( it->nID == nVSOID )
 			it = terrainInfo.foots.erase( it );
@@ -147,7 +147,7 @@ void CTerraGen::RemoveFootInfo( const int nVSOID )
 
 void CTerraGen::RemoveFootGfxInfo( const int nVSOID )
 {
-	for ( list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); )
+	for ( std::list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); )
 	{
 		if ( it->nID == nVSOID )
 			it = terrainGfxInfo.foots.erase( it );

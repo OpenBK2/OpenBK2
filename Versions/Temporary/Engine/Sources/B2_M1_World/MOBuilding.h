@@ -6,13 +6,13 @@ class CMOBuilding : public IMOContainer
 {
 	OBJECT_NOCOPY_METHODS( CMOBuilding );
 
-	vector< CPtr<CMOSelectable> > vPassangers;
+	std::vector< CPtr<CMOSelectable> > vPassangers;
 
 	enum EWindowState { EWS_NONE, EWS_DAY, EWS_NIGHT, EWS_DESTROYED };
-	vector<EWindowState> attachedWindows;
-	typedef list< pair< int, int > > CAttachedObjIDs;
-	vector< CAttachedObjIDs > attachedObjects;
-	vector< float > attachedObjectsHP;
+	std::vector<EWindowState> attachedWindows;
+	typedef std::list< std::pair< int, int > > CAttachedObjIDs;
+	std::vector< CAttachedObjIDs > attachedObjects;
+	std::vector< float > attachedObjectsHP;
 	float fMaxDistance;
 	float fBuildingHP;
 	WORD wAmbientSound;
@@ -21,7 +21,7 @@ class CMOBuilding : public IMOContainer
 	WORD wCycledSoundTimed;
 	bool bStorage;
 
-	hash_set<int> projectilesAlreadyHit;
+	std::unordered_set<int> projectilesAlreadyHit;
 	int nOldModelStage;
 	int nCurrentAmmo;
 	float fCapturingProgress;
@@ -52,7 +52,7 @@ public:
 	void GetStatus( SObjectStatus *pStatus ) const;
 	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 
-	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate );
+	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const std::list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate );
 	void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update );
 	void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex );
 
@@ -68,7 +68,7 @@ public:
 	bool Load( struct IMOUnit *pMO, bool bEnter ) { return false; }
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() { }
-	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const;
 
 	int GetPassangersCount() const { return vPassangers.size(); }
 

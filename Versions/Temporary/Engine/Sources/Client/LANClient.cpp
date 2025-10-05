@@ -61,7 +61,7 @@ void CLANClient::SendGamePacket( class CNetPacket *pPacket, bool bBroadcast )
 		pSaver->Add( 1, &pNetPacket );
 	}
 
-	for( list<int>::iterator it = clients.begin(); it != clients.end(); ++it )
+	for( std::list<int>::iterator it = clients.begin(); it != clients.end(); ++it )
 	{
 		if ( bBroadcast )
 		{
@@ -117,7 +117,7 @@ void CLANClient::Segment()
 			{
 				pNetPacket = new CNetNewClient();
 
-				list<int>::iterator it = clients.begin();
+				std::list<int>::iterator it = clients.begin();
 				for ( ; it != clients.end() && *it != nClientID; ++it )
 					;
 				if ( it == clients.end() )
@@ -132,7 +132,7 @@ void CLANClient::Segment()
 			break;
 		case NNet::IDriver::REMOVE_CLIENT:
 			{
-				list<int>::iterator it = clients.begin();
+				std::list<int>::iterator it = clients.begin();
 				for ( ; it != clients.end() && *it != nClientID; ++it )
 					;
 				if ( it != clients.end() )

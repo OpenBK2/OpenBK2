@@ -19,15 +19,19 @@ REGISTER_SAVELOAD_CLASS(0x11075B80,CWindowScreen)
 
 NGScene::I2DGameView *CWindowScreen::p2DGameView = 0;
 
-void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator *ss, CStateSequiences *src, CStateSequiences *dst, CWindowScreen *pS )
+void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator &ss, CStateSequiences &src, CStateSequiences *dst, CWindowScreen *pS )
 {
-	(*ss)->Segment( 1, pS ); // advance a little (to run all imidiate reactions)
-	if ( (*(*ss)).IsEnd() )
+	ss->Segment( 1, pS ); // advance a little (to run all immediate reactions)
+	if ( ss->IsEnd() )
 	{
-		if ( (*(*ss)).IsToBeDeleted() || !dst )
-			*ss = (*src).erase( *ss );
-		else																// animation finished, but may be reversed.
-			(*dst).splice( (*dst).end(), (*src), (*ss)++ );
+		if ( ss->IsToBeDeleted() || !dst )
+			ss = src.erase( ss );
+		else {
+			// animation finished, but may be reversed.
+			auto next = std::next(ss);
+			dst->splice(dst->end(), src, ss);
+			ss = next;
+		}
 	}
 }
 
@@ -67,7 +71,7 @@ void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	
 	CWindow::InitStatic();
 	
-	for ( vector<NDb::SCommandSequienceEntry>::const_iterator it = pDesc->commandSequiences.begin();
+	for ( std::vector<NDb::SCommandSequienceEntry>::const_iterator it = pDesc->commandSequiences.begin();
 				it != pDesc->commandSequiences.end(); ++it )
 	{
 		NI_ASSERT( commandSequiences.find( it->szName ) == commandSequiences.end(), StrFmt( "duplicate reaction name \"%s\"", it->szName.c_str() ) );
@@ -246,7 +250,7 @@ void CWindowScreen::InitSingletonWindows()
 	}
 }
 
-void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
+void CWindowScreen::UndoStateCommandSequence( const std::string &szCmdSeq )
 {
 	// откатим незаконченную прямую последовательность
 	for ( CStateSequiences::iterator it = stateSequiences.begin(); it != stateSequiences.end(); ++it )
@@ -274,17 +278,17 @@ void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
 	}
 }
 
-void CWindowScreen::RegisterEffect( const string &szEffect, const vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable )
+void CWindowScreen::RegisterEffect( const std::string &szEffect, const std::vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable )
 {
 	commandSequiences[szEffect].commands = cmds;
 	commandSequiences[szEffect].bReversable = bReversable;
 }
-void CWindowScreen::RegisterEffect( const string &szEffect, const NDb::SUIStateSequence &cmds )
+void CWindowScreen::RegisterEffect( const std::string &szEffect, const NDb::SUIStateSequence &cmds )
 {
 	commandSequiences[szEffect] = cmds;
 }
 
-void CWindowScreen::RegisterReaction( const string &szReactionKey, struct IMessageReactionB2 *pReaction )
+void CWindowScreen::RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction )
 {
 	messageReactions.Register( szReactionKey, pReaction );
 }
@@ -308,7 +312,7 @@ void CWindowScreen::Segment( const int timeDiff )
 
 void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 {
-	list<CWindowAnimationID> resumed;
+	std::list<CWindowAnimationID> resumed;
 
 	// choose states that are finished animations
 	for ( CStateSequiences::iterator ss = stateSequiences.begin(); ss != stateSequiences.end(); )
@@ -366,7 +370,7 @@ void CWindowScreen::RegisterToSegment( struct IWindow *pWnd, const bool bRegiste
 	if ( bRegister )
 		segmentObjs.insert( pWnd );
 	else
-		segmentObjs.remove( pWnd );
+		segmentObjs.erase( pWnd );
 }
 
 bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
@@ -379,18 +383,18 @@ void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 	if ( 0 == nAnimationID ) return;
 
 	// first search in finished animations
-	for ( CStateSequiences::iterator ss = finishedAnimations.begin(); ss != finishedAnimations.end(); )
-	{
-		if ( ss->GetID().first == nAnimationID )
-		{
-			ss->Reverse();
-			StartEffectAndDeleteIfNeeded( &ss, &stateSequiences, &finishedAnimations, this );
-			return;
-		}
-		else
-			++ss;
-	}
+	auto it = std::find_if(finishedAnimations.begin(), finishedAnimations.end(),
+						   [&](const auto &elem){ return elem.GetID().first == nAnimationID; });
+	if (it != finishedAnimations.end()) {
+		it->Reverse();
+		auto ss = std::find_if(stateSequiences.begin(), stateSequiences.end(),
+						   [&](const auto &elem){ return elem.GetID() == it->GetID(); });
 
+		if (ss != stateSequiences.end())
+		{
+			StartEffectAndDeleteIfNeeded(ss, stateSequiences, &finishedAnimations, this);
+		}
+	}
 	// then find animation and try to reverse
 	for ( CStateSequiences::iterator ss = stateSequiences.begin(); ss != stateSequiences.end(); ++ss )
 	{
@@ -425,11 +429,11 @@ int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &se
 	stateSequiences.push_front( CStates( seq, "", seq.bReversable, GetKeyboardFlags() ) );
 	CStateSequiences::iterator ss = stateSequiences.begin();
 	ss->SetAnimatedWindow( nID, pWindow );
-	StartEffectAndDeleteIfNeeded( &ss, &stateSequiences, &finishedAnimations, this );
+	StartEffectAndDeleteIfNeeded( ss, stateSequiences, &finishedAnimations, this );
 	return nID;
 }
 
-void CWindowScreen::RunStateCommandSequience( const string &szCmdSeq, IWindow *_pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait )
+void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq, IWindow *_pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait )
 {
 	if ( CDynamicCast<CWindow> pSequenceParent = _pSequenceParent )
 	{
@@ -452,7 +456,7 @@ void CWindowScreen::RunStateCommandSequience( const string &szCmdSeq, IWindow *_
 	}
 }
 
-void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward )
+void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward )
 {
 	if ( szCmdSeq.empty() ) 
 		return;
@@ -482,7 +486,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, C
 			CStateSequiences::iterator ss = stateSequiences.begin();
 			ss->SetNotifySink( pSequenceParent );
 			ss->SetContext( pContext );
-			StartEffectAndDeleteIfNeeded( &ss, &stateSequiences, &finishedAnimations, this );
+			StartEffectAndDeleteIfNeeded( ss, stateSequiences, &finishedAnimations, this );
 		}
 	}
 	else
@@ -496,7 +500,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, C
 				NI_ASSERT( !bFound, StrFmt( "duplicate sequience to reverse found in stateSequieces \"%s\"", szCmdSeq.c_str()) );
 				it->Reverse();
 				it->SetContext( pContext );
-				StartEffectAndDeleteIfNeeded( &it, &stateSequiences, 0, this );
+				StartEffectAndDeleteIfNeeded( it, stateSequiences, 0, this );
 				bFound = true;
 			}
 		}
@@ -521,7 +525,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, C
 	}
 }
 
-void CWindowScreen::SetWindowText( const string &szWindowName, const wstring &szText )
+void CWindowScreen::SetWindowText( const std::string &szWindowName, const std::wstring &szText )
 {
 	CWindow *pChild = GetDeepChild( szWindowName );
 	NI_ASSERT( pChild != 0, StrFmt( "cannot find deeper child \"%s\"", szWindowName.c_str() ) );
@@ -534,12 +538,12 @@ void CWindowScreen::SetWindowText( const string &szWindowName, const wstring &sz
 	}
 }
 
-bool CWindowScreen::RunReaction( const string &szSender, const string &szReactionName )
+bool CWindowScreen::RunReaction( const std::string &szSender, const std::string &szReactionName )
 {
 	return messageReactions.Execute( szSender, szReactionName, this, pReactionsAndChecks, GetKeyboardFlags() );
 }
 
-bool CWindowScreen::RunReaction( const string &szSender, const NDb::SUIDesc *pReaction )
+bool CWindowScreen::RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction )
 {
 	return messageReactions.Execute( szSender, pReaction, this, pReactionsAndChecks, GetKeyboardFlags() );
 }
@@ -549,7 +553,7 @@ void CWindowScreen::SetTooltipContext( const int nContext )
 	tooltips.SetTooltipContext( nContext, this );
 }
 
-IWindow *CWindowScreen::CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner )
+IWindow *CWindowScreen::CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner )
 {
 	return tooltips.CreateTooltipWindow( wszTooltipText, pTooltipOwner, this );
 }
@@ -605,9 +609,9 @@ IWindow* CWindowScreen::AddElement( const struct NDb::SUIDesc *pDesc )
 	//CRAP}
 }
 
-const wstring& CWindowScreen::GetTextEntry( const string &szName ) const
+const std::wstring& CWindowScreen::GetTextEntry( const std::string &szName ) const
 {
-	static wstring empty;
+	static std::wstring empty;
 	if ( !pInstance )
 		return empty;
 
@@ -652,7 +656,7 @@ bool CWindowScreen::ActivateNextInTabOrder()
 void CWindowScreen::RegisterTabOrder( IWindow * pWindow, int nTabOrder )
 {
 	if ( nTabOrder != -1 )
-		tabOrder.Push( pair<CObj<CWindow>, int>(dynamic_cast<CWindow*>(pWindow), nTabOrder) );
+		tabOrder.Push( std::pair<CObj<CWindow>, int>(dynamic_cast<CWindow*>(pWindow), nTabOrder) );
 }
 
 

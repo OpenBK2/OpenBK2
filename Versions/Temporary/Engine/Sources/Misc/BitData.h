@@ -7,7 +7,7 @@ template<class T> class CBitArray2DRLEWrapper;
 class CArray1Bit
 {
 	int xSize;
-	vector<BYTE> array;
+	std::vector<BYTE> array;
 
 	const BYTE GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
 public:
@@ -178,7 +178,7 @@ public:
 class CArray4Bit
 {
 	int nSize;
-	vector<BYTE> array;
+	std::vector<BYTE> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &array ); saver.Add( 2, &nSize ); return 0; }
 	int operator&( struct IXmlSaver &saver ) {  saver.Add( "Size", &nSize ); saver.Add( "BitArray", &array ); return 0; }

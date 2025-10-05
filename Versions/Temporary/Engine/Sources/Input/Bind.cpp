@@ -12,11 +12,11 @@ namespace NInput
 {
 
 // Global vars
-typedef hash_map<int, SActionInfo> TActionsMap;
-typedef hash_map<string, SCommand> TCommandsMap;
+typedef std::unordered_map<int, SActionInfo> TActionsMap;
+typedef std::unordered_map<std::string, SCommand> TCommandsMap;
 
-static vector<string> sections;
-static list<SGameMessage> events;
+static std::vector<std::string> sections;
+static std::list<SGameMessage> events;
 
 TActionsMap& GetActions()
 {
@@ -38,19 +38,19 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet );
 
 // Public
 
-const vector<string>& GetSections()
+const std::vector<std::string>& GetSections()
 {
 	return sections;
 }
 
-void SetSection( const string &_szSection, bool bUpdate )
+void SetSection( const std::string &_szSection, bool bUpdate )
 {
-	vector<string> temp( 1 );
+	std::vector<std::string> temp( 1 );
 	temp[0] = _szSection;
 	SetSection( temp, bUpdate );
 }
 
-void SetSection( const vector<string> &_sections, bool bUpdate )
+void SetSection( const std::vector<std::string> &_sections, bool bUpdate )
 {
 	if ( sections == _sections )
 		return;
@@ -60,7 +60,7 @@ void SetSection( const vector<string> &_sections, bool bUpdate )
 		UpdateBinds();
 }
 
-static bool IsSectionInSet( const string &szSection )
+static bool IsSectionInSet( const std::string &szSection )
 {
 	if ( szSection.empty() )
 		return true;
@@ -68,7 +68,7 @@ static bool IsSectionInSet( const string &szSection )
 	return find( sections.begin(), sections.end(), szSection ) != sections.end();
 }
 
-void Bind( EMappingType eType, const string &sCmd, const string &szSection, const vector<string> &szControlsSet )
+void Bind( EMappingType eType, const std::string &sCmd, const std::string &szSection, const std::vector<std::string> &szControlsSet )
 {
 	SMapping sMapping;
 	TActionsMap &sActions = GetActions();
@@ -118,7 +118,7 @@ void Bind( EMappingType eType, const string &sCmd, const string &szSection, cons
 	sCommand.mappingsList.push_back( sMapping );
 }
 
-void Unbind( const string &szCmd )
+void Unbind( const std::string &szCmd )
 {
 	TCommandsMap &sCommandsMap = GetCommands();
 
@@ -127,7 +127,7 @@ void Unbind( const string &szCmd )
 		return;
 
 	SCommand &sCommand = iTemp->second;
-	for ( list<SMapping>::iterator iMapping = sCommand.mappingsList.begin(); iMapping != sCommand.mappingsList.end(); )
+	for ( std::list<SMapping>::iterator iMapping = sCommand.mappingsList.begin(); iMapping != sCommand.mappingsList.end(); )
 	{
 		if ( !IsSectionInSet( iMapping->szSection ) )
 		{
@@ -150,7 +150,7 @@ void UnbindAll()
 		Unbind( iTemp->first );
 }
 
-void GetBind( const string &szCmd, list<SBind> *pRes )
+void GetBind( const std::string &szCmd, std::list<SBind> *pRes )
 {
 	TActionsMap &sActions = GetActions();
 	TCommandsMap &sCommandsMap = GetCommands();
@@ -161,9 +161,9 @@ void GetBind( const string &szCmd, list<SBind> *pRes )
 		return;
 
 	SCommand &sCommand = sCommandsMap[szCmd];
-	for ( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 	{
-		SBind &sBind = *( pRes->insert( pRes->end() ) );
+		SBind &sBind = pRes->emplace_back();
 		sBind.eType = iTempMapping->mType;
 		sBind.szSection = iTempMapping->szSection;
 
@@ -179,18 +179,18 @@ void UpdateBinds()
 {
 	TCommandsMap &sCommandsMap = GetCommands();
 
-	for ( hash_map<string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
-		for ( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 			iTempMapping->blockingGroupsSet.clear();
 	}
 
-	for ( hash_map<string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
 
-		for ( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 		{
 			iTempMapping->bDisabled = false;
 
@@ -203,18 +203,18 @@ void UpdateBinds()
 		}
 	}
 
-	for ( hash_map<string, SCommand>::iterator iTempCommand1 = sCommandsMap.begin(); iTempCommand1 != sCommandsMap.end(); ++iTempCommand1 )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand1 = sCommandsMap.begin(); iTempCommand1 != sCommandsMap.end(); ++iTempCommand1 )
 	{
 		SCommand &sCommand1 = iTempCommand1->second;
-		hash_map<string, SCommand>::iterator iNext = iTempCommand1;
+		std::unordered_map<std::string, SCommand>::iterator iNext = iTempCommand1;
 		iNext++;
-		for ( hash_map<string, SCommand>::iterator iTempCommand2 = iNext; iTempCommand2 != sCommandsMap.end(); ++iTempCommand2 )
+		for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand2 = iNext; iTempCommand2 != sCommandsMap.end(); ++iTempCommand2 )
 		{
 			SCommand &sCommand2 = iTempCommand2->second;
 
-			for ( list<SMapping>::iterator iTempMapping1 = sCommand1.mappingsList.begin(); iTempMapping1 != sCommand1.mappingsList.end(); ++iTempMapping1 )
+			for ( std::list<SMapping>::iterator iTempMapping1 = sCommand1.mappingsList.begin(); iTempMapping1 != sCommand1.mappingsList.end(); ++iTempMapping1 )
 			{
-				for ( list<SMapping>::iterator iTempMapping2 = sCommand2.mappingsList.begin(); iTempMapping2 != sCommand2.mappingsList.end(); ++iTempMapping2 )
+				for ( std::list<SMapping>::iterator iTempMapping2 = sCommand2.mappingsList.begin(); iTempMapping2 != sCommand2.mappingsList.end(); ++iTempMapping2 )
 				{
 					if ( iTempMapping1->bDisabled || iTempMapping2->bDisabled )
 						continue;
@@ -229,7 +229,7 @@ void UpdateBinds()
 	}
 }
 
-float GetControlCoeff( const string &szControl )
+float GetControlCoeff( const std::string &szControl )
 {
 	TActionsMap &sActions = GetActions();
 
@@ -244,7 +244,7 @@ float GetControlCoeff( const string &szControl )
 	return iTemp->second.fCoeff;
 }
 
-void SetControlCoeff( const string &szControl, float fCoeff )
+void SetControlCoeff( const std::string &szControl, float fCoeff )
 {
 	TActionsMap &sActions = GetActions();
 
@@ -279,7 +279,7 @@ bool GetEvent( SGameMessage *pSGameMessage )
 	return true;
 }
 
-void MakeEvent( SGameMessage *pMsg,  const string &szGameMessage, int _nParam1, int _nParam2, EControlType ct )
+void MakeEvent( SGameMessage *pMsg,  const std::string &szGameMessage, int _nParam1, int _nParam2, EControlType ct )
 {
 	*pMsg = SGameMessage();
 	TCommandsMap::iterator iTemp = GetCommands().find( szGameMessage );
@@ -299,14 +299,14 @@ void MakeEvent( SGameMessage *pMsg,  const string &szGameMessage, int _nParam1, 
 	pMsg->nParam2 = _nParam2;
 }
 
-void PostEvent( const string &szEvent, int _nParam1, int _nParam2 )
+void PostEvent( const std::string &szEvent, int _nParam1, int _nParam2 )
 {
 	SGameMessage sEvent;
 	MakeEvent( &sEvent, szEvent, _nParam1, _nParam2, CT_UNKNOWN );
 	events.push_back( sEvent );
 }
 
-void PostWinEvent( const string &szEvent, int _nParam1, int _nParam2 )
+void PostWinEvent( const std::string &szEvent, int _nParam1, int _nParam2 )
 {
 	SGameMessage sEvent;
 	MakeEvent( &sEvent, szEvent, _nParam1, _nParam2, CT_WINDOWS );
@@ -330,7 +330,7 @@ void PurgeUIEvents()
 			break;
 		NInput::ProcessMessage( msg );
 	}
-	for ( list<SGameMessage>::iterator it = events.begin(); it != events.end(); )
+	for ( std::list<SGameMessage>::iterator it = events.begin(); it != events.end(); )
 	{
 		SGameMessage &msg = *it;
 		if ( msg.mMessage.cType == CT_UNKNOWN )
@@ -342,7 +342,7 @@ void PurgeUIEvents()
 	}
 }
 
-float GetCommandCoeff( const string &szControl )
+float GetCommandCoeff( const std::string &szControl )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
 	if ( iTemp != GetCommands().end() )
@@ -351,7 +351,7 @@ float GetCommandCoeff( const string &szControl )
 	return 1.0f;
 }
 
-void SetCommandCoeff( const string &szControl, float fCoeff )
+void SetCommandCoeff( const std::string &szControl, float fCoeff )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
 	if ( iTemp == GetCommands().end() )
@@ -362,7 +362,7 @@ void SetCommandCoeff( const string &szControl, float fCoeff )
 
 // CBind
 
-CBind::CBind( const string &sCmd ): fDelta( 0 )
+CBind::CBind( const std::string &sCmd ): fDelta( 0 )
 {
 
 #ifndef _FINALRELEASE
@@ -422,7 +422,7 @@ static void Update( DWORD dwTime )
 		
 		bool bActive = false;
 		int64_t nValue = 0;
-		for( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled )
 				continue;
@@ -456,10 +456,10 @@ static bool IsBindActive( const SMapping &sMapping )
 
 	if ( bSetActive )
 	{
-		for( list<vector<int> >::const_iterator iTempSet = sMapping.blockingGroupsSet.begin(); iTempSet != sMapping.blockingGroupsSet.end(); iTempSet++ )
+		for( std::list<std::vector<int> >::const_iterator iTempSet = sMapping.blockingGroupsSet.begin(); iTempSet != sMapping.blockingGroupsSet.end(); iTempSet++ )
 		{
 			int nBlockingCount = 0;
-			const vector<int> &sBlockingSet = *iTempSet;
+			const std::vector<int> &sBlockingSet = *iTempSet;
 
 			for( int nTemp = 0; nTemp < sBlockingSet.size(); nTemp++ )
 			{
@@ -498,11 +498,11 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 	SActionInfo &sActionInfo = sActions[mMsg.nAction];
 	sActionInfo.bActive = mMsg.bState;
 
-	for ( hash_map<string, SCommand>::iterator iTempCommand = sCommands.begin(); iTempCommand != sCommands.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommands.begin(); iTempCommand != sCommands.end(); ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
 
-		for ( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
 				continue;
@@ -545,7 +545,7 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 	SActionInfo &sActionInfo = sActions[mMsg.nAction];
 	sActionInfo.bActive = mMsg.bState;
 
-	for( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 	{
 		if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
 			continue;
@@ -595,11 +595,11 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 //! Crossover detection
 static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 {
-	for ( vector<int>::const_iterator iTempB = mSetB.actionsSet.begin(); iTempB != mSetB.actionsSet.end(); ++iTempB )
+	for ( std::vector<int>::const_iterator iTempB = mSetB.actionsSet.begin(); iTempB != mSetB.actionsSet.end(); ++iTempB )
 	{
 		bool bInSet = false;
 		
-		for ( vector<int>::const_iterator iTempA = mSetA.actionsSet.begin(); iTempA != mSetA.actionsSet.end(); ++iTempA )
+		for ( std::vector<int>::const_iterator iTempA = mSetA.actionsSet.begin(); iTempA != mSetA.actionsSet.end(); ++iTempA )
 		{
 			if ( *iTempB == *iTempA )
 				bInSet = true;
@@ -614,7 +614,7 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 
 static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMapping )
 {
-	for ( list<SMapping>::const_iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for ( std::list<SMapping>::const_iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 	{
 		if ( ( sMapping.mType != iTempMapping->mType ) || ( sMapping.nPower != iTempMapping->nPower ) || ( sMapping.bActive != iTempMapping->bActive ) || ( sMapping.szSection != iTempMapping->szSection ) )
 			continue;
@@ -622,7 +622,7 @@ static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMappi
 			continue;
 
 		int nSameActionsCount = 0;
-		for ( vector<int>::const_iterator iTempAction = iTempMapping->actionsSet.begin(); iTempAction != iTempMapping->actionsSet.end(); iTempAction++ )
+		for ( std::vector<int>::const_iterator iTempAction = iTempMapping->actionsSet.begin(); iTempAction != iTempMapping->actionsSet.end(); iTempAction++ )
 		{
 			if ( find( sMapping.actionsSet.begin(), sMapping.actionsSet.end(), *iTempAction ) != sMapping.actionsSet.end() )
 				nSameActionsCount++;
@@ -637,7 +637,7 @@ static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMappi
 
 static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 {
-	vector<int> blockingGroupSet;
+	std::vector<int> blockingGroupSet;
 	TActionsMap &sActions = GetActions();
 
 	for ( int nBaseTemp = 0; nBaseTemp < sBaseSet.actionsSet.size(); nBaseTemp++ )
@@ -665,9 +665,9 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 
 }; // NAMESPACE
 
-static void CommandBindInner( const string &szID, const vector<wstring> &_paramsSet )
+static void CommandBindInner( const std::string &szID, const std::vector<std::wstring> &_paramsSet )
 {
-	vector<wstring> paramsSet( _paramsSet );
+	std::vector<std::wstring> paramsSet( _paramsSet );
 
 	if ( paramsSet.size() < 2 )
 	{
@@ -676,9 +676,9 @@ static void CommandBindInner( const string &szID, const vector<wstring> &_params
 		return;
 	}
 
-	vector<wstring>::const_iterator iTemp = paramsSet.begin();
+	std::vector<std::wstring>::const_iterator iTemp = paramsSet.begin();
 
-	string szCommand( NStr::ToMBCS( *paramsSet.begin() ) );
+	std::string szCommand( NStr::ToMBCS( *paramsSet.begin() ) );
 	paramsSet.erase( paramsSet.begin() );
 	NStr::TrimBoth( szCommand, "\t\n\r\'" );
 
@@ -702,20 +702,20 @@ static void CommandBindInner( const string &szID, const vector<wstring> &_params
 		break;
 	}
 
-	vector<string> controlsSet;
+	std::vector<std::string> controlsSet;
 	controlsSet.reserve( paramsSet.size() );
-	for ( vector<wstring>::const_iterator iTemp = paramsSet.begin(); iTemp != paramsSet.end(); iTemp++ )
+	for ( std::vector<std::wstring>::const_iterator iTemp = paramsSet.begin(); iTemp != paramsSet.end(); iTemp++ )
 	{
 		if ( iTemp->compare( L"+" ) == 0 )
 			continue;
 
-		string szWord( NStr::ToMBCS( *iTemp ) );
+		std::string szWord( NStr::ToMBCS( *iTemp ) );
 		NStr::TrimBoth( szWord, "\t\n\r\'" );
 		controlsSet.push_back( szWord );
 	}
 
-	string szSection;
-	const vector<string> &sections = NInput::GetSections();
+	std::string szSection;
+	const std::vector<std::string> &sections = NInput::GetSections();
 	if ( !sections.empty() )
 	{
 		for ( int nTemp = 0; nTemp < sections.size(); ++nTemp )
@@ -725,12 +725,12 @@ static void CommandBindInner( const string &szID, const vector<wstring> &_params
 		NInput::Bind( eType, szCommand, "", controlsSet );
 }
 
-static void CommandBind( const string &szID, const vector<wstring> &_paramsSet, void *pContext )
+static void CommandBind( const std::string &szID, const std::vector<std::wstring> &_paramsSet, void *pContext )
 {
-	vector<wstring> paramsSet( _paramsSet );
+	std::vector<std::wstring> paramsSet( _paramsSet );
 	for ( int k = 1; k < paramsSet.size(); ++k )
 	{
-		if ( paramsSet[k] == wstring(L"'CTRL'") )
+		if ( paramsSet[k] == std::wstring(L"'CTRL'") )
 		{
 			paramsSet[k] = L"'LCTRL'";
 			CommandBind( szID, paramsSet, pContext );
@@ -758,7 +758,7 @@ static void CommandBind( const string &szID, const vector<wstring> &_paramsSet, 
 	CommandBindInner( szID, paramsSet );
 }
 
-static void CommandUnbind( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandUnbind( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
 	{
@@ -769,14 +769,14 @@ static void CommandUnbind( const string &szID, const vector<wstring> &paramsSet,
 	NInput::Unbind( NStr::ToMBCS( paramsSet.front() ) );
 }
 
-static void CommandUnbindAll( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandUnbindAll( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NInput::UnbindAll();
 }
 
-static void CommandBindSection( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandBindSection( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	string szSection;
+	std::string szSection;
 
 	if ( paramsSet.size() >= 1 )
 		szSection = NStr::ToMBCS( paramsSet.front() );
@@ -784,7 +784,7 @@ static void CommandBindSection( const string &szID, const vector<wstring> &param
 	NInput::SetSection( szSection, false );
 }
 
-static void CommandBindConfigure( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandBindConfigure( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 2 )
 	{
@@ -795,12 +795,12 @@ static void CommandBindConfigure( const string &szID, const vector<wstring> &par
 	NInput::SetControlCoeff( NStr::ToMBCS( paramsSet[0] ), _wtof( paramsSet[1].c_str() ) );
 }
 
-static void CommandBindUpdate( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandBindUpdate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NInput::UpdateBinds();
 }
 
-static void CommandShowBind( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CommandShowBind( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
 	{
@@ -808,11 +808,11 @@ static void CommandShowBind( const string &szID, const vector<wstring> &paramsSe
 		return;
 	}
 
-	list<NInput::SBind> bindsList;
+	std::list<NInput::SBind> bindsList;
 	NInput::GetBind( NStr::ToMBCS( paramsSet.front() ), &bindsList );
 
 	csSystem << "Bind '" << paramsSet.front() << "' :" << endl;
-	for ( list<NInput::SBind>::const_iterator iTemp = bindsList.begin(); iTemp != bindsList.end(); iTemp++ )
+	for ( std::list<NInput::SBind>::const_iterator iTemp = bindsList.begin(); iTemp != bindsList.end(); iTemp++ )
 	{
 		for ( int nTemp = 0; nTemp < iTemp->controlsSet.size(); nTemp++ )
 			csSystem << iTemp->controlsSet[nTemp] << " ";

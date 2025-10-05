@@ -18,12 +18,12 @@ bool CEffectorRunReaction::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
+void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
 { 
 	szAnimatedWindow = _szAnimatedWindow;
 	const NDb::SUISRunReaction *pCmd( checked_cast<const NDb::SUISRunReaction*>( _pCmd ) );
-	CParam<string> szReactionF( pCmd->szReactionForward );
-	CParam<string> szReactionB( pCmd->szReactionBack );
+	CParam<std::string> szReactionF( pCmd->szReactionForward );
+	CParam<std::string> szReactionB( pCmd->szReactionBack );
 	if ( pContext )
 	{
 		szReactionF.Merge( pContext->szReactionForward );
@@ -46,7 +46,7 @@ const int CEffectorRunReaction::Segment( const int timeDiff, struct IScreen *pSc
 	// this effect is instant
 	if ( bForward ? !szFwd.empty() : !szBack.empty() )
 	{
-		const string &szReactionName = bForward ? szFwd : szBack;
+		const std::string &szReactionName = bForward ? szFwd : szBack;
 		pScreen->RunReaction( szAnimatedWindow, szReactionName );
 	}
 	bFinished = true;

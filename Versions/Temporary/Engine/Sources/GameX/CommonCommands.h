@@ -10,7 +10,7 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 	unsigned long ulCheckSum;
 
 	// не сэйвится!
-	static vector< list<unsigned long> > checkSums;
+	static std::vector< std::list<unsigned long> > checkSums;
 public:	
 	static WORD wMask;
 public:

@@ -339,14 +339,14 @@ static void CreateFinalResolveMatrix( CArray2D<double> *pRes, int nSize )
 }*/
 
 static double fResolveCoef[15] = { -0.000114508, 0.00042735, -0.00159489, 0.00595222, -0.022214, 0.0829038, -0.309401, 1.1547, -0.309401, 0.0829038, -0.022214, 0.00595222, -0.00159489, 0.00042735, -0.000114508 };
-static void MulResolve( vector<float> *pRes, const vector<float> &s )
+static void MulResolve( std::vector<float> *pRes, const std::vector<float> &s )
 {
-	vector<float> &r = *pRes;
+	std::vector<float> &r = *pRes;
 	r.resize( s.size() );
 	for ( int y = 0; y < r.size(); ++y )
 	{
 		float fRes = 0;
-		int nStart = Max( -7, -y ), nFinish = Min( 7, r.size() - y - 1 );
+		int nStart = Max( -7, -y ), nFinish = Min<int>( 7, r.size() - y - 1 );
 		for ( int delta = nStart; delta <= nFinish; ++delta )
 			fRes += fResolveCoef[delta + 7] * s[ y + delta ];
 		r[y] = fRes;
@@ -363,7 +363,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 	//CreateFinalResolveMatrix( &m, src.GetSizeX() );
 	for ( int y = 0; y < src.GetSizeY(); ++y )
 	{
-		vector<float> s, st;
+		std::vector<float> s, st;
 		s.resize( src.GetSizeX() );
 		for ( int x = 0; x < src.GetSizeX(); ++x )
 			s[x] = src[y][x];
@@ -375,7 +375,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 	//CreateFinalResolveMatrix( &m, src.GetSizeY() );
 	for ( int x = 0; x < src.GetSizeX(); ++x )
 	{
-		vector<float> s, st;
+		std::vector<float> s, st;
 		s.resize( src.GetSizeY() );
 		for ( int y = 0; y < src.GetSizeY(); ++y )
 			s[y] = t[y][x];

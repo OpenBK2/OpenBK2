@@ -17,9 +17,9 @@ private:
 	bool bHistoryPlaying;
 	//
 	// убиваема или нет данная сторона
-	vector<BYTE> immortals;
+	std::vector<BYTE> immortals;
 	// убивает ли данная сторона с первого раза
-	vector<BYTE> firstShoot;
+	std::vector<BYTE> firstShoot;
 
 	bool bPasswordOK;
 public:
@@ -49,8 +49,8 @@ public:
 	void SetHistoryPlaying( bool _bHistoryPlaying ) { bHistoryPlaying = _bHistoryPlaying; }
 	bool IsHistoryPlaying() const { return bHistoryPlaying; }
 	
-	const unsigned long MakeCheckSum( const string &szPassword );
-	void CheckPassword( const string &szPassword );
+	const unsigned long MakeCheckSum( const std::string &szPassword );
+	void CheckPassword( const std::string &szPassword );
 	
 	bool IsPasswordOk() const { return bPasswordOK; }
 };

@@ -13,11 +13,11 @@ struct SExceptionDlgInitParams
 {
 	const char *pszCondition;
 	const char *pszDescription;
-	const vector<SCallStackEntry> &entries;
+	const std::vector<SCallStackEntry> &entries;
 	const char *pszExtInfo;
 	//
 	SExceptionDlgInitParams( const char *pszNewCondition, const char *pszNewDescription, 
-		const vector<SCallStackEntry> &_entries, const char *szExtInfo )
+		const std::vector<SCallStackEntry> &_entries, const char *szExtInfo )
 		: pszCondition( pszNewCondition ), pszDescription( pszNewDescription ), 
 		entries(_entries), pszExtInfo(szExtInfo) {  }
 };
@@ -25,7 +25,7 @@ static const SExceptionDlgInitParams *g_pParams = 0;
 
 EBSUReport __cdecl ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszCondition, const char *pszDescription, 
-																		const vector<SCallStackEntry> &entries, const char *pszExtInfo ) 
+																		const std::vector<SCallStackEntry> &entries, const char *pszExtInfo )
 {
 	WriteReportToFile( "error.txt", pszCondition, pszDescription, entries );
 	// remember old cursor before dialog box call

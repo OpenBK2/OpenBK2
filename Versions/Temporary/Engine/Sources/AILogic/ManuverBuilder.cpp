@@ -9,7 +9,7 @@
 CManuverBuilder theManuverBuilder;
 
 CManuvers CManuverBuilder::manuvers;
-vector<int> CManuverBuilder::suitableIndeces;
+std::vector<int> CManuverBuilder::suitableIndeces;
 CManuverStateDesc CManuverBuilder::state;
 
 
@@ -147,7 +147,7 @@ int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, clas
 		}
 	}
 	int nIndex = attacks[pEnemy->GetFormationID()].size();
-	attacks[pEnemy->GetFormationID()].push_back( pair<int,CVec3>( pAttacker->GetFormationID(), CalcOffsetByIndex( attacks[pEnemy->GetFormationID()].size() ) ) );
+	attacks[pEnemy->GetFormationID()].push_back( std::pair<int,CVec3>( pAttacker->GetFormationID(), CalcOffsetByIndex( attacks[pEnemy->GetFormationID()].size() ) ) );
 	return nIndex;
 }
 

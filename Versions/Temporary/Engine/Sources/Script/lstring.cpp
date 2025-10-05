@@ -15,7 +15,7 @@
 TString *luaS_newlstr (lua_State *L, const char *str) 
 {
 	TString res( str );
-	CLuaStrings::iterator it = L->strings.insert( pair<TString,bool>( res, false ) ).first;
+	CLuaStrings::iterator it = L->strings.insert( std::pair<TString,bool>( res, false ) ).first;
 	return const_cast<TString*>( &(it->first) );
 }
 

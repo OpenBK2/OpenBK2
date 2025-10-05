@@ -12,7 +12,7 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 	struct SFrame
 	{
 		ZDATA
-		string szFileName;
+		std::string szFileName;
 		float fDelay;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szFileName); f.Add(3,&fDelay); return 0; }
 
@@ -21,7 +21,7 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 	
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
-	vector<SFrame> frames;
+	std::vector<SFrame> frames;
 	float fDelay;
 	bool bFinished;
 	CObj<CBackgroundMutableTexture> pPictureTexture;
@@ -33,7 +33,7 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 private:
 	void MakeInterior();
 	void LoadSequence();
-	bool LoadImage( const string &szFileName );
+	bool LoadImage( const std::string &szFileName );
 	void NextPicture();
 public:
 	CInterfaceDemo();
@@ -45,8 +45,8 @@ public:
 	void SetFinal( bool _bFinal );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

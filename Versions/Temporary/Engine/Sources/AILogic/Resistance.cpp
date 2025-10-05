@@ -208,7 +208,7 @@ void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
 		binder1st( ptr_mem_fun( CCircle::GetCenter() ),
 		equal_to<CVec2>( vCenter ) );
 */
-	list<CCircle>::iterator it = excluded.begin();
+	std::list<CCircle>::iterator it = excluded.begin();
 	while ( it != excluded.end() )
 	{
 		const CCircle &circle = *it;
@@ -234,7 +234,7 @@ void CResistancesContainer::AddExcluded( const CVec2 &vCenter, const float fRadi
 
 bool CResistancesContainer::IsCellExcluded( const CVec2 &vCellCenter )
 {
-	for ( list<CCircle>::const_iterator it = excluded.begin(); it != excluded.end(); ++it )
+	for ( std::list<CCircle>::const_iterator it = excluded.begin(); it != excluded.end(); ++it )
 		if ( IsCellInExcludingCircle( vCellCenter, *it ) )
 			return true;
 	return false;
@@ -254,7 +254,7 @@ bool CResistancesContainer::IsInUse( const int nResistanceCellNumber )
 
 bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 {
-	list<CCircle>::const_iterator iter = excluded.begin();
+	std::list<CCircle>::const_iterator iter = excluded.begin();
 	while ( iter != excluded.end() && fabs2( vCenter - iter->center ) >= sqr( iter->r ) )
 		++iter;
 

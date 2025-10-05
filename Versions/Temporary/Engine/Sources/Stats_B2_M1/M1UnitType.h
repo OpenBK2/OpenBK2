@@ -44,15 +44,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EM1UnitBaseType eValue );
-	EM1UnitBaseType StringToEnum_NDb_EM1UnitBaseType( const string &szValue );
+	std::string EnumToString( NDb::EM1UnitBaseType eValue );
+	EM1UnitBaseType StringToEnum_NDb_EM1UnitBaseType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EM1UnitBaseType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EM1UnitBaseType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EM1UnitBaseType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EM1UnitBaseType( szValue ); }
+	static std::string ToString( NDb::EM1UnitBaseType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EM1UnitBaseType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EM1UnitBaseType( szValue ); }
 };
 

@@ -119,7 +119,7 @@ namespace NDb
 			eTargetPanel( ACTION_BTN_PANEL_DEFAULT )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -132,7 +132,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		EM1Action eAction;
-		string szCrapName;
+		std::string szCrapName;
 		CDBPtr< SWindowMSButton > pButton;
 		CDBPtr< SWindowMSButton > pNewButton;
 		bool bIsAbility;
@@ -162,7 +162,7 @@ namespace NDb
 			eTargetPanel( ACTION_BTN_PANEL_DEFAULT )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -188,7 +188,7 @@ namespace NDb
 		CDBPtr< STexture > pForegroundIcon;
 		CDBPtr< STexture > pForegroundIconDisabled;
 		bool bPressEffect;
-		string szHotkeyCmd;
+		std::string szHotkeyCmd;
 
 		#include "include_ActionButtonInfo.h"
 
@@ -232,7 +232,7 @@ namespace NDb
 				nColor( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -246,14 +246,14 @@ namespace NDb
 		public:
 			CDBPtr< SBackground > pUserForward;
 			CDBPtr< SBackground > pNeutralForward;
-			vector< CDBPtr< SBackground > > friendForwards;
-			vector< CDBPtr< SBackground > > enemyForwards;
+			std::vector< CDBPtr< SBackground > > friendForwards;
+			std::vector< CDBPtr< SBackground > > enemyForwards;
 
 			SUnitFullInfo() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -261,8 +261,8 @@ namespace NDb
 		};
 		CVec3 vUserColor;
 		CVec3 vNeutralColor;
-		vector< CVec3 > friendColors;
-		vector< CVec3 > enemyColors;
+		std::vector< CVec3 > friendColors;
+		std::vector< CVec3 > enemyColors;
 		SUnitFullInfo unitFullInfo;
 		SPlayer userInfo;
 		SPlayer neutralInfo;
@@ -275,7 +275,7 @@ namespace NDb
 			vNeutralColor( VNULL3 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -298,7 +298,7 @@ namespace NDb
 			eType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -319,7 +319,7 @@ namespace NDb
 			vColor( VNULL3 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -331,7 +331,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		NFile::CFilePath szTextFileRef;
 
 		#include "include_MLTag.h"
@@ -340,7 +340,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -362,7 +362,7 @@ namespace NDb
 			eGameType( MP_GT_STANDARD )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -388,22 +388,22 @@ namespace NDb
 				eSeason( SEASON_WINTER )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SActionButton > actionButtons;
-		vector< SM1ActionButton > m1ActionButtons;
-		vector< CDBPtr< SActionButtonInfo > > actionButtonInfos;
+		std::vector< SActionButton > actionButtons;
+		std::vector< SM1ActionButton > m1ActionButtons;
+		std::vector< CDBPtr< SActionButtonInfo > > actionButtonInfos;
 		SPlayersColors playersColors;
-		vector< SReinfButton > reinfButtons;
-		vector< SSeasonColor > chatSeasonColors;
-		vector< SSeasonName > seasonNames;
-		vector< SMLTag > tags;
-		vector< SMPLocalizedGameType > mPLocalizedGameTypes;
-		vector< CDBPtr< STexture > > chapterMapArrows;
+		std::vector< SReinfButton > reinfButtons;
+		std::vector< SSeasonColor > chatSeasonColors;
+		std::vector< SSeasonName > seasonNames;
+		std::vector< SMLTag > tags;
+		std::vector< SMPLocalizedGameType > mPLocalizedGameTypes;
+		std::vector< CDBPtr< STexture > > chapterMapArrows;
 		NFile::CFilePath szForbiddenWordsFileRef;
 
 		#include "include_UIConstsB2.h"
@@ -428,7 +428,7 @@ namespace NDb
 		CVec2 vPoint01;
 		CVec2 vPoint10;
 		CVec2 vPoint11;
-		vector< CVec3 > playerColors;
+		std::vector< CVec3 > playerColors;
 		CVec3 vViewportFrameColor;
 		bool bRotable;
 		CDBPtr< STexture > pRotableBackgroundTexture;
@@ -574,13 +574,13 @@ namespace NDb
 				vSize( VNULL2 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SObjectParams > places;
+		std::vector< SObjectParams > places;
 
 		SWindow3DControlShared() { }
 		//
@@ -720,7 +720,7 @@ namespace NDb
 		CVec2 vOffsetBounce;
 		CVec2 vAccelCoeffBounce;
 		float fMoveTimeBounce;
-		string szElementToMove;
+		std::string szElementToMove;
 		bool bBorder;
 		float fMaxMoveTime;
 
@@ -824,15 +824,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EActionButtonPanel eValue );
-	EActionButtonPanel StringToEnum_NDb_EActionButtonPanel( const string &szValue );
+	std::string EnumToString( NDb::EActionButtonPanel eValue );
+	EActionButtonPanel StringToEnum_NDb_EActionButtonPanel( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EActionButtonPanel>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EActionButtonPanel eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EActionButtonPanel ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EActionButtonPanel( szValue ); }
+	static std::string ToString( NDb::EActionButtonPanel eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EActionButtonPanel ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EActionButtonPanel( szValue ); }
 };
 

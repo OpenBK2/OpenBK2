@@ -13,7 +13,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CEntrenchmentCreation );
 	float GetTrenchWidth( int nType );// 0 - секция , 1 - поворот
-	typedef vector< CObj<CEntrenchmentPart> > CParts;
+	typedef std::vector< CObj<CEntrenchmentPart> > CParts;
 	bool CanBuildNextInner() const;
 	bool CanBuildNextInnerSlow( const int _nIndex ) const;
 
@@ -27,7 +27,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	CObj<CEntrenchmentPart> pEndTerminator;			// текущий конечный терминатор
 	CObj<CEntrenchmentPart> pNewEndTerminator;	// будуший конечный терминатор
 	
-	vector<CVec2> vPoints;						// центры окопов
+	std::vector<CVec2> vPoints;						// центры окопов
 	//
 	int nCurIndex;
 	SAIAngle wAngle;
@@ -35,7 +35,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	bool bCannot;
 	bool bSayAck;
 
-	list<SVector> tilesUnder;									// ТАйлы под следующим сегментом
+	std::list<SVector> tilesUnder;									// ТАйлы под следующим сегментом
 
 	//consts
 	int nTermInd;
@@ -46,7 +46,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	CEntrenchmentPart * AddElement( const NDb::SEntrenchmentRPGStats *pRPG, const CVec3 &pt, WORD angle, int nFrameIndex, int nPlayer );
 	void CreateNewEndTerminator();
 	void CalcTilesUnder();
-	void GetTilesUnderForIndex( list<SVector> *pTiles, const int nIndex ) const;
+	void GetTilesUnderForIndex( std::list<SVector> *pTiles, const int nIndex ) const;
 	void InitConsts();
 	bool CanDigBecauseOfOtherTrenches( const SRect &rect, const CVec2 &pt ) const;
 	bool CanDigTile( const SVector &tile ) const;
@@ -66,8 +66,8 @@ public:
 	const CVec2 GetBuildPointForIndex( const int nPlace, const int nMaxPlace, const int _nIndex ) const;
 	void BuildNext();
 	void BuildAll( const int _nMinIndex, const int _nMaxIndex );
-	void GetUnitsPreventing( list< CPtr<CAIUnit> > * units );
-	void GetUnitsPreventingByIndex( list< CPtr<CAIUnit> > *units, const int _nIndex );
+	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units );
+	void GetUnitsPreventingByIndex( std::list< CPtr<CAIUnit> > *units, const int _nIndex );
 	bool IsAnyUnitPrevent() const;
 	bool IsAnyUnitPreventByIndex( const int _nIndex ) const;
   bool CanBuildNext() const; 

@@ -70,7 +70,7 @@ CUIFactory::CUIFactory()
 //	MessageReactionsRegisterScriptFunctions();
 }
 
-void CUIFactory::SetMLHandler( const wstring &wsTAG, struct IMLHandler *pHandler )
+void CUIFactory::SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler )
 {
 	customMLHandlers[wsTAG] = pHandler;
 }
@@ -165,7 +165,7 @@ IMessageCheck * CUIFactory::MakeCheck( const struct NDb::SUIDesc *pDesc )
 	return p;
 }
 
-IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimateWindow )
+IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimateWindow )
 {
 	if ( !pCmd ) return 0;
 	IUIEffector *p = MakeObject<IUIEffector>( pCmd->nClassTypeID );
@@ -173,7 +173,7 @@ IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, struct IScre
 	return p;
 }
 
-void CUIFactory::RegisterMessage( const string &szMessage )
+void CUIFactory::RegisterMessage( const std::string &szMessage )
 {
 	registeredMessages.AddObserver( szMessage, OnKnownMessage );
 }

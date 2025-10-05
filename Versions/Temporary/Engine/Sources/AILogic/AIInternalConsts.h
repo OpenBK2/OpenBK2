@@ -433,7 +433,7 @@ public:
 
 		SRevealInfo() : fRevealByQuery( 0.0f ), fRevealByMovingOff( 0.0f ), fForgetRevealDistance( 0.0f ), nTimeOfReveal( 0 ) { }
 	};
-	static hash_map<int, SRevealInfo> REVEAL_INFO;
+	static std::unordered_map<int, SRevealInfo> REVEAL_INFO;
 
 	// infantry will be healed to full health during this time
 	static NTimer::STime INFANTRY_FULL_HEAL_TIME;
@@ -441,16 +441,16 @@ public:
 	//
 	static void Load();
 	//
-	static hash_map< NDb::EDesignUnitType, int, SEnumHash > PRIORITIES;
+	static std::unordered_map< NDb::EDesignUnitType, int, SEnumHash > PRIORITIES;
 	static const int GetUnitPriority( const NDb::EDesignUnitType &unitType )
 	{
-		hash_map< NDb::EDesignUnitType, int, SEnumHash >::const_iterator pos = PRIORITIES.find( unitType );
+		std::unordered_map< NDb::EDesignUnitType, int, SEnumHash >::const_iterator pos = PRIORITIES.find( unitType );
 		if ( pos == PRIORITIES.end() )
 			return 0;
 		else
 			return pos->second;
 	}
-  static void InitPriorities( const vector<NDb::SUnitTypePriority> &priorities );
+  static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
 };
 
 

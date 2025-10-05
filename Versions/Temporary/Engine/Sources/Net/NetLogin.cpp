@@ -50,7 +50,7 @@ bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SL
 /////////////////////////////////////////////////////////////////////////////////////
 CLoginSupport::SAcceptedLogin& CLoginSupport::GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info )
 {
-	for ( list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
+	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
 	{
 		if ( i->addr == addr && i->nLoginAttempt == info.nLoginAttempt )
 		{
@@ -58,7 +58,7 @@ CLoginSupport::SAcceptedLogin& CLoginSupport::GetAcceptedLogin( const CNodeAddre
 			return *i;
 		}
 	}
-	SAcceptedLogin &a = *acceptedList.insert( acceptedList.end() );
+	SAcceptedLogin &a = acceptedList.emplace_back();
 	a.addr = addr;
 	a.fTimeLeft = F_KEEP_ACCEPTED_TIME;
 	a.nLoginAttempt = info.nLoginAttempt;
@@ -76,7 +76,7 @@ void CLoginSupport::AcceptLogin( const CNodeAddress &addr, CBitStream *pBits,
 	(*pBits).Write( localAddr );
 	(*pBits).Write( uniqueServerID );
 
-	for ( list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
+	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
 	{
 		if ( i->addr == addr )
 		{
@@ -92,7 +92,7 @@ void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, co
 	(*pBits).Write( info.nLoginAttempt );
 	(*pBits).Write( nReason );
 
-	for ( list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
+	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
 	{
 		if ( i->addr == addr )
 		{
@@ -105,7 +105,7 @@ void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, co
 /////////////////////////////////////////////////////////////////////////////////////
 bool CLoginSupport::HasAccepted( const CNodeAddress &addr, const SLoginInfo &info )
 {
-	for ( list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
+	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
 	{
 		if ( i->addr == addr && i->nLoginAttempt == info.nLoginAttempt )
 			return true;
@@ -181,7 +181,7 @@ void CLoginSupport::Step( float fDeltaTime )
 			}
 		}
 	}
-	for ( list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
+	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
 	{
 		i->fTimeLeft -= fDeltaTime;
 		if ( i->fTimeLeft < 0 )

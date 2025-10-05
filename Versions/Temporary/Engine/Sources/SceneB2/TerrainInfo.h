@@ -30,9 +30,9 @@ struct STerrainInfo
 {
 	struct STile
 	{
-		vector<CVec3fEx> vertices;
-		vector<float> addHeights;
-		vector<STriangle> triangles;
+		std::vector<CVec3fEx> vertices;
+		std::vector<float> addHeights;
+		std::vector<STriangle> triangles;
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -125,15 +125,15 @@ struct STerrainInfo
 	{
 		int nID;
 		int nRandSeed;
-		vector<STerrainInfo::SVSOPoint> sampPoints;
-		vector<CVec3fEx> ridge;
-		vector<CVec3fEx> samples;
+		std::vector<STerrainInfo::SVSOPoint> sampPoints;
+		std::vector<CVec3fEx> ridge;
+		std::vector<CVec3fEx> samples;
 		CVec2i vSampMin, vSampMax;
 		CVec2i vRidgeMin, vRidgeMax;
 		CVec2 vBBMin, vBBMax;
-		vector<CVec3> precVerts;
-		vector<float> precHeights;
-		vector<CVec3> precNorms;
+		std::vector<CVec3> precVerts;
+		std::vector<float> precHeights;
+		std::vector<CVec3> precNorms;
 		CDBPtr<NDb::SCragDesc> pDesc;
 		//
 		bool operator == ( const SCrag &v ) const { return nID == v.nID; }
@@ -162,7 +162,7 @@ struct STerrainInfo
 	struct SPeak
 	{
 		int nID;
-		vector< vector<STerrainInfo::SVSOPoint> > points;
+		std::vector< std::vector<STerrainInfo::SVSOPoint> > points;
 		CVec2 vBBMin, vBBMax;
 		//
 		bool operator == ( const SPeak &v ) const { return nID == v.nID; }
@@ -180,7 +180,7 @@ struct STerrainInfo
 	struct SFoot
 	{
 		int nID;
-		vector< vector<STerrainInfo::SVSOPoint> > points;
+		std::vector< std::vector<STerrainInfo::SVSOPoint> > points;
 		float fTexGeomScale;
 		CDBPtr<NDb::SMaterial> pFootMaterial;
 		//
@@ -200,15 +200,15 @@ struct STerrainInfo
 	{
 		int nID;
 		int nRandSeed;
-		vector<CVec3fEx> samples;
-		vector<CVec3> precVertsL, precVertsR;
-		vector<float> precHeightsL, precHeightsR;
-		vector<CVec3> precNormsL, precNormsR;
+		std::vector<CVec3fEx> samples;
+		std::vector<CVec3> precVertsL, precVertsR;
+		std::vector<float> precHeightsL, precHeightsR;
+		std::vector<CVec3> precNormsL, precNormsR;
 		CVec2i vSampMin, vSampMax;
 		CVec2 vBBMin, vBBMax;
 		CDBPtr<NDb::SRiverDesc> pDesc;
-		vector<CVec3fEx> ridgeL;
-		vector<CVec3fEx> ridgeR;
+		std::vector<CVec3fEx> ridgeL;
+		std::vector<CVec3fEx> ridgeR;
 		int nWaterSamplesNum;
 		int nWater2SamplesNum;
 		//
@@ -261,8 +261,8 @@ struct STerrainInfo
 		float fMinHeight;
 		float fMaxHeight;
 		int nCount;
-		vector<CVec3> verts;
-		list<int> precs;
+		std::vector<CVec3> verts;
+		std::list<int> precs;
 		float fDepth;
 		float fDepthRand;
 		float fRandX, fRandY;
@@ -288,12 +288,12 @@ struct STerrainInfo
 	{
 		int nID;
 		int nExcludeRiverID;
-		vector<int> nodes;
-		vector<CVec3> norms;
-		vector<float> minHeights;
-		vector<float> maxHeights;
-		vector<BYTE> visibles;
-		vector<int> intersectors;
+		std::vector<int> nodes;
+		std::vector<CVec3> norms;
+		std::vector<float> minHeights;
+		std::vector<float> maxHeights;
+		std::vector<BYTE> visibles;
+		std::vector<int> intersectors;
 		CVec2 vMin, vMax;
 		CDBPtr<NDb::SMaterial> pMaterial;
 		CDBPtr<NDb::SMaterial> pFootMaterial;
@@ -331,22 +331,22 @@ struct STerrainInfo
 		}
 	};
 
-	list<SRoad> roads;									// roads array
-	list<SCrag> crags;									// crags array
-	list<SPeak> peaks;									// peaks array
-	list<SFoot> foots;
-	list<SRiver> rivers;								// rivers array
-	list<STerraSpot> terraspots;				// terraspots array
-	vector<SPrecipiceNode> precNodes;		// precipice nodes
-	list<SPrecipice> precipices;				// precipices
+	std::list<SRoad> roads;									// roads array
+	std::list<SCrag> crags;									// crags array
+	std::list<SPeak> peaks;									// peaks array
+	std::list<SFoot> foots;
+	std::list<SRiver> rivers;								// rivers array
+	std::list<STerraSpot> terraspots;				// terraspots array
+	std::vector<SPrecipiceNode> precNodes;		// precipice nodes
+	std::list<SPrecipice> precipices;				// precipices
 	CArray2D<BYTE> seaMask;
 
 	struct SOptimizedTile
 	{
 		int nIndex;
-		vector<STriangle> triangles;
-		vector<CVec3> vertices;
-		vector<float> addHeights;
+		std::vector<STriangle> triangles;
+		std::vector<CVec3> vertices;
+		std::vector<float> addHeights;
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -358,7 +358,7 @@ struct STerrainInfo
 		}
 	};
 
-	vector<SOptimizedTile> optimizedTiles;
+	std::vector<SOptimizedTile> optimizedTiles;
 	CArray2D<short int> optimizedHeights;
 	CArray2D<short int> optimizedAddHeights;
 	CArray2D1Bit optimizedSeaMask;
@@ -370,7 +370,7 @@ struct STerrainInfo
 	//
 	CArray2D<float> waterHeightCoeffs;
 	CArray2D<float> waterAddHeights;
-	vector<BYTE> waterAddHeightsPacked;
+	std::vector<BYTE> waterAddHeightsPacked;
 	//////////////////////////////////////////////////////////////////////////
 	//
 	int operator&( IBinSaver &saver )
@@ -408,8 +408,8 @@ struct STerraObjectInfo
 	CVec3 vPos;
 	float fAngle;
 	CVec2 vOrigin;
-	string szMaskFileName;
-	string szTexFileName;
+	std::string szMaskFileName;
+	std::string szTexFileName;
 	//
 	int operator&( IBinSaver &saver )
 	{

@@ -18,19 +18,19 @@ const char* CObjectBase::GetFullTypeName() const
 }
 
 static bool bDestroyInProgress;
-static list<CObjectBase*> *pDestroy, *pInvalidate;
+static std::list<CObjectBase*> *pDestroy, *pInvalidate;
 
-inline list<CObjectBase*>& GetDestroy()
+inline std::list<CObjectBase*>& GetDestroy()
 {
 	if ( !pDestroy )
-		pDestroy = new list<CObjectBase*>;
+		pDestroy = new std::list<CObjectBase*>;
 	return *pDestroy;
 }
 
-inline list<CObjectBase*>& GetInvalidate()
+inline std::list<CObjectBase*>& GetInvalidate()
 {
 	if ( !pInvalidate )
-		pInvalidate = new list<CObjectBase*>;
+		pInvalidate = new std::list<CObjectBase*>;
 	return *pInvalidate;
 }
 
@@ -107,8 +107,8 @@ void CObjectBase::ReleaseRef()
 void CObjectBase::DestroyDelayed()
 {
 	ASSERT( bDestroyInProgress );
-	list<CObjectBase*> &toDestroy = GetDestroy();
-	list<CObjectBase*> &toInvalidate = GetInvalidate();
+	std::list<CObjectBase*> &toDestroy = GetDestroy();
+	std::list<CObjectBase*> &toInvalidate = GetInvalidate();
 	while ( !toDestroy.empty() || !toInvalidate.empty() )
 	{
 		while ( !toDestroy.empty() )
@@ -138,12 +138,12 @@ struct SSimplePointerHash
 		int operator()( T *p ) const { return (int)p; }
 };
 
-hash_set<CObjectBase *, SSimplePointerHash > *pObjectsSet; // do not initialize!
+std::unordered_set<CObjectBase *, SSimplePointerHash > *pObjectsSet; // do not initialize!
 
 void RegisterInObjectsSet( CObjectBase *pObject )
 {
 	if ( pObjectsSet == 0 )
-		pObjectsSet = new hash_set<CObjectBase *, SSimplePointerHash >;
+		pObjectsSet = new std::unordered_set<CObjectBase *, SSimplePointerHash >;
 
 	pObjectsSet->insert( pObject );
 }
@@ -172,7 +172,7 @@ struct STypeStats
 
 struct STypeStatsComparer
 {
-	bool operator()( const pair<string, STypeStats> &left, pair<string, STypeStats> &right ) const
+	bool operator()( const std::pair<std::string, STypeStats> &left, std::pair<std::string, STypeStats> &right ) const
 	{
 		return left.first < right.first;
 	}
@@ -193,17 +193,17 @@ class CTrivialPointerSerialization: public IPointerSerialization
 	}
 };
 
-static void CollectObjectsStatistics( hash_map< string, STypeStats > *pTypesMap )
+static void CollectObjectsStatistics( std::unordered_map< std::string, STypeStats > *pTypesMap )
 {
 	ASSERT( pTypesMap != 0 );
-	hash_map< string, STypeStats > &typesMap = *pTypesMap;
+	std::unordered_map< std::string, STypeStats > &typesMap = *pTypesMap;
 
 	CMemoryStream memoryStream;
 	int nStreamSize = memoryStream.GetSize();
 	CPtr<CTrivialPointerSerialization> pPointerSerialization = new CTrivialPointerSerialization();
 	CPtr<IBinSaver> pSaver = CreateChunklessSaver( pPointerSerialization, &memoryStream, SAVER_MODE_WRITE );
 
-	for ( hash_set<CObjectBase *, SSimplePointerHash >::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
+	for ( std::unordered_set<CObjectBase *, SSimplePointerHash >::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
 	{
 		CObjectBase *pObject = *it;
 		const char *szTypeName = pObject->GetFullTypeName();
@@ -227,14 +227,14 @@ static void CollectObjectsStatistics( hash_map< string, STypeStats > *pTypesMap 
 
 void PrintObjectsStatistics()
 {
-	hash_map< string, STypeStats > typesMap;
+	std::unordered_map< std::string, STypeStats > typesMap;
 	CollectObjectsStatistics( &typesMap );
 
-	vector< pair<string, STypeStats> > statistics;
+	std::vector< std::pair<std::string, STypeStats> > statistics;
 	statistics.reserve( typesMap.size() );
-	for ( hash_map< string, STypeStats >::iterator it = typesMap.begin(); it != typesMap.end(); ++it )
+	for ( std::unordered_map< std::string, STypeStats >::iterator it = typesMap.begin(); it != typesMap.end(); ++it )
 	{
-		statistics.push_back( pair<string, STypeStats>( it->first.data(), it->second ) );
+		statistics.push_back( std::pair<std::string, STypeStats>( it->first.data(), it->second ) );
 	}
 	typesMap.clear();
 
@@ -249,7 +249,7 @@ void PrintObjectsStatistics()
 	int nTotalSerializeSize = 0;
 	for ( int i = 0; i < statistics.size(); ++i )
 	{
-		const pair<string, STypeStats> &tmp = statistics[i];
+		const std::pair<std::string, STypeStats> &tmp = statistics[i];
 		const STypeStats &stats = tmp.second;
 		const int nNumberXSizeOf = stats.nObjectsNumber*stats.nSizeOf;
 		sprintf( szBuf, "%s\t%d\t%d\t%d\t%d\t%d\t%d\n", tmp.first.data(), stats.nObjectsNumber, stats.nValidsNumber, stats.nInvalidsNumber, stats.nSizeOf, nNumberXSizeOf, stats.nSerializeSize );

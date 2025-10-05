@@ -410,7 +410,7 @@ static void message( lua_State *L, const char *s )
 static void SaveStackForErrorMessage( lua_State *pState, const char *s )
 {
 	NScript::luaLastError.stack.clear();
-	NScript::luaLastError.szError = string( s );
+	NScript::luaLastError.szError = std::string( s );
 	lua_Debug debugInfo;
 	int nDepth = 1;
 	while ( lua_getstack( pState, nDepth, &debugInfo ) != 0 )

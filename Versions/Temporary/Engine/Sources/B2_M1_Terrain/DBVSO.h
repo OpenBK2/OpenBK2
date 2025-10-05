@@ -35,7 +35,7 @@ namespace NDb
 			nSoilType( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -56,7 +56,7 @@ namespace NDb
 			fTilingStep( 0.1000f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -78,7 +78,7 @@ namespace NDb
 			nUseToPixel( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -92,7 +92,7 @@ namespace NDb
 	public:
 		float fDisturbance;
 		int nNumCells;
-		vector< CDBPtr< SMaterial > > materials;
+		std::vector< CDBPtr< SMaterial > > materials;
 		int nUseFromPixel;
 		int nUseToPixel;
 		float fStreamSpeed;
@@ -106,7 +106,7 @@ namespace NDb
 			fStreamSpeed( 0.1000f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -168,7 +168,7 @@ namespace NDb
 			fReserved( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -181,8 +181,8 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		CDBPtr< SVSODesc > pDescriptor;
-		vector< SVSOPoint > points;
-		vector< CVec3 > controlPoints;
+		std::vector< SVSOPoint > points;
+		std::vector< CVec3 > controlPoints;
 		int nVSOID;
 		int nCMArrowType;
 		int nCMArrowMission;
@@ -196,7 +196,7 @@ namespace NDb
 			nCMArrowMission2( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -288,7 +288,7 @@ namespace NDb
 		float fRandX;
 		float fRandY;
 		float fRidgeTexGeomScale;
-		vector< SVSOLayerCenterDesc > waterLayers;
+		std::vector< SVSOLayerCenterDesc > waterLayers;
 		bool bHasPeak;
 		float fDefaultWidth;
 		float fDefaultOpacity;

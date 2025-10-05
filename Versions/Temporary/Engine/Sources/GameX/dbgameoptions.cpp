@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -52,7 +52,7 @@ DWORD SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::CalcChec
 }
 
 
-string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue )
+std::string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue )
 {
 	switch ( eValue )
 	{
@@ -71,7 +71,7 @@ string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOption
 	}
 }
 
-NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const string &szValue )
+NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const std::string &szValue )
 {
 	if ( szValue == "OPTION_EDITOR_EDITLINE" )
 		return NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITLINE;
@@ -87,7 +87,7 @@ NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType NDb::Strin
 }
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (BYTE*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Values", &values, pThis );
@@ -126,7 +126,7 @@ DWORD SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::CalcChe
 
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (BYTE*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -183,7 +183,7 @@ DWORD SOptionSystem::SOptionsCategory::SOptionEntry::CalcCheckSum() const
 
 
 
-void SOptionSystem::SOptionsCategory::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );

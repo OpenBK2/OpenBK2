@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "VisObjIconsManager.h"
 
+#include <algorithm>
+
 //#include <VTuneAPI.h>
 //#pragma comment (lib, "vtuneapi.lib")
 
@@ -68,7 +70,7 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 		singleIcons[i].texCoords = pIconsSet->icons[i].rctexCoords;
 	}
 
-	sort( singleIcons.begin(), singleIcons.end() );
+	std::sort( singleIcons.begin(), singleIcons.end() );
 
 	for ( int i = 0; i < singleIcons.size(); ++i )
 		type2VectorHash[singleIcons[i].nType] = i;
@@ -125,7 +127,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			float fIconsOffsetX = fScrOffsetX + fHPBarLength;
 
 			float fIconsSizeX = 0.0f;
-			for ( vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
+			for ( std::vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
 			{
 				const SSingleIcon &baseIcon = singleIcons[*it];
 				fIconsSizeX += baseIcon.texCoords.x2 - baseIcon.texCoords.x1;
@@ -134,7 +136,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			if ( fIconsSizeX > fHPBarLength )
 				fIconsOffsetX += (fIconsSizeX - fHPBarLength) * 0.5f;
 
-			for ( vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
+			for ( std::vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
 			{
 				const SSingleIcon &baseIcon = singleIcons[*it];
 				rect.fSizeX = baseIcon.texCoords.x2 - baseIcon.texCoords.x1;
@@ -240,7 +242,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 	}
 }
 
-static vector<CVisObjIconsManager::SObjIcon> regenIcons( 256 );
+static std::vector<CVisObjIconsManager::SObjIcon> regenIcons( 256 );
 void CVisObjIconsManager::RegenerateAllIconsRects()
 {
 	rectLayout.rects.resize( 0 );
@@ -252,8 +254,8 @@ void CVisObjIconsManager::RegenerateAllIconsRects()
 	if ( regenIcons.empty() )
 		return;
 
-	sort( regenIcons.begin(), regenIcons.end() ); // for depth ordering
-	vector<SObjIcon>::iterator itIcon = regenIcons.end();
+	std::sort( regenIcons.begin(), regenIcons.end() ); // for depth ordering
+	std::vector<SObjIcon>::iterator itIcon = regenIcons.end();
 	do
 	{
 		--itIcon;
@@ -297,7 +299,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	CObjIconsHash::iterator itFind = objIcons.find( iconInfo.nID );
 	if ( itFind == objIcons.end() ) // create new
 	{
-		itFind = objIcons.insert( pair<int,SObjIcon>( iconInfo.nID, SObjIcon( iconInfo.nID, -1 ) ) ).first;
+		itFind = objIcons.insert( std::pair<int,SObjIcon>( iconInfo.nID, SObjIcon( iconInfo.nID, -1 ) ) ).first;
 	}
 
 	SObjIcon &icon = itFind->second;
@@ -309,7 +311,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	icon.nColor = ( nCol << 24 ) | ( nCol << 16 ) | ( nCol << 8 ) | ( nCol );
 	icon.nHPBarBaseLength = iconInfo.nHPBarBaseLength;
 
-	icon.hpBars.resize( 1 + Min( iconInfo.smallHitbars.size(), MAX_SMALL_HITBARS ) );
+	icon.hpBars.resize( 1 + Min<size_t>( iconInfo.smallHitbars.size(), MAX_SMALL_HITBARS ) );
 	SObjIcon::SHPBar &hpBar = icon.hpBars[0];
 	hpBar.nOffsetX = 0;
 	hpBar.nOffsetY = 0;

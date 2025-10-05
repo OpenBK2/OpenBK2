@@ -7,7 +7,7 @@
 #include "TerraAIObserver.h"
 
 static bool bShowWater = false;
-static list<SObjTileInfo> steepTiles;
+static std::list<SObjTileInfo> steepTiles;
 static float s_fHeightsDiffToLock = 20.0f;
 
 CTerraAIObserver::CTerraAIObserver() : bShowPassability( false ), pMarkers( new CPassMarkersDraw() )
@@ -18,10 +18,10 @@ CTerraAIObserver::CTerraAIObserver() : bShowPassability( false ), pMarkers( new 
 
 void CTerraAIObserver::AddVSO( const NDb::SVSOInstance *pInstance )
 {
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	for ( int j = 0; j < pInstance->points.size() - 1; ++j )
 	{
-		list<SVector> temp;
+		std::list<SVector> temp;
 		GetTilesUnderVSO( pInstance, j, 1.0f, &temp, SSingleSide() );
 		tiles.splice( tiles.end(), temp );
 	}
@@ -54,13 +54,13 @@ void CTerraAIObserver::AddRiver( const NDb::SVSOInstance *pInstance )
 
 void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake )
 {
-	list<SVector> coastTiles;
-	list<SVector> waterTiles;
+	std::list<SVector> coastTiles;
+	std::list<SVector> waterTiles;
 	waterTiles.clear();
 
 	for ( int j = 0; j < pInstance->points.size() - 1; ++j )
 	{
-		list<SVector> temp;
+		std::list<SVector> temp;
 		GetTilesUnderVSO( pInstance, j, 1.0f, &temp, SSingleSide( true, -64.0f, 288.0f ) );
 		coastTiles.splice( coastTiles.end(), temp );
 	}
@@ -70,7 +70,7 @@ void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const b
 }
 
 
-void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, list<SVector> *pTiles, const SSingleSide &singleSide, bool bInverse )
+void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, std::list<SVector> *pTiles, const SSingleSide &singleSide, bool bInverse )
 {
 	const float fTileSize = (float)(pAIMap->GetTileSize());
 	NDb::SVSOInstance revVSO = (*pVSO);
@@ -140,7 +140,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 			const WORD wDirJ = GetDirectionByVector( v[j] - vCenter );
 
 			if ( wDirI > wDirJ )
-				swap( v[i], v[j] );
+				std::swap( v[i], v[j] );
 		}
 	}
 
@@ -148,7 +148,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 }
 
 
-void CTerraAIObserver::SetTerraTypes( const vector<NDb::STerrainAIProperties> &params )
+void CTerraAIObserver::SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params )
 {
 	if ( !pTerrain )
 		return;
@@ -289,7 +289,7 @@ void CTerraAIObserver::SetPassMarkers( const int color, const int aiClass, const
 	}
 }
 
-void CTerraAIObserver::DumpMaxes( const string &szFileName, const int aiClass )
+void CTerraAIObserver::DumpMaxes( const std::string &szFileName, const int aiClass )
 {
 	pTerrain->DumpMaxes( ELM_STATIC, (EAIClasses)aiClass, "debug_images\\" + szFileName + ".tga" );
 }

@@ -6,7 +6,7 @@ struct SCustomLobbyClientInfo
 {
 	ZDATA
 		int nID;
-		string szNick;
+		std::string szNick;
 		ECommonClientState eState;
 		bool bWant2ReceiveChat;
 		int nGameID;

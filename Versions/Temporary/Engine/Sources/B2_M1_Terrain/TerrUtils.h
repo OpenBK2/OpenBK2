@@ -179,9 +179,9 @@ inline CVec2 GetVec2( const CVec3 &v )
 }
 
 template <class TYPE>
-inline bool PushBackUnique( vector<TYPE> *arr, const TYPE &elem )
+inline bool PushBackUnique( std::vector<TYPE> *arr, const TYPE &elem )
 {
-	for ( vector<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( std::vector<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
 			return false;
@@ -191,9 +191,9 @@ inline bool PushBackUnique( vector<TYPE> *arr, const TYPE &elem )
 }
 
 template <>
-inline bool PushBackUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
+inline bool PushBackUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 {
-	for ( vector<CVec3>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( std::vector<CVec3>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
 			return false;
@@ -203,9 +203,9 @@ inline bool PushBackUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 }
 
 template <>
-inline bool PushBackUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
+inline bool PushBackUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx &elem )
 {
-	for ( vector<CVec3fEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( std::vector<CVec3fEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
 			return false;
@@ -215,9 +215,9 @@ inline bool PushBackUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &ele
 }
 
 template <>
-inline bool PushBackUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &elem )
+inline bool PushBackUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx &elem )
 {
-	for ( vector<CVec3dEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( std::vector<CVec3dEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
 			return false;
@@ -227,7 +227,7 @@ inline bool PushBackUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &ele
 }
 
 template <class TYPE>
-inline int AddUnique( vector<TYPE> *arr, const TYPE &elem )
+inline int AddUnique( std::vector<TYPE> *arr, const TYPE &elem )
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
@@ -239,9 +239,9 @@ inline int AddUnique( vector<TYPE> *arr, const TYPE &elem )
 }
 
 template <class TYPE>
-inline void AddUnique( list<TYPE> *arr, const TYPE &elem )
+inline void AddUnique( std::list<TYPE> *arr, const TYPE &elem )
 {
-	for ( list<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( std::list<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
 			return;
@@ -250,7 +250,7 @@ inline void AddUnique( list<TYPE> *arr, const TYPE &elem )
 }
 
 template <>
-inline int AddUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
+inline int AddUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
@@ -262,7 +262,7 @@ inline int AddUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 }
 
 template <>
-inline int AddUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
+inline int AddUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx &elem )
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
@@ -274,7 +274,7 @@ inline int AddUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
 }
 
 template <>
-inline int AddUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &elem )
+inline int AddUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx &elem )
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
@@ -593,10 +593,10 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert/*, bool bIncl
 	return ( (nCount == 3) || (nCount == -3) );
 }
 
-inline bool IsInside( const vector<CVec3> &lineCoeffs, const CVec3 &vert )
+inline bool IsInside( const std::vector<CVec3> &lineCoeffs, const CVec3 &vert )
 {
 	int nCountL = 0, nCountR = 0;
-	for ( vector<CVec3>::const_iterator it = lineCoeffs.begin(); it != lineCoeffs.end(); ++it )
+	for ( std::vector<CVec3>::const_iterator it = lineCoeffs.begin(); it != lineCoeffs.end(); ++it )
 	{
 		const float d = it->x * vert.x + it->y * vert.y + it->z;
 		if ( fabs(d) < DEF_FLOAT_EPS )
@@ -680,7 +680,7 @@ inline bool IsIntersectOneOf( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1,
 	return false;
 }
 
-inline void AddIntersection( vector<CVec3> *pIntersection, const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
+inline void AddIntersection( std::vector<CVec3> *pIntersection, const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const float fDet = ( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
 	if ( fabs(fDet) > DEF_EPS )
@@ -695,7 +695,7 @@ inline void AddIntersection( vector<CVec3> *pIntersection, const CVec3 &p1, cons
 	}
 }
 
-inline void AddIntersectionOneSide( vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
+inline void AddIntersectionOneSide( std::vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
 	if ( fabs( fDet ) > DEF_EPS )
@@ -708,7 +708,7 @@ inline void AddIntersectionOneSide( vector<SIntersectPoint> *pIntersection, cons
 	}
 }
 
-inline void AddIntersection( vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
+inline void AddIntersection( std::vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
 	if ( fabs(fDet) > DEF_EPS )
@@ -722,18 +722,18 @@ inline void AddIntersection( vector<SIntersectPoint> *pIntersection, const CVec3
 }
 
 // whether "rV" is inside "rPoly"
-B2_M1_TERRAIN_EXPORT bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders = false );
-B2_M1_TERRAIN_EXPORT bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV );
-B2_M1_TERRAIN_EXPORT void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-B2_M1_TERRAIN_EXPORT void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
-B2_M1_TERRAIN_EXPORT void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
-void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
-void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const bool bSetFlag );
-B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-B2_M1_TERRAIN_EXPORT void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints );
+B2_M1_TERRAIN_EXPORT bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders = false );
+B2_M1_TERRAIN_EXPORT bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV );
+B2_M1_TERRAIN_EXPORT void GetIntersection( std::vector<CVec3dEx> *pIntersection, const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT void GetIntersection( std::vector<SIntersectPoint> *pIntersection, const std::vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
+B2_M1_TERRAIN_EXPORT void GetIntersection( std::vector<SIntersectPoint> *pIntersection, const std::vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
+void GetBorderIntersection( std::vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
+void AttachIntersection( std::vector<NDb::SVSOPoint> *pIntersection, const std::vector<NDb::SVSOPoint> &rPoly, const bool bSetFlag );
+B2_M1_TERRAIN_EXPORT bool IsIntersect( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT bool IsIntersect( const std::vector<STriangle> &rTriangles, const std::vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> &rSourcePoints );
 
-void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
+void GetIntersectionTriangles( std::vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
 bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, bool bIncludeBorders = false );
 bool AreTrianglesTakenUp( const CTriangleEx rOuterTriangle, const CTriangleEx rInnerTriangle, bool bIncludeBorders = true );
 

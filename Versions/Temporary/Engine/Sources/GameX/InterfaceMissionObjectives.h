@@ -21,8 +21,8 @@ public:
 			pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
-		virtual bool Execute( const string &szSender, const string &szReaction );
-		virtual int Check( const string &szCheckName ) const;
+		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
+		virtual int Check( const std::string &szCheckName ) const;
 
 		int operator&( IBinSaver &saver )
 		{
@@ -41,9 +41,9 @@ private:
 		bool bAutoSelect;
 		CPtr<ITextView> pText;
 		CPtr<IButton> pStatus;
-		wstring wszHeader;
-		wstring wszDescBrief;
-		wstring wszDescFull;
+		std::wstring wszHeader;
+		std::wstring wszDescBrief;
+		std::wstring wszDescFull;
 		int nButtonIndex;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&nID); f.Add(4,&pButton); f.Add(5,&bAutoSelect); f.Add(6,&pText); f.Add(7,&pStatus); f.Add(8,&wszHeader); f.Add(9,&wszDescBrief); f.Add(10,&wszDescFull); f.Add(11,&nButtonIndex); return 0; }
 		
@@ -55,7 +55,7 @@ private:
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pDescPanel;
 
-	vector<SObjective> objectives;
+	std::vector<SObjective> objectives;
 	bool bIsModal;
 	
 	int nPrevSelectionID;
@@ -70,10 +70,10 @@ private:
 	CPtr<IWindow> pNextObjective;
 	CPtr<IWindow> pObjectiveItem;
 	CPtr<ITextView> pHeader;
-	wstring wszObjectivesSummary;
-	wstring wszMissionName;
-	wstring wszMissionBriefing;
-	wstring wszObjectivesSummaryTooltip;
+	std::wstring wszObjectivesSummary;
+	std::wstring wszMissionName;
+	std::wstring wszMissionBriefing;
+	std::wstring wszObjectivesSummaryTooltip;
 	float fMainInitialTop;
 	float fMainInitialHeight;
 	float fListInitialHeight;

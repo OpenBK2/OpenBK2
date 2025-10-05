@@ -38,8 +38,8 @@ public:
 
 	CFastRenderer();
 	bool TestSphere( const CVec3 &ptCenter, float fR ) { return ts.IsIn( SSphere( ptCenter, fR ) ); }
-	void GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits ) const;
-	void GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits, int x, int y ) const;
+	void GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits ) const;
+	void GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits, int x, int y ) const;
 	void GetDir( CVec3 *pRes, float x, float y ) const;
 	void GetCoordsClamped( const CVec3 &v, float *pX, float *pY );
 	//! Angle in radians; region is inclusive
@@ -51,7 +51,7 @@ public:
 	void InitProjective( const CVec3 &src, const CVec3 &dst, const CVec2 &halfSquare, int nHalfSize );
 	void InitProjective( const CVec3 &src, const CVec3 &dst, float fHalfSquare, int nHalfSize );
 	void InitSingleRay( const CVec3 &src, const CVec3 &dst );
-	void TraceEntity( const vector<SConvexHull> &e, bool bTerrain );
+	void TraceEntity( const std::vector<SConvexHull> &e, bool bTerrain );
 	void TraceEntity( const SConvexHull &e, bool bTerrain );
 	void SortIntervals();
 	void ReduceTerrain();

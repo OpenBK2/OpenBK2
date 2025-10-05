@@ -61,19 +61,19 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 
 	NTimer::STime nextSegmTime;
 	
-	vector< CObj<CTurret> > turrets;
-	vector< CPtr<CUnitGuns> > guns;
+	std::vector< CObj<CTurret> > turrets;
+	std::vector< CPtr<CUnitGuns> > guns;
 
 	NTimer::STime lastDistibution;
 
 	// для каждой из сторон 3 наблюдательных fireplace
 	CArray2D<int> observationPlaces;
 
-	vector<SSideInfo> sides;
+	std::vector<SSideInfo> sides;
 	// по fire place - <номер точки << 2> | <сторона>
-	vector<int> firePlace2Observation;
+	std::vector<int> firePlace2Observation;
 	// по fireplace - солдат в нём
-	vector< CPtr<CSoldier> > firePlace2Soldier;
+	std::vector< CPtr<CSoldier> > firePlace2Soldier;
 	int nLastFreeFireSoldierChoice;
 
 	// player последнего из защитников, побывавшего в здании
@@ -87,7 +87,7 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	bool bEscaped;
 	NTimer::STime timeOfDeath;
 	
-	vector<NTimer::STime> lastLeave;
+	std::vector<NTimer::STime> lastLeave;
 protected:
 	int nLinkID;
 	CDBPtr<SBuildingRPGStats> pStats;
@@ -166,7 +166,7 @@ public:
 	// количество HP, когда пора убегать из здания ( убегать, если их станет меньше )
 	const float GetEscapeHitPoints() const;
 	// выгнать формацию солдата из дома, pFormations - список уже выгнанных формаций
-	void DriveOut( CSoldier *pSoldier, hash_set<int> *pFormations );
+	void DriveOut( CSoldier *pSoldier, std::unordered_set<int> *pFormations );
 	void KillAllInsiders();
 protected:
 

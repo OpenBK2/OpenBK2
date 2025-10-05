@@ -39,7 +39,7 @@ class CWindowMultiTextureProgressBar : public CWindow, public IMultiTextureProgr
 {
 	OBJECT_BASIC_METHODS(CWindowMultiTextureProgressBar)
 
-	vector< CObj<IWindowPart> > parts;
+	std::vector< CObj<IWindowPart> > parts;
 
 	CPtr<NDb::SWindowMultiTextureProgressBar> pInstance;
 	CDBPtr<NDb::SWindowMultiTextureProgressBarShared> pShared;
@@ -56,8 +56,8 @@ public:
 	
 	//IMultiTextureProgressBar{
 	virtual bool IsSolid() const;
-	virtual void GetPositions( vector<float> *pPositions ) const;
-	virtual void SetPositions( const vector<float> &positions, bool bSolid );
+	virtual void GetPositions( std::vector<float> *pPositions ) const;
+	virtual void SetPositions( const std::vector<float> &positions, bool bSolid );
 	//IMultiTextureProgressBar}
 };
 

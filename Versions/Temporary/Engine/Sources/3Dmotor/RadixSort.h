@@ -6,12 +6,12 @@ enum ERadixFetch
 	RF_BACK,
 	RF_FLOAT
 };
-inline void RadixSortStage( int shift, const int *pDepths, vector<int> *pRes, ERadixFetch fetch )
+inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRes, ERadixFetch fetch )
 {
 	int lists[256];
 	memset( lists, -1, sizeof(lists) );
 	int nCount = pRes->size();
-	vector<int> temp( nCount );
+	std::vector<int> temp( nCount );
 	for ( int k = 0; k < nCount; ++k )
 	{
 		int nIdx = (*pRes)[k];
@@ -53,7 +53,7 @@ inline void RadixSortStage( int shift, const int *pDepths, vector<int> *pRes, ER
 	}
 }
 // lowest first
-inline void DoRadixSort( const float *pSrc, int nSize, vector<int> *pRes )
+inline void DoRadixSort( const float *pSrc, int nSize, std::vector<int> *pRes )
 {
 	pRes->resize( nSize );
 	if ( nSize <= 0 )
@@ -66,7 +66,7 @@ inline void DoRadixSort( const float *pSrc, int nSize, vector<int> *pRes )
 	RadixSortStage( 24, (const int*)pSrc, pRes, RF_FLOAT );
 }
 
-inline void DoRadixSort( const unsigned int *pSrc, int nSize, vector<int> *pRes )
+inline void DoRadixSort( const unsigned int *pSrc, int nSize, std::vector<int> *pRes )
 {
 	pRes->resize( nSize );
 	if ( nSize <= 0 )

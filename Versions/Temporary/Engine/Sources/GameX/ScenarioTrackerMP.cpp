@@ -78,9 +78,9 @@ void CScenarioTrackerMultiplayer::RegisterReinforcementCall( int nPlayer, NDb::E
 	reinfCallsByType[nPlayer][eType] += 1;
 }
 
-void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, vector<int> *pCallsByType )
+void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType )
 {
-	vector<int> &reinfUses = *pCallsByType;
+	std::vector<int> &reinfUses = *pCallsByType;
 	reinfUses.resize( NDb::_RT_NONE, 0 );
 
 	if ( nPlayer < 0 || nPlayer >= reinfCallsByType.GetSizeY() )
@@ -237,12 +237,12 @@ const NDb::SMapInfo * CScenarioTrackerMultiplayer::GetCurrentMission() const
 
 void CScenarioTrackerMultiplayer::ClearMissionScriptVars()
 {
-	const string szPrefix = "temp.";
-	vector<string> globalVars;
+	const std::string szPrefix = "temp.";
+	std::vector<std::string> globalVars;
 	NGlobal::GetIDList( &globalVars );
-	for ( vector<string>::iterator it = globalVars.begin(); it != globalVars.end(); ++it )
+	for ( std::vector<std::string>::iterator it = globalVars.begin(); it != globalVars.end(); ++it )
 	{
-		const string &szName = *it;
+		const std::string &szName = *it;
 		if ( szName.compare( 0, szPrefix.size(), szPrefix ) == 0 )
 		{
 			NGlobal::RemoveVar( szName );
@@ -297,7 +297,7 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 	if ( !pMission || !IsPlayerPresent( nNewOwnerPlayer ) )
 		return;
 
-	hash_map<int,int>::iterator pos = flags.find( nBuildingLinkID );
+	std::unordered_map<int,int>::iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
 		return;
 	int nOldPlayer = pos->second;
@@ -315,26 +315,26 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 
 const int CScenarioTrackerMultiplayer::GetKeyBuildingOwner( const int nBuildingLinkID )
 {
-	hash_map<int,int>::const_iterator pos = flags.find( nBuildingLinkID );
+	std::unordered_map<int,int>::const_iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
 		return nNeutralPlayer;
 	else
 		return pos->second;
 }
 
-const pair<int,int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
+const std::pair<int,int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 {
 	int nOwned0 = 0;
 	int nOwned1 = 0;
 
-	for ( hash_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+	for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 	{
 		if ( GetPlayerSide( it->second ) == 0 )
 			++nOwned0;
 		else if ( GetPlayerSide( it->second ) == 1 )
 			++nOwned1;
 	}
-	return pair<int,int>( nOwned0, nOwned1 );
+	return std::pair<int,int>( nOwned0, nOwned1 );
 }
 
 #define FULL_RECYCLE_TIME 215.0f
@@ -351,7 +351,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		int nFlags = 0;
 		int nOwnFlags = 0;
 
-		for ( hash_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+		for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 		{
 			++nFlags;
 			if ( GetPlayerSide( it->second ) == nSide )
@@ -361,7 +361,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		float fFullTime = pMPConsts->vReinfCounterRecycle.y;
 		float fMinTime = pMPConsts->vReinfCounterRecycle.x;
 		if ( fFullTime < fMinTime )
-			swap( fFullTime, fMinTime );
+			std::swap( fFullTime, fMinTime );
 		if ( fFullTime == 0.0f )
 			fFullTime = FULL_RECYCLE_TIME;
 		if ( fMinTime == 0.0f )
@@ -376,7 +376,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		return 1.0f;
 
 	float fCoeff = -1.0f;
-	for ( hash_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+	for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 	{
 		if ( GetPlayerSide( it->second ) == nSide )
 		{
@@ -500,7 +500,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforceme
 			continue;
 		if ( pLevels->eDBType != eType )
 			continue;
-		int nCheckedLevel = Min( pLevels->levels.size() - 1, nLevel );
+		int nCheckedLevel = Min<int>( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
 			break;
 
@@ -629,7 +629,7 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 	{
 		int nTime = players[nPlayer].timeKeyPointsOwned;
 
-		for ( hash_map<int, int>::iterator it = flags.begin(); it != flags.end(); ++it )
+		for ( std::unordered_map<int, int>::iterator it = flags.begin(); it != flags.end(); ++it )
 		{
 			if ( it->second == nPlayer )
 				nTime += curTime - flagTimes[it->first];
@@ -802,13 +802,13 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 
 		// The following cycle selects the best (techlevel-wise, but not better than the selected tech level) reinforcement
 		// from the MPConsts->sides. Default is taken from mapinfo 
-		const vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
+		const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
 		for ( int j = 0; j <= nTechLevel; ++j )
 		{
 			if ( j >= techLevels.size() )
 				break;
 
-			const vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[j].reinforcements;
+			const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[j].reinforcements;
 
 			for ( int k = 0; k < reinfSet.size(); ++k )
 			{

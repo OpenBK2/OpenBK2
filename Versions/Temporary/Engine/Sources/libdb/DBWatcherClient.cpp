@@ -30,7 +30,7 @@ public:
 #pragma warning( default: 4530 )
 	}
 
-	virtual IDBWatcherClient::EResult GetReferencingObjects( const string &szName, vector<CDBID> *pReferencingObjs )
+	virtual IDBWatcherClient::EResult GetReferencingObjects( const std::string &szName, std::vector<CDBID> *pReferencingObjs )
 	{
 		if ( bFailed )
 			return IDBWatcherClient::EResult::FAILED;

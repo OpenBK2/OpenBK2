@@ -18,10 +18,10 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CFileNode );
 	
-	string szFullFileName;
-	hash_map< string, CObj<CFileNode> > includes;
-	list<string> cppExternalIncludes;
-	list<string> hExternalIncludes;
+	std::string szFullFileName;
+	std::unordered_map< std::string, CObj<CFileNode> > includes;
+	std::list<std::string> cppExternalIncludes;
+	std::list<std::string> hExternalIncludes;
 
 	bool bFileExist;
 	enum EParseState
@@ -34,10 +34,10 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 	bool bIncludedInOtherFile;
 	bool bRootFile;
 
-	list< CObj<CNamespace> > namespaces;
+	std::list< CObj<CNamespace> > namespaces;
 public:
 	CFileNode() : eParseState( EPS_NOPARSED ), bFileExist( false ), bIncludedInOtherFile( false ) { }
-	CFileNode( const string &_szFullFileName, bool _bRootFile )
+	CFileNode( const std::string &_szFullFileName, bool _bRootFile )
 		: bFileExist( false ), eParseState( EPS_NOPARSED ), szFullFileName( _szFullFileName ), bIncludedInOtherFile( false ), bRootFile( _bRootFile ) { }
 	void SetExist() { bFileExist = true; }
 	void SetIncludedInOtherFile() { bIncludedInOtherFile = true; }
@@ -45,44 +45,44 @@ public:
 	bool IsParsed() const { return eParseState == EPS_PARSED; }
 	bool IsRootFile() const { return bRootFile; }
 
-	const string& GetName() const { return szFullFileName; }
-	void SetFullName( const string &_szFullName );
+	const std::string& GetName() const { return szFullFileName; }
+	void SetFullName( const std::string &_szFullName );
 
-	void AddInclude( string szFileName );
+	void AddInclude( std::string szFileName );
 	void AddInclude( CFileNode *pNode );
-	CFileNode* GetInclude( const string &szFileName );
+	CFileNode* GetInclude( const std::string &szFileName );
 
 	CNamespace* GetNamespace() const;
 	void OpenNewNamespace( CNodesList<CComplexTypeNode> *pVisibleTypes );
 	void CloseNamespace( bool bResolveForwards );
 
-	CAttributeDefNode* FindAttrDef( const string &szAttrName );
+	CAttributeDefNode* FindAttrDef( const std::string &szAttrName );
 	void AddAttrDef( CAttributeDefNode *pAttrDefNode );
 
-	void AddHExternal( const string &szIncludeName );
-	void AddCPPExternal( const string &szIncludeName );
+	void AddHExternal( const std::string &szIncludeName );
+	void AddCPPExternal( const std::string &szIncludeName );
 
 	void AddDef( CLangNode *pNode );
-	CLangNode* FindDef( const string &szTypeName, bool bOnlyTopNamespace );
-	CTypeNode* FindForward( const string &szTypeName, bool bOnlyTopNamespace );
+	CLangNode* FindDef( const std::string &szTypeName, bool bOnlyTopNamespace );
+	CTypeNode* FindForward( const std::string &szTypeName, bool bOnlyTopNamespace );
 
-	CEnumEntryNode* FindEnumEntry( const string &szEntryName, bool bOnlyTopNamespace );
+	CEnumEntryNode* FindEnumEntry( const std::string &szEntryName, bool bOnlyTopNamespace );
 
 	void Parse();
 
-	typedef hash_map< string, CObj<CFileNode> >::const_iterator TIncludesIter;
+	typedef std::unordered_map< std::string, CObj<CFileNode> >::const_iterator TIncludesIter;
 	TIncludesIter BeginIncludes() const { return includes.begin(); }
 	TIncludesIter EndIncludes() const { return includes.end(); }
 
-	const list<string>& GetHExternalIncludes() const { return hExternalIncludes; }
-	const list<string>& GetCPPExternalIncludes() const { return cppExternalIncludes; }
+	const std::list<std::string>& GetHExternalIncludes() const { return hExternalIncludes; }
+	const std::list<std::string>& GetCPPExternalIncludes() const { return cppExternalIncludes; }
 };
 
 CFileNode* GetRootFile();
 
-void AddInclude( const string &szFileName );
-void AddHExternal( const string &szIncludeName );
-void AddCPPExternal( const string &szIncludeName );
+void AddInclude( const std::string &szFileName );
+void AddHExternal( const std::string &szIncludeName );
+void AddCPPExternal( const std::string &szIncludeName );
 CFileNode* GetCurFileNode();
 
 }

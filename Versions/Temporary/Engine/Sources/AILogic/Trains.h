@@ -71,7 +71,7 @@ class CTrainLocomotive : public CMilitaryCar
 	OBJECT_NOCOPY_METHODS( CTrainLocomotive );
 
 	// List of cars
-	typedef list< CPtr<CAIUnit> > CCarList;
+	typedef std::list< CPtr<CAIUnit> > CCarList;
 	ZDATA_(CMilitaryCar)
 	CCarList cars;
 

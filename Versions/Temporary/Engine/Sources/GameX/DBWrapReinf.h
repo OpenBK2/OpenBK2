@@ -9,7 +9,7 @@ namespace NDBWrap
 {
 
 // Название уровня опытности самого подкрепления (не командира)
-const wstring& GetReinfXPLevelName( int nLevel );
+const std::wstring& GetReinfXPLevelName( int nLevel );
 
 float GetLeaderRankExp( const NDb::SCampaign *pCampaign, int nRank );
 

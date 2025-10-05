@@ -3,9 +3,9 @@
 class CFormation;
 class CAIUnit;
 class CCommonUnit;
-typedef list< CPtr<CFormation> > Infantry;
-typedef list< CPtr<CAIUnit> > MechUnits;
-typedef list<CPtr<CCommonUnit> > CommonUnits;
+typedef std::list< CPtr<CFormation> > Infantry;
+typedef std::list< CPtr<CAIUnit> > MechUnits;
+typedef std::list<CPtr<CCommonUnit> > CommonUnits;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum ETaskName

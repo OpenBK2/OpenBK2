@@ -5,17 +5,17 @@
 #include "MainLoop.h"
 
 MAIN_EXPORT IInterfaceCommand *CreateICExitGame();
-IInterfaceCommand *CreateICLoad( const string &szName );
-MAIN_EXPORT IInterfaceCommand *CreateICSave( const string &szName );
+IInterfaceCommand *CreateICLoad( const std::string &szName );
+MAIN_EXPORT IInterfaceCommand *CreateICSave( const std::string &szName );
 MAIN_EXPORT IInterfaceCommand *CreateICCloseInterface();
 
 MAIN_EXPORT IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode );
-IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, vector< CPtr<IDebugSaveCheckObj> > &checkers );
+IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<IDebugSaveCheckObj> > &checkers );
 
 class MAIN_EXPORT CICLoadBase : public IInterfaceCommand
 {
-	wstring szTitleName;
-	string szFileName;
+	std::wstring szTitleName;
+	std::string szFileName;
 public:
 	enum EStage
 	{
@@ -25,7 +25,7 @@ public:
 	};
 	
 	CICLoadBase();
-	CICLoadBase( const string &szFileName );
+	CICLoadBase( const std::string &szFileName );
 	
 	void Configure( const char *pszConfig );
 	void Exec();
@@ -38,13 +38,13 @@ public:
 class MAIN_EXPORT CICSaveBase : public IInterfaceCommand
 {
 	ZDATA
-	wstring szTitleName;
-	string szFileName;
+	std::wstring szTitleName;
+	std::string szFileName;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szTitleName); f.Add(3,&szFileName); return 0; }
 protected:
-	const string &GetFileName() const { return szFileName; }
-	const string GetPathName();
+	const std::string &GetFileName() const { return szFileName; }
+	const std::string GetPathName();
 public:
 	enum EStage
 	{
@@ -53,7 +53,7 @@ public:
 	};
 
 	CICSaveBase();
-	CICSaveBase( const string &szFileName );
+	CICSaveBase( const std::string &szFileName );
 	
 	void Configure( const char *pszConfig );
 	void Exec();

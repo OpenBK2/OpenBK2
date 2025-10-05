@@ -22,7 +22,7 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 	};
 	OBJECT_BASIC_METHODS( CDeadHouseAnimations );
 	ZDATA
-		vector<SAnimationInfo> animations;
+		std::vector<SAnimationInfo> animations;
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&animations); return 0; } private:
 private:
 public:

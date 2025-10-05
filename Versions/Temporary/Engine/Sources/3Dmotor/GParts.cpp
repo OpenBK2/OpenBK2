@@ -114,8 +114,8 @@ void ISomePart::SetLM( CPtrFuncBase<NGfx::CTexture> *pLM )
 
 // CStaticAnimatedPart
 
-CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< vector<SHMatrix> > *pAnim, 
-	CFuncBase<vector<NGfx::SCompactTransformer> > *pMMXAnim, 
+CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *pAnim,
+	CFuncBase<std::vector<NGfx::SCompactTransformer> > *pMMXAnim,
 	const SBound &_bv, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo ) 
 	: ISomePart( pData, _pMaterial, _gInfo ), pAnimation(pAnim), pMMXAnimation(pMMXAnim), bv(_bv)
 {
@@ -180,8 +180,8 @@ CDynamicPartWithAnimatedBound::CDynamicPartWithAnimatedBound( CPtrFuncBase<CObje
 
 // CAnimatedPart
 
-CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< vector<SHMatrix> > *_pAnim,
-	CFuncBase<vector<NGfx::SCompactTransformer> > *_pMMXAnim, 
+CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *_pAnim,
+	CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 	CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim), 
 	pAnimation(_pAnim), pMMXAnimation(_pMMXAnim)
@@ -338,9 +338,9 @@ void CCombinedPart::UpdatePartInfo()
 	if ( !pCombiner.Refresh() && !bRecalcPartInfo )
 		return;
 	bRecalcPartInfo = false;
-	CDGPtr<CFuncBase<vector< CPtr<IPart> > > > pC( GetCombiner() );
+	CDGPtr<CFuncBase<std::vector< CPtr<IPart> > > > pC( GetCombiner() );
 	pC.Refresh();
-	const vector< CPtr<IPart> > &src = pC->GetValue();
+	const std::vector< CPtr<IPart> > &src = pC->GetValue();
 	parts.resize( src.size() );
 	materials.resize( 0 );
 	for ( int k = 0; k < src.size(); ++k )
@@ -388,7 +388,7 @@ bool CVolumeNode::SUpdatableObjects::IsEmpty()
 }
 
 template <class TElem, class TParam, class TParam2>
-inline void UpdateVector( vector<TElem> *a, TParam *p1, TParam2 *p2 )
+inline void UpdateVector( std::vector<TElem> *a, TParam *p1, TParam2 *p2 )
 {
 	int nSize = a->size();
 	for ( int k = 0; k < nSize; )
@@ -405,7 +405,7 @@ inline void UpdateVector( vector<TElem> *a, TParam *p1, TParam2 *p2 )
 	a->resize( nSize );
 }
 template <class TElem, class TParam>
-inline void UpdateVector( vector<TElem> *a, TParam *p )
+inline void UpdateVector( std::vector<TElem> *a, TParam *p )
 {
 	int nSize = a->size();
 	for ( int k = 0; k < nSize; )

@@ -41,7 +41,7 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 	{
 		ZDATA
 		CPtr<IButton> pBtn;
-		string szBtnName;
+		std::string szBtnName;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&szBtnName); return 0; }
 	};
 
@@ -52,7 +52,7 @@ public:
 	public:
 		ZDATA
 		CDBPtr<NDb::SUnitBaseRPGStats> pStats;
-		wstring wszBriefDesc;
+		std::wstring wszBriefDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&wszBriefDesc); return 0; }
 		
 		bool operator==( const CUnitData &data ) const
@@ -82,7 +82,7 @@ private:
 	{
 		ZDATA
 		CPtr<IListControl> pUnitListCont;
-		vector< CPtr<CUnitData> > filteredUnits;
+		std::vector< CPtr<CUnitData> > filteredUnits;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnitListCont); f.Add(3,&filteredUnits); return 0; }
 	};
 	
@@ -99,18 +99,18 @@ private:
 	CPtr<IButton> pStepBackward;
 	CPtr<IButton> pStepForward;
 	
-	vector< SFilterBtn > filterCountries;
-	vector< SFilterBtn > filterUnitTypes;
+	std::vector< SFilterBtn > filterCountries;
+	std::vector< SFilterBtn > filterUnitTypes;
 	EFilterCountries eSelCountry;
 	EFilterUnitTypes eSelUnitType;
 	
-	hash_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash > knownUnits;
-	vector< SSelectedUnit > selectedUnits; // array for undo purpose
+	std::unordered_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash > knownUnits;
+	std::vector< SSelectedUnit > selectedUnits; // array for undo purpose
 	int nSelUnit;
 	
 	CObj<CDataViewer> pDataViewer;
 	
-	vector<SFilterCache> filterCache;
+	std::vector<SFilterCache> filterCache;
 	
 	ZSKIP //CPtr<IWindow> pBackground;
 	
@@ -126,8 +126,8 @@ private:
 	void MsgUnitSelectionChanged( const SGameMessage &msg );
 	void MsgHelpScreen( const SGameMessage &msg );
 	
-	bool OnFilterBtn( const string &szName );
-	bool OnEffectFinished( const string &szName );
+	bool OnFilterBtn( const std::string &szName );
+	bool OnEffectFinished( const std::string &szName );
 	
 	void MakeInterior();
 	
@@ -155,8 +155,8 @@ public:
 	bool StepLocal( bool bAppActive );
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 public:
 	static bool RunWithUnit( const NDb::SUnitBaseRPGStats *pStats );
@@ -177,8 +177,8 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

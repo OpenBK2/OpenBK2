@@ -236,7 +236,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 	
 	int nIndex = 0;
-	for ( vector< const NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin(); 
+	for ( std::vector< NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin();
 		it != pChapter->missionPath.end(); ++it, ++nIndex )
 	{
 		const NDb::SMissionEnableInfo &info = *it;
@@ -309,11 +309,11 @@ void CInterfaceChapterMapMenu::InitMissions()
 			}
 		}
 
-		wstring wszMapName;
+		std::wstring wszMapName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(info.pMap->,LocalizedName) )
 			wszMapName = GET_TEXT_PRE(info.pMap->,LocalizedName);
-		wstring wszTooltipTemplate;
-		wstring wszMapStatus;
+		std::wstring wszTooltipTemplate;
+		std::wstring wszMapStatus;
 		bool bFinalLocked = bFinalMission && (target.eState == EMS_DISABLED);
 		if ( IScreen *pScreen = GetScreen() )
 		{
@@ -326,14 +326,14 @@ void CInterfaceChapterMapMenu::InitMissions()
 			else if ( target.eState == EMS_DISABLED )
 				wszMapStatus = pScreen->GetTextEntry( "T_MISSION_UNAVAILABLE" );
 		}
-		vector< pair<wstring, wstring> > params;
-		params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_MISSION_NAME, wszMapName ) );
-		params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_MISSION_STATUS, wszMapStatus ) );
+		std::vector< std::pair<std::wstring, std::wstring> > params;
+		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_MISSION_NAME, wszMapName ) );
+		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_MISSION_STATUS, wszMapStatus ) );
 		if ( bFinalLocked )
 		{
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
-			wstring wszCount = NStr::ToUnicode( StrFmt( "%d", pST->GetMissionToEnableCount() ) );
-			params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_FINAL_MISSION_LOCKS, wszCount ) );
+			std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", pST->GetMissionToEnableCount() ) );
+			params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_FINAL_MISSION_LOCKS, wszCount ) );
 		}
 		SetDynamicTooltip( pElement, wszTooltipTemplate, params );
 
@@ -359,7 +359,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 				pRewardButton->ShowWindow( true );
 			else
 				continue;
-			wstring wszRewardPrefix = L"";
+			std::wstring wszRewardPrefix = L"";
 			if ( pRewardButton->DemandTooltip() )
 			{
 				CDynamicCast<CWindowTooltip> pTooltip = pRewardButton->DemandTooltip();

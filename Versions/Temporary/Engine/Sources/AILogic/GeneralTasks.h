@@ -69,7 +69,7 @@ public:
 class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnumerator
 {
 	OBJECT_BASIC_METHODS(CGeneralTaskToHoldReinforcement);
-	typedef hash_map<int, CVec2> UnitsPositions;
+	typedef std::unordered_map<int, CVec2> UnitsPositions;
 	ZDATA
 	CommonUnits tanksFree;
 	NDb::SAIGeneralParcel patchInfo;
@@ -139,7 +139,7 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 		ESS_REST,
 		ESS_WAIT_FOR_WORKERS,
 	};
-	typedef vector< CPtr<CCommonUnit> > CTanks;
+	typedef std::vector< CPtr<CCommonUnit> > CTanks;
 
 	ZDATA
 	ESwarmState eState;

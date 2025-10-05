@@ -57,9 +57,9 @@ void CFenceCreation::BuildNext()
 
 bool CFenceCreation::CanPlaceOnTerrain( CGivenPassabilityStObject *pObj ) const
 {
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	pObj->GetCoveredTiles( &tiles );
-	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		if ( !GetAIMap()->IsTileInside( *it ) || ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 			return false;
@@ -79,10 +79,10 @@ void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate 
 	for ( int i = 0; i < fenceSegements.size(); ++i )
 	{
 		// check part
-		list<SVector> tiles;
+		std::list<SVector> tiles;
 		fenceSegements[i]->GetCoveredTiles( &tiles );
 		bool bCanBuildCurrent = false;
-		for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !GetAIMap()->IsTileInside( *it ) || ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 				pUpdate->impossibleToBuildTiles.push_back( CVec2(it->x, it->y) );
@@ -165,9 +165,9 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 			}
 		}
 	}
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	pObj->GetCoveredTiles( &tiles );
-	for ( list<SVector>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SVector>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		const SStaticObjectRPGStats * pStats = checked_cast<const SStaticObjectRPGStats *>(pObj->GetStats());
 		if ( GetTerrain()->IsLocked( *it, (EAIClasses)pStats->nAIPassabilityClass ) )
@@ -176,7 +176,7 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 	return true;
 }
 
-void CFenceCreation::GetUnitsPreventing( list< CPtr<CAIUnit> > *units )
+void CFenceCreation::GetUnitsPreventing( std::list< CPtr<CAIUnit> > *units )
 {
 	SRect r1;
 	fenceSegements[nCurIndex]->GetBoundRect( &r1 );

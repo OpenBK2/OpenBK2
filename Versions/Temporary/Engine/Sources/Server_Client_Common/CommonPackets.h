@@ -79,11 +79,11 @@ class CSystemBroadcastPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CSystemBroadcastPacket )
 public:
 	ZDATA
-		wstring wszText;
+		std::wstring wszText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
 
 	CSystemBroadcastPacket() { }
-	CSystemBroadcastPacket( const int nClientID, const wstring &_wszText )
+	CSystemBroadcastPacket( const int nClientID, const std::wstring &_wszText )
 		: CNetPacket( nClientID ), wszText( _wszText ) { }
 };
 

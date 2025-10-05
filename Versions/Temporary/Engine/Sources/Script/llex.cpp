@@ -215,7 +215,7 @@ static void read_long_string (LexState *LS, SemInfo *seminfo) {
   } endloop:
   save_and_next(L, LS, l);  /* skip the second ']' */
   save(L, '\0', l);
-	string szSemi( &L->Mbuffer[2], l-5 );
+	std::string szSemi( &L->Mbuffer[2], l-5 );
   seminfo->ts = luaS_newlstr(L, szSemi.c_str() );//L->Mbuffer+2, l-5);
 }
 
@@ -268,7 +268,7 @@ static void read_string (LexState *LS, int del, SemInfo *seminfo) {
   }
   save_and_next(L, LS, l);  /* skip delimiter */
   save(L, '\0', l);
-	string szSemi( &L->Mbuffer[1], l-3 );
+	std::string szSemi( &L->Mbuffer[1], l-3 );
   seminfo->ts = luaS_newlstr(L, szSemi.c_str() );//L->Mbuffer+2, l-5);
 //  seminfo->ts = luaS_newlstr(L, L->Mbuffer+1, l-3);
 }

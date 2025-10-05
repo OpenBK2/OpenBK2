@@ -40,9 +40,9 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 		SInsiderInfo( CSoldier *_pUnit, const int _nFireplace ) : pUnit( _pUnit ), nFireplace( _nFireplace ) { }
 	};
 
-	typedef list<CPtr<CEntrenchmentPart> > CSegmentList;
+	typedef std::list<CPtr<CEntrenchmentPart> > CSegmentList;
 
-	list<SInsiderInfo>::iterator iter;
+	std::list<SInsiderInfo>::iterator iter;
 	ZDATA_(CStaticObject)
 		ZPARENT(CStormableObject)
 		ZPARENT(CRotatingFireplacesObject)
@@ -50,9 +50,9 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 	int z;
 
 	int nBusyFireplaces;
-	vector<SFireplaceInfo> fireplaces;	
+	std::vector<SFireplaceInfo> fireplaces;
 	
-	list<SInsiderInfo> insiders;
+	std::list<SInsiderInfo> insiders;
 	ZSKIP
 
 	CDBPtr<SEntrenchmentRPGStats> pStats;
@@ -78,7 +78,7 @@ public:
 
 	virtual const CVec3& GetCenter() const;
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const { return rect.center; }
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void GetBoundRect( SRect *pRect ) const { *pRect = rect; }
 	virtual bool IsPointInside( const CVec2 &point ) const { return rect.IsPointInside( point ); }
 	virtual const WORD GetDir() const { return GetDirectionByVector( rect.dir ); }
@@ -146,7 +146,7 @@ class CEntrenchmentPart : public CExistingObject
 	bool bOwnerChanged;			// client-dependent, for sending creation update
 	bool bDigBySegment;
 
-	list<SVector> coveredTiles;	
+	std::list<SVector> coveredTiles;
 	CObj<CFullEntrenchment> pFullEntrenchment;
 
 	NTimer::STime nextSegmTime;
@@ -200,14 +200,14 @@ public:
 
 	void GetBoundRect( SRect *pRect ) const { *pRect = boundRect; }
 	virtual bool IsPointInside( const CVec2 &point ) const;
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 
 	virtual void Segment();
 	virtual const NTimer::STime GetNextSegmentTime() const;
 
 	virtual void LockTiles() { }
 	virtual void UnlockTiles()  { }
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles ) { pTiles->clear(); }
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) { pTiles->clear(); }
 	virtual void SetTransparencies() { }
 	virtual void RemoveTransparencies() { }
 	virtual void RestoreTransparenciesImmidiately() { }
@@ -248,7 +248,7 @@ class CFullEntrenchment : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS( CFullEntrenchment );
 
-	typedef list<CPtr<CEntrenchment> > CSectionList;
+	typedef std::list<CPtr<CEntrenchment> > CSectionList;
 
 	ZDATA
 	ZSKIP
@@ -275,7 +275,7 @@ class CEntrenchmentTankPit : public CGivenPassabilityStObject
 	
 	CVec2 vHalfSize; 
 	SRect boundRect;
-	list<SObjTileInfo> tilesToLock;
+	std::list<SObjTileInfo> tilesToLock;
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pOwner); f.Add(3,&pStats); f.Add(4,&wDir); f.Add(5,&vHalfSize); f.Add(6,&boundRect); f.Add(7,&tilesToLock); return 0; }
 protected:
@@ -284,20 +284,20 @@ public:
 	CEntrenchmentTankPit() { }
 	~CEntrenchmentTankPit();
 	// nFrameIndex - индекс в векторе SEntrenchmentRPGStats::segments
-	CEntrenchmentTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir,const int nFrameIndex, const class CVec2 &vResizeFactor, const list<SObjTileInfo> &tiles, class CAIUnit *_pOwner );
+	CEntrenchmentTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir,const int nFrameIndex, const class CVec2 &vResizeFactor, const std::list<SObjTileInfo> &tiles, class CAIUnit *_pOwner );
 
 	virtual const WORD GetDir() const { return wDir; }
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) { }
 	void GetBoundRect( SRect *pRect ) const { *pRect = boundRect; }
 	virtual bool IsPointInside( const CVec2 &point ) const { return false; }
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const ;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const ;
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual void Segment() { }
 
 	virtual void LockTiles();
 	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles );
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
 	virtual void SetTransparencies() { }
 	virtual void RemoveTransparencies() { }
 	virtual const SHPObjectRPGStats* GetStats() const { return pStats; }

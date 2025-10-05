@@ -459,7 +459,7 @@ void CBuilding::InitObservationPlaces()
 	GetBoundRect( &boundRect );
 	CVec2 vCenter( boundRect.center );
 
-	vector<int> takenSlots( pStats->aiSlots.size(), 0 );
+	std::vector<int> takenSlots( pStats->aiSlots.size(), 0 );
 
 	for ( int i = 0; i < 4; ++i )
 	{
@@ -1393,7 +1393,7 @@ void CBuilding::Segment()
 
 void CBuilding::KillAllInsiders()
 {
-	list< CPtr<CSoldier> > dead;
+	std::list< CPtr<CSoldier> > dead;
 
 	for ( int i = 0; i < medical.Size(); ++i )
 		dead.push_back( medical[i] );
@@ -1404,7 +1404,7 @@ void CBuilding::KillAllInsiders()
 	for ( int i = 0; i < fire.Size(); ++i )
 		dead.push_back( fire[i] );
 
-	for ( list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
+	for ( std::list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
 		(*iter)->Die( false, 0 );
 }
 
@@ -1435,7 +1435,7 @@ void CBuilding::SetHitPoints( const float fNewHP )
 	}	
 }
 
-void CBuilding::DriveOut( CSoldier *pSoldier, hash_set<int> *pFormations )
+void CBuilding::DriveOut( CSoldier *pSoldier, std::unordered_set<int> *pFormations )
 {
 	NI_ASSERT( GetNEntrancePoints() != 0, "building without entrance points" );
 
@@ -1472,7 +1472,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 			bEscaped = GetHitPoints() <= GetEscapeHitPoints() && bShouldEscape;
 			if ( bEscaped )
 			{
-				hash_set<int> formations;
+				std::unordered_set<int> formations;
 				for ( int i = 0; i < fire.Size(); ++i )
 					DriveOut( fire[i], &formations );
 				for ( int i = 0; i < medical.Size(); ++i )
@@ -1527,7 +1527,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 				{
 					const float fProbability = fDamage / pStats->fMaxHP;
 
-					list< CPtr<CSoldier> > dead;								
+					std::list< CPtr<CSoldier> > dead;
 					for ( int i = 0; i < medical.Size(); ++i )
 					{
 						// не жилец
@@ -1549,7 +1549,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 							dead.push_back( fire[i] );
 					}
 
-					for ( list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
+					for ( std::list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
 					{
 						CSoldier *pSoldier = *iter;
 
@@ -1706,7 +1706,7 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 	{
 		const CTRect<float> &aabbRect = GetPassProfile()->GetAABBRect();
 		const CTPoint<float> vAABBCenter = aabbRect.GetCenter();
-		vector<SVector> tiles = GetPassProfile()->GetTilesUnder();
+		std::vector<SVector> tiles = GetPassProfile()->GetTilesUnder();
 		for ( int i = 0; i < tiles.size(); ++i )
 		{
 			CVec2 vTileCenter = AICellsTiles::GetPointByTile( tiles[i] );

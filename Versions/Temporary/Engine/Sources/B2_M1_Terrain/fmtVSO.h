@@ -40,7 +40,7 @@ struct SVectorStripeObjectDesc
 		float fTextureStep;									// шаг текстурирования по тайлам
 		int nNumCells;											// ширина потока в ячейках (в тайлах)
 		bool bAnimated;											// animated layer
-		string szTexture;							// текстура потока (или директория, если это анимированная текстура)
+		std::string szTexture;							// текстура потока (или директория, если это анимированная текстура)
 		float fDisturbance;									// mesh disturbance
 		float fRelWidth;										// relative width
 
@@ -69,14 +69,14 @@ struct SVectorStripeObjectDesc
 	//----------------------------------------------------------------------------------------------------
 	// layers
 	SLayer bottom;												// bottom central layer
-	vector<SLayer> bottomBorders;		// bottom layer border parts
-	vector<SLayer> layers;						// additional layers
+	std::vector<SLayer> bottomBorders;		// bottom layer border parts
+	std::vector<SLayer> layers;						// additional layers
 	NImage::SColor miniMapCenterColor;						// цвет обьекта на минимапе ( центральная часть )
 	NImage::SColor miniMapBorderColor;						// цвет обьекта на минимапе ( край )
 	
 	//----------------------------------------------------------------------------------------------------
 	// ambient sound
-	string szAmbientSound;
+	std::string szAmbientSound;
 	
 	//----------------------------------------------------------------------------------------------------
 	SVectorStripeObjectDesc() 
@@ -91,12 +91,12 @@ struct SVectorStripeObjectDesc
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SVectorStripeObject : SVectorStripeObjectDesc
 {
-	string szDescName;								// complete path to descriptor
+	std::string szDescName;								// complete path to descriptor
 
 	//----------------------------------------------------------------------------------------------------
 	// points
-	vector<SVectorStripeObjectPoint> points;	// points
-	vector<CVec3> controlpoints;			// control polyline points
+	std::vector<SVectorStripeObjectPoint> points;	// points
+	std::vector<CVec3> controlpoints;			// control polyline points
 
 	//----------------------------------------------------------------------------------------------------
 	// object's ID
@@ -109,6 +109,6 @@ struct SVectorStripeObject : SVectorStripeObjectDesc
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-typedef vector<SVectorStripeObject> TVSOList;
+typedef std::vector<SVectorStripeObject> TVSOList;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -52,14 +52,14 @@ static bool ProcessMainLoopCmds( const SGameMessage &msg )
 
 namespace NMainLoop
 {
-typedef list< CObj<IInterfaceCommand> > CInterfaceCommandsList;
-typedef list< CObj<IInterfaceBase> > CInterfacesList;
+typedef std::list< CObj<IInterfaceCommand> > CInterfaceCommandsList;
+typedef std::list< CObj<IInterfaceBase> > CInterfacesList;
 static CInterfaceCommandsList icmds;					// interface commands
 static CInterfacesList interfaces;						// interfaces stack
-static string szBaseDir;								// base dir of the main loop
+static std::string szBaseDir;								// base dir of the main loop
 static bool bInputEnabled = true;
 
-const string& GetBaseDir()
+const std::string& GetBaseDir()
 {
 	return szBaseDir;
 }
@@ -69,12 +69,12 @@ void InitMainLoop()
 	char buffer[1024];
 	GetCurrentDirectory( 1024, buffer );
 	//
-	const string szLogFileName = string(buffer) + "\\log.txt";
-	const string szErrorFileName = string(buffer) + "\\error.txt";
+	const std::string szLogFileName = std::string(buffer) + "\\log.txt";
+	const std::string szErrorFileName = std::string(buffer) + "\\error.txt";
 	DeleteFile( szErrorFileName.c_str() );
 	DeleteFile( szLogFileName.c_str() );
 	//
-	string szTemp = buffer;
+	std::string szTemp = buffer;
 	NI_ASSERT( !szTemp.empty(), "Can't get current directory" );
 	if ( szTemp[szTemp.size() - 1] != '\\' )
 		szTemp += '\\';
@@ -283,14 +283,14 @@ bool StepApp( bool bActive )
 }
 }
 
-static void CmdLoad( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
 		NMainLoop::Command( CreateICLoad( "quick" ) );
 	else
 		NMainLoop::Command( CreateICLoad( NStr::ToMBCS( paramsSet[0] ) ) );
 }
-static void CmdSave( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
 		NMainLoop::Command( CreateICSave( "quick" ) );

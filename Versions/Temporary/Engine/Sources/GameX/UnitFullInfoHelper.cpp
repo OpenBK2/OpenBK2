@@ -6,16 +6,18 @@
 #include "Stats_B2_M1/DBVisObj.h"
 #include "System/Text.h"
 
+#include <algorithm>
+
 namespace NUnitFullInfo
 {
 
-void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats );
-void MakeSquadWeapons( vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats );
-void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats );
-void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon );
+void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats );
+void MakeSquadWeapons( std::vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats );
+void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats );
+void AddWeapon( std::vector<SWeapon> &weapons, const SWeapon &weapon );
 
-void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats );
-void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats );
+void MakeMechArmors( std::vector<int> &armors, const NDb::SMechUnitRPGStats *pStats );
+void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStats );
 
 const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason );
 
@@ -85,7 +87,7 @@ int SWeaponsSort::GetWeaponPriority( const SWeapon &weapon ) const
 	}
 }
 
-void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats )
+void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats )
 {
 	weapons.clear();
 	
@@ -120,21 +122,21 @@ void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pS
 	}
 }
 
-void MakeSquadWeapons( vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats )
+void MakeSquadWeapons( std::vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats )
 {
 	weapons.clear();
 
-	for ( vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
+	for ( std::vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
 		it != pStats->members.end(); ++it )
 	{
 		const NDb::SInfantryRPGStats *pInfantryStats = *it;
 		
 		AddInfantryWeapons( weapons, pInfantryStats );
 	}
-	sort( weapons.begin(), weapons.end(), SWeaponsSort() );
+	std::sort( weapons.begin(), weapons.end(), SWeaponsSort() );
 }
 
-void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats )
+void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats )
 {
 	// Weapons
 	const int nID = -1;
@@ -164,9 +166,9 @@ void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats 
 	}
 }
 
-void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon )
+void AddWeapon( std::vector<SWeapon> &weapons, const SWeapon &weapon )
 {
-	vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
+	std::vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
 	if ( it != weapons.end() )
 	{
 		SWeapon &current = *it;
@@ -183,7 +185,7 @@ void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon )
 	}
 }
 
-void MakeWeapons( vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats )
+void MakeWeapons( std::vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
 	{
@@ -195,7 +197,7 @@ void MakeWeapons( vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats
 	}
 }
 
-void MakeArmors( vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
+void MakeArmors( std::vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
 	{
@@ -207,7 +209,7 @@ void MakeArmors( vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
 	}
 }
 
-void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats )
+void MakeMechArmors( std::vector<int> &armors, const NDb::SMechUnitRPGStats *pStats )
 {
 	if ( pStats->armors.size() >= ARMOR_COUNT )
 	{
@@ -229,7 +231,7 @@ void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats )
 	}
 }
 
-void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats )
+void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStats )
 {
 	armors.resize( ARMOR_COUNT );
 
@@ -238,7 +240,7 @@ void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats )
 	armors[ES_ARMOR_BACK] = 0;
 	armors[ES_ARMOR_TOP] = 0;
 	
-	for ( vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
+	for ( std::vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
 		it != pStats->members.end(); ++it )
 	{
 		const NDb::SInfantryRPGStats *pStats = *it;
@@ -303,7 +305,7 @@ const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 {
 	if ( pVisObj )
 	{
-		for ( vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
+		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
 			if ( it->eSeason == eSeason ) 
 				return it->pModel;

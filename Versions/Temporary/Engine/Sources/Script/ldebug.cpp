@@ -90,7 +90,7 @@ static int nups( lua_State *L, TObject* f )
 }
 
 
-int luaG_getline ( const vector<int> &lineinfo, int pc, int refline, int *prefi) {
+int luaG_getline ( const std::vector<int> &lineinfo, int pc, int refline, int *prefi) {
   int refi;
   if (lineinfo.empty() || pc == -1)
     return -1;  // no line info or function is not active

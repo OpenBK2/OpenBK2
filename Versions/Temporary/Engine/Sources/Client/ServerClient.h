@@ -11,14 +11,14 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 
 	CPtr<class CNet> pNet;
 
-	list< CPtr<class CPacketProcessor> > processors;
-	list< CPtr<class CNetPacket> > packets;
+	std::list< CPtr<class CPacketProcessor> > processors;
+	std::list< CPtr<class CNetPacket> > packets;
 
 	CPtr<class CPlayGameProcessor> pPlayGameProcessor;
 
 	// debug pause
 	bool bDebugPaused;
-	list< CPtr<class CNetPacket> > pausedPackets;
+	std::list< CPtr<class CNetPacket> > pausedPackets;
 
 	struct SPausedGamePacket
 	{
@@ -29,7 +29,7 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 		SPausedGamePacket( class CNetPacket *_pPacket, bool _bBroadcast )
 			: pPacket( _pPacket ), bBroadcast( _bBroadcast ) { }
 	};
-	list<SPausedGamePacket> pausedGamePackets;
+	std::list<SPausedGamePacket> pausedGamePackets;
 	int nTimeOut;
 
 	void PushPacket( class CNetPacket *pPacket );

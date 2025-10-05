@@ -53,29 +53,29 @@ public:
 	{
 		ZDATA
 		int nID;
-		vector<DWORD> data;
+		std::vector<DWORD> data;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&data); return 0; }
 	};
 	struct SData
 	{
 		ZDATA
-		vector<SVertex> verts;
-		vector<STriangle> geometry;
-		vector<SVertexWeight> weights;
-		vector<CVec2> secondTex;
-		vector<SStream> attributes;
+		std::vector<SVertex> verts;
+		std::vector<STriangle> geometry;
+		std::vector<SVertexWeight> weights;
+		std::vector<CVec2> secondTex;
+		std::vector<SStream> attributes;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&verts); f.Add(3,&geometry); f.Add(4,&weights); f.Add(5,&secondTex); f.Add(6,&attributes); return 0; }
 	};
 	struct SBinData
 	{
 		ZDATA
-		vector<CVec3> positions;
-		vector<SUVInfo> verts;
-		vector<SRealVertexWeight> weights;
-		vector<WORD> posIndices; // references to positions for each vert
-		vector<WORD> vertRefPositions; // number of first position encounter for each vertex
-		vector<STriangle> geometry;
-		vector<SStream> attributes;
+		std::vector<CVec3> positions;
+		std::vector<SUVInfo> verts;
+		std::vector<SRealVertexWeight> weights;
+		std::vector<WORD> posIndices; // references to positions for each vert
+		std::vector<WORD> vertRefPositions; // number of first position encounter for each vertex
+		std::vector<STriangle> geometry;
+		std::vector<SStream> attributes;
 		int nTris;
 		float fAverageTriArea;
 		bool bIsLightmappable;
@@ -93,13 +93,13 @@ public:
 			return 0; }
 	};
 
-	vector<CVec3> positions;
-	vector<SUVInfo> verts;
-	vector<SRealVertexWeight> weights;
-	vector<WORD> posIndices; // references to positions for each vert
-	vector<WORD> vertRefPositions; // number of first position encounter for each vertex
-	vector<STriangle> geometry;
-	vector<SStream> attributes;
+	std::vector<CVec3> positions;
+	std::vector<SUVInfo> verts;
+	std::vector<SRealVertexWeight> weights;
+	std::vector<WORD> posIndices; // references to positions for each vert
+	std::vector<WORD> vertRefPositions; // number of first position encounter for each vertex
+	std::vector<STriangle> geometry;
+	std::vector<SStream> attributes;
 	int nTris;
 	float fAverageTriArea;
 	bool bIsLightmappable;
@@ -107,21 +107,21 @@ public:
 private:
 	void EstablishRefs();
 	void MergePositions();
-	void AssignGeometry( const SData &data, vector<STriangle> *pGeom );
+	void AssignGeometry( const SData &data, std::vector<STriangle> *pGeom );
 	void CalcAverageTriArea();
-	void Assign( const SData &data, vector<STriangle> *pGeom, bool bOptimizeVCache );
+	void Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache );
 
 public:
 	
 	void AssignDestructive(SBinData *pData)
 	{
-		swap( positions, pData->positions );
-		swap( verts, pData->verts );
-		swap( weights, pData->weights );
-		swap( posIndices, pData->posIndices );
-		swap( vertRefPositions, pData->vertRefPositions );
-		swap( geometry, pData->geometry );
-		swap( attributes, pData->attributes );
+		std::swap( positions, pData->positions );
+		std::swap( verts, pData->verts );
+		std::swap( weights, pData->weights );
+		std::swap( posIndices, pData->posIndices );
+		std::swap( vertRefPositions, pData->vertRefPositions );
+		std::swap( geometry, pData->geometry );
+		std::swap( attributes, pData->attributes );
 		nTris = pData->nTris;
 		fAverageTriArea = pData->fAverageTriArea;
 		bIsLightmappable = pData->bIsLightmappable;
@@ -144,17 +144,17 @@ public:
 	// will modify pData
 	void Assign( SData *pData, bool bOptimizeVCache );
 	void AssignFast( SData *pData );
-	const vector<CVec3>& GetPositions() const { return positions; }
-	const vector<SUVInfo>& GetVertices() const { return verts; }
-	const vector<SRealVertexWeight>& GetWeights() const { return weights; }
-	const vector<WORD>& GetPositionIndices() const { return posIndices; }
-	const vector<STriangle>& GetGeometry() const { return geometry; }
-	const vector<DWORD> &GetAttribute( int nID );
+	const std::vector<CVec3>& GetPositions() const { return positions; }
+	const std::vector<SUVInfo>& GetVertices() const { return verts; }
+	const std::vector<SRealVertexWeight>& GetWeights() const { return weights; }
+	const std::vector<WORD>& GetPositionIndices() const { return posIndices; }
+	const std::vector<STriangle>& GetGeometry() const { return geometry; }
+	const std::vector<DWORD> &GetAttribute( int nID );
 
-	void SetAttribute( int nID, const vector<DWORD> &attr );
+	void SetAttribute( int nID, const std::vector<DWORD> &attr );
 
-	void GetVxPositionTriangles( vector<STriangle> *pRes ) const;
-	void GetPosTriangles( vector<STriangle> *pRes ) const; // over positions[]
+	void GetVxPositionTriangles( std::vector<STriangle> *pRes ) const;
+	void GetPosTriangles( std::vector<STriangle> *pRes ) const; // over positions[]
 	int GetTrisCount() { return nTris; }
 	float GetAverageTriArea() { return fAverageTriArea; }
 	bool IsLightmappable() const { return bIsLightmappable; }
@@ -165,8 +165,8 @@ public:
 	void CalcBound( SSphere *pRes );
 	friend class CSquarePacker;
 };
-void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter );
-void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions );
+void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<WORD> &filter );
+void MergePositions( std::vector<WORD> *pMatches, std::vector<CVec3> *pPositions );
 _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 

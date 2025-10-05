@@ -3256,7 +3256,7 @@ CFormationDetonateChargeState::CFormationDetonateChargeState( class CFormation *
 
 void CFormationDetonateChargeState::Segment()
 {
-	for ( list< CPtr<CSoldier> >::iterator it = sappers.begin(); it != sappers.end(); )
+	for ( std::list< CPtr<CSoldier> >::iterator it = sappers.begin(); it != sappers.end(); )
 	{
 		if ( !IsValidObj( *it ) )
 			it = sappers.erase( it );
@@ -3265,7 +3265,7 @@ void CFormationDetonateChargeState::Segment()
 	}
 
 	
-	for ( list< CPtr<CSoldier> >::iterator it = sappers.begin(); it != sappers.end(); )
+	for ( std::list< CPtr<CSoldier> >::iterator it = sappers.begin(); it != sappers.end(); )
 	{
 		if ( curTime - nBeginAnimTime >= (*it)->GetStats()->GetAnimTime( GetAnimationFromAction( ACTION_NOTIFY_USE_DOWN ) ) )
 		{
@@ -3312,7 +3312,7 @@ void CFormationThrowGrenadeState::AddTarget( CAIUnit *pEnemy, const CVec2 &vTarg
 	// no free soldiers, let's get one from used
 	if ( pSoldier == 0 )
 	{
-		for ( vector< SThrowInfo >::iterator it = vSoldiers.begin(); it != vSoldiers.end(); ++it )
+		for ( std::vector< SThrowInfo >::iterator it = vSoldiers.begin(); it != vSoldiers.end(); ++it )
 		{
 			if ( it->pSoilder->HasGrenades() )
 			{
@@ -3343,7 +3343,7 @@ IUnitState* CFormationThrowGrenadeState::Instance( class CFormation *pUnit )
 
 void CFormationThrowGrenadeState::Segment()
 {
-	for ( vector< SThrowInfo >::iterator it = vSoldiers.begin(); it != vSoldiers.end(); )
+	for ( std::vector< SThrowInfo >::iterator it = vSoldiers.begin(); it != vSoldiers.end(); )
 	{
 		it->pSoilder->Segment();		//CRAP? - to allow the soldier to pick the command, if any
 
@@ -3352,7 +3352,7 @@ void CFormationThrowGrenadeState::Segment()
 		if ( !it->bPassSegment && eState != EUSN_ATTACK_UNIT && eState != EUSN_ATTACK_OBJECT && 
 			eState != EUSN_ATTACK_IN_ENTRENCH && eState != EUSN_ATTACK_UNIT_IN_BUILDING )
 		{
-			vSoldiers.erase( it );
+			it = vSoldiers.erase( it );
 		}
 		else
 		{
@@ -3520,7 +3520,7 @@ CFormationFirstAidState::CFormationFirstAidState( class CFormation *_pFormation,
 		CSoldier *pSold = (*pFormation)[i];
 		const int nLevel = theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType() );
 		const NDb::SUnitBaseRPGStats *pStats = pSold->GetStats();
-		const int nAbilities = Min( nLevel+1, pStats->GetActions()->specialAbilities.size() );
+		const int nAbilities = Min<int>( nLevel+1, pStats->GetActions()->specialAbilities.size() );
 		bool bCanHeal = false;
 		for ( int nAbility = 0; nAbility < nAbilities; ++nAbility )
 		{

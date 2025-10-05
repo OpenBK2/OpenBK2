@@ -7,6 +7,8 @@
 
 #include <zconf.h>
 
+#include <algorithm>
+
 REGISTER_SAVELOAD_CLASS( 0x3116C300, CDeadHouseAnimations );
 
 void CDeadHouseAnimations::Add( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation )
@@ -16,7 +18,7 @@ void CDeadHouseAnimations::Add( int nObjectID, const NTimer::STime &time, const 
 
 void CDeadHouseAnimations::Sort()
 {
-	sort( animations.begin(), animations.end(), SSortAnimationsByTime() );
+	std::sort( animations.begin(), animations.end(), SSortAnimationsByTime() );
 }
 
 bool CDeadHouseAnimations::Update( const NTimer::STime &time )

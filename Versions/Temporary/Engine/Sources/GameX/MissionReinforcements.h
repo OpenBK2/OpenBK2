@@ -23,7 +23,7 @@ class CMissionReinf : public CObjectBase
 		CPtr<IProgressBar> pXPBar;
 		CPtr<IWindow> pBadWeatherWnd;
 		CPtr<IWindow> pIconDisabledWnd;
-		vector< CPtr<IWindow> > chevrons;
+		std::vector< CPtr<IWindow> > chevrons;
 		CPtr<IWindow> pXPBarBg;
 		CPtr<IWindow> pIconEnabledWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pButton); f.Add(3,&pReinf); f.Add(4,&pIconWnd); f.Add(6,&pXPBar); f.Add(7,&pBadWeatherWnd); f.Add(8,&pIconDisabledWnd); f.Add(9,&chevrons); f.Add(10,&pXPBarBg); f.Add(11,&pIconEnabledWnd); return 0; }
@@ -42,8 +42,8 @@ class CMissionReinf : public CObjectBase
 		CPtr<IWindow> pFlagBg;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pButton); f.Add(4,&pIcon); f.Add(5,&pCountView); f.Add(6,&pStats); f.Add(7,&nCount); f.Add(8,&pFlagBg); return 0; }
 	};
-	typedef hash_map< string, NDb::EReinforcementType > CNameToTypes;
-	typedef hash_map< NDb::EReinforcementType, SReinfInfo, SEnumHash > CReinfInfos;
+	typedef std::unordered_map< std::string, NDb::EReinforcementType > CNameToTypes;
+	typedef std::unordered_map< NDb::EReinforcementType, SReinfInfo, SEnumHash > CReinfInfos;
 
 	ZDATA
 	CPtr<CWorldClient> pWorld;
@@ -60,7 +60,7 @@ class CMissionReinf : public CObjectBase
 	CVec2 vMousePos;
 	bool bAvailNotified;
 	ZSKIP//bool bAvailNotifyRepeat;
-	vector<SUnitInfo> units;
+	std::vector<SUnitInfo> units;
 	bool bFullInfoMode;
 	CPtr<IWindow> pCommonInfo;
 	CPtr<IWindow> pFullInfoWnd;
@@ -79,7 +79,7 @@ class CMissionReinf : public CObjectBase
 	int nPrevReinfCount;
 	bool bIsOpen;
 	bool bIsLight;
-	vector< CDBPtr<NDb::STexture> > textures;
+	std::vector< CDBPtr<NDb::STexture> > textures;
 	CPtr<IButton> pToggleReinfBtn;
 
 	bool bBlink;
@@ -115,7 +115,7 @@ private:
 	const NDb::SReinforcement* GetReinfContext( const NDb::EReinforcementType eType ) const;
 	const NDb::SReinforcementTypes* GetReinfTypes() const;
 	
-	NDb::EReinforcementType FindReinfInfo( const string &szName );
+	NDb::EReinforcementType FindReinfInfo( const std::string &szName );
 	void UpdateReinfInfo();
 	bool CanCall( const NDb::EReinforcementType eType ) const;
 	bool IsAvia( const NDb::EReinforcementType eType ) const;
@@ -150,15 +150,15 @@ public:
 	
 	bool IsOpen() const { return bIsOpen; }
 	void Show();
-	void Select( const string &szSender );
-	void SelectDblClick( const string &szSender );
+	void Select( const std::string &szSender );
+	void SelectDblClick( const std::string &szSender );
 	void Call( const CVec2 &vPos );
 	void CallNoReinf();
 	void Close( bool bForced );
-	void ShowUnitInfo( const string &szSender );
+	void ShowUnitInfo( const std::string &szSender );
 	void UnitFullInfoBack();
-	void MouseOverForward( const string &szSender );
-	void MouseOverBackward( const string &szSender );
+	void MouseOverForward( const std::string &szSender );
+	void MouseOverBackward( const std::string &szSender );
 	void BadWeather( bool bStart );
 	void UpdateWinLooseState();
 	bool ResetReinfMode();
@@ -167,11 +167,11 @@ public:
 	void SetMousePos( const CVec2 &vPos );
 	void SetTrackMousePos( bool bTrack );
 
-	void OnClickFullInfoMember( const string &szSender );
-	void OnFullInfoMemberOverOn( const string &szSender );
-	void OnFullInfoMemberOverOff( const string &szSender );
-	void OnFullInfoWeaponOverOn( const string &szSender );
-	void OnFullInfoWeaponOverOff( const string &szSender );
+	void OnClickFullInfoMember( const std::string &szSender );
+	void OnFullInfoMemberOverOn( const std::string &szSender );
+	void OnFullInfoMemberOverOff( const std::string &szSender );
+	void OnFullInfoWeaponOverOn( const std::string &szSender );
+	void OnFullInfoWeaponOverOff( const std::string &szSender );
 
 	void OnReinfCallMode();
 	void OnReinfAutoShowReinf( bool bOn );

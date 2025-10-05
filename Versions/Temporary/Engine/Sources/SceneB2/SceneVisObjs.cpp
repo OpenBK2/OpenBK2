@@ -74,9 +74,9 @@ void CVisObjReflectionInfo::Recalc()
 		if ( pValue == 0 )
 			pValue = new NGScene::CObjectInfo;
 
-		const vector<CVec3> &positions = pGeometry->GetValue()->GetPositions();
-		const vector<NGScene::SUVInfo> &vertices = pGeometry->GetValue()->GetVertices();
-		const vector<WORD> &indices = pGeometry->GetValue()->GetPositionIndices();
+		const std::vector<CVec3> &positions = pGeometry->GetValue()->GetPositions();
+		const std::vector<NGScene::SUVInfo> &vertices = pGeometry->GetValue()->GetVertices();
+		const std::vector<WORD> &indices = pGeometry->GetValue()->GetPositionIndices();
 		data.triangles = pGeometry->GetValue()->GetGeometry();
 
 		CVec3 v;

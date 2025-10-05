@@ -27,7 +27,7 @@ class CZipFile : public CObjectBase
 		bool HasCompression() const { return dwCSize < dwUSize; }
 	};
 	//
-	vector<SFileHeader> papDir;
+	std::vector<SFileHeader> papDir;
 	CMMFile mmf;
 	int nTotalSize;
 	//
@@ -41,7 +41,7 @@ public:
 	bool IsOk() const { return !papDir.empty(); }
 	int GetNumFiles() const { return papDir.size(); }
 	//
-	void GetFileName( int nIndex, string *pString ) const;
+	void GetFileName( int nIndex, std::string *pString ) const;
 	int GetFileLen( int nIndex ) const;
 	DWORD GetFileAttribs( int nIndex ) const;
 	DWORD GetModDateTime( int nIndex ) const;	// high word - date, low word - time

@@ -22,7 +22,7 @@ struct SWindowCompare
 	bool operator()( const CObj<CWindow> &o1, const CObj<CWindow> &o2 ) const;
 };
 
-typedef pair<int/*animation ID*/, CPtr<CWindow> > CWindowAnimationID;
+typedef std::pair<int/*animation ID*/, CPtr<CWindow> > CWindowAnimationID;
 
 struct SAnimationIDHash
 {
@@ -39,7 +39,7 @@ enum EMouseStateB2
 class UI_EXPORT CUIMORegConttainer : public NInput::CGMORegContainer
 {
 public:
-	virtual void AddRawObserver( const string &szMsgName, IGMObserver *pObserver );
+	virtual void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver );
 };
 
 const int WINDOW_TOP_PRIORITY = 0x01000000;
@@ -55,21 +55,21 @@ class UI_EXPORT CWindow : virtual public IWindow, public CUIMORegConttainer
 
 	// dynamic data, set during execution
 	CPtr<IWindow> pCustomTooltip;
-	wstring wszCustomTooltip;
+	std::wstring wszCustomTooltip;
 	
 	CPtr<CWindow> pParent;									// parent window.
 	CObj<CWindow> pFocusedChild;									// child or its parent that has keyboard focus
 	bool bFocused;
 	CDBID nOutlineType;
 	CObj<CWindow> pHighlighted;							// window currently under mouse cursor
-	vector< CObj<CWindow> > pressed;		// pressed with each mouse button
+	std::vector< CObj<CWindow> > pressed;		// pressed with each mouse button
 	CVec2 vScreenPos;
 	IClickNotify *pClickNotify;
 	
 	CObj<class CPlacedText> pPlacedText;
 	
 	bool bDelayChildRemove; // valid only during ProcessEvent
-	vector<CObj<CWindow> > removedChildren;
+	std::vector<CObj<CWindow> > removedChildren;
 	float fFadeValue;
 	float fInternalFadeValue;
 	int nIDForMLHandler;
@@ -86,9 +86,9 @@ private:
 
 	// BEGIN these loads from data
 
-	typedef hash_set<CPtr<CWindow>, SDefaultPtrHash > CChildren;
+	typedef std::unordered_set<CPtr<CWindow>, SDefaultPtrHash > CChildren;
 	CChildren children;
-	pair<CTRect<float>, bool> delayedReposition;
+	std::pair<CTRect<float>, bool> delayedReposition;
 	
 	// message handler
 	DECLARE_HANDLE_MAP;
@@ -116,7 +116,7 @@ protected:
 			return pressed[nButton]->GetName().c_str();
 		return 0;
 	}
-	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const string &szCommanEffect, 
+	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const std::string &szCommanEffect,
 																const bool bWaitOnGraphics, const bool bForward );
 	
 	// Returns root window
@@ -130,10 +130,10 @@ protected:
 	void CheckRemoveFocus( CWindow *pClickedWnd );
 	
 	// for debug purpose only
-	int CheckNamedChildrenCount( const string &szName, bool bRecursive );
+	int CheckNamedChildrenCount( const std::string &szName, bool bRecursive );
 	
-	virtual const wstring& GetDBFormatText() const;
-	virtual const wstring& GetDBInstanceText() const;
+	virtual const std::wstring& GetDBFormatText() const;
+	virtual const std::wstring& GetDBInstanceText() const;
 	virtual const NDb::SWindowPlacement* GetDBTextPlacement() const;
 	virtual void OnChangeVisibility( bool bShow );
 	virtual bool IsRelatedFocus( IWindow *pWindow ) const { return this == pWindow; }
@@ -207,16 +207,16 @@ public:
 	int GetNumChildren();
 	IWindow *GetChild( int nIndex );
 	void RemoveChild( IWindow *_pChild );
-	void RemoveChild( const string &szChildName );
-	IWindow* GetChild( const string &_szName, const bool bRecursive );
-	IWindow* GetVisibleChild( const string &_szName, const bool bRecursive );
+	void RemoveChild( const std::string &szChildName );
+	IWindow* GetChild( const std::string &_szName, const bool bRecursive );
+	IWindow* GetVisibleChild( const std::string &_szName, const bool bRecursive );
 	// deep children
-	CWindow* GetDeepChild( const string &_szName );
+	CWindow* GetDeepChild( const std::string &_szName );
 	virtual void SetParent( CWindow *pParent );
 	CWindow* GetParent() const { return pParent; }
 
-	const string & GetName() const;
-	void SetName( const string &_szName );
+	const std::string & GetName() const;
+	void SetName( const std::string &_szName );
 	// return minimal width that text is displayed properly
 	int GetOptimalWidth() const ;
 	
@@ -245,9 +245,9 @@ public:
 	//virtual void OnChar( const wchar_t chr );
 	virtual IWindow* Pick( const CVec2 &vPos, const bool bRecursive  );
 	virtual void SetOutline( const CDBID &outlineType=CDBID() );
-	virtual void SetTextString( const wstring &szText );
+	virtual void SetTextString( const std::wstring &szText );
 	const wchar_t * GetTextString() const;
-	virtual wstring GetDBText() const;
+	virtual std::wstring GetDBText() const;
 	virtual SWindowContext * GetContext();
 	virtual const struct NDb::SUIDesc * GetDesc() const { return pWindowStats; }
 	virtual IWindow* GetParentWindow() const	{ return pParent; }
@@ -260,10 +260,10 @@ public:
 
 	//get manipulator for editor functionality
 	// help context
-	const wstring& GetDBTooltipStr() const;	// old function, need to be removed
+	const std::wstring& GetDBTooltipStr() const;	// old function, need to be removed
 	virtual IWindow *DemandTooltip();
 	//
-	virtual void SetTooltip( const wstring &wszTooltip );
+	virtual void SetTooltip( const std::wstring &wszTooltip );
 	void SetTooltipIDForMLHandler( int nID );
 	int GetTooltipIDForMLHandler() const;
 	virtual void SetTooltip( IWindow *pTooltipWindow );

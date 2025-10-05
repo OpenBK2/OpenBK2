@@ -57,8 +57,8 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	CVec2 vBBMin, vBBMax;
 	CVec2 vWindOffset;
-	vector<CVec3> parts;
-	vector<BYTE> partsPresent;
+	std::vector<CVec3> parts;
+	std::vector<BYTE> partsPresent;
 	CVec3 vCameraAnchor, vCameraEye, vViewNormal, vViewNormal3;
 	NTimer::STime timeLightStop;
 	NTimer::STime timeThunder;
@@ -67,7 +67,7 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	float fFadeCoeff;
 
-	vector< CDGPtr<CPtrFuncBase<NGScene::CAnimLightInfo> > > lightningLoaders;
+	std::vector< CDGPtr<CPtrFuncBase<NGScene::CAnimLightInfo> > > lightningLoaders;
 	CDGPtr<CPtrFuncBase<NGScene::CAnimLight> > pLightningAnimator;
 	CObj<NGScene::CCVec3> pLightningColor;
 	CPtr<IFullScreenFader> pScreenFader;
@@ -78,7 +78,7 @@ class CWeatherVisual : public CFuncBase<bool>
 	CObj<NDb::SAmbientLight> pCurrentWeatherLight;
 
 	int nVisualParts;
-	vector<NGScene::CObjectInfo::SData> visualData;
+	std::vector<NGScene::CObjectInfo::SData> visualData;
 
 	void UpdateAmbientSound();
 
@@ -124,7 +124,7 @@ public:
 	void Update();
 
 public:
-	vector<NGScene::CObjectInfo::SData> *GetVisualData() { return &visualData; }
+	std::vector<NGScene::CObjectInfo::SData> *GetVisualData() { return &visualData; }
 
 	int operator&( IBinSaver &saver );
 };

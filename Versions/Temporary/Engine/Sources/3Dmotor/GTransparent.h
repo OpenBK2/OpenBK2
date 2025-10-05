@@ -58,7 +58,7 @@ public:
 class IReportParticlesGeometry
 {
 public:
-	virtual void AddParticles( IVBCombiner *pVertices, CFuncBase<vector<NGfx::STriangleList> > *pTrilists, 
+	virtual void AddParticles( IVBCombiner *pVertices, CFuncBase<std::vector<NGfx::STriangleList> > *pTrilists,
 		int nPart, int nParticles, const SBound &bv ) = 0;
 };
 
@@ -99,11 +99,11 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	SParticleLightInfo litParticlesAlloc, kernel, *pLMAlloc;
 	SParticleOrientationInfo orientation;
 
-	vector<STransparentInfo> infos;
+	std::vector<STransparentInfo> infos;
 	CPool<STransparentObjectInfo> objInfoPool;
-	vector<float> depths;
-	vector<int> sourcePtrs;
-	vector<int> infoStartIdx;
+	std::vector<float> depths;
+	std::vector<int> sourcePtrs;
+	std::vector<int> infoStartIdx;
 	unsigned int nElementPtr, nInfoIdx;
 	bool bUseFakeLM;
 
@@ -142,7 +142,7 @@ public:
 	virtual const SParticleLightInfo& GetKernelLightInfo() const { return kernel; }
 	virtual void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tex,
 		float fDepth );
-	virtual void SampleWarFog( const vector<CVec3> &vPos, vector<float> *pRes );
+	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes );
 
 	void AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv, IReportParticlesGeometry *pStore );
 	void AddElement( SRenderGeometryInfo *pGeometry, IMaterial *pMaterial, const SPerPartVariables &vars, int nIndex, float fDepth );

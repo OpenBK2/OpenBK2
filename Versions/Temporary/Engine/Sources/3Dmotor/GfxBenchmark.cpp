@@ -10,6 +10,8 @@
 //#include <D3D9.h>
 //#include "..\Misc\Win32Helper.h"
 
+#include <algorithm>
+
 
 // ? tnl mode
 // ? measure texture amount influence
@@ -97,7 +99,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 {
 	rc.AddPrimitive( pGeom, pTris );
 	rc.Flush();
-	vector<float> times;
+	std::vector<float> times;
 	FlushQueue();
 	for ( int i = 0; i < 5; ++i )
 	{
@@ -110,7 +112,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 		times.push_back( NHPTimer::GetTimePassed( &tBegin ) );
 		//Flip();
 	}
-	sort( times.begin(), times.end() );
+	std::sort( times.begin(), times.end() );
 	return times[ times.size() / 2 ];
 }
 

@@ -41,8 +41,8 @@ public:
 
 class SERVER_CLIENT_COMMON_EXPORT CPacketProcessorBase
 {
-	hash_map<int, CPtr<IPacketProcessorFun> > packetProcessorFuns;
-	list< CPtr<CNetPacket> > packets;
+	std::unordered_map<int, CPtr<IPacketProcessorFun> > packetProcessorFuns;
+	std::list< CPtr<CNetPacket> > packets;
 protected:
 	template<typename TObj, typename TPacket>
 	void Register( TObj *pObj, bool (TObj::*pfnProcessFun)( TPacket *pPacket ) )

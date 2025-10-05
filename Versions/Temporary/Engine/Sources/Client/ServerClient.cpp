@@ -110,7 +110,7 @@ void CServerClient::GetPacketsFromNet()
 
 		bool bProcessed = false;
 
-		list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+		std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )
 		{
 			bProcessed = (*iter)->ProcessPacket( pPacket );
@@ -145,7 +145,7 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 	// packet to server
 	else
 	{
-		list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+		std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )
 		{
 			bProcessed = (*iter)->ProcessPacket( pPacket );
@@ -164,7 +164,7 @@ void CServerClient::Segment()
 	
 	GetPacketsFromNet();
 
-	list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+	std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
 	while ( iter != processors.end() )
 	{
 		CPacketProcessor *pProcessor = *iter;
@@ -218,11 +218,11 @@ void CServerClient::TogglePause( bool bPause )
 	bDebugPaused = bPause;
 	if ( !bDebugPaused )
 	{
-		for ( list< CPtr<class CNetPacket> >::iterator iter = pausedPackets.begin(); iter != pausedPackets.end(); ++iter )
+		for ( std::list< CPtr<class CNetPacket> >::iterator iter = pausedPackets.begin(); iter != pausedPackets.end(); ++iter )
 			SendPacket( *iter );
 		pausedPackets.clear();
 
-		for ( list<SPausedGamePacket>::iterator iter = pausedGamePackets.begin(); iter != pausedGamePackets.end(); ++iter )
+		for ( std::list<SPausedGamePacket>::iterator iter = pausedGamePackets.begin(); iter != pausedGamePackets.end(); ++iter )
 			SendGamePacket( iter->pPacket, iter->bBroadcast );
 		pausedGamePackets.clear();
 	}

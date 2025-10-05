@@ -20,7 +20,7 @@ CWindowStatsSystem::SColorString::SColorString( const wchar_t *pszStr, DWORD col
 
 void CWindowStatsSystem::SColorString::SetText( const wchar_t *pszStr, DWORD col, const int nWidth )
 {
-	wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
+	std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
 	pGfxText->SetText( szText, 0 );
 	pGfxText->Generate( VirtualToScreenX( nWidth ) );
 }
@@ -41,10 +41,10 @@ void CWindowStatsSystem::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pShared = checked_cast_ptr<const NDb::SWindowStatsSystemShared *>( pDesc->pShared );
 }
 
-void CWindowStatsSystem::UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor )
+void CWindowStatsSystem::UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor )
 {
 	CEntries::iterator entryPos = entries.find( szEntry );
-	const wstring szTmp = szEntry + L": " + szValue;
+	const std::wstring szTmp = szEntry + L": " + szValue;
 	CTRect<float> wndRect;
 	FillWindowRect( &wndRect );
 

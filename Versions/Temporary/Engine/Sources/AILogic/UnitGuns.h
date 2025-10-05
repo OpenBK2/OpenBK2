@@ -22,9 +22,9 @@ class CUnitGuns : public CAIObjectBase
 	float fMaxFireRange;
 	bool bCanShootToPlanes;
 
-	vector< CPtr<SCommonGunInfo> > commonGunsInfo;
-	vector< CObj<CBasicGun> > guns;
-	vector<int> gunsBegins;
+	std::vector< CPtr<SCommonGunInfo> > commonGunsInfo;
+	std::vector< CObj<CBasicGun> > guns;
+	std::vector<int> gunsBegins;
 	int nCommonGuns;
 	// с priority 0
 	int nMainGun;

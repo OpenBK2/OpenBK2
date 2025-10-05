@@ -34,8 +34,8 @@ const float CalculateProbability( float x0, float y0, float x1, float y1 )
 		bool bSwaped = false;
 		if ( y1 - y0 > x1 - x0 )
 		{
-			swap( x0, y0 );
-			swap( x1, y1 );
+			std::swap( x0, y0 );
+			std::swap( x1, y1 );
 			bSwaped = true;
 		}
 

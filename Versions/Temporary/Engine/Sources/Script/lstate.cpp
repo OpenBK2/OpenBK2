@@ -24,7 +24,7 @@ void luaB_opentests (lua_State *L) {}
 //
 //
 //
-const string MakeUniqueName( lua_State *L, const char *name )
+const std::string MakeUniqueName( lua_State *L, const char *name )
 {
 	return (L->szName.empty() ? name : L->szName + "." + name);
 }

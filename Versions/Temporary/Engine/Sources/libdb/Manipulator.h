@@ -42,9 +42,9 @@ struct SIteratorDesc
 //structure with property description
 struct SPropertyDesc : public SIteratorDesc
 {
-	typedef list<string> CValuesList; 
+	typedef std::list<std::string> CValuesList;
 	// CRAP{ HASH_SET
-	typedef hash_map<string, DWORD> CTypesMap;
+	typedef std::unordered_map<std::string, DWORD> CTypesMap;
 	// CRAP} HASH_SET
 	//value checks flags
 	enum EPropertyCheckType
@@ -54,7 +54,7 @@ struct SPropertyDesc : public SIteratorDesc
 		PCT_MAX		= 0x0002,
 	};
 	
-	string szDesc;                                  //property description MBCS
+	std::string szDesc;                                  //property description MBCS
 	bool bDescInitialized;
 
 	float fLeftBorder;                              //left border value
@@ -62,12 +62,12 @@ struct SPropertyDesc : public SIteratorDesc
 	int nMinOccurs;
 	int nMaxOccurs;
 	DWORD dwChecks;                                 //check flags contained here
-	string szDefault;                               // default field value in string representation
+	std::string szDefault;                               // default field value in string representation
 	
-	string szTypeName;                              //type name
+	std::string szTypeName;                              //type name
 	CTypesMap refTypes;                             //possible types of objects, to which references can be set  
 	CValuesList values;                             //possible values (i.e. for combo boxes), MBCS
-	string szEnumName;
+	std::string szEnumName;
 	
 	bool bArray;                                    //Массив
 	bool bStruct;                                   //Структура
@@ -79,21 +79,21 @@ struct SPropertyDesc : public SIteratorDesc
 	bool bUseUpperType;
 	bool bNoBase;
 	bool bUnsafe;
-	string szTypeRename;
-	string szTypePrefix;
-	string szTypePath;
+	std::string szTypeRename;
+	std::string szTypePrefix;
+	std::string szTypePath;
 	
-	string szLocalDef;                //if related type should be defined in local namespace (for code generator)
+	std::string szLocalDef;                //if related type should be defined in local namespace (for code generator)
 	bool bCheckSum;                   //if the field should be counted when calculationg checksum (for code generator)
 	int nTypeID;                      //struct typeID (for code generator)
-	string szHSection;
-	string szInclude;
+	std::string szHSection;
+	std::string szInclude;
 	int nSize;
 	bool bPrivate;										// is this var private
-	string szRndType;
+	std::string szRndType;
 
-	string szPropControlType;                       //string whith editor control type
-	string szStringParam;                           // additional parameter
+	std::string szPropControlType;                       //string whith editor control type
+	std::string szStringParam;                           // additional parameter
 	int nIntParam;                                  // additional parameter
 
 	SPropertyDesc()
@@ -141,9 +141,9 @@ struct IManipulatorIterator : public CObjectBase
 	// get current property descriptor (if availible)
 	virtual const SIteratorDesc* GetDesc() const = 0;
 	// get current item name
-	virtual bool GetName( string *pszName ) const = 0;
+	virtual bool GetName( std::string *pszName ) const = 0;
 	// get current item type
-	virtual bool GetType( string *pszType ) const = 0;
+	virtual bool GetType( std::string *pszType ) const = 0;
 	// get current item id
 	virtual UINT GetID() const = 0;
 	// is it folder
@@ -161,39 +161,39 @@ enum ECacheType
 
 struct IManipulator : public CObjectBase
 {
-	typedef hash_map<string, UINT> CNameMap;
+	typedef std::unordered_map<std::string, UINT> CNameMap;
 	//
 	// begin to iterate through all properties
 	virtual IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache ) = 0;
 	// get property descriptor by name
-	virtual const SIteratorDesc* GetDesc( const string &rszName ) const = 0;
+	virtual const SIteratorDesc* GetDesc( const std::string &rszName ) const = 0;
 	// get item type by name
-	virtual bool GetType( const string &rszName, string *pszType ) const = 0;
+	virtual bool GetType( const std::string &rszName, std::string *pszType ) const = 0;
 	// get item id by name
-	virtual UINT GetID( const string &rszName ) const = 0;
+	virtual UINT GetID( const std::string &rszName ) const = 0;
 	// get object DBID
 	virtual CDBID GetDBID() const { return CDBID(); }
 	// get item id by name
-	virtual bool GetName( UINT nID, string *pszName ) const = 0;
+	virtual bool GetName( UINT nID, std::string *pszName ) const = 0;
 	// add one more element to list
-	virtual bool InsertNode( const string &rszName, int nNodeIndex = NODE_ADD_INDEX ) = 0;
+	virtual bool InsertNode( const std::string &rszName, int nNodeIndex = NODE_ADD_INDEX ) = 0;
 	// remove element from list (or all elements)
-	virtual bool RemoveNode( const string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX ) = 0;
-	virtual bool RemoveNodeByID( const string &szName, int nNodeID ) = 0;
+	virtual bool RemoveNode( const std::string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX ) = 0;
+	virtual bool RemoveNodeByID( const std::string &szName, int nNodeID ) = 0;
 	// rename element ( if possible )
-	virtual bool RenameNode( const string &rszName, const string &rszNewName ) = 0;
+	virtual bool RenameNode( const std::string &rszName, const std::string &rszNewName ) = 0;
 	// retrieve value
-	virtual bool GetValue( const string &rszName, CVariant *pValue ) const = 0;
+	virtual bool GetValue( const std::string &rszName, CVariant *pValue ) const = 0;
 	// set value
-	virtual bool SetValue( const string &rszName, const CVariant &rValue ) = 0;
+	virtual bool SetValue( const std::string &rszName, const CVariant &rValue ) = 0;
 	// is name exists and have a value
-	virtual bool IsNameExists( const string &rszName ) const = 0;
+	virtual bool IsNameExists( const std::string &rszName ) const = 0;
 	//
 	virtual void GetNameList( CNameMap *pNameMap ) const = 0;
 	//
 	virtual void ClearCache() {};
 	// check value (still out of order)
-	virtual bool CheckValue( const string &rszName, const CVariant &rValue, bool *pResult ) const = 0;
+	virtual bool CheckValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const = 0;
 	//
 	virtual NDb::IObjMan *GetObjMan() = 0;
 };

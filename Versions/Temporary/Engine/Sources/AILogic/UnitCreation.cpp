@@ -42,7 +42,7 @@ extern CBalanceTest theBalanceTest;
 extern SRailRoadSystem theRailRoadSystem;
 extern CGlobalWarFog theWarFog;
 
-void CLightPlaneCreation::CalcPositions( const int nMax, const CVec2 & box, const CVec2 & direction, vector<CVec2> * positions, CVec2 * offset, const bool bRandom )
+void CLightPlaneCreation::CalcPositions( const int nMax, const CVec2 & box, const CVec2 & direction, std::vector<CVec2> * positions, CVec2 * offset, const bool bRandom )
 {
 	/* таким образом
 		1
@@ -79,7 +79,7 @@ void CLightPlaneCreation::CalcPositions( const int nMax, const CVec2 & box, cons
 	*offset = ( CVec2( resize * box.y, 0 ) * nMax / 2 )/*^direction*/;
 }
 
-void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const CVec2 &direction, vector<CVec2> *positions, CVec2 *offset, bool bRandom )
+void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const CVec2 &direction, std::vector<CVec2> *positions, CVec2 *offset, bool bRandom )
 {
 	/*
 	таким образом
@@ -137,7 +137,7 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const
 
 const SMechUnitRPGStats * GetRandomTankPit( const STankPitInfo &info, const class CVec2 &vSize, const bool bCanDig, float *pfResize )
 {
-	const vector< CDBPtr<SMechUnitRPGStats> > * pPits = bCanDig ? &info.digTankPits : &info.sandBagTankPits;
+	const std::vector< CDBPtr<SMechUnitRPGStats> > * pPits = bCanDig ? &info.digTankPits : &info.sandBagTankPits;
 
 	int nBestIndex = -1;
 	float fDiff = 0;
@@ -217,7 +217,7 @@ void CUnitCreation::Init( const struct SMapInfo* pMapInfo, ICollisionsCollector 
 	}
 	else
 	{
-		for ( vector<SMapPlayerInfo>::const_iterator it = pMapInfo->players.begin(); it != pMapInfo->players.end(); ++it )
+		for ( std::vector<SMapPlayerInfo>::const_iterator it = pMapInfo->players.begin(); it != pMapInfo->players.end(); ++it )
 		{
 			inGameUnits.push_back( *it );
 			partyDependentInfo.push_back( it->pPartyInfo );
@@ -495,7 +495,7 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 			if ( pLevels->eDBType != pUnit->GetReinforcementType() )
 				continue;
 			int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( player, eType );
-			nXPLevel = Min( pLevels->levels.size() - 1, nXPLevel );
+			nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
 			if ( nXPLevel < 0 )
 				break;
 
@@ -598,13 +598,13 @@ const SMechUnitRPGStats * CUnitCreation::GetRandomTankPit( const class CVec2 &vS
 	return ::GetRandomTankPit( pConsts->tankPits, vSize, bCanDig, pfResize );	
 }
 
-void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, list<CVec2> *pCenters ) const
+void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const
 {
 	const SSquadRPGStats::SFormation &formation = pStats->formations[nFormation];
 	const int nSizeOfFormation = (nUnits == -1) ? formation.order.size() : nUnits;
 
 	CVec2 vRelFormDir = GetVectorByDirection( wFormDir );
-	swap( vRelFormDir.x, vRelFormDir.y );
+	std::swap( vRelFormDir.x, vRelFormDir.y );
 	vRelFormDir.y = -vRelFormDir.y;
 	
 	for ( int j = 0; j < nSizeOfFormation; ++j )
@@ -642,12 +642,12 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	if ( bSendToWorld )
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_UNIT, pFormation, -1 );
 
-	list<CVec2> centers;
+	std::list<CVec2> centers;
 	GetCentersOfAllFormationUnits( pStats, vFormCenter, wDir, nFormation, nUnits, &centers );
 
 	// по слотам конфигурации
 	const int nSizeOfFormation = Min( formation.order.size(), (nUnits == -1) ? formation.order.size() : nUnits );
-	list<CVec2>::iterator iter = centers.begin();
+	std::list<CVec2>::iterator iter = centers.begin();
 	for ( int j = 0; j < nSizeOfFormation; ++j, ++iter )
 	{
 		NI_ASSERT( iter != centers.end(), "Centers of units of formation incorrectly initialized" );
@@ -670,7 +670,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	{
 		CSoldier * pSold = (*pFormation)[i];
 		const NDb::SUnitBaseRPGStats *pSt = pSold->GetStats();
-		const int nLevel = Min( 1 + theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType()), pSt->GetActions()->specialAbilities.size() );
+		const int nLevel = Min<int>( 1 + theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType()), pSt->GetActions()->specialAbilities.size() );
 		for ( int nAb = 0; nAb < nLevel; ++nAb )
 		{
 			if ( pSt->GetActions()->specialAbilities[nAb]->eName == NDb::ABILITY_FIRST_AID )

@@ -87,7 +87,7 @@ void CInterfaceMultiplayer::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
-bool CInterfaceMultiplayer::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMultiplayer::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "reaction_on_multiplayer_back" )
 		return OnBack( szSender );
@@ -107,19 +107,19 @@ bool CInterfaceMultiplayer::Execute( const string &szSender, const string &szRea
 	return false;
 }
 
-int CInterfaceMultiplayer::Check( const string &szCheckName ) const
+int CInterfaceMultiplayer::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 
-bool CInterfaceMultiplayer::OnBack( const string &szSender )
+bool CInterfaceMultiplayer::OnBack( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 	return true;
 }
 
-bool CInterfaceMultiplayer::OnLAN( const string &szSender )
+bool CInterfaceMultiplayer::OnLAN( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_LAN_NET );
@@ -127,7 +127,7 @@ bool CInterfaceMultiplayer::OnLAN( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMultiplayer::OnNivalNet( const string &szSender )
+bool CInterfaceMultiplayer::OnNivalNet( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NIVAL_NET );
@@ -135,7 +135,7 @@ bool CInterfaceMultiplayer::OnNivalNet( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMultiplayer::OnLoadReplay( const string &szSender )
+bool CInterfaceMultiplayer::OnLoadReplay( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_REPLAY_SAVE_LOAD, "load" );

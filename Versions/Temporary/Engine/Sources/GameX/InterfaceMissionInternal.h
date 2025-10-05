@@ -38,8 +38,8 @@ struct SSlotPosition
 	int sizeY;
 };
 
-typedef pair< NDb::EUserAction, CPtr<IWindow> > CActionButton;
-typedef list< CActionButton > CActionButtons;
+typedef std::pair< NDb::EUserAction, CPtr<IWindow> > CActionButton;
+typedef std::list< CActionButton > CActionButtons;
 
 struct SChatMessage
 {
@@ -70,7 +70,7 @@ public:
 		}
 		//
 		bool NeedFlags() const { return true; }
-		bool Execute( const string &szSender, const string &szReaction, WORD wKeyboardFlags );
+		bool Execute( const std::string &szSender, const std::string &szReaction, WORD wKeyboardFlags );
 	};
 private:
 	struct SWeaponInfo
@@ -79,7 +79,7 @@ private:
 		CDBPtr<NDb::SWeaponRPGStats> pWeaponID;
 		int nCount;
 		bool bPrimary;
-		wstring szLocalizedName;
+		std::wstring szLocalizedName;
 		int nAmmo;
 		int nMaxAmmo;
 		CPtr<IWindow> pName;
@@ -119,8 +119,8 @@ private:
 		bool bCurPresent; // присутствует на одной из панелей
 
 		CPtr< IWindow > pAutocastBorderWnd;
-		string szHotkeyCmd;
-		wstring wszTooltip;
+		std::string szHotkeyCmd;
+		std::wstring wszTooltip;
 		bool bEnabled;
 		CPtr<IWindow> pBlinkWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&bAbility); f.Add(4,&ePanel); f.Add(5,&eTargetPanel); f.Add(6,&bPressEffect); f.Add(7,&pIcon); f.Add(8,&pForegroundIcon); f.Add(9,&pIconDisabled); f.Add(10,&pForegroundIconDisabled); f.Add(12,&pIconFgWnd); f.Add(13,&pClockWnd); f.Add(14,&pAutocastWnd); f.Add(15,&pStaticBorderWnd); f.Add(16,&pActiveBorderWnd); f.Add(17,&bAutocast); f.Add(18,&bPassive); f.Add(19,&curState); f.Add(20,&nSlot); f.Add(21,&pIconBgDisabledWnd); f.Add(22,&pIconFgDisabledWnd); f.Add(23,&bCurPresent); f.Add(24,&pAutocastBorderWnd); f.Add(25,&szHotkeyCmd); f.Add(26,&wszTooltip); f.Add(27,&bEnabled); f.Add(28,&pBlinkWnd); return 0; }
@@ -128,7 +128,7 @@ private:
 		void Enable( bool bEnable );
 		void SetProgress( float fProgress );
 	};
-	typedef hash_map< NDb::EUserAction, SNewActionButton, SEnumHash > CNewActionButtons;
+	typedef std::unordered_map< NDb::EUserAction, SNewActionButton, SEnumHash > CNewActionButtons;
 	
 	struct SIconSlot
 	{
@@ -169,16 +169,16 @@ private:
 	EActiveControl eActiveControl;
 	bool bIsActiveScreen;
 	NDb::EUserAction eForcedAction;
-	vector<SSlotPosition> vAbilitySlots;
+	std::vector<SSlotPosition> vAbilitySlots;
 	CActionButtons lActiveAbilities;
 	CActionButtons actionButtons;
 	int nCurrentSlot;
 	//vector< CPtr<IWindow> > vIconSlots;
-	vector< SIconSlot > iconSlots;
+	std::vector< SIconSlot > iconSlots;
 	CPtr< IMiniMap > pMiniMap;
 	CPtr< IWindow > pChatMessages;
 	CPtr< IWindow > pChatMessagesElement;
-	list<SChatMessage> chatMessages;
+	std::list<SChatMessage> chatMessages;
 	CPtr< ITabControl > pMultiFunctionTab;
 	CPtr< ITabControl > pActionTab;
 	CPtr< ITabControl > pAppearanceTab;
@@ -218,7 +218,7 @@ private:
 	
 	CObj<CMissionReinf> pReinf;
 	
-	string szButtonsBindSection;
+	std::string szButtonsBindSection;
 	
 	ZSKIP //CPtr<IWindow> pReinfLight;
 	CPtr<IButton> pFlareBtn;
@@ -226,12 +226,12 @@ private:
 	CPtr<IWindow> pMultifunctionWnd;
 	bool bMultifunctionPanelMinimized;
 	CObj<class CMissionUnitFullInfo> pUnitFullInfo;
-	vector< CPtr<IButton> > specialSelectBtns;
+	std::vector< CPtr<IButton> > specialSelectBtns;
 	
 	CNewActionButtons newActionButtons;
 	NDb::EActionButtonPanel eActivePanel;
 	NDb::EUserAction eActiveAction;
-	vector<CVec2> newActionButtonSlots;
+	std::vector<CVec2> newActionButtonSlots;
 
 	CVec3 vPrevCameraLine; // don't save
 	
@@ -257,8 +257,8 @@ private:
 	bool bMovieMode;
 	
 	CObj<CMissionSuperWeapon> pSuperWeapon;
-	wstring wszTooltipSlot;
-	wstring wszTooltipSlotUnit;
+	std::wstring wszTooltipSlot;
+	std::wstring wszTooltipSlotUnit;
 
 	float fEndGameRestTime; // don't save
 
@@ -270,8 +270,8 @@ private:
 		CPtr<IWindow> pPanel;
 		CPtr<ITextView> pView;
 		CPtr<IEditLine> pEdit;
-		wstring wszAll;
-		wstring wszTeam;
+		std::wstring wszAll;
+		std::wstring wszTeam;
 		float fEditBaseX;
 		float fEditBaseWidth;
 		bool bTeamByDefault;
@@ -310,12 +310,12 @@ private:
 	
 	void InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts );
 
-	void MakeActionTooltip( NDb::EUserAction eUserAction, const string &szCommand, bool bHotkey );
+	void MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey );
 	void MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot );
 	void MakeCommandTooltip( NDb::EUserAction eUserAction );
 	
 	bool IsAbility( NDb::EUserAction eAction ) const;
-	NDb::EUserAction GetActionByButtonName( const string &szName ) const;
+	NDb::EUserAction GetActionByButtonName( const std::string &szName ) const;
 	void UpdateActionPanel();
 	
 	void UpdateActionButtons();
@@ -334,7 +334,7 @@ private:
 	void CheckInactiveInput();
 	
 	void StartChatInput( bool bTeam );
-	void SendChat( const wstring &wszText, bool bTeam );
+	void SendChat( const std::wstring &wszText, bool bTeam );
 	void FastMinimizePanels();
 	void FastMaximizePanels();
 	void OnChatInputLostFocus();
@@ -401,24 +401,24 @@ protected:
 	void MsgOnScriptBlinkActionButton( const SGameMessage &msg );
 	void MsgBlinkObjectiveBtn( const SGameMessage &msg );
 
-	bool OnReinfSelect( const string &szSender );
-	bool OnReinfSelectDblClick( const string &szSender );
-	bool OnToggleReinf( const string &szSender );
-	bool OnReinfUnitInfo( const string &szSender );
-	bool OnReinfFullInfoBack( const string &szSender );
-	bool OnReinfMouseOverForward( const string &szSender );
-	bool OnReinfMouseOverBackward( const string &szSender );
-	bool OnReinfCallMode( const string &szSender );
-	bool OnReinfAutoShowReinf( const string &szSender, bool bOn );
+	bool OnReinfSelect( const std::string &szSender );
+	bool OnReinfSelectDblClick( const std::string &szSender );
+	bool OnToggleReinf( const std::string &szSender );
+	bool OnReinfUnitInfo( const std::string &szSender );
+	bool OnReinfFullInfoBack( const std::string &szSender );
+	bool OnReinfMouseOverForward( const std::string &szSender );
+	bool OnReinfMouseOverBackward( const std::string &szSender );
+	bool OnReinfCallMode( const std::string &szSender );
+	bool OnReinfAutoShowReinf( const std::string &szSender, bool bOn );
 
-	bool OnClickMultiSelectUnit( const string &szSender, WORD wKeyboardFlags );
-	bool OnSelectSpecialGroup( const string &szSender, WORD wKeyboardFlags );
-	bool OnUnselectSpecialGroup( const string &szSender, WORD wKeyboardFlags );
+	bool OnClickMultiSelectUnit( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnSelectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnUnselectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags );
 
-	bool OnNewActionButtonClick( const string &szSender, WORD wKeyboardFlags );
+	bool OnNewActionButtonClick( const std::string &szSender, WORD wKeyboardFlags );
 	void NewActionButtonClick( NDb::EUserAction eAction );
-	bool OnNewActionButtonRightClick( const string &szSender, WORD wKeyboardFlags );
-	bool OnNotificationEventBtn( const string &szSender, bool bRightBtn );
+	bool OnNewActionButtonRightClick( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnNotificationEventBtn( const std::string &szSender, bool bRightBtn );
 	bool OnEnterPressed( WORD wKeyboardFlags );
 	bool OnChatInputEnterPressed();
 	bool OnChatInputEscPressed();
@@ -428,11 +428,11 @@ protected:
 	void AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace );
 	void SetArmyPoints( int nPoints );
 	void UpdateMultiUnitsInfo( CMapObj *pMO, int nCount );
-	bool OnClickFullInfoMember( const string &szSender );
-	bool OnFullInfoMemberOverOn( const string &szSender );
-	bool OnFullInfoMemberOverOff( const string &szSender );
-	bool OnFullInfoWeaponOverOn( const string &szSender );
-	bool OnFullInfoWeaponOverOff( const string &szSender );
+	bool OnClickFullInfoMember( const std::string &szSender );
+	bool OnFullInfoMemberOverOn( const std::string &szSender );
+	bool OnFullInfoMemberOverOff( const std::string &szSender );
+	bool OnFullInfoWeaponOverOn( const std::string &szSender );
+	bool OnFullInfoWeaponOverOff( const std::string &szSender );
 
 	bool ProcessEvent( const struct SGameMessage &msg );
 
@@ -461,7 +461,7 @@ public:
 	virtual void Freeze( const bool bFreeze );
 	class CWorldClient* GetWorld() { return pWorld; }
 
-	void GetObjectHPs( const CMapObj *pMO, vector<float> *pHPs, bool *pIsSquad );
+	void GetObjectHPs( const CMapObj *pMO, std::vector<float> *pHPs, bool *pIsSquad );
 
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
 
@@ -476,7 +476,7 @@ class CICMission : public CInterfaceCommandBase<CInterfaceMission>
 public:
 	CDBPtr<NDb::SMapInfo> pMap;
 	bool bReplay;
-	string szReplayFileName;
+	std::string szReplayFileName;
 	bool bFromInterface;
 	CPtr<ITransceiver> pTrans;
 	int nPlayerForWarFog;
@@ -484,7 +484,7 @@ public:
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
 	CICMission() : nPlayerForWarFog( -1 ) {}
-	CICMission( const NDb::SMapInfo *_pMap, const string &_szReplay, bool _bFromInterface )
+	CICMission( const NDb::SMapInfo *_pMap, const std::string &_szReplay, bool _bFromInterface )
 		: pMap(_pMap), szReplayFileName(_szReplay), bFromInterface(_bFromInterface),
 		nPlayerForWarFog( -1 )
 	{ 

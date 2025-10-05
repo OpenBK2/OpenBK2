@@ -6,20 +6,20 @@ namespace NLang
 
 	class CLangNode : public CObjectBase
 	{
-		string szName;
+		std::string szName;
 
-		string szFileWhereDefined;
+		std::string szFileWhereDefined;
 		int nLineWhereDefined;
 	public:
 		CLangNode() : nLineWhereDefined( -1 ) { }
-		CLangNode( const string &_szName, const string &_szFileWhereDefined, int _nLineWhereDefined )
+		CLangNode( const std::string &_szName, const std::string &_szFileWhereDefined, int _nLineWhereDefined )
 			: szName( _szName ), szFileWhereDefined( _szFileWhereDefined ), nLineWhereDefined( _nLineWhereDefined ) { }
 
-		const string& GetFile() const { return szFileWhereDefined; }
+		const std::string& GetFile() const { return szFileWhereDefined; }
 		const int GetLine() const { return nLineWhereDefined; }
 
-		const string& GetName() { return szName; }
-		void SetName( const string &_szName ) { szName = _szName; }
+		const std::string& GetName() { return szName; }
+		void SetName( const std::string &_szName ) { szName = _szName; }
 
 		virtual void Visit( IVisitor *pVisitor )
 		{
@@ -47,27 +47,27 @@ namespace NLang
 		ESimpleType eType;
 		bool bValue;
 		float fValue;
-		string szValue;
+		std::string szValue;
 		DWORD dwHexValue;
-		string szName;
+		std::string szName;
 	public:
 		CSimpleValue() : eType( EST_UNKNOWN ), bValue( false ), fValue( 0.0f ), dwHexValue( 0 ) { }
-		CSimpleValue( const string &szValue, bool bString ) { SetValue( szValue, bString ); }
-		void SetValue( const string &szValue, bool bString );
-		void SetWStrValue( const string &_szValue )
+		CSimpleValue( const std::string &szValue, bool bString ) { SetValue( szValue, bString ); }
+		void SetValue( const std::string &szValue, bool bString );
+		void SetWStrValue( const std::string &_szValue )
 		{
 			szValue = _szValue;
 			eType = EST_WSTRING;
 		}
 
-		void SetToEnum( const string &_szValue ) { szValue = _szValue; eType = EST_ENUM; }
+		void SetToEnum( const std::string &_szValue ) { szValue = _szValue; eType = EST_ENUM; }
 
 		ESimpleType GetType() const { return eType; }
-		const string& GetEnum() const { return szValue; }
+		const std::string& GetEnum() const { return szValue; }
 
 		bool GetBool() const { return bValue; }
 		float GetFloat() const { return fValue; }
-		const string& GetString() const { return szValue; }
+		const std::string& GetString() const { return szValue; }
 		DWORD GetHexBinary() const { return dwHexValue; }
 		int GetInt() const { return fValue; }
 		WORD GetWORD() const { return fValue; }
@@ -75,11 +75,11 @@ namespace NLang
 	};
 
 	const char* GetTypeName( ESimpleType eType );
-	ESimpleType GetType( const string &szTypeName );
+	ESimpleType GetType( const std::string &szTypeName );
 	bool IsTypesEqual( ESimpleType eType1, ESimpleType eType2 );
 
-	bool Parse( const string &szRootDir, const string &szFileMask, bool bInTestMode );
-	bool Parse( const vector<string> &files, const string &szBaseFileName );
+	bool Parse( const std::string &szRootDir, const std::string &szFileMask, bool bInTestMode );
+	bool Parse( const std::vector<std::string> &files, const std::string &szBaseFileName );
 }
 
 

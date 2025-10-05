@@ -54,13 +54,13 @@ enum EEditorType
 };
 };
 
-NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const string &szName );
+NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string &szName );
 const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType );
 template<>
 struct SKnownEnum<NDb::NTypeDef::ETypeType>
 {
 	enum { isKnown = 1 };
-	static NDb::NTypeDef::ETypeType ToEnum( const string &szName ) { return StringToEnum_NDb_NTypeDef_ETypeType( szName ); }
+	static NDb::NTypeDef::ETypeType ToEnum( const std::string &szName ) { return StringToEnum_NDb_NTypeDef_ETypeType( szName ); }
 	static const char *ToString( NDb::NTypeDef::ETypeType eType ) { return EnumToString_NDb_NTypeDef_ETypeType( eType ); }
 };
 

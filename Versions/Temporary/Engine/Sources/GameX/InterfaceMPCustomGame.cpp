@@ -56,17 +56,17 @@ void CInterfaceMPCustomGame::SetFiltersData()
 {
 	CPtr<CTextData> pData;
 
-	wstring wszAnyText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_ANY");
+	std::wstring wszAnyText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_ANY");
 	if ( pMapSizeBox )
 	{		
 		pData = new CTextData( wszAnyText );
-		wstring wszSmallText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_SMALL_MAP");
+		std::wstring wszSmallText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_SMALL_MAP");
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszSmallText );
-		wstring wszMediumText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_MEDIUM_MAP");
+		std::wstring wszMediumText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_MEDIUM_MAP");
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszMediumText );
-		wstring wszLargeText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_LARGE_MAP");
+		std::wstring wszLargeText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_LARGE_MAP");
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszLargeText );
 		pMapSizeBox->AddItem( pData );
@@ -96,7 +96,7 @@ void CInterfaceMPCustomGame::SetFiltersData()
 		pNumPlayersBox->AddItem( pData );
 		for ( int i = 1; i <= 4; ++i )
 		{
-			wstring wszPlayers = NStr::ToUnicode( StrFmt( "%d", i * 2 ) );
+			std::wstring wszPlayers = NStr::ToUnicode( StrFmt( "%d", i * 2 ) );
 			pData = new CTextData( wszPlayers );
 			pNumPlayersBox->AddItem( pData );
 		}	
@@ -152,10 +152,10 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	
 	NMPSetData::SetChildText( pItem, "ItemGameName", NStr::ToUnicode( info.szSessionName ) );			
 
-	wstring wStr = NStr::ToUnicode( info.szMapName );
+	std::wstring wStr = NStr::ToUnicode( info.szMapName );
 	NMPSetData::SetChildText( pItem, "ItemMapName", wStr );
 
-	wstring wszTechText;
+	std::wstring wszTechText;
 	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size() 
 		&& CHECK_TEXT_NOT_EMPTY_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name ) )
 		wszTechText = GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name );
@@ -178,7 +178,7 @@ void CInterfaceMPCustomGame::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
-bool CInterfaceMPCustomGame::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPCustomGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBackReaction( szSender );
@@ -214,13 +214,13 @@ bool CInterfaceMPCustomGame::Execute( const string &szSender, const string &szRe
 	return false;
 }
 
-bool CInterfaceMPCustomGame::OnCancelFilters( const string &szSender )
+bool CInterfaceMPCustomGame::OnCancelFilters( const std::string &szSender )
 {
 	pFilters->ShowWindow( false );
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnOkFilters( const string &szSender )
+bool CInterfaceMPCustomGame::OnOkFilters( const std::string &szSender )
 {
 	pFilters->ShowWindow( false );
 	if ( pMapSizeBox )
@@ -236,7 +236,7 @@ bool CInterfaceMPCustomGame::OnOkFilters( const string &szSender )
 	return true;
 }
 
-int CInterfaceMPCustomGame::Check( const string &szCheckName ) const
+int CInterfaceMPCustomGame::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -248,7 +248,7 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 	if ( pRefresh )
 		pRefresh->Enable( true );
 
-	for ( list<int>::iterator it = pMsg->gamesRemoved.begin(); it != pMsg->gamesRemoved.end(); ++it )
+	for ( std::list<int>::iterator it = pMsg->gamesRemoved.begin(); it != pMsg->gamesRemoved.end(); ++it )
 	{
 		CMPGameListItems::iterator itGame = items.find( *it );
 		if ( itGame == items.end() )
@@ -260,7 +260,7 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 		items.erase( itGame );
 	}
 
-	for ( list<SUIGameInfo>::iterator it = pMsg->gamesAddChange.begin(); it != pMsg->gamesAddChange.end(); ++it )
+	for ( std::list<SUIGameInfo>::iterator it = pMsg->gamesAddChange.begin(); it != pMsg->gamesAddChange.end(); ++it )
 	{
 		SUIGameInfo &game = *it;
 		SGameEntry &entry = items[game.nGameID];
@@ -293,7 +293,7 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnBackReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnBackReaction( const std::string &szSender )
 {
 	// Stop updating games list
 	SMPUIGameListMessage *pStopUpdateMsg = new SMPUIGameListMessage( false );
@@ -306,7 +306,7 @@ bool CInterfaceMPCustomGame::OnBackReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnJoinGameReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnJoinGameReaction( const std::string &szSender )
 {
 	if ( nSelectedID != -1 )
 	{
@@ -328,7 +328,7 @@ bool CInterfaceMPCustomGame::OnJoinGameReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnFiltersReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnFiltersReaction( const std::string &szSender )
 {	
 	pFilters->ShowWindow( true );	
 
@@ -344,14 +344,14 @@ bool CInterfaceMPCustomGame::OnFiltersReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnRefreshReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnRefreshReaction( const std::string &szSender )
 {
 	if ( pRefresh )
 		pRefresh->Enable( false );
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnCreateGameReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnCreateGameReaction( const std::string &szSender )
 {
 	// Stop updating games list
 	SMPUIGameListMessage *pStopUpdateMsg = new SMPUIGameListMessage( false );
@@ -363,7 +363,7 @@ bool CInterfaceMPCustomGame::OnCreateGameReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnLoadGameReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnLoadGameReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "load_from_main_menu" );
@@ -371,7 +371,7 @@ bool CInterfaceMPCustomGame::OnLoadGameReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnSelectGameReaction( const string &szSender )
+bool CInterfaceMPCustomGame::OnSelectGameReaction( const std::string &szSender )
 {	
 	IButton *pBtn = GetChildChecked<IButton>( pMain, "ButtonJoinGame", true );
 	IListControlItem *pItem = pList->GetSelectedListItem();
@@ -397,7 +397,7 @@ void CInterfaceMPCustomGame::AfterLoad()
 	RegisterObservers();
 }
 
-bool CInterfaceMPCustomGame::OnPasswordOk( const string &szSender )
+bool CInterfaceMPCustomGame::OnPasswordOk( const std::string &szSender )
 {
 	wszPassword = pPasswordEdit->GetText();
 	pPasswordPopup->ShowWindow( false );
@@ -405,7 +405,7 @@ bool CInterfaceMPCustomGame::OnPasswordOk( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnPasswordCancel( const string &szSender )\
+bool CInterfaceMPCustomGame::OnPasswordCancel( const std::string &szSender )\
 {
 	pPasswordPopup->ShowWindow( false );
 	return true;

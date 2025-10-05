@@ -47,15 +47,15 @@ void CTerraGen::CreateExplosionData( NMeshData::SMeshData *pData, const CVec2 &v
 	{
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
-			for ( vector<STriangle>::const_iterator it = terrainInfo.tiles[g][i].triangles.begin(); it != terrainInfo.tiles[g][i].triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = terrainInfo.tiles[g][i].triangles.begin(); it != terrainInfo.tiles[g][i].triangles.end(); ++it )
 			{
 				trg.i1 = nVertOffs + it->i1;
 				trg.i2 = nVertOffs + it->i2;
 				trg.i3 = nVertOffs + it->i3;
 				pData->triangles.push_back( trg );
 			}
-			vector<CVec3fEx>::const_iterator itVert = terrainInfo.tiles[g][i].vertices.begin();
-			vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
+			std::vector<CVec3fEx>::const_iterator itVert = terrainInfo.tiles[g][i].vertices.begin();
+			std::vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
 			for ( ; itVert != terrainInfo.tiles[g][i].vertices.end(); ++itVert, ++itHeight )
 			{
 				vert.pos.Set( itVert->x, itVert->y, max( itVert->z + ( *itHeight ), 0.0f ) + DEF_EXPLOSION_HEIGHT_BASE + DEF_EXPLOSION_HEIGHT * nIncHeight );
@@ -114,7 +114,7 @@ void CTerraGen::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb:
 	for ( int nX = nTileX1; nX <= nTileX2; ++nX )
 		for ( int nY = nTileY1; nY <= nTileY2; ++nY )
 		{
-			vector<int> &idArr = terraExplosionsHash[nY][nX];
+			std::vector<int> &idArr = terraExplosionsHash[nY][nX];
 			idArr.resize( s_nMaxExplosionsPerTile, -1 );
 			explosionsManager.RemoveExplosion( idArr[s_nMaxExplosionsPerTile - 1] );
 			for ( int k = s_nMaxExplosionsPerTile - 1; k >= 1; --k )

@@ -25,7 +25,7 @@ struct SReinforcementTypeHash
 };
 // new method
 void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement *_pReinf, const EReinforcementType eType, const NDb::SDeployTemplate *pTemplate,
-	const CVec2 &vPosition, WORD wDirection, const int nScriptID, list< pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates );
+	const CVec2 &vPosition, WORD wDirection, const int nScriptID, std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates );
 
 void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *_pReinf, const NDb::SDeployTemplate *pTemplate,
 	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget );

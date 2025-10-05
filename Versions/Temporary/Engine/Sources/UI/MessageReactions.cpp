@@ -25,7 +25,7 @@ int ScriptErrorOut( struct lua_State *state )
 {
 	Script script( state );
 	Script::Object obj = script.GetObject(script.GetTop());
-	const string szError = StrFmt( "Script error: %s", obj.GetString() );
+	const std::string szError = StrFmt( "Script error: %s", obj.GetString() );
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szError.c_str(), 0xffff0000, true );
 	DebugTrace( "%s\n", szError.c_str() );
 	return 0;
@@ -42,7 +42,7 @@ static int OutputStringValue( struct lua_State *state )
 {
 	Script script(state);
 	NI_ASSERT( script.GetTop() == 2, "Script function must have 2 arguments on the stack" );			//два аргумента
-	string szStr = script.GetObject( -2 );
+	std::string szStr = script.GetObject( -2 );
 	int nValue = script.GetObject( -1 );
 	DebugTrace( "****Debug LUA script: %s %s\n", szStr.c_str(), nValue );
 	return 0;
@@ -67,7 +67,7 @@ void MessageReactionsRegisterScriptFunctions()
 
 void CMessageReactions::InitByDesc( const NDb::SMessageReactionsDesc &desc )
 {
-	for ( vector<NDb::SReactionSequenceEntry>::const_iterator it = desc.reactions.begin();
+	for ( std::vector<NDb::SReactionSequenceEntry>::const_iterator it = desc.reactions.begin();
 																										it != desc.reactions.end();
 																										++it )
 	{
@@ -77,7 +77,7 @@ void CMessageReactions::InitByDesc( const NDb::SMessageReactionsDesc &desc )
 		InitScript( desc.szScriptFileRef );
 }
 
-void CMessageReactions::RunScriptText( const string &szScriptBody )
+void CMessageReactions::RunScriptText( const std::string &szScriptBody )
 {
 	pScript = CreateScriptWrapper();
 	pScript->Init();
@@ -86,12 +86,12 @@ void CMessageReactions::RunScriptText( const string &szScriptBody )
 	if ( pScript->RunScript( szScriptBody.c_str() ) != 0 ) 
 		pScript = 0;
 }
-void CMessageReactions::InitScript( const string &szScriptFileName )
+void CMessageReactions::InitScript( const std::string &szScriptFileName )
 {
 	pScript = 0;
 	if ( !szScriptFileName.empty() )
 	{
-		string szScriptText;
+		std::string szScriptText;
 		CFileStream stream( NVFS::GetMainVFS(), szScriptFileName );
 		if ( stream.IsOk() )
 		{
@@ -113,7 +113,7 @@ int CMessageReactions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-bool CMessageReactions::Execute( const string &szSender, const string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
 {
 	if ( pProg && 
 		(pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags ) : pProg->Execute( szSender, szReactionKey )  ) ) return true;
@@ -125,14 +125,14 @@ bool CMessageReactions::Execute( const string &szSender, const string &szReactio
 	return false;
 }
 
-bool CMessageReactions::Execute( const string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
 {
 	CObj<IMessageReactionB2> pReactionB2 = CUIFactory::MakeReaction( pReaction );
 	return pReactionB2->Execute( pScreen, pScript, pProg, wKeyboardFlags );
 }
 
 
-void CMessageReactions::Register( const string &szReactionKey, IMessageReactionB2 *pReaction )
+void CMessageReactions::Register( const std::string &szReactionKey, IMessageReactionB2 *pReaction )
 {
 	reactions[szReactionKey] = pReaction;
 }

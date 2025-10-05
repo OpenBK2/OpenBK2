@@ -13,15 +13,15 @@ namespace NGScene
 class CInterfaceScreenBase : public IInterfaceBase, protected NInput::CGMORegContainer
 {
 	NInput::CGMORegContainer importantMsgs;
-	const string szInterfaceType;		// interface type - "InterMission", "Mission", etc.
-	const string szBindSection;			// this interface bind section
+	const std::string szInterfaceType;		// interface type - "InterMission", "Mission", etc.
+	const std::string szBindSection;			// this interface bind section
 	//
 	NTimer::STime nTime;
 	CObj<class CWindowTextView> pVersionWindow;
 	bool bInFocus;
 	CVec2 vLastScreenSize;
 	bool bShowScreenOnGetFocus;
-	hash_map<int,bool> registeredIDsForMLHandler;
+	std::unordered_map<int,bool> registeredIDsForMLHandler;
 
 	// Is interface transparent and we should draw under it
 	bool bIsTransparent;
@@ -65,27 +65,27 @@ protected:
 	// Пауза вне игры, обусловленная интерфейсом
 	void PauseIntermission( bool bPause );
 	
-	const string& GetBindSection() const { return szBindSection; }
+	const std::string& GetBindSection() const { return szBindSection; }
 	virtual void RestoreBindSection();
 	
 	void AddScreen( struct IProgrammedReactionsAndChecks *pReactions );
 	IScreen* GetScreen() { return pScreen; }
 	
 	template <typename TObj, typename TMsg>
-		void AddImportantObserver( const string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
+		void AddImportantObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
 	{
 		importantMsgs.AddObserver( szMsgName, _pfnMemFun );
 	}
 	
-	void SetDynamicTextView( ITextView *pView, const vector< pair<wstring, wstring> > &params );
-	void SetDynamicTooltip( IWindow *pWnd, const wstring &wszTooltip, const vector< pair<wstring, wstring> > &params );
+	void SetDynamicTextView( ITextView *pView, const std::vector< std::pair<std::wstring, std::wstring> > &params );
+	void SetDynamicTooltip( IWindow *pWnd, const std::wstring &wszTooltip, const std::vector< std::pair<std::wstring, std::wstring> > &params );
 
 	void SetMainWindowTexture( IWindow *pMainWindow, const NDb::STexture *pTexture );
 	
 	// disable explicit destruction
 	~CInterfaceScreenBase();
 public:
-	CInterfaceScreenBase( const string &_szInterfaceType, const string &_szBindSection );
+	CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection );
 	//
 	virtual bool Init();
 	virtual bool Init( struct ITransceiver *pTransceiver ) { return CInterfaceScreenBase::Init(); }
@@ -100,7 +100,7 @@ public:
 	virtual void AfterLoad();
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
 	
-	const string& GetInterfaceType() const { return szInterfaceType; }
+	const std::string& GetInterfaceType() const { return szInterfaceType; }
 
 	virtual void HideUnfocusedScreen();
 };
@@ -129,7 +129,7 @@ public:
 	}
 };
 
-bool AddUIScreen( IScreen *pWindowScreen, const string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions );
+bool AddUIScreen( IScreen *pWindowScreen, const std::string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions );
 
 #define INTERFACE_COMMAND_DECLARE( CommandName, InterfaceName )		\
 class CommandName : public CInterfaceCommandBase< InterfaceName >	\

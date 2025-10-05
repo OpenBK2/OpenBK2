@@ -209,7 +209,7 @@ public:
 	void GetNormale( CVec3 *pvNormale, float u, float v, const float ptCtrls[16] ) const;
 };
 
-void SampleNURBSCurve( vector<CVec3> *pRes, const float fSampleStep, const vector<CVec3> &ctrlPoints,
+void SampleNURBSCurve( std::vector<CVec3> *pRes, const float fSampleStep, const std::vector<CVec3> &ctrlPoints,
   const float fWeight1 = 1.0f, const float fWeight2 = 1.0f, const float fWeight3 = 1.0f, const float fWeight4 = 1.0f );
 
 

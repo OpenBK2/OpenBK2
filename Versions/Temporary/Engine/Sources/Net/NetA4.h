@@ -29,7 +29,7 @@ public:
 	{
 		EMessage msg;
 		int nClientID;
-		vector<int> received;
+		std::vector<int> received;
 		CMemoryStream pkt;
 	};
 private:
@@ -60,7 +60,7 @@ private:
 	};
 
 	//
-	typedef hash_map<CP2PTracker::UCID,SPeer> CPeerList;
+	typedef std::unordered_map<CP2PTracker::UCID,SPeer> CPeerList;
 	CPeerList clients;
 	EState state;
 	EReject lastReject;
@@ -68,7 +68,7 @@ private:
 	CServerInfoSupport serverInfo;
 	CLoginSupport login;
 	CP2PTracker p2p;
-	list<SMessage> msgQueue;
+	std::list<SMessage> msgQueue;
 	bool bAcceptNewClients;
 	CPtr<ILinksManager> pLinks; // created/destroyed only in Init/Destroy
 	int nGamePort;
@@ -88,7 +88,7 @@ private:
 	void ProcessLogin( const CNodeAddress &addr, CBitStream &bits );
 	void ProcessNormal( const CNodeAddress &addr, CBitStream &bits );
 	void AddOutputMessage( EMessage msg, CP2PTracker::UCID _from, 
-		CMemoryStream &data, const vector<CP2PTracker::UCID> &received );
+		CMemoryStream &data, const std::vector<CP2PTracker::UCID> &received );
 
 	void PollMessages( SPeer *pPeer );
 	void ProcessP2PMessages();
@@ -113,8 +113,8 @@ private:
 	bool bSendNow;
 	bool bReceiveNow;
 
-	list<CMemoryStream> msgToSendBroadcast;
-	list< pair< int, CMemoryStream > > msgToSendDirect;
+	std::list<CMemoryStream> msgToSendBroadcast;
+	std::list< std::pair< int, CMemoryStream > > msgToSendDirect;
 
 	bool AnalyzeLags();
 #endif __TEST_LAGS__
@@ -157,7 +157,7 @@ public:
 	// kick player 'nClient'
 	virtual void Kick( int nClient );
 	// get next message
-	virtual bool GetMessage( EMessage *pMsg, int *pClientID, vector<int> *pReceived, CMemoryStream *pPkt );
+	virtual bool GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt );
 	// ping of the client, -1 if client doesn't exist
 	virtual const float GetPing( const int nClientID );
 	// time since last message was received from this client
@@ -166,7 +166,7 @@ public:
 	virtual void Step();
 	virtual int GetSelfClientID() { return login.GetSelfClientID(); }
 
-	virtual const string GetIP( const int nClientID );
+	virtual const std::string GetIP( const int nClientID );
 	virtual const int GetPort( const int nClientID );
 	// 
 	// for debug

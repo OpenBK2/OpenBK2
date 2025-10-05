@@ -25,7 +25,7 @@ public:
 	void AIUpdateFall( const SAITreeBrokenUpdate *pUpdate );
 
 	virtual bool IsObject() const { return true; }
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );

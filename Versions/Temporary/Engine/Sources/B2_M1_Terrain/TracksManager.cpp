@@ -17,7 +17,7 @@ CTrackObjInfo::CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrack
 : pTimer( _pTimer ), pTrackManager( _pTrackManager ), nID( _nID )
 {
   tracksBuf.resize( DEF_MAX_TRACKS_IN_BUFFER );
-  for ( vector<NMeshData::SMeshData>::iterator it = tracksBuf.begin(); it != tracksBuf.end(); ++it )
+  for ( std::vector<NMeshData::SMeshData>::iterator it = tracksBuf.begin(); it != tracksBuf.end(); ++it )
   {
     it->vertices.reserve( DEF_MAX_VERTS_PER_TRACK );
     it->vertices.resize( 0 );
@@ -52,8 +52,8 @@ void CTrackObjInfo::Recalc()
   {
     data.verts.resize( 0 );
 		data.geometry.resize(0);
-    vector<NMeshData::SMeshData>::const_iterator itCur = tracksBuf.begin() + nStartInd;
-    vector<NMeshData::SMeshData>::const_iterator itFinal = tracksBuf.begin() + nFinalInd;
+    std::vector<NMeshData::SMeshData>::const_iterator itCur = tracksBuf.begin() + nStartInd;
+    std::vector<NMeshData::SMeshData>::const_iterator itFinal = tracksBuf.begin() + nFinalInd;
     const int nCurTime = pTimer->GetValue();
     bool bDelFlag;
     int nTrackCount = nStartInd;
@@ -62,7 +62,7 @@ void CTrackObjInfo::Recalc()
       bDelFlag = false;
       const int nVertsOffs = data.verts.size();
 			const int nFadingCoeff = Float2Int( (nCurTime - startTimes[nTrackCount]) * fFadingSpeed );
-      for ( vector<NGScene::SVertex>::const_iterator it = itCur->vertices.begin(); it != itCur->vertices.end(); ++it )
+      for ( std::vector<NGScene::SVertex>::const_iterator it = itCur->vertices.begin(); it != itCur->vertices.end(); ++it )
       {
 				data.verts.push_back( *it );
         const int nCol = ( data.verts.back().texU.dw & 0xff ) + nFadingCoeff;
@@ -76,7 +76,7 @@ void CTrackObjInfo::Recalc()
           data.verts.back().texU.dw = PackAndDupBYTE2DWORD( nCol );
       }
 
-			for ( vector<STriangle>::const_iterator it = itCur->triangles.begin(); it != itCur->triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = itCur->triangles.begin(); it != itCur->triangles.end(); ++it )
 				data.geometry.push_back( STriangle( nVertsOffs + it->i1, nVertsOffs + it->i2, nVertsOffs + it->i3 ) );
 
 			if ( bDelFlag )
@@ -141,7 +141,7 @@ CTracksManager::CTracksManager( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
   bound.BoxInit( CVec3(0, 0, 0), CVec3(0, 0, 0) );
   int nCount = 0;
   NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
-  for ( vector<STrackObj>::iterator it = tracks.begin(); it != tracks.end(); ++it )
+  for ( std::vector<STrackObj>::iterator it = tracks.begin(); it != tracks.end(); ++it )
   {
     it->vMin.Set(FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE);
     it->vMax.Set(-FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE);
@@ -217,7 +217,7 @@ void CTracksManager::FreeTrackBuffer( const int nFreeID )
 
 void CTracksManager::ProcessDelQueue()
 {
-  for ( vector<int>::const_iterator it = delQueue.begin(); it != delQueue.end(); ++it )
+  for ( std::vector<int>::const_iterator it = delQueue.begin(); it != delQueue.end(); ++it )
   {
     tracks[*it].trackHolder.pHolder = 0;
   }
@@ -228,11 +228,11 @@ void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
 {
   pGScene = _pGScene;
   pTimer = _pTimer;
-  for ( vector<STrackObj>::iterator it = tracks.begin(); it != tracks.end(); ++it )
+  for ( std::vector<STrackObj>::iterator it = tracks.begin(); it != tracks.end(); ++it )
     it->trackHolder.pPatch->AttachTimer( pTimer );
 
   NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
-  for ( vector<int>::const_iterator it = updatedTracks.begin(); it != updatedTracks.end(); ++it )
+  for ( std::vector<int>::const_iterator it = updatedTracks.begin(); it != updatedTracks.end(); ++it )
   {
     tracks[*it].trackHolder.pHolder = pGScene->CreateDynamicMesh( 
       pGScene->MakeMeshInfo( tracks[*it].trackHolder.pPatch, pTracksMaterial ), 0, tracks[*it].pBound, NGScene::MakeLargeHintBound(), room );

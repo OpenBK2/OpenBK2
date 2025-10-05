@@ -49,7 +49,7 @@ static unsigned char nGammaCorrectionR[256], nGammaCorrectionG[256], nGammaCorre
 D3DCAPS9 devCaps;
 SRenderTargetsInfo rtInfo;
 static HWND hWnd;
-static vector<SVideoModeInfo> videoModes;
+static std::vector<SVideoModeInfo> videoModes;
 static int nDeviceCreationID = 1;
 static SSystemInfo systemInfo;
 static bool bIsDebugRuntime;
@@ -596,16 +596,16 @@ static bool CheckDeviceCaps()
 		pTestBuffer->Unlock();
 
 	// count LVM (or memory
-	vector<NWin32Helper::com_ptr<IDirect3DTexture9> > test;
+	std::vector<NWin32Helper::com_ptr<IDirect3DTexture9> > test;
 	for ( int k = 0; 1; ++k )
 	{
-		NWin32Helper::com_ptr<IDirect3DTexture9> &res = *test.insert( test.end() );
+		NWin32Helper::com_ptr<IDirect3DTexture9> &res = test.emplace_back();
 		HRESULT hr = pTestDevice->CreateTexture( 512, 512, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, res.GetAddr(), 0 );
 		if ( FAILED(hr) )
 			break;
 	}
-	systemInfo.fLVMTextureMemory = test.size() - 1 + 3 * GetBpp( desktop.Format ) / 32; // 3 for 640x480 chain
-	systemInfo.fAGPTextureMemory = pTestDevice->GetAvailableTextureMem() / (1024*1024);
+	systemInfo.fLVMTextureMemory = test.size() - 1 + 3 * GetBpp(desktop.Format) / 32; // 3 for 640x480 chain
+	systemInfo.fAGPTextureMemory = pTestDevice->GetAvailableTextureMem() / (1024 * 1024);
 	systemInfo.nDesktopResolution = desktop.Width;
 
 	if ( !bHardwareVP )
@@ -681,7 +681,7 @@ bool SetMode( const SVideoMode &m, const SRenderTargetsInfo &_rtInfo )
 	return D3D_OK == hr;
 }
 
-void GetModesList( list<SVideoMode> *pRes, int nBpp )
+void GetModesList( std::list<SVideoMode> *pRes, int nBpp )
 {
 	if ( b16BitModeOnly )
 		nBpp = 16;
@@ -858,7 +858,7 @@ void Flip()
 // test cooperative level
 
 static float fGamma = 1.0f;
-static vector<NGfx::SPixel8888> gammaRamp;
+static std::vector<NGfx::SPixel8888> gammaRamp;
 static float fLastGamma = -1;
 static bool bChangedGammaRamp;
 static D3DGAMMARAMP keptGamma;
@@ -940,7 +940,7 @@ void SetGamma( bool bGamma )
 	bChangedGammaRamp = false;
 }
 
-void SetGammaRamp( const vector<NGfx::SPixel8888> &ramp )
+void SetGammaRamp( const std::vector<NGfx::SPixel8888> &ramp )
 {
 	gammaRamp = ramp;
 	bChangedGammaRamp = true;

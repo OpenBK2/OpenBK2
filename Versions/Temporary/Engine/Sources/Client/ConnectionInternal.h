@@ -15,7 +15,7 @@ class CSimpleConnection : public IConnection
 	int nMyServerID;
 	bool bConnectionTested;
 
-	list<class CPtr<CNetPacket> > packets;
+	std::list<class CPtr<CNetPacket> > packets;
 	CPtr<class CPacketProcessor> pFinishConnection;
 
 	//
@@ -44,7 +44,7 @@ class CThroughServerConnection : public IConnection
 	CPtr<CNet> pNet;
 	bool bConnectionTested;
 
-	list<class CPtr<CNetPacket> > packets;
+	std::list<class CPtr<CNetPacket> > packets;
 public:
 	CThroughServerConnection() { }
 	CThroughServerConnection( const int nClientServerID, CNet *pNet );

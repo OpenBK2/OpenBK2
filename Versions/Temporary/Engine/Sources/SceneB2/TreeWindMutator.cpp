@@ -8,7 +8,7 @@
 
 #define TIME_COEFF 1
 
-void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const vector<string> &leafNames )
+void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames )
 {
 	vPos.x = _vPos3.x;
 	vPos.y = _vPos3.y;
@@ -17,7 +17,7 @@ void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3,
 	fMagnitude = 0.0f;
 
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
-	for ( vector<string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
+	for ( std::vector<std::string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
 		leafBones.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
 }
 
@@ -54,7 +54,7 @@ void CTreeWindMutator::MutateSkeletonPose( granny_local_pose *pPose )
 
 	granny_transform *pTransform = GrannyGetLocalPoseTransform( pPose, 0 );
 	TransformRootBone( pTransform, qRot );
-	for ( vector<int>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
+	for ( std::vector<int>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
 		if ( *it == -1 )
 			continue;

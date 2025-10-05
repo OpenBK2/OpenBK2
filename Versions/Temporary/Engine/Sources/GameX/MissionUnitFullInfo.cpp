@@ -176,14 +176,14 @@ void CMissionUnitFullInfo::ClearInfo()
 
 void CMissionUnitFullInfo::HideSpecific()
 {
-	for ( vector<SWeaponItem>::iterator it = weaponItems.begin(); it != weaponItems.end(); ++it )
+	for ( std::vector<SWeaponItem>::iterator it = weaponItems.begin(); it != weaponItems.end(); ++it )
 	{
 		SWeaponItem &item = *it;
 		if ( item.pItem )
 			item.pItem->ShowWindow( false );
 	}
 
-	for ( vector<SViewMember>::iterator it = viewMembers.begin(); it != viewMembers.end(); ++it )
+	for ( std::vector<SViewMember>::iterator it = viewMembers.begin(); it != viewMembers.end(); ++it )
 	{
 		SViewMember &viewMember = *it;
 		if ( viewMember.pBtn )
@@ -209,7 +209,7 @@ void CMissionUnitFullInfo::HideSpecific()
 void CMissionUnitFullInfo::Clear3DView()
 {
 	if ( p3DCtrl )
-		p3DCtrl->SetObjects( vector<IWindow3DControl::SObject>() );
+		p3DCtrl->SetObjects( std::vector<IWindow3DControl::SObject>() );
 }
 
 void CMissionUnitFullInfo::SetReinfUnit( const NDb::SHPObjectRPGStats *pStats )
@@ -282,7 +282,7 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 	bool bMembersDetailsUpdated = false;
 	if ( pMO == pBaseMO )
 	{
-		vector<SMember> oldMembers;
+		std::vector<SMember> oldMembers;
 		members.swap( oldMembers );
 		MakeMembers( &members );
 		bSimilarMembers = (members == oldMembers);
@@ -351,7 +351,7 @@ void CMissionUnitFullInfo::MakeName()
 	}
 }
 
-void CMissionUnitFullInfo::MakeMembers( vector<SMember> *pMembers )
+void CMissionUnitFullInfo::MakeMembers( std::vector<SMember> *pMembers )
 {
 	IMOContainer *pMOCont = dynamic_cast_ptr<IMOContainer*>( pBaseMO );
 	if ( !pMOCont )
@@ -361,11 +361,11 @@ void CMissionUnitFullInfo::MakeMembers( vector<SMember> *pMembers )
 		return;
 	}
 
-	vector<CMOSelectable*> passengers;
+	std::vector<CMOSelectable*> passengers;
 	if ( pMOCont->GetTypeID() != NDb::SSquadRPGStats::typeID )
 	{
 		pMOCont->GetPassangers( &passengers );
-		for ( vector<CMOSelectable*>::iterator it = passengers.begin(); it != passengers.end(); ++it )
+		for ( std::vector<CMOSelectable*>::iterator it = passengers.begin(); it != passengers.end(); ++it )
 		{
 			CMOSelectable *pPassenger = *it; 
 			if ( !pPassenger )
@@ -482,9 +482,9 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 	{
 		if ( const IMOSquad *pSquad = dynamic_cast_ptr<const IMOSquad*>( pSelMO ) )
 		{
-			vector<CMOSelectable*> passengers;
+			std::vector<CMOSelectable*> passengers;
 			pSquad->GetPassangers( &passengers );
-			for ( int i = 0; i < Min( 3, passengers.size() ); ++i )
+			for ( int i = 0; i < Min<int>( 3, passengers.size() ); ++i )
 			{
 				CMOSelectable *pSO = passengers[i];
 				if ( !pSO )
@@ -501,7 +501,7 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 		}
 		else
 		{
-			for ( int i = 0; i < Min( 3, pSquadStats->members.size() ); ++i )
+			for ( int i = 0; i < Min<int>( 3, pSquadStats->members.size() ); ++i )
 			{
 				const NDb::SInfantryRPGStats *pMember = pSquadStats->members[i];
 				if ( !pMember )
@@ -613,7 +613,7 @@ void CMissionUnitFullInfo::MakeCurrent()
 
 void CMissionUnitFullInfo::UpdateMembers( bool bCanLeave )
 {
-	for ( vector<SViewMember>::iterator it = viewMembers.begin(); it != viewMembers.end(); ++it )
+	for ( std::vector<SViewMember>::iterator it = viewMembers.begin(); it != viewMembers.end(); ++it )
 	{
 		SViewMember &viewMember = *it;
 		if ( viewMember.pBtn )
@@ -684,10 +684,10 @@ void CMissionUnitFullInfo::ShowArmor()
 	if ( pArmorsWnd )
 		pArmorsWnd->ShowWindow( true );
 		
-	wstring wszArmorFront = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
-	wstring wszArmorSide = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
-	wstring wszArmorBack = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
-	wstring wszArmorTop = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
+	std::wstring wszArmorFront = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
+	std::wstring wszArmorSide = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
+	std::wstring wszArmorBack = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
+	std::wstring wszArmorTop = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
 	
 	if ( pArmorFrontView )
 	{
@@ -739,10 +739,10 @@ void CMissionUnitFullInfo::ShowWeapons()
 		if ( weaponItems[i].pItem )
 			weaponItems[i].pItem->ShowWindow( true );
 			
-		wstring wszDamage = NStr::ToUnicode( StrFmt( "%d", weapons[i].nDamage ) );
-		wstring wszPenetration = NStr::ToUnicode( StrFmt( "%d", weapons[i].nPenetration ) );
-		wstring wszAmmo = NStr::ToUnicode( StrFmt( "%d/%d", weapons[i].nAmmo, weapons[i].nMaxAmmo ) );
-		wstring wszCount = NStr::ToUnicode( StrFmt( "%d", weapons[i].nCount ) );
+		std::wstring wszDamage = NStr::ToUnicode( StrFmt( "%d", weapons[i].nDamage ) );
+		std::wstring wszPenetration = NStr::ToUnicode( StrFmt( "%d", weapons[i].nPenetration ) );
+		std::wstring wszAmmo = NStr::ToUnicode( StrFmt( "%d/%d", weapons[i].nAmmo, weapons[i].nMaxAmmo ) );
+		std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", weapons[i].nCount ) );
 		
 		if ( weaponItems[i].pDamage )
 			weaponItems[i].pDamage->SetText( weaponItems[i].pDamage->GetDBText() + wszDamage );
@@ -804,7 +804,7 @@ void CMissionUnitFullInfo::ShowResources()
 	}
 	else
 	{
-		wstring wszValue = NStr::ToUnicode( StrFmt( "%d", nMaxSupplies ) );
+		std::wstring wszValue = NStr::ToUnicode( StrFmt( "%d", nMaxSupplies ) );
 		if ( nCurSupplies >= 0 )
 			wszValue = NStr::ToUnicode( StrFmt( "%d", nCurSupplies ) ) + L"/" + wszValue;
 		if ( pSuppliesCountView )
@@ -900,7 +900,7 @@ void CMissionUnitFullInfo::ShowHP()
 
 //		float fHP = hps[0].fFraction * hps[0].fMax;
 //		int nHP = fHP > 1.0f ? fHP : ( fHP != 0.0f ? 1.0f : 0.0f );
-		wstring wszValue = NStr::ToUnicode( StrFmt( "%d", hps[0].nHP ) );
+		std::wstring wszValue = NStr::ToUnicode( StrFmt( "%d", hps[0].nHP ) );
 		if ( pHPView )
 		{
 			pHPView->SetText( pHPView->GetDBText() + wszValue );
@@ -943,7 +943,7 @@ void CMissionUnitFullInfo::ShowCurrent()
 	ShowFuel();
 }
 
-void CMissionUnitFullInfo::OnClickMember( const string &szSender )
+void CMissionUnitFullInfo::OnClickMember( const std::string &szSender )
 {
 	for ( int i = 0; i < viewMembers.size(); ++i )
 	{
@@ -955,7 +955,7 @@ void CMissionUnitFullInfo::OnClickMember( const string &szSender )
 	}
 }
 
-void CMissionUnitFullInfo::OnMemberOverOn( const string &szSender )
+void CMissionUnitFullInfo::OnMemberOverOn( const std::string &szSender )
 {
 	for ( int i = 0; i < Min( viewMembers.size(), members.size() ); ++i )
 	{
@@ -971,7 +971,7 @@ void CMissionUnitFullInfo::OnMemberOverOn( const string &szSender )
 	}
 }
 
-void CMissionUnitFullInfo::OnMemberOverOff( const string &szSender )
+void CMissionUnitFullInfo::OnMemberOverOff( const std::string &szSender )
 {
 	pSelStats = pBaseStats;
 	pSelMO = pBaseMO;
@@ -980,7 +980,7 @@ void CMissionUnitFullInfo::OnMemberOverOff( const string &szSender )
 	ShowCurrent();
 }
 
-void CMissionUnitFullInfo::OnWeaponOverOn( const string &szSender )
+void CMissionUnitFullInfo::OnWeaponOverOn( const std::string &szSender )
 {
 	for ( int i = 0; i < Min( weaponItems.size(), weapons.size() ); ++i )
 	{
@@ -994,7 +994,7 @@ void CMissionUnitFullInfo::OnWeaponOverOn( const string &szSender )
 	}
 }
 
-void CMissionUnitFullInfo::OnWeaponOverOff( const string &szSender )
+void CMissionUnitFullInfo::OnWeaponOverOff( const std::string &szSender )
 {
 	nSelWeapon = 0;
 	MakeCurrent();

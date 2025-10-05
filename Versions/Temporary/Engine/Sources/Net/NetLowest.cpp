@@ -17,7 +17,7 @@ bool CNodeAddressSet::GetAddress( int n, CNodeAddress *pRes ) const
 	return true;
 }
 
-string CNodeAddress::GetIP()
+std::string CNodeAddress::GetIP()
 {
 	sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
 	char szBuf[1024];

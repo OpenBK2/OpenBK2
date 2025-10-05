@@ -19,7 +19,7 @@ enum EStreamPath
 	STREAM_PATH_RELATIVE = 1
 };
 
-static CDataStream *OpenWinFileDirect( const string &szPath, bool bRead )
+static CDataStream *OpenWinFileDirect( const std::string &szPath, bool bRead )
 {
 	CMemoryMappedFile *p;
 	if ( bRead )
@@ -34,18 +34,18 @@ static CDataStream *OpenWinFileDirect( const string &szPath, bool bRead )
 	return p;
 }
 
-static CDataStream* OpenWinFile( const string &szPath, bool bRead )
+static CDataStream* OpenWinFile( const std::string &szPath, bool bRead )
 {
 	return OpenWinFileDirect( szPath, bRead );
 }
 
 // helper function - create/open win file and check for success
-static CDataStream* OpenWinFileRW( const string &szPath )
+static CDataStream* OpenWinFileRW( const std::string &szPath )
 {
 	return OpenWinFile( szPath, false );
 }
 
-static void PreprocessPath( string *pResPath, EStreamPath *pStreamPathType, const string &szPath, const string &szBasePath )
+static void PreprocessPath( std::string *pResPath, EStreamPath *pStreamPathType, const std::string &szPath, const std::string &szBasePath )
 {
 	if ( szBasePath.empty() )
 	{
@@ -69,7 +69,7 @@ static void PreprocessPath( string *pResPath, EStreamPath *pStreamPathType, cons
 	}
 }
 
-bool GetWinFileStats( struct SFileStats *pStats, const string &szPath )
+bool GetWinFileStats( struct SFileStats *pStats, const std::string &szPath )
 {
 	pStats->pszName = 0;
 	pStats->nSize = 0;
@@ -92,24 +92,24 @@ bool GetWinFileStats( struct SFileStats *pStats, const string &szPath )
 	return true;
 }
 
-bool DoesWinFileExist( const string &szPath )
+bool DoesWinFileExist( const std::string &szPath )
 {
 	return NFile::DoesFileExist( szPath );
 }
 
-CDataStream* CWinVFS::CWinFileEntry::OpenStream( const string &szPathName )
+CDataStream* CWinVFS::CWinFileEntry::OpenStream( const std::string &szPathName )
 {
 	return OpenWinFileDirect( szBasePath + szPathName, true );
 }
 
-bool CWinVFS::CWinFileEntry::GetStats( SFileStats *pStats, const string &szPathName ) const
+bool CWinVFS::CWinFileEntry::GetStats( SFileStats *pStats, const std::string &szPathName ) const
 {
 	return pStats == 0 ? false : GetWinFileStats( pStats, szBasePath + szPathName );
 }
 
 
 
-CWinVFS::CWinVFS( const string &_szBasePath )
+CWinVFS::CWinVFS( const std::string &_szBasePath )
 : bAllWinFilesChecked( false ), bArchiveOnly( false )
 {
 	if ( _szBasePath.empty() )
@@ -120,8 +120,8 @@ CWinVFS::CWinVFS( const string &_szBasePath )
 	//
 	bArchiveOnly = NFile::DoesFileExist( _szBasePath );
 	//
-	string szDir = _szBasePath;
-	string szExt;
+	std::string szDir = _szBasePath;
+	std::string szExt;
 	{
 		NStr::ReplaceAllChars( &szDir, '/', '\\' );
 		const int nPos = szDir.rfind( '\\' );
@@ -226,7 +226,7 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 	return 0;
 }
 
-CDataStream* CWinVFS::OpenFileDirect( const string &_szPath )
+CDataStream* CWinVFS::OpenFileDirect( const std::string &_szPath )
 {
 	NFile::CFilePath szPath;
 	EStreamPath ePath;
@@ -245,7 +245,7 @@ CDataStream* CWinVFS::OpenFileDirect( const string &_szPath )
 	return 0;
 }
 
-CDataStream* CWinVFS::OpenFile( const string &szPath )
+CDataStream* CWinVFS::OpenFile( const std::string &szPath )
 {
 	return OpenFileDirect( szPath );
 }
@@ -256,10 +256,10 @@ static int nCallsNumber = 0;
 
 class CProfiler
 {
-	const string szPath;
+	const std::string szPath;
 	const DWORD dwStartTime;
 public:
-	CProfiler( const string &_szPath ) : szPath( szPath ), dwStartTime( GetTickCount() ) { }
+	CProfiler( const std::string &_szPath ) : szPath( szPath ), dwStartTime( GetTickCount() ) { }
 	~CProfiler()
 	{
 		const float fLoadTime = float(GetTickCount() - dwStartTime)/1000.0f;
@@ -285,7 +285,7 @@ void VFSSegmentProfiler()
 	}
 }
 
-bool CWinVFS::DoesFileExist( const string &_szPath )
+bool CWinVFS::DoesFileExist( const std::string &_szPath )
 {
 	CProfiler profiler( _szPath );
 
@@ -299,7 +299,7 @@ bool CWinVFS::DoesFileExist( const string &_szPath )
 		return NFile::DoesFileExist( szPath );
 }
 
-bool CWinVFS::GetFileStats( SFileStats *pStats, const string &_szPath )
+bool CWinVFS::GetFileStats( SFileStats *pStats, const std::string &_szPath )
 {
 	NFile::CFilePath szPath;
 	EStreamPath ePath;
@@ -316,7 +316,7 @@ bool CWinVFS::GetFileStats( SFileStats *pStats, const string &_szPath )
 	return false;
 }
 
-void CWinVFS::GetAllFileNames( vector<string> *pFileNames, const string &rszFolder )
+void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder )
 {
 	NWin32Helper::CCriticalSectionLock csLock( g_WinVFSCriticalSection );
 	if ( !bArchiveOnly )
@@ -349,18 +349,18 @@ void CWinVFS::GetAllFileNames( vector<string> *pFileNames, const string &rszFold
 }
 
 
-CWinFileCreator::CWinFileCreator( const string &_szBasePath )
+CWinFileCreator::CWinFileCreator( const std::string &_szBasePath )
 : szBasePath( _szBasePath )
 {
 }
 
-CDataStream* CWinFileCreator::CreateFile( const string &_szPath )
+CDataStream* CWinFileCreator::CreateFile( const std::string &_szPath )
 {
 	NFile::CFilePath szPath;
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	//
-	const string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
+	const std::string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
 	NFile::CreatePath( NFile::GetFilePath(szFullFilePath) );
 	//
 	CDataStream *pRes = OpenWinFileDirect( szFullFilePath, false );
@@ -370,22 +370,22 @@ CDataStream* CWinFileCreator::CreateFile( const string &_szPath )
 	return pRes;
 }
 
-bool CWinFileCreator::RemoveFile( const string &_szPath )
+bool CWinFileCreator::RemoveFile( const std::string &_szPath )
 {
 	NFile::CFilePath szPath;
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
-	const string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
+	const std::string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
 	//
 	return ::DeleteFile( szFullFilePath.c_str() ) != FALSE;
 }
 
-IVFS* CreateWinVFS( const string &szBasePath )
+IVFS* CreateWinVFS( const std::string &szBasePath )
 {
 	return new NVFS::CWinVFS( szBasePath );
 }
 
-IFileCreator* CreateWinFileCreator( const string &szBasePath )
+IFileCreator* CreateWinFileCreator( const std::string &szBasePath )
 {
 	return new CWinFileCreator( szBasePath );
 }

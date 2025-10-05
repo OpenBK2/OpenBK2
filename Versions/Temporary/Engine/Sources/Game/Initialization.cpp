@@ -6,7 +6,7 @@ bool IsRunningOnLocalDrive()
 	// check for remote drive - not allowed to run from!
 	char buffer[2048];
 	GetModuleFileName( 0, buffer, 2048 );
-	string szModuleDir = buffer;
+	std::string szModuleDir = buffer;
 	szModuleDir.erase( szModuleDir.find( '\\' ) );
 	if ( szModuleDir.empty() )
 		return true;

@@ -19,7 +19,7 @@ struct SProfileInfo
 		: vCenter( _vCenter ), wDir( _wDir ), profile( _profile ) { }
 };
 
-static hash_map<int, SProfileInfo> profiles;
+static std::unordered_map<int, SProfileInfo> profiles;
 static bool bShow = false;
 
 void AddProfile( const int nID, const CVec3 &vCenter, const WORD wDir, const NDb::SPassProfile &profile )
@@ -35,7 +35,7 @@ void RemoveProfile( const int nID )
 void ToggleLockProfiles()
 {
 	bShow = !bShow;
-	for ( hash_map<int, SProfileInfo>::iterator iter = profiles.begin(); iter != profiles.end(); ++iter )
+	for ( std::unordered_map<int, SProfileInfo>::iterator iter = profiles.begin(); iter != profiles.end(); ++iter )
 	{
 		const NDb::SPassProfile &profile = iter->second.profile;
 		const CVec2 vCenter = iter->second.vCenter;

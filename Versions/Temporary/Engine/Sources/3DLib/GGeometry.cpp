@@ -17,7 +17,7 @@ namespace NGfx
 namespace NGScene
 {
 
-void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter )
+void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<WORD> &filter )
 {
 	int nTarget = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
@@ -32,14 +32,14 @@ void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter )
 	pRes->resize( nTarget );
 }
 
-void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions )
+void MergePositions( std::vector<WORD> *pMatches, std::vector<CVec3> *pPositions )
 {
-	vector<CVec3> mergedPositions;
-	vector<CVec3> &positions = *pPositions;
-	vector<WORD> &posIndices = *pMatches;
+	std::vector<CVec3> mergedPositions;
+	std::vector<CVec3> &positions = *pPositions;
+	std::vector<WORD> &posIndices = *pMatches;
 	posIndices.resize( positions.size() );
 	mergedPositions.reserve( pPositions->size() );
-	typedef hash_map<CVec3,int,SVec3Hash> CPosHash;
+	typedef std::unordered_map<CVec3,int,SVec3Hash> CPosHash;
 	CPosHash posHash;
 	for ( int k = 0; k < positions.size(); ++k )
 	{
@@ -62,7 +62,7 @@ void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions )
 
 struct SRefTracker
 {
-	vector<int> temp;
+	std::vector<int> temp;
 
 	void SetSize( int n )
 	{
@@ -112,12 +112,12 @@ void CObjectInfo::MergePositions()
 		NGScene::MergePositions( &posIndices, &positions );
 		return;
 	}
-	vector<CVec3> mergedPositions;
-	vector<SRealVertexWeight> mergedWeights;
+	std::vector<CVec3> mergedPositions;
+	std::vector<SRealVertexWeight> mergedWeights;
 	mergedPositions.reserve( positions.size() );
 	mergedWeights.reserve( weights.size() );
 	posIndices.resize( positions.size() );
-	typedef hash_map<SCompoundPosKey,int,CalcCompoundKeyHash> CPosHash;
+	typedef std::unordered_map<SCompoundPosKey,int,CalcCompoundKeyHash> CPosHash;
 	CPosHash posHash;
 	for ( int k = 0; k < positions.size(); ++k )
 	{
@@ -139,7 +139,7 @@ void CObjectInfo::MergePositions()
 	weights = mergedWeights;
 }
 
-void CObjectInfo::AssignGeometry( const SData &data, vector<STriangle> *pGeom )
+void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGeom )
 {
 	// initialize stuff
 	positions.resize( data.verts.size() );
@@ -163,9 +163,9 @@ void CObjectInfo::AssignGeometry( const SData &data, vector<STriangle> *pGeom )
 			{
 				if ( res.fWeights[k] < res.fWeights[k+1] )
 				{
-					swap( res.fWeights[k], res.fWeights[k+1] );
-					swap( res.nWeights[k], res.nWeights[k+1] );
-					swap( res.cBoneIndices[k], res.cBoneIndices[k+1] );
+					std::swap( res.fWeights[k], res.fWeights[k+1] );
+					std::swap( res.nWeights[k], res.nWeights[k+1] );
+					std::swap( res.cBoneIndices[k], res.cBoneIndices[k+1] );
 				}
 				else
 					break;
@@ -199,9 +199,9 @@ void CObjectInfo::AssignGeometry( const SData &data, vector<STriangle> *pGeom )
 }
 
 template<class T>
-static void Reorder( vector<T> *pRes, const vector<int> &newPlaces )
+static void Reorder( std::vector<T> *pRes, const std::vector<int> &newPlaces )
 {
-	vector<T> tmp( pRes->size() );
+	std::vector<T> tmp( pRes->size() );
 	for ( int k = 0; k < tmp.size(); ++k )
 		tmp[k] = (*pRes)[ newPlaces[k] ];
 	*pRes = tmp;
@@ -209,7 +209,7 @@ static void Reorder( vector<T> *pRes, const vector<int> &newPlaces )
 
 void CObjectInfo::CalcAverageTriArea()
 {
-	vector<STriangle> tris;
+	std::vector<STriangle> tris;
 	GetPosTriangles( &tris );
 	if ( tris.empty() )
 	{
@@ -225,8 +225,8 @@ void CObjectInfo::CalcAverageTriArea()
 	fAverageTriArea = fArea / tris.size();
 }
 
-static vector<DWORD> emptyAttribute;
-const vector<DWORD> &CObjectInfo::GetAttribute( int nID )
+static std::vector<DWORD> emptyAttribute;
+const std::vector<DWORD> &CObjectInfo::GetAttribute( int nID )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
 	{
@@ -236,7 +236,7 @@ const vector<DWORD> &CObjectInfo::GetAttribute( int nID )
 	return emptyAttribute;
 }
 
-void CObjectInfo::SetAttribute( int nID, const vector<DWORD> &attr )
+void CObjectInfo::SetAttribute( int nID, const std::vector<DWORD> &attr )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
 	{
@@ -246,13 +246,13 @@ void CObjectInfo::SetAttribute( int nID, const vector<DWORD> &attr )
 			return;
 		}
 	}
-	vector<SStream>::iterator it = attributes.insert( attributes.end(), SStream() );
+	std::vector<SStream>::iterator it = attributes.insert( attributes.end(), SStream() );
 	it->nID = nID;
 	it->data = attr;
 }
 
 template<class T>
-static void Shuffle( vector<T> *pRes, const vector<T> &src, const vector<WORD> &vxReorder, int nResVertices )
+static void Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<WORD> &vxReorder, int nResVertices )
 {
 	pRes->resize( nResVertices );
 	ASSERT( vxReorder.size() <= src.size() );
@@ -262,7 +262,7 @@ static void Shuffle( vector<T> *pRes, const vector<T> &src, const vector<WORD> &
 			(*pRes)[ vxReorder[k] ] = src[k];
 	}
 }
-void CObjectInfo::Assign( const SData &data, vector<STriangle> *pGeom, bool bOptimizeVCache )
+void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache )
 {
 	if ( bOptimizeVCache )
 	{
@@ -270,10 +270,10 @@ void CObjectInfo::Assign( const SData &data, vector<STriangle> *pGeom, bool bOpt
 		if ( data.geometry.size() > 0  )
 		{
 			// optimize for vertex cache
-			vector<STriangle> &tris = optimizedData.geometry;
+			std::vector<STriangle> &tris = optimizedData.geometry;
 			tris = data.geometry;
 			CTriVertexCacheOptimizer vxOptimize;
-			vector<WORD> vxReorder;
+			std::vector<WORD> vxReorder;
 			int nResVertices;
 			//NHPTimer::STime tStart;
 			//NHPTimer::GetTime( &tStart );
@@ -320,7 +320,7 @@ void CObjectInfo::Assign( SData *pData, bool bOptimizeVCache )
 
 void CObjectInfo::Assign( const SData &data, bool bOptimizeVCache )
 {
-	vector<STriangle> geom( data.geometry );
+	std::vector<STriangle> geom( data.geometry );
 	Assign( data, &geom, bOptimizeVCache );
 }
 
@@ -334,14 +334,14 @@ void CObjectInfo::AssignFast( SData *pData )
 	fAverageTriArea = 0;
 }
 
-void CObjectInfo::GetVxPositionTriangles( vector<STriangle> *pRes ) const
+void CObjectInfo::GetVxPositionTriangles( std::vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !vertRefPositions.empty() )
 		FilterTrinagles( pRes, vertRefPositions );
 }
 
-void CObjectInfo::GetPosTriangles( vector<STriangle> *pRes ) const
+void CObjectInfo::GetPosTriangles( std::vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !posIndices.empty() )
@@ -379,13 +379,13 @@ struct SVertexShiftHash
 };
 
 template<class TGetTex>
-static int GetVertex( CObjectInfo::SData *pData, hash_map<SVertexShift,int,SVertexShiftHash> *pShifted, 
+static int GetVertex( CObjectInfo::SData *pData, std::unordered_map<SVertexShift,int,SVertexShiftHash> *pShifted,
 	int _nXShift, int _nYShift, int _nVertex, TGetTex f )
 {
 	if ( _nXShift == 0 && _nYShift == 0 )
 		return _nVertex;
 	SVertexShift idx( _nVertex, _nXShift, _nYShift );
-	hash_map<SVertexShift,int,SVertexShiftHash>::iterator i = pShifted->find( idx );
+	std::unordered_map<SVertexShift,int,SVertexShiftHash>::iterator i = pShifted->find( idx );
 	if ( i != pShifted->end() )
 		return i->second;
 	int nRes = pData->verts.size();
@@ -465,9 +465,9 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 	}
 	// resolve complex cases
 	CObjectInfo::SData res( *pData );
-	vector<STriangle> &tris = res.geometry;
+	std::vector<STriangle> &tris = res.geometry;
 	tris = pData->geometry;
-	hash_map<SVertexShift,int,SVertexShiftHash> shifted;
+	std::unordered_map<SVertexShift,int,SVertexShiftHash> shifted;
 	for ( int k = 0; k < tris.size(); ++k )
 	{
 		STriangle &t = tris[k];

@@ -18,7 +18,7 @@ class CWindowEditLine : public CWindow, public IEditLine
 	CUIMORegConttainer impotantMsgs;
 
 	CObj<IML> pGfxText;								// text to display
-	list<CTRect<float> > rectsList;
+	std::list<CTRect<float> > rectsList;
 	//pGfxText->Render( &rectsList, CTPoint<float>( 0, 0 ), CTRect<float>( 0, 0, 0, 0 ) );
 
 	int timeSegment;							// for counting segment times
@@ -32,7 +32,7 @@ class CWindowEditLine : public CWindow, public IEditLine
 
 	//для скроллинга текста влево и вправо
 	//в pGFXText будет храниться лишь часть отображаемой строки, а в этой переменной полностью текст
-	wstring wszFullText;
+	std::wstring wszFullText;
 	bool bRegistered;												// message sink registered
 	bool bMouseButton1Down;
 
@@ -63,7 +63,7 @@ class CWindowEditLine : public CWindow, public IEditLine
 	// return false if char isn't fit into edit line space and is not added by this reason
 	bool AddChar( const wchar_t chr );
 	int GetTextWidth( const int nFirstChars );
-	void SetTextToGfx( const wstring &szText );
+	void SetTextToGfx( const std::wstring &szText );
 	//bool ProcessEvent( const struct SGameMessage &msg );
 protected:
 	NDb::SWindow* GetInstance() { return pInstance; }

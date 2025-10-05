@@ -11,12 +11,12 @@ void CWindowTooltip::InitByDesc( const struct NDb::SUIDesc* pDesc )
 	CWindow::InitByDesc( pDesc );
 }
 
-void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const wstring &_szText, IScreen *_pScreen,
+void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const std::wstring &_szText, IScreen *_pScreen,
 																	const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler )
 {
 	wszText = _szText;
 	
-	wstring szText;
+	std::wstring szText;
 	if ( const NDb::SForegroundTextString *pForeground = pInstance->pTextString )
 	{
 		if ( pForeground->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pForeground->pShared->,FormatString) )

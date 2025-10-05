@@ -85,7 +85,7 @@ void CInterfaceMPLadderGame::SetControls()
 {
 	CPtr<CTextData> pData;
 	CPtr<CTextDataViewer> pViewer;
-	wstring wszAnyText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_ANY" );
+	std::wstring wszAnyText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_ANY" );
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
 
 	if ( pSide )
@@ -98,7 +98,7 @@ void CInterfaceMPLadderGame::SetControls()
 
 		if ( pMPConsts )
 		{
-			typedef const vector< NDb::SMultiplayerSide> MPSides;
+			typedef const std::vector< NDb::SMultiplayerSide> MPSides;
 			MPSides &sides = pMPConsts->sides;
 			for ( MPSides::const_iterator it = sides.begin(); it != sides.end(); it++ )
 			{
@@ -121,7 +121,7 @@ void CInterfaceMPLadderGame::SetControls()
 		pTechLevel->Select( 0 );
 		if ( pMPConsts )
 		{
-			typedef const vector< NDb::SMultiplayerTechLevel> MPTechLevels;
+			typedef const std::vector< NDb::SMultiplayerTechLevel> MPTechLevels;
 			MPTechLevels &techlevels = pMPConsts->techLevels;
 			for ( MPTechLevels::const_iterator it = techlevels.begin(); it != techlevels.end(); it++ )
 			{
@@ -209,7 +209,7 @@ void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase
 	}
 }
 
-bool CInterfaceMPLadderGame::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPLadderGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBackReaction( szSender );
@@ -229,18 +229,18 @@ bool CInterfaceMPLadderGame::Execute( const string &szSender, const string &szRe
 	return false;
 }
 
-int CInterfaceMPLadderGame::Check( const string &szCheckName ) const
+int CInterfaceMPLadderGame::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 ///////////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////////
-bool CInterfaceMPLadderGame::OnBackReaction( const string &szSender )
+bool CInterfaceMPLadderGame::OnBackReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	return true;
 }
 
-bool CInterfaceMPLadderGame::OnStartGameReaction( const string &szSender )
+bool CInterfaceMPLadderGame::OnStartGameReaction( const std::string &szSender )
 {
 	if ( pChecksumPWL )
 	{
@@ -278,12 +278,12 @@ bool CInterfaceMPLadderGame::OnStartGameReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceMPLadderGame::OnSelectMapReaction( const string &szSender )
+bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 {	
 	IListControlItem *pItem = pList->GetSelectedListItem();
 	CDynamicCast<CLadderMapData> pInfo = pItem->GetUserData();
 	CDBPtr<NDb::SMultiplayerMap> pSelected = pInfo->pMapDesc;
-	wstring wszName = L"";
+	std::wstring wszName = L"";
 	CDBPtr<NDb::STexture> pMiniMapTexture = 0;
 	CPtr<IMiniMap> pWindowMiniMap = GetChildChecked<IMiniMap>( pMain, "Minimap", true );
 

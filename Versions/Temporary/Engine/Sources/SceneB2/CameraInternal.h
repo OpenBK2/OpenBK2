@@ -45,7 +45,7 @@ class CCamera : public ICamera, protected NInput::CGMORegContainer
 	bool bWasUpdatedExternally; // camera was updated from external
 	bool bIsMovieFinished;			// the movie segment has reached it`s finish
 	bool bIsPlayingFinal;				// the current movie segment is the final one
-	list<NCamera::SEarthQuake> earthquakes;
+	std::list<NCamera::SEarthQuake> earthquakes;
 	NTimer::STime timeLastUpdate;
 	//
 	void MsgMouseRotation( const SGameMessage &msg, bool bBegin );
@@ -68,7 +68,7 @@ public:
 	virtual void SetDistance( const float fDist );
 	virtual float GetDistance() const;
 	void SwitchAutoPositioning( const bool bAllowAutoPositioning );
-	void SwitchManualScrolling( const string &szLocker, const bool bManualOn );
+	void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn );
 
 	const CVec3 GetListener() const;
 

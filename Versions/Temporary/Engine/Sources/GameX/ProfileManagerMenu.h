@@ -15,11 +15,11 @@ private:
 	struct SProfileEntry
 	{
 		ZDATA
-		wstring					wszName;
+		std::wstring					wszName;
 		CPtr< IWindow >	pWindow;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&pWindow); return 0; }
 	};
-	typedef	vector< SProfileEntry > CProfileList;
+	typedef	std::vector< SProfileEntry > CProfileList;
 	
 	ZDATA_(CInterfaceScreenBase)
 	CProfileList profiles;
@@ -41,18 +41,18 @@ private:
 protected:
 	void MsgOk( const SGameMessage &msg );
 	void MsgCancel( const SGameMessage &msg );
-	void MsgBack( const string &szSender );
-	void MsgSelect( const string &szSender );
-	void MsgCreate( const string &szSender );
-	void MsgDelete( const string &szSender );
-	void MsgSelectionChange( const string &szSender );
+	void MsgBack( const std::string &szSender );
+	void MsgSelect( const std::string &szSender );
+	void MsgCreate( const std::string &szSender );
+	void MsgDelete( const std::string &szSender );
+	void MsgSelectionChange( const std::string &szSender );
 	bool OnEditChanged();
 	
 	int FindProfileIndex() const;
 	void UpdateButtons();
 
 	void FillScreenList();
-	bool IsSameProfileName( const wstring &wszName1, const wstring &wszName2 ) const;
+	bool IsSameProfileName( const std::wstring &wszName1, const std::wstring &wszName2 ) const;
 public:
 	CInterfaceProfileManager();
 
@@ -65,8 +65,8 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

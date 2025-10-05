@@ -8,6 +8,8 @@
 #include "Parser/LangNodesDefinitions.h"
 #include "Parser/FileNode.h"
 
+#include <memory>
+
 namespace NCompileCLike
 {
 
@@ -29,7 +31,7 @@ CObjectBase* NewResource()
 	return pResource;
 }
 
-static hash_map< string, SSimpleType> simpleTypes;
+static std::unordered_map< std::string, SSimpleType> simpleTypes;
 struct SSimpleTypesInit
 {
 	SSimpleTypesInit()
@@ -50,11 +52,11 @@ struct SSimpleTypesInit
 template<class T>
 void ClearStruct( T *pT )
 {
-	_Destroy( pT );
-	construct( pT );
+	pT->~T();
+	new (pT) T();
 }
 
-CVisitor::CVisitor( vector< CObj<NDb::NTypeDef::STypeDef> > *_pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *_pTermTypesDesc )
+CVisitor::CVisitor( std::vector< CObj<NDb::NTypeDef::STypeDef> > *_pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *_pTermTypesDesc )
 : pTypes( _pTypes ), pTermTypesDesc( _pTermTypesDesc ), bFailed( false )
 {
 }
@@ -67,7 +69,7 @@ void CVisitor::Visit( NLang::CBaseTypeNode *pBaseTypeNode )
 		pCreatedType = nodes2TypeDefs[pBaseTypeNode];
 	else
 	{
-		hash_map< string, SSimpleType>::iterator iter = simpleTypes.find( pBaseTypeNode->GetName() );
+		std::unordered_map< std::string, SSimpleType>::iterator iter = simpleTypes.find( pBaseTypeNode->GetName() );
 		NI_VERIFY( iter != simpleTypes.end(), StrFmt( "can't find corresponding type for \"%s\"", pBaseTypeNode->GetName().c_str() ), return );
 		SSimpleType &simpleType = iter->second;
 		pCreatedType = CastToUserObject( simpleType.pfnFunc(), (NDb::NTypeDef::STypeDef*)0 );
@@ -80,7 +82,7 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 	CDynamicCast<NDb::NTypeDef::STypeClass> pClass = pStruct;
 	if ( pStruct->pAttributes )
 	{
-		hash_map<string, CVariant> &attr = pStruct->pAttributes->attributes;
+		std::unordered_map<std::string, CVariant> &attr = pStruct->pAttributes->attributes;
 		if ( attr.find( "typeID" ) != attr.end() )
 		{
 			const int nTypeID = attr["typeID"];
@@ -182,11 +184,11 @@ CVariant Val2Variant( const NLang::CSimpleValue &value )
 		case NLang::EST_NOTYPE:			return CVariant( "" );
 		case NLang::EST_STRING:
 			{
-				const string szValue = value.GetString();
+				const std::string szValue = value.GetString();
 
-				wstring wszValue;
+				std::wstring wszValue;
 				NStr::ToUnicode( &wszValue, szValue );
-				string szUTFValue;
+				std::string szUTFValue;
 				NStr::UnicodeToUTF8( &szUTFValue, wszValue );
 
 				return CVariant( szUTFValue );
@@ -201,8 +203,8 @@ CVariant Val2Variant( const NLang::CSimpleValue &value )
 		case NLang::EST_ENUM:				return CVariant( value.GetEnum() );
 		case NLang::EST_WSTRING:
 			{
-				const string szValue = value.GetString();
-				wstring wszValue;
+				const std::string szValue = value.GetString();
+				std::wstring wszValue;
 				NStr::ToUnicode( &wszValue, szValue );
 				return CVariant( wszValue );
 			}
@@ -260,7 +262,7 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 
 			if ( pBinaryType->pAttributes != 0 )
 			{
-				hash_map<string, CVariant> &attr = pTypedef->pAttributes->attributes;
+				std::unordered_map<std::string, CVariant> &attr = pTypedef->pAttributes->attributes;
 				if ( attr.find( "numBytes" ) != attr.end() )
 					pBinaryType->nBinaryObjectSize = attr["numBytes"];
 
@@ -331,10 +333,10 @@ static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pFi
 {
 	if ( pField->pAttributes != 0 )
 	{
-		hash_map<string, CVariant> &attr = pField->pAttributes->attributes;
+		std::unordered_map<std::string, CVariant> &attr = pField->pAttributes->attributes;
 		if ( attr.find( "comments" ) != attr.end() )
 		{
-			const string szDesc = attr["comments"].GetStr();
+			const std::string szDesc = attr["comments"].GetStr();
 			NStr::UTF8ToUnicode( &(pField->wszDesc), szDesc );
 			attr.erase( "comments" );
 		}

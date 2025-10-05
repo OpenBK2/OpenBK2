@@ -46,7 +46,7 @@ int SPlayTime::operator&( IBinSaver &saver )
 
 
 
-void SPlayPause::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlayPause::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "PauseTime", (BYTE*)&nPauseTime - pThis, sizeof(nPauseTime), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "PauseRandom", (BYTE*)&nPauseRandom - pThis, sizeof(nPauseRandom), NTypeDef::TYPE_TYPE_INT );
@@ -222,7 +222,7 @@ int SVoice::operator&( IBinSaver &saver )
 
 
 
-void SCompositionDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCompositionDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Composition", (BYTE*)&pComposition - pThis, sizeof(pComposition), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (BYTE*)&fWeight - pThis, sizeof(fWeight), NTypeDef::TYPE_TYPE_FLOAT );

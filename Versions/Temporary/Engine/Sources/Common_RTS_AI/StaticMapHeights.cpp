@@ -236,7 +236,7 @@ int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const C
 	CArray2D<float> oldHeights;
 
 #ifndef _FINALRELEASE
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 #endif
 
 	oldHeights.SetSizes( nVisHeightsSizeX, nVisHeightsSizeY );

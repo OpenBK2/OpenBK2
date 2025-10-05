@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SCameraLimits::SCLLimit::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCameraLimits::SCLLimit::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );

@@ -17,7 +17,7 @@ static int GetGrannyTypedefOffset( granny_data_type_definition *pType, const cha
 	return -1;
 }
 
-void GetVertices( granny_mesh *pMesh, vector<CVec3> *pRes, CVec3 *vMin, CVec3 *vMax )
+void GetVertices( granny_mesh *pMesh, std::vector<CVec3> *pRes, CVec3 *vMin, CVec3 *vMax )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 	int nPosOffset = GetGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
@@ -44,7 +44,7 @@ void GetVertices( granny_mesh *pMesh, vector<CVec3> *pRes, CVec3 *vMin, CVec3 *v
 	}
 }
 
-void GetTriangles( granny_mesh *pMesh, vector<STriangle> *pRes )
+void GetTriangles( granny_mesh *pMesh, std::vector<STriangle> *pRes )
 {
 	granny_tri_topology *pTopol = pMesh->PrimaryTopology;
 	int nTriCount = 0;
@@ -63,7 +63,7 @@ void GetTriangles( granny_mesh *pMesh, vector<STriangle> *pRes )
 	}
 }
 
-void LoadGrannyModel( const string &szFileName, vector<CVec3> *pVerts, vector<STriangle> *pTrgs, CVec3 *vMin, CVec3 *vMax )
+void LoadGrannyModel( const std::string &szFileName, std::vector<CVec3> *pVerts, std::vector<STriangle> *pTrgs, CVec3 *vMin, CVec3 *vMax )
 {
 	granny_file *pFile = GrannyReadEntireFile( szFileName.c_str() );
 	NI_ASSERT( pFile, StrFmt("Can't read model from %s", szFileName) );
@@ -75,8 +75,8 @@ void LoadGrannyModel( const string &szFileName, vector<CVec3> *pVerts, vector<ST
 		pTrgs->reserve( 512 );
 		vMin->Set( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
 		vMax->Set( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-		vector<CVec3> singleVerts;
-		vector<STriangle> singleTrgs;
+		std::vector<CVec3> singleVerts;
+		std::vector<STriangle> singleTrgs;
 		CVec3 vSingleMin, vSingleMax;
 		for ( int nMeshIndex = 0; nMeshIndex < pInfo->MeshCount; ++nMeshIndex )
 		{
@@ -84,11 +84,11 @@ void LoadGrannyModel( const string &szFileName, vector<CVec3> *pVerts, vector<ST
 			GetVertices( pMesh, &singleVerts, &vSingleMin, &vSingleMax );
 			GetTriangles( pMesh, &singleTrgs );
 			const int nVertsOffs = pVerts->size();
-			for ( vector<CVec3>::const_iterator it = singleVerts.begin(); it != singleVerts.end(); ++it )
+			for ( std::vector<CVec3>::const_iterator it = singleVerts.begin(); it != singleVerts.end(); ++it )
 			{
 				pVerts->push_back( *it );
 			}
-			for ( vector<STriangle>::const_iterator it = singleTrgs.begin(); it != singleTrgs.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = singleTrgs.begin(); it != singleTrgs.end(); ++it )
 			{
 				pTrgs->push_back( STriangle(it->i1 + nVertsOffs, it->i2 + nVertsOffs, it->i3 + nVertsOffs) );
 			}

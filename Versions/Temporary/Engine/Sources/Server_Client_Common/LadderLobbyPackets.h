@@ -12,8 +12,8 @@ public:
 		int nSide; // 0 - random, 1 - allies, 2 - fascist
 	bool bHistoricity;
 	int nTeamSize; // 0 - random
-	list<int> techLevels;
-	list<int> maps;
+	std::list<int> techLevels;
+	std::list<int> maps;
 	UINT uCheckSum;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSide); f.Add(3,&bHistoricity); f.Add(4,&nTeamSize); f.Add(5,&techLevels); f.Add(6,&maps); f.Add(7,&uCheckSum); return 0; }
 	int operator&( IXmlSaver &f ) { 
@@ -22,7 +22,7 @@ public:
 		return 0;
 	}
 	CLadderInfoPacket() {}
-	CLadderInfoPacket( const int nClientID, const int _nSide, const bool _bHistoricity, const int _nTeamSize, const list<int> &_techLevels, const list<int> &_maps, const UINT _uCheckSum )
+	CLadderInfoPacket( const int nClientID, const int _nSide, const bool _bHistoricity, const int _nTeamSize, const std::list<int> &_techLevels, const std::list<int> &_maps, const UINT _uCheckSum )
 		: CNetPacket( nClientID ), nSide( _nSide ), bHistoricity( _bHistoricity ), nTeamSize( _nTeamSize ), techLevels( _techLevels ), maps( _maps ), uCheckSum( _uCheckSum ) {} 
 };
 
@@ -32,13 +32,13 @@ class CLadderGameResultPacket : public CNetPacket
 		ZDATA
 public:
 	int nGameID;
-	hash_set<int> winners;
-	hash_map<int,int> races;
-	hash_map<int,vector<int> > reinfUsed;
-	hash_map<int,int> unitsKilled;
-	hash_map<int,int> unitsLost;
-	hash_map<int,int> playerUnitEff;
-	hash_map<int,int> playerKeyPointEff;
+	std::unordered_set<int> winners;
+	std::unordered_map<int,int> races;
+	std::unordered_map<int,std::vector<int> > reinfUsed;
+	std::unordered_map<int,int> unitsKilled;
+	std::unordered_map<int,int> unitsLost;
+	std::unordered_map<int,int> playerUnitEff;
+	std::unordered_map<int,int> playerKeyPointEff;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&winners); f.Add(4,&races); f.Add(5,&reinfUsed); f.Add(6,&unitsKilled); f.Add(7,&unitsLost); f.Add(8,&playerUnitEff); f.Add(9,&playerKeyPointEff); return 0; }
 	int operator&( IXmlSaver &f ) { 
 		f.Add( "nGameID", &nGameID ); f.Add( "winners", &winners ); f.Add( "races", &races ); f.Add( "units", &reinfUsed );
@@ -46,10 +46,10 @@ public:
 	}
 	CLadderGameResultPacket() {}
 	CLadderGameResultPacket( const int nClientID, const int _nGameID, 
-		const hash_set<int> &_winners, const hash_map<int,int> &_races )
+		const std::unordered_set<int> &_winners, const std::unordered_map<int,int> &_races )
 		: CNetPacket( nClientID ),  nGameID( _nGameID ), winners( _winners ), races( _races ) {}
 	CLadderGameResultPacket( const int nClientID, const int _nGameID, 
-		const hash_set<int> &_winners, const hash_map<int,int> &_races, const hash_map<int, vector<int> > &_reinfUsed )
+		const std::unordered_set<int> &_winners, const std::unordered_map<int,int> &_races, const std::unordered_map<int, std::vector<int> > &_reinfUsed )
 		: CNetPacket( nClientID ),  nGameID( _nGameID ), winners( _winners ), races( _races ), reinfUsed( _reinfUsed ) {}
 
 };
@@ -62,8 +62,8 @@ public:
 	int nGameID;
 	int nMapID;
 	int nTechLevel;
-	list<int> team1;				// If Historicity is OFF, these are not Germans
-	list<int> team2;				// If Historicity is ON, these are Germans
+	std::list<int> team1;				// If Historicity is OFF, these are not Germans
+	std::list<int> team2;				// If Historicity is ON, these are Germans
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&nMapID); f.Add(4,&nTechLevel); f.Add(5,&team1); f.Add(6,&team2); return 0; }
 	int operator&( IXmlSaver &f ) { 
 		f.Add( "nGameID", &nGameID );
@@ -72,7 +72,7 @@ public:
 	}
 	CLadderInvitePacket() {}
 	CLadderInvitePacket( const int nClientID, const int _nGameID, const int _nMapID, const int _nTechLevel, 
-		const list<int> &_team1, const list<int> &_team2 ) 
+		const std::list<int> &_team1, const std::list<int> &_team2 )
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nMapID( _nMapID ), nTechLevel( _nTechLevel ),
 			team1( _team1 ), team2( _team2 ) 	{} 
 };
@@ -82,11 +82,11 @@ class CLadderStatisticsRequestPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLadderStatisticsRequestPacket );
 	ZDATA
 public:
-	string szNick;
+	std::string szNick;
 	bool bSendFullStatistics;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&bSendFullStatistics); return 0; }
 	CLadderStatisticsRequestPacket() {}
-	CLadderStatisticsRequestPacket( int nClientID, const string &_szNick, const bool &_bSendFullStatistics )
+	CLadderStatisticsRequestPacket( int nClientID, const std::string &_szNick, const bool &_bSendFullStatistics )
 		: CNetPacket( nClientID ), szNick( _szNick ), bSendFullStatistics( _bSendFullStatistics ) {}
 };
 
@@ -95,11 +95,11 @@ class CLadderStatisticsPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLadderStatisticsPacket )
 	ZDATA
 public:
-	string szNick;
+	std::string szNick;
 	SLadderStatistics info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&info); return 0; }
 	CLadderStatisticsPacket() {}
-	CLadderStatisticsPacket( int nClientID, const string &_szNick, const SLadderStatistics &_info )
+	CLadderStatisticsPacket( int nClientID, const std::string &_szNick, const SLadderStatistics &_info )
 		: CNetPacket( nClientID ), szNick( _szNick ), info( _info ) {}
 };
 
@@ -108,12 +108,12 @@ class CLadderShortStatisticsPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLadderShortStatisticsPacket )
 	ZDATA
 public:
-	string szNick;
+	std::string szNick;
 	int nLevel;
 	int nRace;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&nLevel); f.Add(4,&nRace); return 0; }
 	CLadderShortStatisticsPacket() {}
-	CLadderShortStatisticsPacket( const int nClientID, const string &_szNick, const int _nLevel, const int _nRace )
+	CLadderShortStatisticsPacket( const int nClientID, const std::string &_szNick, const int _nLevel, const int _nRace )
 		: CNetPacket( nClientID ), szNick( _szNick ), nLevel( _nLevel ), nRace( _nRace ) {}
 };
 

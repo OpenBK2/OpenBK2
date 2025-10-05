@@ -54,11 +54,11 @@ struct IMiniMap : virtual public IWindow
 	// Set some initial params for loading screen
 	virtual void SetLoadingMapParams( int nWidth, int nHeight ) = 0;
 	virtual CVec2 GetAIToScreen( const CVec2 &vPos ) const = 0;
-	virtual void SetUnits( const vector< SMiniMapUnitInfo > &vUnits ) = 0;
-	virtual void SetViewport( const vector< CVec2 > &vPoints ) = 0;
+	virtual void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
+	virtual void SetViewport( const std::vector< CVec2 > &vPoints ) = 0;
 	virtual void SetWarFog( const CArray2D<BYTE> *pWarFogInfo ) = 0;
-	virtual void SetMarkers( const vector<SMarker> &markers ) = 0;
-	virtual void SetFigures( const vector<SFigure> &figures ) = 0;
+	virtual void SetMarkers( const std::vector<SMarker> &markers ) = 0;
+	virtual void SetFigures( const std::vector<SFigure> &figures ) = 0;
 	virtual void SetMaterial( CDBPtr< NDb::SMaterial > pMaterial ) = 0;
 	virtual void SetTexture( const NDb::STexture *pTexture ) = 0;
 	virtual void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color ) = 0;
@@ -71,13 +71,13 @@ struct IMiniMap : virtual public IWindow
 
 struct IPotentialLines : virtual public IWindow
 {
-	virtual void SetParams( const string &szMask, const string &szDiffColourMap, const CVec2 &vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 ) = 0;
+	virtual void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 ) = 0;
 
 	virtual void ClearNodes() = 0;
 	virtual void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ) = 0;		// If such node exists, it is altered
 
 	virtual void ClearArrows() = 0;
-	virtual void AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour ) = 0;
+	virtual void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour ) = 0;
 };
 
 struct ISelection : virtual public IWindow
@@ -118,7 +118,7 @@ struct IWindow3DControl : virtual public IWindow
 		}
 	};
 
-	virtual void SetObjects( const vector<SObject> &objects ) = 0;
+	virtual void SetObjects( const std::vector<SObject> &objects ) = 0;
 	virtual SParam GetDBObjectParam( int nIndex ) const = 0;
 	virtual void SetBaseID3D( int nID ) = 0;
 };

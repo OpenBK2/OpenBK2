@@ -39,8 +39,8 @@ public:
 		: IPart( pData, _pCombiner ), pPart(_pPart) {}
 	virtual ETransformType GetTransformType() const { return pPart->GetTransformType(); }
 	virtual const SFBTransform& GetSimplePos() { return pPart->GetSimplePos(); }
-	virtual const vector<SHMatrix>& GetAnimation() { return pPart->GetAnimation(); }
-	virtual const vector<NGfx::SCompactTransformer>& GetMMXAnimation() { return pPart->GetMMXAnimation(); }
+	virtual const std::vector<SHMatrix>& GetAnimation() { return pPart->GetAnimation(); }
+	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { return pPart->GetMMXAnimation(); }
 	virtual bool Is2Sided() const { return pPart->Is2Sided(); }
 	virtual int GetSortValue() const { return 0; }
 };
@@ -62,8 +62,8 @@ public:
 			: nLightmap(_nLightmap), lmShift(_lmShift), fLMResolution(_fLMResolution) {}
 	};
 	ZDATA
-	hash_map<int, SLightmap> lightmaps;
-	vector<CArray2D<NGfx::SPixel8888> > textures;
+	std::unordered_map<int, SLightmap> lightmaps;
+	std::vector<CArray2D<NGfx::SPixel8888> > textures;
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f ) { 
 		f.Add(2,&lightmaps); 
@@ -97,16 +97,16 @@ struct SLMPartCalc
 	CArray2D<NGfx::SPixel8888> lightmap;
 	float fLMResolution;
 	SBound geomBound;
-	vector<SLMQuad> lmQuads;
+	std::vector<SLMQuad> lmQuads;
 
 	SLMPartCalc() {}
 	SLMPartCalc( ISomePart *_p, const CTPoint<int> &_lmShift, const CTPoint<int> &_lmSize, float _fLMResolution,
-		const SBound &_geomBound, const vector<SLMQuad> &_lmQuads ) 
+		const SBound &_geomBound, const std::vector<SLMQuad> &_lmQuads )
 		: pPart(_p), lmShift(_lmShift), lmSize(_lmSize), fLMResolution(_fLMResolution), geomBound(_geomBound), lmQuads(_lmQuads) {}
 };
 struct SLMGroup
 {
-	vector<SLMPartCalc> parts;
+	std::vector<SLMPartCalc> parts;
 	CSingleTexAlloc lmAlloc;
 	float fResolution;
 
@@ -118,7 +118,7 @@ class CLightmapsTempHolder : public CObjectBase
 	OBJECT_NOCOPY_METHODS(CLightmapsTempHolder);
 public:
 	ZDATA
-	vector<SLMGroup> lmGroups;
+	std::vector<SLMGroup> lmGroups;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&lmGroups); return 0; }
 };
 
@@ -141,7 +141,7 @@ static float CalcLMRes( const SSphere &highResLM, const SBound &partBV )
 	return 10 / ( 1 + sqr( f / highResLM.fRadius ) );
 }
 
-static void AddPart( const SSphere &highResLM, vector<SLMGroup> *pRes, ISomePart *pPart )
+static void AddPart( const SSphere &highResLM, std::vector<SLMGroup> *pRes, ISomePart *pPart )
 {
 	//const CTPoint<int> &lmSize;
 	CDGPtr<CPtrFuncBase<CObjectInfo> > pGeom = GetRawGeometry( pPart );
@@ -153,7 +153,7 @@ static void AddPart( const SSphere &highResLM, vector<SLMGroup> *pRes, ISomePart
 	SBound geomBound;
 	geomBound.BoxInit( pPart->vBVMin, pPart->vBVMax );
 	float fLMResolution = min ( 3.0f, CalcLMRes( highResLM, geomBound ) );
-	vector<SLMQuad> lmQuads;
+	std::vector<SLMQuad> lmQuads;
 	MakeLMCalcGeometry( &lmData, &lmSize, data, fLMResolution, N_LM_TEXTURE_SIZE, CTPoint<int>(0,0), &lmQuads );
 
 	int nResolution = Float2Int( log( fLMResolution * 4 ) );
@@ -229,10 +229,10 @@ static NGfx::EColorWriteMask depthChannels[3] =
 	NGfx::COLORWRITE_RED, NGfx::COLORWRITE_GREEN, NGfx::COLORWRITE_BLUE
 };
 static void RecalcDepthChannels( IRender *pRender, NGfx::CTexture *pDepth, const SSphere &_bound,  
-															 const vector<CVec3> &skyDirs, vector<SDirectionalDepthInfo> *pDepthInfos, 
+															 const std::vector<CVec3> &skyDirs, std::vector<SDirectionalDepthInfo> *pDepthInfos,
 															 int nBase, const SGroupSelect &groupSelect )
 {
-	vector<SDirectionalDepthInfo> &depthInfos = *pDepthInfos;
+	std::vector<SDirectionalDepthInfo> &depthInfos = *pDepthInfos;
 	NGfx::CRenderContext rcDepth;
 
 	rcDepth.SetTextureRT( pDepth );
@@ -273,8 +273,8 @@ static void RenderLight(
 	NGfx::CRenderContext &rc = *pTarget->pRC;
 
 	CRenderCmdList res;
-	const vector<SRenderFragmentInfo*> &fragments = pTarget->pGeom->GetFragments();
-	vector<CVec3> transColors( fragments.size() );
+	const std::vector<SRenderFragmentInfo*> &fragments = pTarget->pGeom->GetFragments();
+	std::vector<CVec3> transColors( fragments.size() );
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( pTarget->pGeom->IsFilteredFragment( i ) )
@@ -294,7 +294,7 @@ static void RenderLight(
 }
 
 static void RenderSkyCheck( SLightmapTargetGeom *pTarget, 
-													 const vector<CVec3> &skyDirs, const vector<SDirectionalDepthInfo> &depthInfos,
+													 const std::vector<CVec3> &skyDirs, const std::vector<SDirectionalDepthInfo> &depthInfos,
 													 const CVec3 &vColor,
 													 int nBase,
 													 float fStrength, NGfx::CTexture *pDepth, NGfx::CTexture *pAdd )
@@ -346,7 +346,7 @@ static void RenderQuad( NGfx::CRenderContext *pRC, const CVec3 &_vCenter, const 
 	CVec3 v2( v1 ^ _vNormal );
 	CVec3 vCenter( _vCenter - _vNormal * _fRadius / 1000 );
 	CObj<NGfx::CGeometry> pGeom;
-	vector<STriangle> tris(2);
+	std::vector<STriangle> tris(2);
 	const float F_QUAD_SIZE = 100000;
 	{
 		NGfx::CBufferLock<NGfx::SGeomVecFull> points( &pGeom, 4 );
@@ -479,8 +479,8 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 	rcTarget.ClearBuffers( 0 );
 
 	// render sky checks
-	const vector<CVec3> &skyDirs = ls.skyDirections;
-	vector<SDirectionalDepthInfo> depthInfos;
+	const std::vector<CVec3> &skyDirs = ls.skyDirections;
+	std::vector<SDirectionalDepthInfo> depthInfos;
 	depthInfos.resize( skyDirs.size() );
 
 	CTransformStack tsDirect;
@@ -495,7 +495,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 		RenderSkyCheck( 
 			&lmTarget, skyDirs, depthInfos, ls.vAmbientColor,//CVec3(1,1,1),//
 			k, F_SKY_SINGLE_STRENGTH_MUL / nTotalSkyDirs, pDepth, pTargetFP2 );
-		swap( pTargetFP1, pTargetFP2 );
+		std::swap( pTargetFP1, pTargetFP2 );
 	}
 
 	for ( int k = 0; k < ls.points.size(); ++k )
@@ -507,7 +507,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 		RenderCubeMapDepth( pRender, vCenter, fRadius, CVec3(0,0,0), pPointDepth );
 		rcTarget.SetTextureRT( pTargetFP1 );
 		RenderPointLightShadowed( &lmTarget, vCenter, fRadius, vColor, pPointDepth, pTargetFP2 );
-		swap( pTargetFP1, pTargetFP2 );
+		std::swap( pTargetFP1, pTargetFP2 );
 	}
 
 	for ( int k = 0; k < ls.semiPoints.size(); ++k )
@@ -523,7 +523,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 		RenderCubeMapDepth( pRender, vCenter, fRadius, s.vNormal, pPointDepth );
 		rcTarget.SetTextureRT( pTargetFP1 );
 		RenderPointLightShadowed( &lmTarget, vCenter, fRadius, s.vColor, pPointDepth, pTargetFP2 );
-		swap( pTargetFP1, pTargetFP2 );
+		std::swap( pTargetFP1, pTargetFP2 );
 	}
 
 	// copy result, gamma correction?
@@ -538,7 +538,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 }
 
 // calc color for all out of triangle samples from inside triangle samples
-static void FixBorders( CArray2D<NGfx::SPixel8888> *pRes, const vector<SLMQuad> &quads )
+static void FixBorders( CArray2D<NGfx::SPixel8888> *pRes, const std::vector<SLMQuad> &quads )
 {
 	for ( int k = 0; k < quads.size(); ++k )
 	{
@@ -568,7 +568,7 @@ static bool CalcLM( IRender *pRender, const CLightState &ls, SLMGroup *pRes )
 	int nSize = pRes->parts.size();
 	SBoundCalcer totalBound;
 	CSceneFragments targetGeom;
-	vector<SRenderGeometryInfo> geomInfos( nSize );
+	std::vector<SRenderGeometryInfo> geomInfos( nSize );
 
 	for ( int nPart = 0; nPart < nSize; ++nPart )
 	{
@@ -645,7 +645,7 @@ static void GenerateLightState( IGScene *pScene, IRender *pRender, CLightState *
 	}
 }
 
-static void FilterLightmappableParts( vector<ISomePart*> *pRes )
+static void FilterLightmappableParts( std::vector<ISomePart*> *pRes )
 {
 	int nDst = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
@@ -664,15 +664,15 @@ static void FilterLightmappableParts( vector<ISomePart*> *pRes )
 	pRes->resize( nDst );
 }
 
-static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, bool bTakeNotLoaded, vector<ISomePart*> *pRes )
+static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, bool bTakeNotLoaded, std::vector<ISomePart*> *pRes )
 {
 	CTransformStack ts;
 	ts.MakeParallel( 1000, 1000, -1000, 1000 );
-	list<SRenderPartSet> parts;
+	std::list<SRenderPartSet> parts;
 	SGroupSelect mask( 0xffff, 0 );
 	pRender->FormPartList( &ts, &parts, IRender::DT_ALL, mask );
 
-	for ( list<SRenderPartSet>::iterator i = parts.begin(); i != parts.end(); ++i )
+	for ( std::list<SRenderPartSet>::iterator i = parts.begin(); i != parts.end(); ++i )
 	{
 		const SRenderPartSet &r = *i;
 		for ( int k = 0; k < r.pParts->size(); ++k )
@@ -697,7 +697,7 @@ static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, boo
 			}
 		}
 	}
-	vector<IPart*> notLoaded;
+	std::vector<IPart*> notLoaded;
 	pRender->GetNotLoaded( &notLoaded );
 	for ( int k = 0; k < notLoaded.size(); ++k )
 	{
@@ -712,7 +712,7 @@ static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, boo
 	FilterLightmappableParts( pRes );
 }
 
-static CLightmapsHolder *CombineLightmaps( const vector<SLMGroup> &groups )
+static CLightmapsHolder *CombineLightmaps( const std::vector<SLMGroup> &groups )
 {
 	CLightmapsHolder *pRes = new CLightmapsHolder;
 	CLMAlloc lmAlloc;
@@ -776,9 +776,9 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase 
 	CLightState ls;
 	GenerateLightState( pScene, pRender, &ls, quality );
 
-	vector<SLMGroup> lmGroups;
+	std::vector<SLMGroup> lmGroups;
 
-	vector<ISomePart*> parts;
+	std::vector<ISomePart*> parts;
 	CollectParts( pRender, pUser, nUserID, false, &parts );
 	for ( int k = 0; k < parts.size(); ++k )
 		AddPart( highResLM, &lmGroups, parts[k] );
@@ -847,18 +847,18 @@ void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLig
 	}
 
 	int nTextures = pLightmaps->textures.size();
-	vector<CObj<CLightmapTexture> > textures( nTextures );
+	std::vector<CObj<CLightmapTexture> > textures( nTextures );
 	for ( int k = 0; k < nTextures; ++k )
 		textures[k] = new CLightmapTexture( pLD,  k );
 
-	vector<ISomePart*> parts;
+	std::vector<ISomePart*> parts;
 	CollectParts( pRender, pUser, 0, true, &parts );
 	for ( int k = 0; k < parts.size(); ++k )
 	{
 		ISomePart *pPart = parts[k];
 
 		int nUserID = pPart->GetFullGroupInfo().nUserID;
-		hash_map<int, CLightmapsHolder::SLightmap>::iterator i = pLightmaps->lightmaps.find( nUserID );
+		std::unordered_map<int, CLightmapsHolder::SLightmap>::iterator i = pLightmaps->lightmaps.find( nUserID );
 		if ( i == pLightmaps->lightmaps.end() )
 			continue;
 		const CLightmapsHolder::SLightmap &lm = i->second;
@@ -869,7 +869,7 @@ void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLig
 		CPtrFuncBase<CObjectInfo> *pGeom = GetRawGeometry( pPart );
 		CGrannyMeshLoader *pML=CDynamicCast<CGrannyMeshLoader>( pGeom );
 		
-		extern hash_set<string>  objects;
+		extern std::unordered_set<std::string>  objects;
 
 
 		if( GetDumpFlag() )

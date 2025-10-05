@@ -31,11 +31,11 @@ class CMOUnit : public IMOUnit
 	};
 	
 	CAbilityInfo abilityMap;
-	vector<SShootAreas> oldAreas;
+	std::vector<SShootAreas> oldAreas;
 	int nOldAreasTime;
 	bool bOpen;
 	int nLevel;
-	vector<SAmmo> ammos;
+	std::vector<SAmmo> ammos;
 	int nSupply;
 	int nMaxAmmo;
 	int nCurAmmo;
@@ -48,8 +48,8 @@ class CMOUnit : public IMOUnit
 private:
 	//
 	const NDb::SUnitBaseRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() ); }
-	void CopyAreas( const vector<SShootAreas> &newAreas );
-	bool AreasChanged( const vector<SShootAreas> &newAreas ) const;
+	void CopyAreas( const std::vector<SShootAreas> &newAreas );
+	bool AreasChanged( const std::vector<SShootAreas> &newAreas ) const;
 
 public:
 	struct IChooseAttached : public CObjectBase
@@ -66,7 +66,7 @@ protected:
 
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc ) = 0;
 	void TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc, 
-										const NDb::ESeason eSeason, const string &szLocator, const ESceneSubObjType eType, const int nNumber );
+										const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber );
 
 	virtual void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
 	virtual void ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
@@ -79,7 +79,7 @@ protected:
 	int GetWeaponAmmoTotal() const;
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
 public:
-	typedef list< SAbilityInfo > CAbilityInfoList;
+	typedef std::list< SAbilityInfo > CAbilityInfoList;
 
 	bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	virtual bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );

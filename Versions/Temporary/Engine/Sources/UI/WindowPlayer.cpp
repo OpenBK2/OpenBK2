@@ -99,7 +99,7 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 	}
 }
 
-void CWindowPlayer::SetSequence( const string &szFileName )
+void CWindowPlayer::SetSequence( const std::string &szFileName )
 {
 	CFileStream stream( NVFS::GetMainVFS(), szFileName );
 	if ( stream.IsOk() )

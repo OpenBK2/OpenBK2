@@ -11,10 +11,10 @@ struct IScriptWrapper;
 
 namespace NScenarioTracker
 {
-typedef hash_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
-typedef vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
-typedef hash_map<NDb::EReinforcementType, float, SEnumHash> CReinforcementXPs;
-typedef hash_map<NDb::EReinforcementType, int, SEnumHash> CReinforcementLevels;
+typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
+typedef std::unordered_map<NDb::EReinforcementType, float, SEnumHash> CReinforcementXPs;
+typedef std::unordered_map<NDb::EReinforcementType, int, SEnumHash> CReinforcementLevels;
 
 void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission, CReinforcementTypes *pMissionReinf, CReinforcementTypes *pChapterReinf, int nPlayer );
 
@@ -23,14 +23,14 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission, CReinforcem
 class CScenarioTracker : public IScenarioTracker
 {
 	OBJECT_NOCOPY_METHODS( CScenarioTracker );
-	typedef hash_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
-	typedef vector<EReinforcementState> CReinforcementEnableStates;
-	typedef vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
-	typedef hash_map< CDBPtr<NDb::SMapInfo>, SMissionStats, SDBPtrHash > CMissionsStats;
-	typedef hash_map<int/*NDb::EReinforcementType*/, SLeaderInfo > CLeaderList;
-	typedef vector<bool> CKnownReinforcements;
-	typedef vector< CPtr<CMapObj> > CObjectiveObjects;
-	typedef hash_map< int, CObjectiveObjects > CObjectivesObjects;
+	typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+	typedef std::vector<EReinforcementState> CReinforcementEnableStates;
+	typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
+	typedef std::unordered_map< CDBPtr<NDb::SMapInfo>, SMissionStats, SDBPtrHash > CMissionsStats;
+	typedef std::unordered_map<int/*NDb::EReinforcementType*/, SLeaderInfo > CLeaderList;
+	typedef std::vector<bool> CKnownReinforcements;
+	typedef std::vector< CPtr<CMapObj> > CObjectiveObjects;
+	typedef std::unordered_map< int, CObjectiveObjects > CObjectivesObjects;
 	
 	struct SFavoriteReinf
 	{
@@ -63,8 +63,8 @@ class CScenarioTracker : public IScenarioTracker
 	bool bChapterFinished;
 
 
-	vector<EMissionObjectiveState> objectives;
-	vector<int> known_objectives;
+	std::vector<EMissionObjectiveState> objectives;
+	std::vector<int> known_objectives;
 
 	CWonMissions wonMissions;
 
@@ -87,7 +87,7 @@ class CScenarioTracker : public IScenarioTracker
 
 	CMissionsStats missionsStats;
 
-	vector< vector<int> > statistic;
+	std::vector< std::vector<int> > statistic;
 	ZSKIP //int nPlayerXPAdds;
 
 		ZSKIP //CArray2D<int> priceKills;
@@ -108,7 +108,7 @@ class CScenarioTracker : public IScenarioTracker
 	ZSKIP //vector<int> leaderLastNames;
 	ZSKIP //vector<int> leaderPictures;
 	ZSKIP //CReinforcementEnableStates chapterReinfPotential; // потенциально доступные подкрепления в данной главе
-	vector<SChapterReinf> chapterCurrentReinfs;
+	std::vector<SChapterReinf> chapterCurrentReinfs;
 	SPlayerColor playerColorUser;
 	SPlayerColor playerColorFriend;
 	SPlayerColor playerColorEnemy;
@@ -120,8 +120,8 @@ class CScenarioTracker : public IScenarioTracker
 	int nMedalTacticsGiven;
 	int nMedalEconomyGiven;
 	int nMedalMunchkinGiven;
-	vector<int> freeLeaders;
-	vector<SFavoriteReinf> favoriteReinfs;
+	std::vector<int> freeLeaders;
+	std::vector<SFavoriteReinf> favoriteReinfs;
 	float fLastVisiblePlayerStatsExpCareer;
 	float fLastVisiblePlayerStatsExpNextRank;
 	bool bIsCustomCampaign;
@@ -156,8 +156,8 @@ public:
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
 	void SetObjectiveState( const int nID, const EMissionObjectiveState eState );
-	bool GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const;
-	void SetObjectiveObjects( int nID, const vector< CMapObj* > &objects );
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const;
+	void SetObjectiveObjects( int nID, const std::vector< CMapObj* > &objects );
 	bool IsDynamicObjective( int nID ) const;
 
 	// reinforcements
@@ -206,12 +206,12 @@ public:
 	const NDb::SCampaign * GetCurrentCampaign() const { return pCampaign; }
 	const NDb::SDifficultyLevel* GetDifficultyLevelDB() const;
 	bool IsTutorialCampaign() const { return bIsTutorial; }
-	void GetAllMissionStats( vector<const SMissionStats*> *pMissions ) const;
+	void GetAllMissionStats( std::vector<const SMissionStats*> *pMissions ) const;
 	NDb::EReinforcementType GetFavoriteReinf() const;
 	void MarkFavoriteReinf( NDb::EReinforcementType eType );
 	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank );
 	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const;
-	wstring GetReinfName( NDb::EReinforcementType eType ) const;
+	std::wstring GetReinfName( NDb::EReinforcementType eType ) const;
 
 	// chapter
 	bool IsChapterActive() const { return !bChapterFinished && pChapter != 0; }
@@ -223,7 +223,7 @@ public:
 
 	// check if reinforcement is potentially active
 	virtual EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType );
-	void GetChapterCurrentReinforcements( vector<SChapterReinf> *pReinf, int nPlayer ) const;
+	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const;
 
 	virtual bool RegisterUnitKill( const SKillInfo &info );
 	virtual int GetUnitKills( const int nPlayer ) const;
@@ -244,7 +244,7 @@ public:
 
 	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) {}
 	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ) { return 2; }
-	virtual const pair<int,int> GetKeyBuildingSummary() { return pair<int,int>( 0, 0 ); }
+	virtual const std::pair<int,int> GetKeyBuildingSummary() { return std::pair<int,int>( 0, 0 ); }
 	virtual const float GetRecycleSpeedCoeff( const int nSide ) { return 1.0f; }
 
 	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const;
@@ -271,14 +271,14 @@ public:
 	void UndoAssignLeader( const SUndoLeaderInfo &undo );
 	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType );
 	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType );
-	const wstring& GetLeaderRankName( int nRank ) const;
+	const std::wstring& GetLeaderRankName( int nRank ) const;
 	int GetAvailablePromotions() const;
 	void SetAvailablePromotions( int nCount );
 
 	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf );
 
 	// Debug
-	bool DebugAssignLeader( NDb::EReinforcementType eReinf, const wstring &wszName )
+	bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName )
 	{
 		SGenerateLeaderInfo info;
 		info.wszFullName = wszName;
@@ -316,15 +316,15 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 
 	ZDATA
 		CDBPtr<NDb::SMapInfo> pMission;
-	vector<SPlayerInfo> players;
+	std::vector<SPlayerInfo> players;
 
 	ZSKIP //bool bMissionWon; // special serialization
 		ZONSERIALIZE
 
-		hash_map<int, int> flags;
+		std::unordered_map<int, int> flags;
 	bool bNoKeyBuildings;			// No key buildings to fight for, fight to death, limited number of calls
 
-	vector< vector<int> > statistic;
+	std::vector< std::vector<int> > statistic;
 	int nPlayerXPAdds;
 
 	CArray2D<float> kills;
@@ -332,7 +332,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 
 	CDBPtr<NDb::SAIGameConsts> pAIConsts;
 	int nTechLevel;
-	hash_map<int, NTimer::STime> flagTimes;
+	std::unordered_map<int, NTimer::STime> flagTimes;
 	int nNeutralPlayer;
 	SMultiplayerInfo multiplayerInfo;
 	ZSKIP //int nLocalPlayer; in OnSerialize()
@@ -373,7 +373,7 @@ public:
 	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls );
 	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls );
 	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType );
-	void GetReinforcementCallsInfo( int nPlayer, vector<int> *pCallsByType );
+	void GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType );
 
 	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const;
 	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP );
@@ -394,8 +394,8 @@ public:
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
 	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) {}
-	bool GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const { return false; }
-	void SetObjectiveObjects( int nID, const vector< CMapObj* > &objects ) {}
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const { return false; }
+	void SetObjectiveObjects( int nID, const std::vector< CMapObj* > &objects ) {}
 	bool IsDynamicObjective( int nID ) const { return false; }
 
 	// mission
@@ -420,12 +420,12 @@ public:
 	const NDb::SCampaign * GetCurrentCampaign() const { return 0; }
 	const NDb::SDifficultyLevel* GetDifficultyLevelDB() const { return 0; }
 	bool IsTutorialCampaign() const { return false; }
-	void GetAllMissionStats( vector<const SMissionStats*> *pMissions ) const {}
+	void GetAllMissionStats( std::vector<const SMissionStats*> *pMissions ) const {}
 	NDb::EReinforcementType GetFavoriteReinf() const { return NDb::_RT_NONE; }
 	void MarkFavoriteReinf( NDb::EReinforcementType eType ) {}
 	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) {}
 	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const {}
-	wstring GetReinfName( NDb::EReinforcementType eType ) const { return wstring(); }
+	std::wstring GetReinfName( NDb::EReinforcementType eType ) const { return std::wstring(); }
 
 	// chapter
 	bool IsChapterActive() const { NI_ASSERT( false, "wrong call" ); return false; }
@@ -436,7 +436,7 @@ public:
 	int GetMissionToEnableCount() const { return 0; }
 
 	virtual EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType ) { return ERS_DISABLED; }
-	void GetChapterCurrentReinforcements( vector<SChapterReinf> *pReinf, int nPlayer ) const { pReinf->clear(); }
+	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const { pReinf->clear(); }
 	int GetReinforcementCallsLeftInChapter() const { return 0; }
 	int GetReinforcementCallsOld() const { return 0; }
 	virtual bool RegisterUnitKill( const SKillInfo &info );
@@ -459,7 +459,7 @@ public:
 
 	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer );
 	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID );		// return side (0..2)
-	virtual const pair<int,int> GetKeyBuildingSummary();
+	virtual const std::pair<int,int> GetKeyBuildingSummary();
 	virtual const float GetRecycleSpeedCoeff( const int nSide );
 	virtual const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer );
 
@@ -489,7 +489,7 @@ public:
 	void UndoAssignLeader( const SUndoLeaderInfo &undo ) {}
 	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType ) { return GetReinforcementXPLevel( nPlayer, eType ); }
 	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType ) { return 0; }
-	const wstring& GetLeaderRankName( int nRank ) const { static wstring wszEmpty; return wszEmpty; }
+	const std::wstring& GetLeaderRankName( int nRank ) const { static std::wstring wszEmpty; return wszEmpty; }
 	int GetAvailablePromotions() const { return 0; }
 	void SetAvailablePromotions( int nCount ) {}
 

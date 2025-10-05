@@ -11,7 +11,7 @@ inline void FlipY( CArray2D<BYTE> &image )
 	const int nSizeX = image.GetSizeX();
 	const int nSizeY = image.GetSizeY();
 	BYTE *data = &( image[0][0] );
-	vector<BYTE> dataline( nSizeX );
+	std::vector<BYTE> dataline( nSizeX );
 	for ( int i = 0; i < nSizeY/2; ++i )
 	{
 		memcpy( &(dataline[0]), &(data[i*nSizeX]), nSizeX * sizeof(BYTE) );

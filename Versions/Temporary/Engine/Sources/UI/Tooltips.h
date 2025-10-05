@@ -27,7 +27,7 @@ public:
 	void Segment( const int timeDiff, class CWindowScreen *pScreen );
 	void HideTooltip();
 
-	IWindow *CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen );
+	IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen );
 };
 
 

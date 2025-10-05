@@ -44,7 +44,7 @@ bool CInterfaceMPLadderStatistics::Init()
 	return true;
 }
 
-bool CInterfaceMPLadderStatistics::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPLadderStatistics::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBackReaction();
@@ -61,7 +61,7 @@ bool CInterfaceMPLadderStatistics::Execute( const string &szSender, const string
 	return false;
 }
 
-int CInterfaceMPLadderStatistics::Check( const string &szCheckName ) const
+int CInterfaceMPLadderStatistics::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -102,7 +102,7 @@ bool CInterfaceMPLadderStatistics::OnBackReaction()
 	return true;
 }
 
-void CInterfaceMPLadderStatistics::RequestInfo( const string &szNick )
+void CInterfaceMPLadderStatistics::RequestInfo( const std::string &szNick )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILadderInfoRequestMessage( szNick, false ) );
 	ITextView *pUserName = GetChildChecked<ITextView>( pMain, "UserName", true );
@@ -226,7 +226,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	Add1Line( L"" );
 
 	// Favourite things
-	wstring wszReinfName = L"-";
+	std::wstring wszReinfName = L"-";
 	bool bNameFound = false;
 	for ( int nSide = 0; nSide < pMPConsts->sides.size() && !bNameFound; ++nSide )
 	{
@@ -251,7 +251,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	Add2Line( GetScreen()->GetTextEntry( "T_HDR_FAVOURITE_REINF" ), wszReinfName );
 	Add1Line( L"" );
 	
-	wstring wszName = L"-";
+	std::wstring wszName = L"-";
 	if ( info.nStrongestAgainst >= 0 && info.nStrongestAgainst < pMPConsts->sides.size() )
 		wszName = GET_TEXT_PRE( pMPConsts->sides[info.nStrongestAgainst]., Name );
 	Add2Line( GetScreen()->GetTextEntry( "T_HDR_MOST_EFFECTIVE" ), wszName );
@@ -265,7 +265,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	pWaiting->ShowWindow( false );
 }
 
-void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &info, const wstring &wszName, int nUseSolo, int nUseTeam )
+void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &info, const std::wstring &wszName, int nUseSolo, int nUseTeam )
 {
 	int nWins = 0;
 	int nLosses = 0;
@@ -288,7 +288,7 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 	Add4Line( L"", L"", L"", L"" );
 }
 
-void CInterfaceMPLadderStatistics::Add4Line( const wstring &wszItem1, const wstring &wszItem2, const wstring &wszItem3, const wstring &wszItem4 )
+void CInterfaceMPLadderStatistics::Add4Line( const std::wstring &wszItem1, const std::wstring &wszItem2, const std::wstring &wszItem3, const std::wstring &wszItem4 )
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv4Template );
 	if ( !pItem )
@@ -311,7 +311,7 @@ void CInterfaceMPLadderStatistics::Add4Line( const wstring &wszItem1, const wstr
 	pAdvList->PushBack( pItem, false );
 }
 
-void CInterfaceMPLadderStatistics::Add2Line( const wstring &wszItem1, const wstring &wszItem2 )
+void CInterfaceMPLadderStatistics::Add2Line( const std::wstring &wszItem1, const std::wstring &wszItem2 )
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv2Template );
 	if ( !pItem )
@@ -328,7 +328,7 @@ void CInterfaceMPLadderStatistics::Add2Line( const wstring &wszItem1, const wstr
 	pAdvList->PushBack( pItem, false );
 }
 
-void CInterfaceMPLadderStatistics::Add1Line( const wstring &wszItem )
+void CInterfaceMPLadderStatistics::Add1Line( const std::wstring &wszItem )
 {
 	ITextView *pItem = dynamic_cast<ITextView*>( AddWindowCopy( pAdvList, pAdv1Template ) );
 	if ( !pItem )
@@ -338,7 +338,7 @@ void CInterfaceMPLadderStatistics::Add1Line( const wstring &wszItem )
 	pAdvList->PushBack( pItem, false );
 }
 
-bool CInterfaceMPLadderStatistics::OnShowMedal( const string &szSender )
+bool CInterfaceMPLadderStatistics::OnShowMedal( const std::string &szSender )
 {
 	const NDb::SMedal *pMedal = 0;
 	for ( int i = 0; i < medals.size(); ++i )

@@ -9,7 +9,7 @@ namespace NCheckSums
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SCheckSumBufferStorage
 	{
-		vector<BYTE> buf;
+		std::vector<BYTE> buf;
 		int nCnt;
 		//
 		SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {  }

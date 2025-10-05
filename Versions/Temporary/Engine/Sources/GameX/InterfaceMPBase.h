@@ -9,7 +9,7 @@ class CInterfaceMPScreenBase : public CInterfaceScreenBase, public CMPUIMessageT
 {
 private:
 protected:
-	CInterfaceMPScreenBase( const string &szInterfaceType, const string &szBindSection );
+	CInterfaceMPScreenBase( const std::string &szInterfaceType, const std::string &szBindSection );
 
 	bool StepLocal( bool bAppActive );
 public:

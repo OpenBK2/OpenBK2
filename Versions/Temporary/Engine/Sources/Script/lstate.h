@@ -37,7 +37,7 @@ class CVectorList
 			return 0;
 		}
 	};
-	vector<SHolder> data;
+	std::vector<SHolder> data;
 	int nFirstFree;
 public:
 	CVectorList() : nFirstFree(-1) {}
@@ -128,11 +128,11 @@ public:
 	ZDATA
 	StkId top;  // first free slot in the stack 
 	StkId Cbase;  // base for current C function
-	vector<TObject> stack;  // stack base 
-	vector<SLuaVMState> executedCalls;
+	std::vector<TObject> stack;  // stack base
+	std::vector<SLuaVMState> executedCalls;
 	int thisThreadIsSleeping;
 	bool bErrorInThread;
-	string name;
+	std::string name;
 	int errorHookRef;
 //	CPtr<CThreadGroup> pGroup;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&top); f.Add(3,&Cbase); f.Add(4,&stack); f.Add(5,&executedCalls); f.Add(6,&thisThreadIsSleeping); f.Add(7,&bErrorInThread); f.Add(8,&name); f.Add(9,&errorHookRef); return 0; }
@@ -183,8 +183,8 @@ public:
 //};
 
 
-typedef list<CObj<CLuaThread> > CThreads;
-typedef hash_map<TString, bool, TStringHash> CLuaStrings;
+typedef std::list<CObj<CLuaThread> > CThreads;
+typedef std::unordered_map<TString, bool, TStringHash> CLuaStrings;
 
 
 struct lua_State 
@@ -193,17 +193,17 @@ struct lua_State
 	CPtr<CObjectBase> pContext;
 	// lua_State instance name, used as prefix to registered C-functions
 	// throughout serialization
-	string szName;
+	std::string szName;
 
 	// thread-specific state
 	CPtr<CLuaThread> pCT; // current thread
-	vector<char> Mbuffer;  // buffer
+	std::vector<char> Mbuffer;  // buffer
 
 	// global state 
 	CThreads threads;
 	int nGT;  // index of table for globals 
-	vector<TM> TMtable;  // table for tag methods
-	vector<Ref> refArray;  // locked objects
+	std::vector<TM> TMtable;  // table for tag methods
+	std::vector<Ref> refArray;  // locked objects
 	int refFree;  // list of free positions in refArray
 	unsigned long nGCticks;  // number of `bytes' currently allocated
 	int nGCAvoid;
@@ -242,7 +242,7 @@ CLuaThread* lua_newThread( lua_State *L, const char *name );
 void lua_setThread( lua_State *L, CLuaThread *pThread );
 
 
-const string MakeUniqueName( lua_State *L, const char *name );
+const std::string MakeUniqueName( lua_State *L, const char *name );
 
 
 

@@ -22,13 +22,13 @@ void InitRoller( IPlayer *pRoller )
 	}
 }
 
-void PlayRollerAnim( vector<IPlayer*> &rollers, int _nStart, int _nEnd, float fRollerTime )
+void PlayRollerAnim( std::vector<IPlayer*> &rollers, int _nStart, int _nEnd, float fRollerTime )
 {
-	vector<int> digStart;
-	vector<int> digEnd;
-	vector<int> frameStart;
-	vector<int> frameEnd;
-	vector<int> frameSkip;
+	std::vector<int> digStart;
+	std::vector<int> digEnd;
+	std::vector<int> frameStart;
+	std::vector<int> frameEnd;
+	std::vector<int> frameSkip;
 	
 	digStart.resize( rollers.size() );
 	digEnd.resize( rollers.size() );
@@ -50,7 +50,7 @@ void PlayRollerAnim( vector<IPlayer*> &rollers, int _nStart, int _nEnd, float fR
 
 		if ( !bForward )
 		{
-			swap( digStart[i], digEnd[i] );
+			std::swap( digStart[i], digEnd[i] );
 		}
 
 		if ( digStart[i] < digEnd[i] )
@@ -73,7 +73,7 @@ void PlayRollerAnim( vector<IPlayer*> &rollers, int _nStart, int _nEnd, float fR
 		{
 			frameStart[i] = 40 - frameStart[i];
 			frameEnd[i] = 40 - frameEnd[i];
-			swap( frameStart[i], frameEnd[i] );
+			std::swap( frameStart[i], frameEnd[i] );
 		}
 
 		frameStart[i] *= ROLLER_FRAMES_PER_DIGIT;

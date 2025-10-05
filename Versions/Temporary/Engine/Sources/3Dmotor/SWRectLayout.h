@@ -38,7 +38,7 @@ public:
 	};
 	//
 	CTPoint<float> scale;
-	vector<SRect> rects;
+	std::vector<SRect> rects;
 	//
 	CSWRectLayout(): scale( 1, 1 ) {}
 	void AddRect( short nScreenX, short nScreenY, const STextureCoord &sTex, const NGfx::SPixel8888 &color = NGfx::SPixel8888( 0xFF, 0xFF, 0xFF, 0xFF ) )

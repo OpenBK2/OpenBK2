@@ -50,7 +50,7 @@ bool CInterfaceProfileManager::Init()
 	return true;
 }
 
-bool CInterfaceProfileManager::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceProfileManager::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "reaction_on_back" )
 	{
@@ -83,14 +83,14 @@ bool CInterfaceProfileManager::Execute( const string &szSender, const string &sz
 	return false;
 }
 
-int CInterfaceProfileManager::Check( const string &szCheckName ) const
+int CInterfaceProfileManager::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
 
 void CInterfaceProfileManager::FillScreenList()
 {
-	vector<wstring> tmpList;
+	std::vector<std::wstring> tmpList;
 
 	if ( pProfileList ) 
 	{
@@ -104,7 +104,7 @@ void CInterfaceProfileManager::FillScreenList()
 	profiles.clear();
 
 	NProfile::GetAllProfiles( &tmpList );
-	wstring wszSelectedItem = NProfile::GetCurrentProfileName();
+	std::wstring wszSelectedItem = NProfile::GetCurrentProfileName();
 	nSelectedItem = -1;
 	for ( int i = 0; i < tmpList.size(); ++i )
 	{
@@ -146,26 +146,26 @@ void CInterfaceProfileManager::FillScreenList()
 	}
 }
 
-void CInterfaceProfileManager::MsgBack( const string &szSender )
+void CInterfaceProfileManager::MsgBack( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 }
 
-void CInterfaceProfileManager::MsgSelect( const string &szSender )
+void CInterfaceProfileManager::MsgSelect( const std::string &szSender )
 {
 	if ( nSelectedItem == -1 )		// Not selected, do nothing
 		return;
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 
-	wstring wszCurrentProfile = NProfile::GetCurrentProfileName();
+	std::wstring wszCurrentProfile = NProfile::GetCurrentProfileName();
 	if ( profiles[nSelectedItem].wszName != wszCurrentProfile )
 		NProfile::ChangeProfile( profiles[nSelectedItem].wszName );
 }
 
-void CInterfaceProfileManager::MsgCreate( const string &szSender )
+void CInterfaceProfileManager::MsgCreate( const std::string &szSender )
 {
-	wstring wszName;
+	std::wstring wszName;
 	if ( pNameEditLine )
 		wszName = pNameEditLine->GetText();
 		
@@ -190,9 +190,9 @@ void CInterfaceProfileManager::MsgCreate( const string &szSender )
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 }
 
-void CInterfaceProfileManager::MsgDelete( const string &szSender )
+void CInterfaceProfileManager::MsgDelete( const std::string &szSender )
 {
-	wstring wszName;
+	std::wstring wszName;
 
 	if ( nSelectedItem < 0 || nSelectedItem >= profiles.size() ) 
 		return;			//Wrong selection
@@ -214,7 +214,7 @@ void CInterfaceProfileManager::MsgDelete( const string &szSender )
 		InterfaceState()->GetTextEntry( "T_PROFILE_MANAGER_DELETE_QUESTION" ) ).c_str() );
 }
 
-void CInterfaceProfileManager::MsgSelectionChange( const string &szSender )
+void CInterfaceProfileManager::MsgSelectionChange( const std::string &szSender )
 {
 	if ( bNoUpdateSelection )
 		return;
@@ -261,7 +261,7 @@ bool CInterfaceProfileManager::OnEditChanged()
 
 int CInterfaceProfileManager::FindProfileIndex() const
 {
-	wstring wszEditName;
+	std::wstring wszEditName;
 	if ( pNameEditLine )
 		wszEditName = pNameEditLine->GetText();
 
@@ -277,12 +277,12 @@ int CInterfaceProfileManager::FindProfileIndex() const
 
 void CInterfaceProfileManager::UpdateButtons()
 {
-	wstring wszEditName;
+	std::wstring wszEditName;
 	if ( pNameEditLine )
 		wszEditName = pNameEditLine->GetText();
 
 	int nIndex = FindProfileIndex();
-	wstring wszCurrentProfile = NProfile::GetCurrentProfileName();
+	std::wstring wszCurrentProfile = NProfile::GetCurrentProfileName();
 	
 	// Can create only a profile with non-empty, non-existent name
 	bool bCanCreate = !wszEditName.empty() && nIndex == -1;
@@ -298,10 +298,10 @@ void CInterfaceProfileManager::UpdateButtons()
 		pDeleteBtn->Enable( bCanDelete );
 }
 
-bool CInterfaceProfileManager::IsSameProfileName( const wstring &wszName1, const wstring &wszName2 ) const
+bool CInterfaceProfileManager::IsSameProfileName( const std::wstring &wszName1, const std::wstring &wszName2 ) const
 {
-	string szName1 = NStr::ToMBCS( wszName1 );
-	string szName2 = NStr::ToMBCS( wszName2 );
+	std::string szName1 = NStr::ToMBCS( wszName1 );
+	std::string szName2 = NStr::ToMBCS( wszName2 );
 	NStr::ToLower( &szName1 );
 	NStr::ToLower( &szName2 );
 	return szName1 == szName2;
@@ -335,7 +335,7 @@ void CInterfaceProfileManager::MsgOk( const SGameMessage &msg )
 	{
 		case EST_DELETE_QUESTION:
 		{
-			wstring wszName = profiles[ nSelectedItem ].wszName;
+			std::wstring wszName = profiles[ nSelectedItem ].wszName;
 			if ( NProfile::RemoveProfile( wszName ) ) 
 			{
 				FillScreenList();

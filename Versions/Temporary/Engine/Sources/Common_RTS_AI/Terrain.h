@@ -106,7 +106,7 @@ struct SUnitTileInfo
 	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater ) :  profile( _profile ), bWater( _bWater ) {}
 };
 
-typedef hash_map<int, SUnitTileInfo> CUnitsRects;
+typedef std::unordered_map<int, SUnitTileInfo> CUnitsRects;
 
 class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 {
@@ -132,40 +132,40 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass )
 			: tile( _tile ), aiClass( _aiClass ) {}
 	};
-	typedef list<STmpLockInfo2> CTmpLockInfoBuf2;
-	typedef list<STmpLockInfo> CTmpLockInfoBuf;
+	typedef std::list<STmpLockInfo2> CTmpLockInfoBuf2;
+	typedef std::list<STmpLockInfo> CTmpLockInfoBuf;
 
-	vector< CArray2D<BYTE> > unitsBuf;  // юниты, для воды и для суши
+	std::vector< CArray2D<BYTE> > unitsBuf;  // юниты, для воды и для суши
 	CUnitsRects unitsRects;
 	CArray2D<BYTE> passTypes;
-	vector<float> passabilities;
+	std::vector<float> passabilities;
 	// 0 - статич. объекты, 0xff - статич. и динамич. объекты
 	ELockMode eMode;
 	CArray2D<EAIClasses> buf;
 	CArray2D4Bit terrainTypes;
-	hash_map< int, pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
+	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
 	// по типу terrain - его ai проходимость
-	vector<DWORD> passClasses;
+	std::vector<DWORD> passClasses;
 	// по номеру тайла terrain - его тип
-	vector<BYTE> terrSubTypes;
+	std::vector<BYTE> terrSubTypes;
 	CArray2D1Bit digImpossible;		// невозможность строительства окопов на тайле
 	CArray2D1Bit bridgeTiles;
 	CArray2D<BYTE> soil;
-	vector<BYTE> tileDigImpossible;
-	vector<BYTE> soilParams;
+	std::vector<BYTE> tileDigImpossible;
+	std::vector<BYTE> soilParams;
 	CArray2D<CArray2D4Bit> maxes;
 	bool bInitMode;
-	hash_map< int, CTmpLockInfoBuf2 > tmpLockUnitsMap;
+	std::unordered_map< int, CTmpLockInfoBuf2 > tmpLockUnitsMap;
 	int nTmpLockUnitID;
 
 	CPtr<CAIMap> pAIMap;
-	vector<int> classIndices;
+	std::vector<int> classIndices;
 
 	CArray2D1Bit maskForSmooth;
 	CArray2D<CArray2D4Bit> maxesSmooth;
 	//
 #ifndef _FINALRELEASE
-	vector<STerrainLockInfo> debugLockInfo;
+	std::vector<STerrainLockInfo> debugLockInfo;
 	int nDebugLockInfoCount;
 	int nDebugLockInfoPos;
 #endif
@@ -180,7 +180,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	bool IsLockedByUnits( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked4Class( const int x, const int y, const EAIClasses aiClass ) const;
 	//
-	void AddWaterTiles( const list<SVector> &tiles );
+	void AddWaterTiles( const std::list<SVector> &tiles );
 	//
 	void SetMode( const ELockMode _eMode ) { eMode = _eMode; }
 
@@ -193,8 +193,8 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	void LockUnitProfile( const SUnitProfile &profile, const int id, SVector *pDownTile, SVector *pUpTile, const bool bWater );
 	bool UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUpTile, bool *bWater );
 
-	void LockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile );
-	void UnlockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile );
+	void LockTiles( const std::list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile );
+	void UnlockTiles( const std::list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile );
 
 	void UpdateMaxesForAddedTiles( int downX, int upX, int downY, int upY, const EAIClasses aiClasses );
 	void UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int upY, const EAIClasses aiClasses );
@@ -225,8 +225,8 @@ public:
 	void SetTerraTypes( const int nIndex, const float fPass, const DWORD passClass, const BYTE soilType, const BYTE digImpossible );
 	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
 	
-	void AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
-	void AddMarineTiles( const list<SVector> coastTiles, const BYTE coastSoilType, const list<SVector> waterTiles, const BYTE waterSoilType );
+	void AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
+	void AddMarineTiles( const std::list<SVector> coastTiles, const BYTE coastSoilType, const std::list<SVector> waterTiles, const BYTE waterSoilType );
 
 	// залокано конкретно для этого класса статическим объектом
 	bool IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const;
@@ -237,9 +237,9 @@ public:
 
 	// Than tiles.size() more, than better, don't call very often with small tiles.size()
 	// The best way of using - rare calls with big tiles.size()
-	void AddStaticObjectTiles( const list<SObjTileInfo> &tiles );
-	void RemoveStaticObjectTiles( const list<SObjTileInfo> &tiles );
-	void RemoveStaticObjectTilesForBridge( const list<SObjTileInfo> &tiles );
+	void AddStaticObjectTiles( const std::list<SObjTileInfo> &tiles );
+	void RemoveStaticObjectTiles( const std::list<SObjTileInfo> &tiles );
+	void RemoveStaticObjectTilesForBridge( const std::list<SObjTileInfo> &tiles );
 
 	void AddUnitTiles( const int id, const SRect &rect, const bool bWater );
 	void AddUnitTiles( const int id, const SUnitProfile &profile, const bool bWater );
@@ -257,7 +257,7 @@ public:
 	void RemoveTemporaryUnlocking( const int id );
 
 	int TemporaryLockUnitProfile( const SUnitProfile &profile, const EAIClasses aiClass );
-	int TemporaryLockTiles( list<SObjTileInfo> &tiles );
+	int TemporaryLockTiles( std::list<SObjTileInfo> &tiles );
 	void RemoveTemporaryLock( const int nLockID );
 
 	// terrain passability
@@ -273,7 +273,7 @@ public:
 	const int GetTerrainPassTypeByTileNum( const int nTile ) { return terrSubTypes[nTile]; }
 
 	const bool CanDigEntrenchment( const int x, const int y ) const;
-	const void AddUndigableTiles( const list<SVector> &tiles );
+	const void AddUndigableTiles( const std::list<SVector> &tiles );
 
 	// is the tile on a bridge?
 	const bool IsBridge( const SVector &tile ) const;
@@ -306,19 +306,19 @@ public:
 	}
 
 	// debug helpers
-	void GetLockedTiles( vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo );
+	void GetLockedTiles( std::vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo );
 	int ShowUnitLock( const int nUnitID, const int nMarkerID ) const;
 
 	friend struct STerrainModeSetter;
 
 	//for debug purpose only
-	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName );
-	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &markTiles );
-	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &linkTiles1, const vector<SVector> &linkTiles2, const bool bLink );
-	void DumpStaticLock( const EAIClasses aiClass, const string &szFileName );
-	void DumpPassability( const string &szFileName );
-	void DumpBridges( const string &szFileName );
-	void DumpUnitsBuf( const string &szFileName );
+	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName );
+	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &markTiles );
+	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &linkTiles1, const std::vector<SVector> &linkTiles2, const bool bLink );
+	void DumpStaticLock( const EAIClasses aiClass, const std::string &szFileName );
+	void DumpPassability( const std::string &szFileName );
+	void DumpBridges( const std::string &szFileName );
+	void DumpUnitsBuf( const std::string &szFileName );
 	void DumpLockInfo() const;
 
 	//сгладить lock для всех maxes'ов

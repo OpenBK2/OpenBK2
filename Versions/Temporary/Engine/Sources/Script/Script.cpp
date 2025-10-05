@@ -60,7 +60,7 @@ int Script::RegisterNewTag( const SRegFunction *pList )
 	for(; pCur->func && pCur->name; ++pCur )
 	{
 		PushCFunction( pCur->func );
-		string str( pCur->name );
+		std::string str( pCur->name );
 		str += nTag;
 		lua_RegisterFunc( pCur->func, MakeUniqueName(m_state, str.c_str()) );
 		SetTagMethod( nTag, pCur->name );
@@ -88,17 +88,17 @@ void Script::RegisterSaveLoad( const SRegFunction *pList )
 }
 
 
-static void luaErrorNEA( Script *pScript, const string &szFuncName )
+static void luaErrorNEA( Script *pScript, const std::string &szFuncName )
 {
-	string str = "Not enough arguments when calling function ";
+	std::string str = "Not enough arguments when calling function ";
 	str += szFuncName;
 	str += ".\n";
 	pScript->Error( str.c_str() );
 }
 
-static void luaErrorWToA( Script *pScript, const string &szFuncName, int nArg )
+static void luaErrorWToA( Script *pScript, const std::string &szFuncName, int nArg )
 {
-	string str = "Wrong type of argument ";
+	std::string str = "Wrong type of argument ";
 	str += char( '0' + nArg );
 	str += ", when calling function ";
 	str += szFuncName;
@@ -106,16 +106,16 @@ static void luaErrorWToA( Script *pScript, const string &szFuncName, int nArg )
 	pScript->Error( str.c_str() );
 }
 
-static void luaWarningNVA( Script *pScript, const string &szFuncName, int nArg )
+static void luaWarningNVA( Script *pScript, const std::string &szFuncName, int nArg )
 {
-	string str = "Script warning: Argument ";
+	std::string str = "Script warning: Argument ";
 	str += char( '0' + nArg );
 	str += " is no more valid, when calling function ";
 	str += szFuncName;
 	csSystem << str << endl;
 }
 
-bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<SLuaParams> *pParams, bool bLog )
+bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std::vector<SLuaParams> *pParams, bool bLog )
 {
 	pParams->clear();
 	const char *pCurChar = szArgList;
@@ -127,7 +127,7 @@ bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<S
 	while ( !bDone )
 	{
 		char cTypeID = *pCurChar;
-		string szDefaultValue = "";
+		std::string szDefaultValue = "";
 		bool isOK = true;
 		bool bHasDefaultValue = false;
 		//
@@ -157,7 +157,7 @@ bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<S
 						param.f = o.GetNumber();
 						param.n = param.f;
 						if ( bLog )
-							param.s = string( o.GetString() );
+							param.s = std::string( o.GetString() );
 					}
 					break;
 				case 's':
@@ -362,18 +362,18 @@ void Script::ConfigSetString(const char* section, const char* entry, const char*
 	sectionTable.SetString(entry, value);
 }
 
-static string IndentString( unsigned int indentLevel )
+static std::string IndentString( unsigned int indentLevel )
 {
-	string str;
+	std::string str;
 	for ( int i = 0; i < indentLevel; ++i )
 		str += ' ';
 	return str;
 }
 
-string Script::GetObjectAsText( const char* name, Script::Object value, bool bDecorateOutput, unsigned int indentLevel )
+std::string Script::GetObjectAsText( const char* name, Script::Object value, bool bDecorateOutput, unsigned int indentLevel )
 {
 	Script& script = *this;
-	string strRet;
+	std::string strRet;
 
 	// Indent the line the number of spaces for the current indentation level.
 	const unsigned int INDENT_SIZE = 2;
@@ -547,21 +547,21 @@ string Script::GetObjectAsText( const char* name, Script::Object value, bool bDe
 	return strRet;
 }
 
-string Script::GetObjectAsText( const char* name, bool bDecorateOutput )
+std::string Script::GetObjectAsText( const char* name, bool bDecorateOutput )
 {
-	string strRet;
+	std::string strRet;
 	AutoBlock block(*this);
 	GetGlobal(name);
 	Object value = GetObject(GetTop());
 	if ( !value.IsNil() )
 		return GetObjectAsText( name, value, bDecorateOutput, 0 );
 	else
-		return string("There is no global entity with name \"") + name + "\"";
+		return std::string("There is no global entity with name \"") + name + "\"";
 }
 
-string Script::GetStateAsText()
+std::string Script::GetStateAsText()
 {
-	string str;
+	std::string str;
 	// For safety, just in case we leave something behind on the script stack.
 	AutoBlock block(*this);
 

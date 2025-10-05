@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::ESoundType eValue )
+std::string EnumToString( NDb::ESoundType eValue )
 {
 	switch ( eValue )
 	{
@@ -25,7 +25,7 @@ string EnumToString( NDb::ESoundType eValue )
 	}
 }
 
-NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const string &szValue )
+NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const std::string &szValue )
 {
 	if ( szValue == "NORMAL" )
 		return NDb::NORMAL;
@@ -37,7 +37,7 @@ NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const string &szValue )
 }
 
 
-void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "PathName", (BYTE*)&pPathName - pThis, sizeof(pPathName), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "MinDist", (BYTE*)&fMinDist - pThis, sizeof(fMinDist), NTypeDef::TYPE_TYPE_FLOAT );

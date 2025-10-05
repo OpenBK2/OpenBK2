@@ -32,8 +32,8 @@ class CSyncSrc: public CObjectBase
 		explicit SObject( T *_pObject ): pObject(_pObject) {}
 	};
 	ZDATA
-	vector<int> freeIDs;
-	vector<SObject> objects;
+	std::vector<int> freeIDs;
+	std::vector<SObject> objects;
 	int nVersion;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&freeIDs); f.Add(3,&objects); f.Add(4,&nVersion); return 0; }
@@ -130,11 +130,11 @@ public:
 
 class IVisitorBase
 {
-	vector<CObj<CObjectBase> > *pStuff;
+	std::vector<CObj<CObjectBase> > *pStuff;
 	CObjectBase *pCurrentObject;
 
 	void RegisterBase( CObjectBase *p ) { ASSERT( pStuff ); pStuff->push_back( p ); }
-	void StartNewObject( vector<CObj<CObjectBase> > *_pStuff, CObjectBase *_pCurrentObject )
+	void StartNewObject( std::vector<CObj<CObjectBase> > *_pStuff, CObjectBase *_pCurrentObject )
 	{
 		pStuff = _pStuff;
 		pCurrentObject = _pCurrentObject;
@@ -144,12 +144,12 @@ public:
 	template<class TR>
 		TR* Register( TR *p ) { RegisterBase( CastToObjectBase(p) ); return p; }
 	CObjectBase* GetCurrentSrcObject() const { return pCurrentObject; }
-	const vector<CObj<CObjectBase> >& GetCurrentObjects() const { ASSERT(pStuff); return *pStuff; }
+	const std::vector<CObj<CObjectBase> >& GetCurrentObjects() const { ASSERT(pStuff); return *pStuff; }
 	friend struct SVisitorBaseAccess;
 };
 struct SVisitorBaseAccess
 {
-	void StartNewObject( IVisitorBase *p, vector<CObj<CObjectBase> > *_pStuff, CObjectBase *_pCurrentObject )
+	void StartNewObject( IVisitorBase *p, std::vector<CObj<CObjectBase> > *_pStuff, CObjectBase *_pCurrentObject )
 	{
 		p->StartNewObject( _pStuff, _pCurrentObject );
 	}
@@ -158,7 +158,7 @@ struct SVisitorBaseAccess
 template<class T,class TVisitor>
 class COrdinarySyncDst: public CSyncDst<T>
 {
-	typedef vector<vector<CObj<CObjectBase> > > CObjVector;
+	typedef std::vector<std::vector<CObj<CObjectBase> > > CObjVector;
 	typedef CSyncDst<T> TSyncParent;
 	ZDATA_(TSyncParent)
 	CObjVector view;
@@ -183,8 +183,8 @@ private:
 	}
 protected:
 	virtual void PostVisit( int nID, T *pObject ) {}
-	const vector<CObj<CObjectBase> >& GetObjects( int nID ) const { return view[nID]; }
-	const vector<CObj<CObjectBase> >& GetCurrentObjects() const { ASSERT(pStuff); return *pStuff; }
+	const std::vector<CObj<CObjectBase> >& GetObjects( int nID ) const { return view[nID]; }
+	const std::vector<CObj<CObjectBase> >& GetCurrentObjects() const { ASSERT(pStuff); return *pStuff; }
 public:
 	COrdinarySyncDst() : CSyncDst<T>(0) {}
 	COrdinarySyncDst( CSyncSrc<T> *p, TVisitor *_pVisitor ): CSyncDst<T>(p), pVisitor(_pVisitor) {}
@@ -197,12 +197,12 @@ class CSetSyncSrc: public CSyncSrc<T>
 {
 	OBJECT_BASIC_METHODS( CSetSyncSrc );
 	typedef CSyncSrc<T> TParent;
-	typedef hash_map<CPtr<T>, int, SPtrHash> CStuffHash;
+	typedef std::unordered_map<CPtr<T>, int, SPtrHash> CStuffHash;
 	ZDATA_(TParent)
 	CStuffHash stuff;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); f.Add(2,&stuff); return 0; }
 public:
-	void Set( const vector<T*> &newSet )
+	void Set( const std::vector<T*> &newSet )
 	{
 		CStuffHash t = stuff;
 		for ( int k = 0; k < newSet.size(); ++k )
@@ -238,7 +238,7 @@ class CBoolSyncDstUtil: public CSyncDst<T>
 	ZDATA_(TParent)
 	CPtr<TUplink> pRes; // uplink
 	int nMask;
-	vector<CPtr<T> > track;
+	std::vector<CPtr<T> > track;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); f.Add(2,&pRes); f.Add(3,&nMask); f.Add(4,&track); return 0; }
 private:
@@ -276,7 +276,7 @@ class CBoolSyncSrc: public CSyncSrc<T>
 		int nMask;
 		int nTrackID;
 	};
-	typedef hash_map<CPtr<T>, SObjectInfo, SPtrHash> CObjectsHash;
+	typedef std::unordered_map<CPtr<T>, SObjectInfo, SPtrHash> CObjectsHash;
 	typedef CSyncSrc<T> TParent;
 	ZDATA_(TParent)
 	CObjectsHash objects;

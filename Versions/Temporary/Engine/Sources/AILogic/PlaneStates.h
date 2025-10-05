@@ -96,7 +96,7 @@ protected:
 	CObj<CPlaneShturmovikShootEstimator> pShootEstimator;
 	CEnemyContainer enemie;								// enemie that we attack (ground target)
 
-  vector<CVec2> vPatrolPoints;				// набор точек патрулирования
+  std::vector<CVec2> vPatrolPoints;				// набор точек патрулирования
 	int	 nCurPointIndex;								// текущая точка патрулирования
 	bool bEconomyMode;									// if plane use smaller amount of fuel
 	NTimer::STime timeNextScan;

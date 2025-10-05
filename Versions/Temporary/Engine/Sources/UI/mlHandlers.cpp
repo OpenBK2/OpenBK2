@@ -14,7 +14,7 @@
 namespace NML
 {
 
-static NGfx::SPixel8888 StringToColor( const wstring &color, float fFade = 1.0f )
+static NGfx::SPixel8888 StringToColor( const std::wstring &color, float fFade = 1.0f )
 {
 	NGfx::SPixel8888 retColor;
 
@@ -60,21 +60,21 @@ static NGfx::SPixel8888 StringToColor( const wstring &color, float fFade = 1.0f 
 
 // CBRHandler
 
-void CBRHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )
+void CBRHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	pLayout->AddObject( CreateLineBreakObject() );
 }
 
 // CTabHandler
 
-void CTabHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )
+void CTabHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	pLayout->AddObject( CreateTabObject() );
 }
 
 // CColorHandler
 
-void CColorHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )
+void CColorHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 3 )
 		return;
@@ -83,7 +83,7 @@ void CColorHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vect
 
 // CFontHandler
 
-void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )
+void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	int nFlags = 0;
 	int nOutlineSize = 0;
@@ -99,8 +99,8 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vecto
 		if ( paramsSet[nTemp + 1].compare( L"=" ) != 0 )
 			break;
 
-		const wstring &wsID = paramsSet[nTemp];
-		const wstring &wsParam = paramsSet[nTemp + 2];
+		const std::wstring &wsID = paramsSet[nTemp];
+		const std::wstring &wsParam = paramsSet[nTemp + 2];
 		if ( wsID.compare( L"size" ) == 0  )
 		{
 			nFlags |= N_FONTOBJECT_SIZE;
@@ -110,7 +110,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vecto
 
 			if ( nParams > 1 )
 			{
-				wstring sizeMod( wsString );
+				std::wstring sizeMod( wsString );
 				if ( sizeMod.compare( L"px" ) == 0 )
 					font.nSize |= FONT_SIZE_PIXELS;
 				else if ( sizeMod.compare( L"pt" ) == 0 )
@@ -149,7 +149,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vecto
 
 // CMinFontSizeHandler
 
-void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )
+void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 4 )
 		return;

@@ -156,7 +156,7 @@ bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 	slots[nOwnSlot].bPresent = true;
 	ulHostCheckSum = pPacket->ulCheckSum;
 
-	for ( list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
+	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
 		ClientAssignNewClient( *it );
 	pendingClients.clear();
 	OnSetMySlotNumber();

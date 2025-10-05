@@ -52,12 +52,12 @@ bool CInterfaceMissionMovieBorder::StepLocal( bool bAppActive )
 	return bAppActive;
 }
 
-bool CInterfaceMissionMovieBorder::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMissionMovieBorder::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
 
-int CInterfaceMissionMovieBorder::Check( const string &szCheckName ) const
+int CInterfaceMissionMovieBorder::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

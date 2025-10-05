@@ -7,12 +7,12 @@
 // CStates::
 
 
-CStates::CStates( const NDb::SUIStateSequence &seq, const string &_szCmdName, const bool _bReversable, WORD _wKeyboardFlags ) 
+CStates::CStates( const NDb::SUIStateSequence &seq, const std::string &_szCmdName, const bool _bReversable, WORD _wKeyboardFlags )
 : szCmdName( _szCmdName ), nCurIndex( 0 ), bForward( true ), bReversable( _bReversable ), bEnd( true ) ,
 	wKeyboardFlags( _wKeyboardFlags )
 {
 	Reserve( seq.commands.size() );
-	for ( vector<CDBPtr<NDb::SUIStateBase> >::const_iterator it	= seq.commands.begin(); it != seq.commands.end(); ++it )
+	for ( std::vector<CDBPtr<NDb::SUIStateBase> >::const_iterator it	= seq.commands.begin(); it != seq.commands.end(); ++it )
 		Add( *it );
 	CheckEnd();
 }

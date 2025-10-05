@@ -19,7 +19,7 @@ struct SRand
 
 class CRoulette
 {
-	vector<float> m_aSectors;
+	std::vector<float> m_aSectors;
 public:
 	CRoulette() : m_aSectors( 1, 0.0f ) {}
 	void AddSector( float fValue );
@@ -61,7 +61,7 @@ private:
 	void Init();  // very slow operation
 	void Isaac();
 	void FillRandRsl();
-	BOOL RecFindFile( string &szFoundName, const char *pszBaseDir, int nToFind, int* pnTotFinded );
+	BOOL RecFindFile( std::string &szFoundName, const char *pszBaseDir, int nToFind, int* pnTotFinded );
 };
 
 inline unsigned int CRandomGenerator::Get()

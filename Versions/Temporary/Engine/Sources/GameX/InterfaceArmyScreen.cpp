@@ -26,10 +26,10 @@ public:
 	struct SAbility
 	{
 		ZDATA
-		wstring wszName;
-		wstring wszDesc;
+		std::wstring wszName;
+		std::wstring wszDesc;
 		CDBPtr<NDb::STexture> pEnabledIcon;
-		wstring wszTooltip;
+		std::wstring wszTooltip;
 		CDBPtr<NDb::STexture> pDisabledIcon;
 		int nLevel;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&wszDesc); f.Add(4,&pEnabledIcon); f.Add(5,&wszTooltip); f.Add(6,&pDisabledIcon); f.Add(7,&nLevel); return 0; }
@@ -43,12 +43,12 @@ public:
 	ZSKIP //wstring wszLine02;
 	CObj<CLeaderInfo> pLeader;
 	bool bEnabled;
-	wstring wszName;
-	wstring wszProfileUnit;
+	std::wstring wszName;
+	std::wstring wszProfileUnit;
 	CPtr<IListControlItem> pItem;
 	bool bFromPrevChapter;
-	wstring wszProfileUnitRank;
-	vector<SAbility> abilities;
+	std::wstring wszProfileUnitRank;
+	std::vector<SAbility> abilities;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&pDBReinf); f.Add(4,&pTexture); f.Add(7,&pLeader); f.Add(8,&bEnabled); f.Add(9,&wszName); f.Add(10,&wszProfileUnit); f.Add(11,&pItem); f.Add(12,&bFromPrevChapter); f.Add(13,&wszProfileUnitRank); f.Add(14,&abilities); return 0; }
 
 	void FillAbilities();
@@ -88,11 +88,11 @@ public:
 	};
 	
 	ZDATA
-	wstring wszName;
+	std::wstring wszName;
 	CDBPtr<NDb::STexture> pIcon;
 	float fExp; // [0..1]
 	ZSKIP //wstring wszRank;
-	wstring wszSpecialization;
+	std::wstring wszSpecialization;
 	int nKilled;
 	int nLost;
 	ZSKIP //vector<SAbility> abilities;
@@ -182,7 +182,7 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 			pIcon->SetTexture( pData->pTexture );
 		if ( pLine01View )
 		{
-			wstring wszLine = pData->wszName;
+			std::wstring wszLine = pData->wszName;
 			pLine01View->SetText( pLine01View->GetDBText() + wszLine );
 		}
 		if ( pAssignedView )
@@ -303,7 +303,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	
 	const int nLocalPlayer = 0;
 	const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts();
-	vector<IScenarioTracker::SChapterReinf> reinfs;
+	std::vector<IScenarioTracker::SChapterReinf> reinfs;
 	pST->GetChapterCurrentReinforcements( &reinfs, nLocalPlayer );
 	for ( int i = 0; i < reinfs.size(); ++i )
 	{
@@ -339,7 +339,7 @@ void CInterfaceArmyScreen::MakeInterior()
 			// icon
 			if ( pUIConsts )
 			{
-				for ( vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin(); 
+				for ( std::vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin();
 					it != pUIConsts->reinfButtons.end(); ++it )
 				{
 					const NDb::SReinfButton &button = *it;
@@ -401,8 +401,8 @@ void CInterfaceArmyScreen::MakeInterior()
 	{
 		SVisAbility &visAbility = visAbilities[i];
 
-		wstring wszTag = NStr::ToUnicode( StrFmt( DYNAMIC_TAG_RANK_NAME_FORMAT, i + 1 ) );
-		wstring wszRankName;
+		std::wstring wszTag = NStr::ToUnicode( StrFmt( DYNAMIC_TAG_RANK_NAME_FORMAT, i + 1 ) );
+		std::wstring wszRankName;
 		if ( i < pCampaign->leaderRanks.size() )
 		{
 			const NDb::SLeaderExpLevel &rank = pCampaign->leaderRanks[i];
@@ -410,8 +410,8 @@ void CInterfaceArmyScreen::MakeInterior()
 				wszRankName = GET_TEXT_PRE(rank.,RankName);
 		}
 
-		vector< pair<wstring, wstring> > params;
-		params.push_back( pair<wstring, wstring>( wszTag, wszRankName ) );
+		std::vector< std::pair<std::wstring, std::wstring> > params;
+		params.push_back( std::pair<std::wstring, std::wstring>( wszTag, wszRankName ) );
 		SetDynamicTextView( visAbility.pRankLabel, params );
 	}
 	
@@ -561,8 +561,8 @@ void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *
 			{
 				visAbility.pWnd->ShowWindow( true );
 				
-				vector< pair<wstring, wstring> > params;
-				params.push_back( pair<wstring, wstring>( TEXT_TAG_ABILITY_TOOLTIP, ability.wszTooltip ) );
+				std::vector< std::pair<std::wstring, std::wstring> > params;
+				params.push_back( std::pair<std::wstring, std::wstring>( TEXT_TAG_ABILITY_TOOLTIP, ability.wszTooltip ) );
 				SetDynamicTooltip( visAbility.pWnd, visAbility.pWnd->GetDBTooltipStr(), params );
 			}
 
@@ -637,7 +637,7 @@ void CInterfaceArmyScreen::UpdateSelectionInfo()
 	ShowReinfAbilities( pSelection->bEnabled, pSelection, pSelection->pLeader );
 }
 
-bool CInterfaceArmyScreen::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceArmyScreen::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
 		return OnBack();
@@ -673,7 +673,7 @@ bool CInterfaceArmyScreen::Execute( const string &szSender, const string &szReac
 	return false;
 }
 
-int CInterfaceArmyScreen::Check( const string &szCheckName ) const
+int CInterfaceArmyScreen::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -1112,24 +1112,24 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	if ( pLeaderExpBar )
 		pLeaderExpBar->SetPosition( fExpAtLevel );
 
-	wstring wszRank = pST->GetLeaderRankName( nTempRank );
+	std::wstring wszRank = pST->GetLeaderRankName( nTempRank );
 	if ( pLeader->lastSeen.bRankChanged && pLeader->lastSeen.nCurRank == pLeader->nRank )
 		wszRank = wszChangedValueTag + wszRank;
 	if ( pLeaderRankView )
 		pLeaderRankView->SetText( pLeaderRankView->GetDBText() + wszRank );
 
-	wstring wszRankNumber = NStr::ToUnicode( StrFmt( "%d", pLeader->nRank + 1 ) );
-	vector< pair<wstring, wstring> > params;
-	params.push_back( pair<wstring, wstring>( DYNAMIC_TAG_RANK_NUMBER, wszRankNumber ) );
+	std::wstring wszRankNumber = NStr::ToUnicode( StrFmt( "%d", pLeader->nRank + 1 ) );
+	std::vector< std::pair<std::wstring, std::wstring> > params;
+	params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_RANK_NUMBER, wszRankNumber ) );
 	SetDynamicTextView( pLeaderRankLabel, params );
 	
-	wstring wszKilled = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurKilled ) );
+	std::wstring wszKilled = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurKilled ) );
 	if ( pLeader->lastSeen.bKilledChanged && pLeader->lastSeen.nCurKilled == pLeader->nKilled )
 		wszKilled = wszChangedValueTag + wszKilled;
 	if ( pLeaderKilledView )
 		pLeaderKilledView->SetText( pLeaderKilledView->GetDBText() + wszKilled );
 
-	wstring wszLost = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurLost ) );
+	std::wstring wszLost = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurLost ) );
 	if ( pLeader->lastSeen.bLostChanged && pLeader->lastSeen.nCurLost == pLeader->nLost )
 		wszLost = wszChangedValueTag + wszLost;
 	if ( pLeaderLostView )

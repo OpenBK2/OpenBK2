@@ -35,7 +35,7 @@ struct SExplosionObj
 
 class CExplosionsManager
 {
-	list<SExplosionObj> explosions;
+	std::list<SExplosionObj> explosions;
 	int nLastID;
 	CObj<NGScene::IGameView> pGScene;
 	//

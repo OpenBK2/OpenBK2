@@ -25,7 +25,7 @@ struct ITransceiver : public CObjectBase
 	// client commands
 	virtual void CommandClientTogglePause() = 0;
 	virtual void CommandClientSpeed( int nChange ) = 0;
-	virtual void CommandClientDropPlayer( const wstring &szPlayerNick ) = 0;
+	virtual void CommandClientDropPlayer( const std::wstring &szPlayerNick ) = 0;
 	virtual void CommandTimeOut( bool bSet ) = 0;
 
 	virtual ICheckSumLog *GetCheckSumLogger() = 0;
@@ -35,9 +35,9 @@ struct ITransceiver : public CObjectBase
 struct SReplayInfo
 {
 	bool bDoReplay;
-	string szReplayName;
+	std::string szReplayName;
 	SReplayInfo() : bDoReplay(false) {}
-	SReplayInfo( const string &_sz ) : bDoReplay(true), szReplayName(_sz) {}
+	SReplayInfo( const std::string &_sz ) : bDoReplay(true), szReplayName(_sz) {}
 };
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI );
 

@@ -34,7 +34,7 @@ namespace NDb
 				public:
 					NFile::CFilePath szNameFileRef;
 					NFile::CFilePath szTooltipFileRef;
-					string szValue;
+					std::string szValue;
 
 					#include "include_OptionEntryState.h"
 
@@ -42,7 +42,7 @@ namespace NDb
 						__dwCheckSum( 0 )
 					{ }
 					//
-					void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+					void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 					//
 					int operator&( IBinSaver &saver );
 					int operator&( IXmlSaver &saver );
@@ -63,27 +63,27 @@ namespace NDb
 				private:
 					mutable DWORD __dwCheckSum;
 				public:
-					string szProgName;
-					vector< string > values;
+					std::string szProgName;
+					std::vector< std::string > values;
 
 					SSliderSingleValue() :
 						__dwCheckSum( 0 )
 					{ }
 					//
-					void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+					void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 					//
 					int operator&( IBinSaver &saver );
 					int operator&( IXmlSaver &saver );
 					DWORD CalcCheckSum() const;
 				};
-				string szProgName;
+				std::string szProgName;
 				NFile::CFilePath szNameFileRef;
 				NFile::CFilePath szTooltipFileRef;
-				vector< SOptionEntryState > states;
+				std::vector< SOptionEntryState > states;
 				EOptionEditorType eEditorType;
-				string szDefaultValue;
+				std::string szDefaultValue;
 				int nModeFlags;
-				vector< SSliderSingleValue > sliderValues;
+				std::vector< SSliderSingleValue > sliderValues;
 
 				#include "include_OptionEntry.h"
 
@@ -93,7 +93,7 @@ namespace NDb
 					nModeFlags( 0 )
 				{ }
 				//
-				void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
@@ -101,7 +101,7 @@ namespace NDb
 			};
 			NFile::CFilePath szNameFileRef;
 			NFile::CFilePath szTooltipFileRef;
-			vector< SOptionEntry > options;
+			std::vector< SOptionEntry > options;
 
 			#include "include_OptionCategory.h"
 
@@ -109,13 +109,13 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SOptionsCategory > categories;
+		std::vector< SOptionsCategory > categories;
 
 		#include "include_OptionSystem.h"
 
@@ -133,15 +133,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue );
-	SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const string &szValue );
+	std::string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue );
+	SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( szValue ); }
+	static std::string ToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( szValue ); }
 };
 

@@ -11,7 +11,7 @@ namespace NBSU
 //	return const_cast<char*>(str.c_str());
 //}
 
-void ListView_AddColumn( HWND hwnd, const string &strCaption, int nWidth )
+void ListView_AddColumn( HWND hwnd, const std::string &strCaption, int nWidth )
 {
 	LV_COLUMN  Column;
 	memset( &Column, 0, sizeof( LV_COLUMN) );
@@ -24,7 +24,7 @@ void ListView_AddColumn( HWND hwnd, const string &strCaption, int nWidth )
 	ListView_InsertColumn( hwnd, 1000, &Column );
 }
 
-int ListView_AddItem( HWND hwnd, const string &strText, LPARAM lParam, int nItem )
+int ListView_AddItem( HWND hwnd, const std::string &strText, LPARAM lParam, int nItem )
 {
 	LVITEM Item;
 	memset( &Item, 0, sizeof(Item) );
@@ -36,12 +36,12 @@ int ListView_AddItem( HWND hwnd, const string &strText, LPARAM lParam, int nItem
 	return ListView_InsertItem( hwnd, &Item );
 }
 
-string GetFileName( const string &strFullPath )
+std::string GetFileName( const std::string &strFullPath )
 {
 	return strFullPath.substr( strFullPath.rfind( '\\' ) + 1 );
 }
 
-void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries )
+void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entries )
 {
 	SendMessage( hwndCallStack, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
 	RECT rc;
@@ -149,7 +149,7 @@ void* GetDlgUserData( HWND hwndDlg )
 //}
 
 void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription, 
-												const vector<SCallStackEntry> &entries )
+												const std::vector<SCallStackEntry> &entries )
 {
 	char buffer[1024];
 	// create file name

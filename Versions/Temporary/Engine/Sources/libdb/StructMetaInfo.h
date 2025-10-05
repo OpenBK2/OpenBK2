@@ -32,7 +32,7 @@ public:
 		CObj<SStructMetaInfo> pContained;		// in the case of array-of-structs, this field will contain struct descriptor
 		CPtr<NTypeDef::STypeDef> pTypeDef;	// link to type descriptor. this field will be filled during linking struct meta info with type definition
 #ifdef FAST_DEBUG
-		string szFieldName;
+		std::string szFieldName;
 #endif
 		//
 		typedef bool (SField::*SetValue)( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues );
@@ -94,7 +94,7 @@ public:
 		void MakeDeepCopy( SField *pRes ) const;
 	};
 	//
-	typedef hash_map<string, SField> CFieldsMap;
+	typedef std::unordered_map<std::string, SField> CFieldsMap;
 	CFieldsMap fields;
 	SField singleField;	// for simple arrays
 	int nStructSize;
@@ -104,15 +104,15 @@ public:
 	//
 	SStructMetaInfo(): nStructSize(0), nNumOwnValues(0), nNumCodeValues(0) {}
 	//
-	void AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );
-	void AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType, 
+	void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );
+	void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType,
 		             int nContainedSize, NTypeDef::ETypeType eContainedType );
 	// meta constructor/destructor
 	void ConstructStruct( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn );
 	void DestructStruct( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn );
 	//
-	void LinkWithTypeDef( const string &szAddName, NTypeDef::STypeStructBase *pType );
-	void LinkField( const string &szAddName, const string &szFieldName, NTypeDef::STypeDef *pType );
+	void LinkWithTypeDef( const std::string &szAddName, NTypeDef::STypeStructBase *pType );
+	void LinkField( const std::string &szAddName, const std::string &szFieldName, NTypeDef::STypeDef *pType );
 	//
 	void MakeDeepCopy( SStructMetaInfo *pRes ) const;
 };

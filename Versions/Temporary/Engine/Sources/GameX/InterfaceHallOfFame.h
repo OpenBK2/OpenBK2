@@ -8,18 +8,18 @@ struct SHallOfFameEntry
 {
 	ZDATA
 	int nScore;
-	wstring wszName;
+	std::wstring wszName;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nScore); f.Add(3,&wszName); return 0; }
 };
 
 class CHallOfFame
 {
 	ZDATA
-	vector<SHallOfFameEntry> entries;
+	std::vector<SHallOfFameEntry> entries;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&entries); return 0; }
 public:
 	CHallOfFame();
-	void AddRecord( const wstring &wszName, int nScore )
+	void AddRecord( const std::wstring &wszName, int nScore )
 	{
 		SHallOfFameEntry val;
 		val.wszName = wszName;
@@ -61,8 +61,8 @@ public:
 	void MsgBack( const SGameMessage &msg );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const { return 0; }
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const { return 0; }
 	//}
 };
 

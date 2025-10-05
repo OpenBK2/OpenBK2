@@ -706,7 +706,7 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 	vSides[2] = vEnemyCenter - vShift; // 32k
 
 	vShift = vEnemyDir * fEnemyWidth;
-	swap( vShift.x, vShift.y );
+	std::swap( vShift.x, vShift.y );
 	vShift.x = -vShift.x;
 	
 	vSides[1] = vEnemyCenter + vShift; // 16k
@@ -2138,7 +2138,7 @@ CSoldierEntrenchSelfState::CSoldierEntrenchSelfState ( class CSoldier *_pSoldier
 
 	float fCoeff = 1.0f;
 	int nDefaultTime = SConsts::ENTRENCH_SELF_TIME;
-	for ( int i = 0; i < Min ( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() ); ++i )
+	for ( int i = 0; i < Min<int> ( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pSoldier->GetStats()->GetActions()->specialAbilities[i]->eName;
 		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 
@@ -2177,7 +2177,7 @@ void CSoldierEntrenchSelfState::Segment()
 			// create tank pit and set unit into it
 			const SVector vDigTile( pSoldier->GetCenterTile() );
 			const SMechUnitRPGStats *pStats = theUnitCreation.GetFoxHole( GetTerrain()->CanDigEntrenchment( vDigTile.x, vDigTile.y ) );
-			list<SObjTileInfo> tilesToLock;
+			std::list<SObjTileInfo> tilesToLock;
 			CPtr<CExistingObject> pTankPit = theStatObjs.AddNewTankPit( pStats, CVec3(pSoldier->GetCenterPlain(),0.0f), pSoldier->GetFrontDirection(), 0, pStats->vAABBHalfSize, tilesToLock, pSoldier );
 			if ( pTankPit )
 			{

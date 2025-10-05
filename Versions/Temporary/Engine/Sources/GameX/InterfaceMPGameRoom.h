@@ -26,7 +26,7 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 		CPtr<IWindow> pControlDisabler;
 	};
 
-	typedef vector<SUISlot> CUISlots;
+	typedef std::vector<SUISlot> CUISlots;
 
 	ZDATA_(CInterfaceMPScreenBase)
 		// { Info for the game 
@@ -93,7 +93,7 @@ private:
 	bool OnChangeSideReaction();
 	bool OnChangeTeamReaction();
 	bool OnChangeColorReaction();
-	bool OnPlayerCombo( const string &szSender );
+	bool OnPlayerCombo( const std::string &szSender );
 	bool OnInterruptReaction();
 	bool OnSessionEnter();
 	bool OnShowAdvanced( const bool bShow );
@@ -127,8 +127,8 @@ public:
 	
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;	
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 
@@ -138,7 +138,7 @@ class CICMPGameRoom : public CInterfaceCommandBase<CInterfaceMPGameRoom>
 	OBJECT_BASIC_METHODS( CICMPGameRoom );
 	//
 	ZDATA
-	string str;
+	std::string str;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&str); return 0; }
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

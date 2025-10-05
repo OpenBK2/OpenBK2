@@ -17,7 +17,7 @@ int lua##Name( lua_State* pState )																			\
 	if ( pState == 0 )																										\
 		return 0;																														\
 	Script *pScript;																											\
-	vector<SLuaParams> luaParams;																					\
+	std::vector<SLuaParams> luaParams;																					\
 	if ( !luaPrepareData( pState, #Name, Params, &pScript, &luaParams ) )	\
 		return 0;																														
 #define END_SCRIPT_COMMAND }
@@ -33,8 +33,8 @@ DECLARE_SCRIPT_COMMAND( LuaTest );
 
 bool luaGetBool( const Script::Object &o );
 void luaPushBool( lua_State *pState, bool bValue );
-void ScriptWarning( const string &message );
-void ScriptError( const string &message );
+void ScriptWarning( const std::string &message );
+void ScriptError( const std::string &message );
 }
 //
 

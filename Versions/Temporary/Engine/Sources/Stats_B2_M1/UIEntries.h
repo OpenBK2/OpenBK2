@@ -20,7 +20,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		CDBPtr< SWindowScreen > pScreen;
-		string szType;
+		std::string szType;
 		NFile::CFilePath szHelpHeaderFileRef;
 		NFile::CFilePath szHelpDescFileRef;
 		bool bHelpNoMultiplayer;
@@ -32,7 +32,7 @@ namespace NDb
 			bHelpNoMultiplayer( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -45,7 +45,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		NFile::CFilePath szTextFileRef;
-		string szTextID;
+		std::string szTextID;
 
 		#include "include_UITextEntry.h"
 
@@ -53,7 +53,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -65,14 +65,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szTextID;
+		std::string szTextID;
 		CDBPtr< STexture > pTexture;
 
 		SUITextureEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -84,7 +84,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( STextEntry )
 	public:
 		enum { typeID = 0x171AE380 };
-		string szName;
+		std::string szName;
 		NFile::CFilePath szTextFileRef;
 
 		#include "include_TextEntry.h"

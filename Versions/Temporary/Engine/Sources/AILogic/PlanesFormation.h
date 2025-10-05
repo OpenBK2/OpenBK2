@@ -8,9 +8,9 @@
 
 class CPlaneManuverHistory
 {
-	typedef hash_map<CVec3, SFormationMemberInfo, SVec3Hash> CMemberCache;
+	typedef std::unordered_map<CVec3, SFormationMemberInfo, SVec3Hash> CMemberCache;
 	ZDATA
-	list<CObj<IManuver> > pathHistory;
+	std::list<CObj<IManuver> > pathHistory;
 	CMemberCache memberCache;
 	SFormationMemberInfo curPos;
 	bool bFinished;
@@ -32,7 +32,7 @@ class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUn
 	OBJECT_NOCOPY_METHODS( CPlanesFormation );
 
 	static int nIDSoFar;
-	static hash_map<int, bool> existence;
+	static std::unordered_map<int, bool> existence;
 	ZDATA_(CBasePathUnit)
 	CPlaneManuverHistory pathHistory;
 	CPlanePreferences preferences;

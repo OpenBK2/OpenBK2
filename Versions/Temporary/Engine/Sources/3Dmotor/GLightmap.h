@@ -21,7 +21,7 @@ class CLightmapTextureCache;
 class CSingleTexAlloc
 {
 	CObj<CLightmapTextureCache> pCache;
-	vector<CObj<CObjectBase> > regions;
+	std::vector<CObj<CObjectBase> > regions;
 public:
 	CSingleTexAlloc( int _nSize );
 	bool AllocRegion( const CTPoint<int> &size, CTPoint<int> *pPos );
@@ -34,8 +34,8 @@ class CLMAlloc
 		CObj<CLightmapTextureCache> pCache;
 		CArray2D<NGfx::SPixel8888> data;
 	};
-	vector<STex> textures;
-	vector<CObj<CObjectBase> > regions;
+	std::vector<STex> textures;
+	std::vector<CObj<CObjectBase> > regions;
 
 	bool TryAlloc( const NCache::CQuadTreeElement &elem, int nTexture, const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int> *pPos );
 public:
@@ -82,6 +82,6 @@ public:
 };
 void EnableLMGeometryDump(bool flag);
 bool GetDumpFlag();
-void SetDumpDirectory(const string &szDirectoryName);
+void SetDumpDirectory(const std::string &szDirectoryName);
 }
 

@@ -240,11 +240,11 @@ void CTerraGen::UpdateArea( const int nTileX1, const int nTileY1, const int nTil
 void CTerraGen::RestoreFromHistory()
 {
 	// restore entrenchments
-	for ( vector<SEntrenchmentHistory>::const_iterator it = entrenchmentsHistory.begin(); it != entrenchmentsHistory.end(); ++it )
+	for ( std::vector<SEntrenchmentHistory>::const_iterator it = entrenchmentsHistory.begin(); it != entrenchmentsHistory.end(); ++it )
 		AddEntrenchment( it->ctrlPoints, it->fWidth, false );
 
 	// restore explosions
-	for ( vector<SExplosionHistory>::const_iterator it = explosionsHistory.begin(); it != explosionsHistory.end(); ++it )
+	for ( std::vector<SExplosionHistory>::const_iterator it = explosionsHistory.begin(); it != explosionsHistory.end(); ++it )
 		AddExplosion( it->vMin, it->vMax, it->pMaterial, false );
 }
 

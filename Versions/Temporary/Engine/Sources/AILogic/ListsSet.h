@@ -23,12 +23,12 @@ class CListsSet
 {
 	public: public: int operator&( IBinSaver &saver ); private:;
 	
-	vector<int> nexts;
-	vector<int> preds;
-	vector<T> values;
+	std::vector<int> nexts;
+	std::vector<int> preds;
+	std::vector<T> values;
 
-	vector<int> fronts;
-	vector<int> sizes;
+	std::vector<int> fronts;
+	std::vector<int> sizes;
 
 	int freePtr;
 
@@ -252,9 +252,9 @@ void CListsSet<T>::CheckSizes() const
 {
 	for ( int nListNum = 0; nListNum < sizes.size(); ++nListNum )
 	{
-		string strResult = StrFmt( "+++ %s : Checking size for list %d, size = %d: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
+		std::string strResult = StrFmt( "+++ %s : Checking size for list %d, size = %d: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
 		//DebugTrace( "%s : Checking size for list %d with size %d ...", typeid(*this).name(), nListNum, GetSize( nListNum ) );
-		hash_set<int> visited;
+		std::unordered_set<int> visited;
 		int nCount = 0;
 		bool bTwice = false;
 		for ( int i = begin( nListNum ); i != end(); i = GetNext( i ) )
@@ -292,7 +292,7 @@ class CQueuesSet
 	public: public: int operator&( IBinSaver &saver ); private:;
 protected:
 	CListsSet<T> cListsSet;
-	vector<int> currentPos;
+	std::vector<int> currentPos;
 public:
 	CQueuesSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
 	explicit CQueuesSet( const int queuesNum ) { Init( queuesNum ); }

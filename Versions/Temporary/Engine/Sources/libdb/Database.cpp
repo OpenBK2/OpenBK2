@@ -71,12 +71,12 @@ void SetLoadDepth( int nLoadDepth )
 		s_pMainDatabase->SetLoadDepth( nLoadDepth );
 }
 
-bool RegisterResourceFile( const string &szFileName )
+bool RegisterResourceFile( const std::string &szFileName )
 {
 	return s_pMainDatabase->RegisterResourceFile( szFileName );
 }
 
-bool IsFileRegistered( const string &szFileName )
+bool IsFileRegistered( const std::string &szFileName )
 {
 	return s_pMainDatabase->IsFileRegistered( szFileName );
 }
@@ -96,12 +96,12 @@ bool DoesObjectExist( const CDBID &dbid )
 	return dbid.IsEmpty() ? false : s_pMainDatabase->DoesObjectExist( dbid );
 }
 
-IObjMan *CreateNewObject( const string &szClassTypeName )
+IObjMan *CreateNewObject( const std::string &szClassTypeName )
 {
 	return s_pMainDatabase->CreateNewObject( szClassTypeName );
 }
 
-bool AddNewObject( const string &szFilePath, const CDBID &dbid, IObjMan *pObjMan )
+bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan )
 {
 	return s_pMainDatabase->AddNewObject( szFilePath, dbid, pObjMan );
 }
@@ -133,22 +133,22 @@ void DropCachedResources()
 		s_pMainDatabase->DropCachedResources();
 }
 
-bool GetClassesList( vector<NTypeDef::STypeClass*> *pRes )
+bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes )
 {
 	return s_pMainDatabase->GetClassesList( pRes );
 }
 
-bool GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName )
+bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName )
 {
 	return s_pMainDatabase->GetObjectsList( pRes, szClassTypeName );
 }
 
-bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID )
+bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID )
 {
 	return s_pMainDatabase->GetObjectsList( pRes, nClassTypeID );
 }
 
-string GetClassTypeName( const CDBID &dbid )
+std::string GetClassTypeName( const CDBID &dbid )
 {
 	return s_pMainDatabase->GetClassTypeName( dbid );
 }
@@ -173,12 +173,12 @@ bool CBasicDatabase::ReadResourceHeader( STypeObjectHeader *pHeader, const CDBID
 bool CBasicDatabase::LoadIndex()
 {
 	ResetIndexChanged();
-	vector<SFullTypeHeader> objectsIndex;
+	std::vector<SFullTypeHeader> objectsIndex;
 	CFileStream stream( GetVFS(), INDEX_FILE_NAME );
 	if ( LoadIndexData( &objectsIndex, &stream ) )
 	{
 		// register all objects from index
-		for ( vector<SFullTypeHeader>::iterator it = objectsIndex.begin(); it != objectsIndex.end(); ++it )
+		for ( std::vector<SFullTypeHeader>::iterator it = objectsIndex.begin(); it != objectsIndex.end(); ++it )
 			RegisterObject( *it );
 	}
 	else
@@ -202,7 +202,7 @@ bool HasChangedObjects()
 
 void NormalizeDBID( CDBID *pRes, const CDBID &dbid )
 {
-	string szRes = dbid.ToString();
+	std::string szRes = dbid.ToString();
 //	NStr::ToLowerASCII( &szRes, dbid.ToString() );
 	NStr::ReplaceAllChars( &szRes, '\\', '/' );
 	*pRes = szRes;
@@ -228,12 +228,12 @@ void CResourceHelper::CallPostLoad( CResource *pRes, bool bInEditor )
 
 bool IsDBIDValid( const CDBID &dbid )
 {
-	const string szFullPath = GetFileName( dbid );
-	list<string> parts;
+	const std::string szFullPath = GetFileName( dbid );
+	std::list<std::string> parts;
 	NFile::SplitPath( &parts, szFullPath );
 	// check filename - must have .xdb at the end
 	{
-		const string &szFileName = parts.back();
+		const std::string &szFileName = parts.back();
 		if ( szFileName.size() < 4 )
 			return false;
 		if ( NFile::ComparePathEq( szFileName.size() - 4, 4, szFileName, 0, 4, ".xdb" ) == false )
@@ -241,7 +241,7 @@ bool IsDBIDValid( const CDBID &dbid )
 	}
 	parts.pop_back();
 	// check each file path directory entry - must not contain .xdb at the end
-	for ( list<string>::const_iterator it = parts.begin(); it != parts.end(); ++it )
+	for ( std::list<std::string>::const_iterator it = parts.begin(); it != parts.end(); ++it )
 	{
 		if ( it->size() >= 4 && NFile::ComparePathEq( it->size() - 4, 4, *it, 0, 4, ".xdb" ) != false )
 			return false;

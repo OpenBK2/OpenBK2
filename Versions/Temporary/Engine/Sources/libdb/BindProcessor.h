@@ -20,16 +20,16 @@ namespace NBind
 
 struct ILoadableObjMan
 {
-	virtual bool LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) = 0;
-	virtual bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) = 0;
-	virtual bool SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType ) = 0;
+	virtual bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) = 0;
+	virtual bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) = 0;
+	virtual bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) = 0;
 };
 
 struct SBindProcessor
 {
 	struct SArrayRequisites
 	{
-		vector<BYTE> *pRawVector;
+		std::vector<BYTE> *pRawVector;
 		NMetaInfo::SStructMetaInfo *pContained;
 		NTypeDef::STypeArray *pTypeArray;
 		UValue *pUValue;
@@ -37,7 +37,7 @@ struct SBindProcessor
 	};
 	struct SArrayCallParams : public SArrayRequisites
 	{
-		string szRestName;
+		std::string szRestName;
 		int nArrayIndex;
 		SArrayCallParams(): nArrayIndex(0) {}
 	};
@@ -50,29 +50,29 @@ struct SBindProcessor
 	SBindProcessor( BYTE *_pThis, UValue *_ownValues, NMetaInfo::SStructMetaInfo *_pMetaInfo )
 		: pThis( _pThis ), ownValues( _ownValues ), pMetaInfo( _pMetaInfo ) {}
 	//
-	IObjMan *CreateManipulator( const string &szName, IObjMan *pParent );
-	IObjManIterator *CreateIterator( const string &_szAddName, NTypeDef::STypeStructBase *_pType, 
+	IObjMan *CreateManipulator( const std::string &szName, IObjMan *pParent );
+	IObjManIterator *CreateIterator( const std::string &_szAddName, NTypeDef::STypeStructBase *_pType,
 		                               IObjMan *pParent, bool bShowHidden );
 	//
-	bool SetValue( const string &szName, const CVariant &value );
-	bool GetValue( const string &szName, CVariant *pValue );
+	bool SetValue( const std::string &szName, const CVariant &value );
+	bool GetValue( const std::string &szName, CVariant *pValue );
 	//
-	bool Insert( const string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false );
-	bool Remove( const string &szName, const int nPos, const int nAmount = 1 );
+	bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false );
+	bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 );
 	//
-	CBindArray *GetBindArray( const string &szName );
+	CBindArray *GetBindArray( const std::string &szName );
 	//
-	bool ExtractArrayCallParams( const string &szName, int nArrayIndexStartPos, SArrayCallParams *pCallParams );
-	bool GetArrayRequisites( const string &szName, SArrayRequisites *pReqs );
-	bool InitArrayElementBindProcessor( SBindProcessor *pProc, string *pszRestName, const string &szName );
+	bool ExtractArrayCallParams( const std::string &szName, int nArrayIndexStartPos, SArrayCallParams *pCallParams );
+	bool GetArrayRequisites( const std::string &szName, SArrayRequisites *pReqs );
+	bool InitArrayElementBindProcessor( SBindProcessor *pProc, std::string *pszRestName, const std::string &szName );
 	//
-	bool LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode, IObjMan *pParent );
-	bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode, IObjMan *pParent );
-	bool SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType );
+	bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode, IObjMan *pParent );
+	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode, IObjMan *pParent );
+	bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType );
 };
 
 }
 
-const NTypeDef::STypeStructBase::SField *FindField( const string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct );
+const NTypeDef::STypeStructBase::SField *FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct );
 
 }

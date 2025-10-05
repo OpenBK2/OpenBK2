@@ -11,13 +11,13 @@ private:
 	struct SReplayEntry
 	{
 		ZDATA
-		string												szName;
+		std::string												szName;
 		SYSTEMTIME										time;
 		CPtr<IWindow>									pItem;
 		SMultiplayerReplayInfo				info;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&time); f.Add(4,&pItem); f.Add(5,&info); return 0; }
 	};
-	typedef vector<SReplayEntry> CReplayEntries;
+	typedef std::vector<SReplayEntry> CReplayEntries;
 
 	enum EQuestionMode {
 		EQM_NONE,
@@ -69,11 +69,11 @@ private:
 public:
 	CInterfaceReplaySaveLoad();
 	bool Init();
-	void SetMode( const string &szMode );
+	void SetMode( const std::string &szMode );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 
@@ -82,7 +82,7 @@ class CICInterfaceReplaySaveLoad : public CInterfaceCommandBase<CInterfaceReplay
 	OBJECT_BASIC_METHODS( CICInterfaceReplaySaveLoad );
 
 	ZDATA_(CInterfaceCommandBase<CInterfaceReplaySaveLoad>)
-	string szMode;
+	std::string szMode;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceReplaySaveLoad>*)this); f.Add(2,&szMode); return 0; }
 	//
 	void PreCreate();

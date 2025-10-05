@@ -14,10 +14,10 @@ private:
 	void RegisterObservers();
 
 	//{
-	bool OnBack( const string &szSender );
-	bool OnLAN( const string &szSender );
-	bool OnNivalNet( const string &szSender );
-	bool OnLoadReplay( const string &szSender );
+	bool OnBack( const std::string &szSender );
+	bool OnLAN( const std::string &szSender );
+	bool OnNivalNet( const std::string &szSender );
+	bool OnLoadReplay( const std::string &szSender );
 	bool OnProfileManagerMenu();
 	//}
 protected:
@@ -32,8 +32,8 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

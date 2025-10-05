@@ -12,10 +12,11 @@
 #include "Statistics.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
-#include "Misc/nalgoritm.h"
 #include "Misc/Checker.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "GlobalWarFog.h"
+
+#include <algorithm>
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4CC, CFullEntrenchment );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C1, CEntrenchmentTankPit );
@@ -96,7 +97,7 @@ void CEntrenchmentPart::Init()
 
 bool CEntrenchmentPart::CanUnregister() const
 {
-	for ( list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
+	for ( std::list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
 	{
 		const SVector &tile = *iter;		
 		if ( !theWarFog.IsTileVisible( tile, 0 ) || !theWarFog.IsTileVisible( tile, 1 ) )
@@ -111,7 +112,7 @@ void CEntrenchmentPart::Segment()
 	// все действия здесь должны быть const, т.к. они различны на разных компах, для multiplayer
 	if ( !bVisible )
 	{
-		for ( list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
+		for ( std::list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
 		{
 			if ( theWarFog.IsTileVisible( *iter, theDipl.GetMyParty() ) )
 			{
@@ -173,7 +174,7 @@ CVec2 CEntrenchmentPart::GetShift( const CVec2 &vPoint, const CVec2 &vDir )
 	return CVec2( vDir * vPoint.y + dirPerp * vPoint.x );
 }
 
-void CEntrenchmentPart::GetCoveredTiles( list<SVector> *pTiles ) const
+void CEntrenchmentPart::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	SRect boundRect;
 	GetBoundRect( &boundRect );
@@ -439,7 +440,7 @@ void CEntrenchment::ProcessEmptyFireplace( const int nFireplace )
 
 void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace )
 {
-	list< SInsiderInfo >::iterator iter = insiders.begin();
+	std::list< SInsiderInfo >::iterator iter = insiders.begin();
 	while ( iter != insiders.end() && iter->pUnit != pUnit )
 		++iter;
 
@@ -501,7 +502,7 @@ void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, 
 	}*/
 }
 
-void CEntrenchment::GetCoveredTiles( list<SVector> *pTiles ) const
+void CEntrenchment::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	GetAIMap()->GetTilesCoveredByRect( rect, pTiles );
 }
@@ -525,7 +526,7 @@ CSoldier* CEntrenchment::GetUnit( const int n ) const
 {
 	NI_ASSERT( n < GetNDefenders(), "Wrong unit to get from entrenchment" );
 
-	list<SInsiderInfo>::const_iterator iter = insiders.begin();
+	std::list<SInsiderInfo>::const_iterator iter = insiders.begin();
 	advance( iter, n );
 	return iter->pUnit;
 }
@@ -623,7 +624,7 @@ CEntrenchmentTankPit::CEntrenchmentTankPit( const SMechUnitRPGStats *_pStats,
 												const CVec3& center,
 												const WORD dir,
 												const int nFrameIndex,  const class CVec2 &vHalfSize,
-												const list<SObjTileInfo> &tiles,
+												const std::list<SObjTileInfo> &tiles,
 												class CAIUnit *_pOwner )
 : wDir( dir ), vHalfSize( vHalfSize ), pStats( _pStats ), pOwner( _pOwner ), tilesToLock( tiles ),
 	CGivenPassabilityStObject( center, 1.0f, dir, nFrameIndex )
@@ -639,7 +640,7 @@ CEntrenchmentTankPit::~CEntrenchmentTankPit()
 void CEntrenchmentTankPit::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	pTiles->clear();
-	for ( list<SObjTileInfo>::const_iterator i = tilesToLock.begin(); tilesToLock.end() != i; ++i )
+	for ( std::list<SObjTileInfo>::const_iterator i = tilesToLock.begin(); tilesToLock.end() != i; ++i )
 	{
 		const SVector &v = i->tile;
 		if ( GetAIMap()->IsTileInside( v ) )
@@ -647,10 +648,10 @@ void CEntrenchmentTankPit::GetTilesForVisibility( CTilesSet *pTiles ) const
 	}
 }
 
-void CEntrenchmentTankPit::GetCoveredTiles( list<SVector> *pTiles ) const
+void CEntrenchmentTankPit::GetCoveredTiles( std::list<SVector> *pTiles ) const
 {
 	pTiles->clear();
-	for ( list<SObjTileInfo>::const_iterator i = tilesToLock.begin(); tilesToLock.end() != i; ++i )
+	for ( std::list<SObjTileInfo>::const_iterator i = tilesToLock.begin(); tilesToLock.end() != i; ++i )
 	{
 		const SVector &v = i->tile;
 		if ( GetAIMap()->IsTileInside( v ) )
@@ -666,7 +667,7 @@ void CEntrenchmentTankPit::GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->nExpLevel = 0;
 }
 
-void CEntrenchmentTankPit::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
+void CEntrenchmentTankPit::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
 	*pTiles = tilesToLock;
 }

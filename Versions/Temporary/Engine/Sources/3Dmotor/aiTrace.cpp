@@ -115,13 +115,13 @@ SInterval::SCrossPoint CTracer::CalcCross( const SRefTriangle &t )
 
 inline float Dot( const CVec3 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + b.w; }
 static float fTraceSign[] = {1,-1};
-void CTracer::TraceEntity( const SConvexHull &e, vector<SInterval::SCrossPoint> *pEnter, vector<SInterval::SCrossPoint> *pExit )
+void CTracer::TraceEntity( const SConvexHull &e, std::vector<SInterval::SCrossPoint> *pEnter, std::vector<SInterval::SCrossPoint> *pExit )
 {
-	vector<SInterval::SCrossPoint> &enter = *pEnter;
-	vector<SInterval::SCrossPoint> &exit = *pExit;
+	std::vector<SInterval::SCrossPoint> &enter = *pEnter;
+	std::vector<SInterval::SCrossPoint> &exit = *pExit;
 	// transform vertices
-	vector<CVec2> transformed;
-	vector<float> edgeSide;
+	std::vector<CVec2> transformed;
+	std::vector<float> edgeSide;
 	//
 	transformed.resize( e.points.size() );
 	//
@@ -146,7 +146,7 @@ void CTracer::TraceEntity( const SConvexHull &e, vector<SInterval::SCrossPoint> 
 			edgeSide[i] = 1e-6f; // same as with points, somebody has to win ;)
 	}
 	// check tris
-	for ( vector<STriangle>::const_iterator i = e.tris.mesh.begin(); i != e.tris.mesh.end(); ++i )
+	for ( std::vector<STriangle>::const_iterator i = e.tris.mesh.begin(); i != e.tris.mesh.end(); ++i )
 	{
 		float f1 = edgeSide[ i->i1 & 0x7fff ] * fTraceSign[ i->i1>>15 ];
 		float f2 = edgeSide[ i->i2 & 0x7fff ] * fTraceSign[ i->i2>>15 ];
@@ -160,18 +160,18 @@ void CTracer::TraceEntity( const SConvexHull &e, vector<SInterval::SCrossPoint> 
 
 void CTracer::TraceEntity( const SConvexHull &e, bool bTerrain )
 {
-	vector<SInterval::SCrossPoint> enter;
-	vector<SInterval::SCrossPoint> exit;
+	std::vector<SInterval::SCrossPoint> enter;
+	std::vector<SInterval::SCrossPoint> exit;
 	TraceEntity( e, &enter, &exit );
 	ASSERT( bTerrain || e.tris.bClosed );
 	// fill intervals structure
 	FillIntersectionResults( &intersections, &enter, &exit, e.src, e.nUserID, bTerrain );//!e.tris.bClosed );
 }
 
-void CTracer::TraceEntity( const vector<SConvexHull> &hulls, bool bTerrain )
+void CTracer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain )
 {
-	vector<SInterval::SCrossPoint> enter;
-	vector<SInterval::SCrossPoint> exit;
+	std::vector<SInterval::SCrossPoint> enter;
+	std::vector<SInterval::SCrossPoint> exit;
 	for ( int i = 0; i < hulls.size(); ++i )
 		TraceEntity( hulls[i], &enter, &exit );
 	// fill intervals structure

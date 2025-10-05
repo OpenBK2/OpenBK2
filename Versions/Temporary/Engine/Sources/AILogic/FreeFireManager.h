@@ -26,7 +26,7 @@ class CFreeFireManager
 	};
 
 	ZDATA 
-	vector<SShotInfo> shootInfo;
+	std::vector<SShotInfo> shootInfo;
 
 	NTimer::STime lastCheck;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&shootInfo); f.Add(3,&lastCheck); return 0; }

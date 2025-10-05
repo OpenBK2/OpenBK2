@@ -22,9 +22,9 @@ NTimer::STime lastTimeDiff = 50;
 
 struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 {
-	vector<SRect> mediateRects;
+	std::vector<SRect> mediateRects;
 	//
-	SCheckTurnIterateUnitsCallback( const vector<SRect> &_mediateRects ): mediateRects( _mediateRects ) {}
+	SCheckTurnIterateUnitsCallback( const std::vector<SRect> &_mediateRects ): mediateRects( _mediateRects ) {}
 	//
 	bool Iterate( CBasePathUnit *unit ) const
 	{
@@ -465,7 +465,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 
 	const int nParts = 4;
 	const int nAdd = nDirSign * int( wBestDir / nParts );
-	vector<SRect> mediateRects( nParts );
+	std::vector<SRect> mediateRects( nParts );
 	for ( int i = 1; i <= nParts; ++i )
 	{
 		const WORD wMediateDir = wCurDir + i * nAdd;  // dirSign * int(bestDir / 2);
@@ -531,7 +531,7 @@ void CBasePathUnit::StaticLockTiles() const
 	if ( IsStaticUnit() )
 	{
 		SUnitProfile profile( GetUnitProfile() );
-		list<SObjTileInfo> tiles;
+		std::list<SObjTileInfo> tiles;
 		if ( profile.bRect )
 		{
 			const SRect &rect( profile.rect );
@@ -543,10 +543,10 @@ void CBasePathUnit::StaticLockTiles() const
 			pAIMap->GetTilesCoveredByCircle( circle.center, circle.r, &tiles );
 		}
 		if ( GetMovementPlane() == PLANE_WATER )
-			for ( list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+			for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 				it->lockInfo = EAC_WATER;
 		else
-			for ( list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+			for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 				it->lockInfo = EAC_TERRAIN;
 		pAIMap->GetTerrain()->AddStaticObjectTiles( tiles );
 	}

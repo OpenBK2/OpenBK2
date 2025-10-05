@@ -46,8 +46,8 @@ protected:
 		int									nGameID;
 		NNet::CNodeAddress	lanNode;
 		NTimer::STime				lastSeen;
-		string							szSessionName;
-		string							szMapName;
+		std::string							szSessionName;
+		std::string							szMapName;
 		int									nPlayers;
 		int									nMaxPlayers;
 		float								fPing;
@@ -57,7 +57,7 @@ protected:
 		int									nTechLevel;
 		bool								bPasswordRequired;
 	};
-	typedef list<SNetGameInfo> CNetGameList;
+	typedef std::list<SNetGameInfo> CNetGameList;
 
 	struct SLagInfo
 	{
@@ -66,10 +66,10 @@ protected:
 		DWORD dwHatedBy;							// They want him kicked already
 		SLagInfo() : timeStartLag(0), nLagLeft(0), dwHatedBy(0) {}
 	};
-	typedef vector<SLagInfo> CLaggerList;
+	typedef std::vector<SLagInfo> CLaggerList;
 
 	// General MP state
-	string szMPName;
+	std::string szMPName;
 	bool bGameRoomInit;
 
 	CObj<IServerClient> pClient;
@@ -79,12 +79,12 @@ protected:
 
 	// Game state
 	int nGameID;
-	string szSessionName;
-	string szPassword;
+	std::string szSessionName;
+	std::string szPassword;
 	SB2GameSpecificData gameDesc;
 	unsigned long ulHostCheckSum;
 	unsigned long ulGameCheckSum;
-	vector<SMPSlot> slots;
+	std::vector<SMPSlot> slots;
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
@@ -96,7 +96,7 @@ protected:
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
 
-	list<int> pendingClients;				// NEW_CLIENT-s that are received when we do not have our slot number yet
+	std::list<int> pendingClients;				// NEW_CLIENT-s that are received when we do not have our slot number yet
 
 	// (Custom) Games List
 	SAutoUpdate						gamesUpdate;
@@ -159,7 +159,7 @@ protected:
 	bool HasPlayerStoppedLagging( int nPlayer );
 	bool HasPlayerStartedLagging( int nPlayer );
 	void SendStartGamePacket();
-	void AddGameInfoForUI( list<SUIGameInfo> *pList, const SNetGameInfo &game );
+	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();
 	virtual void CheckJoinGameConditions() {}
 	
@@ -179,8 +179,8 @@ protected:
 	void JoiningClientAssignNewClient( int nClientID );
 	void RemoveClient( int nClientID, bool bKicked );
 
-	void CreateRehash( vector<BYTE> *pOrder );
-	void RehashSlots( const vector<BYTE> &order );
+	void CreateRehash( std::vector<BYTE> *pOrder );
+	void RehashSlots( const std::vector<BYTE> &order );
 
 	virtual void UpdateGameList() = 0;
 	virtual void OnLeaveGame() = 0;
@@ -191,7 +191,7 @@ protected:
 	virtual void KickPlayerFromSlot( const int nSlot ) = 0;
 	virtual void OnSurrender() {}
 
-	void OnCriticalNetworkError( const wstring &wszMessage );
+	void OnCriticalNetworkError( const std::wstring &wszMessage );
 
 	unsigned long GetCheckSum( const NDb::SMultiplayerMap *pMPMap );
 public:
@@ -203,7 +203,7 @@ public:
 	bool Segment();
 	//}
 
-	const bool SaveReplay( const string &szFileName );
+	const bool SaveReplay( const std::string &szFileName );
 	//void CMPManagerMode::UpdateInfoForReplay( SMultiplayerReplayInfo *pReplayInfo );
 	virtual void SetLanTester( class CLANTester *_pLANTester ) = 0;
 };

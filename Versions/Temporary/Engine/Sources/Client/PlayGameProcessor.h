@@ -16,15 +16,15 @@ class CPlayGameProcessor : public CPacketProcessor
 	CPtr<CNet> pNet;
 	CPtr<CNet> pAcceptGamersNet;
 
-	typedef hash_map<int, CPtr<IConnection> > TConnections;
+	typedef std::unordered_map<int, CPtr<IConnection> > TConnections;
 	TConnections connections;
 
-	typedef hash_map< int, CPtr<CConnectionEffort> > TConnectionEfforts;
+	typedef std::unordered_map< int, CPtr<CConnectionEffort> > TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;
 
 	int nMyServerID;
 
-	string szServerIP;
+	std::string szServerIP;
 	int nNetGameVersion;
 	int nServerPort;
 
@@ -40,7 +40,7 @@ class CPlayGameProcessor : public CPacketProcessor
 		SWaitingPacket( CNetPacket *_pPacket, const DWORD _dwStartTime )
 			: pPacket( _pPacket ), dwStartTime( _dwStartTime ) { }
 	};
-	list<SWaitingPacket> waitingPackets;
+	std::list<SWaitingPacket> waitingPackets;
 
 	CPtr<NNet::CGameLinksManager> pLinksManager;
 	NNet::CNodeAddress serverAddress;

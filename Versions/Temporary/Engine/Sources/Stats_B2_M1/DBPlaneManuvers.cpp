@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::ESpeedRelation eValue )
+std::string EnumToString( NDb::ESpeedRelation eValue )
 {
 	switch ( eValue )
 	{
@@ -29,7 +29,7 @@ string EnumToString( NDb::ESpeedRelation eValue )
 	}
 }
 
-NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const string &szValue )
+NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const std::string &szValue )
 {
 	if ( szValue == "ESR_NEAR_STALL" )
 		return NDb::ESR_NEAR_STALL;
@@ -44,7 +44,7 @@ NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const string &szValue 
 	return NDb::ESR_NEAR_STALL;
 }
 
-string EnumToString( NDb::EPlanesAttitude eValue )
+std::string EnumToString( NDb::EPlanesAttitude eValue )
 {
 	switch ( eValue )
 	{
@@ -57,7 +57,7 @@ string EnumToString( NDb::EPlanesAttitude eValue )
 	}
 }
 
-NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const string &szValue )
+NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const std::string &szValue )
 {
 	if ( szValue == "EPA_ATTACK" )
 		return NDb::EPA_ATTACK;
@@ -66,7 +66,7 @@ NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const string &szValu
 	return NDb::EPA_ATTACK;
 }
 
-string EnumToString( NDb::EManuverDestination eValue )
+std::string EnumToString( NDb::EManuverDestination eValue )
 {
 	switch ( eValue )
 	{
@@ -79,7 +79,7 @@ string EnumToString( NDb::EManuverDestination eValue )
 	}
 }
 
-NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const string &szValue )
+NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const std::string &szValue )
 {
 	if ( szValue == "EMD_PREDICTED_POINT" )
 		return NDb::EMD_PREDICTED_POINT;
@@ -88,7 +88,7 @@ NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const string
 	return NDb::EMD_PREDICTED_POINT;
 }
 
-string EnumToString( NDb::EManuverID eValue )
+std::string EnumToString( NDb::EManuverID eValue )
 {
 	switch ( eValue )
 	{
@@ -101,7 +101,7 @@ string EnumToString( NDb::EManuverID eValue )
 	}
 }
 
-NDb::EManuverID NDb::StringToEnum_NDb_EManuverID( const string &szValue )
+NDb::EManuverID NDb::StringToEnum_NDb_EManuverID( const std::string &szValue )
 {
 	if ( szValue == "DB_EMID_GENERIC" )
 		return NDb::DB_EMID_GENERIC;
@@ -287,7 +287,7 @@ DWORD SHeightRange::CalcCheckSum() const
 
 
 
-void SManuverConditions::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SManuverConditions::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "EnemyDirection", (BYTE*)&pEnemyDirection - pThis, sizeof(pEnemyDirection), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "SelfDirection", (BYTE*)&pSelfDirection - pThis, sizeof(pSelfDirection), NTypeDef::TYPE_TYPE_REF );

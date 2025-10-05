@@ -25,8 +25,8 @@ class CSWTextureData: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CSWTextureData);
 public:
-	vector<CArray2D<NGfx::SPixel8888> > mips;
-	vector<CArray2D<SBumpPixel> > bumpMips;
+	std::vector<CArray2D<NGfx::SPixel8888> > mips;
+	std::vector<CArray2D<SBumpPixel> > bumpMips;
 
 	void PrepareBump();
 	int GetSizeX() const { return mips[0].GetSizeX(); }

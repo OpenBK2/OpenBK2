@@ -62,7 +62,7 @@ void CSoundSample::SetKey( const CDBID &dbid )
 		if ( stream.IsOk() )
 		{
 			const int nSize = stream.GetSize();
-			vector<char> data(nSize);
+			std::vector<char> data(nSize);
 			stream.Read( &data[0], nSize );
 			FSOUND_SAMPLE *pSample = FSOUND_Sample_Load( FSOUND_UNMANAGED, &data[0], /*( b3DSoundShare ? FSOUND_HW3D : FSOUND_2D ) |*/ FSOUND_LOADMEMORY, 0, nSize );
 			SetSample( pSample );

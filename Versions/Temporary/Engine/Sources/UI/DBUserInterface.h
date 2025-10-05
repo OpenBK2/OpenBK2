@@ -51,8 +51,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		CParam<string> szParam1;
-		CParam<string> szParam2;
+		CParam<std::string> szParam1;
+		CParam<std::string> szParam2;
 		CParam<CVec2> vParam1;
 		CParam<int> nParam1;
 
@@ -60,7 +60,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -72,8 +72,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szMessageID;
-		string szStringParam;
+		std::string szMessageID;
+		std::string szStringParam;
 		int nIntParam;
 
 		SBUIMessage() :
@@ -81,7 +81,7 @@ namespace NDb
 			nIntParam( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -132,7 +132,7 @@ namespace NDb
 		enum { typeID = 0x11075C00 };
 		CParam<CVec2> vOffset;
 		CParam<float> fMoveTime;
-		CParam<string> szElementToMove;
+		CParam<std::string> szElementToMove;
 
 		#include "include_uismoveto.h"
 
@@ -152,8 +152,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SUISRunReaction )
 	public:
 		enum { typeID = 0x11075C05 };
-		CParam<string> szReactionForward;
-		CParam<string> szReactionBack;
+		CParam<std::string> szReactionForward;
+		CParam<std::string> szReactionBack;
 
 		#include "include_uisrunreaction.h"
 
@@ -173,8 +173,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SUISSendUIMessage )
 	public:
 		enum { typeID = 0x11075C07 };
-		CParam<string> szMessageID;
-		CParam<string> szParam;
+		CParam<std::string> szMessageID;
+		CParam<std::string> szParam;
 		CParam<int> nForwardParam;
 		CParam<int> nBackParam;
 
@@ -196,7 +196,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SUIConsoleCommand )
 	public:
 		enum { typeID = 0x110953C1 };
-		string szEditBoxName;
+		std::string szEditBoxName;
 
 		#include "include_uiconsolecommand.h"
 
@@ -237,7 +237,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SUIStateBase > > commands;
+		std::vector< CDBPtr< SUIStateBase > > commands;
 		bool bReversable;
 
 		SUIStateSequence() :
@@ -245,7 +245,7 @@ namespace NDb
 			bReversable( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -336,7 +336,7 @@ namespace NDb
 			nRotate( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -416,8 +416,8 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szGameMessage;
-		string szLogicalReaction;
+		std::string szGameMessage;
+		std::string szLogicalReaction;
 		SUIStateSequence visualReaction;
 		bool bWaitVisual;
 		bool bForward;
@@ -428,7 +428,7 @@ namespace NDb
 			bForward( true )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -451,7 +451,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -470,7 +470,7 @@ namespace NDb
 			bTransparent( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -483,12 +483,12 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SUIDesc > > children;
+		std::vector< CDBPtr< SUIDesc > > children;
 		CDBPtr< SBackground > pBackground;
 		CDBPtr< SBackground > pForeground;
 		SWindowFlags flags;
 		SWindowPlacement placement;
-		vector< CVec2 > activeArea;
+		std::vector< CVec2 > activeArea;
 		bool bIgnoreDblClick;
 
 		SWindowShared() :
@@ -509,11 +509,11 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		NFile::CFilePath szTooltipFileRef;
 		bool bVisible;
 		int nPriority;
-		vector< SGameMessageReaction > gameMessageReactions;
+		std::vector< SGameMessageReaction > gameMessageReactions;
 		SWindowPlacement placement;
 		bool bEnabled;
 		CDBPtr< SForegroundTextString > pTextString;
@@ -640,13 +640,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< SUIDesc > > data;
+		std::vector< CDBPtr< SUIDesc > > data;
 
 		SMessageSequence() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -666,7 +666,7 @@ namespace NDb
 			nCustomCheckReturn( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -678,7 +678,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SCheckRunScript )
 	public:
 		enum { typeID = 0x1106BC41 };
-		string szScriptFunction;
+		std::string szScriptFunction;
 
 		#include "include_checkrunscript.h"
 
@@ -698,7 +698,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SCheckPreprogrammed )
 	public:
 		enum { typeID = 0x1106BC42 };
-		string szCheckName;
+		std::string szCheckName;
 
 		#include "include_checkpreprogrammed.h"
 
@@ -718,8 +718,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SCheckIsWindowEnabled )
 	public:
 		enum { typeID = 0x15083380 };
-		string szWindowName;
-		string szParentWindowName;
+		std::string szWindowName;
+		std::string szParentWindowName;
 
 		#include "include_checkiswindowenabled.h"
 
@@ -739,8 +739,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SCheckIsWindowVisible )
 	public:
 		enum { typeID = 0x110B3400 };
-		string szWindowName;
-		string szParentWindowName;
+		std::string szWindowName;
+		std::string szParentWindowName;
 
 		#include "include_checkiswindowvisible.h"
 
@@ -760,7 +760,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SCheckIsTabActive )
 	public:
 		enum { typeID = 0x170B6300 };
-		string szTabControlName;
+		std::string szTabControlName;
 		int nTab;
 
 		#include "include_checkistabactive.h"
@@ -783,7 +783,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SMessageReactionComplex )
 	public:
 		enum { typeID = 0x1106BC43 };
-		vector< SMessageSequienceEntry > branches;
+		std::vector< SMessageSequienceEntry > branches;
 		CDBPtr< SUIDesc > pConditionCheck;
 		SMessageSequence commonBefore;
 		SMessageSequence commonAfter;
@@ -806,8 +806,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SARSetGlobalVar )
 	public:
 		enum { typeID = 0x1106BC44 };
-		string szVarName;
-		string szVarValue;
+		std::string szVarName;
+		std::string szVarValue;
 
 		#include "include_arsetglobalvar.h"
 
@@ -827,7 +827,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SARRemoveGlobalVar )
 	public:
 		enum { typeID = 0x1106BC45 };
-		string szVarName;
+		std::string szVarName;
 
 		#include "include_arremoveglobalvar.h"
 
@@ -847,8 +847,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SARSendUIMessage )
 	public:
 		enum { typeID = 0x1106BC46 };
-		string szMessageID;
-		string szStringParam;
+		std::string szMessageID;
+		std::string szStringParam;
 		int nIntParam;
 
 		#include "include_arsenduimessage.h"
@@ -871,7 +871,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SARSendGameMessage )
 	public:
 		enum { typeID = 0x15084340 };
-		string szEventName;
+		std::string szEventName;
 		int nIntParam;
 
 		#include "include_arsendgamemessage.h"
@@ -894,7 +894,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SARSwitchTab )
 	public:
 		enum { typeID = 0x15083384 };
-		string szTabControlName;
+		std::string szTabControlName;
 		int nTab;
 
 		#include "include_arswitchtab.h"
@@ -917,14 +917,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		CDBPtr< SUIDesc > pReaction;
 
 		SReactionSequenceEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -936,14 +936,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SReactionSequenceEntry > reactions;
+		std::vector< SReactionSequenceEntry > reactions;
 		NFile::CFilePath szScriptFileRef;
 
 		SMessageReactionsDesc() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -955,14 +955,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		SUIStateSequence sequence;
 
 		SCommandSequienceEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -974,14 +974,14 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szName;
+		std::string szName;
 		NFile::CFilePath szTextFileRef;
 
 		SScreenTextEntry() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1011,9 +1011,9 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106BC4A };
 		SMessageReactionsDesc messageReactions;
-		vector< SCommandSequienceEntry > commandSequiences;
+		std::vector< SCommandSequienceEntry > commandSequiences;
 		int nTooltipContext;
-		vector< SScreenTextEntry > relatedTexts;
+		std::vector< SScreenTextEntry > relatedTexts;
 
 		#include "include_screen.h"
 
@@ -1091,7 +1091,7 @@ namespace NDb
 			nMaxValue( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1111,7 +1111,7 @@ namespace NDb
 			fValue( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1123,7 +1123,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowMultiTextureProgressBarShared )
 	public:
 		enum { typeID = 0x150A0AC1 };
-		vector< SMultiTextureProgressBarSharedState > states;
+		std::vector< SMultiTextureProgressBarSharedState > states;
 
 		SWindowMultiTextureProgressBarShared() { }
 		//
@@ -1141,7 +1141,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowMultiTextureProgressBar )
 	public:
 		enum { typeID = 0x150A0AC2 };
-		vector< float > progresses;
+		std::vector< float > progresses;
 		bool bSolid;
 		float fPieceSize;
 
@@ -1169,7 +1169,7 @@ namespace NDb
 		enum { typeID = 0x1106C3C2 };
 		int nColor;
 		int nFormat;
-		string szFontName;
+		std::string szFontName;
 		int nRedLineSpace;
 
 		SWindowTextViewShared() :
@@ -1274,7 +1274,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowPlayer )
 	public:
 		enum { typeID = 0x170A7B81 };
-		string szSequenceName;
+		std::string szSequenceName;
 		bool bMaintainAspectRatio;
 
 		#include "include_windowplayer.h"
@@ -1307,7 +1307,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowEditLineShared )
 	public:
 		enum { typeID = 0x1106C340 };
-		string szFontName;
+		std::string szFontName;
 		int nColor;
 		int nCursorColor;
 		int nSelColor;
@@ -1338,16 +1338,16 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowEditLine )
 	public:
 		enum { typeID = 0x1106C342 };
-		string szOnReturn;
+		std::string szOnReturn;
 		SUIStateSequence sequienceOnReturn;
-		string szOnEscape;
+		std::string szOnEscape;
 		SUIStateSequence sequienceOnEscape;
 		int nMaxLength;
 		bool bTextScroll;
 		ETextEntryType eTextEntryType;
 		bool bPassword;
 		SUIStateSequence sequienceOnTextChanged;
-		string szOnTextChanged;
+		std::string szOnTextChanged;
 		int nTabOrder;
 		SUIStateSequence sequienceOnFocusLost;
 
@@ -1616,7 +1616,7 @@ namespace NDb
 		enum { typeID = 0x1106C2C0 };
 		CDBPtr< SWindow > pSortIconDown;
 		CDBPtr< SWindow > pSortIconUp;
-		vector< CDBPtr< SWindowMSButton > > subHeaderSamples;
+		std::vector< CDBPtr< SWindowMSButton > > subHeaderSamples;
 
 		SWindowListHeaderShared() { }
 		//
@@ -1653,7 +1653,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowListItemShared )
 	public:
 		enum { typeID = 0x170CC480 };
-		vector< CDBPtr< SWindow > > subItemSamples;
+		std::vector< CDBPtr< SWindow > > subItemSamples;
 
 		SWindowListItemShared() { }
 		//
@@ -1756,19 +1756,19 @@ namespace NDb
 			mutable DWORD __dwCheckSum;
 		public:
 			CDBPtr< SWindow > pTabContainer;
-			string szButtonName;
+			std::string szButtonName;
 
 			STab() :
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< STab > tabs;
+		std::vector< STab > tabs;
 
 		#include "include_windowtabcontrol.h"
 
@@ -1864,7 +1864,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1889,7 +1889,7 @@ namespace NDb
 			eDefaultSubState( BST_NORMAL )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1901,13 +1901,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		string szMessageOnEnterState;
+		std::string szMessageOnEnterState;
 		SUIStateSequence commandsOnEnterState;
 		SUIStateSequence commandsOnRightClick;
 		SUIStateSequence commandsOnLDblKlick;
 		bool bWaitVisual;
 		bool bReverseCommands;
-		string szName;
+		std::string szName;
 
 		SButtonLogicalState() :
 			__dwCheckSum( 0 ),
@@ -1915,7 +1915,7 @@ namespace NDb
 			bReverseCommands( false )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -1927,7 +1927,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowMSButtonShared )
 	public:
 		enum { typeID = 0x1106C380 };
-		vector< SButtonVisualState > visualStates;
+		std::vector< SButtonVisualState > visualStates;
 		EButtonChangeStateType eTriggerMode;
 
 		SWindowMSButtonShared() :
@@ -1948,7 +1948,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWindowMSButton )
 	public:
 		enum { typeID = 0x1106C382 };
-		vector< SButtonLogicalState > buttonStates;
+		std::vector< SButtonLogicalState > buttonStates;
 		int nButtonGroupID;
 		bool bAutoChangeState;
 		SUIStateSequence pushEffect;
@@ -2072,7 +2072,7 @@ namespace NDb
 		enum { typeID = 0x170AE340 };
 		EButtonSubstateType eSubstate;
 		float fWaitTime;
-		CParam<string> szButton;
+		CParam<std::string> szButton;
 
 		#include "include_uisbuttonsubstate.h"
 
@@ -2093,57 +2093,57 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EPositionAllign eValue );
-	EPositionAllign StringToEnum_NDb_EPositionAllign( const string &szValue );
+	std::string EnumToString( NDb::EPositionAllign eValue );
+	EPositionAllign StringToEnum_NDb_EPositionAllign( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EPositionAllign>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EPositionAllign eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EPositionAllign ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EPositionAllign( szValue ); }
+	static std::string ToString( NDb::EPositionAllign eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EPositionAllign ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EPositionAllign( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::ETextEntryType eValue );
-	ETextEntryType StringToEnum_NDb_ETextEntryType( const string &szValue );
+	std::string EnumToString( NDb::ETextEntryType eValue );
+	ETextEntryType StringToEnum_NDb_ETextEntryType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ETextEntryType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ETextEntryType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ETextEntryType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ETextEntryType( szValue ); }
+	static std::string ToString( NDb::ETextEntryType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ETextEntryType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ETextEntryType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EButtonSubstateType eValue );
-	EButtonSubstateType StringToEnum_NDb_EButtonSubstateType( const string &szValue );
+	std::string EnumToString( NDb::EButtonSubstateType eValue );
+	EButtonSubstateType StringToEnum_NDb_EButtonSubstateType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EButtonSubstateType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EButtonSubstateType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EButtonSubstateType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EButtonSubstateType( szValue ); }
+	static std::string ToString( NDb::EButtonSubstateType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EButtonSubstateType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EButtonSubstateType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EButtonChangeStateType eValue );
-	EButtonChangeStateType StringToEnum_NDb_EButtonChangeStateType( const string &szValue );
+	std::string EnumToString( NDb::EButtonChangeStateType eValue );
+	EButtonChangeStateType StringToEnum_NDb_EButtonChangeStateType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EButtonChangeStateType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EButtonChangeStateType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EButtonChangeStateType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EButtonChangeStateType( szValue ); }
+	static std::string ToString( NDb::EButtonChangeStateType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EButtonChangeStateType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EButtonChangeStateType( szValue ); }
 };
 

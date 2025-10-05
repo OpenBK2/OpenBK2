@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SRankExperience::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SRankExperience::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Experience", (BYTE*)&fExperience - pThis, sizeof(fExperience), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Rank", (BYTE*)&pRank - pThis, sizeof(pRank), NTypeDef::TYPE_TYPE_REF );
@@ -53,7 +53,7 @@ DWORD SRankExperience::CalcCheckSum() const
 
 
 
-void SLeaderExpLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SLeaderExpLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "RankNameFileRef", (BYTE*)&szRankNameFileRef - pThis, sizeof(szRankNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "ExpNeeded", (BYTE*)&nExpNeeded - pThis, sizeof(nExpNeeded), NTypeDef::TYPE_TYPE_INT );
@@ -95,7 +95,7 @@ DWORD SLeaderExpLevel::CalcCheckSum() const
 
 
 
-void SMedalConditions::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMedalConditions::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Medal", (BYTE*)&pMedal - pThis, sizeof(pMedal), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Parameter", (BYTE*)&fParameter - pThis, sizeof(fParameter), NTypeDef::TYPE_TYPE_FLOAT );
@@ -137,7 +137,7 @@ DWORD SMedalConditions::CalcCheckSum() const
 
 
 
-void SCampaign::SLeader::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SCampaign::SLeader::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (BYTE*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
@@ -292,7 +292,7 @@ DWORD SCampaign::CalcCheckSum() const
 
 
 
-void SUnitClassEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUnitClassEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (BYTE*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
 }
@@ -328,7 +328,7 @@ DWORD SUnitClassEntry::CalcCheckSum() const
 
 
 
-void SEnemyEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SEnemyEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (BYTE*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (BYTE*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
@@ -366,7 +366,7 @@ DWORD SEnemyEntry::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EMissionEnableType eValue )
+std::string EnumToString( NDb::EMissionEnableType eValue )
 {
 	switch ( eValue )
 	{
@@ -383,7 +383,7 @@ string EnumToString( NDb::EMissionEnableType eValue )
 	}
 }
 
-NDb::EMissionEnableType NDb::StringToEnum_NDb_EMissionEnableType( const string &szValue )
+NDb::EMissionEnableType NDb::StringToEnum_NDb_EMissionEnableType( const std::string &szValue )
 {
 	if ( szValue == "MET_REGULAR" )
 		return NDb::MET_REGULAR;
@@ -396,7 +396,7 @@ NDb::EMissionEnableType NDb::StringToEnum_NDb_EMissionEnableType( const string &
 	return NDb::MET_REGULAR;
 }
 
-string EnumToString( NDb::EMissionType eValue )
+std::string EnumToString( NDb::EMissionType eValue )
 {
 	switch ( eValue )
 	{
@@ -419,7 +419,7 @@ string EnumToString( NDb::EMissionType eValue )
 	}
 }
 
-NDb::EMissionType NDb::StringToEnum_NDb_EMissionType( const string &szValue )
+NDb::EMissionType NDb::StringToEnum_NDb_EMissionType( const std::string &szValue )
 {
 	if ( szValue == "EMT_FINAL" )
 		return NDb::EMT_FINAL;
@@ -438,7 +438,7 @@ NDb::EMissionType NDb::StringToEnum_NDb_EMissionType( const string &szValue )
 	return NDb::EMT_FINAL;
 }
 
-string EnumToString( NDb::EMissionWeather eValue )
+std::string EnumToString( NDb::EMissionWeather eValue )
 {
 	switch ( eValue )
 	{
@@ -455,7 +455,7 @@ string EnumToString( NDb::EMissionWeather eValue )
 	}
 }
 
-NDb::EMissionWeather NDb::StringToEnum_NDb_EMissionWeather( const string &szValue )
+NDb::EMissionWeather NDb::StringToEnum_NDb_EMissionWeather( const std::string &szValue )
 {
 	if ( szValue == "EMW_SUN" )
 		return NDb::EMW_SUN;
@@ -468,7 +468,7 @@ NDb::EMissionWeather NDb::StringToEnum_NDb_EMissionWeather( const string &szValu
 	return NDb::EMW_SUN;
 }
 
-string EnumToString( NDb::EMissionDayTime eValue )
+std::string EnumToString( NDb::EMissionDayTime eValue )
 {
 	switch ( eValue )
 	{
@@ -485,7 +485,7 @@ string EnumToString( NDb::EMissionDayTime eValue )
 	}
 }
 
-NDb::EMissionDayTime NDb::StringToEnum_NDb_EMissionDayTime( const string &szValue )
+NDb::EMissionDayTime NDb::StringToEnum_NDb_EMissionDayTime( const std::string &szValue )
 {
 	if ( szValue == "EMDT_DAY" )
 		return NDb::EMDT_DAY;
@@ -498,7 +498,7 @@ NDb::EMissionDayTime NDb::StringToEnum_NDb_EMissionDayTime( const string &szValu
 	return NDb::EMDT_DAY;
 }
 
-string EnumToString( NDb::EMissionDifficulty eValue )
+std::string EnumToString( NDb::EMissionDifficulty eValue )
 {
 	switch ( eValue )
 	{
@@ -515,7 +515,7 @@ string EnumToString( NDb::EMissionDifficulty eValue )
 	}
 }
 
-NDb::EMissionDifficulty NDb::StringToEnum_NDb_EMissionDifficulty( const string &szValue )
+NDb::EMissionDifficulty NDb::StringToEnum_NDb_EMissionDifficulty( const std::string &szValue )
 {
 	if ( szValue == "EMD_EASY" )
 		return NDb::EMD_EASY;
@@ -529,7 +529,7 @@ NDb::EMissionDifficulty NDb::StringToEnum_NDb_EMissionDifficulty( const string &
 }
 
 
-void SMissionEnableInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMissionEnableInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Map", (BYTE*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PlaceOnChapterMap", &vPlaceOnChapterMap, pThis ); 
@@ -610,7 +610,7 @@ DWORD SMissionEnableInfo::CalcCheckSum() const
 
 
 
-void SScenarioUnitModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SScenarioUnitModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Quantity", (BYTE*)&nQuantity - pThis, sizeof(nQuantity), NTypeDef::TYPE_TYPE_INT );
@@ -652,7 +652,7 @@ DWORD SScenarioUnitModifier::CalcCheckSum() const
 
 
 
-void SBaseReinforcements::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SBaseReinforcements::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
 }
@@ -687,7 +687,7 @@ DWORD SBaseReinforcements::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EChapterBonusType eValue )
+std::string EnumToString( NDb::EChapterBonusType eValue )
 {
 	switch ( eValue )
 	{
@@ -702,7 +702,7 @@ string EnumToString( NDb::EChapterBonusType eValue )
 	}
 }
 
-NDb::EChapterBonusType NDb::StringToEnum_NDb_EChapterBonusType( const string &szValue )
+NDb::EChapterBonusType NDb::StringToEnum_NDb_EChapterBonusType( const std::string &szValue )
 {
 	if ( szValue == "CBT_REINF_DISABLE" )
 		return NDb::CBT_REINF_DISABLE;
@@ -714,7 +714,7 @@ NDb::EChapterBonusType NDb::StringToEnum_NDb_EChapterBonusType( const string &sz
 }
 
 
-void SChapterGeneralInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SChapterGeneralInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DescFileRef", (BYTE*)&szDescFileRef - pThis, sizeof(szDescFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Portrait", (BYTE*)&pPortrait - pThis, sizeof(pPortrait), NTypeDef::TYPE_TYPE_REF );

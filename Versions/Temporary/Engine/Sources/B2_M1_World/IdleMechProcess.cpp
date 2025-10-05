@@ -10,7 +10,7 @@
 
 REGISTER_SAVELOAD_CLASS( 0x12118C80, CIdleMechProcess );
 
-CIdleMechProcess::CIdleMechProcess( int nObjectID, const vector<string> &effectBones, const NDb::SComplexEffect *pComplexEffect ) : 
+CIdleMechProcess::CIdleMechProcess( int nObjectID, const std::vector<std::string> &effectBones, const NDb::SComplexEffect *pComplexEffect ) :
 	nID( nObjectID ), pEffect( pComplexEffect->GetSceneEffect() ), times( 0 )
 {
 	bones.resize( effectBones.size() );

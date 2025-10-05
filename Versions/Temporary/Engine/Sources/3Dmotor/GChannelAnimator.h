@@ -10,7 +10,7 @@ namespace NAnimation
 	struct IChannelAnimator
 	{
 		virtual int GetChannelCount() = 0;
-		virtual int GetChannelIndex( const string &szName ) = 0;
+		virtual int GetChannelIndex( const std::string &szName ) = 0;
 		virtual float GetChannelValue( int nChannelIndex ) = 0;
 	};
 } // namespace NAnimation

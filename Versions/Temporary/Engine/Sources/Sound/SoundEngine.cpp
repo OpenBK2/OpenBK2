@@ -40,7 +40,7 @@ CPlayLog::CPlayLog()
 	ClearLog();
 }
 
-void CPlayLog::Add( const string &szName, bool bLooped, int nStartPos )
+void CPlayLog::Add( const std::string &szName, bool bLooped, int nStartPos )
 {
 	log[nCurPos].szName = szName;
 	log[nCurPos].bLooped = bLooped;
@@ -51,7 +51,7 @@ void CPlayLog::Add( const string &szName, bool bLooped, int nStartPos )
 	nCurPos %= SOUND_PLAY_LOG_SIZE;
 }
 
-void CPlayLog::SaveToFile( const string &szFileName )
+void CPlayLog::SaveToFile( const std::string &szFileName )
 {
 	const int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos + 1;
 	const int nStartPos = bLogIsFull ? ( nCurPos + SOUND_PLAY_LOG_SIZE - 1 ) % SOUND_PLAY_LOG_SIZE : 0;
@@ -69,7 +69,7 @@ void CPlayLog::SaveToFile( const string &szFileName )
 	operator&( *pSaver.GetPtr() );
 }
 
-void CPlayLog::PlayFile( const string &szFileName, int nMaxSize )
+void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 {
 	CFileStream stream( StrFmt( "%s.soundlog", szFileName.c_str() ), CFileStream::WIN_READ_ONLY );
 
@@ -84,7 +84,7 @@ void CPlayLog::PlayFile( const string &szFileName, int nMaxSize )
 	int nStartPos = bLogIsFull ? ( nCurPos + SOUND_PLAY_LOG_SIZE -1 ) % SOUND_PLAY_LOG_SIZE : 0;
 	int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos;
 	
-	list<FSOUND_SAMPLE *> toDelete;
+	std::list<FSOUND_SAMPLE *> toDelete;
 	for ( int i = 0; i < Min( nEntries, nMaxSize ); ++i )
 	{
 		const SLogEntry &entry = log[( i + nStartPos ) % SOUND_PLAY_LOG_SIZE];
@@ -102,7 +102,7 @@ void CPlayLog::PlayFile( const string &szFileName, int nMaxSize )
 				DebugTrace( "SoundLog play: %s", entry.szName );
 
 				const int nSize = stream.GetSize();
-				vector<char> data(nSize);
+				std::vector<char> data(nSize);
 				stream.Read( &data[0], nSize );
 				FSOUND_SAMPLE *pSample = FSOUND_Sample_Load( FSOUND_UNMANAGED, &data[0], /*( b3DSoundShare ? FSOUND_HW3D : FSOUND_2D ) |*/ FSOUND_LOADMEMORY, 0, nSize );
 				const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, pSample, 0, true );
@@ -317,8 +317,8 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 
 void CSoundEngine::MapSound( ISound *pSound, int nChannel )
 {
-	channelsMap.insert( pair<ISound*, int>( pSound, nChannel ) );
-	soundsMap.insert( pair<int, CPtr<ISound> >( nChannel, pSound ) );
+	channelsMap.insert( std::pair<ISound*, int>( pSound, nChannel ) );
+	soundsMap.insert( std::pair<int, CPtr<ISound> >( nChannel, pSound ) );
 }
 
 bool CSoundEngine::IsPaused()
@@ -344,7 +344,7 @@ void CSoundEngine::ClearChannels()
 	if ( bPaused )
 		return;
 	//
-	list<int> channels;
+	std::list<int> channels;
 	// collect finished and invalid channels
 	for ( CChannelSoundMap::iterator it = soundsMap.begin(); it != soundsMap.end(); ++it )
 	{
@@ -359,7 +359,7 @@ void CSoundEngine::ClearChannels()
 		}
 	}
 	// clear it
-	for ( list<int>::iterator it = channels.begin(); it != channels.end(); ++it )
+	for ( std::list<int>::iterator it = channels.begin(); it != channels.end(); ++it )
 	{
 		const int nChannel = *it;
 		ISound *pSound = soundsMap[nChannel];
@@ -518,7 +518,7 @@ int CSoundEngine::operator&( IBinSaver &saver )
 
 ISFX *CreateSoundEngine() { return new CSoundEngine(); }
 
-void SoundParams( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void SoundParams( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
 		return;
@@ -528,7 +528,7 @@ void SoundParams( const string &szID, const vector<wstring> &paramsSet, void *pC
 	FSOUND_3D_SetRolloffFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[2] ) ));
 }
 
-void SaveSoundLog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
 		return;
@@ -537,7 +537,7 @@ void SaveSoundLog( const string &szID, const vector<wstring> &paramsSet, void *p
 #endif
 }
 
-void PlaySoundLog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void PlaySoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
 		return;

@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include <algorithm>
 
 //
 // очаги сопротивления
@@ -39,7 +40,7 @@ struct SResistanceCmp
 	}
 };
 
-typedef vector<SResistance> CResistance;
+typedef std::vector<SResistance> CResistance;
 
 class CResistancesContainer
 {
@@ -52,15 +53,15 @@ class CResistancesContainer
 		SSellInfo() : fCellWeight( 0.0f ), bInUse( false ), bAllowShoot( true ) { }
 		SSellInfo( const float _fCellWeight, const bool _bInUse, const bool _bAllowShoot ) : fCellWeight( _fCellWeight ), bInUse( _bInUse ), bAllowShoot( _bAllowShoot ) { }
 	};
-	typedef hash_map<int, SSellInfo> CCellsWeights;
+	typedef std::unordered_map<int, SSellInfo> CCellsWeights;
 
-	typedef hash_map<int, int> CCellsWithGoodWeight;
+	typedef std::unordered_map<int, int> CCellsWithGoodWeight;
 
 	ZDATA
 	CResistance resistances;
 
 	CCellsWeights cellsWeights;
-	list<CCircle> excluded;				// general will not shoot to these circles
+	std::list<CCircle> excluded;				// general will not shoot to these circles
 	CCellsWithGoodWeight goodWeight;
 
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&resistances); f.Add(3,&cellsWeights); f.Add(4,&excluded); f.Add(5,&goodWeight); return 0; }
@@ -76,7 +77,7 @@ class CResistancesContainer
 			: pContainter( _pContainter )
 		{
 			SResistanceCmp cmp;
-			sort( pContainter->resistances.begin(), pContainter->resistances.end(), cmp );
+			std::sort( pContainter->resistances.begin(), pContainter->resistances.end(), cmp );
 			iter = pContainter->resistances.begin(); 
 			IterateToNotInUse(); 
 		}

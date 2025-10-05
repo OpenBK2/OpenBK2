@@ -40,7 +40,7 @@ struct SWaterSmoothProfile
 };
 
 
-inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, const NDb::SWater &water )
+inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterParams, const NDb::SWater &water )
 {
 	int nInd = -1;
 	for ( int i = 0; i < pWaterParams->size(); ++i )
@@ -54,7 +54,7 @@ inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, c
 
 	if ( nInd == -1 )
 	{
-		vector<NWaterStuff::SWaterParams>::iterator it = pWaterParams->insert( pWaterParams->end(), NWaterStuff::SWaterParams() );
+		std::vector<NWaterStuff::SWaterParams>::iterator it = pWaterParams->insert( pWaterParams->end(), NWaterStuff::SWaterParams() );
 		*it = water;
 		nInd = pWaterParams->size() - 1;
 	}
@@ -109,12 +109,12 @@ inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, c
 
 
 static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, CArray2D<BYTE> *pMask, const BYTE cFillMask,
-													 const vector<NDb::SVSOPoint> &samples )
+													 const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
 		return;
 
-	vector<CVec3dEx> boundPoints( samples.size() );
+	std::vector<CVec3dEx> boundPoints( samples.size() );
 	CVec2i vMin( INT_MAX, INT_MAX ), vMax( INT_MIN, INT_MIN );
 	for ( int i = 0; i < samples.size(); ++i )
 	{
@@ -162,16 +162,16 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 }
 
 
-static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples )
+static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
 		return;
 
-	vector<CVec3fEx> ridge( samples.size() * 2 );
+	std::vector<CVec3fEx> ridge( samples.size() * 2 );
 	CVec2 vPos;
 	CVec2 vMin( FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE );
 	int nInd = 0;
-	for ( vector<NDb::SVSOPoint>::const_iterator it = samples.begin(); it != samples.end(); ++it, ++nInd )
+	for ( std::vector<NDb::SVSOPoint>::const_iterator it = samples.begin(); it != samples.end(); ++it, ++nInd )
 	{
 		vPos.Set( it->vPos.x, it->vPos.y );
 		AI2Vis( &vPos );
@@ -235,7 +235,7 @@ const int defAreaHash[AREA_HASH_ELEMS_NUM][5] =
 #define AREA_LEFT_SIDE 4
 #define AREA_NONE_SIDE 7
 
-typedef hash_map<int, vector<int> > CAreaCornersHash;
+typedef std::unordered_map<int, std::vector<int> > CAreaCornersHash;
 static CAreaCornersHash areaCornersHash;
 
 static void InitCornersHash()
@@ -385,7 +385,7 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 }
 
 
-static void GetSeaAreas( vector< vector<NDb::SVSOPoint> > *pRes, const vector<NDb::SVSOPoint> &samples, const CVec2 &p1, const CVec2 &p2 )
+static void GetSeaAreas( std::vector< std::vector<NDb::SVSOPoint> > *pRes, const std::vector<NDb::SVSOPoint> &samples, const CVec2 &p1, const CVec2 &p2 )
 {
 	if ( samples.size() < 2 )
 		return;
@@ -393,12 +393,12 @@ static void GetSeaAreas( vector< vector<NDb::SVSOPoint> > *pRes, const vector<ND
 	if ( areaCornersHash.empty() )
 		InitCornersHash();
 
-	vector<vector<NDb::SVSOPoint> > &res = *pRes;
-	vector<NDb::SVSOPoint> addPoints( 128 );
+	std::vector<std::vector<NDb::SVSOPoint> > &res = *pRes;
+	std::vector<NDb::SVSOPoint> addPoints( 128 );
 
 	NDb::SVSOPoint p;
-	vector<NDb::SVSOPoint>::const_iterator it1 = samples.begin();
-	vector<NDb::SVSOPoint>::const_iterator it2 = samples.begin(); ++it2;
+	std::vector<NDb::SVSOPoint>::const_iterator it1 = samples.begin();
+	std::vector<NDb::SVSOPoint>::const_iterator it2 = samples.begin(); ++it2;
 	for ( ; it1 != samples.end() && it2 != samples.end(); ++it1, ++it2 )
 	{
 		if ( GetIntersectWithArea( &p, *it1, *it2, p1, p2 ) )
@@ -424,8 +424,8 @@ static void GetSeaAreas( vector< vector<NDb::SVSOPoint> > *pRes, const vector<ND
 				CAreaCornersHash::const_iterator itFind = areaCornersHash.find( (nInd2 << 3) | nInd1 );
 				if ( itFind != areaCornersHash.end() )
 				{
-					const vector<int> &cornersArr = itFind->second;
-					for ( vector<int>::const_iterator it = cornersArr.begin(); it != cornersArr.end(); ++it )
+					const std::vector<int> &cornersArr = itFind->second;
+					for ( std::vector<int>::const_iterator it = cornersArr.begin(); it != cornersArr.end(); ++it )
 					{
 						GetCornerFromInd( &p, *it, p1, p2 );
 						addPoints.push_back( p );
@@ -492,7 +492,7 @@ void CTerraGen::ReCreateAllWaterZones()
 		//vector<NWaterStuff::SWaterParams>::iterator it = waterParams.insert( waterParams.end(), NWaterStuff::SWaterParams() );
 		//*it = *( pCoastDesc->pWater );
 		//FillSeaArea( pDesc->coast.points, pDesc->vCoastMidPoint, terrainInfo.seaMask, terrainInfo.waterHeightCoeffs );
-		vector<vector<NDb::SVSOPoint> > seaAreas;
+		std::vector<std::vector<NDb::SVSOPoint> > seaAreas;
 		GetSeaAreas( &seaAreas, pDesc->coast.points,
 								 CVec2(Vis2AI(-DEF_SEA_OUTSIDE_MAP), Vis2AI(-DEF_SEA_OUTSIDE_MAP)),
 								 CVec2(Vis2AI((float)(terrainInfo.heights.GetSizeX() - 1) * DEF_TILE_SIZE + DEF_SEA_OUTSIDE_MAP),
@@ -506,8 +506,8 @@ void CTerraGen::ReCreateAllWaterZones()
 	}
 
 	// add lakes & islands
-	vector<int> procLakes;
-	vector<int> procIslands;
+	std::vector<int> procLakes;
+	std::vector<int> procIslands;
 	procLakes.reserve( pDesc->lakes.size() );
 	procIslands.reserve( pDesc->lakes.size() );
 	for ( int i = 0; i < pDesc->lakes.size(); ++i )
@@ -522,7 +522,7 @@ void CTerraGen::ReCreateAllWaterZones()
 
 	// affect lakes
 	CArray2D<float> newHeights( terrainInfo.waterHeightCoeffs.GetSizeX(), terrainInfo.waterHeightCoeffs.GetSizeY() );
-	for ( vector<int>::const_iterator it = procLakes.begin(); it != procLakes.end(); ++it )
+	for ( std::vector<int>::const_iterator it = procLakes.begin(); it != procLakes.end(); ++it )
 	{
 		const NDb::SVSOInstance &lake = pDesc->lakes[*it];
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( lake.pDescriptor.GetPtr() );
@@ -536,7 +536,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	}
 
 	// affect islands
-	for ( vector<int>::const_iterator it = procIslands.begin(); it != procIslands.end(); ++it )
+	for ( std::vector<int>::const_iterator it = procIslands.begin(); it != procIslands.end(); ++it )
 	{
 		const NDb::SVSOInstance &island = pDesc->lakes[*it];
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( island.pDescriptor.GetPtr() );
@@ -556,7 +556,7 @@ void CTerraGen::ReCreateAllWaterZones()
 					 (terrainInfo.waterHeightCoeffs[g + 1][i + 1] < 1.0f) )
 			{
 				STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-				for ( vector<CVec3fEx>::iterator it = tile.vertices.begin(); it != tile.vertices.end(); ++it )
+				for ( std::vector<CVec3fEx>::iterator it = tile.vertices.begin(); it != tile.vertices.end(); ++it )
 					it->z = GetTerraHeight( it->x, it->y, i, g );
 			}
 		}
@@ -657,7 +657,7 @@ void CTerraGen::InitWater()
 
 	const float fAngle = ToRadian( pDesc->weather.nWindDirection );
 
-	vector<NWaterStuff::SSurfBorder> waterBorders;
+	std::vector<NWaterStuff::SSurfBorder> waterBorders;
 
 	if ( pDesc->coast.points.size() >= 2 && pDesc->coast.pDescriptor != 0 )
 	{
@@ -667,7 +667,7 @@ void CTerraGen::InitWater()
 		waterBorders.back().pSurfMaterial = pCoastDesc->pWater->pWaterSet->pSurf;
 	}
 
-	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->lakes.begin(); it != pDesc->lakes.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->lakes.begin(); it != pDesc->lakes.end(); ++it )
 	{
 		if ( it->points.size() >= 2 )
 		{
@@ -681,8 +681,8 @@ void CTerraGen::InitWater()
 	waterController.Init( fAngle, terrainInfo.seaMask, waterParams, waterBorders, pGScene, pDesc->pOceanWater );
 
 	// delete surfes, which are placed inside any river
-	vector<NWaterStuff::SSurfBorder> surfBorders;
-	vector<NDb::SVSOPoint> lastSurf;
+	std::vector<NWaterStuff::SSurfBorder> surfBorders;
+	std::vector<NDb::SVSOPoint> lastSurf;
 	lastSurf.reserve( 512 );
 	CVec3 vPos;
 	for ( int i = 0; i < waterBorders.size(); ++i )
@@ -690,7 +690,7 @@ void CTerraGen::InitWater()
 		if ( waterBorders[i].pSurfMaterial )
 		{
 			lastSurf.resize( 0 );
-			for ( vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
+			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
 			{
 				vPos = it->vPos;
 				AI2Vis( &vPos );
@@ -735,7 +735,7 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 
 	const float fAngle = ToRadian( pDesc->weather.nWindDirection );
 
-	vector<NWaterStuff::SSurfBorder> waterBorders;
+	std::vector<NWaterStuff::SSurfBorder> waterBorders;
 
 	if ( pDesc->coast.points.size() >= 2 && pDesc->coast.pDescriptor != 0 )
 	{
@@ -745,7 +745,7 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 		waterBorders.back().pSurfMaterial = pCoastDesc->pWater->pWaterSet->pSurf;
 	}
 
-	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->lakes.begin(); it != pDesc->lakes.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->lakes.begin(); it != pDesc->lakes.end(); ++it )
 	{
 		if ( it->points.size() >= 2 )
 		{
@@ -756,7 +756,7 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 		}
 	}
 
-	for ( vector<NWaterStuff::SWaterParams>::iterator it = waterParams.begin(); it < waterParams.end(); ++it )
+	for ( std::vector<NWaterStuff::SWaterParams>::iterator it = waterParams.begin(); it < waterParams.end(); ++it )
 	{
 		if ( it->eWaterType == pWater->eWaterType )
 		{
@@ -768,8 +768,8 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 	waterController.Init( fAngle, terrainInfo.seaMask, waterParams, waterBorders, pGScene, pWater );
 
 	// delete surfes, which are placed inside any river
-	vector<NWaterStuff::SSurfBorder> surfBorders;
-	vector<NDb::SVSOPoint> lastSurf;
+	std::vector<NWaterStuff::SSurfBorder> surfBorders;
+	std::vector<NDb::SVSOPoint> lastSurf;
 	lastSurf.reserve( 512 );
 	CVec3 vPos;
 	for ( int i = 0; i < waterBorders.size(); ++i )
@@ -777,7 +777,7 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 		if ( waterBorders[i].pSurfMaterial )
 		{
 			lastSurf.resize( 0 );
-			for ( vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
+			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
 			{
 				vPos = it->vPos;
 				AI2Vis( &vPos );

@@ -23,20 +23,20 @@ class CSplashScreen : public CObjectBase
 		CBitmap();
 		~CBitmap();
 
-		bool Load( const string &rszImageFileName );
+		bool Load( const std::string &rszImageFileName );
 		bool Draw( HDC *pHDC );
 		int GetSizeX() { return bitmapInfo.bmWidth; }
 		int GetSizeY() { return bitmapInfo.bmHeight; }
 	};
 
-	string szImageFileName;
+	std::string szImageFileName;
 	CBitmap bitmap;	
 	HWND hWnd;
 public:
 	CSplashScreen();
 	~CSplashScreen();
 
-	bool Create( const string &rszImageFileName, bool bTopMost );
+	bool Create( const std::string &rszImageFileName, bool bTopMost );
 	bool IsWindow();
 	bool ShowWindow( int nCmdShow );
 	bool UpdateWindow();
@@ -103,7 +103,7 @@ void CSplashScreen::CBitmap::Clear()
 	bitmapInfo.bmWidth = 0;
 }
 
-bool CSplashScreen::CBitmap::Load( const string &rszImageFileName )
+bool CSplashScreen::CBitmap::Load( const std::string &rszImageFileName )
 {
 	Clear();
 	//Use LoadImage() to get the image loaded into a DIBSection
@@ -191,7 +191,7 @@ bool CSplashScreen::Draw( HDC *pHDC )
 	return bitmap.Draw( pHDC );
 }
 
-bool CSplashScreen::Create( const string &_szImageFileName, bool bTopMost )
+bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 {
 	szImageFileName = _szImageFileName;
 
@@ -279,7 +279,7 @@ void CSplashScreen::Destroy()
 	UnregisterClass( pszSplashScreenWindowClass, ::GetModuleHandle(0) );
 }
 
-CObjectBase *CreateSplashScreen( const string &_szImageFileName, bool bTopMost )
+CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopMost )
 {
 	CSplashScreen *pSplash = new CSplashScreen();
 	pSplash->Create( _szImageFileName, bTopMost );

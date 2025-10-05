@@ -92,7 +92,7 @@ class CRasterizer
 			int nBackface;
 			if ( nLeft > nRight )
 			{
-				swap( nLeft, nRight );
+				std::swap( nLeft, nRight );
 				nBackface = nBack^1;
 			}
 			else if ( nRight > nLeft )
@@ -115,7 +115,7 @@ class CRasterizer
 			int nBackface;
 			if ( nLeft > nRight )
 			{
-				swap( nLeft, nRight );
+				std::swap( nLeft, nRight );
 				nBackface = nBack^1;
 			}
 			else if ( nRight > nLeft )

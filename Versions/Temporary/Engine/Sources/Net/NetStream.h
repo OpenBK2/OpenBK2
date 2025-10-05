@@ -66,16 +66,16 @@ class CStreamTracker
 public:
 	// channel data
 	CRingBuffer<N_STREAM_BUFFER> channelInBuf;
-	list<CMemoryStream> outList;
+	std::list<CMemoryStream> outList;
 	
 	CStreamTracker();
 	bool HasOutData() { return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty(); }
 	bool CanReadMsg() const { return channelInBuf.GetBufSize() > N_MAX_PACKET_SIZE; }
 	void WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit );
 	void ReadMsg( CBitStream &bits );
-	void Rollback( const vector<PACKET_ID> &pkts );
-	void Erase( const vector<PACKET_ID> &pkts );
-	void Commit( const vector<PACKET_ID> &pkts );
+	void Rollback( const std::vector<PACKET_ID> &pkts );
+	void Erase( const std::vector<PACKET_ID> &pkts );
+	void Commit( const std::vector<PACKET_ID> &pkts );
 private:
 	CRingBuffer<N_STREAM_BUFFER> channelOutBuf;
 	typedef unsigned int CHANNEL_DATA_OFFSET;
@@ -95,9 +95,9 @@ private:
 	// streaming data control structures
 	// текущее смещение отсылаемых и принимаемых данных
 	CHANNEL_DATA_OFFSET nChannelOutputOffset, nChannelInputOffset;
-	typedef list<SChannelBlock> SChannelBlockList;
+	typedef std::list<SChannelBlock> SChannelBlockList;
 	SChannelBlockList channelOutFlyList, channelOutList, channelInList;
-	hash_map< PACKET_ID, PACKET_ID > reassign;
+	std::unordered_map< PACKET_ID, PACKET_ID > reassign;
 
 	static bool IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test );
 };

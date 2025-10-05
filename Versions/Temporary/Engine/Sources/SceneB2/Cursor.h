@@ -9,7 +9,7 @@ struct ICursor : public CObjectBase
 
 	virtual bool Init() = 0;
 	// cursor mode
-	virtual void RegisterMode( const int nMode, const string &szFileName ) = 0;
+	virtual void RegisterMode( const int nMode, const std::string &szFileName ) = 0;
 	virtual bool SetMode( const int nMode ) = 0;
 	virtual void OnSetCursor() = 0;
 	// show/hide cursor

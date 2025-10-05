@@ -23,14 +23,14 @@ class CFile;
 class CCodeStructure : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CCodeStructure )
-	list< CObj<CFile> > files;
+	std::list< CObj<CFile> > files;
 public:
 	CCodeStructure() { }
-	CCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
-	const list< CObj<CFile> > &GetFiles() const { return files; }
+	const std::list< CObj<CFile> > &GetFiles() const { return files; }
 
-	void GenerateCode( const string &szRootDir );
+	void GenerateCode( const std::string &szRootDir );
 
 	int operator&( IXmlSaver &saver )
 	{

@@ -46,7 +46,7 @@ void CInterfaceMPWaitPlayers::RegisterObservers()
 	AddObserver( "multiplayer_pause", &CInterfaceMPWaitPlayers::MsgOnMultiplayerPause );
 }
 
-bool CInterfaceMPWaitPlayers::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPWaitPlayers::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_interrupt" )
 	{
@@ -58,7 +58,7 @@ bool CInterfaceMPWaitPlayers::Execute( const string &szSender, const string &szR
 	return false;
 }
 
-int CInterfaceMPWaitPlayers::Check( const string &szCheckName ) const
+int CInterfaceMPWaitPlayers::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -82,7 +82,7 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 
 	if ( bOwnLag )
 	{
-		wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
+		std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
 		if ( pOwnTime )
 			pOwnTime->SetText( pOwnTime->GetDBText() + wszTime );
 	}
@@ -101,7 +101,7 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 	return true;
 }
 
-void CInterfaceMPWaitPlayers::AddPlayerLine( const string &szName, const int nTime )
+void CInterfaceMPWaitPlayers::AddPlayerLine( const std::string &szName, const int nTime )
 {
 	if ( !pPlayerListItem )
 		return;
@@ -117,7 +117,7 @@ void CInterfaceMPWaitPlayers::AddPlayerLine( const string &szName, const int nTi
 	{
 		if ( nTime >= 0 )
 		{
-			wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", nTime / 60, nTime % 60 ) );
+			std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", nTime / 60, nTime % 60 ) );
 			pTime->SetText( pTime->GetDBText() + wszTime );
 		}
 	}

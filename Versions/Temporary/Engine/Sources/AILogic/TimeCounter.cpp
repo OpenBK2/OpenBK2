@@ -92,7 +92,7 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 68, "general_intendant" );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CTimeCounter::RegisterCounter( const int nName, const string &szName )
+void CTimeCounter::RegisterCounter( const int nName, const std::string &szName )
 {
 	names[nName] = szName;
 }
@@ -118,7 +118,7 @@ void CTimeCounter::Count( const int nName, const bool bStart )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CTimeCounter::Count( const string &szName, const bool bStart )
+void CTimeCounter::Count( const std::string &szName, const bool bStart )
 {
 	if ( bStart )
 		NHPTimer::GetTime( &(szStartTimes[szName]) );
@@ -152,7 +152,7 @@ void CTimeCounter::PrintCounters()
 			pConsoleBuffer->WriteASCII( 11, StrFmt( "%s = %g", names[name].c_str(), fTime ), 0, true );
 	}
 	
-	for ( hash_map<string, double>::const_iterator iter = szCounters.begin(); iter != szCounters.end(); ++iter )
+	for ( std::unordered_map<std::string, double>::const_iterator iter = szCounters.begin(); iter != szCounters.end(); ++iter )
 	{
 		const double fTime = iter->second;
 		if ( fTime > 0.0f )

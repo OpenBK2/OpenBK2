@@ -7,7 +7,7 @@ namespace NLang
 
 struct SToken
 {
-	string psz;
+	std::string psz;
 	CPtr<NLang::CLangNode> pNode;
 
 	SToken() { }

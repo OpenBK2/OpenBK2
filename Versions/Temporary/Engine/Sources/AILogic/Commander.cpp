@@ -3,7 +3,9 @@
 #include "Commander.h"
 #include "GeneralHelper.h"
 #include "TimeCounter.h"
-#include "Misc/nalgoritm.h"
+
+#include <algorithm>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NAI::CTimeCounter timeCounter;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,9 +104,9 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 	// the simple optimisation
 	if ( pEn->NeedNBest( eType ) > 1 )
 	{
-		vector< pair<float, CPtr<CCommonUnit> > > units;
+		std::vector< std::pair<float, CPtr<CCommonUnit> > > units;
 		for ( CommonUnits::iterator it = pUnits->begin(); it != pUnits->end(); ++it )
-			units.push_back( pair<float, CPtr<CCommonUnit> >( 0, *it ) );
+			units.push_back( std::pair<float, CPtr<CCommonUnit> >( 0, *it ) );
 		pUnits->clear();
 		SCalcRatingPredicate calcRating( pEn, eType );
 		for_each( units.begin(), units.end(), calcRating );

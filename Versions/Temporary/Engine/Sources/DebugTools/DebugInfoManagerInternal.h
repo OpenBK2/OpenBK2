@@ -43,12 +43,12 @@ struct SDebugInfoMarker : public SDebugInfoObject
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoMarker );
 public:
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 
 	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const  { return DEBUG_INFO_MARKER; }
 
 	SDebugInfoMarker() : SDebugInfoObject() {}
-	SDebugInfoMarker( const int nID, const vector<SVector> &_tiles, const EColor color ) : SDebugInfoObject( nID, color ), tiles( _tiles ) {}
+	SDebugInfoMarker( const int nID, const std::vector<SVector> &_tiles, const EColor color ) : SDebugInfoObject( nID, color ), tiles( _tiles ) {}
 };
 
 struct SDebugInfoCircle : public SDebugInfoObject
@@ -138,7 +138,7 @@ class DEBUGTOOLS_EXPORT CDebugInfoManager : public IDebugInfoManager
 	int nCurrentID;
 	int nRedAxisID, nGreenAxisID, nBlueAxisID;
 	NDebugInfo::EColor currentColor;
-	list< CPtr<NDebugInfo::SDebugInfoUpdate> > updates;
+	std::list< CPtr<NDebugInfo::SDebugInfoUpdate> > updates;
 
   const int GetID( const int nID );
 	const int PushUpdate( NDebugInfo::SDebugInfoUpdate *pObject );
@@ -149,7 +149,7 @@ public:
 
 	void Reset();
 
-	int CreateMarker( const int nID, const vector<SVector> &tiles, const NDebugInfo::EColor eColor );
+	int CreateMarker( const int nID, const std::vector<SVector> &tiles, const NDebugInfo::EColor eColor );
 	int CreateCircle( const int nID, const CCircle &circle, const NDebugInfo::EColor eColor );
 	int CreateSegment( const int nID, const CSegment &segment, const int nThickness, const NDebugInfo::EColor eColor );
 	void DeleteObject( const int nID );

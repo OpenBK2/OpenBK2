@@ -207,7 +207,7 @@ void CFormation::InitGeometries()
 {
 	for ( int i = 0; i < GetStats()->formations.size(); ++i )
 	{
-		vector<SGeometryCellInfo> cells;
+		std::vector<SGeometryCellInfo> cells;
 		for ( int j = 0; j < GetStats()->formations[i].order.size(); ++j )
 			cells.push_back( SGeometryCellInfo( pStats->formations[i].order[j].vPos, -1 ) );
 		pGroupSmoothPath->AddGeometry( cells );
@@ -602,7 +602,7 @@ const bool CFormation::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vSh
 		{
 			if ( pPath )
 			{
-				vector<SVector> tiles;
+				std::vector<SVector> tiles;
 				tiles.reserve( pPath->GetLength() );
 				for ( int i = 0; i < pPath->GetLength(); ++i )
 					tiles.push_back( pPath->GetTile( i ) );
@@ -762,7 +762,7 @@ void CFormation::DeleteSoldier( class CSoldier *pUnit )
 {
 	if ( pGroupSmoothPath->DeleteUnit( pUnit ) )  
 	{
-		for ( vector< CPtr<CSoldier> >::iterator it = soldiers.begin(); it != soldiers.end(); ++it )
+		for ( std::vector< CPtr<CSoldier> >::iterator it = soldiers.begin(); it != soldiers.end(); ++it )
 		{
 			if ( *it == pUnit )
 			{

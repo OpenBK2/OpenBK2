@@ -10,7 +10,7 @@ class CWindowSimple;
 
 struct IHeaderNotify : public virtual CObjectBase
 {
-	virtual void ColumnsResized( const vector<int> &sizes ) = 0;
+	virtual void ColumnsResized( const std::vector<int> &sizes ) = 0;
 	virtual void ColumnResort( IWindowSorter *pSorter ) = 0;
 	virtual void SetOptimalWidth( const int nColumn ) = 0;
 };
@@ -21,7 +21,7 @@ class CWindowListHeader : public CWindow, public IButtonNotify
 	
 	CPtr<NDb::SWindowListHeader> pInstance;
 	CDBPtr<NDb::SWindowListHeaderShared> pShared;
-	vector< CPtr<IWindowSorter> > sorters;
+	std::vector< CPtr<IWindowSorter> > sorters;
 	int nSelectedColumn;										// sorting is performed by this column
 	int bResizable;
 	
@@ -32,14 +32,14 @@ class CWindowListHeader : public CWindow, public IButtonNotify
 	
 	CPtr<IHeaderNotify> pHeaderNotify;
 	
-	vector<int> columnSizes;
-	vector< CPtr<IWindow> > subitems;
+	std::vector<int> columnSizes;
+	std::vector< CPtr<IWindow> > subitems;
 
 	void AdjustColums();
 	void ResizeColumn( const int nPos, const int nResizingIndex );
 	// return column index and bool - is that column will be restored
 	// from width 0 ( to display different cursors )
-	pair<int,bool> GetResizeColumnIndex( const CVec2 &vPos ) const;
+	std::pair<int,bool> GetResizeColumnIndex( const CVec2 &vPos ) const;
 	void UpdateSortButton();
 protected:
 	NDb::SWindow* GetInstance() { return pInstance; }
@@ -53,7 +53,7 @@ public:
 	void SetNotify( IHeaderNotify *_pHeaderNotify ) { pHeaderNotify = _pHeaderNotify; }
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	void MakeInterior();
-	const vector<int>& GetSizes() const
+	const std::vector<int>& GetSizes() const
 	{
 		return columnSizes;
 	}
@@ -85,14 +85,14 @@ class CWindowListItem : public CWindow, public IListControlItem
 	CPtr<NDb::SWindowListItem> pInstance;
 	CDBPtr<NDb::SWindowListItemShared> pShared;
 	
-	vector< CPtr<IWindow> > subitems;
+	std::vector< CPtr<IWindow> > subitems;
 	CPtr< CObjectBase > pUserData;
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 public:
 	virtual int operator&( IBinSaver &saver );
 	void MakeInterior( const int nColumns );
-	void SetColumnSizes( const vector<int> &sizes );
+	void SetColumnSizes( const std::vector<int> &sizes );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	//{ struct IListControlItem
@@ -115,7 +115,7 @@ class CWindowListCtrl :	public CWindowScrollableContainerBase, public IListContr
 	CDBPtr<NDb::SWindowListSharedData> pShared;
 	CObj<CWindowListHeader> pHeader;
 	
-	typedef list< CObj<IWindow> > CItems;
+	typedef std::list< CObj<IWindow> > CItems;
 	CItems items;
 
 	int nSortColumn;
@@ -163,7 +163,7 @@ public:
 	//}
 	
 	//{ IHeaderNotify
-	virtual void ColumnsResized( const vector<int> &sizes );
+	virtual void ColumnsResized( const std::vector<int> &sizes );
 	virtual void ColumnResort( IWindowSorter *pSorter );
 	virtual void SetOptimalWidth( const int nColumn );
 	//}

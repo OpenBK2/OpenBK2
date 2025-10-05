@@ -19,8 +19,8 @@ public:
 		}
 		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface ) 
 			: pScreen( _pScreen ), pInterface( _pInterface ) {   }
-		virtual bool Execute( const string &szSender, const string &szReaction );
-		virtual int Check( const string &szCheckName ) const;
+		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
+		virtual int Check( const std::string &szCheckName ) const;
 	};
 	//
 	void ChangeResolution();
@@ -33,7 +33,7 @@ public:
 
 	void OnGetFocus( bool bFocus );
 
-	void SetMode( const string &szMode );
+	void SetMode( const std::string &szMode );
 
 	void FillScreen();
 
@@ -60,17 +60,17 @@ private:
 		int							nOptionEntry;
 		CPtr< IWindow > pWindow;
 		float						fSliderPosition;
-		string					szProgName;
-		string					szSavedValue;
-		string					szCurrentValue;
+		std::string					szProgName;
+		std::string					szSavedValue;
+		std::string					szCurrentValue;
 	};
-	typedef vector< SOptionInstance > CInstances;
+	typedef std::vector< SOptionInstance > CInstances;
 	struct SCategoryInstance 
 	{
 		int							nCategoryEntry;
 		CPtr< IWindow > pWindow;
 	};
-	typedef vector< SCategoryInstance > CCategories;
+	typedef std::vector< SCategoryInstance > CCategories;
 
 	ZDATA_(CInterfaceScreenBase)
 	CObj<CReactions>	pReactions;
@@ -102,8 +102,8 @@ protected:
 	void MsgBack( const SGameMessage &msg );
 	void MsgAccept( const SGameMessage &msg );
 	void SelectCategory( int nCategory, bool bForceRecreate );
-	void OnSelectCategory( const string &szSender );
-	void OnControlChange( const string &szSender );
+	void OnSelectCategory( const std::string &szSender );
+	void OnControlChange( const std::string &szSender );
 	void CommitEditLineChanges();					//Collect and store EditLine values
 	void RollbackChanges();
 	void RestoreDefaultValues();
@@ -117,7 +117,7 @@ class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
 	OBJECT_BASIC_METHODS( CICOptionsMenu );
 	//
 	ZDATA_(CInterfaceCommandBase<CInterfaceOptionsMenu>)
-	string szMode;
+	std::string szMode;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceOptionsMenu>*)this); f.Add(2,&szMode); return 0; }
 	//
 	void PreCreate();

@@ -3,12 +3,6 @@
 #include <cstdint>
 
 /////////////////////////////////////////////////////////////////////////////////////
-namespace nstl
-{
-	template<> struct hash<__int64> {
-		size_t operator()(__int64 __x) const { return __x; }
-	};
-}
 
 namespace NNet
 {
@@ -28,7 +22,7 @@ public:
 	{
 		EOutMessage msg;
 		UCID from;
-		vector<UCID> received;
+		std::vector<UCID> received;
 		CMemoryStream pkt;
 	};
 	struct SPacket
@@ -39,8 +33,8 @@ public:
 		SPacket() {}
 		SPacket( UCID _addr, CMemoryStream &_pkt ): addr(_addr), pkt(_pkt) {}
 	};
-	vector<SPacket> packets;
-	vector<UCID> kicks;
+	std::vector<SPacket> packets;
+	std::vector<UCID> kicks;
 
 	void SendBroadcast( CMemoryStream &pkt );
 	void SendDirect( UCID addr, CMemoryStream &pkt );
@@ -62,7 +56,7 @@ private:
 		int nID;
 		bool bDirect;
 		CMemoryStream msg;
-		list<SAck> acks;
+		std::list<SAck> acks;
 	};
 	struct SFastAck
 	{
@@ -82,24 +76,24 @@ private:
 	{
 		UCID addr;
 		bool bActive;    // not active when peer is being dropped
-		list<SPeerClient> clients; // current clients from peer view
-		list<SQMessage> messages;
-		list<SFastAck> fastacks; // acks received from this peer before message itself
-		list<UCID> requireKick;
+		std::list<SPeerClient> clients; // current clients from peer view
+		std::list<SQMessage> messages;
+		std::list<SFastAck> fastacks; // acks received from this peer before message itself
+		std::list<UCID> requireKick;
 		PEER_ID id;
 		CMemoryStream addrInfo;
 
 		bool IsActive() const { return bActive; }
 		bool HasClient( UCID addr ) const
 		{
-			for ( list<SPeerClient>::const_iterator i = clients.begin(); i != clients.end(); ++i )
+			for ( std::list<SPeerClient>::const_iterator i = clients.begin(); i != clients.end(); ++i )
 				if ( i->addr == addr )
 					return true;
 			return false;
 		}
 		const UCID GetAddr( PEER_ID id )
 		{
-			for ( list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); ++i )
+			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); ++i )
 			{
 				if ( i->id == id )
 					return i->addr;
@@ -109,7 +103,7 @@ private:
 		}
 		void RemoveClient( UCID addr )
 		{
-			for ( list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); )
+			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); )
 			{
 				if ( i->addr == addr )
 					i = clients.erase( i );
@@ -118,15 +112,15 @@ private:
 			}
 		}
 	};
-	list<SMessage> output;
-	hash_map<UCID,SPeer> clients;
-	hash_map<PEER_ID,UCID> peersByID; 
+	std::list<SMessage> output;
+	std::unordered_map<UCID,SPeer> clients;
+	std::unordered_map<PEER_ID,UCID> peersByID;
 	PEER_ID maxPeerID;
 
 	SPeer* GetClient( UCID addr );
 	SPeer* GetClientByPeerID( PEER_ID id );
 	void AddOutputMessage( EOutMessage msg, UCID _from, 
-		const CMemoryStream *pData = 0, vector<UCID> *pReceived = 0 );
+		const CMemoryStream *pData = 0, std::vector<UCID> *pReceived = 0 );
 	void AddKickApprove( UCID victim, UCID kickFrom );
 	void ApproveKick( UCID victim, UCID from );
 	PEER_ID GetUnusedID();

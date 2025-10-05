@@ -10,9 +10,9 @@
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;
 struct ICommonB2M1AI;
-typedef hash_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
-typedef list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
-typedef hash_map<int, CPtr<CMapObj> > CKeyBuildings;
+typedef std::unordered_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
+typedef std::list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
+typedef std::unordered_map<int, CPtr<CMapObj> > CKeyBuildings;
 
 class CCombatMusic
 {
@@ -35,9 +35,9 @@ public:
 
 class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IUpdatableClient
 {
-	typedef hash_map<int, ObjectFactoryNewFunc> CNewFuncsMap;
+	typedef std::unordered_map<int, ObjectFactoryNewFunc> CNewFuncsMap;
 	CNewFuncsMap newFuncs;
-	typedef hash_map<int, CObj<CMapObj> > CMapObjMap;
+	typedef std::unordered_map<int, CObj<CMapObj> > CMapObjMap;
 	CMapObjMap objects;
 	NDb::ESeason eSeason;
 	NDb::EDayNight eDayTime;					// needed to determine if headlights are on
@@ -46,17 +46,17 @@ class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IU
 
 	// every segment update functions
 	typedef void (CUpdatableWorld::*EVERY_SEGMENT_UPDATE)();
-	typedef vector<EVERY_SEGMENT_UPDATE> CEverySegment;
+	typedef std::vector<EVERY_SEGMENT_UPDATE> CEverySegment;
 	CEverySegment everySegment;
 
 	// updates by type
 	typedef void (CUpdatableWorld::*UPDATE_TYPE)( const SAIBasicUpdate *pUpdate );
-	typedef hash_map<int, UPDATE_TYPE> CUpdateType;
+	typedef std::unordered_map<int, UPDATE_TYPE> CUpdateType;
 public:
 	CUpdateType updateType;
 private:
 	// Temporary vis objects for building (IDs)
-	typedef vector<int> CTempMapObjList;
+	typedef std::vector<int> CTempMapObjList;
 	CTempMapObjList ghostObjects;
 
 	// for animations testing
@@ -64,7 +64,7 @@ private:
 	
 	int nLastRangeAreasTime;
 
-	typedef hash_map<int /*UnitID*/, NTimer::STime> CWaitingCorpses;
+	typedef std::unordered_map<int /*UnitID*/, NTimer::STime> CWaitingCorpses;
 
 	CWaitingCorpses graveyard;
 
@@ -82,12 +82,12 @@ private:
 	CKeyBuildings keyBuildings;
 	CCombatMusic combatMusic;
 
-	hash_map<int, CObj<CLaserMarkTrace> > laserMarks;
-	hash_map<int, CObj<CObjectBase> > laserMarksMeshes;
+	std::unordered_map<int, CObj<CLaserMarkTrace> > laserMarks;
+	std::unordered_map<int, CObj<CObjectBase> > laserMarksMeshes;
 
 #ifndef _FINALRELEASE
-	vector<CObj<CPtrFuncBase<NGScene::CObjectInfo> > > badObjects;
-	vector<CObj<CObjectBase> > badObjectsMeshes;
+	std::vector<CObj<CPtrFuncBase<NGScene::CObjectInfo> > > badObjects;
+	std::vector<CObj<CObjectBase> > badObjectsMeshes;
 #endif
 private:
 	void InitPrivate();
@@ -311,13 +311,13 @@ public:
 	const CKeyBuildings& GetKeyBuildings() const { return keyBuildings; }
 
 	// script cameras
-	virtual void GetCameraByName( NCamera::CCameraPlacement *pCamera, const string &rszName ) const {}
+	virtual void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const {}
 	virtual void GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const {}
 	virtual bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const { return false; }
 
-	void GetObjects( list<int> *pObjects ) const;
-	void GetObjects( vector<IB2MapObj*> *pObjects ) const;
-	void GetObjects( vector<CMapObj*> *pObjects ) const;
+	void GetObjects( std::list<int> *pObjects ) const;
+	void GetObjects( std::vector<IB2MapObj*> *pObjects ) const;
+	void GetObjects( std::vector<CMapObj*> *pObjects ) const;
 };
 
 

@@ -5,13 +5,13 @@
 #pragma once
 
 template <class TYPE, class TStorageType = CPtr<TYPE>, class TPosition = CVec3, class TCoeffType = float>
-class CAreaMap : public CArray2D< list<TStorageType> >
+class CAreaMap : public CArray2D< std::list<TStorageType> >
 {
-	typedef CArray2D< list<TStorageType> > TParent;
+	typedef CArray2D< std::list<TStorageType> > TParent;
 	ZDATA_(TParent)
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); return 0; }
-	typedef list<TStorageType> CDataList;
+	typedef std::list<TStorageType> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 private:
 	const TCoeffType tCellSize;								// area map cell size
@@ -121,13 +121,13 @@ public:
 };
 
 template <class TYPE, class TPosition = CVec3, class TComparator = CStructAreaMapComparator<TYPE>, class TCoeffType = float>
-class CStructAreaMap : public CArray2D< list<TYPE> >
+class CStructAreaMap : public CArray2D< std::list<TYPE> >
 {
-	typedef CArray2D< list<TYPE> > TParent;
+	typedef CArray2D< std::list<TYPE> > TParent;
 	ZDATA_(TParent)
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); return 0; }
-	typedef list<TYPE> CDataList;
+	typedef std::list<TYPE> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 private:
 	const TCoeffType tCellSize;								// area map cell size

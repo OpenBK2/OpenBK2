@@ -34,7 +34,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase,
 	//--------------
 
 
-	typedef vector< CPtr<CLadderMapData> > CMPMaps;
+	typedef std::vector< CPtr<CLadderMapData> > CMPMaps;
 
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
@@ -57,9 +57,9 @@ private:
 	void UpdateInterior();
 	void CheckEnableStartButton();
 
-	bool OnBackReaction( const string &szSender );
-	bool OnStartGameReaction( const string &szSender );
-	bool OnSelectMapReaction( const string &szSender );
+	bool OnBackReaction( const std::string &szSender );
+	bool OnStartGameReaction( const std::string &szSender );
+	bool OnSelectMapReaction( const std::string &szSender );
 	bool OnTeamSizeChanged();
 	bool OnChangeMapStatusReaction();
 protected:
@@ -71,8 +71,8 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;	
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	void FillMapData();
 	//}
 };

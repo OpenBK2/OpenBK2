@@ -17,7 +17,7 @@ struct IAILogic;
 struct IScenarioTracker;
 struct IMissionSuperWeapon;
 
-typedef	hash_map< NDb::EUserAction, string, SEnumHash > CEventsMap;
+typedef	std::unordered_map< NDb::EUserAction, std::string, SEnumHash > CEventsMap;
 
 enum EActionMode
 {
@@ -54,7 +54,7 @@ private:
 		EBS_COMPLETE,
 	};
 
-	typedef hash_map<int, SActionDesc> CActionsMap;
+	typedef std::unordered_map<int, SActionDesc> CActionsMap;
 	
 	struct SMapCommandAck
 	{
@@ -86,7 +86,7 @@ private:
 	NDb::EUserAction eForcedAction;
 	CPtr<CObjectBase> pForcedActionParam;
 	CActionsMap userActionsMap;	// DON'T SAVE THIS FIELD
-	list<int>	lastPickObjects;
+	std::list<int>	lastPickObjects;
 	NTimer::STime lastPickTime;
 	CVec2	vLastPickPos;
 	CVec2	vFirstCommandPoint;
@@ -116,9 +116,9 @@ private:
 
 	bool bOnMinimap; // don't save
 	bool bOnMinimapOff; // don't save
-	vector<SSoundTerrainInfo> terrainSounds;
+	std::vector<SSoundTerrainInfo> terrainSounds;
 	
-	typedef hash_map< int, CPtr<CMOSelectable> > CSpecialGroup;
+	typedef std::unordered_map< int, CPtr<CMOSelectable> > CSpecialGroup;
 	CSpecialGroup sgFighters;
 	CSpecialGroup sgGroundAttackPlanes;
 	CSpecialGroup sgReconPlanes;
@@ -130,9 +130,9 @@ private:
 	bool bUISelectionDir; // don't save
 	CVec2 vUISelectionStartDir; // don't save
 	CVec2 vUISelectionMovePos; // don't save
-	vector<int> uiVisSelections; // don't save
+	std::vector<int> uiVisSelections; // don't save
 
-	typedef hash_map< int, CPtr<CMapObj> > CObjMap;
+	typedef std::unordered_map< int, CPtr<CMapObj> > CObjMap;
 	CObjMap ownAvia;
 	
 	struct SUnitIcon
@@ -142,13 +142,13 @@ private:
 		float fLastTime;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMOUnit); f.Add(3,&fLastTime); return 0; }
 	};
-	typedef hash_map< int, SUnitIcon > CUnitIconMap;
+	typedef std::unordered_map< int, SUnitIcon > CUnitIconMap;
 	CUnitIconMap unitIcons;
 	
-	vector<CVec4> minimapColors;
+	std::vector<CVec4> minimapColors;
 	bool bIsOwnUnitsPresent;
 
-	vector< hash_map< int, int > > xrayUnits; // vector by players < id, time >, don't save
+	std::vector< std::unordered_map< int, int > > xrayUnits; // vector by players < id, time >, don't save
 	NTimer::STime timeAbs; // don't save
 	
 	CPtr<IMissionSuperWeapon> pSuperWeapon;
@@ -213,7 +213,7 @@ private:
 	// pMO == 0 - remove object
 	void UpdateSpecialGroups( int nID, CMapObj *pMO );
 	
-	void CenterSelectionGroupPrivate( const vector<CMOSelectable*> &group );
+	void CenterSelectionGroupPrivate( const std::vector<CMOSelectable*> &group );
 
 	void OnSelectSlot( int nSlot, WORD wKeyboardFlags );
 	void OnActionOnSlot( int nSlot, WORD wKeyboardFlags );
@@ -311,7 +311,7 @@ public:
 	void Update();
 	//
 	bool ProcessEvent( const struct SGameMessage &msg );
-	bool PickMapObj( const CVec2 &vPos, list<int> *pPickObjects );
+	bool PickMapObj( const CVec2 &vPos, std::list<int> *pPickObjects );
 	CMapObj *PickTopMapObj( const CVec2 &vPos );
 	// PickTopMapObj that can be actioned upon with eActionOn 
 	CMapObj *PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction eActionOn );
@@ -471,7 +471,7 @@ public:
 	// for sound
 	const NDb::SComplexSoundDesc * GetTerrainSound( int nTerrainType );
 	const NDb::SComplexSoundDesc * GetTerrainCycleSound( int nTerrainType );
-	void GetTerrainMassData( vector<SSoundTerrainInfo> *pData, int nMaxSize );
+	void GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize );
 	float GetSoundVolume( int nTerrainType ) const;
 
 	void OnClickMultiSelectUnit( int nSlot, WORD wKeyboardFlags );
@@ -481,14 +481,14 @@ public:
 	void CenterSelectedUnit();
 
 	bool IsActiveOwnAvia() const;
-	void GetOwnAvia( vector<CMapObj*> *pObjects ) const;
+	void GetOwnAvia( std::vector<CMapObj*> *pObjects ) const;
 
-	void GetCameraByName( NCamera::CCameraPlacement *pCamera, const string &rszName ) const;
+	void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const;
 	void GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const;
 	bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const;
 
 	void UpdateUnitIcons( float fDeltaTime );
-	void SetMinimapColors( const vector<CVec4> &_minimapColors );
+	void SetMinimapColors( const std::vector<CVec4> &_minimapColors );
 	
 	bool IsOwnUnitsPresent() const { return bIsOwnUnitsPresent; }
 	void GameResetForcedAction();

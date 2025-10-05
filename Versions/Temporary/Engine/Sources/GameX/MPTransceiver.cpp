@@ -39,7 +39,7 @@ public:
 	ZDATA
 	int nSegment;
 	ulong ulCheckSum;
-	list<CMPTransceiver::SRawCommand> aiCommands;
+	std::list<CMPTransceiver::SRawCommand> aiCommands;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSegment); f.Add(3,&ulCheckSum); f.Add(4,&aiCommands); return 0; }
 
 	CAISegmentFinishedPacket() : CNetPacket( 0 ) {}
@@ -219,12 +219,12 @@ void CMPTransceiver::FinalizeSegmentPack()
 	pPacket->ulCheckSum = ulCheckSum;		
 	const int nSegmentToExecute = GetSegmentToExecute( nCommonSegment );
 
-	for ( list< CPtr<IAILogicCommandB2> >::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
+	for ( std::list< CPtr<IAILogicCommandB2> >::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
 	{
 		CPtr<IAILogicCommandB2> pCommand = *it;
 		cmds[nSegmentToExecute][nMyLogicID].push_back( pCommand );
 		//DebugTrace( "+++ Plr %d cmd to execute on %d", nMyLogicID, nSegmentToExecute );
-		SRawCommand &aiCommand = *( pPacket->aiCommands.insert( pPacket->aiCommands.end() ) );
+		SRawCommand &aiCommand = pPacket->aiCommands.emplace_back();
 		aiCommand.nTypeID = pCmdsSerializer->GetCommandID( pCommand );
 		{
 			aiCommand.cmd.Seek( 0 );
@@ -260,7 +260,7 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
 	SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
 	const int nSegmentToExecuteCommand = GetSegmentToExecute( pPacket->nSegment );
-	for ( list<SRawCommand>::iterator it = pPacket->aiCommands.begin(); it != pPacket->aiCommands.end(); ++it )
+	for ( std::list<SRawCommand>::iterator it = pPacket->aiCommands.begin(); it != pPacket->aiCommands.end(); ++it )
 	{
 		SRawCommand &rawCommand = *it;
 		CObjectBase *pObj = pCmdsSerializer->MakeCommand( rawCommand.nTypeID );
@@ -469,7 +469,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	if ( nCommonSegment <= nLatency )
 		return false;
 
-	string szCheckSums = StrFmt( "Segment %d: ", nSegment );
+	std::string szCheckSums = StrFmt( "Segment %d: ", nSegment );
 	unsigned long nMyCheckSum = checkSums[nMyLogicID][nSegment];
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
@@ -486,7 +486,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 		if ( NGlobal::GetVar( "save_on_async", 0 ) != 0 )
 		{
 			NSaveLoad::SSaveInfo info;
-			string szFilename = StrFmt( "async_%1d_%03d", nMyLogicID, nSegment );
+			std::string szFilename = StrFmt( "async_%1d_%03d", nMyLogicID, nSegment );
 			NMainLoop::Command( CreateICSave( szFilename ) );
 			info.Write( NSaveLoad::GetSavePath() + szFilename + NSaveLoad::INFO_FILE_EXTENSION, NStr::ToUnicode( szCheckSums ), false, false, false );
 			NGlobal::SetVar( "save_on_async", 0 );

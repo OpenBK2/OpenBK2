@@ -29,7 +29,7 @@ class CFormation : public CCommonUnit
 		bool bHasMortar;
 		CDBPtr<SUnitBaseRPGStats> pStats;
 		float fHP;
-		vector<int> ammo;
+		std::vector<int> ammo;
 	public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&bHasMortar); f.Add(3,&pStats); f.Add(4,&fHP); f.Add(5,&ammo); return 0; }
 	public:
@@ -69,7 +69,7 @@ class CFormation : public CCommonUnit
 	//
 	BYTE cPlayer;
 
-	vector<SGunInfo> guns;
+	std::vector<SGunInfo> guns;
 
 	bool bWaiting;
 	CDBPtr<NDb::SSquadRPGStats> pStats;
@@ -81,7 +81,7 @@ class CFormation : public CCommonUnit
 
 	float fMaxFireRange;
 
-	vector<SVirtualUnit> virtualUnits;
+	std::vector<SVirtualUnit> virtualUnits;
 	int nVirtualUnits;
 	bool bCanBeResupplied;
 
@@ -96,7 +96,7 @@ class CFormation : public CCommonUnit
 	int nInUnitsID;
 
 	CPtr<CGroupSmoothPath> pGroupSmoothPath;
-	vector< CPtr<CSoldier> > soldiers;
+	std::vector< CPtr<CSoldier> > soldiers;
 	float fMaxSpeed;
 	float fSpeedCoeff;
 	CVec2 vAABBHalfSize;

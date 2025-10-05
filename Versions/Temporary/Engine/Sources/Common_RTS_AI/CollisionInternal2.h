@@ -2,7 +2,8 @@
 
 #include "BasePathUnit.h"
 #include "Collision.h"
-#include "Misc/nqueue.h"
+
+#include <queue>
 
 struct IPath;
 
@@ -42,14 +43,14 @@ class CCollisionsCollector : public ICollisionsCollector
 	{
 		ZDATA
 			CPtr<CBasePathUnitHolder> pUnit;
-			vector<SPusherInfo> pushers;
+			std::vector<SPusherInfo> pushers;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pushers); return 0; }
 		SCollision() : pUnit( 0 ) {}
 		SCollision( CBasePathUnit *_pUnit ) { pUnit = new CBasePathUnitHolder( _pUnit ); }
 		SCollision( CBasePathUnit *pUnit1, CBasePathUnit *pUnit2, const float fDistance, const NCollision::ECollideType eCollideType ) { pUnit = new CBasePathUnitHolder( pUnit1 ); pushers.push_back( SPusherInfo( pUnit2, fDistance, eCollideType ) ); }
 		void AddPusher( CBasePathUnit *_pUnit, const float fDistance, const NCollision::ECollideType eCollideType ) { pushers.push_back( SPusherInfo( _pUnit, fDistance, eCollideType ) ); }
 	};
-	typedef hash_map<int, SCollision> TCollisions;
+	typedef std::unordered_map<int, SCollision> TCollisions;
 	OBJECT_NOCOPY_METHODS( CCollisionsCollector )
 	ZDATA
 		TCollisions collisions;

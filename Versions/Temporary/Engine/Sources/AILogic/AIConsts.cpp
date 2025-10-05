@@ -256,8 +256,8 @@ int SConsts::SHOW_ALL_TIME_COEFF = 5;
 
 int SConsts::TIME_TO_ALLOW_KILL_CRUSHED_OBJ = 20000;
 
-hash_map<int, SConsts::SRevealInfo> SConsts::REVEAL_INFO;
-hash_map< NDb::EDesignUnitType, int, SEnumHash > SConsts::PRIORITIES;
+std::unordered_map<int, SConsts::SRevealInfo> SConsts::REVEAL_INFO;
+std::unordered_map< NDb::EDesignUnitType, int, SEnumHash > SConsts::PRIORITIES;
 
 float SConsts::REINFORCEMENT_GROUP_DISTANCE = 900.0f;
 NTimer::STime SConsts::INFANTRY_FULL_HEAL_TIME = 2000;
@@ -524,11 +524,11 @@ void SConsts::LoadRevealInfo()
 {
 	CPtr<IRPGStatsAutomagic> pAutoMagic = MakeObject<IRPGStatsAutomagic>( IRPGStatsAutomagic::tidTypeID );
 
-	string szStatsIter = pAutoMagic->GetFirstStr();
+	std::string szStatsIter = pAutoMagic->GetFirstStr();
 	do
 	{
 		const int nStats = pAutoMagic->ToInt( szStatsIter.c_str() );
-		string szName = "AI.RevealInfo." + szStatsIter + ".Query";
+		std::string szName = "AI.RevealInfo." + szStatsIter + ".Query";
 		REVEAL_INFO[nStats].fRevealByQuery = NGlobal::GetVar( szName, 0.0f );
 
 		szName = "AI.RevealInfo." + szStatsIter + ".MovingOff";
@@ -545,10 +545,10 @@ void SConsts::LoadRevealInfo()
 	while ( !pAutoMagic->IsLastStr( szStatsIter.c_str() ) );
 }
 
-void SConsts::InitPriorities( const vector<NDb::SUnitTypePriority> &priorities )
+void SConsts::InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities )
 {
 	PRIORITIES.clear();
-	for ( vector<SUnitTypePriority>::const_iterator it = priorities.begin(); it != priorities.end(); ++it )
+	for ( std::vector<SUnitTypePriority>::const_iterator it = priorities.begin(); it != priorities.end(); ++it )
 		PRIORITIES[ it->eUnitType ] = it->nPriority;
 }
 

@@ -3,6 +3,7 @@
 
 #include "vendor/granny/include/granny.h"
 
+#include <algorithm>
 
 struct SMemoryInfo
 {
@@ -36,13 +37,13 @@ struct SSimplePointerHash
 
 struct SGrannyMemoryRequestComparer
 {
-	bool operator()( const pair<string, int> &left, pair<string, int> &right ) const
+	bool operator()( const std::pair<std::string, int> &left, std::pair<std::string, int> &right ) const
 	{
 		return left.first < right.first;
 	}
 };
 
-typedef hash_map<void *, SMemoryInfo, SSimplePointerHash > TGrannyMemoryMap;
+typedef std::unordered_map<void *, SMemoryInfo, SSimplePointerHash > TGrannyMemoryMap;
 
 static granny_allocate_callback *AllocateCallback;
 static granny_deallocate_callback *DeallocateCallback;
@@ -51,10 +52,10 @@ static TGrannyMemoryMap *pGrannyMemoryMap; // do not initialize!
 static GRANNY_CALLBACK(void *) GrannyReplacementAlloc( char const *pszFile, granny_int32x nLine, granny_uintaddrx nAlignment, granny_uintaddrx nSize, granny_int32x nAllocationIntent )
 {
 	if ( pGrannyMemoryMap == 0 )
-		pGrannyMemoryMap = new hash_map<void *, SMemoryInfo, SSimplePointerHash >;
+		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo, SSimplePointerHash >;
 
 	void *pMemory = (*AllocateCallback)(pszFile,nLine,nAlignment,nSize,nAllocationIntent);
-	pGrannyMemoryMap->insert( pair <void *, SMemoryInfo>( pMemory, SMemoryInfo(pszFile,nLine,nAlignment,nSize) ) );
+	pGrannyMemoryMap->insert( std::pair <void *, SMemoryInfo>( pMemory, SMemoryInfo(pszFile,nLine,nAlignment,nSize) ) );
 	return pMemory;
 }
 
@@ -78,7 +79,7 @@ void DumpGrannyMemory()
 		return;
 	}
 
-	typedef hash_map<string, int> TMemoryRequestMap;
+	typedef std::unordered_map<std::string, int> TMemoryRequestMap;
 	TMemoryRequestMap MemoryRequestMap;
 	char szBuf[1024];
 	for ( TGrannyMemoryMap::iterator it = pGrannyMemoryMap->begin(); it != pGrannyMemoryMap->end(); ++it )
@@ -88,25 +89,25 @@ void DumpGrannyMemory()
 		
 		TMemoryRequestMap::iterator itRequest = MemoryRequestMap.find(szBuf);
 		if ( itRequest == MemoryRequestMap.end() )
-			MemoryRequestMap.insert( pair<string, int>( szBuf, 0 ) );
+			MemoryRequestMap.insert( std::pair<std::string, int>( szBuf, 0 ) );
 		else
 			itRequest->second += info.nSize;
     }
 
-	vector< pair< string, int > > MemoryRequestArray;
+	std::vector< std::pair< std::string, int > > MemoryRequestArray;
 	for ( TMemoryRequestMap::iterator it = MemoryRequestMap.begin(); it != MemoryRequestMap.end(); ++it )
-		MemoryRequestArray.push_back( pair<string, int>( it->first.data(), it->second ) );
+		MemoryRequestArray.push_back( std::pair<std::string, int>( it->first.data(), it->second ) );
 
 	MemoryRequestMap.clear();
 
-	sort( MemoryRequestArray.begin(), MemoryRequestArray.end(), SGrannyMemoryRequestComparer() );
+	std::sort( MemoryRequestArray.begin(), MemoryRequestArray.end(), SGrannyMemoryRequestComparer() );
 
 	OutputDebugString( "source file\tline\tsize\n" );
 
 	int nTotalSize = 0;
 	for ( int i = 0; i < MemoryRequestArray.size(); ++i )
 	{
-		const pair<string, int> &tmp = MemoryRequestArray[i];
+		const std::pair<std::string, int> &tmp = MemoryRequestArray[i];
 		sprintf( szBuf, "%s\t%d\n", tmp.first.data(), tmp.second );
 		OutputDebugString( szBuf );
 		nTotalSize += tmp.second;

@@ -46,7 +46,7 @@ namespace NGScene {
 
 	}
 
-	IVideoPlayer * CreateVideoPlayer(const string filename, int flags)
+	IVideoPlayer * CreateVideoPlayer(const std::string filename, int flags)
 	{
 		return new IVideoPlayer();
 	}

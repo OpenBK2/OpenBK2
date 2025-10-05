@@ -136,15 +136,15 @@ struct SPushAlphaTriangle
 };
 
 
-static vector<SPushAlphaTriangle> prePushTrgs( 256 );
+static std::vector<SPushAlphaTriangle> prePushTrgs( 256 );
 
 
-static void WrapChapterTexture( vector<NGScene::SVertex> *pVerts, const int nPatchesX, const int nPatchesY, const float fScale = 1 )
+static void WrapChapterTexture( std::vector<NGScene::SVertex> *pVerts, const int nPatchesX, const int nPatchesY, const float fScale = 1 )
 {
 	const float fDefTexSize = 1024.0f;
 	const CVec2 vCropSize( 696.0f, 591.0f );
 
-	for ( vector<NGScene::SVertex>::iterator itVert = pVerts->begin(); itVert != pVerts->end(); ++itVert )
+	for ( std::vector<NGScene::SVertex>::iterator itVert = pVerts->begin(); itVert != pVerts->end(); ++itVert )
 	{
 		NGScene::SVertex &vert = (*itVert);
 		const CVec3 &vPos = vert.pos;
@@ -155,8 +155,8 @@ static void WrapChapterTexture( vector<NGScene::SVertex> *pVerts, const int nPat
 }
 
 
-void CTerraGen::AddTileTriangle( vector<NMeshData::SMeshData> *pMeshData,
-																 vector<NMeshData::SMeshDataTex2> *pTexData,
+void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
+																 std::vector<NMeshData::SMeshDataTex2> *pTexData,
 																 const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
 																 const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3,
 																 const int nTileX, const int nTileY,
@@ -236,7 +236,7 @@ void CTerraGen::AddTileTriangle( vector<NMeshData::SMeshData> *pMeshData,
 		const int nInd2 = AddUniqueVertex( pSingleMeshData, pSingleTexData, vSecTex2, nA2, &vert2, bNeedFaster );
 		const int nInd3 = AddUniqueVertex( pSingleMeshData, pSingleTexData, vSecTex3, nA3, &vert3, bNeedFaster );
 
-		vector<STriangle> &triangles = ( pSingleMeshData != 0 ) ? pSingleMeshData->triangles : pSingleTexData->triangles;
+		std::vector<STriangle> &triangles = ( pSingleMeshData != 0 ) ? pSingleMeshData->triangles : pSingleTexData->triangles;
 
 		if ( (nInd1 != nInd2) && (nInd2 != nInd3) && (nInd3 != nInd1) )
 		{
@@ -252,10 +252,10 @@ void CTerraGen::AddTileTriangle( vector<NMeshData::SMeshData> *pMeshData,
 }
 
 
-typedef hash_map<int, CVec3> CPatchNormsHash;
-typedef hash_map<int, int> CPatchNormsCntHash;
-typedef hash_map<int, NGScene::SVertex> CPatchVertsHash;
-typedef hash_map<int, CVec3> CPatchPreLightHash;
+typedef std::unordered_map<int, CVec3> CPatchNormsHash;
+typedef std::unordered_map<int, int> CPatchNormsCntHash;
+typedef std::unordered_map<int, NGScene::SVertex> CPatchVertsHash;
+typedef std::unordered_map<int, CVec3> CPatchPreLightHash;
 
 inline int GetVertexHashKey( const CVec3 &v )
 {
@@ -298,16 +298,16 @@ inline int AddGfxVertex( CPatchVertsHash *pVertsHash, const CVec3 &rVertex, cons
 }
 
 
-inline int AddLayerVertex( hash_map<int, int> *pVertsHash, vector<NGScene::SVertex> *pDataVerts, vector<DWORD> *pAttr,
+inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash, std::vector<NGScene::SVertex> *pDataVerts, std::vector<DWORD> *pAttr,
 													 const int nInd, const NGScene::SVertex &vert, const float fTexScaleCoeff, CPatchPreLightHash &preLightHash /* - really const!*/ )
 {
-	hash_map<int, int>::const_iterator itFind = pVertsHash->find( nInd );
+	std::unordered_map<int, int>::const_iterator itFind = pVertsHash->find( nInd );
 	if ( itFind == pVertsHash->end() )
 	{
 		const int nLayerKey = pDataVerts->size();
 		(*pVertsHash)[nInd] = nLayerKey;
 		//pDataVerts->push_back( vert );
-		vector<NGScene::SVertex>::iterator itAdded = pDataVerts->insert( pDataVerts->end(), vert );
+		std::vector<NGScene::SVertex>::iterator itAdded = pDataVerts->insert( pDataVerts->end(), vert );
 		itAdded->tex *= fTexScaleCoeff;
 		NGfx::SCompactVector compVect;
 		NGfx::CalcCompactVector( &compVect, preLightHash[nInd] );
@@ -355,17 +355,17 @@ void CTerraGen::PutAllFeaturesToGfx()
 {
 	//for ( list<SCragGFXInfo>::const_iterator it = terrainGfxInfo.crags.begin(); it != terrainGfxInfo.crags.end(); ++it )
 	//	pGfxObserver->AddCrag( &(*it) );
-	for ( list<SRiverGFXInfo>::const_iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
+	for ( std::list<SRiverGFXInfo>::const_iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
 		pGfxObserver->AddRiver( &(*it) );
-	for ( list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
+	for ( std::list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
 		pGfxObserver->AddRoad( &(*it) );
-	for ( list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin(); it != terrainGfxInfo.terraspots.end(); ++it )
+	for ( std::list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin(); it != terrainGfxInfo.terraspots.end(); ++it )
 		pGfxObserver->AddTerraSpot( &(*it) );
-	for ( list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
+	for ( std::list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
 		pGfxObserver->AddPeak( &(*it) );
-	for ( list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); ++it )
+	for ( std::list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); ++it )
 		pGfxObserver->AddFoot( &(*it) );
-	for ( list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
+	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
 		pGfxObserver->AddPrecipice( &(*it) );
 }
 
@@ -390,11 +390,11 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	{
 		TIME_STAT_START( Roads_recreation )
 
-			vector<NDb::SVSOPoint> points;
-		for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
+			std::vector<NDb::SVSOPoint> points;
+		for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 		{
 			ConvertVSOPointsFromAIToVisAndPutOnTerrain( &points, it->points );
-			CreateRoadGfx( it, points );
+			CreateRoadGfx( &*it, points );
 		}
 
 		TIME_STAT_FINISH( Roads_recreation )
@@ -404,13 +404,13 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	{
 		// recreate foots
 		//AddAllFoots();
-		for ( list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); ++it )
+		for ( std::list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); ++it )
 			AddFoot( *it );
 
 		terrainInfo.peaks.clear();
 
 		// recreate precipices
-		for ( list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
+		for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
 			CreatePrecipiceMesh( &(*it), false );
 
 		// recreate peaks
@@ -421,7 +421,7 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	// recreate rivers
 	if ( pDesc->rivers.size() > 0 )
 	{
-		for ( list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
+		for ( std::list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance )
@@ -434,7 +434,7 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	// recreate spots
 	if ( pDesc->spots.size() > 0 )
 	{
-		for ( list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
+		for ( std::list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
 		{
 			const NDb::STerrainSpotInstance *pInstance = FindTerraSpot( it->nID );
 			if ( pInstance && pInstance->pDescriptor )
@@ -657,7 +657,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 			for ( int i = ntx1; i < ntx2; ++i )
 			{
 				const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-				for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+				for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 				{
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
@@ -687,13 +687,13 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 		for ( CPatchNormsHash::const_iterator it = patchNorms.begin(); it != patchNorms.end(); ++it )
 			preLightHash[it->first] = GetPreLightColor( pDesc, it->second, vPreLightDir );
 
-		vector<hash_map<int, int> > patchesVertsHash( tileTerraMasks.size() );
-		static hash_map<int, NGScene::SVertex> vertsHash( 1024 );
+		std::vector<std::unordered_map<int, int> > patchesVertsHash( tileTerraMasks.size() );
+		static std::unordered_map<int, NGScene::SVertex> vertsHash( 1024 );
 
 		//vector<NMeshData::SMeshData> *pData = &(terrainGfxInfo.terraPatches[nPatchY][nPatchX]);
 
 		int nAlpha1, nAlpha2, nAlpha3, nAlpha4;
-		static vector<int> maskLayers( 64 );
+		static std::vector<int> maskLayers( 64 );
 
 		vertsHash.clear();
 		for ( int g = nTileY1; g < nTileY2; ++g )
@@ -711,7 +711,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					continue;
 
 				const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-				for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+				for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 				{
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
@@ -754,7 +754,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						const BYTE cA1 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
 						const BYTE cA2 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
 						const BYTE cA3 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
-						hash_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
+						std::unordered_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
 						const int &nRealNum = tilesOrder[nLayer].nPrevNum;
 						//NMeshData::SMeshData &curData = data[nRealNum];
 						NMeshData::SMeshData &curData = terrainGfxInfo.terraPatches[nPatchInd + p][nRealNum];
@@ -833,9 +833,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 		{
 			//NMeshData::SMeshData &data = terrainGfxInfo.terraPatches[nPatchY][nPatchX][k];
 			NMeshData::SMeshData &data = terrainGfxInfo.terraPatches[nPatchInd + i][k];
-			vector<NGScene::SVertex>( data.vertices ).swap( data.vertices );
-			vector<STriangle>( data.triangles ).swap( data.triangles );
-			vector<DWORD>( data.attributes[0].data ).swap( data.attributes[0].data );
+			std::vector<NGScene::SVertex>( data.vertices ).swap( data.vertices );
+			std::vector<STriangle>( data.triangles ).swap( data.triangles );
+			std::vector<DWORD>( data.attributes[0].data ).swap( data.attributes[0].data );
 			if ( data.attributes[0].data.empty() )
 				data.attributes.clear();
 		}

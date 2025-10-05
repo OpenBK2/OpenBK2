@@ -7,7 +7,7 @@ class CSoundCell : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CSoundCell );
 	int nRadius;												// радиус звучания этой клетки(в клетках)
-	typedef list< CPtr<CSound> > CSounds;
+	typedef std::list< CPtr<CSound> > CSounds;
 	CSounds sounds;												// звуки этой клетки
 	void RecountForDelete();
 	NTimer::STime timeLastCombatHear;

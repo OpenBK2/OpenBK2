@@ -5,7 +5,7 @@
 namespace NSingleton
 {
 
-typedef hash_map< int, CObj<CObjectBase> > CObjectsMap;
+typedef std::unordered_map< int, CObj<CObjectBase> > CObjectsMap;
 static CObjectsMap objects;
 
 struct SSingletonAutoMagic
@@ -47,7 +47,7 @@ void DoneSingletons()
 	SSingletonAutoMagic::Clear();
 }
 
-void GetAllSingletonIDs( vector<int> *pRes )
+void GetAllSingletonIDs( std::vector<int> *pRes )
 {
 	pRes->resize( 0 );
 	for ( CObjectsMap::iterator i = objects.begin(); i != objects.end(); ++i )
@@ -58,7 +58,7 @@ void GetAllSingletonIDs( vector<int> *pRes )
 struct SSingletonSerializer
 {
 	class CSingleObject;
-	static hash_map<CObjectBase*, bool, SDefaultPtrHash> saved;
+	static std::unordered_map<CObjectBase*, bool, SDefaultPtrHash> saved;
 
 	class CSingleObject
 	{
@@ -84,7 +84,7 @@ struct SSingletonSerializer
 	};
 	int operator&( IBinSaver &saver )
 	{
-		vector<CSingleObject> singles;
+		std::vector<CSingleObject> singles;
 		if ( saver.IsReading() )
 			saver.Add( 1, &singles );
 		else
@@ -98,7 +98,7 @@ struct SSingletonSerializer
 	}
 };
 
-hash_map<CObjectBase*, bool, SDefaultPtrHash> SSingletonSerializer::saved;
+std::unordered_map<CObjectBase*, bool, SDefaultPtrHash> SSingletonSerializer::saved;
 
 void Serialize( const char chunkID, IBinSaver &saver )
 {

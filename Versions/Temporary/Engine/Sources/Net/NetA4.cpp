@@ -96,10 +96,10 @@ static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 	return false;
 }
 
-static void WritePacket( list<CMemoryStream> *pDst, CMemoryStream &pkt )
+static void WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
 {
 	NI_ASSERT( pkt.GetSize() < N_STREAM_BUFFER - 1000, StrFmt( "Wrong memory stream size (%d)", pkt.GetSize() ) );
-	CMemoryStream &b = *( pDst->insert( pDst->end() ) );
+	CMemoryStream &b = pDst->emplace_back();
 	int nSize = pkt.GetSize();
 	if ( nSize >= 128 )
 	{
@@ -395,7 +395,7 @@ bool CNetDriver::AnalyzeLags()
 }
 #endif // __TEST_LAGS__
 
-bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, vector<int> *pReceived, CMemoryStream *pPkt )
+bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 
@@ -483,7 +483,7 @@ void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
 	{
 		pPeer->currentAddr = addr;
 		pPeer->bTryShortcut = false;
-		vector<PACKET_ID> acked;
+		std::vector<PACKET_ID> acked;
 		NI_ASSERT( pPeer->data.CanReadMsg(), "data polling is not perfect" ); // data polling is not perfect
 		if ( pPeer->data.CanReadMsg() && pPeer->acks.ReadAcks( &acked, bits ) )
 		{
@@ -576,7 +576,7 @@ void CNetDriver::ProcessIncomingMessages()
 				// was kicked
 				{
 					CMemoryStream fake;
-					vector<CP2PTracker::UCID> fake1;
+					std::vector<CP2PTracker::UCID> fake1;
 
 					AddOutputMessage( KICKED, 0, fake, fake1 );
 					while ( !clients.empty() )
@@ -599,7 +599,7 @@ void CNetDriver::ProcessIncomingMessages()
 
 void CNetDriver::StepInactive()
 {
-	vector<CNodeAddress> dest;
+	std::vector<CNodeAddress> dest;
 	CNodeAddress broadcast;
 	pLinks->MakeBroadcastAddr( &broadcast, nGamePort );
 	if ( serverInfo.CanSendRequest( broadcast, &dest ) )
@@ -650,11 +650,11 @@ void CNetDriver::StepConnecting()
 }
 
 void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from, 
-		CMemoryStream &data, const vector<CP2PTracker::UCID> &received )
+		CMemoryStream &data, const std::vector<CP2PTracker::UCID> &received )
 {
 	if ( msg == KICKED )
 	{
-		SMessage &res = *msgQueue.insert( msgQueue.end() );
+		SMessage &res = msgQueue.emplace_back();
 		res.msg = msg;
 		return;
 	}
@@ -662,7 +662,7 @@ void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from,
 	NI_ASSERT( pPeer != 0, "NULL peer" );
 	if ( !pPeer )
 		return;
-	SMessage &res = *msgQueue.insert( msgQueue.end() );
+	SMessage &res = msgQueue.emplace_back();
 	res.msg = msg;
 	res.pkt = data;
 	res.nClientID = pPeer->clientID;
@@ -730,7 +730,7 @@ void CNetDriver::StepActive( float fDeltaTime )
 	// rollback outdated packets
 	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 	{
-		vector<PACKET_ID> rolled, erased;
+		std::vector<PACKET_ID> rolled, erased;
 		i->second.acks.Step( &rolled, &erased, fDeltaTime, consts.fServerListTimeout );
 		i->second.data.Rollback( rolled );
 		i->second.data.Erase( erased );
@@ -811,7 +811,7 @@ void CNetDriver::StepActive( float fDeltaTime )
 				if ( !CSendPacket::GetResult() )
 				{
 					it->second.acks.PacketLost( pktID );
-					vector<PACKET_ID> roll;
+					std::vector<PACKET_ID> roll;
 					roll.push_back( pktID );
 					it->second.data.Rollback( roll );
 					break;
@@ -1010,7 +1010,7 @@ const char* CNetDriver::GetAddressByClientID( const int nClientID ) const
 		return iter->second.currentAddr.GetFastName().c_str();
 }
 
-const string CNetDriver::GetIP( const int nClientID )
+const std::string CNetDriver::GetIP( const int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	CPeerList::iterator iter = clients.find( nClientID );

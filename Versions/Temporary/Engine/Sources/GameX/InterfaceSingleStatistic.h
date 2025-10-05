@@ -41,7 +41,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 		ZSKIP //CPtr<ITextView> pBaseUnitNameView;
 		CDBPtr<NDb::SReinforcement> pReinf;
 		CPtr<IButton> pBtn;
-		string szButtonName;
+		std::string szButtonName;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(6,&pReinf); f.Add(7,&pBtn); f.Add(8,&szButtonName); return 0; }
 	};
 	
@@ -62,7 +62,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	ZSKIP //CPtr<IWindow> pNewRankDlg;
 	ZSKIP //CPtr<ITextView> pNewRankView;
 	ZSKIP //CPtr<IWindow> pMedalDialogBgr;
-	list< CDBPtr<NDb::SMedal> > pendingMedals;
+	std::list< CDBPtr<NDb::SMedal> > pendingMedals;
 	ZSKIP //NTimer::STime timeShowNextMedal;
 	
 	CPtr<IWindow> pInfoPanel;
@@ -74,11 +74,11 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<ITextView> pExpView;
 	CPtr<ITextView> pMissionTimeView;
 	CPtr<ITextView> pCampaignTimeView;
-	vector<SPlayer> players;
-	vector<SReinf> reinfs;
-	wstring wszTime1;
-	wstring wszTime2;
-	wstring wszTime3;
+	std::vector<SPlayer> players;
+	std::vector<SReinf> reinfs;
+	std::wstring wszTime1;
+	std::wstring wszTime2;
+	std::wstring wszTime3;
 	
 	CPtr<IWindow> pNewRankDlg;
 	CPtr<IWindow> pNewRankPanel;
@@ -97,7 +97,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	ZSKIP //CObj<SChapterReinfComposition> pChapterReinfComposition;
 
 	CDBPtr<NDb::SPlayerRank> pNewPlayerRank;
-	list< CDBPtr<NDb::SMedal> > medals;
+	std::list< CDBPtr<NDb::SMedal> > medals;
 	
 	bool bPopup;
 	CPtr<IWindow> pPopupBgWnd;
@@ -137,14 +137,14 @@ private:
 	void ShowMedal( const NDb::SMedal *pMedal );
 	void ExpProgressStep();
 	
-	wstring GetFormattedTime( int nTime ) const;
+	std::wstring GetFormattedTime( int nTime ) const;
 
 	bool OnMenuNext();
 	bool OnMedalDialogClose();
 	bool OnNewRankDialogClose();
-	bool OnReinfClick( const string &szSender );
+	bool OnReinfClick( const std::string &szSender );
 	bool OnChapterReinfClose();
-	bool OnChapterReinfUnitBtn( const string &szSender );
+	bool OnChapterReinfUnitBtn( const std::string &szSender );
 	bool OnMenuNextOnEnter();
 	bool OnRestartMission();
 	bool OnExitToMainMenu();
@@ -164,8 +164,8 @@ public:
 	void OnGetFocus( bool bFocus );
 	
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const string &szSender, const string &szReaction );
-	int Check( const string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int Check( const std::string &szCheckName ) const;
 	//}
 };
 

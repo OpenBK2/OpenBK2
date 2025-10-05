@@ -212,7 +212,7 @@ void CNet::SendPacket( CNetPacket *pPacket )
 		pausePackets.push_back( pPacket );
 }
 
-const string CNet::GetIP( const int nClientID ) const
+const std::string CNet::GetIP( const int nClientID ) const
 {
 	return pNetDriver->GetIP( nClientID );
 }
@@ -238,7 +238,7 @@ void CNet::DebugTogglePause( bool bPause )
 
 	if ( !bDebugNetPaused )
 	{
-		for ( list< CPtr<CNetPacket> >::iterator iter = pausePackets.begin(); iter != pausePackets.end(); ++iter )
+		for ( std::list< CPtr<CNetPacket> >::iterator iter = pausePackets.begin(); iter != pausePackets.end(); ++iter )
 			SendPacket( *iter );
 
 		pausePackets.clear();

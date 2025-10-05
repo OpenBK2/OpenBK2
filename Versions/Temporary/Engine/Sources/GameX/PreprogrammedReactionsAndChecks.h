@@ -9,12 +9,12 @@ template <typename TObj>
 class CReactionObserver : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CReactionObserver )
-		void (TObj::*pfnMemFun)(const string &);
+		void (TObj::*pfnMemFun)(const std::string &);
 public:
 	CReactionObserver() {  }
-	CReactionObserver( void (TObj::*_pfnMemFun)(const string &) ) 
+	CReactionObserver( void (TObj::*_pfnMemFun)(const std::string &) )
 		: pfnMemFun( _pfnMemFun ) {}
-		void Execute( CObjectBase * pThis, const string &szSender ) 
+		void Execute( CObjectBase * pThis, const std::string &szSender )
 		{ 
 			if ( pThis )
 				( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( szSender ); 
@@ -44,31 +44,31 @@ class CProgrammedReactionsAndChecks : public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CProgrammedReactionsAndChecks )
 
-	typedef hash_map<string, CPtr<CReactionObserver<TObj> > > CReactions;
+	typedef std::unordered_map<std::string, CPtr<CReactionObserver<TObj> > > CReactions;
 	CReactions reactions;
-	typedef hash_map<string, CPtr<CCheckObserver<TObj> > > CChecks;
+	typedef std::unordered_map<std::string, CPtr<CCheckObserver<TObj> > > CChecks;
 	CChecks checks;
 public:
 	void SetInterface( TObj *_pInterface ) 
 	{
 		pInterface = _pInterface;
 	}
-	void AddCheck( const string &szCheck, int (TObj::*_pfnMemFun)()const )
+	void AddCheck( const std::string &szCheck, int (TObj::*_pfnMemFun)()const )
 	{
 		checks[szCheck] = new CCheckObserver<TObj>( _pfnMemFun );
 	}
-	void AddReaction( const string &szReaction, void (TObj::*_pfnMemFun)(const string &) )
+	void AddReaction( const std::string &szReaction, void (TObj::*_pfnMemFun)(const std::string &) )
 	{
 		reactions[szReaction] = new CReactionObserver<TObj>( _pfnMemFun );
 	}
-	int Check( const string &szCheckName ) const
+	int Check( const std::string &szCheckName ) const
 	{
 		CChecks::const_iterator pos = checks.find( szCheckName );
 		if ( pos != checks.end() )
 			return pos->second->Execute( this );
 		return 0;
 	}
-	bool Execute( const string &szSender, const string &szReaction )
+	bool Execute( const std::string &szSender, const std::string &szReaction )
 	{
 		CReactions::iterator pos = reactions.find( szReaction );
 		if ( pos != reactions.end() )

@@ -20,13 +20,13 @@ class CGeneral : public CCommander, public IEnemyContainer
 {
 	OBJECT_BASIC_METHODS(CGeneral);
 
-	typedef hash_map< int/*request ID*/, CPtr<IGeneralTask> > RequestedTasks;
-	typedef pair< CPtr<CAIUnit>, NTimer::STime> CUnitTimeSeen;
-	typedef hash_map< int/* unit unique ID*/, CUnitTimeSeen > CEnemyVisibility;
+	typedef std::unordered_map< int/*request ID*/, CPtr<IGeneralTask> > RequestedTasks;
+	typedef std::pair< CPtr<CAIUnit>, NTimer::STime> CUnitTimeSeen;
+	typedef std::unordered_map< int/* unit unique ID*/, CUnitTimeSeen > CEnemyVisibility;
 
 	//{ do not save these, it is only for IN-Segment use
 	CEnemyVisibility::iterator curProcessed;	// cannot be saved, so there will be some tricks
-	list<int> erased;
+	std::list<int> erased;
 	//}
 
 	ZDATA_(CCommander)
@@ -44,10 +44,10 @@ class CGeneral : public CCommander, public IEnemyContainer
 	CommonUnits transportsFree;
 
 	NTimer::STime timeNextUpdate;					// next update of this general
-	hash_set<int> mobileReinforcementGroupIDs;
+	std::unordered_set<int> mobileReinforcementGroupIDs;
 
 	//Distribution of availability of own units in reinforcements.
-	vector<float>	enemyByRType;					// Current balance of forces (enemy's distribution of reinfs minus own forces)
+	std::vector<float>	enemyByRType;					// Current balance of forces (enemy's distribution of reinfs minus own forces)
 	int						nAirReinfTurnCounter;		// counter to give reinforcement to AirGeneral every n-th turn
 
 	CObj<CGeneralAirForce> pAirForce;
@@ -108,7 +108,7 @@ public:
 	void Init( const struct NDb::SAIGeneralSide &mapInfo );
 	void Init();
 	// появились новые юниты
-	void GiveNewUnits( const list<CCommonUnit*> &pUnits,  bool bFromReinforcement = false );
+	void GiveNewUnits( const std::list<CCommonUnit*> &pUnits,  bool bFromReinforcement = false );
 
 	// для манипулирования мобильными резервами
 	bool IsMobileReinforcement( int nGroupID ) const;

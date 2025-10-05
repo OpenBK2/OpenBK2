@@ -49,10 +49,10 @@ void CVariant::Copy(const CVariant &var)
 		m_float = var.m_float;
 		break;
 	case VT_STR:
-		m_pstr = new string( *var.m_pstr );
+		m_pstr = new std::string( *var.m_pstr );
 		break;
 	case VT_WSTR:
-		m_pwstr = new wstring( *var.m_pwstr );
+		m_pwstr = new std::wstring( *var.m_pwstr );
 		break;
 	case VT_BOOL:
 		m_bool = var.m_bool;
@@ -128,7 +128,7 @@ const wchar_t *CVariant::GetWStr() const
 	return L"";
 }
 
-string CVariant::GetStringRecode() const
+std::string CVariant::GetStringRecode() const
 {
 	switch ( m_eType )
 	{
@@ -144,7 +144,7 @@ string CVariant::GetStringRecode() const
 	}
 }
 
-wstring CVariant::GetWStringRecode() const
+std::wstring CVariant::GetWStringRecode() const
 {
 	switch ( m_eType )
 	{
@@ -305,7 +305,7 @@ CVariant::operator bool() const
 	}
 }
 
-bool CVariant::ToText( string *pszText ) const
+bool CVariant::ToText( std::string *pszText ) const
 {
 	if ( !pszText )
 	{
@@ -457,11 +457,11 @@ int CVariant::operator & ( IBinSaver &saver )
 		saver.Add( 2, &m_bool );
 		break;
 	case VT_STR:
-		if ( saver.IsReading() ) m_pstr = new string();
+		if ( saver.IsReading() ) m_pstr = new std::string();
 		saver.Add( 2, m_pstr );
 		break;
 	case VT_WSTR:
-		if ( saver.IsReading() ) m_pwstr = new wstring();
+		if ( saver.IsReading() ) m_pwstr = new std::wstring();
 		saver.Add( 2, m_pwstr );
 		break;
 	case VT_POINTER:
@@ -506,13 +506,13 @@ int CVariant::operator&( IXmlSaver &saver )
 
 	case VT_STR:
 		if ( saver.IsReading() )
-			m_pstr = new string();
+			m_pstr = new std::string();
 		saver.Add( "Data", m_pstr );
 		break;
 
 	case VT_WSTR:
 		if ( saver.IsReading() )
-			m_pwstr = new wstring();
+			m_pwstr = new std::wstring();
 		saver.Add( "Data", m_pwstr );
 		break;
 

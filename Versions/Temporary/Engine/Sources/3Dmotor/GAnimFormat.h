@@ -29,7 +29,7 @@ class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
 	OBJECT_BASIC_METHODS(CGrannyBaseStuffLoader);
 	ZDATA
 	CDGPtr<NGScene::CGrannyMemFileLoader> pGrannyFile;
-	string szResName;
+	std::string szResName;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGrannyFile); f.Add(3,&szResName); return 0; }
 
 	void TrueSetKey( const NGScene::SResKey<NGScene::SGrannyFileLoaderInfo> &key );
@@ -39,7 +39,7 @@ protected:
 	void Recalc();
 	virtual bool IsDelayedLoad() const { return true; }
 public:
-	CGrannyBaseStuffLoader( const string &_szResName ) : szResName(_szResName) {}
+	CGrannyBaseStuffLoader( const std::string &_szResName ) : szResName(_szResName) {}
 
 template<class TResource>
 	void SetKey( const CDBPtr<TResource> &pResource )

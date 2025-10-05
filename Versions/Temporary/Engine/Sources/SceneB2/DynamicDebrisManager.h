@@ -16,7 +16,7 @@ typedef NMeshData::SPatchHolder<CVisDynamicDebrisPatch> CVisDynamicDebrisPatchHo
 class CDynamicDebrisManager
 {
 	CObj<NGScene::IGameView> pGScene;
-	vector<CVisDynamicDebrisPatchHolder> debrisPatches;
+	std::vector<CVisDynamicDebrisPatchHolder> debrisPatches;
 	//
 public:
 	//

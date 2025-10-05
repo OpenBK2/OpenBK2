@@ -98,7 +98,7 @@ struct SReflowInfo
 	float fMaxX;
 	float fLineWidth, fLineHeight, fLastLineHeight;
 	SRange sLeft, sRight;
-	list<CPtr<IMLObject> > line, leftWraped, rightWraped;
+	std::list<CPtr<IMLObject> > line, leftWraped, rightWraped;
 
 	int operator&( IBinSaver &saver )
 	{
@@ -123,7 +123,7 @@ class UI_EXPORT CMLStream: public CObjectBase
 	OBJECT_BASIC_METHODS(CMLStream)
 private:
 	int nPos;
-	wstring wsText;
+	std::wstring wsText;
 	int nSize;
 
 public:
@@ -135,8 +135,8 @@ public:
 
  	WCHAR GetChar() const { return wsText[nPos]; }
 	bool IsEof() const { return nPos >= nSize; }
-	void GetString( int nStart, int nSize, wstring *pRes );
-	void InsertString( const wstring &wsText );
+	void GetString( int nStart, int nSize, std::wstring *pRes );
+	void InsertString( const std::wstring &wsText );
 
 	int operator&( IBinSaver &saver )
 	{
@@ -162,7 +162,7 @@ struct IMLObject: public CObjectBase
 	virtual const CTPoint<float>& GetPosition() const = 0;
 	virtual void SetPosition( const CTPoint<float> &sPosition ) = 0;
 
-	virtual void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) = 0;
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
@@ -186,7 +186,7 @@ struct IMLLayout: public CObjectBase
 
 	virtual void Generate(  float fWidth ) = 0;
 
-	virtual void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
@@ -194,16 +194,16 @@ struct IMLLayout: public CObjectBase
 
 struct UI_EXPORT IMLHandler: public CObjectBase
 {
-	virtual void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet ) = 0;
+	virtual void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) = 0;
 };
 
 // IML
 
 struct IML: public CObjectBase
 {
-	virtual void SetText( const wstring &wsText, int nFlags ) = 0;
+	virtual void SetText( const std::wstring &wsText, int nFlags ) = 0;
 	virtual void SetFade( float fFade ) = 0;
-	virtual void SetHandler( const wstring &wsTAG, IMLHandler *pHandler ) = 0;
+	virtual void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler ) = 0;
 	virtual void SetIDForHandler( int nID ) = 0;
 	virtual int GetIDForHandler() const = 0;
 
@@ -211,7 +211,7 @@ struct IML: public CObjectBase
 	virtual const CTPoint<int>& GetSize() = 0;
 
 	virtual void Generate(  int nWidth ) = 0;
-	virtual void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 

@@ -293,7 +293,7 @@ inline CVec3 GetNURBSPoint( const float t, const CVec3 &p1, const CVec3 &p2, con
                 ( fW1 * n1 * p1.z + fW2 * n2 * p2.z + fW3 * n3 * p3.z + fW4 * n4 * p4.z ) * w );
 }
 
-void SampleNURBSCurve( vector<CVec3> *pRes, const float fSampleStep, const vector<CVec3> &ctrlPoints,
+void SampleNURBSCurve( std::vector<CVec3> *pRes, const float fSampleStep, const std::vector<CVec3> &ctrlPoints,
   const float fWeight1/* = 1.0f*/, const float fWeight2/* = 1.0f*/, const float fWeight3/* = 1.0f*/, const float fWeight4/* = 1.0f*/ )
 {
   pRes->reserve( 512 );

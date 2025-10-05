@@ -13,9 +13,9 @@ namespace NGScene
 // CFileTexture
 
 template <class TPixel>
-void LoadTextureData( vector<CArray2D<TPixel> > *pMips, int _nMips, int _nSizeX, int _nSizeY, CDataStream *pFile )
+void LoadTextureData( std::vector<CArray2D<TPixel> > *pMips, int _nMips, int _nSizeX, int _nSizeY, CDataStream *pFile )
 {
-	vector<CArray2D<TPixel> > &mips = *pMips;
+	std::vector<CArray2D<TPixel> > &mips = *pMips;
 	//int nXSize = _nSizeX;
 	//int nYSize = _nSizeY;
 	
@@ -76,7 +76,7 @@ bool CSWTexture::IsReady()
 template<class TPixel>
 void LoadDxt( CSWTextureData *pValue, int nDxt, int nSizeX, int nSizeY, int nMips, CDataStream *pStream )
 {
-	vector<CArray2D<TPixel> > dxt;
+	std::vector<CArray2D<TPixel> > dxt;
 	LoadTextureData<TPixel>( &dxt, nMips, nSizeX, nSizeY, pStream ); 
 	pValue->mips.resize( dxt.size() );
 	for ( int k = 0; k < dxt.size(); ++k )

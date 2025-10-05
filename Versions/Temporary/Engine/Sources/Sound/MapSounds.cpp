@@ -84,7 +84,7 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 				!maxElement->second.instanceIDs.empty() &&
 				maxElement->second.nCount >= SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
 			{
-				hash_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingLoopedSound.wInstanceID = element->first;
 				playingLoopedSound.wSoundTypeID = maxElement->first;
 				playingLoopedSound.wSceneID = pScene->AddSound( registeredSounds.ToT1(playingLoopedSound.wSoundTypeID),
@@ -109,7 +109,7 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 
 			if ( maxElement != cellSounds.end() && !maxElement->second.instanceIDs.empty() )
 			{
-				hash_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingSound.wInstanceID = element->first;
 				playingSound.wSoundTypeID = maxElement->first;
 				playingSound.wSceneID = pScene->AddSound( registeredSounds.ToT1( playingSound.wSoundTypeID ),
@@ -144,7 +144,7 @@ void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 void CMapSounds::RemoveSound( const WORD wInstanceID )
 {
 	if ( 0 == wInstanceID ) return ;
-	hash_map<WORD, SIntThree>::iterator pos = cells.find( wInstanceID );
+	std::unordered_map<WORD, SIntThree>::iterator pos = cells.find( wInstanceID );
 	NI_ASSERT( pos != cells.end(), "wrong instace deleted" );
 	if ( pos == cells.end() )
 		return;

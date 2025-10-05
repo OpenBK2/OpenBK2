@@ -2,8 +2,8 @@
 #include "lsaver.h"
 #include "lstring.h"
 
-typedef hash_map<CLuaFuncID, int> CLuaIDToFuncMap;
-typedef hash_map<int, CLuaFuncID> CLuaFuncToIDMap;
+typedef std::unordered_map<CLuaFuncID, int> CLuaIDToFuncMap;
+typedef std::unordered_map<int, CLuaFuncID> CLuaFuncToIDMap;
 CLuaFuncToIDMap luaFuncToIDMap;
 CLuaIDToFuncMap luaIDToFuncMap;
 lua_State *pLUASaverState;
@@ -105,13 +105,13 @@ void lua_AddString( IBinSaver &f, IBinSaver::chunk_id idChunk, TString **ppszStr
 {
 	if ( f.IsReading() )
 	{
-		string str;
+		std::string str;
 		f.Add( idChunk, &str, nChunk );
 		*ppszStr = luaS_new( pLUASaverState, str.c_str() );
 	}
 	else
 	{
-		string str = (*ppszStr)->GetStr();
+		std::string str = (*ppszStr)->GetStr();
 		f.Add( idChunk, &str, nChunk );
 	}
 }

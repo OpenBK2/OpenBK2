@@ -40,9 +40,9 @@ void CWindDeformer::Recalc()
 	if ( !pValue )
 		pValue = new CObjectInfo( *pMesh );
 
-	vector<NGScene::SUVInfo> &v = pValue->verts;
-	const vector<WORD> &posInds = pValue->GetPositionIndices();
-	vector<CVec3> &c = pValue->positions;
+	std::vector<NGScene::SUVInfo> &v = pValue->verts;
+	const std::vector<WORD> &posInds = pValue->GetPositionIndices();
+	std::vector<CVec3> &c = pValue->positions;
 
 	float x, y, angle;
 

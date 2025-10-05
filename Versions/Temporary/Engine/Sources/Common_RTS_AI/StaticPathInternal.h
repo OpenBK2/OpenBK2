@@ -11,7 +11,7 @@ class CCommonStaticPath : public IStaticPath
 	OBJECT_BASIC_METHODS( CCommonStaticPath );
 
 	ZDATA
-		vector<SVector> path;
+		std::vector<SVector> path;
 		int nLen;
 		// в тайловых координатах
 		SVector startTile, finishTile;

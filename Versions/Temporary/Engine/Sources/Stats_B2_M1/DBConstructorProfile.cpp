@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SDBGunsProfile::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SDBGunsProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (BYTE*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
 }
@@ -47,7 +47,7 @@ DWORD SDBGunsProfile::CalcCheckSum() const
 
 
 
-void SDBPlatformsProfile::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SDBPlatformsProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (BYTE*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Guns", &guns, pThis );

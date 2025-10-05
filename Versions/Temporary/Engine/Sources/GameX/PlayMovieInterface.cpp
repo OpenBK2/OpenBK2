@@ -50,7 +50,7 @@ void CICPlayMovie::Configure( const char *pszConfig )
 	if ( !pszConfig ) 
 		return;
 	// split string
-	vector<string> szStrings;
+	std::vector<std::string> szStrings;
 	NStr::SplitStringWithMultipleBrackets( pszConfig, szStrings, ';' );
 	// movie sequence name
 	if ( szStrings.size() >= 1 ) 
@@ -65,7 +65,7 @@ void CICPlayMovie::Configure( const char *pszConfig )
 
 void CICPlayMovie::PostCreate( IInterface *pInterface ) 
 { 
-	string szMovie = szSequenceName;
+	std::string szMovie = szSequenceName;
 	if ( szSequenceName.size() >= 4 && szSequenceName.compare( szSequenceName.size() - 4, 4, ".xml" ) != 0 )
 		szMovie += ".xml";
 	pInterface->LoadMovieSequence( szMovie );
@@ -96,7 +96,7 @@ CPlayMovieInterface::~CPlayMovieInterface()
 {
 }
 
-void CPlayMovieInterface::LoadMovieSequence( const string &_szFileName )
+void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 {
 	szFileName = _szFileName;
 	
@@ -149,7 +149,7 @@ void CPlayMovieInterface::LoadMovieSequence( const string &_szFileName )
 	}
 }
 
-void CPlayMovieInterface::SetNextInterface( const string &_szNextCommand )
+void CPlayMovieInterface::SetNextInterface( const std::string &_szNextCommand )
 {
 	szNextCommand = _szNextCommand;
 }
@@ -240,7 +240,7 @@ void CPlayMovieInterface::StartNextInterface()
 	if ( !szNextCommand.empty() )
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-		wstring wszNextCommand = NStr::ToUnicode( szNextCommand );
+		std::wstring wszNextCommand = NStr::ToUnicode( szNextCommand );
 		NGlobal::ProcessCommand( wszNextCommand );
 	}
 	else
@@ -255,14 +255,14 @@ void CPlayMovieInterface::OnGetFocus( bool bFocus )
 		PauseIntermission( true );
 }
 
-void PlayMovieSequence( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
 	{
 		csSystem << "usage: movie_sequence <file name>" << endl;
 		return;
 	}
-	string szSeqName = NStr::ToMBCS( paramsSet[0] );
+	std::string szSeqName = NStr::ToMBCS( paramsSet[0] );
 	if ( paramsSet.size() > 1 ) 
 		szSeqName += ";" + NStr::ToMBCS( paramsSet[1] );
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szSeqName.c_str() );

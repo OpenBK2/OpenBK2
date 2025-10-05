@@ -11,7 +11,7 @@
 
 // Chat-related methods for MP Lobby
 
-void CInterfaceMPLobby::TryToJoinChatChannel( const string &szChannel )
+void CInterfaceMPLobby::TryToJoinChatChannel( const std::string &szChannel )
 {
 	bJoiningChannel = true;
 	szCurrentChannel = szChannel;
@@ -75,7 +75,7 @@ bool CInterfaceMPLobby::OnPostChatMessageReaction()
 {
 	if ( pChatInput )
 	{
-		wstring wszText = pChatInput->GetText();
+		std::wstring wszText = pChatInput->GetText();
 		if ( !wszText.empty() )
 		{
 			if ( pSelection )
@@ -120,12 +120,12 @@ void CInterfaceMPLobby::RebuildClientList()
 
 bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( pMsg->szName.empty() )
 		wszText = pMsg->wszText;
 	else
 	{
-		wstring wszPrivate;
+		std::wstring wszPrivate;
 		if ( pMsg->bPrivate )
 			wszPrivate = InterfaceState()->GetTextEntry( "T_PRIVATE_MESSAGE_PREFIX" );
 		wszText = NStr::ToUnicode( pMsg->szName ) + wszPrivate + L" : " + pMsg->wszText;
@@ -138,7 +138,7 @@ bool CInterfaceMPLobby::OnChatChannelsListMessage( struct SMPUIChatChannelListMe
 {
 	pChannelsList->RemoveAllElements();
 
-	for ( list<string>::iterator it = pMsg->channels.begin(); it != pMsg->channels.end(); ++it )
+	for ( std::list<std::string>::iterator it = pMsg->channels.begin(); it != pMsg->channels.end(); ++it )
 	{
 		CTextData *pNewData = new CTextData( NStr::ToUnicode( *it ) );
 		pChannelsList->AddItem( pNewData );
@@ -169,7 +169,7 @@ bool CInterfaceMPLobby::OnChatChannelNicksMessage( struct SMPUIChatChannelNicksM
 
 	// Process clients list
 	pList->clear();
-	for ( list<string>::iterator it = pMsg->nicks.begin(); it != pMsg->nicks.end(); ++it )
+	for ( std::list<std::string>::iterator it = pMsg->nicks.begin(); it != pMsg->nicks.end(); ++it )
 	{
 		CPtr<CClientListData> pData = new CClientListData( *it, eDefaultStatus );
 		(*pList)[*it] = pData;
@@ -212,7 +212,7 @@ bool CInterfaceMPLobby::OnChatChannelNicksChangeMessage( struct SMPUIChatChannel
 	return true;
 }
 
-int CInterfaceMPLobby::GetButtonState( const string &szNick )
+int CInterfaceMPLobby::GetButtonState( const std::string &szNick )
 {
 	CChatClientsList::iterator itIgnore = chatIgnores.find( szNick );
 	if ( itIgnore != chatIgnores.end() )

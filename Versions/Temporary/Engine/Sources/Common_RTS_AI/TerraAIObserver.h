@@ -44,7 +44,7 @@ public:
 	ZEND int operator&( IBinSaver &f );
 
 	virtual void AddVSO( const NDb::SVSOInstance *pVSO );
-	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, list<SVector> *pTiles,
+	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, std::list<SVector> *pTiles,
 												 const SSingleSide &singleSide, bool bInverse = false );
 
 	void InitPassMarkers( CAIMap *_pAIMap );
@@ -62,7 +62,7 @@ public:
 	virtual void AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake );
 	//
 	virtual void UpdateZ( CVec3 *pvPos );
-	virtual void SetTerraTypes( const vector<NDb::STerrainAIProperties> &params );
+	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params );
 	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
 
@@ -79,7 +79,7 @@ public:
 	virtual void DrawPassabilities() const;
 	virtual void ToggleShowPassability();
 	virtual void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius );
-	virtual void DumpMaxes( const string &szFileName, const int aiClass );
+	virtual void DumpMaxes( const std::string &szFileName, const int aiClass );
 
 	virtual bool IsPassabilityOn() const { return bShowPassability; }
 	virtual bool IsBridge( const int nX, const int nY ) const;

@@ -1318,7 +1318,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 {
 	if ( curTime < lastScanTime + realScanDuration )
 	{
-		for ( list< CPtr<CAIUnit> >::iterator it = targetsCache.begin(); it != targetsCache.end(); )
+		for ( std::list< CPtr<CAIUnit> >::iterator it = targetsCache.begin(); it != targetsCache.end(); )
 		{
 			CPtr<CAIUnit> pCachedEnemy = *it;
 			if ( IsValid( pCachedEnemy ) && pCachedEnemy->IsAlive() && theDipl.GetDiplStatus( GetPlayer(), pCachedEnemy->GetPlayer() ) == EDI_ENEMY )
@@ -2201,7 +2201,7 @@ void CAIUnit::InitSpecialAbilities( int nFromLevel )
 	NI_ASSERT( GetStats()->GetActions() != 0, StrFmt("Empty actions set for unit \"%s\" of type \"%s\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
 	pShootInMovementExecutor = 0;
 	// start SpecialAbility executors (that are possible for this unit)
-	const int nActiveAbilities = Min( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
+	const int nActiveAbilities = Min<int>( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
 	for ( int i = nFromLevel; i < nActiveAbilities; ++i )
 	{
 		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0, StrFmt("Empty ability %d for unit \"%s\" of type \"%s\"", i, NDb::GetResName(GetStats()), typeid(*GetStats()).name()) )
@@ -2732,8 +2732,8 @@ void CAIUnit::UpdateVisibilityForced()
 const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType )
 {
 	const NDb::EUnitSpecialAbility eAbility = ( eType == NDb::ABILITY_PLACE_CONTROLLED_CHARGE || eType == NDb::ABILITY_DETONATE ) ? NDb::ABILITY_RADIO_CONTROLLED_MODE : eType;
-	const vector< CDBPtr< SUnitSpecialAblityDesc > > &abilities = GetStats()->GetActions()->specialAbilities;
-	const int nMaxAbilityCount = Min( GetAbilityLevel(), abilities.size() );
+	const std::vector< CDBPtr< SUnitSpecialAblityDesc > > &abilities = GetStats()->GetActions()->specialAbilities;
+	const int nMaxAbilityCount = Min<int>( GetAbilityLevel(), abilities.size() );
 	for ( int i = 0; i < nMaxAbilityCount; ++i )
 	{
 		NI_ASSERT( abilities[i], StrFmt("No ability desc. Unit \"%s\", ability %d", NDb::GetResName(GetStats()), i ) );
@@ -2796,7 +2796,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			if ( pLevels->eDBType == eReinforcementType && !bOldRemoved )
 			{
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eReinforcementType );
-				nXPLevel = Min( pLevels->levels.size() - 1, nXPLevel );
+				nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 					continue;
 				if ( pLevels->levels[nXPLevel].pStatsBonus )
@@ -2808,7 +2808,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			else if ( pLevels->eDBType == eType && !bNewApplied )
 			{
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eType );
-				nXPLevel = Min( pLevels->levels.size() - 1, nXPLevel );
+				nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 					continue;
 				if ( pLevels->levels[nXPLevel].pStatsBonus )

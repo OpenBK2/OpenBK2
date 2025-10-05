@@ -27,7 +27,7 @@ struct SB2StartGameParams
 	};
 
 	ZDATA
-	vector< SClient > clients;
+	std::vector< SClient > clients;
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	int nGameID;
 	int nSpeedAdjustment;
@@ -51,9 +51,9 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	long nCommonSegment;
 	int nMyLogicID;												// номер "нашего" игрока
 	bool bCommandsFromHistory;
-	vector<WORD> segmFinished;
+	std::vector<WORD> segmFinished;
 	WORD wMask;
-	typedef list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
+	typedef std::list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
 	CArray2D<CAILogicCommandsList> cmds;
 
 	CDBPtr<NDb::SNetGameConsts> pConsts;
@@ -69,7 +69,7 @@ public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTypeID); f.Add(3,&cmd); return 0; }
 	};
 private:
-	list< CPtr<IAILogicCommandB2> > aiCommandsToSend;
+	std::list< CPtr<IAILogicCommandB2> > aiCommandsToSend;
 
 	struct SPlayer
 	{
@@ -78,7 +78,7 @@ private:
 		bool bLoaded;
 		SPlayer() : nClientID( -1 ), bLoaded( false ) {}
 	};
-	typedef vector<SPlayer> CPlayersList;
+	typedef std::vector<SPlayer> CPlayersList;
 	CPlayersList players;
 
 	CDBPtr<NDb::SMapInfo> pMapInfo;
@@ -128,7 +128,7 @@ public:
 	// client commands
 	void CommandClientTogglePause() {}
 	void CommandClientSpeed( int nChange ) {}
-	void CommandClientDropPlayer( const wstring &szPlayerNick ) {}
+	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
 	void CommandTimeOut( bool bSet );
 
 	bool IsGameEnded() { return bIsGameEnded; }

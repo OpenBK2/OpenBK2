@@ -21,12 +21,12 @@ enum EResupplyType
 class CSupremeBeing
 {
 	public: int operator&( IBinSaver &saver ); private:;
-	typedef hash_map<int, CObj<CGeneral> > Generals;
+	typedef std::unordered_map<int, CObj<CGeneral> > Generals;
 	Generals generals;
-	typedef list< CPtr<IGeneralDelayedTask> > DelayedTasks;
+	typedef std::list< CPtr<IGeneralDelayedTask> > DelayedTasks;
 	DelayedTasks delayedTasks;
 
-	hash_set<int/*Link ID*/> ironmans;
+	std::unordered_set<int/*Link ID*/> ironmans;
 
 public:
 	void Segment();
@@ -41,7 +41,7 @@ public:
 	// каждый генерал знает о юнитах, которые являются мобильным резервом
 	void Init( const NDb::SMapInfo* pMapInfo );
 	// раздать юниты генералам
-	void GiveNewUnitsToGenerals( const list<class CCommonUnit*> &pUnits, bool bFromReinforcement = false );
+	void GiveNewUnitsToGenerals( const std::list<class CCommonUnit*> &pUnits, bool bFromReinforcement = false );
 
 	bool IsMobileReinforcement( int nParty, int nGroup ) const;
 	void AddReinforcement( class CAIUnit *pUnit );

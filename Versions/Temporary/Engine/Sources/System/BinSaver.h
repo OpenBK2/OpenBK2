@@ -50,8 +50,8 @@ struct IBinSaver : public CObjectBase
 {
 public:
 	typedef unsigned char chunk_id;
-	typedef string stdString;
-	typedef wstring stdWString;
+	typedef std::string stdString;
+	typedef std::wstring stdWString;
 private:
 	char __cdecl TestDataPath(...) { return 0; }
 	int __cdecl TestDataPath( stdString* ) { return 0; }
@@ -60,17 +60,17 @@ private:
 	template<class T1>
 		int __cdecl TestDataPath( CArray2D<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( vector<T1>* ) { return 0; }
+		int __cdecl TestDataPath( std::vector<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( list<T1>* ) { return 0; }
+		int __cdecl TestDataPath( std::list<T1>* ) { return 0; }
 	template<class T1, class T2, class T3>
-		int __cdecl TestDataPath( hash_map<T1,T2,T3>* ) { return 0; }
+		int __cdecl TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( hash_set<T1,T2>* ) { return 0; }
+		int __cdecl TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( set<T1,T2>* ) { return 0; }
+		int __cdecl TestDataPath( std::set<T1,T2>* ) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( pair<T1,T2>* ) { return 0; }
+		int __cdecl TestDataPath( std::pair<T1,T2>* ) { return 0; }
 	//
 	template<class T>
 	void __cdecl CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
@@ -87,7 +87,7 @@ private:
 	}
 	//
 	// vector
-	template <class T> void DoVector( vector<T> &data )
+	template <class T> void DoVector( std::vector<T> &data )
 	{
 		int i, nSize;
 		if ( IsReading() )
@@ -107,7 +107,7 @@ private:
 		for ( i = 0; i < nSize; i++ )
 			Add( 1, &data[i], i + 1 );
 	}
-	template <class T> void DoDataVector( vector<T> &data )
+	template <class T> void DoDataVector( std::vector<T> &data )
 	{
 		int nSize = data.size();
 		Add( 1, &nSize );
@@ -121,7 +121,7 @@ private:
 	}
 	// hash_map
 	template <class T1,class T2,class T3> 
-		void DoHashMap( hash_map<T1,T2,T3> &data )
+		void DoHashMap( std::unordered_map<T1,T2,T3> &data )
 	{
 		if ( IsReading() )
 		{
@@ -135,9 +135,9 @@ private:
 			{
 				int nBuckets;
 				Add( 4, &nBuckets );
-				data.set_bucket_count( nBuckets );
+				data.rehash( nBuckets );
 			}
-			vector<T1> indices;
+			std::vector<T1> indices;
 			indices.resize( nSize );
 			for ( i = 0; i < nSize; ++i )
 				Add( 1, &indices[i], i + 1 );
@@ -150,10 +150,10 @@ private:
 			Add( 3, &nSize );
 			Add( 4, &nBuckets );
 
-			vector<T1> indices;
+			std::vector<T1> indices;
 			indices.resize( nSize );
 			int i = 1;
-			for ( hash_map<T1,T2,T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+			for ( typename std::unordered_map<T1,T2,T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
 				indices[ nSize - i ] = pos->first;
 			for ( i = 0; i < nSize; ++i )
 				Add( 1, &indices[i], i + 1 );
@@ -162,11 +162,11 @@ private:
 		}
 	}
 	template <class T1,class T2> 
-		void DoSet( set<T1,T2> &data )
+		void DoSet( std::set<T1,T2> &data )
 	{
 		if ( IsReading() )
 		{
-			vector<T1> vectorData;
+			std::vector<T1> vectorData;
 			Add( 1, &vectorData );
 
 			data.clear();
@@ -174,7 +174,7 @@ private:
 		}
 		else
 		{
-			vector<T1> vectorData( data.begin(), data.end() );
+			std::vector<T1> vectorData( data.begin(), data.end() );
 			Add( 1, &vectorData );
 		}
 	}
@@ -203,8 +203,8 @@ private:
 	virtual int CountChunks( const chunk_id idChunk ) = 0;
 
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) = 0;
-	virtual void DataChunkString( string &data ) = 0;
-	virtual void DataChunkString( wstring &data ) = 0;
+	virtual void DataChunkString( std::string &data ) = 0;
+	virtual void DataChunkString( std::wstring &data ) = 0;
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject ) = 0;
 	virtual CObjectBase* LoadObject() = 0;
@@ -254,7 +254,7 @@ public:
 		FinishChunk();
 	}
 	template<class T1>
-		void Add( const chunk_id idChunk, vector<T1> *pVec, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::vector<T1> *pVec, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -265,23 +265,25 @@ public:
 		FinishChunk();
 	}
 	template<class T1, class T2, class T3>
-		void Add( const chunk_id idChunk, hash_map<T1,T2,T3> *pHash, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::unordered_map<T1,T2,T3> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
+#if 0
 	template<class T1, class T2>
-		void Add( const chunk_id idChunk, hash_set<T1,T2> *pHash, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::unordered_set<T1,T2> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
+#endif
 	template<class T1, class T2>
-		void Add( const chunk_id idChunk, set<T1,T2> *pSet, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::set<T1,T2> *pSet, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -300,11 +302,11 @@ public:
 		FinishChunk();
 	}
 	template<class T1>
-		void Add( const chunk_id idChunk, list<T1> *pList, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::list<T1> *pList, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
-		list<T1> &data = *pList;
+		std::list<T1> &data = *pList;
 		if ( IsReading() )
 		{
 			int nSize;
@@ -321,12 +323,12 @@ public:
 			Add( 2, &nSize );
 		}
 		int i = 1;
-		for ( list<T1>::iterator k = data.begin(); k != data.end(); ++k, ++i )
+		for ( typename std::list<T1>::iterator k = data.begin(); k != data.end(); ++k, ++i )
 			Add( 1, &(*k), i );
 		FinishChunk();
 	}
 	template <class T1, class T2> 
-		void Add( const chunk_id idChunk, pair<T1, T2> *pData, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk(idChunk, nChunkNumber) )
 			return;
@@ -358,8 +360,8 @@ public:
 	}
 private:
 	// Compile time error detection
-	template <class T1, class T2, class T3, class T4, class T5>
-	void Add( const chunk_id idChunk, _Ht_it<T1, T2, T3, T4, T5> *pData, int nChunkNumber = 1 ) 
+	template <class T1, class T2, class T3>
+	void Add( const chunk_id idChunk, typename std::unordered_map<T1, T2, T3>::iterator *pData, int nChunkNumber = 1 )
 	{
 		ASSERT( 0 && "Hash table iterator can't be serialized" );
 	}
@@ -370,7 +372,7 @@ private:
 	}
 
 	template<class T1, class T2>//, class _Traits>
-		void Add( const chunk_id idChunk, _List_it<T1, T2> *pData, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, typename std::list<T1, T2>::iterator *pData, int nChunkNumber = 1 )
 	{
 		ASSERT( 0 && "List iterator can't be serialized" );
 	}
@@ -404,11 +406,11 @@ struct IDebugSaveCheckObj : public CObjectBase
 };
 
 class CFileStream;
-SYSTEM_EXPORT IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext );
-SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &objToCheck );
+SYSTEM_EXPORT IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext );
+SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const std::vector<SBinSaverExternalObject> &external, std::vector< CPtr<IDebugSaveCheckObj> > &objToCheck );
 
 inline IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode )
 {
-	return CreateBinSaver( pStream, mode, vector<SBinSaverExternalObject>() );
+	return CreateBinSaver( pStream, mode, std::vector<SBinSaverExternalObject>() );
 }
 

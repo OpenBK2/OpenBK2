@@ -10,13 +10,13 @@
 //
 #define DEF_ROAD_VERT_EPS 0.001f
 
-inline int AddUniqueRoadVertex( vector<NGScene::SVertex> *pVerts, const CVec3 &vert,
+inline int AddUniqueRoadVertex( std::vector<NGScene::SVertex> *pVerts, const CVec3 &vert,
 																const int nTileX, const int nTileY,
 																const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vNorm4,
 																const CVec2 &vTex, const float fAlpha )
 {
 	int nCount = 0;
-	for ( vector<NGScene::SVertex>::const_iterator it = pVerts->begin(); it != pVerts->end(); ++it, ++nCount )
+	for ( std::vector<NGScene::SVertex>::const_iterator it = pVerts->begin(); it != pVerts->end(); ++it, ++nCount )
 	{
 		if ( (fabs2(it->pos.x - vert.x) < DEF_ROAD_VERT_EPS) && (fabs2(it->pos.y - vert.y) < DEF_ROAD_VERT_EPS) &&
 				 (fabs2(it->pos.z - vert.z) < DEF_ROAD_VERT_EPS) )
@@ -39,7 +39,7 @@ inline int CTerraGen::CalcTexAndAddRoadVertex(	const CVec3 &vert, const CVec3 &v
 																								const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4,
 																								const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4,
 																								const int nTileX, const int nTileY,
-																								vector<NGScene::SVertex> *pVerts )
+																								std::vector<NGScene::SVertex> *pVerts )
 {
 	CVec2 vBary;
 	GetBaryCoords( vert, v1, v2, v4, &vBary );
@@ -69,9 +69,9 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 
 	CVec2 vBary1, vBary2, vBary3, vBary;
 
-	static vector<CVec3> points(16);
-	static vector<CVec3> tempPoints(16);
-	static vector<CVec3> resPoints(16);
+	static std::vector<CVec3> points(16);
+	static std::vector<CVec3> tempPoints(16);
+	static std::vector<CVec3> resPoints(16);
 
 	int nPrevInd;
 
@@ -80,7 +80,7 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
 			const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-			for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
 													 max(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) + DEF_ROAD_HEIGHT );
@@ -149,9 +149,9 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 						continue;
 
 					tempPoints.resize( 0 );
-					for ( vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
+					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
 					{
-						vector<CVec3>::const_iterator itTemp = tempPoints.begin();
+						std::vector<CVec3>::const_iterator itTemp = tempPoints.begin();
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( (fabs2(it->x - itTemp->x) + fabs2(it->y - itTemp->y)) < DEF_FLOAT_EPS2 )
@@ -168,7 +168,7 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 
 					CreateConvexHull( &resPoints, tempPoints );
 
-					vector<CVec3>::const_iterator itResPoint = resPoints.begin();
+					std::vector<CVec3>::const_iterator itResPoint = resPoints.begin();
 
 					GetBaryCoords( *itResPoint, v1, v2, v3, &vBary );
 					const int nInd0 = AddUniqueRoadVertex( &pData->vertices, *itResPoint, i, g,
@@ -210,7 +210,7 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 																			const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4,
 																			NMeshData::SMeshData *pData )
 {
-	vector<CVec3> coeffs(4);
+	std::vector<CVec3> coeffs(4);
 	GetLineEq( v1.x, v1.y, v2.x, v2.y, &(coeffs[0].x), &(coeffs[0].y), &(coeffs[0].z) );
 	GetLineEq( v2.x, v2.y, v3.x, v3.y, &(coeffs[1].x), &(coeffs[1].y), &(coeffs[1].z) );
 	GetLineEq( v3.x, v3.y, v4.x, v4.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
@@ -223,9 +223,9 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 
 	CVec2 bary;
 
-	static vector<CVec3> points(16);
-	static vector<CVec3> tempPoints(16);
-	static vector<CVec3> resPoints(16);
+	static std::vector<CVec3> points(16);
+	static std::vector<CVec3> tempPoints(16);
+	static std::vector<CVec3> resPoints(16);
 
 	int nPrevInd;
 
@@ -234,7 +234,7 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
 			const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-			for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
 					max( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_ROAD_HEIGHT );
@@ -300,9 +300,9 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 						continue;
 
 					tempPoints.resize( 0 );
-					for ( vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
+					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
 					{
-						vector<CVec3>::const_iterator itTemp = tempPoints.begin();
+						std::vector<CVec3>::const_iterator itTemp = tempPoints.begin();
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( (fabs2(it->x - itTemp->x) + fabs2(it->y - itTemp->y)) < DEF_FLOAT_EPS2 )
@@ -319,7 +319,7 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 
 					CreateConvexHull( &resPoints, tempPoints );
 
-					vector<CVec3>::const_iterator itResPoint = resPoints.begin();
+					std::vector<CVec3>::const_iterator itResPoint = resPoints.begin();
 
 					const int nInd0 = CalcTexAndAddRoadVertex( *itResPoint, v1, v2, v3, v4, vTex1, vTex2, vTex3, vTex4,
 																										 fAlpha1, fAlpha2, fAlpha3, fAlpha4, i, g, &pData->vertices );
@@ -417,7 +417,7 @@ inline void TryAddRoadGfxToObserver( STerrainGfxInfo *pTerraGfxInfo, const SRoad
 {
 	int nSize = 0;
 
-	for ( vector<NMeshData::SMeshData>::const_iterator it = gfxInfo.patches.begin(); it != gfxInfo.patches.end(); ++it )
+	for ( std::vector<NMeshData::SMeshData>::const_iterator it = gfxInfo.patches.begin(); it != gfxInfo.patches.end(); ++it )
 		nSize += it->triangles.size();
 
 	if ( nSize > 0 )
@@ -428,10 +428,10 @@ inline void TryAddRoadGfxToObserver( STerrainGfxInfo *pTerraGfxInfo, const SRoad
 	}
 }
 
-void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const vector<NDb::SVSOPoint> &points )
+void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::vector<NDb::SVSOPoint> &points )
 {
 	// check, that such road GFX isn't exists
-	for ( list<SRoadGFXInfo>::const_iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
+	for ( std::list<SRoadGFXInfo>::const_iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
 	{
 		if ( it->nID == pInstance->nVSOID )
 		{
@@ -532,7 +532,7 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const vector<
 void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 {
 	//check if there already exist such road
-	for ( list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
+	for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
 	{
 		if ( it->nID == pInstance->nVSOID )
 		{
@@ -547,12 +547,12 @@ void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 	STerrainInfo::SRoad curRoadInfo;
 	curRoadInfo.nID = pInstance->nVSOID;
 
-	vector<NDb::SVSOPoint> points;
+	std::vector<NDb::SVSOPoint> points;
 	ConvertVSOPointsFromAIToVisAndPutOnTerrain( &points, pInstance->points );
 
 	curRoadInfo.vBBMin.Set( FP_MAX_VALUE, FP_MAX_VALUE );
 	curRoadInfo.vBBMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE );
-	for ( vector<NDb::SVSOPoint>::const_iterator it = points.begin(); it != points.end(); ++it )
+	for ( std::vector<NDb::SVSOPoint>::const_iterator it = points.begin(); it != points.end(); ++it )
 	{
 		curRoadInfo.vBBMin.Minimize( CVec2(it->vPos.x, it->vPos.y) );
 		curRoadInfo.vBBMax.Maximize( CVec2(it->vPos.x, it->vPos.y) );
@@ -569,7 +569,7 @@ void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 void CTerraGen::UpdateRoad( const int nVSOID )
 {
 	RemoveRoad( nVSOID );
-	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 	{
 		if ( it->nVSOID == nVSOID )
 		{
@@ -582,7 +582,7 @@ void CTerraGen::UpdateRoad( const int nVSOID )
 
 void CTerraGen::RemoveRoad( const int nVSOID )
 {
-	for ( list<STerrainInfo::SRoad>::iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
+	for ( std::list<STerrainInfo::SRoad>::iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
 	{
 		if ( it->nID == nVSOID )
 		{
@@ -591,7 +591,7 @@ void CTerraGen::RemoveRoad( const int nVSOID )
 		}
 	}
 
-	for ( list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); )
+	for ( std::list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); )
 	{
 		if ( it->nID == nVSOID )
 			it = terrainGfxInfo.roads.erase( it );
@@ -607,7 +607,7 @@ void CTerraGen::AddAllRoads()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	RemoveAllRoads();
-	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 	{
 		AddRoad( &(*it) );
 	}
@@ -618,7 +618,7 @@ void CTerraGen::RemoveAllRoads()
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	if ( pGfxObserver )
 	{
-		for ( list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
+		for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
 		{
 			pGfxObserver->RemoveRoad( it->nID );
 		}
@@ -629,7 +629,7 @@ void CTerraGen::RemoveAllRoads()
 
 const NDb::SVSOInstance* CTerraGen::FindRoad( int nID ) const
 {
-	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
+	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
 			return static_cast<const NDb::SVSOInstance *>( &(*it) );

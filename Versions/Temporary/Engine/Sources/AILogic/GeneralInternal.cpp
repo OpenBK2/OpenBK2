@@ -445,7 +445,7 @@ void CGeneral::Bombardment()
 
 			if ( cBombardmentType == 1 )
 			{
-				vector<EForceType> availFroces;
+				std::vector<EForceType> availFroces;
 				if ( theReinfArray[nParty].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
 					availFroces.push_back( FT_AIR_GUNPLANE );
 				if ( theReinfArray[nParty].HasReinforcement( NDb::RT_BOMBERS ) )
@@ -559,13 +559,13 @@ bool CGeneral::IsMobileReinforcement( int nGroupID ) const
 	return mobileReinforcementGroupIDs.find( nGroupID ) != mobileReinforcementGroupIDs.end();
 }
 
-void CGeneral::GiveNewUnits( const list<CCommonUnit*> &pUnits, bool bFromReinforcement )
+void CGeneral::GiveNewUnits( const std::list<CCommonUnit*> &pUnits, bool bFromReinforcement )
 {
-	typedef hash_map<int, bool> Formations;
+	typedef std::unordered_map<int, bool> Formations;
 	Formations formations; // добавляемые формации
 	
 	// забрать все юниты, кроме солдат. солдат забирать формациями	
-	for ( list<CCommonUnit*>::const_iterator iter = pUnits.begin(); iter != pUnits.end(); ++iter )
+	for ( std::list<CCommonUnit*>::const_iterator iter = pUnits.begin(); iter != pUnits.end(); ++iter )
 	{
 		CCommonUnit *pUnit = *iter;
 		if ( theDipl.GetDiplStatusForParties( pUnit->GetParty(), nParty ) == EDI_FRIEND )

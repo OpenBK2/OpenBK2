@@ -9,7 +9,7 @@
 #include "System/Commands.h"
 
 static const int N_TAB_SIZE = 4;
-static string s_DefaultFontName = "System";
+static std::string s_DefaultFontName = "System";
 
 struct SFontInfo
 {
@@ -67,7 +67,7 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 
 // CMLStream
 
-void CMLStream::GetString( int nStart, int nSize, wstring *pRes )
+void CMLStream::GetString( int nStart, int nSize, std::wstring *pRes )
 {
 	if ( nStart + nSize > wsText.length() )
 	{
@@ -78,9 +78,9 @@ void CMLStream::GetString( int nStart, int nSize, wstring *pRes )
 	*pRes = wsText.substr( nStart, nSize );
 }
 
-void CMLStream::InsertString( const wstring &wsInsertText )
+void CMLStream::InsertString( const std::wstring &wsInsertText )
 {
-	wstring wsNewText( wsText.substr( 0, nPos ) + wsInsertText + wsText.substr( nPos ) );
+	std::wstring wsNewText( wsText.substr( 0, nPos ) + wsInsertText + wsText.substr( nPos ) );
 	wsText = wsNewText;
 	nSize = wsText.size();
 }
@@ -99,7 +99,7 @@ private:
 	CTPoint<float> sSize;
 	CTPoint<float> sPosition;
 	////
-	list<float> edges;
+	std::list<float> edges;
 	CRectLayout sNormal;
 	CRectLayout sOutline;
 	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture;
@@ -119,7 +119,7 @@ public:
 	const CTPoint<float>& GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
@@ -239,12 +239,12 @@ void CMLTextObject::SetPosition( const CTPoint<float> &_sPosition )
 	sPosition = _sPosition;
 }
 
-void CMLTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	CTPoint<float> sPos = sGlobalPosition + sPosition;
 
 	float fLastX = 0;
-	for ( list<float>::const_iterator iTemp = edges.begin(); iTemp != edges.end(); iTemp++ )
+	for ( std::list<float>::const_iterator iTemp = edges.begin(); iTemp != edges.end(); iTemp++ )
 	{
 		pRender->push_back( CTRect<float>( fLastX + sPos.x, sPos.y, *iTemp + sPos.x, sSize.y + sPos.y ) );
 		fLastX = *iTemp;
@@ -309,7 +309,7 @@ public:
 	const CTPoint<float>& GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
@@ -375,7 +375,7 @@ void CMLImageObject::SetPosition( const CTPoint<float> &_sPosition )
 	sPosition = _sPosition;
 }
 
-void CMLImageObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLImageObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	pRender->push_back( CTRect<float>( sGlobalPosition.x, sGlobalPosition.y, sSize.x + sGlobalPosition.x, sSize.y + sGlobalPosition.y ) );
 }
@@ -425,7 +425,7 @@ public:
 	const CTPoint<float>& GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) {}
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) {}
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) {}
 
 	int operator&( IBinSaver &saver );
@@ -508,8 +508,8 @@ private:
 	};
 	SState sState;
 	CTPoint<float> sSize;
-	list<SCmdPair> itemsList;
-	list<SState> states;
+	std::list<SCmdPair> itemsList;
+	std::list<SState> states;
 
 protected:
 	void CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock );
@@ -532,7 +532,7 @@ public:
 
 	void Generate(  float fWidth );
 
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
@@ -594,7 +594,7 @@ void CMLLayout::PopState()
 
 void CMLLayout::Generate(  float fWidth )
 {
-	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
@@ -609,7 +609,7 @@ void CMLLayout::Generate(  float fWidth )
 	sInfo.fLastLineHeight = 0;
 	sInfo.sLeft = SRange( 0, -1 );
 	sInfo.sRight = SRange( fWidth, -1 );
-	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		ECommand eCommand = iTemp->eCmd;
 		if ( eCommand == CMD_BREAKLINE )
@@ -665,9 +665,9 @@ void CMLLayout::Generate(  float fWidth )
 	sSize.y = sInfo.fY;
 }
 
-void CMLLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void CMLLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
-	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
@@ -678,7 +678,7 @@ void CMLLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPo
 
 void CMLLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
-	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
@@ -769,7 +769,7 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 		}
 	}
 
-	for( list<CPtr<IMLObject> >::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )
+	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )
 	{
 		const CTPoint<float> &sSize = (*iTemp)->GetSize();
 		SState::EVERTAlign eVAlign = (*iTemp)->GetState().eVAlign;
@@ -795,7 +795,7 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 
 void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 {
-	for( list<CPtr<IMLObject> >::iterator iTemp = pInfo->leftWraped.begin(); iTemp != pInfo->leftWraped.end(); iTemp++ )
+	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->leftWraped.begin(); iTemp != pInfo->leftWraped.end(); iTemp++ )
 	{
 		const CTPoint<float> &sSize = (*iTemp)->GetSize();
 
@@ -805,7 +805,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 		pInfo->sLeft.fValue += sSize.x;
 		pInfo->sLeft.fHeight = max( pInfo->sLeft.fHeight, pInfo->fY + sSize.y );
 	}
-	for( list<CPtr<IMLObject> >::iterator iTemp = pInfo->rightWraped.begin(); iTemp != pInfo->rightWraped.end(); iTemp++ )
+	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->rightWraped.begin(); iTemp != pInfo->rightWraped.end(); iTemp++ )
 	{
 		const CTPoint<float> &sSize = (*iTemp)->GetSize();
 
@@ -836,17 +836,17 @@ class CML: public IML
 	OBJECT_BASIC_METHODS(CML)
 private:
 	CTPoint<int> sSize;
-	wstring wsText;
+	std::wstring wsText;
 	CObj<CMLLayout> pLayout;
 	CObj<CMLStream> pStream;
-	hash_map<wstring,CObj<IMLHandler> > tagsMap;
+	std::unordered_map<std::wstring,CObj<IMLHandler> > tagsMap;
 	int nIDForHandler;
 	CObj<SFadeValue> sFadeValue;
 public:
 	CML();
 
-	void SetText( const wstring &wsText, int nFlags );
-	void SetHandler( const wstring &wsTAG, IMLHandler *pHandler );
+	void SetText( const std::wstring &wsText, int nFlags );
+	void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler );
 	void SetIDForHandler( int nID );
 	int GetIDForHandler() const;
 	void SetFade( float fFade );
@@ -856,7 +856,7 @@ public:
 
 	void Generate( int nWidth );
 
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
@@ -892,12 +892,12 @@ CML::CML()
 	tagsMap[L"pop"] = new CStateStack( false );
 }
 
-void CML::SetText( const wstring &_wsText, int nFlags )
+void CML::SetText( const std::wstring &_wsText, int nFlags )
 {
 	wsText = _wsText;
 }
 
-void CML::SetHandler( const wstring &wsTAG, IMLHandler *pHandler )
+void CML::SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler )
 {
 	tagsMap[wsTAG] = pHandler;
 }
@@ -948,7 +948,7 @@ void CML::Generate( int nWidth )
 	int nWordBegin = 0;
 	bool bTAG = false, bBracketsBlock = false;
 	ECharType eThisChar = CHAR_NULL, eLastChar = CHAR_NULL;
-	vector<wstring> paramsSet;
+	std::vector<std::wstring> paramsSet;
 
 	for ( bool bContinue = true; bContinue; )
 	{
@@ -987,7 +987,7 @@ void CML::Generate( int nWidth )
 				pLayout->AddCommand( CMD_BREAKLINE );
 			else if ( bTAG && ( ( eLastChar == CHAR_ALNUM ) || ( eLastChar == CHAR_PUNCTUATION ) ) )
 			{
-				wstring &wsTemp = *paramsSet.insert( paramsSet.end() );
+				std::wstring &wsTemp = paramsSet.emplace_back();
 				pStream->GetString( nWordBegin, pStream->GetSeek() - nWordBegin, &wsTemp );
 			}
 			else if ( eThisChar == CHAR_SKIP ) 
@@ -1005,7 +1005,7 @@ void CML::Generate( int nWidth )
 
 			if ( !paramsSet.empty() )
 			{
-				hash_map<wstring,CObj<IMLHandler> >::const_iterator iTemp = tagsMap.find( paramsSet.front() );
+				std::unordered_map<std::wstring,CObj<IMLHandler> >::const_iterator iTemp = tagsMap.find( paramsSet.front() );
 				if ( ( iTemp != tagsMap.end() ) && ( iTemp->second != 0 ) )
 					iTemp->second->Exec( this, pLayout, paramsSet );
 			}
@@ -1022,7 +1022,7 @@ void CML::Generate( int nWidth )
 	pLayout->Generate( nWidth );
 }
 
-void CML::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void CML::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	pLayout->Render( pRender, sPosition, sWindow );
 }

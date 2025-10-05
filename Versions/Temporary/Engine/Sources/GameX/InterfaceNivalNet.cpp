@@ -94,8 +94,8 @@ void CInterfaceNivalNet::MakeInterior()
 	pRegistrationUserName = GetChildChecked<IEditLine>( pFrameRegister, "edit_registration_username", true );
 
 	pRememberPassword = GetChildChecked<IButton>( pFrameLogin, "ButtonRememberPassword", true );
-	wstring wszStoredPassword = NGlobal::GetVar( "Multiplayer.NivalNet.StoredPassword", "" ).GetString();
-	wstring wszStoredLogin = NGlobal::GetVar( "Multiplayer.NivalNet.StoredLogin", "" ).GetString();	
+	std::wstring wszStoredPassword = NGlobal::GetVar( "Multiplayer.NivalNet.StoredPassword", "" ).GetString();
+	std::wstring wszStoredLogin = NGlobal::GetVar( "Multiplayer.NivalNet.StoredLogin", "" ).GetString();
 	pLoginLoginEdit->SetText( wszStoredLogin.c_str() );
 	pLoginPasswordEdit->SetText( wszStoredPassword.c_str() );
 	pRememberPassword->SetState( ( wszStoredLogin == L"" ) ? 0 : 1 );
@@ -148,7 +148,7 @@ void CInterfaceNivalNet::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
-bool CInterfaceNivalNet::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceNivalNet::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "back" )
 		return OnBackReaction( szSender );
@@ -197,7 +197,7 @@ bool CInterfaceNivalNet::OnLoginRecovery()
 	return true;
 }
 
-int CInterfaceNivalNet::Check( const string &szCheckName ) const
+int CInterfaceNivalNet::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -226,7 +226,7 @@ bool CInterfaceNivalNet::OnConnectResultMessage( SMPUIConnectResultMessage *pMsg
 	return true;
 }
 
-bool CInterfaceNivalNet::OnBackReaction( const string &szSender )
+bool CInterfaceNivalNet::OnBackReaction( const std::string &szSender )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NO_NET );
 
@@ -236,11 +236,11 @@ bool CInterfaceNivalNet::OnBackReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnLoginReaction( const string &szSender )
+bool CInterfaceNivalNet::OnLoginReaction( const std::string &szSender )
 {
 	if ( pLoginLoginEdit && pLoginPasswordEdit )
 	{
-		wstring wszLogin = pLoginLoginEdit->GetText();
+		std::wstring wszLogin = pLoginLoginEdit->GetText();
 		if ( wszLogin.empty() )
 		{
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
@@ -261,7 +261,7 @@ bool CInterfaceNivalNet::OnLoginReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnRegisterReaction( const string &szSender )
+bool CInterfaceNivalNet::OnRegisterReaction( const std::string &szSender )
 {
 	eState = ES_REGISTER;
 
@@ -273,21 +273,21 @@ bool CInterfaceNivalNet::OnRegisterReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::CheckRegistrationData( string &szReason )
+bool CInterfaceNivalNet::CheckRegistrationData( std::string &szReason )
 {
 	if ( !pRegistrationPassword || !pRegistrationUserName || !pEmail || !pConfirmPassword || !pConfirmEmail || !pCDKey )
 	{
 		szReason = "REGISTER_ERR_UNKNOWN";
 		return false;
 	}
-	wstring szName = pRegistrationUserName->GetText();
+	std::wstring szName = pRegistrationUserName->GetText();
 	if ( szName.size() < nMIN_USERNAME )
 	{
 		szReason = "REGISTER_ERR_NICK_TOO_SHORT";
 		return false;
 	}
-	wstring szPass1 = pRegistrationPassword->GetText();
-	wstring szPass2 = pConfirmPassword->GetText();
+	std::wstring szPass1 = pRegistrationPassword->GetText();
+	std::wstring szPass2 = pConfirmPassword->GetText();
 	if ( szPass1.size()< nMIN_PASSWORD || szPass2.size()< nMIN_PASSWORD )
 	{
 		szReason = "REGISTER_ERR_PASSWORD_TOO_SHORT";
@@ -298,8 +298,8 @@ bool CInterfaceNivalNet::CheckRegistrationData( string &szReason )
 		szReason = "REGISTER_ERR_PASSWORDS_DIFFER";
 		return false;
 	}
-	wstring wszEmail1 = pEmail->GetText();
-	wstring wszEmail2 = pConfirmEmail->GetText();
+	std::wstring wszEmail1 = pEmail->GetText();
+	std::wstring wszEmail2 = pConfirmEmail->GetText();
 	if ( wszEmail1 != wszEmail2 )
 	{
 		szReason = "REGISTER_ERR_EMAILS_DIFFER";
@@ -319,10 +319,10 @@ bool CInterfaceNivalNet::CheckRegistrationData( string &szReason )
 	return true;
 }
 
-bool CInterfaceNivalNet::IsEmailValid( const wstring &wszEmail )
+bool CInterfaceNivalNet::IsEmailValid( const std::wstring &wszEmail )
 {
-	string szEmail = NStr::ToMBCS( wszEmail );
-	vector<string> parts;
+	std::string szEmail = NStr::ToMBCS( wszEmail );
+	std::vector<std::string> parts;
 	NStr::SplitString( szEmail, &parts, '@' );
 	if ( parts.size() != 2 )
 		return false;
@@ -333,9 +333,9 @@ bool CInterfaceNivalNet::IsEmailValid( const wstring &wszEmail )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnRegisterOkReaction( const string &szSender )
+bool CInterfaceNivalNet::OnRegisterOkReaction( const std::string &szSender )
 {
-	string szRejectReasonCode;
+	std::string szRejectReasonCode;
 	if ( !CheckRegistrationData( szRejectReasonCode ) )
 	{
 		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
@@ -343,15 +343,15 @@ bool CInterfaceNivalNet::OnRegisterOkReaction( const string &szSender )
 		return true;
 	}
 
-	wstring wszPass = pRegistrationPassword->GetText();
-	wstring wszName = pRegistrationUserName->GetText();
-	wstring wszEmail = pEmail->GetText();
+	std::wstring wszPass = pRegistrationPassword->GetText();
+	std::wstring wszName = pRegistrationUserName->GetText();
+	std::wstring wszEmail = pEmail->GetText();
 
-	string szGUID;
+	std::string szGUID;
 	GUID guidCDKey;
 	CoCreateGuid( &guidCDKey );
 	NStr::GUID2String( &szGUID, guidCDKey );
-	wstring wszCDKey = NStr::ToUnicode( szGUID ); //pCDKey->GetText();
+	std::wstring wszCDKey = NStr::ToUnicode( szGUID ); //pCDKey->GetText();
 
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIRegisterMessage( wszName, wszPass, wszCDKey, wszEmail ) );
 	eState = ES_NORMAL;
@@ -364,7 +364,7 @@ bool CInterfaceNivalNet::OnRegisterOkReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnRegisterCancelReaction( const string &szSender )
+bool CInterfaceNivalNet::OnRegisterCancelReaction( const std::string &szSender )
 {
 	eState = ES_NORMAL;
 	UpdateInterior();
@@ -372,7 +372,7 @@ bool CInterfaceNivalNet::OnRegisterCancelReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnRecoveryCancelReaction( const string &szSender )
+bool CInterfaceNivalNet::OnRecoveryCancelReaction( const std::string &szSender )
 {
 	eState = ES_NORMAL;
 
@@ -381,10 +381,10 @@ bool CInterfaceNivalNet::OnRecoveryCancelReaction( const string &szSender )
 	return true;
 }
 
-bool CInterfaceNivalNet::OnRecoveryOkReaction( const string &szSender )
+bool CInterfaceNivalNet::OnRecoveryOkReaction( const std::string &szSender )
 {
 	
-	wstring text;
+	std::wstring text;
 	if ( pUserNameRecovery )
 		text = pUserNameRecovery->GetText();
 	// validate text
@@ -392,7 +392,7 @@ bool CInterfaceNivalNet::OnRecoveryOkReaction( const string &szSender )
 	{
 		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
 			CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
-			wstring( L"Error: Empty user name" ) ).c_str() );
+			std::wstring( L"Error: Empty user name" ) ).c_str() );
 		return true;
 	}
 	//Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIRecoverPasswordMessage( text ) );

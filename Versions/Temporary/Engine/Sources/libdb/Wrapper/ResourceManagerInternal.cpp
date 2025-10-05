@@ -39,9 +39,9 @@ CResourceManagerWrapper::~CResourceManagerWrapper()
 
 struct SConstUserDataForResMan
 {
-	string szExportSourceFolder;
-	string szExportDestinationFolder;
-	string szObjectRecordIDsFolder;
+	std::string szExportSourceFolder;
+	std::string szExportDestinationFolder;
+	std::string szObjectRecordIDsFolder;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -65,19 +65,19 @@ void CResourceManagerWrapper::SetConfig( const SDBConfig &config )
 
 IManipulator* CResourceManagerWrapper::CreateTableManipulator()
 {
-	vector<STypeClass*> classes;
+	std::vector<STypeClass*> classes;
 	NDb::GetClassesList( &classes );
 	return new CTableManipulatorWrapper( classes );
 }
 
-IManipulator* CResourceManagerWrapper::CreateFolderManipulator( const string &szClassTypeName )
+IManipulator* CResourceManagerWrapper::CreateFolderManipulator( const std::string &szClassTypeName )
 {
 	return new CFolderManipulatorWrapper( szClassTypeName, szSrcPath, szDstPath );
 }
 
-static string GetClassTypeName( const int nClassTypeID )
+static std::string GetClassTypeName( const int nClassTypeID )
 {
-	vector<STypeClass*> classes;
+	std::vector<STypeClass*> classes;
 	NDb::GetClassesList( &classes );
 	for ( int i = 0; i < classes.size(); ++i )
 	{
@@ -89,20 +89,20 @@ static string GetClassTypeName( const int nClassTypeID )
 
 IManipulator* CResourceManagerWrapper::CreateFolderManipulator( int nClassTypeID )
 {
-	const string szClassTypeName = GetClassTypeName( nClassTypeID );
+	const std::string szClassTypeName = GetClassTypeName( nClassTypeID );
 	return szClassTypeName.empty() ? 0 : CreateFolderManipulator( szClassTypeName );
 }
 
-IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const string &szTypeName, const string &szObjectName )
+IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator(CDBID(szObjectName)) )
 		return new CObjectManipulatorWrapper( pMan );
 	return 0;
 }
 
-IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const string &szTypeName, int nID )
+IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const std::string &szTypeName, int nID )
 {
-	vector<STypeClass*> classes;
+	std::vector<STypeClass*> classes;
 	NDb::GetClassesList( &classes );
 	for ( int i = 0; i < classes.size(); ++i )
 	{
@@ -117,7 +117,7 @@ IManipulator* CResourceManagerWrapper::CreateObjectManipulator( int nTypeID, int
 	return 0;
 }
 
-IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const string &szTypeName, const CDBID &rCDBID )
+IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator( rCDBID ) )
 		return new CObjectManipulatorWrapper( pMan );
@@ -125,7 +125,7 @@ IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const string &sz
 }
 
 
-IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const string &szObjectName )
+IManipulator* CResourceManagerWrapper::CreateObjectManipulator( const std::string &szObjectName )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator(CDBID(szObjectName)) )
 		return new CObjectManipulatorWrapper( pMan );
@@ -146,26 +146,26 @@ bool CResourceManagerWrapper::SerializeObject( CDataStream *pStream, int nTypeID
 	return false;
 }
 
-void CResourceManagerWrapper::SerializeObjects( const string &szFile, const string &szTypeName, const string &szRootObject )
+void CResourceManagerWrapper::SerializeObjects( const std::string &szFile, const std::string &szTypeName, const std::string &szRootObject )
 {
 }
 
-void CResourceManagerWrapper::SerializeObjects( const string &szFile )
+void CResourceManagerWrapper::SerializeObjects( const std::string &szFile )
 {
 }
 
-void CResourceManagerWrapper::FillReferencingObjects( bool *pServiceIsReady, const string &szTypeName, const string &szObjectName, list<string> &results )
+void CResourceManagerWrapper::FillReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results )
 {
 	results.clear();
 	if ( NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>() )
 	{
-		vector<CDBID> referencingObjs;
+		std::vector<CDBID> referencingObjs;
 		const NDBWatcherClient::IDBWatcherClient::EResult eClientResult = pClient->GetReferencingObjects( szObjectName, &referencingObjs );
 		if ( eClientResult == NDBWatcherClient::IDBWatcherClient::EResult::COMPLETE )
 		{
-			for ( vector<CDBID>::const_iterator it = referencingObjs.begin(); it != referencingObjs.end(); ++it )
+			for ( std::vector<CDBID>::const_iterator it = referencingObjs.begin(); it != referencingObjs.end(); ++it )
 			{
-				string szFileName;
+				std::string szFileName;
 				NFile::NormalizePath( &szFileName, NDb::GetFileName(*it) );
 				results.push_back( szFileName );
 			}
@@ -181,7 +181,7 @@ void CResourceManagerWrapper::FillReferencingObjects( bool *pServiceIsReady, con
 }
 
 // CRAP{ remove it ASAP
-bool CResourceManagerWrapper::HasReferencingObjects( bool *pServiceIsReady, const string &szTypeName, int nObjectID )
+bool CResourceManagerWrapper::HasReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, int nObjectID )
 {
 	return false;
 }
@@ -202,7 +202,7 @@ bool CResourceManagerWrapper::CanSyncDB()
 	return NDb::HasChangedObjects();
 }
 
-void CResourceManagerWrapper::SetDataDir( const string &dataDir )
+void CResourceManagerWrapper::SetDataDir( const std::string &dataDir )
 {
 }
 

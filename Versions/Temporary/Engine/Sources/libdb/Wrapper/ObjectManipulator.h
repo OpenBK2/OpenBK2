@@ -18,20 +18,20 @@ public:
 
 	// IManipulator
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc* GetDesc( const string &szName ) const;
-	bool GetType( const string &rszName, string *pszType ) const;
-	UINT GetID( const string &rszName ) const; 
+	const SIteratorDesc* GetDesc( const std::string &szName ) const;
+	bool GetType( const std::string &rszName, std::string *pszType ) const;
+	UINT GetID( const std::string &rszName ) const;
 	CDBID GetDBID() const;
-	bool GetName( UINT nID, string *pszName ) const;
-	bool GetValue( const string &szName, CVariant *pValue ) const;
-	bool SetValue( const string &szName, const CVariant &value );
-	bool CheckValue( const string &szName, const CVariant &value, bool *pResult ) const;
+	bool GetName( UINT nID, std::string *pszName ) const;
+	bool GetValue( const std::string &szName, CVariant *pValue ) const;
+	bool SetValue( const std::string &szName, const CVariant &value );
+	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const;
 	NDb::IObjMan* GetObjMan() { return pObjMan; }
-	bool InsertNode( const string &szName, int nNodeIndex = NODE_ADD_INDEX );
-	bool RemoveNode( const string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const string &szName, int nNodeID );
-	bool RenameNode( const string &szName, const string &szNewName ) { return false; }
-	bool IsNameExists( const string &rszName ) const;
+	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX );
+	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
+	bool RemoveNodeByID( const std::string &szName, int nNodeID );
+	bool RenameNode( const std::string &szName, const std::string &szNewName ) { return false; }
+	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( CNameMap *pNameMap ) const {}
 	void ClearCache();
 };
@@ -51,8 +51,8 @@ public:
 	bool Next();
 	bool IsEnd() const;
 	const SIteratorDesc* GetDesc() const;
-	bool GetType( string *pszType ) const;
-	bool GetName( string *pszName ) const;
+	bool GetType( std::string *pszType ) const;
+	bool GetName( std::string *pszName ) const;
 	UINT GetID() const { return INVALID_NODE_ID; }
 	bool IsFolder() const { return false; }
 };

@@ -506,7 +506,7 @@ CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTran
 
 void CTransportWaitPassengerState::Segment()
 {
-	list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
+	std::list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
 	while ( iter != formationsToWait.end() )
 	{
 		if ( !IsValidObj( *iter ) || (*iter)->GetState()->GetName() != EUSN_ENTER_TRANSPORT )
@@ -532,7 +532,7 @@ ETryStateInterruptResult CTransportWaitPassengerState::TryInterruptState( CAICom
 
 void CTransportWaitPassengerState::AddFormationToWait( CFormation *pFormation  )
 {
-	list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
+	std::list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
 	while ( iter != formationsToWait.end() && *iter != pFormation )
 		++iter;
 
@@ -1163,9 +1163,9 @@ bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit * pUnit )
 	SRect rect( pUnit->GetUnitRect() );
 	const EAIClasses aiClass = pUnit->GetAIPassabilityClass();
 
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
-	for ( list<SVector>::iterator i = tiles.begin(); i !=tiles.end(); ++i )
+	for ( std::list<SVector>::iterator i = tiles.begin(); i !=tiles.end(); ++i )
 	{
 		if ( GetTerrain()->IsLocked( (*i), aiClass ) )
 			return false;
@@ -1429,7 +1429,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 	}
 
 	// Tell infantry to unload
-	hash_map<int, bool> formations;
+	std::unordered_map<int, bool> formations;
 	for ( int i = 0; i < pTransport->GetNPassengers(); ++i )
 	{
 		CSoldier *pPass = pTransport->GetPassenger( i );
@@ -1437,7 +1437,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 			continue;
 		formations[pPass->GetFormation()->GetUniqueId()] = true;
 	}
-	for ( hash_map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
+	for ( std::unordered_map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
 		CFormation *pPass = checked_cast<CFormation*>( CLinkObject::GetObjectByUniqueId( it->first ) );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_UNLOAD, pTransport->GetUniqueId() ), pPass, false );

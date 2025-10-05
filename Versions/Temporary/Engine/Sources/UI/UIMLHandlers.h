@@ -1,7 +1,7 @@
 #pragma once
 #include "UIML.h"
 
-inline NGfx::SPixel8888 StringToColor( const wstring &wsColor, float fFade = 1.0f )
+inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade = 1.0f )
 {
 	NGfx::SPixel8888 sColor;
 
@@ -55,7 +55,7 @@ private:																					\
 	ZDATA																						\
 	ZEND int operator&( IBinSaver &f ) { return 0; }\
 public:																						\
-void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )	\
+void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )	\
 	{																								\
 		SState sState = pLayout->GetState();					\
 		sState.Var = Value;														\
@@ -84,7 +84,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		pLayout->AddCommand( CMD_BREAKLINE );
 	}
@@ -113,7 +113,7 @@ private:
 public:
 	CCOLORHandler(){}
 	CCOLORHandler( SFadeValue *pFadeValue ):sFadeValue( pFadeValue ){}
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( paramsSet.size() != 3 )
 			return;
@@ -134,7 +134,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		pLayout->AddObject( CreateIMLTabObject() );
 	}
@@ -150,7 +150,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		SState sState = pLayout->GetState();
 		if ( paramsSet.size() > 1 )
@@ -166,8 +166,8 @@ public:
 				if ( paramsSet[nTemp + 1].compare( L"=" ) != 0 )
 					break;
 
-				const wstring &wsID = paramsSet[nTemp];
-				const wstring &wsParam = paramsSet[nTemp + 2];
+				const std::wstring &wsID = paramsSet[nTemp];
+				const std::wstring &wsParam = paramsSet[nTemp + 2];
 				if ( wsID.compare( L"size" ) == 0  )
 				{
 					WCHAR wsString[128];
@@ -175,7 +175,7 @@ public:
 
 					if ( nParams > 1 )
 					{
-						wstring wsSizeMod( wsString );
+						std::wstring wsSizeMod( wsString );
 						if ( wsSizeMod.compare( L"px" ) == 0 )
 							sState.sFont.nSize |= FONT_SIZE_PIXELS;
 						else if ( wsSizeMod.compare( L"pt" ) == 0 )
@@ -211,7 +211,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		int nWidth = -1, nHeight = -1;
 		int nBorder = 0;
@@ -228,8 +228,8 @@ public:
 				if ( paramsSet[nTemp + 1].compare( L"=" ) != 0 )
 					break;
 
-				const wstring &wsID = paramsSet[nTemp];
-				const wstring &wsParam = paramsSet[nTemp + 2];
+				const std::wstring &wsID = paramsSet[nTemp];
+				const std::wstring &wsParam = paramsSet[nTemp + 2];
 				if ( wsID.compare( L"align" ) == 0  )
 				{
 					if ( wsParam.compare( L"left" ) == 0 )
@@ -265,7 +265,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		SState sState = pLayout->GetState();
 		if ( paramsSet.size() > 1 )
@@ -281,8 +281,8 @@ public:
 				if ( paramsSet[nTemp + 1].compare( L"=" ) != 0 )
 					break;
 
-				const wstring &wsID = paramsSet[nTemp];
-				const wstring &wsParam = paramsSet[nTemp + 2];
+				const std::wstring &wsID = paramsSet[nTemp];
+				const std::wstring &wsParam = paramsSet[nTemp + 2];
 				if ( wsID.compare( L"size" ) == 0  )
 					sState.nMinFontSize = _wtol( wsParam.c_str() );
 
@@ -306,7 +306,7 @@ private:
 public:
 	CStateStack() {}
 	CStateStack( bool _bSave ): bSave( _bSave ) {}
-	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( bSave )
 			pLayout->PushState();

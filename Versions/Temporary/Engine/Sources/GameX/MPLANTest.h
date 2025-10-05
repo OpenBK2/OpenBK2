@@ -16,12 +16,12 @@ private:
 	bool bIsServer;
 	CPtr<struct IMPToUIManager> pMPManager;
 	int nMySlot;
-	hash_map<int,bool> gameClientsReady;
+	std::unordered_map<int,bool> gameClientsReady;
 	bool bStarted;
 	int nPlayersToWait;
 	bool bAcceptSent;
 	void CreateGame();
-	void RunShellCommand( const wstring& wszCommand );
+	void RunShellCommand( const std::wstring& wszCommand );
 
 public:
 	CLANTester();
@@ -31,7 +31,7 @@ public:
 	void ClientInfoChanged( const int nClientID, const bool bReady );
 	void SetMySlot( const int _nMySlot ) { nMySlot = _nMySlot; }
 	void ClientRemoved( const int nClientID );
-	void NewGameFound( const int nID, const string &szName );
+	void NewGameFound( const int nID, const std::string &szName );
 	void EndGame();
 	void AsyncDetected();
 };

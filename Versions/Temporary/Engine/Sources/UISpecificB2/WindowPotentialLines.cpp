@@ -151,9 +151,9 @@ CWindowPotentialLines::CWindowPotentialLines()
 
 struct STextureEntryEqual
 {
-	string szID;
+	std::string szID;
 
-	STextureEntryEqual( const string &_szID ) { szID = _szID; }
+	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
 	bool operator()( const NDb::SUITextureEntry &value ) const
 	{
 		return szID == value.szTextID;
@@ -441,7 +441,7 @@ void CWindowPotentialLines::SetNode( int nX, int nY, int nEndOffsetX, int nEndOf
 	bValid = false;
 }
 
-void CWindowPotentialLines::SetParams( const string &szMask, const string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 )
+void CWindowPotentialLines::SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 )
 {
 	vMainStrike = _vMainStrike;
 	szMaskFile = szMask;
@@ -453,7 +453,7 @@ void CWindowPotentialLines::SetParams( const string &szMask, const string &szDif
 	SetupNoise();
 }
 
-void CWindowPotentialLines::AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour  )
+void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour  )
 {
 	if ( pArrowTexture->IsRefInvalid() )
 		return;
@@ -472,7 +472,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 	CVec2 sPos[4];
 	CVec2 sScreenPos[4];
 
-	vector<float> segmentLengths;
+	std::vector<float> segmentLengths;
 	CTRect<float> rect = GetWindowRect();
 	CVec2 vPos( rect.x1, rect.y1 ); 
 	CVec2 vSizeMultiplier( rect.Width() / vTextureSize.x, rect.Height() / vTextureSize.y );
@@ -481,7 +481,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 	{
 		CTRect<float> rectTexture;
 		SArrowDesc &arrow = *itArrow;
-		vector<CVec2> &arrowPts = arrow.pts;
+		std::vector<CVec2> &arrowPts = arrow.pts;
 		NGfx::SPixel8888 sColors[4] = { arrow.dwColour, arrow.dwColour, arrow.dwColour, arrow.dwColour };
 		float fArrowWidth = arrow.fWidth / 2.0f;		// Half-width, actually
 		float fArrowTextureLength = arrow.pTexture->nHeight - 4.0f;

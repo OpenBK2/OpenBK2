@@ -31,7 +31,7 @@ namespace NDb
 			nUseFrames( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -97,13 +97,13 @@ namespace NDb
 				fPhaseOffset( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SWaterWaveType > waves;
+		std::vector< SWaterWaveType > waves;
 		CDBPtr< SWaterSet > pWaterSet;
 		CDBPtr< STwoSidedLight > pLight;
 		CDBPtr< STGNoise > pDepthNoise;
@@ -143,15 +143,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::SWater::EWaterType eValue );
-	SWater::EWaterType StringToEnum_NDb_SWater_EWaterType( const string &szValue );
+	std::string EnumToString( NDb::SWater::EWaterType eValue );
+	SWater::EWaterType StringToEnum_NDb_SWater_EWaterType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SWater::EWaterType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SWater::EWaterType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SWater::EWaterType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWater_EWaterType( szValue ); }
+	static std::string ToString( NDb::SWater::EWaterType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SWater::EWaterType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SWater_EWaterType( szValue ); }
 };
 

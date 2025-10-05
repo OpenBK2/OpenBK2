@@ -11,18 +11,18 @@ class CFenceCreation : public CLongObjectCreation
 	// скопировал у Костика
 	struct APointHelper
 	{
-		vector<CVec2> m_points;
+		std::vector<CVec2> m_points;
 		APointHelper() {}
 		bool operator() ( long x, long y ) { m_points.push_back( CVec2( x, y ) ); return true; }
 	};
 
 	ZDATA_(CLongObjectCreation)
-	vector< CObj<CFence> > fenceSegements;	// сегменты
-	vector<CVec2> vPoints;					// позиции
+	std::vector< CObj<CFence> > fenceSegements;	// сегменты
+	std::vector<CVec2> vPoints;					// позиции
 	bool bTmpNonCheatPath; // if skipped 1 or more objects - move to another without cheat path
 
 	int nCurIndex;
-	list<SVector> tilesUnder;
+	std::list<SVector> tilesUnder;
 	SAIAngle wAngle;
 	CLine2 line;
 	bool bCannot;
@@ -45,7 +45,7 @@ public:
 	const int GetCurIndex() const;
 	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
 	void BuildNext();
-	void GetUnitsPreventing( list< CPtr<CAIUnit> > * units );
+	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units );
 	bool IsAnyUnitPrevent() const;
 	bool CanBuildNext() const; 
 	void LockNext();

@@ -17,7 +17,7 @@ struct SLMQuad
 _3DLIB_EXPORT void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift );
 _3DLIB_EXPORT void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
-	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, vector<SLMQuad> *pQuads );
+	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, std::vector<SLMQuad> *pQuads );
 _3DLIB_EXPORT void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src );
 
 }

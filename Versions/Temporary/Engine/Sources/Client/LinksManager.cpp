@@ -8,7 +8,7 @@ namespace NNet
 bool CGameLinksManager::IsGoodAddress( const sockaddr &addr ) const
 {
 	bool bGood = true;
-	list<sockaddr>::const_iterator iter = bannedAddresses.begin();
+	std::list<sockaddr>::const_iterator iter = bannedAddresses.begin();
 	while ( iter != bannedAddresses.end() && bGood )
 	{
 		const sockaddr &bannedAddr = *iter;

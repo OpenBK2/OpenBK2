@@ -278,7 +278,7 @@ void luaV_strconc (lua_State *L, int total, StkId top) {
     }
     else if ( !LObj(L, top-1)->GetS()->empty() ) 
 		{  
-			string str;
+			std::string str;
       while (n < total && !tostring(L, LObj(L, top-n-1))) 
         n++;
       for ( int i = n; i > 0; i-- ) 

@@ -44,7 +44,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		return -1;
 
 	const int nNumRetArgs = script.GetTop();
-	string szAnswer("");
+	std::string szAnswer("");
 
 	int nResult = 0;
 	if ( nNumRetArgs == 1 )
@@ -59,7 +59,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		Script::Object obj = pScript->GetScript()->GetObject( i );
 
 		if ( obj.IsNumber() )
-			szAnswer += string( StrFmt( "%d", int(obj) ) );
+			szAnswer += std::string( StrFmt( "%d", int(obj) ) );
 		else if ( const char *pszAnswer = obj.GetString() )
 			szAnswer += pszAnswer;
 
@@ -123,7 +123,7 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 	NI_ASSERT( stream.IsOk() != 0, StrFmt( "Can't find script file \"%s\"", pszFileName ) );
 	const int nSize = stream.GetSize();
 	// +10 на всякий случай
-	vector<char> buffer( nSize + 10 );
+	std::vector<char> buffer( nSize + 10 );
 	stream.Read( &(buffer[0]), nSize );
 	return (script.DoBuffer( &(buffer[0]), nSize, "Script" ) == 0) ; 
 }

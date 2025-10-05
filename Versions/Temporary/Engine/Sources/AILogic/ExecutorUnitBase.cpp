@@ -168,7 +168,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 	return false;
 }
 
-void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &events, const SExecutorEventParam &_par )
+void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &events, const SExecutorEventParam &_par )
 {
 	SExecutorEventParam par( _par );
 	for ( int i = 0; i < events.size(); ++i )
@@ -178,7 +178,7 @@ void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const 
 	}
 }
 
-void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &unitEvents, const int nUnitID )
+void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &unitEvents, const int nUnitID )
 {
 	SExecutorEventParam par;
 	par.nUnitID = nUnitID;

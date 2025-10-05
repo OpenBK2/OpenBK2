@@ -31,13 +31,13 @@ class CSimpleClientEffort : public CConnectionEffort
 
 	float fStartConnectClientTime;
 	float fPredBreakThroughSend;
-	string szClientIP;
+	std::string szClientIP;
 	int nClientPort;
 	int nTimeOut;
 public:
 	CSimpleClientEffort() { }
 	CSimpleClientEffort( const int nMyServerID, const int nClientServerID, CNet *pNet, 
-											 const string &szServerIP, const int nServerPort, const int nGameNetVersion, const int nTimeOut );
+											 const std::string &szServerIP, const int nServerPort, const int nGameNetVersion, const int nTimeOut );
 
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }
@@ -69,7 +69,7 @@ class CSimpleServerEffort : public CConnectionEffort
 
 	CPtr<CNet> pNet;
 	CPtr<CNet> pAcceptGamersNet;
-	string szClientIP;
+	std::string szClientIP;
 	int nClientPort;
 
 	float fStartConnectClientTime;
@@ -77,7 +77,7 @@ class CSimpleServerEffort : public CConnectionEffort
 public:
 	CSimpleServerEffort() { }
 	CSimpleServerEffort( const int nMyServerID, const int nClientServerID, 
-											 const string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet );
+											 const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet );
 
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }

@@ -41,7 +41,7 @@ struct TMinfo
 struct TM {
 	ZDATA
 	TMinfo info;
-  list<int> collected;  /* list of garbage-collected udata indices with this tag */
+  std::list<int> collected;  /* list of garbage-collected udata indices with this tag */
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&info); f.Add(3,&collected); return 0; }
 };
 

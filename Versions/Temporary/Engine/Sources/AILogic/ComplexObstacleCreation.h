@@ -13,11 +13,11 @@ class CComplexObstacleCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CComplexObstacleCreation )
 	ZDATA_(CLongObjectCreation)
-		vector< CObj<CCommonStaticObject> > antitanks;
+		std::vector< CObj<CCommonStaticObject> > antitanks;
 	CPtr<CFenceCreation> pFenceCreation;
 	int nCurIndex;
 	bool bCannot;
-	list<SVector> tilesUnder;
+	std::list<SVector> tilesUnder;
 	bool bTmpNonCheatPath; // if skipped 1 or more objects - move to another without cheat path
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&antitanks); f.Add(3,&pFenceCreation); f.Add(4,&nCurIndex); f.Add(5,&bCannot); f.Add(6,&tilesUnder); f.Add(7,&bTmpNonCheatPath); return 0; }
 	const bool IsAntitank( const int _nIndex ) const
@@ -47,7 +47,7 @@ public:
 	const int GetCurIndex() const;
 	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
 	void BuildNext();
-	void GetUnitsPreventing( list< CPtr<CAIUnit> > * units );
+	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units );
 	bool IsAnyUnitPrevent() const;
 	bool CanBuildNext() const;
 	void LockCannotBuild();

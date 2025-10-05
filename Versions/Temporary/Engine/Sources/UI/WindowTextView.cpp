@@ -130,7 +130,7 @@ void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 	}
 }
 
-const wstring& CWindowTextView::GetDBFormatText() const
+const std::wstring& CWindowTextView::GetDBFormatText() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
@@ -141,7 +141,7 @@ const wstring& CWindowTextView::GetDBFormatText() const
 	return CWindow::GetDBFormatText();
 }
 
-const wstring& CWindowTextView::GetDBInstanceText() const
+const std::wstring& CWindowTextView::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->,Text) )
 		return GET_TEXT_PRE(pInstance->,Text);
@@ -149,17 +149,17 @@ const wstring& CWindowTextView::GetDBInstanceText() const
 	return CWindow::GetDBInstanceText();
 }
 
-wstring CWindowTextView::GetDBText() const
+std::wstring CWindowTextView::GetDBText() const
 {
 	return CWindow::GetDBText();
 }
 
-const wstring& CWindowTextView::GetText() const
+const std::wstring& CWindowTextView::GetText() const
 {
 	return wszCustomText;
 }
 
-bool CWindowTextView::SetText( const wstring &_szText )
+bool CWindowTextView::SetText( const std::wstring &_szText )
 {
 	if ( wszCustomText == _szText )
 		return true;

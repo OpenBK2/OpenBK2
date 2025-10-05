@@ -62,15 +62,15 @@ void CTerraGen::CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin,
 	{
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
-			for ( vector<STriangle>::const_iterator it = terrainInfo.tiles[g][i].triangles.begin(); it != terrainInfo.tiles[g][i].triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = terrainInfo.tiles[g][i].triangles.begin(); it != terrainInfo.tiles[g][i].triangles.end(); ++it )
 			{
 				trg.i1 = nVertOffs + it->i1;
 				trg.i2 = nVertOffs + it->i2;
 				trg.i3 = nVertOffs + it->i3;
 				pData->triangles.push_back( trg );
 			}
-			vector<CVec3fEx>::const_iterator itVert = terrainInfo.tiles[g][i].vertices.begin();
-			vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
+			std::vector<CVec3fEx>::const_iterator itVert = terrainInfo.tiles[g][i].vertices.begin();
+			std::vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
 			for ( ; itVert != terrainInfo.tiles[g][i].vertices.end(); ++itVert, ++itHeight )
 			{
 				vert.pos.Set( itVert->x, itVert->y, max( itVert->z + ( *itHeight ), fMinHeight ) + DEF_SELECTION_HEIGHT );

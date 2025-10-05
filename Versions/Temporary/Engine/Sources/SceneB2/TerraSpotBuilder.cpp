@@ -6,13 +6,13 @@
 #define DEF_TRIANGLES_NUM_ALLOC 256
 #define DEF_TERRASPOT_HEIGHT 0.1f
 
-inline int AddUniqueTerraSpotVertex( vector<NGScene::SVertex> &arr, const CVec3 &vert, const int nTileX, const int nTileY,
+inline int AddUniqueTerraSpotVertex( std::vector<NGScene::SVertex> &arr, const CVec3 &vert, const int nTileX, const int nTileY,
 																		 const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vNorm4,
 																		 const CVec2 &vTex, NGScene::SVertex &templ,
 																		 const float fUsedTexSizeX, const float fUsedTexSizeY )
 {
 	int nCount = 0;
-	for ( vector<NGScene::SVertex>::const_iterator it = arr.begin(); it != arr.end(); ++it, ++nCount )
+	for ( std::vector<NGScene::SVertex>::const_iterator it = arr.begin(); it != arr.end(); ++it, ++nCount )
 	{
 		if ( ( fabs2( it->pos.x - vert.x ) + fabs2( it->pos.y - vert.y ) + fabs2( it->pos.z - vert.z ) ) < DEF_FLOAT_EPS2 )
 			return nCount;
@@ -40,7 +40,7 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 	AI2Vis( &v3 );
 	AI2Vis( &v4 );
 
-	vector<CVec3> coeffs(4);
+	std::vector<CVec3> coeffs(4);
 	GetLineEq( v1.x, v1.y, v2.x, v2.y, &(coeffs[0].x), &(coeffs[0].y), &(coeffs[0].z) );
 	GetLineEq( v2.x, v2.y, v3.x, v3.y, &(coeffs[1].x), &(coeffs[1].y), &(coeffs[1].z) );
 	GetLineEq( v3.x, v3.y, v4.x, v4.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
@@ -70,9 +70,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 	CalcCompactVector( &(templ.texU), CVec3(1, 0, 0) );
 	CalcCompactVector( &(templ.texV), CVec3(0, 1, 0) );
 
-	static vector<CVec3> points(16);
-	static vector<CVec3> tempPoints(16);
-	static vector<CVec3> resPoints(16);
+	static std::vector<CVec3> points(16);
+	static std::vector<CVec3> tempPoints(16);
+	static std::vector<CVec3> resPoints(16);
 
 	int nPrevInd;
 
@@ -81,7 +81,7 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
 			const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-			for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
 					max( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_TERRASPOT_HEIGHT );
@@ -159,9 +159,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 						continue;
 
 					tempPoints.resize( 0 );
-					for ( vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
+					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
 					{
-						vector<CVec3>::const_iterator itTemp = tempPoints.begin();
+						std::vector<CVec3>::const_iterator itTemp = tempPoints.begin();
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
@@ -178,7 +178,7 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 
 					CreateConvexHull( &resPoints, tempPoints );
 
-					vector<CVec3>::const_iterator itResPoint = resPoints.begin();
+					std::vector<CVec3>::const_iterator itResPoint = resPoints.begin();
 					GetBaryCoords( *itResPoint, v1, v2, v4, &bary );
 					const int nInd0 = AddUniqueTerraSpotVertex( gfxInfo.data.vertices, *itResPoint, i, g,
 						terrainNorms[g][i], terrainNorms[g][i+1], terrainNorms[g+1][i+1], terrainNorms[g+1][i],
@@ -234,7 +234,7 @@ void CTerraGen::AddAllTerraSpots()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	RemoveAllTerraSpots();
-	for ( vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
+	for ( std::vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
 	{
 		AddTerraSpot( &(*it) );
 	}
@@ -245,7 +245,7 @@ void CTerraGen::RemoveAllTerraSpots()
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	if ( pGfxObserver )
 	{
-		for ( list<STerrainInfo::STerraSpot>::const_iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
+		for ( std::list<STerrainInfo::STerraSpot>::const_iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
 		{
 			pGfxObserver->RemoveTerraSpot( it->nID );
 		}
@@ -257,7 +257,7 @@ void CTerraGen::RemoveAllTerraSpots()
 void CTerraGen::UpdateTerraSpot( const int nSpotID )
 {
 	RemoveTerraSpot( nSpotID );
-	for ( vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
+	for ( std::vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
 	{
 		if ( it->nSpotID == nSpotID )
 		{
@@ -270,7 +270,7 @@ void CTerraGen::UpdateTerraSpot( const int nSpotID )
 
 void CTerraGen::RemoveTerraSpot( const int nSpotID )
 {
-	for ( list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
+	for ( std::list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
 	{
 		if ( it->nID == nSpotID )
 		{
@@ -279,7 +279,7 @@ void CTerraGen::RemoveTerraSpot( const int nSpotID )
 		}
 	}
 
-	for ( list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin(); it != terrainGfxInfo.terraspots.end(); ++it )
+	for ( std::list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin(); it != terrainGfxInfo.terraspots.end(); ++it )
 	{
 		if ( it->nID == nSpotID )
 		{
@@ -294,7 +294,7 @@ void CTerraGen::RemoveTerraSpot( const int nSpotID )
 
 const NDb::STerrainSpotInstance* CTerraGen::FindTerraSpot( int nID ) const
 {
-	for ( vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
+	for ( std::vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
 	{
 		if ( it->nSpotID == nID )
 			return &(*it);

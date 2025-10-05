@@ -32,10 +32,10 @@ void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate 
 	{
 		if ( !antitanks[i] )
 			continue;
-		list<SVector> tiles;
+		std::list<SVector> tiles;
 		antitanks[i]->GetCoveredTiles( &tiles );
 		bool bCanBuildCurrent = true;
-		for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !GetAIMap()->IsTileInside(*it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
@@ -148,7 +148,7 @@ void CComplexObstacleCreation::AdvanceToNextIndex()
 	}
 }
 
-void CComplexObstacleCreation::GetUnitsPreventing( list< CPtr<CAIUnit> > * units )
+void CComplexObstacleCreation::GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units )
 {
 	if ( IsAntitank( nCurIndex ) )
 	{
@@ -180,9 +180,9 @@ bool CComplexObstacleCreation::CanBuildNext() const
 	{
 		if ( antitanks[GetAntitankIndex(nCurIndex)] )
 		{
-			list<SVector> tiles;
+			std::list<SVector> tiles;
 			antitanks[GetAntitankIndex(nCurIndex)]->GetCoveredTiles( &tiles );
-			for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+			for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 			{
 				if ( !GetAIMap()->IsTileInside(*it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 					return false;

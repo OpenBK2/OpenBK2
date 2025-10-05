@@ -50,7 +50,7 @@ static bool bShowParticles = true;
 bool bWaterReflection = false;
 extern bool bLowRAM;
 #ifdef FADE_TEST
-static vector<CPtr<CObjectBase> > fadeTestObjects;
+static std::vector<CPtr<CObjectBase> > fadeTestObjects;
 #endif
 
 // share objects
@@ -213,7 +213,7 @@ class CGameView: public IGameView
 	OBJECT_BASIC_METHODS(CGameView);
 	ZDATA
 	CObj<IGScene> pScene;
-	list<CPtr<CRenderNode> > nodes; // if object is just created and no refs are stored it should not become leak
+	std::list<CPtr<CRenderNode> > nodes; // if object is just created and no refs are stored it should not become leak
 	ZSKIP
 	//list<CPtr<CGrassTracker> > grassTrackers;
 	CObj<CMaterialShare> pMaterials;
@@ -233,9 +233,9 @@ class CGameView: public IGameView
 	ESceneRenderMode renderMode;
 	bool bForceFastest;
 	ZSKIP
-	list<CPtr<CRenderNode> > precacheObjects;
+	std::list<CPtr<CRenderNode> > precacheObjects;
 	CObj<CFuncBase<STime> > pPrevLightTime;
-	list<CPtr<CObjectFader> > faders;
+	std::list<CPtr<CObjectFader> > faders;
 	CObj<CObjectBase> pRain;
 	CObj<SDepthOfField> pDepthOfField;
 	CObj<ISkyDome> pSkyDome;
@@ -281,7 +281,7 @@ public:
 	virtual CObjectBase* CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime, const SFBTransform &place, const SRoomInfo &_g,
 		IFader *pFader, IParticleFilter *pFilter );
 	virtual CObjectBase* CreateRain( const NDb::SParticleInstance *pInstance, CFuncBase<STime> *pTime, IParticleFilter *pFilter, const SRoomInfo &_g );
-	virtual CPolyline* CreatePolyline( const vector<CVec3> &points, const vector<unsigned short> &indices, const CVec4 &color, bool bDepthTest );
+	virtual CPolyline* CreatePolyline( const std::vector<CVec3> &points, const std::vector<unsigned short> &indices, const CVec4 &color, bool bDepthTest );
 	virtual CObjectBase* Precache( const NDb::SModel *pModel );
 	virtual void Precache( const NDb::SEffect *pEffect );
 	virtual void LoadEverything() { WaitForLoad( true ); LoadEverythingInt(); }
@@ -294,9 +294,9 @@ public:
 	virtual CObjectBase* AddFlare( CFuncBase<CVec3> *pOrigin, CFuncBase<STime> *pTime, int nFloor, float fFlareRadius, const NDb::STexture *pFlareTexture, float fOnTime, float fOffTime );
 	virtual CObjectBase* AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, CFuncBase<CVec2> *pSize, const CVec2 &vMaxSize, const NDb::STexture *pTexture, int nFloor );
 	virtual CObjectBase* AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, const CVec2 &sSize, const NDb::STexture *pTexture, int nFloor );
-	virtual CObjectBase* AddPostFilter( const vector<CObjectBase*> &target, IPostProcess *pEffect );
+	virtual CObjectBase* AddPostFilter( const std::vector<CObjectBase*> &target, IPostProcess *pEffect );
 	virtual CObjectBase* AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, float fRadius, const NDb::STexture *pMask, bool bLightmapOnly );
-	virtual CDecalTarget* CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info );
+	virtual CDecalTarget* CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info );
 	virtual CObjectBase* AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial );
 	virtual CDecalFader* AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial, STime tFadeInStart, STime tFadeInEnd, STime tFadeOutStart, STime tFadeOutEnd, CFuncBase<STime> *pTime );
 	virtual void SetWarFogBlend( float fBlend );
@@ -408,7 +408,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 
 	const int nSkelInFile = (pModel->pSkeleton ? 0 : -1);
 
-	const vector<int> &materialQuantities = pGeometry->materialQuantities;
+	const std::vector<int> &materialQuantities = pGeometry->materialQuantities;
 	if ( materialQuantities.empty() )
 	{
 		// B2-ish way: 1 to 1 correspondence between meshes and materials.
@@ -421,7 +421,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 			{
 				continue;
 			}
-			SPartInfo &p = pRes->parts.push_back();
+			SPartInfo &p = pRes->parts.emplace_back();
 			SPartAndSkeletonKey key( pGeometry, nMesh, -1, pModel->pSkeleton, nSkelInFile, bIsLightMapped ? 1 : 0 );
 			p.pGeometry = shareGrannyMeshes.Get( key );
 			p.pMaterial = CreateMaterial( pModel->materials[nModelMaterial] );
@@ -442,7 +442,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 			{
 				for ( int nMaterial = 0; nMaterial < materialQuantities[nMesh]; ++nMaterial )
 				{
-					SPartInfo &p = pRes->parts.push_back();
+					SPartInfo &p = pRes->parts.emplace_back();
 					SPartAndSkeletonKey key( pGeometry, nMesh, nMaterial, pModel->pSkeleton, nSkelInFile, bIsLightMapped ? 1 : 0 );
 					p.pGeometry = shareGrannyMeshes.Get( key );
 					if ( nModelMaterial < pModel->materials.size() )
@@ -479,7 +479,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 			}
 			else
 			{
-				SPartInfo &p = pRes->parts.push_back();
+				SPartInfo &p = pRes->parts.emplace_back();
 				SPartAndSkeletonKey key( pGeometry, nMesh, -1, pModel->pSkeleton, nSkelInFile, bIsLightMapped ? 1 : 0 );
 				p.pGeometry = shareGrannyMeshes.Get( key );
 				p.pMaterial = CreateSubstituteMaterial();
@@ -534,7 +534,7 @@ CObjectBase* CGameView::CreateDynamicMesh( const SMeshInfo &meshInfo, CFuncBase<
 	return pRes;
 }
 
-CDecalTarget* CGameView::CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info )
+CDecalTarget* CGameView::CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info )
 {
 	return pScene->CreateDecalTarget( targets, _info );
 }
@@ -587,7 +587,7 @@ CObjectBase* CGameView::CreateMesh( const SMeshInfo &meshInfo, const CCreateMesh
 
 	CPtr<CObjectBase> pPart;
 	CPtr<CBind> pBind;
-	CPtr< CFuncBase<vector<NGfx::SCompactTransformer> > > pMMXAnimation;
+	CPtr< CFuncBase<std::vector<NGfx::SCompactTransformer> > > pMMXAnimation;
 
 	CCreateMeshBound meshBound = _meshBound;
 	if ( !meshBound.GetBounder() && ( meshBound.GetBound().s.fRadius == 0.0f ) )
@@ -895,7 +895,7 @@ CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffec
 				pSkelAnimator->SetGlobalTransform( pMSR );
 
 				// FIXME: давать свой SBound, когда возможно, это ускорит рассчёт того, что в кадр попадает
-				vector<CPtr<CFuncBase<float> > > transparencyAnimators;
+				std::vector<CPtr<CFuncBase<float> > > transparencyAnimators;
 				CreateAnimatedTransparencyChannels( &transparencyAnimators, meshInfo, pModel, pSkelAnimator );
  				pRes->AddPart( CreateMesh( meshInfo, 0, 0, NGScene::CMeshAnimStuff( pModel, pSkelAnimator, &transparencyAnimators ), fullRoomInfo, pFader ) );
 			}
@@ -943,7 +943,7 @@ CObjectBase* CGameView::CreateRain( const NDb::SParticleInstance *pInstance, CFu
 	return CreateParticles( true, nPFlags, pInstance->bDoesCastShadow, pInstance->bIsCrown, pAnimator, pIdentityTransform, particleBound, _g, 0 );
 }
 
-CPolyline* CGameView::CreatePolyline( const vector<CVec3> &points, const vector<unsigned short> &indices, 
+CPolyline* CGameView::CreatePolyline( const std::vector<CVec3> &points, const std::vector<unsigned short> &indices,
 	const CVec4 &color, bool bDepthTest )
 {
 	return pScene->CreatePolyline( new CMemGeometry( points ), indices, color, bDepthTest );
@@ -1016,7 +1016,7 @@ void CGameView::Precache( const NDb::SEffect *pEffect )
 
 void CGameView::TouchPrecached()
 {
-	for ( list<CPtr<CRenderNode> >::iterator i = precacheObjects.begin(); i != precacheObjects.end(); )
+	for ( std::list<CPtr<CRenderNode> >::iterator i = precacheObjects.begin(); i != precacheObjects.end(); )
 	{
 		CRenderNode *p = *i;
 		bool bOk = true;
@@ -1460,7 +1460,7 @@ CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *p
 		SRoomInfo( 0, nFloor, 0 ), 0 );
 }
 
-static void GetParts( vector<CObjectBase*> *pRes, const vector<CObjectBase*> &target )
+static void GetParts( std::vector<CObjectBase*> *pRes, const std::vector<CObjectBase*> &target )
 {
 	for ( int k = 0; k < target.size(); ++k )
 	{
@@ -1476,10 +1476,10 @@ static void GetParts( vector<CObjectBase*> *pRes, const vector<CObjectBase*> &ta
 	}
 }
 
-CObjectBase* CGameView::AddPostFilter( const vector<CObjectBase*> &target, IPostProcess *pEffect )
+CObjectBase* CGameView::AddPostFilter( const std::vector<CObjectBase*> &target, IPostProcess *pEffect )
 {
 	CPtr<IPostProcess> pHold(pEffect);
-	vector<CObjectBase*> parts;
+	std::vector<CObjectBase*> parts;
 	GetParts( &parts, target );
 	CRenderNode *pRes = new CRenderNode;
 	for ( int k = 0; k < parts.size(); ++k )
@@ -1607,7 +1607,7 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 	else
 		pScene->SetSunFlares( CVec3( 0, 0, 0 ), 0, 0 );
 #ifdef DEBUG_LIGHTING
-	static vector<CObj<CObjectBase> > lights;
+	static std::vector<CObj<CObjectBase> > lights;
 	float fBright = 1;//.5f;
 	float fRadius = 50;
 	lights.push_back( AddPointLight( CVec3(fBright,fBright,0), CVec3(20,20,30), fRadius ) );
@@ -1818,12 +1818,12 @@ public:
 	}
 };
 
-void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResult,
+void CreateAnimatedTransparencyChannels( std::vector<CPtr<CFuncBase<float> > > *pResult,
 		const IGameView::SMeshInfo &meshInfo, const NDb::SModel *pModel,
 		NAnimation::ISkeletonAnimator *pAnimator )
 {
 	pResult->assign(meshInfo.parts.size(), 0);
-	string szChannelName;
+	std::string szChannelName;
 	for ( int i = 0; i < meshInfo.parts.size(); ++i )
 	{
 		const NGScene::IGameView::SPartInfo &partInfo = meshInfo.parts[i];
@@ -1842,7 +1842,7 @@ CDGPtr <CGrannyMeshLoader> GetMeshLoader( const SPartAndSkeletonKey & key )
 	return shareGrannyMeshes.Get( key );
 }
 
-void CollectAllParts( vector<CObjectBase*> *pRes, IGameView *_pView )
+void CollectAllParts( std::vector<CObjectBase*> *pRes, IGameView *_pView )
 {
 	CDynamicCast<CGameView> pView( _pView );
 	IGScene *pScene = pView->GetGScene();
@@ -1857,7 +1857,7 @@ IGameView* CreateNewView()
 
 // Commands/Vars
 
-static void VarSetHSR( const string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSetHSR( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	defaultHSRMode = HSR_NONE;
 	if ( sValue.GetFloat() == 1 )

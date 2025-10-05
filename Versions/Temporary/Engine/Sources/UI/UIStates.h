@@ -25,7 +25,7 @@ struct SUIState
 
 class CStates 
 {
-	vector<SUIState> states;
+	std::vector<SUIState> states;
 	int nCurIndex;												// currently running effect
 	bool bForward;												// effect direction 
 	bool bEnd;														// all effects are finished
@@ -33,8 +33,8 @@ class CStates
 	CPtr<SWindowContext> pContext;
 	CPtr<SWindowAnimationContext> pAnimationContext;
 	bool bReversable;												// effect can be undone
-	string szCmdName;
-	pair<int, CPtr<CWindow> > id;
+	std::string szCmdName;
+	std::pair<int, CPtr<CWindow> > id;
 	WORD wKeyboardFlags;
 
 	void CheckEnd();
@@ -50,18 +50,18 @@ public:
 	CStates() : nCurIndex( 0 ), bForward( true ), bEnd( true ), bReversable( false ) {  }
 
 	CStates( const NDb::SUIStateSequence &seq, 
-					 const string &_szCmdName, 
+					 const std::string &_szCmdName,
 					 const bool _bReversable, 
 					 WORD wFlags );
 
 	void FastForward( const int timeDiff, class CWindowScreen *pScreen );
-	const string &GetName() const { return szCmdName; }
+	const std::string &GetName() const { return szCmdName; }
 	void SetNotifySink( class CWindow *pWindow ) { pNotifySink = pWindow; }
 	void SetContext( SWindowContext *_pContext ) { pContext = _pContext; }
 	
 	// if this states are animation states - then they will need id.
 	void SetAnimatedWindow( const int nID, class CWindow * pWindow );
-	const pair<int, CPtr<CWindow> > GetID() const { return id; }
+	const std::pair<int, CPtr<CWindow> > GetID() const { return id; }
 
 	// effect can be deleted already, all work is done
 	const bool IsToBeDeleted() const;

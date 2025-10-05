@@ -48,10 +48,10 @@ void CHeightFogHolder::Recalc()
 
 	if ( pHeightFog )
 	{
-		const vector<CVec3> &poses = pMesh->GetPositions();
-		const vector<WORD> &posInds = pMesh->GetPositionIndices();
-		const vector<DWORD> &srcAttrs = pMesh->GetAttribute( GATTR_VERTEX_COLOR );
-		vector<DWORD> attrs( srcAttrs );
+		const std::vector<CVec3> &poses = pMesh->GetPositions();
+		const std::vector<WORD> &posInds = pMesh->GetPositionIndices();
+		const std::vector<DWORD> &srcAttrs = pMesh->GetAttribute( GATTR_VERTEX_COLOR );
+		std::vector<DWORD> attrs( srcAttrs );
 		if ( attrs.size() != posInds.size() )
 		{
 			attrs.resize( posInds.size() );

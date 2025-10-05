@@ -52,12 +52,12 @@ int CFullBridge::operator&( IBinSaver &saver )
 	{
 		int nSize = spans.size();
 		saver.Add( ++cnt, &nSize );
-		for ( list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
+		for ( std::list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
 			SerializeOwner( ++cnt, &(*iter), &saver );
 		
 		nSize = projectedSpans.size();
 		saver.Add( ++cnt, &nSize );
-		for ( list<CBridgeSpan*>::iterator iter = projectedSpans.begin(); iter != projectedSpans.end(); ++iter )
+		for ( std::list<CBridgeSpan*>::iterator iter = projectedSpans.begin(); iter != projectedSpans.end(); ++iter )
 			SerializeOwner( ++cnt, &(*iter), &saver );
 
 	}
@@ -66,10 +66,10 @@ int CFullBridge::operator&( IBinSaver &saver )
 		int nSize;
 		saver.Add( ++cnt, &nSize );
 		spans.clear();
-		vector<CBridgeSpan*> spanseVector;
+		std::vector<CBridgeSpan*> spanseVector;
 		spanseVector.resize( nSize );
 		
-		for ( vector<CBridgeSpan*>::iterator iter = spanseVector.begin(); iter != spanseVector.end(); ++iter )
+		for ( std::vector<CBridgeSpan*>::iterator iter = spanseVector.begin(); iter != spanseVector.end(); ++iter )
 			SerializeOwner( ++cnt, &(*iter), &saver );
 		spans.insert( spans.end(), spanseVector.begin(), spanseVector.end() );
 

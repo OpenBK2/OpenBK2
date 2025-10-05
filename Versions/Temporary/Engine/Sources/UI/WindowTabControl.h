@@ -20,16 +20,16 @@ class CWindowTabControl : public CWindow, public ITabControl, public IButtonNoti
 
 	CDBPtr<NDb::SWindowTabControlShared> pShared;
 	CPtr<NDb::SWindowTabControl> pInstance;
-	vector<string> tabNames;
+	std::vector<std::string> tabNames;
 
 	CObj<CWindowScrollableContainer> pHeadersContainer;			// tab headers container
 //	CObj<CWindow> pContainerSample;
 //	CObj<CWindowMSButton> pButtonSample;
 
 	void ShowTab( const int nTab, const bool bShow, const bool bUpdateButtons );
-	const string &CreateTabName( const int nTab, CWindow *pTab );
+	const std::string &CreateTabName( const int nTab, CWindow *pTab );
 	void SetActive( const int nTab, const bool bUpdateButtons );
-	void AddTab( const wstring &szButtonName, CWindow *pTab );
+	void AddTab( const std::wstring &szButtonName, CWindow *pTab );
 protected:
 	NDb::SWindow* GetInstance() { return pInstance; }
 
@@ -54,7 +54,7 @@ public:
 	int GetNTabs() const;
 	void SetActive( const int nTab ) { SetActive( nTab, true ); }
 	int GetActive() const { return nActiveTab; }
-	void AddTab( const wstring &szButtonName );
+	void AddTab( const std::wstring &szButtonName );
 	void AddElement( const int nTab, IWindow *pWnd );
 	//ITabControl}
 

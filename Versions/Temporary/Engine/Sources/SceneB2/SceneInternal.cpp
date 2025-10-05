@@ -382,13 +382,13 @@ bool CScene::IsShowOn( ESceneShow eShow )
 
 static void OutputStat( const char *pszName, const int nValue, DWORD dwColor, IStatSystem *pSS )
 {
-	const string szValue = StrFmt( "%d", nValue );
+	const std::string szValue = StrFmt( "%d", nValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
 static void OutputStat( const char *pszName, const float fValue, DWORD dwColor, IStatSystem *pSS )
 {
-	const string szValue = StrFmt( "%g", fValue );
+	const std::string szValue = StrFmt( "%g", fValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
@@ -406,7 +406,7 @@ static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 
 static void OutputStat( const char *pszName, const CVec3 &vValue, DWORD dwColor, IStatSystem *pSS )
 {
-	const string szValue = StrFmt( "%g %g %g", vValue.x, vValue.y, vValue.z );
+	const std::string szValue = StrFmt( "%g %g %g", vValue.x, vValue.y, vValue.z );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
@@ -508,7 +508,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		s_fLastGamma = NGamma::s_fGamma;
 		s_fLastContrast = NGamma::s_fContrast;
 		s_fLastBrightness = NGamma::s_fBrightness;
-		vector<NGfx::SPixel8888> gammaRamp( 256 );
+		std::vector<NGfx::SPixel8888> gammaRamp( 256 );
 		CalcGammaRamp( &(gammaRamp[0]), NGamma::s_fBrightness, NGamma::s_fContrast, NGamma::s_fGamma );
 		NGfx::SetGammaRamp( gammaRamp );
 	}
@@ -965,7 +965,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	//
 	SYSTEMTIME systime;
 	GetLocalTime( &systime );
-	const string szFileName = StrFmt( "screenshots\\mapshot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga", 
+	const std::string szFileName = StrFmt( "screenshots\\mapshot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga",
 		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
 		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
 	//
@@ -1081,13 +1081,13 @@ void CScene::UpdateAIGeometry()
 		
 	data[eScene]->pAIMapVisitor->Sync();
 	data[eScene]->pAIMap->Sync();
-	list<NAI::SObjectInfo> ent;
+	std::list<NAI::SObjectInfo> ent;
 	data[eScene]->pAIMap->GetEntities( &ent, -1 );
 	
 	SFBTransform idPos;
 	Identity( &idPos.forward );
 	Identity( &idPos.backward );
-	for( list<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
+	for( std::list<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
 	{
 		const NAI::SObjectInfo &obj = *it;
 		CObj<CMemObject> pMemObject = new CMemObject;
@@ -1230,7 +1230,7 @@ bool CScene::ToggleGetSizeFromTarget( bool _bGetSizesFromTarget )
 }
 
 // special script function to position camera for pwl-mapshot 
-static void CmdSetPWLMapshotCamera( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( !(Scene()->DoesTerraManagerExist()) )
 		return;
@@ -1254,7 +1254,7 @@ static void CmdSetPWLMapshotCamera( const string &szID, const vector<wstring> &p
 	Camera()->SetPlacement( fOldDist, fPitch, fYaw );
 }
 
-static void CmdPreparePWL( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdPreparePWL( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	CmdSetPWLMapshotCamera( "pwlmapshot_set_camera", paramsSet, pContext );
 	WriteToPipe( PIPE_SCRIPT_CMDS, "RemoveAllUnitsTmp()" );

@@ -57,7 +57,7 @@ void CDataStream::ReadOverflow( void *pDest, int nSize )
 	}
 }
 
-void CDataStream::ReadString( string &res, int nMaxSize )
+void CDataStream::ReadString( std::string &res, int nMaxSize )
 {
 	int nSize = 0;
 	Read( &nSize, 1 );
@@ -81,7 +81,7 @@ void CDataStream::ReadString( string &res, int nMaxSize )
 	data.pCurrent += nSize;
 }
 
-void CDataStream::WriteString( const string &res )
+void CDataStream::WriteString( const std::string &res )
 {
 	int nSize = res.size(), nVal;
 	if ( nSize >= 128 )
@@ -220,7 +220,7 @@ void CMappedStream::Flush()
 // **
 // ************************************************************************************************************************ //
 
-CFileStream::CFileStream( NVFS::IVFS *pVFS, const string &szFileName )
+CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
 : CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_READ_ONLY should've been used", szFileName.c_str() ) );
@@ -229,7 +229,7 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const string &szFileName )
 		SyncWith( *pStream );
 }
 
-CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const string &szFileName )
+CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName )
 : CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_CREATE should've been used", szFileName.c_str() ) );
@@ -238,7 +238,7 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const string &szFile
 		SyncWith( *pStream );
 }
 
-CFileStream::CFileStream( const string &szFileName, const EWinMode eWinMode )
+CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode )
 : CDataStream( F_Broken )
 {
 	if ( eWinMode == WIN_READ_ONLY )

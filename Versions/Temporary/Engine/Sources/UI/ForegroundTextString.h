@@ -7,7 +7,7 @@ class CForegroundTextString : public IWindowPart
 {
 	OBJECT_BASIC_METHODS( CForegroundTextString )
 	ZDATA
-	wstring wszCustomText;
+	std::wstring wszCustomText;
 	CTRect<float> rcParent;
 	CPtr<NDb::SForegroundTextString> pInstance;
 	CObj<IML> pGfxText;
@@ -19,11 +19,11 @@ public:
 	CForegroundTextString() {}
 
 	virtual void Init();
-	void SetText( const wstring &_szText );
+	void SetText( const std::wstring &_szText );
 	int GetOptimalWidth() const;
-	const wstring &GetText() const;
-	const wstring& GetDBInstanceText() const;
-	const wstring& GetDBFormatText() const;
+	const std::wstring &GetText() const;
+	const std::wstring& GetDBInstanceText() const;
+	const std::wstring& GetDBFormatText() const;
 	const NDb::SWindowPlacement* GetPlacement() const;
 
 	//IWindowPart{
@@ -41,7 +41,7 @@ class CPlacedText : public CObjectBase
 	OBJECT_BASIC_METHODS( CPlacedText )
 
 	ZDATA
-	wstring wszText;
+	std::wstring wszText;
 	NDb::SWindowPlacement placement;
 	CTRect<float> rcParent;
 	CObj<IML> pGfxText;
@@ -57,8 +57,8 @@ public:
 
 	void Visit( struct IUIVisitor *pVisitor );
 	
-	const wstring& GetText() const { return wszText; }
-	void SetText( const wstring &wszText );
+	const std::wstring& GetText() const { return wszText; }
+	void SetText( const std::wstring &wszText );
 
 	int GetOptimalWidth() const;
 

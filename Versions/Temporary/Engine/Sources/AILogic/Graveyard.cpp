@@ -35,7 +35,7 @@ public:
 		// кончилсась анимация смерти и проинициализировались и endFogTime
 		bool bAnimFinished;
 
-		list<SObjTileInfo> lockedTiles; // залоканные тайлы
+		std::list<SObjTileInfo> lockedTiles; // залоканные тайлы
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&endFogTime); f.Add(4,&timeToEndDieAnimation); f.Add(5,&bAnimFinished); f.Add(6,&lockedTiles); return 0; }
 
 	SKilledUnit() { }
@@ -49,7 +49,7 @@ public:
 
 void CGraveyard::Segment()
 {
-	list< CPtr<SKilledUnit> >::iterator iter = killed.begin();
+	std::list< CPtr<SKilledUnit> >::iterator iter = killed.begin();
 	while ( iter != killed.end() )
 	{
 		SKilledUnit *pKilled = *iter;
@@ -110,7 +110,7 @@ void CGraveyard::Segment()
 	}
 	dissapeared.clear();
 
-	for ( hash_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
+	for ( std::unordered_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
 	{
 		if ( !CLinkObject::IsLinkObjectExists( it->first ) )
 			diedVisible.erase( it++ );
@@ -197,13 +197,13 @@ const int GetTileNum( const SVector &tile )
 
 void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 {
-	list<SVector> rectTiles;
+	std::list<SVector> rectTiles;
 	GetAIMap()->GetTilesCoveredByRect( bridgeRect, &rectTiles );
-	for ( list<SVector>::iterator iter = rectTiles.begin(); iter != rectTiles.end(); ++iter )
+	for ( std::list<SVector>::iterator iter = rectTiles.begin(); iter != rectTiles.end(); ++iter )
 	{
 		const SVector &tile = *iter;
 		const int nTileNum = GetTileNum( tile );
-		for ( list< CObj<CDeadUnit> >::iterator iter = bridgeDeadSoldiers[nTileNum].begin(); iter != bridgeDeadSoldiers[nTileNum].end(); ++iter )
+		for ( std::list< CObj<CDeadUnit> >::iterator iter = bridgeDeadSoldiers[nTileNum].begin(); iter != bridgeDeadSoldiers[nTileNum].end(); ++iter )
 		{
 			CDeadUnit *pDeadUnit = *iter;
 			updater.AddUpdate( 0, ACTION_NOTIFY_DISSAPEAR_OBJ, pDeadUnit->GetDieObject(), -1 );
@@ -216,7 +216,7 @@ void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 void CGraveyard::CheckSoonBeDead()
 {
 	// The quection is: to be or not to be?...
-	list<CAIUnit*> deadObjs;
+	std::list<CAIUnit*> deadObjs;
 	for ( UpdateObjSet::iterator iter = soonBeDead.begin(); iter != soonBeDead.end(); ++iter )
 	{
 		CAIUnit *pUnit = iter->second.first;
@@ -244,7 +244,7 @@ void CGraveyard::CheckSoonBeDead()
 		}
 	}
 
-	for ( list<CAIUnit*>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
+	for ( std::list<CAIUnit*>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
 		soonBeDead.erase( (*iter)->GetUniqueId() );
 }
 

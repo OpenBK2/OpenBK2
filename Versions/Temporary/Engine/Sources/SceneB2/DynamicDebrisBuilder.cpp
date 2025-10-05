@@ -12,7 +12,7 @@ inline int AddUniqueDebrisVertex( NMeshData::SMeshDataTex2 &data, const CVec3 &v
 																	const CVec2 &vTex, NGScene::SVertex &templ, const float fDistX, const float fDistY )
 {
 	int nCount = 0;
-	for ( vector<NGScene::SVertex>::const_iterator it = data.vertices.begin(); it != data.vertices.end(); ++it, ++nCount )
+	for ( std::vector<NGScene::SVertex>::const_iterator it = data.vertices.begin(); it != data.vertices.end(); ++it, ++nCount )
 	{
 		if ( ( fabs2( it->pos.x - vert.x ) + fabs2( it->pos.y - vert.y ) + fabs2( it->pos.z - vert.z ) ) < DEF_FLOAT_EPS2 )
 			return nCount;
@@ -57,7 +57,7 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 	const float fDist12 = fabs( v1 - v2 );
 	const float fDist14 = fabs( v1 - v4 );
 
-	vector<CVec3> coeffs(4);
+	std::vector<CVec3> coeffs(4);
 	GetLineEq( v1.x, v1.y, v2.x, v2.y, &(coeffs[0].x), &(coeffs[0].y), &(coeffs[0].z) );
 	GetLineEq( v2.x, v2.y, v3.x, v3.y, &(coeffs[1].x), &(coeffs[1].y), &(coeffs[1].z) );
 	GetLineEq( v3.x, v3.y, v4.x, v4.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
@@ -82,9 +82,9 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 	CalcCompactVector( &(templ.texU), CVec3(1, 0, 0) );
 	CalcCompactVector( &(templ.texV), CVec3(0, 1, 0) );
 
-	static vector<CVec3> points(16);
-	static vector<CVec3> tempPoints(16);
-	static vector<CVec3> resPoints(16);
+	static std::vector<CVec3> points(16);
+	static std::vector<CVec3> tempPoints(16);
+	static std::vector<CVec3> resPoints(16);
 
 	int nPrevInd;
 
@@ -93,7 +93,7 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
 			const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
-			for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
+			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
 					max( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_DEBRIS_HEIGHT );
@@ -168,9 +168,9 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 						continue;
 
 					tempPoints.resize( 0 );
-					for ( vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
+					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
 					{
-						vector<CVec3>::const_iterator itTemp = tempPoints.begin();
+						std::vector<CVec3>::const_iterator itTemp = tempPoints.begin();
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
@@ -187,7 +187,7 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 
 					CreateConvexHull( &resPoints, tempPoints );
 
-					vector<CVec3>::const_iterator itResPoint = resPoints.begin();
+					std::vector<CVec3>::const_iterator itResPoint = resPoints.begin();
 					GetBaryCoords( *itResPoint, v1, v2, v4, &bary );
 					const int nInd0 = AddUniqueDebrisVertex( data, *itResPoint, i, g, terrainNorms[g][i], terrainNorms[g][i+1],
 						terrainNorms[g+1][i+1], terrainNorms[g+1][i], bary, templ, fDist12, fDist14 );

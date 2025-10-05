@@ -76,7 +76,7 @@ void CStandartDirPath::Shift( const int nShift )
 
 void CStandartDirPath::MarkPath( const int nID, const NDebugInfo::EColor color ) const
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	SVector vStartTile( startPoint.x / nTileSize, startPoint.y / nTileSize );
 	SVector vFinishTile( finishPoint.x / nTileSize, finishPoint.y / nTileSize );
 	CBres bres;

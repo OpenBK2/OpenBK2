@@ -188,15 +188,11 @@ SYSTEM_EXPORT void LoadPrecached();
 }
 
 typedef NGScene::SResKey<int> SIntResKey;
-namespace nstl
+
+template<> struct std::hash<SIntResKey>
 {
-	template<> struct hash<SIntResKey>
-	{
-		size_t operator()(const SIntResKey &key ) const { return key.tKey; }
-	};
-}
+	size_t operator()(const SIntResKey &key ) const { return key.tKey; }
+};
 
 template<class T>
 SIntResKey GetIntResKey( T *pResource ) { return SIntResKey( pResource->uid, pResource->GetRecordID() ); }
-
-

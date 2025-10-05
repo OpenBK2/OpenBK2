@@ -61,7 +61,7 @@ void CMPManagerMode::StartGame()
 		pScenarioTracker->SetPlayerParty( i, slot.nCountry );
 		pScenarioTracker->SetPlayerColour( i, slot.nColour );
 
-		IScenarioTracker::SMultiplayerInfo::SPlayer &scenarioPlayer = scenarioInfo.players.push_back();
+		IScenarioTracker::SMultiplayerInfo::SPlayer &scenarioPlayer = scenarioInfo.players.emplace_back();
 		scenarioPlayer.wszName = NStr::ToUnicode( slot.szName );
 		scenarioPlayer.nTeam = slot.nTeam;
 		scenarioPlayer.nIndex = i;
@@ -261,7 +261,7 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 	NTimer::STime curGameTime = pTimer->GetGameTime();
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 
-	pair<int, int> flags = pScenarioTracker->GetKeyBuildingSummary();
+	std::pair<int, int> flags = pScenarioTracker->GetKeyBuildingSummary();
 
 	int nNewWinningSide = 2;
 	if ( flags.first > 0 && flags.second == 0 )
@@ -406,9 +406,9 @@ void CMPManagerMode::AnalyzeLaggers()
 		SendLagInfo();
 }
 
-void CMPManagerMode::CreateRehash( vector<BYTE> *pOrder )
+void CMPManagerMode::CreateRehash( std::vector<BYTE> *pOrder )
 {
-	vector<BYTE> &order = *pOrder;
+	std::vector<BYTE> &order = *pOrder;
 	int nSize = slots.size();
 	order.resize( nSize, -1 );
 	for ( int i = 0; i < nSize; ++i )
@@ -421,20 +421,20 @@ void CMPManagerMode::CreateRehash( vector<BYTE> *pOrder )
 	{
 		int nIndex1 = NWin32Random::Random() % nSize;
 		int nIndex2 = NWin32Random::Random() % nSize;
-		swap( order[nIndex1], order[nIndex2] );
+		std::swap( order[nIndex1], order[nIndex2] );
 	}
 }
 
-void CMPManagerMode::RehashSlots( const vector<BYTE> &order )
+void CMPManagerMode::RehashSlots( const std::vector<BYTE> &order )
 {
-	string szDebugOut = "+++ Rehash slots:";
+	std::string szDebugOut = "+++ Rehash slots:";
 	for ( int i = 0; i < order.size(); ++i )
 	{
 		szDebugOut += StrFmt( " %d,", order[i] );
 	}
 	DebugTrace( szDebugOut.c_str() );
 
-	vector<SMPSlot> newSlots;
+	std::vector<SMPSlot> newSlots;
 	newSlots.resize( slots.size() );
 	for ( int i = 0; i < slots.size(); ++i )
 	{

@@ -167,7 +167,7 @@ struct ICamera : public CObjectBase
 	virtual void SwitchAutoPositioning( const bool bAllowAutoPositioning ) = 0;
 	// we need a named locker, for example finishing a script can't to permit a moving, 
 	// locked by a mouse selector and vice versa
-	virtual void SwitchManualScrolling( const string &szLocker, const bool bManualOn ) = 0;
+	virtual void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn ) = 0;
 
 	// for listener positioning
 	virtual const CVec3 GetListener() const { return GetPos(); } 

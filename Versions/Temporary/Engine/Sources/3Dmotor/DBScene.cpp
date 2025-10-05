@@ -48,7 +48,7 @@ int SModel::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::EConvertionType eValue )
+std::string EnumToString( NDb::EConvertionType eValue )
 {
 	switch ( eValue )
 	{
@@ -69,7 +69,7 @@ string EnumToString( NDb::EConvertionType eValue )
 	}
 }
 
-NDb::EConvertionType NDb::StringToEnum_NDb_EConvertionType( const string &szValue )
+NDb::EConvertionType NDb::StringToEnum_NDb_EConvertionType( const std::string &szValue )
 {
 	if ( szValue == "CONVERT_ORDINARY" )
 		return NDb::CONVERT_ORDINARY;
@@ -86,7 +86,7 @@ NDb::EConvertionType NDb::StringToEnum_NDb_EConvertionType( const string &szValu
 	return NDb::CONVERT_ORDINARY;
 }
 
-string EnumToString( NDb::STexture::EType eValue )
+std::string EnumToString( NDb::STexture::EType eValue )
 {
 	switch ( eValue )
 	{
@@ -99,7 +99,7 @@ string EnumToString( NDb::STexture::EType eValue )
 	}
 }
 
-NDb::STexture::EType NDb::StringToEnum_NDb_STexture_EType( const string &szValue )
+NDb::STexture::EType NDb::StringToEnum_NDb_STexture_EType( const std::string &szValue )
 {
 	if ( szValue == "REGULAR" )
 		return NDb::STexture::REGULAR;
@@ -108,7 +108,7 @@ NDb::STexture::EType NDb::StringToEnum_NDb_STexture_EType( const string &szValue
 	return NDb::STexture::REGULAR;
 }
 
-string EnumToString( NDb::STexture::EAddrType eValue )
+std::string EnumToString( NDb::STexture::EAddrType eValue )
 {
 	switch ( eValue )
 	{
@@ -125,7 +125,7 @@ string EnumToString( NDb::STexture::EAddrType eValue )
 	}
 }
 
-NDb::STexture::EAddrType NDb::StringToEnum_NDb_STexture_EAddrType( const string &szValue )
+NDb::STexture::EAddrType NDb::StringToEnum_NDb_STexture_EAddrType( const std::string &szValue )
 {
 	if ( szValue == "CLAMP" )
 		return NDb::STexture::CLAMP;
@@ -138,7 +138,7 @@ NDb::STexture::EAddrType NDb::StringToEnum_NDb_STexture_EAddrType( const string 
 	return NDb::STexture::CLAMP;
 }
 
-string EnumToString( NDb::STexture::EFormat eValue )
+std::string EnumToString( NDb::STexture::EFormat eValue )
 {
 	switch ( eValue )
 	{
@@ -155,7 +155,7 @@ string EnumToString( NDb::STexture::EFormat eValue )
 	}
 }
 
-NDb::STexture::EFormat NDb::StringToEnum_NDb_STexture_EFormat( const string &szValue )
+NDb::STexture::EFormat NDb::StringToEnum_NDb_STexture_EFormat( const std::string &szValue )
 {
 	if ( szValue == "TF_DXT1" )
 		return NDb::STexture::TF_DXT1;
@@ -275,7 +275,7 @@ int SCubeTexture::operator&( IBinSaver &saver )
 
 
 
-void SSunFlare::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSunFlare::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (BYTE*)&fDistance - pThis, sizeof(fDistance), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
@@ -785,7 +785,7 @@ int SLightInstance::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::SParticleInstance::ELight eValue )
+std::string EnumToString( NDb::SParticleInstance::ELight eValue )
 {
 	switch ( eValue )
 	{
@@ -798,7 +798,7 @@ string EnumToString( NDb::SParticleInstance::ELight eValue )
 	}
 }
 
-NDb::SParticleInstance::ELight NDb::StringToEnum_NDb_SParticleInstance_ELight( const string &szValue )
+NDb::SParticleInstance::ELight NDb::StringToEnum_NDb_SParticleInstance_ELight( const std::string &szValue )
 {
 	if ( szValue == "L_NORMAL" )
 		return NDb::SParticleInstance::L_NORMAL;
@@ -807,7 +807,7 @@ NDb::SParticleInstance::ELight NDb::StringToEnum_NDb_SParticleInstance_ELight( c
 	return NDb::SParticleInstance::L_NORMAL;
 }
 
-string EnumToString( NDb::SParticleInstance::EStatic eValue )
+std::string EnumToString( NDb::SParticleInstance::EStatic eValue )
 {
 	switch ( eValue )
 	{
@@ -820,7 +820,7 @@ string EnumToString( NDb::SParticleInstance::EStatic eValue )
 	}
 }
 
-NDb::SParticleInstance::EStatic NDb::StringToEnum_NDb_SParticleInstance_EStatic( const string &szValue )
+NDb::SParticleInstance::EStatic NDb::StringToEnum_NDb_SParticleInstance_EStatic( const std::string &szValue )
 {
 	if ( szValue == "P_STATIC" )
 		return NDb::SParticleInstance::P_STATIC;
@@ -1035,7 +1035,7 @@ int SDecal::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::SFont::EPitch eValue )
+std::string EnumToString( NDb::SFont::EPitch eValue )
 {
 	switch ( eValue )
 	{
@@ -1046,14 +1046,14 @@ string EnumToString( NDb::SFont::EPitch eValue )
 	}
 }
 
-NDb::SFont::EPitch NDb::StringToEnum_NDb_SFont_EPitch( const string &szValue )
+NDb::SFont::EPitch NDb::StringToEnum_NDb_SFont_EPitch( const std::string &szValue )
 {
 	if ( szValue == "DEFAULT" )
 		return NDb::SFont::DEFAULT;
 	return NDb::SFont::DEFAULT;
 }
 
-string EnumToString( NDb::SFont::ECharset eValue )
+std::string EnumToString( NDb::SFont::ECharset eValue )
 {
 	switch ( eValue )
 	{
@@ -1092,7 +1092,7 @@ string EnumToString( NDb::SFont::ECharset eValue )
 	}
 }
 
-NDb::SFont::ECharset NDb::StringToEnum_NDb_SFont_ECharset( const string &szValue )
+NDb::SFont::ECharset NDb::StringToEnum_NDb_SFont_ECharset( const std::string &szValue )
 {
 	if ( szValue == "ANSI" )
 		return NDb::SFont::ANSI;
@@ -1271,7 +1271,7 @@ int SGeometry::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::EAddressMode eValue )
+std::string EnumToString( NDb::EAddressMode eValue )
 {
 	switch ( eValue )
 	{
@@ -1284,7 +1284,7 @@ string EnumToString( NDb::EAddressMode eValue )
 	}
 }
 
-NDb::EAddressMode NDb::StringToEnum_NDb_EAddressMode( const string &szValue )
+NDb::EAddressMode NDb::StringToEnum_NDb_EAddressMode( const std::string &szValue )
 {
 	if ( szValue == "AM_WRAP" )
 		return NDb::AM_WRAP;
@@ -1293,7 +1293,7 @@ NDb::EAddressMode NDb::StringToEnum_NDb_EAddressMode( const string &szValue )
 	return NDb::AM_WRAP;
 }
 
-string EnumToString( NDb::SMaterial::ELightingMode eValue )
+std::string EnumToString( NDb::SMaterial::ELightingMode eValue )
 {
 	switch ( eValue )
 	{
@@ -1306,7 +1306,7 @@ string EnumToString( NDb::SMaterial::ELightingMode eValue )
 	}
 }
 
-NDb::SMaterial::ELightingMode NDb::StringToEnum_NDb_SMaterial_ELightingMode( const string &szValue )
+NDb::SMaterial::ELightingMode NDb::StringToEnum_NDb_SMaterial_ELightingMode( const std::string &szValue )
 {
 	if ( szValue == "L_NORMAL" )
 		return NDb::SMaterial::L_NORMAL;
@@ -1315,7 +1315,7 @@ NDb::SMaterial::ELightingMode NDb::StringToEnum_NDb_SMaterial_ELightingMode( con
 	return NDb::SMaterial::L_NORMAL;
 }
 
-string EnumToString( NDb::SMaterial::EEffect eValue )
+std::string EnumToString( NDb::SMaterial::EEffect eValue )
 {
 	switch ( eValue )
 	{
@@ -1342,7 +1342,7 @@ string EnumToString( NDb::SMaterial::EEffect eValue )
 	}
 }
 
-NDb::SMaterial::EEffect NDb::StringToEnum_NDb_SMaterial_EEffect( const string &szValue )
+NDb::SMaterial::EEffect NDb::StringToEnum_NDb_SMaterial_EEffect( const std::string &szValue )
 {
 	if ( szValue == "M_GENERIC" )
 		return NDb::SMaterial::M_GENERIC;
@@ -1365,7 +1365,7 @@ NDb::SMaterial::EEffect NDb::StringToEnum_NDb_SMaterial_EEffect( const string &s
 	return NDb::SMaterial::M_GENERIC;
 }
 
-string EnumToString( NDb::SMaterial::EAlphaMode eValue )
+std::string EnumToString( NDb::SMaterial::EAlphaMode eValue )
 {
 	switch ( eValue )
 	{
@@ -1386,7 +1386,7 @@ string EnumToString( NDb::SMaterial::EAlphaMode eValue )
 	}
 }
 
-NDb::SMaterial::EAlphaMode NDb::StringToEnum_NDb_SMaterial_EAlphaMode( const string &szValue )
+NDb::SMaterial::EAlphaMode NDb::StringToEnum_NDb_SMaterial_EAlphaMode( const std::string &szValue )
 {
 	if ( szValue == "AM_OPAQUE" )
 		return NDb::SMaterial::AM_OPAQUE;
@@ -1403,7 +1403,7 @@ NDb::SMaterial::EAlphaMode NDb::StringToEnum_NDb_SMaterial_EAlphaMode( const str
 	return NDb::SMaterial::AM_OPAQUE;
 }
 
-string EnumToString( NDb::SMaterial::EDynamicMode eValue )
+std::string EnumToString( NDb::SMaterial::EDynamicMode eValue )
 {
 	switch ( eValue )
 	{
@@ -1418,7 +1418,7 @@ string EnumToString( NDb::SMaterial::EDynamicMode eValue )
 	}
 }
 
-NDb::SMaterial::EDynamicMode NDb::StringToEnum_NDb_SMaterial_EDynamicMode( const string &szValue )
+NDb::SMaterial::EDynamicMode NDb::StringToEnum_NDb_SMaterial_EDynamicMode( const std::string &szValue )
 {
 	if ( szValue == "DM_DONT_CARE" )
 		return NDb::SMaterial::DM_DONT_CARE;

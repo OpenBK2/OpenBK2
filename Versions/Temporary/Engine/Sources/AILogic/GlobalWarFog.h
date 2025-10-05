@@ -85,9 +85,9 @@ class CGlobalWarFog : public CAIObjectBase
 	};
 
 // internal types
-	typedef	hash_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
+	typedef	std::unordered_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
 	typedef CArray2D<SWarFogTileInfo> TWarFog;
-	typedef hash_set<SVector, STilesHash> TTilesToSmooth;
+	typedef std::unordered_set<SVector, STilesHash> TTilesToSmooth;
 
 	OBJECT_NOCOPY_METHODS( CGlobalWarFog );
 	CArray2D<CArray1Bit> areas;					// calculated spirals for every point
@@ -101,7 +101,7 @@ class CGlobalWarFog : public CAIObjectBase
 	CArray2D<BYTE> miniMapWarFog;
 	bool bNeedFullCalc;
 	NTimer::STime nLastFogCalcTime;
-	vector<BYTE> miniMapSums;					
+	std::vector<BYTE> miniMapSums;
 	int nMiniMapY;
 
 
@@ -112,19 +112,19 @@ class CGlobalWarFog : public CAIObjectBase
 	bool bFullSmooth;
 	*/
 	
-	vector<SSpiralPoint> spiral;   // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
+	std::vector<SSpiralPoint> spiral;   // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
 	CArray2D<int> spiralCoords;    // MaxRadius * MaxRadius
-	vector<int> lengths;           // MaxRadius * sizeof( int )
+	std::vector<int> lengths;           // MaxRadius * sizeof( int )
 	ZDATA
 		int nSizeX;
 		int nSizeY;
 		int nMaxRadius;
 		int nUnitHeight;
 
-		vector<TWarFog> warFog;
+		std::vector<TWarFog> warFog;
 
 		CArray2D1Bit areasOpenTiles;
-		hash_set<string> scriptAreas;
+		std::unordered_set<std::string> scriptAreas;
 
 		CArray2D<int> staticObjects;
 
@@ -196,7 +196,7 @@ public:
 
 	void AddStaticObjectTile( const SVector &vTile, const int nObjectID, const float fHeight );
 	void RemoveStaticObjectTile( const SVector &vTile, const int nObjectID );
-	void ReplaceStaticObjects( const int nNewID, const hash_set<int> &oldIDs );
+	void ReplaceStaticObjects( const int nNewID, const std::unordered_set<int> &oldIDs );
 
 	bool IsTraceable( const SVector &tile1, const SVector &tile2 );
 

@@ -2,7 +2,7 @@
 
 #include "Common_RTS_AI/TerraAIObserver.h"
 
-typedef list<CVec2> CRiverSounds;
+typedef std::list<CVec2> CRiverSounds;
 
 class CTerraAIObserverInGame :	public CTerraAIObserver
 {

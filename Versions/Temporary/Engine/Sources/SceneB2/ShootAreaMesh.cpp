@@ -4,7 +4,7 @@
 #include "ShootAreaMesh.h"
 #include "System/FastMath.h"
 
-void AppendToVector( vector<NGScene::SVertex> &dst, const vector<NGScene::SVertex> &src )
+void AppendToVector( std::vector<NGScene::SVertex> &dst, const std::vector<NGScene::SVertex> &src )
 {
 	int nStart = dst.size();
 	dst.resize( nStart + src.size() );
@@ -12,7 +12,7 @@ void AppendToVector( vector<NGScene::SVertex> &dst, const vector<NGScene::SVerte
 		dst[nStart + i] = src[i];
 }
 
-void AppendToVector( vector<STriangle> &dst, const vector<STriangle> &src, int nOffset )
+void AppendToVector( std::vector<STriangle> &dst, const std::vector<STriangle> &src, int nOffset )
 {
 	int nStart = dst.size();
 	dst.resize( nStart + src.size() );
@@ -53,7 +53,7 @@ struct SCircleHeightFunctor : public SLinearHeightFunctor
 	}	
 };
 
-void CShootAreaMesh::FillGrid( vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func )
+void CShootAreaMesh::FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func )
 {
 	grid.resize( nNumPoints );
 	const float fStep = 1.0f / ( nNumPoints - 1 );
@@ -61,7 +61,7 @@ void CShootAreaMesh::FillGrid( vector<float> &grid, int nNumPoints, SLinearHeigh
 		grid[i] = func.GetGrid( i * fStep );
 }
 
-void CShootAreaMesh::LinearTransform( vector<float> &output, const vector<float> &input, float fMin, float fMax )
+void CShootAreaMesh::LinearTransform( std::vector<float> &output, const std::vector<float> &input, float fMin, float fMax )
 {
 	output.resize( input.size() );
 	for ( int i = 0; i < input.size(); ++i )
@@ -73,9 +73,9 @@ void CShootAreaMesh::Recalc()
 	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 	NGScene::CObjectInfo::SData objData;
-	vector<NGScene::SVertex> verts;
-	vector<STriangle> allTris;
-	vector<STriangle> tris;
+	std::vector<NGScene::SVertex> verts;
+	std::vector<STriangle> allTris;
+	std::vector<STriangle> tris;
 	BuildCircle( verts, tris, fMaxRadius );
 	AppendToVector( allTris, tris, objData.verts.size() );
 	AppendToVector( objData.verts, verts );
@@ -120,7 +120,7 @@ CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float 
 	pTransform = new CCSFBTransform( transform );
 }
 
-void CShootAreaMesh::BuildCircle( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadius )
+void CShootAreaMesh::BuildCircle( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadius )
 {	
 	const float fSRadius = fRadius - fWidth;
 	const int nSegments = max( int( fRadius * FP_2PI / 4.0f ), 16 );
@@ -157,7 +157,7 @@ void CShootAreaMesh::BuildCircle( vector<NGScene::SVertex> &verts, vector<STrian
 	}
 }
 
-void CShootAreaMesh::BuildLine( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadiant )
+void CShootAreaMesh::BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadiant )
 {
 	const int nSegments = int( ( fMaxRadius - fMinRadius ) / 4.0f );
 	const float fStep = ( fMaxRadius - fMinRadius ) / nSegments;
@@ -204,19 +204,19 @@ void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
 }
 
-void CShootAreaMesh::BuildSector( vector<NGScene::SVertex> &verts, vector<STriangle> &tris )
+void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris )
 {
 	const float fHeightCoeff = 10.0f;
 	
 	const int nNumRadians = 10;
-	vector<float> radians;
-	vector<float> transformedRadians;
+	std::vector<float> radians;
+	std::vector<float> transformedRadians;
 	SRadianHeightFunctor radianFunctor;
 	FillGrid( radians, nNumRadians, radianFunctor );
 	LinearTransform( transformedRadians, radians, fStartAngle, fEndAngle );
 	const int nNumCircles = 10;
-	vector<float> circles;
-	vector<float> transformedCircles;
+	std::vector<float> circles;
+	std::vector<float> transformedCircles;
 	SCircleHeightFunctor circleFunctor;
 	FillGrid( circles, nNumCircles, circleFunctor );
 	LinearTransform( transformedCircles, circles, fMinRadius, fMaxRadius );

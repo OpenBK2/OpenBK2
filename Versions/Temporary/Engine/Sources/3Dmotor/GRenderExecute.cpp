@@ -5,6 +5,8 @@
 #include "3DLib/Transform.h"
 #include "GfxShaders.h"
 
+#include <algorithm>
+
 namespace NGScene
 {
 extern bool bNewShadows;
@@ -37,11 +39,11 @@ struct SCompareOps
 	}
 };
 
-static vector<float> geomDepths;
+static std::vector<float> geomDepths;
 struct SDepthCompare
 {
-	const vector<SRenderFragmentInfo::SElement> &elems;
-	SDepthCompare( const vector<SRenderFragmentInfo::SElement> &_elems ) : elems(_elems) {}
+	const std::vector<SRenderFragmentInfo::SElement> &elems;
+	SDepthCompare( const std::vector<SRenderFragmentInfo::SElement> &_elems ) : elems(_elems) {}
 	bool operator()( int a, int b ) const { return geomDepths[ elems[ a ].nGeometry ] < geomDepths[ elems[ b ].nGeometry ]; }
 };
 static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &scene )
@@ -58,12 +60,12 @@ static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &sc
 static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &fragment, 
 	const CSceneFragments &scene, ETrilistType triListType )
 {
-	static vector<int> indices;
+	static std::vector<int> indices;
 	int nElements = fragment.elements.size();
 	indices.resize( nElements );
 	for ( int k = 0; k < nElements; ++k )
 		indices[k] = k;
-	sort( indices.begin(), indices.end(), SDepthCompare( fragment.elements ) );
+	std::sort( indices.begin(), indices.end(), SDepthCompare( fragment.elements ) );
 	for ( int k = 0; k < nElements; ++k )
 	{
 		const SRenderFragmentInfo::SElement &element = fragment.elements[ indices[ k ] ];
@@ -73,7 +75,7 @@ static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &
 		SRenderGeometryInfo *pGeometryInfo = scene.GetGeometryInfo( element.nGeometry );
 		pGeometryInfo->pTriLists[triListType].Refresh();
 		pGeometryInfo->pVertices.Refresh();
-		const vector<NGfx::STriangleList> &tris = pGeometryInfo->pTriLists[triListType]->GetValue();
+		const std::vector<NGfx::STriangleList> &tris = pGeometryInfo->pTriLists[triListType]->GetValue();
 		ASSERT( element.nBlock * 32 < tris.size() );
 		int nBase = element.nBlock * 32;
 		int nFlags = element.nFlags;
@@ -382,7 +384,7 @@ static ETrilistType ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmd
 	return triListType;
 }
 
-static void ExecOps( NGfx::CRenderContext *pRC, const vector<CRenderCmdList::SOperation> &ops,
+static void ExecOps( NGfx::CRenderContext *pRC, const std::vector<CRenderCmdList::SOperation> &ops,
 	const CSceneFragments &scene, const SLightInfo &lightInfo )
 {
 	if ( ops.empty() )
@@ -390,8 +392,8 @@ static void ExecOps( NGfx::CRenderContext *pRC, const vector<CRenderCmdList::SOp
 
 	InitGeomDepths( pRC, scene );
 
-	vector<const CRenderCmdList::SOperation*> renderThem;
-	for ( vector<CRenderCmdList::SOperation>::const_iterator i = ops.begin(); i != ops.end(); ++i )
+	std::vector<const CRenderCmdList::SOperation*> renderThem;
+	for ( std::vector<CRenderCmdList::SOperation>::const_iterator i = ops.begin(); i != ops.end(); ++i )
 		renderThem.push_back( &(*i) );
 
 	sort( renderThem.begin(), renderThem.end(), SCompareOps() );
@@ -401,7 +403,7 @@ static void ExecOps( NGfx::CRenderContext *pRC, const vector<CRenderCmdList::SOp
 
 	const CRenderCmdList::SOperation *pPrevOp = 0;
 	ETrilistType triListType = TLT_GEOM;
-	for ( vector<const CRenderCmdList::SOperation*>::iterator i = renderThem.begin(); i != renderThem.end(); ++i )
+	for ( std::vector<const CRenderCmdList::SOperation*>::iterator i = renderThem.begin(); i != renderThem.end(); ++i )
 	{
 		const CRenderCmdList::SOperation &op = *(*i);
 		if ( op.op == RO_NOP )

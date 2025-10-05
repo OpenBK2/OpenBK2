@@ -42,7 +42,7 @@ public:
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
 	virtual const bool CanGoBackward() const { return false; }
 	virtual const bool CanGoForward() const { return true; }
-	virtual void GetNextTiles( list<SVector> *pTiles ) {}
+	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
 	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return CVec2( 0, 0 ); }
 	virtual IMemento* CreateMemento() const { return 0; }
 	virtual float GetCurvatureRadius() const { return 0.0f; }

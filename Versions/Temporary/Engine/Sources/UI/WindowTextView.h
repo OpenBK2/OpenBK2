@@ -21,14 +21,14 @@ class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 	CDBPtr<NDb::SWindowTextViewShared> pShared;
 
 	CObj<IML> pGfxText;								// text to display
-	wstring wszCustomText;
+	std::wstring wszCustomText;
 	CVec2 vScreenRect;
 	int nIDForMLHandler;
 private:	
 	bool InitText();
 	//{ overrided
-	const wstring& GetDBFormatText() const;
-	const wstring& GetDBInstanceText() const;
+	const std::wstring& GetDBFormatText() const;
+	const std::wstring& GetDBInstanceText() const;
 	//}
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
@@ -40,14 +40,14 @@ public:
 	virtual int operator&( struct IBinSaver &saver );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
-	virtual wstring GetDBText() const;
-	virtual const wstring& GetText() const;
+	virtual std::wstring GetDBText() const;
+	virtual const std::wstring& GetText() const;
 	// return true if height of window is updated
-	virtual bool SetText( const wstring &szText );
+	virtual bool SetText( const std::wstring &szText );
 	virtual void SetWidth( const int nWidth );
 
 	// do nothing (use SetText & GetText)
-	void SetTextString( const wstring &szText ) {}
+	void SetTextString( const std::wstring &szText ) {}
 
 	virtual const CTPoint<int> GetSize() const;
 

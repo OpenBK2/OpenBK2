@@ -119,7 +119,7 @@ void CInterfaceMPGameRoom::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
-bool CInterfaceMPGameRoom::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBackReaction();
@@ -163,7 +163,7 @@ bool CInterfaceMPGameRoom::Execute( const string &szSender, const string &szReac
 	return false;
 }
 
-bool CInterfaceMPGameRoom::OnPlayerCombo( const string &szSender )
+bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 {
 	int nIndex = -1;
 	for ( int i = 0; i < slots.size(); ++i )
@@ -242,7 +242,7 @@ bool CInterfaceMPGameRoom::OnChangeColorReaction()
 	return true;	
 }
 
-int CInterfaceMPGameRoom::Check( const string &szCheckName ) const
+int CInterfaceMPGameRoom::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -337,7 +337,7 @@ bool CInterfaceMPGameRoom::OnChatEnter()
 {
 	if ( pChatInput )
 	{
-		wstring wszText = pChatInput->GetText();
+		std::wstring wszText = pChatInput->GetText();
 		if ( !wszText.empty() )
 		{
 			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );					
@@ -355,7 +355,7 @@ bool CInterfaceMPGameRoom::OnChatEscape()
 
 bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 {
-	wstring wszText;
+	std::wstring wszText;
 	if ( pMsg->szName.empty() )
 		wszText = pMsg->wszText;
 	else
@@ -368,7 +368,7 @@ void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 {
 	if ( !pTimeLimit )
 		return;	  	
-	wstring wszText = NStr::ToUnicode( StrFmt( "%d min.", nTimeLimit ) );
+	std::wstring wszText = NStr::ToUnicode( StrFmt( "%d min.", nTimeLimit ) );
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );	
 }
 
@@ -388,7 +388,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	if ( pMsg->eResult != SMPUIGameRoomInitMessage::ERR_SUCCESS )
 	{
 		ReturnToGamesList();
-		string szReasonCode = "DISCONNECT_UNKNOWN";
+		std::string szReasonCode = "DISCONNECT_UNKNOWN";
 		switch ( pMsg->eResult )
 		{
 		case SMPUIGameRoomInitMessage::ERR_GAME_FULL:
@@ -407,7 +407,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 			szReasonCode = "DISCONNECT_CONNECT_FAIL";
 			break;
 		}
-		wstring wszReason = GetScreen()->GetTextEntry( szReasonCode );
+		std::wstring wszReason = GetScreen()->GetTextEntry( szReasonCode );
 		if ( wszReason.length() > 0 )
 		{
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
@@ -571,7 +571,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		slot.pAccept->ShowWindow( slot.info.bPresent );
 
 		slot.pPing->ShowWindow( i != nOwnSlot );
-		wstring wszPingTooltip = GetScreen()->GetTextEntry( "PING_PREFIX" );
+		std::wstring wszPingTooltip = GetScreen()->GetTextEntry( "PING_PREFIX" );
 
 		if ( !slot.info.bPresent )
 		{

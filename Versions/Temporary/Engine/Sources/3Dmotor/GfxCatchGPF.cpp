@@ -159,7 +159,7 @@ struct SRegionHash
 {
 	int operator()( const SRegion &r ) const { return (int)r.pData; }
 };
-typedef hash_map<SRegion,int,SRegionHash> TIgnoreHash;
+typedef std::unordered_map<SRegion,int,SRegionHash> TIgnoreHash;
 static TIgnoreHash ignoreRegions;
 
 static LONG WINAPI SkipWrongAddress( _EXCEPTION_POINTERS* ExceptionInfo )

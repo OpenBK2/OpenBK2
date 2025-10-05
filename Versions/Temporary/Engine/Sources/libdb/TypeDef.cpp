@@ -20,29 +20,29 @@ namespace NTypeDef
 // **
 // ************************************************************************************************************************ //
 
-void STypeInt::ToString( string *pRes, const CVariant &value ) const
+void STypeInt::ToString( std::string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%d", (int)value );
 }
-void STypeInt::FromString( CVariant *pRes, const string &szValue ) const
+void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	*pRes = NStr::ToInt( szValue );
 }
 
-void STypeFloat::ToString( string *pRes, const CVariant &value ) const
+void STypeFloat::ToString( std::string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%g", (float)value );
 }
-void STypeFloat::FromString( CVariant *pRes, const string &szValue ) const
+void STypeFloat::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	*pRes = NStr::ToFloat( szValue );
 }
 
-void STypeBool::ToString( string *pRes, const CVariant &value ) const
+void STypeBool::ToString( std::string *pRes, const CVariant &value ) const
 {
 	*pRes = (bool)value == false ? "false" : "true";
 }
-void STypeBool::FromString( CVariant *pRes, const string &szValue ) const
+void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	if ( szValue.empty() || szValue[0] == '0' || szValue == "false" )
 		*pRes = false;
@@ -55,38 +55,38 @@ void STypeBool::FromString( CVariant *pRes, const string &szValue ) const
 	}
 }
 
-void STypeString::ToString( string *pRes, const CVariant &value ) const
+void STypeString::ToString( std::string *pRes, const CVariant &value ) const
 {
 	*pRes = value.GetStr();
 }
-void STypeString::FromString( CVariant *pRes, const string &szValue ) const
+void STypeString::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	*pRes = szValue;
 }
 
-void STypeWString::ToString( string *pRes, const CVariant &value ) const
+void STypeWString::ToString( std::string *pRes, const CVariant &value ) const
 {
 	NStr::UnicodeToUTF8( pRes, value.GetWStr() );
 }
-void STypeWString::FromString( CVariant *pRes, const string &szValue ) const
+void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) const
 {
-	wstring wszRes;
+	std::wstring wszRes;
 	NStr::UTF8ToUnicode( &wszRes, szValue );
 	*pRes = wszRes;
 }
 
-void STypeGUID::ToString( string *pRes, const CVariant &value ) const
+void STypeGUID::ToString( std::string *pRes, const CVariant &value ) const
 {
 	NStr::GUID2String( pRes, *((GUID*)value.GetPtr()) );
 }
-void STypeGUID::FromString( CVariant *pRes, const string &szValue ) const
+void STypeGUID::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	GUID guid;
 	NStr::String2GUID( szValue, &guid );
 	*pRes = CVariant( &guid, sizeof(guid) );
 }
 
-void STypeBinary::ToString( string *pRes, const CVariant &value ) const
+void STypeBinary::ToString( std::string *pRes, const CVariant &value ) const
 {
 	NI_ASSERT( value.GetBlobSize() == nBinaryObjectSize, "Wrong binary object size" );
 	const int nSize = Min( (int)value.GetBlobSize(), nBinaryObjectSize );
@@ -94,7 +94,7 @@ void STypeBinary::ToString( string *pRes, const CVariant &value ) const
 	pRes->resize( nSize * 2 );
 	NStr::BinToString( value.GetPtr(), nSize, (char*)pRes->data() );
 }
-void STypeBinary::FromString( CVariant *pRes, const string &szValue ) const
+void STypeBinary::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	const int nSize = szValue.size() / 2;
 	BYTE *pData = new BYTE[nSize];
@@ -103,7 +103,7 @@ void STypeBinary::FromString( CVariant *pRes, const string &szValue ) const
 	delete []pData;
 }
 
-void STypeEnum::ToString( string *pRes, const CVariant &value ) const
+void STypeEnum::ToString( std::string *pRes, const CVariant &value ) const
 {
 	if ( value.GetType() == CVariant::VT_STR )
 	{
@@ -113,7 +113,7 @@ void STypeEnum::ToString( string *pRes, const CVariant &value ) const
 	else if ( value.GetType() == CVariant::VT_INT )
 	{
 		const int nValue = value;
-		for ( vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+		for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 		{
 			if ( it->nVal == nValue )
 			{
@@ -124,9 +124,9 @@ void STypeEnum::ToString( string *pRes, const CVariant &value ) const
 	}
 	*pRes = entries.empty() ? "" : entries[0].szName;
 }
-void STypeEnum::FromString( CVariant *pRes, const string &szValue ) const
+void STypeEnum::FromString( CVariant *pRes, const std::string &szValue ) const
 {
-	for ( vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+	for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
 		if ( it->szName == szValue )
 		{
@@ -137,16 +137,16 @@ void STypeEnum::FromString( CVariant *pRes, const string &szValue ) const
 	*pRes = entries.empty() ? CVariant() : entries[0].nVal;
 }
 
-void STypeArray::ToString( string *pRes, const CVariant &value ) const
+void STypeArray::ToString( std::string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%d", (int)value );
 }
-void STypeArray::FromString( CVariant *pRes, const string &szValue ) const
+void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	*pRes = NStr::ToInt( szValue );
 }
 
-void STypeRef::ToString( string *pRes, const CVariant &value ) const
+void STypeRef::ToString( std::string *pRes, const CVariant &value ) const
 {
 	NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL, StrFmt("Can't convert type %d to DBID", value.GetType()), return );
 	if ( value.GetType() == CVariant::VT_NULL )
@@ -154,11 +154,11 @@ void STypeRef::ToString( string *pRes, const CVariant &value ) const
 	else
 		*pRes = value.GetDBID().ToString();
 }
-void STypeRef::FromString( CVariant *pRes, const string &szValue ) const
+void STypeRef::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	*pRes = CDBID( szValue );
 }
-void STypeRef::GetRefTypesList( vector<const STypeClass *> *pTypesList ) const
+void STypeRef::GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const
 {
 	if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>(pRefType) )
 	{
@@ -209,7 +209,7 @@ CVariant STypeGUID::GetDefaultValue() const
 
 CVariant STypeBinary::GetDefaultValue() const 
 { 
-	vector<BYTE> buffer( nBinaryObjectSize );
+	std::vector<BYTE> buffer( nBinaryObjectSize );
 	fill( buffer.begin(), buffer.end(), 0 );
 	CVariant var( &(buffer[0]), nBinaryObjectSize );
 	return var; 
@@ -224,9 +224,9 @@ CVariant STypeBinary::GetDefaultValue() const
 // ************************************************************************************************************************ //
 
 void STypeStructBase::AddField( STypeDef *pType, 
-																const string &szName, 
+																const std::string &szName,
 																const int nChunkID, 
-																const wstring &wszDesc, 
+																const std::wstring &wszDesc,
 							                  SConstraints *pConstraints, 
 																SAttributes *pAttributes,
 																const CVariant &_vtDefVal )
@@ -270,7 +270,7 @@ CVariant STypeStructBase::SField::GetDefaultValue() const
 		return checked_cast_ptr<STypeSimple *>(pType)->GetDefaultValue();
 }
 
-bool STypeStructBase::SField::HasAttribute( const string &szName ) const 
+bool STypeStructBase::SField::HasAttribute( const std::string &szName ) const
 {
 	// check field's attribs
 	if ( pAttributes && pAttributes->attributes.find( szName ) != pAttributes->attributes.end() )
@@ -291,12 +291,12 @@ bool STypeStructBase::SField::HasAttribute( const string &szName ) const
 	return false;
 }
 
-const CVariant *STypeStructBase::SField::GetAttribute( const string &szName ) const
+const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName ) const
 {
 	// check field's attribs
 	if ( pAttributes )
 	{
-		hash_map<string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
+		std::unordered_map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
 		if ( pos != pAttributes->attributes.end() )
 			return &( pos->second );
 	}
@@ -306,7 +306,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const string &szName ) co
 		const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
 		if ( pTypeBinary->pAttributes )
 		{
-			hash_map<string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
+			std::unordered_map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
 			if ( pos != pTypeBinary->pAttributes->attributes.end() )
 				return &( pos->second );
 		}
@@ -316,7 +316,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const string &szName ) co
 		const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
 		if ( pTypeStruct->pAttributes )
 		{
-			hash_map<string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
+			std::unordered_map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
 			if ( pos != pTypeStruct->pAttributes->attributes.end() )
 				return &( pos->second );
 		}

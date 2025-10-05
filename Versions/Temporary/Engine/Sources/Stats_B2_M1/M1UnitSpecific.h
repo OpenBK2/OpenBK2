@@ -44,7 +44,7 @@ namespace NDb
 		public:
 			CDBPtr< SVisObj > pScaled;
 			CDBPtr< SVisObj > pDynamic;
-			string szLocatorName;
+			std::string szLocatorName;
 			float fStartScaleSpeed;
 			float fHideStaticSpeed;
 
@@ -54,13 +54,13 @@ namespace NDb
 				fHideStaticSpeed( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
-		vector< SHelicopterAxis > axes;
+		std::vector< SHelicopterAxis > axes;
 		float fFlyingHeight;
 		float fMaxSpeed;
 		float fMaxAcceleration;

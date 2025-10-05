@@ -6,7 +6,7 @@ class CPool
 	{
 		T data[N_BLOCK_SIZE];
 	};
-	list<SBlock> data;
+	std::list<SBlock> data;
 	T *pCurrent, *pLast;
 
 	CPool( const CPool &a ) { ASSERT(0); }
@@ -14,7 +14,7 @@ class CPool
 	int operator&( IBinSaver &f ) { ASSERT(0); return 0; }
 	__declspec(noinline) void AllocNewBlock()
 	{
-		SBlock *pBlock = &*data.insert( data.end() );
+		SBlock *pBlock = &data.emplace_back();
 		pCurrent = &pBlock->data[-1];
 		pLast = &pBlock->data[N_BLOCK_SIZE - 1];
 	}
@@ -22,7 +22,7 @@ public:
 	struct SIterator
 	{
 		T *p, *pBlockStart;
-		typename list<SBlock>::iterator i;
+		typename std::list<SBlock>::iterator i;
 		CPool *pPool;
 
 		SIterator(): pPool(0), p(0), pBlockStart(0) {}

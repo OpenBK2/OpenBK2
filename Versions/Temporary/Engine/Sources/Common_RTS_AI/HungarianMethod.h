@@ -12,10 +12,10 @@ class COMMON_RTS_AI_EXPORT CHungarianMethod
 {
 	int nSize;
 	CArray2D<float> matrix;
-	vector<int> result;
+	std::vector<int> result;
 
 	CArray2D<int> marks;
-	vector<int> row, col, markRow, markCol;
+	std::vector<int> row, col, markRow, markCol;
 
 	void Minimize();
 	void MarkZeros();

@@ -21,11 +21,11 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fWidth;
 	
 	CVec2 GetCenter();
-	static void FillGrid( vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func );
-	static void LinearTransform( vector<float> &output, const vector<float> &input, float fMin, float fMax );
-	void BuildCircle( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadius );
-	void BuildLine( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadiant );
-	void BuildSector( vector<NGScene::SVertex> &verts, vector<STriangle> &tris );
+	static void FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func );
+	static void LinearTransform( std::vector<float> &output, const std::vector<float> &input, float fMin, float fMax );
+	void BuildCircle( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadius );
+	void BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadiant );
+	void BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris );
 	static void FillVertexData( NGScene::SVertex &vertex );
 
 protected:

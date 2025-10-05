@@ -139,7 +139,7 @@ DWORD STGTerraSet::CalcCheckSum() const
 }
 
 
-string EnumToString( NDb::EWeatherType eValue )
+std::string EnumToString( NDb::EWeatherType eValue )
 {
 	switch ( eValue )
 	{
@@ -154,7 +154,7 @@ string EnumToString( NDb::EWeatherType eValue )
 	}
 }
 
-NDb::EWeatherType NDb::StringToEnum_NDb_EWeatherType( const string &szValue )
+NDb::EWeatherType NDb::StringToEnum_NDb_EWeatherType( const std::string &szValue )
 {
 	if ( szValue == "WEATHER_RAIN" )
 		return NDb::WEATHER_RAIN;
@@ -166,7 +166,7 @@ NDb::EWeatherType NDb::StringToEnum_NDb_EWeatherType( const string &szValue )
 }
 
 
-void SWeather::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWeather::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "WindDirection", (BYTE*)&nWindDirection - pThis, sizeof(nWindDirection), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "WindForce", (BYTE*)&nWindForce - pThis, sizeof(nWindForce), NTypeDef::TYPE_TYPE_INT );
@@ -214,7 +214,7 @@ DWORD SWeather::CalcCheckSum() const
 
 
 
-void SWeatherDesc::SAmbientSoundDescr::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWeatherDesc::SAmbientSoundDescr::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AmbientSound", (BYTE*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "SoundLength", (BYTE*)&fSoundLength - pThis, sizeof(fSoundLength), NTypeDef::TYPE_TYPE_FLOAT );

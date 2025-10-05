@@ -1,8 +1,10 @@
 #pragma once
 
+#include <algorithm>
+
 class CAddPointFunctional
 {
-	vector<SSpiralPoint> *pPoints;
+	std::vector<SSpiralPoint> *pPoints;
 	CArray2D1Bit *pMask;
 	int nRadius;
 	int nOffset;
@@ -18,14 +20,14 @@ protected:
 	}
 
 public:
-	CAddPointFunctional( vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius ) : pPoints( _pPoints ), pMask( _pMask ), nRadius( _nRadius ) { nOffset = ( pMask->GetSizeX()-1 ) / 2; }
+	CAddPointFunctional( std::vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius ) : pPoints( _pPoints ), pMask( _pMask ), nRadius( _nRadius ) { nOffset = ( pMask->GetSizeX()-1 ) / 2; }
 	void operator()( int x, int y ) { SetPoint( x, y ); }
 };
 
 class CAddPoint8Functional : public CAddPointFunctional
 {
 public:
-	CAddPoint8Functional( vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius ) : CAddPointFunctional( _pPoints, _pMask, _nRadius ) {}
+	CAddPoint8Functional( std::vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius ) : CAddPointFunctional( _pPoints, _pMask, _nRadius ) {}
 
 	void operator()( int x, int y )
 	{
@@ -56,7 +58,7 @@ struct SSpiralPointSort
 	}
 };
 
-void GenerateSpiral( vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, vector<int> &lengths, const int nMaxRadius )
+void GenerateSpiral( std::vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, std::vector<int> &lengths, const int nMaxRadius )
 {
 	spiral.clear();
 	spiralCoords.Clear();
@@ -97,7 +99,7 @@ void GenerateSpiral( vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, 
 		}
 
 		// sort spiral and calculate segments for every cell
-		sort( spiral.begin(), spiral.end(), SSpiralPointSort() );
+		std::sort( spiral.begin(), spiral.end(), SSpiralPointSort() );
 		spiral[0].sector.wStartAngle = 0;
 		spiral[0].sector.wEndAngle = 65535;
 		int nStartCell = 1;			// first cell with current radius

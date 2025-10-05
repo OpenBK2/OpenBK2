@@ -54,7 +54,7 @@ namespace NDb
 			nPauseRandom( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -161,7 +161,7 @@ namespace NDb
 			fWeight( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -173,8 +173,8 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SPlayList )
 	public:
 		enum { typeID = 0x11181303 };
-		vector< CDBPtr< SComposition > > stillOrder;
-		vector< SCompositionDesc > randomOrder;
+		std::vector< CDBPtr< SComposition > > stillOrder;
+		std::vector< SCompositionDesc > randomOrder;
 		CDBPtr< SFade > pFadeIn;
 		CDBPtr< SFade > pFadeOut;
 
@@ -194,7 +194,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SMapMusic )
 	public:
 		enum { typeID = 0x11181305 };
-		vector< CDBPtr< SPlayList > > playLists;
+		std::vector< CDBPtr< SPlayList > > playLists;
 
 		SMapMusic() { }
 		//

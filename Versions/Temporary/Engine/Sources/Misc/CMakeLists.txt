@@ -8,7 +8,6 @@ set(SOURCES
     BSUtil.cpp
     Geom.cpp
     HPTimer.cpp
-    ntree.cpp
     PlaneGeometry.cpp
     Progress.cpp
     Spline.cpp

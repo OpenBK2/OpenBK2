@@ -12,12 +12,12 @@ class CObjectFader : public CObjectBase
 	ZDATA
 	CDGPtr<CFuncBase<float> > pFader;
 	CPtr<CObjectBase> pObj;
-	vector<CDGPtr<CFuncBase<float> > > transpChannels;
+	std::vector<CDGPtr<CFuncBase<float> > > transpChannels;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFader); f.Add(3,&pObj); f.Add(4,&transpChannels); return 0; }
 protected:
 	CObjectFader() {}
 public:
-	CObjectFader( CObjectBase *_pObj, CFuncBase<float> *_pFader, vector<CPtr<CFuncBase<float> > > *_pTranspChannels );
+	CObjectFader( CObjectBase *_pObj, CFuncBase<float> *_pFader, std::vector<CPtr<CFuncBase<float> > > *_pTranspChannels );
 	bool Update( void *p );
 	const CPtr<CObjectBase> &getObj() { return pObj;};
 

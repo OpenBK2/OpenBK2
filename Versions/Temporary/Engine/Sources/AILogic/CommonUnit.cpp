@@ -557,7 +557,7 @@ const bool CCommonUnit::TryExecuteCommand( CAICommand *pCommand, const bool bPla
 		if ( nCommandLeft == 0 )
 		{
 			CQueueUnit::DelCmdQueue( GetUniqueIdQU() );
-			vector<int> availEnemies;
+			std::vector<int> availEnemies;
 			for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 			{
 				if ( theDipl.IsPlayerExist( i ) && theDipl.GetDiplStatus( GetPlayer(), i ) == EDI_ENEMY )

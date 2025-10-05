@@ -21,7 +21,7 @@ public:
 		bool bWrongVersion;     // to catch different version
 		CMemoryStream info;
 	};
-	typedef list<SServerInfo> CServerInfoList;
+	typedef std::list<SServerInfo> CServerInfoList;
 private:
 	CServerInfoList servers;
 	float fTime, fRequestDelay;
@@ -46,7 +46,7 @@ public:
 	void ProcessServerInfo( const CNodeAddress &addr, CBitStream &bits, float fServerListTimeout );
 	void WriteRequest( CBitStream *pBits );
 	// server search
-	bool CanSendRequest( const CNodeAddress &broadcast, vector<CNodeAddress> *pDest );
+	bool CanSendRequest( const CNodeAddress &broadcast, std::vector<CNodeAddress> *pDest );
 };
 
 }

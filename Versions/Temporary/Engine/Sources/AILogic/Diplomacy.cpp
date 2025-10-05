@@ -10,7 +10,7 @@ CDiplomacy theDipl;
 
 extern CDifficultyLevel theDifficultyLevel;
 
-void CDiplomacy::Load( const vector<int> &_playerParty )
+void CDiplomacy::Load( const std::vector<int> &_playerParty )
 {
 	if ( !GetScenarioTracker() )
 		return;

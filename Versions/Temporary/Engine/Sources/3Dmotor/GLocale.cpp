@@ -54,7 +54,7 @@ CFontInfo* CTextLocaleInfo::SearchFont( const SFont &sFont )
 	int nSize = 0;
 	CPtr<CFontInfo> pResFontInfo;
 
-	for ( vector< CObj<CFontInfo> >::iterator iTemp = fonts.begin(); iTemp != fonts.end(); iTemp++ )
+	for ( std::vector< CObj<CFontInfo> >::iterator iTemp = fonts.begin(); iTemp != fonts.end(); iTemp++ )
 	{
 		const SFont &sDBFont = (*iTemp)->GetType();
 		if ( sDBFont.szName != sFont.szName )

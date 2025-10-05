@@ -54,7 +54,7 @@
 
 const int CLIENT_UNIQUE_ID_UNDER_CONSTRUCTION_LIST = -10; // look for other CLIENT_UNIQUE_ID_xxx (криво, но менять поздно)
 
-static list< CPtr<IClientUpdatableProcess> > processesToUpdate;
+static std::list< CPtr<IClientUpdatableProcess> > processesToUpdate;
 
 // ************************************************************************************************************************ //
 // **
@@ -268,7 +268,7 @@ void CUpdatableWorld::UpdateAcknowledgemets()
 					CDynamicCast<IMOSquad> pSquad = pMO;
 					if ( pSquad )
 					{
-						vector<CMOSelectable*> passangers;
+						std::vector<CMOSelectable*> passangers;
 						pSquad->GetPassangers( &passangers );
 						if ( !passangers.empty() )
 						{
@@ -346,7 +346,7 @@ void CUpdatableWorld::UpdateClientData()
 	const bool bNoVisual = NGlobal::GetVar( "no_visual_updates", 0 );
 	if ( !bNoVisual )
 	{
-		for ( list< CPtr<IClientUpdatableProcess> >::iterator it = processesToUpdate.begin(); it != processesToUpdate.end(); )
+		for ( std::list< CPtr<IClientUpdatableProcess> >::iterator it = processesToUpdate.begin(); it != processesToUpdate.end(); )
 		{
 			CPtr<IClientUpdatableProcess> pProcess = *it;
 			if ( IsValid(pProcess) == false || pProcess->Update(currTime) == false )
@@ -1209,7 +1209,7 @@ void CUpdatableWorld::UpdateRangeAreas( const SAIBasicUpdate *_pUpdate )
 	for ( int i = 0; i < pUpdate->info.size(); ++i )
 	{
 		const SShootAreas &areas = pUpdate->info[i];
-		for ( list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
+		for ( std::list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
 		{
 			const SShootArea &area = *it;
 			DWORD dwColor = area.GetColor();
@@ -1589,7 +1589,7 @@ void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate * _pU
 		}
 
 		// Display locked/unlocked tiles
-		vector<SVector> tiles;
+		std::vector<SVector> tiles;
 
 		tiles.resize( pUpdate->buildTiles.size() );
 		for( int i = 0; i < pUpdate->buildTiles.size(); ++i )
@@ -1693,7 +1693,7 @@ void CUpdatableWorld::RemoveMapObj( int nID, bool bGlobalRemove )
 	OnDeadOrRemoveMapObj( nID );
 }
 
-void CUpdatableWorld::GetObjects( list<int> *pObjects ) const
+void CUpdatableWorld::GetObjects( std::list<int> *pObjects ) const
 {
 	for ( CMapObjMap::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
@@ -1701,7 +1701,7 @@ void CUpdatableWorld::GetObjects( list<int> *pObjects ) const
 	}
 }
 
-void CUpdatableWorld::GetObjects( vector<IB2MapObj*> *pObjects ) const
+void CUpdatableWorld::GetObjects( std::vector<IB2MapObj*> *pObjects ) const
 {
 	pObjects->reserve( objects.size() );
 	for ( CMapObjMap::const_iterator it = objects.begin(); it != objects.end(); ++it )
@@ -1711,7 +1711,7 @@ void CUpdatableWorld::GetObjects( vector<IB2MapObj*> *pObjects ) const
 	}
 }
 
-void CUpdatableWorld::GetObjects( vector<CMapObj*> *pObjects ) const
+void CUpdatableWorld::GetObjects( std::vector<CMapObj*> *pObjects ) const
 {
 	pObjects->reserve( objects.size() );
 	for ( CMapObjMap::const_iterator it = objects.begin(); it != objects.end(); ++it )
@@ -1777,7 +1777,7 @@ void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, 
 					if ( const NDb::SHPObjectRPGStats *pStats = pUpdate->info.pStats )
 					{
 						const CDBID &dbid = pStats->GetDBID();
-						const string szType = typeid(*pStats).name();
+						const std::string szType = typeid(*pStats).name();
 						csSystem << CC_ORANGE << "ERROR: Failed to create object " << szType << ": " << dbid.ToString() << endl;
 					}
 				}
@@ -1939,8 +1939,8 @@ void CUpdatableWorld::UpdateDamage( const SAIBasicUpdate * _pUpdate )
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO )
 	{
-		list<int> probableAttached;
-		list<IScene::SPickObjInfo> pickedObj;
+		std::list<int> probableAttached;
+		std::list<IScene::SPickObjInfo> pickedObj;
 		Scene()->PickAllObjects( pUpdate->vExplosionPos, pMO->GetCenter(), &pickedObj, &probableAttached );
 
 		CPtr<IClientUpdatableProcess> pProcess = pMO->AIUpdateDamage( pUpdate->nProjectileUniqueID, pUpdate->fDamage, probableAttached, Scene(), eSeason, true );
@@ -2190,11 +2190,11 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 {
 	if ( pUpdate->info.nUnitID == -1 )
 	{
-		hash_map<int, CObj<CLaserMarkTrace> >::iterator pos = laserMarks.find( pUpdate->info.nLaserMarkID );
+		std::unordered_map<int, CObj<CLaserMarkTrace> >::iterator pos = laserMarks.find( pUpdate->info.nLaserMarkID );
 		if ( pos != laserMarks.end() )
 			laserMarks.erase( pos );
 
-		hash_map<int, CObj<CObjectBase> >::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
+		std::unordered_map<int, CObj<CObjectBase> >::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
 		if ( posMesh != laserMarksMeshes.end() )
 			laserMarksMeshes.erase( posMesh );
 	}
@@ -2207,8 +2207,8 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 			const CVec3 vStart( pMOUnit->GetFirePoint( pUpdate->info.nPlatform, pUpdate->info.nGun ) );
 			CVec3 vTarget( pUpdate->info.vTarget );
 			AI2Vis( &vTarget );
-			hash_map<int, CObj<CLaserMarkTrace> >::iterator pos = laserMarks.find( pUpdate->info.nLaserMarkID );
-			hash_map<int, CObj<CObjectBase> >::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
+			std::unordered_map<int, CObj<CLaserMarkTrace> >::iterator pos = laserMarks.find( pUpdate->info.nLaserMarkID );
+			std::unordered_map<int, CObj<CObjectBase> >::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
 			if ( pos != laserMarks.end() && posMesh != laserMarksMeshes.end() )
 			{
 				CPtr<CLaserMarkTrace> pTrace = pos->second;

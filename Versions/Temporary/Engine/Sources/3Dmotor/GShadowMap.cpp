@@ -8,13 +8,13 @@ namespace NGeometry
 
 struct SPolygon
 {
-	vector<CVec4> vertices;
+	std::vector<CVec4> vertices;
 	CVec4 vPlane;
 };
 
 struct SPolyhedron
 {
-	vector<SPolygon> facets;
+	std::vector<SPolygon> facets;
 };
 
 struct SEdge
@@ -64,7 +64,7 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 static void Split( SPolyhedron *pRes, const SPlane &p )
 {
 	SPolyhedron src = *pRes;
-	list<SEdge> edges;
+	std::list<SEdge> edges;
 	pRes->facets.resize(0);
 	for ( int k = 0; k < src.facets.size(); ++k )
 	{
@@ -132,7 +132,7 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 		{
 			CVec4 v = onPlane.vertices.back();
 			bool bFound = false;
-			for ( list<SEdge>::iterator i = edges.begin(); i != edges.end(); ++i )
+			for ( std::list<SEdge>::iterator i = edges.begin(); i != edges.end(); ++i )
 			{
 				if ( v == i->vStart )
 				{
@@ -188,7 +188,7 @@ static SPolygon GetQuad( const CVec4 &a, const CVec4 &b, const CVec4 &c, const C
 
 struct SHashedHedron
 {
-	vector<CVec4> pts;
+	std::vector<CVec4> pts;
 	struct SEdge
 	{
 		int nStart, nEnd;
@@ -197,11 +197,11 @@ struct SHashedHedron
 	};
 	struct SPolygon
 	{
-		vector<int> edges;
+		std::vector<int> edges;
 		CVec4 vPlane;
 	};
-	vector<SEdge> edges;
-	vector<SPolygon> polys;
+	std::vector<SEdge> edges;
+	std::vector<SPolygon> polys;
 };
 
 static int AddPoint( SHashedHedron *pRes, const CVec4 &v )
@@ -248,7 +248,7 @@ static void Assign( SHashedHedron *pRes, const SPolyhedron &src )
 
 static bool IsClosed( const SHashedHedron &src )
 {
-	vector<int> count;
+	std::vector<int> count;
 	count.resize( src.edges.size(), 0 );
 	for ( int k = 0; k < src.polys.size(); ++k )
 	{
@@ -296,14 +296,14 @@ static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeomet
 	NGeometry::Assign( &h, src );
 	//ASSERT( NGeometry::IsClosed( h ) );
 
-	vector<int> up( h.polys.size() );
+	std::vector<int> up( h.polys.size() );
 	for ( int k = 0; k < h.polys.size(); ++k )
 	{
 		const CVec4 vPlane = h.polys[k].vPlane;
 		up[k] = vPlane * CVec4(ptDir,0) < 0;
 	}
 
-	vector<int> rPolys( h.edges.size(), 0 ), lPolys( h.edges.size(), 0 );
+	std::vector<int> rPolys( h.edges.size(), 0 ), lPolys( h.edges.size(), 0 );
 	for ( int k = 0; k < h.polys.size(); ++k )
 	{
 		NGeometry::SHashedHedron::SPolygon &p = h.polys[k];
@@ -380,7 +380,7 @@ static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
 	*pfB = fShift;
 }
 
-static void CalcMinMax( const vector<CVec3> &points, const CVec4 &vDir, float *pfMin, float *pfMax )
+static void CalcMinMax( const std::vector<CVec3> &points, const CVec4 &vDir, float *pfMin, float *pfMax )
 {
 	float fMin = 1e38f, fMax = -1e38f;
 	for ( int k = 0; k < points.size(); ++k )
@@ -392,7 +392,7 @@ static void CalcMinMax( const vector<CVec3> &points, const CVec4 &vDir, float *p
 	*pfMin = fMin;
 	*pfMax = fMax;
 }
-static float CalcRange( const vector<CVec3> &points, const CVec4 &vDir )
+static float CalcRange( const std::vector<CVec3> &points, const CVec4 &vDir )
 {
 	float fMin, fMax;
 	CalcMinMax( points, vDir, &fMin, &fMax );
@@ -407,7 +407,7 @@ static void DefaultShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShad
 
 struct SAreaCalcInfo
 {
-	vector<CVec3> points;
+	std::vector<CVec3> points;
 	CVec3 vXBase, vYBase, vCamera;
 	float fCW;//, fMinimalScale;
 };
@@ -532,7 +532,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	CVec3 yDir = vLightDir ^ CVec3(0,1,0);
 	Normalize( &yDir );
 
-	hash_map<CVec3,bool, SVec3Hash> pointHash;
+	std::unordered_map<CVec3,bool, SVec3Hash> pointHash;
 	for ( int k = 0; k < projHedron.facets.size(); ++k )
 	{
 		const NGeometry::SPolygon &p = projHedron.facets[k];
@@ -606,7 +606,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	pRes->vDirY = svDirY;
 	
 	SAreaCalcInfo areaInfo;
-	for ( hash_map<CVec3,bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
+	for ( std::unordered_map<CVec3,bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
 		areaInfo.points.push_back( i->first );
 
 	// base orientation

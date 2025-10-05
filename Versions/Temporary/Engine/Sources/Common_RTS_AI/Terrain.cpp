@@ -5,9 +5,10 @@
 #include "Common_RTS_AI/AIMap.h"
 #include "Image/Image.h"
 #include "Image/ImageTGA.h"
-#include "Misc/NAlgoritm.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "Misc/Bresenham.h"
+
+#include <algorithm>
 
 //*******************************************************************
 //*												  CTerrain																*
@@ -83,9 +84,9 @@ const bool CTerrain::CanDigEntrenchment( const int x, const int y ) const
 	return !digImpossible.GetData( x, y );
 }
 
-const void CTerrain::AddUndigableTiles( const list<SVector> &tiles )
+const void CTerrain::AddUndigableTiles( const std::list<SVector> &tiles )
 {
-	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		digImpossible.SetData( it->x, it->y );
 }
 
@@ -217,9 +218,9 @@ const ETerrainTypes CTerrain::GetTerrainType( const int nX, const int nY ) const
 		return ETerrainTypes( terrainTypes.GetData( nX, nY ) );
 }
 
-void CTerrain::AddWaterTiles( const list<SVector> &tiles )
+void CTerrain::AddWaterTiles( const std::list<SVector> &tiles )
 {
-	for ( list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	for ( std::list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		const SVector &tile = *iter;
 		if ( pAIMap->IsTileInside(tile) )
@@ -227,7 +228,7 @@ void CTerrain::AddWaterTiles( const list<SVector> &tiles )
 	}
 }
 
-void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench )
+void CTerrain::AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench )
 {
 	const ELockMode oldMode = eMode;
 
@@ -252,7 +253,7 @@ void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClas
 
 	int downX = pAIMap->GetSizeX() - 1, downY = pAIMap->GetSizeY() - 1, upX = 0, upY = 0;
 
-	for( list<SVector>::const_iterator it = vTiles.begin(); it != vTiles.end(); ++it )
+	for( std::list<SVector>::const_iterator it = vTiles.begin(); it != vTiles.end(); ++it )
 	{
 		const SVector tile = *it;
 		if ( pAIMap->IsTileInside( tile ) )
@@ -326,9 +327,9 @@ void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClas
 	SetMode( oldMode );
 }
 
-void CTerrain::AddMarineTiles( const list<SVector> coastTiles, const BYTE coastSoilType, const list<SVector> waterTiles, const BYTE waterSoilType )
+void CTerrain::AddMarineTiles( const std::list<SVector> coastTiles, const BYTE coastSoilType, const std::list<SVector> waterTiles, const BYTE waterSoilType )
 {
-	for ( list<SVector>::const_iterator it = coastTiles.begin(); it != coastTiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = coastTiles.begin(); it != coastTiles.end(); ++it )
 	{
 		if ( pAIMap->IsTileInside( *it ) )
 		{
@@ -339,7 +340,7 @@ void CTerrain::AddMarineTiles( const list<SVector> coastTiles, const BYTE coastS
 		}
 	}
 
-	for ( list<SVector>::const_iterator it = waterTiles.begin(); it != waterTiles.end(); ++it )
+	for ( std::list<SVector>::const_iterator it = waterTiles.begin(); it != waterTiles.end(); ++it )
 	{
 		if ( pAIMap->IsTileInside( *it ) )
 		{
@@ -430,7 +431,7 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 
 	unitsRects[id] = SUnitTileInfo( profile, bWater );
 
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	if ( profile.bRect )
 	{
 		const SRect &rect( profile.rect );
@@ -451,7 +452,7 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 
 	// lock tiles
 	//DebugTrace( "CTerrain::LockUnitProfile( %d ( %2.3f x %2.3f, %2.3f ), %d, ..., %s )", tiles.size(), profile.GetCenter().x, profile.GetCenter().y, profile.GetRadius(), id, bWater ? "true" : "false" );
-	for ( vector<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	for ( std::vector<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		const SVector &tile( *iter );
 
@@ -489,7 +490,7 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 	CUnitsRects::iterator pos = unitsRects.find( id );
 	if ( pos != unitsRects.end() )
 	{
-		vector<SVector> tiles;
+		std::vector<SVector> tiles;
 		if ( pos->second.profile.bRect )
 		{
 			const SRect &rect( pos->second.profile.rect );
@@ -510,7 +511,7 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 		const int nWater = pos->second.bWater ? 1 : 0; 
 
 		//DebugTrace( "CTerrain::UnlockUnitProfile( %d ( %2.3f x %2.3f, %2.3f ), %d, ..., %s )", tiles.size(), pos->second.profile.GetCenter().x, pos->second.profile.GetCenter().y, pos->second.profile.GetRadius(), id, *pbWater ? "true" : "false" );
-		for ( vector<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		for ( std::vector<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		{
 			const SVector &tile( *iter );
 
@@ -575,18 +576,18 @@ struct SUpDownFinder
 	}
 };
 
-void CTerrain::LockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
+void CTerrain::LockTiles( const std::list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
 {
-	for ( list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	for ( std::list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		LockTile( *iter );
 
 	SUpDownFinder finder( *pDownTile, *pUpTile, pAIMap );
 	for_each( tiles.begin(), tiles.end(), finder );
 }
 
-void CTerrain::UnlockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
+void CTerrain::UnlockTiles( const std::list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
 {
-	for ( list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	for ( std::list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		UnlockTile( *iter );
 
 	SUpDownFinder finder( *pDownTile, *pUpTile, pAIMap );
@@ -630,12 +631,12 @@ void CTerrain::InitExplosionTerrainTypes()
 
 bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater )
 {
-	hash_map< int, pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
+	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
 	
 	if ( pos == tmpUnlockUnitsMap.end() )
 	{
 		const int nWater = bWater ? 1 : 0;
-		list<SVector> tiles;
+		std::list<SVector> tiles;
 
 		SUnitProfile profile = unitProfile;
 		profile.Compress( 1.25f );
@@ -652,13 +653,13 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 
 		CTmpLockInfoBuf tmpUnlockUnitsBuf;
 
-		for ( list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		{
 			const SVector tile = *iter;
 
 			if ( pAIMap->IsTileInside( tile ) )
 			{
-				tmpUnlockUnitsBuf.push_back();
+				tmpUnlockUnitsBuf.emplace_back();
 				tmpUnlockUnitsBuf.back().tile = tile;
 				tmpUnlockUnitsBuf.back().nUnitsBuf = unitsBuf[nWater][tile.y][tile.x];
 				tmpUnlockUnitsBuf.back().aiClass = buf[tile.y][tile.x];
@@ -667,7 +668,7 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 			}
 		}
 
-		tmpUnlockUnitsMap[id] = pair< bool, CTmpLockInfoBuf >( bWater, tmpUnlockUnitsBuf );
+		tmpUnlockUnitsMap[id] = std::pair< bool, CTmpLockInfoBuf >( bWater, tmpUnlockUnitsBuf );
 
 		return true;
 	}
@@ -677,7 +678,7 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 
 void CTerrain::RemoveTemporaryUnlocking( const int id )
 {
-	hash_map< int, pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
+	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
 
 	if ( pos != tmpUnlockUnitsMap.end() )
 	{
@@ -1173,7 +1174,7 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 	const int nAIClassIndex = GetClassIndexFast( aiClass );
 	CArray2D4Bit &thisMaxes = maxes[eMode][nAIClassIndex];
 	CArray2D4Bit &thisMaxesSmooth = maxesSmooth[eMode][nAIClassIndex];
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 
 	for ( int y = _yMin; y < _yMax; ++y )
 		for ( int x = _xMin; x < _xMax; ++x )
@@ -1323,7 +1324,7 @@ void CTerrain::UpdateMaxesForRemovedStObject( const SVector &downTile, const SVe
 	eMode = oldMode;
 }
 
-void CTerrain::AddStaticObjectTiles( const list<SObjTileInfo> &tiles )
+void CTerrain::AddStaticObjectTiles( const std::list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
 	LockTiles( tiles, &downTile, &upTile );
@@ -1331,7 +1332,7 @@ void CTerrain::AddStaticObjectTiles( const list<SObjTileInfo> &tiles )
 	UpdateMaxesForAddedStObject( downTile, upTile );
 }
 
-void CTerrain::RemoveStaticObjectTiles( const list<SObjTileInfo> &tiles )
+void CTerrain::RemoveStaticObjectTiles( const std::list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
 	UnlockTiles( tiles, &downTile, &upTile );
@@ -1340,7 +1341,7 @@ void CTerrain::RemoveStaticObjectTiles( const list<SObjTileInfo> &tiles )
 	UpdateMaxesForRemovedStObject( downTile, upTile );
 }
 
-void CTerrain::RemoveStaticObjectTilesForBridge( const list<SObjTileInfo> &tiles )
+void CTerrain::RemoveStaticObjectTilesForBridge( const std::list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
 	UnlockTiles( tiles, &downTile, &upTile );
@@ -1379,7 +1380,7 @@ void CTerrain::AddLockInfo( const int nUnitID, const bool bLock, const SUnitProf
 void CTerrain::DumpLockInfo() const
 {
 #ifndef _FINALRELEASE
-	for ( vector<STerrainLockInfo>::const_iterator it = debugLockInfo.begin(); it != debugLockInfo.end(); ++it )
+	for ( std::vector<STerrainLockInfo>::const_iterator it = debugLockInfo.begin(); it != debugLockInfo.end(); ++it )
 	{
 		if ( it->bLock )
 		{
@@ -1428,7 +1429,7 @@ void CTerrain::RemoveUnitTiles( const int id )
 	}
 }
 
-void CTerrain::DumpStaticLock( const EAIClasses aiClass, const string &szFileName )
+void CTerrain::DumpStaticLock( const EAIClasses aiClass, const std::string &szFileName )
 {
 	CArray2D<DWORD> image;
 	image.SetSizes( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
@@ -1448,19 +1449,19 @@ void CTerrain::DumpStaticLock( const EAIClasses aiClass, const string &szFileNam
 	NImage::SaveImageAsTGA( &stream, image );
 }
 
-void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName )
+void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName )
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	DumpMaxes( lockMode, aiClass, szFileName, tiles );
 }
 
-void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &markTiles )
+void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &markTiles )
 {
-	vector<SVector> tiles;
+	std::vector<SVector> tiles;
 	DumpMaxes( lockMode, aiClass, szFileName, markTiles, tiles, false );
 }
 
-void ShowMarkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVector> tiles, const NImage::SColor color )
+void ShowMarkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, std::vector<SVector> tiles, const NImage::SColor color )
 {
 	if ( tiles.empty() )
 		return;
@@ -1476,7 +1477,7 @@ void ShowMarkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVect
 	}
 }
 
-void ShowLinkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVector> tiles, const NImage::SColor color )
+void ShowLinkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, std::vector<SVector> tiles, const NImage::SColor color )
 {
 	if ( tiles.empty() )
 		return;
@@ -1497,7 +1498,7 @@ void ShowLinkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVect
 	}
 }
 
-void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &tiles1, const vector<SVector> &tiles2, const bool bLink )
+void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &tiles1, const std::vector<SVector> &tiles2, const bool bLink )
 {
 	const int IMAGE_CELL_SIZE = 10;
 	CArray2D<DWORD> image;
@@ -1577,7 +1578,7 @@ void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, co
 		NImage::SaveImageAsTGA( &imageStream, image );
 }
 
-void CTerrain::DumpPassability( const string &szFileName )
+void CTerrain::DumpPassability( const std::string &szFileName )
 {
 	CArray2D<DWORD> image;
 	image.SetSizes( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
@@ -1593,7 +1594,7 @@ void CTerrain::DumpPassability( const string &szFileName )
 	NImage::SaveImageAsTGA( &imageStream, image );
 }
 
-void CTerrain::DumpBridges( const string &szFileName )
+void CTerrain::DumpBridges( const std::string &szFileName )
 {
 	CArray2D<DWORD> image;
 	image.SetSizes( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
@@ -1609,7 +1610,7 @@ void CTerrain::DumpBridges( const string &szFileName )
 	NImage::SaveImageAsTGA( &imageStream, image );
 }
 
-void CTerrain::DumpUnitsBuf( const string &szFileName )
+void CTerrain::DumpUnitsBuf( const std::string &szFileName )
 {
 	CArray2D<DWORD> image;
 	image.SetSizes( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
@@ -1657,7 +1658,7 @@ EAIClasses CTerrain::GetTileLockInfo( const int x, const int y ) const
 		return (EAIClasses)buf[y][x];
 }
 
-void CTerrain::GetLockedTiles( vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo )
+void CTerrain::GetLockedTiles( std::vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo )
 {
 	STerrainModeSetter modeSetter( ELM_ALL, this );
 	pTiles->clear();
@@ -1677,7 +1678,7 @@ int CTerrain::ShowUnitLock( const int nUnitID, const int nMarkerID ) const
 	CUnitsRects::const_iterator pos = unitsRects.find( nUnitID );
 	if ( pos != unitsRects.end() )
 	{
-		vector<SVector> tiles;
+		std::vector<SVector> tiles;
 		if ( pos->second.profile.bRect )
 		{
 			const SRect &rect( pos->second.profile.rect );
@@ -1696,7 +1697,7 @@ int CTerrain::ShowUnitLock( const int nUnitID, const int nMarkerID ) const
 
 int CTerrain::TemporaryLockUnitProfile( const SUnitProfile &profile, const EAIClasses aiClass )
 {
-	list<SObjTileInfo> tiles;
+	std::list<SObjTileInfo> tiles;
 	if ( profile.bRect )
 	{
 		const SRect &rect( profile.rect );
@@ -1707,16 +1708,16 @@ int CTerrain::TemporaryLockUnitProfile( const SUnitProfile &profile, const EAICl
 		const CCircle &circle( profile.circle );
 		pAIMap->GetTilesCoveredByCircle( circle.center, circle.r, &tiles );
 	}
-	for ( list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 		it->lockInfo = aiClass;
 
 	return TemporaryLockTiles( tiles );
 }
 
-int CTerrain::TemporaryLockTiles( list<SObjTileInfo> &tiles )
+int CTerrain::TemporaryLockTiles( std::list<SObjTileInfo> &tiles )
 {
 	CTmpLockInfoBuf2 tmpLockInfo;
-	for ( list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+	for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 		tmpLockInfo.push_back( STmpLockInfo2( SVector( it->tile.x, it->tile.y ), buf[it->tile.y][it->tile.x] ) );
 
 	AddStaticObjectTiles( tiles );
@@ -1728,11 +1729,11 @@ int CTerrain::TemporaryLockTiles( list<SObjTileInfo> &tiles )
 
 void CTerrain::RemoveTemporaryLock( const int nLockID )
 {
-	hash_map< int, CTmpLockInfoBuf2 >::iterator pos = tmpLockUnitsMap.find( nLockID );
+	std::unordered_map< int, CTmpLockInfoBuf2 >::iterator pos = tmpLockUnitsMap.find( nLockID );
 	if ( pos != tmpLockUnitsMap.end() )
 	{
 		SVector downTile( 2 * pAIMap->GetMaxMapSize(), 2 * pAIMap->GetMaxMapSize() ), upTile( -10, -10 );
-		for ( list<STmpLockInfo2>::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
+		for ( std::list<STmpLockInfo2>::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
 		{
 			buf[it->tile.y][it->tile.x] = it->aiClass;
 			downTile.x = Min( downTile.x, it->tile.x );

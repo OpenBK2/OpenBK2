@@ -178,7 +178,7 @@ void CCameraBasicMouseMutator::SwitchAutoPositioning( const bool bAllowAutoPosit
 		bAutoPositioning = bAllowAutoPositioning; 
 }
 
-void CCameraBasicMouseMutator::SwitchManualScrolling( const string &szLocker, const bool bManualOn )
+void CCameraBasicMouseMutator::SwitchManualScrolling( const std::string &szLocker, const bool bManualOn )
 {
 	if ( bManualOn )
 		manualLockers.erase( szLocker );

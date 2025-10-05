@@ -31,7 +31,7 @@ bool CInterfaceReplaySaveLoad::Init()
 	return true;
 }
 
-void CInterfaceReplaySaveLoad::SetMode( const string &szMode )
+void CInterfaceReplaySaveLoad::SetMode( const std::string &szMode )
 {
 	if ( szMode == "save" )
 	{
@@ -64,7 +64,7 @@ void CInterfaceReplaySaveLoad::ShowHideControls()
 		pPlayerList->Enable( !bSaveMode );
 }
 
-bool CInterfaceReplaySaveLoad::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceReplaySaveLoad::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
 		return OnBack();
@@ -79,7 +79,7 @@ bool CInterfaceReplaySaveLoad::Execute( const string &szSender, const string &sz
 	return false;
 }
 
-int CInterfaceReplaySaveLoad::Check( const string &szCheckName ) const
+int CInterfaceReplaySaveLoad::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -155,7 +155,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		ITextView *pItemPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 		if ( pItemName )
 			pItemName->SetText( pItemName->GetDBText() + NStr::ToUnicode( entry.szName ) );
-		wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d<br>%02d:%02d",
+		std::wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d<br>%02d:%02d",
 			entry.time.wDay, entry.time.wMonth, entry.time.wYear,
 			entry.time.wHour, entry.time.wMinute ) );
 		if ( pItemDate )
@@ -240,7 +240,7 @@ void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, 
 	if ( pFlag1 )
 		pFlag1->ShowWindow( nTeam == 1 );
 
-	string szNameList;
+	std::string szNameList;
 	for ( int i = 0; i < info.slots.size(); ++i )
 	{
 		const SMPSlot &slot = info.slots[i];
@@ -331,7 +331,7 @@ bool CInterfaceReplaySaveLoad::OnBack()
 
 void CInterfaceReplaySaveLoad::DoSaveReplay()
 {
-	string szNewName;
+	std::string szNewName;
 	if ( pNameEdit )
 		szNewName = NStr::ToMBCS( pNameEdit->GetText() );
 
@@ -341,7 +341,7 @@ void CInterfaceReplaySaveLoad::DoSaveReplay()
 	bool bResult = Singleton<IMPToUIManager>()->SaveReplay( szNewName );
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	string szErrorCode = bResult ? "T_SAVE_SUCCESSFUL" : "T_SAVE_FAILED";
+	std::string szErrorCode = bResult ? "T_SAVE_SUCCESSFUL" : "T_SAVE_FAILED";
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", GetScreen()->GetTextEntry( szErrorCode ) ).c_str() );
 
@@ -349,7 +349,7 @@ void CInterfaceReplaySaveLoad::DoSaveReplay()
 
 bool CInterfaceReplaySaveLoad::OnSave()
 {
-	string szNewName;
+	std::string szNewName;
 	if ( pNameEdit )
 		szNewName = NStr::ToMBCS( pNameEdit->GetText() );
 
@@ -389,7 +389,7 @@ bool CInterfaceReplaySaveLoad::OnLoad()
 		}
 	}
 
-	string szCmd = "replay " + entry.szName + StrFmt( " %d", nPlayFor );
+	std::string szCmd = "replay " + entry.szName + StrFmt( " %d", nPlayFor );
 
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NGlobal::ProcessCommand( NStr::ToUnicode( szCmd ) );

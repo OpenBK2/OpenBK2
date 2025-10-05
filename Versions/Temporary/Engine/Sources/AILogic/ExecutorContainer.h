@@ -30,12 +30,12 @@ class CExecutorContainer :	public IExecutorContainer
 	// executor lauched only when SExID::nID == pExecutor->GetID()
 	// otherwize it is removed from list
 
-	typedef list<SExID> CExecutorIDList;
-  typedef vector<CExecutorIDList> CExecutors;
-	typedef hash_map<CPtr<CExecutor>, bool, SExecutorPtrHash> CSleepingExecutors;
+	typedef std::list<SExID> CExecutorIDList;
+  typedef std::vector<CExecutorIDList> CExecutors;
+	typedef std::unordered_map<CPtr<CExecutor>, bool, SExecutorPtrHash> CSleepingExecutors;
 
-	typedef list< CPtr<CExecutor> > CExecutorList;
-	typedef hash_map<SExecutorEventParam, CExecutorList, SExecutorEventParamHash> CEvents;
+	typedef std::list< CPtr<CExecutor> > CExecutorList;
+	typedef std::unordered_map<SExecutorEventParam, CExecutorList, SExecutorEventParamHash> CEvents;
 
 
 	CSleepingExecutors::iterator checkIter;				// not all invalid sleeping checked every segment

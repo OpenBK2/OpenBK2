@@ -72,14 +72,14 @@ struct SChunk
 	int nCount;
 	int nIndex;
 	SState sState;
-	wstring wsText;
+	std::wstring wsText;
 	ECharType eType;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nCount); f.Add(3,&nIndex); f.Add(4,&sState); f.Add(5,&wsText); f.Add(6,&eType); return 0; }
 	
 	SChunk() {}
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, int _nCount )
 		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount ) {}
-	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const wstring &_wsText )
+	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const std::wstring &_wsText )
 		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText ) {}
 };
 
@@ -96,14 +96,14 @@ private:
 	SState sState;
 	SFontInfo sFontInfo;
 	EAlignStyle eAlignStyle;
-	list<SChunk> chunksList;
+	std::list<SChunk> chunksList;
 	CTPoint<int> sSize;
 	CTPoint<float> sRealSize;
 public:
 	bool bProcessTAGs;
 	CPtr<CTextLocaleInfo> pLocale;
 	CDGPtr< CFuncBase<CVec2> > pScreenRect;
-	CDGPtr< CFuncBase< wstring > > pText;
+	CDGPtr< CFuncBase< std::wstring > > pText;
 	CDGPtr< CFuncBase< CTPoint<int> > > pSize;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&bDynamic); f.Add(3,&fLineWidth); f.Add(4,&fLineHeight); f.Add(5,&fLastLineHeight); f.Add(6,&sState); f.Add(7,&sFontInfo); f.Add(8,&eAlignStyle); f.Add(9,&chunksList); f.Add(10,&sSize); f.Add(11,&sRealSize); f.Add(12,&bProcessTAGs); f.Add(13,&pLocale); f.Add(14,&pScreenRect); f.Add(15,&pText); f.Add(16,&pSize); return 0; }
 
@@ -113,9 +113,9 @@ protected:
 	CRectLayout* GetLayout( const SFont &sFont );
 	void GetFontFormatInfo( const SFont &sFont, SFontInfo *pInfo );
 
-	void TagFont( const wstring &wsTag );
-	void TagColor( const wstring &wsTag );
-	void ProcessTAG( const wstring &wsTag );
+	void TagFont( const std::wstring &wsTag );
+	void TagColor( const std::wstring &wsTag );
+	void ProcessTAG( const std::wstring &wsTag );
 
 	void Recalc();
 	bool NeedUpdate() { return pText.Refresh() | pSize.Refresh() | pScreenRect.Refresh(); }
@@ -124,7 +124,7 @@ public:
 	CTextFormater() {}
 };
 
-CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase< wstring > *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs )
+CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase< std::wstring > *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs )
 {
 	CTextFormater *pTextFormater = new CTextFormater;
 	pTextFormater->bProcessTAGs = bProcessTAGs;
@@ -165,7 +165,7 @@ void CTextFormater::Generate()
 	GetFontFormatInfo( sState.sFont, &sFontInfo );
 
 	pText.Refresh();
-	const wstring &wsText = pText->GetValue();
+	const std::wstring &wsText = pText->GetValue();
 	pSize.Refresh();
 	sSize = pSize->GetValue();
 
@@ -251,9 +251,9 @@ void CTextFormater::Generate()
 		if ( eThisChar == CHAR_TAG )
 		{
 			int nPos = wsText.find( WC_TAG_END, nTemp );
-			if ( nPos != wstring::npos )
+			if ( nPos != std::wstring::npos )
 			{
-				const wstring &wsSubStr = wsText.substr( nTemp + 1, nPos - nTemp - 1 );
+				const std::wstring &wsSubStr = wsText.substr( nTemp + 1, nPos - nTemp - 1 );
 				ProcessTAG( wsSubStr );
 
 				nTemp = nPos + 1;
@@ -363,7 +363,7 @@ void CTextFormater::GenerateLine()
 	return;
 }
 
-void CTextFormater::ProcessTAG( const wstring &wsTag )
+void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 {
 	if ( wsTag.compare( L"br" ) == 0 )
 	{
@@ -411,13 +411,13 @@ void CTextFormater::ProcessTAG( const wstring &wsTag )
 struct SWString
 {
 	ECharType eType;
-	wstring wsString;
+	std::wstring wsString;
 
 	SWString() {}
-	SWString( ECharType _eType, const wstring &_wsString ): eType( _eType ), wsString( _wsString ) {}
+	SWString( ECharType _eType, const std::wstring &_wsString ): eType( _eType ), wsString( _wsString ) {}
 };
 
-void SplitString( const wstring &wsString, list<SWString> *pParts )
+void SplitString( const std::wstring &wsString, std::list<SWString> *pParts )
 {
 	int nTemp = 0, nWordBegin = 0;
 	bool bBracketsBlock = false;
@@ -452,13 +452,13 @@ void SplitString( const wstring &wsString, list<SWString> *pParts )
 	}while( wcChar != 0 );
 }
 
-void CTextFormater::TagFont( const wstring &wsTag )
+void CTextFormater::TagFont( const std::wstring &wsTag )
 {
-	list<SWString> partsList;
+	std::list<SWString> partsList;
 	SplitString( wsTag, &partsList );
 
 	SFont sNewFont( sState.sFont );
-	for ( list<SWString>::iterator iTemp = partsList.begin(); iTemp != partsList.end(); iTemp++ )
+	for ( std::list<SWString>::iterator iTemp = partsList.begin(); iTemp != partsList.end(); iTemp++ )
 	{
 		if ( iTemp->eType != CHAR_ALNUM )
 			continue;
@@ -489,7 +489,7 @@ void CTextFormater::TagFont( const wstring &wsTag )
 
 				if ( nParams > 1 )
 				{
-					wstring wsSizeMod( wsString );
+					std::wstring wsSizeMod( wsString );
 					if ( wsSizeMod.compare( L"px" ) == 0 )
 						sNewFont.nSize |= FONT_SIZE_PIXELS;
 					else if ( wsSizeMod.compare( L"pt" ) == 0 )
@@ -516,12 +516,12 @@ void CTextFormater::TagFont( const wstring &wsTag )
 	GetFontFormatInfo( sNewFont, &sFontInfo );
 }
 
-void CTextFormater::TagColor( const wstring &wsTag )
+void CTextFormater::TagColor( const std::wstring &wsTag )
 {
-	list<SWString> partsList;
+	std::list<SWString> partsList;
 	SplitString( wsTag, &partsList );
 
-	list<SWString>::iterator iTemp = partsList.begin();
+	std::list<SWString>::iterator iTemp = partsList.begin();
 	iTemp++;
 	if ( ( iTemp->eType != CHAR_PUNCTUATION ) || ( iTemp->wsString.compare( L"=" ) != 0 ) )
 		return;

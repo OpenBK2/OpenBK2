@@ -18,7 +18,7 @@ public:
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
-	virtual void GetPassangers( vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );

@@ -15,7 +15,7 @@ class CExecutorTransportReinforcement : public CExecutor
 		ETransportStates eState;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); return 0; }
 	};
-	typedef vector< STransportInfo > CTransportList;
+	typedef std::vector< STransportInfo > CTransportList;
 
 	ZDATA_(CExecutor)
 	CTransportList transports;
@@ -27,7 +27,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&transports); f.Add(3,&pReinf); f.Add(4,&vStart); f.Add(5,&vUnload); f.Add(6,&vTarget); return 0; }
 
 	CExecutorTransportReinforcement() {}
-	CExecutorTransportReinforcement( list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget );
+	CExecutorTransportReinforcement( std::list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget );
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
 	virtual bool IsExecutorValid() const { return true; }

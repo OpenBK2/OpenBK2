@@ -19,8 +19,8 @@
 
 #include <zconf.h>
 
-static vector<DWORD> colors;
-static vector<wstring> sides;
+static std::vector<DWORD> colors;
+static std::vector<std::wstring> sides;
 
 static DWORD ConvertColor( const CVec3 &vColor )
 {
@@ -97,7 +97,7 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 	NI_VERIFY( pItem, "Wrong window", return );
 	CDynamicCast<CTextData> pInfo = pData;
 
-	wstring wszText = L"";
+	std::wstring wszText = L"";
 	if ( pInfo )
 		wszText = pInfo->wszText;		
 
@@ -108,7 +108,7 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 
 // Some strange utilities
 
-void NMPSetData::SetText( ITextView *pText, const wstring &szText )
+void NMPSetData::SetText( ITextView *pText, const std::wstring &szText )
 {
 	if ( !pText )
 		return;
@@ -117,11 +117,11 @@ void NMPSetData::SetText( ITextView *pText, const wstring &szText )
 
 void NMPSetData::SetNum( ITextView *pWindow, int nText )
 {	
-	wstring newstring = NStr::ToUnicode( StrFmt( "%d", nText ) );
+	std::wstring newstring = NStr::ToUnicode( StrFmt( "%d", nText ) );
 	SetText( pWindow, newstring );	
 }
 
-void NMPSetData::SetChildText( IListControlItem *pItem, const string &szName, const wstring &szText )
+void NMPSetData::SetChildText( IListControlItem *pItem, const std::string &szName, const std::wstring &szText )
 {
 	ITextView *pTxt = GetChildChecked<ITextView>( pItem, szName, true );		
 	SetText( pTxt, szText );			

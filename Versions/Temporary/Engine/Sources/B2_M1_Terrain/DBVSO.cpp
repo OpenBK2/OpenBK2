@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void STerrainAIProperties::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void STerrainAIProperties::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Passability", (BYTE*)&fPassability - pThis, sizeof(fPassability), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "AIClass", (BYTE*)&nAIClass - pThis, sizeof(nAIClass), NTypeDef::TYPE_TYPE_INT );
@@ -59,7 +59,7 @@ DWORD STerrainAIProperties::CalcCheckSum() const
 
 
 
-void SVSOLayerBaseDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVSOLayerBaseDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "CenterOpacity", (BYTE*)&fCenterOpacity - pThis, sizeof(fCenterOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "TilingStep", (BYTE*)&fTilingStep - pThis, sizeof(fTilingStep), NTypeDef::TYPE_TYPE_FLOAT );
@@ -98,7 +98,7 @@ DWORD SVSOLayerBaseDesc::CalcCheckSum() const
 
 
 
-void SVSOLayerBorderDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVSOLayerBorderDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
 
@@ -144,7 +144,7 @@ DWORD SVSOLayerBorderDesc::CalcCheckSum() const
 
 
 
-void SVSOLayerCenterDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVSOLayerCenterDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
 
@@ -257,7 +257,7 @@ DWORD SVSODesc::CalcCheckSum() const
 
 
 
-void SVSOPoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVSOPoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Norm", &vNorm, pThis ); 
@@ -311,7 +311,7 @@ DWORD SVSOPoint::CalcCheckSum() const
 
 
 
-void SVSOInstance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVSOInstance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (BYTE*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "points", &points, pThis );

@@ -223,7 +223,7 @@ static void __forceinline SSEOneVertex( const CVec3 *pSrc, CVec3 *pRes )//__m128
 	}
 }
 
-static void SSESkinning( const CVec3 *pSrc, CVec3 *pRes, const SSSEVertexWeight *pWeight, const vector<SHMatrix> &blends, int nCount )
+static void SSESkinning( const CVec3 *pSrc, CVec3 *pRes, const SSSEVertexWeight *pWeight, const std::vector<SHMatrix> &blends, int nCount )
 {
 	const SHMatrix *pMatrices = &blends[0];
 	ASSERT( (((int)pMatrices) & 0xf ) == 0 );

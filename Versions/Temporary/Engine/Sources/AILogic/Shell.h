@@ -1,10 +1,10 @@
 #pragma once
 
-#include <queue>
 #include "LinkObject.h"
-#include "Misc/nqueue.h"
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
+
+#include <queue>
 
 class CAIUnit;
 
@@ -413,13 +413,13 @@ struct SInvisShellCompare
 	bool operator()( const SInvisShell &s1, const SInvisShell &s2 ) const
 		{	return s1.ptr->GetExplTime() > s2.ptr->GetExplTime(); }
 };
-typedef list< CObj<CVisShell> > CVisShellList;
+typedef std::list< CObj<CVisShell> > CVisShellList;
 
 class CShellsStore
 {
 
 	// все невидимые снаряды
-	typedef priority_queue< SInvisShell, vector<SInvisShell>, SInvisShellCompare > CInvisShells;
+	typedef std::priority_queue< SInvisShell, std::vector<SInvisShell>, SInvisShellCompare > CInvisShells;
 	ZDATA
 	CInvisShells invisShells;
 	// все видимые снаряды

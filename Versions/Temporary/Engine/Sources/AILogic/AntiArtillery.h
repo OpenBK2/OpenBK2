@@ -31,15 +31,15 @@ class CAntiArtillery : public CLinkObject
 
 	NTimer::STime lastScan;
 	// время последнего услышанного выстрела и последнего посланного круга из этой артиллерии для каждой из сторон
-	vector<NTimer::STime> lastShotTime;
-	vector<NTimer::STime> lastRevealCircleTime;
+	std::vector<NTimer::STime> lastShotTime;
+	std::vector<NTimer::STime> lastRevealCircleTime;
 	bool bIsAA;		// is the gun an Anti-Aircraft Gun?
 
 	// расстояние до ближайшего врага ( считается только для врагов )
-	vector<float> closestEnemyDist2;
-	vector<CVec2> lastHeardPos;
-	vector<BYTE> nHeardShots;
-	vector<CVec2> lastRevealCenter;
+	std::vector<float> closestEnemyDist2;
+	std::vector<CVec2> lastHeardPos;
+	std::vector<BYTE> nHeardShots;
+	std::vector<CVec2> lastRevealCenter;
 	CPtr<CAIUnit> pOwner;
 public: 
 	int operator&( IBinSaver &f ) 

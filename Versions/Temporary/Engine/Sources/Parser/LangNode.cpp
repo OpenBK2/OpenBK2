@@ -8,7 +8,7 @@
 namespace NLang
 {
 
-static hash_map<int, string> typeToName;
+static std::unordered_map<int, std::string> typeToName;
 
 static struct SInitTypeNames
 {
@@ -33,11 +33,11 @@ const char* GetTypeName( ESimpleType eType )
 	return ( typeToName.find( eType ) != typeToName.end() ) ? typeToName[eType].c_str() : "unknown";
 }
 
-ESimpleType GetType( const string &szTypeName )
+ESimpleType GetType( const std::string &szTypeName )
 {
-	for ( hash_map<int, string>::iterator iter = typeToName.begin(); iter != typeToName.end(); ++iter )
+	for ( std::unordered_map<int, std::string>::iterator iter = typeToName.begin(); iter != typeToName.end(); ++iter )
 	{
-		const string &szType = iter->second;
+		const std::string &szType = iter->second;
 		if ( szType == szTypeName )
 			return ESimpleType( iter->first );
 	}
@@ -59,7 +59,7 @@ bool IsTypesEqual( ESimpleType eType1, ESimpleType eType2 )
 
 
 
-void CSimpleValue::SetValue( const string &szDefValue, bool bString )
+void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 {
 	if ( bString )
 	{

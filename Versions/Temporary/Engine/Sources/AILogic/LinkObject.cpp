@@ -76,9 +76,9 @@ CLinkObject* CLinkObject::GetObjectByLink( const int nLink )
 
 void CLinkObject::Segment()
 {
-	for ( list<int>::iterator iter = SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.begin(); iter != SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.end(); ++iter )
+	for ( std::list<int>::iterator iter = SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.begin(); iter != SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.end(); ++iter )
 		SLinkObjDataAutoMagic::pLinkObjData->link2object[*iter] = 0;
-	for ( list<int>::iterator iter = SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.begin(); iter != SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.end(); ++iter )
+	for ( std::list<int>::iterator iter = SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.begin(); iter != SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.end(); ++iter )
 	{
 		int nID = *iter;
 		if ( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end() )
@@ -118,11 +118,11 @@ CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
 { 
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
 	NI_ASSERT( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end(), StrFmt( "Wrong unique id (%d)", nUniqueID ) );
-	hash_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
+	std::unordered_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
 	return pos == SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end() ? 0 : pos->second;
 }
 
-void CLinkObject::GetFreeLinks( list<int> *pLinks, const int nSize )
+void CLinkObject::GetFreeLinks( std::list<int> *pLinks, const int nSize )
 {
 	pLinks->clear();
 	for ( int i = 1; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size() && pLinks->size() < nSize; ++i )

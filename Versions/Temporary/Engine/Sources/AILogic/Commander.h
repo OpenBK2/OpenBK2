@@ -36,10 +36,10 @@ class CCommander : public ICommander
 		IWorkerEnumerator *pEn;
 		EForceType eType;
 		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType ) : pEn( _pEn ), eType( _eType ) {  }
-		void operator()( pair<float, CPtr<CCommonUnit> > &value )
+		void operator()( std::pair<float, CPtr<CCommonUnit> > &value )
 			{ value.first = pEn->EvaluateWorkerRating( value.second, eType ); }
-		bool operator()( const pair<float, CPtr<CCommonUnit> > &v1,
-										 const pair<float, CPtr<CCommonUnit> > &v2 )
+		bool operator()( const std::pair<float, CPtr<CCommonUnit> > &v1,
+										 const std::pair<float, CPtr<CCommonUnit> > &v2 )
 		{
 			return v1.first < v2.first;
 		}
@@ -75,7 +75,7 @@ class CCommander : public ICommander
 	};
 protected:
 
-	typedef vector< CObj<IGeneralTask> > Tasks;
+	typedef std::vector< CObj<IGeneralTask> > Tasks;
 	Tasks tasks;			// all tasks of this colonel. 
 	float fMeanSeverity;
 

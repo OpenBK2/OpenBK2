@@ -30,6 +30,6 @@ public:
 	void UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, NTimer::STime currTime, bool bVisible );
 };
 
-void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator );
+void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const std::string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator );
 
 

@@ -13,15 +13,15 @@ class CString;	// без такой ботвы #include "../../MapEditorLib/Inte
 namespace NFolderManipulator
 {
 
-bool CheckedFileOperation( const string &szOperationDescription, bool bFileOperationResult )
+bool CheckedFileOperation( const std::string &szOperationDescription, bool bFileOperationResult )
 {
 	if ( !bFileOperationResult )
 	{
 		LPVOID lpMsgBuf;
-		DWORD dw = GetLastError(); 
+		DWORD dw = GetLastError();
 
 		FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM,
 			NULL,
 			dw,
@@ -29,7 +29,7 @@ bool CheckedFileOperation( const string &szOperationDescription, bool bFileOpera
 			(LPTSTR) &lpMsgBuf,
 			0, NULL );
 
-		string szErrorMessage = StrFmt( "rename failed: %s, %s", szOperationDescription.c_str(), lpMsgBuf );
+		std::string szErrorMessage = StrFmt( "rename failed: %s, %s", szOperationDescription.c_str(), lpMsgBuf );
 		LocalFree(lpMsgBuf);
 
 		return false;
@@ -38,12 +38,12 @@ bool CheckedFileOperation( const string &szOperationDescription, bool bFileOpera
 	return true;
 }
 
-bool CheckedMove( const string &szFrom, const string &szTo )
+bool CheckedMove( const std::string &szFrom, const std::string &szTo )
 {
 	return CheckedFileOperation( StrFmt( "move %s -> %s", szFrom.c_str(), szTo.c_str() ), MoveFile( szFrom.c_str(), szTo.c_str() ) );
 }
 
-bool CheckedCopy( const string &szFrom, const string &szTo )
+bool CheckedCopy( const std::string &szFrom, const std::string &szTo )
 {
 	return CheckedFileOperation( StrFmt( "copy %s -> %s", szFrom.c_str(), szTo.c_str() ), CopyFile( szFrom.c_str(), szTo.c_str(), false ) );
 }
@@ -52,10 +52,10 @@ struct SReplaceEntry
 {
 	int nPos;
 	int nOldStrSize;
-	string szNewStr;
+	std::string szNewStr;
 
 	SReplaceEntry() : nPos( 0 ), nOldStrSize( 0 ) { }
-	SReplaceEntry( const int _nPos, const int _nOldStrSize, const string &_szNewStr )
+	SReplaceEntry( const int _nPos, const int _nOldStrSize, const std::string &_szNewStr )
 		: nPos( _nPos ), nOldStrSize( _nOldStrSize ), szNewStr( _szNewStr ) { }
 };
 
@@ -65,7 +65,7 @@ struct SReferencingObjInfo
 	bool bNeedToReload;
 
 	SReferencingObjInfo() : bNeedToReload( false ) { }
-	SReferencingObjInfo( const string &szObjName )
+	SReferencingObjInfo( const std::string &szObjName )
 		: dbID( szObjName ), bNeedToReload( NDb::IsFileRegistered( szObjName ) ) { }
 	SReferencingObjInfo( const CDBID &_dbID )
 		: dbID( _dbID ), bNeedToReload( NDb::IsFileRegistered( dbID.ToString() ) ) { }
@@ -73,12 +73,12 @@ struct SReferencingObjInfo
 
 class CXDBEnumeration
 {
-	vector<SReferencingObjInfo> *pReferencingObjs;
-	vector<CDBID> *pChangedObjs;
-	const string &szStorageDir;
+	std::vector<SReferencingObjInfo> *pReferencingObjs;
+	std::vector<CDBID> *pChangedObjs;
+	const std::string &szStorageDir;
 	bool bOk;
 public:
-	CXDBEnumeration( const string &_szStorageDir, vector<SReferencingObjInfo> *_pReferencingObjs, vector<CDBID> *_pChangedObjs )
+	CXDBEnumeration( const std::string &_szStorageDir, std::vector<SReferencingObjInfo> *_pReferencingObjs, std::vector<CDBID> *_pChangedObjs )
 		: pReferencingObjs( _pReferencingObjs ), szStorageDir( _szStorageDir ), pChangedObjs( _pChangedObjs ), bOk( true ) { }
 
 	const bool IsOk() const { return bOk; }
@@ -87,10 +87,10 @@ public:
 	{
 		if ( !iter.IsDirectory() && bOk )
 		{
-			const string szName = iter.GetFullName().substr( szStorageDir.size() );
+			const std::string szName = iter.GetFullName().substr( szStorageDir.size() );
 			pChangedObjs->push_back( CDBID( szName ) );
 
-			vector<CDBID> refObjs;
+			std::vector<CDBID> refObjs;
 			NDBWatcherClient::IDBWatcherClient::EResult eClientResult;
 			while ( ( eClientResult = Singleton<NDBWatcherClient::IDBWatcherClient>()->GetReferencingObjects( szName, &refObjs ) )
 				== NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY );
@@ -105,12 +105,12 @@ public:
 
 
 
-static bool IsFolderName( const string &szName )
+static bool IsFolderName( const std::string &szName )
 {
 	return !szName.empty() && ( szName[szName.size() - 1] == '\\' || szName[szName.size() - 1] == '/' );
 }
 
-static bool ReplaceEntriesInFile( const string &szFileName, const string &szNewFileName, const vector<SReplaceEntry> &entries, const vector<char> &buffer, const string &szStorageDir )
+static bool ReplaceEntriesInFile( const std::string &szFileName, const std::string &szNewFileName, const std::vector<SReplaceEntry> &entries, const std::vector<char> &buffer, const std::string &szStorageDir )
 {
 	NFile::CreatePath( NFile::GetFilePath(szStorageDir + szNewFileName) );
 	if ( entries.empty() )
@@ -123,7 +123,7 @@ static bool ReplaceEntriesInFile( const string &szFileName, const string &szNewF
 		return true;
 	}
 
-	const string szNewTempFileName = szNewFileName + ".$$$";
+	const std::string szNewTempFileName = szNewFileName + ".$$$";
 
 	{
 		CFileStream newStream( NVFS::GetMainFileCreator(), szNewTempFileName );
@@ -147,15 +147,15 @@ static bool ReplaceEntriesInFile( const string &szFileName, const string &szNewF
 	return CheckedMove( szStorageDir + szNewTempFileName, szStorageDir + szNewFileName );
 }
 
-static bool ChangeReference( const string &szFileName, const string &_szOldObjName, const string &_szNewObjName, const string &szStorageDir )
+static bool ChangeReference( const std::string &szFileName, const std::string &_szOldObjName, const std::string &_szNewObjName, const std::string &szStorageDir )
 {
-	string szOldObjName = "href=\"" + _szOldObjName;
-	string szNewObjName = "href=\"" + _szNewObjName;
+	std::string szOldObjName = "href=\"" + _szOldObjName;
+	std::string szNewObjName = "href=\"" + _szNewObjName;
 
 	replace( szOldObjName.begin(), szOldObjName.end(), '\\', '/' );
 	replace( szNewObjName.begin(), szNewObjName.end(), '\\', '/' );
 
-	vector<char> buffer;
+	std::vector<char> buffer;
 	{
 		CFileStream stream( NVFS::GetMainVFS(), szStorageDir + szFileName );
 		if ( !stream.IsOk() || stream.GetSize() == 0 )
@@ -165,10 +165,10 @@ static bool ChangeReference( const string &szFileName, const string &_szOldObjNa
 		stream.Read( &(buffer[0]), stream.GetSize() );
 	}
 
-	vector<int> entries;
+	std::vector<int> entries;
 	NStr::FastSearch( &(buffer[0]), buffer.size(), szOldObjName, &entries, NStr::SASCIICharsComparer() );
 
-	vector<SReplaceEntry> replaceEntries;
+	std::vector<SReplaceEntry> replaceEntries;
 	replaceEntries.reserve( entries.size() );
 	for ( int i = 0; i < entries.size(); ++i )
 		replaceEntries.push_back( SReplaceEntry( entries[i], szOldObjName.size(), szNewObjName ) );
@@ -176,17 +176,17 @@ static bool ChangeReference( const string &szFileName, const string &_szOldObjNa
 	return ReplaceEntriesInFile( szFileName, szFileName, replaceEntries, buffer, szStorageDir );
 }
 
-static bool ConvertToRelativeNameIfDownByDirs( const string &szSrcName, const string &szSearchName, string *pszRelativeName )
+static bool ConvertToRelativeNameIfDownByDirs( const std::string &szSrcName, const std::string &szSearchName, std::string *pszRelativeName )
 {
-	list<string> searchPath;
+	std::list<std::string> searchPath;
 	NFile::SplitPath( &searchPath, szSearchName );
 	searchPath.pop_back();
 
-	list<string> srcPath;
+	std::list<std::string> srcPath;
 	NFile::SplitPath( &srcPath, szSrcName );
 
-	list<string>::iterator searchIter = searchPath.begin();
-	list<string>::iterator srcIter = srcPath.begin();
+	std::list<std::string>::iterator searchIter = searchPath.begin();
+	std::list<std::string>::iterator srcIter = srcPath.begin();
 
 	while ( searchIter != searchPath.end() && *searchIter == *srcIter )
 	{
@@ -200,7 +200,7 @@ static bool ConvertToRelativeNameIfDownByDirs( const string &szSrcName, const st
 	pszRelativeName->clear();
 	while ( srcIter != srcPath.end() )
 	{
-		const string szSeparator = pszRelativeName->empty() ? "" : "/";
+		const std::string szSeparator = pszRelativeName->empty() ? "" : "/";
 		*pszRelativeName += szSeparator;
 		*pszRelativeName += *srcIter;
 
@@ -209,9 +209,9 @@ static bool ConvertToRelativeNameIfDownByDirs( const string &szSrcName, const st
 	return true;
 }
 
-static bool FixReferencingFile( const string &szFileName, const string &szName, const string &szNewName, const string &szStorageDir )
+static bool FixReferencingFile( const std::string &szFileName, const std::string &szName, const std::string &szNewName, const std::string &szStorageDir )
 {
-	string szNewRelativeName = szNewName;
+	std::string szNewRelativeName = szNewName;
 	const bool bNewNameConverted = ConvertToRelativeNameIfDownByDirs( szNewName, szFileName, &szNewRelativeName );
 	if ( !bNewNameConverted )
 		szNewRelativeName = "/" + szNewRelativeName;
@@ -219,7 +219,7 @@ static bool FixReferencingFile( const string &szFileName, const string &szName, 
 	if ( !ChangeReference( szFileName, "/" + szName, szNewRelativeName, szStorageDir ) )
 		return false;
 
-	string szRelativeName;
+	std::string szRelativeName;
 	const bool bNameConverted = ConvertToRelativeNameIfDownByDirs( szName, szFileName, &szRelativeName );
 	if ( bNameConverted )
 	{
@@ -230,7 +230,7 @@ static bool FixReferencingFile( const string &szFileName, const string &szName, 
 	return true;
 }
 
-static bool FixChangedFile( const string &szOldName, const string &szNewName, const string &szStorageDir )
+static bool FixChangedFile( const std::string &szOldName, const std::string &szNewName, const std::string &szStorageDir )
 {
 	if ( NFile::GetFilePath( szOldName ) == NFile::GetFilePath( szNewName ) )
 	{
@@ -238,7 +238,7 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 		return CheckedCopy( szStorageDir + szOldName, szStorageDir + szNewName );
 	}
 
-	vector<char> buffer;
+	std::vector<char> buffer;
 	{
 		CFileStream stream( NVFS::GetMainVFS(), szStorageDir + szOldName );
 		if ( !stream.IsOk() || stream.GetSize() == 0 )
@@ -248,13 +248,13 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 		stream.Read( &(buffer[0]), stream.GetSize() );
 	}
 
-	const string szSearchStr = " href=\"";
-	vector<int> entries;
+	const std::string szSearchStr = " href=\"";
+	std::vector<int> entries;
 	NStr::FastSearch( &(buffer[0]), buffer.size(), szSearchStr, &entries, NStr::SASCIICharsComparer() );
 
-	string szOldPath = NFile::GetFilePath( szOldName );
+	std::string szOldPath = NFile::GetFilePath( szOldName );
 	NStr::ReplaceAllChars( &szOldPath, '\\', '/' );
-	vector<SReplaceEntry> replaceEntries;
+	std::vector<SReplaceEntry> replaceEntries;
 	replaceEntries.reserve( entries.size() );
 	for ( int i = 0; i < entries.size(); ++i )
 	{
@@ -263,7 +263,7 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 		if ( buffer[entries[i] + szSearchStr.size()] == '/' )
 			continue;
 
-		string szRefFile = "";
+		std::string szRefFile = "";
 		for ( int j = entries[i] + szSearchStr.size();j < buffer.size() && buffer[j] != '#' && buffer[j] != '\"'; ++j )
 			szRefFile += buffer[j];
 
@@ -272,8 +272,8 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 			continue;
 		NStr::ReplaceAllChars( &szRefFile, '\\', '/' );
 
-		const string szFullRefFile = szOldPath + szRefFile;
-		string szRightName;
+		const std::string szFullRefFile = szOldPath + szRefFile;
+		std::string szRightName;
 		const bool bRefChanged = ConvertToRelativeNameIfDownByDirs( szFullRefFile, szNewName, &szRightName );
 		if ( !bRefChanged )
 			szRightName = "/" + szFullRefFile;
@@ -284,16 +284,16 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 	return ReplaceEntriesInFile( szOldName, szNewName, replaceEntries, buffer, szStorageDir );
 }
 
-bool RenameNode2( const string &_szName, const string &_szNewName )
+bool RenameNode2( const std::string &_szName, const std::string &_szNewName )
 {
-	vector<SReferencingObjInfo> referencingObjs;
-	vector<CDBID> changedObjs;
+	std::vector<SReferencingObjInfo> referencingObjs;
+	std::vector<CDBID> changedObjs;
 
-	string szName, szNewName;
+	std::string szName, szNewName;
 	NStr::ToLowerASCII( &szName, _szName );
 	NStr::ToLowerASCII( &szNewName, _szNewName );
 
-	const string szStorageDir = Singleton<IUserDataContainer>()->Get()->constUserData.szDataStorageFolder;
+	const std::string szStorageDir = Singleton<IUserDataContainer>()->Get()->constUserData.szDataStorageFolder;
 
 	DbgTrc( "collecting files..." );
 	if ( IsFolderName( szName ) )
@@ -305,8 +305,8 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 	}
 	else
 	{
-		vector<CDBID> refObjs;
-		while ( Singleton<NDBWatcherClient::IDBWatcherClient>()->GetReferencingObjects( szName, &refObjs ) == 
+		std::vector<CDBID> refObjs;
+		while ( Singleton<NDBWatcherClient::IDBWatcherClient>()->GetReferencingObjects( szName, &refObjs ) ==
 			NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY );
 		referencingObjs.insert( referencingObjs.end(), refObjs.begin(), refObjs.end() );
 		changedObjs.push_back( szName );
@@ -321,7 +321,7 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 	DbgTrc( "referencing files: %d", referencingObjs.size() );
 	for ( int i = 0; i < changedObjs.size(); ++i )
 	{
-		string szNewObjName = changedObjs[i].ToString();
+		std::string szNewObjName = changedObjs[i].ToString();
 		szNewObjName.replace( 0, szName.size(), szNewName );
 
 		if ( !FixChangedFile( changedObjs[i].ToString(), szNewObjName, szStorageDir ) )
@@ -335,7 +335,7 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 
 	for ( int i = 0; i < changedObjs.size(); ++i )
 	{
-		string szNewObjName = changedObjs[i].ToString();
+		std::string szNewObjName = changedObjs[i].ToString();
 		szNewObjName.replace( 0, szNewObjName.size(), szNewName );
 		if ( changedObjs[i].ToString() != szNewObjName )
 			DeleteFile( (szStorageDir + changedObjs[i].ToString()).c_str() );
@@ -343,7 +343,7 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 
 	for ( int i = 0; i < changedObjs.size(); ++i )
 	{
-		string szObjName = changedObjs[i].ToString();
+		std::string szObjName = changedObjs[i].ToString();
 		szObjName.replace( 0, szName.size(), szNewName );
 
 		NDb::RegisterResourceFile( szObjName );
@@ -357,19 +357,19 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 	return true;
 }
 
-bool RenameNode( const string &szOldName, const string &szNewName )
+bool RenameNode( const std::string &szOldName, const std::string &szNewName )
 {
 	bool bRes = true;
 	if ( IsFolderName(szOldName) )
 	{
-		vector<string> filenames;
+		std::vector<std::string> filenames;
 		NVFS::GetMainVFS()->GetAllFileNames( &filenames, szOldName );
-		const string szXDB = ".xdb";
-		for ( vector<string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
+		const std::string szXDB = ".xdb";
+		for ( std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
 		{
 			if ( it->size() > 4 && NFile::ComparePathEq(it->size() - 4, 4, *it, 0, 4, szXDB) )
 			{
-				string szNewObjFileName = *it;
+				std::string szNewObjFileName = *it;
 				szNewObjFileName.replace( 0, szOldName.size(), szNewName );
 				bRes = bRes && NDb::RenameObject( CDBID(*it), CDBID(szNewObjFileName) );
 			}

@@ -92,7 +92,7 @@ struct SFeedBackUnitsArray : public CObjectBase
 	OBJECT_BASIC_METHODS( SFeedBackUnitsArray )
 public:
 	ZDATA
-		vector<int> unitIDs;
+		std::vector<int> unitIDs;
 	int nUpdateID;
 	CVec2 vCenterCamera;
 	int nParam;

@@ -12,12 +12,12 @@
 //#pragma comment(lib, "vtuneapi.lib")
 
 
-static bool IsFolderName( const string &szName )
+static bool IsFolderName( const std::string &szName )
 {
 	return !szName.empty() && ( szName[szName.size() - 1] == '\\' || szName[szName.size() - 1] == '/' );
 }
 
-CFolderManipulatorWrapper::CFolderManipulatorWrapper( const string &_szClassTypeName, const string &_szSrcPath, const string &_szDstPath ) 
+CFolderManipulatorWrapper::CFolderManipulatorWrapper( const std::string &_szClassTypeName, const std::string &_szSrcPath, const std::string &_szDstPath )
 : szClassTypeName( _szClassTypeName ), szSrcPath( _szSrcPath ), szDstPath( _szDstPath )
 {
 }
@@ -27,7 +27,7 @@ IManipulatorIterator* CFolderManipulatorWrapper::Iterate( bool bShowHidden, ECac
 	return new CFolderManipulatorIteratorWrapper( szSrcPath, szClassTypeName );
 }
 
-bool CFolderManipulatorWrapper::InsertNode( const string &szName, int nNodeIndex )
+bool CFolderManipulatorWrapper::InsertNode( const std::string &szName, int nNodeIndex )
 {
 	if ( szName.empty() )
 		return false;
@@ -47,7 +47,7 @@ bool CFolderManipulatorWrapper::InsertNode( const string &szName, int nNodeIndex
 	return false;
 }
 
-bool CFolderManipulatorWrapper::RemoveNode( const string &szName, int nNodeIndex )
+bool CFolderManipulatorWrapper::RemoveNode( const std::string &szName, int nNodeIndex )
 {
 	if ( szName.empty() )
 		return false;
@@ -57,35 +57,35 @@ bool CFolderManipulatorWrapper::RemoveNode( const string &szName, int nNodeIndex
 		return NDb::RemoveObject( CDBID(szName) );
 }
 
-namespace NFolderManipulator { bool RenameNode( const string &szName, const string &szNewName ); }
+namespace NFolderManipulator { bool RenameNode( const std::string &szName, const std::string &szNewName ); }
 
-bool CFolderManipulatorWrapper::RenameNode( const string &szName, const string &szNewName )
+bool CFolderManipulatorWrapper::RenameNode( const std::string &szName, const std::string &szNewName )
 {
 	return NFolderManipulator::RenameNode( szName, szNewName );
 }
 
-bool CFolderManipulatorWrapper::GetValue( const string &szName, CVariant *pValue ) const
+bool CFolderManipulatorWrapper::GetValue( const std::string &szName, CVariant *pValue ) const
 {
 	*pValue = 0;
 	return true;
 }
 
-bool CFolderManipulatorWrapper::SetValue( const string &szName, const CVariant &value )
+bool CFolderManipulatorWrapper::SetValue( const std::string &szName, const CVariant &value )
 {
 	return true;
 }
 
-UINT CFolderManipulatorWrapper::GetID( const string &szName ) const
+UINT CFolderManipulatorWrapper::GetID( const std::string &szName ) const
 {
 	return INVALID_NODE_ID;
 }
 
-bool CFolderManipulatorWrapper::GetName( UINT nID, string *pszName ) const
+bool CFolderManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
 {
 	return false;
 }
 
-bool CFolderManipulatorWrapper::IsNameExists( const string &rszName ) const
+bool CFolderManipulatorWrapper::IsNameExists( const std::string &rszName ) const
 {
 	if ( rszName.empty() )
 		return false;
@@ -112,21 +112,21 @@ void CFolderManipulatorWrapper::GetNameList( CNameMap *pNameMap ) const
 // **
 // ************************************************************************************************************************ //
 
-CFolderManipulatorIteratorWrapper::CFolderManipulatorIteratorWrapper( const string &szSrcPath, const string &szTypeName )
+CFolderManipulatorIteratorWrapper::CFolderManipulatorIteratorWrapper( const std::string &szSrcPath, const std::string &szTypeName )
 {
 	NHPTimer::STime hptime;
 	NHPTimer::GetTime( &hptime );
 //	VTResume();
 	// retrieve all objects by type
 	bool bShowFullTree = NGlobal::GetVar( "show_full_tree", 0 ) != 0;
-	vector<CDBID> objectsList;
-	const string szTypeName2Retrieve = bShowFullTree ? "" : szTypeName;
+	std::vector<CDBID> objectsList;
+	const std::string szTypeName2Retrieve = bShowFullTree ? "" : szTypeName;
 	NDb::GetObjectsList( &objectsList, szTypeName2Retrieve );
-	hash_map<NFile::CFilePath, int> checks;
+	std::unordered_map<NFile::CFilePath, int> checks;
 	//
 	int nCounter = 0;
 	entriesList.reserve( objectsList.size() );
-	for ( vector<CDBID>::const_iterator itDBID = objectsList.begin(); itDBID != objectsList.end(); ++itDBID )
+	for ( std::vector<CDBID>::const_iterator itDBID = objectsList.begin(); itDBID != objectsList.end(); ++itDBID )
 	{
 //		SEntry &entry = entriesList[nCounter];
 //		entry.dbid = *itDBID;
@@ -183,7 +183,7 @@ const SIteratorDesc* CFolderManipulatorIteratorWrapper::GetDesc() const
 	return 0;
 }
 
-bool CFolderManipulatorIteratorWrapper::GetName( string *pszName ) const
+bool CFolderManipulatorIteratorWrapper::GetName( std::string *pszName ) const
 {
 	if ( IsEnd() )
 		return false;
@@ -196,7 +196,7 @@ bool CFolderManipulatorIteratorWrapper::GetName( string *pszName ) const
 	return !pszName->empty();
 }
 
-bool CFolderManipulatorIteratorWrapper::GetType( string *pszType ) const
+bool CFolderManipulatorIteratorWrapper::GetType( std::string *pszType ) const
 {
 	*pszType = posCurrElement->IsObject() ? "object" : "folder";
 	return true;

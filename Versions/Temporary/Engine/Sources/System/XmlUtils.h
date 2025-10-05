@@ -5,7 +5,7 @@
 
 namespace NXml
 {
-	SYSTEM_EXPORT void ConvertToString( string *pStr );
+	SYSTEM_EXPORT void ConvertToString( std::string *pStr );
 }
 
 

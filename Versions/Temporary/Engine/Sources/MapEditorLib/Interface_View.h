@@ -26,7 +26,7 @@ struct IView
 	//Установить манипулятор
 	virtual void SetViewManipulator( IManipulator* _pViewManipulator,
 																	 const SObjectSet &rObjectSet,
-																	 const string &rszTemporaryLabel ) = 0;
+																	 const std::string &rszTemporaryLabel ) = 0;
 	//Получить ранее установленный манипулятор
 	virtual IManipulator* GetViewManipulator() = 0;
 	//Убрать манипулятор
@@ -35,7 +35,7 @@ struct IView
 };
 
 // CRAP{ HASH_SET
-typedef hash_map<IView*, DWORD, SDefaultPtrHash> CViewSet;
+typedef std::unordered_map<IView*, DWORD, SDefaultPtrHash> CViewSet;
 // CRAP} HASH_SET
 
 

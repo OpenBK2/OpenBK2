@@ -23,14 +23,14 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
 }
 
-CExecutorTransportReinforcement::CExecutorTransportReinforcement( list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget ) :
+CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget ) :
 CExecutor(TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION), 
 vStart( _vStart ), vTarget( _vTarget )
 {
 	// Assign transports
 	transports.resize( pTransports->size() );
 	int i = 0;
-	for ( list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it, ++i )
+	for ( std::list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it, ++i )
 	{
 		transports[i].pUnit = *it;
 		transports[i].eState = ETS_FULL;
@@ -54,8 +54,8 @@ vStart( _vStart ), vTarget( _vTarget )
 	vUnload = vCurPoint;
 
 	// Give commands
-	vector<int> ids;
-	for ( list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it )
+	std::vector<int> ids;
+	for ( std::list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it )
 	{
 		ids.push_back( (*it)->GetUniqueId() );
 	}

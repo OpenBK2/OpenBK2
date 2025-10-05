@@ -88,13 +88,13 @@ struct SRenderGeometryInfo;
 struct SRenderPartSet
 {
 	CPtr<CObjectBase> pNode;
-	const vector< CPtr<IPart> > *pParts;
+	const std::vector< CPtr<IPart> > *pParts;
 	CPartFlags parts, opaque;
 	SRenderGeometryInfo *pGeometry;
 	int nFloorMask;
 
 	SRenderPartSet() {}
-	SRenderPartSet( CObjectBase *_pNode, const vector< CPtr<IPart> > *_pParts, SRenderGeometryInfo *_pGeometry, int _nFloorMask )
+	SRenderPartSet( CObjectBase *_pNode, const std::vector< CPtr<IPart> > *_pParts, SRenderGeometryInfo *_pGeometry, int _nFloorMask )
 		: pNode(_pNode), pParts(_pParts), pGeometry(_pGeometry), nFloorMask(_nFloorMask)
 	{ 
 		parts.Clear();
@@ -116,10 +116,10 @@ public:
 	};
 	
 	virtual CFuncBase<SPerVertexLightState> *GetLightState() const = 0;
-	virtual void FormPartList( CTransformStack *pTS, list<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask ) = 0;
+	virtual void FormPartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask ) = 0;
 	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes ) = 0;
 	virtual void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender ) = 0;
-	virtual void GetNotLoaded( vector<IPart*> *pRes ) = 0;
+	virtual void GetNotLoaded( std::vector<IPart*> *pRes ) = 0;
 	virtual void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC ) = 0;
 	virtual CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles ) = 0;
 };
@@ -136,20 +136,20 @@ class IVBCombiner : public CPtrFuncBase<NGfx::CGeometry>
 protected:
 	ZDATA
 	SBound bound;
-	vector<SSphere> partBVs;
+	std::vector<SSphere> partBVs;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bound); f.Add(3,&partBVs); return 0; }
 	virtual const SBound& GetBound() { ASSERT( IsFrameMatch() ); return bound; }
-	virtual const vector<SSphere>& GetBounds() { ASSERT( IsFrameMatch() ); return partBVs; }
+	virtual const std::vector<SSphere>& GetBounds() { ASSERT( IsFrameMatch() ); return partBVs; }
 	int GetPartsNum() const { return partBVs.size(); }
-	virtual CFuncBase<vector< CPtr<IPart> > > * GetCombiner() const { return 0; }
+	virtual CFuncBase<std::vector< CPtr<IPart> > > * GetCombiner() const { return 0; }
 	virtual void FreeMemory() {}
 	bool IsValidValue() const { return IsValid( pValue ); }
 };
 struct SRenderGeometryInfo
 {
 	CDGPtr<IVBCombiner> pVertices;
-	CDGPtr< CFuncBase<vector<NGfx::STriangleList> > > pTriLists[TLT_NUMBER];
+	CDGPtr< CFuncBase<std::vector<NGfx::STriangleList> > > pTriLists[TLT_NUMBER];
 
 	int operator&( CStructureSaver &f ) 
 	{ 
@@ -315,7 +315,7 @@ struct SRenderFragmentInfo
 		SElement() {}
 		SElement( short _nGeom, short _nBlock, int _nFlags ) : nGeometry(_nGeom), nBlock(_nBlock), nFlags(_nFlags) {}
 	};
-	vector<SElement> elements;
+	std::vector<SElement> elements;
 	CPtr<IMaterial> pMaterial;
 	SPerPartVariables vars;
 
@@ -353,21 +353,21 @@ private:
 	CPool<SRenderGeometryInfo,128> geometryInfos;
 	CPool<SRenderFragmentInfo,128> fragmentInfos;
 	
-	typedef hash_map<SRenderFragmentKey, int, SRenderFragmentHash> CFragmentHash;
+	typedef std::unordered_map<SRenderFragmentKey, int, SRenderFragmentHash> CFragmentHash;
 	CFragmentHash fragmentHash;
-	vector<SRenderStaticInfo*> statics;
-	vector<SRenderGeometryInfo*> geometries;
-	vector<SRenderFragmentInfo*> fragments;
+	std::vector<SRenderStaticInfo*> statics;
+	std::vector<SRenderGeometryInfo*> geometries;
+	std::vector<SRenderFragmentInfo*> fragments;
 	SBoundCalcer bc;
-	vector<char> filterFragment;
-	vector<char> filterGeometry;
-	vector<CPartFlags> selectedParts;
+	std::vector<char> filterFragment;
+	std::vector<char> filterGeometry;
+	std::vector<CPartFlags> selectedParts;
 	bool bNeedHSR;
 public:
 	CSceneFragments();
 	int AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGeometry, const SBound &_bv, bool bNotAddBound );
 	void AddElement( int nGeometryIndex, const CPartFlags &_parts, IMaterial *pMaterial, const SPerPartVariables &_vars );
-	void AddLitParticles( IVBCombiner *pCombiner, CFuncBase<vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv );
+	void AddLitParticles( IVBCombiner *pCombiner, CFuncBase<std::vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv );
 	void SetLitParticlesMaterial( IMaterial *p );
 	
 	int GetSceneTris() const { return nSceneTris; }
@@ -376,12 +376,12 @@ public:
 	EFragmentsSplit GetGeometryFlags( unsigned int n ) const { if ( n >= filterGeometry.size() ) return FST_ACCEPT; return (EFragmentsSplit)filterGeometry[n]; }
 	const CPartFlags& GetGeometryParts( unsigned int n ) const { return selectedParts[n]; }
 	bool HasSelectedFragments() const;
-	const vector<SRenderFragmentInfo*>& GetFragments() const { return fragments; }
+	const std::vector<SRenderFragmentInfo*>& GetFragments() const { return fragments; }
 	const SRenderFragmentInfo& GetLitParticles() const { return *fragments[0]; }
 	const SRenderStaticInfo& GetStaticInfo( int nGeom ) const { return *statics[ nGeom ]; }
 	SRenderGeometryInfo* GetGeometryInfo( int nGeom ) const { return geometries[ nGeom ]; }
 	int GetGeometriesNum() const { ASSERT( statics.size() == geometries.size() ); return geometries.size(); }
-	void HideGeometry( const vector<CPartFlags> &flags );
+	void HideGeometry( const std::vector<CPartFlags> &flags );
 	void SetNeedHSR( bool _b ) { bNeedHSR = _b; }
 	bool NeedHSR() const { return bNeedHSR; }
 	void AddGeomBound( const SBound &_b ) { bc.Add( _b ); }
@@ -393,8 +393,8 @@ public:
 class CSelectGeometries
 {
 	CSceneFragments *pScene;
-	vector<char> holdFlags;
-	vector<CPartFlags> holdParts;
+	std::vector<char> holdFlags;
+	std::vector<CPartFlags> holdParts;
 public:
 	template<class T>
 		CSelectGeometries( CSceneFragments *_pScene, const T &select ) : pScene(_pScene) 
@@ -425,7 +425,7 @@ public:
 class CSelectFragments
 {
 	CSceneFragments *pScene;
-	vector<char> holdFilter;
+	std::vector<char> holdFilter;
 public:
 	template<class T>
 		CSelectFragments( CSceneFragments *_pScene, const T &select ) : pScene(_pScene) 
@@ -467,12 +467,12 @@ struct SIgnorePartsInfo
 	// bit set to 1 means part is ignored
 	ZDATA
 	CPartFlags flags;
-	CDGPtr<CFuncBase<vector<CPtr<IPart> > > > pTrackCombiner;
-	vector<CPtr<IPart> > ignore;
+	CDGPtr<CFuncBase<std::vector<CPtr<IPart> > > > pTrackCombiner;
+	std::vector<CPtr<IPart> > ignore;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&flags); f.Add(3,&pTrackCombiner); f.Add(4,&ignore); return 0; }
-	void Init( const CPartFlags &_flags, const vector<CPtr<IPart> > *pParts );
+	void Init( const CPartFlags &_flags, const std::vector<CPtr<IPart> > *pParts );
 };
-typedef hash_map<CPtr<CObjectBase>,SIgnorePartsInfo,SPtrHash> CFullIgnorePartsHash;
+typedef std::unordered_map<CPtr<CObjectBase>,SIgnorePartsInfo,SPtrHash> CFullIgnorePartsHash;
 struct SIgnoredSphereFilter
 {
 	CFullIgnorePartsHash *pIgnoreList;
@@ -540,7 +540,7 @@ public:
 				p1.nData == a.p1.nData && p2.nData == a.p2.nData && p3.nData == a.p3.nData;
 		}
 	};
-	vector<SOperation> ops;
+	std::vector<SOperation> ops;
 
 	CRenderCmdList() {}
 	bool IsEmpty() const { return ops.empty(); }
@@ -548,13 +548,13 @@ public:
 
 class COpGenContext
 {
-	vector<CRenderCmdList::SOperation> *pRes;
+	std::vector<CRenderCmdList::SOperation> *pRes;
 	const SRenderFragmentInfo *pCurFragment;
 	bool bHasAddedOps;
 	int nPartPriority;
 
 public:
-	COpGenContext( vector<CRenderCmdList::SOperation> *_pRes, const SRenderFragmentInfo *_pTarget )
+	COpGenContext( std::vector<CRenderCmdList::SOperation> *_pRes, const SRenderFragmentInfo *_pTarget )
 		: pRes(_pRes), pCurFragment(_pTarget), bHasAddedOps(false), nPartPriority( _pTarget->vars.nPriority ) {}
 	bool HasAddedOps() const { return bHasAddedOps; }
 	void AddOperation(

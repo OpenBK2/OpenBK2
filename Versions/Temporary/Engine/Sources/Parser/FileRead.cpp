@@ -7,7 +7,7 @@
 namespace NLang
 {
 
-static string szFileName = "";
+static std::string szFileName = "";
 static CDataStream *pStream = 0;
 static int nTypeNumber = 0;
 
@@ -25,11 +25,11 @@ const char* GetParsingFileName()
 	return szFileName.c_str();
 }
 
-bool OpenFile( const string &_szFileName )
+bool OpenFile( const std::string &_szFileName )
 {
 	szFileName = _szFileName;
 
-	string szStreamFileName = szFileName;
+	std::string szStreamFileName = szFileName;
 	NStr::ReplaceAllChars( &szStreamFileName, '/', '\\' );
 
 	NStr::ToLowerASCII( &szFileName );

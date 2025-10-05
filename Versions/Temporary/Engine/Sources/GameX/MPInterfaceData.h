@@ -9,7 +9,7 @@ struct SMPSlot
 	ZDATA
 	int nClientID;		// 
 	bool bPresent;		// 
-	string szName;
+	std::string szName;
 	int nTeam;				// 0 or 1
 	int nCountry;			// from Sides table in MultiplayerConsts
 	int nColour;

@@ -18,6 +18,8 @@
 
 #include <zconf.h>
 
+#include <algorithm>
+
 #ifdef _PROFILER
 #include <VTuneAPI.h>
 
@@ -84,15 +86,15 @@ bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, c
 	if ( pData1->pStats->ePoliticalSide != pData2->pStats->ePoliticalSide )
 		return pData1->pStats->ePoliticalSide < pData2->pStats->ePoliticalSide;
 
-	wstring wszName1;
-	wstring wszName2;
+	std::wstring wszName1;
+	std::wstring wszName2;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pData1->pStats->,LocalizedName) )
 		wszName1 = GET_TEXT_PRE(pData1->pStats->,LocalizedName);
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pData2->pStats->,LocalizedName) )
 		wszName2 = GET_TEXT_PRE(pData2->pStats->,LocalizedName);
 
-	transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower ); 
-	transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower ); 
+	std::transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower );
+	std::transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower );
 
 	if ( wszName1 != wszName2 )
 		return wszName1 < wszName2;
@@ -189,7 +191,7 @@ void CInterfaceEncyclopedia::EffectBorderFinish()
 	{
 //		pScreen->Enable( true );
 
-		for ( vector<SFilterCache>::iterator it = filterCache.begin(); it != filterCache.end(); ++it )
+		for ( std::vector<SFilterCache>::iterator it = filterCache.begin(); it != filterCache.end(); ++it )
 		{
 			SFilterCache &cache = *it;
 			cache.pUnitListCont->Update();
@@ -231,12 +233,12 @@ void CInterfaceEncyclopedia::MakeInterior()
 	filterUnitTypes[EFUT_TRANSPORT].szBtnName = "UnitTypesTransportBtn";
 	filterUnitTypes[EFUT_MISC].szBtnName = "UnitTypesMiscBtn";
 
-	for ( vector< SFilterBtn >::iterator it = filterCountries.begin(); it != filterCountries.end(); ++it )
+	for ( std::vector< SFilterBtn >::iterator it = filterCountries.begin(); it != filterCountries.end(); ++it )
 	{
 		SFilterBtn &filter = *it;
 		filter.pBtn = GetChildChecked<IButton>( pMain, filter.szBtnName, true );
 	}
-	for ( vector< SFilterBtn >::iterator it = filterUnitTypes.begin(); it != filterUnitTypes.end(); ++it )
+	for ( std::vector< SFilterBtn >::iterator it = filterUnitTypes.begin(); it != filterUnitTypes.end(); ++it )
 	{
 		SFilterBtn &filter = *it;
 		filter.pBtn = GetChildChecked<IButton>( pMain, filter.szBtnName, true );
@@ -275,7 +277,7 @@ void CInterfaceEncyclopedia::MakeInterior()
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 }
 
-bool CInterfaceEncyclopedia::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceEncyclopedia::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "FilterBtn" )
 		return OnFilterBtn( szSender );
@@ -286,7 +288,7 @@ bool CInterfaceEncyclopedia::Execute( const string &szSender, const string &szRe
 	return false;
 }
 
-int CInterfaceEncyclopedia::Check( const string &szCheckName ) const
+int CInterfaceEncyclopedia::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
@@ -346,7 +348,7 @@ void CInterfaceEncyclopedia::MsgHelpScreen( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_HELP_SCREEN, GetInterfaceType().c_str() );
 }
 
-bool CInterfaceEncyclopedia::OnFilterBtn( const string &szName )
+bool CInterfaceEncyclopedia::OnFilterBtn( const std::string &szName )
 {
 	for ( int i = 0; i < filterCountries.size(); ++i )
 	{
@@ -379,7 +381,7 @@ bool CInterfaceEncyclopedia::OnFilterBtn( const string &szName )
 	return true;
 }
 
-bool CInterfaceEncyclopedia::OnEffectFinished( const string &szName )
+bool CInterfaceEncyclopedia::OnEffectFinished( const std::string &szName )
 {
 	if ( bEffectBorder )
 	{
@@ -500,7 +502,7 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 				}
 			}
 			sort( cache.filteredUnits.begin(), cache.filteredUnits.end(), SDataSorter() );
-			for ( vector< CPtr<CUnitData> >::iterator it = cache.filteredUnits.begin(); it != cache.filteredUnits.end(); ++it )
+			for ( std::vector< CPtr<CUnitData> >::iterator it = cache.filteredUnits.begin(); it != cache.filteredUnits.end(); ++it )
 			{
 				CUnitData *pData = *it;
 				IListControlItem *pItem = cache.pUnitListCont->AddItem( pData );
@@ -590,7 +592,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 
 		if ( p3DCtrl )
 		{
-			vector<IWindow3DControl::SObject> objects;
+			std::vector<IWindow3DControl::SObject> objects;
 			
 			IWindow3DControl::SParam param = p3DCtrl->GetDBObjectParam( 0 );
 			IWindow3DControl::SObject object;
@@ -616,7 +618,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 		if ( pUnitNameView )
 			pUnitNameView->SetText( L"" );
 		if ( p3DCtrl )
-			p3DCtrl->SetObjects( vector<IWindow3DControl::SObject>() );
+			p3DCtrl->SetObjects( std::vector<IWindow3DControl::SObject>() );
 	}
 }
 
@@ -663,7 +665,7 @@ CInterfaceEncyclopedia::CUnitData* CInterfaceEncyclopedia::GetUnitData( const ND
 	if ( !pStats )
 		return 0;
 
-	hash_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash >::iterator it = knownUnits.find( pStats );
+	std::unordered_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash >::iterator it = knownUnits.find( pStats );
 	if ( it != knownUnits.end() )
 	{
 		return it->second;
@@ -742,12 +744,12 @@ bool CInterfaceEncyclopediaWait::StepLocal( bool bAppActive )
 	return bResult;
 }
 
-bool CInterfaceEncyclopediaWait::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceEncyclopediaWait::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	return false;
 }
 
-int CInterfaceEncyclopediaWait::Check( const string &szCheckName ) const
+int CInterfaceEncyclopediaWait::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

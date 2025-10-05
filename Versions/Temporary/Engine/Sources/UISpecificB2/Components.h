@@ -11,7 +11,7 @@ class CTextureRoundSegmentVisitor
 	CTRect<float> rect;
 	float fStartAngle;
 	float fFinishAngle;
-	vector<NGfx::SPixel8888> colors;
+	std::vector<NGfx::SPixel8888> colors;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTexture); f.Add(3,&rect); f.Add(4,&fStartAngle); f.Add(5,&fFinishAngle); f.Add(6,&colors); return 0; }
 private:

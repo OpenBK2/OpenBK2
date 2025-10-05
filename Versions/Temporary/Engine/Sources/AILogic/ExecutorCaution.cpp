@@ -9,7 +9,7 @@ CExecutorUnitCombatBonus ( NDb::ABILITY_CAUTION, _pUnit, TID_CAUTION )
 
 void CExecutorCaution::RegisterOnEvents( IExecutorContainer *pContainer )
 {
-	vector<EExecutorEventID> unitEvents;
+	std::vector<EExecutorEventID> unitEvents;
 
 	unitEvents.push_back( EID_ABILITY_ACTIVATE_AUTOCAST );
 	unitEvents.push_back( EID_ABILITY_DEACTIVATE_AUTOCAST );

@@ -95,7 +95,7 @@ static int CalcGrannyMemberArraySize( granny_data_type_definition *pType, const 
 	return 0;
 }
 
-void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, vector<CVec3> *pRes )
+void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, std::vector<CVec3> *pRes )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 	int nPosOffset = CalcGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
@@ -115,7 +115,7 @@ void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, vector<CVec3> *pRes )
 	}
 }
 
-void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, vector<STriangle> *pRes )
+void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, std::vector<STriangle> *pRes )
 {
 	granny_tri_topology *pTopol = pMesh->PrimaryTopology;
 	// ASSERT( pTopol->GroupCount == 1 );
@@ -136,7 +136,7 @@ void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, vector<STriangle> *pRes )
 	}
 }
 
-void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<NGScene::SVertex> *pVerts )
+void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vector<NGScene::SVertex> *pVerts )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 	int nPosOffset, nNormalOffset, nTexUOffset, nTexVOffset, nTexOffset; 
@@ -231,7 +231,7 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<N
 
 const char *ConvertWeightsFromGrannyEx(
 							  const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex,
-							  vector<SVertexWeight> *pWeights, int nVertices )
+							  std::vector<SVertexWeight> *pWeights, int nVertices )
 {
 
 	const char *res=0;
@@ -289,7 +289,7 @@ const char *ConvertWeightsFromGrannyEx(
 		int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 		char *pUntypedVertices = (char*)(pMesh->PrimaryVertexData->Vertices);
 
-		vector<int> index2bone;
+		std::vector<int> index2bone;
 		index2bone.resize( pMesh->BoneBindingCount );
 		for ( int k = 0; k < pMesh->BoneBindingCount; ++k )
 		{
@@ -357,7 +357,7 @@ const char *ConvertWeightsFromGrannyEx(
 }
 
 
-void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<STriangle> *pGeometry )
+void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vector<STriangle> *pGeometry )
 {
 	granny_tri_topology *pTopology = pMesh->PrimaryTopology;
 
@@ -456,11 +456,11 @@ void CGrannyMeshLoader::Recalc()
 			buff[0] = 0;
 		}
 
-		string szFileName = buff;
+		std::string szFileName = buff;
 		sLightMapped = szFileName+"_l";
 
 
-		const string szTryFileName( bLightMap ? sLightMapped : szFileName );
+		const std::string szTryFileName( bLightMap ? sLightMapped : szFileName );
 
 
 		const bool bIsTryFileExist = NVFS::GetMainVFS()->DoesFileExist( szTryFileName );

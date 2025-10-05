@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "Misc/nheap.h"
 #include "System/Time.h"
 #include "Shell.h"
 #include "AIUnit.h"
@@ -276,7 +275,7 @@ void CCumulativeExpl::Explode()
 	{
 		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
 		// итератор нужен, значит здесь нельзя заводить итератор.
-		list<CExistingObject*> hitObjects;
+		std::list<CExistingObject*> hitObjects;
 		
 		// по статическим объектам
 		for ( CStObjCircleIter<false> iter( vExplCoord, 0 ); !iter.IsFinished(); iter.Iterate() )
@@ -286,7 +285,7 @@ void CCumulativeExpl::Explode()
 				hitObjects.push_back( pObj );
 		}
 		
-		for ( list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
+		for ( std::list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
 			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
 			const bool bExplResult = (*it)->ProcessCumulativeExpl( this, nArmorDir, false );
@@ -377,7 +376,7 @@ void CBurstExpl::Explode()
 		// по статическим объектам
 		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
 		// итератор нужен, значит здесь нельзя заводить итератор.
-		list<CExistingObject*> hitObjects;
+		std::list<CExistingObject*> hitObjects;
 		
 		// по статическим объектам
 		for ( CStObjCircleIter<false> iter( explCoord, fSmallRadius + 300.0f ); !iter.IsFinished(); iter.Iterate() )
@@ -386,7 +385,7 @@ void CBurstExpl::Explode()
 			if ( IsValidObj( pObj ) )
 				hitObjects.push_back( pObj );
 		}
-		for ( list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
+		for ( std::list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
 			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
 			const bool bExplResult = (*it)->ProcessBurstExpl( this, nArmorDir, fRadius, fSmallRadius );

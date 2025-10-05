@@ -13,7 +13,7 @@ CChatControlWrapper::CChatControlWrapper( IScrollableContainer *_pList, int _nMa
 		pItem->ShowWindow( false );
 }
 
-void CChatControlWrapper::AddItem( const wstring &wszText )
+void CChatControlWrapper::AddItem( const std::wstring &wszText )
 {
 	if ( !pList || !pItem )
 		return;

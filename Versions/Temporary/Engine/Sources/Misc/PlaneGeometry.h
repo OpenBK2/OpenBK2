@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc_export.h"
+#include "Win32Random.h"
 
 // Приведения типов
 
@@ -275,8 +276,8 @@ EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &
 		return CP_OUTSIDE;
 	}
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 	
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygon.end() )
@@ -343,8 +344,8 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 		return CP_OUTSIDE;
 	}
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygon.end() )
@@ -401,7 +402,7 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPolygon &rPol
 {
 	EClassifyPolygon classifyPolygonInside = CP_INSIDE;	
 	EClassifyPolygon classifyPolygonOutside = CP_OUTSIDE;	
-	for ( TPolygon::const_iterator itPoint = rPolygonCheck.begin(); itPoint != rPolygonCheck.end(); ++itPoint )
+	for (typename TPolygon::const_iterator itPoint = rPolygonCheck.begin(); itPoint != rPolygonCheck.end(); ++itPoint )
 	{
 		if ( ClassifyPolygon<TPolygon, TPoint>( rPolygon, *itPoint ) != CP_OUTSIDE )
 		{
@@ -433,8 +434,8 @@ float GetPolygonPerimeter( const TPolygon &rPolygon )
 		return 0.0f;
 	}
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 	++itCurrentPoint1;
 	//одна точка
 	if ( itCurrentPoint1 == rPolygon.end() )
@@ -468,9 +469,9 @@ float GetSignedPolygonSquare( const TPolygon &rPolygon )
 		return 0.0f;
 	}
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint2 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint2 = rPolygon.begin();
 	++itCurrentPoint1;
 	++itCurrentPoint2;
 	//одна точка
@@ -517,7 +518,7 @@ bool GetPolygonMassCenter( const TPolygon &rPolygon, TPoint *pvMassCenter )
 	}
 
 	int nPointCount = 1;
-	TPolygon::const_iterator itPoint = rPolygon.begin();
+	typename TPolygon::const_iterator itPoint = rPolygon.begin();
 	( *pvMassCenter ) = ( *itPoint );
 	++itPoint;
 	for ( ; itPoint != rPolygon.end(); ++itPoint )
@@ -684,7 +685,7 @@ inline void NormalazeDirection( float *pDirection )
 template<class TPolygon, class TPoint>
 void MovePoints( TPolygon *pPolygon, const TPoint &rvMove )
 {
-	for ( TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
+	for ( typename TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
 	{
 		MovePoint<TPoint>( &( *itPoint ), rvMove );
 	}
@@ -696,7 +697,7 @@ void RotatePoints( TPolygon *pPolygon, float a )
 {
 	const float fSinA = sin( a );
 	const float fCosA = cos( a );
-	for ( TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
+	for ( typename TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
 	{
 		const float fX = itPoint->x;
 		itPoint->x = ( fX * fCosA ) - ( itPoint->y * fSinA );
@@ -710,7 +711,7 @@ void RotatePoints( TPolygon *pPolygon, float a, const TPoint &rCenterPoint )
 {
 	const float fSinA = sin( a );
 	const float fCosA = cos( a );
-	for ( TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
+	for ( typename TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
 	{
 		TPoint point = ( *itPoint ) - rCenterPoint;
 		const float fX = point.x;
@@ -764,8 +765,8 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 		return true;
 	}
 
-	TPolygon::const_iterator itSourcePoint0 = rSourcePolygon.begin();
-	TPolygon::const_iterator itSourcePoint1 = rSourcePolygon.begin();
+	typename TPolygon::const_iterator itSourcePoint0 = rSourcePolygon.begin();
+	typename TPolygon::const_iterator itSourcePoint1 = rSourcePolygon.begin();
 
 	++itSourcePoint1;
 	if ( itSourcePoint1 == rSourcePolygon.end() )
@@ -920,8 +921,8 @@ bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, T
 		( *pCutPolygon ) = rPolygon;
 		return true;
 	}
-	TPolygon::const_iterator itCurrentPoint0 = rPolygonCore.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygonCore.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygonCore.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygonCore.begin();
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygonCore.end() )
 	{
@@ -992,7 +993,7 @@ bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, T
 
 
 template<class TPolygon, class TPoint>
-bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const vector<float> &weights, const TPoint &rPoint, float fWeight, TPolygon *pVoronoyPolygon )
+bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const std::vector<float> &weights, const TPoint &rPoint, float fWeight, TPolygon *pVoronoyPolygon )
 {
 	NI_ASSERT( pVoronoyPolygon != 0,
 		StrFmt( "Wrong parameter: pVoronoyPolygon %x\n", pVoronoyPolygon ) );
@@ -1065,7 +1066,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 
 	int nCount = 0;
 	
-	for ( TPolygon::const_iterator itPoint = rBoundingPolygon.begin(); itPoint != rBoundingPolygon.end(); ++itPoint )
+	for ( typename TPolygon::const_iterator itPoint = rBoundingPolygon.begin(); itPoint != rBoundingPolygon.end(); ++itPoint )
 	{
 		if ( ( itPoint->x != rPoint.x ) || ( itPoint->y != rPoint.y ) )
 		{
@@ -1087,7 +1088,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 		}
 	}
 
-	for ( TPolygon::const_iterator itPoint = rPoints.begin(); itPoint != rPoints.end(); ++itPoint )
+	for ( typename TPolygon::const_iterator itPoint = rPoints.begin(); itPoint != rPoints.end(); ++itPoint )
 	{
 		if ( ( itPoint->x != rPoint.x ) || ( itPoint->y != rPoint.y ) )
 		{
@@ -1180,7 +1181,7 @@ void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBo
 	//вырожденный случай
 	if ( !rPolygon.empty() )
 	{
-		TPolygon::const_iterator itPoint = rPolygon.begin();
+		typename TPolygon::const_iterator itPoint = rPolygon.begin();
 		pBoundingBox->Set( itPoint->x, itPoint->y, itPoint->x, itPoint->y );
 		for ( ++itPoint; itPoint != rPolygon.end(); ++itPoint )
 		{
@@ -1264,7 +1265,7 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 	}
 	else
 	{
-		TPolygon::const_iterator itTestSourcePoint = rSourceSequence.begin();
+		typename TPolygon::const_iterator itTestSourcePoint = rSourceSequence.begin();
 		++itTestSourcePoint;
 		if ( itTestSourcePoint == rSourceSequence.end() )
 		{
@@ -1286,8 +1287,8 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 		if ( ( nCount & 0x01 ) > 0 )
 		{
 			sequence0.clear();
-			TPolygon::const_iterator itSourcePoint0 = sequence1.begin();
-			TPolygon::const_iterator itSourcePoint1 = sequence1.begin();
+			typename TPolygon::const_iterator itSourcePoint0 = sequence1.begin();
+			typename TPolygon::const_iterator itSourcePoint1 = sequence1.begin();
 			++itSourcePoint1;
 			EClassifyEdge classifyEdge = ( NWin32Random::Random( 2 ) > 0 ) ? CE_LEFT : CE_RIGHT;
 			while ( itSourcePoint0 != sequence1.end() )
@@ -1326,8 +1327,8 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 		else
 		{
 			sequence1.clear();
-			TPolygon::const_iterator itSourcePoint0 = sequence0.begin();
-			TPolygon::const_iterator itSourcePoint1 = sequence0.begin();
+			typename TPolygon::const_iterator itSourcePoint0 = sequence0.begin();
+			typename TPolygon::const_iterator itSourcePoint1 = sequence0.begin();
 			++itSourcePoint1;
 			EClassifyEdge classifyEdge = ( NWin32Random::Random( 2 ) > 0 ) ? CE_LEFT : CE_RIGHT;
 			while ( itSourcePoint0 != sequence0.end() )
@@ -1390,8 +1391,8 @@ bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPoly
 	NI_ASSERT( pEnlargedPolygon != 0,
 						 StrFmt( "Wrong parameter: pEnlargedPolygon %x\n", pEnlargedPolygon ) );
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygon.end() )
 	{
@@ -1400,7 +1401,7 @@ bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPoly
 	}
 	else
 	{
-		TPolygon::const_iterator itCurrentPoint2 = itCurrentPoint1;
+		typename TPolygon::const_iterator itCurrentPoint2 = itCurrentPoint1;
 		++itCurrentPoint2;
 		if ( itCurrentPoint2 == rPolygon.end() )
 		{
@@ -1495,8 +1496,8 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 		return 0.0;
 	}
 
-	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
-	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
+	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 
 	//одна точка
 	++itCurrentPoint1;
@@ -1949,7 +1950,7 @@ bool ApplyTilesInRange( const CTRect<int> &rRect,
 												const CTPoint<int> &rMax,
 												Type &rApplyFunctional )
 {
-	return ApplyTilesInRange( rRect, rMin.x, rMin.y, rMax.x, rMax.y, rApplyFunctional )
+	return ApplyTilesInRange( rRect, rMin.x, rMin.y, rMax.x, rMax.y, rApplyFunctional );
 }
 
 template<class Type>

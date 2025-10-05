@@ -153,7 +153,7 @@ int CWindowEditLine::GetSelection( const int _nX )
 	
 	int i = 0;	// char number
 	//nCur += editRect.left;
-	for ( list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
+	for ( std::list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
 	{
 		nCur += it->Width();
 		if ( nCur > nX )
@@ -205,7 +205,7 @@ bool CWindowEditLine::DeleteSelection()
 
 bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 {
-	static const wstring szInValidSymbols = L"<>";
+	static const std::wstring szInValidSymbols = L"<>";
 	static const int nLen = szInValidSymbols.size();
 	for ( int i = 0; i < nLen; i++ )
 	{
@@ -218,7 +218,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 	case NDb::ETET_GAME_SPY:
 		{
 			//проверим, что символ удовлетворяет требованиям GameSpy NickName
-			static const wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
+			static const std::wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -231,7 +231,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 	case NDb::ETET_FILENAME:
 		{
 			//проверим, что символ удовлетворяет требованиям FileName symbols
-			static const wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
+			static const std::wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -243,7 +243,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 		break;
 	case NDb::ETET_NUMERIC:
 		{
-			static const wstring szValidSymbols = L"0123456789";
+			static const std::wstring szValidSymbols = L"0123456789";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -255,7 +255,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 		break;
 	case NDb::ETET_LOCAL_PLAYERNAME:
 		{
-			static const wstring szInValidSymbols = L"&'\"<>";
+			static const std::wstring szInValidSymbols = L"&'\"<>";
 			static const int nLen = szInValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -297,11 +297,11 @@ void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 		LPTSTR lptstr = (LPTSTR)GlobalLock(h); 
 		if ( lptstr != NULL ) 
 		{ 
-			const wstring szInserted( NStr::ToUnicode(lptstr) );
+			const std::wstring szInserted( NStr::ToUnicode(lptstr) );
 			GlobalUnlock(h); 
 			CloseClipboard();
 
-			const wstring wszOldText = wszFullText;
+			const std::wstring wszOldText = wszFullText;
 			const int nOldCursorPos = nCursorPos;
 			const int nStrLen = szInserted.size();
 			for ( int i = 0; i < nStrLen; ++i )
@@ -382,9 +382,9 @@ void CWindowEditLine::CopySelectionToClipboard()
 	} 
 
 	// get selection
-	wstring wszToCopy = &wszFullText[nBeginSel];
+	std::wstring wszToCopy = &wszFullText[nBeginSel];
 	wszToCopy.resize( nEndSel - nBeginSel );
-	const string szToCopy( NStr::ToMBCS( wszToCopy ) );
+	const std::string szToCopy( NStr::ToMBCS( wszToCopy ) );
 
 	// Lock the handle and copy the text to the buffer. 
 	LPTSTR lptstrCopy = (LPTSTR)GlobalLock( hglbCopy ); 
@@ -402,7 +402,7 @@ void CWindowEditLine::OnTab( const struct SGameMessage &msg )
 	if ( !IsFocused() )
 		return;
 
-	const wstring wszOldText = wszFullText;
+	const std::wstring wszOldText = wszFullText;
 	const int nOldCursorPos = nCursorPos;
 
 	if ( pInstance->eTextEntryType != NDb::ETET_NUMERIC && pInstance->eTextEntryType != NDb::ETET_GAME_SPY && pInstance->eTextEntryType != NDb::ETET_FILENAME )
@@ -591,7 +591,7 @@ bool CWindowEditLine::OnKey( const SGameMessage &msg )
 
 bool CWindowEditLine::AddChar( const wchar_t chr )
 {
-	const wstring wszOldText = wszFullText;
+	const std::wstring wszOldText = wszFullText;
 	const int nOldCursorPos = nCursorPos;
 	if ( IsValidSymbol( chr ) )
 	{
@@ -696,11 +696,11 @@ int CWindowEditLine::GetTextWidth( const int nFirstChars )
 	{
 		if ( rectsList.empty() )
 			return 0;
-		list<CTRect<float> >::const_iterator pos = rectsList.end();
+		std::list<CTRect<float> >::const_iterator pos = rectsList.end();
 		--pos;
 		return pos->x2;
 	}
-	list<CTRect<float> >::const_iterator it = rectsList.begin();
+	std::list<CTRect<float> >::const_iterator it = rectsList.begin();
 	
 	advance( it, nFirstChars );
 	if ( it == rectsList.end() )
@@ -816,7 +816,7 @@ void CWindowEditLine::EnsureCursorVisible()
 	pText->SetText( wszFullText.c_str() + nBeginText );
 	pGfxText->SetText( pText );
 */
-	wstring wszTmp = wszFullText.c_str() + nBeginText;
+	std::wstring wszTmp = wszFullText.c_str() + nBeginText;
 	SetTextToGfx( wszTmp );
 
 	if ( nCursorPos <= 0 && nBeginText > 0 )
@@ -837,7 +837,7 @@ void CWindowEditLine::EnsureCursorVisible()
 			nBeginText--;
 			nCursorPos++;
 		}
-		const wstring wszTmp = wszFullText.c_str() + nBeginText;
+		const std::wstring wszTmp = wszFullText.c_str() + nBeginText;
 		SetTextToGfx( wszTmp );
 	}
 	else if ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )
@@ -856,7 +856,7 @@ void CWindowEditLine::EnsureCursorVisible()
 			}
 			if ( !wszFullText.empty() )
 			{
-				const wstring wszTmp = wszFullText.c_str() + nBeginText;
+				const std::wstring wszTmp = wszFullText.c_str() + nBeginText;
 				SetTextToGfx( wszTmp );
 			}
 			else
@@ -868,11 +868,11 @@ void CWindowEditLine::EnsureCursorVisible()
 	}
 }
 
-void CWindowEditLine::SetTextToGfx( const wstring &szText )
+void CWindowEditLine::SetTextToGfx( const std::wstring &szText )
 {
 	CTRect<float> wndRect;
 	FillWindowRectEditLine( &wndRect );
-	wstring wszText;
+	std::wstring wszText;
 	if ( pInstance->bPassword )
 	{
 		for ( int i = szText.size(); i != 0 ; i-- )
@@ -888,7 +888,7 @@ void CWindowEditLine::SetTextToGfx( const wstring &szText )
 	rectsList.clear();
 	pGfxText->Render( &rectsList, CTPoint<float>( 0, 0 ), CTRect<float>( 0, 0, 0, 0 ) );
 	//DEBUG{
-	list<CTRect<float> >::const_iterator it = rectsList.begin();
+	std::list<CTRect<float> >::const_iterator it = rectsList.begin();
 	while ( it != rectsList.end() )
 	{
 		CTRect<float> dbg = *it;
@@ -903,7 +903,7 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 	CTRect<float> wndRect;
 	FillWindowRectEditLine( &wndRect );
 
-	wstring wszTmp = wszFullText.c_str() + nBeginText;
+	std::wstring wszTmp = wszFullText.c_str() + nBeginText;
 	SetTextToGfx( wszTmp );
 
 	//сперва проверим ограничение на максимальную длину текста
@@ -914,7 +914,7 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 		return true;
 
 	int nTextWidth = 0;
-	for ( list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
+	for ( std::list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
 		nTextWidth += it->Width();
 	return GetTextWidth( -1 ) < wndRect.Width() - 2;
 }

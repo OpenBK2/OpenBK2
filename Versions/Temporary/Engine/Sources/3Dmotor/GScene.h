@@ -103,7 +103,7 @@ public:
 	};
 	////
 	ZDATA
-	vector<SFlare> flares;
+	std::vector<SFlare> flares;
 	CDGPtr<CPtrFuncBase<NGfx::CTexture> > pOverbright;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&flares); f.Add(3,&pOverbright); return 0; }
 };
@@ -134,7 +134,7 @@ public:
 
 		SObject( SRenderGeometryInfo *_pInfo, int _nIdx ) : pInfo(_pInfo), nIdx(_nIdx) {}
 	};
-	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render ) = 0;
+	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render ) = 0;
 };
 
 // hintBV specifies area where object will be moving, if area is not limited just specify very large BV
@@ -152,16 +152,16 @@ public:
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
 		CFuncBase<SFBTransform> *pPlacement, CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
-		CFuncBase<vector<SHMatrix> > *pPlacement, CFuncBase<vector<NGfx::SCompactTransformer> > *_pMMXAnim, 
+		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
-		CFuncBase<vector<SHMatrix> > *pPlacement, CFuncBase<vector<NGfx::SCompactTransformer> > *_pMMXAnim, 
+		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		const SBound &_bv, const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo, CFuncBase<SFBTransform> *pPlacement, IMaterial *pMat, 
 		CFuncBase<SBound> *pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateParticles( CPtrFuncBase<CParticleEffect> *pInfo,
 		CFuncBase<SFBTransform> *pPlacement, const SBound &bound, const SBound &hintBV, const SGroupInfo &_ginfo, int nPFlags ) = 0;
-	virtual CPolyline* CreatePolyline( CPtrFuncBase<NGfx::CGeometry> *pGeometry, const vector<unsigned short> &indices, 
+	virtual CPolyline* CreatePolyline( CPtrFuncBase<NGfx::CGeometry> *pGeometry, const std::vector<unsigned short> &indices,
 		const CVec4 &color, bool bDepthTest ) = 0;
 	virtual CObjectBase* CreatePostProcessor( CObjectBase *pRenderNode, IPostProcess *pProcessor ) = 0;
 	virtual void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight ) = 0;
@@ -176,7 +176,7 @@ public:
 	virtual CObjectBase* AddPointLight( CPtrFuncBase<CAnimLight> *pLight ) = 0;
 	virtual CObjectBase* AddSpotLight( CFuncBase<CVec3> *pColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, 
 		float fRadius, CPtrFuncBase<NGfx::CTexture> *pMask, bool bLightmapOnly ) = 0;
-	virtual CDecalTarget* CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info ) = 0;
+	virtual CDecalTarget* CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info ) = 0;
 	virtual CObjectBase* AddDecal( NGScene::CDecalTarget *pTarget, IMaterial *pMaterial ) = 0;
 	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale ) = 0;
 	virtual void LoadEverything() = 0;
@@ -192,7 +192,7 @@ public:
 	virtual void WaitForLoad( bool bWait = true ) = 0;
 	virtual void SetTwilight( bool _bIsTwilight ) = 0;
 	virtual CFuncBase<CVec3> *GetParticlesLightColor() = 0;
-	virtual void CollectAllParts( vector<CObjectBase*> *pRes ) = 0;
+	virtual void CollectAllParts( std::vector<CObjectBase*> *pRes ) = 0;
 
 	virtual void SetLoadingCounter( ILoadingCounter *pCounter ) = 0;
 };
@@ -216,7 +216,7 @@ _3DMOTOR_EXPORT void Flip();
 _3DMOTOR_EXPORT int CalcTouchedTextureSize();
 bool GetGeometryObjectInfo( CObjectBase *p, 
 	CPtrFuncBase<CObjectInfo> **pGeometry, SFBTransform *pPos, SFullGroupInfo *pGroupInfo );
-CFuncBase<vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<vector<SHMatrix> > *pAnim );
+CFuncBase<std::vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<std::vector<SHMatrix> > *pAnim );
 void SetPartFade( CObjectBase *p, float fFade );
 void SetPartPriority( CObjectBase *_p, int _nPriority );
 void SetPartLM( CObjectBase *p, CPtrFuncBase<NGfx::CTexture> *pLM );//CFuncBase<CArray2D<NGfx::SPixel8888> > *pLM )

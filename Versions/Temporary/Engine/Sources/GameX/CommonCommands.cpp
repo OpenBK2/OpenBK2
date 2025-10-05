@@ -15,7 +15,7 @@
 // **
 // ************************************************************************************************************************ //
 
-vector< list<unsigned long> > CControlSumCheckCommand::checkSums;
+std::vector< std::list<unsigned long> > CControlSumCheckCommand::checkSums;
 WORD CControlSumCheckCommand::wMask;
 
 void CControlSumCheckCommand::Execute()
@@ -169,7 +169,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 	NGlobal::SetVar( "out_of_sync", 0 );
 	int nOutOfSyncs = 0;
 	int nOutOfSyncWith = 0;		// number of players we are async with
-	vector<bool> asyncWith;
+	std::vector<bool> asyncWith;
 	asyncWith.resize( 16, false );
 	unsigned long checkSum;
 

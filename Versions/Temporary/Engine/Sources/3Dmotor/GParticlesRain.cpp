@@ -57,9 +57,9 @@ void CRainAnimator::Recalc()
 	//fpMaxH = vCameraPos.z + FP_LIMIT_DISTANCE;
 	float fWrapCenterZ = vCameraPos.z;
 	int nBufSpace = sqr( N_PARTICLES_S_NUMBER * 2 + 1 );
-	vector<char> faces( nBufSpace );
-	vector<CVec3> positions( nBufSpace );
-	vector<CVec3> directions( nBufSpace );
+	std::vector<char> faces( nBufSpace );
+	std::vector<CVec3> positions( nBufSpace );
+	std::vector<CVec3> directions( nBufSpace );
 	int nTotalParticles = 0;
 	for ( int y = -N_PARTICLES_S_NUMBER; y <= N_PARTICLES_S_NUMBER; ++y )
 	{
@@ -98,7 +98,7 @@ void CRainAnimator::Recalc()
 	directions.resize( nTotalParticles );
 	if ( IsValid(pFilter) )
 	{
-		vector<char> fake, filter;
+		std::vector<char> fake, filter;
 		pFilter->FilterParticles( positions, fake, &filter );
 		pRealValue->faces.resize( nTotalParticles );
 		pRealValue->positions.resize( nTotalParticles );

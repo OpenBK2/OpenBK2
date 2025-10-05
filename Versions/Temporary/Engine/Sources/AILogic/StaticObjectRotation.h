@@ -150,7 +150,7 @@ public:
 	
 		vRotationVector = CVec2( NMath::Cos( 2 * PI * (_wAngle) / 65536.0f ), NMath::Sin( 2 * PI * (_wAngle) / 65536.0f ) );
 		vRotationVectorBack = CVec2( NMath::Cos( 2 * PI * (65536 - _wAngle) / 65536.0f ), NMath::Sin( 2 * PI * ( 65536 - _wAngle) / 65536.0f ) );
-		vector<CVec2> vVertices;
+		std::vector<CVec2> vVertices;
 		
 		CVec2 vPt = -vOrigin;
 		vVertices.push_back( ( vPt ^ vRotationVector) + vCenter );

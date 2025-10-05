@@ -193,7 +193,7 @@ void CStaticObjects::DeleteInternalObjectInfo( CExistingObject *pObj )
 void CStaticObjects::DeleteInternalEntrenchmentInfo( CEntrenchment *pEntrench )
 {
 	CObjectBase *pObj = pEntrench;
-	list< CObj<CObjectBase> > ::iterator iter = entrenchments.begin();
+	std::list< CObj<CObjectBase> > ::iterator iter = entrenchments.begin();
 	while ( iter != entrenchments.end() && (*iter) != pObj )
 		++iter;
 
@@ -226,7 +226,7 @@ CStaticObject* CStaticObjects::AddNewSmokeScreen( const CVec3 &vCenter, const fl
 	return pObj;
 }
 
-CExistingObject* CStaticObjects::AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner )
+CExistingObject* CStaticObjects::AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner )
 {
 	CEntrenchmentTankPit *pObj = new CEntrenchmentTankPit( pStats, center, dir, nFrameIndex, vHalfSize, tilesToLock, pOwner );
 	pObj->Mem2UniqueIdObjs();
@@ -343,7 +343,7 @@ CStaticObject* CStaticObjects::AddNewBridgeSpan( const SBridgeRPGStats *pStats, 
 void CStaticObjects::PostAllObjectsInit()
 {
 	theBridgeHeightsRemover.Clear();
-	for ( list<CPtr<CBridgeSpan> >::iterator it = bridges.begin(); it != bridges.end(); ++it )
+	for ( std::list<CPtr<CBridgeSpan> >::iterator it = bridges.begin(); it != bridges.end(); ++it )
 	{
 		(*it)->SetHeights();
 	}
@@ -367,7 +367,7 @@ void CStaticObjects::RemoveObstacle( struct IObstacle *pObstacle )
 
 void CStaticObjects::AddObstacle( struct IObstacle *pObstacle )
 {
-	obstacleObjects.insert( pair< int, CPtr<IObstacle> >(pObstacle->GetObject()->GetUniqueId(), pObstacle ) );
+	obstacleObjects.insert( std::pair< int, CPtr<IObstacle> >(pObstacle->GetObject()->GetUniqueId(), pObstacle ) );
 	obstacles.AddToPosition( pObstacle, AICellsTiles::GetTile( CVec2(pObstacle->GetCenter().x,pObstacle->GetCenter().y) ) );
 }
 
@@ -434,7 +434,7 @@ void CStaticObjects::AddObjectToAreaMapTile( CExistingObject *pObj, const SVecto
 
 void CStaticObjects::AddToAreaMap( CExistingObject *pObj )
 {
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	pObj->GetCoveredTiles( &tiles );
 	
 	// чтобы не удалился после update
@@ -442,7 +442,7 @@ void CStaticObjects::AddToAreaMap( CExistingObject *pObj )
 		AddObjectToAreaMapTile( pObj, AICellsTiles::GetTile( CVec2(pObj->GetCenter().x,pObj->GetCenter().y) ) );
 	else
 	{
-		for ( list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 			AddObjectToAreaMapTile( pObj, *iter );
 	}
 
@@ -461,14 +461,14 @@ void CStaticObjects::RemoveObjectFromAreaMapTile( CExistingObject *pObj, const S
 
 void CStaticObjects::RemoveFromAreaMap( CExistingObject *pObj )
 {
-	list<SVector> tiles;
+	std::list<SVector> tiles;
 	pObj->GetCoveredTiles( &tiles );
 
 	if ( tiles.empty() )
 		RemoveObjectFromAreaMapTile( pObj, AICellsTiles::GetTile( CVec2(pObj->GetCenter().x,pObj->GetCenter().y) ) );
 	else
 	{
-		for ( list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 			RemoveObjectFromAreaMapTile( pObj, *iter );
 	}
 
@@ -515,11 +515,11 @@ void CStaticObjects::Segment()
 	deletedObjects.clear();
 
 	// горящие объекты
-	list<int> burningList;
-	for ( hash_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
+	std::list<int> burningList;
+	for ( std::unordered_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
 		burningList.push_back( *iter );
 
-	for ( list<int>::iterator iter = burningList.begin(); iter != burningList.end(); ++iter )
+	for ( std::list<int>::iterator iter = burningList.begin(); iter != burningList.end(); ++iter )
 	{
 		CExistingObject *pObj = GetObjectByUniqueIdSafe<CExistingObject>( *iter );
 		if ( !pObj || !pObj->IsRefValid() || !pObj->IsAlive() )
@@ -551,7 +551,7 @@ void CStaticObjects::UpdateAllObjectsPos()
 		}
 	}
 
-	hash_map<int, CPtr<CFullBridge> > fullBridges;
+	std::unordered_map<int, CPtr<CFullBridge> > fullBridges;
 	for ( CStObjGlobalIter<false> iter; !iter.IsFinished(); iter.Iterate() )
 	{
 		CExistingObject *pObj = *iter;
@@ -572,7 +572,7 @@ void CStaticObjects::UpdateAllObjectsPos()
 		}
 	}
 
-	for ( hash_map<int, CPtr<CFullBridge> >::iterator it = fullBridges.begin(); it != fullBridges.end(); ++it )
+	for ( std::unordered_map<int, CPtr<CFullBridge> >::iterator it = fullBridges.begin(); it != fullBridges.end(); ++it )
 		it->second->InitEntireBridge();
 	
 }

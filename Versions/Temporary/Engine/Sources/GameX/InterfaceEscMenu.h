@@ -16,8 +16,8 @@ public:
 		~CReactions()	{	}
 		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) : 
 			pScreen( _pScreen ), pInterface( _pInterface ) {   }
-		virtual bool Execute( const string &szSender, const string &szReaction );
-		virtual int Check( const string &szCheckName ) const;
+		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
+		virtual int Check( const std::string &szCheckName ) const;
 		
 		int operator&( IBinSaver &saver )
 		{
@@ -57,13 +57,13 @@ private:
 	void MsgOk( const SGameMessage &msg );
 	void MsgCancel( const SGameMessage &msg );
 	void MsgWinned( const SGameMessage &msg );
-	void OnSave( const string &szSender );
-	void OnLoad( const string &szSender );
-	bool OnRestartMission( const string &szSender );
-	bool OnEndMissionSubMenu( const string &szSender );
-	bool OnEndMissionReturnToGame( const string &szSender );
-	bool OnMenuBack( const string &szSender );
-	bool OnMPMenuBack( const string &szSender );
+	void OnSave( const std::string &szSender );
+	void OnLoad( const std::string &szSender );
+	bool OnRestartMission( const std::string &szSender );
+	bool OnEndMissionSubMenu( const std::string &szSender );
+	bool OnEndMissionReturnToGame( const std::string &szSender );
+	bool OnMenuBack( const std::string &szSender );
+	bool OnMPMenuBack( const std::string &szSender );
 	bool OnFinishReplay();
 	
 	void MsgMultiplayerEndMission( const SGameMessage &msg );

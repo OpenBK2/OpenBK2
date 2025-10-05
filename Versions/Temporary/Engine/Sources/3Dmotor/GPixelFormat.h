@@ -219,7 +219,7 @@ struct STriangleList
 	int nOffset;
 
 	STriangleList() : pTri(0), nTris(0), nBaseIndex(0), nOffset(0) {}
-	STriangleList( const vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex(0), nOffset(0) {}
+	STriangleList( const std::vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex(0), nOffset(0) {}
 	STriangleList( const STriangle *_pTri, int _nTris, int _nBaseIndex = 0, int _nOffset = 0 ) : pTri(_pTri), nTris(_nTris), nBaseIndex(_nBaseIndex), nOffset(_nOffset) {}
 };
 

@@ -22,7 +22,7 @@ class CArtillery : public CAIUnit
 	CPtr<CMechUnitGuns> pGuns;
 
 	// вращающаяся пушка
-	vector< CObj<CTurret> > turrets;
+	std::vector< CObj<CTurret> > turrets;
 
 	EActionNotify eCurInstallAction, eNextInstallAction;
 	// в каком из install/uninstall мы сейчас находимся

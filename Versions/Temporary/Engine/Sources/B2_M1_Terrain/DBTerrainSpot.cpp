@@ -46,7 +46,7 @@ int STerrainSpotDesc::operator&( IBinSaver &saver )
 
 
 
-void STerrainSpotInstance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void STerrainSpotInstance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (BYTE*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "SpotID", (BYTE*)&nSpotID - pThis, sizeof(nSpotID), NTypeDef::TYPE_TYPE_INT );

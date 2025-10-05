@@ -7,7 +7,7 @@
 
 struct SLoadNoise
 {
-	string szFileName;
+	std::string szFileName;
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -29,7 +29,7 @@ CNoiseManager::CNoiseManager()
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	NI_ASSERT( pSaver, "Can't create XML saver for Noises\\noises.xml reading" );
 
-	vector<SNoiseStored> vLoadNoises;
+	std::vector<SNoiseStored> vLoadNoises;
 
 	pSaver->Add( "Noises", &vLoadNoises );
 
@@ -50,9 +50,9 @@ CNoiseAccessor CNoiseManager::GetNoise( unsigned int nNoiseNum )
 	return CNoiseAccessor( noises[nNoiseNum].noise );
 }
 
-CNoiseAccessor CNoiseManager::GetNoise( const string &_szName )
+CNoiseAccessor CNoiseManager::GetNoise( const std::string &_szName )
 {
-	string szName;
+	std::string szName;
 	NStr::ToLowerASCII( &szName, _szName );
 	for ( int i = 0; i < noises.size(); ++i )
 	{

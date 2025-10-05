@@ -58,7 +58,7 @@ void StepSceneHoldQueue( const NTimer::STime _timeCurrTime )
 	timeLastTime = timeCurrTime;
 }
 
-void GetSceneHoldedObjects( list<CObjectBase*> *pObjects, bool bSerializeable )
+void GetSceneHoldedObjects( std::list<CObjectBase*> *pObjects, bool bSerializeable )
 {
 	if ( bSerializeable )
 	{
@@ -80,7 +80,7 @@ void GetSceneHoldedObjects( list<CObjectBase*> *pObjects, bool bSerializeable )
 
 struct SSceneHoldQueueSerializer
 {
-	vector< list< CObj<CObjectBase> > > data;
+	std::vector< std::list< CObj<CObjectBase> > > data;
 	//
 	SSceneHoldQueueSerializer(): data( N_HOLD_TIME ) {}
 	int operator&( IBinSaver &saver )
@@ -99,7 +99,7 @@ void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 		saver.Add( chunkID, &hq );
 		for ( int i = 0; i < N_HOLD_TIME; ++i )
 		{
-			for ( list< CObj<CObjectBase> >::iterator it = hq.data[i].begin(); it != hq.data[i].end(); ++it )
+			for ( std::list< CObj<CObjectBase> >::iterator it = hq.data[i].begin(); it != hq.data[i].end(); ++it )
 				*serializableSceneHoldQueue[i].Alloc() = it->GetPtr();
 		}
 	}

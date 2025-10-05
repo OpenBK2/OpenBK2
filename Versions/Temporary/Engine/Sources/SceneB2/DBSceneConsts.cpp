@@ -11,7 +11,7 @@ namespace NDb
 
 
 
-void SLightEffectConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SLightEffectConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LightConeTexture", (BYTE*)&pLightConeTexture - pThis, sizeof(pLightConeTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "FlareTexture", (BYTE*)&pFlareTexture - pThis, sizeof(pFlareTexture), NTypeDef::TYPE_TYPE_REF );
@@ -53,7 +53,7 @@ DWORD SLightEffectConsts::CalcCheckSum() const
 
 
 
-void SSceneConsts::SSelectionMaterials::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SSelectionMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Air", (BYTE*)&pAir - pThis, sizeof(pAir), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Water", (BYTE*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
@@ -92,7 +92,7 @@ DWORD SSceneConsts::SSelectionMaterials::CalcCheckSum() const
 
 
 
-void SSceneConsts::STrackMaterials::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSceneConsts::STrackMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Track", (BYTE*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
 }
@@ -125,7 +125,7 @@ DWORD SSceneConsts::STrackMaterials::CalcCheckSum() const
 
 
 
-void SSceneConsts::SIconAIGeometry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SIconAIGeometry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (BYTE*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
 }
@@ -158,7 +158,7 @@ DWORD SSceneConsts::SIconAIGeometry::CalcCheckSum() const
 
 
 
-void SSceneConsts::STerraGenConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSceneConsts::STerraGenConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "BorderSmoothNoise", (BYTE*)&szBorderSmoothNoise - pThis, sizeof(szBorderSmoothNoise), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextureCombiningNoise", (BYTE*)&szTextureCombiningNoise - pThis, sizeof(szTextureCombiningNoise), NTypeDef::TYPE_TYPE_STRING );
@@ -197,7 +197,7 @@ DWORD SSceneConsts::STerraGenConsts::CalcCheckSum() const
 
 
 
-void SSceneConsts::SDebugMaterials::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SDebugMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "RedMaterial", (BYTE*)&pRedMaterial - pThis, sizeof(pRedMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "GreenMaterial", (BYTE*)&pGreenMaterial - pThis, sizeof(pGreenMaterial), NTypeDef::TYPE_TYPE_REF );

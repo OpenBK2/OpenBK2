@@ -23,7 +23,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 // CTabHandler
@@ -36,7 +36,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 // CColorHandler
@@ -52,7 +52,7 @@ private:
 public:
 	CColorHandler(){}
 	CColorHandler( SFadeValue* pFadeValue ): sFadeValue( pFadeValue ){}
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 // CFontHandler
@@ -65,7 +65,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 // CMinFontSizeHandler
@@ -78,7 +78,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
 #define DECALRE_SIMPLE_HANDLER( Name, Fnc, Value )\
@@ -88,7 +88,7 @@ class Name: public IHandler												\
 private:																					\
 	int operator&( IBinSaver &f ) { return 0; }			\
 public:																						\
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const vector<wstring> &paramsSet )	\
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )	\
 	{																								\
 		pLayout->AddObject( Fnc( Value ) );						\
 	}																								\

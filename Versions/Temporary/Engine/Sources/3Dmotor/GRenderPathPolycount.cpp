@@ -7,8 +7,8 @@ namespace NGScene
 void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pRender, CSceneFragments &scene )
 {
 	CRenderCmdList lightOps;
-	const vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
-	vector<CVec4> colors;
+	const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+	std::vector<CVec4> colors;
 	colors.resize( fragments.size(), CVec4(0,0,0,0) );
 	for ( int k = 0; k < fragments.size(); ++k )
 	{

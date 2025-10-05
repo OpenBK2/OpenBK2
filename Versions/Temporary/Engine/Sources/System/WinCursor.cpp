@@ -9,9 +9,9 @@
 
 namespace NWinCursor
 {
-HCURSOR LoadCursor( const string &szFileName )
+HCURSOR LoadCursor( const std::string &szFileName )
 {
-	const string szTempFile( NFile::GetTempFileName() );	
+	const std::string szTempFile( NFile::GetTempFileName() );
 	{
 		CFileStream file( NVFS::GetMainVFS(), szFileName );
 		if ( !file.IsOk() )

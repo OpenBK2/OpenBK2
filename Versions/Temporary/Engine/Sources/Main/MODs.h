@@ -18,15 +18,15 @@ namespace NMOD
 struct SMOD
 {
 	ZDATA
-	wstring wszName;											// MOD short name
-	wstring wszDesc;											// MOD long description
+	std::wstring wszName;											// MOD short name
+	std::wstring wszDesc;											// MOD long description
 	NFile::CFilePath szFullFolderPath;		// full folder path to MOD
 	NFile::CFilePath szRelativePath;			// path, relative to MODs base
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&wszDesc); f.Add(4,&szFullFolderPath); f.Add(5,&szRelativePath); return 0; }
 };
 
 //! get list of all available mods
-MAIN_EXPORT void GetAllMODs( vector<SMOD> *pMODs );
+MAIN_EXPORT void GetAllMODs( std::vector<SMOD> *pMODs );
 //! instantly attach mod (in game use it only for start)
 MAIN_EXPORT void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode );
 //! correctly attach mod through game mechanisms

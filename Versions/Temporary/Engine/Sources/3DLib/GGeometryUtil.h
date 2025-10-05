@@ -19,29 +19,29 @@ struct SVxCache
 class CTriVertexCacheOptimizer
 {
 private:
-	vector<int> triPerVertex;
-	vector<int> tpvIndex;
-	vector<int> freeLinks;
-	vector<char> isUsed;
-	vector<int> cachePos;
-	vector<int> cache;
-	vector<int> outQueue, outPrevPos;
+	std::vector<int> triPerVertex;
+	std::vector<int> tpvIndex;
+	std::vector<int> freeLinks;
+	std::vector<char> isUsed;
+	std::vector<int> cachePos;
+	std::vector<int> cache;
+	std::vector<int> outQueue, outPrevPos;
 	int nVertices;
 	bool bEvictedReferencedVertex;
 	int nVCacheSize;
-	vector<int> lastTry;
+	std::vector<int> lastTry;
 	int nTryCount;
 	int nOutQueueSize, nOutPrevPosSize;
 
-	void CountVertices( const vector<STriangle> &tris );
-	void Init( const vector<STriangle> &tris );
+	void CountVertices( const std::vector<STriangle> &tris );
+	void Init( const std::vector<STriangle> &tris );
 	struct SStartSearch
 	{
 		int nBestIdx, nBestFreeLinks;
 		CTriVertexCacheOptimizer *pOptimizer;
-		const vector<STriangle> &tris;
+		const std::vector<STriangle> &tris;
 
-		SStartSearch( CTriVertexCacheOptimizer *pO, const vector<STriangle> &_tris ) : nBestIdx(-1), nBestFreeLinks(1000000), pOptimizer(pO), tris(_tris) {}
+		SStartSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris ) : nBestIdx(-1), nBestFreeLinks(1000000), pOptimizer(pO), tris(_tris) {}
 		void Try( int nTri )
 		{
 			const STriangle &q = tris[nTri];
@@ -61,8 +61,8 @@ private:
 	{
 		int nBestIdx, nBestCached, nBestFreeLinks, nBestDistance;
 		CTriVertexCacheOptimizer *pOptimizer;
-		const vector<STriangle> &tris;
-		SBestSearch( CTriVertexCacheOptimizer *pO, const vector<STriangle> &_tris ) : nBestIdx( -1 ), nBestCached( -1 ), pOptimizer(pO), tris(_tris) {}
+		const std::vector<STriangle> &tris;
+		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris ) : nBestIdx( -1 ), nBestCached( -1 ), pOptimizer(pO), tris(_tris) {}
 		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize ) 
 		{
 			if ( n <= *pnResDistance )
@@ -176,14 +176,14 @@ private:
 			}
 		}
 	};
-	int SearchBest( const vector<STriangle> &tris );
-	void MeasureEfficiency( const vector<STriangle> &tris );
+	int SearchBest( const std::vector<STriangle> &tris );
+	void MeasureEfficiency( const std::vector<STriangle> &tris );
 	bool OutputVertex( int n );
 	void ReverseVertex();
-	int CountNotCachedFL( const vector<STriangle> &tris, int nVertex );
-	void OptimizeVertexOrder( vector<STriangle> &tris, int *pnResVerts, vector<WORD> *pVertexReorder );
+	int CountNotCachedFL( const std::vector<STriangle> &tris, int nVertex );
+	void OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<WORD> *pVertexReorder );
 public:
-	void Optimize( vector<STriangle> *pTris, vector<WORD> *pVertexReorder, int *pnResVerts, int nVCacheSize );
+	void Optimize( std::vector<STriangle> *pTris, std::vector<WORD> *pVertexReorder, int *pnResVerts, int nVCacheSize );
 };
 
 struct SEdgeInfo

@@ -54,7 +54,7 @@ public:
 	virtual const CVec3& GetCenter() const = 0;
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const = 0;
 	virtual void GetBoundRect( SRect *pRect ) const = 0;
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const = 0;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const = 0;
 	virtual bool IsPointInside( const CVec2 &point ) const = 0;
 	virtual const WORD GetDir() const = 0;
 
@@ -172,7 +172,7 @@ public:
 	virtual void SetNewPlacement( const CVec3 &center, const WORD dir );
 
 	virtual void LockTiles() = 0;
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles ) = 0;
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) = 0;
 	virtual void UnlockTiles() = 0;
 	virtual void SetTransparencies() = 0;
 	virtual void RemoveTransparencies() = 0;
@@ -233,7 +233,7 @@ class CGivenPassabilityStObject : public CExistingObject
 		SAIAngle wDir;
 		CPtr<CObjectProfile> pPassProfile;
 		CPtr<CObjectProfile> pVisProfile;
-		list<SObjTileInfo> lockedTiles;
+		std::list<SObjTileInfo> lockedTiles;
 		public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExistingObject*)this); f.Add(2,&center); f.Add(3,&boundRect); f.Add(4,&lockInfo); f.Add(5,&bTransparencySet); f.Add(6,&wDir); f.Add(7,&pPassProfile); f.Add(8,&pVisProfile); f.Add(9,&lockedTiles); return 0; }
 protected:
@@ -264,13 +264,13 @@ public:
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 
-	virtual void GetCoveredTiles( list<SVector> *pTiles ) const;
+	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void GetBoundRect( SRect *pRect ) const { *pRect = boundRect; }
 	virtual bool IsPointInside( const CVec2 &point ) const;
 
 	virtual void LockTiles();
 	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( list<SObjTileInfo> *pTiles );
+	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
 	virtual void SetTransparencies() { SetTransparenciesInt( GetUniqueId() ); }
 	virtual void RemoveTransparencies() { RemoveTransparenciesInt( GetUniqueId() ); }
 	virtual void RestoreTransparenciesImmidiately();

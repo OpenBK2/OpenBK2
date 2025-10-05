@@ -18,7 +18,7 @@ namespace NGScene
 	{
 		OBJECT_NOCOPY_METHODS( CLightmapsLoader );
 		ZDATA
-		string szName;
+		std::string szName;
 		int   nUseCount;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&nUseCount); return 0; }
 		
@@ -27,7 +27,7 @@ namespace NGScene
 		const CArray2D< NGfx::SPixel8888 > &GetTexture(int UID);
 		CLightmapsLoader(){};
 		CLightmapsHolder *GetHolder();
-		CLightmapsLoader(const string &_szName):szName(_szName){};
+		CLightmapsLoader(const std::string &_szName):szName(_szName){};
 		void ReleaseHint();
 
 	};

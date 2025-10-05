@@ -94,12 +94,12 @@ public:
 	unsigned char* GetBufferForWrite() const { ASSERT( CanWrite() ); return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer; }
 	//
 	// стандартные операции ввода/вывода
-	void ReadString( string &res, int nMaxSize = -1 );
-	void WriteString( const string &res );
+	void ReadString( std::string &res, int nMaxSize = -1 );
+	void WriteString( const std::string &res );
 	template<class T> CDataStream& operator>>( T &res ) { Read( &res, sizeof(res) ); return *this; }
 	template<class T> CDataStream& operator<<( const T &res ) { Write( &res, sizeof(res) ); return *this; }
-	template<> CDataStream& operator>>( string &res ) { ReadString( res ); return *this; }
-	template<> CDataStream& operator<<( const string &res ) { WriteString( res ); return *this; }
+	template<> CDataStream& operator>>( std::string &res ) { ReadString( res ); return *this; }
+	template<> CDataStream& operator<<( const std::string &res ) { WriteString( res ); return *this; }
 	bool IsOk() const { return ( data.nFlags & F_Broken ) == 0; }
 	bool CanRead() const { return ( data.nFlags & F_CanRead ) != 0; }
 	bool CanWrite() const { return ( data.nFlags & F_CanWrite ) != 0; }
@@ -157,11 +157,11 @@ private:
 	void operator=( const CFileStream &stream );
 public:
 	// open file
-	CFileStream( NVFS::IVFS *pVFS, const string &szFileName );
+	CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName );
 	// create file
-	CFileStream( NVFS::IFileCreator *pFileCreator, const string &szFileName );
+	CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName );
 	// open/create win file
-	CFileStream( const string &szFileName, const EWinMode eWinMode );
+	CFileStream( const std::string &szFileName, const EWinMode eWinMode );
 	virtual ~CFileStream();
 	virtual void AllocBuf( int nOldFileSize, int nSize );
 	virtual void Flush();
@@ -176,7 +176,7 @@ public:
 	CTextStream& operator<<( const char *p ) { f.Write( p, strlen(p) ); return *this; }
 	CTextStream& operator<<( int n ) { char buf[128]; itoa( n, buf, 10 ); f.Write( buf, strlen(buf) ); return *this; }
 	CTextStream& operator<<( double n ) { char buf[128]; gcvt( n, 7, buf ); f.Write( buf, strlen(buf) ); return *this; }
-	CTextStream& operator<<( const string &s ) { f.Write( s.c_str(), s.length() ); return *this; }
+	CTextStream& operator<<( const std::string &s ) { f.Write( s.c_str(), s.length() ); return *this; }
 	CTextStream& operator<<( OpFunc func ) { return func(*this); }
 };
 inline CTextStream& endl( CTextStream& sStream ) { sStream << "\n"; return sStream; }

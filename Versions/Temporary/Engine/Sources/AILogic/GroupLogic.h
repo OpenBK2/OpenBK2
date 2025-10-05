@@ -28,12 +28,12 @@ public:
 	int operator&( IBinSaver &saver ); 
 private:
 CFreeGroupIDs groupIds;
-	hash_set<int> registeredGroups;
+	std::unordered_set<int> registeredGroups;
 	CQueuesSet< CPtr<CCommonUnit> > groupUnits;
-	list< CPtr<CCommonUnit> > followingUnits;
+	std::list< CPtr<CCommonUnit> > followingUnits;
 
 	// 0 - all units, except of infantry; 1 - infantry
-	vector< NSegmObjs::CContainer< CPtr<CCommonUnit> > > segmUnits;
+	std::vector< NSegmObjs::CContainer< CPtr<CCommonUnit> > > segmUnits;
 	NSegmObjs::CContainer< CPtr<CCommonUnit> > freezeUnits;
 	NSegmObjs::CContainer< CPtr<CAIUnit> > firstPathUnits;
 	NSegmObjs::CContainer< CPtr<CAIUnit> > secondPathUnits;
@@ -51,9 +51,9 @@ CFreeGroupIDs groupIds;
 		SAmbushInfo( const int _nUniqueId )
 			: nUniqueId( _nUniqueId ), vAmbushCenter( -1.0f, -1.0f ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) { }
 	};
-	typedef list< list<SAmbushInfo> > CAmbushGroups;
+	typedef std::list< std::list<SAmbushInfo> > CAmbushGroups;
 	CAmbushGroups ambushGroups;
-	hash_set<int> ambushUnits;
+	std::unordered_set<int> ambushUnits;
 	NTimer::STime lastAmbushCheck;
 	CPtr<ICollisionsCollector> pCollisionsCollector;
 
@@ -86,7 +86,7 @@ public:
 	void Clear() { DestroyContents(); }
 
 	const WORD GenerateGroupNumber();
-	void RegisterGroup( const vector<int> &vIDs, const WORD wGroup );
+	void RegisterGroup( const std::vector<int> &vIDs, const WORD wGroup );
 	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup );
 	void UnregisterGroup( const WORD wGroup );
 	
@@ -100,7 +100,7 @@ public:
 	void PushFrontUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
 	
 	// послать updates на shoot areas для всех юнитов в группе
-	void UpdateAllAreas( const vector<int> &units, const EActionNotify eAction );
+	void UpdateAllAreas( const std::vector<int> &units, const EActionNotify eAction );
 
 	void Segment();
 	

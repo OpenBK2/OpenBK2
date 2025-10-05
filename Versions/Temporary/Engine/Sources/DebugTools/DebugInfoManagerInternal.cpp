@@ -26,7 +26,7 @@ const int CDebugInfoManager::PushUpdate( NDebugInfo::SDebugInfoUpdate *pObject )
 	return pObject->nID;
 }
 
-int CDebugInfoManager::CreateMarker( const int nID, const vector<SVector> &tiles, const NDebugInfo::EColor eColor )
+int CDebugInfoManager::CreateMarker( const int nID, const std::vector<SVector> &tiles, const NDebugInfo::EColor eColor )
 {
 	return PushUpdate( new NDebugInfo::SDebugInfoMarker( GetID( nID ), tiles, eColor ) );
 }

@@ -31,7 +31,7 @@ CInterfaceScreenBase( "HallOfFame", "hall_of_fame" )
 	AddObserver( "esc_pressed", &CInterfaceHallOfFame::MsgBack );
 }
 
-bool CInterfaceHallOfFame::Execute( const string &szSender, const string &szReaction ) 
+bool CInterfaceHallOfFame::Execute( const std::string &szSender, const std::string &szReaction )
 { 
 	if ( szReaction == "menu_back" )
 	{
@@ -70,7 +70,7 @@ void CInterfaceHallOfFame::MakeInterior()
 	}
 	// ask data and fill it with default values
 	const NDb::SGameRoot * pRoot = InterfaceState()->GetGameRoot();
-	vector<SHallOfFameEntry> entries;
+	std::vector<SHallOfFameEntry> entries;
 	entries.reserve( pRoot->hallOfFameDefaultRecords.size() + theHallOfFame.GetNRecords() );
 	
 	for ( int i = 0; i < pRoot->hallOfFameDefaultRecords.size(); ++i )

@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EM1UnitBaseType eValue )
+std::string EnumToString( NDb::EM1UnitBaseType eValue )
 {
 	switch ( eValue )
 	{
@@ -27,7 +27,7 @@ string EnumToString( NDb::EM1UnitBaseType eValue )
 	}
 }
 
-NDb::EM1UnitBaseType NDb::StringToEnum_NDb_EM1UnitBaseType( const string &szValue )
+NDb::EM1UnitBaseType NDb::StringToEnum_NDb_EM1UnitBaseType( const std::string &szValue )
 {
 	if ( szValue == "M1_MECH" )
 		return NDb::M1_MECH;

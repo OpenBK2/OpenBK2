@@ -11,17 +11,17 @@ static bool bWriteLog = false;
 
 // Erase IML tags
 
-static wstring EraseTags( const wstring &szStr )
+static std::wstring EraseTags( const std::wstring &szStr )
 {
-	wstring szRet;
+	std::wstring szRet;
 	for ( int i = 0; i != szStr.npos && i < szStr.size(); )
 	{
 		int pos = szStr.find( '<', i );
-		if ( pos != string::npos )
+		if ( pos != std::string::npos )
 		{
 			szRet += szStr.substr( i, pos - i );
 			i = szStr.find( '>', pos );
-			if ( i != string::npos )
+			if ( i != std::string::npos )
 				++i;
 		}
 		else
@@ -42,7 +42,7 @@ void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, con
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }
 
-void CConsoleBuffer::Write( const int nStreamID, const wstring &szString, const DWORD color, const bool bPersistentMsg )
+void CConsoleBuffer::Write( const int nStreamID, const std::wstring &szString, const DWORD color, const bool bPersistentMsg )
 {
 	++nSlowCompress;
 	if ( ( nSlowCompress & 1023 ) == 0 )
@@ -50,7 +50,7 @@ void CConsoleBuffer::Write( const int nStreamID, const wstring &szString, const 
 	int nID = 1;
 	if ( !lines.empty() )
 		nID = lines.back().nSequenceID + 1;
-	SConsoleLine &l = *lines.insert( lines.end() );
+	SConsoleLine &l = lines.emplace_back();
 	l.nSequenceID = nID;
 	l.nStream = nStreamID;
 	l.bPersistent = bPersistentMsg;
@@ -90,7 +90,7 @@ bool CConsoleBuffer::GetNextLine( SConsoleLine *pRes, int *pSequenceID )
 
 void CConsoleBuffer::CompressLines()
 {
-	vector<bool> take;
+	std::vector<bool> take;
 	take.resize( lines.size(), false );
 	for ( int k = 0; k < lines.size(); ++k )
 	{
@@ -127,7 +127,7 @@ void CConsoleBuffer::DumpLog()
 		{
 			if ( lines[k].bPersistent )
 			{
-				string sz = NStr::ToMBCS( lines[k].szText );
+				std::string sz = NStr::ToMBCS( lines[k].szText );
 				fprintf( file, sz.c_str() );
 			}
 		}
@@ -137,16 +137,16 @@ void CConsoleBuffer::DumpLog()
 
 // pipes support
 
-void WriteToPipe( int nPipe, const string &sz, DWORD dwColor, bool bPersistentMsg )
+void WriteToPipe( int nPipe, const std::string &sz, DWORD dwColor, bool bPersistentMsg )
 {
 	WriteToPipe( nPipe, NStr::ToUnicode( sz ), dwColor, bPersistentMsg );
 }
 
-void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor, bool bPersistentMsg )
+void WriteToPipe( int nPipe, const std::wstring &sz, DWORD dwColor, bool bPersistentMsg )
 {
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
 	SPipeChannel &dst = pBuffer->GetPipeChannel( nPipe );
-	SPipeMessage &msg = *dst.msgs.insert( dst.msgs.end() );
+	SPipeMessage &msg = dst.msgs.emplace_back();
 	msg.sz = sz;
 	msg.dwColor = dwColor;
 	for ( int k = 0; k < dst.copyToStreams.size(); ++k )
@@ -164,7 +164,7 @@ static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
 	return true;
 }
 
-bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor )
+bool ReadFromPipe( int nPipe, std::string *pRes, DWORD *pDWColor )
 {
 	*pRes = "";
 	if ( pDWColor )
@@ -178,7 +178,7 @@ bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor )
 	return true;
 }
 
-bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor )
+bool ReadFromPipe( int nPipe, std::wstring *pRes, DWORD *pDWColor )
 {
 	*pRes = L"";
 	if ( pDWColor )

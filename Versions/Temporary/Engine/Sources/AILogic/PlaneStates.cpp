@@ -1062,14 +1062,14 @@ ETryStateInterruptResult CPlaneParaDropState::TryInterruptState( CAICommand *pCo
 		if ( IsValidObj( pSquad ) )
 		{
 			// kill undropped soldiers
-			list<CSoldier*> onboardSoldiers;
+			std::list<CSoldier*> onboardSoldiers;
 			for ( int i = 0; i < pSquad->Size(); ++i )
 			{
 				CSoldier *pSold = (*pSquad)[i];
 				if ( pSold->IsRefValid() && pSold->IsAlive() && pSold->IsInSolidPlace() )
 					onboardSoldiers.push_back( pSold );
 			}
-			for ( list<CSoldier*>::iterator it = onboardSoldiers.begin(); it != onboardSoldiers.end(); ++it )
+			for ( std::list<CSoldier*>::iterator it = onboardSoldiers.begin(); it != onboardSoldiers.end(); ++it )
 				(*it)->Disappear();
 		}			
 	}
@@ -1583,7 +1583,7 @@ void CPlaneShturmovikPatrolState::Segment()
 //		pPlane->SetCommandFinished();
 
 	//DEBUG{
-	static hash_map<int, string> nameconv;
+	static std::unordered_map<int, std::string> nameconv;
 	if ( nameconv.empty() )
 	{
 		nameconv[PSPS_ESCAPE] = "PSPS_ESCAPE";

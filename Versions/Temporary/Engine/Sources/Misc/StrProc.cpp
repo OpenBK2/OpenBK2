@@ -9,7 +9,7 @@ static int gs_nCodePage = GetACP();
 
 // разделить строку на массив строк по заданному разделителю
 template <class T1>
-static void SplitStringT( const basic_string<T1> &szString, vector< basic_string<T1> > *pVector, const T1 tSeparator )
+static void SplitStringT( const std::basic_string<T1> &szString, std::vector< std::basic_string<T1> > *pVector, const T1 tSeparator )
 {
 	int nPos = 0, nLastPos = 0;
 	//
@@ -20,55 +20,55 @@ static void SplitStringT( const basic_string<T1> &szString, vector< basic_string
 		pVector->push_back( szString.substr( nLastPos, nPos - nLastPos ) );
 		nLastPos = nPos + 1;//szString.find_first_not_of( cSeparator, nPos );
 		//
-	} while( nPos != basic_string<T1>::npos );
+	} while( nPos != std::basic_string<T1>::npos );
 }
-void SplitString( const string &szString, vector<string> *pVector, const char cSeparator )
+void SplitString( const std::string &szString, std::vector<std::string> *pVector, const char cSeparator )
 {
 	SplitStringT( szString, pVector, cSeparator );
 }
-void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator )
+void SplitString( const std::wstring &szString, std::vector<std::wstring> *pVector, const wchar_t cSeparator )
 {
 	SplitStringT( szString, pVector, cSeparator );
 }
 
 template <class TChar>
-void SplitStringWithMultipleBracketsT( const basic_string<TChar> &szString, vector<basic_string<TChar> > &szVector, const TChar cSeparator )
+void SplitStringWithMultipleBracketsT( const std::basic_string<TChar> &szString, std::vector<std::basic_string<TChar> > &szVector, const TChar cSeparator )
 {
-	for ( CStringIterator<TChar, const basic_string<TChar>&, CBracketSeparator<TChar, SBracketsQuoteTest<TChar> > > it(szString, cSeparator); !it.IsEnd(); it.Next() )
+	for ( CStringIterator<TChar, const std::basic_string<TChar>&, CBracketSeparator<TChar, SBracketsQuoteTest<TChar> > > it(szString, cSeparator); !it.IsEnd(); it.Next() )
 		szVector.push_back( it.Get() );
 }
 
-void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator )
+void SplitStringWithMultipleBrackets( const std::string &szString, std::vector<std::string> &szVector, const char cSeparator )
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
-void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector, const wchar_t cSeparator )
+void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector, const wchar_t cSeparator )
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
 
 // отрезать все символы 'cTrim' справа
-void TrimRight( string &szString, const char cTrim )
+void TrimRight( std::string &szString, const char cTrim )
 {
 	size_t nPos = szString.find_last_not_of( cTrim );
-	if ( nPos == string::npos )
+	if ( nPos == std::string::npos )
 	{
 		if ( szString.find_first_of( cTrim ) == 0 )
 			szString.clear();
 	}
 	else
-		szString.erase( nPos + 1, string::npos );
+		szString.erase( nPos + 1, std::string::npos );
 }
-void TrimRight( string &szString, const char *pszTrim )
+void TrimRight( std::string &szString, const char *pszTrim )
 {
 	size_t nPos = szString.find_last_not_of( pszTrim );
-	if ( nPos == string::npos )
+	if ( nPos == std::string::npos )
 	{
 		if ( szString.find_first_of( pszTrim ) == 0 )
 			szString.clear();
 	}
 	else
-		szString.erase( nPos + 1, string::npos );
+		szString.erase( nPos + 1, std::string::npos );
 }
 // вырезать все символы 'cTrim' из строки
 class CSymbolCheckFunctional
@@ -87,7 +87,7 @@ public:
     return false;
   }
 };
-void TrimInside( string &szString, const char *pszTrim )
+void TrimInside( std::string &szString, const char *pszTrim )
 {
   szString.erase( remove_if(szString.begin(), szString.end(), CSymbolCheckFunctional(pszTrim)), szString.end() );
 }
@@ -118,7 +118,7 @@ unsigned long ToULong( const char *pszString )
 }
 
 // <[+/-]>[dec digit]*
-bool IsDecNumber( const string &szString )
+bool IsDecNumber( const std::string &szString )
 {
 	if ( szString.empty() )
 		return false;
@@ -132,7 +132,7 @@ bool IsDecNumber( const string &szString )
 	return ( (i > nFirstDigit) && (i == szString.size()) );
 }
 // <[+/-]>[0][oct digit]*
-bool IsOctNumber( const string &szString )
+bool IsOctNumber( const std::string &szString )
 {
 	if ( szString.empty() )
 		return false;
@@ -149,7 +149,7 @@ bool IsOctNumber( const string &szString )
 	return ( (i > nFirstDigit) && (i == szString.size()) );
 }
 // <[+/-]>[0x][hex digit]*
-bool IsHexNumber( const string &szString )
+bool IsHexNumber( const std::string &szString )
 {
 	if ( szString.empty() )
 		return false;
@@ -202,11 +202,11 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 // **
 // ************************************************************************************************************************ //
 
-void UnicodeToUTF8( string *pRes, const wstring &szString )
+void UnicodeToUTF8( std::string *pRes, const std::wstring &szString )
 {
 	pRes->resize( 0 );
 	pRes->reserve( szString.size() * 2 );
-	for ( wstring::const_iterator it = szString.begin(); it != szString.end(); ++it )
+	for ( std::wstring::const_iterator it = szString.begin(); it != szString.end(); ++it )
 	{
 		const wchar_t chr = *it;
 		if ( chr < 0x80 )
@@ -224,11 +224,11 @@ void UnicodeToUTF8( string *pRes, const wstring &szString )
 		}
 	}
 }
-void UTF8ToUnicode( wstring *pRes, const string &szString )
+void UTF8ToUnicode( std::wstring *pRes, const std::string &szString )
 {
 	pRes->resize( 0 );
 	pRes->reserve( szString.size() );
-	string::const_iterator it = szString.begin();
+	std::string::const_iterator it = szString.begin();
 	while ( it != szString.end() ) 
 	{
 		BYTE chr = BYTE( *it );
@@ -262,14 +262,14 @@ void SetCodePage( const int nCodePage )
 {
 	gs_nCodePage = nCodePage;
 }
-void ToMBCS( string *pRes, const wstring &szSrc )
+void ToMBCS( std::string *pRes, const std::wstring &szSrc )
 {
 	const int nBuffLen = szSrc.length()*2 + 10;
 	pRes->resize( nBuffLen );
 	const int nLength = WideCharToMultiByte( gs_nCodePage, 0, szSrc.c_str(), szSrc.length(), &((*pRes)[0]), nBuffLen, 0, 0 );
 	pRes->resize( nLength );
 }
-void ToUnicode( wstring *pRes, const string &szSrc )
+void ToUnicode( std::wstring *pRes, const std::string &szSrc )
 {
 	const int nBuffLen = szSrc.length() + 3;
 	pRes->resize( nBuffLen );
@@ -277,26 +277,26 @@ void ToUnicode( wstring *pRes, const string &szSrc )
 	pRes->resize( nLength );
 }
 
-void UTF8ToMBCS( string *pRes, const string &szSrc )
+void UTF8ToMBCS( std::string *pRes, const std::string &szSrc )
 {
-	wstring wszTemp;
+	std::wstring wszTemp;
 	UTF8ToUnicode( &wszTemp, szSrc );
 	ToMBCS( pRes, wszTemp );
 }
-void MBCSToUTF8( string *pRes, const string &szSrc )
+void MBCSToUTF8( std::string *pRes, const std::string &szSrc )
 {
-	wstring wszTemp;
+	std::wstring wszTemp;
 	ToUnicode( &wszTemp, szSrc );
 	UnicodeToUTF8( pRes, wszTemp );
 }
 
 // GUID => string
-void GUID2String( string *pString, const GUID &guid )
+void GUID2String( std::string *pString, const GUID &guid )
 {
 	*pString = StrFmt( "%.8X-%.4X-%.4X-%.2X%.2X-%.2X%.2X%.2X%.2X%.2X%.2X", guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], 
 		guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7] );
 }
-void String2GUID( const string &szString, GUID *pGuid )
+void String2GUID( const std::string &szString, GUID *pGuid )
 {
 	((BYTE*)&pGuid->Data1)[3] = ( HexSymbolToHalfByte( szString[0] ) << 4 ) | HexSymbolToHalfByte( szString[1] );
 	((BYTE*)&pGuid->Data1)[2] = ( HexSymbolToHalfByte( szString[2] ) << 4 ) | HexSymbolToHalfByte( szString[3] );

@@ -1,6 +1,6 @@
-vector< SSlot > aiSlots;
+std::vector< SSlot > aiSlots;
 
-vector<int> aiSlotToSlot;		// index - AI slot, value - index in slot[]
+std::vector<int> aiSlotToSlot;		// index - AI slot, value - index in slot[]
 
 void SBuildingRPGStats::ToAIUnits( bool bInEditor )
 {

@@ -4,6 +4,8 @@
 #include "CommonUnit.h"
 #include "Common_RTS_AI/PathFinder.h"
 
+#include <algorithm>
+
 REGISTER_SAVELOAD_CLASS( 0x1508D49E, CBridgeCreation );
 
 //*******************************************************************
@@ -21,12 +23,12 @@ bool CBridgeCreation::SBridgeSpanSort::operator()( const CObj<CBridgeSpan> &s1, 
 		return v1.x > v2.x;
 }
 
-CVec2 CBridgeCreation::SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit )
+CVec2 CBridgeCreation::SortBridgeSpans( std::vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit )
 {
 	if ( 1 >= spans->size() ) return VNULL2;
 
 	SBridgeSpanSort pr;
-	sort( spans->begin(), spans->end(), pr );
+	std::sort( spans->begin(), spans->end(), pr );
 	// проверить, к какому идти меньше - к первому или к последнему
 	const CBridgeSpan *s1 = *spans->begin();
 	const CBridgeSpan *s2 = (*spans)[spans->size()-1];

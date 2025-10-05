@@ -27,7 +27,7 @@ class CExecutorUnitBase :	public CExecutor
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&eAbility); f.Add(3,&timeLastUpdate); f.Add(4,&fSpeedCoeff); f.Add(5,&lastSent); f.Add(6,&timeDisableGroup); f.Add(7,&pUpdate); f.Add(8,&pAbilityDesc); f.Add(9,&stateBeforeDisable); f.Add(10,&state); f.Add(11,&fOldProgress); return 0; }
 private:
-	void RegisterOnEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &events, const SExecutorEventParam &par );
+	void RegisterOnEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &events, const SExecutorEventParam &par );
 	// return true if it must be called again during current segment
 	bool UpdateAbilityState();
 	void UpdateProgress( const SAbilitySwitchState _state, const float fParam );
@@ -60,7 +60,7 @@ protected:
 
 	void SetSpeedCoeff( const float _fSpeedCoeff ) { fSpeedCoeff = _fSpeedCoeff; }
 
-	void RegisterOnUnitEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &unitEvents, const int nUnitID );
+	void RegisterOnUnitEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &unitEvents, const int nUnitID );
 	const EUnitSpecialAbility GetAbility() const { return eAbility; }
 	void Disable();
 	void SetAutocast( const bool _bAutocast );

@@ -2,14 +2,14 @@
 
 #include "PlanePathFraction.h"
 
-typedef pair< const IPathFraction*, float> CCurFraction;
+typedef std::pair< const IPathFraction*, float> CCurFraction;
 
 //	CPathFractionComplexBase
 
 class CPathFractionComplexBase : public IPathFraction
 {
 protected:
-	typedef vector< CPtr<IPathFraction> > CSubstitutes;
+	typedef std::vector< CPtr<IPathFraction> > CSubstitutes;
 	CSubstitutes substitute;
 
 	CCurFraction GetCur( const float fDist ) const;

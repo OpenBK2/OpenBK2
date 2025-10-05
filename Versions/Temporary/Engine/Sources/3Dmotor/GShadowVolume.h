@@ -14,13 +14,13 @@ public:
 };
 
 void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
-	list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask );
+	std::list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask );
 
-typedef hash_map<CPtr<CObjectBase>,CPartFlags,SPtrHash> CIgnorePartsHash;
+typedef std::unordered_map<CPtr<CObjectBase>,CPartFlags,SPtrHash> CIgnorePartsHash;
 
 void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCenter, 
-	float fRadius, vector<STriangle> *pTris, 
-	vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
+	float fRadius, std::vector<STriangle> *pTris,
+	std::vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
 	float *pHullRadius,
 	CIgnorePartsHash *pIgnore = 0 );
 

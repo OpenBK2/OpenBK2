@@ -19,7 +19,7 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 		SOldHeights( const int _nX1, const int _nY1, const CArray2D<float> &_heights ) :
 			nX1( _nX1 ), nY1( _nY1 ), heights( _heights ) {}
 	};
-	typedef hash_map< int, SOldHeights > CHeightsMap;
+	typedef std::unordered_map< int, SOldHeights > CHeightsMap;
 
 	// высоты по узлам визуальной сетки
 	CArray2D<float> heights;

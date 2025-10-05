@@ -27,7 +27,7 @@ bool InitShaderFX()
 	pManager = new CStatesManager;
 	HRESULT hRes;
 
-	string szFileName = "FX//GfxPS.fx";
+	std::string szFileName = "FX//GfxPS.fx";
 	if ( NVFS::GetMainVFS()->DoesFileExist( szFileName ) )
 	{
 		CFileStream stream( NVFS::GetMainVFS(), szFileName );
@@ -35,7 +35,7 @@ bool InitShaderFX()
 		{
 			int n = stream.GetSize();
 
-			string sResult;
+			std::string sResult;
 			  sResult.resize( n );
 			stream.Read( &sResult[0], n );
 			
@@ -66,7 +66,7 @@ bool InitShaderFX()
 		{
 			int n = stream.GetSize();
 
-			string sResult;
+			std::string sResult;
 			sResult.resize( n );
 			stream.Read( &sResult[0], n );
 
@@ -107,12 +107,12 @@ void DoneShaderFX()
 	pVSEffect = 0;
 }
 
-CPixelShader* CreatePixelShader( const string &szName )
+CPixelShader* CreatePixelShader( const std::string &szName )
 {
 	return new CPixelShader( szName );
 }
 
-CVertexShader* CreateVertexShader( const string &szName )
+CVertexShader* CreateVertexShader( const std::string &szName )
 {
 	return new CVertexShader( szName );
 }
@@ -134,7 +134,7 @@ const char* __cdecl Format( const char *pszFormat, ... )
 }
 
 
-CPixelShader::CPixelShader( const string &szName ):
+CPixelShader::CPixelShader( const std::string &szName ):
 	bBegin( false ), hTechnique( 0 )
 {
 	DWORD dwMaxVersion = 0;
@@ -147,10 +147,10 @@ CPixelShader::CPixelShader( const string &szName ):
 		dwMaxVersion = D3DPS_VERSION( nMajor, nMinor );
 	}
 
-	vector<D3DXHANDLE> handles;
+	std::vector<D3DXHANDLE> handles;
 	for ( int nTemp = 0; nTemp < N_MAX_TECHNIQUES; ++nTemp )
 	{
-		string szID( szName );
+		std::string szID( szName );
 		if ( nTemp > 0)
 			szID = Format( "%s_%d", szName.c_str(), nTemp );
 
@@ -218,7 +218,7 @@ void CPixelShader::End()
 
 // CVertexShader
 
-CVertexShader::CVertexShader( const string &szName )
+CVertexShader::CVertexShader( const std::string &szName )
 {
 	D3DXHANDLE hFnc = pVSEffect->GetFunctionByName( szName.c_str() );
 

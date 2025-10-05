@@ -39,16 +39,16 @@ namespace NProgressHook
 		if ( pProgressHook ) pProgressHook->Step();
 	}
 
-	void DebugLock( const string &szFileName, const int nLine );
-	void DebugUnLock( const string &szFileName, const int nLine );
+	void DebugLock( const std::string &szFileName, const int nLine );
+	void DebugUnLock( const std::string &szFileName, const int nLine );
 	
-	inline void LockRange( IProgressHook *pProgressHook, const int nLength, const string &szFileName, const int nLine )
+	inline void LockRange( IProgressHook *pProgressHook, const int nLength, const std::string &szFileName, const int nLine )
 	{
 		if ( pProgressHook ) pProgressHook->LockRange( nLength );
 		DebugLock( szFileName, nLine );
 	}
 
-	inline void UnlockRange( IProgressHook *pProgressHook, const string &szFileName, const int nLine )
+	inline void UnlockRange( IProgressHook *pProgressHook, const std::string &szFileName, const int nLine )
 	{
 		if ( pProgressHook ) pProgressHook->UnlockRange();
 		DebugUnLock( szFileName, nLine );

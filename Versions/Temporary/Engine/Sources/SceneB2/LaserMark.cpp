@@ -41,7 +41,7 @@ void CLaserMarkTrace::Recalc()
 
 	NGfx::SCompactVector vCompactNormal;
 	NGfx::CalcCompactVector( &vCompactNormal, CVec3(0, 0, 1) );
-	for ( vector<NGScene::SVertex>::iterator it = data.verts.begin(); it != data.verts.end(); ++it )
+	for ( std::vector<NGScene::SVertex>::iterator it = data.verts.begin(); it != data.verts.end(); ++it )
 		it->normal = vCompactNormal;
 
 

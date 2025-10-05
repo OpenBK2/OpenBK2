@@ -2,10 +2,12 @@
 
 #include "Profiler.h"
 
+#include <algorithm>
+
 namespace NProfiler
 {
 
-typedef hash_map<string, DWORD> Times;
+typedef std::unordered_map<std::string, DWORD> Times;
 static Times *pTimes = new Times;
 
 static struct STimesDeleter
@@ -25,15 +27,15 @@ void DumpStats()
 	{
 		DbgTrc( "============= Profile info =============" );
 		
-		vector<string> sortedTimes;
+		std::vector<std::string> sortedTimes;
 		sortedTimes.reserve( pTimes->size() );
 		for ( Times::iterator iter = pTimes->begin(); iter != pTimes->end(); ++iter )
 			sortedTimes.push_back( iter->first );
 
-		sort( sortedTimes.begin(), sortedTimes.end() );
+		std::sort( sortedTimes.begin(), sortedTimes.end() );
 		for ( int i = 0; i < sortedTimes.size(); ++i )
 		{
-			const string szProfileInfo = sortedTimes[i];
+			const std::string szProfileInfo = sortedTimes[i];
 			DbgTrc( "%s : time %d", szProfileInfo.c_str(), (*pTimes)[szProfileInfo] );
 		}
 
@@ -49,7 +51,7 @@ CProfiler::CProfiler( const char* pszFile, const int _nLine )
 CProfiler::~CProfiler()
 {
 	const DWORD dwTime = GetTickCount() - dwStartTime;
-	const string szHash = StrFmt( "%s(%d)", szFile.c_str(), nLine );
+	const std::string szHash = StrFmt( "%s(%d)", szFile.c_str(), nLine );
 
 	if ( pTimes )
 	{
@@ -64,7 +66,7 @@ CProfiler::~CProfiler()
 }
 }
 
-static void Profile( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void Profile( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	NProfiler::DumpStats();
 }

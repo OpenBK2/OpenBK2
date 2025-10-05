@@ -10,7 +10,7 @@ class CTreeWindMutator: public ITreeWindMutator
 	OBJECT_BASIC_METHODS( CTreeWindMutator );
 
 	// Bone indices
-	vector<int> leafBones;
+	std::vector<int> leafBones;
 	CVec2 vPos;
 	NTimer::STime lastUpdateTime;
 	float fMagnitude;							//Cached
@@ -21,7 +21,7 @@ class CTreeWindMutator: public ITreeWindMutator
 public:
 	CTreeWindMutator() {}
 
-	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const vector<string> &leafNames );
+	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames );
 
 	bool NeedUpdate();
 	void MutateSkeletonPose( granny_local_pose *pPose );

@@ -27,7 +27,7 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 
 	SYSTEMTIME systime;
 	GetLocalTime( &systime );
-	const string szFileName = 
+	const std::string szFileName =
 		StrFmt( "screenshots\\shot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga", 
 		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
 		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );

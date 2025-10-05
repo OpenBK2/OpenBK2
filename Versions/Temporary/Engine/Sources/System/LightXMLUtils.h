@@ -13,7 +13,7 @@ namespace NLXML
 
 class CToStringConvertor
 {
-	string szValue;
+	std::string szValue;
 	//
 	void ConvertFromSigned( const int value )
 	{
@@ -46,7 +46,7 @@ public:
 	CToStringConvertor( const float value ) { ConvertFromFP( value ); }
 	CToStringConvertor( const double value ) { ConvertFromFP( value ); }
 	//
-	operator const string&() const { return szValue; }
+	operator const std::string&() const { return szValue; }
 };
 
 // ************************************************************************************************************************ //
@@ -59,7 +59,7 @@ public:
 
 class CStringComposer
 {
-	vector<char> chars;
+	std::vector<char> chars;
 	//
 	void Reserve( const int nSize )
 	{
@@ -82,7 +82,7 @@ public:
 		chars.reserve( nBufferSize < 8 ? 8 : nBufferSize );
 	}
 	//
-	CStringComposer& operator<<( const string &szString )
+	CStringComposer& operator<<( const std::string &szString )
 	{
 		AddString( szString.c_str(), szString.size() );
 		return *this;
@@ -138,7 +138,7 @@ public:
 		: pStream( _pStream ), buffer( 2048 ) {  }
 	~CWriteStream() { DumpForced(); }
 	//
-	CWriteStream& operator<<( const string &szString )
+	CWriteStream& operator<<( const std::string &szString )
 	{
 		buffer << szString;
 		Dump();
@@ -157,7 +157,7 @@ public:
 		return *this;
 	}
 	//
-	void WriteChecked( const string &szString );
+	void WriteChecked( const std::string &szString );
 };
 
 // ************************************************************************************************************************ //
@@ -180,12 +180,12 @@ inline const char* SkipWhiteSpace( const char *p )
 	return p;
 }
 
-inline bool IsEqualSubstring( const string &szString, const char *pszBegin, const char *pszEnd )
+inline bool IsEqualSubstring( const std::string &szString, const char *pszBegin, const char *pszEnd )
 {
 	if ( pszEnd - pszBegin < szString.length() ) 
 		return false;
 	//
-	for ( string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++pszBegin )
+	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++pszBegin )
 	{
 		if ( *it != *pszBegin ) 
 			return false;
@@ -193,9 +193,9 @@ inline bool IsEqualSubstring( const string &szString, const char *pszBegin, cons
 	return true;
 }
 
-inline bool IsEqualSubstring( const string &szString, const char *p )
+inline bool IsEqualSubstring( const std::string &szString, const char *p )
 {
-	for ( string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
+	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
 		if ( *it != *p ) 
 			return false;
@@ -203,9 +203,9 @@ inline bool IsEqualSubstring( const string &szString, const char *p )
 	return true;
 }
 
-inline bool IsEqualSubstringIC( const string &szString, const char *p )
+inline bool IsEqualSubstringIC( const std::string &szString, const char *p )
 {
-	for ( string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
+	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
 		if ( *it != tolower(*p) ) 
 			return false;
@@ -214,9 +214,9 @@ inline bool IsEqualSubstringIC( const string &szString, const char *p )
 }
 
 const char* GetEntity( const char *p, char *pValue );
-const char* ReadName( const char *p, string *pszName );
-const char* ReadText( string *pszText, const char *pszBegin, const char *pszEnd, 
-										         const string &szEndTag, const bool bTrimWhiteSpace );
+const char* ReadName( const char *p, std::string *pszName );
+const char* ReadText( std::string *pszText, const char *pszBegin, const char *pszEnd,
+										         const std::string &szEndTag, const bool bTrimWhiteSpace );
 
 __forceinline const char* GetChar( const char *p, char *pValue )
 {

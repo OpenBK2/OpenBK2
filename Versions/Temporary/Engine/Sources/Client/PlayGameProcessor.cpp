@@ -77,7 +77,7 @@ bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 	else
 	{
 */
-	for ( list<int>::iterator iter = pPacket->clients.begin(); iter != pPacket->clients.end(); ++iter )
+	for ( std::list<int>::iterator iter = pPacket->clients.begin(); iter != pPacket->clients.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstClientEffort( nMyServerID, *iter, pNet, nTimeOut );
 		CreateConnectionEffort( pEffort );
@@ -174,7 +174,7 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 
 void CPlayGameProcessor::ProcessEfforts()
 {
-	list< CPtr<CConnectionEffort> > success, failed;
+	std::list< CPtr<CConnectionEffort> > success, failed;
 
 	for ( TConnectionEfforts::iterator iter = connectionEfforts.begin(); iter != connectionEfforts.end(); ++iter )
 	{
@@ -188,7 +188,7 @@ void CPlayGameProcessor::ProcessEfforts()
 			failed.push_back( pEffort );
 	}
 
-	for ( list< CPtr<CConnectionEffort> >::iterator iter = success.begin(); iter != success.end(); ++iter )
+	for ( std::list< CPtr<CConnectionEffort> >::iterator iter = success.begin(); iter != success.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = *iter;
 		const int nClientServerID = pEffort->GetClientServerID();
@@ -197,7 +197,7 @@ void CPlayGameProcessor::ProcessEfforts()
     connections[nClientServerID] = pEffort->CreateConnection();
 	}
 
-	for ( list< CPtr<CConnectionEffort> >::iterator iter = failed.begin(); iter != failed.end(); ++iter )
+	for ( std::list< CPtr<CConnectionEffort> >::iterator iter = failed.begin(); iter != failed.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = *iter;
 		connectionEfforts.erase( pEffort->GetClientServerID() );
@@ -215,7 +215,7 @@ bool CPlayGameProcessor::Segment()
 	ProcessEfforts();
 
 	DWORD dwCurTime = GetTickCount();
-	list<SWaitingPacket>::iterator iter = waitingPackets.begin();
+	std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
 	while ( iter != waitingPackets.end() )
 	{
 		const SWaitingPacket &packet = *iter;
@@ -225,7 +225,7 @@ bool CPlayGameProcessor::Segment()
 			++iter;
 	}
 
-	list<int> deadConnections;
+	std::list<int> deadConnections;
 	for ( TConnections::iterator conn_iter = connections.begin(); conn_iter != connections.end(); ++conn_iter )
 	{
 		IConnection *pConnection = conn_iter->second;
@@ -233,7 +233,7 @@ bool CPlayGameProcessor::Segment()
 			deadConnections.push_back( conn_iter->first );
 	}
 
-	for ( list<int>::iterator iter = deadConnections.begin(); iter != deadConnections.end(); ++iter )
+	for ( std::list<int>::iterator iter = deadConnections.begin(); iter != deadConnections.end(); ++iter )
 		connections.erase( *iter );
 
 	return true;
@@ -245,7 +245,7 @@ bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
 	{
 		connectionEfforts[pEffort->GetClientServerID()] = pEffort;
 
-		list<SWaitingPacket>::iterator iter = waitingPackets.begin();
+		std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
 		while ( iter != waitingPackets.end() )
 		{
 			const SWaitingPacket &packet = *iter;

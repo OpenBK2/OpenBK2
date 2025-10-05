@@ -7,17 +7,17 @@
 bool g_bDontUpdateRoads = false;
 static bool s_bMakeHolesForEntrenchment = true;
 
-void CTerraGen::MakeHoleOnTile( const vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten )
+void CTerraGen::MakeHoleOnTile( const std::vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten )
 {
-	vector<CVec3dEx> newVerts( 512 );
-	vector<CVec3dEx> tileVertices( 512 );
-	vector<STriangle> tileTriangles( 512 );
+	std::vector<CVec3dEx> newVerts( 512 );
+	std::vector<CVec3dEx> tileVertices( 512 );
+	std::vector<STriangle> tileTriangles( 512 );
 
 	tileVertices.resize( 0 );
 	tileTriangles.resize( 0 );
 	CTriangleEx curTrg;
 	CVec2 vBary;
-	for ( vector<STriangle>::const_iterator it = terrainInfo.tiles[nTileY][nTileX].triangles.begin(); it != terrainInfo.tiles[nTileY][nTileX].triangles.end(); ++it )
+	for ( std::vector<STriangle>::const_iterator it = terrainInfo.tiles[nTileY][nTileX].triangles.begin(); it != terrainInfo.tiles[nTileY][nTileX].triangles.end(); ++it )
 	{
 		newVerts.resize( 0 );
 		curTrg.Set( terrainInfo.tiles[nTileY][nTileX].vertices[it->i1],
@@ -41,7 +41,7 @@ void CTerraGen::MakeHoleOnTile( const vector<CVec3dEx> &samples, const int nTile
 			continue;
 
 		// add sample curve's vertices, which are placed inside triangle
-		for ( vector<CVec3dEx>::const_iterator itPoint = samples.begin(); itPoint != samples.end(); ++itPoint )
+		for ( std::vector<CVec3dEx>::const_iterator itPoint = samples.begin(); itPoint != samples.end(); ++itPoint )
 		{
 			if ( IsInside(curTrg, *itPoint) )
 				newVerts.push_back( CVec3dEx(itPoint->x, itPoint->y, itPoint->z, itPoint->flag) );
@@ -105,7 +105,7 @@ void CTerraGen::MakeHoleOnTile( const vector<CVec3dEx> &samples, const int nTile
 	terrainInfo.tiles[nTileY][nTileX].triangles = tileTriangles;
 }
 
-void CTerraGen::MakeHole( const vector<CVec3fEx> &samples, const int nTileX1, const int nTileY1,
+void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples, const int nTileX1, const int nTileY1,
 													const int nTileX2, const int nTileY2, const bool bLeftHeighten /*= true*/ )
 {
 	if ( samples.empty() )
@@ -114,7 +114,7 @@ void CTerraGen::MakeHole( const vector<CVec3fEx> &samples, const int nTileX1, co
 	NWin32Helper::CPrecisionControl precControl( NWin32Helper::CPrecisionControl::PCM_HIGH );
 
 	const int nSamplesNum = samples.size() >> 1;
-	vector<CVec3dEx> newSamples( 4 );
+	std::vector<CVec3dEx> newSamples( 4 );
 	for ( int k = 0; k < (nSamplesNum - 1); ++k )
 	{
 		newSamples[0] = samples[k];
@@ -150,7 +150,7 @@ void CTerraGen::MakeHole( const vector<CVec3fEx> &samples, const int nTileX1, co
 	}
 }
 
-void CTerraGen::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth, const bool bWriteHistory/* = true*/ )
+void CTerraGen::AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth, const bool bWriteHistory/* = true*/ )
 {
 	if ( !s_bMakeHolesForEntrenchment || _ctrlPoints.empty() )
 		return;
@@ -163,7 +163,7 @@ void CTerraGen::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _
 		entrenchmentsHistory.push_back( history );
 	}
 
-	vector<CVec2> norms( _ctrlPoints.size() );
+	std::vector<CVec2> norms( _ctrlPoints.size() );
 	fill( norms.begin(), norms.end(), VNULL2 );
 	CVec2 vNorm;
 	for ( int i = 0; i < (_ctrlPoints.size() - 1); ++i )
@@ -182,7 +182,7 @@ void CTerraGen::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _
 
 	const float fWidth = AI2Vis( _fWidth );
 
-	vector<CVec3fEx> samples( _ctrlPoints.size() * 2 );
+	std::vector<CVec3fEx> samples( _ctrlPoints.size() * 2 );
 	CVec2 vMin(FP_MAX_VALUE, FP_MAX_VALUE), vMax(-FP_MAX_VALUE, -FP_MAX_VALUE);
 	for ( int i = 0; i < _ctrlPoints.size(); ++i )
 	{

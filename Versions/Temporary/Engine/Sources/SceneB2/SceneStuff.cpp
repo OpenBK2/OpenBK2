@@ -196,9 +196,9 @@ void CScene::AfterLoad()
 	// holded objects
 	if ( eScene == SCENE_MISSION )
 	{
-		list<CObjectBase*> holdedObjects;
+		std::list<CObjectBase*> holdedObjects;
 		GetSceneHoldedObjects( &holdedObjects, true );
-		for ( list<CObjectBase*>::iterator it = holdedObjects.begin(); it != holdedObjects.end(); ++it )
+		for ( std::list<CObjectBase*>::iterator it = holdedObjects.begin(); it != holdedObjects.end(); ++it )
 		{
 			if ( SVisObjDescBase *pVOD = dynamic_cast<SVisObjDescBase*>(*it) )
 			{
@@ -216,7 +216,7 @@ void CScene::AfterLoad()
 	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
 	{
 		data[eScene]->pTerraManager->Setup( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
-		const string szTerrainFilePath = NDb::GetFolderName( data[eScene]->pTerraManager->GetDesc()->GetDBID() );
+		const std::string szTerrainFilePath = NDb::GetFolderName( data[eScene]->pTerraManager->GetDesc()->GetDBID() );
 		NScene::LoadTerrain( data[eScene]->pTerraManager, data[eScene]->pTerraManager->GetDesc(), szTerrainFilePath );
 		data[eScene]->pTerraManager->RestoreFromHistory();
 	}
@@ -281,7 +281,7 @@ static const DWORD overdrawColors[] =
 
 void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
-	hash_map<DWORD, int> colors;
+	std::unordered_map<DWORD, int> colors;
 	for ( int i = 0; i < ARRAY_SIZE(NScene::overdrawColors); ++i )
 		colors[ NScene::overdrawColors[i] ] = i + 1;
 	// turn UI off, overdraw on
@@ -308,7 +308,7 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 		for ( int x = 0; x < image.GetSizeX(); ++x )
 		{
 			const DWORD color = image[y][x].dwColor & 0x00ffffff;
-			hash_map<DWORD, int>::const_iterator posOverdraw = colors.find( color );
+			std::unordered_map<DWORD, int>::const_iterator posOverdraw = colors.find( color );
 			if ( posOverdraw != colors.end() )
 			{
 				nTotalOverdraw += posOverdraw->second;

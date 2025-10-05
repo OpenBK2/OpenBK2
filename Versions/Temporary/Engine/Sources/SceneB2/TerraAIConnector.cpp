@@ -62,7 +62,7 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 }
 
 
-void CTerraGen::SetTerraTypesToAI( const vector<NDb::STerrainAIProperties> &params ) const
+void CTerraGen::SetTerraTypesToAI( const std::vector<NDb::STerrainAIProperties> &params ) const
 {
 	//NI_VERIFY( pAIObserver, "SetTerraTypesToAI - AI Observer does not exist", return )
 	//
@@ -103,10 +103,10 @@ void CTerraGen::UpdateAllAIInfo()
 		}
 	}
 
-	vector<NDb::STerrainAIProperties> params;
+	std::vector<NDb::STerrainAIProperties> params;
 	params.reserve( pDesc->pTerraSet->terraTypes.size() );
 	params.resize( 0 );
-	for ( vector< CDBPtr< NDb::STGTerraType > >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
+	for ( std::vector< CDBPtr< NDb::STGTerraType > >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
 		params.push_back( (*it)->aIProperty );
 	if ( pAIObserver )
 		pAIObserver->SetTerraTypes( params );
@@ -162,7 +162,7 @@ void CTerraGen::PutAllCragsToAI() const
 	//
 	//if ( pAIObserver )
 	{
-		for ( list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+		for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindCrag( it->nID );
 			if ( pInstance )
@@ -178,7 +178,7 @@ void CTerraGen::PutAllRiversToAI() const
 	//
 	//if ( pAIObserver )
 	{
-		for ( list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
+		for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance ) 
@@ -194,7 +194,7 @@ void CTerraGen::PutAllRoadsToAI() const
 	//
 	//if ( pAIObserver )
 	{
-		for ( list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
+		for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRoad( it->nID );
 			if ( pInstance ) 

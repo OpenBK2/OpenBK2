@@ -5,11 +5,11 @@
 #include "SceneInternal.h"
 #include "DBSceneConsts.h"
 
-static hash_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash> colorsMap;
+static std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash> colorsMap;
 
 const NDb::SMaterial *Color2Color( const NDebugInfo::EColor color )
 {
-	hash_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash >::const_iterator pos = colorsMap.find( color );
+	std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash >::const_iterator pos = colorsMap.find( color );
 	if ( pos == colorsMap.end() )
 		return 0;
 	else
@@ -60,8 +60,8 @@ void CScene::CreateSegment( const NDebugInfo::SDebugInfoSegment *pSegment )
 
 void CScene::CreateLine( const NDebugInfo::SDebugInfoLine *pLine )
 {
-	vector<CVec3> points;
-	vector<WORD> indices;
+	std::vector<CVec3> points;
+	std::vector<WORD> indices;
 	const WORD wEndArrowIndex = ( pLine->arrowStart.fHeight != 0.0f ) ? 6 : 2;
 
 	points.push_back( pLine->arrowStart.vPosition );
@@ -116,8 +116,8 @@ void CScene::CreateLine( const NDebugInfo::SDebugInfoLine *pLine )
 
 void CScene::CreateRect( const NDebugInfo::SDebugInfoRect *pRect )
 {
-	vector<CVec3> points;
-	vector<WORD> indices;
+	std::vector<CVec3> points;
+	std::vector<WORD> indices;
 	points.push_back( CVec3( pRect->rect.v1, pRect->fZ ) );
 	points.push_back( CVec3( pRect->rect.v2, pRect->fZ ) );
 	points.push_back( CVec3( pRect->rect.v3, pRect->fZ ) );

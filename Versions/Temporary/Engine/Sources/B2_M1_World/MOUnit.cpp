@@ -62,7 +62,7 @@ bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	SetStats( checked_cast_ptr<const NDb::SUnitBaseRPGStats*>( pUpdate->info.pStats ) );
 	if ( GetStatsLocal()->GetActions() )
 	{
-		for ( vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = GetStatsLocal()->GetActions()->specialAbilities.begin(); it != GetStatsLocal()->GetActions()->specialAbilities.end(); ++it )
+		for ( std::vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = GetStatsLocal()->GetActions()->specialAbilities.begin(); it != GetStatsLocal()->GetActions()->specialAbilities.end(); ++it )
 		{
 			if ( (*it) != 0 )
 				abilityMap[(*it)->eName] = SAbilityInfo( EASS_READY_TO_ON, 0.0f );
@@ -169,11 +169,11 @@ IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &sta
 
 	ammos.clear();
 	int nNewCurAmmo = 0;
-	for ( vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
+	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
 	{
 		const SAINotifyRPGStats::SWeaponAmmo &updateAmmo = *it;
 		nNewCurAmmo += updateAmmo.nAmmo;
-		vector<SAmmo>::iterator iAmmo = find_if( ammos.begin(), ammos.end(), SAmmoCompare( updateAmmo.pStats ) );
+		std::vector<SAmmo>::iterator iAmmo = find_if( ammos.begin(), ammos.end(), SAmmoCompare( updateAmmo.pStats ) );
 		if ( iAmmo == ammos.end() )
 		{
 			SAmmo ammo;
@@ -268,7 +268,7 @@ void CMOUnit::SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime 
 
 int CMOUnit::GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const
 {
-	vector<SAmmo>::const_iterator iAmmo = find_if( ammos.begin(), ammos.end(), SAmmoCompare( pWeapon ) );
+	std::vector<SAmmo>::const_iterator iAmmo = find_if( ammos.begin(), ammos.end(), SAmmoCompare( pWeapon ) );
 	NI_VERIFY( iAmmo != ammos.end(), "Wrong weapon", return 0 );
 	return iAmmo->nAmmo;
 }
@@ -276,7 +276,7 @@ int CMOUnit::GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const
 int CMOUnit::GetWeaponAmmoTotal() const
 {
 	int nAmmo = 0;
-	for ( vector<SAmmo>::const_iterator it = ammos.begin(); it != ammos.end(); ++it )
+	for ( std::vector<SAmmo>::const_iterator it = ammos.begin(); it != ammos.end(); ++it )
 	{
 		const SAmmo &ammo = *it;
 		nAmmo += ammo.nAmmo;
@@ -378,7 +378,7 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 	for ( int i = 0; i < pUpdate->info.size(); ++i )
 	{
 		const SShootAreas &areas = pUpdate->info[i];
-		for ( list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
+		for ( std::list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
 		{
 			const SShootArea &area = *it;
 			DWORD dwColor = area.GetColor();
@@ -392,25 +392,25 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 	}
 }
 
-void CMOUnit::CopyAreas( const vector<SShootAreas> &newAreas )
+void CMOUnit::CopyAreas( const std::vector<SShootAreas> &newAreas )
 {
 	oldAreas.resize( newAreas.size() );
 	for ( int i = 0; i < newAreas.size(); ++i )
 	{
 		oldAreas[i].areas.clear();
-		for ( list<SShootArea>::const_iterator it = newAreas[i].areas.begin(); it != newAreas[i].areas.end(); ++it )
+		for ( std::list<SShootArea>::const_iterator it = newAreas[i].areas.begin(); it != newAreas[i].areas.end(); ++it )
 			oldAreas[i].areas.push_back( *it );
 	}
 }
 
-bool CMOUnit::AreasChanged( const vector<SShootAreas> &newAreas ) const
+bool CMOUnit::AreasChanged( const std::vector<SShootAreas> &newAreas ) const
 {
 	if ( oldAreas.size() != newAreas.size() )
 		return true;
 	for ( int i = 0; i < newAreas.size(); ++i )
 	{
-		list<SShootArea>::const_iterator itOld = oldAreas[i].areas.begin();
-		list<SShootArea>::const_iterator itNew = newAreas[i].areas.begin();
+		std::list<SShootArea>::const_iterator itOld = oldAreas[i].areas.begin();
+		std::list<SShootArea>::const_iterator itNew = newAreas[i].areas.begin();
 		while ( itOld != oldAreas[i].areas.end() && itNew != newAreas[i].areas.end() )
 		{
 			if ( *itOld != *itNew )
@@ -455,7 +455,7 @@ public:
 
 	virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 	{
-		const vector<NDb::SAttachedModelVisObj::SSDamageLevel> &damageLevels = pAttachedVisObj->damageLevels;
+		const std::vector<NDb::SAttachedModelVisObj::SSDamageLevel> &damageLevels = pAttachedVisObj->damageLevels;
 		return damageLevels.size() > nDamageLevel && damageLevels[nDamageLevel].pVisObj ?
 					 damageLevels[nDamageLevel].pVisObj : 0;
 	}
@@ -515,7 +515,7 @@ void CMOUnit::ChangeModelToTransportable( const NDb::SModel *pNewModel, const ND
 }
 
 void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc, 
-														const NDb::ESeason eSeason, const string &szLocator, const ESceneSubObjType eType, const int nNumber )
+														const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber )
 {
 	if ( pAttachedObj )
 	{

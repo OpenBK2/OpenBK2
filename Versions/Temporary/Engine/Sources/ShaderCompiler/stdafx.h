@@ -23,18 +23,13 @@
 #define NI_ASSERT(a,b) ASSERT( (a) && (b) )
 
 #include <string.h>
-#include "Misc/nvector.h"
-#include "Misc/nlist.h"
-#include "Misc/nstring.h"
 
-#pragma component( mintypeinfo, on )
-#include "Misc/nhash_map.h"
-#include "Misc/nhash_set.h"
-#include "Misc/nset.h"
-#pragma component( mintypeinfo, off )
-
-using namespace nstl;
-#include "Misc/nhelpdebug.h"
+#include <list>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
 
 #include <iostream>
 #include <fstream>

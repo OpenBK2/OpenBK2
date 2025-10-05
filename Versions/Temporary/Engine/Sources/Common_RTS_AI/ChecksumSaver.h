@@ -7,10 +7,10 @@ struct ICheckSumLog;
 class CCheckSumSaver : 	public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS( CCheckSumSaver );
-	typedef list<CPtr<CObjectBase> > CAddOrder;
+	typedef std::list<CPtr<CObjectBase> > CAddOrder;
 	CAddOrder addOrder;
 
-	typedef hash_map<CPtr<CObjectBase>, bool, SPtrHash> CAddedObjects;
+	typedef std::unordered_map<CPtr<CObjectBase>, bool, SPtrHash> CAddedObjects;
 	CAddedObjects addedObjects;
 	int nAddedObjects; 
 
@@ -28,8 +28,8 @@ class CCheckSumSaver : 	public IBinSaver
 	virtual void FinishChunk() {}
 
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber );
-	virtual void DataChunkString( string &data );
-	virtual void DataChunkString( wstring &data );
+	virtual void DataChunkString( std::string &data );
+	virtual void DataChunkString( std::wstring &data );
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject );
 	

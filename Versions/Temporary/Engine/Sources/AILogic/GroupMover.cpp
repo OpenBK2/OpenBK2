@@ -92,7 +92,7 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 		it->second.vPosition = vPosition + it->second.pUnit->GetCenterPlain() - vGroupCenter;
 
 	// balance group
-	vector<SForce> forces;
+	std::vector<SForce> forces;
 	forces.reserve( units.size() );
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
 		forces.push_back( SForce( it->second.pUnit->GetUniqueID(), it->second.vPosition ) );
@@ -102,9 +102,9 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	{
 		bNullForces = true;
 
-		for ( vector<SForce>::iterator it = forces.begin(); it != forces.end(); ++it )
+		for ( std::vector<SForce>::iterator it = forces.begin(); it != forces.end(); ++it )
 		{
-			vector<SForce>::iterator it2 = it;
+			std::vector<SForce>::iterator it2 = it;
 			for ( ++it2; it2 != forces.end(); ++it2 )
 			{
 				CVec2 vDirection = it->vPosition - it2->vPosition;
@@ -124,7 +124,7 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 			}
 		}
 
-		for ( vector<SForce>::iterator it = forces.begin(); it != forces.end(); ++it )
+		for ( std::vector<SForce>::iterator it = forces.begin(); it != forces.end(); ++it )
 		{
 			it->vPosition += it->vForce;
 			it->vForce = VNULL2;
@@ -192,7 +192,7 @@ const bool CGroupMover::CalcPositions()
 		return true;
 
 	// reset subgroups for units
-	typedef hash_map<int, CPtr<CCommonUnit> > TUnitsHashSet;
+	typedef std::unordered_map<int, CPtr<CCommonUnit> > TUnitsHashSet;
 	TUnitsHashSet unsortedUnits;
 	for ( TGroup::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
@@ -238,7 +238,7 @@ const bool CGroupMover::CalcPositions()
 	subGroups.resize( nCurrentGroup );
 	int nMaxSubGroupIndex = -1;
 	int nMaxSubGroupSize = -1;
-	vector<int> subGroupSizes( nCurrentGroup, 0 );
+	std::vector<int> subGroupSizes( nCurrentGroup, 0 );
 	for ( TGroup::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
 		subGroups[it->second->GetSubGroup()].Add( it->second );

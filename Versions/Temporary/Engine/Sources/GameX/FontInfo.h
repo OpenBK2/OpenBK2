@@ -9,7 +9,7 @@ class CFontInfo
 public:
 	struct SSourceParams
 	{
-		string szFaceName;
+		std::string szFaceName;
 		DWORD dwCharSet;
 		int nWeight;
 		int nHeight;
@@ -21,27 +21,27 @@ private:
 	SSourceParams source;							// source params, this font info was created with
 	HFONT hFont;											// HFONT used to draw with this font
 	TEXTMETRIC tm;										// text metrics, e.g. character height
-	vector<ABC> abc;									// character ABC widths
-	vector<KERNINGPAIR> kps;					// kerning pairs
+	std::vector<ABC> abc;									// character ABC widths
+	std::vector<KERNINGPAIR> kps;					// kerning pairs
 	int nTextureSizeX, nTextureSizeY;	// estimated texture size
-	hash_map<WORD, WORD> translate;		// MBCS => UNICODE translation table
-	vector<WORD> mbcsChars;
+	std::unordered_map<WORD, WORD> translate;		// MBCS => UNICODE translation table
+	std::vector<WORD> mbcsChars;
 	//
 	bool EstimateTextureSize( DWORD dwNumChars );
-	bool MeasureFont( HDC hdc, vector<WORD> *pChars );
+	bool MeasureFont( HDC hdc, std::vector<WORD> *pChars );
 public:
 	CFontInfo() : hFont( 0 ), nTextureSizeX( 0 ), nTextureSizeY( 0 ) {  }
 	~CFontInfo() { if ( hFont ) DeleteObject( hFont ); }
 	//
-	bool LoadFontInfo( const SSourceParams &_source, vector<WORD> *pChars, HWND hWnd );
+	bool LoadFontInfo( const SSourceParams &_source, std::vector<WORD> *pChars, HWND hWnd );
 	// MBCS => UNICODE
 	WORD Translate( WORD code ) const;
 	//
 	HFONT GetFont() const { return hFont; }
 	const TEXTMETRIC &GetTextMetrics() const { return tm; }
-	const vector<ABC> &GetABC() const { return abc; }
-	const vector<KERNINGPAIR> &GetKerningPairs() const { return kps; }
-	const vector<WORD> &GetMBCSChars() const { return mbcsChars; }
+	const std::vector<ABC> &GetABC() const { return abc; }
+	const std::vector<KERNINGPAIR> &GetKerningPairs() const { return kps; }
+	const std::vector<WORD> &GetMBCSChars() const { return mbcsChars; }
 	CTPoint<int> GetTextureSize() const { return CTPoint<int>(nTextureSizeX, nTextureSizeY); }
 };
 

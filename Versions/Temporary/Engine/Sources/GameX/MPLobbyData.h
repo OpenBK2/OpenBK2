@@ -9,14 +9,14 @@ class CClientListData : public CObjectBase
 	OBJECT_NOCOPY_METHODS(CClientListData)	
 public:
 	ZDATA
-	string szName;
+	std::string szName;
 	EMPChatStatus eStatus;
 	CPtr<IListControlItem> pListItem;
 	CPtr<IButton> pStatusIcon;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&eStatus); f.Add(4,&pListItem); f.Add(5,&pStatusIcon); return 0; }
 
 	CClientListData() {}
-	CClientListData( const string &_szName, const EMPChatStatus _eStatus ) : szName( _szName ), eStatus( _eStatus ) { };
+	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus ) : szName( _szName ), eStatus( _eStatus ) { };
 };
 
 class CClientListViewer : public IDataViewer

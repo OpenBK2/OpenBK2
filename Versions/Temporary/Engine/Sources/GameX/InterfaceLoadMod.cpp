@@ -60,7 +60,7 @@ void CInterfaceLoadMod::MakeInterior()
 	pDefaultBtn = GetChildChecked<IButton>( pBottomPanel, "DefaultBtn", true );
 	pAcceptBtn = GetChildChecked<IButton>( pBottomPanel, "AcceptBtn", true );
 
-	vector<NMOD::SMOD> gameMODs;
+	std::vector<NMOD::SMOD> gameMODs;
 	NMOD::GetAllMODs( &gameMODs );
 	for ( int i = 0; i < gameMODs.size(); ++i )
 	{
@@ -98,7 +98,7 @@ void CInterfaceLoadMod::MakeInterior()
 	UpdateSelection();
 }
 
-void CInterfaceLoadMod::AddMod( const wstring &wszName, const wstring &wszDesc, const NFile::CFilePath &szFullFolderPath )
+void CInterfaceLoadMod::AddMod( const std::wstring &wszName, const std::wstring &wszDesc, const NFile::CFilePath &szFullFolderPath )
 {
 	SMod mod;
 	mod.pWnd = AddWindowCopy( pModsListCont, pModsListItemTemplate );
@@ -138,7 +138,7 @@ const CInterfaceLoadMod::SMod* CInterfaceLoadMod::FindSelected() const
 	return 0;
 }
 
-bool CInterfaceLoadMod::Execute( const string &szSender, const string &szReaction )
+bool CInterfaceLoadMod::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
 		return OnBack();
@@ -154,7 +154,7 @@ bool CInterfaceLoadMod::Execute( const string &szSender, const string &szReactio
 	return false;
 }
 
-int CInterfaceLoadMod::Check( const string &szCheckName ) const
+int CInterfaceLoadMod::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }

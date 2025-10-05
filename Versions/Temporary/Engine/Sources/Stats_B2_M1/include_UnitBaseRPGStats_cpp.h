@@ -28,7 +28,7 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 		const SBaseGunRPGStats &gun = GetGun( nUniqueID, nPlatform, i );
 		if ( gun.pWeapon )
 		{
-			for ( vector<SWeaponRPGStats::SShell>::const_iterator shell = gun.pWeapon->shells.begin(); shell != gun.pWeapon->shells.end(); ++shell )
+			for ( std::vector<SWeaponRPGStats::SShell>::const_iterator shell = gun.pWeapon->shells.begin(); shell != gun.pWeapon->shells.end(); ++shell )
 				nDamagetypes[shell->eDamageType] = 1;
 		}
 	}
@@ -74,7 +74,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	// convert AI price
 	if ( !bInEditor )
 	{
-		const string szVarName = StrFmt( "AIPrice.%x", int(etype) );
+		const std::string szVarName = StrFmt( "AIPrice.%x", int(etype) );
 		fPrice *= NGlobal::GetVar( szVarName.c_str(), 1.0f );
 	}
 
@@ -114,7 +114,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 			for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 			{
 				const SAnimB2 *pAnim = checked_cast_ptr<const SAnimB2 *>( pSkeleton->animations[i] );
-				vector<SAnimDesc>::iterator pos = animdescs[pAnim->eType].anims.insert( animdescs[pAnim->eType].anims.end(), SAnimDesc() );
+				std::vector<SAnimDesc>::iterator pos = animdescs[pAnim->eType].anims.insert( animdescs[pAnim->eType].anims.end(), SAnimDesc() );
 				pos->nLength = pAnim->nLength;
 				pos->nAction = pAnim->nAction;
 				if ( IsInfantry() )

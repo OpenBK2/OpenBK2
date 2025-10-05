@@ -8,8 +8,8 @@ namespace NDb
 class CDBIterator : public IDBIterator
 {
 	OBJECT_BASIC_METHODS( CDBIterator )
-	vector<CDBID> dbids;
-	vector<CDBID>::const_iterator posCurrent;
+	std::vector<CDBID> dbids;
+	std::vector<CDBID>::const_iterator posCurrent;
 	//
 	CDBIterator() {}
 public:

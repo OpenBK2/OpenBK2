@@ -7,8 +7,8 @@
 namespace NCustom
 {
 
-void GetCustomMissions( vector<CDBID> *pDBIDs );
-void GetCustomCampaigns( vector<CDBID> *pDBIDs );
-void GetMultiplayerMaps( vector<CDBID> *pDBIDs );
+void GetCustomMissions( std::vector<CDBID> *pDBIDs );
+void GetCustomCampaigns( std::vector<CDBID> *pDBIDs );
+void GetMultiplayerMaps( std::vector<CDBID> *pDBIDs );
 
 }

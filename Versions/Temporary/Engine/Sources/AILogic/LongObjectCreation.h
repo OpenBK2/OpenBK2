@@ -16,14 +16,14 @@ public:
 protected:
 	const BYTE GetPlayer() const { return nPlayer; }
 	bool IsAnyUnitPrevent( const SRect &r1 ) const;
-	void GetUnitsPreventing( const SRect &r1, list< CPtr<CAIUnit> > *units ) const;
-	void UnlockPreventingUnits( list<CPtr<CAIUnit> > &preventing ) const;
-	bool CanBuildOnRect( SRect r1, const list<SVector> &tilesUnder ) const;
+	void GetUnitsPreventing( const SRect &r1, std::list< CPtr<CAIUnit> > *units ) const;
+	void UnlockPreventingUnits( std::list<CPtr<CAIUnit> > &preventing ) const;
+	bool CanBuildOnRect( SRect r1, const std::list<SVector> &tilesUnder ) const;
 	bool IsAIModificationAllowed() const { return bAllowAIModification; }
 
 	// helper functions
 	WORD GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd );
-	void SplitLineToSegrments( vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
+	void SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
 
 public:
 	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification ) 
@@ -46,7 +46,7 @@ public:
 	// для первого сегмента ставит начальный терминатор
 	virtual void BuildNext() { fWorkAccumulated = 0.0f; }
 	// находит юнитов, которые мещают дальнейшему строительству
-	virtual void GetUnitsPreventing( list< CPtr<CAIUnit> > * units ) = 0;
+	virtual void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units ) = 0;
 	// есть ли хоть 1 юнит, который мешает
 	virtual bool IsAnyUnitPrevent() const = 0;
 	// может лт следуюший сегмент быть построен ( без учета юнитов )
@@ -82,7 +82,7 @@ struct SCreationData
 	{
 	}
 };
-typedef list<SCreationData> CCreations;
+typedef std::list<SCreationData> CCreations;
 extern CCreations creations;
 template <class CCreation>
 void PreCreate( const CVec2 &vFinish, CObj<CLongObjectCreation> *_pCreation, bool bCheckLock )

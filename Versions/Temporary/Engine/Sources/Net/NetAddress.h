@@ -17,10 +17,10 @@ public:
 	void Clear() { memset( &addr, 0, sizeof(addr) ); }
 	//
 	bool SetInetName( const char *pszHost, int nDefaultPort );
-	string GetName( bool bResolve = true ) const;
-	string GetFastName() const { return GetName( false ); }
+	std::string GetName( bool bResolve = true ) const;
+	std::string GetFastName() const { return GetName( false ); }
 	//
-	string GetIP();
+	std::string GetIP();
 	int GetPort();
 	//
 	bool SameIP( const CNodeAddress &a ) const { return memcmp( ((char*)&a.addr) + 4, ((char*)&addr) + 4, 4 ) == 0; }

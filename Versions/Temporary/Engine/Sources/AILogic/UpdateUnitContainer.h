@@ -22,13 +22,13 @@ struct SUpdateUnitInfo
 
 };
 
-typedef hash_map<int, SUpdateUnitInfo> CUpdateUnitList;
+typedef std::unordered_map<int, SUpdateUnitInfo> CUpdateUnitList;
 
 class CUpdateUnitContainer : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CUpdateUnitContainer );
 
-	vector<CUpdateUnitList> updateLists;
+	std::vector<CUpdateUnitList> updateLists;
 	float f2MaxRadius, fMaxRadius2;
 
 public:

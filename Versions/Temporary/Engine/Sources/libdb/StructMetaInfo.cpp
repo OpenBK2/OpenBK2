@@ -24,11 +24,11 @@ void ConstructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 	switch ( eType )
 	{
 	case NTypeDef::TYPE_TYPE_STRING:
-		new(pData) string();
+		new(pData) std::string();
 		break;
 
 	case NTypeDef::TYPE_TYPE_WSTRING:
-		new(pData) wstring();
+		new(pData) std::wstring();
 		break;
 
 	case NTypeDef::TYPE_TYPE_REF:
@@ -43,15 +43,15 @@ void DestructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 	switch ( eType )
 	{
 	case NTypeDef::TYPE_TYPE_STRING:
-		((string*)pData)->~string();
+		((std::string*)pData)->~basic_string();
 		break;
 
 	case NTypeDef::TYPE_TYPE_WSTRING:
-		((wstring*)pData)->~wstring();
+		((std::wstring*)pData)->~basic_string();
 		break;
 
 	case NTypeDef::TYPE_TYPE_ARRAY:
-		((vector<BYTE>*)pData)->~vector<BYTE>();
+		((std::vector<BYTE>*)pData)->~vector<BYTE>();
 		break;
 
 	case NTypeDef::TYPE_TYPE_REF:
@@ -74,11 +74,11 @@ void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *value
 		switch ( GetType() )
 		{
 		case NTypeDef::TYPE_TYPE_STRING:
-			data.pString = new string();
+			data.pString = new std::string();
 			break;
 
 		case NTypeDef::TYPE_TYPE_WSTRING:
-			data.pWString = new wstring();
+			data.pWString = new std::wstring();
 			break;
 
 		case NTypeDef::TYPE_TYPE_GUID:
@@ -174,7 +174,7 @@ void SStructMetaInfo::DestructStruct( BYTE *pThis, NBind::UValue *values, bool b
 // **
 // ************************************************************************************************************************ //
 
-void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType )
+void SStructMetaInfo::AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType )
 {
 	NI_ASSERT( fields.find(szName) == fields.end(), StrFmt("Field \"%s\" already exists!", szName.c_str() ) );
 	SField &field = fields[szName];
@@ -188,7 +188,7 @@ void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTy
 #endif
 }
 
-void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType, 
+void SStructMetaInfo::AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType,
 							                  int nContainedSize, NTypeDef::ETypeType eContainedType )
 {
 	NI_ASSERT( fields.find(szName) == fields.end(), StrFmt("Field \"%s\" already exists!", szName.c_str() ) );
@@ -371,11 +371,11 @@ void SetupSetGetStructFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeTyp
 	}
 }
 
-void SStructMetaInfo::LinkField( const string &szAddName, const string &szFieldName, NTypeDef::STypeDef *pType )
+void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string &szFieldName, NTypeDef::STypeDef *pType )
 {
 	if ( pType->IsSimpleType() )
 	{
-		const string szFullFieldName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
+		const std::string szFullFieldName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
 		CFieldsMap::iterator posField = fields.find( szFullFieldName );
 		if ( posField == fields.end() )
 		{
@@ -403,14 +403,14 @@ void SStructMetaInfo::LinkField( const string &szAddName, const string &szFieldN
 	}
 	else if ( pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 	{
-		const string szNewAddName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
+		const std::string szNewAddName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
 		LinkWithTypeDef( szNewAddName, checked_cast<NTypeDef::STypeStructBase*>(pType) );
 	}
 	else if ( pType->eType == NTypeDef::TYPE_TYPE_ARRAY )
 	{
 		NTypeDef::STypeArray *pTypeArray = checked_cast<NTypeDef::STypeArray*>( pType );
 		NI_ASSERT( pTypeArray->field.pType->eType != NTypeDef::TYPE_TYPE_BOOL, "Don't use array of bool!!!" );
-		const string szFullFieldName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
+		const std::string szFullFieldName = szAddName.empty() ? szFieldName : szAddName + "." + szFieldName;
 		CFieldsMap::iterator posField = fields.find( szFullFieldName );
 		if ( posField == fields.end() )	// array of owns
 		{
@@ -470,7 +470,7 @@ void SStructMetaInfo::LinkField( const string &szAddName, const string &szFieldN
 	}
 }
 
-void SStructMetaInfo::LinkWithTypeDef( const string &szAddName, NTypeDef::STypeStructBase *pType )
+void SStructMetaInfo::LinkWithTypeDef( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 {
 	if ( pType->pBaseType )
 		LinkWithTypeDef( szAddName, pType->pBaseType );

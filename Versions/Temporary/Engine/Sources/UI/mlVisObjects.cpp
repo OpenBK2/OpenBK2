@@ -64,7 +64,7 @@ private:
 	CTPoint<float> size;
 	CTPoint<float> position;
 	////
-	list<float> edges;
+	std::list<float> edges;
 	CRectLayout normalRects;
 	CRectLayout outlineRects;
 	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture;
@@ -80,7 +80,7 @@ public:
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
@@ -158,12 +158,12 @@ void CTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> 
 	pView->CreateDynamicRects( pTexture, normalRects, pos, window );
 }
 
-void CTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
+void CTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	CTPoint<float> pos = _position + position;
 
 	float fLastX = 0;
-	for ( list<float>::const_iterator iTemp = edges.begin(); iTemp != edges.end(); iTemp++ )
+	for ( std::list<float>::const_iterator iTemp = edges.begin(); iTemp != edges.end(); iTemp++ )
 	{
 		pRender->push_back( CTRect<float>( fLastX + pos.x, pos.y, *iTemp + pos.x, size.y + pos.y ) );
 		fLastX = *iTemp;
@@ -198,7 +198,7 @@ public:
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
@@ -237,7 +237,7 @@ void CImageObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float>
 	pView->CreateDynamicRects( pTexture, rects, _position + position, window );
 }
 
-void CImageObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
+void CImageObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	pRender->push_back( CTRect<float>( _position.x, _position.y, size.x + _position.x, size.y + _position.y ) );
 }
@@ -264,7 +264,7 @@ public:
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
@@ -311,7 +311,7 @@ public:
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
-	void Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
 	bool IsSpace() const { return true; }
 	const CTPoint<float>& GetSize() const { return size; }

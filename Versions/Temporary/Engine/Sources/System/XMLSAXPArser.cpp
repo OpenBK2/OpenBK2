@@ -67,7 +67,7 @@ public:
 		}
 	}
 	//
-	bool ReadUntilNonspace( string *pszBuff )
+	bool ReadUntilNonspace( std::string *pszBuff )
 	{
 		while ( 1 )
 		{
@@ -119,7 +119,7 @@ public:
 bool ParseXMLImpl( IXmlSaxVisitor *pVisitor, CBufferedStream &stream );
 bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream );
 
-bool ReadName( string *pszName, CBufferedStream &stream )
+bool ReadName( std::string *pszName, CBufferedStream &stream )
 {
 	pszName->clear();
 	pszName->reserve( 32 );
@@ -145,7 +145,7 @@ bool ReadName( string *pszName, CBufferedStream &stream )
 // "gt;"		'>'
 // "quot;"	'\"'
 // "apos;"	'\''
-char ReadSysChar( string *pszBuff, CBufferedStream &stream )
+char ReadSysChar( std::string *pszBuff, CBufferedStream &stream )
 {
 	char chr = 0;
 	stream.Next();
@@ -336,7 +336,7 @@ char ReadSysChar( string *pszBuff, CBufferedStream &stream )
 	}
 }
 
-bool ReadText( string *pszText, CBufferedStream &stream, const char *pszEndTag )
+bool ReadText( std::string *pszText, CBufferedStream &stream, const char *pszEndTag )
 {
 	while ( !stream.IsEnd() )
 	{
@@ -345,7 +345,7 @@ bool ReadText( string *pszText, CBufferedStream &stream, const char *pszEndTag )
 		{
 			if ( stream.GetNumCharsToEnd() < 3 )
 				return false;
-			string szSysChar;
+			std::string szSysChar;
 			chr = ReadSysChar( &szSysChar, stream );
 			if ( chr == char(0xff) )
 			{
@@ -455,7 +455,7 @@ EXmlNodeType Identify( CBufferedStream &stream )
 // ************************************************************************************************************************ //
 
 // attribute parser
-bool ParseAttribute( string *pszName, string *pszText, CBufferedStream &stream )
+bool ParseAttribute( std::string *pszName, std::string *pszText, CBufferedStream &stream )
 {
 	if ( stream.SkipWhiteSpaces() == false )
 		return false;
@@ -499,10 +499,10 @@ bool ParseAttribute( string *pszName, string *pszText, CBufferedStream &stream )
 // header parse
 bool ParseHeader( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
-	string szVersion = "1.0", szEncoding = "UTF-8", szStandalone = "";
+	std::string szVersion = "1.0", szEncoding = "UTF-8", szStandalone = "";
 	while ( stream.SkipWhiteSpaces() != false && stream.GetChar() != '?' )
 	{
-		string szName, szText;
+		std::string szName, szText;
 		if ( ParseAttribute(&szName, &szText, stream) == false )
 			return false;
 		if ( szName == "version" )
@@ -531,7 +531,7 @@ bool ParseHeader( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 // comment block
 bool ParseComment( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
-	string szText;
+	std::string szText;
 	if ( ReadText( &szText, stream, "-->" ) == false )
 		return false;
 	return pVisitor->VisitComment( szText );
@@ -540,7 +540,7 @@ bool ParseComment( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	// read in text and elements in any order.
-	string szBuffer;
+	std::string szBuffer;
 	while ( stream.ReadUntilNonspace(&szBuffer) != false )
 	{
 		if ( stream.GetChar() == '/' )
@@ -548,7 +548,7 @@ bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		else if ( stream.GetChar() != '<' )
 		{
 			// take what we have - read an element's text
-			string szText;
+			std::string szText;
 			if ( ReadText(&szText, stream, "<") == false || pVisitor->VisitText(szBuffer + szText) == false )
 				return false;
 		}
@@ -587,7 +587,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	if ( stream.SkipWhiteSpaces() == false )
 		return false;
 	// read chunk start name
-	string szName;
+	std::string szName;
 	if ( ReadName(&szName, stream) == false || pVisitor->VisitChunkStart(szName) == false )
 		return false;
 	// read attributes
@@ -611,7 +611,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 				return false;
 			// check for the end tag
 			stream.Next();
-			string szEndName;
+			std::string szEndName;
 			if ( stream.IsEnd() || ReadName(&szEndName, stream) == false || pVisitor->VisitChunkFinish(szEndName) == false )
 				return false;
 			stream.Next();
@@ -620,7 +620,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		}
 		else
 		{
-			string szName, szText;
+			std::string szName, szText;
 			if ( ParseAttribute(&szName, &szText, stream) == false || pVisitor->VisitAttribute(szName, szText) == false )
 				return false;
 		}

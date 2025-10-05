@@ -18,7 +18,7 @@ class TKeyVector
 {
 public:
 	ZDATA
-	vector< TKey<TValue> > keys;
+	std::vector< TKey<TValue> > keys;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&keys); return 0; }
 	void GetValue( float fT, TValue *pRes ) const
 	{

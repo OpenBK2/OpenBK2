@@ -112,7 +112,7 @@ namespace NDb
 			eAckType( ACK_NONE )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -122,43 +122,43 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EUnitAckType eValue );
-	EUnitAckType StringToEnum_NDb_EUnitAckType( const string &szValue );
+	std::string EnumToString( NDb::EUnitAckType eValue );
+	EUnitAckType StringToEnum_NDb_EUnitAckType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EUnitAckType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EUnitAckType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EUnitAckType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitAckType( szValue ); }
+	static std::string ToString( NDb::EUnitAckType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EUnitAckType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EUnitAckType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EAckClass eValue );
-	EAckClass StringToEnum_NDb_EAckClass( const string &szValue );
+	std::string EnumToString( NDb::EAckClass eValue );
+	EAckClass StringToEnum_NDb_EAckClass( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EAckClass>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EAckClass eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EAckClass ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAckClass( szValue ); }
+	static std::string ToString( NDb::EAckClass eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EAckClass ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EAckClass( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EAckPosition eValue );
-	EAckPosition StringToEnum_NDb_EAckPosition( const string &szValue );
+	std::string EnumToString( NDb::EAckPosition eValue );
+	EAckPosition StringToEnum_NDb_EAckPosition( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EAckPosition>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EAckPosition eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EAckPosition ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAckPosition( szValue ); }
+	static std::string ToString( NDb::EAckPosition eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EAckPosition ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EAckPosition( szValue ); }
 };
 

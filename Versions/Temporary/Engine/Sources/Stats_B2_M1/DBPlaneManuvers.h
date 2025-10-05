@@ -164,7 +164,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -205,57 +205,57 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::ESpeedRelation eValue );
-	ESpeedRelation StringToEnum_NDb_ESpeedRelation( const string &szValue );
+	std::string EnumToString( NDb::ESpeedRelation eValue );
+	ESpeedRelation StringToEnum_NDb_ESpeedRelation( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::ESpeedRelation>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::ESpeedRelation eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::ESpeedRelation ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESpeedRelation( szValue ); }
+	static std::string ToString( NDb::ESpeedRelation eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::ESpeedRelation ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESpeedRelation( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EPlanesAttitude eValue );
-	EPlanesAttitude StringToEnum_NDb_EPlanesAttitude( const string &szValue );
+	std::string EnumToString( NDb::EPlanesAttitude eValue );
+	EPlanesAttitude StringToEnum_NDb_EPlanesAttitude( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EPlanesAttitude>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EPlanesAttitude eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EPlanesAttitude ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EPlanesAttitude( szValue ); }
+	static std::string ToString( NDb::EPlanesAttitude eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EPlanesAttitude ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EPlanesAttitude( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EManuverDestination eValue );
-	EManuverDestination StringToEnum_NDb_EManuverDestination( const string &szValue );
+	std::string EnumToString( NDb::EManuverDestination eValue );
+	EManuverDestination StringToEnum_NDb_EManuverDestination( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EManuverDestination>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EManuverDestination eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EManuverDestination ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EManuverDestination( szValue ); }
+	static std::string ToString( NDb::EManuverDestination eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EManuverDestination ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EManuverDestination( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EManuverID eValue );
-	EManuverID StringToEnum_NDb_EManuverID( const string &szValue );
+	std::string EnumToString( NDb::EManuverID eValue );
+	EManuverID StringToEnum_NDb_EManuverID( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EManuverID>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EManuverID eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EManuverID ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EManuverID( szValue ); }
+	static std::string ToString( NDb::EManuverID eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EManuverID ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EManuverID( szValue ); }
 };
 

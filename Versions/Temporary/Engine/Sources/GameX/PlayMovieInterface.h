@@ -10,12 +10,12 @@ class CPlayMovieInterface : public CInterfaceScreenBase
 
 	ZDATA_(CInterfaceScreenBase)
 	// next command
-	string szNextCommand;
+	std::string szNextCommand;
 	CPtr<IPlayer> pPlayerControl;
 	bool bProlog;
 	bool bFadeIn;
 	bool bFadeOut;
-	string szFileName;
+	std::string szFileName;
 	CPtr<IWindow> pBackground;
 	float fFadeIn;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&szNextCommand); f.Add(3,&pPlayerControl); f.Add(4,&bProlog); f.Add(5,&bFadeIn); f.Add(6,&bFadeOut); f.Add(7,&szFileName); f.Add(8,&pBackground); f.Add(9,&fFadeIn); return 0; }
@@ -29,8 +29,8 @@ private:
 public:	
 	CPlayMovieInterface();
 	//
-	void LoadMovieSequence( const string &szFileName );
-	void SetNextInterface( const string &szNextCommand );
+	void LoadMovieSequence( const std::string &szFileName );
+	void SetNextInterface( const std::string &szNextCommand );
 	//
 	bool Init();
 	void OnGetFocus( bool bFocus );
@@ -40,8 +40,8 @@ class CICPlayMovie : public CInterfaceCommandBase<CPlayMovieInterface>
 {
 	OBJECT_NOCOPY_METHODS( CICPlayMovie );
 	//
-	string szSequenceName;
-	string szNextCommand;
+	std::string szSequenceName;
+	std::string szNextCommand;
 	//
 	void PreCreate() {}
 	void PostCreate( IInterface *pInterface );

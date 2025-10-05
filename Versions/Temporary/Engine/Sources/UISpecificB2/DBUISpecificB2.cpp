@@ -75,7 +75,7 @@ int SARSetForcedAction::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::EActionButtonPanel eValue )
+std::string EnumToString( NDb::EActionButtonPanel eValue )
 {
 	switch ( eValue )
 	{
@@ -92,7 +92,7 @@ string EnumToString( NDb::EActionButtonPanel eValue )
 	}
 }
 
-NDb::EActionButtonPanel NDb::StringToEnum_NDb_EActionButtonPanel( const string &szValue )
+NDb::EActionButtonPanel NDb::StringToEnum_NDb_EActionButtonPanel( const std::string &szValue )
 {
 	if ( szValue == "ACTION_BTN_PANEL_DEFAULT" )
 		return NDb::ACTION_BTN_PANEL_DEFAULT;
@@ -106,7 +106,7 @@ NDb::EActionButtonPanel NDb::StringToEnum_NDb_EActionButtonPanel( const string &
 }
 
 
-void SActionButton::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SActionButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Button", (BYTE*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
@@ -184,7 +184,7 @@ DWORD SActionButton::CalcCheckSum() const
 
 
 
-void SM1ActionButton::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SM1ActionButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "CrapName", (BYTE*)&szCrapName - pThis, sizeof(szCrapName), NTypeDef::TYPE_TYPE_STRING );
@@ -333,7 +333,7 @@ int SActionButtonInfo::operator&( IBinSaver &saver )
 
 
 
-void SPlayersColors::SPlayer::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlayersColors::SPlayer::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (BYTE*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
@@ -372,7 +372,7 @@ DWORD SPlayersColors::SPlayer::CalcCheckSum() const
 
 
 
-void SPlayersColors::SUnitFullInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlayersColors::SUnitFullInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "UserForward", (BYTE*)&pUserForward - pThis, sizeof(pUserForward), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "NeutralForward", (BYTE*)&pNeutralForward - pThis, sizeof(pNeutralForward), NTypeDef::TYPE_TYPE_REF );
@@ -417,7 +417,7 @@ DWORD SPlayersColors::SUnitFullInfo::CalcCheckSum() const
 
 
 
-void SPlayersColors::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SPlayersColors::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "UserColor", &vUserColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "NeutralColor", &vNeutralColor, pThis ); 
@@ -477,7 +477,7 @@ DWORD SPlayersColors::CalcCheckSum() const
 
 
 
-void SReinfButton::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SReinfButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Button", (BYTE*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
@@ -525,7 +525,7 @@ DWORD SReinfButton::CalcCheckSum() const
 
 
 
-void SSeasonColor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SSeasonColor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Color", &vColor, pThis ); 
@@ -564,7 +564,7 @@ DWORD SSeasonColor::CalcCheckSum() const
 
 
 
-void SMLTag::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMLTag::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -603,7 +603,7 @@ DWORD SMLTag::CalcCheckSum() const
 
 
 
-void SMPLocalizedGameType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMPLocalizedGameType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "GameType", (BYTE*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "LocalizedTextFileRef", (BYTE*)&szLocalizedTextFileRef - pThis, sizeof(szLocalizedTextFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -642,7 +642,7 @@ DWORD SMPLocalizedGameType::CalcCheckSum() const
 
 
 
-void SUIConstsB2::SSeasonName::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SUIConstsB2::SSeasonName::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -938,7 +938,7 @@ int SWindowRoundProgressBar::operator&( IBinSaver &saver )
 
 
 
-void SWindow3DControlShared::SObjectParams::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SWindow3DControlShared::SObjectParams::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis ); 

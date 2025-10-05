@@ -92,8 +92,8 @@ class CWaterPatch : public CVersioningBase
 	struct SWaterSurfaceType
 	{
 		float fHeight;
-		vector<float> phase;
-		vector<float> amplitude;
+		std::vector<float> phase;
+		std::vector<float> amplitude;
 	};
 	//
 	struct SFoamParams
@@ -119,8 +119,8 @@ class CWaterPatch : public CVersioningBase
 	CDBPtr<NDb::SWater> pDesc;
 	CDGPtr<CCSBound> pBound;
 	//
-	vector<SGridType> grid;
-	vector<SWaveType> waves;
+	std::vector<SGridType> grid;
+	std::vector<SWaveType> waves;
 
 	CArray2D<SWaterSurfaceType> waterSurf;
 
@@ -136,8 +136,8 @@ class CWaterPatch : public CVersioningBase
 	CVec2 windVec;
 
 	// foam parameters
-	vector<vector<SFoamParams> > foamParams;
-	vector<float> foamXOffsets;
+	std::vector<std::vector<SFoamParams> > foamParams;
+	std::vector<float> foamXOffsets;
 
 	CArray2D<SWaterHorDeform> waterHorDeform;
 
@@ -173,7 +173,7 @@ class CWater : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CWater )
 	//
-	vector< CObj<CWaterPatch> > patches;
+	std::vector< CObj<CWaterPatch> > patches;
 	CDGPtr< CFuncBase<STime> > pTimer;
 	CDBPtr<NDb::SWater> pDesc;
 public:

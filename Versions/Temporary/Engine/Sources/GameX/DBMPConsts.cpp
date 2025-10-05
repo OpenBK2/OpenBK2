@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EHistoricalSide eValue )
+std::string EnumToString( NDb::EHistoricalSide eValue )
 {
 	switch ( eValue )
 	{
@@ -23,7 +23,7 @@ string EnumToString( NDb::EHistoricalSide eValue )
 	}
 }
 
-NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const string &szValue )
+NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const std::string &szValue )
 {
 	if ( szValue == "HS_ALLIES" )
 		return NDb::HS_ALLIES;
@@ -33,7 +33,7 @@ NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const string &szValu
 }
 
 
-void SMultiplayerTechLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMultiplayerTechLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "DescriptionFileRef", (BYTE*)&szDescriptionFileRef - pThis, sizeof(szDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -69,7 +69,7 @@ DWORD SMultiplayerTechLevel::CalcCheckSum() const
 
 
 
-void STechLevelReinfSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void STechLevelReinfSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (BYTE*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
@@ -108,7 +108,7 @@ DWORD STechLevelReinfSet::CalcCheckSum() const
 
 
 
-void SLadderRank::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SLadderRank::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Level", (BYTE*)&nLevel - pThis, sizeof(nLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -150,7 +150,7 @@ DWORD SLadderRank::CalcCheckSum() const
 
 
 
-void SMultiplayerSide::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMultiplayerSide::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "PartyInfo", (BYTE*)&pPartyInfo - pThis, sizeof(pPartyInfo), NTypeDef::TYPE_TYPE_REF );
@@ -204,7 +204,7 @@ DWORD SMultiplayerSide::CalcCheckSum() const
 
 
 
-void SMultiplayerConsts::SPlayerColor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMultiplayerConsts::SPlayerColor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (BYTE*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );

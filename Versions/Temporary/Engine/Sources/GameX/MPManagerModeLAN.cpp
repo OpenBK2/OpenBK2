@@ -31,11 +31,11 @@ class CLANPasswordPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLANPasswordPacket );
 public:
 	ZDATA
-	string szPassword;
+	std::string szPassword;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szPassword); return 0; }
 
 	CLANPasswordPacket() { }
-	CLANPasswordPacket( const int nClientID, const string &_szPassword ) : CNetPacket( nClientID ), szPassword( _szPassword ) { }
+	CLANPasswordPacket( const int nClientID, const std::string &_szPassword ) : CNetPacket( nClientID ), szPassword( _szPassword ) { }
 };
 REGISTER_SAVELOAD_CLASS( 0x19256440, CLANPasswordPacket );
 
@@ -121,7 +121,7 @@ void CMPManagerModeLAN::UpdateGameList()
 
 		if ( iter == games.end() )			// new server
 		{
-			SNetGameInfo &game = *games.insert( games.end() );
+			SNetGameInfo &game = games.emplace_back();
 
 			game.nGameID = ++wGameUniqueID;
 			game.fPing = fPing * 1000;
@@ -167,7 +167,7 @@ void CMPManagerModeLAN::UpdateGameList()
 
 bool CMPManagerModeLAN::OnChatMessage( SMPUIChatMessage *pMsg )
 {
-	wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
+	std::wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
 	
 	CPtr<CChatPacket> pPacket = new CChatPacket( 0, wszFilteredText, "", 0, true );
 
@@ -263,7 +263,7 @@ bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 	if ( eCurrentState != EGS_HOST )
 		return true;
 
-	for ( list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
+	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
 	{
 		if ( *it = pPacket->nClientID )
 		{

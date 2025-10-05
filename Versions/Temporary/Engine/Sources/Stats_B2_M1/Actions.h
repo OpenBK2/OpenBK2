@@ -82,7 +82,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		ZSKIP//int nMainAmmo
 		ZSKIP//int nSecondaryAmmo;				// патроны главной пушки и всего остального
 		NTimer::STime time;
-		vector<SWeaponAmmo> ammo;
+		std::vector<SWeaponAmmo> ammo;
 		int nSupply;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&fHitPoints); f.Add(3,&fFuel); f.Add(6,&time); f.Add(7,&ammo); f.Add(8,&nSupply); return 0; }
 public:

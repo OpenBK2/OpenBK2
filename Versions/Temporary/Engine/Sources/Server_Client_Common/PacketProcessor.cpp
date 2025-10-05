@@ -7,7 +7,7 @@ BASIC_REGISTER_CLASS( IPacketProcessorFun );
 bool CPacketProcessorBase::ProcessPacket( CNetPacket *pPacket )
 {
 	const int nTypeID = NObjectFactory::GetObjectTypeID( pPacket );
-	hash_map<int, CPtr<IPacketProcessorFun> >::iterator iter = packetProcessorFuns.find( nTypeID );
+	std::unordered_map<int, CPtr<IPacketProcessorFun> >::iterator iter = packetProcessorFuns.find( nTypeID );
 	if ( iter != packetProcessorFuns.end() )
 	{
 		IPacketProcessorFun *pProcessor = iter->second;

@@ -229,13 +229,13 @@ private:
 	float fSpeedCoeff;
 	CDGPtr< CFuncBase<STime> > pTimer;
 	NCamera::CCameraPlacement placement;
-	vector<CQuat> cameraQuats;
-	vector<CVec3> cameraAnchors;
-	vector<float> cameraDists;
+	std::vector<CQuat> cameraQuats;
+	std::vector<CVec3> cameraAnchors;
+	std::vector<float> cameraDists;
 
 	EPlaybackMode eMode;
 	int nLastKeyID;
-	string szCallbackFuncName;
+	std::string szCallbackFuncName;
 
 public:
 	ZEND
@@ -273,7 +273,7 @@ public:
 	const NCamera::CCameraPlacement GetValue() const;
 	float GetTime() const { return fCurrTime; }
 	float GetLength() const;
-	void SetCallbackFuncName( const string &_szCallbackFuncName );
+	void SetCallbackFuncName( const std::string &_szCallbackFuncName );
 
 	const CVec3 GetAnchor() const;
 	const CVec3 GetPos() const;

@@ -42,7 +42,7 @@ struct SRTDescHash
 };
 struct SRenderTargetsInfo
 {
-	typedef hash_map<SRenderTargetDesc,int,SRTDescHash> CRTHash;
+	typedef std::unordered_map<SRenderTargetDesc,int,SRTDescHash> CRTHash;
 	CRTHash targets; // resolution to number
 	CRTHash cubeTargets; // resolution to number
 	int nRegisters;
@@ -77,9 +77,9 @@ _3DMOTOR_EXPORT void Done3D();
 HWND GetHWND();
 _3DMOTOR_EXPORT bool Is3DActive();
 _3DMOTOR_EXPORT void SetGamma( bool bGamma );
-_3DMOTOR_EXPORT void SetGammaRamp( const vector<NGfx::SPixel8888> &ramp );
+_3DMOTOR_EXPORT void SetGammaRamp( const std::vector<NGfx::SPixel8888> &ramp );
 bool SetMode( const SVideoMode &m_, const SRenderTargetsInfo &_rtInfo );
-_3DMOTOR_EXPORT void GetModesList( list<SVideoMode> *pRes, int nBpp = 32 );
+_3DMOTOR_EXPORT void GetModesList( std::list<SVideoMode> *pRes, int nBpp = 32 );
 int GetMaxAnisotropicLevel();
 _3DMOTOR_EXPORT CVec2 GetScreenRect();
 void Flip();

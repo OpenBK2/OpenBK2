@@ -22,13 +22,13 @@ namespace NDb
 namespace NBind
 {
 
-typedef vector< pair<string, wstring> > CAttributesList;
+typedef std::vector< std::pair<std::string, std::wstring> > CAttributesList;
 class CBindStruct : public IObjMan, public ILoadableObjMan
 {
 	OBJECT_NOCOPY_METHODS( CBindStruct );
 	//
 	CObj<CResource> pStruct;
-	vector<UValue> ownValues;
+	std::vector<UValue> ownValues;
 	CAttributesList attributes;	// additional object header attributes
 	CObj<NMetaInfo::SStructMetaInfo> pMetaInfo;
 	SBindProcessor bindProcessor;
@@ -42,7 +42,7 @@ public:
 	~CBindStruct();
 	//
 	NMetaInfo::SStructMetaInfo *GetMetaInfo() const { return pMetaInfo; }
-	const string &GetTypeName() const { return pMetaInfo->pStructTypeDef->szTypeName; }
+	const std::string &GetTypeName() const { return pMetaInfo->pStructTypeDef->szTypeName; }
 	const CAttributesList &GetAttributes() const { return attributes; }
 	//
 	bool IsLoaded() const { return bLoaded; }
@@ -58,29 +58,29 @@ public:
 	void ResetChanged() { bChanged = false; }
 	bool IsChanged() const { return bLoaded && bChanged; }
 	//
-	IObjMan *CreateManipulator( const string &szName ) { return bindProcessor.CreateManipulator( szName, this ); }
+	IObjMan *CreateManipulator( const std::string &szName ) { return bindProcessor.CreateManipulator( szName, this ); }
 	IObjManIterator *CreateIterator( bool bShowHidden )	{ return bindProcessor.CreateIterator( "", pMetaInfo->pStructTypeDef, this, bShowHidden ); }
-	string GetFullName() const { return ""; }
+	std::string GetFullName() const { return ""; }
 	//
-	bool SetValue( const string &szName, const CVariant &value ) { SetChanged(); return bindProcessor.SetValue( szName, value ); }
-	bool GetValue( const string &szName, CVariant *pValue ) { return bindProcessor.GetValue( szName, pValue ); }
+	bool SetValue( const std::string &szName, const CVariant &value ) { SetChanged(); return bindProcessor.SetValue( szName, value ); }
+	bool GetValue( const std::string &szName, CVariant *pValue ) { return bindProcessor.GetValue( szName, pValue ); }
 	//
-	bool Insert( const string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) { SetChanged(); return bindProcessor.Insert( szName, nPos, nAmount, bSetDefault ); }
-	bool Remove( const string &szName, const int nPos, const int nAmount = 1 ) { SetChanged(); return bindProcessor.Remove( szName, nPos, nAmount ); }
+	bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) { SetChanged(); return bindProcessor.Insert( szName, nPos, nAmount, bSetDefault ); }
+	bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 ) { SetChanged(); return bindProcessor.Remove( szName, nPos, nAmount ); }
 	// get property field descriptor by name
-	const NTypeDef::STypeStructBase::SField *GetDesc( const string &szFullFieldName ) const { return FindField( szFullFieldName, 0, pMetaInfo->pStructTypeDef ); }
+	const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const { return FindField( szFullFieldName, 0, pMetaInfo->pStructTypeDef ); }
 	//
 	CResource *GetObject() { return const_cast<CResource*>( pStruct.GetPtr() ); }
 	const CDBID &GetDBID() const { return dbidMain; }
 	// additional custom attributes
-	wstring GetAttribute( const string &szName ) const;
-	void SetAttribute( const string &szName, const wstring &szValue );
+	std::wstring GetAttribute( const std::string &szName ) const;
+	void SetAttribute( const std::string &szName, const std::wstring &szValue );
 	//
-	CBindArray *GetBindArray( const string &szName ) { return bindProcessor.GetBindArray( szName ); }
+	CBindArray *GetBindArray( const std::string &szName ) { return bindProcessor.GetBindArray( szName ); }
 	//
-	bool LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) { bool bRes = bindProcessor.LoadXML( szAddName, pType, pNode, this ); SetLoaded(); return bRes; }
-	bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) { ResetChanged(); return bindProcessor.SaveXML( szAddName, pType, pNode, this ); }
-	bool SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType ) { SetChanged(); return bindProcessor.SetDefault( szAddName, pType ); }
+	bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) { bool bRes = bindProcessor.LoadXML( szAddName, pType, pNode, this ); SetLoaded(); return bRes; }
+	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) { ResetChanged(); return bindProcessor.SaveXML( szAddName, pType, pNode, this ); }
+	bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) { SetChanged(); return bindProcessor.SetDefault( szAddName, pType ); }
 };
 
 class CStructIterator : public IObjManIterator
@@ -89,37 +89,37 @@ class CStructIterator : public IObjManIterator
 	//
 	struct SLevel
 	{
-		string szAddName;
+		std::string szAddName;
 		CPtr<NTypeDef::STypeStructBase> pTypeStruct;
 		int nCurrField;
 		CObj<IObjManIterator> pAggregatedIterator;
 		//
 		bool IsEnd() const { return nCurrField >= pTypeStruct->fields.size() && pAggregatedIterator == 0; }
-		string GetName() const { return pAggregatedIterator != 0 ? pAggregatedIterator->GetName() : szAddName + pTypeStruct->fields[nCurrField].szName; }
+		std::string GetName() const { return pAggregatedIterator != 0 ? pAggregatedIterator->GetName() : szAddName + pTypeStruct->fields[nCurrField].szName; }
 		const NTypeDef::STypeStructBase::SField *GetDesc() const { return pAggregatedIterator != 0 ? pAggregatedIterator->GetDesc() : &( pTypeStruct->fields[nCurrField] ); }
 	};
-	list<SLevel> levels;
+	std::list<SLevel> levels;
 	CPtr<IObjMan> pObjMan;
 	bool bShowHidden;
 	//
 	bool GotoNextFieldInLevels();
-	bool AddLevel( const string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct );
+	bool AddLevel( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct );
 	//
 	CStructIterator(): bShowHidden(false) {}
 public:
-	CStructIterator( const string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct, IObjMan *_pObjMan, bool _bShowHidden )
+	CStructIterator( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct, IObjMan *_pObjMan, bool _bShowHidden )
 		: pObjMan( _pObjMan ), bShowHidden( _bShowHidden )
 	{
 		AddLevel( _szAddName, _pTypeStruct );
 	}
 	//
-	string GetBaseName() const { return pObjMan->GetFullName(); }
+	std::string GetBaseName() const { return pObjMan->GetFullName(); }
 	// goto next field
 	bool Next();
 	// have we reached end?
 	bool IsEnd() const { return levels.empty(); }
 	// get current field's (full) name
-	string GetName() const { return levels.empty() ? "" : levels.back().GetName(); }
+	std::string GetName() const { return levels.empty() ? "" : levels.back().GetName(); }
 	// get current field descriptor
 	const NTypeDef::STypeStructBase::SField *GetDesc() const { return levels.empty() ? 0 : levels.back().GetDesc(); }
 };

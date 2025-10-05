@@ -13,12 +13,12 @@
 #endif
 //#define _DONT_LOG_PACKETS
 
-void CNetLogger::OpenLogFile( const string &szNick )
+void CNetLogger::OpenLogFile( const std::string &szNick )
 {
 #ifndef _DONT_LOG_PACKETS 
 	CloseLogFile( szNick );
 
-	string szFullName;
+	std::string szFullName;
 	NFile::GetFullName( &szFullName, "..\\Logs\\" );
 	NFile::CreatePath( szFullName.c_str() );
 	szFullName += szNick + ".log";
@@ -29,10 +29,10 @@ void CNetLogger::OpenLogFile( const string &szNick )
 #endif
 }
 
-void CNetLogger::CloseLogFile( const string &szNick )
+void CNetLogger::CloseLogFile( const std::string &szNick )
 {
 #ifndef _DONT_LOG_PACKETS	
-	hash_map<string, FILE*>::iterator iter = logs.find( szNick	);
+	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( szNick	);
 	if ( iter != logs.end() )
 	{
 		fclose( iter->second );
@@ -44,25 +44,25 @@ void CNetLogger::CloseLogFile( const string &szNick )
 CNetLogger::~CNetLogger()
 {
 #ifndef _DONT_LOG_PACKETS	
-	for ( hash_map<string, FILE*>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
+	for ( std::unordered_map<std::string, FILE*>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
 		fclose( iter->second );
 #endif
 }
 
-void CNetLogger::Log( const string &wszNick, const string &szLog )
+void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 {
 #ifndef _DONT_LOG_PACKETS	
-	hash_map<string, FILE*>::iterator iter = logs.find( wszNick	);
+	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( wszNick	);
 	if ( logs.find( wszNick ) != logs.end() )
 	{
-		string szStr;
+		std::string szStr;
 		
 		static char buf[1024];
 		_strdate( buf );
 		szStr = buf;
 
 		_strtime( buf );
-		szStr += string(" ") + buf;
+		szStr += std::string(" ") + buf;
 
 		struct __timeb64 tstruct;
 		_ftime64( &tstruct );
@@ -102,13 +102,13 @@ CNetLogger* GetNetLogger()
 }
 
 static IBinSaver *pLogSaver = 0;
-static string *pszLogStr = 0;
+static std::string *pszLogStr = 0;
 
 static struct SLogSaverLife
 {
 	SLogSaverLife()
 	{
-		pszLogStr = new string;
+		pszLogStr = new std::string;
 		pLogSaver = CreateLogSaver( pszLogStr );
 	}
 

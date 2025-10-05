@@ -20,7 +20,7 @@ namespace NDb
 	struct SMechUnitRPGStats; 
 }
 template<bool bOnlyContainers> class CStObjIter;
-typedef list< CPtr<CBuilding> > CStoragesList;
+typedef std::list< CPtr<CBuilding> > CStoragesList;
 
 //*******************************************************************
 //*												  CStaticObjects													*
@@ -34,7 +34,7 @@ class CStaticObjects : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CStaticObjects );
 	
 	typedef CAreaMap<IObstacle, CPtr<IObstacle>, SVector, int > ObstacleAreaMap;
-	typedef hash_map< int, CPtr<IObstacle> > ObstacleObjectMap;
+	typedef std::unordered_map< int, CPtr<IObstacle> > ObstacleObjectMap;
 	typedef CAreaMap<CExistingObject, CObj<CExistingObject>, SVector, int> StaticObjectsAreaMap;
 	struct SSegmentObjectsSort
 	{
@@ -54,8 +54,8 @@ public:
 	// для хранения информации о складах RU 
 	class CStoragesContainer
 	{
-		typedef hash_map< int, CObj<CBuilding> > CStorages;
-		typedef list< CObj<CBuilding> > CStoragesList;
+		typedef std::unordered_map< int, CObj<CBuilding> > CStorages;
+		typedef std::list< CObj<CBuilding> > CStoragesList;
 
 		ZDATA
 		ZSKIP
@@ -82,7 +82,7 @@ public:
 	};
 
 private:
-	typedef hash_map< int, CObj<CExistingObject> > CObjectsHashSet;
+	typedef std::unordered_map< int, CObj<CExistingObject> > CObjectsHashSet;
 
 	ZDATA
 	ObstacleAreaMap obstacles;
@@ -91,8 +91,8 @@ private:
 	StaticObjectsAreaMap areaMap;
 	StaticObjectsAreaMap containersAreaMap;
 	int nObjs;
-	list<CPtr<CBridgeSpan> > bridges;
-	list<CObj<CObjectBase> > entrenchments;
+	std::list<CPtr<CBridgeSpan> > bridges;
+	std::list<CObj<CObjectBase> > entrenchments;
 
 	// for iterators
 	bool bIterCreated;
@@ -101,7 +101,7 @@ private:
 	CObjectsHashSet terraObjs;
 	CObjectsHashSet deletedObjects;
 
-	hash_set<int> burningObjects;
+	std::unordered_set<int> burningObjects;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&obstacles); f.Add(3,&obstacleObjects); f.Add(4,&areaMap); f.Add(5,&containersAreaMap); f.Add(6,&nObjs); f.Add(7,&bridges); f.Add(8,&entrenchments); f.Add(9,&bIterCreated); f.Add(10,&storagesContainer); f.Add(11,&terraObjs); f.Add(12,&deletedObjects); f.Add(13,&burningObjects); return 0; }
 
 	//
@@ -140,7 +140,7 @@ public:
 	class CStaticObject* AddNewSmokeScreen( const CVec3 &vCenter, const float fR, const int nTransparency, const int nTime );
 
 	class CMineStaticObject* AddNewMine( const SMineRPGStats *pStats, const float fHPFactor, const CVec3 &center, const int nFrameIndex, const int player );
-	class CExistingObject* AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner );
+	class CExistingObject* AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner );
 	void GetNewStaticObjects( struct SNewUnitInfo **pObjects, int *pnLen );
 	void GetDeletedStaticObjects( CObjectBase ***pObjects, int *pnLen );
 

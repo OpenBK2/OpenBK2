@@ -19,7 +19,7 @@ static void Report( const char *pszFormat, ... )
 	OutputDebugString( charBuff );
 }
 
-static string GetErrorDesc( CCmdLine::EProcessResult eResult )
+static std::string GetErrorDesc( CCmdLine::EProcessResult eResult )
 {
 	switch ( eResult )
 	{
@@ -46,7 +46,7 @@ static string GetErrorDesc( CCmdLine::EProcessResult eResult )
 struct CCmdLine::IObserver: public CObjectBase
 {
 	virtual bool IsNeedValue() const = 0;
-	virtual CCmdLine::EProcessResult AcceptValue( const string &value ) = 0;
+	virtual CCmdLine::EProcessResult AcceptValue( const std::string &value ) = 0;
 };
 
 template <class TYPE>
@@ -59,18 +59,18 @@ class CCmdLine::CObserver : public CCmdLine::IObserver
 	const TYPE tInitialValue;	// store initial value of *pRes here to compare then setting new!
 	TYPE *pResult;
 	//
-	template <class TRes> TRes Convert( const string &input ) { return Convert<int>(input); }
-	template <> int Convert<int>( const string &input ) { return NStr::ToInt(input); }
-	template <> float Convert<float>( const string &input ) { return NStr::ToFloat(input); }
-	template <> string Convert<string>( const string &input ) { return input; }
-	template <> wstring Convert<wstring>( const string &input ) { return NStr::ToUnicode(input); }
+	template <class TRes> TRes Convert( const std::string &input ) { return Convert<int>(input); }
+	template <> int Convert<int>( const std::string &input ) { return NStr::ToInt(input); }
+	template <> float Convert<float>( const std::string &input ) { return NStr::ToFloat(input); }
+	template <> std::string Convert<std::string>( const std::string &input ) { return input; }
+	template <> std::wstring Convert<std::wstring>( const std::string &input ) { return NStr::ToUnicode(input); }
 public:
 	CObserver(): bNeedValue( false ), tInternal( TYPE() ), tInitialValue( TYPE() ), pResult( 0 ) {}
 	CObserver( TYPE *_pResult ): bNeedValue( true ), tInternal( TYPE() ), tInitialValue( *_pResult ), pResult( _pResult ) {}
 	CObserver( TYPE *_pResult, const TYPE &tSetVal ): bNeedValue( false ), tInternal( tSetVal ), tInitialValue( *_pResult ), pResult( _pResult ) {}
 	//
 	bool IsNeedValue() const { return bNeedValue; }
-	CCmdLine::EProcessResult AcceptValue( const string &value ) 
+	CCmdLine::EProcessResult AcceptValue( const std::string &value )
 	{ 
 		if ( *pResult != tInitialValue )
 			return CCmdLine::PROC_RESULT_AMBIGUITY;
@@ -97,7 +97,7 @@ const CCmdLine::SObserver *CCmdLine::Find( const char *pszName ) const
 	return 0;
 }
 
-string CCmdLine::GetHelp( const char *pszName ) const
+std::string CCmdLine::GetHelp( const char *pszName ) const
 {
 	if ( const SObserver *pObserver = Find( pszName ) )
 		return pObserver->szDescription;
@@ -120,18 +120,18 @@ bool CCmdLine::AddOptionInternal( const char *pszOptionName, IObserver *_pObserv
 
 CCmdLine::IObserver *CCmdLine::MakeIntObserver( int *pRes ) const { return new CObserver<int>( pRes ); }
 CCmdLine::IObserver *CCmdLine::MakeFloatObserver( float *pRes ) const { return new CObserver<float>( pRes ); }
-CCmdLine::IObserver *CCmdLine::MakeStringObserver( string *pRes ) const { return new CObserver<string>( pRes ); }
-CCmdLine::IObserver *CCmdLine::MakeWStringObserver( wstring *pRes ) const {	return new CObserver<wstring>( pRes ); }
+CCmdLine::IObserver *CCmdLine::MakeStringObserver( std::string *pRes ) const { return new CObserver<std::string>( pRes ); }
+CCmdLine::IObserver *CCmdLine::MakeWStringObserver( std::wstring *pRes ) const {	return new CObserver<std::wstring>( pRes ); }
 CCmdLine::IObserver *CCmdLine::MakeIntObserver( int *pRes, const int &setval ) const { return new CObserver<int>( pRes, setval ); }
 CCmdLine::IObserver *CCmdLine::MakeFloatObserver( float *pRes, const float &setval ) const { return new CObserver<float>( pRes, setval ); }
-CCmdLine::IObserver *CCmdLine::MakeStringObserver( string *pRes, const string &setval ) const { return new CObserver<string>( pRes, setval ); }
-CCmdLine::IObserver *CCmdLine::MakeWStringObserver( wstring *pRes, const wstring &setval ) const { return new CObserver<wstring>( pRes, setval ); }
+CCmdLine::IObserver *CCmdLine::MakeStringObserver( std::string *pRes, const std::string &setval ) const { return new CObserver<std::string>( pRes, setval ); }
+CCmdLine::IObserver *CCmdLine::MakeWStringObserver( std::wstring *pRes, const std::wstring &setval ) const { return new CObserver<std::wstring>( pRes, setval ); }
 
 int CCmdLine::PrintUsage( const char *pszAdd ) const
 {
-	string szMessage = szHeader + "\n";
+	std::string szMessage = szHeader + "\n";
 	if ( pszAdd != 0 )
-		szMessage += string( pszAdd ) + "\n";
+		szMessage += std::string( pszAdd ) + "\n";
 	//
 	for ( CObserversList::const_iterator it = observers.begin(); it != observers.end(); ++it )
 		szMessage += "\t" + it->szName + " - " + it->szDescription + "\n";
@@ -148,12 +148,12 @@ int CCmdLine::PrintHeader() const
 
 CCmdLine::EProcessResult CCmdLine::Process( const char *pszCommandLine ) const
 {
-	vector<string> strings;
+	std::vector<std::string> strings;
 	strings.reserve( 16 );
 	// split input line
-	for ( NStr::CStringIterator<char, string, NStr::CBracketSeparator<char, NStr::SQuoteTest<char> > > it( pszCommandLine, ' ' ); !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SQuoteTest<char> > > it( pszCommandLine, ' ' ); !it.IsEnd(); it.Next() )
 	{
-		string szVal;
+		std::string szVal;
 		it.Get( &szVal );
 		if ( !szVal.empty() )
 		{
@@ -166,11 +166,11 @@ CCmdLine::EProcessResult CCmdLine::Process( const char *pszCommandLine ) const
 
 CCmdLine::EProcessResult CCmdLine::Process( int argc, char *argv[] ) const
 {
-	vector<string> strings;
+	std::vector<std::string> strings;
 	strings.reserve( 16 );
 	for ( int i = 1; i < argc; ++i )
 	{
-		string szVal = argv[i];
+		std::string szVal = argv[i];
 		if ( !szVal.empty() )
 		{
 			NStr::TrimBoth( szVal, '\"' );
@@ -180,7 +180,7 @@ CCmdLine::EProcessResult CCmdLine::Process( int argc, char *argv[] ) const
 	//
 	return Process( strings );
 }
-CCmdLine::EProcessResult CCmdLine::Process( const vector<string> &args ) const
+CCmdLine::EProcessResult CCmdLine::Process( const std::vector<std::string> &args ) const
 {
 	if ( args.empty() )
 	{

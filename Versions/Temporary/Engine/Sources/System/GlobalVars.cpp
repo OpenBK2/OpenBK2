@@ -14,10 +14,10 @@
 // **
 // ************************************************************************************************************************ //
 
-typedef hash_map<string, wstring> CAliasMap;
+typedef std::unordered_map<std::string, std::wstring> CAliasMap;
 static CAliasMap s_AliasMap;
 
-bool AddAlias( const string &szAliasName, const wstring &wszCommand )
+bool AddAlias( const std::string &szAliasName, const std::wstring &wszCommand )
 {
 	if ( s_AliasMap.find(szAliasName) != s_AliasMap.end() )
 		return false;
@@ -25,7 +25,7 @@ bool AddAlias( const string &szAliasName, const wstring &wszCommand )
 	return true;
 }
 
-wstring GetAlias( const string &szAliasName )
+std::wstring GetAlias( const std::string &szAliasName )
 {
 	CAliasMap::const_iterator pos = s_AliasMap.find( szAliasName );
 	if ( pos != s_AliasMap.end() )
@@ -37,7 +37,7 @@ wstring GetAlias( const string &szAliasName )
 template <class TChar, class TBrackets = SBracketsTest<TChar> >
 class CBracketMulticharSeparator
 {
-	vector<TChar> stc;										// close brackets stack
+	std::vector<TChar> stc;										// close brackets stack
 	//
 	bool IsSeparator( const TChar tChar ) const
 	{
@@ -64,9 +64,9 @@ public:
 		return false;
 	}
 };
-static void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector )
+static void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector )
 {
-	for ( NStr::CStringIterator<wchar_t, const basic_string<wchar_t>&, CBracketMulticharSeparator<wchar_t, NStr::SQuoteTest<wchar_t> > > it(szString, ' '); !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<wchar_t, const std::basic_string<wchar_t>&, CBracketMulticharSeparator<wchar_t, NStr::SQuoteTest<wchar_t> > > it(szString, ' '); !it.IsEnd(); it.Next() )
 		szVector.push_back( it.Get() );
 }
 // TODO}
@@ -95,13 +95,13 @@ struct SRecordCheck
 };
 struct SCommandInfo
 {
-	vector<SRecord> data;
+	std::vector<SRecord> data;
 	EStorageClass storage;
 	CValue sValue, sDefaultValue;
 	bool bIsRegistered;
 	SCommandInfo() : storage(STORAGE_NONE), bIsRegistered(false) {}
 };
-typedef hash_map<string, SCommandInfo> TRecordsMap;
+typedef std::unordered_map<std::string, SCommandInfo> TRecordsMap;
 
 class CRecordsMap : public CObjectBase
 {
@@ -128,11 +128,11 @@ static CRecordsMap* GetRecordsMap()
 	return pRecordsMap;
 }
 
-static void CmdDefaultHandler( const string &szID, const vector<wstring> &paramsSet, void *pContext );
-static void SplitString( const wstring &szCmd, vector<wstring> *pRes );
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
+static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes );
 
 static int nUniqueVarID = 1;
-int RegisterCmd( const string &szID, CmdHandler pHandler, void *pContext )
+int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -142,7 +142,7 @@ int RegisterCmd( const string &szID, CmdHandler pHandler, void *pContext )
 	return nUniqueVarID;
 }
 
-int RegisterVar( const string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
+int RegisterVar( const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -159,7 +159,7 @@ int RegisterVar( const string &szID, VarHandler pHandler, void *pContext, const 
 	return nUniqueVarID;
 }
 
-void UnregisterCmd( const string &szID, int nID )
+void UnregisterCmd( const std::string &szID, int nID )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -172,12 +172,12 @@ void UnregisterCmd( const string &szID, int nID )
 	info.data.erase( remove_if( info.data.begin(), info.data.end(), SRecordCheck(nID) ), info.data.end() );
 }
 
-void UnregisterVar( const string &szID, int nID )
+void UnregisterVar( const std::string &szID, int nID )
 {
 	UnregisterCmd( szID, nID );
 }
 
-void RemoveVar( const string &szID )
+void RemoveVar( const std::string &szID )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -187,7 +187,7 @@ void RemoveVar( const string &szID )
 		recordsMap.erase( pos );
 }
 
-void GetIDList( vector<string> *pList )
+void GetIDList( std::vector<std::string> *pList )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -202,7 +202,7 @@ void GetIDList( vector<string> *pList )
 	}
 }
 
-void GetVarsByClass( vector< pair<string, CValue> > *pList, EStorageClass eStorageClass )
+void GetVarsByClass( std::vector< std::pair<std::string, CValue> > *pList, EStorageClass eStorageClass )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -212,11 +212,11 @@ void GetVarsByClass( vector< pair<string, CValue> > *pList, EStorageClass eStora
 	for ( TRecordsMap::const_iterator it = recordsMap.begin(); it != recordsMap.end(); ++it )
 	{
 		if ( it->second.storage == eStorageClass )
-			pList->push_back( pair<string, CValue>(it->first, it->second.sValue) );
+			pList->push_back( std::pair<std::string, CValue>(it->first, it->second.sValue) );
 	}
 }
 
-const CValue &GetVar( const string &szID, const CValue &sDefault )
+const CValue &GetVar( const std::string &szID, const CValue &sDefault )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -229,7 +229,7 @@ const CValue &GetVar( const string &szID, const CValue &sDefault )
 }
 
 static EStorageClass eNewVarStorageClass = STORAGE_DONT_CARE;
-void SetVar( const string &szVar, const CValue &sValue, EStorageClass storage )
+void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -245,7 +245,7 @@ void SetVar( const string &szVar, const CValue &sValue, EStorageClass storage )
 		NI_ASSERT( storage == STORAGE_DONT_CARE || storage == i->second.storage, "different storage classes has been specified for this var" );
 	SCommandInfo &info = i->second;
 	info.storage = Max( info.storage, storage );
-	const vector<SRecord> &records = info.data;
+	const std::vector<SRecord> &records = info.data;
 	for ( int k = 0; k < records.size(); ++k )
 	{
 		const SRecord &sRecord = records[k];
@@ -255,16 +255,16 @@ void SetVar( const string &szVar, const CValue &sValue, EStorageClass storage )
 	info.sValue = sValue;
 }
 
-void ProcessCommand( const wstring &wsCommandStr )
+void ProcessCommand( const std::wstring &wsCommandStr )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
-	vector<wstring> wordsSet;
+	std::vector<std::wstring> wordsSet;
 //	SplitString( wsCommandStr, &wordsSet );
 	SplitStringWithMultipleBrackets( wsCommandStr, wordsSet );
 	// remove empty strings
-	for ( vector<wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); ) 
+	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); )
 	{
 		if ( it->empty() ) 
 			it = wordsSet.erase( it );
@@ -281,11 +281,11 @@ void ProcessCommand( const wstring &wsCommandStr )
 	if ( wordsSet.empty() )
 		return;
 
-	string szCommandName = NStr::ToMBCS( *wordsSet.begin() );
+	std::string szCommandName = NStr::ToMBCS( *wordsSet.begin() );
 	wordsSet.erase( wordsSet.begin() );
 	// process command alias
 	{
-		wstring wszAliasCmd = GetAlias( szCommandName );
+		std::wstring wszAliasCmd = GetAlias( szCommandName );
 		if ( !wszAliasCmd.empty() )
 		{
 			if ( !wordsSet.empty() )
@@ -307,13 +307,13 @@ void ProcessCommand( const wstring &wsCommandStr )
 		return;
 	}
 	// remove unnecessary quotes
-	for ( vector<wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); ++it )
+	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); ++it )
 	{
 		if ( it->size() > 2 && (*it)[0] == L'\"' && (*it)[it->size() - 1] == L'\"' )
 			*it = it->substr( 1, it->size() - 2 );
 	}
 	//
-	const vector<SRecord> &records = iTemp->second.data;
+	const std::vector<SRecord> &records = iTemp->second.data;
 	bool bWasHandled = false;
 	for ( int k = 0; k < records.size(); ++k )
 	{
@@ -327,10 +327,10 @@ void ProcessCommand( const wstring &wsCommandStr )
 		CmdDefaultHandler( szCommandName, wordsSet, 0 );
 }
 
-void LoadConfig( const string &szFileName, EStorageClass _newVarStorage )
+void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 {
 	eNewVarStorageClass = _newVarStorage;
-  string szBuffer;
+  std::string szBuffer;
 
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
   const int nSize = stream.GetSize();
@@ -341,23 +341,23 @@ void LoadConfig( const string &szFileName, EStorageClass _newVarStorage )
 
 	csSystem << "Executing " << szFileName << endl;
 
-	vector<string> cmdsSet;
+	std::vector<std::string> cmdsSet;
 	NStr::SplitString( szBuffer.c_str(), &cmdsSet, '\n' );
 	NWin32Helper::CControl87Guard control87guard;
 	_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
-	for ( vector<string>::const_iterator iTemp = cmdsSet.begin(); iTemp != cmdsSet.end(); ++iTemp )
+	for ( std::vector<std::string>::const_iterator iTemp = cmdsSet.begin(); iTemp != cmdsSet.end(); ++iTemp )
 	{
 	  if ( iTemp->empty() )
 	    continue;
 
-	  string szCmd( *iTemp );
+	  std::string szCmd( *iTemp );
 	  NStr::TrimBoth( szCmd, "\n\r" );
 	  if ( szCmd.substr( 0, 1 ).compare( ";" ) == 0 )
 	    continue;
 	  if ( szCmd.substr( 0, 2 ).compare( "//" ) == 0 )
 	    continue;
 		//
-		wstring wszCmd;
+		std::wstring wszCmd;
 		NStr::ToUnicode( &wszCmd, szCmd );
 	  ProcessCommand( wszCmd );
 	}
@@ -366,8 +366,8 @@ void LoadConfig( const string &szFileName, EStorageClass _newVarStorage )
 
 struct SSaveRecord
 {
-	string szName;
-	string szValue;
+	std::string szName;
+	std::string szValue;
 };
 struct SSaveRecordSort
 {
@@ -376,12 +376,12 @@ struct SSaveRecordSort
 		return s1.szName < s2.szName; 
 	}
 };
-static void SaveConfig( const string &szFileName, EStorageClass storage )
+static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
-	vector<SSaveRecord> tempSet;
+	std::vector<SSaveRecord> tempSet;
 	for ( TRecordsMap::iterator iTemp = recordsMap.begin(); iTemp != recordsMap.end(); iTemp++ )
 	{
 		if ( iTemp->second.storage != storage )
@@ -390,7 +390,7 @@ static void SaveConfig( const string &szFileName, EStorageClass storage )
 		if ( iTemp->second.sValue.GetString().empty() )
 			continue;
 
-		SSaveRecord &sRec = *tempSet.insert( tempSet.end() );
+		SSaveRecord &sRec = tempSet.emplace_back();
 		sRec.szName = iTemp->first;
 		sRec.szValue = NStr::ToMBCS( iTemp->second.sValue.GetString() );
 	}
@@ -406,10 +406,10 @@ static void SaveConfig( const string &szFileName, EStorageClass storage )
 	fprintf( pFile, "//============================================================================\n" );
 	fprintf( pFile, "// generated by the game, please do not modify\n" );
 	fprintf( pFile, "//============================================================================\n" );
-	for ( vector<SSaveRecord>::iterator iTemp = tempSet.begin(); iTemp != tempSet.end(); iTemp++ )
+	for ( std::vector<SSaveRecord>::iterator iTemp = tempSet.begin(); iTemp != tempSet.end(); iTemp++ )
 	{
 		// put global var with spaces in quotes before save
-		if ( iTemp->szValue.find(' ') != string::npos )
+		if ( iTemp->szValue.find(' ') != std::string::npos )
 			iTemp->szValue = '\"' + iTemp->szValue + '\"';
 		fprintf( pFile, "setvar %s = %s\n", iTemp->szName.c_str(), iTemp->szValue.c_str() );
 	}
@@ -417,7 +417,7 @@ static void SaveConfig( const string &szFileName, EStorageClass storage )
 	fclose( pFile );
 }
 
-void SaveAllVars( const string &szGlobalName, const string &szUserName )
+void SaveAllVars( const std::string &szGlobalName, const std::string &szUserName )
 {
 	NFile::CreatePath( NFile::GetFilePath( szGlobalName ) );
 	SaveConfig( szGlobalName, STORAGE_GLOBAL );
@@ -430,7 +430,7 @@ void ResetVarsToDefault( EStorageClass storage )
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
-	vector<string> toDel;
+	std::vector<std::string> toDel;
 	for ( TRecordsMap::iterator i = recordsMap.begin(); i != recordsMap.end(); ++i )
 	{
 		SCommandInfo &info = i->second;
@@ -445,10 +445,10 @@ void ResetVarsToDefault( EStorageClass storage )
 		recordsMap.erase( recordsMap.find( toDel[k] ) );
 }
 
-static void SplitString( const wstring &szCmd, vector<wstring> *pRes )
+static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes )
 {
-	vector<wstring> params;
-	list<WCHAR> stackBrackets;
+	std::vector<std::wstring> params;
+	std::list<WCHAR> stackBrackets;
 	int i, nLastPos = 0;
 	//
 	for ( i = 0; i < szCmd.size(); ++i )
@@ -460,7 +460,7 @@ static void SplitString( const wstring &szCmd, vector<wstring> *pRes )
 		{
 			if ( ( c == L' ' ) || ( c == L'\t' ) || ( c == L'\r' ) )
 			{
-				wstring szRes = szCmd.substr( nLastPos, i - nLastPos );
+				std::wstring szRes = szCmd.substr( nLastPos, i - nLastPos );
 				if ( !szRes.empty() )
 					params.push_back( szRes );
 				nLastPos = i + 1; 
@@ -476,7 +476,7 @@ static void SplitString( const wstring &szCmd, vector<wstring> *pRes )
 	*pRes = params;
 }
 
-static void CmdDefaultHandler( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
 	{
@@ -488,11 +488,11 @@ static void CmdDefaultHandler( const string &szID, const vector<wstring> &params
 	SetVar( szID, CValue( paramsSet.front() ) );
 }
 
-void CmdPrintHelp( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( NGlobal::GetVar( "VVP", 0 ) == 0 )
 		return;
-	vector<string> varsSet;
+	std::vector<std::string> varsSet;
 	NGlobal::GetIDList( &varsSet );
 	sort( varsSet.begin(), varsSet.end() );
 
@@ -502,13 +502,13 @@ void CmdPrintHelp( const string &szID, const vector<wstring> &paramsSet, void *p
 	csSystem << CC_BLUE << "Total:" << (int)varsSet.size() << endl;
 }
 
-static void CmdLoadConfig( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
 		NGlobal::LoadConfig( "..\\" + NStr::ToMBCS( paramsSet[nTemp] ) );
 }
 
-static void CmdSetVar( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
 	{
@@ -524,7 +524,7 @@ static void CmdSetVar( const string &szID, const vector<wstring> &paramsSet, voi
 	NGlobal::SetVar( NStr::ToMBCS( paramsSet[0] ), NGlobal::CValue( paramsSet[2] ) );
 }
 
-static void CmdAlias( const string &szID, const vector<wstring> &paramsSet, void *pContext )
+static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
 	{
@@ -534,8 +534,8 @@ static void CmdAlias( const string &szID, const vector<wstring> &paramsSet, void
 	if ( paramsSet[1].compare( L"=" ) != 0 )
 		return;
 	//
-	const string szAliasName = NStr::ToMBCS( paramsSet[0] );
-	wstring wszCommand = paramsSet[2];
+	const std::string szAliasName = NStr::ToMBCS( paramsSet[0] );
+	std::wstring wszCommand = paramsSet[2];
 	for ( int i = 3; i < paramsSet.size(); ++i )
 		wszCommand = wszCommand + L" " + paramsSet[i];
 	//

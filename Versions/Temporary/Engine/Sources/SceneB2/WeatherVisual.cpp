@@ -33,7 +33,7 @@ void CWeatherVisual::CWeatherPart::Recalc()
 		return;
 
 	pWeather.Refresh();
-	vector<NGScene::CObjectInfo::SData> *pVisualData = pWeather->GetVisualData();
+	std::vector<NGScene::CObjectInfo::SData> *pVisualData = pWeather->GetVisualData();
 	if ( nNumPart >= pVisualData->size() || (*pVisualData)[nNumPart].verts.empty() )
 		pValue->Clear();
 	else
@@ -245,7 +245,7 @@ void CWeatherVisual::Recalc()
 			if ( timeLightStop < timeLastRecalc )
 			{
 				int nRandom = NWin32Random::Random(0, pDesc->lightnings.size() );
-				nRandom = Clamp( nRandom, 0, pDesc->lightnings.size() - 1 );
+				nRandom = Clamp<int>( nRandom, 0, pDesc->lightnings.size() - 1 );
 
 				const NDb::SLightInstance *pInstance = pDesc->lightnings[nRandom];
 				if ( pInstance )
@@ -354,7 +354,7 @@ void CWeatherVisual::Recalc()
 		data.geometry.resize( 2 * nTotalPartCount );
 	}
 
-	static vector<int> partsIndex;
+	static std::vector<int> partsIndex;
 	partsIndex.resize( nVisualParts );
 	partsIndex.assign( nVisualParts, 0 );
 	
@@ -599,7 +599,7 @@ void CWeatherVisual::PlayAmbientSound()
 	if ( pDesc->ambientSound.empty() )
 		return;
 
-	const int nSound = Clamp( NWin32Random::Random(0, pDesc->ambientSound.size()), 0, pDesc->ambientSound.size()-1 );
+	const int nSound = Clamp<int>( NWin32Random::Random(0, pDesc->ambientSound.size()), 0, pDesc->ambientSound.size()-1 );
 
 	const NDb::SComplexSoundDesc *pSound =  pDesc->ambientSound[nSound].pAmbientSound;
 	if ( pSound )

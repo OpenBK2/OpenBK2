@@ -44,7 +44,7 @@ namespace NDb
 	public:
 		CUserCommands defaultPerformableActions;
 		CUserCommands defaultActionsToEndure;
-		vector< CDBPtr< SM1UnitSpecAction > > actionParams;
+		std::vector< CDBPtr< SM1UnitSpecAction > > actionParams;
 
 		SM1UnitActions() :
 			__dwCheckSum( 0 )
@@ -118,7 +118,7 @@ namespace NDb
 			fAddParam( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -137,7 +137,7 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -150,13 +150,13 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		SM1ParameterModifier range;
-		vector< SShellStatsModifier > shells;
+		std::vector< SShellStatsModifier > shells;
 
 		SWeaponStatsModifier() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -168,13 +168,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SWeaponStatsModifier > guns;
+		std::vector< SWeaponStatsModifier > guns;
 
 		SPlatformWeaponsStatsModifier() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -186,13 +186,13 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< SPlatformWeaponsStatsModifier > platforms;
+		std::vector< SPlatformWeaponsStatsModifier > platforms;
 
 		SWeaponsStatsModifier() :
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );

@@ -10,19 +10,19 @@
 namespace NScene
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	const string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
+	const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath )
+	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
 	{
-		const string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+		const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
 		//
 		//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
 		pTerraManager->Load( pDesc, 0 );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath )
+	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
 	{
-		const string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+		const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
 		//
 		CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
 		if ( stream.IsOk() )
@@ -34,13 +34,13 @@ namespace NScene
 		return false;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SaveTerrain( ITerraManager *pTerraManager, const string &szMapFilePath )
+	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath )
 	{
 		try
 		{
 			if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() ) 
 			{
-				const string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+				const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
 				//
 				CFileStream stream( NVFS::GetMainFileCreator(), szTerrainBinFileName );
 				if ( stream.IsOk() )
@@ -193,7 +193,7 @@ void CTerrainManager::RemoveTerraSpot( const int nSpotID )
 }
 
 
-void CTerrainManager::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth )
+void CTerrainManager::AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth )
 {
 	pTerraGen->AddEntrenchment( _ctrlPoints, _fWidth );
 }
@@ -348,7 +348,7 @@ void CTerrainManager::InitHeights4Editor( int nSizeX, int nSizeY )
 }
 
 
-void CTerrainManager::CreateDebris(	const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+void CTerrainManager::CreateDebris(	const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
 																		const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 																		const NDebrisBuilder::EMaskSmoothType smoothType )
 {

@@ -3,11 +3,11 @@
 struct SCallStackEntry;
 namespace NBSU
 {
-void ListView_AddColumn( HWND hwnd, const string &strCaption, int nWidth );
-int ListView_AddItem( HWND hwnd, const string &strText, LPARAM lParam, int nItem = 0 );
-string GetFileName( const string &strFullPath );
+void ListView_AddColumn( HWND hwnd, const std::string &strCaption, int nWidth );
+int ListView_AddItem( HWND hwnd, const std::string &strText, LPARAM lParam, int nItem = 0 );
+std::string GetFileName( const std::string &strFullPath );
 
-void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries );
+void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entries );
 
 //void AddListBoxItem( HWND hWnd, const char *pszString, const void *pItemData );
 //void AddCallStackItem( HWND hWnd, const SCallStackEntry *pEntry );
@@ -28,6 +28,6 @@ void* GetDlgUserData( HWND hwndDlg );
 //int GetCheckButtonState( HWND hwndDlg, const int nElementID );
 
 void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription, 
-	const vector<SCallStackEntry> &entries );
+	const std::vector<SCallStackEntry> &entries );
 }
 

@@ -8,10 +8,10 @@ const float F_SHIFT = 0.004f;
 
 struct STriangleCreator
 {
-	vector<STriangle> *pDst;
+	std::vector<STriangle> *pDst;
 	int nRoot, nPrev;
 
-	STriangleCreator( vector<STriangle> *_pDst ) : pDst(_pDst), nRoot(-1), nPrev(-1) {}
+	STriangleCreator( std::vector<STriangle> *_pDst ) : pDst(_pDst), nRoot(-1), nPrev(-1) {}
 	void AddVertex( int n )
 	{
 		if ( nRoot == -1 )
@@ -85,7 +85,7 @@ struct SSPoint
 
 struct SShadowPoly
 {
-	vector<SSPoint> points;
+	std::vector<SSPoint> points;
 };
 
 class CShadowBuilder
@@ -142,7 +142,7 @@ static void CalcMiddlePoint( const SSPoint &a, const SSPoint &b, SSPoint *pRes, 
 	pRes->uv[1] = a.uv[1] * fB - b.uv[1] * fA;
 }
 
-static void Split( SShadowPoly *pRes, const SShadowPoly &src, const vector<float> &f )
+static void Split( SShadowPoly *pRes, const SShadowPoly &src, const std::vector<float> &f )
 {
 	ASSERT( src.points.size() == f.size() );
 	int nRes = 0;
@@ -171,7 +171,7 @@ static void Split( SShadowPoly *pRes, const SShadowPoly &src, const vector<float
 	pRes->points.resize( nRes );
 }
 
-static vector<float> fPlaneOffsets;
+static std::vector<float> fPlaneOffsets;
 static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV )
 {
 	fPlaneOffsets.resize( src.points.size() );
@@ -216,7 +216,7 @@ void CShadowBuilder::AddShadowTriangle( SShadowPoly *pTri )
 		DoSplit( pTDst, *pTSrc, CVec3( fClipPlanes[k][0], fClipPlanes[k][1], fClipPlanes[k][2] ) );
 		if ( pTDst->points.size() < 3 )
 			return;
-		swap( pTSrc, pTDst );
+		std::swap( pTSrc, pTDst );
 	}
 	STriangleCreator tc( &info.geometry );
 	for ( int k = 0; k < pTSrc->points.size(); ++k )
@@ -228,9 +228,9 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 	SShadowPoly tri;
 	SFBTransform trans;
 	_srcPos.MakeMatrix( &trans );
-	const vector<STriangle> &infoTris = info.GetGeometry();
-	const vector<CVec3> &infoPositions = info.GetPositions();
-	vector<SSPoint> projPoints( info.GetPositions().size() );
+	const std::vector<STriangle> &infoTris = info.GetGeometry();
+	const std::vector<CVec3> &infoPositions = info.GetPositions();
+	std::vector<SSPoint> projPoints( info.GetPositions().size() );
 	int nTest = 0;
 	for ( int k = 0; k < projPoints.size(); ++k )
 	{
@@ -323,7 +323,7 @@ void CDecalGeometry::Recalc()
 
 // CPerPolyDecal
 
-CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const vector<CVec3> &_srcPositions ) : pPart(_pPart), srcPositions(_srcPositions)
+CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const std::vector<CVec3> &_srcPositions ) : pPart(_pPart), srcPositions(_srcPositions)
 {
 	data.geometry.resize(0);
 }
@@ -362,13 +362,13 @@ void CPerPolyDecal::Recalc()
 class CObjectInfoProcessor
 {
 	CObjectInfo::SData &info;
-	vector<int> vertMap;
+	std::vector<int> vertMap;
 protected:
-	const vector<CVec3> &srcPositions;
-	const vector<SUVInfo> &srcVertices;
-	const vector<WORD> &posIndices;
-	const vector<STriangle> &srcTris;
-	const vector<SRealVertexWeight> &srcWeights;
+	const std::vector<CVec3> &srcPositions;
+	const std::vector<SUVInfo> &srcVertices;
+	const std::vector<WORD> &posIndices;
+	const std::vector<STriangle> &srcTris;
+	const std::vector<SRealVertexWeight> &srcWeights;
 public:
 	CObjectInfoProcessor( CObjectInfo::SData *pInfo, const CObjectInfo &src ) 
 		: info(*pInfo), srcPositions( src.GetPositions() ), srcVertices( src.GetVertices() ),
@@ -380,8 +380,8 @@ public:
 	}
 	struct SPolygon
 	{
-		vector<SVertex> polygon;
-		vector<int> polygonIndices;
+		std::vector<SVertex> polygon;
+		std::vector<int> polygonIndices;
 	};
 	bool HasResIndex( int nIdx ) const { return vertMap[ nIdx ] >= 0; }
 	int GetResIndex( int nIdx ) const { return vertMap[ nIdx ]; }
@@ -435,11 +435,11 @@ public:
 class CExplosionShadowBuilder : CObjectInfoProcessor
 {
 public:
-	CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &positions,
+	CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &positions,
 		const CVec3 &_vOrigin, float _fSize, float _fRotation );
 };
 
-CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &xformed,
+CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &xformed,
 	const CVec3 &vOrigin, float fSize, float _fRotation )
 : CObjectInfoProcessor( pInfo, src )
 {
@@ -509,7 +509,7 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 	}
 }
 
-void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions )
+void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions )
 {
 	CExplosionShadowBuilder sb( pRes, info, positions, vOrigin, fSize, fRotation );
 }
@@ -520,11 +520,11 @@ class CPerPolyDecalBuilder : CObjectInfoProcessor
 {
 	SQuadProjection projection;
 public:
-	CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &positions,
+	CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &positions,
 		const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift );
 };
 
-CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &xformed,
+CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &xformed,
 	const CVec3 &vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift )
 	: CObjectInfoProcessor( pInfo, src )
 {
@@ -584,7 +584,7 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const COb
 	}
 }
 
-void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions )
+void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions )
 {
 	CPerPolyDecalBuilder ppb( pRes, info, positions, vOrigin, vNormal, vSize, fRotation, vShift );
 }

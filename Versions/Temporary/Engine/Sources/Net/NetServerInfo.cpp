@@ -114,7 +114,7 @@ void CServerInfoSupport::WriteRequest( CBitStream *pBits )
 	(*pBits).Write( fTime );
 }
 
-bool CServerInfoSupport::CanSendRequest( const CNodeAddress &broadcast, vector<CNodeAddress> *pDest )
+bool CServerInfoSupport::CanSendRequest( const CNodeAddress &broadcast, std::vector<CNodeAddress> *pDest )
 {
 	if ( fRequestDelay <= 0 )
 	{

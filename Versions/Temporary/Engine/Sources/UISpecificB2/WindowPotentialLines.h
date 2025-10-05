@@ -129,18 +129,18 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 		int nEndOffsetY;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nX); f.Add(3,&nY); f.Add(4,&fValue); f.Add(5,&nEndOffsetX); f.Add(6,&nEndOffsetY); return 0; }
 	};
-	typedef list<SNodeDesc> CNodeList;
+	typedef std::list<SNodeDesc> CNodeList;
 
 	struct SArrowDesc 
 	{
 		ZDATA
-		vector<CVec2> pts;
+		std::vector<CVec2> pts;
 		float fWidth;
 		DWORD dwColour;
 		CDBPtr<NDb::STexture> pTexture;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pts); f.Add(3,&fWidth); f.Add(4,&dwColour); f.Add(5,&pTexture); return 0; }
 	};
-	typedef list<SArrowDesc> CArrowList;
+	typedef std::list<SArrowDesc> CArrowList;
 
 	// This data is generated
 	CPointsArray pts;
@@ -164,8 +164,8 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 	CVec2 vTextureSize;
 
 	CVec2 vMainStrike;
-	string szMaskFile;
-	string szDiffColourMapFile;
+	std::string szMaskFile;
+	std::string szDiffColourMapFile;
 
 	ZONSERIALIZE
 public:
@@ -192,7 +192,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *pDesc ); 
 	//}
 
-	void SetParams( const string &szMask, const string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 );
+	void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 );
 
 	// Nodes management
 	void ClearNodes();
@@ -200,6 +200,6 @@ public:
 
 	// Arrows management
 	void ClearArrows() { arrows.clear(); }
-	void AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour );
+	void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour );
 };
 

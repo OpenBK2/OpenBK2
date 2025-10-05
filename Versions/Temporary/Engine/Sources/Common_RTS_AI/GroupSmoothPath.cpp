@@ -5,6 +5,8 @@
 #include "System/Commands.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <algorithm>
+
 static bool s_bShowGroupMarker = false;
 
 const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit ) const
@@ -91,17 +93,17 @@ void CGroupSmoothPath::RecalcCells()
 
 void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirection )
 {
-	vector<SUnitInfo> unitsList;
+	std::vector<SUnitInfo> unitsList;
 	unitsList.reserve( GetUnitsCount() );
 	for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
 		unitsList.push_back( it->second );
-	sort( unitsList.begin(), unitsList.end(), SUnitsInfoSortByPriority() );
+	std::sort( unitsList.begin(), unitsList.end(), SUnitsInfoSortByPriority() );
 
-	vector<SUnitInfo>::iterator itStart = unitsList.begin();
+	std::vector<SUnitInfo>::iterator itStart = unitsList.begin();
 	while ( itStart != unitsList.end() )
 	{
 		const int nPriority = itStart->nPriority;
-		vector<SUnitInfo>::iterator itEnd = itStart;
+		std::vector<SUnitInfo>::iterator itEnd = itStart;
 		int nCount = 0;
 		for ( ; ( itEnd != unitsList.end() && itEnd->nPriority == nPriority ); ++itEnd, ++nCount );
 
@@ -112,12 +114,12 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 			NI_ASSERT( nCount <= pos->second.size(), StrFmt( "Too much units with priority %d (%d > %d)", nPriority, nCount, pos->second.size() ) );
 			if ( nCount <= pos->second.size() ) 
 			{
-				const int nSize = Min( nCount, pos->second.size() );
+				const int nSize = Min<int>( nCount, pos->second.size() );
 				CArray2D<float> distMatrix;
 				distMatrix.SetSizes( nSize, nSize );
 				{
 					int i = 0;
-					for ( vector<SUnitInfo>::iterator it = itStart; it != itEnd; ++it )
+					for ( std::vector<SUnitInfo>::iterator it = itStart; it != itEnd; ++it )
 					{
 						for ( int j = 0; j < nSize; ++j )
 						{
@@ -135,7 +137,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 				hungMethod.Solve();
 				{
 					int i = 0;
-					for ( vector<SUnitInfo>::iterator it = itStart; it != itEnd; ++it )
+					for ( std::vector<SUnitInfo>::iterator it = itStart; it != itEnd; ++it )
 					{
 						it->nCell = hungMethod.GetResult( i );
 						i++;
@@ -145,7 +147,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 			}
 		}
 	}
-	for ( vector<SUnitInfo>::iterator it = unitsList.begin(); it != unitsList.end(); ++it )
+	for ( std::vector<SUnitInfo>::iterator it = unitsList.begin(); it != unitsList.end(); ++it )
 	{
 		CUnitsMap::iterator pos = units.find( it->pUnit->GetUniqueID() );
 		if ( pos != units.end() )
@@ -153,7 +155,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 	}
 }
 
-void CGroupSmoothPath::AddGeometry( const vector<SGeometryCellInfo> &cells )
+void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells )
 {
 	const CVec2 vDir1( 0, 1 );
 

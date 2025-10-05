@@ -43,7 +43,7 @@ class CTransportWaitPassengerState : public IUnitState
 	OBJECT_BASIC_METHODS( CTransportWaitPassengerState );
 	ZDATA
 	CPtr<CMilitaryCar> pTransport;
-	list< CPtr<CFormation> > formationsToWait;
+	std::list< CPtr<CFormation> > formationsToWait;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTransport); f.Add(3,&formationsToWait); return 0; }
 public:

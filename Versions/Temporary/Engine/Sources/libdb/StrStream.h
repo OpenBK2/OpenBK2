@@ -5,15 +5,15 @@ namespace NCodeGen
 
 class CStrStream
 {
-	string *pszStr;
+	std::string *pszStr;
 public:
 	typedef CStrStream& (*OpFunc)( CStrStream& );
-	CStrStream( string *_pszStr ) : pszStr( _pszStr ) { }
+	CStrStream( std::string *_pszStr ) : pszStr( _pszStr ) { }
 
 	CStrStream& operator<<( const char *psz ) { *pszStr += psz; return *this; }
 	CStrStream& operator<<( int n ) { *pszStr += StrFmt( "%d", n ); return *this; }
 	CStrStream& operator<<( double f ) { *pszStr += StrFmt( "%g", f ); return *this; }
-	CStrStream& operator<<( const string &s ) { *pszStr += s; return *this; }
+	CStrStream& operator<<( const std::string &s ) { *pszStr += s; return *this; }
 	CStrStream& operator<<( OpFunc func ) { return func(*this); }
 };
 

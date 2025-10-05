@@ -10,7 +10,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
+std::string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
 {
 	switch ( eValue )
 	{
@@ -47,7 +47,7 @@ string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
 	}
 }
 
-NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const string &szValue )
+NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const std::string &szValue )
 {
 	if ( szValue == "ICONTYPE_NONE" )
 		return NDb::SIconsSet::SIconType::ICONTYPE_NONE;
@@ -81,7 +81,7 @@ NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconTy
 }
 
 
-void SIconsSet::SIconType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SIconsSet::SIconType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis ); 
@@ -151,7 +151,7 @@ int SIconsSet::operator&( IBinSaver &saver )
 }
 
 
-string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue )
+std::string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue )
 {
 	switch ( eValue )
 	{
@@ -210,7 +210,7 @@ string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue )
 	}
 }
 
-NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const string &szValue )
+NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const std::string &szValue )
 {
 	if ( szValue == "VOIT_NONE" )
 		return NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE;
@@ -266,7 +266,7 @@ NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObj
 }
 
 
-void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );

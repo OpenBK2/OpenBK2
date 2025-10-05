@@ -19,7 +19,7 @@ struct IPlaneCreation
 	virtual void CalcPositions( const int nMax,
 		const CVec2 & vAABBbox,
 		const CVec2 & vDirection,
-		vector<CVec2> *positions,
+		std::vector<CVec2> *positions,
 		CVec2 * pvOffset, const bool bRandom = false ) = 0;
 
 };
@@ -45,7 +45,7 @@ public:
 		virtual void CalcPositions( const int nMax,
 			const CVec2 & vAABBbox,
 			const CVec2 & vDirection,
-			vector<CVec2> *positions,
+			std::vector<CVec2> *positions,
 			CVec2 * pvOffset, const bool bRandom = false );
 };
 
@@ -59,7 +59,7 @@ public:
 		virtual void CalcPositions( const int nMax,
 			const CVec2 & vAABBbox,
 			const CVec2 & vDirection,
-			vector<CVec2> * positions,
+			std::vector<CVec2> * positions,
 			CVec2 * pvOffset, const bool bRandom = false );
 };
 
@@ -69,7 +69,7 @@ struct SLocalInGameUnitCreationInfo
 {
 	ZDATA
 	CDBPtr<SSquadRPGStats> pParatrooper;										// название парашютистов
-	string szPartyName;												// название страны
+	std::string szPartyName;												// название страны
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pParatrooper); f.Add(3,&szPartyName); return 0; }
 	SLocalInGameUnitCreationInfo & operator=( const struct SMapPlayerInfo &rSUnitCreation );
 	SLocalInGameUnitCreationInfo( const struct SMapPlayerInfo &rSUnitCreation );
@@ -86,17 +86,17 @@ public:
 		SFeedBack( const int eEnable, const int eDisable )
 			: eEnable( eEnable ), eDisable( eDisable ) {  }
 	};
-	vector<SFeedBack> feedbacks;
+	std::vector<SFeedBack> feedbacks;
 
 private:
 	ZDATA
 	bool bInit;														// for delaying initialization untill segment
 	CPtr<ICollisionsCollector> pCollisionsCollector;
 
-	vector<SLocalInGameUnitCreationInfo> inGameUnits;
+	std::vector<SLocalInGameUnitCreationInfo> inGameUnits;
 	// consts
 	// читается из xml, сохранять не нужно
-	vector<CDBPtr<NDb::SPartyDependentInfo> > partyDependentInfo;
+	std::vector<CDBPtr<NDb::SPartyDependentInfo> > partyDependentInfo;
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 	CDBPtr<NDb::SMapInfo> pCurrentMap;
 
@@ -127,7 +127,7 @@ public:
 									bool bInitialization,// = false, 
 									bool bSendToWorld,// = true, 
 									NDb::EReinforcementType eType) const;
-	void GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, list<CVec2> *pCenters ) const;
+	void GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const;
 	class CCommonUnit* AddNewFormation( const SSquadRPGStats *pStats, const int nFormation, const float fHP, const float x, const float y, const float z, const WORD wDir, const int nDiplomacy,
 																			bool bInitialization,// = false,
 																			bool bSendToWorld,// = true,

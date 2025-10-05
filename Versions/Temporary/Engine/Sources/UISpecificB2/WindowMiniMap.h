@@ -125,17 +125,17 @@ protected:
 
 	bool bRangesPresent;
 
-	vector<int> bButtonDown;
+	std::vector<int> bButtonDown;
 	float fAspect;
 
 	float fMapWidth, fMapHeight;
 
-	vector<NGfx::SPixel8888> playerColors;
-	vector<NGfx::SPixel8888> warFogColors;
+	std::vector<NGfx::SPixel8888> playerColors;
+	std::vector<NGfx::SPixel8888> warFogColors;
 	NGfx::SPixel8888 frameColor;
 	CArray2D1Bit maskMiniMap;
 	CDBPtr< NDb::SMaterial > pMaterial;
-	vector<SMarker> markers;
+	std::vector<SMarker> markers;
 
 	bool bRotable;
 	CVec2 vRotableCenter;
@@ -148,7 +148,7 @@ protected:
 	float fAdditionalScale;
 	float fPrevRotableAngle;
 
-	CArray2D< pair<CVec2, bool> > screenToMap;
+	CArray2D< std::pair<CVec2, bool> > screenToMap;
 	bool bNeedScreenToMapRefresh;
 	CVec2 vOldDir;
 	
@@ -200,11 +200,11 @@ public:
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 
-	void SetUnits( const vector< SMiniMapUnitInfo > &vUnits );
-	void SetViewport( const vector< CVec2 > &vPoints );
+	void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits );
+	void SetViewport( const std::vector< CVec2 > &vPoints );
 	void SetWarFog( const CArray2D<BYTE> *pWarFogInfo );
-	void SetMarkers( const vector<SMarker> &markers );
-	void SetFigures( const vector<SFigure> &figures );
+	void SetMarkers( const std::vector<SMarker> &markers );
+	void SetFigures( const std::vector<SFigure> &figures );
 
 	void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color );
 

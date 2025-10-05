@@ -41,11 +41,11 @@ class CDecalTarget : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CDecalTarget);
 public:
-	typedef hash_map<SSrcPosInfo, vector<CVec3>, SSrcPosInfoHash > CSrcPosHash;
+	typedef std::unordered_map<SSrcPosInfo, std::vector<CVec3>, SSrcPosInfoHash > CSrcPosHash;
 	ZDATA
 	SDecalMappingInfo mapInfo;
-	vector<SDecalTargetPart> targetParts;
-	vector<CPtr<ISomePart> > parts;
+	std::vector<SDecalTargetPart> targetParts;
+	std::vector<CPtr<ISomePart> > parts;
 	CSrcPosHash srcPositions;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&mapInfo); f.Add(3,&targetParts); f.Add(4,&parts); f.Add(5,&srcPositions); return 0; }
 	CDecalTarget() {}
@@ -61,7 +61,7 @@ class CDecal : public CObjectBase
 	ZDATA
 	CPtr<CDecalsManager> pOwner;
 	CObj<CDecalTarget> pTarget;
-	vector<CMObj<CObjectBase> > decals;
+	std::vector<CMObj<CObjectBase> > decals;
 	CObj<IMaterial> pMaterial;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pTarget); f.Add(4,&decals); f.Add(5,&pMaterial); return 0; }
 public:
@@ -70,21 +70,21 @@ public:
 	~CDecal();
 	bool OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &tp );
 	void Walk();
-	vector<CMObj<CObjectBase> > &GetDecals() { return decals; }
+	std::vector<CMObj<CObjectBase> > &GetDecals() { return decals; }
 };
 
-typedef hash_map<CPtr<CObjectBase>, bool, SPtrHash> CObjectBaseSet;
+typedef std::unordered_map<CPtr<CObjectBase>, bool, SPtrHash> CObjectBaseSet;
 class IDecalQuery : virtual public CObjectBase
 {
 public:
-	virtual CObjectBase* CreateDecal( ISomePart *pTarget, const vector<CVec3> &srcPositions, const SDecalMappingInfo &_info, IMaterial *pMaterial ) = 0;
-	virtual void GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet &targets, vector<CPtr<ISomePart> > *pRes ) = 0;
+	virtual CObjectBase* CreateDecal( ISomePart *pTarget, const std::vector<CVec3> &srcPositions, const SDecalMappingInfo &_info, IMaterial *pMaterial ) = 0;
+	virtual void GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet &targets, std::vector<CPtr<ISomePart> > *pRes ) = 0;
 };
 
 class CDecalsManager : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CDecalsManager);
-	typedef hash_map<SDecalTargetPart, vector<CPtr<CDecal> >, SDecalTargetPartHash> CPerUserHash;
+	typedef std::unordered_map<SDecalTargetPart, std::vector<CPtr<CDecal> >, SDecalTargetPartHash> CPerUserHash;
 	ZDATA
 	CPtr<IDecalQuery> pScene;
 	CPerUserHash decalsPerUser;
@@ -96,7 +96,7 @@ public:
 	void OnCreate( ISomePart *pNew );
 	// CreateDecal should be called right after CreateDecalTarget or some target parts may get removed
 	// and information about them will be lost
-	CDecalTarget* CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info );
+	CDecalTarget* CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info );
 	CDecal* CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial );
 	void Register( CDecal *pDecal, CDecalTarget *pTarget );
 	void Unregister( CDecal *pDecal, CDecalTarget *pTarget );

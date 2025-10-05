@@ -19,10 +19,10 @@ int CEffectorConsoleBufferCommand::operator&( IBinSaver &saver )
 void CEffectorConsoleBufferCommand::Configure( const NDb::SUIStateBase *_pCmd,
 																							struct IScreen *pScreen,
 																							SWindowContext *pContext,
-																							const string &szAnimatedWindow )
+																							const std::string &szAnimatedWindow )
 {
 	const NDb::SUIConsoleCommand *pCmd( checked_cast<const NDb::SUIConsoleCommand*>( _pCmd ) );
-	CParam<string> elementToAsk( pCmd->szEditBoxName );
+	CParam<std::string> elementToAsk( pCmd->szEditBoxName );
 	if ( pCmd->szEditBoxName.empty() )
 		elementToAsk = szAnimatedWindow;
 

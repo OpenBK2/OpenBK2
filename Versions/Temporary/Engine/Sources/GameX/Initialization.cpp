@@ -119,7 +119,7 @@ void InitConsts()
 	NI_ASSERT( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0, "Can't find all necessary consts" );
 	if ( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0 ) 
 	{
-		for ( vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin(); it != pClientConsts->cursors.end(); ++it )
+		for ( std::vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin(); it != pClientConsts->cursors.end(); ++it )
 			Cursor()->RegisterMode( it->eAction, it->szFileName );
 		if ( pUIConsts ) 
 			Singleton<IUIInitialization>()->SetUIConsts( pUIConsts );
@@ -142,9 +142,9 @@ void PostStorageInitialize()
 // ************************************************************************************************************************ //
 
 template <class TYPE>
-const TYPE *GetConsts( const string &szVarName )
+const TYPE *GetConsts( const std::string &szVarName )
 {
-	string szValue = NStr::ToMBCS( NGlobal::GetVar( szVarName, "" ) );
+	std::string szValue = NStr::ToMBCS( NGlobal::GetVar( szVarName, "" ) );
 	if ( szValue.empty() )
 		return 0;
 	NI_VERIFY( !NStr::IsDecNumber(szValue), "Deprecated way to identify resources. Use DBID instead!", return 0 );

@@ -78,9 +78,9 @@ struct ITerraManager : public CObjectBase
 	virtual void UpdateTerraSpot( const int nSpotID ) = 0;
 	virtual void RemoveTerraSpot( const int nSpotID ) = 0;
 	// entrenchment
-	virtual void AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth ) = 0;
+	virtual void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth ) = 0;
 	// debris creation
-	virtual void CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+	virtual void CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
 														 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 														 const NDebrisBuilder::EMaskSmoothType smoothType = NDebrisBuilder::MASK_SMOOTH_SHARP ) = 0;
 	// geometry editor
@@ -132,7 +132,7 @@ struct ITerraManager : public CObjectBase
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;
 	//
-	virtual bool GetCragPrecVerts( vector<CVec3> *pVerts, int nVSOId ) = 0;
+	virtual bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId ) = 0;
 	//
 	virtual int GetTilesCountX() const = 0;
 	virtual int GetTilesCountY() const = 0;
@@ -143,8 +143,8 @@ struct ITerraManager : public CObjectBase
 struct ITerraGfxObserver : public CObjectBase
 {
 	// terrain itself
-	virtual void UpdatePatchGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) = 0;
-	virtual void UpdateBorderGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) = 0;
+	virtual void UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) = 0;
+	virtual void UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) = 0;
 	// road
 	virtual void AddRoad( SRoadGFXInfo *pRoadGfxInfo ) = 0;
 	virtual bool UpdateRoad( const int nVSOID ) = 0;
@@ -183,11 +183,11 @@ struct ITerraGfxObserver : public CObjectBase
 
 namespace NScene
 {
-	extern const string SZ_TERRA_BIN_FILE_NAME;
+	extern const std::string SZ_TERRA_BIN_FILE_NAME;
 	//
-	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath );
-	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath );
-	bool SaveTerrain( ITerraManager *pTerraManager, const string &szMapFilePath );
+	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
 };
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20

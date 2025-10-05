@@ -51,7 +51,7 @@ bool IsRunningOnLocalDrive();
 bool ProcessCommandLine( LPSTR lpCmdLine );
 static void StoreBuildInfo()
 {
-	const string szVersion = StrFmt( "Build %d, %s %s", NVersionInfo::nBuild, NVersionInfo::szDate.c_str(), NVersionInfo::szTime.c_str() );
+	const std::string szVersion = StrFmt( "Build %d, %s %s", NVersionInfo::nBuild, NVersionInfo::szDate.c_str(), NVersionInfo::szTime.c_str() );
 	NGlobal::SetVar( "version.info", szVersion );
 }
 
@@ -120,7 +120,7 @@ static void StartLagProfiling()
 }
 */
 
-static string szLaunchDirectory;
+static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
 	CreateMutex( 0, TRUE, "NIVAL_RTS_ENGINE" ); // при выходе система сама уничтожит этот mutex
@@ -152,7 +152,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	if ( ProcessCommandLine(lpCmdLine) == false )
 		return 0xDEAD;
 
-	string szLogFileName, szErrorFileName;
+	std::string szLogFileName, szErrorFileName;
 	{
 		char buffer[1024];
 		GetCurrentDirectory( 1024, buffer );
@@ -163,8 +163,8 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				szLaunchDirectory += '\\';
 		}
 		//
-		szLogFileName = string(buffer) + "\\log.txt";
-		szErrorFileName = string(buffer) + "\\error.txt";
+		szLogFileName = std::string(buffer) + "\\log.txt";
+		szErrorFileName = std::string(buffer) + "\\error.txt";
 		DeleteFile( szErrorFileName.c_str() );
 		DeleteFile( szLogFileName.c_str() );
 	}
@@ -208,7 +208,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_GAME );
 	NProfile::LoadProfile();
 	//
-	string szMOD2Attach = NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") );
+	std::string szMOD2Attach = NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") );
 	if ( !szMOD2Attach.empty() )
 		szMOD2Attach = NMainLoop::GetBaseDir() + "MODs\\" + szMOD2Attach;
 	if ( NMOD::DoesMODAttached(szMOD2Attach) == false )
@@ -277,11 +277,11 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 bool ProcessCommandLine( LPSTR lpCmdLine )
 {
-	for ( NStr::CStringIterator<char, string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char> > > it(lpCmdLine, ' '); 
+	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char> > > it(lpCmdLine, ' ');
 	      !it.IsEnd(); it.Next() )
 	{
 		// get string
-		string szString;
+		std::string szString;
 		it.Get( &szString );
 		NStr::TrimBoth( szString );
 		if ( szString.empty() ) 
@@ -289,13 +289,13 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		// check for '-' at the begining
 		if ( szString == "-show-version" )
 		{
-			string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			printf( szVersion.c_str() );
 			return false;
 		}
 		else if ( szString == "-show-version-mb" )
 		{
-			string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			::MessageBox( 0, szVersion.c_str(), "Build version", MB_OK | MB_ICONEXCLAMATION );
 			return false;
 		}
@@ -310,9 +310,9 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		if ( szString.size() > 4 ) 
 		{
 			const int nExtPos = szString.rfind( '.' );
-			if ( nExtPos != string::npos ) 
+			if ( nExtPos != std::string::npos )
 			{
-				string szExt = szString.substr( nExtPos );
+				std::string szExt = szString.substr( nExtPos );
 				NStr::ToLower( &szExt );
 				if ( szExt == ".sav" )
 				{
@@ -328,22 +328,22 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		}
 		// check for '\"' tag - string entry
 		const int nFirstQuotePos = szString.find( '\"' );
-		if ( nFirstQuotePos != string::npos ) 
+		if ( nFirstQuotePos != std::string::npos )
 		{
 			const int nLastQuotePos = szString.rfind( '\"' );
 			NI_ASSERT( nLastQuotePos != string::npos, StrFmt("Can't read string from cmd line string entry \"%s\"", szString.c_str()) );
-			const string szVarName = szString.substr( 0, nFirstQuotePos );
-			const string szValue = szString.substr( nFirstQuotePos + 1, nLastQuotePos - nFirstQuotePos );
+			const std::string szVarName = szString.substr( 0, nFirstQuotePos );
+			const std::string szValue = szString.substr( nFirstQuotePos + 1, nLastQuotePos - nFirstQuotePos );
 			NGlobal::SetVar( szVarName, szValue );
 			//
 			continue;
 		}
 		// check for number
 		const int nNumberPos = szString.find_first_of( "-0123456789" );
-		if ( nNumberPos != string::npos ) 
+		if ( nNumberPos != std::string::npos )
 		{
-			const string szVarName = szString.substr( 0, nNumberPos );
-			const string szValue = szString.substr( nNumberPos );
+			const std::string szVarName = szString.substr( 0, nNumberPos );
+			const std::string szValue = szString.substr( nNumberPos );
 			NGlobal::SetVar( szVarName, NStr::ToInt(szValue) );
 			continue;
 		}

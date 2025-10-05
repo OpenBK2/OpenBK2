@@ -19,7 +19,7 @@ class CWindow3DControl : public CWindow, public IWindow3DControl
 	ZDATA_(CWindow)
 	CPtr<NDb::SWindow3DControl> pInstance;
 	CDBPtr<NDb::SWindow3DControlShared> pShared;
-	vector<SObject> objects;
+	std::vector<SObject> objects;
 	bool bIsObjectsVisible;
 	CTRect<float> rectPrev;
 	int nBaseID3D;
@@ -40,7 +40,7 @@ public:
 	//}
 	
 	//{ IWindow3DControl
-	void SetObjects( const vector<SObject> &objects );
+	void SetObjects( const std::vector<SObject> &objects );
 	SParam GetDBObjectParam( int nIndex ) const;
 	void SetBaseID3D( int nID );
 	//}

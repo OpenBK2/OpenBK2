@@ -7,11 +7,11 @@
 namespace NText
 {
 	//! get text from resources by filename
-	SYSTEM_EXPORT const wstring &GetText( const string &szTextFileName );
+	SYSTEM_EXPORT const std::wstring &GetText( const std::string &szTextFileName );
 	//! reload text to resources (discard cached information)
-	void Reload( const string &szTextFileName );
+	void Reload( const std::string &szTextFileName );
 	//! load unicode text from stream to wstring
-	SYSTEM_EXPORT bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream );
+	SYSTEM_EXPORT bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream );
 }
 
 // CRAP{ for transition-to-text-files period only

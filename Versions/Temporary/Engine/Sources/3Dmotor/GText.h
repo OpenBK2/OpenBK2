@@ -33,12 +33,12 @@ struct SText
 
 	ZDATA
 	CTPoint<int> sSize;
-	vector<SCharRect> charsSet;
-	vector<SFontLayout> rectLayouts;
+	std::vector<SCharRect> charsSet;
+	std::vector<SFontLayout> rectLayouts;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&sSize); f.Add(3,&charsSet); f.Add(4,&rectLayouts); return 0; }
 };
 
-CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase<wstring> *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs = true );
+CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase<std::wstring> *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs = true );
 
 }; // namespace 
 

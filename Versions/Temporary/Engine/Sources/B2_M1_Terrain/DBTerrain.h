@@ -80,7 +80,7 @@ namespace NDb
 	private:
 		mutable DWORD __dwCheckSum;
 	public:
-		vector< CDBPtr< STGTerraType > > terraTypes;
+		std::vector< CDBPtr< STGTerraType > > terraTypes;
 		bool bWrapTexture;
 
 		STGTerraSet() :
@@ -123,7 +123,7 @@ namespace NDb
 			fWeatherPeriodRandom( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -152,7 +152,7 @@ namespace NDb
 				fSoundLength( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -160,7 +160,7 @@ namespace NDb
 		};
 		EWeatherType eType;
 		CDBPtr< SMaterial > pPartMaterial;
-		vector< CDBPtr< SMaterial > > partMaterials;
+		std::vector< CDBPtr< SMaterial > > partMaterials;
 		float fPartSize;
 		float fFallHeight;
 		float fSpeed;
@@ -168,12 +168,12 @@ namespace NDb
 		int nIntensity;
 		bool bWindAffected;
 		CDBPtr< SAmbientLight > pWeatherLight;
-		vector< CDBPtr< SLightInstance > > lightnings;
+		std::vector< CDBPtr< SLightInstance > > lightnings;
 		float fLightningsPerMinute;
 		float fLightningsRandom;
 		CDBPtr< SWater > pWater;
-		vector< SAmbientSoundDescr > ambientSound;
-		vector< CDBPtr< SComplexSoundDesc > > randomSounds;
+		std::vector< SAmbientSoundDescr > ambientSound;
+		std::vector< CDBPtr< SComplexSoundDesc > > randomSounds;
 
 		SWeatherDesc() :
 			__dwCheckSum( 0 ),
@@ -206,16 +206,16 @@ namespace NDb
 		int nNumPatchesX;
 		int nNumPatchesY;
 		CDBPtr< STGTerraSet > pTerraSet;
-		string szMapFilesPath;
+		std::string szMapFilesPath;
 		CDBPtr< SAmbientLight > pLight;
 		CDBPtr< SPreLight > pPreLight;
 		SWeather weather;
 		CDBPtr< SWater > pOceanWater;
-		vector< SVSOInstance > roads;
-		vector< SVSOInstance > rivers;
-		vector< SVSOInstance > crags;
-		vector< STerrainSpotInstance > spots;
-		vector< SVSOInstance > lakes;
+		std::vector< SVSOInstance > roads;
+		std::vector< SVSOInstance > rivers;
+		std::vector< SVSOInstance > crags;
+		std::vector< STerrainSpotInstance > spots;
+		std::vector< SVSOInstance > lakes;
 		bool bHasCoast;
 		SVSOInstance coast;
 		CVec3 vCoastMidPoint;
@@ -239,15 +239,15 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EWeatherType eValue );
-	EWeatherType StringToEnum_NDb_EWeatherType( const string &szValue );
+	std::string EnumToString( NDb::EWeatherType eValue );
+	EWeatherType StringToEnum_NDb_EWeatherType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EWeatherType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EWeatherType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EWeatherType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EWeatherType( szValue ); }
+	static std::string ToString( NDb::EWeatherType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EWeatherType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EWeatherType( szValue ); }
 };
 

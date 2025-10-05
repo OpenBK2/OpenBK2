@@ -23,7 +23,7 @@ class CTreeFallingMutator : public ITreeFallingMutator
 	NTimer::STime nStartTime;
 	CVec3 vRotAxis;
 	CVec3 vEffectRotAxis;
-	list<SLeafMutatorData> leafBones;
+	std::list<SLeafMutatorData> leafBones;
 	bool bFinished;
 	int nEffectID;
 	CVec3 vTreePos;
@@ -37,7 +37,7 @@ class CTreeFallingMutator : public ITreeFallingMutator
 public:
 	CTreeFallingMutator() : bFinished( false ) {}
 
-	void Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot, const vector<string> &leafNames,
+	void Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot, const std::vector<std::string> &leafNames,
 							int _nEffectID, const CVec3 &vPos, float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart );
 	bool NeedUpdate() { return !bFinished; }
 	void MutateSkeletonPose( granny_local_pose *pPose );
