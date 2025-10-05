@@ -152,43 +152,9 @@ static NWin32Helper::CEvent newRequest;
 static HANDLE hLoaderThread;
 static std::list<CPtr<CFileRequest> > holdRequests;
 static std::list<CFileRequest*> requests;
-static HANDLE hEventEnableLoadingThread = INVALID_HANDLE_VALUE;
-
-// STARFORCE{
-#ifdef _FINALRELEASE
-void __declspec(dllexport) SFINIT0_CreateLoadingThreadEvent()
-{
-	hEventEnableLoadingThread = CreateEvent( 0, true, false, 0 );
-}
-void __declspec(dllexport) SFINIT1_EnableLoadingThreadEvent()
-{
-	if ( hEventEnableLoadingThread != INVALID_HANDLE_VALUE )
-		SetEvent( hEventEnableLoadingThread );
-}
-#endif // _FINALRELEASE
-// STARFORCE}
-
-static void WaitAllPendingLoad()
-{
-	for(;;)
-	{
-		{
-			NWin32Helper::CCriticalSectionLock lp( pendingCheck );
-			NWin32Helper::CCriticalSectionLock l( reqQueue );
-			if ( requests.empty() )
-				return;
-		}
-		Sleep(0);
-	}
-}
 
 static DWORD WINAPI LoaderThread( void* )
 {
-	// STARFORCE{
-#ifdef _FINALRELEASE
-	WaitForSingleObject( hEventEnableLoadingThread, INFINITE );
-#endif // _FINALRELEASE
-	// STARFORCE}
 	for (;;)
 	{
 		newRequest.Wait();
