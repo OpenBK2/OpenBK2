@@ -8,10 +8,6 @@
 #include "System/FilePath.h"
 #include "Misc/HPTimer.h"
 
-//#include <vtuneapi.h>
-//#pragma comment(lib, "vtuneapi.lib")
-
-
 static bool IsFolderName( const std::string &szName )
 {
 	return !szName.empty() && ( szName[szName.size() - 1] == '\\' || szName[szName.size() - 1] == '/' );
@@ -116,7 +112,6 @@ CFolderManipulatorIteratorWrapper::CFolderManipulatorIteratorWrapper( const std:
 {
 	NHPTimer::STime hptime;
 	NHPTimer::GetTime( &hptime );
-//	VTResume();
 	// retrieve all objects by type
 	bool bShowFullTree = NGlobal::GetVar( "show_full_tree", 0 ) != 0;
 	std::vector<CDBID> objectsList;
@@ -158,9 +153,7 @@ CFolderManipulatorIteratorWrapper::CFolderManipulatorIteratorWrapper( const std:
 	}
 	//
 	posCurrElement = entriesList.begin();
-	//
-//	VTPause();
-	//
+
 	const float fTimePassed = NHPTimer::GetTimePassed( &hptime );
 	DebugTrace( "***** Time passed for full tree retrieve: %g msec *****", fTimePassed * 1000.0f );
 }

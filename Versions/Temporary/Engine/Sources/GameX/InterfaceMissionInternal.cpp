@@ -56,12 +56,6 @@
 
 #include <algorithm>
 
-#ifdef _PROFILER
-#include <VTuneAPI.h>
-
-#endif // _PROFILER
-//CRAP}
-
 
 static int WARFOG_HARD_RECT_WIDTH = 2;
 static int WARFOG_MIN_VALUE = 128;
@@ -1675,9 +1669,6 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 bool CInterfaceMission::StepLocal( bool bAppActive )
 {
 	Sleep( 1 );
-#ifdef _PROFILER
-	VTResume();
-#endif
 
 	if ( IsValid( pTransceiver ) )
 		pTransceiver->DoSegments();
@@ -1878,10 +1869,6 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	Singleton<IMPToUIManager>()->MPUISegment();
 
 	CheckInactiveInput();
-
-#ifdef _PROFILER
-	VTPause();
-#endif
 
 	return bResult;
 }
@@ -3743,9 +3730,6 @@ void CICLoadB2::OnProgress( EStage eStage )
 	{
 		case STG_START:
 		{
-#ifdef _PROFILER
-			VTResume();
-#endif
 			InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 
 			std::wstring wszText = InterfaceState()->GetTextEntry( "T_LOADING" );
@@ -3769,9 +3753,6 @@ void CICLoadB2::OnProgress( EStage eStage )
 		break;
 		case STG_AFTER_LOAD_DONE:
 		{
-#ifdef _PROFILER
-			VTPause();
-#endif
 			if ( pProgress )
 				pProgress->Step();
 

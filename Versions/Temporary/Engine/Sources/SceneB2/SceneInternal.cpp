@@ -466,37 +466,6 @@ inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fCo
 												 (fGamma - 0.5f)*2.0f );
 }
 
-//#define MEASURE_BREAKS
-
-#ifdef MEASURE_BREAKS
-#include <vtuneapi.h>
-
-#endif
-
-
-static void MeasureBreakes( const float fFPS )
-{
-#ifdef MEASURE_BREAKS
-	static bool bVTuneActive = false;
-
-	if ( fFPS < 25 )
-	{
-		if ( bVTuneActive == false )
-		{
-			VTResume();
-			bVTuneActive = true;
-			DebugTrace( "VTune resumed" );
-		}
-	}
-	else if ( bVTuneActive == true )
-	{
-		VTPause();
-		bVTuneActive = false;
-		DebugTrace( "VTune paused" );
-	}
-#endif
-}
-
 void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 {
 	static float s_fLastGamma = NGamma::s_fGamma;
@@ -688,7 +657,6 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 				const float fTimeCoeff = 1000.0f / float( timeAbs - data[eScene]->timeStatLastShow );
 				// minimal allowed dynamic FPS check
 				const float fFPS = float( data[eScene]->nStatNumFrames ) * fTimeCoeff;
-				MeasureBreakes( fFPS );
 
 				if ( fFPS < s_fMinDynamicFPS && NGlobal::GetVar( "m1", 0 ) == 0 )
 				{

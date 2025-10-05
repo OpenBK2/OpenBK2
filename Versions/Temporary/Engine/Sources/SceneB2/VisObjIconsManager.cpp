@@ -7,9 +7,6 @@
 
 #include <algorithm>
 
-//#include <VTuneAPI.h>
-//#pragma comment (lib, "vtuneapi.lib")
-
 const int DEF_HPBAR_PARTS_NUM = 3;
 const int DEF_ICONS_GAP_X = 2;
 const int DEF_ICONS_ABOVE_Y = 2;
@@ -381,7 +378,6 @@ void CVisObjIconsManager::RemoveIcon( const int nID )
 
 void CVisObjIconsManager::DrawIcons()
 {
-	//VTResume();
 	if ( p2DView )
 	{
 		if ( bNeedUpdate )
@@ -397,7 +393,6 @@ void CVisObjIconsManager::DrawIcons()
 		//p2DView->CreateDynamicClearRects( rectLayout, CTPoint<float>( 0, 0 ), scrRect );
 		p2DView->CreateDynamicRects( pTexture, rectLayout, CTPoint<float>( 0, 0 ), scrRect );
 	}
-	//VTPause();
 }
 
 REGISTER_SAVELOAD_CLASS( 0x17146CC0, CVisObjIconsManager );

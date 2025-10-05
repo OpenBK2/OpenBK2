@@ -20,11 +20,6 @@
 
 #include <algorithm>
 
-#ifdef _PROFILER
-#include <VTuneAPI.h>
-
-#endif // _PROFILER
-
 namespace NGScene
 {
 _3DMOTOR_EXPORT EXTERNVAR int nTextureUseMip;
@@ -166,10 +161,6 @@ void CInterfaceEncyclopedia::EffectFinish()
 	}
 	else
 	{
-#ifdef _PROFILER
-		VTPause();
-#endif // _PROFILER
-
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		if ( !pRunUnit )
 			NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
@@ -295,9 +286,6 @@ int CInterfaceEncyclopedia::Check( const std::string &szCheckName ) const
 
 void CInterfaceEncyclopedia::MsgBack( const SGameMessage &msg )
 {
-#ifdef _PROFILER
-	VTResume();
-#endif // _PROFILER
 //	EffectBorderStart( false );
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );

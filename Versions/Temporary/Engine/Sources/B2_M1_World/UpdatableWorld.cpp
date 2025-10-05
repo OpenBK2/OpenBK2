@@ -40,13 +40,6 @@
 
 //#include "../Stats_B2_M1/DBMapInfo.h"
 
-//CRAP{ for profiling
-#ifdef _PROFILER
-#include <VTuneAPI.h>
-
-#endif // _PROFILER
-//CRAP}
-
 
 #define REGISTER_UPDATE( RPGName, Name ) newFuncs[RPGName::typeID] = Name##::New##Name
 
@@ -1789,10 +1782,6 @@ void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, 
 
 void CUpdatableWorld::Update()
 {
-#ifdef _PROFILER
-	VTResume();
-#endif
-
 	currTime = Singleton<IGameTimer>()->GetGameTime();
 	for ( CEverySegment::iterator it = everySegment.begin(); it != everySegment.end(); ++it )
 		(this->*(*it))();
@@ -1813,10 +1802,6 @@ void CUpdatableWorld::Update()
 			graveyard.erase( itOld );
 		}
 	}
-#ifdef _PROFILER
-	VTPause();
-#endif
-
 }
 
 void CUpdatableWorld::ProcessUpdate( const SAIPointLightUpdate *pUpdate )

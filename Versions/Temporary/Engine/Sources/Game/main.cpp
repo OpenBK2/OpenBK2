@@ -55,71 +55,6 @@ static void StoreBuildInfo()
 	NGlobal::SetVar( "version.info", szVersion );
 }
 
-/*
-////#include <vtuneapi.h>
-extern "C"
-{
-	void __declspec(dllimport) __cdecl VTPause(void);
-	void __declspec(dllimport) __cdecl VTResume(void);
-}
-
-
-namespace NGfx
-{
-	EXTERNVAR int nTotalFrames;
-	EXTERNVAR NHPTimer::STime timeFrameStart;
-	EXTERNVAR int nCurrentFrame;
-}
-static int nLimitFrame = 150;
-static volatile bool bFrameRateThreadEnabled = true;
-static DWORD WINAPI VTuneThreadBreak( void* )
-{
-	SetThreadPriority( GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL );
-	for(;;)
-	{
-		Sleep(1);
-		if ( NGfx::nTotalFrames < nLimitFrame )
-			continue;
-		NHPTimer::STime t = NGfx::timeFrameStart;
-		if ( bFrameRateThreadEnabled && NHPTimer::GetTimePassed( &t ) > 1 / 10.0f )
-		{
-			nLimitFrame = NGfx::nTotalFrames + 100;
-			__debugbreak();
-		}
-	}
-}
-static DWORD WINAPI VTuneThreadProfile( void* )
-{
-	SetThreadPriority( GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL );
-	for(;;)
-	{
-		Sleep(1);
-		if ( NGfx::nTotalFrames < nLimitFrame )
-			continue;
-
-		if ( !bFrameRateThreadEnabled )
-			continue;
-
-		NHPTimer::STime t = NGfx::timeFrameStart;
-		if ( NGfx::nCurrentFrame > 1000 && NHPTimer::GetTimePassed( &t ) > 1 / 20.0f )
-		{
-			VTResume();
-		}
-		else
-		{
-			VTPause();
-		}
-		// don`t forget about sampling during application shut down
-	}
-}
-static void StartLagProfiling()
-{
-	DWORD dwThread;
-	//CreateThread( 0, 1024, VTuneThreadBreak, 0, 0, &dwThread );	// for break at slow frame
-	CreateThread( 0, 1024, VTuneThreadProfile, 0, 0, &dwThread );	// to profile slow frames.
-}
-*/
-
 static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
@@ -228,7 +163,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		return 0xDEAD;
 	}
 	// start
-	//StartLagProfiling();
 	Cursor()->Acquire( true );
 	while ( 1 ) 
 	{

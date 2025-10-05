@@ -8,10 +8,6 @@
 
 #include <algorithm>
 
-
-//#include <VTuneAPI.h>
-//#pragma comment (lib, "vtuneapi.lib")
-
 #define DEF_TILES_BLUR_FILTER_HX 2
 #define DEF_TILES_BLUR_FILTER_HY 2
 
@@ -339,8 +335,6 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<BYTE> &mask,
 																		const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
-	//VTResume();
-
 	if ( ( terrainInfo.tileTerraMap.GetSizeX() != tileTerraMapDiffs.GetSizeX() ) ||
 			 ( terrainInfo.tileTerraMap.GetSizeY() != tileTerraMapDiffs.GetSizeY() ) )
 	{
@@ -434,8 +428,6 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 			texModCheck[g][i] = 1;
 		}
 	}
-
-	//VTPause();
 }
 
 void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs )

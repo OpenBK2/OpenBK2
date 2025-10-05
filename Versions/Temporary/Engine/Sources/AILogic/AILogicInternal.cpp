@@ -65,8 +65,6 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "Input/Bind.h"
 #include "GlobalWarFog.h"
 
-//#define FPS_TEST
-
 REGISTER_SAVELOAD_CLASS( 0x1108D441, CAILogic );
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -95,22 +93,6 @@ extern CGraveyard theGraveyard;
 extern CKeyBuildingBonusSystem theBonusSystem;
 // for debug
 extern CShellsStore theShellsStore;
-
-#ifdef FPS_TEST
-EXTERNVAR int nDGCurrentFrame;
-static int nSegmentStop = 0;
-static int nSegmentCount = -10;
-static int nStartFrame = 0;
-static DWORD dwStartTickCount = 0;
-
-static const int nSegemntsInTick = 20;
-static int nSegmentNextTick = 0;
-static DWORD dwTickStartTickCount = 0;
-static int nTickStartFrame = 0;
-
-#include <VTuneAPI.h>
-
-#endif
 
 CBalanceTest theBalanceTest;
 
@@ -1265,41 +1247,6 @@ void CAILogic::Segment()
 			bLocalPlayerUnitsPresent = bPresent;
 			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 );
 		}
-
-#ifdef FPS_TEST
-		++nSegmentCount;
-		if ( nSegmentCount == 0 )
-		{
-			nStartFrame = nDGCurrentFrame;
-			dwStartTickCount = ::GetTickCount();
-
-			nSegmentNextTick = nSegmentCount + nSegemntsInTick;
-			nTickStartFrame = nDGCurrentFrame;
-			dwTickStartTickCount = ::GetTickCount();
-
-			nSegmentStop = NGlobal::GetVar( "FPS_TEST_DURATION", 0 );
-			NI_ASSERT( nSegmentStop, "FPS_TEST #define'ed but FPS_TEST_DURATION not" );
-			//VTResume();
-		}
-		if ( nSegmentStop == nSegmentCount )
-		{
-			DebugTrace( "[FPS Test]: Average FPS %2.3f (segments: %d)", 1000.f*(float)(nDGCurrentFrame - nStartFrame)/(float)( ::GetTickCount() - dwStartTickCount ), nSegmentCount );
-			NInput::PostEvent( "exit", 0, 0 );
-		}
-		if ( nSegmentNextTick == nSegmentCount )
-		{
-			DebugTrace( "[FPS Test]: Average FPS %2.3f (segments: %d .. %d )", 1000.f*(float)(nDGCurrentFrame - nTickStartFrame)/(float)( ::GetTickCount() - dwTickStartTickCount ), nSegmentCount - nSegemntsInTick, nSegmentCount );
-			nSegmentNextTick = nSegmentCount + nSegemntsInTick;
-			nTickStartFrame = nDGCurrentFrame;
-			dwTickStartTickCount = ::GetTickCount();
-			//theWarFog.DumpWarFog();
-			//updater.DumpSizes();
-		}
-		if ( nSegmentCount == 240 )
-			VTResume();
-		if ( nSegmentCount == 300 )
-			VTPause();
-#endif
 	}
 
 //	CheckAIObjectBase();

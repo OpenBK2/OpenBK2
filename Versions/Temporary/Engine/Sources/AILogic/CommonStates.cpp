@@ -24,24 +24,6 @@
 #include "ExecutorContainer.h"
 #include "System/Commands.h"
 
-
-/*
-#include <VTuneApi.h>
-
-class CVTuneResumer
-{
-public:
-	CVTuneResumer()
-	{
-		VTResume();
-	}
-	~CVTuneResumer()
-	{
-		VTPause();
-	}
-};
-*/
-
 REGISTER_SAVELOAD_CLASS( 0x1108D4DE, CMechAttackUnitState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4CF, CFollowState );
 REGISTER_SAVELOAD_CLASS( 0x1108D49E, CCommonSwarmState );
@@ -1463,7 +1445,6 @@ void CFollowState::Segment()
 				lastHeadUnitPos = pHeadUnit->GetCenterPlain();
 				if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pHeadUnit->GetCenterPlain() + pUnit->GetFollowShift(), VNULL2, pUnit, true, GetAIMap() ) )
 				{
-					//CVTuneResumer resumer;
 					pUnit->SendAlongPath( pPath, VNULL2, true );
 				}
 				else

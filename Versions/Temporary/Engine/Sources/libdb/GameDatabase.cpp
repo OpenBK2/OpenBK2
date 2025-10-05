@@ -8,7 +8,6 @@
 #include "System/xmlreader.h"
 #include "Misc/Win32Helper.h"
 
-//#define _PROFILER
 namespace NTest
 {
 	void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
@@ -280,28 +279,6 @@ LIBDB_EXPORT void SegmentProfiler()
 	}
 }
 
-#ifdef _PROFILER
-#include <vtuneapi.h>
-
-#endif
-
-struct SVTuneProfiler
-{
-	SVTuneProfiler()
-	{
-#ifdef _PROFILER
-			VTResume();
-#endif
-	}
-	~SVTuneProfiler() 
-	{
-#ifdef _PROFILER	
-		VTPause(); 
-#endif
-	}
-};
-
-
 CResource *CGameDatabase::GetObject( const CDBID &dbid )
 {
 	SGameDbForceLoadGuard forceLoadGuard;
@@ -318,7 +295,6 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 		CFileStream stream( GetVFS(), GetFileName(dbid) );
 		// here we must set special rounding and precision state to be sync during multiplayer
 		NWin32Helper::CControl87Guard control87guard;
-		//SVTuneProfiler profiler;
 		_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
 		if ( stream.IsOk() )
 		{
