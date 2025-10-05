@@ -4,3 +4,6 @@
 [submodule "third_party/uesp-esoapps"]
 	path = third_party/uesp-esoapps
 	url = https://github.com/uesp/uesp-esoapps.git
+[submodule "third_party/pciids"]
+	path = third_party/pciids
+	url = https://github.com/pciutils/pciids.git
