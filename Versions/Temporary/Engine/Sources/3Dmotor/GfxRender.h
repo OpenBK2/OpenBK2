@@ -3,6 +3,9 @@
 
 //
 #include "GPixelFormat.h"
+
+#include "pciids/gpus.h"
+
 struct SPShader;
 struct SVShader;
 struct SHLSLShader;
@@ -16,31 +19,7 @@ enum EHardwareLevel
 	HL_RADEON2,
 	HL_R300
 };
-enum EVideoCard
-{
-	VC_DEFAULT,
-	//// nVidia
-	VC_GEFORCE1,
-	VC_GEFORCE2,
-	VC_GEFORCE2MX,
-	VC_GEFORCE3,
-	VC_GEFORCE4,
-	VC_GEFORCE4MX,
-	VC_GEFORCEFX_MID,
-	VC_GEFORCEFX_FAST,
-	VC_GEFORCEFX_SLOW,
-	VC_GEFORCEFX_LE,
-	//// ATi
-	VC_RADEON7X00,
-	VC_RADEON9000,
-	VC_RADEON9100,
-	VC_RADEON9200,
-	VC_RADEON9500,
-	VC_RADEON9600,
-	VC_RADEON9600SE,
-	VC_RADEON9700,
-	VC_RADEON9800
-};
+
 EVideoCard GetVideoCard();
 EHardwareLevel GetHardwareLevel();
 bool IsTnLDevice();
@@ -285,5 +264,3 @@ bool DoesSupportOcclusionQueries();
 void SetDithering( EDithering a );
 
 }
-
-

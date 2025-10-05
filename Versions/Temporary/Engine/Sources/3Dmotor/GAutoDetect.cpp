@@ -6,6 +6,8 @@
 #include "Misc/HPTimer.h"
 #include "3Dmotor/GfxBenchmark.h"
 
+#include "pciids/detect.h"
+
 namespace NGScene
 {
 struct SCfgValue { const char *pszName; float fValue; };
@@ -193,49 +195,6 @@ static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 
 	return CV_CUSTOM;
 }
-
-#define HWLEVEL_ANY -1
-struct SAutoDetectCfg
-{
-	int nCard;
-	int nLevel;
-	////
-	int nSpeed;
-	int nTexture;
-
-	int n16bppMode;
-	////
-	char *pszName;
-};
-static SAutoDetectCfg configAutoDetect[] =
-{
-	//// CARD									HW Level		 Speed	  Texture  16bpp mode
-	{ NGfx::VC_GEFORCE1,			HWLEVEL_ANY, CV_VHIGH, CV_MED,   1, "GeForce 1" },
-	{ NGfx::VC_GEFORCE2,			HWLEVEL_ANY, CV_VHIGH, CV_MED,   1, "GeForce 2" },
-	{ NGfx::VC_GEFORCE3,			HWLEVEL_ANY, CV_HIGH,  CV_MED,   0, "GeForce 3" },
-	{ NGfx::VC_GEFORCE4,			HWLEVEL_ANY, CV_HIGH,  CV_HIGH,  0, "GeForce 4" },
-	{ NGfx::VC_GEFORCE2MX,		HWLEVEL_ANY, CV_VHIGH, CV_LOW,   1, "GeForce 2MX" },
-	{ NGfx::VC_GEFORCE4MX,		HWLEVEL_ANY, CV_VHIGH, CV_MED,   1, "GeForce 4MX" },
-	{ NGfx::VC_GEFORCEFX_SLOW,HWLEVEL_ANY, CV_VHIGH, CV_LOW,   1, "GeForce FX(5200)" },
-	{ NGfx::VC_GEFORCEFX_LE,  HWLEVEL_ANY, CV_VHIGH, CV_MED,   0, "GeForce FX(5700LE/5700VE)" },
-	{ NGfx::VC_GEFORCEFX_MID,	HWLEVEL_ANY, CV_MED,   CV_HIGH,	 0, "GeForce FX(5600)" },
-	{ NGfx::VC_GEFORCEFX_FAST,HWLEVEL_ANY, CV_LOW,   CV_HIGH,	 0, "GeForce FX(5700/5800/5900/5950)" },
-	////
-	{ NGfx::VC_RADEON7X00,   HWLEVEL_ANY, CV_VHIGH,  CV_MED,   1, "Radeon 7X00" },
-	{ NGfx::VC_RADEON9000,   HWLEVEL_ANY, CV_VHIGH,  CV_MED,   1, "Radeon 9000" },
-	{ NGfx::VC_RADEON9100,   HWLEVEL_ANY, CV_VHIGH,  CV_HIGH,  0, "Radeon 9100" },
-	{ NGfx::VC_RADEON9200,   HWLEVEL_ANY, CV_VHIGH,  CV_HIGH,  0, "Radeon 9200" },
-	{ NGfx::VC_RADEON9500,   HWLEVEL_ANY, CV_MED,    CV_HIGH,  0, "Radeon 9500" },
-	{ NGfx::VC_RADEON9600SE, HWLEVEL_ANY, CV_MED,    CV_HIGH,  0, "Radeon 9600SE" },
-	{ NGfx::VC_RADEON9600,   HWLEVEL_ANY, CV_MED,    CV_HIGH,  0, "Radeon 9600" },
-	{ NGfx::VC_RADEON9700,   HWLEVEL_ANY, CV_LOW,    CV_HIGH,  0, "Radeon 9700" },
-	{ NGfx::VC_RADEON9800,   HWLEVEL_ANY, CV_LOW,    CV_HIGH,  0, "Radeon 9800" },
-	////
-	{ NGfx::VC_DEFAULT, NGfx::HL_R300,    CV_MED,    CV_HIGH,  0, "Unknown card, ps.2.0 class hardware" },
-	{ NGfx::VC_DEFAULT, NGfx::HL_RADEON2, CV_HIGH,   CV_HIGH,  0, "Unknown card, ps.1.4 class hardware" },
-	{ NGfx::VC_DEFAULT, NGfx::HL_GFORCE3, CV_HIGH,   CV_HIGH,  0, "Unknown card, ps.1.1 class hardware" },
-	{ NGfx::VC_DEFAULT, NGfx::HL_TNL_DEVICE, CV_VHIGH, CV_MED,1, "Unknown card, DX7 class hardware" }
-};
 
 static bool IsLowRAM()
 {
