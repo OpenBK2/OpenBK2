@@ -295,23 +295,7 @@ void AutoDetectVideoConfig()
 	else
 	{
 		// select texture mode
-
-		float fLVM = systemInfo.fLVMTextureMemory;
-		float fAGP = systemInfo.fAGPTextureMemory;
-		if ( fLVM < 32 )
-		{
-			nDefault16bppMode = 1;
-			nDefaultSpeed = CV_VHIGH;
-			nDefaultTexture = CV_LOW;
-			if ( fLVM < 16 )
-				NGlobal::SetVar( "gfx_resolution", "800x600" );
-		}
-		else if ( fLVM < 64 )
-			nDefaultTexture = Min( nDefaultTexture, (int)CV_MED );
-		else if ( fLVM < 128 )
-			nDefaultTexture = Min( nDefaultTexture, (int)CV_HIGH );
-		else if ( fLVM + fAGP > 160 )
-			nDefaultTexture = Min( nDefaultTexture, (int)CV_VHIGH );
+		nDefaultTexture = Min( nDefaultTexture, (int)CV_VHIGH );
 
 		if ( perf.fFillRate != 0 )
 		{

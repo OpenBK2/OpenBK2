@@ -24,7 +24,6 @@ struct SVideoMode
 
 struct SSystemInfo
 {
-	float fLVMTextureMemory, fAGPTextureMemory;
 	int nDesktopResolution;
 };
 

@@ -595,17 +595,6 @@ static bool CheckDeviceCaps()
 	if ( SUCCEEDED(hr) )
 		pTestBuffer->Unlock();
 
-	// count LVM (or memory
-	std::vector<NWin32Helper::com_ptr<IDirect3DTexture9> > test;
-	for ( int k = 0; 1; ++k )
-	{
-		NWin32Helper::com_ptr<IDirect3DTexture9> &res = test.emplace_back();
-		HRESULT hr = pTestDevice->CreateTexture( 512, 512, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, res.GetAddr(), 0 );
-		if ( FAILED(hr) )
-			break;
-	}
-	systemInfo.fLVMTextureMemory = test.size() - 1 + 3 * GetBpp(desktop.Format) / 32; // 3 for 640x480 chain
-	systemInfo.fAGPTextureMemory = pTestDevice->GetAvailableTextureMem() / (1024 * 1024);
 	systemInfo.nDesktopResolution = desktop.Width;
 
 	if ( !bHardwareVP )
@@ -643,8 +632,7 @@ static bool CheckDeviceCaps()
 			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nDepthFSAA ) )
 		)
 		nMaxFSAA = Min( nFrontFSAA, nDepthFSAA );
-	
-	test.clear();
+
 	return true;
 }
 
