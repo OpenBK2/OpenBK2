@@ -89,9 +89,17 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 	CONTEXT ctx;
 
 	ZeroSA( stkFrame );
+#if defined(_M_IX86)
 	Assign( &stkFrame.AddrPC, pExPtrs->ContextRecord->SegCs, pExPtrs->ContextRecord->Eip );
 	Assign( &stkFrame.AddrFrame, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Ebp );
 	Assign( &stkFrame.AddrStack, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Eip );
+#elif defined(_M_AMD64)
+	Assign( &stkFrame.AddrPC, pExPtrs->ContextRecord->SegCs, pExPtrs->ContextRecord->Rip );
+	Assign( &stkFrame.AddrFrame, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Rbp );
+	Assign( &stkFrame.AddrStack, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Rip );
+#else
+#error "Unsupported processor architecture"
+#endif
 
 	int nEntry = 0;
 	for ( nEntry = 0; nEntry < nMaxEntries; ++nEntry )
@@ -109,23 +117,11 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 
 int CollectCallStack( SCallStackEntry *pRes, int nMaxEntries )
 {
-	DWORD dwAddr, dwEbp, dwEsp;
-	__asm
-	{
-		call nxt
-nxt:
-		pop [dwAddr]
-		mov dwEbp, ebp
-		mov dwEsp, esp
-	}
-
 	CONTEXT ctx;
 	EXCEPTION_POINTERS ep;
 	ep.ContextRecord = &ctx;
-	ctx.Eip = dwAddr;
-	ctx.Ebp = dwEbp;
-	ctx.Esp = dwEsp;
-	CollectCallStack( &ep, pRes, nMaxEntries );
+	RtlCaptureContext(&ctx);
+	return CollectCallStack( &ep, pRes, nMaxEntries );
 }
 
 CSymEngine &GetSymEngine()
@@ -133,32 +129,3 @@ CSymEngine &GetSymEngine()
 	static CSymEngine se;
 	return se;
 }
-
-void SymAccessTest()
-{
-	CSymEngine &se = GetSymEngine();
-	CSymString szFunc, szFile, szModule;
-	int nLine;
-	DWORD dwAddr, dwEbp, dwEsp;
-	__asm
-	{
-		call nxt
-nxt:
-		pop [dwAddr]
-		mov dwEbp, ebp
-		mov dwEsp, esp
-	}
-	se.GetSymbol( dwAddr, &szModule, &szFile, &nLine, &szFunc );
-	nLine = nLine;
-	//printf( szFile.szStr );
-	
-	SCallStackEntry stk[100];
-	CONTEXT ctx;
-	EXCEPTION_POINTERS ep;
-	ep.ContextRecord = &ctx;
-	ctx.Eip = dwAddr;
-	ctx.Ebp = dwEbp;
-	ctx.Esp = dwEsp;
-	CollectCallStack( &ep, stk, ARRAY_SIZE(stk) );
-}
-
