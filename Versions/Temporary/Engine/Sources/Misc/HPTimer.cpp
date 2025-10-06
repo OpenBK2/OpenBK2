@@ -13,13 +13,7 @@ double NHPTimer::GetSeconds( const NHPTimer::STime &a )
 
 static inline void GetCounter( int64_t *pTime )
 {
-	__asm
-	{
-		rdtsc
-		mov esi, pTime
-		mov [esi], eax
-		mov [esi+4], edx
-	}
+	*pTime = __rdtsc();
 }
 
 double NHPTimer::GetClockRate()
