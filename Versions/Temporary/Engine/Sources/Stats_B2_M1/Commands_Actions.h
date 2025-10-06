@@ -12,8 +12,8 @@ class CUserCommands
 {
 	BYTE actions[16];
 public:
-	int GetSize() const {  return ARRAY_SIZE(actions) * 8; }
-	void Clear() { memset( actions, 0, ARRAY_SIZE(actions) ); }
+	int GetSize() const {  return std::size(actions) * 8; }
+	void Clear() { memset( actions, 0, std::size(actions) ); }
 
 	void RemoveData( const int nBit )
 	{

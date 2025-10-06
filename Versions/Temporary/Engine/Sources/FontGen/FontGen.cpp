@@ -266,7 +266,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 			int nMask = 1 << nShift;
 			if ( lpntme->ntmFontSig.fsUsb[nIndex] & nMask )
 			{
-				for ( int nRange = 0; nRange < ARRAY_SIZE( sCharRanges ); nRange++ )
+				for ( int nRange = 0; nRange < std::size( sCharRanges ); nRange++ )
 				{
 					if ( sCharRanges[nRange].nBit != nTemp )
 						continue;
@@ -331,7 +331,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 			int nMask = 1 << nShift;
 			if ( sCharSetInfo.fs.fsUsb[nIndex] & nMask )
 			{
-				for ( int nRange = 0; nRange < ARRAY_SIZE( sCharRanges ); nRange++ )
+				for ( int nRange = 0; nRange < std::size( sCharRanges ); nRange++ )
 				{
 					if ( sCharRanges[nRange].nBit != nTemp )
 						continue;

@@ -24,9 +24,9 @@ static struct SNormalizeInit
 	SNormalizeInit() 
 	{
 		nNormalizeTable[0] = 0x7fff;
-		for ( int k = 1; k < ARRAY_SIZE(nNormalizeTable); ++k )
+		for ( int k = 1; k < std::size(nNormalizeTable); ++k )
 			nNormalizeTable[k] = (std::min)( 0x7fff, Float2Int( (64 * (127 * 16)) / sqrt( k + 0.99f ) ) );
-		for ( int k = 0; k < ARRAY_SIZE(mmxWeights); ++k )
+		for ( int k = 0; k < std::size(mmxWeights); ++k )
 		{
 			NGfx::SMMXWord &a = mmxWeights[k];
 			a.nZ = a.nY = a.nX = a.nW = k << 6;

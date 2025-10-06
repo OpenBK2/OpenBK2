@@ -104,7 +104,7 @@ EVideoCard GetVideoCard()
 	if ( FAILED( hRes ) )
 		return VC_DEFAULT;
 
-	for ( int nTemp = 0; nTemp < ARRAY_SIZE( videoCardsArray ); nTemp++ )
+	for ( int nTemp = 0; nTemp < std::size( videoCardsArray ); nTemp++ )
 	{
 		const SVideoCardType &sType = videoCardsArray[nTemp];
 		if ( ( sID.VendorId == sType.dwVendorID ) && ( ( sID.DeviceId & sType.dwDeviceIDMask ) == ( sType.dwDeviceID & sType.dwDeviceIDMask ) ) )
@@ -203,7 +203,7 @@ void ReduceHWLag()
 	lagQueries.push_front( pFrameMark );
 }
 
-#define ZERO_ARRAY(a) { for ( int k = 0; k < ARRAY_SIZE(a); ++k ) a[k] = 0; }
+#define ZERO_ARRAY(a) { for ( int k = 0; k < std::size(a); ++k ) a[k] = 0; }
 
 // Vertex formats description
 
@@ -831,7 +831,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 
 void ForceTextureFilterSetup()
 {
-	for ( int i = 0; i < ARRAY_SIZE( TSFilterMode ); ++i )
+	for ( int i = 0; i < std::size( TSFilterMode ); ++i )
 		TSFilterMode[i] = (EFilterMode)-1;
 }
 
@@ -1219,8 +1219,8 @@ bool CRenderContext::SetShader( const SHLSLShader &pShader )
 {
 	ASSERT( pOutstandingStream == 0 );
 	ASSERT( !IsTnLDevice() );
-	ASSERT( pShader.nPSShaderID > 0 && pShader.nPSShaderID <= ARRAY_SIZE(psAllShaders) );
-	ASSERT( pShader.nVSShaderID > 0 && pShader.nVSShaderID <= ARRAY_SIZE(vsAllShaders) );
+	ASSERT( pShader.nPSShaderID > 0 && pShader.nPSShaderID <= std::size(psAllShaders) );
+	ASSERT( pShader.nVSShaderID > 0 && pShader.nVSShaderID <= std::size(vsAllShaders) );
 	if ( pixelShaders[ pShader.nPSShaderID - 1 ] == 0 )
 		return false;
 	if ( vertexShaders[ pShader.nVSShaderID - 1 ] == 0 )
@@ -1609,15 +1609,15 @@ static void InitTextureStage( int n )
 
 static void InitStateBlocks()
 {
-	ASSERT( ARRAY_SIZE(pixelShaders) >= ARRAY_SIZE(psAllShaders) );
-	ASSERT( ARRAY_SIZE(vertexShaders) >= ARRAY_SIZE(vsAllShaders) );
-	ASSERT( ARRAY_SIZE(vertexDeclarations) >= ARRAY_SIZE(geometryFormatInfo) );
+	ASSERT( std::size(pixelShaders) >= std::size(psAllShaders) );
+	ASSERT( std::size(vertexShaders) >= std::size(vsAllShaders) );
+	ASSERT( std::size(vertexDeclarations) >= std::size(geometryFormatInfo) );
 	ZERO_ARRAY( pixelShaders );
 	ZERO_ARRAY( vertexShaders );
 	ZERO_ARRAY( vertexDeclarations );
 	if ( bHardwarePixelShaders )
 	{
-		for ( int k = 0; k < ARRAY_SIZE(psAllShaders); ++k )
+		for ( int k = 0; k < std::size(psAllShaders); ++k )
 		{
 			const SPShader &sha = *psAllShaders[k];
 			DWORD *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
@@ -1642,7 +1642,7 @@ static void InitStateBlocks()
 	}
 	if ( !bTnLDevice )
 	{
-		for ( int k = 0; k < ARRAY_SIZE(vsAllShaders); ++k )
+		for ( int k = 0; k < std::size(vsAllShaders); ++k )
 		{
 			const SVShader &sha = *vsAllShaders[k];
 			DWORD *pShader = sha.pShader11;
@@ -1655,7 +1655,7 @@ static void InitStateBlocks()
 			D3DASSERT( hr, "CreateVertexShader failed" );
 		}
 
-		for ( int k = 0; k < ARRAY_SIZE(geometryFormatInfo); ++k )
+		for ( int k = 0; k < std::size(geometryFormatInfo); ++k )
 		{
 			const D3DVERTEXELEMENT9 *p = geometryFormatInfo[k].pdwVSD;
 			if ( p )

@@ -37,7 +37,7 @@ static std::wstring GetProfileName( const std::string &szDir, const std::string 
 		if ( nLength > 0 )
 		{
 			wchar_t buffer[1280];
-			int len = (std::min)( ARRAY_SIZE(buffer)-1, nLength / sizeof( wchar_t ) );
+			int len = (std::min)( std::size(buffer)-1, nLength / sizeof( wchar_t ) );
 			stream.Read( buffer, len * sizeof( wchar_t ) );
 			buffer[len] = 0;
 			std::wstring szName;

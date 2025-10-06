@@ -282,7 +282,7 @@ static const DWORD overdrawColors[] =
 void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
 	std::unordered_map<DWORD, int> colors;
-	for ( int i = 0; i < ARRAY_SIZE(NScene::overdrawColors); ++i )
+	for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
 		colors[ NScene::overdrawColors[i] ] = i + 1;
 	// turn UI off, overdraw on
 	while ( ToggleShow(SCENE_SHOW_UI) != false );
@@ -320,7 +320,7 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 				float r = ( color >> 16 ) & 0xff;
 				float g = ( color >>	8 ) & 0xff;
 				float b = (		color		) & 0xff;
-				for ( int i = 0; i < ARRAY_SIZE(NScene::overdrawColors); ++i )
+				for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
 				{
 					DWORD localColor = NScene::overdrawColors[i];
 					float lr = ( localColor >> 16 ) & 0xff;

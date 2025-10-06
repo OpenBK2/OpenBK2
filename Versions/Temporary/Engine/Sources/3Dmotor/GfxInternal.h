@@ -40,14 +40,14 @@ extern SGeomFormatInfo geometryFormatInfo[6];
 
 inline int GetGeomFormatSize( int nFormatID )
 {
-	ASSERT( nFormatID >= 0 && nFormatID < ARRAY_SIZE( geometryFormatInfo ) );
+	ASSERT( nFormatID >= 0 && nFormatID < std::size( geometryFormatInfo ) );
 	ASSERT( nFormatID == geometryFormatInfo[nFormatID].nFormatID );
 	return geometryFormatInfo[nFormatID].nSize;
 }
 
 inline const D3DVERTEXELEMENT9* GetVertexLayout( int nFormatID )
 {
-	ASSERT( nFormatID >= 0 && nFormatID < ARRAY_SIZE( geometryFormatInfo ) );
+	ASSERT( nFormatID >= 0 && nFormatID < std::size( geometryFormatInfo ) );
 	ASSERT( nFormatID == geometryFormatInfo[nFormatID].nFormatID );
 	return geometryFormatInfo[nFormatID].pdwVSD;
 }

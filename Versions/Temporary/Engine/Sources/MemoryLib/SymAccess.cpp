@@ -2,10 +2,8 @@
 #include "SymAccess.h"
 #include <DbgHelp.h>
 
+#include <iterator>
 
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE( a ) ( sizeof( a ) / sizeof( (a)[0] ) )
-#endif
 template <class TYPE>
 inline void ZeroSA( TYPE &val )
 {
@@ -53,7 +51,7 @@ bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *
 	if ( pszFunc )
 	{
 		SYMBOL_INFO *pInfo = (SYMBOL_INFO*)szBuf;
-		pInfo->SizeOfStruct = ARRAY_SIZE(szBuf);
+		pInfo->SizeOfStruct = std::size(szBuf);
 		pInfo->MaxNameLen = N_MAX_NAME_LENG;
 		if ( SymFromAddr( hProcess, dwAddress, 0, pInfo ) )
 			*pszFunc = pInfo->Name;

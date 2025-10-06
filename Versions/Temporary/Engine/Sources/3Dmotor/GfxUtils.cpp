@@ -304,7 +304,7 @@ void C2DQuadsRenderer::AddRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pCol
 	}
 	////
 	CVec2 sPos[4];
-	for ( int nTemp = 0; nTemp < ARRAY_SIZE( sPos ); ++nTemp )
+	for ( int nTemp = 0; nTemp < std::size( sPos ); ++nTemp )
 	{
 		sPos[nTemp].x = Float2Int( pPos4[nTemp].x );
 		sPos[nTemp].y = Float2Int( pPos4[nTemp].y );

@@ -760,7 +760,7 @@ void DumpAllObjects()
 				break;
 			}
 		}
-		NI_VERIFY( nStartPosition < ARRAY_SIZE(s_pszTypeNames), "Failed to find start position for data export!", return );
+		NI_VERIFY( nStartPosition < std::size(s_pszTypeNames), "Failed to find start position for data export!", return );
 	}
 	// export
 	for ( int i = nStartPosition; s_pszTypeNames[i] != 0; ++i )

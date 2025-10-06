@@ -225,7 +225,7 @@ void AutoDetectVideoConfig()
 	}
 	int nDefaultSpeed = -1, nDefaultTexture = -1, nDefaultFSAA = -1;
 	int nDefault16bppMode = 1;
-	for ( int nTemp = 0; nTemp < ARRAY_SIZE( configAutoDetect ); nTemp++ )
+	for ( int nTemp = 0; nTemp < std::size( configAutoDetect ); nTemp++ )
 	{
 		const SAutoDetectCfg &sType = configAutoDetect[nTemp];
 		if ( ( sType.nCard != NGfx::VC_DEFAULT ) && ( sType.nCard != card ) )
@@ -300,22 +300,22 @@ void AutoDetectVideoConfig()
 
 //EConfigValue GetLightingQualityMode()
 //{
-//	return FindCfgMode( lightingQualityConfig, ARRAY_SIZE( lightingQualityConfig ) );
+//	return FindCfgMode( lightingQualityConfig, std::size( lightingQualityConfig ) );
 //}
 
 //void SetLightingQualityMode( EConfigValue eMode )
 //{
-//	ApplyCfgValues( lightingQualityConfig, ARRAY_SIZE( lightingQualityConfig ), eMode );
+//	ApplyCfgValues( lightingQualityConfig, std::size( lightingQualityConfig ), eMode );
 //}
 
 EConfigValue GetSpeedMode()
 {
-	return FindCfgMode( speedConfig, ARRAY_SIZE( speedConfig ) );
+	return FindCfgMode( speedConfig, std::size( speedConfig ) );
 }
 
 void SetSpeedMode( EConfigValue eMode )
 {
-	ApplyCfgValues( speedConfig, ARRAY_SIZE( speedConfig ), eMode );
+	ApplyCfgValues( speedConfig, std::size( speedConfig ), eMode );
 	int nHSRMode = 0;
 	if ( !IsLowRAM() )
 	{
@@ -334,21 +334,21 @@ void SetSpeedMode( EConfigValue eMode )
 
 EConfigValue GetTextureMode()
 {
-	return FindCfgMode( textureConfig, ARRAY_SIZE( textureConfig ) );
+	return FindCfgMode( textureConfig, std::size( textureConfig ) );
 }
 
 void SetTextureMode( EConfigValue eMode )
 {
-	ApplyCfgValues( textureConfig, ARRAY_SIZE( textureConfig ), eMode );
+	ApplyCfgValues( textureConfig, std::size( textureConfig ), eMode );
 }
 
 EConfigValue GetFSAAMode()
 {
-	return FindCfgMode( fsaaConfig, ARRAY_SIZE( fsaaConfig ) );
+	return FindCfgMode( fsaaConfig, std::size( fsaaConfig ) );
 }
 void SetFSAAMode( EConfigValue eMode )
 {
-	ApplyCfgValues( fsaaConfig, ARRAY_SIZE( fsaaConfig ), eMode );
+	ApplyCfgValues( fsaaConfig, std::size( fsaaConfig ), eMode );
 }
 
 static void CommandGfxAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )

@@ -298,7 +298,7 @@ void CTransformStack::PrepareClipPlanes()
 
 void CTransformStack::AddClipPlane( const CVec4 &v )
 {
-	ASSERT( nClipPlanes < ARRAY_SIZE(viewFrustrum) );
+	ASSERT( nClipPlanes < std::size(viewFrustrum) );
 	viewFrustrum[ nClipPlanes++ ] = v;
 	nClipFlags[0] = ( 1 << nClipPlanes ) - 1;
 }
@@ -466,7 +466,7 @@ bool CTransformStack::PushClipHint( const SSphere &s )
 			nFlags &= ~nTest;
 	}
 	nClipFlags[ ++nClipFlagsPtr ] = nFlags;
-	ASSERT( nClipFlagsPtr < ARRAY_SIZE(nClipFlags) );
+	ASSERT( nClipFlagsPtr < std::size(nClipFlags) );
 	return true;
 }
 
@@ -489,7 +489,7 @@ bool CTransformStack::PushClipHint( const SBound &bv )
 			nFlags &= ~nTest;
 	}
 	nClipFlags[ ++nClipFlagsPtr ] = nFlags;
-	ASSERT( nClipFlagsPtr < ARRAY_SIZE(nClipFlags) );
+	ASSERT( nClipFlagsPtr < std::size(nClipFlags) );
 	if ( !bDoubt )
 		return true;
 	if ( CheckParallelepiped( 
