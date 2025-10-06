@@ -769,7 +769,7 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 	// Update values that are described in the slider
 	int nNumValues = pQualityOption->sliderValues[0].values.size();
 	int nValue = Float2Int( fParam*nNumValues - 0.5f );
-	nValue = Clamp( nValue, 0, nNumValues - 1 );			
+	nValue = Clamp( nValue, 0, nNumValues - 1 );
 
 	for ( int iSliderVariable = 0; iSliderVariable < pQualityOption->sliderValues.size(); ++iSliderVariable )
 	{

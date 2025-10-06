@@ -124,7 +124,7 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	if ( GetSplineDX() != VNULL2 )
 		GetUnit()->SetDirectionVec( GetSplineDX() );
 
-	float fSpeed = Min( _fSpeed, GetUnit()->GetMaxPossibleSpeed() );
+	float fSpeed = (std::min)( _fSpeed, GetUnit()->GetMaxPossibleSpeed() );
 	const CVec2 vResult = fabs( GetSplinePoint() - vCenter ) < fRemain ? GetSplinePoint() : vCenter + Norm( GetSplinePoint() - vCenter ) * fRemain;
 
 	return vResult;

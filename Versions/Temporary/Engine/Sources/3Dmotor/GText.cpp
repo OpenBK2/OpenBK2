@@ -383,13 +383,13 @@ void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 	else if ( wsTag.compare( L"lb" ) == 0 )
 	{
 		fLineWidth += sFontInfo.pInfo->GetChar( L'<' ).nWidth * sFontInfo.scale.x;
-		fLineHeight = Max( fLineHeight, sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y );
+		fLineHeight = (std::max)( fLineHeight, sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y );
 		chunksList.push_back( SChunk( CHAR_ALNUM, -1, sState, L"<" ) );
 	}
 	else if ( wsTag.compare( L"rb" ) == 0 )
 	{
 		fLineWidth += sFontInfo.pInfo->GetChar( L'>' ).nWidth * sFontInfo.scale.x;
-		fLineHeight = Max( fLineHeight, sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y );
+		fLineHeight = (std::max)( fLineHeight, sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y );
 		chunksList.push_back( SChunk( CHAR_ALNUM, -1, sState, L">" ) );
 	}
 	else if ( wsTag.compare( L"left" ) == 0 )

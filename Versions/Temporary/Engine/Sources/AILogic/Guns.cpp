@@ -173,7 +173,7 @@ float CBasicGun::GetFireRange( float fZ ) const
 	if (	GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE &&
 				!pStats->IsAviation() && ( pStats->etype != RPG_TYPE_ART_AAGUN || fZ == 0.0f ) )
 	{
-		return Min( GetFireRangeMax(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
+		return (std::min)( GetFireRangeMax(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 	}
 	else
 		return GetFireRangeMax();
@@ -202,7 +202,7 @@ bool CBasicGun::InFireRange( CAIUnit *pTarget ) const
 	else
 	{
 		if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
-			fMaxRange = Min( GetFireRange( pTarget->GetZ() ), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
+			fMaxRange = (std::min)( GetFireRange( pTarget->GetZ() ), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 		else
 			fMaxRange = GetFireRange( pTarget->GetZ() );
 
@@ -391,7 +391,7 @@ void CBasicGun::Aiming()
 				{
 					const float fZ = GetHeights()->GetVisZ( target.x, target.y );
 					const float fDisp = GetDispByRadius( this, fabs( pOwner->GetCenterPlain() - target ) );
-					z = Max( fZ, NRandom::Random( z - fDisp, z + fDisp ) );
+					z = (std::max)( fZ, NRandom::Random( z - fDisp, z + fDisp ) );
 				}
 			}
 
@@ -480,7 +480,7 @@ void CBasicGun::Shooting()
 		pCommonGunInfo->lastShoot += GetFireRate();
 		
 		// Subtract appropriate number of shells
-		pCommonGunInfo->nAmmo -= Min( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );
+		pCommonGunInfo->nAmmo -= (std::min)( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );
 		pOwner->CheckAmmoStatus();
 
 		CPtr<CBuilding> pBuilding = GetMountBuilding();
@@ -886,7 +886,7 @@ bool CBasicGun::CanShootWOGunTurn( CAIUnit *pEnemy, const BYTE cDeltaAngle )
 const NTimer::STime CBasicGun::GetRestTimeOfRelax() const
 {
 	return 
-		Max( GetRelaxTime() - ( curTime - pCommonGunInfo->lastShoot ), 0.0f );
+		(std::max)( GetRelaxTime() - ( curTime - pCommonGunInfo->lastShoot ), 0.0f );
 }
 
 bool CBasicGun::AnalyzeLimitedAngle( class CCommonUnit *pUnit, const CVec2 &point ) const
@@ -1302,7 +1302,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 #endif
 	const CVec2 vOwnerCenter = pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform );
 	const float fOwnerZ( pOwner->GetZ() );
-	const int nShotsAtOnce = Min( GetOwner()->GetMultiShot(), GetNAmmo() );
+	const int nShotsAtOnce = (std::min)( GetOwner()->GetMultiShot(), GetNAmmo() );
 	for ( int i = 0; i < nShotsAtOnce; ++i )
 	{
 		switch ( eType )
@@ -1313,7 +1313,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				Normalize( &vDir );
 				const CVec2 vExplosion( vOwnerCenter + vDir * GetFireRangeMax() );
 				// to disallow kill themselves
-				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + Min( GetWeapon()->fRangeMin, pWeapon->shells[nShellType].fArea ) ) );
+				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, pWeapon->shells[nShellType].fArea ) ) );
 				
 				CPtr<CFlameThrowerExpl> pExpl = new CFlameThrowerExpl( pOwner, this, CVec3( vExplosion, z ), CVec3( vStart, fOwnerZ ), nShellType );
 				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
@@ -1524,7 +1524,7 @@ WORD CTurretGun::CalcVerticalAngle( const class CVec3 &pt ) const
 	const WORD wZDesiredAngle = GetZAngle( pt ) + GetTrajectoryZAngle( pt );
 
 	const WORD wConstraint = GetVerTurnConstraint() + 65535/4 * 3;
-	return Min( wConstraint, wZDesiredAngle );
+	return (std::min)( wConstraint, wZDesiredAngle );
 }
 
 bool CTurretGun::TurnByVer( const CVec2 &vEnemyCenter, const float zDiff )
@@ -1634,7 +1634,7 @@ bool CTurretGun::TurnByBestWay( const WORD wDirToEnemy )
 	{
 		const float fBaseTurnTime = (float)wBaseTurn / fBaseSpeed;
 		const float fTurretTurnTime = (float)DirsDifference( wTurretCurAngle, 0 ) / fTurretSpeed;
-		const float fTogetherTime = Max( fBaseTurnTime, fTurretTurnTime );
+		const float fTogetherTime = (std::max)( fBaseTurnTime, fTurretTurnTime );
 
 		const WORD wTurretTurn = DirsDifference( wTurretGlobalAngle, wDirToEnemy );
 		const float fTurretOnlyTime = (float)wTurretTurn / fTurretSpeed;
@@ -1773,13 +1773,13 @@ const NTimer::STime CTurretGun::GetTimeToShootToPoint( const CVec3 &vPoint ) con
 		1.0f * ( DirsDifference( wCurHorAngle, GetDirectionByVector( xDiff,yDiff ) )) / fHorRotSpeed;
 	const NTimer::STime timeVerTurn = 
 		1.0f * ( DirsDifference( GetDirectionByVector( fabs(xDiff,yDiff), zDiff ), wCurVerAngle ) ) / fVertRotSpeed;
-	const NTimer::STime timeToTurn = Max( timeVerTurn, timeHorTurn );
+	const NTimer::STime timeToTurn = (std::max)( timeVerTurn, timeHorTurn );
 
 	const float fTime = 
 					timeToTurn + GetTimeToShoot( vPoint );
 
 	// time is rounded to segment duration
-	return Max( fTime, GetRelaxTime( false ) + CBasicGun::GetAimTime( false ) ) / SConsts::AI_SEGMENT_DURATION * SConsts::AI_SEGMENT_DURATION;
+	return (std::max)( fTime, GetRelaxTime( false ) + CBasicGun::GetAimTime( false ) ) / SConsts::AI_SEGMENT_DURATION * SConsts::AI_SEGMENT_DURATION;
 }
 
 bool CTurretGun::AnalyzeTurning()

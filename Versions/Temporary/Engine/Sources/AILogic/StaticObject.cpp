@@ -237,7 +237,7 @@ bool CExistingObject::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, 
 void CExistingObject::BurnSegment()
 {
 	const float fDamage = GetStats()->fMaxHP * SConsts::BURNING_SPEED * 0.01f * SConsts::AI_SEGMENT_DURATION;
-	fHP = Max( GetMinHP(), fHP - fDamage );
+	fHP = (std::max)( GetMinHP(), fHP - fDamage );
 	SetAlive( GetHitPoints() > 0.0f );
 	if ( fHP <= 0 )
 		Die( fDamage );

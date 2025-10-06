@@ -90,10 +90,10 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 			const CVec2 vRawVert = profile.polygons[i].verts[j];
 			const CVec2 vVert = vCenter + (vRawVert ^ vRotation);
 
-			vLeftDown.x = Min( vLeftDown.x, vVert.x );
-			vLeftDown.y = Min( vLeftDown.y, vVert.y );
-			vRightUp.x = Max( vRightUp.x, vVert.x );
-			vRightUp.y = Max( vRightUp.y, vVert.y );
+			vLeftDown.x = (std::min)( vLeftDown.x, vVert.x );
+			vLeftDown.y = (std::min)( vLeftDown.y, vVert.y );
+			vRightUp.x = (std::max)( vRightUp.x, vVert.x );
+			vRightUp.y = (std::max)( vRightUp.y, vVert.y );
 			bInitted = true;
 		}
 	}

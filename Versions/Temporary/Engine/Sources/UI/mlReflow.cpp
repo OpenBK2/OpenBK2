@@ -196,7 +196,7 @@ void CReflowState::Finalize()
 			else
 				fX += visSize.x;
 
-			size.x = Max( size.x, fX );
+			size.x = (std::max)( size.x, fX );
 		}
 	}
 }
@@ -208,7 +208,7 @@ void CReflowState::ProcessWraped()
 		const CTPoint<float> &visSize = (*iTemp)->GetSize();
 
 		(*iTemp)->SetPosition( CTPoint<float>( rangeLeft.fValue, size.y ) );
-		size.x = Max( size.x, rangeLeft.fValue + visSize.x );
+		size.x = (std::max)( size.x, rangeLeft.fValue + visSize.x );
 
 		rangeLeft.fValue += visSize.x;
 		rangeLeft.fHeight = max( rangeLeft.fHeight, size.y + visSize.y );
@@ -219,7 +219,7 @@ void CReflowState::ProcessWraped()
 		const CTPoint<float> &visSize = (*iTemp)->GetSize();
 
 		(*iTemp)->SetPosition( CTPoint<float>( rangeRight.fValue - visSize.x, size.y ) );
-		size.x = Max( size.x, rangeRight.fValue );
+		size.x = (std::max)( size.x, rangeRight.fValue );
 
 		rangeRight.fValue -= visSize.x;
 		rangeRight.fHeight = max( rangeRight.fHeight, size.y + visSize.y );

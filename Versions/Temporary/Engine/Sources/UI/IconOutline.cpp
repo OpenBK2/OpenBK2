@@ -173,8 +173,8 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 				// enlarge size estimate
 				if ( pMask && eUsage==NGfx::TEXTURE_2D )
 				{
-					nSizeXAdd = Max( nSizeXAdd, pMask->nWidth );
-					nSizeYAdd = Max( nSizeYAdd, pMask->nHeight );
+					nSizeXAdd = (std::max)( nSizeXAdd, pMask->nWidth );
+					nSizeYAdd = (std::max)( nSizeYAdd, pMask->nHeight );
 				}
 				//else
 				//	ASSERT( 0 );
@@ -189,15 +189,15 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 				}
 				cmd.vPos.x += nSizeXAdd / 2;
 				cmd.vPos.y += nSizeYAdd / 2;
-				int nMinX = Min( cmd.vPos.x, cmd.vPos.x + cmd.vSize.x );
-				int nMaxX = Max( cmd.vPos.x, cmd.vPos.x + cmd.vSize.x );
-				int nMinY = Min( cmd.vPos.y, cmd.vPos.y + cmd.vSize.y );
-				int nMaxY = Max( cmd.vPos.y, cmd.vPos.y + cmd.vSize.y );
+				int nMinX = (std::min)( cmd.vPos.x, cmd.vPos.x + cmd.vSize.x );
+				int nMaxX = (std::max)( cmd.vPos.x, cmd.vPos.x + cmd.vSize.x );
+				int nMinY = (std::min)( cmd.vPos.y, cmd.vPos.y + cmd.vSize.y );
+				int nMaxY = (std::max)( cmd.vPos.y, cmd.vPos.y + cmd.vSize.y );
 				ASSERT( nMinY >= 0 && nMinY >= 0 );
 				if ( !bIsFixedSize )
 				{
-					resSize.x = Max( resSize.x, nMaxX );
-					resSize.y = Max( resSize.y, nMaxY );
+					resSize.x = (std::max)( resSize.x, nMaxX );
+					resSize.y = (std::max)( resSize.y, nMaxY );
 				}
 				else
 				{
@@ -226,8 +226,8 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 					CTPoint<int> sz = pML->GetSize();
 					cmd.vSize.x = sz.x;
 					cmd.vSize.y = sz.y;
-					resSize.x = Max( resSize.x, Float2Int( cmd.vPos.x + cmd.vSize.x ) );
-					resSize.y = Max( resSize.y, Float2Int( cmd.vPos.y + cmd.vSize.y ) );
+					resSize.x = (std::max)( resSize.x, Float2Int( cmd.vPos.x + cmd.vSize.x ) );
+					resSize.y = (std::max)( resSize.y, Float2Int( cmd.vPos.y + cmd.vSize.y ) );
 				}
 				resSize.x *= CIconOutliner::GetTextStretchX();
 				cmd.vSize.x *= CIconOutliner::GetTextStretchX();

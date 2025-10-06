@@ -10,7 +10,7 @@
 
 void CFreeIds::Init( const int nElements )
 {
-	nexts.clear(); nexts.resize( Max( nElements, 2 ), 0 );
+	nexts.clear(); nexts.resize( (std::max)( nElements, 2 ), 0 );
 	givenIDs.clear();
 
 	firstEl = 1;

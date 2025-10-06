@@ -4,7 +4,7 @@ int nFireRate;
 float GetRandomDamage() const { return GetPositiveRandom( fDamagePower, nDamageRandom ); }
 int GetRandomPiercing() const { return GetPositiveRandom( nPiercing, nPiercingRandom ); }
 int GetMaxPossiblePiercing() const { return nPiercing + nPiercingRandom; }
-int GetMinPossiblePiercing() const { return Max( 0, nPiercing - nPiercingRandom ); }
+int GetMinPossiblePiercing() const { return (std::max)( 0, nPiercing - nPiercingRandom ); }
 const bool HasCraters() const { return pCraters != 0; }
 //const string& GetRandomCrater() const { return craters[rand() % craters.size()]; }
 // преобразовать из человеческих единиц в AI

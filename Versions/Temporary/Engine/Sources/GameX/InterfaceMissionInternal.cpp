@@ -1559,7 +1559,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 	{
 		int nSpeed = (chatMessages.front().nVisibleTime < CHAT_MESSAGE_MAX_VISIBLE_TIME) ?
 			CHAT_MESSAGE_SPEED : CHAT_MESSAGE_MAX_SPEED;
-		int nDelta = Max( (int)1, (int)(nDeltaTime * nSpeed / 1000) );
+		int nDelta = (std::max)( (int)1, (int)(nDeltaTime * nSpeed / 1000) );
 		for ( std::list<SChatMessage>::iterator it = chatMessages.begin(); it != chatMessages.end(); )
 		{
 			SChatMessage &el = *it;
@@ -1581,7 +1581,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 {
 	const int nMapSizeX = Singleton<IAILogic>()->GetMiniMapWarFogSizeX();
 	const int nMapSizeY = Singleton<IAILogic>()->GetMiniMapWarFogSizeY();
-	const int nMaxMapSize = Max( nMapSizeX, nMapSizeY );
+	const int nMaxMapSize = (std::max)( nMapSizeX, nMapSizeY );
 	const int nWarFogSize = GetNextPow2( nMaxMapSize );
 	const float fWarFogCellSize = AI_TILES_IN_VIS_TILE * VIS_TILES_IN_PATCH * VIS_TILE_SIZE / AI_TILES_IN_PATCH;
 
@@ -1952,7 +1952,7 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	pTimeRemainingTitle->ShowWindow( nTimelimit != -1 );
 	if ( nTimelimit != -1 )
 	{
-		const int nTimeRemaining =  Max( 0, int(nTimelimit - Singleton<IGameTimer>()->GetGameTime()/1000) );
+		const int nTimeRemaining =  (std::max)( 0, int(nTimelimit - Singleton<IGameTimer>()->GetGameTime()/1000) );
 		pTimeRemaining->SetText( NStr::ToUnicode( StrFmt( "%i", nTimeRemaining ) ) );
 	}
 

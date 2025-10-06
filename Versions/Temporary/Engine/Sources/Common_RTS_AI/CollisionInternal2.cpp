@@ -152,14 +152,14 @@ const bool CheckRect( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const CVec2 
 const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const SRect &unitRect, const CBasePathUnit *pCand, const SRect &candRect, float *pfDistance )
 {
 	const float fUnitSpeed = ( pCand->IsInfantry() ) ? pUnit->GetMaxPossibleSpeed() : pUnit->GetSpeed();
-	const float fMaxSpeed = Max( fUnitSpeed * unitRect.lengthAhead, pCand->GetSpeed() * candRect.lengthAhead );
-	const float fFullSpeedAhead = Max( fMaxSpeed * FULL_SPEED_TIME, MIN_FULL_SPEED_LENGTH );
+	const float fMaxSpeed = (std::max)( fUnitSpeed * unitRect.lengthAhead, pCand->GetSpeed() * candRect.lengthAhead );
+	const float fFullSpeedAhead = (std::max)( fMaxSpeed * FULL_SPEED_TIME, MIN_FULL_SPEED_LENGTH );
 
 	const SRect unitFullSpeedRect( GetSpeedRect( pUnit, fFullSpeedAhead ) );
 	const SRect candFullSpeedRect( GetSpeedRect( pCand, fFullSpeedAhead ) );
 
-	const SRect unitSpeedRect( GetUnitRect( pUnit, Max( SPEED_TIME * pUnit->GetSpeed(), MIN_SPEED_LENGTH ) ) );
-	const SRect candSpeedRect( GetUnitRect( pCand, Max( SPEED_TIME * pCand->GetSpeed(), MIN_SPEED_LENGTH ) ) );
+	const SRect unitSpeedRect( GetUnitRect( pUnit, (std::max)( SPEED_TIME * pUnit->GetSpeed(), MIN_SPEED_LENGTH ) ) );
+	const SRect candSpeedRect( GetUnitRect( pCand, (std::max)( SPEED_TIME * pCand->GetSpeed(), MIN_SPEED_LENGTH ) ) );
 
 	//DebugInfoManager()->DrawRect( pUnit->GetUniqueID()*100, unitRect, 204.0f, NDebugInfo::WHITE );
 	//DebugInfoManager()->DrawRect( pCand->GetUniqueID()*100, candRect, 204.0f, NDebugInfo::WHITE );
@@ -212,7 +212,7 @@ const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const
 		}
 		else if ( bUnitFullSpeedRectCand && bCandFullSpeedRectUnit )
 		{
-			*pfDistance = Min( fabs( unitFullSpeedRect, candRect ), fabs( candFullSpeedRect, unitRect ) );
+			*pfDistance = (std::min)( fabs( unitFullSpeedRect, candRect ), fabs( candFullSpeedRect, unitRect ) );
 			if ( Cross( unitRect.dir,pCand->GetCenterPlain() - pUnit->GetCenterPlain() ) > 0.0f && !pCand->IsInfantry() )
 				return NCollision::ECT_FIRST_GIVEPLACE;
 			else
@@ -332,7 +332,7 @@ void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 		timeToWait = 0;
 	else
 		timeToWait -= timeDiff;
-	const SRect unitSpeedRect( GetUnitRect( GetUnit(), Max( SPEED_TIME * GetUnit()->GetSpeed(), MIN_SPEED_LENGTH ) ) );
+	const SRect unitSpeedRect( GetUnitRect( GetUnit(), (std::max)( SPEED_TIME * GetUnit()->GetSpeed(), MIN_SPEED_LENGTH ) ) );
 	const SRect pusherRect(GetUnitRect( GetPushUnit(), 1.0f ) );
 	bIsSolved = !unitSpeedRect.IsIntersected( pusherRect ) || timeToWait == 0;
 }

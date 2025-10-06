@@ -36,8 +36,8 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 
 	if ( pTexture )
 	{
-		rc.fSizeX = Min( float(pos.Width()), float(size.x) );
-		rc.fSizeY = Min( float(pos.Height()), float(size.y) );
+		rc.fSizeX = (std::min)( float(pos.Width()), float(size.x) );
+		rc.fSizeY = (std::min)( float(pos.Height()), float(size.y) );
 
 		NUITools::ApplyTextureAllign( pStats->eTextureX, pos.Width(), size.x, 
 			&rc.sTex.rcTexRect.x1, &rc.sTex.rcTexRect.x2, &rc.sTex.rcTexRect.x1 );

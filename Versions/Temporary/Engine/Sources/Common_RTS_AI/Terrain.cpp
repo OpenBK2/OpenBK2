@@ -272,10 +272,10 @@ void CTerrain::AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPas
 
 			soil[tile.y][tile.x] = cSoilParams;
 
-			downX = Min( downX, tile.x - pAIMap->GetMaxUnitTileRadius() - 1 );
-			downY = Min( downY, tile.y - pAIMap->GetMaxUnitTileRadius() - 1 );
-			upX = Max( upX, tile.x + pAIMap->GetMaxUnitTileRadius() + 1 );
-			upY = Max( upY, tile.y + pAIMap->GetMaxUnitTileRadius() + 1 );
+			downX = (std::min)( downX, tile.x - pAIMap->GetMaxUnitTileRadius() - 1 );
+			downY = (std::min)( downY, tile.y - pAIMap->GetMaxUnitTileRadius() - 1 );
+			upX = (std::max)( upX, tile.x + pAIMap->GetMaxUnitTileRadius() + 1 );
+			upY = (std::max)( upY, tile.y + pAIMap->GetMaxUnitTileRadius() + 1 );
 
 			if ( ( aiClass & EAC_WATER ) != EAC_WATER )
 			{				
@@ -286,10 +286,10 @@ void CTerrain::AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPas
 		}
 	}
 
-	downX = Max( 0, downX );
-	downY = Max( 0, downY );
-	upX = Min( pAIMap->GetSizeX() - 1, upX );
-	upY = Min( pAIMap->GetSizeY() - 1, upY );
+	downX = (std::max)( 0, downX );
+	downY = (std::max)( 0, downY );
+	upX = (std::min)( pAIMap->GetSizeX() - 1, upX );
+	upY = (std::min)( pAIMap->GetSizeY() - 1, upY );
 
 	if ( aiClass == EAC_NONE )
 	{
@@ -385,26 +385,26 @@ void CTerrain::InitMaxesDefault( const int nSizeX, const int nSizeY )
 
 void CTerrain::InitMaxes( const int _nX1, const int _nX2, const int _nY1, const int _nY2 )
 {
-	const int nX1 = Max( 0, 2*_nX1 - pAIMap->GetMaxUnitTileRadius() );
-	const int nX2 = Min( pAIMap->GetSizeX(), 2*_nX2 + pAIMap->GetMaxUnitTileRadius() );
-	const int nY1 = Max( 0, 2*_nY1 - pAIMap->GetMaxUnitTileRadius() );
-	const int nY2 = Min( pAIMap->GetSizeY(), 2*_nY2 + pAIMap->GetMaxUnitTileRadius() );
+	const int nX1 = (std::max)( 0, 2*_nX1 - pAIMap->GetMaxUnitTileRadius() );
+	const int nX2 = (std::min)( pAIMap->GetSizeX(), 2*_nX2 + pAIMap->GetMaxUnitTileRadius() );
+	const int nY1 = (std::max)( 0, 2*_nY1 - pAIMap->GetMaxUnitTileRadius() );
+	const int nY2 = (std::min)( pAIMap->GetSizeY(), 2*_nY2 + pAIMap->GetMaxUnitTileRadius() );
 
 	for ( int y = nY1; y < nY2; ++y )
 	{
 		for ( int x = nX1; x < nX2; ++x )
 		{
-			const int dX = Min( x, pAIMap->GetSizeX() - x - 1 );
-			const int dY = Min( y, pAIMap->GetSizeY() - y - 1 );
+			const int dX = (std::min)( x, pAIMap->GetSizeX() - x - 1 );
+			const int dY = (std::min)( y, pAIMap->GetSizeY() - y - 1 );
 
 			if ( dX < pAIMap->GetMaxUnitTileRadius() || dY < pAIMap->GetMaxUnitTileRadius() )
 			{
 				for ( int i = 0; i < GetClassIndex(EAC_COUNT); ++i )
 				{
-					maxes[0][i].SetData( x, y, Min( dX, dY ) + 1 );
-					maxes[1][i].SetData( x, y, Min( dX, dY ) + 1 );
-					maxesSmooth[0][i].SetData( x, y, Min( dX, dY ) + 1 );
-					maxesSmooth[1][i].SetData( x, y, Min( dX, dY ) + 1 );
+					maxes[0][i].SetData( x, y, (std::min)( dX, dY ) + 1 );
+					maxes[1][i].SetData( x, y, (std::min)( dX, dY ) + 1 );
+					maxesSmooth[0][i].SetData( x, y, (std::min)( dX, dY ) + 1 );
+					maxesSmooth[1][i].SetData( x, y, (std::min)( dX, dY ) + 1 );
 				}
 			}
 			else
@@ -461,19 +461,19 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 			++unitsBuf[1 - nWater][tile.y][tile.x];
 			if ( unitsBuf[1 - nWater][tile.y][tile.x] == 1 )
 			{
-				downX = Min( downX, tile.x );
-				downY = Min( downY, tile.y );
-				upX = Max( upX, tile.x );
-				upY = Max( upY, tile.y );
+				downX = (std::min)( downX, tile.x );
+				downY = (std::min)( downY, tile.y );
+				upX = (std::max)( upX, tile.x );
+				upY = (std::max)( upY, tile.y );
 			}
 		}
 		++unitsBuf[nWater][tile.y][tile.x];
 		if ( unitsBuf[nWater][tile.y][tile.x] == 1 )
 		{
-			downX = Min( downX, tile.x );
-			downY = Min( downY, tile.y );
-			upX = Max( upX, tile.x );
-			upY = Max( upY, tile.y );
+			downX = (std::min)( downX, tile.x );
+			downY = (std::min)( downY, tile.y );
+			upX = (std::max)( upX, tile.x );
+			upY = (std::max)( upY, tile.y );
 		}
 	}
 
@@ -520,19 +520,19 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 				--unitsBuf[1 - nWater][tile.y][tile.x];
 				if ( unitsBuf[1 - nWater][tile.y][tile.x] == 0 )
 				{
-					downX = Min( downX, tile.x );
-					downY = Min( downY, tile.y );
-					upX = Max( upX, tile.x );
-					upY = Max( upY, tile.y );
+					downX = (std::min)( downX, tile.x );
+					downY = (std::min)( downY, tile.y );
+					upX = (std::max)( upX, tile.x );
+					upY = (std::max)( upY, tile.y );
 				}
 			}
 			--unitsBuf[nWater][tile.y][tile.x];
 			if ( unitsBuf[nWater][tile.y][tile.x] == 0 )
 			{
-				downX = Min( downX, tile.x );
-				downY = Min( downY, tile.y );
-				upX = Max( upX, tile.x );
-				upY = Max( upY, tile.y );
+				downX = (std::min)( downX, tile.x );
+				downY = (std::min)( downY, tile.y );
+				upX = (std::max)( upX, tile.x );
+				upY = (std::max)( upY, tile.y );
 			}
 		}
 
@@ -562,17 +562,17 @@ struct SUpDownFinder
 
 	void operator()( const SObjTileInfo &el )
 	{
-		downTile.x = Min( downTile.x, el.tile.x );
-		downTile.y = Min( downTile.y, el.tile.y );
-		upTile.x = Max( upTile.x, el.tile.x );
-		upTile.y = Max( upTile.y, el.tile.y );
+		downTile.x = (std::min)( downTile.x, el.tile.x );
+		downTile.y = (std::min)( downTile.y, el.tile.y );
+		upTile.x = (std::max)( upTile.x, el.tile.x );
+		upTile.y = (std::max)( upTile.y, el.tile.y );
 	}
 	void operator()( const SVector &el )
 	{
-		downTile.x = Min( downTile.x, el.x );
-		downTile.y = Min( downTile.y, el.y );
-		upTile.x = Max( upTile.x, el.x );
-		upTile.y = Max( upTile.y, el.y );
+		downTile.x = (std::min)( downTile.x, el.x );
+		downTile.y = (std::min)( downTile.y, el.y );
+		upTile.x = (std::max)( upTile.x, el.x );
+		upTile.y = (std::max)( upTile.y, el.y );
 	}
 };
 
@@ -663,7 +663,7 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 				tmpUnlockUnitsBuf.back().tile = tile;
 				tmpUnlockUnitsBuf.back().nUnitsBuf = unitsBuf[nWater][tile.y][tile.x];
 				tmpUnlockUnitsBuf.back().aiClass = buf[tile.y][tile.x];
-				unitsBuf[nWater][tile.y][tile.x] = Max( 0, unitsBuf[nWater][tile.y][tile.x] - nDecrease );
+				unitsBuf[nWater][tile.y][tile.x] = (std::max)( 0, unitsBuf[nWater][tile.y][tile.x] - nDecrease );
 				//buf[tile.y][tile.x] = EAC_NONE;
 			}
 		}
@@ -914,10 +914,10 @@ void CTerrain::UnlockTile( const int x, const int y, const EAIClasses aiClasses 
 
 void IncreaseUpdateRect( int *pDownX, int *pUpX, int *pDownY, int *pUpY, CAIMap *pAIMap )
 {
-	*pDownX = Max( *pDownX - pAIMap->GetMaxUnitTileRadius() - 1, 0 );
-	*pDownY = Max( *pDownY - pAIMap->GetMaxUnitTileRadius() - 1, 0 );
-	*pUpX = Min( *pUpX + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeX() - 1 );
-	*pUpY = Min( *pUpY + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeY() - 1 );
+	*pDownX = (std::max)( *pDownX - pAIMap->GetMaxUnitTileRadius() - 1, 0 );
+	*pDownY = (std::max)( *pDownY - pAIMap->GetMaxUnitTileRadius() - 1, 0 );
+	*pUpX = (std::min)( *pUpX + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeX() - 1 );
+	*pUpY = (std::min)( *pUpY + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeY() - 1 );
 }
 
 void CTerrain::UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int upY, const EAIClasses aiClass )
@@ -1180,10 +1180,10 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 		for ( int x = _xMin; x < _xMax; ++x )
 			thisMaxesSmooth.SetData( x, y, thisMaxes.GetData( x, y ) );
 
-	const int xMin = Max( _xMin, 1 );
-	const int yMin = Max( _yMin, 1 );
-	const int xMax = Min( _xMax, pAIMap->GetSizeX() - 2 );
-	const int yMax = Min( _yMax, pAIMap->GetSizeY() - 2 );
+	const int xMin = (std::max)( _xMin, 1 );
+	const int yMin = (std::max)( _yMin, 1 );
+	const int xMax = (std::min)( _xMax, pAIMap->GetSizeX() - 2 );
+	const int yMax = (std::min)( _yMax, pAIMap->GetSizeY() - 2 );
 	
 	// избавляемся от "левых" залоканных мест
   for ( int y = yMin; y <= yMax; ++y )
@@ -1736,10 +1736,10 @@ void CTerrain::RemoveTemporaryLock( const int nLockID )
 		for ( std::list<STmpLockInfo2>::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
 		{
 			buf[it->tile.y][it->tile.x] = it->aiClass;
-			downTile.x = Min( downTile.x, it->tile.x );
-			downTile.y = Min( downTile.y, it->tile.y );
-			upTile.x = Max( upTile.x, it->tile.x );
-			upTile.y = Max( upTile.y, it->tile.y );
+			downTile.x = (std::min)( downTile.x, it->tile.x );
+			downTile.y = (std::min)( downTile.y, it->tile.y );
+			upTile.x = (std::max)( upTile.x, it->tile.x );
+			upTile.y = (std::max)( upTile.y, it->tile.y );
 
 		}
 		tmpLockUnitsMap.erase( pos );

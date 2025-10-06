@@ -62,13 +62,13 @@ void FillIntersectionResults( std::vector<SInterval> *pRes,
 	std::sort( enter.begin(), enter.end(), CmpCrosses );
 	std::sort( exit.begin(), exit.end(), CmpCrosses );
 	CalcResult( &enter, &exit, bTerrain, MakeCross, CmpCrosses );
-	for ( int i = 0; i < Min( enter.size(), exit.size() ); ++i )
+	for ( int i = 0; i < (std::min)( enter.size(), exit.size() ); ++i )
 	{
 		// due to cheating with degenerate cases and computation errors this might happen
 		//ASSERT( enter[i].fT <= exit[i].fT );
 		if ( enter[i].fT > exit[i].fT )
 			OutputDebugString( "AI tracing, something went wrong\n" );
-		exit[i].fT = Max( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
+		exit[i].fT = (std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
 }	
@@ -83,9 +83,9 @@ void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
 	std::sort( enter.begin(), enter.end() );
 	std::sort( exit.begin(), exit.end() );
 	CalcResult( &enter, &exit, bTerrain, MakeFloat, CmpFloat );
-	for ( int i = 0; i < Min( enter.size(), exit.size() ); ++i )
+	for ( int i = 0; i < (std::min)( enter.size(), exit.size() ); ++i )
 	{
-		exit[i] = Max( enter[i], exit[i] ); // this is it Beavis, correct wrong results so it seams less buggy
+		exit[i] = (std::max)( enter[i], exit[i] ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SSimpleInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
 }

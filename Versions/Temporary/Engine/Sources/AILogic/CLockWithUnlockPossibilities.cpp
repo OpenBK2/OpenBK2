@@ -18,7 +18,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 		NI_ASSERT( formerTilesType.size() == 0, "wrong call" );
 		// найти количество юнитов, которые могут быть на нашем пути.
 		int nUnits = 0;
-		for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, bigRect.center, Max( bigRect.width, Max(bigRect.lengthAhead,bigRect.lengthBack) ) );
+		for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, bigRect.center, (std::max)( bigRect.width, (std::max)(bigRect.lengthAhead,bigRect.lengthBack) ) );
 					!iter.IsFinished(); iter.Iterate() )
 		{
 			if ( bigRect.IsIntersected( (*iter)->GetUnitRect() ) ) 

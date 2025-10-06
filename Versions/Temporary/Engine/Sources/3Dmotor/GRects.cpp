@@ -27,10 +27,10 @@ bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex,
 	CRectLayout::STextureCoord &sTex = *pTex;
 
 	CTRect<float> sSourceRect;
-	sSourceRect.x1 = sPosition.x + Min( sRect.fX, sRect.fX + sRect.fSizeX );
-	sSourceRect.y1 = sPosition.y + Min( sRect.fY, sRect.fY + sRect.fSizeY );
-	sSourceRect.x2 = sPosition.x + Max( sRect.fX, sRect.fX + sRect.fSizeX );
-	sSourceRect.y2 = sPosition.y + Max( sRect.fY, sRect.fY + sRect.fSizeY );
+	sSourceRect.x1 = sPosition.x + (std::min)( sRect.fX, sRect.fX + sRect.fSizeX );
+	sSourceRect.y1 = sPosition.y + (std::min)( sRect.fY, sRect.fY + sRect.fSizeY );
+	sSourceRect.x2 = sPosition.x + (std::max)( sRect.fX, sRect.fX + sRect.fSizeX );
+	sSourceRect.y2 = sPosition.y + (std::max)( sRect.fY, sRect.fY + sRect.fSizeY );
 
 	sClippedRect = sSourceRect;
 	sClippedRect.x1 = Clamp( sClippedRect.x1, sWindow.x1, sWindow.x2 );

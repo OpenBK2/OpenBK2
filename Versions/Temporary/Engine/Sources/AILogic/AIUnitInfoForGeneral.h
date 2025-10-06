@@ -40,7 +40,7 @@ public:
 	void SetRegisteredPos( const CVec2 &vPos ) { vLastRegisteredGeneralPos = vPos; }
 	const CVec2& GetRegisteredPos() const { return vLastRegisteredGeneralPos; }
 
-	const NTimer::STime GetLastTimeOfVisibility() const { return Max( lastVisibleAntiArtTime, lastVisibleTime ); }
+	const NTimer::STime GetLastTimeOfVisibility() const { return (std::max)( lastVisibleAntiArtTime, lastVisibleTime ); }
 	void SetLastVisibleTime( const NTimer::STime time ) { lastVisibleTime = time; lastVisibleAntiArtTime = time; }
 	
 	bool IsLastVisibleAntiArt() const { return lastVisibleAntiArtTime > lastVisibleTime; }

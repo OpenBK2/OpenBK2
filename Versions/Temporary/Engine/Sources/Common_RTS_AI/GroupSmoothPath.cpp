@@ -114,7 +114,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 			NI_ASSERT( nCount <= pos->second.size(), StrFmt( "Too much units with priority %d (%d > %d)", nPriority, nCount, pos->second.size() ) );
 			if ( nCount <= pos->second.size() ) 
 			{
-				const int nSize = Min<int>( nCount, pos->second.size() );
+				const int nSize = (std::min<int>)( nCount, pos->second.size() );
 				CArray2D<float> distMatrix;
 				distMatrix.SetSizes( nSize, nSize );
 				{
@@ -177,15 +177,15 @@ void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells 
 		{
 			CCells newCells;
 			newCells.push_back( SCellInfo( cells[i].vCellPosition ) );
-			fMaxProjection = Max( newCells.back().fUnitProjShift, fMaxProjection );
-			fRadius = Max( fabs( vDir1 ^ newCells.back().vUnitShift ), fRadius );
+			fMaxProjection = (std::max)( newCells.back().fUnitProjShift, fMaxProjection );
+			fRadius = (std::max)( fabs( vDir1 ^ newCells.back().vUnitShift ), fRadius );
 			priorityCells[ cells[i].nPriority ] = newCells;
 		}
 		else
 		{
 			pos->second.push_back( SCellInfo( cells[i].vCellPosition ) );
-			fMaxProjection = Max( pos->second.back().fUnitProjShift, fMaxProjection );
-			fRadius = Max( fabs( vDir1 ^ pos->second.back().vUnitShift ), fRadius );
+			fMaxProjection = (std::max)( pos->second.back().fUnitProjShift, fMaxProjection );
+			fRadius = (std::max)( fabs( vDir1 ^ pos->second.back().vUnitShift ), fRadius );
 		}
 	}
 	geometries.push_back( SGeometry( priorityCells, fMaxProjection, fRadius ) );
@@ -222,7 +222,7 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 				const float fProjection = vShift * vDir1;
 				posCell->second[it->second.nCell].fUnitProjShift = fProjection;
 
-				fMaxProjection = Max( fMaxProjection, fProjection );
+				fMaxProjection = (std::max)( fMaxProjection, fProjection );
 			}
 			geometries[i].fMaxProjection = fMaxProjection;
 		}
@@ -234,7 +234,7 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( fMaxPathShift > 0.0f )
-		fSpeedCoeff = Min( 4.0f, Max( 1.0f, fMaxPathShift/GetAIMap()->GetTileSize() ) );
+		fSpeedCoeff = (std::min)( 4.0f, (std::max)( 1.0f, fMaxPathShift/GetAIMap()->GetTileSize() ) );
 
 	CVec2 vOldDirection = GetDirection();
 	CStandartSmoothPathBasis::Segment( timeDiff );

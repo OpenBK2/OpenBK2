@@ -37,7 +37,7 @@ int CStaticMembers::operator&( IBinSaver &saver )
 		saver.Add( 18 ,&objs );
 		int nMax = 0;
 		for ( std::unordered_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
-			nMax = Max( nMax, it->first );
+			nMax = (std::max)( nMax, it->first );
 
 		SLinkObjDataAutoMagic::pLinkObjData->link2object.resize( nMax + 1, 0 );
 		for ( std::unordered_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )

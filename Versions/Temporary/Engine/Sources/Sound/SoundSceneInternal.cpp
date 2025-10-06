@@ -355,13 +355,13 @@ void CSoundScene2D::UpdateCombatMap( const SIntThree &vCell, CSound *pSound )
 	{
 		const int nRadius = SSoundSceneConsts::COMBAT_SOUND_FEAR_RADIUS;
 
-		const SIntThree vMinPos( Max(vCell.x - nRadius, 0), 
-														 Max(vCell.y - nRadius, 0), 
-														 Max(vCell.z - nRadius, nMinZ ) );
+		const SIntThree vMinPos( (std::max)(vCell.x - nRadius, 0),
+														 (std::max)(vCell.y - nRadius, 0),
+														 (std::max)(vCell.z - nRadius, nMinZ ) );
 
-		const SIntThree vMaxPos( Min(vCell.x + nRadius, vLimit.x - 1), 
-														 Min(vCell.y + nRadius, vLimit.y - 1),
-														 Min(vCell.z + nRadius, vLimit.z - 1) );
+		const SIntThree vMaxPos( (std::min)(vCell.x + nRadius, vLimit.x - 1),
+														 (std::min)(vCell.y + nRadius, vLimit.y - 1),
+														 (std::min)(vCell.z + nRadius, vLimit.z - 1) );
 
 		SIntThree vCur;
 		for ( vCur.z = vMinPos.z; vCur.z < vMaxPos.z; ++vCur.z )
@@ -758,7 +758,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 			CSound & sound = *(*soundsIter);
 			if ( SFX_MIX_ALL == eMixType || sound.GetMixType() == eMixType )
 			{
-				nStartSample = Max( nStartSample, sound.GetSamplesPassed() );
+				nStartSample = (std::max)( nStartSample, sound.GetSamplesPassed() );
 				const NTimer::STime tmp = sound.GetBeginTime();
 				if ( tmp < nStartTime || nStartTime == 0 )
 					nStartTime = tmp; 

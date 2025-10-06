@@ -289,7 +289,7 @@ void CInterfaceCustomCampaign::UpdateDifficulty( const SCampaign *pCampaign, boo
 	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pCampaign->pCampaignDB->difficultyLevels;
 
 	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty : 
-		Max( 0, Min( CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
+		(std::max)( 0, (std::min)( CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
 
 	pDifficultyComboBox->ShowWindow( true );
 

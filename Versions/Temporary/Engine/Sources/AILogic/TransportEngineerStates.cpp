@@ -59,7 +59,7 @@ bool CTransportResupplyState::FindUnitToServe( bool *pIsNotEnoughRU )
 	CFormationServeUnitState::CFindFirstUnitPredicate pred;
 	CFormationResupplyUnitState::FindUnitToServe( pTransport->GetCenterPlain(), 
 																								pTransport->GetPlayer(), 
-																								Min(pTransport->GetResursUnitsLeft(), SConsts::ENGINEER_RU_CARRY_WEIGHT),
+																								(std::min)(pTransport->GetResursUnitsLeft(), SConsts::ENGINEER_RU_CARRY_WEIGHT),
 																								pLoaderSquad, &pred, pPreferredUnit );
 	*pIsNotEnoughRU = pred.IsNotEnoughRu();
 	return pred.HasUnit();

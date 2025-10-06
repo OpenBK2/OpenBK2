@@ -5,6 +5,7 @@
 #include "Tools.h"
 
 #include <cmath>
+#include <algorithm>
 
 #pragma pack( push, 4 )
 
@@ -38,8 +39,8 @@ public:
 	bool operator==( const CVec2 &v ) const { return ( (v.x == x) && (v.y == y) ); }
 	bool operator!=( const CVec2 &v ) const { return ( (v.x != x) || (v.y != y) ); }
   // internal data non-math modification
-  void Maximize( const CVec2 &v ) { x = Max( x, v.x ); y = Max( y, v.y ); }
-  void Minimize( const CVec2 &v ) { x = Min( x, v.x ); y = Min( y, v.y ); }
+  void Maximize( const CVec2 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); }
+  void Minimize( const CVec2 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); }
   //
   void Negate( const CVec2 &v ) { x = -v.x; y = -v.y; } // this = -v
   void Negate() { x = -x; y = -y; }     // this = -this
@@ -107,8 +108,8 @@ public:
 	bool operator==( const CVec3 &v ) const { return ( (v.x == x) && (v.y == y) && (v.z == z) ); }
 	bool operator!=( const CVec3 &v ) const { return ( (v.x != x) || (v.y != y) || (v.z != z) ); }
   // internal data non-math modification
-  void Maximize( const CVec3 &v ) { x = Max( x, v.x ); y = Max( y, v.y ); z = Max( z, v.z ); }
-  void Minimize( const CVec3 &v ) { x = Min( x, v.x ); y = Min( y, v.y ); z = Min( z, v.z ); }
+  void Maximize( const CVec3 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); }
+  void Minimize( const CVec3 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); }
   //
   void Negate( const CVec3 &v ) { x = -v.x; y = -v.y; z = -v.z; } // this = -v
   void Negate() { x = -x; y = -y; z = -z; }     // this = -this
@@ -179,8 +180,8 @@ public:
 	bool operator==( const CVec4 &v ) const { return ( (v.x == x) && (v.y == y) && (v.z == z) && (v.w == w) ); }
 	bool operator!=( const CVec4 &v ) const { return ( (v.x != x) || (v.y != y) || (v.z != z) || (v.w != w) ); }
   // internal data non-math modification
-  void Maximize( const CVec4 &v ) { x = Max( x, v.x ); y = Max( y, v.y ); z = Max( z, v.z ); w = Max( w, v.w ); }
-  void Minimize( const CVec4 &v ) { x = Min( x, v.x ); y = Min( y, v.y ); z = Min( z, v.z ); w = Min( w, v.w ); }
+  void Maximize( const CVec4 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); w = (std::max)( w, v.w ); }
+  void Minimize( const CVec4 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); w = (std::min)( w, v.w ); }
   //
   void Negate( const CVec4 &v ) { x = -v.x; y = -v.y; z = -v.z; w = -v.w; } // this = -v
   void Negate() { x = -x; y = -y; z = -z; w = -w; }     // this = -this
@@ -740,8 +741,8 @@ public:
 	void DecompReversedEulerMatrix( SHMatrix *pMatrix ) const;
   // internal data non-math modification
   bool Normalize() { return ::Normalize(x, y, z, w); }
-  void Maximize( const CQuat &v ) { x = Max( x, v.x ); y = Max( y, v.y ); z = Max( z, v.z ); w = Max( w, v.w ); }
-  void Minimize( const CQuat &v ) { x = Min( x, v.x ); y = Min( y, v.y ); z = Min( z, v.z ); w = Min( w, v.w ); }
+  void Maximize( const CQuat &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); w = (std::max)( w, v.w ); }
+  void Minimize( const CQuat &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); w = (std::min)( w, v.w ); }
   //
   void Negate( const CQuat &q ) { x = -q.x; y = -q.y; z = -q.z; w = -q.w; } // this = -v
   void Negate() { x = -x; y = -y; z = -z; w = -w; }     // this = -this
@@ -911,13 +912,13 @@ public:
 	bool IsInside( const TPoint &pt ) const { return (pt.x >= minx) && (pt.x <= maxx) && (pt.y >= miny) && (pt.y <= maxy); }
 	bool IsInside( const TYPE &x, const TYPE &y ) const { return (x >= minx) && (x <= maxx) && (y >= miny) && (y <= maxy); }
 	bool IsInside( const TRect &rect ) const { return (rect.minx >= minx) && (rect.maxx <= maxx) && (rect.miny >= miny) && (rect.maxy <= maxy); }
-	bool IsIntersect( const TRect &rc ) const { return ( Max(minx, rc.minx) < Min(maxx, rc.maxx) ) && ( Max(miny, rc.miny) < Min(maxy, rc.maxy) ); }
-	bool IsIntersectEdges( const TRect &rc ) const { return ( Max(minx, rc.minx) <= Min(maxx, rc.maxx) ) && ( Max(miny, rc.miny) <= Min(maxy, rc.maxy) ); }
+	bool IsIntersect( const TRect &rc ) const { return ( (std::max)(minx, rc.minx) < (std::min)(maxx, rc.maxx) ) && ( (std::max)(miny, rc.miny) < (std::min)(maxy, rc.maxy) ); }
+	bool IsIntersectEdges( const TRect &rc ) const { return ( (std::max)(minx, rc.minx) <= (std::min)(maxx, rc.maxx) ) && ( (std::max)(miny, rc.miny) <= (std::min)(maxy, rc.maxy) ); }
 	// intersection, union, etc
 	void Intersect( const TRect &rect )
 	{
-		minx = Max( minx, rect.minx ); maxx = Min( maxx, rect.maxx );
-		miny = Max( miny, rect.miny ); maxy = Min( maxy, rect.maxy );
+		minx = (std::max)( minx, rect.minx ); maxx = (std::min)( maxx, rect.maxx );
+		miny = (std::max)( miny, rect.miny ); maxy = (std::min)( maxy, rect.maxy );
 	}
 	TRect &Union( const TRect &rect )
 	{
@@ -925,8 +926,8 @@ public:
 			*this = rect;
 		else if ( !rect.IsEmpty() )
 		{
-			minx = Min( minx, rect.minx ); maxx = Max( maxx, rect.maxx );
-			miny = Min( miny, rect.miny ); maxy = Max( maxy, rect.maxy );
+			minx = (std::min)( minx, rect.minx ); maxx = (std::max)( maxx, rect.maxx );
+			miny = (std::min)( miny, rect.miny ); maxy = (std::max)( maxy, rect.maxy );
 		}
 		return *this;
 	}
@@ -943,7 +944,7 @@ public:
 	void Move( const TPoint &pt ) { Move(pt.x, pt.y); }
 	void Move( const CVec2 &pt ) { Move(pt.x, pt.y); }
 	// normalization
-	void Normalize() { Set( Min( minx, maxx ), Min( miny, maxy ), Max( minx, maxx ), Max( miny, maxy ) ); }
+	void Normalize() { Set( (std::min)( minx, maxx ), (std::min)( miny, maxy ), (std::max)( minx, maxx ), (std::max)( miny, maxy ) ); }
 };
 
 // triangle
@@ -2071,7 +2072,7 @@ inline void MakeOrientation( CQuat *pQuat, const CVec3 &vNormal )
 
 inline int mDistance( const SVector &vec1, const SVector &vec2 )
 {
-	return Max( abs( vec1.x-vec2.x ), abs( vec1.y-vec2.y ) );
+	return (std::max)( abs( vec1.x-vec2.x ), abs( vec1.y-vec2.y ) );
 }
 
 #pragma pack( pop )

@@ -12,7 +12,7 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 	if ( !( pTarget->GetStats()->IsInfantry() && 
 				  checked_cast<CSoldier*>(pTarget)->IsInBuilding() && ( checked_cast<CSoldier*>(pTarget)->GetMinAngle() !=0 || checked_cast<CSoldier*>(pTarget)->GetMaxAngle() != 65535 ) ) )
 	{
-		CPtr<IPointChecking> pPointChecking = new CAttackPointChecking( fRangeMin, Max( 0.0f, fRangeMax - 4.0f * SConsts::TILE_SIZE ), pTarget->GetCenterTile(), bIgnoreObstacles );
+		CPtr<IPointChecking> pPointChecking = new CAttackPointChecking( fRangeMin, (std::max)( 0.0f, fRangeMax - 4.0f * SConsts::TILE_SIZE ), pTarget->GetCenterTile(), bIgnoreObstacles );
 
 		CVec2 vRandomCant( VNULL2 );
 		if ( fRandomCant != 0.0f )
@@ -63,7 +63,7 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 		CVec2 vAttackDir( GetVectorByDirection( ( pSoldier->GetMaxAngle() + pSoldier->GetMinAngle() ) / 2 ) );
 		const CVec2 vDirFromEnemy( pSoldier->GetCenterPlain() - pUnit->GetCenterPlain() );
 		const float fProj = vAttackDir * vDirFromEnemy;
-		const float fMinDist = Min( fProj, fRangeMax * 3.0f / 4.0f );
+		const float fMinDist = (std::min)( fProj, fRangeMax * 3.0f / 4.0f );
 
 		return 
 			CreateStaticPathForSideAttack( 

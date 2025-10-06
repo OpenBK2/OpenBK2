@@ -80,8 +80,8 @@ class CUnitsIter
 		const CVec2 vCellDownLeft( nXCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF, nYCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF );
 		const CVec2 vCellUpRight( (nXCell + 1 ) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1, (nYCell + 1) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1 );
 
-		const CVec2 vLowIterDownLeft( Max( vCellDownLeft.x, vDownLeft.x ), Max( vCellDownLeft.y, vDownLeft.y ) );
-		const CVec2 vLowIterUpRight( Min( vCellUpRight.x, vUpRight.x ), Min( vCellUpRight.y, vUpRight.y ) );
+		const CVec2 vLowIterDownLeft( (std::max)( vCellDownLeft.x, vDownLeft.x ), (std::max)( vCellDownLeft.y, vDownLeft.y ) );
+		const CVec2 vLowIterUpRight( (std::min)( vCellUpRight.x, vUpRight.x ), (std::min)( vCellUpRight.y, vUpRight.y ) );
 
 		iter.Init4HighIter( vLowIterDownLeft, vLowIterUpRight, cCurDipl, 1, cCurMech, 1, cCurVis );
 	}

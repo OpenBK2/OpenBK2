@@ -76,7 +76,7 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 
 	if ( pInstance->bMaintainAspectRatio )
 	{
-		float fScale = Min( dstRect.Width() / textureRect.Width(), dstRect.Height() / textureRect.Height() );
+		float fScale = (std::min)( dstRect.Width() / textureRect.Width(), dstRect.Height() / textureRect.Height() );
 		CTPoint<float> shift( ( dstRect.Width() - textureRect.Width() * fScale ) / 2, 
 			( dstRect.Height() - textureRect.Height() * fScale ) / 2 );
 

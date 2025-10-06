@@ -2543,7 +2543,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 		{
 			SSoundTerrainInfo &info = infos[areaTypes[y][x]];
 			info.fWeight += 1;
-			info.vPos += CVec3( Max(0.0f, vPos.x - fRadius) + x * VIS_TILE_SIZE, Max(0.0f, vPos.y - fRadius) + y * VIS_TILE_SIZE, 0 );
+			info.vPos += CVec3( (std::max)(0.0f, vPos.x - fRadius) + x * VIS_TILE_SIZE, (std::max)(0.0f, vPos.y - fRadius) + y * VIS_TILE_SIZE, 0 );
 		}
 	}
 	pData->resize( infos.size() );
@@ -2561,7 +2561,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 	// удалить все с нулевой массой
 	SSoundTerrainInfo::CPrZeroMass prZeroMass;
 	std::vector<SSoundTerrainInfo>::iterator firstZeromass = find_if( pData->begin(), pData->end(), prZeroMass );
-	int nSize = Min( nMaxSize, firstZeromass - pData->begin() );
+	int nSize = (std::min)( nMaxSize, firstZeromass - pData->begin() );
 	pData->resize( nSize );
 	// оставшееся отсортировать по TerrainType
 	SSoundTerrainInfo::CPrTerrainTypeSort prTerrainType;

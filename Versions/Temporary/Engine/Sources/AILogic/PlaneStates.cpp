@@ -778,7 +778,7 @@ float CPlaneBombState::RecalcStartAttack() const
 			fStartAttackDist += pPlane->GetSpeed() * 
 				( 
 				pStats->fAimingTime + 
-				Min( pStats->nAmmoPerBurst, pGun->GetNAmmo() ) * pGun->GetFireRate()
+				(std::min)( pStats->nAmmoPerBurst, pGun->GetNAmmo() ) * pGun->GetFireRate()
 				) / 2.0f;
 
 			break;
@@ -1931,7 +1931,7 @@ CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInFiringSector()
 	{
 		CBasicGun * pGun = pPlane->GetGun( i );
 		if ( pGun->GetNAmmo() != 0 && pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
-			fBentRange = Max( fBentRange, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
+			fBentRange = (std::max)( fBentRange, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
 	}
 
 	const CVec2 vBentRange( GetVectorByDirection( fBentRange + 65535 * 3 / 4 ) );
@@ -1966,8 +1966,8 @@ CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
 		{
 			if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			{
-				fGnutost = Max( fGnutost, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
-				fMaxRange = Max( fMaxRange, pGun->GetFireRangeMax() );
+				fGnutost = (std::max)( fGnutost, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
+				fMaxRange = (std::max)( fMaxRange, pGun->GetFireRangeMax() );
 			}
 		}
 	}
@@ -2046,7 +2046,7 @@ CPlaneFlyDeadState::CPlaneFlyDeadState ( CAviation *_pPlane )
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( bGroundCrash )
 		pFormation->SetCanViolateHeghtLimits();
-	fHeight = bGroundCrash ? -500.0f : Max( SPlanesConsts::GetMinHeight(), pPlane->GetCenter().z * 0.8f );
+	fHeight = bGroundCrash ? -500.0f : (std::max)( SPlanesConsts::GetMinHeight(), pPlane->GetCenter().z * 0.8f );
 	pFormation->CreatePointManuver( CVec3( pPlane->GetCenterPlain() + pPlane->GetDirectionVector() * pref.GetR( fabs( pPlane->GetSpeedB2() ) ) * 2, fHeight), bGroundCrash || bFatality ? false : true  );
 
 	deadZone.Init();
@@ -2068,8 +2068,8 @@ void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 * pPoint )
 	const float fYMaxDiff = fabs(pPoint->y - fMaxY);
 	const float fYMinDiff = fabs(pPoint->y - fMinY);
 	
-	const float fXDiff = Min( fXMaxDiff, fXMinDiff );
-	const float fYDiff = Min( fYMaxDiff, fYMinDiff );
+	const float fXDiff = (std::min)( fXMaxDiff, fXMinDiff );
+	const float fYDiff = (std::min)( fYMaxDiff, fYMinDiff );
 	if ( fXDiff < fYDiff )
 	{
 		if ( fXMaxDiff > fXMinDiff )
@@ -2100,7 +2100,7 @@ void CPlaneFlyDeadState::InitPathToNearestPoint()
 
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( pFormation )
-		pFormation->CreatePointManuver( CVec3(vPoint,Max(SPlanesConsts::GetMinHeight(),pPlane->GetCenter().z * 0.8f)), true );
+		pFormation->CreatePointManuver( CVec3(vPoint,(std::max)(SPlanesConsts::GetMinHeight(),pPlane->GetCenter().z * 0.8f)), true );
 }
 
 void CPlaneFlyDeadState::Segment()
@@ -2222,7 +2222,7 @@ CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarge
 	fDistToDive2 = sqr( 2.0f * ( vPos3.z - GetHeights()->GetZ( vTarget ) ) );
 */
 	const CPlanePreferences &planePrefs = pPlane->GetPreferencesB2();
-	fDistToDive2 = sqr( Max( planePrefs.GetR( fabs( pPlane->GetSpeedB2() ) ), g_fBombDiveDistance ) );
+	fDistToDive2 = sqr( (std::max)( planePrefs.GetR( fabs( pPlane->GetSpeedB2() ) ), g_fBombDiveDistance ) );
 }
 
 void CPlaneSuicideState::Segment()

@@ -913,7 +913,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 {
 	const int nID = GetID();
 	NDb::EAnimationType eAnimType = NDb::ANIMATION_DEATH;
-	const int nStartTime = Min( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
+	const int nStartTime = (std::min)( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
 	if ( pUpdate->dieAnimation.nParam != -1 ) 
 	{
 		eAnimType = NDb::EAnimationType( ( pUpdate->dieAnimation.nParam >> 16 ) & 0x00000fff );
@@ -999,7 +999,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 		if ( IsVisible() && pUpdate->dieAnimation.nParam != -1 )
 		{
 			const NDb::EAnimationType eAnimType = NDb::EAnimationType( ( pUpdate->dieAnimation.nParam >> 16 ) & 0x00000fff );
-			const int nStartTime = Min( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
+			const int nStartTime = (std::min)( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
 
 			if ( eAnimType == NDb::ANIMATION_DEATH_FATALITY && pStats->pEffectFatality ) 
 			{
@@ -1057,7 +1057,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 
 void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 {
-	const NTimer::STime timeEffect = Min( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
+	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	if ( pUpdate->nParam == -1 )		// started to dive, make burn effect
 	{

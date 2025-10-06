@@ -492,7 +492,7 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 
 				int nStart = infoStartIdx[ nFragment ], nFinish = infoStartIdx[ nFragment + 1 ];
 				int nParticles = nFinish - nStart;
-				nParticles = Min( nParticles, NGfx::N_MAX_RECTANGLES ); // CRAP
+				nParticles = (std::min)( nParticles, NGfx::N_MAX_RECTANGLES ); // CRAP
 				if ( nParticles == 0 )
 					continue;
 

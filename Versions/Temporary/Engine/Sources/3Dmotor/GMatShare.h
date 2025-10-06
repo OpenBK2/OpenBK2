@@ -16,7 +16,7 @@ inline int GetFloorMask( int nFloor ) { return ( 1 << (nFloor - N_MIN_FLOOR + 1)
 inline int GetParticlesRequireFlag( bool bShowParticles ) { return bShowParticles ? 0 : N_MASK_TREECROWN; }
 inline int GetFloorBit( int nFloor, bool bShadowCast, bool bParticles, int nLODMask = 0 ) 
 { 
-	return ( 1 << Max( nFloor - N_MIN_FLOOR, 0 ) ) | ( bParticles ? 0 : N_MASK_TREECROWN ) | ( bShadowCast ? N_MASK_CAST_SHADOW : 0 ) | nLODMask; 
+	return ( 1 << (std::max)( nFloor - N_MIN_FLOOR, 0 ) ) | ( bParticles ? 0 : N_MASK_TREECROWN ) | ( bShadowCast ? N_MASK_CAST_SHADOW : 0 ) | nLODMask;
 }
 class IMaterial;
 struct SMaterialCreateInfo;

@@ -72,8 +72,8 @@ void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
 	}
 	
 	CVec2 vVirtSize;
-	vVirtSize.x = Min( (float)( pos.Width() ), (float)( pStats->vFrameSize.x ) );
-	vVirtSize.y = Min( (float)( pos.Height() ), (float)( pStats->vFrameSize.y ) );
+	vVirtSize.x = (std::min)( (float)( pos.Width() ), (float)( pStats->vFrameSize.x ) );
+	vVirtSize.y = (std::min)( (float)( pos.Height() ), (float)( pStats->vFrameSize.y ) );
 	NGfx::SPixel8888 sColor = FadeColor( pStats->nColor, GetFadeValue() );
 
 	CRectLayout rects( pos.x1, pos.y1, vVirtSize.x, vVirtSize.y, 

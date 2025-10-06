@@ -162,7 +162,7 @@ float CCommonUnit::GetDesirableSpeed() const
 void CCommonUnit::AdjustWithDesirableSpeed( float *pfMaxSpeed ) const
 {
 	if ( fDesirableSpeed != -1.0f && !IsIdle() )
-		*pfMaxSpeed = Min( fDesirableSpeed, *pfMaxSpeed );
+		*pfMaxSpeed = (std::min)( fDesirableSpeed, *pfMaxSpeed );
 }
 
 void CCommonUnit::SetFollowState( CCommonUnit *_pFollowedUnit )
@@ -201,9 +201,9 @@ void CCommonUnit::FollowingByYou( CCommonUnit *pFollowingUnit )
 	if ( fDist > SConsts::FOLLOW_WAIT_RADIUS )
 		fDesirableSpeed = 0.0f;
 	else if ( fDist > SConsts::FOLLOW_STOP_RADIUS )
-		fDesirableSpeed = Min( fDesirableSpeed, pFollowingUnit->GetSpeedForFollowing() );
+		fDesirableSpeed = (std::min)( fDesirableSpeed, pFollowingUnit->GetSpeedForFollowing() );
 
-	fMinFollowingSpeed = Min( fDesirableSpeed, fMinFollowingSpeed );
+	fMinFollowingSpeed = (std::min)( fDesirableSpeed, fMinFollowingSpeed );
 }
 
 void CCommonUnit::Segment()
@@ -213,7 +213,7 @@ void CCommonUnit::Segment()
 		if ( fDesirableSpeed == -1.0f )
 			SetDesirableSpeed( fMinFollowingSpeed );
 		else
-			SetDesirableSpeed( Min( fDesirableSpeed, fMinFollowingSpeed ) );
+			SetDesirableSpeed( (std::min)( fDesirableSpeed, fMinFollowingSpeed ) );
 	}
 
 	fMinFollowingSpeed = 1e10;

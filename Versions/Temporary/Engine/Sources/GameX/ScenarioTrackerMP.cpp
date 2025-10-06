@@ -66,7 +66,7 @@ void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, i
 		++players[nPlayer].nReinforcementCallsUsed;
 
 	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
-		players[nPlayer].nReinforcementCallsLeft = Max( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
+		players[nPlayer].nReinforcementCallsLeft = (std::max)( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
 }
 
 void CScenarioTrackerMultiplayer::RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType )
@@ -500,7 +500,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforceme
 			continue;
 		if ( pLevels->eDBType != eType )
 			continue;
-		int nCheckedLevel = Min<int>( pLevels->levels.size() - 1, nLevel );
+		int nCheckedLevel = (std::min<int>)( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
 			break;
 

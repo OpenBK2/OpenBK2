@@ -138,7 +138,7 @@ bool CMechAttackUnitState::TurnToBestPos()
 					const int wBaseAngle = pGun->GetRestTimeOfRelax() * pUnit->GetTurnSpeed();
 					const int wTurretAngle = pGun->GetRestTimeOfRelax() * pGun->GetRotateSpeed();
 
-					const WORD wAngleOfTurn = Min( wDirsDiff, WORD( Min( wBaseAngle, wTurretAngle ) ) );
+					const WORD wAngleOfTurn = (std::min)( wDirsDiff, WORD( (std::min)( wBaseAngle, wTurretAngle ) ) );
 
 					if ( DirsDifference( wAngleOfTurn + wFrontDir, wDirToEnemy ) < DirsDifference( wFrontDir - wAngleOfTurn, wDirToEnemy ) )
 						nBestAngle = WORD( wAngleOfTurn + wFrontDir );
@@ -748,7 +748,7 @@ void CCommonAttackCommonStatObjState::AnalyzePosition()
 	}
 	else if ( bSwarmAttack || g_bAgressiveMovement )
 	{
-		if ( CPtr<IStaticPath> pStaticPath = CreateStaticPathForStObjAttack( GetUnit(), pObj, pGun->GetWeapon()->fRangeMin, Min( pGun->GetFireRange( 0 ), GetUnit()->GetSightRadius() ), false ) )
+		if ( CPtr<IStaticPath> pStaticPath = CreateStaticPathForStObjAttack( GetUnit(), pObj, pGun->GetWeapon()->fRangeMin, (std::min)( pGun->GetFireRange( 0 ), GetUnit()->GetSightRadius() ), false ) )
 		{
 			if ( GetUnit()->GetCenterTile() != pStaticPath->GetFinishTile() )
 				bAim = true;

@@ -516,7 +516,7 @@ void CGeneral::BombardmentSegment()
 	{
 		if ( curTime >= lastBombardmentCheck + 1000 )
 		{
-			const float fComparativeWeight = Min( SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE, SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS);
+			const float fComparativeWeight = (std::min)( SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE, SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS);
 			const SResistance &maxCell = *iter;
 			const float fRatio = maxCell.GetWeight() / fComparativeWeight;
 			const CVec2 vCellCenter = SResistance::GetResistanceCellCenter( maxCell.GetCellNumber() );

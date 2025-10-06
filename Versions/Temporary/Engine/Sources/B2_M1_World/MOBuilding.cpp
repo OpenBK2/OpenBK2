@@ -131,7 +131,7 @@ bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate
 		for ( int j = 0; j < GetStats()->slots.size(); ++j )
 		{
 			if ( i != j )
-				fMaxDistance = Max( fabs2( GetStats()->slots[i].vDamageCenter - GetStats()->slots[j].vDamageCenter ), fMaxDistance );
+				fMaxDistance = (std::max)( fabs2( GetStats()->slots[i].vDamageCenter - GetStats()->slots[j].vDamageCenter ), fMaxDistance );
 		}
 
 	fBuildingHP = pUpdate->info.fHitPoints;
@@ -492,7 +492,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 
 	float fTime = Singleton<IGameTimer>()->GetGameTime();
 	
-	fBuildingHP = Max( fBuildingHP - fDamage, 0.0f );
+	fBuildingHP = (std::max)( fBuildingHP - fDamage, 0.0f );
 	const bool bAlive = fBuildingHP > 0;
 	CPtr<CDeadHouseAnimations> pHolder = new CDeadHouseAnimations();
 	// наносим повреждения для секций
@@ -508,7 +508,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 				const float fDist2 = fabs2( vPoint - GetStats()->slots[i].vDamageCenter );
 				const float fSlotDamage = fDamage * ( 1 - fDist2/fMaxDistance*( 1 - GetStats()->fDamageCoeff ) );
 				const int nOldIndex = GetSlotHPIndex( i, attachedWindows[i] );
-				attachedObjectsHP[i] = ( bAlive ) ? Max( 0.0f, attachedObjectsHP[i] - fSlotDamage ) : 0.0f;
+				attachedObjectsHP[i] = ( bAlive ) ? (std::max)( 0.0f, attachedObjectsHP[i] - fSlotDamage ) : 0.0f;
 				const int nNewIndex = GetSlotHPIndex( i, attachedWindows[i] );
 				if ( !bAlive )
 				{
@@ -933,7 +933,7 @@ void CMOBuilding::AttachComplexEffectToSlot( const int nSlot, const ESceneSubObj
 		SoundScene()->AddSound( pEffect->pSoundEffect, vEffectPos, SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, currTime > _time ? currTime - _time : 0, 2 );
 	}
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
-		AttachEffectToSlot( nSlot, eType, pSceneEffect, Min(_time, currTime), false, bRemoveObject ); 
+		AttachEffectToSlot( nSlot, eType, pSceneEffect, (std::min)(_time, currTime), false, bRemoveObject );
 }
 
 static void MakeSlotPos( const CVec3 &_vBuildingPos, const CQuat &qBuildingOrient, const CVec3 &_vSlotPos, const CQuat &qSlotOrient, const CVec2 &vSlotScale, SHMatrix *pmResult )

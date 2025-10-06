@@ -320,14 +320,14 @@ protected:
 	
 	void ClipVertical( int *pnSY, int *pnFY2, int *pnFY )
 	{
-		(*pnSY) = Max( *pnSY, region.y1 );
-		(*pnFY) = Min( *pnFY, region.y2 );
-		(*pnFY2) = Min( *pnFY2, region.y2 );
+		(*pnSY) = (std::max)( *pnSY, region.y1 );
+		(*pnFY) = (std::min)( *pnFY, region.y2 );
+		(*pnFY2) = (std::min)( *pnFY2, region.y2 );
 	}
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
-		(*pnSX) = Max( *pnSX, region.x1 );
-		(*pnFX) = Min( *pnFX, region.x2 );
+		(*pnSX) = (std::max)( *pnSX, region.x1 );
+		(*pnFX) = (std::min)( *pnFX, region.x2 );
 	}
 };
 

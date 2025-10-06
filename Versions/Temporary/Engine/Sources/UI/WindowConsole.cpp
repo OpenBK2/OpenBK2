@@ -159,7 +159,7 @@ void CWindowConsole::Segment( const int timeDiff )
 
 	if ( vectorOfStrings.size() > nConsoleSize * 1.5 )
 	{
-		const int nNewSize = Max( nBeginString + 1, nConsoleSize );
+		const int nNewSize = (std::max)( nBeginString + 1, nConsoleSize );
 		const int nStrToCut = vectorOfStrings.size() - nNewSize;
 		if ( nStrToCut > nConsoleSize / 2 )
 			vectorOfStrings.erase( vectorOfStrings.begin(), vectorOfStrings.begin() + nStrToCut );
@@ -246,7 +246,7 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 				for ( std::list<std::wstring>::const_iterator iTemp = resultList.begin(); iTemp != resultList.end(); iTemp++ )
 				{
 					std::wstring wsNewSame( wsSamePart );
-					for ( int nTemp = 0; nTemp < Min( iTemp->length(), wsSamePart.length() ); nTemp++ )
+					for ( int nTemp = 0; nTemp < (std::min)( iTemp->length(), wsSamePart.length() ); nTemp++ )
 					{
 						if ( (*iTemp)[nTemp] == wsSamePart[nTemp] )
 							continue;

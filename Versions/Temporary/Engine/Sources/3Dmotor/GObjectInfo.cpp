@@ -283,8 +283,8 @@ const char *ConvertWeightsFromGrannyEx(
 		ASSERT( nIndicesCount > 0 && nWeightsCount > 0 && "Unsupported number of vertice-to-bone bindings in mesh!" );
 		if ( nWeightsCount == 0 || nIndicesCount == 0 || nIndicesCount != nWeightsCount )
 			return "Error";
-		nWeightsCount = Min( 4, nWeightsCount );
-		nIndicesCount = Min( 4, nIndicesCount );
+		nWeightsCount = (std::min)( 4, nWeightsCount );
+		nIndicesCount = (std::min)( 4, nIndicesCount );
 
 		int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 		char *pUntypedVertices = (char*)(pMesh->PrimaryVertexData->Vertices);

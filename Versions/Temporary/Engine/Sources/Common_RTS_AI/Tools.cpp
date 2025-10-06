@@ -176,9 +176,9 @@ const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInf
 	if ( !pUnit->IsIdle() )
 	{
 		if ( bForInfantry )
-			lengthAhead = Max( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
 		else
-			lengthAhead = Max( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
 	}
 	else
 		lengthAhead = vAABBHalfSize.y * BOUND_RECT_FACTOR;
@@ -201,9 +201,9 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 	if ( !pUnit->IsIdle() )
 	{
 		if ( bForInfantry )
-			lengthAhead = Max( SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * 0.5f );
+			lengthAhead = (std::max)( SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * 0.5f );
 		else
-			lengthAhead = Max( SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * 0.5f );
+			lengthAhead = (std::max)( SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * 0.5f );
 	}
 	else
 		lengthAhead = 0;

@@ -116,10 +116,10 @@ void CInterfacePlayerStats::MakeInterior()
 	expProgressCareer.Init();
 	expProgressRank.Init();
 	
-	expProgressCareer.fStart = Min( expProgressCareer.fTarget, Max( expProgressCareer.fStart, fLastVisiblePlayerStatsExpCareer ) );
-	expProgressCareer.fCur = Max( expProgressCareer.fCur, expProgressCareer.fStart );
-	expProgressRank.fStart = Min( expProgressRank.fTarget, Max( expProgressRank.fStart, fLastVisiblePlayerStatsExpNextRank ) );
-	expProgressRank.fCur = Max( expProgressRank.fCur, expProgressRank.fStart );
+	expProgressCareer.fStart = (std::min)( expProgressCareer.fTarget, (std::max)( expProgressCareer.fStart, fLastVisiblePlayerStatsExpCareer ) );
+	expProgressCareer.fCur = (std::max)( expProgressCareer.fCur, expProgressCareer.fStart );
+	expProgressRank.fStart = (std::min)( expProgressRank.fTarget, (std::max)( expProgressRank.fStart, fLastVisiblePlayerStatsExpNextRank ) );
+	expProgressRank.fCur = (std::max)( expProgressRank.fCur, expProgressRank.fStart );
 
 	ExpProgressStep();
 

@@ -10,7 +10,7 @@ bool ToAIUnits( bool bInEditor )
 	{
 		float fLocalHSpeed = 1.0f / fHorizontalRotationSpeed * 65535.0f / 1000.0f;
 		if ( fLocalHSpeed != 0 )
-			fLocalHSpeed = Max( 1.0f, fLocalHSpeed );
+			fLocalHSpeed = (std::max)( 1.0f, fLocalHSpeed );
 		wHorizontalRotationSpeed = fLocalHSpeed <= 65535.0f ? WORD( fLocalHSpeed ) : 65535;
 		if ( !bInEditor )
 			fHorizontalRotationSpeed = fLocalHSpeed;
@@ -24,7 +24,7 @@ bool ToAIUnits( bool bInEditor )
 	{
 		float fLocalVSpeed = 1.0f / fVerticalRotationSpeed * 65535.0f / 1000.0f;
 		if ( fLocalVSpeed != 0 )
-			fLocalVSpeed = Max( 1.0f, fLocalVSpeed );
+			fLocalVSpeed = (std::max)( 1.0f, fLocalVSpeed );
 		wVerticalRotationSpeed = fLocalVSpeed <= 65535.0f ? WORD( fLocalVSpeed ) : 65535;
 		if ( !bInEditor )
 			fVerticalRotationSpeed = fLocalVSpeed;

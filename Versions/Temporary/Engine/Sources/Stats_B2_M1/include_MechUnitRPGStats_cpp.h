@@ -27,8 +27,8 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 		nMaxArmor = armors[0].nMax;
 		for ( int i = 1; i < 4; ++i )
 		{
-			nMinArmor = Min( nMinArmor, armors[i].nMin );
-			nMaxArmor = Max( nMaxArmor, armors[i].nMax );
+			nMinArmor = (std::min)( nMinArmor, armors[i].nMin );
+			nMaxArmor = (std::max)( nMaxArmor, armors[i].nMax );
 		}
 	}
 	//

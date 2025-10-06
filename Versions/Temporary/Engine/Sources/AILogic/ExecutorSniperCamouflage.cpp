@@ -72,11 +72,11 @@ int CExecutorSniperCamouflage::Segment()
 		{
 			if ( bMoving )
 			{
-				fCamoflage = Max( 0.0f, fCamoflage - nEnemysAround * SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_DECREASE_PER_SECOND_MOVE / 1000 );
+				fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_DECREASE_PER_SECOND_MOVE / 1000 );
 			}
 			else if ( !bWasSomeAction && !bMoving )
 			{
-				fCamoflage = Min( 1.0f, fCamoflage + SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_ADDITION_PER_TIME / 1000 );
+				fCamoflage = (std::min)( 1.0f, fCamoflage + SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_ADDITION_PER_TIME / 1000 );
 			}
 		}
 		bWasSomeAction = false;
@@ -245,7 +245,7 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 	case EID_FIRE_CAMOFLATED:
 		bWasSomeAction = true;
 		if ( !bAdvanced || bStartCounting )
-			fCamoflage = Max( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
+			fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
 		
 		return true;
 	case EID_START_IDLE:

@@ -274,7 +274,7 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 	{
 		if ( nNewWinningSide != 2 )
 		{
-			nSecondsLeft = Max ( 0, int( ( int(timeResolution) - int(curGameTime) ) / 1000 ) );
+			nSecondsLeft = (std::max) ( 0, int( ( int(timeResolution) - int(curGameTime) ) / 1000 ) );
 			if ( curGameTime > timeResolution )
 			{
 				if ( nWinningSide != slots[nOwnSlot].nTeam )
@@ -343,7 +343,7 @@ void CMPManagerMode::AnalyzeLaggers()
 
 		if ( nTimeLeft < NGameX::GetMPConsts()->nTimeUserMPLag )			// Too little time left, remove pause
 		{
-			lagInfo.nLagLeft = Max( nTimeLeft, 0 );
+			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
 			pTransceiver->CommandTimeOut( false );
 			dwLaggers &= ~( 1UL << nOwnSlot );
 			ShowWaitWindow( false );
@@ -373,7 +373,7 @@ void CMPManagerMode::AnalyzeLaggers()
 		else if ( HasPlayerStoppedLagging( i ) )
 		{
 			int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
-			lagInfo.nLagLeft = Max( nTimeLeft, 0 );
+			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
 			lagInfo.dwHatedBy = 0;
 			lagInfo.timeStartLag = 0;
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );

@@ -297,7 +297,7 @@ private:
 		SElement &node = alloc( pNode );
 		MRU_TYPE bestRU = 0;
 		for ( pointer pDown = node.pDown; pDown != Alloc::NIL; pDown = alloc( pDown ).pNextPeer )
-			bestRU = Max( bestRU, alloc( pDown ).nRU );
+			bestRU = (std::max)( bestRU, alloc( pDown ).nRU );
 		if ( bestRU == node.nRU )
 			return;
 		node.nRU = bestRU;
@@ -399,7 +399,7 @@ public:
 				{
 					if ( IsValid( n.pUser ) )
 					{
-						pStats->nEldestEntry = Min( pStats->nEldestEntry, n.nRU );
+						pStats->nEldestEntry = (std::min)( pStats->nEldestEntry, n.nRU );
 						pStats->nUsed += n.elem.GetSize();
 						pStats->nBlocks++;
 					}
@@ -451,7 +451,7 @@ public:
 	MRU_TYPE GetCurrentRU() const { return nCurrentRU; }
 	void PerformAlloc( TUser *pRes, SCachePlace *pPlace )
 	{
-		nLatestAllocRU = Max( nLatestAllocRU, pPlace->nMRU );
+		nLatestAllocRU = (std::max)( nLatestAllocRU, pPlace->nMRU );
 		MakeFreeLeaf( pPlace->pBest );
 		pointer pNode = GetAllocNode( pPlace->pBest, pPlace->requestSize );
 		SElement &nRes = alloc( pNode );
@@ -618,7 +618,7 @@ public:
 	{
 		ASSERT( nSize > 0 );
 		out( CFibElement( nSize - 1, nShift ), NONE );
-		out( CFibElement( Max( 0, nSize - 2 ), nShift + fib( nSize - 1 ) ), NONE );
+		out( CFibElement( (std::max)( 0, nSize - 2 ), nShift + fib( nSize - 1 ) ), NONE );
 	}
 	CFibElement() {}
 	CFibElement( int _nSize, int _nShift )

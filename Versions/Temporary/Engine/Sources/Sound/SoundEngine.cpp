@@ -85,7 +85,7 @@ void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 	int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos;
 	
 	std::list<FSOUND_SAMPLE *> toDelete;
-	for ( int i = 0; i < Min( nEntries, nMaxSize ); ++i )
+	for ( int i = 0; i < (std::min)( nEntries, nMaxSize ); ++i )
 	{
 		const SLogEntry &entry = log[( i + nStartPos ) % SOUND_PLAY_LOG_SIZE];
 		const NDb::SSoundDesc * pDesc = NDb::Get<NDb::SSoundDesc>( entry.szName );

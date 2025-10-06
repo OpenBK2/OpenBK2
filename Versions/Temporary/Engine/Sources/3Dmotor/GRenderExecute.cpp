@@ -81,7 +81,7 @@ static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &
 		int nFlags = element.nFlags;
 		if ( filter == FST_SPLIT )
 			nFlags &= scene.GetGeometryParts( element.nGeometry ).GetBlock( element.nBlock );
-		pRC->AddPrimitive( pGeometryInfo->pVertices->GetValue(), &tris[0] + nBase, Min( 32, int(tris.size() - nBase) ), nFlags );
+		pRC->AddPrimitive( pGeometryInfo->pVertices->GetValue(), &tris[0] + nBase, (std::min)( 32, int(tris.size() - nBase) ), nFlags );
 	}
 }
 

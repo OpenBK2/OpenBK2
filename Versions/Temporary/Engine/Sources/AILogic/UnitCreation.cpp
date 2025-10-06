@@ -495,7 +495,7 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 			if ( pLevels->eDBType != pUnit->GetReinforcementType() )
 				continue;
 			int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( player, eType );
-			nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
+			nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 			if ( nXPLevel < 0 )
 				break;
 
@@ -646,7 +646,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	GetCentersOfAllFormationUnits( pStats, vFormCenter, wDir, nFormation, nUnits, &centers );
 
 	// по слотам конфигурации
-	const int nSizeOfFormation = Min( formation.order.size(), (nUnits == -1) ? formation.order.size() : nUnits );
+	const int nSizeOfFormation = (std::min)( formation.order.size(), (nUnits == -1) ? formation.order.size() : nUnits );
 	std::list<CVec2>::iterator iter = centers.begin();
 	for ( int j = 0; j < nSizeOfFormation; ++j, ++iter )
 	{
@@ -670,7 +670,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	{
 		CSoldier * pSold = (*pFormation)[i];
 		const NDb::SUnitBaseRPGStats *pSt = pSold->GetStats();
-		const int nLevel = Min<int>( 1 + theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType()), pSt->GetActions()->specialAbilities.size() );
+		const int nLevel = (std::min<int>)( 1 + theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType()), pSt->GetActions()->specialAbilities.size() );
 		for ( int nAb = 0; nAb < nLevel; ++nAb )
 		{
 			if ( pSt->GetActions()->specialAbilities[nAb]->eName == NDb::ABILITY_FIRST_AID )

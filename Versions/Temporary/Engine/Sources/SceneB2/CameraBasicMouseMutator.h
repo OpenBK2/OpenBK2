@@ -24,8 +24,8 @@ namespace NCamera
 			//
 			if ( fMin < fMax )
 			{
-				fMin = Min( fAve, fMin );
-				fMax = Max( fAve, fMax );
+				fMin = (std::min)( fAve, fMin );
+				fMax = (std::max)( fAve, fMax );
 			}
 			//
 			fAutoSpeed = _fAuto; 

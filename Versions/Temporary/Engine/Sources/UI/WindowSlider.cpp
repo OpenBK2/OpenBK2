@@ -90,8 +90,8 @@ void CWindowSlider::UpdatePos()
 
 void CWindowSlider::SetRange( const float _fMin, const float _fMax, const float _fPageSize  )
 {
-	fMin = Min( _fMin, _fMax );
-	fMax = Max( _fMax, _fMin );
+	fMin = (std::min)( _fMin, _fMax );
+	fMax = (std::max)( _fMax, _fMin );
 
 	fPageSize = _fPageSize > 0 ? _fPageSize : fMax - fMin;
 

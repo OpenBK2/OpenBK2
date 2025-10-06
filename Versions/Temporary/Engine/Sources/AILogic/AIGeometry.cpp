@@ -17,7 +17,7 @@ const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegm
 	{
 		const float fDist1 = fabs( vSegmentStart - vPoint );
 		const float fDist2 = fabs( vSegmentEnd - vPoint );
-		return Min( fDist1, fDist2 );
+		return (std::min)( fDist1, fDist2 );
 	}
 	else 
 	{

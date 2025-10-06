@@ -1312,7 +1312,7 @@ void CBuilding::Segment()
 		const float fInc = SConsts::AI_SEGMENT_DURATION * SConsts::CURE_SPEED_IN_BUILDING;
 		for ( int i = 0; i < medical.Size(); ++i )
 		{
-			const float fWantedInc = Min( fInc, medical[i]->GetStats()->fMaxHP - medical[i]->GetHitPoints() );
+			const float fWantedInc = (std::min)( fInc, medical[i]->GetStats()->fMaxHP - medical[i]->GetHitPoints() );
 			medical[i]->IncreaseHitPoints( fWantedInc );
 		}
 
@@ -1421,7 +1421,7 @@ void CBuilding::SetHitPoints( const float fNewHP )
 { 
 	if ( fNewHP != fHP )
 	{
-		fHP = Min( fNewHP, GetStats()->fMaxHP );
+		fHP = (std::min)( fNewHP, GetStats()->fMaxHP );
 		SetAlive( fHP > 0.0f );
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 
@@ -1467,7 +1467,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 			else
 				fHP -= fDamage;
 
-			fHP = Max( fHP, ( theBonusSystem.IsKeyBuilding( nLinkID ) ) ? 0.1f : 0.0f );
+			fHP = (std::max)( fHP, ( theBonusSystem.IsKeyBuilding( nLinkID ) ) ? 0.1f : 0.0f );
 			SetAlive( fHP > 0.0f );
 			bEscaped = GetHitPoints() <= GetEscapeHitPoints() && bShouldEscape;
 			if ( bEscaped )

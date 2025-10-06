@@ -259,7 +259,7 @@ void CMechUnitEntrenchSelfState::Segment()
 			}
 			float fCoeff = 1.0f;
 			int nDefaultTime = SConsts::ENTRENCH_SELF_TIME;
-			for ( int i = 0; i < Min<int> ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
+			for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 			{
 				const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
 				if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 

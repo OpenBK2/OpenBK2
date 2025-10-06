@@ -11,7 +11,7 @@ void CVolumeContainer::Init( const CVec3 &_ptMin, const CVec3 &ptMax, float fReg
 {
 	ptMin = _ptMin;
 	ASSERT( ptMax.x > ptMin.x && ptMax.y > ptMin.y && ptMax.z > ptMin.z );
-	float fSize = Max( ptMax.x - ptMin.x, Max( ptMax.y - ptMin.y, ptMax.z - ptMin.z ) );
+	float fSize = (std::max)( ptMax.x - ptMin.x, (std::max)( ptMax.y - ptMin.y, ptMax.z - ptMin.z ) );
 	int nDepth = 1;
 	while ( fSize > fRegularSize && nDepth < 6 )
 	{
@@ -51,7 +51,7 @@ void CVolumeContainer::Fetch( const SBound &bound )
 		return;
 	}
 	pFetched = &fetchBufferArray;
-	fetchBufferArray.resize( Max( fetchBufferArray.size(), fetchMark.size() ) );
+	fetchBufferArray.resize( (std::max)( fetchBufferArray.size(), fetchMark.size() ) );
 	nFetched = 0;
 	if ( fetchMark.empty() )
 		return;
@@ -103,12 +103,12 @@ void CVolumeContainer::Fetch( const SBound &bound )
 
 void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SIntCoords &a, const SIntCoords &b, const SIntCoords &c )
 {
-	pRes->mn.x = Min( a.x, Min( b.x, c.x ) );
-	pRes->mn.y = Min( a.y, Min( b.y, c.y ) );
-	pRes->mn.z = Min( a.z, Min( b.z, c.z ) );
-	pRes->mx.x = Max( a.x, Max( b.x, c.x ) );
-	pRes->mx.y = Max( a.y, Max( b.y, c.y ) );
-	pRes->mx.z = Max( a.z, Max( b.z, c.z ) );
+	pRes->mn.x = (std::min)( a.x, (std::min)( b.x, c.x ) );
+	pRes->mn.y = (std::min)( a.y, (std::min)( b.y, c.y ) );
+	pRes->mn.z = (std::min)( a.z, (std::min)( b.z, c.z ) );
+	pRes->mx.x = (std::max)( a.x, (std::max)( b.x, c.x ) );
+	pRes->mx.y = (std::max)( a.y, (std::max)( b.y, c.y ) );
+	pRes->mx.z = (std::max)( a.z, (std::max)( b.z, c.z ) );
 }
 
 void CVolumeContainer::InitFirstPt( SVolumeBounds *pRes, const SHMatrix &pos, const CVec3 &coord )
@@ -165,8 +165,8 @@ bool CVolumeContainer::IsOut( const SVolumeBounds &t )
 void CVolumeContainer::ClipVolume( SVolumeBounds *pRes )
 {
 	int nMax = ( 1 << ( volumeData.size() - 1 ) ) - 1;
-	pRes->mn.x = Max( 0, pRes->mn.x ); pRes->mn.y = Max( 0, pRes->mn.y ); pRes->mn.z = Max( 0, pRes->mn.z );
-	pRes->mx.x = Min( nMax, pRes->mx.x ); pRes->mx.y = Min( nMax, pRes->mx.y ); pRes->mx.z = Min( nMax, pRes->mx.z );
+	pRes->mn.x = (std::max)( 0, pRes->mn.x ); pRes->mn.y = (std::max)( 0, pRes->mn.y ); pRes->mn.z = (std::max)( 0, pRes->mn.z );
+	pRes->mx.x = (std::min)( nMax, pRes->mx.x ); pRes->mx.y = (std::min)( nMax, pRes->mx.y ); pRes->mx.z = (std::min)( nMax, pRes->mx.z );
 }
 
 void CVolumeContainer::Add( const SVolumeBounds &b, int nData )

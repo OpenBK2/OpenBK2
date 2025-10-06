@@ -38,8 +38,8 @@ void CShotTraceObj::Recalc()
 	if ( fAlpha2 < 0 )
 		fAlpha2 = 0;
 
-	const float fHead = ClampFast( fAlpha1, 0.0f, 1.0f );
-	const float fTail = ClampFast( fAlpha2, 0.0f, 1.0f );
+	const float fHead = Clamp( fAlpha1, 0.0f, 1.0f );
+	const float fTail = Clamp( fAlpha2, 0.0f, 1.0f );
 
 	const CVec3 vTraceHead = vStart + ( vEnd - vStart ) * fHead; // head of trace
 	const CVec3 vTraceTail = vStart + ( vEnd - vStart ) * fTail; // tail of trace

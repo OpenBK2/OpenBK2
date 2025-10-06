@@ -363,7 +363,7 @@ void CBridgeSpan::SetHitPoints( const float fNewHP )
 
 	if ( fHP != fNewHP )
 	{
-		fHP = Min( fNewHP, GetStats()->fMaxHP );
+		fHP = (std::min)( fNewHP, GetStats()->fMaxHP );
 		SetAlive( fHP > 0.0f );
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
@@ -396,7 +396,7 @@ void CBridgeSpan::Die( const float fDamage )
 	std::list<CExistingObject*> deadObjects;
 	{
 		STerrainModeSetter terrainMode( ELM_STATIC, GetTerrain() );
-		for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, rectCenter, Max( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, rectCenter, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CAIUnit *pUnit = *iter;
 			if ( pUnit && pUnit->IsAlive() && !pUnit->GetStats()->IsAviation() )
@@ -442,7 +442,7 @@ void CBridgeSpan::TakeDamage( const float fDamage, const bool bFromExplosion, co
 	NI_ASSERT( pFullBridge != 0, "Check your map!!! Bridge span without full bridge." );
 	if ( bFromExplosion && fHP > 0 && pFullBridge && pFullBridge->CanTakeDamage() && !theCheats.GetImmortals(0) )
 	{
-		fHP = Max( 0.0f, fHP - fDamage );
+		fHP = (std::max)( 0.0f, fHP - fDamage );
 
 		if ( theCheats.GetFirstShoot( theDipl.GetNParty( nPlayerOfShoot) ) == 1 )
 			fHP = 0;

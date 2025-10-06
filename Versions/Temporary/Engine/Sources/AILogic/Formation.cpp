@@ -282,7 +282,7 @@ void CFormation::Segment()
 			{
 				fMaxSpeed = (*this)[0]->GetMaxSpeedHere();
 				for ( int i = 1; i < Size(); ++i )  
-					fMaxSpeed = Min( fMaxSpeed, (*this)[i]->GetMaxSpeedHere() );
+					fMaxSpeed = (std::min)( fMaxSpeed, (*this)[i]->GetMaxSpeedHere() );
 			}
 		}
 
@@ -443,7 +443,7 @@ const float CFormation::GetSightRadius() const
 {
 	float fResult = 0;
 	for ( int i = 0; i < Size(); ++i )
-		fResult = Max( fResult, (*this)[i]->GetSightRadius() );
+		fResult = (std::max)( fResult, (*this)[i]->GetSightRadius() );
 
 	return fResult;
 }

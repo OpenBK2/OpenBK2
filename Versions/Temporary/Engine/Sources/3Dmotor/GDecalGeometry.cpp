@@ -283,8 +283,8 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 			for ( int k = 0; k < tri.points.size(); ++k )
 			{
 				float fDepth = ( tri.points[k].point - projection.vOrigin ) * projection.vProjectDirection;
-				fDepthMin = Min( fDepth, fDepthMin );
-				fDepthMax = Max( fDepth, fDepthMax );
+				fDepthMin = (std::min)( fDepth, fDepthMin );
+				fDepthMax = (std::max)( fDepth, fDepthMax );
 			}
 			if ( fDepthMin > fDepthMargin || fDepthMax < -fDepthMargin )
 				continue;
@@ -488,7 +488,7 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 
 				CVec3 vLightDir = vXformed - vOrigin;
 				float fH = (vLightDir * vXNormal) / fSize;
-				float fS = Max( 0.0001f, 1 - sqr( fH ) );
+				float fS = (std::max)( 0.0001f, 1 - sqr( fH ) );
 				NGfx::CalcCompactVector( &res.texU, CVec3( 1, 0, 0 ) );
 				NGfx::CalcCompactVector( &res.texV, CVec3( fS, sqrt(1-sqr(fS)), 0 ) );
 				float fU = (vLightDir * vXTexU) / fS / fSize;
@@ -553,8 +553,8 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const COb
 			// calc uv
 			const CVec3 &vXformed = xformed[ posIndices[ nIdx ] ];
 			float fDepth = ( vXformed - vOrigin ) * projection.vProjectDirection;
-			fDepthMin = Min( fDepth, fDepthMin );
-			fDepthMax = Max( fDepth, fDepthMax );
+			fDepthMin = (std::min)( fDepth, fDepthMin );
+			fDepthMax = (std::max)( fDepth, fDepthMax );
 			if ( !HasResIndex( nIdx ) )
 			{
 				const SUVInfo &uv = srcVertices[ nIdx ];

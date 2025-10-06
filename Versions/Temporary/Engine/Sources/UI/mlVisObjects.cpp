@@ -37,7 +37,7 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 	else
 		ASSERT( 0 );
 
-	search.nSize = Max( search.nSize, nMinSize );
+	search.nSize = (std::max)( search.nSize, nMinSize );
 
 	CPtr<NGScene::CFontInfo> pFont = NGScene::GetTextLocaleInfo()->GetFont( search );
 	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo( pFont->GetFormatInfo() );

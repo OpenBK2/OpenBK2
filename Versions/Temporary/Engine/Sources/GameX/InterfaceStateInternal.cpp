@@ -711,7 +711,7 @@ std::wstring CInterfaceState::FilterMPChatText( const std::wstring &_wszText )
 					int nForbiddenCount = wszForbiddenWord.size();
 					while ( nForbiddenCount > 0 )
 					{
-						int nCount = Min<int>( nForbiddenCount, wszForbiddenReplacement.size() );
+						int nCount = (std::min<int>)( nForbiddenCount, wszForbiddenReplacement.size() );
 						memcpy( &wszText[nPos], &wszForbiddenReplacement[0], nCount * sizeof( wchar_t ) );
 						nPos += nCount;
 						nForbiddenCount -= nCount;

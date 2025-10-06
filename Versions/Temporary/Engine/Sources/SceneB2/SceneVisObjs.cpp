@@ -39,9 +39,9 @@ float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CV
 	vMin.Minimize( vRes );
 	vMax.Maximize( vRes );
 	//
-	const float fMaxX = Max( fabs(vMin.x), fabs(vMax.x) ) * 2.0f;
-	const float fMaxY = Max( fabs(vMin.y), fabs(vMax.y) ) * 2.0f;
-	return Min( vElementSize.x / fMaxX, vElementSize.y / fMaxY );
+	const float fMaxX = (std::max)( fabs(vMin.x), fabs(vMax.x) ) * 2.0f;
+	const float fMaxY = (std::max)( fabs(vMin.y), fabs(vMax.y) ) * 2.0f;
+	return (std::min)( vElementSize.x / fMaxX, vElementSize.y / fMaxY );
 }
 
 void MakeScreenTransform( SHMatrix *pMatrix, const CVec2 &vScreenPos, const CVec2 &_vElementSize, 

@@ -14,32 +14,32 @@ struct SBoundCalcer
 		for ( TSet::const_iterator i = a.begin(); i != a.end(); ++i )
 		{
 			const CVec3 &p = GetPoint(*i);
-			ptMin.x = Min( ptMin.x, p.x );
-			ptMin.y = Min( ptMin.y, p.y );
-			ptMin.z = Min( ptMin.z, p.z );
-			ptMax.x = Max( ptMax.x, p.x );
-			ptMax.y = Max( ptMax.y, p.y );
-			ptMax.z = Max( ptMax.z, p.z );
+			ptMin.x = (std::min)( ptMin.x, p.x );
+			ptMin.y = (std::min)( ptMin.y, p.y );
+			ptMin.z = (std::min)( ptMin.z, p.z );
+			ptMax.x = (std::max)( ptMax.x, p.x );
+			ptMax.y = (std::max)( ptMax.y, p.y );
+			ptMax.z = (std::max)( ptMax.z, p.z );
 		}
 	}
 	void Clear() { ptMin = CVec3( 1e38f,1e38f,1e38f ); ptMax = CVec3(-1e38f,-1e38f,-1e38f); }
 	void Add( const CVec3 &p, float fRadius )
 	{
-		ptMin.x = Min( ptMin.x, p.x - fRadius );
-		ptMin.y = Min( ptMin.y, p.y - fRadius );
-		ptMin.z = Min( ptMin.z, p.z - fRadius );
-		ptMax.x = Max( ptMax.x, p.x + fRadius );
-		ptMax.y = Max( ptMax.y, p.y + fRadius );
-		ptMax.z = Max( ptMax.z, p.z + fRadius );
+		ptMin.x = (std::min)( ptMin.x, p.x - fRadius );
+		ptMin.y = (std::min)( ptMin.y, p.y - fRadius );
+		ptMin.z = (std::min)( ptMin.z, p.z - fRadius );
+		ptMax.x = (std::max)( ptMax.x, p.x + fRadius );
+		ptMax.y = (std::max)( ptMax.y, p.y + fRadius );
+		ptMax.z = (std::max)( ptMax.z, p.z + fRadius );
 	}
 	void Add( const CVec3 &_p )
 	{
-		ptMin.x = Min( ptMin.x, _p.x );
-		ptMin.y = Min( ptMin.y, _p.y );
-		ptMin.z = Min( ptMin.z, _p.z );
-		ptMax.x = Max( ptMax.x, _p.x );
-		ptMax.y = Max( ptMax.y, _p.y );
-		ptMax.z = Max( ptMax.z, _p.z );
+		ptMin.x = (std::min)( ptMin.x, _p.x );
+		ptMin.y = (std::min)( ptMin.y, _p.y );
+		ptMin.z = (std::min)( ptMin.z, _p.z );
+		ptMax.x = (std::max)( ptMax.x, _p.x );
+		ptMax.y = (std::max)( ptMax.y, _p.y );
+		ptMax.z = (std::max)( ptMax.z, _p.z );
 	}
 	void Add( const SBoundCalcer &bc )
 	{

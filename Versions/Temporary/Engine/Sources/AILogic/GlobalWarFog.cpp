@@ -228,7 +228,7 @@ void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, c
 		return;
 
 	units[nID] = SWarForFullUnitInfo( updateInfo, nParty, GetSpiralLength() );
-	units[nID].nRadius = Min( units[nID].nRadius, GetMaxRadius() );
+	units[nID].nRadius = (std::min)( units[nID].nRadius, GetMaxRadius() );
 	updateUnitList.Push( nID, UPD_CREATE_NEW_UNIT, 0.0f );
 }
 
@@ -265,7 +265,7 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 			if ( pos->second.updateFlag == UPD_UPDATED )
 				pos->second.updateFlag = UPD_UPDATE_PROPERTIES;
 
-			pos->second.nRadius = Min( updateInfo.nRadius, GetMaxRadius() );
+			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
 			pos->second.vPos = updateInfo.vPos;
 			updateUnitList.Push( nID, pos->second.updateFlag, mDistance( pos->second.vOldPos, pos->second.vPos ) );
@@ -275,7 +275,7 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 			if ( pos->second.updateFlag == UPD_UPDATED )
 				pos->second.updateFlag = UPD_UPDATE_POSITION;
 
-			pos->second.nRadius = Min( updateInfo.nRadius, GetMaxRadius() );
+			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
 			pos->second.vPos = updateInfo.vPos;
 			updateUnitList.Push( nID, pos->second.updateFlag, mDistance( pos->second.vOldPos, pos->second.vPos ) );
@@ -348,7 +348,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 
 	CPtr<CWarFogVisibility> pVisibility = CreateWarFogVisibility( this, unitInfo );
 
-	const int nClsLength = lengths[ Min( unitInfo.nRadius, CAMOUFLAGE_RADIUS ) ];
+	const int nClsLength = lengths[ (std::min)( unitInfo.nRadius, CAMOUFLAGE_RADIUS ) ];
 	for ( int i = 0; i < nClsLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;
@@ -386,7 +386,7 @@ void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unit
 {
 	TWarFog &thisPartyWarFog = warFog[unitInfo.nParty];
 
-	const int nClsOldLength = GetSpiralLength( Min( unitInfo.nOldRadius, CAMOUFLAGE_RADIUS ) );
+	const int nClsOldLength = GetSpiralLength( (std::min)( unitInfo.nOldRadius, CAMOUFLAGE_RADIUS ) );
 	for ( int i = 0; i < nClsOldLength; ++i )
 	{
 		if ( unitInfo.visValues.GetData( i ) )
@@ -589,7 +589,7 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<BYTE> **pWarFogInfo, const int nPart
 		nMiniMapY = 0;
 	nLastFogCalcTime = nFogCalcTime;
 	bNeedFullCalc = false;
-	const int nLastY = Min( nMiniMapY + nShift, miniMapWarFog.GetSizeY() );
+	const int nLastY = (std::min)( nMiniMapY + nShift, miniMapWarFog.GetSizeY() );
 	for ( int y = nMiniMapY; y < nLastY; ++y )
 	{
 		if ( y == 0 )
@@ -638,8 +638,8 @@ void CGlobalWarFog::DumpWarFog()
 	for ( int x = 0; x < GetSizeX(); ++x )
 		for ( int y = 0; y < GetSizeY(); ++y )
 		{
-			nMinHeight = Min( nMinHeight, heights[y][x] );
-			nMaxHeight = Max( nMaxHeight, heights[y][x] );
+			nMinHeight = (std::min)( nMinHeight, heights[y][x] );
+			nMaxHeight = (std::max)( nMaxHeight, heights[y][x] );
 		}
 
 	DebugTrace( "Min height = %d, Max height = %d", nMinHeight, nMaxHeight );

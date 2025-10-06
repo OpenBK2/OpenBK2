@@ -30,7 +30,7 @@ CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIM
 
 void CCommonStaticPath::MoveStartTileTo( const int nStart )
 {
-	const int nDelta = Min( nLen, nStart );
+	const int nDelta = (std::min)( nLen, nStart );
 	nLen -= nDelta;
 
 	startTile = path[nDelta];

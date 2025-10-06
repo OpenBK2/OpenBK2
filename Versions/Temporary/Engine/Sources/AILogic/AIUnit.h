@@ -469,7 +469,7 @@ public:
 	bool IsTrampled() const { return bTrampled; }
 	//
 	void UpdateVisibilityForced();
-	const bool IsStaticUnit() const { return GetStats()->fSpeed == 0.0f && Max( GetStats()->vAABBHalfSize.x, GetStats()->vAABBHalfSize.y ) > 128.0f; }
+	const bool IsStaticUnit() const { return GetStats()->fSpeed == 0.0f && (std::max)( GetStats()->vAABBHalfSize.x, GetStats()->vAABBHalfSize.y ) > 128.0f; }
 
 	// real implementation of the method
 	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );

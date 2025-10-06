@@ -595,7 +595,7 @@ void CWindow::AddChild( IWindow *pWnd, bool bDoReposition )
 		return;
 
 	if ( drawOrder.GetReserved() <= drawOrder.Size() + 1 )
-		drawOrder.Reserve( drawOrder.Size() + Max( 10, drawOrder.Size() ) );
+		drawOrder.Reserve( drawOrder.Size() + (std::max)( 10, drawOrder.Size() ) );
 	drawOrder.Push( pWindow.GetPtr() ); 
 	pWindow->SetParent( this );
 	children.insert( pWindow );
@@ -766,7 +766,7 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 		return false;
 
 	NI_ASSERT( nButton >= 0, StrFmt( "don't understand such buttons %i", nButton) );
-	pressed.resize( Max( (int)pressed.size(), nButton + 1 ) );
+	pressed.resize( (std::max)( (int)pressed.size(), nButton + 1 ) );
 
 	CPtr<CWindow> pTmp = pressed[nButton];
 	pressed[nButton] = PickInternal( vPos, false );
@@ -795,7 +795,7 @@ bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 //	if ( CWindow *pChild = PickInternal( vPos, false ) )
 //		return pChild->OnButtonUp( vPos, nButton );
 
-	pressed.resize( Max( (int)pressed.size(), nButton + 1 ) );
+	pressed.resize( (std::max)( (int)pressed.size(), nButton + 1 ) );
 	const bool bWasPressed = pressed[nButton] != 0;
 	if ( pressed[nButton] )
 	{

@@ -43,7 +43,7 @@ void CEntrenchmentCreation::InitConsts()
 
 bool CEntrenchmentCreation::SearchTrenches( const CVec2 &vCenter, const SRect &rectToTest )
 {
-	const float fMaxSize = Max( rectToTest.lengthAhead, Max(rectToTest.lengthBack, rectToTest.width ) ) + 2 * SConsts::TILE_SIZE;
+	const float fMaxSize = (std::max)( rectToTest.lengthAhead, (std::max)(rectToTest.lengthBack, rectToTest.width ) ) + 2 * SConsts::TILE_SIZE;
 	// просканировать в радиусе на наличие окопов
 	for ( CStObjCircleIter<false> iter( vCenter, fMaxSize ); !iter.IsFinished(); iter.Iterate() )
 	{

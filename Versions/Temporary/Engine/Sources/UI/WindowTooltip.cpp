@@ -52,7 +52,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 
 		// position inside screen
 		// adjust X
-		nMaxXPos = Max( 0, nScreenW - nW - 3 );
+		nMaxXPos = (std::max)( 0, nScreenW - nW - 3 );
 
 		// adjust Y
 		// if it is possible - tooltip window is above window that tooltip is about

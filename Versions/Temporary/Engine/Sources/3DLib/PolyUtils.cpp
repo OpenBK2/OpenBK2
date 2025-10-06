@@ -35,7 +35,7 @@ bool IsPolygonInverse( const std::vector<CVec2> &vPolygon )
 		const CVec2 &vBeg = vPolygon[nTemp];
 		const CVec2 &vEnd = vPolygon[(nTemp + 1) % vPolygon.size()];
 
-		float fMin = Min( vBeg.x, vEnd.x );
+		float fMin = (std::min)( vBeg.x, vEnd.x );
 		fSquare += ( vEnd.y + vBeg.y ) * ( vEnd.x - vBeg.x );
 	}
 
@@ -459,7 +459,7 @@ void CPolyClipper::MakeLinks( EPolygon eType, SPolygon *psPolygon )
 static float GetAngleDif( float a, float b )
 {
 	float f = fabs( a - b );
-	return Min( f, 360 - f );
+	return (std::min)( f, 360 - f );
 }
 
 void CPolyClipper::SortLinks()
@@ -531,10 +531,10 @@ void CPolyClipper::SortLinks()
 							--nCountClip;
 					}
 				}
-				nMinCountSrc = Min( nMinCountSrc, nCountSrc );
-				nMaxCountSrc = Max( nMaxCountSrc, nCountSrc );
-				nMinCountClip = Min( nMinCountClip, nCountClip );
-				nMaxCountClip = Max( nMaxCountClip, nCountClip );
+				nMinCountSrc = (std::min)( nMinCountSrc, nCountSrc );
+				nMaxCountSrc = (std::max)( nMaxCountSrc, nCountSrc );
+				nMinCountClip = (std::min)( nMinCountClip, nCountClip );
+				nMaxCountClip = (std::max)( nMaxCountClip, nCountClip );
 			}
 			ASSERT( nMaxCountSrc - nMinCountSrc <= 1 );
 			ASSERT( nMaxCountClip - nMinCountClip <= 1 );

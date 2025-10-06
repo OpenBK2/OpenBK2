@@ -77,7 +77,7 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 				NI_ASSERT( (_MCW_RC & _control87( 0, 0 )) == 0, "something changed processor control word" );
 				const SInfantryRPGStats::SInfantryGun &gun = pOwnerStats->GetGun( pOwner->GetUniqueID(), 0, 0 );
 				timeOfFinishAnimation = curTime + 
-					Max( pOwnerStats->GetAnimTime( nAnimation ), 
+					(std::max)( pOwnerStats->GetAnimTime( nAnimation ),
 					Float2Int( gun.pWeapon->nAmmoPerBurst * 60000 / gun.pWeapon->shells[0].fFireRate - 0.5f ) );
 			}
 			

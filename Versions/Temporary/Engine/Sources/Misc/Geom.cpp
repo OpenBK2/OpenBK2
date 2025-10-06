@@ -88,7 +88,7 @@ const WORD DirsDifference( const WORD dir1, const WORD dir2 )
 	const	WORD clockWise = dir1-dir2;
 	const	WORD antiClockWise = dir2-dir1;
 
-	return Min( clockWise, antiClockWise );
+	return (std::min)( clockWise, antiClockWise );
 }
 
 const int DifferenceSign( const WORD dir1, const WORD dir2 )
@@ -130,7 +130,7 @@ const WORD GetZAngle( const float x, const float y, const float z )
 {
 	const WORD wZDir = GetZDirectionBy3DVector( x, y, z );
 
-	const WORD wZAngle = Min( DirsDifference( wZDir, 16384 * 3 ), DirsDifference( wZDir, 16384 ) );
+	const WORD wZAngle = (std::min)( DirsDifference( wZDir, 16384 * 3 ), DirsDifference( wZDir, 16384 ) );
 	return z >= 0.0f ? wZAngle : 65536 - wZAngle;
 }
 
@@ -211,13 +211,13 @@ bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v
 	const float proj3 = v3 * dir;
 	const float proj4 = v4 * dir;
 
-	const float min12 = Min( proj1, proj2 );
-	const float min34 = Min( proj3, proj4 );
-	const float max12 = Max( proj1, proj2 );
-	const float max34 = Max( proj3, proj4 );
+	const float min12 = (std::min)( proj1, proj2 );
+	const float min34 = (std::min)( proj3, proj4 );
+	const float max12 = (std::max)( proj1, proj2 );
+	const float max34 = (std::max)( proj3, proj4 );
 
 	return 
-		!( Min( min12, min34 ) >= max || Max( max12, max34 ) <= min );
+		!( (std::min)( min12, min34 ) >= max || (std::max)( max12, max34 ) <= min );
 }
 
 bool SRect::IsIntersected( const CSegment &segment ) const
@@ -348,15 +348,15 @@ const float fabs( const SRect rect1, const SRect rect2 )
 	const float f2_3 = ( rect2.v3 - rect2.center ) * dir;
 	const float f2_4 = ( rect2.v4 - rect2.center ) * dir;
 
-	const float segm1Min = Min( Min( f1_1, f1_2 ), Min( f1_3, f1_4 ) );
-	const float segm1Max = Max( Max( f1_1, f1_2 ), Max( f1_3, f1_4 ) );
+	const float segm1Min = (std::min)( (std::min)( f1_1, f1_2 ), (std::min)( f1_3, f1_4 ) );
+	const float segm1Max = (std::max)( (std::max)( f1_1, f1_2 ), (std::max)( f1_3, f1_4 ) );
 
-	const float segm2Min = Min( Min( f2_1, f2_2 ), Min( f2_3, f2_4 ) );
-	const float segm2Max = Max( Max( f2_1, f2_2 ), Max( f2_3, f2_4 ) );
+	const float segm2Min = (std::min)( (std::min)( f2_1, f2_2 ), (std::min)( f2_3, f2_4 ) );
+	const float segm2Max = (std::max)( (std::max)( f2_1, f2_2 ), (std::max)( f2_3, f2_4 ) );
 
 	// не пересекаются
 	if ( segm1Max < segm2Min || segm2Max < segm1Min )
-		return Min( fabs( segm1Max - segm2Min ), fabs( segm2Max - segm1Min ) );
+		return (std::min)( fabs( segm1Max - segm2Min ), fabs( segm2Max - segm1Min ) );
 	else
 		return 0;
 }
@@ -432,7 +432,7 @@ const WORD GetVisibleAngle( const CVec2 &point, const SRect rect )
 	const WORD diff5 = DirsDifference( wAngle4, wAngle2 );
 	const WORD diff6 = DirsDifference( wAngle4, wAngle3 );
 
-	return Max( Max ( Max( diff1, diff2 ), Max( diff3, diff4 ) ), Max( diff5, diff6 ) );
+	return (std::max)( (std::max) ( (std::max)( diff1, diff2 ), (std::max)( diff3, diff4 ) ), (std::max)( diff5, diff6 ) );
 }
 
 

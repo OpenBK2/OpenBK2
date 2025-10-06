@@ -251,8 +251,8 @@ static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pForm
 
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
-	const int nMaxPossible = GetMSB( Min(nWidth, nHeight) ) - ( (ePixelFormat >= CF_DXT1) && (ePixelFormat <= CF_DXT5) ? 2 : 0 );
-	return nNumMipLevels <= 0 ? nMaxPossible : Min( nNumMipLevels, nMaxPossible );
+	const int nMaxPossible = GetMSB( (std::min)(nWidth, nHeight) ) - ( (ePixelFormat >= CF_DXT1) && (ePixelFormat <= CF_DXT5) ? 2 : 0 );
+	return nNumMipLevels <= 0 ? nMaxPossible : (std::min)( nNumMipLevels, nMaxPossible );
 }
 
 // ************************************************************************************************************************ //

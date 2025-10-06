@@ -386,8 +386,8 @@ static void CalcMinMax( const std::vector<CVec3> &points, const CVec4 &vDir, flo
 	for ( int k = 0; k < points.size(); ++k )
 	{
 		float f = Dot4( CVec4( points[k], 1 ), vDir );
-		fMax = Max( fMax, f );
-		fMin = Min( fMin, f );
+		fMax = (std::max)( fMax, f );
+		fMin = (std::min)( fMin, f );
 	}
 	*pfMin = fMin;
 	*pfMax = fMax;
@@ -490,7 +490,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		CVec3 vSceneMax = sceneBound.s.ptCenter + sceneBound.ptHalfBox;
 		vSceneMin = Discr( vSceneMin, 0.5 );
 		vSceneMax = Discr( vSceneMax, 0.5 );
-		NGeometry::Split( &hedron, SPlane( CVec3(0,0, 1), -Max( -0.5f, vSceneMin.z ) ) );
+		NGeometry::Split( &hedron, SPlane( CVec3(0,0, 1), -(std::max)( -0.5f, vSceneMin.z ) ) );
 		NGeometry::Split( &hedron, SPlane( CVec3( 1,0,0), -vSceneMin.x ) );
 		NGeometry::Split( &hedron, SPlane( CVec3(-1,0,0), vSceneMax.x ) );
 		NGeometry::Split( &hedron, SPlane( CVec3(0, 1,0), -vSceneMin.y ) );
@@ -539,7 +539,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		for ( int i = 0; i < p.vertices.size(); ++i )
 		{
 			CVec3 vPos = Unhomogen( p.vertices[i] );
-			fMinW	= Min( fMinW, Dot4( mCamera.w, CVec4(vPos,1) ) );
+			fMinW	= (std::min)( fMinW, Dot4( mCamera.w, CVec4(vPos,1) ) );
 
 			float fX = xDir * vPos;
 			float fY = yDir * vPos;
@@ -625,7 +625,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	float fProjectionScale = 1 / fMinimalSize; // 0.5// 1 // 0.2
 	if ( areaInfo.fCW == 0 )
 		fProjectionScale = 1e-5f; // practically linear projection
-	fProjectionScale = Max( 1e-5f ,fProjectionScale );
+	fProjectionScale = (std::max)( 1e-5f ,fProjectionScale );
 
 	// select u, v orientation
 	if ( areaInfo.fCW != 0 )

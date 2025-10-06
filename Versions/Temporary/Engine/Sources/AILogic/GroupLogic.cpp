@@ -279,16 +279,16 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	{
 		const CVec2& center = groupUnits.GetEl( i )->GetCenterPlain();
 
-		fMinX = Min( fMinX, center.x );
-		fMaxX = Max( fMaxX, center.x );
-		fMinY = Min( fMinY, center.y );
-		fMaxY = Max( fMaxY, center.y );
+		fMinX = (std::min)( fMinX, center.x );
+		fMaxX = (std::max)( fMaxX, center.x );
+		fMinY = (std::min)( fMinY, center.y );
+		fMaxY = (std::max)( fMaxY, center.y );
 	}
 
 	int numRows = ceil( ( fMaxX - fMinX ) / SConsts::GROUP_DISTANCE );
 	int numColumns = ceil( ( fMaxY - fMinY ) / SConsts::GROUP_DISTANCE );
-	numRows = Max( numRows, 1 );
-	numColumns = Max( numColumns, 1 );
+	numRows = (std::max)( numRows, 1 );
+	numColumns = (std::max)( numColumns, 1 );
 	std::vector<CVec2> centers( numRows * numColumns );
 	std::vector<int> nums( numRows * numColumns );
 

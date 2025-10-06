@@ -411,8 +411,8 @@ static bool GetIntersectBound( SBound *pRes, const SBound &b1, const SBound &b2 
 	const CVec3 vMax2 = b2.s.ptCenter + b2.ptHalfBox;
 
 	CVec3 vMin, vMax;
-	vMin.x = Max( vMin1.x, vMin2.x ); vMin.y = Max( vMin1.y, vMin2.y ); vMin.z = Max( vMin1.z, vMin2.z );
-	vMax.x = Min( vMax1.x, vMax2.x ); vMax.y = Min( vMax1.y, vMax2.y ); vMax.z = Min( vMax1.z, vMax2.z );
+	vMin.x = (std::max)( vMin1.x, vMin2.x ); vMin.y = (std::max)( vMin1.y, vMin2.y ); vMin.z = (std::max)( vMin1.z, vMin2.z );
+	vMax.x = (std::min)( vMax1.x, vMax2.x ); vMax.y = (std::min)( vMax1.y, vMax2.y ); vMax.z = (std::min)( vMax1.z, vMax2.z );
 	if ( vMax.x < vMin.x || vMax.y < vMin.y || vMax.z < vMin.z )
 		return false;
 	pRes->BoxInit( vMin, vMax );

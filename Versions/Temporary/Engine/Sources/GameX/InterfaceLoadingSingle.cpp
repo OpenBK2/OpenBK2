@@ -224,7 +224,7 @@ void CInterfaceLoadingBase::MakeInterior()
 	if ( pVideo )
 	{
 		pVideo->Play();
-		nTotalFrames = Max( 2, pVideo->GetNumFrames() );
+		nTotalFrames = (std::max)( 2, pVideo->GetNumFrames() );
 		pVideo->SetCurrentFrame( 1 );
 	}
 }
@@ -455,7 +455,7 @@ CProgressHookHelper::CProgressHookHelper()
 void CProgressHookHelper::SetNumSteps( const int nNumSteps )
 {
 	SRange &range = ranges.back();
-	range.nNumSteps = Max( 1, nNumSteps );
+	range.nNumSteps = (std::max)( 1, nNumSteps );
 }
 
 void CProgressHookHelper::LockRange( const int nLength )
@@ -473,19 +473,19 @@ void CProgressHookHelper::UnlockRange()
 {
 	ranges.pop_back();
 	SRange &range = ranges.back();
-	range.nStep = Min( range.nNumSteps, range.nStep + range.nLockedRange );
+	range.nStep = (std::min)( range.nNumSteps, range.nStep + range.nLockedRange );
 }
 
 void CProgressHookHelper::Step()
 {
 	SRange &range = ranges.back();
-	range.nStep = Min( range.nNumSteps, range.nStep + 1 );
+	range.nStep = (std::min)( range.nNumSteps, range.nStep + 1 );
 }
 
 void CProgressHookHelper::SetCurrentStep( int nCurrentStep )
 {
 	SRange &range = ranges.back();
-	range.nStep = Min( range.nNumSteps, nCurrentStep );
+	range.nStep = (std::min)( range.nNumSteps, nCurrentStep );
 }
 
 float CProgressHookHelper::GetProgress() const
@@ -503,7 +503,7 @@ float CProgressHookHelper::GetProgress() const
 
 int CProgressHookHelper::GetProgress( int nMin, int nMax ) const
 {
-	return nMin + ceilf( GetProgress() * Max( 1, nMax - nMin ) + 0.5f );
+	return nMin + ceilf( GetProgress() * (std::max)( 1, nMax - nMin ) + 0.5f );
 }
 
 // CInterfaceLoadingSingleFinished

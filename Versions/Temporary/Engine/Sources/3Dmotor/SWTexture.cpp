@@ -20,7 +20,7 @@ void LoadTextureData( std::vector<CArray2D<TPixel> > *pMips, int _nMips, int _nS
 	//int nYSize = _nSizeY;
 	
 	ASSERT( _nMips > 0 );
-	_nMips = Max( _nMips, 1 );
+	_nMips = (std::max)( _nMips, 1 );
 	mips.resize( _nMips );
 	for ( int nMip = 0; nMip < _nMips; ++nMip )
 	{

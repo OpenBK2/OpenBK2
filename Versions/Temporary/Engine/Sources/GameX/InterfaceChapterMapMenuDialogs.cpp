@@ -218,7 +218,7 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 
 	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
 	{
-		for ( int i = 0; i < Min<int>( 3, pSquadStats->members.size() ); ++i )
+		for ( int i = 0; i < (std::min<int>)( 3, pSquadStats->members.size() ); ++i )
 		{
 			const NDb::SInfantryRPGStats *pMember = pSquadStats->members[i];
 			if ( !pMember )
@@ -412,7 +412,7 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 	MakeReinfData( unitsDataOld, pOldReinf );
 	MakeReinfData( unitsDataNew, pNewReinf );
 	
-	int nMaxCount = Max( unitsDataOld.size(), unitsDataNew.size() );
+	int nMaxCount = (std::max)( unitsDataOld.size(), unitsDataNew.size() );
 	lines.reserve( nMaxCount );
 	for ( int i = 0; i < nMaxCount; ++i )
 	{
@@ -694,7 +694,7 @@ void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter
 			int nItemHeight = 0;
 			pGeneralPicture->GetPlacement( 0, 0, 0, &nItemHeight );
 			pGeneralDesc->GetPlacement( 0, 0, 0, &nTextHeight );
-			nItemHeight = Max( nItemHeight, nTextHeight ) + 40;
+			nItemHeight = (std::max)( nItemHeight, nTextHeight ) + 40;
 			pItemGeneral->SetPlacement( 0, 0, 0, nItemHeight, EWPF_SIZE_Y );
 		}
 	}

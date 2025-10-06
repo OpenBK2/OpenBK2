@@ -120,7 +120,7 @@ bool CSceneFragments::HasSelectedFragments() const
 
 void CSceneFragments::HideGeometry( const std::vector<CPartFlags> &flags )
 {
-	int n = Min( geometries.size(), flags.size() );
+	int n = (std::min)( geometries.size(), flags.size() );
 	if ( filterGeometry.empty() )
 	{
 		filterGeometry.resize( geometries.size(), FST_ACCEPT );
@@ -242,7 +242,7 @@ EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGe
 			int nBlock = res2.GetBlock( k >> 5 );
 			if ( nBlock == 0 )
 				continue;
-			int nFinal = Min( k + 32, nPartsNum );
+			int nFinal = (std::min)( k + 32, nPartsNum );
 			int nStart = k;
 			for ( int i = k, nTest = 1; i < nFinal; ++i )
 			{

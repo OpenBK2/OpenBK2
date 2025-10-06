@@ -1150,7 +1150,7 @@ void CScripts::DelInvalidUnits( const int scriptId )
 
 int CScripts::GetCheckObjectsInScriptArea( const SScriptArea &area, const struct ICheckObjects &check )
 {
-	float fR = area.eType == EAT_CIRCLE ? area.fR : Max( fabs(area.vAABBHalfSize.x), fabs(area.vAABBHalfSize.y) );	
+	float fR = area.eType == EAT_CIRCLE ? area.fR : (std::max)( fabs(area.vAABBHalfSize.x), fabs(area.vAABBHalfSize.y) );
 	int nResult = 0;
 	for ( CStObjCircleIter<false> iter( area.vCenter, fR ); !iter.IsFinished(); iter.Iterate() )
 	{
@@ -1728,7 +1728,7 @@ void CScripts::EnumUnitsInCircle( IEnumerator *pEnumerator, const int nPlayer, b
 
 void CScripts::EnumUnitsInRect( IEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes, const SRect &rect )
 {
-	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, rect.center, 1.5f * Max( rect.width, rect.lengthAhead + rect.lengthBack ) ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, rect.center, 1.5f * (std::max)( rect.width, rect.lengthAhead + rect.lengthBack ) ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( IsValidObj(pUnit) && pUnit->GetPlayer() == nPlayer && IsUnitInRectArea( pUnit, rect, nPlayer ) && IsUnitQualified( false, pUnit ) )

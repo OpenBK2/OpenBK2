@@ -75,7 +75,7 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 		CDBPtr<NDb::SUnitStatsModifier> pOldBonus, pNewBonus;
 		const int nNewLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eKillerType );
 		const int nNewLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eKillerType );
-		const int nOldAbilityLevel = ( nOldLeaderLevel < 0 ) ? 0 : Min ( nOldLevel, nOldLeaderLevel );
+		const int nOldAbilityLevel = ( nOldLeaderLevel < 0 ) ? 0 : (std::min) ( nOldLevel, nOldLeaderLevel );
 		// Issue bonus
 		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetAIConsts();
 		for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
@@ -86,11 +86,11 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 
 			if ( pLevels->eDBType == eKillerType )
 			{
-				int nXPLevel = Min<int>( pLevels->levels.size() - 1, nOldLevel );
+				int nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nOldLevel );
 				if ( nXPLevel >= 0 )
 					pOldBonus = pLevels->levels[nXPLevel].pStatsBonus;
 
-				nXPLevel = Min<int>( pLevels->levels.size() - 1, nNewLevel );
+				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nNewLevel );
 				if ( nXPLevel >= 0 )
 					pNewBonus = pLevels->levels[nXPLevel].pStatsBonus;
 
@@ -159,7 +159,7 @@ const int CStatistics::GetAbilityLevel( const int nPlayer, const NDb::EReinforce
   const int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
 	const int nLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eType );
 
-	return ( nLeaderLevel < 0 ) ? 0 : Min ( nXPLevel, nLeaderLevel );
+	return ( nLeaderLevel < 0 ) ? 0 : (std::min) ( nXPLevel, nLeaderLevel );
 }
 
 void CStatistics::ObjectDestroyed( const int nPlayer )

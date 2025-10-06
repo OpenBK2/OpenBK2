@@ -89,7 +89,7 @@ void STypeGUID::FromString( CVariant *pRes, const std::string &szValue ) const
 void STypeBinary::ToString( std::string *pRes, const CVariant &value ) const
 {
 	NI_ASSERT( value.GetBlobSize() == nBinaryObjectSize, "Wrong binary object size" );
-	const int nSize = Min( (int)value.GetBlobSize(), nBinaryObjectSize );
+	const int nSize = (std::min)( (int)value.GetBlobSize(), nBinaryObjectSize );
 	NI_VERIFY( nSize > 0, "Binary object size can't have size < 0", return );
 	pRes->resize( nSize * 2 );
 	NStr::BinToString( value.GetPtr(), nSize, (char*)pRes->data() );

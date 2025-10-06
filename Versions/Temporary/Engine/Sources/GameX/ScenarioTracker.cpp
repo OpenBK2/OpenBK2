@@ -173,7 +173,7 @@ void CScenarioTracker::MapStart()
 		if ( pChapter->bUseMapReinforcements )
 			nReinforcementCallsLeftInMission = pMission->players[0].nReinforcementCalls;
 		else
-			nReinforcementCallsLeftInMission = Min( nReinforcementCallsLeftInChapter, GetMissionRecommendedReinfCalls() );
+			nReinforcementCallsLeftInMission = (std::min)( nReinforcementCallsLeftInChapter, GetMissionRecommendedReinfCalls() );
 	}
 
 	objectives.resize( GetCurrentMission()->objectives.size() );
@@ -367,7 +367,7 @@ void CScenarioTracker::MissionWin()
 		if ( pChapter )
 			nReinforcementCallsLeftOld = nReinforcementCallsLeftInChapter;
 		//nReinforcementCallsLeftInChapter -= nReinforcementCallsUsed + pMission->players[0].nReinforcementCalls - nReinforcementCallsLeftInMission;
-		int nChapterCallsUsed = Max( 0, nRecommendedCalls - nReinforcementCallsLeftInMission );		// 
+		int nChapterCallsUsed = (std::max)( 0, nRecommendedCalls - nReinforcementCallsLeftInMission );		//
 		nReinforcementCallsLeftInChapter -= nChapterCallsUsed;
 		nReinforcementCallsUsed = 0;
 		nMainEnemy = -1;
@@ -639,7 +639,7 @@ int CScenarioTracker::GetMissionToEnableCount() const
 		return 0;
 	const int nMissionsToEnable = pChapter->missionPath[0].nMissionsToEnable;
 	const int nWonMissions = wonMissions.size();
-	const int nCount = Max( 0, nMissionsToEnable - nWonMissions );
+	const int nCount = (std::max)( 0, nMissionsToEnable - nWonMissions );
 	return nCount;
 }
 
@@ -896,7 +896,7 @@ float CScenarioTracker::GetReinforcementXPForLevel( NDb::EReinforcementType eTyp
 			continue;
 		if ( pLevels->eDBType != eType )
 			continue;
-		int nCheckedLevel = Min<int>( pLevels->levels.size() - 1, nLevel );
+		int nCheckedLevel = (std::min<int>)( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
 			break;
 
@@ -1125,10 +1125,10 @@ void CScenarioTracker::DecreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	int nActualCalls = ( nCalls == 0 ) ? 1 : nCalls;
 	if ( nPlayer == 0 )
-		nReinforcementCallsLeftInMission = Max ( 0, nReinforcementCallsLeftInMission - nActualCalls );
+		nReinforcementCallsLeftInMission = (std::max) ( 0, nReinforcementCallsLeftInMission - nActualCalls );
 	else if ( nPlayer == nMainEnemy )
 	{
-		nEnemyReinfCallsLeft = Max ( 0, nEnemyReinfCallsLeft - nActualCalls );
+		nEnemyReinfCallsLeft = (std::max) ( 0, nEnemyReinfCallsLeft - nActualCalls );
 	}
 
 	// Add to statistics
@@ -1857,7 +1857,7 @@ bool CScenarioTracker::GiveXPToPlayer( const int nPlayer, const int nXP )
 	if ( nPlayer != 0 )
 		return false;
 
-	fPlayerXPAdds = Max( 0.0f, fPlayerXPAdds + nXP );
+	fPlayerXPAdds = (std::max)( 0.0f, fPlayerXPAdds + nXP );
 
 	return false;
 }

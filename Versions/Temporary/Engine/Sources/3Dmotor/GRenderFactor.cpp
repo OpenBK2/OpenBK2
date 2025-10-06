@@ -65,7 +65,7 @@ static void RefreshSpecularResponse()
 		float fRo = (y + 0.5f) / N_SIZE;
 		float fPower = triple( fabs(fRo) ) * 256;
 		float fResMul;
-		fResMul = sqrt(sqrt( Max( fPower, 1.0f ) ));
+		fResMul = sqrt(sqrt( (std::max)( fPower, 1.0f ) ));
 		if ( fRo == 0 )
 			fResMul = 1;
 		for ( int x = 0; x < N_SIZE; ++x )
@@ -75,7 +75,7 @@ static void RefreshSpecularResponse()
 			{
 				fX = ( fX - 0.5f ) * 2;
 				fX = sqrt( fX * 4 ); // fX = length(N-H)
-				fX = Max( fX, (float)sqrt(0.5f) );
+				fX = (std::max)( fX, (float)sqrt(0.5f) );
 			}
 			else
 				fX = sqrt( fX ); // fX = length(N-H)
@@ -107,7 +107,7 @@ static void RefreshSpecularResponseR300()
 		float fRo = (y + 0.5f) / N_SIZE;
 		float fPower = triple( fabs(fRo) ) * 256;
 		float fResMul;
-		fResMul = sqrt(sqrt( Max( fPower, 1.0f ) ));
+		fResMul = sqrt(sqrt( (std::max)( fPower, 1.0f ) ));
 		if ( fRo == 0 )
 			fResMul = 1;
 		for ( int x = 0; x < N_SIZE; ++x )

@@ -304,7 +304,7 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	if ( pTimeLimit )
 		wszTime = pTimeLimit->GetText();
 	int nTime = NStr::ToInt( NStr::ToMBCS ( wszTime ) );
-  pCreateMsg->specificInfo.nTimeLimit = Max( nTime, 5 );
+  pCreateMsg->specificInfo.nTimeLimit = (std::max)( nTime, 5 );
 
 	if ( pSliderGameSpeed )
 	{

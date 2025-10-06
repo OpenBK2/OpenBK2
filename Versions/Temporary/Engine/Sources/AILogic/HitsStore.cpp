@@ -38,10 +38,10 @@ void CHitsStore::AddHit( const CVec2 &center, const EHitTypes eHitType )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CHitsStore::WasHit( const CVec2 &center, const float fR, const EHitTypes eHitType ) const
 {
-	const int nDownX = Max( 0, int( center.x - fR ) / SConsts::HIT_CELL_SIZE );
-	const int nDownY = Max( 0, int( center.y - fR ) / SConsts::HIT_CELL_SIZE );
-	const int nUpX = Min( hits[0].GetSizeX() - 1, int( center.x + fR ) / SConsts::HIT_CELL_SIZE );
-	const int nUpY = Min( hits[0].GetSizeY() - 1, int( center.y + fR ) / SConsts::HIT_CELL_SIZE );
+	const int nDownX = (std::max)( 0, int( center.x - fR ) / SConsts::HIT_CELL_SIZE );
+	const int nDownY = (std::max)( 0, int( center.y - fR ) / SConsts::HIT_CELL_SIZE );
+	const int nUpX = (std::min)( hits[0].GetSizeX() - 1, int( center.x + fR ) / SConsts::HIT_CELL_SIZE );
+	const int nUpY = (std::min)( hits[0].GetSizeY() - 1, int( center.y + fR ) / SConsts::HIT_CELL_SIZE );
 
 	for ( int y = nDownY; y <= nUpY; ++y )
 	{

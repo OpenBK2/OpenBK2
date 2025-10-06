@@ -145,7 +145,7 @@ bool GetFontCharsForCharset( std::vector<WORD> *pChars, HDC hDC, const std::stri
 	memset( &sLogFont, 0, sizeof( LOGFONT ) );
 	sLogFont.lfCharSet = dwCharSet;
 	sLogFont.lfPitchAndFamily = 0;
-	memcpy( sLogFont.lfFaceName, szFaceName.c_str(), Min<size_t>(szFaceName.size() + 1, LF_FACESIZE) );
+	memcpy( sLogFont.lfFaceName, szFaceName.c_str(), (std::min<size_t>)(szFaceName.size() + 1, LF_FACESIZE) );
 	EnumFontFamiliesEx( hDC, &sLogFont, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)pChars, 0 );
 	//
 	return !pChars->empty();

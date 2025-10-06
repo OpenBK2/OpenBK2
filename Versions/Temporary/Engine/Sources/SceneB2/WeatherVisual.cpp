@@ -182,7 +182,7 @@ void CWeatherVisual::Recalc()
 		case NDb::EWS_FADE_IN:
 		{
 			if ( timeLength > 0 )
-				fFadeCoeff = ClampFast( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
+				fFadeCoeff = Clamp( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
 			else
 				fFadeCoeff = 1.0;
 			if ( fFadeCoeff == 1.0 )
@@ -193,7 +193,7 @@ void CWeatherVisual::Recalc()
 		case NDb::EWS_FADE_OUT:
 		{
 			if ( timeLength > 0 )
-				fFadeCoeff = 1.0f - ClampFast( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
+				fFadeCoeff = 1.0f - Clamp( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
 			if ( fFadeCoeff == 0.0 )
 			{
 				eState = NDb::EWS_CLEAR;
@@ -404,7 +404,7 @@ void CWeatherVisual::Recalc()
 						if ( vPos.z < fHeight )
 							continue;
 
-						vPos2.z = Max( vPos.z - pDesc->fTrajectoryParameter, fHeight );
+						vPos2.z = (std::max)( vPos.z - pDesc->fTrajectoryParameter, fHeight );
 
 						if ( pDesc->bWindAffected )
 						{
@@ -447,7 +447,7 @@ void CWeatherVisual::Recalc()
 						CVec3 vPos2( vPos );
 
 						float fHeight = AI2Vis(Scene()->GetZ( Vis2AI(vPos2.x), Vis2AI(vPos2.y) ));
-						vPos2.z = Max( vPos.z - pDesc->fTrajectoryParameter,fHeight );
+						vPos2.z = (std::max)( vPos.z - pDesc->fTrajectoryParameter,fHeight );
 
 						data.verts[nIndex4 + 0].pos = vPos2;
 						//data.verts[nIndex4 + 1].pos = vPos2 - vViewNormal * pDesc->fPartSize;

@@ -26,7 +26,7 @@ int CTimeCounter::GetDeltaT( float fMult, STime currentTime )
 		if ( prevTime == 0 )
 			prevTime = currentTime;
 		STime deltaT = currentTime - prevTime;
-		return Min( (int)150, Float2Int( deltaT * fMult ) ); // min 7 fps
+		return (std::min)( (int)150, Float2Int( deltaT * fMult ) ); // min 7 fps
 	}
 	return 0;
 }

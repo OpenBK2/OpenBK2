@@ -99,9 +99,9 @@ static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 {
 	const float fH = abs( fX1 - fX2 );
 	const float fV = abs( fY1 - fY2 );
-	const float fOrto = Max( fH, fV );
+	const float fOrto = (std::max)( fH, fV );
 
-	return Min ( fOrto, ( fH + fV ) * 0.666f );
+	return (std::min) ( fOrto, ( fH + fV ) * 0.666f );
 }
 
 #define LINE_BLUR_PART 0.3f
@@ -126,7 +126,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 					nNewAlpha = nNewAlpha * ( fR - fDist ) / ( fR * ( 1.0f - LINE_BLUR_PART ) );  
 				}
 				pMapLayer->PutPixel( nX, nY, color );
-				pMapLayer->SetPixelAlpha( nX, nY, Max( nOldAlpha, nNewAlpha ) );
+				pMapLayer->SetPixelAlpha( nX, nY, (std::max)( nOldAlpha, nNewAlpha ) );
 			}
 		}
 	}
@@ -552,7 +552,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 			VirtualToScreen( &sScreenPos[1] );
 			VirtualToScreen( &sScreenPos[2] );
 			VirtualToScreen( &sScreenPos[3] );
-			rectWindow.y2 = Min( rectWindow.y1 + fSegmentTextureLength, fArrowTextureLength );
+			rectWindow.y2 = (std::min)( rectWindow.y1 + fSegmentTextureLength, fArrowTextureLength );
 
 			pVisitor->VisitUIRect( arrow.pTexture, 3, sScreenPos, sColors, rectWindow );
 

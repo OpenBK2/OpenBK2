@@ -671,15 +671,15 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 							const SColor24 noiseCol = curNoise[gg%curNoise.GetSizeY()][ii%curNoise.GetSizeX()];
 							const float fNoiseCoeff = curParams.fNoiseCoeff;
 
-							cr = ClampFast( Float2Int( vCol.x*( fNoiseCoeff * noiseCol.r * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
-							cg = ClampFast( Float2Int( vCol.y*( fNoiseCoeff * noiseCol.g * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
-							cb = ClampFast( Float2Int( vCol.z*( fNoiseCoeff * noiseCol.b * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
+							cr = Clamp( Float2Int( vCol.x*( fNoiseCoeff * noiseCol.r * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
+							cg = Clamp( Float2Int( vCol.y*( fNoiseCoeff * noiseCol.g * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
+							cb = Clamp( Float2Int( vCol.z*( fNoiseCoeff * noiseCol.b * DEF_INV_255 + 1.0f - fNoiseCoeff ) ), 0, 255 );
 						}
 						else
 						{
-							cr = ClampFast( Float2Int( vCol.x ), 0, 255 );
-							cg = ClampFast( Float2Int( vCol.y ), 0, 255 );
-							cb = ClampFast( Float2Int( vCol.z ), 0, 255 );
+							cr = Clamp( Float2Int( vCol.x ), 0, 255 );
+							cg = Clamp( Float2Int( vCol.y ), 0, 255 );
+							cb = Clamp( Float2Int( vCol.z ), 0, 255 );
 						}
 
 						nColor = ( cr << 16 ) | ( cg << 8 ) | cb;

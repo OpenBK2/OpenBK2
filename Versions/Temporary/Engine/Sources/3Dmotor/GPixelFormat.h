@@ -182,7 +182,7 @@ inline CVec3 GetVector( const SCompactVector &a )
 
 inline DWORD Get255Range( float f ) 
 {
-	return Max( 0, Min( 255, Float2Int( f * 256 ) ) );
+	return (std::max)( 0, (std::min)( 255, Float2Int( f * 256 ) ) );
 }
 inline DWORD GetDWORDColor( const CVec4 &color )
 {

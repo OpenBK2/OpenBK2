@@ -177,7 +177,7 @@ void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize )
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
 		const SRect &r = (*pRes)[k];
-		nMaxWidth = Max( nMaxWidth, (int)r.nXSize );
+		nMaxWidth = (std::max)( nMaxWidth, (int)r.nXSize );
 		nArea += r.nXSize * r.nYSize;
 	}
 	int nXWidthLog2 = 0;

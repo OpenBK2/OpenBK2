@@ -112,8 +112,8 @@ void CStandartPath2::CopyPath( const int nLength )
 	if ( nLength < 0 )
 		return;
 	pPathFinder->GetTiles( &(pathBuffer[0]), nLength );
-	const int nCopyTiles = Min( nLength, MAX_PATH_TILES_COUNT - nLastPathTile );
-	memcpy( &(pathTiles[0]) + nLastPathTile, &(pathBuffer[0]), sizeof(SVector) * Min( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
+	const int nCopyTiles = (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile );
+	memcpy( &(pathTiles[0]) + nLastPathTile, &(pathBuffer[0]), sizeof(SVector) * (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
 	if ( nLength > nCopyTiles )
 		memcpy( &(pathTiles[0]), &(pathBuffer[0]) + nCopyTiles, sizeof(SVector) * ( nLength - nCopyTiles ) );
 	nLastPathTile = (nLastPathTile+nLength)%MAX_PATH_TILES_COUNT;
@@ -130,7 +130,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	const int nPrevStaticPathTile = nCurStaticPathTile;
 	// выбираем точку на текущем статическом пути
 	if ( bShift )
-		nCurStaticPathTile = Min( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength()-2 );
+		nCurStaticPathTile = (std::min)( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength()-2 );
 	
 	SVector vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile ) );
 	bool bNextTileValid = true;
@@ -195,7 +195,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	else
 	{
 		// подбираем nCurStaticPathTile и тайл на пути, чтобы они были максимально близки
-		int nLength = Min( pFoundStaticPath->GetLength()-1, MAX_PATH_TILES_COUNT - 2*MAX_LOOK_FORWARD_POINTS );
+		int nLength = (std::min)( pFoundStaticPath->GetLength()-1, MAX_PATH_TILES_COUNT - 2*MAX_LOOK_FORWARD_POINTS );
 		bool bCloseToFinish = false;
 		do
 		{

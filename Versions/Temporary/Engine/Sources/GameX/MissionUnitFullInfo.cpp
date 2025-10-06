@@ -484,7 +484,7 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 		{
 			std::vector<CMOSelectable*> passengers;
 			pSquad->GetPassangers( &passengers );
-			for ( int i = 0; i < Min<int>( 3, passengers.size() ); ++i )
+			for ( int i = 0; i < (std::min<int>)( 3, passengers.size() ); ++i )
 			{
 				CMOSelectable *pSO = passengers[i];
 				if ( !pSO )
@@ -501,7 +501,7 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 		}
 		else
 		{
-			for ( int i = 0; i < Min<int>( 3, pSquadStats->members.size() ); ++i )
+			for ( int i = 0; i < (std::min<int>)( 3, pSquadStats->members.size() ); ++i )
 			{
 				const NDb::SInfantryRPGStats *pMember = pSquadStats->members[i];
 				if ( !pMember )
@@ -957,7 +957,7 @@ void CMissionUnitFullInfo::OnClickMember( const std::string &szSender )
 
 void CMissionUnitFullInfo::OnMemberOverOn( const std::string &szSender )
 {
-	for ( int i = 0; i < Min( viewMembers.size(), members.size() ); ++i )
+	for ( int i = 0; i < (std::min)( viewMembers.size(), members.size() ); ++i )
 	{
 		if ( viewMembers[i].pBtn && szSender == viewMembers[i].pBtn->GetName() )
 		{
@@ -982,7 +982,7 @@ void CMissionUnitFullInfo::OnMemberOverOff( const std::string &szSender )
 
 void CMissionUnitFullInfo::OnWeaponOverOn( const std::string &szSender )
 {
-	for ( int i = 0; i < Min( weaponItems.size(), weapons.size() ); ++i )
+	for ( int i = 0; i < (std::min)( weaponItems.size(), weapons.size() ); ++i )
 	{
 		if ( weaponItems[i].pIconBtn && szSender == weaponItems[i].pIconBtn->GetName() )
 		{

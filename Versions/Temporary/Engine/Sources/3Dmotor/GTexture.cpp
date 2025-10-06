@@ -85,7 +85,7 @@ void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, i
 	int _nLevels, TStream *pFile, int nCutMip, const TPixel *p = 0 )
 {
 	CDynamicCast<NGfx::I2DBuffer> pTexBuffer( pTexture );
-	int nLevels = Min( _nLevels, nCutMip + pTexBuffer->GetNumMipLevels() );
+	int nLevels = (std::min)( _nLevels, nCutMip + pTexBuffer->GetNumMipLevels() );
 	for ( int nLevel = 0; nLevel < nLevels; ++nLevel )
 	{
 		int nX = (_nX >> nLevel) / TPixel::XSize;
@@ -111,7 +111,7 @@ void LoadTextureData( NGfx::CCubeTexture *pTexture, int _nX, int _nY, int _nSize
 	int _nLevels, TStream *pFile, int nCutMip, const TPixel *p = 0 )
 {
 	CDynamicCast<NGfx::ICubeBuffer> pTexBuffer( pTexture );
-	int nLevels = Min( _nLevels, nCutMip + pTexBuffer->GetNumMipLevels() );
+	int nLevels = (std::min)( _nLevels, nCutMip + pTexBuffer->GetNumMipLevels() );
 	for ( int nLevel = 0; nLevel < nLevels; ++nLevel )
 	{
 		int nX = (_nX >> nLevel) / TPixel::XSize;
@@ -135,7 +135,7 @@ template<class TRes, class TStream>
 static bool RealLoadTexture( TRes *pTexture, TStream *pStream, const SDDSHeader &hdr,
 	int nX, int nY, int nSizeX, int nSizeY, int nLevels, int nCutMip )
 {
-	nLevels = Min( nLevels, int(hdr.dwMipMapCount) );
+	nLevels = (std::min)( nLevels, int(hdr.dwMipMapCount) );
 	switch ( GetPixelFormat(hdr) )
 	{
 		case NGfx::CF_DXT1:			LoadTextureData<NGfx::SPixelDXT1>( pTexture, nX, nY, nSizeX, nSizeY, nLevels, pStream, nCutMip ); break;
@@ -257,8 +257,8 @@ void FixMips( SDDSHeader *pRes )
 	if ( pRes->dwMipMapCount == 0 ) 
 		pRes->dwMipMapCount = 1;
 	NGfx::EPixelFormat format = GetPixelFormat( *pRes );
-	int nMaxPossibleLevels = GetMSB( Min(pRes->dwWidth, pRes->dwHeight) ) - ( (format >= NGfx::CF_DXT1) && (format <= NGfx::CF_DXT5) ? 2 : 0 );
-	pRes->dwMipMapCount = Min( (int)pRes->dwMipMapCount, (int)nMaxPossibleLevels );
+	int nMaxPossibleLevels = GetMSB( (std::min)(pRes->dwWidth, pRes->dwHeight) ) - ( (format >= NGfx::CF_DXT1) && (format <= NGfx::CF_DXT5) ? 2 : 0 );
+	pRes->dwMipMapCount = (std::min)( (int)pRes->dwMipMapCount, (int)nMaxPossibleLevels );
 }
 
 void CFileTexture::Recalc()
@@ -345,7 +345,7 @@ void CFileTexture::Recalc()
 		file->Read( &hdr, sizeof(hdr) );
 		FixMips( &hdr.header );
 
-		nCutMips = Min( nCutMips, int(hdr.header.dwMipMapCount) - 1 );
+		nCutMips = (std::min)( nCutMips, int(hdr.header.dwMipMapCount) - 1 );
 		if ( GetPixelFormat( hdr.header ) == NGfx::CF_A8R8G8B8 && NGfx::Is16BitTextures() )
 		{
 			pValue = LoadConvertTo16Bit( file.GetStream(), hdr.header, eUsage, eWrap, nCutMips, hdr.header.dwWidth, hdr.header.dwHeight, hdr.header.dwMipMapCount );

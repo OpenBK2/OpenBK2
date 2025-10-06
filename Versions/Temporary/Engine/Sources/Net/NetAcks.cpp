@@ -113,8 +113,8 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> 
 	// check network capacity
 	//float fMaxTimeElapsed = Max( fUpdateTimeDelay * 1.2f, fRTTDiscard );
 	//fUpdateTimeElapsed = Min( fUpdateTimeElapsed, fMaxTimeElapsed );
-	fRTTDiscard = Max( fRTTDiscard, 0.1f );
-	fRTTDiscard = Min( fRTTDiscard, fMaxRTT );
+	fRTTDiscard = (std::max)( fRTTDiscard, 0.1f );
+	fRTTDiscard = (std::min)( fRTTDiscard, fMaxRTT );
 	// roll back updates that are out of estimated rtt
 	std::list<CUpdate>::iterator it, itmp;
 	for ( it = sentUpdates.begin(); it != sentUpdates.end(); )
@@ -125,7 +125,7 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> 
 			//fUpdateTimeDelay *= 1.2f;
 			--nFlyPackets;
 			fWindow -= 0.5f;
-			fWindow = Max( MIN_WINDOWS_SIZE, fWindow );
+			fWindow = (std::max)( MIN_WINDOWS_SIZE, fWindow );
 #ifdef LOG
 			std::cout << "CONGESTION, new window=" << fWindow << "packets" << std::endl;
 #endif
@@ -163,7 +163,7 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 			if ( i->bOnTheWindowEdge )
 			{
 				fWindow += 0.05f;
-				fWindow = Min( fWindow, MAX_WINDOWS_SIZE );
+				fWindow = (std::min)( fWindow, MAX_WINDOWS_SIZE );
 			}
 				// / fWindow;
 			//fUpdateTimeDelay *= 0.99f;
@@ -245,7 +245,7 @@ bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
 		//if (pCSLog) (*pCSLog) << "SKIP too old update, dif=" << nPktLastReceived - nPkt << endl;
 		return false;
 	}
-	nPktLastReceived = Max( nPktLastReceived, nPkt );
+	nPktLastReceived = (std::max)( nPktLastReceived, nPkt );
 	// check for duplicate (for economy on rcvList mostly, because ack maybe already be sent
 	// and duplication will not be detected)
 	for ( std::vector<UPDATE_ID>::iterator k = receivedPkts.begin(); k != receivedPkts.end(); ++k )
@@ -353,7 +353,7 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 			bFound = true;
 			--nFlyPackets;
 			fWindow -= 1.0f;
-			fWindow = Max( MIN_WINDOWS_SIZE, fWindow );
+			fWindow = (std::max)( MIN_WINDOWS_SIZE, fWindow );
 #ifdef LOG
 			std::cout << "SEND FAILURE, new window=" << fWindow << "packets" << std::endl;
 #endif

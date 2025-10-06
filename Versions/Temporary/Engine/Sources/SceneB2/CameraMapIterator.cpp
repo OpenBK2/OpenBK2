@@ -22,18 +22,18 @@ CCameraMapIterator::CCameraMapIterator( float fFOV, float fYaw, float fPitch, fl
 	v3.Set( v3.x*fCos - v3.y*fSin, v3.x*fSin + v3.y*fCos );
 
 	CTRect<float> rcBigRect;
-	rcBigRect.minx = Min( 0.0f, v1.x );
-	rcBigRect.minx = Min( rcBigRect.minx, v2.x );
-	rcBigRect.minx = Min( rcBigRect.minx, v3.x );
-	rcBigRect.miny = Min( 0.0f, v1.y );
-	rcBigRect.miny = Min( rcBigRect.miny, v2.y );
-	rcBigRect.miny = Min( rcBigRect.miny, v3.y );
-	rcBigRect.maxx = Max( 0.0f, v1.x );
-	rcBigRect.maxx = Max( rcBigRect.maxx, v2.x );
-	rcBigRect.maxx = Max( rcBigRect.maxx, v3.x );
-	rcBigRect.maxy = Max( 0.0f, v1.y );
-	rcBigRect.maxy = Max( rcBigRect.maxy, v2.y );
-	rcBigRect.maxy = Max( rcBigRect.maxy, v3.y );
+	rcBigRect.minx = (std::min)( 0.0f, v1.x );
+	rcBigRect.minx = (std::min)( rcBigRect.minx, v2.x );
+	rcBigRect.minx = (std::min)( rcBigRect.minx, v3.x );
+	rcBigRect.miny = (std::min)( 0.0f, v1.y );
+	rcBigRect.miny = (std::min)( rcBigRect.miny, v2.y );
+	rcBigRect.miny = (std::min)( rcBigRect.miny, v3.y );
+	rcBigRect.maxx = (std::max)( 0.0f, v1.x );
+	rcBigRect.maxx = (std::max)( rcBigRect.maxx, v2.x );
+	rcBigRect.maxx = (std::max)( rcBigRect.maxx, v3.x );
+	rcBigRect.maxy = (std::max)( 0.0f, v1.y );
+	rcBigRect.maxy = (std::max)( rcBigRect.maxy, v2.y );
+	rcBigRect.maxy = (std::max)( rcBigRect.maxy, v3.y );
 	//
 	const CVec3 vAxisX(	fCos, fSin, 0 );
 	const CVec3 vAxisY( -fSin, fCos, 0 );

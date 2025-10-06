@@ -70,8 +70,8 @@ const void CStaticMapHeights::UpdateVisZ( CVec3 *pVec ) const
 
 const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY ) const 
 { 
-	const int inMapX = Min( Max( 0, nTileX ), nStaticMapSizeX - 1 );
-	const int inMapY = Min( Max( 0, nTileY ), nStaticMapSizeY - 1 );
+	const int inMapX = (std::min)( (std::max)( 0, nTileX ), nStaticMapSizeX - 1 );
+	const int inMapY = (std::min)( (std::max)( 0, nTileY ), nStaticMapSizeY - 1 );
 
 	return tileHeights[inMapY][inMapX];
 }
@@ -136,10 +136,10 @@ void CStaticMapHeights::FinalizeUpdateHeights( const int nX1, const int nY1, con
 {
 	betaSpline3D.Init( 1.0f, -1.0f );
 
-	const int nMinX = Max( 0, 2 * nX1 - 4 );
-	const int nMaxX = Min( nStaticMapSizeX, 2 * nX2 + 4 );
-	const int nMinY = Max( 0, 2 * nY1 - 4 );
-	const int nMaxY = Min( nStaticMapSizeY, 2 * nY2 + 4 );
+	const int nMinX = (std::max)( 0, 2 * nX1 - 4 );
+	const int nMaxX = (std::min)( nStaticMapSizeX, 2 * nX2 + 4 );
+	const int nMinY = (std::max)( 0, 2 * nY1 - 4 );
+	const int nMaxY = (std::min)( nStaticMapSizeY, 2 * nY2 + 4 );
 
 	for ( int i = nMinY; i < nMaxY; ++i )
 	{
@@ -230,8 +230,8 @@ int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const C
 	const int nVisX1 = (nX1 + 1)/2 + 1;
 	const int nVisY1 = (nY1 + 1)/2 + 1;
 
-	const int nVisHeightsSizeX = Min( ( bridge.GetSizeX() )/2 - nX1%2 + 1, heights.GetSizeX() - nVisX1 );
-	const int nVisHeightsSizeY = Min( ( bridge.GetSizeY() )/2 - nY1%2 + 1, heights.GetSizeY() - nVisY1 );
+	const int nVisHeightsSizeX = (std::min)( ( bridge.GetSizeX() )/2 - nX1%2 + 1, heights.GetSizeX() - nVisX1 );
+	const int nVisHeightsSizeY = (std::min)( ( bridge.GetSizeY() )/2 - nY1%2 + 1, heights.GetSizeY() - nVisY1 );
 
 	CArray2D<float> oldHeights;
 
@@ -377,7 +377,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		t02 = (vLineY[0] == 0) ? -1.0f : ( maxY - vLineY[1] )/vLineY[0];
 	else 
 		t02 = 0.0f;
-	const float t1 = Max( t01, t02 );
+	const float t1 = (std::max)( t01, t02 );
 
 	if ( vEnd.x < 0 )
 		t01 = (vLineX[0] == 0) ? 2.0f : -vLineX[1]/vLineX[0];
@@ -392,7 +392,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		t02 = (vLineY[0] == 0) ? 2.0f : ( maxY - vLineY[1] )/vLineY[0];
 	else 
 		t02 = 1.0f;
-	const float t2 = Min( t01, t02 );
+	const float t2 = (std::min)( t01, t02 );
 
   // просматривать отрезок в интервале t1 .. t2, все что вне - лежит за пределами карты
 	pvResult->x = 0.0f;
@@ -509,7 +509,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 		t02 = (vLineY[0] == 0) ? -1.0f : ( maxY - vLineY[1] )/vLineY[0];
 	else 
 		t02 = 0.0f;
-	const float t1 = Max( t01, t02 );
+	const float t1 = (std::max)( t01, t02 );
 
 	if ( vEnd.x < 0 )
 		t01 = (vLineX[0] == 0) ? 2.0f : -vLineX[1]/vLineX[0];
@@ -524,7 +524,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 		t02 = (vLineY[0] == 0) ? 2.0f : ( maxY - vLineY[1] )/vLineY[0];
 	else 
 		t02 = 1.0f;
-	const float t2 = Min( t01, t02 );
+	const float t2 = (std::min)( t01, t02 );
 
 	pvResult->x = 0.0f;
 	pvResult->y = 0.0f;

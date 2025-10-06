@@ -102,14 +102,14 @@ bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 	if ( GetAIMap()->IsRectOnLockedTiles( rect, EAC_ANY ) )
 		return false;
 
-	int nMinX = Min( Min( rect.v1.x, rect.v2.x ), Min( rect.v3.x, rect.v4.x ) );
-	int nMinY = Min( Min( rect.v1.y, rect.v2.y ), Min( rect.v3.y, rect.v4.y ) );
-	int nMaxX = Max( Max( rect.v1.x, rect.v2.x ), Max( rect.v3.x, rect.v4.x ) );
-	int nMaxY = Max( Max( rect.v1.y, rect.v2.y ), Max( rect.v3.y, rect.v4.y ) );
+	int nMinX = (std::min)( (std::min)( rect.v1.x, rect.v2.x ), (std::min)( rect.v3.x, rect.v4.x ) );
+	int nMinY = (std::min)( (std::min)( rect.v1.y, rect.v2.y ), (std::min)( rect.v3.y, rect.v4.y ) );
+	int nMaxX = (std::max)( (std::max)( rect.v1.x, rect.v2.x ), (std::max)( rect.v3.x, rect.v4.x ) );
+	int nMaxY = (std::max)( (std::max)( rect.v1.y, rect.v2.y ), (std::max)( rect.v3.y, rect.v4.y ) );
 
 	const CVec2 vAABBHalfSize( ( nMinX + nMaxX ) * 0.5f, ( nMinY + nMaxY ) * 0.5f );
 
-	for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, rect.center, Max( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, rect.center, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pIterUnit = *iter;
 		if ( pIterUnit && pIterUnit->IsRefValid() )
@@ -267,7 +267,7 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 	if ( fHitPoints != fMaxHP )
 	{
 		const float fFormerHP = fHitPoints ;
-		fHitPoints = Min( fMaxHP, fHitPoints + fInc );
+		fHitPoints = (std::min)( fMaxHP, fHitPoints + fInc );
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
 }
@@ -1082,7 +1082,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const
 const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const DWORD dwGuns ) const
 {
 	float fSpeed = 0;
-	const int nGuns = Min( int(sizeof(dwGuns) * 8), GetNGuns() );
+	const int nGuns = (std::min)( int(sizeof(dwGuns) * 8), GetNGuns() );
 	for ( int i = 0; i < nGuns; ++i )
 	{
 		if ( (dwGuns & i<<i) )
@@ -1302,15 +1302,15 @@ const float CAIUnit::GetTargetScanRadius()
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && GetFirstArtilleryGun() != 0 && !DoesReservePosExist() )
 		return GetFirstArtilleryGun()->GetFireRange( 0 );
 	else if ( GetStats()->etype == RPG_TYPE_OFFICER )
-		return Min( GetGun(0)->GetFireRange( 0 ) * SConsts::OFFICER_COEFFICIENT_FOR_SCAN, GetSightRadius() );
+		return (std::min)( GetGun(0)->GetFireRange( 0 ) * SConsts::OFFICER_COEFFICIENT_FOR_SCAN, GetSightRadius() );
 	else if ( GetStats()->IsArtillery() )
-		return Min( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
+		return (std::min)( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 	else
 	{
 		const float fCallForHelpRadius = theDipl.IsAIPlayer( GetPlayer() ) ? SConsts::AI_CALL_FOR_HELP_RADIUS : SConsts::CALL_FOR_HELP_RADIUS;
 		const float fFireRange = GetNGuns() > 0 ? GetGun( 0 )->GetFireRange( 0 ) : GetSightRadius();
 
-		return Min( fCallForHelpRadius, fFireRange );
+		return (std::min)( fCallForHelpRadius, fFireRange );
 	}
 }
 
@@ -1796,7 +1796,7 @@ void CAIUnit::SetCamoulfage()
 		SetBehaviourFire( SBehaviour::EFNoFire );
 	}
 	else
-    fCamoflage = Clamp( 1.0f - GetStatsModifier()->camouflage.Get( GetStats()->fCamouflage ), 0.0f, 1.0f ); 
+    fCamoflage = Clamp( 1.0f - GetStatsModifier()->camouflage.Get( GetStats()->fCamouflage ), 0.0f, 1.0f );
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_SET_CAMOUFLAGE, this, -1 );
 }
@@ -2201,7 +2201,7 @@ void CAIUnit::InitSpecialAbilities( int nFromLevel )
 	NI_ASSERT( GetStats()->GetActions() != 0, StrFmt("Empty actions set for unit \"%s\" of type \"%s\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
 	pShootInMovementExecutor = 0;
 	// start SpecialAbility executors (that are possible for this unit)
-	const int nActiveAbilities = Min<int>( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
+	const int nActiveAbilities = (std::min<int>)( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
 	for ( int i = nFromLevel; i < nActiveAbilities; ++i )
 	{
 		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0, StrFmt("Empty ability %d for unit \"%s\" of type \"%s\"", i, NDb::GetResName(GetStats()), typeid(*GetStats()).name()) )
@@ -2733,7 +2733,7 @@ const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUni
 {
 	const NDb::EUnitSpecialAbility eAbility = ( eType == NDb::ABILITY_PLACE_CONTROLLED_CHARGE || eType == NDb::ABILITY_DETONATE ) ? NDb::ABILITY_RADIO_CONTROLLED_MODE : eType;
 	const std::vector< CDBPtr< SUnitSpecialAblityDesc > > &abilities = GetStats()->GetActions()->specialAbilities;
-	const int nMaxAbilityCount = Min<int>( GetAbilityLevel(), abilities.size() );
+	const int nMaxAbilityCount = (std::min<int>)( GetAbilityLevel(), abilities.size() );
 	for ( int i = 0; i < nMaxAbilityCount; ++i )
 	{
 		NI_ASSERT( abilities[i], StrFmt("No ability desc. Unit \"%s\", ability %d", NDb::GetResName(GetStats()), i ) );
@@ -2796,7 +2796,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			if ( pLevels->eDBType == eReinforcementType && !bOldRemoved )
 			{
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eReinforcementType );
-				nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
+				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 					continue;
 				if ( pLevels->levels[nXPLevel].pStatsBonus )
@@ -2808,7 +2808,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			else if ( pLevels->eDBType == eType && !bNewApplied )
 			{
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eType );
-				nXPLevel = Min<int>( pLevels->levels.size() - 1, nXPLevel );
+				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 					continue;
 				if ( pLevels->levels[nXPLevel].pStatsBonus )

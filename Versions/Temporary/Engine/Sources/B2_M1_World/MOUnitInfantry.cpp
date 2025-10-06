@@ -222,7 +222,7 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 		SHMatrix mShootOffset( gun.vShootPointOffset, qFireRot );
 		//
 		//
-		Scene()->AttachEffect( GetID(), ESSOT_GUN_FIRE, pInfStats->szGunBoneName, mShootOffset, pVisEffect, Min( shot.time, currTime ), ESAT_REPLACE_ON_BONE );
+		Scene()->AttachEffect( GetID(), ESSOT_GUN_FIRE, pInfStats->szGunBoneName, mShootOffset, pVisEffect, (std::min)( shot.time, currTime ), ESAT_REPLACE_ON_BONE );
 		//
 	}
 	AddShotTrace( pWeapon, shot, currTime, pScene );
@@ -496,7 +496,7 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 		vParachutePos, qParachuteRot, vParachuteScale, 
 		OBJ_ANIM_MODE_FORCE_ANIMATED, 0, false );
 	//
-	const NTimer::STime timeBegin = Min( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
+	const NTimer::STime timeBegin = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	// change animation for main model
 	const NDb::SAnimB2 *pUnitIdleAnim = 0;
 	int nBeginAnimLength = -1;
@@ -557,7 +557,7 @@ IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFi
 	//
 	const NDb::SModel *pParaModel = GetModelDesc();
 	SetModel( pUnitModel );
-	const NTimer::STime timeBegin = Min( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
+	const NTimer::STime timeBegin = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	// change animation for main model
 	int nUnitIdleAnimID = -1;
 	int nFinishAnimLength = -1;

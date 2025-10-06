@@ -25,7 +25,7 @@ namespace NReinforcement
 
 void CBalanceTest::AllignSizes( std::string *szTitle, std::string *szSide0, std::string *szSide1, int nAdd )
 {
-	const int nMaxSize = Max( szTitle->size(), Max( szSide0->size(), szSide1->size() ) ) + nAdd;
+	const int nMaxSize = (std::max)( szTitle->size(), (std::max)( szSide0->size(), szSide1->size() ) ) + nAdd;
 	szTitle->resize( nMaxSize, ' ' );
 	szSide0->resize( nMaxSize, ' ' );
 	szSide1->resize( nMaxSize, ' ' );

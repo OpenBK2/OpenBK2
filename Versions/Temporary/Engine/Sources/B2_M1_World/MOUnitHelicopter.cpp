@@ -264,7 +264,7 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPG
 void CMOUnitHelicopter::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	DetachSound( EAST_MOVEMENT );
-	const NTimer::STime timeEffect = Min( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
+	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	if ( pUpdate->nParam == -1 )		// started to dive, make burn effect
 	{

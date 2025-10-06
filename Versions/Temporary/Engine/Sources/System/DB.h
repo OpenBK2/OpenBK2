@@ -73,7 +73,7 @@ public:
 	{ 
 		const int nSize1 = szKeyName.size();
 		const int nSize2 = dbid.szKeyName.size();
-		const int nSize = Min( nSize1, nSize2 );
+		const int nSize = (std::min)( nSize1, nSize2 );
 		//
 		for ( int i = 0; i < nSize; ++i )
 		{

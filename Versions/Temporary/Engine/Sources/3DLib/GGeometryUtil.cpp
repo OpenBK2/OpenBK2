@@ -15,7 +15,7 @@ void CTriVertexCacheOptimizer::CountVertices( const std::vector<STriangle> &tris
 {
 	int nMax = 0;
 	for ( int k = 0; k < tris.size(); ++k )
-		nMax = Max( nMax, Max( (int)tris[k].i1, Max( (int)tris[k].i2, (int)tris[k].i3 ) ) );
+		nMax = (std::max)( nMax, (std::max)( (int)tris[k].i1, (std::max)( (int)tris[k].i2, (int)tris[k].i3 ) ) );
 	nVertices = nMax + 1;
 }
 

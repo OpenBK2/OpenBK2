@@ -1221,7 +1221,7 @@ static void MakeSunFlareRect( CVec2 *pQuadPos, const CVec2 &sPos, const CVec2 &s
 
 static float MakeSunFlareFadeCoeff( const CVec2 &sPos, const CVec2 &sHalfScreen )
 {
-	return 1.0f - Min( 1.0f, fabs( sPos ) / fabs( sHalfScreen ) );
+	return 1.0f - (std::min)( 1.0f, fabs( sPos ) / fabs( sHalfScreen ) );
 }
 
 void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
@@ -1270,7 +1270,7 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 	else if ( fSunFlareCoeff < 1.0f )
 		fSunFlareCoeff += float( sDelta ) / 500;
 	////
-	fSunFlareCoeff = Min( 1.0f, Max( 0.0f, fSunFlareCoeff ) );
+	fSunFlareCoeff = (std::min)( 1.0f, (std::max)( 0.0f, fSunFlareCoeff ) );
 	if ( fSunFlareCoeff < FP_EPSILON )
 		return;
 	////

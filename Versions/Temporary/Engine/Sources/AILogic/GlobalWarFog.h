@@ -164,7 +164,7 @@ private:
 	const int GetStaticObjectAtTile( const SVector &vTile ) const { return staticObjects[vTile.y][vTile.x]; }
 
 	const int GetSpiralLength() const { return spiral.size(); }
-	const int GetSpiralLength( const int nRadius ) { return lengths[ Min( GetMaxRadius(), nRadius ) ]; }
+	const int GetSpiralLength( const int nRadius ) { return lengths[ (std::min)( GetMaxRadius(), nRadius ) ]; }
 	const SSpiralPoint &GetSpiralPoint( const int nIndex ) const { return spiral[ nIndex ]; }
 
 	void OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty );

@@ -311,7 +311,7 @@ void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 			}
 			
 			DeleteSelection();
-			wszFullText.insert( Max(0,nBeginText+nCursorPos), szInserted.c_str() );
+			wszFullText.insert( (std::max)(0,nBeginText+nCursorPos), szInserted.c_str() );
 
 			nCursorPos+= szInserted.size();
 			if ( !CheckTextInsideEditLine() )
@@ -596,7 +596,7 @@ bool CWindowEditLine::AddChar( const wchar_t chr )
 	if ( IsValidSymbol( chr ) )
 	{
 		DeleteSelection();
-		wszFullText.insert( wszFullText.begin() + Min( int(wszFullText.size()), nBeginText + nCursorPos), chr );
+		wszFullText.insert( wszFullText.begin() + (std::min)( int(wszFullText.size()), nBeginText + nCursorPos), chr );
 		nCursorPos++;
 		if ( !CheckTextInsideEditLine() )
 		{

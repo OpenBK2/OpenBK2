@@ -35,8 +35,8 @@ bool CDataStream::FixupBuf( int nOldSize )
 	ASSERT( data.pCurrent == data.pFileEnd );
 
 	int nNewBufSize = data.pCurrent - data.pBuffer;
-	nNewBufSize = Min( nNewBufSize + 65536 * 16, nNewBufSize * 2 );
-	nNewBufSize = Max( nNewBufSize, 4096 );
+	nNewBufSize = (std::min)( nNewBufSize + 65536 * 16, nNewBufSize * 2 );
+	nNewBufSize = (std::max)( nNewBufSize, 4096 );
 	nNewBufSize &= ~4095;
 	AllocBuf( nOldSize, nNewBufSize );
 	return IsOk();
@@ -123,7 +123,7 @@ void CDataStream::WriteFrom( CDataStream &src )
 void CMemoryStream::AllocBuf( int nOldFileSize, int nSize )
 {
 	unsigned char *pBuf = new unsigned char[ nSize ];
-	int nTransfer = Min( nSize, nOldFileSize );
+	int nTransfer = (std::min)( nSize, nOldFileSize );
 	unsigned char *pPrevBuffer = GetBufferPtr();
 	if ( nTransfer != 0 && pBuf != 0 )
 		memcpy( pBuf, pPrevBuffer, nTransfer );

@@ -149,11 +149,11 @@ void CStaticObjects::EnumObstaclesInRange(  const CVec2 &vCenter,
 																						const float fR,
 																						struct IObstacleEnumerator *f )
 {
-	const int nMinX = Max( 0, int( ( vCenter.x - fR ) / ( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
-	const int nMaxX = Min( obstacles.GetSizeX() - 1, int( ( vCenter.x + fR ) / float( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
-	const int nMinY = Max( 0, int( ( vCenter.y - fR ) / ( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
+	const int nMinX = (std::max)( 0, int( ( vCenter.x - fR ) / ( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
+	const int nMaxX = (std::min)( obstacles.GetSizeX() - 1, int( ( vCenter.x + fR ) / float( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
+	const int nMinY = (std::max)( 0, int( ( vCenter.y - fR ) / ( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
 
-	const int nMaxY = Min( obstacles.GetSizeY() - 1, int( ( vCenter.y + fR ) / float( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
+	const int nMaxY = (std::min)( obstacles.GetSizeY() - 1, int( ( vCenter.y + fR ) / float( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
 	const float fR2 = sqr( fR );
 
 	for ( int x = nMinX; x <= nMaxX; ++x )

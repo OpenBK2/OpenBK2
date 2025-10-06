@@ -30,8 +30,8 @@ void CFade::SetCurrentVolume()
 		const float fTime = timeFaded;
 
 		Singleton<IMusicSystem>()->SetVolume( eVolumeType, 
-			0.01f * Clamp( fStartVolume + fCoef * fTime, Min( fStartVolume, pFade->fFinalVolume ), 
-			Max( fStartVolume, pFade->fFinalVolume ) ) );
+			0.01f * Clamp( fStartVolume + fCoef * fTime, (std::min)( fStartVolume, pFade->fFinalVolume ),
+			(std::max)( fStartVolume, pFade->fFinalVolume ) ) );
 	}
 }
 

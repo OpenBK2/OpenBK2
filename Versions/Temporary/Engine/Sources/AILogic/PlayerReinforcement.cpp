@@ -60,7 +60,7 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer, const NDb::SMa
 	}
 
 	nMapReinforcementBonus = pMapInfo->players[nPlayer].nReinforcementCalls;
-	fRecycleTimeCoeff = Max( 0.0f, pMapInfo->players[nPlayer].fRecycleTimeCoefficient );
+	fRecycleTimeCoeff = (std::max)( 0.0f, pMapInfo->players[nPlayer].fRecycleTimeCoefficient );
 	// reinforcement points
 	for ( int i = 0; i < pMapInfo->players[nPlayer].reinforcementPoints.size(); ++i )
 		AddPosition( pMapInfo->players[nPlayer].reinforcementPoints[i], i, pMapInfo->players[nPlayer].reinforcementPoints[i].bIsDefault );

@@ -731,7 +731,7 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 	int nAvailMissionReinf = MakeArmyInfo();
 	int nMissionReinfTypes = pMap->players[0].reinforcementTypes.size();
 
-	int nCallsInMission = Min( mission.nRecommendedCalls, Singleton<IScenarioTracker>()->GetReinforcementCallsLeftInChapter() );
+	int nCallsInMission = (std::min)( mission.nRecommendedCalls, Singleton<IScenarioTracker>()->GetReinforcementCallsLeftInChapter() );
 	PlayMissionRollerAnim( nCurrentMissionReinfs, nCallsInMission );
 	PlayReinfRollerAnim( nCallsLeft - nCurrentMissionReinfs, nCallsLeft - nCallsInMission );
 	nCurrentMissionReinfs = nCallsInMission;
@@ -760,7 +760,7 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 
 		// Display bonus reinfs
 		const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
-		const int nBonuses = Min<int>( mission.reward.size(), 4 );
+		const int nBonuses = (std::min<int>)( mission.reward.size(), 4 );
 		for ( int i = 0; i < 4; ++i )
 		{
 			if ( bonusButtons[i].pButton )

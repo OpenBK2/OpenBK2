@@ -109,8 +109,8 @@ inline BYTE GetInterpolateValue( const CVec3 &v, const CArray2D<BYTE> &mask )
 {
 	const int x = Clamp( int(v.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int y = Clamp( int(v.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
-	const float dx = ClampFast( v.x - (float)x * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const float dy = ClampFast( v.y - (float)y * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float dx = Clamp( v.x - (float)x * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float dy = Clamp( v.y - (float)y * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const float fAlpha = (float)( (float)mask[y][x] + (float)(mask[y][x + 1] - mask[y][x]) * dx ) * ( 1.0f - dy ) +
 		(float)( (float)mask[y + 1][x] + (float)(mask[y + 1][x + 1] - mask[y + 1][x]) * dx ) * dy;
 	return Clamp( Float2Int(fAlpha), 0, 255 );
@@ -179,16 +179,16 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 	const CArray2D<BYTE> &mask = tileTerraMasks[0];
 	const int nV1x = Clamp( int(v1.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int nV1y = Clamp( int(v1.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
-	const float fV1dx = ClampFast( v1.x - (float)nV1x * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const float fV1dy = ClampFast( v1.y - (float)nV1y * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV1dx = Clamp( v1.x - (float)nV1x * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV1dy = Clamp( v1.y - (float)nV1y * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const int nV2x = Clamp( int(v2.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int nV2y = Clamp( int(v2.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
-	const float fV2dx = ClampFast( v2.x - (float)nV2x * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const float fV2dy = ClampFast( v2.y - (float)nV2y * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV2dx = Clamp( v2.x - (float)nV2x * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV2dy = Clamp( v2.y - (float)nV2y * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const int nV3x = Clamp( int(v3.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int nV3y = Clamp( int(v3.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
-	const float fV3dx = ClampFast( v3.x - (float)nV3x * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const float fV3dy = ClampFast( v3.y - (float)nV3y * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV3dx = Clamp( v3.x - (float)nV3x * DEF_TILE_SIZE, 0.0f, 1.0f );
+	const float fV3dy = Clamp( v3.y - (float)nV3y * DEF_TILE_SIZE, 0.0f, 1.0f );
 
 	for ( int k = 0; k < tileTerraMasks.size(); ++k )
 	{

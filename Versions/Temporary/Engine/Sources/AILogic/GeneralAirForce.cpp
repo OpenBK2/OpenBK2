@@ -307,7 +307,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 
 	std::vector<CVec2> points;
 	
-	const int nStep = Max( 2.0f, fSizeX / SGeneralConsts::SCOUT_POINTS );
+	const int nStep = (std::max)( 2.0f, fSizeX / SGeneralConsts::SCOUT_POINTS );
 
 	for ( int x = nStep / 2; x < fSizeX; x += nStep )
 	{
@@ -341,7 +341,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	const float fFlyHeight( pSamplePlane->GetZ() );
 	
 	std::list<CVec2> vPointsToFly;
-	const float fCheckRadius = Min( static_cast<int>( SGeneralConsts::SCOUT_FREE_POINT ),
+	const float fCheckRadius = (std::min)( static_cast<int>( SGeneralConsts::SCOUT_FREE_POINT ),
 																	static_cast<int>( nStep * SConsts::TILE_SIZE ) );
 	
 	CVec2 vCurStartPoint = vAppearPoint;

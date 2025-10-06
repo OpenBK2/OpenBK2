@@ -66,7 +66,7 @@ void CPointGlowAnimator::CalcSize()
 	}
 	STime tCur = pTime->GetValue();
 	if ( bShortInterval )
-		tNextCheck = Min( tNextCheck, tCur + 150 );
+		tNextCheck = (std::min)( tNextCheck, tCur + 150 );
 	if ( tCur > tNextCheck )
 	{
 		CVec4 vCamera4 = pCamera->GetValue();

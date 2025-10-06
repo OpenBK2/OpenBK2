@@ -157,7 +157,7 @@ bool ComparePathLt( const int nStart1, const int nLength1, const std::string &sz
 	if ( nLength2 == 0 )
 		return false;
 	//
-	const int nSize = Min( nLength1, nLength2 );
+	const int nSize = (std::min)( nLength1, nLength2 );
 	const char *p1 = &( szPath1[nStart1] );
 	const char *p2 = &( szPath2[nStart2] );
 	for ( int i = 0; i < nSize; ++i )

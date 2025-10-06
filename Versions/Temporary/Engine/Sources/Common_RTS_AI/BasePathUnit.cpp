@@ -257,7 +257,7 @@ const bool CBasePathUnit::MakeTurnToDirection( const WORD _wDirection )
 	const WORD wClockWise = wNewFrontDir - GetFrontDirection();
 	const WORD wAntiClockWise = GetFrontDirection() - wNewFrontDir;
 
-	const WORD wMinTurn = Min( wClockWise, wAntiClockWise );
+	const WORD wMinTurn = (std::min)( wClockWise, wAntiClockWise );
 	if ( wMinTurn < TURN_TOLERANCE )
 	{
 		SetDirection( _wDirection );
@@ -371,7 +371,7 @@ const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildP
 				const WORD wCurDir( GetDirectionByVector( vCurDir ) );
 				const WORD wRightDirDiff = DirsDifference( wUnitDir, wCurDir );
 				const WORD wBackDirDiff = DirsDifference( wUnitDir + 32768, wCurDir );
-				const WORD wDirsDiff = Min( wRightDirDiff, wBackDirDiff );
+				const WORD wDirsDiff = (std::min)( wRightDirDiff, wBackDirDiff );
 				if ( ( CanGoBackward() || wDirsDiff == wRightDirDiff ) && 
 					CheckTurn( 1.0f, vCurDir, false, true ) )
 				{
@@ -460,7 +460,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 
 	const WORD wClockWise = wFinalDir - GetFrontDirection();
 	const WORD wAntiClockWise = GetFrontDirection() - wFinalDir;
-	const WORD wBestDir = Min( wClockWise, wAntiClockWise );
+	const WORD wBestDir = (std::min)( wClockWise, wAntiClockWise );
 	const int nDirSign = ( wClockWise < wAntiClockWise ) ? ( 1 ) : ( -1 );
 
 	const int nParts = 4;
@@ -739,7 +739,7 @@ const float CBasePathUnit::GetMaxSpeedHere( const CVec2 &vPosition, const bool b
 	const float fMapPass = pAIMap->GetTerrain()->GetPass( vPosition );
 	float fSpeed = GetMaxPossibleSpeed() * ( fMapPass + ( 1 - fMapPass ) * GetPassability() );
 	if ( bAdjust && GetDesiredSpeed() > 0.0f  )
-		fSpeed = Min( fSpeed, GetDesiredSpeed() );
+		fSpeed = (std::min)( fSpeed, GetDesiredSpeed() );
 
 	return fSpeed;
 }

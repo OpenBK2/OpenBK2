@@ -99,7 +99,7 @@ void CTimeCounter::RegisterCounter( const int nName, const std::string &szName )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::Count( const int nName, const bool bStart )
 {
-	nMaxIndex = Max( nName, nMaxIndex );
+	nMaxIndex = (std::max)( nName, nMaxIndex );
 
 	if ( bStart )
 	{
@@ -175,7 +175,7 @@ void CTimeCounter::ChangeVar( const int nIndex, const float fChange )
 	if ( nIndex >= variables.size() )
 		variables.resize( nIndex * 1.5, 0.0f );
 
-	nMaxVar = Max( nIndex, nMaxVar );
+	nMaxVar = (std::max)( nIndex, nMaxVar );
 	variables[nIndex] += fChange;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ void CTimeCounter::SetVar( const int nIndex, const float fValue )
 	if ( nIndex >= variables.size() )
 		variables.resize( nIndex * 1.5, 0.0f );
 
-	nMaxVar = Max( nIndex, nMaxVar );
+	nMaxVar = (std::max)( nIndex, nMaxVar );
 	variables[nIndex] = fValue;
 }
 

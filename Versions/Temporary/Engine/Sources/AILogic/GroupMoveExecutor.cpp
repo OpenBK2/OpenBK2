@@ -221,7 +221,7 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 				{
 					pos = cells.find( nPriority );
 					nPrevPriority = nPriority;
-					fMaxGroupSpeed = Min( it->pUnit->GetMaxPossibleSpeed(), fMaxGroupSpeed );
+					fMaxGroupSpeed = (std::min)( it->pUnit->GetMaxPossibleSpeed(), fMaxGroupSpeed );
 				}
 
 				it->pUnit->SetGroupShift( pos->second[ it->nCell ] );
@@ -257,7 +257,7 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 		{
 			priorityGroups[ nPriority ] = SPriorityGroupPosition( it->pUnit->GetAABBHalfSize().x*AABB_HALF_SIZE_X_MULTIPLIER, it->pUnit->GetAABBHalfSize().y*AABB_HALF_SIZE_Y_MULTIPLIER );
 			pos = priorityGroups.find( nPriority );
-			fMaxHeight = Max( pos->second.vUnitSize.x, fMaxHeight );
+			fMaxHeight = (std::max)( pos->second.vUnitSize.x, fMaxHeight );
 			priorityValues.push_back( nPriority );
 		}
 		else

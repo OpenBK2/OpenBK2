@@ -661,7 +661,7 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 				}
 				else
 				{
-					pInfo->nAlphaTest = Max( 1, Float2Int( pInfo->nAlphaTest * fFade ) );
+					pInfo->nAlphaTest = (std::max)( 1, Float2Int( pInfo->nAlphaTest * fFade ) );
 					pOp->AddOperation( RO_TNL_LIT_TEXTURE, 100, nAlphaMode, 0, pInfo );
 				}
 				break;
@@ -749,7 +749,7 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 			}
 			else
 			{
-				pInfo->nAlphaTest = Max( 1, Float2Int( pInfo->nAlphaTest * fFade ) );
+				pInfo->nAlphaTest = (std::max)( 1, Float2Int( pInfo->nAlphaTest * fFade ) );
 				pOp->AddOperation( rop, 100, nAlphaMode, 0, this, pInfo );
 			}
 			break;

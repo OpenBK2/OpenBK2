@@ -54,7 +54,7 @@ void MakeQuadTriList( int nRects, STriangleList *pRes )
 {
 	ASSERT( nRects <= N_MAX_RECTANGLES );
 	RefreshUniversalRectTrisBuffer();
-	*pRes = STriangleList( &universalRectsBuffer[0], Min( nRects, N_MAX_RECTANGLES ) * 2, 0 );
+	*pRes = STriangleList( &universalRectsBuffer[0], (std::min)( nRects, N_MAX_RECTANGLES ) * 2, 0 );
 }
 
 // C2DQuadsRenderer
@@ -166,8 +166,8 @@ S2DRectInfoLock* C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const 
 	}
 	else
 	{
-		fScaleU = fUVMult / Max( 1, region.size.x );
-		fScaleV = fUVMult / Max( 1, region.size.y );
+		fScaleU = fUVMult / (std::max)( 1, region.size.x );
+		fScaleV = fUVMult / (std::max)( 1, region.size.y );
 	}
 	return pLock;
 }

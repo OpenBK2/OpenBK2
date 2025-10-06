@@ -78,7 +78,7 @@ void CCommonPathFinder::SetLimitedPathParameters(
 	pAIMap = _pAIMap;
 	pTerrain = pAIMap->GetTerrain();
 
-	const int nMaxSize = Max( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
+	const int nMaxSize = (std::max)( pAIMap->GetSizeX(), pAIMap->GetSizeY() );
 	if ( nMaxSize > mapBuf.GetSizeX() )
 	{
 		mapBuf.SetSizes( nMaxSize, nMaxSize );
@@ -96,7 +96,7 @@ void CCommonPathFinder::SetLimitedPathParameters(
 	startPoint.x = Clamp( startPoint.x, 0, pAIMap->GetSizeX() - 1 );
 	startPoint.y = Clamp( startPoint.y, 0, pAIMap->GetSizeY() - 1 );
 	finishPoint = pAIMap->GetTile( vFinishPoint.x, vFinishPoint.y );
-	upperLimit = Min( _nUpperLimit, LONG_PATH_LENGTH );
+	upperLimit = (std::min)( _nUpperLimit, LONG_PATH_LENGTH );
 
 	longPath = ( upperLimit == LONG_PATH_LENGTH );
 	lastKnownGoodTile = _lastKnownGoodTile;
@@ -884,7 +884,7 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE, const int MA
 
 	while ( i < nLength-1 )
 	{
-		const int j = Min( i+STEP_LENGTH_THERE, nLength )-1;
+		const int j = (std::min)( i+STEP_LENGTH_THERE, nLength )-1;
 
 		if ( numOfAttempts > MAX_NUM_OF_ATTEMPTS_THERE  ||  
 			!Walkable( stopPoints[checkNum + nStart], stopPoints[j + nStart] ) )
@@ -914,7 +914,7 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE, const int MA
 	int nSegm = 0;
 	while ( i > 0 )
 	{
-		const int j = Max( i-STEP_LENGTH_BACK, 0 );
+		const int j = (std::max)( i-STEP_LENGTH_BACK, 0 );
 
 		if ( numOfAttempts > MAX_NUM_OF_ATTEMPTS_BACK || !Walkable( addPoints[j], addPoints[checkNum] ) )
 		{
@@ -975,7 +975,7 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE, const int MA
 			//  simple bisections	
 			if ( longPath )
 			{
-				int j = Min( i - 1, (int)TOLERANCE )+1;
+				int j = (std::min)( i - 1, (int)TOLERANCE )+1;
 				while ( j > 0  &&  !Walkable( stopPoints[segmBegin[i]], stopPoints[segmBegin[i-j+1]-1] ) )
 					j >>= 1;
 
@@ -995,7 +995,7 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE, const int MA
 			else
 				//	sequential search	
 			{
-				int j = Max(1, i-TOLERANCE);
+				int j = (std::max)(1, i-TOLERANCE);
 				while ( j <= i && !Walkable( stopPoints[segmBegin[i]], stopPoints[segmBegin[j]-1] ) )
 					++j;
 

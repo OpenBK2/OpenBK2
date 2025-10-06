@@ -48,8 +48,8 @@ const float F( const float fHPPercent, const float fT0, const float fT1, const f
 	static const float fAlphaPrice = 1.0f;
 
 	return
-		( 0.8f + fHPPercent * 0.2f ) * fAlphaAttack1 * Min( 0.0f, fT2 - F_LIMIT_TIME ) -
-		( 0.8f + fHPPercent * 0.2f ) * fAlphaAttack2 * Max( 0.0f, fT2 - F_LIMIT_TIME ) -
+		( 0.8f + fHPPercent * 0.2f ) * fAlphaAttack1 * (std::min)( 0.0f, fT2 - F_LIMIT_TIME ) -
+		( 0.8f + fHPPercent * 0.2f ) * fAlphaAttack2 * (std::max)( 0.0f, fT2 - F_LIMIT_TIME ) -
 		fAlphaGo * fT0 - 
 		fAlphaKill * fT1 +
 		fPrice * fAlphaPrice;
@@ -104,7 +104,7 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 		{
 			float fTurnSpeed = pTurret->GetHorRotationSpeed();
 			if ( bMovingOwner )
-				fTurnSpeed = Min( fTurnSpeed, pOwner->GetTurnSpeed() );
+				fTurnSpeed = (std::min)( fTurnSpeed, pOwner->GetTurnSpeed() );
 
 			return nTimeVerticalAim + float( wTurnAngle ) / fTurnSpeed;
 		}
@@ -257,7 +257,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 					
 					// нельзя двигаться или нужно идти достаточно далеко, чтобы примерно дойти до точки, откуда можно стрелять
 					const float fFireRange = pGun->GetFireRange( pEnemy->GetCenter().z );
-					const float fDistToGo = Max( 0.0f, fDist - fFireRange );
+					const float fDistToGo = (std::max)( 0.0f, fDist - fFireRange );
 					const CVec2 vPoint = vCenterPlain + vDirToEnemy * fDistToGo;
 
 	
@@ -300,7 +300,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						if ( fR <= 0 )
 							fProbToHit = 1;
 						else
-							fProbToHit = Min( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
+							fProbToHit = (std::min)( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
 
 						// probability to pierce
 						const float fPierceProb = 1.0f / Clamp( sqr( float( pGun->GetMaxPossiblePiercing() - pEnemy->GetMinArmor() ) / float( pGun->GetMaxPossiblePiercing() - pGun->GetMinPossiblePiercing() ) ), 0.01f, 1.0f );
@@ -552,7 +552,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 					 pGun->GetNAmmo() > 0 && pGun->CanShootToUnit( pEnemy ) )
 			{
 				// нельзя двигаться или можно идти достаточно далеко, чтобы примерно дойти до точки, откуда можно стрелять
-				const float fDistToGo = Max( 0.0f, fDist - pGun->GetFireRange( pEnemy->GetCenter().z ) );
+				const float fDistToGo = (std::max)( 0.0f, fDist - pGun->GetFireRange( pEnemy->GetCenter().z ) );
 				const CVec2 vPoint = vCeneterPlain + vDirToEnemy * fDistToGo;
 
 				if ( pOwner->CanGoToPoint( vPoint ) || fDistToGo == 0 )
@@ -585,7 +585,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 					if ( fR <= 0 )
 						fProbToHit = 1;
 					else
-						fProbToHit = Min( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
+						fProbToHit = (std::min)( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
 
 					// выстрелов, чтобы убить с вероятностью 80%		
 					const float fShotsToKill = 0.8 * pEnemy->GetHitPoints() / pGun->GetDamage();

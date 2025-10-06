@@ -367,7 +367,7 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 				pRes->AutoDepthStencilFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nDepth ) ) )
 		{
 			pRes->MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
-			pRes->MultiSampleQuality = Min( Min( nFront, nDepth ), nFSAA );
+			pRes->MultiSampleQuality = (std::min)( (std::min)( nFront, nDepth ), nFSAA );
 			if ( pRes->MultiSampleQuality > 0 )
 				--pRes->MultiSampleQuality;
 		}
@@ -631,7 +631,7 @@ static bool CheckDeviceCaps()
 		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_D24S8,
 			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nDepthFSAA ) )
 		)
-		nMaxFSAA = Min( nFrontFSAA, nDepthFSAA );
+		nMaxFSAA = (std::min)( nFrontFSAA, nDepthFSAA );
 
 	return true;
 }
@@ -892,9 +892,9 @@ void SetGamma( bool bGamma )
 		int nMax = 0;
 		for ( int k = 0; k < 256; ++k )
 		{
-			nMax = Max( nMax, (int)keptGamma.red[k] );
-			nMax = Max( nMax, (int)keptGamma.green[k] );
-			nMax = Max( nMax, (int)keptGamma.blue[k] );
+			nMax = (std::max)( nMax, (int)keptGamma.red[k] );
+			nMax = (std::max)( nMax, (int)keptGamma.green[k] );
+			nMax = (std::max)( nMax, (int)keptGamma.blue[k] );
 		}
 		if ( nMax < 120 )
 		{

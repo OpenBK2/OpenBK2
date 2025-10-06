@@ -51,7 +51,7 @@ float Heal( const float fMaxHP, const float fCurHP, const float fRepCost,
 	if (  fMaxHP !=  fCurHP )
 	{
 		const float hpRepeared = *pfWorkAccumulator / fRepCost;
-		const float dh =  Min( fMaxHP - fCurHP, hpRepeared );
+		const float dh =  (std::min)( fMaxHP - fCurHP, hpRepeared );
 		{
 			*pfWorkAccumulator -= dh * fRepCost;
 			*pfWorkLeft -= dh * fRepCost ;
@@ -408,7 +408,7 @@ void CFormationRepairUnitState::Segment()
 				break;
 			}
 			else if ( pred.IsNotEnoughRu() || !bNearTruck ||
-								fWorkLeft != Min( SConsts::ENGINEER_RU_CARRY_WEIGHT, pHomeTransport->GetResursUnitsLeft() ) )
+								fWorkLeft != (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pHomeTransport->GetResursUnitsLeft() ) )
 				Interrupt();
 			else
 			{
@@ -467,7 +467,7 @@ void CFormationRepairUnitState::Segment()
 													SConsts::RU_PER_QUANT *
 													( curTime - lastRepearTime ) / SConsts::TIME_QUANT;
 
-			fWorkAccumulator = Min( fWorkAccumulator, fWorkLeft );
+			fWorkAccumulator = (std::min)( fWorkAccumulator, fWorkLeft );
 
 			// гусеницу - в первую очередь
 			if ( pTank && pTank->IsTrackDamaged() && // если повреждена и достаточно ресурсов
@@ -543,7 +543,7 @@ void CFormationServeUnitState::SetHomeTransport( class CAITransportUnit *pTransp
 	NI_ASSERT( eState == EFRUS_WAIT_FOR_HOME_TRANSPORT, "wrong state" );
 	eState = EFRUS_FIND_UNIT_TO_SERVE;
 	pHomeTransport = pTransport;
-	fWorkLeft = Min( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
+	fWorkLeft = (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
 }
 
 //*******************************************************************
@@ -715,7 +715,7 @@ void CFormationResupplyUnitState::Segment()
 			fWorkAccumulator += pUnit->Size() * 
 													SConsts::RU_PER_QUANT * 
 													(curTime - lastResupplyTime) / SConsts::TIME_QUANT;
-			fWorkAccumulator = Min( fWorkAccumulator, fWorkLeft );
+			fWorkAccumulator = (std::min)( fWorkAccumulator, fWorkLeft );
 			lastResupplyTime = curTime ;
 			float fWorkPerformed = 0;
 			int nGunsResupplied = 0;
@@ -729,8 +729,8 @@ void CFormationResupplyUnitState::Segment()
 				if ( 0 != iAmmoNeeded )
 				{//need resupply
 					min1AmmoCost = ( min1AmmoCost == 0 || rStats.fReloadCost < min1AmmoCost ) ? rStats.fReloadCost : min1AmmoCost;
-					int nAmmoToAdd = Min( iAmmoNeeded, int( fWorkAccumulator / rStats.fReloadCost ) );
-					float fWorkNeeded = Min( iAmmoNeeded * rStats.fReloadCost, nAmmoToAdd * rStats.fReloadCost );
+					int nAmmoToAdd = (std::min)( iAmmoNeeded, int( fWorkAccumulator / rStats.fReloadCost ) );
+					float fWorkNeeded = (std::min)( iAmmoNeeded * rStats.fReloadCost, nAmmoToAdd * rStats.fReloadCost );
 					if ( fWorkNeeded == 0 )
 					{
 						continue;
@@ -1177,7 +1177,7 @@ void CFormationBuildLongObjectState::SetHomeTransport( class CAITransportUnit *p
 	NI_ASSERT( eState == ETBS_WAITING_FOR_HOMETRANSPORT, "wrong state" );
 	eState = FBFS_READY_TO_START;
 	pHomeTransport = pTransport;
-	fWorkLeft = Min( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
+	fWorkLeft = (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
 }
 
 ETryStateInterruptResult CFormationBuildLongObjectState::TryInterruptState( CAICommand *pCommand )
@@ -1254,7 +1254,7 @@ void CFormationBuildLongObjectState::Segment()
 		}
 		else if ( curTime - lastTime > SConsts::TIME_QUANT )
 		{
-			const float fAddWork = Min( 1.0f * pUnit->Size() *
+			const float fAddWork = (std::min)( 1.0f * pUnit->Size() *
 				SConsts::RU_PER_QUANT *
 														float( curTime - lastTime ) / SConsts::TIME_QUANT,
 														fWorkLeft );
@@ -2305,7 +2305,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 					NI_ASSERT( dynamic_cast<CArtilleryCrewPath*>(crewMember.pUnit->GetSmoothPath()) != 0, "wrong path" );
 					CArtilleryCrewPath* pPath = checked_cast<CArtilleryCrewPath*>( crewMember.pUnit->GetSmoothPath() );
 					const float fSpeed = pArtillery->GetSpeed();
-					pPath->SetParams( crewMember.vServePoint, Max( fSpeed, crewMember.pUnit->GetMaxPossibleSpeed() )  );
+					pPath->SetParams( crewMember.vServePoint, (std::max)( fSpeed, crewMember.pUnit->GetMaxPossibleSpeed() )  );
 					crewMember.pUnit->SetDirectionVec( vDiff );
 					continue;
 				}
@@ -2764,7 +2764,7 @@ void CFormationRepairBridgeState::Segment()
 		{
 			fWorkDone = 1.0f * ( curTime - timeLastCheck ) / SConsts::TIME_QUANT * SConsts::RU_PER_QUANT;
 			timeLastCheck = curTime;
-			fWorkDone = Min( fWorkLeft, fWorkDone );
+			fWorkDone = (std::min)( fWorkLeft, fWorkDone );
 			float fMissedWork = 0;
 			int nSpansWithMissedHP = 0;
 			// calc missed work
@@ -2823,7 +2823,7 @@ void CFormationRepairBridgeState::SetHomeTransport( class CAITransportUnit *pTra
 	NI_ASSERT( eState == FRBS_WAIT_FOR_HOMETRANSPORT, "wrong state sequence" );
 	eState = FRBS_START_APPROACH;
 	pHomeTransport = pTransport;
-	fWorkLeft = Min( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
+	fWorkLeft = (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
 }
 
 //*******************************************************************
@@ -2924,7 +2924,7 @@ void CFormationRepairBuildingState::Segment()
 		if ( curTime - lastRepearTime > SConsts::TIME_QUANT )
 		{
 			fWorkAccumulator += pUnit->Size() * SConsts::RU_PER_QUANT * ( curTime - lastRepearTime ) / SConsts::TIME_QUANT;
-			fWorkAccumulator = Min( fWorkAccumulator, fWorkLeft );
+			fWorkAccumulator = (std::min)( fWorkAccumulator, fWorkLeft );
 
 			const float maxHP = pBuilding->GetStats()->fMaxHP;
 			const float curHP = pBuilding->GetHitPoints();
@@ -2973,7 +2973,7 @@ void CFormationRepairBuildingState::SetHomeTransport( class CAITransportUnit *pT
 	NI_ASSERT( eState == EFRBS_WAIT_FOR_HOME_TRANSPORT, "wrong state" );
 	eState = EFRBS_START_APPROACH;
 	pHomeTransport = pTransport;
-	fWorkLeft = Min( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
+	fWorkLeft = (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
 }
 
 

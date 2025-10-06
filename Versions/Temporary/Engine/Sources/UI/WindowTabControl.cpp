@@ -139,7 +139,7 @@ void CWindowTabControl::Init()
 
 const std::string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pTab )
 {
-	tabNames.resize( Max<int>( tabNames.size(), nTab + 1 ) );
+	tabNames.resize( (std::max<int>)( tabNames.size(), nTab + 1 ) );
 	if ( tabNames[nTab].empty() || pTab )
 	{
 		if ( pTab )

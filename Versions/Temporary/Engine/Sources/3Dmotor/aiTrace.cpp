@@ -88,17 +88,17 @@ SInterval::SCrossPoint CTracer::CalcCross( const SRefTriangle &t )
 		if ( f1 * f2 < 0 )
 		{
 			fD = GetPlanePoint( t.a, f1, t.a2, f2 ) * ptDir;
-			fMinDistance = Min( fD, fMinDistance );
+			fMinDistance = (std::min)( fD, fMinDistance );
 		}
 		if ( f2 * f3 < 0 )
 		{
 			fD = GetPlanePoint( t.a2, f2, t.a3, f3 ) * ptDir;
-			fMinDistance = Min( fD, fMinDistance );
+			fMinDistance = (std::min)( fD, fMinDistance );
 		}
 		if ( f3 * f1 < 0 )
 		{
 			fD = GetPlanePoint( t.a3, f3, t.a, f1 ) * ptDir;
-			fMinDistance = Min( fD, fMinDistance );
+			fMinDistance = (std::min)( fD, fMinDistance );
 		}
 		if ( fMinDistance == 1e30f )
 		{

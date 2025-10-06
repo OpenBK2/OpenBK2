@@ -2138,7 +2138,7 @@ CSoldierEntrenchSelfState::CSoldierEntrenchSelfState ( class CSoldier *_pSoldier
 
 	float fCoeff = 1.0f;
 	int nDefaultTime = SConsts::ENTRENCH_SELF_TIME;
-	for ( int i = 0; i < Min<int> ( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() ); ++i )
+	for ( int i = 0; i < (std::min<int>) ( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pSoldier->GetStats()->GetActions()->specialAbilities[i]->eName;
 		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 

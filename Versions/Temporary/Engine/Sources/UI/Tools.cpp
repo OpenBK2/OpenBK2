@@ -41,7 +41,7 @@ void ApplyTextureAllign( const NDb::EPositionAllign eAllign,
 	{
 	case NDb::EPA_LOW_END:
 		*pfMap1 = 0;
-		*pfMap2 = Min( fWidth, fTextureWidth );
+		*pfMap2 = (std::min)( fWidth, fTextureWidth );
 
 		break;
 	case NDb::ERA_CENTER:
@@ -70,7 +70,7 @@ void ApplyTextureAllign( const NDb::EPositionAllign eAllign,
 		break;
 	default:
 		*pfMap1 = 0;
-		*pfMap2 = Min( fWidth, fTextureWidth );
+		*pfMap2 = (std::min)( fWidth, fTextureWidth );
 		break;
 	}
 }

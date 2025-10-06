@@ -52,7 +52,7 @@ static void PreprocessPath( std::string *pResPath, EStreamPath *pStreamPathType,
 		*pStreamPathType = STREAM_PATH_ABSOLUTE;
 		*pResPath = szPath;
 	}
-	else if ( NFile::ComparePathEq(0, szBasePath.size(), szBasePath, 0, Min(szBasePath.size(), szPath.size()), szPath) != false )
+	else if ( NFile::ComparePathEq(0, szBasePath.size(), szBasePath, 0, (std::min)(szBasePath.size(), szPath.size()), szPath) != false )
 	{
 		*pStreamPathType = STREAM_PATH_RELATIVE;
 		*pResPath = szPath.c_str() + szBasePath.size();

@@ -51,7 +51,7 @@ void CWindowProgressBar::Visit( struct IUIVisitor *pVisitor )
 
 void CWindowProgressBar::SetPosition( const float fPos ) 
 { 
-	pInstance->fProgress = Clamp( fPos, 0.0f, 1.0f ); 
+	pInstance->fProgress = Clamp( fPos, 0.0f, 1.0f );
 	CTRect<float> rect;
 	FillWindowRect( &rect );
 

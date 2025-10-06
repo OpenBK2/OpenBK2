@@ -85,7 +85,7 @@ public:
 	
 	const NTimer::STime& GetHorEndTime() const { return hor.endTime; }
 	const NTimer::STime& GetVerEndTime() const { return ver.endTime; }
-	const NTimer::STime GetEndTurnTime() const { return Max( GetHorEndTime(), GetVerEndTime() ); }
+	const NTimer::STime GetEndTurnTime() const { return (std::max)( GetHorEndTime(), GetVerEndTime() ); }
 
 	void Segment();
 

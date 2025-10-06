@@ -580,7 +580,7 @@ void CUpdatableWorld::UpdateMove( const SAIBasicUpdate * _pUpdate )
 	if ( pMO == 0 )
 		return;
 	//
-	const NTimer::STime time = Min( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
+	const NTimer::STime time = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	CPtr<IClientUpdatableProcess> pProcess = pMO->AIUpdateMovement( time, true, Scene(), SoundScene() );
 	if ( pProcess != 0 )
 		RegisterProcess( pProcess );
@@ -609,7 +609,7 @@ void CUpdatableWorld::UpdateStop( const SAIBasicUpdate * _pUpdate )
 	CMapObj *pMO = checked_cast<CMapObj *>(GetMapObj( nID ));
 	if ( pMO == 0 )
 		return;
-	const NTimer::STime time = Min( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
+	const NTimer::STime time = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	CPtr<IClientUpdatableProcess> pProcess = pMO->AIUpdateMovement( time, false, Scene(), SoundScene() );
 	if ( pProcess != 0 )
 		RegisterProcess( pProcess );

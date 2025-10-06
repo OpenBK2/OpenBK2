@@ -171,7 +171,7 @@ bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pT
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	const int nSize = data.pArray->GetSize( *this, pThis );
-	const int nDesiredSize = Max( 0, (int)value );
+	const int nDesiredSize = (std::max)( 0, (int)value );
 	//
 	if ( nDesiredSize == 0 )
 		return data.pArray->Remove( 0, -1, *this, pThis );

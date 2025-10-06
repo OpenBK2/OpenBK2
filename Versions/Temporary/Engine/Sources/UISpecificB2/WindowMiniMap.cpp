@@ -171,7 +171,7 @@ void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nW
 	fMapWidth = nWidth;
 	fMapHeight = nHeight;
 	fAspect = fMapWidth/fMapHeight;
-	const int nWarFogLevel = Max( 2, _nWarFogLevel );
+	const int nWarFogLevel = (std::max)( 2, _nWarFogLevel );
 	warFogColors.resize( nWarFogLevel );
 	for ( int i = 0; i < nWarFogLevel; ++i )
 		warFogColors[i] = NGfx::SPixel8888( 0, 0, 0, s_nDarkWarFogAlpha - i*(s_nDarkWarFogAlpha - s_nLightWarFogAlpha)/(nWarFogLevel - 1) );
@@ -193,10 +193,10 @@ void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nW
 void CWindowMiniMap::SetBaseRotableParams()
 {
 	// base rectangle
-	CVec2 vMin( Min( pShared->vPoint00.x, Min( pShared->vPoint01.x, Min( pShared->vPoint10.x, pShared->vPoint11.x ) ) ),
-		Min( pShared->vPoint00.y, Min( pShared->vPoint01.y, Min( pShared->vPoint10.y, pShared->vPoint11.y ) ) ) );
-	CVec2 vMax( Max( pShared->vPoint00.x, Max( pShared->vPoint01.x, Max( pShared->vPoint10.x, pShared->vPoint11.x ) ) ),
-		Max( pShared->vPoint00.y, Max( pShared->vPoint01.y, Max( pShared->vPoint10.y, pShared->vPoint11.y ) ) ) );
+	CVec2 vMin( (std::min)( pShared->vPoint00.x, (std::min)( pShared->vPoint01.x, (std::min)( pShared->vPoint10.x, pShared->vPoint11.x ) ) ),
+		(std::min)( pShared->vPoint00.y, (std::min)( pShared->vPoint01.y, (std::min)( pShared->vPoint10.y, pShared->vPoint11.y ) ) ) );
+	CVec2 vMax( (std::max)( pShared->vPoint00.x, (std::max)( pShared->vPoint01.x, (std::max)( pShared->vPoint10.x, pShared->vPoint11.x ) ) ),
+		(std::max)( pShared->vPoint00.y, (std::max)( pShared->vPoint01.y, (std::max)( pShared->vPoint10.y, pShared->vPoint11.y ) ) ) );
 
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
 	{
@@ -206,7 +206,7 @@ void CWindowMiniMap::SetBaseRotableParams()
 	{
 		float a1 = ( vMax.y - vMin.y ) * 0.5f;
 		float a2 = ( vMax.x - vMin.x ) * 0.5f;
-		float maxsize = sqrt( 2.0f ) * Max( a1, a2 );
+		float maxsize = sqrt( 2.0f ) * (std::max)( a1, a2 );
 
 		vRotableCenter.x = sqrt( 2.0f ) * a2;
 		vRotableCenter.y = sqrt( 2.0f ) * a1;

@@ -104,7 +104,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	if ( !pGameRoot )
 		return;
 
-	int nCampaignCount = Min<int>( MAX_CAMPAIGN_COUNT, pGameRoot->campaigns.size() );
+	int nCampaignCount = (std::min<int>)( MAX_CAMPAIGN_COUNT, pGameRoot->campaigns.size() );
 	switch ( nCampaignCount )
 	{
 		case 1:
@@ -133,7 +133,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	// additional test campaigns
 	bool bAllowTestCampaigns = NGlobal::GetVar( "allow_test_campaigns", 0 ) != 0;
 	if ( bAllowTestCampaigns )
-		nCampaignCount = Min<int>( 5, pGameRoot->campaigns.size() );
+		nCampaignCount = (std::min<int>)( 5, pGameRoot->campaigns.size() );
 	if ( nCampaignCount >= 4 )
 		AddCampaignWindow( 3, 3 );
 	if ( nCampaignCount >= 5 )
@@ -372,7 +372,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	{
 		const int nOldDifficulty = bFirstTime ? CAMPAIGN_DEFAULT_DIFFICULTY : pDifficulty->GetSelectedIndex();
 		const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < pCampaign->difficultyLevels.size() ) ? nOldDifficulty : 
-			Max( 0, Min( CAMPAIGN_DEFAULT_DIFFICULTY, (int)( pCampaign->difficultyLevels.size() ) - 1 ) );
+			(std::max)( 0, (std::min)( CAMPAIGN_DEFAULT_DIFFICULTY, (int)( pCampaign->difficultyLevels.size() ) - 1 ) );
 
 		pDifficulty->RemoveAllItems();
 		if ( pCampaign->difficultyLevels.empty() )

@@ -71,11 +71,11 @@ inline float GetRandom( float fAverage, int nRandom )
 }
 inline int GetPositiveRandom( int nAverage, int nRandom )
 {
-	return Max( 0, NRandom::Random( nAverage - nRandom,  nAverage + nRandom) );
+	return (std::max)( 0, NRandom::Random( nAverage - nRandom,  nAverage + nRandom) );
 }
 inline float GetPositiveRandom( float fAverage, int nRandom )
 {
-	return Max( 0.0f, NRandom::Random( fAverage - float(nRandom), fAverage + float(nRandom) ) );
+	return (std::max)( 0.0f, NRandom::Random( fAverage - float(nRandom), fAverage + float(nRandom) ) );
 }
 
 // Special Ability

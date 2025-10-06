@@ -1044,7 +1044,7 @@ CFormationEnterEntrenchmentState::CFormationEnterEntrenchmentState( CFormation *
 bool CFormationEnterEntrenchmentState::IsAnyPartCloseToEntrenchment() const
 {
 	// посмотреть положение центра формации
-	const float fFormationRadius2 = sqr( Max( pFormation->GetRadius(), SConsts::TILE_SIZE * 4.0f ) );
+	const float fFormationRadius2 = sqr( (std::max)( pFormation->GetRadius(), SConsts::TILE_SIZE * 4.0f ) );
 	const CVec2 vFormationCenter = pFormation->GetCenterPlain();
 	CVec2 vClosestPoint;
 	pEntrenchment->GetClosestPoint( vFormationCenter, &vClosestPoint );
@@ -3520,7 +3520,7 @@ CFormationFirstAidState::CFormationFirstAidState( class CFormation *_pFormation,
 		CSoldier *pSold = (*pFormation)[i];
 		const int nLevel = theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType() );
 		const NDb::SUnitBaseRPGStats *pStats = pSold->GetStats();
-		const int nAbilities = Min<int>( nLevel+1, pStats->GetActions()->specialAbilities.size() );
+		const int nAbilities = (std::min<int>)( nLevel+1, pStats->GetActions()->specialAbilities.size() );
 		bool bCanHeal = false;
 		for ( int nAbility = 0; nAbility < nAbilities; ++nAbility )
 		{
@@ -3571,7 +3571,7 @@ bool CFormationFirstAidState::FindNearestPatient( CSoldier *pDoctor, CSoldier *p
 			if ( IsSoldierNeedHealing( pUnit ) )
 			{
 				const float fWeight = //1.0f / Min( 1.0f, fabs( pSold->GetCenter() - vStartPoint ) ) + 
-											1.0f / Max( 1.0f, fabs( pUnit->GetCenter() - pDoctor->GetCenter() ) );
+											1.0f / (std::max)( 1.0f, fabs( pUnit->GetCenter() - pDoctor->GetCenter() ) );
 				if ( fWeight > fCurWeight )
 					*pNewPatient = checked_cast<CSoldier*>( pUnit );
 			}

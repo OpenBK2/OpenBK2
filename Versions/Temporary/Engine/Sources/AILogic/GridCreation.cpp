@@ -79,7 +79,7 @@ void CSortedGridUnits::Sort()
 	for ( int i = 0; i < nUnits; ++i )
 	{
 		rotatedUnitsCoord[i] = ( units[i]->GetCenterPlain() ) ^ vRotateAngle;
-		fMinCoord = Min( fMinCoord, rotatedUnitsCoord[i].y );
+		fMinCoord = (std::min)( fMinCoord, rotatedUnitsCoord[i].y );
 	}
 	for ( int i = 0; i < nUnits; ++i )
 		rotatedUnitsCoord[i].y -= fMinCoord;
@@ -171,7 +171,7 @@ void CGrid::CalculateMaxWidth()
 	for ( int i = 0; i < sortedUnits.GetSize(); ++i )
 	{
 		if ( !sortedUnits.IsFormation( i ) )
-			fMaxWidth = Max( fMaxWidth, 2.0f * sortedUnits.GetAABB( i ).x );
+			fMaxWidth = (std::max)( fMaxWidth, 2.0f * sortedUnits.GetAABB( i ).x );
 	}
 }
 
@@ -210,8 +210,8 @@ void CGrid::CreateGrid()
 		sortedColumns.push_back( nColumn );
 		std::sort( sortedColumns.begin(), sortedColumns.end(), compare );
 
-		fHeight = Max( fHeight, static_cast<float>(fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y )) );
-		fWidth = Max( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber(i)].x + vAABBHalfSize.x );
+		fHeight = (std::max)( fHeight, static_cast<float>(fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y )) );
+		fWidth = (std::max)( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber(i)].x + vAABBHalfSize.x );
 	}
 
 	//

@@ -86,8 +86,8 @@ inline void CalcTexCoords( SShortTextureUV *pRes, float fU, float fV )
 }
 inline void CalcLMCoords( SShortTextureUV *pRes, float fU, float fV ) 
 {
-	pRes->nU = Min( Float2Int( fU * 65536 ), 65535 ) - 32768;
-	pRes->nV = Min( Float2Int( fV * 65536 ), 65535 ) - 32768;
+	pRes->nU = (std::min)( Float2Int( fU * 65536 ), 65535 ) - 32768;
+	pRes->nV = (std::min)( Float2Int( fV * 65536 ), 65535 ) - 32768;
 }
 inline CVec2 GetTexCoords( const SShortTextureUV &src )
 {
@@ -203,7 +203,7 @@ class CTextureLock
 	void InitAccess()
 	{
 		char *pStart = (char*)pLock->GetBuffer();
-		raws.resize( Max( 1, nYSize ) );
+		raws.resize( (std::max)( 1, nYSize ) );
 		std::vector<void*>::iterator tek = raws.begin(), fin = raws.end();
 		while ( tek != fin )
 		{

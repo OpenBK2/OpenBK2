@@ -17,7 +17,7 @@ public:
 	int GetBufSize() const { return N_SIZE - 1 - GetSize(); }
 	int Peek( void *pBuf, int nBufSize )
 	{
-		int nRes = Min( nBufSize, GetSize() );
+		int nRes = (std::min)( nBufSize, GetSize() );
 		if ( nReadPtr + nRes > N_SIZE )
 		{
 			int nRight = N_SIZE - nReadPtr;
@@ -39,7 +39,7 @@ public:
 	int Write( const void *pBuf, int nLength )
 	{
 		ASSERT( GetSize() + nLength < N_SIZE );
-		int nRes = Min( GetBufSize(), nLength );
+		int nRes = (std::min)( GetBufSize(), nLength );
 
 		if ( nWritePtr + nRes > N_SIZE )
 		{

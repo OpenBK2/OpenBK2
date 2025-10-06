@@ -91,13 +91,13 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 		bInverse = true;
 	}
 	// add to storage
-	int nXSize = Max( Float2Int( fSize21 * fTexelsPerMeter ), 2 );
-	int nYSize = Max( Float2Int( fSize31 * fTexelsPerMeter ), 2 );
+	int nXSize = (std::max)( Float2Int( fSize21 * fTexelsPerMeter ), 2 );
+	int nYSize = (std::max)( Float2Int( fSize31 * fTexelsPerMeter ), 2 );
 	nXSize = RoundToGood( nXSize );
 	nYSize = RoundToGood( nYSize );
 	ASSERT( nYSize <= nXSize );
-	nXSize = Min( nXSize, nMaxSize );
-	nYSize = Min( nYSize, nXSize );
+	nXSize = (std::min)( nXSize, nMaxSize );
+	nYSize = (std::min)( nYSize, nXSize );
 	if ( nXSize == nYSize && n2 > n3 )
 	{
 		std::swap( n2, n3 );

@@ -137,7 +137,7 @@ static float CalcLMRes( const SSphere &highResLM, const SBound &partBV )
 {
 	float fDist = fabs( highResLM.ptCenter - partBV.s.ptCenter );
 	float f = fDist + partBV.s.fRadius - highResLM.fRadius;
-	f = Max( f, 0.0f );
+	f = (std::max)( f, 0.0f );
 	return 10 / ( 1 + sqr( f / highResLM.fRadius ) );
 }
 

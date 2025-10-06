@@ -28,7 +28,7 @@ CVec3 CPathFractionArc3D::GetPoint( const float _fDist ) const
 
 CVec3 CPathFractionArc3D::GetNormale( const float __fDist ) const
 {
-	const float _fDist = Min( fLength, __fDist );
+	const float _fDist = (std::min)( fLength, __fDist );
 	const float fDist = bNegative ? fLength - _fDist : _fDist;
 
 	const CVec2 vn( -GetVectorByDirection( GetDirectionByVector( -circle.center ) + nDiff * fDist / fLength ) );

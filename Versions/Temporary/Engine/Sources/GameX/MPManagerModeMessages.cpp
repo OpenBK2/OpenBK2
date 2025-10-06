@@ -209,7 +209,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 	{
 		dwLaggers &= ~( 1UL << nOwnSlot );
 		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
-		lags[nOwnSlot].nLagLeft = Max( nTimeLeft, 0 );
+		lags[nOwnSlot].nLagLeft = (std::max)( nTimeLeft, 0 );
 		lags[nOwnSlot].dwHatedBy = 0;
 		lags[nOwnSlot].timeStartLag = 0;
 	}

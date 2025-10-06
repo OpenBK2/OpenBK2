@@ -29,7 +29,7 @@ float GetLeaderRankExp( const NDb::SCampaign *pCampaign, int nRank )
 {
 	if ( pCampaign && !pCampaign->leaderRanks.empty() )
 	{
-		int nIndex = Min<int>( nRank, pCampaign->leaderRanks.size() - 1 );
+		int nIndex = (std::min<int>)( nRank, pCampaign->leaderRanks.size() - 1 );
 		float fRequiredXP = pCampaign->leaderRanks[nIndex].nExpNeeded;
 		return fRequiredXP;
 	}

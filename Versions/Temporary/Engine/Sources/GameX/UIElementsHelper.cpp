@@ -123,7 +123,7 @@ void SExpProgressCareer::Init()
 	fStart = fExpCurrent - fExpEarned + fTargetLevelExp;
 	fCur = fStart;
 	fTarget = fExpCurrent + fTargetLevelExp;
-	fStep = Max( 1.0f, fExpEarned * EXP_PROGRESS_STEP_FRACTION );
+	fStep = (std::max)( 1.0f, fExpEarned * EXP_PROGRESS_STEP_FRACTION );
 	fTotal = 0.0f;
 
 	if ( pCampaign && !pCampaign->rankExperiences.empty() )
@@ -196,7 +196,7 @@ void SExpProgressRank::Init()
 	fStart = fExpCurrent - fExpEarned + fTargetLevelExp;
 	fCur = fStart;
 	fTarget = fExpCurrent + fTargetLevelExp;
-	fStep = Max( 1.0f, fExpEarned * EXP_PROGRESS_STEP_FRACTION );
+	fStep = (std::max)( 1.0f, fExpEarned * EXP_PROGRESS_STEP_FRACTION );
 	nNextLevel = 0;
 	fCurLevelExp = 0.0f;
 
@@ -251,7 +251,7 @@ void SExpProgressRank::Step( bool bWait )
 
 	if ( fLevelDeltaExp >= 1.0f )
 	{
-		float fExpAtLevel = Max( fStart, fCurLevelExp ) - fCurLevelExp;
+		float fExpAtLevel = (std::max)( fStart, fCurLevelExp ) - fCurLevelExp;
 		float fExpCurAtLevel = fCur - fCurLevelExp;
 		fProgress = Clamp( fExpAtLevel / fLevelDeltaExp, 0.0f, 1.0f );
 		fNewProgress = Clamp( fExpCurAtLevel / fLevelDeltaExp, 0.0f, 1.0f );

@@ -220,10 +220,10 @@ CStObjCircleIter<bOnlyContainers>::CStObjCircleIter<bOnlyContainers>( const CVec
 {
 	const int nBigCellSize = SConsts::TILE_SIZE * GetCellSize();
 
-	const int nMinX = Max( 0, int( (vCenter.x - fR) / nBigCellSize ) );
-	const int nMaxX = Min( GetAreaMap().GetSizeX() - 1, int( (vCenter.x + fR) / nBigCellSize ) );
-	const int nMinY = Max( 0, int( ( vCenter.y - fR ) / nBigCellSize ) );
-	const int nMaxY = Min( GetAreaMap().GetSizeY() - 1, int( ( vCenter.y + fR ) / nBigCellSize ) );
+	const int nMinX = (std::max)( 0, int( (vCenter.x - fR) / nBigCellSize ) );
+	const int nMaxX = (std::min)( GetAreaMap().GetSizeX() - 1, int( (vCenter.x + fR) / nBigCellSize ) );
+	const int nMinY = (std::max)( 0, int( ( vCenter.y - fR ) / nBigCellSize ) );
+	const int nMaxY = (std::min)( GetAreaMap().GetSizeY() - 1, int( ( vCenter.y + fR ) / nBigCellSize ) );
 
 	CStObjIter<bOnlyContainers>::Init( nMinX, nMaxX, nMinY, nMaxY );
 }

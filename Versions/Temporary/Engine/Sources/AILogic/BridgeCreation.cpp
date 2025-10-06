@@ -39,8 +39,8 @@ CVec2 CBridgeCreation::SortBridgeSpans( std::vector< CObj<CBridgeSpan> > *spans,
 	SRect r1, r2;
 	s1->GetBoundRect( &r1 );
 	s2->GetBoundRect( &r2 );
-	const CVec2 v1( r1.center - Max(r1.lengthAhead,Max(r1.lengthBack,r1.width))*vFrom1to2 );
-	const CVec2 v2( r2.center + Max(r2.lengthAhead,Max(r2.lengthBack,r2.width))*vFrom1to2 );
+	const CVec2 v1( r1.center - (std::max)(r1.lengthAhead,(std::max)(r1.lengthBack,r1.width))*vFrom1to2 );
+	const CVec2 v2( r2.center + (std::max)(r2.lengthAhead,(std::max)(r2.lengthBack,r2.width))*vFrom1to2 );
 
 
 	CPtr<IStaticPath> pPath1 = CreateStaticPathToPoint( v1, VNULL2, pUnit, true, GetAIMap() );

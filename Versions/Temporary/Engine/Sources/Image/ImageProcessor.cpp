@@ -78,7 +78,7 @@ bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<
 			const DWORD dstR = ( pDstColors[i] >> 16 ) & 0x000000ff;
 			const DWORD dstG = ( pDstColors[i] >>  8 ) & 0x000000ff;
 			const DWORD dstB = ( pDstColors[i]       ) & 0x000000ff;
-			pDstColors[i] = ( Max(srcA, dstA) << 24 ) |
+			pDstColors[i] = ( (std::max)(srcA, dstA) << 24 ) |
 											( ((srcR*srcA + dstR*(255 - srcA)) / 255) << 16 ) |
 											( ((srcR*srcA + dstR*(255 - srcA)) / 255) << 16 ) |
 											( ((srcG*srcA + dstG*(255 - srcA)) / 255) <<  8 ) |

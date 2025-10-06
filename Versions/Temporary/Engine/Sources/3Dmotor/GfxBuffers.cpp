@@ -1092,12 +1092,12 @@ public:
 			currentPrim = _prim;
 		}
 		int nSrcStart = 0;
-		nMaxVBIndex = Max( nMaxVBIndex, nVBSize + nVBStart );
+		nMaxVBIndex = (std::max)( nMaxVBIndex, nVBSize + nVBStart );
 		while ( nTris > 0 )
 		{
 			// feed into current buffer until full
 			//{
-			int nToDraw = Min( nBuf - nLast, nTris );
+			int nToDraw = (std::min)( nBuf - nLast, nTris );
 			DWORD dwFlags = D3DLOCK_NOOVERWRITE;
 			if ( nToDraw == 0 )
 			{
@@ -1106,7 +1106,7 @@ public:
 				nLast = 0;
 				nStart = 0;
 				dwFlags = D3DLOCK_DISCARD;
-				nToDraw = Min( nBuf - nLast, nTris );
+				nToDraw = (std::min)( nBuf - nLast, nTris );
 			}
 
 			if ( !pDynamicTrisBuffer->pLocked )
@@ -1249,14 +1249,14 @@ public:
 		while ( nTris > 0 )
 		{
 			// feed into current buffer until full
-			int nToDraw = Min( nBuf - nLast, nTris );
+			int nToDraw = (std::min)( nBuf - nLast, nTris );
 			DWORD dwFlags = D3DLOCK_NOOVERWRITE;
 			if ( nToDraw == 0 )
 			{
 				nLast = 0;
 				nStart = 0;
 				dwFlags = D3DLOCK_DISCARD;
-				nToDraw = Min( nBuf - nLast, nTris );
+				nToDraw = (std::min)( nBuf - nLast, nTris );
 			}
 
 			pDynamicTrisBuffer->Lock( dwFlags );
@@ -1271,12 +1271,12 @@ public:
 				res.i1 = src.i1;
 				res.i2 = src.i2;
 				res.i3 = src.i3;
-				nMin = Min ( nMin, src.i1 );
-				nMin = Min ( nMin, src.i2 );
-				nMin = Min ( nMin, src.i3 );
-				nMax = Max ( nMax, src.i1 );
-				nMax = Max ( nMax, src.i2 );
-				nMax = Max ( nMax, src.i3 );
+				nMin = (std::min) ( nMin, src.i1 );
+				nMin = (std::min) ( nMin, src.i2 );
+				nMin = (std::min) ( nMin, src.i3 );
+				nMax = (std::max) ( nMax, src.i1 );
+				nMax = (std::max) ( nMax, src.i2 );
+				nMax = (std::max) ( nMax, src.i3 );
 			}
 			pDynamicTrisBuffer->Unlock();
 

@@ -407,8 +407,8 @@ static int GetShift( float fX1, float fX2, float fX3 )
 	int nX1 = Float2Int( fX1 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
 	int nX2 = Float2Int( fX2 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
 	int nX3 = Float2Int( fX3 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
-	int nXMin = Min( Min( nX1, nX2 ), nX3 );
-	int nXMax = Max( Max( nX1, nX2 ), nX3 );
+	int nXMin = (std::min)( (std::min)( nX1, nX2 ), nX3 );
+	int nXMax = (std::max)( (std::max)( nX1, nX2 ), nX3 );
 	int nDif = nXMax - nXMin;
 	if ( nDif < N_MAX_TEX_WRAP )
 		return ( nXMin & ~(N_MAX_TEX_WRAP - 1) ) + N_MAX_TEX_WRAP;// ;
@@ -443,10 +443,10 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 		const CVec2 &tex = f.GetTex( pData, k );
 		float fX = tex.x;
 		float fY = tex.y;
-		fXMin = Min( fXMin, fX );
-		fYMin = Min( fYMin, fY );
-		fXMax = Max( fXMax, fX );
-		fYMax = Max( fYMax, fY );
+		fXMin = (std::min)( fXMin, fX );
+		fYMin = (std::min)( fYMin, fY );
+		fXMax = (std::max)( fXMax, fX );
+		fYMax = (std::max)( fYMax, fY );
 	}
 	fXMin = floor( fXMin );
 	fYMin = floor( fYMin );

@@ -92,7 +92,7 @@ public:
 
 		xlen = abs( xlen ) + 1;
 		ylen = abs( ylen ) + 1;
-		len = Max( xlen, ylen );
+		len = (std::max)( xlen, ylen );
 
 		NI_ASSERT( xlen != 0 || ylen != 0, "Wrong line" );
 	}
@@ -102,7 +102,7 @@ public:
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
 		
 		const int zlen = finishZ-startZ;
-		dxy = Max( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
+		dxy = (std::max)( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
 
 		intPart = zlen / dxy;
 		rinc = abs( zlen % dxy );
@@ -117,7 +117,7 @@ public:
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
 		
 		const int zlen = finishZ-startZ;
-		dxy = Max( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
+		dxy = (std::max)( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
 		
 		intPart = zlen / dxy;
 		rinc = abs( zlen % dxy );

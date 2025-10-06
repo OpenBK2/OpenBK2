@@ -48,7 +48,7 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	else
 		ASSERT( 0 );
 
-	sSearch.nSize = Max( sSearch.nSize, nMinSize );
+	sSearch.nSize = (std::max)( sSearch.nSize, nMinSize );
 
 	CPtr<NGScene::CFontInfo> pFont = NGScene::GetTextLocaleInfo()->GetFont( sSearch );
 	if ( !pFont )
@@ -788,7 +788,7 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 		}
 
 		fX += (*iTemp)->GetSize().x;
-		pInfo->fMaxX = Max( pInfo->fMaxX, fX );
+		pInfo->fMaxX = (std::max)( pInfo->fMaxX, fX );
 		fX += fSpace;
 	}
 }
@@ -800,7 +800,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 		const CTPoint<float> &sSize = (*iTemp)->GetSize();
 
 		(*iTemp)->SetPosition( CTPoint<float>( pInfo->sLeft.fValue, pInfo->fY ) );
-		pInfo->fMaxX = Max( pInfo->fMaxX, pInfo->sLeft.fValue + sSize.x );
+		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sLeft.fValue + sSize.x );
 
 		pInfo->sLeft.fValue += sSize.x;
 		pInfo->sLeft.fHeight = max( pInfo->sLeft.fHeight, pInfo->fY + sSize.y );
@@ -810,7 +810,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 		const CTPoint<float> &sSize = (*iTemp)->GetSize();
 
 		(*iTemp)->SetPosition( CTPoint<float>( pInfo->sRight.fValue - sSize.x, pInfo->fY ) );
-		pInfo->fMaxX = Max( pInfo->fMaxX, pInfo->sRight.fValue );
+		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sRight.fValue );
 
 		pInfo->sRight.fValue -= sSize.x;
 		pInfo->sRight.fHeight = max( pInfo->sRight.fHeight, pInfo->fY + sSize.y );

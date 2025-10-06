@@ -313,7 +313,7 @@ void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, WORD wDir, NTimer
 {
 	if ( pEffect == 0 ) 
 		return;
-	const NTimer::STime timeEffect = Min( time, GameTimer()->GetGameTime() );
+	const NTimer::STime timeEffect = (std::min)( time, GameTimer()->GetGameTime() );
 	if ( !pStats->surfacePoints.empty() ) 
 	{
 		const CVec3 vDir = CVec3( GetVectorByDirection( wDir ), 0 );
@@ -886,7 +886,7 @@ int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer
 		const NTimer::STime currTime = GameTimer()->GetGameTime();
 		// randomize effect direction
 		const float fAngle = NWin32Random::Random( 0.0f, FP_2PI );
-		return Scene()->AddEffect( nID, pSceneEffect, Min(timeStart, currTime), vPos, CQuat(fAngle, V3_AXIS_Z, false) ); 
+		return Scene()->AddEffect( nID, pSceneEffect, (std::min)(timeStart, currTime), vPos, CQuat(fAngle, V3_AXIS_Z, false) );
 	}
 
 	return -1;
@@ -904,7 +904,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 		{
 			// randomize effect direction
 			const float fAngle = NWin32Random::Random( 0.0f, FP_2PI );
-			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, Min(timeStart, currTime), vPos, CQuat(fAngle, V3_AXIS_Z, false) ); 
+			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, (std::min)(timeStart, currTime), vPos, CQuat(fAngle, V3_AXIS_Z, false) );
 		}
 	}
 	return -1;
@@ -919,7 +919,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 	{
 		const NDb::SSeasonEffect &sceneEffect = pEffect->seasons[i];
 		if ( sceneEffect.eSeasonToUse == eSeason && sceneEffect.pSceneEffect != 0 )
-			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, Min(timeStart, currTime), vPos, qRot );
+			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, (std::min)(timeStart, currTime), vPos, qRot );
 	}
 	return -1;
 }
@@ -936,7 +936,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 	{
 		const NDb::SSeasonEffect &sceneEffect = pEffect->seasons[i];
 		if ( sceneEffect.eSeasonToUse == eSeason && sceneEffect.pSceneEffect != 0 )
-			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, Min(timeStart, currTime), mPlace );
+			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, (std::min)(timeStart, currTime), mPlace );
 	}
 	return -1;
 }
@@ -951,7 +951,7 @@ int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer
 		SoundScene()->AddSound( pEffect->pSoundEffect, vPos, SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, currTime > timeStart ? currTime - timeStart : 0, 2 );
 	}
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
-		return Scene()->AddEffect( nID, pSceneEffect, Min(timeStart, currTime), mPlace ); 
+		return Scene()->AddEffect( nID, pSceneEffect, (std::min)(timeStart, currTime), mPlace );
 	return -1;
 }
 
@@ -970,7 +970,7 @@ void PlayComplexEffect( const int nID, const std::string &szBoneName, ESceneSubO
 		}
 	}
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
-		Scene()->AttachEffect( nID, eType, szBoneName, pSceneEffect, Min(timeStart, currTime), eMode ); 
+		Scene()->AttachEffect( nID, eType, szBoneName, pSceneEffect, (std::min)(timeStart, currTime), eMode );
 }
 
 bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISkeletonAnimator *pAnimator )

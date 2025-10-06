@@ -21,8 +21,8 @@ public:
 
 	bool IsFinished() const { return nCurrentTile == tiles.size(); }
 
-	const CVec2 PeekPoint( const int nShift ) const { return GetPoint( tiles[Min<int>( nCurrentTile + nShift, tiles.size()-1 )] ); }
-	void Shift( const int nShift ) { nCurrentTile = Min<int>( nCurrentTile + nShift, tiles.size() ); }
+	const CVec2 PeekPoint( const int nShift ) const { return GetPoint( tiles[(std::min<int>)( nCurrentTile + nShift, tiles.size()-1 )] ); }
+	void Shift( const int nShift ) { nCurrentTile = (std::min<int>)( nCurrentTile + nShift, tiles.size() ); }
 
 	const CVec2& GetFinishPoint() const { return vFinishPoint; }
 	const CVec2& GetStartPoint() const { return vStartPoint; }

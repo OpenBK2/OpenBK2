@@ -357,8 +357,8 @@ void CTransformStack::MakeDirect( const CVec2 &screenRect )
 	float fHeight = screenRect.y;
 	float far_plane = 1000;
 	float near_plane = 0.1f;
-	fWidth = Max( fWidth, 1.0f );
-	fHeight = Max( fHeight, 1.0f );
+	fWidth = (std::max)( fWidth, 1.0f );
+	fHeight = (std::max)( fHeight, 1.0f );
 	SHMatrix ret;
 	ZeroMemory(&ret, sizeof(ret));
 	ret._11 = 2 / fWidth;

@@ -275,7 +275,7 @@ public:
 	virtual void SetCollisionOld( ICollisionOld *pCollision, IPath *pPath ) {}
 
 	const int GetStayTime() const { return stayTime; }
-	void UpdateCollisionStayTime( const NTimer::STime time ) { collStayTime = Max( collStayTime, Min( stayTime, time ) ); }
+	void UpdateCollisionStayTime( const NTimer::STime time ) { collStayTime = (std::max)( collStayTime, (std::min)( stayTime, time ) ); }
 
 	void SetLastPushUnit( CBasePathUnit *pUnit ) { pLastPushUnit = pUnit; }
 	CBasePathUnit *GetLastPushUnit() const { return pLastPushUnit; }

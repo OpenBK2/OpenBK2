@@ -514,7 +514,7 @@ void CWindowListCtrl::SetOptimalWidth( const int nColumn )
 		IListControlItem *pI = dynamic_cast_ptr<IListControlItem*>( *it );
 		CWindow *pSubItem = dynamic_cast<CWindow*>( pI->GetSubItem( nColumn ) );
 		
-		nMaxOptimalWidth = Max( pSubItem->GetOptimalWidth(), nMaxOptimalWidth  );
+		nMaxOptimalWidth = (std::max)( pSubItem->GetOptimalWidth(), nMaxOptimalWidth  );
 	}
 	pHeader->SetColumnSize( nColumn, nMaxOptimalWidth );
 }

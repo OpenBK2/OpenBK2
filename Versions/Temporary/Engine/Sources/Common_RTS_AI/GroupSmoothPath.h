@@ -140,7 +140,7 @@ public:
 	const float GetMaxPathShift() const { return fMaxPathShift; }
 	const float GetMaxProjection() const { return geometries[GetCurrentGeometry()].fMaxProjection; }
 	const float GetRadius() const { return geometries[GetCurrentGeometry()].fRadius; }
-	void NotifyPathShift( const float fPathShift ) { fMaxPathShift = Max( fPathShift, fMaxPathShift ); }
+	void NotifyPathShift( const float fPathShift ) { fMaxPathShift = (std::max)( fPathShift, fMaxPathShift ); }
 
 	virtual void Segment( const NTimer::STime timeDiff );
 

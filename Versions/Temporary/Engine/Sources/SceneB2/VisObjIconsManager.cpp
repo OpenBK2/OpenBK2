@@ -304,19 +304,19 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	// common
 	icon.vPos.Set( vPos.x, vPos.y, vPos.z + iconInfo.fAddHeight );
 	icon.fAddHeight = iconInfo.fAddHeight;
-	const int nCol = ClampFast( Float2Int( iconInfo.fAlpha * 255.0f ), 0, 255 );
+	const int nCol = Clamp( Float2Int( iconInfo.fAlpha * 255.0f ), 0, 255 );
 	icon.nColor = ( nCol << 24 ) | ( nCol << 16 ) | ( nCol << 8 ) | ( nCol );
 	icon.nHPBarBaseLength = iconInfo.nHPBarBaseLength;
 
-	icon.hpBars.resize( 1 + Min<size_t>( iconInfo.smallHitbars.size(), MAX_SMALL_HITBARS ) );
+	icon.hpBars.resize( 1 + (std::min<size_t>)( iconInfo.smallHitbars.size(), MAX_SMALL_HITBARS ) );
 	SObjIcon::SHPBar &hpBar = icon.hpBars[0];
 	hpBar.nOffsetX = 0;
 	hpBar.nOffsetY = 0;
 	hpBar.fLength = icon.nHPBarBaseLength;
 	hpBar.nColorIndex = DEF_HPBAR_PARTS_NUM + Clamp( iconInfo.nHPBarAdditionalColorIndex, 0, nHPBarColorsNum - 1 );
 	hpBar.nColorIndex2 = DEF_HPBAR_PARTS_NUM + Clamp( iconInfo.nHPBarColorIndex, 0, nHPBarColorsNum - 1 );
-	hpBar.fValue = ClampFast( iconInfo.fHPBarValue * iconInfo.fHPBarAdditionalValue, 0.0f, 1.0f );
-	hpBar.fValue2 = ClampFast( iconInfo.fHPBarValue - hpBar.fValue, 0.0f, 1.0f );
+	hpBar.fValue = Clamp( iconInfo.fHPBarValue * iconInfo.fHPBarAdditionalValue, 0.0f, 1.0f );
+	hpBar.fValue2 = Clamp( iconInfo.fHPBarValue - hpBar.fValue, 0.0f, 1.0f );
 
 	icon.icons.reserve( iconInfo.icons.size() + 1 );
 	icon.icons.resize( 0 );
@@ -349,7 +349,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 		hpBar.nColorIndex = DEF_HPBAR_PARTS_NUM + Clamp( hitbarInfo.nColorIndex, 0, nHPBarColorsNum - 1 );
 		hpBar.nColorIndex2 = hpBar.nColorIndex;
 		hpBar.fValue = 0.0f;
-		hpBar.fValue2 = ClampFast( hitbarInfo.fValue, 0.0f, 1.0f );
+		hpBar.fValue2 = Clamp( hitbarInfo.fValue, 0.0f, 1.0f );
 	}
 
 	UpdateIcon( icon );

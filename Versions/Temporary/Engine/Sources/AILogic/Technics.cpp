@@ -617,7 +617,7 @@ void CTank::ScanForDangerousDir()
 {
 	if ( nextTimeOfDangerousDirScan < curTime )
 	{
-		const float fR = 1.3f * Max( GetSightRadius(), Min( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE ) );
+		const float fR = 1.3f * (std::max)( GetSightRadius(), (std::min)( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE ) );
 		const CVec2 vCenter( GetCenterPlain() );
 		const int nParty = GetParty();
 

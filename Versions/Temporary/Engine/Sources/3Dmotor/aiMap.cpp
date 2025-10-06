@@ -721,7 +721,7 @@ void CAIMap::InsertHull( CConvexHull *pHull )
 
 void CAIMap::RegisterFloor( int nFloor )
 {
-	nMaxFloor = Max( nFloor, nMaxFloor );
+	nMaxFloor = (std::max)( nFloor, nMaxFloor );
 }
 
 bool CAIMap::InitFloorsSelector( SFloorsSelector *pRes, const CFloorsSet &fs )
@@ -1163,7 +1163,7 @@ void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, 
 		if ( it->enter.fT < 0 )
 			continue;
 		if ( bIsSet )
-			pRes->z = Max( pRes->z, ptPos.z - it->enter.fT );
+			pRes->z = (std::max)( pRes->z, ptPos.z - it->enter.fT );
 		else
 		{
 			pRes->z = ptPos.z - it->enter.fT;

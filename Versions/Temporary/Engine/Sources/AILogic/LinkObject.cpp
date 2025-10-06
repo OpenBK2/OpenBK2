@@ -133,7 +133,7 @@ void CLinkObject::GetFreeLinks( std::list<int> *pLinks, const int nSize )
 
 	if ( pLinks->size() < nSize )
 	{
-		int nLink = Max( (int)SLinkObjDataAutoMagic::pLinkObjData->link2object.size(), 1 );
+		int nLink = (std::max)( (int)SLinkObjDataAutoMagic::pLinkObjData->link2object.size(), 1 );
 		while ( pLinks->size() < nSize )
 		{
 			pLinks->push_back( nLink );

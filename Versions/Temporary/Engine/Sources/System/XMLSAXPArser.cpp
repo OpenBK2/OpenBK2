@@ -40,7 +40,7 @@ class CBufferedStream
 	bool IsBufferEmpty() const { return nCurrPos >= nBytesInBuffer; }
 	void ReadPortion()
 	{
-		const int nToRead = Min( int(BUFFER_SIZE), nStreamSize - nBytesRead );
+		const int nToRead = (std::min)( int(BUFFER_SIZE), nStreamSize - nBytesRead );
 		if ( nToRead == 0 )
 			return;
 		pStream->Read( buffer, nToRead );

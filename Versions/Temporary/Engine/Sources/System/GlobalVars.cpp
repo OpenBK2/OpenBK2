@@ -154,7 +154,7 @@ int RegisterVar( const std::string &szID, VarHandler pHandler, void *pContext, c
 		info.sDefaultValue = sValue;
 	}
 	info.bIsRegistered = true;
-	info.storage = Max( info.storage, storage );
+	info.storage = (std::max)( info.storage, storage );
 	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
 	return nUniqueVarID;
 }
@@ -237,14 +237,14 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 	TRecordsMap::iterator i = recordsMap.find( szVar );
 	if ( i == recordsMap.end() )
 	{
-		storage = Max( storage, eNewVarStorageClass );
+		storage = (std::max)( storage, eNewVarStorageClass );
 		recordsMap[ szVar ];
 		i = recordsMap.find( szVar );
 	}
 	else
 		NI_ASSERT( storage == STORAGE_DONT_CARE || storage == i->second.storage, "different storage classes has been specified for this var" );
 	SCommandInfo &info = i->second;
-	info.storage = Max( info.storage, storage );
+	info.storage = (std::max)( info.storage, storage );
 	const std::vector<SRecord> &records = info.data;
 	for ( int k = 0; k < records.size(); ++k )
 	{

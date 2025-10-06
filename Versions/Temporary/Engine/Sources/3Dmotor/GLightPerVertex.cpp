@@ -336,7 +336,7 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const 
 	{
 		CVec3 v = _vCenter - srcPos[k];
 		float f = fabs2( v );
-		float fCut = Max( 0.0f, sqr(_fRadius) - f ) * ( 1 / sqr(_fRadius ) );
+		float fCut = (std::max)( 0.0f, sqr(_fRadius) - f ) * ( 1 / sqr(_fRadius ) );
 		float fAttenuation = fCut / ( f * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / sqrt( f );
 		NGfx::SMMXWord &n = (*pRes)[k];
 		n.nX = Float2Int( v.x * fAttenuation * N_PL_ATTENUATION_SCALE );
@@ -365,7 +365,7 @@ static void CalcPointLightAttenuationSSE( std::vector<NGfx::SMMXWord> *pRes, con
 	for ( int k = 0; k < nSize; k += N_BLOCK )
 	{
 		const CVec3 *pData = &srcPos[k];
-		int nBlock = Min( N_BLOCK, nSize - k );
+		int nBlock = (std::min)( N_BLOCK, nSize - k );
 
 		// warm up cache
 		int nByteSize = sizeof(srcPos[0]) * nBlock - 4;
@@ -653,7 +653,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 		float f = fabs2( v );
 		// take into account size of object
 		float fCorrected = f + sqr( bv.s.fRadius ) * 0.25f;
-		float fCut = Max( 0.0f, sqr(p.fRadius) - fCorrected ) * ( 1 / sqr(p.fRadius ) );
+		float fCut = (std::max)( 0.0f, sqr(p.fRadius) - fCorrected ) * ( 1 / sqr(p.fRadius ) );
 		float fAttenuation = fCut / ( fCorrected * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / sqrt( f );
 		att.nX = Float2Int( v.x * fAttenuation * N_PL_ATTENUATION_SCALE );
 		att.nY = Float2Int( v.y * fAttenuation * N_PL_ATTENUATION_SCALE );

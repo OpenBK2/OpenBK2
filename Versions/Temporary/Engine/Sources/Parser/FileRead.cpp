@@ -53,14 +53,14 @@ int ReadData( char *pBuf, int nMaxSize )
 	int nCurPos = pStream->GetPosition();
 	if ( nCurPos == 0 )
 	{
-		int nSizeToRead = Min( pStream->GetSize(), nMaxSize - 1 );
+		int nSizeToRead = (std::min)( pStream->GetSize(), nMaxSize - 1 );
 		pBuf[0] = '\n';
 		pStream->Read( pBuf + 1, nSizeToRead );
 		return nSizeToRead + 1;
 	}
 	else
 	{
-		int nSizeToRead = Min( pStream->GetSize() - nCurPos, nMaxSize );
+		int nSizeToRead = (std::min)( pStream->GetSize() - nCurPos, nMaxSize );
 		pStream->Read( pBuf, nSizeToRead );
 		return nSizeToRead;	
 	}

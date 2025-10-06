@@ -192,10 +192,10 @@ void CMapSounds::Update( const CVec3 &vListener, const float fViewRadius )
 {
 	if ( timeNextUpdate < CSoundScene2D::GetCurTime() )
 	{
-		const int nMinX = Max( 0, int(vListener.x - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
-		const int nMaxX = Min( mapCells.GetSizeX()-1, int(vListener.x + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
-		const int nMinY = Max( 0, int(vListener.y - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
-		const int nMaxY = Min( mapCells.GetSizeY()-1, int(vListener.y + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
+		const int nMinX = (std::max)( 0, int(vListener.x - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
+		const int nMaxX = (std::min)( mapCells.GetSizeX()-1, int(vListener.x + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
+		const int nMinY = (std::max)( 0, int(vListener.y - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
+		const int nMaxY = (std::min)( mapCells.GetSizeY()-1, int(vListener.y + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
 
 		//scan only through cells near screen
 		for ( int x = nMinX; x <= nMaxX; ++x )

@@ -810,7 +810,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 	{
 		if ( nUseAnisotropy > 1 && ( filter == FILTER_BEST || filter == FILTER_BUMP ) )
 		{
-			nUseAnisotropy = Min( nUseAnisotropy, (int)devCaps.MaxAnisotropy );
+			nUseAnisotropy = (std::min)( nUseAnisotropy, (int)devCaps.MaxAnisotropy );
 			TrySetAnisotropicMagFilter( n );
 			TrySetAnisotropicMinFilter( n );
 			ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );//D3DTEXF_LINEAR );//D3DTEXF_POINT );
@@ -1524,8 +1524,8 @@ bool InitZBuffer( D3DFORMAT format )
 			nYSize = Float2Int( nYRSize * (564.0f / 768.0f ) * sqrt(fRegisterResolution) );
 #endif
 		}
-		nXSize = Min( nXSize, (int)devCaps.MaxTextureWidth );
-		nYSize = Min( nYSize, (int)devCaps.MaxTextureHeight );
+		nXSize = (std::min)( nXSize, (int)devCaps.MaxTextureWidth );
+		nYSize = (std::min)( nYSize, (int)devCaps.MaxTextureHeight );
 		ptRegisterBufferSize = CTPoint<int>( nXSize, nYSize );
 		hr = pDevice->CreateDepthStencilSurface( nXSize, nYSize, format, D3DMULTISAMPLE_NONE, 0,
 			FALSE, pRegisterDepth.GetAddr(), 0 );
@@ -1583,7 +1583,7 @@ static void InitTextureStage( int n )
 {
 	if ( nUseAnisotropy > 1 )
 	{
-		nUseAnisotropy = Min( nUseAnisotropy, (int)devCaps.MaxAnisotropy );
+		nUseAnisotropy = (std::min)( nUseAnisotropy, (int)devCaps.MaxAnisotropy );
 
 		TrySetAnisotropicMagFilter( n );
 		TrySetAnisotropicMinFilter( n );

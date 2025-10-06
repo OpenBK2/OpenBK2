@@ -1814,7 +1814,7 @@ class CTransparencyToOpacityFunc
 public:
 	float operator()( float fValue )
 	{
-		return (1.f - ClampFast(fValue, 0.f, 1.f));
+		return (1.f - Clamp(fValue, 0.f, 1.f));
 	}
 };
 

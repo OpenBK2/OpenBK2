@@ -86,7 +86,7 @@ public:
 		int nPos = GetPosition();
 		Seek( nSize );
 		Trunc();
-		nPos = Min( nPos, nSize );
+		nPos = (std::min)( nPos, nSize );
 		Seek( nPos );
 	}
 	// direct buffer access

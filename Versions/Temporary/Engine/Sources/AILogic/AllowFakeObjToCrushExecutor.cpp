@@ -33,8 +33,8 @@ int CAllowFakeObjToCrushExecutor::Segment()
 			return -1;
 		}
 
-		const int nSegmentsLeft = Max( 1, int(changeTypeTime - curTime)/SConsts::AI_SEGMENT_DURATION );
-		return Min( MAX_SEGMENT_DELAY - 1, nSegmentsLeft );
+		const int nSegmentsLeft = (std::max)( 1, int(changeTypeTime - curTime)/SConsts::AI_SEGMENT_DURATION );
+		return (std::min)( MAX_SEGMENT_DELAY - 1, nSegmentsLeft );
 	}
 
 	return -1;

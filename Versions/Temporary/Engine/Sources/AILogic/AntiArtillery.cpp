@@ -104,7 +104,7 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 				nHeardShots[i] = 0;
 
 			CVec2 newCenter;
-			const float fCurRadius = GetRadius( Min( (float)nHeardShots[i], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fGunRadius );
+			const float fCurRadius = GetRadius( (std::min)( (float)nHeardShots[i], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fGunRadius );
 
 			if ( nHeardShots[i] > SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS )
 				newCenter = lastRevealCenter[i];
@@ -133,7 +133,7 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 const CCircle CAntiArtillery::GetRevealCircle( const int nParty ) const
 {
 	return CCircle( lastRevealCenter[nParty], 
-									GetRadius( Min( (float)nHeardShots[nParty], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fMaxRadius ) );
+									GetRadius( (std::min)( (float)nHeardShots[nParty], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fMaxRadius ) );
 }
 
 const NTimer::STime CAntiArtillery::GetLastHeardTime( const int nParty ) const

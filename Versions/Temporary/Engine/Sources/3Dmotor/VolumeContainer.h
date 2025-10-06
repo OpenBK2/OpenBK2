@@ -26,7 +26,7 @@ public:
 	{
 		SIntCoords mn, mx;
 
-		int GetSize() const { return Max( mx.x - mn.x, Max( mx.y - mn.y, mx.z - mn.z ) ); }
+		int GetSize() const { return (std::max)( mx.x - mn.x, (std::max)( mx.y - mn.y, mx.z - mn.z ) ); }
 	};
 private:
 	void InitFirstPt( SVolumeBounds *pRes, const SHMatrix &pos, const CVec3 &coord );

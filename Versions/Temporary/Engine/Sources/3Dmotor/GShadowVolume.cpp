@@ -42,7 +42,7 @@ public:
 	void Initialize( int nXSize, int nYSize, float _fZBufScale )
 	{
 		fZBufScale = _fZBufScale;
-		int nSize = Max( nXSize, nYSize );
+		int nSize = (std::max)( nXSize, nYSize );
 		int nLevels = 0;
 		while ( (nSize>>nLevels) > 4 )
 			++nLevels;
@@ -62,8 +62,8 @@ public:
 		{
 			const CArray2D<zbuf_type> &src = depthBuffer[ k - 1 ];
 			CArray2D<zbuf_type> &dst = depthBuffer[ k ];
-			int nXSize = Min( src.GetSizeX() / 2, dst.GetSizeX() );
-			int nYSize = Min( src.GetSizeY() / 2, dst.GetSizeY() );
+			int nXSize = (std::min)( src.GetSizeX() / 2, dst.GetSizeX() );
+			int nYSize = (std::min)( src.GetSizeY() / 2, dst.GetSizeY() );
 			int nMask1 = 0xffff, nMask2 = 0xffff0000;
 			_asm
 			{
@@ -136,7 +136,7 @@ fin:
 				for ( int y = nYSize; y < dst.GetSizeY(); ++y )
 				{
 					for ( int x = 0; x < nXSize; ++x )
-						dst[y][x] = Min(
+						dst[y][x] = (std::min)(
 							src[y*2][x*2  ],
 							src[y*2][x*2+1] );
 				}
@@ -155,7 +155,7 @@ fin:
 				for ( int x = nXSize; x < dst.GetSizeX(); ++x )
 				{
 					for ( int y = 0; y < nYSize; ++y )
-						dst[y][x] = Min(
+						dst[y][x] = (std::min)(
 							src[y*2  ][x*2],
 							src[y*2+1][x*2] );
 				}
@@ -181,14 +181,14 @@ fin:
 		int nX2 = Float2Int( ( r.x2 + 1 ) * 0.5f * depthBuffer[0].GetSizeX() - 0.5f );
 		int nY1 = Float2Int( ( r.y1 + 1 ) * 0.5f * depthBuffer[0].GetSizeY() - 0.5f );
 		int nY2 = Float2Int( ( r.y2 + 1 ) * 0.5f * depthBuffer[0].GetSizeY() - 0.5f );
-		int nMax = Max( nX2 - nX1, nY2 - nY1 ), nLevel = 0;
+		int nMax = (std::max)( nX2 - nX1, nY2 - nY1 ), nLevel = 0;
 		while ( (nMax>>nLevel) > 3 && nLevel < depthBuffer.size() - 1 )
 			++nLevel;
 		const CArray2D<zbuf_type> &l = depthBuffer[nLevel];
-		nX1 = Max( (nX1 >> nLevel)-0, 0 );
-		nX2 = Min( (nX2 >> nLevel)+0, l.GetSizeX() - 1 );
-		nY1 = Max( (nY1 >> nLevel)-0, 0 );
-		nY2 = Min( (nY2 >> nLevel)+0, l.GetSizeY() - 1 );
+		nX1 = (std::max)( (nX1 >> nLevel)-0, 0 );
+		nX2 = (std::min)( (nX2 >> nLevel)+0, l.GetSizeX() - 1 );
+		nY1 = (std::max)( (nY1 >> nLevel)-0, 0 );
+		nY2 = (std::min)( (nY2 >> nLevel)+0, l.GetSizeY() - 1 );
 		for ( int y = nY1; y <= nY2; ++y )
 		{
 			for ( int x = nX1; x <= nX2; ++x )
@@ -246,20 +246,20 @@ class CPartsRender: public CRasterizer<CPartsRender>
 
 	void ClipVertical( int *pnY )
 	{
-		(*pnY) = Max( *pnY, 0 );
-		(*pnY) = Min( *pnY, nHeight-1 );
+		(*pnY) = (std::max)( *pnY, 0 );
+		(*pnY) = (std::min)( *pnY, nHeight-1 );
 	}
 
 	void ClipVertical( int *pnSY, int *pnFY2, int *pnFY )
 	{
-		(*pnSY) = Max( *pnSY, 0 );
-		(*pnFY2) = Min( *pnFY2, nHeight );//N_OCCLUDE_BUFFER_HEIGHT );
-		(*pnFY) = Min( *pnFY, nHeight );//N_OCCLUDE_BUFFER_HEIGHT );
+		(*pnSY) = (std::max)( *pnSY, 0 );
+		(*pnFY2) = (std::min)( *pnFY2, nHeight );//N_OCCLUDE_BUFFER_HEIGHT );
+		(*pnFY) = (std::min)( *pnFY, nHeight );//N_OCCLUDE_BUFFER_HEIGHT );
 	}
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
-		(*pnSX) = Max( *pnSX, 0 );
-		(*pnFX) = Min( *pnFX, nWidth );//N_OCCLUDE_BUFFER_WIDTH );
+		(*pnSX) = (std::max)( *pnSX, 0 );
+		(*pnFX) = (std::min)( *pnFX, nWidth );//N_OCCLUDE_BUFFER_WIDTH );
 	}
 	__forceinline void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
 	{
@@ -313,7 +313,7 @@ public:
 				float fZ = fRadius / fLeng;
 				float fZt = 1 / fZ;//( fZAdd + fZMul * fZ ) / ( fWAdd + fWMul * fZ );
 				int nZValue = Float2IntScale( fZt, fZBufScale );
-				nZValue = Min( nZValue, 65535 );
+				nZValue = (std::min)( nZValue, 65535 );
 				depthBuffer[nY][nX] = nZValue;//Float2Int( fZt * fZBufScale );//fZt;//
 			}
 		}
@@ -857,9 +857,9 @@ void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const 
 	float f3 = CalcPointNorm( p3 );
 	if ( f1 > fRadius * FP_SQRT_3 && f2 > fRadius * FP_SQRT_3 && f3 > fRadius * FP_SQRT_3 )
 		return;
-	fHullRadius = Max( fHullRadius, f1 );
-	fHullRadius = Max( fHullRadius, f2 );
-	fHullRadius = Max( fHullRadius, f3 );
+	fHullRadius = (std::max)( fHullRadius, f1 );
+	fHullRadius = (std::max)( fHullRadius, f2 );
+	fHullRadius = (std::max)( fHullRadius, f3 );
 	int n1 = AddPoint( p1 );
 	int n2 = AddPoint( p2 );
 	int n3 = AddPoint( p3 );

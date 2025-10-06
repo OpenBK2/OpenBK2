@@ -346,7 +346,7 @@ static void MulResolve( std::vector<float> *pRes, const std::vector<float> &s )
 	for ( int y = 0; y < r.size(); ++y )
 	{
 		float fRes = 0;
-		int nStart = Max( -7, -y ), nFinish = Min<int>( 7, r.size() - y - 1 );
+		int nStart = (std::max)( -7, -y ), nFinish = (std::min<int>)( 7, r.size() - y - 1 );
 		for ( int delta = nStart; delta <= nFinish; ++delta )
 			fRes += fResolveCoef[delta + 7] * s[ y + delta ];
 		r[y] = fRes;

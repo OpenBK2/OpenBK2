@@ -47,7 +47,7 @@ CAviation::~CAviation()
 void CAviation::DecFuel( const bool bEconomyMode )
 {
 	const float fDec = (bEconomyMode ?  SConsts::PLANE_FUEL_DEC_ECONOMY : SConsts::PLANE_FUEL_DEC ) * SConsts::AI_SEGMENT_DURATION / 1000;
-	fFuel = Max( fFuel - fDec, 0.0f );
+	fFuel = (std::max)( fFuel - fDec, 0.0f );
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 }
 

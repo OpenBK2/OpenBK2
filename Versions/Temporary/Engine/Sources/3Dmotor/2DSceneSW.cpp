@@ -230,7 +230,7 @@ private:
 		for ( int x = nLeft; x < nRight; ++x )
 		{
 			const NGfx::SPixel8888 &color = tex.Fetch();
-			res[nY][x] = Min( res[nY][x] , (int)( 0xFF - color.r ) );// ( ( res[nY][x] * color.r ) >> 8 ); 
+			res[nY][x] = (std::min)( res[nY][x] , (int)( 0xFF - color.r ) );// ( ( res[nY][x] * color.r ) >> 8 );
 		}
 	}
 	friend class CRasterizer<CFogRender>;

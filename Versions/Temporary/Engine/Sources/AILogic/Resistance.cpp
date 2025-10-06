@@ -38,9 +38,9 @@ const float GetCoeffByDeltaTime( const float fDeltaTime, const float fUpperBound
 {
 	float fCoeff = 1.0f - ( fDeltaTime / fUpperBound ) / 3.0f;
 	if ( bNeedDeinstall )
-		fCoeff = Min( 1.0f, fCoeff * 1.2f );
+		fCoeff = (std::min)( 1.0f, fCoeff * 1.2f );
 	if ( !bCanMove )
-		fCoeff = Min( 1.0f, fCoeff * 1.1f );
+		fCoeff = (std::min)( 1.0f, fCoeff * 1.1f );
 
 	return fCoeff;
 }
@@ -105,7 +105,7 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 		if ( cellsWeights.find( nLastCell ) != cellsWeights.end() )
 		{
 			CResistance::iterator pos = find( resistances.begin(), resistances.end(), SResistance( nLastCell, 0, 0 ) );
-			const float fNew = Max( 0.0f, cellsWeights[nLastCell].fCellWeight - pInfo->GetWeight() );
+			const float fNew = (std::max)( 0.0f, cellsWeights[nLastCell].fCellWeight - pInfo->GetWeight() );
 			cellsWeights[nLastCell].fCellWeight = fNew;
 			if ( pos != resistances.end() )
 				pos->SetWeight( fNew );
@@ -172,7 +172,7 @@ void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 		CResistance::iterator pos = find( resistances.begin(), resistances.end(), SResistance( nCell, 0, 0 ) );
 		if ( pos == resistances.end() )
 			return;
-		cellsWeights[nCell].fCellWeight = Max( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
+		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
 			--goodWeight[nCell];
@@ -188,7 +188,7 @@ void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 		if ( pos == resistances.end() )
 			return;
 
-		cellsWeights[nCell].fCellWeight = Max( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
+		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
 			--goodWeight[nCell];

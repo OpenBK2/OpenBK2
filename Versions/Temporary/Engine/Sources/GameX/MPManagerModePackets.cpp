@@ -192,7 +192,7 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 
 	SLagInfo &lag = lags[pPacket->nPlayer];
 	//DebugTrace( "*** LAG UPDATE player %d, time %d --> %d", pPacket->nPlayer, lag.nLagLeft, pPacket->nTimeLeft );
-	lag.nLagLeft = Min( pPacket->nTimeLeft, int( lag.nLagLeft ) );
+	lag.nLagLeft = (std::min)( pPacket->nTimeLeft, int( lag.nLagLeft ) );
 
 	return true;
 }
@@ -241,7 +241,7 @@ bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 		if ( slot.nClientID == pPacket->nClientID )
 		{
 			const int nTimeDiff = curTime - pPacket->nSendTime;
-			slot.nPing = Max( 0, nTimeDiff );
+			slot.nPing = (std::max)( 0, nTimeDiff );
 			if ( bGameRoomInit )
 			{
 				SMPUIUpdateSlotMessage *pMsg = new SMPUIUpdateSlotMessage;

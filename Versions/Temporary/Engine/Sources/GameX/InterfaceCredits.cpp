@@ -87,7 +87,7 @@ bool CInterfaceCredits::StepLocal( bool bAppActive )
 			{
 				nY -= nDelta;
 				timeLastMove = curTime;
-				nY = Max( -nSize, nY );
+				nY = (std::max)( -nSize, nY );
 				pText->SetPlacement( 0, nY, 0, 0, EWPF_POS_Y );
 			}
 		}

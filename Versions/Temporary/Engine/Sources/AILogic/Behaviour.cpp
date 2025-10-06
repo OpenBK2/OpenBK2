@@ -235,12 +235,12 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 							
 							WORD wRotateAngle;
 							if ( pUnit->GetStats()->IsArmor() )
-								wRotateAngle = Min( (WORD)15000, (WORD)pTurret->GetHorTurnConstraint() );
+								wRotateAngle = (std::min)( (WORD)15000, (WORD)pTurret->GetHorTurnConstraint() );
 							else
-								wRotateAngle = Min( (WORD)32768, (WORD)pTurret->GetHorTurnConstraint() );
+								wRotateAngle = (std::min)( (WORD)32768, (WORD)pTurret->GetHorTurnConstraint() );
 
 							const WORD wMinRotateAngle = wRotateAngle / 4;
-							const WORD wMaxRotateAngle = Max( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
+							const WORD wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
 							
 							if ( wMaxRotateAngle > 0 && (int)wMaxRotateAngle - (int)wMinRotateAngle + 1 != 0 )
 							{

@@ -290,91 +290,12 @@ __forceinline void Float2Int( int *pInt, float fVal )
 
 }
 
-// min/max functions
-template <class TYPE>
-inline const TYPE Min( const TYPE val1, const TYPE val2 )
-{
-	return (val1 < val2 ? val1 : val2);
-}
-template <class TYPE>
-inline const TYPE Max( const TYPE val1, const TYPE val2 )
-{
-	return (val1 > val2 ? val1 : val2);
-}
-
-// returns minimum of two float values
-template<>
-inline const float Min<float>( const float a, const float b )
-{
-	float fpRet;
-	_asm
-	{
-		// comparing
-		fld     dword ptr [b]
-		fcomp		dword ptr [a]
-		fnstsw  ax
-		mov			ecx, dword ptr [b]
-		shl			eax, 23
-		sar			eax, 31
-		// merging: (val1 & mask) | (val2 & ~mask)
-		and			ecx, eax
-		not			eax
-		and			eax, dword ptr [a]
-		or			eax, ecx
-		mov			[fpRet], eax
-	}
-	return fpRet;
-}
-// returns minimum of two float values
-template<>
-inline const float Max<float>( const float a, const float b )
-{
-	float fpRet;
-	_asm
-	{
-		// comparing
-		fld     dword ptr [a]
-		fcomp		dword ptr [b]
-		fnstsw  ax
-		mov			ecx, dword ptr [b]
-		shl			eax, 23
-		sar			eax, 31
-		// merging: (val1 & mask) | (val2 & ~mask)
-		and			ecx, eax
-		not			eax
-		and			eax, dword ptr [a]
-		or			eax, ecx
-		mov			[fpRet], eax
-	}
-	return fpRet;
-}
-
 // clamp - обрезать число с двух сторон (min/max)
 template <class TYPE>
 inline const TYPE Clamp( const TYPE tVal, const TYPE tMin, const TYPE tMax )
 {
-  return Max( tMin, Min(tVal, tMax) );
-}
-inline const float ClampFast( const float fVal, const float fMin, const float fMax )
-{
-	union { float f; int hex; };
-	f = fVal - fMin;
-	hex &= ~hex>>31;
-	f += fMin - fMax;
-	hex &= hex>>31;
-	f += fMax;
-
-	return f;
-}
-inline const int ClampFast( const int nVal, const int nMin, const int nMax )
-{
-	int hex = nVal - nMin;
-	hex &= ~hex>>31;
-	hex += nMin - nMax;
-	hex &= hex>>31;
-	hex += nMax;
-
-	return hex;
+	// standard std::clamp asserts for invalid values in debug
+	return (std::max)( tMin, (std::min)(tVal, tMax) );
 }
 
 // ************************************************************************************************************************ //

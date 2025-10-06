@@ -46,9 +46,9 @@ private:
 		{
 			const STriangle &q = tris[nTri];
 			int nFreeLinks = 0;
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
 
 			if ( nFreeLinks < nBestFreeLinks )
 			{
@@ -123,9 +123,9 @@ private:
 			if ( nQDistance1 + 1 < nVCacheSize )
 				nDistanceGuess = nQDistance1;
 			if ( nQDistance2 + 1 < nVCacheSize )
-				nDistanceGuess = Max( nDistanceGuess, nQDistance2 );
+				nDistanceGuess = (std::max)( nDistanceGuess, nQDistance2 );
 			if ( nQDistance3 + 1 < nVCacheSize )
-				nDistanceGuess = Max( nDistanceGuess, nQDistance3 );
+				nDistanceGuess = (std::max)( nDistanceGuess, nQDistance3 );
 			if ( nCached == nBestCached && nDistanceGuess < nBestDistance )
 			{
 				pOptimizer->ReverseVertex();
@@ -141,9 +141,9 @@ private:
 			GetL( &nDistance, nQDistance2, q.i2, nVCacheSize );
 			GetL( &nDistance, nQDistance3, q.i3, nVCacheSize );
 
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
-			nFreeLinks = Max( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
 
 			pOptimizer->ReverseVertex();
 			pOptimizer->ReverseVertex();

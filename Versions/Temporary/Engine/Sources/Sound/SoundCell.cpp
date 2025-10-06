@@ -44,7 +44,7 @@ void CSoundCell::RecountForDelete()
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
 		NI_ASSERT( 0 != (*it)->GetRadiusMax(), " 0 max radius" );
-		nRadius = Max( nRadius, (*it)->GetRadiusMax() );
+		nRadius = (std::max)( nRadius, (*it)->GetRadiusMax() );
 	}
 }
 
@@ -52,7 +52,7 @@ void CSoundCell::AddSound( class CSound *pSound )
 {
 	NI_ASSERT( 0 != pSound->GetRadiusMax(), " 0 max radius" );
 	sounds.push_back( pSound );
-	nRadius = Max( nRadius, pSound->GetRadiusMax() );
+	nRadius = (std::max)( nRadius, pSound->GetRadiusMax() );
 
 }
 

@@ -99,8 +99,8 @@ void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstr
 	ResizeTextView( pTextView, szText, sizeTextWindow.x );
 	const CTPoint<int> &sizeTextView = pTextView->GetSize();
 	
-	int nDeltaX = Max( 0, sizeTextView.x - sizeTextWindow.x );
-	int nDeltaY = Max( 0, sizeTextView.y - sizeTextWindow.y );
+	int nDeltaX = (std::max)( 0, sizeTextView.x - sizeTextWindow.x );
+	int nDeltaY = (std::max)( 0, sizeTextView.y - sizeTextWindow.y );
 	
 	CTPoint<int> posWindow;
 	CTPoint<int> sizeWindow;
@@ -144,7 +144,7 @@ void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const std::wstr
 	pTextView->SetText( pTextView->GetDBText() + szText );
 	pTextView->SetWidth( nMinX );
 	const CTPoint<int> &size = pTextView->GetSize();
-	int nNiceX = Max( Max( nMinX, size.x), (int)sqrtf( size.x * size.y * TEXT_VIEW_NICE_X2Y ) );
+	int nNiceX = (std::max)( (std::max)( nMinX, size.x), (int)sqrtf( size.x * size.y * TEXT_VIEW_NICE_X2Y ) );
 	pTextView->SetWidth( nNiceX );
 	const CTPoint<int> &size2 = pTextView->GetSize();
 	if ( size2.x < nNiceX ) 

@@ -254,7 +254,7 @@ void AutoDetectVideoConfig()
 	else
 	{
 		// select texture mode
-		nDefaultTexture = Min( nDefaultTexture, (int)CV_VHIGH );
+		nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_VHIGH );
 
 		if ( perf.fFillRate != 0 )
 		{
@@ -263,14 +263,14 @@ void AutoDetectVideoConfig()
 			if ( perf.fFillRate < 400 )
 			{
 				nDefaultSpeed = CV_HIGH;
-				nDefaultTexture = Min( nDefaultTexture, (int)CV_HIGH );
+				nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_HIGH );
 			}
 			if ( perf.fFillRate < 190 )
 			{
 				NGlobal::SetVar( "gfx_resolution", "1024x768" );
 				if ( perf.fFillRate < perf.fPSRate * 0.7 )
 					nDefault16bppMode = 1;
-				nDefaultTexture = Min( nDefaultTexture, (int)CV_MED );
+				nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_MED );
 			}
 			if ( perf.fFillRate > 700 )
 			{
@@ -278,7 +278,7 @@ void AutoDetectVideoConfig()
 				nDefaultFSAA = CV_VHIGH;
 			}
 			else
-				nDefaultTexture = Min( nDefaultTexture, (int)CV_HIGH );
+				nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_HIGH );
 		}
 	}
 
