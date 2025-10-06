@@ -93,37 +93,6 @@ public:
 	void Set( ERoundingControlMode mode ) { _control87( mode, _MCW_RC ); };
 };
 
-class CSimpleCriticalSection
-{
-	int nLock;
-	CSimpleCriticalSection( const CSimpleCriticalSection & ) {}
-	CSimpleCriticalSection& operator=( const CSimpleCriticalSection &) {}
-	//
-	void Enter() 
-	{ 
-		int *pData = &nLock;
-		_asm
-		{
-			mov esi, pData
-Retry:
-			mov eax, 1
-			lock xchg [esi], eax
-			test eax, eax
-			jz Ok
-			//pause
-			push 0
-			call dword ptr[ Sleep ]
-			jmp Retry
-Ok:
-		}
-	}
-	void Leave() { nLock = 0; }
-public:
-	CSimpleCriticalSection() : nLock(0) {}
-	friend class CTLock<CSimpleCriticalSection>;
-};
-typedef CTLock<CSimpleCriticalSection> CSimpleCriticalSectionLock;
-
 }
 
 
