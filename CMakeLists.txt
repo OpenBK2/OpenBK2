@@ -24,8 +24,8 @@ set(ZLIB_COMPAT ON)
 include(cmake/zlib-ng.cmake)
 
 set(SDLMIXER_VENDORED OFF)
-add_subdirectory(third_party/SDL)
-add_subdirectory(third_party/SDL_mixer)
+include(cmake/sdl.cmake)
+include(cmake/sdl_mixer.cmake)
 
 include(cmake/dxsdk.cmake)
 include(cmake/fmod.cmake)
