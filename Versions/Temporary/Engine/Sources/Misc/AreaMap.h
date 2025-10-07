@@ -52,12 +52,11 @@ public:
 	// if this is a new object, this will be added to the area map
 	void MoveTo( TYPE *pObj, const TPosition &vNewPos )
 	{
-		NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
 		const TPosition vOldPos = pObj->GetPosition();
-		const int nOldIndexX = Float2Int( vOldPos.x / tCellSize - 0.5f );
-		const int nOldIndexY = Float2Int( vOldPos.y / tCellSize - 0.5f );
-		const int nNewIndexX = Float2Int( vNewPos.x / tCellSize - 0.5f );
-		const int nNewIndexY = Float2Int( vNewPos.y / tCellSize - 0.5f );
+		const int nOldIndexX = static_cast<int>(std::nearbyint( vOldPos.x / tCellSize - 0.5f ));
+		const int nOldIndexY = static_cast<int>(std::nearbyint( vOldPos.y / tCellSize - 0.5f ));
+		const int nNewIndexX = static_cast<int>(std::nearbyint( vNewPos.x / tCellSize - 0.5f ));
+		const int nNewIndexY = static_cast<int>(std::nearbyint( vNewPos.y / tCellSize - 0.5f ));
 		// if we are moved to the new cell, add to the new and, then, remove from the old one
 		if ( (nOldIndexX != nNewIndexX) || (nOldIndexY != nNewIndexY) )
 		{
@@ -71,36 +70,32 @@ public:
 	void Add( TYPE *pObj )
 	{
 		const TPosition vPos = pObj->GetPosition();
-		NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
-		const int nX = Float2Int( vPos.x / tCellSize - 0.5f );
-		const int nY = Float2Int( vPos.y / tCellSize - 0.5f );
+		const int nX = static_cast<int>(std::nearbyint( vPos.x / tCellSize - 0.5f ));
+		const int nY = static_cast<int>(std::nearbyint( vPos.y / tCellSize - 0.5f ));
 		AddTo( nX, nY, pObj );
 	}
 	// remove object from the area map
 	void Remove( TYPE *pObj )
 	{
 		const TPosition vPos = pObj->GetPosition();
-		NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
-		const int nX = Float2Int( vPos.x / tCellSize - 0.5f );
-		const int nY = Float2Int( vPos.y / tCellSize - 0.5f );
+		const int nX = static_cast<int>(std::nearbyint( vPos.x / tCellSize - 0.5f ));
+		const int nY = static_cast<int>(std::nearbyint( vPos.y / tCellSize - 0.5f ));
 		RemoveFrom( nX, nY, pObj );
 	}
 
 	// add new object to position
 	void AddToPosition( TYPE *pObj, const TPosition &vPos )
 	{
-		NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
-		const int nX = Float2Int( vPos.x / tCellSize - 0.5f );
-		const int nY = Float2Int( vPos.y / tCellSize - 0.5f );
+		const int nX = static_cast<int>(std::nearbyint( vPos.x / tCellSize - 0.5f ));
+		const int nY = static_cast<int>(std::nearbyint( vPos.y / tCellSize - 0.5f ));
 		AddTo( nX, nY, pObj );
 	}
 
 	// remove object from positions
 	void RemoveFromPosition( TYPE *pObj, const TPosition &vPos )
 	{
-		NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
-		const int nX = Float2Int( vPos.x / tCellSize - 0.5f );
-		const int nY = Float2Int( vPos.y / tCellSize - 0.5f );
+		const int nX = static_cast<int>(std::nearbyint( vPos.x / tCellSize - 0.5f ));
+		const int nY = static_cast<int>(std::nearbyint( vPos.y / tCellSize - 0.5f ));
 		RemoveFrom( nX, nY, pObj );
 	}
 	//

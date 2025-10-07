@@ -212,17 +212,7 @@ inline float SignumNormalizeAngleInRadian( const float angle )
 // very fast float-to-int conversion. WARNING: uses current FPU rounding state (!)
 __forceinline int Float2Int( const float fVal )
 {
-	int nRet;
-	__asm  fld dword ptr fVal
-	__asm  fistp nRet
-	return nRet;
-}
-__forceinline void Float2Int( int *pInt, float fVal ) 
-{
-	__asm  fld  fVal
-  __asm  mov  edx, pInt
-  __asm  fistp dword ptr [edx];
-
+	return static_cast<int>(fVal);
 }
 
 // clamp - обрезать число с двух сторон (min/max)
