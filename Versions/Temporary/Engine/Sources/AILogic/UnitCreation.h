@@ -24,8 +24,6 @@ struct IPlaneCreation
 
 };
 
-ICollisionsCollector;
-
 //
 class CPlaneCreation : public IPlaneCreation
 {
