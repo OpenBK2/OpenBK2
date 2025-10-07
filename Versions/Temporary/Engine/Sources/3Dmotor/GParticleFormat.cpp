@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "GParticleFormat.h"
+
+#include "GPixelFormat.h"
+
 namespace NGScene
 {
 
@@ -48,62 +51,26 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 template<>
 void Interpolate( const DWORD &v1, const DWORD &v2, float f1, float f2, DWORD *pRes )
 {
-	int n1 = Float2Int( f1 * 0x4000 ), n2 = Float2Int( ( f1 + f2 ) * 0x4000 ) - n1;
-	_asm
-	{
-		mov esi, v1
-		movd mm0, [esi]
-		mov esi, v2
-		movd mm1, [esi]
-		punpcklbw mm0, mm0
-		punpcklbw mm1, mm1
-		psrlw mm0, 2
-		psrlw mm1, 2
-		movd mm3, n1
-		punpcklwd mm3, mm3
-		punpckldq mm3, mm3
-		movd mm4, n2
-		punpcklwd mm4, mm4
-		punpckldq mm4, mm4
-		pmulhw mm0, mm3
-		pmulhw mm1, mm4
-		paddw mm0, mm1
-		psrlw mm0, 4
-		packuswb mm0, mm0
-		mov esi, pRes
-		movd [esi], mm0
-		emms
-	}
-	//ASSERT( IsInRange( v1 & 0xff, v2 & 0xff, (*pRes) & 0xff ) );
-	//ASSERT( IsInRange( v1 & 0xff00, v2 & 0xff00, (*pRes) & 0xff00 ) );
-	//ASSERT( IsInRange( v1 & 0xff0000, v2 & 0xff0000, (*pRes) & 0xff0000 ) );
-	//ASSERT( IsInRange( v1 & 0xff000000, v2 & 0xff000000, (*pRes) & 0xff000000 ) );
-	/*DWORD b = Float2Int( (v1 & 0x000000FF) * (1 - fAlpha) + (v2 & 0x000000FF) * fAlpha );
-	DWORD g = Float2Int( (v1 & 0x0000FF00) * (1 - fAlpha) + (v2 & 0x0000FF00) * fAlpha );
-	DWORD r = Float2Int( (v1 & 0x00FF0000) * (1 - fAlpha) + (v2 & 0x00FF0000) * fAlpha );
-	DWORD a = Float2Int( (v1 & 0xFF000000) * (1 - fAlpha) + (v2 & 0xFF000000) * fAlpha );
-	*pRes = b | (g & 0x0000FF00) | (r & 0x00FF0000) | (a & 0xFF000000);*/
+	NGfx::SPixel8888 c1(v1), c2(v2), out;
+
+	out.r = Float2Int(c1.r * f1 + c2.r * f2);
+	out.g = Float2Int(c1.g * f1 + c2.g * f2);
+	out.b = Float2Int(c1.b * f1 + c2.b * f2);
+	out.a = Float2Int(c1.a * f1 + c2.a * f2);
+
+	*pRes = out.dwColor;
 }
 template<>
 void Scale( const DWORD &v, float f, DWORD *pRes )
 {
-	int n1 = Float2Int( f * 0x4000 );
-	_asm
-	{
-		mov esi, v
-		movd mm0, [esi]
-		punpcklbw mm0, mm0
-		psrlw mm0, 2
-		movd mm3, n1
-		punpcklwd mm3, mm3
-		punpckldq mm3, mm3
-		pmulhw mm0, mm3
-		psrlw mm0, 4
-		packuswb mm0, mm0
-		mov esi, pRes
-		movd [esi], mm0
-		emms
-	}
+	NGfx::SPixel8888 c(v), out;
+
+	out.r = Float2Int(c.r * f);
+	out.g = Float2Int(c.g * f);
+	out.b = Float2Int(c.b * f);
+	out.a = Float2Int(c.a * f);
+
+	*pRes = out.dwColor;
 }
 
 // CParticlesLoader
