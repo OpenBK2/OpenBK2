@@ -981,55 +981,9 @@ public:
 
 static __forceinline void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
 {
-	_asm
-	{
-		mov esi, pSrc
-		mov edi, pDst
-		mov ecx, nSize
-		mov ebx, nShift
-		cmp ecx, 4
-		jl last
-		movd mm1, ebx
-		punpckldq mm1, mm1
-		pxor mm0, mm0
-// warm up cache
-		mov eax, ecx
-		sub eax, 2
-warm_up_loop:
-		mov edx, [esi+eax * 2]
-		sub eax, 16
-		cmp eax, 0
-		jg warm_up_loop
-// process
-final_ckl:
-		movq mm4, [esi]
-		add esi, 8
-		add edi, 16
-		movq mm3, mm4
-		punpcklwd mm3, mm0
-		punpckhwd mm4, mm0
-		paddd mm3, mm1
-		paddd mm4, mm1
-		sub ecx, 4
-		movq [edi-16], mm3
-		movq [edi+8-16], mm4
-		cmp ecx, 4
-		jae final_ckl
-		emms
-last:
-		cmp ecx, 0
-		jle fff
-last_lp:
-		xor eax, eax
-		mov ax,[esi]
-		add eax, ebx
-		mov [edi], eax
-		add esi, 2
-		add edi, 4
-		dec ecx
-		jnz last_lp
-fff:
-	}
+	std::transform(pSrc, pSrc + nSize, pDst, [nShift](uint16_t value) {
+		return value + nShift;
+	});
 }
 
 struct S32Triangle
