@@ -119,9 +119,6 @@ inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const CTRect<T>
 }
 
 DEFINE_DG_CONSTANT_NODE( CCSWRectLayout, CSWRectLayout );
-#ifdef STUPID_VISUAL_ASSIST
-class CCSWRectLayout;
-#endif
 }
 
 

@@ -30,20 +30,6 @@ DEFINE_DG_CONSTANT_NODE( CCTRect, CTRect<int> );
 DEFINE_DG_CONSTANT_NODE( CCTPoint, CTPoint<int> );
 DEFINE_DG_CONSTANT_NODE( CCWString, std::wstring );
 DEFINE_DG_CONSTANT_NODE( CCRectLayout, CRectLayout );
-#ifdef STUPID_VISUAL_ASSIST
-class CCMSR;
-class CCFBTransform;
-class CCSphere;
-class CCVec2;
-class CCVec3;
-class CCVec4;
-class CCInt;
-class CCFloat;
-class CCTRect;
-class CCTPoint;
-class CCWString;
-class CCRectLayout;
-#endif
 
 //! Создаёт CCTRect
 inline CCTRect* CreateRect( int x, int y, int width, int height ) 

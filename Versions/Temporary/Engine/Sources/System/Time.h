@@ -4,9 +4,6 @@
 #include "time.hpp"
 
 DEFINE_DG_CONSTANT_NODE( CCTime, STime );
-#ifdef STUPID_VISUAL_ASSIST
-class CCTime;
-#endif
 
 class CTimeCounter
 {

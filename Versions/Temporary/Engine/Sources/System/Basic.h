@@ -200,11 +200,6 @@ public:                                                                         
 	TPtrName& operator=( const TPtrName &a ) { CBase::SetObject( a.Get() ); return *this; }   \
 	int operator&( IBinSaver &f ) { return (*(CBase*)this) & (f); }                    \
 };
-#ifdef STUPID_VISUAL_ASSIST
-template<class T> class CPtr {};
-template<class T> class CObj {};
-template<class T> class CMObj {};
-#endif
 //
 BASIC_PTR_DECLARE( CPtr, CObjectBase::SRef );
 BASIC_PTR_DECLARE( CObj, CObjectBase::SRefO );
