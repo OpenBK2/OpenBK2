@@ -64,72 +64,25 @@ public:
 			CArray2D<zbuf_type> &dst = depthBuffer[ k ];
 			int nXSize = (std::min)( src.GetSizeX() / 2, dst.GetSizeX() );
 			int nYSize = (std::min)( src.GetSizeY() / 2, dst.GetSizeY() );
-			int nMask1 = 0xffff, nMask2 = 0xffff0000;
-			_asm
-			{
-				movd mm6, nMask1
-				movd mm7, nMask2
-			}
 			for ( int y = 0; y < nYSize; ++y )
 			{
-				int nShift = src.GetSizeX() * 2;
-				const void *pSrc = &src[y*2][0];
-				void *pDst = &dst[y][0];
-				__asm
-				{
-					mov esi, pSrc
-					mov edi, pDst
-					mov ebx, nShift
-					mov ecx, nXSize
-					shr ecx, 1
-lp:
-					movq mm0, [esi]
-					movq mm1, [esi+ebx]
-					add esi, 8
-					add edi, 4
-					dec ecx
-					movq mm2, mm0
-					psubusw mm2, mm1
-					psubw mm0, mm2
-					movq mm1, mm0
-					psrl mm0, 16
-					movq mm2, mm0
-					psubusw mm2, mm1
-					psubw mm0, mm2
-					movq mm1, mm0
-					psrl mm0, 16
-					pand mm1, mm6
-					pand mm0, mm7
-					por mm0, mm1
-					movd [edi-4], mm0
-					jnz lp
-					mov ecx, nXSize
-					test ecx, 1
-					jz fin
-					movd mm0, [esi]
-					movd mm1, [esi+ebx]
-					movq mm2, mm0
-					psubusw mm2, mm1
-					psubw mm0, mm2
-					movq mm1, mm0
-					psrl mm0, 16
-					movq mm2, mm0
-					psubusw mm2, mm1
-					psubw mm0, mm2
-					movd eax, mm0
-					mov [edi], ax
-fin:
+				for ( int x = 0; x < nXSize; ++x ) {
+					// 2x2 block
+					zbuf_type a = src[y * 2][x * 2];
+					zbuf_type b = src[y * 2][x * 2 + 1];
+					zbuf_type c = src[y * 2 + 1][x * 2];
+					zbuf_type d = src[y * 2 + 1][x * 2 + 1];
+
+					auto min_pair = [](zbuf_type u, zbuf_type v) {
+						return u - ((u - v) & ((u - v) >> 15));
+					};
+					zbuf_type ab = min_pair(a,b);
+					zbuf_type cd = min_pair(c, d);
+					zbuf_type abcd = min_pair(ab, cd);
+
+					dst[x][y] = abcd;
 				}
-					//for ( int x = 0; x < nXSize; ++x )
-					//{
-					//dst[y][x] = Min(
-					//	src[y*2  ][x*2  ], Min(
-					//	src[y*2  ][x*2+1], Min(
-					//	src[y*2+1][x*2  ], 
-					//	src[y*2+1][x*2+1] ) ) );
-					//}
 			}
-			_asm emms
 			if ( nYSize * 2 < src.GetSizeY() )
 			{
 				ASSERT( nYSize * 2 + 1 == src.GetSizeY() );
