@@ -82,64 +82,15 @@ inline void CalcBound( TRes *pRes, const TSet &a, TGetPoint GetPoint )
 	b.Make( pRes );
 }
 
-// should not be mixed with fpu & mmx code from StartMMXBound to StoreMMXBoundResult
-#pragma warning( disable : 4799 )
-inline void StartMMXBound( CVec3 *pMin, CVec3 *pMax )
-{
-	__asm
-	{
-		mov esi, pMin
-		movq mm4, [esi]
-		movd mm5, [esi+8]
-		mov esi, pMax
-		movq mm6, [esi]
-		movd mm7, [esi+8]
-	}
-}
-inline void AddMMXBoundPoint( const CVec3 *p )
-{
-	__asm
-	{
-		mov esi, p
-		movq mm0, [esi]
-		movd mm1, [esi+8]
-		movq mm2, mm6
-		movq mm3, mm0
-		pcmpgtd mm2, mm0
-		pcmpgtd mm3, mm4
-		pand mm6, mm2
-		pand mm4, mm3
-		pandn mm2, mm0
-		pandn mm3, mm0
-		por mm6, mm2
-		por mm4, mm3
+inline void UpdateBounds(CVec3 & vMin, CVec3 & vMax, const CVec3 & v) {
+	vMin.x = (std::min)(vMin.x, v.x);
+	vMin.y = (std::min)(vMin.y, v.y);
+	vMin.z = (std::min)(vMin.z, v.z);
 
-		movq mm2, mm7
-		movq mm3, mm1
-		pcmpgtd mm2, mm1
-		pcmpgtd mm3, mm5
-		pand mm7, mm2
-		pand mm5, mm3
-		pandn mm2, mm1
-		pandn mm3, mm1
-		por mm7, mm2
-		por mm5, mm3
-	}
+	vMax.x = (std::max)(vMax.x, v.x);
+	vMax.y = (std::max)(vMax.y, v.y);
+	vMax.z = (std::max)(vMax.z, v.z);
 }
-inline void StoreMMXBoundResult( CVec3 *pMin, CVec3 *pMax )
-{
-	__asm
-	{
-		mov esi, pMin
-		movq [esi], mm4
-		movd [esi+8], mm5
-		mov esi, pMax
-		movq [esi], mm6
-		movd [esi+8], mm7
-		emms
-	}
-}
-#pragma warning( default : 4799 )
 
 inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 {

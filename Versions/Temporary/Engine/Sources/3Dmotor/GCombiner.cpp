@@ -528,10 +528,15 @@ void CVBCombiner::XFormPosition()
 				// calc bv
 				SBoundCalcer bc;
 				bc.ptMax = CVec3(0,0,0);
-				StartMMXBound( &bc.ptMin, &bc.ptMax );
-				for ( int k = 0; k < nSize; ++k )
-					AddMMXBoundPoint( &(*pRes)[k] );
-				StoreMMXBoundResult( &pPart->vBVMin, &pPart->vBVMax );
+
+				for ( int k = 0; k < nSize; ++k ) {
+					const CVec3 & v = (*pRes)[k];
+
+					UpdateBounds(bc.ptMin, bc.ptMax, v);
+				}
+				pPart->vBVMin = bc.ptMin;
+				pPart->vBVMax = bc.ptMax;
+
 				pPart->fAverageTriArea = pObjInfo->GetAverageTriArea();
 			}
 		}

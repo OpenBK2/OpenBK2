@@ -156,9 +156,10 @@ public:
 		vNormal = _vNormal;
 	}
 	__forceinline void WriteParticle( NGfx::SGeomVecFull *pRes, const CVec3 &v, const NGfx::SShortTextureUV &tex, 
-		short nLU, short nLV, DWORD dwColor )
+		short nLU, short nLV, DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
-		AddMMXBoundPoint( &v );
+		UpdateBounds(vMin, vMax, v);
+
 		pRes->pos = v;
 		pRes->normal = vNormal;
 		pRes->tex = tex;
@@ -176,20 +177,20 @@ public:
 	__forceinline void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
-		StartMMXBound( &bcPart.ptMin, &bcPart.ptMax );
 		NGfx::SGeomVecFull *pRes = &pWriteBuffer->res[pWriteBuffer->nTarget];
 		pWriteBuffer->nTarget += 4;
 		short nU = pl.vStart.nU, nV = pl.vStart.nV;
 		short nU1 = pl.vStart.nU + pl.vSize.nU, nV1 = pl.vStart.nV + pl.vSize.nV;
-		WriteParticle( pRes + 0, vPos[0], tPlace.vUVs[0], nU,  nV1, dwColor );
-		WriteParticle( pRes + 1, vPos[1], tPlace.vUVs[1], nU1, nV1, dwColor );
-		WriteParticle( pRes + 2, vPos[2], tPlace.vUVs[2], nU1, nV,  dwColor );
-		WriteParticle( pRes + 3, vPos[3], tPlace.vUVs[3], nU,  nV,  dwColor );
-
-		StoreMMXBoundResult( &bcPart.ptMin, &bcPart.ptMax );
+		WriteParticle( pRes + 0, vPos[0], tPlace.vUVs[0], nU,  nV1, dwColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 1, vPos[1], tPlace.vUVs[1], nU1, nV1, dwColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 2, vPos[2], tPlace.vUVs[2], nU1, nV,  dwColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 3, vPos[3], tPlace.vUVs[3], nU,  nV,  dwColor, bcPart.ptMin, bcPart.ptMax );
 		pl.Inc();
 	}
 };
+
+void WriteParticle(NGfx::SGeomVecT2C1 * p_res, CVec3 v, float f_u, float f_v, DWORD dword, CVec3 vec3,
+                  CVec3 pt_max);
 
 class CTnLParticlesGeometry : public CParticlesGeometry<NGfx::SGeomVecT2C1>
 {
@@ -202,9 +203,10 @@ public:
 		orientation = _orientation;
 	}
 	__forceinline void WriteParticle( NGfx::SGeomVecT2C1 *pRes, const CVec3 &v, float fU, float fV,
-		DWORD dwColor )
+		DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
-		AddMMXBoundPoint( &v );
+		UpdateBounds(vMin, vMax, v);
+
 		pRes->pos = v;
 		pRes->color.dwColor = dwColor;
 		pRes->tex1.x = fU;
@@ -218,6 +220,24 @@ public:
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
 	}
+
+	__forceinline DWORD BlendParticleColor(DWORD dwColor, DWORD dwPColor) {
+		uint8_t R1 = (dwColor >> 16) & 0xFF;
+		uint8_t G1 = (dwColor >> 8) & 0xFF;
+		uint8_t B1 = (dwColor >> 0) & 0xFF;
+
+		uint8_t R2 = (dwPColor >> 16) & 0xFF;
+		uint8_t G2 = (dwPColor >> 8) & 0xFF;
+		uint8_t B2 = (dwPColor >> 0) & 0xFF;
+
+		uint8_t R = static_cast<uint8_t>((R1 * R2) / 255);
+		uint8_t G = static_cast<uint8_t>((G1 * G2) / 255);
+		uint8_t B = static_cast<uint8_t>((B1 * B2) / 255);
+		uint8_t A = 0x7F;
+
+		return (A << 24) | (R << 16) | (G << 8) | B;
+	}
+
 	__forceinline void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
@@ -225,43 +245,13 @@ public:
 		float fV1 = tPlace.vUVs[3].nV * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
 		float fU2 = tPlace.vUVs[1].nU * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
 		float fV2 = tPlace.vUVs[1].nV * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
-		DWORD dwResColor = dwPColor;
-		__asm
-		{
-			mov eax, dwColor
-			movd mm2, eax
-			movd mm3, dwResColor
-			shr eax, 25
-			mov ebx, eax
-			shl eax, 8
-			or ebx, eax
-			shl eax, 8
-			or ebx, eax
-			or ebx, 0x7f000000
-			pcmpeqw mm0, mm0
-			pcmpeqw mm1, mm1
-      punpcklbw mm0, mm2
-			punpcklbw mm1, mm3
-			psrlw mm0, 1
-			psrlw mm1, 1
-			pmulhw mm0, mm1
-			movd mm5, ebx
-			pcmpeqw mm6, mm6
-			punpcklbw mm6, mm5
-			pmulhw mm0, mm6
-			psrlw mm0, 5
-			packuswb mm0, mm0
-			movd dwResColor, mm0
-		}
-		StartMMXBound( &bcPart.ptMin, &bcPart.ptMax );
+		DWORD dwResColor = BlendParticleColor(dwColor, dwPColor);
 		NGfx::SGeomVecT2C1 *pRes = &pWriteBuffer->res[pWriteBuffer->nTarget];
 		pWriteBuffer->nTarget += 4;
-		WriteParticle( pRes + 0, vPos[0], fU1, fV2, dwResColor );
-		WriteParticle( pRes + 1, vPos[1], fU2, fV2, dwResColor );
-		WriteParticle( pRes + 2, vPos[2], fU2, fV1, dwResColor );
-		WriteParticle( pRes + 3, vPos[3], fU1, fV1, dwResColor );
-
-		StoreMMXBoundResult( &bcPart.ptMin, &bcPart.ptMax );
+		WriteParticle( pRes + 0, vPos[0], fU1, fV2, dwResColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 1, vPos[1], fU2, fV2, dwResColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 2, vPos[2], fU2, fV1, dwResColor, bcPart.ptMin, bcPart.ptMax );
+		WriteParticle( pRes + 3, vPos[3], fU1, fV1, dwResColor, bcPart.ptMin, bcPart.ptMax );
 	}
 };
 
