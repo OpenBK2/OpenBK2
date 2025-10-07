@@ -515,51 +515,6 @@ void CSW2DScene::AddGrayingFilter( const CVec4 &vConvolution )
 	rects.push_back( new CGrayingFilter( vConvolution ) );
 }
 
-#pragma warning( disable : 4799 )
-static void StartHiColorConvert4444()
-{
-	DWORD mask1 = 0x00f000f0;
-	DWORD mask2 = 0xf000f000;
-	DWORD rAdd = 0x08080808;
-	_asm
-	{
-		movd mm4, mask1
-		movd mm5, mask2
-		movd mm7, rAdd
-		punpckldq mm4, mm4
-		punpckldq mm5, mm5
-		punpckldq mm7, mm7
-	}
-}
-
-static void ConvertToHiColor4444( void *pDst, void *pSrc, int nSize )
-{
-	ASSERT( ( nSize & 1 ) == 0 && nSize > 0 );
-	nSize /= 2;
-	_asm
-	{
-		mov ecx, nSize
-		mov esi, pSrc
-		mov edi, pDst
-lp:
-		movq mm0, [esi]
-		paddusb mm0, mm7
-		movq mm2, mm0
-		movq mm1, mm0
-		pand mm2, mm4
-		pand mm1, mm5
-		psrlq mm2, 4
-		psrlq mm1, 8
-		por mm2, mm1
-		packuswb mm2, mm2
-		movd [edi], mm2
-		add esi, 8
-		add edi, 4
-		dec ecx
-		jnz lp
-	}
-}
-
 static void CalcMip( CArray2D<NGfx::SPixel8888> *pRes )
 {
 	CArray2D<NGfx::SPixel8888> src = *pRes;
@@ -605,24 +560,23 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 		else
 		{
 			NGfx::CTextureLock<NGfx::SPixel4444> lock( pTarget, nMip, NGfx::INPLACE );
-			StartHiColorConvert4444();
+			int nSizeY = lock.GetSizeY();
 			int nSizeX = lock.GetSizeX();
-			std::vector<NGfx::SPixel4444> colorBuf;
-			std::vector<NGfx::SPixel8888> srcColorBuf;
-			for ( int y = 0; y < lock.GetSizeY(); ++y )
+			for ( int y = 0; y < nSizeY; ++y )
 			{
-				if ( nSizeX & 1 )
-				{
-					colorBuf.resize( nSizeX + 1 );
-					srcColorBuf.resize( nSizeX + 1 );
-					memcpy( &srcColorBuf[0], &r.res[y][0], nSizeX * sizeof(srcColorBuf[0]) );
-					ConvertToHiColor4444( &colorBuf[0], &srcColorBuf[0], nSizeX + 1 );
-					memcpy( &lock[y][0], &colorBuf[0], nSizeX * sizeof(colorBuf[0]) );
+				NGfx::SPixel8888* srcRow = &r.res[y][0];
+				NGfx::SPixel4444* dstRow = &lock[y][0];
+
+				for (int x = 0; x < nSizeX; ++x) {
+					const auto& src = srcRow[x];
+					auto& dst = dstRow[x];
+
+					dst.r = src.r >> 4;
+					dst.g = src.g >> 4;
+					dst.b = src.b >> 4;
+					dst.a = src.a >> 4;
 				}
-				else
-					ConvertToHiColor4444( &lock[y][0], &r.res[y][0], lock.GetSizeX() );
 			}
-			_asm emms
 		}
 		CalcMip( &r.res );
 	}
