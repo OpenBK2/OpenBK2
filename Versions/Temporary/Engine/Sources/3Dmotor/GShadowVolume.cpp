@@ -221,15 +221,9 @@ fin:
 
 int __forceinline Float2IntScale( const float fpVar, const float fpScale )
 {
-	int nRet;
-	__asm 
-	{
-		fld dword ptr fpVar
-		fmul dword ptr fpScale
-		fistp nRet
-	}
-	return nRet;
+	return static_cast<int>(fpVar * fpScale);
 }
+
 class CPartsRender;
 class CPartsRender: public CRasterizer<CPartsRender>
 {
