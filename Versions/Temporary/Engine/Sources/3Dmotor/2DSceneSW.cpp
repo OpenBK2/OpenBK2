@@ -105,69 +105,30 @@ private:
 		if ( bDoMask )
 		{
 			ASSERT( multColor.dwColor == 0xffffffff );
-			_asm
-			{
-				pxor mm2, mm2
-			}
 			for ( ; pDst < pFinish; ++pDst )
 			{
-				DWORD color = tex.Fetch().dwColor;
-				__asm
-				{
-					mov esi, pDst
-					movd mm0, color
-					movd mm1, [esi]
-					movq mm3, mm0
-					punpcklbw mm3, mm3
-					punpcklbw mm0, mm2
-					punpckhwd mm3, mm3
-					punpcklbw mm1, mm2
-					punpckhdq mm3, mm3
-					paddw mm0, mm1
-					psllw mm1, 1
-					psrlw mm3, 1
-					pmulhw mm1, mm3
-					psubw mm0, mm1
-					packuswb mm0, mm0
-					movd [esi], mm0
-				}
-				//const NGfx::SPixel8888 &color = tex.Fetch();
-				//NGfx::SPixel8888 &dst = *pDst;
-				//int a = color.a;
-				//dst.r = color.r + ( ( dst.r * ( 256 - a ) ) >> 8 );
-				//dst.g = color.g + ( ( dst.g * ( 256 - a ) ) >> 8 );
-				//dst.b = color.b + ( ( dst.b * ( 256 - a ) ) >> 8 );
-				//dst.a = color.a + ( ( dst.a * ( 256 - a ) ) >> 8 );
+				const NGfx::SPixel8888 &src = tex.Fetch();
+				NGfx::SPixel8888 &dst = *pDst;
+				uint32_t invA = 256 - src.a;
+
+				dst.r = src.r + ((dst.r * invA) >> 8);
+				dst.g = src.g + ((dst.g * invA) >> 8);
+				dst.b = src.b + ((dst.b * invA) >> 8);
+				dst.a = src.a + ((dst.a * invA) >> 8);
 			}
-			__asm emms
 		}
 		else
 		{
 			if ( multColor.dwColor != 0xffffffff )
 			{
-				DWORD tempColor = multColor.dwColor;
-				_asm
-				{
-					pxor mm2, mm2
-					movd mm1, tempColor
-					punpcklbw mm1, mm1
-					psrlw mm1, 1
-				}
 				for ( ; pDst < pFinish; ++pDst )
 				{
-					DWORD color = tex.Fetch().dwColor;
-					__asm
-					{
-						mov esi, pDst
-						movd mm0, color
-						punpcklbw mm0, mm2
-						psllw mm0, 1
-						pmulhw mm0, mm1
-						packuswb mm0, mm0
-						movd [esi], mm0
-					}
+					auto src = tex.Fetch();
+					pDst->r = (src.r * multColor.r) / 255;
+					pDst->g = (src.g * multColor.g) / 255;
+					pDst->b = (src.b * multColor.b) / 255;
+					pDst->a = (src.a * multColor.a) / 255;
 				}
-				__asm emms
 			}
 			else
 			{
