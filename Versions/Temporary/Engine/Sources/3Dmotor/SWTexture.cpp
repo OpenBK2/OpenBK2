@@ -175,78 +175,64 @@ void CBilinearTexture::Recalc()
 	pValue->mips[0].SetSizes( nXSize, nYSize );
 	ASSERT( pic.GetSizeX() > 1 && pic.GetSizeY() > 1 );
 	float fdU = 0, fdV = 0;
+	int nPicXSize = pic.GetSizeX();
+	int nPicYSize = pic.GetSizeY();
 	if ( nXSize > 1 )
-		fdU = ( (float)pic.GetSizeX() - 1.01f ) / ( nXSize - 1 );
+		fdU = ( (float)nPicXSize - 1.01f ) / ( nXSize - 1 );
 	if ( nYSize > 1 )
-		fdV = ( (float)pic.GetSizeY() - 1.01f ) / ( nYSize - 1 );
+		fdV = ( (float)nPicYSize - 1.01f ) / ( nYSize - 1 );
 	int nUPos, nDU = Float2Int( fdU * 0x8000 ), nVPos, nDV = Float2Int( fdV * 0x8000 );
-	int nNextY = pic.GetSizeX() * 4;
-	int64_t shift = 0x10001000100010;
+
 	nVPos = 0;
 	for ( int y = 0; y < nYSize; ++y )
 	{
-		int nYMul = ( nVPos & 0x7fff ), nYMul1 = 0x7fff - nYMul;
 		nUPos = 0;
-		NGfx::SPixel8888 *pPictureSrc = &pic[ nVPos >> 15 ][0];
 		NGfx::SPixel8888 *pDst = &pValue->mips[0][y][0];
-		__asm
-		{
-			movd mm4, nYMul
-			movd mm5, nYMul1
-			punpcklwd mm4, mm4
-			punpcklwd mm5, mm5
-			punpckldq mm4, mm4
-			punpckldq mm5, mm5
-		}
+
+		float fVPos = y * fdV;
+		int v0 = static_cast<int>(fVPos);
+		int v1 = (std::min)(v0 + 1,  nPicYSize - 1);
+		float fy = fVPos - v0;
+
 		for ( int x = 0; x < nXSize; ++x )
 		{
-			int nXMul = ( nUPos & 0x7fff );
-			NGfx::SPixel8888 *pSrc = &pPictureSrc[nUPos>>15];
-			__asm
-			{
-				mov esi, pSrc
-				mov edi, nNextY
-				movd mm6, nXMul
-				punpcklwd mm6, mm6
-				pxor mm0, mm0
-				punpckldq mm6, mm6
-				pxor mm1, mm1
-				punpcklbw mm0, [esi]
-				pxor mm2, mm2
-				punpcklbw mm1, [esi + 4]
-				pxor mm3, mm3
-				punpcklbw mm2, [esi + edi]
-				punpcklbw mm3, [esi + edi + 4]
-				psrlw mm0, 1
-				mov esi, pDst
-				psrlw mm1, 1
-				psrlw mm2, 1
-				psrlw mm3, 1
-				// mm0 = mm0 * (1-mm6) + mm1 * mm6
-				// mm2 = mm2 * (1-mm6) + mm3 * mm6
-				psubw mm1, mm0
-				psubw mm3, mm2
-				psrlw mm0, 1
-				psrlw mm2, 1
-				pmulhw mm1, mm6
-				pmulhw mm3, mm6
-				paddw mm0, mm1
-				paddw mm2, mm3
-				// mm0 = mm0 * mm5 + mm2 * mm4
-				pmulhw mm0, mm5
-				pmulhw mm2, mm4
-				paddw mm0, mm2
-				paddw mm0, shift
-				psrlw mm0, 5
-				packuswb mm0, mm0
-				movd [esi], mm0
-			}
+
+			float fUPos = x * fdU;
+			int u0 = static_cast<int>(fUPos);
+			int u1 = (std::min)(u0 + 1, nPicXSize - 1);
+			float fx = fUPos - u0;
+
+			const NGfx::SPixel8888 & p00 = pic[v0][u0];
+			const NGfx::SPixel8888 & p10 = pic[v1][u0];
+			const NGfx::SPixel8888 & p01 = pic[v0][u1];
+			const NGfx::SPixel8888 & p11 = pic[v1][u1];
+
+			auto lerp = [](uint8_t a, uint8_t b, float t) {
+				return static_cast<uint8_t>(a * (1 - t) + b * t + 0.5f);
+			};
+
+			NGfx::SPixel8888 & dst = pValue->mips[0][y][x];
+
+			uint8_t r0 = lerp(p00.r, p10.r, fx);
+			uint8_t g0 = lerp(p00.g, p10.g, fx);
+			uint8_t b0 = lerp(p00.b, p10.b, fx);
+			uint8_t a0 = lerp(p00.a, p10.a, fx);
+
+			uint8_t r1 = lerp(p01.r, p11.r, fx);
+			uint8_t g1 = lerp(p01.g, p11.g, fx);
+			uint8_t b1 = lerp(p01.b, p11.b, fx);
+			uint8_t a1 = lerp(p01.a, p11.a, fx);
+
+			dst.r = lerp(r0, r1, fy);
+			dst.g = lerp(g0, g1, fy);
+			dst.b = lerp(b0, b1, fy);
+			dst.a = lerp(a0, a1, fy);
+
 			pDst++;
 			nUPos += nDU;
 		}
 		nVPos += nDV;
 	}
-	_asm emms
 }
 
 } // namespace
