@@ -1,7 +1,6 @@
 #pragma once
 #include "GfxInternal.h"
 #include "Gfx.h"
-#include "GfxCatchGPF.h"
 
 namespace NGfx
 {
@@ -70,7 +69,6 @@ public:
 			HRESULT hr = obj->Lock( 0, 0, (void**)&pLocked, dwFlags );
 			ASSERT( hr == D3D_OK );
 			bWasLinearBufferLock = true;
-			AddIgnoreAccessViolationRegion( pLocked, nSize );
 		}
 	}
 	void Unlock()
@@ -83,7 +81,6 @@ public:
 		ASSERT( nLockCount == 0 );
 		if ( pLocked )
 		{
-			RemoveIgnoreAccessViolationRegion( pLocked, nSize );
 			HRESULT hr = obj->Unlock();
 			ASSERT( hr == D3D_OK );
 			pLocked = 0;
@@ -160,12 +157,10 @@ public:
 		ASSERT( !pLocked );
 		HRESULT hr = obj->Lock( 0, 0, (void**)&pLocked, dwFlags );
 		ASSERT( hr == D3D_OK );
-		AddIgnoreAccessViolationRegion( pLocked, nSize );
 	}
 	void Unlock()
 	{
 		ASSERT( pLocked );
-		RemoveIgnoreAccessViolationRegion( pLocked, nSize );
 		HRESULT hr = obj->Unlock();
 		ASSERT( hr == D3D_OK );
 		pLocked = 0;

@@ -11,9 +11,6 @@
 #include "GfxInternal.h"
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
-#include "GfxCatchGPF.h"
-
-
 
 namespace NGfx
 {
@@ -646,7 +643,6 @@ static bool InitD3D()
 	}
 	if ( !CheckDeviceCaps() )
 		return false;
-	InitCatchGPF();
 	return true;
 }
 

@@ -34,7 +34,6 @@ set(SOURCES
     Gfx.cpp
     GfxBenchmark.cpp
     GfxBuffers.cpp
-    GfxCatchGPF.cpp
     GfxEffects.cpp
     GfxInternal.cpp
     GfxRender.cpp
