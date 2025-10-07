@@ -1,71 +1,27 @@
 #pragma once
 #include "GPixelFormat.h"
 
+#include <glm/glm.hpp>
+
 extern bool bIsSSEPresent;
 
-inline void SSELoadMatrix( const SHMatrix &m )
-{
-	const float *row0 = &m._11;
-	__asm 
-	{
-		// load columns of matrix into xmm4-7
-		mov         eax, row0
-		movups xmm7, [eax]       // a b c d
-		movups xmm1, [eax + 16]  // e f g h
-		movups xmm2, [eax + 32]  // i j k l
-		movups xmm3, [eax + 48]  // m n o p
-		movaps xmm5, xmm7        // a b c d
-		movaps xmm0, xmm1        // e f g h
-
-		unpckhps xmm7, xmm2      // a i b j
-		unpckhps xmm1, xmm3      // e m f n
-		movaps   xmm6, xmm7      // a i b j
-		unpckhps xmm7, xmm1      // a e i m ---
-		unpcklps xmm6, xmm1      // b f j n ---
-
-		unpcklps xmm5, xmm2      // c k d l
-		unpcklps xmm0, xmm3      // g o h p
-		movaps   xmm4, xmm5      // c k d l
-		unpckhps xmm5, xmm0      // c g k o ---
-		unpcklps xmm4, xmm0      // d h l p ---
-	}
+inline glm::mat4 LoadMatrix(const SHMatrix & m) {
+	// SHMatrix is row-major
+	// glm is column-major
+	return glm::mat4{
+		m._11, m._21, m._31, m._41,
+		m._12, m._22, m._32, m._42,
+		m._13, m._23, m._33, m._43,
+		m._14, m._24, m._34, m._44,
+	};
 }
-// MatrixMultiply3 -- a C++/ASM version of MatrixMultiply2, which takes
-// advantage of Intel's SSE instructions.  This version requires that
-// M be in column-major order.
-//
-// Performance: 57 cycles/vector (for Vec4 output)
-inline void SSEMatrixMultiply3( const CVec3 *vin, CVec3 *vout )
-{
-	__asm 
-	{
-		mov         esi, vin
-		mov         edi, vout
 
-		// we'll store the final result in xmm2
-		// broadcast x into xmm1, multiply it by the first
-		// column of the matrix (xmm4), and add it to the total
-		movss   xmm0, [esi]
-		movss   xmm1, [esi+4]
-		movss   xmm2, [esi+8]
-		shufps   xmm0, xmm0, 0
-		shufps   xmm1, xmm1, 0
-		shufps   xmm2, xmm2, 0
-		mulps xmm0, xmm4
-		mulps xmm1, xmm5
-		mulps xmm2, xmm6
-		addps	xmm0, xmm7
-		addps xmm1, xmm2
-		addps xmm0, xmm1
-		// write the results to vout
-		//movups   [edi], xmm2
-		movss [edi], xmm0
-		movaps xmm1, xmm0
-		shufps xmm1, xmm1, 0x55
-		shufps xmm0, xmm0, 0xaa
-		movss [edi+4], xmm1
-		movss [edi+8], xmm0
-	}
+inline void MatrixMultiplyVec3(const glm::mat4 & M, const CVec3 & vin, CVec3 & vout) {
+	glm::vec4 v{vin.x, vin.y, vin.z, 1.0f};
+	glm::vec4 res = M * v;
+	vout.x = res.x;
+	vout.y = res.y;
+	vout.z = res.z;
 }
 
 // BatchTransform1 -- A modified version of BatchMultiply4 which makes
@@ -77,82 +33,11 @@ inline void SSEMatrixMultiply3( const CVec3 *vin, CVec3 *vout )
 // Performance: 17 cycles/vector (for Vec4 output)
 inline void SSEBatchTransform( const SHMatrix &m, const CVec3 *vin, CVec3 *vout, int len )
 {
-	SSELoadMatrix( m );
-
-	// if there are an odd number of vectors, process the first one
-	// separately and advance the pointers
-	if ( len & 0x1 )
-	{
-		SSEMatrixMultiply3( vin, vout );
-		++vin;
-		++vout;
+	auto matrix = LoadMatrix(m);
+	for (int i = 0; i < len; ++i) {
+		MatrixMultiplyVec3(matrix, vin[i], vout[i]);
 	}
-	len >>= 1; // we process two vectors at a time
 
-	__asm 
-	{
-		mov      esi, vin
-		mov      edi, vout
-		mov      ecx, len
-
-BT2_START:
-		// process x (hiding the prefetches in the delays)
-		movss      xmm1, [esi+0x00]
-		movss      xmm3, [esi+0x00 + 12]
-		shufps   xmm1, xmm1, 0x00
-		prefetchnta [edi+0x30]
-		shufps   xmm3, xmm3, 0x00
-		mulps      xmm1, xmm4
-		prefetchnta   [esi+0x30]
-		mulps      xmm3, xmm4
-
-					// process y
-		movss      xmm0, [esi+0x04]
-		movss      xmm2, [esi+0x04 + 12]
-		shufps   xmm0, xmm0, 0x00
-		shufps   xmm2, xmm2, 0x00
-		mulps      xmm0, xmm5
-		mulps      xmm2, xmm5
-		addps      xmm1, xmm0
-		addps      xmm3, xmm2
-
-		// process z (hiding some pointer arithmetic between
-		// the multiplies)
-		movss      xmm0, [esi+0x08]
-		movss      xmm2, [esi+0x08 + 12]
-		shufps   xmm0, xmm0, 0x00
-		shufps   xmm2, xmm2, 0x00
-		mulps      xmm0, xmm6
-		add         esi, 12 * 2
-		mulps      xmm2, xmm6
-		add         edi, 12 * 2 // 0x20
-		addps      xmm1, xmm0
-		addps      xmm3, xmm2
-
-		// process w
-		addps      xmm1, xmm7
-		addps      xmm3, xmm7
-
-		// write output vectors to memory and loop
-		movss [edi-24], xmm1
-		movaps xmm0, xmm1
-		shufps xmm0, xmm0, 0x55
-		shufps xmm1, xmm1, 0xaa
-		movss [edi-20], xmm0
-		movss [edi-16], xmm1
-
-		movss [edi-12], xmm3
-		movaps xmm2, xmm3
-		shufps xmm2, xmm2, 0x55
-		shufps xmm3, xmm3, 0xaa
-		movss [edi-8], xmm2
-		movss [edi-4], xmm3
-		//movaps   [edi-0x20], xmm1
-		//movaps   [edi-0x10], xmm3
-
-		dec         ecx
-		jnz         BT2_START
-	}
 }
 
 struct SSSEVertexWeight
@@ -162,139 +47,28 @@ struct SSSEVertexWeight
 	BYTE cBoneIndices[4];
 };
 
-// xmm7, xmm1, xmm2, xmm3 - transformation matrix, xmm3 is not used since it should always be (0,0,0,1)
-static void __forceinline SSEOneVertex( const CVec3 *pSrc, CVec3 *pRes )//__m128 *pM )
-{
-	__asm
-	{
-		// transpose transformation matrix
-		movaps xmm5, xmm7        // a b c d
-		movaps xmm0, xmm1        // e f g h
-
-		unpckhps xmm7, xmm2      // a i b j
-		unpckhps xmm1, xmm3      // e m f n
-		movaps   xmm6, xmm7      // a i b j
-		unpckhps xmm7, xmm1      // a e i m ---
-		unpcklps xmm6, xmm1      // b f j n ---
-
-		unpcklps xmm5, xmm2      // c k d l
-		unpcklps xmm0, xmm3      // g o h p
-		movaps   xmm4, xmm5      // c k d l
-		unpckhps xmm5, xmm0      // c g k o ---
-		unpcklps xmm4, xmm0      // d h l p ---
-//		mov eax, pM
-		mov esi, pSrc
-		mov edi, pRes
-
-		movss   xmm0, [esi]
-		movss   xmm1, [esi+4]
-		movss   xmm2, [esi+8]
-		shufps   xmm0, xmm0, 0
-		shufps   xmm1, xmm1, 0
-		shufps   xmm2, xmm2, 0
-		mulps xmm0, xmm4
-		mulps xmm1, xmm5
-		mulps xmm2, xmm6
-		addps	xmm0, xmm7
-		addps xmm1, xmm2
-		addps xmm0, xmm1
-
-		// load v into xmm0.
-		//movups   xmm0, [esi]
-		//movups   xmm2, xmm0
-		//shufps   xmm2, xmm2, 0x00
-		//mulps      xmm2, xmm4//[eax]
-		//movups   xmm1, xmm0
-		//shufps   xmm1, xmm1, 0x55
-		//mulps      xmm1, xmm5//[eax+16]
-		//addps      xmm2, xmm1
-		//movups   xmm1, xmm0
-		//shufps   xmm1, xmm1, 0xAA
-		//mulps      xmm1, xmm6//[eax+32]
-		//addps      xmm2, xmm1
-		//addps      xmm2, xmm7//[eax+48]
-
-		movss [edi], xmm0
-		movaps xmm1, xmm0
-		shufps xmm1, xmm1, 0x55
-		shufps xmm0, xmm0, 0xaa
-		movss [edi+4], xmm1
-		movss [edi+8], xmm0
-	}
-}
-
 static void SSESkinning( const CVec3 *pSrc, CVec3 *pRes, const SSSEVertexWeight *pWeight, const std::vector<SHMatrix> &blends, int nCount )
 {
-	const SHMatrix *pMatrices = &blends[0];
-	ASSERT( (((int)pMatrices) & 0xf ) == 0 );
-	for ( int k = 0; k < nCount; ++k, ++pSrc, ++pRes, ++pWeight )
-	{
-		__asm
-		{
-			mov esi, pMatrices
-			mov edi, pWeight
-			movzx ebx, byte ptr[edi+20]
-			shl ebx, 6
-			movaps xmm7, [ebx + esi ]
-			movaps xmm1, [ebx + esi + 16]
-			movaps xmm2, [ebx + esi + 32]
-			movaps xmm3, [ebx + esi + 48]
-			cmp byte ptr [edi+ 17], 0
-			jz ex
-			movss xmm0, [edi]
-			shufps xmm0, xmm0, 0
-			mulps xmm7, xmm0
-			mulps xmm1, xmm0
-			mulps xmm2, xmm0
-			
-			movzx ebx, byte ptr[edi+21]
-			shl ebx, 6
-			movss xmm0, [edi+4]
-			shufps xmm0, xmm0, 0
-			movaps xmm4, [ebx + esi]
-			movaps xmm5, [ebx + esi + 16]
-			movaps xmm6, [ebx + esi + 32]
-			mulps xmm4, xmm0
-			mulps xmm5, xmm0
-			mulps xmm6, xmm0
-			addps xmm7, xmm4
-			addps xmm1, xmm5
-			addps xmm2, xmm6
+	for (int k = 0; k < nCount; ++k, ++pSrc, ++pRes, ++pWeight) {
+		glm::mat4 blended{0.0f};
 
-			cmp byte ptr [edi+ 18], 0
-			jz ex
-			movzx ebx, byte ptr[edi+22]
-			shl ebx, 6
-			movss xmm0, [edi+8]
-			shufps xmm0, xmm0, 0
-			movaps xmm4, [ebx + esi]
-			movaps xmm5, [ebx + esi + 16]
-			movaps xmm6, [ebx + esi + 32]
-			mulps xmm4, xmm0
-			mulps xmm5, xmm0
-			mulps xmm6, xmm0
-			addps xmm7, xmm4
-			addps xmm1, xmm5
-			addps xmm2, xmm6
+		for (int i = 0; i < 4; ++i) {
+			float w = pWeight->fWeights[i];
+			if (w == 0.0f) {
+				continue;
+			}
+			int boneIndex = pWeight->cBoneIndices[i];
+			glm::mat4 m = LoadMatrix(blends[boneIndex]);
 
-			cmp byte ptr [edi+ 19], 0
-			jz ex
-			movzx ebx, byte ptr[edi+23]
-			shl ebx, 6
-			movss xmm0, [edi+12]
-			shufps xmm0, xmm0, 0
-			movaps xmm4, [ebx + esi]
-			movaps xmm5, [ebx + esi + 16]
-			movaps xmm6, [ebx + esi + 32]
-			mulps xmm4, xmm0
-			mulps xmm5,xmm0
-			mulps xmm6, xmm0
-			addps xmm7, xmm4
-			addps xmm1, xmm5
-			addps xmm2, xmm6
-ex:;
+			blended += w * m;
 		}
-		SSEOneVertex( pSrc, pRes );
+
+		glm::vec4 v(pSrc->x, pSrc->y, pSrc->z, 1.0f);
+		glm::vec4 r = blended * v;
+
+		pRes->x = r.x;
+		pRes->y = r.y;
+		pRes->z = r.z;
 	}
 }
 
@@ -308,55 +82,25 @@ inline void SSETransformAndProject( const SHMatrix &m, const CVec3 *vin, SSSERes
 {
 	if ( len <= 0 )
 		return;
-	SSELoadMatrix( m );
-	__asm 
-	{
-		mov         esi, vin
-		mov         edi, vout
-		mov ecx, len
 
-		// we'll store the final result in xmm2
-		// broadcast x into xmm1, multiply it by the first
-		// column of the matrix (xmm4), and add it to the total
-lp:
-		movss   xmm0, [esi]
-		movss   xmm1, [esi+4]
-		movss   xmm2, [esi+8]
-		shufps   xmm0, xmm0, 0
-		shufps   xmm1, xmm1, 0
-		shufps   xmm2, xmm2, 0
-		mulps xmm0, xmm4
-		mulps xmm1, xmm5
-		mulps xmm2, xmm6
-		addps	xmm0, xmm7
-		addps xmm1, xmm2
-		addps xmm0, xmm1
-		// project
-		movaps xmm3, xmm0
-		shufps xmm3, xmm3, 0xaa
-		rcpss xmm3, xmm3
-		movaps xmm1, xmm0
-		movaps xmm2, xmm0
-		shufps xmm2, xmm2, 0x55
-		mulss xmm1, xmm3
-		mulss xmm2, xmm3
-		// write result to vOut
-		movss [edi], xmm1
-		movss [edi+4], xmm2
-		movss [edi+8], xmm3
-		movss [edi+12], xmm0
-		movaps xmm1, xmm0
-		shufps xmm1, xmm1, 0x55
-		shufps xmm0, xmm0, 0xaa
-		movss [edi+12+4], xmm1
-		movss [edi+12+8], xmm0
-		// to write out whole line
-		mov [edi+24], ecx
-		mov [edi+28], ecx
-		add esi, 12
-		add edi, 32
-		dec ecx
-		jnz lp
+	glm::mat4 matrix = LoadMatrix(m);
+
+	for (int i = 0; i < len; ++i) {
+
+		glm::vec4 v{vin[i].x, vin[i].y, vin[i].z, 1.0f};
+
+		// transform
+		glm::vec4 t = matrix * v;
+
+		// perspective divide
+		float invw = 1.0f / t.w;
+
+		CVec3 proj{t.x * invw, t.y * invw, t.z * invw};
+
+		vout[i].vSrc = vin[i];
+		vout[i].vRes = proj;
+		vout[i].nPad1 = 0;
+		vout[i].nPad2 = 0;
 	}
 }
 
