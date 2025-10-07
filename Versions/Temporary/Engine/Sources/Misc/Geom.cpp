@@ -96,7 +96,7 @@ const int DifferenceSign( const WORD dir1, const WORD dir2 )
 	const	WORD clockWise = dir1-dir2;
 	const	WORD antiClockWise = dir2-dir1;
 
-	return Sign(int(antiClockWise) - int(clockWise));
+	return boost::math::sign(int(antiClockWise) - int(clockWise));
 }
 
 bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir )
@@ -246,15 +246,15 @@ bool SRect::IsIntersected( const SRect &rect ) const
 bool SRect::IsPointInside( const CVec2 &point ) const
 {
 	const CVec2 center( ( v1.x + v2.x + v3.x + v4.x ) / 4, ( v1.y + v2.y + v3.y + v4.y ) / 4 );
-	const short int rightSign = Sign( TriangleAAA( v1, v2, center ) );
+	const short int rightSign = boost::math::sign( TriangleAAA( v1, v2, center ) );
 
 	// вырожденный прямоугольник
 	if ( rightSign == 0 )
 		return fabs2( point - center ) < 0.001f;
 
 	return 
-		Sign( TriangleAAA ( v1, v2, point ) ) == rightSign && Sign( TriangleAAA ( v2, v3, point ) ) == rightSign &&
-		Sign( TriangleAAA ( v3, v4, point ) ) == rightSign && Sign( TriangleAAA ( v4, v1, point ) ) == rightSign;
+		boost::math::sign( TriangleAAA ( v1, v2, point ) ) == rightSign && boost::math::sign( TriangleAAA ( v2, v3, point ) ) == rightSign &&
+		boost::math::sign( TriangleAAA ( v3, v4, point ) ) == rightSign && boost::math::sign( TriangleAAA ( v4, v1, point ) ) == rightSign;
 }
 
 bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const

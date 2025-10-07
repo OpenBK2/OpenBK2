@@ -11,11 +11,11 @@ public:
 			p1( ptStart ), p2( ptFinish ) {}
 
 	bool IsPointOnLine( const SVector &point )	const { return a*point.x + b*point.y + c == 0; }
-	const int GetHPLineSign( const SVector &point ) const { return Sign( a*point.x + b*point.y + c ); }
+	const int GetHPLineSign( const SVector &point ) const { return boost::math::sign( a*point.x + b*point.y + c ); }
 	bool IsSegmIntersectLine( const SVector &ptStart, const SVector &ptFinish) const
 	{
-		const int t1 = Sign( GetHPLineSign( ptStart ) );
-		const int t2 = Sign( GetHPLineSign( ptFinish ) );
+		const int t1 = boost::math::sign( GetHPLineSign( ptStart ) );
+		const int t2 = boost::math::sign( GetHPLineSign( ptFinish ) );
 		return (t1 >= 0) && (t2 <= 0) || (t1 <= 0) && (t2 >= 0);
 	}
 	float GetDistFromLine( const SVector &point ) const

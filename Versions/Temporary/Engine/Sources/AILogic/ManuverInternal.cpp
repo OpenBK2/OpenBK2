@@ -190,7 +190,7 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 		fPositiveAccel = -1.0f;
   
 	const float fTiltSpeedDelta = fPositiveAccel * fTiltAccel * timeDiff;
-	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed && Sign( fCurTiltSpeed + fTiltSpeedDelta ) != Sign( fCurTiltSpeed ) )
+	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed && boost::math::sign( fCurTiltSpeed + fTiltSpeedDelta ) != boost::math::sign( fCurTiltSpeed ) )
 		fCurTiltSpeed = 0;
 	else
 	{

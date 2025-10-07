@@ -1711,8 +1711,8 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 		{
 			CVec2 vTileCenter = AICellsTiles::GetPointByTile( tiles[i] );
 
-			if ( Sign( vTileCenter.x - vAABBCenter.x ) * Sign( center.x - vAABBCenter.x ) >= 0 &&
-					Sign( vTileCenter.y - vAABBCenter.y ) * Sign( center.y - vAABBCenter.y ) >= 0 &&
+			if ( boost::math::sign( vTileCenter.x - vAABBCenter.x ) * boost::math::sign( center.x - vAABBCenter.x ) >= 0 &&
+					boost::math::sign( vTileCenter.y - vAABBCenter.y ) * boost::math::sign( center.y - vAABBCenter.y ) >= 0 &&
 					theWarFog.IsUnitVisible( tiles[i], nParty, bCamouflated /*, fCamouflage*/ ) )
 			{
 				return true;

@@ -134,7 +134,7 @@ bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirect
 
 	const CVec2 vRadius( v11 - from.center );
 	const CVec2 vTangent( v21 - v11 );
-	if (  Sign( vRadius.y * vTangent.x - vRadius.x * vTangent.y ) == from.nDir )
+	if (  boost::math::sign( vRadius.y * vTangent.x - vRadius.x * vTangent.y ) == from.nDir )
 	{
 		*v1 = v11;
 		*v2 = v21;

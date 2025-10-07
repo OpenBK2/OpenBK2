@@ -174,10 +174,10 @@ bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const 
 
 		// check if pair of ( vR1t & vTangent1 ) and ( v0 & R0 ) is of same allignment
 		//DEBUG{
-		int nS1 = Sign( vR1t.y * vTangent1.x - vR1t.x * vTangent1.y );
-		int nS2 = Sign( vR2t.y * vTangent2.x - vR2t.x * vTangent2.y );
+		int nS1 = boost::math::sign( vR1t.y * vTangent1.x - vR1t.x * vTangent1.y );
+		int nS2 = boost::math::sign( vR2t.y * vTangent2.x - vR2t.x * vTangent2.y );
 		//DEBUG}
-		if ( Sign( vR1t.y * vTangent1.x - vR1t.x * vTangent1.y ) == -1 ) //nCircleSign )
+		if ( boost::math::sign( vR1t.y * vTangent1.x - vR1t.x * vTangent1.y ) == -1 ) //nCircleSign )
 		{
 			// if it is so, then 1st tangent - is needed tangent
 			const int nDiff = DirectedDirsDifference( vR0t, vR1t, -1 );//nCircleSign );

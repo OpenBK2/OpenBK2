@@ -263,8 +263,8 @@ struct SVector
 
 	void TurnLeftUntilAxis()
 	{
-		const short int signX = Sign( x );
-		const short int signY = Sign( y );
+		const short int signX = boost::math::sign( x );
+		const short int signY = boost::math::sign( y );
 		/*	
 		if ( signX >= 0 && signY == -1 ) 	{ x = 1;  y = 0; return; }
 		if ( signX == 1 && signY >= 0 )		{ x = 0;  y = 1; return; }
@@ -279,8 +279,8 @@ struct SVector
 
 	void TurnLeftUntil45()
 	{
-		const short int signX = Sign( x );
-		const short int signY = Sign( y );
+		const short int signX = boost::math::sign( x );
+		const short int signY = boost::math::sign( y );
 
 		if ( signX != 0 && signX * signY >= 0 )
 		{
@@ -317,8 +317,8 @@ struct SVector
 
 	void TurnRightUntilAxis()
 	{
-		const short int signX = Sign( x );
-		const short int signY = Sign( y );
+		const short int signX = boost::math::sign( x );
+		const short int signY = boost::math::sign( y );
 		/*	
 		if ( signX >=0 && signY == 1 )		{ x = 1;  y = 0; return; }
 		if ( signX == -1 && signY >= 0 )	{ x = 0;  y = 1; return; }
@@ -333,8 +333,8 @@ struct SVector
 
 	void TurnRightUntil45()
 	{
-		const short int signX = Sign( x );
-		const short int signY = Sign( y );
+		const short int signX = boost::math::sign( x );
+		const short int signY = boost::math::sign( y );
 
 		if ( signX != 0 && signX * signY <= 0 ) 
 		{
@@ -405,7 +405,7 @@ public:
 	// проекция точки на прямую
 	void ProjectPoint( const CVec2 &point, CVec2 *result );
 	// знак - в какой полуплоскости отн. прямой лежит точка
-	const int GetSign( const CVec2 &point ) const { return Sign( a * point.x + b * point.y + c); }
+	const int GetSign( const CVec2 &point ) const { return boost::math::sign( a * point.x + b * point.y + c); }
 
 	// нормализация линии
 	void Normalize()
@@ -1879,10 +1879,10 @@ inline float TriangleArea2( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 )
 
 inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3, const CVec2 &p )
 {
-	const int nSign1 = Sign( TriangleArea2( p, p1, p2 ) );
-	const int nSign2 = Sign( TriangleArea2( p, p2, p3 ) );
-	const int nSign3 = Sign( TriangleArea2( p, p3, p1 ) );
-	const int nSign	 = Sign( TriangleArea2( p1, p2, p3 ) );
+	const int nSign1 = boost::math::sign( TriangleArea2( p, p1, p2 ) );
+	const int nSign2 = boost::math::sign( TriangleArea2( p, p2, p3 ) );
+	const int nSign3 = boost::math::sign( TriangleArea2( p, p3, p1 ) );
+	const int nSign	 = boost::math::sign( TriangleArea2( p1, p2, p3 ) );
 
 	if ( nSign != 0 )
 		return nSign * nSign1 >= 0 && nSign * nSign2 >= 0 && nSign * nSign3 >= 0;
@@ -2047,14 +2047,14 @@ inline void GetAngles( const CVec3 &vNormal, float *pfPhi, float *pfTheta )
 	{
 		const float fLen2 = fabs2( vNormal.y, vNormal.z );
 		*pfPhi = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfPhi = -Sign( vNormal.y ) * acos( Clamp(*pfPhi, -1.0f, 1.0f) );
+		*pfPhi = -boost::math::sign( vNormal.y ) * acos( Clamp(*pfPhi, -1.0f, 1.0f) );
 	}
 	// theta - поворот в плоскости ZX относительно оси Y
 	// cos( theta ) = Z*N(y=0) = Nz / fabs( Nx, Nz )
 	{
 		const float fLen2 = fabs2( vNormal.x, vNormal.z );
 		*pfTheta = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfTheta = Sign( vNormal.x ) * acos( Clamp(*pfTheta, -1.0f, 1.0f) );
+		*pfTheta = boost::math::sign( vNormal.x ) * acos( Clamp(*pfTheta, -1.0f, 1.0f) );
 	}
 }
 

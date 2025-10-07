@@ -2,8 +2,9 @@
 #pragma once
 #include "Misc_export.h"
 
+#include <cmath>
 
-#include <math.h>
+#include <boost/math/special_functions/sign.hpp>
 
 // square root of the 2 and 3
 #define SQRT_2		1.41421356237309504880
@@ -170,55 +171,6 @@ inline void Zero( TYPE &val )
 }
 
 // ************************************************************************************************************************ //
-// работа со знаком числа
-// ************************************************************************************************************************ //
-// signum function
-template <class TYPE>
-inline TYPE Sign( const TYPE x )
-{
-	if ( x < 0 )
-		return -1;
-	else if ( x > 0 )
-		return +1;
-	else
-		return 0;
-}
-// calculates sign for integer variable, returns -1, 0, 1. template specialization
-//#pragma warning( disable: 4035 ) // compiler can and does produce wrong code in this case with optimisations turned on
-template <>
-inline int Sign<int>( const int nVal )
-{
-	int nRes;
-	_asm
-	{
-		xor ecx, ecx
-		mov eax, nVal
-		test eax, 0x7FFFFFFF
-		setne cl
-		sar eax, 31
-		or eax, ecx
-		mov nRes, eax
-	}
-	return nRes;
-}
-template <>
-inline short int Sign<short int>( const short int nVal )
-{
-	short int nRes;
-	_asm
-	{
-		xor ecx,ecx
-		mov ax, nVal
-		test ax, 0x7FFF
-		setne cl
-		sar ax, 15
-		or ax, cx
-		mov nRes, ax
-	}
-	return nRes;
-}
-
-// ************************************************************************************************************************ //
 // radian <=> degree conversion functions
 // ************************************************************************************************************************ //
 inline float ToRadian( const float angle )
@@ -243,7 +195,7 @@ inline int NormalizeAngleInDegree( const int angle )
 }
 inline float SignumNormalizeAngleInDegree( const float angle )
 {
-	return float( fmod( angle + 180*Sign(angle),  360 ) - 180 * Sign( angle ) );
+	return float( fmod( angle + 180*boost::math::sign(angle),  360 ) - 180 * boost::math::sign( angle ) );
 }
 inline float NormalizeAngleInRadian( const float angle )
 {

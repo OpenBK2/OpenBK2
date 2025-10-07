@@ -86,7 +86,7 @@ public:
 	CBresenham3( int _x1, int _y1, int _z1, int _x2, int _y2, int _z2 )
 		: x1( _x1 ), y1( _y1 ), z1( _z1 ), x2( _x2 ), y2( _y2 ), z2( _z2 ),
 		  xlen( abs(x2 - x1) + 1 ), ylen( abs(y2 - y1) + 1 ), zlen( abs(z2 - z1) + 1 ), len( (std::max)((std::max)(xlen, ylen), zlen) ),
-		  xinc( Sign(x2 - x1) ), yinc( Sign(y2 - y1) ), zinc( Sign(z2 - z1) ),
+		  xinc( boost::math::sign(x2 - x1) ), yinc( boost::math::sign(y2 - y1) ), zinc( boost::math::sign(z2 - z1) ),
 			xerr( 0 ), yerr( 0 ), zerr( 0 ) {  }
 	//
 	void Next()

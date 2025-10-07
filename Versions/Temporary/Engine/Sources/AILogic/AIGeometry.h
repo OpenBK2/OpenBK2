@@ -49,11 +49,11 @@ struct SLine
 		: a( ptFinish.y - ptStart.y ), b( ptStart.x - ptFinish.x ), c( ptFinish.x*ptStart.y - ptStart.x*ptFinish.y ) {  }
 
 	bool IsPointOnLine( const SVector &point )	const { return a*point.x + b*point.y + c == 0; }
-	const int GetHPLineSign( const SVector &point ) const { return Sign( a*point.x + b*point.y + c ); }
+	const int GetHPLineSign( const SVector &point ) const { return boost::math::sign( a*point.x + b*point.y + c ); }
 	bool IsSegmIntersectLine( const SVector &ptStart, const SVector &ptFinish) const
 	{
-		const int t1 = Sign( GetHPLineSign( ptStart ) );
-		const int t2 = Sign( GetHPLineSign( ptFinish ) );
+		const int t1 = boost::math::sign( GetHPLineSign( ptStart ) );
+		const int t2 = boost::math::sign( GetHPLineSign( ptFinish ) );
 		return (t1 >= 0) && (t2 <= 0) || (t1 <= 0) && (t2 >= 0);
 	}
 	const SLine GetPerpendicular( const SVector &point ) const { return SLine( -b, a, b*point.x - a*point.y ); }
@@ -87,8 +87,8 @@ public:
 		xerr = 0;
 		yerr = 0;
 		
-		xinc = Sign( xlen );
-		yinc = Sign( ylen );
+		xinc = boost::math::sign( xlen );
+		yinc = boost::math::sign( ylen );
 
 		xlen = abs( xlen ) + 1;
 		ylen = abs( ylen ) + 1;
@@ -106,7 +106,7 @@ public:
 
 		intPart = zlen / dxy;
 		rinc = abs( zlen % dxy );
- 		zinc = Sign( zlen );
+ 		zinc = boost::math::sign( zlen );
 
 		z = finishZ; 
 		r = 0;
@@ -121,7 +121,7 @@ public:
 		
 		intPart = zlen / dxy;
 		rinc = abs( zlen % dxy );
-		zinc = Sign( zlen );
+		zinc = boost::math::sign( zlen );
 
 		z = finishZ+intPart;
 		r = rinc;

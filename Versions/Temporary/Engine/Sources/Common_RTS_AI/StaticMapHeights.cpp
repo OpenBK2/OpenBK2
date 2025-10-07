@@ -409,8 +409,8 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		float zT0 = GetVisZ( vLineX[0] * t + vLineX[1], vLineY[0] * t + vLineY[1] );
 		float zV, zT;
 		// дх, ду - направление движения по сетке
-		const int dX = Sign( vEnd.x - vBegin.x );
-		const int dY = Sign( vEnd.y - vBegin.y );
+		const int dX = boost::math::sign( vEnd.x - vBegin.x );
+		const int dY = boost::math::sign( vEnd.y - vBegin.y );
 		// х, у - координаты ближайшего узла сетки высот
 		int x = ((vLineX[0] * t + vLineX[1]) / nTileSize / 2.0f);
 		int y = ((vLineY[0] * t + vLineY[1]) / nTileSize / 2.0f);
@@ -538,8 +538,8 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 		float zV, zT;
 		int x = ((vLineX[0] * t + vLineX[1]) / nTileSize / 2.0f);
 		int y = ((vLineY[0] * t + vLineY[1]) / nTileSize / 2.0f);
-		const int dX = Sign( vEnd.x - vBegin.x );
-		const int dY = Sign( vEnd.y - vBegin.y );
+		const int dX = boost::math::sign( vEnd.x - vBegin.x );
+		const int dY = boost::math::sign( vEnd.y - vBegin.y );
 		t01 = t02 = 1.1f; // something more than 1.0f
 		while ( t < 1.0f )
 		{

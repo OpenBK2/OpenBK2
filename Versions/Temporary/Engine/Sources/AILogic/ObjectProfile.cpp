@@ -239,7 +239,7 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 						++nCount;
 					}
 				}
-				else if ( Sign( vPoint.y - points[i].y ) * Sign( points[i+1].y - vPoint.y ) > 0 )
+				else if ( boost::math::sign( vPoint.y - points[i].y ) * boost::math::sign( points[i+1].y - vPoint.y ) > 0 )
 				{
 					const float fT = (vPoint.y - points[i].y)/(points[i+1].y - points[i].y);
 					const float fX = points[i].x + fT * (points[i+1].x - points[i].x);
