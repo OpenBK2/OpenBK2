@@ -127,20 +127,20 @@ bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString )
 
 void* SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData )
 {
-	return reinterpret_cast<void*>( SetWindowLong( GetDlgItem(hwndDlg, nElementID), 
-		                                             GWL_USERDATA, reinterpret_cast<LONG>(pUserData) ) );
+	return reinterpret_cast<void*>( SetWindowLongPtr( GetDlgItem(hwndDlg, nElementID),
+		                                             GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pUserData) ) );
 }
 void* GetWindowUserData( HWND hwndDlg, const int nElementID )
 {
-	return reinterpret_cast<void*>( GetWindowLong( GetDlgItem(hwndDlg, nElementID), GWL_USERDATA ) );
+	return reinterpret_cast<void*>( GetWindowLongPtr( GetDlgItem(hwndDlg, nElementID), GWLP_USERDATA ) );
 }
 void* SetDlgUserData( HWND hwndDlg, void *pUserData )
 {
-	return reinterpret_cast<void*>( SetWindowLong( hwndDlg, DWL_USER, reinterpret_cast<LONG>(pUserData) ) );
+	return reinterpret_cast<void*>( SetWindowLongPtr( hwndDlg, DWLP_USER, reinterpret_cast<LONG_PTR>(pUserData) ) );
 }
 void* GetDlgUserData( HWND hwndDlg )
 {
-	return reinterpret_cast<void*>( GetWindowLong( hwndDlg, DWL_USER ) );
+	return reinterpret_cast<void*>( GetWindowLongPtr( hwndDlg, DWLP_USER ) );
 }
 
 //int GetCheckButtonState( HWND hwndDlg, const int nElementID )
