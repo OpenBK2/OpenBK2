@@ -28,6 +28,7 @@ include(cmake/sdl.cmake)
 include(cmake/sdl_mixer.cmake)
 
 include(cmake/boost.cmake)
+include(cmake/glm.cmake)
 include(cmake/dxsdk.cmake)
 include(cmake/fmod.cmake)
 include(cmake/granny.cmake)
