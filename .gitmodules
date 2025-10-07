@@ -1,3 +1,6 @@
 [submodule "third_party/flessd"]
 	path = third_party/flessd
 	url = https://github.com/SSE4/flessd.git
+[submodule "third_party/uesp-esoapps"]
+	path = third_party/uesp-esoapps
+	url = https://github.com/uesp/uesp-esoapps.git
