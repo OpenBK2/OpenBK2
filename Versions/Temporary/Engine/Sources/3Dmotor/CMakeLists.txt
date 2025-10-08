@@ -110,3 +110,5 @@ generate_export_header(3Dmotor EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/3Dmo
 target_link_libraries(3Dmotor PRIVATE 3DLib Image libdb MemoryLib Misc System zlib granny::granny dxsdk::d3d9 dxsdk::d3dx9 dxsdk::dxerr dxsdk::dxguid)
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)
 install(TARGETS 3Dmotor DESTINATION bin)
+
+add_subdirectory(test)
