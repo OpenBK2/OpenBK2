@@ -403,40 +403,6 @@ struct SPartTransformer : public T
 	}
 };
 
-template<class T>
-static void FastGeometryTransfer( T *pDst, const T *pSrc, int nSize )
-{
-	ASSERT( sizeof(T) == 32 );
-	_asm
-	{
-		mov esi, pSrc
-		mov edi, pDst
-		mov ecx, nSize
-		cmp ecx, 0
-		jle fff
-		// warm up cache
-		mov eax, ecx
-warm_up_loop:
-		mov edx, [esi+eax - 32]
-		sub eax, 32
-		jg warm_up_loop
-final_ckl:
-		movq mm0, [esi]
-		movq mm1, [esi+8]
-		movq mm2, [esi+16]
-		movq mm3, [esi+24]
-		add esi, 32
-		movq [edi], mm0
-		movq [edi+8], mm1
-		movq [edi+16], mm2
-		movq [edi+24], mm3
-		add edi, 32
-		sub ecx, 32
-		jg final_ckl
-fff:
-		emms
-	}
-}
 template<class TVertex>
 struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVertex> >
 {
@@ -473,8 +439,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 				int nTransformed = DoTransform( p, (TVertex*)&p->gfxData[0], transformed );
 				ASSERT( nTransformed == nPartVerts );
 			}
-			FastGeometryTransfer( &geom[nVert], (TVertex*)&p->gfxData[0], nSize );
-			//memcpy( &geom[nVert], &p->gfxData[0], nSize );
+			std::memcpy(&geom[nVert], &p->gfxData[0], nSize);
 		}
 		nVert += nPartVerts;
 		ASSERT( nVert <= geom.GetSize() );
