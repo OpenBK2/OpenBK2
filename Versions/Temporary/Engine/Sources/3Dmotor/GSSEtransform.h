@@ -1,5 +1,6 @@
 #pragma once
 #include "GPixelFormat.h"
+#include "MMXhelpers.h"
 
 #include <glm/glm.hpp>
 
@@ -139,234 +140,152 @@ static void Assign( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 	pRes->c.nZ = Float2Int( m._32 * 0x800 );  pRes->c.nY = Float2Int( m._21 * 0x800 );  pRes->c.nX = Float2Int( m._13 * 0x800 );  pRes->c.nW = 0;
 }
 
-// disable no emms warning, emms is placed after all mmx calcs
-#pragma warning( disable : 4799 )
-static void MMXTransformVector( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
-	const NGfx::SCompactTransformer *pTrans )
+// Helper: apply a single transform with optional shuffle, returns mm64 result
+static uint64_t ApplyTransform(
+	uint64_t mm0,
+	const short a[4],
+	const short b[4],
+	const short c[4])
 {
-	_asm
-	{
-		mov esi, pSrc
-		mov ecx, [esi]
-		mov edi, ecx
-		and edi, 0xffffff
-		and ecx, 0xff000000
-		movd mm7, edi
-		mov esi, pTrans
-		mov edi, pFixups
-		pxor mm0, mm0
-		punpcklbw mm0, mm7 // unpacked vector
-		psubw mm0, [edi]
-		
-		movq mm1, mm0    // z y x
-		pmulhw mm1, [esi] 
-		movq mm2, mm0
-		movq mm3, mm0
-		psllq mm2, 16
-		psrlq mm3, 32
-		paddw mm2, mm3   // x z y
-		pmulhw mm2, [esi+8]
-		movq mm3, mm0
-		movq mm4, mm0
-		paddsw mm1, mm2
-		psllq mm3, 32
-		psrlq mm4, 16
-		paddw mm3, mm4   // y x z
-		pmulhw mm3, [esi+16]
-		paddsw mm1, mm3 // packed result
-		// normalize
-		psllw mm1, 3
-		movq mm2, mm1
-		pmaddwd mm2, mm2
-		movq mm3, mm2
-		psrlq mm3, 32
-		paddd mm2, mm3
-		movd ebx, mm2
-		shr ebx, 18
-		xor eax, eax
-		mov ax, [nNormalizeTable + ebx*2]
-		movd mm2, eax
-		punpcklwd mm2, mm2
-		punpckldq mm2, mm2
-		pmulhw mm1, mm2
-		psllw mm1, 5
-		// pack and output result
-		paddw mm1, [edi+8]
-		psrlw mm1, 8
-		packuswb mm1, mm1
-		movd edi, mm1
-		or ecx, edi
-		mov esi, pRes
-		mov [esi], ecx
-	}
+	uint64_t mmA = mmx::pmulhw(mm0, mmx::combine64(a));
+	uint64_t mmB = mmx::pmulhw(mmx::shuffleTransform(mm0, 16, 32), mmx::combine64(b));
+	uint64_t mmC = mmx::pmulhw(mmx::shuffleTransform(mm0, 32, 16), mmx::combine64(c));
+	mmA = mmx::paddsw(mmA, mmB);
+	mmA = mmx::paddsw(mmA, mmC);
+	return mmA;
 }
 
-static void MMXTransformVector2( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
-	const NGfx::SCompactTransformer *pTrans, char w1,
-	const NGfx::SCompactTransformer *pTrans2, char w2 )
+// Helper: apply weight to a transform result
+static uint64_t ApplyWeight(uint64_t mm, unsigned char wIdx)
 {
-	_asm
-	{
-		mov esi, pSrc
-		mov ecx, [esi]
-		mov edi, ecx
-		and edi, 0xffffff
-		and ecx, 0xff000000
-		movd mm7, edi
-		mov esi, pTrans
-		mov ebx, pTrans2
-		mov edi, pFixups
-		pxor mm0, mm0
-		punpcklbw mm0, mm7 // unpacked vector
-		psubw mm0, [edi]
-
-		movq mm1, mm0    // z y x
-		movq mm5, mm1
-		pmulhw mm1, [esi] 
-		pmulhw mm5, [ebx]
-		movq mm2, mm0
-		movq mm3, mm0
-		psllq mm2, 16
-		psrlq mm3, 32
-		paddw mm2, mm3   // x z y
-		movq mm6, mm2
-		pmulhw mm2, [esi+8]
-		pmulhw mm6, [ebx+8]
-		movq mm3, mm0
-		movq mm4, mm0
-		paddsw mm1, mm2
-		paddsw mm5, mm6
-		psllq mm3, 32
-		psrlq mm4, 16
-		paddw mm3, mm4   // y x z
-		movq mm6, mm3
-		pmulhw mm3, [esi+16]
-		pmulhw mm6, [ebx+16]
-		paddsw mm1, mm3 // packed result
-		paddsw mm5, mm6
-		movzx esi, w1
-		movzx ebx, w2
-		psllw mm1, 4
-		psllw mm5, 4
-		pmulhw mm1, qword ptr[esi*8 + mmxWeights]
-		pmulhw mm5, qword ptr[ebx*8 + mmxWeights]
-		paddsw mm1, mm5
-		// normalize
-		psllw mm1, 3
-		movq mm2, mm1
-		pmaddwd mm2, mm2
-		movq mm3, mm2
-		psrlq mm3, 32
-		paddd mm2, mm3
-		movd ebx, mm2
-		shr ebx, 18
-		xor eax, eax
-		mov ax, [nNormalizeTable + ebx*2]
-		movd mm2, eax
-		punpcklwd mm2, mm2
-		punpckldq mm2, mm2
-		pmulhw mm1, mm2
-		psllw mm1, 5
-		// pack and output result
-		paddw mm1, [edi+8]
-		psrlw mm1, 8
-		packuswb mm1, mm1
-		movd edi, mm1
-		or ecx, edi
-		mov esi, pRes
-		mov [esi], ecx
-	}
+	mm = mmx::psllw(mm, 4); // shift before weight
+	short wArr[4] = { mmxWeights[wIdx].nZ, mmxWeights[wIdx].nY, mmxWeights[wIdx].nX, mmxWeights[wIdx].nW };
+	return mmx::pmulhw(mm, mmx::combine64(wArr));
 }
 
-static void MMXTransformVector3( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
-	const NGfx::SCompactTransformer *pTrans, char w1,
-	const NGfx::SCompactTransformer *pTrans2, char w2,
-	const NGfx::SCompactTransformer *pTrans3, char w3 )
+// Shared final normalization
+static uint64_t NormalizeAndShift(uint64_t mm)
 {
-	_asm
-	{
-		mov esi, pSrc
-		mov ecx, [esi]
-		mov edi, ecx
-		and edi, 0xffffff
-		and ecx, 0xff000000
-		movd mm7, edi
-		mov esi, pTrans
-		mov ebx, pTrans2
-		mov edx, pTrans3
-		mov edi, pFixups
-		pxor mm0, mm0
-		punpcklbw mm0, mm7 // unpacked vector
-		psubw mm0, [edi]
-
-		movq mm1, mm0    // z y x
-		movq mm5, mm1
-		movq mm7, mm1
-		pmulhw mm1, [esi] 
-		pmulhw mm5, [ebx]
-		pmulhw mm7, [edx]
-		movq mm2, mm0
-		movq mm3, mm0
-		psllq mm2, 16
-		psrlq mm3, 32
-		paddw mm2, mm3   // x z y
-		movq mm6, mm2
-		movq mm3, mm2
-		pmulhw mm2, [esi+8]
-		pmulhw mm6, [ebx+8]
-		pmulhw mm3, [edx+8]
-		paddsw mm7, mm3
-		movq mm3, mm0
-		movq mm4, mm0
-		paddsw mm1, mm2
-		paddsw mm5, mm6
-		psllq mm3, 32
-		psrlq mm4, 16
-		paddw mm3, mm4   // y x z
-		movq mm6, mm3
-		movq mm4, mm3
-		pmulhw mm3, [esi+16]
-		pmulhw mm6, [ebx+16]
-		pmulhw mm4, [edx+16]
-		paddsw mm1, mm3 // packed result
-		paddsw mm5, mm6
-		paddsw mm7, mm4
-		movzx esi, w1
-		movzx ebx, w2
-		movzx edx, w3
-		psllw mm1, 4
-		psllw mm5, 4
-		psllw mm7, 4
-		pmulhw mm1, qword ptr[esi*8 + mmxWeights]
-		pmulhw mm5, qword ptr[ebx*8 + mmxWeights]
-		pmulhw mm7, qword ptr[edx*8 + mmxWeights]
-		paddsw mm1, mm5
-		paddsw mm1, mm7
-		// normalize
-		psllw mm1, 3
-		movq mm2, mm1
-		pmaddwd mm2, mm2
-		movq mm3, mm2
-		psrlq mm3, 32
-		paddd mm2, mm3
-		movd ebx, mm2
-		shr ebx, 18
-		xor eax, eax
-		mov ax, [nNormalizeTable + ebx*2]
-		movd mm2, eax
-		punpcklwd mm2, mm2
-		punpckldq mm2, mm2
-		pmulhw mm1, mm2
-		psllw mm1, 5
-		// pack and output result
-		paddw mm1, [edi+8]
-		psrlw mm1, 8
-		packuswb mm1, mm1
-		movd edi, mm1
-		or ecx, edi
-		mov esi, pRes
-		mov [esi], ecx
-	}
+	mm = mmx::psllw(mm, 3);
+	uint64_t mmSq = mmx::pmaddwd(mm, mm);
+	uint32_t sumSquares = static_cast<uint32_t>(mmSq & 0xFFFFFFFFULL) +
+		static_cast<uint32_t>((mmSq >> 32) & 0xFFFFFFFFULL);
+	uint32_t idx = std::min(sumSquares >> 18, 16383U);
+	short normalize = nNormalizeTable[idx];
+	short normWords[4] = { normalize, normalize, normalize, normalize };
+	mm = mmx::pmulhw(mm, mmx::combine64(normWords));
+	mm = mmx::psllw(mm, 5);
+	return mm;
 }
-#pragma warning( default : 4799 )
 
+// General template function for N transforms (1..3)
+static void MMXTransformVectorGeneral(
+	NGfx::SCompactVector* pRes,
+	const NGfx::SCompactVector* pSrc,
+	const SMMXFixups* pFixups,
+	const NGfx::SCompactTransformer* pTrans1, char w1 = 0,
+	const NGfx::SCompactTransformer* pTrans2 = nullptr, char w2 = 0,
+	const NGfx::SCompactTransformer* pTrans3 = nullptr, char w3 = 0)
+{
+	uint32_t src32 = *(const uint32_t*)pSrc;
+	uint32_t low = src32 & 0x00FFFFFF;
+	uint32_t high = src32 & 0xFF000000;
+
+	uint64_t mm0 = mmx::punpcklbw(0, low);
+
+	short fix[4] = {
+		pFixups->normalFixup.nZ,
+		pFixups->normalFixup.nY,
+		pFixups->normalFixup.nX,
+		pFixups->normalFixup.nW
+	};
+
+	short mm0_words[4];
+	mmx::split64(mm0, mm0_words);
+	for (int i = 0; i < 4; ++i) mm0_words[i] -= fix[i];
+	mm0 = mmx::combine64(mm0_words);
+
+	// Apply first transform
+	short a1[4] = { pTrans1->a.nZ, pTrans1->a.nY, pTrans1->a.nX, pTrans1->a.nW };
+	short b1[4] = { pTrans1->b.nZ, pTrans1->b.nY, pTrans1->b.nX, pTrans1->b.nW };
+	short c1[4] = { pTrans1->c.nZ, pTrans1->c.nY, pTrans1->c.nX, pTrans1->c.nW };
+	uint64_t mm = ApplyTransform(mm0, a1, b1, c1);
+
+	// Second transform
+	if (pTrans2) {
+
+		mm = ApplyWeight(mm, static_cast<unsigned char>(w1));
+
+		short a2[4] = { pTrans2->a.nZ, pTrans2->a.nY, pTrans2->a.nX, pTrans2->a.nW };
+		short b2[4] = { pTrans2->b.nZ, pTrans2->b.nY, pTrans2->b.nX, pTrans2->b.nW };
+		short c2[4] = { pTrans2->c.nZ, pTrans2->c.nY, pTrans2->c.nX, pTrans2->c.nW };
+		uint64_t mm2 = ApplyTransform(mm0, a2, b2, c2);
+		mm2 = ApplyWeight(mm2, static_cast<unsigned char>(w2));
+		mm = mmx::paddsw(mm, mm2);
+	}
+
+	// Third transform
+	if (pTrans3) {
+		short a3[4] = { pTrans3->a.nZ, pTrans3->a.nY, pTrans3->a.nX, pTrans3->a.nW };
+		short b3[4] = { pTrans3->b.nZ, pTrans3->b.nY, pTrans3->b.nX, pTrans3->b.nW };
+		short c3[4] = { pTrans3->c.nZ, pTrans3->c.nY, pTrans3->c.nX, pTrans3->c.nW };
+		uint64_t mm3 = ApplyTransform(mm0, a3, b3, c3);
+		mm3 = ApplyWeight(mm3, static_cast<unsigned char>(w3));
+		mm = mmx::paddsw(mm, mm3);
+	}
+
+	mm = NormalizeAndShift(mm);
+
+	short w[4];
+	mmx::split64(mm, w);
+
+	w[0] += pFixups->shiftedFixup.nZ;
+	w[1] += pFixups->shiftedFixup.nY;
+	w[2] += pFixups->shiftedFixup.nX;
+	w[3] += pFixups->shiftedFixup.nW;
+
+	for (int i = 0; i < 4; ++i) {
+		int val = 0xFF & (w[i] >> 8);
+		w[i] = static_cast<short>(std::clamp(val, 0, 255));
+	}
+
+	pRes->z = static_cast<unsigned char>(w[0]);
+	pRes->y = static_cast<unsigned char>(w[1]);
+	pRes->x = static_cast<unsigned char>(w[2]);
+	pRes->w = static_cast<unsigned char>(w[3]) | pSrc->w;
+}
+
+static void MMXTransformVector(
+	NGfx::SCompactVector* pRes,
+	const NGfx::SCompactVector* pSrc,
+	const SMMXFixups* pFixups,
+	const NGfx::SCompactTransformer* pTrans)
+{
+	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans);
+}
+
+static void MMXTransformVector2(
+	NGfx::SCompactVector* pRes,
+	const NGfx::SCompactVector* pSrc,
+	const SMMXFixups* pFixups,
+	const NGfx::SCompactTransformer* pTrans,
+	char w1,
+	const NGfx::SCompactTransformer* pTrans2,
+	char w2)
+{
+	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans, w1, pTrans2, w2);
+}
+
+static void MMXTransformVector3(
+	NGfx::SCompactVector* pRes,
+	const NGfx::SCompactVector* pSrc,
+	const SMMXFixups* pFixups,
+	const NGfx::SCompactTransformer* pTrans,
+	char w1,
+	const NGfx::SCompactTransformer* pTrans2,
+	char w2,
+	const NGfx::SCompactTransformer* pTrans3,
+	char w3)
+{
+	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans, w1, pTrans2, w2, pTrans3, w3);
+}

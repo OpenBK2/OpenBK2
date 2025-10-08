@@ -275,7 +275,6 @@ struct STGenericTransformer
 		xformedNormals.resize( nVertices );
 		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
 			MMXTransformVector( &xformedNormals[k], &pSrc[k].normal, &fixups, &transformer );
-		_asm emms;
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
 	}
@@ -321,8 +320,6 @@ struct STGenericTransformer
 				MMXTransformVector3( &xformedNormals[k], &pSrc->normal, &fixups, &blend1, nW1, &blend2, nW2, &blend3, nW3 );
 			}
 		}
-		_asm emms;
-
 		CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
 	}
 };
