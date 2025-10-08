@@ -128,6 +128,8 @@ public:
 
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
+	int SelectionIndexToNationIndex(int nSelectionIndex);
+	int NationIndexToSelectionIndex(int nCountryIndex);
 	int Check( const std::string &szCheckName ) const;
 	//}
 };

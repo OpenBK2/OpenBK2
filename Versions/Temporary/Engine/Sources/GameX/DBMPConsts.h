@@ -49,10 +49,12 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 		std::vector< CDBPtr< SReinforcement > > reinforcements;
+		bool bDisabled;
 		CDBPtr< SReinforcement > pStartingUnits;
 
 		STechLevelReinfSet() :
-			__dwCheckSum( 0 )
+			__dwCheckSum( 0 ),
+			bDisabled(false)	// Make levels are enabled by default
 		{ }
 		//
 		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;

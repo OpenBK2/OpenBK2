@@ -800,25 +800,42 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 		if ( nTechLevel < 0 || players[nPlayer].nMultiplayerSide == -1 )				// keep default if side (or techlevel) is undefined
 			continue;
 
-		// The following cycle selects the best (techlevel-wise, but not better than the selected tech level) reinforcement
-		// from the MPConsts->sides. Default is taken from mapinfo 
+		// Use only the current tech level to assign reinfs - no more inheritance from old ones!
 		const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
-		for ( int j = 0; j <= nTechLevel; ++j )
+
+		if ( nTechLevel >= techLevels.size() )
+			continue;
+		
+		const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[nTechLevel].reinforcements;
+
+		for ( int k = 0; k < reinfSet.size(); ++k )
 		{
-			if ( j >= techLevels.size() )
-				break;
-
-			const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[j].reinforcements;
-
-			for ( int k = 0; k < reinfSet.size(); ++k )
+			if ( reinfSet[k]->eType == eType )			// Found a reinf of this type in this tech level
 			{
-				if ( reinfSet[k]->eType == eType )			// Found a reinf of this type in this tech level
-				{
-					reinfs[eType] = reinfSet[k];
-					break;
-				}
+				reinfs[eType] = reinfSet[k];
+				break;
 			}
 		}
+
+		// The following cycle selects the best (techlevel-wise, but not better than the selected tech level) reinforcement
+		// from the MPConsts->sides. Default is taken from mapinfo 
+		// const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
+		// for ( int j = 0; j <= nTechLevel; ++j )
+		// {
+		// 	if ( j >= techLevels.size() )
+		// 		break;
+
+		// 	const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[j].reinforcements;
+
+		// 	for ( int k = 0; k < reinfSet.size(); ++k )
+		// 	{
+		// 		if ( reinfSet[k]->eType == eType )			// Found a reinf of this type in this tech level
+		// 		{
+		// 			reinfs[eType] = reinfSet[k];
+		// 			break;
+		// 		}
+		// 	}
+		// }
 	}
 }
 

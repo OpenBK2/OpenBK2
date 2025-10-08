@@ -78,6 +78,7 @@ void STechLevelReinfSet::ReportMetaInfo( const std::string &szAddName, BYTE *pTh
 int STechLevelReinfSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Reinforcements", &reinforcements );
+	saver.Add( "Disabled", &bDisabled );
 	saver.Add( "StartingUnits", &pStartingUnits );
 
 	return 0;
@@ -86,7 +87,8 @@ int STechLevelReinfSet::operator&( IXmlSaver &saver )
 int STechLevelReinfSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &reinforcements );
-	saver.Add( 3, &pStartingUnits );
+	saver.Add( 3, &bDisabled );
+	saver.Add( 4, &pStartingUnits );
 
 	return 0;
 }
@@ -98,7 +100,7 @@ DWORD STechLevelReinfSet::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << reinforcements << pStartingUnits;
+	checkSum << reinforcements << bDisabled << pStartingUnits;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

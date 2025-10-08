@@ -227,7 +227,8 @@ void CBuildingSimple::Segment()
 			}
 		}
 
-		// neutral building can be taken by the first unit
+		// neutral building can be taken by the first unit for free
+		bool bIsContested = false;
 		if ( bShouldCount )
 		{
 			if ( theDipl.GetNParty( GetPlayer() ) == theDipl.GetNeutralParty() )
@@ -239,17 +240,44 @@ void CBuildingSimple::Segment()
 				}
 				else
 				{
+					int nNeutralPlayer = GetPlayer();
+					BYTE nContenders = 0;
 					for ( CUnitsIter<0,3> iter( theDipl.GetNParty(nPlayer), ANY_PARTY, CVec2(GetCenter().x,GetCenter().y), SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
 						!iter.IsFinished(); iter.Iterate() )
 					{
 						CPtr<CAIUnit> curUnit = *iter;
 						const int nUnitPlayer = curUnit->GetPlayer();
-						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() && nUnitPlayer != nPlayer && theDipl.GetNParty( nUnitPlayer ) != theDipl.GetNeutralParty() )
+						const BYTE nUnitSide = theDipl.GetNParty( nUnitPlayer );
+						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() && nUnitPlayer != nPlayer && nUnitSide != theDipl.GetNeutralParty() )
 						{
-							nNewPlayer = nUnitPlayer;
+							if (nNewPlayer == nNeutralPlayer)
+								nNewPlayer = nUnitPlayer;
 							//ChangePlayer( nNewPlayer );		// Change instantly
-							break;
+							nContenders |= 1 << nUnitSide;
+							// Iterate all units to see if base is contested or not! - Cannot stop after the first valid one
+							//break;
 						}
+					}
+					// team 0 (green) is capping
+					if ( nContenders == 1 )
+					{
+						// Do nothing
+					}
+					// team 1 (red) is capping
+					else if (nContenders == 2)
+					{
+						// Do nothing
+					}
+					// base is contested!
+					else if (nContenders != 0)
+					{
+						bIsContested = true;
+					}
+					// base has no units around no player change
+					else
+					{
+						nNewPlayer = GetPlayer();
+						bShouldCount = false;
 					}
 				}
 			}
@@ -314,17 +342,20 @@ void CBuildingSimple::Segment()
 			}
 			else
 			{
-				if ( curTime < timeToChangeOwner )		// still not done, do not change
+				if ( curTime < timeToChangeOwner || bIsContested )		// still not done, do not change
 				{
 					float fProgress = 0.5f;
-					if ( timeToChangeOwnerTotal > 1 )
-						fProgress = 1.0f - float( timeToChangeOwner - curTime ) / timeToChangeOwnerTotal;
+					
+					int nTotalTime = timeToChangeOwnerTotal;
+					int nPassedTime = timeToChangeOwner - curTime;
+
+					fProgress = (std::min)( 1.0f - float( nPassedTime ) / nTotalTime, 1.0f );
 
 					CPtr<SAIKeyBuildingCaptureUpdate> pProgressUpdate = new SAIKeyBuildingCaptureUpdate;
 					pProgressUpdate->nObjUniqueID = GetUniqueId();
 					pProgressUpdate->fProgress = fProgress;
 					pProgressUpdate->nOldSide = theDipl.GetNParty( GetPlayer() );
-					pProgressUpdate->nNewSide = theDipl.GetNParty( nNewPlayer );
+					pProgressUpdate->nNewSide = bIsContested ? -2 : theDipl.GetNParty( nNewPlayer );
 					updater.AddUpdate( pProgressUpdate, ACTION_NOTIFY_KEY_CAPTURE_PROGRESS, this, 0 );
 
 					nNewPlayer = GetPlayer();

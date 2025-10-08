@@ -2301,6 +2301,9 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 
 int CWorldClient::GetHPBarColorIndex( const CMapObj *pMO, const int nPlayer )
 {
+	if (nPlayer == -2)
+		return 20;
+
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST )
 		return 0;

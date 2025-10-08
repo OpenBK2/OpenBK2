@@ -10,7 +10,8 @@ struct SAIConsts
 		MAX_MAP_SIZE = 1024, 
 		INFINITY_PATH_LIMIT = 5000, 
 		MAX_LENGTH_OF_SMALL_PATH = 20, 
-		MAX_NUMBER_OF_UNITS = 3000,
+		// This one is not even used..
+		MAX_NUMBER_OF_UNITS = 10000,
 		// чтобы сменить продолжительность AI сегмента, необходимо подправиться (кроме этого) еще два места:
 		// 1. GameX\Initialization.cpp, NGlobal::SetVar( "AI_SEGMENT_DURATION", 200 );
 		// 2. Script\lapi.cpp, thisThreadIsSleeping = lfToSleep * 50 / 200;

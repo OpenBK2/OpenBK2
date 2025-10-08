@@ -507,14 +507,14 @@ void SConsts::Load()
 	FIGHTER_PATROL_TIME = 1000 * nFighterPatrolTime;
 
 	//
-	if ( AI_CALL_FOR_HELP_RADIUS > 2000 )
+	if ( AI_CALL_FOR_HELP_RADIUS > 3840 )
 	{
-		AI_CALL_FOR_HELP_RADIUS = 2000;
+		AI_CALL_FOR_HELP_RADIUS = 3840;
 		CONSOLE_BUFFER_LOG2( PIPE_CHAT, StrFmt("AICallForHelpRadius is too big, reduced to %d", AI_CALL_FOR_HELP_RADIUS ), 0xffff0000, true );
 	}
-	if ( CALL_FOR_HELP_RADIUS > 2000 )
+	if ( CALL_FOR_HELP_RADIUS > 3840 )
 	{
-		CALL_FOR_HELP_RADIUS = 2000;
+		CALL_FOR_HELP_RADIUS = 3840;
 		CONSOLE_BUFFER_LOG2( PIPE_CHAT, StrFmt("CallForHelpRadius is too big, reduced to %d", CALL_FOR_HELP_RADIUS ), 0xffff0000, true );
 	}
 	
