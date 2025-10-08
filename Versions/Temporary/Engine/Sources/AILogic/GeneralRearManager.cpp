@@ -25,7 +25,22 @@ static const bool IsAviationReinfType( const int /*NDb::EReinforcementType*/ eRT
 	return ( eRType == NDb::RT_BOMBERS ||
 		eRType == NDb::RT_GROUND_ATTACK_PLANES ||
 		eRType == NDb::RT_RECON ||
-		eRType == NDb::RT_FIGHTERS );
+		eRType == NDb::RT_FIGHTERS ||
+		eRType == NDb::RT_EXTRA_AIR_1 ||
+		eRType == NDb::RT_EXTRA_AIR_2 ||
+		eRType == NDb::RT_EXTRA_AIR_3 ||
+		eRType == NDb::RT_EXTRA_AIR_4 ||
+		eRType == NDb::RT_EXTRA_AIR_5 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_AIR_1 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_AIR_2 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_AIR_3 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_AIR_4 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_AIR_5 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_MIXED_1 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_MIXED_2 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_MIXED_3 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_MIXED_4 ||
+		eRType == NDb::RT_EXTRA_MAXLVL_MIXED_5 );
 }
 
 void CGeneral::CheckAvailableReinforcement()

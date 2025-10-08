@@ -270,7 +270,9 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, con
 		CallReinforcement( eType, nPointID, nScriptID, &objects, bOnWater, vPoint );
 		if ( bOnWater && !bAviation )
 			return;
-		SendReinforcementToPoint( objects, eType, vPoint, ( eType == NDb::RT_ELITE_INFANTRY || eType == NDb::RT_PARATROOPS ) && pReinf->HasPlanes(), 0.0f );
+		bool isMixedReinf = ( eType == NDb::RT_EXTRA_MIXED_1 || eType == NDb::RT_EXTRA_MIXED_2 || eType == NDb::RT_EXTRA_MIXED_3 || eType == NDb::RT_EXTRA_MIXED_4 || eType == NDb::RT_EXTRA_MIXED_5 ||
+							eType == NDb::RT_EXTRA_MAXLVL_MIXED_1 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_2 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_3 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_4 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_5 );
+		SendReinforcementToPoint( objects, eType, vPoint, ( eType == NDb::RT_ELITE_INFANTRY || eType == NDb::RT_PARATROOPS || isMixedReinf ) && pReinf->HasPlanes(), 0.0f );
 	}
 }
 
@@ -580,7 +582,17 @@ bool CPlayerReinforcement::HasGroundReinforcements() const
 				 it->second->eType != RT_BOMBERS &&
 				 it->second->eType != RT_GROUND_ATTACK_PLANES &&
 				 it->second->eType != RT_RECON &&
-				 it->second->eType != RT_PARATROOPS )
+				 it->second->eType != RT_PARATROOPS &&
+				 it->second->eType != RT_EXTRA_AIR_1 &&
+				 it->second->eType != RT_EXTRA_AIR_2 &&
+				 it->second->eType != RT_EXTRA_AIR_3 &&
+				 it->second->eType != RT_EXTRA_AIR_4 &&
+				 it->second->eType != RT_EXTRA_AIR_5 &&
+				 it->second->eType != RT_EXTRA_MAXLVL_AIR_1 &&
+				 it->second->eType != RT_EXTRA_MAXLVL_AIR_2 &&
+			 	 it->second->eType != RT_EXTRA_MAXLVL_AIR_3 &&
+				 it->second->eType != RT_EXTRA_MAXLVL_AIR_4 &&
+				 it->second->eType != RT_EXTRA_MAXLVL_AIR_5 )
 		{
 			return true;
 		}

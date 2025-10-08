@@ -5715,6 +5715,76 @@ std::string EnumToString( NDb::EReinforcementType eValue )
 		return "RT_HEAVY_ARTILLERY";
 	case NDb::RT_SUPER_WEAPON:
 		return "RT_SUPER_WEAPON";
+	case NDb::RT_EXTRA_GROUND_1:
+    	return "RT_EXTRA_GROUND_1";
+	case NDb::RT_EXTRA_GROUND_2:
+		return "RT_EXTRA_GROUND_2";
+	case NDb::RT_EXTRA_GROUND_3:
+		return "RT_EXTRA_GROUND_3";
+	case NDb::RT_EXTRA_GROUND_4:
+		return "RT_EXTRA_GROUND_4";
+	case NDb::RT_EXTRA_GROUND_5:
+		return "RT_EXTRA_GROUND_5";
+	case NDb::RT_EXTRA_GROUND_6:
+		return "RT_EXTRA_GROUND_6";
+	case NDb::RT_EXTRA_GROUND_7:
+		return "RT_EXTRA_GROUND_7";
+	case NDb::RT_EXTRA_GROUND_8:
+		return "RT_EXTRA_GROUND_8";
+	case NDb::RT_EXTRA_GROUND_9:
+		return "RT_EXTRA_GROUND_9";
+	case NDb::RT_EXTRA_GROUND_10:
+		return "RT_EXTRA_GROUND_10";
+	case NDb::RT_EXTRA_AIR_1:
+		return "RT_EXTRA_AIR_1";
+	case NDb::RT_EXTRA_AIR_2:
+		return "RT_EXTRA_AIR_2";
+	case NDb::RT_EXTRA_AIR_3:
+		return "RT_EXTRA_AIR_3";
+	case NDb::RT_EXTRA_AIR_4:
+		return "RT_EXTRA_AIR_4";
+	case NDb::RT_EXTRA_AIR_5:
+		return "RT_EXTRA_AIR_5";
+	case NDb::RT_EXTRA_MIXED_1:
+		return "RT_EXTRA_MIXED_1";
+	case NDb::RT_EXTRA_MIXED_2:
+		return "RT_EXTRA_MIXED_2";
+	case NDb::RT_EXTRA_MIXED_3:
+		return "RT_EXTRA_MIXED_3";
+	case NDb::RT_EXTRA_MIXED_4:
+		return "RT_EXTRA_MIXED_4";
+	case NDb::RT_EXTRA_MIXED_5:
+		return "RT_EXTRA_MIXED_5";
+	case NDb::RT_EXTRA_MAXLVL_GROUND_1:
+		return "RT_EXTRA_MAXLVL_GROUND_1";
+	case NDb::RT_EXTRA_MAXLVL_GROUND_2:
+		return "RT_EXTRA_MAXLVL_GROUND_2";
+	case NDb::RT_EXTRA_MAXLVL_GROUND_3:
+		return "RT_EXTRA_MAXLVL_GROUND_3";
+	case NDb::RT_EXTRA_MAXLVL_GROUND_4:
+		return "RT_EXTRA_MAXLVL_GROUND_4";
+	case NDb::RT_EXTRA_MAXLVL_GROUND_5:
+		return "RT_EXTRA_MAXLVL_GROUND_5";
+	case NDb::RT_EXTRA_MAXLVL_AIR_1:
+		return "RT_EXTRA_MAXLVL_AIR_1";
+	case NDb::RT_EXTRA_MAXLVL_AIR_2:
+		return "RT_EXTRA_MAXLVL_AIR_2";
+	case NDb::RT_EXTRA_MAXLVL_AIR_3:
+		return "RT_EXTRA_MAXLVL_AIR_3";
+	case NDb::RT_EXTRA_MAXLVL_AIR_4:
+		return "RT_EXTRA_MAXLVL_AIR_4";
+	case NDb::RT_EXTRA_MAXLVL_AIR_5:
+		return "RT_EXTRA_MAXLVL_AIR_5";
+	case NDb::RT_EXTRA_MAXLVL_MIXED_1:
+		return "RT_EXTRA_MAXLVL_MIXED_1";
+	case NDb::RT_EXTRA_MAXLVL_MIXED_2:
+		return "RT_EXTRA_MAXLVL_MIXED_2";
+	case NDb::RT_EXTRA_MAXLVL_MIXED_3:
+		return "RT_EXTRA_MAXLVL_MIXED_3";
+	case NDb::RT_EXTRA_MAXLVL_MIXED_4:
+		return "RT_EXTRA_MAXLVL_MIXED_4";
+	case NDb::RT_EXTRA_MAXLVL_MIXED_5:
+		return "RT_EXTRA_MAXLVL_MIXED_5";
 	case NDb::_RT_NONE:
 		return "_RT_NONE";
 	default:
@@ -5766,6 +5836,76 @@ NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const std::str
 		return NDb::RT_HEAVY_ARTILLERY;
 	if ( szValue == "RT_SUPER_WEAPON" )
 		return NDb::RT_SUPER_WEAPON;
+	if ( szValue == "RT_EXTRA_GROUND_1" )
+    	return NDb::RT_EXTRA_GROUND_1;
+	if ( szValue == "RT_EXTRA_GROUND_2" )
+		return NDb::RT_EXTRA_GROUND_2;
+	if ( szValue == "RT_EXTRA_GROUND_3" )
+		return NDb::RT_EXTRA_GROUND_3;
+	if ( szValue == "RT_EXTRA_GROUND_4" )
+		return NDb::RT_EXTRA_GROUND_4;
+	if ( szValue == "RT_EXTRA_GROUND_5" )
+		return NDb::RT_EXTRA_GROUND_5;
+	if ( szValue == "RT_EXTRA_GROUND_6" )
+		return NDb::RT_EXTRA_GROUND_6;
+	if ( szValue == "RT_EXTRA_GROUND_7" )
+		return NDb::RT_EXTRA_GROUND_7;
+	if ( szValue == "RT_EXTRA_GROUND_8" )
+		return NDb::RT_EXTRA_GROUND_8;
+	if ( szValue == "RT_EXTRA_GROUND_9" )
+		return NDb::RT_EXTRA_GROUND_9;
+	if ( szValue == "RT_EXTRA_GROUND_10" )
+		return NDb::RT_EXTRA_GROUND_10;
+	if ( szValue == "RT_EXTRA_AIR_1" )
+		return NDb::RT_EXTRA_AIR_1;
+	if ( szValue == "RT_EXTRA_AIR_2" )
+		return NDb::RT_EXTRA_AIR_2;
+	if ( szValue == "RT_EXTRA_AIR_3" )
+		return NDb::RT_EXTRA_AIR_3;
+	if ( szValue == "RT_EXTRA_AIR_4" )
+		return NDb::RT_EXTRA_AIR_4;
+	if ( szValue == "RT_EXTRA_AIR_5" )
+		return NDb::RT_EXTRA_AIR_5;
+	if ( szValue == "RT_EXTRA_MIXED_1" )
+		return NDb::RT_EXTRA_MIXED_1;
+	if ( szValue == "RT_EXTRA_MIXED_2" )
+		return NDb::RT_EXTRA_MIXED_2;
+	if ( szValue == "RT_EXTRA_MIXED_3" )
+		return NDb::RT_EXTRA_MIXED_3;
+	if ( szValue == "RT_EXTRA_MIXED_4" )
+		return NDb::RT_EXTRA_MIXED_4;
+	if ( szValue == "RT_EXTRA_MIXED_5" )
+		return NDb::RT_EXTRA_MIXED_5;
+	if ( szValue == "RT_EXTRA_MAXLVL_GROUND_1" )
+		return NDb::RT_EXTRA_MAXLVL_GROUND_1;
+	if ( szValue == "RT_EXTRA_MAXLVL_GROUND_2" )
+		return NDb::RT_EXTRA_MAXLVL_GROUND_2;
+	if ( szValue == "RT_EXTRA_MAXLVL_GROUND_3" )
+		return NDb::RT_EXTRA_MAXLVL_GROUND_3;
+	if ( szValue == "RT_EXTRA_MAXLVL_GROUND_4" )
+		return NDb::RT_EXTRA_MAXLVL_GROUND_4;
+	if ( szValue == "RT_EXTRA_MAXLVL_GROUND_5" )
+		return NDb::RT_EXTRA_MAXLVL_GROUND_5;
+	if ( szValue == "RT_EXTRA_MAXLVL_AIR_1" )
+		return NDb::RT_EXTRA_MAXLVL_AIR_1;
+	if ( szValue == "RT_EXTRA_MAXLVL_AIR_2" )
+		return NDb::RT_EXTRA_MAXLVL_AIR_2;
+	if ( szValue == "RT_EXTRA_MAXLVL_AIR_3" )
+		return NDb::RT_EXTRA_MAXLVL_AIR_3;
+	if ( szValue == "RT_EXTRA_MAXLVL_AIR_4" )
+		return NDb::RT_EXTRA_MAXLVL_AIR_4;
+	if ( szValue == "RT_EXTRA_MAXLVL_AIR_5" )
+		return NDb::RT_EXTRA_MAXLVL_AIR_5;
+	if ( szValue == "RT_EXTRA_MAXLVL_MIXED_1" )
+		return NDb::RT_EXTRA_MAXLVL_MIXED_1;
+	if ( szValue == "RT_EXTRA_MAXLVL_MIXED_2" )
+		return NDb::RT_EXTRA_MAXLVL_MIXED_2;
+	if ( szValue == "RT_EXTRA_MAXLVL_MIXED_3" )
+		return NDb::RT_EXTRA_MAXLVL_MIXED_3;
+	if ( szValue == "RT_EXTRA_MAXLVL_MIXED_4" )
+		return NDb::RT_EXTRA_MAXLVL_MIXED_4;
+	if ( szValue == "RT_EXTRA_MAXLVL_MIXED_5" )
+		return NDb::RT_EXTRA_MAXLVL_MIXED_5;
 	if ( szValue == "_RT_NONE" )
 		return NDb::_RT_NONE;
 	return NDb::RT_MAIN_INFANTRY;

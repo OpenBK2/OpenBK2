@@ -492,9 +492,29 @@ bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
 		case NDb::RT_GROUND_ATTACK_PLANES:
 		case NDb::RT_RECON:
 		case NDb::RT_PARATROOPS:
+		case NDb::RT_EXTRA_AIR_1:
+		case NDb::RT_EXTRA_AIR_2:
+		case NDb::RT_EXTRA_AIR_3:
+		case NDb::RT_EXTRA_AIR_4:
+		case NDb::RT_EXTRA_AIR_5:
+		case NDb::RT_EXTRA_MAXLVL_AIR_1:
+		case NDb::RT_EXTRA_MAXLVL_AIR_2:
+		case NDb::RT_EXTRA_MAXLVL_AIR_3:
+		case NDb::RT_EXTRA_MAXLVL_AIR_4:
+		case NDb::RT_EXTRA_MAXLVL_AIR_5:
 			return true;
 			
 		case NDb::RT_ELITE_INFANTRY:
+		case NDb::RT_EXTRA_MIXED_1:
+		case NDb::RT_EXTRA_MIXED_2:
+		case NDb::RT_EXTRA_MIXED_3:
+		case NDb::RT_EXTRA_MIXED_4:
+		case NDb::RT_EXTRA_MIXED_5:
+		case NDb::RT_EXTRA_MAXLVL_MIXED_1:
+		case NDb::RT_EXTRA_MAXLVL_MIXED_2:
+		case NDb::RT_EXTRA_MAXLVL_MIXED_3:
+		case NDb::RT_EXTRA_MAXLVL_MIXED_4:
+		case NDb::RT_EXTRA_MAXLVL_MIXED_5:
 		{
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			const int nLocalPlayer = pST->GetLocalPlayer();
@@ -1136,6 +1156,16 @@ bool CMissionReinf::IsAllWeatherAvia( const NDb::EReinforcementType eType ) cons
 		case NDb::RT_GROUND_ATTACK_PLANES:
 		case NDb::RT_RECON:
 		case NDb::RT_PARATROOPS:
+		case NDb::RT_EXTRA_AIR_1:
+		case NDb::RT_EXTRA_AIR_2:
+		case NDb::RT_EXTRA_AIR_3:
+		case NDb::RT_EXTRA_AIR_4:
+		case NDb::RT_EXTRA_AIR_5:
+		case NDb::RT_EXTRA_MAXLVL_AIR_1:
+		case NDb::RT_EXTRA_MAXLVL_AIR_2:
+		case NDb::RT_EXTRA_MAXLVL_AIR_3:
+		case NDb::RT_EXTRA_MAXLVL_AIR_4:
+		case NDb::RT_EXTRA_MAXLVL_AIR_5:
 		{
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			int nLocalPlayer = pST->GetLocalPlayer();

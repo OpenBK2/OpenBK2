@@ -3648,7 +3648,17 @@ int CScripts::LandReinforcementFromMap( struct lua_State *state )
 		if ( pReinf->eType == NDb::RT_BOMBERS || 
 			pReinf->eType == NDb::RT_FIGHTERS || 
 			pReinf->eType == NDb::RT_GROUND_ATTACK_PLANES || 
-			pReinf->eType == NDb::RT_RECON )
+			pReinf->eType == NDb::RT_RECON ||
+			pReinf->eType == NDb::RT_EXTRA_AIR_1 ||
+		    pReinf->eType == NDb::RT_EXTRA_AIR_2 ||
+		  	pReinf->eType == NDb::RT_EXTRA_AIR_3 ||
+			pReinf->eType == NDb::RT_EXTRA_AIR_4 ||
+			pReinf->eType == NDb::RT_EXTRA_AIR_5 ||
+			pReinf->eType == NDb::RT_EXTRA_MAXLVL_AIR_1 ||
+			pReinf->eType == NDb::RT_EXTRA_MAXLVL_AIR_2 ||
+			pReinf->eType == NDb::RT_EXTRA_MAXLVL_AIR_3 ||
+			pReinf->eType == NDb::RT_EXTRA_MAXLVL_AIR_4 ||
+			pReinf->eType == NDb::RT_EXTRA_MAXLVL_AIR_5 )
 		{
 			vCallPos = pPos->vAviationPosition;
 		}

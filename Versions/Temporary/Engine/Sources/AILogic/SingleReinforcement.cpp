@@ -212,7 +212,9 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 		(*units.begin())->SendAcknowledgement( NDb::ACK_REINFORCEMENT_ARRIVED, true );
 
 	if ( theDipl.GetNParty( nPlayer ) != theDipl.GetMyParty() && 
-		( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES || eType == NDb::RT_RECON ) )
+		( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES || eType == NDb::RT_RECON ||
+		  eType == NDb::RT_EXTRA_AIR_1 || eType == NDb::RT_EXTRA_AIR_2 || eType == NDb::RT_EXTRA_AIR_3 || eType == NDb::RT_EXTRA_AIR_4 || eType == NDb::RT_EXTRA_AIR_5 ||
+		  eType == NDb::RT_EXTRA_MAXLVL_AIR_1 || eType == NDb::RT_EXTRA_MAXLVL_AIR_2 || eType == NDb::RT_EXTRA_MAXLVL_AIR_3 || eType == NDb::RT_EXTRA_MAXLVL_AIR_4 || eType == NDb::RT_EXTRA_MAXLVL_AIR_5 ) )
 	{
 		CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 		for ( std::list<CCommonUnit*>::iterator it = units.begin(); it != units.end(); ++it )

@@ -476,7 +476,25 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 		return N_MAX_XP_LEVEL;
 #endif _FINALRELEASE
-	if ( eType == NDb::RT_ENGINEERING )
+	if ( eType == NDb::RT_ENGINEERING
+		// --- Extra Max Level Ground ---
+		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_1
+		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_2
+		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_3
+		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_4
+		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_5
+		// --- Extra Max Level Air ---
+		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_1
+		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_2
+		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_3
+		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_4
+		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_5
+		// --- Extra Max Level Mixed ---
+		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_1
+		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_2
+		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_3
+		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_4
+		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_5 )
 	{
 		return N_MAX_XP_LEVEL;
 	}
