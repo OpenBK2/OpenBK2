@@ -133,22 +133,16 @@ static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> 
 	const DWORD *pSrc = &mult[0];
 	for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
 	{
-		DWORD dwB = *pSrc;
-		__asm
-		{
-			mov esi, pDst
-			pxor mm7, mm7
-			movd mm0, [esi]
-			movd mm1, dwB
-			punpcklbw mm0, mm7
-			punpcklbw mm1, mm7
-			pmullw mm0, mm1
-			psrlw mm0, 8
-			packuswb mm0, mm0
-			movd [esi], mm0
-		}
+		NGfx::SPixel8888 src = *pSrc;
+		NGfx::SPixel8888 dst = *pDst;
+
+		dst.r = std::min<int>(255, (src.r * dst.r) >> 8);
+		dst.g = std::min<int>(255, (src.g * dst.g) >> 8);
+		dst.b = std::min<int>(255, (src.b * dst.b) >> 8);
+		dst.a = std::min<int>(255, (src.a * dst.a) >> 8);
+
+		*pDst = dst.dwColor;
 	}
-	__asm emms
 }
 
 // calc colors
