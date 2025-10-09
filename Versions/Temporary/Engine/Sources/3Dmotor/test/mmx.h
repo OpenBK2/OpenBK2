@@ -72,6 +72,18 @@ namespace original {
         return result;
     }
 
+    static uint64_t punpckhwd(uint64_t low1, uint64_t high1) {
+        uint64_t result;
+        __asm {
+            movq mm0, low1
+            movq mm1, high1
+            punpckhwd mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
     static uint64_t punpckldq(uint64_t low1, uint64_t high1) {
         uint64_t result;
         __asm {
@@ -168,6 +180,18 @@ namespace original {
         return result;
     }
 
+    static uint64_t pmullw(uint64_t a, uint64_t b) {
+        uint64_t result;
+        __asm {
+            movq mm0, a
+            movq mm1, b
+            pmullw mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
     static uint64_t paddd(uint64_t a, uint64_t b) {
         uint64_t result;
         __asm {
@@ -254,6 +278,18 @@ namespace original {
             movq mm0, a
             movq mm1, b
             pxor mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
+    static uint64_t pcmpgtw(uint64_t a, uint64_t b) {
+        uint64_t result;
+        __asm {
+            movq mm0, a
+            movq mm1, b
+            pcmpgtw mm0, mm1
             movq result, mm0
             emms
         }

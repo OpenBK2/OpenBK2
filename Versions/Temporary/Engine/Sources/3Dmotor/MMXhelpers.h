@@ -4,12 +4,18 @@
 #include <algorithm>
 
 namespace mmx {
+
+	// Split 64-bit value into 4 signed 16-bit words (little-endian order)
+	inline void split64(uint64_t val, short & z, short & y, short & x, short & w) {
+		z = static_cast<short>( val        & 0xFFFF );
+		y = static_cast<short>((val >> 16) & 0xFFFF );
+		x = static_cast<short>((val >> 32) & 0xFFFF );
+		w = static_cast<short>((val >> 48) & 0xFFFF );
+	}
+
 	// Split 64-bit value into 4 signed 16-bit words (little-endian order)
 	inline void split64(uint64_t val, short w[4]) {
-		w[0] = static_cast<short>( val        & 0xFFFF );
-		w[1] = static_cast<short>((val >> 16) & 0xFFFF );
-		w[2] = static_cast<short>((val >> 32) & 0xFFFF );
-		w[3] = static_cast<short>((val >> 48) & 0xFFFF );
+		split64(val, w[0], w[1], w[2], w[3]);
 	}
 
 	// Combine 4 signed 16-bit words into 64-bit value
@@ -47,6 +53,28 @@ namespace mmx {
 		return combine64(r);
 	}
 
+	// Multiply Packed Signed Integers and Store Low Result
+	/*
+	PMULLW (With 64-bit Operands)
+	TEMP0[31:0] := DEST[15:0] ∗ SRC[15:0]; (* Signed multiplication *)
+	TEMP1[31:0] := DEST[31:16] ∗ SRC[31:16];
+	TEMP2[31:0] := DEST[47:32] ∗ SRC[47:32];
+	TEMP3[31:0] := DEST[63:48] ∗ SRC[63:48];
+	DEST[15:0] := TEMP0[15:0];
+	DEST[31:16] := TEMP1[15:0];
+	DEST[47:32] := TEMP2[15:0];
+	DEST[63:48] := TEMP3[15:0];
+	*/
+	inline uint64_t pmullw(uint64_t dest, uint64_t src) {
+		short d[4], s[4], r[4];
+		split64(dest, d);
+		split64(src, s);
+		for (int i = 0; i < 4; ++i) {
+			int32_t tmp = static_cast<int32_t>(d[i]) * static_cast<int32_t>(s[i]);
+			r[i] = static_cast<short>(tmp & 0xFFFF);  // keep low 16 bits
+		}
+		return combine64(r);
+	}
 	// Multiply and Add Packed Integers
 	/*
 	PMADDWD (With 64-bit Operands)
@@ -219,6 +247,23 @@ namespace mmx {
 		return result;
 	}
 
+	// Unpack High Data
+	/*
+	PUNPCKHWD Instruction With 64-bit Operands:
+	DEST[15:0] := DEST[47:32];
+	DEST[31:16] := SRC[47:32];
+	DEST[47:32] := DEST[63:48];
+	DEST[63:48] := SRC[63:48];
+	*/
+	inline uint64_t punpckhwd(uint64_t low, uint64_t high)
+	{
+		return
+			((low  >> 32) & 0xFFFFULL) |
+			(((high >> 32) & 0xFFFFULL) << 16) |
+			(((low  >> 48) & 0xFFFFULL) << 32) |
+			(((high >> 48) & 0xFFFFULL) << 48);
+	}
+
 	// Unpack Low Data
 	/*
 	PUNPCKLDQ Instruction With 64-bit Operands:
@@ -387,6 +432,32 @@ namespace mmx {
 	*/
 	inline uint64_t pxor(uint64_t a, uint64_t b) {
 		return a ^ b;
+	}
+
+	// Compare Packed Signed Integers for Greater Than
+	/*
+	PCMPGTW (With 64-bit Operands)
+	IF DEST[15:0] > SRC[15:0]
+	THEN DEST[15:0] := FFFFH;
+	ELSE DEST[15:0] := 0; FI;
+	(* Continue comparison of 2nd and 3rd words in DEST and SRC *)
+	IF DEST[63:48] > SRC[63:48]
+	THEN DEST[63:48] := FFFFH;
+	ELSE DEST[63:48] := 0; FI;
+	*/
+	inline uint64_t pcmpgtw(uint64_t a, uint64_t b) {
+		uint64_t result = 0;
+		for (int i = 0; i < 4; ++i) {
+			// extract 16-bit word from each operand
+			int16_t wa = static_cast<int16_t>((a >> (i * 16)) & 0xFFFF);
+			int16_t wb = static_cast<int16_t>((b >> (i * 16)) & 0xFFFF);
+
+			// compare signed
+			uint16_t out = (wa > wb) ? 0xFFFF : 0x0000;
+
+			result |= (uint64_t)out << (i * 16);
+		}
+		return result;
 	}
 
 }

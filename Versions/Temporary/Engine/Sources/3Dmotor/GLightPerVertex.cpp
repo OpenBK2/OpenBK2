@@ -306,67 +306,45 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const 
 }
 
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
-	const std::vector<NGfx::SMMXWord> &attenuation, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
 	const CVec3 &_vColor )
 {
-	NGfx::SMMXWord shift, lightColor, shift1;
-	shift.nX = shift.nY = shift.nZ = (short)0x8000;
-	shift1.nX = shift1.nZ = 1 << 12; shift1.nY = shift1.nW = 0;
-	lightColor.nX = Float2Int( _vColor.x * 32767 );
-	lightColor.nY = Float2Int( _vColor.y * 32767 );
-	lightColor.nZ = Float2Int( _vColor.z * 32767 );
-	__asm
-	{
-		movq mm7, lightColor
-		movq mm5, shift1
-	}
+	uint64_t shift = mmx::combine64(static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), 0);
+	uint64_t shift1 = mmx::combine64(1 << 12, 0, 1 << 12, 0);
+	uint64_t lightColor = mmx::combine64( Float2Int( _vColor.z * 32767 ), Float2Int( _vColor.y * 32767 ), Float2Int( _vColor.x * 32767 ), 0 );
+
 	for ( int k = 0; k < posIndices.size(); ++k )
 	{
 		DWORD dwNormal = _normals[k].dw;
 		const NGfx::SMMXWord *pAtt = &attenuation[ posIndices[k] ];
+		uint64_t att = mmx::combine64( pAtt->nZ, pAtt->nY, pAtt->nX, pAtt->nW );
 		NGfx::SMMXWord *pResColor = &(*pRes)[k];
-		__asm
-		{
-			mov esi, pResColor
-			mov edi, pAtt
-			movq mm6, [esi]
-			movd mm0, dwNormal
-			punpcklbw mm0, mm0
-			psubw mm0, shift
-			pmaddwd mm0, [edi]
-			movq mm1, mm0
-			psrlq mm1, 32
-			paddd mm0, mm1
-			psrad mm0, 15
-			packssdw mm0, mm0
-			punpcklwd mm0, mm0
-			pxor mm2, mm2
-			punpckldq mm0, mm0
-			movq mm1, mm0
-			pcmpgtw mm1, mm2
-			pand mm0, mm1
-			movq mm1, mm0
-			pmulhw mm0, mm7
-			pmullw mm1, mm7
-			movq mm2, mm1
-			movq mm3, mm1
-			punpcklwd mm2, mm0
-			punpckhwd mm3, mm0
-			paddd mm2, mm5
-			paddd mm3, mm5
-			psrad mm2, 13
-			psrad mm3, 13
-			packssdw mm2, mm3
-			paddsw mm2, mm6
-			movq [esi], mm2
-		}
-		//CVec3 vNormal = NGfx::GetVector( pSrc[k].normal );
-		//float f = Max( 0.0f, vNormal * CVec3( pAtt->nX / 8192.0f, pAtt->nY / 8192.0f, pAtt->nZ / 8192.0f ) );
-		//CVec3 vTest = f * _vColor;
-		//f = f;
+		uint64_t resColor = mmx::combine64( pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW );
+
+		uint64_t normal = mmx::punpcklbw(dwNormal, dwNormal);
+		normal = mmx::psubw(normal, shift);
+		normal = mmx::pmaddwd(normal, att);
+		uint64_t normal_high = mmx::psrlq(normal, 32);
+		normal = mmx::paddd(normal, normal_high);
+		normal = mmx::psrad(normal, 15);
+		normal = mmx::packssdw(normal, normal);
+		normal = mmx::punpcklwd(normal, normal);
+		normal = mmx::punpckldq(normal, normal);
+		uint64_t mask = mmx::pcmpgtw(normal, 0);
+		normal = mmx::pand(normal, mask);
+		uint64_t low = mmx::pmullw(normal, lightColor);
+		uint64_t high = mmx::pmulhw(normal, lightColor);
+		uint64_t unpacked_low = mmx::punpcklwd(low, high);
+		uint64_t unpacked_high = mmx::punpckhwd(low, high);
+		unpacked_low = mmx::paddd(unpacked_low, shift1);
+		unpacked_high = mmx::paddd(unpacked_high, shift1);
+		unpacked_low = mmx::psrad(unpacked_low, 13);
+		unpacked_high = mmx::psrad(unpacked_high, 13);
+		uint64_t result = mmx::packssdw(unpacked_low, unpacked_high);
+		result = mmx::paddsw(result, resColor);
+		mmx::split64(result, pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW);
 	}
-	__asm emms
 }
 
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
@@ -544,7 +522,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 	else
 	{
 		CalcPointLightAttenuation( &attenuation, srcPos, p.vCenter, p.fRadius );
-		CalcPointLightColors( pColors, attenuation, pSrc, posIndices, _normals, p.vColor );
+		CalcPointLightColors( pColors, attenuation, posIndices, _normals, p.vColor );
 	}
 }
 

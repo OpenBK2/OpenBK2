@@ -7,6 +7,7 @@ endfunction()
 
 add_unit_test(MultiplyOnColor)
 add_unit_test(CalcDirectionalLighting)
+add_unit_test(CalcPointLightColors)
 add_unit_test(MMXTransformVector)
 add_unit_test(SampleWarFogInt)
 add_unit_test(SampleWarFog)

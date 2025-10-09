@@ -67,6 +67,19 @@ TEST(MMXEmulation, PUNPCKLWD) {
     }
 }
 
+TEST(MMXEmulation, PUNPCKHWD) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+
+        uint64_t low = random_uint64();
+        uint64_t high = random_uint64();
+
+        uint64_t actual = mmx::punpckhwd(low, high);
+        uint64_t expected = original::punpckhwd(low, high);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
 TEST(MMXEmulation, PUNPCKLDQ) {
 
     for (size_t i = 0; i < iterations; ++i) {
@@ -165,6 +178,17 @@ TEST(MMXEmulation, PMULHW) {
     }
 }
 
+TEST(MMXEmulation, PMULLW) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+        uint64_t a = random_uint64();
+        uint64_t b = random_uint64();
+        uint64_t expected = original::pmullw(a, b);
+        uint64_t actual = mmx::pmullw(a, b);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
 TEST(MMXEmulation, PADDD) {
 
     for (size_t i = 0; i < iterations; ++i) {
@@ -234,6 +258,17 @@ TEST(MMXEmulation, PXOR) {
         uint64_t b = random_uint64();
         uint64_t expected = original::pxor(a, b);
         uint64_t actual = mmx::pxor(a, b);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
+TEST(MMXEmulation, PCMPGTW) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+        uint64_t a = random_uint64();
+        uint64_t b = random_uint64();
+        uint64_t expected = original::pcmpgtw(a, b);
+        uint64_t actual = mmx::pcmpgtw(a, b);
         ASSERT_EQ(actual, expected);
     }
 }
