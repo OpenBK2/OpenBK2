@@ -765,7 +765,8 @@ static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcS
 	const WORD *pPosIndices = &posIndices[0];
 	NGfx::SMMXWord mTransp;
 	mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0x1ff;
-	__asm movq mm7, mTransp
+	uint64_t transparency = mmx::combine64(mTransp.nZ, mTransp.nY, mTransp.nX, mTransp.nW);
+
 	if ( bMultiplyOnTransparency )
 	{
 		mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0;
@@ -774,35 +775,27 @@ static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcS
 	{
 		mTransp.nX = mTransp.nY = mTransp.nZ = 0x7fff; mTransp.nW = 0;
 	}
-	__asm movq mm6, mTransp
+	uint64_t multiplyTransparency = mmx::combine64(mTransp.nZ, mTransp.nY, mTransp.nX, mTransp.nW);
+
 	for ( ; p < pEnd; ++p, pSrc += nSrcStride / 4, ++pPosIndices, ++pTransp )
 	{
 		int nScaleIndex = (*pPosIndices) & nScaleMask;
-		int n = ((int) (pScale[ nScaleIndex ]) ) << 2;
-		int nScale = pTransp->w << 7;
-		//ASSERT( ((*pSrc) & 0xff000000 ) == 0 );
-		__asm
-		{
-			mov esi, pSrc
-			movd mm0, [esi]
-			movd mm1, n
-			punpcklbw mm0, mm0
-			mov esi, p
-			psrlw mm0, 1
-			punpcklwd mm1, mm1
-			punpckldq mm1, mm1
-			pmulhw mm0, mm1
-			por mm0, mm7
-			movd mm2, nScale
-			punpcklwd mm2, mm2
-			punpckldq mm2, mm2
-			por mm2, mm6
-			pmulhw mm0, mm2
-			packuswb mm0, mm0
-			movd [esi], mm0
-		}
+		uint64_t n = ((int) (pScale[ nScaleIndex ]) ) << 2;
+		uint64_t nScale = pTransp->w << 7;
+
+		uint64_t src = mmx::punpcklbw(*pSrc, *pSrc);
+		src = mmx::psrlw(src, 1);
+		n = mmx::punpcklwd(n, n);
+		n = mmx::punpckldq(n, n);
+		src = mmx::pmulhw(src, n);
+		src = mmx::por(src, transparency);
+		nScale = mmx::punpcklwd(nScale, nScale);
+		nScale = mmx::punpckldq(nScale, nScale);
+		nScale = mmx::por(nScale, multiplyTransparency);
+		src = mmx::pmulhw(src, nScale);
+		src = mmx::packuswb(src, src);
+		*p = src & 0xFFFFFFFFUL;
 	}
-	__asm emms
 }
 
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,

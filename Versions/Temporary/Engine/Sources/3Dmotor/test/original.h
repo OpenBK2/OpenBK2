@@ -634,4 +634,58 @@ namespace original {
 		__asm emms
 	}
 
+	static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
+		unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
+		bool bMultiplyOnTransparency )
+	{
+	    int nSize = posIndices.size();
+	    if ( pRes->size() < nSize )
+            pRes->resize( nSize );
+	    DWORD *p = &(*pRes)[0], *pEnd = p + nSize;
+	    const DWORD *pSrc = _pSrc;
+	    ASSERT( sizeof(DWORD) == sizeof(transp[0]) );
+	    const NGfx::SCompactVector *pTransp = &transp[0];
+	    const WORD *pPosIndices = &posIndices[0];
+	    NGfx::SMMXWord mTransp;
+	    mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0x1ff;
+	    __asm movq mm7, mTransp
+		if ( bMultiplyOnTransparency )
+		{
+			mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0;
+		}
+		else
+		{
+			mTransp.nX = mTransp.nY = mTransp.nZ = 0x7fff; mTransp.nW = 0;
+		}
+	    __asm movq mm6, mTransp
+		for ( ; p < pEnd; ++p, pSrc += nSrcStride / 4, ++pPosIndices, ++pTransp )
+		{
+			int nScaleIndex = (*pPosIndices) & nScaleMask;
+			int n = ((int) (pScale[ nScaleIndex ]) ) << 2;
+			int nScale = pTransp->w << 7;
+			//ASSERT( ((*pSrc) & 0xff000000 ) == 0 );
+			__asm
+			{
+				mov esi, pSrc
+				movd mm0, [esi]
+				movd mm1, n
+				punpcklbw mm0, mm0
+				mov esi, p
+				psrlw mm0, 1
+				punpcklwd mm1, mm1
+				punpckldq mm1, mm1
+				pmulhw mm0, mm1
+				por mm0, mm7
+				movd mm2, nScale
+				punpcklwd mm2, mm2
+				punpckldq mm2, mm2
+				por mm2, mm6
+				pmulhw mm0, mm2
+				packuswb mm0, mm0
+				movd [esi], mm0
+			}
+		}
+	    __asm emms
+	}
+
 }
