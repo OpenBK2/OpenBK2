@@ -1,4 +1,9 @@
-add_executable(3Dmotor_test EXCLUDE_FROM_ALL
-  MultiplyOnColor.cpp)
-target_link_libraries(3Dmotor_test PRIVATE GTest::gtest_main 3Dmotor Misc)
-gtest_discover_tests(3Dmotor_test)
+function(add_unit_test filename)
+    add_executable(${filename}_test EXCLUDE_FROM_ALL ${filename}.cpp)
+    target_link_libraries(${filename}_test PRIVATE GTest::gtest_main 3Dmotor Misc)
+    gtest_discover_tests(${filename}_test)
+    set_target_properties(${filename}_test PROPERTIES FOLDER "unittest")
+endfunction()
+
+add_unit_test(MultiplyOnColor)
+add_unit_test(MMXhelpers)
