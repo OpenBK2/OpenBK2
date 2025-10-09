@@ -270,33 +270,17 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 		tmp.resize( nVertices * 2 );
 
 	// calc integer x & y
-	{
-		float fpScale = fScale * 0x4000;
-		const CVec3 *pSrc = &srcPos[0], *pEnd = pSrc + nVertices;
-		int *pTmp = &tmp[0];
-		__asm
-		{
-			mov esi, pSrc
-			mov edi, pTmp
-			mov eax, pEnd
-lp:
-			fld dword ptr [esi]
-			fmul fpScale
-			fistp dword ptr[edi]
-			fld dword ptr [esi+4]
-			fmul fpScale
-			fistp dword ptr[edi+4]
-			add esi, 12
-			add edi, 8
-			cmp esi, eax
-			jnz lp
-		}
+	float fpScale = fScale * 0x4000;
+
+	int *out = tmp.data();
+	for (const CVec3 &v : srcPos) {
+		*out++ = static_cast<int>(std::lrintf(v.x * fpScale));
+		*out++ = static_cast<int>(std::lrintf(v.y * fpScale));
 	}
 
 	SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
 	if ( _pRes2 )
 		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
-	_m_empty();
 }
 
 const float F_PL_RADIUS2 = 64;

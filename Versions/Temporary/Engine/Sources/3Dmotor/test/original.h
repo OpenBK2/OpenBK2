@@ -378,4 +378,50 @@ namespace original {
 		}
         __asm emms;
     }
+
+
+	static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
+		std::vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
+    {
+		if ( srcPos.empty() )
+		    return;
+		int nVertices = srcPos.size();
+		if ( _pRes1->size() < nVertices )
+		    _pRes1->resize( nVertices );
+		if ( _pRes2 && _pRes2->size() < nVertices )
+		    _pRes2->resize( nVertices );
+
+		static std::vector<int> tmp;
+		if ( tmp.size() < nVertices * 2 )
+		    tmp.resize( nVertices * 2 );
+
+		// calc integer x & y
+		{
+		    float fpScale = fScale * 0x4000;
+		    const CVec3 *pSrc = &srcPos[0], *pEnd = pSrc + nVertices;
+		    int *pTmp = &tmp[0];
+		    __asm
+			{
+				mov esi, pSrc
+				mov edi, pTmp
+				mov eax, pEnd
+		lp:
+				fld dword ptr [esi]
+				fmul fpScale
+				fistp dword ptr[edi]
+				fld dword ptr [esi+4]
+				fmul fpScale
+				fistp dword ptr[edi+4]
+				add esi, 12
+				add edi, 8
+				cmp esi, eax
+				jnz lp
+			}
+		}
+
+		SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
+		if ( _pRes2 )
+		    SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
+		_m_empty();
+		}
 }
