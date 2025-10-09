@@ -2561,7 +2561,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 	// удалить все с нулевой массой
 	SSoundTerrainInfo::CPrZeroMass prZeroMass;
 	std::vector<SSoundTerrainInfo>::iterator firstZeromass = find_if( pData->begin(), pData->end(), prZeroMass );
-	int nSize = (std::min)( nMaxSize, firstZeromass - pData->begin() );
+	int nSize = (std::min<int>)( nMaxSize, firstZeromass - pData->begin() );
 	pData->resize( nSize );
 	// оставшееся отсортировать по TerrainType
 	SSoundTerrainInfo::CPrTerrainTypeSort prTerrainType;
