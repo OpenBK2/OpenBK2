@@ -6,4 +6,5 @@ function(add_unit_test filename)
 endfunction()
 
 add_unit_test(MultiplyOnColor)
+add_unit_test(CalcDirectionalLighting)
 add_unit_test(MMXhelpers)

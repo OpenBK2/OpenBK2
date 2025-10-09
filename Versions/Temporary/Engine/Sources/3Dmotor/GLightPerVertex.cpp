@@ -148,8 +148,8 @@ static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> 
 // calc colors
 
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x * b.x, a.y * b.y, a.z * b.z ); }
-static void CalcDirectionaLighting(
-	const std::vector<CVec3> &srcPos, const std::vector<WORD> &posIndices,
+static void CalcDirectionalLighting(
+	const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
 	const SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
 	std::vector<DWORD> *pResColors, std::vector<DWORD> *pResShadow )
@@ -157,11 +157,10 @@ static void CalcDirectionaLighting(
 	pResColors->resize( posIndices.size() );
 	pResShadow->resize( posIndices.size() );
 	DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
-	const void *pDirData = &ls.ambient;
 	const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
+	NGfx::SMMXWord transHolder{};
 	if ( bTranslucent )
 	{
-		NGfx::SMMXWord transHolder;
 		ConvertColor( &transHolder, MulPerComp( ls.vLightColor, vTranslucentColor ) );
 		pTranslucentShade = &transHolder;
 	}
@@ -170,70 +169,53 @@ static void CalcDirectionaLighting(
 		DWORD dwNormal = _normals[k].dw;
 		if ( dwNormal != dwPrevNormal )
 		{
-			__asm
-			{
-				mov esi, pDirData
-				movd mm7, dwNormal
-				punpcklbw mm7, mm7
-				psubw mm7, [esi+5*8]//shift
-				pmaddwd mm7, [esi+4*8]//dirLight
-				movq mm6, mm7
-				psrlq mm6, 32
-				paddd mm7, mm6
-				psrad mm7, 15
-				punpcklwd mm7, mm7
-				punpckldq mm7, mm7
-				movq mm6, mm7
-				movq mm5, mm7
-				psraw mm6, 16
-				pand mm7, mm6
-				pandn mm6, mm5 // mm6 = f, range [0, 0x4000]
-				pcmpeqw mm0, mm0
-				pxor mm7, mm0  // mm7 - -f
-				movq mm0, [esi]//ambient // vRes
-				movq mm1, mm0     // vResShadow
-				movq mm2, [esi + 1*8]//lightColor
-				movq mm3, [esi + 2*8]//incidentShadowColor
-				movq mm4, [esi + 3*8]//shadeColor
-				mov esi, pTranslucentShade
-				movq mm5, [esi]
-				pmulhw mm2, mm6
-				pmulhw mm3, mm6
-				pmulhw mm5, mm7
-				pmulhw mm4, mm7
-				paddw mm0, mm2
-				paddw mm1, mm3
-				paddw mm0, mm5
-				paddw mm1, mm4
-				psraw mm0, 4
-				psraw mm1, 4
-				packuswb mm0, mm0
-				packuswb mm1, mm1
-				movd dwColor, mm0
-				movd dwShadowColor, mm1
-			}
+			uint64_t normal = mmx::punpcklbw(dwNormal, dwNormal);
+
+			auto combine_mmx_word = [](auto w) { return mmx::combine64(w.nZ, w.nY, w.nX, w.nW); };
+
+			uint64_t shift = combine_mmx_word(ls.shift);
+			uint64_t shadeColor = combine_mmx_word(ls.shadeColor);
+			uint64_t dirLight = combine_mmx_word(ls.dirLight);
+			uint64_t ambient = combine_mmx_word(ls.ambient);
+			uint64_t lightColor = combine_mmx_word(ls.lightColor);
+			uint64_t incidentShadowColor = combine_mmx_word(ls.incidentShadowColor);
+			uint64_t translucentShade = combine_mmx_word(*pTranslucentShade);
+			uint64_t vResShadow = ambient;
+			uint64_t vRes = ambient;
+
+			uint64_t shifted_normal = mmx::psubw(normal, shift);
+			shifted_normal = mmx::pmaddwd(shifted_normal, dirLight);
+			uint64_t normal_high = mmx::psrlq(shifted_normal, 32);
+			shifted_normal = mmx::paddd(shifted_normal, normal_high);
+			shifted_normal = mmx::psrad(shifted_normal, 15);
+			shifted_normal = mmx::punpcklwd(shifted_normal, shifted_normal);
+			shifted_normal = mmx::punpckldq(shifted_normal, shifted_normal);
+			uint64_t sign = mmx::psraw(shifted_normal, 16);
+			uint64_t negative_f = mmx::pand(shifted_normal, sign);
+			uint64_t f = mmx::pandn(sign, shifted_normal);
+			const uint64_t mask = 0xFFFF'FFFF'FFFF'FFFFULL;
+			negative_f = mmx::pxor(negative_f, mask);
+
+			lightColor = mmx::pmulhw(lightColor, f);
+			incidentShadowColor = mmx::pmulhw(incidentShadowColor, f);
+			translucentShade = mmx::pmulhw(translucentShade, negative_f);
+			shadeColor = mmx::pmulhw(shadeColor, negative_f);
+
+			vRes = mmx::paddw(vRes, lightColor);
+			vResShadow = mmx::paddw(vResShadow, incidentShadowColor);
+			vRes = mmx::paddw(vRes, translucentShade);
+			vResShadow = mmx::paddw(vResShadow, shadeColor);
+			vRes = mmx::psraw(vRes, 4);
+			vResShadow = mmx::psraw(vResShadow, 4);
+
+			dwColor = mmx::packuswb(vRes, vRes);
+			dwShadowColor = mmx::packuswb(vResShadow, vResShadow);
 		}
-//		__asm emms
-//		CVec3 vNormal = NGfx::GetVector( _normals[k] );
-//		CVec3 vRes = ls.vAmbient, vResShadow = ls.vAmbient;
-//		float f = vNormal * ls.vDir;
-//		if ( f > 0 )
-//		{
-//			vRes += f * ls.vLightColor;
-//			vResShadow += f * ls.vIncidentShadowColor;
-//		}
-//		else
-//		{
-//			vRes -= f * ls.vShadeColor;
-//			vResShadow -= f * ls.vShadeColor;
-//		}
-//		DWORD dwShadowColor1 = NGfx::GetDWORDColor( CVec4( vResShadow, 0 ) );
-//		DWORD dwColor1 = NGfx::GetDWORDColor( CVec4( vRes, 0 ) );
+
 		(*pResColors)[k] = dwColor;
 		(*pResShadow)[k] = dwShadowColor;
 		dwPrevNormal = dwNormal;
 	}
-	__asm emms
 }
 
 // sample fog of war array with bilinear filteration and store result to pRes
@@ -725,7 +707,7 @@ struct SPVLightCalcer
 
 				// calc directional
 				// ~60 clocks / vertex without same normal short cut
-				CalcDirectionaLighting( srcPos, posIndices, _normals, ls, pCache->bTranslucent, pCache->vTranslucentColor, pColors, pShadowColors );
+				CalcDirectionalLighting( posIndices, _normals, ls, pCache->bTranslucent, pCache->vTranslucentColor, pColors, pShadowColors );
 				if ( !pCache->bDoNotCacheLighting )
 					pCache->nDirectionalLightID = ls.nDirectionalID;
 
