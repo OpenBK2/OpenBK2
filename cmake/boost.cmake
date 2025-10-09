@@ -2,6 +2,11 @@
 
 include(FetchContent)
 
+set(BOOST_IOSTREAMS_ENABLE_ZLIB OFF)
+set(BOOST_IOSTREAMS_ENABLE_BZIP2 OFF)
+set(BOOST_IOSTREAMS_ENABLE_LZMA OFF)
+set(BOOST_IOSTREAMS_ENABLE_ZSTD OFF)
+
 FetchContent_Declare(
         Boost
         URL https://github.com/boostorg/boost/releases/download/boost-1.89.0/boost-1.89.0-cmake.tar.xz
