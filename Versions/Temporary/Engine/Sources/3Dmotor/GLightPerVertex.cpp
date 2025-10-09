@@ -393,69 +393,39 @@ static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, 
 	DWORD *pResPtr = &(*pRes)[0];
 	const DWORD *pSrcPtr = &src[0];
 	const NGfx::SMMXWord *pAdd = &add[0];
-	__asm
-	{
-		pxor mm7, mm7
-		pcmpeqw mm6, mm6
-		psllw mm6, 15
-		psrlw mm6, 1
-	}
+
+	uint64_t mask = 0x4000'4000'4000'4000ULL;
+
 	for ( DWORD *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
 	{
-		DWORD dwColor = *pSrcPtr;//(*pRes)[k];
-		//NGfx::SMMXWord addColor = add[k];
-		//addColor.nX = Clamp( Float2Int( add[k].x * 32767 ), 0, 32767 );
-		//addColor.nY = Clamp( Float2Int( add[k].y * 32767 ), 0, 32767 );
-		//addColor.nZ = Clamp( Float2Int( add[k].z * 32767 ), 0, 32767 );
-		__asm
-		{
-			mov esi, pAdd
-			movd mm0, dwColor
-			punpcklbw mm0, mm0
-			psrlw mm0, 1
-			movq mm1, mm0
-			pmulhw mm0, mm0
-			psllw mm0, 1
-			movq mm2, mm0
-			pmulhw mm0, mm1
-			pmullw mm2, mm1
-			psllw mm0, 1
-			paddsw mm0, [esi]//addColor
-			psrlw mm0, 1
-			// combine low part into lookup index if higher part is zero
-			psrlw mm2, 2
-			por mm2, mm6
-			movq mm3, mm0
-			pcmpeqw mm3, mm7
-			pand mm2, mm3
-			pandn mm3, mm0
-			por mm3, mm2
-			// calc cubic root from result
-			movd ebx, mm3
-			psrlq mm3, 32
-			mov esi, ebx
-			shr ebx, 16
-			and esi, 0x7fff
-			movzx eax, byte ptr[nCubicRoot + esi]
-			and ebx, 0x7fff
-			xor ecx, ecx
-			mov ch, byte ptr[nCubicRoot + ebx]
-			or eax, ecx
-			movd ebx, mm3
-			and ebx, 0x7fff
-			movzx ecx, byte ptr[nCubicRoot + ebx]
-			shl ecx, 16
-			or eax, ecx
-			mov dwColor, eax
-			//emms
-		}
-		//DWORD dwTest = NGfx::GetDWORDColor( GetOutputColor(
-		//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
-		//	CVec4( add[k], 0 )
-		//	) );
+		DWORD dwColor = *pSrcPtr;
+		uint64_t addColor = mmx::combine64(pAdd->nZ, pAdd->nY, pAdd->nX, pAdd->nW);
+
+		uint64_t color = mmx::punpcklbw(dwColor, dwColor);
+		color = mmx::psrlw(color, 1);
+		uint64_t color_square = mmx::pmulhw(color, color);
+		color_square = mmx::psllw(color_square, 1);
+		uint64_t color_cube_high = mmx::pmulhw(color_square, color);
+		uint64_t color_cube_low = mmx::pmullw(color_square, color);
+		color_cube_high = mmx::psllw(color_cube_high, 1);
+		color_cube_high = mmx::paddsw(color_cube_high, addColor);
+		color_cube_high = mmx::psrlw(color_cube_high, 1);
+		color_cube_low = mmx::psrlw(color_cube_low, 2);
+		color_cube_low = mmx::por(color_cube_low, mask);
+		uint64_t eq = mmx::pcmpeqw(color_cube_high, 0);
+		color_cube_low = mmx::pand(color_cube_low, eq);
+		color_cube_high = mmx::pandn(eq, color_cube_high);
+		uint64_t color_cube = mmx::por(color_cube_high, color_cube_low);
+		color_cube_high = mmx::psrlq(color_cube, 32);
+		uint32_t index1 = color_cube & 0x7FFF;
+		uint32_t index2 = (color_cube >> 16) & 0x7FFF;
+		uint32_t index3 = color_cube_high & 0x7FFF;
+		uint8_t c1 = nCubicRoot[index1];
+		uint8_t c2 = nCubicRoot[index2];
+		uint8_t c3 = nCubicRoot[index3];
+		dwColor = c1 | (c2 << 8) | (c3 << 16);
 		*pResPtr = dwColor;
 	}
-	__asm emms
 }
 
 static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,

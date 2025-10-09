@@ -561,4 +561,77 @@ namespace original {
 	    __asm emms
 	}
 
+	static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
+    {
+		ASSERT( pRes->size() >= add.size() );
+		ASSERT( src.size() >= add.size() );
+		int nSize = add.size();
+		DWORD *pResPtr = &(*pRes)[0];
+		const DWORD *pSrcPtr = &src[0];
+		const NGfx::SMMXWord *pAdd = &add[0];
+		__asm
+		{
+			pxor mm7, mm7
+			pcmpeqw mm6, mm6
+			psllw mm6, 15
+			psrlw mm6, 1
+		}
+		for ( DWORD *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
+		{
+			DWORD dwColor = *pSrcPtr;//(*pRes)[k];
+			//NGfx::SMMXWord addColor = add[k];
+			//addColor.nX = Clamp( Float2Int( add[k].x * 32767 ), 0, 32767 );
+			//addColor.nY = Clamp( Float2Int( add[k].y * 32767 ), 0, 32767 );
+			//addColor.nZ = Clamp( Float2Int( add[k].z * 32767 ), 0, 32767 );
+			__asm
+			{
+				mov esi, pAdd
+				movd mm0, dwColor
+				punpcklbw mm0, mm0
+				psrlw mm0, 1
+				movq mm1, mm0
+				pmulhw mm0, mm0
+				psllw mm0, 1
+				movq mm2, mm0
+				pmulhw mm0, mm1
+				pmullw mm2, mm1
+				psllw mm0, 1
+				paddsw mm0, [esi]//addColor
+				psrlw mm0, 1
+				// combine low part into lookup index if higher part is zero
+				psrlw mm2, 2
+				por mm2, mm6
+				movq mm3, mm0
+				pcmpeqw mm3, mm7
+				pand mm2, mm3
+				pandn mm3, mm0
+				por mm3, mm2
+				// calc cubic root from result
+				movd ebx, mm3
+				psrlq mm3, 32
+				mov esi, ebx
+				shr ebx, 16
+				and esi, 0x7fff
+				movzx eax, byte ptr[nCubicRoot + esi]
+				and ebx, 0x7fff
+				xor ecx, ecx
+				mov ch, byte ptr[nCubicRoot + ebx]
+				or eax, ecx
+				movd ebx, mm3
+				and ebx, 0x7fff
+				movzx ecx, byte ptr[nCubicRoot + ebx]
+				shl ecx, 16
+				or eax, ecx
+				mov dwColor, eax
+				//emms
+			}
+			//DWORD dwTest = NGfx::GetDWORDColor( GetOutputColor(
+			//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
+			//	CVec4( add[k], 0 )
+			//	) );
+			*pResPtr = dwColor;
+		}
+		__asm emms
+	}
+
 }

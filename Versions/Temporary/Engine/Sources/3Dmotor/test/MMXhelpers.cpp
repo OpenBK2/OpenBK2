@@ -18,6 +18,10 @@ TEST(MMXEmulation, PSLLW) {
         actual = original::psllw_3(value);
         expected = mmx::psllw(value, 3);
         ASSERT_EQ(actual, expected);
+
+        actual = original::psllw_1(value);
+        expected = mmx::psllw(value, 1);
+        ASSERT_EQ(actual, expected);
     }
 }
 
@@ -37,6 +41,20 @@ TEST(MMXEmulation, PSRLQ) {
         uint64_t value = random_uint64();
         uint64_t actual =  original::psrlq_32(value);
         uint64_t expected = mmx::psrlq(value, 32);
+        EXPECT_EQ(actual, expected);
+    }
+}
+
+TEST(MMXEmulation, PSRLW) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+        uint64_t value = random_uint64();
+        uint64_t actual =  original::psrlw_1(value);
+        uint64_t expected = mmx::psrlw(value, 1);
+        EXPECT_EQ(actual, expected);
+
+        actual =  original::psrlw_2(value);
+        expected = mmx::psrlw(value, 2);
         EXPECT_EQ(actual, expected);
     }
 }
@@ -262,6 +280,17 @@ TEST(MMXEmulation, PXOR) {
     }
 }
 
+TEST(MMXEmulation, POR) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+        uint64_t a = random_uint64();
+        uint64_t b = random_uint64();
+        uint64_t expected = original::por(a, b);
+        uint64_t actual = mmx::por(a, b);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
 TEST(MMXEmulation, PCMPGTW) {
 
     for (size_t i = 0; i < iterations; ++i) {
@@ -269,6 +298,17 @@ TEST(MMXEmulation, PCMPGTW) {
         uint64_t b = random_uint64();
         uint64_t expected = original::pcmpgtw(a, b);
         uint64_t actual = mmx::pcmpgtw(a, b);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
+TEST(MMXEmulation, PCMPEQW) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+        uint64_t a = random_uint64();
+        uint64_t b = random_uint64();
+        uint64_t expected = original::pcmpeqw(a, b);
+        uint64_t actual = mmx::pcmpeqw(a, b);
         ASSERT_EQ(actual, expected);
     }
 }

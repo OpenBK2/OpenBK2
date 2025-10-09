@@ -119,6 +119,26 @@ namespace mmx {
 		return val >> shift;
 	}
 
+	// Shift Packed Data Right Logical
+	/*
+	PSRLW (With 64-bit Operand)
+	IF (COUNT > 15)
+	THEN
+		DEST[64:0] := 0000000000000000H
+	ELSE
+		DEST[15:0] := ZeroExtend(DEST[15:0] >> COUNT);
+		(* Repeat shift operation for 2nd and 3rd words *)
+		DEST[63:48] := ZeroExtend(DEST[63:48] >> COUNT);
+	FI;
+	*/
+	inline uint64_t psrlw(uint64_t val, int shift) {
+		return
+		(((val & 0xFFFF) >> shift) & 0xFFFF) |
+		(((val & 0xFFFF0000) >> shift) & 0xFFFF0000) |
+		(((val & 0xFFFF00000000) >> shift) & 0xFFFF00000000) |
+		(((val & 0xFFFF000000000000) >> shift) & 0xFFFF000000000000);
+	}
+
 	// Shift Packed Data Left Logical
 	/*
 	PSLLW (With 64-bit Operand)
@@ -434,6 +454,15 @@ namespace mmx {
 		return a ^ b;
 	}
 
+	// Bitwise Logical OR
+	/*
+	POR (64-bit Operand)
+	DEST := DEST OR SRC
+	*/
+	inline uint64_t por(uint64_t a, uint64_t b) {
+		return a | b;
+	}
+
 	// Compare Packed Signed Integers for Greater Than
 	/*
 	PCMPGTW (With 64-bit Operands)
@@ -454,6 +483,32 @@ namespace mmx {
 
 			// compare signed
 			uint16_t out = (wa > wb) ? 0xFFFF : 0x0000;
+
+			result |= (uint64_t)out << (i * 16);
+		}
+		return result;
+	}
+
+	// Compare Packed Data for Equal
+	/*
+	PCMPEQW (With 64-bit Operands)
+	IF DEST[15:0] = SRC[15:0]
+	THEN DEST[15:0] := FFFFH;
+	ELSE DEST[15:0] := 0; FI;
+	(* Continue comparison of 2nd and 3rd words in DEST and SRC *)
+	IF DEST[63:48] = SRC[63:48]
+	THEN DEST[63:48] := FFFFH;
+	ELSE DEST[63:48] := 0; FI;
+	*/
+	inline uint64_t pcmpeqw(uint64_t a, uint64_t b) {
+		uint64_t result = 0;
+		for (int i = 0; i < 4; ++i) {
+			// extract 16-bit word from each operand
+			int16_t wa = static_cast<int16_t>((a >> (i * 16)) & 0xFFFF);
+			int16_t wb = static_cast<int16_t>((b >> (i * 16)) & 0xFFFF);
+
+			// compare signed
+			uint16_t out = (wa == wb) ? 0xFFFF : 0x0000;
 
 			result |= (uint64_t)out << (i * 16);
 		}

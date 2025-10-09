@@ -4,6 +4,17 @@
 
 namespace original {
 
+    static uint64_t psllw_1(uint64_t val) {
+        uint64_t result;
+        __asm {
+            movq mm1, val
+            psllw mm1, 1
+            movq result, mm1
+            emms
+        }
+        return result;
+    }
+
     static uint64_t psllw_3(uint64_t val) {
         uint64_t result;
         __asm {
@@ -42,6 +53,28 @@ namespace original {
         __asm {
             movq mm0, val
             psrlq mm0, 32
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
+    static uint64_t psrlw_1(uint64_t val) {
+        uint64_t result;
+        __asm {
+            movq mm0, val
+            psrlw mm0, 1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
+    static uint64_t psrlw_2(uint64_t val) {
+        uint64_t result;
+        __asm {
+            movq mm0, val
+            psrlw mm0, 2
             movq result, mm0
             emms
         }
@@ -284,12 +317,36 @@ namespace original {
         return result;
     }
 
+    static uint64_t por(uint64_t a, uint64_t b) {
+        uint64_t result;
+        __asm {
+            movq mm0, a
+            movq mm1, b
+            por mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
     static uint64_t pcmpgtw(uint64_t a, uint64_t b) {
         uint64_t result;
         __asm {
             movq mm0, a
             movq mm1, b
             pcmpgtw mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
+    static uint64_t pcmpeqw(uint64_t a, uint64_t b) {
+        uint64_t result;
+        __asm {
+            movq mm0, a
+            movq mm1, b
+            pcmpeqw mm0, mm1
             movq result, mm0
             emms
         }
