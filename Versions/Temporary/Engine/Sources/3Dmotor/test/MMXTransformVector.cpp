@@ -1,0 +1,92 @@
+#include "3Dmotor/stdafx.h"
+#include "3Dmotor/GSSEtransform.h"
+#include "3Dmotor/GSSEtransform.cpp"
+
+#include <gtest/gtest.h>
+
+#include "original.h"
+#include "random.h"
+
+enum { iterations = 100000 };
+
+static void randomizeVector(NGfx::SCompactVector &vec) {
+    vec.z = random_uint8();
+    vec.y = random_uint8();
+    vec.x = random_uint8();
+    vec.w = random_uint8();
+}
+
+static void randomizeFixup(SMMXFixups &fix) {
+
+    random_mmx_word(fix.normalFixup);
+    random_mmx_word(fix.shiftedFixup);
+}
+
+static void randomizeTransformer(NGfx::SCompactTransformer &t) {
+
+    random_mmx_word(t.a);
+    random_mmx_word(t.b);
+    random_mmx_word(t.c);
+}
+
+TEST(MMXEmulation, MMXTransformVector) {
+
+    for (int i = 0; i < iterations; ++i) {
+        NGfx::SCompactVector src{}, resExpected{}, resActual{};
+        SMMXFixups fixups{};
+        NGfx::SCompactTransformer trans{};
+
+        randomizeVector(src);
+        randomizeFixup(fixups);
+        randomizeTransformer(trans);
+
+        original::MMXTransformVector(&resExpected, &src, &fixups, &trans);
+        MMXTransformVector(&resActual, &src, &fixups, &trans);
+
+        EXPECT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
+    }
+}
+
+TEST(MMXEmulation, MMXTransformVector2) {
+
+    for (int i = 0; i < iterations; ++i) {
+        NGfx::SCompactVector src{}, resExpected{}, resActual{};
+        SMMXFixups fixups{};
+        NGfx::SCompactTransformer trans{}, trans2{};
+
+        randomizeVector(src);
+        randomizeFixup(fixups);
+        randomizeTransformer(trans);
+        randomizeTransformer(trans2);
+        char w1 = random_uint8();
+        char w2 = random_uint8();
+
+        original::MMXTransformVector2(&resExpected, &src, &fixups, &trans, w1, &trans2, w2);
+        MMXTransformVector2(&resActual, &src, &fixups, &trans,w1, &trans2, w2);
+
+        ASSERT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
+    }
+}
+
+TEST(MMXEmulation, MMXTransformVector3) {
+
+    for (int i = 0; i < iterations; ++i) {
+        NGfx::SCompactVector src{}, resExpected{}, resActual{};
+        SMMXFixups fixups{};
+        NGfx::SCompactTransformer trans{}, trans2{}, trans3{};
+
+        randomizeVector(src);
+        randomizeFixup(fixups);
+        randomizeTransformer(trans);
+        randomizeTransformer(trans2);
+        randomizeTransformer(trans3);
+        char w1 = random_uint8();
+        char w2 = random_uint8();
+        char w3 = random_uint8();
+
+        original::MMXTransformVector3(&resExpected, &src, &fixups, &trans, w1, &trans2, w2, &trans3, w3);
+        MMXTransformVector3(&resActual, &src, &fixups, &trans, w1, &trans2, w2, &trans3, w3);
+
+        ASSERT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
+    }
+}
