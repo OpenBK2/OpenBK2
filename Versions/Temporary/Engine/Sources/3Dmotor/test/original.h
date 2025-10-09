@@ -485,4 +485,80 @@ namespace original {
 	    }
 	    __asm emms
 	}
+
+	static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+	const NGfx::SMMXWord &attenuation, const NGScene::SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
+	{
+	    NGfx::SMMXWord shift{}, lightColor{}, shift1{};
+	    shift.nX = shift.nY = shift.nZ = (short)0x8000;
+	    shift1.nX = shift1.nZ = 1 << 12; shift1.nY = shift1.nW = 0;
+	    lightColor.nX = Float2Int( _vColor.x * 32767 );
+	    lightColor.nY = Float2Int( _vColor.y * 32767 );
+	    lightColor.nZ = Float2Int( _vColor.z * 32767 );
+	    __asm
+		{
+			movq mm7, lightColor
+			movq mm5, shift1
+		}
+	    DWORD dwPrevNormal = 0;
+	    __declspec(align(8)) NGfx::SMMXWord prevColor;
+	    const NGfx::SMMXWord *pAtt = &attenuation;
+	    for ( int k = 0; k < _nSize; ++k )
+	    {
+            DWORD dwNormal = pSrc[k].normal.dw;
+            NGfx::SMMXWord *pResColor = &(*pRes)[k];
+            if ( dwNormal != dwPrevNormal )
+            {
+                __asm
+				{
+					mov esi, pResColor
+					mov edi, pAtt
+					movq mm6, [esi]
+					movd mm0, dwNormal
+					punpcklbw mm0, mm0
+					psubw mm0, shift
+					pmaddwd mm0, [edi]
+					movq mm1, mm0
+					psrlq mm1, 32
+					paddd mm0, mm1
+					psrad mm0, 15
+					packssdw mm0, mm0
+					punpcklwd mm0, mm0
+					pxor mm2, mm2
+					punpckldq mm0, mm0
+					movq mm1, mm0
+					pcmpgtw mm1, mm2
+					pand mm0, mm1
+					movq mm1, mm0
+					pmulhw mm0, mm7
+					pmullw mm1, mm7
+					movq mm2, mm1
+					movq mm3, mm1
+					punpcklwd mm2, mm0
+					punpckhwd mm3, mm0
+					paddd mm2, mm5
+					paddd mm3, mm5
+					psrad mm2, 13
+					psrad mm3, 13
+					packssdw mm2, mm3
+					movq prevColor, mm2
+					paddsw mm2, mm6
+					movq [esi], mm2
+				}
+                dwPrevNormal = dwNormal;
+            }
+            else
+            {
+               __asm
+				{
+					mov esi, pResColor
+					movq mm0, [esi]
+					paddsw mm0, prevColor
+					movq [esi], mm0
+                }
+            }
+	    }
+	    __asm emms
+	}
+
 }

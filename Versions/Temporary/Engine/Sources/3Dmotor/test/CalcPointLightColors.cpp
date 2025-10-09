@@ -46,3 +46,30 @@ TEST(CalcPointLightColors, CalcPointLightColorsRandom) {
         }
     }
 }
+
+
+TEST(CalcPointLightColors, CalcPointLightColorsRandom2) {
+    for (size_t i = 0; i < iterations; ++i) {
+
+        std::vector<NGfx::SMMXWord> res, ref;
+        res.resize(1);
+        ref.resize(1);
+        NGfx::SMMXWord attenuation;
+        random_mmx_word(attenuation);
+        NGScene::SUVInfo src;
+        src.normal.x = random_uint8();
+        src.normal.y = random_uint8();
+        src.normal.z = random_uint8();
+        src.normal.w = random_uint8();
+        CVec3 vColor{random_float(), random_float(), random_float()};
+        int nSize = 1;
+
+        NGScene::CalcPointLightColors(&res, attenuation, &src, nSize, vColor);
+        original::CalcPointLightColors(&ref, attenuation, &src, nSize, vColor);
+
+        EXPECT_EQ(res.size(), ref.size());
+        for (size_t j = 0; j < res.size(); ++j) {
+            EXPECT_TRUE(0 == memcmp(&ref[j], &res[j], sizeof(NGfx::SMMXWord)));
+        }
+    }
+}
