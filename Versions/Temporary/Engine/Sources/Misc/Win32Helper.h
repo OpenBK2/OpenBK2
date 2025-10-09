@@ -71,8 +71,20 @@ class CControl87Guard
 {
 	unsigned int nPrevState;
 public:
-	CControl87Guard() { nPrevState = _control87( 0, 0 ); }
-	~CControl87Guard() { _control87( nPrevState, 0xffffffff ); }
+	CControl87Guard() {
+#ifdef _M_AMD64
+		nPrevState = _controlfp( 0, 0 );
+#else
+		nPrevState = _control87( 0, 0 );
+#endif
+	}
+	~CControl87Guard() {
+#ifdef _M_AMD64
+		_controlfp(nPrevState, _MCW_DN | _MCW_RC);
+#else
+		_control87( nPrevState, 0xffffffff );
+#endif
+	}
 };
 
 class CPrecisionControl
@@ -80,8 +92,16 @@ class CPrecisionControl
 	CControl87Guard guard;
 public:
 	enum EPrecisionControlMode{ PCM_HIGH = _PC_64, PCM_MEDIUM = _PC_53, PCM_LOW = _PC_24 };
-	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) { _control87( mode, _MCW_PC ); }
-	void Set( EPrecisionControlMode mode ) { _control87( mode, _MCW_PC ); };
+	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) {
+		Set(mode);
+	}
+	void Set( EPrecisionControlMode mode ) {
+#ifdef _M_AMD64
+		// _MCW_PC is not supported on amd64
+#else
+		_control87( mode, _MCW_PC );
+#endif
+	};
 };
 
 class CRoundingControl
@@ -89,8 +109,16 @@ class CRoundingControl
 	CControl87Guard guard;
 public:
 	enum ERoundingControlMode{ RCM_NEAR = _RC_NEAR, RCM_DOWN = _RC_DOWN, RCM_UP = _RC_UP, RCM_CHOP = _RC_CHOP };
-	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) { _control87( mode, _MCW_RC ); }
-	void Set( ERoundingControlMode mode ) { _control87( mode, _MCW_RC ); };
+	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) {
+		Set(mode);
+	}
+	void Set( ERoundingControlMode mode ) {
+#ifdef _M_AMD64
+		// _MCW_PC is not supported on amd64
+#else
+		_control87(mode, _MCW_RC);
+#endif
+	};
 };
 
 }

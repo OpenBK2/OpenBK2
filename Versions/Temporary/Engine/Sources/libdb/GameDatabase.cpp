@@ -295,7 +295,11 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 		CFileStream stream( GetVFS(), GetFileName(dbid) );
 		// here we must set special rounding and precision state to be sync during multiplayer
 		NWin32Helper::CControl87Guard control87guard;
+#ifdef _M_AMD64
+		_controlfp(_RC_CHOP, _MCW_RC);
+#else
 		_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
+#endif
 		if ( stream.IsOk() )
 		{
 			CProfiler profiler( dbid );

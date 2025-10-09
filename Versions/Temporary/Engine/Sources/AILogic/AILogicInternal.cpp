@@ -987,8 +987,11 @@ void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, cons
 	// set control word for FP co-processor
 	// _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24
 	// 0xa001f
+#ifdef _M_AMD64
+	_controlfp(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM);
+#else
 	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
-
+#endif
 	pConsts = _pConsts;
 	pCheckSumLog = _pCheckSumLog;
 	pScenarioTracker = _pScenarioTracker;
@@ -1178,7 +1181,11 @@ void CAILogic::Segment()
 	// set control word for FP co-processor
 	// _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24
 	// 0xa001f
+#ifdef _M_AMD64
+	_controlfp(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM);
+#else
 	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
+#endif
 	//
 	if ( !bSuspended )
 	{
