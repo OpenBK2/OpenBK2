@@ -305,85 +305,6 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const 
 	}
 }
 
-static void CalcPointLightAttenuationSSE( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
-{
-	int nSize = srcPos.size();
-	pRes->resize( nSize );
-	float fAttScale = F_PL_RADIUS2 / sqr( _fRadius );
-	__declspec(align(16)) CVec4 vCenter( _vCenter, 0 );
-	float fRadius2 = sqr( _fRadius );
-	float fCutMult = N_PL_ATTENUATION_SCALE / fRadius2;
-	float fAttAdd = F_PL_MIN_DISTANCE_NORMALIZED;
-	__asm
-	{
-		movaps xmm7, vCenter
-		shufps xmm7, xmm7, 0xc6
-	}
-	NGfx::SMMXWord *pDst = &(*pRes)[0];
-	const int N_BLOCK = 64;
-	for ( int k = 0; k < nSize; k += N_BLOCK )
-	{
-		const CVec3 *pData = &srcPos[k];
-		int nBlock = (std::min)( N_BLOCK, nSize - k );
-
-		// warm up cache
-		int nByteSize = sizeof(srcPos[0]) * nBlock - 4;
-		__asm
-		{
-			mov esi, pData
-			mov edi, nByteSize
-			lp:
-			mov eax, [esi + edi]
-			sub edi, 32
-			jg lp
-		}
-
-		for ( const CVec3 *pSrc = pData, *pEnd = pSrc + nBlock; pSrc < pEnd; ++pSrc, ++pDst )
-		{
-			NGfx::SMMXWord *pMMXRes = pDst;
-			__asm
-			{
-				mov esi, pSrc
-				mov edi, pMMXRes
-				xorps xmm6, xmm6
-				movss xmm2, [esi]
-				movss xmm1, [esi+4]
-				shufps xmm1, xmm2, 0x40
-				movss xmm2, [esi+8]
-				movss xmm1, xmm2 // xmm1 = *pSrc (z,y,x) order
-				movaps xmm0, xmm7
-				subps xmm0, xmm1 // xmm0 = v
-				movaps xmm1, xmm0
-				mulps xmm1, xmm1
-				movaps xmm2, xmm1
-				shufps xmm2, xmm2, 0xe1
-				addss xmm1, xmm2
-				shufps xmm2, xmm2, 0xe2
-				addss xmm1, xmm2 // xmm1[0] = f
-				movss xmm2, fRadius2
-				movss xmm3, xmm1
-				mulss xmm3, fAttScale
-				subss xmm2, xmm1
-				rsqrtss xmm4, xmm1
-				mulss xmm2, fCutMult
-				addss xmm3, fAttAdd
-				maxss xmm2, xmm6 // xmm2[0] = fCut * 8191
-				rcpss xmm3, xmm3
-				mulss xmm2, xmm4
-				mulss xmm2, xmm3
-				shufps xmm2, xmm2, 0 // xmm2 = fAttenuation
-				mulps xmm0, xmm2
-				cvtps2pi mm0, xmm0
-				shufps xmm0, xmm0, 0x0e
-				cvtps2pi mm1, xmm0
-				packssdw mm0, mm1
-				movq [edi], mm0
-			}
-		}
-	}
-	__asm emms
-}
-
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const std::vector<NGfx::SMMXWord> &attenuation, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
@@ -622,10 +543,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 	}
 	else
 	{
-		if ( bIsSSEPresent )
-			CalcPointLightAttenuationSSE( &attenuation, srcPos, p.vCenter, p.fRadius );
-		else
-			CalcPointLightAttenuation( &attenuation, srcPos, p.vCenter, p.fRadius );
+		CalcPointLightAttenuation( &attenuation, srcPos, p.vCenter, p.fRadius );
 		CalcPointLightColors( pColors, attenuation, pSrc, posIndices, _normals, p.vColor );
 	}
 }
