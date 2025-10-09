@@ -343,4 +343,39 @@ namespace original {
 	        emms
 	    }
 	}
+
+	static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
+    {
+		ASSERT( fog.GetSizeX() == fog.GetSizeY() );
+		ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
+		__m64 zero;
+		zero = _m_from_int( 0 );
+		unsigned char *pRes = &(*_pRes)[0];
+		int nMask = fog.GetSizeX() - 2;
+		for ( const int *pTmp = &intCoords[0], *pTmpEnd = pTmp + nVertices * 2; pTmp < pTmpEnd; pTmp += 2, ++pRes )
+		{
+		    int nY = pTmp[1];
+		    int nYU = ( nY >> 14 ) & nMask;
+		    int nYfi = nY & 0x3fff;
+		    __m64 nYf = _m_from_int( ( 0x4000 - nYfi ) | (nYfi << 16) );
+		    int nX = pTmp[0];
+		    int nXL = ( nX >> 14 ) & nMask;
+		    int nXfi = nX & 0x3fff;
+		    __m64 nXf = _m_from_int( ( 0x4000 - nXfi ) | (nXfi << 16)  );
+		    const unsigned char *pUp = (&fog[nYU][0]) + nXL;
+		    const unsigned char *pDown = pUp + nMask + 2;
+
+		    __m64 nData = _mm_unpacklo_pi32(
+				_m_punpcklbw( _m_from_int( *(unsigned short*)pUp ), zero ),
+				_m_punpcklbw( _m_from_int( *(unsigned short*)pDown ), zero )
+				);
+		    nXf = _mm_unpacklo_pi32( nXf, nXf );
+		    nData = _m_pmaddwd( nData, nXf );
+		    nData = _m_psradi( nData, 14 );
+		    nData = _mm_packs_pi32( nData, zero );
+		    nData = _m_pmaddwd( nData, nYf );
+		    *pRes = _m_to_int( nData ) >> 14;
+		}
+        __asm emms;
+    }
 }

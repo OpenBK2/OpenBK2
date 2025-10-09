@@ -2,6 +2,12 @@
 
 #include <random>
 
+static uint64_t random_int() {
+    static std::mt19937_64 rng{std::random_device{}()};
+    std::uniform_int_distribution dist;
+    return dist(rng);
+}
+
 static uint64_t random_uint64() {
     static std::mt19937_64 rng{std::random_device{}()};
     std::uniform_int_distribution<uint64_t> dist;

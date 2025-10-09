@@ -84,6 +84,18 @@ namespace original {
         return result;
     }
 
+    static uint64_t packssdw(uint64_t low1, uint64_t high1) {
+        uint64_t result;
+        __asm {
+            movq mm0, low1
+            movq mm1, high1
+            packssdw mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
     static uint64_t packuswb(uint64_t low1, uint64_t high1) {
         uint64_t result;
         __asm {
@@ -162,6 +174,17 @@ namespace original {
             movq mm0, a
             movq mm1, b
             paddd mm0, mm1
+            movq result, mm0
+            emms
+        }
+        return result;
+    }
+
+    static uint64_t psrad_14(uint64_t val) {
+        uint64_t result;
+        __asm {
+            movq mm0, val
+            psrad mm0, 14
             movq result, mm0
             emms
         }

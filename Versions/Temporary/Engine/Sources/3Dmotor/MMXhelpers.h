@@ -237,6 +237,10 @@ namespace mmx {
 		return static_cast<uint8_t>(std::clamp<int16_t>(w, 0, 255));
 	}
 
+	inline int16_t saturate_signed_double_word_to_signed_word(int32_t v) {
+		return static_cast<int16_t>(std::clamp<int32_t>(v, -32768, 32767));
+	};
+
 	// Pack With Unsigned Saturation
 	/*
 	PACKUSWB (With 64-bit Operands)
@@ -267,6 +271,22 @@ namespace mmx {
 			result |= (static_cast<uint64_t>(b) << ((i + 4) * 8));
 		}
 		return result;
+	}
+
+	// Pack With Signed Saturation
+	inline uint64_t packssdw(uint64_t low, uint64_t high) {
+
+		int32_t l0 = static_cast<int32_t>(low & 0xFFFFFFFFULL);
+		int32_t l1 = static_cast<int32_t>((low >> 32) & 0xFFFFFFFFULL);
+		int32_t h0 = static_cast<int32_t>(high & 0xFFFFFFFFULL);
+		int32_t h1 = static_cast<int32_t>((high >> 32) & 0xFFFFFFFFULL);
+
+		uint64_t r0 = static_cast<uint16_t>(saturate_signed_double_word_to_signed_word(l0));
+		uint64_t r1 = static_cast<uint16_t>(saturate_signed_double_word_to_signed_word(l1));
+		uint64_t r2 = static_cast<uint16_t>(saturate_signed_double_word_to_signed_word(h0));
+		uint64_t r3 = static_cast<uint16_t>(saturate_signed_double_word_to_signed_word(h1));
+
+		return (r3 << 48) | (r2 << 32) | (r1 << 16) | r0;
 	}
 
 	inline uint32_t low_u32(uint64_t val) {

@@ -80,6 +80,19 @@ TEST(MMXEmulation, PUNPCKLDQ) {
     }
 }
 
+TEST(MMXEmulation, PACKSSDW) {
+
+    for (size_t i = 0; i < iterations; ++i) {
+
+        uint64_t low = random_uint64();
+        uint64_t high = random_uint64();
+
+        uint64_t actual = mmx::packssdw(low, high);
+        uint64_t expected = original::packssdw(low, high);
+        ASSERT_EQ(actual, expected);
+    }
+}
+
 TEST(MMXEmulation, PACKUSWB) {
 
     for (size_t i = 0; i < iterations; ++i) {
@@ -167,8 +180,13 @@ TEST(MMXEmulation, PSRAD) {
 
     for (size_t i = 0; i < iterations; ++i) {
         uint64_t a = random_uint64();
-        uint64_t expected = original::psrad_15(a);
-        uint64_t actual = mmx::psrad(a, 15);
+
+        uint64_t expected = original::psrad_14(a);
+        uint64_t actual = mmx::psrad(a, 14);
+        ASSERT_EQ(actual, expected);
+
+        expected = original::psrad_15(a);
+        actual = mmx::psrad(a, 15);
         ASSERT_EQ(actual, expected);
     }
 }
