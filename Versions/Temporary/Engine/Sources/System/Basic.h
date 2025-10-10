@@ -233,8 +233,8 @@ struct SPtrTest
 
 struct SPtrHash
 {
-	template <class T,class T1> 
-		int operator()( const CPtrBase<T,T1> &a ) const { return (int)a.GetBarePtr(); }
+	template <class T, class T1>
+		std::size_t operator()( const CPtrBase<T, T1> &a ) const { return std::hash<const void*>()(a.GetBarePtr());}
 };
 
 // walks container of pointers and erases references on invalid entries
