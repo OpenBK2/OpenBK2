@@ -8,3 +8,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(glm)
+
+FetchContent_GetProperties(glm SOURCE_DIR GLM_SOURCE_DIR)
+
+include(cmake/get_all_targets.cmake)
+
+get_all_targets(glm_targets ${GLM_SOURCE_DIR})
+foreach(target IN LISTS glm_targets)
+    set_target_properties(${target} PROPERTIES FOLDER "third_party/GLM")
+endforeach()

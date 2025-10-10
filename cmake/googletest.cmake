@@ -8,3 +8,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(googletest)
+
+FetchContent_GetProperties(googletest SOURCE_DIR GOOGLETEST_SOURCE_DIR)
+
+include(cmake/get_all_targets.cmake)
+
+get_all_targets(googletest_targets ${GOOGLETEST_SOURCE_DIR})
+foreach(target IN LISTS googletest_targets)
+    set_target_properties(${target} PROPERTIES FOLDER "third_party/GoogleTest")
+endforeach()

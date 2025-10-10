@@ -8,3 +8,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(zlibng)
+
+FetchContent_GetProperties(zlibng SOURCE_DIR ZLIB_SOURCE_DIR)
+
+include(cmake/get_all_targets.cmake)
+
+get_all_targets(zlibng_targets ${ZLIB_SOURCE_DIR})
+foreach(target IN LISTS zlibng_targets)
+    set_target_properties(${target} PROPERTIES FOLDER "third_party/zlib-ng")
+endforeach()

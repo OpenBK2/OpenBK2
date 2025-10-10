@@ -8,3 +8,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(SDL)
+
+FetchContent_GetProperties(SDL SOURCE_DIR SDL_SOURCE_DIR)
+
+include(cmake/get_all_targets.cmake)
+
+get_all_targets(sdl_targets ${SDL_SOURCE_DIR})
+foreach(target IN LISTS sdl_targets)
+    set_target_properties(${target} PROPERTIES FOLDER "third_party/SDL")
+endforeach()

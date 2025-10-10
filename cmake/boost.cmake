@@ -15,3 +15,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(Boost)
+
+FetchContent_GetProperties(Boost SOURCE_DIR BOOST_SOURCE_DIR)
+
+include(cmake/get_all_targets.cmake)
+
+get_all_targets(boost_targets ${BOOST_SOURCE_DIR})
+foreach(target IN LISTS boost_targets)
+    set_target_properties(${target} PROPERTIES FOLDER "third_party/boost")
+endforeach()
