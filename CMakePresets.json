@@ -1,0 +1,76 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base-windows",
+      "hidden": true,
+      "displayName": "Base Windows Ninja Preset",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_INSTALL_PREFIX": "C:/Games/bk2"
+      }
+    },
+    {
+      "name": "Windows-x64-Debug",
+      "inherits": "base-windows",
+      "displayName": "Windows / x64 / Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "Windows-x64-Release",
+      "inherits": "base-windows",
+      "displayName": "Windows / x64 / Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "Windows-x86-Debug",
+      "inherits": "base-windows",
+      "displayName": "Windows / x86 / Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "Windows-x86-Release",
+      "inherits": "base-windows",
+      "displayName": "Windows / x86 / Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "external"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "Windows-x64-Debug", "configurePreset": "Windows-x64-Debug" },
+    { "name": "Windows-x64-Release", "configurePreset": "Windows-x64-Release" },
+    { "name": "Windows-x86-Debug", "configurePreset": "Windows-x86-Debug" },
+    { "name": "Windows-x86-Release", "configurePreset": "Windows-x86-Release" }
+  ]
+}
