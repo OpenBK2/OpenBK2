@@ -81,12 +81,12 @@ bool CAnimationWatch::NeedUpdate()
 				indices.push_back( k );
 		}
 		// sync with previous trackers
-		std::unordered_map<void*, int, SDefaultPtrHash> old;
+		std::unordered_map<void*, int> old;
 		for ( int k = 0; k < oldWatch.size(); ++k )
 			old[ oldWatch[k] ] = k;
 		for ( int k = 0; k < watch.size(); ++k )
 		{
-			std::unordered_map<void*, int, SDefaultPtrHash>::iterator i = old.find( watch[k] );
+			std::unordered_map<void*, int>::iterator i = old.find( watch[k] );
 			if ( i != old.end() )
 				watch[k].Sync( oldWatch[ i->second ] );
 		}

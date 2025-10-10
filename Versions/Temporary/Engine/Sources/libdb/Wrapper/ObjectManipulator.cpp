@@ -162,7 +162,7 @@ IManipulatorIterator *CObjectManipulatorWrapper::Iterate( bool bShowHidden, ECac
 	return new CObjectManipulatorIteratorWrapper( pObjMan->CreateIterator(bShowHidden) );
 }
 
-typedef std::unordered_map<void *, SPropertyDesc, SDefaultPtrHash> CPropertyDescMap;
+typedef std::unordered_map<void *, SPropertyDesc> CPropertyDescMap;
 static CPropertyDescMap s_propertyDescMap;
 const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {

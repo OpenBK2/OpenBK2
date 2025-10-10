@@ -264,7 +264,11 @@ public:
 struct SDBPtrHash
 {
 	template <class T>
-		int operator()( const T &a ) const { return a.GetPtr() ? a.GetPtr()->GetDBID().GetHashKey() : 0; }
+		std::size_t operator()( const T &a ) const { return a.GetPtr() ? a.GetPtr()->GetDBID().GetHashKey() : 0; }
+};
+
+template<typename T> struct std::hash<CDBPtr<T>> {
+	std::size_t operator()(const CDBPtr<T> &p) const { return std::hash<T*>()(p.GetPtr()); }
 };
 
 #define REGISTER_DATABASE_CLASS( N, name )  \

@@ -31,9 +31,9 @@ class CXMLChunkSaver : public IXmlSaver
 	std::string szCurrObjectPath;
 	std::list<std::string> objectNamesStack;
 	//
-	typedef std::unordered_map<void*,CPtr<CXmlResource>,SDefaultPtrHash> CObjectsHash;
+	typedef std::unordered_map<void*,CPtr<CXmlResource>> CObjectsHash;
 	CObjectsHash objects;
-	typedef std::unordered_map<void*,bool,SDefaultPtrHash> CPObjectsHash;
+	typedef std::unordered_map<void*,bool> CPObjectsHash;
 	CPObjectsHash storedObjects;
 	std::list< CPtr<CXmlResource> > toStore;
 	//

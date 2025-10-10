@@ -98,7 +98,7 @@ class CObjectCollector : public IObjectCollector
 	typedef vector<string> CObjectTypeNameList;
 	typedef hash_map<string, CObjectTypeNameList> CDataExtractorTypeMap;
 	//
-	typedef hash_map<IObjectCollectorCallback*, int, SDefaultPtrHash> CObjectCollectorCallbackMap;
+	typedef hash_map<IObjectCollectorCallback*, int> CObjectCollectorCallbackMap;
 	typedef hash_map<string, CObj<IObjectDataExtractor> > CDataExtractorMap;
 	//
 	CObjectCollection objectCollection;

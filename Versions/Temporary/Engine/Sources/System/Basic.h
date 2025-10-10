@@ -204,6 +204,19 @@ public:                                                                         
 BASIC_PTR_DECLARE( CPtr, CObjectBase::SRef );
 BASIC_PTR_DECLARE( CObj, CObjectBase::SRefO );
 BASIC_PTR_DECLARE( CMObj, CObjectBase::SRefM );
+
+template<typename T> struct std::hash<CPtr<T>> {
+	std::size_t operator()(const CPtr<T> &p) const { return std::hash<T*>()(p.GetPtr()); }
+};
+
+template<typename T> struct std::hash<CObj<T>> {
+	std::size_t operator()(const CObj<T> &p) const { return std::hash<T*>()(p.GetPtr()); }
+};
+
+template<typename T> struct std::hash<CMObj<T>> {
+	std::size_t operator()(const CMObj<T> &p) const { return std::hash<T*>()(p.GetPtr()); }
+};
+
 // misuse guard
 template<class T> inline bool IsValid( CObj<T> *p ) { return p->YouHaveMadeMistake(); }
 template<class T> inline bool IsValid( CPtr<T> *p ) { return p->YouHaveMadeMistake(); }

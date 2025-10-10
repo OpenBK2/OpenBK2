@@ -35,7 +35,7 @@ struct IView
 };
 
 // CRAP{ HASH_SET
-typedef std::unordered_map<IView*, DWORD, SDefaultPtrHash> CViewSet;
+typedef std::unordered_map<IView*, DWORD> CViewSet;
 // CRAP} HASH_SET
 
 

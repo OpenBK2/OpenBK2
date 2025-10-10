@@ -41,7 +41,7 @@ public:
 };
 #endif 
 
-typedef std::unordered_map<ISound*, int, SDefaultPtrHash> CSoundChannelMap;
+typedef std::unordered_map<ISound*, int> CSoundChannelMap;
 typedef std::unordered_map<int, CPtr<ISound> > CChannelSoundMap;
 
 class CSoundEngine : public ISFX

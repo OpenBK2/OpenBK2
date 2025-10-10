@@ -54,7 +54,7 @@ class CAILogic : public IAILogic
 
 	CPtr<ICheckSumLog> pCheckSumLog;
 	
-	typedef std::unordered_set<CDBPtr<SMechUnitRPGStats>, SDefaultPtrHash> CAvailTrucks;
+	typedef std::unordered_set<CDBPtr<SMechUnitRPGStats>> CAvailTrucks;
 	CAvailTrucks availableTrucks;
 	
 	CPtr<IProgressHook> pProgress;

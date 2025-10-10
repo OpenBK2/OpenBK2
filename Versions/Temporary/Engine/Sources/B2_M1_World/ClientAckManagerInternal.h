@@ -81,7 +81,7 @@ class CClientAckManager : public IClientAckManager
 	};
 	//
 	typedef std::unordered_map< int, NTimer::STime > CUnitAcksPresence;
-	typedef std::unordered_map< CPtr<IMOUnit>, SUnitAck, SDefaultPtrHash > CUnitsAcks;
+	typedef std::unordered_map< CPtr<IMOUnit>, SUnitAck > CUnitsAcks;
 	typedef std::list< SDeathAck > CDeathAcks;
 
 	//для выбора заданного типа асков

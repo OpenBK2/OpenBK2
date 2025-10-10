@@ -25,11 +25,6 @@ struct SVec2Equ
 	}
 };
 
-struct SDefaultPtrHash
-{
-	int operator()( const void *pData ) const { return int( pData ); }
-};
-
 struct SEnumHash
 {
 	template <class T>

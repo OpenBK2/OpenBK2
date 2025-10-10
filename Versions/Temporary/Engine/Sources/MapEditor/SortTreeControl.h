@@ -11,8 +11,8 @@ class CSortTreeControl : public SECTreeCtrl
 {
 protected:
 	typedef hash_map<string, HTREEITEM> CTreeItemMap;
-	typedef hash_map<HTREEITEM, COLORREF, SDefaultPtrHash> CTreeItemColorMap;
-	typedef hash_map<HTREEITEM, bool, SDefaultPtrHash> CTreeItemBoolMap;
+	typedef hash_map<HTREEITEM, COLORREF> CTreeItemColorMap;
+	typedef hash_map<HTREEITEM, bool> CTreeItemBoolMap;
 	
 private:
 	CTreeItemMap treeItemMap;

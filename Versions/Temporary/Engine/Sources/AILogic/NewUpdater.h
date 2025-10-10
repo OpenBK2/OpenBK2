@@ -283,7 +283,7 @@ private:
 	CUpdateList interpolatableUpdates;
 	CUpdateList::iterator pendingIt;
 	//basic updates catalog
-	typedef std::unordered_map< CPtr<CUpdatableObj>, CUpdateList, SDefaultPtrHash > CUpdateMap;
+	typedef std::unordered_map< CPtr<CUpdatableObj>, CUpdateList > CUpdateMap;
 	CUpdateMap updatesHash;
 	//current segment time
 	NTimer::STime nTime;

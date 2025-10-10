@@ -86,7 +86,7 @@ private:
 
 	// BEGIN these loads from data
 
-	typedef std::unordered_set<CPtr<CWindow>, SDefaultPtrHash > CChildren;
+	typedef std::unordered_set<CPtr<CWindow>> CChildren;
 	CChildren children;
 	std::pair<CTRect<float>, bool> delayedReposition;
 	

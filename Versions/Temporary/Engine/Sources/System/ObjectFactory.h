@@ -12,7 +12,7 @@ public:
 private:
 	typedef T* (*newFunc)();
 	typedef std::unordered_map<int, newFunc> CTypeNewHash;                // typeID->newFunc()
-	typedef std::unordered_map<VFT, int, SDefaultPtrHash> CTypeIndexHash; // vftable->typeID
+	typedef std::unordered_map<VFT, int> CTypeIndexHash; // vftable->typeID
 
 	CTypeIndexHash typeIndex;
 	CTypeNewHash typeInfo;

@@ -38,7 +38,7 @@ bool SWindowCompare::operator()( const CObj<CWindow> &o1, const CObj<CWindow> &o
 
 int SAnimationIDHash::operator()( const CWindowAnimationID &p ) const
 {
-	SDefaultPtrHash h;
+	std::hash<const void*> h;
 	return p.first + h( p.second );
 }
 

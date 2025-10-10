@@ -58,7 +58,7 @@ void GetAllSingletonIDs( std::vector<int> *pRes )
 struct SSingletonSerializer
 {
 	class CSingleObject;
-	static std::unordered_map<CObjectBase*, bool, SDefaultPtrHash> saved;
+	static std::unordered_map<CObjectBase*, bool> saved;
 
 	class CSingleObject
 	{
@@ -98,7 +98,7 @@ struct SSingletonSerializer
 	}
 };
 
-std::unordered_map<CObjectBase*, bool, SDefaultPtrHash> SSingletonSerializer::saved;
+std::unordered_map<CObjectBase*, bool> SSingletonSerializer::saved;
 
 void Serialize( const char chunkID, IBinSaver &saver )
 {

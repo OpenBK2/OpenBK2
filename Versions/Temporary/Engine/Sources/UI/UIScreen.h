@@ -40,7 +40,7 @@ class CWindowScreen : public CWindow, public IScreen
 	CWatingForAnimation watingForAnimation;
 
 	// segment calling
-	typedef std::unordered_set< CObj<IWindow>, SDefaultPtrHash > CSegmentObjs;
+	typedef std::unordered_set< CObj<IWindow> > CSegmentObjs;
 	CSegmentObjs segmentObjs;
 
 	// message reactions
@@ -86,7 +86,7 @@ public:
 	{
 		int operator()( const SButtonGroupID &id ) const
 		{
-			SDefaultPtrHash pr;
+			std::hash<const void*> pr;
 			return (pr( id.pParent ) << 4) & id.nGroupID;
 		}
 	};

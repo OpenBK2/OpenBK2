@@ -42,9 +42,9 @@ private:
 	bool bIsReading, bPackResult;
 	// maps objects addresses during save(first) to addresses during load(second) - during loading
 	// or serves as a sign that some object has been already stored - during storing
-	typedef std::unordered_map<void*,CPtr<CObjectBase>,SDefaultPtrHash> CObjectsHash;
+	typedef std::unordered_map<void*,CPtr<CObjectBase>> CObjectsHash;
 	CObjectsHash objects;
-	typedef std::unordered_map<void*,bool,SDefaultPtrHash> CPObjectsHash;
+	typedef std::unordered_map<void*,bool> CPObjectsHash;
 	CPObjectsHash storedObjects;
 	typedef std::unordered_map<int,CObjectBase*> CExternalHash;
 	CExternalHash externalObjects;
