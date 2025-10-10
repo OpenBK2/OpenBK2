@@ -1,7 +1,6 @@
 project(B2_MapEditor)
 set(SOURCES
     main.cpp
-    ModuleHook.cpp
     stdafx.cpp
     VFSDbObserver.cpp
 )

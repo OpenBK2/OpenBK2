@@ -2,7 +2,6 @@ project(Game)
 set(SOURCES
     Initialization.cpp
     main.cpp
-    ModuleHook.cpp
     stdafx.cpp
     SysKeys.cpp
     Test.cpp
