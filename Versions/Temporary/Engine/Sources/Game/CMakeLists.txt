@@ -13,3 +13,8 @@ install(TARGETS Game DESTINATION bin)
 if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_link_options(Game PRIVATE "/LARGEADDRESSAWARE")
 endif()
+
+# add icon (for windows)
+if(WIN32)
+	target_sources(Game PRIVATE icon.rc)
+endif()
