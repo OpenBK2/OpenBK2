@@ -12,6 +12,11 @@
 #include "System/RandomGen.h"
 #include <float.h>
 
+
+#include "PointChecking.h"
+
+BASIC_REGISTER_CLASS ( IPointChecking );
+
 const WORD TURN_TOLERANCE = 0;
 NTimer::STime lastTimeDiff = 50;
 
