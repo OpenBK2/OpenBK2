@@ -89,13 +89,13 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 
 		CRectLayout rects;
 		rects.AddRect( dstRect.x1 + shift.x, dstRect.y1 + shift.y, textureRect.Width() * fScale, textureRect.Height() * fScale, textureRect, 0xFFFFFFFF );
-		pVisitor->VisitUITextureRect( pPlayer, 3, rects );
+		//pVisitor->VisitUITextureRect( pPlayer, 3, rects );
 	}
 	else
 	{
 		CRectLayout rects;
 		rects.AddRect( dstRect.x1, dstRect.y1, dstRect.Width(), dstRect.Height(), textureRect, 0xFFFFFFFF );
-		pVisitor->VisitUITextureRect( pPlayer, 3, rects );
+		//pVisitor->VisitUITextureRect( pPlayer, 3, rects );
 	}
 }
 
