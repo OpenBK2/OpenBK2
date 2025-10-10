@@ -97,22 +97,57 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 	//file->Read( pData, pValue->nBytes );
 
 	char *p = pData;
-	pValue->fTEnd = *( (float*)p );
+	pValue->fTEnd = *reinterpret_cast<float *>(p);
 	p += sizeof(float);
-	pValue->fFrameRate = *( (float*)p );
+	pValue->fFrameRate = *reinterpret_cast<float *>(p);
 	p += sizeof(float);
-	pValue->nParticles = *( (int*)p );
+	pValue->nParticles = *reinterpret_cast<int *>(p);
 	p += sizeof(int);
-	pValue->particles = (SParticle*)p;
+	pValue->particles.resize(pValue->nParticles);
 
 	for ( int nP = 0; nP < pValue->nParticles; ++nP )
 	{
 		SParticle &particle = pValue->particles[nP];
-		particle.pos.keys = (TKey<CVec3>*)(pData + (int)particle.pos.keys);
-		particle.rot.keys = (TKey<float>*)(pData + (int)particle.rot.keys);
-		particle.scale.keys = (TKey<CVec2>*)(pData + (int)particle.scale.keys);
-		particle.color.keys = (TKey<DWORD>*)(pData + (int)particle.color.keys);
-		particle.sprite.keys = (TKey<short>*)(pData + (int)particle.sprite.keys);
+		particle.nTStart = *reinterpret_cast<short *>(p);
+		p += sizeof(short);
+
+		particle.nTEnd = *reinterpret_cast<short*>(p);
+		p += sizeof(short);
+
+		particle.pos.nKeys = *reinterpret_cast<short *>(p);
+		p += sizeof(short);
+
+		int32_t offset = *reinterpret_cast<int32_t *>(p);
+		p += sizeof(int32_t);
+		particle.pos.keys = reinterpret_cast<TKey<CVec3> *>(pData + offset);
+
+		particle.rot.nKeys = *reinterpret_cast<short*>(p);
+		p += sizeof(short);
+
+		offset = *reinterpret_cast<int32_t*>(p);
+		p += sizeof(int32_t);
+		particle.rot.keys = reinterpret_cast<TKey<float> *>(pData + offset);
+
+		particle.scale.nKeys = *reinterpret_cast<short*>(p);
+		p += sizeof(short);
+
+		offset = *reinterpret_cast<int32_t*>(p);
+		p += sizeof(int32_t);
+		particle.scale.keys = reinterpret_cast<TKey<CVec2> *>(pData + offset);
+
+		particle.color.nKeys = *reinterpret_cast<short*>(p);
+		p += sizeof(short);
+
+		offset = *reinterpret_cast<int32_t*>(p);
+		p += sizeof(int32_t);
+		particle.color.keys = reinterpret_cast<TKey<DWORD> *>(pData + offset);
+
+		particle.sprite.nKeys = *reinterpret_cast<short*>(p);
+		p += sizeof(short);
+
+		offset = *reinterpret_cast<int32_t*>(p);
+		p += sizeof(int32_t);
+		particle.sprite.keys = reinterpret_cast<TKey<short> *>(pData + offset);
 	}
 }
 

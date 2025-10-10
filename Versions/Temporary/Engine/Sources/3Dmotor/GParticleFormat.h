@@ -101,7 +101,7 @@ public:
 	float fTEnd;
 	float fFrameRate;
 	int nParticles;
-	SParticle *particles;
+	std::vector<SParticle> particles;
 
 	CParticlesInfo() { nBytes = 0; nParticles = 0; fTEnd = 0; fFrameRate = 1; }
 	void CalcBound( SBound *pRes );
