@@ -25,7 +25,7 @@ CLogStream& CLogStream::operator<< ( const std::size_t &nVal )
 	wchar_t wszBuffer[1024];
 
 	bConsoleUpdated = true;
-	swprintf( wszBuffer, L"%d", nVal );
+	swprintf( wszBuffer, L"%zu", nVal );
 	wsStreamBuffer = wsStreamBuffer + wszBuffer;
 	return *this;
 }
