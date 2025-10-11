@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_EDITOR "build editor" OFF)
 
 if(MSVC)
+  add_compile_options("/nologo")
+  add_link_options("/nologo")
   add_compile_options("/wd4251")
   add_compile_options("/wd4275")
   add_compile_options("/FS")
