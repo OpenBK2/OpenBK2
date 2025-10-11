@@ -111,7 +111,7 @@ void CMemoryMappedFileFragment::UnmapFile( void *p )
 	{
 		int nAllocGranularity = GetAllocGranularity();
 		int nShift = nOffset & ( nAllocGranularity - 1 );
-		void *pAligned = (void*)( ((int)p) - nShift );
+		void *pAligned = (void*)( ((intptr_t)p) - nShift );
 		BOOL bTest = UnmapViewOfFile( pAligned );
 		ASSERT( bTest );
 	}
