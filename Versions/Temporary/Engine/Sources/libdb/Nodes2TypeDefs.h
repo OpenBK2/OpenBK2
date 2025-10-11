@@ -13,13 +13,5 @@ namespace NDb
 	}
 }
 
-struct SNodesHash
-{
-	int operator()( NLang::CLangNode *pNode ) const;
-	int operator()( NDb::NTypeDef::STypeDef *pNode ) const;
-};
-
-typedef std::unordered_map< NLang::CLangNode*, CObj<NDb::NTypeDef::STypeDef>, SNodesHash > CNodes2TypeDefs;
-typedef std::unordered_map<NDb::NTypeDef::STypeDef*, CPtr<NDb::NTypeDef::STypeDef>, SNodesHash> CClasses2Refs;
-
-
+typedef std::unordered_map< NLang::CLangNode*, CObj<NDb::NTypeDef::STypeDef> > CNodes2TypeDefs;
+typedef std::unordered_map<NDb::NTypeDef::STypeDef*, CPtr<NDb::NTypeDef::STypeDef>> CClasses2Refs;

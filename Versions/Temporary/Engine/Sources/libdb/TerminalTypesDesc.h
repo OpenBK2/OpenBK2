@@ -13,7 +13,7 @@ class CTerminalTypesDescriptor : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CTerminalTypesDescriptor );
 
-	std::unordered_set<STypeDef*, SNodesHash> nonTerminalTypes;
+	std::unordered_set<STypeDef*> nonTerminalTypes;
 public:
 	bool IsTerminalType( STypeDef *pType ) const { return nonTerminalTypes.find( pType ) == nonTerminalTypes.end(); }
 	void SetTypeToNonTerminal( STypeDef *pType ) { nonTerminalTypes.insert( pType ); }
