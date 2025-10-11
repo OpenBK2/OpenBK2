@@ -258,18 +258,15 @@ void CRandomGenSeed::FillRandRsl()
 				continue;
 		}
 		bSuccess = TRUE;
-		OFSTRUCT ofStruct;
-		Zero( ofStruct );
-		ofStruct.cBytes = sizeof( ofStruct );
-		HFILE hFile = OpenFile( pszFindedName, &ofStruct, OF_READ | OF_SHARE_DENY_NONE );
-		if ( hFile != HFILE_ERROR )
+		HANDLE hFile = CreateFile( pszFindedName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		if ( hFile != INVALID_HANDLE_VALUE )
 		{
 			srand( GetTickCount() );
-			SetFilePointer( HANDLE(hFile), N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
+			SetFilePointer( hFile, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
 			DWORD dwReadBytes = 0;
-			if ( ReadFile( HANDLE(hFile), rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) != TRUE || (dwReadBytes != sizeof(rnd.randrsl)) )
+			if ( ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) != TRUE || (dwReadBytes != sizeof(rnd.randrsl)) )
 				bSuccess = FALSE;
-			CloseHandle( HANDLE(hFile) );
+			CloseHandle( hFile );
 		}
 		else
 			bSuccess = FALSE;
