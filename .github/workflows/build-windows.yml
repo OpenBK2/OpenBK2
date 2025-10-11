@@ -1,0 +1,66 @@
+name: Build (Windows)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        preset: [Windows-x64-Release, Windows-x86-Release]
+
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSVC dev command prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ contains(matrix.preset, 'x64') && 'x64' || 'x86' }}
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v5
+
+      - name: Set DXSDK env
+        shell: bash
+        run: |
+          DXSDK_ROOT_WIN=$(cygpath -w $HOME/cache)
+          echo "DXSDK_ROOT=$DXSDK_ROOT_WIN" >> $GITHUB_ENV
+
+      - name: Cache DXSDK
+        uses: actions/cache@v4
+        with:
+          path: $HOME/cache
+          key: DXSDK-Jun2010
+
+      - name: Install 7z
+        uses: milliewalky/setup-7-zip@v2
+
+      - name: Install DirectX SDK (June 2010)
+        shell: bash
+        run: |
+          curl -L "https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe" -o DXSDK_Jun10.exe
+          7z x DXSDK_Jun10.exe DXSDK/Include -o_DX2010_
+          7z x DXSDK_Jun10.exe DXSDK/Lib -o_DX2010_
+          mv _DX2010_/DXSDK $HOME/cache
+
+      - name: Configure with preset
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build with preset
+        run: cmake --build --preset ${{ matrix.preset }} --parallel
+
+      - name: Install
+        run: cmake --install out/build/${{ matrix.preset }} --prefix install/${{ matrix.preset }}
+
+      - name: Upload installed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.preset }}-install
+          path: install/${{ matrix.preset }}
