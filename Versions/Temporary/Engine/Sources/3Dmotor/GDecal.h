@@ -1,6 +1,8 @@
 #pragma once
 #include "GDecalInfo.h"
 
+#include <boost/functional/hash.hpp>
+
 namespace NGScene
 {
 class CDecalTarget;
@@ -17,7 +19,12 @@ struct SDecalTargetPart
 };
 struct SDecalTargetPartHash
 {
-	int operator()( const SDecalTargetPart &p ) const { return (int)p.pUser.GetPtr() ^ p.nUserID;}
+	std::size_t operator()( const SDecalTargetPart &p ) const {
+		std::size_t seed;
+		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pUser.GetPtr()));
+		boost::hash_combine(seed, p.nUserID);
+		return seed;
+	}
 };
 struct SSrcPosInfo
 {
@@ -33,7 +40,13 @@ struct SSrcPosInfo
 };
 struct SSrcPosInfoHash
 {
-	int operator()( const SSrcPosInfo &p ) const { return (int)p.pUser.GetPtr() ^ p.nUserID ^ (int)p.pSource.GetPtr(); }
+	std::size_t operator()( const SSrcPosInfo &p ) const {
+		std::size_t seed;
+		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pUser.GetPtr()));
+		boost::hash_combine(seed, p.nUserID);
+		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pSource.GetPtr()));
+		return seed;
+	}
 };
 
 class ISomePart;
