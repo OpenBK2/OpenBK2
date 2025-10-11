@@ -5,6 +5,7 @@
 #include "BSUtil.h"
 #include "BSUInit.h"
 
+#include <cinttypes>
 
 static void TypeDebugTrace( const char *buff, const char *pszWhat, const std::vector<SCallStackEntry> &entries )
 {
@@ -147,7 +148,7 @@ static LONG __stdcall CrashHandlerFilter( EXCEPTION_POINTERS *pExPtrs )
 	if ( !entries.empty() )
 		sprintf( buff, "First-chance exception in %s: 0x%.8X: %s.", entries[0].szFile.szStr, pExPtrs->ExceptionRecord->ExceptionCode, ExceptionCodeToString(pExPtrs->ExceptionRecord->ExceptionCode) );
 	else
-		sprintf( buff, "Unhandled Exception (0x%X) at the 0x%X: %s", pExPtrs->ExceptionRecord->ExceptionCode, pExPtrs->ExceptionRecord->ExceptionAddress, ExceptionCodeToString(pExPtrs->ExceptionRecord->ExceptionCode) );
+		sprintf( buff, "Unhandled Exception (0x%X) at the 0x%" PRIxPTR ": %s",pExPtrs->ExceptionRecord->ExceptionCode, reinterpret_cast<intptr_t>(pExPtrs->ExceptionRecord->ExceptionAddress), ExceptionCodeToString(pExPtrs->ExceptionRecord->ExceptionCode) );
 
 	TypeDebugTrace( buff, ExceptionCodeToString( pExPtrs->ExceptionRecord->ExceptionCode ), entries );
 	//
