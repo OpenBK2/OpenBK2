@@ -585,12 +585,12 @@ std::string Script::GetStateAsText()
 	}
 	char buf[30];
 	int nThreads = m_state->threads.size();
-	sprintf( buf, "Threads number = %d \n", m_state->threads.size() );
+	sprintf( buf, "Threads number = %zu \n", m_state->threads.size() );
 	str+=buf;
 	for ( CThreads::iterator i = m_state->threads.begin(); i != m_state->threads.end(); ++i )
 	{
 		CLuaThread &tred = **i;
-		sprintf( buf, "Thread #%d: stacksize %d", i, tred.top );
+		sprintf( buf, "Thread #%p: stacksize %d", i->GetPtr(), tred.top );
 		str += buf;
 		if ( tred.top > 0 )
 		{
