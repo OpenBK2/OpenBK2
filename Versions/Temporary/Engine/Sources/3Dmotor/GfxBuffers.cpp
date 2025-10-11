@@ -1269,7 +1269,7 @@ struct SGeometryTypeHash
 // all DX buffers
 static std::list< CMObj<CObjectBase> > lostable;
 static std::list< CMObj<CObjectBase> > managed;
-typedef std::unordered_map<CPtr<CTB>, CObj<CTexture>, SPtrHash> CTexContainerHash;
+typedef std::unordered_map<CPtr<CTB>, CObj<CTexture>> CTexContainerHash;
 static CTexContainerHash texContainers;
 typedef std::unordered_map<SRenderTargetDesc, CTextureBuffersSet, SRTDescHash> CRTCache;
 static CRTCache rtCache;

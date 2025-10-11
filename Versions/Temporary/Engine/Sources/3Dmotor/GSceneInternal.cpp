@@ -1194,7 +1194,7 @@ void CGScene::DrawPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC, 
 	if ( postprocessors.empty() )
 		return;
 	UpdateSet( &postprocessors, this );
-	typedef std::unordered_map<CPtr<IPostProcess>, std::vector<IPostProcess::SObject>, SPtrHash> CPostHash;
+	typedef std::unordered_map<CPtr<IPostProcess>, std::vector<IPostProcess::SObject>> CPostHash;
 	CPostHash postHash;
 	for ( std::list< CPtr<CPostProcessBinder> >::iterator i = postprocessors.begin(); i != postprocessors.end(); ++i )
 		(*i)->Store( &postHash[ (*i)->GetPostProcessor() ], pTS, mask );

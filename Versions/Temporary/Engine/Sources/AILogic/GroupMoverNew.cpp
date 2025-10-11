@@ -133,7 +133,7 @@ IStaticPath *CGroupMover::SSubGroupPathInfo::CreatePathForUnit( CCommonUnit *pUn
 	return pPath;
 }
 
-typedef hash_set<CPtr<CCommonUnit>, SPtrHash > TUnitsHashSet;
+typedef hash_set<CPtr<CCommonUnit> > TUnitsHashSet;
 
 const int CGroupMover::BuildGroups( vector<SGroup> &groups )
 {

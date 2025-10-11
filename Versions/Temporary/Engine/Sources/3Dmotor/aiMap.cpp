@@ -30,7 +30,7 @@ static bool IsValidInCurrentState( CConvexHull *p );
 class CUserHullsTracker : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CUserHullsTracker);
-	typedef std::unordered_map<CPtr<CObjectBase>, std::vector<CPtr<CConvexHull> >, SPtrHash> SUserHash;
+	typedef std::unordered_map<CPtr<CObjectBase>, std::vector<CPtr<CConvexHull> >> SUserHash;
 	ZDATA
 	SUserHash data;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&data); return 0; }
