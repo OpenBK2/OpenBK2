@@ -97,7 +97,7 @@ public:
 	virtual const std::vector<SHMatrix>& GetAnimation() { return *(std::vector<SHMatrix>*)0; }
 	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { return *(std::vector<NGfx::SCompactTransformer>*)0; }
 	virtual bool Is2Sided() const { return false; }
-	virtual int GetSortValue() const { return 0; }
+	virtual intptr_t GetSortValue() const { return 0; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) {}
 	void ResetCachedTransform(); // for CVBCombiner only
 	void ResetCachedLighting() { gfxData.Clear(); } // for CVBCombiner only

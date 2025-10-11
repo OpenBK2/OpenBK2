@@ -301,7 +301,7 @@ struct SPerPartVariables
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fFade); f.Add(3,&nPriority); f.Add(4,&pLM); return 0; }
 
 	SPerPartVariables() : fFade(1), nPriority(0) {}
-	int GetSortValue() const { return (*(int*)&fFade) ^ nPriority ^ ((int)pLM.GetPtr()); }
+	intptr_t GetSortValue() const { return (*(int*)&fFade) ^ nPriority ^ ((intptr_t)pLM.GetPtr()); }
 	bool operator == ( const SPerPartVariables &a ) const { return fFade == a.fFade && nPriority == a.nPriority && pLM == a.pLM; }
 };
 

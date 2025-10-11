@@ -59,7 +59,7 @@ public:
 	const SGroupInfo& GetGroupInfo() const { return group.fullGroupInfo.groupInfo; }
 	const SFullGroupInfo& GetFullGroupInfo() const { return group.fullGroupInfo; }
 	virtual bool Is2Sided() const { return group.pMaterial->Is2Sided(); }
-	virtual int GetSortValue() const { return ((int)group.pMaterial.GetPtr()) + vars.GetSortValue(); }
+	virtual intptr_t GetSortValue() const { return ((intptr_t)group.pMaterial.GetPtr()) + vars.GetSortValue(); }
 	void SetFade( float _fFade );
 	float GetFade() const { return vars.fFade; }
 	void SetLM( CPtrFuncBase<NGfx::CTexture> *pLM );

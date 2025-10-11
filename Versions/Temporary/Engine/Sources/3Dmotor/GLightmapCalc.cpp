@@ -42,7 +42,7 @@ public:
 	virtual const std::vector<SHMatrix>& GetAnimation() { return pPart->GetAnimation(); }
 	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { return pPart->GetMMXAnimation(); }
 	virtual bool Is2Sided() const { return pPart->Is2Sided(); }
-	virtual int GetSortValue() const { return 0; }
+	virtual intptr_t GetSortValue() const { return 0; }
 };
 
 class CLightmapsHolder : public CObjectBase

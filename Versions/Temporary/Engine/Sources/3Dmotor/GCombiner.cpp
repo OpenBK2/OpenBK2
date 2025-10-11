@@ -7,6 +7,8 @@
 #include "GSSETransform.h"
 #include "Misc/HashFuncs.h"
 
+#include <boost/sort/spreadsort/integer_sort.hpp>
+
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;
 
@@ -121,14 +123,12 @@ void CPerMaterialCombiner::Recalc()
 	bHasChanged = false;
 	if ( value.size() < 4 )
 		return;
-	std::vector< CPtr<IPart> > res( value );
-	std::vector<int> sorted( res.size() );
-	std::vector<unsigned int> sortValues( res.size() );
-	for ( int k = 0; k < res.size(); ++k )
-		sortValues[k] = res[k]->GetSortValue();
-	::DoRadixSort( (const unsigned int*) &sortValues[0], res.size(), &sorted );
-	for ( int k = 0; k < res.size(); ++k )
-		value[k] = res[ sorted[k] ];
+
+	boost::sort::spreadsort::integer_sort(std::begin(value), std::end(value), [](const auto & v, const unsigned offset) {
+		return v->GetSortValue() >> offset;
+	}, [](const auto& a, const auto& b) {
+		return a->GetSortValue() < b->GetSortValue();
+	});
 }
 
 void CPerMaterialCombiner::AddPart( IPart *pPart )
