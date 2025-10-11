@@ -5,6 +5,9 @@
 #include "Script/lstate.h"
 #include "System/RandomGen.h"
 #include "Misc/StrProc.h"
+
+#include <cinttypes>
+
 //
 namespace NScript
 {
@@ -49,12 +52,12 @@ void ScriptError( const std::string &message )
 	csSystem << CC_RED << "Script error: " << CC_GREY << message << endl;
 }
 
-static void ShowLuaLog( const std::string &szName, int nThreadID, const std::vector<SLuaParams> &params, bool bParsed )
+static void ShowLuaLog( const std::string &szName, intptr_t nThreadID, const std::vector<SLuaParams> &params, bool bParsed )
 {
 	if ( !bShowLuaLog )
 		return;
 	char buf[32];
-	sprintf( buf, "%x", nThreadID );
+	sprintf( buf, "%" PRIxPTR, nThreadID);
 	csScript << CC_GREY << "  LUA(" << buf << "):  " << CC_ORANGE << szName << "(  ";
 	std::string szLog;
 
@@ -103,10 +106,10 @@ bool luaPrepareData( lua_State* pState, const std::string &szFuncName, const std
 	}
 	if ( szParams != "" && !(*ppScript)->CheckArgs( szParams.c_str(), szFuncName.c_str(), pParams, bShowLuaLog ) )
 	{
-		ShowLuaLog( szFuncName, (int)pState->pCT.GetPtr(), *pParams, false );
+		ShowLuaLog( szFuncName, (intptr_t)pState->pCT.GetPtr(), *pParams, false );
 		return false;
 	}
-	ShowLuaLog( szFuncName, (int)pState->pCT.GetPtr(), *pParams, true );
+	ShowLuaLog( szFuncName, (intptr_t)pState->pCT.GetPtr(), *pParams, true );
 	return true;
 }
 
