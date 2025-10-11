@@ -29,12 +29,6 @@ struct SMemoryInfo
 	}
 };
 
-struct SSimplePointerHash
-{
-	template <class T> 
-		int operator()( T *p ) const { return (int)p; }
-};
-
 struct SGrannyMemoryRequestComparer
 {
 	bool operator()( const std::pair<std::string, int> &left, std::pair<std::string, int> &right ) const
@@ -43,7 +37,7 @@ struct SGrannyMemoryRequestComparer
 	}
 };
 
-typedef std::unordered_map<void *, SMemoryInfo, SSimplePointerHash > TGrannyMemoryMap;
+typedef std::unordered_map<void *, SMemoryInfo > TGrannyMemoryMap;
 
 static granny_allocate_callback *AllocateCallback;
 static granny_deallocate_callback *DeallocateCallback;
@@ -52,7 +46,7 @@ static TGrannyMemoryMap *pGrannyMemoryMap; // do not initialize!
 static GRANNY_CALLBACK(void *) GrannyReplacementAlloc( char const *pszFile, granny_int32x nLine, granny_uintaddrx nAlignment, granny_uintaddrx nSize, granny_int32x nAllocationIntent )
 {
 	if ( pGrannyMemoryMap == 0 )
-		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo, SSimplePointerHash >;
+		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo >;
 
 	void *pMemory = (*AllocateCallback)(pszFile,nLine,nAlignment,nSize,nAllocationIntent);
 	pGrannyMemoryMap->insert( std::pair <void *, SMemoryInfo>( pMemory, SMemoryInfo(pszFile,nLine,nAlignment,nSize) ) );

@@ -132,18 +132,12 @@ void CObjectBase::DestroyDelayed()
 
 #ifdef TRACK_OBJECTS_STATISTICS
 
-struct SSimplePointerHash
-{
-	template <class T> 
-		int operator()( T *p ) const { return (int)p; }
-};
-
-std::unordered_set<CObjectBase *, SSimplePointerHash > *pObjectsSet; // do not initialize!
+std::unordered_set<CObjectBase * > *pObjectsSet; // do not initialize!
 
 void RegisterInObjectsSet( CObjectBase *pObject )
 {
 	if ( pObjectsSet == 0 )
-		pObjectsSet = new std::unordered_set<CObjectBase *, SSimplePointerHash >;
+		pObjectsSet = new std::unordered_set<CObjectBase * >;
 
 	pObjectsSet->insert( pObject );
 }
@@ -203,7 +197,7 @@ static void CollectObjectsStatistics( std::unordered_map< std::string, STypeStat
 	CPtr<CTrivialPointerSerialization> pPointerSerialization = new CTrivialPointerSerialization();
 	CPtr<IBinSaver> pSaver = CreateChunklessSaver( pPointerSerialization, &memoryStream, SAVER_MODE_WRITE );
 
-	for ( std::unordered_set<CObjectBase *, SSimplePointerHash >::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
+	for ( std::unordered_set<CObjectBase * >::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
 	{
 		CObjectBase *pObject = *it;
 		const char *szTypeName = pObject->GetFullTypeName();
