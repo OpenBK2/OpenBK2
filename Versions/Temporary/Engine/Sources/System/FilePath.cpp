@@ -21,10 +21,9 @@ __forceinline char ConvertChar( const char chr )
 	return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 }
 
-static int FindLastSlash( const std::string &szFullFilePath )
+static size_t FindLastSlash( const std::string &szFullFilePath )
 {
-	int i = szFullFilePath.size();
-	while ( --i >= 0 )
+	for (size_t i = szFullFilePath.size(); i-- > 0; )
 	{
 		if ( IsFolderSeparator(szFullFilePath[i]) )
 			return i;
@@ -42,27 +41,27 @@ static int FindLastSlash( const std::string &szFullFilePath )
 
 std::string GetFilePath( const std::string &szFullFilePath )
 {
-	const int nPos = FindLastSlash( szFullFilePath );
+	const size_t nPos = FindLastSlash( szFullFilePath );
 	return nPos != std::string::npos ? szFullFilePath.substr( 0, nPos + 1 ) : "";
 }
 
 std::string GetFileName( const std::string &szFullFilePath )
 {
-	const int nPos = FindLastSlash( szFullFilePath );
+	const size_t nPos = FindLastSlash( szFullFilePath );
 	return nPos != std::string::npos ? szFullFilePath.substr( nPos + 1 ) : szFullFilePath;
 }
 
 std::string GetFileTitle( const std::string &szFullFilePath )
 {
 	const std::string szFileName = GetFileName( szFullFilePath );
-	const int nPos = szFileName.rfind( '.' );
+	const size_t nPos = szFileName.rfind( '.' );
 	return nPos != std::string::npos ? szFileName.substr( 0, nPos ) : szFileName;
 }
 
 std::string GetFileExt( const std::string &szFullFilePath )
 {
 	const std::string szFileName = GetFileName( szFullFilePath );
-	const int nPos = szFileName.rfind( '.' );
+	const size_t nPos = szFileName.rfind( '.' );
 	return nPos != std::string::npos ? szFileName.substr( nPos ) : "";
 }
 
@@ -73,8 +72,8 @@ std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 	//
 	if ( pszExt == 0 || pszExt[0] == 0 )
 	{
-		const int nPos = FindLastSlash( szFullFilePath );
-		for ( int i = szFullFilePath.size() - 1; i > nPos; --i )
+		const size_t nPos = FindLastSlash( szFullFilePath );
+		for ( size_t i = szFullFilePath.size() - 1; i > nPos; --i )
 		{
 			if ( szFullFilePath[i] == '.' )
 				return szFullFilePath.substr( 0, i );
@@ -83,17 +82,17 @@ std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 	}
 	else
 	{
-		const int nPos = szFullFilePath.rfind( '.' );
-		const int nCmpSize = szFullFilePath.size() - (nPos + 1);
+		const size_t nPos = szFullFilePath.rfind( '.' );
+		const size_t nCmpSize = szFullFilePath.size() - (nPos + 1);
 		if ( nPos != std::string::npos && ComparePathEq(nPos + 1, nCmpSize, szFullFilePath, 0, strlen(pszExt), pszExt) != false )
 			return szFullFilePath.substr( 0, nPos );
 		return  szFullFilePath;
 	}
 }
 
-static int FindNextSlash( const std::string &szFullFilePath, const int nStartPos )
+static size_t FindNextSlash( const std::string &szFullFilePath, const int nStartPos )
 {
-	for ( int i = nStartPos; i < szFullFilePath.size(); ++i )
+	for ( size_t i = nStartPos; i < szFullFilePath.size(); ++i )
 	{
 		if ( IsFolderSeparator(szFullFilePath[i]) )
 			return i;
@@ -102,10 +101,10 @@ static int FindNextSlash( const std::string &szFullFilePath, const int nStartPos
 }
 void SplitPath( std::list<std::string> *pRes, const std::string &szFullFilePath )
 {
-	int nLastPos = 0;
+	size_t nLastPos = 0;
 	do
 	{
-		const int nPos = FindNextSlash( szFullFilePath, nLastPos );
+		const size_t nPos = FindNextSlash( szFullFilePath, nLastPos );
 		pRes->push_back( szFullFilePath.substr( nLastPos, nPos - nLastPos ) );
 		nLastPos = nPos + 1;
 	} while( nLastPos != (std::string::npos + 1) );
@@ -181,7 +180,7 @@ void MakeRelativePath( std::string *pRes, const std::string &szFullPath, const s
 		return;
 	}
 	//
-	const int nPos = FindLastSlash( szParentPath );
+	const size_t nPos = FindLastSlash( szParentPath );
 	if ( nPos != std::string::npos && ComparePathEq(0, nPos + 1, szParentPath, 0, nPos + 1, szFullPath) )
 		*pRes = szFullPath.c_str() + nPos + 1;
 	else
@@ -205,7 +204,7 @@ void MakeFullPath( std::string *pRes, const std::string &szRelativePath, const s
 		*pRes = szRelativePath.c_str() + 1;
 	else	// relative to parent's path
 	{
-		const int nPos = FindLastSlash( szParentPath );
+		const size_t nPos = FindLastSlash( szParentPath );
 		if ( nPos != std::string::npos )
 			*pRes = szParentPath.substr( 0, nPos ) + "/" + szRelativePath;
 		else
@@ -215,9 +214,9 @@ void MakeFullPath( std::string *pRes, const std::string &szRelativePath, const s
 
 void NormalizePath( std::string *pRes, const std::string &szFilePath )
 {
-	const int nSize = szFilePath.size();
+	const size_t nSize = szFilePath.size();
 	pRes->resize( szFilePath.size() );
-	for ( int i = 0; i < nSize; ++i )
+	for ( size_t i = 0; i < nSize; ++i )
 		(*pRes)[i] = ConvertFolderSeparator( szFilePath[i] );
 }
 
