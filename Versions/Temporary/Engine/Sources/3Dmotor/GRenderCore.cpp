@@ -274,7 +274,6 @@ void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IP
 	ignore.resize( nRes );
 }
 
-struct SRawPtrHash { template<class T> int operator()( T *p ) const { return (int)p; } };
 EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pIgnoreList )
@@ -296,7 +295,7 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 	{
 		ipi.flags.TakeAll();
 		const std::vector< CPtr<IPart> > &parts = ipi.pTrackCombiner->GetValue();
-		typedef std::unordered_map<IPart*, bool, SRawPtrHash> CPtrSet;
+		typedef std::unordered_map<IPart*, bool> CPtrSet;
 		CPtrSet ignore;
 		int nDst = 0;
 		for ( int k = 0; k < ipi.ignore.size(); ++k )
