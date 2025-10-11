@@ -1677,7 +1677,9 @@ void CUpdatableWorld::RemoveMapObj( int nID, bool bGlobalRemove )
 	{
 		Scene()->RemoveObject( nID );
 		CMapObjMap::iterator pos = objects.find( nID );
-		objects.erase( pos ); 
+		if (pos != objects.end()) {
+			objects.erase(pos);
+		}
 	}
 	else
 	{
