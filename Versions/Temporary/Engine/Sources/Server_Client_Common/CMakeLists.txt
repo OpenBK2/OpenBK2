@@ -16,5 +16,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(Server_Client_Common SHARED ${SOURCES})
 generate_export_header(Server_Client_Common EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Server_Client_Common_export.h)
-target_link_libraries(Server_Client_Common PRIVATE MemoryLib Misc Net System zlib)
+target_link_libraries(Server_Client_Common PRIVATE MemoryLib Misc Net System zlib winapi)
 install(TARGETS Server_Client_Common DESTINATION bin)

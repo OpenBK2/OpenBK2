@@ -24,6 +24,8 @@ if(MSVC)
   add_definitions("-D_CRT_NON_CONFORMING_SWPRINTFS=1")
 endif()
 
+include(cmake/winapi.cmake)
+
 set(ZLIB_COMPAT ON)
 include(cmake/zlib-ng.cmake)
 

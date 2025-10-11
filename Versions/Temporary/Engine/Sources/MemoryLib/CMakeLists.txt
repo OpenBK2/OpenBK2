@@ -6,6 +6,6 @@ set(SOURCES
 )
 include(GenerateExportHeader)
 add_library(MemoryLib SHARED ${SOURCES})
-target_link_libraries(MemoryLib PRIVATE DbgHelp)
+target_link_libraries(MemoryLib PRIVATE DbgHelp winapi)
 generate_export_header(MemoryLib EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MemoryLib_export.h)
 install(TARGETS MemoryLib DESTINATION bin)

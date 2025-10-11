@@ -11,8 +11,6 @@
 #include <ctype.h>
 #include <assert.h>
 #include <limits.h>
-
-#define _WIN32_WINNT  0x0400
 #include <windows.h>
 #include <commctrl.h>
 #include <richedit.h>

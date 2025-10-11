@@ -6,10 +6,6 @@
 
 #pragma once
 #ifndef __AFX__
-#define WIN32_LEAN_AND_MEAN							// Exclude rarely-used stuff from Windows headers
-
-// WINDOWINFO requires at least Windows 2000
-#define _WIN32_WINNT 0x500
 #include <windows.h>
 #include <typeinfo>
 #include <stdio.h>

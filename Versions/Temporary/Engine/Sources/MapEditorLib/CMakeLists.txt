@@ -56,5 +56,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(MapEditorLib SHARED ${SOURCES})
 generate_export_header(MapEditorLib EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MapEditorLib_export.h)
-target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System)
+target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System winapi)
 install(TARGETS MapEditorLib DESTINATION bin)

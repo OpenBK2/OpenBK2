@@ -215,5 +215,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(AILogic SHARED ${SOURCES})
 generate_export_header(AILogic EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/AILogic_export.h)
-target_link_libraries(AILogic PRIVATE B2_M1_Terrain B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script Stats_B2_M1 System zlib)
+target_link_libraries(AILogic PRIVATE B2_M1_Terrain B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script Stats_B2_M1 System zlib winapi)
 install(TARGETS AILogic DESTINATION bin)

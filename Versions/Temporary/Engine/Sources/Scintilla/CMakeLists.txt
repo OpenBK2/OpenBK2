@@ -64,5 +64,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(Scintilla SHARED ${SOURCES})
 generate_export_header(Scintilla EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Scintilla_export.h)
-target_link_libraries(Scintilla PRIVATE MemoryLib Imm32)
+target_link_libraries(Scintilla PRIVATE MemoryLib Imm32 winapi)
 install(TARGETS Scintilla DESTINATION bin)

@@ -14,5 +14,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(B2_M1_Terrain SHARED ${SOURCES})
 generate_export_header(B2_M1_Terrain EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/B2_M1_Terrain_export.h)
-target_link_libraries(B2_M1_Terrain PRIVATE 3DLib 3Dmotor libdb MemoryLib Misc Sound System zlib)
+target_link_libraries(B2_M1_Terrain PRIVATE 3DLib 3Dmotor libdb MemoryLib Misc Sound System zlib winapi)
 install(TARGETS B2_M1_Terrain DESTINATION bin)

@@ -61,5 +61,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(UI SHARED ${SOURCES})
 generate_export_header(UI EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/UI_export.h)
-target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib)
+target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi)
 install(TARGETS UI DESTINATION bin)

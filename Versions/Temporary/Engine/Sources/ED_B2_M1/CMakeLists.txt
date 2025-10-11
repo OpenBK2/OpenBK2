@@ -182,5 +182,5 @@ set(SOURCES
 include(GenerateExportHeader)
 add_library(ED_B2_M1 SHARED ${SOURCES})
 generate_export_header(ED_B2_M1 EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ED_B2_M1_export.h)
-target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Scintilla Stats_B2_M1 System UISpecificB2 UI zlib)
+target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Scintilla Stats_B2_M1 System UISpecificB2 UI zlib winapi)
 install(TARGETS ED_B2_M1 DESTINATION bin)
