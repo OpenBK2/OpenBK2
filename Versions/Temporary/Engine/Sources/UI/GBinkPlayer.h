@@ -1,35 +1,39 @@
 #pragma once
+#include "System/Dg.h"
 
-#include "UI_export.h"
+namespace NGfx
+{
+	class CTexture;
+}
 
 namespace NGScene
 {
-	class IVideoPlayer: virtual public CObjectBase
+	struct IVideoPlayer : public CPtrFuncBase<NGfx::CTexture>
 	{
-		OBJECT_BASIC_METHODS(IVideoPlayer)
-	public:
-		enum {
-			COPY_ALL = 1,
-			PLAY_NO_TIME_UPDATE = 2,
-			PLAY_WITH_SOUND = 4,
+		enum
+		{
+			COPY_ALL = 0x00000001,
+			PLAY_LOOPED = 0x00000002,
+			//PLAY_FROM_MEMORY = 0x00000004,
+			PLAY_WITH_SOUND = 0x00000008,
+			PLAY_NO_TIME_UPDATE = 0x00000010,
 		};
-		int GetCurrentFrame();
-		void SetCurrentFrame(int frame);
-		int GetNumFrames();
 
-		bool IsPlaying();
+		virtual void Play() = 0;
+		virtual bool Stop() = 0;
+		virtual bool Pause(bool bPause) = 0;
+		virtual bool IsPlaying() const = 0;
 
-		void Play();
-		void Stop();
-		bool Pause(bool paused);
-		void PlayFragment(int start_frame, int end_frame, int frame_skip);
-		void GetSize(void *);
+		virtual int GetCurrentFrame() const = 0;
+		virtual void SetCurrentFrame(int nFrame) = 0;
 
-	private:
-		bool paused_;
-		int frame_;
+		virtual int GetLength() const = 0;
+		virtual int GetNumFrames() const = 0;
+		virtual void GetSize(CTPoint<int>* pSize) const = 0;
+
+		virtual void PlayFragment(int nStartFrame, int nEndFrame, int nFrameSkip = 0) = 0;
 	};
-	
-	UI_EXPORT IVideoPlayer * CreateVideoPlayer(std::string filename, int flags);
-}
 
+	IVideoPlayer* CreateVideoPlayer(const std::string& szFileName, DWORD dwFlags);
+
+}
