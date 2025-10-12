@@ -1,6 +1,8 @@
 #pragma once
 #include "Stats_b2_m1/RPGStats.h"
 
+#include <boost/functional/hash.hpp>
+
 class CExecutor;
 
 extern struct IExecutorContainer * pTheExecutorsContainer;
@@ -97,7 +99,9 @@ public:
 	virtual const class CAICommand * GetCommand() const { return 0; }
 	bool operator==( const SExecutorEventParam &param ) const
 	{
-		return 0 == memcmp( this, &param, sizeof(*this) );
+		return (eEventID == param.eEventID) &&
+			(nExecutorID == param.nExecutorID) &&
+			(nUnitID == param.nUnitID);
 	}
 };
 
@@ -307,9 +311,13 @@ public:
 
 struct SExecutorEventParamHash
 {
-	int operator()( const SExecutorEventParam &e ) const
+	std::size_t operator()( const SExecutorEventParam &e ) const
 	{ 
-		return e.eEventID  + (e.nExecutorID << 8) + (e.nUnitID << 16); 
+		std::size_t seed;
+		boost::hash_combine(seed, static_cast<size_t>(e.eEventID));
+		boost::hash_combine(seed, e.nExecutorID);
+		boost::hash_combine(seed, e.nUnitID);
+		return seed;
 	}
 };
 
