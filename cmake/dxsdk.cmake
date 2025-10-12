@@ -1,4 +1,10 @@
-set(DXSDK_ROOT "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)")
+if(DEFINED ENV{DXSDK_ROOT})
+  set(DXSDK_ROOT $ENV{DXSDK_ROOT})
+else()
+  set(DXSDK_ROOT "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)")
+endif()
+
+message(STATUS "using DirectX SDK from ${DXSDK_ROOT}")
 
 set(DXSDK_INCLUDE ${DXSDK_ROOT}/Include)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
