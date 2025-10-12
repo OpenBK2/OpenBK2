@@ -1,4 +1,5 @@
 project(UI)
+
 set(SOURCES
     Background.cpp
     BackgroundMutableTexture.cpp
@@ -58,9 +59,10 @@ set(SOURCES
     WindowTextView.cpp
     WindowTooltip.cpp
 )
+
 include(GenerateExportHeader)
 add_library(UI SHARED ${SOURCES})
 generate_export_header(UI EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/UI_export.h)
-target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi)
+target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared)
 install(TARGETS UI DESTINATION bin)
 add_version_info(UI)
