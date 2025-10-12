@@ -24,7 +24,8 @@ struct SVideoMode
 
 struct SSystemInfo
 {
-	int nDesktopResolution;
+	int nDesktopWidth;
+	int nDesktopHeight;
 };
 
 struct SRenderTargetDesc

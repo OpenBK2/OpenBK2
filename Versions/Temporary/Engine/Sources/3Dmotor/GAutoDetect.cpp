@@ -8,6 +8,8 @@
 
 #include "pciids/detect.h"
 
+#include <fmt/format.h>
+
 namespace NGScene
 {
 struct SCfgValue { const char *pszName; float fValue; };
@@ -282,11 +284,9 @@ void AutoDetectVideoConfig()
 		}
 	}
 
-	int nDesktopResolution = systemInfo.nDesktopResolution;
-	if ( nDesktopResolution < 1024 )
-		NGlobal::SetVar( "gfx_resolution", "800x600" );
-	else
-		NGlobal::SetVar( "gfx_resolution", "1024x768" );
+	int nDesktopWidth = systemInfo.nDesktopWidth;
+	int nDesktopHeight = systemInfo.nDesktopHeight;
+	NGlobal::SetVar( "gfx_resolution", fmt::format("{}x{}", nDesktopWidth, nDesktopHeight) );
 
 	if ( !NGfx::CanStreamGeometry() || perf.fCPUclock < 1400 )
 		nDefaultSpeed = CV_VHIGH;

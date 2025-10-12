@@ -63,15 +63,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	swscanf( sValue.GetString().c_str(), L"%dx%d", &nModeX, &nModeY );
 	if ( nModeY == -1 )
 	{
-		if ( nModeX == 320 ) { nModeY = 200; }
-		else if ( nModeX == 400 ) { nModeY = 300; }
-		else if ( nModeX == 640 ) { nModeY = 480; }
-		else if ( nModeX == 800 ) { nModeY = 600; }
-		else if ( nModeX == 1024 ) { nModeY = 768; }
-		else if ( nModeX == 1152 ) { nModeY = 864; }
-		else if ( nModeX == 1280 ) { nModeY = 960; } // 4:3 resolution
-		else if ( nModeX == 1600 ) { nModeY = 1200; }
-		else { nModeX = 1024; nModeY = 768; }
+		const NGfx::SSystemInfo &systemInfo = NGfx::GetSystemInfo();
+		float aspect = systemInfo.nDesktopHeight ? static_cast<float>(systemInfo.nDesktopWidth) / static_cast<float>(systemInfo.nDesktopHeight) : 4.0f / 3.0f;
+		nModeY = static_cast<int>( nModeX / aspect );
 	}
 
 	NGfx::EFS fullScreen = NGfx::WINDOWED;

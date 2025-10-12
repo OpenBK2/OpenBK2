@@ -592,7 +592,8 @@ static bool CheckDeviceCaps()
 	if ( SUCCEEDED(hr) )
 		pTestBuffer->Unlock();
 
-	systemInfo.nDesktopResolution = desktop.Width;
+	systemInfo.nDesktopWidth = desktop.Width;
+	systemInfo.nDesktopHeight = desktop.Height;
 
 	if ( !bHardwareVP )
 	{
