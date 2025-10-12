@@ -9,13 +9,33 @@ The game is still available on [Steam](https://store.steampowered.com/app/313500
 In 2025, the game's source code was released under a [special license](LICENSE.md) that prohibits commercial use but is completely open for the game's community, education and research.
 Please review the terms of the [license agreement](LICENSE.md) carefully before using it.
 
-## Tech stack
+## Original Tech stack
 
 - **Game engine**: Custom 3D engine, mostly written in C++
 - **Scripting language**: Lua
 - **Animation**: Granny Animation (RAD Game Tools) ⚠️ *Commercial license - not included*
 - **Video**: Bink Video Technology ⚠️ *Commercial license - not included*
 - **Audio**: FMOD sound system ⚠️ *Commercial license - not included*
+
+## New Tech stack
+
+- **Game engine**: Custom 3D engine, mostly written in C++
+- **Scripting language**: Lua
+- **Animation**: Granny Animation (RAD Game Tools) - from [uesp-esoapps](https://github.com/uesp/uesp-esoapps.git)
+- **Audio**: FLESSD sound system - Open source version of FMOD
+
+## New changes
+
+- Old BK2 source code was ported to modern Visual Studio 2022, CMake
+- BK2 can now also be compiled as 64 bit app
+- Replaced FMOD with FLESSD
+- Removed dependence on S3TC lib
+- Videos are disabled for now - to be implemented with FFMPEG in the future
+- Some new features:
+    - Added an option to disable certain techlevels for certain nations in MP
+    - Reworked reinforcement inheritance system in MP
+    - Fixed the "green team base capping advantage" on neutral bases by introducing the contested base state
+    - Player color pallete (HP bars) now supports up to 16 colors (which is also the max possible number of players)
 
 ## What is in this repository
 
@@ -57,10 +77,7 @@ Please review the terms of the [license agreement](LICENSE.md) carefully before 
 
 # Building the project
 
-## Build requirements
-- Microsoft Visual Studio (2003)
-- DirectX SDK
-- Additional dependencies are specified in the documentation
+See [Contributing.md](https://github.com/OpenBK2/OpenBK2/blob/port/Contributing.md) file.
 
 ---
 
