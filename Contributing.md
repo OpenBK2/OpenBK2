@@ -17,20 +17,29 @@ Install [Microsoft Visual Studio 2022](https://visualstudio.microsoft.com/downlo
 
 Use `File -> Open -> Folder` menu (Ctrl+Shift+Alt+O) to open the cloned repository folder
 
-go to `Project -> CMake Settings for b2` menu
+go to `Project ->Edit CMake Presets for b2` menu
 
-click green plus sign (Add a new configuration), select `x86-Release`
+Edit the `configurePresets` part of the file, `CMAKE_INSTALL_PREFIX` path. e.g. to install game into the `C:\Games\bk2` directory, use the following:
 
-add installation prefix to `CMake command arguments`. e.g. to install game into the `C:\Games\bk2` directory, use the following:
-
-```bash
--DCMAKE_INSTALL_PREFIX=C:/Games/bk2
+```cmake
+  "configurePresets": [
+    {
+      "name": "base-windows",
+      "hidden": true,
+      "displayName": "Base Windows Ninja Preset",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_INSTALL_PREFIX": "C:/Games/bk2"
+      }
+    },
 ```
-remove the default `x64-Debug` configuration (it won't build anyway).
 
 save the file (Ctrl+S).
 
-once CMake configuration is completed, use `Build -> Install Project` menu.
+once CMake configuration is completed, use `Build -> Install b2` menu.
 
 # copying data files
 
@@ -51,3 +60,4 @@ copying will take a while - there are **MANY** small files.
 # launching the game
 
 the game executable is `bin\Game.exe`. therefore, if game was installed into `C:\Games\bk2`, then `C:\Games\bk2\bin\Game.exe` should be launched.
+
