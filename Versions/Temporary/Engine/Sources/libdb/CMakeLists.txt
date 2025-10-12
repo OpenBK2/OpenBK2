@@ -44,3 +44,4 @@ generate_export_header(libdb EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/libdb_
 target_include_directories(libdb PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(libdb PRIVATE MemoryLib Misc Parser System zlib winapi)
 install(TARGETS libdb DESTINATION bin)
+add_version_info(libdb)

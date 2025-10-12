@@ -2,7 +2,6 @@
 
 #include <crtdbg.h>
 #include "resource.h"
-#include "revision.h"
 #include "Misc/2Darray.h"
 #include "stats_b2_m1/IconsSet.h"
 

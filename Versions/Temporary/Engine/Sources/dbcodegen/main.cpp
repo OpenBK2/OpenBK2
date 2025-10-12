@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "revision.h"
 #include "codegen.h"
 #include "Config.h"
 #include "Errors.h"

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "revision.h"
 #include "libdb/EditorDb.h"
 #include "libdb/TypeDef.h"
 #include "System/VFSOperations.h"

@@ -39,6 +39,7 @@ include(cmake/glm.cmake)
 include(cmake/dxsdk.cmake)
 include(cmake/fmod.cmake)
 include(cmake/granny.cmake)
+include(cmake/versioninfo.cmake)
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
 

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "revision.h"
 #include "libdb/Db.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"

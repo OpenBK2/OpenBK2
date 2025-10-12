@@ -16,6 +16,7 @@ add_library(Parser SHARED ${SOURCES})
 generate_export_header(Parser EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Parser_export.h)
 target_link_libraries(Parser PRIVATE MemoryLib Misc System zlib winapi)
 install(TARGETS Parser DESTINATION bin)
+add_version_info(Parser)
 
 set_source_files_properties(lex.yy.c PROPERTIES LANGUAGE CXX)
 set_source_files_properties(lang.tab.c PROPERTIES LANGUAGE CXX)

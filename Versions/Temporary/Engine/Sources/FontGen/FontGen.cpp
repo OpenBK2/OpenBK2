@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "revision.h"
 #include "FontFormat.h"
 #include "Image/Targa.h"
 #include "Misc/2Darray.h"

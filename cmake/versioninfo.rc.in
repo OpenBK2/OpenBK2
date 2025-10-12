@@ -1,0 +1,29 @@
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION @VI_MAJOR@.@VI_MINOR@.@VI_PATCH@.@VI_BUILD@
+ PRODUCTVERSION @VI_MAJOR@.@VI_MINOR@.@VI_PATCH@.@VI_BUILD@
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE @VI_FILETYPE@
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "@VI_COMPANY_NAME@\0"
+            VALUE "FileDescription", "@VI_FILE_DESCRIPTION@\0"
+            VALUE "FileVersion", "@VI_MAJOR@.@VI_MINOR@.@VI_PATCH@.@VI_BUILD@\0"
+            VALUE "InternalName", "@TARGET_NAME@.@VI_EXT@\0"
+            VALUE "OriginalFilename", "@TARGET_NAME@.@VI_EXT@\0"
+            VALUE "ProductName", "@VI_PRODUCT_NAME@\0"
+            VALUE "ProductVersion", "@VI_MAJOR@.@VI_MINOR@.@VI_PATCH@.@VI_BUILD@\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

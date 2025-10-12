@@ -22,3 +22,4 @@ generate_export_header(Misc EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Misc_ex
 target_link_libraries(Misc PRIVATE MemoryLib Comctl32 winapi)
 target_link_libraries(Misc PUBLIC Boost::math)
 install(TARGETS Misc DESTINATION bin)
+add_version_info(Misc)
