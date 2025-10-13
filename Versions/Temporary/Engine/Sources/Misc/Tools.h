@@ -6,8 +6,10 @@
 
 #include <cmath>
 #include <cstdint>
+#include <type_traits>
 
 #include <boost/config.hpp>
+#include <boost/core/bit.hpp>
 #include <boost/math/special_functions/sign.hpp>
 
 // square root of the 2 and 3
@@ -69,101 +71,61 @@ inline TYPE_OUT bit_cast( const TYPE_IN &val )
 // Return the next power of 2 higher than the input
 // If the input is already a power of 2, the output will be the same as the input.
 // Got this from Brian Sharp's sweng mailing list.
-inline int GetNextPow2( uint32_t n )
+// The hand-rolled routines these replaced had per-width overloads, and their
+// results for zero depended on that width. make_unsigned_t<T> reproduces the
+// original 32/16/8-bit domains exactly, rather than widening everything to
+// uint64_t -- which would also turn a negative int argument into a huge value.
+template<typename T>
+inline int GetNextPow2( T n )
 {
-	n -= 1;
-
-	n |= n >> 16;
-	n |= n >> 8;
-	n |= n >> 4;
-	n |= n >> 2;
-	n |= n >> 1;
-
-	return n + 1;
+	// only 32-bit overloads existed (uint32_t and int), so narrower arguments
+	// were promoted; reproduce that instead of letting bit_ceil overflow a
+	// narrow type. Old code did n-1, smeared the bits down, then +1, which
+	// wrapped back to 0 for n == 0.
+	using U = std::make_unsigned_t<T>;
+	using P = std::conditional_t<( sizeof( U ) < sizeof( uint32_t ) ), uint32_t, U>;
+	const P u = static_cast<P>( static_cast<U>( n ) );
+	// bit_ceil is undefined when the result is not representable; the old code
+	// smeared to all-ones and wrapped to 0 there, so reproduce that.
+	constexpr P highest = P( 1 ) << ( sizeof( P ) * 8 - 1 );
+	if ( u == 0 || u > highest )
+	{
+		return 0;
+	}
+	return static_cast<int>( boost::core::bit_ceil( u ) );
 }
-inline int GetNextPow2( int n ) { return GetNextPow2( uint32_t(n) ); }
 
 // получить старший включенный бит
-inline int GetMSB( uint32_t n )
+template<typename T>
+inline int GetMSB( T n )
 {
-  int k = 0;
-	if ( n & 0xFFFF0000 ) k = 16, n >>= 16;
-  if ( n & 0x0000FF00 ) k += 8, n >>= 8;
-  if ( n & 0x000000F0 ) k += 4, n >>= 4;
-  if ( n & 0x0000000C ) k += 2, n >>= 2;
-  if ( n & 0x00000002 ) k += 1;
-	return k;
+	// old code left k at 0 when no bit was set, so 0 and 1 both gave 0
+	using U = std::make_unsigned_t<T>;
+	const U u = static_cast<U>( n );
+	return u == 0 ? 0 : boost::core::bit_width( u ) - 1;
 }
-inline int GetMSB( int n ) { return GetMSB( uint32_t(n) ); }
-inline int GetMSB( uint16_t n )
-{
-  int k = 0;
-  if ( n & 0xFF00 ) k  = 8, n >>= 8;
-  if ( n & 0x00F0 ) k += 4, n >>= 4;
-  if ( n & 0x000C ) k += 2, n >>= 2;
-  if ( n & 0x0002 ) k += 1;
-	return k;
-}
-inline int GetMSB( short n ) { return GetMSB( uint16_t(n) ); }
-inline int GetMSB( uint8_t n )
-{
-  int k = 0;
-  if ( n & 0xF0 ) k  = 4, n >>= 4;
-  if ( n & 0x0C ) k += 2, n >>= 2;
-  if ( n & 0x02 ) k += 1;
-	return k;
-}
-inline int GetMSB( char n ) { return GetMSB( uint8_t(n) ); }
 
 // получить младший включенный бит
-inline int GetLSB( uint32_t n )
+template<typename T>
+inline int GetLSB( T n )
 {
-  int k = 0;
-  if ( (n & 0x0000FFFF) == 0 ) k = 16, n >>= 16;
-  if ( (n & 0x000000FF) == 0 ) k += 8, n >>= 8;
-  if ( (n & 0x0000000F) == 0 ) k += 4, n >>= 4;
-  if ( (n & 0x00000003) == 0 ) k += 2, n >>= 2;
-  if ( (n & 0x00000001) == 0 ) k += 1;
-	return k;
+	// every shift step fired for zero, leaving k at width-1: 31 / 15 / 7 for
+	// the 32 / 16 / 8-bit overloads respectively
+	using U = std::make_unsigned_t<T>;
+	const U u = static_cast<U>( n );
+	return u == 0 ? static_cast<int>( sizeof( U ) * 8 - 1 ) : boost::core::countr_zero( u );
 }
-inline int GetLSB( int n ) { return GetLSB( uint32_t(n) ); }
-inline int GetLSB( uint16_t n )
-{
-  int k = 0;
-  if ( (n & 0x00FF) == 0 ) k  = 8, n >>= 8;
-  if ( (n & 0x000F) == 0 ) k += 4, n >>= 4;
-  if ( (n & 0x0003) == 0 ) k += 2, n >>= 2;
-  if ( (n & 0x0001) == 0 ) k += 1;
-	return k;
-}
-inline int GetLSB( short n ) { return GetLSB( uint16_t(n) ); }
-inline int GetLSB( uint8_t n )
-{
-  int k = 0;
-  if ( (n & 0x0F) == 0 ) k  = 4, n >>= 4;
-  if ( (n & 0x03) == 0 ) k += 2, n >>= 2;
-  if ( (n & 0x01) == 0 ) k += 1;
-	return k;
-}
-inline int GetLSB( char n ) { return GetLSB( uint8_t(n) ); }
 
 // подсчёт колличества ненулевых бит в числе
 // 0x49249249ul // = 0100_1001_0010_0100_1001_0010_0100_1001
 // 0x381c0e07ul // = 0011_1000_0001_1100_0000_1110_0000_0111
-inline int GetNumBits( uint32_t v )
+template<typename T>
+inline int GetNumBits( T v )
 {
-  v = (v & 0x49249249ul) + ((v >> 1) & 0x49249249ul) + ((v >> 2) & 0x49249249ul);
-  v = ((v + (v >> 3)) & 0x381c0e07ul) + ((v >> 6) & 0x381c0e07ul);
-  return int( (v + (v >> 9) + (v >> 18) + (v >> 27)) & 0x3f );
+	// popcount needs an unsigned type; the old int overload counted via
+	// uint32_t(v), so a negative argument yielded 32
+	return boost::core::popcount( static_cast<std::make_unsigned_t<T>>( v ) );
 }
-inline int GetNumBits( int v ) { return GetNumBits( uint32_t(v) ); }
-inline int GetNumBits( uint8_t v )
-{
-  v = (v & 0x55) + ((v >> 1) & 0x55);
-  v = (v & 0x33) + ((v >> 2) & 0x33);
-  return int( (v & 0x0f) + ((v >> 4) & 0x0f) );
-}
-inline int GetNumBits( char v ) { return GetNumBits( uint8_t(v) ); }
 
 // ************************************************************************************************************************ //
 // обнуление памяти по типу переменной
