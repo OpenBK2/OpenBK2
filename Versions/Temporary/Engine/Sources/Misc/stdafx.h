@@ -51,11 +51,12 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <cstdint>
 
 namespace NTimer
 {
-	typedef DWORD STime;
-};
+	typedef uint32_t STime;
+}
 //
 #include "Misc/Tools.h"
 #include "Misc/Geom.h"

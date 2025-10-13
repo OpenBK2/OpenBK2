@@ -1,9 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 namespace NTimer
 {
-	typedef DWORD STime;
+	typedef uint32_t STime;
 }
+
 namespace NDb
 {
 	enum ENotificationEventType;

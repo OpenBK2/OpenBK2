@@ -1,3 +1,5 @@
 #pragma once
-typedef DWORD STime;
 
+#include <cstdint>
+
+typedef uint32_t STime;

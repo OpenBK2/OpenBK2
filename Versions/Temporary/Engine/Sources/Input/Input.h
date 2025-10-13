@@ -2,8 +2,9 @@
 
 #include "Input_export.h"
 
+#include <cstdint>
 
-typedef DWORD STime;
+typedef uint32_t STime;
 
 #include "System/WinFrame.h"
 namespace NInput

@@ -49,11 +49,12 @@
 #include "System/det_map.h"
 #include "System/det_set.h"
 #include <set>
+#include <cstdint>
 
 namespace NTimer
 {
-	typedef DWORD STime;
-};
+	typedef uint32_t STime;
+}
 //
 #include "System/System.h"
 #include "Misc/Tools.h"

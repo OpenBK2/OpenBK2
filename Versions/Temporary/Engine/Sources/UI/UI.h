@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include "UI_export.h"
 
-
 #include "commandparam.h"
+
+#include <cstdint>
 
 enum EKeyboardFlags
 {
@@ -14,7 +14,7 @@ enum EKeyboardFlags
 	EKF_CTRL		= 4,
 };
 
-typedef DWORD STime;
+typedef uint32_t STime;
 
 EXTERNVAR bool s_bUICommonShowWarnings;
 
