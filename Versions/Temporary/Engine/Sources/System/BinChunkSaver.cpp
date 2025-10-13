@@ -553,9 +553,9 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 					// check if there are any unsaved fields
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
 					{
-						static std::vector<const type_info*> ignores;
+						static std::vector<const std::type_info*> ignores;
 						bool bPerformCheck = true;
-						const type_info &ti = typeid( *pObject );
+						const std::type_info &ti = typeid( *pObject );
 						for ( int k = 0; k < ignores.size(); ++k )
 						{
 							if ( ti == *ignores[k] )

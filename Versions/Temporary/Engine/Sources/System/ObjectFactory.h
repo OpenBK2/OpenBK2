@@ -8,7 +8,7 @@ template <class T>
 class CClassFactory
 {
 public:
-	typedef const type_info *VFT;
+	typedef const std::type_info *VFT;
 private:
 	typedef T* (*newFunc)();
 	typedef std::unordered_map<int, newFunc> CTypeNewHash;                // typeID->newFunc()

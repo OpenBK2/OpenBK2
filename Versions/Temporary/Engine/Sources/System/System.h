@@ -33,11 +33,11 @@ namespace NObjectFactory
 	// create new object by typeID
 	SYSTEM_EXPORT CObjectBase *MakeObject( int nTypeID );
 	// register type for further creation
-	SYSTEM_EXPORT void RegisterType( int nObjectTypeID, ::ObjectFactoryNewFunc pfnNewFunc, const type_info *pTypeInfo );
-	void UnRegisterType( int nObjectTypeID, const type_info *pTypeInfo );
+	SYSTEM_EXPORT void RegisterType( int nObjectTypeID, ::ObjectFactoryNewFunc pfnNewFunc, const std::type_info *pTypeInfo );
+	void UnRegisterType( int nObjectTypeID, const std::type_info *pTypeInfo );
 	// get object's typeID (for save/load system)
 	SYSTEM_EXPORT int GetObjectTypeID( CObjectBase *pObj );
-	SYSTEM_EXPORT int GetObjectTypeID( const type_info &rtti );
+	SYSTEM_EXPORT int GetObjectTypeID( const std::type_info &rtti );
 	// check, is type registered
 	SYSTEM_EXPORT bool IsRegistered( int nObjectTypeID );
 	// start register type

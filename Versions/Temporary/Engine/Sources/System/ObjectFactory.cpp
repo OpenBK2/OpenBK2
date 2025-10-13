@@ -24,12 +24,12 @@ CObjectBase *MakeObject( int nTypeID )
 	return pSSClasses->CreateObject( nTypeID );
 }
 
-void RegisterType( int nObjectTypeID, ObjectFactoryNewFunc pfnNewFunc, const type_info *pTypeInfo )
+void RegisterType( int nObjectTypeID, ObjectFactoryNewFunc pfnNewFunc, const std::type_info *pTypeInfo )
 {
 	pSSClasses->RegisterTypeBase( nObjectTypeID, pfnNewFunc, pTypeInfo );
 }
 
-void UnRegisterType( int nObjectTypeID, const type_info *pObjectTypeInfo )
+void UnRegisterType( int nObjectTypeID, const std::type_info *pObjectTypeInfo )
 {
 	if ( pSSClasses )
 		pSSClasses->UnregisterTypeBase( nObjectTypeID, pObjectTypeInfo );
@@ -40,7 +40,7 @@ int GetObjectTypeID( CObjectBase *pObj )
 	return pSSClasses->GetObjectTypeID( pObj );
 }
 
-int GetObjectTypeID( const type_info &rtti )
+int GetObjectTypeID( const std::type_info &rtti )
 {
 	return pSSClasses->GetObjectTypeID( &rtti );
 }
