@@ -49,28 +49,28 @@ protected:
 	//
 	afx_msg void OnTimer( UINT nIDEvent );
 
-	LONG nSceneColorTimer;
+	int32_t nSceneColorTimer;
   inline UINT GetSceneColorID() { return 1; }
   inline UINT GetSceneColorTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetSceneColorTimer();
   void KillSceneColorTimer();
   void OnSceneColorTimer();
 	//
-	LONG nTerrainColorTimer;
+	int32_t nTerrainColorTimer;
   inline UINT GetTerrainColorID() { return 2; }
   inline UINT GetTerrainColorTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetTerrainColorTimer();
   void KillTerrainColorTimer();
   void OnTerrainColorTimer();
 	//
-	LONG nTerrainColorOpacityTimer;
+	int32_t nTerrainColorOpacityTimer;
   inline UINT GetTerrainColorOpacityID() { return 3; }
   inline UINT GetTerrainColorOpacityTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetTerrainColorOpacityTimer();
   void KillTerrainColorOpacityTimer();
   void OnTerrainColorOpacityTimer();
 	//
-	LONG nFOVTimer;
+	int32_t nFOVTimer;
   inline UINT GetFOVID() { return 4; }
   inline UINT GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
   void SetFOVTimer();

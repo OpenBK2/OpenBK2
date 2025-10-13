@@ -233,9 +233,9 @@ BOOL CLuaEditor::PreparePrint(CDC *pDC, CPrintInfo *pInfo)
 	int startPos = crange.cpMin;
 	int endPos = crange.cpMax;
 
-	LONG lengthDoc = Sci(SCI_GETLENGTH);
-	LONG lengthPrinted = 0;
-	LONG lengthDocMax = lengthDoc;
+	int32_t lengthDoc = Sci(SCI_GETLENGTH);
+	int32_t lengthPrinted = 0;
+	int32_t lengthDocMax = lengthDoc;
 
 	// Requested to print selection
 	if (pInfo->m_pPD->m_pd.Flags & PD_SELECTION) {

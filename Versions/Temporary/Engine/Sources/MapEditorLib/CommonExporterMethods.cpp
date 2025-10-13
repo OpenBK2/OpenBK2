@@ -318,7 +318,7 @@ void GetMayaInstallPath( string *szPath, const string &szMayaVersion )
 	const int nMaxSize = 512;
 	int nSize = nMaxSize;
 	uint8_t buffer[nMaxSize];
-	LONG error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
+	int32_t error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
 			StrFmt("SOFTWARE\\Alias|Wavefront\\Maya\\%s\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()),
 			0, &type,
 			buffer, (LPDWORD)&nSize

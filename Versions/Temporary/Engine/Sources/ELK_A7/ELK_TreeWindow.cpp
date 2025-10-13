@@ -8,6 +8,8 @@
 #include "WMDefines.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 CELKTreeWindow::CELKTreeWindow() : pwndFormWindow( 0 ), bCollapseDeselected( true ), bNextFilterChanged( true ), bPreviousFilterChanged( true ), cachedNextItem( 0 ), cachedPreviousItem( 0 ), bCachedNextItemExists( true ), bCachedPreviousItemExists( true )
 {
 }
@@ -194,9 +196,9 @@ void CELKTreeWindow::FillTree( const class CELK &rELK, const string &rszInitialI
 		if ( baseItem != 0 )
 		{
 			
-			rootFolderMap[reinterpret_cast<LONG>( baseItem )] = szDataBaseFolder;
-			rootNameMap[reinterpret_cast<LONG>( baseItem )] = rELKElement.szPath.substr( rELKElement.szPath.rfind( '\\' ) + 1 );
-			rootNumberMap[reinterpret_cast<LONG>( baseItem )] = nElementIndex;
+			rootFolderMap[reinterpret_cast<int32_t>( baseItem )] = szDataBaseFolder;
+			rootNameMap[reinterpret_cast<int32_t>( baseItem )] = rELKElement.szPath.substr( rELKElement.szPath.rfind( '\\' ) + 1 );
+			rootNumberMap[reinterpret_cast<int32_t>( baseItem )] = nElementIndex;
 			int nTextState = FillFolder( baseItem, szDataBaseFolder, rszInitialItemPath, nInitialELKElement, pwndProgressDialog );
 			wndTree.SetItemImage( baseItem, IMAGE_ROOT_NOT_TRANSLATED_EXPANDED + nTextState, IMAGE_ROOT_NOT_TRANSLATED_EXPANDED + nTextState );
 			if ( ( !rszInitialItemPath.empty() ) && ( nInitialELKElement >= 0 ) )
@@ -229,7 +231,7 @@ void CELKTreeWindow::GetItemPathInternal( HTREEITEM item, string *pszItemPath, b
 		}
 		if ( bFull )
 		{
-			( *pszItemPath ) = rootFolderMap[reinterpret_cast<LONG>( item )] + ( *pszItemPath );
+			( *pszItemPath ) = rootFolderMap[reinterpret_cast<int32_t>( item )] + ( *pszItemPath );
 		}
 		if ( !childItem )
 		{
@@ -245,7 +247,7 @@ int CELKTreeWindow::GetELKElementNumberInternal( HTREEITEM item )
 	{
 		item = parentItem;
 	}
-	hash_map<LONG, int>::const_iterator itRootNumber = rootNumberMap.find( reinterpret_cast<LONG>( item ) );
+	hash_map<int32_t, int>::const_iterator itRootNumber = rootNumberMap.find( reinterpret_cast<int32_t>( item ) );
 	if ( itRootNumber != rootNumberMap.end() )
 	{
 		return itRootNumber->second;
@@ -264,7 +266,7 @@ void CELKTreeWindow::GetELKElementNameInternal( HTREEITEM item, string *pszName 
 		{
 			item = parentItem;
 		}
-		hash_map<LONG, string>::const_iterator itRootName = rootNameMap.find( reinterpret_cast<LONG>( item ) );
+		hash_map<int32_t, string>::const_iterator itRootName = rootNameMap.find( reinterpret_cast<int32_t>( item ) );
 		if ( itRootName != rootNameMap.end() )
 		{
 			( *pszName ) = itRootName->second;
@@ -283,7 +285,7 @@ void CELKTreeWindow::GetELKElementPathInternal( HTREEITEM item, string *pszPath 
 		{
 			item = parentItem;
 		}
-		hash_map<LONG, string>::const_iterator itRootFolder = rootFolderMap.find( reinterpret_cast<LONG>( item ) );
+		hash_map<int32_t, string>::const_iterator itRootFolder = rootFolderMap.find( reinterpret_cast<int32_t>( item ) );
 		if ( itRootFolder != rootFolderMap.end() )
 		{
 			( *pszPath ) = itRootFolder->second;
@@ -306,7 +308,7 @@ void CELKTreeWindow::GetXLSPathInternal( HTREEITEM item, string *pszItemPath )
 			( *pszItemPath ) = szLocalPath + string( "\\" ) + ( *pszItemPath );
 			item = parentItem;
 		}
-		( *pszItemPath ) = rootNameMap[reinterpret_cast<LONG>( item )] + string( "\\" ) + ( *pszItemPath );
+		( *pszItemPath ) = rootNameMap[reinterpret_cast<int32_t>( item )] + string( "\\" ) + ( *pszItemPath );
 		if ( !childItem )
 		{
 			( *pszItemPath ) = pszItemPath->substr( 0, pszItemPath->rfind( '\\' ) );

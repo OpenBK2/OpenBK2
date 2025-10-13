@@ -33,7 +33,7 @@
 	r = *(float *)&_i;                    \
 	r = r * (2.0f - (p) * r);             \
 }
-//#define MAKELONG(x,y) (LONG((uint16_t(x)&0xffff)))|(LONG((uint16_t(y)&0xffff)<<16))
+//#define MAKELONG(x,y) (int32_t((uint16_t(x)&0xffff)))|(int32_t((uint16_t(y)&0xffff)<<16))
 // C/C++ standard conforming fp-bits retrieving
 inline uint32_t GetFloatBits( float fVal )
 {

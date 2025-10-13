@@ -1570,7 +1570,7 @@ void CMainFrame::OnUpdateBrowseCollapseItem(CCmdUI* pCmdUI)
 }
 
 
-LONG CMainFrame::OnCreateCombo(UINT wParam, LONG lParam)
+int32_t CMainFrame::OnCreateCombo(UINT wParam, int32_t lParam)
 {
 	HWND hWnd = reinterpret_cast<HWND>( lParam );
 	UINT nNotifyCode = HIWORD( wParam );
@@ -1838,7 +1838,7 @@ void CMainFrame::OnUpdateEditFind( CCmdUI* pCmdUI )
 }
 
 
-LONG CMainFrame::OnFindReplace( WPARAM wParam, LPARAM lParam )
+int32_t CMainFrame::OnFindReplace( WPARAM wParam, LPARAM lParam )
 {
 	if ( lParam != 0 )
 	{

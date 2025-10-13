@@ -392,7 +392,7 @@ int CSpellChecker::SearchForLanguages( vector<int> *pLanguages )
 	{
 		pLanguages->clear();
 
-		LONG result = ERROR_SUCCESS;
+		int32_t result = ERROR_SUCCESS;
 		uint32_t dwDisposition;
 		HKEY hRegistrySection;
 		result = ::RegCreateKeyEx( HKEY_LOCAL_MACHINE,

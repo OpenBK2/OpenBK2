@@ -1,11 +1,12 @@
-
 #pragma once
+
 #include "ELK_TreeWindow.h"
 #include "InputViewWindow.h"
 #include "ELK_Types.h"
 #include "WMDefines.h"
 #include "SpellChecker.h"
 
+#include <cstdint>
 
 class CMainFrame : public SECFrameWnd
 {
@@ -100,9 +101,9 @@ protected:
 	afx_msg void OnUpdateToolsChooseFons(CCmdUI* pCmdUI);
 	afx_msg void OnRecentElk( UINT nID );
 	afx_msg void OnUpdateRecentElkRange( CCmdUI* pCmdUI );
-  afx_msg LONG OnFindReplace( WPARAM wParam, LPARAM lParam );
+  afx_msg int32_t OnFindReplace( WPARAM wParam, LPARAM lParam );
 
-	afx_msg LONG OnCreateCombo( UINT wParam, LONG lParam );
+	afx_msg int32_t OnCreateCombo( UINT wParam, int32_t lParam );
 	afx_msg void OnChangeFilter();
 	DECLARE_MESSAGE_MAP()
 

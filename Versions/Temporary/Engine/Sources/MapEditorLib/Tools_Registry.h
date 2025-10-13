@@ -20,23 +20,23 @@ class CRegistrySection
 	bool IsValid() { return ( hRegistrySection != 0 ); }
 
   //STL строка
-	LONG LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const;
-  LONG SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const;
+	int32_t LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const;
+  int32_t SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const;
  
 	//uint32_t
-	LONG LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const;
-  LONG SaveDWORD( LPCTSTR pszRegistryKey, uint32_t dwSaveValue ) const;
+	int32_t LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const;
+  int32_t SaveDWORD( LPCTSTR pszRegistryKey, uint32_t dwSaveValue ) const;
 
 	//Любое число ( только простые типы ), сохраняется и считывается по маске pszMask, хранится в виде строки для наглядности
 	template<class TValue>
-	LONG LoadNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, TValue *pLoadValue, const TValue rDefaultValue ) const
+	int32_t LoadNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, TValue *pLoadValue, const TValue rDefaultValue ) const
 	{
 		if ( pLoadValue != 0 )
 		{
 			( *pLoadValue ) = rDefaultValue;
 			
 			string szBuffer;
-			LONG eResult = LoadString( pszRegistryKey, &szBuffer, "" );
+			int32_t eResult = LoadString( pszRegistryKey, &szBuffer, "" );
 			if ( ( eResult == ERROR_SUCCESS ) && ( !szBuffer.empty() ) )
 			{
 				if ( sscanf( szBuffer.c_str(), pszMask, pLoadValue ) < 1 )
@@ -54,7 +54,7 @@ class CRegistrySection
 	}
 
 	template<class TValue>
-  LONG SaveNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const TValue &rSaveValue ) const
+  int32_t SaveNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const TValue &rSaveValue ) const
 	{
 		const string szBuffer = StrFmt( pszMask, rSaveValue );
 		return SaveString( pszRegistryKey, szBuffer );
@@ -62,14 +62,14 @@ class CRegistrySection
 
   //CTRect<TValue>, каждое поле сохраняется и считывается по маске pszMask,  хранится в виде строки для наглядности
 	template<class TValue>
-	LONG LoadRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, CTRect<TValue> *pLoadValue, const CTRect<TValue> &rDefaultValue ) const
+	int32_t LoadRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, CTRect<TValue> *pLoadValue, const CTRect<TValue> &rDefaultValue ) const
 	{
 		if ( pLoadValue != 0 )
 		{
 			( *pLoadValue ) = rDefaultValue;
 			
 			string szBuffer;
-			LONG eResult = LoadString( pszRegistryKey, &szBuffer, "" );
+			int32_t eResult = LoadString( pszRegistryKey, &szBuffer, "" );
 			if ( ( eResult == ERROR_SUCCESS ) && ( !szBuffer.empty() ) )
 			{
 				if ( sscanf( szBuffer.c_str(),
@@ -92,7 +92,7 @@ class CRegistrySection
 	}
 
 	template<class TValue>
-  LONG SaveRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const CTRect<TValue> &rSaveValue ) const
+  int32_t SaveRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const CTRect<TValue> &rSaveValue ) const
 	{
 		const string szFormat = StrFmt( "%s %s %s %s", pszMask, pszMask, pszMask, pszMask );
 		const string szBuffer = StrFmt( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );

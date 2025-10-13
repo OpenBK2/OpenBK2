@@ -4,6 +4,7 @@
 #include "TreeDockWindow.h"
 #include "ELK_Types.h"
 
+#include <cstdint>
 
 class CELKTreeWindow : public CTreeDockWindow
 {
@@ -72,9 +73,9 @@ protected:
 	HTREEITEM GetFirstItemInternal();
 	HTREEITEM GetLastItemInternal();
 
-	hash_map<LONG, string> rootFolderMap;
-	hash_map<LONG, string> rootNameMap;
-	hash_map<LONG, int> rootNumberMap;
+	hash_map<int32_t, string> rootFolderMap;
+	hash_map<int32_t, string> rootNameMap;
+	hash_map<int32_t, int> rootNumberMap;
 
 	int GetItemsCountInternal();
 	void GetItemPathInternal( HTREEITEM item, string *pszItemPath, bool bFull = true );

@@ -12,7 +12,7 @@ namespace NGfx
 class CStatesManager: public ID3DXEffectStateManager
 {
 private:
-	LONG nRef;
+	long nRef;
 
 public:
 	CStatesManager() {}

@@ -25,9 +25,9 @@ class CScriptCameraWindow : public CResizeDialog, public ICommandHandler
 	// Resize Dialog
 	DECLARE_RESIZE_DLG_WND_COMMON_METHODS( CScriptCameraWindowData )
 
-	LONG nYawTimerID;
-	LONG nPitchTimerID;
-	LONG nFOVTimerID;
+	int32_t nYawTimerID;
+	int32_t nPitchTimerID;
+	int32_t nFOVTimerID;
 	inline UINT GetYawTimerID() { return 4; }
 	inline UINT GetPitchTimerID() { return 5; }
 	inline UINT GetFOVTimerID() { return 6; }

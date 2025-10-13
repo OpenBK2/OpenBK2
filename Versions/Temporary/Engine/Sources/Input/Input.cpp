@@ -239,13 +239,13 @@ struct SInputDeviceEnum
 };
 struct SInputDataFormat
 {
-	LONG  lX;
-	LONG  lY;
-	LONG  lZ;
-	LONG  lRX;
-	LONG  lRY;
-	LONG  lRZ;
-	LONG  lPOV;
+	int32_t  lX;
+	int32_t  lY;
+	int32_t  lZ;
+	int32_t  lRX;
+	int32_t  lRY;
+	int32_t  lRZ;
+	int32_t  lPOV;
 	uint8_t  bButton[32];
 };
 

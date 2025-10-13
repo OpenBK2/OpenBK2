@@ -6,7 +6,7 @@
 
 CRegistrySection::CRegistrySection( HKEY hKey, REGSAM samDesired, LPCTSTR pszRegistrySection )
 {
-  LONG eResult = ERROR_SUCCESS;
+  int32_t eResult = ERROR_SUCCESS;
   uint32_t dwDisposition;
   eResult = ::RegCreateKeyEx( hKey,
 														 pszRegistrySection,
@@ -34,7 +34,7 @@ CRegistrySection::~CRegistrySection()
 }
 
 
-LONG CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const
+int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const
 {
   if ( ( pszLoadValue != 0 ) && ( hRegistrySection != 0 ) )
 	{
@@ -43,7 +43,7 @@ LONG CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue,
 		uint32_t dwLoadValueType;
 		uint32_t dwLoadValueLength = 0xFFF;
 		uint8_t pBuffer[0xFFF];
-		LONG eResult = ERROR_SUCCESS;
+		int32_t eResult = ERROR_SUCCESS;
 		eResult = ::RegQueryValueEx( hRegistrySection,
 																pszRegistryKey,
 																0,
@@ -67,7 +67,7 @@ LONG CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue,
 }
 
 
-LONG CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const
+int32_t CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const
 {
 	return ::RegSetValueEx( hRegistrySection,
 													pszRegistryKey,
@@ -78,7 +78,7 @@ LONG CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveV
 }
 
 
-LONG CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const
+int32_t CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const
 {
   if ( ( pdwLoadValue != 0 ) && ( hRegistrySection != 0 ) )
 	{
@@ -87,7 +87,7 @@ LONG CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue
 		uint32_t dwLoadValueType;
 		uint32_t dwLoadValueLength = 0xFFF;
 		uint8_t pBuffer[0xFFF];
-		LONG eResult = ERROR_SUCCESS;
+		int32_t eResult = ERROR_SUCCESS;
 		eResult = ::RegQueryValueEx( hRegistrySection,
 																pszRegistryKey,
 																0,
@@ -111,7 +111,7 @@ LONG CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue
 }
 
 
-LONG CRegistrySection::SaveDWORD( LPCTSTR pszRegistryKey, uint32_t dwSaveValue ) const
+int32_t CRegistrySection::SaveDWORD( LPCTSTR pszRegistryKey, uint32_t dwSaveValue ) const
 {
 	return ::RegSetValueEx( hRegistrySection,
 													pszRegistryKey,

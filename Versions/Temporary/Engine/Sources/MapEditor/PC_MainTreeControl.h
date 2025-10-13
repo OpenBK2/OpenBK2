@@ -39,7 +39,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	CPtr<IPCItemEditor> pMultilineStringEditor;
 	//
 	// Таймер дла отложенного считывания полей структур из базы
-	LONG nCreateTreeTimer;
+	int32_t nCreateTreeTimer;
 	bool bCreateTree;
 	bool bAsync;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;

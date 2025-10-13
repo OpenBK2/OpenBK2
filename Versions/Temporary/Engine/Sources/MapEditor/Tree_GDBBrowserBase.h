@@ -85,7 +85,7 @@ private:
 	bool bStrongSelection; // selection in open / resent list operations
 	//
 	// Таймер дла отложенного считывания полей структур из базы
-	LONG nCreateTreeTimer;
+	int32_t nCreateTreeTimer;
 	bool bCreateTreeSelectionChanged;
 	string szIgnoreSelectionName;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
@@ -97,7 +97,7 @@ private:
   void OnCreateTreeTimer();
 
   //Таймер для отложенного обновления поля поcле редактирования метки
-	LONG nLabelEditSortTimer;
+	int32_t nLabelEditSortTimer;
 	HTREEITEM hLabelEditSortTimerItem;
   inline UINT GetLabelEditSortTimerID() { return 101; }
   inline UINT GetLabelEditSortTimerInterval() { return 10; }

@@ -54,7 +54,7 @@ class CMoviesEditorWindow : public CResizeDialog, public ICommandHandler
 	SScriptMovieEditorData dialogData;
 
 	float fNewLength;
-	LONG nMovieTimerID;
+	int32_t nMovieTimerID;
 
 	// CResizeDialog
 	CBitmap bitmaps[SB_SIZE];

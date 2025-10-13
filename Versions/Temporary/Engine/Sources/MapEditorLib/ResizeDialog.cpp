@@ -272,8 +272,8 @@ void CResizeDialog::OnSizing( UINT fwSide, LPRECT pRect )
 	GetWindowRect( &windowRect );
 
 
-	LONG nXSize = clientRect.right - clientRect.left;
-	LONG nYSize = clientRect.bottom - clientRect.top;
+	int32_t nXSize = clientRect.right - clientRect.left;
+	int32_t nYSize = clientRect.bottom - clientRect.top;
 	nXSize = ( pRect->right - pRect->left ) - ( ( windowRect.right - windowRect.left ) - nXSize );
 	nYSize = ( pRect->bottom - pRect->top ) - ( ( windowRect.bottom - windowRect.top ) - nYSize );
 

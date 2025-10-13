@@ -17,8 +17,8 @@ class CChildFrameWndBase : public CWnd, public ICommandHandler
 	bool bEnableSceneUpdate;
 	bool bEnableScroll;
 	//
-	LONG nUpdateSceneTimer;
-	LONG nUpdateSceneTimerInterval;
+	int32_t nUpdateSceneTimer;
+	int32_t nUpdateSceneTimerInterval;
 
 	bool bIsSettingUp;
 	bool bWasResized;
