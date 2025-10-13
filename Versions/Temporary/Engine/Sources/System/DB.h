@@ -117,7 +117,7 @@ namespace NDb
 		CDBID dbid;
 		bool bLoaded;
 		// disable assign operator
-		CResource& operator=( const CResource &res ) {}
+		CResource& operator=( const CResource &res ) = delete;
 	protected:
 		virtual void PostLoad( bool bInEditor ) {}
 	public:
