@@ -2,6 +2,8 @@
 #include "GSceneUtils.h"
 #include "3DLib/Transform.h"
 
+#include "port/cdecl.h"
+
 namespace NGScene
 {
 
@@ -127,5 +129,5 @@ REGISTER_SAVELOAD_CLASS( 0x12341181, CScaleNode )
 REGISTER_SAVELOAD_CLASS( 0x114c1110, CCTPoint )
 REGISTER_SAVELOAD_CLASS( 0x022a2120, CExtractTranslation )
 
-extern "C" void __cdecl ForceGSceneGraph() {}
+extern "C" void PORT_CDECL ForceGSceneGraph() {}
 

@@ -7,6 +7,9 @@
 #include "Misc/StrProc.h"
 #include "System/FileUtils.h"
 #include "System/FilePath.h"
+
+#include "port/cdecl.h"
+
 //
 using namespace NDb::NCodeGenTool;
 
@@ -45,7 +48,7 @@ bool ReadConfigFile( SConfig *pConfig, const string &szConfigFile )
 }
 
 
-int __cdecl main( int argc, char *argv[] )
+int PORT_CDECL main( int argc, char *argv[] )
 {
 	const string szCurrDir = NFile::GetNormalizedCurrDir();
 	//

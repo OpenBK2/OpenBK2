@@ -7,6 +7,8 @@
 #include "GShaderFX.h"
 #include "GShaderFX.hpp"
 
+#include "port/cdecl.h"
+
 #include <cstdint>
 
 namespace NGfx
@@ -119,7 +121,7 @@ CVertexShader* CreateVertexShader( const std::string &szName )
 
 
 // форматирование строки
-const char* __cdecl Format( const char *pszFormat, ... )
+const char* PORT_CDECL Format( const char *pszFormat, ... )
 {
 	static char buff[2048];
 	va_list va;

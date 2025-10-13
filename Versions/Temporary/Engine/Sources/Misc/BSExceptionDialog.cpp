@@ -4,6 +4,8 @@
 #include "BSDialogFunctions.h"
 #include "resource.h"
 
+#include "port/cdecl.h"
+
 namespace NBSU
 {
 
@@ -23,7 +25,7 @@ struct SExceptionDlgInitParams
 };
 static const SExceptionDlgInitParams *g_pParams = 0;
 
-EBSUReport __cdecl ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
+EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszCondition, const char *pszDescription, 
 																		const std::vector<SCallStackEntry> &entries, const char *pszExtInfo )
 {

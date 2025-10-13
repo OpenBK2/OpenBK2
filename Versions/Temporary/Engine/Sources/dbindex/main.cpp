@@ -9,6 +9,7 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include "port/cdecl.h"
 
 namespace NDb
 {
@@ -32,7 +33,7 @@ int PrintUsage()
 	return 0xDEAD;
 }
 
-int __cdecl main( int argc, char *argv[] )
+int PORT_CDECL main( int argc, char *argv[] )
 {
 	string szCWD;
 	{

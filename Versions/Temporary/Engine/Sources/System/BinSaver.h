@@ -6,6 +6,8 @@
 #include "det_map.h"
 #include "det_set.h"
 
+#include "port/cdecl.h"
+
 #define REGISTER_SAVELOAD_CLASS( N, name )  \
 	BASIC_REGISTER_CLASS( name ) \
 	static struct name##Register##N { \
@@ -62,33 +64,33 @@ public:
 	typedef std::string stdString;
 	typedef std::wstring stdWString;
 private:
-	char __cdecl TestDataPath(...) { return 0; }
-	int __cdecl TestDataPath( stdString* ) { return 0; }
-	int __cdecl TestDataPath( stdWString* ) { return 0; }
-	int __cdecl TestDataPath( CMemoryStream* ) { return 0; }
+	char PORT_CDECL TestDataPath(...) { return 0; }
+	int PORT_CDECL TestDataPath( stdString* ) { return 0; }
+	int PORT_CDECL TestDataPath( stdWString* ) { return 0; }
+	int PORT_CDECL TestDataPath( CMemoryStream* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( CArray2D<T1>* ) { return 0; }
+		int PORT_CDECL TestDataPath( CArray2D<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( std::vector<T1>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::vector<T1>* ) { return 0; }
 	template<class T1>
-		int __cdecl TestDataPath( std::list<T1>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::list<T1>* ) { return 0; }
 	template<class T1, class T2, class T3>
-		int __cdecl TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
 	template<class T1, class T2, class T3, class T4>
-		int __cdecl TestDataPath( det_map<T1,T2,T3,T4>* ) { return 0; }
+		int PORT_CDECL TestDataPath( det_map<T1,T2,T3,T4>* ) { return 0; }
 	template<class T1, class T2, class T3>
-		int __cdecl TestDataPath( det_set<T1,T2,T3>* ) { return 0; }
+		int PORT_CDECL TestDataPath( det_set<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2, class T3>
-		int __cdecl TestDataPath(std::priority_queue<T1, T2, T3>*) { return 0; }
+		int PORT_CDECL TestDataPath(std::priority_queue<T1, T2, T3>*) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( std::set<T1,T2>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::set<T1,T2>* ) { return 0; }
 	template<class T1, class T2>
-		int __cdecl TestDataPath( std::pair<T1,T2>* ) { return 0; }
+		int PORT_CDECL TestDataPath( std::pair<T1,T2>* ) { return 0; }
 	//
 	template<class T>
-	void __cdecl CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
+	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -96,7 +98,7 @@ private:
 		FinishChunk();
 	}
 	template<class T>
-	void __cdecl CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
+	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
 	{
 		DataChunk( idChunk, p, sizeof(T), nChunkNumber );
 	}

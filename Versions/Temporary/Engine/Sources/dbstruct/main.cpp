@@ -8,6 +8,7 @@
 #include "System/FileUtils.h"
 #include "System/CmdLine.h"
 
+#include "port/cdecl.h"
 #include "port/stdcall.h"
 
 namespace
@@ -153,7 +154,7 @@ int MakeBin()
 
 }
 
-int __cdecl main( int argc, char *argv[] )
+int PORT_CDECL main( int argc, char *argv[] )
 {
 	const string szCWD = NFile::GetNormalizedCurrDir();
 	//

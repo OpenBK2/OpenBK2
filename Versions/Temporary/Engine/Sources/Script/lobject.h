@@ -10,7 +10,10 @@
 #include "llimits.h"
 #include "lua.h"
 
+#include "port/cdecl.h"
+
 #include <cassert>
+
 #define LUA_INTERNALERROR(s)	assert(((void)s,0))
 #define LUA_ASSERT(c,s)		ASSERT(c)
 
@@ -371,8 +374,8 @@ char *luaO_openspace (lua_State *L, size_t n);
 int luaO_equalObj (const TObject *t1, const TObject *t2);
 int luaO_str2d (const char *s, Number *result);
 
-void __cdecl luaO_verror (lua_State *L, const char *fmt, ...);
-void __cdecl luaO_chunkid (char *out, const char *source, int len);
+void PORT_CDECL luaO_verror (lua_State *L, const char *fmt, ...);
+void PORT_CDECL luaO_chunkid (char *out, const char *source, int len);
 
 
 

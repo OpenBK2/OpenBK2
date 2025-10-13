@@ -11,10 +11,11 @@
 #include <cstdlib>
 #include <cstring>
 
-
 #include "lobject.h"
 
 #include "lsaver.h"
+
+#include "port/cdecl.h"
 
 const TObject luaO_nilobject( LUA_TNIL );
 
@@ -63,7 +64,7 @@ int luaO_str2d (const char *s, Number *result) {  /* LUA_NUMBER */
 #define MAX_VERROR	280
 
 /* this function needs to handle only '%d' and '%.XXs' formats */
-void __cdecl luaO_verror (lua_State *L, const char *fmt, ...) {
+void PORT_CDECL luaO_verror (lua_State *L, const char *fmt, ...) {
   va_list argp;
   char buff[MAX_VERROR];  /* to hold formatted message */
   va_start(argp, fmt);
@@ -73,7 +74,7 @@ void __cdecl luaO_verror (lua_State *L, const char *fmt, ...) {
 }
 
 
-void __cdecl luaO_chunkid (char *out, const char *source, int bufflen) {
+void PORT_CDECL luaO_chunkid (char *out, const char *source, int bufflen) {
   if (!source) {
     return;
   }

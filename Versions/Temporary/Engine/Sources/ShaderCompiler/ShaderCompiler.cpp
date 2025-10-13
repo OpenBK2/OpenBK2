@@ -7,6 +7,8 @@
 #include "hlsl.h"
 #include <d3dx9.h>
 
+#include "port/cdecl.h"
+
 #include <cstdint>
 
 struct SCommand
@@ -592,7 +594,7 @@ static void ParseFile( char *pszFile )
 	}
 }
 
-void __cdecl main( int argc, char* argv[] )
+void PORT_CDECL main( int argc, char* argv[] )
 {
 	if ( argc != 3 )
 	{

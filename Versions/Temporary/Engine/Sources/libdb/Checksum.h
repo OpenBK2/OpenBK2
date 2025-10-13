@@ -2,6 +2,8 @@
 
 #include "libdb_export.h"
 
+#include "port/cdecl.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -14,11 +16,11 @@ class CCheckSum
 	uint32_t dwCheckSum;
 	IBinSaver *p;
 	
-	char __cdecl TestType(...) { return 0; }	
+	char PORT_CDECL TestType(...) { return 0; }
 	template<class T1>
-		int __cdecl TestType( std::vector<T1>* ) { return 0; }
-	int __cdecl TestType( std::string* ) { return 0; }
-	int __cdecl TestType( std::wstring* ) { return 0; }
+		int PORT_CDECL TestType( std::vector<T1>* ) { return 0; }
+	int PORT_CDECL TestType( std::string* ) { return 0; }
+	int PORT_CDECL TestType( std::wstring* ) { return 0; }
 
 	template<class T>
 	void DataCheckSum( T *p, const int nLen )
@@ -27,13 +29,13 @@ class CCheckSum
 	}
 
 	template<class T>
-	void __cdecl SeparateCheckSum( const T &data, SInt2Type<1> *pp )
+	void PORT_CDECL SeparateCheckSum( const T &data, SInt2Type<1> *pp )
 	{
 		DataCheckSum( &data, sizeof( T ) );
 	}
 
 	template<class T>
-	void __cdecl SeparateCheckSum( const T &data, SInt2Type<4> *pp )
+	void PORT_CDECL SeparateCheckSum( const T &data, SInt2Type<4> *pp )
 	{
 		uint32_t dataCheckSum = data.CalcCheckSum();
 		dataCheckSum = CalcCheckSum( dwCheckSum, (const uint8_t*)&dataCheckSum, sizeof(uint32_t) );

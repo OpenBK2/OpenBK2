@@ -6,6 +6,8 @@
 #include "Misc/nalgoritm.h"
 #include "System/FileUtils.h"
 
+#include "port/cdecl.h"
+
 #include <cstdint>
 
 const int N_LEADING_PIXELS = 2;
@@ -602,7 +604,7 @@ static void ShowUsage()
 	
 }
 
-int __cdecl main( int argc, char *argv[] )
+int PORT_CDECL main( int argc, char *argv[] )
 {
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
