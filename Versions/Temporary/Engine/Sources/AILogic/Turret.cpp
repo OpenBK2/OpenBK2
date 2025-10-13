@@ -8,6 +8,8 @@
 #include "Diplomacy.h"
 #include "AIGeometry.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4B3, CUnitTurret );
 REGISTER_SAVELOAD_CLASS( 0x1108D4B4, CMountedTurret );
 
@@ -21,7 +23,7 @@ extern CDiplomacy theDipl;
 
 BASIC_REGISTER_CLASS( CTurret );
 
-CTurret::CTurret( const WORD wHorRotationSpeed, const WORD wVerRotationSpeed, bool _bReturnToNULLVerAngle )
+CTurret::CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool _bReturnToNULLVerAngle )
 {
 	SetAlive( true );
 	SetUniqueIdForObjects();
@@ -44,12 +46,12 @@ CTurret::CTurret( const WORD wHorRotationSpeed, const WORD wVerRotationSpeed, bo
 	bCanReturn = false;
 }
 
-void CTurret::SetTurnParameters( SRotating *pRotateInfo, const WORD wAngle, const bool bInstantly )
+void CTurret::SetTurnParameters( SRotating *pRotateInfo, const uint16_t wAngle, const bool bInstantly )
 {
 	if ( !bInstantly )
 	{
-		const WORD wRotateAngle = DirsDifference( wAngle, pRotateInfo->wCurAngle );
-		pRotateInfo->sign = ( WORD( wAngle - pRotateInfo->wCurAngle ) == wRotateAngle ) ? 1 : -1;
+		const uint16_t wRotateAngle = DirsDifference( wAngle, pRotateInfo->wCurAngle );
+		pRotateInfo->sign = ( uint16_t( wAngle - pRotateInfo->wCurAngle ) == wRotateAngle ) ? 1 : -1;
 
 		pRotateInfo->startTime = curTime;
 		if ( pRotateInfo->wRotationSpeed == 0 )
@@ -70,7 +72,7 @@ void CTurret::SetTurnParameters( SRotating *pRotateInfo, const WORD wAngle, cons
 	}
 }
 
-bool CTurret::TurnHor( const WORD wHorAngle, const bool bInstantly )
+bool CTurret::TurnHor( const uint16_t wHorAngle, const bool bInstantly )
 {
 	hor.wCurAngle = GetHorCurAngle();
 
@@ -81,7 +83,7 @@ bool CTurret::TurnHor( const WORD wHorAngle, const bool bInstantly )
 	return true;
 }
 
-bool CTurret::TurnVer( const WORD wVerAngle, const bool bInstantly )
+bool CTurret::TurnVer( const uint16_t wVerAngle, const bool bInstantly )
 {
 	if ( bVerAiming )
 	{
@@ -96,13 +98,13 @@ bool CTurret::TurnVer( const WORD wVerAngle, const bool bInstantly )
 	return false;
 }
 
-void CTurret::Turn( const WORD wHorAngle, const WORD wVerAngle, const bool bInstantly )
+void CTurret::Turn( const uint16_t wHorAngle, const uint16_t wVerAngle, const bool bInstantly )
 {
 	TurnHor( wHorAngle, bInstantly );
 	TurnVer( wVerAngle, bInstantly );
 }
 
-WORD CTurret::ConstraintAngle( const WORD wDesAngle, const WORD wTurnConstraint ) const
+uint16_t CTurret::ConstraintAngle( const uint16_t wDesAngle, const uint16_t wTurnConstraint ) const
 {
 	if ( DirsDifference( wDesAngle, 0 ) > wTurnConstraint )
 	{
@@ -115,10 +117,10 @@ WORD CTurret::ConstraintAngle( const WORD wDesAngle, const WORD wTurnConstraint 
 		return wDesAngle;
 }
 
-int GetSignOfTurn( const WORD wStartAngle, const WORD wFinishAngle )
+int GetSignOfTurn( const uint16_t wStartAngle, const uint16_t wFinishAngle )
 {
-	const WORD wRotateAngle = DirsDifference( wStartAngle, wFinishAngle );
-	return ( WORD( wFinishAngle - wStartAngle ) == wRotateAngle ) ? 1 : -1;
+	const uint16_t wRotateAngle = DirsDifference( wStartAngle, wFinishAngle );
+	return ( uint16_t( wFinishAngle - wStartAngle ) == wRotateAngle ) ? 1 : -1;
 }
 
 void CTurret::Segment()
@@ -142,13 +144,13 @@ void CTurret::Segment()
 		else 
 		{
 			const CVec2 toTracedUnit( pTracedUnit->GetCenterPlain() - GetOwnerCenter() );
-			const WORD wDesHorAngle = ConstraintAngle( GetDirectionByVector( toTracedUnit ) - GetOwnerFrontDir() + ( IsBackGunsDirection() ? 32768 : 0 ), GetHorTurnConstraint() );
+			const uint16_t wDesHorAngle = ConstraintAngle( GetDirectionByVector( toTracedUnit ) - GetOwnerFrontDir() + ( IsBackGunsDirection() ? 32768 : 0 ), GetHorTurnConstraint() );
 			if ( hor.bFinished || GetSignOfTurn( GetHorCurAngle(), wDesHorAngle ) != hor.sign )
 				TurnHor( wDesHorAngle );
 
 			if ( bVerAiming )
 			{
-				const WORD wDesVerAngle = ConstraintAngle( GetZAngle( toTracedUnit, pTracedUnit->GetCenter().z - GetOwnerZ() ), GetVerTurnConstraint() );
+				const uint16_t wDesVerAngle = ConstraintAngle( GetZAngle( toTracedUnit, pTracedUnit->GetCenter().z - GetOwnerZ() ), GetVerTurnConstraint() );
 				if ( ver.bFinished || GetSignOfTurn( GetVerCurAngle(), wDesVerAngle ) != ver.sign )
 					TurnVer( wDesVerAngle + 16384 * 3 );
 			}
@@ -163,7 +165,7 @@ void CTurret::Segment()
 	}
 }
 
-WORD CTurret::GetCurAngle( const SRotating &rotateInfo ) const 
+uint16_t CTurret::GetCurAngle( const SRotating &rotateInfo ) const
 {
 	if ( rotateInfo.bFinished )
 		return rotateInfo.wCurAngle; 
@@ -234,15 +236,15 @@ void CTurret::SetCanReturn()
 //*											  CUnitTurret																*
 //*******************************************************************
 
-CUnitTurret::CUnitTurret( CAIUnit *_pOwner, const int _nPlatform, const WORD wHorRotationSpeed, const WORD wVerRotationSpeed,
-	const WORD _wHorConstraint, const WORD _wVerConstraint, const bool _bBuckGunsDirection )
+CUnitTurret::CUnitTurret( CAIUnit *_pOwner, const int _nPlatform, const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed,
+	const uint16_t _wHorConstraint, const uint16_t _wVerConstraint, const bool _bBuckGunsDirection )
 : CTurret( wHorRotationSpeed, wVerRotationSpeed, _pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN ),
 	pOwner( _pOwner ), nPlatform( _nPlatform ), wHorConstraint( _wHorConstraint ), wVerConstraint( _wVerConstraint ),
 	bCanRotateTurret( true ), wOldHorConstraint( _wHorConstraint ), bBuckGunsDirection( _bBuckGunsDirection )
 {
 }
 
-WORD CUnitTurret::GetHorTurnConstraint() const 
+uint16_t CUnitTurret::GetHorTurnConstraint() const
 { 
 	if ( !bCanRotateTurret )
 		return 0;
@@ -250,7 +252,7 @@ WORD CUnitTurret::GetHorTurnConstraint() const
 		return wHorConstraint;
 }
 
-bool CUnitTurret::TurnHor( const WORD wHorAngle, const bool bInstantly )
+bool CUnitTurret::TurnHor( const uint16_t wHorAngle, const bool bInstantly )
 {
 	if ( CTurret::TurnHor( wHorAngle, bInstantly ) )
 	{
@@ -261,7 +263,7 @@ bool CUnitTurret::TurnHor( const WORD wHorAngle, const bool bInstantly )
 	return false;
 }
 
-bool CUnitTurret::TurnVer( const WORD wVerAngle, const bool bInstantly )
+bool CUnitTurret::TurnVer( const uint16_t wVerAngle, const bool bInstantly )
 {
 	if ( CTurret::TurnVer( wVerAngle, bInstantly ) )
 	{
@@ -293,7 +295,7 @@ CVec2 CUnitTurret::GetOwnerCenter()
 	return pOwner->GetCenterPlain();
 }
 
-WORD CUnitTurret::GetOwnerFrontDir()
+uint16_t CUnitTurret::GetOwnerFrontDir()
 {
 	return pOwner->GetFrontDirection();
 }
@@ -333,12 +335,12 @@ CMountedTurret::CMountedTurret( CBuilding *_pBuilding, const int _nSlot )
 	center.y += pBuilding->GetCenter().y;
 }
 
-WORD CMountedTurret::GetHorTurnConstraint() const
+uint16_t CMountedTurret::GetHorTurnConstraint() const
 {
 	return wHorTurnConstraint;
 }
 
-WORD CMountedTurret::GetVerTurnConstraint() const
+uint16_t CMountedTurret::GetVerTurnConstraint() const
 {
 	return wVerTurnConstraint;
 }

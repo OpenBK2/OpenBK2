@@ -4,12 +4,15 @@
 #include "AIUnit.h"
 #include "Guns.h"
 #include "DamageToEnemyUpdater.h"
+
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*												CDamageToEnemyUpdater											*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, const DWORD dwGuns )
+void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, const uint32_t dwGuns )
 {
 	UnsetDamageFromEnemy( pCurEnemy );
 	pCurEnemy = pEnemy;

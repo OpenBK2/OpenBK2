@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 class CBasePathUnit;
 
 struct IStaticPathFinder : public CAIObjectBase
 {
-	virtual void SetPathParameters( const int nBoundTileRadius, const BYTE aiClass, struct IPointChecking *pChecking, const CVec2 &startPoint, const CVec2 &finishPoint, const int upperLimit, const bool longPath, const SVector &lastKnownGoodTile ) = 0;
+	virtual void SetPathParameters( const int nBoundTileRadius, const uint8_t aiClass, struct IPointChecking *pChecking, const CVec2 &startPoint, const CVec2 &finishPoint, const int upperLimit, const bool longPath, const SVector &lastKnownGoodTile ) = 0;
 
 	// поиск пути без каких-либо улучшений
 	virtual bool CalculatePath() = 0;	
@@ -22,7 +24,7 @@ struct IStaticPathFinder : public CAIObjectBase
 
 struct IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, class CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, const bool bIgnoreObstacles );
 struct IStaticPath* CreateStaticPathForStObjAttack( CBasePathUnit *pUnit, class CStaticObject *pObj, const float fRangeMin, const float fRangeMax, const bool bIgnoreObstacles );
-struct IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, class CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const WORD wHalfAngle, const bool bIgnoreObstacles );
+struct IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, class CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const uint16_t wHalfAngle, const bool bIgnoreObstacles );
 struct IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking );
 bool CanUnitApproachToUnitByPath( const class CAIUnit *pMoving, const struct IStaticPath *pPath, const class CAIUnit *pStanding);
 bool CanUnitApproachToPointByPath( const class CAIUnit *pMoving, const IStaticPath *pPath, const class CVec2 & point );

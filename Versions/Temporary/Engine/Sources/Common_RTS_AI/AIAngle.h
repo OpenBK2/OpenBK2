@@ -2,13 +2,14 @@
 
 #include "Common_RTS_AI_export.h"
 
+#include <cstdint>
 
-// angle (replacememt for WORD angle), multiplayer sync
+// angle (replacememt for uint16_t angle), multiplayer sync
 struct COMMON_RTS_AI_EXPORT SAIAngle
 {
 	union
 	{
-		WORD wAngle;
+		uint16_t wAngle;
 		int allign;
 	};
 

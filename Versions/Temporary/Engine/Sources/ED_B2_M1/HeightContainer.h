@@ -3,6 +3,7 @@
 #include "MapeditorLib/Tools_FreeIDCollector.h"
 #include "VSOManager.h"
 
+#include <cstdint>
 
 class CHeightContainer
 {
@@ -12,10 +13,10 @@ class CHeightContainer
 	CTPoint<int> planeSize;														// размер однобитной плоскости
 	int nStackCount;																	// количество стеков
 	float fTileSize;																	// размер сетки
-	vector<CArray2D<DWORD> > blackPlaneStackList;			// стеки однобитных плоскостей ( по sizeof(DWORD) на стек ) (черные)
-	vector<CArray2D<DWORD> > redPlaneStackList;				// стеки однобитных плоскостей ( по sizeof(DWORD) на стек ) (красные)
-	vector<DWORD> markedBitslList;										// набор битов помарканной точки (берется из черной плоскости)
-	vector<DWORD> filledBitsList;											// набор битов указывающий заполненность ( если последнее число == 0, то можно сократить количество плоскостей ) (общее для обоих типов плоскостей)
+	vector<CArray2D<uint32_t> > blackPlaneStackList;			// стеки однобитных плоскостей ( по sizeof(uint32_t) на стек ) (черные)
+	vector<CArray2D<uint32_t> > redPlaneStackList;				// стеки однобитных плоскостей ( по sizeof(uint32_t) на стек ) (красные)
+	vector<uint32_t> markedBitslList;										// набор битов помарканной точки (берется из черной плоскости)
+	vector<uint32_t> filledBitsList;											// набор битов указывающий заполненность ( если последнее число == 0, то можно сократить количество плоскостей ) (общее для обоих типов плоскостей)
 	CFreeIDCollector freePlaneIndexCollector;					// номера свободных плоскостей
 	hash_map<int, int> polygonID2PlaneIndexMap;				// PolygonID -> PlaneIndex (0...nCount)
 	//
@@ -31,11 +32,11 @@ class CHeightContainer
 									const vector<CVec2> &rBlackPolygon,
 									const vector<CVec2> &rRedPolygon );										// закрасить плоскость
 	//
-	void GetBits( vector<DWORD> *pBitsList, const int x, const int y );
-	void AddBitsToString( string *pszMessage, const DWORD dwBits ) const;
+	void GetBits( vector<uint32_t> *pBitsList, const int x, const int y );
+	void AddBitsToString( string *pszMessage, const uint32_t dwBits ) const;
 	//
-	void MarkTraceImageTile( CArray2D<DWORD> *pImage, int x, int y, DWORD dwColor );
-	void MarkTraceImageGrid( CArray2D<DWORD> *pImage, DWORD dwColor );
+	void MarkTraceImageTile( CArray2D<uint32_t> *pImage, int x, int y, uint32_t dwColor );
+	void MarkTraceImageGrid( CArray2D<uint32_t> *pImage, uint32_t dwColor );
 
 public:
 	CHeightContainer( const float _fTileSize );

@@ -7,6 +7,8 @@
 
 #include "MapEditorLib/Interface_MainFrame.h"
 
+#include <cstdint>
+
 BEGIN_MESSAGE_MAP(CLogWindow, CScintillaEditorWindow)
 	ON_WM_SETFOCUS()
 	ON_WM_CONTEXTMENU()
@@ -36,7 +38,7 @@ void CLogWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 }
 
 
-bool CLogWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CLogWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

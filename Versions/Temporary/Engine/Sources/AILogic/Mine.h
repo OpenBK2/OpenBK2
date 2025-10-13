@@ -1,7 +1,8 @@
-
 #pragma once
 
 #include "StaticObject.h"
+
+#include <cstdint>
 
 //*******************************************************************
 //*												 CMineStaticObject								  			*
@@ -16,7 +17,7 @@ class CMineStaticObject : public CGivenPassabilityStObject
 	CDBPtr<SMineRPGStats> pStats;
 	int	player;
 
-	DWORD mVisibleStatus;
+	uint32_t mVisibleStatus;
 	NTimer::STime nextSegmTime;
 
 	bool bIfWillBeDeleted; // кто-то из солдат направляется к этой мине
@@ -55,7 +56,7 @@ public:
 	virtual void Die( const float fDamage );
 	virtual EStaticObjType GetObjectType() const { return ESOT_MINE; }
 
-	virtual const bool IsVisible( const BYTE nParty ) const;
+	virtual const bool IsVisible( const uint8_t nParty ) const;
 	void SetVisible( int nParty, bool bVis = true );
 
 	// для удаления инженерами

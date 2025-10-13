@@ -6,6 +6,8 @@
 #include "Misc/nalgoritm.h"
 #include "System/FileUtils.h"
 
+#include <cstdint>
+
 const int N_LEADING_PIXELS = 2;
 
 namespace NImage
@@ -129,11 +131,11 @@ struct SFontInfo
 	vector<ABC> abc;									// character ABC widths
 	vector<KERNINGPAIR> kps;					// kernging pairs
 	int nTextureSizeX, nTextureSizeY;			// estimated texture size
-	hash_map<WORD, WORD> translate;	// ANSI => UNICODE translation table
+	hash_map<uint16_t, uint16_t> translate;	// ANSI => UNICODE translation table
 	//
-	WORD Translate( WORD code ) const
+	uint16_t Translate( uint16_t code ) const
 	{
-		hash_map<WORD, WORD>::const_iterator pos = translate.find( code );
+		hash_map<uint16_t, uint16_t>::const_iterator pos = translate.find( code );
 		//ASSERT( pos != translate.end() );
 		if ( pos == translate.end() )
 		{
@@ -148,12 +150,12 @@ struct SFontInfo
 };
 
 // estimate, is requested number of chars fit in the selected texture
-inline bool IsFit( const SFontInfo &fi, DWORD dwNumChars, DWORD dwSizeX, DWORD dwSizeY )
+inline bool IsFit( const SFontInfo &fi, uint32_t dwNumChars, uint32_t dwSizeX, uint32_t dwSizeY )
 {
   return ( dwSizeX / (fi.tm.tmAveCharWidth + 2) ) * ( dwSizeY / fi.tm.tmHeight ) >= dwNumChars;
 }
 
-bool EstimateTextureSize( SFontInfo *pFI, DWORD dwNumChars )
+bool EstimateTextureSize( SFontInfo *pFI, uint32_t dwNumChars )
 {
 	SFontInfo &fi = *pFI;
   for ( int i=6; i<13; ++i )
@@ -184,9 +186,9 @@ struct SKPZeroFunctional
 //      Fills CFontInfo fi (global) with text metrics and char widths
 //      -> hdc: HDC that the font is currently selected into
 //
-void MeasureFont( HDC hdc, SFontInfo *pFI, vector<WORD> *pChars )
+void MeasureFont( HDC hdc, SFontInfo *pFI, vector<uint16_t> *pChars )
 {
-	vector<WORD> &chars = *pChars;
+	vector<uint16_t> &chars = *pChars;
 	SFontInfo &fi = *pFI;
   GetTextMetrics( hdc, &fi.tm );
 	sort( chars.begin(), chars.end() );
@@ -250,9 +252,9 @@ void MeasureFont( HDC hdc, SFontInfo *pFI, vector<WORD> *pChars )
 	}
 }
 
-int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD FontType, LPARAM lParam )
+int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, uint32_t FontType, LPARAM lParam )
 {
-	vector<WORD> *pChars = (vector<WORD>*)lParam;
+	vector<uint16_t> *pChars = (vector<uint16_t>*)lParam;
 
 	printf( "\nFont: %S %S %S", lpelfe->elfFullName, lpelfe->elfStyle, lpelfe->elfScript );
 	if ( FontType == TRUETYPE_FONTTYPE )
@@ -298,11 +300,11 @@ static bool IsWinXPOrLater()
 	return (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && ( osvi.dwMajorVersion > 4 ) && ( osvi.dwMinorVersion > 0 );
 }
 
-void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, DWORD dwCharSet, 
-	bool bAntialias, DWORD dwPitch, LPCTSTR pszFaceName, vector<WORD> *pChars )
+void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, uint32_t dwCharSet,
+	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, vector<uint16_t> *pChars )
 {
 	SFontInfo &fi = *pFI;
-	vector<WORD> &chars = *pChars;
+	vector<uint16_t> &chars = *pChars;
   // invoke ChooseFont common dialog:
   // create an HFONT:
   if ( fi.hFont )
@@ -316,10 +318,10 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 
 	printf( "\n=============================================================" );
 
-	DWORD dwTemp = dwCharSet;
+	uint32_t dwTemp = dwCharSet;
 	CHARSETINFO sCharSetInfo;
 	memset( &sCharSetInfo, 0, sizeof( CHARSETINFO ) );
-	if ( TranslateCharsetInfo( (DWORD*)dwTemp, &sCharSetInfo, TCI_SRCCHARSET ) )
+	if ( TranslateCharsetInfo( (uint32_t*)dwTemp, &sCharSetInfo, TCI_SRCCHARSET ) )
 	{
 		printf( "\nCS %d CP %d === %x %x %x %x", sCharSetInfo.ciCharset, sCharSetInfo.ciACP, sCharSetInfo.fs.fsUsb[0], sCharSetInfo.fs.fsUsb[1], sCharSetInfo.fs.fsUsb[2], sCharSetInfo.fs.fsUsb[3] );
 		for ( int nTemp = 0; nTemp < 126; nTemp++ )
@@ -360,7 +362,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 	}
 */
 
-	DWORD dwQuality = bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY;
+	uint32_t dwQuality = bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY;
   fi.hFont = ::CreateFont( nHeight, 0, 0, 0, nWeight, bItalic, FALSE, FALSE, 
                            dwCharSet, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, 
                            dwQuality,
@@ -377,7 +379,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 	// translate chars to UNICODE and re-map kerns and chars
 	{
 		CHARSETINFO cs;
-		BOOL bRetVal = TranslateCharsetInfo( (DWORD*)dwCharSet, &cs, TCI_SRCCHARSET );
+		BOOL bRetVal = TranslateCharsetInfo( (uint32_t*)dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
 		NStr::SetCodePage( cs.ciACP );
 		// form string
@@ -398,7 +400,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 }
 
 // draw font in the DC
-bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<WORD> &chars )
+bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<uint16_t> &chars )
 {
   // Draw characters:
   int x = 0, y = 0;
@@ -419,13 +421,13 @@ bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<WORD> &chars )
   return true;
 }
 
-void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<WORD> &chars )
+void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<uint16_t> &chars )
 {
   // Create an offscreen bitmap:
   int width = fi.nTextureSizeX;//16 * fi.tm.tmMaxCharWidth;
   int height = fi.nTextureSizeY;//14 * fi.tm.tmHeight;
   // Prepare to create a bitmap
-  BYTE *pBitmapBits = 0;
+  uint8_t *pBitmapBits = 0;
   BITMAPINFO bmi;
   memset( &bmi.bmiHeader, 0, sizeof(bmi.bmiHeader) );
   bmi.bmiHeader.biSize        = sizeof( BITMAPINFOHEADER );
@@ -456,9 +458,9 @@ void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<WO
 	pRes->SetSizes( fi.nTextureSizeX, fi.nTextureSizeY );
   for ( int i=0, j=0; i< fi.nTextureSizeX * fi.nTextureSizeY * 3; i+=3, ++j )
   {
-    //DWORD b = pBitmapBits[i + 0];
-    DWORD g = pBitmapBits[i + 1];
-    //DWORD r = pBitmapBits[i + 2];
+    //uint32_t b = pBitmapBits[i + 0];
+    uint32_t g = pBitmapBits[i + 1];
+    //uint32_t r = pBitmapBits[i + 2];
 		(*pRes)[ j / fi.nTextureSizeX ][ j % fi.nTextureSizeX ] = CVec4( 1, 1, 1, g / 255.0f );
   }
 	NImage::FlipY( *pRes );
@@ -469,9 +471,9 @@ void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<WO
 class CFontGen
 {
 public:
-	static void CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<WORD> &chars );
+	static void CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<uint16_t> &chars );
 };
-void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<WORD> &chars )
+void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<uint16_t> &chars )
 {
 	const TEXTMETRIC &tm = fi.tm;
 	// textmetric and ABCs must be converted to the next data
@@ -491,15 +493,15 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
   //vector<SKerningPair> kerns( dwNumKerningPairs );
 	for ( int i=0; i<fi.kps.size(); ++i )
 	{
-		DWORD dwFirst = fi.Translate( fi.kps[i].wFirst );
-		DWORD dwSecond = fi.Translate( fi.kps[i].wSecond );
+		uint32_t dwFirst = fi.Translate( fi.kps[i].wFirst );
+		uint32_t dwSecond = fi.Translate( fi.kps[i].wSecond );
 		format.kerns[(dwFirst << 16) | dwSecond] = fi.kps[i].iKernAmount;
 	}
   // convert this structures to the STFLetterFull array
   int x = 0, y = 0;
 	for ( int i=0; i<chars.size(); ++i )
 	{
-		WORD unicode = fi.Translate( chars[i] );
+		uint16_t unicode = fi.Translate( chars[i] );
 		//
 		int nNextCharShift = fi.abc[i].abcB + abs( fi.abc[i].abcC );
 		if ( x + nNextCharShift + N_LEADING_PIXELS > fi.nTextureSizeX )
@@ -531,8 +533,8 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
 	}
 }
 
-void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, DWORD dwHeight, DWORD dwWeight, bool bItalic, DWORD dwCharSet, 
-	bool bAntialias, DWORD dwPitch, LPCTSTR pszFaceName, vector<WORD> *pChars )
+void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, uint32_t dwHeight, uint32_t dwWeight, bool bItalic, uint32_t dwCharSet,
+	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, vector<uint16_t> *pChars )
 {
 	SFontInfo fi;
 	LoadFont( GetDesktopWindow(), &fi, dwHeight, dwWeight, bItalic, dwCharSet, bAntialias, dwPitch, pszFaceName, pChars );
@@ -542,7 +544,7 @@ void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, DWORD dwHeight, DWORD dw
 	CFileStream stream( pszDstPngFile, CFileStream::WIN_CREATE );
 	if ( stream.IsOk() ) 
 	{
-		CArray2D<DWORD> image2( image.GetSizeX(), image.GetSizeY() );
+		CArray2D<uint32_t> image2( image.GetSizeX(), image.GetSizeY() );
 		NImage::Convert( &image2, image );
 		NImage::SaveAsTGA( image2, &stream );
 	}
@@ -625,7 +627,7 @@ int __cdecl main( int argc, char *argv[] )
     return 0xDEAD;
   }
   // initialize charsets map
-  hash_map<string, DWORD> charsets;
+  hash_map<string, uint32_t> charsets;
   charsets["-ansi"]        = ANSI_CHARSET;
   charsets["-baltic"]      = BALTIC_CHARSET;
   charsets["-chinesebig5"] = CHINESEBIG5_CHARSET;
@@ -645,7 +647,7 @@ int __cdecl main( int argc, char *argv[] )
   charsets["-arabic"]      = ARABIC_CHARSET;
   charsets["-thai"]        = THAI_CHARSET;
   // initialize pitch map
-  hash_map<string, DWORD> pitches;
+  hash_map<string, uint32_t> pitches;
   pitches["-default"]  = DEFAULT_PITCH;
   pitches["-fixed"]    = FIXED_PITCH;
   pitches["-variable"] = VARIABLE_PITCH;
@@ -656,14 +658,14 @@ int __cdecl main( int argc, char *argv[] )
 //  szString.erase( szString.find_last_of( '\\' ) );
   szString += "\\fontgen.ini";
 
-  DWORD dwHeight = 20;
-  DWORD dwWeight = 400;
+  uint32_t dwHeight = 20;
+  uint32_t dwWeight = 400;
   bool bItalic = 0;
   bool bAntialias = 0;
   // pitch
-  DWORD dwPitch = VARIABLE_PITCH;
+  uint32_t dwPitch = VARIABLE_PITCH;
   // charset
-  DWORD dwCharSet = ANSI_CHARSET;//DEFAULT_CHARSET;
+  uint32_t dwCharSet = ANSI_CHARSET;//DEFAULT_CHARSET;
   // font face name
   string szFaceName = "Times New Roman", szDstFile, szDstPngFile, szCharsSrcName;
 	int nOrdinaryParamCount = 0;
@@ -710,14 +712,14 @@ int __cdecl main( int argc, char *argv[] )
   //
   hWnd = GetDesktopWindow();
 
-	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ WORD пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ MBCS
-	vector<WORD> chars;
+	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ uint16_t пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ MBCS
+	vector<uint16_t> chars;
 	if ( !szCharsSrcName.empty() && NFile::DoesFileExist( szCharsSrcName ) )
 	{
 		CFileStream fileStream( szCharsSrcName, CFileStream::WIN_READ_ONLY );
 		if ( fileStream.IsOk() && fileStream.GetSize() > 0 )
 		{
-			const int nCharCount = fileStream.GetSize() / sizeof( WORD );
+			const int nCharCount = fileStream.GetSize() / sizeof( uint16_t );
 			if ( nCharCount > 0 )
 			{
 				chars.resize( nCharCount );

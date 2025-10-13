@@ -1,9 +1,11 @@
-const SUserActions& operator=( const DWORD _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; return *this; }
+#include <cstdint>
+
+const SUserActions& operator=( const uint32_t _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; return *this; }
 const SUserActions& operator=( const SUserActions &_actions ) { return this->operator=( _actions.actions ); }
 //
-bool operator==( const DWORD _actions[2] ) const { return (_actions[0] == actions[0]) && (_actions[1] == actions[1]); }
+bool operator==( const uint32_t _actions[2] ) const { return (_actions[0] == actions[0]) && (_actions[1] == actions[1]); }
 bool operator==( const SUserActions &_actions ) const { return this->operator==( _actions.actions ); }
-bool operator!=( const DWORD _actions[2] ) const { return (_actions[0] != actions[0]) || (_actions[1] != actions[1]); }
+bool operator!=( const uint32_t _actions[2] ) const { return (_actions[0] != actions[0]) || (_actions[1] != actions[1]); }
 bool operator!=( const SUserActions &_actions ) const { return this->operator!=( _actions.actions ); }
 //
 void operator|=( const SUserActions &ua ) { actions[0] |= ua.actions[0]; actions[1] |= ua.actions[1]; }
@@ -31,8 +33,8 @@ void RemoveAction( const int nAction )
 	actions[nIndex] &= ~( 1UL << (nAction - nIndex*32) );
 }
 //
-DWORD GetActions( const int nIndex ) const { return actions[nIndex]; }
-void GetActions( DWORD *_actions ) const { _actions[0] = actions[0]; _actions[1] = actions[1]; }
+uint32_t GetActions( const int nIndex ) const { return actions[nIndex]; }
+void GetActions( uint32_t *_actions ) const { _actions[0] = actions[0]; _actions[1] = actions[1]; }
 void GetActions( SUserActions *pActions ) const { GetActions( pActions->GetBuffer() ); }
-void SetActions( const DWORD _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; }
-DWORD* GetBuffer() { return &(actions[0]); } 
+void SetActions( const uint32_t _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; }
+uint32_t* GetBuffer() { return &(actions[0]); }

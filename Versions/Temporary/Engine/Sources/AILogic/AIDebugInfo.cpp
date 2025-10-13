@@ -6,6 +6,8 @@
 #include "System/det_map.h"
 #include "Stats_B2_M1/DBPassProfile.h"
 
+#include <cstdint>
+
 namespace NAIVisInfo
 {
 
@@ -13,17 +15,17 @@ struct SProfileInfo
 {
 	NDb::SPassProfile profile;
 	CVec2 vCenter;
-	WORD wDir;
+	uint16_t wDir;
 
 	SProfileInfo() { }
-	SProfileInfo( const CVec2 &_vCenter, const WORD _wDir, const NDb::SPassProfile &_profile )
+	SProfileInfo( const CVec2 &_vCenter, const uint16_t _wDir, const NDb::SPassProfile &_profile )
 		: vCenter( _vCenter ), wDir( _wDir ), profile( _profile ) { }
 };
 
 static det_map<int, SProfileInfo> profiles;
 static bool bShow = false;
 
-void AddProfile( const int nID, const CVec3 &vCenter, const WORD wDir, const NDb::SPassProfile &profile )
+void AddProfile( const int nID, const CVec3 &vCenter, const uint16_t wDir, const NDb::SPassProfile &profile )
 {
 	profiles[nID] = SProfileInfo( CVec2( vCenter.x, vCenter.y ), wDir, profile );
 }
@@ -40,7 +42,7 @@ void ToggleLockProfiles()
 	{
 		const NDb::SPassProfile &profile = iter->second.profile;
 		const CVec2 vCenter = iter->second.vCenter;
-		const WORD wDir = iter->second.wDir;
+		const uint16_t wDir = iter->second.wDir;
 		if ( !profile.polygons.empty() )
 		{
 			int nCnt = 0;

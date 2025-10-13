@@ -6,6 +6,8 @@
 #include "ControlSelection.h"
 #include "System/XmlSaver.h"
 
+#include <cstdint>
+
 struct SUserData
 {
 	enum ESerializeType
@@ -96,8 +98,8 @@ struct SUserData
 	{
 		//typedef hash_map<string, string> CBrowsePathMap;
 		// CRAP{ HASH_SET
-		typedef std::unordered_map<std::string, DWORD> CExpandedPropertySet;
-		typedef std::unordered_map<std::string, DWORD> CExpandedObjectSet;
+		typedef std::unordered_map<std::string, uint32_t> CExpandedPropertySet;
+		typedef std::unordered_map<std::string, uint32_t> CExpandedObjectSet;
 		// CRAP} HASH_SET
 		std::string szCurrentObject;										// объект выделенный в таблице
 		std::string szCurrentProperty;									// свойство выделенное у объекта

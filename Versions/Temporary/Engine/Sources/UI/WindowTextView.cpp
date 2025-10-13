@@ -1,14 +1,14 @@
 // WindowTextView.cpp: implementation of the CWindowTextView class.
 //
 
-
 #include "stdafx.h"
 #include "WindowTextView.h"
 #include "UIVisitor.h"
 #include "System/Text.h"
 
-
 #include "UIML.h"
+
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS(0x11075B8C, CWindowTextView)
 extern CVec2 vScreenRect;
@@ -48,7 +48,7 @@ const CTPoint<int> CWindowTextView::GetSize() const
 	return ptSize;
 }
 
-void CWindowTextView::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags )
+void CWindowTextView::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags )
 {
 	float fOldWidth = GetWindowRect().Width();
 	CWindow::SetPlacement( x, y, sizeX, sizeY, flags );

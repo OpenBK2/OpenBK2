@@ -3,6 +3,8 @@
 #include "LinksManager.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <cstdint>
+
 class CNet;
 class CNetPacket;
 struct IConnection;
@@ -34,10 +36,10 @@ class CPlayGameProcessor : public CPacketProcessor
 	struct SWaitingPacket
 	{
 		CPtr<CNetPacket> pPacket;
-		DWORD dwStartTime;
+		uint32_t dwStartTime;
 
 		SWaitingPacket() : dwStartTime( 0 ) { }
-		SWaitingPacket( CNetPacket *_pPacket, const DWORD _dwStartTime )
+		SWaitingPacket( CNetPacket *_pPacket, const uint32_t _dwStartTime )
 			: pPacket( _pPacket ), dwStartTime( _dwStartTime ) { }
 	};
 	std::list<SWaitingPacket> waitingPackets;

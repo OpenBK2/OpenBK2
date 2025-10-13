@@ -6,6 +6,8 @@
 #include "MapInfoController.h"
 #include "CoastState.h"
 
+#include <cstdint>
+
 #define POSITION_CHANGED		0x01
 #define DIRECTION_CHANGED		0x02
 #define LINK_CHANGED				0x04
@@ -15,40 +17,40 @@
 
 namespace NMapInfoEditor
 {
-	extern const DWORD BRUSH_COLOR;
+	extern const uint32_t BRUSH_COLOR;
 	extern const float BRUSH_RADIUS;
 	extern const int BRUSH_PARTS;
 	//
-	extern const DWORD PLACEMENT_COLOR;
+	extern const uint32_t PLACEMENT_COLOR;
 	extern const float PLACEMENT_RADIUS0;
 	extern const float PLACEMENT_RADIUS1;
 	extern const float PLACEMENT_DIRECTION_RADIUS;
 	extern const int PLACEMENT_PARTS;
 
-	extern const DWORD SCENE_OBJECT_SELECTION_COLOR;
+	extern const uint32_t SCENE_OBJECT_SELECTION_COLOR;
 	extern const float SCENE_OBJECT_SELECTION_RADIUS0;
 	extern const float SCENE_OBJECT_SELECTION_RADIUS1;
 	extern const float SCENE_OBJECT_DIRECTION_RADIUS;
 	extern const int SCENE_OBJECT_SELECTION_PARTS;
 	//
-	extern const DWORD OBJECT_SELECTION_COLOR;
+	extern const uint32_t OBJECT_SELECTION_COLOR;
 	extern const float OBJECT_SELECTION_RADIUS0;
 	extern const float OBJECT_SELECTION_RADIUS1;
 	extern const float OBJECT_DIRECTION_RADIUS;
 	extern const int OBJECT_SELECTION_PARTS;
 	//
-	extern const DWORD OBJECT_LINK_COLOR;
+	extern const uint32_t OBJECT_LINK_COLOR;
 	extern const float OBJECT_LINK_RADIUS0;
 	extern const float OBJECT_LINK_RADIUS1;
 	extern const int OBJECT_LINK_PARTS;
 	//
-	extern const DWORD MAIN_OBJECT_SELECTION_COLOR;
+	extern const uint32_t MAIN_OBJECT_SELECTION_COLOR;
 	extern const float MAIN_OBJECT_SELECTION_RADIUS0;
 	extern const float MAIN_OBJECT_SELECTION_RADIUS1;
 	extern const float MAIN_OBJECT_DIRECTION_RADIUS;
 	extern const int MAIN_OBJECT_SELECTION_PARTS;
 	//
-	extern const DWORD SELECTION_COLOR;
+	extern const uint32_t SELECTION_COLOR;
 	extern const float SELECTION_RADIUS0;
 	extern const float SELECTION_RADIUS1;
 	extern const float DIRECTION_RADIUS;
@@ -58,16 +60,16 @@ namespace NMapInfoEditor
 	//
 	extern const float HEIGHT_DELIMITER;
 	//
-	extern const DWORD DRAW_SELECTION_CIRCLE0;
-	extern const DWORD DRAW_SELECTION_CIRCLE1;
-	extern const DWORD DRAW_SELECTION_POINT_CIRCLE;
-	extern const DWORD DRAW_DIRECTION;
-	extern const DWORD DRAW_DIRECTION_POINT;
-	extern const DWORD DRAW_ALL;
+	extern const uint32_t DRAW_SELECTION_CIRCLE0;
+	extern const uint32_t DRAW_SELECTION_CIRCLE1;
+	extern const uint32_t DRAW_SELECTION_POINT_CIRCLE;
+	extern const uint32_t DRAW_DIRECTION;
+	extern const uint32_t DRAW_DIRECTION_POINT;
+	extern const uint32_t DRAW_ALL;
 	//
-	extern const DWORD PARCEL_COLOR_UNKNOWN;
-	extern const DWORD PARCEL_COLOR_DEFENCE;
-	extern const DWORD PARCEL_COLOR_REINFORCE;
+	extern const uint32_t PARCEL_COLOR_UNKNOWN;
+	extern const uint32_t PARCEL_COLOR_DEFENCE;
+	extern const uint32_t PARCEL_COLOR_REINFORCE;
 	extern const float PARCEL_REINFORCE_RAD;
 	extern const int PARCEL_PARTS;
 	extern const int PARCEL_POINT_PARTS;

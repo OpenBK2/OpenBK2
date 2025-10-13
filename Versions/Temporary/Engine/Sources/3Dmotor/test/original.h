@@ -7,16 +7,18 @@
 #include "3Dmotor/GSSETransform.h"
 #include "3DLib/GGeometry.h"
 
+#include <cstdint>
+
 namespace original {
-    static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> &mult )
+    static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
     {
         if ( mult.empty() )
             return;
-        DWORD *pDst = &(*pRes)[0], *pDstEnd = pDst + pRes->size();
-        const DWORD *pSrc = &mult[0];
+        uint32_t *pDst = &(*pRes)[0], *pDstEnd = pDst + pRes->size();
+        const uint32_t *pSrc = &mult[0];
         for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
         {
-            DWORD dwB = *pSrc;
+            uint32_t dwB = *pSrc;
             __asm
             {
                 mov esi, pDst
@@ -47,14 +49,14 @@ namespace original {
     }
 
     static void CalcDirectionalLighting(
-	const std::vector<WORD> &posIndices,
+	const std::vector<uint16_t> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
 	const NGScene::SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
-	std::vector<DWORD> *pResColors, std::vector<DWORD> *pResShadow )
+	std::vector<uint32_t> *pResColors, std::vector<uint32_t> *pResShadow )
 	{
 		pResColors->resize( posIndices.size() );
 		pResShadow->resize( posIndices.size() );
-		DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+		uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
 		const void *pDirData = &ls.ambient;
 		const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
 		if ( bTranslucent )
@@ -65,7 +67,7 @@ namespace original {
 		}
 		for ( int k = 0; k < posIndices.size(); ++k )
 		{
-			DWORD dwNormal = _normals[k].dw;
+			uint32_t dwNormal = _normals[k].dw;
 			if ( dwNormal != dwPrevNormal )
 			{
 				__asm
@@ -462,7 +464,7 @@ namespace original {
 
 
 	static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
-		const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<WORD> &posIndices,
+		const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<uint16_t> &posIndices,
 		const std::vector<NGfx::SCompactVector> &_normals,
 		const CVec3 &_vColor )
 	{
@@ -479,7 +481,7 @@ namespace original {
 		}
 	    for ( int k = 0; k < posIndices.size(); ++k )
 	    {
-            DWORD dwNormal = _normals[k].dw;
+            uint32_t dwNormal = _normals[k].dw;
             const NGfx::SMMXWord *pAtt = &attenuation[ posIndices[k] ];
             NGfx::SMMXWord *pResColor = &(*pRes)[k];
             __asm
@@ -535,12 +537,12 @@ namespace original {
 			movq mm7, lightColor
 			movq mm5, shift1
 		}
-	    DWORD dwPrevNormal = 0;
+	    uint32_t dwPrevNormal = 0;
 	    __declspec(align(8)) NGfx::SMMXWord prevColor;
 	    const NGfx::SMMXWord *pAtt = &attenuation;
 	    for ( int k = 0; k < _nSize; ++k )
 	    {
-            DWORD dwNormal = pSrc[k].normal.dw;
+            uint32_t dwNormal = pSrc[k].normal.dw;
             NGfx::SMMXWord *pResColor = &(*pRes)[k];
             if ( dwNormal != dwPrevNormal )
             {
@@ -596,13 +598,13 @@ namespace original {
 	    __asm emms
 	}
 
-	static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
+	static void AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const std::vector<NGfx::SMMXWord> &add )
     {
 		ASSERT( pRes->size() >= add.size() );
 		ASSERT( src.size() >= add.size() );
 		int nSize = add.size();
-		DWORD *pResPtr = &(*pRes)[0];
-		const DWORD *pSrcPtr = &src[0];
+		uint32_t *pResPtr = &(*pRes)[0];
+		const uint32_t *pSrcPtr = &src[0];
 		const NGfx::SMMXWord *pAdd = &add[0];
 		__asm
 		{
@@ -611,9 +613,9 @@ namespace original {
 			psllw mm6, 15
 			psrlw mm6, 1
 		}
-		for ( DWORD *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
+		for ( uint32_t *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
 		{
-			DWORD dwColor = *pSrcPtr;//(*pRes)[k];
+			uint32_t dwColor = *pSrcPtr;//(*pRes)[k];
 			//NGfx::SMMXWord addColor = add[k];
 			//addColor.nX = Clamp( Float2Int( add[k].x * 32767 ), 0, 32767 );
 			//addColor.nY = Clamp( Float2Int( add[k].y * 32767 ), 0, 32767 );
@@ -660,7 +662,7 @@ namespace original {
 				mov dwColor, eax
 				//emms
 			}
-			//DWORD dwTest = NGfx::GetDWORDColor( GetOutputColor(
+			//uint32_t dwTest = NGfx::GetDWORDColor( GetOutputColor(
 			//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
 			//	CVec4( add[k], 0 )
 			//	) );
@@ -669,18 +671,18 @@ namespace original {
 		__asm emms
 	}
 
-	static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
-		unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
+	static void ScaleColors( std::vector<uint32_t> *pRes, const uint32_t *_pSrc, int nSrcStride,
+		unsigned char *pScale, int nScaleMask, const std::vector<uint16_t> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
 		bool bMultiplyOnTransparency )
 	{
 	    int nSize = posIndices.size();
 	    if ( pRes->size() < nSize )
             pRes->resize( nSize );
-	    DWORD *p = &(*pRes)[0], *pEnd = p + nSize;
-	    const DWORD *pSrc = _pSrc;
-	    ASSERT( sizeof(DWORD) == sizeof(transp[0]) );
+	    uint32_t *p = &(*pRes)[0], *pEnd = p + nSize;
+	    const uint32_t *pSrc = _pSrc;
+	    ASSERT( sizeof(uint32_t) == sizeof(transp[0]) );
 	    const NGfx::SCompactVector *pTransp = &transp[0];
-	    const WORD *pPosIndices = &posIndices[0];
+	    const uint16_t *pPosIndices = &posIndices[0];
 	    NGfx::SMMXWord mTransp;
 	    mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0x1ff;
 	    __asm movq mm7, mTransp

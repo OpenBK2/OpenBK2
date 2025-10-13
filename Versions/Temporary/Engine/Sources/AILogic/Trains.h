@@ -7,6 +7,8 @@
 #include "FreeFireManager.h"
 #include "StaticObject.h"
 
+#include <cstdint>
+
 //
 //	Trains.h
 //
@@ -87,12 +89,12 @@ class CTrainLocomotive : public CMilitaryCar
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&cars); f.Add(3,&nTrack); f.Add(4,&bBackward); f.Add(5,&fTrackPos); f.Add(6,&fTrackLimit); f.Add(7,&fFrontOffset); f.Add(8,&fBackOffset); f.Add(9,&fTrainLength); f.Add(10,&fBackLink); return 0; }
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 	virtual IStatesFactory* GetStatesFactory() const { return CLocomotiveStatesFactory::Instance(); }
 
 	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual const bool CanRotate() const { return false; }
-	virtual bool CanTurnToFrontDir( const WORD wDir ) { return false; }
+	virtual bool CanTurnToFrontDir( const uint16_t wDir ) { return false; }
 	virtual const bool CanShootInMovement() { return true; }
 
 	virtual const bool NeedDeinstall() const { return false; }
@@ -150,12 +152,12 @@ private:
 	void LinkToLocomotive( CTrainLocomotive *pLinkTo );
 public:
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 	virtual IStatesFactory* GetStatesFactory() const { return CTrainCarStatesFactory::Instance(); }
 
 	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual const bool CanRotate() const { return false; }
-	virtual bool CanTurnToFrontDir( const WORD wDir ) { return false; }
+	virtual bool CanTurnToFrontDir( const uint16_t wDir ) { return false; }
 	virtual const bool CanShootInMovement() { return true; }
 
 	virtual const bool NeedDeinstall() const { return false; }

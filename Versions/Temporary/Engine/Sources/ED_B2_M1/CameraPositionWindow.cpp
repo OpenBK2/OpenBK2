@@ -3,6 +3,8 @@
 #include "commandhandlerdefines.h"
 #include "CameraPositionWindow.h"
 
+#include <cstdint>
+
 //
 //		
 //		CAMERA POSITION WINDOW
@@ -95,7 +97,7 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 }
 
 
-bool CCameraPositionWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CCameraPositionWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SCameraPositionWindowData *pData = reinterpret_cast<SCameraPositionWindowData*>(dwData);
 	switch( nCommandID ) 

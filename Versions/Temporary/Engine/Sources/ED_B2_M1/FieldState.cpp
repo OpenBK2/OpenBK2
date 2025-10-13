@@ -17,6 +17,8 @@
 #include "EditorMethods.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const char CFieldState::FIELD_TYPE_NAME[] = "Field";
@@ -164,7 +166,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 						// заполняем землю
 						if ( pEditParameters->bFillTerrain )
 						{
-							CArray2D<BYTE> tile2DArray;
+							CArray2D<uint8_t> tile2DArray;
 							CTPoint<int> startTile;
 							FillTileSet( &tile2DArray,
 													&startTile,
@@ -176,7 +178,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 													&visDistances );
 							//Trace2DByteArray( tile2DArray, "CFieldState::UpdatePolygon()" );
 							CVec3 vDiffPos = VNULL3;
-							CArray2D<BYTE> diff;
+							CArray2D<uint8_t> diff;
 							if ( IEditorScene *pScene = EditorScene() )
 							{
 								if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
@@ -231,7 +233,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 						// заполняем объекты
 						if ( pEditParameters->bFillObjects )
 						{
-							CArray2D<BYTE> aiTileMap;
+							CArray2D<uint8_t> aiTileMap;
 							aiTileMap.SetSizes( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH * 2,
 																	pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * 2 );
 							aiTileMap.FillZero();
@@ -261,7 +263,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 }
 
 
-bool CFieldState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CFieldState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -475,7 +477,7 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 }
 
 
-bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
+bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 															 CTPoint<int> *pStartTile,
 															 const NDb::SField &rField,
 															 const CFieldPolygon &rPolygon,
@@ -704,7 +706,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	// создаем градиент
 	SGradient gradient;
 	{
-		CArray2D<DWORD> image;
+		CArray2D<uint32_t> image;
 		CFileStream stream( NVFS::GetMainVFS(), szProfileFileName );
 		if ( stream.IsOk() )
 		{
@@ -864,7 +866,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 		{
 			const SStaticObjectRPGStats* pStaticObjectRPGStats = NGDB::GetRPGStats<SStaticObjectRPGStats>( pMapObjectInfo[nObjectIndex].szName.c_str() );
 			const CVec2 &rOrigin = pStaticObjectRPGStats->GetOrigin( pMapObjectInfo[nObjectIndex].nFrameIndex );
-			const CArray2D<BYTE> &rPassability = pStaticObjectRPGStats->GetPassability( pMapObjectInfo[nObjectIndex].nFrameIndex );
+			const CArray2D<uint8_t> &rPassability = pStaticObjectRPGStats->GetPassability( pMapObjectInfo[nObjectIndex].nFrameIndex );
 			CTPoint<int> start( ( pMapObjectInfo[nObjectIndex].vPos.x - rOrigin.x + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE,
 													( pMapObjectInfo[nObjectIndex].vPos.y - rOrigin.y + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE );
 			
@@ -918,7 +920,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 																 const CTPoint<int> terrainSize,
 																 float fTileSize,
 																 CFieldDistanceMap *pDistances,
-																 CArray2D<BYTE> *pTileMap )
+																 CArray2D<uint8_t> *pTileMap )
 {
 	NI_ASSERT( pMapInfoEditor != 0, "FillObjectSet(): Invalid parameter pMapInfoEditor == 0" );
 	//
@@ -937,8 +939,8 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											 terrainSize.y ) );
 	}
 	//
-	ModifyTilesFunctional<CArray2D<BYTE>, BYTE> tileMapModifyTiles( 1, pTileMap );
-	CheckTilesFunctional<CArray2D<BYTE>, BYTE> tileMapCheckTiles( 1, pTileMap );
+	ModifyTilesFunctional<CArray2D<uint8_t>, uint8_t> tileMapModifyTiles( 1, pTileMap );
+	CheckTilesFunctional<CArray2D<uint8_t>, uint8_t> tileMapCheckTiles( 1, pTileMap );
 	//
 	CTRect<int> boundingRect( 0, 0, terrainSize.x, terrainSize.y );
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );

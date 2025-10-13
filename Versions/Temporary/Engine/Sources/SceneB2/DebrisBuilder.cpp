@@ -4,9 +4,11 @@
 #include "TerraTools.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 #define DEF_DEBRIS_HEIGHT_DISPERSION 0.1f
 
-static void SmoothMaskSharp( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad )
+static void SmoothMaskSharp( CArray2D<uint8_t> *pImage, const CArray2D<uint8_t> &mask, const int nSmoothRad )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
 	const int nSmoothRad2 = nSmoothRad * nSmoothRad;
@@ -38,7 +40,7 @@ static void SmoothMaskSharp( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask,
 	}
 }
 
-static void SmoothMaskMedium( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad, CNoiseManager &noiseManager )
+static void SmoothMaskMedium( CArray2D<uint8_t> *pImage, const CArray2D<uint8_t> &mask, const int nSmoothRad, CNoiseManager &noiseManager )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
 	// init noises
@@ -77,7 +79,7 @@ static void SmoothMaskMedium( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask
 	}
 }
 
-static void SmoothMaskBlur( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad )
+static void SmoothMaskBlur( CArray2D<uint8_t> *pImage, const CArray2D<uint8_t> &mask, const int nSmoothRad )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
 	const int nSmoothRad2 = nSmoothRad * nSmoothRad;
@@ -106,7 +108,7 @@ static void SmoothMaskBlur( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, 
 	}
 }
 
-void CTerraGen::CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+void CTerraGen::CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
 															const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 															const NDebrisBuilder::EMaskSmoothType smoothType )
 {
@@ -121,7 +123,7 @@ void CTerraGen::CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pIm
 	const float fCoeffX = ( vMax.x - vMin.x ) * DEF_PATCH_TEX_SIZE / DEF_PATCH_WORLD_SIZE;
 	const float fCoeffY = ( vMax.y - vMin.y ) * DEF_PATCH_TEX_SIZE / DEF_PATCH_WORLD_SIZE;
 
-	CArray2D<BYTE> mask;
+	CArray2D<uint8_t> mask;
 	switch ( maskType )
 	{
 	case NDebrisBuilder::MASK_STATIC:

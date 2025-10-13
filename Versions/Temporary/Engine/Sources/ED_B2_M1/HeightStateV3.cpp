@@ -17,6 +17,8 @@
 #include "Misc/Win32Helper.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 #define HEIGHT_MARK ( 1.0f )
@@ -27,7 +29,7 @@ const float CHeightStateV3::MAX_HEIGHT		= AI_TILE_SIZE * 10.0f;
 const float CHeightStateV3::HEIGHT_SPEED	= 15.0f * VIS_TILE_SIZE / ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
 const float CHeightStateV3::ROUND_RATIO		= 0.1f;
 const float CHeightStateV3::PLATO_RATIO		= 0.5f;
-const DWORD CHeightStateV3::BRUSH_COLOR		= 0xFFFF0000;
+const uint32_t CHeightStateV3::BRUSH_COLOR		= 0xFFFF0000;
 const int CHeightStateV3::BRUSH_PARTS			= 32;
 const int CHeightStateV3::HEIGHT_BRUSH_SIZE[5] = { 3, 5, 9, 13, 17 };
 const int	CHeightStateV3::TILE_BRUSH_SIZE[5] = { 2, 4, 8, 12, 16 };
@@ -1172,7 +1174,7 @@ void CHeightStateV3::CreateMapInfoController()
 }
 
 
-void CHeightStateV3::CreateTileBrush( CArray2D<BYTE> *pBrush, int nSize, int nTileIndex, bool bCircle )
+void CHeightStateV3::CreateTileBrush( CArray2D<uint8_t> *pBrush, int nSize, int nTileIndex, bool bCircle )
 {
 	NI_ASSERT( pBrush != 0, "CreateBrush(): Invalid parameter: pBrush == 0" );
 
@@ -1208,7 +1210,7 @@ void CHeightStateV3::Enter()
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	// создаем градиент
-	CArray2D<DWORD> image;
+	CArray2D<uint32_t> image;
 	{
 		CFileStream stream( pUserData->constUserData.szStartFolder + "Editor\\profile.tga", CFileStream::WIN_READ_ONLY );
 		if ( stream.IsOk() )
@@ -1438,7 +1440,7 @@ void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CHeightStateV3::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CHeightStateV3::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -1460,7 +1462,7 @@ bool CHeightStateV3::HandleCommand( UINT nCommandID, DWORD dwData )
 			}
 			case ID_MITHV3_ON_TIMER:
 			{
-				ProcessTerrain( static_cast<SEditParameters::EBrush>( Clamp<DWORD>( dwData, SEditParameters::B_TILE, SEditParameters::B_PLATO ) ) ); 
+				ProcessTerrain( static_cast<SEditParameters::EBrush>( Clamp<uint32_t>( dwData, SEditParameters::B_TILE, SEditParameters::B_PLATO ) ) );
 				return true;
 			}
 			case ID_MITHV3_UPDATE_HEIGHT:
@@ -1648,7 +1650,7 @@ void CHeightStateV3::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		{
 			if ( ( nChar >= 0x31 ) && ( nChar <= 0x35 ) )
 			{
-				pEditParameters->eBrush = static_cast<SEditParameters::EBrush>( Clamp<DWORD>( nChar - 0x31, SEditParameters::B_TILE, SEditParameters::B_PLATO ) );
+				pEditParameters->eBrush = static_cast<SEditParameters::EBrush>( Clamp<uint32_t>( nChar - 0x31, SEditParameters::B_TILE, SEditParameters::B_PLATO ) );
 				SetActiveInputState( pEditParameters->eBrush, true, false );
 				pEditParameters->nFlags = MITHV3EP_BRUSH;
 				::SetEditParameters( *pEditParameters, CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );

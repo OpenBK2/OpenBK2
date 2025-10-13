@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbterrain.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,8 +17,8 @@ void STGNoise::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TGNoise", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "FileName", (BYTE*)&szFileName - pThis, sizeof(szFileName), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "FileName", (uint8_t*)&szFileName - pThis, sizeof(szFileName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -41,14 +43,14 @@ void STGTerraType::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TGTerraType", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "PeakMaterial", (BYTE*)&pPeakMaterial - pThis, sizeof(pPeakMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "ScaleCoeff", (BYTE*)&fScaleCoeff - pThis, sizeof(fScaleCoeff), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Sound", (BYTE*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "CycledSound", (BYTE*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "PeakMaterial", (uint8_t*)&pPeakMaterial - pThis, sizeof(pPeakMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ScaleCoeff", (uint8_t*)&fScaleCoeff - pThis, sizeof(fScaleCoeff), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Sound", (uint8_t*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "CycledSound", (uint8_t*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -79,7 +81,7 @@ int STGTerraType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STGTerraType::CalcCheckSum() const
+uint32_t STGTerraType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -100,9 +102,9 @@ void STGTerraSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TGTerraSet", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "TerraTypes", &terraTypes, pThis );
-	NMetaInfo::ReportMetaInfo( "WrapTexture", (BYTE*)&bWrapTexture - pThis, sizeof(bWrapTexture), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "WrapTexture", (uint8_t*)&bWrapTexture - pThis, sizeof(bWrapTexture), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -123,7 +125,7 @@ int STGTerraSet::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STGTerraSet::CalcCheckSum() const
+uint32_t STGTerraSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -166,13 +168,13 @@ NDb::EWeatherType NDb::StringToEnum_NDb_EWeatherType( const std::string &szValue
 }
 
 
-void SWeather::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWeather::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "WindDirection", (BYTE*)&nWindDirection - pThis, sizeof(nWindDirection), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "WindForce", (BYTE*)&nWindForce - pThis, sizeof(nWindForce), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "WeatherPeriod", (BYTE*)&fWeatherPeriod - pThis, sizeof(fWeatherPeriod), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "WeatherPeriodRandom", (BYTE*)&fWeatherPeriodRandom - pThis, sizeof(fWeatherPeriodRandom), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Visuals", (BYTE*)&pVisuals - pThis, sizeof(pVisuals), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "WindDirection", (uint8_t*)&nWindDirection - pThis, sizeof(nWindDirection), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "WindForce", (uint8_t*)&nWindForce - pThis, sizeof(nWindForce), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "WeatherPeriod", (uint8_t*)&fWeatherPeriod - pThis, sizeof(fWeatherPeriod), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "WeatherPeriodRandom", (uint8_t*)&fWeatherPeriodRandom - pThis, sizeof(fWeatherPeriodRandom), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Visuals", (uint8_t*)&pVisuals - pThis, sizeof(pVisuals), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SWeather::operator&( IXmlSaver &saver )
@@ -197,7 +199,7 @@ int SWeather::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWeather::CalcCheckSum() const
+uint32_t SWeather::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -214,10 +216,10 @@ DWORD SWeather::CalcCheckSum() const
 
 
 
-void SWeatherDesc::SAmbientSoundDescr::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWeatherDesc::SAmbientSoundDescr::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "AmbientSound", (BYTE*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SoundLength", (BYTE*)&fSoundLength - pThis, sizeof(fSoundLength), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AmbientSound", (uint8_t*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SoundLength", (uint8_t*)&fSoundLength - pThis, sizeof(fSoundLength), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SWeatherDesc::SAmbientSoundDescr::operator&( IXmlSaver &saver )
@@ -236,7 +238,7 @@ int SWeatherDesc::SAmbientSoundDescr::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWeatherDesc::SAmbientSoundDescr::CalcCheckSum() const
+uint32_t SWeatherDesc::SAmbientSoundDescr::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -257,21 +259,21 @@ void SWeatherDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "WeatherDesc", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "PartMaterial", (BYTE*)&pPartMaterial - pThis, sizeof(pPartMaterial), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "PartMaterial", (uint8_t*)&pPartMaterial - pThis, sizeof(pPartMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "PartMaterials", &partMaterials, pThis );
-	NMetaInfo::ReportMetaInfo( "PartSize", (BYTE*)&fPartSize - pThis, sizeof(fPartSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "FallHeight", (BYTE*)&fFallHeight - pThis, sizeof(fFallHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Speed", (BYTE*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "TrajectoryParameter", (BYTE*)&fTrajectoryParameter - pThis, sizeof(fTrajectoryParameter), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Intensity", (BYTE*)&nIntensity - pThis, sizeof(nIntensity), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "WindAffected", (BYTE*)&bWindAffected - pThis, sizeof(bWindAffected), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "WeatherLight", (BYTE*)&pWeatherLight - pThis, sizeof(pWeatherLight), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PartSize", (uint8_t*)&fPartSize - pThis, sizeof(fPartSize), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FallHeight", (uint8_t*)&fFallHeight - pThis, sizeof(fFallHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Speed", (uint8_t*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "TrajectoryParameter", (uint8_t*)&fTrajectoryParameter - pThis, sizeof(fTrajectoryParameter), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Intensity", (uint8_t*)&nIntensity - pThis, sizeof(nIntensity), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "WindAffected", (uint8_t*)&bWindAffected - pThis, sizeof(bWindAffected), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "WeatherLight", (uint8_t*)&pWeatherLight - pThis, sizeof(pWeatherLight), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Lightnings", &lightnings, pThis );
-	NMetaInfo::ReportMetaInfo( "LightningsPerMinute", (BYTE*)&fLightningsPerMinute - pThis, sizeof(fLightningsPerMinute), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "LightningsRandom", (BYTE*)&fLightningsRandom - pThis, sizeof(fLightningsRandom), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Water", (BYTE*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "LightningsPerMinute", (uint8_t*)&fLightningsPerMinute - pThis, sizeof(fLightningsPerMinute), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "LightningsRandom", (uint8_t*)&fLightningsRandom - pThis, sizeof(fLightningsRandom), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Water", (uint8_t*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "AmbientSound", &ambientSound, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "RandomSounds", &randomSounds, pThis );
 	NMetaInfo::FinishMetaInfoReport();
@@ -322,7 +324,7 @@ int SWeatherDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWeatherDesc::CalcCheckSum() const
+uint32_t SWeatherDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -341,24 +343,24 @@ DWORD SWeatherDesc::CalcCheckSum() const
 
 void STerrain::ReportMetaInfo() const
 {
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "NumPatchesX", (BYTE*)&nNumPatchesX - pThis, sizeof(nNumPatchesX), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "NumPatchesY", (BYTE*)&nNumPatchesY - pThis, sizeof(nNumPatchesY), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TerraSet", (BYTE*)&pTerraSet - pThis, sizeof(pTerraSet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MapFilesPath", (BYTE*)&szMapFilesPath - pThis, sizeof(szMapFilesPath), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Light", (BYTE*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PreLight", (BYTE*)&pPreLight - pThis, sizeof(pPreLight), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "NumPatchesX", (uint8_t*)&nNumPatchesX - pThis, sizeof(nNumPatchesX), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NumPatchesY", (uint8_t*)&nNumPatchesY - pThis, sizeof(nNumPatchesY), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TerraSet", (uint8_t*)&pTerraSet - pThis, sizeof(pTerraSet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MapFilesPath", (uint8_t*)&szMapFilesPath - pThis, sizeof(szMapFilesPath), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Light", (uint8_t*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PreLight", (uint8_t*)&pPreLight - pThis, sizeof(pPreLight), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "Weather", &weather, pThis ); 
-	NMetaInfo::ReportMetaInfo( "OceanWater", (BYTE*)&pOceanWater - pThis, sizeof(pOceanWater), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "OceanWater", (uint8_t*)&pOceanWater - pThis, sizeof(pOceanWater), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "Roads", &roads, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Rivers", &rivers, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Crags", &crags, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Spots", &spots, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Lakes", &lakes, pThis );
-	NMetaInfo::ReportMetaInfo( "HasCoast", (BYTE*)&bHasCoast - pThis, sizeof(bHasCoast), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "HasCoast", (uint8_t*)&bHasCoast - pThis, sizeof(bHasCoast), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructMetaInfo( "Coast", &coast, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "CoastMidPoint", &vCoastMidPoint, pThis ); 
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 }
 
 int STerrain::operator&( IXmlSaver &saver )
@@ -407,7 +409,7 @@ int STerrain::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STerrain::CalcCheckSum() const
+uint32_t STerrain::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

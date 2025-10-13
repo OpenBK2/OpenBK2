@@ -5,6 +5,7 @@
 #include "Tools.h"
 
 #include <cmath>
+#include <cstdint>
 #include <algorithm>
 
 #pragma pack( push, 4 )
@@ -148,10 +149,10 @@ inline float fabs2( const CVec3 &a ) { return fabs2( a.x, a.y, a.z ); }
 inline float fabs( const CVec3 &a ) { return fabs( a.x, a.y, a.z ); }
 inline bool Normalize( CVec3 *pVec ) { return Normalize(pVec->x, pVec->y, pVec->z); }
 
-inline BYTE floatToByte( const float fNumber ) { return BYTE( fNumber * 127.0f ); }
-inline float byteToFloat( const BYTE cNumber ) { return float( char( cNumber ) ) / 127.0f; }
-inline DWORD Vec3ToDWORD( const CVec3 &v ) { return DWORD( floatToByte( v.x ) ) | ( DWORD( floatToByte( v.y ) ) << 8 ) | ( DWORD( floatToByte( v.z ) ) << 16 ); }
-inline const CVec3 DWORDToVec3( DWORD dwVector ) { return CVec3( byteToFloat( dwVector & 0xff ), byteToFloat( (dwVector >> 8) & 0xff ), byteToFloat( (dwVector >> 16) & 0xff ) ); }
+inline uint8_t floatToByte( const float fNumber ) { return uint8_t( fNumber * 127.0f ); }
+inline float byteToFloat( const uint8_t cNumber ) { return float( char( cNumber ) ) / 127.0f; }
+inline uint32_t Vec3ToDWORD( const CVec3 &v ) { return uint32_t( floatToByte( v.x ) ) | ( uint32_t( floatToByte( v.y ) ) << 8 ) | ( uint32_t( floatToByte( v.z ) ) << 16 ); }
+inline const CVec3 DWORDToVec3( uint32_t dwVector ) { return CVec3( byteToFloat( dwVector & 0xff ), byteToFloat( (dwVector >> 8) & 0xff ), byteToFloat( (dwVector >> 16) & 0xff ) ); }
 
 // 4D vector
 class MISC_EXPORT CVec4
@@ -606,7 +607,7 @@ public:
 	bool IsPointOverPlane( const CVec3 &pt ) const { return n*pt > -d; }
 	bool IsPointUnderPlane( const CVec3 &pt ) const { return n*pt < -d; }
   // протестировать, не лежит ли точка под плоскостью. вернуть 0x80000000 если это так или 0 в противном случае
-  DWORD CheckPointUnderPlane( const CVec3 &pt ) const;
+  uint32_t CheckPointUnderPlane( const CVec3 &pt ) const;
 };
 
 // ************************************************************************************************************************ //
@@ -950,12 +951,12 @@ public:
 // triangle
 struct STriangle
 {
-	WORD i1, i2, i3;
+	uint16_t i1, i2, i3;
 	//
 	STriangle() {}
-	STriangle( WORD _i1, WORD _i2, WORD _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
+	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
   //
-  void Set( const WORD _i1, const WORD _i2, const WORD _i3 ) { i1 = _i1; i2 = _i2; i3 = _i3; }
+  void Set( const uint16_t _i1, const uint16_t _i2, const uint16_t _i3 ) { i1 = _i1; i2 = _i2; i3 = _i3; }
 };
 // ориентированная ( против часовой - положительна ) площадь треугольника, помноженная на два
 inline float TriangleAAA( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 )
@@ -1078,7 +1079,7 @@ inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 
 // протестировать, не лежит ли точка под плоскостью.
 // вернуть 0x80000000 если это так или 0 в противном случае
-inline DWORD SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
+inline uint32_t SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 {
   float fDist = n*pt + d;
   return ( FP_BITS(fDist) & 0x80000000 );
@@ -1094,7 +1095,7 @@ inline DWORD SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 
 inline void Identity( SHMatrix *pRes )
 {
-	memset(pRes, 0, 16 * sizeof(DWORD));
+	memset(pRes, 0, 16 * sizeof(uint32_t));
 
 	pRes->_11 = pRes->_22 = pRes->_33 = pRes->_44 = 1.0f;
 }
@@ -1948,22 +1949,22 @@ inline void MakeMatrix( SHMatrix *pMatrix, const CVec3 &pos, const CQuat &rot, c
 	pMatrix->_44 = 1.0f;
 }
 
-MISC_EXPORT const WORD GetDirectionByVector( const CVec2 &vec );
-MISC_EXPORT const WORD GetDirectionByVector( float x, float y );
-MISC_EXPORT const CVec2 GetVectorByDirection( const WORD dir );
-const WORD GetZDirectionBy3DVector( const float x, const float y, const float z );
-const WORD GetZDirectionBy3DVector( const CVec2 &vec, const float z );
+MISC_EXPORT const uint16_t GetDirectionByVector( const CVec2 &vec );
+MISC_EXPORT const uint16_t GetDirectionByVector( float x, float y );
+MISC_EXPORT const CVec2 GetVectorByDirection( const uint16_t dir );
+const uint16_t GetZDirectionBy3DVector( const float x, const float y, const float z );
+const uint16_t GetZDirectionBy3DVector( const CVec2 &vec, const float z );
 // угол между между вектором и OXY
-MISC_EXPORT const WORD GetZAngle( const float x, const float y, float z );
+MISC_EXPORT const uint16_t GetZAngle( const float x, const float y, float z );
 // угол между между вектором и OXY
-MISC_EXPORT const WORD GetZAngle( const CVec2 &vec, const float z );
-MISC_EXPORT const WORD GetZAngle( const CVec3 &vPoint );
-MISC_EXPORT const WORD DirsDifference( const WORD dir1, const WORD dir2 );
-MISC_EXPORT const int DifferenceSign( const WORD dir1, const WORD dir2 );
+MISC_EXPORT const uint16_t GetZAngle( const CVec2 &vec, const float z );
+MISC_EXPORT const uint16_t GetZAngle( const CVec3 &vPoint );
+MISC_EXPORT const uint16_t DirsDifference( const uint16_t dir1, const uint16_t dir2 );
+MISC_EXPORT const int DifferenceSign( const uint16_t dir1, const uint16_t dir2 );
 // в угле от startAngleDir до finishAngleDir против часовой
-MISC_EXPORT bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir );
+MISC_EXPORT bool IsInTheAngle( const uint16_t dir, const uint16_t startAngleDir, const uint16_t finishAngleDir );
 // dir в минимальном угле мжду dir1 и dir2
-MISC_EXPORT bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 );
+MISC_EXPORT bool IsInTheMinAngle( const uint16_t dir, const uint16_t dir1, const uint16_t dir2 );
 
 inline bool IsAlmostZero( const CVec2 &vec )
 {
@@ -2019,7 +2020,7 @@ struct MISC_EXPORT SRect
 	bool IsIntersectCircle( const CCircle &circle ) const { return IsIntersectCircle( circle.center, circle.r ); }
 	bool IsIntersectTriangle( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3 ) const;
 
-	const int GetSide( const WORD dirFromRectCenter ) const;
+	const int GetSide( const uint16_t dirFromRectCenter ) const;
 	const int GetSide( const CVec2 &point ) const;
 
 	void Compress( const float fFactor );
@@ -2030,7 +2031,7 @@ struct MISC_EXPORT SRect
 
 MISC_EXPORT const float fabs( const SRect rect1, const SRect rect2 );
 // угол, под которым rect виден из точки point
-MISC_EXPORT const WORD GetVisibleAngle( const CVec2 &point, const SRect rect );
+MISC_EXPORT const uint16_t GetVisibleAngle( const CVec2 &point, const SRect rect );
 // точка пересечения луча из точки vPoint по направлению vDir (можно не нормировать) с прямоугольником rect
 // возвращает false, если не пересекается
 MISC_EXPORT const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );

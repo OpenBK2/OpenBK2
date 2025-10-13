@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 /*enum EUnitSpecialAbility
 {
@@ -28,7 +29,7 @@ struct SAbilitySwitchState
 			unsigned						bAutocast	: 8;
 			unsigned						crap				: 16;
 		};
-		DWORD dwStateValue;
+		uint32_t dwStateValue;
 	};
 	SAbilitySwitchState( const SAbilitySwitchState &src ) { dwStateValue = src.dwStateValue; }
 	SAbilitySwitchState( const EAbilitySwitchState _eState ) : eState(_eState), bAutocast(false), crap( 0 ) { }

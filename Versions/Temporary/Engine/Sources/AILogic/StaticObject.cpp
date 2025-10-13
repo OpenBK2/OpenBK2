@@ -18,6 +18,9 @@
 #include "AILock.h"
 #include "FeedBackSystem.h"
 #include "ExecutorBurningFuel.h"
+
+#include <cstdint>
+
 extern bool g_bNewLock;
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -42,7 +45,7 @@ public:
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
 
-int ConvertToNAngle( const WORD _wAngle ) 
+int ConvertToNAngle( const uint16_t _wAngle )
 {
 	return int( float(_wAngle) / 16384 + 0.5f) % 4;
 }
@@ -65,12 +68,12 @@ extern NTimer::STime curTime;
 
 BASIC_REGISTER_CLASS( CStaticObject );
 
-const BYTE CStaticObject::GetPlayer() const 
+const uint8_t CStaticObject::GetPlayer() const
 { 
 	return theDipl.GetNeutralPlayer();
 }
 
-const bool CStaticObject::IsVisible( const BYTE cParty ) const
+const bool CStaticObject::IsVisible( const uint8_t cParty ) const
 {
 	CTilesSet tiles;
 	GetTilesForVisibility( &tiles );
@@ -151,7 +154,7 @@ void CExistingObject::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->nPlayer = GetPlayer();
 }
 
-void CExistingObject::SetNewPlacement( const CVec3 &center, const WORD dir )	
+void CExistingObject::SetNewPlacement( const CVec3 &center, const uint16_t dir )
 { 
 	UnlockTiles();	
 
@@ -178,7 +181,7 @@ void CExistingObject::Delete()
 	}
 }
 
-const int CExistingObject::GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir )
+const int CExistingObject::GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir )
 {
 	switch ( nArmorDir )
 	{
@@ -261,12 +264,12 @@ void CExistingObject::WasHit()
 //*												 CGivenPassabilityStObject								*
 //*******************************************************************
 
-bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pStats, const CVec2 &vPos, const WORD wDir, const int nFrameIndex )
+bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pStats, const CVec2 &vPos, const uint16_t wDir, const int nFrameIndex )
 {
 	if ( g_bNewLock == 0 )
 	{
 		const CVec3 vCenter( vPos, 0 );
-		const CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( nFrameIndex ), wDir, pStats->GetOrigin( nFrameIndex ), CVec2( vCenter.x, vCenter.y ) );
+		const CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( nFrameIndex ), wDir, pStats->GetOrigin( nFrameIndex ), CVec2( vCenter.x, vCenter.y ) );
 		for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 		{
 			for ( int y = pass.GetMinY(); y < pass.GetMaxY(); y += SConsts::TILE_SIZE )
@@ -302,7 +305,7 @@ void CGivenPassabilityStObject::RotateFence( const CVec3 &vNewCenter )
 //DEBUG}
 
 CGivenPassabilityStObject::CGivenPassabilityStObject( const CVec3 &_center, const float _fHP,
-																										  const WORD _wAngle, const int nFrameIndex )
+																										  const uint16_t _wAngle, const int nFrameIndex )
 : CExistingObject( nFrameIndex, _fHP ), center( _center ), bTransparencySet( false ), wDir( _wAngle )
 { 
 	// unitialized hunt
@@ -314,7 +317,7 @@ void CGivenPassabilityStObject::Init()
 	const CVec3 vCenter( GetCenter() );
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );
 
-	const CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( GetFrameIndex() ), wDir, pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+	const CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( GetFrameIndex() ), wDir, pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 	boundRect.InitRect( CVec2( (pass.GetMinX() + pass.GetMaxX()) * 0.5f,
 														 (pass.GetMinY() + pass.GetMaxY()) * 0.5f), 
 														 CVec2( 1, 0 ), 
@@ -326,14 +329,14 @@ void CGivenPassabilityStObject::Init()
 	pVisProfile = new CObjectProfile( pStats->GetVisProfile( GetFrameIndex() ), GetCenter(), wDir, bForceThickLock );
 }
 
-void CGivenPassabilityStObject::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
+void CGivenPassabilityStObject::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetVisibility( GetFrameIndex() ), wDir, pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
 
-void CGivenPassabilityStObject::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
+void CGivenPassabilityStObject::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 	const CVec3 vCenter( GetCenter() );
@@ -400,7 +403,7 @@ void CGivenPassabilityStObject::UnlockTiles()
 {
 	if ( g_bNewLock == 0 )
 	{
-		CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 		GetPassability( &pass );
 
 		const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
@@ -440,7 +443,7 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID && GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
 		return;
 	//special for (c) Alexander Vinnikov's method of visibility
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetVisibility( &pass );
 
 	const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
@@ -466,7 +469,7 @@ void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID && GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
 		return;
 	//special for (c) Alexander Vinnikov's method of visibility
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetVisibility( &pass );
 
 	const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
@@ -514,7 +517,7 @@ bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 			bool bRet = false;
 			if ( g_bNewLock == 0 || GetPassProfile() == 0 )
 			{
-				CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+				CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 				GetPassability( &pass );
 				bRet = pass.GetVal( point );
 			}
@@ -546,7 +549,7 @@ void CGivenPassabilityStObject::GetCoveredTiles( std::list<SVector> *pTiles ) co
 		const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 
 		const CVec3 vCenter( GetCenter() );
-		const CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( GetFrameIndex() ), wDir, pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+		const CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass( pStats->GetPassability( GetFrameIndex() ), wDir, pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 		for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 		{
 			for ( int y = pass.GetMinY(); y < pass.GetMaxY(); y += SConsts::TILE_SIZE )
@@ -718,7 +721,7 @@ bool CTerraMeshStaticObject::CanUnitGoThrough( const EAIClasses &eClass ) const
 	return ( pStats->nAIPassabilityClass & eClass ) == 0;
 }
 
-void CTerraMeshStaticObject::SetNewPlacement( const CVec3 &center, const WORD dir )
+void CTerraMeshStaticObject::SetNewPlacement( const CVec3 &center, const uint16_t dir )
 {
 	CCommonStaticObject::SetNewPlacement( center, dir );
 	wDir = dir;

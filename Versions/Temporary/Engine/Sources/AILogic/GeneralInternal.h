@@ -6,7 +6,7 @@
 #include "System/FreeIDs.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
-
+#include <cstdint>
 
 class CArtillery;
 class CAIUnit;
@@ -60,7 +60,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 
 	NTimer::STime lastBombardmentCheck;
 	// 0 - артиллерия, 1 - бомберы
-	BYTE cBombardmentType;
+	uint8_t cBombardmentType;
 	bool bSendReserves;										// send tanks to swarm
 	int nMaxAllowedMobileTanks;
 

@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 namespace NGfx
 {
 
@@ -55,19 +58,19 @@ struct SPixel8888
 	enum { ID = CF_A8R8G8B8, XSize = 1, YSize = 1 };
 	union
 	{
-		DWORD dwColor;
+		uint32_t dwColor;
 		struct
 		{
-			DWORD b : 8;
-			DWORD g : 8;
-			DWORD r : 8;
-			DWORD a : 8;
+			uint32_t b : 8;
+			uint32_t g : 8;
+			uint32_t r : 8;
+			uint32_t a : 8;
 		};
 	};
 	SPixel8888() {}
 	SPixel8888( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xFF )
 		: b( _b ), g( _g ), r( _r ), a( _a ) {}
-	SPixel8888( DWORD _dwColor ) : dwColor(_dwColor ){}
+	SPixel8888( uint32_t _dwColor ) : dwColor(_dwColor ){}
 };
 inline bool operator==( const SPixel8888 &a, const SPixel8888 &b ) { return a.dwColor == b.dwColor; }
 
@@ -76,13 +79,13 @@ struct SPixel1555
 	enum { ID = CF_A1R5G5B5, XSize = 1, YSize = 1 };
 	union
 	{
-		WORD wColor;
+		uint16_t wColor;
 		struct
 		{
-			WORD b : 5;
-			WORD g : 5;
-			WORD r : 5;
-			WORD a : 1;
+			uint16_t b : 5;
+			uint16_t g : 5;
+			uint16_t r : 5;
+			uint16_t a : 1;
 		};
 	};
 	SPixel1555() {}
@@ -94,12 +97,12 @@ struct SPixel565
 	enum { ID = CF_R5G6B5, XSize = 1, YSize = 1 };
 	union
 	{
-		WORD wColor;
+		uint16_t wColor;
 		struct
 		{
-			WORD b : 5;
-			WORD g : 6;
-			WORD r : 5;
+			uint16_t b : 5;
+			uint16_t g : 6;
+			uint16_t r : 5;
 		};
 	};
 	SPixel565() {}
@@ -111,13 +114,13 @@ struct SPixel4444
 	enum { ID = CF_A4R4G4B4, XSize = 1, YSize = 1 };
 	union
 	{
-		WORD wColor;
+		uint16_t wColor;
 		struct
 		{
-			WORD b : 4;
-			WORD g : 4;
-			WORD r : 4;
-			WORD a : 4;
+			uint16_t b : 4;
+			uint16_t g : 4;
+			uint16_t r : 4;
+			uint16_t a : 4;
 		};
 	};
 	SPixel4444() {}
@@ -127,28 +130,28 @@ struct SPixel4444
 struct SPixelDXT1
 {
 	enum { ID = CF_DXT1, XSize = 4, YSize = 4 };
-	WORD color1, color2;
-	DWORD colors;
+	uint16_t color1, color2;
+	uint32_t colors;
 };
 struct SPixelDXT2
 {
 	enum { ID = CF_DXT2, XSize = 4, YSize = 4 };
-	DWORD colors1, colors2, colors3, colors4;
+	uint32_t colors1, colors2, colors3, colors4;
 };
 struct SPixelDXT3
 {
 	enum { ID = CF_DXT3, XSize = 4, YSize = 4 };
-	DWORD colors1, colors2, colors3, colors4;
+	uint32_t colors1, colors2, colors3, colors4;
 };
 struct SPixelDXT4
 {
 	enum { ID = CF_DXT4, XSize = 4, YSize = 4 };
-	DWORD colors1, colors2, colors3, colors4;
+	uint32_t colors1, colors2, colors3, colors4;
 };
 struct SPixelDXT5
 {
 	enum { ID = CF_DXT5, XSize = 4, YSize = 4 };
-	DWORD colors1, colors2, colors3, colors4;
+	uint32_t colors1, colors2, colors3, colors4;
 };
 
 struct SShortTextureUV
@@ -156,7 +159,7 @@ struct SShortTextureUV
 	union
 	{
 		struct { short nU, nV; };
-		DWORD dw;
+		uint32_t dw;
 	};
 };
 
@@ -166,7 +169,7 @@ struct SCompactVector
 	union
 	{
 		struct { unsigned char z, y, x, w; };
-		DWORD dw;
+		uint32_t dw;
 	};
 };
 
@@ -183,11 +186,11 @@ inline CVec3 GetVector( const SCompactVector &a )
 	return CVec3( ( ((int)a.x) - 128 ) / 127.0f, ( ((int)a.y) - 128 ) / 127.0f, ( ((int)a.z) - 128 ) / 127.0f );
 }
 
-inline DWORD Get255Range( float f ) 
+inline uint32_t Get255Range( float f )
 {
 	return (std::max)( 0, (std::min)( 255, Float2Int( f * 256 ) ) );
 }
-inline DWORD GetDWORDColor( const CVec4 &color )
+inline uint32_t GetDWORDColor( const CVec4 &color )
 {
 	return Get255Range( color.z ) + (Get255Range( color.y ) << 8) +
 		(Get255Range( color.x ) << 16) + (Get255Range( color.w ) << 24);
@@ -196,15 +199,15 @@ inline SPixel8888 Get8888Color( const CVec4 &color )
 {
 	return SPixel8888( Get255Range( color.r ), Get255Range( color.g ), Get255Range( color.b ), Get255Range( color.a ) );
 }
-inline CVec4 GetCVec4Color( DWORD cr )
+inline CVec4 GetCVec4Color( uint32_t cr )
 {
 	return CVec4( cr >> 16 & 0xff, cr >> 8 & 0xff, cr & 0xff, cr >> 24 & 0xff ) / 255;
 }
 
 struct CInterpolateColor
 {
-	typedef DWORD RET;
-	DWORD operator()( DWORD a, DWORD b, float f ) const 
+	typedef uint32_t RET;
+	uint32_t operator()( uint32_t a, uint32_t b, float f ) const
 	{ 
 		return
 			Float2Int( (a&0xff) * (1-f) + (b&0xff) * f ) +

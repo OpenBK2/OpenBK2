@@ -1,18 +1,21 @@
 #pragma once
+
+#include <cstdint>
+
 namespace NAI
 {
 
 struct SEdge
 {
-	WORD wStart, wFinish;
+	uint16_t wStart, wFinish;
 	//
 	SEdge() {}
-	SEdge( WORD _wS, WORD _wF ): wStart(_wS), wFinish(_wF) {}
+	SEdge( uint16_t _wS, uint16_t _wF ): wStart(_wS), wFinish(_wF) {}
 };
 
 class CEdgesInfo
 {
-	WORD InsertEdge( WORD i1, WORD i2, const std::vector<CVec3> &pts );
+	uint16_t InsertEdge( uint16_t i1, uint16_t i2, const std::vector<CVec3> &pts );
 public:
 	std::vector<SEdge> edges;
 	std::vector<STriangle> mesh;

@@ -1,15 +1,17 @@
 #include "stdafx.h"
 #include "MapEditorSingleton.h"
 
+#include <cstdint>
+
 string CMapEditorSingletonBase::MAP_FILE_NAME = "CMapEditorSingletonBase_B2MapEditor_1.0";
-const DWORD CMapEditorSingletonBase::MAP_FILE_MAX_SIZE = 0xFFF;
+const uint32_t CMapEditorSingletonBase::MAP_FILE_MAX_SIZE = 0xFFF;
 
 void CMapEditorSingletonBase::SetMapFileName( const string &szMapFileName )
 {
 	MAP_FILE_NAME = szMapFileName;
 }
 
-bool CMapEditorSingletonBase::SendCommand( HWND hWndDst, HWND hWndSrc, DWORD dwCommand, DWORD dwDataLength, const void* pData ) const
+bool CMapEditorSingletonBase::SendCommand( HWND hWndDst, HWND hWndSrc, uint32_t dwCommand, uint32_t dwDataLength, const void* pData ) const
 {
   if ( hWndDst == 0 )
 	{

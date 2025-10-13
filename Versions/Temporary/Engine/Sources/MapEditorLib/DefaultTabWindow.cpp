@@ -2,6 +2,8 @@
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
 
+#include <cstdint>
+
 BEGIN_MESSAGE_MAP( CDefault3DTabWindow, SEC3DTabWnd )
 END_MESSAGE_MAP()
 
@@ -69,7 +71,7 @@ void CDefault3DTabWindow::OnNotifyChangeTab( WPARAM wParam, LPARAM lParam )
 		{
 			nTabIndex = INVALID_TAB_INDEX;
 		}
-		DWORD dwParam = MAKELONG( nTabIndex, nShortcutIndex );
+		uint32_t dwParam = MAKELONG( nTabIndex, nShortcutIndex );
 		//DebugTrace( "CDefault3DTabWindow::OnNotifyChangeTab(), dwParam: %d(0x%X)", dwParam, dwParam );
 		bool bEnable = false;
 		bool bChecked = false;

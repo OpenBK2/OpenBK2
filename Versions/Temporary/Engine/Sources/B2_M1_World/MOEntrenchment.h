@@ -2,6 +2,8 @@
 
 #include "MapObj.h"
 
+#include <cstdint>
+
 class CMOEntrenchment;
 
 class CMOEntrenchmentPart : public CMOSelectable
@@ -14,7 +16,7 @@ class CMOEntrenchmentPart : public CMOSelectable
 	{
 		//Indentifying parameters
 		CVec3			vPos;
-		WORD			wDir;
+		uint16_t			wDir;
 		//Derived parameters
 		CQuat			qRot;
 		SHMatrix	mPlace;
@@ -27,7 +29,7 @@ class CMOEntrenchmentPart : public CMOSelectable
 	SCachedInfo cached;
 	int nFrameIndex;
 
-	void DeriveTransform( const CVec3 &_vPos, const WORD _wDir );
+	void DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir );
 public:
 	CMOEntrenchmentPart() : pParent( 0 )  , nFrameIndex( 0 )
 	{

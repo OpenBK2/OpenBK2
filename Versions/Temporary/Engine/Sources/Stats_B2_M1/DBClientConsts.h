@@ -8,6 +8,8 @@
 #include "useractions.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -19,7 +21,7 @@ namespace NDb
 	struct SWCActionsPriority
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< EUserAction > selfActions;
 		std::vector< EUserAction > friendActions;
@@ -30,17 +32,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SM1WCActionsPriority
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< EM1Action > selfActions;
 		std::vector< EM1Action > friendActions;
@@ -51,17 +53,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SCursor
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szFileName;
 		EUserAction eAction;
@@ -73,17 +75,17 @@ namespace NDb
 			eM1Action( M1_ACTION_UNKNOWN )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SAckParameter
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		EUnitAckType eAckType;
 		EAckClass eAckClass;
@@ -101,17 +103,17 @@ namespace NDb
 			ePosition( ACK_POS_UNIT )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SAckManagerConsts
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nMinAckRadius;
 		int nMaxAckRadius;
@@ -126,17 +128,17 @@ namespace NDb
 			nNumSelectionsBeforeAnnoyed( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMapCommandAck
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SVisObj > pVisObj;
 		float fShowTime;
@@ -146,11 +148,11 @@ namespace NDb
 			fShowTime( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SClientGameConsts : public CResource
@@ -159,13 +161,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x1007BA80 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		struct SMechUnitIconsSet
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			EDesignUnitType eType;
 			CDBPtr< SIconsSet > pIconsSet;
@@ -179,17 +181,17 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SSquadIconsSet
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			EDesignSquadType eType;
 			CDBPtr< SIconsSet > pIconsSet;
@@ -203,17 +205,17 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SBuildingIconsSet
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			EDesignBuildingType eType;
 			CDBPtr< SIconsSet > pIconsSet;
@@ -227,17 +229,17 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SPassengerIconsSet
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SIconsSet > pIconsSet;
 			float fHPBarLen;
@@ -247,11 +249,11 @@ namespace NDb
 				fHPBarLen( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		CDBPtr< SCameraLimits > pCamera;
 		std::vector< SCursor > cursors;
@@ -280,7 +282,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

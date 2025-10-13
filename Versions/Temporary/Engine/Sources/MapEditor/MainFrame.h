@@ -8,7 +8,7 @@
 #include "DW_Log.h"
 #include "ProgressDialog.h"
 
-
+#include <cstdint>
 
 #define TOOLBARS_COUNT 6
 //
@@ -32,7 +32,7 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	static const UINT TOOLBAR_CONTROL_ID[TOOLBARS_COUNT];
 	static const UINT TOOLBAR_CONTROL_ID_TO_ARRANGE;
 	static const UINT TOOLBAR_NAME_ID[TOOLBARS_COUNT];
-	static const DWORD TOOLBAR_STYLE[TOOLBARS_COUNT];
+	static const uint32_t TOOLBAR_STYLE[TOOLBARS_COUNT];
 	static const bool TOOLBAR_SHOW[TOOLBARS_COUNT];
 	//
 	static const UINT TOOLBAR_MAIN_ELEMENTS_ID[TOOLBAR_MAIN_ELEMENTS_COUNT];
@@ -42,7 +42,7 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	static const UINT TOOLBAR_PC_ELEMENTS_ID[TOOLBAR_PC_ELEMENTS_COUNT];
 	static const UINT TOOLBAR_VIEW_ELEMENTS_ID[TOOLBAR_VIEW_ELEMENTS_COUNT];
 	//
-	static const DWORD TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT];
+	static const uint32_t TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT];
 	static const UINT* TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT];
 	//
 	static const UINT STATUSBAR_INDICATORS_ID[STATUSBAR_ELEMENTS];
@@ -134,7 +134,7 @@ public:
 											const CString &rstrTitle,
 											const UINT nButtonCount,
 											const UINT* pButtonIDMap,
-											const DWORD dwAlignment,
+											const uint32_t dwAlignment,
 											const UINT nStyle,
 											const bool bDocked,
 											const bool bVisible,
@@ -164,7 +164,7 @@ public:
 	void IterateProgressDialogPosition();
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	DECLARE_MESSAGE_MAP()

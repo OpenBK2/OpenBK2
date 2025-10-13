@@ -11,7 +11,7 @@
 #include "MessageReaction.h"
 //CRAP}
 
-
+#include <cstdint>
 
 // ************************************************************************************************************************ //
 // **
@@ -113,7 +113,7 @@ int CMessageReactions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-bool CMessageReactions::Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags )
 {
 	if ( pProg && 
 		(pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags ) : pProg->Execute( szSender, szReactionKey )  ) ) return true;
@@ -125,7 +125,7 @@ bool CMessageReactions::Execute( const std::string &szSender, const std::string 
 	return false;
 }
 
-bool CMessageReactions::Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags )
 {
 	CObj<IMessageReactionB2> pReactionB2 = CUIFactory::MakeReaction( pReaction );
 	return pReactionB2->Execute( pScreen, pScript, pProg, wKeyboardFlags );

@@ -28,6 +28,8 @@
 #include "FeedBackSystem.h"
 #include "EntrenchmentCreation.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D474, CFormationRepairUnitState );
 REGISTER_SAVELOAD_CLASS( 0x1108D475, CFormationLoadRuState );
 REGISTER_SAVELOAD_CLASS( 0x1108D476, CFormationResupplyUnitState );
@@ -1059,7 +1061,7 @@ void CFormationPlaceAntitankState::Segment()
 			for ( int i = 0; i < nSize; ++i )
 			{
 				RecordRandomCall();
-				const CVec2 vShift( GetVectorByDirection( WORD(NRandom::Random(0, 65535) ) * SConsts::TILE_SIZE ) );
+				const CVec2 vShift( GetVectorByDirection( uint16_t(NRandom::Random(0, 65535) ) * SConsts::TILE_SIZE ) );
 				CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vDesiredPoint, vShift, (*pUnit)[i], true, GetAIMap() );
 				if ( pPath )
 					(*pUnit)[i]->SendAlongPath( pPath, vShift, true );
@@ -1745,19 +1747,19 @@ void CFormationGunCrewState::Segment()
 		return;
 	}
 	CTurret *pTurret = pArtillery->GetTurret( 0 );
-	const WORD wCurTurretHorDir = pTurret->GetHorCurAngle();
-	const WORD wCurTurretVerDir = pTurret->GetVerCurAngle();
+	const uint16_t wCurTurretHorDir = pTurret->GetHorCurAngle();
+	const uint16_t wCurTurretVerDir = pTurret->GetVerCurAngle();
 
 	const bool bNoAnimation = EGSS_MOVE != eGunState && b360DegreesRotate;
 	
-	const WORD wCurTuttetDir = pArtillery->GetFrontDirection() + wCurTurretHorDir;
+	const uint16_t wCurTuttetDir = pArtillery->GetFrontDirection() + wCurTurretHorDir;
 	const CVec2 vTurretDir = GetVectorByDirection( wGunTurretDir );
 	
 	const bool bReloaderRotatesWithTurret = b360DegreesRotate && pStats->etype != RPG_TYPE_ART_AAGUN;
 
 	const CVec2 vGunDir =  bReloaderRotatesWithTurret ? vTurretDir : GetVectorByDirection( pArtillery->GetFrontDirection() );
 
-	const WORD wCurBaseDir = bReloaderRotatesWithTurret ? wGunTurretDir : pArtillery->GetFrontDirection();
+	const uint16_t wCurBaseDir = bReloaderRotatesWithTurret ? wGunTurretDir : pArtillery->GetFrontDirection();
 	const CVec2 vCurGunPos = pArtillery->GetCenterPlain();
 	bool bRecalcPoints = wCurTuttetDir != wGunTurretDir || wGunBaseDir != wCurBaseDir || vCurGunPos != vGunPos;
 	vGunPos = vCurGunPos;
@@ -1922,12 +1924,12 @@ void CFormationGunCrewState::RecountPoints( const CVec2 &vGunDir, const CVec2 &v
 	}
 }				
 
-WORD CFormationGunCrewState::CalcDirToAmmoBox( int nCrewNumber ) const
+uint16_t CFormationGunCrewState::CalcDirToAmmoBox( int nCrewNumber ) const
 {
 	return GetDirectionByVector( CVec2(pArtillery->GetAmmoBoxCoordinates().x,pArtillery->GetAmmoBoxCoordinates().y) - crew[nCrewNumber].pUnit->GetCenterPlain() );
 }
 
-WORD CFormationGunCrewState::CalcDirFromTo( int nCrewNumberFrom, int nCrewNumberTo ) const
+uint16_t CFormationGunCrewState::CalcDirFromTo( int nCrewNumberFrom, int nCrewNumberTo ) const
 {
 	const CVec2 vCenter ( pArtillery->GetCenterPlain() );
 	const CVec2 ptTo( pStats->gunners[eGunState].gunners[nCrewNumberTo].y, - pStats->gunners[eGunState].gunners[nCrewNumberTo].x );
@@ -2618,7 +2620,7 @@ CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormati
 					CSoldier *pOldSoldier = soldiersToUse[i];
 					CSoldier *pNewSoldier = (*pCrew)[i];
 
-					const WORD wDirection = pOldSoldier->GetDirection();
+					const uint16_t wDirection = pOldSoldier->GetDirection();
 					const CVec2 vPos = pOldSoldier->GetCenterPlain();
 
 					pNewSoldier->SetDirection( wDirection );

@@ -14,6 +14,8 @@
 #include "SquadEditor.h"
 #include "FormationsState.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const char *GetDesiredMapSeason()
@@ -78,7 +80,7 @@ void CSquadState::LoadEnterConfig()
 void CSquadState::Enter()
 {
 	NI_ASSERT( pSquadEditor != 0, "CSquadState::Enter(), pSquadEditor == 0" );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
 	//
 	pSquadEditor->ReloadTerrain(); 
 	//
@@ -108,7 +110,7 @@ void CSquadState::Leave()
 }
 
 
-bool CSquadState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CSquadState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
  	switch( nCommandID )
 	{

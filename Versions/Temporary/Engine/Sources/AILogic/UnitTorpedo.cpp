@@ -6,6 +6,8 @@
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"
 
+#include <cstdint>
+
 extern CShellsStore theShellsStore;
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
@@ -65,7 +67,7 @@ void CTorpedoAttackState::Segment()
 
 // CUnitTorpedo
 
-void CUnitTorpedo::Init( const CVec2 &center, const int z, CAIUnit *_pOwner, const SWeaponRPGStats *_pShooterStats, const SMechUnitRPGStats *_pTorpedoStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CUnitTorpedo::Init( const CVec2 &center, const int z, CAIUnit *_pOwner, const SWeaponRPGStats *_pShooterStats, const SMechUnitRPGStats *_pTorpedoStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	pShooterStats = _pShooterStats;
 	pTorpedoStats = _pTorpedoStats;

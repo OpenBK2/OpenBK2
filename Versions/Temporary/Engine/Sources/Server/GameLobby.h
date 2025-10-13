@@ -4,6 +4,7 @@
 #include "Server_Client_Common/GameInfo.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <cstdint>
 
 class CGameLobby : public CPacketProcessor
 {
@@ -14,8 +15,8 @@ class CGameLobby : public CPacketProcessor
 	CPtr<class CClients> pClients;
 	hash_map< int, hash_set<int> > throughServerClients;
 
-	DWORD dwGameTimeOut;
-	DWORD dwGameLoadingTimeOut;
+	uint32_t dwGameTimeOut;
+	uint32_t dwGameLoadingTimeOut;
 	string szCfgFile;
 
 	struct SLobbyGameInfo
@@ -43,7 +44,7 @@ class CGameLobby : public CPacketProcessor
 	bool GetGameClients( const int nGame, hash_set<int> *pClients );
 	void SetClientGameID( const int nClientID, const int nGameID );
 	void EraseGameClients( const int nGameID );
-	void SetClientLobbyID( const int nClientID, const BYTE cLobbyID );
+	void SetClientLobbyID( const int nClientID, const uint8_t cLobbyID );
 	void InformThroughServerClients( const int nLeftGameClient );
 	void RemoveLobbyClient( const int nClientID ); 
 	bool KillGame( const int nGameID );

@@ -4,6 +4,8 @@
 #include "ResourceDefines.h"
 #include "VSOMultiState.h"
 
+#include <cstdint>
+
 class CVSOWindow : public CResizeDialog, public ICommandHandler
 {
 public:
@@ -65,7 +67,7 @@ public:
 	~CVSOWindow();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

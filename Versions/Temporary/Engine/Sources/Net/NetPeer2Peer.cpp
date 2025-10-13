@@ -5,6 +5,8 @@
 #include <iostream>
 #endif
 
+#include <cstdint>
+
 #if !defined(_FINALRELEASE) || defined(_DEVVERSION)
 //#define __LOG__
 #endif // !defined(_FINALRELEASE) || defined(_DEVVERSION)
@@ -56,7 +58,7 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 	{
 		case DIRECT:		
 			{
-				BYTE cMsgID = 0xff;		
+				uint8_t cMsgID = 0xff;
 				if ( pData )
 				{
 					CMemoryStream streamCopy( *pData );
@@ -415,7 +417,7 @@ void CP2PTracker::SendDirect( UCID addr, CMemoryStream &data )
 #ifdef __LOG__
 	data.Seek( 0 );
 
-	BYTE cMsgID;
+	uint8_t cMsgID;
 	data >> cMsgID;
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "p2p: send direct to %d, msg %d", addr, (int)cMsgID ), 0xffffff00, true );
 #endif
@@ -541,7 +543,7 @@ void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 #ifdef __LOG__
 	data.Seek( 0 );
 	
-	BYTE cMsgID;
+	uint8_t cMsgID;
 	data >> cMsgID;
 	if ( cMsgID != 9 )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "p2p: send broadcast, msg %d", (int)cMsgID ), 0xffffff00, true );

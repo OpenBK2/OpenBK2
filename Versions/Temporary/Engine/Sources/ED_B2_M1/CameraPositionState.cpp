@@ -14,6 +14,8 @@
 #include "CameraPositionState.h"
 #include "CameraPositionWindow.h"
 
+#include <cstdint>
+
 static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMapInfoMan, int nPlayerIndex )
 {
 	if ( !pResult || !pMapInfoMan )
@@ -139,7 +141,7 @@ void CCameraPositionState::SavePosition()
 }
 
 
-bool CCameraPositionState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CCameraPositionState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -151,7 +153,7 @@ bool CCameraPositionState::HandleCommand( UINT nCommandID, DWORD dwData )
 		case ID_CPE_ON_PLAYER_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<DWORD>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
 			RefreshWindow( true );
 			return true;	
@@ -159,7 +161,7 @@ bool CCameraPositionState::HandleCommand( UINT nCommandID, DWORD dwData )
 		case ID_CPW_PARAM_TYPE_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<DWORD>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
 			cameraPositions[nCurrentPlayer].bUseAnchorOnly = !data.bAllParams;
 			SavePosition();
@@ -230,7 +232,7 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 	data.bAllParams = !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<DWORD>(&data) );
+																												reinterpret_cast<uint32_t>(&data) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }

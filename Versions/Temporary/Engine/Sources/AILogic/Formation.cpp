@@ -30,6 +30,8 @@
 
 #include "System/Commands.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D498, CFormation );
 
 enum ECatchArtilleryType
@@ -80,7 +82,7 @@ CAIUnit* CFormation::CCarryedMortar::CreateMortar( class CFormation *pOwner )
 		bCanPlace = false;
 		// find first unlocked place and move mortar here
 		RecordRandomCall();
-		const WORD wRandStart = NRandom::Random( 65535 );
+		const uint16_t wRandStart = NRandom::Random( 65535 );
 		for ( int nDistance = 0; nDistance < 50 && !bCanPlace; nDistance += 2 )
 		{
 			for ( int nAngle = 0; nAngle < 8 && !bCanPlace; ++nAngle )
@@ -194,7 +196,7 @@ void CFormation::AddNewUnitToSlot( CSoldier *pUnit, const bool bSendToWorld )
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_FORMATION, pUnit, -1 );
 }
 
-const int CFormation::GetUnitSlotInStats( const BYTE cSlot ) const
+const int CFormation::GetUnitSlotInStats( const uint8_t cSlot ) const
 {
 	return 0;
 	/*
@@ -223,7 +225,7 @@ ISmoothPath *CFormation::CreateSmoothPath()
 	return result;
 }
 
-void CFormation::Init( const SSquadRPGStats *_pStats, const CVec2 &center, const int z, const WORD dir, ICollisionsCollector *pCollisionsCollector )
+void CFormation::Init( const SSquadRPGStats *_pStats, const CVec2 &center, const int z, const uint16_t dir, ICollisionsCollector *pCollisionsCollector )
 {
 	fMaxSpeed = 666.0;
 	SetUniqueIdForUnits( ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID );
@@ -476,7 +478,7 @@ void CFormation::SetSelectable( bool bSelectable, bool bSendToWorld )
 		(*this)[i]->SetSelectable( bSelectable, bSendToWorld );
 }
 
-void CFormation::ChangePlayer( const BYTE _cPlayer )
+void CFormation::ChangePlayer( const uint8_t _cPlayer )
 {
 	if ( cPlayer != _cPlayer )
 	{
@@ -492,7 +494,7 @@ void CFormation::ChangePlayer( const BYTE _cPlayer )
 	}
 }
 
-const bool CFormation::IsVisible( const BYTE party ) const
+const bool CFormation::IsVisible( const uint8_t party ) const
 {
 	for ( int i = 0; i < Size(); ++i )
 	{
@@ -970,9 +972,9 @@ void CFormation::ResetTargetScan()
 		(*this)[i]->ResetTargetScan();
 }
 
-BYTE CFormation::AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, bool bScanForObstacles, CObjectBase *pCheckBuilding )
+uint8_t CFormation::AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, bool bScanForObstacles, CObjectBase *pCheckBuilding )
 {
-	BYTE cResult = 0;
+	uint8_t cResult = 0;
 	for ( int i = 0; i < Size(); ++i )
 	{
 		if ( IsMemberResting( (*this)[i] ) )
@@ -1152,7 +1154,7 @@ const bool CFormation::CanCatchArtillery( const CArtillery *pArtillery ) const
 	if ( !GetState() || !(GetState()->IsRestState()) )
 		return false;
 
-	DWORD dwType = 0;
+	uint32_t dwType = 0;
 	switch( pArtillery->GetStats()->etype )
 	{
 	case NDb::RPG_TYPE_ART_GUN: dwType = EAT_GUN; break;

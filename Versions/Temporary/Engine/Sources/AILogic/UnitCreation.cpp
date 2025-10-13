@@ -27,6 +27,8 @@
 #include "RailRoads.h"
 #include "GlobalWarFog.h"
 
+#include <cstdint>
+
 extern CExecutorContainer theExecutorContainer;
 extern CWeather theWeather;
 extern CScripts *pScripts;
@@ -297,7 +299,7 @@ CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 	if ( !pStats )
 		return 0;
 	
-	const WORD wDir = pPlane->GetDirection();
+	const uint16_t wDir = pPlane->GetDirection();
 	const int nFormation = 0;
 	float fHP = 1.0f;
 
@@ -325,7 +327,7 @@ CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit 
 	if ( !pStats )
 		return 0;
 
-	const WORD wDir = 0;
+	const uint16_t wDir = 0;
 	const int nFormation = 0;
 	float fHP = 1.0f;
 	const int nPlayer = pWithUnit->GetPlayer();
@@ -401,10 +403,10 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::S
 
 	pUnit->SetUniqueIdForUnits( nUniqueUnitID );
 
-	WORD wDir = GetDirectionByVector( vTarget - vSource );
+	uint16_t wDir = GetDirectionByVector( vTarget - vSource );
 	const NDb::SMechUnitRPGStats *pStats = pConsts->common.pTorpedoStats;
 
-	const BYTE nPlayer = theDipl.GetNeutralPlayer();
+	const uint8_t nPlayer = theDipl.GetNeutralPlayer();
 
 	pUnit->Init( vSource, GetHeights()->GetZ( vSource ), pOwner, pWeaponStats, pStats, 
 		pStats->fMaxHP, wDir, nPlayer, pCollisionsCollector );
@@ -427,8 +429,8 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::S
 }
 
 int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats, 
-															const float fHPFactor, const int x, const int y, const int z, const WORD dir,
-															const BYTE player, 
+															const float fHPFactor, const int x, const int y, const int z, const uint16_t dir,
+															const uint8_t player,
 															bool bInitialization, bool bSendToWorld, const NDb::EReinforcementType eType ) const
 {
 	CPtr<CAIUnit> pUnit;
@@ -604,7 +606,7 @@ const SMechUnitRPGStats * CUnitCreation::GetRandomTankPit( const class CVec2 &vS
 	return ::GetRandomTankPit( pConsts->tankPits, vSize, bCanDig, pfResize );	
 }
 
-void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const
+void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const uint16_t wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const
 {
 	const SSquadRPGStats::SFormation &formation = pStats->formations[nFormation];
 	const int nSizeOfFormation = (nUnits == -1) ? formation.order.size() : nUnits;
@@ -623,7 +625,7 @@ void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats,
 	}
 }
 
-CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const int _nFormation, const float fHP, const float x, const float y, const float z, const WORD wDir, const int nDiplomacy, bool bInitialization, bool bSendToWorld, const int nUnits, NDb::EReinforcementType eType ) const
+CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const int _nFormation, const float fHP, const float x, const float y, const float z, const uint16_t wDir, const int nDiplomacy, bool bInitialization, bool bSendToWorld, const int nUnits, NDb::EReinforcementType eType ) const
 {
 	NI_ASSERT( _nFormation < pStats->formations.size(), "" );
 	int nFormation = 0;
@@ -659,7 +661,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 		NI_ASSERT( iter != centers.end(), "Centers of units of formation incorrectly initialized" );
 
 		const CVec2 unitCoord( *iter );
-		const WORD wUnitDir = wDir + formation.order[j].nDir;
+		const uint16_t wUnitDir = wDir + formation.order[j].nDir;
 
 		const int nUniqueUnitID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 		const int id = AddNewUnit( nUniqueUnitID, pStats->members[j], fHP, unitCoord.x, unitCoord.y, z, wUnitDir, nDiplomacy, bInit, bSendToWorld, eType );

@@ -7,6 +7,8 @@
 #include "GSSETransform.h"
 #include "Misc/HashFuncs.h"
 
+#include <cstdint>
+
 #include <boost/sort/spreadsort/integer_sort.hpp>
 
 #include <cstdint>
@@ -292,7 +294,7 @@ struct STGenericTransformer
 			return CopyTransform( pObjInfo, _pSrc, nVerties, pCache, bv, pRes );
 		}
 
-		const std::vector<WORD> &posIndices = pObjInfo->GetPositionIndices();
+		const std::vector<uint16_t> &posIndices = pObjInfo->GetPositionIndices();
 		ASSERT( nVerties == posIndices.size() );
 		xformedNormals.resize( posIndices.size() );
 		const SUVInfo *pSrc = _pSrc;
@@ -306,7 +308,7 @@ struct STGenericTransformer
 			}
 			else if ( pWeight->nWeights[2] == 0 )
 			{
-				BYTE nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1];
+				uint8_t nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1];
 
 				const auto & blend1 = blends[pWeight->cBoneIndices[0]];
 				const auto & blend2 = blends[pWeight->cBoneIndices[1]];
@@ -318,7 +320,7 @@ struct STGenericTransformer
 				const auto & blend2 = blends[pWeight->cBoneIndices[1]];
 				const auto & blend3 = blends[pWeight->cBoneIndices[2]];
 
-				BYTE nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
+				uint8_t nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
 
 				MMXTransformVector3( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2, blend3, nW3 );
 			}

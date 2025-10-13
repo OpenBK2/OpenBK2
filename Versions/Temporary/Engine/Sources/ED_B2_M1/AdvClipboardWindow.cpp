@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <cstdint>
+
 /**
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
@@ -148,7 +151,7 @@ void CAdvClipboardWindow::SetDialogData( const SAdvClipboardWindowData *pData )
 }
 
 
-bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{

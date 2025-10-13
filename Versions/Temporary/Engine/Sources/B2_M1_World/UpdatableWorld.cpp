@@ -38,6 +38,8 @@
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
 
+#include <cstdint>
+
 //#include "../Stats_B2_M1/DBMapInfo.h"
 
 
@@ -1205,7 +1207,7 @@ void CUpdatableWorld::UpdateRangeAreas( const SAIBasicUpdate *_pUpdate )
 		for ( std::list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
 		{
 			const SShootArea &area = *it;
-			DWORD dwColor = area.GetColor();
+			uint32_t dwColor = area.GetColor();
 			CVec3 vColor( ( dwColor & 0x00ff0000 ) >> 16, ( dwColor & 0x0000ff00 ) >> 8, dwColor & 0x000000ff );
 			vColor = vColor / 256.0f;
 			CVec2 vCenter( area.vCenter3D.x, area.vCenter3D.y );
@@ -1367,7 +1369,7 @@ void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate )
 	NStr::ToLower( szFlagName );
 	if ( IUIMiniMap *pUIMiniMap = checked_cast<IUIMiniMap*>( Scene()->GetMissionScreen()->GetChildByID( 20000 ) ) )
 	{
-	WORD wCircleColor;
+	uint16_t wCircleColor;
 	string szSoundName;
 	if ( action.nParam == pUserPlayer->GetDiplomacySide() )
 	{
@@ -1387,7 +1389,7 @@ void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate )
 	szSoundName = IsNeutral() ? "Int_failed" : "Int_flag_captured";
 	}
 	CVec3 vPos;
-	WORD wDir;
+	uint16_t wDir;
 	GetPlacement( &vPos, &wDir );
 	pUIMiniMap->RemoveMarker( nMarkerID );
 	pUIMiniMap->AddMarker( szFlagName + "Flag", CVec2( vPos.x, vPos.y ), true, nMarkerID, GetSingleton<IGameTimer>()->GetAbsTime(), 0, false );

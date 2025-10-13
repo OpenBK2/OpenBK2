@@ -9,6 +9,8 @@
 #include "TerrainManager.h"
 #include "SceneInternal.h"
 
+#include <cstdint>
+
 float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CVec3 &vHalfSize, const CQuat &rot )
 {
 	SHMatrix matrix;
@@ -76,7 +78,7 @@ void CVisObjReflectionInfo::Recalc()
 
 		const std::vector<CVec3> &positions = pGeometry->GetValue()->GetPositions();
 		const std::vector<NGScene::SUVInfo> &vertices = pGeometry->GetValue()->GetVertices();
-		const std::vector<WORD> &indices = pGeometry->GetValue()->GetPositionIndices();
+		const std::vector<uint16_t> &indices = pGeometry->GetValue()->GetPositionIndices();
 		data.triangles = pGeometry->GetValue()->GetGeometry();
 
 		CVec3 v;

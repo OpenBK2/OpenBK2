@@ -9,6 +9,8 @@
 #include "MapObjectMultiState.h"
 #include "EditorMethods.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CMapObjectMultiState::UpdateEditParameters( UINT nFlags )
@@ -121,7 +123,7 @@ void CMapObjectMultiState::Leave()
 }
 
 
-bool CMapObjectMultiState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapObjectMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

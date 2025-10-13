@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 class CAviation;
 class CAIUnit;
@@ -8,15 +9,15 @@ class CPredictedAntiAviationFire
 {
 	class SPredict
 	{
-		WORD wHor, wVer;
+		uint16_t wHor, wVer;
 		CVec3 vPt;
 		float fRange;
 		NTimer::STime timeToFire;
 	public:
 		SPredict() {  }
 		SPredict( const CVec3 &pt, const float _fRange, const NTimer::STime _timeToFire, CAIUnit *pOwner );
-		WORD GetHor()const { return wHor; }
-		WORD GetVer()const { return wVer; }
+		uint16_t GetHor()const { return wHor; }
+		uint16_t GetVer()const { return wVer; }
 		float GetRange() const { return fRange; }
 		const CVec3 GetPt() const { return vPt; }
 		const NTimer::STime GetFireTime() const { return timeToFire; }

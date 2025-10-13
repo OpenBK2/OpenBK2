@@ -3,6 +3,8 @@
 
 #include "LinkObject.h"
 
+#include <cstdint>
+
 class CRevealCircle : public CLinkObject
 {
 	OBJECT_BASIC_METHODS( CRevealCircle );
@@ -16,7 +18,7 @@ public:
 
 	virtual void GetRevealCircle( CCircle *pCircle ) const { *pCircle = circle; }
 	
-	virtual const bool IsVisible( const BYTE party ) const { return true; }
+	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
 };
@@ -38,7 +40,7 @@ class CAntiArtillery : public CLinkObject
 	// расстояние до ближайшего врага ( считается только для врагов )
 	std::vector<float> closestEnemyDist2;
 	std::vector<CVec2> lastHeardPos;
-	std::vector<BYTE> nHeardShots;
+	std::vector<uint8_t> nHeardShots;
 	std::vector<CVec2> lastRevealCenter;
 	CPtr<CAIUnit> pOwner;
 public: 
@@ -70,7 +72,7 @@ public:
 	const CVec2 GetLastRevealCenter( const int nParty ) const { return lastRevealCenter[ nParty ]; }
 
 	//
-	virtual const bool IsVisible( const BYTE party ) const { return true; }
+	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
 	

@@ -2,6 +2,9 @@
 #include "GfxUtils.h"
 #include "GfxShaders.h"
 #include "3DLib/Transform.h"
+
+#include <cstdint>
+
 namespace NGfx
 {
 
@@ -16,7 +19,7 @@ static void RefreshUniversalRectTrisBuffer()
 	universalRectsBuffer.resize( N_MAX_RECTANGLES * 2 );
 	for ( int i = 0; i < N_MAX_RECTANGLES; ++i )
 	{
-		WORD wStart = i * 4;
+		uint16_t wStart = i * 4;
 		universalRectsBuffer[i*2  ] = STriangle( wStart + 0, wStart + 1, wStart + 2 );
 		universalRectsBuffer[i*2+1] = STriangle( wStart + 0, wStart + 2, wStart + 3 );
 	}
@@ -172,7 +175,7 @@ S2DRectInfoLock* C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const 
 	return pLock;
 }
 
-static void FillVertex( SRectVertex *pRes, float x, float y, float u, float v, DWORD dwColor, float fZ )
+static void FillVertex( SRectVertex *pRes, float x, float y, float u, float v, uint32_t dwColor, float fZ )
 {
 	pRes->pos.x = x;
 	pRes->pos.y = y;
@@ -186,7 +189,7 @@ static void FillVertex( SRectVertex *pRes, float x, float y, float u, float v, D
 	pRes->texV.dw = 0;
 }
 
-static void FillVertex( SGeomVecT2C1 *pRes, float x, float y, float u, float v, DWORD dwColor, float fScaleU, float fScaleV, float fZ )
+static void FillVertex( SGeomVecT2C1 *pRes, float x, float y, float u, float v, uint32_t dwColor, float fScaleU, float fScaleV, float fZ )
 {
 	pRes->pos.x = x;
 	pRes->pos.y = y;

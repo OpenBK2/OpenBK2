@@ -5,6 +5,8 @@
 #include "Formation.h"
 #include "Soldier.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 
@@ -13,7 +15,7 @@ CExecutorUnitCombatBonus ( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & ~CExecutorUnitCombatBonus::EUM_MOVING ) )
 	{					// Switch camo off if doing anything but moving
@@ -28,7 +30,7 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChan
 
 int CExecutorCamouflage::Segment()
 {
-	const BYTE cPartyToCheck = GetAIUnit()->GetParty() == theDipl.GetNeutralParty() ? theDipl.GetNeutralParty() : 1 - GetAIUnit()->GetParty();
+	const uint8_t cPartyToCheck = GetAIUnit()->GetParty() == theDipl.GetNeutralParty() ? theDipl.GetNeutralParty() : 1 - GetAIUnit()->GetParty();
 	if ( GetState() == EASS_ACTIVE && GetAIUnit()->IsVisible( cPartyToCheck ) )
 	{
 		GetAIUnit()->SetBehaviourFire( SBehaviour::EFAtWill );

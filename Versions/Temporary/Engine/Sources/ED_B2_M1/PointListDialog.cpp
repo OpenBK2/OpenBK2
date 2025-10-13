@@ -5,6 +5,8 @@
 #include "seasonmnemonics.h"
 #include "PointListDialog.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 BEGIN_MESSAGE_MAP(CPointListDialog, CResizeDialog)
@@ -216,7 +218,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 }
 
 
-bool CPointListDialog::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPointListDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
 	

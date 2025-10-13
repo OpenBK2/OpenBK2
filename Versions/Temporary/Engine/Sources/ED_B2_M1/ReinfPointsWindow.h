@@ -5,6 +5,8 @@
 #include "ResourceDefines.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include <cstdint>
+
 //
 //						REINFPOINTS WINDOW DATA
 //
@@ -106,7 +108,7 @@ protected:
 	void NotifyHandler();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:

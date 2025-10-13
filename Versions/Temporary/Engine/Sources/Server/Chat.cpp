@@ -5,6 +5,8 @@
 #include "Misc/Time64.h"
 #include "System/XmlSaver.h"
 
+#include <cstdint>
+
 wstring CChatLobby::wszWelcomeText;
 
 CChatLobby::CChatLobby( CClients *_pClients, const string& _szCfgFileName ) 
@@ -203,7 +205,7 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 
 bool CChatLobby::ProcessChatChannelsRequestPacket( CChatChannelsListRequestPacket *pPacket )
 {
-	DWORD dwVersion = pPacket->dwVersion;
+	uint32_t dwVersion = pPacket->dwVersion;
 	list<string> addedChannelsList = channels.GetAddDiff( dwVersion );
 	list<string> removedChannelsList = channels.GetRemoveDiff( dwVersion );
 	PushPacket( new CChatChannelsListPacket( pPacket->nClientID, channels.GetVersion(), addedChannelsList,

@@ -17,6 +17,8 @@
 #include "libdb/ObjMan.h"
 #include "mapeditorlib/MaskManipulator.h"
 
+#include <cstdint>
+
 // CChapterState
 
 CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
@@ -29,7 +31,7 @@ CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
 
 void CChapterState::Enter()
 {
-//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CChapterInterfaceCommand( new CChapterInterface() ) ) );
+//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CChapterInterfaceCommand( new CChapterInterface() ) ) );
 
 	// clear the scene
 	Singleton<IUIScene>()->Create();
@@ -541,7 +543,7 @@ IView* CChapterState::ClearView()
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<DWORD>(&pView) );
+																												reinterpret_cast<uint32_t>(&pView) );
 	if ( pView != 0 )
 	{
 		pView->RemoveViewManipulator();
@@ -555,7 +557,7 @@ void CChapterState::SetView( IView *pView )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<DWORD>(&pView) );
+																												reinterpret_cast<uint32_t>(&pView) );
 	bool bNeedCreateTree = true;
 	if ( pView != 0 )
 	{
@@ -569,7 +571,7 @@ void CChapterState::SetView( IView *pView )
 	ICommandHandler *pCommandHandler = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_COMMAND_HANDLER, 
-																												reinterpret_cast<DWORD>(&pCommandHandler) );
+																												reinterpret_cast<uint32_t>(&pCommandHandler) );
 	if ( pCommandHandler != 0 )
 	{
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -583,7 +585,7 @@ void CChapterState::ClearMaskManipulator()
 		IView *pView = 0;
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
 																													ID_PC_DIALOG_GET_VIEW, 
-																													reinterpret_cast<DWORD>(&pView) );
+																													reinterpret_cast<uint32_t>(&pView) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();

@@ -2,6 +2,8 @@
 
 #include "AILogic/AILogicCommand.h"
 
+#include <cstdint>
+
 class CControlSumCheckCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CControlSumCheckCommand );
@@ -12,7 +14,7 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 	// не сэйвится!
 	static std::vector< std::list<unsigned long> > checkSums;
 public:	
-	static WORD wMask;
+	static uint16_t wMask;
 public:
 	CControlSumCheckCommand() { }
 	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum ) 
@@ -23,8 +25,8 @@ public:
 	bool NeedToBeStored() const { return false; }
 
 	static void Check( const int nOurNumber, struct IAILogic *pAI );
-	static void Init( const WORD wMask );
-	static void SetMask( const WORD wMask );
+	static void Init( const uint16_t wMask );
+	static void SetMask( const uint16_t wMask );
 
 	int operator&( IBinSaver &saver );
 };
@@ -40,7 +42,7 @@ public:
 
 	// не сэйвится!
 	static CArray2D<unsigned long> checkSums;
-	static WORD wMask;
+	static uint16_t wMask;
 public:
 	CControlSumHistoryCommand() { }
 	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum ) 
@@ -53,8 +55,8 @@ public:
 		// only if CheckSum on nStartSegment is different, check other segments
 		static void Check( const int nOurNumber, const int nStartSegment, struct IAILogic *pAI );
 
-		static void Init( const WORD wMask );
-		static void SetMask( const WORD wMask );
+		static void Init( const uint16_t wMask );
+		static void SetMask( const uint16_t wMask );
 
 		static unsigned long GetValue( const int _nPlayer, const int _nSegment );
 

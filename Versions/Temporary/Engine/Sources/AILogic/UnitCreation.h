@@ -2,6 +2,8 @@
 
 #include "Mine.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SPartyDependentInfo;
@@ -120,13 +122,13 @@ public:
 									const int x, 
 									const int y, 
 									const int z, 
-									const WORD _dir, 
-									const BYTE player, 
+									const uint16_t _dir,
+									const uint8_t player,
 									bool bInitialization,// = false, 
 									bool bSendToWorld,// = true, 
 									NDb::EReinforcementType eType) const;
-	void GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const;
-	class CCommonUnit* AddNewFormation( const SSquadRPGStats *pStats, const int nFormation, const float fHP, const float x, const float y, const float z, const WORD wDir, const int nDiplomacy,
+	void GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const uint16_t wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const;
+	class CCommonUnit* AddNewFormation( const SSquadRPGStats *pStats, const int nFormation, const float fHP, const float x, const float y, const float z, const uint16_t wDir, const int nDiplomacy,
 																			bool bInitialization,// = false,
 																			bool bSendToWorld,// = true,
 																			const int nUnits,// = -1 

@@ -6,6 +6,8 @@
 #include "MarkerSet.h"
 #include "SquadState.h"
 
+#include <cstdint>
+
 //
 //
 //			SQUAD EDITOR SETTINGS
@@ -109,7 +111,7 @@ public:
 	//
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 

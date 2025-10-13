@@ -1,7 +1,8 @@
 #pragma once
 
-// automatically generated file, don't change manually!
+#include <cstdint>
 
+// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 
@@ -35,7 +36,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

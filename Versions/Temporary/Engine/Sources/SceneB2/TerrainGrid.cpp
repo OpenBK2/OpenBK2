@@ -3,11 +3,13 @@
 #include "TerrainManager.h"
 #include "SceneInternal.h"
 
+#include <cstdint>
+
 static const CVec4 CLR_CENTER = CVec4(0.8f, 0.8f, 0.8f, 1.0f);
 static const CVec4 CLR_BORDER = CVec4(1.0f, 1.0f, 1.0f, 1.0f);
 static const bool bGridDepthTest = false;
 
-static void CreatePolylineForOnePatch( std::vector<CVec3> *pVertices, std::vector<WORD> *pIndicesCenter, std::vector<WORD> *pIndicesBorder,
+static void CreatePolylineForOnePatch( std::vector<CVec3> *pVertices, std::vector<uint16_t> *pIndicesCenter, std::vector<uint16_t> *pIndicesBorder,
 																			 const int nStartX, const int nStartY, const int fTileSizeInAIUnits, const int nNumTilesInPatch )
 {
 	// create vertices
@@ -86,7 +88,7 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 			for ( int x = 0; x < nNumPatchesX; ++x )
 			{
 				std::vector<CVec3> vertices;
-				std::vector<WORD> indicesCenter, indicesBorder;
+				std::vector<uint16_t> indicesCenter, indicesBorder;
 				const int nStartX = x * nNumTilesInPatch;
 				const int nStartY = y * nNumTilesInPatch;
 				CreatePolylineForOnePatch( &vertices, &indicesCenter, &indicesBorder, nStartX, nStartY, fTileSizeInAIUnits, nNumTilesInPatch );
@@ -142,7 +144,7 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 			for ( int x = nMinUpdX; x <= nMaxUpdX; ++x )
 			{
 				std::vector<CVec3> vertices;
-				std::vector<WORD> indicesCenter, indicesBorder;
+				std::vector<uint16_t> indicesCenter, indicesBorder;
 				const int nStartX = x * nTilesInPatchCount;
 				const int nStartY = y * nTilesInPatchCount;
 

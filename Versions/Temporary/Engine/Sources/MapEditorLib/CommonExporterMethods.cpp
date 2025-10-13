@@ -14,6 +14,8 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include <cstdint>
+
 string GetGrannyExportSettingsFileName( const string &szTypeName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -147,7 +149,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 																 0 );
 		if ( hFile != INVALID_HANDLE_VALUE )
 		{
-			DWORD dwBytesWritten = 0;
+			uint32_t dwBytesWritten = 0;
 			bResult = WriteFile( hFile, rszScriptText.c_str(), rszScriptText.size(), &dwBytesWritten, 0 );
 			if ( bResult )
 			{
@@ -166,7 +168,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 		return false;
 	}
 
-	DWORD dwResult = ERROR_SUCCESS;
+	uint32_t dwResult = ERROR_SUCCESS;
 	if ( bNeedExport )
 	{
 		// Запускаем Maya
@@ -186,7 +188,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 		bResult = ::CreateProcess( 0, const_cast<char*>( szCommandLine.c_str() ), 0, 0, false, 0, 0, 0, &startinfo, &procinfo );
 		if ( bResult )
 		{
-			const DWORD dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
+			const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
 			::CloseHandle( procinfo.hProcess );
 			::CloseHandle( procinfo.hThread );
 		}
@@ -312,10 +314,10 @@ string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder
 
 void GetMayaInstallPath( string *szPath, const string &szMayaVersion )
 {
-	DWORD type;
+	uint32_t type;
 	const int nMaxSize = 512;
 	int nSize = nMaxSize;
-	BYTE buffer[nMaxSize];
+	uint8_t buffer[nMaxSize];
 	LONG error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
 			StrFmt("SOFTWARE\\Alias|Wavefront\\Maya\\%s\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()),
 			0, &type,
@@ -437,7 +439,7 @@ bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName 
 {
 	NI_ASSERT( pObjectSet != 0, "GetSelectedObjects(): SObjectSet == 0" );
 	//
-	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( pObjectSet ) );
+	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( pObjectSet ) );
 	bResult = bResult && ( pObjectSet->szObjectTypeName == szObjectTypeName );
 	bResult = bResult && ( !pObjectSet->objectNameSet.empty() );
 	//

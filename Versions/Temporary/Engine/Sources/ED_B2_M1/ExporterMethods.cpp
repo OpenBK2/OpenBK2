@@ -22,6 +22,8 @@
 #include "libdb/ObjMan.h"
 #include "libdb/EditorDb.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 IManipulator* CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipulator, string *pModelName )
@@ -59,7 +61,7 @@ bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, con
 }
 
 
-bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin )
+bool NormalizePassabilityArray( CArray2D<uint8_t> *pDestination, CVec2 *pvOrigin )
 {
 	NI_ASSERT( pDestination != 0, "NormalizePassabilityArray() pDestination == 0" );
 	CTPoint<int> startPoint( -1, -1 );
@@ -107,7 +109,7 @@ bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin )
 				 ( finishPoint.x != ( pDestination->GetSizeX() - 1 ) ) ||
  				 ( finishPoint.x != ( pDestination->GetSizeY() - 1 ) ) )
 		{
-			CArray2D<BYTE> noEmptyArray;
+			CArray2D<uint8_t> noEmptyArray;
 			noEmptyArray.SetSizes( finishPoint.x - startPoint.x + 1, finishPoint.y - startPoint.y + 1 );
 			for ( int x = startPoint.x; x <= finishPoint.x; ++x )
 			{
@@ -137,10 +139,10 @@ bool CreateObjectStaticDebris( const string &rszGrannyFileName, const string &rs
 	//
 	if ( CPtr<ITerraManager> pTerraManager = MakeObject<ITerraManager>( ITerraManager::tidTypeID ) )
 	{
-		CArray2D<BYTE> imageArray;
+		CArray2D<uint8_t> imageArray;
 		pTerraManager->CreateDebris( rszGrannyFileName, &imageArray, pvOrigin, NDebrisBuilder::MASK_STATIC, nSmoothRadius );
 		CFileStream imageFileStream( NVFS::GetMainFileCreator(), rszImageFileName );
-		return NImage::SaveAsTGA<BYTE>( imageArray, &imageFileStream );
+		return NImage::SaveAsTGA<uint8_t>( imageArray, &imageFileStream );
 	}
 	return false;
 }
@@ -152,16 +154,16 @@ bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &r
 	//
 	if ( CPtr<ITerraManager> pTerraManager = MakeObject<ITerraManager>( ITerraManager::tidTypeID ) )
 	{
-		CArray2D<BYTE> imageArray;
+		CArray2D<uint8_t> imageArray;
 		pTerraManager->CreateDebris( rszGrannyFileName, &imageArray, pvOrigin, NDebrisBuilder::MASK_DYNAMIC, fWidth );
-		CArray2D<DWORD> imageArray32;
+		CArray2D<uint32_t> imageArray32;
 		imageArray32.SetSizes( imageArray.GetSizeY(), imageArray.GetSizeX() );
 		for ( int i = 0; i < imageArray.GetSizeX(); ++i )
 		{
 			for ( int j = 0; j < imageArray.GetSizeY(); ++j )
 			{
-				BYTE cData = imageArray[j][i];
-				DWORD dwColor = cData << 24 | cData << 16 | cData << 8 | cData;
+				uint8_t cData = imageArray[j][i];
+				uint32_t dwColor = cData << 24 | cData << 16 | cData << 8 | cData;
 				imageArray32[i][j] = dwColor;
 			}
 		}
@@ -172,7 +174,7 @@ bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &r
 }
 
 
-bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *pPassabilityArray, CVec2 *pvOrigin )
+bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<uint8_t> *pPassabilityArray, CVec2 *pvOrigin )
 {
 	NI_ASSERT( pPassabilityArray != 0, "CreateObjectPassability() pPassabilityArray = 0" );
 	NI_ASSERT( pvOrigin != 0, "CreateObjectPassability() pvOrigin = 0" );
@@ -552,7 +554,7 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 	}
 }
 
-void GetPassability( CArray2D<BYTE> *pPassability, IManipulator *pBuildingRPGStatsManipulator )
+void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPGStatsManipulator )
 {
 	CVariant v;
 	pBuildingRPGStatsManipulator->GetValue( "passability.data", &v ); 

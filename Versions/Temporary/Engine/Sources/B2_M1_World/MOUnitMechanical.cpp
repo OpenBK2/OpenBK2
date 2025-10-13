@@ -19,6 +19,8 @@
 #include "System/Text.h"
 #include "Common_RTS_AI/AIClasses.h"
 
+#include <cstdint>
+
 namespace
 {
 
@@ -751,7 +753,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		}
 		bool bPlaceSegment = false;
 		bool bNewDir = bForwardMoving;
-		WORD wDirRange = abs( wLastTrackDir - placement.dir ); 
+		uint16_t wDirRange = abs( wLastTrackDir - placement.dir );
 		if ( nLastTrackTime < 0 || ( Singleton<IGameTimer>()->GetGameTime() - nLastTrackTime > pStats->nTrackLifetime ) || ( wDirRange > 32768 ? wDirRange < ( 65536 - 8192 ) : wDirRange > 8192 ) )
 		{
 			//reset old placed track points, center and dir, put current segment	

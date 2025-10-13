@@ -2,6 +2,8 @@
 
 #include "LongObjectCreation.h"
 
+#include <cstdint>
+
 class CEntrenchmentPart;
 class CEntrenchment;
 namespace NDb
@@ -42,8 +44,8 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&nStartIndex); f.Add(3,&pEntrenchmentStats); f.Add(4,&pFullEntrenchment); f.Add(5,&parts); f.Add(6,&pBeginTerminator); f.Add(7,&pEndTerminator); f.Add(8,&pNewEndTerminator); f.Add(9,&vPoints); f.Add(10,&nCurIndex); f.Add(11,&wAngle); f.Add(12,&line); f.Add(13,&bCannot); f.Add(14,&bSayAck); f.Add(15,&tilesUnder); f.Add(16,&nTermInd); return 0; }
 	void OnSerialize( IBinSaver &saver );
 	//
-	bool CanDig( const NDb::SEntrenchmentRPGStats *pRPG, const CVec2 &pt, WORD angle, int nFrameIndex );
-	CEntrenchmentPart * AddElement( const NDb::SEntrenchmentRPGStats *pRPG, const CVec3 &pt, WORD angle, int nFrameIndex, int nPlayer );
+	bool CanDig( const NDb::SEntrenchmentRPGStats *pRPG, const CVec2 &pt, uint16_t angle, int nFrameIndex );
+	CEntrenchmentPart * AddElement( const NDb::SEntrenchmentRPGStats *pRPG, const CVec3 &pt, uint16_t angle, int nFrameIndex, int nPlayer );
 	void CreateNewEndTerminator();
 	void CalcTilesUnder();
 	void GetTilesUnderForIndex( std::list<SVector> *pTiles, const int nIndex ) const;

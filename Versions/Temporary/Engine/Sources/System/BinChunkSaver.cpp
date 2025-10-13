@@ -2,6 +2,8 @@
 #include "BinChunkSaver.h"
 #include "Cruncher.h"
 
+#include <cstdint>
+
 SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 
 // remove this for final version
@@ -37,7 +39,7 @@ void CStructureSaver::SChunkLevel::Clear()
 
 static bool ReadShortChunkSave( CDataStream &file, chunk_id &dwID, CMemoryStream &chunk )
 {
-	DWORD dwLeng = 0;
+	uint32_t dwLeng = 0;
 	if ( file.GetPosition() == file.GetSize() )
 		return false;
 	file.Read( &dwID, sizeof( dwID ) );
@@ -84,7 +86,7 @@ static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream
 #endif
 		return WriteShortChunkSave( file, dwID, compressed, false );
 	}
-	DWORD dwLeng;
+	uint32_t dwLeng;
 	file.Write( &dwID, sizeof( dwID ) );
 	dwLeng = chunk.GetSize();
 	dwLeng <<= 1;
@@ -147,7 +149,7 @@ static void WritePtrData( unsigned char *pDst, const void *pSrc, int *nPos, int 
 bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &res )
 {
 	const unsigned char *pSrc = data.GetBuffer() + src.nStart;
-	DWORD dwLeng = 0;
+	uint32_t dwLeng = 0;
 	if ( nPos + 2 > src.nLength )
 		return false;
 	ReadPtrData( pSrc, &res.idChunk, nPos, sizeof( res.idChunk ) );
@@ -178,7 +180,7 @@ bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID,
 	}
 	NI_ASSERT( nLength == 0 || bFound, "Unitialized data" );
 #endif
-	DWORD dwLeng;
+	uint32_t dwLeng;
 	data.SetSize( dst.nStart + dst.nLength + 1 + 4 + nLength );
 	unsigned char *pDst = data.GetBufferForWrite() + dst.nStart;
 	WritePtrData( pDst, &dwID, &dst.nLength, sizeof( dwID ) );
@@ -563,7 +565,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 						{
 							bool bFound = false;
 							const int nSize = sizeof( *pObject );
-							const BYTE *pObjAsArray = (const BYTE*)pObject;
+							const uint8_t *pObjAsArray = (const uint8_t*)pObject;
 							for ( int i = 0; i < nSize; ++i )
 							{
 								if ( pObjAsArray[i] == 0xcd )

@@ -17,6 +17,8 @@
 
 #include "MapEditorLib/Interface_MainFrame.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EDITOR_IN_DLL( Model, CModelEditor )
@@ -175,7 +177,7 @@ void CModelEditor::Destroy()
 }
 
 
-bool CModelEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CModelEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{

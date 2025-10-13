@@ -6,6 +6,8 @@
 #include "StringResources.h"
 #include "FormationWindow.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 //
@@ -91,7 +93,7 @@ void CFormationWindow::NotifyHandler()
 	CWaitCursor wcur;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SQUAD_FORMATIONS_STATE, 
 																												ID_FORMATION_WINDOW_CHANGE_STATE, 
-																												static_cast<DWORD>(nSelectedIndex) );
+																												static_cast<uint32_t>(nSelectedIndex) );
 }
 
 
@@ -138,7 +140,7 @@ void CFormationWindow::SetDialogData( const SFormationWindowDialogData *pData )
 }
 
 
-bool CFormationWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CFormationWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SFormationWindowDialogData *pData = reinterpret_cast<SFormationWindowDialogData*>( dwData );
 	

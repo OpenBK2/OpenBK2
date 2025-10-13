@@ -3,16 +3,18 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 
+#include <cstdint>
+
 class CProgressDlg : public CResizeDialog
 {
 private:
 	string szActionName;
 	CStatic	m_ProgressLabel;
 	CProgressCtrl	m_ProgressBar;
-	static const DWORD START_TIMER_ID;
-	static const DWORD START_TIMER_INTERVAL;
+	static const uint32_t START_TIMER_ID;
+	static const uint32_t START_TIMER_INTERVAL;
 	//
-	DWORD dwStartTimer;
+	uint32_t dwStartTimer;
 
 protected:
 	virtual BOOL OnInitDialog();

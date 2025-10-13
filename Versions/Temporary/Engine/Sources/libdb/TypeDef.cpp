@@ -2,6 +2,8 @@
 #include "TypeDef.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 int CRAPTooSmartCompiler_DBTools_TypeDef()
 {
 	return 0;
@@ -97,7 +99,7 @@ void STypeBinary::ToString( std::string *pRes, const CVariant &value ) const
 void STypeBinary::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	const int nSize = szValue.size() / 2;
-	BYTE *pData = new BYTE[nSize];
+	uint8_t *pData = new uint8_t[nSize];
 	NStr::StringToBin( szValue.c_str(), pData, 0 );
 	*pRes = CVariant( pData, nSize );
 	delete []pData;
@@ -209,7 +211,7 @@ CVariant STypeGUID::GetDefaultValue() const
 
 CVariant STypeBinary::GetDefaultValue() const 
 { 
-	std::vector<BYTE> buffer( nBinaryObjectSize );
+	std::vector<uint8_t> buffer( nBinaryObjectSize );
 	fill( buffer.begin(), buffer.end(), 0 );
 	CVariant var( &(buffer[0]), nBinaryObjectSize );
 	return var; 

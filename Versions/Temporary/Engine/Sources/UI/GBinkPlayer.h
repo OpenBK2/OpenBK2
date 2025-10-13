@@ -1,4 +1,6 @@
 #pragma once
+
+#include <cstdint>
 #include "System/Dg.h"
 
 namespace NGfx
@@ -35,6 +37,6 @@ namespace NGScene
 		virtual void PlayFragment(int nStartFrame, int nEndFrame, int nFrameSkip = 0) = 0;
 	};
 
-	IVideoPlayer* CreateVideoPlayer(const std::string& szFileName, DWORD dwFlags);
+	IVideoPlayer* CreateVideoPlayer(const std::string& szFileName, uint32_t dwFlags);
 
 }

@@ -5,6 +5,8 @@
 
 #include "PassMarkers.h"
 
+#include <cstdint>
+
 namespace NPassMarkers
 {
 	static bool s_bShowWater = false;
@@ -134,7 +136,7 @@ void CPassMarkersDraw::DrawPassabilities()
 	//	for ( int y = 0; y < pAIMap->GetSizeY(); ++y )
 	//	{
 	//		const SVector tile( x, y );
-	//		const BYTE soil = pTerrain->GetSoilType( tile );
+	//		const uint8_t soil = pTerrain->GetSoilType( tile );
 
 	//		if ( (soil & SVectorStripeObject::ESP_DUST) && (soil & SVectorStripeObject::ESP_TRACE) )
 	//			redTiles.push_back( tile );

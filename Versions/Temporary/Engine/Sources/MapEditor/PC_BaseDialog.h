@@ -3,10 +3,12 @@
 struct IView;
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 class CPCBaseDialog : public ICommandHandler
 {
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	// Получить указатель на дерево

@@ -1,5 +1,7 @@
-
 #pragma once
+
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CCommonUnit;
 class CAIUnit;
@@ -10,7 +12,7 @@ class CBasicGun;
 class CShootEstimatorLighAA
 {
 	ZDATA
-	BYTE party;
+	uint8_t party;
 	
 	CPtr<CCommonUnit> pUnit;
 	CPtr<CAIUnit> pResult;

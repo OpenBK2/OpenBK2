@@ -1,6 +1,8 @@
 #pragma once
+
 #include "GPixelFormat.h"
 
+#include <cstdint>
 
 class CRectLayout
 {
@@ -42,7 +44,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&rects); f.Add(3,&fZ); return 0; }
 	//
 	CRectLayout() :fZ(0) {}
-	CRectLayout ( float fScrX, float fScrY, float fScrW, float fScrH, float fTxtX, float fTxtY, float fTxtW, float fTxtH, DWORD dwColor )
+	CRectLayout ( float fScrX, float fScrY, float fScrW, float fScrH, float fTxtX, float fTxtY, float fTxtW, float fTxtH, uint32_t dwColor )
 	{
 		AddRect( fScrX, fScrY, fScrW, fScrH, STextureCoord( fTxtX, fTxtY, fTxtW, fTxtH ), dwColor );
 		fZ = 0;
@@ -61,7 +63,7 @@ public:
 	}
 };
 
-inline CRectLayout MakeLayout( float fScrX, float fScrY, float fScrW, float fScrH, float fTxtX, float fTxtY, float fTxtW, float fTxtH, DWORD dwColor = 0xFFFFFFFF )
+inline CRectLayout MakeLayout( float fScrX, float fScrY, float fScrW, float fScrH, float fTxtX, float fTxtY, float fTxtW, float fTxtH, uint32_t dwColor = 0xFFFFFFFF )
 {
 	return CRectLayout( fScrX, fScrY, fScrW, fScrH, fTxtX, fTxtY, fTxtW, fTxtH, dwColor );
 }

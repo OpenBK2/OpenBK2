@@ -2,8 +2,8 @@
 
 #include "B2_M1_Terrain_export.h"
 
-
 #include <cmath>
+#include <cstdint>
 
 #include "DBVSO.h"
 
@@ -53,15 +53,15 @@ template<class TReal> class CVec3Ex // CRAP {not properly connected yet} CRAP
 {
 public:
 	TReal x, y, z;
-	BYTE flag;
+	uint8_t flag;
 	//
 	CVec3Ex() {}
-	CVec3Ex( const TReal _x, const TReal _y, const TReal _z, const BYTE _flag ) : x( _x) , y( _y ), z( _z ), flag( _flag ) {}
-	CVec3Ex( const CVec3 &v, const BYTE _flag ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3Ex( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag ) : x( _x) , y( _y ), z( _z ), flag( _flag ) {}
+	CVec3Ex( const CVec3 &v, const uint8_t _flag ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
 	CVec3Ex( const CVec3Ex &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
 	//
-	void Set( const TReal _x, const TReal _y, const TReal _z, const BYTE _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
-	void Set( const CVec3 &v, const BYTE _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
+	void Set( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
+	void Set( const CVec3 &v, const uint8_t _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
 	//
 	bool operator == ( const CVec3Ex &v ) const
 	{
@@ -87,16 +87,16 @@ class CVec3fEx
 {
 public:
 	float x, y, z;
-	BYTE flag;
+	uint8_t flag;
 	//
 	CVec3fEx() {}
 	//
-	CVec3fEx( const float _x, const float _y, const float _z, const BYTE _flag ) : x( _x ), y( _y ), z( _z ), flag( _flag ) {}
-	CVec3fEx( const CVec3 &v, const BYTE _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3fEx( const float _x, const float _y, const float _z, const uint8_t _flag ) : x( _x ), y( _y ), z( _z ), flag( _flag ) {}
+	CVec3fEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
 	CVec3fEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
 	//
-	void Set( const float _x, const float _y, const float _z, const BYTE _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
-	void Set( const CVec3 &v, const BYTE _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
+	void Set( const float _x, const float _y, const float _z, const uint8_t _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
+	void Set( const CVec3 &v, const uint8_t _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
 	//
 	bool operator == ( const CVec3fEx &v ) const
 	{
@@ -125,16 +125,16 @@ class CVec3dEx
 {
 public:
 	double x, y, z;
-	BYTE flag;
+	uint8_t flag;
 	//
 	CVec3dEx() {}
 	//
-	CVec3dEx( const double _x, const double _y, const double _z, const BYTE _flag ) : x( _x ), y( _y ), z( _z ), flag( _flag ) {}
-	CVec3dEx( const CVec3 &v, const BYTE _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3dEx( const double _x, const double _y, const double _z, const uint8_t _flag ) : x( _x ), y( _y ), z( _z ), flag( _flag ) {}
+	CVec3dEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
 	CVec3dEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
 	//
-	void Set( const double _x, const double _y, const double _z, const BYTE _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
-	void Set( const CVec3 &v, const BYTE _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
+	void Set( const double _x, const double _y, const double _z, const uint8_t _flag ) { x = _x; y = _y; z = _z; flag = _flag; }
+	void Set( const CVec3 &v, const uint8_t _flag ) { x = v.x; y = v.y; z = v.z; flag = _flag; }
 	//
 	bool operator == ( const CVec3dEx &v ) const
 	{

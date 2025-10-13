@@ -3,7 +3,9 @@
 
 #include "PC_BaseDialog.h"
 
-bool CPCBaseDialog::HandleCommand( UINT nCommandID, DWORD dwData )
+#include <cstdint>
+
+bool CPCBaseDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

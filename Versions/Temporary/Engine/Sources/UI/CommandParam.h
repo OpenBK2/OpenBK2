@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 template <class TParamType>
 class CParam : public std::pair<TParamType,bool>
@@ -21,6 +22,6 @@ public:
 	const TParamType &Get() const { return first; }
 	operator TParamType() { return first; }
 	int operator&( IBinSaver &f ) { f.Add( 1, &first ); f.Add( 2, &second ); return 0; }
-	DWORD CalcCheckSum() const { return 0; }
+	uint32_t CalcCheckSum() const { return 0; }
 };
 

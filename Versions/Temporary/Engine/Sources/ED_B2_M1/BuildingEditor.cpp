@@ -22,6 +22,8 @@
 #include "BuildingState.h"
 #include "BuildingEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EDITOR_IN_DLL( BuildingRPGStats, CBuildingEditor )
@@ -174,7 +176,7 @@ void CBuildingEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-bool CBuildingEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CBuildingEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	return false;
 }

@@ -1,8 +1,8 @@
-
 #pragma once
 
-
 #include"csapi.h"
+
+#include <cstdint>
 
 #define BUFFER_LEN ( 0xFFFF )
 #define W_LIST_LEN ( 100 )
@@ -12,22 +12,22 @@
 #define BRITISH_CODE	( 0x0809 )
 
 
-typedef GLOBALSEC ( *TSpellVer )					( WORD  FAR *, WORD FAR *, WORD FAR * );
+typedef GLOBALSEC ( *TSpellVer )					( uint16_t  FAR *, uint16_t FAR *, uint16_t FAR * );
 typedef GLOBALSEC ( *TSpellInit )					( SPLID FAR *, WSC FAR * );
 typedef GLOBALSEC ( *TSpellOptions )			( SPLID splid, long nSpellOptions );
 typedef GLOBALSEC ( *TSpellCheck )				( SPLID splid, SCCC, LPSIB, LPSRB );
 typedef GLOBALSEC ( *TSpellTerminate )		( SPLID splid, BOOL bForce );
 typedef GLOBALSEC ( *TSpellOpenMdr )			( SPLID splid, LPSPATH lpspathMain, LPSPATH lpspathExc, BOOL bCreateUdrExc, BOOL bCache, LID lidExpected, LPMDRS lpMdrs );
 typedef GLOBALSEC ( *TSpellCloseMdr )			( SPLID splid, LPMDRS lpMdrs );
-typedef GLOBALSEC ( *TSpellOpenUdr )			( SPLID splid, LPSPATH lpspathUdr, BOOL bCreateUdr, WORD udrpropType, UDR FAR *lpUdr, BOOL FAR *lpbReadonly );
+typedef GLOBALSEC ( *TSpellOpenUdr )			( SPLID splid, LPSPATH lpspathUdr, BOOL bCreateUdr, uint16_t udrpropType, UDR FAR *lpUdr, BOOL FAR *lpbReadonly );
 typedef GLOBALSEC ( *TSpellAddUdr )				( SPLID splid, UDR udr, CHAR FAR *lpszAdd );
 typedef GLOBALSEC ( *TSpellCloseUdr )			( SPLID splid, UDR udr, BOOL bForce );
 typedef GLOBALSEC ( *TSpellDebugCommand )	( SPLID splid, unsigned short wDebCom );
 typedef GLOBALSEC ( *TSpellAddChangeUdr )	( SPLID splid, UDR udr, CHAR FAR *lpszAdd, CHAR FAR *lpszChange );
 typedef GLOBALSEC ( *TSpellDelUdr )				( SPLID splid, UDR udr, CHAR FAR *lpszDel );
 typedef GLOBALSEC ( *TSpellClearUdr )			( SPLID splid, UDR udr );
-typedef GLOBALSEC ( *TSpellGetSizeUdr )		( SPLID splid, UDR udr, WORD FAR *lpcWords );
-typedef GLOBALSEC ( *TSpellGetListUdr )		( SPLID splid, UDR udr, WORD iszStart, LPSRB lpSrb );
+typedef GLOBALSEC ( *TSpellGetSizeUdr )		( SPLID splid, UDR udr, uint16_t FAR *lpcWords );
+typedef GLOBALSEC ( *TSpellGetListUdr )		( SPLID splid, UDR udr, uint16_t iszStart, LPSRB lpSrb );
 typedef GLOBALSEC ( *TSpellVerifyMdr )		( LPSPATH lpspathMdr, LID lidExpected, LID FAR *lpLid );
 
 // SpellEngine state values.
@@ -79,16 +79,16 @@ class CSpellEngine
 
 	HINSTANCE hLib;
 	SPLID id;
-	WORD wVer;
-	WORD wEng;
-	WORD wMode;
+	uint16_t wVer;
+	uint16_t wEng;
+	uint16_t wMode;
 	MDRS mdrs;
 	UDR uDr;
 
 	int nLanguage;
 	int nUdrRO;
 	
-	BYTE pRatings[BUFFER_LEN];
+	uint8_t pRatings[BUFFER_LEN];
 	SIB	sib;
 	SRB	srb;
 

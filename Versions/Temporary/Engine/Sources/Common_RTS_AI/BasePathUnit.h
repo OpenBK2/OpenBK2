@@ -2,12 +2,13 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "Common_RTS_AI/Terrain.h"
 
 #include "Path.h"
 #include "StaticPath.h"
 #include "Collision.h"
+
+#include <cstdint>
 
 class CAIMap;
 class CStaticMapHeights;
@@ -112,13 +113,13 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 		bool bStoppedSent;
 		ZSKIP
 		CVec3 vOldPlacement;
-		WORD wOldDirection;
+		uint16_t wOldDirection;
 	public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&wDirection); f.Add(4,&wFrontDirection); f.Add(5,&wLastDirection); f.Add(6,&bGoForward); f.Add(7,&bTurning); f.Add(8,&bTurnCalled); f.Add(9,&vCenter); f.Add(10,&vTile); f.Add(11,&vLastKnownGoodTile); f.Add(12,&fSpeed); f.Add(13,&fDesiredSpeed); f.Add(14,&bLocking); f.Add(15,&bOnLockedTiles); f.Add(16,&bIdle); f.Add(17,&bFixUnlocking); f.Add(18,&nCollisionsCount); f.Add(19,&pSmoothPath); f.Add(20,&pDefaultPath); f.Add(21,&pPathMemento); f.Add(22,&pCurrentCollision); f.Add(23,&pInterruptedCollision); f.Add(24,&bNoCollision); f.Add(25,&stayTime); f.Add(26,&collStayTime); f.Add(27,&nextSecondPathSegmTime); f.Add(28,&checkOnLockedTime); f.Add(29,&bMaxSlowed); f.Add(30,&bMinSlowed); f.Add(31,&bNotified); f.Add(32,&bTurningToDirContinuesly); f.Add(33,&wDirToContinueslyTurn); f.Add(34,&eMovementPlane); f.Add(35,&pAIMap); f.Add(36,&pHeights); f.Add(37,&pCollisionsCollector); f.Add(38,&pInterruptedPath); f.Add(40,&bPlacementUpdated); f.Add(41,&bStoppedSent); f.Add(43,&vOldPlacement); f.Add(44,&wOldDirection); return 0; }
 	private:
 	
 	void OnSerialize( IBinSaver &f );
-	const bool MakeTurnToDirection( const WORD wDirection );
+	const bool MakeTurnToDirection( const uint16_t wDirection );
 
 	const bool IterateUnitsProc( const CBasePathUnit *unit ) const;
 	const SRect GetUnitModifiedRect( const float fCompress ) const;
@@ -128,7 +129,7 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 protected:
 	//! обновить позицию юнита, это должен делать кто-то из AI
 	//virtual void UpdatePlacement( const CVec3 &vOldPosition )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )	= 0;
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate )	= 0;
 	virtual void UpdateTile() = 0;
 	//! создать путь при инициализации юнита (для формации создаются свои пути)
 	virtual ISmoothPath *CreateSmoothPath();
@@ -143,7 +144,7 @@ protected:
 	virtual void OnStopped() {}
 public:
 	CBasePathUnit();
-	void Init( const CVec3 &vCenter, const WORD wDirection, CAIMap *pAIMap, ICollisionsCollector *pCollisionsCollector, CCommonPathFinder *pPathFinder );
+	void Init( const CVec3 &vCenter, const uint16_t wDirection, CAIMap *pAIMap, ICollisionsCollector *pCollisionsCollector, CCommonPathFinder *pPathFinder );
 
 	//! информация о позиции юнита в пространстве (3D)
 	const CVec3 & GetCenter() const {	return vCenter; }
@@ -164,15 +165,15 @@ public:
 	virtual void SetCenter( const CVec3 &vCenter, const bool bNeedUpdate = true );
   
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении
-	const bool IsValidDirection( const WORD wDirection );
+	const bool IsValidDirection( const uint16_t wDirection );
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении (направление задается вектором)
 	const bool IsValidDirection( const CVec2 &vDirection ) { return IsValidDirection( GetDirectionByVector( vDirection ) ); }
 	//! получить направление движения юнита, 
-	const WORD GetDirection() const { return wDirection; }
+	const uint16_t GetDirection() const { return wDirection; }
 	const float GetDir() const { return float(wFrontDirection) / 65536.0f * FP_2PI; }
 
 	//! куда смотрит перед юнита
-	const WORD GetFrontDirection() const { return wFrontDirection; }
+	const uint16_t GetFrontDirection() const { return wFrontDirection; }
 	//! получить напраление движения юнита в векторе
 	const CVec2 GetDirectionVector() const { return GetVectorByDirection( GetDirection() ); }
 	//! получить, куда собирается ехать юнит (например на поворотах может несколько отличаться от направления движения)
@@ -180,18 +181,18 @@ public:
 	//! куда смотрит перед юнита в векторе
 	const CVec2 GetFrontDirectionVector() const { return GetVectorByDirection( GetFrontDirection() ); }
 	//! установить направление движения юнита
-	virtual void SetDirection( const WORD wDirection, const bool bNeedUpdate = true );
+	virtual void SetDirection( const uint16_t wDirection, const bool bNeedUpdate = true );
 	//! установить направление движения юнита вектором
 	void SetDirectionVec( const CVec2 &vDirection ) { SetDirection( GetDirectionByVector( vDirection ) ); }
 	//! повернуться в указанном направлении
-	virtual const bool TurnToDirection( const WORD wDirection, const bool bCanBackward, const bool bCanForward );
+	virtual const bool TurnToDirection( const uint16_t wDirection, const bool bCanBackward, const bool bCanForward );
 	//! повернуться на указанную точку
 	virtual const bool TurnToTarget( const CVec2 &vTarget );
 
 	//! можно ли передом повернуться в указанном направлении
-	virtual const bool CanTurnToFrontDir( const WORD wDirection ) const;
+	virtual const bool CanTurnToFrontDir( const uint16_t wDirection ) const;
 	//! можно ли повернуться в указанном направлении
-	virtual const bool CanTurnTo( const WORD wDirection, const bool bCanRebuildPath = true );
+	virtual const bool CanTurnTo( const uint16_t wDirection, const bool bCanRebuildPath = true );
 	//! можно ли развернуться на 180 градусов
 	bool CanMake180DegreesTurn( SRect rect ) const;
 
@@ -335,7 +336,7 @@ public:
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const = 0;
 
 	virtual const bool IsDangerousDirExist() const = 0;
-	virtual const WORD GetDangerousDir() const = 0;
+	virtual const uint16_t GetDangerousDir() const = 0;
 
 	//! с кем может коллизиться юнит
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_ALL; }
@@ -345,7 +346,7 @@ public:
 	//! значение равно последнему значение iterFunc, сам юнит (this) никогда не пройдет через итератор
 	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const = 0;
 
-	virtual void TurnToDirectionContinuesly( const WORD _wDirection );
+	virtual void TurnToDirectionContinuesly( const uint16_t _wDirection );
 
 	//! послать юнит вдоль пути, возвращает true, если юнит поехал
 	virtual const bool SendAlongPath( IPath *pPath );

@@ -3,6 +3,8 @@
 #include "Terrain.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 class CTerrainManager : public ITerraManager
 {
 	OBJECT_NOCOPY_METHODS( CTerrainManager )
@@ -60,7 +62,7 @@ public:
 	//
 	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth );
 	//
-	void CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+	void CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
 										 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 										 const NDebrisBuilder::EMaskSmoothType smoothType );
 	// selection
@@ -99,16 +101,16 @@ public:
 	void HideTerrain( bool bHide );
 	//
 	void UpdateTileAreaType(	const float fXo, const float fYo,
-														const CArray2D<BYTE> &mask,
+														const CArray2D<uint8_t> &mask,
 														const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
 	//
-	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs );
+	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs );
 	//
 	void FinalizeTexModifying();
 	//
 	void ClampUnderRivers( NMeshData::SMeshData *pData );
 	//
-	void GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 );
+	void GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 );
 	void GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 );
 	//
 	void UpdateAfterTilesModifying();
@@ -116,7 +118,7 @@ public:
 	virtual float GetZ( float x, float y ) const;
 	float GetTileHeight( int nX, int nY ) const;
 	virtual void UpdateZ( CVec3 *pvPos );
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );

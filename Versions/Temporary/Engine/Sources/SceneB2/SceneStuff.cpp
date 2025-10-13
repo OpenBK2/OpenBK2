@@ -17,6 +17,8 @@
 
 #include "SceneInternal.h"
 
+#include <cstdint>
+
 ITerraManager *CScene::GetTerraManager()
 {
 	if ( !DoesTerraManagerExist() ) 
@@ -254,7 +256,7 @@ bool CScene::GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const
 
 namespace NScene
 {
-static const DWORD overdrawColors[] = 
+static const uint32_t overdrawColors[] =
 {
 	0x00000055,
 	0x000000AA,
@@ -281,7 +283,7 @@ static const DWORD overdrawColors[] =
 
 void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
-	std::unordered_map<DWORD, int> colors;
+	std::unordered_map<uint32_t, int> colors;
 	for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
 		colors[ NScene::overdrawColors[i] ] = i + 1;
 	// turn UI off, overdraw on
@@ -307,8 +309,8 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 	{
 		for ( int x = 0; x < image.GetSizeX(); ++x )
 		{
-			const DWORD color = image[y][x].dwColor & 0x00ffffff;
-			std::unordered_map<DWORD, int>::const_iterator posOverdraw = colors.find( color );
+			const uint32_t color = image[y][x].dwColor & 0x00ffffff;
+			std::unordered_map<uint32_t, int>::const_iterator posOverdraw = colors.find( color );
 			if ( posOverdraw != colors.end() )
 			{
 				nTotalOverdraw += posOverdraw->second;
@@ -322,7 +324,7 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 				float b = (		color		) & 0xff;
 				for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
 				{
-					DWORD localColor = NScene::overdrawColors[i];
+					uint32_t localColor = NScene::overdrawColors[i];
 					float lr = ( localColor >> 16 ) & 0xff;
 					float lg = ( localColor >>	8 ) & 0xff;
 					float lb = (		localColor		) & 0xff;

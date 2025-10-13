@@ -2,6 +2,8 @@
 
 #include "StrProc.h"
 
+#include <cstdint>
+
 namespace NStr 
 {
 
@@ -183,11 +185,11 @@ const char* BinToString( const void *pData, int nSize, char *pszBuffer )
 }
 void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 {
-	BYTE *pData = (BYTE*)pBuffer;
+	uint8_t *pData = (uint8_t*)pBuffer;
 	for ( const char *it = pszData; *it != 0; it += 2 )
 		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *(it +1) );
 	if ( pnSize ) 
-		*pnSize = int( pData - (BYTE*)pBuffer );
+		*pnSize = int( pData - (uint8_t*)pBuffer );
 	return pBuffer;
 }
 
@@ -231,14 +233,14 @@ void UTF8ToUnicode( std::wstring *pRes, const std::string &szString )
 	std::string::const_iterator it = szString.begin();
 	while ( it != szString.end() ) 
 	{
-		BYTE chr = BYTE( *it );
+		uint8_t chr = uint8_t( *it );
 		if ( (chr & 0x80) == 0 ) 
 			*pRes += chr;
 		else if ( (chr & 0xe0) == 0xc0 )	// check first 3 bits ( wchar < 0x800 )
 		{
 			wchar_t res = (chr & 0x1f) << 6;
 			++it;
-			chr = BYTE( *it );
+			chr = uint8_t( *it );
 			res |= ( chr & 0x3f );
 			*pRes += res;
 		}
@@ -246,10 +248,10 @@ void UTF8ToUnicode( std::wstring *pRes, const std::string &szString )
 		{
 			wchar_t res = ( chr & 0x0f ) << 12;
 			++it;
-			chr = BYTE( *it );
+			chr = uint8_t( *it );
 			res |= ( chr & 0x3f ) << 6;
 			++it;
-			chr = BYTE( *it );
+			chr = uint8_t( *it );
 			res |= chr & 0x3f;
 			*pRes += res;
 		}
@@ -298,16 +300,16 @@ void GUID2String( std::string *pString, const GUID &guid )
 }
 void String2GUID( const std::string &szString, GUID *pGuid )
 {
-	((BYTE*)&pGuid->Data1)[3] = ( HexSymbolToHalfByte( szString[0] ) << 4 ) | HexSymbolToHalfByte( szString[1] );
-	((BYTE*)&pGuid->Data1)[2] = ( HexSymbolToHalfByte( szString[2] ) << 4 ) | HexSymbolToHalfByte( szString[3] );
-	((BYTE*)&pGuid->Data1)[1] = ( HexSymbolToHalfByte( szString[4] ) << 4 ) | HexSymbolToHalfByte( szString[5] );
-	((BYTE*)&pGuid->Data1)[0] = ( HexSymbolToHalfByte( szString[6] ) << 4 ) | HexSymbolToHalfByte( szString[7] );
+	((uint8_t*)&pGuid->Data1)[3] = ( HexSymbolToHalfByte( szString[0] ) << 4 ) | HexSymbolToHalfByte( szString[1] );
+	((uint8_t*)&pGuid->Data1)[2] = ( HexSymbolToHalfByte( szString[2] ) << 4 ) | HexSymbolToHalfByte( szString[3] );
+	((uint8_t*)&pGuid->Data1)[1] = ( HexSymbolToHalfByte( szString[4] ) << 4 ) | HexSymbolToHalfByte( szString[5] );
+	((uint8_t*)&pGuid->Data1)[0] = ( HexSymbolToHalfByte( szString[6] ) << 4 ) | HexSymbolToHalfByte( szString[7] );
 
-	((BYTE*)&pGuid->Data2)[1] = ( HexSymbolToHalfByte( szString[9] ) << 4 ) | HexSymbolToHalfByte( szString[10] );
-	((BYTE*)&pGuid->Data2)[0] = ( HexSymbolToHalfByte( szString[11] ) << 4 ) | HexSymbolToHalfByte( szString[12] );
+	((uint8_t*)&pGuid->Data2)[1] = ( HexSymbolToHalfByte( szString[9] ) << 4 ) | HexSymbolToHalfByte( szString[10] );
+	((uint8_t*)&pGuid->Data2)[0] = ( HexSymbolToHalfByte( szString[11] ) << 4 ) | HexSymbolToHalfByte( szString[12] );
 
-	((BYTE*)&pGuid->Data3)[1] = ( HexSymbolToHalfByte( szString[14] ) << 4 ) | HexSymbolToHalfByte( szString[15] );
-	((BYTE*)&pGuid->Data3)[0] = ( HexSymbolToHalfByte( szString[16] ) << 4 ) | HexSymbolToHalfByte( szString[17] );
+	((uint8_t*)&pGuid->Data3)[1] = ( HexSymbolToHalfByte( szString[14] ) << 4 ) | HexSymbolToHalfByte( szString[15] );
+	((uint8_t*)&pGuid->Data3)[0] = ( HexSymbolToHalfByte( szString[16] ) << 4 ) | HexSymbolToHalfByte( szString[17] );
 
 	pGuid->Data4[0] = ( HexSymbolToHalfByte( szString[19] ) << 4 ) | HexSymbolToHalfByte( szString[20] );
 	pGuid->Data4[1] = ( HexSymbolToHalfByte( szString[21] ) << 4 ) | HexSymbolToHalfByte( szString[22] );

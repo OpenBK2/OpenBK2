@@ -8,6 +8,8 @@
 #include "System/xmlreader.h"
 #include "Misc/Win32Helper.h"
 
+#include <cstdint>
+
 namespace NTest
 {
 	void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
@@ -244,14 +246,14 @@ CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 	}
 }
 
-static DWORD dwLastProfilerSegment = 0;
+static uint32_t dwLastProfilerSegment = 0;
 static float fBigTimeForLoad = 0.0f;
 static int nObjLoaded = 0;
 
 class CProfiler
 {
 	const std::string szObjName;
-	const DWORD dwStartTime;
+	const uint32_t dwStartTime;
 public:
 	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetTickCount() ) { }
 	~CProfiler()
@@ -267,7 +269,7 @@ public:
 
 LIBDB_EXPORT void SegmentProfiler()
 {
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
 		if ( fBigTimeForLoad != 0.0f )

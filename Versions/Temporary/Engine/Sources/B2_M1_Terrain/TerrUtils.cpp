@@ -5,6 +5,7 @@
 #include "TerrUtils.h"
 
 #include <algorithm>
+#include <cstdint>
 
 CVec3dEx CVec3fEx::GetVec3dEx() const { return CVec3dEx( (double)x, (double)y, (double)z, flag ); }
 CVec3fEx CVec3dEx::GetVec3fEx() const { return CVec3fEx( (float)x, (float)y, (float)z, flag ); }
@@ -297,7 +298,7 @@ bool IsIntersect( const std::vector<STriangle> &rTriangles, const std::vector<CV
 	return false;
 }
 
-static std::vector<BYTE> flags( 64 );
+static std::vector<uint8_t> flags( 64 );
 static CArray2D<CVec3> normVects( 64, 64 );
 void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> &rSourcePoints )
 {

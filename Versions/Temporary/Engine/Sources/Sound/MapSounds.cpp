@@ -3,11 +3,13 @@
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
 
+#include <cstdint>
+
 //*******************************************************************
 //*															CMapSounds
 //*******************************************************************
 
-void CMapSounds::CMapSoundCell::AddSound( const WORD wSoundID, const CVec3 &vPos, const CMapSounds::RegisteredSounds &registeredSounds, const WORD wInstanceID, const bool bLooped )
+void CMapSounds::CMapSoundCell::AddSound( const uint16_t wSoundID, const CVec3 &vPos, const CMapSounds::RegisteredSounds &registeredSounds, const uint16_t wInstanceID, const bool bLooped )
 {
 	if ( bLooped )
 	{
@@ -21,7 +23,7 @@ void CMapSounds::CMapSoundCell::AddSound( const WORD wSoundID, const CVec3 &vPos
 	}
 }
 
-void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, struct ISoundScene * pScene )
+void CMapSounds::CMapSoundCell::RemoveSound( const uint16_t wInstanceID, struct ISoundScene * pScene )
 {
 	// if removed sound is playing - remove it from sound scene
 	if ( wInstanceID == playingLoopedSound.wInstanceID && 0 != playingLoopedSound.wSceneID)
@@ -43,7 +45,7 @@ void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, struct ISou
 
 }
 
-void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSounds *pCellSounds, const WORD wInstanceID )
+void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSounds *pCellSounds, const uint16_t wInstanceID )
 {
 	// remove this sound from types list
 	for ( CellSounds::iterator it = pCellSounds->begin(); pCellSounds->end() != it ; ++it )
@@ -84,7 +86,7 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 				!maxElement->second.instanceIDs.empty() &&
 				maxElement->second.nCount >= SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
 			{
-				std::unordered_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<uint16_t,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingLoopedSound.wInstanceID = element->first;
 				playingLoopedSound.wSoundTypeID = maxElement->first;
 				playingLoopedSound.wSceneID = pScene->AddSound( registeredSounds.ToT1(playingLoopedSound.wSoundTypeID),
@@ -109,7 +111,7 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 
 			if ( maxElement != cellSounds.end() && !maxElement->second.instanceIDs.empty() )
 			{
-				std::unordered_map<WORD,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<uint16_t,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingSound.wInstanceID = element->first;
 				playingSound.wSoundTypeID = maxElement->first;
 				playingSound.wSceneID = pScene->AddSound( registeredSounds.ToT1( playingSound.wSoundTypeID ),
@@ -141,10 +143,10 @@ void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 	cells.clear();
 }
 
-void CMapSounds::RemoveSound( const WORD wInstanceID )
+void CMapSounds::RemoveSound( const uint16_t wInstanceID )
 {
 	if ( 0 == wInstanceID ) return ;
-	std::unordered_map<WORD, SIntThree>::iterator pos = cells.find( wInstanceID );
+	std::unordered_map<uint16_t, SIntThree>::iterator pos = cells.find( wInstanceID );
 	NI_ASSERT( pos != cells.end(), "wrong instace deleted" );
 	if ( pos == cells.end() )
 		return;
@@ -154,7 +156,7 @@ void CMapSounds::RemoveSound( const WORD wInstanceID )
 	cells.erase( wInstanceID );
 }
 
-WORD CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pStats )
+uint16_t CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pStats )
 {
 	// определить к какой клетке он относится.
 	const SIntThree vCellPos( vPos.x / SSoundSceneConsts::MAP_SOUND_CELL, vPos.y / SSoundSceneConsts::MAP_SOUND_CELL, vPos.z / SSoundSceneConsts::MAP_SOUND_CELL );
@@ -166,12 +168,12 @@ WORD CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pSta
 	// зарегистрировать звук
 	if ( !registeredSounds.IsPresent( pStats ) )
 	{
-		const WORD wNewID = soundIDs.Get();
+		const uint16_t wNewID = soundIDs.Get();
 		registeredSounds.Add( pStats, wNewID );
 	}
 	// wSoundID - зарегистрированный звук.
-	const WORD wSoundID = registeredSounds.ToT2( pStats );
-	const WORD wInstanceID = instanceIDs.Get();
+	const uint16_t wSoundID = registeredSounds.ToT2( pStats );
+	const uint16_t wInstanceID = instanceIDs.Get();
 	// добавить его в эту клетку.
 	mapCells[vCellPos.y][vCellPos.x].AddSound( wSoundID, vPos, registeredSounds, wInstanceID, pStats->bLooped );
 	// добавить в карту клекта - ID звука.

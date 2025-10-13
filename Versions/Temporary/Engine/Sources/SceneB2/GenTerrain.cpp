@@ -6,6 +6,8 @@
 #include "TerraConverters.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 #define DEF_TRGS_RESERVE_COUNT ( DEF_PATCH_SIZE * DEF_PATCH_SIZE * 2 )
 #define DEF_VERTS_RESERVE_COUNT ( (DEF_PATCH_SIZE + 1) * (DEF_PATCH_SIZE + 1) )
 #define DEF_TERRA_OBJS_COUNT 512
@@ -218,7 +220,7 @@ void CTerraGen::InitTileMasks()
 }
 
 
-void CTerraGen::UpdateArea( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, const DWORD dwUpdateFlags )
+void CTerraGen::UpdateArea( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, const uint32_t dwUpdateFlags )
 {
 	UpdateHeightsAfterCrags( nTileX1, nTileY1, nTileX2, nTileY2 );
 	UpdateNormals( nTileX1, nTileY1, nTileX2, nTileY2 );

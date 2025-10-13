@@ -2,6 +2,8 @@
 
 #include "Stats_B2_M1/AITypes.h"
 
+#include <cstdint>
+
 // последняя party обязательно должна быть нейтральна ко всем
 class CDiplomacy
 {
@@ -24,7 +26,7 @@ public:
 
 	const int GetNPlayers() const { return playerParty.size(); }
 
-	const EDiplomacyInfo GetDiplStatus( const BYTE a, const BYTE b ) const
+	const EDiplomacyInfo GetDiplStatus( const uint8_t a, const uint8_t b ) const
 	{ 
 		if ( playerParty[a] == 2 || playerParty[b] == 2 )
 			return EDI_NEUTRAL;
@@ -34,7 +36,7 @@ public:
 			return EDI_FRIEND;
 	}
 
-	const EDiplomacyInfo GetDiplStatusForParties( const BYTE nParty1, const BYTE nParty2 )
+	const EDiplomacyInfo GetDiplStatusForParties( const uint8_t nParty1, const uint8_t nParty2 )
 	{
 		if ( nParty1 == 2 || nParty2 == 2 )
 			return EDI_NEUTRAL;
@@ -45,15 +47,15 @@ public:
 				return EDI_FRIEND;
 	}
 
-	const BYTE GetNParty( const BYTE cPlayer ) const { return playerParty[cPlayer]; }
-	const BYTE GetMyNumber() const { return nMyNumber; }
-	const BYTE GetMyParty() const { return GetNParty( GetMyNumber() ); }
-	const bool IsAIPlayer( const BYTE cPlayer ) const { return !bNetGame && cPlayer != GetMyNumber(); }
-	const BYTE GetNeutralPlayer() const { return GetNPlayers() - 1; }
+	const uint8_t GetNParty( const uint8_t cPlayer ) const { return playerParty[cPlayer]; }
+	const uint8_t GetMyNumber() const { return nMyNumber; }
+	const uint8_t GetMyParty() const { return GetNParty( GetMyNumber() ); }
+	const bool IsAIPlayer( const uint8_t cPlayer ) const { return !bNetGame && cPlayer != GetMyNumber(); }
+	const uint8_t GetNeutralPlayer() const { return GetNPlayers() - 1; }
 	// номер нейтральной стороны
 	int GetNeutralParty() const { return 2; }
 
-	void SetParty( const BYTE nPlayer, const BYTE newParty ) { playerParty[nPlayer] = newParty; }
+	void SetParty( const uint8_t nPlayer, const uint8_t newParty ) { playerParty[nPlayer] = newParty; }
 	
 	void SetMyNumber( const int nNumber ) { nMyNumber = nNumber; }
 	void SetNetGame( bool _bNetGame );

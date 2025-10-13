@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbsounddesc.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,8 +17,8 @@ void SSoundDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SoundDesc", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "SoundPath", (BYTE*)&szSoundPath - pThis, sizeof(szSoundPath), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "SoundPath", (uint8_t*)&szSoundPath - pThis, sizeof(szSoundPath), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

@@ -1,12 +1,14 @@
-
 #pragma once
+
 #include "MapEditorLib/Tools_Resources.h"
 #include "MapEditorLib/Tools_Registry.h"
 #include "3Dmotor/DBScene.h"
 //#include "..\Formats\fmtFont.h"
 
-typedef hash_map<WORD, DWORD> CSymbolSet;
-typedef vector<WORD> CSymbolList;
+#include <cstdint>
+
+typedef hash_map<uint16_t, uint32_t> CSymbolSet;
+typedef vector<uint16_t> CSymbolList;
 struct SSymbolSet
 {
 	CSymbolSet symbolSet;
@@ -336,9 +338,9 @@ typedef hash_map<string, SSimpleFilter> CFilterMap;
 
 struct SKPZeroFunctional
 {
-  const hash_map<WORD, WORD> *pTranslate;
+  const hash_map<uint16_t, uint16_t> *pTranslate;
 	SKPZeroFunctional() : pTranslate( 0 )	{}
-	SKPZeroFunctional( const hash_map<WORD, WORD> *_pTranslate )
+	SKPZeroFunctional( const hash_map<uint16_t, uint16_t> *_pTranslate )
 	{
 		pTranslate = _pTranslate;
 	}

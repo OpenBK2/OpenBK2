@@ -1,7 +1,8 @@
-
 #pragma once
 
 #include "StaticObject.h"
+
+#include <cstdint>
 
 class CSmokeScreen : public CExistingObject
 {
@@ -23,7 +24,7 @@ class CSmokeScreen : public CExistingObject
 	void TraceToPoint( const int x, const int y, const bool bAdd );
 	void Trace( const bool bAdd );
 protected:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const WORD dir = 0 ) { }
+	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) { }
 public:
 	CSmokeScreen() : bTransparencySet( false ) { }
 	CSmokeScreen( const CVec3 &vCenter, const float fRadius, const int nTransparency, const int nTime );
@@ -59,7 +60,7 @@ public:
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const { return CVec2(vCenter.x,vCenter.y); }
 	virtual void GetBoundRect( SRect *pRect ) const { pRect->InitRect( CVec2(GetCenter().x,GetCenter().y), CVec2( 1.0f, 1.0f ), 0.0f, 0.0f ); }
 	virtual bool IsPointInside( const CVec2 &point ) const { return false; }
-	virtual const WORD GetDir() const { return 0; }
+	virtual const uint16_t GetDir() const { return 0; }
 
 	virtual CObjectProfile* GetPassProfile() const { return 0; }
 };

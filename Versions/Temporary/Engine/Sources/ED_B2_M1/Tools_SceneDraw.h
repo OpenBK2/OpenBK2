@@ -8,6 +8,8 @@
 #include "SceneB2/Terrain.h"
 #include "stats_b2_m1/Vis2AI.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NDb
@@ -20,8 +22,8 @@ class CSceneDrawTool
 	static const float SCENE_Z_SHIFT;
 
 	// CRAP{ HASH_SET
-	typedef hash_map<int, DWORD> CModelIDSet;
-	typedef hash_map<int, DWORD> CPolylineIDSet;
+	typedef hash_map<int, uint32_t> CModelIDSet;
+	typedef hash_map<int, uint32_t> CPolylineIDSet;
 	// CRAP} HASH_SET
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SModelInfo
@@ -91,7 +93,7 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
-	void DrawLine( const TPoint &rBegin, const TPoint &rEnd,  DWORD dwColor, bool bDepthCheck )
+	void DrawLine( const TPoint &rBegin, const TPoint &rEnd,  uint32_t dwColor, bool bDepthCheck )
 	{
 		const CVec3 vBegin = GetPointType( rBegin, static_cast<CVec3*>( 0 ) );
 		const CVec3 vEnd = GetPointType( rEnd, static_cast<CVec3*>( 0 ) );
@@ -107,7 +109,7 @@ public:
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
-	void Draw3DLine( const TPoint &rBegin, const TPoint &rEnd,  DWORD dwColor, bool bDepthCheck, int nSegmentCount )
+	void Draw3DLine( const TPoint &rBegin, const TPoint &rEnd,  uint32_t dwColor, bool bDepthCheck, int nSegmentCount )
 	{
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		//
@@ -135,7 +137,7 @@ public:
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void Draw3DLine( const CTPoint<int> &rBegin, const CTPoint<int> &rEnd,  DWORD dwColor, bool bGridHeights, bool bConnectors, bool bDepthCheck )
+	void Draw3DLine( const CTPoint<int> &rBegin, const CTPoint<int> &rEnd,  uint32_t dwColor, bool bGridHeights, bool bConnectors, bool bDepthCheck )
 	{
 		ITerraManager *pTerraManager = EditorScene()->GetTerraManager();
 		if ( ( pTerraManager != 0 ) && ( ( rBegin.x == rEnd.x ) || ( rBegin.y == rEnd.y ) ) )
@@ -200,7 +202,7 @@ public:
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPointList>
-	void DrawPolyline( const TPointList &rPolintList, DWORD dwColor, bool bClosed, bool bDepthCheck )
+	void DrawPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
 		TPointList::const_iterator itTestPoint = rPolintList.begin();
 		// нет точек
@@ -232,7 +234,7 @@ public:
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPointList>
-	void Draw3DPolyline( const TPointList &rPolintList, DWORD dwColor, bool bClosed, bool bDepthCheck )
+	void Draw3DPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
 		TPointList::const_iterator itTestPoint = rPolintList.begin();
 		// нет точек
@@ -266,7 +268,7 @@ public:
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
-	void DrawCircle( const TPoint &rCenter, float fRadius, int nParts, DWORD dwColor, bool bDepthCheck )
+	void DrawCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
 	{	
 		if ( nParts < 2 )
 		{
@@ -287,7 +289,7 @@ public:
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
-	void Draw3DCircle( const TPoint &rCenter, float fRadius, int nParts, DWORD dwColor, bool bDepthCheck )
+	void Draw3DCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
 	{	
 		if ( nParts < 2 )
 		{

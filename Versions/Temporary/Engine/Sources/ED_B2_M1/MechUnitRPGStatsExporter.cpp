@@ -102,6 +102,9 @@
 #include "MechUnitRPGStatsExporter.h"
 #include "System/FastMath.h"
 #include "ED_Common/TempAttributesTool.h"
+
+#include <cstdint>
+
 //DEBUG{
 //DEBUG}
 
@@ -925,7 +928,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 		return;
 
 	const int nNumElems = v;
-	vector<BYTE> gunProcessed( rGuns.size(), BYTE(0) );
+	vector<uint8_t> gunProcessed( rGuns.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
 		string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, i );
@@ -1084,7 +1087,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 		return;
 	const int nNumElems = v;
 
-	vector<BYTE> platformProcessed( rPlatforms.size(), BYTE(0) );
+	vector<uint8_t> platformProcessed( rPlatforms.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
 		string szLocNameDBA = StrFmt( "platforms.[%d].RotatePoint", i );

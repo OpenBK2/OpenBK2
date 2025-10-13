@@ -1,6 +1,8 @@
-WORD wDivingAngle;
-WORD wClimbingAngle;
-WORD wTiltAngle;
+#include <cstdint>
+
+uint16_t wDivingAngle;
+uint16_t wClimbingAngle;
+uint16_t wTiltAngle;
 std::unordered_map</*enum EManuverID*/int, bool> manuverMap;
 
 virtual void ToAIUnits( bool bInEditor );

@@ -3,6 +3,8 @@
 #include "ConsoleBufferInternal.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 #pragma warning( disable : 4530 )
 #include <fstream>
 using std::wofstream;
@@ -35,14 +37,14 @@ static std::wstring EraseTags( const std::wstring &szStr )
 
 // CConsoleBuffer
 
-void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, const DWORD color, const bool bPersistentMsg )
+void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, const uint32_t color, const bool bPersistentMsg )
 {
 	if ( pszString == 0 ) 
 		return;
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }
 
-void CConsoleBuffer::Write( const int nStreamID, const std::wstring &szString, const DWORD color, const bool bPersistentMsg )
+void CConsoleBuffer::Write( const int nStreamID, const std::wstring &szString, const uint32_t color, const bool bPersistentMsg )
 {
 	++nSlowCompress;
 	if ( ( nSlowCompress & 1023 ) == 0 )
@@ -137,12 +139,12 @@ void CConsoleBuffer::DumpLog()
 
 // pipes support
 
-void WriteToPipe( int nPipe, const std::string &sz, DWORD dwColor, bool bPersistentMsg )
+void WriteToPipe( int nPipe, const std::string &sz, uint32_t dwColor, bool bPersistentMsg )
 {
 	WriteToPipe( nPipe, NStr::ToUnicode( sz ), dwColor, bPersistentMsg );
 }
 
-void WriteToPipe( int nPipe, const std::wstring &sz, DWORD dwColor, bool bPersistentMsg )
+void WriteToPipe( int nPipe, const std::wstring &sz, uint32_t dwColor, bool bPersistentMsg )
 {
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
 	SPipeChannel &dst = pBuffer->GetPipeChannel( nPipe );
@@ -164,7 +166,7 @@ static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
 	return true;
 }
 
-bool ReadFromPipe( int nPipe, std::string *pRes, DWORD *pDWColor )
+bool ReadFromPipe( int nPipe, std::string *pRes, uint32_t *pDWColor )
 {
 	*pRes = "";
 	if ( pDWColor )
@@ -178,7 +180,7 @@ bool ReadFromPipe( int nPipe, std::string *pRes, DWORD *pDWColor )
 	return true;
 }
 
-bool ReadFromPipe( int nPipe, std::wstring *pRes, DWORD *pDWColor )
+bool ReadFromPipe( int nPipe, std::wstring *pRes, uint32_t *pDWColor )
 {
 	*pRes = L"";
 	if ( pDWColor )

@@ -3,18 +3,20 @@
 #include "AILogic/AILogicCommand.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
 
+#include <cstdint>
+
 class CRegisterGroupCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CRegisterGroupCommand );
 	//
 	ZDATA
 		std::vector<int> unitsIDs;					// IDs of all obejcts in group
-	WORD nID;														// ID of the group
+	uint16_t nID;														// ID of the group
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitsIDs); f.Add(3,&nID); return 0; }
 public:
 	CRegisterGroupCommand() { }
 	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID  );
-	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const WORD wID, IAILogic *pAILogic );
+	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wID, IAILogic *pAILogic );
 	//
 	void Execute();
 	//
@@ -61,12 +63,12 @@ class CB2GroupCommand : public IAILogicCommandB2
 	//
 	ZDATA
 		SAIUnitCmd command;									// command itself
-	WORD wGroup;												// group ID, this command for
+	uint16_t wGroup;												// group ID, this command for
 	bool bPlaceInQueue;									// do we need place this command in the group's queue
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wGroup); f.Add(4,&bPlaceInQueue); return 0; }
 public:
 	CB2GroupCommand() { }
-	CB2GroupCommand( const SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue );
+	CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
 	//
 	void Execute();
 	//
@@ -87,12 +89,12 @@ class CUnitCommand : public IAILogicCommandB2
 	//
 	ZDATA
 		SAIUnitCmd command;									// command itself
-	WORD wID;														// group ID - result of this command :)
+	uint16_t wID;														// group ID - result of this command :)
 	int nPlayer;												// player number
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wID); f.Add(4,&nPlayer); return 0; }
 public:
 	CUnitCommand() { }
-	CUnitCommand( const struct SAIUnitCmd *pCommand, const WORD wID, const int nPlayer );
+	CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t wID, const int nPlayer );
 	//
 	void Execute();
 	//

@@ -8,6 +8,7 @@
 #include "Artillery.h"
 #include "Stats_B2_M1/ActionsRemap.h"
 
+#include <cstdint>
 
 extern NTimer::STime curTime;
 
@@ -55,8 +56,8 @@ void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 {
 	FreezeByState( false );
 	
-	const WORD wThisID = GetUniqueIdQU();
-	const WORD wUnitID = pUnit->GetUniqueIdQU();
+	const uint16_t wThisID = GetUniqueIdQU();
+	const uint16_t wUnitID = pUnit->GetUniqueIdQU();
 
 	DelCmdQueue( wThisID );
 	

@@ -2,6 +2,8 @@
 
 #include "LinkObject.h"
 
+#include <cstdint>
+
 class CAIUnit;
 class CCommonUnit;
 class CUpdatableObj;
@@ -29,7 +31,7 @@ public:
 
 	virtual void GetDyingInfo( struct SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie );
 
-	virtual const bool IsVisible( const BYTE cParty ) const;
+	virtual const bool IsVisible( const uint8_t cParty ) const;
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 

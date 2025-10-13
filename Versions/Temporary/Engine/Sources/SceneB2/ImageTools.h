@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NImageTools
@@ -24,7 +26,7 @@ namespace NImageTools
 		hdr.nElemSize = sizeof(T);
 
 		const int nLen = hdr.nSizeX * hdr.nSizeY * hdr.nElemSize;
-		BYTE *pDstBuf = new BYTE [nLen];
+		uint8_t *pDstBuf = new uint8_t [nLen];
 		z_stream stream;
 		stream.next_in = (Bytef*)&(image[0][0]);
 		stream.avail_in = (uInt)nLen;
@@ -70,7 +72,7 @@ namespace NImageTools
 			return;
 		}
 
-		BYTE *pSrcData = new BYTE [hdr.nPackLength];
+		uint8_t *pSrcData = new uint8_t [hdr.nPackLength];
 		pStream->Read( pSrcData, hdr.nPackLength );
 
 		// Setup the inflate stream.

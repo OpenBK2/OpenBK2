@@ -22,6 +22,8 @@
 #include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EXPORTER_IN_DLL( MapInfo, CMapInfoExporter )
@@ -210,7 +212,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 }
 
 
-bool CMapInfoExporter::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapInfoExporter::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SObjectSet objectSet;
 	bool bResult = false;

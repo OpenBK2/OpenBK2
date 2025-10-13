@@ -6,6 +6,8 @@
 
 #include "PC_IntInputEditor.h"
 
+#include <cstdint>
+
 bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCIntInputEditor::GetPCItemStringValue() pszValue == 0" );
@@ -116,8 +118,8 @@ bool CPCIntInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
-		const DWORD dwExStyle	= WS_EX_CLIENTEDGE;
+		const uint32_t dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
+		const uint32_t dwExStyle	= WS_EX_CLIENTEDGE;
 		if ( CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) )
 		{
 			ModifyStyleEx( 0, dwExStyle );
@@ -200,7 +202,7 @@ void CPCIntInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCIntInputEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCIntInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

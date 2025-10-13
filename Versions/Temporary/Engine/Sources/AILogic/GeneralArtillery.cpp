@@ -13,6 +13,8 @@
 #include "Technics.h"
 #include "GeneralInternal.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 extern CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
@@ -354,7 +356,7 @@ void CGeneralArtilleryTask::StartBombardment()
 {
 	const int nUnits = bombardmentUnits.size();
 	const float fShift = ( nUnits == 0 ) ? 0.0f : fBombardmentRadius / 2.0f;
-	WORD wDir = 0;
+	uint16_t wDir = 0;
 
 	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter, wDir += 65536.0f / float(nUnits) )
 	{

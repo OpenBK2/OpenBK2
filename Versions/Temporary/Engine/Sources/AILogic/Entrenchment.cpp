@@ -17,6 +17,7 @@
 #include "GlobalWarFog.h"
 
 #include <algorithm>
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4CC, CFullEntrenchment );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C1, CEntrenchmentTankPit );
@@ -38,7 +39,7 @@ extern CStatistics theStatistics;
 //BASIC_REGISTER_CLASS( CEntrenchmentPart );
 //BASIC_REGISTER_CLASS( CEntrenchmentTankPit );
 
-CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats, const CVec3 &_center, const WORD _dir, const int nFrameIndex,  float fHP, int nPlayer, bool _bPlayerCreates )
+CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats, const CVec3 &_center, const uint16_t _dir, const int nFrameIndex,  float fHP, int nPlayer, bool _bPlayerCreates )
 :	CExistingObject( nFrameIndex, fHP ), pStats( _pStats ), center( _center ), dir( _dir ),
 	bDigBySegment( false ), bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ), 
 	bSuspendedAppear( nPlayer != theDipl.GetMyNumber() ),
@@ -145,7 +146,7 @@ void CEntrenchmentPart::GetPlacement( SAINotifyPlacement *pPlacement, const NTim
 	pPlacement->dwNormal = GetHeights()->GetNormal( pPlacement->center.x, pPlacement->center.y );
 }
 
-SRect CEntrenchmentPart::CalcBoundRect( const CVec2 & center, const WORD _dir, const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& stats)
+SRect CEntrenchmentPart::CalcBoundRect( const CVec2 & center, const uint16_t _dir, const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& stats)
 {
 	SRect r;
 	const CVec2 vDir( GetVectorByDirection( _dir + 65535/4 ) );
@@ -155,7 +156,7 @@ SRect CEntrenchmentPart::CalcBoundRect( const CVec2 & center, const WORD _dir, c
 	return r;
 }
 
-void CEntrenchmentPart::SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const WORD _dir ) 
+void CEntrenchmentPart::SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t _dir )
 { 
 	center = _center; 
 	dir = _dir; 
@@ -532,7 +533,7 @@ CSoldier* CEntrenchment::GetUnit( const int n ) const
 	return iter->pUnit;
 }
 
-const BYTE CEntrenchment::GetPlayer() const
+const uint8_t CEntrenchment::GetPlayer() const
 {
 	if ( GetNDefenders() ==0 || insiders.empty() )
 		return theDipl.GetNeutralPlayer();
@@ -623,7 +624,7 @@ void CEntrenchment::SetVisible()
 
 CEntrenchmentTankPit::CEntrenchmentTankPit( const SMechUnitRPGStats *_pStats,
 												const CVec3& center,
-												const WORD dir,
+												const uint16_t dir,
 												const int nFrameIndex,  const class CVec2 &vHalfSize,
 												const std::list<SObjTileInfo> &tiles,
 												class CAIUnit *_pOwner )

@@ -1,10 +1,10 @@
 // MessageReactions.h: interface for the CMessageReactions class.
 //
 
-
-
 #pragma once
 #include "Script/ScriptWrapper.h"
+
+#include <cstdint>
 
 struct IMessageReactionB2;
 
@@ -24,8 +24,8 @@ class CMessageReactions
 public:
 	CMessageReactions() {  }
 	void InitByDesc( const NDb::SMessageReactionsDesc &instance );
-	bool Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags );
-	bool Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags );
+	bool Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags );
+	bool Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags );
 	void Register( const std::string &szReactionKey, IMessageReactionB2 *pReaction );
 	int operator&( IBinSaver &saver );
 };

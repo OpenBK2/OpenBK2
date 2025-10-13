@@ -2,6 +2,8 @@
 #include "scintilla/scintilla.h"
 #include "ScintillaEditor.h"
 
+#include <cstdint>
+
 CScintillaEditorWindow::CScintillaEditorWindow()
 	: pwndStatusStringWindow( 0 ) //, pwndTargetWindow( 0 )
 {
@@ -50,7 +52,7 @@ void CScintillaEditorWindow::OnKillFocus( CWnd* pNewWnd )
 /**/
 
 
-BOOL CScintillaEditorWindow::CreateEx(  CWnd* pwndParent, DWORD dwStyleEx, DWORD dwStyle, const CRect &rStartRect, UINT nControlID /**, CWnd *_pwndTargetWindow **/ )
+BOOL CScintillaEditorWindow::CreateEx(  CWnd* pwndParent, uint32_t dwStyleEx, uint32_t dwStyle, const CRect &rStartRect, UINT nControlID /**, CWnd *_pwndTargetWindow **/ )
 {
 	BOOL bCreated = CWnd::CreateEx( dwStyleEx, "Scintilla", "", dwStyle, rStartRect, pwndParent, nControlID );
 	if ( !bCreated )

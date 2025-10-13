@@ -12,6 +12,8 @@
 #include "VSOManager.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NMinimapImage
@@ -24,10 +26,10 @@ const SLakeType typeLakeType;
 
 struct SSetColorFunctional
 {
-	CArray2D<DWORD> *pDestImage;	
-	DWORD dwColor;
+	CArray2D<uint32_t> *pDestImage;
+	uint32_t dwColor;
 	//
-	SSetColorFunctional( CArray2D<DWORD> *_pDestImage, DWORD _dwColor )
+	SSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 		: pDestImage( _pDestImage ), dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -42,10 +44,10 @@ struct SSetColorFunctional
 
 struct SBooleanSetColorFunctional
 {
-	CArray2D<DWORD> *pDestImage;	
-	DWORD dwColor;
+	CArray2D<uint32_t> *pDestImage;
+	uint32_t dwColor;
 	//
-	SBooleanSetColorFunctional( CArray2D<DWORD> *_pDestImage, DWORD _dwColor )
+	SBooleanSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 		: pDestImage( _pDestImage ), dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -62,11 +64,11 @@ struct SBooleanSetColorFunctional
 // WBC = with bounds check
 struct SWBCSetColorFunctional
 {
-	CArray2D<DWORD> *pDestImage;	
-	DWORD dwColor;
+	CArray2D<uint32_t> *pDestImage;
+	uint32_t dwColor;
 	CTPoint<int> size;
 	//
-	SWBCSetColorFunctional( CArray2D<DWORD> *_pDestImage, DWORD _dwColor )
+	SWBCSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 		: pDestImage( _pDestImage ), dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -140,7 +142,7 @@ void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *
 }
 
 
-void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, float fRatio, NImage::EImageScaleMethod eScaleMethod )
+void RenderLight( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, float fRatio, NImage::EImageScaleMethod eScaleMethod )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pTerrainInfo == 0" );
@@ -161,18 +163,18 @@ void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 	Normalize( &vLight );
 	vLight *= ( -1.0f );
 	//
-	BYTE nMinShade = 0xFF;
-	BYTE nMaxShade = 0x00;
+	uint8_t nMinShade = 0xFF;
+	uint8_t nMaxShade = 0x00;
 	CVec3 vNormale = VNULL3;
-	BYTE nShade = 0;
-	CArray2D<DWORD> shadeImage( size.x, size.y );
+	uint8_t nShade = 0;
+	CArray2D<uint32_t> shadeImage( size.x, size.y );
 	shadeImage.FillZero();
 	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 		{
 			GetNormale( &vNormale, nXIndex, nYIndex, pTerrainInfo );
-			nShade = (BYTE)( ( 255.0f * Clamp( vNormale * vLight, 0.0f, 1.0f ) ) + 0.5f );
+			nShade = (uint8_t)( ( 255.0f * Clamp( vNormale * vLight, 0.0f, 1.0f ) ) + 0.5f );
 			if ( nShade > nMaxShade )
 			{
 				nMaxShade = nShade;
@@ -181,7 +183,7 @@ void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 			{
 				nMinShade = nShade;
 			}
-			shadeImage[nYIndex][nXIndex] = MakeARGBColor<DWORD>( 0xFF, nShade, nShade, nShade );
+			shadeImage[nYIndex][nXIndex] = MakeARGBColor<uint32_t>( 0xFF, nShade, nShade, nShade );
 		}
 	}
 	NImage::FullColor( &shadeImage, fRatio );
@@ -189,14 +191,14 @@ void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 }
 
 
-void RenderTerrain( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, NImage::EImageScaleMethod eScaleMethod )
+void RenderTerrain( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, NImage::EImageScaleMethod eScaleMethod )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
 	NI_ASSERT( pTerrainInfo != 0, "Wrong parameter: pTerrainInfo == 0" );
 	//map size in VIS tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH, pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH );
-	CArray2D<DWORD> terrainImage( size.x, size.y );
+	CArray2D<uint32_t> terrainImage( size.x, size.y );
 	terrainImage.FillZero();
 	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 	{
@@ -213,14 +215,14 @@ void RenderTerrain( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, cons
 }
 
 
-void RenderFlora( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, int nWoodRadius, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderFlora( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, int nWoodRadius, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
 	NI_ASSERT( pMinimapLayer != 0, "Wrong parameter: pMapInfo == 0" );
 	//map size in AI tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
-	CArray2D<DWORD> floraImage( size.x, size.y );
+	CArray2D<uint32_t> floraImage( size.x, size.y );
 	floraImage.FillZero();
 	//
 	SSetColorFunctional setColorFunctional( &floraImage, pMinimapLayer->nColor );
@@ -252,7 +254,7 @@ void RenderFlora( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, int nW
 }
 
 
-void GetVSOColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColor, int nBorderColor, int nCenterWidth, int nColor )
+void GetVSOColors( uint32_t *pdwCenterColor, uint32_t *pdwBorderColor, int nCenterColor, int nBorderColor, int nCenterWidth, int nColor )
 {
 	NI_ASSERT( pdwCenterColor != 0, "Wrong parameter: pdwCenterColor == 0" );
 	NI_ASSERT( pdwBorderColor != 0, "Wrong parameter: pdwBorderColor == 0" );
@@ -278,7 +280,7 @@ void GetVSOColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColo
 }
 
 
-void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderRiver( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -286,7 +288,7 @@ void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD 
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
 	const CTRect<int> rect( 0, 0, size.x, size.y );
 	//
-	CArray2D<DWORD> riverImage( size.x, size.y );
+	CArray2D<uint32_t> riverImage( size.x, size.y );
 	riverImage.FillZero();
 	// render all borders
 	for ( int nRiverIndex = 0; nRiverIndex < pMapInfo->rivers.size(); ++nRiverIndex )
@@ -297,8 +299,8 @@ void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD 
 		}
 		const NDb::SRiverDesc *pRiverDesc = checked_cast<const NDb::SRiverDesc*>( pMapInfo->rivers[nRiverIndex].pDescriptor.GetPtr() );
 		//
-		DWORD dwCenterColor = 0;
-		DWORD dwBorderColor = 0;
+		uint32_t dwCenterColor = 0;
+		uint32_t dwBorderColor = 0;
 		GetVSOColors( &dwCenterColor,
 									&dwBorderColor,
 									pRiverDesc->nMiniMapCenterColor,
@@ -326,8 +328,8 @@ void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD 
 		}
 		const NDb::SRiverDesc *pRiverDesc = checked_cast<const NDb::SRiverDesc*>( pMapInfo->rivers[nRiverIndex].pDescriptor.GetPtr() );
 		//
-		DWORD dwCenterColor = 0;
-		DWORD dwBorderColor = 0;
+		uint32_t dwCenterColor = 0;
+		uint32_t dwBorderColor = 0;
 		GetVSOColors( &dwCenterColor,
 									&dwBorderColor,
 									pRiverDesc->nMiniMapCenterColor,
@@ -351,7 +353,7 @@ void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD 
 }
 
 
-void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadType eRoadType, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoadType eRoadType, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -359,7 +361,7 @@ void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadTy
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
 	const CTRect<int> rect( 0, 0, size.x, size.y );
 	//
-	CArray2D<DWORD> roadImage( size.x, size.y );
+	CArray2D<uint32_t> roadImage( size.x, size.y );
 	roadImage.FillZero();
 	list<int> roadIndexList;
 	for ( int nRoadIndex = 0; nRoadIndex < pMapInfo->roads.size(); ++nRoadIndex )
@@ -394,8 +396,8 @@ void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadTy
 		int nRoadIndex = *itRoadIndex;
 		const NDb::SRoadDesc *pRoadDesc = checked_cast<const NDb::SRoadDesc*>( pMapInfo->roads[nRoadIndex].pDescriptor.GetPtr() );
 		//
-		DWORD dwCenterColor = 0;
-		DWORD dwBorderColor = 0;
+		uint32_t dwCenterColor = 0;
+		uint32_t dwBorderColor = 0;
 		GetVSOColors( &dwCenterColor,
 									&dwBorderColor,
 									pRoadDesc->nMiniMapCenterColor,
@@ -420,8 +422,8 @@ void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadTy
 		int nRoadIndex = *itRoadIndex;
 		const NDb::SRoadDesc *pRoadDesc = checked_cast<const NDb::SRoadDesc*>( pMapInfo->roads[nRoadIndex].pDescriptor.GetPtr() );
 		//
-		DWORD dwCenterColor = 0;
-		DWORD dwBorderColor = 0;
+		uint32_t dwCenterColor = 0;
+		uint32_t dwBorderColor = 0;
 		GetVSOColors( &dwCenterColor,
 									&dwBorderColor,
 									pRoadDesc->nMiniMapCenterColor,
@@ -445,14 +447,14 @@ void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadTy
 }
 
 
-void RenderObject( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, NDb::EObjGameType eObjGameType, bool bShowAllBuildingsPassability, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderObject( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, NDb::EObjGameType eObjGameType, bool bShowAllBuildingsPassability, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
 	//map size in AI tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
 	const CTRect<int> rect( 0, 0, size.x, size.y );
-	CArray2D<DWORD> objectImage( size.x, size.y );
+	CArray2D<uint32_t> objectImage( size.x, size.y );
 	objectImage.FillZero();
 	//
 	SWBCSetColorFunctional wbcSetColorFunctional( &objectImage, pMinimapLayer->nColor );
@@ -513,14 +515,14 @@ void RenderObject( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, NDb::
 }
 
 
-void RenderBridge( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderBridge( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
 	//map size in AI tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
 	const CTRect<int> rect( 0, 0, size.x, size.y );
-	CArray2D<DWORD> objectImage( size.x, size.y );
+	CArray2D<uint32_t> objectImage( size.x, size.y );
 	objectImage.FillZero();
 	//
 	SWBCSetColorFunctional wbcSetColorFunctional( &objectImage, pMinimapLayer->nColor );
@@ -573,7 +575,7 @@ void RenderBridge( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD
 }
 
 
-void GetLakeColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColor, int nBorderColor, int nGradientWidth, int nColor )
+void GetLakeColors( uint32_t *pdwCenterColor, uint32_t *pdwBorderColor, int nCenterColor, int nBorderColor, int nGradientWidth, int nColor )
 {
 	NI_ASSERT( pdwCenterColor != 0, "Wrong parameter: pdwCenterColor == 0" );
 	NI_ASSERT( pdwBorderColor != 0, "Wrong parameter: pdwBorderColor == 0" );
@@ -594,7 +596,7 @@ void GetLakeColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterCol
 }
 
 
-void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, const CLakeList &rLakeList, const CLakeList &rIslandList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderOcean( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, const CLakeList &rLakeList, const CLakeList &rIslandList, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -605,7 +607,7 @@ void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 	}
 	//map size in AI tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
-	CArray2D<DWORD> oceanImage( size.x, size.y );
+	CArray2D<uint32_t> oceanImage( size.x, size.y );
 	oceanImage.FillZero();
 	//
 	const NDb::SCoastDesc *pCoastDescriptor = dynamic_cast<const NDb::SCoastDesc*>( &( *( pMapInfo->coast.pDescriptor ) ) );
@@ -613,8 +615,8 @@ void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 	{
 		return;
 	}
-	DWORD dwCenterColor = 0;
-	DWORD dwBorderColor = 0;
+	uint32_t dwCenterColor = 0;
+	uint32_t dwBorderColor = 0;
 	GetLakeColors( &dwCenterColor, 
 								 &dwBorderColor,
 								 pCoastDescriptor->nMiniMapCenterColor,
@@ -651,7 +653,7 @@ void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 				}
 				if ( bNotLake )
 				{
-					if ( ( GetAlphaFromARGBColor<DWORD>( dwBorderColor ) > 0 ) && ( pCoastDescriptor->nMiniMapGradientWidth > 0 ) )
+					if ( ( GetAlphaFromARGBColor<uint32_t>( dwBorderColor ) > 0 ) && ( pCoastDescriptor->nMiniMapGradientWidth > 0 ) )
 					{
 						float fDistance = fabs( PolygonDistance( coastPointList, vTileCenter, false ) );
 						for ( CLakeList::const_iterator itIsland = rIslandList.begin(); itIsland != rIslandList.end(); ++itIsland )
@@ -687,7 +689,7 @@ void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 }
 
 
-void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
+void RenderLake( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -698,7 +700,7 @@ void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const S
 	}
 	//map size in AI tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH );
-	CArray2D<DWORD> lakeImage( size.x, size.y );
+	CArray2D<uint32_t> lakeImage( size.x, size.y );
 	lakeImage.FillZero();
 
 	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
@@ -715,15 +717,15 @@ void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const S
 					{
 						if ( ClassifyPolygon( itLake->pointList, vTileCenter ) != CP_OUTSIDE )
 						{
-							DWORD dwCenterColor = 0;
-							DWORD dwBorderColor = 0;
+							uint32_t dwCenterColor = 0;
+							uint32_t dwBorderColor = 0;
 							GetLakeColors( &dwCenterColor, 
 														&dwBorderColor,
 														itLake->pDescriptor->nMiniMapCenterColor,
 														itLake->pDescriptor->nMiniMapBorderColor,
 														itLake->pDescriptor->nMiniMapGradientWidth,
 														pMinimapLayer->nColor );
-							if ( ( GetAlphaFromARGBColor<DWORD>( dwBorderColor ) > 0 ) && ( itLake->pDescriptor->nMiniMapGradientWidth > 0 ) )
+							if ( ( GetAlphaFromARGBColor<uint32_t>( dwBorderColor ) > 0 ) && ( itLake->pDescriptor->nMiniMapGradientWidth > 0 ) )
 							{
 								const float fGradientWidth = itLake->pDescriptor->nMiniMapGradientWidth * AI_TILE_SIZE * 1.0f;
 								float fDistance = fabs( PolygonDistance( itLake->pointList, vTileCenter, true ) );
@@ -828,10 +830,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	}
 	//
 	// create render layers
-	vector<CArray2D<DWORD>*> layerList;
+	vector<CArray2D<uint32_t>*> layerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<DWORD>*>::iterator itLayer = layerList.insert( layerList.end(), 0 );
+		vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.insert( layerList.end(), 0 );
 	}
 	// render layers
 	{
@@ -841,14 +843,14 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( mapSize.x, mapSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( mapSize.x, mapSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderTerrain( pLayer, pMapInfo, pTerrainInfo, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 				//apply terrain shadows
 				if ( pMinimap->bShowTerrainShades )
 				{
-					CArray2D<DWORD> lightImage( mapSize.x, mapSize.y );
+					CArray2D<uint32_t> lightImage( mapSize.x, mapSize.y );
 					RenderLight( &lightImage, pMapInfo, pTerrainInfo, pMinimap->nTerrainShadeRatio / 100.0f, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 					NImage::Noise( pLayer, lightImage, true, pMinimap->nMinAlpha );
 				}
@@ -862,8 +864,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderOcean( pLayer, pMapInfo, pTerrainInfo, lakeList, islandList, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -876,8 +878,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderLake( pLayer, pMapInfo, pTerrainInfo, LAKE_LAKE, lakeList, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -890,8 +892,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderLake( pLayer, pMapInfo, pTerrainInfo, LAKE_SWAMP, lakeList, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -904,8 +906,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				//RenderCrag( pLayer, pMapInfo, pTerrainInfo, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 			}
@@ -918,8 +920,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderFlora( pLayer, pMapInfo, pMinimap->nWoodRadius, pMinimapLayer );
 			}
@@ -932,8 +934,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderRoad( pLayer, pMapInfo, ROAD_ROAD, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -946,8 +948,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderRoad( pLayer, pMapInfo, ROAD_RAILROAD, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -960,8 +962,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderRiver( pLayer, pMapInfo, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -974,8 +976,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderObject( pLayer, pMapInfo, NDb::SGVOGT_BUILDING, pMinimap->bShowAllBuildingsPassability, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -988,8 +990,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				layerList[eLayerType] = new CArray2D<DWORD>( imageSize.x, imageSize.y );
-				CArray2D<DWORD> *pLayer = layerList[eLayerType];
+				layerList[eLayerType] = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
+				CArray2D<uint32_t> *pLayer = layerList[eLayerType];
 				pLayer->FillZero();
 				RenderBridge( pLayer, pMapInfo, pMinimap->nMinAlpha, pMinimapLayer );
 			}
@@ -1001,10 +1003,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 		if ( pMinimapLayer != 0 )
 		{
-			if ( ( GetAlphaFromARGBColor<DWORD>( pMinimapLayer->nBorderColor ) > pMinimap->nMinAlpha ) &&
+			if ( ( GetAlphaFromARGBColor<uint32_t>( pMinimapLayer->nBorderColor ) > pMinimap->nMinAlpha ) &&
 					 ( pMinimapLayer->nBorderWidth > 0 ) )
 			{
-				CArray2D<DWORD> *pLayer = layerList[nLayerIndex];
+				CArray2D<uint32_t> *pLayer = layerList[nLayerIndex];
 				if ( pMinimapLayer->nBorderWidth > 0 )
 				{
 					NImage::MarkEdge( pLayer, pMinimapLayer->nBorderColor, false, pMinimap->nMinAlpha );
@@ -1017,10 +1019,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		}
 	}
 	// create alpha emboss layers
-	vector<CArray2D<DWORD>*> aphaEmbossLayerList;
+	vector<CArray2D<uint32_t>*> aphaEmbossLayerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<DWORD>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.insert( aphaEmbossLayerList.end(), 0 );
+		vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.insert( aphaEmbossLayerList.end(), 0 );
 		( *itAphaEmbossLayer ) = 0;
 		const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 		if ( pMinimapLayer != 0 )
@@ -1029,8 +1031,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 						 ( pMinimapLayer->embossPoint.ny != 0 ) ) &&
 					 ( pMinimapLayer->nEmbossFilterSize > 0 ) )
 			{
-				const CArray2D<DWORD> *pLayer = layerList[nLayerIndex];
-				( *itAphaEmbossLayer ) = new CArray2D<DWORD>( pLayer->GetSizeX(), pLayer->GetSizeY() );
+				const CArray2D<uint32_t> *pLayer = layerList[nLayerIndex];
+				( *itAphaEmbossLayer ) = new CArray2D<uint32_t>( pLayer->GetSizeX(), pLayer->GetSizeY() );
 				( *itAphaEmbossLayer )->FillZero();
 				NImage::GetAlphaEmboss( ( *itAphaEmbossLayer ),
 																( *pLayer ),
@@ -1041,10 +1043,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		}
 	}
 	// create shadow layers
-	vector<CArray2D<DWORD>*> shadowLayerList;
+	vector<CArray2D<uint32_t>*> shadowLayerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<DWORD>*>::iterator itShadowLayer = shadowLayerList.insert( shadowLayerList.end(), 0 );
+		vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.insert( shadowLayerList.end(), 0 );
 		( *itShadowLayer ) = 0;
 		const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 		if ( pMinimapLayer != 0 )
@@ -1052,8 +1054,8 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			if ( ( pMinimapLayer->shadowPoint.nx != 0 ) ||
 					 ( pMinimapLayer->shadowPoint.ny != 0 ) )
 			{
-				const CArray2D<DWORD> *pLayer = layerList[nLayerIndex];
-				( *itShadowLayer ) = new CArray2D<DWORD>( pLayer->GetSizeX(), pLayer->GetSizeY() );
+				const CArray2D<uint32_t> *pLayer = layerList[nLayerIndex];
+				( *itShadowLayer ) = new CArray2D<uint32_t>( pLayer->GetSizeX(), pLayer->GetSizeY() );
 				( *itShadowLayer )->FillZero();
 				NImage::GetShadow( ( *itShadowLayer ),
 													 ( *pLayer ),
@@ -1075,18 +1077,18 @@ void Create( const NDb::SMapInfo *pMapInfo,
 											 itCreateParameter->size.y,
 											 itCreateParameter->szImageFileName.c_str() ) );
 		//Collect noises
-		vector<CArray2D<DWORD>*> noisedLayerList;
+		vector<CArray2D<uint32_t>*> noisedLayerList;
 		for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 		{
-			vector<CArray2D<DWORD>*>::iterator itNoisedLayer = noisedLayerList.insert( noisedLayerList.end(), 0 );
+			vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.insert( noisedLayerList.end(), 0 );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
-				( *itNoisedLayer ) = new CArray2D<DWORD>( imageSize.x, imageSize.y );
+				( *itNoisedLayer ) = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
 				NImage::Scale( *itNoisedLayer, ( *( layerList[nLayerIndex] ) ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 				// Noise Layer
 				const string szNoiseFileName = pUserData->constUserData.szExportSourceFolder + pMinimapLayer->szNoiseImage;
-				CArray2D<DWORD> noise;
+				CArray2D<uint32_t> noise;
 				CFileStream stream( NVFS::GetMainVFS(), szNoiseFileName );
 				if ( stream.IsOk() )
 				{
@@ -1102,7 +1104,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 						if ( ( imageSize.x != itCreateParameter->size.x ) ||
 								 ( imageSize.y != itCreateParameter->size.y ) )
 						{
-							CArray2D<DWORD> scaledNoise( ( noise.GetSizeX() * imageSize.x ) / itCreateParameter->size.x + 0.5f,
+							CArray2D<uint32_t> scaledNoise( ( noise.GetSizeX() * imageSize.x ) / itCreateParameter->size.x + 0.5f,
 																					 ( noise.GetSizeY() * imageSize.y ) / itCreateParameter->size.y + 0.5f );
 							scaledNoise.FillZero();
 							NImage::Scale( &scaledNoise, noise, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
@@ -1126,7 +1128,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		//* apply alpha emboss
 		//* add shadow
 		bool bFirstLayerAdded = false;
-		CArray2D<DWORD> minimapImage( imageSize.x, imageSize.y );
+		CArray2D<uint32_t> minimapImage( imageSize.x, imageSize.y );
 		for ( int nLayerIndex = ( LAYER_COUNT - 1 ); nLayerIndex >= 0; --nLayerIndex )
 		{
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
@@ -1145,11 +1147,11 @@ void Create( const NDb::SMapInfo *pMapInfo,
 				//apply alpha emboss
 				if ( aphaEmbossLayerList[nLayerIndex] != 0 )
 				{
-					CArray2D<DWORD> *pAlphaEmbossLayer = aphaEmbossLayerList[nLayerIndex];
+					CArray2D<uint32_t> *pAlphaEmbossLayer = aphaEmbossLayerList[nLayerIndex];
 					if ( ( pAlphaEmbossLayer->GetSizeX() != imageSize.x ) ||
 							 ( pAlphaEmbossLayer->GetSizeY() != imageSize.y ) )
 					{
-						CArray2D<DWORD> alphaEmboss( imageSize.x, imageSize.y );
+						CArray2D<uint32_t> alphaEmboss( imageSize.x, imageSize.y );
 						NImage::Scale( &alphaEmboss, ( *pAlphaEmbossLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) ); 
 						NImage::Noise( &minimapImage, alphaEmboss, true, pMinimap->nMinAlpha );
 					}
@@ -1161,11 +1163,11 @@ void Create( const NDb::SMapInfo *pMapInfo,
 				//add shadow
 				if ( shadowLayerList[nLayerIndex] != 0 )
 				{
-					CArray2D<DWORD> *pShadowLayer = shadowLayerList[nLayerIndex];
+					CArray2D<uint32_t> *pShadowLayer = shadowLayerList[nLayerIndex];
 					if ( ( pShadowLayer->GetSizeX() != imageSize.x ) ||
 							 ( pShadowLayer->GetSizeY() != imageSize.y ) )
 					{
-						CArray2D<DWORD> shadow( imageSize.x, imageSize.y );
+						CArray2D<uint32_t> shadow( imageSize.x, imageSize.y );
 						NImage::Scale( &shadow, ( *pShadowLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) ); 
 						NImage::Noise( &minimapImage, shadow, true, pMinimap->nMinAlpha );
 					}
@@ -1188,7 +1190,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		//compress and save image
 		if ( ( imageSize.x != itCreateParameter->size.x ) || ( imageSize.y != itCreateParameter->size.y ) )
 		{
-			CArray2D<DWORD> compressedMinimapImage( itCreateParameter->size.x, itCreateParameter->size.y );
+			CArray2D<uint32_t> compressedMinimapImage( itCreateParameter->size.x, itCreateParameter->size.y );
 			NImage::Scale( &compressedMinimapImage, minimapImage, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
 			minimapImage = compressedMinimapImage;
 		}
@@ -1198,7 +1200,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		// delete noises
 		{
 			int nIndex = 0;
-			for ( vector<CArray2D<DWORD>*>::iterator itNoisedLayer = noisedLayerList.begin(); itNoisedLayer != noisedLayerList.end(); ++itNoisedLayer )
+			for ( vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.begin(); itNoisedLayer != noisedLayerList.end(); ++itNoisedLayer )
 			{
 				if ( ( *itNoisedLayer ) != 0 )
 				{
@@ -1220,7 +1222,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete shadow layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<DWORD>*>::iterator itShadowLayer = shadowLayerList.begin(); itShadowLayer != shadowLayerList.end(); ++itShadowLayer )
+		for ( vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.begin(); itShadowLayer != shadowLayerList.end(); ++itShadowLayer )
 		{
 			if ( ( *itShadowLayer ) != 0 )
 			{
@@ -1241,7 +1243,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete alpha emboss layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<DWORD>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.begin(); itAphaEmbossLayer != aphaEmbossLayerList.end(); ++itAphaEmbossLayer )
+		for ( vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.begin(); itAphaEmbossLayer != aphaEmbossLayerList.end(); ++itAphaEmbossLayer )
 		{
 			if ( ( *itAphaEmbossLayer ) != 0 )
 			{
@@ -1262,7 +1264,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete render layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<DWORD>*>::iterator itLayer = layerList.begin(); itLayer != layerList.end(); ++itLayer )
+		for ( vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.begin(); itLayer != layerList.end(); ++itLayer )
 		{
 			if ( ( *itLayer ) != 0 )
 			{
@@ -1288,7 +1290,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 
 /**
 // rotate image
-CArray2D<DWORD> minimapRotate( minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1, 
+CArray2D<uint32_t> minimapRotate( minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1,
 																minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1 );
 minimapRotate.FillZero();
 for ( int x = 0;  x < minimapImage.GetSizeX(); ++x )
@@ -1297,17 +1299,17 @@ for ( int x = 0;  x < minimapImage.GetSizeX(); ++x )
 	{
 		const int _x = x + y;
 		const int _y = x + minimapImage.GetSizeY() - y - 1;
-		const DWORD dwColor11 = minimapImage[y][x];
+		const uint32_t dwColor11 = minimapImage[y][x];
 		minimapRotate[_y][_x] = dwColor11;
 		if ( ( x > 0 ) && ( y > 0 ) )
 		{
-			const DWORD dwColor10 = minimapImage[y - 1][x];
-			const DWORD dwColor01 = minimapImage[y][x - 1];
-			const DWORD dwColor00 = minimapImage[y - 1][x - 1];
-			const DWORD dwR = ( GetRedFromARGBColor( dwColor00 ) + GetRedFromARGBColor(dwColor01 ) + GetRedFromARGBColor( dwColor10 ) + GetRedFromARGBColor( dwColor11 ) ) / 4;
-			const DWORD dwG = ( GetGreenFromARGBColor( dwColor00 ) + GetGreenFromARGBColor( dwColor01 ) + GetGreenFromARGBColor( dwColor10 ) + GetGreenFromARGBColor( dwColor11 ) )  / 4;
-			const DWORD dwB = ( GetBlueFromARGBColor( dwColor00 ) + GetBlueFromARGBColor( dwColor01 ) + GetBlueFromARGBColor( dwColor10 ) + GetBlueFromARGBColor( dwColor11 ) ) /4;
-			minimapRotate[_y][_x - 1] = MakeARGBColor<DWORD>( 0xFF, dwR, dwG, dwB );
+			const uint32_t dwColor10 = minimapImage[y - 1][x];
+			const uint32_t dwColor01 = minimapImage[y][x - 1];
+			const uint32_t dwColor00 = minimapImage[y - 1][x - 1];
+			const uint32_t dwR = ( GetRedFromARGBColor( dwColor00 ) + GetRedFromARGBColor(dwColor01 ) + GetRedFromARGBColor( dwColor10 ) + GetRedFromARGBColor( dwColor11 ) ) / 4;
+			const uint32_t dwG = ( GetGreenFromARGBColor( dwColor00 ) + GetGreenFromARGBColor( dwColor01 ) + GetGreenFromARGBColor( dwColor10 ) + GetGreenFromARGBColor( dwColor11 ) )  / 4;
+			const uint32_t dwB = ( GetBlueFromARGBColor( dwColor00 ) + GetBlueFromARGBColor( dwColor01 ) + GetBlueFromARGBColor( dwColor10 ) + GetBlueFromARGBColor( dwColor11 ) ) /4;
+			minimapRotate[_y][_x - 1] = MakeARGBColor<uint32_t>( 0xFF, dwR, dwG, dwB );
 		}
 	}
 }

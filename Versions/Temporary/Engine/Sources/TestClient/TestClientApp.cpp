@@ -13,6 +13,8 @@
 
 #include "Server_Client_Common/Commands.h"
 
+#include <cstdint>
+
 CTestClientApp theApp;
 
 CTestClientApp::CTestClientApp()
@@ -23,7 +25,7 @@ CTestClientApp::CTestClientApp()
 }
 
 
-void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime )
+void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, uint32_t dwTime )
 {
 	theApp.Segment();
 }

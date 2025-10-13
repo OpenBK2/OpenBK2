@@ -2,11 +2,13 @@
 
 #include "Tools_Geometry.h"
 
+#include <cstdint>
+
 const float MINIMAL_POINT_DISTANCE = 2.0f;
 
 /**
 
-WORD GetAIDirectionByVector( float x, float y, WORD wDefaultDirection )
+uint16_t GetAIDirectionByVector( float x, float y, uint16_t wDefaultDirection )
 {
 	if ( ( fabs( x ) < 1 ) && ( fabs( y ) < 1 ) )
 	{
@@ -36,7 +38,7 @@ WORD GetAIDirectionByVector( float x, float y, WORD wDefaultDirection )
 	//
 	if ( ( x + y ) != 0 )
 	{
-		return (WORD)( ( 16384.0f * y / ( x + y ) ) + add );
+		return (uint16_t)( ( 16384.0f * y / ( x + y ) ) + add );
 	}
 	else
 	{
@@ -46,7 +48,7 @@ WORD GetAIDirectionByVector( float x, float y, WORD wDefaultDirection )
 /**/
 /**
 
-void GetVectorByAIDirection( CVec2 *pVec2, WORD wDirection, float fRadius )
+void GetVectorByAIDirection( CVec2 *pVec2, uint16_t wDirection, float fRadius )
 {
 	if ( pVec2 )
 	{

@@ -6,6 +6,8 @@
 #include "TerraHeight.h"
 #include "Scene.h"
 
+#include <cstdint>
+
 #define DEF_HEIGHTS_SMOOTH_RADIUS 3
 #define DEF_SMOOTH_DIST ( DEF_TILE_SIZE * 7.0f )
 #define DEF_SMOOTH_SLEEKNESS ( DEF_TILE_SIZE * FP_SQRT_2 / DEF_SMOOTH_DIST )
@@ -63,7 +65,7 @@ inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterPara
 }
 
 
-//static void FillSeaArea( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples, const CVec3 &_vMidPoint, CArray2D<BYTE> *pMask )
+//static void FillSeaArea( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples, const CVec3 &_vMidPoint, CArray2D<uint8_t> *pMask )
 //{
 //	vector<CVec2i> points( samples.size() );
 //	for ( int i = 0; i < samples.size(); ++i )
@@ -72,7 +74,7 @@ inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterPara
 //	CVec2i vMidPoint;
 //	AI2VisTiles( &vMidPoint, _vMidPoint );
 //
-//	CArray2D<BYTE> fillMap( pMask->GetSizeX(), pMask->GetSizeY() );
+//	CArray2D<uint8_t> fillMap( pMask->GetSizeX(), pMask->GetSizeY() );
 //	fillMap.FillZero();
 //
 //	for ( int i = 1; i < points.size(); ++i )
@@ -108,7 +110,7 @@ inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterPara
 //}
 
 
-static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, CArray2D<BYTE> *pMask, const BYTE cFillMask,
+static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, CArray2D<uint8_t> *pMask, const uint8_t cFillMask,
 													 const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
@@ -134,7 +136,7 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 	vMax.x = Clamp( vMax.x + 2, 0, pHeights->GetSizeX() - 1 );
 	vMax.y = Clamp( vMax.y + 2, 0, pHeights->GetSizeY() - 1 );
 
-	CArray2D<BYTE> fillMap( vMax.x - vMin.x + 2, vMax.y - vMin.y + 2 );
+	CArray2D<uint8_t> fillMap( vMax.x - vMin.x + 2, vMax.y - vMin.y + 2 );
 	fillMap.FillZero();
 
 	for ( int g = vMin.y; g <= vMax.y; ++g )
@@ -476,7 +478,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	terrainInfo.waterHeightCoeffs.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	terrainInfo.waterHeightCoeffs.FillEvery( 1.0f );
 
-	CArray2D<BYTE> coastMask;
+	CArray2D<uint8_t> coastMask;
 	coastMask.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	coastMask.FillZero();
 	CArray2D<float> coastHeights;
@@ -601,7 +603,7 @@ void CTerraGen::ReCreateAllWaterZones()
 
 void CTerraGen::UpdateWater()
 {
-	CArray2D<BYTE> prevMask = terrainInfo.seaMask;
+	CArray2D<uint8_t> prevMask = terrainInfo.seaMask;
 	CArray2D<float> prevWaterHeights = terrainInfo.waterHeightCoeffs;
 	CVec2i vBBMin( INT_MAX, INT_MAX ), vBBMax( INT_MIN, INT_MIN );
 	//ReCreateAllWaterZones();

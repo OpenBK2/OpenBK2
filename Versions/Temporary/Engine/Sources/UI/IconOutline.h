@@ -1,6 +1,9 @@
 #pragma once
+
 #include "3Dmotor/GfxBuffers.h"
 #include "System/Dg.h"
+
+#include <cstdint>
 
 struct IML;
 namespace NGScene
@@ -37,7 +40,7 @@ struct SFormattingInfo
 		std::wstring szText;
 		CVec2 vPos;
 		CVec2 vSize;
-		DWORD dwColor;
+		uint32_t dwColor;
 		CDBPtr<NDb::STexture> pTexture;
 		CDBID nOutlineType;
 		int nFlags; // CENTER_
@@ -48,10 +51,10 @@ struct SFormattingInfo
 		SCmd() : type(ELEM_TEXT), vPos(0,0), vSize(0,0), dwColor(0), nFlags(0), nChainX(-1) {}
 		SCmd( const std::wstring &_szText, const CVec2 &_vPos, int _nFlags )
 			: type(ELEM_TEXT), vPos(_vPos), vSize(0,0), dwColor(0), szText(_szText), nFlags(_nFlags), nChainX(-1) {}
-		SCmd( const NDb::STexture *_pTexture, const CVec2 &_vPos, const CVec2 &_vSize, DWORD _dwColor ) 
+		SCmd( const NDb::STexture *_pTexture, const CVec2 &_vPos, const CVec2 &_vSize, uint32_t _dwColor )
 			: type(ELEM_PICTURE), pTexture(_pTexture), vPos(_vPos), vSize(_vSize), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
 		SCmd( const CDBID &_nOutlineType ) : type(ELEM_OUTLINE), nOutlineType(_nOutlineType), vPos(0,0), vSize(0,0), dwColor(0), nFlags(0), nChainX(-1) {}
-		SCmd( DWORD _dwColor ) : type(ELEM_GRAY_FILTER), vPos(0,0), vSize(0,0), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
+		SCmd( uint32_t _dwColor ) : type(ELEM_GRAY_FILTER), vPos(0,0), vSize(0,0), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
 		bool operator==( const SCmd &a ) const 
 		{ 
 			return szText == a.szText && vPos == a.vPos && vSize == a.vSize && dwColor == a.dwColor && 
@@ -65,12 +68,12 @@ struct SFormattingInfo
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&cmds); return 0; }
 	bool operator==( const SFormattingInfo &a ) const { return cmds == a.cmds;}
 	void AddText( const std::wstring &_szText, const CVec2 &_vPos = CVec2(0,0), int _nFlags = 0 ) { cmds.push_back( SCmd( _szText, _vPos, _nFlags ) ); }
-	void AddPicture( const NDb::STexture *_pTexture, const CVec2 &_vPos = CVec2(0,0), const CVec2 &_vSize = CVec2(0,0), DWORD _dwColor = 0xffffffff )
+	void AddPicture( const NDb::STexture *_pTexture, const CVec2 &_vPos = CVec2(0,0), const CVec2 &_vSize = CVec2(0,0), uint32_t _dwColor = 0xffffffff )
 	{
 		cmds.push_back( SCmd( _pTexture, _vPos, _vSize, _dwColor ) );
 	}
 	void AddOutline( const CDBID &_nOutlineType ) { cmds.push_back( SCmd( _nOutlineType ) ); }
-	void AddGrayFilter( DWORD _dwColor ) { cmds.push_back( SCmd( _dwColor ) ); }
+	void AddGrayFilter( uint32_t _dwColor ) { cmds.push_back( SCmd( _dwColor ) ); }
 	void ChainLastCmd( int nShift = 1 ) { int nCmds = cmds.size(); cmds[ nCmds - 1 ].nChainX = nCmds - 1 - nShift; }
 };
 

@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include <cstdint>
 
 //*******************************************************************
 //*								  Set of lists, stored in arrays									*
@@ -501,9 +502,9 @@ inline int SElInfo<T>::operator&( IBinSaver &saver )
 	return 0;
 }
 
-// для WORD
+// для uint16_t
 template <>
-inline int SElInfo<WORD>::operator&( IBinSaver &saver )
+inline int SElInfo<uint16_t>::operator&( IBinSaver &saver )
 {
 			
 	

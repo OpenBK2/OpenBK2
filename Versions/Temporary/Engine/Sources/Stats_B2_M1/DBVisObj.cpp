@@ -6,16 +6,18 @@
 #include "System/XmlSaver.h"
 #include "DBVisObj.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SVisObj::SSingleObj::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVisObj::SSingleObj::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Model", (BYTE*)&pModel - pThis, sizeof(pModel), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "LowLevelModel", (BYTE*)&pLowLevelModel - pThis, sizeof(pLowLevelModel), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Model", (uint8_t*)&pModel - pThis, sizeof(pModel), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "LowLevelModel", (uint8_t*)&pLowLevelModel - pThis, sizeof(pLowLevelModel), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Season", (uint8_t*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SVisObj::SSingleObj::operator&( IXmlSaver &saver )
@@ -36,7 +38,7 @@ int SVisObj::SSingleObj::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVisObj::SSingleObj::CalcCheckSum() const
+uint32_t SVisObj::SSingleObj::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -57,8 +59,8 @@ void SVisObj::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "VisObj", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "ForceAnimated", (BYTE*)&bForceAnimated - pThis, sizeof(bForceAnimated), NTypeDef::TYPE_TYPE_BOOL );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "ForceAnimated", (uint8_t*)&bForceAnimated - pThis, sizeof(bForceAnimated), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructArrayMetaInfo( "Models", &models, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

@@ -15,6 +15,8 @@
 
 #include <filesystem>
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -24,13 +26,13 @@ void SGameConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "GameConsts", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "AI", (BYTE*)&pAI - pThis, sizeof(pAI), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Net", (BYTE*)&pNet - pThis, sizeof(pNet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Client", (BYTE*)&pClient - pThis, sizeof(pClient), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "UI", (BYTE*)&pUI - pThis, sizeof(pUI), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Scene", (BYTE*)&pScene - pThis, sizeof(pScene), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Multiplayer", (BYTE*)&pMultiplayer - pThis, sizeof(pMultiplayer), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "AI", (uint8_t*)&pAI - pThis, sizeof(pAI), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Net", (uint8_t*)&pNet - pThis, sizeof(pNet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Client", (uint8_t*)&pClient - pThis, sizeof(pClient), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "UI", (uint8_t*)&pUI - pThis, sizeof(pUI), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Scene", (uint8_t*)&pScene - pThis, sizeof(pScene), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Multiplayer", (uint8_t*)&pMultiplayer - pThis, sizeof(pMultiplayer), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -59,7 +61,7 @@ int SGameConsts::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SGameConsts::CalcCheckSum() const
+uint32_t SGameConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -74,9 +76,9 @@ DWORD SGameConsts::CalcCheckSum() const
 	return __dwCheckSum;
 }
 
-DWORD SGameConsts::GetMPDataVersionChecksum() const
+uint32_t SGameConsts::GetMPDataVersionChecksum() const
 {
-	DWORD ret = 123321;
+	uint32_t ret = 123321;
 
 	// game.exe version
 	auto gameVersionStr = string_conversion::wstring_to_utf8(NGlobal::GetVar("code_version_number", "0.0.0.0").GetString());
@@ -85,14 +87,14 @@ DWORD SGameConsts::GetMPDataVersionChecksum() const
 	ret = CalculateChecksum(ret, v1 * v1 + v1 + 1, v2 * v2 + v2 + 2, v3 * v3 + v3 + 3, v4 * v4 + v4 + 4);
 
 	// AI Consts checksum
-	DWORD ai_chksum = pAI->CalcCheckSum();
+	uint32_t ai_chksum = pAI->CalcCheckSum();
 	ret = CalculateChecksum(ret, ai_chksum);
 
 	// Net Consts checksum, port param discluded
 	ret = CalculateChecksum(ret, pNet->nMaxLatency, pNet->nTimeToStartLagByNoSegmentData, pNet->nTimeToAllowDropByLag, pNet->nTimeOutTime, pNet->nTimeBWTimeOuts);
 
 	// MP Consts checksum
-	DWORD mp_chksum = pMultiplayer->CalcCheckSum();
+	uint32_t mp_chksum = pMultiplayer->CalcCheckSum();
 	ret = CalculateChecksum(ret, mp_chksum);
 
 	// loaded mod folder path checksum
@@ -113,9 +115,9 @@ DWORD SGameConsts::GetMPDataVersionChecksum() const
 	return ret;
 }
 
-DWORD SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
+uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
 {
-	DWORD ret = GetMPDataVersionChecksum();
+	uint32_t ret = GetMPDataVersionChecksum();
 	
 	ret = CalculateChecksum(ret, map->CalcCheckSum());
 

@@ -16,6 +16,8 @@
 #include "EditorMethods.h"
 #include "SeasonMnemonics.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const int CBridgeState::START_TERMINATOR_INDEX = 0;
@@ -26,7 +28,7 @@ const int CBridgeState::TERMINATOR_COUNT = 2;
 bool CBridgeState::CanAddBridge()
 {
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		return ( objectSet.szObjectTypeName == "BridgeRPGStats" ) &&
 					 ( !objectSet.objectNameSet.empty() );
@@ -41,7 +43,7 @@ void CBridgeState::InsertObjectEnter()
 	ClearData();
 	//
 	CWaitCursor waitCursor;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) );
 }
 
 
@@ -251,7 +253,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		// получаем размер 
 		if ( objectSet.szObjectTypeName.empty() )
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
 				CPtr<IManipulator> pBridgeRPGStatsManipulator = pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first );
 				if ( pBridgeRPGStatsManipulator )
@@ -463,7 +465,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 					}
 					//
 					const CQuat qObjectSceneRotation( fDirection, V3_AXIS_Z );
-					const DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+					const uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 					//
 					if ( CPtr<SAIPlacementUpdate> pUpdate = new SAIPlacementUpdate() )
 					{

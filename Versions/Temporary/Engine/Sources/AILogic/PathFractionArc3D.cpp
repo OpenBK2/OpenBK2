@@ -2,6 +2,8 @@
 #include "./pathfractionarc3d.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x11095C02, CPathFractionArc3D )
 
 
@@ -61,7 +63,7 @@ CVec3 CPathFractionArc3D::GetEndPoint() const
 }
 
 void CPathFractionArc3D::Init( const CVec3 &_i, const CVec3 &_j, const CVec3 &_k,
-															const CDirectedCircle &_circle, const CVec3 &_x0, const CVec3 &_x1, const float _fLength, const WORD _nDiff )
+															const CDirectedCircle &_circle, const CVec3 &_x0, const CVec3 &_x1, const float _fLength, const uint16_t _nDiff )
 {
 	bNegative = false;
 	i = _i;

@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbplanemanuvers.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -115,9 +117,9 @@ void SDirectionRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DirectionRange", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Min", (uint8_t*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Max", (uint8_t*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -138,7 +140,7 @@ int SDirectionRange::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SDirectionRange::CalcCheckSum() const
+uint32_t SDirectionRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -159,9 +161,9 @@ void SSpeedRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SpeedRange", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Min", (uint8_t*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Max", (uint8_t*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -182,7 +184,7 @@ int SSpeedRange::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSpeedRange::CalcCheckSum() const
+uint32_t SSpeedRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -203,9 +205,9 @@ void SDistanceRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DistanceRange", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Min", (uint8_t*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Max", (uint8_t*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -226,7 +228,7 @@ int SDistanceRange::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SDistanceRange::CalcCheckSum() const
+uint32_t SDistanceRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -247,9 +249,9 @@ void SHeightRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "HeightRange", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Min", (uint8_t*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Max", (uint8_t*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -270,7 +272,7 @@ int SHeightRange::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SHeightRange::CalcCheckSum() const
+uint32_t SHeightRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -287,16 +289,16 @@ DWORD SHeightRange::CalcCheckSum() const
 
 
 
-void SManuverConditions::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SManuverConditions::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "EnemyDirection", (BYTE*)&pEnemyDirection - pThis, sizeof(pEnemyDirection), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SelfDirection", (BYTE*)&pSelfDirection - pThis, sizeof(pSelfDirection), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SpeedAngle", (BYTE*)&pSpeedAngle - pThis, sizeof(pSpeedAngle), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (BYTE*)&pDistance - pThis, sizeof(pDistance), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SelfHeight", (BYTE*)&pSelfHeight - pThis, sizeof(pSelfHeight), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "HeightDifference", (BYTE*)&pHeightDifference - pThis, sizeof(pHeightDifference), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SelfSpeed", (BYTE*)&pSelfSpeed - pThis, sizeof(pSelfSpeed), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "EnemySpeed", (BYTE*)&pEnemySpeed - pThis, sizeof(pEnemySpeed), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "EnemyDirection", (uint8_t*)&pEnemyDirection - pThis, sizeof(pEnemyDirection), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SelfDirection", (uint8_t*)&pSelfDirection - pThis, sizeof(pSelfDirection), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SpeedAngle", (uint8_t*)&pSpeedAngle - pThis, sizeof(pSpeedAngle), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (uint8_t*)&pDistance - pThis, sizeof(pDistance), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SelfHeight", (uint8_t*)&pSelfHeight - pThis, sizeof(pSelfHeight), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "HeightDifference", (uint8_t*)&pHeightDifference - pThis, sizeof(pHeightDifference), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SelfSpeed", (uint8_t*)&pSelfSpeed - pThis, sizeof(pSelfSpeed), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "EnemySpeed", (uint8_t*)&pEnemySpeed - pThis, sizeof(pEnemySpeed), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SManuverConditions::operator&( IXmlSaver &saver )
@@ -327,7 +329,7 @@ int SManuverConditions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SManuverConditions::CalcCheckSum() const
+uint32_t SManuverConditions::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -348,11 +350,11 @@ void SManuverDescriptor::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ManuverDescriptor", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Conditions", &conditions, pThis ); 
-	NMetaInfo::ReportMetaInfo( "ManuverID", (BYTE*)&eManuverID - pThis, sizeof(eManuverID), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Destination", (BYTE*)&eDestination - pThis, sizeof(eDestination), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Attitude", (BYTE*)&eAttitude - pThis, sizeof(eAttitude), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "ManuverID", (uint8_t*)&eManuverID - pThis, sizeof(eManuverID), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Destination", (uint8_t*)&eDestination - pThis, sizeof(eDestination), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Attitude", (uint8_t*)&eAttitude - pThis, sizeof(eAttitude), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -377,7 +379,7 @@ int SManuverDescriptor::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SManuverDescriptor::CalcCheckSum() const
+uint32_t SManuverDescriptor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

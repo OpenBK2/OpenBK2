@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 template<class T>
 class CArray2DRLEWrapper
 {
@@ -23,18 +25,18 @@ template<class T>
 class CBitArray2DRLEWrapper
 {
 	T &a;
-	BYTE packingData;
+	uint8_t packingData;
 
 	CBitArray2DRLEWrapper();
 public:
-	CBitArray2DRLEWrapper( T &_a, const BYTE _packingData ) : a( _a ), packingData( _packingData ) { }
+	CBitArray2DRLEWrapper( T &_a, const uint8_t _packingData ) : a( _a ), packingData( _packingData ) { }
 
 	int operator&( struct IBinSaver &saver )
 	{
 		
 		saver.Add( 1, &a.xSize );
 
-		CArray2DRLEWrapper<BYTE> rleWrapper( a.array, packingData );
+		CArray2DRLEWrapper<uint8_t> rleWrapper( a.array, packingData );
 		saver.Add( 2, &rleWrapper );
 
 		return 0;

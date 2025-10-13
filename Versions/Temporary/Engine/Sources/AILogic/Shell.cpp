@@ -23,6 +23,8 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4E3, CHitInfo );
 REGISTER_SAVELOAD_CLASS( 0x1108D446, CFakeBallisticTraj );
 REGISTER_SAVELOAD_CLASS( 0x1108D447, CBombBallisticTraj );
@@ -264,7 +266,7 @@ void CExplosion::Init(	CAIUnit *_pUnit,
 												const float fDispRatio,
 												const CVec3 &_explCoord, 
 												const CVec3 &attackerPos, 
-												const BYTE _nShellType, 
+												const uint8_t _nShellType,
 												const bool bRandomize, 
 												const int _nPlayerOfShoot )
 {
@@ -299,7 +301,7 @@ void CExplosion::Init(	CAIUnit *_pUnit,
 	attackDir = GetDirectionByVector( - vDiff.x, - vDiff.y );
 }
 
-CExplosion::CExplosion( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize )
+CExplosion::CExplosion( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize )
 {
 	if ( pUnit != 0 )
 		Init( pUnit, pWeapon, pWeapon->fDispersion, 1, explCoord, attackerPos, nShellType, bRandomize, pUnit->GetPlayer() );
@@ -307,7 +309,7 @@ CExplosion::CExplosion( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CV
 		Init( pUnit, pWeapon, pWeapon->fDispersion, 1, explCoord, attackerPos, nShellType, bRandomize, theDipl.GetNeutralPlayer() );
 }
 
-CExplosion::CExplosion( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize )
+CExplosion::CExplosion( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize )
 {
 	float fDispRatio = pGun->GetDispRatio( nShellType, fabs(explCoord-attackerPos) );
 	if ( pUnit != 0 )
@@ -400,7 +402,7 @@ void CExplosion::AddHitToSend( CHitInfo *pHit )
 //*												CCumulativeExpl														*
 //*******************************************************************
 
-CCumulativeExpl::CCumulativeExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize )
+CCumulativeExpl::CCumulativeExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize )
 {
 	if ( pUnit && pUnit->GetZ() > GetExplCoordinates().z )
@@ -531,14 +533,14 @@ void CCumulativeExpl::Explode()
 //*												CBurstExpl																*
 //*******************************************************************
 
-CBurstExpl::CBurstExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
+CBurstExpl::CBurstExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 {
 	if ( pWeapon->shells[nShellType].etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
 		nArmorDir = 2;
 }
 
-CBurstExpl::CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
+CBurstExpl::CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pWeapon, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 { 
 	if ( pWeapon->shells[nShellType].etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
@@ -686,7 +688,7 @@ void CBurstExpl::Explode()
 
 CFlameThrowerExpl::CFlameThrowerExpl( CAIUnit *pUnit, const class CBasicGun *pGun,
 									const CVec3 &explCoord, const CVec3 &attackerPos, 
-									const BYTE nShellType, const bool bRandomize )
+									const uint8_t nShellType, const bool bRandomize )
 									: CExplosion( pUnit, pGun, explCoord, 
 																attackerPos, nShellType, bRandomize ),
 									vShooterPos( attackerPos ), vTargetPos( explCoord )
@@ -1075,7 +1077,7 @@ const NDb::SWeaponRPGStats::SShell::ETrajectoryType CFakeBallisticTraj::GetTrajT
 //*													CBallisticTraj													*
 //*******************************************************************
 
-CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType _eType, WORD wMaxAngle, float fMaxRange )
+CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType _eType, uint16_t wMaxAngle, float fMaxRange )
 : startTime( curTime ), vStart3D( _vStart ), eType( _eType )
 {
 	if ( eType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
@@ -1133,7 +1135,7 @@ const CVec3 CBallisticTraj::GetCoordinates() const
 	return vRet;
 }
 
-WORD CBallisticTraj::GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, WORD wMaxAngle, float fMaxRange )
+uint16_t CBallisticTraj::GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange )
 {
 	const CBallisticTraj traj( VNULL3, vToAim, fV, eType, wMaxAngle, fMaxRange );
 	return traj.wAngle;

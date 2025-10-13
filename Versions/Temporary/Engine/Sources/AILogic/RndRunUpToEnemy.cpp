@@ -6,6 +6,8 @@
 #include "Guns.h"
 #include "SerializeOwner.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 
 CRndRunUpToEnemy::CRndRunUpToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, bool bCanMove )
@@ -40,10 +42,10 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	NI_ASSERT( !bForceStaying, "Wrong force staying value ( false expected )" );
 	
 	const CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
-	const WORD wDirToEnemy = GetDirectionByVector( vDirToEnemy );
+	const uint16_t wDirToEnemy = GetDirectionByVector( vDirToEnemy );
 
-	const WORD wRandomAngle = NRandom::Random( 0, 65536 / 5 ); RecordRandomCall();
-	WORD wResultDir;
+	const uint16_t wRandomAngle = NRandom::Random( 0, 65536 / 5 ); RecordRandomCall();
+	uint16_t wResultDir;
 	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
 		wResultDir = wDirToEnemy - wRandomAngle;

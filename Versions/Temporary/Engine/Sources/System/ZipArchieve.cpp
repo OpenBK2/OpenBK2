@@ -2,6 +2,8 @@
 
 #include "ZipArchieve.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 #include <zlib.h>
 
@@ -32,17 +34,17 @@
 struct CZipFile::SZipLocalFileHeader
 {
 	enum { SIGNATURE = 0x04034b50, COMP_STORE = 0, COMP_DEFLAT = 8 };
-	DWORD dwSignature;										// local file header signature
-	WORD  version;												// version needed to extract
-	WORD  flag;														// general purpose bit flag
-	WORD  wCompression;										// compression method: COMP_xxxx
-	WORD  wModTime;												// last mod file time (MS-DOS)
-	WORD  wModDate;												// last mod file date (MS-DOS)
-	DWORD dwCRC32;												// CRC-32
-	DWORD dwCSize;												// compressed size
-	DWORD dwUSize;												// uncompressed size
-	WORD  wFileNameLen;										// filename length (w/o zero terminator!)
-	WORD  wExtraLen;											// extra field length
+	uint32_t dwSignature;										// local file header signature
+	uint16_t  version;												// version needed to extract
+	uint16_t  flag;														// general purpose bit flag
+	uint16_t  wCompression;										// compression method: COMP_xxxx
+	uint16_t  wModTime;												// last mod file time (MS-DOS)
+	uint16_t  wModDate;												// last mod file date (MS-DOS)
+	uint32_t dwCRC32;												// CRC-32
+	uint32_t dwCSize;												// compressed size
+	uint32_t dwUSize;												// uncompressed size
+	uint16_t  wFileNameLen;										// filename length (w/o zero terminator!)
+	uint16_t  wExtraLen;											// extra field length
 	// here filename follows (wFileNameLen bytes)
 	// here extra field follows (wExtraLen bytes)
 	bool IsDataDescriptorExist() const { return (flag & 4) != 0; }
@@ -53,47 +55,47 @@ struct CZipFile::SZipLocalFileHeader
 // if data descriptor exist, then one must get CRC32, CSize and USize from the data descriptor instead of from local file header
 struct CZipFile::SZipDataDescriptor
 {
-	DWORD dwCRC32;												// CRC-32
-	DWORD dwCSize;												// compressed size
-	DWORD dwUSize;												// uncompressed size
+	uint32_t dwCRC32;												// CRC-32
+	uint32_t dwCSize;												// compressed size
+	uint32_t dwUSize;												// uncompressed size
 };
 
 struct CZipFile::SZipCentralDirHeader
 {
 	enum { SIGNATURE = 0x06054b50 };
-	DWORD dwSignature;										// end of central dir signature
-	WORD  wDisk;													// number of this disk
-	WORD  wStartDisk;											// number of disk with start central dir
-	WORD  wDirEntries;										// total number of entries in central dir on this disk
-	WORD  wTotalDirEntries;								// total number entries in central dir
-	DWORD dwDirSize;											// size of central directory
-	DWORD dwDirOffset;										// offset of start of central directory with respect to the starting disk nuber
-	WORD  wCommentLen;										// zipfile comment length
+	uint32_t dwSignature;										// end of central dir signature
+	uint16_t  wDisk;													// number of this disk
+	uint16_t  wStartDisk;											// number of disk with start central dir
+	uint16_t  wDirEntries;										// total number of entries in central dir on this disk
+	uint16_t  wTotalDirEntries;								// total number entries in central dir
+	uint32_t dwDirSize;											// size of central directory
+	uint32_t dwDirOffset;										// offset of start of central directory with respect to the starting disk nuber
+	uint16_t  wCommentLen;										// zipfile comment length
 	// comment follows here (wCommentLen bytes)
 };
 
 struct CZipFile::SZipFileHeader
 {
 	enum { SIGNATURE = 0x02014b50, COMP_STORE = 0, COMP_DEFLAT = 8 };
-	DWORD dwSignature;										// central file header signature
-	BYTE  verMade;												// version made by
-	BYTE  os;															// host operating system
-	BYTE  verNeeded;											// version needed to extract
-	BYTE  osNeeded;												// OS of version needed for extraction
-	WORD  flag;														// general purpose bit flag
-	WORD  wCompression;										// compression method: COMP_xxxx
-	WORD  wModTime;												// last mode file time (MS-DOS)
-	WORD  wModDate;												// last mode file date (MS-DOS)
-	DWORD dwCRC32;												// CRC-32
-	DWORD dwCSize;												// compressed size
-	DWORD dwUSize;												// uncompressed size
-	WORD  wFileNameLen;										// filename length
-	WORD  wExtraLen;											// extra field length
-	WORD  wCommentLen;										// file comment length
-	WORD  wDiskStart;											// disk number start
-	WORD  wIntAttr;												// internal file attributes: bit0 == 1 => ASCII or text file, == 0 => binary data
-	DWORD wExtAttr;												// external file attributes, host system dependent
-	DWORD dwHdrOffset;										// relative offset of local header from the start of the first disk, on which this file appears
+	uint32_t dwSignature;										// central file header signature
+	uint8_t  verMade;												// version made by
+	uint8_t  os;															// host operating system
+	uint8_t  verNeeded;											// version needed to extract
+	uint8_t  osNeeded;												// OS of version needed for extraction
+	uint16_t  flag;														// general purpose bit flag
+	uint16_t  wCompression;										// compression method: COMP_xxxx
+	uint16_t  wModTime;												// last mode file time (MS-DOS)
+	uint16_t  wModDate;												// last mode file date (MS-DOS)
+	uint32_t dwCRC32;												// CRC-32
+	uint32_t dwCSize;												// compressed size
+	uint32_t dwUSize;												// uncompressed size
+	uint16_t  wFileNameLen;										// filename length
+	uint16_t  wExtraLen;											// extra field length
+	uint16_t  wCommentLen;										// file comment length
+	uint16_t  wDiskStart;											// disk number start
+	uint16_t  wIntAttr;												// internal file attributes: bit0 == 1 => ASCII or text file, == 0 => binary data
+	uint32_t wExtAttr;												// external file attributes, host system dependent
+	uint32_t dwHdrOffset;										// relative offset of local header from the start of the first disk, on which this file appears
 	// filename follows here (wFileNameLen bytes)
 	// extra field follows here (wExtraLen bytes)
 	// file comment follows here (wCommentLen bytes)
@@ -136,7 +138,7 @@ struct CZipFile::SZipFileHeader
 
 void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 {
-	dwModDateTime = DWORD( (hdr.wModDate) << 16 ) | DWORD( hdr.wModTime );
+	dwModDateTime = uint32_t( (hdr.wModDate) << 16 ) | uint32_t( hdr.wModTime );
 	dwCSize = hdr.dwCSize == 0 ? hdr.dwUSize : hdr.dwCSize;
 	dwUSize = hdr.dwUSize;
 	wExtAttr = hdr.wExtAttr;
@@ -231,12 +233,12 @@ int CZipFile::GetFileLen( int nIndex ) const
 	return papDir[nIndex].dwUSize;
 }
 
-DWORD CZipFile::GetFileAttribs( int nIndex ) const
+uint32_t CZipFile::GetFileAttribs( int nIndex ) const
 {
 	return papDir[nIndex].wExtAttr;
 }
 
-DWORD CZipFile::GetModDateTime( int nIndex ) const
+uint32_t CZipFile::GetModDateTime( int nIndex ) const
 {
 	return papDir[nIndex].dwModDateTime;
 }

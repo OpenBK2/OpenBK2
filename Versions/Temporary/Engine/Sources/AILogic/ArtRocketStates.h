@@ -1,8 +1,9 @@
-
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "StatesFactory.h"
 #include "UnitStates.h"
+
+#include <cstdint>
 class CArtillery;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CArtRocketStatesFactory : public IStatesFactory
@@ -36,7 +37,7 @@ class CArtRocketAttackGroundState : public IUnitAttackingState
 	CVec2 point;
 	bool bFired;
 	bool bFinished;
-	WORD wDirToRotate;
+	uint16_t wDirToRotate;
 	bool bSaidNoAmmo;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pArtillery); f.Add(3,&eState); f.Add(4,&point); f.Add(5,&bFired); f.Add(6,&bFinished); f.Add(7,&wDirToRotate); f.Add(8,&bSaidNoAmmo); return 0; }

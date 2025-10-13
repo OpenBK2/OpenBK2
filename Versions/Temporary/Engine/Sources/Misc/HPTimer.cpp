@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "HPTimer.h"
 
+#include <cstdint>
+
 using namespace NHPTimer;
 static double fProcFreq1 = 1;
 
@@ -38,14 +40,14 @@ void NHPTimer::UpdateHPTimerFrequency()
 	static int64_t freq, start, fin;
 	static double fTStart, fTFinish, fPassed;
 	static STime tStart;
-	static DWORD dwStart;
+	static uint32_t dwStart;
 	static bool bUpdateInitiated = false;
 	if ( bUpdateInitiated )
 	{
 		STime tTest( tStart );
 		fPassed = GetTimePassed( &tTest );
 		QueryPerformanceCounter( (_LARGE_INTEGER*) &fin );
-		DWORD dwFinish = GetTickCount();
+		uint32_t dwFinish = GetTickCount();
 		if ( dwFinish - dwStart < 50 )
 			return;
 		fTStart = double( start );

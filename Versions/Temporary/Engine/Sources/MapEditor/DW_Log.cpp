@@ -6,6 +6,8 @@
 
 #include "DW_Log.h"
 
+#include <cstdint>
+
 CDWLog::CDWLog()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_LOG, this );
@@ -132,7 +134,7 @@ void CDWLog::Append( const NLog::SLogBuffer &rLogBuffer )
 }
 
 
-bool CDWLog::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CDWLog::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( ( Singleton<IUserDataContainer>() == 0 ) ||
 			 ( Singleton<IUserDataContainer>()->Get() == 0 ) )

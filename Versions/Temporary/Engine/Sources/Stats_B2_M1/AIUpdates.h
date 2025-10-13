@@ -4,6 +4,8 @@
 #include "Actions.h"
 #include "CameraRunTypes.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SVisObj;
@@ -694,11 +696,11 @@ struct SChatMessageUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 		std::wstring wszMessage;
-		DWORD dwColor;
+		uint32_t dwColor;
 		bool bAnotherChat;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&wszMessage); f.Add(3,&dwColor); f.Add(4,&bAnotherChat); return 0; }
 	SChatMessageUpdate() {}
-	SChatMessageUpdate( const std::wstring &_wszMessage, const DWORD &_dwColor, const bool &_bAnotherChat )
+	SChatMessageUpdate( const std::wstring &_wszMessage, const uint32_t &_dwColor, const bool &_bAnotherChat )
 		: wszMessage( _wszMessage ), dwColor( _dwColor ), bAnotherChat( _bAnotherChat ) {}
 
 	REGISTER_TO_UPDATES

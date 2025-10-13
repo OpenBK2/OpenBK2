@@ -2,6 +2,7 @@
 
 #include "Interface_UserData.h"
 
+#include <cstdint>
 
 enum ELogOutputType
 {
@@ -21,7 +22,7 @@ enum ELogOutputType
 
 struct SSWTParams
 {
-	DWORD dwFlags;
+	uint32_t dwFlags;
 	//
 	string szMOD;
 	string szType;
@@ -67,7 +68,7 @@ struct IMainFrame : public ILogger
 															const CString &rstrTitle,
 															const UINT nButtonCount,
 															const UINT* pButtonIDMap,
-															const DWORD dwAlignment,
+															const uint32_t dwAlignment,
 															const UINT nStyle,
 															const bool bDocked,
 															const bool bVisible,

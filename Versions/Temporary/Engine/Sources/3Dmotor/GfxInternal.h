@@ -5,6 +5,8 @@
 #include "Misc/Win32Helper.h"
 #include "GPixelFormat.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 	class CGeometry;
@@ -34,7 +36,7 @@ struct SGeomFormatInfo
 	int nFormatID;
 	int nSize;
 	D3DVERTEXELEMENT9 *pdwVSD;
-	DWORD dwFVF;
+	uint32_t dwFVF;
 };
 extern SGeomFormatInfo geometryFormatInfo[6];
 

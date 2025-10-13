@@ -6,6 +6,8 @@
 #include "Image/Targa.h"
 #include "UI/BackgroundMutableTexture.h"
 
+#include <cstdint>
+
 const char* DEMO_START_SEQUENCE_FILE_NAME = "Demo\\start_frames.xml";
 const char* DEMO_FINAL_SEQUENCE_FILE_NAME = "Demo\\final_frames.xml";
 
@@ -101,7 +103,7 @@ bool CInterfaceDemo::LoadImage( const std::string &szFileName )
 	bool bResult = stream.IsOk();
 	if ( bResult )
 	{
-		CArray2D<DWORD> array;
+		CArray2D<uint32_t> array;
 		NImage::LoadTGAImage( array, &stream );
 		pPictureTexture->Set( *reinterpret_cast< CArray2D<NGfx::SPixel8888>* >( &array ) );
 	}

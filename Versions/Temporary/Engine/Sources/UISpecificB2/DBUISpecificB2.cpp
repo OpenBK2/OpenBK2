@@ -7,6 +7,8 @@
 #include "dbuispecificb2.h"
 #include "dbuispecificcpp.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -17,9 +19,9 @@ void SARSetSpecialAbility::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "ARSetSpecialAbility", typeID, sizeof(*this) );
 	SUIDesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Ability", (BYTE*)&eAbility - pThis, sizeof(eAbility), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "AbilityParam", (BYTE*)&eAbilityParam - pThis, sizeof(eAbilityParam), NTypeDef::TYPE_TYPE_ENUM );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Ability", (uint8_t*)&eAbility - pThis, sizeof(eAbility), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "AbilityParam", (uint8_t*)&eAbilityParam - pThis, sizeof(eAbilityParam), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -49,9 +51,9 @@ void SARSetForcedAction::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "ARSetForcedAction", typeID, sizeof(*this) );
 	SUIDesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "UserAction", (BYTE*)&eUserAction - pThis, sizeof(eUserAction), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "M1UserAction", (BYTE*)&eM1UserAction - pThis, sizeof(eM1UserAction), NTypeDef::TYPE_TYPE_ENUM );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "UserAction", (uint8_t*)&eUserAction - pThis, sizeof(eUserAction), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "M1UserAction", (uint8_t*)&eM1UserAction - pThis, sizeof(eM1UserAction), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -106,23 +108,23 @@ NDb::EActionButtonPanel NDb::StringToEnum_NDb_EActionButtonPanel( const std::str
 }
 
 
-void SActionButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SActionButton::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Button", (BYTE*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "NewButton", (BYTE*)&pNewButton - pThis, sizeof(pNewButton), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "IsAbility", (BYTE*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Autocast", (BYTE*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Passive", (BYTE*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Action", (uint8_t*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Button", (uint8_t*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "NewButton", (uint8_t*)&pNewButton - pThis, sizeof(pNewButton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "IsAbility", (uint8_t*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Autocast", (uint8_t*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Passive", (uint8_t*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (BYTE*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIcon", (BYTE*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "IconDisabled", (BYTE*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIconDisabled", (BYTE*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "PressEffect", (BYTE*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Panel", (BYTE*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "TargetPanel", (BYTE*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (uint8_t*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIcon", (uint8_t*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "IconDisabled", (uint8_t*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIconDisabled", (uint8_t*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "PressEffect", (uint8_t*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Panel", (uint8_t*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "TargetPanel", (uint8_t*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SActionButton::operator&( IXmlSaver &saver )
@@ -167,7 +169,7 @@ int SActionButton::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SActionButton::CalcCheckSum() const
+uint32_t SActionButton::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -184,24 +186,24 @@ DWORD SActionButton::CalcCheckSum() const
 
 
 
-void SM1ActionButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SM1ActionButton::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "CrapName", (BYTE*)&szCrapName - pThis, sizeof(szCrapName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Button", (BYTE*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "NewButton", (BYTE*)&pNewButton - pThis, sizeof(pNewButton), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "IsAbility", (BYTE*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Autocast", (BYTE*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Passive", (BYTE*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Action", (uint8_t*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "CrapName", (uint8_t*)&szCrapName - pThis, sizeof(szCrapName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Button", (uint8_t*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "NewButton", (uint8_t*)&pNewButton - pThis, sizeof(pNewButton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "IsAbility", (uint8_t*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Autocast", (uint8_t*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Passive", (uint8_t*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (BYTE*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIcon", (BYTE*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "IconDisabled", (BYTE*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIconDisabled", (BYTE*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "PressEffect", (BYTE*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Panel", (BYTE*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "TargetPanel", (BYTE*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (uint8_t*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIcon", (uint8_t*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "IconDisabled", (uint8_t*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ForegroundIconDisabled", (uint8_t*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "PressEffect", (uint8_t*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Panel", (uint8_t*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "TargetPanel", (uint8_t*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SM1ActionButton::operator&( IXmlSaver &saver )
@@ -248,7 +250,7 @@ int SM1ActionButton::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1ActionButton::CalcCheckSum() const
+uint32_t SM1ActionButton::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -269,22 +271,22 @@ void SActionButtonInfo::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ActionButtonInfo", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "NoButton", (BYTE*)&bNoButton - pThis, sizeof(bNoButton), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "IsAbility", (BYTE*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Autocast", (BYTE*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Passive", (BYTE*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Slot", (BYTE*)&nSlot - pThis, sizeof(nSlot), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Panel", (BYTE*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "TargetPanel", (BYTE*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Icon", (BYTE*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "IconDisabled", (BYTE*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "ForegroundIcon", (BYTE*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "ForegroundIconDisabled", (BYTE*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PressEffect", (BYTE*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "HotkeyCmd", (BYTE*)&szHotkeyCmd - pThis, sizeof(szHotkeyCmd), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Action", (uint8_t*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "NoButton", (uint8_t*)&bNoButton - pThis, sizeof(bNoButton), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "IsAbility", (uint8_t*)&bIsAbility - pThis, sizeof(bIsAbility), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Autocast", (uint8_t*)&bAutocast - pThis, sizeof(bAutocast), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Passive", (uint8_t*)&bPassive - pThis, sizeof(bPassive), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Slot", (uint8_t*)&nSlot - pThis, sizeof(nSlot), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Panel", (uint8_t*)&ePanel - pThis, sizeof(ePanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "TargetPanel", (uint8_t*)&eTargetPanel - pThis, sizeof(eTargetPanel), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Icon", (uint8_t*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "IconDisabled", (uint8_t*)&pIconDisabled - pThis, sizeof(pIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ForegroundIcon", (uint8_t*)&pForegroundIcon - pThis, sizeof(pForegroundIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ForegroundIconDisabled", (uint8_t*)&pForegroundIconDisabled - pThis, sizeof(pForegroundIconDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PressEffect", (uint8_t*)&bPressEffect - pThis, sizeof(bPressEffect), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "HotkeyCmd", (uint8_t*)&szHotkeyCmd - pThis, sizeof(szHotkeyCmd), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -333,10 +335,10 @@ int SActionButtonInfo::operator&( IBinSaver &saver )
 
 
 
-void SPlayersColors::SPlayer::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlayersColors::SPlayer::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (BYTE*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (uint8_t*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SPlayersColors::SPlayer::operator&( IXmlSaver &saver )
@@ -355,7 +357,7 @@ int SPlayersColors::SPlayer::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlayersColors::SPlayer::CalcCheckSum() const
+uint32_t SPlayersColors::SPlayer::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -372,10 +374,10 @@ DWORD SPlayersColors::SPlayer::CalcCheckSum() const
 
 
 
-void SPlayersColors::SUnitFullInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlayersColors::SUnitFullInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "UserForward", (BYTE*)&pUserForward - pThis, sizeof(pUserForward), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "NeutralForward", (BYTE*)&pNeutralForward - pThis, sizeof(pNeutralForward), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "UserForward", (uint8_t*)&pUserForward - pThis, sizeof(pUserForward), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "NeutralForward", (uint8_t*)&pNeutralForward - pThis, sizeof(pNeutralForward), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "FriendForwards", &friendForwards, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "EnemyForwards", &enemyForwards, pThis );
 }
@@ -400,7 +402,7 @@ int SPlayersColors::SUnitFullInfo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlayersColors::SUnitFullInfo::CalcCheckSum() const
+uint32_t SPlayersColors::SUnitFullInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -417,7 +419,7 @@ DWORD SPlayersColors::SUnitFullInfo::CalcCheckSum() const
 
 
 
-void SPlayersColors::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlayersColors::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "UserColor", &vUserColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "NeutralColor", &vNeutralColor, pThis ); 
@@ -460,7 +462,7 @@ int SPlayersColors::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlayersColors::CalcCheckSum() const
+uint32_t SPlayersColors::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -477,13 +479,13 @@ DWORD SPlayersColors::CalcCheckSum() const
 
 
 
-void SReinfButton::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinfButton::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Button", (BYTE*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "TextureDisabled", (BYTE*)&pTextureDisabled - pThis, sizeof(pTextureDisabled), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "DescFileRef", (BYTE*)&szDescFileRef - pThis, sizeof(szDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Button", (uint8_t*)&pButton - pThis, sizeof(pButton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextureDisabled", (uint8_t*)&pTextureDisabled - pThis, sizeof(pTextureDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "DescFileRef", (uint8_t*)&szDescFileRef - pThis, sizeof(szDescFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SReinfButton::operator&( IXmlSaver &saver )
@@ -508,7 +510,7 @@ int SReinfButton::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinfButton::CalcCheckSum() const
+uint32_t SReinfButton::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -525,9 +527,9 @@ DWORD SReinfButton::CalcCheckSum() const
 
 
 
-void SSeasonColor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSeasonColor::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Season", (uint8_t*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Color", &vColor, pThis ); 
 }
 
@@ -547,7 +549,7 @@ int SSeasonColor::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSeasonColor::CalcCheckSum() const
+uint32_t SSeasonColor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -564,10 +566,10 @@ DWORD SSeasonColor::CalcCheckSum() const
 
 
 
-void SMLTag::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMLTag::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SMLTag::operator&( IXmlSaver &saver )
@@ -586,7 +588,7 @@ int SMLTag::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMLTag::CalcCheckSum() const
+uint32_t SMLTag::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -603,10 +605,10 @@ DWORD SMLTag::CalcCheckSum() const
 
 
 
-void SMPLocalizedGameType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMPLocalizedGameType::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "GameType", (BYTE*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "LocalizedTextFileRef", (BYTE*)&szLocalizedTextFileRef - pThis, sizeof(szLocalizedTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "GameType", (uint8_t*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "LocalizedTextFileRef", (uint8_t*)&szLocalizedTextFileRef - pThis, sizeof(szLocalizedTextFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SMPLocalizedGameType::operator&( IXmlSaver &saver )
@@ -625,7 +627,7 @@ int SMPLocalizedGameType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMPLocalizedGameType::CalcCheckSum() const
+uint32_t SMPLocalizedGameType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -642,10 +644,10 @@ DWORD SMPLocalizedGameType::CalcCheckSum() const
 
 
 
-void SUIConstsB2::SSeasonName::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUIConstsB2::SSeasonName::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Season", (uint8_t*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SUIConstsB2::SSeasonName::operator&( IXmlSaver &saver )
@@ -664,7 +666,7 @@ int SUIConstsB2::SSeasonName::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUIConstsB2::SSeasonName::CalcCheckSum() const
+uint32_t SUIConstsB2::SSeasonName::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -686,7 +688,7 @@ void SUIConstsB2::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "UIConstsB2", typeID, sizeof(*this) );
 	SUIGameConsts::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "ActionButtons", &actionButtons, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "M1ActionButtons", &m1ActionButtons, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ActionButtonInfos", &actionButtonInfos, pThis );
@@ -697,7 +699,7 @@ void SUIConstsB2::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Tags", &tags, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "MPLocalizedGameTypes", &mPLocalizedGameTypes, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ChapterMapArrows", &chapterMapArrows, pThis );
-	NMetaInfo::ReportMetaInfo( "ForbiddenWordsFileRef", (BYTE*)&szForbiddenWordsFileRef - pThis, sizeof(szForbiddenWordsFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "ForbiddenWordsFileRef", (uint8_t*)&szForbiddenWordsFileRef - pThis, sizeof(szForbiddenWordsFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -745,16 +747,16 @@ void SWindowMiniMapShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowMiniMapShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Point00", &vPoint00, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Point01", &vPoint01, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Point10", &vPoint10, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Point11", &vPoint11, pThis ); 
 	NMetaInfo::ReportStructArrayMetaInfo( "PlayerColors", &playerColors, pThis );
 	NMetaInfo::ReportStructMetaInfo( "ViewportFrameColor", &vViewportFrameColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Rotable", (BYTE*)&bRotable - pThis, sizeof(bRotable), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "RotableBackgroundTexture", (BYTE*)&pRotableBackgroundTexture - pThis, sizeof(pRotableBackgroundTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "RotableForegroundTexture", (BYTE*)&pRotableForegroundTexture - pThis, sizeof(pRotableForegroundTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Rotable", (uint8_t*)&bRotable - pThis, sizeof(bRotable), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "RotableBackgroundTexture", (uint8_t*)&pRotableBackgroundTexture - pThis, sizeof(pRotableBackgroundTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "RotableForegroundTexture", (uint8_t*)&pRotableForegroundTexture - pThis, sizeof(pRotableForegroundTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "RotableBackgroundSize", &vRotableBackgroundSize, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "RotableSize", &vRotableSize, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
@@ -804,7 +806,7 @@ void SWindowMiniMap::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowMiniMap", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -830,7 +832,7 @@ void SWindowSelectionShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowSelectionShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -856,8 +858,8 @@ void SWindowSelection::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowSelection", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "SelectorTexture", (BYTE*)&pSelectorTexture - pThis, sizeof(pSelectorTexture), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "SelectorTexture", (uint8_t*)&pSelectorTexture - pThis, sizeof(pSelectorTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -885,9 +887,9 @@ void SWindowRoundProgressBarShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowRoundProgressBarShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -917,7 +919,7 @@ void SWindowRoundProgressBar::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowRoundProgressBar", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -938,7 +940,7 @@ int SWindowRoundProgressBar::operator&( IBinSaver &saver )
 
 
 
-void SWindow3DControlShared::SObjectParams::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWindow3DControlShared::SObjectParams::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &vSize, pThis ); 
@@ -960,7 +962,7 @@ int SWindow3DControlShared::SObjectParams::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWindow3DControlShared::SObjectParams::CalcCheckSum() const
+uint32_t SWindow3DControlShared::SObjectParams::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -982,7 +984,7 @@ void SWindow3DControlShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "Window3DControlShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Places", &places, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -1011,7 +1013,7 @@ void SWindow3DControl::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "Window3DControl", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1037,15 +1039,15 @@ void SWindowFrameSequenceShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowFrameSequenceShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "FrameSize", &vFrameSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "FrameCountX", (BYTE*)&nFrameCountX - pThis, sizeof(nFrameCountX), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "FrameCountY", (BYTE*)&nFrameCountY - pThis, sizeof(nFrameCountY), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Time", (BYTE*)&nTime - pThis, sizeof(nTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "FrameCount", (BYTE*)&nFrameCount - pThis, sizeof(nFrameCount), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "RandomStartFrame", (BYTE*)&bRandomStartFrame - pThis, sizeof(bRandomStartFrame), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "RandomAddTime", (BYTE*)&nRandomAddTime - pThis, sizeof(nRandomAddTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCountX", (uint8_t*)&nFrameCountX - pThis, sizeof(nFrameCountX), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCountY", (uint8_t*)&nFrameCountY - pThis, sizeof(nFrameCountY), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Time", (uint8_t*)&nTime - pThis, sizeof(nTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCount", (uint8_t*)&nFrameCount - pThis, sizeof(nFrameCount), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "RandomStartFrame", (uint8_t*)&bRandomStartFrame - pThis, sizeof(bRandomStartFrame), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "RandomAddTime", (uint8_t*)&nRandomAddTime - pThis, sizeof(nRandomAddTime), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1087,7 +1089,7 @@ void SWindowFrameSequence::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowFrameSequence", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1113,7 +1115,7 @@ void SUISPlaySound::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "UISPlaySound", typeID, sizeof(*this) );
 	SUIStateBase::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "pSoundToPlay", &pSoundToPlay, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -1142,7 +1144,7 @@ void SUISB2MoveShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "UISB2MoveShared", typeID, sizeof(*this) );
 	SUIStateBaseShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "vOffset", &vOffset, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "vAccel", &vAccel, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "fMoveTime", &fMoveTime, pThis ); 
@@ -1186,16 +1188,16 @@ void SUISB2Move::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "UISB2Move", typeID, sizeof(*this) );
 	SUIStateBase::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Offset", &vOffset, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AccelCoeff", &vAccelCoeff, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MoveTime", (BYTE*)&fMoveTime - pThis, sizeof(fMoveTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MoveTime", (uint8_t*)&fMoveTime - pThis, sizeof(fMoveTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "OffsetBounce", &vOffsetBounce, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AccelCoeffBounce", &vAccelCoeffBounce, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MoveTimeBounce", (BYTE*)&fMoveTimeBounce - pThis, sizeof(fMoveTimeBounce), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ElementToMove", (BYTE*)&szElementToMove - pThis, sizeof(szElementToMove), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Border", (BYTE*)&bBorder - pThis, sizeof(bBorder), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "MaxMoveTime", (BYTE*)&fMaxMoveTime - pThis, sizeof(fMaxMoveTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MoveTimeBounce", (uint8_t*)&fMoveTimeBounce - pThis, sizeof(fMoveTimeBounce), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ElementToMove", (uint8_t*)&szElementToMove - pThis, sizeof(szElementToMove), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Border", (uint8_t*)&bBorder - pThis, sizeof(bBorder), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "MaxMoveTime", (uint8_t*)&fMaxMoveTime - pThis, sizeof(fMaxMoveTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1239,8 +1241,8 @@ void SWindowPotentialLinesShared::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowPotentialLinesShared", typeID, sizeof(*this) );
 	SWindowShared::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Colour", (BYTE*)&nColour - pThis, sizeof(nColour), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Colour", (uint8_t*)&nColour - pThis, sizeof(nColour), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1268,7 +1270,7 @@ void SWindowPotentialLines::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WindowPotentialLines", typeID, sizeof(*this) );
 	SWindow::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1294,15 +1296,15 @@ void SBackgroundFrameSequence::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "BackgroundFrameSequence", typeID, sizeof(*this) );
 	SBackground::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "SequenceTexture", (BYTE*)&pSequenceTexture - pThis, sizeof(pSequenceTexture), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "SequenceTexture", (uint8_t*)&pSequenceTexture - pThis, sizeof(pSequenceTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "FrameSize", &vFrameSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "FrameCountX", (BYTE*)&nFrameCountX - pThis, sizeof(nFrameCountX), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "FrameCountY", (BYTE*)&nFrameCountY - pThis, sizeof(nFrameCountY), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Time", (BYTE*)&nTime - pThis, sizeof(nTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "FrameCount", (BYTE*)&nFrameCount - pThis, sizeof(nFrameCount), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "RandomStartFrame", (BYTE*)&bRandomStartFrame - pThis, sizeof(bRandomStartFrame), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "RandomAddTime", (BYTE*)&nRandomAddTime - pThis, sizeof(nRandomAddTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCountX", (uint8_t*)&nFrameCountX - pThis, sizeof(nFrameCountX), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCountY", (uint8_t*)&nFrameCountY - pThis, sizeof(nFrameCountY), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Time", (uint8_t*)&nTime - pThis, sizeof(nTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FrameCount", (uint8_t*)&nFrameCount - pThis, sizeof(nFrameCount), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "RandomStartFrame", (uint8_t*)&bRandomStartFrame - pThis, sizeof(bRandomStartFrame), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "RandomAddTime", (uint8_t*)&nRandomAddTime - pThis, sizeof(nRandomAddTime), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

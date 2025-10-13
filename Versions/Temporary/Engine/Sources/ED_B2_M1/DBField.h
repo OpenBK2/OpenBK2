@@ -5,6 +5,8 @@
 #include "stats_b2_m1/Season.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -15,7 +17,7 @@ namespace NDb
 	struct SFieldTileDesc
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nValue;
 		int nWeight;
@@ -26,17 +28,17 @@ namespace NDb
 			nWeight( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SFieldObjectDesc
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SHPObjectRPGStats > pValue;
 		int nWeight;
@@ -46,17 +48,17 @@ namespace NDb
 			nWeight( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SFieldPatternSize
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nMin;
 		int nMax;
@@ -67,17 +69,17 @@ namespace NDb
 			nMax( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SFieldTileShell
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		vector< SFieldTileDesc > tiles;
 		float fWidth;
@@ -87,17 +89,17 @@ namespace NDb
 			fWidth( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SFieldObjectShell
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		vector< SFieldObjectDesc > objects;
 		float fWidth;
@@ -111,11 +113,11 @@ namespace NDb
 			fRatio( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SField : public CResource
@@ -142,7 +144,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

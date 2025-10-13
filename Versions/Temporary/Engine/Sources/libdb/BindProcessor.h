@@ -5,6 +5,8 @@
 #include "Variant.h"
 #include "ObjMan.h"
 
+#include <cstdint>
+
 namespace NLXML
 {
 	class CXMLNode;
@@ -29,7 +31,7 @@ struct SBindProcessor
 {
 	struct SArrayRequisites
 	{
-		std::vector<BYTE> *pRawVector;
+		std::vector<uint8_t> *pRawVector;
 		NMetaInfo::SStructMetaInfo *pContained;
 		NTypeDef::STypeArray *pTypeArray;
 		UValue *pUValue;
@@ -42,12 +44,12 @@ struct SBindProcessor
 		SArrayCallParams(): nArrayIndex(0) {}
 	};
 
-	BYTE *pThis;
+	uint8_t *pThis;
 	UValue *ownValues;
 	NMetaInfo::SStructMetaInfo *pMetaInfo;
 	//
 	SBindProcessor(): pThis(0), ownValues(0), pMetaInfo(0) {}
-	SBindProcessor( BYTE *_pThis, UValue *_ownValues, NMetaInfo::SStructMetaInfo *_pMetaInfo )
+	SBindProcessor( uint8_t *_pThis, UValue *_ownValues, NMetaInfo::SStructMetaInfo *_pMetaInfo )
 		: pThis( _pThis ), ownValues( _ownValues ), pMetaInfo( _pMetaInfo ) {}
 	//
 	IObjMan *CreateManipulator( const std::string &szName, IObjMan *pParent );

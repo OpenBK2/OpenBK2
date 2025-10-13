@@ -3,6 +3,9 @@
 
 //#include "RPGSTats.h"
 #pragma once
+
+#include <cstdint>
+
 /**
  * 1) У самолета есть список маневров, которые он может совершать (с весами).
  * при выборе маневра CManuverBuilder смотрит в этот список и выбирает нужный маневр.
@@ -29,15 +32,15 @@ public:
 	float GetR( const float fSpeed ) const;
 	float GetStallSpeed() const;
 	float GetMaxSpeed() const;
-	// tilt in WORD per millisecond
+	// tilt in uint16_t per millisecond
 	float GetTiltSpeed() const;
-	// tilt acceleration in WORD per millisecond^2
+	// tilt acceleration in uint16_t per millisecond^2
 	float GetTiltAccell() const;
 	bool IsManuverAllowed( const enum NDb::EManuverID eManuver ) const;
 	float GetSpeed( const float fZ ) const;
 	// can do "bochka"
 	bool CanFlip() const;
 	bool CanViolateHeghtLimits() const { return bCanViolateHeghtLimits; }
-	WORD GetDivingAngle() const;
+	uint16_t GetDivingAngle() const;
 };
 

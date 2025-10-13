@@ -2,6 +2,8 @@
 
 #include "Variant.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct IObjMan;
@@ -44,7 +46,7 @@ struct SPropertyDesc : public SIteratorDesc
 {
 	typedef std::list<std::string> CValuesList;
 	// CRAP{ HASH_SET
-	typedef std::unordered_map<std::string, DWORD> CTypesMap;
+	typedef std::unordered_map<std::string, uint32_t> CTypesMap;
 	// CRAP} HASH_SET
 	//value checks flags
 	enum EPropertyCheckType
@@ -61,7 +63,7 @@ struct SPropertyDesc : public SIteratorDesc
 	float fRightBorder;                             //right border value
 	int nMinOccurs;
 	int nMaxOccurs;
-	DWORD dwChecks;                                 //check flags contained here
+	uint32_t dwChecks;                                 //check flags contained here
 	std::string szDefault;                               // default field value in string representation
 	
 	std::string szTypeName;                              //type name

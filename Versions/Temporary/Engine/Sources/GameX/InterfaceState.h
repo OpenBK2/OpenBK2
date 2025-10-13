@@ -3,6 +3,8 @@
 #include "GameX/DBScenario.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SGameRoot;
@@ -58,7 +60,7 @@ struct IInterfaceState : public CObjectBase
 	virtual void StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty ) = 0;
 	
 	//{ mission console
-	virtual void SetMissionConsoleColor( DWORD dwColor ) = 0;
+	virtual void SetMissionConsoleColor( uint32_t dwColor ) = 0;
 	virtual void WriteToMissionConsole( const std::wstring &wszText ) = 0;
 	virtual void WriteToMissionConsoleSelected( const std::wstring &wszText ) = 0;
 	virtual std::wstring GetMissionConsoleMLTag() const = 0;

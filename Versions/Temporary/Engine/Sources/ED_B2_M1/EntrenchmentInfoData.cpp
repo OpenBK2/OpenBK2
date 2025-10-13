@@ -7,6 +7,8 @@
 #include "EntrenchmentInfoData.h"
 #include <float.h>
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NMapInfoEditor 
@@ -84,7 +86,7 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SEntrenchmentInfo::GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 																																	 CQuat *pQuat,
-																																	 DWORD *pdwNormal,
+																																	 uint32_t *pdwNormal,
 																																	 CVec3 *pScale,
 																																	 const float fSegmentHalfLen,
 																																	 const CVec3 &rvCenterPos,
@@ -175,7 +177,7 @@ namespace NMapInfoEditor
 				bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.nPlayer ), pManipulator, szObjectPrefix + ".Player" );
 				bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.fHP ), pManipulator, szObjectPrefix + ".HP" );
 				bResult = bResult && CManipulatorManager::GetVec3<CVec3, float>( &( mapInfoElement.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
-				WORD wDirection = 0;
+				uint16_t wDirection = 0;
 				bResult = bResult && CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 				mapInfoElement.fDirection = AI2VisRad( wDirection );
 				mapInfoElement.nLinkToLinkID = INVALID_NODE_ID;
@@ -262,7 +264,7 @@ namespace NMapInfoEditor
 			CVec3 vTerrainPos = VNULL3;
 			CQuat qRot = QNULL;
 			CVec3 vScale = CVec3( 1.0f, 1.0f, 1.0f );
-			DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+			uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 			GetEntrenchmentSegmentPositionOnTerrain(	&vTerrainPos, &qRot, &dwNormal, &vScale, pSeg->vAABBHalfSize.x, vObjectScenePosition, fObjectSceneDirection );
 			//
 			const UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
@@ -358,7 +360,7 @@ namespace NMapInfoEditor
 				//	повернуть в вертикальной плоскости и промасштабировать
 				//
 				CVec3 vTerrainPos = VNULL3;
-				DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+				uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 				CQuat qRot = QNULL;
 				CVec3 vScale = CVec3( 1.0f, 1.0f, 1.0f );
 				float fDirection = pSgInfo->fDirAngle;

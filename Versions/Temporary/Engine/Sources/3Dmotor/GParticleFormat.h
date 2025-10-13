@@ -1,5 +1,8 @@
 #pragma once
+
 #include "System/GResource.h"
+
+#include <cstdint>
 
 #include <boost/config.hpp>
 
@@ -14,14 +17,14 @@ inline void Interpolate( const TValue &v1, const TValue &v2, float f1, float f2,
 template<>
 inline void Interpolate( const short &v1, const short &v2, float f1, float f2, short *pRes ) { *pRes = v1; }
 template<>
-void Interpolate( const DWORD &v1, const DWORD &v2, float f1, float f2, DWORD *pRes );
+void Interpolate( const uint32_t &v1, const uint32_t &v2, float f1, float f2, uint32_t *pRes );
 
 template<class TValue>
 inline void Scale( const TValue &v, float f, TValue *pRes ) { *pRes = v * f; }
 template<>
 inline void Scale( const short &v, float f, short *pRes ) { *pRes = v; }
 template<>
-void Scale( const DWORD &v, float f, DWORD *pRes );
+void Scale( const uint32_t &v, float f, uint32_t *pRes );
 
 #pragma pack( push, 2 )
 
@@ -86,7 +89,7 @@ struct SParticle
 	TKeyTrack<CVec3> pos;
 	TKeyTrack<float> rot;
 	TKeyTrack<CVec2> scale;
-	TKeyTrack<DWORD> color;
+	TKeyTrack<uint32_t> color;
 	TKeyTrack<short> sprite;
 };
 

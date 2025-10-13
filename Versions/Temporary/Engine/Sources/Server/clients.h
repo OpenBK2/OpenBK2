@@ -2,6 +2,8 @@
 
 #include "Server_Client_Common/CommonClientState.h"
 
+#include <cstdint>
+
 struct st_mysql;
 typedef st_mysql MYSQL;
 struct SLadderStatistics;
@@ -13,7 +15,7 @@ struct SCommonClientInfo
 {
 	ECommonClientState eState;
 	bool bWant2ReceiveChat;
-	BYTE cLobbyID;
+	uint8_t cLobbyID;
 	int nGameID;
 
 	SCommonClientInfo()

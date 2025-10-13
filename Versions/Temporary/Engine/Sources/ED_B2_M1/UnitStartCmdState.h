@@ -5,6 +5,8 @@
 #include "EdUnitStartCmd.h"
 #include "UnitStartCmdWindow.h"
 
+#include <cstdint>
+
 //
 //
 //	UNIT START COMMANDS LIST
@@ -126,7 +128,7 @@ protected:
 	CMapInfoEditor* GetMapInfoEditor();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:

@@ -3,6 +3,8 @@
 #include "clientackmanager.h"
 #include "Misc/HashFuncs.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	enum EAckClass;
@@ -62,7 +64,7 @@ class CClientAckManager : public IClientAckManager
 	{
 		int operator&( IBinSaver &saver );
 		CAcks acks;													// очередь Ack, которые еще проигрывать
-		WORD wSoundID;											// этот звук играет
+		uint16_t wSoundID;											// этот звук играет
 		int /*EUnitAckType*/ eCurrentAck;		// этот  Ack сейчас играет
 		NTimer::STime timeRun;							// время когда можно проиграть AckPisitive
 		SUnitAck()

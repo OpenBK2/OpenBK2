@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbmpconsts.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -33,10 +35,10 @@ NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const std::string &s
 }
 
 
-void SMultiplayerTechLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMultiplayerTechLevel::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "DescriptionFileRef", (BYTE*)&szDescriptionFileRef - pThis, sizeof(szDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "DescriptionFileRef", (uint8_t*)&szDescriptionFileRef - pThis, sizeof(szDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SMultiplayerTechLevel::operator&( IXmlSaver &saver )
@@ -55,7 +57,7 @@ int SMultiplayerTechLevel::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMultiplayerTechLevel::CalcCheckSum() const
+uint32_t SMultiplayerTechLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -69,10 +71,10 @@ DWORD SMultiplayerTechLevel::CalcCheckSum() const
 
 
 
-void STechLevelReinfSet::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void STechLevelReinfSet::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (BYTE*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (uint8_t*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
 }
 
 int STechLevelReinfSet::operator&( IXmlSaver &saver )
@@ -93,7 +95,7 @@ int STechLevelReinfSet::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STechLevelReinfSet::CalcCheckSum() const
+uint32_t STechLevelReinfSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -110,11 +112,11 @@ DWORD STechLevelReinfSet::CalcCheckSum() const
 
 
 
-void SLadderRank::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SLadderRank::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Level", (BYTE*)&nLevel - pThis, sizeof(nLevel), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Level", (uint8_t*)&nLevel - pThis, sizeof(nLevel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SLadderRank::operator&( IXmlSaver &saver )
@@ -135,7 +137,7 @@ int SLadderRank::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SLadderRank::CalcCheckSum() const
+uint32_t SLadderRank::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -152,12 +154,12 @@ DWORD SLadderRank::CalcCheckSum() const
 
 
 
-void SMultiplayerSide::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMultiplayerSide::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "PartyInfo", (BYTE*)&pPartyInfo - pThis, sizeof(pPartyInfo), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ListItemIcon", (BYTE*)&pListItemIcon - pThis, sizeof(pListItemIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "HistoricalSide", (BYTE*)&eHistoricalSide - pThis, sizeof(eHistoricalSide), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "PartyInfo", (uint8_t*)&pPartyInfo - pThis, sizeof(pPartyInfo), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ListItemIcon", (uint8_t*)&pListItemIcon - pThis, sizeof(pListItemIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "HistoricalSide", (uint8_t*)&eHistoricalSide - pThis, sizeof(eHistoricalSide), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "TechLevels", &techLevels, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "LadderRanks", &ladderRanks, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Medals", &medals, pThis );
@@ -189,7 +191,7 @@ int SMultiplayerSide::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMultiplayerSide::CalcCheckSum() const
+uint32_t SMultiplayerSide::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -206,10 +208,10 @@ DWORD SMultiplayerSide::CalcCheckSum() const
 
 
 
-void SMultiplayerConsts::SPlayerColor::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMultiplayerConsts::SPlayerColor::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (BYTE*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (uint8_t*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SMultiplayerConsts::SPlayerColor::operator&( IXmlSaver &saver )
@@ -228,7 +230,7 @@ int SMultiplayerConsts::SPlayerColor::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMultiplayerConsts::SPlayerColor::CalcCheckSum() const
+uint32_t SMultiplayerConsts::SPlayerColor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -249,16 +251,16 @@ void SMultiplayerConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MultiplayerConsts", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "TechLevels", &techLevels, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Sides", &sides, pThis );
-	NMetaInfo::ReportMetaInfo( "RandomCountryIcon", (BYTE*)&pRandomCountryIcon - pThis, sizeof(pRandomCountryIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "RandomCountryIcon", (uint8_t*)&pRandomCountryIcon - pThis, sizeof(pRandomCountryIcon), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "DiplomacyInfo", &diplomacyInfo, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "expLevels", &expLevels, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "PlayerColorInfos", &playerColorInfos, pThis );
 	NMetaInfo::ReportStructMetaInfo( "ReinfCounterRecycle", &vReinfCounterRecycle, pThis ); 
-	NMetaInfo::ReportMetaInfo( "TimeUserMPPause", (BYTE*)&nTimeUserMPPause - pThis, sizeof(nTimeUserMPPause), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TimeUserMPLag", (BYTE*)&nTimeUserMPLag - pThis, sizeof(nTimeUserMPLag), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeUserMPPause", (uint8_t*)&nTimeUserMPPause - pThis, sizeof(nTimeUserMPPause), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeUserMPLag", (uint8_t*)&nTimeUserMPLag - pThis, sizeof(nTimeUserMPLag), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -293,7 +295,7 @@ int SMultiplayerConsts::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMultiplayerConsts::CalcCheckSum() const
+uint32_t SMultiplayerConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

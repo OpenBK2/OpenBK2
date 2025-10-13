@@ -6,6 +6,8 @@
 #include "MapEditorLib/Tools_IndexCollector.h"
 #include "MapEditorLib/Tools_FreeIDCollector.h"
 
+#include <cstdint>
+
 //
 //
 //	SCRIPT AREA STATE
@@ -83,7 +85,7 @@ public:
 	virtual void RemovePolygon( int nPolygonID );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	void PostDraw( CPaintDC *pPaintDC );

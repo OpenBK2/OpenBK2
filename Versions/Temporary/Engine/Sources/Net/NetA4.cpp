@@ -4,6 +4,7 @@
 #include "System/Time.h"
 #include "NetA4.h"
 
+#include <cstdint>
 
 // for testing
 
@@ -134,7 +135,7 @@ static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 // **
 // ************************************************************************************************************************ //
 
-static DWORD WINAPI TheThreadProc( LPVOID lpParameter )
+static unsigned long WINAPI TheThreadProc( LPVOID lpParameter )
 {
 	CNetDriver *pNet = reinterpret_cast<CNetDriver*>(lpParameter);
 	// run finction
@@ -262,7 +263,7 @@ void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort
 	bReceiveNow = false;
 #endif // __TEST_LAGS__
 
-	DWORD dwThreadId;
+	unsigned long dwThreadId;
 	ResetEvent( hStopCommand );
 	ResetEvent( hThreadReport );
 	hThread = CreateThread( 0, 1024*1024, TheThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );

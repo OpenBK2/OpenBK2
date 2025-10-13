@@ -4,6 +4,8 @@
 
 #include "Type.h"
 
+#include <cstdint>
+
 namespace NFile
 {
 	class CFilePath;
@@ -64,38 +66,38 @@ inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * )
 // ************************************************************************************************************************ //
 
 template <class TYPE>
-	inline void ReportStructMetaInfo( const std::string &_szName, const TYPE *pField, BYTE *pThis )
+	inline void ReportStructMetaInfo( const std::string &_szName, const TYPE *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
 	pField->ReportMetaInfo( szName, pThis );
 }
 
 template <>
-	inline void ReportStructMetaInfo<CVec2>( const std::string &_szName, const CVec2 *pField, BYTE *pThis )
+	inline void ReportStructMetaInfo<CVec2>( const std::string &_szName, const CVec2 *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
-	NMetaInfo::ReportMetaInfo( szName + "x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <>
-	inline void ReportStructMetaInfo<CVec3>( const std::string &_szName, const CVec3 *pField, BYTE *pThis )
+	inline void ReportStructMetaInfo<CVec3>( const std::string &_szName, const CVec3 *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
-	NMetaInfo::ReportMetaInfo( szName + "x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "z", (BYTE*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "z", (uint8_t*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <>
-	inline void ReportStructMetaInfo<CVec4>( const std::string &_szName, const CVec4 *pField, BYTE *pThis )
+	inline void ReportStructMetaInfo<CVec4>( const std::string &_szName, const CVec4 *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
-	NMetaInfo::ReportMetaInfo( szName + "x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "z", (BYTE*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "w", (BYTE*)&pField->w - pThis, sizeof(pField->w), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "z", (uint8_t*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "w", (uint8_t*)&pField->w - pThis, sizeof(pField->w), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <>
-	inline void ReportStructMetaInfo<CQuat>( const std::string &szName, const CQuat *pField, BYTE *pThis )
+	inline void ReportStructMetaInfo<CQuat>( const std::string &szName, const CQuat *pField, uint8_t *pThis )
 {
 	ReportStructMetaInfo( szName, &(pField->GetInternalVector()), pThis );
 }
@@ -109,45 +111,45 @@ template <>
 // ************************************************************************************************************************ //
 
 template <class TYPE>
-inline void ReportFirstParamPairElement( const std::string &_szName, const TYPE *pField, BYTE *pThis )
+inline void ReportFirstParamPairElement( const std::string &_szName, const TYPE *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( _szName, (BYTE*)pField - pThis, sizeof(*pField), GetSimpleTypeDef( (TYPE*)0 ) );
+	NMetaInfo::ReportMetaInfo( _szName, (uint8_t*)pField - pThis, sizeof(*pField), GetSimpleTypeDef( (TYPE*)0 ) );
 }
 template <>
-inline void ReportFirstParamPairElement<CVec2>( const std::string &_szName, const CVec2 *pField, BYTE *pThis )
+inline void ReportFirstParamPairElement<CVec2>( const std::string &_szName, const CVec2 *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( _szName + ".x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( _szName + ".y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( _szName + ".x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( _szName + ".y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <>
-inline void ReportFirstParamPairElement<CVec3>( const std::string &_szName, const CVec3 *pField, BYTE *pThis )
+inline void ReportFirstParamPairElement<CVec3>( const std::string &_szName, const CVec3 *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( _szName + ".x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( _szName + ".y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( _szName + ".z", (BYTE*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( _szName + ".x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( _szName + ".y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( _szName + ".z", (uint8_t*)&pField->z - pThis, sizeof(pField->z), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <class TYPE, template <class T1> class TParam>
-inline void ReportStructMetaInfo( const std::string &_szName, const TParam<TYPE> *pField, BYTE *pThis )
+inline void ReportStructMetaInfo( const std::string &_szName, const TParam<TYPE> *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
 	ReportFirstParamPairElement( szName + "First", &pField->first, pThis );
-	NMetaInfo::ReportMetaInfo( szName + "Second", (BYTE*)&pField->second - pThis, sizeof(pField->second), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szName + "Second", (uint8_t*)&pField->second - pThis, sizeof(pField->second), NTypeDef::TYPE_TYPE_BOOL );
 }
 template <>
-inline void ReportStructMetaInfo<float, CTPoint>( const std::string &_szName, const CTPoint<float> *pField, BYTE *pThis )
+inline void ReportStructMetaInfo<float, CTPoint>( const std::string &_szName, const CTPoint<float> *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
-	NMetaInfo::ReportMetaInfo( szName + "x", (BYTE*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y", (BYTE*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x", (uint8_t*)&pField->x - pThis, sizeof(pField->x), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y", (uint8_t*)&pField->y - pThis, sizeof(pField->y), NTypeDef::TYPE_TYPE_FLOAT );
 }
 template <>
-inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, const CTRect<float> *pField, BYTE *pThis )
+inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, const CTRect<float> *pField, uint8_t *pThis )
 {
 	const std::string szName = _szName.empty() ? _szName : _szName + ".";
-	NMetaInfo::ReportMetaInfo( szName + "x1", (BYTE*)&pField->x1 - pThis, sizeof(pField->x1), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y1", (BYTE*)&pField->y1 - pThis, sizeof(pField->y1), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "x2", (BYTE*)&pField->x2 - pThis, sizeof(pField->x2), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szName + "y2", (BYTE*)&pField->y2 - pThis, sizeof(pField->y2), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x1", (uint8_t*)&pField->x1 - pThis, sizeof(pField->x1), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y1", (uint8_t*)&pField->y1 - pThis, sizeof(pField->y1), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "x2", (uint8_t*)&pField->x2 - pThis, sizeof(pField->x2), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szName + "y2", (uint8_t*)&pField->y2 - pThis, sizeof(pField->y2), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 // ************************************************************************************************************************ //
@@ -159,11 +161,11 @@ inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, con
 // ************************************************************************************************************************ //
 
 //template <>
-//inline void ReportStructMetaInfo<int, CArray2D>( const string &_szName, const CArray2D<int> *pField, BYTE *pThis )
+//inline void ReportStructMetaInfo<int, CArray2D>( const string &_szName, const CArray2D<int> *pField, uint8_t *pThis )
 //{	
 //}
 //template <>
-//inline void ReportStructMetaInfo<BYTE, CArray2D>( const string &_szName, const CArray2D<BYTE> *pField, BYTE *pThis )
+//inline void ReportStructMetaInfo<uint8_t, CArray2D>( const string &_szName, const CArray2D<uint8_t> *pField, uint8_t *pThis )
 //{
 //}
 
@@ -176,19 +178,19 @@ inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, con
 // ************************************************************************************************************************ //
 
 template <class TYPE>
-	inline void ReportStructArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, BYTE *pThis )
+	inline void ReportStructArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( szName, (BYTE*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY, 
+	NMetaInfo::ReportMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY,
 		                         sizeof(TYPE), NTypeDef::TYPE_TYPE_STRUCT );
 	TYPE temp;
-	ReportStructMetaInfo( "", &temp, (BYTE*)&temp );
+	ReportStructMetaInfo( "", &temp, (uint8_t*)&temp );
 	FinishMetaInfoReport();
 }
 
 template <class TYPE>
-	inline void ReportSimpleArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, BYTE *pThis )
+	inline void ReportSimpleArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( szName, (BYTE*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY, 
+	NMetaInfo::ReportMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY,
 		sizeof(TYPE), GetSimpleTypeDef( (TYPE*)0 ) );
 }
 

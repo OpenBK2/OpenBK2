@@ -2,7 +2,10 @@
 
 #include "Common_RTS_AI/Terrain.h"
 #include "Misc/AreaMap.h"
+
 #include <float.h>
+
+#include <cstdint>
 
 class CExistingObject;
 class CStaticObject;
@@ -126,21 +129,21 @@ public:
 	void AddObstacle( struct IObstacle *pObstacle );
 	void RemoveObstacle( struct IObstacle *pObstacle );
 	
-	class CStaticObject* AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nDiplomacy, const int nFrameIndex );
+	class CStaticObject* AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex );
 	void AddStaticObject( class CExistingObject* pObj, bool bAlreadyLocked );
-	class CStaticObject* AddNewStaticObject( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex );
-	class CStaticObject* AddNewTerraObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex );
-	class CStaticObject* AddNewTerraMeshObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex );
-	class CStaticObject* AddNewBuilding( const SBuildingRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex, int nPlayer, int nLinkID );
+	class CStaticObject* AddNewStaticObject( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex );
+	class CStaticObject* AddNewTerraObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex );
+	class CStaticObject* AddNewTerraMeshObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex );
+	class CStaticObject* AddNewBuilding( const SBuildingRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex, int nPlayer, int nLinkID );
 	void AddStorage( class CBuilding *pObj );
-	class CStaticObject* AddNewEntrencmentPart( const SEntrenchmentRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD dir, const int nFrameIndex, int nPlayer, bool bPlayerCreates );
+	class CStaticObject* AddNewEntrencmentPart( const SEntrenchmentRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t dir, const int nFrameIndex, int nPlayer, bool bPlayerCreates );
 	void AddEntrencmentPart(  class CEntrenchmentPart *pObj, bool bLockedAlready );
 	class CStaticObject* AddNewEntrencment( CObjectBase** segments, const int nLen, class CFullEntrenchment *pFullEntrenchment, const bool bPiecewise = false );
-	class CStaticObject* AddNewBridgeSpan( const SBridgeRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD ir, const int nFrameIndex );
+	class CStaticObject* AddNewBridgeSpan( const SBridgeRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t ir, const int nFrameIndex );
 	class CStaticObject* AddNewSmokeScreen( const CVec3 &vCenter, const float fR, const int nTransparency, const int nTime );
 
 	class CMineStaticObject* AddNewMine( const SMineRPGStats *pStats, const float fHPFactor, const CVec3 &center, const int nFrameIndex, const int player );
-	class CExistingObject* AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner );
+	class CExistingObject* AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const uint16_t dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner );
 	void GetNewStaticObjects( struct SNewUnitInfo **pObjects, int *pnLen );
 	void GetDeletedStaticObjects( CObjectBase ***pObjects, int *pnLen );
 

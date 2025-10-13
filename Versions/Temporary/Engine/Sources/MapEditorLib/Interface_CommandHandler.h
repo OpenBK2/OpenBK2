@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define INVALID_COMMAND_ID (0xFFffFFff)
 #define INVALID_COMMAND_HANDLER_ID (0xFFffFFff)
 
@@ -9,7 +11,7 @@ struct ICommandHandler
 	virtual ~ICommandHandler() {}
 	//
 	// Обработать команду от User Interface, если вернули false, то команда не обработана
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData ) = 0;
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData ) = 0;
 	// Можно ли сейчас обрабатывать команду? Если вернули false, то команда не обработана
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
@@ -34,11 +36,11 @@ struct ICommandHandlerContainer : public CObjectBase
 	// Получить обработчик команды 
 	virtual ICommandHandler* Get( UINT nType ) = 0;
 	// Передать команду на обработку, последнему зарегистрированному обработчику
-	virtual bool HandleCommand( UINT nType, UINT nCommandID, DWORD dwData ) = 0;
+	virtual bool HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData ) = 0;
 	// Проверить возможность обработки команды у последнего зарегистрированного обработчика
 	virtual bool UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 	// Передать команду на обработку, обработчик получить из ранее зарегистрированных
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData ) = 0;
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData ) = 0;
 	// Проверить возможность обработки команды, обработчик получить из ранее зарегистрированных
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };

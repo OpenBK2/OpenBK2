@@ -1,7 +1,8 @@
 #pragma once
 
-// automatically generated file, don't change manually!
+#include <cstdint>
 
+// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 
@@ -26,7 +27,7 @@ namespace NDb
 		struct SSoundStats
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SSoundDesc > pPathName;
 			float fMinDist;
@@ -42,11 +43,11 @@ namespace NDb
 				esoundType( NORMAL )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		std::vector< SSoundStats > sounds;
 		bool bLooped;
@@ -63,7 +64,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

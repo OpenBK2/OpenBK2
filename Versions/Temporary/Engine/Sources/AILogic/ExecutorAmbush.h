@@ -1,5 +1,8 @@
 #pragma once
+
 #include "ExecutorUnitCombatBonus.h"
+
+#include <cstdint>
 
 class CExecutorAmbush : public CExecutorUnitCombatBonus
 {
@@ -7,7 +10,7 @@ class CExecutorAmbush : public CExecutorUnitCombatBonus
 
 protected:
 
-	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const WORD oldModeFlags, const WORD newModeFlags );
+	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags );
 
 public:
 	CExecutorAmbush( CAIUnit *_pUnit );

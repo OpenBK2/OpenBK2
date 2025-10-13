@@ -7,6 +7,8 @@
 
 #include "Stats_B2_M1/M1UnitType.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NMapInfoEditor
@@ -92,7 +94,7 @@ namespace NMapInfoEditor
 				bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.nPlayer ), pManipulator, szObjectPrefix + ".Player" );
 				bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.fHP ), pManipulator, szObjectPrefix + ".HP" );
 				bResult = bResult && CManipulatorManager::GetVec3<CVec3, float>( &vPosition, pManipulator, szObjectPrefix + ".Pos" );
-				WORD wDirection = 0;
+				uint16_t wDirection = 0;
 				bResult = bResult && CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 				fDirection = AI2VisRad( wDirection );
 				bResult = bResult && CManipulatorManager::GetValue( &nLinkID, pManipulator, szObjectPrefix + ".Link.LinkID" );

@@ -1,11 +1,11 @@
-#if !defined( __UNIT_START_CMD_WINDOW__ )
-#define __UNIT_START_CMD_WINDOW__
 #pragma once
 
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "StringResources.h"
+
+#include <cstdint>
 
 //
 //
@@ -101,7 +101,7 @@ public:
 	virtual BOOL OnInitDialog();
 	//
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	DECLARE_MESSAGE_MAP()
@@ -113,6 +113,3 @@ public:
 	afx_msg void OnLvnItemchangedListUnitCmd(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMDblclkListUnitCmd(NMHDR *pNMHDR, LRESULT *pResult);
 };
-
-#endif // #if !defined( __SCRIPT_AREA_WINDOW__ )
-

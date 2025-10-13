@@ -4,6 +4,7 @@
 #include "MapEditorLib/MaskManipulator.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
 
 class CMapInfoEditor;
 class CMapInfoState : public CMultiInputState, public ICommandHandler
@@ -99,7 +100,7 @@ public:
 
 	void CancelSelection();
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

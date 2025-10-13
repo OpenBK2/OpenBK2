@@ -5,6 +5,8 @@
 #include "AIGeometry.h"
 #include "StaticObject.h"
 
+#include <cstdint>
+
 extern CGlobalWarFog theWarFog;
 
 bool CheckObstacles( const bool bIgnoreObstacles, const SVector &curTile, const SVector &targetTile )
@@ -53,7 +55,7 @@ bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
 		return false;
 
-	const WORD wCurDir = GetDirectionByVector( (curTile - targetTile).ToCVec2() );
+	const uint16_t wCurDir = GetDirectionByVector( (curTile - targetTile).ToCVec2() );
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
 	const bool bRet =	

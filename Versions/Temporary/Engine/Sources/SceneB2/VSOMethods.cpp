@@ -2,6 +2,8 @@
 
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 extern bool g_bDontUpdateRoads;
 
 void CTerraGen::CollectAllCragsAndRiversInArea( std::vector<int> *pColCrags, std::vector<int> *pColRivers,
@@ -103,7 +105,7 @@ void CTerraGen::ConvertVSOPointsFromAIToVisAndPutOnTerrain( std::vector<NDb::SVS
 }
 
 
-void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, DWORD dwUpdateFlags )
+void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, uint32_t dwUpdateFlags )
 {
 	static std::vector<int> updatedCrags( 128 );
 	static std::vector<int> updatedRivers( 128 );

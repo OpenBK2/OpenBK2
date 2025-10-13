@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "3DLib/Bound.h"
 #include "aiObject.h"
+
+#include <cstdint>
+
 //#include "PrecalcSpheres.h"
 
 namespace NAI
@@ -26,7 +29,7 @@ inline void CountEdge( vector<int> *pRes, int n )
 
 int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount, vector<STriangle> *pTris)
 {
-	WORD i1, i2, i3;
+	uint16_t i1, i2, i3;
 	if ( t.i1 & 0x8000 )
 	{
 		i1 = edges[ t.i1 & 0x7fff ].wFinish; 
@@ -137,7 +140,7 @@ void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
 	pRes->resize( mesh.size() );
 	for ( int i = 0; i < mesh.size(); ++i )
 	{
-		WORD i1, i2, i3;
+		uint16_t i1, i2, i3;
 		const STriangle &t = mesh[i];
 		if ( t.i1 & 0x8000 )
 		{
@@ -158,7 +161,7 @@ void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
 	}
 }
 
-WORD CEdgesInfo::InsertEdge( WORD i1, WORD i2, const vector<CVec3> &pts )
+uint16_t CEdgesInfo::InsertEdge( uint16_t i1, uint16_t i2, const vector<CVec3> &pts )
 {
 	for ( int i = 0; i < edges.size(); i++ )
 	{
@@ -167,7 +170,7 @@ WORD CEdgesInfo::InsertEdge( WORD i1, WORD i2, const vector<CVec3> &pts )
 		if ( edges[i].wStart == i2 && edges[i].wFinish == i1 )
 			return i | 0x8000;
 	}
-	WORD f = 0;
+	uint16_t f = 0;
 	SEdge edge( i1, i2 );
 	const CVec3 &p1 = pts[i1];
 	const CVec3 &p2 = pts[i2];

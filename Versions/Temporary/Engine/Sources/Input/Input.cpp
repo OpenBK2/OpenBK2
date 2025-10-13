@@ -6,7 +6,7 @@
 #include "Misc/Win32Helper.h"
 #include "Misc/StrProc.h"
 
-
+#include <cstdint>
 
 extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
 
@@ -14,7 +14,7 @@ bool bMouseDisabledDebug = false;
 static const int POV_RANGE_VALUE = 1000;
 static const int AXIS_RANGE_VALUE = 10000;
 static const int SAMPLE_BUFFER_SIZE = 1024;
-const DWORD TIME_DIFF_DBL_CLK = 500;
+const uint32_t TIME_DIFF_DBL_CLK = 500;
 // DDSSOOOO
 #define INPUT_KEYID( vID, vOFFS )								( ( ( vID & 0xFF ) << 24 ) | ( vOFFS ) )
 #define INPUT_KEYIDEX( vID, vOFFS, vSPECIAL )		( ( ( vID & 0xFF ) << 24 ) | ( ( vSPECIAL & 0xFF ) << 16 ) | ( vOFFS ) )
@@ -203,17 +203,17 @@ struct SKey
 {
 	int nAction;
 	int nDevType;
-	DWORD dwLastValue;
+	uint32_t dwLastValue;
 	EPOVAxis ePOVAxis;
 	EControlType eType;
-	DWORD dwLastPressed;
+	uint32_t dwLastPressed;
 
 	SKey(): ePOVAxis( PA_UNKNOWN ), nAction( 0 ), nDevType( 0 ), dwLastValue( 0xBAD ), eType( CT_UNKNOWN ), dwLastPressed(0) {}
 	SKey( int _nAction, int _nDevType, EControlType _eType, EPOVAxis _ePOVAxis = PA_UNKNOWN ): dwLastValue( 0xBAD ), nAction( _nAction ), nDevType( _nDevType ), eType( _eType ), ePOVAxis( _ePOVAxis ), dwLastPressed(0)  {}
 };
 struct SInputEvent
 {
-	DWORD dwSequence;
+	uint32_t dwSequence;
 	SMessage sMessage;
 };
 struct SInputDevice
@@ -222,8 +222,8 @@ struct SInputDevice
 	bool bPoll;
 	bool bNeedResync;
 	std::string szName;
-	DWORD dwDevType;
-	DWORD dwFormatSize;
+	uint32_t dwDevType;
+	uint32_t dwFormatSize;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiDevice;
 	//
 	SInputDevice(): bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pdiDevice( 0 ) {  }
@@ -246,14 +246,14 @@ struct SInputDataFormat
 	LONG  lRY;
 	LONG  lRZ;
 	LONG  lPOV;
-	BYTE  bButton[32];
+	uint8_t  bButton[32];
 };
 
 typedef std::vector<SInputEvent> CEventList;
 typedef std::vector<SInputDevice> CDevicesList;
 ///
 static std::unordered_map<std::string, int> nameIDs;
-static std::unordered_map<DWORD, SKey> actionIDs;
+static std::unordered_map<uint32_t, SKey> actionIDs;
 static std::unordered_map<int, std::string> idNames;
 ///
 static int nCounter[4] = { 0, 0, 0, 0 };
@@ -273,7 +273,7 @@ static bool SetCoopLevel();
 static bool SetFocus( bool bFocus );
 static void ReleaseKeyboardState();
 static void ResyncDevice( const SInputDevice &sDevice );
-static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize );
+static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize );
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice );
 static void AddDeviceKeys( int nID, int nDevType );
 static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext );
@@ -449,7 +449,7 @@ static void FillEventInfo( SInputEvent &sEvent, SKey &sKey, const DIDEVICEOBJECT
 	sKey.dwLastValue = did.dwData;
 }
 
-static DWORD dwPrevPump;
+static uint32_t dwPrevPump;
 void PumpMessages( bool bFocus )
 {
 	HRESULT hRes;
@@ -463,7 +463,7 @@ void PumpMessages( bool bFocus )
 	if ( !bFocusCaptured )
 		return;
 
-	DWORD dwTest = GetTickCount();
+	uint32_t dwTest = GetTickCount();
 	if ( dwTest - dwPrevPump < 1 )
 		return;
 	dwPrevPump = dwTest;
@@ -472,7 +472,7 @@ void PumpMessages( bool bFocus )
 	events.resize( SAMPLE_BUFFER_SIZE * devices.size() * 2 );
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
-		DWORD dwElements = SAMPLE_BUFFER_SIZE;
+		unsigned long dwElements = SAMPLE_BUFFER_SIZE;
 		DIDEVICEOBJECTDATA didObjects[SAMPLE_BUFFER_SIZE];
 
 		if ( iTempDevice->bPoll )
@@ -583,27 +583,27 @@ void PumpMessages( bool bFocus )
 
 static void ResyncDevice( const SInputDevice &sDevice )
 {
-	std::vector<BYTE> sBuffer;
+	std::vector<uint8_t> sBuffer;
 	sBuffer.resize( sDevice.dwFormatSize );
 
 	sDevice.pdiDevice->GetDeviceState( sDevice.dwFormatSize, &( sBuffer[0] ) );
 
-	for ( std::unordered_map<DWORD, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); iTemp++ )
+	for ( std::unordered_map<uint32_t, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); iTemp++ )
 	{
 		SKey &sKey = iTemp->second;
 		if ( sKey.nDevType == GET_DIDEVICE_TYPE( sDevice.dwDevType ) )
 		{
-			DWORD dwData = 0;
+			uint32_t dwData = 0;
 			if ( sKey.eType == CT_KEY && ( sKey.nAction & DIK_DBLCLK_MODIFIER ) )
 				dwData = 0;
 			else
 			{
-				BYTE *pData = &( sBuffer[INPUT_GETACTIONOFFS( sKey.nAction )] );
+				uint8_t *pData = &( sBuffer[INPUT_GETACTIONOFFS( sKey.nAction )] );
 
 				if ( sKey.eType == CT_KEY )
-					dwData = *(BYTE*)pData;
+					dwData = *(uint8_t*)pData;
 				else
-					dwData = *(DWORD*)pData;
+					dwData = *(uint32_t*)pData;
 			}
 
 			if ( sKey.dwLastValue == dwData )
@@ -803,8 +803,8 @@ static bool SetFocus( bool bFocus )
 static void ReleaseKeyboardState()
 {
 	DebugTrace("Release keyboard state");
-	const DWORD dwTime = GetTickCount();
-	for ( std::unordered_map<DWORD, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); ++iTemp )
+	const uint32_t dwTime = GetTickCount();
+	for ( std::unordered_map<uint32_t, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); ++iTemp )
 	{
 		SKey &sKey = iTemp->second;
 		if ( sKey.nDevType != DI8DEVTYPE_KEYBOARD || sKey.eType != CT_KEY )
@@ -827,7 +827,7 @@ static void ReleaseKeyboardState()
 }
 
 // добавить информацию про девайс
-static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize )
+static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize )
 {
 	HRESULT hRes;
 	DIDEVCAPS didCaps;

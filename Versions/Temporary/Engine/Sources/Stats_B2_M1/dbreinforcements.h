@@ -2,10 +2,11 @@
 
 #include "Stats_B2_M1_export.h"
 
-
 // automatically generated file, don't change manually!
 
 #include "RPGStats.h"
+
+#include <cstdint>
 
 struct IXmlSaver;
 
@@ -15,7 +16,7 @@ namespace NDb
 	struct SIntArray
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< int > data;
 
@@ -23,17 +24,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SReinforcementGroupInfoEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nGroupID;
 		SIntArray groupsVector;
@@ -43,17 +44,17 @@ namespace NDb
 			nGroupID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SReinforcementGroupInfo
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< SReinforcementGroupInfoEntry > infos;
 
@@ -63,17 +64,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SReinforcementMaskEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nDirection;
 		CVec2 vPosition;
@@ -84,17 +85,17 @@ namespace NDb
 			vPosition( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SReinforcementMask
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< SReinforcementMaskEntry > positions;
 
@@ -102,17 +103,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SReinforcementDefinition
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMechUnitRPGStats > pMechUnit;
 		CDBPtr< SSquadRPGStats > pSquad;
@@ -128,17 +129,17 @@ namespace NDb
 			eType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct STATS_B2_M1_EXPORT STypedDeployTemplate
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		EReinforcementType eType;
 		CDBPtr< SDeployTemplate > pTemplate;
@@ -148,17 +149,17 @@ namespace NDb
 			eType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct STATS_B2_M1_EXPORT SReinforcementPosition
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CVec2 vPosition;
 		CVec2 vAviationPosition;
@@ -183,17 +184,17 @@ namespace NDb
 			nPositionID( 1 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SScriptReinforcementEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SReinforcement > pReinforcement;
 		std::string szName;
@@ -202,17 +203,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SPlayerReinforcementEnable
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		SReinforcementPosition newPointOnEnable;
 		EReinforcementType eReinforcementToEnable;
@@ -226,11 +227,11 @@ namespace NDb
 			nGivenReinforcementPointID( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

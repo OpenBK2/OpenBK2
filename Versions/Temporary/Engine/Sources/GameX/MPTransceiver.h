@@ -1,10 +1,11 @@
 #pragma once
 
-
 #include "Transceiver.h"
 #include "Misc/2Darray.h"
 #include "Server_Client_Common/PacketProcessor.h"
 #include "MultiplayerNetPackets.h"
+
+#include <cstdint>
 
 struct ICommandsHistory;
 struct IServerClient;
@@ -57,9 +58,9 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	long nCommonSegment;
 	int nMyLogicID;												// номер "нашего" игрока
 	bool bCommandsFromHistory;
-	std::vector<WORD> segmFinished;
-	WORD wMask;
-	WORD wWaitMask;
+	std::vector<uint16_t> segmFinished;
+	uint16_t wMask;
+	uint16_t wWaitMask;
 	typedef std::list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
 	CArray2D<CAILogicCommandsList> cmds;
 
@@ -118,7 +119,7 @@ private:
 
 	void CheckRunGame();
 	void LeaveOutOfSync();
-	void ReportLags( DWORD dwLaggers, bool bInitial );
+	void ReportLags( uint32_t dwLaggers, bool bInitial );
 	bool IsPlayerPresent( int nPlayer ) const;
 	bool IsPlayerWaitedFor( int nPlayer ) const;
 	int GetSegmentToExecute( const int nSegment ) const;

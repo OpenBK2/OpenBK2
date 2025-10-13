@@ -31,6 +31,8 @@
 
 #include "libdb/Db.h"
 
+#include <cstdint>
+
 IMPLEMENT_DYNAMIC(CMainFrame, SECWorkbook)
 
 
@@ -162,7 +164,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 		VERIFY( pToolBarMgr->LoadToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[0] ),
 																							MAKEINTRESOURCE( TOOLBAR_ID[0] ) ) );
 		//нулевой элемент пропускаем
-		for ( DWORD nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
+		for ( uint32_t nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 		{
 			VERIFY( pToolBarMgr->AddToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ),
 																							MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ) ) );
@@ -180,7 +182,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 																			 true,
 																			 TOOLBAR_SHOW[0] );
 		//нулевой элемент пропускаем
-		for ( DWORD nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
+		for ( uint32_t nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 		{
 			strToolbarName.LoadString( TOOLBAR_NAME_ID[nElementIndex] );
 			pToolBarMgr->DefineDefaultToolBar( TOOLBAR_CONTROL_ID[nElementIndex],
@@ -202,7 +204,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 		return -1;
 	}
 	//нулевой элемент пропускаем
-	for ( DWORD nElementIndex = 1; nElementIndex < STATUSBAR_ELEMENTS; ++nElementIndex )
+	for ( uint32_t nElementIndex = 1; nElementIndex < STATUSBAR_ELEMENTS; ++nElementIndex )
 	{
 		const int nPaneIndex = wndStatusBar.CommandToIndex( STATUSBAR_INDICATORS_ID[nElementIndex] );
 		wndStatusBar.SetPaneInfo( nPaneIndex,
@@ -217,8 +219,8 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//
 	UINT nDWID = 0;
 	CString strDWName;
-	const DWORD dwDWStyle = WS_CHILD | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
-	const DWORD dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
+	const uint32_t dwDWStyle = WS_CHILD | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
+	const uint32_t dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
 	//	
 	//
 	nDWID = SECControlBar::GetUniqueBarID( this, ID_DW_LOG_WINDOW );
@@ -536,7 +538,7 @@ void CMainFrame::OpenResource( const string &rszResourceName )
 						CStringManager::AddToRecentList( szName, bMainObject );
 						//
 						IView *pView = 0;
-						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 						if ( pView != 0 )
 						{
 							pView->SetViewManipulator( pObjectManipulator, objectSet, string() );
@@ -677,8 +679,8 @@ void CMainFrame::OnDWGDBBrowserNew()
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 		//	
-		const DWORD dwDWStyle = WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
-		const DWORD dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
+		const uint32_t dwDWStyle = WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
+		const uint32_t dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
 		const int nUniqueBarID = SECControlBar::GetUniqueBarID( this, ID_DW_GDB_BROWSER );
 		CString strDWName;
 		strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
@@ -891,7 +893,7 @@ void CMainFrame::OnToolsCustomize()
 	cmdPage.SetManager( dynamic_cast<SECToolBarManager*>( m_pControlBarManager ) );
 	
 	CString strToolbarName;
-	for ( DWORD nElementIndex = 0; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
+	for ( uint32_t nElementIndex = 0; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 	{
 		strToolbarName.LoadString( TOOLBAR_NAME_ID[nElementIndex] );
 		cmdPage.DefineBtnGroup( strToolbarName,
@@ -902,7 +904,7 @@ void CMainFrame::OnToolsCustomize()
 	CEditorApp *pApp = dynamic_cast<CEditorApp *>( AfxGetApp() );
 	CCursomToolBarInfoList cursomToolBarInfoList;
 	pApp->GetCursomToolBarsInfo( &cursomToolBarInfoList );
-	for ( DWORD nElementIndex = 0; nElementIndex < cursomToolBarInfoList.size(); ++nElementIndex )
+	for ( uint32_t nElementIndex = 0; nElementIndex < cursomToolBarInfoList.size(); ++nElementIndex )
 	{
 		cmdPage.DefineBtnGroup( cursomToolBarInfoList[nElementIndex].strName,
 														cursomToolBarInfoList[nElementIndex].nCount,
@@ -1029,8 +1031,8 @@ SECControlBar* CMainFrame::CreateControlBar( UINT *pnID,
 {
 	NI_ASSERT( pnID != 0, "CMainFrame::CreateControlBar() pnID == 0" );
 
-	DWORD dwDWStyle = WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
-	DWORD dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
+	uint32_t dwDWStyle = WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
+	uint32_t dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
 	//	
 	( *pnID ) = SECControlBar::GetUniqueBarID( this, ( *pnID ) );
 	CDefaultDockingWindow *pwndDefaultDockingWindow = new CDefaultDockingWindow();
@@ -1194,7 +1196,7 @@ void CMainFrame::CreateToolBar( UINT *pnID,
 																const CString &rstrTitle,
 																const UINT nButtonCount,
 																const UINT* pButtonIDMap,
-																const DWORD dwAlignment,
+																const uint32_t dwAlignment,
 																const UINT nStyle,
 																const bool bDocked,
 																const bool bVisible,
@@ -1558,7 +1560,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 }
 
 
-bool CMainFrame::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMainFrame::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

@@ -1,9 +1,10 @@
-
 #pragma once
 
 #include "StatesFactory.h"
 #include "UnitStates.h"
 #include "DamageToEnemyUpdater.h"
+
+#include <cstdint>
 
 class CAIUnit;
 class CBuilding;
@@ -494,7 +495,7 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 	bool bGroundCrash;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,&eState); f.Add(3,&deadZone); f.Add(4,&fHeight); f.Add(5,&bFatality); f.Add(6,&bExplodeInstantly); f.Add(7,&timeStart); f.Add(8,&bGroundCrash); return 0; }
 	void InitPathToNearestPoint();
-	float CalcPath( const WORD wCurDir, const BYTE nDesiredDir, const bool bRight, const float fTurnRadius, CVec2 *vDestPoint );
+	float CalcPath( const uint16_t wCurDir, const uint8_t nDesiredDir, const bool bRight, const float fTurnRadius, CVec2 *vDestPoint );
 public:
 
 	CPlaneFlyDeadState () { }

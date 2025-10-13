@@ -6,6 +6,9 @@
 //#include "..\System\BasicChunk.h"
 #include "Input/Bind.h"
 #include "Input/BindInternal.h"
+
+#include <cstdint>
+
 using namespace NStr;
 
 namespace NInput
@@ -29,7 +32,7 @@ TCommandsMap& GetCommands()
 	return commandsMap;
 }
 
-static void Update( DWORD dwTime );
+static void Update( uint32_t dwTime );
 static void ProcessMessage( const NInput::SMessage &mMsg );
 static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &cCommand );
 static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB );
@@ -412,7 +415,7 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 //
 
 //! Update all commands
-static void Update( DWORD dwTime )
+static void Update( uint32_t dwTime )
 {
 	TCommandsMap &sCommands = GetCommands();
 	

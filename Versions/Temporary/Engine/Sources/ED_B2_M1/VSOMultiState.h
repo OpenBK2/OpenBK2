@@ -8,6 +8,8 @@
 #include "LakeState.h"
 #include "CoastState.h"
 
+#include <cstdint>
+
 //Mapinfo object state edit parameters
 #define MIVSOSEP_POINT_NUMBER	0x00000001
 #define MIVSOSEP_STATS_TYPE		0x00000002
@@ -139,7 +141,7 @@ public:
 	bool PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

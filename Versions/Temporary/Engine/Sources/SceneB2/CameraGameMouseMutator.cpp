@@ -4,6 +4,8 @@
 #include "System/Commands.h"
 #include "Scene.h"
 
+#include <cstdint>
+
 namespace NCamera
 {
 	static bool s_bGameCameraMousePitchInvert = false;
@@ -52,7 +54,7 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void CCameraGameMouseMutator::Recalc()
 	{
-		const DWORD currTime = GetTickCount();
+		const uint32_t currTime = GetTickCount();
 		const float fTimeDiff = GetTimeLastUpdate() < currTime ? currTime - GetTimeLastUpdate() : 0;
 		SetTimeLastUpdate( currTime );
 		CVec3 vDir;

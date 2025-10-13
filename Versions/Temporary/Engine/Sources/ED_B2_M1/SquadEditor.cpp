@@ -19,6 +19,8 @@
 #include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/AnimModes.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EDITOR_IN_DLL( SquadRPGStats, CSquadEditor )
@@ -82,7 +84,7 @@ void CSquadEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-bool CSquadEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CSquadEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	return false;
 }

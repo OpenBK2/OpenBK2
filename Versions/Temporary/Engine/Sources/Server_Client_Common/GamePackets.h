@@ -3,6 +3,8 @@
 #include "GameInfo.h"
 #include "Server_Client_Common/NetPacket.h"
 
+#include <cstdint>
+
 /** create game */
 class CCreateGamePacket : public CNetPacket
 {
@@ -226,7 +228,7 @@ class CLobbyGamesPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLobbyGamesPacket )
 public:
 	ZDATA
-		DWORD dwVersion;
+		uint32_t dwVersion;
 		bool bFullUpdate;
 		std::list<int> removed;
 		std::list<SGameInfo> added;

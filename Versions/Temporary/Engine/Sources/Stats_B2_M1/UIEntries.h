@@ -2,10 +2,11 @@
 
 #include "Stats_B2_M1_export.h"
 
-
 // automatically generated file, don't change manually!
 
 #include "System/FilePath.h"
+
+#include <cstdint>
 
 struct IXmlSaver;
 
@@ -17,7 +18,7 @@ namespace NDb
 	struct STATS_B2_M1_EXPORT SUIScreenEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SWindowScreen > pScreen;
 		std::string szType;
@@ -32,17 +33,17 @@ namespace NDb
 			bHelpNoMultiplayer( false )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SUITextEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szTextFileRef;
 		std::string szTextID;
@@ -53,17 +54,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct STATS_B2_M1_EXPORT SUITextureEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::string szTextID;
 		CDBPtr< STexture > pTexture;
@@ -72,11 +73,11 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct STextEntry : public CResource
@@ -97,7 +98,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

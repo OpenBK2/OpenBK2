@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ImagePSD.h" 
 
+#include <cstdint>
+
 enum EStreamSeek
 {
 	E_STREAM_SEEK_SET	= 0,
@@ -229,7 +231,7 @@ namespace NImage
 		return 1;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool LoadImagePSD( CArray2D<DWORD> &pRes, CDataStream *pStream )
+	bool LoadImagePSD( CArray2D<uint32_t> &pRes, CDataStream *pStream )
 	{
 		// Create PSD reader and attach it to the stream
 		CReadPSD rPS( pStream );
@@ -271,16 +273,16 @@ namespace NImage
 			PSimg2D = rPS.GetRAWimage( nChannels, nHeight, nWidth );
 		}
 
-		std::vector<DWORD> image;
+		std::vector<uint32_t> image;
 		image.resize( nSize );
 
 		for ( int i = 0; i < nSize; ++i )
 		{
-			DWORD r = PSimg2D[0][i] & 0x000000FF;
-			DWORD g = PSimg2D[1][i] & 0x000000FF;
-			DWORD b = PSimg2D[2][i] & 0x000000FF;
+			uint32_t r = PSimg2D[0][i] & 0x000000FF;
+			uint32_t g = PSimg2D[1][i] & 0x000000FF;
+			uint32_t b = PSimg2D[2][i] & 0x000000FF;
 
-			DWORD a = 0x000000FF;
+			uint32_t a = 0x000000FF;
 
 			if ( nChannels > 3 )
 			{

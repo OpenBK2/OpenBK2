@@ -30,6 +30,8 @@
 #include "DebugTools/DebugInfoManager.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 extern CWeather theWeather;
 extern CScripts *pScripts;
 extern CSupremeBeing theSupremeBeing;
@@ -1481,7 +1483,7 @@ void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 		pEnemy->UpdateTakenDamagePower( -fTakenDamage );
 	if ( pNewEnemy )
 	{
-		fTakenDamage = pOwner->GetKillSpeed( pNewEnemy, DWORD(-1) );
+		fTakenDamage = pOwner->GetKillSpeed( pNewEnemy, uint32_t(-1) );
 		pNewEnemy->UpdateTakenDamagePower( fTakenDamage );
 	}
 	pEnemy = pNewEnemy;

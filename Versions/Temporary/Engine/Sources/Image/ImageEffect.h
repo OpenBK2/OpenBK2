@@ -2,39 +2,41 @@
 
 #include "ImageColor.h"
 
+#include <cstdint>
+
 namespace NImage
 {
 
-EXTERNVAR const DWORD BLACK_COLOR;
-EXTERNVAR const DWORD WHITE_COLOR;
-EXTERNVAR const DWORD GRAY_LIGHTER_COLOR;
-EXTERNVAR const DWORD GRAY_DARKER_COLOR;
-EXTERNVAR const DWORD BASE_EMBOSS_COLOR;
+EXTERNVAR const uint32_t BLACK_COLOR;
+EXTERNVAR const uint32_t WHITE_COLOR;
+EXTERNVAR const uint32_t GRAY_LIGHTER_COLOR;
+EXTERNVAR const uint32_t GRAY_DARKER_COLOR;
+EXTERNVAR const uint32_t BASE_EMBOSS_COLOR;
 
 
-void GetImageParams( DWORD *pdwMinColor, DWORD *pdwMaxColor, DWORD *pdwAverageColor, const CArray2D<DWORD> &rImage );
-void Invert( CArray2D<DWORD> *pImage );
-void FullColor( CArray2D<DWORD> *pImage, float fRatio );
-void GammaCorrection( CArray2D<DWORD> *pImage, float fBrightness, float fContrast, float fGamma ); // [-1...1]
+void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdwAverageColor, const CArray2D<uint32_t> &rImage );
+void Invert( CArray2D<uint32_t> *pImage );
+void FullColor( CArray2D<uint32_t> *pImage, float fRatio );
+void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fContrast, float fGamma ); // [-1...1]
 //
-void ApplyFilter( CArray2D<DWORD> *pImage, const CArray2D<int> &rFilter, DWORD dwMinAlpha );
-void MarkEdge( CArray2D<DWORD> *pImage, DWORD dwEdgeColor, bool bOutside, DWORD dwMinAlpha );
-void EraseEdge( CArray2D<DWORD> *pImage, DWORD dwMinAlpha );
+void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint32_t dwMinAlpha );
+void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, uint32_t dwMinAlpha );
+void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha );
 //
-void Emboss( CArray2D<DWORD> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, DWORD dwMinAlpha );
-void Noise( CArray2D<DWORD> *pImage, const CArray2D<DWORD> &rNoise, bool bEqualize, DWORD dwMinAlpha );
+void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, uint32_t dwMinAlpha );
+void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha );
 //
-void FastAddImageByAlpha( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, DWORD dwMinAlpha );
-void FastAddImageByColor( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, DWORD dwColor, bool bInclude );
+void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha );
+void FastAddImageByColor( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwColor, bool bInclude );
 //
-void GetShadow( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, const CTPoint<int> &rShiftPoint, DWORD dwShadowColor, DWORD dwNonShadowColor, DWORD dwMinAlpha );
-void GetAlphaEmboss( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, DWORD dwMinAlpha );
+void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, uint32_t dwShadowColor, uint32_t dwNonShadowColor, uint32_t dwMinAlpha );
+void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, uint32_t dwMinAlpha );
 //
-void DrawLine( CArray2D<DWORD> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
+void DrawLine( CArray2D<uint32_t> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
 //
 //все одного размера!
 template<class TArray>
-void FastComposeImagesByAlpha( CArray2D<DWORD> *pDestImage, const TArray &rSourceImageList, DWORD dwMinAlpha )
+void FastComposeImagesByAlpha( CArray2D<uint32_t> *pDestImage, const TArray &rSourceImageList, uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	//
@@ -57,7 +59,7 @@ void FastComposeImagesByAlpha( CArray2D<DWORD> *pDestImage, const TArray &rSourc
 }
 //все одного размера!
 template<class TArray>
-void FastComposeImagesByColor( CArray2D<DWORD> *pDestImage, const TArray &rSourceImageList, DWORD dwColor, bool bInclude )
+void FastComposeImagesByColor( CArray2D<uint32_t> *pDestImage, const TArray &rSourceImageList, uint32_t dwColor, bool bInclude )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	//
@@ -162,14 +164,14 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 //функционал применяющий данный паттерн к указанной точке картинки
 struct SApplyFilterFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
 	const CArray2D<int> *pFilter;
 	int nDivider;
 	CTPoint<int> filterHalfSize; 
 
-	SApplyFilterFunctional( CArray2D<DWORD> *_pDestImage,
-													const CArray2D<DWORD> *_pSourceImage,
+	SApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
+													const CArray2D<uint32_t> *_pSourceImage,
 													const CArray2D<int> *_pFilter,
 													int _nDivider )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
@@ -194,9 +196,9 @@ struct SApplyFilterFunctional
 															nYIndex - filterHalfSize.y,
 															nXIndex + filterHalfSize.x,
 															nYIndex + filterHalfSize.y );
-		DWORD dwRed = 0;
-		DWORD dwGreen = 0;
-		DWORD dwBlue = 0;
+		uint32_t dwRed = 0;
+		uint32_t dwGreen = 0;
+		uint32_t dwBlue = 0;
 		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny;
 					nLocalYIndex <= localIndices.maxy;
 					++nFilterYIndex, ++nLocalYIndex )
@@ -206,7 +208,7 @@ struct SApplyFilterFunctional
 						++nFilterXIndex, ++nLocalXIndex )
 			{
 				int nValue = ( *pFilter )[nFilterYIndex][nFilterXIndex];
-				const DWORD dwColor = ( *pSourceImage )[nLocalYIndex][nLocalXIndex];
+				const uint32_t dwColor = ( *pSourceImage )[nLocalYIndex][nLocalXIndex];
 				dwRed += GetRedFromARGBColor( dwColor ) * nValue;
 				dwGreen += GetGreenFromARGBColor( dwColor ) * nValue;
 				dwBlue += GetBlueFromARGBColor( dwColor ) * nValue;
@@ -216,7 +218,7 @@ struct SApplyFilterFunctional
 		dwGreen = Clamp<int>( dwGreen / nDivider, 0, 0xFF );
 		dwBlue = Clamp<int>( dwBlue / nDivider, 0, 0xFF );
 		//
-		DWORD dwDestColor = MakeARGBColor<DWORD>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
+		uint32_t dwDestColor = MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
 																							dwRed, dwGreen, dwBlue );
 		( *pDestImage )[nYIndex][nXIndex] = dwDestColor;
 	}
@@ -227,15 +229,15 @@ struct SApplyFilterFunctional
 // WBC = with bounds check
 struct SWBCApplyFilterFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
 	const CArray2D<int> *pFilter;
 	int nDivider;
 	CTPoint<int> size; 
 	CTPoint<int> filterHalfSize; 
 
-	SWBCApplyFilterFunctional( CArray2D<DWORD> *_pDestImage,
-														 const CArray2D<DWORD> *_pSourceImage,
+	SWBCApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
+														 const CArray2D<uint32_t> *_pSourceImage,
 														 const CArray2D<int> *_pFilter,
 														 int _nDivider )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
@@ -262,9 +264,9 @@ struct SWBCApplyFilterFunctional
 															nYIndex - filterHalfSize.y,
 															nXIndex + filterHalfSize.x,
 															nYIndex + filterHalfSize.y );
-		DWORD dwRed = 0;
-		DWORD dwGreen = 0;
-		DWORD dwBlue = 0;
+		uint32_t dwRed = 0;
+		uint32_t dwGreen = 0;
+		uint32_t dwBlue = 0;
 		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny;
 					nLocalYIndex <= localIndices.maxy;
 					++nFilterYIndex, ++nLocalYIndex )
@@ -278,7 +280,7 @@ struct SWBCApplyFilterFunctional
 				const int nYPos = Clamp<int>( nLocalYIndex, 0, size.y - 1 );
 				//
 				int nValue = ( *pFilter )[nFilterYIndex][nFilterXIndex];
-				const DWORD dwColor = ( *pSourceImage )[nYPos][nXPos];
+				const uint32_t dwColor = ( *pSourceImage )[nYPos][nXPos];
 				dwRed += GetRedFromARGBColor( dwColor ) * nValue;
 				dwGreen += GetGreenFromARGBColor( dwColor ) * nValue;
 				dwBlue += GetBlueFromARGBColor( dwColor ) * nValue;
@@ -288,7 +290,7 @@ struct SWBCApplyFilterFunctional
 		dwGreen = Clamp<int>( dwGreen / nDivider, 0, 0xFF );
 		dwBlue = Clamp<int>( dwBlue / nDivider, 0, 0xFF );
 		//
-		DWORD dwDestColor = MakeARGBColor<DWORD>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
+		uint32_t dwDestColor = MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
 																							dwRed, dwGreen, dwBlue );
 		( *pDestImage )[nYIndex][nXIndex] = dwDestColor;
 	}
@@ -298,15 +300,15 @@ struct SWBCApplyFilterFunctional
 //функционал помечающий край картинки
 struct SMarkOutsideEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
-	DWORD dwEdgeColor;
-	DWORD dwMinAlpha;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
+	uint32_t dwEdgeColor;
+	uint32_t dwMinAlpha;
 
-	SMarkOutsideEdgeFunctional( CArray2D<DWORD> *_pDestImage,
-															const CArray2D<DWORD> *_pSourceImage,
-															DWORD _dwEdgeColor,
-															DWORD _dwMinAlpha ) 
+	SMarkOutsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
+															const CArray2D<uint32_t> *_pSourceImage,
+															uint32_t _dwEdgeColor,
+															uint32_t _dwMinAlpha )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -340,16 +342,16 @@ struct SMarkOutsideEdgeFunctional
 // WBC = with bounds check
 struct SWBCMarkOutsideEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
-	DWORD dwEdgeColor;
-	DWORD dwMinAlpha;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
+	uint32_t dwEdgeColor;
+	uint32_t dwMinAlpha;
 	CTPoint<int> size; 
 
-	SWBCMarkOutsideEdgeFunctional( CArray2D<DWORD> *_pDestImage,
-																 const CArray2D<DWORD> *_pSourceImage,
-																 DWORD _dwEdgeColor,
-																 DWORD _dwMinAlpha ) 
+	SWBCMarkOutsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
+																 const CArray2D<uint32_t> *_pSourceImage,
+																 uint32_t _dwEdgeColor,
+																 uint32_t _dwMinAlpha )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -390,15 +392,15 @@ struct SWBCMarkOutsideEdgeFunctional
 //функционал помечающий край картинки
 struct SMarkInsideEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
-	DWORD dwEdgeColor;
-	DWORD dwMinAlpha;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
+	uint32_t dwEdgeColor;
+	uint32_t dwMinAlpha;
 
-	SMarkInsideEdgeFunctional( CArray2D<DWORD> *_pDestImage,
-														 const CArray2D<DWORD> *_pSourceImage,
-														 DWORD _dwEdgeColor,
-														 DWORD _dwMinAlpha ) 
+	SMarkInsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
+														 const CArray2D<uint32_t> *_pSourceImage,
+														 uint32_t _dwEdgeColor,
+														 uint32_t _dwMinAlpha )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -432,16 +434,16 @@ struct SMarkInsideEdgeFunctional
 // WBC = with bounds check
 struct SWBCMarkInsideEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
-	DWORD dwEdgeColor;
-	DWORD dwMinAlpha;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
+	uint32_t dwEdgeColor;
+	uint32_t dwMinAlpha;
 	CTPoint<int> size; 
 
-	SWBCMarkInsideEdgeFunctional( CArray2D<DWORD> *_pDestImage,
-																const CArray2D<DWORD> *_pSourceImage,
-																DWORD _dwEdgeColor,
-																DWORD _dwMinAlpha ) 
+	SWBCMarkInsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
+																const CArray2D<uint32_t> *_pSourceImage,
+																uint32_t _dwEdgeColor,
+																uint32_t _dwMinAlpha )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -482,10 +484,10 @@ struct SWBCMarkInsideEdgeFunctional
 //функционал помечающий край картинки
 struct SEraseEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
 
-	SEraseEdgeFunctional( CArray2D<DWORD> *_pDestImage, const CArray2D<DWORD> *_pSourceImage )
+	SEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -520,11 +522,11 @@ struct SEraseEdgeFunctional
 // WBC = with bounds check
 struct SWBCEraseEdgeFunctional
 {
-	CArray2D<DWORD> *pDestImage;
-	const CArray2D<DWORD> *pSourceImage;
+	CArray2D<uint32_t> *pDestImage;
+	const CArray2D<uint32_t> *pSourceImage;
 	CTPoint<int> size; 
 
-	SWBCEraseEdgeFunctional( CArray2D<DWORD> *_pDestImage, const CArray2D<DWORD> *_pSourceImage )
+	SWBCEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );

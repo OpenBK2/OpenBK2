@@ -11,6 +11,8 @@
 #include "NewUpdater.h"
 #include "StaticObjects.h"
 
+#include <cstdint>
+
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
 extern CExecutorContainer theExecutorContainer;
@@ -72,7 +74,7 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit
 		theExecutorContainer.Add( new CKillCorpseExecutor( pFakeStObj ) );
 }
 
-CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex, 
+CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex,
 																								  const std::list<SObjTileInfo> &tiles, const bool _bDestructByTracks,
 																									CUpdatableObj* _pDeadObj, CObjectProfile *_pPassProfile )
 : CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE ), pDeadObj( _pDeadObj ), 
@@ -82,7 +84,7 @@ CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const WOR
 		it->lockInfo = bDestructByTracks ? EAIClasses( it->lockInfo & ( ~EAC_TRACK ) ) : EAIClasses( it->lockInfo );
 }
 
-const BYTE CFakeCorpseStaticObject::GetPlayer() const
+const uint8_t CFakeCorpseStaticObject::GetPlayer() const
 { 
 	return theDipl.GetNeutralPlayer(); 
 }

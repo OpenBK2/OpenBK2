@@ -5,6 +5,8 @@
 #include "System/LightXML.h"
 #include "Database.h"
 
+#include <cstdint>
+
 namespace NDb
 {
   //
@@ -24,18 +26,18 @@ namespace NBind
 
 CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo )
 : pStruct( _pStruct ), pMetaInfo( _pMetaInfo ), ownValues( _pMetaInfo->nNumOwnValues ),
-  bindProcessor( (BYTE*)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &(ownValues[0]), _pMetaInfo ),
+  bindProcessor( (uint8_t*)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &(ownValues[0]), _pMetaInfo ),
 	bLoaded( false ), bChanged( false ), bNewObject( false )
 {
 	if ( pMetaInfo->nNumOwnValues > 0 )
-		pMetaInfo->ConstructStruct( (BYTE*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
+		pMetaInfo->ConstructStruct( (uint8_t*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
 	bool bSuccess = pMetaInfo->fields.find( "flags" ) != pMetaInfo->fields.end();
 }
 
 CBindStruct::~CBindStruct()
 {
 	if ( pMetaInfo && pMetaInfo->nNumOwnValues > 0 )
-		pMetaInfo->DestructStruct( (BYTE*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
+		pMetaInfo->DestructStruct( (uint8_t*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
 }
 
 void CBindStruct::SetDBID( const CDBID &_dbid ) 

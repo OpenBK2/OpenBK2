@@ -1,6 +1,9 @@
 #pragma once
+
 #include "GPixelFormat.h"
 #include "Misc/2Darray.h"
+
+#include <cstdint>
 
 namespace NGfx
 {
@@ -77,7 +80,7 @@ struct SCacheLightingInfo
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bReplaceWithDirectional); f.Add(3,&bDoNotCacheLighting); f.Add(4,&bSkipLighting); f.Add(5,&bSelfIllum); f.Add(6,&bMultiplyOnTransparency); f.Add(7,&bSkipStaticPointLights); f.Add(8,&bTranslucent); f.Add(9,&vTranslucentColor); return 0; }
 	std::vector<NGfx::SMMXWord> pointLight;
 	std::vector<int> pointLightIDs;
-	std::vector<DWORD> colors, shadowColors;
+	std::vector<uint32_t> colors, shadowColors;
 	int nDirectionalLightID;
 	std::vector<unsigned char> warFogNew, warFogOld;
 	int nWarFogNewID, nWarFogOldID;
@@ -88,12 +91,12 @@ struct SCacheLightingInfo
 
 struct SUVInfo;
 void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
-	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
-	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<uint16_t> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<uint32_t> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes, 
-	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
-	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<DWORD> &vertexColor,
+	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<uint16_t> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<uint32_t> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
 void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &ls, std::vector<float> *pRes );
 

@@ -6,7 +6,9 @@
 #include "Misc/StrProc.h"
 #include "InterfaceState.h"
 
-void CMPManagerModeNivalNet::RequestChatChannels( DWORD dwVersion )
+#include <cstdint>
+
+void CMPManagerModeNivalNet::RequestChatChannels( uint32_t dwVersion )
 {
 	CChatChannelsListRequestPacket *pPacket = new CChatChannelsListRequestPacket( 0, dwVersion );
 	pClient->SendPacket( pPacket );

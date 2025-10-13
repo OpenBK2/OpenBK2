@@ -14,6 +14,7 @@
 #include "System/VFSOperations.h"
 
 #include <algorithm>
+#include <cstdint>
 
 #define DEF_WATER_PATCH_SIZE_X 6
 #define DEF_WATER_PATCH_SIZE_Y 6
@@ -157,7 +158,7 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 																const int nFramesX, const int nFramesY,
 																const bool _bUseNoise,
 																const float _fNoiseCoeff,
-																const BYTE _nParamInd )
+																const uint8_t _nParamInd )
 	: bUpdate( true ),
 	pController( pContr ),
 	pTimer( _pTimer ),
@@ -322,11 +323,11 @@ inline int FindWaterParamInd( int nInd, const std::vector<NWaterStuff::SWaterPar
 }
 
 void CWaterController::Init(	const float fAngle,
-															const CArray2D<BYTE> &seaMap,
+															const CArray2D<uint8_t> &seaMap,
 															const std::vector<NWaterStuff::SWaterParams> &_waterParams,
 															const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 															NGScene::IGameView *_pGScene,
-															//CArray2D<BYTE> &waterBottomMap,
+															//CArray2D<uint8_t> &waterBottomMap,
 															const NDb::SWater *pWater )
 {
 	waterPatches.clear();
@@ -404,7 +405,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, con
 	int nInd;
 	CVec3 vCurNorm;
 
-	CArray2D<BYTE> singleMask( 128, 128 );
+	CArray2D<uint8_t> singleMask( 128, 128 );
 	CArray2D<CPtr<SWaterNode> > &waterNodes = *pWaterNodes;
 
 	for ( int k = 0; k < waterBorders.size(); ++k )
@@ -545,7 +546,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 
 	waterPatches.resize( 0 );
 
-	std::vector<BYTE> useParams( 256 );
+	std::vector<uint8_t> useParams( 256 );
 
 	// Divide water nodes to patches
 	const int nPatchesX = waterNodes.GetSizeX() / DEF_WATER_PATCH_SIZE_X + ( (waterNodes.GetSizeX() % DEF_WATER_PATCH_SIZE_X) ? 1 : 0 );
@@ -578,7 +579,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 				continue;
 
 			// Create patch for current water param
-			for ( std::vector<BYTE>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
+			for ( std::vector<uint8_t>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
 			{				
 				const NWaterStuff::SWaterParams &curParams = waterParams[*it];
 				const float fTexCoordOffsX = 1.0f / curParams.nNumFramesX;
@@ -751,7 +752,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 
 			param2patch.clear();
 
-			for ( vector<BYTE>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
+			for ( vector<uint8_t>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
 			{
 				waterPatches.push_back( CVisWaterPatchHolder() );
 				const NWaterStuff::SWaterParams &curParams = waterParams[*it];
@@ -769,7 +770,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 					if ( waterNodes[gg][ii] )
 					{
 
-						const BYTE nParam = waterNodes[gg][ii]->nParamInd;
+						const uint8_t nParam = waterNodes[gg][ii]->nParamInd;
 						CVisWaterPatch *pCurPatch = waterPatches[param2patch[nParam]].pPatch;
 
 						pCurPatch->verts.push_back( CVec2i(ii, gg) );
@@ -781,7 +782,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 				}
 			}
 
-			for ( vector<BYTE>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
+			for ( vector<uint8_t>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
 			{
 				const int nCurPatchNum = param2patch[*it];
 				CVisWaterPatch *pCurPatch = waterPatches[nCurPatchNum].pPatch;
@@ -871,7 +872,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 	}
 }
 
-static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &seaMap, const std::vector<NWaterStuff::SSurfBorder> &borders )
+static void CreateAlphaMap( CArray2D<uint8_t> *pAlphaMap, const CArray2D<uint8_t> &seaMap, const std::vector<NWaterStuff::SSurfBorder> &borders )
 {
 	NI_VERIFY( pAlphaMap, "Invalid pointer", return )
 
@@ -959,7 +960,7 @@ class CShaderWater : public CPtrFuncBase<NGScene::CObjectInfo>
 	OBJECT_NOCOPY_METHODS(CShaderWater)
 	ZDATA
 	int nOriginX, nOriginY;
-	CArray2D<BYTE> alphaMap;
+	CArray2D<uint8_t> alphaMap;
 	float fSpeed;
 	float fRadius;
 	int nNumFramesX;
@@ -970,7 +971,7 @@ protected:
 	CShaderWater() {}
 public:
 	CShaderWater( int _nOriginX, int _nOriginY,
-								const CArray2D<BYTE> &_alphaMap,
+								const CArray2D<uint8_t> &_alphaMap,
 								float _fSpeed, float _fRadius, int _nNumFramesX, int _nNumFramesY )
 	: nOriginX( _nOriginX ),
 	nOriginY( _nOriginY ),
@@ -1009,7 +1010,7 @@ inline int AddNewVertex(	NGScene::CObjectInfo::SData *pData,
 													int nOffsX, int nOffsY,
 													int x, int y,
 													float fTexScaleX, float fTexScaleY,
-													BYTE cFade,
+													uint8_t cFade,
 													float fWaterHeight,
 													float fRadius, float fSpeed )
 {
@@ -1033,7 +1034,7 @@ inline int AddNewMiddleVertex(	NGScene::CObjectInfo::SData *pData,
 																int nOffsX, int nOffsY,
 																int x, int y,
 																float fTexScaleX, float fTexScaleY,
-																BYTE cFade,
+																uint8_t cFade,
 																float fWaterHeight,
 																float fRadius, float fSpeed )
 {
@@ -1058,7 +1059,7 @@ inline int GetVertexIndex(	CVertsHash *pVertsHash,
 														int nOffsX, int nOffsY,
 														int x, int y,
 														float fTexScaleX, float fTexScaleY,
-														BYTE cFade,
+														uint8_t cFade,
 														float fWaterHeight,
 														float fRadius, float fSpeed )
 {
@@ -1096,10 +1097,10 @@ void CShaderWater::Recalc()
 	{
 		for ( int i = 0; i < ( alphaMap.GetSizeX() - 1 ); ++i )
 		{
-			const BYTE &cAlp1 = alphaMap[g][i];
-			const BYTE &cAlp2 = alphaMap[g][i + 1];
-			const BYTE &cAlp3 = alphaMap[g + 1][i + 1];
-			const BYTE &cAlp4 = alphaMap[g + 1][i];
+			const uint8_t &cAlp1 = alphaMap[g][i];
+			const uint8_t &cAlp2 = alphaMap[g][i + 1];
+			const uint8_t &cAlp3 = alphaMap[g + 1][i + 1];
+			const uint8_t &cAlp4 = alphaMap[g + 1][i];
 			if ( cAlp1 || cAlp2 || cAlp3 || cAlp4 )
 			{
 				const int nInd = g * nRaw + i;
@@ -1150,11 +1151,11 @@ void CShaderWater::Recalc()
 				SColor24 NoiseColX = noise[ nNoiseV	& ( noise.GetSizeY() - 1 )][ nNoiseU1 & ( noise.GetSizeX() - 1 )];
 				SColor24 NoiseColXY = noise[ nNoiseV1	& ( noise.GetSizeY() - 1 )][ nNoiseU1 & ( noise.GetSizeX() - 1 )];
 
-				const BYTE r = NoiseCol.r*(1-fFractionX)*(1-fFractionY) + NoiseColX.r*fFractionX*(1-fFractionY)+NoiseColY.r*(1-fFractionX)*fFractionY + NoiseColXY.r*fFractionX*fFractionY;
-				const BYTE g = NoiseCol.g*(1-fFractionX)*(1-fFractionY) + NoiseColX.g*fFractionX*(1-fFractionY)+NoiseColY.g*(1-fFractionX)*fFractionY + NoiseColXY.g*fFractionX*fFractionY;
-				const BYTE b = NoiseCol.b*(1-fFractionX)*(1-fFractionY) + NoiseColX.b*fFractionX*(1-fFractionY)+NoiseColY.b*(1-fFractionX)*fFractionY + NoiseColXY.b*fFractionX*fFractionY;
+				const uint8_t r = NoiseCol.r*(1-fFractionX)*(1-fFractionY) + NoiseColX.r*fFractionX*(1-fFractionY)+NoiseColY.r*(1-fFractionX)*fFractionY + NoiseColXY.r*fFractionX*fFractionY;
+				const uint8_t g = NoiseCol.g*(1-fFractionX)*(1-fFractionY) + NoiseColX.g*fFractionX*(1-fFractionY)+NoiseColY.g*(1-fFractionX)*fFractionY + NoiseColXY.g*fFractionX*fFractionY;
+				const uint8_t b = NoiseCol.b*(1-fFractionX)*(1-fFractionY) + NoiseColX.b*fFractionX*(1-fFractionY)+NoiseColY.b*(1-fFractionX)*fFractionY + NoiseColXY.b*fFractionX*fFractionY;
 
-				DWORD nColor = 0xff000000 | ( r << 16 ) | ( g << 8 ) | b;
+				uint32_t nColor = 0xff000000 | ( r << 16 ) | ( g << 8 ) | b;
 				attr.data[i] = nColor;
 			}
 		}
@@ -1164,7 +1165,7 @@ void CShaderWater::Recalc()
 	pValue->Assign( data, true );
 }
 
-void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
+void CWaterController::InitSilentWater( const CArray2D<uint8_t> &seaMap,
 																				const std::vector<NWaterStuff::SWaterParams> &waterParams,
 																				const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 																				NGScene::IGameView *_pGScene,
@@ -1172,7 +1173,7 @@ void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
 {
 	const int nPatchSize = pWater->nTilesNumPerWaterTexture;
 
-	CArray2D<BYTE> locMap( nPatchSize + 1, nPatchSize + 1 ), alphaMap;
+	CArray2D<uint8_t> locMap( nPatchSize + 1, nPatchSize + 1 ), alphaMap;
 	CreateAlphaMap( &alphaMap, seaMap, waterBorders );
 
 	const int nNumPatchesX = seaMap.GetSizeX() / nPatchSize + ( ( ( seaMap.GetSizeX() % nPatchSize ) == 0 ) ? 0 : 1 );
@@ -1229,7 +1230,7 @@ void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
 	}
 }
 
-void CWaterController::InitOceanWater( const CArray2D<BYTE> &seaMap,
+void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 																			 const std::vector<NWaterStuff::SWaterParams> &waterParams,
 																			 const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 																			 NGScene::IGameView *_pGScene,

@@ -7,20 +7,22 @@
 
 #include "MapEditorLib/Interface_UserData.h"
 
+#include <cstdint>
+
 bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCBinaryBitFieldEditor::GetPCItemStringValue() pszValue == 0" );
 	pszValue->clear();
 	if ( rValue.GetType() == CVariant::VT_POINTER )
 	{
-		const BYTE *pValues = static_cast<const BYTE*>( rValue.GetPtr() );
+		const uint8_t *pValues = static_cast<const uint8_t*>( rValue.GetPtr() );
 		for ( int nByteIndex = 0; nByteIndex < pPropertyDesc->nSize; ++nByteIndex )
 			*pszValue += StrFmt( "%02X", pValues[nByteIndex] );
 	}
 	else if ( rValue.GetType() == CVariant::VT_INT )
 	{
 		const int nValue = (int)rValue;
-		const BYTE *pValues = reinterpret_cast<const BYTE *>( &nValue );
+		const uint8_t *pValues = reinterpret_cast<const uint8_t *>( &nValue );
 		for ( int i = 0; i < 4; ++i )
 			*pszValue += StrFmt( "%02X", pValues[i] );
 	}
@@ -36,11 +38,11 @@ bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const string &rs
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
 	( *pValue ) = CVariant();
-	BYTE * pData = new BYTE[pPropertyDesc->nSize];
+	uint8_t * pData = new uint8_t[pPropertyDesc->nSize];
 	memset( pData, 0, pPropertyDesc->nSize );
 	{
-		BYTE nHighByte = 0;
-		BYTE nLowByte = 0;
+		uint8_t nHighByte = 0;
+		uint8_t nLowByte = 0;
 		int nByteIndex = 0;
 		bool bLowByteAcquired = false;
 		for ( int nCharIndex = 0; nCharIndex < rszValue.length(); ++nCharIndex ) 
@@ -105,7 +107,7 @@ void CPCBinaryBitFieldEditor::OnBrowse()
 {
 	CVariant value;
 	GetValue( &value );
-	CBinaryBitFieldDialog binaryBitFieldDialog( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam, static_cast<const BYTE*>( value.GetPtr() ), GetPropertyDesc()->nSize, GetTargetWindow() );
+	CBinaryBitFieldDialog binaryBitFieldDialog( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam, static_cast<const uint8_t*>( value.GetPtr() ), GetPropertyDesc()->nSize, GetTargetWindow() );
 	if ( ( binaryBitFieldDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
 	{
 		string szValue;

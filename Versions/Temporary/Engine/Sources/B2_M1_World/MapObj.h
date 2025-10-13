@@ -2,7 +2,6 @@
 
 #include "B2_M1_World_export.h"
 
-
 #include "Misc/2Darray.h"
 #include "stats_b2_m1/actioncommand.h"
 #include "stats_b2_m1/specialabilities.h"
@@ -14,6 +13,8 @@
 #include "SceneB2/Scene.h"
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Misc/HashFuncs.h"
+
+#include <cstdint>
 
 #include <zconf.h>
 
@@ -196,7 +197,7 @@ class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 	bool bLoopedAnimation;
 	bool bIsSilentlyDead;
 
-	std::vector<WORD> attachedSounds;
+	std::vector<uint16_t> attachedSounds;
 	//
 	bool bHasMoveAnimation;
 	float fAnimationSpeed;
@@ -341,7 +342,7 @@ public:
 	//
 	// set fire/put out
 	void ChangeLight( const int nLight, NDb::ESeason eSeason, bool bLight );
-	void AIUpdateHit( const NDb::SComplexEffect *pEffect, WORD wDir, NTimer::STime time );
+	void AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NTimer::STime time );
 	//
 	int GetKeyObjectPlayer() const { return nKeyObjectPlayer; }
 	bool IsKeyObject() const { return nKeyObjectPlayer != -1; }
@@ -377,7 +378,7 @@ class B2_M1_WORLD_EXPORT CMOSelectable : public CMapObj
 	bool bDisableIcons;
 	bool bIsMousePicked;
 	bool bHighlighted;
-	DWORD dwVisualStatus;
+	uint32_t dwVisualStatus;
 	float fVisualRadius;
 private:
 	bool HasVisualGroup( enum EUnitStatus eGroup ) const;

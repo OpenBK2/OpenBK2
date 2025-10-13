@@ -4,14 +4,16 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "DBScenario.h"
 
+#include <cstdint>
+
 // SChapterMapMenuHelper::SArrow
 
-DWORD SChapterMapMenuHelper::SArrow::GetColor() const
+uint32_t SChapterMapMenuHelper::SArrow::GetColor() const
 {
 	return 0xffffffff;
 }
 
-DWORD SChapterMapMenuHelper::SArrow::GetDependentColor() const
+uint32_t SChapterMapMenuHelper::SArrow::GetDependentColor() const
 {
 	return 0x40ffffff;
 }

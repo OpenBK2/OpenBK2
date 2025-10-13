@@ -2,6 +2,8 @@
 
 #include "AIUnit.h"
 
+#include <cstdint>
+
 class CUnitGuns;
 class CTurret;
 struct IPath;
@@ -64,7 +66,7 @@ protected:
 	virtual CUnitGuns* GetGuns();
 public:
 	CArtillery() : bBulletStorageVisible( false ) { }
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD _dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t _dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 	int operator&( IBinSaver &f );
 
 	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
@@ -123,13 +125,13 @@ public:
 		
 	virtual bool IsMech() const { return true; }
 	
-	virtual bool TurnToDir( const WORD &newDir, const bool bCanBackward = true, const bool bForward = true );
+	virtual bool TurnToDir( const uint16_t &newDir, const bool bCanBackward = true, const bool bForward = true );
 	const bool TurnToTarget( const CVec2 &vTarget );
 
 	virtual bool TurnToUnit( const CVec2 &targCenter );
 
 	// обслуживание пушки артиллеристами
-	virtual void ChangePlayer( const BYTE cPlayer );
+	virtual void ChangePlayer( const uint8_t cPlayer );
 	virtual void SetCrew( class CFormation * _pCrew, const bool bCapture = true );
 	virtual void DelCrew();
 	virtual bool HasServeCrew() const;
@@ -165,8 +167,8 @@ public:
 	virtual const bool CanGoBackward() const { return GetCrew() == 0; }
 
 	virtual void Stop();
-	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
-	virtual const DWORD GetNormale() const;
+	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
+	virtual const uint32_t GetNormale() const;
 
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;

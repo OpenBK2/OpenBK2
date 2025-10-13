@@ -15,6 +15,9 @@
 extern CUnitCreation theUnitCreation;
 // for profiling
 #include "TimeCounter.h"
+
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4DF, CTankShootEstimator );
 REGISTER_SAVELOAD_CLASS( 0x1108D4E0, CSoldierShootEstimator );
 REGISTER_SAVELOAD_CLASS( 0x1108D4E1, CPlaneDeffensiveFireShootEstimator );
@@ -82,10 +85,10 @@ CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
 
 const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwner, CBasicGun *pGun )
 {
-	const WORD wUnitDir = pOwner->GetDirection();		
-	const WORD wDirToEnemy = GetDirectionByVector( vPoint - pOwner->GetCenterPlain() );
+	const uint16_t wUnitDir = pOwner->GetDirection();
+	const uint16_t wDirToEnemy = GetDirectionByVector( vPoint - pOwner->GetCenterPlain() );
 	const bool bMovingOwner = pOwner->CanRotate() && !pOwner->NeedDeinstall();
-	const WORD wDeltaAngle = pGun->GetWeapon()->wDeltaAngle;
+	const uint16_t wDeltaAngle = pGun->GetWeapon()->wDeltaAngle;
 	CTurret *pTurret = pGun->GetTurret();
 
 	if ( pTurret != 0 )
@@ -95,8 +98,8 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 		if ( pGun->IsBallisticTrajectory() )
 			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() ) / pTurret->GetVerRotationSpeed();
 
-		const WORD wGunDir = pTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
-		const WORD wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
+		const uint16_t wGunDir = pTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
+		const uint16_t wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
 
 		if ( wTurnAngle < wDeltaAngle )
 			return nTimeVerticalAim;
@@ -115,8 +118,8 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 			return 0.0f;
 		else
 		{
-			const WORD wGunDir = pGun->GetGun().wDirection + wUnitDir;
-			const WORD wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
+			const uint16_t wGunDir = pGun->GetGun().wDirection + wUnitDir;
+			const uint16_t wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
 			if ( wTurnAngle < wDeltaAngle )
 				return 0.0f;
 			else
@@ -126,7 +129,7 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 }
 
 
-void CTankShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
+void CTankShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t _dwForbidden )
 {
 	pCurTarget = pCurEnemy;
 	bDamageToCurTargetUpdated = bDamageUpdated;
@@ -442,7 +445,7 @@ CSoldierShootEstimator::CSoldierShootEstimator( CAIUnit *_pOwner )
 	pMosinStats = theUnitCreation.GetMosinStats();
 }
 
-void CSoldierShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
+void CSoldierShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t _dwForbidden )
 {
 	pCurTarget = pCurEnemy;
 	bDamageToCurTargetUpdated = bDamageUpdated;
@@ -782,7 +785,7 @@ CPlaneDeffensiveFireShootEstimator::CPlaneDeffensiveFireShootEstimator( class CA
 	
 }
 
-void CPlaneDeffensiveFireShootEstimator::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden )
+void CPlaneDeffensiveFireShootEstimator::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden )
 {
 	pCurTarget = pCurEnemy;
 	bDamageToCurTargetUpdated = bDamageUpdated;
@@ -847,7 +850,7 @@ CPlaneShturmovikShootEstimator::CPlaneShturmovikShootEstimator( class CAIUnit *p
 {
 }
 
-void CPlaneShturmovikShootEstimator::Reset( class CAIUnit *_pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden )
+void CPlaneShturmovikShootEstimator::Reset( class CAIUnit *_pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden )
 {
 	bestAviation.Reset();
 	bestForBombs.Reset();
@@ -886,7 +889,7 @@ void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 	bool bCanBreak = false;
 	bool bOnlyBombs = true;
 	int nGuns = pOwner->GetNGuns();
-	DWORD dwPossibleGuns = 0;
+	uint32_t dwPossibleGuns = 0;
 	for ( int i = 0; i < nGuns; ++i )
 	{
 		CBasicGun *pGun = pOwner->GetGun( i );
@@ -943,7 +946,7 @@ void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 		const SBuildingRPGStats *pBuildingStats = checked_cast<const SBuildingRPGStats*>( pBuilding->GetStats() );
 
 		int nGuns = pOwner->GetNGuns();
-		DWORD dwPossibleGuns = 0;
+		uint32_t dwPossibleGuns = 0;
 		bool bCanBreak = false;
 		for ( int i = 0; i < nGuns; ++i )
 		{
@@ -981,12 +984,12 @@ void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 
 const float CPlaneShturmovikShootEstimator::CalcTimeToOpenFire( CAIUnit *pEnemy ) const
 {
-	const WORD wDir = pOwner->GetDirection();
-	const WORD wDirToEnemy = GetDirectionByVector( pEnemy->GetCenterPlain() - pOwner->GetCenterPlain() );
+	const uint16_t wDir = pOwner->GetDirection();
+	const uint16_t wDirToEnemy = GetDirectionByVector( pEnemy->GetCenterPlain() - pOwner->GetCenterPlain() );
 	return float( DirsDifference( wDir, wDirToEnemy ) ) / 65535.0f;
 }
 
-const float CPlaneShturmovikShootEstimator::CalcRating( CAIUnit *pEnemy, const DWORD dwPossibleGuns ) const
+const float CPlaneShturmovikShootEstimator::CalcRating( CAIUnit *pEnemy, const uint32_t dwPossibleGuns ) const
 {
 	const float fEnemyKillUsSpeed = pEnemy->GetKillSpeed( pOwner );
 	const float fKillEnemy = pOwner->GetKillSpeed( pEnemy, dwPossibleGuns );
@@ -998,7 +1001,7 @@ const float CPlaneShturmovikShootEstimator::CalcRating( CAIUnit *pEnemy, const D
 	return fKillEnemy == 0 ? 0 : ( fEnemyKillUsSpeed * 100000 + ( 5 * fKillEnemy - fKillEnemyByOthers + fPrice ) );
 }
 
-void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const DWORD dwPossibleGuns )
+void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const uint32_t dwPossibleGuns )
 {
 	const float fRating = CalcRating( pTarget, dwPossibleGuns );
 
@@ -1059,7 +1062,7 @@ CShootEstimatorSupportAAGun::CShootEstimatorSupportAAGun ( class CAIUnit *_pOwne
 {
 }
 
-void CShootEstimatorSupportAAGun::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
+void CShootEstimatorSupportAAGun::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t _dwForbidden )
 {
 	pBestTarget = pCurEnemy;
 	bDamageToCurTargetUpdated = bDamageUpdated;

@@ -8,6 +8,8 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
 
+#include <cstdint>
+
 //Mapinfo terrain field state edit parameters
 #define MITFEP_MOVE_TYPE		0x00000001
 #define MITFEP_FIELD_COUNT	0x00000002
@@ -119,7 +121,7 @@ private:
 	static void CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTileSetWeightVectorList, const NDb::SField &rField );
 	static void CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *pObjectSetWeightVectorList, const NDb::SField &rField );
 	static int GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rPolygon, const CTPoint<int> &rXBounds, CXPosList *pXPosList );
-	static bool FillTileSet( CArray2D<BYTE> *pTile2DArray,
+	static bool FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 													 CTPoint<int> *pStartTile,
 													 const NDb::SField &rField,
 													 const CFieldPolygon &rPolygon,
@@ -139,7 +141,7 @@ private:
 														 const CTPoint<int> terrainSize,
 														 float fTileSize,
 														 CFieldDistanceMap *pDistances,
-														 CArray2D<BYTE> *pTileMap );
+														 CArray2D<uint8_t> *pTileMap );
 
 public:
 	//IInputState interface
@@ -163,7 +165,7 @@ public:
 
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	// CFieldState

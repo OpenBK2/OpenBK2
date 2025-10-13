@@ -7,6 +7,7 @@
 #include "hlsl.h"
 #include <d3dx9.h>
 
+#include <cstdint>
 
 struct SCommand
 {
@@ -308,7 +309,7 @@ enum EState
 	PS_PROC
 };
 
-static void CompileShader( const string &s, const string &name, const char *pszType, vector<DWORD> *pRes )
+static void CompileShader( const string &s, const string &name, const char *pszType, vector<uint32_t> *pRes )
 {
 	pRes->clear();
 	HRESULT hr;

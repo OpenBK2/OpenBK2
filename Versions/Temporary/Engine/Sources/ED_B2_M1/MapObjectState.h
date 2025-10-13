@@ -9,6 +9,8 @@
 #include "EditorScene.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NMapInfoEditor
@@ -156,7 +158,7 @@ class CMapObjectState : public CMultiInputState, public ICommandHandler
 	friend class CMapObjectPasteState;
 	//
 protected:
-	static const DWORD SELECTION_LINE_COLOR;
+	static const uint32_t SELECTION_LINE_COLOR;
 
 	enum EInputStates
 	{
@@ -302,7 +304,7 @@ public:
 	virtual CMapInfoEditor* GetMapInfoEditor();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

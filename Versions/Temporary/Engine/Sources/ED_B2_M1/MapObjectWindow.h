@@ -4,6 +4,8 @@
 #include "ResourceDefines.h"
 #include "MapObjectMultiState.h"
 
+#include <cstdint>
+
 class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 {
 	struct SObjectListElement
@@ -70,7 +72,7 @@ public:
 	~CMapObjectWindow();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

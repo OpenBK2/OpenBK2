@@ -32,6 +32,8 @@
 #include "ExecutorContainer.h"
 #include "Stats_B2_M1/AnimationFromAction.h"
 
+#include <cstdint>
+
 extern CStatistics theStatistics;
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4DD, CFormationSwarmState );
@@ -725,12 +727,12 @@ IUnitState* CFormationStatesFactory::ProduceRestState( CQueueUnit *pUnit )
 //*											 CFormationRestState												*
 //*******************************************************************
 
-IUnitState* CFormationRestState::Instance( CFormation *pFormation, const CVec2 &guardPoint, const WORD wDir, const float _fTimeToWait )
+IUnitState* CFormationRestState::Instance( CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float _fTimeToWait )
 {
 	return new CFormationRestState( pFormation, guardPoint, wDir, _fTimeToWait );
 }
 
-CFormationRestState::CFormationRestState( CFormation *_pFormation, const CVec2 &guardPoint, const WORD wDir, const float _fTimeToWait )
+CFormationRestState::CFormationRestState( CFormation *_pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float _fTimeToWait )
 : pFormation( _pFormation ), CCommonRestState( guardPoint, wDir, _pFormation, _fTimeToWait )
 {
 	pFormation->SetToWaitingState();
@@ -1767,12 +1769,12 @@ const CVec2 CFormationAttackCommonStatObjState::GetPurposePoint() const
 //*										CFormationRotateState													*
 //*******************************************************************
 
-IUnitState* CFormationRotateState::Instance( CFormation *pFormation, const WORD wDir )
+IUnitState* CFormationRotateState::Instance( CFormation *pFormation, const uint16_t wDir )
 {
 	return new CFormationRotateState( pFormation, wDir );
 }
 
-CFormationRotateState::CFormationRotateState( CFormation *_pFormation, const WORD wDir )
+CFormationRotateState::CFormationRotateState( CFormation *_pFormation, const uint16_t wDir )
 : pFormation( _pFormation )
 {
 	// повернуть формацию

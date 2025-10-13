@@ -8,6 +8,8 @@
 #include "Misc/StrProc.h"
 #include "MapEditorLib/StringManager.h"
 
+#include <cstdint>
+
 CPCFloatInputEditor::CPCFloatInputEditor() : fDefaultValue( 0.0f ), nPrecision( PCSV_DEFAULT_RECISION ), bCreateControls( true )
 {	
 }
@@ -97,8 +99,8 @@ bool CPCFloatInputEditor::CreateEditor( const string &rszName, EPCIEType _nEdito
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
-		const DWORD dwExStyle	= WS_EX_CLIENTEDGE;
+		const uint32_t dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
+		const uint32_t dwExStyle	= WS_EX_CLIENTEDGE;
 		if ( CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) )
 		{
 			ModifyStyleEx( 0, dwExStyle );
@@ -196,7 +198,7 @@ void CPCFloatInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCFloatInputEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCFloatInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

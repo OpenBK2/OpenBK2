@@ -20,6 +20,7 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
 
 extern CDiplomacy theDipl;
 extern CStaticObjects theStatObjs;
@@ -135,7 +136,7 @@ struct SVectorHash
 };
 typedef det_map<SVector, bool, SVectorHash> CSVectorHash;
 
-void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WORD wDirExclude )
+void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const uint16_t wDirExclude )
 {
 	// криво! как-то нужно подумать и написать получше
 	std::list<SVector> tilesUnderRect;
@@ -167,7 +168,7 @@ void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WO
 	for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); )
 	{
 		const CVec2 vec = GetAIMap()->GetPointByTile( *it );
-		const WORD wDirToTile = GetDirectionByVector( vec - rect.center );
+		const uint16_t wDirToTile = GetDirectionByVector( vec - rect.center );
 		if ( DirsDifference( wDirToTile, wDirExclude ) < (65535 / 8) )
 			it = tiles.erase( it );
 		else 
@@ -587,14 +588,14 @@ void CMechUnitInsideMechUnitState::SendToDestination( const CVec2 &vDropPoint, c
 bool CMechUnitInsideMechUnitState::FindAllowedDropPoint( CAIUnit *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
-	WORD wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
+	uint16_t wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
 	CVec2 vCenterPoint = *vDropPoint;
 	const int nIterations = 8;
 	for ( float fRadius = 150; fRadius < 3000; fRadius += 50 )
 	{
 		for ( int i = 0; i < nIterations; ++i )
 		{
-			WORD wDir = wStartDir +(65535 / nIterations * i);
+			uint16_t wDir = wStartDir +(65535 / nIterations * i);
 			const CVec2 vDir = GetVectorByDirection( wDir );
 			const CVec2 vPoint(  vCenterPoint + vDir * fRadius );
 			const SVector vTile( AICellsTiles::GetTile( vPoint ) );

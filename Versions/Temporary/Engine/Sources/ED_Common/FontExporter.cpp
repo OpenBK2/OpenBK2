@@ -12,6 +12,7 @@
 #include "System/FileUtils.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 
+#include <cstdint>
 
 REGISTER_EXPORTER_IN_DLL( Font, CFontExporter )
 
@@ -131,7 +132,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	bResult = ::CreateProcess( 0, const_cast<char*>( szCommandLine.c_str() ), 0, 0, false, 0, 0, 0, &startinfo, &procinfo );
 	if ( bResult )
 	{
-		const DWORD dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
+		const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
 	}
 	else
 	{
@@ -164,7 +165,7 @@ startinfo.cb = sizeof( startinfo );
 bResult = ::CreateProcess( 0, const_cast<char*>( szCommandLine.c_str() ), 0, 0, false, 0, 0, 0, &startinfo, &procinfo );
 if ( bResult )
 {
-const DWORD dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
+const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
 }
 ::CloseHandle( procinfo.hProcess );
 ::CloseHandle( procinfo.hThread );

@@ -1,9 +1,10 @@
-
 #pragma once
+
 #include "mapeditorlib/interface_commandhandler.h"
 #include "Stats_B2_M1/Season.h"
 #include "MapEditorLib/BuildDataBuilder.h"
 
+#include <cstdint>
 
 class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 {
@@ -71,7 +72,7 @@ protected:
 	bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

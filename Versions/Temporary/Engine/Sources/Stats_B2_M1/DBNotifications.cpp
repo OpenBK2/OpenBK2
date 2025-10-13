@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbnotifications.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -127,16 +129,16 @@ void SNotification::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Notification", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Sound", (BYTE*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FigureType", (BYTE*)&eFigureType - pThis, sizeof(eFigureType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Time", (BYTE*)&fTime - pThis, sizeof(fTime), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Size", (BYTE*)&fSize - pThis, sizeof(fSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RotationSpeed", (BYTE*)&fRotationSpeed - pThis, sizeof(fRotationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DuplicateDelay", (BYTE*)&fDuplicateDelay - pThis, sizeof(fDuplicateDelay), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Sound", (uint8_t*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FigureType", (uint8_t*)&eFigureType - pThis, sizeof(eFigureType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Time", (uint8_t*)&fTime - pThis, sizeof(fTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Size", (uint8_t*)&fSize - pThis, sizeof(fSize), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RotationSpeed", (uint8_t*)&fRotationSpeed - pThis, sizeof(fRotationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DuplicateDelay", (uint8_t*)&fDuplicateDelay - pThis, sizeof(fDuplicateDelay), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -291,17 +293,17 @@ void SNotificationEvent::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "NotificationEvent", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Sound", (BYTE*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "ShowByCamera", (BYTE*)&bShowByCamera - pThis, sizeof(bShowByCamera), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "AutoRemoveTime", (BYTE*)&fAutoRemoveTime - pThis, sizeof(fAutoRemoveTime), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Notification", (BYTE*)&pNotification - pThis, sizeof(pNotification), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NoDupArea", (BYTE*)&fNoDupArea - pThis, sizeof(fNoDupArea), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "NoDupTime", (BYTE*)&fNoDupTime - pThis, sizeof(fNoDupTime), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Sound", (uint8_t*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ShowByCamera", (uint8_t*)&bShowByCamera - pThis, sizeof(bShowByCamera), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "AutoRemoveTime", (uint8_t*)&fAutoRemoveTime - pThis, sizeof(fAutoRemoveTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Notification", (uint8_t*)&pNotification - pThis, sizeof(pNotification), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NoDupArea", (uint8_t*)&fNoDupArea - pThis, sizeof(fNoDupArea), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "NoDupTime", (uint8_t*)&fNoDupTime - pThis, sizeof(fNoDupTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

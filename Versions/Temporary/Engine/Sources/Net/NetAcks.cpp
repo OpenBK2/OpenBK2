@@ -8,6 +8,8 @@
 #include <iostream>
 #endif
 
+#include <cstdint>
+
 namespace NNet
 {
 const int CS_PACKET_ID_RANGE = 0x10000;
@@ -21,7 +23,7 @@ const float MAX_WINDOWS_SIZE = 10.0f;
 
 CAckTracker::CAckTracker()
 {
-	DWORD dwTick = GetTickCount();
+	uint32_t dwTick = GetTickCount();
 	float fRTT;
 	fRTT = F_INITIAL_RTT;
 	fAvrgRTT = fRTT;
@@ -199,7 +201,7 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 // pair to SendPktAcks()
 void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
-	DWORD dwBits, dwNewAckBits;
+	uint32_t dwBits, dwNewAckBits;
 	PACKET_ID nLast;
 	bits.Read( &nLast, sizeof(nLast) );
 	bits.Read( &dwBits, sizeof( dwBits ) );
@@ -298,7 +300,7 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 void CAckTracker::SendPktAcks( CBitStream *pBits )
 {
 	int i;
-	DWORD dwBits = 0;
+	uint32_t dwBits = 0;
 	PACKET_ID nLast = (PACKET_ID)nPktLastReceived;
 	UPDATE_ID nTest = nPktLastReceived;
 	for ( i = 1; i <= 32; i++ )

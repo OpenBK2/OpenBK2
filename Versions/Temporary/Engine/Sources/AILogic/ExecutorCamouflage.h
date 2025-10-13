@@ -1,5 +1,8 @@
 #pragma once
+
 #include "ExecutorUnitCombatBonus.h"
+
+#include <cstdint>
 
 class CExecutorCamouflage : public CExecutorUnitCombatBonus
 {
@@ -12,7 +15,7 @@ public:
 
 protected:
 
-	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const WORD oldModeFlags, const WORD newModeFlags );
+	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags );
 	void SwitchingOffEnd();
 	void SwitchOnEnd();
 public:

@@ -22,6 +22,8 @@
 #include "SeasonMnemonics.h"
 #include "MapInfoEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CSimpleObjectState::ClearData()
@@ -57,7 +59,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 {
 	bool bResult = false;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bResult = ( ( objectSet.szObjectTypeName == "MineRPGStats" ) ||
 								( objectSet.szObjectTypeName == "BuildingRPGStats" ) ||
@@ -147,7 +149,7 @@ bool CSimpleObjectState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerra
 			vObjectScenePosition.z = GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 			//
 			const float fObjectSceneDirection = fDirection + itSceneObject->fDirection;
-			DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+			uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 			CQuat qObjectSceneRotation = CQuat( fObjectSceneDirection, V3_AXIS_Z );
 			if ( SSimpleObjectInfo::NeedMakeOrientation( szRPGStatsTypeName, rpgStatsDBID ) )
 			{
@@ -199,7 +201,7 @@ bool CSimpleObjectState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerra
 		//
 		CWaitCursor waitCursor;
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
@@ -309,7 +311,7 @@ void CSimpleObjectState::InsertObjectEnter()
 		ClearData();
 		SObjectSet objectSet;
 		//
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
@@ -352,7 +354,7 @@ void CSimpleObjectState::InsertObjectEnter()
 								CVec3 vObjectScenePosition = vPosition + vAdditionalPosition;
 								vObjectScenePosition.z += GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 								const float fObjectSceneDirection = fDirection + fAdditionalDirection;
-								DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+								uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 								CQuat qObjectSceneRotation = CQuat( fObjectSceneDirection, V3_AXIS_Z );
 								if ( SSimpleObjectInfo::NeedMakeOrientation( szRPGStatsTypeName, rpgStatsDBID ) )
 								{
@@ -404,7 +406,7 @@ void CSimpleObjectState::InsertObjectEnter()
 			}
 			else
 			{
-				DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+				uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 				CQuat qRotation = CQuat( fDirection, V3_AXIS_Z );
 				if ( SSimpleObjectInfo::NeedMakeOrientation( szRPGStatsTypeName, rpgStatsDBID ) )
 				{

@@ -2,13 +2,15 @@
 
 #include "ED_Common/ChildFrameWndBase.h"
 
+#include <cstdint>
+
 class CCFCSceneB2 : public CChildFrameWndBase
 {
 	void ResetCamera( bool bAll );
-	void UpdateCamera( DWORD dwData );
-	void UpdateCameraPosition( DWORD dwData );
+	void UpdateCamera( uint32_t dwData );
+	void UpdateCameraPosition( uint32_t dwData );
 	void ClearScene();
-	bool KeyPressed( UINT nChar, DWORD dwData );
+	bool KeyPressed( UINT nChar, uint32_t dwData );
 
 protected:
 
@@ -17,7 +19,7 @@ public:
 	virtual ~CCFCSceneB2();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// CChildFrameWndBase

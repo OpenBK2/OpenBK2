@@ -7,6 +7,8 @@
 #include "PC_GUIDEditor.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 bool CPCGUIDEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCBinaryBitFieldEditor::GetPCItemStringValue() pszValue == 0" );
@@ -33,7 +35,7 @@ bool CPCGUIDEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, co
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
 	( *pValue ) = CVariant();
-	BYTE * pData = new BYTE[sizeof( GUID )];
+	uint8_t * pData = new uint8_t[sizeof( GUID )];
 	GUID value;
 	try
 	{
@@ -139,8 +141,8 @@ bool CPCGUIDEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType,
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
-		const DWORD dwExStyle	= WS_EX_CLIENTEDGE;
+		const uint32_t dwStyle		= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
+		const uint32_t dwExStyle	= WS_EX_CLIENTEDGE;
 		bool bResult = CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() );
 		if ( bResult )
 		{
@@ -219,7 +221,7 @@ void CPCGUIDEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCGUIDEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCGUIDEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

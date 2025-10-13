@@ -4,6 +4,8 @@
 #include "B2_M1_Terrain/DBTerrain.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 /*
 жестко заданный minimap, в виде ромба. вершины ромба лежат РОВНО на серединах сторон окна прямоугольника, 
 являющегося minimap'ом:
@@ -65,7 +67,7 @@ public:
 	void SetMapInfoEditorSize( const int nSizeX, const int nSizeY );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	DECLARE_MESSAGE_MAP()

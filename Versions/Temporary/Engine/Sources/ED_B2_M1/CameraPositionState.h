@@ -3,6 +3,8 @@
 #include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 struct SCameraPos
 {
 	CVec3 vAnchor;
@@ -62,7 +64,7 @@ public:
 	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
 
 	//	ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	//	CCameraPositionState 

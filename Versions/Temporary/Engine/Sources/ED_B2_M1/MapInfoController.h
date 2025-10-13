@@ -4,6 +4,8 @@
 #include "MapEditorLib/ObjectBaseController.h"
 #include "B2_M1_Terrain/DBVSO.h"
 
+#include <cstdint>
+
 class CMapInfoController : public CObjectBaseController
 {
 	OBJECT_NOCOPY_METHODS( CMapInfoController );
@@ -13,7 +15,7 @@ public:
 	//
 	struct STileUndoData
 	{
-		CArray2D<BYTE> brush;
+		CArray2D<uint8_t> brush;
 		CVec3 vBrushPos;
 	};
 	//
@@ -71,7 +73,7 @@ public:
 						 vsoUndoDataList.empty() ); }
 
 	// Helpers
-	inline bool AddChangeTileOperation( const CArray2D<BYTE> &rBrush, const CVec3 &rvBrushPos )
+	inline bool AddChangeTileOperation( const CArray2D<uint8_t> &rBrush, const CVec3 &rvBrushPos )
 	{
 		CTileUndoDataList::iterator posTileUndoData = tileUndoDataList.insert( tileUndoDataList.begin(), STileUndoData() );
 		posTileUndoData->brush = rBrush;

@@ -2,7 +2,7 @@
 
 #include "TerraTools.h"
 
-
+#include <cstdint>
 
 static int GetGrannyTypedefOffset( granny_data_type_definition *pType, const char *name )
 {
@@ -99,7 +99,7 @@ void LoadGrannyModel( const std::string &szFileName, std::vector<CVec3> *pVerts,
 	GrannyFreeFile( pFile );
 }
 
-void ScanFill( CArray2D<BYTE> *pMask, const BYTE nColor )
+void ScanFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 {
 	int nHigh, nLow, x;
 	bool bFill;
@@ -156,7 +156,7 @@ void ScanFill( CArray2D<BYTE> *pMask, const BYTE nColor )
 	}
 }
 
-void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor )
+void ScanFillInArea( CArray2D<uint8_t> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const uint8_t nColor )
 {
 	NI_ASSERT( (nMinX >= 0) && (nMaxX < pMask->GetSizeX()) && (nMinY >= 0) && (nMaxY < pMask->GetSizeY()), "Wrong area coordinates" );
 	NI_ASSERT( (nMinX <= nMaxX) && (nMinY <= nMaxY), "Wrong area coordinates" );
@@ -215,7 +215,7 @@ void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, co
 	}
 }
 
-void DrawLine( CArray2D<BYTE> *pArray, const int nX1, const int nY1, const int nX2, const int nY2, const BYTE nColor )
+void DrawLine( CArray2D<uint8_t> *pArray, const int nX1, const int nY1, const int nX2, const int nY2, const uint8_t nColor )
 {
 	const int nDx = abs( nX2 - nX1 );
 	const int nDy = abs( nY2 - nY1 );
@@ -263,7 +263,7 @@ void DrawLine( CArray2D<BYTE> *pArray, const int nX1, const int nY1, const int n
 	}
 }
 
-static int LineFill( CArray2D<BYTE> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr, const BYTE nColor )
+static int LineFill( CArray2D<uint8_t> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr, const uint8_t nColor )
 {
 	if ( (x < 0) ||( y < 0) || (x >= pArray->GetSizeX()) || (y >= pArray->GetSizeY()) )
 		return x;
@@ -322,8 +322,8 @@ static int LineFill( CArray2D<BYTE> *pArray, const int x, const int y, const int
 	return xr;
 }
 
-static int LineFillEx( CArray2D<BYTE> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr,
-											 const BYTE nColor, const BYTE nBorderColor )
+static int LineFillEx( CArray2D<uint8_t> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr,
+											 const uint8_t nColor, const uint8_t nBorderColor )
 {
 	if ( (x < 0) || (y < 0) || (x >= pArray->GetSizeX()) || (y >= pArray->GetSizeY()) )
 		return x;
@@ -377,8 +377,8 @@ static int LineFillEx( CArray2D<BYTE> *pArray, const int x, const int y, const i
 	return xr;
 }
 
-static int LineFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY,
-													 const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr, const BYTE nColor )
+static int LineFillInArea( CArray2D<uint8_t> *pArray, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY,
+													 const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr, const uint8_t nColor )
 {
 	if ( (x < nMinX) || (y < nMinY) || (x > nMaxX) || (y >= nMaxY) )
 		return x;
@@ -435,13 +435,13 @@ static int LineFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const int nM
 	return xr;
 }
 
-void SimpleFill( CArray2D<BYTE> *pArray, const int x, const int y, const BYTE nColor, const BYTE nBorderColor )
+void SimpleFill( CArray2D<uint8_t> *pArray, const int x, const int y, const uint8_t nColor, const uint8_t nBorderColor )
 {
 	LineFillEx( pArray, x, y, 1, x, x, nColor, nBorderColor );
 }
 
-static int CheckFill( CArray2D<BYTE> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr,
-											const BYTE nColor, const BYTE nBorderColor, int *nFlag )
+static int CheckFill( CArray2D<uint8_t> *pArray, const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr,
+											const uint8_t nColor, const uint8_t nBorderColor, int *nFlag )
 {
 	if ( (x < 0) || (y < 0) || (x >= pArray->GetSizeX()) || (y >= pArray->GetSizeY()) )
 	{
@@ -506,9 +506,9 @@ static int CheckFill( CArray2D<BYTE> *pArray, const int x, const int y, const in
 	return xr;
 }
 
-static int CheckFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY,
+static int CheckFillInArea( CArray2D<uint8_t> *pArray, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY,
 														const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr,
-														const BYTE nColor, const BYTE nBorderColor, int *nFlag )
+														const uint8_t nColor, const uint8_t nBorderColor, int *nFlag )
 {
 	if ( (x < nMinX) || (y < nMinY) || (x > nMaxX) || (y > nMaxY) )
 	{
@@ -573,7 +573,7 @@ static int CheckFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const int n
 	return xr;
 }
 
-void WiseFill( CArray2D<BYTE> *pMask, const BYTE nColor )
+void WiseFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 {
 	NI_ASSERT( nColor != 0xff, "Color 0xff is forbidden for this type of filling" );
 	int x, nFlag;
@@ -615,7 +615,7 @@ void WiseFill( CArray2D<BYTE> *pMask, const BYTE nColor )
 	}
 }
 
-void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor )
+void WiseFillInArea( CArray2D<uint8_t> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const uint8_t nColor )
 {
 	NI_ASSERT( (nMinX >= 0) && (nMaxX < pMask->GetSizeX()) && (nMinY >= 0) && (nMaxY < pMask->GetSizeY()), "Wrong area coordinates" );
 	NI_ASSERT( (nMinX <= nMaxX) && (nMinY <= nMaxY), "Wrong area coordinates" );

@@ -2,6 +2,7 @@
 
 #include "MemoryLib_export.h"
 
+#include <cstdint>
 #include <cstring>
 
 struct CSymString
@@ -26,14 +27,14 @@ class MEMORYLIB_EXPORT CSymEngine
 public:
 	CSymEngine();
 	~CSymEngine();
-	bool GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc );
+	bool GetSymbol( uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc );
 	HANDLE GetProcess() const { return hProcess; }
 };
 MEMORYLIB_EXPORT CSymEngine &GetSymEngine();
 
 struct SCallStackEntry
 {
-	DWORD dwAddress;
+	uint32_t dwAddress;
 	CSymString szFile, szFunc;
 	int nLine;
 	SCallStackEntry() : dwAddress(0), nLine(-1) {}

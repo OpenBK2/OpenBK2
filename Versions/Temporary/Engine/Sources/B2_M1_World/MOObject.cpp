@@ -7,12 +7,14 @@
 #include "SceneB2/WindController.h"
 #include "Sound/SoundScene.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 static bool bDrawGrass = true;
 static bool bAnimateTrees = true;
 
-void RemoveAttachedSound( WORD *pwSound )
+void RemoveAttachedSound( uint16_t *pwSound )
 {
 	Singleton<ISoundScene>()->RemoveSoundFromMap( *pwSound );
 	*pwSound = 0;

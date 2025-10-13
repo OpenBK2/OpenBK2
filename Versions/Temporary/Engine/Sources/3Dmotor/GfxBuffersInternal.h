@@ -2,6 +2,8 @@
 #include "GfxInternal.h"
 #include "Gfx.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 
@@ -11,7 +13,7 @@ enum ETrueBufferUsage
 	TBU_DYNAMIC,
 	TBU_SOFTWARE
 };
-inline DWORD GetUsageFlags( ETrueBufferUsage eUsage )
+inline uint32_t GetUsageFlags( ETrueBufferUsage eUsage )
 {
 	switch ( eUsage )
 	{
@@ -59,7 +61,7 @@ public:
 	CRBase( int _nSize ): nSize(_nSize), nLockCount(0), pLocked(0) {}
 	~CRBase() { Free(); }
 	int GetSize() const { return nSize; }
-	void Lock( DWORD dwFlags )
+	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( nLockCount == 0 || dwFlags == 0 || dwFlags == D3DLOCK_NOOVERWRITE );
 		++nLockCount;
@@ -152,7 +154,7 @@ public:
 		if ( bInitOk )
 			TryLockBuffer( this, eUsage );
 	}
-	void Lock( DWORD dwFlags )
+	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( !pLocked );
 		HRESULT hr = obj->Lock( 0, 0, (void**)&pLocked, dwFlags );

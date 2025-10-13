@@ -7,6 +7,7 @@
 #include "Scene.h"
 
 #include <algorithm>
+#include <cstdint>
 
 #define DEF_RIVER_SAMPLES_PER_PATCH 4
 //
@@ -43,7 +44,7 @@
 #define DEF_MIN_REFL_ALPHA_VAL 128
 #define DEF_REFL_ALPHA_RANGE ( 255 - DEF_MIN_REFL_ALPHA_VAL )
 
-inline BYTE CalculateAlphaValue( const int nWaterSamplesNum, const int nAlphaCellsNumL, const int nAlphaCellsNumR,
+inline uint8_t CalculateAlphaValue( const int nWaterSamplesNum, const int nAlphaCellsNumL, const int nAlphaCellsNumR,
 																 const float fAlphaCellsCoeffL, const float fAlphaCellsCoeffR, const float x,
 																 const float fOpacity)
 {

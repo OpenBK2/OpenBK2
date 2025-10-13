@@ -22,7 +22,7 @@ namespace NDb
 	struct SRankExperience
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fExperience;
 		CDBPtr< SPlayerRank > pRank;
@@ -34,17 +34,17 @@ namespace NDb
 			nAddPromotion( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SLeaderExpLevel
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szRankNameFileRef;
 		int nExpNeeded;
@@ -57,17 +57,17 @@ namespace NDb
 			nExpNeeded( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMedalConditions
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMedal > pMedal;
 		float fParameter;
@@ -79,11 +79,11 @@ namespace NDb
 			nStartingChapter( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SCampaign : public CResource
@@ -92,13 +92,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x10083400 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		struct SLeader
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			NFile::CFilePath szNameFileRef;
 			CDBPtr< STexture > pPicture;
@@ -107,11 +107,11 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		std::vector< CDBPtr< SChapter > > chapters;
 		NFile::CFilePath szLocalizedNameFileRef;
@@ -153,7 +153,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 	enum EReinforcementType;
 	struct SMapInfo;
@@ -167,7 +167,7 @@ namespace NDb
 	struct SUnitClassEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SReinforcement > pReinforcement;
 
@@ -175,17 +175,17 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SEnemyEntry
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMechUnitRPGStats > pMechUnit;
 		CDBPtr< SSquadRPGStats > pSquad;
@@ -194,11 +194,11 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	enum EMissionEnableType
@@ -247,7 +247,7 @@ namespace NDb
 	struct SMissionEnableInfo
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMapInfo > pMap;
 		CVec2 vPlaceOnChapterMap;
@@ -283,17 +283,17 @@ namespace NDb
 			vEndOffset( VNULL2 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SScenarioUnitModifier
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		EReinforcementType eType;
 		int nQuantity;
@@ -305,17 +305,17 @@ namespace NDb
 			nQuantity( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SBaseReinforcements
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< CDBPtr< SReinforcement > > reinforcements;
 
@@ -323,11 +323,11 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	enum EChapterBonusType
@@ -340,7 +340,7 @@ namespace NDb
 	struct SChapterGeneralInfo
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szDescFileRef;
 		CDBPtr< STexture > pPortrait;
@@ -352,11 +352,11 @@ namespace NDb
 			eReinforcementType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SChapterBonus : public CResource
@@ -365,7 +365,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1917A440 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		EChapterBonusType eBonusType;
 		bool bApplyToEnemy;
@@ -387,7 +387,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SChapter : public CResource
@@ -396,7 +396,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x10083401 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedNameSaveLoadFileRef;
@@ -438,7 +438,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 	struct STexture;
 
@@ -448,7 +448,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x170C9480 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedDescFileRef;
@@ -467,7 +467,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

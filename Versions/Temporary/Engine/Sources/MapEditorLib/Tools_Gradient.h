@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 struct SGradient
 {
@@ -37,7 +38,7 @@ public:
 	}
 
 	void UpdateHeightRanges();
-	bool CreateFromImage( const CArray2D<DWORD> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange );
+	bool CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange );
 	bool Get( float *pfValue, float fPosition, bool bSquareInterpolated ) const;
 	inline float operator()( float fPosition, bool bSquareInterpolated = false ) const { float fValue = 0.0f; Get( &fValue, fPosition, bSquareInterpolated ); return fValue; }
 };

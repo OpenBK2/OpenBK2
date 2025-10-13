@@ -4,24 +4,26 @@
 #include "Misc/2Darray.h"
 #include "Image/Targa.h"
 
+#include <cstdint>
+
 using namespace NImage;
 
-inline void FlipY( CArray2D<BYTE> &image )
+inline void FlipY( CArray2D<uint8_t> &image )
 {
 	const int nSizeX = image.GetSizeX();
 	const int nSizeY = image.GetSizeY();
-	BYTE *data = &( image[0][0] );
-	std::vector<BYTE> dataline( nSizeX );
+	uint8_t *data = &( image[0][0] );
+	std::vector<uint8_t> dataline( nSizeX );
 	for ( int i = 0; i < nSizeY/2; ++i )
 	{
-		memcpy( &(dataline[0]), &(data[i*nSizeX]), nSizeX * sizeof(BYTE) );
-		memcpy( &(data[i*nSizeX]), &(data[(nSizeY - i - 1)*nSizeX]), nSizeX * sizeof(BYTE) );
-		memcpy( &(data[(nSizeY - i - 1)*nSizeX]), &(dataline[0]), nSizeX * sizeof(BYTE) );
+		memcpy( &(dataline[0]), &(data[i*nSizeX]), nSizeX * sizeof(uint8_t) );
+		memcpy( &(data[i*nSizeX]), &(data[(nSizeY - i - 1)*nSizeX]), nSizeX * sizeof(uint8_t) );
+		memcpy( &(data[(nSizeY - i - 1)*nSizeX]), &(dataline[0]), nSizeX * sizeof(uint8_t) );
 	}
 }
 
 
-bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<BYTE> &data )
+bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 {
 	NI_ASSERT( pStream->IsOk(), "LoadGrayTGAImage - Can't load image" );
 	//
@@ -41,7 +43,7 @@ bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<BYTE> &data )
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 ) 
 	{
 		for ( int i = data.GetSizeY() - 1; i >= 0; --i )
-			pStream->Read( &(data[i][0]), data.GetSizeX() * sizeof(BYTE) );
+			pStream->Read( &(data[i][0]), data.GetSizeX() * sizeof(uint8_t) );
 	}
 	else
 		pStream->Read( &(data[0][0]), nRequested );
@@ -50,7 +52,7 @@ bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<BYTE> &data )
 }
 
 
-bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<BYTE> &data, int nPosY )
+bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<uint8_t> &data, int nPosY )
 {
 	NI_ASSERT( pStream->IsOk(), "AppendGrayTGAImageAtBottom - Can't load image" );
 	//
@@ -67,7 +69,7 @@ bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<BYTE> &data, int
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 ) 
 	{
 		for ( int i = nPosY + int(hdr.imagespec.wImageHeight) - 1; nPosY >= 0; --i )
-			pStream->Read( &(data[i][0]), hdr.imagespec.wImageWidth * sizeof(BYTE) );
+			pStream->Read( &(data[i][0]), hdr.imagespec.wImageWidth * sizeof(uint8_t) );
 	}
 	else
 		pStream->Read( &(data[nPosY][0]), nRequested );
@@ -76,7 +78,7 @@ bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<BYTE> &data, int
 }
 
 
-bool SaveGrayTGAImage( CDataStream *pStream, CArray2D<BYTE> &data )
+bool SaveGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 {
 	NI_VERIFY( pStream->IsOk(), "SaveGrayTGAImage - Can't save image", return false )
 	// compose and write header

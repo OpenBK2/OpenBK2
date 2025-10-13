@@ -6,6 +6,8 @@
 
 #include "PC_StringComboEditor.h"
 
+#include <cstdint>
+
 CPCStringComboEditor::CPCStringComboEditor() : bCreateControls( true )
 {	
 }
@@ -109,7 +111,7 @@ bool CPCStringComboEditor::CreateEditor( const string &rszName, EPCIEType _nEdit
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle =  WS_CHILD | WS_VSCROLL | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST;
+		const uint32_t dwStyle =  WS_CHILD | WS_VSCROLL | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST;
 		if ( CComboBox::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) )
 		{
 			SetExtendedUI( true );
@@ -194,7 +196,7 @@ void CPCStringComboEditor::SetDefaultValue()
 }
 
 
-bool CPCStringComboEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCStringComboEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -228,7 +230,7 @@ bool CPCStringComboEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool 
 	NI_ASSERT( pbEnable != 0, "CPCStringComboEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCStringComboEditor::UpdateCommand(), pbCheck == 0" );
 	//
-	DWORD dwSelection = 0;
+	uint32_t dwSelection = 0;
 	dwSelection = CComboBox::GetEditSel();
 	switch( nCommandID )
 	{

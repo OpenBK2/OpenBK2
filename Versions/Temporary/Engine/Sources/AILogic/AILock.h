@@ -3,26 +3,25 @@
 #include "Common_RTS_AI/Terrain.h"
 #include "StaticObjectRotation.h"
 
-
-
+#include <cstdint>
 
 namespace NLock
 {
 struct SEntranceData
 {
 	CVec2 vPos;
-	WORD wDir;
+	uint16_t wDir;
 };
 
 struct SStaticObjectLockInfo
 {
 	bool bNewLockingWay;
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > oldLock;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > oldLock;
 	const std::vector<SVector> *pNewLock;
-	CArray2D<BYTE> &lockInfo;
+	CArray2D<uint8_t> &lockInfo;
 	std::list<SObjTileInfo> &lockedTiles;
 
-	SStaticObjectLockInfo ( CArray2D<BYTE> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
+	SStaticObjectLockInfo ( CArray2D<uint8_t> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
 		: lockInfo( _lockInfo ), lockedTiles( _lockedTiles ), bNewLockingWay( true ), pNewLock( 0 )
 	{
 	}
@@ -55,7 +54,7 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 
 	if ( lockInfo.bNewLockingWay == false )
 	{
-		CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > &pass = lockInfo.oldLock;
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > &pass = lockInfo.oldLock;
 
 		lockInfo.lockInfo.SetSizes( (pass.GetMaxX() - pass.GetMinX() ) / SConsts::TILE_SIZE + 2, (pass.GetMaxY() - pass.GetMinY())/SConsts::TILE_SIZE +2 );
 		lockInfo.lockInfo.FillZero();
@@ -72,8 +71,8 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 					if ( !access.IsTileInside( tile ) )
 						continue;
 
-					const BYTE tileInfo = access.GetTileLockInfo( tile );
-					BYTE lock = ~tileInfo & ePassClass & EAC_ANY;
+					const uint8_t tileInfo = access.GetTileLockInfo( tile );
+					uint8_t lock = ~tileInfo & ePassClass & EAC_ANY;
 					if ( entranceTiles.find( tile ) != entranceTiles.end() )
 						lock &= ~EAC_HUMAN;
 					lockInfo.lockInfo[tile.y - vStartTile.y][tile.x - vStartTile.x] = lock;
@@ -91,8 +90,8 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 			if ( !access.IsTileInside( tiles[i] ) )
 				continue;
 
-			const BYTE tileInfo = access.GetTileLockInfo( tiles[i] );
-			BYTE lock = ~tileInfo & ePassClass & EAC_ANY;
+			const uint8_t tileInfo = access.GetTileLockInfo( tiles[i] );
+			uint8_t lock = ~tileInfo & ePassClass & EAC_ANY;
 			if ( entranceTiles.find( tiles[i] ) != entranceTiles.end() )
 				lock &= ~EAC_HUMAN;
 

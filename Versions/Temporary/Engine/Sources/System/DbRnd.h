@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -191,7 +193,7 @@ const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRan
 
 struct SRndReference
 {
-	void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const { }
+	void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const { }
 };
 
 }

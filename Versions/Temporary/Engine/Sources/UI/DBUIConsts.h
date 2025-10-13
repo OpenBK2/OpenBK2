@@ -2,10 +2,11 @@
 
 #include "UI_export.h"
 
-
 // automatically generated file, don't change manually!
 
 #include "dbuserinterface.h"
+
+#include <cstdint>
 
 struct IXmlSaver;
 
@@ -43,14 +44,14 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 
 	struct UI_EXPORT SUIGameConsts : public CResource
 	{
 	public:
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< CDBPtr< STooltipContext > > contexts;
 		CDBPtr< SWindowConsole > pConsole;
@@ -66,7 +67,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

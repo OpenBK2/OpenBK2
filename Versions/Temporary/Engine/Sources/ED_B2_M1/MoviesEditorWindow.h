@@ -6,6 +6,8 @@
 #include "MoviesEditorData.h"
 #include "TimeSliderControl.h"
 
+#include <cstdint>
+
 #define DEF_TIMELINE_LEN	1000
 
 #define SLI_MODE_NOTHING				0x00000000
@@ -99,7 +101,7 @@ public:
 	void ResetDialog();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	virtual void NotifyHandler( SScriptMovieEditorData::EMoviesEditorLastAction eAction );

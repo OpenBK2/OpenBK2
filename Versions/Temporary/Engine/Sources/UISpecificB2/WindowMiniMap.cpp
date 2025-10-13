@@ -10,6 +10,8 @@
 #include "Main/GameTimer.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS(0x1508EAC0, CWindowMiniMap);
 REGISTER_SAVELOAD_CLASS(0x15099C00, CMiniMapLayer);
 
@@ -480,7 +482,7 @@ void CWindowMiniMap::UpdateWarFog()
 			{
 				const int nFogX = vPos.x * fX;
 				const int nFogY = vPos.y * fY;
-				const BYTE color = warFog[nFogY][nFogX];
+				const uint8_t color = warFog[nFogY][nFogX];
 				pWarFogLayer->PutPixel( x, y, warFogColors[color] );
 			}
 		}
@@ -874,7 +876,7 @@ void CWindowMiniMap::SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits )
 	pUnitsLayer->SetNeedUpdate();
 }
 
-void CWindowMiniMap::SetWarFog( const CArray2D<BYTE> *pWarFogInfo )
+void CWindowMiniMap::SetWarFog( const CArray2D<uint8_t> *pWarFogInfo )
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 1 )
 	{

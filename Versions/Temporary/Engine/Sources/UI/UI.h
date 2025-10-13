@@ -199,9 +199,9 @@ struct IWindow : virtual public CObjectBase
 	// window's placement
 	virtual void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const = 0;
 
-	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags ) = 0;
+	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) = 0;
 	virtual CTRect<int> GetPlacement() const = 0;
-	virtual void SetPlacement( const CTRect<int> &rc, const DWORD flags ) = 0;
+	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) = 0;
 	//
 	virtual bool IsInside( const CVec2 &vPos ) const = 0;
 	//
@@ -259,7 +259,7 @@ struct IConsole : virtual public IWindow
 // console strings (add to bottom, scroll automatically to the top)
 struct IConsoleOutput : virtual public IWindow
 {
-	virtual void AddString( const std::wstring &szString, const DWORD color  ) = 0;
+	virtual void AddString( const std::wstring &szString, const uint32_t color  ) = 0;
 	virtual void Scroll( const int bUp ) = 0;
 	virtual void ToBegin() = 0;
 	virtual void ToEnd() = 0;
@@ -268,7 +268,7 @@ struct IConsoleOutput : virtual public IWindow
 
 struct IStatsSystemWindow : virtual public IWindow
 {
-	virtual void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor ) = 0;
+	virtual void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor ) = 0;
 };
 
 struct IButtonNotify : virtual public CObjectBase
@@ -361,8 +361,8 @@ struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 	//}
 
 	// new method, use it in new code
-	virtual bool Execute( const std::string &szSender, const std::string &szReaction, WORD wKeyboardFlags ) { return false; }
-	virtual int Check( const std::string &szCheckName, WORD wKeyboardFlags ) const { return 0; }
+	virtual bool Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags ) { return false; }
+	virtual int Check( const std::string &szCheckName, uint16_t wKeyboardFlags ) const { return 0; }
 };
 
 // specific screen funcitonality

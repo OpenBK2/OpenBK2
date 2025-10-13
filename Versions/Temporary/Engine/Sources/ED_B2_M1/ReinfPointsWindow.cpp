@@ -4,6 +4,8 @@
 #include "StringResources.h"
 #include "ReinfPointsWindow.h"
 
+#include <cstdint>
+
 //
 //
 //		REINFPOINTS WINDOW
@@ -145,7 +147,7 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 }
 
 
-bool CReinfPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CReinfPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SReinfPointsWindowData *pData = reinterpret_cast<SReinfPointsWindowData*>( dwData );
 

@@ -3,6 +3,8 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/ScintillaEditor.h"
 
+#include <cstdint>
+
 class CLogWindow : public CScintillaEditorWindow, public ICommandHandler
 {
 protected:
@@ -11,7 +13,7 @@ protected:
 public:
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

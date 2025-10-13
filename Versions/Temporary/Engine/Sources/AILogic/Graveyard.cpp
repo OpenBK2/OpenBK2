@@ -13,6 +13,8 @@
 #include "Stats_B2_M1/AnimationFromAction.h"
 #include "Stats_B2_M1/AnimModelGet.h"
 
+#include <cstdint>
+
 CGraveyard theGraveyard;
 
 extern CEventUpdater updater;
@@ -348,7 +350,7 @@ CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
 }
 
-const bool CDeadUnit::IsVisible( const BYTE cParty ) const
+const bool CDeadUnit::IsVisible( const uint8_t cParty ) const
 {
 	return theWarFog.IsTileVisible( tileCenter, cParty );
 }
@@ -389,7 +391,7 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 	else
 	{
 		if ( nFatality == -1 )
-			nFatality =	WORD( -1 );
+			nFatality =	uint16_t( -1 );
 		
 		pDyingInfo->nParam = nFatality;
 	}

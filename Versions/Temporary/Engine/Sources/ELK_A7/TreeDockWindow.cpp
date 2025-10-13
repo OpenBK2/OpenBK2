@@ -2,6 +2,8 @@
 #include "resource.h"
 #include "TreeDockWindow.h"
 
+#include <cstdint>
+
 CTreeDockWindow::CTreeDockWindow()
 	: pwndMainFrame( 0 )
 {
@@ -36,7 +38,7 @@ int CTreeDockWindow::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	//InitImageLists();
 
 	// create a tree control
-	DWORD dwStyle = TVS_SHOWSELALWAYS |
+	uint32_t dwStyle = TVS_SHOWSELALWAYS |
 									TVS_HASBUTTONS |
 									TVS_LINESATROOT |
 									TVS_HASLINES |
@@ -44,7 +46,7 @@ int CTreeDockWindow::OnCreate( LPCREATESTRUCT lpCreateStruct )
 									TVS_DISABLEDRAGDROP |
 									WS_CHILD | WS_VISIBLE;
 
-	DWORD dwStyleEx = TVXS_FLYBYTOOLTIPS |
+	uint32_t dwStyleEx = TVXS_FLYBYTOOLTIPS |
 										LVXS_HILIGHTSUBITEMS;
 
 	BOOL bCreated = wndTree.Create( dwStyle, dwStyleEx, CRect( 0, 0, 0, 0 ), this, IDC_EMBEDDED_CONTROL );

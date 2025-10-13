@@ -1,15 +1,18 @@
 #pragma once
+
 #include "2Darray.h"
 #include "System/XmlSaver.h"
+
+#include <cstdint>
 
 template<class T> class CBitArray2DRLEWrapper;
 
 class CArray1Bit
 {
 	int xSize;
-	std::vector<BYTE> array;
+	std::vector<uint8_t> array;
 
-	const BYTE GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
+	const uint8_t GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
 public:
 	int operator&( struct IBinSaver &saver ) { saver.Add( 1, &array ); saver.Add( 2, &xSize ); return 0; }
 	int operator&( struct IXmlSaver &saver ) { saver.Add( "Size", &xSize ); saver.Add( "BitArray", &array ); return 0; }
@@ -31,7 +34,7 @@ public:
 
 	//
 	void SetData( const int n ) { array[n >> 3] |= 1 << (n & 7); }
-	const BYTE GetData( const int n ) const { return ( array[n >> 3] >> (n & 7) ) & 1; }
+	const uint8_t GetData( const int n ) const { return ( array[n >> 3] >> (n & 7) ) & 1; }
 	void RemoveData( const int n ) { array[n >> 3] &= ~( 1 << (n & 7) ); }
 
 	//
@@ -178,7 +181,7 @@ public:
 class CArray4Bit
 {
 	int nSize;
-	std::vector<BYTE> array;
+	std::vector<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &array ); saver.Add( 2, &nSize ); return 0; }
 	int operator&( struct IXmlSaver &saver ) {  saver.Add( "Size", &nSize ); saver.Add( "BitArray", &array ); return 0; }
@@ -204,13 +207,13 @@ public:
 	int GetSize() const { return nSize; }
 	bool IsEmpty() const { return nSize == 0; }
 
-	void SetData( const int n, const BYTE cData )
+	void SetData( const int n, const uint8_t cData )
 	{
 		RemoveData( n );
 		array[n >> 1] |= cData << ( (n & 1) << 2 );
 	}
 
-	const BYTE GetData( const int n ) const
+	const uint8_t GetData( const int n ) const
 	{
 		return ( array[n >> 1] >> ( (n & 1) << 2 ) ) & 0xf;
 	}
@@ -224,7 +227,7 @@ public:
 class CArray2D4Bit
 {
 	int xSize;
-	CArray2D<BYTE> array;
+	CArray2D<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
 
@@ -246,13 +249,13 @@ public:
 	//
 	bool IsEmpty() const { return array.IsEmpty(); }
 
-	void SetData( const int x, const int y, const BYTE cData )
+	void SetData( const int x, const int y, const uint8_t cData )
 	{
 		RemoveData( x, y );
 		array[y][x >> 1] |= cData << ( (x & 1) << 2 );
 	}
 
-	const BYTE GetData( const int x, const int y ) const
+	const uint8_t GetData( const int x, const int y ) const
 	{
 		return ( array[y][x >> 1] >> ( (x & 1) << 2 ) ) & 0xf;
 	}
@@ -268,7 +271,7 @@ public:
 class CArray2D1Bit
 {
 	int xSize;
-	CArray2D<BYTE> array;
+	CArray2D<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
 
@@ -306,7 +309,7 @@ public:
 		array[y][x >> 3] |= 1 << (x & 7);
 	}
 
-	const BYTE GetData( const int x, const int y ) const
+	const uint8_t GetData( const int x, const int y ) const
 	{
 		return ( array[y][x >> 3] >> (x & 7) ) & 1;
 	}

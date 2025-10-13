@@ -5,6 +5,8 @@
 #include "SceneB2/Scene.h"
 #include "SimpleObjectState.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 //
@@ -104,7 +106,7 @@ public:
 	bool InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 	//
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 };

@@ -2,12 +2,14 @@
 
 #include "Main/AICmdsAutoMagicInterface.h"
 
+#include <cstdint>
+
 class CAICmdsAutomagic : public IAICmdsAutoMagic
 {
 	OBJECT_BASIC_METHODS( CAICmdsAutomagic );
 
 	ZDATA
-		std::unordered_map<int, BYTE> msg2byte;
+		std::unordered_map<int, uint8_t> msg2byte;
 	std::vector<int> byte2msg;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&msg2byte); f.Add(3,&byte2msg); return 0; }
 public:	

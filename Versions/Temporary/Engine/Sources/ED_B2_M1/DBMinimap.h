@@ -5,6 +5,8 @@
 #include "stats_b2_m1/Season.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -43,7 +45,7 @@ namespace NDb
 	struct SShadowPoint
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nx;
 		int ny;
@@ -54,17 +56,17 @@ namespace NDb
 			ny( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SEmbossPoint
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nx;
 		int ny;
@@ -75,17 +77,17 @@ namespace NDb
 			ny( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMinimapLayer
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		EMinimapLayerType eType;
 		int nEmbossFilterSize;
@@ -109,11 +111,11 @@ namespace NDb
 			eScaleMethod( IMAGE_SCALE_METHOD_DEFAULT )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMinimap : public CResource
@@ -142,7 +144,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

@@ -1,8 +1,9 @@
-
 #pragma once
 
 #include "StaticObject.h"
 #include "System/det_map.h"
+
+#include <cstdint>
 
 class CFullBridge;
 // remember in what order bridges applied heigths and ensures heights removal in reverse order.
@@ -27,7 +28,7 @@ class CBridgeSpan : public CGivenPassabilityStObject
 	ZDATA_(CGivenPassabilityStObject)
 	CDBPtr<SBridgeRPGStats> pStats;
 
-	ZSKIP//CArray2D<BYTE> unlockTypes;	// разлоканные типы террэйна, 0 - если нечего было разлокивать
+	ZSKIP//CArray2D<uint8_t> unlockTypes;	// разлоканные типы террэйна, 0 - если нечего было разлокивать
 	CObj<CFullBridge> pFullBridge;
 	bool bNewBuilt;												// этот мост построили во время тгры
 	bool bLocked;													// залочены ли тайл
@@ -52,13 +53,13 @@ public:
 	//DEBUG}
 
 	void GetTilesForVisibilityInternal( CTilesSet *pTiles ) const;
-	void GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibity ) const;
-	void GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const;
+	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibity ) const;
+	void GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const;
 protected:
 	virtual int GetHeight() const { return 0; }
 public:
 	CBridgeSpan() : nScriptID( -1 ) { }
-	CBridgeSpan( const SBridgeRPGStats *pStats, const CVec3 &center, const float fHP, const WORD _nDir, const int nFrameIndex );
+	CBridgeSpan( const SBridgeRPGStats *pStats, const CVec3 &center, const float fHP, const uint16_t _nDir, const int nFrameIndex );
 	
 	void Build();													// построить сегмент моста, залокать как положено, послать в мир.
 
@@ -120,7 +121,7 @@ public: int operator&( IBinSaver &saver ); private:
 	public:
 		//
 		SSpanLock(): pSpan( 0 ) {  }
-		SSpanLock( CBridgeSpan * pSpan, const WORD wDir );
+		SSpanLock( CBridgeSpan * pSpan, const uint16_t wDir );
 		void Unlock();
 		const CBridgeSpan * GetSpan() const { return pSpan; }
 	};
@@ -143,9 +144,9 @@ public:
 
 	void EnumSpans( std::vector< CObj<CBridgeSpan> > *pSpans );
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	const bool IsVisible( const BYTE cParty ) const;
+	const bool IsVisible( const uint8_t cParty ) const;
 
-	void LockSpan( CBridgeSpan * pSpan, const WORD wDir );
+	void LockSpan( CBridgeSpan * pSpan, const uint16_t wDir );
 	void UnlockSpan( CBridgeSpan * pSpan );
 	void UnlockAllSpans();
 

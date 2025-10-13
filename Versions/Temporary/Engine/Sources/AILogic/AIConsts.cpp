@@ -5,6 +5,8 @@
 #include "System/det_map.h"
 #include "DBAIConsts.h"
 
+#include <cstdint>
+
 namespace NAIConsts
 {
 	const int WAR_FOG_FULL_UPDATE() { return SAIConsts::WAR_FOG_FULL_UPDATE; }
@@ -22,10 +24,10 @@ const float SConsts::SCamouflage::SNEAK_DECREASE_PER_SECOND_MOVE = 0.5f;
 const int SConsts::SCamouflage::SNEAK_ADVANCED_TIMEOUT = 6000;
 const int SConsts::SCamouflage::SNEAK_ADVANCED_RESET_TIMEOUT = 2000;
 
-const WORD SConsts::STANDART_VIS_ANGLE = 32768;
+const uint16_t SConsts::STANDART_VIS_ANGLE = 32768;
 const int SConsts::MAX_DIST_TO_RECALC_FOG = 55 * SConsts::TILE_SIZE;
 const int SConsts::TURN_TOLERANCE = 0;
-const WORD SConsts::DIR_DIFF_TO_SMOOTH_TURNING = 2000;
+const uint16_t SConsts::DIR_DIFF_TO_SMOOTH_TURNING = 2000;
 const int SConsts::NUMBER_ITERS_TO_LOOK_AHEAD = 7;
 const int SConsts::MAX_LEN_TO_GO_BACKWARD = 8;
 const int SConsts::SPEED_FACTOR = 800;
@@ -99,7 +101,7 @@ int SConsts::TIME_QUANT = 160;
 float SConsts::RU_PER_QUANT = 10;
 float SConsts::ENGINEER_RU_CARRY_WEIGHT = 3000.0f;
 float SConsts::SPY_GLASS_RADIUS = 1920.f;
-WORD SConsts::SPY_GLASS_ANGLE = 5000;
+uint16_t SConsts::SPY_GLASS_ANGLE = 5000;
 float SConsts::HOLD_SECTOR_SIGHT_BONUS = 1.2f;
 float SConsts::HOLD_SECTOR_DISPERSION_BONUS = 0.5f;
 int SConsts::TIME_TO_ENTER_HOLD_SECTOR = 1000;
@@ -107,7 +109,7 @@ int SConsts::TIME_TO_ENTER_HOLD_SECTOR = 1000;
 float SConsts::TRACK_TARGETING_AIM_BONUS = 2.0f;
 float SConsts::TRACK_TARGETING_DAMAGE_MODIFIER = 0.5f;
 float SConsts::AREA_DAMAGE_COEFF = 0.2f;
-WORD SConsts::MIN_ROTATE_ANGLE = 6000;
+uint16_t SConsts::MIN_ROTATE_ANGLE = 6000;
 float SConsts::RADIUS_TO_START_ANTIARTILLERY_FIRE = 320.0f;
 float SConsts::TRANSPORT_RU_CAPACITY = 10000.0f;
 float SConsts::TIME_OF_ALARM_UNDER_FIRE = 15000.0f;

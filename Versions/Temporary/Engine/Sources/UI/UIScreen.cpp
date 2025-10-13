@@ -10,6 +10,7 @@
 #include "3Dmotor/G2DView.h"
 #include "System/Text.h"
 
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS(0x11075B80,CWindowScreen)
 
@@ -410,15 +411,15 @@ void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 	NI_ASSERT( false, "trying to reverse nonregistered animation" );
 }
 
-WORD CWindowScreen::GetKeyboardFlags() const
+uint16_t CWindowScreen::GetKeyboardFlags() const
 {
-	WORD wRes = (WORD)EKF_NONE;
+	uint16_t wRes = (uint16_t)EKF_NONE;
 	if ( bindShift.IsActive() )
-		wRes |= (WORD)EKF_SHIFT;
+		wRes |= (uint16_t)EKF_SHIFT;
 	if ( bindCtrl.IsActive() )
-		wRes |= (WORD)EKF_CTRL;
+		wRes |= (uint16_t)EKF_CTRL;
 	if ( bindCtrl.IsActive() )
-		wRes |= (WORD)EKF_CTRL;
+		wRes |= (uint16_t)EKF_CTRL;
 	return wRes;
 }
 

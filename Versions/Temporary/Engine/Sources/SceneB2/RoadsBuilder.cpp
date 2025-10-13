@@ -3,6 +3,8 @@
 #include "3Dmotor/DBScene.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 #define DEF_ROAD_HEIGHT 0.1f
 #define DEF_ROAD_SAMPS_PER_PATCH 4
 #define DEF_ROAD_PATCH_VERTS_RESERVE 256
@@ -740,9 +742,9 @@ const NDb::SVSOInstance* CTerraGen::FindRoad( int nID ) const
 
 				for ( vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 				{
-					const BYTE &b1 = vertTexCoords[it->i1].x > -0.5f;
-					const BYTE &b2 = vertTexCoords[it->i2].x > -0.5f;
-					const BYTE &b3 = vertTexCoords[it->i3].x > -0.5f;
+					const uint8_t &b1 = vertTexCoords[it->i1].x > -0.5f;
+					const uint8_t &b2 = vertTexCoords[it->i2].x > -0.5f;
+					const uint8_t &b3 = vertTexCoords[it->i3].x > -0.5f;
 					if ( b1 && b2 && b3 )
 					{
 					}

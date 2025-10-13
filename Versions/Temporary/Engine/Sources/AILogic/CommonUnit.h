@@ -5,6 +5,8 @@
 #include "QueueUnit.h"
 #include "Common_RTS_AI/BasePathUnit.h"
 
+#include <cstdint>
+
 // причины по которым с юнита пытаются снять камуфляж,
 enum ECamouflageRemoveReason
 {
@@ -84,7 +86,7 @@ protected:
 	IShootEstimator* GetShootEstimator() { return pShootEstimator; }
 	virtual void NullSegmTime() {};
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const;
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate );
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
 	virtual void UpdateTile();
 	void ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility, const NDb::ESpecialAbilityParam action, class CAICommand * pCommand );
 
@@ -94,7 +96,7 @@ public:
 	int operator&( IBinSaver &f );
 	virtual int GetMovingType() const { return 0; }
 	virtual bool IsSelectable() const { return bSelectable; }
-	virtual void Init( const CVec3 &_vCenter, const WORD _wDirection, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec3 &_vCenter, const uint16_t _wDirection, ICollisionsCollector *pCollisionsCollector );
 	
 	virtual int GetNGuns() const = 0;
 	virtual CBasicGun* GetGun( const int n ) const = 0;
@@ -111,9 +113,9 @@ public:
 
 	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
 
-	virtual const BYTE GetPlayer() const = 0;
-	const BYTE GetParty() const;
-	virtual void ChangePlayer( const BYTE cPlayer ) = 0;
+	virtual const uint8_t GetPlayer() const = 0;
+	const uint8_t GetParty() const;
+	virtual void ChangePlayer( const uint8_t cPlayer ) = 0;
 	
 	// какой максимальный damage можно нанести юниту pTarget
 	virtual const float GetMaxDamage( class CCommonUnit *pTarget ) const;
@@ -128,7 +130,7 @@ public:
 	const NTimer::STime& GetLastBehTime() const { return lastBehTime; }
 	NTimer::STime& GetLastBehTime() { return lastBehTime; }
 
-	virtual const bool IsVisible( const BYTE party ) const = 0;
+	virtual const bool IsVisible( const uint8_t party ) const = 0;
 
 	virtual const bool NeedDeinstall() const { return false; }
 	// может ли сейчас стрелять ( например, если не инсталлирована, то не может )
@@ -147,7 +149,7 @@ public:
 	
 	// про updat-ить область range/пристрелки
 	virtual void UpdateArea( const EActionNotify eAction ) = 0;
-	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
+	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun );
@@ -160,10 +162,10 @@ public:
 	virtual const int GetNTurrets() const = 0;
 	virtual bool IsMech() const = 0;
 	
-	void SetBattlePos( const CVec2 &vPos, const WORD _wReserveDir = 0 ) { vBattlePos = vPos; wReserveDir = _wReserveDir; }
+	void SetBattlePos( const CVec2 &vPos, const uint16_t _wReserveDir = 0 ) { vBattlePos = vPos; wReserveDir = _wReserveDir; }
 	bool DoesReservePosExist() const { return vBattlePos.x != -1.0f; }
 	const CVec2& GetBattlePos() const { NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" ); return vBattlePos; }
-	const WORD GetReserveDir() const { NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" ); return wReserveDir; }
+	const uint16_t GetReserveDir() const { NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" ); return wReserveDir; }
 	void SetTruck( class CAIUnit *pUnit );
 	class CAIUnit* GetTruck() const;
 	
@@ -225,7 +227,7 @@ public:
 	void SetShootEstimator( struct IShootEstimator *pShootEstimator );
 	// сбросить всю информацию в shoot estimator и проинициализировать его юнитом pCurEnemy
 	// считается что сейчас стреляем по pCurEnemy, bDamageUpdated - был ли update на damage pCurEnemy нами
-	void ResetShootEstimator( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden = 0 );
+	void ResetShootEstimator( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden = 0 );
 	void AddUnitToShootEstimator( class CAIUnit *pUnit );
 	CAIUnit* GetBestShootEstimatedUnit() const;
 	CBasicGun* GetBestShootEstimatedGun() const;
@@ -235,7 +237,7 @@ public:
 	// обнулить время для периодов сканирования
 	virtual void ResetTargetScan() = 0;
 	// просканировать, если пора; если нашли цель, то атаковать
-	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 ) = 0;
+	virtual uint8_t AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 ) = 0;
 	// просканировать на поиск цели
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun ) = 0;
 	// поиск препятствия
@@ -281,7 +283,7 @@ public:
 	virtual const bool CanRotate() const = 0;
 	virtual const EAIClasses GetAIPassabilityClass() const { return EAC_ANY; }
 	virtual const bool IsDangerousDirExist() const { return false; }
-	virtual const WORD GetDangerousDir() const { return 0; }
+	virtual const uint16_t GetDangerousDir() const { return 0; }
 	virtual const int GetUniqueID() const { return CLinkObject::GetUniqueId(); }
 	virtual void UnitTrampled( const CBasePathUnit *pUnit ) {}
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const = 0;

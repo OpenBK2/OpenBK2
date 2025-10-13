@@ -9,6 +9,8 @@
 #include "GGeometryUtil.h"
 //#include "..\Misc\HPTimer.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 	_3DLIB_EXPORT int nVCacheSize = 10;
@@ -17,7 +19,7 @@ namespace NGfx
 namespace NGScene
 {
 
-void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<WORD> &filter )
+void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<uint16_t> &filter )
 {
 	int nTarget = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
@@ -32,11 +34,11 @@ void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<WORD> &fil
 	pRes->resize( nTarget );
 }
 
-void MergePositions( std::vector<WORD> *pMatches, std::vector<CVec3> *pPositions )
+void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPositions )
 {
 	std::vector<CVec3> mergedPositions;
 	std::vector<CVec3> &positions = *pPositions;
-	std::vector<WORD> &posIndices = *pMatches;
+	std::vector<uint16_t> &posIndices = *pMatches;
 	posIndices.resize( positions.size() );
 	mergedPositions.reserve( pPositions->size() );
 	typedef std::unordered_map<CVec3,int,SVec3Hash> CPosHash;
@@ -225,8 +227,8 @@ void CObjectInfo::CalcAverageTriArea()
 	fAverageTriArea = fArea / tris.size();
 }
 
-static std::vector<DWORD> emptyAttribute;
-const std::vector<DWORD> &CObjectInfo::GetAttribute( int nID )
+static std::vector<uint32_t> emptyAttribute;
+const std::vector<uint32_t> &CObjectInfo::GetAttribute( int nID )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
 	{
@@ -236,7 +238,7 @@ const std::vector<DWORD> &CObjectInfo::GetAttribute( int nID )
 	return emptyAttribute;
 }
 
-void CObjectInfo::SetAttribute( int nID, const std::vector<DWORD> &attr )
+void CObjectInfo::SetAttribute( int nID, const std::vector<uint32_t> &attr )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
 	{
@@ -252,7 +254,7 @@ void CObjectInfo::SetAttribute( int nID, const std::vector<DWORD> &attr )
 }
 
 template<class T>
-static void Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<WORD> &vxReorder, int nResVertices )
+static void Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<uint16_t> &vxReorder, int nResVertices )
 {
 	pRes->resize( nResVertices );
 	ASSERT( vxReorder.size() <= src.size() );
@@ -273,7 +275,7 @@ void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool
 			std::vector<STriangle> &tris = optimizedData.geometry;
 			tris = data.geometry;
 			CTriVertexCacheOptimizer vxOptimize;
-			std::vector<WORD> vxReorder;
+			std::vector<uint16_t> vxReorder;
 			int nResVertices;
 			//NHPTimer::STime tStart;
 			//NHPTimer::GetTime( &tStart );

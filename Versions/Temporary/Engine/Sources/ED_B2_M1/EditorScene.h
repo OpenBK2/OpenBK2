@@ -2,6 +2,8 @@
 
 #include "3Dmotor/GView.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SModel;
@@ -38,7 +40,7 @@ struct IEditorScene : public CObjectBase
 	virtual NGScene::IGameView *GetGView() = 0;
 	virtual CVec2 GetScreenRect() = 0;
 	virtual class CCSTime *GetGameTimer() = 0;
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const = 0;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual void ClearMarkers( ESceneMarkerType eType, int nID ) = 0;
 	virtual void AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter ) = 0;
 	virtual void SwitchScene( const EScene eScene ) = 0;
@@ -53,7 +55,7 @@ struct IEditorScene : public CObjectBase
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
 
 	virtual int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
-	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
 	virtual void RemovePolyline( const int nID ) = 0;
 	virtual bool ToggleShow( ESceneShow eShow ) = 0;
 	virtual bool ToggleAIGeometryMode() = 0;

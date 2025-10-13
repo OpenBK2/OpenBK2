@@ -17,6 +17,7 @@
 #include "3Dmotor/GSSEtransform.cpp"
 #include "3Dmotor/test/random.h"
 
+#include <cstdint>
 #include <vector>
 
 namespace {
@@ -27,11 +28,11 @@ struct SInputs
 {
     std::vector<NGfx::SCompactVector> normals;
     std::vector<NGfx::SCompactVector> transp;
-    std::vector<WORD> posIndices;
+    std::vector<uint16_t> posIndices;
     std::vector<NGfx::SMMXWord> attenuation;
     std::vector<NGfx::SMMXWord> colors;
-    std::vector<DWORD> src;
-    std::vector<DWORD> dst;
+    std::vector<uint32_t> src;
+    std::vector<uint32_t> dst;
     std::vector<CVec3> pos;
     std::vector<int> coords;
     std::vector<unsigned char> fog;
@@ -64,7 +65,7 @@ struct SInputs
         {
             normals[k].dw = random_uint32();
             transp[k].dw = random_uint32();
-            posIndices[k] = static_cast<WORD>( random_uint32() % n );
+            posIndices[k] = static_cast<uint16_t>( random_uint32() % n );
             word( attenuation[k] );
             word( colors[k] );
             src[k] = random_uint32();
@@ -101,7 +102,7 @@ const NGScene::SLightingKernels *SetFor( int nIndex )
         if ( !pK ) { state.SkipWithError( "not supported on this CPU" ); return; } \
         const int n = (int)state.range( 1 );                                      \
         SInputs in( n );                                                          \
-        std::vector<DWORD> outA( n ), outB( n );                                  \
+        std::vector<uint32_t> outA( n ), outB( n );                                  \
         for ( auto _ : state ) { body; benchmark::ClobberMemory(); }              \
         state.SetLabel( pK->pszName );                                            \
     }                                                                             \
@@ -132,7 +133,7 @@ LIGHTING_BENCH( BM_AddColors,
     pK->pAddColors( &in.dst[0], &in.src[0], &in.colors[0], n ) );
 
 LIGHTING_BENCH( BM_ScaleColors,
-    pK->pScaleColors( &in.dst[0], &in.src[0], sizeof( DWORD ), &in.scale[0], 0xff,
+    pK->pScaleColors( &in.dst[0], &in.src[0], sizeof( uint32_t ), &in.scale[0], 0xff,
         &in.posIndices[0], &in.transp[0], n, false ) );
 
 }

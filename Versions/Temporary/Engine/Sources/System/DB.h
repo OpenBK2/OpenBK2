@@ -4,6 +4,8 @@
 
 #include "System_export.h"
 
+#include <cstdint>
+
 #include <boost/config.hpp>
 
 // database object identification
@@ -12,7 +14,7 @@ class CDBID
 	ZDATA
 		std::string szKeyName;
 		ZSKIP;
-		DWORD dwHashKey;
+		uint32_t dwHashKey;
 public:
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szKeyName); f.Add(4,&dwHashKey); OnSerialize( f ); return 0; }
@@ -127,7 +129,7 @@ namespace NDb
 		virtual int GetTypeID() const = 0;
 		int GetRecordID() const { return -1; }
 		//
-		virtual DWORD CalcCheckSum() const { return 0; }
+		virtual uint32_t CalcCheckSum() const { return 0; }
 	};
 	//
 	// database functions
@@ -260,7 +262,7 @@ public:
 		return 0;
 	}
 
-	DWORD CalcCheckSum() const;
+	uint32_t CalcCheckSum() const;
 };
 
 struct SDBPtrHash

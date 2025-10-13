@@ -15,6 +15,8 @@
 
 #include "libdb/ResourceManager.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const string CRoadState::VSO_NAME = "Roads";
@@ -26,7 +28,7 @@ bool CRoadState::CanInsertVSO()
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			if( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{
@@ -70,7 +72,7 @@ void CRoadState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 		{
 			float fDefaultWidth = 0.0f;
 			SObjectSet objectSet;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
 				if ( objectSet.szObjectTypeName == VSO_TYPE_NAME )
 				{

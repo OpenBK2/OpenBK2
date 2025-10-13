@@ -4,6 +4,8 @@
 #include "BindProcessor.h"
 #include "Bind.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 namespace NBind
@@ -23,7 +25,7 @@ class CArrayElementManipulator : public IArrayElementManipulator, public ILoadab
 	//
 	CPtr<NMetaInfo::SStructMetaInfo> pContained;	// contained type
 	CPtr<NTypeDef::STypeArray> pTypeArray;				// array type def
-	std::vector<BYTE> *pRawVector;							// raw data vector
+	std::vector<uint8_t> *pRawVector;							// raw data vector
 	CBindArray *pBindArray;								// bind array of the parent array :)
 	CObj<IObjMan> pParent;								// parent object
 	std::string szAddName;											// additional name (for complete name restructuring)
@@ -31,7 +33,7 @@ class CArrayElementManipulator : public IArrayElementManipulator, public ILoadab
 	//
 	CArrayElementManipulator() {}
 public:
-	CArrayElementManipulator( const int _nIndex, const std::string &_szAddName, std::vector<BYTE> *_pRawVector,
+	CArrayElementManipulator( const int _nIndex, const std::string &_szAddName, std::vector<uint8_t> *_pRawVector,
 		NMetaInfo::SStructMetaInfo *_pContained, NTypeDef::STypeArray *_pTypeArray, IObjMan *_pParent, CBindArray *_pBindArray )
 		: pContained( _pContained ), pTypeArray( _pTypeArray ), pRawVector( _pRawVector ), pBindArray( _pBindArray ), 
 		  pParent( _pParent ), szAddName( _szAddName ), nIndex( _nIndex ) 
@@ -180,7 +182,7 @@ public:
 // **
 // ************************************************************************************************************************ //
 
-IObjMan *CBindArray::CreateManipulator( const int nIndex, const std::string &szAddName, std::vector<BYTE> *pRawVector,
+IObjMan *CBindArray::CreateManipulator( const int nIndex, const std::string &szAddName, std::vector<uint8_t> *pRawVector,
 																			  NMetaInfo::SStructMetaInfo *pContained, NTypeDef::STypeArray *pTypeArray,
 																			  IObjMan *pParent )
 {
@@ -194,7 +196,7 @@ IObjManIterator *CBindArray::CreateIterator( const int nIndex, const std::string
 }
 
 bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
-	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+	std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	const int nStructSize = pContained->singleField.main.size != 0 ? pContained->singleField.main.size : pContained->nStructSize;
 	if ( pContained->nNumCodeValues == 0 )
@@ -215,12 +217,12 @@ bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex,
 	return true;
 }
 
-int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis ) const
+int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis ) const
 {
 	const int nBinaryShift = field.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
 	{
-		const int nSize = reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() )->size() / int( field.contained.size );
+		const int nSize = reinterpret_cast<std::vector<uint8_t>*>( pThis + field.GetBinaryShift() )->size() / int( field.contained.size );
 #ifndef _FINALRELEASE
 		if ( field.pContained->nNumOwnValues != 0 )
 		{
@@ -235,7 +237,7 @@ int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *
 	}
 }
 
-bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis, bool bSetDefault )
+bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis, bool bSetDefault )
 {
 	if ( nAmount <= 0 )
 		return false;
@@ -248,11 +250,11 @@ bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SS
 		(*it)->ReportArrayInsert( nPos, nAmount );
 	//
 	const int nElementSize = int( field.contained.size );
-	BYTE *pNewData = 0;
+	uint8_t *pNewData = 0;
 	// resize code elements
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
+		std::vector<uint8_t> &rawVector = *( reinterpret_cast<std::vector<uint8_t>*>( pThis + field.GetBinaryShift() ) );
 		const int nOldRawSize = nSize * nElementSize;
 		const int nNewRawSize = ( nSize + nAmount ) * nElementSize;
 		const int nOldDataPos = nPos * nElementSize;
@@ -300,7 +302,7 @@ bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SS
 	return true;
 }
 
-bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis )
+bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis )
 {
 	const int nSize = GetSize( field, pThis );
 	if ( nSize == 0 )
@@ -324,10 +326,10 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 		(*it)->ReportArrayRemove( nPos, nAmount );
 	//
 	const int nElementSize = int( field.contained.size );
-	BYTE *pNewData = 0;
+	uint8_t *pNewData = 0;
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
+		std::vector<uint8_t> &rawVector = *( reinterpret_cast<std::vector<uint8_t>*>( pThis + field.GetBinaryShift() ) );
 		pNewData = &( rawVector[nElementSize * nPos] );
 	}
 	// destruct elements
@@ -337,9 +339,9 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 	// shift rest code values
 	if ( field.pContained->nNumCodeValues > 0 )
 	{
-		std::vector<BYTE> &rawVector = *( reinterpret_cast<std::vector<BYTE>*>( pThis + field.GetBinaryShift() ) );
-		BYTE *pDataRestBegin = &( rawVector[nElementSize * (nPos + nAmount) - 1] ) + 1;
-		BYTE *pDataRestEnd = &( rawVector[nElementSize * nSize - 1] ) + 1;
+		std::vector<uint8_t> &rawVector = *( reinterpret_cast<std::vector<uint8_t>*>( pThis + field.GetBinaryShift() ) );
+		uint8_t *pDataRestBegin = &( rawVector[nElementSize * (nPos + nAmount) - 1] ) + 1;
+		uint8_t *pDataRestEnd = &( rawVector[nElementSize * nSize - 1] ) + 1;
 		if ( pDataRestBegin < pDataRestEnd )
 			memmove( pNewData, pDataRestBegin, pDataRestEnd - pDataRestBegin );
 		rawVector.resize( (nSize - nAmount) * nElementSize );
@@ -354,7 +356,7 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 }
 
 bool CBindArray::SetValue( const std::string &szRestName, const int nIndex, const CVariant &value,
-	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+	std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	SBindProcessor bindProcessor;
 	if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -364,7 +366,7 @@ bool CBindArray::SetValue( const std::string &szRestName, const int nIndex, cons
 }
 
 bool CBindArray::GetValue( const std::string &szRestName, const int nIndex, CVariant *pValue,
-	std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
+	std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	SBindProcessor bindProcessor;
 	if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )

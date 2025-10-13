@@ -4,12 +4,10 @@
 #include "GfxInternal.h"
 #include "System/VFSOperations.h"
 
-
 #include "GShaderFX.h"
 #include "GShaderFX.hpp"
 
-
-
+#include <cstdint>
 
 namespace NGfx
 {
@@ -137,7 +135,7 @@ const char* __cdecl Format( const char *pszFormat, ... )
 CPixelShader::CPixelShader( const std::string &szName ):
 	bBegin( false ), hTechnique( 0 )
 {
-	DWORD dwMaxVersion = 0;
+	uint32_t dwMaxVersion = 0;
 	if ( fPixelShaderMaxVersion > 0 )
 	{
 		int nTemp = fPixelShaderMaxVersion * 10;
@@ -169,7 +167,7 @@ CPixelShader::CPixelShader( const std::string &szName ):
 			hRes = pPSEffect->GetPassDesc( hPass, &passDesc );
 			ASSERT( SUCCEEDED( hRes ) );
 
-			DWORD dwVer = D3DXGetShaderVersion( passDesc.pPixelShaderFunction );
+			uint32_t dwVer = D3DXGetShaderVersion( passDesc.pPixelShaderFunction );
 			if ( dwVer > dwMaxVersion )
 				continue;
 		}
@@ -233,7 +231,7 @@ CVertexShader::CVertexShader( const std::string &szName )
 		return;
 	}
 
-	pDevice->CreateVertexShader( (DWORD*)pBuffer->GetBufferPointer(), pShader.GetAddr() );
+	pDevice->CreateVertexShader( (unsigned long*)pBuffer->GetBufferPointer(), pShader.GetAddr() );
 }
 
 void CVertexShader::Use()
@@ -284,37 +282,37 @@ HRESULT CStatesManager::SetMaterial( CONST D3DMATERIAL9 *pMaterial )
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetLight( DWORD Index, CONST D3DLIGHT9 *pLight )
+HRESULT CStatesManager::SetLight(unsigned long Index, CONST D3DLIGHT9 *pLight )
 {
 	ASSERT( 0 );
 	return S_OK;
 }
 
-HRESULT CStatesManager::LightEnable( DWORD Index, BOOL Enable )
+HRESULT CStatesManager::LightEnable(unsigned long Index, BOOL Enable )
 {
 	ASSERT( 0 );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetRenderState( D3DRENDERSTATETYPE State, DWORD Value )
+HRESULT CStatesManager::SetRenderState( D3DRENDERSTATETYPE State, unsigned long Value )
 {
 	pDevice->SetRenderState( State, Value );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetTexture( DWORD Stage, LPDIRECT3DBASETEXTURE9 pTexture )
+HRESULT CStatesManager::SetTexture(unsigned long Stage, LPDIRECT3DBASETEXTURE9 pTexture )
 {
 	pDevice->SetTexture( Stage, pTexture );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetTextureStageState( DWORD Stage, D3DTEXTURESTAGESTATETYPE Type, DWORD Value )
+HRESULT CStatesManager::SetTextureStageState(unsigned long Stage, D3DTEXTURESTAGESTATETYPE Type, unsigned long Value )
 {
 	pDevice->SetTextureStageState( Stage, Type, Value );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetSamplerState( DWORD Sampler, D3DSAMPLERSTATETYPE Type, DWORD Value )
+HRESULT CStatesManager::SetSamplerState(unsigned long Sampler, D3DSAMPLERSTATETYPE Type, unsigned long Value )
 {
 	pDevice->SetSamplerState( Sampler, Type, Value );
 	return S_OK;
@@ -326,7 +324,7 @@ HRESULT CStatesManager::SetNPatchMode( FLOAT NumSegments )
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetFVF( DWORD FVF )
+HRESULT CStatesManager::SetFVF(unsigned long FVF )
 {
 	ASSERT( 0 );
 	return S_OK;

@@ -8,6 +8,8 @@
 #include <CommCtrl.h>
 #endif
 
+#include <cstdint>
+
 //#include "CallStack.h"
 //#include "DialogFunctions.h"
 //#include "WndUtils.h"
@@ -20,7 +22,7 @@ static bool needSaveLog = true;
 
 
 static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam );
-static bool ReportAssertionDlgProcCommand( HWND hwndDlg, WORD wCtrlID, WORD wNotifCode, LPARAM lParam );
+static bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam );
 
 struct SAssertionDlgParams
 {
@@ -165,7 +167,7 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM 
 	return false;
 }
 
-bool ReportAssertionDlgProcCommand( HWND hwndDlg, WORD wCtrlID, WORD wNotifCode, LPARAM lParam )
+bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam )
 {
 	switch(wCtrlID)
 	{ 

@@ -6,14 +6,16 @@
 #include "System/XmlSaver.h"
 #include "dbattachedmodelvisobj.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SAttachedModelVisObj::SSDamageLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SAttachedModelVisObj::SSDamageLevel::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (uint8_t*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SAttachedModelVisObj::SSDamageLevel::operator&( IXmlSaver &saver )
@@ -30,7 +32,7 @@ int SAttachedModelVisObj::SSDamageLevel::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SAttachedModelVisObj::SSDamageLevel::CalcCheckSum() const
+uint32_t SAttachedModelVisObj::SSDamageLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -48,11 +50,11 @@ void SAttachedModelVisObj::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AttachedModelVisObj", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "visualObject", (BYTE*)&pvisualObject - pThis, sizeof(pvisualObject), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "visualObject", (uint8_t*)&pvisualObject - pThis, sizeof(pvisualObject), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "DamageLevels", &damageLevels, pThis );
-	NMetaInfo::ReportMetaInfo( "AnimableModel", (BYTE*)&pAnimableModel - pThis, sizeof(pAnimableModel), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TransportableModel", (BYTE*)&pTransportableModel - pThis, sizeof(pTransportableModel), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AnimableModel", (uint8_t*)&pAnimableModel - pThis, sizeof(pAnimableModel), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TransportableModel", (uint8_t*)&pTransportableModel - pThis, sizeof(pTransportableModel), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "animdescs", &animdescs, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

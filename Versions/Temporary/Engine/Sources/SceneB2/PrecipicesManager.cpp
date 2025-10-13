@@ -3,6 +3,7 @@
 #include "GenTerrain.h"
 
 #include <algorithm>
+#include <cstdint>
 
 int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 															const float fMin, const float fMax,
@@ -159,7 +160,7 @@ STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
 
 void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr,
 																				 const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale,
-																				 const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial,
+																				 const uint8_t bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial,
 																				 const float fDepth, const float fDepthRand, const float fRandX, const float fRandY,
 																				 const bool bHasPeak )
 {

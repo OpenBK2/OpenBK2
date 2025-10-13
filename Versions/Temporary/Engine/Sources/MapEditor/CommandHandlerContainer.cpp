@@ -3,6 +3,8 @@
 #include "CommandHandlerContainer.h"
 #include "MapEditorLib/Tools_HashSet.h"
 
+#include <cstdint>
+
 void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID )
 {
 	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
@@ -93,7 +95,7 @@ ICommandHandler* CCommandHandlerContainer::Get( UINT nType )
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, DWORD dwData )
+bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData )
 {
 //	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
 	ICommandHandler *pCommandHandler = Get( nType );
@@ -119,7 +121,7 @@ bool CCommandHandlerContainer::UpdateCommand( UINT nType, UINT nCommandID, bool 
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )

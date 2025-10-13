@@ -5,6 +5,7 @@
 #include "Commands.h"
 #include "XmlSaver.h"
 
+#include <cstdint>
 #include <vector>
 #include <string>
 
@@ -339,7 +340,7 @@ void CRandomGenSeed::FillRandRsl()
 		{
 			srand( GetTickCount() );
 			SetFilePointer( hFile, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
-			DWORD dwReadBytes = 0;
+			unsigned long dwReadBytes = 0;
 			if ( ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) != TRUE || (dwReadBytes != sizeof(rnd.randrsl)) )
 				bSuccess = FALSE;
 			CloseHandle( hFile );

@@ -4,6 +4,8 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoViewFilterDlg.h"
 
+#include <cstdint>
+
 //
 //
 //	CMapInfoViewFilterDlg
@@ -90,7 +92,7 @@ void CMapInfoViewFilterDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoViewFilterDlg::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapInfoViewFilterDlg::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	return false;
 }

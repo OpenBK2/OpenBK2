@@ -5,6 +5,8 @@
 #include "Technics.h"
 #include "Common_RTS_AI/StandartSmoothMechPath.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4C4, CPresizePath );
 REGISTER_SAVELOAD_CLASS( 0x11123400, CMechUnitRestOnBoardPath);
 
@@ -87,7 +89,7 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 			break;
 		case EPPS_TURN_TO_DESIRED_POINT:
 			{
-				WORD dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
+				uint16_t dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
 				dir = !pUnit->IsGoForward() ? dir : dir+65535/2;
 				if ( pUnit->TurnToDirection( dir, true, true ) )
 				{

@@ -2,6 +2,8 @@
 #include "System/FastMath.h"
 #include "AIGeometry.h"
 
+#include <cstdint>
+
 const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegmentEnd, const CVec2 &vPoint )
 {
 	CLine2 line( vSegmentStart, vSegmentEnd );
@@ -54,7 +56,7 @@ void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &
 	//pQuat->Negate();
 }
 
-const CVec2 MoveVectorByDirection( const CVec2 &vPoint, WORD wDir )
+const CVec2 MoveVectorByDirection( const CVec2 &vPoint, uint16_t wDir )
 {
 	/*vRes = GetVectorByDirection( wDir );
 	vRes.Set( vPoint.x * vRes.x - vPoint.y * vRes.y, vPoint.x * vRes.y + vPoint.y * vRes.x );

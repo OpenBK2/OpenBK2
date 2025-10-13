@@ -4,7 +4,7 @@
 
 #include "UIML.h"
 
-
+#include <cstdint>
 
 int CWindowStatsSystem::SColorString::operator&( IBinSaver &saver )
 {
@@ -13,19 +13,19 @@ int CWindowStatsSystem::SColorString::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CWindowStatsSystem::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
+CWindowStatsSystem::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
 {
 	Init( pszStr, col, nWidth );
 }
 
-void CWindowStatsSystem::SColorString::SetText( const wchar_t *pszStr, DWORD col, const int nWidth )
+void CWindowStatsSystem::SColorString::SetText( const wchar_t *pszStr, uint32_t col, const int nWidth )
 {
 	std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
 	pGfxText->SetText( szText, 0 );
 	pGfxText->Generate( VirtualToScreenX( nWidth ) );
 }
 
-void CWindowStatsSystem::SColorString::Init( const wchar_t *pszStr, DWORD col, const int nWidth )
+void CWindowStatsSystem::SColorString::Init( const wchar_t *pszStr, uint32_t col, const int nWidth )
 {
 	pGfxText = CreateML();
 	CUIFactory::RegisterMLHandlers( pGfxText );
@@ -41,7 +41,7 @@ void CWindowStatsSystem::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pShared = checked_cast_ptr<const NDb::SWindowStatsSystemShared *>( pDesc->pShared );
 }
 
-void CWindowStatsSystem::UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor )
+void CWindowStatsSystem::UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor )
 {
 	CEntries::iterator entryPos = entries.find( szEntry );
 	const std::wstring szTmp = szEntry + L": " + szValue;

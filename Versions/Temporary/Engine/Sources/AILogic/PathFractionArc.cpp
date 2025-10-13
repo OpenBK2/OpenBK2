@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "./pathfractionarc.h"
 
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS(0x11095C40, CPathFractionArc)
 
@@ -30,11 +31,11 @@ CVec3 CPathFractionArc::GetPoint( const float fDist ) const
 	//CRAP{ WILL OPTIMIZE 
 	const CVec2 vFromX( x0 );
 	const CVec2 vFromR( vFromX - circle.center );
-	const WORD wFrom = GetDirectionByVector( vFromR );
+	const uint16_t wFrom = GetDirectionByVector( vFromR );
 	//CRAP}
 
-	const WORD wSingleAngle = fDist/ circle.r / ( 2.0f * PI ) * 65535;
-	const WORD wTo = wFrom + circle.nDir * nOrientation * wSingleAngle;
+	const uint16_t wSingleAngle = fDist/ circle.r / ( 2.0f * PI ) * 65535;
+	const uint16_t wTo = wFrom + circle.nDir * nOrientation * wSingleAngle;
 	const CVec2 vToR( circle.r * GetVectorByDirection( wTo ) );
 
 	return CVec3( circle.center + vToR, fZ );
@@ -45,11 +46,11 @@ CVec3 CPathFractionArc::GetTangent( const float fDist ) const
 	//CRAP{ WILL OPTIMIZE
 	const CVec2 vFromX( x0 );
 	const CVec2 vFromR( vFromX - circle.center );
-	const WORD wFrom = GetDirectionByVector( vFromR );
+	const uint16_t wFrom = GetDirectionByVector( vFromR );
 	//CRAP}
 
-	const WORD wSingleAngle = fDist/ circle.r / ( 2.0f * PI ) * 65535;
-	const WORD wTo = wFrom + circle.nDir * nOrientation * wSingleAngle;
+	const uint16_t wSingleAngle = fDist/ circle.r / ( 2.0f * PI ) * 65535;
+	const uint16_t wTo = wFrom + circle.nDir * nOrientation * wSingleAngle;
 	const CVec2 vToR( circle.r * GetVectorByDirection( wTo ) );
 
 	return CVec3( -nOrientation * vToR.y * circle.nDir, nOrientation * vToR.x * circle.nDir, 0 );

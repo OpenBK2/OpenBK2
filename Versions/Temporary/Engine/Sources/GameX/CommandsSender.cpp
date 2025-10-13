@@ -8,6 +8,7 @@
 #include "ScenarioTracker.h"
 
 #include <algorithm>
+#include <cstdint>
 
 #ifndef _FINALRELEASE
 static int AUTOSAVE_ID = 0;
@@ -52,14 +53,14 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 }
 
 // unregister group 
-void CCommandsSender::CommandUnregisterGroup( const WORD wGroup )
+void CCommandsSender::CommandUnregisterGroup( const uint16_t wGroup )
 {
 //	if ( !bHistoryPlaying )
 //		pTransciver->SendCommand( new CUnregisterGroupCommand( wGroup ) );
 }
 
 // send command to group of units
-void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue, const int nCommandSaveID )
+void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue, const int nCommandSaveID )
 {
 	if ( !bHistoryPlaying )
 	{

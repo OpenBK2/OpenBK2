@@ -2,6 +2,8 @@
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 class CChildFrameWndBase : public CWnd, public ICommandHandler
 {
 	static const int DEFAULT_REFRESH_RATE;
@@ -29,15 +31,15 @@ class CChildFrameWndBase : public CWnd, public ICommandHandler
 	void AlignWndAspect();
 	//
 	void RemoveInput(); 
-	void EnableInput( DWORD dwData );
-	void EnableAutoUpdate( DWORD dwData );
+	void EnableInput( uint32_t dwData );
+	void EnableAutoUpdate( uint32_t dwData );
 	void EnableGameInput( struct IInterfaceCommand *pInterfaceCommand );
 	void DisableGameInput();
-	void GetDimensions( DWORD dwData );
-	void EnableRunMode( DWORD dwData );
-	void EnableRender( DWORD dwData );
-	void EnableScrollbars( DWORD dwData );
-	void EnableMouseCapture( DWORD dwData );
+	void GetDimensions( uint32_t dwData );
+	void EnableRunMode( uint32_t dwData );
+	void EnableRender( uint32_t dwData );
+	void EnableScrollbars( uint32_t dwData );
+	void EnableMouseCapture( uint32_t dwData );
 
 protected:
 	CRect rectBorder1, rectBorder2, rectWindow, rectMain;
@@ -87,7 +89,7 @@ public:
 
 	bool IsSceneUpdateEnabled() { return bEnableSceneUpdate; }
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// methods

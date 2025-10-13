@@ -35,6 +35,8 @@
 #include "Shell.h"
 #include "GlobalWarFog.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4DC, CSniper);
 REGISTER_SAVELOAD_CLASS( 0x1108D442, CInfantry );
 
@@ -90,12 +92,12 @@ void CSoldier::InitGuns()
 	SetShootEstimator( new CSoldierShootEstimator( this ) );
 }
 
-const DWORD CSoldier::GetNormale( const CVec2 &vCenter ) const
+const uint32_t CSoldier::GetNormale( const CVec2 &vCenter ) const
 {
 	return IsLying() ? GetHeights()->GetNormal( vCenter ) : GetHeights()->GetNormal( -1, -1 );
 }
 
-const DWORD CSoldier::GetNormale() const
+const uint32_t CSoldier::GetNormale() const
 {
 	return IsLying() ? GetHeights()->GetNormal( GetCenterPlain() ) : GetHeights()->GetNormal( -1, -1 );
 }
@@ -412,7 +414,7 @@ bool CSoldier::InVisCone( const CVec2 &point ) const
 		DirsDifference( GetDirectionByVector( point - GetCenterPlain() ),GetFrontDirection() ) < GetVisionAngle();
 }
 
-void CSoldier::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CSoldier::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	bBeingHealed = false;
 	eInsideType = EOIO_NONE;
@@ -1085,7 +1087,7 @@ CBasicGun* CSoldier::ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STi
 	return pGuns->ChooseGunForStatObj( this, pObj, pTime ); 
 }
 
-bool CSoldier::CalculateUnitVisibility4Party( const BYTE party )
+bool CSoldier::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	bool bVisibility;
 	if ( IsInBuilding() )
@@ -1110,7 +1112,7 @@ bool CSoldier::CalculateUnitVisibility4Party( const BYTE party )
 	return UpdateUnitVisibilityForParty( party, bVisibility );
 }
 
-void CSoldier::SetDirection( const WORD newDir )
+void CSoldier::SetDirection( const uint16_t newDir )
 {
 	lastDirUpdate = curTime;
 	CAIUnit::SetDirection( newDir );
@@ -1409,7 +1411,7 @@ const ECollidingType CSoldier::GetCollidingType( CBasePathUnit *pUnit ) const
 //*														CSniper																*
 //*******************************************************************
 
-void CSniper::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CSniper::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	lastVisibilityCheck = 0;
 	bVisible = false;
@@ -1459,7 +1461,7 @@ void CSniper::Segment()
 		//SetCamoulfage();
 }
 
-bool CSniper::CalculateUnitVisibility4Party( const BYTE party ) 
+bool CSniper::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	if ( !IsCamoulflated() )
 		return CSoldier::CalculateUnitVisibility4Party( party );

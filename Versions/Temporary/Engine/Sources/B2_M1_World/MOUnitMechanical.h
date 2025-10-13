@@ -4,6 +4,8 @@
 #include "SceneB2/AnimMutators.h"
 #include "SmokeTrailEffect.h"
 
+#include <cstdint>
+
 namespace NAnimation
 {
 	struct ISkeletonAnimator;
@@ -33,7 +35,7 @@ class CMOUnitMechanical : public CMOUnit
 		std::vector<CVec3> lastTrackPoints;
 		std::vector<CVec3> trackPoints;
 		float fTrackWidth;
-		WORD wLastTrackDir;
+		uint16_t wLastTrackDir;
 		int nLastTrackTime;
 		bool bForwardMoving;
 		CPtr<IMOContainer> pTransport;

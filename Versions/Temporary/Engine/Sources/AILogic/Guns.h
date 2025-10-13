@@ -1,8 +1,9 @@
-
 #pragma once
 
 #include "LinkObject.h"
 #include "Stats_B2_M1/RPGStats.h"
+
+#include <cstdint>
 
 namespace NDb
 {
@@ -78,7 +79,7 @@ private:
 	float fRandom4Aim, fRandom4Relax;
 	//
 protected:	
-	BYTE nShellType;
+	uint8_t nShellType;
 	CPtr<CAIUnit> pOwner;
 	int nOwnerParty;
 	CPtr<SCommonGunInfo> pCommonGunInfo;
@@ -116,7 +117,7 @@ private:
 	void WaitForActionPoint();
 	void Shooting();
 	const CVec2 GetShootingPoint() const;
-	WORD GetVisAngleOfAim() const;
+	uint16_t GetVisAngleOfAim() const;
 
 	// для ускорения стрельбы в хороших случаях
 	void OnWaitForActionPointState();
@@ -132,13 +133,13 @@ protected:
 	//
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff ) = 0;
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle, cDeltaAngle - учитывать ли deltaAngle
-	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const = 0;
+	virtual bool IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const = 0;
 	virtual void ToRestState();
 	virtual void Rest() = 0;
 	virtual bool AnalyzeTurning() = 0;
 	// можно ли стрельнуть по цели не вращая ни turret ни base и не двигаясь
 	// cDeltaAngle - учитывать ли deltaAngle
-	bool CanShootWOGunTurn( const BYTE cDeltaAngle, const float fZ );
+	bool CanShootWOGunTurn( const uint8_t cDeltaAngle, const float fZ );
 	// можно ли стрелять по точке, если pUnit находится внутри статич. объекта
 	bool AnalyzeLimitedAngle( class CCommonUnit *pUnit, const CVec2 &point ) const;
 	void Turning();
@@ -148,7 +149,7 @@ protected:
 	const NDb::SUnitStatsModifier* GetAntiAviationModifier() const;
 public:
 	CBasicGun() : pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3	), lastCheckTurnTime( 0 ), bCanShootToUnitWOMove( false ) { }
-	CBasicGun( class CAIUnit *pOwner, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType );
+	CBasicGun( class CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType );
 
 	virtual int GetShellType() const { return nShellType; } 
 
@@ -189,13 +190,13 @@ public:
 
 	virtual bool IsRelaxing() const;
 	// можно ли стрельнуть по pEnemy, не вращая ни base ни turret, cDeltaAngle - учитывать ли deltaAngle
-	virtual bool CanShootWOGunTurn( class CAIUnit *pEnemy, const BYTE cDeltaAngle );
+	virtual bool CanShootWOGunTurn( class CAIUnit *pEnemy, const uint8_t cDeltaAngle );
 	virtual const NTimer::STime GetRestTimeOfRelax() const;
 
 	// стрельба, когда двигаться запрещено
 	virtual bool CanShootToUnitWOMove( class CAIUnit *pEnemy );
 	virtual bool CanShootToObjectWOMove( class CStaticObject *pObj );
-	virtual bool CanShootToPointWOMove( const CVec2 &point, const float fZ, const WORD wHorAddAngle = 0, const WORD wVertAddAngle = 0, CAIUnit *pEnemy = 0 );
+	virtual bool CanShootToPointWOMove( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle = 0, const uint16_t wVertAddAngle = 0, CAIUnit *pEnemy = 0 );
 
 	// можно ли дострельнуть по высоте	
 	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;	
@@ -204,13 +205,13 @@ public:
 	// можно ли стрельнуть в объект по прямому приказу
 	virtual bool CanShootToUnit( class CAIUnit *pEnemy );
 	virtual bool CanShootToObject( class CStaticObject *pObj );
-	virtual bool CanShootToPoint( const CVec2 &point, const float fZ, const WORD wHorAddAngle = 0, const WORD wVertAddAngle = 0 );
+	virtual bool CanShootToPoint( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle = 0, const uint16_t wVertAddAngle = 0 );
 
 	// можно пристрелить, не поворачивая base ( turret вращать можно )
-	virtual bool IsInShootCone( const CVec2 &point, const WORD wAddAngle = 0 ) const;
+	virtual bool IsInShootCone( const CVec2 &point, const uint16_t wAddAngle = 0 ) const;
 
 	virtual const float GetDispersion() const;
-	virtual const float GetDispRatio( BYTE nShellType, const float fDist ) const; 
+	virtual const float GetDispRatio( uint8_t nShellType, const float fDist ) const;
 	virtual const int GetFireRate() const;
 	void LockInCurAngle() { bAngleLocked = true; }
 	void UnlockCurAngle() { bAngleLocked = false; }
@@ -246,13 +247,13 @@ public:
 
 	virtual struct IBallisticTraj* CreateTraj( const CVec3 &vTarget ) const;
 	virtual void Fire( const CVec2 &target, const float z, const bool bShowBombEffect );
-	virtual WORD GetTrajectoryZAngle( const CVec3 &vToAim ) const;
+	virtual uint16_t GetTrajectoryZAngle( const CVec3 &vToAim ) const;
 
 	// сказать, почему отказался стрелять
 	virtual const EUnitAckType& GetRejectReason() const { return eRejectReason; }
 	virtual void SetRejectReason( const EUnitAckType &eReason );
 
-	virtual const bool IsVisible( const BYTE party ) const { return true; }
+	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
 
@@ -282,18 +283,18 @@ public:
 
 	virtual void StopFire() = 0;
 
-	virtual WORD GetHorTurnConstraint() const = 0;
-	virtual WORD GetVerTurnConstraint() const = 0;
+	virtual uint16_t GetHorTurnConstraint() const = 0;
+	virtual uint16_t GetVerTurnConstraint() const = 0;
 	virtual class CTurret* GetTurret() const = 0;
 
 	// направление, по которому в данный момент смотрит орудие
-	virtual const WORD GetGlobalDir() const = 0;
+	virtual const uint16_t GetGlobalDir() const = 0;
 	// for AA guns.
 	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const { return 0; }
 	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const { return 0; }
 	virtual void TraceAim( class CAIUnit *pUnit ) = 0;
 	// если на турели, то повернуть в относительный угол wAngle
-	virtual void TurnToRelativeDir( const WORD wAngle ) = 0;
+	virtual void TurnToRelativeDir( const uint16_t wAngle ) = 0;
 	// разрешить/запретить атаковать без учёта ограничения на поворот орудия по горизонтали
 	virtual void SetCircularAttack( const bool bCanAttack ) = 0;
 	virtual class CBuilding *GetMountBuilding() const { return 0; }

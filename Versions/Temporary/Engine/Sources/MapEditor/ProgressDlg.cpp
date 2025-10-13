@@ -2,8 +2,10 @@
 
 #include "ProgressDlg.h"
 
-const DWORD CProgressDlg::START_TIMER_ID = 1;
-const DWORD CProgressDlg::START_TIMER_INTERVAL = 1000;
+#include <cstdint>
+
+const uint32_t CProgressDlg::START_TIMER_ID = 1;
+const uint32_t CProgressDlg::START_TIMER_INTERVAL = 1000;
 
 BEGIN_MESSAGE_MAP( CProgressDlg, CResizeDialog )
 	ON_WM_TIMER()

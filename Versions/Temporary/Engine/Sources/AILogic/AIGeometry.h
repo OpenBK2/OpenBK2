@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 //*******************************************************************
 //*								  Geometry for AI : vectors, lines								*
 //*******************************************************************
@@ -152,6 +154,6 @@ const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegm
 
 void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &vNormale );
 
-const CVec2 MoveVectorByDirection( const CVec2 &vPoint, WORD wDir );
+const CVec2 MoveVectorByDirection( const CVec2 &vPoint, uint16_t wDir );
 
 

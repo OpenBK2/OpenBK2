@@ -3,7 +3,9 @@
 #include "Image/Targa.h"
 #include "TerrainInfo.h"
 
-void LegacyLoadTileMap( const std::string &szMapFilesPath, int nX, int nY, CArray2D<BYTE> *pTileTerraMap )
+#include <cstdint>
+
+void LegacyLoadTileMap( const std::string &szMapFilesPath, int nX, int nY, CArray2D<uint8_t> *pTileTerraMap )
 {
 	CFileStream streamTileMap( szMapFilesPath + "zonemap.tga", CFileStream::WIN_READ_ONLY );
 	if ( streamTileMap.IsOk() )

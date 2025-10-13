@@ -8,6 +8,8 @@
 
 #include "SoundDescExporter.h"
 
+#include <cstdint>
+
 REGISTER_EXPORTER_IN_DLL( SoundDesc, CSoundDescExporter )
 
 
@@ -59,7 +61,7 @@ EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator* pManipulator,
 	//
 	if ( NFile::CopyFile( szSource, szDestination ) == false )
 	{
-		DWORD dwErrorCode = ::GetLastError();
+		uint32_t dwErrorCode = ::GetLastError();
 		pLogger->Log( LT_ERROR, StrFmt("Can't copy sound desc object\n") );
 		pLogger->Log( LT_ERROR, StrFmt("\tSound desc: %s\n", rszObjectName.c_str()) );
 		pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSource.c_str()) );

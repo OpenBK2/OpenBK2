@@ -103,11 +103,11 @@ class CChatChannelsListRequestPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatChannelsListRequestPacket )
 public:
 	ZDATA
-		DWORD dwVersion;
+		uint32_t dwVersion;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); return 0; }
 
 	CChatChannelsListRequestPacket() {}
-	CChatChannelsListRequestPacket( const int nClientID, const DWORD _dwVersion )
+	CChatChannelsListRequestPacket( const int nClientID, const uint32_t _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) {}
 };
 
@@ -116,14 +116,14 @@ class CChatChannelsListPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatChannelsListPacket )
 public:
 	ZDATA
-		DWORD dwVersion;
+		uint32_t dwVersion;
 		std::list<std::string> added;
 		std::list<std::string> removed;
 		bool bIsFullUpdate;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); f.Add(3,&added); f.Add(4,&removed); f.Add(5,&bIsFullUpdate); return 0; }
 
 	CChatChannelsListPacket() {}
-	CChatChannelsListPacket( const int nClientID, const DWORD _dwVersion, const std::list<std::string> &_added,
+	CChatChannelsListPacket( const int nClientID, const uint32_t _dwVersion, const std::list<std::string> &_added,
 		const std::list<std::string> &_removed, bool _bIsFullUpdate )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ), added( _added ), removed( _removed ), bIsFullUpdate( _bIsFullUpdate ) {}
 };

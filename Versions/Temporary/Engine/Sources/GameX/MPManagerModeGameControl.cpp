@@ -22,6 +22,8 @@
 #include <iomanip>
 #include <sstream>
 
+#include <cstdint>
+
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
 
 void CMPManagerMode::StartGame()
@@ -447,7 +449,7 @@ void CMPManagerMode::AnalyzeLaggers()
 		}
 	}
 
-	DWORD dwPlayers = 0;
+	uint32_t dwPlayers = 0;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( IsPlayerPresent( i ) )
@@ -539,7 +541,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						GetOwnClientID(),
 						StrFmt( "slot_to_kick=%d", i ) );
 					pClient->SendGamePacket( pPkt, true );
-					const DWORD dwPreVoteMask = lagInfo.dwHatedBy;
+					const uint32_t dwPreVoteMask = lagInfo.dwHatedBy;
 					lagInfo.dwHatedBy |= ( 1UL << nOwnSlot );
 					NGameX::MatchPacketTrace_Log(
 						IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -549,7 +551,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						StrFmt( "slot=%d pre_votes=%08X post_votes=%08X", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
 				}
 				// Kick voting is game-control-host authoritative; authority migrates if the original host leaves.
-				const DWORD dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
+				const uint32_t dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
 				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
 				{
 					const int nReplacementHostClientID = bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;
@@ -584,9 +586,9 @@ void CMPManagerMode::AnalyzeLaggers()
 		SendLagInfo();
 }
 
-void CMPManagerMode::CreateRehash( std::vector<BYTE> *pOrder )
+void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 {
-	std::vector<BYTE> &order = *pOrder;
+	std::vector<uint8_t> &order = *pOrder;
 	int nSize = slots.size();
 	order.resize( nSize, -1 );
 	for ( int i = 0; i < nSize; ++i )
@@ -603,7 +605,7 @@ void CMPManagerMode::CreateRehash( std::vector<BYTE> *pOrder )
 	}
 }
 
-void CMPManagerMode::RehashSlots( const std::vector<BYTE> &order )
+void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 {
 	std::string szDebugOut = "+++ Rehash slots:";
 	for ( int i = 0; i < order.size(); ++i )

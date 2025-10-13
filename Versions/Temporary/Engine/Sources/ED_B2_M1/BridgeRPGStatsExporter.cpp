@@ -11,6 +11,8 @@
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 static const char *AI_GEOMETRY_PREFIX[] = { "mAI", "center", "border" };
@@ -57,7 +59,7 @@ void CBridgeRPGStatsExporter::GetVisObjectNameList( list<string> *pVisOblectName
 }
 
 
-void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource )
+void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	if ( rvDestination == rvSource )
@@ -72,7 +74,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 		return;
 	}
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
-	CArray2D<BYTE> backup = ( *pDestination );
+	CArray2D<uint8_t> backup = ( *pDestination );
 	pDestination->SetSizes( difference.x + size.x, difference.y + size.y );
 	pDestination->FillZero();
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -85,7 +87,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 }
 
 
-void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const CTPoint<int>  &rSourceSize )
+void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, const CTPoint<int>  &rSourceSize )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
@@ -97,7 +99,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 	{
 		return;
 	}
-	CArray2D<BYTE> backup = ( *pDestination );
+	CArray2D<uint8_t> backup = ( *pDestination );
 	pDestination->SetSizes( rSourceSize.x, rSourceSize.y );
 	pDestination->FillZero();
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -110,12 +112,12 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 }
 
 
-void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, int nAITileCount )
+void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, int nAITileCount )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	NI_ASSERT( pOrigin != 0, "CBridgeRPGStatsExporter::EnlargeArray() pOrigin == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
-	CArray2D<BYTE> backup = ( *pDestination );
+	CArray2D<uint8_t> backup = ( *pDestination );
 	pDestination->SetSizes( size.x + ( 2 * nAITileCount ), size.y );
 	pDestination->FillZero();
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -141,12 +143,12 @@ void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 
 }
 
 
-void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount )
+void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	NI_ASSERT( pOrigin != 0, "CBridgeRPGStatsExporter::EnlargeArray() pOrigin == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
-	CArray2D<BYTE> backup = ( *pDestination );
+	CArray2D<uint8_t> backup = ( *pDestination );
 	pDestination->SetSizes( size.x, size.y + ( 2 * nAITileCount ) + ( bMakeStep ? 1 : 0 ) );
 	pDestination->FillZero();
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -179,7 +181,7 @@ void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 
 }
 
 
-void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<BYTE> *pDestination, const CArray2D<BYTE> &rSource, LOCK_TYPE lockType )
+void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination, const CArray2D<uint8_t> &rSource, LOCK_TYPE lockType )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::SetArrayInfo() pDestination == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
@@ -324,7 +326,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	float fHeight = 0.0f;
 	bool bHeightCalculated = false;
 	//
-	list<CArray2D<BYTE> > passabilityArrayList;
+	list<CArray2D<uint8_t> > passabilityArrayList;
 	list<CVec2> passabilityOriginList;
 	list<CVec2> sizeList;
 	//
@@ -344,11 +346,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		//
 		CVec2 vPassabilityOrigin = VNULL2;
 		CVec2 vSize = VNULL2;
-		CArray2D<BYTE> passabilityArray;
+		CArray2D<uint8_t> passabilityArray;
 		// создаем массивы проходимостей
-		CArray2D<BYTE> bridgePassabilityArray;
-		CArray2D<BYTE> centerPassabilityArray;
-		CArray2D<BYTE> borderPassabilityArray;
+		CArray2D<uint8_t> bridgePassabilityArray;
+		CArray2D<uint8_t> centerPassabilityArray;
+		CArray2D<uint8_t> borderPassabilityArray;
 		CVec2 vBridgePassabilityOrigin = VNULL2;
 		CVec2 vCenterPassabilityOrigin = VNULL2;
 		CVec2 vBorderPassabilityOrigin = VNULL2;
@@ -506,7 +508,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	{
 		int nMaxYSize = 0;
 		{
-			list<CArray2D<BYTE> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+			list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
 				if ( nMaxYSize < itPassabilityArray->GetSizeY() )
@@ -517,7 +519,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			}
 		}
 		{
-			list<CArray2D<BYTE> >::iterator itPassabilityArray = passabilityArrayList.begin();
+			list<CArray2D<uint8_t> >::iterator itPassabilityArray = passabilityArrayList.begin();
 			list<CVec2>::iterator itPassabilityOrigin = passabilityOriginList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
@@ -535,7 +537,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	}
 	// Прописываем данные
 	{
-		list<CArray2D<BYTE> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+		list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
 		list<CVec2>::const_iterator itPassabilityOrigin = passabilityOriginList.begin();
 		list<CVec2>::const_iterator itSize = sizeList.begin();
 		//

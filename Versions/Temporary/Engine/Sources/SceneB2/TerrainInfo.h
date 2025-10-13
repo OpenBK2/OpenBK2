@@ -4,6 +4,8 @@
 #include "Misc/BitData.h"
 #include "B2_M1_Terrain/TerrUtils.h"
 
+#include <cstdint>
+
 #define DEF_PATCH_SIZE_BITS 4
 #define DEF_PATCH_SIZE ( 1 << DEF_PATCH_SIZE_BITS )
 #define DEF_PATCH_PIX_PER_TILE 32
@@ -292,13 +294,13 @@ struct STerrainInfo
 		std::vector<CVec3> norms;
 		std::vector<float> minHeights;
 		std::vector<float> maxHeights;
-		std::vector<BYTE> visibles;
+		std::vector<uint8_t> visibles;
 		std::vector<int> intersectors;
 		CVec2 vMin, vMax;
 		CDBPtr<NDb::SMaterial> pMaterial;
 		CDBPtr<NDb::SMaterial> pFootMaterial;
 		float fTexGeomScale;
-		BYTE bStayedOnTerrain;
+		uint8_t bStayedOnTerrain;
 		float fDepth;
 		float fDepthRand;
 		float fRandX, fRandY;
@@ -339,7 +341,7 @@ struct STerrainInfo
 	std::list<STerraSpot> terraspots;				// terraspots array
 	std::vector<SPrecipiceNode> precNodes;		// precipice nodes
 	std::list<SPrecipice> precipices;				// precipices
-	CArray2D<BYTE> seaMask;
+	CArray2D<uint8_t> seaMask;
 
 	struct SOptimizedTile
 	{
@@ -363,14 +365,14 @@ struct STerrainInfo
 	CArray2D<short int> optimizedAddHeights;
 	CArray2D1Bit optimizedSeaMask;
 	//
-	CArray2D<BYTE> tileTerraMap;
+	CArray2D<uint8_t> tileTerraMap;
 	int nRecreateRandSeed;
 	//
 	CArray2D<float> riverHeights;
 	//
 	CArray2D<float> waterHeightCoeffs;
 	CArray2D<float> waterAddHeights;
-	std::vector<BYTE> waterAddHeightsPacked;
+	std::vector<uint8_t> waterAddHeightsPacked;
 	//////////////////////////////////////////////////////////////////////////
 	//
 	int operator&( IBinSaver &saver )

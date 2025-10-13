@@ -5,6 +5,8 @@
 #include "Stats_B2_M1/AIUnitCmd.h"
 #include "Common_RTS_AI/AIClasses.h"
 
+#include <cstdint>
+
 struct IStaticPathFinder;
 struct IStaticPath;
 class CGroupMover;
@@ -15,7 +17,7 @@ struct SGroupPathInfo
 	CPtr<IStaticPath> pPath;
 	CPtr<IStaticPathFinder> pPathFinder;
 	int nSubGroup;
-	BYTE cTileSize;
+	uint8_t cTileSize;
 	EAIClasses aiClass;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPath); f.Add(3,&pPathFinder); f.Add(4,&nSubGroup); f.Add(5,&cTileSize); f.Add(6,&aiClass); return 0; }
 public:

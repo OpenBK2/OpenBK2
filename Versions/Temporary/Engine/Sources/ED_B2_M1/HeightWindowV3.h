@@ -5,6 +5,7 @@
 #include "HeightStateV3.h"
 #include "ED_B2_M1Dll.h"
 
+#include <cstdint>
 
 class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 {
@@ -54,7 +55,7 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	afx_msg void OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult );
 
 	LONG nHeightTimer;
-	DWORD dwHeightData;
+	uint32_t dwHeightData;
   inline UINT GetHeightID() { return 2; }
   inline UINT GetHeightTimerInterval() { return 100; }	// Частота в миллисекундах
   void SetHeightTimer();
@@ -78,7 +79,7 @@ public:
 	~CHeightWindowV3();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

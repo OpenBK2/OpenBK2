@@ -17,6 +17,8 @@
 #include "WindowSimpleSharedEditor.h"
 #include "WindowSimpleSharedState.h"
 
+#include <cstdint>
+
 namespace 
 {
 	const char WINDOW_SIMPLE_SHARED_TYPE_NAME[] = "WindowSimpleShared";
@@ -389,7 +391,7 @@ void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 	}
 
 	IView *pView = 0;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 	if ( pView != 0 )
 	{
 		SObjectSet objectSet;
@@ -404,7 +406,7 @@ void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 			pView->SetViewManipulator( pManipulator, objectSet, string() );
 			bHardUpdate = true;
 		}
-		DWORD dwCommand = bHardUpdate ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES;
+		uint32_t dwCommand = bHardUpdate ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES;
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, dwCommand, 0 );
 	}
 }
@@ -604,7 +606,7 @@ void CWindowSimpleSharedState::ReplaceChild( IWindow *pWindow, const CTPoint<int
 void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 {
 	SObjectSet objectSet;
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) )
+	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) )
 		return;
 
 	if ( 1 != objectSet.objectNameSet.size() )

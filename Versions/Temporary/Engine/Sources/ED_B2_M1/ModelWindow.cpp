@@ -8,6 +8,8 @@
 #include "Image/ImageColor.h"
 #include "./modelwindow.h"
 
+#include <cstdint>
+
 CModelWindow::CModelWindow( CWnd* pParent )
 	: CResizeDialog( CModelWindow::IDD, pParent ),
 		bCreateControls( true ),
@@ -738,7 +740,7 @@ void CModelWindow::OnFOVTimer()
 }
 
 
-bool CModelWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CModelWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

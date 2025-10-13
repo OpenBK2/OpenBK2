@@ -10,6 +10,8 @@
 #include "Scene.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <boost/config.hpp>
 
 #define DEF_INV_255 ( 1.0f / 255.0f )
@@ -84,7 +86,7 @@
 // normal.w - transparency
 // texU.rgb - dwColor (texU.w is occupied by fog)
 // texV.rgb - cScndTex (texV.w is occupied by fog)
-static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes, const DWORD dwColor, const unsigned char cScndTex,
+static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes, const uint32_t dwColor, const unsigned char cScndTex,
 																			 const unsigned char cTransparency )
 {
 	CalcCompactVector( &pRes->normal, CVec3(0, 0, 1) );
@@ -356,7 +358,7 @@ int CWaterPatch::Process( const long nTime )
 				}*/
 				foamParams[k][i].fFoamTexCoeff = fInvCoastLen / ( 0.01f + foamParams[k][i].fFoamY * 0.99f );
 				foamParams[k][i].fFoamTexOffs = 0.0f;
-				foamParams[k][i].nFoamColor = /*( (DWORD)*/Clamp( int(foamParams[k][i].fFoamY * 255.0f), 0, 255 )/* << 24 )*/;
+				foamParams[k][i].nFoamColor = /*( (uint32_t)*/Clamp( int(foamParams[k][i].fFoamY * 255.0f), 0, 255 )/* << 24 )*/;
 			}
 			else
 			{
@@ -373,7 +375,7 @@ int CWaterPatch::Process( const long nTime )
 				}*/
 				foamParams[k][i].fFoamTexCoeff = 1.0f * fInvCoastLen;
 				foamParams[k][i].fFoamTexOffs = Clamp( 1.0f - foamParams[k][i].fFoamY, 0.0f, 1.0f );
-				foamParams[k][i].nFoamColor = /*( (DWORD)*/Clamp( int(( foamParams[k][i].fFoamY - DEF_FOAM_BACK_DIST2 ) * DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 * 255.0f), 0, 255 )/* << 24 )*/;
+				foamParams[k][i].nFoamColor = /*( (uint32_t)*/Clamp( int(( foamParams[k][i].fFoamY - DEF_FOAM_BACK_DIST2 ) * DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 * 255.0f), 0, 255 )/* << 24 )*/;
 			}
 		}
 	}
@@ -557,7 +559,7 @@ int CWaterPatch::Process( const long nTime )
 				const float fAlp2 = (float)( grid[nGridInd].color >> 24 ) * DEF_INV_255;
 				const float fCoeff = fabs2( Clamp( ( grid[nGridInd].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				DWORD dwGridColor = grid[ nGridInd ].color;
+				uint32_t dwGridColor = grid[ nGridInd ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
@@ -566,7 +568,7 @@ int CWaterPatch::Process( const long nTime )
 				const float fAlp2 = (float)( grid[nGridInd+1].color >> 24 ) * DEF_INV_255;
 				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				DWORD dwGridColor = grid[ nGridInd + 1 ].color;
+				uint32_t dwGridColor = grid[ nGridInd + 1 ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
@@ -575,7 +577,7 @@ int CWaterPatch::Process( const long nTime )
 				const float fAlp2 = (float)( grid[nGridInd+1+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
 				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1+waterSurf.GetSizeX()].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				DWORD dwGridColor = grid[ nGridInd + 1 + waterSurf.GetSizeX() ].color;
+				uint32_t dwGridColor = grid[ nGridInd + 1 + waterSurf.GetSizeX() ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
@@ -584,7 +586,7 @@ int CWaterPatch::Process( const long nTime )
 				const float fAlp2 = (float)( grid[nGridInd+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
 				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+waterSurf.GetSizeX()].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				DWORD dwGridColor = grid[ nGridInd + waterSurf.GetSizeX() ].color;
+				uint32_t dwGridColor = grid[ nGridInd + waterSurf.GetSizeX() ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}

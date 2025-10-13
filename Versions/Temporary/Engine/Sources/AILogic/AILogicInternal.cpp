@@ -69,6 +69,8 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "GlobalWarFog.h"
 #include "SimpleChecksumCalc.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D441, CAILogic );
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -283,7 +285,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 				const SMechUnitRPGStats *pNewStats = 0;
 				if ( CheckForScenarioTruck( object, linksInfo, &pNewStats ) )
 				{
-					const WORD wDir = object.nDir;
+					const uint16_t wDir = object.nDir;
 					int id = 0;
 					if ( pNewStats != 0 )
 					{
@@ -337,7 +339,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 				if ( pStats == 0 )
 					pStats = checked_cast<const SSquadRPGStats*>( object.pObject.GetPtr() );
 
-				const WORD wDir = object.nDir;
+				const uint16_t wDir = object.nDir;
 				const int nFormation = object.nFrameIndex == -1 ? 0 : object.nFrameIndex;
 
 				if ( !pStats->members.empty() && pStats->members[0] != 0 )
@@ -835,7 +837,7 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 		cmd.nObjectID = pObj->GetUniqueId();
 	cmd.vPos = startCommand.vPos;
 	
-	const	WORD wGroup = theGroupLogic.GenerateGroupNumber();
+	const	uint16_t wGroup = theGroupLogic.GenerateGroupNumber();
 	theGroupLogic.RegisterGroup( pUnitsBuffer, nSize, wGroup );
 	theGroupLogic.GroupCommand( cmd, wGroup, true );
 	theGroupLogic.UnregisterGroup( wGroup );
@@ -1145,7 +1147,7 @@ void CAILogic::UpdateCheckSum( bool bSend )
 		{
 			CAIUnit *pUnit = *iter;
 			const CVec2 vCenter = pUnit->GetCenterPlain();
-			const WORD wDir = pUnit->GetFrontDirection();
+			const uint16_t wDir = pUnit->GetFrontDirection();
 			const float fHP = pUnit->GetHitPoints();
 
 			CopyToBuf( &checkSumBuf, vCenter );
@@ -1206,7 +1208,7 @@ void CAILogic::WriteDetailedChecksumInfo()
 	{
 		CAIUnit *pUnit = *iter;
 		const CVec2 vCenter = pUnit->GetCenterPlain();
-		const WORD wDir = pUnit->GetFrontDirection();
+		const uint16_t wDir = pUnit->GetFrontDirection();
 		const float fHP = pUnit->GetHitPoints();
 		
 		std::string unitName = "<NO_NAME>";
@@ -1324,7 +1326,7 @@ void CAILogic::Segment()
 //	CheckAIObjectBase();
 }
 
-void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer )
+void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer )
 {
 	curTime = CAITimer::GetSegmentTime();
 	switch( pCommand->nCmdType )
@@ -1356,7 +1358,7 @@ void CAILogic::RegisterGroup( const std::vector<int> &vIDs, const int nGroup )
 	theGroupLogic.RegisterGroup( vIDs, nGroup );
 }
 
-void CAILogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup )
+void CAILogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup )
 {
 	theGroupLogic.RegisterGroup( pUnitsBuffer, nLen, wGroup );
 }
@@ -1366,7 +1368,7 @@ void CAILogic::UnregisterGroup( const int nGroup )
 	theGroupLogic.UnregisterGroup( nGroup );
 }
 
-void CAILogic::GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue )
+void CAILogic::GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue )
 {
 	theGroupLogic.GroupCommand( *pCommand, wGroup, bPlaceInQueue );
 }
@@ -1414,7 +1416,7 @@ const bool CAILogic::GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnit
 	return false;
 }
 
-bool CAILogic::GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime )
+bool CAILogic::GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime )
 {
 	if ( CanShowVisibilities() && ( !theDipl.IsNetGame() || bNetGameStarted ) )
 		return theWarFog.GetWarForInfo( pWarFogInfo, theCheats.GetNPartyForWarFog(), bFirstTime );
@@ -1578,7 +1580,7 @@ float CAILogic::GetZ( const CVec2 &vPoint ) const
 	return GetHeights()->GetVisZ( vPoint.x, vPoint.y );
 }
 
-const DWORD CAILogic::GetNormal( const CVec2 &vPoint ) const
+const uint32_t CAILogic::GetNormal( const CVec2 &vPoint ) const
 {
 	return GetHeights()->GetNormal( vPoint.x, vPoint.y );
 }

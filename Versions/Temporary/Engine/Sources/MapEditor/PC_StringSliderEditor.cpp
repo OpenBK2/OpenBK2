@@ -6,6 +6,8 @@
 
 #include "PC_StringSliderEditor.h"
 
+#include <cstdint>
+
 CPCStringSliderEditor::CPCStringSliderEditor() : bCreateControls( true )
 {	
 }
@@ -130,10 +132,10 @@ bool CPCStringSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEdi
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle							= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
-		const DWORD dwSliderStyle				= WS_CHILD | TBS_HORZ | TBS_AUTOTICKS;
-		const DWORD dwExStyle						= WS_EX_CLIENTEDGE;
-		const DWORD dwSliderExStyle			= WS_EX_CLIENTEDGE;
+		const uint32_t dwStyle							= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT;
+		const uint32_t dwSliderStyle				= WS_CHILD | TBS_HORZ | TBS_AUTOTICKS;
+		const uint32_t dwExStyle						= WS_EX_CLIENTEDGE;
+		const uint32_t dwSliderExStyle			= WS_EX_CLIENTEDGE;
 		bool bResult = CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) &&
 									 wndSlider.Create( dwSliderStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() + 1 );
 		if ( bResult )
@@ -236,7 +238,7 @@ void CPCStringSliderEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM
 }
 
 
-bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

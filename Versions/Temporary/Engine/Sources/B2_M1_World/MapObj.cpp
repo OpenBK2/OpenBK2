@@ -11,6 +11,8 @@
 #include "System/Text.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 
+#include <cstdint>
+
 const float SOLID_ICON_ALPHA = 1.0f;
 float FADED_ICON_ALPHA = 0.25f;
 const float MOUSE_PICKED_ALPHA_BONUS = 0.6f;
@@ -311,7 +313,7 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 	return nResult;
 }
 
-void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, WORD wDir, NTimer::STime time )
+void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NTimer::STime time )
 {
 	if ( pEffect == 0 ) 
 		return;

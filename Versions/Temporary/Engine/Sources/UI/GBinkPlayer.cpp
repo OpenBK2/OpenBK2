@@ -20,8 +20,8 @@ class CBinkVideoPlayer: public IVideoPlayer
 	ZDATA
 	bool bForceUpdate = false;
 	bool bStopped = false;
-	DWORD dwCopyFlags = 0;
-	DWORD dwPlayFlags = 0;
+	uint32_t dwCopyFlags = 0;
+	uint32_t dwPlayFlags = 0;
 	/////
 	std::string szFileName;
 	bool bNeedUpdate = false; // BinkWait returned 0
@@ -45,7 +45,7 @@ protected:
 
 public:
 	CBinkVideoPlayer() = default;
-	CBinkVideoPlayer( const std::string &filename, DWORD dwFlags );
+	CBinkVideoPlayer( const std::string &filename, uint32_t dwFlags );
 
 	~CBinkVideoPlayer() override = default;
 
@@ -65,12 +65,12 @@ public:
 	void PlayFragment( int nStartFrame, int _nEndFrame, int _nFrameSkip = 0 ) override;
 };
 
-IVideoPlayer* CreateVideoPlayer( const std::string &filename, DWORD dwFlags )
+IVideoPlayer* CreateVideoPlayer( const std::string &filename, uint32_t dwFlags )
 {
 	return new CBinkVideoPlayer( filename, dwFlags );
 }
 
-CBinkVideoPlayer::CBinkVideoPlayer( const std::string &filename, DWORD _dwFlags ):
+CBinkVideoPlayer::CBinkVideoPlayer( const std::string &filename, uint32_t _dwFlags ):
 	dwPlayFlags( _dwFlags ), szFileName( filename )
 {
 }

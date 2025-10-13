@@ -4,6 +4,8 @@
 #include "NetPacket.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 static int N_SAVELOAD_VERSION = 2;
 
 // uses the fact that order of chunks during save and during load is the same
@@ -22,10 +24,10 @@ class CLogSaver : public IBinSaver
 		switch ( nSize )
 		{
 		case 1:
-			*pszLog += StrFmt( " %d", (int)(*(reinterpret_cast<BYTE*>(pData))) );
+			*pszLog += StrFmt( " %d", (int)(*(reinterpret_cast<uint8_t*>(pData))) );
 			break;
 		case 2:
-			*pszLog += StrFmt( " %d", (int)(*(reinterpret_cast<WORD*>(pData))) );
+			*pszLog += StrFmt( " %d", (int)(*(reinterpret_cast<uint16_t*>(pData))) );
 			break;
 		case 4:
 			*pszLog += StrFmt( " %d", (int)(*(reinterpret_cast<int*>(pData))) );

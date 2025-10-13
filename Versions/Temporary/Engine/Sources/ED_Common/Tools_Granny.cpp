@@ -5,6 +5,8 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char *pName )
 {
 	int nOffset = 0;
@@ -235,7 +237,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
 				NStr::ToLowerASCII( &szName );
-				const float fValue = *(float*)( ((BYTE*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
+				const float fValue = *(float*)( ((uint8_t*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
 				posBone->attributeMap[szName] = fValue;
 				nOffset += 4;
 				/**
@@ -249,7 +251,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
 				NStr::ToLowerASCII( &szName );
-				const float fValue = *(int*)( ((BYTE*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
+				const float fValue = *(int*)( ((uint8_t*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
 				posBone->attributeMap[szName] = fValue;
 				/**
 				DebugTrace( "Read Attribute: <%s:%g>", szName.c_str(), fValue );

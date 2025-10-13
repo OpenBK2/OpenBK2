@@ -6,15 +6,17 @@
 #include "System/XmlSaver.h"
 #include "dbgameroot.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SUISoundEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUISoundEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Sound", (BYTE*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Sound", (uint8_t*)&pSound - pThis, sizeof(pSound), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SUISoundEntry::operator&( IXmlSaver &saver )
@@ -33,7 +35,7 @@ int SUISoundEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUISoundEntry::CalcCheckSum() const
+uint32_t SUISoundEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -50,10 +52,10 @@ DWORD SUISoundEntry::CalcCheckSum() const
 
 
 
-void SMainMenuBackground::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMainMenuBackground::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Map", (BYTE*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (BYTE*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Map", (uint8_t*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (uint8_t*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SMainMenuBackground::operator&( IXmlSaver &saver )
@@ -72,7 +74,7 @@ int SMainMenuBackground::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMainMenuBackground::CalcCheckSum() const
+uint32_t SMainMenuBackground::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -89,10 +91,10 @@ DWORD SMainMenuBackground::CalcCheckSum() const
 
 
 
-void SHallOfFameRecord::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SHallOfFameRecord::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Score", (BYTE*)&nScore - pThis, sizeof(nScore), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Score", (uint8_t*)&nScore - pThis, sizeof(nScore), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SHallOfFameRecord::operator&( IXmlSaver &saver )
@@ -111,7 +113,7 @@ int SHallOfFameRecord::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SHallOfFameRecord::CalcCheckSum() const
+uint32_t SHallOfFameRecord::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -128,10 +130,10 @@ DWORD SHallOfFameRecord::CalcCheckSum() const
 
 
 
-void SGameRoot::STutorialMap::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SGameRoot::STutorialMap::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "MapInfo", (BYTE*)&pMapInfo - pThis, sizeof(pMapInfo), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "DifficultyFileRef", (BYTE*)&szDifficultyFileRef - pThis, sizeof(szDifficultyFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "MapInfo", (uint8_t*)&pMapInfo - pThis, sizeof(pMapInfo), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "DifficultyFileRef", (uint8_t*)&szDifficultyFileRef - pThis, sizeof(szDifficultyFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SGameRoot::STutorialMap::operator&( IXmlSaver &saver )
@@ -150,7 +152,7 @@ int SGameRoot::STutorialMap::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SGameRoot::STutorialMap::CalcCheckSum() const
+uint32_t SGameRoot::STutorialMap::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -171,27 +173,27 @@ void SGameRoot::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "GameRoot", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Consts", (BYTE*)&pConsts - pThis, sizeof(pConsts), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Consts", (uint8_t*)&pConsts - pThis, sizeof(pConsts), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Campaigns", &campaigns, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "TutorialMaps", &tutorialMaps, pThis );
-	NMetaInfo::ReportMetaInfo( "ScreenVideoPlayer", (BYTE*)&pScreenVideoPlayer - pThis, sizeof(pScreenVideoPlayer), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ScreenVideoPlayer", (uint8_t*)&pScreenVideoPlayer - pThis, sizeof(pScreenVideoPlayer), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "Screens", &screens, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "TextEntries", &textEntries, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Fonts", &fonts, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Sounds", &sounds, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Textures", &textures, pThis );
-	NMetaInfo::ReportMetaInfo( "GameOptions", (BYTE*)&pGameOptions - pThis, sizeof(pGameOptions), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "GameOptions", (uint8_t*)&pGameOptions - pThis, sizeof(pGameOptions), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "MainMenuBackground", &mainMenuBackground, pThis ); 
-	NMetaInfo::ReportMetaInfo( "InterfacesBackground", (BYTE*)&pInterfacesBackground - pThis, sizeof(pInterfacesBackground), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "InterfacesBackground", (uint8_t*)&pInterfacesBackground - pThis, sizeof(pInterfacesBackground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Notifications", &notifications, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "NotificationEvents", &notificationEvents, pThis );
-	NMetaInfo::ReportMetaInfo( "IntroMovie", (BYTE*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "IntroMovie", (uint8_t*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "EncyclopediaMechUnits", &encyclopediaMechUnits, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "CitationFileRefs", &citationFileRefs, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MultiplayerMaps", &multiplayerMaps, pThis );
-	NMetaInfo::ReportMetaInfo( "TestMap", (BYTE*)&pTestMap - pThis, sizeof(pTestMap), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MainMenuMusic", (BYTE*)&pMainMenuMusic - pThis, sizeof(pMainMenuMusic), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TestMap", (uint8_t*)&pTestMap - pThis, sizeof(pTestMap), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MainMenuMusic", (uint8_t*)&pMainMenuMusic - pThis, sizeof(pMainMenuMusic), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "HallOfFameDefaultRecords", &hallOfFameDefaultRecords, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -251,7 +253,7 @@ int SGameRoot::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SGameRoot::CalcCheckSum() const
+uint32_t SGameRoot::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

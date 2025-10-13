@@ -16,6 +16,8 @@
 #include "GameXClassIDs.h"
 #include "Main/MODs.h"
 
+#include <cstdint>
+
 namespace NSaveLoad
 {
 
@@ -107,7 +109,7 @@ void SSaveInfo::GenerateInfo()
 	}
 	else
 	{
-		CArray2D<DWORD> image1;
+		CArray2D<uint32_t> image1;
 
 		int nScreenShotSizeX = VirtualToScreenX( SCREENSHOT_X_SIZE ); 
 		int nScreenShotSizeY = VirtualToScreenY( SCREENSHOT_Y_SIZE ); 
@@ -137,7 +139,7 @@ void SSaveInfo::GenerateInfo()
 					image1[ y ][ x ] = tmpScreenShot[ y ][ x ].dwColor;
 		}
 
-		CArray2D<DWORD> image2;
+		CArray2D<uint32_t> image2;
 		image2.SetSizes( nScreenShotSizeX, nScreenShotSizeY );
 		NImage::Scale( &image2, image1, NImage::IMAGE_SCALE_METHOD_FILTER );
 

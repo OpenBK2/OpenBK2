@@ -9,11 +9,12 @@
 #include "MapInfoEditor.h"
 #include "CragState.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const string CCragState::VSO_NAME = "Crags";
 const string CCragState::VSO_TYPE_NAME = "CragDesc";
-
 
 /**
 bool CCragState::CanInsertVSO()
@@ -21,7 +22,7 @@ bool CCragState::CanInsertVSO()
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			if( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{
@@ -52,7 +53,7 @@ void CCragState::PrepareInsertVSO()
 	pSelectedCragDesc = 0;
 	const UINT nObjectTypeID = NDb::SCragDesc::typeID;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		if ( objectSet.szObjectTypeName == VSO_TYPE_NAME )
 		{

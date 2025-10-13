@@ -2,9 +2,10 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "AIClasses.h"
 #include "Misc/BitData.h"
+
+#include <cstdint>
 
 enum ELockMode
 {
@@ -33,7 +34,7 @@ struct SObjTileInfo
 
 	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) { }
 	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) { }
-	SObjTileInfo( const SVector &_tile, const BYTE _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) { }
+	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) { }
 	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo ) : tile( _tile ), lockInfo( _lockInfo ) { }
 };
 
@@ -135,9 +136,9 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	typedef std::list<STmpLockInfo2> CTmpLockInfoBuf2;
 	typedef std::list<STmpLockInfo> CTmpLockInfoBuf;
 
-	std::vector< CArray2D<BYTE> > unitsBuf;  // юниты, для воды и для суши
+	std::vector< CArray2D<uint8_t> > unitsBuf;  // юниты, для воды и для суши
 	CUnitsRects unitsRects;
-	CArray2D<BYTE> passTypes;
+	CArray2D<uint8_t> passTypes;
 	std::vector<float> passabilities;
 	// 0 - статич. объекты, 0xff - статич. и динамич. объекты
 	ELockMode eMode;
@@ -145,15 +146,15 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	CArray2D4Bit terrainTypes;
 	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
 	// по типу terrain - его ai проходимость
-	std::vector<DWORD> passClasses;
+	std::vector<uint32_t> passClasses;
 	// по номеру тайла terrain - его тип
-	std::vector<BYTE> terrSubTypes;
+	std::vector<uint8_t> terrSubTypes;
 	CArray2D1Bit digImpossible;		// невозможность строительства окопов на тайле
 	CArray2D1Bit bridgeTiles;
 	CArray2D1Bit riverCliffTiles;
-	CArray2D<BYTE> soil;
-	std::vector<BYTE> tileDigImpossible;
-	std::vector<BYTE> soilParams;
+	CArray2D<uint8_t> soil;
+	std::vector<uint8_t> tileDigImpossible;
+	std::vector<uint8_t> soilParams;
 	CArray2D<CArray2D4Bit> maxes;
 	bool bInitMode;
 	std::unordered_map< int, CTmpLockInfoBuf2 > tmpLockUnitsMap;
@@ -208,7 +209,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 
 	const int GetTerrainPassabilityType( const int nX, const int nY ) const;
 
-	const int GetClassIndexFast( const BYTE aiClass ) const { return classIndices[aiClass]; }
+	const int GetClassIndexFast( const uint8_t aiClass ) const { return classIndices[aiClass]; }
 	bool IsStaticLockedWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
 	bool HasRiverCliffTiles( const SVector &tile, const int nBoundTileRadius ) const;
@@ -224,11 +225,11 @@ public:
 	CTerrain( CAIMap *pAIMap, const bool bInitMode );
 
 	void PrepareTerraTypes( const int nCount );
-	void SetTerraTypes( const int nIndex, const float fPass, const DWORD passClass, const BYTE soilType, const BYTE digImpossible );
-	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
+	void SetTerraTypes( const int nIndex, const float fPass, const uint32_t passClass, const uint8_t soilType, const uint8_t digImpossible );
+	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
 	
 	void AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
-	void AddMarineTiles( const std::list<SVector> coastTiles, const BYTE coastSoilType, const std::list<SVector> waterTiles, const BYTE waterSoilType );
+	void AddMarineTiles( const std::list<SVector> coastTiles, const uint8_t coastSoilType, const std::list<SVector> waterTiles, const uint8_t waterSoilType );
 	void ClearRiverCliffTiles();
 	void AddRiverCliffTiles( const std::list<SVector> &tiles );
 
@@ -284,7 +285,7 @@ public:
 	void AddBridgeTile( const SVector &tile );
 	void RemoveBridgeTile( const SVector &tile );
 
-	BYTE GetSoilType( const SVector &tile ) const;
+	uint8_t GetSoilType( const SVector &tile ) const;
 
 	void StartInitMode() { bInitMode = true; }
 	void FinishInitMode();

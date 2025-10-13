@@ -21,6 +21,8 @@
 #include "System/Text.h"
 #include "InterfaceMisc.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 static bool s_bMPAllowStartGame;
@@ -781,7 +783,7 @@ void CInterfaceMPGameRoom::MsgCancel( const SGameMessage &msg )
 	UpdateInterior();
 }
 
-static DWORD ConvertColor( const CVec3 &vColor )
+static uint32_t ConvertColor( const CVec3 &vColor )
 {
 	const int r = vColor.r * 255.0f;
 	const int g = vColor.g * 255.0f;

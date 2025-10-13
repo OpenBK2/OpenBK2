@@ -3,6 +3,8 @@
 #include "Server_Client_Common/CommonClientState.h"
 #include "ChatPackets.h"
 
+#include <cstdint>
+
 class CNetNewClient : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CNetNewClient );
@@ -138,11 +140,11 @@ class CGetLobbyClientsPacket : public CNetPacket
 public:
 	ZDATA
 		/** my latest received version */
-		DWORD dwVersion;
+		uint32_t dwVersion;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); return 0; }
 
 	CGetLobbyClientsPacket() { }
-	CGetLobbyClientsPacket( const int nClientID, const DWORD _dwVersion )
+	CGetLobbyClientsPacket( const int nClientID, const uint32_t _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) { }
 };
 
@@ -153,11 +155,11 @@ class CGetLobbyGamesPacket : public CNetPacket
 public:
 	ZDATA
 		/** my latest received version */
-		DWORD dwVersion;
+		uint32_t dwVersion;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); return 0; }
 
 	CGetLobbyGamesPacket() { }
-	CGetLobbyGamesPacket( const int nClientID, const DWORD _dwVersion )
+	CGetLobbyGamesPacket( const int nClientID, const uint32_t _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) { }
 };
 

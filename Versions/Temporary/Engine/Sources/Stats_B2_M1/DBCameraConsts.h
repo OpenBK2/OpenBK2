@@ -1,7 +1,8 @@
 #pragma once
 
-// automatically generated file, don't change manually!
+#include <cstdint>
 
+// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 
@@ -14,13 +15,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x1007B4C0 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		struct SCLLimit
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			float fMin;
 			float fMax;
@@ -39,11 +40,11 @@ namespace NDb
 				bCyclic( false )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		SCLLimit distanceLimit;
 		SCLLimit pitchLimit;
@@ -61,7 +62,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

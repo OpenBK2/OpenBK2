@@ -2,6 +2,9 @@
 
 #include "Interface_FolderCallback.h"
 #include "StringManager.h"
+
+#include <cstdint>
+
 //
 struct IManipulator;
 struct IView;
@@ -48,7 +51,7 @@ struct SBuildDataParams
 
 
 // CRAP{ HASH_SET
-typedef std::unordered_map<std::string, DWORD> CTableSet;
+typedef std::unordered_map<std::string, uint32_t> CTableSet;
 typedef std::unordered_map<int, CTableSet> CTableSetMap;
 // CRAP} HASH_SET
 

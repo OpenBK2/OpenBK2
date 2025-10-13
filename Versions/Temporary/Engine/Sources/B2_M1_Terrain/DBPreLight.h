@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // automatically generated file, don't change manually!
 
 
@@ -37,7 +39,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 
 	struct STwoSidedLight : public CResource
@@ -71,7 +73,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

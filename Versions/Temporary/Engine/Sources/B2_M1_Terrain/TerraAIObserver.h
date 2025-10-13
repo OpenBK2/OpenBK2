@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 //#pragma once
 //
 //#include "../B2_M1_World/TerraAIObserver.h"
@@ -46,11 +49,11 @@
 //	//
 //	virtual void UpdateZ( CVec3 *pvPos );
 //	void SetTerraTypes( const vector<NDb::STerrainAIProperties> &params );
-//	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
+//	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
 //
 //	virtual float GetZ( float x, float y ) const;
 //	virtual float GetTileHeight( int nX, int nY ) const;
-//	virtual DWORD GetNormal( const CVec2 &vPoint ) const;
+//	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 //
 //	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 //	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;

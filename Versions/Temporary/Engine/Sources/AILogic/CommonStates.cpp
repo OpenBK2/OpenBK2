@@ -24,6 +24,8 @@
 #include "ExecutorContainer.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4DE, CMechAttackUnitState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4CF, CFollowState );
 REGISTER_SAVELOAD_CLASS( 0x1108D49E, CCommonSwarmState );
@@ -130,20 +132,20 @@ bool CMechAttackUnitState::TurnToBestPos()
 			if ( !bTurningToBest || fabs2( lastEnemyCenter - vEnemyCenter ) >= 200.0f )
 			{
 				bTurningToBest = true;
-				const WORD wDirToEnemy = GetDirectionByVector( pEnemy->GetCenterPlain() - pUnit->GetCenterPlain() );
+				const uint16_t wDirToEnemy = GetDirectionByVector( pEnemy->GetCenterPlain() - pUnit->GetCenterPlain() );
 				if ( wDirToEnemy != 0 )
 				{
-					const WORD wFrontDir = pUnit->GetFrontDirection();
-					const WORD wDirsDiff = DirsDifference( wDirToEnemy, wFrontDir );
+					const uint16_t wFrontDir = pUnit->GetFrontDirection();
+					const uint16_t wDirsDiff = DirsDifference( wDirToEnemy, wFrontDir );
 					const int wBaseAngle = pGun->GetRestTimeOfRelax() * pUnit->GetTurnSpeed();
 					const int wTurretAngle = pGun->GetRestTimeOfRelax() * pGun->GetRotateSpeed();
 
-					const WORD wAngleOfTurn = (std::min)( wDirsDiff, WORD( (std::min)( wBaseAngle, wTurretAngle ) ) );
+					const uint16_t wAngleOfTurn = (std::min)( wDirsDiff, uint16_t( (std::min)( wBaseAngle, wTurretAngle ) ) );
 
 					if ( DirsDifference( wAngleOfTurn + wFrontDir, wDirToEnemy ) < DirsDifference( wFrontDir - wAngleOfTurn, wDirToEnemy ) )
-						nBestAngle = WORD( wAngleOfTurn + wFrontDir );
+						nBestAngle = uint16_t( wAngleOfTurn + wFrontDir );
 					else
-						nBestAngle = WORD( wFrontDir - wAngleOfTurn );
+						nBestAngle = uint16_t( wFrontDir - wAngleOfTurn );
 
 					if ( DirsDifference( nBestAngle, wFrontDir ) > SConsts::MIN_ROTATE_ANGLE && pUnit->CanTurnToFrontDir( nBestAngle ) )
 					{
@@ -258,7 +260,7 @@ void CMechAttackUnitState::AnalyzeMovingPosition()
 		// в зоне поиска пути к стороне
 		if ( !bEnemyVisible || pGun->InGoToSideRange( pEnemy ) )
 		{
-			nBestSide = BYTE(-1);
+			nBestSide = uint8_t(-1);
 			lastEnemyTile = SVector( -1, -1 );
 //			if ( IsValidObj( pGun ) )
 //				pGun->StopTracing();
@@ -895,12 +897,12 @@ const CVec2 CCommonAttackCommonStatObjState::GetPurposePoint() const
 //*												CMechUnitRestState												*
 //*******************************************************************
 
-IUnitState* CMechUnitRestState::Instance( class CAIUnit *pUnit, const CVec2 &guardPoint, const WORD wDir, const bool bFinishWnenCanMove, const float _fTimeToWait )
+IUnitState* CMechUnitRestState::Instance( class CAIUnit *pUnit, const CVec2 &guardPoint, const uint16_t wDir, const bool bFinishWnenCanMove, const float _fTimeToWait )
 {
 	return new CMechUnitRestState( pUnit, guardPoint, wDir, bFinishWnenCanMove, _fTimeToWait );
 }
 
-CMechUnitRestState::CMechUnitRestState( CAIUnit *_pUnit, const CVec2 &_guardPoint, const WORD _wDir, const bool _bFinishWnenCanMove, const float _fTimeToWait )
+CMechUnitRestState::CMechUnitRestState( CAIUnit *_pUnit, const CVec2 &_guardPoint, const uint16_t _wDir, const bool _bFinishWnenCanMove, const float _fTimeToWait )
 : pUnit( _pUnit ), CCommonRestState( _guardPoint, _wDir, _pUnit, _fTimeToWait ), bFinishWhenCanMove( _bFinishWnenCanMove )
 {
 	pUnit->StartCamouflating();
@@ -944,7 +946,7 @@ ETryStateInterruptResult CMechUnitRestState::TryInterruptState( class CAICommand
 //*******************************************************************
 
 extern CExecutorContainer theExecutorContainer;
-CCommonRestState::CCommonRestState( const CVec2 &_guardPoint, const WORD _wDir, CCommonUnit *_pUnit, const float fTimeToWait )
+CCommonRestState::CCommonRestState( const CVec2 &_guardPoint, const uint16_t _wDir, CCommonUnit *_pUnit, const float fTimeToWait )
 : pUnit( _pUnit ), nextMove( 0 ), guardPoint( _guardPoint ), wDir( _wDir ), startMoveTime( curTime ),
 	bWait( fTimeToWait >= 0 ), timeToFinishState( fTimeToWait >= 0 ? curTime + fTimeToWait * 1000 : 0 )
 {
@@ -985,7 +987,7 @@ void CCommonRestState::Segment()
 	bool bTargetFound = false;
 	if ( !pUnit->IsFormation() )
 	{
-		BYTE cResult = pUnit->AnalyzeTargetScan( 0, false, false );
+		uint8_t cResult = pUnit->AnalyzeTargetScan( 0, false, false );
 		if ( cResult & 2 )
 			bScanned = true;
 		bTargetFound = cResult & 1;
@@ -1286,7 +1288,7 @@ bool CCommonAttackUnitInBuildingState::FindPathToSector()
 		pTarget->GetCenterPlain() + 
 		GetVectorByDirection
 		( 
-			WORD( pTarget->GetMaxAngle() - pTarget->GetMinAngle() ) / 2 + pTarget->GetMinAngle()
+			uint16_t( pTarget->GetMaxAngle() - pTarget->GetMinAngle() ) / 2 + pTarget->GetMinAngle()
 		) * 320.0f;
 
 	if ( CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( point, VNULL2, GetUnit(), false, GetAIMap() ) )
@@ -1548,7 +1550,7 @@ void CCommonSwarmState::Segment()
 				
 				if ( pUnit->GetNextCommand() == 0 )
 				{
-					const WORD wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? wDirToPoint : wDirToPoint + 32768;
+					const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? wDirToPoint : wDirToPoint + 32768;
 					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD, pUnit->GetCenterPlain(), wDir ), pUnit, false );
 				}
 			

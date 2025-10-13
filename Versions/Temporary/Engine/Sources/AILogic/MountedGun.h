@@ -1,6 +1,8 @@
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "GunsInternal.h"
+
+#include <cstdint>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CMountedTurret;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +41,7 @@ class CMountedToBaseGun : public CBaseGun, public CCommonMountedGun
 public:
 	CMountedToBaseGun() { }
 
-	CMountedToBaseGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, IGunsFactory::EGunTypes eType ) 
+	CMountedToBaseGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, IGunsFactory::EGunTypes eType )
 	: CCommonMountedGun( pObject, pTurret, nSlot ), CBaseGun( 0, nShellType, pCommonGunInfo, eType ) { }
 
 	virtual const SBaseGunRPGStats& GetGun() const { return CCommonMountedGun::GetGun(); }

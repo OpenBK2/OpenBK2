@@ -5,6 +5,8 @@
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "ED_Common/Tools_Granny.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NDb
@@ -16,14 +18,14 @@ namespace NDb
 
 bool CreateObjectStaticDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius );
 bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, float fWidth );
-bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *pPassabilityArray, CVec2 *pvOrigin );
+bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<uint8_t> *pPassabilityArray, CVec2 *pvOrigin );
 bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
 void SavePassProfile( const NDb::SPassProfile &profile, const string &szPrefix, const string &szFieldName, IManipulator *pManipulator );
 
 // Правильное расположение bounding box
 bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, const CVec3 &rvMin, const CVec3 &rvMax );
 // Правильные размеры bounding box
-bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin );
+bool NormalizePassabilityArray( CArray2D<uint8_t> *pDestination, CVec2 *pvOrigin );
 
 
 //
@@ -100,7 +102,7 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 										const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 										bool bClear );
 //
-void GetPassability( CArray2D<BYTE> *pPassability, IManipulator *pBuildingRPGStatsManipulator );
+void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPGStatsManipulator );
 //
 // fix locators of object set
 bool FixLocators( const struct SObjectSet &objectSet, const string &szLocatorNamePattern, const string &szArrayName );

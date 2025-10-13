@@ -1,7 +1,9 @@
-
 #pragma once
+
 #include "mapeditorlib/interface_commandhandler.h"
 #include "MapEditorLib/Interface_Exporter.h"
+
+#include <cstdint>
 
 class CMapInfoExporter : public IExporter, public ICommandHandler
 {
@@ -39,7 +41,7 @@ public:
 														 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

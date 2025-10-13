@@ -23,6 +23,8 @@
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
 extern CGlobalWarFog theWarFog;
@@ -53,7 +55,7 @@ CBasicGun* CCommonUnit::ChooseGunForStatObjWOTime( CStaticObject *pObj )
 	return ChooseGunForStatObj( pObj, &time );
 }
 
-void CCommonUnit::Init( const CVec3 &_vCenter, const WORD _wDirection, ICollisionsCollector *pCollisionsCollector )
+void CCommonUnit::Init( const CVec3 &_vCenter, const uint16_t _wDirection, ICollisionsCollector *pCollisionsCollector )
 {
 	NI_VERIFY( GetUniqueID() != -1, "Unique id is not set", SetUniqueIdForUnits( ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID) );
 
@@ -104,7 +106,7 @@ void CCommonUnit::SetSelectable( bool _bSelectable, bool bSendToWorld )
 	updater.AddUpdate( 0, ACTION_NOTIFY_SELECTABLE_CHANGED, this, IsSelectable() );
 }
 
-const BYTE CCommonUnit::GetParty() const
+const uint8_t CCommonUnit::GetParty() const
 {
 	return theDipl.GetNParty( GetPlayer() );
 }
@@ -249,7 +251,7 @@ void CCommonUnit::SetShootEstimator( IShootEstimator *_pShootEstimator )
 	pShootEstimator = _pShootEstimator;
 }
 
-void CCommonUnit::ResetShootEstimator( CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD wForbidden )
+void CCommonUnit::ResetShootEstimator( CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t wForbidden )
 {
 	pShootEstimator->Reset( pCurEnemy, bDamageUpdated, wForbidden );
 }
@@ -442,7 +444,7 @@ IStaticPath* CCommonUnit::GetPathToEntrenchment( CEntrenchment *pEntrenchment )
 	return CreateStaticPathToPoint( finishPoint, VNULL2, this, false, GetAIMap() );
 }
 
-void CCommonUnit::UpdatePlacement( const CVec3 &_vOldPosition, const WORD _wOldDirection, const bool bNeedUpdate )
+void CCommonUnit::UpdatePlacement( const CVec3 &_vOldPosition, const uint16_t _wOldDirection, const bool bNeedUpdate )
 {
 	qFinish.FromAngleAxis( ToRadian( float( GetFrontDirection() ) / 65536.0f * 360.0f ), 0, 0, 1 );
 	MakeOrientation( &qFinish, DWORDToVec3( GetNormale( GetCenterPlain() ) ) );
@@ -463,7 +465,7 @@ void CCommonUnit::UpdatePlacement( const CVec3 &_vOldPosition, const WORD _wOldD
 	}
 }
 
-const DWORD CCommonUnit::GetNormale( const CVec2 &vCenter ) const
+const uint32_t CCommonUnit::GetNormale( const CVec2 &vCenter ) const
 {
 	return GetHeights()->GetNormal( vCenter.x, vCenter.y );
 }

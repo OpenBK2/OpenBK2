@@ -12,6 +12,8 @@
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 
@@ -51,7 +53,7 @@ static int nDeviceCreationID = 1;
 static SSystemInfo systemInfo;
 static bool bIsDebugRuntime;
 static bool bCanDoFastScreenshot = false;
-static DWORD nFSAA, nMaxFSAA;
+static unsigned long nFSAA, nMaxFSAA;
 static int nWinXPos = 0;
 static int nAdapterToUse = D3DADAPTER_DEFAULT;
 
@@ -356,7 +358,7 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 {
 	if ( nFSAA > 0 && nMaxFSAA > 0 )
 	{
-		DWORD nFront, nDepth;
+		unsigned long nFront, nDepth;
 		if ( 
 			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
 				pRes->BackBufferFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nFront ) ) &&
@@ -622,7 +624,7 @@ static bool CheckDeviceCaps()
 	b8888Supported = 
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) );
 
-	DWORD nFrontFSAA, nDepthFSAA;
+	unsigned long nFrontFSAA, nDepthFSAA;
 	if ( 
 		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8,
 			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&
@@ -865,7 +867,7 @@ void SetGamma( bool bGamma )
 			//if ( f < 0.0031308f ) f = f * 12.92f; else 	f = 1.055f * exp( log( f ) / 2.4f ) - 0.055f;
 			//if ( f < 0.026175f ) f = f * 4; else 	f = 1.1466f * exp( log( f ) / 2.4f ) - 0.1466f;
 			f = exp( log( f ) / fGamma );
-			WORD wRes = Float2Int( f * 65535 );
+			uint16_t wRes = Float2Int( f * 65535 );
 			if ( !gammaRamp.empty() )
 			{
 				const NGfx::SPixel8888 &c = gammaRamp[ wRes >> 8 ];
@@ -898,7 +900,7 @@ void SetGamma( bool bGamma )
 			// suspicious gamma was returned better set to default
 			for ( int k = 0; k < 256; ++k )
 			{
-				WORD wRes = k << 8;
+				uint16_t wRes = k << 8;
 				gamma.red[k] = wRes;
 				gamma.green[k] = wRes;
 				gamma.blue[k] = wRes;
@@ -912,7 +914,7 @@ void SetGamma( bool bGamma )
 				++nShift;
 			for ( int k = 0; k < 256; ++k )
 			{
-				WORD wRes = k << 8;
+				uint16_t wRes = k << 8;
 				gamma.red[k] = keptGamma.red[k] << nShift;
 				gamma.green[k] = keptGamma.green[k] << nShift;
 				gamma.blue[k] = keptGamma.blue[k] << nShift;

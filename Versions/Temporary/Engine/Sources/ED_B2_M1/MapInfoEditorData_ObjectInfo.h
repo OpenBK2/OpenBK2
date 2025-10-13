@@ -7,6 +7,7 @@
 #include "Tools_SceneDraw.h"
 #include "EditorScene.h"
 
+#include <cstdint>
 
 namespace NMapInfoEditor
 {
@@ -268,7 +269,7 @@ namespace NMapInfoEditor
 		virtual SObjectInfo* CallDuplicate() const = 0;
 		virtual EObjectInfoType GetObjectInfoType() = 0;
 		// настройщики
-		virtual void GetDrawSelectionParameters( DWORD *pdwSceneObject, DWORD *pdwObject, DWORD *pdwObjectLink, DWORD *pdwMainObject )
+		virtual void GetDrawSelectionParameters( uint32_t *pdwSceneObject, uint32_t *pdwObject, uint32_t *pdwObjectLink, uint32_t *pdwMainObject )
 		{
 			if ( pdwSceneObject )
 			{

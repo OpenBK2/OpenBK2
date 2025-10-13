@@ -15,6 +15,8 @@
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_MOD.h"
 
+#include <cstdint>
+
 //#include "..\MapEditorLib\Tools_SysCodes.h"
 
 CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID ) : bCreateControls( true ), nGDBBrowserID( _nGDBBrowserID ), wndContents( nGDBBrowserID )
@@ -731,7 +733,7 @@ void CDWGDBBrowser::OnGetLatest()
 }
 
 
-bool CDWGDBBrowser::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CDWGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//

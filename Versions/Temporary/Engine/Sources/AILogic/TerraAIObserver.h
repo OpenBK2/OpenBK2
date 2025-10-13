@@ -2,6 +2,8 @@
 
 #include "Common_RTS_AI/TerraAIObserver.h"
 
+#include <cstdint>
+
 typedef std::list<CVec2> CRiverSounds;
 
 class CTerraAIObserverInGame :	public CTerraAIObserver
@@ -20,7 +22,7 @@ public:
 	virtual ~CTerraAIObserverInGame() {}
 
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
-	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
+	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
 
 	void AddRiver( const NDb::SVSOInstance *pInstance );
 	virtual void FinalizeUpdates();

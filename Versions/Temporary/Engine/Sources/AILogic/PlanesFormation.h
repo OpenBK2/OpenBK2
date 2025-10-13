@@ -6,6 +6,8 @@
 
 #include "Common_RTS_AI/BasePathUnit.h"
 
+#include <cstdint>
+
 class CPlaneManuverHistory
 {
 	typedef det_map<CVec3, SFormationMemberInfo, SVec3Hash> CMemberCache;
@@ -137,17 +139,17 @@ public:
 	void SetCanViolateHeghtLimits();
 
 	virtual void UpdateDirection( const CVec2 &newDir ) { NI_ASSERT( false, "WRONG CALL"); }
-	virtual void UpdateDirection( const WORD newDir ) { NI_ASSERT( false, "WRONG CALL"); }
+	virtual void UpdateDirection( const uint16_t newDir ) { NI_ASSERT( false, "WRONG CALL"); }
 
 	virtual const bool SendAlongPath( struct IPath *pPath ) { NI_ASSERT( false, "WRONG CALL"); return false; }
-	virtual const WORD GetDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
+	virtual const uint16_t GetDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetDirVector() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
-	virtual const WORD GetFrontDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
+	virtual const uint16_t GetFrontDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetCenter() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
 	virtual const float GetZ() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetSpeed() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
 	virtual struct ISmoothPath* GetCurPath() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
 	virtual void UpdateTile()	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdateTile" ); }
 
 	// ну и уродство
@@ -164,7 +166,7 @@ public:
 	virtual void SetNewCoordinates( const CVec3 &newCenter, bool bStopUnit = true ) { NI_ASSERT( false, "WRONG CALL"); }
 	virtual const SRect GetUnitRectForLock() const { NI_ASSERT( false, "WRONG CALL"); return SRect(); }
 	virtual const SRect & GetUnitRect() const { NI_ASSERT( false, "WRONG CALL"); static SRect r; return r; }
-	virtual bool TurnToDir( const WORD &newDir, const bool bCanBackward = true, const bool bForward = true ) { NI_ASSERT( false, "WRONG CALL"); return true; }
+	virtual bool TurnToDir( const uint16_t &newDir, const bool bCanBackward = true, const bool bForward = true ) { NI_ASSERT( false, "WRONG CALL"); return true; }
 	virtual bool TurnToUnit( const CVec2 &targCenter ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual const bool IsIdle() const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual const bool IsTurning() const { NI_ASSERT( false, "WRONG CALL"); return false; }
@@ -172,12 +174,12 @@ public:
 	virtual void StopTurning() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void ForceGoByRightDir() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) { NI_ASSERT( false, "WRONG CALL"); return false; }
-	virtual bool CheckToTurn( const WORD wNewDir ) { NI_ASSERT( false, "WRONG CALL"); return false; }
+	virtual bool CheckToTurn( const uint16_t wNewDir ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual void LockTiles() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void UnlockTiles() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void FixUnlocking() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void UnfixUnlocking() { NI_ASSERT( false, "WRONG CALL"); }
-	virtual bool CanTurnToFrontDir( const WORD wDir ) { NI_ASSERT( false, "WRONG CALL"); return false; }
+	virtual bool CanTurnToFrontDir( const uint16_t wDir ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual bool IsInFormation() const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual class CFormation* GetFormation() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2 GetUnitPointInFormation() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
@@ -199,7 +201,7 @@ public:
 	virtual const SVector GetLastKnownGoodTile() const { NI_ASSERT( false, "WRONG CALL"); return SVector(0,0); }
 
 	virtual const bool IsDangerousDirExist() const { return false; }
-	virtual const WORD GetDangerousDir() const { return 0; }
+	virtual const uint16_t GetDangerousDir() const { return 0; }
 
 	virtual const SUnitProfile &GetUnitProfile() const { NI_ASSERT( false, "WRONG CALL"); static SUnitProfile unitProfile; return unitProfile; }
 	virtual const float GetTurnRadius() const { NI_ASSERT( false, "WRONG CALL"); return 0.0f;  }

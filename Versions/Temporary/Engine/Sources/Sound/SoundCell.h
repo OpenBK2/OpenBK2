@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Sound.h"
 
+#include <cstdint>
 
 //клетка, содержащая звук
 class CSoundCell : public CObjectBase
@@ -20,9 +22,9 @@ public:
 	int GetRadius() const { return nRadius; }
 	void SetRadius( int nRad ) { nRadius = nRad; }
 	void AddSound( class CSound *pSound );	// добавляет звук и пересчитывает радиус звучания
-	void RemoveSound( const WORD wID, ISFX * pSFX =0 );					// удаляет звук и пересчитывает радиус звучания
-	CSound * GetSound( const WORD wID );
-	const CSound * GetSound( const WORD wID ) const;
+	void RemoveSound( const uint16_t wID, ISFX * pSFX =0 );					// удаляет звук и пересчитывает радиус звучания
+	CSound * GetSound( const uint16_t wID );
+	const CSound * GetSound( const uint16_t wID ) const;
 
 	// удалить звуки с ID == 0 , которые завершились
 	// все доигравшие звуки пометить как доигравшие

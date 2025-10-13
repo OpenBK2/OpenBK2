@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbmusicsystem.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,11 +17,11 @@ void SPlayTime::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "PlayTime", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Numer", (BYTE*)&nNumer - pThis, sizeof(nNumer), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "NumberRandom", (BYTE*)&nNumberRandom - pThis, sizeof(nNumberRandom), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "PlayTime", (BYTE*)&nPlayTime - pThis, sizeof(nPlayTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "PlayTimeRandom", (BYTE*)&nPlayTimeRandom - pThis, sizeof(nPlayTimeRandom), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Numer", (uint8_t*)&nNumer - pThis, sizeof(nNumer), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NumberRandom", (uint8_t*)&nNumberRandom - pThis, sizeof(nNumberRandom), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "PlayTime", (uint8_t*)&nPlayTime - pThis, sizeof(nPlayTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "PlayTimeRandom", (uint8_t*)&nPlayTimeRandom - pThis, sizeof(nPlayTimeRandom), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -46,10 +48,10 @@ int SPlayTime::operator&( IBinSaver &saver )
 
 
 
-void SPlayPause::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlayPause::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "PauseTime", (BYTE*)&nPauseTime - pThis, sizeof(nPauseTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PauseRandom", (BYTE*)&nPauseRandom - pThis, sizeof(nPauseRandom), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PauseTime", (uint8_t*)&nPauseTime - pThis, sizeof(nPauseTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PauseRandom", (uint8_t*)&nPauseRandom - pThis, sizeof(nPauseRandom), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SPlayPause::operator&( IXmlSaver &saver )
@@ -68,7 +70,7 @@ int SPlayPause::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlayPause::CalcCheckSum() const
+uint32_t SPlayPause::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -89,10 +91,10 @@ void SFade::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Fade", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "FinalVolume", (BYTE*)&fFinalVolume - pThis, sizeof(fFinalVolume), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "FadeTime", (BYTE*)&nFadeTime - pThis, sizeof(nFadeTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Pause", (BYTE*)&bPause - pThis, sizeof(bPause), NTypeDef::TYPE_TYPE_BOOL );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "FinalVolume", (uint8_t*)&fFinalVolume - pThis, sizeof(fFinalVolume), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FadeTime", (uint8_t*)&nFadeTime - pThis, sizeof(nFadeTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Pause", (uint8_t*)&bPause - pThis, sizeof(bPause), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -121,8 +123,8 @@ void SMusicTrack::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MusicTrack", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "MusicFileName", (BYTE*)&szMusicFileName - pThis, sizeof(szMusicFileName), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "MusicFileName", (uint8_t*)&szMusicFileName - pThis, sizeof(szMusicFileName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -147,11 +149,11 @@ void SComposition::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Composition", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Track", (BYTE*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FadeIn", (BYTE*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FadeOut", (BYTE*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PlayTime", (BYTE*)&pPlayTime - pThis, sizeof(pPlayTime), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Track", (uint8_t*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeIn", (uint8_t*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeOut", (uint8_t*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PlayTime", (uint8_t*)&pPlayTime - pThis, sizeof(pPlayTime), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "PlayPauseAfter", &playPauseAfter, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -185,13 +187,13 @@ void SVoice::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Voice", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Track", (BYTE*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PlayTime", (BYTE*)&pPlayTime - pThis, sizeof(pPlayTime), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FadeIn", (BYTE*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FadeOut", (BYTE*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MusicStreamFadeIn", (BYTE*)&pMusicStreamFadeIn - pThis, sizeof(pMusicStreamFadeIn), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MusicStreamFadeOut", (BYTE*)&pMusicStreamFadeOut - pThis, sizeof(pMusicStreamFadeOut), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Track", (uint8_t*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PlayTime", (uint8_t*)&pPlayTime - pThis, sizeof(pPlayTime), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeIn", (uint8_t*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeOut", (uint8_t*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MusicStreamFadeIn", (uint8_t*)&pMusicStreamFadeIn - pThis, sizeof(pMusicStreamFadeIn), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MusicStreamFadeOut", (uint8_t*)&pMusicStreamFadeOut - pThis, sizeof(pMusicStreamFadeOut), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -222,10 +224,10 @@ int SVoice::operator&( IBinSaver &saver )
 
 
 
-void SCompositionDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SCompositionDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Composition", (BYTE*)&pComposition - pThis, sizeof(pComposition), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (BYTE*)&fWeight - pThis, sizeof(fWeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Composition", (uint8_t*)&pComposition - pThis, sizeof(pComposition), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (uint8_t*)&fWeight - pThis, sizeof(fWeight), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SCompositionDesc::operator&( IXmlSaver &saver )
@@ -244,7 +246,7 @@ int SCompositionDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCompositionDesc::CalcCheckSum() const
+uint32_t SCompositionDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -265,11 +267,11 @@ void SPlayList::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "PlayList", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "StillOrder", &stillOrder, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "RandomOrder", &randomOrder, pThis );
-	NMetaInfo::ReportMetaInfo( "FadeIn", (BYTE*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FadeOut", (BYTE*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeIn", (uint8_t*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FadeOut", (uint8_t*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -300,7 +302,7 @@ void SMapMusic::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MapMusic", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "PlayLists", &playLists, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

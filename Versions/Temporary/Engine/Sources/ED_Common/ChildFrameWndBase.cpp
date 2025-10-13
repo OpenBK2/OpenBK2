@@ -12,6 +12,8 @@
 #include "UI/UI.h"
 #include "ChildFrameWndBase.h"
 
+#include <cstdint>
+
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
 
@@ -640,14 +642,14 @@ void CChildFrameWndBase::RemoveInput()
 }
 
 
-void CChildFrameWndBase::EnableInput( DWORD dwData )
+void CChildFrameWndBase::EnableInput( uint32_t dwData )
 {
 	DebugTrace( "CChildFrameWndBase::EnableInput( %d )", dwData );
 	bInputEnabled = ( dwData != 0 );
 }
 
 
-void CChildFrameWndBase::EnableAutoUpdate( DWORD dwData )
+void CChildFrameWndBase::EnableAutoUpdate( uint32_t dwData )
 {
 	if ( dwData != 0 )
 	{
@@ -661,7 +663,7 @@ void CChildFrameWndBase::EnableAutoUpdate( DWORD dwData )
 }
 
 
-void CChildFrameWndBase::EnableRunMode( DWORD dwData )
+void CChildFrameWndBase::EnableRunMode( uint32_t dwData )
 {
 	bRunModeEnabled = ( dwData != 0 );
 	if ( bRunModeEnabled )
@@ -700,13 +702,13 @@ void CChildFrameWndBase::DisableGameInput()
 }
 
 
-void CChildFrameWndBase::EnableRender( DWORD dwData )
+void CChildFrameWndBase::EnableRender( uint32_t dwData )
 {
 	bRenderEnabled = ( dwData != 0 );
 }
 
 
-void CChildFrameWndBase::EnableScrollbars( DWORD dwData )
+void CChildFrameWndBase::EnableScrollbars( uint32_t dwData )
 {
 	if ( bEnableScroll != ( dwData > 0 ) )
 	{
@@ -737,7 +739,7 @@ void CChildFrameWndBase::EnableScrollbars( DWORD dwData )
 }
 
 
-void CChildFrameWndBase::EnableMouseCapture( DWORD dwData )
+void CChildFrameWndBase::EnableMouseCapture( uint32_t dwData )
 {
 	if ( dwData > 0 )
 	{
@@ -750,7 +752,7 @@ void CChildFrameWndBase::EnableMouseCapture( DWORD dwData )
 }
 
 
-void CChildFrameWndBase::GetDimensions( DWORD dwData )
+void CChildFrameWndBase::GetDimensions( uint32_t dwData )
 {
 	if ( dwData != 0 )
 	{
@@ -763,7 +765,7 @@ void CChildFrameWndBase::GetDimensions( DWORD dwData )
 }
 
 
-bool CChildFrameWndBase::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CChildFrameWndBase::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

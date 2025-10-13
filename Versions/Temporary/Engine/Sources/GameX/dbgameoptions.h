@@ -18,19 +18,19 @@ namespace NDb
 		struct SOptionsCategory
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 
 			struct SOptionEntry
 			{
 			private:
-				mutable DWORD __dwCheckSum;
+				mutable uint32_t __dwCheckSum;
 			public:
 
 				struct SOptionEntryState
 				{
 				private:
-					mutable DWORD __dwCheckSum;
+					mutable uint32_t __dwCheckSum;
 				public:
 					NFile::CFilePath szNameFileRef;
 					NFile::CFilePath szTooltipFileRef;
@@ -42,11 +42,11 @@ namespace NDb
 						__dwCheckSum( 0 )
 					{ }
 					//
-					void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+					void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 					//
 					int operator&( IBinSaver &saver );
 					int operator&( IXmlSaver &saver );
-					DWORD CalcCheckSum() const;
+					uint32_t CalcCheckSum() const;
 				};
 
 				enum EOptionEditorType
@@ -61,7 +61,7 @@ namespace NDb
 				struct SSliderSingleValue
 				{
 				private:
-					mutable DWORD __dwCheckSum;
+					mutable uint32_t __dwCheckSum;
 				public:
 					std::string szProgName;
 					std::vector< std::string > values;
@@ -70,11 +70,11 @@ namespace NDb
 						__dwCheckSum( 0 )
 					{ }
 					//
-					void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+					void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 					//
 					int operator&( IBinSaver &saver );
 					int operator&( IXmlSaver &saver );
-					DWORD CalcCheckSum() const;
+					uint32_t CalcCheckSum() const;
 				};
 				std::string szProgName;
 				NFile::CFilePath szNameFileRef;
@@ -93,11 +93,11 @@ namespace NDb
 					nModeFlags( 0 )
 				{ }
 				//
-				void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+				void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 				//
 				int operator&( IBinSaver &saver );
 				int operator&( IXmlSaver &saver );
-				DWORD CalcCheckSum() const;
+				uint32_t CalcCheckSum() const;
 			};
 			NFile::CFilePath szNameFileRef;
 			NFile::CFilePath szTooltipFileRef;
@@ -109,11 +109,11 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		std::vector< SOptionsCategory > categories;
 
@@ -127,7 +127,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

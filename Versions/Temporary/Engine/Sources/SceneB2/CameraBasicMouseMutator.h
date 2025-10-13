@@ -3,6 +3,8 @@
 #include "Camera.h"
 #include "Input/GameMessage.h"
 
+#include <cstdint>
+
 namespace NCamera
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +48,7 @@ namespace NCamera
 		SLimit distanceLimit;						// distance limit (min/max)
 		SLimit pitchLimit;							// pitch limit (min/max)
 		SLimit yawLimit;								// yaw (rotation) limit (min/max)
-		DWORD timeLastUpdate;
+		uint32_t timeLastUpdate;
 		//
 		// input sliders. NOTE: don't store it - acquire in Init()
 		NInput::CBind sliderFwd;				// forward/backward moving slider (parrallel ground)
@@ -98,8 +100,8 @@ namespace NCamera
 		bool HasAutopositioning() const { return bAutoPositioning; }
 		void SetWasUpdated( bool _bWasUpdated ) { bWasUpdated = _bWasUpdated; }
 		//
-		DWORD GetTimeLastUpdate() const { return timeLastUpdate; }
-		void SetTimeLastUpdate( const DWORD &_timeLastUpdate ) { timeLastUpdate = _timeLastUpdate; }
+		uint32_t GetTimeLastUpdate() const { return timeLastUpdate; }
+		void SetTimeLastUpdate( const uint32_t &_timeLastUpdate ) { timeLastUpdate = _timeLastUpdate; }
 		bool IsCameraLocked() const { return !manualLockers.empty(); }
 
 	public:

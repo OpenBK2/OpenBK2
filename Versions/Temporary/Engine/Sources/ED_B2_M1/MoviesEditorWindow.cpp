@@ -10,6 +10,8 @@
 
 #include "MoviesEditorWindow.h"
 
+#include <cstdint>
+
 #define MOVED_DEF_SCALING (2.0f)
 
 static float GetSliderPercent( const CSliderCtrl &slider )
@@ -179,7 +181,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 }
 
 
-bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{

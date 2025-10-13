@@ -1,6 +1,8 @@
 #pragma once
+
 #include "FileReaders.h"
 
+#include <cstdint>
 
 class CZipFile : public CObjectBase
 {
@@ -12,11 +14,11 @@ class CZipFile : public CObjectBase
 	//
 	struct SFileHeader
 	{
-		DWORD dwModDateTime;									// last mode file date & time (MS-DOS)
-		DWORD dwCSize;												// compressed size
-		DWORD dwUSize;												// uncompressed size
-		DWORD wExtAttr;												// external file attributes, host system dependent
-		DWORD dwHdrOffset;										// relative offset of local header from the start of the first disk, on which this file appears
+		uint32_t dwModDateTime;									// last mode file date & time (MS-DOS)
+		uint32_t dwCSize;												// compressed size
+		uint32_t dwUSize;												// uncompressed size
+		uint32_t wExtAttr;												// external file attributes, host system dependent
+		uint32_t dwHdrOffset;										// relative offset of local header from the start of the first disk, on which this file appears
 		const char *pszFileName;							// filename
 		//
 		SFileHeader(): pszFileName(0) {}
@@ -43,8 +45,8 @@ public:
 	//
 	void GetFileName( int nIndex, std::string *pString ) const;
 	int GetFileLen( int nIndex ) const;
-	DWORD GetFileAttribs( int nIndex ) const;
-	DWORD GetModDateTime( int nIndex ) const;	// high word - date, low word - time
+	uint32_t GetFileAttribs( int nIndex ) const;
+	uint32_t GetModDateTime( int nIndex ) const;	// high word - date, low word - time
 
 	CDataStream *OpenFile( int nIndex );
 };

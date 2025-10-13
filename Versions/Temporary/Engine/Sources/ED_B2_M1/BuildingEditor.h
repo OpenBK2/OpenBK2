@@ -1,4 +1,5 @@
 #pragma once
+
 #define EDITOR_BUILDING_ID (-4)
 
 #include "B2_M1_World/MOBuilding.h"
@@ -6,6 +7,7 @@
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/EditorBase.h"
 
+#include <cstdint>
 
 class CBuildingRPGStatsEditorSettings
 {
@@ -41,7 +43,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	CVec2 vBuildingOrigin;
 	//
 	bool bDrawPassability;
-	CArray2D<BYTE> modelPassability;
+	CArray2D<uint8_t> modelPassability;
 	//
 	string szScreenTitle;
 	//
@@ -71,7 +73,7 @@ public:
 	void Redo( IController* pController );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	//CBuildingEditor

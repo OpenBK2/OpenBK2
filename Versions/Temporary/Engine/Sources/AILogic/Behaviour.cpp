@@ -7,6 +7,7 @@
 #include "HitsStore.h"
 #include "Turret.h"
 
+#include <cstdint>
 
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
@@ -233,20 +234,20 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 						if ( NRandom::Random( 0.0f, 1.0f ) > 0.7f )
 						{
 							CTurret *pTurret = pUnit->GetTurret( 0 );
-							const WORD wTurretAngle = pTurret->GetHorCurAngle();
+							const uint16_t wTurretAngle = pTurret->GetHorCurAngle();
 							
-							WORD wRotateAngle;
+							uint16_t wRotateAngle;
 							if ( pUnit->GetStats()->IsArmor() )
-								wRotateAngle = (std::min)( (WORD)15000, (WORD)pTurret->GetHorTurnConstraint() );
+								wRotateAngle = (std::min)( (uint16_t)15000, (uint16_t)pTurret->GetHorTurnConstraint() );
 							else
-								wRotateAngle = (std::min)( (WORD)32768, (WORD)pTurret->GetHorTurnConstraint() );
+								wRotateAngle = (std::min)( (uint16_t)32768, (uint16_t)pTurret->GetHorTurnConstraint() );
 
-							const WORD wMinRotateAngle = wRotateAngle / 4;
-							const WORD wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
+							const uint16_t wMinRotateAngle = wRotateAngle / 4;
+							const uint16_t wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
 							
 							if ( wMaxRotateAngle > 0 && (int)wMaxRotateAngle - (int)wMinRotateAngle + 1 != 0 )
 							{
-								WORD wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle ); RecordRandomCall();
+								uint16_t wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle ); RecordRandomCall();
 
 								bool bClockWise = false;
 								bool bCounterClockWise = false;
@@ -275,7 +276,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 								}
 								nLastSign = nSign;
 
-								const WORD wResAngle = wTurretAngle + nSign * wRotate;
+								const uint16_t wResAngle = wTurretAngle + nSign * wRotate;
 								pTurret->TurnHor( wResAngle );
 							}
 						}

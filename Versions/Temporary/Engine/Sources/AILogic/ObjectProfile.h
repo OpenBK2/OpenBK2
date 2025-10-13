@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Stats_B2_M1/DBPassProfile.h"
 
+#include <cstdint>
 
 struct SUnitProfile;
 
@@ -21,7 +23,7 @@ class CObjectProfile : public CObjectBase
 	void Init( const NDb::SPassProfile &profile, const CVec2 &vCenter, const CVec2 &vRotation, const bool bForceThickLock );
 public:
 	CObjectProfile() { }
-	CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const WORD wDir, const bool bForceThickLock );
+	CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const uint16_t wDir, const bool bForceThickLock );
 	CObjectProfile( const struct SRect &unitRect, const bool bForceThickLock );
 
 	bool IsTileInside( const SVector &tile ) const;

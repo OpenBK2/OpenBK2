@@ -32,6 +32,8 @@
 #include "SuperWeapon.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
 
+#include <cstdint>
+
 const int CURSOR_FADE_HALF_SIZE_X = 150;
 const int CURSOR_FADE_HALF_SIZE_Y = 150;
 
@@ -778,7 +780,7 @@ void CWorldClient::UnHideFromSelectionGroup( CMapObj *pMapObj )
 		pSelector->UnHideForGroups( checked_cast<CMOSelectable*>(pMapObj) );
 }
 
-void CWorldClient::RegisterUserAction( NDb::EUserAction nAction, DWORD flags, USER_ACTION pfnUserAction )
+void CWorldClient::RegisterUserAction( NDb::EUserAction nAction, uint32_t flags, USER_ACTION pfnUserAction )
 {
 	NI_ASSERT( (flags != 0) && (pfnUserAction), StrFmt("Can't register action %d with NULL functions and/or flags", nAction) );
 	SActionDesc &action = userActionsMap[nAction];
@@ -1151,7 +1153,7 @@ void CWorldClient::GotoSelectionDst( SUISelection *pUISelection )
 
 		SAIUnitCmd command( ACTION_COMMAND_MOVE_TO );
 		command.vPos = object.vMovePos;
-		const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
+		const uint16_t wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 		pCommandsSender->CommandGroupCommand( &command, wAIGroup, GetPlaceInQueue(), ML_COMMAND_SAVE_GAME );
 		pCommandsSender->CommandUnregisterGroup( wAIGroup );
 		}
@@ -1163,7 +1165,7 @@ void CWorldClient::GotoSelectionDst( SUISelection *pUISelection )
 
 		SAIUnitCmd command( ACTION_COMMAND_ROTATE_TO );
 		command.vPos = object.vRotatePos;
-		const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
+		const uint16_t wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 		pCommandsSender->CommandGroupCommand( &command, wAIGroup, true, ML_COMMAND_SAVE_GAME );
 		pCommandsSender->CommandUnregisterGroup( wAIGroup );
 		}
@@ -2713,7 +2715,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 	Scene()->PickZeroHeight( &vPos, vScreenSize * 0.5f );
 	const float fRadius = 0.5f * ( vScreenSize.x + vScreenSize.y );
 	
-	CArray2D<BYTE> areaTypes;
+	CArray2D<uint8_t> areaTypes;
 	pTerraManager->GetAreaTileTypes( &areaTypes, (vPos.x - fRadius) / VIS_TILE_SIZE,
 																							 (vPos.y - fRadius) / VIS_TILE_SIZE, 
 																							 (vPos.x + fRadius) / VIS_TILE_SIZE,
@@ -2776,7 +2778,7 @@ const NDb::SComplexSoundDesc * CWorldClient::GetTerrainCycleSound( int nTerrainT
 	return terraTypes[nTerrainType]->pCycledSound;
 }
 
-void CWorldClient::OnSelectSlot( int nSlot, WORD wKeyboardFlags )
+void CWorldClient::OnSelectSlot( int nSlot, uint16_t wKeyboardFlags )
 {
 	NI_VERIFY( nSlot >= 0, "Wrong slot", return );
 
@@ -2802,7 +2804,7 @@ void CWorldClient::OnSelectSlot( int nSlot, WORD wKeyboardFlags )
 	}
 }
 
-void CWorldClient::OnClickMultiSelectUnit( int nSlot, WORD wKeyboardFlags )
+void CWorldClient::OnClickMultiSelectUnit( int nSlot, uint16_t wKeyboardFlags )
 {
 	if ( !IsForcedAction() )
 		OnSelectSlot( nSlot, wKeyboardFlags );
@@ -2810,7 +2812,7 @@ void CWorldClient::OnClickMultiSelectUnit( int nSlot, WORD wKeyboardFlags )
 		OnActionOnSlot( nSlot, wKeyboardFlags );
 }
 
-void CWorldClient::OnActionOnSlot( int nSlot, WORD wKeyboardFlags )
+void CWorldClient::OnActionOnSlot( int nSlot, uint16_t wKeyboardFlags )
 {
 	const CMapObj *pMO = pSelector->GetFirstSlotUnit( nSlot );
 	if ( !pMO )

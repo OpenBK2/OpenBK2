@@ -6,6 +6,8 @@
 #include "MapInfoStoreInputState.h"
 #include "libdb/Manipulator.h"
 
+#include <cstdint>
+
 class CPolygonSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -102,8 +104,8 @@ protected:
 	static const float CONTROL_POINT_RADIUS;
 	static const int CONTROL_POINT_PARTS;
 	static const float CENTER_POINT_RADIUS;
-	static const DWORD CONTROL_POINT_COLOR;
-	static const DWORD CONTROL_LINE_COLOR;
+	static const uint32_t CONTROL_POINT_COLOR;
+	static const uint32_t CONTROL_LINE_COLOR;
 	//
 	typedef vector<UINT> CPolygonIDList;
 	typedef vector<CVec3> CControlPointList;
@@ -231,7 +233,7 @@ public:
 	}
 
 	//ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

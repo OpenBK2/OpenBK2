@@ -4,13 +4,15 @@
 #include "Image/ImageConvertor.h"
 #include "3Dmotor/FontFormat.h"
 
+#include <cstdint>
+
 namespace NFontGen
 {
 
 static bool DrawFont( HDC hdc, const CFontInfo &fi )
 {
 	const std::vector<ABC> &abc = fi.GetABC();
-	const std::vector<WORD> &chars = fi.GetMBCSChars();
+	const std::vector<uint16_t> &chars = fi.GetMBCSChars();
 	const TEXTMETRIC &tm = fi.GetTextMetrics();
 	const CTPoint<int> textureSize = fi.GetTextureSize();
 	//
@@ -32,7 +34,7 @@ static bool DrawFont( HDC hdc, const CFontInfo &fi )
 	return true;
 }
 
-void CreateFontImage( CArray2D<DWORD> *pRes, const CFontInfo &fi )
+void CreateFontImage( CArray2D<uint32_t> *pRes, const CFontInfo &fi )
 {
 	const CTPoint<int> textureSize = fi.GetTextureSize();
 	// Prepare to create a bitmap
@@ -47,7 +49,7 @@ void CreateFontImage( CArray2D<DWORD> *pRes, const CFontInfo &fi )
 	bmi.bmiHeader.biSizeImage   = abs( bmi.bmiHeader.biWidth * bmi.bmiHeader.biHeight * bmi.bmiHeader.biBitCount / 8 );
 	// Create a DC and a bitmap for the font
 	HDC hDC = CreateCompatibleDC( 0 );
-	BYTE *pBitmapBits = 0;
+	uint8_t *pBitmapBits = 0;
 	HBITMAP hbmBitmap = CreateDIBSection( hDC, &bmi, DIB_RGB_COLORS, (void**)&pBitmapBits, 0, 0 );
 	HBITMAP hOldBmp = (HBITMAP)SelectObject( hDC, hbmBitmap );
 	HFONT hOldFont = (HFONT)SelectObject( hDC, fi.GetFont() );
@@ -67,7 +69,7 @@ void CreateFontImage( CArray2D<DWORD> *pRes, const CFontInfo &fi )
 	pRes->SetSizes( textureSize.x, textureSize.y );
 	// b, g, r = 0, 1, 2 
 	for ( int i = 0, j = 0; i< textureSize.x*textureSize.y*3; i += 3, ++j )
-		(*pRes)[j / textureSize.x][j % textureSize.x] = (DWORD(pBitmapBits[i + 1]) << 24) | 0x00ffffff;
+		(*pRes)[j / textureSize.x][j % textureSize.x] = (uint32_t(pBitmapBits[i + 1]) << 24) | 0x00ffffff;
 	NImage::FlipY( *pRes );
 }
 
@@ -89,18 +91,18 @@ void CreateFontFormat( CFontFormatInfo *pRes, const CFontInfo &fi )
 	const std::vector<KERNINGPAIR> &kps = fi.GetKerningPairs();
 	for ( int i = 0; i < kps.size(); ++i )
 	{
-		DWORD dwFirst = fi.Translate( kps[i].wFirst );
-		DWORD dwSecond = fi.Translate( kps[i].wSecond );
+		uint32_t dwFirst = fi.Translate( kps[i].wFirst );
+		uint32_t dwSecond = fi.Translate( kps[i].wSecond );
 		pRes->kerns[(dwFirst << 16) | dwSecond] = kps[i].iKernAmount;
 	}
 	// convert this structures to the STFLetterFull array
 	int x = 0, y = 0;
-	const std::vector<WORD> &chars = fi.GetMBCSChars();
+	const std::vector<uint16_t> &chars = fi.GetMBCSChars();
 	const std::vector<ABC> &abc = fi.GetABC();
 	const CTPoint<int> textureSize = fi.GetTextureSize();
 	for ( int i = 0; i < chars.size(); ++i )
 	{
-		WORD unicode = fi.Translate( chars[i] );
+		uint16_t unicode = fi.Translate( chars[i] );
 		//
 		int nNextCharShift = abc[i].abcB + abs( abc[i].abcC );
 		if ( x + nNextCharShift + N_LEADING_PIXELS > textureSize.x )

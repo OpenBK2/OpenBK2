@@ -20,6 +20,8 @@
 #include "Misc/StrProc.h"
 #include "libdb/ResourceManager.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_BUILDER_IN_DLL( AnimB2, CAnimationBuilder )
@@ -196,7 +198,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 						int nLastFrame = -1;
 						string szAABBAName;
 						string szAABBDName;
-						DWORD dwWeaponBits = 0;
+						uint32_t dwWeaponBits = 0;
 						bool bLooped = 0;
 						int nActionFrame = 0;
 						float fSpeed = 1.0f;
@@ -336,14 +338,14 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 }
 
 
-bool CAnimationBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CAnimationBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{	
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<DWORD>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
 			const string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -372,7 +374,7 @@ bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<DWORD>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
 			const string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -392,9 +394,9 @@ bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 }
 
 
-DWORD CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) const
+uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) const
 {
-	DWORD dwWeaponBits = 0;
+	uint32_t dwWeaponBits = 0;
 	for ( UINT nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL; nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER; ++nWeaponTypeIndex )
 	{
 		string szMnemonic = typeMayaWeaponMnemonics.GetMnemonic( nWeaponTypeIndex );

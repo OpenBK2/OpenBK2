@@ -1,7 +1,10 @@
 #pragma once
+
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
 #include "GfxBuffers.h"
+
+#include <cstdint>
 
 #include <boost/config.hpp>
 
@@ -21,12 +24,12 @@ protected:
 		CObj<CParticleEffect> pEffect;
 		int nStartParticle;
 		SParticleLightInfo lmPlacement;
-		DWORD dwPColor;
+		uint32_t dwPColor;
 		int nBufferPlace;
 		ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pEffect); f.Add(3,&nStartParticle); f.Add(4,&lmPlacement); f.Add(5,&dwPColor); f.Add(6,&nBufferPlace); return 0; }
 
 		SEffectInfo() {}
-		SEffectInfo( CParticleEffect *_pEffect, int _nStartParticle, const SParticleLightInfo &lm, DWORD _dwPColor, int _nBufferPlace )
+		SEffectInfo( CParticleEffect *_pEffect, int _nStartParticle, const SParticleLightInfo &lm, uint32_t _dwPColor, int _nBufferPlace )
 			: pEffect(_pEffect) , nStartParticle(_nStartParticle), lmPlacement(lm), dwPColor(_dwPColor), nBufferPlace(_nBufferPlace) {}
 	};
 	ZDATA
@@ -40,12 +43,12 @@ public:
 private:
 	IParticleOutput *pRootOutput;
 protected:
-	DWORD dwPColor;
+	uint32_t dwPColor;
 	bool bIsAddingPart;
 public:
 	CBaseParticlesGeometry( IParticleOutput *_pRootOutput = 0 ) : bIsAddingPart(false), pRootOutput(_pRootOutput) {}
 	void RealStart( CParticleEffect *pEffect, int nStartParticle, const SBound &bv, const SParticleLightInfo &lm,
-		DWORD _dwPColor, int nBufferPlace )
+		uint32_t _dwPColor, int nBufferPlace )
 	{
 		ASSERT(!bIsAddingPart);
 		//bc.Add( bv );
@@ -57,7 +60,7 @@ public:
 		dwPColor = _dwPColor;
 	}
 	virtual void Start( CParticleEffect *pEffect, int nStartParticle, const SBound &bv, const SParticleLightInfo &lm,
-		DWORD dwPColor ) = 0;
+		uint32_t dwPColor ) = 0;
 	void FinishPart( SBound *pTrueBound, SParticleLightInfo *pLM )
 	{
 		ASSERT( bIsAddingPart );
@@ -126,7 +129,7 @@ public:
 	CParticlesGeometry( IParticleOutput *_pRootOutput = 0 ) : CBaseParticlesGeometry(_pRootOutput), pWriteBuffer(0) {}
 
 	virtual void Start( CParticleEffect *pEffect, int nStartParticle, const SBound &bv, const SParticleLightInfo &lm,
-		DWORD dwPColor )
+		uint32_t dwPColor )
 	{
 		ASSERT( ( effects.empty() && pWriteBuffer == 0 ) || (!effects.empty() && pWriteBuffer != 0 ) );
 		if ( !pWriteBuffer )
@@ -159,7 +162,7 @@ public:
 	}
 
 	BOOST_FORCEINLINE void WriteParticle( NGfx::SGeomVecFull *pRes, const CVec3 &v, const NGfx::SShortTextureUV &tex,
-		short nLU, short nLV, DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
+		short nLU, short nLV, uint32_t dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
 		UpdateBounds(vMin, vMax, v);
 
@@ -172,14 +175,14 @@ public:
 		pRes->texV.dw = 0;
 	}
 
-	void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
 	}
 
-	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		NGfx::SGeomVecFull *pRes = &pWriteBuffer->res[pWriteBuffer->nTarget];
@@ -194,7 +197,7 @@ public:
 	}
 };
 
-void WriteParticle(NGfx::SGeomVecT2C1 * p_res, CVec3 v, float f_u, float f_v, DWORD dword, CVec3 vec3,
+void WriteParticle(NGfx::SGeomVecT2C1 * p_res, CVec3 v, float f_u, float f_v, uint32_t dword, CVec3 vec3,
                   CVec3 pt_max);
 
 class CTnLParticlesGeometry : public CParticlesGeometry<NGfx::SGeomVecT2C1>
@@ -209,7 +212,7 @@ public:
 	}
 
 	BOOST_FORCEINLINE void WriteParticle( NGfx::SGeomVecT2C1 *pRes, const CVec3 &v, float fU, float fV,
-		DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
+		uint32_t dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
 		UpdateBounds(vMin, vMax, v);
 
@@ -220,14 +223,14 @@ public:
 		pRes->tex2.x = 0;
 		pRes->tex2.y = 0;
 	}
-	void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
 	}
 
-	BOOST_FORCEINLINE DWORD BlendParticleColor(DWORD dwColor, DWORD dwPColor) {
+	BOOST_FORCEINLINE uint32_t BlendParticleColor(uint32_t dwColor, uint32_t dwPColor) {
 		uint8_t R1 = (dwColor >> 16) & 0xFF;
 		uint8_t G1 = (dwColor >> 8) & 0xFF;
 		uint8_t B1 = (dwColor >> 0) & 0xFF;
@@ -244,14 +247,14 @@ public:
 		return (A << 24) | (R << 16) | (G << 8) | B;
 	}
 
-	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		float fU1 = tPlace.vUVs[3].nU * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
 		float fV1 = tPlace.vUVs[3].nV * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
 		float fU2 = tPlace.vUVs[1].nU * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
 		float fV2 = tPlace.vUVs[1].nV * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
-		DWORD dwResColor = BlendParticleColor(dwColor, dwPColor);
+		uint32_t dwResColor = BlendParticleColor(dwColor, dwPColor);
 		NGfx::SGeomVecT2C1 *pRes = &pWriteBuffer->res[pWriteBuffer->nTarget];
 		pWriteBuffer->nTarget += 4;
 		WriteParticle( pRes + 0, vPos[0], fU1, fV2, dwResColor, bcPart.ptMin, bcPart.ptMax );

@@ -4,29 +4,31 @@
 #include "Units.h"
 #include "Common_RTS_AI/AIMap.h"
 
+#include <cstdint>
+
 extern CUnits units;
 
-template<BYTE cOnlyOneTypeVisibility, int NSize>
+template<uint8_t cOnlyOneTypeVisibility, int NSize>
 class CUnitsIter
 {
 	CVec2 vDownLeft;
 	CVec2 vUpRight;
 
 	int nDownX, nDownY, nUpX, nUpY;
-	BYTE cStartDipl;
-	BYTE cCurDipl;
-	BYTE cDiplEnd;
-	BYTE cCurMech;
-	BYTE cMechEnd;
+	uint8_t cStartDipl;
+	uint8_t cCurDipl;
+	uint8_t cDiplEnd;
+	uint8_t cCurMech;
+	uint8_t cMechEnd;
 
-	BYTE cCurVis;
+	uint8_t cCurVis;
 
 	int nXCell, nYCell;
 
 	CUnitsIter<1, NSize-1> iter;
 
 	//
-	void Init( BYTE _cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		nDownX = vDownLeft.x / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
 		nDownY = vDownLeft.y / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
@@ -86,7 +88,7 @@ class CUnitsIter
 		iter.Init4HighIter( vLowIterDownLeft, vLowIterUpRight, cCurDipl, 1, cCurMech, 1, cCurVis );
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
 		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
@@ -99,16 +101,16 @@ class CUnitsIter
 public:
 	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
 
-	CUnitsIter( const BYTE _cStartDipl, BYTE cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
-		BYTE cStartMech = 0;
-		BYTE cMechs = 1;
+		uint8_t cStartMech = 0;
+		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
 			cMechs = 2;
 
-		BYTE cStartDipl = 0;
-		BYTE cDiplomacies = 0;
+		uint8_t cStartDipl = 0;
+		uint8_t cDiplomacies = 0;
 		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
 		else if ( _cStartDipl == 2 )
 		{
@@ -127,7 +129,7 @@ public:
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 	
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs, BYTE cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;
@@ -183,12 +185,12 @@ class CUnitsIter<1, 0>
 	CVec2 vUpRight;
 
 	int nDownX, nDownY, nUpX, nUpY;
-	BYTE cStartDipl;
-	BYTE cCurDipl;
-	BYTE cDiplEnd;
-	BYTE cCurMech;
-	BYTE cMechEnd;
-	BYTE cCurVis;
+	uint8_t cStartDipl;
+	uint8_t cCurDipl;
+	uint8_t cDiplEnd;
+	uint8_t cCurMech;
+	uint8_t cMechEnd;
+	uint8_t cCurVis;
 
 	int nXCell, nYCell;
 	int nIter;
@@ -232,7 +234,7 @@ class CUnitsIter<1, 0>
 		return units.unitsInCells[cCurVis].begin( nCellID );
 	}
 	
-	void Init( BYTE _cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		nDownX = vDownLeft.x / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
 		nDownY = vDownLeft.y / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
@@ -257,7 +259,7 @@ class CUnitsIter<1, 0>
 			nIter = GetCurCellIter();
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
 		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
@@ -268,15 +270,15 @@ class CUnitsIter<1, 0>
 	}
 public:
 	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
-	CUnitsIter( const BYTE _cStartDipl, BYTE cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
-		BYTE cStartMech = 0;
-		BYTE cMechs = 1;
+		uint8_t cStartMech = 0;
+		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
 			cMechs = 2;
 
-		BYTE cStartDipl, cDiplomacies;
+		uint8_t cStartDipl, cDiplomacies;
 		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
 		else if ( _cStartDipl == 2 )
 		{
@@ -295,7 +297,7 @@ public:
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 	
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs, BYTE cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;
@@ -350,12 +352,12 @@ class CUnitsIter<0, 0>
 	CVec2 vUpRight;
 
 	int nDownX, nDownY, nUpX, nUpY;
-	BYTE cStartDipl;
-	BYTE cCurDipl;
-	BYTE cDiplEnd;
-	BYTE cCurMech;
-	BYTE cMechEnd;
-	BYTE cCurVis;
+	uint8_t cStartDipl;
+	uint8_t cCurDipl;
+	uint8_t cDiplEnd;
+	uint8_t cCurMech;
+	uint8_t cMechEnd;
+	uint8_t cCurVis;
 
 	int nXCell, nYCell;
 	int nIter;
@@ -399,7 +401,7 @@ class CUnitsIter<0, 0>
 		return units.unitsInCells[cCurVis].begin( nCellID );
 	}
 	
-	void Init( BYTE _cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		nDownX = vDownLeft.x / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
 		nDownY = vDownLeft.y / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
@@ -424,7 +426,7 @@ class CUnitsIter<0, 0>
 			nIter = GetCurCellIter();
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs )
+	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
 		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
@@ -435,15 +437,15 @@ class CUnitsIter<0, 0>
 	}
 public:
 	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
-	CUnitsIter( const BYTE _cStartDipl, BYTE cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
-		BYTE cStartMech = 0;
-		BYTE cMechs = 1;
+		uint8_t cStartMech = 0;
+		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
 			cMechs = 2;
 
-		BYTE cStartDipl = 0, cDiplomacies = 0;
+		uint8_t cStartDipl = 0, cDiplomacies = 0;
 		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
 		else if ( _cStartDipl == 2 )
 		{
@@ -462,7 +464,7 @@ public:
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 	
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, BYTE cStartDipl, BYTE cDiplomacies, BYTE cStartMech, BYTE cMechs, BYTE cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;

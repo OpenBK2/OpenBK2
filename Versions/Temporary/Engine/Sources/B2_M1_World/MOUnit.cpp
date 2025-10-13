@@ -15,6 +15,8 @@
 #include "System/Commands.h"
 #include "MOUnitInfantry.h"
 
+#include <cstdint>
+
 static float s_fPointerOffset = 3.0f;
 
 bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
@@ -396,7 +398,7 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 		for ( std::list<SShootArea>::const_iterator it = areas.areas.begin(); it != areas.areas.end(); ++it )
 		{
 			const SShootArea &area = *it;
-			DWORD dwColor = area.GetColor();
+			uint32_t dwColor = area.GetColor();
 			CVec3 vColor( ( dwColor & 0x00ff0000 ) >> 16, ( dwColor & 0x0000ff00 ) >> 8, dwColor & 0x000000ff );
 			vColor = vColor / 256.0f;
 			CVec2 vCenter( area.vCenter3D.x, area.vCenter3D.y );

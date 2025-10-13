@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMultiplayerMap;
@@ -16,7 +19,7 @@ struct SMPSlot
 	bool bAccept;			// true means no changes possible (including closed slot)
 	bool bRandomCountry;
 	int nPing;				// -1 means no data
-	WORD wConnectedTo;
+	uint16_t wConnectedTo;
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClientID); f.Add(3,&bPresent); f.Add(4,&szName); f.Add(5,&nTeam); f.Add(6,&nCountry); f.Add(7,&nColour); f.Add(8,&bAccept); f.Add(9,&bRandomCountry); f.Add(10,&nPing); f.Add(11,&wConnectedTo); return 0; }
 

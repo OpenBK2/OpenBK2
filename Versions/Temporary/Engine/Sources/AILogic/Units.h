@@ -4,6 +4,8 @@
 #include "System/FreeIDs.h"
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 class CAIUnit;
 class CAviation;
 
@@ -20,7 +22,7 @@ namespace NDb
 {
 	struct SUnitStatsModifier;
 }
-template<BYTE cOnlyVisible, int nSize> class CUnitsIter;
+template<uint8_t cOnlyVisible, int nSize> class CUnitsIter;
 
 class CUnits : public CAIObjectBase
 {
@@ -48,9 +50,9 @@ private:
 	int nBigCellsSizeX, nBigCellsSizeY;
 
 	// количество юнитов в ячейке
-	CArray2D<WORD> nUnitsCell;
+	CArray2D<uint16_t> nUnitsCell;
 	// номер ячейки
-	CArray2D<WORD> nCell;
+	CArray2D<uint16_t> nCell;
 	// список юнитов для каждой из ячеек, 0 - not visible for enemy, 1 - visible for enemy
 	std::vector< CListsSet<SInitializedWord> > unitsInCells;
 	// позиция юнита в ячейках
@@ -62,7 +64,7 @@ private:
 	std::vector<SUnitPosition> posUnitInCell;
 
 	enum { N_CELLS_LEVELS = 3 };
-	CArray2D<WORD> numUnits[2][N_CELLS_LEVELS][3][2];
+	CArray2D<uint16_t> numUnits[2][N_CELLS_LEVELS][3][2];
 	
 	// для нумерации ячеек
 	CFreeIds cellsIds;
@@ -108,7 +110,7 @@ public:
 	void DelUnitFromCell( class CAIUnit *pUnit, bool bWithLeveledCelles );
 	
 	void UnitChangedPosition( class CAIUnit *pUnit, const CVec2 &newPos );
-	void ChangePlayer( class CAIUnit *pUnit, const BYTE cNewPlayer );
+	void ChangePlayer( class CAIUnit *pUnit, const uint8_t cNewPlayer );
 	
 	const int Size( const int nParty ) const;
 	

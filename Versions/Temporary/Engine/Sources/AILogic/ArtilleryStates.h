@@ -1,8 +1,9 @@
-
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "SoldierStates.h"
 #include "StatusUpdatesHelper.h"
+
+#include <cstdint>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
 class CStaticObject;
@@ -352,10 +353,10 @@ class CArtilleryRestState : public CMechUnitRestState
 	CPtr<CArtillery> pArtillery;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMechUnitRestState*)this); f.Add(2,&pArtillery); return 0; }
 public:
-	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &guardPoint, const WORD wDir, const float fTimeToWait );
+	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 	
 	CArtilleryRestState() : pArtillery( 0 ) { }
-	CArtilleryRestState( class CArtillery *pArtillery, const CVec2 &guardPoint, const WORD wDir, const float fTimeToWait );
+	CArtilleryRestState( class CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
 	virtual void Segment();
 };

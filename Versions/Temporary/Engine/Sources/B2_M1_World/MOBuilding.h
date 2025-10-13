@@ -2,6 +2,8 @@
 
 #include "MapObj.h"
 
+#include <cstdint>
+
 class CMOBuilding : public IMOContainer
 {
 	OBJECT_NOCOPY_METHODS( CMOBuilding );
@@ -15,10 +17,10 @@ class CMOBuilding : public IMOContainer
 	std::vector< float > attachedObjectsHP;
 	float fMaxDistance;
 	float fBuildingHP;
-	WORD wAmbientSound;
-	WORD wCycledSound;
-	//WORD wAmbientSoundTimed;
-	WORD wCycledSoundTimed;
+	uint16_t wAmbientSound;
+	uint16_t wCycledSound;
+	//uint16_t wAmbientSoundTimed;
+	uint16_t wCycledSoundTimed;
 	bool bStorage;
 
 	std::unordered_set<int> projectilesAlreadyHit;

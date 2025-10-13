@@ -175,7 +175,7 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		std::wstring colorStr = L"", colorEndStr = L"";
 		if (playerID >= 0)
 		{
-			DWORD color = scenario->GetPlayerColor(playerID).dwColor;
+			uint32_t color = scenario->GetPlayerColor(playerID).dwColor;
 			colorStr = L"<color = " + string_conversion::utf8_to_wstring(string_conversion::RGBA_to_hex(color)) + L">";
 			colorEndStr = L"<color = FFFFFFFF>";
 		}
@@ -239,7 +239,7 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 	if ( nSlotToKick < 0 || nSlotToKick >= slots.size() || !IsPlayerPresent( nSlotToKick ) )
 		return true;
 
-	const DWORD dwPreVotes = lags[nSlotToKick].dwHatedBy;
+	const uint32_t dwPreVotes = lags[nSlotToKick].dwHatedBy;
 	lags[nSlotToKick].dwHatedBy |= ( 1UL << nVoterSlot );
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -279,7 +279,7 @@ bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 	if ( nSlot < 0 || nSlot >= slots.size() || !IsPlayerPresent( nSlot ) )
 		return true;
 
-	const DWORD dwPreUserPausedPlayers = dwUserPausedPlayers;
+	const uint32_t dwPreUserPausedPlayers = dwUserPausedPlayers;
 	if ( pPacket->bPaused )
 		dwUserPausedPlayers |= ( 1UL << nSlot );
 	else

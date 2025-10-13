@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbterrainspot.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,11 +17,11 @@ void STerrainSpotDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TerrainSpotDesc", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "UsedTexSizeX", (BYTE*)&fUsedTexSizeX - pThis, sizeof(fUsedTexSizeX), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "UsedTexSizeY", (BYTE*)&fUsedTexSizeY - pThis, sizeof(fUsedTexSizeY), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ScaleCoeff", (BYTE*)&fScaleCoeff - pThis, sizeof(fScaleCoeff), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "UsedTexSizeX", (uint8_t*)&fUsedTexSizeX - pThis, sizeof(fUsedTexSizeX), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "UsedTexSizeY", (uint8_t*)&fUsedTexSizeY - pThis, sizeof(fUsedTexSizeY), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ScaleCoeff", (uint8_t*)&fScaleCoeff - pThis, sizeof(fScaleCoeff), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -46,10 +48,10 @@ int STerrainSpotDesc::operator&( IBinSaver &saver )
 
 
 
-void STerrainSpotInstance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void STerrainSpotInstance::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (BYTE*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "SpotID", (BYTE*)&nSpotID - pThis, sizeof(nSpotID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (uint8_t*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "SpotID", (uint8_t*)&nSpotID - pThis, sizeof(nSpotID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "points", &points, pThis );
 }
 
@@ -71,7 +73,7 @@ int STerrainSpotInstance::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STerrainSpotInstance::CalcCheckSum() const
+uint32_t STerrainSpotInstance::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

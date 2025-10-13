@@ -3,6 +3,8 @@
 #include "CommandHandlerDefines.h"
 #include "UnitStartCmdWindow.h"
 
+#include <cstdint>
+
 //
 //
 //		UNITS START COMMANDS WINDOW
@@ -71,7 +73,7 @@ BOOL CUnitStartCmdWindow::OnInitDialog()
 }
 
 
-bool CUnitStartCmdWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CUnitStartCmdWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SUnitStartCmdWindowData *pData = reinterpret_cast<SUnitStartCmdWindowData*>( dwData );
 	//

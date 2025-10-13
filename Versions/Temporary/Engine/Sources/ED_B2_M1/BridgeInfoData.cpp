@@ -6,6 +6,8 @@
 #include "BridgeInfoData.h"
 #include "MapEditorLib/Interface_Logger.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NMapInfoEditor
@@ -56,7 +58,7 @@ namespace NMapInfoEditor
 			bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.nPlayer ), pManipulator, szObjectPrefix + ".Player" );
 			bResult = bResult && CManipulatorManager::GetValue( &( mapInfoElement.fHP ), pManipulator, szObjectPrefix + ".HP" );
 			bResult = bResult && CManipulatorManager::GetVec3<CVec3, float>( &( mapInfoElement.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
-			WORD wDirection = 0;
+			uint16_t wDirection = 0;
 			bResult = bResult && CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 			mapInfoElement.fDirection = AI2VisRad( wDirection );
 			//

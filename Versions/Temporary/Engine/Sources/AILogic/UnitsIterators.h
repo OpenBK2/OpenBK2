@@ -3,6 +3,8 @@
 #include "Units.h"
 #include "Diplomacy.h"
 
+#include <cstdint>
+
 extern CUnits units;
 extern CDiplomacy theDipl;
 
@@ -38,11 +40,11 @@ class CIter
 {
 	T geomIter;
 	int nCurParty, nParties, nCellId, iter;
-	std::vector<BYTE> parties;
+	std::vector<uint8_t> parties;
 
 	public: virtual int operator&( IBinSaver &saver ) {  saver.Add( 1, &geomIter ); saver.Add( 2, &nCurParty ); saver.Add( 3, &nParties ); saver.Add( 4, &nCellId ); saver.Add( 5, &iter ); saver.Add( 6, &parties ); return 0; } private:
 public:
-	CIter( const BYTE cStartDipl, const BYTE cFilter, const T &_geomIter, bool bOnlyMech = false )
+	CIter( const uint8_t cStartDipl, const uint8_t cFilter, const T &_geomIter, bool bOnlyMech = false )
 		: geomIter( _geomIter ), parties( 2 * 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ )
 	{
 		nParties = 0;
@@ -98,14 +100,14 @@ ZDATA
 	int iter;
 	int nCurParty;
 	int nParties;
-	std::vector<BYTE> parties;
+	std::vector<uint8_t> parties;
 	det_set<int> visitedUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&iter); f.Add(3,&nCurParty); f.Add(4,&nParties); f.Add(5,&parties); f.Add(6,&visitedUnits); return 0; }
 public:
 	CGlobalIter() : parties( 3/*SAIConsts::MAX_NUM_OF_PARTIES*/ ) { }
-	CGlobalIter( const BYTE cStartDipl, const BYTE cFilter ) : parties( 3/*SAIConsts::MAX_NUM_OF_PARTIES*/ ) { Init( cStartDipl, cFilter ); }
+	CGlobalIter( const uint8_t cStartDipl, const uint8_t cFilter ) : parties( 3/*SAIConsts::MAX_NUM_OF_PARTIES*/ ) { Init( cStartDipl, cFilter ); }
 
-	void Init( const BYTE cStartDipl, const BYTE cFilter );
+	void Init( const uint8_t cStartDipl, const uint8_t cFilter );
 
 	void Iterate();
 	CAIUnit* operator*() const;

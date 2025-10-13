@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "IconsSet.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -81,9 +83,9 @@ NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconTy
 }
 
 
-void SIconsSet::SIconType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SIconsSet::SIconType::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis ); 
 }
 
@@ -103,7 +105,7 @@ int SIconsSet::SIconType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SIconsSet::SIconType::CalcCheckSum() const
+uint32_t SIconsSet::SIconType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -124,9 +126,9 @@ void SIconsSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "IconsSet", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "MaterialZCheck", (BYTE*)&pMaterialZCheck - pThis, sizeof(pMaterialZCheck), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MaterialNonZCheck", (BYTE*)&pMaterialNonZCheck - pThis, sizeof(pMaterialNonZCheck), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "MaterialZCheck", (uint8_t*)&pMaterialZCheck - pThis, sizeof(pMaterialZCheck), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MaterialNonZCheck", (uint8_t*)&pMaterialNonZCheck - pThis, sizeof(pMaterialNonZCheck), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "icons", &icons, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -266,10 +268,10 @@ NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObj
 }
 
 
-void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "texCoords", &rctexCoords, pThis ); 
 }
 
@@ -291,7 +293,7 @@ int SVisObjIconsSet::SVisObjIcon::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVisObjIconsSet::SVisObjIcon::CalcCheckSum() const
+uint32_t SVisObjIconsSet::SVisObjIcon::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -312,8 +314,8 @@ void SVisObjIconsSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "VisObjIconsSet", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "hpBarBorders", &hpBarBorders, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "hpBarColors", &hpBarColors, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "icons", &icons, pThis );

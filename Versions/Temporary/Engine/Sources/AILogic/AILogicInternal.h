@@ -5,6 +5,8 @@
 #include "Common_RTS_AI/Terrain.h"
 #include "System/det_map.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMapInfo;
@@ -115,19 +117,19 @@ public:
 	virtual void PostMapLoad();
 	virtual void ClearAI();
 
-	virtual void UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer );
+	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer );
 
 	virtual const int GenerateGroupNumber();
 	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup );
-	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup );
+	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	virtual void UnregisterGroup( const int nGroup );
-	virtual void GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue );
+	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
 	
 	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow );
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas );
 	
 	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits );
-	virtual bool GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime );
+	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime );
 	virtual int GetMiniMapWarFogSizeX() const;
 	virtual int GetMiniMapWarFogSizeY() const;
 	virtual void CallScriptFunction( const char *pszCommand );
@@ -154,7 +156,7 @@ public:
 	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck );
 	
 	virtual float GetZ( const CVec2 &vPoint ) const;
-	virtual const DWORD GetNormal( const CVec2 &vPoint ) const;
+	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	
 	virtual bool ToggleShow( const int nShowType );

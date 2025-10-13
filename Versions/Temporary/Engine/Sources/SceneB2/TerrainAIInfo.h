@@ -2,10 +2,12 @@
 
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 struct STerrainAIInfo
 {
 	CArray2D<float> heights;
-	CArray2D<BYTE> terrTypes;
+	CArray2D<uint8_t> terrTypes;
 	//
 	int operator&( IBinSaver &saver )
 	{

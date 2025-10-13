@@ -1,7 +1,6 @@
 // WindowConsole.cpp: implementation of the CWindowConsole class.
 //
 
-
 #include "stdafx.h"
 #include "WindowConsole.h"
 #include "WindowEditLine.h"
@@ -11,6 +10,8 @@
 #include "UIML.h"
 #include "DBUIConsts.h"
 #include "System/Commands.h"
+
+#include <cstdint>
 
 static int nConsoleSize = 100;
 
@@ -58,7 +59,7 @@ CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginStri
 	impotantMsgs.AddObserver( "console_last_string", &CWindowConsole::OnCtrlEnd );
 }
 
-CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
+CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
 : szString( pszStr ), dwColor( col ) 
 {  
 	const std::wstring szText = pszStr;
@@ -145,7 +146,7 @@ void CWindowConsole::Segment( const int timeDiff )
 	ReadConsoleStrings();
 	// read commands
 	std::wstring szCmd;
-	DWORD color = 0;
+	uint32_t color = 0;
 	while ( ReadFromPipe( PIPE_CONSOLE_CMDS, &szCmd, &color ) )
 	{
 		vectorOfCommands.push_back( szCmd );

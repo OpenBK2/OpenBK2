@@ -8,6 +8,8 @@
 #include "AIDebugInfo.h"
 #include "WeatherVisual.h"
 
+#include <cstdint>
+
 #define SCREEN_VIRTUAL_WIDTH 1024.0f
 #define SCREEN_VIRTUAL_HEIGHT 768.0f
 #define INTERFACE_3D_ELEMENT_WIDTH 120.0f
@@ -381,7 +383,7 @@ protected:
 											 const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection );
 	int AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale, 
 												 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection );
-	int AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
+	int AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
 
 	//	AddObject with client-calculated matrix
 	int AddStaticObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
@@ -518,7 +520,7 @@ public:
 	void AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial );
 	// polyline
 	int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
+	int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
 	void RemovePolyline( const int nID );
 
 	// shoot areas
@@ -607,7 +609,7 @@ public:
 	virtual float GetZ( float x, float y ) const;
 	float GetTileHeight( int nX, int nY ) const;
 	virtual void UpdateZ( CVec3 *pvPos );
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );

@@ -29,16 +29,18 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 //REGISTER_EXPORTER_IN_EXE( Font, CFontExporter )
 //REGISTER_EXPORTER_IN_EXE( Texture, CTextureExporter )
 
 
 NDb::SFont::ECharset CELK::GetCharset( int nCodePage )
 {
-	DWORD dwTemp = nCodePage;
+	uint32_t dwTemp = nCodePage;
 	CHARSETINFO sCharSetInfo;
 	memset( &sCharSetInfo, 0, sizeof( CHARSETINFO ) );
-	if ( TranslateCharsetInfo( (DWORD*)dwTemp, &sCharSetInfo, TCI_SRCCODEPAGE ) )
+	if ( TranslateCharsetInfo( (uint32_t*)dwTemp, &sCharSetInfo, TCI_SRCCODEPAGE ) )
 	{
 		if  ( sCharSetInfo.ciCharset == ANSI_CHARSET )
 		{
@@ -132,8 +134,8 @@ bool GetExcelODBCDriverName( CString *pstrExcelODBCDriverName )
 	{
 		pstrExcelODBCDriverName->Empty();
 		TCHAR szBuf[2001];
-		const WORD cbBufMax = 2000;
-		WORD cbBufOut;
+		const uint16_t cbBufMax = 2000;
+		uint16_t cbBufOut;
 		LPTSTR pszBuf = szBuf;
 
 		if ( SQLGetInstalledDrivers( szBuf, cbBufMax, &cbBufOut ) )
@@ -164,7 +166,7 @@ void CELK::GetOriginalText( const string &rszTextPath, CString *pstrText, int nC
 		OpenStreamHolder( &streamHolder, StrFmt( _T( "%s%s" ), rszTextPath.c_str(), ELK_EXTENTION ) );
 		if ( streamHolder.pStream && streamHolder.pStream->IsOk() && ( streamHolder.pStream->GetSize() > 0 ) )
 		{
-			vector<BYTE> fileBuffer;
+			vector<uint8_t> fileBuffer;
 			fileBuffer.resize( streamHolder.pStream->GetSize() );
 			streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 			File2String( pstrText, 0, fileBuffer, nCodePage, bRemove_0D );
@@ -183,7 +185,7 @@ void CELK::GetTranslatedText( const string &rszTextPath, CString *pstrText,  int
 		OpenStreamHolder( &streamHolder, StrFmt( _T( "%s%s" ), rszTextPath.c_str(), TXT_EXTENTION ) );
 		if ( streamHolder.pStream && streamHolder.pStream->IsOk() && ( streamHolder.pStream->GetSize() > 0 ) )
 		{
-			vector<BYTE> fileBuffer;
+			vector<uint8_t> fileBuffer;
 			fileBuffer.resize( streamHolder.pStream->GetSize() );
 			streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 			File2String( pstrText, 0, fileBuffer, nCodePage, bRemove_0D );
@@ -217,7 +219,7 @@ void CELK::GetDescription( const string &rszTextPath, CString *pstrText, int nCo
 			OpenStreamHolder( &streamHolder, szFileName );
 			if ( streamHolder.pStream && streamHolder.pStream->IsOk() && ( streamHolder.pStream->GetSize() > 0 ) )
 			{
-				vector<BYTE> fileBuffer;
+				vector<uint8_t> fileBuffer;
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				File2String( pstrText, 0, fileBuffer, nCodePage, bRemove_0D );
@@ -246,7 +248,7 @@ void CELK::SetTranslatedText( const string &rszTextPath, const CString &rstrText
 	CreateStreamHolder( &streamHolder, StrFmt( _T( "%s%s" ), rszTextPath.c_str(), TXT_EXTENTION ) );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk()  )
 	{
-		vector<BYTE> fileBuffer;
+		vector<uint8_t> fileBuffer;
 		String2File( &fileBuffer, rstrText, true, nCodePage, bAdd_0D );
 		streamHolder.pStream->Write( &( fileBuffer[0] ), fileBuffer.size() );
 	}
@@ -535,7 +537,7 @@ bool CELK::ExportToPAK( const string &rszELKPath,
 							{
 								LPCTSTR pSymbol = pSymbols;
 								pSymbols = _tcsinc( pSymbols );
-								WORD wSymbol = 0;
+								uint16_t wSymbol = 0;
 								if ( ( pSymbols - pSymbol ) > 1 )
 								{
 									const TCHAR b0 = ( *pSymbol );
@@ -644,7 +646,7 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 				{
 					if ( itSymbolSet->first == DEFAULT_FONT_NAME )
 					{
-						for ( WORD wSymbol = 32; wSymbol < 256; ++wSymbol ) 
+						for ( uint16_t wSymbol = 32; wSymbol < 256; ++wSymbol )
 						{
 							itSymbolSet->second.symbolSet[wSymbol] = 0;
 						}
@@ -843,7 +845,7 @@ bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bo
 				NStr::ToLower( &szBaseFilePath );
 				usedPaths.insert( szBaseFilePath );
 
-				vector<BYTE> buffer0;
+				vector<uint8_t> buffer0;
 				if ( stream.GetSize() > 0 )
 				{
 					buffer0.resize( stream.GetSize() );
@@ -859,7 +861,7 @@ bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bo
 					textProperty.nState = SELKTextProperty::STATE_NOT_TRANSLATED;
 				}
 
-				vector<BYTE> buffer1;
+				vector<uint8_t> buffer1;
 				bool bFileExists = false;
 				//
 				{
@@ -1167,8 +1169,8 @@ bool CELK::ImportFromXLS( const CELK &rELK, const string &rszXLSPath, string *ps
 						bool bOrifginal = false;
 						int nState = SELKTextProperty::STATE_TRANSLATED;
 
-						vector<BYTE> buffer0;
-						vector<BYTE> buffer1;
+						vector<uint8_t> buffer0;
+						vector<uint8_t> buffer1;
 
 						if ( strOriginalTextOnDisk != strOriginalText )
 						{

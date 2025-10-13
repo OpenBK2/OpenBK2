@@ -10,6 +10,8 @@
 #include "Statistics.h"
 #include "System/XmlSaver.h"
 
+#include <cstdint>
+
 CGameLobby::CGameLobby( CClients *_pClients, const string &_szCfgFile )
 : pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
 {
@@ -54,7 +56,7 @@ void CGameLobby::ReloadConfig()
 	pSaver->Add( "GameLoadingTimeout", &dwGameLoadingTimeOut );
 }
 
-void CGameLobby::SetClientLobbyID( const int nClientID, const BYTE cLobbyID )
+void CGameLobby::SetClientLobbyID( const int nClientID, const uint8_t cLobbyID )
 {
 	SCommonClientInfo clientInfo;
 	if ( pClients->GetCommonClientInfo( nClientID, &clientInfo ) )

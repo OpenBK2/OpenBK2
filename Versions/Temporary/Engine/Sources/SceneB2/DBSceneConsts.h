@@ -4,6 +4,8 @@
 
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -17,7 +19,7 @@ namespace NDb
 	struct SLightEffectConsts
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< STexture > pLightConeTexture;
 		CDBPtr< STexture > pFlareTexture;
@@ -28,11 +30,11 @@ namespace NDb
 			fFlareAppearTime( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SSceneConsts : public CResource
@@ -44,7 +46,7 @@ namespace NDb
 		struct SSelectionMaterials
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SMaterial > pAir;
 			CDBPtr< SMaterial > pWater;
@@ -54,17 +56,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct STrackMaterials
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SMaterial > pTrack;
 
@@ -72,17 +74,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SIconAIGeometry
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SAIGeometry > pIcon;
 
@@ -90,17 +92,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct STerraGenConsts
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			NFile::CFilePath szBorderSmoothNoise;
 			NFile::CFilePath szTextureCombiningNoise;
@@ -110,17 +112,17 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SDebugMaterials
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SMaterial > pRedMaterial;
 			CDBPtr< SMaterial > pGreenMaterial;
@@ -132,11 +134,11 @@ namespace NDb
 				__dwCheckSum( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		SSelectionMaterials selectionMaterials;
 		STrackMaterials trackMaterials;
@@ -156,7 +158,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

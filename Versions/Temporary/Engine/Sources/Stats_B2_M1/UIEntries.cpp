@@ -6,18 +6,20 @@
 #include "System/XmlSaver.h"
 #include "uientries.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SUIScreenEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUIScreenEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Screen", (BYTE*)&pScreen - pThis, sizeof(pScreen), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "HelpHeaderFileRef", (BYTE*)&szHelpHeaderFileRef - pThis, sizeof(szHelpHeaderFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "HelpDescFileRef", (BYTE*)&szHelpDescFileRef - pThis, sizeof(szHelpDescFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "HelpNoMultiplayer", (BYTE*)&bHelpNoMultiplayer - pThis, sizeof(bHelpNoMultiplayer), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Screen", (uint8_t*)&pScreen - pThis, sizeof(pScreen), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&szType - pThis, sizeof(szType), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "HelpHeaderFileRef", (uint8_t*)&szHelpHeaderFileRef - pThis, sizeof(szHelpHeaderFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "HelpDescFileRef", (uint8_t*)&szHelpDescFileRef - pThis, sizeof(szHelpDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "HelpNoMultiplayer", (uint8_t*)&bHelpNoMultiplayer - pThis, sizeof(bHelpNoMultiplayer), NTypeDef::TYPE_TYPE_BOOL );
 }
 
 int SUIScreenEntry::operator&( IXmlSaver &saver )
@@ -42,7 +44,7 @@ int SUIScreenEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUIScreenEntry::CalcCheckSum() const
+uint32_t SUIScreenEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -59,10 +61,10 @@ DWORD SUIScreenEntry::CalcCheckSum() const
 
 
 
-void SUITextEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUITextEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (BYTE*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (uint8_t*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SUITextEntry::operator&( IXmlSaver &saver )
@@ -81,7 +83,7 @@ int SUITextEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUITextEntry::CalcCheckSum() const
+uint32_t SUITextEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -98,10 +100,10 @@ DWORD SUITextEntry::CalcCheckSum() const
 
 
 
-void SUITextureEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUITextureEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (BYTE*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextID", (uint8_t*)&szTextID - pThis, sizeof(szTextID), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SUITextureEntry::operator&( IXmlSaver &saver )
@@ -120,7 +122,7 @@ int SUITextureEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUITextureEntry::CalcCheckSum() const
+uint32_t SUITextureEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -141,9 +143,9 @@ void STextEntry::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TextEntry", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "TextFileRef", (BYTE*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

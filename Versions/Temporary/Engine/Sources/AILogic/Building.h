@@ -1,9 +1,10 @@
-
 #pragma once
 
 #include "StaticObject.h"
 #include "Misc/Heap.h"
 #include "StormableObject.h"
+
+#include <cstdint>
 
 class CSoldier;
 class CCommonUnit;
@@ -104,7 +105,7 @@ public:
 	void SwapFireMed();
 	void SwapRestMed();
 
-	const BYTE GetFreeFireSlot();
+	const uint8_t GetFreeFireSlot();
 
 	// засунуть конкретного юнита в слот
 	void PopFromFire();
@@ -175,7 +176,7 @@ protected:
 	void SoldierDamaged( class CSoldier *pUnit );
 
 	CBuilding() : pLockingUnit( 0 ), nextSegmTime ( 0 ), nScriptID( -1 ), bKeyBuilding( false ), bNewtralInfantryInside( false ) { }
-	CBuilding( const SBuildingRPGStats *pStats, const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex, int _nLinkID );
+	CBuilding( const SBuildingRPGStats *pStats, const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex, int _nLinkID );
 public:
 	const int GetNFreePlaces() const;
 	const int GetNOverallPlaces() const { return nOveralPlaces; }
@@ -187,7 +188,7 @@ public:
 
 	const int GetNEntrancePoints() const { return pStats->entrances.size(); }
 	const CVec2 GetEntrancePoint( const int nEntrance ) const;
-	void GetEntranceData( CVec2 *pvPoint, WORD *pwDir, int nIndex ) const;
+	void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const;
 	// найти выход, ближайший чтобы идти в точку point
 	bool ChooseEntrance( class CCommonUnit *pUnit, const CVec2 &vPoint, int *pnEntrance ) const;
 
@@ -210,7 +211,7 @@ public:
 	virtual bool IsContainer() const { return true; }
 	virtual const int GetNDefenders() const;
 	virtual class CSoldier* GetUnit( const int n ) const;
-	virtual const BYTE GetPlayer() const;
+	virtual const uint8_t GetPlayer() const;
 	
 	void Lock( class CCommonUnit *pUnit );
 	bool IsLocked( const int nPlayer ) const;
@@ -243,7 +244,7 @@ public:
 
 	const NTimer::STime& GetLastLeaveTime( const int nPlayer ) const { return lastLeave[nPlayer]; }
 	void SetLastLeaveTime( const int nPlayer );
-	virtual const WORD GetDir() const { return wDir; }
+	virtual const uint16_t GetDir() const { return wDir; }
 	virtual const float GetMinHP() const;
 };
 
@@ -265,10 +266,10 @@ protected:
 	virtual void AddSoldier( CSoldier *pUnit );
 public:
 	CBuildingSimple() { }
-	CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int nLinkID );
+	CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int nLinkID );
 	
 	virtual void Segment();
-	virtual const BYTE GetPlayer() const;
+	virtual const uint8_t GetPlayer() const;
 	void ChangePlayer( const int nPlayer );
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual void Die( const float fDamage );

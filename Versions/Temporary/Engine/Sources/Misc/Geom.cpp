@@ -2,6 +2,8 @@
 
 #include "Geom.h"
 
+#include <cstdint>
+
 void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 {
 	const float x2 = x*x;
@@ -14,7 +16,7 @@ void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 	*pfRoll = atan2( 2*(z*y + w*x), w2 + z2 - x2 - y2 );
 }
 
-const WORD GetDirectionByVector( float x, float y )
+const uint16_t GetDirectionByVector( float x, float y )
 {
 	if ( IsAlmostZero( x, y ) )
 		return 0;
@@ -53,12 +55,12 @@ const WORD GetDirectionByVector( float x, float y )
 		return 0;
 }
 
-const WORD GetDirectionByVector( const CVec2 &vec )
+const uint16_t GetDirectionByVector( const CVec2 &vec )
 {
 	return GetDirectionByVector( vec.x, vec.y );
 }
 
-const CVec2 GetVectorByDirection( const WORD dir )
+const CVec2 GetVectorByDirection( const uint16_t dir )
 {
 	const float fDir = float(dir % 16384) / 16384.0f;
 	CVec2 result( 1-fDir, fDir );
@@ -83,58 +85,58 @@ const CVec2 GetVectorByDirection( const WORD dir )
 	return result;
 }
 
-const WORD DirsDifference( const WORD dir1, const WORD dir2 )
+const uint16_t DirsDifference( const uint16_t dir1, const uint16_t dir2 )
 {
-	const	WORD clockWise = dir1-dir2;
-	const	WORD antiClockWise = dir2-dir1;
+	const	uint16_t clockWise = dir1-dir2;
+	const	uint16_t antiClockWise = dir2-dir1;
 
 	return (std::min)( clockWise, antiClockWise );
 }
 
-const int DifferenceSign( const WORD dir1, const WORD dir2 )
+const int DifferenceSign( const uint16_t dir1, const uint16_t dir2 )
 {
-	const	WORD clockWise = dir1-dir2;
-	const	WORD antiClockWise = dir2-dir1;
+	const	uint16_t clockWise = dir1-dir2;
+	const	uint16_t antiClockWise = dir2-dir1;
 
 	return boost::math::sign(int(antiClockWise) - int(clockWise));
 }
 
-bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir )
+bool IsInTheAngle( const uint16_t dir, const uint16_t startAngleDir, const uint16_t finishAngleDir )
 {
 	return 
-		WORD( dir - startAngleDir ) + WORD( finishAngleDir - dir ) == WORD( finishAngleDir - startAngleDir );
+		uint16_t( dir - startAngleDir ) + uint16_t( finishAngleDir - dir ) == uint16_t( finishAngleDir - startAngleDir );
 }
 
-bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 )
+bool IsInTheMinAngle( const uint16_t dir, const uint16_t dir1, const uint16_t dir2 )
 {
 	return
 		(int)DirsDifference( dir, dir1 ) + (int)DirsDifference( dir, dir2 ) == DirsDifference( dir1, dir2 );
 }
 
-const WORD GetZDirectionBy3DVector( const float x, const float y, const float z )
+const uint16_t GetZDirectionBy3DVector( const float x, const float y, const float z )
 {
 	return GetDirectionByVector( fabs( x, y ), z );
 }
 
-const WORD GetZDirectionBy3DVector( const CVec2 &vec, const float z )
+const uint16_t GetZDirectionBy3DVector( const CVec2 &vec, const float z )
 {
 	return GetZDirectionBy3DVector( vec.x, vec.y, z );
 }
 
-const WORD GetZAngle( const CVec2 &vec, const float z )
+const uint16_t GetZAngle( const CVec2 &vec, const float z )
 {
 	return GetZAngle( vec.x, vec.y, z );
 }
 
-const WORD GetZAngle( const float x, const float y, const float z )
+const uint16_t GetZAngle( const float x, const float y, const float z )
 {
-	const WORD wZDir = GetZDirectionBy3DVector( x, y, z );
+	const uint16_t wZDir = GetZDirectionBy3DVector( x, y, z );
 
-	const WORD wZAngle = (std::min)( DirsDifference( wZDir, 16384 * 3 ), DirsDifference( wZDir, 16384 ) );
+	const uint16_t wZAngle = (std::min)( DirsDifference( wZDir, 16384 * 3 ), DirsDifference( wZDir, 16384 ) );
 	return z >= 0.0f ? wZAngle : 65536 - wZAngle;
 }
 
-const WORD GetZAngle( const CVec3 &vPoint )
+const uint16_t GetZAngle( const CVec3 &vPoint )
 {
 	return GetZAngle( vPoint.x, vPoint.y, vPoint.z );
 }
@@ -301,10 +303,10 @@ bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVe
 	return false;
 }
 
-const int SRect::GetSide( const WORD dirFromRectCenter ) const
+const int SRect::GetSide( const uint16_t dirFromRectCenter ) const
 {
 	// разница по модулю 65536	
-	const WORD diff = dirFromRectCenter - GetDirectionByVector( dir );
+	const uint16_t diff = dirFromRectCenter - GetDirectionByVector( dir );
 
 	if ( diff <= 8192 )
 		return SIDE_FRONT;
@@ -418,19 +420,19 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 	return false;
 }
 
-const WORD GetVisibleAngle( const CVec2 &point, const SRect rect )
+const uint16_t GetVisibleAngle( const CVec2 &point, const SRect rect )
 {
-	const WORD wAngle1 = GetDirectionByVector( rect.v1 - point );
-	const WORD wAngle2 = GetDirectionByVector( rect.v2 - point );
-	const WORD wAngle3 = GetDirectionByVector( rect.v3 - point );
-	const WORD wAngle4 = GetDirectionByVector( rect.v4 - point );
+	const uint16_t wAngle1 = GetDirectionByVector( rect.v1 - point );
+	const uint16_t wAngle2 = GetDirectionByVector( rect.v2 - point );
+	const uint16_t wAngle3 = GetDirectionByVector( rect.v3 - point );
+	const uint16_t wAngle4 = GetDirectionByVector( rect.v4 - point );
 
-	const WORD diff1 = DirsDifference( wAngle2, wAngle1 );
-	const WORD diff2 = DirsDifference( wAngle3, wAngle1 );
-	const WORD diff3 = DirsDifference( wAngle4, wAngle1 );
-	const WORD diff4 = DirsDifference( wAngle3, wAngle2 );
-	const WORD diff5 = DirsDifference( wAngle4, wAngle2 );
-	const WORD diff6 = DirsDifference( wAngle4, wAngle3 );
+	const uint16_t diff1 = DirsDifference( wAngle2, wAngle1 );
+	const uint16_t diff2 = DirsDifference( wAngle3, wAngle1 );
+	const uint16_t diff3 = DirsDifference( wAngle4, wAngle1 );
+	const uint16_t diff4 = DirsDifference( wAngle3, wAngle2 );
+	const uint16_t diff5 = DirsDifference( wAngle4, wAngle2 );
+	const uint16_t diff6 = DirsDifference( wAngle4, wAngle3 );
 
 	return (std::max)( (std::max) ( (std::max)( diff1, diff2 ), (std::max)( diff3, diff4 ) ), (std::max)( diff5, diff6 ) );
 }

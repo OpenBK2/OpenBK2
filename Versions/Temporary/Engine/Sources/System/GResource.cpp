@@ -4,6 +4,8 @@
 #include "VFSOperations.h"
 #include "Misc/Win32Helper.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 
@@ -153,7 +155,7 @@ static HANDLE hLoaderThread;
 static std::list<CPtr<CFileRequest> > holdRequests;
 static std::list<CFileRequest*> requests;
 
-static DWORD WINAPI LoaderThread( void* )
+static unsigned long WINAPI LoaderThread( void* )
 {
 	for (;;)
 	{
@@ -217,7 +219,7 @@ void ReleaseFileRequestHolder()
 
 void __declspec(dllexport) SFLB3_RunResourceLoadingThread()
 {
-	DWORD dwThread;
+	unsigned long dwThread;
 	hLoaderThread = CreateThread( 0, 102400, LoaderThread, 0, 0, &dwThread );
 }
 

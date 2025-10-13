@@ -15,6 +15,8 @@
 #include "FenceState.h"
 #include "MapInfoEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CFenceState::ClearData()
@@ -91,7 +93,7 @@ void CFenceState::InsertFence()
 }
 
 
-bool CFenceState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CFenceState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -145,7 +147,7 @@ void CFenceState::RefreshSelectedFenceInfo()
 	selectedFenceInfo = SSelectedFenceInfo();
 	//
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "FenceRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes ) 
@@ -222,7 +224,7 @@ void CFenceState::FillScene( UINT nFlags, const CVec3 &rTerrainPos )
 					CFenceDesignTool::SFenceSectionInfo *pSectionInfo = it;
 					pSectionInfo->vPosition.z = GetTerrainHeight( pSectionInfo->vPosition.x, pSectionInfo->vPosition.y );
 
-					DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+					uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 					CQuat qRotation = CQuat( pSectionInfo->fDirection, V3_AXIS_Z );
 					if ( SSimpleObjectInfo::NeedMakeOrientation( selectedFenceInfo.szRPGStatsTypeName, selectedFenceInfo.rpgStatsDBID ) )
 					{

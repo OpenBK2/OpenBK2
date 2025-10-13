@@ -8,6 +8,7 @@
 #include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/ObjectController.h"
 
+#include <cstdint>
 
 struct SEditorState
 {
@@ -99,7 +100,7 @@ public:
 	void Redo( IController* pController );
 	
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData ) { return false; }
+	bool HandleCommand( UINT nCommandID, uint32_t dwData ) { return false; }
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 
 	// methods

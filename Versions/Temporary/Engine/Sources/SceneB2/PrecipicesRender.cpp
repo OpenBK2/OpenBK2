@@ -6,6 +6,8 @@
 #include "GenTerrain.h"
 #include "VersionInfo.h"
 
+#include <cstdint>
+
 #define DEF_PRECIPICE_SAMPLES_PER_PATCH 4
 //
 #define DEF_PRECIPICE_SAMP_HEIGHT 1.0f
@@ -545,7 +547,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 {
-	static std::vector<BYTE> nodesHash( 2048 );
+	static std::vector<uint8_t> nodesHash( 2048 );
 	nodesHash.resize( terrainInfo.precNodes.size() );
 	fill( nodesHash.begin(), nodesHash.end(), 0 );
 

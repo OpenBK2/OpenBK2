@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "AckTypes.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -361,10 +363,10 @@ NDb::EAckPosition NDb::StringToEnum_NDb_EAckPosition( const std::string &szValue
 }
 
 
-void SAckType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SAckType::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "AckType", (BYTE*)&eAckType - pThis, sizeof(eAckType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Ack", (BYTE*)&pAck - pThis, sizeof(pAck), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "AckType", (uint8_t*)&eAckType - pThis, sizeof(eAckType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Ack", (uint8_t*)&pAck - pThis, sizeof(pAck), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SAckType::operator&( IXmlSaver &saver )
@@ -383,7 +385,7 @@ int SAckType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SAckType::CalcCheckSum() const
+uint32_t SAckType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

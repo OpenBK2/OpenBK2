@@ -3,6 +3,8 @@
 #include "StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
+
 void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *pv, float ptCtrls[] ) const
 {
 	int nTileX = vPoint.x / 2 / nTileSize;
@@ -25,10 +27,10 @@ void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *
 			ptCtrls[i * 4 + j] = heights[nTileY + i][nTileX + j] / ( 2.0f * nTileSize );
 }
 
-const DWORD CStaticMapHeights::GetNormal( const float x, const float y ) const
+const uint32_t CStaticMapHeights::GetNormal( const float x, const float y ) const
 {
 	if ( !(x >= 0 && x < nStaticMapSizeX*nTileSize && y >= 0 && y < nStaticMapSizeY*nTileSize) )
-		return DWORD( BYTE(127.0f) ) << 16;
+		return uint32_t( uint8_t(127.0f) ) << 16;
 	else
 	{
 		float u, v;

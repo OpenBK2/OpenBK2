@@ -4,6 +4,8 @@
 #include "Tools_Gradient.h"
 #include "Image/ImageColor.h"
 
+#include <cstdint>
+
 void SGradient::UpdateHeightRanges()
 {
 	CHeightList::iterator itHeight = heightList.begin();
@@ -57,7 +59,7 @@ void SGradient::UpdateHeightRanges()
 }
 
 
-bool SGradient::CreateFromImage( const CArray2D<DWORD> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange )
+bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange )
 {
 	NI_ASSERT( ( rRange.max - rRange.min ) > FP_EPSILON, StrFmt( "Invalid range: %g %g\n", rRange.min, rRange.max ) );
 	if ( ( rRange.max - rRange.min ) <= FP_EPSILON )
@@ -75,7 +77,7 @@ bool SGradient::CreateFromImage( const CArray2D<DWORD> &rImage, const CTPoint<fl
 		bool isCompleted = false;
 		for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 		{
-			const DWORD dwColor = rImage[nYIndex][nXIndex];
+			const uint32_t dwColor = rImage[nYIndex][nXIndex];
 			if ( ( GetRedFromARGBColor( dwColor )		< 0x80 ) && 
 					 ( GetGreenFromARGBColor( dwColor )	< 0x80 ) &&
 					 ( GetBlueFromARGBColor( dwColor )	< 0x80 ) )

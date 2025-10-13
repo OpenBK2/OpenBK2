@@ -4,6 +4,7 @@
 
 #include "AILogic/ScenarioTracker.h"
 
+#include <cstdint>
 
 // BEGIN new scenario tracker
 
@@ -201,7 +202,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 	struct SPlayerColor
 	{
 		ZDATA
-		DWORD dwColor;
+		uint32_t dwColor;
 		CDBPtr<NDb::SBackground> pUnitFullInfo;
 		int nColorIndex; // индекс цвета хитбара над юнитами на карте
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwColor); f.Add(3,&pUnitFullInfo); f.Add(4,&nColorIndex); return 0; }

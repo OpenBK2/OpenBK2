@@ -6,18 +6,20 @@
 #include "System/XmlSaver.h"
 #include "DBVSO.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void STerrainAIProperties::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void STerrainAIProperties::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Passability", (BYTE*)&fPassability - pThis, sizeof(fPassability), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "AIClass", (BYTE*)&nAIClass - pThis, sizeof(nAIClass), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "AIPassabilityClass", (BYTE*)&nAIPassabilityClass - pThis, sizeof(nAIPassabilityClass), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "CanEntrench", (BYTE*)&bCanEntrench - pThis, sizeof(bCanEntrench), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "SoilType", (BYTE*)&nSoilType - pThis, sizeof(nSoilType), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Passability", (uint8_t*)&fPassability - pThis, sizeof(fPassability), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AIClass", (uint8_t*)&nAIClass - pThis, sizeof(nAIClass), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AIPassabilityClass", (uint8_t*)&nAIPassabilityClass - pThis, sizeof(nAIPassabilityClass), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CanEntrench", (uint8_t*)&bCanEntrench - pThis, sizeof(bCanEntrench), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "SoilType", (uint8_t*)&nSoilType - pThis, sizeof(nSoilType), NTypeDef::TYPE_TYPE_INT );
 }
 
 int STerrainAIProperties::operator&( IXmlSaver &saver )
@@ -42,7 +44,7 @@ int STerrainAIProperties::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STerrainAIProperties::CalcCheckSum() const
+uint32_t STerrainAIProperties::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -59,10 +61,10 @@ DWORD STerrainAIProperties::CalcCheckSum() const
 
 
 
-void SVSOLayerBaseDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVSOLayerBaseDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "CenterOpacity", (BYTE*)&fCenterOpacity - pThis, sizeof(fCenterOpacity), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "TilingStep", (BYTE*)&fTilingStep - pThis, sizeof(fTilingStep), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CenterOpacity", (uint8_t*)&fCenterOpacity - pThis, sizeof(fCenterOpacity), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "TilingStep", (uint8_t*)&fTilingStep - pThis, sizeof(fTilingStep), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SVSOLayerBaseDesc::operator&( IXmlSaver &saver )
@@ -81,7 +83,7 @@ int SVSOLayerBaseDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSOLayerBaseDesc::CalcCheckSum() const
+uint32_t SVSOLayerBaseDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -98,13 +100,13 @@ DWORD SVSOLayerBaseDesc::CalcCheckSum() const
 
 
 
-void SVSOLayerBorderDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVSOLayerBorderDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
 
-	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "UseFromPixel", (BYTE*)&nUseFromPixel - pThis, sizeof(nUseFromPixel), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (BYTE*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "UseFromPixel", (uint8_t*)&nUseFromPixel - pThis, sizeof(nUseFromPixel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (uint8_t*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SVSOLayerBorderDesc::operator&( IXmlSaver &saver )
@@ -127,7 +129,7 @@ int SVSOLayerBorderDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSOLayerBorderDesc::CalcCheckSum() const
+uint32_t SVSOLayerBorderDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -144,16 +146,16 @@ DWORD SVSOLayerBorderDesc::CalcCheckSum() const
 
 
 
-void SVSOLayerCenterDesc::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVSOLayerCenterDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
 
-	NMetaInfo::ReportMetaInfo( szAddName + "Disturbance", (BYTE*)&fDisturbance - pThis, sizeof(fDisturbance), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "NumCells", (BYTE*)&nNumCells - pThis, sizeof(nNumCells), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Disturbance", (uint8_t*)&fDisturbance - pThis, sizeof(fDisturbance), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "NumCells", (uint8_t*)&nNumCells - pThis, sizeof(nNumCells), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Materials", &materials, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "UseFromPixel", (BYTE*)&nUseFromPixel - pThis, sizeof(nUseFromPixel), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (BYTE*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "StreamSpeed", (BYTE*)&fStreamSpeed - pThis, sizeof(fStreamSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UseFromPixel", (uint8_t*)&nUseFromPixel - pThis, sizeof(nUseFromPixel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (uint8_t*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "StreamSpeed", (uint8_t*)&fStreamSpeed - pThis, sizeof(fStreamSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SVSOLayerCenterDesc::operator&( IXmlSaver &saver )
@@ -182,7 +184,7 @@ int SVSOLayerCenterDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSOLayerCenterDesc::CalcCheckSum() const
+uint32_t SVSOLayerCenterDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -201,15 +203,15 @@ DWORD SVSOLayerCenterDesc::CalcCheckSum() const
 
 void SVSODesc::ReportMetaInfo() const
 {
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&nType - pThis, sizeof(nType), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&nType - pThis, sizeof(nType), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MiniMapCenterColor", (BYTE*)&nMiniMapCenterColor - pThis, sizeof(nMiniMapCenterColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "MiniMapBorderColor", (BYTE*)&nMiniMapBorderColor - pThis, sizeof(nMiniMapBorderColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "MiniMapCenterWidth", (BYTE*)&nMiniMapCenterWidth - pThis, sizeof(nMiniMapCenterWidth), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "AmbientSound", (BYTE*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "CycledSound", (BYTE*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MiniMapCenterColor", (uint8_t*)&nMiniMapCenterColor - pThis, sizeof(nMiniMapCenterColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "MiniMapBorderColor", (uint8_t*)&nMiniMapBorderColor - pThis, sizeof(nMiniMapBorderColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "MiniMapCenterWidth", (uint8_t*)&nMiniMapCenterWidth - pThis, sizeof(nMiniMapCenterWidth), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "AmbientSound", (uint8_t*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "CycledSound", (uint8_t*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SVSODesc::operator&( IXmlSaver &saver )
@@ -240,7 +242,7 @@ int SVSODesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSODesc::CalcCheckSum() const
+uint32_t SVSODesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -257,15 +259,15 @@ DWORD SVSODesc::CalcCheckSum() const
 
 
 
-void SVSOPoint::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVSOPoint::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Norm", &vNorm, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Opacity", (BYTE*)&fOpacity - pThis, sizeof(fOpacity), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "KeyPoint", (BYTE*)&bKeyPoint - pThis, sizeof(bKeyPoint), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (BYTE*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Reserved", (BYTE*)&fReserved - pThis, sizeof(fReserved), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Opacity", (uint8_t*)&fOpacity - pThis, sizeof(fOpacity), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "KeyPoint", (uint8_t*)&bKeyPoint - pThis, sizeof(bKeyPoint), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (uint8_t*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Reserved", (uint8_t*)&fReserved - pThis, sizeof(fReserved), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SVSOPoint::operator&( IXmlSaver &saver )
@@ -294,7 +296,7 @@ int SVSOPoint::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSOPoint::CalcCheckSum() const
+uint32_t SVSOPoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -311,15 +313,15 @@ DWORD SVSOPoint::CalcCheckSum() const
 
 
 
-void SVSOInstance::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SVSOInstance::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (BYTE*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (uint8_t*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "points", &points, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ControlPoints", &controlPoints, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "VSOID", (BYTE*)&nVSOID - pThis, sizeof(nVSOID), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowType", (BYTE*)&nCMArrowType - pThis, sizeof(nCMArrowType), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission", (BYTE*)&nCMArrowMission - pThis, sizeof(nCMArrowMission), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission2", (BYTE*)&nCMArrowMission2 - pThis, sizeof(nCMArrowMission2), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "VSOID", (uint8_t*)&nVSOID - pThis, sizeof(nVSOID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowType", (uint8_t*)&nCMArrowType - pThis, sizeof(nCMArrowType), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission", (uint8_t*)&nCMArrowMission - pThis, sizeof(nCMArrowMission), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission2", (uint8_t*)&nCMArrowMission2 - pThis, sizeof(nCMArrowMission2), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SVSOInstance::operator&( IXmlSaver &saver )
@@ -348,7 +350,7 @@ int SVSOInstance::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SVSOInstance::CalcCheckSum() const
+uint32_t SVSOInstance::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -370,11 +372,11 @@ void SRoadDesc::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "RoadDesc", typeID, sizeof(*this) );
 	SVSODesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "LeftBorder", &leftBorder, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "RightBorder", &rightBorder, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Center", &center, pThis ); 
-	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (BYTE*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (uint8_t*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -401,7 +403,7 @@ int SRoadDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SRoadDesc::CalcCheckSum() const
+uint32_t SRoadDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -423,17 +425,17 @@ void SCragDesc::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "CragDesc", typeID, sizeof(*this) );
 	SVSODesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "BorderRand", (BYTE*)&fBorderRand - pThis, sizeof(fBorderRand), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Depth", (BYTE*)&fDepth - pThis, sizeof(fDepth), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DepthRand", (BYTE*)&fDepthRand - pThis, sizeof(fDepthRand), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RandX", (BYTE*)&fRandX - pThis, sizeof(fRandX), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RandY", (BYTE*)&fRandY - pThis, sizeof(fRandY), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HasPeak", (BYTE*)&bHasPeak - pThis, sizeof(bHasPeak), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "RidgeMaterial", (BYTE*)&pRidgeMaterial - pThis, sizeof(pRidgeMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "FootMaterial", (BYTE*)&pFootMaterial - pThis, sizeof(pFootMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "LeftSided", (BYTE*)&bLeftSided - pThis, sizeof(bLeftSided), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "RidgeTexGeomScale", (BYTE*)&fRidgeTexGeomScale - pThis, sizeof(fRidgeTexGeomScale), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "BorderRand", (uint8_t*)&fBorderRand - pThis, sizeof(fBorderRand), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Depth", (uint8_t*)&fDepth - pThis, sizeof(fDepth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DepthRand", (uint8_t*)&fDepthRand - pThis, sizeof(fDepthRand), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RandX", (uint8_t*)&fRandX - pThis, sizeof(fRandX), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RandY", (uint8_t*)&fRandY - pThis, sizeof(fRandY), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HasPeak", (uint8_t*)&bHasPeak - pThis, sizeof(bHasPeak), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "RidgeMaterial", (uint8_t*)&pRidgeMaterial - pThis, sizeof(pRidgeMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "FootMaterial", (uint8_t*)&pFootMaterial - pThis, sizeof(pFootMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "LeftSided", (uint8_t*)&bLeftSided - pThis, sizeof(bLeftSided), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "RidgeTexGeomScale", (uint8_t*)&fRidgeTexGeomScale - pThis, sizeof(fRidgeTexGeomScale), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -472,7 +474,7 @@ int SCragDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCragDesc::CalcCheckSum() const
+uint32_t SCragDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -494,21 +496,21 @@ void SRiverDesc::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "RiverDesc", typeID, sizeof(*this) );
 	SVSODesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "BottomMaterial", (BYTE*)&pBottomMaterial - pThis, sizeof(pBottomMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PrecipiceMaterial", (BYTE*)&pPrecipiceMaterial - pThis, sizeof(pPrecipiceMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "WaterMaterial", (BYTE*)&pWaterMaterial - pThis, sizeof(pWaterMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "StreamSpeed", (BYTE*)&fStreamSpeed - pThis, sizeof(fStreamSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "BorderRand", (BYTE*)&fBorderRand - pThis, sizeof(fBorderRand), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Depth", (BYTE*)&fDepth - pThis, sizeof(fDepth), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DepthRand", (BYTE*)&fDepthRand - pThis, sizeof(fDepthRand), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RandX", (BYTE*)&fRandX - pThis, sizeof(fRandX), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RandY", (BYTE*)&fRandY - pThis, sizeof(fRandY), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "RidgeTexGeomScale", (BYTE*)&fRidgeTexGeomScale - pThis, sizeof(fRidgeTexGeomScale), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "BottomMaterial", (uint8_t*)&pBottomMaterial - pThis, sizeof(pBottomMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PrecipiceMaterial", (uint8_t*)&pPrecipiceMaterial - pThis, sizeof(pPrecipiceMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "WaterMaterial", (uint8_t*)&pWaterMaterial - pThis, sizeof(pWaterMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "StreamSpeed", (uint8_t*)&fStreamSpeed - pThis, sizeof(fStreamSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "BorderRand", (uint8_t*)&fBorderRand - pThis, sizeof(fBorderRand), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Depth", (uint8_t*)&fDepth - pThis, sizeof(fDepth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DepthRand", (uint8_t*)&fDepthRand - pThis, sizeof(fDepthRand), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RandX", (uint8_t*)&fRandX - pThis, sizeof(fRandX), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RandY", (uint8_t*)&fRandY - pThis, sizeof(fRandY), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "RidgeTexGeomScale", (uint8_t*)&fRidgeTexGeomScale - pThis, sizeof(fRidgeTexGeomScale), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructArrayMetaInfo( "WaterLayers", &waterLayers, pThis );
-	NMetaInfo::ReportMetaInfo( "HasPeak", (BYTE*)&bHasPeak - pThis, sizeof(bHasPeak), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "DefaultWidth", (BYTE*)&fDefaultWidth - pThis, sizeof(fDefaultWidth), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (BYTE*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HasPeak", (uint8_t*)&bHasPeak - pThis, sizeof(bHasPeak), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "DefaultWidth", (uint8_t*)&fDefaultWidth - pThis, sizeof(fDefaultWidth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (uint8_t*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -555,7 +557,7 @@ int SRiverDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SRiverDesc::CalcCheckSum() const
+uint32_t SRiverDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -577,9 +579,9 @@ void SCoastDesc::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "CoastDesc", typeID, sizeof(*this) );
 	SVSODesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Water", (BYTE*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (BYTE*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Water", (uint8_t*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (uint8_t*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -602,7 +604,7 @@ int SCoastDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCoastDesc::CalcCheckSum() const
+uint32_t SCoastDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -624,10 +626,10 @@ void SLakeDesc::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "LakeDesc", typeID, sizeof(*this) );
 	SVSODesc::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "WaterParams", (BYTE*)&pWaterParams - pThis, sizeof(pWaterParams), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "IsLake", (BYTE*)&bIsLake - pThis, sizeof(bIsLake), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (BYTE*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "WaterParams", (uint8_t*)&pWaterParams - pThis, sizeof(pWaterParams), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "IsLake", (uint8_t*)&bIsLake - pThis, sizeof(bIsLake), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (uint8_t*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -652,7 +654,7 @@ int SLakeDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SLakeDesc::CalcCheckSum() const
+uint32_t SLakeDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

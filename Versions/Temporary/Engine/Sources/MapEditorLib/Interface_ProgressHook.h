@@ -2,6 +2,8 @@
 
 #include "Interface_Controller.h"
 
+#include <cstdint>
+
 class CProgressDlg;
 struct IProgressHook : public CObjectBase
 {

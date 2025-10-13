@@ -4,7 +4,9 @@
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
 
-CBinaryBitFieldDialog::CBinaryBitFieldDialog( const string &_szFileName, const BYTE *_pData, const int _nSize, CWnd *pwndParent )
+#include <cstdint>
+
+CBinaryBitFieldDialog::CBinaryBitFieldDialog( const string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent )
 	: CResizeDialog( CBinaryBitFieldDialog::IDD, pwndParent ),
 		bCreateControls( true ),
 		szFileName( _szFileName ),
@@ -79,7 +81,7 @@ BOOL CBinaryBitFieldDialog::OnInitDialog()
 
 	for ( int nByteIndex = 0; nByteIndex < nSize; ++nByteIndex )
 	{
-		BYTE bMask = 1;
+		uint8_t bMask = 1;
 		for ( int nBitIndex = 0; nBitIndex < 8; ++nBitIndex )
 		{
 			if ( pData[nByteIndex] & bMask )
@@ -102,7 +104,7 @@ void CBinaryBitFieldDialog::OnOK()
 {
 	CResizeDialog::OnOK();
 
-	BYTE *pNewData = const_cast<BYTE *>( pData );
+	uint8_t *pNewData = const_cast<uint8_t *>( pData );
 	memset( pNewData, 0, nSize );
 	CString strString;
 	for ( int nStringIndex = 0; nStringIndex < wndTablesList.GetCount(); ++nStringIndex )

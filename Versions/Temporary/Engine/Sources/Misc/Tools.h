@@ -5,6 +5,7 @@
 #include "port/stdcall.h"
 
 #include <cmath>
+#include <cstdint>
 
 #include <boost/config.hpp>
 #include <boost/math/special_functions/sign.hpp>
@@ -40,9 +41,9 @@
 // **
 // ************************************************************************************************************************ //
 
-// access float as DWORD
-#define FP_BITS( fp ) ( *(DWORD*)(&(fp)) )
-#define FP_BITS_CONST( fp ) ( *(const DWORD*)(&(fp)) )
+// access float as uint32_t
+#define FP_BITS( fp ) ( *(uint32_t*)(&(fp)) )
+#define FP_BITS_CONST( fp ) ( *(const uint32_t*)(&(fp)) )
 // floating pt 1.0
 #define FP_ONE_BITS 0x3F800000
 
@@ -68,7 +69,7 @@ inline TYPE_OUT bit_cast( const TYPE_IN &val )
 // Return the next power of 2 higher than the input
 // If the input is already a power of 2, the output will be the same as the input.
 // Got this from Brian Sharp's sweng mailing list.
-inline int GetNextPow2( DWORD n )
+inline int GetNextPow2( uint32_t n )
 {
 	n -= 1;
 
@@ -80,10 +81,10 @@ inline int GetNextPow2( DWORD n )
 
 	return n + 1;
 }
-inline int GetNextPow2( int n ) { return GetNextPow2( DWORD(n) ); }
+inline int GetNextPow2( int n ) { return GetNextPow2( uint32_t(n) ); }
 
 // получить старший включенный бит
-inline int GetMSB( DWORD n )
+inline int GetMSB( uint32_t n )
 {
   int k = 0;
 	if ( n & 0xFFFF0000 ) k = 16, n >>= 16;
@@ -93,8 +94,8 @@ inline int GetMSB( DWORD n )
   if ( n & 0x00000002 ) k += 1;
 	return k;
 }
-inline int GetMSB( int n ) { return GetMSB( DWORD(n) ); }
-inline int GetMSB( WORD n )
+inline int GetMSB( int n ) { return GetMSB( uint32_t(n) ); }
+inline int GetMSB( uint16_t n )
 {
   int k = 0;
   if ( n & 0xFF00 ) k  = 8, n >>= 8;
@@ -103,8 +104,8 @@ inline int GetMSB( WORD n )
   if ( n & 0x0002 ) k += 1;
 	return k;
 }
-inline int GetMSB( short n ) { return GetMSB( WORD(n) ); }
-inline int GetMSB( BYTE n )
+inline int GetMSB( short n ) { return GetMSB( uint16_t(n) ); }
+inline int GetMSB( uint8_t n )
 {
   int k = 0;
   if ( n & 0xF0 ) k  = 4, n >>= 4;
@@ -112,10 +113,10 @@ inline int GetMSB( BYTE n )
   if ( n & 0x02 ) k += 1;
 	return k;
 }
-inline int GetMSB( char n ) { return GetMSB( BYTE(n) ); }
+inline int GetMSB( char n ) { return GetMSB( uint8_t(n) ); }
 
 // получить младший включенный бит
-inline int GetLSB( DWORD n )
+inline int GetLSB( uint32_t n )
 {
   int k = 0;
   if ( (n & 0x0000FFFF) == 0 ) k = 16, n >>= 16;
@@ -125,8 +126,8 @@ inline int GetLSB( DWORD n )
   if ( (n & 0x00000001) == 0 ) k += 1;
 	return k;
 }
-inline int GetLSB( int n ) { return GetLSB( DWORD(n) ); }
-inline int GetLSB( WORD n )
+inline int GetLSB( int n ) { return GetLSB( uint32_t(n) ); }
+inline int GetLSB( uint16_t n )
 {
   int k = 0;
   if ( (n & 0x00FF) == 0 ) k  = 8, n >>= 8;
@@ -135,8 +136,8 @@ inline int GetLSB( WORD n )
   if ( (n & 0x0001) == 0 ) k += 1;
 	return k;
 }
-inline int GetLSB( short n ) { return GetLSB( WORD(n) ); }
-inline int GetLSB( BYTE n )
+inline int GetLSB( short n ) { return GetLSB( uint16_t(n) ); }
+inline int GetLSB( uint8_t n )
 {
   int k = 0;
   if ( (n & 0x0F) == 0 ) k  = 4, n >>= 4;
@@ -144,25 +145,25 @@ inline int GetLSB( BYTE n )
   if ( (n & 0x01) == 0 ) k += 1;
 	return k;
 }
-inline int GetLSB( char n ) { return GetLSB( BYTE(n) ); }
+inline int GetLSB( char n ) { return GetLSB( uint8_t(n) ); }
 
 // подсчёт колличества ненулевых бит в числе
 // 0x49249249ul // = 0100_1001_0010_0100_1001_0010_0100_1001
 // 0x381c0e07ul // = 0011_1000_0001_1100_0000_1110_0000_0111
-inline int GetNumBits( DWORD v )
+inline int GetNumBits( uint32_t v )
 {
   v = (v & 0x49249249ul) + ((v >> 1) & 0x49249249ul) + ((v >> 2) & 0x49249249ul);
   v = ((v + (v >> 3)) & 0x381c0e07ul) + ((v >> 6) & 0x381c0e07ul);
   return int( (v + (v >> 9) + (v >> 18) + (v >> 27)) & 0x3f );
 }
-inline int GetNumBits( int v ) { return GetNumBits( DWORD(v) ); }
-inline int GetNumBits( BYTE v )
+inline int GetNumBits( int v ) { return GetNumBits( uint32_t(v) ); }
+inline int GetNumBits( uint8_t v )
 {
   v = (v & 0x55) + ((v >> 1) & 0x55);
   v = (v & 0x33) + ((v >> 2) & 0x33);
   return int( (v & 0x0f) + ((v >> 4) & 0x0f) );
 }
-inline int GetNumBits( char v ) { return GetNumBits( BYTE(v) ); }
+inline int GetNumBits( char v ) { return GetNumBits( uint8_t(v) ); }
 
 // ************************************************************************************************************************ //
 // обнуление памяти по типу переменной

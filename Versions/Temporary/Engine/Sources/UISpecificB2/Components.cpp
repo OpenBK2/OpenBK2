@@ -8,6 +8,8 @@
 #include "UI/UIVisitor.h"
 #include "3Dmotor/DBScene.h"
 
+#include <cstdint>
+
 IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 {
 	IWindow *pWnd = Singleton<IUIInitialization>()->CreateWindowFromDesc( pDesc );
@@ -40,7 +42,7 @@ void CTextureRoundSegmentVisitor::SetTexture( const NDb::STexture *_pTexture )
 	pTexture = _pTexture;
 }
 
-void CTextureRoundSegmentVisitor::SetColor( DWORD dwColor )
+void CTextureRoundSegmentVisitor::SetColor( uint32_t dwColor )
 {
 	fill( colors.begin(), colors.end(), NGfx::SPixel8888( dwColor ) );
 }

@@ -10,6 +10,8 @@
 #include "System/Commands.h"
 #include "VisObjIconsManager.h"
 
+#include <cstdint>
+
 static bool s_bGeomAABB = false;
 std::vector<int> SModelVisObjDesc::n2Attach;
 
@@ -58,7 +60,7 @@ void SModelVisObjDesc::Visit( IAIVisitor *pVisitor )
 		pVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetPlacement().forward, 0, 0, 1 );
 }
 
-void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<WORD> &bbIndices )
+void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices )
 {
 	if ( pModel != 0 && pModel->pGeometry != 0 )
 	{
@@ -94,7 +96,7 @@ void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<W
 void SModelVisObjDesc::UpdateBBPolyLine( NGScene::IGameView *pGScene )
 {
 	std::vector<CVec3> bbPoints( 8 );
-	std::vector<WORD> bbIndices( 24 );
+	std::vector<uint16_t> bbIndices( 24 );
 	std::vector<CVec3> transformedBBPoints( 8 );
 	FillBBPoints( bbPoints, bbIndices );
 	if ( pModel != 0 )

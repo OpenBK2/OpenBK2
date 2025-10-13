@@ -2,13 +2,15 @@
 #include "UIWindow.h"
 #include "UIVisitor.hpp"
 
+#include <cstdint>
+
 CUIWindow::CUIWindow() : 
 	pos(0, 0, 0, 0), pTexture(0), color(0)
 {
 }
 
 
-CUIWindow::CUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::STexture *_pTexture ) :
+CUIWindow::CUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture ) :
 	pos(x, y, w, h), pTexture(_pTexture), color(_color)
 {
 }
@@ -28,7 +30,7 @@ void CUIWindow::Visit( IUIVisitor *pVisitor )
 }
 
 
-CUIWindow *CreateUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::STexture *_pTexture )
+CUIWindow *CreateUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture )
 {
 	CUIWindow *pUIWindow = new CUIWindow( x, y, w, h, _color, _pTexture );
 	return pUIWindow;

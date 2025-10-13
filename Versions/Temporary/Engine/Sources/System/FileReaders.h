@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 enum EStreamAccess
 {
 	STREAM_ACCESS_READ,
@@ -40,7 +42,7 @@ class CMemoryMappedFile : public CMappedStream
 	void *MapFile( int nSize )
 	{
 		file.MapFile( nSize, CanWrite() );
-		DWORD dwVFlags = 0;
+		uint32_t dwVFlags = 0;
 		if ( CanWrite() )
 			dwVFlags = FILE_MAP_ALL_ACCESS;
 		else

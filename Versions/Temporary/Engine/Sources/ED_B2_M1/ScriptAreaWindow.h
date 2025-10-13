@@ -6,6 +6,8 @@
 #include "Stats_B2_M1/DBMapinfo.h"
 #include "libdb/Manipulator.h"
 
+#include <cstdint>
+
 //
 //
 //		SCRIPT AREA WINDOW DATA
@@ -89,7 +91,7 @@ public:
 	virtual void OnCancel() {}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

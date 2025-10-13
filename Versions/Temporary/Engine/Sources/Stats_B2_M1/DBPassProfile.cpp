@@ -6,15 +6,17 @@
 #include "System/XmlSaver.h"
 #include "dbpassprofile.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SPolygon2D::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPolygon2D::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "verts", &verts, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "Fake", (BYTE*)&nFake - pThis, sizeof(nFake), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Fake", (uint8_t*)&nFake - pThis, sizeof(nFake), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SPolygon2D::operator&( IXmlSaver &saver )
@@ -33,7 +35,7 @@ int SPolygon2D::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPolygon2D::CalcCheckSum() const
+uint32_t SPolygon2D::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -50,7 +52,7 @@ DWORD SPolygon2D::CalcCheckSum() const
 
 
 
-void SPassProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPassProfile::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "polygons", &polygons, pThis );
 }
@@ -69,7 +71,7 @@ int SPassProfile::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPassProfile::CalcCheckSum() const
+uint32_t SPassProfile::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

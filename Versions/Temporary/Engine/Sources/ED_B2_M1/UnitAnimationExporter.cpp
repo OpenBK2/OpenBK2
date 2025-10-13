@@ -8,6 +8,8 @@
 #include "AnimationMnemonics.h"
 #include "WeaponMnemonics.h"
 
+#include <cstdint>
+
 REGISTER_EXPORTER_IN_DLL( InfantryRPGStats, CInfantryExporter )
 
 static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
@@ -70,7 +72,7 @@ void CInfantryExporter::BuildAnimsMap()
 				{
 					if ( pAnimMan->GetValue( "WeaponsToUseWith", &var ) )
 					{
-						DWORD dwAnimMask;
+						uint32_t dwAnimMask;
 						memcpy( &dwAnimMask, var.GetPtr(), 4 );
 						if ( dwAnimMask != 0 )
 						{ 
@@ -352,13 +354,13 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 		bResult = bResult && pItWeapon->GetValue( "WeaponType", &var );
 		if ( bResult )
 		{
-			DWORD dwWeaponMask = 0x1 << typeWeaponMnemonics.GetValue( string( var.GetStr() ) );
+			uint32_t dwWeaponMask = 0x1 << typeWeaponMnemonics.GetValue( string( var.GetStr() ) );
 
 			//write animation data to stats
 			int nAnimCounter = 0;
-			for ( hash_map<DWORD, list<string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
+			for ( hash_map<uint32_t, list<string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
 			{
-				const DWORD dwAnimMask = itAnimList->first;
+				const uint32_t dwAnimMask = itAnimList->first;
 				if ( dwAnimMask & dwWeaponMask )
 				{
 					for ( list<string>::const_iterator itAnim = itAnimList->second.begin(); itAnim != itAnimList->second.end(); ++itAnim )

@@ -5,6 +5,8 @@
 
 #include "System/FreeIDs.h"
 
+#include <cstdint>
+
 class CCommonUnit;
 class CAIUnit;
 struct ICollisionsCollector;
@@ -70,31 +72,31 @@ CFreeGroupIDs groupIds;
 
 	void ProcessGridCommand( const CVec2 &vGridCenter, const CVec2 &vGridDir, const int nGroup, bool bPlaceInQueue );
 
-	void EraseFromAmbushGroups( const SAIUnitCmd &command, const WORD wGroup );
-	void CreateAmbushGroup( const WORD wGroup );
+	void EraseFromAmbushGroups( const SAIUnitCmd &command, const uint16_t wGroup );
+	void CreateAmbushGroup( const uint16_t wGroup );
 	void ProcessAmbushGroups();
 	void SetToAmbush( CAmbushGroups::iterator &iter );
 
 	//
-	static WORD GetGroupNumberByID( const WORD wID );
-	static WORD GetSpecialGroupNumberByID( const WORD wID );
-	static WORD GetIdByGroupNumber( const WORD wGroup ); 
-	static WORD GetPlayerByGroupNumber( const WORD wGroup );
+	static uint16_t GetGroupNumberByID( const uint16_t wID );
+	static uint16_t GetSpecialGroupNumberByID( const uint16_t wID );
+	static uint16_t GetIdByGroupNumber( const uint16_t wGroup );
+	static uint16_t GetPlayerByGroupNumber( const uint16_t wGroup );
 public:
 	CGroupLogic() { }
 	void Init( ICollisionsCollector *pCollisionsCollector );
 	void Clear() { DestroyContents(); }
 
-	const WORD GenerateGroupNumber();
-	void RegisterGroup( const std::vector<int> &vIDs, const WORD wGroup );
-	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup );
-	void UnregisterGroup( const WORD wGroup );
+	const uint16_t GenerateGroupNumber();
+	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
+	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
+	void UnregisterGroup( const uint16_t wGroup );
 	
 	void DelUnitFromGroup( class CCommonUnit *pUnit );
 	void AddUnitToGroup( class CCommonUnit *pUnit, const int nGroup );
 	void DelUnitFromSpecialGroup( class CCommonUnit *pUnit );
 
-	void GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bool bPlaceInQueue );
+	void GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup, bool bPlaceInQueue );
 	void UnitCommand( const SAIUnitCmd &command, class CCommonUnit *pGroupUnit, bool bPlaceInQueue );
 	void InsertUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
 	void PushFrontUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
@@ -104,8 +106,8 @@ public:
 
 	void Segment();
 	
-	void CreateSpecialGroup( const WORD wGroup );
-	void UnregisterSpecialGroup( const WORD wSpecialGroup );
+	void CreateSpecialGroup( const uint16_t wGroup );
+	void UnregisterSpecialGroup( const uint16_t wSpecialGroup );
 	
 	int BeginGroup( const int nGroup ) const { return groupUnits.begin( nGroup ); }
 	int EndGroup() const { return groupUnits.end(); }

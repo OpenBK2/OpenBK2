@@ -17,6 +17,8 @@
 #include "DBConsts.h"
 #include "MPPacketTraceLog.h"
 
+#include <cstdint>
+
 // CMPManagerMode - UI->MP message handlers
 
 bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
@@ -149,7 +151,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 				--nSlotsUsed;
 			}
 		}
-		WORD wOldConnectMask = oldSlot.wConnectedTo;
+		uint16_t wOldConnectMask = oldSlot.wConnectedTo;
 		oldSlot = newSlot;
 		oldSlot.wConnectedTo = wOldConnectMask;
 		pClient->SendGamePacket( new CB2SlotInfoPacket( 0, pMsg->nSlot, newSlot ), true );
@@ -164,7 +166,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 {
-	const DWORD dwLaggersBefore = dwLaggers;
+	const uint32_t dwLaggersBefore = dwLaggers;
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
 	{
 		dwLaggersOld = 0;
@@ -299,7 +301,7 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	std::wstring colorStr = L"", colorEndStr = L"";
 	if (playerID >= 0)
 	{
-		DWORD color = scenario->GetPlayerColor(playerID).dwColor;
+		uint32_t color = scenario->GetPlayerColor(playerID).dwColor;
 		colorStr = L"<color = " + string_conversion::utf8_to_wstring(string_conversion::RGBA_to_hex(color)) + L">";
 		colorEndStr = L"<color = FFFFFFFF>";
 	}

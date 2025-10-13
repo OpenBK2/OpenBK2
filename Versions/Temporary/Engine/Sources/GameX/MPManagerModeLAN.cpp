@@ -19,12 +19,14 @@
 #include "Misc/Time64.h"
 #include "MPLANTest.h"
 
+#include <cstdint>
+
 #define SERVER_DEAD_TIMEOUT 5000
 #define LAN_PORT 4201
 #define LAN_TIMEOUT_SEC 20
 
 UINT64 nAsyncTime;
-const DWORD ASYNC_EXIT_TIMEOUT = 20000;
+const uint32_t ASYNC_EXIT_TIMEOUT = 20000;
 
 REGISTER_SAVELOAD_CLASS( 0x19243482, CMPManagerModeLAN );
 

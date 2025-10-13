@@ -7,6 +7,8 @@
 
 #include <zlib.h>
 
+#include <cstdint>
+
 SCheats theCheats;
 extern CDiplomacy theDipl;
 bool g_bDontShowWarFog;
@@ -85,13 +87,13 @@ bool SCheats::GetTurnOffWarFog() const
 #endif
 }
 
-void SCheats::SetImmortals( const int nPlayer, const BYTE cValue )
+void SCheats::SetImmortals( const int nPlayer, const uint8_t cValue )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
 		immortals[nPlayer] = cValue;
 }
 
-void SCheats::SetFirstShoot( const int nPlayer, const BYTE cValue )
+void SCheats::SetFirstShoot( const int nPlayer, const uint8_t cValue )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
 		firstShoot[nPlayer] = cValue;
@@ -115,7 +117,7 @@ int SCheats::operator&( IBinSaver &saver )
 }
 
 const int s_nKey2Length = 20;
-BYTE s_cKey2[s_nKey2Length] = { /* [REMOVED_SECRET_KEY] */ };
+uint8_t s_cKey2[s_nKey2Length] = { /* [REMOVED_SECRET_KEY] */ };
 //uLong ulPass = 3702409162;
 uLong ulPass = 0; /* [REMOVED_SECRET_PASSWORD_HASH] */
 
@@ -125,7 +127,7 @@ const unsigned long SCheats::MakeCheckSum( const std::string &_szPassword )
 //	string szPassword = "123456";
 	string szPassword = "654321";
 
-	vector<BYTE> checksum;
+	vector<uint8_t> checksum;
 	checksum.reserve( 100 );
 	checksum.insert( checksum.end(), szPassword.begin(), szPassword.end() );
 	checksum.insert( checksum.end(), s_cKey2, s_cKey2 + s_nKey2Length );
@@ -138,7 +140,7 @@ const unsigned long SCheats::MakeCheckSum( const std::string &_szPassword )
 
 void SCheats::CheckPassword( const std::string &szPassword )
 {
-	std::vector<BYTE> checksum;
+	std::vector<uint8_t> checksum;
 	checksum.reserve( 100 );
 	checksum.insert( checksum.end(), szPassword.begin(), szPassword.end() );
 	checksum.insert( checksum.end(), s_cKey2, s_cKey2 + s_nKey2Length );

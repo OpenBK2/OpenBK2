@@ -4,6 +4,8 @@
 #include "libdb/ReportMetaInfo.h"
 #include "testtype.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -13,8 +15,8 @@ void SWeapon::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Weapon", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "AmmoPerBurst", (BYTE*)&nAmmoPerBurst - pThis, sizeof(nAmmoPerBurst), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "AmmoPerBurst", (uint8_t*)&nAmmoPerBurst - pThis, sizeof(nAmmoPerBurst), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -37,12 +39,12 @@ int SWeapon::operator&( IBinSaver &saver )
 
 void SHPObject::ReportMetaInfo() const
 {
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Name", (BYTE*)&wszName - pThis, sizeof(wszName), NTypeDef::TYPE_TYPE_WSTRING );
-	NMetaInfo::ReportMetaInfo( "HP", (BYTE*)&fHP - pThis, sizeof(fHP), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HasPassability", (BYTE*)&bHasPassability - pThis, sizeof(bHasPassability), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Flags", (BYTE*)&flags - pThis, sizeof(flags), NTypeDef::TYPE_TYPE_BINARY );
-	NMetaInfo::ReportMetaInfo( "DesignerName", (BYTE*)&szDesignerName - pThis, sizeof(szDesignerName), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Name", (uint8_t*)&wszName - pThis, sizeof(wszName), NTypeDef::TYPE_TYPE_WSTRING );
+	NMetaInfo::ReportMetaInfo( "HP", (uint8_t*)&fHP - pThis, sizeof(fHP), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HasPassability", (uint8_t*)&bHasPassability - pThis, sizeof(bHasPassability), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Flags", (uint8_t*)&flags - pThis, sizeof(flags), NTypeDef::TYPE_TYPE_BINARY );
+	NMetaInfo::ReportMetaInfo( "DesignerName", (uint8_t*)&szDesignerName - pThis, sizeof(szDesignerName), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SHPObject::operator&( IXmlSaver &saver )
@@ -115,11 +117,11 @@ void SUnitBase::ReportMetaInfo() const
 {
 	SHPObject::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "UnitType", (BYTE*)&eUnitType - pThis, sizeof(eUnitType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Sight", (BYTE*)&fSight - pThis, sizeof(fSight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Speed", (BYTE*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "BoundTileRadius", (BYTE*)&nBoundTileRadius - pThis, sizeof(nBoundTileRadius), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "UnitType", (uint8_t*)&eUnitType - pThis, sizeof(eUnitType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Sight", (uint8_t*)&fSight - pThis, sizeof(fSight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Speed", (uint8_t*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "BoundTileRadius", (uint8_t*)&nBoundTileRadius - pThis, sizeof(nBoundTileRadius), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SUnitBase::operator&( IXmlSaver &saver )
@@ -146,11 +148,11 @@ int SUnitBase::operator&( IBinSaver &saver )
 
 
 
-void SMechUnit::SJogging::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnit::SJogging::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (BYTE*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Phase", (BYTE*)&fPhase - pThis, sizeof(fPhase), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Shift", (BYTE*)&fShift - pThis, sizeof(fShift), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (uint8_t*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Phase", (uint8_t*)&fPhase - pThis, sizeof(fPhase), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Shift", (uint8_t*)&fShift - pThis, sizeof(fShift), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Tremble", &vTremble, pThis ); 
 }
 
@@ -176,16 +178,16 @@ int SMechUnit::SJogging::operator&( IBinSaver &saver )
 
 
 
-void SMechUnit::SStruct1::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnit::SStruct1::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeInt", (BYTE*)&nTypeInt - pThis, sizeof(nTypeInt), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeFloat", (BYTE*)&fTypeFloat - pThis, sizeof(fTypeFloat), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeBool", (BYTE*)&bTypeBool - pThis, sizeof(bTypeBool), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeGUID", (BYTE*)&typeGUID - pThis, sizeof(typeGUID), NTypeDef::TYPE_TYPE_GUID );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeString", (BYTE*)&szTypeString - pThis, sizeof(szTypeString), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeWString", (BYTE*)&wszTypeWString - pThis, sizeof(wszTypeWString), NTypeDef::TYPE_TYPE_WSTRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeEnumUnitType", (BYTE*)&eTypeEnumUnitType - pThis, sizeof(eTypeEnumUnitType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "TypeBinaryFlags", (BYTE*)&typeBinaryFlags - pThis, sizeof(typeBinaryFlags), NTypeDef::TYPE_TYPE_BINARY );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeInt", (uint8_t*)&nTypeInt - pThis, sizeof(nTypeInt), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeFloat", (uint8_t*)&fTypeFloat - pThis, sizeof(fTypeFloat), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeBool", (uint8_t*)&bTypeBool - pThis, sizeof(bTypeBool), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeGUID", (uint8_t*)&typeGUID - pThis, sizeof(typeGUID), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeString", (uint8_t*)&szTypeString - pThis, sizeof(szTypeString), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeWString", (uint8_t*)&wszTypeWString - pThis, sizeof(wszTypeWString), NTypeDef::TYPE_TYPE_WSTRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeEnumUnitType", (uint8_t*)&eTypeEnumUnitType - pThis, sizeof(eTypeEnumUnitType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "TypeBinaryFlags", (uint8_t*)&typeBinaryFlags - pThis, sizeof(typeBinaryFlags), NTypeDef::TYPE_TYPE_BINARY );
 }
 
 int SMechUnit::SStruct1::operator&( IXmlSaver &saver )
@@ -218,7 +220,7 @@ int SMechUnit::SStruct1::operator&( IBinSaver &saver )
 
 
 
-void SMechUnit::SStruct2::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMechUnit::SStruct2::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Structs", &structs, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "guids", &guids, pThis );
@@ -247,10 +249,10 @@ void SMechUnit::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "MechUnit", typeID, sizeof(*this) );
 	SUnitBase::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Jx", &jx, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Jy", &jy, pThis ); 
-	NMetaInfo::ReportMetaInfo( "guid", (BYTE*)&guid - pThis, sizeof(guid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "guid", (uint8_t*)&guid - pThis, sizeof(guid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SimpleArrayInt", &simpleArrayInt, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SimpleArrayFloat", &simpleArrayFloat, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SimpleArrayGUID", &simpleArrayGUID, pThis );
@@ -260,7 +262,7 @@ void SMechUnit::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SimpleArrayWString", &simpleArrayWString, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ComplexArrayStruct1", &complexArrayStruct1, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ComplexArrayStruct2", &complexArrayStruct2, pThis );
-	NMetaInfo::ReportMetaInfo( "Weapon", (BYTE*)&pWeapon - pThis, sizeof(pWeapon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Weapon", (uint8_t*)&pWeapon - pThis, sizeof(pWeapon), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Weapons", &weapons, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -310,14 +312,14 @@ int SMechUnit::operator&( IBinSaver &saver )
 
 
 
-void SMapInfo2::SMapObject::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMapInfo2::SMapObject::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "HP", (BYTE*)&fHP - pThis, sizeof(fHP), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "HP", (uint8_t*)&fHP - pThis, sizeof(fHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Rot", &qRot, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (BYTE*)&linkID - pThis, sizeof(linkID), NTypeDef::TYPE_TYPE_GUID );
-	NMetaInfo::ReportMetaInfo( szAddName + "LinkWith", (BYTE*)&linkWith - pThis, sizeof(linkWith), NTypeDef::TYPE_TYPE_GUID );
-	NMetaInfo::ReportMetaInfo( szAddName + "Object", (BYTE*)&pObject - pThis, sizeof(pObject), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (uint8_t*)&linkID - pThis, sizeof(linkID), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( szAddName + "LinkWith", (uint8_t*)&linkWith - pThis, sizeof(linkWith), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( szAddName + "Object", (uint8_t*)&pObject - pThis, sizeof(pObject), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SMapInfo2::SMapObject::operator&( IXmlSaver &saver )
@@ -350,7 +352,7 @@ void SMapInfo2::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MapInfo2", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Objects", &objects, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

@@ -17,6 +17,7 @@
 #include "B2AI.h"
 
 #include <algorithm>
+#include <cstdint>
 
 extern CSupremeBeing theSupremeBeing;
 extern CStaticObjects theStaticObjects;
@@ -46,7 +47,7 @@ CGeneralTaskToDefendPatch::CGeneralTaskToDefendPatch()
 void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 {
 	const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
-	const WORD wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
+	const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
 	const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
 	const CVec2 vReinforcePoint( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
 	const CVec2 vLookPoint( vReinforcePoint + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );
@@ -90,7 +91,7 @@ void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, C
 		for ( int i = 0; i < patchInfo.reinforcePoints.size(); ++i )
 		{
 			const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[i].vCenter );
-			const WORD wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[i].GetDir() );
+			const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[i].GetDir() );
 			const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
 			const CVec2 vP( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
 			const CVec2 vLookPoint( vP + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );
@@ -504,7 +505,7 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 	else
 	{
 		const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
-		const WORD wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
+		const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
 		const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
 		const CVec2 vReinforcePoint( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
 		const CVec2 vLookPoint( vReinforcePoint + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );

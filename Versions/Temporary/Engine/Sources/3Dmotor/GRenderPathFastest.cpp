@@ -14,6 +14,8 @@
 
 #include "Image/ImageTGA.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 extern bool bSimpleParticles;
@@ -596,7 +598,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 	CArray2D<NGfx::SPixel8888> texture;
 	NGfx::GetRenderTargetData( &texture, pCurrentWaterReflectionTexture );	
 
-	CArray2D<DWORD> image;
+	CArray2D<uint32_t> image;
 	image.SetSizes( texture.GetSizeX(), texture.GetSizeY() );
 
 	for ( int iX = 0; iX < texture.GetSizeX(); ++iX )

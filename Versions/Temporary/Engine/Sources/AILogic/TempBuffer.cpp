@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "tempbuffer.h"
 
-std::vector<BYTE> buffer( 32 );
+#include <cstdint>
 
+std::vector<uint8_t> buffer( 32 );

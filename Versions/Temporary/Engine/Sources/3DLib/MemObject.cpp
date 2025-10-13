@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "PolyUtils.h"
 
+#include <cstdint>
+
 struct SMemBuilderVertex
 {
 	CVec3 point;
@@ -30,11 +32,11 @@ class CMemObjectBuilder
 	CMemObject *p;
 public:
 	CMemObjectBuilder( CMemObject *_p ): p(_p) {}
-	WORD GetPointIndex( const CVec3 &point, const CVec3 &normal );
+	uint16_t GetPointIndex( const CVec3 &point, const CVec3 &normal );
 	void AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs );
 };
 
-WORD CMemObjectBuilder::GetPointIndex( const CVec3 &point, const CVec3 &normal )
+uint16_t CMemObjectBuilder::GetPointIndex( const CVec3 &point, const CVec3 &normal )
 {
 	int nCounter = 0;
 	SMemBuilderVertex v;
@@ -56,9 +58,9 @@ void CMemObjectBuilder::AddSphereTriangle( const CVec3 &a, const CVec3 &b, const
 {
 	if ( nSubs == 0 )
 	{
-		WORD w1 = GetPointIndex( a, a );
-		WORD w2 = GetPointIndex( b, b );
-		WORD w3 = GetPointIndex( c, c );
+		uint16_t w1 = GetPointIndex( a, a );
+		uint16_t w2 = GetPointIndex( b, b );
+		uint16_t w3 = GetPointIndex( c, c );
 		p->resTris.push_back( STriangle( w1, w2, w3 ) );
 	}
 	else
@@ -287,15 +289,15 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 	m.RotateHVector( &base[0], base[0] );
 	CVec3 n(0, 1, 0);
 	m.RotateHVector( &n, n );
-	WORD capd = b.GetPointIndex( base[0], -n );
-	WORD capu = b.GetPointIndex( base[0] + ptDir, n );
+	uint16_t capd = b.GetPointIndex( base[0], -n );
+	uint16_t capu = b.GetPointIndex( base[0] + ptDir, n );
 	for ( int i = 1; i < base.size(); ++i )
 	{
 		m.RotateHVector( &base[i], base[i] );
-		WORD w1 = b.GetPointIndex( base[i-1], VNULL3 );
-		WORD w2 = b.GetPointIndex( base[i], VNULL3 );
-		WORD w3 = b.GetPointIndex( base[i-1] + ptDir, VNULL3 );
-		WORD w4 = b.GetPointIndex( base[i] + ptDir, VNULL3 );
+		uint16_t w1 = b.GetPointIndex( base[i-1], VNULL3 );
+		uint16_t w2 = b.GetPointIndex( base[i], VNULL3 );
+		uint16_t w3 = b.GetPointIndex( base[i-1] + ptDir, VNULL3 );
+		uint16_t w4 = b.GetPointIndex( base[i] + ptDir, VNULL3 );
 		CVec3 n1 = (resPoints[w1] - resPoints[w4]) ^ (resPoints[w2] - resPoints[w4]);
 		CVec3 n2 = (resPoints[w4] - resPoints[w1]) ^ (resPoints[w3] - resPoints[w1]);
 		Normalize( &n1 );
@@ -309,10 +311,10 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 		resTris.push_back( STriangle( w1, w3, w4 ) );
 		if ( bClose )
 		{
-			WORD c1 = b.GetPointIndex( base[i-1], -n );
-			WORD c2 = b.GetPointIndex( base[i], -n );
-			WORD c3 = b.GetPointIndex( base[i-1] + ptDir, n );
-			WORD c4 = b.GetPointIndex( base[i] + ptDir, n );
+			uint16_t c1 = b.GetPointIndex( base[i-1], -n );
+			uint16_t c2 = b.GetPointIndex( base[i], -n );
+			uint16_t c3 = b.GetPointIndex( base[i-1] + ptDir, n );
+			uint16_t c4 = b.GetPointIndex( base[i] + ptDir, n );
 			resTris.push_back( STriangle( capd, c1, c2 ) );
 			resTris.push_back( STriangle( capu, c4, c3 ) );
 		}
@@ -330,10 +332,10 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 	ptMiddle.x += 0.5f * fBase;
 
 	CVec3 ptN( -1, 0, 0 );
-	WORD w1 = b.GetPointIndex( ptLeft, ptN );
-	WORD w2 = b.GetPointIndex( ptLeft + CVec3(0,0,fHeight), ptN );
-	WORD w3 = b.GetPointIndex( ptRight + CVec3(0,0,fHeight), ptN );
-	WORD w4 = b.GetPointIndex( ptRight, ptN );
+	uint16_t w1 = b.GetPointIndex( ptLeft, ptN );
+	uint16_t w2 = b.GetPointIndex( ptLeft + CVec3(0,0,fHeight), ptN );
+	uint16_t w3 = b.GetPointIndex( ptRight + CVec3(0,0,fHeight), ptN );
+	uint16_t w4 = b.GetPointIndex( ptRight, ptN );
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 	resTris.push_back( STriangle( w1, w4, w3 ) );
 	//

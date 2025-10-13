@@ -6,16 +6,18 @@
 #include "UnitStates.h"
 #include "System/FastMath.h"
 
+#include <cstdint>
+
 BASIC_REGISTER_CLASS(CLongObjectCreation);
 
-WORD CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
+uint16_t CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 {
 	CVec2 vTmp = vEnd - vBegin;  
 	Normalize( &vTmp );
 	float fAngle = NMath::ACos( ( vTmp.x )/ fabs( vTmp.x, vTmp.y ) );
 	if ( vTmp.y < 0 )
 		fAngle = FP_2PI - fAngle;
-	return WORD ( (fAngle/( 2.0f * PI ) ) * 65535 );
+	return uint16_t ( (fAngle/( 2.0f * PI ) ) * 65535 );
 }
 
 void CLongObjectCreation::SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH )

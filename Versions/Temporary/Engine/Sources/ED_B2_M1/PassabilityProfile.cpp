@@ -5,12 +5,14 @@
 #include "Stats_B2_M1/DBPassProfile.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
+#include <cstdint>
+
 //#define _DEBUG_GENERATION
 
 #ifdef _DEBUG_GENERATION
 class CDebugMask
 {
-	CArray2D<DWORD> mask;
+	CArray2D<uint32_t> mask;
 	float fScaleCoeffX;
 	float fScaleCoeffY;
 	CVec2 vMin;
@@ -158,8 +160,8 @@ void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName
 		vector<CVec2> prjPoints;
 		for ( int i = 0; i < 3; ++i )
 		{
-			const BYTE cFirst = (points[i].z <= fMaxZ) ? 1 : 0;
-			const BYTE cSecond = (points[i+1].z <= fMaxZ) ? 1 : 0;
+			const uint8_t cFirst = (points[i].z <= fMaxZ) ? 1 : 0;
+			const uint8_t cSecond = (points[i+1].z <= fMaxZ) ? 1 : 0;
 
 			const CVec2 vFirst( points[i].x, points[i].y );
 			const CVec2 vSecond( points[i+1].x, points[i+1].y );

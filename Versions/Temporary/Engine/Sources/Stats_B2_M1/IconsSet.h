@@ -1,7 +1,8 @@
 #pragma once
 
-// automatically generated file, don't change manually!
+#include <cstdint>
 
+// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 
@@ -19,7 +20,7 @@ namespace NDb
 		struct SIconType
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 
 			enum EIconTypeEnum
@@ -47,11 +48,11 @@ namespace NDb
 				eType( ICONTYPE_NONE )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		CDBPtr< SMaterial > pMaterialZCheck;
 		CDBPtr< SMaterial > pMaterialNonZCheck;
@@ -65,7 +66,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 
 	struct SVisObjIconsSet : public CResource
@@ -77,7 +78,7 @@ namespace NDb
 		struct SVisObjIcon
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 
 			enum EVisObjIconType
@@ -118,11 +119,11 @@ namespace NDb
 				nPriority( 0 )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		CDBPtr< STexture > pTexture;
 		std::vector< CTRect<float> > hpBarBorders;
@@ -138,7 +139,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

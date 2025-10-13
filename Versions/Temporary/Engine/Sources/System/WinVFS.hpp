@@ -6,6 +6,8 @@
 #include "FileTime.h"
 #include "FileUtils.h"
 
+#include <cstdint>
+
 namespace NVFS
 {
 class CWinVFS : public IVFS
@@ -14,16 +16,16 @@ class CWinVFS : public IVFS
 
 	class CFileEntry
 	{
-		DWORD dwCheckTime;
+		uint32_t dwCheckTime;
 		bool bChecked;
 	public:
-		CFileEntry( const DWORD _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {  }
+		CFileEntry( const uint32_t _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {  }
 		virtual ~CFileEntry() {}
 		//
 		void SetChecked() { bChecked = true; }
 		bool IsChecked() const { return bChecked; }
 		//
-		DWORD GetCheckTime() const { return dwCheckTime; }
+		uint32_t GetCheckTime() const { return dwCheckTime; }
 		virtual CDataStream* OpenStream( const std::string &szPathName ) = 0;
 		virtual bool GetStats( SFileStats *pStats, const std::string &szPathName ) const = 0;
 	};
@@ -32,7 +34,7 @@ class CWinVFS : public IVFS
 	{
 		const std::string &szBasePath;
 	public:
-		CWinFileEntry( const DWORD _dwCheckTime, const std::string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
+		CWinFileEntry( const uint32_t _dwCheckTime, const std::string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
 		// мы не храним имя файла, а передаём его в виде параметра, т.к. оно итак хранится в hash_map от storage, 
 		// а эту хрень вызывают только здесь и только я... (теперь уже не только ты -)
 		CDataStream* OpenStream( const std::string &szPathName );
@@ -44,7 +46,7 @@ class CWinVFS : public IVFS
 		CZipFile &zipfile;							// zipfile structure
 		const int nIndex;											// this file index in the zipfile
 	public:
-		CZipFileEntry( const DWORD _dwCheckTime, CZipFile &_zipfile, const int _nIndex )
+		CZipFileEntry( const uint32_t _dwCheckTime, CZipFile &_zipfile, const int _nIndex )
 			: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex ) {}
 			CDataStream* OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
 			bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
@@ -71,7 +73,7 @@ class CWinVFS : public IVFS
 			if ( it.GetLength() <= 0 ) 
 				return;
 			//
-			const DWORD dwCheckTime = FILETIMEToWin32DateTime( it.GetLastWriteTime() );
+			const uint32_t dwCheckTime = FILETIMEToWin32DateTime( it.GetLastWriteTime() );
 			NFile::CFilePath szFileName = it.GetFullName();
 			szFileName.erase( 0, szBasePath.size() );
 			CStreamEntriesMap::iterator pos = pVFS->streamEntriesMap.find( szFileName );

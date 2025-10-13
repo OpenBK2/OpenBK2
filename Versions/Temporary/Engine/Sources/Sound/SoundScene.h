@@ -2,6 +2,7 @@
 
 #include "Sound_export.h"
 
+#include <cstdint>
 
 enum ESoundSceneMode
 {
@@ -50,27 +51,27 @@ struct ISoundScene : public CObjectBase
 	virtual void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode ) = 0;
 	//add - remove sound. return sound ID
 	// nVolumeType =  0 - Music, 1-Voice, 2-SFX
-	virtual WORD AddSound( const struct NDb::SComplexSoundDesc *pStats,
+	virtual uint16_t AddSound( const struct NDb::SComplexSoundDesc *pStats,
 		const CVec3 &vPos, // AI pixels
 		const ESoundMixType eMixType,
 		const ESoundAddMode eAddMode,
 		const unsigned int nTimeAfterStart,
 		int nVolumeType ) = 0;
 
-	virtual WORD AddSound( const struct NDb::SComplexSoundDesc *pStats,
+	virtual uint16_t AddSound( const struct NDb::SComplexSoundDesc *pStats,
 		CFuncBase<CVec3> *pPos, // AI pixels
 		const ESoundMixType eMixType,
 		const ESoundAddMode eAddMode,
 		const unsigned int nTimeAfterStart,
 		int nVolumeType ) { return 0; };
 
-	virtual void RemoveSound( const WORD wID ) = 0;
+	virtual void RemoveSound( const uint16_t wID ) = 0;
 	// sound management (vPos in AI pixels)
-	virtual void SetSoundPos( const WORD wID, const CVec3 &vPos ) = 0;
-	virtual bool IsSoundFinished( const WORD wID ) const = 0;
+	virtual void SetSoundPos( const uint16_t wID, const CVec3 &vPos ) = 0;
+	virtual bool IsSoundFinished( const uint16_t wID ) const = 0;
 	// map sounds (vPos in AI pixels)
-	virtual WORD AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos ) = 0;
-	virtual void RemoveSoundFromMap( const WORD	wInstanceID ) = 0;
+	virtual uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos ) = 0;
+	virtual void RemoveSoundFromMap( const uint16_t	wInstanceID ) = 0;
 	// segment 
 	virtual void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) = 0;
 	// clear all map sounds. 

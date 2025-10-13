@@ -4,7 +4,9 @@
 #include "libdb/Manipulator.h"
 #include "Interface_CommandHandler.h"
 
-bool SetGetEditParameters( DWORD pEditParameters, UINT nCommandHandlerType, int nCmdID )
+#include <cstdint>
+
+bool SetGetEditParameters( uint32_t pEditParameters, UINT nCommandHandlerType, int nCmdID )
 {
 	NI_ASSERT( pEditParameters != 0, "CObjectState::GetEditParameters(): pEditParameters == 0" );
 	return Singleton<ICommandHandlerContainer>()->HandleCommand( nCommandHandlerType, nCmdID, pEditParameters );

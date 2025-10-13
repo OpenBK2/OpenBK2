@@ -4,6 +4,8 @@
 #include "GRenderModes.h"
 #include "HeightFog.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 
@@ -49,9 +51,9 @@ void CHeightFogHolder::Recalc()
 	if ( pHeightFog )
 	{
 		const std::vector<CVec3> &poses = pMesh->GetPositions();
-		const std::vector<WORD> &posInds = pMesh->GetPositionIndices();
-		const std::vector<DWORD> &srcAttrs = pMesh->GetAttribute( GATTR_VERTEX_COLOR );
-		std::vector<DWORD> attrs( srcAttrs );
+		const std::vector<uint16_t> &posInds = pMesh->GetPositionIndices();
+		const std::vector<uint32_t> &srcAttrs = pMesh->GetAttribute( GATTR_VERTEX_COLOR );
+		std::vector<uint32_t> attrs( srcAttrs );
 		if ( attrs.size() != posInds.size() )
 		{
 			attrs.resize( posInds.size() );
@@ -66,7 +68,7 @@ void CHeightFogHolder::Recalc()
 		for ( int i = 0; i < attrs.size(); ++i )
 		{
 			curPlace.forward.RotateHVector( &vPos, poses[posInds[i]] );
-			DWORD &nAttr = attrs[i];
+			uint32_t &nAttr = attrs[i];
 			const float fR = float( ( nAttr >> 16 ) & 0xff ) * F_INV_255;
 			const float fG = float( ( nAttr >> 8 ) & 0xff ) * F_INV_255;
 			const float fB = float( nAttr & 0xff ) * F_INV_255;

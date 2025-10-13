@@ -4,6 +4,7 @@
 #include "MapEditorLib/DefaultInputState.h"
 #include "DialogData.h"
 
+#include <cstdint>
 
 //
 //
@@ -36,7 +37,7 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
 		
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// CFormationsState 

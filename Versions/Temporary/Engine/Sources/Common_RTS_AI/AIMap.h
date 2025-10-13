@@ -4,6 +4,8 @@
 
 #include "AIClasses.h"
 
+#include <cstdint>
+
 class CStaticMapHeights;
 class CTerrain;
 class CArray2D1Bit;
@@ -48,7 +50,7 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	void AddLinesEven( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
 	void Add8TilesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
 	void AddLinesOdd( const SVector vOffset, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
-	SVector GetOffset( const WORD wAngle, const int nDiameter );
+	SVector GetOffset( const uint16_t wAngle, const int nDiameter );
 	bool IsLocked( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked( const SVector &tile, const EAIClasses aiClass ) const;
 

@@ -8,6 +8,7 @@
 #include "Parser/LangNodesDefinitions.h"
 #include "Parser/FileNode.h"
 
+#include <cstdint>
 #include <memory>
 
 namespace NCompileCLike
@@ -38,8 +39,8 @@ struct SSimpleTypesInit
 	{
 		simpleTypes["int"]				= SSimpleType( NDb::NTypeDef::STypeInt::NewSTypeInt );
 		simpleTypes["float"]			= SSimpleType( NDb::NTypeDef::STypeFloat::NewSTypeFloat );
-		simpleTypes["DWORD"]			= SSimpleType( NDb::NTypeDef::STypeInt::NewSTypeInt );
-		simpleTypes["WORD"]				= SSimpleType( NDb::NTypeDef::STypeInt::NewSTypeInt );
+		simpleTypes["uint32_t"]			= SSimpleType( NDb::NTypeDef::STypeInt::NewSTypeInt );
+		simpleTypes["uint16_t"]				= SSimpleType( NDb::NTypeDef::STypeInt::NewSTypeInt );
 		simpleTypes["string"]			= SSimpleType( NDb::NTypeDef::STypeString::NewSTypeString );
 		simpleTypes["bool"]				= SSimpleType( NDb::NTypeDef::STypeBool::NewSTypeBool );
 		simpleTypes["hexbinary"]	= SSimpleType( NDb::NTypeDef::STypeBinary::NewSTypeBinary );

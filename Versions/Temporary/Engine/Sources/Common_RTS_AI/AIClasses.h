@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 enum EAIClasses
 {
 	EAC_NONE  = 0x00,
@@ -19,7 +21,7 @@ enum EAIClasses
 	EAC_FORCE_DWORD = 0x7FFFFFFF,
 };
 
-inline const int GetClassIndex( const BYTE aiClass )
+inline const int GetClassIndex( const uint8_t aiClass )
 {
 	switch( aiClass ) 
 	{

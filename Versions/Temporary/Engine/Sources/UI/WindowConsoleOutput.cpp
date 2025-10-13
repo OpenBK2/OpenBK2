@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "./windowconsoleoutput.h"
 
-
 #include "UIVisitor.h"
 
 #include "UIML.h"
+
+#include <cstdint>
 
 static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пикселах
 static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
@@ -20,7 +21,7 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
+CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
 : szString( pszStr ), dwColor( col ) 
 {  
 	const std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
@@ -41,7 +42,7 @@ int CWindowConsoleOutput::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CWindowConsoleOutput::AddString( const std::wstring &szString, const DWORD color )
+void CWindowConsoleOutput::AddString( const std::wstring &szString, const uint32_t color )
 {
 	int nSizeX;
 	GetPlacement( 0, 0, &nSizeX, 0 );

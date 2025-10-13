@@ -10,6 +10,8 @@
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
 
+#include <cstdint>
+
 enum EMultiTesterStage
 {
 	LOGIN = 0,
@@ -100,7 +102,7 @@ bool CMultiTester::Segment()
 		return false;
 
 	// В режиме ожидания ответа сервера только обрабатываем пакеты
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	if ( !IsActive() )
 		return true;
 
@@ -196,7 +198,7 @@ bool CMultiTester::ProcessClientRemoved( CNetRemoveClient *pPacket )
 
 void CMultiTester::MainStage()
 {
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	if ( dwTime < dwLastSegmentTime + SEGMENT_DURATION )
 		return;
 	dwLastSegmentTime = dwTime;
@@ -212,7 +214,7 @@ void CMultiTester::MainStage()
 
 void CMultiTester::TestChat()
 {
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	if ( dwTime > CHAT_CHANNEL_CHANGE_PERIOD + dwLastChatChannelChangeTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
 		string szChannelName = StrFmt( "TEST_CHAT_CHANNEL_%d", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
@@ -260,7 +262,7 @@ void CMultiTester::TestLadder()
 	}
 	if ( bIsInGame )
 	{
-		const DWORD dwTime = GetTickCount();
+		const uint32_t dwTime = GetTickCount();
 		if ( dwTime > 5000 + dwLastGameHeartBeatTime )
 		{
 			pServerClient->SendPacket( new CGameHeartBeatPacket( 0, nGameID ) );

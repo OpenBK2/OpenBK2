@@ -16,6 +16,7 @@
 #include "System/Text.h"
 #include "3Dmotor/DBScene.h"
 
+#include <cstdint>
 
 int CHECK_DUPLICATE_CHILDREN;
 UI_EXPORT int CHECK_UI_TEXTURES_INSTANT_LOAD;
@@ -549,12 +550,12 @@ CTRect<float> CWindow::GetWindowRect() const
 	return CTRect<float>( vScreenPos.x, vScreenPos.y, pInstance->placement.size.Get().x + vScreenPos.x, pInstance->placement.size.Get().y + vScreenPos.y );
 }
 
-void CWindow::SetPlacement( const CTRect<int> &rc, const DWORD flags )
+void CWindow::SetPlacement( const CTRect<int> &rc, const uint32_t flags )
 {
 	SetPlacement( rc.x1, rc.y1, rc.Width(), rc.Height(), flags );
 }
 
-void CWindow::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags ) 
+void CWindow::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags )
 {
 	if ( flags & EWPF_POS_X )
 	{

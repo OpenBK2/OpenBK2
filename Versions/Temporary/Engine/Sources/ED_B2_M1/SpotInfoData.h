@@ -3,6 +3,7 @@
 #include "MapInfoEditorData.h"
 #include "Misc/Planegeometry.h"
 
+#include <cstdint>
 
 namespace NMapInfoEditor
 {
@@ -94,7 +95,7 @@ namespace NMapInfoEditor
 
 		// абстрактные методы
 		// настройщики
-		void GetDrawSelectionParameters( DWORD *pdwSceneObject, DWORD *pdwObject, DWORD *pdwObjectLink, DWORD *pdwMainObject ) {}
+		void GetDrawSelectionParameters( uint32_t *pdwSceneObject, uint32_t *pdwObject, uint32_t *pdwObjectLink, uint32_t *pdwMainObject ) {}
 		bool NeedMakeOrientation() { return false; }
 		bool KeepZeroHeight() { return false; }
 		bool KeepCommonHeight() { return false; }

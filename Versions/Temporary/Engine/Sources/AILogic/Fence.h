@@ -2,6 +2,8 @@
 
 #include "StaticObject.h"
 
+#include <cstdint>
+
 class CFence : public CCommonStaticObject
 {
 	OBJECT_BASIC_METHODS( CFence );
@@ -21,16 +23,16 @@ class CFence : public CCommonStaticObject
 	void AnalyzeConnection( CFence *pFence );
 	void DamagePartially( CFence * pDestroyedFence );
 
-	void GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibity ) const;
-	void GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const;
+	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibity ) const;
+	void GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const;
 
 	int GetHeight() const;
 public:
 	CFence() { }
-	CFence( const SFenceRPGStats *pStats, const CVec3 &center, const float fHP, const WORD wDir, const int nDiplomacy, const int nFrameIndex );
+	CFence( const SFenceRPGStats *pStats, const CVec3 &center, const float fHP, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex );
 	virtual void Init();
 
-	virtual const BYTE GetPlayer() const { return nCreator; }
+	virtual const uint8_t GetPlayer() const { return nCreator; }
 
 	const struct SHPObjectRPGStats *GetStats() const { return pStats; }
 

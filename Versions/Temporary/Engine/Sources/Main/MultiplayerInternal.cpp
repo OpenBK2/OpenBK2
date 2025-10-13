@@ -10,6 +10,8 @@
 
 #include <float.h>
 
+#include <cstdint>
+
 const int nNetTimeout = 60;				// As in SNetDriverConsts default constructor.
 //const int nNetTimeout = 300;
 
@@ -61,7 +63,7 @@ void CMultiplayerInternal::SendAICommand( CObjectBase *pCommand )
 {
 	CPtr<CObjectBase> pHold = pCommand;
 	{
-		pktOutgoing << BYTE(NGM_AI_CMD);
+		pktOutgoing << uint8_t(NGM_AI_CMD);
 		// add command to packet
 		int nID = pCmdsSerialize->GetCommandID( pCommand );
 		pktOutgoing.Write( &nID, pCmdsSerialize->GetIDSize() );
@@ -78,7 +80,7 @@ void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 	CPtr<CObjectBase> pHold = pCommand;
 	CMemoryStream pkt;
 	{
-		pkt << BYTE(NGM_AI_CMD);
+		pkt << uint8_t(NGM_AI_CMD);
 		// add command to packet
 		int nID = pCmdsSerialize->GetCommandID( pCommand );
 		pkt.Write( &nID, pCmdsSerialize->GetIDSize() );
@@ -93,7 +95,7 @@ void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 
 void CMultiplayerInternal::FinishSegment()
 {
-	pktOutgoing << BYTE(NGM_ID_SEGMENT);
+	pktOutgoing << uint8_t(NGM_ID_SEGMENT);
 	pNetDriver->SendBroadcast( pktOutgoing );
 	pktOutgoing.SetSizeDiscard( 0 );
 }
@@ -172,7 +174,7 @@ bool CMultiplayerInternal::CheckConnection()
 CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, CMemoryStream *pPkt )
 {
 	CMemoryStream &pkt = *pPkt;
-	BYTE msgID = 0;
+	uint8_t msgID = 0;
 	if ( pkt.GetPosition() < pkt.GetSize() )
 	{
 		pkt.Read( &msgID, sizeof(msgID) );

@@ -1,7 +1,9 @@
-
 #pragma once
 
 #include "Image/Image.h"
+
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SVectorStripeObjectPoint
 {
@@ -34,8 +36,8 @@ struct SVectorStripeObjectDesc
 	//----------------------------------------------------------------------------------------------------
 	struct SLayer
 	{
-		BYTE opacityCenter;									// прозрачность в центре потока
-		BYTE opacityBorder;									// прозрачность по краям
+		uint8_t opacityCenter;									// прозрачность в центре потока
+		uint8_t opacityBorder;									// прозрачность по краям
 		float fStreamSpeed;									// условная скорость потока
 		float fTextureStep;									// шаг текстурирования по тайлам
 		int nNumCells;											// ширина потока в ячейках (в тайлах)
@@ -55,7 +57,7 @@ struct SVectorStripeObjectDesc
 	int	eType;														// type
 	int nPriority;												// priority
 	float fPassability;										// passability
-	DWORD dwAIClasses;										// AI классы, которые не могут ходить по этой дороге
+	uint32_t dwAIClasses;										// AI классы, которые не могут ходить по этой дороге
 
 	enum ESoilParams
 	{ 
@@ -64,7 +66,7 @@ struct SVectorStripeObjectDesc
 		ESP_RAIL	= 0x20,
 		ESP_SPLASH = 0x40,
 	};
-	BYTE cSoilParams;											// параметры почвы - следы, пыль и т.д.
+	uint8_t cSoilParams;											// параметры почвы - следы, пыль и т.д.
 	
 	//----------------------------------------------------------------------------------------------------
 	// layers

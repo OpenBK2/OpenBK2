@@ -6,19 +6,21 @@
 #include "System/XmlSaver.h"
 #include "dbcameraconsts.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SCameraLimits::SCLLimit::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SCameraLimits::SCLLimit::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Ave", (BYTE*)&fAve - pThis, sizeof(fAve), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "AutoSpeed", (BYTE*)&fAutoSpeed - pThis, sizeof(fAutoSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "ManualSpeed", (BYTE*)&fManualSpeed - pThis, sizeof(fManualSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Cyclic", (BYTE*)&bCyclic - pThis, sizeof(bCyclic), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Min", (uint8_t*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Max", (uint8_t*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Ave", (uint8_t*)&fAve - pThis, sizeof(fAve), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AutoSpeed", (uint8_t*)&fAutoSpeed - pThis, sizeof(fAutoSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "ManualSpeed", (uint8_t*)&fManualSpeed - pThis, sizeof(fManualSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Cyclic", (uint8_t*)&bCyclic - pThis, sizeof(bCyclic), NTypeDef::TYPE_TYPE_BOOL );
 }
 
 int SCameraLimits::SCLLimit::operator&( IXmlSaver &saver )
@@ -45,7 +47,7 @@ int SCameraLimits::SCLLimit::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCameraLimits::SCLLimit::CalcCheckSum() const
+uint32_t SCameraLimits::SCLLimit::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -66,11 +68,11 @@ void SCameraLimits::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "CameraLimits", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "DistanceLimit", &distanceLimit, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "PitchLimit", &pitchLimit, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "YawLimit", &yawLimit, pThis ); 
-	NMetaInfo::ReportMetaInfo( "FOV", (BYTE*)&fFOV - pThis, sizeof(fFOV), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FOV", (uint8_t*)&fFOV - pThis, sizeof(fFOV), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -95,7 +97,7 @@ int SCameraLimits::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCameraLimits::CalcCheckSum() const
+uint32_t SCameraLimits::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

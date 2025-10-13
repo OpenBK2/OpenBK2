@@ -3,6 +3,8 @@
 #include "CommonUnit.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include <cstdint>
+
 class CArtillery;
 class CCommonPathFinder;
 class CBasePathUnit;
@@ -67,7 +69,7 @@ class CFormation : public CCommonUnit
 
 	CArray1Bit availCommands;
 	//
-	BYTE cPlayer;
+	uint8_t cPlayer;
 
 	std::vector<SGunInfo> guns;
 
@@ -103,7 +105,7 @@ class CFormation : public CCommonUnit
 	int nBoundTileRadius;
 
 	NTimer::STime timeLastCatchArt;
-	DWORD dwCatchArtFlag;
+	uint32_t dwCatchArtFlag;
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonUnit *)this); f.Add(2,&fPass); f.Add(3,&timeToCamouflage); f.Add(4,&availCommands); f.Add(5,&cPlayer); f.Add(6,&guns); f.Add(7,&bWaiting); f.Add(8,&pStats); f.Add(9,&bDisabled); f.Add(10,&eInsideType); f.Add(11,&pObjInside); f.Add(12,&fMaxFireRange); f.Add(13,&virtualUnits); f.Add(14,&nVirtualUnits); f.Add(15,&bCanBeResupplied); f.Add(16,&mortar); f.Add(17,&bBoredInMoveFormationSent); f.Add(18,&lastBoredInMoveFormationCheck); f.Add(19,&bWithMoraleOfficer); f.Add(20,&bUsedCharge); f.Add(21,&pCharge); f.Add(22,&nInUnitsID); f.Add(23,&pGroupSmoothPath); f.Add(24,&soldiers); f.Add(25,&fMaxSpeed); f.Add(26,&fSpeedCoeff); f.Add(27,&vAABBHalfSize); f.Add(28,&nBoundTileRadius); f.Add(29,&timeLastCatchArt); f.Add(30,&dwCatchArtFlag); return 0; }
 	//
@@ -118,11 +120,11 @@ public:
 	void UpdateStats( class CSoldier *pUnit, const int nPos );
 protected:
 	virtual ISmoothPath *CreateSmoothPath();
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate ) {};
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) {};
 
 public:
 	CFormation();
-	void Init( const SSquadRPGStats *pStats, const CVec2 &center, const int z, const WORD dir, ICollisionsCollector *pCollisionsCollector );
+	void Init( const SSquadRPGStats *pStats, const CVec2 &center, const int z, const uint16_t dir, ICollisionsCollector *pCollisionsCollector );
 	// передвигает центр формации в её центр масс и инициализирует geomInfo
 	void ChangeGeometry( const int nGeometry );
 	const int GetGeometriesCount() const;
@@ -138,7 +140,7 @@ public:
 	void DeleteSoldier( class CSoldier *pUnit );
 
 	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units 
-	const int GetUnitSlotInStats( const BYTE cSlot ) const;
+	const int GetUnitSlotInStats( const uint8_t cSlot ) const;
 	virtual const float GetPassability() const { return fPass; }
 
 	virtual void Segment();
@@ -169,8 +171,8 @@ public:
 
 	virtual class CBasicGun* ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
 
-	virtual const BYTE GetPlayer() const { return cPlayer; }
-	virtual void ChangePlayer( const BYTE cPlayer );
+	virtual const uint8_t GetPlayer() const { return cPlayer; }
+	virtual void ChangePlayer( const uint8_t cPlayer );
 
 	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
 
@@ -181,7 +183,7 @@ public:
 	void UnsetFromWaitingState() { bWaiting = false; }
 	const bool IsInWaitingState() const { return bWaiting; }
 
-	virtual const bool IsVisible( const BYTE party ) const;
+	virtual const bool IsVisible( const uint8_t party ) const;
 
 	//
 	void WasHitNearUnit();
@@ -273,7 +275,7 @@ public:
 
 	virtual void ResetTargetScan();
 	// просканировать, если пора; если нашли цель, то атаковать
-	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding );
+	virtual uint8_t AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding );
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 
 	virtual bool CanMoveForGuard() const { return CanMove(); }
@@ -320,7 +322,7 @@ public:
 	virtual const float GetTurnRadius() const { return 0.0f; }
 	virtual const bool IsRound() const { return true; }
 	virtual const bool IsDangerousDirExist() const { return false; }
-	virtual const WORD GetDangerousDir() const { return 0; }
+	virtual const uint16_t GetDangerousDir() const { return 0; }
 	virtual const float GetMaxPossibleSpeed() const { return fMaxSpeed / fSpeedCoeff; }
 	virtual const CVec2 &GetAABBHalfSize() const { return vAABBHalfSize; }
 	virtual const CVec2 GetCenterShift() const { return VNULL2; }
@@ -348,7 +350,7 @@ public:
 
 	const bool CanCatchArtillery( const CArtillery *pArtillery ) const;
 	void ResetCatchArtTimer();
-	void SetCatchArtFlag( const DWORD _dwCatchArtFlag ) { dwCatchArtFlag = _dwCatchArtFlag; }
+	void SetCatchArtFlag( const uint32_t _dwCatchArtFlag ) { dwCatchArtFlag = _dwCatchArtFlag; }
 	void QuickLoadToMechUnit( CAITransportUnit *pTransport );
 };
 

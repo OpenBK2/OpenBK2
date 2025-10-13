@@ -3,6 +3,8 @@
 #include "MapInfoEditor.h"
 #include "ResourceDefines.h"
 
+#include <cstdint>
+
 //
 //
 //	CMapInfoViewFilterDlg
@@ -45,7 +47,7 @@ public:
 	void OnCancel();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

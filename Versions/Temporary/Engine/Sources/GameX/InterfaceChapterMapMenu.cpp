@@ -21,6 +21,7 @@
 #include "3Dmotor/ScreenShot.h"
 
 #include <algorithm>
+#include <cstdint>
 
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;
@@ -700,7 +701,7 @@ void CInterfaceChapterMapMenu::SelectTarget( int nIndex )
 		{
 			const SChapterMapMenuHelper::SArrow &arrow = helperMission.arrows[i];
 
-			DWORD dwColor = arrow.GetColor();
+			uint32_t dwColor = arrow.GetColor();
 			if ( arrow.nDependIndex >= 0 )
 			{
 				if ( targets[arrow.nDependIndex].eState != EMS_COMPLETED )

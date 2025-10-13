@@ -2,6 +2,7 @@
 #include "FileReaders.h"
 #include "Misc/Win32Helper.h"
 
+#include <cstdint>
 
 int CMMFile::GetFileSize()
 {
@@ -17,7 +18,7 @@ void CMMFile::SetFileSize( int nSize )
 
 void CMMFile::MapFile( int nSize, bool bCanWrite )
 {
-	DWORD dwFFlags = 0;
+	uint32_t dwFFlags = 0;
 	if ( bCanWrite )
 		dwFFlags = PAGE_READWRITE;
 	else
@@ -95,7 +96,7 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 		char *pszBuf = new char[ nSize ];
 		HANDLE hFile = pFile->GetFile();
 		SetFilePointer( hFile, nOffset, 0, FILE_BEGIN );
-		DWORD dwRes;
+		unsigned long dwRes;
 		BOOL bRead = ReadFile( hFile, pszBuf, nSize, &dwRes, 0 );
 		ASSERT( bRead && dwRes == nSize );
 		return pszBuf;

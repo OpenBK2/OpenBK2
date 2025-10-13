@@ -4,6 +4,7 @@
 
 #include "Input_export.h"
 
+#include <cstdint>
 
 namespace NInput
 {
@@ -20,8 +21,8 @@ struct SGameMessage
 	// general-purpose params
 	struct  
 	{
-		int nParam1;//union { int nParam1; DWORD dwParam1; float fParam1; };
-		int nParam2; //union { int nParam2; DWORD dwParam2; float fParam2; };
+		int nParam1;//union { int nParam1; uint32_t dwParam1; float fParam1; };
+		int nParam2; //union { int nParam2; uint32_t dwParam2; float fParam2; };
 	};
 	SGameMessage() : nParam1(0), nParam2(0) {}
 };

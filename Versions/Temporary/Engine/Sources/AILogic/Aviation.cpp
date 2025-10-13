@@ -19,6 +19,7 @@
 #include "UnitsIterators2.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS( 0x1108D443, CAviation );
 REGISTER_SAVELOAD_CLASS( 0x1508D490, CPlanesFormation );
@@ -72,7 +73,7 @@ const SRect & CAviation::GetUnitRect() const
 	return unitRect;
 }
 
-void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	pStats = checked_cast<const SMechUnitRPGStats*>( _pStats );
 	// calculate appear height
@@ -132,7 +133,7 @@ IStatesFactory* CAviation::GetStatesFactory() const
 	return CPlaneStatesFactory::Instance(); 
 }
 
-const WORD CAviation::GetDir() const
+const uint16_t CAviation::GetDir() const
 {
 	if ( pFormation )
 	{

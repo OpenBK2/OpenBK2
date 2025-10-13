@@ -4,6 +4,8 @@
 #include "Bind.h"
 #include "EditorDb.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 namespace NMetaInfo
@@ -87,37 +89,37 @@ CDBID GetDBIDFromValue( const CVariant &value )
 // **
 // ************************************************************************************************************************ //
 
-bool SStructMetaInfo::SField::SetValueToStructInt( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	*((int*)pData) = (int)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructFloat( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	*((float*)pData) = (float)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructBool( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	*((bool*)pData) = (bool)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	*((std::string*)pData) = value.GetStr();
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructWString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	*((std::wstring*)pData) = value.GetWStringRecode();
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	if ( value.GetBlobSize() != sizeof(GUID) )
 		return false;
@@ -125,7 +127,7 @@ bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, BYTE 
 	memcpy( pData, value.GetPtr(), sizeof(GUID) );
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	if ( int(main.size) == 4 && value.GetType() == CVariant::VT_INT )
@@ -144,12 +146,12 @@ bool SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, BYT
 		return false;
 	}
 }
-bool SStructMetaInfo::SField::SetValueToStructEnum( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	return VariantToEnum( (int*)pData, value, pTypeDef );
 }
-bool SStructMetaInfo::SField::SetValueToStructDBID( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToStructDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
 	const CDBID dbid = GetDBIDFromValue( value );
@@ -167,7 +169,7 @@ bool SStructMetaInfo::SField::SetValueToStructDBID( const CVariant &value, BYTE 
 	return true;
 }
 
-bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	const int nSize = data.pArray->GetSize( *this, pThis );
@@ -190,48 +192,48 @@ bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pT
 // **
 // ************************************************************************************************************************ //
 
-bool SStructMetaInfo::SField::GetValueFromStructInt( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = *((int*)pData);
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructFloat( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = *((float*)pData);
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructBool( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = *((bool*)pData);
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = *((std::string*)pData);
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructWString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = *((std::wstring*)pData);
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructGUIDorBinary( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructGUIDorBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	*pValue = CVariant( pData, int(main.size) );
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromStructEnum( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	return EnumToVariant( pValue, *((int*)pData), pTypeDef );
 }
-bool SStructMetaInfo::SField::GetValueFromStructDBID( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromStructDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
 	if ( const CResource *pObj = ((CDBPtr<CResource>*)pData)->GetPtrNoLoad() )
@@ -240,7 +242,7 @@ bool SStructMetaInfo::SField::GetValueFromStructDBID( CVariant *pValue, BYTE *pT
 		*pValue = CDBID();
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = data.pArray->GetSize( *this, pThis );
@@ -255,37 +257,37 @@ bool SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, BYTE *pThis, 
 // **
 // ************************************************************************************************************************ //
 
-bool SStructMetaInfo::SField::SetValueToOwnInt( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	data.nValue = (int)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnFloat( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	data.fValue = (float)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnBool( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	data.bValue = (bool)value;
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*data.pString = value.GetStr();
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnWString( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*data.pWString = value.GetWStringRecode();
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	if ( value.GetBlobSize() != sizeof(GUID) )
 		return false;
@@ -293,7 +295,7 @@ bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, BYTE *pT
 	memcpy( data.pGUID, value.GetPtr(), sizeof(GUID) );
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	const int nBinarySize = checked_cast_ptr<NTypeDef::STypeBinary*>(pTypeDef)->nBinaryObjectSize;
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
@@ -315,12 +317,12 @@ bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, BYTE *
 	}
 	return true;
 }
-bool SStructMetaInfo::SField::SetValueToOwnEnum( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	return VariantToEnum( &data.nValue, value, pTypeDef );
 }
-bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
+bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	const CDBID dbid = GetDBIDFromValue( value );
@@ -350,54 +352,54 @@ bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, BYTE *pT
 // **
 // ************************************************************************************************************************ //
 
-bool SStructMetaInfo::SField::GetValueFromOwnInt( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = data.nValue;
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnFloat( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = data.fValue;
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnBool( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = data.bValue;
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = *data.pString;
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnWString( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = *data.pWString;
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnGUID( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnGUID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = CVariant( data.pGUID, sizeof(GUID) );
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnBinary( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	*pValue = CVariant( data.pBLOB, int(main.size) );
 	return true;
 }
-bool SStructMetaInfo::SField::GetValueFromOwnEnum( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	return EnumToVariant( pValue, data.nValue, pTypeDef );
 }
-bool SStructMetaInfo::SField::GetValueFromOwnDBID( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
+bool SStructMetaInfo::SField::GetValueFromOwnDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
 	if ( data.pObjMan )

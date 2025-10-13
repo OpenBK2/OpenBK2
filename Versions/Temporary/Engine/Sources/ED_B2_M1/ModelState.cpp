@@ -35,6 +35,8 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "Stats_B2_M1/DBVisObj.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 CModelState::CModelState( CModelEditor *_pModelEditor ) : nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
@@ -100,7 +102,7 @@ void CModelState::Enter()
 		UpdateLight();
 		// Обновляем сцену
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CModelInterfaceCommand( new CModelInterface() ) ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CModelInterfaceCommand( new CModelInterface() ) ) );
 	}
 	//
 	CDefaultInputState::Enter();
@@ -1158,7 +1160,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 }
 
 
-bool CModelState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CModelState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( pModelEditor == 0 )
 	{

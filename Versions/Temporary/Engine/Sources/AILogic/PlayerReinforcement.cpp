@@ -13,6 +13,8 @@
 #include "AILogicInternal.h"
 #include "System/RandomGen.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 CPlayerReinforcementArray theReinfArray;
@@ -348,7 +350,7 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int
 		const CVec2 vCallPoint = bAviaReinf ?
 															posPositions->second.first.vAviationPosition :
 															posPositions->second.first.vPosition;
-		WORD wDirection =bAviaReinf ? 
+		uint16_t wDirection =bAviaReinf ?
 															GetDirectionByVector( vTarget - vCallPoint ) :
 															posPositions->second.first.nDirection;
 
@@ -433,7 +435,7 @@ void CPlayerReinforcement::CallSuperWeapon()
 	}
 	const bool bOnWater = GetTerrain()->GetTerrainType( GetAIMap()->GetTile( pos->second.first.vPosition ) ) == ETT_WATER_TERRAIN;
 	const CVec2 vDeployPoint = pos->second.first.vAviationPosition;
-	const WORD wDirection = GetDirectionByVector( vTarget - vDeployPoint );
+	const uint16_t wDirection = GetDirectionByVector( vTarget - vDeployPoint );
 	CDBPtr<NDb::SDeployTemplate> pTemplate = GetDeployTemplate( pos->second.first, NDb::RT_SUPER_WEAPON );
 	std::list< std::pair<int, CObjectBase*> > objects;
 	NReinforcement::PlaceSingleLandReinforcement( nPlayer, pReinforcement, pReinforcement->eType, pTemplate, vDeployPoint, wDirection, -1, &objects, nSuperWeaponShotsLeft != nSuperWeaponShots );

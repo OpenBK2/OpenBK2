@@ -1,20 +1,22 @@
-
 #pragma once
+
 #include "Commander.h"
 #include "General.h"
 #include "EnemyRememberer.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
+#include <cstdint>
+
 class CResupplyCellInfo : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS(CResupplyCellInfo);
 
-	typedef det_map< int/*Unique ID*/, BYTE > CResupplyInfo;
+	typedef det_map< int/*Unique ID*/, uint8_t > CResupplyInfo;
 	ZDATA
 	CResupplyInfo resupplyInfo;
 	std::vector<float> resupplyCount;
 	float fCount;													// whole weight
-	BYTE cMarkedUnderSupply;							// indicates that this cell is under supply
+	uint8_t cMarkedUnderSupply;							// indicates that this cell is under supply
 	SVector vCell;												// coordinates of the cell ( in GetGeneralCell )
 	NTimer::STime timeLastDanger;					// time when last truck was killed near this cell
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&resupplyInfo); f.Add(3,&resupplyCount); f.Add(4,&fCount); f.Add(5,&cMarkedUnderSupply); f.Add(6,&vCell); f.Add(7,&timeLastDanger); return 0; }
@@ -26,8 +28,8 @@ public:
 	void AddUnitResupply( class CCommonUnit * pUnit, const enum EResupplyType eType );
 	void RemoveUnitResupply( class CCommonUnit * pUnit, const enum EResupplyType eType );
 	
-	BYTE RemoveUnit( class CCommonUnit * pUnit );
-	void AddUnit( class CCommonUnit * pUnit, const BYTE cRes );
+	uint8_t RemoveUnit( class CCommonUnit * pUnit );
+	void AddUnit( class CCommonUnit * pUnit, const uint8_t cRes );
 	const bool IsUnitRegistered( CCommonUnit * pUnit ) const;
 
 	// for marking that this cell is under supply.
@@ -37,7 +39,7 @@ public:
 	void SetDanger( const NTimer::STime timeDanger ) ;
 	const bool IsDangerous() const ;
 
-	float GetNNeeded( const BYTE cTypeMask ) const;
+	float GetNNeeded( const uint8_t cTypeMask ) const;
 	bool IsEmpty() const;
 	float GetNNeeded( const enum EResupplyType eType ) const 
 	{ 
@@ -50,8 +52,8 @@ public:
 
 	struct SSortByResupplyMaskPredicate
 	{
-		BYTE cMask;
-		SSortByResupplyMaskPredicate( const BYTE cMask ) : cMask( cMask ) {  }
+		uint8_t cMask;
+		SSortByResupplyMaskPredicate( const uint8_t cMask ) : cMask( cMask ) {  }
 		bool operator()( const CPtr<CResupplyCellInfo> &s1, const CPtr<CResupplyCellInfo> &s2 ) const
 		{
 			float s1n = s1->GetNNeeded( cMask );
@@ -269,7 +271,7 @@ private:
 	
 	typedef det_map< SVector, CPtr<CResupplyCellInfo>, SVectorHash > ResupplyCells;
 	typedef det_map< /*Unique ID*/ int, CPtr<CEnemyRememberer> > CFreeArtillery;
-	typedef std::pair<CVec2, WORD> CPosition;
+	typedef std::pair<CVec2, uint16_t> CPosition;
 
 	ZDATA_(CCommander)
 	CPtr<CCommander> pGeneral;
@@ -300,7 +302,7 @@ public:
 
 	void Init();
 	void AddReiforcePositions( const struct NDb::SAIGeneralParcel &_patchInfo );
-	void AddReiforcePosition( const CVec2 & vPos, const WORD wDirection );
+	void AddReiforcePosition( const CVec2 & vPos, const uint16_t wDirection );
 	
 	virtual void Give( CCommonUnit *pWorker );
 	virtual float GetMeanSeverity() const { return 0; }

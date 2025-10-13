@@ -1,9 +1,9 @@
-
 #pragma once
 
 #include "Server_Client_Common/NetPacket.h"
 #include "MPInterfaceData.h"
 
+#include <cstdint>
 
 class CB2SlotInfoPacket : public CNetPacket
 {
@@ -36,13 +36,13 @@ public:
 	struct SShortSlotInfo
 	{
 		ZDATA
-		BYTE nCountry;
-		BYTE nTeam;
+		uint8_t nCountry;
+		uint8_t nTeam;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCountry); f.Add(3,&nTeam); return 0; }
 	};
 	ZDATA
 	std::vector<SShortSlotInfo> slots;
-	std::vector<BYTE> slotRehash;
+	std::vector<uint8_t> slotRehash;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&slots); f.Add(3,&slotRehash); return 0; }
 
 	CB2GameRoomStartGamePacket() {}
@@ -54,7 +54,7 @@ class CB2SuggestKickPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2SuggestKickPacket );
 public:
 	ZDATA
-	BYTE nSlotToKick;
+	uint8_t nSlotToKick;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlotToKick); return 0; }
 
 	CB2SuggestKickPacket() {}
@@ -95,13 +95,13 @@ class CB2DropPlayerAtSegmentPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2DropPlayerAtSegmentPacket );
 public:
 	ZDATA
-		BYTE nSlotToDrop;
+		uint8_t nSlotToDrop;
 		int nSegment;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlotToDrop); f.Add(3,&nSegment); return 0; }
 
 	CB2DropPlayerAtSegmentPacket() : nSlotToDrop( 0 ), nSegment( 0 ) {}
 	CB2DropPlayerAtSegmentPacket( int nClientID, int _nSlotToDrop, int _nSegment )
-		: CNetPacket( nClientID ), nSlotToDrop( BYTE( _nSlotToDrop ) ), nSegment( _nSegment ) {}
+		: CNetPacket( nClientID ), nSlotToDrop( uint8_t( _nSlotToDrop ) ), nSegment( _nSegment ) {}
 };
 
 

@@ -2,7 +2,7 @@
 
 #include "resource.h"
 
-
+#include <cstdint>
 
 class CProgressDialog : public CDialog
 {
@@ -13,10 +13,10 @@ public:
 	CStatic	m_ProgressLabel;
 	CProgressCtrl	m_ProgressBar;
 protected:
-	static const DWORD START_TIMER_ID;
-	static const DWORD START_TIMER_INTERVAL;
+	static const uint32_t START_TIMER_ID;
+	static const uint32_t START_TIMER_INTERVAL;
 
-  DWORD dwStartTimer;
+  uint32_t dwStartTimer;
 
   void SetStartTimer();
   void KillStartTimer();

@@ -6,6 +6,8 @@
 #include "random.h"
 #include "original.h"
 
+#include <cstdint>
+
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];
 
@@ -14,14 +16,14 @@ enum { iterations = 10000 };
 TEST(ScaleColors, ScaleColorsRandom) {
     for (size_t i = 0; i < iterations; ++i) {
 
-        std::vector<DWORD> res, ref;
+        std::vector<uint32_t> res, ref;
         res.resize(1);
         ref.resize(1);
-        DWORD src = random_uint32();
+        uint32_t src = random_uint32();
         int nSrcStride = random_int();
 	    unsigned char scale = random_uint8();
         int nScaleMask = 1;
-        std::vector<WORD> posIndices;
+        std::vector<uint16_t> posIndices;
         posIndices.emplace_back(0);
         std::vector<NGfx::SCompactVector> transp;
         NGfx::SCompactVector transparent;

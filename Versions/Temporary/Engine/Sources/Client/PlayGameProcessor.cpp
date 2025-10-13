@@ -9,7 +9,9 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
 
-static const DWORD dwWaitingPacketTimeout = 300000;
+#include <cstdint>
+
+static const uint32_t dwWaitingPacketTimeout = 300000;
 const int CONNECTION_TIMEOUT = 20;
 
 CPlayGameProcessor::CPlayGameProcessor( CNet *_pNet, const char* pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
@@ -214,7 +216,7 @@ bool CPlayGameProcessor::Segment()
 
 	ProcessEfforts();
 
-	DWORD dwCurTime = GetTickCount();
+	uint32_t dwCurTime = GetTickCount();
 	std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
 	while ( iter != waitingPackets.end() )
 	{

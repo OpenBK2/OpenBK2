@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 /*struct SInterfaceMissionWarFogInfo
 {
@@ -27,7 +28,7 @@
 	float cloudDensities[256];
 
 	void Reset( const int nSizeX, const int nSizeY, const float fScale );
-	void SetWarFog( const CArray2D<BYTE> &warFog, float fScale, NTimer::STime nGameTime );
+	void SetWarFog( const CArray2D<uint8_t> &warFog, float fScale, NTimer::STime nGameTime );
 	void Update( NTimer::STime nGameTime );
 	//
 	SInterfaceMissionWarFogInfo();

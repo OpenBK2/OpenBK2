@@ -12,6 +12,8 @@
 #include "libdb/ResourceManager.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CCoastState::GetWaterPos( const NDb::SMapInfo *pMapInfo, const vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos )
@@ -87,7 +89,7 @@ bool CCoastState::CanInsertVSO()
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			return ( objectSet.szObjectTypeName == "CoastDesc" );
 		}
@@ -174,7 +176,7 @@ int CCoastState::InsertVSO( const vector<CVec3> &rControlPointList )
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			if ( objectSet.szObjectTypeName == "CoastDesc" )
 			{

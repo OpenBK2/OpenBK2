@@ -4,6 +4,8 @@
 #include "libdb/Manipulator.h"
 #include "Misc/HashFuncs.h"
 
+#include <cstdint>
+
 #define VIEW_COLLECTION_ID ("_VIEW_COLLECTION_ID_")
 
 // Те, кто создает Undo Operation могут самостоятельно выполнить их снова
@@ -35,7 +37,7 @@ struct IView
 };
 
 // CRAP{ HASH_SET
-typedef std::unordered_map<IView*, DWORD> CViewSet;
+typedef std::unordered_map<IView*, uint32_t> CViewSet;
 // CRAP} HASH_SET
 
 

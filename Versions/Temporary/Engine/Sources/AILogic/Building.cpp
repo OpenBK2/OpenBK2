@@ -26,6 +26,8 @@
 #include "GlobalWarFog.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D450, CBuildingSimple );
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -135,7 +137,7 @@ void CBuildingSimple::SetPartyFlag( CExistingObject * _pKeyBuildingFlag )
 		RaisePlayerFlag( GetPlayer() );
 }
 
-CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int _nLinkID )
+CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int _nLinkID )
 : CBuilding( pStats, center, wDir, fHP, nFrameIndex, _nLinkID ), nPlayer( nPlayerIndex ), nSideToCapture(-1), timeToChangeOwner(0), 
 timeToChangeOwnerTotal(0)
 {
@@ -201,7 +203,7 @@ bool CBuildingSimple::ShouldSuspendAction( const EActionNotify &eAction ) const
 		return CBuilding::ShouldSuspendAction( eAction );
 }
 
-const BYTE CBuildingSimple::GetPlayer() const
+const uint8_t CBuildingSimple::GetPlayer() const
 {
 	if ( theBonusSystem.IsKeyBuilding( nLinkID ) )
 		return nPlayer;
@@ -241,13 +243,13 @@ void CBuildingSimple::Segment()
 				else
 				{
 					int nNeutralPlayer = GetPlayer();
-					BYTE nContenders = 0;
+					uint8_t nContenders = 0;
 					for ( CUnitsIter<0,3> iter( theDipl.GetNParty(nPlayer), ANY_PARTY, CVec2(GetCenter().x,GetCenter().y), SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
 						!iter.IsFinished(); iter.Iterate() )
 					{
 						CPtr<CAIUnit> curUnit = *iter;
 						const int nUnitPlayer = curUnit->GetPlayer();
-						const BYTE nUnitSide = theDipl.GetNParty( nUnitPlayer );
+						const uint8_t nUnitSide = theDipl.GetNParty( nUnitPlayer );
 						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() && nUnitPlayer != nPlayer && nUnitSide != theDipl.GetNeutralParty() )
 						{
 							if (nNewPlayer == nNeutralPlayer)
@@ -444,7 +446,7 @@ bool CBuilding::SIllSort::operator()( const CPtr<CSoldier> &a, const CPtr<CSoldi
 
 BASIC_REGISTER_CLASS( CBuilding );
 
-CBuilding::CBuilding( const SBuildingRPGStats *_pStats, const CVec3 &center, const WORD _wDir, const float fHP, const int nFrameIndex, int _nLinkID )
+CBuilding::CBuilding( const SBuildingRPGStats *_pStats, const CVec3 &center, const uint16_t _wDir, const float fHP, const int nFrameIndex, int _nLinkID )
 : pStats( _pStats ), CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex ), pLockingUnit( 0 ),
 	nOveralPlaces( _pStats->nRestSlots + _pStats->nMedicalSlots + _pStats->aiSlots.size() ),
 	medical( _pStats->nMedicalSlots ), fire( _pStats->aiSlots.size() ), rest( _pStats->nRestSlots ),
@@ -495,23 +497,23 @@ void CBuilding::InitObservationPlaces()
 	for ( int i = 0; i < 4; ++i )
 	{
 		int nLeftSlot = -1;
-		WORD wLeftDiff = 65535;
+		uint16_t wLeftDiff = 65535;
 		int nMiddleSlot = -1;
-		WORD wMiddleDiff = 65535;
+		uint16_t wMiddleDiff = 65535;
 		int nRightSlot = -1;
-		WORD wRightDiff = 65535;
+		uint16_t wRightDiff = 65535;
 
 		const CVec2 vRightPoint = boundRect.v[i] - vCenter; 
 		const CVec2 vLeftPoint = boundRect.v[(i+1) % 4] - vCenter;
 		const CVec2 vMiddlePoint = vRightPoint + vLeftPoint;
-		WORD wRightDir = GetDirectionByVector( vRightPoint );
-		WORD wLeftDir = GetDirectionByVector( vLeftPoint );
-		WORD wMiddleDir = GetDirectionByVector( vMiddlePoint );
+		uint16_t wRightDir = GetDirectionByVector( vRightPoint );
+		uint16_t wLeftDir = GetDirectionByVector( vLeftPoint );
+		uint16_t wMiddleDir = GetDirectionByVector( vMiddlePoint );
 
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
 			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
-			const WORD wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
+			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( takenSlots[j] == 0 && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
 			{
@@ -526,7 +528,7 @@ void CBuilding::InitObservationPlaces()
 				++sides[i].nFireSlots;
 				takenSlots[j] = 1;
 
-				const WORD wLocalLeftDiff = DirsDifference( wSlotDir, wLeftDir );
+				const uint16_t wLocalLeftDiff = DirsDifference( wSlotDir, wLeftDir );
 				if ( wLocalLeftDiff < wLeftDiff )
 				{
 					nLeftSlot = j;
@@ -538,11 +540,11 @@ void CBuilding::InitObservationPlaces()
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
 			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
-			const WORD wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
+			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( nLeftSlot != j && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
 			{
-				const WORD wLocalRightDiff = DirsDifference( wSlotDir, wRightDir );
+				const uint16_t wLocalRightDiff = DirsDifference( wSlotDir, wRightDir );
 				if ( wLocalRightDiff < wRightDiff )
 				{
 					nRightSlot = j;
@@ -554,11 +556,11 @@ void CBuilding::InitObservationPlaces()
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
 			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
-			const WORD wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
+			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( nLeftSlot != j && nRightSlot != j && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
 			{
-				const WORD wLocalMiddleDiff = DirsDifference( wSlotDir, wMiddleDir );
+				const uint16_t wLocalMiddleDiff = DirsDifference( wSlotDir, wMiddleDir );
 				if ( wLocalMiddleDiff < wMiddleDiff )
 				{
 					nMiddleSlot = j;
@@ -621,7 +623,7 @@ void CBuilding::SetFiringUnitProperties( CSoldier *pUnit, const int nSlot, const
 	pUnit->WarFogChanged();
 }
 
-const BYTE CBuilding::GetFreeFireSlot()
+const uint8_t CBuilding::GetFreeFireSlot()
 {
 	for ( int j = 0; j < firePlace2Soldier.size(); ++j )
 	{
@@ -688,7 +690,7 @@ const CVec2 CBuilding::GetEntrancePoint( const int nEntrance ) const
 	return CVec2(GetCenter().x,GetCenter().y) + MoveVectorByDirection( vLocalPos, wDir );
 }
 
-void CBuilding::GetEntranceData( CVec2 *pvPoint, WORD *pwDir, int nIndex ) const
+void CBuilding::GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const
 {
 	*pvPoint = GetEntrancePoint( nIndex );
 	*pwDir = pStats->entrances[nIndex].nDir + wDir;
@@ -1639,7 +1641,7 @@ class CSoldier* CBuilding::GetUnit( const int n ) const
 	return medical[n - fire.Size() - rest.Size()];
 }
 
-const BYTE CBuilding::GetPlayer() const
+const uint8_t CBuilding::GetPlayer() const
 {
 	if ( !fire.IsEmpty() )
 		return fire[0]->GetPlayer();
@@ -1709,7 +1711,7 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 
 	if ( g_bNewLock == 0 )
 	{
-		CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 		GetPassability( &pass );
 
 		const int nSizeX = pass.GetMaxX() - pass.GetMinX();

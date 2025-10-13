@@ -4,6 +4,8 @@
 #include "Stats_B2_M1/IconsSet.h"
 #include "B2_M1_Terrain/PatchHolder.h"
 
+#include <cstdint>
+
 struct ICamera;
 class CCSBound;
 
@@ -49,10 +51,10 @@ struct SVisObjIcons
 	{
 		NDb::SIconsSet::SIconType::EIconTypeEnum eType;
 		float fValue;
-		BYTE cAlpha;
+		uint8_t cAlpha;
 		//
 		SPresentIcon() {}
-		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const BYTE _cAlpha ) :
+		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const uint8_t _cAlpha ) :
 			eType( _eType ), fValue( _fValue ), cAlpha( _cAlpha ) {}
 		//
 		int operator &( IBinSaver &saver )

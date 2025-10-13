@@ -7,6 +7,8 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
 
+#include <cstdint>
+
 const char CPCStringDirRefEditor::FOLDER_PATH_LABEL[] = "_FOLDER_";
 
 
@@ -116,8 +118,8 @@ void CPCStringDirRefEditor::OnBrowse()
 				::ZeroMemory( olePath, sizeof( olePath ) );
 
 				LPITEMIDLIST pidl = NULL;
-				DWORD dwEaten   = 0;
-				DWORD dwAttribs = 0;
+				uint32_t dwEaten   = 0;
+				uint32_t dwAttribs = 0;
 
 				::MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szInitialDir.c_str(), -1, olePath, _MAX_PATH );
 

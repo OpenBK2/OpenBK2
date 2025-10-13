@@ -3,6 +3,8 @@
 #include "CustomLobbyClientInfo.h"
 #include "NetPacket.h"
 
+#include <cstdint>
+
 /** incremental update of clients in the lobby */
 class CCustomLobbyClientsPacket : public CNetPacket
 {
@@ -10,7 +12,7 @@ class CCustomLobbyClientsPacket : public CNetPacket
 public:
 	ZDATA
 		/** version of clients list */
-		DWORD dwVersion;
+		uint32_t dwVersion;
 		/** is it full update or not? */
 		bool bFullUpdate;
 		/** removed clinets */

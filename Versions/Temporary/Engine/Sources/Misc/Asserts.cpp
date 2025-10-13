@@ -8,6 +8,7 @@
 #include "port/stdcall.h"
 
 #include <cinttypes>
+#include <cstdint>
 
 static void TypeDebugTrace( const char *buff, const char *pszWhat, const std::vector<SCallStackEntry> &entries )
 {

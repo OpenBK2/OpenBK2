@@ -10,6 +10,7 @@
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Entrenchment.h"
 
+#include <cstdint>
 
 const static float fNearToNormale = 0.05f; 
 extern CStaticObjects theStatObjs;
@@ -486,7 +487,7 @@ void CEntrenchmentCreation::LockNext()
 		pBeginTerminator->LockTiles();
 }
 
-CEntrenchmentPart * CEntrenchmentCreation::AddElement( const SEntrenchmentRPGStats *pRPG, const CVec3 &pt, WORD angle, int nFrameIndex, int nPlayer )
+CEntrenchmentPart * CEntrenchmentCreation::AddElement( const SEntrenchmentRPGStats *pRPG, const CVec3 &pt, uint16_t angle, int nFrameIndex, int nPlayer )
 {
 	//create entrenchments
 	CEntrenchmentPart *ptr = new CEntrenchmentPart( pRPG, pt, angle, nFrameIndex, pRPG->fMaxHP, nPlayer, true );
@@ -510,7 +511,7 @@ bool CEntrenchmentCreation::CanDigBecauseOfOtherTrenches( const SRect &rect, con
 	return !SearchTrenches( pt, rect );
 }
 
-bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVec2 &pt, WORD angle, int nFrameIndex )
+bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVec2 &pt, uint16_t angle, int nFrameIndex )
 {
 	SRect rect = CEntrenchmentPart::CalcBoundRect( pt, angle, pRPG->segments[nFrameIndex] );
 	if ( !CanDigBecauseOfOtherTrenches( rect, pt ) )

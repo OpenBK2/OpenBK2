@@ -6,16 +6,18 @@
 #include "System/XmlSaver.h"
 #include "dbscenario.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SRankExperience::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SRankExperience::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Experience", (BYTE*)&fExperience - pThis, sizeof(fExperience), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Rank", (BYTE*)&pRank - pThis, sizeof(pRank), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "AddPromotion", (BYTE*)&nAddPromotion - pThis, sizeof(nAddPromotion), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Experience", (uint8_t*)&fExperience - pThis, sizeof(fExperience), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Rank", (uint8_t*)&pRank - pThis, sizeof(pRank), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "AddPromotion", (uint8_t*)&nAddPromotion - pThis, sizeof(nAddPromotion), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SRankExperience::operator&( IXmlSaver &saver )
@@ -36,7 +38,7 @@ int SRankExperience::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SRankExperience::CalcCheckSum() const
+uint32_t SRankExperience::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -53,11 +55,11 @@ DWORD SRankExperience::CalcCheckSum() const
 
 
 
-void SLeaderExpLevel::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SLeaderExpLevel::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "RankNameFileRef", (BYTE*)&szRankNameFileRef - pThis, sizeof(szRankNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "ExpNeeded", (BYTE*)&nExpNeeded - pThis, sizeof(nExpNeeded), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "StatsBonus", (BYTE*)&pStatsBonus - pThis, sizeof(pStatsBonus), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "RankNameFileRef", (uint8_t*)&szRankNameFileRef - pThis, sizeof(szRankNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ExpNeeded", (uint8_t*)&nExpNeeded - pThis, sizeof(nExpNeeded), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "StatsBonus", (uint8_t*)&pStatsBonus - pThis, sizeof(pStatsBonus), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SLeaderExpLevel::operator&( IXmlSaver &saver )
@@ -78,7 +80,7 @@ int SLeaderExpLevel::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SLeaderExpLevel::CalcCheckSum() const
+uint32_t SLeaderExpLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -95,11 +97,11 @@ DWORD SLeaderExpLevel::CalcCheckSum() const
 
 
 
-void SMedalConditions::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMedalConditions::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Medal", (BYTE*)&pMedal - pThis, sizeof(pMedal), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Parameter", (BYTE*)&fParameter - pThis, sizeof(fParameter), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "StartingChapter", (BYTE*)&nStartingChapter - pThis, sizeof(nStartingChapter), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Medal", (uint8_t*)&pMedal - pThis, sizeof(pMedal), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Parameter", (uint8_t*)&fParameter - pThis, sizeof(fParameter), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "StartingChapter", (uint8_t*)&nStartingChapter - pThis, sizeof(nStartingChapter), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SMedalConditions::operator&( IXmlSaver &saver )
@@ -120,7 +122,7 @@ int SMedalConditions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMedalConditions::CalcCheckSum() const
+uint32_t SMedalConditions::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -137,10 +139,10 @@ DWORD SMedalConditions::CalcCheckSum() const
 
 
 
-void SCampaign::SLeader::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SCampaign::SLeader::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (BYTE*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Picture", (uint8_t*)&pPicture - pThis, sizeof(pPicture), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SCampaign::SLeader::operator&( IXmlSaver &saver )
@@ -159,7 +161,7 @@ int SCampaign::SLeader::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCampaign::SLeader::CalcCheckSum() const
+uint32_t SCampaign::SLeader::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -177,34 +179,34 @@ void SCampaign::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Campaign", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Chapters", &chapters, pThis );
-	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (BYTE*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "ScriptFileRef", (BYTE*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (uint8_t*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (uint8_t*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "ScriptFileRef", (uint8_t*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( "Screens", &screens, pThis );
-	NMetaInfo::ReportMetaInfo( "TextureNotStarted", (BYTE*)&pTextureNotStarted - pThis, sizeof(pTextureNotStarted), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureCompleted", (BYTE*)&pTextureCompleted - pThis, sizeof(pTextureCompleted), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureNotStartedSelected", (BYTE*)&pTextureNotStartedSelected - pThis, sizeof(pTextureNotStartedSelected), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureCompletedSelected", (BYTE*)&pTextureCompletedSelected - pThis, sizeof(pTextureCompletedSelected), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureMissionCompleted", (BYTE*)&pTextureMissionCompleted - pThis, sizeof(pTextureMissionCompleted), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureMenuBackground", (BYTE*)&pTextureMenuBackground - pThis, sizeof(pTextureMenuBackground), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureMenuIcon", (BYTE*)&pTextureMenuIcon - pThis, sizeof(pTextureMenuIcon), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "TextureChapterFinishBonus", (BYTE*)&pTextureChapterFinishBonus - pThis, sizeof(pTextureChapterFinishBonus), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureNotStarted", (uint8_t*)&pTextureNotStarted - pThis, sizeof(pTextureNotStarted), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureCompleted", (uint8_t*)&pTextureCompleted - pThis, sizeof(pTextureCompleted), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureNotStartedSelected", (uint8_t*)&pTextureNotStartedSelected - pThis, sizeof(pTextureNotStartedSelected), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureCompletedSelected", (uint8_t*)&pTextureCompletedSelected - pThis, sizeof(pTextureCompletedSelected), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureMissionCompleted", (uint8_t*)&pTextureMissionCompleted - pThis, sizeof(pTextureMissionCompleted), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureMenuBackground", (uint8_t*)&pTextureMenuBackground - pThis, sizeof(pTextureMenuBackground), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureMenuIcon", (uint8_t*)&pTextureMenuIcon - pThis, sizeof(pTextureMenuIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TextureChapterFinishBonus", (uint8_t*)&pTextureChapterFinishBonus - pThis, sizeof(pTextureChapterFinishBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "RankExperiences", &rankExperiences, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "LeaderRanks", &leaderRanks, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Leaders", &leaders, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "DifficultyLevels", &difficultyLevels, pThis );
-	NMetaInfo::ReportMetaInfo( "IntroMovie", (BYTE*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "OutroMovie", (BYTE*)&szOutroMovie - pThis, sizeof(szOutroMovie), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "ReinforcementTypes", (BYTE*)&pReinforcementTypes - pThis, sizeof(pReinforcementTypes), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "IntermissionMusic", (BYTE*)&pIntermissionMusic - pThis, sizeof(pIntermissionMusic), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SaveLoadFlag", (BYTE*)&pSaveLoadFlag - pThis, sizeof(pSaveLoadFlag), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "IntroMovie", (uint8_t*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "OutroMovie", (uint8_t*)&szOutroMovie - pThis, sizeof(szOutroMovie), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "ReinforcementTypes", (uint8_t*)&pReinforcementTypes - pThis, sizeof(pReinforcementTypes), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "IntermissionMusic", (uint8_t*)&pIntermissionMusic - pThis, sizeof(pIntermissionMusic), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SaveLoadFlag", (uint8_t*)&pSaveLoadFlag - pThis, sizeof(pSaveLoadFlag), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "MedalsForChapter", &medalsForChapter, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "MedalsForKills", &medalsForKills, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "MedalsForTactics", &medalsForTactics, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "MedalsForEconomy", &medalsForEconomy, pThis );
-	NMetaInfo::ReportMetaInfo( "MedalForMunchkinism", (BYTE*)&pMedalForMunchkinism - pThis, sizeof(pMedalForMunchkinism), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MedalForMunchkinism", (uint8_t*)&pMedalForMunchkinism - pThis, sizeof(pMedalForMunchkinism), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -275,7 +277,7 @@ int SCampaign::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SCampaign::CalcCheckSum() const
+uint32_t SCampaign::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -292,9 +294,9 @@ DWORD SCampaign::CalcCheckSum() const
 
 
 
-void SUnitClassEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SUnitClassEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (BYTE*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (uint8_t*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SUnitClassEntry::operator&( IXmlSaver &saver )
@@ -311,7 +313,7 @@ int SUnitClassEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SUnitClassEntry::CalcCheckSum() const
+uint32_t SUnitClassEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -328,10 +330,10 @@ DWORD SUnitClassEntry::CalcCheckSum() const
 
 
 
-void SEnemyEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SEnemyEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (BYTE*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (BYTE*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (uint8_t*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (uint8_t*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SEnemyEntry::operator&( IXmlSaver &saver )
@@ -350,7 +352,7 @@ int SEnemyEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SEnemyEntry::CalcCheckSum() const
+uint32_t SEnemyEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -529,23 +531,23 @@ NDb::EMissionDifficulty NDb::StringToEnum_NDb_EMissionDifficulty( const std::str
 }
 
 
-void SMissionEnableInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SMissionEnableInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Map", (BYTE*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Map", (uint8_t*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PlaceOnChapterMap", &vPlaceOnChapterMap, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "MissionsToEnable", (BYTE*)&nMissionsToEnable - pThis, sizeof(nMissionsToEnable), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "MissionEnableType", (BYTE*)&eMissionEnableType - pThis, sizeof(eMissionEnableType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "MissionsToEnable", (uint8_t*)&nMissionsToEnable - pThis, sizeof(nMissionsToEnable), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "MissionEnableType", (uint8_t*)&eMissionEnableType - pThis, sizeof(eMissionEnableType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reward", &reward, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ExpectedEnemy", &expectedEnemy, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "RecommendedCalls", (BYTE*)&nRecommendedCalls - pThis, sizeof(nRecommendedCalls), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PotentialIncomplete", (BYTE*)&fPotentialIncomplete - pThis, sizeof(fPotentialIncomplete), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PotentialComplete", (BYTE*)&fPotentialComplete - pThis, sizeof(fPotentialComplete), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Difficulty", (BYTE*)&eDifficulty - pThis, sizeof(eDifficulty), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Time", (BYTE*)&eTime - pThis, sizeof(eTime), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Weather", (BYTE*)&eWeather - pThis, sizeof(eWeather), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "ShowPotentialComplete", (BYTE*)&bShowPotentialComplete - pThis, sizeof(bShowPotentialComplete), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "RecommendedOrder", (BYTE*)&nRecommendedOrder - pThis, sizeof(nRecommendedOrder), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "RecommendedCalls", (uint8_t*)&nRecommendedCalls - pThis, sizeof(nRecommendedCalls), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PotentialIncomplete", (uint8_t*)&fPotentialIncomplete - pThis, sizeof(fPotentialIncomplete), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PotentialComplete", (uint8_t*)&fPotentialComplete - pThis, sizeof(fPotentialComplete), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Difficulty", (uint8_t*)&eDifficulty - pThis, sizeof(eDifficulty), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Time", (uint8_t*)&eTime - pThis, sizeof(eTime), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Weather", (uint8_t*)&eWeather - pThis, sizeof(eWeather), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "ShowPotentialComplete", (uint8_t*)&bShowPotentialComplete - pThis, sizeof(bShowPotentialComplete), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "RecommendedOrder", (uint8_t*)&nRecommendedOrder - pThis, sizeof(nRecommendedOrder), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "EndOffset", &vEndOffset, pThis ); 
 }
 
@@ -593,7 +595,7 @@ int SMissionEnableInfo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMissionEnableInfo::CalcCheckSum() const
+uint32_t SMissionEnableInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -610,11 +612,11 @@ DWORD SMissionEnableInfo::CalcCheckSum() const
 
 
 
-void SScenarioUnitModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SScenarioUnitModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Quantity", (BYTE*)&nQuantity - pThis, sizeof(nQuantity), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Units", (BYTE*)&pUnits - pThis, sizeof(pUnits), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Quantity", (uint8_t*)&nQuantity - pThis, sizeof(nQuantity), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Units", (uint8_t*)&pUnits - pThis, sizeof(pUnits), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SScenarioUnitModifier::operator&( IXmlSaver &saver )
@@ -635,7 +637,7 @@ int SScenarioUnitModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SScenarioUnitModifier::CalcCheckSum() const
+uint32_t SScenarioUnitModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -652,7 +654,7 @@ DWORD SScenarioUnitModifier::CalcCheckSum() const
 
 
 
-void SBaseReinforcements::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SBaseReinforcements::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
 }
@@ -671,7 +673,7 @@ int SBaseReinforcements::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SBaseReinforcements::CalcCheckSum() const
+uint32_t SBaseReinforcements::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -714,12 +716,12 @@ NDb::EChapterBonusType NDb::StringToEnum_NDb_EChapterBonusType( const std::strin
 }
 
 
-void SChapterGeneralInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SChapterGeneralInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "DescFileRef", (BYTE*)&szDescFileRef - pThis, sizeof(szDescFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Portrait", (BYTE*)&pPortrait - pThis, sizeof(pPortrait), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementType", (BYTE*)&eReinforcementType - pThis, sizeof(eReinforcementType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "StatBonus", (BYTE*)&pStatBonus - pThis, sizeof(pStatBonus), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "DescFileRef", (uint8_t*)&szDescFileRef - pThis, sizeof(szDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Portrait", (uint8_t*)&pPortrait - pThis, sizeof(pPortrait), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementType", (uint8_t*)&eReinforcementType - pThis, sizeof(eReinforcementType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "StatBonus", (uint8_t*)&pStatBonus - pThis, sizeof(pStatBonus), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SChapterGeneralInfo::operator&( IXmlSaver &saver )
@@ -742,7 +744,7 @@ int SChapterGeneralInfo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SChapterGeneralInfo::CalcCheckSum() const
+uint32_t SChapterGeneralInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -763,12 +765,12 @@ void SChapterBonus::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ChapterBonus", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "BonusType", (BYTE*)&eBonusType - pThis, sizeof(eBonusType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "ApplyToEnemy", (BYTE*)&bApplyToEnemy - pThis, sizeof(bApplyToEnemy), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "ReinforcementType", (BYTE*)&eReinforcementType - pThis, sizeof(eReinforcementType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "ReinforcementSet", (BYTE*)&pReinforcementSet - pThis, sizeof(pReinforcementSet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NumberOfCalls", (BYTE*)&nNumberOfCalls - pThis, sizeof(nNumberOfCalls), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "BonusType", (uint8_t*)&eBonusType - pThis, sizeof(eBonusType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "ApplyToEnemy", (uint8_t*)&bApplyToEnemy - pThis, sizeof(bApplyToEnemy), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "ReinforcementType", (uint8_t*)&eReinforcementType - pThis, sizeof(eReinforcementType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "ReinforcementSet", (uint8_t*)&pReinforcementSet - pThis, sizeof(pReinforcementSet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NumberOfCalls", (uint8_t*)&nNumberOfCalls - pThis, sizeof(nNumberOfCalls), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -795,7 +797,7 @@ int SChapterBonus::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SChapterBonus::CalcCheckSum() const
+uint32_t SChapterBonus::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -816,27 +818,27 @@ void SChapter::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Chapter", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "LocalizedNameSaveLoadFileRef", (BYTE*)&szLocalizedNameSaveLoadFileRef - pThis, sizeof(szLocalizedNameSaveLoadFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "LocalizedDateFileRef", (BYTE*)&szLocalizedDateFileRef - pThis, sizeof(szLocalizedDateFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "LocalizedDescriptionFileRef", (BYTE*)&szLocalizedDescriptionFileRef - pThis, sizeof(szLocalizedDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (uint8_t*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedNameSaveLoadFileRef", (uint8_t*)&szLocalizedNameSaveLoadFileRef - pThis, sizeof(szLocalizedNameSaveLoadFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedDateFileRef", (uint8_t*)&szLocalizedDateFileRef - pThis, sizeof(szLocalizedDateFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedDescriptionFileRef", (uint8_t*)&szLocalizedDescriptionFileRef - pThis, sizeof(szLocalizedDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( "MissionPath", &missionPath, pThis );
-	NMetaInfo::ReportMetaInfo( "ScriptFileRef", (BYTE*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "UseMapReinforcements", (BYTE*)&bUseMapReinforcements - pThis, sizeof(bUseMapReinforcements), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "ScriptFileRef", (uint8_t*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "UseMapReinforcements", (uint8_t*)&bUseMapReinforcements - pThis, sizeof(bUseMapReinforcements), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructArrayMetaInfo( "BasePlayerReinforcements", &basePlayerReinforcements, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ReinforcementModifiers", &reinforcementModifiers, pThis );
-	NMetaInfo::ReportMetaInfo( "MapPicture", (BYTE*)&pMapPicture - pThis, sizeof(pMapPicture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SeaNoiseMask", (BYTE*)&szSeaNoiseMask - pThis, sizeof(szSeaNoiseMask), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "DifferentColourMap", (BYTE*)&szDifferentColourMap - pThis, sizeof(szDifferentColourMap), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "PositiveColour", (BYTE*)&nPositiveColour - pThis, sizeof(nPositiveColour), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "NegativeColour", (BYTE*)&nNegativeColour - pThis, sizeof(nNegativeColour), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "MainStrikeAngle", (BYTE*)&fMainStrikeAngle - pThis, sizeof(fMainStrikeAngle), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MainStrikePower", (BYTE*)&fMainStrikePower - pThis, sizeof(fMainStrikePower), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ReinforcementCalls", (BYTE*)&nReinforcementCalls - pThis, sizeof(nReinforcementCalls), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "DetailsMap", (BYTE*)&pDetailsMap - pThis, sizeof(pDetailsMap), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MapPicture", (uint8_t*)&pMapPicture - pThis, sizeof(pMapPicture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SeaNoiseMask", (uint8_t*)&szSeaNoiseMask - pThis, sizeof(szSeaNoiseMask), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "DifferentColourMap", (uint8_t*)&szDifferentColourMap - pThis, sizeof(szDifferentColourMap), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "PositiveColour", (uint8_t*)&nPositiveColour - pThis, sizeof(nPositiveColour), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NegativeColour", (uint8_t*)&nNegativeColour - pThis, sizeof(nNegativeColour), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "MainStrikeAngle", (uint8_t*)&fMainStrikeAngle - pThis, sizeof(fMainStrikeAngle), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MainStrikePower", (uint8_t*)&fMainStrikePower - pThis, sizeof(fMainStrikePower), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ReinforcementCalls", (uint8_t*)&nReinforcementCalls - pThis, sizeof(nReinforcementCalls), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "DetailsMap", (uint8_t*)&pDetailsMap - pThis, sizeof(pDetailsMap), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ArrowTextures", &arrowTextures, pThis );
-	NMetaInfo::ReportMetaInfo( "IntroMovie", (BYTE*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "IntroMovie", (uint8_t*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( "General", &general, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -896,7 +898,7 @@ int SChapter::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SChapter::CalcCheckSum() const
+uint32_t SChapter::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -917,11 +919,11 @@ void SMedal::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Medal", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (BYTE*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "IconTexture", (BYTE*)&pIconTexture - pThis, sizeof(pIconTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PictureTexture", (BYTE*)&pPictureTexture - pThis, sizeof(pPictureTexture), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (uint8_t*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (uint8_t*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "IconTexture", (uint8_t*)&pIconTexture - pThis, sizeof(pIconTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PictureTexture", (uint8_t*)&pPictureTexture - pThis, sizeof(pPictureTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -946,7 +948,7 @@ int SMedal::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMedal::CalcCheckSum() const
+uint32_t SMedal::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

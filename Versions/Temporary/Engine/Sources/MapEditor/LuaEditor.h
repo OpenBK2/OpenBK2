@@ -1,10 +1,10 @@
-
 #pragma once
 // LuaEditor.h : header file
 //
 #include "Scintilla/scintilla.h"
 #include "ReplaceTextDlg.h"
 
+#include <cstdint>
 
 // CLuaEditor window
 
@@ -30,7 +30,7 @@ public:
 	void InitScintilla();
 
 	void SetLuaLexer();
-	void SetKeywordColor( int nKeywordSet, DWORD dwColor );/*D. Belyaev*/
+	void SetKeywordColor( int nKeywordSet, uint32_t dwColor );/*D. Belyaev*/
 
 	BOOL PreparePrint(CDC* pDC, CPrintInfo* pInfo);
 	void PrintPage(CDC* pDC, CPrintInfo* pInfo);

@@ -6,6 +6,8 @@
 #include "Turret.h"
 #include "AIUnit.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 
 CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner ) 
@@ -24,7 +26,7 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 			lastCheck = curTime;
 		
 		const float fSightRadius = pUnit->GetSightRadius();
-		DWORD dwForbidden = 0;
+		uint32_t dwForbidden = 0;
 
 		int nTriedGuns = 0;
 		for ( int i = 0; i < pUnit->GetNGuns(); ++i )

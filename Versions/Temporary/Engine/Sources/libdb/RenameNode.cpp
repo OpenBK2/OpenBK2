@@ -10,6 +10,8 @@ class CString;	// без такой ботвы #include "../../MapEditorLib/Inte
 #include "Misc/StrProc.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 namespace NFolderManipulator
 {
 
@@ -18,7 +20,7 @@ bool CheckedFileOperation( const std::string &szOperationDescription, bool bFile
 	if ( !bFileOperationResult )
 	{
 		LPVOID lpMsgBuf;
-		DWORD dw = GetLastError();
+		uint32_t dw = GetLastError();
 
 		FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |

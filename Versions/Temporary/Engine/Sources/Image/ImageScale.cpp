@@ -2,6 +2,8 @@
 #include "ImageScale.h"
 #include "System/FastMath.h"
 
+#include <cstdint>
+
 #define WHITE_PIXEL 255
 #define BLACK_PIXEL 0
 
@@ -11,7 +13,7 @@ namespace NImage
 #pragma pack( 1 )
 struct SARGB
 {
-	BYTE a, r, g, b;
+	uint8_t a, r, g, b;
 };
 #pragma pack()
 struct CONTRIB
@@ -31,24 +33,24 @@ struct CLIST
 		: n( 0 ), p( 0 ) {  }
 };
 
-inline SARGB get_pixel( const CArray2D<DWORD> &img, int x, int y )
+inline SARGB get_pixel( const CArray2D<uint32_t> &img, int x, int y )
 {
 	return bit_cast<SARGB>( img[y][x] );
 }
 
-inline void put_pixel( CArray2D<DWORD> &img, int x, int y, SARGB pixel )
+inline void put_pixel( CArray2D<uint32_t> &img, int x, int y, SARGB pixel )
 {
-	img[y][x] = bit_cast<DWORD>( pixel );
+	img[y][x] = bit_cast<uint32_t>( pixel );
 }
 
-inline void get_row( SARGB *row, const CArray2D<DWORD> &img, int y )
+inline void get_row( SARGB *row, const CArray2D<uint32_t> &img, int y )
 {
   if ( (y < 0) || (y >= img.GetSizeY()) )
 		return;
   memcpy( row, &(img[y][0]), img.GetSizeX() * sizeof(SARGB) );
 }
 
-inline void get_column( SARGB *column, const CArray2D<DWORD> &img, int x )
+inline void get_column( SARGB *column, const CArray2D<uint32_t> &img, int x )
 {
   if ( (x < 0) || (x >= img.GetSizeX()) )
 		return;
@@ -206,7 +208,7 @@ typedef double (*FILTERFUNC)( double t );
 // **
 // ************************************************************************************************************************ //
 
-void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScaleMethod method )
+void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImageScaleMethod method )
 {
 	NI_ASSERT( pDst != 0, "Wrong parameter: pDst == 0" );
 	if ( ( pDst->GetSizeX() == src.GetSizeX() ) &&
@@ -215,7 +217,7 @@ void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScale
 		( *pDst ) = src;
 		return;
 	}
-	CArray2D<DWORD> &dst = *pDst;
+	CArray2D<uint32_t> &dst = *pDst;
 	FILTERFUNC pfnFilterFunc = Lanczos3_filter;
 	double filterwidth = Lanczos3_support;
 	switch ( method )
@@ -243,7 +245,7 @@ void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScale
 			break;
 	}
 	// create intermediate image to hold horizontal zoom
-	CArray2D<DWORD> imgTemp( dst.GetSizeX(), src.GetSizeY() );
+	CArray2D<uint32_t> imgTemp( dst.GetSizeX(), src.GetSizeY() );
   // x/y scaling
   double xscale = double( dst.GetSizeX() ) / double( src.GetSizeX() );
   double yscale = double( dst.GetSizeY() ) / double( src.GetSizeY() );
@@ -319,10 +321,10 @@ void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScale
             g += raster[contrib[i].p[j].pixel].g * contrib[i].p[j].weight;
             b += raster[contrib[i].p[j].pixel].b * contrib[i].p[j].weight;
           }
-          SARGB pix = {	(BYTE)Clamp( int(a + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(r + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(g + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(b + 0.5), BLACK_PIXEL, WHITE_PIXEL )	};
+          SARGB pix = {	(uint8_t)Clamp( int(a + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(r + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(g + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(b + 0.5), BLACK_PIXEL, WHITE_PIXEL )	};
           put_pixel( imgTemp, i, k, pix );
         }
       }
@@ -407,10 +409,10 @@ void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScale
             g += raster[contrib[i].p[j].pixel].g * contrib[i].p[j].weight;
             b += raster[contrib[i].p[j].pixel].b * contrib[i].p[j].weight;
           }
-          SARGB pix = {	(BYTE)Clamp( int(a + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(r + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(g + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
-												(BYTE)Clamp( int(b + 0.5), BLACK_PIXEL, WHITE_PIXEL )	};
+          SARGB pix = {	(uint8_t)Clamp( int(a + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(r + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(g + 0.5), BLACK_PIXEL, WHITE_PIXEL ),
+												(uint8_t)Clamp( int(b + 0.5), BLACK_PIXEL, WHITE_PIXEL )	};
           put_pixel( dst, k, i, pix );
         }
       }

@@ -35,6 +35,7 @@
 #include "FeedBackSystem.h"
 
 #include <algorithm>
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS( 0x1108D444, CTank );
 REGISTER_SAVELOAD_CLASS( 0x1108D445, CAITransportUnit );
@@ -66,7 +67,7 @@ const bool CMilitaryCar::IsIdle() const
 	return CAIUnit::IsIdle();
 }
 
-void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	bCanUnload = true;
 	pStats = checked_cast<const SMechUnitRPGStats*>( _pStats );
@@ -101,12 +102,12 @@ const bool CMilitaryCar::CanBoard( CAIUnit *pUnit ) const
 	return false;
 }
 
-DWORD CMilitaryCar::InitSupportAntiAircraftGuns()
+uint32_t CMilitaryCar::InitSupportAntiAircraftGuns()
 {
 	// dissalow to shoot from AA guns if there is non AA guns.
 	// in that case all AA guns will be controlled by special state.
 	
-	DWORD dwDissalow = 0;
+	uint32_t dwDissalow = 0;
 	for ( int nGun = 0; nGun < GetNGuns(); ++nGun )
 	{
 		CBasicGun * pGun = GetGun( nGun );
@@ -192,13 +193,13 @@ void CMilitaryCar::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::S
 	//CRAP}
 }
 
-const WORD CMilitaryCar::GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const
+const uint16_t CMilitaryCar::GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const
 {
 	CBoardOrder::const_iterator pos = boardOrder.find( pUnit->GetUniqueId() );
 	NI_ASSERT( pos != boardOrder.end(), "unit is not borded" );
 	if ( pos != boardOrder.end() )
 	{
-		return WORD(pStats->boardedMechUnitPosition[pos->second].nDirection) + GetFrontDirection();
+		return uint16_t(pStats->boardedMechUnitPosition[pos->second].nDirection) + GetFrontDirection();
 	}
 	return 0;
 }
@@ -526,7 +527,7 @@ const bool CMilitaryCar::CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) c
 //*															CTank																*
 //*******************************************************************
 
-void CTank::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CTank::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	bTrackDamaged = false;
 	wDangerousDir = 0;
@@ -590,7 +591,7 @@ void CTank::RepairTrack()
 	}
 }
 
-bool CTank::CanTurnToFrontDir( const WORD wDir )
+bool CTank::CanTurnToFrontDir( const uint16_t wDir )
 { 
 	return !bTrackDamaged && CAIUnit::CanTurnToFrontDir( wDir ) && !IsInTankPit();
 }
@@ -691,7 +692,7 @@ bool CTank::CanMoveAfterUserCommand() const
 
 //BASIC_REGISTER_CLASS( CAITransportUnit );
 
-void CAITransportUnit::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CAITransportUnit::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	CMilitaryCar::Init( center, z, _pStats, fHP, dir, player, pCollisionsCollector );
 	fResursUnits = SConsts::TRANSPORT_RU_CAPACITY;
@@ -974,7 +975,7 @@ const bool CAITransportUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDi
 	return bResult;
 }
 
-bool CAITransportUnit::CalculateUnitVisibility4Party( const BYTE party )
+bool CAITransportUnit::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	if ( IsTowing() )
 		return IsVisible( party );

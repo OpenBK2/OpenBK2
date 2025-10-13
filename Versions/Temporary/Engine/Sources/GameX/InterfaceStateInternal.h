@@ -2,6 +2,8 @@
 
 #include "InterfaceState.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SGameRoot;
@@ -47,7 +49,7 @@ class CInterfaceState : public IInterfaceState
 	ZSKIP //CPtr<ICampaignState> pCurrentCampaign;
 	ZSKIP //CPtr<NGScene::CScreenshotTexture> pScreenShot;
 	int nDifficulty;
-	DWORD dwMissionChatColor;
+	uint32_t dwMissionChatColor;
 	bool bSuppressEnableFocus;
 	bool bTransitEffectFlag;
 	CCampaignsMap campaigns;
@@ -98,7 +100,7 @@ public:
 
 	void StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty );
 
-	void SetMissionConsoleColor( DWORD dwColor );
+	void SetMissionConsoleColor( uint32_t dwColor );
 	void WriteToMissionConsole( const std::wstring &wszText );
 	void WriteToMissionConsoleSelected( const std::wstring &wszText );
 	std::wstring GetMissionConsoleMLTag() const;

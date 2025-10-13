@@ -392,7 +392,7 @@ void CMapInfoState::Enter()
 	NProgress::IteratePosition(); // 2
 	NI_ASSERT( pMapInfoEditor != 0, "CMapInfoState::Enter(), pMapInfoEditor == 0" );
 	//
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CMapInfoInterfaceCommand( new CMapInfoInterface( this ) ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CMapInfoInterfaceCommand( new CMapInfoInterface( this ) ) ) );
 	//
 	pMapInfoEditor->ClearMapInfoData();
 	NProgress::IteratePosition(); // 3
@@ -693,7 +693,7 @@ void CMapInfoState::Leave()
 }
 
 
-bool CMapInfoState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapInfoState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

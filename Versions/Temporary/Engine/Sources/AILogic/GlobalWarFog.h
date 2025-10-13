@@ -3,6 +3,8 @@
 #include "UpdateUnitContainer.h"
 #include "Misc/BitData.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SScriptArea;
@@ -16,7 +18,7 @@ struct SSector
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wStartAngle); f.Add(3,&wEndAngle); return 0; }
 
 	SSector() : wStartAngle( 0 ), wEndAngle( 65535 ) {}
-	SSector( const DWORD _wStartAngle, const DWORD _wEndAngle ) : wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle ) {}
+	SSector( const uint32_t _wStartAngle, const uint32_t _wEndAngle ) : wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle ) {}
 
 	bool operator!=( const SSector &sector ) { return ( wStartAngle != sector.wStartAngle || wEndAngle != sector.wEndAngle ); }
 	bool IsIntersec( const SSector &sector ) const
@@ -98,16 +100,16 @@ class CGlobalWarFog : public CAIObjectBase
 	bool bInitialization;
 	bool bHasInvalidTile;
 
-	CArray2D<BYTE> miniMapWarFog;
+	CArray2D<uint8_t> miniMapWarFog;
 	bool bNeedFullCalc;
 	NTimer::STime nLastFogCalcTime;
-	std::vector<BYTE> miniMapSums;
+	std::vector<uint8_t> miniMapSums;
 	int nMiniMapY;
 
 
 	/*
 	TTilesToSmooth miniMapSmoothTiles;
-	BYTE cMiniMapWarFogParty;
+	uint8_t cMiniMapWarFogParty;
 	bool bMiniMapWarFogReady;
 	bool bFullSmooth;
 	*/
@@ -169,7 +171,7 @@ private:
 
 	void OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty );
 
-	const BYTE GetClientTileVis( const int x, const int y, const int nParty ) const { return IsTileVisible( SVector( x, y ), nParty ) ? SAIConsts::VIS_POWER : 0; }
+	const uint8_t GetClientTileVis( const int x, const int y, const int nParty ) const { return IsTileVisible( SVector( x, y ), nParty ) ? SAIConsts::VIS_POWER : 0; }
 	const bool IsValidParty( const int nParty ) const { return nParty == 0 || nParty == 1; }
 public:
 	void Init( const int nSizeX, const int nSizeY, const int nMaxRadius, const float fUnitHeight );
@@ -183,7 +185,7 @@ public:
 
 	void SynchronizeHeights( const SVector &vUpLeftTile, const SVector &vBottomRightTile );
 
-	bool GetWarForInfo( CArray2D<BYTE> **pWarFogInfo, const int nParty, const bool bFirstTime );
+	bool GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nParty, const bool bFirstTime );
 	
 	int GetSizeX() const { return nSizeX; }
 	int GetSizeY() const { return nSizeY; }

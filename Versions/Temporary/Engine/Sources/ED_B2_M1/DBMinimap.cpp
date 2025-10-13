@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbminimap.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -119,10 +121,10 @@ NDb::EImageScaleMethod NDb::StringToEnum_NDb_EImageScaleMethod( const string &sz
 }
 
 
-void SShadowPoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SShadowPoint::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "x", (BYTE*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "y", (BYTE*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "x", (uint8_t*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "y", (uint8_t*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SShadowPoint::operator&( IXmlSaver &saver )
@@ -141,7 +143,7 @@ int SShadowPoint::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SShadowPoint::CalcCheckSum() const
+uint32_t SShadowPoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -158,10 +160,10 @@ DWORD SShadowPoint::CalcCheckSum() const
 
 
 
-void SEmbossPoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SEmbossPoint::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "x", (BYTE*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "y", (BYTE*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "x", (uint8_t*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "y", (uint8_t*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SEmbossPoint::operator&( IXmlSaver &saver )
@@ -180,7 +182,7 @@ int SEmbossPoint::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SEmbossPoint::CalcCheckSum() const
+uint32_t SEmbossPoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -197,18 +199,18 @@ DWORD SEmbossPoint::CalcCheckSum() const
 
 
 
-void SMinimapLayer::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SMinimapLayer::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "EmbossFilterSize", (BYTE*)&nEmbossFilterSize - pThis, sizeof(nEmbossFilterSize), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "ScaleNoise", (BYTE*)&bScaleNoise - pThis, sizeof(bScaleNoise), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "BorderColor", (BYTE*)&nBorderColor - pThis, sizeof(nBorderColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "BorderWidth", (BYTE*)&nBorderWidth - pThis, sizeof(nBorderWidth), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "EmbossFilterSize", (uint8_t*)&nEmbossFilterSize - pThis, sizeof(nEmbossFilterSize), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "ScaleNoise", (uint8_t*)&bScaleNoise - pThis, sizeof(bScaleNoise), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "BorderColor", (uint8_t*)&nBorderColor - pThis, sizeof(nBorderColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "BorderWidth", (uint8_t*)&nBorderWidth - pThis, sizeof(nBorderWidth), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "ShadowPoint", &shadowPoint, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "EmbossPoint", &embossPoint, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "NoiseImage", (BYTE*)&szNoiseImage - pThis, sizeof(szNoiseImage), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "ScaleMethod", (BYTE*)&eScaleMethod - pThis, sizeof(eScaleMethod), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "NoiseImage", (uint8_t*)&szNoiseImage - pThis, sizeof(szNoiseImage), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ScaleMethod", (uint8_t*)&eScaleMethod - pThis, sizeof(eScaleMethod), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SMinimapLayer::operator&( IXmlSaver &saver )
@@ -243,7 +245,7 @@ int SMinimapLayer::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SMinimapLayer::CalcCheckSum() const
+uint32_t SMinimapLayer::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -264,12 +266,12 @@ void SMinimap::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Minimap", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "WoodRadius", (BYTE*)&nWoodRadius - pThis, sizeof(nWoodRadius), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TerrainShadeRatio", (BYTE*)&nTerrainShadeRatio - pThis, sizeof(nTerrainShadeRatio), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "ShowAllBuildingsPassability", (BYTE*)&bShowAllBuildingsPassability - pThis, sizeof(bShowAllBuildingsPassability), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "ShowTerrainShades", (BYTE*)&bShowTerrainShades - pThis, sizeof(bShowTerrainShades), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "MinAlpha", (BYTE*)&nMinAlpha - pThis, sizeof(nMinAlpha), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "WoodRadius", (uint8_t*)&nWoodRadius - pThis, sizeof(nWoodRadius), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TerrainShadeRatio", (uint8_t*)&nTerrainShadeRatio - pThis, sizeof(nTerrainShadeRatio), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "ShowAllBuildingsPassability", (uint8_t*)&bShowAllBuildingsPassability - pThis, sizeof(bShowAllBuildingsPassability), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "ShowTerrainShades", (uint8_t*)&bShowTerrainShades - pThis, sizeof(bShowTerrainShades), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "MinAlpha", (uint8_t*)&nMinAlpha - pThis, sizeof(nMinAlpha), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( "Layers", &layers, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

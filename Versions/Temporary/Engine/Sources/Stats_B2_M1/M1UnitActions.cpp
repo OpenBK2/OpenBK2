@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "m1unitactions.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -13,8 +15,8 @@ namespace NDb
 
 void SM1UnitSpecAction::ReportMetaInfo() const
 {
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SM1UnitSpecAction::operator&( IXmlSaver &saver )
@@ -31,7 +33,7 @@ int SM1UnitSpecAction::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitSpecAction::CalcCheckSum() const
+uint32_t SM1UnitSpecAction::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -52,9 +54,9 @@ void SM1UnitActions::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "M1UnitActions", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "DefaultPerformableActions", (BYTE*)&defaultPerformableActions - pThis, sizeof(defaultPerformableActions), NTypeDef::TYPE_TYPE_BINARY );
-	NMetaInfo::ReportMetaInfo( "DefaultActionsToEndure", (BYTE*)&defaultActionsToEndure - pThis, sizeof(defaultActionsToEndure), NTypeDef::TYPE_TYPE_BINARY );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "DefaultPerformableActions", (uint8_t*)&defaultPerformableActions - pThis, sizeof(defaultPerformableActions), NTypeDef::TYPE_TYPE_BINARY );
+	NMetaInfo::ReportMetaInfo( "DefaultActionsToEndure", (uint8_t*)&defaultActionsToEndure - pThis, sizeof(defaultActionsToEndure), NTypeDef::TYPE_TYPE_BINARY );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ActionParams", &actionParams, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -78,7 +80,7 @@ int SM1UnitActions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitActions::CalcCheckSum() const
+uint32_t SM1UnitActions::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -100,7 +102,7 @@ void SM1UnitActionBuild::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "M1UnitActionBuild", typeID, sizeof(*this) );
 	SM1UnitSpecAction::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -119,7 +121,7 @@ int SM1UnitActionBuild::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitActionBuild::CalcCheckSum() const
+uint32_t SM1UnitActionBuild::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -141,9 +143,9 @@ void SM1UnitActionTransform::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "M1UnitActionTransform", typeID, sizeof(*this) );
 	SM1UnitSpecAction::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "TransformationTime", (BYTE*)&nTransformationTime - pThis, sizeof(nTransformationTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "StatsModifier", (BYTE*)&pStatsModifier - pThis, sizeof(pStatsModifier), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "TransformationTime", (uint8_t*)&nTransformationTime - pThis, sizeof(nTransformationTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "StatsModifier", (uint8_t*)&pStatsModifier - pThis, sizeof(pStatsModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -166,7 +168,7 @@ int SM1UnitActionTransform::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitActionTransform::CalcCheckSum() const
+uint32_t SM1UnitActionTransform::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -183,10 +185,10 @@ DWORD SM1UnitActionTransform::CalcCheckSum() const
 
 
 
-void SM1ParameterModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SM1ParameterModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "MultParam", (BYTE*)&fMultParam - pThis, sizeof(fMultParam), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "AddParam", (BYTE*)&fAddParam - pThis, sizeof(fAddParam), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "MultParam", (uint8_t*)&fMultParam - pThis, sizeof(fMultParam), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AddParam", (uint8_t*)&fAddParam - pThis, sizeof(fAddParam), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SM1ParameterModifier::operator&( IXmlSaver &saver )
@@ -205,7 +207,7 @@ int SM1ParameterModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1ParameterModifier::CalcCheckSum() const
+uint32_t SM1ParameterModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -222,7 +224,7 @@ DWORD SM1ParameterModifier::CalcCheckSum() const
 
 
 
-void SShellStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SShellStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "damage", &damage, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "piercing", &piercing, pThis ); 
@@ -244,7 +246,7 @@ int SShellStatsModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SShellStatsModifier::CalcCheckSum() const
+uint32_t SShellStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -261,7 +263,7 @@ DWORD SShellStatsModifier::CalcCheckSum() const
 
 
 
-void SWeaponStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWeaponStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "range", &range, pThis ); 
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "shells", &shells, pThis );
@@ -283,7 +285,7 @@ int SWeaponStatsModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWeaponStatsModifier::CalcCheckSum() const
+uint32_t SWeaponStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -300,7 +302,7 @@ DWORD SWeaponStatsModifier::CalcCheckSum() const
 
 
 
-void SPlatformWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlatformWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Guns", &guns, pThis );
 }
@@ -319,7 +321,7 @@ int SPlatformWeaponsStatsModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlatformWeaponsStatsModifier::CalcCheckSum() const
+uint32_t SPlatformWeaponsStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -336,7 +338,7 @@ DWORD SPlatformWeaponsStatsModifier::CalcCheckSum() const
 
 
 
-void SWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWeaponsStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Platforms", &platforms, pThis );
 }
@@ -355,7 +357,7 @@ int SWeaponsStatsModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWeaponsStatsModifier::CalcCheckSum() const
+uint32_t SWeaponsStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -376,7 +378,7 @@ void SM1UnitStatsModifier::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "M1UnitStatsModifier", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "weapons", &weapons, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "sightRange", &sightRange, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "speed", &speed, pThis ); 
@@ -405,7 +407,7 @@ int SM1UnitStatsModifier::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitStatsModifier::CalcCheckSum() const
+uint32_t SM1UnitStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

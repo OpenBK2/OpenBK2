@@ -4,13 +4,15 @@
 #include "Server_Client_Common/Commands.h"
 #include "Misc/win32helper.h"
 
+#include <cstdint>
+
 const int INPUT_BUFFER_SIZE = 255;
 
 static NWin32Helper::CCriticalSection csClientSocketReading;
 static NWin32Helper::CCriticalSection csClientSocketWriting;
 CObj<CTerminal> pTheTerminal;
 
-static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
+static uint32_t WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 {
 	CTerminal* pTerminal = reinterpret_cast<CTerminal*>(lpParameter);
 	while (1)
@@ -24,7 +26,7 @@ static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
 {
 	pTheTerminal = this;
-	WORD sockVersion;
+	uint16_t sockVersion;
 	WSADATA wsaData;
 
 	sockVersion = MAKEWORD(1, 1);			// We'd like Winsock version 1.1
@@ -65,7 +67,7 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 		WSACleanup();				// Shutdown Winsock
 		return;			// Return an error value
 	}
-	DWORD dwThreadId;
+	uint32_t dwThreadId;
 
 	hReadingThread = CreateThread( 0, 1024*1024, TheTerminalThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );
 }

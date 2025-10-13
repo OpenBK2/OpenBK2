@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // ************************************************************************************************************************ //
 // **
 // ** diplomacy info
@@ -54,31 +56,31 @@ struct SShootArea
 	float fMinR, fMaxR;
 
 	// углы задают конус стрельбы - против часовой стрелки
-	WORD wStartAngle;
-	WORD wFinishAngle;
+	uint16_t wStartAngle;
+	uint16_t wFinishAngle;
 	
 	//
 	SShootArea()
 		: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ), 
 			wStartAngle( 65535 ), wFinishAngle( 65535 ), eType( ESAT_LINE ) { }
 
-	const DWORD GetColor() const
+	const uint32_t GetColor() const
 	{
-		static const DWORD colors[] = { 0x0000ff00, 0x000000ff, 0x00ff0000, 0x0000ff00 };
+		static const uint32_t colors[] = { 0x0000ff00, 0x000000ff, 0x00ff0000, 0x0000ff00 };
 		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
 		return colors[eType];
 	}
 
-	const WORD GetMiniMapCircleColor() const
+	const uint16_t GetMiniMapCircleColor() const
 	{
-		static const WORD colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
+		static const uint16_t colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
 		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
 		return colors[eType];
 	}
 
-	const WORD GetMiniMapSectorColor() const
+	const uint16_t GetMiniMapSectorColor() const
 	{
-		static const WORD colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
+		static const uint16_t colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
 		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
 		return colors[eType];
 	}

@@ -3,6 +3,8 @@
 #include "MDDLDialog.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 #define UNDO_BUFFER_SIZE 25
 
 class CControllerContainer : public IControllerContainer, public ICommandHandler
@@ -30,7 +32,7 @@ public:
 	int RemoveTemporaryControllers( const string &rszTemporaryLabel );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

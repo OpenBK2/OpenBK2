@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "TracksManager.h"
 
+#include <cstdint>
+
 #define DEF_MAX_TRACK_BUFFERS 128
 #define DEF_MAX_TRACKS_IN_BUFFER 32
 #define DEF_MAX_VERTS_PER_TRACK 8
@@ -8,9 +10,9 @@
 
 DEFINE_DG_CONSTANT_NODE( CCSBound, SBound );
 
-inline DWORD PackAndDupBYTE2DWORD( const BYTE elem )
+inline uint32_t PackAndDupBYTE2DWORD( const uint8_t elem )
 {
-  return ( (DWORD)elem << 24 ) + ( (DWORD)elem << 16 ) + ( (DWORD)elem << 8 ) + elem;
+  return ( (uint32_t)elem << 24 ) + ( (uint32_t)elem << 16 ) + ( (uint32_t)elem << 8 ) + elem;
 }
 
 CTrackObjInfo::CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrackManager, const int _nID )

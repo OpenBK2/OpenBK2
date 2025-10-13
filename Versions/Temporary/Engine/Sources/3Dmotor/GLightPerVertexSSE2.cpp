@@ -12,6 +12,7 @@
 #include <emmintrin.h>
 
 #include <algorithm>
+#include <cstdint>
 
 namespace NGScene
 {
@@ -43,7 +44,7 @@ struct SDirectionalLightingSSE2Data
 };
 
 static inline void CalcDirectionalLightingSSE2x1(
-	DWORD dwNormal, const SDirectionalLightingSSE2Data &data, DWORD *pColor, DWORD *pShadowColor )
+	uint32_t dwNormal, const SDirectionalLightingSSE2Data &data, uint32_t *pColor, uint32_t *pShadowColor )
 {
 	__m128i normal = _mm_cvtsi32_si128( static_cast<int>( dwNormal ) );
 	normal = _mm_unpacklo_epi8( normal, normal );
@@ -75,13 +76,13 @@ static inline void CalcDirectionalLightingSSE2x1(
 	vRes = _mm_srai_epi16( vRes, 4 );
 	vResShadow = _mm_srai_epi16( vResShadow, 4 );
 
-	*pColor = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_packus_epi16( vRes, vRes ) ) );
-	*pShadowColor = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_packus_epi16( vResShadow, vResShadow ) ) );
+	*pColor = static_cast<uint32_t>( _mm_cvtsi128_si32( _mm_packus_epi16( vRes, vRes ) ) );
+	*pShadowColor = static_cast<uint32_t>( _mm_cvtsi128_si32( _mm_packus_epi16( vResShadow, vResShadow ) ) );
 }
 
 static inline void CalcDirectionalLightingSSE2x2(
-	DWORD dwNormal0, DWORD dwNormal1, const SDirectionalLightingSSE2Data &data,
-	DWORD *pColor0, DWORD *pShadowColor0, DWORD *pColor1, DWORD *pShadowColor1 )
+	uint32_t dwNormal0, uint32_t dwNormal1, const SDirectionalLightingSSE2Data &data,
+	uint32_t *pColor0, uint32_t *pShadowColor0, uint32_t *pColor1, uint32_t *pShadowColor1 )
 {
 	// Each 64-bit half follows the original MMX code for one normal.
 	__m128i normal = _mm_or_si128(
@@ -118,18 +119,18 @@ static inline void CalcDirectionalLightingSSE2x2(
 
 	__m128i packedColor = _mm_packus_epi16( vRes, vRes );
 	__m128i packedShadowColor = _mm_packus_epi16( vResShadow, vResShadow );
-	*pColor0 = static_cast<DWORD>( _mm_cvtsi128_si32( packedColor ) );
-	*pShadowColor0 = static_cast<DWORD>( _mm_cvtsi128_si32( packedShadowColor ) );
-	*pColor1 = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_srli_si128( packedColor, 4 ) ) );
-	*pShadowColor1 = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_srli_si128( packedShadowColor, 4 ) ) );
+	*pColor0 = static_cast<uint32_t>( _mm_cvtsi128_si32( packedColor ) );
+	*pShadowColor0 = static_cast<uint32_t>( _mm_cvtsi128_si32( packedShadowColor ) );
+	*pColor1 = static_cast<uint32_t>( _mm_cvtsi128_si32( _mm_srli_si128( packedColor, 4 ) ) );
+	*pShadowColor1 = static_cast<uint32_t>( _mm_cvtsi128_si32( _mm_srli_si128( packedShadowColor, 4 ) ) );
 }
 
 static void CalcDirectionalLighting(
 	const NGfx::SCompactVector *pNormals, int nCount,
 	const SPerVertexLightState &ls, const NGfx::SMMXWord &translucentShade,
-	DWORD *pResColors, DWORD *pResShadow )
+	uint32_t *pResColors, uint32_t *pResShadow )
 {
-	DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+	uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
 
 	SDirectionalLightingSSE2Data lightingData;
 	lightingData.shift = LoadMMXWord128( ls.shift );
@@ -143,15 +144,15 @@ static void CalcDirectionalLighting(
 
 	for ( int k = 0; k < nCount; ++k )
 	{
-		DWORD dwNormal = pNormals[k].dw;
+		uint32_t dwNormal = pNormals[k].dw;
 		if ( dwNormal != dwPrevNormal )
 		{
 			if ( k + 1 < nCount )
 			{
-				DWORD dwNextNormal = pNormals[k + 1].dw;
+				uint32_t dwNextNormal = pNormals[k + 1].dw;
 				if ( dwNextNormal != dwNormal )
 				{
-					DWORD dwNextColor = 0, dwNextShadowColor = 0;
+					uint32_t dwNextColor = 0, dwNextShadowColor = 0;
 					CalcDirectionalLightingSSE2x2(
 						dwNormal, dwNextNormal, lightingData,
 						&dwColor, &dwShadowColor, &dwNextColor, &dwNextShadowColor );
@@ -213,7 +214,7 @@ static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScal
 
 struct SWarFogSSE2Sample
 {
-	DWORD fogValues;
+	uint32_t fogValues;
 	int xWeights;
 	int yWeights;
 };
@@ -229,16 +230,16 @@ static inline SWarFogSSE2Sample PrepareWarFogSSE2Sample(
 	const unsigned char *pDown = pUp + nMask + 2;
 
 	SWarFogSSE2Sample sample;
-	sample.fogValues = static_cast<DWORD>( pUp[0] ) |
-		( static_cast<DWORD>( pUp[1] ) << 8 ) |
-		( static_cast<DWORD>( pDown[0] ) << 16 ) |
-		( static_cast<DWORD>( pDown[1] ) << 24 );
+	sample.fogValues = static_cast<uint32_t>( pUp[0] ) |
+		( static_cast<uint32_t>( pUp[1] ) << 8 ) |
+		( static_cast<uint32_t>( pDown[0] ) << 16 ) |
+		( static_cast<uint32_t>( pDown[1] ) << 24 );
 	sample.xWeights = ( 0x4000 - nXfi ) | ( nXfi << 16 );
 	sample.yWeights = ( 0x4000 - nYfi ) | ( nYfi << 16 );
 	return sample;
 }
 
-static inline WORD SampleWarFogIntSSE2x2( const SWarFogSSE2Sample &sample0, const SWarFogSSE2Sample &sample1 )
+static inline uint16_t SampleWarFogIntSSE2x2( const SWarFogSSE2Sample &sample0, const SWarFogSSE2Sample &sample1 )
 {
 	const __m128i zero = _mm_setzero_si128();
 	__m128i fogValues = _mm_set_epi32(
@@ -257,7 +258,7 @@ static inline WORD SampleWarFogIntSSE2x2( const SWarFogSSE2Sample &sample0, cons
 	vertical = _mm_srai_epi32( vertical, 14 );
 	vertical = _mm_packs_epi32( vertical, vertical );
 	vertical = _mm_packus_epi16( vertical, vertical );
-	return static_cast<WORD>( _mm_extract_epi16( vertical, 0 ) );
+	return static_cast<uint16_t>( _mm_extract_epi16( vertical, 0 ) );
 }
 
 static void SampleWarFogInt(
@@ -276,7 +277,7 @@ static void SampleWarFogInt(
 			pIntCoords[k * 2], pIntCoords[k * 2 + 1], nMask, pFog, nFogSizeX );
 		const SWarFogSSE2Sample sample1 = PrepareWarFogSSE2Sample(
 			pIntCoords[k * 2 + 2], pIntCoords[k * 2 + 3], nMask, pFog, nFogSizeX );
-		const WORD result = SampleWarFogIntSSE2x2( sample0, sample1 );
+		const uint16_t result = SampleWarFogIntSSE2x2( sample0, sample1 );
 		pRes[k] = static_cast<unsigned char>( result );
 		pRes[k + 1] = static_cast<unsigned char>( result >> 8 );
 	}
@@ -382,7 +383,7 @@ static inline __m128i CalcPointLightColorsSSE2x2(
 
 static void CalcPointLightColorsIndexed(
 	NGfx::SMMXWord *pRes, const NGfx::SMMXWord *pAttenuation,
-	const WORD *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
+	const uint16_t *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
 	const NGfx::SMMXWord &lightColorWord )
 {
 	NGfx::SMMXWord shift{};
@@ -429,7 +430,7 @@ static void CalcPointLightColorsUniform(
 	data.lightColor = LoadMMXWord128( lightColorWord );
 	data.rounding = _mm_set1_epi32( 1 << 12 );
 
-	auto normalAt = [pNormals, nNormalStride]( int k ) -> DWORD
+	auto normalAt = [pNormals, nNormalStride]( int k ) -> uint32_t
 	{
 		const unsigned char *p = reinterpret_cast<const unsigned char *>( pNormals ) + k * nNormalStride;
 		return reinterpret_cast<const NGfx::SCompactVector *>( p )->dw;
@@ -478,17 +479,17 @@ static inline __m128i CalcAddColorIndicesSSE2( __m128i packedColors, __m128i add
 		_mm_andnot_si128( highIsZero, colorCubesHigh ) );
 }
 
-static inline DWORD LookupCubicRootColorSSE2( __m128i indices )
+static inline uint32_t LookupCubicRootColorSSE2( __m128i indices )
 {
 	const int nZ = _mm_extract_epi16( indices, 0 ) & 0x7fff;
 	const int nY = _mm_extract_epi16( indices, 1 ) & 0x7fff;
 	const int nX = _mm_extract_epi16( indices, 2 ) & 0x7fff;
-	return static_cast<DWORD>( nCubicRoot[nZ] ) |
-		( static_cast<DWORD>( nCubicRoot[nY] ) << 8 ) |
-		( static_cast<DWORD>( nCubicRoot[nX] ) << 16 );
+	return static_cast<uint32_t>( nCubicRoot[nZ] ) |
+		( static_cast<uint32_t>( nCubicRoot[nY] ) << 8 ) |
+		( static_cast<uint32_t>( nCubicRoot[nX] ) << 16 );
 }
 
-static void AddColors( DWORD *pRes, const DWORD *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
+static void AddColors( uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
 {
 	if ( nCount == 0 )
 		return;
@@ -518,7 +519,7 @@ struct SScaleColorsSSE2Data
 };
 
 static inline __m128i ScaleColorsSSE2x2(
-	DWORD color0, DWORD color1, int scale0, int scale1,
+	uint32_t color0, uint32_t color1, int scale0, int scale1,
 	int transparencyScale0, int transparencyScale1,
 	const SScaleColorsSSE2Data &data )
 {
@@ -544,9 +545,9 @@ static inline __m128i ScaleColorsSSE2x2(
 }
 
 static void ScaleColors(
-	DWORD *pRes, const DWORD *pSrc, int nSrcStride,
+	uint32_t *pRes, const uint32_t *pSrc, int nSrcStride,
 	const unsigned char *pScale, int nScaleMask,
-	const WORD *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
+	const uint16_t *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
 	bool bMultiplyOnTransparency )
 {
 	if ( nCount == 0 )
@@ -585,7 +586,7 @@ static void ScaleColors(
 		const int transparencyScale = static_cast<int>( pTransp[k].w ) << 7;
 		const __m128i result = ScaleColorsSSE2x2(
 			*pSrc, 0, scale, 0, transparencyScale, 0, data );
-		pRes[k] = static_cast<DWORD>( _mm_cvtsi128_si32( result ) );
+		pRes[k] = static_cast<uint32_t>( _mm_cvtsi128_si32( result ) );
 	}
 }
 

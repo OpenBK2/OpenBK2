@@ -19,6 +19,8 @@
 #include "Common_RTS_AI/Terrain.h"
 #include "FeedbackSystem.h"
 
+#include <cstdint>
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CSupremeBeing theSupremeBeing;
 extern CEventUpdater updater;
@@ -68,7 +70,7 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 		float fDist = fDistDelta;
     for ( int i = 1; i < FIND_POSITION_STEP && !bPositionFound; ++i, fDist += fDistDelta )
 		{
-			WORD wDir = 0;
+			uint16_t wDir = 0;
 			for ( int n = 0; n < DIRECTION_STEP && !bPositionFound; ++n, wDir += 65536/DIRECTION_STEP )
 			{
 				const CVec2 vTempResult = vResult + GetVectorByDirection( wDir ) * fDist;
@@ -87,7 +89,7 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 }
 
 void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
-	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
+	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, uint16_t wDirection,
 	std::list< std::pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates )
 {
 	if ( !bDisableUpdates )
@@ -110,7 +112,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 		if ( i < pos.size() )
 		{
 			CVec2 vPos2( vPosition + MoveVectorByDirection( pos[i].vPosition, wDirection ) );
-			const WORD wDir = wDirection + pos[i].nDirection;
+			const uint16_t wDir = wDirection + pos[i].nDirection;
 			SMapObjectInfo info;
 			const NDb::SHPObjectRPGStats *pStats = entries[i].pMechUnit;
 			EAIClasses aiClass = EAC_HUMAN;
@@ -229,14 +231,14 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 }
 
 void PlaceSingleLandReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
-	const int nForceID,	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const WORD wDirection )
+	const int nForceID,	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const uint16_t wDirection )
 {
 	std::list< std::pair<int, CObjectBase*> > objects;
 	PlaceReinforcement( eType, nPlayer, entries, position, vPosition, wDirection, &objects, nForceID, -1, false );
 }
 
 void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const EReinforcementType eType,
-	const NDb::SDeployTemplate *pTemplate, const CVec2 &vPosition, WORD wDirection, const int nScriptID,
+	const NDb::SDeployTemplate *pTemplate, const CVec2 &vPosition, uint16_t wDirection, const int nScriptID,
 	std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates )
 {
 	CDBPtr<NDb::SDeployTemplate> pFinalTemplate = pTemplate;
@@ -266,7 +268,7 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 }
 
 void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const NDb::SDeployTemplate *pTemplate,
-																	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget )
+																	const CVec2 &vPosition, uint16_t wDirection, const int nScriptID, const CVec2 &vTarget )
 {
 	std::vector<NDb::SReinforcementEntry> entries;
 	int nMinLink = 0;

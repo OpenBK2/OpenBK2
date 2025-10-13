@@ -3,6 +3,8 @@
 #include "LinksManager.h"
 #include "NetLowest.h"
 
+#include <cstdint>
+
 namespace NNet
 {
 
@@ -10,7 +12,7 @@ static struct SWSAInit
 {
 	SWSAInit()
 	{
-		WORD wVersionRequested = MAKEWORD( 1, 1 );
+		uint16_t wVersionRequested = MAKEWORD( 1, 1 );
 		WSADATA wsaData;
 
 		int bRv = WSAStartup( wVersionRequested, &wsaData ) == 0;
@@ -93,7 +95,7 @@ bool CLinksManagerCommon::Init( const int nPort )
 			return false;
 		}
 	}
-	DWORD	dwOpt = 1;
+	unsigned long dwOpt = 1;
 	ioctlsocket( s, FIONBIO, &dwOpt ); // no block
 	setsockopt( s, SOL_SOCKET, SO_BROADCAST, (const char*)&dwOpt, 4 );
 	if ( nPort != 0 )
@@ -126,12 +128,12 @@ bool CLinksManagerCommon::IsLocalAddr( const CNodeAddress &test ) const
 	{
 		const CNodeAddress &broad = broadcastAddr;//[ i ];
 		const sockaddr_in &nb = *(sockaddr_in*)&broad.addr;
-		DWORD dwB = nb.sin_addr.S_un.S_addr;
-		DWORD dwT = nt.sin_addr.S_un.S_addr;
-		DWORD dwMask = 0;
+		uint32_t dwB = nb.sin_addr.S_un.S_addr;
+		uint32_t dwT = nt.sin_addr.S_un.S_addr;
+		uint32_t dwMask = 0;
 		for ( int k = 3; k >= 0; k-- )
 		{
-			DWORD dwTestMask = 0xFF << k*8;
+			uint32_t dwTestMask = 0xFF << k*8;
 			if ( (dwB & dwTestMask) == dwTestMask )
 				dwMask |= dwTestMask;
 			else

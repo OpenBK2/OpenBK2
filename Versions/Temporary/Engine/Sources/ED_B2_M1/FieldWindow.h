@@ -4,6 +4,8 @@
 #include "ResourceDefines.h"
 #include "FieldState.h"
 
+#include <cstdint>
+
 class CFieldWindow : public CResizeDialog, public ICommandHandler
 {
 	bool bCreateControls;
@@ -34,7 +36,7 @@ public:
 
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

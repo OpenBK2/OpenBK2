@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <cstdint>
+
 //#include "..\Image\Targa.h"
 //#include "..\Misc\GeomMisc.h"
 //#include "GenTerrain.h"
@@ -183,7 +185,7 @@
 	if ( terraObjsPatchesHash[nPatchY][nPatchX].empty() )
 		return;
 
-	CArray2D<BYTE> objMask;
+	CArray2D<uint8_t> objMask;
 	CArray2D<SColor24> objTex;
 
 	//// load patch tex image
@@ -270,7 +272,7 @@
 	//NImage::SaveAsTGA( texPatch, pPatchTGAStream );
 }*/
 
-//void CTerraGen::ApplyTerraObjects( CArray2D<DWORD> &patchTex, const int nPatchX, const int nPatchY )
+//void CTerraGen::ApplyTerraObjects( CArray2D<uint32_t> &patchTex, const int nPatchX, const int nPatchY )
 //{
 //	if ( !pDesc )
 //		return;
@@ -281,7 +283,7 @@
 //	if ( terraObjsPatchesHash[nPatchY][nPatchX].empty() )
 //		return;
 //
-//	CArray2D<BYTE> objMask;
+//	CArray2D<uint8_t> objMask;
 //	CArray2D<SColor24> objTex;
 //
 //	const int nOffsX = nPatchX * DEF_PATCH_TEX_SIZE;
@@ -343,11 +345,11 @@
 //				if ( ( fTx >= 0.0f ) && ( fTx <= 1.0f ) && ( fTy >= 0.0f ) && ( fTy <= 1.0f ) )
 //				{
 //					const float fAlpha = (float)objMask[Float2Int( fTy * ( objMask.GetSizeY() - 1 ) )][Float2Int( fTx * ( objMask.GetSizeX() - 1 ) )] * DEF_INV_255;
-//					const DWORD &col = patchTex[y][x];
+//					const uint32_t &col = patchTex[y][x];
 //					const SColor24 &objCol = objTex[Float2Int( fTy * ( objTex.GetSizeY() - 1 ) )][Float2Int( fTx * ( objTex.GetSizeX() - 1 ) )];
-//					const BYTE rr = Clamp( Float2Int( (float)UnpackBYTE2(col) * (1.0f - fAlpha ) + (float)objCol.r * fAlpha ), 0, 255 );
-//					const BYTE gg = Clamp( Float2Int( (float)UnpackBYTE1(col) * (1.0f - fAlpha ) + (float)objCol.g * fAlpha ), 0, 255 );
-//					const BYTE bb = Clamp( Float2Int( (float)UnpackBYTE0(col) * (1.0f - fAlpha ) + (float)objCol.b * fAlpha ), 0, 255 );
+//					const uint8_t rr = Clamp( Float2Int( (float)UnpackBYTE2(col) * (1.0f - fAlpha ) + (float)objCol.r * fAlpha ), 0, 255 );
+//					const uint8_t gg = Clamp( Float2Int( (float)UnpackBYTE1(col) * (1.0f - fAlpha ) + (float)objCol.g * fAlpha ), 0, 255 );
+//					const uint8_t bb = Clamp( Float2Int( (float)UnpackBYTE0(col) * (1.0f - fAlpha ) + (float)objCol.b * fAlpha ), 0, 255 );
 //					patchTex[y][x] = PackDWORD( 0xff, rr, gg, bb );
 //				}
 //			}

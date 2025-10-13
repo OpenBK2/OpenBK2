@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 struct SUpdateInfo
 {
-	DWORD dwVersion;
+	uint32_t dwVersion;
 	bool bFullUpdate;
 	list<int> removed;
 	list<int> added;
@@ -31,18 +33,18 @@ class CUpdatableList
 	struct SChange
 	{
 		int nID;
-		BYTE change;
+		uint8_t change;
 
 		SChange() : change( EC_NOP ) { }
 	};
 
 	vector<SChange> changes;
 	hash_set<int> now;
-	DWORD dwVersion;
+	uint32_t dwVersion;
 
 	//
 	void GetFullUpdate( const int nNoIncludeID, SUpdateInfo *pUpdate );
-	void GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion, SUpdateInfo *pUpdate );
+	void GetUpdate( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate );
 public:
 	CUpdatableList();
 
@@ -50,7 +52,7 @@ public:
 	void Remove( const int nID );
 	void Change( const int nID );
 
-	void GetDiff( const int nNoIncludeID, const DWORD dwOldVersion, SUpdateInfo *pUpdate );
+	void GetDiff( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate );
 };
 
 

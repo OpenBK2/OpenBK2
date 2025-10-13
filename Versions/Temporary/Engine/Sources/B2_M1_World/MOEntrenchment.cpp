@@ -4,6 +4,8 @@
 #include "SceneB2/TerraGen.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
+
 bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	CDBPtr<NDb::SEntrenchmentRPGStats> pStats = checked_cast<const NDb::SEntrenchmentRPGStats*>( GetStats() );
@@ -65,7 +67,7 @@ void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement
 //}
 
 // calculate transform from position, rotation, normal
-void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const WORD _wDir )
+void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir )
 {
 	if ( cached.vPos == _vPos && cached.wDir == _wDir )
 		return;				//Same matrix, no need to recompute

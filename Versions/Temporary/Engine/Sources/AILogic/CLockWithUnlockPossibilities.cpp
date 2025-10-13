@@ -5,11 +5,13 @@
 #include "AIUnit.h"
 #include "UnitsIterators2.h"
 
+#include <cstdint>
+
 //*******************************************************************
 //*										  CLockWithUnlockPossibilities								*
 //*******************************************************************
 
-bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const BYTE _bAIClass )
+bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const uint8_t _bAIClass )
 {
 	// залочить/разлочить тайлы 
 	if ( bLock )
@@ -38,7 +40,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 		bAIClass = _bAIClass;
 		for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 		{
-			BYTE b = GetTerrain()->GetTileLockInfo( (*it) );
+			uint8_t b = GetTerrain()->GetTileLockInfo( (*it) );
 			formerTilesType[i] = b;
 			bPossible &= !(formerTilesType[i] & bAIClass); // может ли танк проехать по нужному пути
 			++i;
@@ -86,7 +88,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const B
 void CLockWithUnlockPossibilities::Lock()
 {
 	int i=0;
-	BYTE aiClass=0;
+	uint8_t aiClass=0;
 	bool aiAnyExists = false;
 
 	std::list<SObjTileInfo> tilesInfo;
@@ -106,7 +108,7 @@ void CLockWithUnlockPossibilities::Lock()
 void CLockWithUnlockPossibilities::Unlock()
 {
 	int i=0;
-	BYTE aiClass=0;
+	uint8_t aiClass=0;
 	bool aiAnyExists = false;
 
 	std::list<SObjTileInfo> tilesInfo;

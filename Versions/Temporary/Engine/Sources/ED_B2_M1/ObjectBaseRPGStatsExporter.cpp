@@ -13,6 +13,8 @@
 #include "ExporterMethods.h"
 #include "SeasonMnemonics.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NDb
@@ -318,7 +320,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		CVec2 vPassabilityOrigin = VNULL2;
 		if ( bHasPassability )
 		{
-			CArray2D<BYTE> passabilityArray;
+			CArray2D<uint8_t> passabilityArray;
 			bResult = bResult && CreateObjectPassability( szDestination, &passabilityArray, &vPassabilityOrigin );
 			// Добавляем новую информацию
 			bResult = bResult && CManipulatorManager::Set2DArray( passabilityArray, pManipulator, "passability" );

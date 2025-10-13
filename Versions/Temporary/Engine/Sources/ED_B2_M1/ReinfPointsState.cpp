@@ -9,6 +9,8 @@
 #include "ReinfPointsWindow.h"
 #include "ReinfPointsTypedDlg.h"
 
+#include <cstdint>
+
 //
 //
 //		REINF POINTS STATE
@@ -257,7 +259,7 @@ void CReinfPointsState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CReinfPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CReinfPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -271,7 +273,7 @@ bool CReinfPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 			SReinfPointsWindowData data;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(  CHID_REINF_POINTS_WINDOW, 
 																																	ID_WINDOW_GET_DIALOG_DATA, 
-																																	reinterpret_cast<DWORD>(&data) ) )
+																																	reinterpret_cast<uint32_t>(&data) ) )
 			{
 				nSelectedReinfPoint = data.nSelectedPoint;
 				nSelectedPlayer = data.nPlayerIndex;
@@ -414,7 +416,7 @@ void CReinfPointsState::RefreshReinfPointsWindow()
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_REINF_POINTS_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<DWORD>(&data) );
+																												reinterpret_cast<uint32_t>(&data) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, 
 																												ID_SCENE_UPDATE, 
 																												0 );

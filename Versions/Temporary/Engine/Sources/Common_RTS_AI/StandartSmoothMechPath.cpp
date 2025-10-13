@@ -5,11 +5,12 @@
 #include "System/RandomGen.h"
 #include "BasePathUnit.h"
 
+#include <cstdint>
 
 const float MIN_LENGTH_FOR_LARGE_TURN = 1024.0f;  //! минимальное расстояние с которого начинает строиться большой разворот
 const float MIN_LENGTH_FOR_SMALL_TURN = 256.0f;   //! минимальное расстояние с которого начинает строиться серий маленьких разворотов
 const float THRESHOLD_FOR_LARGE_TURN = 0.95f;			//! минимальное значение косинуса угла между обратным направлением юнита и сплайном, при котором возможет большой разворот
-const WORD  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разнице в угле нужно гладко поворачиваться 
+const uint16_t  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разнице в угле нужно гладко поворачиваться
 
 class CPushTileFunctional
 {
@@ -55,13 +56,13 @@ public:
 	}
 };
 
-WORD CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const WORD wStartAngle, const WORD wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward )
+uint16_t CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward )
 {
 	//DEBUG{
 	/*
 	vector<SVector> tiles;
 	CCheckTileFunctionalWithMark checkFunc2( GetUnit(), &tiles, GetAIMap()->GetTerrain() );
-	WORD wResult = CheckArcTiles( checkFunc2, vUnit, wStartAngle, wDiffAngle, fRadius, bClockWise, bForward, GetAIMap() );
+	uint16_t wResult = CheckArcTiles( checkFunc2, vUnit, wStartAngle, wDiffAngle, fRadius, bClockWise, bForward, GetAIMap() );
 	DebugInfoManager()->CreateMarker( OBJECT_ID_FORGET, tiles, NDebugInfo::RED );
 	return wResult;
 	*/
@@ -71,7 +72,7 @@ WORD CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const WORD wStartAng
 }
 
 // построить большой разворот
-bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint )
+bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint )
 {
 	if ( GetUnit()->GetMovementPlane() != PLANE_WATER || GetUnit()->GetTurnRadius() == 0.0f )
 	{
@@ -95,10 +96,10 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD w
 	}
 	*/
 	circles.clear();
-	const	WORD clockWise = wStartDir - wEndDir;
-	const	WORD antiClockWise = wEndDir - wStartDir;
+	const	uint16_t clockWise = wStartDir - wEndDir;
+	const	uint16_t antiClockWise = wEndDir - wStartDir;
 	bool bClockWise = ( clockWise < antiClockWise );
-	WORD dirDiff = (bClockWise) ? clockWise : antiClockWise;
+	uint16_t dirDiff = (bClockWise) ? clockWise : antiClockWise;
 
 	if ( CheckArc( GetUnit()->GetCenterPlain(), wStartDir, dirDiff, GetUnit()->GetTurnRadius(), bClockWise, true ) < dirDiff )
 	{
@@ -124,7 +125,7 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD w
 	return true;
 }
 
-bool CStandartSmoothMechPath::BuildSmallTurns( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward )
+bool CStandartSmoothMechPath::BuildSmallTurns( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward )
 {
 	return false;
 	/*
@@ -134,26 +135,26 @@ bool CStandartSmoothMechPath::BuildSmallTurns( const WORD wStartDir, const WORD 
 	if ( fPathLen < MIN_LENGTH_FOR_SMALL_TURN )
 		return false;
 	const CVec2 vPathStartPoint = GetPath()->GetStartPoint();
-	const	WORD clockWise = wStartDir - wEndDir;
-	const	WORD antiClockWise = wEndDir - wStartDir;
+	const	uint16_t clockWise = wStartDir - wEndDir;
+	const	uint16_t antiClockWise = wEndDir - wStartDir;
 	bool bLocalClockWise = ( clockWise < antiClockWise );
 	bool bLocalForward = bPrefereForward;
 	for ( int i = 0; i < 4; i++ )
 	{
 		circles.clear();
-		WORD currentDir = wStartDir;
+		uint16_t currentDir = wStartDir;
 		bool bClockWise = bLocalClockWise;
 		bool bForward = bLocalForward;
 		CVec2 vPosition = GetUnit()->GetCenterPlain();
-		WORD wRemain = ( bClockWise ) ? ( currentDir - wEndDir ) : ( wEndDir - currentDir );
-		const WORD wBestTurn = wRemain/2;
+		uint16_t wRemain = ( bClockWise ) ? ( currentDir - wEndDir ) : ( wEndDir - currentDir );
+		const uint16_t wBestTurn = wRemain/2;
 		bool bFirstStep = true;
 		while ( wRemain > DIR_DIFF_TO_SMOOTH_TURNING/2 )
 		{
-			const WORD MAX_TURN = 16384;
-			const WORD wPrefer = ( bFirstStep ) ? wBestTurn : Min( wRemain, MAX_TURN );
+			const uint16_t MAX_TURN = 16384;
+			const uint16_t wPrefer = ( bFirstStep ) ? wBestTurn : Min( wRemain, MAX_TURN );
 			bFirstStep = false;
-			WORD wClear = CheckArc( vPosition, currentDir, wPrefer, GetUnit()->GetTurnRadius(), bClockWise, bForward );
+			uint16_t wClear = CheckArc( vPosition, currentDir, wPrefer, GetUnit()->GetTurnRadius(), bClockWise, bForward );
 			if ( wClear < wPrefer && wClear < 1024 )
 				break;
 			circles.push_back( CCirclePath( currentDir, wClear, vPosition, GetUnit()->GetTurnRadius(), bClockWise, bForward ) );
@@ -269,12 +270,12 @@ void CStandartSmoothMechPath::AddSmoothTurn()
 	}
 }
 
-bool CStandartSmoothMechPath::CheckTurn( const WORD wNewDir )
+bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 {
 	bool bCanBackward = GetPath()->CanGoBackward( GetUnit() );
-	const WORD wUnitDir = GetUnit()->GetDirection();
-	const WORD wRightDirsDiff = DirsDifference( wUnitDir, wNewDir );
-	const WORD wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
+	const uint16_t wUnitDir = GetUnit()->GetDirection();
+	const uint16_t wRightDirsDiff = DirsDifference( wUnitDir, wNewDir );
+	const uint16_t wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
 	// поворот небольшой
 	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING || 
 		bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
@@ -293,7 +294,7 @@ bool CStandartSmoothMechPath::CheckTurn( const WORD wNewDir )
 		{
 			if ( GetUnit()->IsDangerousDirExist() )
 			{
-				const WORD wDangerousDir = GetUnit()->GetDangerousDir();
+				const uint16_t wDangerousDir = GetUnit()->GetDangerousDir();
 
 				bCanRotateForward =
 					DirsDifference( wNewDir, wDangerousDir ) < DirsDifference( wNewDir + 32768, wDangerousDir );
@@ -504,7 +505,7 @@ bool CStandartSmoothMechPath::UpdateDirection()
 			GetUnit()->SetGoForward( false );
 
 		// слишком велика разница между старым и новым направлениями, нужно повернуться
-		const WORD wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
+		const uint16_t wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
 		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff	> DIR_DIFF_TO_SMOOTH_TURNING ) )
 		{
 			if ( !GetUnit()->TurnToDirection( GetDirectionByVector( GetSplineDX() ), true, !bForceGoBackward ) )
@@ -570,11 +571,11 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 		{
 			lastCheckToRightTurn = 0;
 
-			const WORD wFrontDir = GetUnit()->GetFrontDirection();
+			const uint16_t wFrontDir = GetUnit()->GetFrontDirection();
 			bool bCheck = true;
 			if ( GetUnit()->IsDangerousDirExist() )
 			{
-				const WORD wDangerousDir = GetUnit()->GetDangerousDir();
+				const uint16_t wDangerousDir = GetUnit()->GetDangerousDir();
 				bCheck = DirsDifference( wFrontDir, wDangerousDir ) > 
 					DirsDifference( wFrontDir + 32768, wDangerousDir );
 			}

@@ -2,8 +2,10 @@
 
 #include "ProgressDialog.h"
 
-const DWORD CProgressDialog::START_TIMER_ID = 10;
-const DWORD CProgressDialog::START_TIMER_INTERVAL = 500;
+#include <cstdint>
+
+const uint32_t CProgressDialog::START_TIMER_ID = 10;
+const uint32_t CProgressDialog::START_TIMER_INTERVAL = 500;
 
 
 CProgressDialog::CProgressDialog( CWnd* pParent )

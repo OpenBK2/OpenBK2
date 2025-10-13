@@ -5,10 +5,12 @@
 #include "Misc/StrProc.h"
 #include "DebugStatsSystem.h"
 
+#include <cstdint>
+
 namespace NDebugInfo
 {
 
-void UpdateEntry( const std::string &szName, const std::string &szValue, const DWORD dwColor )
+void UpdateEntry( const std::string &szName, const std::string &szValue, const uint32_t dwColor )
 {
 	IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
 	if ( pDebug )

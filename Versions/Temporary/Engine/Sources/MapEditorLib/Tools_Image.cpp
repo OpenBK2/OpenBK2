@@ -3,7 +3,9 @@
 #include "Misc/2Darray.h"
 #include "Tools_Image.h"
 
-void NImage::Copy( CArray2D<DWORD> *pDestination, const CArray2D<DWORD> &rSource, const CTPoint<int> &rStartPoint )
+#include <cstdint>
+
+void NImage::Copy( CArray2D<uint32_t> *pDestination, const CArray2D<uint32_t> &rSource, const CTPoint<int> &rStartPoint )
 {
 	for ( int nXIndex = 0; ( nXIndex < pDestination->GetSizeX() ) && ( nXIndex < ( rSource.GetSizeX() - rStartPoint.x ) ); ++nXIndex )
 	{
@@ -15,13 +17,13 @@ void NImage::Copy( CArray2D<DWORD> *pDestination, const CArray2D<DWORD> &rSource
 }
 
 
-void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<DWORD> &rImage )
+void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage )
 {
 	Load2Bitmap( pBitmap, rImage, CTPoint<int>( rImage.GetSizeX(), rImage.GetSizeY() ) );
 }
 
 
-void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<DWORD> &rImage, const CTPoint<int> &rSize )
+void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage, const CTPoint<int> &rSize )
 {
 	try
 	{

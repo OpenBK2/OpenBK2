@@ -23,6 +23,8 @@
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 const float F_MAX_SCENE_HEIGHT = 20; // CRAP need to store max height in single place
 const int N_DEPTH_CHANNELS_PER_TEX = 3;
 const float F_MINIMAL_SCENE_PART_SIZE = 20;
@@ -83,7 +85,7 @@ public:
 				sprintf( buff, "C:\\test\\lm%i_%i.ddx", r, i );
 	
 				CFileStream stream( buff, CFileStream::WIN_CREATE );
-				NImage::ConvertAndSaveAsDDS( &stream, *(CArray2D<DWORD> *)&textures[i], NImage::IMAGE_TYPE_PICTURE, NGfx::CF_DXT1, 1, true, true, 1024.0f);
+				NImage::ConvertAndSaveAsDDS( &stream, *(CArray2D<uint32_t> *)&textures[i], NImage::IMAGE_TYPE_PICTURE, NGfx::CF_DXT1, 1, true, true, 1024.0f);
 			}
 		
 		}*/

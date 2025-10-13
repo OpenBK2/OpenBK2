@@ -9,14 +9,16 @@
 #include "StaticObjectsIters.h"
 #include "Cheats.h"
 
+#include <cstdint>
+
 extern CDiplomacy theDipl;
 extern CStaticObjects theStatObjs;
 extern CEventUpdater updater;
 extern SCheats theCheats;
 extern NAI::CTimeCounter timeCounter;
-int ConvertToNAngle( const WORD _wAngle );
+int ConvertToNAngle( const uint16_t _wAngle );
 
-CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float fHP, const WORD wDir, const int nDiplomacy, const int nFrameIndex )
+CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float fHP, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex )
 : pStats( _pStats ), CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE ), eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
 {
 	eLifeType = pStats->GetDamageTypeByFrameIndex( GetFrameIndex() );
@@ -129,13 +131,13 @@ void CFence::Die( const float fDamage )
 	Delete();
 }
 
-void CFence::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
+void CFence::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetVisibility( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
 
-void CFence::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
+void CFence::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );

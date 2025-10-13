@@ -2,6 +2,9 @@
 
 #include "InterfaceMPBase.h"
 #include "ScenarioTracker.h"
+
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMedal;
@@ -16,7 +19,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 	{
 		std::wstring wszName;
 		int nCountry;
-		DWORD dwColour;
+		uint32_t dwColour;
 		int nTeam;
 		int nUnitsLost;
 		int nUnitsKilled;

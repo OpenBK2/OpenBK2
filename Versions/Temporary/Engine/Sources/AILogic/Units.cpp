@@ -7,6 +7,8 @@
 #include "UnitsIterators.h"
 #include "UnitsIterators2.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D440, CUnits );
 
 extern CSupremeBeing theSupremeBeing;
@@ -149,7 +151,7 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 		nCell[cell.y][cell.x] = cellsIds.Get();
 	
 	// добавить юнит в список стоящих на этой ячейке
-	const int newId = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + BYTE( pUnit->GetStats()->IsInfantry() ) ) + 1;
+	const int newId = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + uint8_t( pUnit->GetStats()->IsInfantry() ) ) + 1;
 
 	if ( newId >= unitsInCells[0].GetListsNum() || newId >= unitsInCells[1].GetListsNum() )
 	{
@@ -381,7 +383,7 @@ CAIUnit* CUnits::operator[]( const int id )
 	return pUnit; 
 }
 
-void CUnits::ChangePlayer( CAIUnit *pUnit, const BYTE cNewPlayer )
+void CUnits::ChangePlayer( CAIUnit *pUnit, const uint8_t cNewPlayer )
 {
 	if ( pUnit && pUnit->IsAlive() && pUnit->GetPlayer() != cNewPlayer )
 	{
@@ -487,7 +489,7 @@ void CUnits::CheckUnitCell()
 	if ( !pUnit->IsInSolidPlace() && theStaticMap.IsPointInside( pUnit->GetCenter() ) )
 	{
 		const SVector cell = AICellsTiles::GetBigCell( pUnit->GetCenter() );
-		const int id = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + BYTE( pUnit->GetStats()->IsInfantry() ) ) + 1;
+		const int id = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + uint8_t( pUnit->GetStats()->IsInfantry() ) ) + 1;
 
 		for ( int i = unitsInCells.begin( id ); i != unitsInCells.end(); i = unitsInCells.GetNext( i ) )
 		{

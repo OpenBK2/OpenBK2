@@ -5,6 +5,8 @@
 #include "System/BinaryResources.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 //TODO: divide LOAD and CREATE methods in TerraManager
 
 namespace NScene
@@ -285,7 +287,7 @@ void CTerrainManager::UpdateZ( CVec3 *pvPos )
 }
 
 
-DWORD CTerrainManager::GetNormal( const CVec2 &vPoint ) const
+uint32_t CTerrainManager::GetNormal( const CVec2 &vPoint ) const
 {
 	//if ( pTerraGen )
 	{
@@ -348,7 +350,7 @@ void CTerrainManager::InitHeights4Editor( int nSizeX, int nSizeY )
 }
 
 
-void CTerrainManager::CreateDebris(	const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+void CTerrainManager::CreateDebris(	const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
 																		const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 																		const NDebrisBuilder::EMaskSmoothType smoothType )
 {
@@ -461,14 +463,14 @@ void CTerrainManager::HideTerrain( bool bHide )
 }
 
 
-void CTerrainManager::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<BYTE> &mask,
+void CTerrainManager::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask,
 																					const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
 	pTerraGen->UpdateTileAreaType( fXo, fYo, mask, terraBrushUpdate );
 }
 
 
-void CTerrainManager::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs )
+void CTerrainManager::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs )
 {
 	pTerraGen->GetTileTypeUpdateDifferences( pOffsX, pOffsY, pDiffs );
 }
@@ -486,7 +488,7 @@ void CTerrainManager::ClampUnderRivers( NMeshData::SMeshData *pData )
 }
 
 
-void CTerrainManager::GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
+void CTerrainManager::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	pTerraGen->GetAreaTileTypes( pAreaTypes, nX1, nY1, nX2, nY2 );
 }

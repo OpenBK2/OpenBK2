@@ -22,6 +22,8 @@
 #include "ExecutorStaticObjectSegment.h"
 #include "KeyBuildingBonusSystem.h"
 
+#include <cstdint>
+
 extern CKeyBuildingBonusSystem theBonusSystem;
 extern CBridgeHeightRemover theBridgeHeightsRemover;
 CStaticObjects theStatObjs;
@@ -202,7 +204,7 @@ void CStaticObjects::DeleteInternalEntrenchmentInfo( CEntrenchment *pEntrench )
 	entrenchments.erase( iter );
 }
 
-CStaticObject* CStaticObjects::AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nDiplomacy, const int nFrameIndex )
+CStaticObject* CStaticObjects::AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex )
 {
 	CFence *pFence = new CFence( pStats, center, pStats->fMaxHP * fHPFactor, wDir, nDiplomacy, /* nFrameIndex */ 0 ); //no nFrameIndex here, because stats don't have apropriate information
 	pFence->Init();
@@ -226,7 +228,7 @@ CStaticObject* CStaticObjects::AddNewSmokeScreen( const CVec3 &vCenter, const fl
 	return pObj;
 }
 
-CExistingObject* CStaticObjects::AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner )
+CExistingObject* CStaticObjects::AddNewTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const uint16_t dir, const int nFrameIndex, const class CVec2 &vHalfSize, const std::list<SObjTileInfo> &tilesToLock, class CAIUnit *pOwner )
 {
 	CEntrenchmentTankPit *pObj = new CEntrenchmentTankPit( pStats, center, dir, nFrameIndex, vHalfSize, tilesToLock, pOwner );
 	pObj->Mem2UniqueIdObjs();
@@ -250,7 +252,7 @@ void CStaticObjects::AddStaticObject( class CExistingObject* pObj, bool bAlready
 	updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ST_OBJ, pObj, -1 );
 }
 
-CStaticObject* CStaticObjects::AddNewStaticObject( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex )
+CStaticObject* CStaticObjects::AddNewStaticObject( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex )
 {
 	CCommonStaticObject *pObj = new CSimpleStaticObject( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, ESOT_COMMON );
 	pObj->Mem2UniqueIdObjs();
@@ -261,7 +263,7 @@ CStaticObject* CStaticObjects::AddNewStaticObject( const SObjectBaseRPGStats *pS
 	return pObj;
 }
 
-CStaticObject* CStaticObjects::AddNewTerraObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex )
+CStaticObject* CStaticObjects::AddNewTerraObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex )
 {
 	CCommonStaticObject *pObj = new CSimpleStaticObject( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, ESOT_TERRA );
 	pObj->Mem2UniqueIdObjs();
@@ -276,7 +278,7 @@ CStaticObject* CStaticObjects::AddNewTerraObj( const SObjectBaseRPGStats *pStats
 	return pObj;
 }
 
-CStaticObject* CStaticObjects::AddNewTerraMeshObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex )
+CStaticObject* CStaticObjects::AddNewTerraMeshObj( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex )
 {
 	CCommonStaticObject *pObj = new CTerraMeshStaticObject( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, ESOT_TERRA );
 	pObj->Mem2UniqueIdObjs();
@@ -304,7 +306,7 @@ void CStaticObjects::AddStorage( CBuilding *pObj )
 	//updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pObj, -1 );
 }
 
-CStaticObject* CStaticObjects::AddNewBuilding( const SBuildingRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nFrameIndex, int nPlayer, int nLinkID )
+CStaticObject* CStaticObjects::AddNewBuilding( const SBuildingRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex, int nPlayer, int nLinkID )
 {
 	CBuildingSimple *pObj = new CBuildingSimple( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, nPlayer, nLinkID );
 	pObj->Mem2UniqueIdObjs();
@@ -323,7 +325,7 @@ CStaticObject* CStaticObjects::AddNewBuilding( const SBuildingRPGStats *pStats, 
 	return pObj;
 }
 
-CStaticObject* CStaticObjects::AddNewBridgeSpan( const SBridgeRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD dir, const int nFrameIndex )
+CStaticObject* CStaticObjects::AddNewBridgeSpan( const SBridgeRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t dir, const int nFrameIndex )
 {
 	const CVec3 vCenter( center.x, center.y, center.z + GetHeights()->GetVisZ( center.x, center.y ) );
 	CBridgeSpan *pObj = new CBridgeSpan( pStats, vCenter, pStats->fMaxHP * fHPFactor, dir, nFrameIndex );
@@ -381,7 +383,7 @@ void CStaticObjects::AddEntrencmentPart(  class CEntrenchmentPart *pObj, bool bL
 	AddToAreaMap( pObj );
 }
 
-CStaticObject* CStaticObjects::AddNewEntrencmentPart( const SEntrenchmentRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD dir, const int nFrameIndex, int nPlayer, bool bPlayerCreates )
+CStaticObject* CStaticObjects::AddNewEntrencmentPart( const SEntrenchmentRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t dir, const int nFrameIndex, int nPlayer, bool bPlayerCreates )
 {
 	CEntrenchmentPart *pObj = new CEntrenchmentPart( pStats, center, dir, nFrameIndex, pStats->fMaxHP * fHPFactor, nPlayer, bPlayerCreates );
 	pObj->Mem2UniqueIdObjs();

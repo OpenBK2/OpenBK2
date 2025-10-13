@@ -1,4 +1,6 @@
-WORD nDir;
+#include <cstdint>
+
+uint16_t nDir;
 bool ToAIUnits( bool bInEditor )
 {
 	//Vis2AI( &vPos, vPos );

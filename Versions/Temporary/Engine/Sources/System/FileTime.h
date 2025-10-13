@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <boost/predef.h>
 
 #if BOOST_OS_WINDOWS
@@ -14,30 +16,30 @@ struct SWin32Time
 	{
 		struct
 		{
-			DWORD seconds : 5;								// seconds (0..29 with 2 sec. interval)
-			DWORD minutes : 6;								// minutes (0..59)
-			DWORD hours   : 5;								// hours (0..23)
-			DWORD day     : 5;								// day (1..31)
-			DWORD month   : 4;								// month(1..12)
-			DWORD year    : 7;								// year (0..119 relative to 1980)
+			uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
+			uint32_t minutes : 6;								// minutes (0..59)
+			uint32_t hours   : 5;								// hours (0..23)
+			uint32_t day     : 5;								// day (1..31)
+			uint32_t month   : 4;								// month(1..12)
+			uint32_t year    : 7;								// year (0..119 relative to 1980)
 		};
 		struct
 		{
-			WORD wTime;
-			WORD wDate;
+			uint16_t wTime;
+			uint16_t wDate;
 		};
-		DWORD dwFulltime;
+		uint32_t dwFulltime;
 	};
 	//
 	SWin32Time() {  }
-	SWin32Time( const DWORD _dwFulltime ) : dwFulltime( _dwFulltime ) {  }
-	WORD GetDate() const { return wDate; }
-	WORD GetTime() const { return wTime; }
-	operator DWORD() const { return dwFulltime; }
+	SWin32Time( const uint32_t _dwFulltime ) : dwFulltime( _dwFulltime ) {  }
+	uint16_t GetDate() const { return wDate; }
+	uint16_t GetTime() const { return wTime; }
+	operator uint32_t() const { return dwFulltime; }
 };
 
 // transforms DOS date/time format (time_t) to the Win32 date/time format (SWin32Time)
-inline DWORD DOSToWin32DateTime( time_t dostime )
+inline uint32_t DOSToWin32DateTime( time_t dostime )
 {
 	// transform DOS time to local time 'tm' structure
 	tm *pTime = localtime( &dostime );
@@ -54,7 +56,7 @@ inline DWORD DOSToWin32DateTime( time_t dostime )
 }
 
 // transforms Win32 date/time format (SWin32Time) to the DOS date/time format (time_t)
-inline time_t Win32ToDOSDateTime( const DWORD _w32time )
+inline time_t Win32ToDOSDateTime( const uint32_t _w32time )
 {
 	struct SConvert
 	{
@@ -62,14 +64,14 @@ inline time_t Win32ToDOSDateTime( const DWORD _w32time )
 		{
 			struct  
 			{
-				DWORD seconds : 5;								// seconds (0..29 with 2 sec. interval)
-				DWORD minutes : 6;								// minutes (0..59)
-				DWORD hours   : 5;								// hours (0..23)
-				DWORD day     : 5;								// day (1..31)
-				DWORD month   : 4;								// month(1..12)
-				DWORD year    : 7;								// year (0..119 relative to 1980)
+				uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
+				uint32_t minutes : 6;								// minutes (0..59)
+				uint32_t hours   : 5;								// hours (0..23)
+				uint32_t day     : 5;								// day (1..31)
+				uint32_t month   : 4;								// month(1..12)
+				uint32_t year    : 7;								// year (0..119 relative to 1980)
 			};
-			DWORD dwFullTime;
+			uint32_t dwFullTime;
 		};
 	};
 	SConvert w32time;
@@ -89,7 +91,7 @@ inline time_t Win32ToDOSDateTime( const DWORD _w32time )
 }
 
 // transforms FILETIME to Win32 date/time (SWin32Time)
-inline DWORD FILETIMEToWin32DateTime( const FILETIME &filetime )
+inline uint32_t FILETIMEToWin32DateTime( const FILETIME &filetime )
 {
 	FILETIME localfiletime;
 	FileTimeToLocalFileTime( &filetime, &localfiletime );
@@ -107,14 +109,14 @@ inline void FILETIMEToTMTime( const FILETIME &filetime, tm *pTMTime )
 		{
 			struct  
 			{
-				DWORD seconds : 5;								// seconds (0..29 with 2 sec. interval)
-				DWORD minutes : 6;								// minutes (0..59)
-				DWORD hours   : 5;								// hours (0..23)
-				DWORD day     : 5;								// day (1..31)
-				DWORD month   : 4;								// month(1..12)
-				DWORD year    : 7;								// year (0..119 relative to 1980)
+				uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
+				uint32_t minutes : 6;								// minutes (0..59)
+				uint32_t hours   : 5;								// hours (0..23)
+				uint32_t day     : 5;								// day (1..31)
+				uint32_t month   : 4;								// month(1..12)
+				uint32_t year    : 7;								// year (0..119 relative to 1980)
 			};
-			DWORD dwFullTime;
+			uint32_t dwFullTime;
 		};
 	};
 	SConvert w32time;
@@ -134,7 +136,7 @@ inline void FILETIMEToTMTime( const FILETIME &filetime, tm *pTMTime )
 }
 
 // transforms Win32 date/time (SWin32Time) to FILETIME
-inline FILETIME Win32DateTimeToFILETIME( const DWORD win32time )
+inline FILETIME Win32DateTimeToFILETIME( const uint32_t win32time )
 {
 	FILETIME localft;
 	DosDateTimeToFileTime( HIWORD(win32time), LOWORD(win32time), &localft );

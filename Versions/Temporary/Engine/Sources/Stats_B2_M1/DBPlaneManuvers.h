@@ -1,7 +1,8 @@
 #pragma once
 
-// automatically generated file, don't change manually!
+#include <cstdint>
 
+// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 
@@ -48,7 +49,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1108EB80 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fMin;
 		float fMax;
@@ -65,7 +66,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SSpeedRange : public CResource
@@ -74,7 +75,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1108EB81 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fMin;
 		float fMax;
@@ -91,7 +92,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SDistanceRange : public CResource
@@ -100,7 +101,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1108EB82 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fMin;
 		float fMax;
@@ -117,7 +118,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SHeightRange : public CResource
@@ -126,7 +127,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1108EB83 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fMin;
 		float fMax;
@@ -143,13 +144,13 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SManuverConditions
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SDirectionRange > pEnemyDirection;
 		CDBPtr< SDirectionRange > pSelfDirection;
@@ -164,11 +165,11 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SManuverDescriptor : public CResource
@@ -177,7 +178,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1108EB84 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		SManuverConditions conditions;
 		EManuverID eManuverID;
@@ -199,7 +200,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

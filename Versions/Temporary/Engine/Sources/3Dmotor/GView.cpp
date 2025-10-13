@@ -36,6 +36,8 @@
 #include "GfxRender.h"
 #include "GRenderLight.h"
 
+#include <cstdint>
+
 //#define DEBUG_LIGHTING
 //#define FADE_TEST
 //namespace NAnimation
@@ -176,9 +178,9 @@ void CParticleTexture::Recalc()
 					NGfx::SPixel4444 &sDst = sLock[nY][nX];
 					const NGfx::SPixel8888 &sSrc = pTextureData->mips[nLevel][nY][nX];
 
-					sDst.r = (BYTE)( sSrc.r * vColor.x ) >> 4;
-					sDst.g = (BYTE)( sSrc.g * vColor.y ) >> 4;
-					sDst.b = (BYTE)( sSrc.b * vColor.z ) >> 4;
+					sDst.r = (uint8_t)( sSrc.r * vColor.x ) >> 4;
+					sDst.g = (uint8_t)( sSrc.g * vColor.y ) >> 4;
+					sDst.b = (uint8_t)( sSrc.b * vColor.z ) >> 4;
 					sDst.a = sSrc.a >> 4;
 				}
 			}

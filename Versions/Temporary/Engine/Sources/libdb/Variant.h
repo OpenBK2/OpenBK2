@@ -2,6 +2,7 @@
 
 #include <comutil.h>
 
+#include <cstdint>
 
 //#include "DBIDDef.h"
 
@@ -41,7 +42,7 @@ private:
 		SBlob(): m_ptr(0), m_nSize(0), m_bDelete(false) {}
 		SBlob(void *_ptr): m_ptr(_ptr), m_nSize(0), m_bDelete(false) {}
 		SBlob(const void *_ptr, size_t _nSize, bool _bDelete = true): 
-			m_ptr(new BYTE[_nSize]), m_nSize(_nSize), m_bDelete(_bDelete) 
+			m_ptr(new uint8_t[_nSize]), m_nSize(_nSize), m_bDelete(_bDelete)
 		{
 			ASSERT( _ptr != 0 );
 			memcpy( m_ptr, _ptr, m_nSize );
@@ -51,7 +52,7 @@ private:
 		{
 			if(m_bDelete){
 				ASSERT( _blob.m_ptr != 0 );
-				m_ptr = new BYTE[m_nSize];
+				m_ptr = new uint8_t[m_nSize];
 				memcpy( m_ptr, _blob.m_ptr, m_nSize );
 			}
 			else
@@ -75,7 +76,7 @@ private:
 			if( saver.IsReading() )
 			{
 				m_bDelete = true;
-				m_ptr = new BYTE[m_nSize];
+				m_ptr = new uint8_t[m_nSize];
 			}
 
 			saver.AddRawData(2, m_ptr, m_nSize);
@@ -149,12 +150,12 @@ public:
 	CVariant( const bool bVal )         : m_eType( VT_BOOL ), m_bool( bVal ) {}
 	CVariant( const CDBID &dbid )				: m_eType( VT_DBID ), m_dbid( new CDBID(dbid) ) {}
 	//
-	CVariant( const DWORD dwVal )				: m_eType( VT_INT ), m_int( dwVal ) { }
+	CVariant( const uint32_t dwVal )				: m_eType( VT_INT ), m_int( dwVal ) { }
 	CVariant( const long lVal )					: m_eType( VT_INT ), m_int( lVal ) { }
-	CVariant( const WORD wVal )					: m_eType( VT_INT ), m_int( wVal ) { }
+	CVariant( const uint16_t wVal )					: m_eType( VT_INT ), m_int( wVal ) { }
 	CVariant( const short nVal )				: m_eType( VT_INT ), m_int( nVal ) { }
 	CVariant( const char cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
-	CVariant( const BYTE cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
+	CVariant( const uint8_t cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
 	//
 	CVariant( const GUID &guid )				: m_eType( VT_POINTER ), m_pblob( new SBlob((void*)&guid, sizeof(guid)) ) {}
 private:

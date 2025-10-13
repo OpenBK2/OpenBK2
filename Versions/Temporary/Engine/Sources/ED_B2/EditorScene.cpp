@@ -3,6 +3,8 @@
 #include "EditorScene.h"
 #include "SceneB2/Scene.h"
 
+#include <cstdint>
+
 void CEditorScene::RemoveAllScreens()
 {
 	Scene()->RemoveAllScreens();
@@ -38,7 +40,7 @@ class CCSTime* CEditorScene::GetGameTimer()
 	return Scene()->GetGameTimer();
 }
 
-DWORD CEditorScene::GetNormal( const CVec2 &vPoint ) const
+uint32_t CEditorScene::GetNormal( const CVec2 &vPoint ) const
 {
 	return Scene()->GetNormal( vPoint );
 }
@@ -94,7 +96,7 @@ int CEditorScene::AddPolyline( const int nID, const vector<CVec3> &points, const
 	return Scene()->AddPolyline( nID, points, vColor, bDepthCheck );
 }
 
-int CEditorScene::AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck )
+int CEditorScene::AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	return Scene()->AddIndexedPolyline( nID, points, indices, vColor, bDepthCheck );
 }

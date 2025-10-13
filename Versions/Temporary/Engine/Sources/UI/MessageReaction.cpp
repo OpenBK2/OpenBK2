@@ -11,6 +11,9 @@
 //#include "..\Input\Input.h"
 
 #include "WindowTabControl.h"
+
+#include <cstdint>
+
 // здесь генерируется отдельный ID, который потом прописывается в в файле include_?????????????.h
 REGISTER_SAVELOAD_CLASS(0x11075CC0, CARSetGlobalVar)
 REGISTER_SAVELOAD_CLASS(0x11075CC1, CARRemoveGlobalVar)
@@ -26,7 +29,7 @@ BASIC_REGISTER_CLASS(IMessageReactionB2);
 //CMessageReactionB2
 
 
-bool CMessageReactionB2::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CMessageReactionB2::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 	bool bRes = true;
 	if ( !commonBefore.empty() )
@@ -90,7 +93,7 @@ void CMessageReactionB2::InitSequienceByDesc( CMessageSequence *pCreate, const C
 	}
 }
 
-bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute, struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute, struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 	if ( pToExecute->empty() ) 
 		return false;
@@ -107,7 +110,7 @@ bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute, struct ISc
 //		CARSetGlobalVar
 
 
-bool CARSetGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSetGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {  
 #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
 	DebugTrace( "\t\t SetGlobalVar \tvarName =\t\"%s\", \tValue =\t\"%s\"\n", 
@@ -133,7 +136,7 @@ void CARSetGlobalVar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 //		CARRemoveGlobalVar
 
 
-bool CARRemoveGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARRemoveGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {  
 #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
 	DebugTrace( "\t\t RemoveGlabalVar \tvarName =\t\"%s\"\n", 
@@ -159,7 +162,7 @@ void CARRemoveGlobalVar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 //		CARSendUIMessage
 
 
-bool CARSendUIMessage::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSendUIMessage::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 //#if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
 //	DebugTrace( "\t\t SendMessage\tID =\t\"%s\tParam =\t%s\n", 
@@ -187,7 +190,7 @@ void CARSendUIMessage::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 //		CARSendGameMessage
 
 
-bool CARSendGameMessage::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSendGameMessage::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 	NInput::PostEvent( pDesc->szEventName, pDesc->nIntParam, 0 );
 	//IGameEvent *pEvent = Input()->GetEvent( pDesc->szEventName );
@@ -212,7 +215,7 @@ void CARSendGameMessage::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 //		CARSwitchTab
 
 
-bool CARSiwtchTab::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSiwtchTab::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 	CWindowTabControl *pTab = dynamic_cast<CWindowTabControl *>(pScreen->GetElement( pDesc->szTabControlName, true ));
 	NI_ASSERT( pTab != 0, StrFmt( "tab control with name \"%s\" not found", pDesc->szTabControlName ) );

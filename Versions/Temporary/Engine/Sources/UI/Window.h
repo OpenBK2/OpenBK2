@@ -2,16 +2,14 @@
 // Window.h: interface for the CWindow class.
 //
 
-
-#if !defined(AFX_WINDOW_H__54783510_EE35_420B_A2EC_19C1C30EA449__INCLUDED_)
-#define AFX_WINDOW_H__54783510_EE35_420B_A2EC_19C1C30EA449__INCLUDED_
-
 #include "UI_export.h"
 
 #include "WindowMessageHandle.h"
 #include "Misc/HashFuncs.h"
 #include "Misc/Heap.h"
 #include "UI/uifactory.h"
+
+#include <cstdint>
 
 class CForegroundTextString;
 class CWindow;
@@ -171,9 +169,9 @@ public:
 
 	// placement flags = OR of number EWindowPlacementFlags
 	virtual void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const;
-	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags );
+	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags );
 	CTRect<int> GetPlacement() const;
-	virtual void SetPlacement( const CTRect<int> &rc, const DWORD flags );
+	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags );
 
 	struct IScreen* GetScreen();
 	// is point (in screen coordinates) inside control
@@ -287,6 +285,3 @@ public:
 	void SetFadeValue( float fValue );
 	void SetInternalFadeValue( float fValue );
 };
-
-#endif 
-

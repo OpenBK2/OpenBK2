@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace NLang
 {
 	struct IVisitor;
@@ -48,7 +50,7 @@ namespace NLang
 		bool bValue;
 		float fValue;
 		std::string szValue;
-		DWORD dwHexValue;
+		uint32_t dwHexValue;
 		std::string szName;
 	public:
 		CSimpleValue() : eType( EST_UNKNOWN ), bValue( false ), fValue( 0.0f ), dwHexValue( 0 ) { }
@@ -68,10 +70,10 @@ namespace NLang
 		bool GetBool() const { return bValue; }
 		float GetFloat() const { return fValue; }
 		const std::string& GetString() const { return szValue; }
-		DWORD GetHexBinary() const { return dwHexValue; }
+		uint32_t GetHexBinary() const { return dwHexValue; }
 		int GetInt() const { return fValue; }
-		WORD GetWORD() const { return fValue; }
-		WORD GetDWORD() const { return dwHexValue; }
+		uint16_t GetWORD() const { return fValue; }
+		uint16_t GetDWORD() const { return dwHexValue; }
 	};
 
 	const char* GetTypeName( ESimpleType eType );

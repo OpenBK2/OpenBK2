@@ -2,6 +2,8 @@
 
 #include "Stats_B2_M1/AIUnitCmd.h"
 
+#include <cstdint>
+
 struct ITransceiver;
 class CCommandsSender : public CObjectBase
 {
@@ -25,9 +27,9 @@ public:
 	// register group of units to AI
 	virtual int CommandRegisterGroup( const std::vector<int> &vIDs );
 	// unregister group
-	virtual void CommandUnregisterGroup( const WORD wGroup );
+	virtual void CommandUnregisterGroup( const uint16_t wGroup );
 	// send command to group of units
-	virtual void CommandGroupCommand( const SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue, const int nCommandSaveID );
+	virtual void CommandGroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue, const int nCommandSaveID );
 	// set single command to call planes, reinforcements, etc. returns group number, which was created
 	virtual int CommandUnitCommand( const SAIUnitCmd *pCommand );
 	// Actor-less command

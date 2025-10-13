@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GGeometryUtil.h"
 
+#include <cstdint>
+
 /*#include <d3dx8.h>
 namespace NGfx
 {
@@ -182,12 +184,12 @@ int CTriVertexCacheOptimizer::CountNotCachedFL( const std::vector<STriangle> &tr
 	return nRes;
 }
 
-void CTriVertexCacheOptimizer::OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<WORD> *pVertexReorder )
+void CTriVertexCacheOptimizer::OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<uint16_t> *pVertexReorder )
 {
-	std::vector<WORD> &position = *pVertexReorder;
+	std::vector<uint16_t> &position = *pVertexReorder;
 	position.resize(0);
 	position.resize( nVertices, 0xffff );
-	WORD nPos = 0;
+	uint16_t nPos = 0;
 	for ( int k = 0; k < tris.size(); ++k )
 	{
 		const STriangle &q = tris[k];
@@ -208,7 +210,7 @@ void CTriVertexCacheOptimizer::OptimizeVertexOrder( std::vector<STriangle> &tris
 	ASSERT( nPos <= position.size() );
 }
 
-void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris, std::vector<WORD> *pVertexReorder, int *pnResVerts, int _nVCacheSize )
+void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris, std::vector<uint16_t> *pVertexReorder, int *pnResVerts, int _nVCacheSize )
 {
 	nVCacheSize = _nVCacheSize;
 	/*vector<STriangle> tt;
@@ -255,18 +257,18 @@ void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris, std::vec
 		NWin32Helper::com_ptr<ID3DXMesh> pMesh;
 		D3DXCreateMeshFVF( nTris, nVertices, D3DXMESH_SYSTEMMEM, D3DFVF_XYZ, NGfx::pDevice, pMesh.GetAddr() );
 		STriangle *pBuf;
-		pMesh->LockIndexBuffer( 0, (BYTE**)&pBuf );
+		pMesh->LockIndexBuffer( 0, (uint8_t**)&pBuf );
 		for ( int k = 0; k < nTris; ++k )
 			pBuf[k] = (*pTris)[k];
 		pMesh->UnlockIndexBuffer();
-		vector<DWORD> dwAdj( nTris * 3 );
-		vector<DWORD> dwRes( nTris );
+		vector<uint32_t> dwAdj( nTris * 3 );
+		vector<uint32_t> dwRes( nTris );
 		pMesh->ConvertPointRepsToAdjacency( 0, &dwAdj[0] );
 		NWin32Helper::com_ptr<ID3DXBuffer> pReorder;
 		pMesh->OptimizeInplace( D3DXMESHOPT_VERTEXCACHE, &dwAdj[0], 0, &dwRes[0], pReorder.GetAddr() );
 		ASSERT( pReorder->GetBufferSize() == nVertices * 4 );
 		pVertexReorder->resize( nVertices );
-		DWORD *pReorderBuf = (DWORD*)pReorder->GetBufferPointer();
+		uint32_t *pReorderBuf = (uint32_t*)pReorder->GetBufferPointer();
 		for ( int k = 0; k < nVertices; ++k )
 			(*pVertexReorder)[k] = pReorderBuf[k];
 		res.resize( nTris );

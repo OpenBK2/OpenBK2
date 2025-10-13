@@ -6,6 +6,8 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "PC_MultilineStringEditor.h"
 
+#include <cstdint>
+
 CPCMultilineStringEditor::CPCMultilineStringEditor()
 {	
 }
@@ -166,7 +168,7 @@ void CPCMultilineStringEditor::SetDefaultValue()
 }
 
 
-bool CPCMultilineStringEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCMultilineStringEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	/**
 	switch( nCommandID )

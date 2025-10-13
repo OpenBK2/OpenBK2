@@ -9,16 +9,18 @@
 #include "random.h"
 #include "original.h"
 
+#include <cstdint>
+
 enum { iterations = 10000 };
 
 TEST(AddColors, AddColorsRandom) {
     for (size_t i = 0; i < iterations; ++i) {
 
         size_t count = 1;
-        std::vector<DWORD> res, ref;
+        std::vector<uint32_t> res, ref;
         res.resize(count);
         ref.resize(count);
-        std::vector<DWORD> src;
+        std::vector<uint32_t> src;
         std::vector<NGfx::SMMXWord> add;
         for (size_t j = 0; j < count; ++j) {
 

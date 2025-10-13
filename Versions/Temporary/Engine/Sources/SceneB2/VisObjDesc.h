@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "VisObjSelection.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SModel;
@@ -79,7 +81,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	}
 
 	void SetFade( float _fFade ) { fFade = _fFade; }
-	void FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<WORD> &bbIndices );
+	void FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices );
 	void UpdateBBPolyLine( NGScene::IGameView *pGScene );
 	void UpdateSrcBind();
 	//

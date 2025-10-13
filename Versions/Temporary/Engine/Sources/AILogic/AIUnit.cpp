@@ -62,6 +62,8 @@
 #include "DBAIConsts.h"
 #include "GlobalWarFog.h"
 
+#include <cstdint>
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CBalanceTest theBalanceTest;
 extern CExecutorContainer theExecutorContainer;
@@ -86,7 +88,7 @@ extern bool g_bUseRoundUnits;
 
 static bool g_bUseSmartScan = true;
 
-static DWORD g_dwTimeForDangerousTurnRound = 3000;
+static uint32_t g_dwTimeForDangerousTurnRound = 3000;
 
 const int MAX_TARGETS_CACHE_SIZE = 15;
 
@@ -164,7 +166,7 @@ const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRe
 		return SAINotifyHitInfo::EHT_MISS;
 }
 
-const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir, const SRect &unitRect )
+const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir, const SRect &unitRect )
 {
 	switch ( nArmorDir )
 	{
@@ -304,7 +306,7 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 
 int nCntGuns = 0;
 float fRange = 0;
-void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WORD dir, const BYTE _player, ICollisionsCollector *pCollisionsCollector )
+void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const uint16_t dir, const uint8_t _player, ICollisionsCollector *pCollisionsCollector )
 {
 	lastScanTime = curTime;
 	realScanDuration = NRandom::Random( 1500, 2500 ); RecordRandomCall();
@@ -428,7 +430,7 @@ bool CAIUnit::IsAmphibianWaterPoint( const CVec2 &point ) const
 	return GetAIMap()->IsPointInside( point ) && IsAmphibianWaterTile( GetAIMap()->GetTile( point ) );
 }
 
-const DWORD CAIUnit::GetNormale( const CVec2 &vCenter ) const
+const uint32_t CAIUnit::GetNormale( const CVec2 &vCenter ) const
 {
 	if ( GetAmphibianStats() && IsAmphibianWaterPoint( vCenter ) )
 	{
@@ -678,18 +680,18 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 	}
 }
 
-const bool CAIUnit::IsVisible( const BYTE cParty ) const
+const bool CAIUnit::IsVisible( const uint8_t cParty ) const
 {
 	return visible4Party[cParty];
 }
 
-bool CAIUnit::CalculateUnitVisibility4Party( const BYTE party )
+bool CAIUnit::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	const int bVisibility = CalculateUnitVisibility4PartyInner( party );
 	return UpdateUnitVisibilityForParty( party, bVisibility );
 }
 
-bool CAIUnit::CalculateUnitVisibility4PartyInner( const BYTE party ) const
+bool CAIUnit::CalculateUnitVisibility4PartyInner( const uint8_t party ) const
 {
 	// NI_ASSERT( !bAlwaysVisible, "always visible, but not coast battery" );
 	if ( bAlwaysVisible )
@@ -698,13 +700,13 @@ bool CAIUnit::CalculateUnitVisibility4PartyInner( const BYTE party ) const
 		return false;
 	else
 	{
-		const BYTE cParty = theDipl.GetNParty( player );
+		const uint8_t cParty = theDipl.GetNParty( player );
 
 		return GetStats()->IsAviation() || party == cParty || theWarFog.IsUnitVisible( GetCenterTile(), party, IsCamoulflated());
 	}
 }
 
-void CAIUnit::UpdateCrewAndTruckVisibility( BYTE party,  bool bNewVisibility ) 
+void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party,  bool bNewVisibility )
 {
 	if ( GetStats()->IsArtillery() )
 	{
@@ -731,7 +733,7 @@ void CAIUnit::UpdateCrewAndTruckVisibility( BYTE party,  bool bNewVisibility )
 	}	
 }
 
-bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibility )
+bool CAIUnit::UpdateUnitVisibilityForParty( const uint8_t party, const bool bVisibility )
 {
 	const int bVisibilityChanged = int(bVisibility) != visible4Party[party];
 	int bNewVisibility = visible4Party[party];
@@ -794,7 +796,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 	return visible4Party[party]; // not changed
 }
 
-const DWORD CAIUnit::GetNormale() const
+const uint32_t CAIUnit::GetNormale() const
 {
 	return CCommonUnit::GetNormale( GetCenterPlain() );
 }
@@ -1150,9 +1152,9 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 	}
 }
 
-void CAIUnit::ChangePlayer( const BYTE cPlayer )
+void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 {
-	const BYTE cOldPlayer = GetPlayer();
+	const uint8_t cOldPlayer = GetPlayer();
 	if ( GetParty() != theDipl.GetNParty( cPlayer ) )
 	{
 		theFeedBackSystem.RemovedAllFeedbacks( nUniqueID );
@@ -1259,7 +1261,7 @@ void CAIUnit::CreateAntiArtillery( const float fMaxRevealRadius )
 	pAntiArtillery->Init( fMaxRevealRadius, GetParty() );
 }
 
-const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const
+const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) const
 {
 	float fSpeed = 0;
 	for ( int i = 0; i < sizeof(dwGuns) * 8 && i < GetNGuns(); ++i )
@@ -1271,7 +1273,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const
 	return fSpeed;
 }
 
-const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const DWORD dwGuns ) const
+const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const uint32_t dwGuns ) const
 {
 	float fSpeed = 0;
 	const int nGuns = (std::min)( int(sizeof(dwGuns) * 8), GetNGuns() );
@@ -1720,17 +1722,17 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 	return false;
 }
 
-BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
+uint8_t CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
 {
 	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, false );
 }
 
-BYTE CAIUnit::AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
+uint8_t CAIUnit::AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
 {
 	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, true );
 }
 
-BYTE CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving )
+uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving )
 {
 	if ( IsTimeToAnalyzeTargetScan() && theScanLimiter.CanScan() )
 	{
@@ -1977,7 +1979,7 @@ void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const flo
 	
 	if ( NeedDeinstall() || !CanMove() && !CanRotate() )
 	{
-		const WORD wConstraint = 
+		const uint16_t wConstraint =
 			pGun ?
 			pGun->GetTurret() ? pGun->GetTurret()->GetHorTurnConstraint() : pGun->GetWeapon()->wDeltaAngle :
 			65535;
@@ -1989,7 +1991,7 @@ void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const flo
 		}
 		else
 		{
-			const WORD wFrontDir = GetFrontDirection();
+			const uint16_t wFrontDir = GetFrontDirection();
 			pArea->wStartAngle = wFrontDir - wConstraint;
 			pArea->wFinishAngle = wFrontDir + wConstraint;
 		}
@@ -2162,7 +2164,7 @@ void CAIUnit::AnalyzeCamouflage()
 		}
 		else
 		{
-			const BYTE cParty = theDipl.GetNParty( player );
+			const uint8_t cParty = theDipl.GetNParty( player );
 			if ( cParty != theDipl.GetNeutralParty() && IsVisible( 1 - cParty ) ||
 					 cParty == theDipl.GetNeutralParty() && ( IsVisible( 0 ) || IsVisible( 1 ) ) )
 			{
@@ -2317,7 +2319,7 @@ bool CAIUnit::IsCommonGunFiring( const int nCommonGun ) const { return GetGuns()
 
 const float CAIUnit::GetPassability() const { return GetStats()->fPassability; }
 
-void CAIUnit::SetDirection( const WORD wDirection )
+void CAIUnit::SetDirection( const uint16_t wDirection )
 { 
 	CBasePathUnit::SetDirection( wDirection );
 
@@ -3009,7 +3011,7 @@ void CAIUnit::UpdateUnitProfile()
 	}
 }
 
-void CAIUnit::UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )
+void CAIUnit::UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate )
 {
 	CCommonUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
 	if ( bNeedUpdate )

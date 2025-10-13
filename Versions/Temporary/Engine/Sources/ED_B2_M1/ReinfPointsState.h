@@ -2,6 +2,8 @@
 
 #include "MapInfoEditor.h"
 
+#include <cstdint>
+
 //
 //		REINF POINTS STATE
 //
@@ -54,7 +56,7 @@ public:
 	void Draw( CPaintDC *pPaintDC );
 	void PostDraw( CPaintDC *pPaintDC );
 
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );

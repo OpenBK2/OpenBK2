@@ -37,6 +37,8 @@
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
+#include <cstdint>
+
 extern CAAFeedBacks theAAFeedBacks;
 extern CSupremeBeing theSupremeBeing;
 extern CUnitCreation theUnitCreation;
@@ -472,7 +474,7 @@ void CSoldierRestState::Segment()
 				fabs2( guardPoint - pUnit->GetCenterPlain() ) > 200.0f;
 
 			// While returning to formation, allow only attacks that can be fired from the current position.
-			const BYTE cResult =
+			const uint8_t cResult =
 				bNeedFormationPoint ?
 				pUnit->AnalyzeTargetScanWithoutMoving( 0, false, false ) :
 				pUnit->AnalyzeTargetScan( 0, false, false );
@@ -732,7 +734,7 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 	int vBestSides[2] = { 0, 0 }; // в этом массиве две стороны
 	int nCount = 2;
 
-	for ( WORD i = 0; i < 2; ++i )
+	for ( uint16_t i = 0; i < 2; ++i )
 	{
 		if ( !pGun->CanBreach( pEnemy, i + 0 ) )
 		{
@@ -750,12 +752,12 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 	if ( nCount == 0 )
 		return 0;
 
-	WORD wMinAngle = ( vBestSides[0] + vBestSides[1] )/nCount - 8192*nCount;
+	uint16_t wMinAngle = ( vBestSides[0] + vBestSides[1] )/nCount - 8192*nCount;
 
 	if ( nCount == 2 && vBestSides[0] == 0 && vBestSides[1] == 49152 )
 		wMinAngle = 40960;
 
-	const WORD wAngle = wMinAngle + NRandom::Random( 0, 16384*nCount ); RecordRandomCall();
+	const uint16_t wAngle = wMinAngle + NRandom::Random( 0, 16384*nCount ); RecordRandomCall();
 	const CVec2 vAngle = GetVectorByDirection( wAngle );
 
 	IStaticPath *pBestPath = 
@@ -781,7 +783,7 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 	else if ( curTime >= nextShootCheck )
 	{
 		const SVector curEnemyTile = pEnemy->GetCenterTile();
-		const WORD wCurEnemyDir = pEnemy->GetDirection();
+		const uint16_t wCurEnemyDir = pEnemy->GetDirection();
 		// стоим или пора проверять позицию и враг сдвинулся или повернулся
 		if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack ) &&
 			( bIdle || lastEnemyTile != curEnemyTile || DirsDifference( wCurEnemyDir, wLastEnemyDir ) >= ENEMY_DIR_TOLERANCE ) )
@@ -1009,7 +1011,7 @@ void CSoldierMoveToState::Segment()
 			
 			if ( pUnit->GetNextCommand() == 0 )
 			{
-				const WORD wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? wDirToPoint : wDirToPoint + 32768;
+				const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? wDirToPoint : wDirToPoint + 32768;
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD, pUnit->GetCenterPlain(), wDir ), pUnit, false );
 				if ( bLongMove )
 					pUnit->SendAcknowledgement( NDb::ACK_MOVE_END, pUnit->GetPlayer() == theDipl.GetMyNumber() );
@@ -1854,7 +1856,7 @@ CSoldierUseSpyglassState::CSoldierUseSpyglassState( CSoldier *_pSoldier, const C
 	pSoldier->SendAcknowledgement( ACK_POSITIVE );
 	pSoldier->Stop();
 	//
-	const	WORD wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
+	const	uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
 	pSoldier->TurnToDirection( wDir2Look, false, true );
 	pSoldier->SetOwnSightRadius( SConsts::SPY_GLASS_RADIUS );
 	//NI_ASSERT( SConsts::SPY_GLASS_RADIUS / ( 2 * SConsts::TILE_SIZE ) <= theWarFog.GetMaxRadius(), "Invalid sight radius for SPY_GLASS_RADIUS" );
@@ -1885,7 +1887,7 @@ void CSoldierUseSpyglassState::Segment()
 	InitStatus();
 	if ( pSoldier->IsIdle() )
 	{
-		const	WORD wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
+		const	uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
 		if ( pSoldier->GetDirection() != wDir2Look )
 		{
 			pSoldier->TurnToDirection( wDir2Look, false, true );

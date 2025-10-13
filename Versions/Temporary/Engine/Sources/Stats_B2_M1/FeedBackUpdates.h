@@ -105,13 +105,13 @@ struct SAIFeedBack
 {
 	ZDATA
 		EFeedBack feedBackType;
-	DWORD nParam;
+	uint32_t nParam;
 	CPtr<CObjectBase> pParam;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&feedBackType); f.Add(3,&nParam); f.Add(4,&pParam); return 0; }
 public:
 	SAIFeedBack() { }
-	SAIFeedBack( const EFeedBack _feedBackType ) : feedBackType( _feedBackType ), nParam( DWORD(-1) ) { }
-	SAIFeedBack( const EFeedBack _feedBackType, DWORD _nParam, CObjectBase *_pParam )
+	SAIFeedBack( const EFeedBack _feedBackType ) : feedBackType( _feedBackType ), nParam( uint32_t(-1) ) { }
+	SAIFeedBack( const EFeedBack _feedBackType, uint32_t _nParam, CObjectBase *_pParam )
 		: feedBackType( _feedBackType ), nParam( _nParam ), pParam( _pParam ) { }
 
 	SAIFeedBack( const SAIFeedBack &feedBack ) : 

@@ -8,6 +8,8 @@
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/MultiManipulator.h"
 
+#include <cstdint>
+
 IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.objectNameSet.empty() )
@@ -88,7 +90,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	}
 
 	//создаем список полей
-	hash_map<string, DWORD> destinationFields;
+	hash_map<string, uint32_t> destinationFields;
 	if ( !bEqual )
 	{
 		CPtr<IManipulatorIterator> pDestinationManipulatorIterator = pDestinationManipulator->Iterate( true, ECT_CACHE_LOCAL );

@@ -4,6 +4,8 @@
 #include "GenTerrain.h"
 #include "Misc/HPTimer.h"
 
+#include <cstdint>
+
 void CTerraGen::GenerateTerrain()
 {
 	TIME_STAT_START( GenerateTerraGeometry )
@@ -93,11 +95,11 @@ void CTerraGen::ResetTerrainTiles( const int nTileX1, const int nTileY1, const i
 union uF2I
 {
 	float f;
-	DWORD n;
+	uint32_t n;
 };
 
 
-static void PackFloatArrToRaw( std::vector<BYTE> *pDst, const float *pData, const int nLength )
+static void PackFloatArrToRaw( std::vector<uint8_t> *pDst, const float *pData, const int nLength )
 {
 	pDst->reserve( 256 );
 	pDst->resize( 0 );
@@ -128,10 +130,10 @@ static void PackFloatArrToRaw( std::vector<BYTE> *pDst, const float *pData, cons
 }
 
 
-static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vector<BYTE> &src )
+static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vector<uint8_t> &src )
 {
 	int k = 0;
-	std::vector<BYTE>::const_iterator it = src.begin();
+	std::vector<uint8_t>::const_iterator it = src.begin();
 	uF2I uf2i;
 
 	while ( (k < nLength) && (it != src.end()) )
@@ -139,9 +141,9 @@ static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vec
 		if ( *it == 0 )
 		{
 			uf2i.n = *(++it);
-			uf2i.n |= DWORD( *(++it) ) << 8;
-			uf2i.n |= DWORD( *(++it) ) << 16;
-			uf2i.n |= DWORD( *(++it) ) << 24;
+			uf2i.n |= uint32_t( *(++it) ) << 8;
+			uf2i.n |= uint32_t( *(++it) ) << 16;
+			uf2i.n |= uint32_t( *(++it) ) << 24;
 			pData[k++] = uf2i.f;
 		}
 		else

@@ -23,6 +23,8 @@
 #include "System/FilePath.h"
 #include "libdb/Db.h"
 
+#include <cstdint>
+
 /**
 const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT };
@@ -544,7 +546,7 @@ void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 		if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 		{
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator() SetViewManipulator( %d )", bUpdate );
@@ -639,7 +641,7 @@ void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( UINT _nPCDialogCommandHan
 	if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 	{
 		IView *pView = 0;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();
@@ -1056,7 +1058,7 @@ void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rs
 	{
 		( *pszName ) = rszName;
 		bool bExists = ( FindName( hParentItem, ( *pszName ), nType, true, 0 ) != 0 );
-		DWORD nNumber = 2;
+		uint32_t nNumber = 2;
 		//
 		string szBaseName = rszName;
 		const bool bExtendExtention = CStringManager::CutFileExtention( &szBaseName, ".xdb" );
@@ -2121,7 +2123,7 @@ bool CTreeGDBBrowserBase::CanExport( bool bForce )
 }
 
 
-bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

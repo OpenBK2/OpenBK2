@@ -39,6 +39,8 @@
 
 #include "Sound/MusicSystem.h"
 
+#include <cstdint>
+
 CUIVisitor theUIVisitor;
 void TakeScreenShotMsg( const SGameMessage &msg );
 
@@ -380,13 +382,13 @@ bool CScene::IsShowOn( ESceneShow eShow )
 	return false;
 }
 
-static void OutputStat( const char *pszName, const int nValue, DWORD dwColor, IStatSystem *pSS )
+static void OutputStat( const char *pszName, const int nValue, uint32_t dwColor, IStatSystem *pSS )
 {
 	const std::string szValue = StrFmt( "%d", nValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
-static void OutputStat( const char *pszName, const float fValue, DWORD dwColor, IStatSystem *pSS )
+static void OutputStat( const char *pszName, const float fValue, uint32_t dwColor, IStatSystem *pSS )
 {
 	const std::string szValue = StrFmt( "%g", fValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
@@ -394,7 +396,7 @@ static void OutputStat( const char *pszName, const float fValue, DWORD dwColor, 
 
 static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 {
-	DWORD dwColor = 0xff00ff00;
+	uint32_t dwColor = 0xff00ff00;
 	const char *pszValue = "false";
 	if ( bValue ) 
 	{
@@ -404,7 +406,7 @@ static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 	pSS->UpdateEntry( pszName, pszValue, dwColor );
 }
 
-static void OutputStat( const char *pszName, const CVec3 &vValue, DWORD dwColor, IStatSystem *pSS )
+static void OutputStat( const char *pszName, const CVec3 &vValue, uint32_t dwColor, IStatSystem *pSS )
 {
 	const std::string szValue = StrFmt( "%g %g %g", vValue.x, vValue.y, vValue.z );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
@@ -917,7 +919,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	while ( ToggleShow(SCENE_SHOW_UI) != false );
 	//
 	{
-		CArray2D<BYTE> whiteWarFog;
+		CArray2D<uint8_t> whiteWarFog;
 		whiteWarFog.SetSizes( 1, 1 );
 		whiteWarFog[0][0] = 255;
 		SetWarFog( whiteWarFog, 1.0f );
@@ -960,7 +962,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 		CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
 		const int nWriteSizeInBytes = int(hdr.imagespec.wImageWidth) * int(hdr.imagespec.wImageHeight) * sizeof(SColor24);
 		stream.SetSize( sizeof(hdr) + nWriteSizeInBytes + sizeof(footer) );
-		BYTE *pBuffer = stream.GetBufferForWrite();
+		uint8_t *pBuffer = stream.GetBufferForWrite();
 		memcpy( pBuffer, &hdr, sizeof(hdr) );
 		memcpy( pBuffer + sizeof(hdr) + nWriteSizeInBytes, &footer, sizeof(footer) );
 		SColor24 *pImage = (SColor24 *)( pBuffer + sizeof(hdr) );
@@ -987,7 +989,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 			for ( int y = 0; y < data.GetSizeY(); ++y	)
 			{
 				for ( int x = 0; x < data.GetSizeX(); ++x )
-					pImage[(itCamera.GetImagePosY() + y)*nLineWidth + itCamera.GetImagePosX() + x] = convertor( *((DWORD*)(&data[y][x])) );
+					pImage[(itCamera.GetImagePosY() + y)*nLineWidth + itCamera.GetImagePosX() + x] = convertor( *((uint32_t*)(&data[y][x])) );
 			}
 		}
 //		// save result image
@@ -1137,7 +1139,7 @@ float CScene::GetZ( float x, float y ) const
 	return data[eScene]->pTerraManager->GetZ( x, y );
 }
 
-DWORD CScene::GetNormal( const CVec2 &vPoint ) const
+uint32_t CScene::GetNormal( const CVec2 &vPoint ) const
 {
 	return data[eScene]->pTerraManager->GetNormal( vPoint );
 }

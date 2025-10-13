@@ -1,8 +1,11 @@
 #pragma once
+
 #include "System_export.h"
 
-
 #include "Misc/HPTimer.h"
+
+#include <cstdint>
+
 //
 namespace NWinFrame
 {
@@ -31,7 +34,7 @@ namespace NWinFrame
 			struct { int x,y; };         // mouse
 			struct { int nKey, nRep; };  // key
 		};
-		DWORD dwFlags;
+		uint32_t dwFlags;
 	};
 	// WinFrame interface
 	SYSTEM_EXPORT bool (GetMessage)( SWindowsMsg *pRes );

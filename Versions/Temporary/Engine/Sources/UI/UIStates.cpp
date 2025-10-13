@@ -2,12 +2,12 @@
 #include "UIStates.h"
 #include "UIScreen.h"
 
-
+#include <cstdint>
 
 // CStates::
 
 
-CStates::CStates( const NDb::SUIStateSequence &seq, const std::string &_szCmdName, const bool _bReversable, WORD _wKeyboardFlags )
+CStates::CStates( const NDb::SUIStateSequence &seq, const std::string &_szCmdName, const bool _bReversable, uint16_t _wKeyboardFlags )
 : szCmdName( _szCmdName ), nCurIndex( 0 ), bForward( true ), bReversable( _bReversable ), bEnd( true ) ,
 	wKeyboardFlags( _wKeyboardFlags )
 {

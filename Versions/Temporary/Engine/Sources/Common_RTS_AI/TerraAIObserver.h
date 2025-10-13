@@ -10,6 +10,8 @@
 #include "Terrain.h"
 #include "PassMarkers.h"
 
+#include <cstdint>
+
 struct SSingleSide
 {
 	bool bSingleSide;
@@ -65,12 +67,12 @@ public:
 	//
 	virtual void UpdateZ( CVec3 *pvPos );
 	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params );
-	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types );
+	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
 
 	virtual float GetZ( float x, float y ) const;
 	virtual float GetTileHeight( int nX, int nY ) const;
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;

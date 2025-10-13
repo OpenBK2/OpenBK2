@@ -1,11 +1,11 @@
 // WindowConsole.h: interface for the CWindowConsole class.
 //
 
-
-
 #pragma once
 
 #include "Window.h"
+
+#include <cstdint>
 
 struct SWindowEditLine;
 class CWindowEditLine;
@@ -23,12 +23,12 @@ class CWindowConsole : public CWindow, public IConsole
 	public:
 		ZDATA
 		std::wstring szString;
-		DWORD dwColor;
+		uint32_t dwColor;
 		CPtr<IML> pGfxText;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szString); f.Add(3,&dwColor); f.Add(4,&pGfxText); return 0; }
 
 		SColorString() : dwColor( 0xffffffff ) {  }
-		SColorString( const wchar_t *pszStr, DWORD col, const int nWidth );
+		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 	};
 	
 	typedef std::vector<std::wstring> CVectorOfStrings;

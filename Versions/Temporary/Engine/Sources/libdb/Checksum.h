@@ -2,15 +2,16 @@
 
 #include "libdb_export.h"
 
+#include <cstdint>
 
 namespace NDb
 {
-LIBDB_EXPORT DWORD GetDefaultCheckSum();
-LIBDB_EXPORT DWORD CalcCheckSum( const DWORD dwLastCheckSum, const BYTE *pBuf, const int nLen );
+LIBDB_EXPORT uint32_t GetDefaultCheckSum();
+LIBDB_EXPORT uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t *pBuf, const int nLen );
 
 class CCheckSum
 {
-	DWORD dwCheckSum;
+	uint32_t dwCheckSum;
 	IBinSaver *p;
 	
 	char __cdecl TestType(...) { return 0; }	
@@ -22,7 +23,7 @@ class CCheckSum
 	template<class T>
 	void DataCheckSum( T *p, const int nLen )
 	{
-		dwCheckSum = CalcCheckSum( dwCheckSum, (const BYTE*)p, nLen );
+		dwCheckSum = CalcCheckSum( dwCheckSum, (const uint8_t*)p, nLen );
 	}
 
 	template<class T>
@@ -34,8 +35,8 @@ class CCheckSum
 	template<class T>
 	void __cdecl SeparateCheckSum( const T &data, SInt2Type<4> *pp )
 	{
-		DWORD dataCheckSum = data.CalcCheckSum();
-		dataCheckSum = CalcCheckSum( dwCheckSum, (const BYTE*)&dataCheckSum, sizeof(DWORD) );
+		uint32_t dataCheckSum = data.CalcCheckSum();
+		dataCheckSum = CalcCheckSum( dwCheckSum, (const uint8_t*)&dataCheckSum, sizeof(uint32_t) );
 	}
 public:
 	CCheckSum() : dwCheckSum( GetDefaultCheckSum() ) { }
@@ -92,13 +93,13 @@ public:
 		return *this;
 	}
 
-	DWORD GetCheckSum() const { return dwCheckSum; }
+	uint32_t GetCheckSum() const { return dwCheckSum; }
 };
 
 }
 
 template <class TUserObj, typename TPtr>
-DWORD CDBPtr<TUserObj,TPtr>::CalcCheckSum() const
+uint32_t CDBPtr<TUserObj,TPtr>::CalcCheckSum() const
 {
 	if ( pObj == 0 )
 		return GetDefaultCheckSum();

@@ -5,6 +5,7 @@
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
 
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS(0x170A7B82, CWindowPlayer);
 
@@ -226,9 +227,9 @@ void CWindowPlayer::UpdatePlayer()
 	}
 }
 
-DWORD CWindowPlayer::GetSceneFlags()
+uint32_t CWindowPlayer::GetSceneFlags()
 {
-	DWORD dwFlags = 0;
+	uint32_t dwFlags = 0;
 	dwFlags |= NGScene::IVideoPlayer::COPY_ALL;
 	//dwFlags |= NGScene::IVideoPlayer::PLAY_LOOPED;
 	//dwFlags |= NGScene::IVideoPlayer::PLAY_NO_TIME_UPDATE;

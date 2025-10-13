@@ -2,6 +2,8 @@
 
 #include "UpdatableList.h"
 
+#include <cstdint>
+
 #define MAX_CHANGES 8192
 #define MASK (MAX_CHANGES - 1)
 
@@ -51,7 +53,7 @@ void CUpdatableList::GetFullUpdate( const int nNoIncludeID, SUpdateInfo *pUpdate
 	}
 }
 
-void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion, SUpdateInfo *pUpdate )
+void CUpdatableList::GetUpdate( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate )
 {
 	pUpdate->Clear();
 	pUpdate->dwVersion = dwVersion;
@@ -59,9 +61,9 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion
 
 	hash_set<int> added, changed;
 
-	const DWORD dwStart = ( dwOldVersion + 1 ) & MASK;
-	const DWORD dwFinish = ( dwVersion + 1 ) & MASK;
-	DWORD dwNow = dwStart;
+	const uint32_t dwStart = ( dwOldVersion + 1 ) & MASK;
+	const uint32_t dwFinish = ( dwVersion + 1 ) & MASK;
+	uint32_t dwNow = dwStart;
 	while ( dwNow != dwFinish )
 	{
 		if ( changes[dwNow].change != EC_NOP && changes[dwNow].nID != nNoIncludeID )
@@ -102,9 +104,9 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion
 		pUpdate->changed.push_back( *iter );
 }
 
-void CUpdatableList::GetDiff( const int nNoIncludeID, const DWORD dwOldVersion, SUpdateInfo *pUpdate )
+void CUpdatableList::GetDiff( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate )
 {
-	const DWORD dwDiff = dwVersion - dwOldVersion;
+	const uint32_t dwDiff = dwVersion - dwOldVersion;
 
 	if ( dwDiff > changes.size() || dwOldVersion == 0 )
 		GetFullUpdate( nNoIncludeID, pUpdate );

@@ -12,12 +12,13 @@
 #include "System/RandomGen.h"
 #include <float.h>
 
-
 #include "PointChecking.h"
+
+#include <cstdint>
 
 BASIC_REGISTER_CLASS ( IPointChecking );
 
-const WORD TURN_TOLERANCE = 0;
+const uint16_t TURN_TOLERANCE = 0;
 NTimer::STime lastTimeDiff = 50;
 
 struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
@@ -97,7 +98,7 @@ ISmoothPath* CBasePathUnit::CreateSmoothPath()
 	return result;
 }
 
-void CBasePathUnit::Init( const CVec3 &_vCenter, const WORD _wDirection, CAIMap *_pAIMap, ICollisionsCollector *_pCollisionsCollector, CCommonPathFinder *_pPathFinder )
+void CBasePathUnit::Init( const CVec3 &_vCenter, const uint16_t _wDirection, CAIMap *_pAIMap, ICollisionsCollector *_pCollisionsCollector, CCommonPathFinder *_pPathFinder )
 {
 	pPathFinder = _pPathFinder;
 	pAIMap = _pAIMap;
@@ -167,9 +168,9 @@ const SRect CBasePathUnit::GetUnitModifiedRect( const float fCompress ) const
 	return result;
 }
 
-void CBasePathUnit::SetDirection( const WORD _wDirection, const bool bNeedUpdate )
+void CBasePathUnit::SetDirection( const uint16_t _wDirection, const bool bNeedUpdate )
 {
-//	const WORD wNewDirection = IsGoForward() ? _wDirection : _wDirection + 32768;
+//	const uint16_t wNewDirection = IsGoForward() ? _wDirection : _wDirection + 32768;
 	if ( wDirection != _wDirection /*wNewDirection != GetDirection() */)
 	{
 		if ( !bPlacementUpdated && bNeedUpdate )
@@ -261,13 +262,13 @@ void CBasePathUnit::SetGoForward( const bool _bGoForward )
 	}
 }
 
-const bool CBasePathUnit::MakeTurnToDirection( const WORD _wDirection )
+const bool CBasePathUnit::MakeTurnToDirection( const uint16_t _wDirection )
 {
-	const WORD wNewFrontDir = IsGoForward() ? _wDirection : _wDirection + 32768;
-	const WORD wClockWise = wNewFrontDir - GetFrontDirection();
-	const WORD wAntiClockWise = GetFrontDirection() - wNewFrontDir;
+	const uint16_t wNewFrontDir = IsGoForward() ? _wDirection : _wDirection + 32768;
+	const uint16_t wClockWise = wNewFrontDir - GetFrontDirection();
+	const uint16_t wAntiClockWise = GetFrontDirection() - wNewFrontDir;
 
-	const WORD wMinTurn = (std::min)( wClockWise, wAntiClockWise );
+	const uint16_t wMinTurn = (std::min)( wClockWise, wAntiClockWise );
 	if ( wMinTurn < TURN_TOLERANCE )
 	{
 		SetDirection( _wDirection );
@@ -294,7 +295,7 @@ const bool CBasePathUnit::MakeTurnToDirection( const WORD _wDirection )
 	}
 }
 
-const bool CBasePathUnit::TurnToDirection( const WORD _wDirection, const bool bCanBackward, const bool bCanForward )
+const bool CBasePathUnit::TurnToDirection( const uint16_t _wDirection, const bool bCanBackward, const bool bCanForward )
 {
 	bTurnCalled = true;
 	if ( GetTurnSpeed() == 0 || CanTurnInstant() )
@@ -350,7 +351,7 @@ bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 	return true;
 }
 
-const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildPath )
+const bool CBasePathUnit::CanTurnTo( const uint16_t wNewDir, const bool bCanRebuildPath )
 {
 	if ( IsRound() )
 		return true;
@@ -361,7 +362,7 @@ const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildP
 
 	const SRect rect( profile.rect );
 	const CVec2 vUnitCenter( GetCenterPlain() );
-	const WORD wUnitDir( GetFrontDirection() );
+	const uint16_t wUnitDir( GetFrontDirection() );
 	CVec2 vBestPoint( -1.0f, -1.0f );
 
 	bool bResult = true;
@@ -378,10 +379,10 @@ const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildP
 
 			for ( int i = 0; i < 360 / fMinAngle; ++i )
 			{
-				const WORD wCurDir( GetDirectionByVector( vCurDir ) );
-				const WORD wRightDirDiff = DirsDifference( wUnitDir, wCurDir );
-				const WORD wBackDirDiff = DirsDifference( wUnitDir + 32768, wCurDir );
-				const WORD wDirsDiff = (std::min)( wRightDirDiff, wBackDirDiff );
+				const uint16_t wCurDir( GetDirectionByVector( vCurDir ) );
+				const uint16_t wRightDirDiff = DirsDifference( wUnitDir, wCurDir );
+				const uint16_t wBackDirDiff = DirsDifference( wUnitDir + 32768, wCurDir );
+				const uint16_t wDirsDiff = (std::min)( wRightDirDiff, wBackDirDiff );
 				if ( ( CanGoBackward() || wDirsDiff == wRightDirDiff ) && 
 					CheckTurn( 1.0f, vCurDir, false, true ) )
 				{
@@ -444,7 +445,7 @@ const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildP
 	return bResult;
 }
 
-const bool CBasePathUnit::CanTurnToFrontDir( const WORD _wDirection ) const
+const bool CBasePathUnit::CanTurnToFrontDir( const uint16_t _wDirection ) const
 {
 	return CheckTurn( 1.0f, GetVectorByDirection( _wDirection ), true, false );
 }
@@ -460,17 +461,17 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 
 	CTemporaryUnitProfileUnlocker unlocker( GetUniqueID(), GetUnitProfile(), IsLockingTiles(), GetMovementPlane() == PLANE_WATER, pAIMap->GetTerrain() );
 
-	const WORD wCurDir = GetDirectionByVector( rect.dir ); // GetFrontDirection();
-	WORD wFinalDir = GetDirectionByVector( vDir );
-	const WORD wFinalDirBack = wFinalDir + 32768;
+	const uint16_t wCurDir = GetDirectionByVector( rect.dir ); // GetFrontDirection();
+	uint16_t wFinalDir = GetDirectionByVector( vDir );
+	const uint16_t wFinalDirBack = wFinalDir + 32768;
 
 	// если выгоднее ехать задом
 	if ( bCanGoBackward && DirsDifference( GetFrontDirection(), wFinalDirBack ) < DirsDifference( GetFrontDirection(), wFinalDir ) )
 		wFinalDir = wFinalDirBack;
 
-	const WORD wClockWise = wFinalDir - GetFrontDirection();
-	const WORD wAntiClockWise = GetFrontDirection() - wFinalDir;
-	const WORD wBestDir = (std::min)( wClockWise, wAntiClockWise );
+	const uint16_t wClockWise = wFinalDir - GetFrontDirection();
+	const uint16_t wAntiClockWise = GetFrontDirection() - wFinalDir;
+	const uint16_t wBestDir = (std::min)( wClockWise, wAntiClockWise );
 	const int nDirSign = ( wClockWise < wAntiClockWise ) ? ( 1 ) : ( -1 );
 
 	const int nParts = 4;
@@ -478,7 +479,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 	std::vector<SRect> mediateRects( nParts );
 	for ( int i = 1; i <= nParts; ++i )
 	{
-		const WORD wMediateDir = wCurDir + i * nAdd;  // dirSign * int(bestDir / 2);
+		const uint16_t wMediateDir = wCurDir + i * nAdd;  // dirSign * int(bestDir / 2);
 		mediateRects[i-1].InitRect( rect.center, GetVectorByDirection( wMediateDir ), rect.lengthAhead, rect.lengthBack, rect.width );
 	}
 
@@ -679,7 +680,7 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 	{
 		bTurningToDirContinuesly = false;
 		bool bPathIsFinished = pSmoothPath->IsFinished();
-		const WORD oldDir = GetFrontDirection();
+		const uint16_t oldDir = GetFrontDirection();
 
 		const CVec2 vOldCenter( GetCenterPlain() );
 		const SVector vOldTile( GetCenterTile() );
@@ -894,7 +895,7 @@ void CBasePathUnit::CalculateIdle()
 		OnIdle();
 }
 
-void CBasePathUnit::TurnToDirectionContinuesly( const WORD _wDirection )
+void CBasePathUnit::TurnToDirectionContinuesly( const uint16_t _wDirection )
 {
 	bTurningToDirContinuesly = true;
 	wDirToContinueslyTurn = _wDirection;
@@ -1025,11 +1026,11 @@ const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 	}
 }
 
-const bool CBasePathUnit::IsValidDirection( const WORD _wDirection )
+const bool CBasePathUnit::IsValidDirection( const uint16_t _wDirection )
 {
 	// GetUnitProfile использует GetFrontDirectionVector для вычисления профайла ПРЯМОУГОЛЬНЫХ юнитов.
 	// это значение не меняется, то есть для ПРЯМОУГОЛЬНЫХ юнитов проверяется валидность текущей позиции, а не запрашиваемой
-	const WORD wTempDirection( wDirection );
+	const uint16_t wTempDirection( wDirection );
 
 	wDirection = _wDirection;
 

@@ -7,6 +7,8 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
+#include <cstdint>
+
 namespace NMapInfoEditor
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -576,12 +578,12 @@ namespace NMapInfoEditor
 					CVec3 vPos = pObjectInfo->vPosition;
 					for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = pObjectInfo->mapInfoElementMap.begin(); itMapInfoElement != pObjectInfo->mapInfoElementMap.end(); ++itMapInfoElement )
 					{
-						const DWORD colors[] = { 0x0000ff00, 0x000000ff, 0x00ff0000, 0x0000ff00 };
+						const uint32_t colors[] = { 0x0000ff00, 0x000000ff, 0x00ff0000, 0x0000ff00 };
 						const float fObjectDirection = pObjectInfo->fDirection;
 						//
 						if ( itMapInfoElement->second.szRPGStatsTypeName == "MechUnitRPGStats" )
 						{
-							const DWORD dwColor = colors[0];
+							const uint32_t dwColor = colors[0];
 							CVec3 vColor( (dwColor & 0x00ff0000) >> 16, (dwColor & 0x0000ff00) >> 8, dwColor & 0x000000ff );
 							vColor /= 256.0f;
 							//
@@ -613,7 +615,7 @@ namespace NMapInfoEditor
 						}
 						else if ( itMapInfoElement->second.szRPGStatsTypeName == "SquadRPGStats" )
 						{
-							const DWORD dwColor = colors[2];
+							const uint32_t dwColor = colors[2];
 							CVec3 vColor( (dwColor & 0x00ff0000) >> 16, (dwColor & 0x0000ff00) >> 8, dwColor & 0x000000ff );
 							vColor /= 256.0f;
 							//
@@ -848,7 +850,7 @@ namespace NMapInfoEditor
 				}
 			}
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->SetViewManipulator( pPropertyManipulator, rObjectSet, string() );
@@ -858,7 +860,7 @@ namespace NMapInfoEditor
 			if ( bCreateTree )
 			{
 				ICommandHandler *pCommandHandler = 0;
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<DWORD>( &pCommandHandler ) );
+				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<uint32_t>( &pCommandHandler ) );
 				if ( pCommandHandler != 0 )
 				{
 					pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -874,7 +876,7 @@ namespace NMapInfoEditor
 		if ( pPropertyManipulator != 0 )
 		{
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->RemoveViewManipulator();

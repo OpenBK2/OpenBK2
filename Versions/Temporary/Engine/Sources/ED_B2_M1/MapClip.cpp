@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <cstdint>
+
 /**
 
 #include "Misc/2Darray.h"
@@ -528,7 +531,7 @@ bool CMapClip::LoadBridgesFromDB( IManipulator *pManipulator )
 		bResult = bResult && CManipulatorManager::GetValue( &br.nFrameIndex, pManipulator, szObjectPrefix + ".FrameIndex" );
 		bResult = bResult && CManipulatorManager::GetValue( &br.nPlayer, pManipulator, szObjectPrefix + ".Player" );
 		bResult = bResult && CManipulatorManager::GetVec3<CVec3,float>( &br.vPosition, pManipulator, szObjectPrefix + ".Pos" );
-		WORD nDir = 0;
+		uint16_t nDir = 0;
 		bResult = bResult && CManipulatorManager::GetValue( &nDir, pManipulator, szObjectPrefix + ".Dir" );
 		br.fDirection = AI2VisRad( nDir );
 		//
@@ -662,7 +665,7 @@ bool CMapClip::LoadObjectsFromDB( IManipulator *pManipulator )
 
 		bResult = bResult && CManipulatorManager::GetVec3<CVec3,float>( &oi.vPosition, pManipulator, szDBA + ".Pos" );
 
-		WORD nDir = 0;
+		uint16_t nDir = 0;
 		bResult = bResult && CManipulatorManager::GetValue( &nDir, pManipulator, szDBA + ".Dir" );
 		oi.fDirection = AI2VisRad( nDir );
 

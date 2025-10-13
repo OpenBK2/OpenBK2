@@ -4,6 +4,8 @@
 #include "GfxBuffers.h"
 #include "GParticleFilter.h"
 
+#include <cstdint>
+
 const float F_PRIORITY_DIST = 0.01f;
 
 static CVec3 NormalizedDif( const CVec3 &a, const CVec3 &b ) { CVec3 d( a - b ); Normalize(&d); return d; }
@@ -284,7 +286,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			CVec2 scale;
 			short sprite;
 			unsigned int nSprite;
-			DWORD dwColor;
+			uint32_t dwColor;
 
 			float fFog = pWarFog[ ( nDst - 1 ) & nWarFogStepMask ] * fFade;
 			part.color.GetValue( frame.fT, fFog, &dwColor );

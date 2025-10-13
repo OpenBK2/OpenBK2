@@ -1,8 +1,9 @@
-
 #pragma once
 
 #include "System/BinaryResources.h"
 #include "libdb/Manipulator.h"
+
+#include <cstdint>
 
 //
 #define REFINFO_MAKE_UNIQUE_LIST	0x00000001
@@ -346,7 +347,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( WORD *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( uint16_t *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -355,7 +356,7 @@ public:
 		bResult = bResult && ( value.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
-			( *pData ) = (WORD)(int)value;
+			( *pData ) = (uint16_t)(int)value;
 		}
 		return bResult;
 	}

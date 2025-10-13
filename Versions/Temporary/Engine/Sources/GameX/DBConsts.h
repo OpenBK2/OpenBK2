@@ -4,6 +4,8 @@
 
 #include "SceneB2/dbsceneconsts.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -22,7 +24,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x11074CC1 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SAIGameConsts > pAI;
 		CDBPtr< SNetGameConsts > pNet;
@@ -41,9 +43,9 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
-		DWORD GetMPDataVersionChecksum() const;
-		DWORD GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
+		uint32_t CalcCheckSum() const;
+		uint32_t GetMPDataVersionChecksum() const;
+		uint32_t GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
 	};
 }
 

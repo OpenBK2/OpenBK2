@@ -13,6 +13,8 @@
 #include "Scintilla/Scintilla.h"
 #include "Server_Client_Common/Commands.h"
 
+#include <cstdint>
+
 CServerApp theApp;
 
 CServerApp::CServerApp()
@@ -23,7 +25,7 @@ CServerApp::CServerApp()
 }
 
 
-void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime )
+void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, uint32_t dwTime )
 {
 	theApp.Segment();
 }

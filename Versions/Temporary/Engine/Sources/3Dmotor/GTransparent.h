@@ -1,7 +1,10 @@
 #pragma once
+
 #include "Cache.h"
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
+
+#include <cstdint>
 
 class CTransformStack;
 namespace NGfx
@@ -116,12 +119,12 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	STransparentInfo *pWriteParticles;
 	CParticleEffect *pCurrentEffect;
 	SBound currentEffectBV;
-	DWORD dwCurrentParticleColor;
+	uint32_t dwCurrentParticleColor;
 	IReportParticlesGeometry *pReportParticles;
 	int nTotalParticles, nLitParticles;
 	SBoundCalcer bc;
 	bool bTnLMode;
-	DWORD dwLitColor, dwNormalColor;
+	uint32_t dwLitColor, dwNormalColor;
 	const SPerVertexLightState *pLightState;
 
 	STransparentInfo* AddFragment();
@@ -129,7 +132,7 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	void FinishParticlesPiece();
 	void StartParticlesPiece();
 	void RealRender( const STransparentRenderContext &trc );
-	void AddParticleOverflow( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	void AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth );
 	ZDATA
 public:
@@ -137,10 +140,10 @@ public:
 public:
 	CTransparentRenderer() : nTotalParticles(0), nLitParticles(0) {}
 	CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize, bool bUseFakeLM,
-		DWORD dwLitColor, DWORD dwNormalColor, const SPerVertexLightState *_pLightState );
+		uint32_t dwLitColor, uint32_t dwNormalColor, const SPerVertexLightState *_pLightState );
 	virtual const SParticleOrientationInfo& GetOrientationInfo() const { return orientation; }
 	virtual const SParticleLightInfo& GetKernelLightInfo() const { return kernel; }
-	virtual void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tex,
+	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex,
 		float fDepth );
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes );
 

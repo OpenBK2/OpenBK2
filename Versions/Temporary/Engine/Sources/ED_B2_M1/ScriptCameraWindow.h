@@ -4,6 +4,8 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "ScriptCameraMovementTypes.h"
 
+#include <cstdint>
+
 //
 //
 //		SCRIPT CAMERA WINDOW
@@ -61,7 +63,7 @@ public:
 	}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	void NotifyHandler( SScriptCameraWindowData::EScriptCameraLastAction eAction );

@@ -11,6 +11,8 @@
 #include "Server_Client_Common/LoginPackets.h"
 #include "Server_Client_Common/ChatPackets.h"
 
+#include <cstdint>
+
 CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult );
@@ -788,7 +790,7 @@ bool CTestClientProcessor::Segment()
 {
 	if ( nGameID != -1 )
 	{
-		const DWORD dwCurTime = GetTickCount();
+		const uint32_t dwCurTime = GetTickCount();
 		if ( dwCurTime - dwLastGameUpdate > dwHeartBeatPeriod )
 		{
 			CNetPacket *pPacket = new CGameHeartBeatPacket( 0, nGameID );

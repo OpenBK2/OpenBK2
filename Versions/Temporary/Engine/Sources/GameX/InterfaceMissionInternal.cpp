@@ -55,7 +55,7 @@
 #include "B2_M1_World/ClientAckManager.h"
 
 #include <algorithm>
-
+#include <cstdint>
 
 static int WARFOG_HARD_RECT_WIDTH = 2;
 static int WARFOG_MIN_VALUE = 128;
@@ -95,9 +95,9 @@ static std::vector< SMiniMapUnitInfo > s_unitsForMiniMap;
 void DoQuickSave();
 void DoQuickLoad();
 
-static void SetRawWarfog( BYTE value )
+static void SetRawWarfog( uint8_t value )
 {
-	CArray2D<BYTE> warFog( 1, 1 );
+	CArray2D<uint8_t> warFog( 1, 1 );
 	warFog.FillEvery( value );
 	Scene()->SetWarFog( warFog, 1.0f );
 }
@@ -118,7 +118,7 @@ static const NDb::SMapInfo *GetMapInfo( const std::string &_szParam )
 	}
 }
 
-static DWORD ConvertColor( const CVec3 &vColor )
+static uint32_t ConvertColor( const CVec3 &vColor )
 {
 	const int r = vColor.r * 255.0f;
 	const int g = vColor.g * 255.0f;
@@ -209,7 +209,7 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd );
 
 // CInterfaceMission::CReactions
 
-bool CInterfaceMission::CReactions::Execute( const std::string &szSender, const std::string &szReaction, WORD wKeyboardFlags )
+bool CInterfaceMission::CReactions::Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags )
 {
 	if ( szReaction == "FullInfoMember" )
 		return pInterface->OnClickFullInfoMember( szSender );
@@ -489,7 +489,7 @@ void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 	for ( int nID = 0; nID < nPlayerCount; ++nID )
 	{
 		const IScenarioTracker::SPlayerColor &color = pScenarioTracker->GetPlayerColor( nID );
-		DWORD dwColor = color.dwColor;
+		uint32_t dwColor = color.dwColor;
 
 		minimapColors[nID] = CVec4( ((dwColor >> 16) & 0xFF) / 255.0f,
 			((dwColor >> 8) & 0xFF) / 255.0f, (dwColor & 0xFF) / 255.0f, 1.0f );
@@ -623,7 +623,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	while ( true )
 	{
 		std::string szReadText;
-		DWORD dwColor;
+		uint32_t dwColor;
 		if ( !ReadFromPipe( PIPE_CHAT, &szReadText, &dwColor ) )
 			break;
 	}
@@ -732,7 +732,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	if ( !pMapInfo )
 		return;
 
-	DWORD dwChatColor = 0xFFFFFFFF;
+	uint32_t dwChatColor = 0xFFFFFFFF;
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
 	{
 		for ( std::vector< NDb::SSeasonColor >::const_iterator it = pUIConsts->chatSeasonColors.begin();
@@ -1511,7 +1511,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 	while ( true )
 	{
 		std::wstring szReadText;
-		DWORD dwColor;
+		uint32_t dwColor;
 		if ( !ReadFromPipe( PIPE_CHAT, &szReadText, &dwColor ) )
 			break;
 
@@ -1524,10 +1524,10 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		ITextView *pView = dynamic_cast<ITextView*>( pViewWindow );
 		NI_ASSERT( pView, "View window for chat messages not found" );
 		pView->SetWidth( nBaseWidth );
-		DWORD a = (dwColor >> 24) & 0xFF;
-		DWORD r = (dwColor >> 16) & 0xFF;
-		DWORD g = (dwColor >> 8) & 0xFF;
-		DWORD b = (dwColor >> 0) & 0xFF;
+		uint32_t a = (dwColor >> 24) & 0xFF;
+		uint32_t r = (dwColor >> 16) & 0xFF;
+		uint32_t g = (dwColor >> 8) & 0xFF;
+		uint32_t b = (dwColor >> 0) & 0xFF;
 		std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%02X%02X%02X%02X>", a, r, g, b ) );
 		szText += szReadText;
 		pView->SetText( szText.c_str() );
@@ -1586,7 +1586,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 	const int nWarFogSize = GetNextPow2( nMaxMapSize );
 	const float fWarFogCellSize = AI_TILES_IN_VIS_TILE * VIS_TILES_IN_PATCH * VIS_TILE_SIZE / AI_TILES_IN_PATCH;
 
-	CArray2D<BYTE> *pWarFogInfo = 0;
+	CArray2D<uint8_t> *pWarFogInfo = 0;
 	bool bWarFogUpdated = false;
 	if ( bShowWarFog )
 	{
@@ -1611,7 +1611,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 				pMiniMap->SetWarFog( pWarFogInfo );
 			else if ( bFirst )
 			{
-				CArray2D<BYTE> warfog( 1, 1 );
+				CArray2D<uint8_t> warfog( 1, 1 );
 				warfog.FillEvery( 0 );
 				pMiniMap->SetWarFog( &warfog );
 			}
@@ -1625,7 +1625,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 			const int nWarFogY = 0;
 
 			const int nWarFogDefault = WARFOG_MIN_VALUE;
-			CArray2D<BYTE> sceneWarFogInfo;
+			CArray2D<uint8_t> sceneWarFogInfo;
 			sceneWarFogInfo.SetSizes( nWarFogSize + 1, nWarFogSize + 1 );
 			// зальем всю карту
 			sceneWarFogInfo.FillEvery( nWarFogDefault );
@@ -3228,7 +3228,7 @@ bool CInterfaceMission::OnReinfAutoShowReinf( const std::string &szSender, bool 
 	return true;
 }
 
-bool CInterfaceMission::OnClickMultiSelectUnit( const std::string &szSender, WORD wKeyboardFlags )
+bool CInterfaceMission::OnClickMultiSelectUnit( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	const int nSize = strlen( "unit_slot_" );
 	int nSlot = NStr::ToInt( szSender.substr( nSize ) ) - 1;
@@ -3238,7 +3238,7 @@ bool CInterfaceMission::OnClickMultiSelectUnit( const std::string &szSender, WOR
 	return true;
 }
 
-bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags )
+bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	if ( szSender == "Button01" )
 		pWorld->OnSelectSpecialGroup( 0 );
@@ -3266,7 +3266,7 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 	return true;
 }
 
-bool CInterfaceMission::OnUnselectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags )
+bool CInterfaceMission::OnUnselectSpecialGroup( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	if ( szSender == "Button04" )
 	{
@@ -3276,7 +3276,7 @@ bool CInterfaceMission::OnUnselectSpecialGroup( const std::string &szSender, WOR
 	return true;
 }
 
-bool CInterfaceMission::OnNewActionButtonClick( const std::string &szSender, WORD wKeyboardFlags )
+bool CInterfaceMission::OnNewActionButtonClick( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	NDb::EUserAction eAction = GetActionByButtonName( szSender );
 
@@ -3317,7 +3317,7 @@ void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 	}
 }
 
-bool CInterfaceMission::OnNewActionButtonRightClick( const std::string &szSender, WORD wKeyboardFlags )
+bool CInterfaceMission::OnNewActionButtonRightClick( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	NDb::EUserAction eAction = GetActionByButtonName( szSender );
 	CNewActionButtons::iterator it = newActionButtons.find( eAction );
@@ -3342,7 +3342,7 @@ bool CInterfaceMission::OnNotificationEventBtn( const std::string &szSender, boo
 	return true;
 }
 
-bool CInterfaceMission::OnEnterPressed( WORD wKeyboardFlags )
+bool CInterfaceMission::OnEnterPressed( uint16_t wKeyboardFlags )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->GetGameType() != IScenarioTracker::EGT_MULTI_FLAG_CONTROL )

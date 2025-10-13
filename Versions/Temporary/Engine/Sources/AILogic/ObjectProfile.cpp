@@ -7,6 +7,8 @@
 #include "System/Commands.h"
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 bool g_bThickLock;
 START_REGISTER(ObjectProfile)
 	REGISTER_VAR_EX( "thick_lock", NGlobal::VarBoolHandler, &g_bThickLock, false, STORAGE_NONE );
@@ -30,10 +32,10 @@ struct STilesCollector
 
 struct STilesArray2DCollector
 {
-	CArray2D<BYTE> *pTiles;
+	CArray2D<uint8_t> *pTiles;
 	SVector vTile;
 
-	STilesArray2DCollector( SVector &_vTile, CArray2D<BYTE> *_pTiles )
+	STilesArray2DCollector( SVector &_vTile, CArray2D<uint8_t> *_pTiles )
 		: pTiles( _pTiles ), vTile( _vTile ) { }
 
 	void operator()( const int x, const int y )
@@ -109,7 +111,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 	Clamp( rightUpTile.x, 0, GetAIMap()->GetSizeX() - 1 );
 	Clamp( rightUpTile.y, 0, GetAIMap()->GetSizeY() - 1 );
 
-	CArray2D<BYTE> passArray( rightUpTile.x - leftDownTile.x, rightUpTile.y - leftDownTile.y );
+	CArray2D<uint8_t> passArray( rightUpTile.x - leftDownTile.x, rightUpTile.y - leftDownTile.y );
 	passArray.FillZero();
 	STilesArray2DCollector collector( leftDownTile, &passArray );
 
@@ -126,7 +128,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 			MakeLine2( startTile.x, startTile.y, endTile.x, endTile.y, collector );
 		}
 	}
-	CArray2D<BYTE> passBorder( passArray );
+	CArray2D<uint8_t> passBorder( passArray );
 	
 	SVector tile;
 	for ( tile.x = leftDownTile.x; tile.x <= rightUpTile.x; ++tile.x )
@@ -169,7 +171,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 		tilesUnderVector.push_back( *iter );
 }
 
-CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const WORD wDir, const bool bForceThickLock )
+CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const uint16_t wDir, const bool bForceThickLock )
 {
 	// client calculates dir slightly different from AI
 	const float fAngle = float(wDir) / 65536 * FP_2PI;

@@ -7,6 +7,8 @@
 #include "BindProcessor.h"
 #include "ObjManIterator.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 namespace NBind
@@ -24,21 +26,21 @@ class CBindArray
 	typedef std::list<IArrayElementManipulator*> CArrayElementsList;
 	CArrayElementsList arrayElementManipulators;
 public:
-	IObjMan *CreateManipulator( const int nIndex, const std::string &szAddName, std::vector<BYTE> *pRawVector,
+	IObjMan *CreateManipulator( const int nIndex, const std::string &szAddName, std::vector<uint8_t> *pRawVector,
 		NMetaInfo::SStructMetaInfo *pContained, NTypeDef::STypeArray *pTypeArray, IObjMan *pParent );
 	IObjManIterator *CreateIterator( const int _nIndex, const std::string &_szAddName,
 		NTypeDef::STypeArray *_pTypeArray, IObjMan *pParent, bool bShowHidden );
 	//
-	int GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis ) const;
-	bool Insert( const int nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis, bool bSetDefault );
-	bool Remove( const int nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis );
+	int GetSize( const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis ) const;
+	bool Insert( const int nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis, bool bSetDefault );
+	bool Remove( const int nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, uint8_t *pThis );
 	bool SetValue( const std::string &szRestName, const int nIndex, const CVariant &value,
-  		           std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
+  		           std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
 	bool GetValue( const std::string &szRestName, const int nIndex, CVariant *pValue,
-		             std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
+		             std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
 	//
 	bool InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
-		                      std::vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
+		                      std::vector<uint8_t> *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
 	//
 	void AddArrayElementManipulator( IArrayElementManipulator *pArrElMan ) { arrayElementManipulators.push_back( pArrElMan ); }
 	void RemoveArrayElementManipulator( IArrayElementManipulator *pArrElMan );

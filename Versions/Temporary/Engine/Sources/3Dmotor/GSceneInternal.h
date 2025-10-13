@@ -1,6 +1,10 @@
 #pragma once
+
 #include "GDecal.h"
 #include "GParts.h"
+
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMaterial;
@@ -65,7 +69,7 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 	ZDATA
 	CDGPtr<CFuncBase<CVec3> > pAmbient;
 	CDGPtr<CFuncBase<CVec3> > pColor;
-	DWORD dwNormalColor, dwParticleColor;
+	uint32_t dwNormalColor, dwParticleColor;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAmbient); f.Add(3,&pColor); f.Add(4,&dwNormalColor); f.Add(5,&dwParticleColor); return 0; }
 	bool NeedUpdate() 
 	{ 
@@ -77,8 +81,8 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 public:
 	void SetAmbient( CFuncBase<CVec3> *_pAmbient ) { pAmbient = _pAmbient; Updated(); }
 	void SetColor( CFuncBase<CVec3> *_pColor ) { pColor = _pColor; }
-	DWORD GetNormalColor() const { return dwNormalColor; }
-	DWORD GetParticleColor() const { return dwParticleColor; }
+	uint32_t GetNormalColor() const { return dwNormalColor; }
+	uint32_t GetParticleColor() const { return dwParticleColor; }
 };
 
 class CDecalsManager;

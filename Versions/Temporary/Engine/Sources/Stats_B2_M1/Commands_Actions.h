@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // ************************************************************************************************************************ //
 // **
 // ** user commands (128 bits)
@@ -10,7 +12,7 @@
 
 class CUserCommands
 {
-	BYTE actions[16];
+	uint8_t actions[16];
 public:
 	int GetSize() const {  return std::size(actions) * 8; }
 	void Clear() { memset( actions, 0, std::size(actions) ); }
@@ -46,21 +48,21 @@ public:
 
 class CUserActions
 {
-	DWORD actions[4];
+	uint32_t actions[4];
 public:
 	CUserActions() { Clear(); }
-	CUserActions( const DWORD _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }
+	CUserActions( const uint32_t _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }
 	CUserActions( const CUserActions &userActions ) { actions[0] = userActions.actions[0]; actions[1] = userActions.actions[1]; actions[2] = userActions.actions[2]; actions[3] = userActions.actions[3]; }
 	//
-	const CUserActions& operator=( const DWORD _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; return *this; }
+	const CUserActions& operator=( const uint32_t _actions[2] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; return *this; }
 	const CUserActions& operator=( const CUserActions &_actions ) { return this->operator=( _actions.actions ); }
 	//
-	bool operator==( const DWORD _actions[4] ) const { return (_actions[0] == actions[0]) && (_actions[1] == actions[1]) && (_actions[2] == actions[2]) && (_actions[3] == actions[3]); }
+	bool operator==( const uint32_t _actions[4] ) const { return (_actions[0] == actions[0]) && (_actions[1] == actions[1]) && (_actions[2] == actions[2]) && (_actions[3] == actions[3]); }
 	bool operator==( const CUserActions &_actions ) const { return this->operator==( _actions.actions ); }
-	bool operator!=( const DWORD _actions[4] ) const { return (_actions[0] != actions[0]) || (_actions[1] != actions[1]) || (_actions[2] != actions[2]) || (_actions[3] != actions[3]); }
+	bool operator!=( const uint32_t _actions[4] ) const { return (_actions[0] != actions[0]) || (_actions[1] != actions[1]) || (_actions[2] != actions[2]) || (_actions[3] != actions[3]); }
 	bool operator!=( const CUserActions &_actions ) const { return this->operator!=( _actions.actions ); }
 	//
-	bool operator>( const DWORD _actions[4] ) const
+	bool operator>( const uint32_t _actions[4] ) const
 	{
 		return ( actions[0] == _actions[0] ? ( actions[1] == _actions[1] ? ( actions[2] == _actions[2] ? actions[3] > _actions[3] : actions[2] > _actions[2] ) : actions[1] > _actions[1] ) : actions[0] > _actions[0] );
 	}
@@ -103,13 +105,13 @@ public:
 		return 0;
 	}
 	//
-	DWORD GetActions( const int nIndex ) const { return actions[nIndex]; }
-	void GetActions( DWORD *_actions ) const { _actions[0] = actions[0]; _actions[1] = actions[1]; _actions[2] = actions[2]; _actions[3] = actions[3]; }
+	uint32_t GetActions( const int nIndex ) const { return actions[nIndex]; }
+	void GetActions( uint32_t *_actions ) const { _actions[0] = actions[0]; _actions[1] = actions[1]; _actions[2] = actions[2]; _actions[3] = actions[3]; }
 	void GetActions( CUserActions *pActions ) const { GetActions( pActions->GetBuffer() ); }
-	void SetActions( const DWORD _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }
-	DWORD* GetBuffer() { return &(actions[0]); }
+	void SetActions( const uint32_t _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }
+	uint32_t* GetBuffer() { return &(actions[0]); }
 	//
-	void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+	void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 };
 
 

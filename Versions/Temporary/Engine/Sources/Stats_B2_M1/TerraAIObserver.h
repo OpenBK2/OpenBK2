@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <list>
 
 //
@@ -19,7 +20,7 @@ struct ITerraAIObserver : public CObjectBase
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) = 0;
 	//
 	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params ) = 0;
-	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &types ) = 0;
+	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types ) = 0;
 	virtual void AddRoad( const NDb::SVSOInstance *pInstance ) = 0;
 	virtual void AddRiver( const NDb::SVSOInstance *pInstance ) = 0;
 	virtual void AddCrag( const NDb::SVSOInstance *pInstance ) = 0;
@@ -30,7 +31,7 @@ struct ITerraAIObserver : public CObjectBase
 	virtual float GetZ( float x, float y ) const = 0;
 	virtual float GetTileHeight( int nX, int nY ) const = 0;
 	virtual void UpdateZ( CVec3 *pvPos ) = 0;
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const = 0;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;

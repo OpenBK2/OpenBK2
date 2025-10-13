@@ -1,7 +1,10 @@
 #pragma once
+
 #include "3DLib_export.h"
 
 #include "3Dmotor/GPixelFormat.h"
+
+#include <cstdint>
 
 namespace NGScene
 {
@@ -24,15 +27,15 @@ struct SUVInfo
 struct SVertexWeight
 {
 	float fWeights[4];
-	BYTE cBoneIndices[4];
+	uint8_t cBoneIndices[4];
 	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
 
 struct SRealVertexWeight
 {
 	float fWeights[4];
-	BYTE nWeights[4];
-	BYTE cBoneIndices[4];
+	uint8_t nWeights[4];
+	uint8_t cBoneIndices[4];
 	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
 
@@ -53,7 +56,7 @@ public:
 	{
 		ZDATA
 		int nID;
-		std::vector<DWORD> data;
+		std::vector<uint32_t> data;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&data); return 0; }
 	};
 	struct SData
@@ -72,8 +75,8 @@ public:
 		std::vector<CVec3> positions;
 		std::vector<SUVInfo> verts;
 		std::vector<SRealVertexWeight> weights;
-		std::vector<WORD> posIndices; // references to positions for each vert
-		std::vector<WORD> vertRefPositions; // number of first position encounter for each vertex
+		std::vector<uint16_t> posIndices; // references to positions for each vert
+		std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 		std::vector<STriangle> geometry;
 		std::vector<SStream> attributes;
 		int nTris;
@@ -96,8 +99,8 @@ public:
 	std::vector<CVec3> positions;
 	std::vector<SUVInfo> verts;
 	std::vector<SRealVertexWeight> weights;
-	std::vector<WORD> posIndices; // references to positions for each vert
-	std::vector<WORD> vertRefPositions; // number of first position encounter for each vertex
+	std::vector<uint16_t> posIndices; // references to positions for each vert
+	std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 	std::vector<STriangle> geometry;
 	std::vector<SStream> attributes;
 	int nTris;
@@ -147,11 +150,11 @@ public:
 	const std::vector<CVec3>& GetPositions() const { return positions; }
 	const std::vector<SUVInfo>& GetVertices() const { return verts; }
 	const std::vector<SRealVertexWeight>& GetWeights() const { return weights; }
-	const std::vector<WORD>& GetPositionIndices() const { return posIndices; }
+	const std::vector<uint16_t>& GetPositionIndices() const { return posIndices; }
 	const std::vector<STriangle>& GetGeometry() const { return geometry; }
-	const std::vector<DWORD> &GetAttribute( int nID );
+	const std::vector<uint32_t> &GetAttribute( int nID );
 
-	void SetAttribute( int nID, const std::vector<DWORD> &attr );
+	void SetAttribute( int nID, const std::vector<uint32_t> &attr );
 
 	void GetVxPositionTriangles( std::vector<STriangle> *pRes ) const;
 	void GetPosTriangles( std::vector<STriangle> *pRes ) const; // over positions[]
@@ -165,8 +168,8 @@ public:
 	void CalcBound( SSphere *pRes );
 	friend class CSquarePacker;
 };
-void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<WORD> &filter );
-void MergePositions( std::vector<WORD> *pMatches, std::vector<CVec3> *pPositions );
+void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<uint16_t> &filter );
+void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPositions );
 _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 

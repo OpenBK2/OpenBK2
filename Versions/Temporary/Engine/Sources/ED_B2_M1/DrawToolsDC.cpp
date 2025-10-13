@@ -2,6 +2,8 @@
 
 #include "DrawToolsDC.h"
 
+#include <cstdint>
+
 namespace NDrawToolsDC
 {
 	static int s_nOldBkMode;
@@ -53,7 +55,7 @@ namespace NDrawToolsDC
 		pDC->SelectObject( &brush );
 		//
 		CPen pen;
-		pen.CreatePen( PS_SOLID, 1, (DWORD)LABEL_BORDER_COLOR );
+		pen.CreatePen( PS_SOLID, 1, (uint32_t)LABEL_BORDER_COLOR );
 		pDC->SelectObject( &pen );
 
 		CRect rect( vScreenPos.x, vScreenPos.y, 200, 200 );

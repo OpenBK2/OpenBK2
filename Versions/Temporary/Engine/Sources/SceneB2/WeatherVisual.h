@@ -4,6 +4,8 @@
 #include "3Dmotor/GObjectInfo.h"
 #include "Camera.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	enum EWeatherState
@@ -58,7 +60,7 @@ class CWeatherVisual : public CFuncBase<bool>
 	CVec2 vBBMin, vBBMax;
 	CVec2 vWindOffset;
 	std::vector<CVec3> parts;
-	std::vector<BYTE> partsPresent;
+	std::vector<uint8_t> partsPresent;
 	CVec3 vCameraAnchor, vCameraEye, vViewNormal, vViewNormal3;
 	NTimer::STime timeLightStop;
 	NTimer::STime timeThunder;

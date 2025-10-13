@@ -6,6 +6,8 @@
 #include "MapEditorLib/ObjectController.h"
 #include "SortTreeControl.h"
 
+#include <cstdint>
+
 // Можно вставлять только в диалоги CDialog и в его производные
 
 int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort );
@@ -150,7 +152,7 @@ public:
 	CWnd* GetStatusStringWindow() { return pwndStatusStringWindow; }
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	// Создание Undo Operation

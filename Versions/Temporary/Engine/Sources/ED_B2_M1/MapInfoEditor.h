@@ -13,6 +13,7 @@
 #include "MiniMapWindow.h"
 #include "MoviesEditorWindow.h"
 
+#include <cstdint>
 
 #define TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT 11
 #define TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT 2
@@ -135,7 +136,7 @@ public:
 	void Redo( IController* pController );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	////////////////////////////

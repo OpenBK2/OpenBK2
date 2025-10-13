@@ -17,6 +17,8 @@
 
 #include <HtmlHelp.h>
 
+#include <cstdint>
+
 #pragma warning( disable : 4786 )
 
 
@@ -416,8 +418,8 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	}
 
 	// Dockable window
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBRS_RIGHT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
-	DWORD dwStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
+	uint32_t dwStyle = WS_CHILD | WS_VISIBLE | CBRS_RIGHT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
+	uint32_t dwStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
 	UINT nID = SECControlBar::GetUniqueBarID( this, 100 );
 	CString strDockingWindowTitle;
 	strDockingWindowTitle.LoadString( IDS_ELK_TREE_WINDOW_TITLE );
@@ -1812,7 +1814,7 @@ void CMainFrame::OnEditFind()
 			pwndFindReplaceDialog->ShowWindow( SW_SHOW );
 		}
 		pwndFindReplaceDialog = new CFindReplaceDialog();
-		DWORD dwFlags = 0;
+		uint32_t dwFlags = 0;
 		if ( params.searchParam.bFindDown )
 		{
 			dwFlags |= FR_DOWN;

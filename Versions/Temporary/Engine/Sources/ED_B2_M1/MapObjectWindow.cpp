@@ -13,6 +13,8 @@
 #include "ED_B2_M1Dll.h"
 #include "MapObjectWindow.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const char CMapObjectWindow::FILTER_TYPE[] = "MAPOBJECT";
@@ -367,7 +369,7 @@ void CMapObjectWindow::UpdateSelection()
 							//
 							ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 							pCommandHandlerContainer->Set( CHID_OBJECT_STORAGE, this );
-							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( selectedObjectListElement.szObjectTypeName ) ) );	
+							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( selectedObjectListElement.szObjectTypeName ) ) );
 							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 						}
 					}
@@ -393,7 +395,7 @@ void CMapObjectWindow::ClearSelection()
 }
 
 
-bool CMapObjectWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapObjectWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -452,7 +454,7 @@ bool CMapObjectWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 				pObjectManipulator = pMultiManipulator;
 			}
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->SetViewManipulator( pObjectManipulator, objectSet, string() );

@@ -1,8 +1,8 @@
-
 #pragma once
 
 #include "Guns.h"
 
+#include <cstdint>
 
 //*******************************************************************
 //*								  Орудийные стволы																*
@@ -23,20 +23,20 @@ class CTurretGun : public CBasicGun
 	//
 	bool TurnByVer( const CVec2 &vEnemyCenter, const float zDiff );
 	bool TurnArtilleryToEnemy( const CVec2 &vEnemyCenter );
-	bool TurnByBestWay( const WORD wDirToEnemy );
+	bool TurnByBestWay( const uint16_t wDirToEnemy );
 	
 	// эта функция считает угол, под которым нужно повернуть турель, чтобы обстреливать
 	// заданную точку. с учетом вертикальных ограничений.
-	WORD CalcVerticalAngle( const class CVec3 &pt ) const;
+	uint16_t CalcVerticalAngle( const class CVec3 &pt ) const;
 protected:
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
-	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const;
+	virtual bool IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const;
 	virtual void Rest();
 	virtual bool AnalyzeTurning();
 public:
 	CTurretGun() : bCircularAttack( false ) { }
-	CTurretGun( class CAIUnit *pOwner, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType, const int nTurret );
+	CTurretGun( class CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType, const int nTurret );
 
 	virtual bool IsOnTurret() const { return true; }
 	virtual class CTurret* GetTurret() const { return pTurret; }
@@ -49,13 +49,13 @@ public:
 	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;
 
 	// куда в данный момент смотрит gun
-	virtual const WORD GetGlobalDir() const;
-	virtual void TurnToRelativeDir( const WORD wAngle );
+	virtual const uint16_t GetGlobalDir() const;
+	virtual void TurnToRelativeDir( const uint16_t wAngle );
 
 	virtual const float GetRotateSpeed() const;
 
-	virtual WORD GetHorTurnConstraint() const;
-	virtual WORD GetVerTurnConstraint() const;
+	virtual uint16_t GetHorTurnConstraint() const;
+	virtual uint16_t GetVerTurnConstraint() const;
 	
 	void SetCircularAttack( const bool bCanAttack );
 
@@ -78,12 +78,12 @@ public:
 protected:
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
-	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const;
+	virtual bool IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const;
 	virtual void Rest() { }
 	virtual bool AnalyzeTurning();
 public:
 	CBaseGun() { }
-	CBaseGun( class CAIUnit *pOwner, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType )
+	CBaseGun( class CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType )
 	: CBasicGun( pOwner, nShellType, pCommonGunInfo, eType ) { }
 
 	virtual bool IsOnTurret() const { return false; }
@@ -94,13 +94,13 @@ public:
 	virtual void StopFire();
 
 	// куда в данный момент смотрит gun
-	virtual const WORD GetGlobalDir() const;
-	virtual void TurnToRelativeDir( const WORD wAngle ) { }
+	virtual const uint16_t GetGlobalDir() const;
+	virtual void TurnToRelativeDir( const uint16_t wAngle ) { }
 
 	virtual const float GetRotateSpeed() const;
 
-	virtual WORD GetHorTurnConstraint() const { return 32768; }
-	virtual WORD GetVerTurnConstraint() const { return 32768; }
+	virtual uint16_t GetHorTurnConstraint() const { return 32768; }
+	virtual uint16_t GetVerTurnConstraint() const { return 32768; }
 
 	void SetCircularAttack( const bool bCanAttack ) { }
 };

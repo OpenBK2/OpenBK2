@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Input/Bind.h"
 
 #include <cstdint>
@@ -12,12 +13,12 @@ protected:
 	bool bActive;
 	int64_t nValue;
 	int64_t nPower;
-	DWORD dwTime;
+	uint32_t dwTime;
 
 public:
 	CKeyAccumulator(): bActive( false ), nValue( 0 ), nPower( 0 ), dwTime( 0 ) {}
 
-	void Activate( int _nPower, DWORD _dwTime )
+	void Activate( int _nPower, uint32_t _dwTime )
 	{
 		if ( bActive )
 		{
@@ -35,17 +36,17 @@ public:
 			bActive = true;
 		}
 	}
-	void Deactivate( DWORD _dwTime )
+	void Deactivate( uint32_t _dwTime )
 	{
 		nPower = 0;
 		nValue += int64_t( _dwTime - dwTime ) * nPower;
 		bActive = false;
 	}
 
-	int64_t Sample( DWORD _dwTime )
+	int64_t Sample( uint32_t _dwTime )
 	{
 		int nTemp = nValue;
-		DWORD dwTimeDelta = _dwTime - dwTime;
+		uint32_t dwTimeDelta = _dwTime - dwTime;
 
 		nValue = 0;
 		dwTime = _dwTime;
@@ -67,9 +68,9 @@ protected:
 	bool bActive;
 	int64_t nValue;
 	int64_t nPower;
-	DWORD dwTime;
+	uint32_t dwTime;
 
-	int64_t GetDelta( DWORD _dwTime )
+	int64_t GetDelta( uint32_t _dwTime )
 	{
 		// не надо так делать, из-за этого в aiMap камера дергается
 		if ( nPower > -POWER_MIN_LIMIT && nPower < POWER_MIN_LIMIT )
@@ -81,7 +82,7 @@ protected:
 public:
 	CDoubleAccumulator(): bActive( false ), nValue( 0 ), nPower( 0 ), dwTime( 0 ) {}
 
-	void Add( int _nPower, DWORD _dwTime )
+	void Add( int _nPower, uint32_t _dwTime )
 	{
 		if ( bActive )
 		{
@@ -97,7 +98,7 @@ public:
 			bActive = true;
 		}
 	}
-	void Deactivate( DWORD _dwTime )
+	void Deactivate( uint32_t _dwTime )
 	{
 		if ( !bActive )
 			return;
@@ -106,10 +107,10 @@ public:
 		nPower = 0;
 		bActive = false;
 	}
-	int64_t Sample( DWORD _dwTime )
+	int64_t Sample( uint32_t _dwTime )
 	{
 		int nTemp = nValue;
-		DWORD dwTimeDelta = _dwTime - dwTime;
+		uint32_t dwTimeDelta = _dwTime - dwTime;
 
 		nTemp += GetDelta( _dwTime );
 		nValue = 0;
@@ -124,16 +125,16 @@ class CAxisAccumulator
 {
 protected:
 	int64_t nValue;
-	DWORD dwActivationTime;
+	uint32_t dwActivationTime;
 
 public:
 	CAxisAccumulator(): nValue( 0 ), dwActivationTime( 0 ) {}
-	void Add( int nPoint, DWORD dwTime )
+	void Add( int nPoint, uint32_t dwTime )
 	{
 		dwActivationTime = dwTime;
 		nValue += nPoint;
 	}
-	int64_t Sample( DWORD dwTime )
+	int64_t Sample( uint32_t dwTime )
 	{
 		int64_t nTemp = nValue;
 		nValue = 0;
@@ -148,7 +149,7 @@ struct SAccumulator
 	CAxisAccumulator sAxisAccumulator;
 	CDoubleAccumulator sLimAxisAccumulator;
 
-	int64_t Sample( DWORD dwTime ) { return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) + sAxisAccumulator.Sample( dwTime ); }
+	int64_t Sample( uint32_t dwTime ) { return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) + sAxisAccumulator.Sample( dwTime ); }
 	void Reset() { sKeyAccumulator.Reset(); sPOVAccumulator.Reset(); sLimAxisAccumulator.Reset(); }
 };
 
@@ -190,7 +191,7 @@ struct SCommand
 	bool bActive;
 	float fDelta;
 	float fSpeed;
-	DWORD dwTime;
+	uint32_t dwTime;
 	float fCoeff;
 	std::list<SMapping> mappingsList;
 

@@ -3,6 +3,8 @@
 
 #include "GPixelFormat.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 
@@ -47,9 +49,9 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 	pRes->BoxInit( ptMin, ptMax );
 }
 
-//static bool IsInRange( DWORD a, DWORD b, DWORD c ) { if ( a < b ) return c >= a && c <= b; return c >= b && c <= a; }
+//static bool IsInRange( uint32_t a, uint32_t b, uint32_t c ) { if ( a < b ) return c >= a && c <= b; return c >= b && c <= a; }
 template<>
-void Interpolate( const DWORD &v1, const DWORD &v2, float f1, float f2, DWORD *pRes )
+void Interpolate( const uint32_t &v1, const uint32_t &v2, float f1, float f2, uint32_t *pRes )
 {
 	NGfx::SPixel8888 c1(v1), c2(v2), out;
 
@@ -61,7 +63,7 @@ void Interpolate( const DWORD &v1, const DWORD &v2, float f1, float f2, DWORD *p
 	*pRes = out.dwColor;
 }
 template<>
-void Scale( const DWORD &v, float f, DWORD *pRes )
+void Scale( const uint32_t &v, float f, uint32_t *pRes )
 {
 	NGfx::SPixel8888 c(v), out;
 
@@ -140,7 +142,7 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 
 		offset = *reinterpret_cast<int32_t*>(p);
 		p += sizeof(int32_t);
-		particle.color.keys = reinterpret_cast<TKey<DWORD> *>(pData + offset);
+		particle.color.keys = reinterpret_cast<TKey<uint32_t> *>(pData + offset);
 
 		particle.sprite.nKeys = *reinterpret_cast<short*>(p);
 		p += sizeof(short);

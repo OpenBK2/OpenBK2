@@ -4,6 +4,8 @@
 #include "Misc/2Darray.h"
 #include "B2_M1_Terrain/PatchHolder.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 	class IGameView;
@@ -68,12 +70,12 @@ class CWaterPatch : public CVersioningBase
 			struct
 			{
 				float x, y, z;
-				DWORD color;
+				uint32_t color;
 			};
 			struct
 			{
 				CVec3 pos;
-				DWORD color;
+				uint32_t color;
 			};
 		};
 		SGridType() {}
@@ -102,7 +104,7 @@ class CWaterPatch : public CVersioningBase
 		float fFoamDy;
 		float fFoamTexOffs;
 		float fFoamTexCoeff;
-		DWORD nFoamColor;
+		uint32_t nFoamColor;
 	};
 	//
 	struct SWaterHorDeform

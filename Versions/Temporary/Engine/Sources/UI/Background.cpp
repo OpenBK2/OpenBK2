@@ -1,18 +1,19 @@
 // Background.cpp: implementation of the CBackgroundSimpleScallingTexture class.
 //
 
-
 #include "stdafx.h"
 #include "Background.h"
 
-DWORD FadeColor( DWORD dwColor, float fFade )
+#include <cstdint>
+
+uint32_t FadeColor( uint32_t dwColor, float fFade )
 {
-	return DWORD( (dwColor & 0xFF ) * fFade ) |
-		DWORD( (dwColor >> 8 & 0xFF ) * fFade ) << 8 |
-		DWORD( (dwColor >> 16 & 0xFF ) * fFade ) << 16 |
-		DWORD( (dwColor >> 24 & 0xFF ) * fFade ) << 24;
+	return uint32_t( (dwColor & 0xFF ) * fFade ) |
+		uint32_t( (dwColor >> 8 & 0xFF ) * fFade ) << 8 |
+		uint32_t( (dwColor >> 16 & 0xFF ) * fFade ) << 16 |
+		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24;
 //	return (dwColor & 0x00FFFFFF) |
-//		DWORD( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // вариант с изменением только альфы смотрится хуже
+//		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // вариант с изменением только альфы смотрится хуже
 }
 
 BASIC_REGISTER_CLASS(IWindowPart)

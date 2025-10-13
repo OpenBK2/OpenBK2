@@ -3,6 +3,7 @@
 #include "UI/IMessageReaction.h"
 #include "DBUISpecificB2.h"
 
+#include <cstdint>
 
 class CARSetForcedAction : public IMessageReactionB2 
 {
@@ -10,7 +11,7 @@ class CARSetForcedAction : public IMessageReactionB2
 	CDBPtr<NDb::SARSetForcedAction> pDesc;
 public:       
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -20,7 +21,7 @@ class CARSetSpecialAbility : public IMessageReactionB2
 	CDBPtr<NDb::SARSetSpecialAbility> pDesc;
 public:       
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 

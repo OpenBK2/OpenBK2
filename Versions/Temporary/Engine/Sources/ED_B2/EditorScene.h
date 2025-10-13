@@ -2,6 +2,8 @@
 
 #include "ED_B2_M1/EditorScene.h"
 
+#include <cstdint>
+
 class CEditorScene : public IEditorScene
 {
 	OBJECT_NOCOPY_METHODS( CEditorScene )
@@ -17,7 +19,7 @@ public:
 	virtual NGScene::IGameView *GetGView();
 	virtual CVec2 GetScreenRect();
 	virtual class CCSTime *GetGameTimer();
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual void ClearMarkers( ESceneMarkerType eType, int nID );
 	virtual void AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter );
 	virtual void SwitchScene( const EScene eScene );
@@ -32,7 +34,7 @@ public:
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
 
 	virtual int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck );
+	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
 	virtual void RemovePolyline( const int nID );
 	virtual bool ToggleShow( ESceneShow eShow );
 	virtual bool ToggleAIGeometryMode();

@@ -19,6 +19,8 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 static const int MAX_UPDATE_AT_SEGMENT = 100;
 static const int MAX_AREAS_CALCULATED_AT_SEGMENT = 50;
 static const int MAX_SMOOTH_TILES_AT_SEGMENT = 1000;
@@ -580,7 +582,7 @@ bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 	}
 }
 
-bool CGlobalWarFog::GetWarForInfo( CArray2D<BYTE> **pWarFogInfo, const int nParty, const bool bFirstTime )
+bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nParty, const bool bFirstTime )
 {
 	*pWarFogInfo = &miniMapWarFog;
 	const NTimer::STime nFogCalcTime = GameTimer()->GetGameTime();
@@ -644,7 +646,7 @@ void CGlobalWarFog::DumpWarFog()
 
 	DebugTrace( "Min height = %d, Max height = %d", nMinHeight, nMaxHeight );
 /*
-	CArray2D<DWORD> image;
+	CArray2D<uint32_t> image;
 	const float fDeltaHeight = 255/(float)( nMaxHeight - nMinHeight );
 	image.SetSizes( heights.GetSizeX(), heights.GetSizeY() );
 	for ( int x = 0;  x < heights.GetSizeX(); ++x )

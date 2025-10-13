@@ -6,16 +6,18 @@
 #include "System/XmlSaver.h"
 #include "dbsceneconsts.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SLightEffectConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SLightEffectConsts::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "LightConeTexture", (BYTE*)&pLightConeTexture - pThis, sizeof(pLightConeTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "FlareTexture", (BYTE*)&pFlareTexture - pThis, sizeof(pFlareTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "FlareAppearTime", (BYTE*)&fFlareAppearTime - pThis, sizeof(fFlareAppearTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "LightConeTexture", (uint8_t*)&pLightConeTexture - pThis, sizeof(pLightConeTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "FlareTexture", (uint8_t*)&pFlareTexture - pThis, sizeof(pFlareTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "FlareAppearTime", (uint8_t*)&fFlareAppearTime - pThis, sizeof(fFlareAppearTime), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SLightEffectConsts::operator&( IXmlSaver &saver )
@@ -36,7 +38,7 @@ int SLightEffectConsts::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SLightEffectConsts::CalcCheckSum() const
+uint32_t SLightEffectConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -53,11 +55,11 @@ DWORD SLightEffectConsts::CalcCheckSum() const
 
 
 
-void SSceneConsts::SSelectionMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SSelectionMaterials::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Air", (BYTE*)&pAir - pThis, sizeof(pAir), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Water", (BYTE*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Ground", (BYTE*)&pGround - pThis, sizeof(pGround), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Air", (uint8_t*)&pAir - pThis, sizeof(pAir), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Water", (uint8_t*)&pWater - pThis, sizeof(pWater), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Ground", (uint8_t*)&pGround - pThis, sizeof(pGround), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SSceneConsts::SSelectionMaterials::operator&( IXmlSaver &saver )
@@ -78,7 +80,7 @@ int SSceneConsts::SSelectionMaterials::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSceneConsts::SSelectionMaterials::CalcCheckSum() const
+uint32_t SSceneConsts::SSelectionMaterials::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -92,9 +94,9 @@ DWORD SSceneConsts::SSelectionMaterials::CalcCheckSum() const
 
 
 
-void SSceneConsts::STrackMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSceneConsts::STrackMaterials::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Track", (BYTE*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Track", (uint8_t*)&pTrack - pThis, sizeof(pTrack), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SSceneConsts::STrackMaterials::operator&( IXmlSaver &saver )
@@ -111,7 +113,7 @@ int SSceneConsts::STrackMaterials::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSceneConsts::STrackMaterials::CalcCheckSum() const
+uint32_t SSceneConsts::STrackMaterials::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -125,9 +127,9 @@ DWORD SSceneConsts::STrackMaterials::CalcCheckSum() const
 
 
 
-void SSceneConsts::SIconAIGeometry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SIconAIGeometry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (BYTE*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Icon", (uint8_t*)&pIcon - pThis, sizeof(pIcon), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SSceneConsts::SIconAIGeometry::operator&( IXmlSaver &saver )
@@ -144,7 +146,7 @@ int SSceneConsts::SIconAIGeometry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSceneConsts::SIconAIGeometry::CalcCheckSum() const
+uint32_t SSceneConsts::SIconAIGeometry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -158,11 +160,11 @@ DWORD SSceneConsts::SIconAIGeometry::CalcCheckSum() const
 
 
 
-void SSceneConsts::STerraGenConsts::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSceneConsts::STerraGenConsts::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "BorderSmoothNoise", (BYTE*)&szBorderSmoothNoise - pThis, sizeof(szBorderSmoothNoise), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TextureCombiningNoise", (BYTE*)&szTextureCombiningNoise - pThis, sizeof(szTextureCombiningNoise), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "DebrisMaskNoise", (BYTE*)&szDebrisMaskNoise - pThis, sizeof(szDebrisMaskNoise), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "BorderSmoothNoise", (uint8_t*)&szBorderSmoothNoise - pThis, sizeof(szBorderSmoothNoise), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TextureCombiningNoise", (uint8_t*)&szTextureCombiningNoise - pThis, sizeof(szTextureCombiningNoise), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "DebrisMaskNoise", (uint8_t*)&szDebrisMaskNoise - pThis, sizeof(szDebrisMaskNoise), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SSceneConsts::STerraGenConsts::operator&( IXmlSaver &saver )
@@ -183,7 +185,7 @@ int SSceneConsts::STerraGenConsts::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSceneConsts::STerraGenConsts::CalcCheckSum() const
+uint32_t SSceneConsts::STerraGenConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -197,13 +199,13 @@ DWORD SSceneConsts::STerraGenConsts::CalcCheckSum() const
 
 
 
-void SSceneConsts::SDebugMaterials::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSceneConsts::SDebugMaterials::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "RedMaterial", (BYTE*)&pRedMaterial - pThis, sizeof(pRedMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "GreenMaterial", (BYTE*)&pGreenMaterial - pThis, sizeof(pGreenMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "BlueMaterial", (BYTE*)&pBlueMaterial - pThis, sizeof(pBlueMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "BlackMaterial", (BYTE*)&pBlackMaterial - pThis, sizeof(pBlackMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "WhiteMaterial", (BYTE*)&pWhiteMaterial - pThis, sizeof(pWhiteMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "RedMaterial", (uint8_t*)&pRedMaterial - pThis, sizeof(pRedMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "GreenMaterial", (uint8_t*)&pGreenMaterial - pThis, sizeof(pGreenMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "BlueMaterial", (uint8_t*)&pBlueMaterial - pThis, sizeof(pBlueMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "BlackMaterial", (uint8_t*)&pBlackMaterial - pThis, sizeof(pBlackMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "WhiteMaterial", (uint8_t*)&pWhiteMaterial - pThis, sizeof(pWhiteMaterial), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SSceneConsts::SDebugMaterials::operator&( IXmlSaver &saver )
@@ -228,7 +230,7 @@ int SSceneConsts::SDebugMaterials::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSceneConsts::SDebugMaterials::CalcCheckSum() const
+uint32_t SSceneConsts::SDebugMaterials::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -246,15 +248,15 @@ void SSceneConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SceneConsts", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "SelectionMaterials", &selectionMaterials, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "TrackMaterials", &trackMaterials, pThis ); 
-	NMetaInfo::ReportMetaInfo( "ShotTraceMaterial", (BYTE*)&pShotTraceMaterial - pThis, sizeof(pShotTraceMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ShotTraceMaterial", (uint8_t*)&pShotTraceMaterial - pThis, sizeof(pShotTraceMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "TerraGenConsts", &terraGenConsts, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "IconAIGeometry", &iconAIGeometry, pThis ); 
-	NMetaInfo::ReportMetaInfo( "VisObjIconsSet", (BYTE*)&pVisObjIconsSet - pThis, sizeof(pVisObjIconsSet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "VisObjIconsSet", (uint8_t*)&pVisObjIconsSet - pThis, sizeof(pVisObjIconsSet), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "LightFX", &lightFX, pThis ); 
-	NMetaInfo::ReportMetaInfo( "InterfaceLight", (BYTE*)&pInterfaceLight - pThis, sizeof(pInterfaceLight), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "InterfaceLight", (uint8_t*)&pInterfaceLight - pThis, sizeof(pInterfaceLight), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "DebugMaterials", &debugMaterials, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }

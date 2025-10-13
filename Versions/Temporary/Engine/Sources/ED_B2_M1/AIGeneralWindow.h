@@ -5,6 +5,8 @@
 #include "Stats_B2_M1/DBMapinfo.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 struct SAIGeneralPointsWindowData
 {
 	struct SAIPlayerInfo
@@ -115,7 +117,7 @@ public:
 	void OnCancel() {}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	void NotifyHandler( SAIGeneralPointsWindowData::EAIGenPointsLastAction eAction );

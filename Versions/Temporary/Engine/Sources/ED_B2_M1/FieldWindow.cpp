@@ -3,6 +3,8 @@
 #include "MapEditorLib/EditParameter.h"
 #include "FieldWindow.h"
 
+#include <cstdint>
+
 CFieldWindow::CFieldWindow( CWnd* pParent )
 	: CResizeDialog( CFieldWindow::IDD, pParent ), bCreateControls( false )
 {
@@ -219,7 +221,7 @@ void CFieldWindow::OnFillHeightsCheckBox()
 }
 
 
-bool CFieldWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CFieldWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

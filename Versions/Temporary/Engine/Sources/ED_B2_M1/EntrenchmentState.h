@@ -3,6 +3,8 @@
 #include "SimpleObjectState.h"
 #include "EntrenchmentInfoData.h"
 
+#include <cstdint>
+
 //
 //
 //
@@ -24,7 +26,7 @@ public:
 	///
 private:
 	///
-	static const DWORD segColors[ST_COUNT];
+	static const uint32_t segColors[ST_COUNT];
 
 	float fArcDeltaAngle;									// половина острого угла конуса в модели Arc
 	CVec3 segAABBSizes[ST_COUNT];					// размеры соответствующих типов сегментов
@@ -39,7 +41,7 @@ private:
 	///
 	CVec3 vDirMarker;									// вектор напраления от блока к курсору мыши
 	///
-	void DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, DWORD clr );
+	void DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, uint32_t clr );
 	CVec3 GetSegPos( int nSegIndex, bool bStart );
 	float GetSegDir( int nSegIndex );
 	///
@@ -118,7 +120,7 @@ protected:
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectLButtonDblClk	( UINT nFlags, const CVec3 &rTerrainPos );
 	///
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	///
 };

@@ -2,6 +2,8 @@
 
 #include "LightXMLUtils.h"
 
+#include <cstdint>
+
 namespace NLXML
 {
 
@@ -89,7 +91,7 @@ const char* GetEntity( const char *p, char *pValue )
 	const char *phx = "#x";
 	// Presume an entity, and pull it out.
 	// Ignore the &#x entities.
-	if ( (*((WORD*)p) == *((WORD*)phx)) && *(p + 2) && *(p + 3) ) 
+	if ( (*((uint16_t*)p) == *((uint16_t*)phx)) && *(p + 2) && *(p + 3) )
 	{
 		if ( isalpha(*(p + 2)) ) 
 			*pValue = ( tolower( *(p + 2) ) - 'a' + 10 ) * 16;

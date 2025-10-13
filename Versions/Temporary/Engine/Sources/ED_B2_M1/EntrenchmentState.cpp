@@ -13,6 +13,8 @@
 #include "EntrenchmentState.h"
 #include "MapInfoEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CEntrenchmentState::ClearData()
@@ -164,7 +166,7 @@ void CEntrenchmentState::InsertEntrenchment()
 }
 
 
-bool CEntrenchmentState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CEntrenchmentState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -214,7 +216,7 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 	//
 	SObjectSet objectSet;
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, 
-		ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "EntrenchmentRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes ) 
@@ -250,7 +252,7 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 //
 //
 
-const DWORD CEntrenchmentDesignTool::segColors[CEntrenchmentDesignTool::ST_COUNT] = 
+const uint32_t CEntrenchmentDesignTool::segColors[CEntrenchmentDesignTool::ST_COUNT] =
 {
 	NMapInfoEditor::PLACEMENT_COLOR,
 	NMapInfoEditor::PLACEMENT_COLOR,
@@ -316,7 +318,7 @@ bool CEntrenchmentDesignTool::Draw( CSceneDrawTool *pDrawTool )
 }
 
 
-void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, DWORD clr )
+void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, uint32_t clr )
 {
 	CVec3 vNormale = GetNormal( dp - cp );
 	Normalize( &vNormale );

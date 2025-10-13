@@ -2,6 +2,8 @@
 
 #include "SceneInternal.h"
 
+#include <cstdint>
+
 int CScene::AddPolyline( const int nID, const std::vector<CVec3> &_points, const CVec4 &vColor, bool bDepthCheck )
 {
 	// translate to Vis coords
@@ -21,7 +23,7 @@ int CScene::AddPolyline( const int nID, const std::vector<CVec3> &_points, const
 	return AddIndexedPolylineInternal( nID, points, indices, vColor, bDepthCheck );
 }
 
-int CScene::AddIndexedPolyline( const int nID, const std::vector<CVec3> &_points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck )
+int CScene::AddIndexedPolyline( const int nID, const std::vector<CVec3> &_points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	// translate to Vis coords
 	std::vector<CVec3> points( _points.size() );
@@ -31,7 +33,7 @@ int CScene::AddIndexedPolyline( const int nID, const std::vector<CVec3> &_points
 	return AddIndexedPolylineInternal( nID, points, indices, vColor, bDepthCheck );
 }
 
-int CScene::AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck )
+int CScene::AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	const int nLineID = GetID( nID );
 	data[eScene]->polylines[nLineID] = data[eScene]->GetGScene()->CreatePolyline( points, indices, vColor, bDepthCheck );

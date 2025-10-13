@@ -3,7 +3,9 @@
 #include "VSODataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-bool CVSODataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+#include <cstdint>
+
+bool CVSODataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	// получаем материал
 	CPtr<IManipulator> pMaterialManipulator = 0;

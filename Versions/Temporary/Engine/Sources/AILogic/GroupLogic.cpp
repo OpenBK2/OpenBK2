@@ -28,6 +28,8 @@
 #include "CommandRegistratorForScript.h"
 #include "GroupMover.h"
 
+#include <cstdint>
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
 CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
@@ -100,27 +102,27 @@ void CGroupLogic::DelGroup( const int nGroup )
 	groupUnits.DelQueue( nGroup );
 }
 
-WORD CGroupLogic::GetGroupNumberByID( const WORD wID )
+uint16_t CGroupLogic::GetGroupNumberByID( const uint16_t wID )
 {
-	return ( ( wID << 4 ) | BYTE( theDipl.GetMyNumber() ) ) << 1;
+	return ( ( wID << 4 ) | uint8_t( theDipl.GetMyNumber() ) ) << 1;
 }
 
-WORD CGroupLogic::GetSpecialGroupNumberByID( const WORD wID )
+uint16_t CGroupLogic::GetSpecialGroupNumberByID( const uint16_t wID )
 {
-	return ( ( ( wID << 4 ) | BYTE( theDipl.GetMyNumber() ) ) << 1 ) | 1;
+	return ( ( ( wID << 4 ) | uint8_t( theDipl.GetMyNumber() ) ) << 1 ) | 1;
 }
 
-WORD CGroupLogic::GetIdByGroupNumber( const WORD wGroup )
+uint16_t CGroupLogic::GetIdByGroupNumber( const uint16_t wGroup )
 {
 	return wGroup >> 5;
 }
 
-WORD CGroupLogic::GetPlayerByGroupNumber( const WORD wGroup )
+uint16_t CGroupLogic::GetPlayerByGroupNumber( const uint16_t wGroup )
 {
 	return ( wGroup >> 1 ) & 0xf;
 }
 
-void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup )
+void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup )
 {
 	std::vector<int> aviaIndexes( nLen, 0 );
 	CVec2 vPos = VNULL2;
@@ -192,7 +194,7 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 	}
 }
 
-void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const WORD wGroup )
+void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup )
 {
 	typedef CObjectBase* LPObjectBase;
 	LPObjectBase *objects = new LPObjectBase[ vIDs.size() ];
@@ -207,12 +209,12 @@ void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const WORD wGroup
 	delete[] objects;
 }
 
-const WORD CGroupLogic::GenerateGroupNumber()
+const uint16_t CGroupLogic::GenerateGroupNumber()
 {
 	return GetGroupNumberByID( groupIds.Get() );
 }
 
-void CGroupLogic::UnregisterSpecialGroup( const WORD wSpecialGroup )
+void CGroupLogic::UnregisterSpecialGroup( const uint16_t wSpecialGroup )
 {
 	if ( registeredGroups.find( wSpecialGroup ) != registeredGroups.end() )
 	{
@@ -226,7 +228,7 @@ void CGroupLogic::UnregisterSpecialGroup( const WORD wSpecialGroup )
 	}
 }
 
-void CGroupLogic::UnregisterGroup( const WORD wGroup ) 
+void CGroupLogic::UnregisterGroup( const uint16_t wGroup )
 { 	
 	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
 	{
@@ -327,11 +329,11 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	}
 }
 
-void CGroupLogic::CreateSpecialGroup( const WORD wGroup )
+void CGroupLogic::CreateSpecialGroup( const uint16_t wGroup )
 {
 	if ( wGroup != 0 )
 	{
-		const WORD wSpecialGroup = GetSpecialGroupNumberByID( groupIds.Get() );
+		const uint16_t wSpecialGroup = GetSpecialGroupNumberByID( groupIds.Get() );
 		registeredGroups.insert( wSpecialGroup );
 
 		if ( wSpecialGroup >= groupUnits.GetQueuesNum() )
@@ -369,7 +371,7 @@ void CGroupLogic::CreateSpecialGroup( const WORD wGroup )
 	}
 }
 
-void CGroupLogic::EraseFromAmbushGroups( const SAIUnitCmd &command, const WORD wGroup )
+void CGroupLogic::EraseFromAmbushGroups( const SAIUnitCmd &command, const uint16_t wGroup )
 {
 	if ( !command.bFromAI || command.nCmdType == ACTION_COMMAND_AMBUSH )
 	{
@@ -381,7 +383,7 @@ void CGroupLogic::EraseFromAmbushGroups( const SAIUnitCmd &command, const WORD w
 	}
 }
 
-void CGroupLogic::CreateAmbushGroup( const WORD wGroup )
+void CGroupLogic::CreateAmbushGroup( const uint16_t wGroup )
 {
 	ambushGroups.emplace_front();
 	for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -528,7 +530,7 @@ void CGroupLogic::ProcessAmbushGroups()
 	}
 }
 
-void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bool bPlaceInQueue )
+void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup, bool bPlaceInQueue )
 {
 	theCommandTrackerForScript.Called( command.nCmdType );
 
@@ -906,7 +908,7 @@ void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 		{
 			CCommonUnit * pUnit = segmUnits[1].GetEl( i );
 			int id = pUnit->GetUniqueId();
-			*ulChecksum = adler32( *ulChecksum, (BYTE*)&id, 4 );
+			*ulChecksum = adler32( *ulChecksum, (uint8_t*)&id, 4 );
 		}
 	}
 }
@@ -923,9 +925,9 @@ void CGroupLogic::UpdateDebugChecksums(FILE* f)
 			CCommonUnit * pUnit = segmUnits[1].GetEl( i );
 			int id = pUnit->GetUniqueId();
 			CVec2 pos = pUnit->GetCenterPlain();
-			WORD dir = pUnit->GetDirection();
+			uint16_t dir = pUnit->GetDirection();
 			
-			BYTE player = pUnit->GetPlayer();
+			uint8_t player = pUnit->GetPlayer();
 			uLong checksum = CalculateChecksum(baseChecksum, id, pos.x, pos.y, dir);
 
 			fprintf(f, "\tPlayer[%d] SegmUnit[%d]: %lu - { pos (%f, %f), dir: %hu }\n", (int)player, pUnit->GetUniqueID(), checksum, pos.x, pos.y, dir);

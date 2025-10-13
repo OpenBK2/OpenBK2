@@ -41,6 +41,8 @@
 
 #include "MapInfoViewFilterDlg.h"
 
+#include <cstdint>
+
 //#include "../GameX/DBGameRoot.h"
 //#include "../GameX/DBConsts.h"
 //#include "../GameX/GetConsts.h"
@@ -642,7 +644,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 }
 
 
-bool CMapInfoEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapInfoEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -661,7 +663,7 @@ bool CMapInfoEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 		case ID_TOOLS_FIT_TO_GRID:
 		{
       editorSettings.bFitToGrid = !editorSettings.bFitToGrid;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FENCE_STATE, ID_TOOLS_FIT_TO_GRID, DWORD(editorSettings.bFitToGrid) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FENCE_STATE, ID_TOOLS_FIT_TO_GRID, uint32_t(editorSettings.bFitToGrid) );
 			return true;
 		}
 		//
@@ -1833,7 +1835,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					CManipulatorManager::GetValue( &( objectLoadInfo.nFrameIndex ), pManipulator, szObjectPrefix + ".FrameIndex" );
 					CManipulatorManager::GetValue( &( objectLoadInfo.fHP ), pManipulator, szObjectPrefix + ".HP" );
 					CManipulatorManager::GetVec3<CVec3, float>( &( objectLoadInfo.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
-					WORD wDirection = 0;
+					uint16_t wDirection = 0;
 					CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 					objectLoadInfo.fDirection = AI2VisRad( wDirection );
 					CManipulatorManager::GetValue( &( objectLoadInfo.nLinkWith ), pManipulator, szObjectPrefix + ".Link.LinkWith" );
@@ -2179,7 +2181,7 @@ void CMapInfoEditor::ApplyViewFilter()
 		const int nWarFogSize = GetNextPow2( nMaxMapSize );
 		const float fWarFogCellSize = AI_TILES_IN_VIS_TILE * VIS_TILES_IN_PATCH * VIS_TILE_SIZE / AI_TILES_IN_PATCH;
 
-		CArray2D<BYTE> warFogInfo;
+		CArray2D<uint8_t> warFogInfo;
 		warFogInfo.SetSizes( nWarFogSize + 1, nWarFogSize + 1 );
 		warFogInfo.FillEvery( nWarfogMinValue );
 
@@ -2201,7 +2203,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	}
 	else
 	{
-		CArray2D<BYTE> warFog( 1, 1 );
+		CArray2D<uint8_t> warFog( 1, 1 );
 		warFog.FillEvery( 255 );
 		pEditorScene->SetWarFog( warFog, 1.0f );
 	}

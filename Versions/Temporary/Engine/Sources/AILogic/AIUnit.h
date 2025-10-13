@@ -5,6 +5,8 @@
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include <cstdint>
+
 class CAntiArtillery;
 class CAIUnitInfoForGeneral;
 class CExistingObject;
@@ -24,7 +26,7 @@ enum EActionNotify;
 
 class CAIUnit: public CCommonUnit
 {
-	BYTE player;
+	uint8_t player;
 	bool bTrampled;
 
 	// половина угла обзора
@@ -65,7 +67,7 @@ class CAIUnit: public CCommonUnit
 	int nVisIndexInUnits;
 	float fCamoflage;
 	
-	DWORD dwForbiddenGuns;									// some guns will be excluded from auto attack
+	uint32_t dwForbiddenGuns;									// some guns will be excluded from auto attack
 	
 	bool bHoldingSector;
 	bool bTargetingTrack;
@@ -104,7 +106,7 @@ private:
 	void UpdateEnableAblitiy( const int nAbility );
 	void InitAbility( const NDb::EUnitSpecialAbility nAbility );
 	void UpdateUnitProfile();
-	BYTE AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving );
+	uint8_t AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving );
 	bool LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun, 
 		const float fRange, const bool bIteratePlanes, const bool bIterateBuildings );
 	void SetTargetScanRandom();
@@ -118,29 +120,29 @@ protected:
 	void DieTrain( const float fDamage );
 	
 	virtual void InitGuns() = 0;
-	void Init( const CVec2 &center, const int z, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center, const int z, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
-	const int GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir, const SRect &unitRect );
+	const int GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir, const SRect &unitRect );
 
 	bool IsTimeToAnalyzeTargetScan() const;
 
-	virtual bool CalculateUnitVisibility4Party( const BYTE cParty );
+	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
 	// for delayed units fade
-	virtual bool UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibility );
+	virtual bool UpdateUnitVisibilityForParty( const uint8_t party, const bool bVisibility );
 
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate );
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
 	// return | of guns, that are used for anti-aviation fire and should be excluded from ordinary target scan
-	virtual DWORD InitSupportAntiAircraftGuns() { return 0; }
+	virtual uint32_t InitSupportAntiAircraftGuns() { return 0; }
 	CObjectBase * GetObjInside() { return pObjInside; }
 public:
 	CAIUnit() : pObjInside( 0 ), bTrampled( false ), nMultipleShots(1), bTargetingTrack(false), bIgnoreAABBCoeff(false), timeLastAttackedAck( 0 ), timeLastAttacked( 0 ), bAmphibianWaterModifierApplied( false ) { }
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector ) = 0;
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector ) = 0;
 	void InitSpecialAbilities( int nFromLevel = 0 );			// Parameter is used on level-up
 	static CAIUnit * GetUnitByUniqueID( const int nUniqueID );
 	int operator&( IBinSaver &f );
 
 	virtual void PrepareToDelete();
-	DWORD GetForbiddenGuns() const { return dwForbiddenGuns; }
+	uint32_t GetForbiddenGuns() const { return dwForbiddenGuns; }
 	// для updater-а
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
@@ -156,8 +158,8 @@ public:
 	class CExistingObject* GetTankPit() const { return pTankPit; }
 	bool IsInTankPit() const { return bIsInTankPit; }
 
-	void SetVisionAngle( const WORD wAngle ) { wVisionAngle = wAngle; }
-	WORD GetVisionAngle() const { return wVisionAngle; }
+	void SetVisionAngle( const uint16_t wAngle ) { wVisionAngle = wAngle; }
+	uint16_t GetVisionAngle() const { return wVisionAngle; }
 
 	//
 	virtual const SUnitBaseRPGStats* GetStats() const = 0;
@@ -175,13 +177,13 @@ public:
 	virtual void Disappear();
 
 	// виден ли данной дипломатической стороной
-	virtual const bool IsVisible( const BYTE party ) const;
-	void SetVisibility( BYTE party, bool bVisible ) { visible4Party[party] = bVisible; }
+	virtual const bool IsVisible( const uint8_t party ) const;
+	void SetVisibility( uint8_t party, bool bVisible ) { visible4Party[party] = bVisible; }
 	// для отложенных updates
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
-	virtual const DWORD GetNormale() const;
+	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
+	virtual const uint32_t GetNormale() const;
 
 	// CBasePathUnit
 	virtual const float GetTurnSpeed() const;
@@ -209,7 +211,7 @@ public:
 
 	virtual const CVec2 &GetAABBHalfSize() const { return GetStats()->vAABBHalfSize; }
 	virtual const float GetVisZ() const;
-	const WORD GetDirAtTheBeginning() const;
+	const uint16_t GetDirAtTheBeginning() const;
 
 	// CPathUnit
 		virtual bool IsInOneTrain( CBasePathUnit *pUnit ) const { return false; }
@@ -262,11 +264,11 @@ public:
 	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand );
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const;
 	
-	virtual const BYTE GetPlayer() const { return player; }
+	virtual const uint8_t GetPlayer() const { return player; }
 	// сменить дипломатию с корректным update в units
-	virtual void ChangePlayer( const BYTE cPlayer );
+	virtual void ChangePlayer( const uint8_t cPlayer );
 	// просто поставить другую дипломатию
-	void SetPlayer( const BYTE cPlayer ) { player = cPlayer; }
+	void SetPlayer( const uint8_t cPlayer ) { player = cPlayer; }
 
 	virtual bool InVisCone( const CVec2 &point ) const { return true; }
 	virtual const float GetSightRadius() const;
@@ -348,13 +350,13 @@ public:
 	// целеразрешение
 	// скорость убийства юнита с pStats из pGun
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
-	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const DWORD dwGuns ) const;
+	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const uint32_t dwGuns ) const;
 	// скорость убийства юнита из наилучшего gun
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const;
 	// скорость убийства юнита из pGun
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy, class CBasicGun *pGun ) const;
 	// скорость убийства юнита из набора Gun, номера задаются маской
-	virtual const float GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const;
+	virtual const float GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) const;
 	void UpdateTakenDamagePower( const float fUpdate );
 	const float GetTakenDamagePower() const { return fTakenDamagePower; }
 	
@@ -362,8 +364,8 @@ public:
 	virtual void ResetTargetScan();
 	// просканировать, если пора; если нашли цель, то атаковать
 	// возвращает: в младшем бите - была ли найдена цель, во втором бите - было ли произведено сканирование
-	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
-	BYTE AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
+	virtual uint8_t AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
+	uint8_t AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
 	// поискать цель, текущая цель для атаки - pCurTarget
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 	// поискать цель вдалеке для артиллерийского обстрела, текущая цель для атаки - pCurTarget
@@ -413,7 +415,7 @@ public:
 	void CalcVisibility( const bool bIgnoreTime );
 	// клиент зависима!
 	virtual const bool IsVisibleByPlayer();
-	bool CalculateUnitVisibility4PartyInner( const BYTE party ) const;
+	bool CalculateUnitVisibility4PartyInner( const uint8_t party ) const;
 	
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun );
@@ -489,7 +491,7 @@ public:
 	virtual const float GetTurnRadius() const { return GetStats()->GetTurnRadius(); }
 
 	// CBasePathUnit
-	void SetDirection( const WORD wDirection );
+	void SetDirection( const uint16_t wDirection );
 	virtual const CVec2 GetCenterShift() const;
 	virtual const bool IsRound() const;
 	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit );
@@ -502,7 +504,7 @@ public:
 	// real implementation of the method
 	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );
 	virtual const bool CanLockTiles() const;
-	void UpdateCrewAndTruckVisibility( BYTE party, bool bNewVisibility );
+	void UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility );
 	void CheckAmmoStatus();
 };
 

@@ -2,6 +2,8 @@
 
 #include "B2_M1_World/CommonB2M1AI.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMapInfo;
@@ -38,7 +40,7 @@ struct IAILogic : public ICommonB2M1AI
 	virtual int GetMiniMapWarFogSizeX() const = 0;
 	virtual int GetMiniMapWarFogSizeY() const = 0;
 	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
-	virtual bool GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime ) = 0;
+	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime ) = 0;
 
 	virtual bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) = 0;
 	virtual bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck ) = 0;
@@ -50,13 +52,13 @@ struct IAILogic : public ICommonB2M1AI
 
 	virtual float GetZ( const CVec2 &vPoint ) const = 0;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
-	virtual const DWORD GetNormal( const CVec2 &vPoint ) const  = 0;
+	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const  = 0;
 	virtual struct ITerraAIObserver* CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
 	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
-	virtual void GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue ) = 0;
-	virtual void UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer ) = 0;
+	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
+	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;
 	virtual const	int GenerateGroupNumber() = 0;
 
 	virtual void RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished = false ) = 0;

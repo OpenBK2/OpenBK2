@@ -6,6 +6,8 @@
 
 #include "TerraAIObserver.h"
 
+#include <cstdint>
+
 static bool bShowWater = false;
 static std::list<SObjTileInfo> steepTiles;
 static float s_fHeightsDiffToLock = 20.0f;
@@ -149,8 +151,8 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 	{
 		for ( int j = i + 1; j < 4; ++j )
 		{
-			const WORD wDirI = GetDirectionByVector( v[i] - vCenter );
-			const WORD wDirJ = GetDirectionByVector( v[j] - vCenter );
+			const uint16_t wDirI = GetDirectionByVector( v[i] - vCenter );
+			const uint16_t wDirJ = GetDirectionByVector( v[j] - vCenter );
 
 			if ( wDirI > wDirJ )
 				std::swap( v[i], v[j] );
@@ -173,7 +175,7 @@ void CTerraAIObserver::SetTerraTypes( const std::vector<NDb::STerrainAIPropertie
 
 
 void CTerraAIObserver::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
-																		const CArray2D<BYTE> &types )
+																		const CArray2D<uint8_t> &types )
 {
 	if ( !types.IsEmpty() ) 
 		pTerrain->UpdateTypes( nX1, nY1, nX2, nY2, types );
@@ -208,7 +210,7 @@ float CTerraAIObserver::GetTileHeight( int nX, int nY ) const
 }
 
 
-DWORD CTerraAIObserver::GetNormal( const CVec2 &vPoint ) const
+uint32_t CTerraAIObserver::GetNormal( const CVec2 &vPoint ) const
 {
 	return pHeights->GetNormal( vPoint );
 }

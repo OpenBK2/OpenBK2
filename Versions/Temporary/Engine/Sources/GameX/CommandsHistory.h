@@ -4,6 +4,8 @@
 #include "System/Commands.h"
 #include "MPInterfaceData.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 struct IAILogicCommandB2;
@@ -56,7 +58,7 @@ class CCommandsHistory : public ICommandsHistory
 		bool bCanAddCommand;
 		CPtr<IRandomSeed> pStartSeed;
 		SMultiplayerReplayInfo replayInfo;
-		DWORD dwLastCheckSum;
+		uint32_t dwLastCheckSum;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&loadedHistory); f.Add(3,&bFinishedHistory); f.Add(4,&bGameFinished); f.Add(5,&bLoadedHistory); f.Add(6,&bCanAddCommand); f.Add(7,&pStartSeed); f.Add(8,&replayInfo); f.Add(9,&dwLastCheckSum); return 0; }
 
 	bool IsFinished( const CSegmentChecksum &_segmentChecksum, const int nGameTime ) const;

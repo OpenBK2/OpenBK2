@@ -9,6 +9,8 @@
 #include "MarkerSet.h"
 #include "BuildingEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 class CPointsListState : public CDefaultInputState, public ICommandHandler
@@ -34,7 +36,7 @@ protected:
 	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// CPointsListState 

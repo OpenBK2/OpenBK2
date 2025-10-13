@@ -2,6 +2,8 @@
 
 #include "Server_Client_Common/CommandsInterface.h"
 
+#include <cstdint>
+
 class CCommands;
 struct IMultiTester;
 class CPinger;
@@ -26,7 +28,7 @@ class CTestClient : virtual public CObjectBase
 
 	vector< CObj<IMultiTester> > testers;
 	int nTestersNameShift;
-	DWORD dwLastTesterCreationTime;
+	uint32_t dwLastTesterCreationTime;
 	//
 	void ProcessCommands();
 

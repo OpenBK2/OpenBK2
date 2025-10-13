@@ -1,7 +1,9 @@
-
 #pragma once
+
 #include "MPInterfaceData.h"
 #include "Server_Client_Common/LadderStatistics.h"
+
+#include <cstdint>
 
 namespace NDb
 {
@@ -226,12 +228,12 @@ struct SMPUILagMessage : public SMPUIMessage
 	OBJECT_NOCOPY_METHODS( SMPUILagMessage );
 public:
 	ZDATA_(SMPUIMessage)
-	DWORD dwLaggingPlayers;
+	uint32_t dwLaggingPlayers;
 	bool bInitialWait;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SMPUIMessage*)this); f.Add(2,&dwLaggingPlayers); f.Add(3,&bInitialWait); return 0; }
 
 	SMPUILagMessage() : SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers(0), bInitialWait(false) {}
-	SMPUILagMessage( const DWORD dwPlayerMask, const bool bOnStart ) 
+	SMPUILagMessage( const uint32_t dwPlayerMask, const bool bOnStart )
 		: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers(dwPlayerMask), bInitialWait(bOnStart) {}
 };
 

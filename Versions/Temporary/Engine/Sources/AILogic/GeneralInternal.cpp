@@ -20,6 +20,8 @@
 //#include "..\Scene\Statistics.h"
 #include "PlayerREinforcement.h"
 
+#include <cstdint>
+
 
 extern CPlayerReinforcementArray theReinfArray;
 extern NAI::CTimeCounter timeCounter;
@@ -731,7 +733,7 @@ void CGeneral::UnitDied( class CCommonUnit * pUnit )
 		BalanceUpdate( BA_REMOVE_ENEMY, pUnit );
 		enemys.erase( it );
 	}
-	else if ( pUnit->GetPlayer() != BYTE(-1) && pUnit->GetParty() == nParty )				// Own unit died
+	else if ( pUnit->GetPlayer() != uint8_t(-1) && pUnit->GetParty() == nParty )				// Own unit died
 	{
 		BalanceUpdate( BA_REMOVE_OWN, pUnit );
 	}

@@ -20,6 +20,8 @@
 #include "System/VFSOperations.h"
 #include "MapEditorLib/Interface_MOD.h"
 
+#include <cstdint>
+
 REGISTER_BUILDER_IN_DLL( MapInfo, CMapInfoBuilder )
 
 
@@ -105,7 +107,7 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( string *pszObjectName, cons
 		if ( bResult ) 
 		{
 			// create empty texture image
-			CArray2D<DWORD> image( 256, 256 );
+			CArray2D<uint32_t> image( 256, 256 );
 			image.FillEvery( 0xffffffff );
 			const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 			CFileStream stream( pUserData->constUserData.szExportSourceFolder + szFolder + "minimap.tga", CFileStream::WIN_CREATE );

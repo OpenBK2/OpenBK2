@@ -8,9 +8,10 @@
 #include "MapInfoEditor.h"
 #include "VSOStateEx.h"
 
-
 #include "libdb/ResourceManager.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
+
+#include <cstdint>
 
 #include <zconf.h>
 
@@ -52,7 +53,7 @@ bool CVSOStateEx::CanInsertVSO()
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			if( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{
@@ -186,7 +187,7 @@ int CVSOStateEx::InsertVSO( const vector<CVec3> &rControlPointList )
 	if ( CanEdit() && CanInsertVSO() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			if ( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{

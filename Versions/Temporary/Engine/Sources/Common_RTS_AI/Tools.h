@@ -3,6 +3,8 @@
 #include "Common_RTS_AI/AIMap.h"
 #include "System/FastMath.h"
 
+#include <cstdint>
+
 const int SPLINE_STEP = 6;
 const int SPLINE_N_OF_ITERATONS = 50;
 
@@ -16,7 +18,7 @@ public: int operator&( IBinSaver &saver ); private:;
 				CVec2 x, dx, d2x, d3x;
 				CVec2 fw_dx, fw_d2x, fw_d3x;
 				float t, tForward;
-				BYTE cntToForward;
+				uint8_t cntToForward;
 public:
 	CBSpline() : a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ), 
 		x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ), 
@@ -71,10 +73,10 @@ public:
 		: fStartDir( 0 ), fDirDiff( 0 ), vCenter( 0, 0 ), fRadius( 0.0f ), bClockWise( false ),
 		fCurrentDelta( 0 ), vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true ) {} 
 
-		CCirclePath( const WORD _wStartDir, const WORD _wDirDiff, const CVec2 &_vPoint, const float _fRadius, const bool _bClockWise, const bool _bForward )
+		CCirclePath( const uint16_t _wStartDir, const uint16_t _wDirDiff, const CVec2 &_vPoint, const float _fRadius, const bool _bClockWise, const bool _bForward )
 			: fRadius( _fRadius ), bClockWise( _bClockWise ), fCurrentDelta( 0 ), bForwardDir( _bForward )
 		{
-			const WORD wPerpDir = ( bClockWise == bForwardDir ) ? ( _wStartDir + 16386 ) : ( _wStartDir - 16386 );
+			const uint16_t wPerpDir = ( bClockWise == bForwardDir ) ? ( _wStartDir + 16386 ) : ( _wStartDir - 16386 );
 			vCenter = _vPoint - fRadius * GetVectorByDirection( wPerpDir );
 			vDX = GetVectorByDirection( _wStartDir );
 
@@ -114,16 +116,16 @@ public:
 //! пор, пока func возвращает true. Возвращает дельту между начальным углом и последним углом, где 
 //! func вернул true
 template<class TYPE>
-WORD CheckArcTiles( TYPE &func, const CVec2 &vUnit, const WORD wStartAngle, const WORD wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward, CAIMap *pAIMap )
+uint16_t CheckArcTiles( TYPE &func, const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward, CAIMap *pAIMap )
 {
-	const WORD wPerpAngle = ( bClockWise == bForward ) ? ( wStartAngle - 16384 ) : ( wStartAngle + 16384 );
+	const uint16_t wPerpAngle = ( bClockWise == bForward ) ? ( wStartAngle - 16384 ) : ( wStartAngle + 16384 );
 	const CVec2 vCenter = vUnit + fRadius * GetVectorByDirection( wPerpAngle );
 	SVector tile = SVector( -666, -666 );
 	const float fDelta = atan2f( 1, fRadius ) * 65536.0f / FP_2PI;
-	const WORD wDelta = fDelta;
-	for ( WORD angle = 0; angle < wDiffAngle; angle += wDelta )
+	const uint16_t wDelta = fDelta;
+	for ( uint16_t angle = 0; angle < wDiffAngle; angle += wDelta )
 	{
-		const WORD wAngle = ( bClockWise ) ? ( wPerpAngle - angle ) : ( wPerpAngle + angle );
+		const uint16_t wAngle = ( bClockWise ) ? ( wPerpAngle - angle ) : ( wPerpAngle + angle );
 		const SVector curTile = pAIMap->GetTile( vCenter - fRadius * GetVectorByDirection( wAngle ) );
 		if ( tile != curTile )
 		{

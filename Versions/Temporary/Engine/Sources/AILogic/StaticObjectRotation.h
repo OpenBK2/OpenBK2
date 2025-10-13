@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 template <class TCont, class TArray2D>
 class CRotatedArray2D
@@ -109,14 +110,14 @@ public:
 class CRotatedVec2 : public CVec2
 {
 public:
-	CRotatedVec2( const CVec2 &_vOrigin, const WORD _wAngle )
+	CRotatedVec2( const CVec2 &_vOrigin, const uint16_t _wAngle )
 		: CVec2( CVec2(_vOrigin.y, -_vOrigin.x) ^ GetVectorByDirection( _wAngle ) )
 	{
 	}
 };
 
-typedef CRotatedArray2D<BYTE, const CArray2D<BYTE> > CRotatedArray2DBYTEConst;
-typedef CRotatedArray2D<BYTE, CArray2D<BYTE> > CRotatedArray2DBYTE;
+typedef CRotatedArray2D<uint8_t, const CArray2D<uint8_t> > CRotatedArray2DBYTEConst;
+typedef CRotatedArray2D<uint8_t, CArray2D<uint8_t> > CRotatedArray2DBYTE;
 
 
 template <class TCont, class TArray2D>
@@ -137,11 +138,11 @@ public:
 		*array
 
 	}
-	CSmoothRotatedArray2D( TArray2D &_array, const WORD _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
+	CSmoothRotatedArray2D( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		Init( _array, _wAngle, _vOrigin, _vCenter );
 	}
-	void Init( TArray2D &_array, const WORD _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
+	void Init( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		array = &_array;
 		wAngle = _wAngle;

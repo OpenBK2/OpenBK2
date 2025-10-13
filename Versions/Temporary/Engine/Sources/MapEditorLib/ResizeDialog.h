@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 #define DECLARE_RESIZE_DLG_WND_COMMON_METHODS( className )														\
 protected:																																						\
@@ -13,7 +14,7 @@ class CResizeDialog : public CDialog
 	struct SControlStyle
 	{
 		CTRect<int> position;
-		DWORD dwStyle;
+		uint32_t dwStyle;
 		float fHorCenterAnchorRatio;
 		float fVerCenterAnchorRatio;
 		float fHorResizeRatio;
@@ -65,7 +66,7 @@ class CResizeDialog : public CDialog
 
 	CResizeDialog( UINT nIDTemplate, CWnd* pParent = 0 );
 	
-	void SetControlStyle( UINT nControlID, DWORD dwStyle = DEFAULT_STYLE, float fHorCenterAnchorRatio = 0.5f, float fVerCenterAnchorRatio = 0.5f, float fHorResizeRatio = 1.0f, float fVerResizeRatio = 1.0f ); //Add and style control to inner structure
+	void SetControlStyle( UINT nControlID, uint32_t dwStyle = DEFAULT_STYLE, float fHorCenterAnchorRatio = 0.5f, float fVerCenterAnchorRatio = 0.5f, float fHorResizeRatio = 1.0f, float fVerResizeRatio = 1.0f ); //Add and style control to inner structure
 	void LoadResizeDialogOptions();
 	void SaveResizeDialogOptions();
 	

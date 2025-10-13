@@ -1,7 +1,10 @@
 #pragma once
+
 #include "MPManager.h"
 #include "DBMPConsts.h"
 #include "Server_Client_Common/LadderStatistics.h"
+
+#include <cstdint>
 
 class CMPManagerModeNivalNet : public CMPManagerMode
 {
@@ -59,7 +62,7 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	bool ShouldSendHeartbeatNow();
 	void RefreshServerGameKeepalive( bool bUpdateGameInfo, const char *szReason, int nRemovedClientID );
 	void InitLobby();
-	void RequestChatChannels( DWORD dwVersion );
+	void RequestChatChannels( uint32_t dwVersion );
 	void CreateServerClient();
 	void SendGameStatistics();
 	void ProcessLadderWaitForClients();

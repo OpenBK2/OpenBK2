@@ -4,6 +4,7 @@
 #include "PC_ItemEditor.h"
 #include "PC_EditorSlider.h"
 
+#include <cstdint>
 
 class CPCStringSliderEditor : public CEdit, public CPCItemEditor, public ICommandHandler
 {
@@ -42,7 +43,7 @@ public:
 	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 private:

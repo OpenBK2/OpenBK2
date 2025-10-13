@@ -3,6 +3,8 @@
 #include "BindArray.h"
 #include "Bind.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 namespace NBind
@@ -74,7 +76,7 @@ bool SBindProcessor::ExtractArrayCallParams( const std::string &szName, int nArr
 	//
 	const int nBinaryShift = pos->second.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
-		pCallParams->pRawVector = reinterpret_cast<std::vector<BYTE>*>( pThis + nBinaryShift );
+		pCallParams->pRawVector = reinterpret_cast<std::vector<uint8_t>*>( pThis + nBinaryShift );
 	//
 	pCallParams->pUValue = &( ownValues[ pos->second.GetOwnValueIndex() ] );
 	pCallParams->pContained = pos->second.pContained;
@@ -87,7 +89,7 @@ bool SBindProcessor::GetArrayRequisites( const std::string &szName, SArrayRequis
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	const int nBinaryShift = pos->second.GetBinaryShift();
 	if ( nBinaryShift != 0x0000ffff )
-		pReqs->pRawVector = reinterpret_cast<std::vector<BYTE>*>( pThis + nBinaryShift );
+		pReqs->pRawVector = reinterpret_cast<std::vector<uint8_t>*>( pThis + nBinaryShift );
 	//
 	pReqs->pUValue = &( ownValues[ pos->second.GetOwnValueIndex() ] );
 	pReqs->pContained = pos->second.pContained;

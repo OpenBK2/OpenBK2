@@ -6,6 +6,8 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "Misc/HPTimer.h"
 
+#include <cstdint>
+
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Operation", &szOperation );
@@ -31,7 +33,7 @@ void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFile
 		pstrText->Empty();
 		if ( CPtr<IDataStream> pFileStream = OpenStream( rszFileName ) )
 		{
-			vector<BYTE> fileBuffer;
+			vector<uint8_t> fileBuffer;
 			fileBuffer.resize( pFileStream->GetSize() );
 			pFileStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 			//

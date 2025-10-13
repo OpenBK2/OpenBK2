@@ -2,6 +2,8 @@
 
 #include "3Dmotor/GfxBuffers.h"
 
+#include <cstdint>
+
 template<class T> class CPtrFuncBase;
 namespace NGfx
 {
@@ -30,8 +32,8 @@ struct IUIVisitor
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
 	virtual void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects ) = 0;
 	virtual void VisitUIText( struct IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
-	//virtual void VisitUIText( struct IGFXText *pText, const CTRect<float> &rcRect, const int nY, const DWORD dwColor, const DWORD dwFlags ) = 0;
-	//virtual void VisitStringW( const wstring &szString, const int nFont, const int nX, const int nY, const DWORD dwColor = 0xFFFFFFFF ) = 0;
+	//virtual void VisitUIText( struct IGFXText *pText, const CTRect<float> &rcRect, const int nY, const uint32_t dwColor, const uint32_t dwFlags ) = 0;
+	//virtual void VisitStringW( const wstring &szString, const int nFont, const int nX, const int nY, const uint32_t dwColor = 0xFFFFFFFF ) = 0;
 	friend class CClipStore;
 };
 

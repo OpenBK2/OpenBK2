@@ -16,6 +16,8 @@
 #include "EditorMethods.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 BEGIN_MESSAGE_MAP(CMiniMapWindow, CWnd)
@@ -99,9 +101,9 @@ void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 					const NImage::SColor color10 = GetColor( *pTerrainDesc, *pTerrainInfo, x, y - 1 );
 					const NImage::SColor color01 = GetColor( *pTerrainDesc, *pTerrainInfo, x - 1, y );
 					const NImage::SColor color00 = GetColor( *pTerrainDesc, *pTerrainInfo, x - 1, y - 1 );
-					const DWORD r = (color00.r + color01.r + color10.r + color11.r)/4;
-					const DWORD g = (color00.g + color01.g + color10.g + color11.g)/4;
-					const DWORD b = (color00.b + color01.b + color10.b + color11.b)/4;
+					const uint32_t r = (color00.r + color01.r + color10.r + color11.r)/4;
+					const uint32_t g = (color00.g + color01.g + color10.g + color11.g)/4;
+					const uint32_t b = (color00.b + color01.b + color10.b + color11.b)/4;
 					p.x --;
 					mapDC.SetPixelV( p, RGB( r, g, b ) );
 				}
@@ -282,7 +284,7 @@ void CMiniMapWindow::OnContextMenu( CWnd* pWnd, CPoint point )
 }
 
 
-bool CMiniMapWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMiniMapWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

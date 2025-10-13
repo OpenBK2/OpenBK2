@@ -2,6 +2,7 @@
 
 #include "B2_M1_Terrain_export.h"
 
+#include <cstdint>
 
 // automatically generated file, don't change manually!
 
@@ -18,7 +19,7 @@ namespace NDb
 	struct STerrainAIProperties
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fPassability;
 		int nAIClass;
@@ -35,17 +36,17 @@ namespace NDb
 			nSoilType( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SVSOLayerBaseDesc
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fCenterOpacity;
 		float fTilingStep;
@@ -56,17 +57,17 @@ namespace NDb
 			fTilingStep( 0.1000f )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SVSOLayerBorderDesc : public SVSOLayerBaseDesc
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMaterial > pMaterial;
 		int nUseFromPixel;
@@ -78,17 +79,17 @@ namespace NDb
 			nUseToPixel( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SVSOLayerCenterDesc : public SVSOLayerBaseDesc
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fDisturbance;
 		int nNumCells;
@@ -106,18 +107,18 @@ namespace NDb
 			fStreamSpeed( 0.1000f )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SVSODesc : public CResource
 	{
 	public:
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nType;
 		int nPriority;
@@ -141,13 +142,13 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct B2_M1_TERRAIN_EXPORT SVSOPoint
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CVec3 vPos;
 		CVec3 vNorm;
@@ -168,17 +169,17 @@ namespace NDb
 			fReserved( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SVSOInstance
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SVSODesc > pDescriptor;
 		std::vector< SVSOPoint > points;
@@ -196,11 +197,11 @@ namespace NDb
 			nCMArrowMission2( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SRoadDesc : public SVSODesc
@@ -209,7 +210,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1007C380 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		SVSOLayerBorderDesc leftBorder;
 		SVSOLayerBorderDesc rightBorder;
@@ -227,7 +228,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SCragDesc : public SVSODesc
@@ -236,7 +237,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1308AC00 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		float fBorderRand;
 		float fDepth;
@@ -267,7 +268,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SRiverDesc : public SVSODesc
@@ -276,7 +277,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x10094B80 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMaterial > pBottomMaterial;
 		CDBPtr< SMaterial > pPrecipiceMaterial;
@@ -313,7 +314,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SCoastDesc : public SVSODesc
@@ -322,7 +323,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x140C9400 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SWater > pWater;
 		int nMiniMapGradientWidth;
@@ -338,7 +339,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SLakeDesc : public SVSODesc
@@ -347,7 +348,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x100C8300 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SWater > pWaterParams;
 		bool bIsLake;
@@ -365,7 +366,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

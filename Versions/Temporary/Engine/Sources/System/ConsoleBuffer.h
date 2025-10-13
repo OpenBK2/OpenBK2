@@ -2,6 +2,7 @@
 
 #include "System_export.h"
 
+#include <cstdint>
 
 enum
 {
@@ -24,13 +25,13 @@ struct IConsoleBuffer : public CObjectBase
 		int nSequenceID;
 		bool bPersistent;
 		std::wstring szText;
-		DWORD dwColor;
+		uint32_t dwColor;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nStream); f.Add(3,&nSequenceID); f.Add(4,&bPersistent); f.Add(5,&szText); f.Add(6,&dwColor); return 0; }
 	};
 	// write string to console's stream
-	virtual void Write( const int nStreamID, const std::wstring &szString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
+	virtual void Write( const int nStreamID, const std::wstring &szString, const uint32_t color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
 	// write string to console's stream. doesn't support any locales - just for english text
-	virtual void WriteASCII( const int nStreamID, const char *pszString, const DWORD color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
+	virtual void WriteASCII( const int nStreamID, const char *pszString, const uint32_t color = 0xffffffff, const bool bPersistentMsg = false ) = 0;
 	virtual void SetLogfile( const char *pszFilename ) = 0;
 	virtual bool GetNextLine( SConsoleLine *pRes, int *pSequenceID ) = 0;
 };
@@ -46,9 +47,9 @@ enum
 	PIPE_CHAT			= 4,					// chat string
 };
 // bPersistentMsg - if pipe dump to console is enabled this parameter will be forwarded to console
-SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::string &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::wstring &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::string *pRes, DWORD *pDWColor );
-SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::wstring *pRes, DWORD *pDWColor );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::string &sz, uint32_t dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::wstring &sz, uint32_t dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::string *pRes, uint32_t *pDWColor );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::wstring *pRes, uint32_t *pDWColor );
 SYSTEM_EXPORT void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );
 

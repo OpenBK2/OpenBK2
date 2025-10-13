@@ -1,9 +1,10 @@
 #pragma once
 
-
 #include "UI/commandparam.h"
 #include "UI/dbuserinterface.h"
 #include "UI/UI.h"
+
+#include <cstdint>
 
 class CUIWindow : public IWindow
 {
@@ -11,7 +12,7 @@ class CUIWindow : public IWindow
 
 public:
 	CUIWindow();
-	CUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::STexture *_pTexture );
+	CUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture );
 	virtual ~CUIWindow();
 
 	// IWindow
@@ -35,9 +36,9 @@ public:
 	void ShowWindow( const bool bShow ) {}
 	bool IsVisible() const { return true; }
 	void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const {}
-	void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags ) {}
+	void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) {}
 	CTRect<int> GetPlacement() const { return CTRect<int>(0,0,0,0); }
-	void SetPlacement( const CTRect<int> &rc, const DWORD flags ) {}
+	void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) {}
 	void AddChild( IWindow *pWnd, bool bDoReposition = false ) {}
 	int GetNumChildren() {return 0;}
 	IWindow *GetChild( int nIndex ) { return 0; }
@@ -78,10 +79,10 @@ protected:
 	string szFakeName;
 	CTRect<float> pos;
 	CDBPtr<NDb::STexture> pTexture;
-	DWORD color;
+	uint32_t color;
 };
 
-CUIWindow *CreateUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::STexture *_pTexture );
+CUIWindow *CreateUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture );
 
 
 

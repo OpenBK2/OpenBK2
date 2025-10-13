@@ -6,6 +6,8 @@
 
 #include "pciids/gpus.h"
 
+#include <cstdint>
+
 struct SPShader;
 struct SVShader;
 struct SHLSLShader;
@@ -209,8 +211,8 @@ public:
 	//void SetVirtualRT( const CTRect<int> &size ); // registers available only in this mode
 	void SetVirtualRT(); // screen size virtual RT
 	void SetRegister( int nRegister );
-	void ClearBuffers( DWORD dwColor = 0x808080 );
-	void ClearTarget( DWORD dwColor = 0x808080 );
+	void ClearBuffers( uint32_t dwColor = 0x808080 );
+	void ClearTarget( uint32_t dwColor = 0x808080 );
 	void ClearZBuffer();
 	//
 	bool HasRegisters() const { return targetMode == RTM_REGISTERS; }

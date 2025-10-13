@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbnetconsts.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,13 +17,13 @@ void SNetGameConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "NetGameConsts", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "MaxLatency", (BYTE*)&nMaxLatency - pThis, sizeof(nMaxLatency), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TimeToStartLagByNoSegmentData", (BYTE*)&nTimeToStartLagByNoSegmentData - pThis, sizeof(nTimeToStartLagByNoSegmentData), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TimeToAllowDropByLag", (BYTE*)&nTimeToAllowDropByLag - pThis, sizeof(nTimeToAllowDropByLag), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TimeOutTime", (BYTE*)&nTimeOutTime - pThis, sizeof(nTimeOutTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "TimeBWTimeOuts", (BYTE*)&nTimeBWTimeOuts - pThis, sizeof(nTimeBWTimeOuts), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Port", (BYTE*)&nPort - pThis, sizeof(nPort), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "MaxLatency", (uint8_t*)&nMaxLatency - pThis, sizeof(nMaxLatency), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeToStartLagByNoSegmentData", (uint8_t*)&nTimeToStartLagByNoSegmentData - pThis, sizeof(nTimeToStartLagByNoSegmentData), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeToAllowDropByLag", (uint8_t*)&nTimeToAllowDropByLag - pThis, sizeof(nTimeToAllowDropByLag), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeOutTime", (uint8_t*)&nTimeOutTime - pThis, sizeof(nTimeOutTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "TimeBWTimeOuts", (uint8_t*)&nTimeBWTimeOuts - pThis, sizeof(nTimeBWTimeOuts), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Port", (uint8_t*)&nPort - pThis, sizeof(nPort), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

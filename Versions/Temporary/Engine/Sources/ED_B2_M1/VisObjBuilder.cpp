@@ -15,6 +15,8 @@
 #include "libdb/ResourceManager.h"
 #include "System/FileUtils.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_BUILDER_IN_DLL( VisObj, CVisObjBuilder )
@@ -621,14 +623,14 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 }
 
 
-bool CVisObjBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CVisObjBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_VIS_OBJ:
 		{	
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<DWORD>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
 			const string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "VisObj" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -657,7 +659,7 @@ bool CVisObjBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 		case ID_TOOLS_CREATE_VIS_OBJ:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<DWORD>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
 			const string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "VisObj" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );

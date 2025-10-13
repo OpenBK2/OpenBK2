@@ -2,14 +2,16 @@
 
 #include "MapObj.h"
 
+#include <cstdint>
+
 class CMOObject : public CMapObj
 {
 	OBJECT_NOCOPY_METHODS( CMOObject );
 	bool bAnimateOnDeath;
-	WORD wAmbientSound;
-	WORD wCycledSound;
-	//WORD wAmbientSoundTimed;
-	WORD wCycledSoundTimed;
+	uint16_t wAmbientSound;
+	uint16_t wCycledSound;
+	//uint16_t wAmbientSoundTimed;
+	uint16_t wCycledSoundTimed;
 	//
 	const NDb::SObjectRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SObjectRPGStats*>( GetStats() ); }
 public:

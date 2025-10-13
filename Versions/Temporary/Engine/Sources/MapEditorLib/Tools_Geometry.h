@@ -2,6 +2,7 @@
 
 #include "Misc/PlaneGeometry.h"
 
+#include <cstdint>
 
 EXTERNVAR const float MINIMAL_POINT_DISTANCE;	//2.0f
 
@@ -39,9 +40,9 @@ inline void UpdateBoundingBox( CVec3 *pvMin, CVec3 *pvMax, const CVec3 &rvPositi
 
 //AI Direction
 
-//WORD GetAIDirectionByVector( float x, float y, WORD wDefaultDirection );
+//uint16_t GetAIDirectionByVector( float x, float y, uint16_t wDefaultDirection );
 
-//void GetVectorByAIDirection( CVec2 *pVec2, WORD wDirection, float fRadius );
+//void GetVectorByAIDirection( CVec2 *pVec2, uint16_t wDirection, float fRadius );
 
 //3D Geometry
 float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection );

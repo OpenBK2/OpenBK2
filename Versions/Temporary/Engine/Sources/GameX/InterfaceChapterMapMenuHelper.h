@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 struct IWindow;
 namespace NDb
 {
@@ -26,8 +28,8 @@ public:
 		CVec2 vDelta;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&points); f.Add(3,&fWidth); f.Add(4,&pTexture); f.Add(5,&nDependIndex); f.Add(7,&rcBounds); f.Add(8,&nID); f.Add(9,&vDelta); return 0; }
 		
-		DWORD GetColor() const;
-		DWORD GetDependentColor() const;
+		uint32_t GetColor() const;
+		uint32_t GetDependentColor() const;
 	};
 	
 	struct SMission

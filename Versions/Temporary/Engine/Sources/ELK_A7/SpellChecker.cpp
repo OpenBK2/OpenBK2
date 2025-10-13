@@ -3,6 +3,8 @@
 #include "MapEditorLib/Tools_Registry.h"
 #include "MLParser.h"
 
+#include <cstdint>
+
 const CSpellEngine::SLidInfo CSpellEngine::LID_NUM[]=
 {
 	{ 0x0409, _T( "AM" ), _T( "American English" )		},
@@ -391,7 +393,7 @@ int CSpellChecker::SearchForLanguages( vector<int> *pLanguages )
 		pLanguages->clear();
 
 		LONG result = ERROR_SUCCESS;
-		DWORD dwDisposition;
+		uint32_t dwDisposition;
 		HKEY hRegistrySection;
 		result = ::RegCreateKeyEx( HKEY_LOCAL_MACHINE,
 															 SPELLING_ENGINE_REGISTRY_SHORT_PATH,
@@ -408,7 +410,7 @@ int CSpellChecker::SearchForLanguages( vector<int> *pLanguages )
 			return 0;
 		}
 		TCHAR pKeyName[128];
-		DWORD nNameSize = 128;
+		uint32_t nNameSize = 128;
 		for ( int nLanguage = 0; nLanguage < 0xFFFF; ++nLanguage )
 		{
 			result = ::RegEnumKeyEx( hRegistrySection, nLanguage, pKeyName, &nNameSize, 0, 0, 0, 0 );
@@ -575,7 +577,7 @@ int CSpellChecker::GetMBCSSymbolsCount( const CString &rstrText )
 		{
 			LPCTSTR pSymbol = pSymbols;
 			pSymbols = _tcsinc( pSymbols );
-			WORD wSymbol = 0;
+			uint16_t wSymbol = 0;
 			if ( ( pSymbols - pSymbol ) > 1 )
 			{
 				const TCHAR b0 = ( *pSymbol );

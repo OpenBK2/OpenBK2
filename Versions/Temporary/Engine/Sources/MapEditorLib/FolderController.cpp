@@ -5,6 +5,8 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
+#include <cstdint>
+
 bool CFolderController::UndoWithoutUpdateViews()
 {
 	if ( undoDataList.empty() )
@@ -62,7 +64,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 	bool bResult = true;
 	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
 	{
-		DWORD dwTime = ::GetTickCount();
+		uint32_t dwTime = ::GetTickCount();
 		switch ( itUndoData->eType )
 		{
 			///////////////////////////////////////////

@@ -3,6 +3,8 @@
 #include "MultiTester.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <cstdint>
+
 class CServerClient;
 
 class CMultiTester : public CPacketProcessor, public IMultiTester
@@ -23,11 +25,11 @@ private:
 	bool bCancelled;
 	int nMyID;
 
-	DWORD dwLastChatChannelChangeTime;
-	DWORD dwLastChatMessageTime;
-	DWORD dwLastSegmentTime;
-	DWORD dwGameStartTime;
-	DWORD dwLastGameHeartBeatTime;
+	uint32_t dwLastChatChannelChangeTime;
+	uint32_t dwLastChatMessageTime;
+	uint32_t dwLastSegmentTime;
+	uint32_t dwGameStartTime;
+	uint32_t dwLastGameHeartBeatTime;
 
 	bool bLadderInfoSend;
 	bool bIsInGame;

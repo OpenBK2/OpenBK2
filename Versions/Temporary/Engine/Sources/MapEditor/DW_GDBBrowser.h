@@ -1,12 +1,12 @@
 #pragma once
 
-
 //#include "3DTab_GDBBrowser.h"
 #include "ComboBox_GDBBrowser.h"
 #include "Empty_GDBBrowser.h"
 
 #include "MapEditorLib/Interface_UserData.h" //CTableSet
 
+#include <cstdint>
 
 class CDWGDBBrowser : public SECControlBar, public ICommandHandler
 {
@@ -61,7 +61,7 @@ public:
 	void EnableEdit( bool bEnable ) { wndContents.EnableEdit( bEnable ); }
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

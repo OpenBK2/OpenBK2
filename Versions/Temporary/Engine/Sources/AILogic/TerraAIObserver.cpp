@@ -9,6 +9,8 @@
 
 #include "TerraAIObserver.h"
 
+#include <cstdint>
+
 extern CEventUpdater updater;
 extern CStaticObjects theStatObjs;
 extern CUnits units;
@@ -64,7 +66,7 @@ void CTerraAIObserverInGame::UpdateHeights( const int nX1, const int nY1, const 
 }
 
 void CTerraAIObserverInGame::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
-																					const CArray2D<BYTE> &types )
+																					const CArray2D<uint8_t> &types )
 {
 	CTerraAIObserver::UpdateTypes( nX1, nY1, nX2, nY2, types );
 

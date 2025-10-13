@@ -7,6 +7,8 @@
 #include "FenceState.h"
 #include "EntrenchmentState.h"
 
+#include <cstdint>
+
 //Mapinfo object state edit parameters
 #define MIMOSEP_PLAYER_COUNT			0x00000001
 #define MIMOSEP_PLAYER_INDEX			0x00000002
@@ -127,7 +129,7 @@ public:
 
 public:
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

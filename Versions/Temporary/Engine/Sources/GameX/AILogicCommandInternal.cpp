@@ -4,6 +4,8 @@
 
 #include "AILogic/B2AI.h"
 
+#include <cstdint>
+
 // ************************************************************************************************************************ //
 // **
 // ** register group
@@ -48,7 +50,7 @@ void CUnregisterGroupCommand::Execute()
 // **
 // ************************************************************************************************************************ //
 
-CB2GroupCommand::CB2GroupCommand( const SAIUnitCmd *pCommand, const WORD _wGroup, bool _bPlaceInQueue)
+CB2GroupCommand::CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t _wGroup, bool _bPlaceInQueue)
 : command( *pCommand ), wGroup( _wGroup ), bPlaceInQueue( _bPlaceInQueue )
 {
 }
@@ -66,7 +68,7 @@ void CB2GroupCommand::Execute()
 // **
 // ************************************************************************************************************************ //
 
-CUnitCommand::CUnitCommand( const struct SAIUnitCmd *pCommand, const WORD _wID, const int _nPlayer )
+CUnitCommand::CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t _wID, const int _nPlayer )
 : command( *pCommand ), wID( _wID ), nPlayer( _nPlayer )
 {
 }

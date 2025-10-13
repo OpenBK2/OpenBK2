@@ -14,9 +14,11 @@
 #include "ED_B2_M1Dll.h"
 #include "MapInfoEditor.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
-const DWORD CMapObjectState::SELECTION_LINE_COLOR	= 0xFF00FF00;
+const uint32_t CMapObjectState::SELECTION_LINE_COLOR	= 0xFF00FF00;
 
 
 void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType )
@@ -300,11 +302,11 @@ void CMapObjectSelectState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMou
 		pParentState->pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
 		//
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( objectSet.szObjectTypeName ) ) );	
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 		}
 	}
@@ -363,11 +365,11 @@ void CMapObjectSelectState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		else if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
 				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( objectSet.szObjectTypeName ) ) );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( objectSet.szObjectTypeName ) ) );
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 			}
 		}
@@ -595,11 +597,11 @@ void CMapObjectEditState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 		pParentState->pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
 		//
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( objectSet.szObjectTypeName ) ) );	
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 		}
 	}
@@ -669,11 +671,11 @@ void CMapObjectEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		else if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
 				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( objectSet.szObjectTypeName ) ) );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( objectSet.szObjectTypeName ) ) );
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 			}
 		}
@@ -898,13 +900,13 @@ void CMapObjectAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
 				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 				pParentState->InsertObjectLeave();
 				pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( objectSet.szObjectTypeName ) ) );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( objectSet.szObjectTypeName ) ) );
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
 				return;
 			}
@@ -1393,7 +1395,7 @@ void CMapObjectState::SwitchToAddState()
 }
 
 
-bool CMapObjectState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapObjectState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

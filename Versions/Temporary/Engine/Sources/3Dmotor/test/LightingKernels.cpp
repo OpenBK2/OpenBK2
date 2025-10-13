@@ -21,6 +21,7 @@
 
 #include <gtest/gtest.h>
 
+#include <cstdint>
 #include <random>
 #include <vector>
 
@@ -102,7 +103,7 @@ TEST(LightingKernels, CalcDirectionalLighting) {
             ls.shift = RandomWord();
             const NGfx::SMMXWord translucent = RandomWord();
 
-            std::vector<DWORD> refColors( n ), refShadow( n ), gotColors( n ), gotShadow( n );
+            std::vector<uint32_t> refColors( n ), refShadow( n ), gotColors( n ), gotShadow( n );
             Ref().pCalcDirectionalLighting( &normals[0], n, ls, translucent, &refColors[0], &refShadow[0] );
             set.pKernels->pCalcDirectionalLighting( &normals[0], n, ls, translucent, &gotColors[0], &gotShadow[0] );
 
@@ -199,10 +200,10 @@ TEST(LightingKernels, CalcPointLightColorsIndexed) {
     for ( const SKernelSet &set : Candidates() ) {
         for ( int n : Counts() ) {
             const std::vector<NGfx::SCompactVector> normals = RandomNormals( n );
-            std::vector<WORD> posIndices( n );
+            std::vector<uint16_t> posIndices( n );
             std::vector<NGfx::SMMXWord> attenuation( n );
             for ( int k = 0; k < n; ++k ) {
-                posIndices[k] = static_cast<WORD>( random_uint32() % n );
+                posIndices[k] = static_cast<uint16_t>( random_uint32() % n );
                 attenuation[k] = RandomWord();
             }
             const NGfx::SMMXWord lightColor = RandomWord();
@@ -254,14 +255,14 @@ TEST(LightingKernels, CalcPointLightColorsUniform) {
 TEST(LightingKernels, AddColors) {
     for ( const SKernelSet &set : Candidates() ) {
         for ( int n : Counts() ) {
-            std::vector<DWORD> src( n );
+            std::vector<uint32_t> src( n );
             std::vector<NGfx::SMMXWord> add( n );
             for ( int k = 0; k < n; ++k ) {
                 src[k] = random_uint32();
                 add[k] = RandomWord();
             }
 
-            std::vector<DWORD> ref( n, 0 ), got( n, 0 );
+            std::vector<uint32_t> ref( n, 0 ), got( n, 0 );
             Ref().pAddColors( &ref[0], &src[0], &add[0], n );
             set.pKernels->pAddColors( &got[0], &src[0], &add[0], n );
 
@@ -275,20 +276,20 @@ TEST(LightingKernels, ScaleColors) {
         for ( int n : Counts() ) {
             for ( int nPass = 0; nPass < 2; ++nPass ) {
                 const bool bMultiplyOnTransparency = nPass != 0;
-                std::vector<DWORD> src( n );
+                std::vector<uint32_t> src( n );
                 std::vector<NGfx::SCompactVector> transp( n );
-                std::vector<WORD> posIndices( n );
+                std::vector<uint16_t> posIndices( n );
                 std::vector<unsigned char> scale( 256 );
                 for ( int k = 0; k < n; ++k ) {
                     src[k] = random_uint32();
                     transp[k].dw = random_uint32();
-                    posIndices[k] = static_cast<WORD>( random_uint32() );
+                    posIndices[k] = static_cast<uint16_t>( random_uint32() );
                 }
                 for ( int k = 0; k < 256; ++k )
                     scale[k] = random_uint8();
 
-                std::vector<DWORD> ref( n, 0 ), got( n, 0 );
-                const int nStride = sizeof( DWORD );
+                std::vector<uint32_t> ref( n, 0 ), got( n, 0 );
+                const int nStride = sizeof( uint32_t );
                 Ref().pScaleColors( &ref[0], &src[0], nStride, &scale[0], 0xff,
                     &posIndices[0], &transp[0], n, bMultiplyOnTransparency );
                 set.pKernels->pScaleColors( &got[0], &src[0], nStride, &scale[0], 0xff,

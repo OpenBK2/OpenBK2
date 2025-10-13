@@ -1,12 +1,13 @@
 // Background.h: interface for the CBackground class.
 //
 
-
+#pragma once
 
 #include "UI_export.h"
 
-#pragma once
 #include "UI.h"
+
+#include <cstdint>
 
 namespace NGScene
 {
@@ -14,7 +15,7 @@ namespace NGScene
 };
 
 // fFade[0..1]
-UI_EXPORT DWORD FadeColor( DWORD dwColor, float fFade );
+UI_EXPORT uint32_t FadeColor( uint32_t dwColor, float fFade );
 
 class UI_EXPORT CBackground : public IWindowPart
 {

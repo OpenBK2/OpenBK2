@@ -6,6 +6,8 @@
 #include "MapEditorLib/Interface_Progress.h"
 #include "ControllerContainer.h"
 
+#include <cstdint>
+
 CControllerContainer::CControllerContainer()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CONTROLLER_CONTAINER, this );
@@ -250,7 +252,7 @@ int CControllerContainer::RemoveTemporaryControllers( const string &rszTemporary
 }
 
 
-bool CControllerContainer::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CControllerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

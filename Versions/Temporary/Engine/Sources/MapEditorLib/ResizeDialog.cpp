@@ -5,6 +5,8 @@
 
 #include "ResizeDialog.h"
 
+#include <cstdint>
+
 BEGIN_MESSAGE_MAP( CResizeDialog, CDialog )
 	ON_WM_SIZE()
 	ON_WM_SIZING()
@@ -118,7 +120,7 @@ void CResizeDialog::OnCancel()
 }
 
 
-void CResizeDialog::SetControlStyle( UINT nControlID, DWORD dwStyle, float fHorCenterAnchorRatio, float fVerCenterAnchorRatio, float fHorResizeRatio, float fVerResizeRatio )
+void CResizeDialog::SetControlStyle( UINT nControlID, uint32_t dwStyle, float fHorCenterAnchorRatio, float fVerCenterAnchorRatio, float fHorResizeRatio, float fVerResizeRatio )
 {
 	SControlStyle controlStyle;
 	controlStyle.position = CTRect<int>( 0, 0 ,0, 0 );

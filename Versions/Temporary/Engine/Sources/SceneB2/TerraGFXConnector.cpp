@@ -4,6 +4,8 @@
 #include "Misc/Win32Random.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 #define DEF_TILE_MIN_ALPHA 0
 
 
@@ -66,7 +68,7 @@ void CTerraGen::RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch )
 int CTerraGen::AddUniqueVertex(	NMeshData::SMeshData *pMeshData,
 															  NMeshData::SMeshDataTex2 *pTexData,
 															  const CVec2 &vSecTex,
-															  const BYTE cAlpha,
+															  const uint8_t cAlpha,
 															  NGScene::SVertex *pVertex,
 															  const bool bNeedFaster ) const
 {
@@ -105,7 +107,7 @@ int CTerraGen::AddUniqueVertex(	NMeshData::SMeshData *pMeshData,
 }
 
 
-inline BYTE GetInterpolateValue( const CVec3 &v, const CArray2D<BYTE> &mask )
+inline uint8_t GetInterpolateValue( const CVec3 &v, const CArray2D<uint8_t> &mask )
 {
 	const int x = Clamp( int(v.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int y = Clamp( int(v.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
@@ -117,7 +119,7 @@ inline BYTE GetInterpolateValue( const CVec3 &v, const CArray2D<BYTE> &mask )
 }
 
 
-inline BYTE GetInterpolateValue( const CArray2D<BYTE> &mask, const int x, const int y, const float dx, const float dy )
+inline uint8_t GetInterpolateValue( const CArray2D<uint8_t> &mask, const int x, const int y, const float dx, const float dy )
 {
 	const float fAlpha = (float)( (float)mask[y][x] + (float)( mask[y][x + 1] - mask[y][x] ) * dx ) * ( 1.0f - dy ) +
 		(float)( (float)mask[y + 1][x] + (float)(mask[y + 1][x + 1] - mask[y + 1][x]) * dx ) * dy;
@@ -128,10 +130,10 @@ inline BYTE GetInterpolateValue( const CArray2D<BYTE> &mask, const int x, const 
 struct SPushAlphaTriangle
 {
 	int nID;
-	BYTE cAlpha1, cAlpha2, cAlpha3;
+	uint8_t cAlpha1, cAlpha2, cAlpha3;
 	//
 	SPushAlphaTriangle() {}
-	SPushAlphaTriangle( const int _nID, const BYTE a1, const BYTE a2, const BYTE a3 )
+	SPushAlphaTriangle( const int _nID, const uint8_t a1, const uint8_t a2, const uint8_t a3 )
 		:	nID(_nID), cAlpha1(a1), cAlpha2(a2), cAlpha3(a3) {}
 };
 
@@ -176,7 +178,7 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 	if ( tileTerraMasks.empty() )
 		return;
 
-	const CArray2D<BYTE> &mask = tileTerraMasks[0];
+	const CArray2D<uint8_t> &mask = tileTerraMasks[0];
 	const int nV1x = Clamp( int(v1.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
 	const int nV1y = Clamp( int(v1.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
 	const float fV1dx = Clamp( v1.x - (float)nV1x * DEF_TILE_SIZE, 0.0f, 1.0f );
@@ -192,10 +194,10 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 
 	for ( int k = 0; k < tileTerraMasks.size(); ++k )
 	{
-		const CArray2D<BYTE> &curMask = tileTerraMasks[k];
-		const BYTE cAlpha1 = GetInterpolateValue( curMask, nV1x, nV1y, fV1dx, fV1dy );
-		const BYTE cAlpha2 = GetInterpolateValue( curMask, nV2x, nV2y, fV2dx, fV2dy );
-		const BYTE cAlpha3 = GetInterpolateValue( curMask, nV3x, nV3y, fV3dx, fV3dy );
+		const CArray2D<uint8_t> &curMask = tileTerraMasks[k];
+		const uint8_t cAlpha1 = GetInterpolateValue( curMask, nV1x, nV1y, fV1dx, fV1dy );
+		const uint8_t cAlpha2 = GetInterpolateValue( curMask, nV2x, nV2y, fV2dx, fV2dy );
+		const uint8_t cAlpha3 = GetInterpolateValue( curMask, nV3x, nV3y, fV3dx, fV3dy );
 		if ( (cAlpha1 > DEF_TILE_MIN_ALPHA) || (cAlpha2 > DEF_TILE_MIN_ALPHA) || (cAlpha3 > DEF_TILE_MIN_ALPHA) )
 			prePushTrgs.push_back( SPushAlphaTriangle(tilesOrder[k].nPrevNum, cAlpha1, cAlpha2, cAlpha3) );
 	}
@@ -298,7 +300,7 @@ inline int AddGfxVertex( CPatchVertsHash *pVertsHash, const CVec3 &rVertex, cons
 }
 
 
-inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash, std::vector<NGScene::SVertex> *pDataVerts, std::vector<DWORD> *pAttr,
+inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash, std::vector<NGScene::SVertex> *pDataVerts, std::vector<uint32_t> *pAttr,
 													 const int nInd, const NGScene::SVertex &vert, const float fTexScaleCoeff, CPatchPreLightHash &preLightHash /* - really const!*/ )
 {
 	std::unordered_map<int, int>::const_iterator itFind = pVertsHash->find( nInd );
@@ -703,7 +705,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 				maskLayers.resize( 0 );
 				for ( int k = tileTerraMasks.size() - 1; k >= 0; --k )
 				{
-					const CArray2D<BYTE> &mask = tileTerraMasks[k];
+					const CArray2D<uint8_t> &mask = tileTerraMasks[k];
 					if ( (mask[g][i] > 0) || (mask[g][i + 1] > 0) || (mask[g + 1][i + 1] > 0) || (mask[g + 1][i] > 0) )
 						maskLayers.push_back( k );
 				}
@@ -741,7 +743,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						const int nLayer = maskLayers[k];
 						if ( k < (maskLayers.size() - 1) )
 						{
-							const CArray2D<BYTE> &mask = tileTerraMasks[nLayer];
+							const CArray2D<uint8_t> &mask = tileTerraMasks[nLayer];
 							nAlpha1 = min( nAlpha1 + mask[g][i], 255 );
 							nAlpha2 = min( nAlpha2 + mask[g][i + 1], 255 );
 							nAlpha3 = min( nAlpha3 + mask[g + 1][i], 255 );
@@ -751,9 +753,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 							nAlpha1 = nAlpha2 = nAlpha3 = nAlpha4 = 255;
 						const int nSub1 = nAlpha2 - nAlpha1;
 						const int nSub2 = nAlpha4 - nAlpha3;
-						const BYTE cA1 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
-						const BYTE cA2 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
-						const BYTE cA3 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
+						const uint8_t cA1 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
+						const uint8_t cA2 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
+						const uint8_t cA3 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
 						std::unordered_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
 						const int &nRealNum = tilesOrder[nLayer].nPrevNum;
 						//NMeshData::SMeshData &curData = data[nRealNum];
@@ -835,7 +837,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 			NMeshData::SMeshData &data = terrainGfxInfo.terraPatches[nPatchInd + i][k];
 			std::vector<NGScene::SVertex>( data.vertices ).swap( data.vertices );
 			std::vector<STriangle>( data.triangles ).swap( data.triangles );
-			std::vector<DWORD>( data.attributes[0].data ).swap( data.attributes[0].data );
+			std::vector<uint32_t>( data.attributes[0].data ).swap( data.attributes[0].data );
 			if ( data.attributes[0].data.empty() )
 				data.attributes.clear();
 		}

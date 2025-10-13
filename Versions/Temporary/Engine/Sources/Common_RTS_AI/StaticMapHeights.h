@@ -2,9 +2,10 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "Misc/Spline.h"
 #include "Misc/2Darray.h"
+
+#include <cstdint>
 
 class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 {
@@ -68,8 +69,8 @@ public:
 	inline const float GetZ( float x, float y ) const { return GetVisZ( x, y ); }
 	inline const float GetZ( const CVec2 &vPos ) const { return GetVisZ( vPos.x, vPos.y ); }
 	inline const void  UpdateZ( CVec3 *pVec ) const { UpdateVisZ( pVec ); }
-	const DWORD GetNormal( const CVec2 &vPoint ) const { return GetNormal( vPoint.x, vPoint.y ); }
-	const DWORD GetNormal( const float x, const float y ) const;
+	const uint32_t GetNormal( const CVec2 &vPoint ) const { return GetNormal( vPoint.x, vPoint.y ); }
+	const uint32_t GetNormal( const float x, const float y ) const;
 	const float GetTileHeight( const int nTileX, const int nTileY ) const;
 	//const float GetVisHeight( const int nVisTileX, const int nVisTileY ) const;
 	void SetHeightForPatternApplying( const int nX, const int nY, const float fHeight );

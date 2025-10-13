@@ -6,13 +6,15 @@
 #include "random.h"
 #include "original.h"
 
+#include <cstdint>
+
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];
 
 TEST(MultiplyOnColor, MultiplyOnColorRandom) {
 
     for (size_t i = 0; i < 10000; ++i) {
-        std::vector<DWORD> res, ref, mult;
+        std::vector<uint32_t> res, ref, mult;
 
         auto c = random_uint32();
         res.push_back(c);

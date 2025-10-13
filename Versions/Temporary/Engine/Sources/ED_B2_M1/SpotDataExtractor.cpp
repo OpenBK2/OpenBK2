@@ -3,7 +3,9 @@
 #include "SpotDataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-bool CSpotDataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+#include <cstdint>
+
+bool CSpotDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference( "Material", pObjectManipulator, 0, 0, 0 ) )
 	{

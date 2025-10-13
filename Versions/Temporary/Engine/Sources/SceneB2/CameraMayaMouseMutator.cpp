@@ -3,6 +3,8 @@
 #include "CameraMayaMouseMutator.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 namespace NCamera
 {
 	static float s_fMayaCameraScrollXSensetivity = 1;
@@ -20,7 +22,7 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void CCameraMayaMouseMutator::Recalc()
 	{
-		const DWORD currTime = GetTickCount();
+		const uint32_t currTime = GetTickCount();
 		const float fTimeDiff = GetTimeLastUpdate() < currTime ? currTime - GetTimeLastUpdate() : 0;
 		SetTimeLastUpdate( currTime );
 		CVec3 vDir;

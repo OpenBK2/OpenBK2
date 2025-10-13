@@ -2,6 +2,8 @@
 
 #include "AIUnit.h"
 
+#include <cstdint>
+
 class CExistingObject;
 class CTurret;
 class CUnitGuns;
@@ -53,11 +55,11 @@ protected:
 	virtual class CUnitGuns* GetGuns() { return pGuns; }
 	virtual void PrepareToDelete();
 	// soldier doesn't have anti aircraft guns yet
-	virtual DWORD InitSupportAntiAircraftGuns();
+	virtual uint32_t InitSupportAntiAircraftGuns();
 
 public:
 	// эту функцию переопределяем в подклассах
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
 	virtual const CVec2 GetGunCenter( const int nGun ) const;
 	void Lock( class CFormation *_pLockingUnit );
@@ -70,8 +72,8 @@ public:
 	// расстояние от центра до точки, откуда можно напрямую бежать к entrance point
 	virtual float GetDistanceToLandPoint() const;
 	const bool IsIdle() const;
-	virtual BYTE GetNAvailableSeats() const { return pStats->nPassangers - pass.size(); }
-	virtual BYTE GetNPassengers() const { return pass.size(); }
+	virtual uint8_t GetNAvailableSeats() const { return pStats->nPassangers - pass.size(); }
+	virtual uint8_t GetNPassengers() const { return pass.size(); }
 	virtual void AddPassenger( class CSoldier *pUnit );
 	virtual class CSoldier* GetPassenger( const int n );
 
@@ -133,7 +135,7 @@ public:
 	void AddBoardingMechUnit( CAIUnit *pUnit );	// notify transport to wait for unit
 	void RemoveBoardingMechUnit( CAIUnit *pUnit );
 	void SetOnBoard( CAIUnit *pUnit, const bool bOnBoard );
-	const WORD GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const;
+	const uint16_t GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const;
 	const CVec3 GetBoardedPosition( CAIUnit *pUnit, const NTimer::STime timeDiff ) const;
 	int GetNBoarded() const { return onBoard.size(); }
 	CAIUnit * GetBoarded( const int nIndex ) { return onBoard[nIndex]; }
@@ -173,7 +175,7 @@ class CTank : public CMilitaryCar
 	//
 	void ScanForDangerousDir();
 public:
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 	virtual IStatesFactory* GetStatesFactory() const;
 
 	bool IsTrackDamaged() const { return bTrackDamaged; }
@@ -183,7 +185,7 @@ public:
 	virtual const bool CanMove() const;
 	virtual const bool CanMoveCritical() const;
 	virtual const bool CanRotate() const;
-	virtual bool CanTurnToFrontDir( const WORD wDir );
+	virtual bool CanTurnToFrontDir( const uint16_t wDir );
 
 	virtual const bool NeedDeinstall() const { return bTrackDamaged; }
 
@@ -199,7 +201,7 @@ public:
 	virtual void Segment();
 
 	virtual const bool IsDangerousDirExist() const { return bDangerousDirSetInertia; }
-	virtual const WORD GetDangerousDir() const { return wDangerousDir; }
+	virtual const uint16_t GetDangerousDir() const { return wDangerousDir; }
 	virtual void Grazed( CAIUnit *pUnit );
 
 	virtual bool CanMoveAfterUserCommand() const;
@@ -223,7 +225,7 @@ class CAITransportUnit : public CMilitaryCar
 	// выбирает юнит из нашей группы, ближайший к артиллерии и возвращает его nUniqueId
 	const int GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake );
 public:
-	void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
 	// для процесса ремонта. грузчики расходуют RU в процессе починки и перезарядки
 	float GetResursUnitsLeft() const { return fResursUnits; }
@@ -264,7 +266,7 @@ public:
 	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const;
 
 	virtual const bool CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
-	bool CalculateUnitVisibility4Party( const BYTE party );
+	bool CalculateUnitVisibility4Party( const uint8_t party );
 };
 
 

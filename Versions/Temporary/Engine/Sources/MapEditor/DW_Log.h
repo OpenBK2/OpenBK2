@@ -3,6 +3,7 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "LogWindow.h"
 
+#include <cstdint>
 
 class CDWLog : public SECControlBar, public ICommandHandler
 {
@@ -24,7 +25,7 @@ public:
 	void ClearLog();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

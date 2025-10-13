@@ -6,6 +6,8 @@
 #include "Stats_B2_M1/UserActions.h"
 #include "Stats_B2_M1/SpecialAbilities.h"
 
+#include <cstdint>
+
 class CWorldClient;
 class CMapObj;
 struct SObjectStatus;
@@ -71,7 +73,7 @@ public:
 		}
 		//
 		bool NeedFlags() const { return true; }
-		bool Execute( const std::string &szSender, const std::string &szReaction, WORD wKeyboardFlags );
+		bool Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags );
 	};
 private:
 	struct SWeaponInfo
@@ -244,7 +246,7 @@ private:
 	
 	CPtr<IScenarioTracker> pScenarioTracker;
 
-	BYTE nFrameTransition;
+	uint8_t nFrameTransition;
 	CVec2 vFrameTransitionTo;
 
 	EUIState eUIState; // don't save
@@ -412,15 +414,15 @@ protected:
 	bool OnReinfCallMode( const std::string &szSender );
 	bool OnReinfAutoShowReinf( const std::string &szSender, bool bOn );
 
-	bool OnClickMultiSelectUnit( const std::string &szSender, WORD wKeyboardFlags );
-	bool OnSelectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags );
-	bool OnUnselectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnClickMultiSelectUnit( const std::string &szSender, uint16_t wKeyboardFlags );
+	bool OnSelectSpecialGroup( const std::string &szSender, uint16_t wKeyboardFlags );
+	bool OnUnselectSpecialGroup( const std::string &szSender, uint16_t wKeyboardFlags );
 
-	bool OnNewActionButtonClick( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnNewActionButtonClick( const std::string &szSender, uint16_t wKeyboardFlags );
 	void NewActionButtonClick( NDb::EUserAction eAction );
-	bool OnNewActionButtonRightClick( const std::string &szSender, WORD wKeyboardFlags );
+	bool OnNewActionButtonRightClick( const std::string &szSender, uint16_t wKeyboardFlags );
 	bool OnNotificationEventBtn( const std::string &szSender, bool bRightBtn );
-	bool OnEnterPressed( WORD wKeyboardFlags );
+	bool OnEnterPressed( uint16_t wKeyboardFlags );
 	bool OnChatInputEnterPressed();
 	bool OnChatInputEscPressed();
 	bool OnChatInputFocusLost();

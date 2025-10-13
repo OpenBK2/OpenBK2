@@ -2,6 +2,8 @@
 
 #include "LinkObject.h"
 
+#include <cstdint>
+
 class CAIUnit;
 struct SAIObjectsUnderConstructionUpdate;
 
@@ -14,7 +16,7 @@ class CLongObjectCreation : public CLinkObject
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&fWorkAccumulated); f.Add(3,&nPlayer); f.Add(4,&bAllowAIModification); return 0; }
 protected:
-	const BYTE GetPlayer() const { return nPlayer; }
+	const uint8_t GetPlayer() const { return nPlayer; }
 	bool IsAnyUnitPrevent( const SRect &r1 ) const;
 	void GetUnitsPreventing( const SRect &r1, std::list< CPtr<CAIUnit> > *units ) const;
 	void UnlockPreventingUnits( std::list<CPtr<CAIUnit> > &preventing ) const;
@@ -22,7 +24,7 @@ protected:
 	bool IsAIModificationAllowed() const { return bAllowAIModification; }
 
 	// helper functions
-	WORD GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd );
+	uint16_t GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd );
 	void SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
 
 public:

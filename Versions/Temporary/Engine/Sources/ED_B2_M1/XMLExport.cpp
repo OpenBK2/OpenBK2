@@ -7,6 +7,8 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 #define NUM_SYSTEM_CHUNKS 1
 namespace NXMLExport
 {
@@ -334,10 +336,10 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 										//
 										if ( FILE *txtfile = fopen( szFullFileName.c_str(), "wb" ) )
 										{
-											WORD wUnicodeMagic = 0xfeff;
-											fwrite( &wUnicodeMagic, sizeof(WORD), 1, txtfile );
+											uint16_t wUnicodeMagic = 0xfeff;
+											fwrite( &wUnicodeMagic, sizeof(uint16_t), 1, txtfile );
 											if ( !wszUnicodeValue.empty() )
-												fwrite( wszUnicodeValue.c_str(), sizeof(WORD), wszUnicodeValue.size(), txtfile );
+												fwrite( wszUnicodeValue.c_str(), sizeof(uint16_t), wszUnicodeValue.size(), txtfile );
 											fclose( txtfile );
 										}
 									}
@@ -365,8 +367,8 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 										NStr::ToUnicode( &wszUnicodeValue, szValue );
 										NStr::UnicodeToUTF8( &szValue, wszUnicodeValue );
 									}
-									// convert type-rename int and DWORD to int value before saving
-									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "DWORD" )
+									// convert type-rename int and uint32_t to int value before saving
+									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "uint32_t" )
 									{
 										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, StrFmt("Can't convert type %d to %s", value.GetType(), pDesc->szTypeRename.c_str()) );
 										if ( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4 )

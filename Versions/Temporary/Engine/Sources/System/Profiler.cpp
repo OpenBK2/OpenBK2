@@ -3,11 +3,12 @@
 #include "Profiler.h"
 
 #include <algorithm>
+#include <cstdint>
 
 namespace NProfiler
 {
 
-typedef std::unordered_map<std::string, DWORD> Times;
+typedef std::unordered_map<std::string, uint32_t> Times;
 static Times *pTimes = new Times;
 
 static struct STimesDeleter
@@ -50,7 +51,7 @@ CProfiler::CProfiler( const char* pszFile, const int _nLine )
 
 CProfiler::~CProfiler()
 {
-	const DWORD dwTime = GetTickCount() - dwStartTime;
+	const uint32_t dwTime = GetTickCount() - dwStartTime;
 	const std::string szHash = StrFmt( "%s(%d)", szFile.c_str(), nLine );
 
 	if ( pTimes )

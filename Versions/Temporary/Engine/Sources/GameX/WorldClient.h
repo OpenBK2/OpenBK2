@@ -6,6 +6,8 @@
 #include "B2_M1_World/UpdatableWorld.h"
 #include "Sound/TerrainSounds.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMapInfo;
@@ -43,7 +45,7 @@ private:
 		};
 		//
 		USER_ACTION pfnAction;
-		DWORD flags;
+		uint32_t flags;
 	};
 
 	enum EBuildState
@@ -219,8 +221,8 @@ private:
 	
 	void CenterSelectionGroupPrivate( const std::vector<CMOSelectable*> &group );
 
-	void OnSelectSlot( int nSlot, WORD wKeyboardFlags );
-	void OnActionOnSlot( int nSlot, WORD wKeyboardFlags );
+	void OnSelectSlot( int nSlot, uint16_t wKeyboardFlags );
+	void OnActionOnSlot( int nSlot, uint16_t wKeyboardFlags );
 	
 	void ShowSelectionDst( const CVec2 &vTarget );
 	void ShowSelectionDst( SUISelection *pUISelection, const CVec2 &vMovePos, 
@@ -252,7 +254,7 @@ protected:
 	NDb::EUserAction DetermineBestAutoAction( CMapObj *_pMO, bool bAltMode );
 	NDb::EUserAction DetermineBestCtrlAction( CMapObj *_pMO );
 
-	void RegisterUserAction( NDb::EUserAction nAction, DWORD flags, USER_ACTION pfnUserAction );
+	void RegisterUserAction( NDb::EUserAction nAction, uint32_t flags, USER_ACTION pfnUserAction );
 
 	bool PerformGroupAction( const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );
 	bool PerformGroupAction( EActionCommand eActionCommand, bool bPlaceInQueue );
@@ -482,7 +484,7 @@ public:
 	void GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize );
 	float GetSoundVolume( int nTerrainType ) const;
 
-	void OnClickMultiSelectUnit( int nSlot, WORD wKeyboardFlags );
+	void OnClickMultiSelectUnit( int nSlot, uint16_t wKeyboardFlags );
 
 	void OnSelectSpecialGroup( int nIndex );
 

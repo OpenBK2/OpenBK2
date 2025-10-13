@@ -1,10 +1,11 @@
-
 #pragma once
 #include "Window.h"
 #include "MessageReactions.h"
 #include "UIStates.h"
 #include "Tooltips.h"
 #include "System/FreeIDs.h"
+
+#include <cstdint>
 
 class CButtonGroup;
 
@@ -62,7 +63,7 @@ class CWindowScreen : public CWindow, public IScreen
 
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
-	WORD GetKeyboardFlags() const;
+	uint16_t GetKeyboardFlags() const;
 
 public:
 	struct SButtonGroupID

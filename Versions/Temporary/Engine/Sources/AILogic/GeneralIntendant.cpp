@@ -22,6 +22,7 @@
 #include "GlobalWarFog.h"
 
 #include <algorithm>
+#include <cstdint>
 
 extern NAI::CTimeCounter timeCounter;
 extern CDiplomacy theDipl;
@@ -364,7 +365,7 @@ void CResupplyCellInfo::AddUnitResupply( CCommonUnit *pUnit, const enum EResuppl
 
 		// if this unit doesn't exist, create it.
 		if ( resupplyInfo.find( nID ) == resupplyInfo.end() )
-			resupplyInfo.insert( std::pair<int,BYTE>( nID,0) );
+			resupplyInfo.insert( std::pair<int,uint8_t>( nID,0) );
 
 		if ( !(resupplyInfo[nID] & (1<<eType)) )
 		{
@@ -382,7 +383,7 @@ void CResupplyCellInfo::RemoveUnitResupply( class CCommonUnit *pUnit, const enum
 	CResupplyInfo::iterator curResupply = resupplyInfo.find( nID );
 	if ( resupplyInfo.end() != curResupply )
 	{
-		const BYTE cRes = curResupply->second;
+		const uint8_t cRes = curResupply->second;
 		if ( cRes & (1<<eType) )
 			RemoveUnitResupplyInternal( pUnit, eType );
 	}
@@ -413,7 +414,7 @@ const bool CResupplyCellInfo::IsDangerous() const
 	return timeLastDanger && timeLastDanger > curTime; 
 }
 
-void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const BYTE cRes )
+void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const uint8_t cRes )
 {
 	NI_ASSERT( 0 !=  cRes, "unit doesn't need resupply" );
 	NI_ASSERT( cRes < (1<<_ERT_COUNT), StrFmt( "wrong resupply mask %d", cRes ) ) ;
@@ -427,7 +428,7 @@ void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const BYTE cRes )
 	}
 }
 
-BYTE CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
+uint8_t CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 {
 //	const float fPrice = pUnit->GetPriceMax();
 	const int nID = pUnit->GetUniqueId();
@@ -436,7 +437,7 @@ BYTE CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 	
 	if ( resupplyInfo.end() != curResupply )
 	{
-		const BYTE cRes = curResupply->second;
+		const uint8_t cRes = curResupply->second;
 		for ( int i = 0; i < _ERT_COUNT && resupplyInfo.find( nID ) != resupplyInfo.end(); ++i )
 		{
 			if ( cRes & (1<<i) )
@@ -447,7 +448,7 @@ BYTE CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 	return 0;
 }
 
-float CResupplyCellInfo::GetNNeeded( const BYTE cTypeMask ) const
+float CResupplyCellInfo::GetNNeeded( const uint8_t cTypeMask ) const
 {
 	float fLocalCount = 0;
 	for ( int i = 0; i < _ERT_COUNT; ++i )
@@ -693,7 +694,7 @@ void CGeneralIntendant::AddReiforcePositions( const struct NDb::SAIGeneralParcel
 		vPositions.push_back( CPosition( patchInfo.vCenter, patchInfo.GetDir() ) );
 }
 
-void CGeneralIntendant::AddReiforcePosition( const CVec2 & vPos, const WORD wDirection )
+void CGeneralIntendant::AddReiforcePosition( const CVec2 & vPos, const uint16_t wDirection )
 {
 	if ( !bInitedByParcel )
 		vPositions.push_back( CPosition( vPos, wDirection ) );
@@ -891,8 +892,8 @@ void CGeneralIntendant::Segment()
 	CCommander::Segment();
 	SGeneralHelper::RemoveDead( &resupplyTrucks );
 
-	const BYTE cResupplyAll = ((1<<_ERT_COUNT)-1);
-	BYTE cResupplyPossible = 0;
+	const uint8_t cResupplyAll = ((1<<_ERT_COUNT)-1);
+	uint8_t cResupplyPossible = 0;
 
 	if ( !cellsWithRequests.empty() )
 	{

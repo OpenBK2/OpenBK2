@@ -8,6 +8,7 @@
 
 #include "B2_M1_Terrain_export.h"
 
+#include <cstdint>
 
 struct IXmlSaver;
 
@@ -38,7 +39,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 
 	struct STGTerraType : public CResource
@@ -47,7 +48,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x13121B41 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		CDBPtr< SMaterial > pMaterial;
 		STerrainAIProperties aIProperty;
@@ -69,7 +70,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct STGTerraSet : public CResource
@@ -78,7 +79,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x13121B01 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		std::vector< CDBPtr< STGTerraType > > terraTypes;
 		bool bWrapTexture;
@@ -94,7 +95,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	enum EWeatherType
@@ -107,7 +108,7 @@ namespace NDb
 	struct SWeather
 	{
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nWindDirection;
 		int nWindForce;
@@ -123,11 +124,11 @@ namespace NDb
 			fWeatherPeriodRandom( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SWeatherDesc : public CResource
@@ -136,13 +137,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x1918BBC0 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		struct SAmbientSoundDescr
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SComplexSoundDesc > pAmbientSound;
 			float fSoundLength;
@@ -152,11 +153,11 @@ namespace NDb
 				fSoundLength( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		EWeatherType eType;
 		CDBPtr< SMaterial > pPartMaterial;
@@ -194,14 +195,14 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct B2_M1_TERRAIN_EXPORT STerrain : public CResource
 	{
 	public:
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 		int nNumPatchesX;
 		int nNumPatchesY;
@@ -233,7 +234,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

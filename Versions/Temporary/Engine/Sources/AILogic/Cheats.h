@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include <cstdint>
 
 struct SCheats
 {
@@ -17,9 +18,9 @@ private:
 	bool bHistoryPlaying;
 	//
 	// убиваема или нет данная сторона
-	std::vector<BYTE> immortals;
+	std::vector<uint8_t> immortals;
 	// убивает ли данная сторона с первого раза
-	std::vector<BYTE> firstShoot;
+	std::vector<uint8_t> firstShoot;
 
 	bool bPasswordOK;
 public:
@@ -40,11 +41,11 @@ public:
 	void SetTurnOffWarFog( bool bTurnOffWarFog );
 	bool GetTurnOffWarFog() const;
 
-	void SetImmortals( const int nPlayer, const BYTE cValue );
-	BYTE GetImmortals( const int nPlayer ) const { return immortals[nPlayer]; }
+	void SetImmortals( const int nPlayer, const uint8_t cValue );
+	uint8_t GetImmortals( const int nPlayer ) const { return immortals[nPlayer]; }
 
-	void SetFirstShoot( const int nPlayer, const BYTE cValue );
-	BYTE GetFirstShoot( const int nPlayer ) const { return firstShoot[nPlayer]; }
+	void SetFirstShoot( const int nPlayer, const uint8_t cValue );
+	uint8_t GetFirstShoot( const int nPlayer ) const { return firstShoot[nPlayer]; }
 	
 	void SetHistoryPlaying( bool _bHistoryPlaying ) { bHistoryPlaying = _bHistoryPlaying; }
 	bool IsHistoryPlaying() const { return bHistoryPlaying; }

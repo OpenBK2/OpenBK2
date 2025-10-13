@@ -4,6 +4,8 @@
 #include "ScriptCameraEditorData.h"
 #include "MoviesEditorData.h"
 
+#include <cstdint>
+
 //
 //
 //		SCRIPT CAMERA STATE
@@ -44,7 +46,7 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 
 protected:
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// IInputState interface

@@ -1,15 +1,17 @@
 #include "stdafx.h"
 
+#include <cstdint>
+
 namespace NProgressHook
 {
 struct SLockInfo
 {
 	std::string szFileName;
 	int nLine;
-	DWORD dwTime;
+	uint32_t dwTime;
 
 	SLockInfo() : nLine( 0 ), dwTime( 0 ) { }
-	SLockInfo( const std::string &_szFileName, const int _nLine, const DWORD _dwTime )
+	SLockInfo( const std::string &_szFileName, const int _nLine, const uint32_t _dwTime )
 		: szFileName( _szFileName ), nLine( _nLine ), dwTime( _dwTime ) { }
 };
 
@@ -23,7 +25,7 @@ void DebugLock( const std::string &szFileName, const int nLine )
 void DebugUnLock( const std::string &szFileName, const int nLine )
 {
 	NI_VERIFY( !locks.empty(), "wrong lock/unlock sequence", return );
-	const DWORD dwTime = GetTickCount();
+	const uint32_t dwTime = GetTickCount();
 	const SLockInfo lockStart = locks.back();
 	locks.pop_back();
 

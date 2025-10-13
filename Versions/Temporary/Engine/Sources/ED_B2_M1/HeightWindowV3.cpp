@@ -15,6 +15,8 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const char CHeightWindowV3::FILTER_TYPE[] = "TILE";
@@ -400,7 +402,7 @@ void CHeightWindowV3::OnHeightTimer()
 }
 
 
-bool CHeightWindowV3::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CHeightWindowV3::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -458,7 +460,7 @@ bool CHeightWindowV3::HandleCommand( UINT nCommandID, DWORD dwData )
 					pObjectManipulator = pMultiManipulator;
 				}
 				IView *pView = 0;
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 				if ( pView != 0 )
 				{
 					pView->SetViewManipulator( pObjectManipulator, objectSet, string() );

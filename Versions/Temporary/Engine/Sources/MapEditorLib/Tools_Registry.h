@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 //Класс для работы с Registry, только REG_SZ, REG_DWORD
 //Возвращаемое значение - ERROR_SUCCES (0) или код GetLastError()
@@ -22,9 +23,9 @@ class CRegistrySection
 	LONG LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const;
   LONG SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const;
  
-	//DWORD
-	LONG LoadDWORD( LPCTSTR pszRegistryKey, DWORD *pdwLoadValue, DWORD dwDefaultValue ) const;
-  LONG SaveDWORD( LPCTSTR pszRegistryKey, DWORD dwSaveValue ) const;
+	//uint32_t
+	LONG LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const;
+  LONG SaveDWORD( LPCTSTR pszRegistryKey, uint32_t dwSaveValue ) const;
 
 	//Любое число ( только простые типы ), сохраняется и считывается по маске pszMask, хранится в виде строки для наглядности
 	template<class TValue>

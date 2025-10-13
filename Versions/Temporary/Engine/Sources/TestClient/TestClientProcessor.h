@@ -4,6 +4,8 @@
 #include "Server_Client_Common/CustomLobbyClientInfo.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <cstdint>
+
 class CTestClientProcessor : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CTestClientProcessor )
@@ -11,13 +13,13 @@ class CTestClientProcessor : public CPacketProcessor
 	CPtr<class CServerClient> pServerClient;
 	int nMyID;
 
-	DWORD dwClientsVersion;
+	uint32_t dwClientsVersion;
 	hash_map<int, SCustomLobbyClientInfo> lobbyClients;
 	
 	int nGameID;
-	DWORD dwLastGameUpdate;
-	DWORD dwGamesVersion;
-	DWORD dwHeartBeatPeriod;
+	uint32_t dwLastGameUpdate;
+	uint32_t dwGamesVersion;
+	uint32_t dwHeartBeatPeriod;
 	hash_map<int, SGameInfo> lobbyGames;
 
 	hash_set<int> gameClients;

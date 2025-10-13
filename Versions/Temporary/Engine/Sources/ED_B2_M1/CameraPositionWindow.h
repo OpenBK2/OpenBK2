@@ -4,6 +4,8 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 //
 //
 //				CAMERA POSITION WINDOW DATA
@@ -59,7 +61,7 @@ public:
 	virtual BOOL OnInitDialog();
 
 	//	ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

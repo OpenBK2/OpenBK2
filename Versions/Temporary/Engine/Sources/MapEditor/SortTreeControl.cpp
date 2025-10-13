@@ -4,6 +4,8 @@
 #include "libdb/Manipulator.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 BEGIN_MESSAGE_MAP(CSortTreeControl, SECTreeCtrl)
 END_MESSAGE_MAP()
 
@@ -138,7 +140,7 @@ HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nS
 {
 	if ( HTREEITEM hItem = InsertItem( lpszItem, nImage, nSelectedImage, hParent, hInsertAfter ) )
 	{
-		SetItemData( hItem, reinterpret_cast<DWORD>( hItem ) );
+		SetItemData( hItem, reinterpret_cast<uint32_t>( hItem ) );
 		//
 		string szHashName;
 		if ( GetTreeItemName( hItem, &szHashName ) )

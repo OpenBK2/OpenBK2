@@ -22,6 +22,8 @@
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
   EXTERNVAR NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
@@ -158,7 +160,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 			ePixelFormat = NGfx::CF_DXT5;
 
 		{
-			CArray2D<DWORD> image;
+			CArray2D<uint32_t> image;
 			CFileStream stream( szSource, CFileStream::WIN_READ_ONLY );
 			if ( stream.IsOk() ) 
 			{

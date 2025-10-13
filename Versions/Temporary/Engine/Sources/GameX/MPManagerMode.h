@@ -1,10 +1,12 @@
 #pragma once
+
 #include "MultiplayerCommandManager.h"
 #include "MultiplayerCommandProcessor.h"
 #include "Server_Client_Common/PacketProcessor.h"
 #include "Net/NetDriver.h"
 #include "Net/NetAddress.h"
 
+#include <cstdint>
 
 struct IServerClient;
 class CLANTester;
@@ -35,7 +37,7 @@ protected:
 		bool					bUpdating;
 		NTimer::STime timeNextUpdate;
 		NTimer::STime timeUpdatePeriod;
-		DWORD					dwVersion;
+		uint32_t					dwVersion;
 		SAutoUpdate() : bUpdating(false), timeNextUpdate( 0 ), timeUpdatePeriod( 1000 ), dwVersion( 0 ) {}
 		bool CheckNeedUpdate();
 		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "should not be serialized" ); return 0; }
@@ -63,7 +65,7 @@ protected:
 	{
 		NTimer::STime timeStartLag;		// Start of last lag
 		int nLagLeft;									// Remaining lag time
-		DWORD dwHatedBy;							// They want him kicked already
+		uint32_t dwHatedBy;							// They want him kicked already
 		SLagInfo() : timeStartLag(0), nLagLeft(0), dwHatedBy(0) {}
 	};
 	typedef std::vector<SLagInfo> CLaggerList;
@@ -88,10 +90,10 @@ protected:
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
-	DWORD dwLaggers;								// Waiting for these players
-	DWORD dwLaggersOld;							// same, previous state, used to find changes in AnalyzeLag();
-	DWORD dwUserPausedPlayers;					// Players that explicitly toggled MP pause
-	DWORD dwInitialPlayers;
+	uint32_t dwLaggers;								// Waiting for these players
+	uint32_t dwLaggersOld;							// same, previous state, used to find changes in AnalyzeLag();
+	uint32_t dwUserPausedPlayers;					// Players that explicitly toggled MP pause
+	uint32_t dwInitialPlayers;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
 	CLaggerList lags;
@@ -159,7 +161,7 @@ protected:
 	void ShowWaitWindow( bool bShow );
 	void SendLagInfo();
 	void AnalyzeLaggers();
-	DWORD GetPresentMask() const;
+	uint32_t GetPresentMask() const;
 	bool IsPlayerPresent( int nPlayer );
 	bool IsPlayerLagging( int nPlayer );
 	bool HasPlayerStoppedLagging( int nPlayer );
@@ -196,8 +198,8 @@ protected:
 	void JoiningClientAssignNewClient( int nClientID );
 	void RemoveClient( int nClientID, bool bKicked );
 
-	void CreateRehash( std::vector<BYTE> *pOrder );
-	void RehashSlots( const std::vector<BYTE> &order );
+	void CreateRehash( std::vector<uint8_t> *pOrder );
+	void RehashSlots( const std::vector<uint8_t> &order );
 
 	virtual void UpdateGameList() = 0;
 	virtual void OnLeaveGame() = 0;
@@ -231,7 +233,7 @@ class CSlotNumberPacket : public CNetPacket
 public:
 	ZDATA
 	int nSlot;
-	DWORD ulCheckSum;
+	uint32_t ulCheckSum;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlot); f.Add(3,&ulCheckSum); return 0; }
 
 	CSlotNumberPacket() { }

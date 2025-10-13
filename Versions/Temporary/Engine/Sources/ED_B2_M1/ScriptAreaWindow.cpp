@@ -5,6 +5,8 @@
 #include "StringResources.h"
 #include "ScriptAreaWindow.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 //
@@ -92,7 +94,7 @@ void CScriptAreaWindow::OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-bool CScriptAreaWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CScriptAreaWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SScriptAreaWindowData *pData = reinterpret_cast<SScriptAreaWindowData*>( dwData );
 	//

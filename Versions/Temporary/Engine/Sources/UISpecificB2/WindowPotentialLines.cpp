@@ -14,6 +14,8 @@
 #include "System/Commands.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 static float s_fWeightMainStrike = 0.007f;
@@ -53,13 +55,13 @@ void CWindowChapterMapLayer::SetSize( const int _nWidth, const int _nHeight )
 	bNeedUpdate = true;
 }
 
-void CWindowChapterMapLayer::SetPixelAlpha( const int x, const int y, const BYTE &nAlpha )
+void CWindowChapterMapLayer::SetPixelAlpha( const int x, const int y, const uint8_t &nAlpha )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
 		points[y][x].a = nAlpha;
 }
 
-BYTE CWindowChapterMapLayer::GetPixelAlpha( const int x, const int y )
+uint8_t CWindowChapterMapLayer::GetPixelAlpha( const int x, const int y )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
 		return points[y][x].a;
@@ -119,8 +121,8 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 			const float fDist = GetOctoDistance( nX, nX0, nY, nY0 );
 			if ( fDist < fR )
 			{
-				BYTE nNewAlpha = color.a;
-				BYTE nOldAlpha = pMapLayer->GetPixelAlpha( nX, nY );
+				uint8_t nNewAlpha = color.a;
+				uint8_t nOldAlpha = pMapLayer->GetPixelAlpha( nX, nY );
 				if ( fDist > fR * LINE_BLUR_PART )
 				{
 					nNewAlpha = nNewAlpha * ( fR - fDist ) / ( fR * ( 1.0f - LINE_BLUR_PART ) );  
@@ -252,7 +254,7 @@ void CWindowPotentialLines::Recalculate()
 				A bit is set to 1 if the value is positive
 				*/
 				float fValues[4] = { pts[i][j].fValue, pts[i - 1][j].fValue, pts[i - 1][j - 1].fValue, pts[i][j - 1].fValue };
-				BYTE nType = 0;
+				uint8_t nType = 0;
 				if ( fValues[0] > 0 )
 					nType |= 1;
 				nType <<= 1;
@@ -441,7 +443,7 @@ void CWindowPotentialLines::SetNode( int nX, int nY, int nEndOffsetX, int nEndOf
 	bValid = false;
 }
 
-void CWindowPotentialLines::SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 )
+void CWindowPotentialLines::SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 )
 {
 	vMainStrike = _vMainStrike;
 	szMaskFile = szMask;
@@ -453,7 +455,7 @@ void CWindowPotentialLines::SetParams( const std::string &szMask, const std::str
 	SetupNoise();
 }
 
-void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour  )
+void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour  )
 {
 	if ( pArrowTexture->IsRefInvalid() )
 		return;
@@ -629,7 +631,7 @@ void CWindowPotentialLines::OnSerialize( IBinSaver &f )
 
 void CWindowPotentialLines::SetupNoise()
 {
-	CArray2D<DWORD> noiseMask;
+	CArray2D<uint32_t> noiseMask;
 
 	{
 		CFileStream stream( NVFS::GetMainVFS(), szMaskFile );

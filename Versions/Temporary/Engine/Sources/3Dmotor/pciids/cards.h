@@ -2,9 +2,9 @@
 
 struct SVideoCardType
 {
-	DWORD dwVendorID;
-	DWORD dwDeviceID;
-	DWORD dwDeviceIDMask;
+	uint32_t dwVendorID;
+	uint32_t dwDeviceID;
+	uint32_t dwDeviceIDMask;
 	NGfx::EVideoCard eType;
 };
 static SVideoCardType videoCardsArray[] =

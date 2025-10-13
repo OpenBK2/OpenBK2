@@ -52,6 +52,8 @@
 #include "GlobalWarFog.h"
 #include "Aviation.h"
 
+#include <cstdint>
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CCombatEstimator theCombatEstimator;
 extern CKeyBuildingBonusSystem theBonusSystem;
@@ -1439,7 +1441,7 @@ int CScripts::LandReinforcementOLD( struct lua_State *state )
 	const int nRein = script.GetObject( 1 );
 	CHECK_ERROR( pScripts->reinforcs.find( nRein ) != pScripts->reinforcs.end(), StrFmt( "Wrong number of reinforcement, %d", nRein ), script );
 
-	WORD playersOfReinforcement = 0;
+	uint16_t playersOfReinforcement = 0;
 	bool bSendAck = false;
 	std::list<CVec2> centers;
 	for ( CReinfList::iterator iter = pScripts->reinforcs[nRein].begin(); iter != pScripts->reinforcs[nRein].end(); ++iter )
@@ -2460,7 +2462,7 @@ int CScripts::DisplayTrace( struct lua_State *state )
 	GetTraceFormatResult( &script, &result );
 
 	const std::string szSeasonName = NStr::ToMBCS( NGlobal::GetVar( "World.Season", "" ) );
-	const DWORD dwColor = NGlobal::GetVar( ("Scene.Colors." + szSeasonName + ".Text.Chat.Color").c_str(), int(0xffffffff) );
+	const uint32_t dwColor = NGlobal::GetVar( ("Scene.Colors." + szSeasonName + ".Text.Chat.Color").c_str(), int(0xffffffff) );
 	CONSOLE_BUFFER_LOG2( PIPE_CHAT, result.c_str(), dwColor, false );
 
 	return 0;
@@ -2587,7 +2589,7 @@ int CScripts::SetCatchArtFlag( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject( 2 ).IsNumber( ), "SetArtilleryCatchFlag: second parameter isn't a number", script );
 
 	const int nScriptID = script.GetObject( 1 );
-	const DWORD dwCatchArtFlag = script.GetObject( 2 );
+	const uint32_t dwCatchArtFlag = script.GetObject( 2 );
 
 	if ( pScripts->groups.find( nScriptID ) != pScripts->groups.end() )
 	{
@@ -2974,7 +2976,7 @@ int CScripts::GetPlayersMask( struct lua_State *pState )
 {
 	Script script( pState );
 
-	DWORD wMask = 0;
+	uint32_t wMask = 0;
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{
 		if ( theDipl.IsPlayerExist( i ) )

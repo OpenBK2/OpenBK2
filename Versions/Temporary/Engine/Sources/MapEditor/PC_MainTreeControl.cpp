@@ -40,6 +40,8 @@
 #include "PC_GUIDEditor.h"
 #include "PC_Vec3ColorEditor.h"
 
+#include <cstdint>
+
 int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort )
 {
 	HTREEITEM hItem0 = reinterpret_cast<HTREEITEM>( lParam0 );
@@ -323,8 +325,8 @@ LRESULT CPCMainTreeControl::OnMessagePCItemChange( WPARAM wParam, LPARAM lParam 
 {
 	//DebugTrace( "CPCMainTreeControl::OnPCItemChange: wParam: 0x%X(%u), lParam: 0x%X", wParam, wParam, lParam );
 	//
-	WORD wPCItemCode = LOWORD( wParam );
-	WORD wPCTargetEditor = HIWORD( wParam );
+	uint16_t wPCItemCode = LOWORD( wParam );
+	uint16_t wPCTargetEditor = HIWORD( wParam );
 	if ( ( wPCItemCode == IC_KILL_FOCUS ) || ( wPCItemCode == IC_VALUE_CHANGED ) )
 	{
 		if ( wPCTargetEditor == PC_TEMPORARY_EDITOR )
@@ -1969,7 +1971,7 @@ void CPCMainTreeControl::SelectAll()
 }
 
 
-bool CPCMainTreeControl::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCMainTreeControl::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( !GetViewManipulator() )
 	{

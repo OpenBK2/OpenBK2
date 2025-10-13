@@ -4,6 +4,8 @@
 #include "Soldier.h"
 #include "PointChecking.h"
 
+#include <cstdint>
+
 BASIC_REGISTER_CLASS( IStaticPathFinder );
 
 IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, bool bIgnoreObstacles )
@@ -74,9 +76,9 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 	}
 }
 
-IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const WORD wHalfAngle, const bool bIgnoreObstacles )
+IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const uint16_t wHalfAngle, const bool bIgnoreObstacles )
 {
-	const WORD wAttackDir = GetDirectionByVector( attackDir );
+	const uint16_t wAttackDir = GetDirectionByVector( attackDir );
 	CVec2 vNormAttackDir( attackDir );
 	Normalize( &vNormAttackDir );
 	
@@ -86,7 +88,7 @@ IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarg
 	if ( pPath != 0 )
 	{
 		CVec2 finishDir = pPath->GetFinishPoint() - pTarget->GetCenterPlain();
-		const WORD wFinishDir = GetDirectionByVector( finishDir );
+		const uint16_t wFinishDir = GetDirectionByVector( finishDir );
 		// нельзя дойти до точки, откуда можно будет атаковать
 		if ( DirsDifference( wFinishDir, wAttackDir ) > wHalfAngle || fabs2( pPath->GetFinishPoint() - pTarget->GetCenterPlain() ) > sqr( fRangeMax ) )
 		{

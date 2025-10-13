@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RandomGen.h"
 
+#include <cstdint>
 
 SRandomSeed::SRandomSeed() : nSeed( GetTickCount() )
 {
@@ -207,7 +208,7 @@ void CRandomGenerator::FillRandRsl()
 		{
 			bool bIsRead = true;
 			SetFilePointer( hf, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
-			DWORD dwRes;
+			unsigned long dwRes;
 			if ( !ReadFile( hf, randrsl, sizeof(randrsl ), &dwRes, 0 ) )
 				bIsRead = false;
 			CloseHandle( hf );

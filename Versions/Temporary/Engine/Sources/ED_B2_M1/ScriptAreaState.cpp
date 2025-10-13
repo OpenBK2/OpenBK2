@@ -8,6 +8,8 @@
 #include "EnterNameDialog.h"
 #include "ScriptAreaState.h"
 
+#include <cstdint>
+
 void CScriptAreaState::Clear()
 {
 	scriptAreaMap.clear();
@@ -394,7 +396,7 @@ bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMa
 	}
 	//
 	dialogData.eChangeMask = eChangeMask;
-	DWORD dwData = reinterpret_cast<DWORD>( &dialogData );
+	uint32_t dwData = reinterpret_cast<uint32_t>( &dialogData );
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_AREA_WINDOW, ID_WINDOW_SET_DIALOG_DATA, dwData );
 	//
 	return bRes;
@@ -413,7 +415,7 @@ void CScriptAreaState::ClearSelection()
 
 bool CScriptAreaState::ProcessScriptAreaWindowData()
 {
-	DWORD dwData = reinterpret_cast<DWORD>( &dialogData );
+	uint32_t dwData = reinterpret_cast<uint32_t>( &dialogData );
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_AREA_WINDOW, ID_WINDOW_GET_DIALOG_DATA, dwData );
 	if ( !bRes )
 	{
@@ -471,7 +473,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 }
 
 
-bool CScriptAreaState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CScriptAreaState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -534,7 +536,7 @@ CScriptAreaState::SScriptArea::SScriptArea() : eType( NDb::EAT_CIRCLE ), nScript
 void CScriptAreaState::SScriptArea::Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const
 {
 	const int N_NUM_CIRCLE_PARTS = 20;
-	DWORD clr = bSelected ? CLR_SELECTED_AREA : CLR_NORMAL_AREA;
+	uint32_t clr = bSelected ? CLR_SELECTED_AREA : CLR_NORMAL_AREA;
 	//
 	switch ( eType )
 	{

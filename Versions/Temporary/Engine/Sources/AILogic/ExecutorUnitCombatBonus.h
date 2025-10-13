@@ -1,5 +1,8 @@
 #pragma once
+
 #include "ExecutorUnitBonus.h"
+
+#include <cstdint>
 
 // CExecutorUnitCombatBonus	(abstract)
 //
@@ -10,7 +13,7 @@
 
 class CExecutorUnitCombatBonus : public CExecutorUnitBonus
 {
-	WORD modeFlags;
+	uint16_t modeFlags;
 
 protected:
 	//Callbacks
@@ -28,7 +31,7 @@ protected:
 		EUM_FIGHTING	= 1<<1,
 	};
 
-	virtual EAbilityCombatReaction OnModeChange( const WORD oldModeFlags, const WORD newModeFlags ) = 0;
+	virtual EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags ) = 0;
 
 public:
 	CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID );

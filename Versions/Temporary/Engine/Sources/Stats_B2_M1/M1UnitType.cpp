@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "m1unittype.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -45,8 +47,8 @@ void SM1UnitType::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "M1UnitType", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "BaseType", (BYTE*)&eBaseType - pThis, sizeof(eBaseType), NTypeDef::TYPE_TYPE_ENUM );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "BaseType", (uint8_t*)&eBaseType - pThis, sizeof(eBaseType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -65,7 +67,7 @@ int SM1UnitType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SM1UnitType::CalcCheckSum() const
+uint32_t SM1UnitType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

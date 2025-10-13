@@ -5,7 +5,7 @@ basestruct string;
 basestruct wstring;
 basestruct hexbinary;
 basestruct GUID;
-basestruct DWORD;
+basestruct uint32_t;
 baseclass void;
 
 attribute unsafe( bool );

@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include "System_export.h"
 
-
 #include "LightXMLUtils.h"
+
+#include <cstdint>
 
 typedef NLXML::CWriteStream NLXML_STREAM;
 
@@ -41,10 +41,10 @@ class CXMLAttribute : public CXMLBase
 	//
 	std::string szName;										// name
 	std::string szValue;									// value
-	mutable DWORD dwHashCode;							// internal hash code value (for fast search)
+	mutable uint32_t dwHashCode;							// internal hash code value (for fast search)
 	//
 	void SetValue( const std::string &_szValue ) { szValue = _szValue; }
-	DWORD GetHashCode() const
+	uint32_t GetHashCode() const
 	{
 		if ( dwHashCode == 0 )
 			dwHashCode = std::hash<std::string>()( szName );
@@ -96,7 +96,7 @@ public:
 	};
 private:
 	const EType eType;										// node type (to avoid dynamic_cast)
-	DWORD dwHashCode;											// hash code for this node by value (== 0 if empty)
+	uint32_t dwHashCode;											// hash code for this node by value (== 0 if empty)
 protected:
 	std::string szValue;									// node value
 public:
@@ -110,7 +110,7 @@ public:
 	//
 	const std::string& GetValue() const { return szValue; }
 	void SetValue( const std::string &_szValue ) { szValue = _szValue; dwHashCode = 0; }
-	bool IsMatch( const std::string &szMatchValue, const DWORD dwMatchHashCode )
+	bool IsMatch( const std::string &szMatchValue, const uint32_t dwMatchHashCode )
 	{
 		if ( dwHashCode == 0 )
 			dwHashCode = std::hash<std::string>()( szValue );
@@ -200,7 +200,7 @@ public:
 	{
 		for ( std::string::const_iterator it = szValue.begin(); it != szValue.end(); ++it )
 		{
-			if ( !isspace( BYTE(*it) ) )
+			if ( !isspace( uint8_t(*it) ) )
 				return false;
 		}
 		return true;

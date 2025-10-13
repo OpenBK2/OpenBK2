@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #pragma pack( push, 4 )
 // clear MSb
 #define FP_ABS_BITS( fp ) ( FP_BITS( fp ) & 0x7FFFFFFF )
@@ -31,9 +33,9 @@
 	r = *(float *)&_i;                    \
 	r = r * (2.0f - (p) * r);             \
 }
-//#define MAKELONG(x,y) (LONG((WORD(x)&0xffff)))|(LONG((WORD(y)&0xffff)<<16))
+//#define MAKELONG(x,y) (LONG((uint16_t(x)&0xffff)))|(LONG((uint16_t(y)&0xffff)<<16))
 // C/C++ standard conforming fp-bits retrieving
-inline DWORD GetFloatBits( float fVal )
+inline uint32_t GetFloatBits( float fVal )
 {
 	union 
 	{
@@ -41,23 +43,23 @@ inline DWORD GetFloatBits( float fVal )
 		unsigned char c[4];
 	} u;
 	u.f = fVal;
-	return ( DWORD(u.c[3]) << 24L ) | ( DWORD(u.c[2]) << 16L ) | ( DWORD(u.c[1]) << 8L ) | DWORD( u.c[0] );
+	return ( uint32_t(u.c[3]) << 24L ) | ( uint32_t(u.c[2]) << 16L ) | ( uint32_t(u.c[1]) << 8L ) | uint32_t( u.c[0] );
 }
 
-inline DWORD PackDWORD( const WORD high, const WORD low ) 
+inline uint32_t PackDWORD( const uint16_t high, const uint16_t low )
 { 
-	return ( DWORD(high) << 16 ) | DWORD(low); 
+	return ( uint32_t(high) << 16 ) | uint32_t(low);
 }
-inline DWORD PackDWORD( const BYTE b3, const BYTE b2, const BYTE b1, const BYTE b0 ) 
+inline uint32_t PackDWORD( const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0 )
 { 
-	return ( DWORD(b3) << 24 ) | ( DWORD(b2) << 16 ) | ( DWORD(b1) << 8 ) | DWORD(b0);
+	return ( uint32_t(b3) << 24 ) | ( uint32_t(b2) << 16 ) | ( uint32_t(b1) << 8 ) | uint32_t(b0);
 }
-inline WORD UnpackHighWORD( const DWORD value ) { return (value >> 16) & 0x0000ffff; }
-inline WORD UnpackLowWORD( const DWORD value ) { return value & 0x0000ffff; }
-inline BYTE UnpackBYTE0( const DWORD value ) { return value & 0xff; }
-inline BYTE UnpackBYTE1( const DWORD value ) { return (value >> 8) & 0xff; }
-inline BYTE UnpackBYTE2( const DWORD value ) { return (value >> 16) & 0xff; }
-inline BYTE UnpackBYTE3( const DWORD value ) { return (value >> 24) & 0xff; }
+inline uint16_t UnpackHighWORD( const uint32_t value ) { return (value >> 16) & 0x0000ffff; }
+inline uint16_t UnpackLowWORD( const uint32_t value ) { return value & 0x0000ffff; }
+inline uint8_t UnpackBYTE0( const uint32_t value ) { return value & 0xff; }
+inline uint8_t UnpackBYTE1( const uint32_t value ) { return (value >> 8) & 0xff; }
+inline uint8_t UnpackBYTE2( const uint32_t value ) { return (value >> 16) & 0xff; }
+inline uint8_t UnpackBYTE3( const uint32_t value ) { return (value >> 24) & 0xff; }
 
 // geometry
 inline float fabsxy2( const CVec3 &a ) { return fabs2( a.x, a.y ); }

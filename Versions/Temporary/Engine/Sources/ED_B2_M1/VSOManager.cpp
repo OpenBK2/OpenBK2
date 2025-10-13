@@ -6,6 +6,8 @@
 #include "Misc/Spline.h"
 #include "B2_M1_Terrain/DBVSO.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 // static consts
@@ -24,16 +26,16 @@ const float	CVSOManager::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;
 const int		CVSOManager::CENTER_POINT_PARTS		= 8;
 const float	CVSOManager::NORMALE_POINT_RADIUS	= AI_TILE_SIZE / 2.0f;
 const int		CVSOManager::NORMALE_POINT_PARTS	= 8;
-const DWORD	CVSOManager::CONTROL_POINT_COLOR	= 0xFFFF4040;
-const DWORD	CVSOManager::CENTER_POINT_COLOR		= 0xFF4040F0;
-const DWORD	CVSOManager::NORMALE_POINT_COLOR	= 0xFF40FF40;
-const DWORD	CVSOManager::CONTROL_LINE_COLOR		= 0xFFFF4040;
-const DWORD	CVSOManager::CENTER_LINE_COLOR		= 0xFF4040FF;
-const DWORD	CVSOManager::NORMALE_LINE_COLOR		= 0xFF40FF40;
+const uint32_t	CVSOManager::CONTROL_POINT_COLOR	= 0xFFFF4040;
+const uint32_t	CVSOManager::CENTER_POINT_COLOR		= 0xFF4040F0;
+const uint32_t	CVSOManager::NORMALE_POINT_COLOR	= 0xFF40FF40;
+const uint32_t	CVSOManager::CONTROL_LINE_COLOR		= 0xFFFF4040;
+const uint32_t	CVSOManager::CENTER_LINE_COLOR		= 0xFF4040FF;
+const uint32_t	CVSOManager::NORMALE_LINE_COLOR		= 0xFF40FF40;
 const float CVSOManager::DEFAULT_POINT_RADIUS	= AI_TILE_SIZE / 8.0f;
-const DWORD CVSOManager::DEFAULT_POINT_PARTS	= 8;
-const DWORD CVSOManager::DEFAULT_POINT_COLOR	= 0xFFFFFF80;
-const DWORD CVSOManager::DEFAULT_LINE_COLOR		= 0xFFFFFF80;
+const uint32_t CVSOManager::DEFAULT_POINT_PARTS	= 8;
+const uint32_t CVSOManager::DEFAULT_POINT_COLOR	= 0xFFFFFF80;
+const uint32_t CVSOManager::DEFAULT_LINE_COLOR		= 0xFFFFFF80;
 const float	CVSOManager::OPACITY_DELIMITER		= 100.0f;
 
 void CVSOManager::SBackupKeyPoints::SaveKeyPoints( const CVSOPointList &rVSOPointList )
@@ -1589,8 +1591,8 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 				}
 				else
 				{
-					const DWORD nAlpha = DWORD( ( *pPoints )[nPointIndex].fOpacity * 0xFF ) & 0xFF;
-					DWORD nColor = DEFAULT_LINE_COLOR;
+					const uint32_t nAlpha = uint32_t( ( *pPoints )[nPointIndex].fOpacity * 0xFF ) & 0xFF;
+					uint32_t nColor = DEFAULT_LINE_COLOR;
 					UpdateAlphaARGBColor( &nColor, nAlpha );
 					if ( pDrawParams->CanEditPoints( CVSOManager::SVSOSelection::ST_CENTER ) )
 					{

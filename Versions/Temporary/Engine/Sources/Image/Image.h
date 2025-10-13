@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 template<class T> class CArray2D;
 
 struct IDirect3DDevice9;
@@ -19,11 +21,11 @@ enum EImageType
 	IMAGE_TYPE_TRANSPARENT_ADD,
 };
 
-bool Copy( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<DWORD> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
-bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<DWORD> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
+bool Copy( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D<uint32_t> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
+bool CopyAB( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D<uint32_t> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
 //
-bool LoadAnyImage( CArray2D<DWORD> *pRes, CDataStream *pStream );
-void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<DWORD> &srcImage,
+bool LoadAnyImage( CArray2D<uint32_t> *pRes, CDataStream *pStream );
+void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize );
 
 struct SColor
@@ -32,16 +34,16 @@ struct SColor
   {
     struct  
     {
-      BYTE b, g, r, a;
+      uint8_t b, g, r, a;
     };
-    DWORD dwColor;
+    uint32_t dwColor;
   };
   //
   SColor() {  }
-  SColor( const DWORD _dwColor ) : dwColor( _dwColor ) {  }
-  SColor( const BYTE _a, const BYTE _r, const BYTE _g, const BYTE _b ) : a( _a ), r( _r ), g( _g ), b( _b ) {  }
+  SColor( const uint32_t _dwColor ) : dwColor( _dwColor ) {  }
+  SColor( const uint8_t _a, const uint8_t _r, const uint8_t _g, const uint8_t _b ) : a( _a ), r( _r ), g( _g ), b( _b ) {  }
   //
-  operator DWORD() const { return dwColor; }
+  operator uint32_t() const { return dwColor; }
 };
 }
 

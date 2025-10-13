@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 /**
 #include "MapInfoEditorData.h"
 #include "BridgeInfoData.h"
@@ -51,7 +54,7 @@ class CMapClip
 	vector<CVec3> pasteRegion;
 	//
 	CArray2D<float> heights;
-	CArray2D<BYTE> tilesType;
+	CArray2D<uint8_t> tilesType;
 	//
 	vector<SClipboardVSO> vsoArray;
 	//

@@ -7,6 +7,9 @@
 #include "AIUnit.h"
 #include "UnitStates.h"
 #include "StatesFactory.h"
+
+#include <cstdint>
+
 struct ICollisionsCollector;
 
 class CTorpedoStatesFactory : public IStatesFactory
@@ -50,16 +53,16 @@ protected:
 
 public:
 	CUnitTorpedo(): pShooterStats(0), pTorpedoStats(0), fSpeed(0), timeLaunched(0), pOwner(0), vContactPoint(VNULL2) {}
-	virtual void Init( const CVec2 &center, const int z, CAIUnit *_pOwner, const SWeaponRPGStats *_pShooterStats, const SMechUnitRPGStats *_pTorpedoStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, CAIUnit *_pOwner, const SWeaponRPGStats *_pShooterStats, const SMechUnitRPGStats *_pTorpedoStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
 	// This Init() does nothing
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector ) { }
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector ) { }
 
 	virtual const SUnitBaseRPGStats* GetStats() const { return pTorpedoStats; }	
 	virtual IStatesFactory* GetStatesFactory() const { return CTorpedoStatesFactory::Instance(); }
 	virtual const float GetSpeed() { return fSpeed; }
 	virtual void Die( const bool fromExplosion, const float fDamage );
-	virtual const BYTE GetParty() { return 2; }
+	virtual const uint8_t GetParty() { return 2; }
 
 	// Inherited from AIUnit
 	virtual const EActionNotify GetShootAction() const { return ACTION_NOTIFY_MECH_SHOOT; }

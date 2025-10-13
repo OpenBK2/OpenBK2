@@ -8,6 +8,8 @@
 #include "Scintilla/SciLexer.h"
 //#include "MainFrame.h"
 
+#include <cstdint>
+
 // CLuaEditor
 
 CLuaEditor::CLuaEditor()
@@ -324,7 +326,7 @@ void CLuaEditor::SetAutoComplete( const vector<string> &vszKeywords,
 	Sci( SCI_AUTOCSETFILLUPS, 0, (int)" (" );
 }
 
-void CLuaEditor::SetKeywordColor( int nKeywordSet, DWORD dwColor )
+void CLuaEditor::SetKeywordColor( int nKeywordSet, uint32_t dwColor )
 {
 	NI_ASSERT( (nKeywordSet > 0) && (nKeywordSet < KEYWORDSET_MAX), "CLuaEditor: KeywordSet counter beyond the bounds " );
 	Sci( SCI_STYLESETFORE, SCE_LUA_WORD2 - 1 + nKeywordSet, dwColor );
@@ -482,7 +484,7 @@ void CLuaEditor::NewLineIndent()
 		int  prevLineLength = Sci( SCI_LINELENGTH,  curLine  -  1 );
 		if ( prevLineLength  <  sizeof(linebuf) )
 		{
-			WORD  buflen  =  sizeof(linebuf);
+			uint16_t  buflen  =  sizeof(linebuf);
 			memcpy(linebuf,  &buflen,  sizeof(buflen));
 			Sci(SCI_GETLINE,  curLine  -  1,	reinterpret_cast<LPARAM>(static_cast<char  *>(linebuf)));
 			linebuf[prevLineLength]  =  '\0';

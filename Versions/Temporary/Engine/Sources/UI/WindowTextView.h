@@ -1,12 +1,13 @@
 // WindowTextView.h: interface for the CWindowTextView class.
 //
 
-
-
 #pragma once
+
 #include "UI_export.h"
 
 #include "Window.h"
+
+#include <cstdint>
 
 struct ISound;
 
@@ -51,7 +52,7 @@ public:
 
 	virtual const CTPoint<int> GetSize() const;
 
-	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags );
+	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags );
 	virtual void Reposition( const CTRect<float> &parentRect );
 	virtual void Init()
 	{

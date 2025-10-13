@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 template<class TColor>
 COLORREF GetBGRColorFromARGBColor( TColor nColor ){ return RGB( 0xFF & ( ( nColor & 0xFF0000 ) >> 16 ), 0xFF & ( ( nColor & 0xFF00 ) >> 8 ), nColor & 0xFF ); }
@@ -31,7 +32,7 @@ COLORREF MakeBGRColor( TColor nRed, TColor nGreen, TColor nBlue )
 }
 
 
-inline DWORD GetARGBColorFromVec4( const CVec4 &vColor )
+inline uint32_t GetARGBColorFromVec4( const CVec4 &vColor )
 {
 	return (
 		( ( int( vColor.a * 255 ) << 24 ) & 0xFF000000 ) +
@@ -122,18 +123,18 @@ TColor UpdateBlueARGBColor( TColor nColor, TColor nBlue ) { return ( ( nBlue & 0
 
 
 template<class TColor>
-DWORD GetAlphaFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0xFF000000 ) >> 24 ) ); }
+uint32_t GetAlphaFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0xFF000000 ) >> 24 ) ); }
 template<class TColor>
-DWORD GetRedFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0x00FF0000 ) >> 16 ) ); }
+uint32_t GetRedFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0x00FF0000 ) >> 16 ) ); }
 template<class TColor>
-DWORD GetGreenFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0x0000FF00 ) >> 8 ) ); }
+uint32_t GetGreenFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0x0000FF00 ) >> 8 ) ); }
 template<class TColor>
-DWORD GetBlueFromARGBColor( TColor nColor ) { return ( nColor & 0x000000FF ); }
+uint32_t GetBlueFromARGBColor( TColor nColor ) { return ( nColor & 0x000000FF ); }
 
 
-inline DWORD GetRedFromBGRColor( COLORREF color ) { return ( color & 0x0000FF ); }
-inline DWORD GetGreenFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0x00FF00 ) >> 8 ) ); }
-inline DWORD GetBlueFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0xFF0000 ) >> 16 ) ); }
+inline uint32_t GetRedFromBGRColor( COLORREF color ) { return ( color & 0x0000FF ); }
+inline uint32_t GetGreenFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0x00FF00 ) >> 8 ) ); }
+inline uint32_t GetBlueFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0xFF0000 ) >> 16 ) ); }
 
 
 template<class TColor>

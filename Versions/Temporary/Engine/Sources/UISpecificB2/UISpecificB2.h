@@ -2,7 +2,6 @@
 
 #include "UISpecificB2_export.h"
 
-
 #include "UI/commandparam.h"
 #include "UI/dbuserinterface.h"
 #include "UI/UI.h"
@@ -12,19 +11,21 @@
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "Misc/Progress.h"
 
+#include <cstdint>
+
 UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
 UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample );
 
 struct SMiniMapUnitInfo
 {
-	WORD x;
-	WORD y;
+	uint16_t x;
+	uint16_t y;
 	float z;
-	BYTE player;
-	BYTE radius; // tiles	
+	uint8_t player;
+	uint8_t radius; // tiles
 
 	SMiniMapUnitInfo() : radius( 0 )  { }
-	SMiniMapUnitInfo( const WORD _x, const WORD _y, const float _z, const BYTE _player, BYTE _radius ) 
+	SMiniMapUnitInfo( const uint16_t _x, const uint16_t _y, const float _z, const uint8_t _player, uint8_t _radius )
 		: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius ) { }
 };
 
@@ -56,7 +57,7 @@ struct IMiniMap : virtual public IWindow
 	virtual CVec2 GetAIToScreen( const CVec2 &vPos ) const = 0;
 	virtual void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
 	virtual void SetViewport( const std::vector< CVec2 > &vPoints ) = 0;
-	virtual void SetWarFog( const CArray2D<BYTE> *pWarFogInfo ) = 0;
+	virtual void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo ) = 0;
 	virtual void SetMarkers( const std::vector<SMarker> &markers ) = 0;
 	virtual void SetFigures( const std::vector<SFigure> &figures ) = 0;
 	virtual void SetMaterial( CDBPtr< NDb::SMaterial > pMaterial ) = 0;
@@ -71,13 +72,13 @@ struct IMiniMap : virtual public IWindow
 
 struct IPotentialLines : virtual public IWindow
 {
-	virtual void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 ) = 0;
+	virtual void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 ) = 0;
 
 	virtual void ClearNodes() = 0;
 	virtual void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ) = 0;		// If such node exists, it is altered
 
 	virtual void ClearArrows() = 0;
-	virtual void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour ) = 0;
+	virtual void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour ) = 0;
 };
 
 struct ISelection : virtual public IWindow

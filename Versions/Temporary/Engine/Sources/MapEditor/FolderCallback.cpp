@@ -7,6 +7,8 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "FolderCallback.h"
 
+#include <cstdint>
+
 void CFolderCallback::UndoChanges()
 {
 	for ( CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
@@ -91,8 +93,8 @@ bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
 	bool bExists = NDb::DoesObjectExist( CDBID( *pszName ) );
 	if ( bExists )
 	{
-		const DWORD dwMaxNumber = 0x10000;
-		DWORD dwNumber = 2;
+		const uint32_t dwMaxNumber = 0x10000;
+		uint32_t dwNumber = 2;
 		const bool bFolder = ( ( *pszName )[pszName->size() - 1] == PATH_SEPARATOR_CHAR );
 		string szName;
 		if ( bFolder )

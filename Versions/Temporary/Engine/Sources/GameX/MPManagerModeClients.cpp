@@ -10,6 +10,8 @@
 
 #include "MPLANTest.h"
 
+#include <cstdint>
+
 // CMPManagerMode - client management
 
 bool CMPManagerMode::HostAssignNewClient( int nClientID )
@@ -110,9 +112,9 @@ bool CMPManagerMode::IsPlayerPresent( int nPlayer )
 	 return slots[nPlayer].bPresent;
 }
 
-DWORD CMPManagerMode::GetPresentMask() const
+uint32_t CMPManagerMode::GetPresentMask() const
 {
-	DWORD dwMask = 0;
+	uint32_t dwMask = 0;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].bPresent )
@@ -264,8 +266,8 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	if ( nCurrent >= 0 && nCurrent <= nSegment )
 		return;
 
-	const DWORD dwLaggersBefore = dwLaggers;
-	const DWORD dwLaggersOldBefore = dwLaggersOld;
+	const uint32_t dwLaggersBefore = dwLaggers;
+	const uint32_t dwLaggersOldBefore = dwLaggersOld;
 	scheduledDropSegmentBySlot[nSlot] = nSegment;
 
 	// Stop local lag accounting for this slot immediately to avoid repeated kick scheduling.
@@ -307,9 +309,9 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 		scheduledDropSegmentBySlot[i] = -1;
 		if ( IsPlayerPresent( i ) )
 		{
-			const DWORD dwPrePresentMask = GetPresentMask();
+			const uint32_t dwPrePresentMask = GetPresentMask();
 			slots[i].bPresent = false;
-			const DWORD dwPostPresentMask = GetPresentMask();
+			const uint32_t dwPostPresentMask = GetPresentMask();
 			NGameX::MatchPacketTrace_Log(
 				nCommonSegment,
 				"STATE",
@@ -426,8 +428,8 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 
 void CMPManagerMode::UpdateMyConnectivityMask()
 {
-	WORD &wMask = slots[nOwnSlot].wConnectedTo;
-	WORD wNewMask = 0;
+	uint16_t &wMask = slots[nOwnSlot].wConnectedTo;
+	uint16_t wNewMask = 0;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].bPresent )

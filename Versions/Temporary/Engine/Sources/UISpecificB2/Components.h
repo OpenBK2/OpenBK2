@@ -4,6 +4,8 @@
 #include "UI/dbuserinterface.h"
 #include "3Dmotor/GPixelFormat.h"
 
+#include <cstdint>
+
 class CTextureRoundSegmentVisitor
 {
 	ZDATA
@@ -22,7 +24,7 @@ public:
 	CTextureRoundSegmentVisitor();
 	
 	void SetTexture( const NDb::STexture *pTexture );
-	void SetColor( DWORD dwColor );
+	void SetColor( uint32_t dwColor );
 	void SetPlacement( const CTRect<float> &rect );
 	// draw only: fStartAngle <= fFinishAngle
 	void SetAngles( float fStartAngle, float fFinishAngle );

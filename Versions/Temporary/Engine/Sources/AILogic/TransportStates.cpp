@@ -29,6 +29,7 @@
 #include "FeedBackSystem.h"
 #include "UnitsIterators2.h"
 
+#include <cstdint>
 #include <map>
 
 //REGISTER_SAVELOAD_CLASS( 0x1108D4D9, CTransportResupplyHumanResourcesState );
@@ -729,14 +730,14 @@ void CTransportLandState::Segment()
 bool CTransportLandState::FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
-	WORD wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
+	uint16_t wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
 	CVec2 vCenterPoint = *vDropPoint;
 	const int nIterations = 8;
 	for ( float fRadius = 150; fRadius < 1000; fRadius += 50 )
 	{
 		for ( int i = 0; i < nIterations; ++i )
 		{
-			WORD wDir = wStartDir + 65535 / nIterations * i;
+			uint16_t wDir = wStartDir + 65535 / nIterations * i;
 			const CVec2 vDir = GetVectorByDirection( wDir );
 			const CVec2 vPoint( vCenterPoint + vDir * fRadius );
 			const SVector vTile( AICellsTiles::GetTile( vPoint ) );

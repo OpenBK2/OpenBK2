@@ -8,6 +8,7 @@
 #include "AIUnit.h"
 #include "UnitStates.h"
 
+#include <cstdint>
 
 REGISTER_SAVELOAD_CLASS( 0x1508D4A9, CFenceCreation );
 extern CStaticObjects theStatObjs;
@@ -112,7 +113,7 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 
 	const SFenceRPGStats *pRPG = theUnitCreation.GetWireFence();
 	SplitLineToSegrments( &vPoints, vFrom, vTo, SConsts::TILE_SIZE *2 );
-	const WORD wDir = GetDirectionByVector( vTo - vFrom );
+	const uint16_t wDir = GetDirectionByVector( vTo - vFrom );
 	wAngle = GetLineAngle( vFrom, vTo );
 	if ( vPoints.size() <= 1 ) return false;
 

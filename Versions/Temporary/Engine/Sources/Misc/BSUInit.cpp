@@ -5,13 +5,15 @@
 #include <commctrl.h>
 #endif
 
+#include <cstdint>
+
 static HINSTANCE g_hInst = NULL ;
 HINSTANCE GetBSUInstance()
 {
 	return g_hInst;
 }
 
-BOOL WINAPI DllMain ( HINSTANCE hInst, DWORD dwReason, LPVOID )
+BOOL WINAPI DllMain ( HINSTANCE hInst, uint32_t dwReason, LPVOID )
 {
 	BOOL bRet = TRUE ;
 	switch ( dwReason )

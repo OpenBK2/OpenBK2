@@ -6,6 +6,8 @@
 #include "EditorScene.h"
 #include "Tools_SceneDraw.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 typedef vector<NDb::SVSOPoint> CVSOPointList;
@@ -26,16 +28,16 @@ public:
 	static const int CENTER_POINT_PARTS;
 	static const float NORMALE_POINT_RADIUS;
 	static const int NORMALE_POINT_PARTS;
-	static const DWORD CONTROL_POINT_COLOR;
-	static const DWORD CENTER_POINT_COLOR;
-	static const DWORD NORMALE_POINT_COLOR;
-	static const DWORD CONTROL_LINE_COLOR;
-	static const DWORD CENTER_LINE_COLOR;
-	static const DWORD NORMALE_LINE_COLOR;
+	static const uint32_t CONTROL_POINT_COLOR;
+	static const uint32_t CENTER_POINT_COLOR;
+	static const uint32_t NORMALE_POINT_COLOR;
+	static const uint32_t CONTROL_LINE_COLOR;
+	static const uint32_t CENTER_LINE_COLOR;
+	static const uint32_t NORMALE_LINE_COLOR;
 	static const float DEFAULT_POINT_RADIUS;
-	static const DWORD DEFAULT_POINT_PARTS;
-	static const DWORD DEFAULT_POINT_COLOR;
-	static const DWORD DEFAULT_LINE_COLOR;
+	static const uint32_t DEFAULT_POINT_PARTS;
+	static const uint32_t DEFAULT_POINT_COLOR;
+	static const uint32_t DEFAULT_LINE_COLOR;
 	static const float OPACITY_DELIMITER;
 	//
 private:

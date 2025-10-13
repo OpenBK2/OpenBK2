@@ -2,6 +2,8 @@
 
 #include "StaticObject.h"
 
+#include <cstdint>
+
 class CFakeCorpseStaticObject : public CCommonStaticObject
 {
 	OBJECT_BASIC_METHODS( CFakeCorpseStaticObject );
@@ -15,7 +17,7 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&tilesToLock); f.Add(3,&pDeadObj); f.Add(4,&eType); f.Add(5,&pPassProfile); return 0; }
 
 	//
-	CFakeCorpseStaticObject( const CVec3 &center, const WORD wDir, const float fHP, const int nFrameIndex,
+	CFakeCorpseStaticObject( const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex,
 													 const std::list<SObjTileInfo> &tiles, const bool bDestructByTracks,
 													 CUpdatableObj* pDeadObj, CObjectProfile *pPassProfile );
 	CFakeCorpseStaticObject() { }
@@ -25,7 +27,7 @@ public:
 
 	virtual void Init() { }
 
-	virtual const BYTE GetPlayer() const; 
+	virtual const uint8_t GetPlayer() const;
 	virtual const SHPObjectRPGStats* GetStats() const { return 0; }
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return bDestructByTracks && (eClass & EAC_TRACK); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;

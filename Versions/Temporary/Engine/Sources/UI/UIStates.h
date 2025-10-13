@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <cstdint>
 
 // UIScreen recieve command sequience, produce states sequience
 // and track execution of states. when Effect is finished or
@@ -35,7 +35,7 @@ class CStates
 	bool bReversable;												// effect can be undone
 	std::string szCmdName;
 	std::pair<int, CPtr<CWindow> > id;
-	WORD wKeyboardFlags;
+	uint16_t wKeyboardFlags;
 
 	void CheckEnd();
 	IUIEffector *CreateEffect( const NDb::SUIStateBase *pCmd, class CWindowScreen *pScreen, SWindowContext *pContext );
@@ -52,7 +52,7 @@ public:
 	CStates( const NDb::SUIStateSequence &seq, 
 					 const std::string &_szCmdName,
 					 const bool _bReversable, 
-					 WORD wFlags );
+					 uint16_t wFlags );
 
 	void FastForward( const int timeDiff, class CWindowScreen *pScreen );
 	const std::string &GetName() const { return szCmdName; }

@@ -1,9 +1,11 @@
-
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "LinkObject.h"
 #include "AIUnit.h"
 #include "Building.h"
+
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //class CAIUnit;
 class CBasicGun;
@@ -47,25 +49,25 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&hor); f.Add(3,&ver); f.Add(4,&bCanReturn); f.Add(5,&bVerAiming); f.Add(6,&pTracedUnit); f.Add(7,&pLockingGun); f.Add(8,&wDefaultHorAngle); f.Add(9,&bReturnToNULLVerAngle); return 0; }
 private:
 	//
-	WORD GetCurAngle( const SRotating &rotateInfo ) const;
-	void SetTurnParameters( SRotating *pRotateInfo, const WORD wAngle, const bool bInstantly );
-	WORD ConstraintAngle( const WORD wDesAngle, const WORD wTurnConstraint ) const;
+	uint16_t GetCurAngle( const SRotating &rotateInfo ) const;
+	void SetTurnParameters( SRotating *pRotateInfo, const uint16_t wAngle, const bool bInstantly );
+	uint16_t ConstraintAngle( const uint16_t wDesAngle, const uint16_t wTurnConstraint ) const;
 protected:
 	virtual void CheckAlive() = 0;
 	virtual const bool IsBackGunsDirection() const { return false; }
 	virtual const CVec2 &GetPlatformOffset() const { return VNULL2; }
 public:
 	CTurret() { }
-	CTurret( const WORD wHorRotationSpeed, const WORD wVerRotationSpeed, bool bReturnToNULLVerAngle );
+	CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool bReturnToNULLVerAngle );
 	
 	const float GetHorRotationSpeed() const { return hor.wRotationSpeed; }
 	const float GetVerRotationSpeed() const { return ver.wRotationSpeed; }
 	
-	virtual void Turn( const WORD wHorAngle, const WORD wVerAngle, const bool bInstantly = false );
+	virtual void Turn( const uint16_t wHorAngle, const uint16_t wVerAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnHor( const WORD wHorAngle, const bool bInstantly = false );
+	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnVer( const WORD wVerAngle, const bool bInstantly = false );
+	virtual bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false );
 
 	void StopTurning();
 	void StopHorTurning();
@@ -77,11 +79,11 @@ public:
 	// можно вернуть пушку к нулевому углу поворота
 	void SetCanReturn();
 
-	WORD GetHorCurAngle() const { return GetCurAngle( hor ); }
-	WORD GetVerCurAngle() const { return GetCurAngle( ver ); }
+	uint16_t GetHorCurAngle() const { return GetCurAngle( hor ); }
+	uint16_t GetVerCurAngle() const { return GetCurAngle( ver ); }
 
-	WORD GetHorFinalAngle() const { return hor.wFinalAngle; }
-	WORD GetVerFinalAngle() const { return ver.wFinalAngle; }
+	uint16_t GetHorFinalAngle() const { return hor.wFinalAngle; }
+	uint16_t GetVerFinalAngle() const { return ver.wFinalAngle; }
 	
 	const NTimer::STime& GetHorEndTime() const { return hor.endTime; }
 	const NTimer::STime& GetVerEndTime() const { return ver.endTime; }
@@ -100,14 +102,14 @@ public:
 	bool DoesRotateVert() const { return ver.wRotationSpeed != 0; }
 
 	virtual CVec2 GetOwnerCenter() = 0;
-	virtual WORD GetOwnerFrontDir() = 0;
+	virtual uint16_t GetOwnerFrontDir() = 0;
 	virtual float GetOwnerZ() = 0;
 	virtual const int GetOwnerParty() const = 0;
 
-	virtual WORD GetHorTurnConstraint() const = 0;
-	virtual void SetHorTurnConstraint( const WORD wLimit ) = 0;
+	virtual uint16_t GetHorTurnConstraint() const = 0;
+	virtual void SetHorTurnConstraint( const uint16_t wLimit ) = 0;
 	virtual void ResetHorTurnConstraint() = 0;
-	virtual WORD GetVerTurnConstraint() const = 0;
+	virtual uint16_t GetVerTurnConstraint() const = 0;
 
 	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
 	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
@@ -119,12 +121,12 @@ public:
 	// залокана ли каким-либо gun-ом, не равным pGun
 	bool IsLocked( const class CBasicGun *pGun );
 
-	void SetDefaultHorAngle( const WORD wHorAngle ) { wDefaultHorAngle = wHorAngle; }
-	const WORD GetDefaultHorAngle() const { return wDefaultHorAngle; }
+	void SetDefaultHorAngle( const uint16_t wHorAngle ) { wDefaultHorAngle = wHorAngle; }
+	const uint16_t GetDefaultHorAngle() const { return wDefaultHorAngle; }
 	
 	virtual bool IsOwnerOperable() const = 0;
 
-	virtual const bool IsVisible( const BYTE cParty ) const { return true; }
+	virtual const bool IsVisible( const uint8_t cParty ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
 
@@ -141,7 +143,7 @@ class CUnitTurret : public CTurret
 	CPtr<CAIUnit> pOwner;
 //	int nModelPart;
 	int nPlatform;
-//	DWORD nGunCarriageParts;
+//	uint32_t nGunCarriageParts;
 	SAIAngle wHorConstraint; 
 	SAIAngle wVerConstraint;
 	SAIAngle wOldHorConstraint;
@@ -156,26 +158,26 @@ protected:
 	const bool IsBackGunsDirection() const { return bBuckGunsDirection; }
 public:
 	CUnitTurret() { }
-	CUnitTurret( class CAIUnit *pOwner, const int nPlatform, const WORD wHorRotationSpeed, const WORD wVerRotationSpeed, const WORD wHorConstraint,
-		const WORD wVerConstraint, const bool bBuckGunsDirection );
+	CUnitTurret( class CAIUnit *pOwner, const int nPlatform, const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, const uint16_t wHorConstraint,
+		const uint16_t wVerConstraint, const bool bBuckGunsDirection );
 
 	// возвращает - был произведён поворот, или turret уже в нужном положении	
-	virtual bool TurnHor( const WORD wHorAngle, const bool bInstantly = false );
+	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnVer( const WORD wVerAngle, const bool bInstantly = false );
+	virtual bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false );
 
 	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn );
 	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn );
 
 	virtual CVec2 GetOwnerCenter();
-	virtual WORD GetOwnerFrontDir();
+	virtual uint16_t GetOwnerFrontDir();
 	virtual float GetOwnerZ();
 	virtual const int GetOwnerParty() const;
 
-	virtual WORD GetHorTurnConstraint() const;
-	virtual WORD GetVerTurnConstraint() const { return wVerConstraint; }
+	virtual uint16_t GetHorTurnConstraint() const;
+	virtual uint16_t GetVerTurnConstraint() const { return wVerConstraint; }
 
-	virtual void SetHorTurnConstraint( const WORD wLimit ) { wHorConstraint = wLimit; }
+	virtual void SetHorTurnConstraint( const uint16_t wLimit ) { wHorConstraint = wLimit; }
 	virtual void ResetHorTurnConstraint() { wHorConstraint = wOldHorConstraint; }
 
 	virtual bool IsOwnerOperable() const;
@@ -207,14 +209,14 @@ public:
 	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) { }
 
 	virtual CVec2 GetOwnerCenter() { return center; }
-	virtual WORD GetOwnerFrontDir() { return dir; }
+	virtual uint16_t GetOwnerFrontDir() { return dir; }
 	virtual float GetOwnerZ() { return 0; }
 	virtual const int GetOwnerParty() const;
 
-	virtual WORD GetHorTurnConstraint() const;
-	virtual WORD GetVerTurnConstraint() const;
+	virtual uint16_t GetHorTurnConstraint() const;
+	virtual uint16_t GetVerTurnConstraint() const;
 
-	virtual void SetHorTurnConstraint( const WORD wLimit ) { wHorTurnConstraint = wLimit; }
+	virtual void SetHorTurnConstraint( const uint16_t wLimit ) { wHorTurnConstraint = wLimit; }
 	virtual void ResetHorTurnConstraint() { wHorTurnConstraint = wOldHorConstraint; }
 
 	virtual bool IsOwnerOperable() const { return true; }

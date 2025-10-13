@@ -4,6 +4,8 @@
 #include "StormableObject.h"
 #include "RotatingFireplacesObject.h"
 
+#include <cstdint>
+
 class CSoldier;
 class CEntrenchmentPart;
 
@@ -81,7 +83,7 @@ public:
 	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void GetBoundRect( SRect *pRect ) const { *pRect = rect; }
 	virtual bool IsPointInside( const CVec2 &point ) const { return rect.IsPointInside( point ); }
-	virtual const WORD GetDir() const { return GetDirectionByVector( rect.dir ); }
+	virtual const uint16_t GetDir() const { return GetDirectionByVector( rect.dir ); }
 
 	virtual const float GetHitPoints() const { return pStats->fMaxHP; }
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
@@ -100,7 +102,7 @@ public:
 	virtual bool IsContainer() const { return true; }
 	virtual const int GetNDefenders() const;
 	virtual class CSoldier* GetUnit( const int n ) const;
-	virtual const BYTE GetPlayer() const;
+	virtual const uint8_t GetPlayer() const;
 
 	void Delete();
 	
@@ -175,13 +177,13 @@ class CEntrenchmentPart : public CExistingObject
 	//
 	static CVec2 GetShift( const CVec2 &vPoint, const CVec2 &vDir );
 protected:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const WORD _dir = 0 );
+	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t _dir = 0 );
 public:
 	CEntrenchmentPart() { }
 	void Init();
 	// nFrameIndex - индекс в векторе SEntrenchmentRPGStats::segments
-	CEntrenchmentPart( const SEntrenchmentRPGStats *pStats, const CVec3& center, const WORD dir, const int nFrameIndex, float fHP, int nPlayer, bool bPlayerCreates );
-	static SRect CalcBoundRect( const CVec2 & center, const WORD _dir, const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& stats);
+	CEntrenchmentPart( const SEntrenchmentRPGStats *pStats, const CVec3& center, const uint16_t dir, const int nFrameIndex, float fHP, int nPlayer, bool bPlayerCreates );
+	static SRect CalcBoundRect( const CVec2 & center, const uint16_t _dir, const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& stats);
 
 	const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& GetSegmStats() const { return pStats->segments[GetFrameIndex()]; }
 	const EEntrenchSegmType GetType() const { return pStats->segments[GetFrameIndex()].eType; }
@@ -194,7 +196,7 @@ public:
 	virtual void GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual const CVec3& GetCenter() const { return center; }
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const { return boundRect.center; }
-	virtual const WORD GetDir() const { return dir; }
+	virtual const uint16_t GetDir() const { return dir; }
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 
@@ -279,14 +281,14 @@ class CEntrenchmentTankPit : public CGivenPassabilityStObject
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pOwner); f.Add(3,&pStats); f.Add(4,&wDir); f.Add(5,&vHalfSize); f.Add(6,&boundRect); f.Add(7,&tilesToLock); return 0; }
 protected:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const WORD _dir = 0 ) { }
+	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t _dir = 0 ) { }
 public:
 	CEntrenchmentTankPit() { }
 	~CEntrenchmentTankPit();
 	// nFrameIndex - индекс в векторе SEntrenchmentRPGStats::segments
-	CEntrenchmentTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const WORD dir,const int nFrameIndex, const class CVec2 &vResizeFactor, const std::list<SObjTileInfo> &tiles, class CAIUnit *_pOwner );
+	CEntrenchmentTankPit( const SMechUnitRPGStats *pStats, const CVec3 &center, const uint16_t dir,const int nFrameIndex, const class CVec2 &vResizeFactor, const std::list<SObjTileInfo> &tiles, class CAIUnit *_pOwner );
 
-	virtual const WORD GetDir() const { return wDir; }
+	virtual const uint16_t GetDir() const { return wDir; }
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) { }
 	void GetBoundRect( SRect *pRect ) const { *pRect = boundRect; }

@@ -2,6 +2,8 @@
 
 #include "StandartSmoothPath.h"
 
+#include <cstdint>
+
 #define STANDART_SMOOTH_MECH_PATH 0x311133C2
 
 //! сглаженный путь для механических юнитов
@@ -27,16 +29,16 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 	void AddSmoothTurn();
 
 	// построить большой разворот
-	bool BuildLargeTurn( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint );
+	bool BuildLargeTurn( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint );
 	// построить серию маленьких разворотов (второй вариант, может дать более оптимальный разворот)
-	bool BuildSmallTurns( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward );
+	bool BuildSmallTurns( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward );
 	// прсото сглаженно выйти на новый угол
 	bool BuildSmoothTurn( const CVec2 &vUnitMoveDir, const bool bCheckThreshold );
 	// отехать задом, чтобы было место для маневра
 	bool RideAway();
 
-	bool CheckTurn( const WORD wNewDir );
-	WORD CheckArc( const CVec2 &vUnit, const WORD wStartAngle, const WORD wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward );
+	bool CheckTurn( const uint16_t wNewDir );
+	uint16_t CheckArc( const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward );
 	bool UpdateDirection();
 protected:
 	virtual const CVec2 MoveUnit( const NTimer::STime timeDiff, const float fSpeed );

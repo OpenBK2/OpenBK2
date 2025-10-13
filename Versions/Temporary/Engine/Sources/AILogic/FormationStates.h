@@ -6,6 +6,8 @@
 #include "StatusUpdatesHelper.h"
 #include "Stats_B2_M1/ActionNotify.h"
 
+#include <cstdint>
+
 class CBuilding;
 class CEntrenchment;
 class CAIUnit;
@@ -60,10 +62,10 @@ protected:
 	virtual class CCommonUnit* GetUnit() const;
 	
 public:
-	static IUnitState* Instance( class CFormation *pFormation, const CVec2 &guardPoint, const WORD wDir, const float fTimeToWait );
+	static IUnitState* Instance( class CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 	
 	CFormationRestState() : pFormation( 0 ) { }
-	CFormationRestState( class CFormation *pFormation, const CVec2 &guardPoint, const WORD wDir, const float fTimeToWait );
+	CFormationRestState( class CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
 	void Segment();
 	
@@ -424,10 +426,10 @@ class CFormationRotateState : public IUnitState
 	CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); return 0; }
 public:
-	static IUnitState* Instance( class CFormation *pFormation, const WORD wDir );
+	static IUnitState* Instance( class CFormation *pFormation, const uint16_t wDir );
 
 	CFormationRotateState() { }
-	CFormationRotateState( class CFormation *pFormation, const WORD wDir );
+	CFormationRotateState( class CFormation *pFormation, const uint16_t wDir );
 
 	virtual void Segment();
 
@@ -957,7 +959,7 @@ class CFormationGunCrewState : public IUnitState
 		SAIAngle wDirection;
 		//
 		SCrewAnimation() : eAction( ACTION_NOTIFY_NONE ), wDirection( 0 ) {  }
-		SCrewAnimation( EActionNotify eAction, WORD wDirection )
+		SCrewAnimation( EActionNotify eAction, uint16_t wDirection )
 			:eAction( eAction ), wDirection ( wDirection )
 		{
 		}
@@ -1054,8 +1056,8 @@ class CFormationGunCrewState : public IUnitState
 	SCrewAnimation CalcNeededAnimation( int iUnitNumber ) const;
 	SCrewAnimation CalcAniamtionForMG( int iUnitNumber ) const;
 
-	WORD CalcDirToAmmoBox( int nCrewNumber ) const;
-	WORD CalcDirFromTo( int nCrewNumberFrom, int nCrewNumberTo ) const;
+	uint16_t CalcDirToAmmoBox( int nCrewNumber ) const;
+	uint16_t CalcDirFromTo( int nCrewNumberFrom, int nCrewNumberTo ) const;
 
 	void SetAllAnimation( EActionNotify action, bool force = false );
 	void RecountPoints( const CVec2 &gunDir, const CVec2 &vTurretDir );

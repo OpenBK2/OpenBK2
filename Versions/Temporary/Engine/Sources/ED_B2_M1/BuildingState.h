@@ -4,6 +4,7 @@
 
 #include "BuildingEditor.h"
 
+#include <cstdint>
 
 //
 //
@@ -59,7 +60,7 @@ public:
 	void Leave();
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

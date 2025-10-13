@@ -29,6 +29,7 @@
 #include "GShaderFX.h"
 #include "GPostEffects.h"
 
+#include <cstdint>
 
 const int N_SKIP_IGNORED_TEST = -1;
 namespace NGScene
@@ -1335,7 +1336,7 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 		MakeSunFlareRect( sPos, sFlare, sDir, CVec2( fXSize, fYSize ), fScaleCoeff );
 		for ( int nTemp = 0; nTemp < 4; ++nTemp )
 		{
-			DWORD dwVal = 0xFF * fSunFlareCoeff;
+			uint32_t dwVal = 0xFF * fSunFlareCoeff;
 			if ( flare.bFade )
 				dwVal *= MakeSunFlareFadeCoeff( sPos[nTemp] - sHalfScreenRect, sHalfScreenRect );
 			/////
@@ -1358,7 +1359,7 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 		}
 		////
 		float fCoeff = MakeSunFlareFadeCoeff( CVec2( sSunProj.x, sSunProj.y ), sHalfScreenRect );
-		DWORD dwColor = 0xFF * fSunFlareCoeff * fCoeff;
+		uint32_t dwColor = 0xFF * fSunFlareCoeff * fCoeff;
 		NGfx::SPixel8888 sColor( dwColor, dwColor, dwColor, dwColor );
 		////
 		CVec2 sPos[4];
@@ -1849,7 +1850,7 @@ void CGScene::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 				{
 					for ( int y = 0; y < 128; ++y )
 					{
-						BYTE v1 = (rand()&127);
+						uint8_t v1 = (rand()&127);
 						lock[y][x] = NGfx::SPixel8888( v1+10, v1+50, v1+100, 0);
 					}
 				}

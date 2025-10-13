@@ -6,7 +6,9 @@
 #include "UI/UI.h"
 #include "Misc/StrProc.h"
 
-void CStatsSystem::UpdateEntry( const std::string &szName, const std::string &szEntry, const DWORD dwColor )
+#include <cstdint>
+
+void CStatsSystem::UpdateEntry( const std::string &szName, const std::string &szEntry, const uint32_t dwColor )
 {
 	IStatsSystemWindow *pStats = Singleton<IDebugSingleton>()->GetStatsWindow();
 	if ( pStats )

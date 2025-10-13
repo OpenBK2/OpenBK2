@@ -6,6 +6,8 @@
 #include "random.h"
 #include "original.h"
 
+#include <cstdint>
+
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];
 
@@ -26,7 +28,7 @@ TEST(CalcPointLightColors, CalcPointLightColorsRandom) {
         src.normal.y = random_uint8();
         src.normal.z = random_uint8();
         src.normal.w = random_uint8();
-        std::vector<WORD> posIndices;
+        std::vector<uint16_t> posIndices;
         posIndices.emplace_back(0);
         std::vector<NGfx::SCompactVector> normals;
         NGfx::SCompactVector normal;

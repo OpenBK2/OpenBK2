@@ -2,7 +2,9 @@
 #include "Commands_Actions.h"
 #include "libdb/ReportMetaInfo.h"
 
-void CUserActions::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+#include <cstdint>
+
+void CUserActions::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 //	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "actions", &actions, pThis );
 }

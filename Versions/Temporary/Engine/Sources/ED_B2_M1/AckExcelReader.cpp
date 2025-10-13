@@ -3,6 +3,8 @@
 #include <odbcinst.h> 
 #include "AckExcelReader.h"
 
+#include <cstdint>
+
 namespace NAcks
 {
 
@@ -52,8 +54,8 @@ static bool GetExcelODBCDriverName( CString *pRes )
 
 	pRes->Empty();
 	TCHAR szBuf[2001];
-	const WORD cbBufMax = 2000;
-	WORD cbBufOut;
+	const uint16_t cbBufMax = 2000;
+	uint16_t cbBufOut;
 	LPTSTR pszBuf = szBuf;
 
 	if ( SQLGetInstalledDrivers( szBuf, cbBufMax, &cbBufOut ) )

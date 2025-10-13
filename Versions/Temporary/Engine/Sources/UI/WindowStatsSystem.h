@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Window.h"
+
+#include <cstdint>
 
 struct ISound;
 
@@ -9,13 +12,13 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 	struct SColorString
 	{
 		std::wstring szString;
-		DWORD dwColor;
+		uint32_t dwColor;
 		CPtr<IML> pGfxText;
 
-		void Init( const wchar_t *pszStr, DWORD col, const int nWidth );
-		void SetText( const wchar_t *pszStr, DWORD col, const int nWidth );
+		void Init( const wchar_t *pszStr, uint32_t col, const int nWidth );
+		void SetText( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		SColorString() : dwColor( 0xffffffff ) {  }
-		SColorString( const wchar_t *pszStr, DWORD col, const int nWidth );
+		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		int operator&( IBinSaver &saver );
 	};
 
@@ -29,7 +32,7 @@ public:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const DWORD dwColor );
+	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor );
 	void Visit( struct IUIVisitor *pVisitor );
 
 	int operator&( IBinSaver &saver )
@@ -41,5 +44,3 @@ public:
 		return 0;
 	}
 };
-
-

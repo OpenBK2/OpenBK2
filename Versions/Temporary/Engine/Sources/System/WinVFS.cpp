@@ -9,6 +9,8 @@
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
 
+#include <cstdint>
+
 static NWin32Helper::CCriticalSection g_WinVFSCriticalSection;
 namespace NVFS
 {
@@ -163,7 +165,7 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 			if ( zip.GetFileLen( i ) <= 0 )
 				continue;
 			// add this entry
-			const DWORD dwCheckTime = zip.GetModDateTime( i );
+			const uint32_t dwCheckTime = zip.GetModDateTime( i );
 			NFile::CFilePath szFileName;
 			zip.GetFileName( i, &szFileName );
 			NStr::ReplaceAllChars( &szFileName, '/', '\\' );
@@ -250,14 +252,14 @@ CDataStream* CWinVFS::OpenFile( const std::string &szPath )
 	return OpenFileDirect( szPath );
 }
 
-static DWORD dwLastProfilerSegment = 0;
+static uint32_t dwLastProfilerSegment = 0;
 static float fBigTimeForLoad = 0.0f;
 static int nCallsNumber = 0;
 
 class CProfiler
 {
 	const std::string szPath;
-	const DWORD dwStartTime;
+	const uint32_t dwStartTime;
 public:
 	CProfiler( const std::string &_szPath ) : szPath( szPath ), dwStartTime( GetTickCount() ) { }
 	~CProfiler()
@@ -273,7 +275,7 @@ public:
 
 void VFSSegmentProfiler()
 {
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
 		if ( fBigTimeForLoad != 0.0f )

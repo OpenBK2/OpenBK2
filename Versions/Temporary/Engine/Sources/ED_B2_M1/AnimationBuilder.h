@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "mapeditorlib/interface_commandhandler.h"
 #include "MapEditorLib/BuildDataBuilder.h"
 
@@ -14,14 +16,14 @@ class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback,
 	bool UpdateAminations( const string &rszAnimationFolder );
 protected:
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	// IBuildDataCallback
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
 	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
 
 	// methods
-	DWORD GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
+	uint32_t GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
 };
 
 

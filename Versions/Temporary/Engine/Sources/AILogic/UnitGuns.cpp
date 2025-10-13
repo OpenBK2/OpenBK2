@@ -7,6 +7,8 @@
 #include "PathFinder.h"
 #include "Weather.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 extern CWeather theWeather;
 
@@ -89,14 +91,14 @@ void CUnitGuns::Segment()
 		guns[i]->Segment();
 }
 
-void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const WORD wWillPower, CTurret *pTurret, CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const
+void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const uint16_t wWillPower, CTurret *pTurret, CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const
 {
 	*pTimeToTurn = 0;
 	// нужно учесть время на развороты
 	if ( pOwner->CanRotate() && ( !bIsEnemyInFireRange || pTurret == 0 ) )
 	{
-		const WORD finishToEnemyDir = GetDirectionByVector( (pEnemy->GetCenterTile() - finishTile).ToCVec2() );
-		const WORD dirsDiff( DirsDifference( pOwner->GetDirection(), finishToEnemyDir ) );
+		const uint16_t finishToEnemyDir = GetDirectionByVector( (pEnemy->GetCenterTile() - finishTile).ToCVec2() );
+		const uint16_t dirsDiff( DirsDifference( pOwner->GetDirection(), finishToEnemyDir ) );
 
 		if ( dirsDiff > wWillPower )
 			*pTimeToTurn = dirsDiff / pOwner->GetTurnSpeed();
@@ -104,19 +106,19 @@ void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const WORD wWillPower, CTurret 
 
 	if ( pTurret != 0 )
 	{
-		WORD startAngle = pTurret->GetHorCurAngle() + pOwner->GetFrontDirection();
+		uint16_t startAngle = pTurret->GetHorCurAngle() + pOwner->GetFrontDirection();
 
-		WORD finalAngle;
+		uint16_t finalAngle;
 		if ( !bIsEnemyInFireRange )
 			finalAngle = GetDirectionByVector( (pEnemy->GetCenterTile() - finishTile).ToCVec2() );
 		else
 			finalAngle = GetDirectionByVector( (pEnemy->GetCenterTile() - pOwner->GetCenterTile()).ToCVec2() );
 
-		const WORD dirsDiff = DirsDifference( finalAngle, startAngle );
+		const uint16_t dirsDiff = DirsDifference( finalAngle, startAngle );
 
 		if ( dirsDiff > wWillPower )
 		{
-			const WORD wHorizontalRotationSpeed = pTurret->GetHorRotateSpeed();
+			const uint16_t wHorizontalRotationSpeed = pTurret->GetHorRotateSpeed();
 			NI_ASSERT( wHorizontalRotationSpeed != 0, StrFmt("horizontal rotation speed == 0 for \"%s\"", pOwner->GetStats()->szKeyName.c_str()) );
 			*pTimeToTurn += DirsDifference( startAngle, finalAngle ) / wHorizontalRotationSpeed;
 		}

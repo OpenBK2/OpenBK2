@@ -9,6 +9,8 @@
 #include "DBSound.h"
 #include "DBSoundDesc.h"
 
+#include <cstdint>
+
 class CSoundCell;
 class CSound;
 namespace NDb
@@ -57,7 +59,7 @@ private:
 	enum ESoundSceneMode eSoundSceneMode;
 	bool bMapInitted;
 	CFreeIds freeIDs;											// таблица ID звуков
-	typedef std::unordered_map< WORD, SIntThree > CSoundIDs;
+	typedef std::unordered_map< uint16_t, SIntThree > CSoundIDs;
 	CSoundIDs soundIDs;			// в какой клетке находится звук.
 
 	CPtr<ISFX> pSFX;
@@ -130,7 +132,7 @@ public:
 
 	// если начался или идет бой - то вызывать эу функцию
 	void MuteTerrain( const bool bMute );
-	WORD AddSound( 	const NDb::SComplexSoundDesc *pStats,
+	uint16_t AddSound( 	const NDb::SComplexSoundDesc *pStats,
 		const CVec3 &vPos,
 		const enum ESoundMixType eMixMode,
 		const enum ESoundAddMode eAddMode,
@@ -138,17 +140,17 @@ public:
 		int nVolumeType );
 
 	//удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const WORD wID );
+	void RemoveSound( const uint16_t wID );
 	// задает новую позицию звуку.
-	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const WORD wID ) const;
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
+	bool IsSoundFinished( const uint16_t wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
 
 	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
 	enum ESoundSceneMode GetMode() const { return eSoundSceneMode; };
 
-	WORD AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const WORD	wInstanceID );
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
+	void RemoveSoundFromMap( const uint16_t	wInstanceID );
 	void ClearSounds();
 };
 
@@ -197,24 +199,24 @@ public:
 	// must be called when new terrain was loaded
 	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
 
-	WORD AddSound( 	const NDb::SComplexSoundDesc *pStats,
+	uint16_t AddSound( 	const NDb::SComplexSoundDesc *pStats,
 		const CVec3 &vPos,
 		const enum ESoundMixType eMixMode,
 		const enum ESoundAddMode eAddMode,
 		const unsigned int nTimeAfterStart,
 		int nVolumeType );
 	// удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const WORD wID );
+	void RemoveSound( const uint16_t wID );
 	// задает новую позицию звуку.
-	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const WORD wID ) const;
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
+	bool IsSoundFinished( const uint16_t wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
 
 	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
 	enum ESoundSceneMode GetMode() const;
 
-	WORD AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const WORD	wInstanceID );
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
+	void RemoveSoundFromMap( const uint16_t	wInstanceID );
 	void ClearSounds();
 };
 
@@ -228,7 +230,7 @@ class CSoundScene : public ISoundScene
 	ESoundSceneMode eMode;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScene); f.Add(3,&eMode); return 0; }
 
-	typedef std::unordered_map<WORD, CDGPtr<CFuncBase<CVec3>, CPtr<CFuncBase<CVec3> > > > CDynamicSoundsMap;
+	typedef std::unordered_map<uint16_t, CDGPtr<CFuncBase<CVec3>, CPtr<CFuncBase<CVec3> > > > CDynamicSoundsMap;
 	CDynamicSoundsMap dynamicSounds;
 
 public:
@@ -241,14 +243,14 @@ public:
 	// must be called when new terrain was loaded
 	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
 
-	WORD AddSound( 	const NDb::SComplexSoundDesc *pStats,
+	uint16_t AddSound( 	const NDb::SComplexSoundDesc *pStats,
 		const CVec3 &vPos,
 		const enum ESoundMixType eMixMode,
 		const enum ESoundAddMode eAddMode,
 		const unsigned int nTimeAfterStart,
 		int nVolumeType );
 
-	WORD AddSound( 	const NDb::SComplexSoundDesc *pStats,
+	uint16_t AddSound( 	const NDb::SComplexSoundDesc *pStats,
 		CFuncBase<CVec3> *pPos, // AI pixels
 		const enum ESoundMixType eMixMode,
 		const enum ESoundAddMode eAddMode,
@@ -256,17 +258,17 @@ public:
 		int nVolumeType );
 
 	//удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const WORD wID );
+	void RemoveSound( const uint16_t wID );
 	// задает новую позицию звуку.
-	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const WORD wID ) const;
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
+	bool IsSoundFinished( const uint16_t wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
 
 	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
 	enum ESoundSceneMode GetMode() const;
 
-	WORD AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const WORD	wInstanceID );
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
+	void RemoveSoundFromMap( const uint16_t	wInstanceID );
 	void ClearSounds();
 	
 	static bool Is3D();

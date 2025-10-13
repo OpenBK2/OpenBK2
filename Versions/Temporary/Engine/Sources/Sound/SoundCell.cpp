@@ -3,6 +3,8 @@
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x110793C2, CSoundCell );
 
 //*******************************************************************
@@ -56,7 +58,7 @@ void CSoundCell::AddSound( class CSound *pSound )
 
 }
 
-void CSoundCell::RemoveSound( const WORD wID, ISFX * pSFX )
+void CSoundCell::RemoveSound( const uint16_t wID, ISFX * pSFX )
 {
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end();  )
 	{
@@ -74,7 +76,7 @@ void CSoundCell::RemoveSound( const WORD wID, ISFX * pSFX )
 	NI_ASSERT( false, "not present" );
 }
 
-const CSound * CSoundCell::GetSound( const WORD wID ) const
+const CSound * CSoundCell::GetSound( const uint16_t wID ) const
 {
 	for ( CSounds::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
@@ -84,7 +86,7 @@ const CSound * CSoundCell::GetSound( const WORD wID ) const
 	return 0;
 }
 
-CSound * CSoundCell::GetSound( const WORD wID )
+CSound * CSoundCell::GetSound( const uint16_t wID )
 {
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{

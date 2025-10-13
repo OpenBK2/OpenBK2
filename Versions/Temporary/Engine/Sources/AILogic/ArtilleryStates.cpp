@@ -22,6 +22,8 @@
 // for profiling
 #include "TimeCounter.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4D5, CArtilleryAttackState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4D6, CArtilleryAttackCommonStatObjState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4D7, CArtilleryRestState );
@@ -1774,12 +1776,12 @@ const CVec2 CArtilleryAttackCommonStatObjState::GetPurposePoint() const
 //*												CArtilleryRestState												*
 //*******************************************************************
 
-IUnitState* CArtilleryRestState::Instance( CArtillery *pArtillery, const CVec2 &guardPoint, const WORD _wDir, const float _fTimeToWait )
+IUnitState* CArtilleryRestState::Instance( CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t _wDir, const float _fTimeToWait )
 {
 	return new CArtilleryRestState( pArtillery, guardPoint, _wDir, _fTimeToWait );
 }
 
-CArtilleryRestState::CArtilleryRestState( CArtillery *_pArtillery, const CVec2 &guardPoint, const WORD _wDir, const float _fTimeToWait  )
+CArtilleryRestState::CArtilleryRestState( CArtillery *_pArtillery, const CVec2 &guardPoint, const uint16_t _wDir, const float _fTimeToWait  )
 : pArtillery( _pArtillery ), CMechUnitRestState( _pArtillery, guardPoint, _wDir, 0, _fTimeToWait )
 {
 	pArtillery->Stop();

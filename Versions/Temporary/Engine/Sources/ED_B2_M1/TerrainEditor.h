@@ -5,6 +5,7 @@
 #include "MapEditorLib/DefaultView.h"
 #include "TerrainState.h"
 
+#include <cstdint>
 
 class CTerrainEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
@@ -34,7 +35,7 @@ public:
 	void Redo( IController* pController ) {}
 	
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData ) { return false; }
+	bool HandleCommand( UINT nCommandID, uint32_t dwData ) { return false; }
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 };
 

@@ -2,6 +2,8 @@
 
 #include "InteractiveProcess.h"
 
+#include <cstdint>
+
 namespace
 {
 	const int PIPE_BUFSIZE = 4096;
@@ -395,7 +397,7 @@ bool CInteractiveProcess::Execute( const string &szScript, const string &szRespo
 		if( pszErrorMessage->empty() )
 			GetErrorMessage( pszErrorMessage, GetLastError() );
 
-		DWORD nTimeout = 500;
+		uint32_t nTimeout = 500;
 		switch ( ::WaitForSingleObject( procInfo.hProcess, nTimeout ) )
 		{
 			case WAIT_OBJECT_0: // external process have been already terminated

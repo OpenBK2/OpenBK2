@@ -253,7 +253,7 @@ static void LimitInterfaceFrameRate( bool bActive )
 	while ( nElapsedTicks < nFrameTicks )
 	{
 		const LONGLONG nTicksLeft = nFrameTicks - nElapsedTicks;
-		const DWORD nSleepMS = DWORD( nTicksLeft * 1000 / frequency.QuadPart );
+		const uint32_t nSleepMS = uint32_t( nTicksLeft * 1000 / frequency.QuadPart );
 		if ( nSleepMS > 1 )
 			Sleep( nSleepMS - 1 );
 		else

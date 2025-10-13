@@ -13,6 +13,8 @@
 #include "pciids/gpus.h"
 #include "pciids/cards.h"
 
+#include <cstdint>
+
 namespace NGfx
 {
 extern SRenderTargetsInfo rtInfo;
@@ -85,7 +87,7 @@ static const SPShader *pCurrentPixelShader;
 const int N_RENDER_STATES = 210;
 const int N_TSS_STATES = 33;
 const int N_SAMPLER_STATES = 14;
-static DWORD renderStates[210], tssStates[8][33], samplerStates[8][14];
+static uint32_t renderStates[210], tssStates[8][33], samplerStates[8][14];
 static std::vector<CMObj<CQuery> > queries;
 static bool bDoesSupportOcclusionQueries = false, bDoesSupportEventQueries = false;
 static std::deque<CObj<IQuery> > lagQueries;
@@ -217,7 +219,7 @@ void ReduceHWLag()
 //	{0, 16, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 //	D3DDECL_END()
 //};
-/*static DWORD dwVecTC[] = {
+/*static uint32_t dwVecTC[] = {
 	D3DVSD_STREAM(0),
 	D3DVSD_REG(0, D3DVSDT_FLOAT3),
 	D3DVSD_REG(2, D3DVSDT_D3DCOLOR),
@@ -232,7 +234,7 @@ static D3DVERTEXELEMENT9 dwVecT2C1[] =
 	{0, 24, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1},
 	D3DDECL_END()
 };
-/*static DWORD dwVecNT[] = {
+/*static uint32_t dwVecNT[] = {
 	D3DVSD_STREAM(0),
 	D3DVSD_REG(0, D3DVSDT_FLOAT3),
 	D3DVSD_REG(1, D3DVSDT_FLOAT3),
@@ -249,7 +251,7 @@ static D3DVERTEXELEMENT9 dwVecFull[] =
 	{0, 28, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 1 },
 	D3DDECL_END()
 };
-/*static DWORD dwVecFull[] = {
+/*static uint32_t dwVecFull[] = {
 	D3DVSD_STREAM(0),
 	D3DVSD_REG(0, D3DVSDT_FLOAT3),
 	D3DVSD_REG(1, D3DVSDT_D3DCOLOR),
@@ -269,7 +271,7 @@ SGeomFormatInfo geometryFormatInfo[6] =
 	{ SGeomVecFull::ID, sizeof(SGeomVecFull), dwVecFull, 0 }
 };
 
-static void ApplyRenderState( D3DRENDERSTATETYPE state, DWORD dwVal )
+static void ApplyRenderState( D3DRENDERSTATETYPE state, uint32_t dwVal )
 {
 	ASSERT( state >= 0 && state <= N_RENDER_STATES );
 	if ( renderStates[state] != dwVal )
@@ -279,7 +281,7 @@ static void ApplyRenderState( D3DRENDERSTATETYPE state, DWORD dwVal )
 	}
 }
 
-static void ApplyRenderState( int nStage, D3DTEXTURESTAGESTATETYPE state, DWORD dwVal )
+static void ApplyRenderState( int nStage, D3DTEXTURESTAGESTATETYPE state, uint32_t dwVal )
 {
 	ASSERT( state >= 0 && state <= N_TSS_STATES );
 	if ( tssStates[nStage][state] != dwVal )
@@ -289,7 +291,7 @@ static void ApplyRenderState( int nStage, D3DTEXTURESTAGESTATETYPE state, DWORD 
 	}
 }
 
-static void ApplySamplerState( int nStage, D3DSAMPLERSTATETYPE state, DWORD dwVal )
+static void ApplySamplerState( int nStage, D3DSAMPLERSTATETYPE state, uint32_t dwVal )
 {
 	ASSERT( state >= 0 && state <= N_SAMPLER_STATES );
 	if ( samplerStates[nStage][state] != dwVal )
@@ -323,7 +325,7 @@ static void SetPSConst( int nReg, const CVec4 *pData, int nSize )
 	else
 	{
 		ASSERT( nReg == 0 && nSize == 1 );
-		DWORD dwColor = GetDWORDColor( pData[0] );
+		uint32_t dwColor = GetDWORDColor( pData[0] );
 		ApplyRenderState( D3DRS_TEXTUREFACTOR, dwColor );
 	}
 }
@@ -357,7 +359,7 @@ static void SetVertexShader( CGeometry *pVB, int nShaderID )
 		if ( nFormatID != nLastUsedVDeclaration )
 		{
 			nLastUsedVDeclaration = nFormatID;
-			DWORD dwFVF = geometryFormatInfo[nFormatID].dwFVF;
+			uint32_t dwFVF = geometryFormatInfo[nFormatID].dwFVF;
 			pDevice->SetFVF( dwFVF );
 		}
 		if ( nLastUsedVShader != nShaderID )
@@ -709,7 +711,7 @@ static void Apply( const ECullMode &cull )
 template<>
 static void Apply( const EColorWriteMask &colorMode )
 {
-	DWORD dwFlags = 
+	uint32_t dwFlags =
 		(( colorMode & COLORWRITE_RED ) ? D3DCOLORWRITEENABLE_RED : 0) |
 		(( colorMode & COLORWRITE_GREEN ) ? D3DCOLORWRITEENABLE_GREEN : 0) |
 		(( colorMode & COLORWRITE_BLUE ) ? D3DCOLORWRITEENABLE_BLUE : 0) |
@@ -737,8 +739,8 @@ static void Apply( const SFogParams &fog )
 	nFogModeColor = GetDWORDColor( CVec4( fog.vColor, 1 ) );
 
 	//ApplyRenderState( D3DRS_FOGTABLEMODE, D3DFOG_LINEAR );
-	//ApplyRenderState( D3DRS_FOGSTART, *(DWORD *)(&pFog->fMinDist) );
-	//ApplyRenderState( D3DRS_FOGEND,   *(DWORD *)(&pFog->fMaxDist) );
+	//ApplyRenderState( D3DRS_FOGSTART, *(uint32_t *)(&pFog->fMinDist) );
+	//ApplyRenderState( D3DRS_FOGEND,   *(uint32_t *)(&pFog->fMaxDist) );
 
 	ApplyRenderState( D3DRS_FOGTABLEMODE, D3DFOG_NONE );
 	ApplyRenderState( D3DRS_FOGVERTEXMODE, D3DFOG_NONE );
@@ -1107,7 +1109,7 @@ void CRenderContext::ApplyRenderTarget() const
 	}
 }
 
-void CRenderContext::ClearTarget( DWORD dwColor )
+void CRenderContext::ClearTarget( uint32_t dwColor )
 {
 	ASSERT( pOutstandingStream == 0 );
 	HRESULT hr;
@@ -1116,12 +1118,12 @@ void CRenderContext::ClearTarget( DWORD dwColor )
 	ASSERT( D3D_OK == hr );
 }
 
-void CRenderContext::ClearBuffers( DWORD dwColor )
+void CRenderContext::ClearBuffers( uint32_t dwColor )
 {
 	ASSERT( pOutstandingStream == 0 );
 	HRESULT hr;
 	Use();
-	DWORD dwFlags = b16BitMode ? D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER : D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
+	uint32_t dwFlags = b16BitMode ? D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER : D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
 	hr = pDevice->Clear( 0, 0, dwFlags, dwColor, 1, 0 );
 	ASSERT( D3D_OK == hr );
 }
@@ -1131,7 +1133,7 @@ void CRenderContext::ClearZBuffer()
 	ASSERT( pOutstandingStream == 0 );
 	HRESULT hr;
 	Use();
-	DWORD dwFlags = b16BitMode ? D3DCLEAR_ZBUFFER : D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
+	uint32_t dwFlags = b16BitMode ? D3DCLEAR_ZBUFFER : D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
 	hr = pDevice->Clear( 0, 0, dwFlags, 0, 1, 0 );
 	ASSERT( D3D_OK == hr );
 }
@@ -1324,7 +1326,7 @@ void CRenderContext::Use() const
 static void DoValidateDevice( int nPID, int nVID )
 {
 	HRESULT hr;
-	DWORD dwPasses;
+	unsigned long dwPasses;
 	hr = pDevice->ValidateDevice( &dwPasses );
 	char szBuf[1024];
 	sprintf( szBuf, "D3D validate device failed ps = %d,  vs = %d", nPID, nVID );
@@ -1343,7 +1345,7 @@ static void SetVertexShader( CGeometry *pVB, CVertexShader *pVShader )
 			return;
 
 		nLastUsedVDeclaration = nFormatID;
-		DWORD dwFVF = geometryFormatInfo[nFormatID].dwFVF;
+		uint32_t dwFVF = geometryFormatInfo[nFormatID].dwFVF;
 		pDevice->SetFVF( dwFVF );
 		pDevice->SetRenderState( D3DRS_LIGHTING, (dwFVF & D3DFVF_DIFFUSE) ? FALSE : TRUE );
 		return;
@@ -1599,7 +1601,7 @@ static void InitTextureStage( int n )
 	pDevice->SetSamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
 
 	float fMipBias = 0;//-1;
-	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, *(DWORD*)&fMipBias );
+	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, *(uint32_t*)&fMipBias );
 	lastUsedAddressMode[n] = CLAMP;
 	TSFilterMode[n] = FILTER_BEST;
 	pDevice->SetSamplerState( n, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
@@ -1620,7 +1622,7 @@ static void InitStateBlocks()
 		for ( int k = 0; k < std::size(psAllShaders); ++k )
 		{
 			const SPShader &sha = *psAllShaders[k];
-			DWORD *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
+			unsigned long *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
 			if ( bHardwarePixelShaders14 && sha.pShader14 != 0 )
 				pShader = sha.pShader14;
 			if ( bHardwarePixelShaders20a && pShader == 0 )
@@ -1645,7 +1647,7 @@ static void InitStateBlocks()
 		for ( int k = 0; k < std::size(vsAllShaders); ++k )
 		{
 			const SVShader &sha = *vsAllShaders[k];
-			DWORD *pShader = sha.pShader11;
+			unsigned long *pShader = sha.pShader11;
 			if ( !pShader )
 				continue;
 			HRESULT hr;

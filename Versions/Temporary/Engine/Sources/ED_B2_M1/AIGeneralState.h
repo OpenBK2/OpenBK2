@@ -4,6 +4,7 @@
 
 #include "MapInfoEditor.h"
 
+#include <cstdint>
 
 //
 //
@@ -42,7 +43,7 @@ public:
 	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	void GetDataFromDB();

@@ -12,6 +12,8 @@
 #include "ED_B2_M1Dll.h"
 #include "VSOWindow.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const char CVSOWindow::FILTER_TYPE[] = "VSO";
@@ -374,7 +376,7 @@ void CVSOWindow::UpdateSelection()
 							//
 							ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 							pCommandHandlerContainer->Set( CHID_OBJECT_STORAGE, this );
-							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_MULTI_STATE, ID_MIVSO_SWITCH_MULTI_STATE, reinterpret_cast<DWORD>( &( selectedObjectListElement.szObjectTypeName ) ) );	
+							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_MULTI_STATE, ID_MIVSO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( selectedObjectListElement.szObjectTypeName ) ) );
 							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_STATE, ID_MIVSO_SWITCH_ADD_STATE, 0 );	
 						}
 					}
@@ -405,7 +407,7 @@ void CVSOWindow::EnableHeight( bool bEnableHeight )
 }
 
 
-bool CVSOWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CVSOWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -467,7 +469,7 @@ bool CVSOWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 				pObjectManipulator = pMultiManipulator;
 			}
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<DWORD>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->SetViewManipulator( pObjectManipulator, objectSet, string() );

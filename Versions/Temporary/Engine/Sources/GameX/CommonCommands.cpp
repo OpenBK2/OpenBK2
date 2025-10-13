@@ -7,6 +7,8 @@
 #include "AILogic/B2AI.h"
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 // ************************************************************************************************************************ //
 // **
 // ** CControlSumCheckCommand
@@ -16,21 +18,21 @@
 // ************************************************************************************************************************ //
 
 std::vector< std::list<unsigned long> > CControlSumCheckCommand::checkSums;
-WORD CControlSumCheckCommand::wMask;
+uint16_t CControlSumCheckCommand::wMask;
 
 void CControlSumCheckCommand::Execute()
 {
 	checkSums[nPlayer].push_back( ulCheckSum );
 }
 
-void CControlSumCheckCommand::Init( const WORD _wMask )
+void CControlSumCheckCommand::Init( const uint16_t _wMask )
 {
 	checkSums.clear();
 	checkSums.resize( 16 );
 	wMask = _wMask;
 }
 
-void CControlSumCheckCommand::SetMask( const WORD _wMask )
+void CControlSumCheckCommand::SetMask( const uint16_t _wMask )
 {
 	wMask = _wMask;
 }
@@ -137,7 +139,7 @@ int CControlSumCheckCommand::operator&( IBinSaver &saver )
 // ************************************************************************************************************************ //
 
 CArray2D<unsigned long> CControlSumHistoryCommand::checkSums;
-WORD CControlSumHistoryCommand::wMask;
+uint16_t CControlSumHistoryCommand::wMask;
 
 static const int nHistoryLength = 20;
 static const int nHistoryTolerance = 5;
@@ -147,14 +149,14 @@ void CControlSumHistoryCommand::Execute()
 	checkSums[nPlayer][nSegment % nHistoryLength] = ulCheckSum;
 }
 
-void CControlSumHistoryCommand::Init( const WORD _wMask )
+void CControlSumHistoryCommand::Init( const uint16_t _wMask )
 {
 	checkSums.Clear();
 	checkSums.SetSizes( nHistoryLength, 16 );
 	wMask = _wMask;
 }
 
-void CControlSumHistoryCommand::SetMask( const WORD _wMask )
+void CControlSumHistoryCommand::SetMask( const uint16_t _wMask )
 {
 	wMask = _wMask;
 }

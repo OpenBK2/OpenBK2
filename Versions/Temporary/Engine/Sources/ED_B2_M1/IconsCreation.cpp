@@ -24,6 +24,8 @@
 
 #include "SceneB2/Camera.h"
 
+#include <cstdint>
+
 const int N_ICONS_SIZE_X = 42;
 const int N_ICONS_SIZE_Y = 42;
 const int N_TARGET_SIZE_X = 512;
@@ -70,7 +72,7 @@ static bool WriteTGA( const string &szFileName, const CArray2D<NGfx::SPixel8888>
 	int nStartX = ( texture.GetSizeX() - nIconSizeX ) / 2;
 	int nStartY = ( texture.GetSizeY() - nIconSizeY ) / 2;
 
-	CArray2D<DWORD> image;
+	CArray2D<uint32_t> image;
 	image.SetSizes( nIconSizeX, nIconSizeY );
 
 	for ( int iX = 0; iX < nIconSizeX; ++iX )

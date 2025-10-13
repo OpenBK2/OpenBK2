@@ -1,9 +1,10 @@
-
 #pragma once
+
 #include "Window.h"
 #include "GBinkPlayer.h"
 #include "System/Dg.h"
 
+#include <cstdint>
 
 class CWindowPlayer : public CWindow, public IPlayer
 {
@@ -33,7 +34,7 @@ class CWindowPlayer : public CWindow, public IPlayer
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 	
-	DWORD GetSceneFlags();
+	uint32_t GetSceneFlags();
 	void UpdatePlayer();
 public:
 	int operator&( IBinSaver &saver );

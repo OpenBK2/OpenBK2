@@ -3,11 +3,13 @@
 #include "MeasureTimer.h"
 #include "libdb/ObjMan.h"
 
+#include <cstdint>
+
 namespace NTest
 {
 
-DWORD flags1[2] = { 0x0f0f0f0f, 0xf0f0f0f0 };
-DWORD flags2[2] = { 0x11223344, 0x55667788 };
+uint32_t flags1[2] = { 0x0f0f0f0f, 0xf0f0f0f0 };
+uint32_t flags2[2] = { 0x11223344, 0x55667788 };
 // {51A5BCA0-B663-41a7-8DED-0673AD1C7F60}
 static const GUID guid1 = { 0x51a5bca0, 0xb663, 0x41a7, { 0x8d, 0xed, 0x06, 0x73, 0xad, 0x1c, 0x7f, 0x60 } };
 // {A86000C4-9F09-4241-AA78-F9DA96F3D897}

@@ -5,6 +5,8 @@
 #include "ScenarioTracker.h"
 #include "Misc/HashFuncs.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 struct IScriptWrapper;
@@ -305,7 +307,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		CReinforcementXPs experience;
 		CReinforcementLevels reinfLevels;
 		CReinforcementLevels leaderLevels;
-		ZSKIP //DWORD dwColor;
+		ZSKIP //uint32_t dwColor;
 		ZSKIP //CDBPtr<NDb::SBackground> pUnitFullInfoColor;
 		SPlayerColor playerColor;
 		int nReinforcementCallsUsed;

@@ -3,6 +3,8 @@
 #include "SFX.h"
 #include "ITerrainSounds.h"
 
+#include <cstdint>
+
 // для звуков, исходящих от Terrain и от протяженных объектов.
 class CTerrainSounds
 {
@@ -35,7 +37,7 @@ public:
 		NTimer::STime timeRestart;				//time when sound must be restarted
 		bool bMustPlay;
 		bool bNeedUpdate;
-		WORD wSound;
+		uint16_t wSound;
 	public:
 		CTerrainSound() : fVolume ( 0.0f ), fPan ( 0.0f ), 
 			bMustPlay( false ),
@@ -64,7 +66,7 @@ private:
 	CPtr<ISFX> pSFX;
 	CVec3 vListener;									//to determine weather coordinates changed
 	// for every terrain there will be separate sound
-	typedef std::unordered_map< BYTE, CTerrainSound > CSounds;
+	typedef std::unordered_map< uint8_t, CTerrainSound > CSounds;
 	CSounds terrainSounds;
 	CPtr<ITerrainSounds> pTerrain;						// to get terrain sounds
 	NTimer::STime lastUpdateTime;

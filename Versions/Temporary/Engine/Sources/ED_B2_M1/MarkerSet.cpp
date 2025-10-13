@@ -6,6 +6,8 @@
 #include "MarkerSet.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 //
@@ -66,7 +68,7 @@ void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points
 	vector<CVec3> polyline;
 	polyline.resize( points.size() * 2 );
 
-	vector<WORD> indices;
+	vector<uint16_t> indices;
 	indices.resize( points.size() * 2 );
 
 	int k = 0;

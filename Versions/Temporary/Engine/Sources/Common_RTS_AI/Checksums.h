@@ -2,6 +2,8 @@
 
 #include "Common_RTS_AI_export.h"
 
+#include <cstdint>
+
 #include <zlib.h>
 
 namespace NCheckSums
@@ -9,7 +11,7 @@ namespace NCheckSums
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SCheckSumBufferStorage
 	{
-		std::vector<BYTE> buf;
+		std::vector<uint8_t> buf;
 		int nCnt;
 		//
 		SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {  }
@@ -62,13 +64,13 @@ namespace NCheckSums
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	inline const uLong GetCRC( const uLong newCheckSum, const uLong oldCheckSum )
 	{
-		static union { uLong checkSum; BYTE array[ sizeof(uLong) ]; };
+		static union { uLong checkSum; uint8_t array[ sizeof(uLong) ]; };
 		checkSum = oldCheckSum;
 		return crc32( newCheckSum, array, sizeof(uLong) );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
-COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const DWORD segmentTime );
+COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const uint32_t segmentTime );
 
 
 

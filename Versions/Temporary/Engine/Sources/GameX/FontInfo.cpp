@@ -2,21 +2,23 @@
 #include "FontInfo.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 namespace NFontGen
 {
 
-WORD CFontInfo::Translate( WORD code ) const
+uint16_t CFontInfo::Translate( uint16_t code ) const
 {
-	std::unordered_map<WORD, WORD>::const_iterator pos = translate.find( code );
+	std::unordered_map<uint16_t, uint16_t>::const_iterator pos = translate.find( code );
 	return pos != translate.end() ? pos->second : 0xffff;
 }
 
-inline bool IsFit( const TEXTMETRIC &tm, DWORD dwNumChars, DWORD dwSizeX, DWORD dwSizeY )
+inline bool IsFit( const TEXTMETRIC &tm, uint32_t dwNumChars, uint32_t dwSizeX, uint32_t dwSizeY )
 {
 	return ( dwSizeX / (tm.tmAveCharWidth + 2) ) * ( dwSizeY / tm.tmHeight ) >= dwNumChars;
 }
 
-bool CFontInfo::EstimateTextureSize( DWORD dwNumChars )
+bool CFontInfo::EstimateTextureSize( uint32_t dwNumChars )
 {
 	// texture sizes from 64 (1<<6) to 2048 (1<<12)
 	for ( int i = 6; i < 13; ++i )
@@ -45,7 +47,7 @@ struct SKerningPairZeroFunctional
 	bool operator()( const KERNINGPAIR &kp ) const { return kp.iKernAmount == 0; } 
 };
 //
-bool CFontInfo::MeasureFont( HDC hdc, std::vector<WORD> *pChars )
+bool CFontInfo::MeasureFont( HDC hdc, std::vector<uint16_t> *pChars )
 {
 	::GetTextMetrics( hdc, &tm );
 	sort( pChars->begin(), pChars->end() );
@@ -121,7 +123,7 @@ static bool IsWinXPOrLater()
 	return (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && ( osvi.dwMajorVersion > 4 ) && ( osvi.dwMinorVersion > 0 );
 }
 
-bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<WORD> *pChars, HWND hWnd )
+bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<uint16_t> *pChars, HWND hWnd )
 {
 	source = _source;
 	if ( hFont )
@@ -129,7 +131,7 @@ bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<WORD> *p
 		DeleteObject( hFont ); 
 		hFont = 0;
 	}
-	const DWORD dwQuality = source.bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY;
+	const uint32_t dwQuality = source.bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY;
 	hFont = ::CreateFont( source.nHeight, 0, 0, 0, source.nWeight, source.bItalic, FALSE, FALSE, 
 		source.dwCharSet, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, 
 		dwQuality, source.dwPitch, source.szFaceName.c_str() );
@@ -147,7 +149,7 @@ bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<WORD> *p
 	// translate MBCS chars to UNICODE and re-map kerns and chars
 	{
 		CHARSETINFO cs;
-		BOOL bRetVal = TranslateCharsetInfo( (DWORD*)source.dwCharSet, &cs, TCI_SRCCHARSET );
+		BOOL bRetVal = TranslateCharsetInfo( (unsigned long*)source.dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
 		NStr::SetCodePage( cs.ciACP );
 		// form string

@@ -2,6 +2,8 @@
 
 #include "Tree_GDBBrowserBase.h"
 
+#include <cstdint>
+
 #define GDB_BROWSER_CBN_SELCHANGE 0
 
 
@@ -47,7 +49,7 @@ public:
 		{
 			pwndNewTab = new TTAB( false, false, nGDBBrowserID );
 
-			DWORD dwStyle = TVS_SHOWSELALWAYS |
+			uint32_t dwStyle = TVS_SHOWSELALWAYS |
 											TVS_HASBUTTONS |
 											TVS_LINESATROOT |
 											TVS_HASLINES |
@@ -57,7 +59,7 @@ public:
 											TVS_DISABLEDRAGDROP |
 											WS_CHILD;// | WS_VISIBLE;
 
-			DWORD dwStyleEx = WS_EX_CLIENTEDGE |
+			uint32_t dwStyleEx = WS_EX_CLIENTEDGE |
 												TVXS_MULTISEL |
 												TVXS_ANIMATE |
 												TVXS_FLYBYTOOLTIPS |
@@ -110,7 +112,7 @@ public:
 	void EnableEdit( bool bEnable );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

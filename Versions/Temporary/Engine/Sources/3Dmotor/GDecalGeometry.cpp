@@ -2,6 +2,9 @@
 #include "GDecalGeometry.h"
 #include "3DLib/Transform.h"
 #include "GCombiner.h"
+
+#include <cstdint>
+
 namespace NGScene
 {
 const float F_SHIFT = 0.004f;
@@ -104,7 +107,7 @@ class CShadowBuilder
 		//pRes->normal = normal;
 		pRes->uv = projection.Project( pnt );
 	}
-	WORD AddPoint( SSPoint &pnt );
+	uint16_t AddPoint( SSPoint &pnt );
 public:
 	CShadowBuilder( CObjectInfo *_pRes, float _fNormalEdge, float _fDepthMargin ) 
 		: pRes(_pRes), fNormalEdge(_fNormalEdge), fDepthMargin(_fDepthMargin)
@@ -188,7 +191,7 @@ inline void ProjectNormalized( NGfx::SCompactVector *pRes, const CVec3 &src, con
 	Normalize( &vRes );
 	NGfx::CalcCompactVector( pRes, vRes );
 }
-WORD CShadowBuilder::AddPoint( SSPoint &pnt )
+uint16_t CShadowBuilder::AddPoint( SSPoint &pnt )
 {
 	int nRes = info.verts.size();
 	info.verts.resize( nRes + 1 );
@@ -366,7 +369,7 @@ class CObjectInfoProcessor
 protected:
 	const std::vector<CVec3> &srcPositions;
 	const std::vector<SUVInfo> &srcVertices;
-	const std::vector<WORD> &posIndices;
+	const std::vector<uint16_t> &posIndices;
 	const std::vector<STriangle> &srcTris;
 	const std::vector<SRealVertexWeight> &srcWeights;
 public:

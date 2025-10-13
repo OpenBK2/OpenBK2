@@ -1,7 +1,9 @@
 #pragma once
+
 #include "GPixelFormat.h"
 #include "MMXhelpers.h"
 
+#include <cstdint>
 #include <optional>
 
 #include <glm/glm.hpp>
@@ -52,8 +54,8 @@ inline void SSEBatchTransform( const SHMatrix &m, const CVec3 *vin, CVec3 *vout,
 struct SSSEVertexWeight
 {
 	float fWeights[4];
-	BYTE nWeights[4];
-	BYTE cBoneIndices[4];
+	uint8_t nWeights[4];
+	uint8_t cBoneIndices[4];
 };
 
 static void SSESkinning( const CVec3 *pSrc, CVec3 *pRes, const SSSEVertexWeight *pWeight, const std::vector<SHMatrix> &blends, int nCount )

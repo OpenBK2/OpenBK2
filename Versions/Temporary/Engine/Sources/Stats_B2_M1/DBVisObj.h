@@ -5,6 +5,8 @@
 #include "3Dmotor/DBScene.h"
 #include "Season.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -21,7 +23,7 @@ namespace NDb
 		struct SSingleObj
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SModel > pModel;
 			CDBPtr< SModel > pLowLevelModel;
@@ -32,11 +34,11 @@ namespace NDb
 				eSeason( SEASON_SUMMER )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		bool bForceAnimated;
 		std::vector< SSingleObj > models;
@@ -51,7 +53,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const { return 0; }
+		uint32_t CalcCheckSum() const { return 0; }
 	};
 }
 

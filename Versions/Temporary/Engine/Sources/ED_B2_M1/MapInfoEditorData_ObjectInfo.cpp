@@ -6,6 +6,8 @@
 #include "Misc/PlaneGeometry.h"
 #include "Stats_B2_M1/AnimationType.h"
 
+#include <cstdint>
+
 namespace NMapInfoEditor
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +65,10 @@ namespace NMapInfoEditor
 			return false;
 		}
 		//
-		DWORD dwSceneObject = 0;
-		DWORD dwObject = 0;
-		DWORD dwObjectLink = 0;
-		DWORD dwMainObject = 0;
+		uint32_t dwSceneObject = 0;
+		uint32_t dwObject = 0;
+		uint32_t dwObjectLink = 0;
+		uint32_t dwMainObject = 0;
 		GetDrawSelectionParameters( &dwSceneObject, &dwObject, &dwObjectLink, &dwMainObject );
 		//
 		if ( dwSceneObject > 0 )
@@ -468,7 +470,7 @@ namespace NMapInfoEditor
 								CVec3 vObjectScenePosition = itMapInfoElement->second.GetPosition( vPosition ) + vAdditionalPosition;
 								vObjectScenePosition.z += GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 								const float fObjectSceneDirection = itMapInfoElement->second.GetDirection( fDirection ) + fAdditionalDirection;
-								DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+								uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 								CQuat qObjectSceneRotation = CQuat( fObjectSceneDirection, V3_AXIS_Z );
 								if ( NeedMakeOrientation() )
 								{
@@ -536,7 +538,7 @@ namespace NMapInfoEditor
 				CVec3 vObjectScenePosition = itMapInfoElement->second.GetPosition( vPosition );
 				vObjectScenePosition.z += GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 				const float fObjectSceneDirection = itMapInfoElement->second.GetDirection( fDirection );
-				DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+				uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 				CQuat qObjectSceneRotation = CQuat( fObjectSceneDirection, V3_AXIS_Z );
 				if ( NeedMakeOrientation() )
 				{
@@ -741,7 +743,7 @@ namespace NMapInfoEditor
 			CVec3 vObjectScenePosition = itSceneElement->second.GetPosition( vPosition );
 			vObjectScenePosition.z += GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 			const float fObjectSceneDirection = itSceneElement->second.GetDirection( fDirection );
-			DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
+			uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 			CQuat qObjectSceneRotation = CQuat( fObjectSceneDirection, V3_AXIS_Z );
 			if ( NeedMakeOrientation() )
 			{
@@ -792,7 +794,7 @@ namespace NMapInfoEditor
 					const string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
 					//Change
 					const CVec3 vObjectDBPosition = itMapInfoElement->second.GetPosition( vPosition );
-					const WORD wObjectDBDirection = Vis2AIRad( itMapInfoElement->second.GetDirection( fDirection ) );
+					const uint16_t wObjectDBDirection = Vis2AIRad( itMapInfoElement->second.GetDirection( fDirection ) );
 					//
 					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( szObjectProperty + "Pos", vObjectDBPosition, pManipulator );
 					bResult = bResult && pObjectController->AddChangeOperation( szObjectProperty + "Dir", wObjectDBDirection, pManipulator );
@@ -1097,7 +1099,7 @@ namespace NMapInfoEditor
 			{
 				MakeAbsolute();
 				CManipulatorManager::GetVec3<CVec3, float>( &( pMapInfoElement->vPosition ), pManipulator, szObjectPrefix + ".Pos" );
-				WORD wDirection = 0;
+				uint16_t wDirection = 0;
 				CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 				float fAdditionalDirection = AI2VisRad( wDirection ) - pMapInfoElement->fDirection;
 				pMapInfoElement->fDirection = AI2VisRad( wDirection );

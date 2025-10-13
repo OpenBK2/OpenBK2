@@ -1,9 +1,11 @@
 #pragma once
 
+#include <cstdint>
+
 struct SVShader
 {
 	string szName;
-	vector<DWORD> vsShader11, vsShader20;
+	vector<uint32_t> vsShader11, vsShader20;
 	//string szShader;
 };
 
@@ -30,7 +32,7 @@ struct SPShader
 	string szName;
 	//string szShader, szShader14;
 	SStates states, shader;
-	vector<DWORD> psShader11, psShader14, psShader20, psShader20a;
+	vector<uint32_t> psShader11, psShader14, psShader20, psShader20a;
 };
 
 struct SHLSLShader

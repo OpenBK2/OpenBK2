@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 struct STilesHash
 {
 	int operator()( const SVector &tile ) const 
@@ -35,8 +37,8 @@ struct SGUIDHash
 {
 	int operator()( const GUID a ) const 
 	{ 
-		DWORD *__s = (DWORD*)(&a);
-		DWORD __h = *__s; 
+		uint32_t *__s = (uint32_t*)(&a);
+		uint32_t __h = *__s;
 		for ( int i = 1; i < 4; ++i)
 			__h ^= __s[i];
 		return __h;

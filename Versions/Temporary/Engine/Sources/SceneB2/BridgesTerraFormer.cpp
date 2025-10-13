@@ -4,6 +4,8 @@
 #include "TerraTools.h"
 #include "GenTerrain.h"
 
+#include <cstdint>
+
 #define DEF_EXPAND_TILES_NUM 7
 #define DEF_EXPAND_TILES_NUM_EXT ( int( FP_SQRT_2 * DEF_EXPAND_TILES_NUM ) )
 #define DEF_CONST_TILES_NUM 1
@@ -52,7 +54,7 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 	const CVec2i vMax( max(max(v1.x, v2.x), max(v3.x, v4.x)) + DEF_EXPAND_TILES_NUM_EXT,
 										 max(max(v1.y, v2.y), max(v3.y, v4.y)) + DEF_EXPAND_TILES_NUM_EXT );
 
-	CArray2D<BYTE> bridgeMask( vMax.x - vMin.x + 1, vMax.y - vMin.y + 1 );
+	CArray2D<uint8_t> bridgeMask( vMax.x - vMin.x + 1, vMax.y - vMin.y + 1 );
 	bridgeMask.FillZero();
 
 	DrawRect( &bridgeMask, v1.x - vMin.x, v1.y - vMin.y, v2.x - vMin.x, v2.y - vMin.y, v3.x - vMin.x, v3.y - vMin.y, v4.x - vMin.x, v4.y - vMin.y, 1 );

@@ -4,6 +4,8 @@
 
 #include "RPGStats.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -14,7 +16,7 @@ namespace NDb
 	{
 	public:
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		SM1UnitSpecific() :
@@ -25,7 +27,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SM1UnitHelicopter : public SM1UnitSpecific
@@ -34,13 +36,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x31197340 };
 	private:
-		mutable DWORD __dwCheckSum;
+		mutable uint32_t __dwCheckSum;
 	public:
 
 		struct SHelicopterAxis
 		{
 		private:
-			mutable DWORD __dwCheckSum;
+			mutable uint32_t __dwCheckSum;
 		public:
 			CDBPtr< SVisObj > pScaled;
 			CDBPtr< SVisObj > pDynamic;
@@ -54,11 +56,11 @@ namespace NDb
 				fHideStaticSpeed( 0.0f )
 			{ }
 			//
-			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
-			DWORD CalcCheckSum() const;
+			uint32_t CalcCheckSum() const;
 		};
 		std::vector< SHelicopterAxis > axes;
 		float fFlyingHeight;
@@ -84,7 +86,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
-		DWORD CalcCheckSum() const;
+		uint32_t CalcCheckSum() const;
 	};
 }
 

@@ -5,6 +5,8 @@
 #include "WindDeformer.h"
 #include "GfxBuffers.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 
@@ -41,7 +43,7 @@ void CWindDeformer::Recalc()
 		pValue = new CObjectInfo( *pMesh );
 
 	std::vector<NGScene::SUVInfo> &v = pValue->verts;
-	const std::vector<WORD> &posInds = pValue->GetPositionIndices();
+	const std::vector<uint16_t> &posInds = pValue->GetPositionIndices();
 	std::vector<CVec3> &c = pValue->positions;
 
 	float x, y, angle;

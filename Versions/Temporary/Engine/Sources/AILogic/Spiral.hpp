@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cstdint>
 
 class CAddPointFunctional
 {
@@ -118,7 +119,7 @@ void GenerateSpiral( std::vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoo
 			}
 			else
 			{
-				const WORD wAngle = ( spiral[i].sector.wEndAngle + spiral[i+1].sector.wStartAngle ) / 2;
+				const uint16_t wAngle = ( spiral[i].sector.wEndAngle + spiral[i+1].sector.wStartAngle ) / 2;
 				spiral[i].sector.wEndAngle = wAngle;
 				spiral[i+1].sector.wStartAngle = wAngle;
 			}

@@ -14,6 +14,8 @@
 #include "UISpecificB2.h"
 #include "Misc/BitData.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 class CWindowChapterMapLayer :  public CPtrFuncBase< NGfx::CTexture >
@@ -43,8 +45,8 @@ public:
 	int GetWidth() const { return nWidth; }
 	int GetHeight() const { return nHeight; }
 	void PutPixel( const int x, const int y, const NGfx::SPixel8888 &color );
-	void SetPixelAlpha( const int x, const int y, const BYTE &nAlpha );
-	BYTE GetPixelAlpha( const int x, const int y );
+	void SetPixelAlpha( const int x, const int y, const uint8_t &nAlpha );
+	uint8_t GetPixelAlpha( const int x, const int y );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y );
 	void SetNeedUpdate() { bNeedUpdate = true; }
 	void SetNeedUpdateNow() { bNeedUpdate = true; nLastUpdateTime = 0; }
@@ -136,7 +138,7 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 		ZDATA
 		std::vector<CVec2> pts;
 		float fWidth;
-		DWORD dwColour;
+		uint32_t dwColour;
 		CDBPtr<NDb::STexture> pTexture;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pts); f.Add(3,&fWidth); f.Add(4,&dwColour); f.Add(5,&pTexture); return 0; }
 	};
@@ -159,8 +161,8 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 	bool bLayerInit;
 	bool bDrawDashes;
 
-	DWORD colourBorder1;		// our colour
-	DWORD colourBorder2;
+	uint32_t colourBorder1;		// our colour
+	uint32_t colourBorder2;
 	CVec2 vTextureSize;
 
 	CVec2 vMainStrike;
@@ -192,7 +194,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *pDesc ); 
 	//}
 
-	void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 );
+	void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 );
 
 	// Nodes management
 	void ClearNodes();
@@ -200,6 +202,6 @@ public:
 
 	// Arrows management
 	void ClearArrows() { arrows.clear(); }
-	void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour );
+	void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour );
 };
 

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <cstdint>
+
 namespace NFontGen
 {
 
@@ -104,9 +106,9 @@ static SCharRange sCharRanges[] =
 	{ 83, 0xA000, 0xA48C, "Yi, Yi Radicals" }
 };
 
-int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD dwFontType, LPARAM lParam )
+int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, uint32_t dwFontType, LPARAM lParam )
 {
-	std::vector<WORD> *pChars = (std::vector<WORD>*)lParam;
+	std::vector<uint16_t> *pChars = (std::vector<uint16_t>*)lParam;
 
 	printf( "\nFont: %S %S %S", lpelfe->elfFullName, lpelfe->elfStyle, lpelfe->elfScript );
 	if ( dwFontType == TRUETYPE_FONTTYPE )
@@ -139,7 +141,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 	return TRUE;
 }
 
-bool GetFontCharsForCharset( std::vector<WORD> *pChars, HDC hDC, const std::string &szFaceName, DWORD dwCharSet )
+bool GetFontCharsForCharset( std::vector<uint16_t> *pChars, HDC hDC, const std::string &szFaceName, uint32_t dwCharSet )
 {
 	LOGFONT sLogFont;
 	memset( &sLogFont, 0, sizeof( LOGFONT ) );

@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbprelight.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,13 +17,13 @@ void SPreLight::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "PreLight", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Whitening", (BYTE*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Pitch", (BYTE*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Whitening", (uint8_t*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -56,14 +58,14 @@ void STwoSidedLight::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TwoSidedLight", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Whitening", (BYTE*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Pitch", (BYTE*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Yaw", (BYTE*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Whitening", (uint8_t*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Yaw", (uint8_t*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

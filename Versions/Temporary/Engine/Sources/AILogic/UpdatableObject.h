@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Stats_B2_M1/ActionNotify.h"
+
+#include <cstdint>
 
 typedef std::vector<SVector> CTilesSet;
 namespace NDb
@@ -46,7 +49,7 @@ public:
 
 	virtual const EActionNotify GetDieAction() const { NI_ASSERT( false, "Wrong call of GetDieAction" ); return ACTION_NOTIFY_NONE; }
 
-	virtual const BYTE GetPlayer() const { NI_ASSERT( false, "Wrong call of GetPlayer" ); return 0xff; }
+	virtual const uint8_t GetPlayer() const { NI_ASSERT( false, "Wrong call of GetPlayer" ); return 0xff; }
 	virtual const int GetNAIGroup() const { return -2; }
 	
 	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const;
@@ -54,7 +57,7 @@ public:
 	virtual const int GetUnitState() const { return 0; }
 
 	// обязательно должна быть константной, чтобы не было расхождений в multiplayerb
-	virtual const bool IsVisible( const BYTE cParty ) const { NI_ASSERT( false, "wrong call" ); return false; }
+	virtual const bool IsVisible( const uint8_t cParty ) const { NI_ASSERT( false, "wrong call" ); return false; }
 	// виден ли игроком
 	virtual const bool IsVisibleByPlayer();
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { NI_ASSERT( false, "wrong call" );  }

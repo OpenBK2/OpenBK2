@@ -3,6 +3,7 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 
+#include <cstdint>
 
 class CPCFloatInputEditor : public CEdit, public CPCItemEditor, public ICommandHandler
 {
@@ -37,7 +38,7 @@ public:
 	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) {}
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

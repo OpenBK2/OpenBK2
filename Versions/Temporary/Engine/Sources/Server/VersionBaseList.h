@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define MAX_HISTORY_LENGTH 500
 
 template <class TData>
@@ -8,17 +10,17 @@ class TVersionBaseList
 	list<TData> nowList;
 	vector<TData> history;
 	vector<bool> dataAdded;
-	DWORD dwVersion;
+	uint32_t dwVersion;
 
 public:
 	TVersionBaseList();
 	void Add( const TData &data );
 	void Remove( const TData &data );
 	const list<TData>& GetNow() const { return nowList; }
-	const list<TData> GetAddDiff( const DWORD _dwVersion ) const;
-	const list<TData> GetRemoveDiff( const DWORD _dwVersion ) const;
-	const DWORD GetVersion() const { return dwVersion; }
-	inline bool NeedFullUpdate( const DWORD _dwVersion ) const; 
+	const list<TData> GetAddDiff( const uint32_t _dwVersion ) const;
+	const list<TData> GetRemoveDiff( const uint32_t _dwVersion ) const;
+	const uint32_t GetVersion() const { return dwVersion; }
+	inline bool NeedFullUpdate( const uint32_t _dwVersion ) const;
 };
 
 template< class TData >
@@ -47,18 +49,18 @@ void TVersionBaseList<TData>::Remove( const TData &data )
 }
 
 template< class TData >
-inline bool TVersionBaseList<TData>::NeedFullUpdate( const DWORD _dwVersion ) const
+inline bool TVersionBaseList<TData>::NeedFullUpdate( const uint32_t _dwVersion ) const
 {
 	return ( dwVersion + 1 > _dwVersion + MAX_HISTORY_LENGTH );
 }
 
 template< class TData >
-const list<TData> TVersionBaseList<TData>::GetAddDiff( const DWORD _dwVersion ) const
+const list<TData> TVersionBaseList<TData>::GetAddDiff( const uint32_t _dwVersion ) const
 {
 	if ( !NeedFullUpdate( _dwVersion ) )
 	{
 		list<TData> result;
-		for ( DWORD v = _dwVersion + 1; v <= dwVersion; ++v )
+		for ( uint32_t v = _dwVersion + 1; v <= dwVersion; ++v )
 		{
 			if ( dataAdded[ v % MAX_HISTORY_LENGTH ] )
 				result.push_back( history[ v % MAX_HISTORY_LENGTH ] );
@@ -72,12 +74,12 @@ const list<TData> TVersionBaseList<TData>::GetAddDiff( const DWORD _dwVersion ) 
 }
 
 template< class TData >
-const list<TData> TVersionBaseList<TData>::GetRemoveDiff( const DWORD _dwVersion ) const
+const list<TData> TVersionBaseList<TData>::GetRemoveDiff( const uint32_t _dwVersion ) const
 {
 	list<TData> result;
 	if ( !NeedFullUpdate( _dwVersion ) )
 	{
-		for ( DWORD v = _dwVersion + 1; v <= dwVersion; ++v )
+		for ( uint32_t v = _dwVersion + 1; v <= dwVersion; ++v )
 		{
 			if ( !dataAdded[ v % MAX_HISTORY_LENGTH ] )
 				result.push_back( history[ v % MAX_HISTORY_LENGTH ] );

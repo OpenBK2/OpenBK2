@@ -2,12 +2,14 @@
 
 #include "ExecutorAmbush.h"
 
+#include <cstdint>
+
 CExecutorAmbush::CExecutorAmbush( CAIUnit *_pUnit	) :
 CExecutorUnitCombatBonus ( NDb::ABILITY_AMBUSH, _pUnit, TID_AMBUSH )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAmbush::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAmbush::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && newModeFlags )
 	{

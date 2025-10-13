@@ -12,6 +12,8 @@
 #include "Misc/StrProc.h"
 #include "B2AI.h"
 
+#include <cstdint>
+
 extern NTimer::STime curTime;
 extern CGroupLogic theGroupLogic;
 extern SCheats theCheats;
@@ -19,7 +21,7 @@ extern SCheats theCheats;
 namespace NReinforcement
 {
 	void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
-		const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
+		const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, uint16_t wDirection,
 		std::list< std::pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates );
 }
 

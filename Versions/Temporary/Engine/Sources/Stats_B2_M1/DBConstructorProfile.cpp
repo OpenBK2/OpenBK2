@@ -6,14 +6,16 @@
 #include "System/XmlSaver.h"
 #include "dbconstructorprofile.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SDBGunsProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SDBGunsProfile::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (BYTE*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (uint8_t*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
 }
 
 int SDBGunsProfile::operator&( IXmlSaver &saver )
@@ -30,7 +32,7 @@ int SDBGunsProfile::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SDBGunsProfile::CalcCheckSum() const
+uint32_t SDBGunsProfile::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -47,9 +49,9 @@ DWORD SDBGunsProfile::CalcCheckSum() const
 
 
 
-void SDBPlatformsProfile::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SDBPlatformsProfile::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (BYTE*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Attached", (uint8_t*)&bAttached - pThis, sizeof(bAttached), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Guns", &guns, pThis );
 }
 
@@ -69,7 +71,7 @@ int SDBPlatformsProfile::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SDBPlatformsProfile::CalcCheckSum() const
+uint32_t SDBPlatformsProfile::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -90,7 +92,7 @@ void SDBConstructorProfile::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DBConstructorProfile", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Platforms", &platforms, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Slots", &slots, pThis );
 	NMetaInfo::FinishMetaInfoReport();
@@ -113,7 +115,7 @@ int SDBConstructorProfile::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SDBConstructorProfile::CalcCheckSum() const
+uint32_t SDBConstructorProfile::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

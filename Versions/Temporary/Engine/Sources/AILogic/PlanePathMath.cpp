@@ -2,11 +2,9 @@
 
 #include "PlanePathMath.h"
 
+#include <cstdint>
+
 const float nOrientation = -1.0f;
-
-
-
-
 
 void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 )
 {
@@ -22,13 +20,13 @@ void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float
 }
 
 // travel angle from start to finish. returned angle is in range [0, 65535]
-WORD DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir )
+uint16_t DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir )
 {
 	return DirectedDirsDifference( GetDirectionByVector(vStart), GetDirectionByVector(vFinish), nDir );
 }
 
 // travel angle from start to finish. returned angle is in range [0, 65535]
-WORD DirectedDirsDifference( const WORD wStart, const WORD wFinish, const int nDir )
+uint16_t DirectedDirsDifference( const uint16_t wStart, const uint16_t wFinish, const int nDir )
 {
 	return ( nDir == -1 ?  /*positive direction*/wFinish - wStart : /*negative direction*/wStart - wFinish );
 }

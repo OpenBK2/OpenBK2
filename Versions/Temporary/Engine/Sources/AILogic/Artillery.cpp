@@ -26,6 +26,8 @@ extern CUnitCreation theUnitCreation;
 // for profiling
 #include "TimeCounter.h"
 
+#include <cstdint>
+
 extern CSupremeBeing theSupremeBeing;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
@@ -168,7 +170,7 @@ const CVec3 CArtillery::GetAmmoBoxCoordinates()
 	if ( b360DegreesRotate && GetStats()->etype != RPG_TYPE_ART_AAGUN )
 	{
 		CTurret *pTurret = GetTurret( 0 );
-		const WORD wCurTurretHorDir = pTurret->GetHorCurAngle();
+		const uint16_t wCurTurretHorDir = pTurret->GetHorCurAngle();
 		vGunDir = GetVectorByDirection( GetFrontDirection() + wCurTurretHorDir );
 	}
 	else
@@ -193,7 +195,7 @@ const bool CArtillery::TurnToTarget( const CVec2 &vTarget )
 	return false;
 }
 
-bool CArtillery::TurnToDir( const WORD &newDir, const bool bCanBackward, const bool bForward )
+bool CArtillery::TurnToDir( const uint16_t &newDir, const bool bCanBackward, const bool bForward )
 {
 	lastCheckToInstall = curTime;	
 	if ( !MustHaveCrewToOperate() || fOperable != 0.0f )
@@ -246,7 +248,7 @@ void CArtillery::DelCrew()
 	pCrew = 0;
 }
 
-void CArtillery::ChangePlayer( const BYTE cPlayer )
+void CArtillery::ChangePlayer( const uint8_t cPlayer )
 {
 	CAIUnit::ChangePlayer( cPlayer );
 	if ( IsValidObj( pCrew ) && pCrew->GetPlayer() != cPlayer )
@@ -317,7 +319,7 @@ void CArtillery::InitGuns()
 		behUpdateDuration = SConsts::LONG_RANGE_ARTILLERY_UPDATE_DURATION;
 }
 
-void CArtillery::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CArtillery::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	nInitialPlayer = player;
 	pStats = checked_cast<const SMechUnitRPGStats*>( _pStats );
@@ -867,7 +869,7 @@ const CVec3 Multi( const SHMatrix &matrix, const CVec3 &vec )
 	return vResult;
 }
 
-const DWORD CArtillery::GetNormale( const CVec2 &vArtCenter ) const
+const uint32_t CArtillery::GetNormale( const CVec2 &vArtCenter ) const
 {
 	if ( GetState() && GetState()->GetName() == EUSN_BEING_TOWED )
 	{
@@ -906,7 +908,7 @@ const DWORD CArtillery::GetNormale( const CVec2 &vArtCenter ) const
 		return CAIUnit::GetNormale();
 }
 
-const DWORD CArtillery::GetNormale() const
+const uint32_t CArtillery::GetNormale() const
 {
 	return GetNormale( GetCenterPlain() );
 }

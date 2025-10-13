@@ -2,6 +2,7 @@
 
 #include "System_export.h"
 
+#include <cstdint>
 
 namespace NFile
 {
@@ -27,7 +28,7 @@ public:
 	bool IsEnd() const { return !IsValid(); }
 	const CFileIterator& operator++() { return Next(); }
 	// current file attributes check
-	DWORD GetAttribs() const { return findinfo.dwFileAttributes; }
+	uint32_t GetAttribs() const { return findinfo.dwFileAttributes; }
 	bool IsReadOnly() const { return ( GetAttribs() & FILE_ATTRIBUTE_READONLY ) != 0; }
 	bool IsSystem() const { return ( GetAttribs() & FILE_ATTRIBUTE_SYSTEM ) != 0; }
 	bool IsHidden() const { return ( GetAttribs() & FILE_ATTRIBUTE_HIDDEN ) != 0; }

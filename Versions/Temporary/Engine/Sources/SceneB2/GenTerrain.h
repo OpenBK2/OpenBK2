@@ -12,6 +12,7 @@
 #include "Misc/HPTimer.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
+#include <cstdint>
 
 #define DEF_CRAG_HOLE_WIDTH 0.05f
 #define DEF_RIVER_DEPTH 4.0f
@@ -73,7 +74,7 @@ class CTerraGen : public CObjectBase
 	CDynamicDebrisManager dynamicDebrisManager;
 	//
 	CArray2D<std::vector<int> > terraExplosionsHash;
-	CArray2D<BYTE> terraExplosionsHeights;
+	CArray2D<uint8_t> terraExplosionsHeights;
 	//
 	std::vector<int> needAddFoots;
 	std::vector<int> updatedPrecipices;
@@ -98,12 +99,12 @@ class CTerraGen : public CObjectBase
 	};
 	std::vector<SEntrenchmentHistory> entrenchmentsHistory;
 	//
-	std::vector<CArray2D<BYTE> > tileTerraMasks;
+	std::vector<CArray2D<uint8_t> > tileTerraMasks;
 	CVec3 vPreLightDir;
 	CVec2i vTexModMin, vTexModMax;
-	CArray2D<BYTE> texModCheck;
+	CArray2D<uint8_t> texModCheck;
 
-	CArray2D<BYTE> needTexExportAfterGeomModifying;
+	CArray2D<uint8_t> needTexExportAfterGeomModifying;
 	CVec2i vGeomModAreaMin, vGeomModAreaMax;
 
 	std::vector<NWaterStuff::SWaterParams> waterParams;
@@ -175,10 +176,10 @@ class CTerraGen : public CObjectBase
 	void UpdateHeightsAfterCrags( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 );
 	void UpdateHeightsAfterRivers( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 );
 	//
-	void UpdateArea( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, DWORD dwUpdateFlags );
+	void UpdateArea( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, uint32_t dwUpdateFlags );
 	void ReCreateAllWaterZones();
 	//
-	void UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, DWORD dwUpdateFlags );
+	void UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, uint32_t dwUpdateFlags );
 	void UpdateAllObjectsInArea( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 );
 
 	// TILE MASKS
@@ -195,7 +196,7 @@ class CTerraGen : public CObjectBase
 	void UpdateTerraBorders();
 	//
 	void CalcTerraVertexData( NGScene::SVertex *pVert, const CVec3 &vPos, const int nTileX, const int nTileY, const int nPatchX, const int nPatchY, const CVec3 *pRealPos, const CVec3 *pRealNorm, const bool bNeedFaster ) const;
-	int AddUniqueVertex(	NMeshData::SMeshData *pMeshData, NMeshData::SMeshDataTex2 *pTexData, const CVec2 &vSecTex, const BYTE cAlpha, NGScene::SVertex *pVert, const bool bNeedFaster ) const;
+	int AddUniqueVertex(	NMeshData::SMeshData *pMeshData, NMeshData::SMeshDataTex2 *pTexData, const CVec2 &vSecTex, const uint8_t cAlpha, NGScene::SVertex *pVert, const bool bNeedFaster ) const;
 	void AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData, std::vector<NMeshData::SMeshDataTex2> *pTexData, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const int nTileX, const int nTileY, const int nPatchX, const int nPatchY, const CVec3 *pRealPos1, const CVec3 *pRealPos2, const CVec3 *pRealPos3, const CVec3 *pRealNorm1, const CVec3 *pRealNorm2, const CVec3 *pRealNorm3,	const bool bNeedFaster ) const;
 	//
 	void UpdateAlphaByPosition( NGScene::SVertex *pVertex );
@@ -286,7 +287,7 @@ class CTerraGen : public CObjectBase
 	void CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const bool bNeedRiversClamping );
 	void RemovePrecipiceFromCollector( const int nID, const bool bFast );
 	CVec3 GetSmoothPrecipiceNorm( const CVec2 &vPos );
-	void AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr, const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale, const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial, const float fDepth, const float fDepthRand, const float fRandX, const float fRandY, const bool bHasPeak );
+	void AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr, const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale, const uint8_t bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial, const float fDepth, const float fDepthRand, const float fRandX, const float fRandY, const bool bHasPeak );
 	//
 	void CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *pPrec );
 	void AddToPrecipiceUpdateQueue( const int nID );
@@ -334,12 +335,12 @@ public:
 	void UpdateAllObjectsInGeomModifyingArea();
 	void UpdateRiversDepthes();
 	//
-	void UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<BYTE> &mask, const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
-	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs );
+	void UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask, const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
+	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs );
 	void FinalizeTexModifying();
 	void UpdateAfterTilesModifying();
 	//
-	void GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 );
+	void GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 );
 	void GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 );
 
 	// ROADS
@@ -368,7 +369,7 @@ public:
 	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial, const bool bWriteHistory = true );
 	void AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const float fAngle, const int nSmoothRad, const NDb::SMaterial *pMaterial );
 	void AddTrack( const int nID, const float fFadingSpeed, const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4, const CVec2 &vNorm, const float _fWidth, const float fAplha, CTracksManager *pTracksManager );
-	void CreateDebris(	const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin, const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius, const NDebrisBuilder::EMaskSmoothType smoothType );
+	void CreateDebris(	const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin, const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius, const NDebrisBuilder::EMaskSmoothType smoothType );
 
 	// AI
   void UpdateAIInfo();

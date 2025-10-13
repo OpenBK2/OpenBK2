@@ -12,6 +12,8 @@
 #include "System/Text.h"
 #include "Misc/Win32Random.h"
 
+#include <cstdint>
+
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
 #define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
@@ -184,7 +186,7 @@ void CInterfaceState::InitForbiddenWords()
 	int nPos = 0;
 	while ( nPos < wszForbiddenWords.size() )
 	{
-		WORD wChar = wszForbiddenWords[nPos];
+		uint16_t wChar = wszForbiddenWords[nPos];
 		if ( wChar == L' ' || wChar == 0x0d || wChar == 0x0a )
 		{
 			nPos++;
@@ -406,7 +408,7 @@ NGScene::CScreenshotTexture* CInterfaceState::GetScreenShotTexture()
 	return pScreenShot.GetPtr();
 }
 
-void CInterfaceState::SetMissionConsoleColor( DWORD dwColor )
+void CInterfaceState::SetMissionConsoleColor( uint32_t dwColor )
 {
 	dwMissionChatColor = dwColor;
 }

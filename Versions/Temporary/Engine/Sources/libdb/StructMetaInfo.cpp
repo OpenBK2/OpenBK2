@@ -5,6 +5,8 @@
 #include "BindArray.h"
 #include "ReportMetaInfo.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -19,7 +21,7 @@ namespace NMetaInfo
 // **
 // ************************************************************************************************************************ //
 
-void ConstructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
+void ConstructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize )
 {
 	switch ( eType )
 	{
@@ -38,7 +40,7 @@ void ConstructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 		memset( pData, 0, nSize );
 	}
 }
-void DestructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
+void DestructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize )
 {
 	switch ( eType )
 	{
@@ -51,7 +53,7 @@ void DestructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 		break;
 
 	case NTypeDef::TYPE_TYPE_ARRAY:
-		((std::vector<BYTE>*)pData)->~vector<BYTE>();
+		((std::vector<uint8_t>*)pData)->~vector<uint8_t>();
 		break;
 
 	case NTypeDef::TYPE_TYPE_REF:
@@ -63,7 +65,7 @@ void DestructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 	}
 }
 
-void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn ) const
+void SStructMetaInfo::SField::ConstructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 {
 	if ( pTypeDef == 0 )
 		return;
@@ -86,7 +88,7 @@ void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *value
 			break;
 
 		case NTypeDef::TYPE_TYPE_BINARY:
-			data.pBLOB = new BYTE[ int(main.size) ];
+			data.pBLOB = new uint8_t[ int(main.size) ];
 			break;
 
 		case NTypeDef::TYPE_TYPE_ARRAY:
@@ -99,7 +101,7 @@ void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *value
 		NMetaInfo::ConstructBinary( pThis + GetBinaryShift(), GetType(), main.size );
 }
 
-void SStructMetaInfo::SField::DestructBinary( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn ) const
+void SStructMetaInfo::SField::DestructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 {
 	if ( pTypeDef == 0 )
 		return;
@@ -137,7 +139,7 @@ void SStructMetaInfo::SField::DestructBinary( BYTE *pThis, NBind::UValue *values
 		NMetaInfo::DestructBinary( pThis + GetBinaryShift(), GetType(), int(main.size) );
 }
 
-void SStructMetaInfo::ConstructStruct( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn )
+void SStructMetaInfo::ConstructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn )
 {
 	if ( fields.empty() )
 		singleField.ConstructBinary( pThis, values, bOnlyOwn );
@@ -155,7 +157,7 @@ void SStructMetaInfo::ConstructStruct( BYTE *pThis, NBind::UValue *values, bool 
 	}
 }
 // meta-destructor
-void SStructMetaInfo::DestructStruct( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn )
+void SStructMetaInfo::DestructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn )
 {
 	if ( fields.empty() )
 		singleField.DestructBinary( pThis, values, bOnlyOwn );
@@ -380,7 +382,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 		if ( posField == fields.end() )
 		{
 			// add nocode (own) value
-			AddField( szFullFieldName, (DWORD(nNumOwnValues) << 16) | 0x8000ffff, pType->GetTypeSize(), pType->eType );
+			AddField( szFullFieldName, (uint32_t(nNumOwnValues) << 16) | 0x8000ffff, pType->GetTypeSize(), pType->eType );
 			posField = fields.find( szFullFieldName );
 			NI_ASSERT( posField != fields.end(), StrFmt("New field \"%s\" was not added", szFullFieldName.c_str()) );
 			SetupSetGetOwnFuncs( &posField->second, pType->eType );
@@ -415,7 +417,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 		if ( posField == fields.end() )	// array of owns
 		{
 			// add nocode (own) array
-			AddField( szFullFieldName, (DWORD(nNumOwnValues) << 16) | 0x8000ffff, pType->GetTypeSize(), pType->eType,
+			AddField( szFullFieldName, (uint32_t(nNumOwnValues) << 16) | 0x8000ffff, pType->GetTypeSize(), pType->eType,
 				        pTypeArray->field.pType->GetTypeSize(), pTypeArray->field.pType->eType );
 			if ( pTypeArray->field.pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 				FinishMetaInfoReport();
@@ -454,7 +456,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 				posField->second.pContained->singleField.pTypeDef = pTypeArray->field.pType;
 			}
 			//
-			posField->second.nShift = int( ( DWORD(nNumOwnValues) << 16 ) | 0x80000000 | ( posField->second.nShift & 0x0000ffff ) );
+			posField->second.nShift = int( ( uint32_t(nNumOwnValues) << 16 ) | 0x80000000 | ( posField->second.nShift & 0x0000ffff ) );
 			++nNumCodeValues;
 		}
 		//

@@ -2,6 +2,8 @@
 
 #include "MapInfoEditorData.h"
 
+#include <cstdint>
+
 namespace NMapInfoEditor
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +56,7 @@ namespace NMapInfoEditor
 
 		static bool GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 																												 CQuat *pQuat,
-																												 DWORD *pdwNormal,
+																												 uint32_t *pdwNormal,
 																												 CVec3 *pScale,
 																												 const float fSegmentHalfLen,
 																												 const CVec3 &rvCenterPos,

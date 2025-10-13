@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define VIS_TILE_SIZE 2.75f
 #define AI_TILE_SIZE 32
 #define AI_TILES_IN_VIS_TILE 2
@@ -74,10 +76,10 @@ inline void FitVisOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 inline void FitVis2AIGrid( CVec3 *pPos ) { FitVisOrigin2AIGrid( pPos, VNULL2 ); }
 
 // AI <=> Vis graduses
-inline WORD Vis2AIGrad( float fGrad ) { return WORD( Float2Int( fGrad / 360.0f * 65536.0f ) & 0x0000ffff ); }
-inline float AI2VisGrad( WORD wGrad ) { return float( wGrad ) / 65536.0f * 360.0f; }
-inline WORD Vis2AIRad( float fRad ) { return WORD( Float2Int( fRad / FP_2PI * 65536.0f ) & 0x0000ffff ); }
-inline float AI2VisRad( WORD wGrad ) { return float( wGrad ) / 65536.0f * FP_2PI; }
+inline uint16_t Vis2AIGrad( float fGrad ) { return uint16_t( Float2Int( fGrad / 360.0f * 65536.0f ) & 0x0000ffff ); }
+inline float AI2VisGrad( uint16_t wGrad ) { return float( wGrad ) / 65536.0f * 360.0f; }
+inline uint16_t Vis2AIRad( float fRad ) { return uint16_t( Float2Int( fRad / FP_2PI * 65536.0f ) & 0x0000ffff ); }
+inline float AI2VisRad( uint16_t wGrad ) { return float( wGrad ) / 65536.0f * FP_2PI; }
 
 inline const SVector GetAIMapTile( const float x, const float y, const int nTileSize )
 {

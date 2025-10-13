@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "MapEditorLib/Tools_MnemonicsCollector.h"
 
 #include "Tree_GDBBrowser_InputState.h"
@@ -8,6 +7,8 @@
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/FolderController.h"
 #include "SortTreeControl.h"
+
+#include <cstdint>
 
 #define TABGDBB_TREE_COLUMN_COUNT (1)
 
@@ -210,7 +211,7 @@ public:
 	void UpdateSelectionManipulator( bool bUpdate );
 	
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// Создание Undo Operation

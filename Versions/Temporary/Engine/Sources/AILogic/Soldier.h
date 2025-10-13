@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include "AIUnit.h"
 #include "StaticObjectSlotInfo.h"
 #include "Mine.h"
 
+#include <cstdint>
 
 class CUnitGuns;
 class CFormation;
@@ -46,7 +46,7 @@ class CSoldier : public CAIUnit
 	CPtr<CFormation> pFormation;
 	CPtr<CFormation> pMemorizedFormation;
 	CPtr<CFormation> pVirtualFormation;
-//	BYTE cFormSlot;
+//	uint8_t cFormSlot;
 	bool bWait2Form;
 
 	bool bAllowLieDown; // может ли солдат ложиться под обстрелом (или стоит как оловянный one.)
@@ -75,9 +75,9 @@ protected:
 	// 
 	virtual void RevealNearestMines( const bool bIncludingAP );
 
-	virtual bool CalculateUnitVisibility4Party( const BYTE cParty ) ;
+	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty ) ;
 	// soldier doesn't have anti aircraft guns yet
-	virtual DWORD InitSupportAntiAircraftGuns() { return 0; }
+	virtual uint32_t InitSupportAntiAircraftGuns() { return 0; }
 	virtual void AdjustSpeed();
 
 public:
@@ -86,13 +86,13 @@ public:
 							 fOwnSightRadius( -1 ), numBlastingCharges( 0, 0 ), numControlledCharges( 0, 0 ), numLandMines( 0,0 ) { }
 
 	virtual ~CSoldier();
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 	
 	void SetRememberedStats( const NDb::SInfantryRPGStats *_pRememberedStats ) { pRememberedStats = pRememberedStats; }
 	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
 	virtual IStatesFactory* GetStatesFactory() const;
 	
-	virtual void SetDirection( const WORD newDir );
+	virtual void SetDirection( const uint16_t newDir );
 
 	virtual void AllowLieDown( bool _bAllowLieDown );
 	bool IsAllowedToLieDown() const { return bAllowLieDown; }
@@ -122,16 +122,16 @@ public:
 	void SetSlotIndex( const int nIndex ) { slotInfo.nIndex = nIndex; }
 	const int GetSlotIndex() const { return slotInfo.nIndex; }
 
-	void SetAngles( const WORD _wMinAngle, const WORD _wMaxAngle ) 
+	void SetAngles( const uint16_t _wMinAngle, const uint16_t _wMaxAngle )
 	{ 
 		wMinAngle = _wMinAngle; 
 		wMaxAngle = _wMaxAngle; 
 	}
-	WORD GetMinAngle() const { return wMinAngle; }
-	WORD GetMaxAngle() const { return wMaxAngle; }
+	uint16_t GetMinAngle() const { return wMinAngle; }
+	uint16_t GetMaxAngle() const { return wMaxAngle; }
 	bool IsAngleLimited() const;
-	virtual const DWORD GetNormale() const;
-	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
+	virtual const uint32_t GetNormale() const;
+	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
 	
 	bool IsInBuilding() const { return eInsideType == EOIO_BUILDING; }
 	bool IsInEntrenchment() const { return eInsideType == EOIO_ENTRENCHMENT; }
@@ -301,11 +301,11 @@ class CSniper : public CSoldier
 	float fCamouflageRemoveWhenShootProbability;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CSoldier*)this); f.Add(2,&lastVisibilityCheck); f.Add(3,&bVisible); f.Add(4,&bSneak); f.Add(5,&fCamouflageRemoveWhenShootProbability); return 0; }
 protected:
-	virtual bool CalculateUnitVisibility4Party( const BYTE cParty ) ;
+	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty ) ;
 public:
 	CSniper() : lastVisibilityCheck( 0 ), bVisible( false ), bSneak( false ) { }
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
 	virtual void Segment();
 

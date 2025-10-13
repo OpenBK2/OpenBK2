@@ -4,6 +4,8 @@
 
 #include "binaryflags.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -98,7 +100,7 @@ namespace NDb
 				vTremble( VNULL3 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -123,7 +125,7 @@ namespace NDb
 				eTypeEnumUnitType( UNIT_TYPE_UNKNOWN )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -136,7 +138,7 @@ namespace NDb
 
 			SStruct2() { }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
@@ -187,7 +189,7 @@ namespace NDb
 				qRot( QNULL )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
+			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );

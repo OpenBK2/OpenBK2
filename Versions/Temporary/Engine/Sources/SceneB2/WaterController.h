@@ -7,6 +7,8 @@
 #include "B2_M1_Terrain/TerrUtils.h"
 #include "Image/ImageConvertor.h"
 
+#include <cstdint>
+
 class CCSBound;
 
 namespace NDb
@@ -36,7 +38,7 @@ public:
 public:
 	CVec3 vPos;
 	CVec2 vTex;
-	BYTE nAlpha;//float fAlpha;
+	uint8_t nAlpha;//float fAlpha;
 	float fAngleOffset;
 	float fAngleStep;
 	float fRadiusOffset;
@@ -45,7 +47,7 @@ public:
 	bool bBorderTexY;
 	bool bIsLargeAlpha;
 	//
-	BYTE nParamInd;
+	uint8_t nParamInd;
 	//
 	std::vector<SWaveParams> waveParams;
 
@@ -76,7 +78,7 @@ class CVisWaterPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fTexCoord2OffsetY;
 	bool bUseNoise;
 	float fNoiseCoeff;
-	BYTE nParamInd;
+	uint8_t nParamInd;
 protected:
 	void UpdateGeomData();
 	void Recalc();
@@ -87,7 +89,7 @@ public:
 	//
 	CVisWaterPatch( const CWaterController *pContr, CFuncBase<STime> *_pTimer,
 		const bool _bUseWaves, const float fMinRad, const float fMaxRad, const NDb::STwoSidedLight *_pLight,
-		const int nFramesX, const int nFramesY, const bool _bUseNoise, const float _fNoiseCoeff, const BYTE _nParamInd );
+		const int nFramesX, const int nFramesY, const bool _bUseNoise, const float _fNoiseCoeff, const uint8_t _nParamInd );
 	~CVisWaterPatch() {};
 };
 
@@ -115,13 +117,13 @@ protected:
 	void SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const std::vector<NWaterStuff::SSurfBorder> &waterBorders );
 	void CreatePatches( const std::vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes );
 
-	void InitSilentWater( const CArray2D<BYTE> &seaMap,
+	void InitSilentWater( const CArray2D<uint8_t> &seaMap,
 												const std::vector<NWaterStuff::SWaterParams> &_waterParams,
 												const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 												NGScene::IGameView *_pGScene,
 												const NDb::SWater *pWater );
 
-	void InitOceanWater( const CArray2D<BYTE> &seaMap,
+	void InitOceanWater( const CArray2D<uint8_t> &seaMap,
 												const std::vector<NWaterStuff::SWaterParams> &_waterParams,
 												const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 												NGScene::IGameView *_pGScene,
@@ -135,11 +137,11 @@ public:
 
 	//
 	CWaterController() {}
-	void Init(	const float fAngle, const CArray2D<BYTE> &seaMap,
+	void Init(	const float fAngle, const CArray2D<uint8_t> &seaMap,
 							const std::vector<NWaterStuff::SWaterParams> &waterParams,
 							const std::vector<NWaterStuff::SSurfBorder> &waterBorders,
 							NGScene::IGameView *_pGScene,
-							//CArray2D<BYTE> &waterBottomMap,
+							//CArray2D<uint8_t> &waterBottomMap,
 							const NDb::SWater *pWater );
 	//const CArray2D<CPtr<SWaterNode> > &GetWaterNodes() const { return waterNodes; }
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }

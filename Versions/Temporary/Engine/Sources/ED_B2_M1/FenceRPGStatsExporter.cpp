@@ -12,6 +12,8 @@
 #include "ExporterMethods.h"
 #include "FenceRPGStatsExporter.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EXPORTER_IN_DLL( FenceRPGStats, CFenceRPGStatsExporter )
@@ -29,7 +31,7 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		return ER_SUCCESS;
 	//
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	CArray2D<BYTE> passabilityArray( 1, 3 );
+	CArray2D<uint8_t> passabilityArray( 1, 3 );
 	passabilityArray[0][0] = 1;
 	passabilityArray[1][0] = 1;
 	passabilityArray[2][0] = 1;
@@ -101,7 +103,7 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 
 bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator, 
 																					  const string &rszSegmentsSetName, 
-																						const CArray2D<BYTE> &rPassabilityArray, 
+																						const CArray2D<uint8_t> &rPassabilityArray,
 																						const CVec3 &rvPassabilityOrigin )
 {
 	// Записываем третий параметр - AI проходимость объекта

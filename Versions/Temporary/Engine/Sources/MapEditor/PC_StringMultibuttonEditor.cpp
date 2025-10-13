@@ -6,6 +6,8 @@
 
 #include "PC_StringMultibuttonEditor.h"
 
+#include <cstdint>
+
 CPCStringMultibuttonEditor::CPCStringMultibuttonEditor( int _nButtonCount )
 	: bIgnoreFocusChange( false ),
 		bMultiLine( false ),
@@ -182,9 +184,9 @@ bool CPCStringMultibuttonEditor::CreateEditor( const string &rszName, EPCIEType 
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
-		const DWORD dwStyle							= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT | ( bMultiLine ? ES_MULTILINE : 0 );
-		const DWORD dwButtonStyle				= WS_CHILD;
-		const DWORD dwExStyle						= WS_EX_CLIENTEDGE;
+		const uint32_t dwStyle							= WS_CHILD | ES_AUTOHSCROLL | ES_LEFT | ( bMultiLine ? ES_MULTILINE : 0 );
+		const uint32_t dwButtonStyle				= WS_CHILD;
+		const uint32_t dwExStyle						= WS_EX_CLIENTEDGE;
 		bool bResult = CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() );
 		for ( int nButtonIndex = 0; nButtonIndex < nButtonCount; ++nButtonIndex )
 		{
@@ -311,7 +313,7 @@ void CPCStringMultibuttonEditor::SetDefaultValue()
 }
 
 
-bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

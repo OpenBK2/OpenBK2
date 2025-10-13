@@ -6,6 +6,8 @@
 #include "UnitCreation.h"
 #include "StaticObjects.h"
 
+#include <cstdint>
+
 extern CUnitCreation theUnitCreation;
 extern CStaticObjects theStatObjs;
 namespace NLongObjectCreation
@@ -62,7 +64,7 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 	pFenceCreation->PreCreate( vFrom, vTo, bCheckLock );
 	antitanks.clear();
 	CVec2 vDirPerp( vTo - vFrom );
-	const WORD wDir( GetDirectionByVector(vDirPerp ) );
+	const uint16_t wDir( GetDirectionByVector(vDirPerp ) );
 	Normalize( &vDirPerp );
 	vDirPerp = CVec2( -vDirPerp.y, vDirPerp.x );
 

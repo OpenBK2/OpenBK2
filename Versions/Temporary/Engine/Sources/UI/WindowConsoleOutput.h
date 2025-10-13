@@ -2,6 +2,8 @@
 
 #include "Window.h"
 
+#include <cstdint>
+
 struct SWindowEditLine;
 class CWindowEditLine;
 
@@ -14,11 +16,11 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	{
 	public:
 		std::wstring szString;
-		DWORD dwColor;
+		uint32_t dwColor;
 		CPtr<IML> pGfxText;
 		
 		SColorString() : dwColor( 0xffffffff ) {  }
-		SColorString( const wchar_t *pszStr, DWORD col, const int nWidth );
+		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		int operator&( IBinSaver &saver );
 	};
 
@@ -40,7 +42,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	void Visit( struct IUIVisitor *pVisitor );
 
-	void AddString( const std::wstring &szString, const DWORD color  );
+	void AddString( const std::wstring &szString, const uint32_t color  );
 	void Scroll( const int bUp );
 	void ToBegin();
 	void ToEnd();

@@ -1,7 +1,8 @@
-
 #pragma once
 
 #include "StaticObjectRPGStatsExporter.h"
+
+#include <cstdint>
 
 class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 {
@@ -29,14 +30,14 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	void GetTempAIGeometryName( string *pszAIGeometryPrefix, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry );
 	void GetVisObjectNameList( list<string> *pVisOblectNameList, struct IManipulator *pManipulator );
 	//
-	void EnlargeArray( CArray2D<BYTE> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource );
-	void EnlargeArray( CArray2D<BYTE> *pDestination, const CTPoint<int>  &rSourceSize );
+	void EnlargeArray( CArray2D<uint8_t> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource );
+	void EnlargeArray( CArray2D<uint8_t> *pDestination, const CTPoint<int>  &rSourceSize );
 	// расширяем массив по стороне X
-	void EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, int nAITileCount );
+	void EnlargeXSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, int nAITileCount );
 	// расширяем массив по стороне Y
-	void EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount );
+	void EnlargeYSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount );
 	//
-	void SetArrayInfo( CArray2D<BYTE> *pDestination, const CArray2D<BYTE> &rSource, LOCK_TYPE lockType );
+	void SetArrayInfo( CArray2D<uint8_t> *pDestination, const CArray2D<uint8_t> &rSource, LOCK_TYPE lockType );
 	//
 	void ExportAdditionalInfo( IManipulator *pManipulator, const string &rszObjectName, const CDBID &rDBID );
 protected:

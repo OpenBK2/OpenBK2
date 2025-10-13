@@ -1,8 +1,10 @@
 #pragma once
+
 #include "3dmotor_export.h"
 
-
 #include "GPixelFormat.h"
+
+#include <cstdint>
 
 struct IDirect3DSurface9;
 
@@ -51,10 +53,10 @@ namespace NGfx
 struct S3DTriangle
 {
 	enum { ID = 100 };
-	WORD i1, i2, i3;
+	uint16_t i1, i2, i3;
 
 	S3DTriangle() {}
-	S3DTriangle( WORD _i1, WORD _i2, WORD _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
+	S3DTriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
 };
 
 //struct SGeomVecT1C1

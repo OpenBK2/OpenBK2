@@ -5,6 +5,8 @@
 #include "UnitStartCmdState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 
+#include <cstdint>
+
 //
 //
 //	UNIT START COMMANDS LIST
@@ -169,7 +171,7 @@ void SStartCommandList::RemoveCommands( const vector<int> &rIndices )
 	if ( rIndices.empty() || commands.empty() )
 		return;
 	//
-	vector<BYTE> mustCopy;
+	vector<uint8_t> mustCopy;
 	mustCopy.resize( commands.size() );
 	for ( int i = 0; i < commands.size(); ++i )
 		mustCopy[i] = true;
@@ -255,7 +257,7 @@ void CUnitStartCmdState::Leave()
 }
 
 
-bool CUnitStartCmdState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CUnitStartCmdState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand(nCommandID, dwData) )
 		return true;
@@ -267,7 +269,7 @@ bool CUnitStartCmdState::HandleCommand( UINT nCommandID, DWORD dwData )
 			SUnitStartCmdWindowData data;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
 																																ID_WINDOW_GET_DIALOG_DATA, 
-																																reinterpret_cast<DWORD>(&data)) )
+																																reinterpret_cast<uint32_t>(&data)) )
 			{
 				switch ( data.eLastAction )
 				{
@@ -831,7 +833,7 @@ void CUnitStartCmdState::RefreshDockingWindow( const vector<int> *pSelection )
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<DWORD>(&data) );
+																												reinterpret_cast<uint32_t>(&data) );
 }
 
 
@@ -1069,7 +1071,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 	
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<DWORD>(&data) );
+																												reinterpret_cast<uint32_t>(&data) );
 }
 
 
@@ -1111,7 +1113,7 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 	SUnitStartCmdWindowData data;
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
 																														ID_WINDOW_GET_DIALOG_DATA,
-																														reinterpret_cast<DWORD>(&data)) )
+																														reinterpret_cast<uint32_t>(&data)) )
 	{
 		for ( int i = 0; i < data.selectedCommands.size(); ++i )
 		{

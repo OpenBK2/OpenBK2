@@ -5,6 +5,8 @@
 #include "ModelWindow.h"
 #include "ModelEditorSettings.h"
 
+#include <cstdint>
+
 #define TOOLBAR_MODEL_ELEMENTS_COUNT 13
 
 EXTERNVAR const UINT TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
@@ -45,7 +47,7 @@ public:
 	void Redo( IController* pController ) {}
 	
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// Icons creations

@@ -1,4 +1,6 @@
-WORD wDeltaAngle;
+#include <cstdint>
+
+uint16_t wDeltaAngle;
 int nAimingTime;
 
 virtual void ToAIUnits( bool bInEditor )
@@ -15,7 +17,7 @@ virtual void ToAIUnits( bool bInEditor )
 		fRevealRadius *= 32.0f;
 	}
 	// градусы <=> градусы65535
-	wDeltaAngle = ( DWORD( float( fDeltaAngle / 2 ) * (65536.0f / 360.0f) ) ) % 65536;
+	wDeltaAngle = ( uint32_t( float( fDeltaAngle / 2 ) * (65536.0f / 360.0f) ) ) % 65536;
 	// shell types
 	for ( int i = 0; i < shells.size(); ++i )
 		shells[i].ToAIUnits( bInEditor ); 

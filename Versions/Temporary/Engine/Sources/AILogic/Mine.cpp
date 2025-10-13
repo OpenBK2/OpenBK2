@@ -149,7 +149,7 @@ void CMineStaticObject::SetVisible( int nParty, bool bVis )
 { 
 	if ( nParty != theDipl.GetNeutralParty() )
 	{
-		mVisibleStatus = ( mVisibleStatus & ~( 1UL << nParty ) ) | ( DWORD(bVis) << nParty );
+		mVisibleStatus = ( mVisibleStatus & ~( 1UL << nParty ) ) | ( uint32_t(bVis) << nParty );
 
 		if ( theDipl.GetDiplStatusForParties( nParty, theDipl.GetMyParty() ) == EDI_FRIEND ) 
 		{
@@ -160,7 +160,7 @@ void CMineStaticObject::SetVisible( int nParty, bool bVis )
 	}
 }
 
-const bool CMineStaticObject::IsVisible( const BYTE nParty ) const
+const bool CMineStaticObject::IsVisible( const uint8_t nParty ) const
 { 
 	return mVisibleStatus & ( 1 << nParty ); 
 }

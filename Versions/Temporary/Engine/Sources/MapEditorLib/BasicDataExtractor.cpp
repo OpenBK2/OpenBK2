@@ -12,8 +12,10 @@
 #include "System/VFSOperations.h"
 #include "Tools_Resources.h"
 
-bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,
-																							  CArray2D<DWORD> *pNormalImage, 
+#include <cstdint>
+
+bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
+																							  CArray2D<uint32_t> *pNormalImage,
 																								const string &szFileName,
 																								ELoadImageMethod eMethod )
 {
@@ -26,7 +28,7 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,
 	OpenStreamHolder( &streamHolder, szFileName );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
-		CArray2D<DWORD> imageSource;
+		CArray2D<uint32_t> imageSource;
 		NImage::LoadImageDDS( &imageSource, streamHolder.pStream );
 		if ( !imageSource.IsEmpty() ) 
 		{
@@ -68,8 +70,8 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 			// just load icons from cache
 			if ( CPtr<IBinSaver> pSaver = CreateBinSaver( streamHolder.pStream, SAVER_MODE_READ ) )
 			{
-				CArray2D<DWORD> imageSmall;
-				CArray2D<DWORD> imageNormal;
+				CArray2D<uint32_t> imageSmall;
+				CArray2D<uint32_t> imageNormal;
 				//
 				pSaver->Add( 1, &imageSmall );
 				pSaver->Add( 2, &imageNormal );
@@ -88,8 +90,8 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 }
 
 
-void CBasicDataExtractor::SaveImagesToCache( CArray2D<DWORD> &rImageSmall,
-																						 CArray2D<DWORD> &rImageNormal,
+void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
+																						 CArray2D<uint32_t> &rImageNormal,
 																						 const string &rszObjectTypeName,
 																						 const string &rszObjectName )
 {
@@ -144,7 +146,7 @@ UINT CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 	}
 	else
 	{
-		CArray2D<DWORD> smallImage, normalImage;
+		CArray2D<uint32_t> smallImage, normalImage;
 		if ( GetImages( &smallImage, &normalImage, rszObjectTypeName, rszObjectName, pObjectManipulator ) )
 		{
 			SaveImagesToCache( smallImage, normalImage, rszObjectTypeName, rszObjectName );

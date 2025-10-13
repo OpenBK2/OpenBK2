@@ -4,6 +4,8 @@
 #include "3Dmotor/DBScene.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 //Mapinfo height state edit parameters
 #define MODEL_EP_LIGHT_COUNT						0x00000001
 #define MODEL_EP_LIGHT_INDEX						0x00000002
@@ -127,7 +129,7 @@ public:
 	void OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

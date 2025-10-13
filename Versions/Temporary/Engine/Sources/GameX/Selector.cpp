@@ -17,6 +17,7 @@
 #include "System/Commands.h"
 
 #include <algorithm>
+#include <cstdint>
 
 static bool s_bShowAllObjectsInfo = false;
 static bool s_bShowBuildingsInfo = false;
@@ -851,7 +852,7 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 	if ( buffer.empty() )
 		return false;
 
-	const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
+	const uint16_t wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 	pCommandsSender->CommandGroupCommand( pCommand, wAIGroup, bPlaceInQueue, ML_COMMAND_SAVE_GAME );
 	pCommandsSender->CommandUnregisterGroup( wAIGroup );
 	return true;
@@ -888,7 +889,7 @@ bool CSelector::DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, 
 		}
 	}
 
-	const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
+	const uint16_t wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 	pCommandsSender->CommandGroupCommand( pCommand, wAIGroup, bPlaceInQueue, ML_COMMAND_SAVE_GAME );
 	pCommandsSender->CommandUnregisterGroup( wAIGroup );
 	return true;
@@ -921,7 +922,7 @@ void CSelector::SetShowAreas( EActionNotify eType, bool bOn )
 			buffer.push_back( pSO->GetID() );
 	}
 
-	//const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
+	//const uint16_t wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 	Singleton<IAILogic>()->ShowAreas( buffer, eType, bOn );
 }
 

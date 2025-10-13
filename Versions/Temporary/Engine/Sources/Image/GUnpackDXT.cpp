@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "GUnpackDXT.h"
 
+#include <cstdint>
 
 namespace NImage
 {
 struct SDDSHeader
 {
-	DWORD dwWidth, dwHeight;
+	uint32_t dwWidth, dwHeight;
 };
 
 // ************************************************************************************************************************ //
@@ -19,31 +20,31 @@ struct SDDSHeader
 
 struct SDXTColBlock
 {
-	WORD col0;
-	WORD col1;
+	uint16_t col0;
+	uint16_t col1;
 	// no bit fields - use bytes
-	BYTE row[4];
+	uint8_t row[4];
 };
 
 struct SDXTAlphaBlockExplicit
 {
-	WORD row[4];
+	uint16_t row[4];
 };
 
 struct SDXTAlphaBlock3BitLinear
 {
-	BYTE alpha0;
-	BYTE alpha1;
+	uint8_t alpha0;
+	uint8_t alpha1;
 
-	BYTE stuff[6];
+	uint8_t stuff[6];
 };
 // use cast to struct instead of RGBA_MAKE as struct is much
 struct SColor8888
 {
-	BYTE b;		//  Last one is MSB, 1st is LSB.
-	BYTE g;		//  order of the output ARGB or BGRA, etc...
-	BYTE r;		// change the order of names to change the 
-	BYTE a;
+	uint8_t b;		//  Last one is MSB, 1st is LSB.
+	uint8_t g;		//  order of the output ARGB or BGRA, etc...
+	uint8_t r;		// change the order of names to change the
+	uint8_t a;
 };
 
 struct SColor565
@@ -54,13 +55,13 @@ struct SColor565
 };
 
 inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor8888 *col_1, 
-																 SColor8888 *col_2, SColor8888 *col_3, WORD &wrd )
+																 SColor8888 *col_2, SColor8888 *col_3, uint16_t &wrd )
 {
 	// There are 4 methods to use - see the Time_ functions.
 	// 1st = shift = does normal approach per byte for color comps
 	// 2nd = use freak variable bit field SColor565 for component extraction
-	// 3rd = use super-freak DWORD adds BEFORE shifting the color components
-	//  This lets you do only 1 add per color instead of 3 BYTE adds and
+	// 3rd = use super-freak uint32_t adds BEFORE shifting the color components
+	//  This lets you do only 1 add per color instead of 3 uint8_t adds and
 	//  might be faster
 	// Call RunTimingSession() to run each of them & output result to txt file
 
@@ -96,26 +97,26 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 		// These two bit codes correspond to the 2-bit fields 
 		// stored in the 64-bit block.
 
-		wrd = ((WORD)col_0->r * 2 + (WORD)col_1->r )/3;
+		wrd = ((uint16_t)col_0->r * 2 + (uint16_t)col_1->r )/3;
 											// no +1 for rounding
 											// as bits have been shifted to 888
-		col_2->r = (BYTE)wrd;
+		col_2->r = (uint8_t)wrd;
 
-		wrd = ((WORD)col_0->g * 2 + (WORD)col_1->g )/3;
-		col_2->g = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->g * 2 + (uint16_t)col_1->g )/3;
+		col_2->g = (uint8_t)wrd;
 
-		wrd = ((WORD)col_0->b * 2 + (WORD)col_1->b )/3;
-		col_2->b = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->b * 2 + (uint16_t)col_1->b )/3;
+		col_2->b = (uint8_t)wrd;
 		col_2->a = 0xff;
 
-		wrd = ((WORD)col_0->r + (WORD)col_1->r *2 )/3;
-		col_3->r = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->r + (uint16_t)col_1->r *2 )/3;
+		col_3->r = (uint8_t)wrd;
 
-		wrd = ((WORD)col_0->g + (WORD)col_1->g *2 )/3;
-		col_3->g = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->g + (uint16_t)col_1->g *2 )/3;
+		col_3->g = (uint8_t)wrd;
 
-		wrd = ((WORD)col_0->b + (WORD)col_1->b *2 )/3;
-		col_3->b = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->b + (uint16_t)col_1->b *2 )/3;
+		col_3->b = (uint8_t)wrd;
 		col_3->a = 0xff;
 
 	}
@@ -131,12 +132,12 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 		
 		// TRACE("block has alpha\n");
 
-		wrd = ((WORD)col_0->r + (WORD)col_1->r )/2;
-		col_2->r = (BYTE)wrd;
-		wrd = ((WORD)col_0->g + (WORD)col_1->g )/2;
-		col_2->g = (BYTE)wrd;
-		wrd = ((WORD)col_0->b + (WORD)col_1->b )/2;
-		col_2->b = (BYTE)wrd;
+		wrd = ((uint16_t)col_0->r + (uint16_t)col_1->r )/2;
+		col_2->r = (uint8_t)wrd;
+		wrd = ((uint16_t)col_0->g + (uint16_t)col_1->g )/2;
+		col_2->g = (uint8_t)wrd;
+		wrd = ((uint16_t)col_0->b + (uint16_t)col_1->b )/2;
+		col_2->b = (uint8_t)wrd;
 		col_2->a = 0xff;
 
 		// adding random to unpacking is stupid, guys!
@@ -149,25 +150,25 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 	}
 }			//  Get color block colors (...)
 
-inline void DecodeColorBlock( DWORD *pImPos, SDXTColBlock *pColorBlock, int width,
-								              DWORD *col_0, DWORD *col_1, DWORD *col_2, DWORD *col_3 )
+inline void DecodeColorBlock( uint32_t *pImPos, SDXTColBlock *pColorBlock, int width,
+								              uint32_t *col_0, uint32_t *col_1, uint32_t *col_2, uint32_t *col_3 )
 {
 	// width is width of image in pixels
-	DWORD bits;
+	uint32_t bits;
 	int r,n;
 
 	// bit masks = 00000011, 00001100, 00110000, 11000000
-	const DWORD masks[] = { 3, 12, 3 << 4, 3 << 6 };
+	const uint32_t masks[] = { 3, 12, 3 << 4, 3 << 6 };
 	const int   shift[] = { 0, 2, 4, 6 };
 
 	// r steps through lines in y
-	for ( r = 0; r < 4; ++r, pImPos += width - 4 )	// no width*4 as DWORD ptr inc will *4
+	for ( r = 0; r < 4; ++r, pImPos += width - 4 )	// no width*4 as uint32_t ptr inc will *4
 	{
 
 		// width * 4 bytes per pixel per line
 		// each j dxtc row is 4 lines of pixels
 
-		// pImPos = (DWORD*)((DWORD)pBase + i*16 + (r+j*4) * hdr.dwWidth * 4 );
+		// pImPos = (uint32_t*)((uint32_t)pBase + i*16 + (r+j*4) * hdr.dwWidth * 4 );
 
 		// n steps through pixels
 		for ( n = 0; n < 4; ++n )
@@ -179,7 +180,7 @@ inline void DecodeColorBlock( DWORD *pImPos, SDXTColBlock *pColorBlock, int widt
 			{
 			case 0 :
 				*pImPos = *col_0;
-				pImPos++;		// increment to next DWORD
+				pImPos++;		// increment to next uint32_t
 				break;
 			case 1 :
 				*pImPos = *col_1;
@@ -202,7 +203,7 @@ inline void DecodeColorBlock( DWORD *pImPos, SDXTColBlock *pColorBlock, int widt
 	}
 }
 
-inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaBlock, int width, DWORD alphazero )
+inline void  DecodeAlphaExplicit( uint32_t *pImPos, SDXTAlphaBlockExplicit *pAlphaBlock, int width, uint32_t alphazero )
 {
 	// alphazero is a bit mask that when & with the image color
 	//  will zero the alpha bits, so if the image DWORDs  are
@@ -213,7 +214,7 @@ inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaB
 	// decodes to 32 bit format only
 	int row, pix;
 
-	WORD wrd;
+	uint16_t wrd;
 
 	SColor8888 col;
 	col.r = col.g = col.b = 0;
@@ -241,7 +242,7 @@ inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaB
 											//  in final image, and is crude approach to full 
 											//  range scale
 
-			*pImPos |= *((DWORD*)&col);	// or the bits into the prev. nulled alpha
+			*pImPos |= *((uint32_t*)&col);	// or the bits into the prev. nulled alpha
 
 			wrd >>= 4;		// move next bits to lowest 4
 
@@ -251,11 +252,11 @@ inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaB
 	}
 }
 
-inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pAlphaBlock,
-									int width, DWORD alphazero)
+inline void DecodeAlpha3BitLinear( uint32_t * pImPos, SDXTAlphaBlock3BitLinear * pAlphaBlock,
+									int width, uint32_t alphazero)
 {
-	static BYTE s_Bits[4][4];
-	static WORD s_Alphas[8];
+	static uint8_t s_Bits[4][4];
+	static uint16_t s_Alphas[8];
 	static SColor8888 s_ACol[4][4];
 
 	s_Alphas[0] = pAlphaBlock->alpha0;
@@ -294,45 +295,45 @@ inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pA
 
 	// first two rows of 4 pixels each:
 	// pRows = (Alpha3BitRows*) & ( pAlphaBlock->stuff[0] );
-	const DWORD mask = 0x00000007;		// bits = 00 00 01 11
+	const uint32_t mask = 0x00000007;		// bits = 00 00 01 11
 
-	DWORD bits = *( (DWORD*) & ( pAlphaBlock->stuff[0] ));
+	uint32_t bits = *( (uint32_t*) & ( pAlphaBlock->stuff[0] ));
 
-	s_Bits[0][0] = (BYTE)( bits & mask );
+	s_Bits[0][0] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[0][1] = (BYTE)( bits & mask );
+	s_Bits[0][1] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[0][2] = (BYTE)( bits & mask );
+	s_Bits[0][2] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[0][3] = (BYTE)( bits & mask );
+	s_Bits[0][3] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[1][0] = (BYTE)( bits & mask );
+	s_Bits[1][0] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[1][1] = (BYTE)( bits & mask );
+	s_Bits[1][1] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[1][2] = (BYTE)( bits & mask );
+	s_Bits[1][2] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[1][3] = (BYTE)( bits & mask );
+	s_Bits[1][3] = (uint8_t)( bits & mask );
 
 	// now for last two rows:
 
-	bits = *( (DWORD*) & ( pAlphaBlock->stuff[3] ));		// last 3 bytes
+	bits = *( (uint32_t*) & ( pAlphaBlock->stuff[3] ));		// last 3 bytes
 
-	s_Bits[2][0] = (BYTE)( bits & mask );
+	s_Bits[2][0] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[2][1] = (BYTE)( bits & mask );
+	s_Bits[2][1] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[2][2] = (BYTE)( bits & mask );
+	s_Bits[2][2] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[2][3] = (BYTE)( bits & mask );
+	s_Bits[2][3] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[3][0] = (BYTE)( bits & mask );
+	s_Bits[3][0] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[3][1] = (BYTE)( bits & mask );
+	s_Bits[3][1] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[3][2] = (BYTE)( bits & mask );
+	s_Bits[3][2] = (uint8_t)( bits & mask );
 	bits >>= 3;
-	s_Bits[3][3] = (BYTE)( bits & mask );
+	s_Bits[3][3] = (uint8_t)( bits & mask );
 
 
 	// decode the codes into alpha values
@@ -343,7 +344,7 @@ inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pA
 	{
 		for( pix=0; pix < 4; pix++ )
 		{
-			s_ACol[row][pix].a = (BYTE) s_Alphas[ s_Bits[row][pix] ];
+			s_ACol[row][pix].a = (uint8_t) s_Alphas[ s_Bits[row][pix] ];
 
 			ASSERT( s_ACol[row][pix].r == 0 );
 			ASSERT( s_ACol[row][pix].g == 0 );
@@ -364,29 +365,29 @@ inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pA
 			// zero the alpha bits of image pixel
 			*pImPos &=  alphazero;
 
-			*pImPos |=  *((DWORD*) &(s_ACol[row][pix]));	// or the bits into the prev. nulled alpha
+			*pImPos |=  *((uint32_t*) &(s_ACol[row][pix]));	// or the bits into the prev. nulled alpha
 			pImPos++;
 		}
 	}
 }
 
-void DecompressDXT1( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+void DecompressDXT1( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	// This was hacked up pretty quick & slopily
 	// decompresses to 32 bit format 0xARGB
 
 	const int xblocks = hdr.dwWidth / 4;
 	const int yblocks = hdr.dwHeight / 4;
-	DWORD *pBase  = (DWORD*)pRes;
-	DWORD *pImPos = (DWORD*)pBase;			// pos in decompressed data
-//	WORD  *pPos   = (WORD*)pCompBytes;	// pos in compressed data
+	uint32_t *pBase  = (uint32_t*)pRes;
+	uint32_t *pImPos = (uint32_t*)pBase;			// pos in decompressed data
+//	uint16_t  *pPos   = (uint16_t*)pCompBytes;	// pos in compressed data
 	int i,j;
 
 	SDXTColBlock *pBlock;
 
 	SColor8888 col_0, col_1, col_2, col_3;
 
-	WORD wrd;
+	uint16_t wrd;
 
 	for( j = 0; j < yblocks; ++j )
 	{
@@ -404,22 +405,22 @@ void DecompressDXT1( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 			// now decode the color block into the bitmap bits
 			// inline func:
 
-			pImPos = (DWORD*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
+			pImPos = (uint32_t*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
 
 
-			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (DWORD*)&col_0, (DWORD*)&col_1,
-												(DWORD*)&col_2, (DWORD*)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (uint32_t*)&col_0, (uint32_t*)&col_1,
+												(uint32_t*)&col_2, (uint32_t*)&col_3 );
 		}
 	}
 }
 
-void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+void DecompressDXT3( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	const int xblocks = hdr.dwWidth / 4;
 	const int yblocks = hdr.dwHeight / 4;
-	DWORD *pBase  = (DWORD*)pRes;
-	DWORD *pImPos = (DWORD*)pBase;			// pos in decompressed data
-//	WORD  *pPos   = (WORD*)pCompBytes;	// pos in compressed data
+	uint32_t *pBase  = (uint32_t*)pRes;
+	uint32_t *pImPos = (uint32_t*)pBase;			// pos in decompressed data
+//	uint16_t  *pPos   = (uint16_t*)pCompBytes;	// pos in compressed data
 	int i,j;
 
 	SDXTColBlock *pBlock;
@@ -428,13 +429,13 @@ void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 	SColor8888 col_0, col_1, col_2, col_3;
 
 
-	WORD wrd;
+	uint16_t wrd;
 
 	// fill alphazero with appropriate value to zero out alpha when
-	//  alphazero is ANDed with the image color 32 bit DWORD:
+	//  alphazero is ANDed with the image color 32 bit uint32_t:
 	col_0.a = 0;
 	col_0.r = col_0.g = col_0.b = 0xff;
-	DWORD alphazero = *((DWORD*) &col_0);
+	uint32_t alphazero = *((uint32_t*) &col_0);
 
 
 
@@ -463,11 +464,11 @@ void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 			// Decode the color block into the bitmap bits
 			// inline func:
 
-			pImPos = (DWORD*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
+			pImPos = (uint32_t*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
 
 
-			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (DWORD*)&col_0, (DWORD*)&col_1,
-								(DWORD*)&col_2, (DWORD*)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (uint32_t*)&col_0, (uint32_t*)&col_1,
+								(uint32_t*)&col_2, (uint32_t*)&col_3 );
 
 			// Overwrite the previous alpha bits with the alpha block
 			//  info
@@ -479,33 +480,33 @@ void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 	}
 }
 
-void DecompressDXT2( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+void DecompressDXT2( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	// Can do color & alpha same as dxt3, but color is pre-multiplied 
 	//   so the result will be wrong unless corrected. 
 	DecompressDXT3( pRes, hdr, pCompBytes );
 }
 
-void DecompressDXT5( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+void DecompressDXT5( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	const int xblocks = hdr.dwWidth / 4;
 	const int yblocks = hdr.dwHeight / 4;
-	DWORD *pBase  = (DWORD*)pRes;
-	DWORD *pImPos = (DWORD*)pBase;			// pos in decompressed data
-//	WORD  *pPos   = (WORD*)pCompBytes;	// pos in compressed data
+	uint32_t *pBase  = (uint32_t*)pRes;
+	uint32_t *pImPos = (uint32_t*)pBase;			// pos in decompressed data
+//	uint16_t  *pPos   = (uint16_t*)pCompBytes;	// pos in compressed data
 	int i,j;
 
 	SDXTColBlock *pBlock;
 	SDXTAlphaBlock3BitLinear *pAlphaBlock;
 
 	SColor8888 col_0, col_1, col_2, col_3;
-	WORD wrd;
+	uint16_t wrd;
 
 	// fill alphazero with appropriate value to zero out alpha when
-	//  alphazero is ANDed with the image color 32 bit DWORD:
+	//  alphazero is ANDed with the image color 32 bit uint32_t:
 	col_0.a = 0;
 	col_0.r = col_0.g = col_0.b = 0xff;
-	DWORD alphazero = *((DWORD*) &col_0);
+	uint32_t alphazero = *((uint32_t*) &col_0);
 
 	////////////////////////////////
 	//	TRACE("blocks: x: %d    y: %d\n", xblocks, yblocks );
@@ -536,11 +537,11 @@ void DecompressDXT5( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 			// Decode the color block into the bitmap bits
 			// inline func:
 
-			pImPos = (DWORD*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
+			pImPos = (uint32_t*)((uintptr_t)pBase + i*16 + (j*4) * hdr.dwWidth * 4 );
 
 
-			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (DWORD*)&col_0, (DWORD*)&col_1,
-								(DWORD*)&col_2, (DWORD*)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, (uint32_t*)&col_0, (uint32_t*)&col_1,
+								(uint32_t*)&col_2, (uint32_t*)&col_3 );
 
 			// Overwrite the previous alpha bits with the alpha block
 			//  info
@@ -552,7 +553,7 @@ void DecompressDXT5( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 	}
 }
 
-void DecompressDXT4( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+void DecompressDXT4( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	// Can do color & alpha same as dxt5, but color is pre-multiplied 
 	//   so the result will be wrong unless corrected. 
@@ -560,7 +561,7 @@ void DecompressDXT4( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 }
 
 
-void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<DWORD> *pRes )
+void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<uint32_t> *pRes )
 {
 	SDDSHeader hdr;
 	hdr.dwWidth = nXSize;
@@ -569,19 +570,19 @@ void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<DW
 	switch ( nDxt ) 
 	{
 	case 1:
-		DecompressDXT1( (DWORD*)&(*pRes)[0][0], hdr, (const BYTE*)pData );
+		DecompressDXT1( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );
 		break;
 	case 2:
-		DecompressDXT2( (DWORD*)&(*pRes)[0][0], hdr, (const BYTE*)pData );
+		DecompressDXT2( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );
 		break;
 	case 3:
-		DecompressDXT3( (DWORD*)&(*pRes)[0][0], hdr, (const BYTE*)pData );
+		DecompressDXT3( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );
 		break;
 	case 4:
-		DecompressDXT4( (DWORD*)&(*pRes)[0][0], hdr, (const BYTE*)pData );
+		DecompressDXT4( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );
 		break;
 	case 5:
-		DecompressDXT5( (DWORD*)&(*pRes)[0][0], hdr, (const BYTE*)pData );
+		DecompressDXT5( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );
 		break;
 	}
 }

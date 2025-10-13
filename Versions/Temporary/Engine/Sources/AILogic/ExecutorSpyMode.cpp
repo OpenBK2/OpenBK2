@@ -3,6 +3,8 @@
 #include "ExecutorSpyMode.h"
 #include "NewUpdater.h"
 
+#include <cstdint>
+
 extern CEventUpdater updater;
 
 CExecutorSpyMode::CExecutorSpyMode( CAIUnit *_pUnit	) :
@@ -10,7 +12,7 @@ CExecutorUnitCombatBonus ( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE ), bMaske
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & CExecutorUnitCombatBonus::EUM_FIGHTING ) )
 	{

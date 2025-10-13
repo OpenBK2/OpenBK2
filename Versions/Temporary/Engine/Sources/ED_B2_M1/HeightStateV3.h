@@ -7,6 +7,8 @@
 #include "HeightPattern.h"
 #include "Tools_SceneDraw.h"
 
+#include <cstdint>
+
 //Mapinfo terrain height state v3 edit parameters
 #define MITHV3EP_BRUSH								0x00000001
 #define MITHV3EP_BRUSH_TYPE						0x00000002
@@ -134,7 +136,7 @@ class CHeightStateV3 : public CMultiInputState, public ICommandHandler
 	static const float	HEIGHT_SPEED;
 	static const float	ROUND_RATIO;
 	static const float	PLATO_RATIO;
-	static const DWORD	BRUSH_COLOR;
+	static const uint32_t	BRUSH_COLOR;
 	static const int		BRUSH_PARTS;
 	static const int		HEIGHT_BRUSH_SIZE[5];
 	static const int		TILE_BRUSH_SIZE[5];
@@ -205,8 +207,8 @@ private:
 
 	// внутренние переменные
 	CVec3 vTileDiffPos;
-	CArray2D<BYTE> tileDiff;
-	CArray2D<BYTE> tileBrush;
+	CArray2D<uint8_t> tileDiff;
+	CArray2D<uint8_t> tileBrush;
 
 	bool bTileEditStarted;
 	bool bHeightEditStarted;
@@ -227,7 +229,7 @@ private:
 	void UpdateCommonPatterns();
 	void UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditParameters::EBrush eBrush );
 	
-	void CreateTileBrush( CArray2D<BYTE> *pBrush, int nSize, int nTileIndex, bool bCircle );
+	void CreateTileBrush( CArray2D<uint8_t> *pBrush, int nSize, int nTileIndex, bool bCircle );
 	void CreatePatternAndModifyGeometry( const SHeightPattern &rPattern );
 protected:
 	//IInputState interface
@@ -246,7 +248,7 @@ protected:
 	void OnKeyUp			( UINT nChar, UINT nRepCnt, UINT nFlags );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:

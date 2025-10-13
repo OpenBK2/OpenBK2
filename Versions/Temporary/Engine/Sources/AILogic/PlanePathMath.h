@@ -1,7 +1,8 @@
-
 #pragma once
+
 #include "Misc/Spline.h"
 
+#include <cstdint>
 
 inline CVec3 ToVec3( const CVec2 &v ) { return CVec3(v,0); }
 inline CVec3 ToVec3( const CVec3 &v ) { return v; }
@@ -96,8 +97,8 @@ struct CDirectedCircle : public CCircle
 void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 );
 
 // travel angle from start to finish. returned angle is in range [0, 65535]
-WORD DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir );
-WORD DirectedDirsDifference( const WORD wStart, const WORD wFinish, const int nDir );
+uint16_t DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir );
+uint16_t DirectedDirsDifference( const uint16_t wStart, const uint16_t wFinish, const int nDir );
 
 // returns points on from & to circles
 // return false if there are no tangens

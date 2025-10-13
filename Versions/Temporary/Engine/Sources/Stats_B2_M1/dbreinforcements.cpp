@@ -6,12 +6,14 @@
 #include "System/XmlSaver.h"
 #include "dbreinforcements.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SIntArray::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SIntArray::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "data", &data, pThis );
 }
@@ -30,7 +32,7 @@ int SIntArray::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SIntArray::CalcCheckSum() const
+uint32_t SIntArray::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -47,9 +49,9 @@ DWORD SIntArray::CalcCheckSum() const
 
 
 
-void SReinforcementGroupInfoEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementGroupInfoEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "GroupID", (BYTE*)&nGroupID - pThis, sizeof(nGroupID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "GroupID", (uint8_t*)&nGroupID - pThis, sizeof(nGroupID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "GroupsVector", &groupsVector, pThis ); 
 }
 
@@ -69,7 +71,7 @@ int SReinforcementGroupInfoEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementGroupInfoEntry::CalcCheckSum() const
+uint32_t SReinforcementGroupInfoEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -86,7 +88,7 @@ DWORD SReinforcementGroupInfoEntry::CalcCheckSum() const
 
 
 
-void SReinforcementGroupInfo::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementGroupInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "infos", &infos, pThis );
 }
@@ -105,7 +107,7 @@ int SReinforcementGroupInfo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementGroupInfo::CalcCheckSum() const
+uint32_t SReinforcementGroupInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -122,9 +124,9 @@ DWORD SReinforcementGroupInfo::CalcCheckSum() const
 
 
 
-void SReinforcementMaskEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementMaskEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
 }
 
@@ -144,7 +146,7 @@ int SReinforcementMaskEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementMaskEntry::CalcCheckSum() const
+uint32_t SReinforcementMaskEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -161,7 +163,7 @@ DWORD SReinforcementMaskEntry::CalcCheckSum() const
 
 
 
-void SReinforcementMask::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementMask::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Positions", &positions, pThis );
 }
@@ -180,7 +182,7 @@ int SReinforcementMask::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementMask::CalcCheckSum() const
+uint32_t SReinforcementMask::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -197,14 +199,14 @@ DWORD SReinforcementMask::CalcCheckSum() const
 
 
 
-void SReinforcementDefinition::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementDefinition::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (BYTE*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (BYTE*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "UnitType", (BYTE*)&eUnitType - pThis, sizeof(eUnitType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "IsAmmunition", (BYTE*)&bIsAmmunition - pThis, sizeof(bIsAmmunition), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (BYTE*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (uint8_t*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Squad", (uint8_t*)&pSquad - pThis, sizeof(pSquad), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "UnitType", (uint8_t*)&eUnitType - pThis, sizeof(eUnitType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "IsAmmunition", (uint8_t*)&bIsAmmunition - pThis, sizeof(bIsAmmunition), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (uint8_t*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SReinforcementDefinition::operator&( IXmlSaver &saver )
@@ -231,7 +233,7 @@ int SReinforcementDefinition::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementDefinition::CalcCheckSum() const
+uint32_t SReinforcementDefinition::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -248,10 +250,10 @@ DWORD SReinforcementDefinition::CalcCheckSum() const
 
 
 
-void STypedDeployTemplate::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void STypedDeployTemplate::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "Template", (BYTE*)&pTemplate - pThis, sizeof(pTemplate), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "Template", (uint8_t*)&pTemplate - pThis, sizeof(pTemplate), NTypeDef::TYPE_TYPE_REF );
 }
 
 int STypedDeployTemplate::operator&( IXmlSaver &saver )
@@ -270,7 +272,7 @@ int STypedDeployTemplate::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD STypedDeployTemplate::CalcCheckSum() const
+uint32_t STypedDeployTemplate::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -287,18 +289,18 @@ DWORD STypedDeployTemplate::CalcCheckSum() const
 
 
 
-void SReinforcementPosition::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SReinforcementPosition::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "AviationPosition", &vAviationPosition, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Template", (BYTE*)&pTemplate - pThis, sizeof(pTemplate), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Template", (uint8_t*)&pTemplate - pThis, sizeof(pTemplate), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "TypedTemplates", &typedTemplates, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "IsDefault", (BYTE*)&bIsDefault - pThis, sizeof(bIsDefault), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "___delete_from_here_to_the_end", (BYTE*)&b___delete_from_here_to_the_end - pThis, sizeof(b___delete_from_here_to_the_end), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "FactoryID", (BYTE*)&nFactoryID - pThis, sizeof(nFactoryID), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PositionID", (BYTE*)&nPositionID - pThis, sizeof(nPositionID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "IsDefault", (uint8_t*)&bIsDefault - pThis, sizeof(bIsDefault), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "___delete_from_here_to_the_end", (uint8_t*)&b___delete_from_here_to_the_end - pThis, sizeof(b___delete_from_here_to_the_end), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "FactoryID", (uint8_t*)&nFactoryID - pThis, sizeof(nFactoryID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PositionID", (uint8_t*)&nPositionID - pThis, sizeof(nPositionID), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SReinforcementPosition::operator&( IXmlSaver &saver )
@@ -333,7 +335,7 @@ int SReinforcementPosition::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SReinforcementPosition::CalcCheckSum() const
+uint32_t SReinforcementPosition::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -350,10 +352,10 @@ DWORD SReinforcementPosition::CalcCheckSum() const
 
 
 
-void SScriptReinforcementEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SScriptReinforcementEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (BYTE*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Reinforcement", (uint8_t*)&pReinforcement - pThis, sizeof(pReinforcement), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SScriptReinforcementEntry::operator&( IXmlSaver &saver )
@@ -372,7 +374,7 @@ int SScriptReinforcementEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SScriptReinforcementEntry::CalcCheckSum() const
+uint32_t SScriptReinforcementEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -389,12 +391,12 @@ DWORD SScriptReinforcementEntry::CalcCheckSum() const
 
 
 
-void SPlayerReinforcementEnable::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SPlayerReinforcementEnable::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "NewPointOnEnable", &newPointOnEnable, pThis ); 
-	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementToEnable", (BYTE*)&eReinforcementToEnable - pThis, sizeof(eReinforcementToEnable), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "SetPoint", (BYTE*)&bSetPoint - pThis, sizeof(bSetPoint), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "GivenReinforcementPointID", (BYTE*)&nGivenReinforcementPointID - pThis, sizeof(nGivenReinforcementPointID), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementToEnable", (uint8_t*)&eReinforcementToEnable - pThis, sizeof(eReinforcementToEnable), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "SetPoint", (uint8_t*)&bSetPoint - pThis, sizeof(bSetPoint), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "GivenReinforcementPointID", (uint8_t*)&nGivenReinforcementPointID - pThis, sizeof(nGivenReinforcementPointID), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SPlayerReinforcementEnable::operator&( IXmlSaver &saver )
@@ -417,7 +419,7 @@ int SPlayerReinforcementEnable::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SPlayerReinforcementEnable::CalcCheckSum() const
+uint32_t SPlayerReinforcementEnable::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;

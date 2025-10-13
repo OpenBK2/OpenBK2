@@ -12,6 +12,8 @@
 #include "Graveyard.h"
 #include "NewUpdater.h"
 
+#include <cstdint>
+
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 extern SRailRoadSystem theRailRoadSystem;
@@ -34,7 +36,7 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 
 //	CTrainLocomotive
 
-void CTrainLocomotive::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
+void CTrainLocomotive::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
 {
 	CMilitaryCar::Init( center, z, pStats, fHP, dir, player, pCollisionsCollector );
 
@@ -85,9 +87,9 @@ void CTrainLocomotive::Init( const CVec2 &center, const int z, const SUnitBaseRP
 
 		vOwnPos = track.points[nPoint].vPos - track.points[nPoint - 1].vPos;
 		
-		WORD wOwnDir = dir;
-		WORD wDir1 = GetDirectionByVector( CVec2( -vOwnPos.x, -vOwnPos.y ) );			// To point 0
-		WORD wDir2 = GetDirectionByVector( CVec2( vOwnPos.x, vOwnPos.y ) );				// To end point
+		uint16_t wOwnDir = dir;
+		uint16_t wDir1 = GetDirectionByVector( CVec2( -vOwnPos.x, -vOwnPos.y ) );			// To point 0
+		uint16_t wDir2 = GetDirectionByVector( CVec2( vOwnPos.x, vOwnPos.y ) );				// To end point
 
 		fTrackPos = ( nPoint - 1 ) * track.fPointLength;
 		fTrackLimit = track.GetTrackLength();
@@ -157,7 +159,7 @@ void CTrainLocomotive::SetToTrackPos( float fPos )
 	CVec3 vPos;
 	vPos = vBackPos - vFrontPos;
 
-	WORD wDir = GetDirectionByVector( vPos.x, vPos.y );
+	uint16_t wDir = GetDirectionByVector( vPos.x, vPos.y );
 	if ( IsGoForward() )
 		wDir += 32768;
 
@@ -907,7 +909,7 @@ const bool CLocomotiveAttackObjState::TryFiring()
 		else
 		{
 			const CVec2 vDir = GetTargetCenter() - pUnit->GetCenterPlain();
-			const WORD wGunDir = GetDirectionByVector( vDir ) - pUnit->GetDirection();
+			const uint16_t wGunDir = GetDirectionByVector( vDir ) - pUnit->GetDirection();
 			pGun->TurnToRelativeDir( wGunDir );
 		}
 	}

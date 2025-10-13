@@ -6,12 +6,14 @@
 #include "System/XmlSaver.h"
 #include "DBAnimB2.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SAnimAABB::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SAnimAABB::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis ); 
@@ -33,7 +35,7 @@ int SAnimAABB::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SAnimAABB::CalcCheckSum() const
+uint32_t SAnimAABB::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -55,15 +57,15 @@ void SAnimB2::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "AnimB2", typeID, sizeof(*this) );
 	SAnimBase::ReportMetaInfo();
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Action", (BYTE*)&nAction - pThis, sizeof(nAction), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Length", (BYTE*)&nLength - pThis, sizeof(nLength), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Looped", (BYTE*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "WeaponsToUseWith", (BYTE*)&nWeaponsToUseWith - pThis, sizeof(nWeaponsToUseWith), NTypeDef::TYPE_TYPE_INT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Action", (uint8_t*)&nAction - pThis, sizeof(nAction), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Length", (uint8_t*)&nLength - pThis, sizeof(nLength), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Looped", (uint8_t*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "WeaponsToUseWith", (uint8_t*)&nWeaponsToUseWith - pThis, sizeof(nWeaponsToUseWith), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( "aabb_a", &aabb_a, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "aabb_d", &aabb_d, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MoveSpeed", (BYTE*)&fMoveSpeed - pThis, sizeof(fMoveSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MoveSpeed", (uint8_t*)&fMoveSpeed - pThis, sizeof(fMoveSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

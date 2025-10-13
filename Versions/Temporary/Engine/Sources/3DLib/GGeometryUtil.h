@@ -1,18 +1,20 @@
 #pragma once
 
+#include <cstdint>
+
 namespace NGScene
 {
 
 template<int N_SIZE>
 struct SVxCache
 {
-	WORD nData[N_SIZE];
+	uint16_t nData[N_SIZE];
 	int nPos;
 
 	SVxCache() { memset( nData, 0xffff, sizeof(nData) ); nPos = 0; }
-	void Push( WORD n ) { if ( IsIn( n ) ) return; nData[(++nPos)%N_SIZE] = n; }
-	bool IsIn( WORD n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return true; return false; }
-	int GetPos( WORD n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return (nPos - k + N_SIZE ) % N_SIZE; return -1; }
+	void Push( uint16_t n ) { if ( IsIn( n ) ) return; nData[(++nPos)%N_SIZE] = n; }
+	bool IsIn( uint16_t n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return true; return false; }
+	int GetPos( uint16_t n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return (nPos - k + N_SIZE ) % N_SIZE; return -1; }
 };
 
 //const int N_VX_TRI_CACHE_SIZE = 10;//24;
@@ -181,9 +183,9 @@ private:
 	bool OutputVertex( int n );
 	void ReverseVertex();
 	int CountNotCachedFL( const std::vector<STriangle> &tris, int nVertex );
-	void OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<WORD> *pVertexReorder );
+	void OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<uint16_t> *pVertexReorder );
 public:
-	void Optimize( std::vector<STriangle> *pTris, std::vector<WORD> *pVertexReorder, int *pnResVerts, int nVCacheSize );
+	void Optimize( std::vector<STriangle> *pTris, std::vector<uint16_t> *pVertexReorder, int *pnResVerts, int nVCacheSize );
 };
 
 struct SEdgeInfo

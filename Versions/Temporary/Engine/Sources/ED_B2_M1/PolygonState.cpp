@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "Misc/2Darray.h"
@@ -9,13 +8,15 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "PolygonState.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 const float	CPolygonState::CONTROL_POINT_RADIUS	= AI_TILE_SIZE / 1.0f;
 const int		CPolygonState::CONTROL_POINT_PARTS	= 8;
 const float	CPolygonState::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;
-const DWORD	CPolygonState::CONTROL_POINT_COLOR	= 0xFFFF4040;
-const DWORD	CPolygonState::CONTROL_LINE_COLOR		= 0xFFFF4040;
+const uint32_t	CPolygonState::CONTROL_POINT_COLOR	= 0xFFFF4040;
+const uint32_t	CPolygonState::CONTROL_LINE_COLOR		= 0xFFFF4040;
 
 void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -660,7 +661,7 @@ void CPolygonState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CPolygonState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CPolygonState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

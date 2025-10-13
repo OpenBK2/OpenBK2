@@ -2,6 +2,8 @@
 
 #include "System/VFSOperations.h"
 
+
+#include <cstdint>
 // Legacy
 template<class TResource>
 bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
@@ -287,17 +289,17 @@ void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePag
 void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage );
 
 
-void File2String( CString *pstrText, bool *pbUnicode, const std::vector<BYTE> &rBuffer, int nCodePage, bool bRemove_0D );
+void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );
 void File2String( CString *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
 void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
-void File2String( std::wstring *pwszText, const std::vector<BYTE> &rBuffer, bool bRemove_0D );
+void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
 void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
 
 
-void String2File( std::vector<BYTE> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
+void String2File( std::vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
 void String2File( const CString &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
 void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
-void String2File( std::vector<BYTE> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
+void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
 void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );
 
 

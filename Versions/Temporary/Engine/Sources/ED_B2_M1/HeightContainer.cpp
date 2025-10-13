@@ -4,15 +4,17 @@
 #include "Image/Targa.h"
 #include "B2_M1_Terrain/DBVSO.h"
 
-int CHeightContainer::STACK_SIZE = sizeof( DWORD ) * 8;
+#include <cstdint>
+
+int CHeightContainer::STACK_SIZE = sizeof( uint32_t ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;
 
 
 struct STraceImageFunctor
 {
-	DWORD dwColor;
-	CArray2D<DWORD> *pImage;
-	STraceImageFunctor( DWORD _dwColor, CArray2D<DWORD> *_pImage ) : dwColor( _dwColor ), pImage( _pImage ) {}
+	uint32_t dwColor;
+	CArray2D<uint32_t> *pImage;
+	STraceImageFunctor( uint32_t _dwColor, CArray2D<uint32_t> *_pImage ) : dwColor( _dwColor ), pImage( _pImage ) {}
 	void operator()( int x, int y )
 	{
 		if ( ( x >= 0 ) && ( x < pImage->GetSizeX() ) && ( y >= 0 ) && ( y < pImage->GetSizeY() ) )
@@ -23,7 +25,7 @@ struct STraceImageFunctor
 };
 
 
-void CHeightContainer::MarkTraceImageTile( CArray2D<DWORD> *pImage, int x, int y, DWORD dwColor )
+void CHeightContainer::MarkTraceImageTile( CArray2D<uint32_t> *pImage, int x, int y, uint32_t dwColor )
 {
 	const CTRect<int> indices( x * TRACE_IMAGE_TILE_SIZE - 2,
 														 y * TRACE_IMAGE_TILE_SIZE - 2,
@@ -42,7 +44,7 @@ void CHeightContainer::MarkTraceImageTile( CArray2D<DWORD> *pImage, int x, int y
 }
 
 
-void CHeightContainer::MarkTraceImageGrid( CArray2D<DWORD> *pImage, DWORD dwColor )
+void CHeightContainer::MarkTraceImageGrid( CArray2D<uint32_t> *pImage, uint32_t dwColor )
 {
 	for ( int x = 0; x < planeSize.x; ++x )
 	{
@@ -69,12 +71,12 @@ void CHeightContainer::AddStack()
 {
 	++nStackCount;
 	{
-		vector<CArray2D<DWORD> >::iterator posPlaneStack = blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<DWORD>() );
+		vector<CArray2D<uint32_t> >::iterator posPlaneStack = blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
 	{
-		vector<CArray2D<DWORD> >::iterator posPlaneStack = redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<DWORD>() );
+		vector<CArray2D<uint32_t> >::iterator posPlaneStack = redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
@@ -134,7 +136,7 @@ void CHeightContainer::ErasePlane( int nPolygonID )
 void CHeightContainer::ClearPlane( int nPlaneIndex )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
-	const DWORD dwMask =  ~( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
+	const uint32_t dwMask =  ~( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
 	for ( int y = 0; y < planeSize.y; ++y )
 	{
 		for ( int x = 0; x < planeSize.x; ++x )
@@ -150,9 +152,9 @@ void CHeightContainer::ClearPlane( int nPlaneIndex )
 struct SModifyBitFunctional
 {
 	int nBit;
-	CArray2D<DWORD> *pPlaneArray;
+	CArray2D<uint32_t> *pPlaneArray;
 
-	SModifyBitFunctional( const int _nBit, CArray2D<DWORD> *_pPlaneArray )
+	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray )
 		: nBit( _nBit ), pPlaneArray( _pPlaneArray )
 	{
 	}
@@ -173,7 +175,7 @@ void CHeightContainer::FillPlane( int nPlaneIndex, const vector<CVec2> &rBlackPo
 }
 
 
-void CHeightContainer::GetBits( vector<DWORD> *pBitsList, const int x, const int y )
+void CHeightContainer::GetBits( vector<uint32_t> *pBitsList, const int x, const int y )
 {
 	pBitsList->resize( nStackCount );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
@@ -183,7 +185,7 @@ void CHeightContainer::GetBits( vector<DWORD> *pBitsList, const int x, const int
 }
 
 
-void CHeightContainer::AddBitsToString( string *pszMessage, const DWORD dwBits ) const
+void CHeightContainer::AddBitsToString( string *pszMessage, const uint32_t dwBits ) const
 {
 	for ( int nBit = 0; nBit < STACK_SIZE; ++nBit )
 	{
@@ -241,7 +243,7 @@ void CHeightContainer::Mark( const int x, const int y )
 bool CHeightContainer::Compare( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
-	vector<DWORD> bitsList;
+	vector<uint32_t> bitsList;
 	GetBits( &bitsList, point.x, point.y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
@@ -267,14 +269,14 @@ void CHeightContainer::InsertPolygon( const vector<CVec2> &rBlackPolygon, const 
 	/**
 	if ( bTraceToImage )
 	{
-		CArray2D<DWORD> traceImage;
+		CArray2D<uint32_t> traceImage;
 		traceImage.SetSizes( ( planeSize.x - 1 ) * TRACE_IMAGE_TILE_SIZE + 1, ( planeSize.y - 1 ) * TRACE_IMAGE_TILE_SIZE + 1 );
 		traceImage.FillEvery( 0xFFFFFFFF );
 		//
 		MarkTraceImageGrid( &traceImage, 0xFF000000 );
 		//
 		const int nStackIndex = nPlaneIndex / STACK_SIZE;
-		const DWORD dwMask = ( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
+		const uint32_t dwMask = ( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
 		for ( int y = 0; y < planeSize.y; ++y )
 		{
 			for ( int x = 0; x < planeSize.x; ++x )
@@ -351,8 +353,8 @@ bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 	CTRect<int> rect( rRect );	
 	ValidateRect( CTRect<int>( 0, 0, planeSize.x, planeSize.y ), &rect );
 	//
-	vector<DWORD> blackBitsList;
-	vector<DWORD> redBitsList;
+	vector<uint32_t> blackBitsList;
+	vector<uint32_t> redBitsList;
 	blackBitsList.resize( nStackCount, 0 );
 	redBitsList.resize( nStackCount, 0 );
 	for ( int y = rect.miny; y < rect.maxy; ++y )
@@ -429,8 +431,8 @@ void CHeightContainer::Trace()
 		{
 			if ( filledBitsList[nStackIndex] & ( 1 << nBit ) )
 			{
-				CArray2D<DWORD> blackPlane( planeSize.y, planeSize.x );
-				CArray2D<DWORD> redPlane( planeSize.y, planeSize.x );
+				CArray2D<uint32_t> blackPlane( planeSize.y, planeSize.x );
+				CArray2D<uint32_t> redPlane( planeSize.y, planeSize.x );
 				for ( int y = 0; y < planeSize.y; ++y )
 				{
 					for ( int x = 0; x < planeSize.x; ++x )

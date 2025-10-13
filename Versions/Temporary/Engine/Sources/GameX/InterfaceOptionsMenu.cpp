@@ -17,6 +17,7 @@
 #include "3Dmotor/GAutoDetect.h"
 #include "3Dmotor/GfxBenchmark.h"
 
+#include <cstdint>
 
 const int ITEM_DELTA_X = 3;
 const int ITEM_DELTA_Y = 3;
@@ -112,7 +113,7 @@ void CInterfaceOptionsMenu::FillScreen()
 {
 	int nButtonX, nButtonY, nButtonSX, nButtonSY;
 	CPtr< IWindow >	pButtonOffset;
-	DWORD nOptionMask = 0xff;			
+	uint32_t nOptionMask = 0xff;
 
 	IWindow *pMPFilters = GetChildChecked<IWindow>( pScreen, "MPFilters", true );
 	if ( pMPFilters )
@@ -395,7 +396,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 		IWindow *pOptionControl = GetChildChecked<IWindow>( pElement, "OptionControl", true );
 		pOptionControl->SetName( StrFmt( "Control%d", i ) );
 		pOptionControl->SetTooltip( GET_TEXT_PRE(pEntry.,Tooltip) );
-		DWORD dwFlags = EWPF_POS_X | EWPF_POS_Y;
+		uint32_t dwFlags = EWPF_POS_X | EWPF_POS_Y;
 		switch ( pEntry.eEditorType )
 		{
 			case NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITLINE:

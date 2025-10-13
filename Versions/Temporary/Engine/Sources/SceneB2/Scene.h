@@ -2,13 +2,14 @@
 
 #include "SceneB2_export.h"
 
-
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "3Dmotor/GView.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/AnimModes.h"
 #include "SceneTypes.h"
+
+#include <cstdint>
 
 struct SGameMessage;
 namespace NDb
@@ -189,7 +190,7 @@ struct IScene : public CObjectBase
 	virtual void AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial ) = 0;
 	// polyline
 	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
-	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
 	virtual void RemovePolyline( const int nID ) = 0;
 	// picks
 	virtual void PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos ) = 0;
@@ -269,7 +270,7 @@ struct IScene : public CObjectBase
 	virtual float GetZ( float x, float y ) const = 0;
 	virtual void UpdateZ( CVec3 *pvPos ) = 0;
 	virtual float GetTileHeight( int nX, int nY ) const = 0;
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const = 0;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 

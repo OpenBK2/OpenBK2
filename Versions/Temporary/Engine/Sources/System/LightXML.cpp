@@ -2,6 +2,8 @@
 
 #include "LightXML.h"
 
+#include <cstdint>
+
 namespace NLXML
 {
 
@@ -120,12 +122,12 @@ static const char* pszCommentHeader = "<!--";
 bool IsHeader( const char *pszBegin, const char *pszEnd )
 {
 	// min node <?xml?>
-	return (pszEnd - pszBegin >= 7) && ( *((DWORD*)pszBegin) == *((DWORD*)pszXMLHeader) ) && ( pszBegin[4] == 'l' );
+	return (pszEnd - pszBegin >= 7) && ( *((uint32_t*)pszBegin) == *((uint32_t*)pszXMLHeader) ) && ( pszBegin[4] == 'l' );
 }
 bool IsComment( const char *pszBegin, const char *pszEnd )
 {
 	// min node <!---->
-	return (pszEnd - pszBegin >= 7) && ( *((DWORD*)pszBegin) == *((DWORD*)pszCommentHeader) );
+	return (pszEnd - pszBegin >= 7) && ( *((uint32_t*)pszBegin) == *((uint32_t*)pszCommentHeader) );
 }
 
 CXMLMultiNode::~CXMLMultiNode() 
@@ -170,7 +172,7 @@ void CXMLMultiNode::Store( NLXML_STREAM &stream, const std::string &szIndention 
 
 CXMLNode* CXMLMultiNode::FindChild( const std::string &_szValue ) const
 {
-	const DWORD dwChildHashCode = std::hash<std::string>()( _szValue );
+	const uint32_t dwChildHashCode = std::hash<std::string>()( _szValue );
 	// try optimized search from optimal search position
 	for ( CNodesList::const_iterator it = posOptimal; it != children.end(); ++it )
 	{
@@ -527,7 +529,7 @@ const char* CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
 		else
 		{
 			// Read over whatever it is.
-			while( p && *p && *p != '>' && !isspace( BYTE(*p) ) )
+			while( p && *p && *p != '>' && !isspace( uint8_t(*p) ) )
 				++p;
 		}
 	}

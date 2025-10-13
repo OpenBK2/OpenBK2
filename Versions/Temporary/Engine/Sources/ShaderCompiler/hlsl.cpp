@@ -4,6 +4,7 @@
 #include "Data.h"
 #include <d3dx9.h>
 
+#include <cstdint>
 
 void Parse( SHLSLSrcInfo *pRes, const char *psz )
 {
@@ -83,7 +84,7 @@ static void WriteRootFile( const string &_szFName,
 static LPD3DXBUFFER CompileShader( const char *pszFName, const char *pszFuncName, const char *pszProfile, string *pszError )
 {
 	LPD3DXBUFFER pCode = 0, pError = 0;
-	DWORD dwShaderFlags = 0; //D3DXSHADER_FORCE_VS_SOFTWARE_NOOPT;//
+	uint32_t dwShaderFlags = 0; //D3DXSHADER_FORCE_VS_SOFTWARE_NOOPT;//
 	HRESULT hr;
 	hr = D3DXCompileShaderFromFile( pszFName, NULL, NULL, pszFuncName, pszProfile, dwShaderFlags, &pCode, &pError, 0 );
 	if ( hr != D3D_OK && pError )
@@ -114,7 +115,7 @@ static bool CanBeCompiled( const vector<SHLSLParam> &vsOutput, const vector<SHLS
 }
 
 static void CompileShader( const vector<SHLSLParam> &vsOutput, const vector<SHLSLParam> &params, const vector<string> &defines, 
-	const char *pszFName, const char *pszFunc, const char *pszProfile, vector<DWORD> *pRes )
+	const char *pszFName, const char *pszFunc, const char *pszProfile, vector<uint32_t> *pRes )
 {
 	pRes->resize(0);
 	WriteRootFile( "temp.fx", vsOutput, params, defines, pszFName );

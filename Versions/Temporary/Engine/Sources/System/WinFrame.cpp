@@ -3,6 +3,8 @@
 #include "Misc/Win32Helper.h"
 #include "Commands.h"
 
+#include <cstdint>
+
 using namespace NWinFrame;
 using namespace NWin32Helper;
 
@@ -121,7 +123,7 @@ void NWinFrame::Exit()
 	//bClientExitReq = true;
 }
 
-static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, DWORD dwFlags )
+static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
 {
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
@@ -148,7 +150,7 @@ bool __declspec(dllexport) SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsign
  atomWndClassName = RegisterClass( &wndClass );
 
   // Set the window's initial style
-  DWORD dwWinStyle = WS_POPUP|WS_SYSMENU|WS_VISIBLE;//WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX|WS_VISIBLE;
+  uint32_t dwWinStyle = WS_POPUP|WS_SYSMENU|WS_VISIBLE;//WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX|WS_VISIBLE;
 
   // Create the render window
   hWnd = CreateWindow( pszWnd, pszApp, dwWinStyle,

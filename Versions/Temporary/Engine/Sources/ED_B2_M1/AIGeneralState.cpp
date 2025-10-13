@@ -11,9 +11,11 @@
 #include "AIGeneralState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
-static DWORD CalcColor( NDb::EParcelType eType )
+static uint32_t CalcColor( NDb::EParcelType eType )
 {
 	switch ( eType )
 	{
@@ -105,7 +107,7 @@ void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 	{
 		const SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = (*itParcel);
 		//
-		const DWORD dwParcelColor = CalcColor( currentParcel.eType );
+		const uint32_t dwParcelColor = CalcColor( currentParcel.eType );
 
 		CVec3 vPos( currentParcel.vCenter, 0 );
 		vPos.z = GetTerrainHeight( vPos.x, vPos.y );
@@ -178,7 +180,7 @@ void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -192,7 +194,7 @@ bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 		{
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_AIGEN_POINTS_WINDOW, 
 																																ID_WINDOW_GET_DIALOG_DATA, 
-																																reinterpret_cast<DWORD>(&dialogData)) )
+																																reinterpret_cast<uint32_t>(&dialogData)) )
 			{
 				switch ( dialogData.eLastAction )
 				{
@@ -561,7 +563,7 @@ void CAIGeneralPointsState::RefreshWindowData()
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<DWORD>(&dialogData) );
+																												reinterpret_cast<uint32_t>(&dialogData) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 

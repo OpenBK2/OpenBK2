@@ -5,6 +5,8 @@
 
 #include "ComboBox_GDBBrowser.h"
 
+#include <cstdint>
+
 CComboBoxGDBBrowser::CComboBoxGDBBrowser( int _nGDBBrowserID ) : pwndParent( 0 ), nControlID( 0 ), bEnableEdit( true ), nGDBBrowserID( _nGDBBrowserID )
 {
 	ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
@@ -49,7 +51,7 @@ bool CComboBoxGDBBrowser::Create( CWnd *_pwndParent, UINT _nControlID )
 	pwndParent = _pwndParent;
 	nControlID = _nControlID;
 	//
-	const DWORD dwStyle =  WS_CHILD | WS_VSCROLL | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST | CBS_SORT;
+	const uint32_t dwStyle =  WS_CHILD | WS_VSCROLL | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST | CBS_SORT;
 	const bool bResult = wndComboBox.Create( dwStyle, CRect( 0, 0, 0, 0 ), pwndParent, nControlID );
 	wndComboBox.SetExtendedUI( true );
 	wndComboBox.SetFont( CFont::FromHandle( (HFONT)GetStockObject( DEFAULT_GUI_FONT ) ) );
@@ -285,7 +287,7 @@ bool CComboBoxGDBBrowser::GetSelectionSet( SSelectionSet *pSelectionSet )
 }
 
 
-bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

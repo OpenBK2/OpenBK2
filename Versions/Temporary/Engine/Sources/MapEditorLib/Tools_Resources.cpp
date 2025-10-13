@@ -6,6 +6,8 @@
 #include "System/WinVFS.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
 {
 	if ( pStreamHolder )
@@ -111,7 +113,7 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 			{
 				if ( bFile )
 				{
-					DWORD dwAttributes = GetFileAttributes( szCheckPath.c_str() );
+					uint32_t dwAttributes = GetFileAttributes( szCheckPath.c_str() );
 					if ( ( dwAttributes == INVALID_FILE_ATTRIBUTES ) ||
 							 ( ( dwAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY ) )
 					{
@@ -121,7 +123,7 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 				else
 				{
 					szCheckPath = szCheckPath.substr( 0, szCheckPath.size() - 1 );
-					DWORD dwAttributes = GetFileAttributes( szCheckPath.c_str() );
+					uint32_t dwAttributes = GetFileAttributes( szCheckPath.c_str() );
 					if ( ( dwAttributes == INVALID_FILE_ATTRIBUTES ) ||
 							 ( ( dwAttributes & FILE_ATTRIBUTE_DIRECTORY ) != FILE_ATTRIBUTE_DIRECTORY ) )
 					{
@@ -374,7 +376,7 @@ void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
 }
 
 
-void File2String( CString *pstrText, bool *pbUnicode, const vector<BYTE> &rBuffer, int nCodePage, bool bRemove_0D )
+void File2String( CString *pstrText, bool *pbUnicode, const vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D )
 {
 	if ( pstrText )
 	{
@@ -466,7 +468,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath,
 		{
 			if ( streamHolder.pStream->GetSize() > 0 )
 			{
-				vector<BYTE> fileBuffer;
+				vector<uint8_t> fileBuffer;
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
@@ -488,7 +490,7 @@ void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, i
 }
 
 
-void File2String( wstring *pwszText, const vector<BYTE> &rBuffer, bool bRemove_0D )
+void File2String( wstring *pwszText, const vector<uint8_t> &rBuffer, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
 	{
@@ -539,7 +541,7 @@ void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D 
 		{
 			if ( streamHolder.pStream->GetSize() > 0 )
 			{
-				vector<BYTE> fileBuffer;
+				vector<uint8_t> fileBuffer;
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
@@ -550,7 +552,7 @@ void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D 
 }
 
 
-void String2File( vector<BYTE> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
+void String2File( vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
 	{
@@ -650,7 +652,7 @@ void String2File( const CString &rstrText, bool bUnicode, const string &rszTextP
 	CreateStreamHolder( &streamHolder, rszTextPath );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
-		vector<BYTE> fileBuffer;
+		vector<uint8_t> fileBuffer;
 		String2File( &fileBuffer, rstrText, bUnicode, nCodePage, bAdd_0D );
 		if ( fileBuffer.size() > 0 )
 		{
@@ -667,7 +669,7 @@ void String2File( const string &rszText, bool bUnicode, const string &rszTextPat
 }
 
 
-void String2File( vector<BYTE> *pBuffer, const wstring &rwszText, bool bAdd_0D )
+void String2File( vector<uint8_t> *pBuffer, const wstring &rwszText, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
 	{
@@ -719,7 +721,7 @@ void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_
 	CreateStreamHolder( &streamHolder, rszTextPath );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
-		vector<BYTE> fileBuffer;
+		vector<uint8_t> fileBuffer;
 		String2File( &fileBuffer, rwszText, bAdd_0D );
 		if ( fileBuffer.size() > 0 )
 		{

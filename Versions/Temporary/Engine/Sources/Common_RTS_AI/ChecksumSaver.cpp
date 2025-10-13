@@ -4,6 +4,7 @@
 #include "CheckSums.h"
 #include "System/CheckSumLog.h"
 
+#include <cstdint>
 using object_storage_type = det_map<int, CObjectBase*>;
 
 object_storage_type & GetStorage()
@@ -49,7 +50,7 @@ CAIObjectBase::CAIObjectBase()
 
 static uLong nLocalCheckSum;
 
-IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog * pLog, const DWORD segmentTime )
+IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog * pLog, const uint32_t segmentTime )
 {
 	return new CCheckSumSaver( pCheckSum, pLog, segmentTime );
 }
@@ -113,7 +114,7 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	}
 	else if ( nSize == 2 )
 	{
-		WORD * _pData = (WORD *)pData;
+		uint16_t * _pData = (uint16_t *)pData;
 		if ( _pData[0]== 0xcdcd || _pData[0] == 0xadad|| _pData[0] == 0xfdfd )
 		{
 			bFound = true;
@@ -121,7 +122,7 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	}
 	else if ( nSize == 1 )
 	{
-		BYTE * _pData = (BYTE *)pData;
+		uint8_t * _pData = (uint8_t *)pData;
 		if ( _pData[0]== 0xcd || _pData[0] == 0xad|| _pData[0] == 0xfd )
 		{
 			bFound = true;
@@ -142,10 +143,10 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 			__debugbreak();
 		}
 
-		*checkSumData = adler32( *checkSumData, (const BYTE*)&idChunk, sizeof(idChunk) );
-		*checkSumData = adler32( *checkSumData, (const BYTE*)pData, nSize );
-		//*checkSumData = adler32( *checkSumData, (const BYTE*)&nSize, sizeof(nSize) );
-		//*checkSumData = adler32( *checkSumData, (const BYTE*)&nChunkNumber, sizeof(nChunkNumber) );
+		*checkSumData = adler32( *checkSumData, (const uint8_t*)&idChunk, sizeof(idChunk) );
+		*checkSumData = adler32( *checkSumData, (const uint8_t*)pData, nSize );
+		//*checkSumData = adler32( *checkSumData, (const uint8_t*)&nSize, sizeof(nSize) );
+		//*checkSumData = adler32( *checkSumData, (const uint8_t*)&nChunkNumber, sizeof(nChunkNumber) );
 
 		if ( pCommandsHistory )
 		{
@@ -162,12 +163,12 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 
 void CCheckSumSaver::DataChunkString( std::string &data )
 {
-	//*checkSumString = adler32( *checkSumString, (const BYTE*)(data.c_str()), data.size() * sizeof( string::value_type ) );
+	//*checkSumString = adler32( *checkSumString, (const uint8_t*)(data.c_str()), data.size() * sizeof( string::value_type ) );
 }
 
 void CCheckSumSaver::DataChunkString( std::wstring &data )
 {
-	//z*checkSumString = adler32( *checkSumString, (const BYTE*)(data.c_str()), data.size() * sizeof( wstring::value_type ) );
+	//z*checkSumString = adler32( *checkSumString, (const uint8_t*)(data.c_str()), data.size() * sizeof( wstring::value_type ) );
 }
 
 void CCheckSumSaver::StoreObject( CObjectBase *pObject )
@@ -197,7 +198,7 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 	}
 	++nCount;
 
-	*checkSumObjects = adler32( *checkSumObjects, (const BYTE*)&(nObj), sizeof(nObj) );
+	*checkSumObjects = adler32( *checkSumObjects, (const uint8_t*)&(nObj), sizeof(nObj) );
 }
 
 

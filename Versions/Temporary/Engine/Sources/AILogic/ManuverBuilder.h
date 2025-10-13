@@ -2,6 +2,9 @@
 
 #include "ManuverStateDesc.h"
 #include "System/RandomGen.h"
+
+#include <cstdint>
+
 namespace NDb
 {
 	struct SAIGameConsts;
@@ -26,7 +29,7 @@ class CManuverBuilder
 		SAIAngle wStartAngle;
 		std::vector<int> attackers;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nMaxAttakers); f.Add(3,&wStartAngle); f.Add(4,&attackers); return 0; }
-		WORD GetAngle( int nAttacker ) const
+		uint16_t GetAngle( int nAttacker ) const
 		{
 			return wStartAngle + 65535 / nMaxAttakers * nAttacker;
 		}

@@ -2,6 +2,8 @@
 #include "ED_B2_M1Dll.h"
 #include "MapInfoAIMarkersSelectDlg.h"
 
+#include <cstdint>
+
 //
 //
 //	CMapInfoAIMarkersSelectDlg
@@ -78,7 +80,7 @@ void CMapInfoAIMarkersSelectDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoAIMarkersSelectDlg::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CMapInfoAIMarkersSelectDlg::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	return false;
 }

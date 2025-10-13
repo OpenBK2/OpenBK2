@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBSound.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -37,13 +39,13 @@ NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const std::string &szValue )
 }
 
 
-void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "PathName", (BYTE*)&pPathName - pThis, sizeof(pPathName), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "MinDist", (BYTE*)&fMinDist - pThis, sizeof(fMinDist), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "MaxDist", (BYTE*)&fMaxDist - pThis, sizeof(fMaxDist), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Probability", (BYTE*)&fProbability - pThis, sizeof(fProbability), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "soundType", (BYTE*)&esoundType - pThis, sizeof(esoundType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "PathName", (uint8_t*)&pPathName - pThis, sizeof(pPathName), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "MinDist", (uint8_t*)&fMinDist - pThis, sizeof(fMinDist), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "MaxDist", (uint8_t*)&fMaxDist - pThis, sizeof(fMaxDist), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Probability", (uint8_t*)&fProbability - pThis, sizeof(fProbability), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "soundType", (uint8_t*)&esoundType - pThis, sizeof(esoundType), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SComplexSoundDesc::SSoundStats::operator&( IXmlSaver &saver )
@@ -68,7 +70,7 @@ int SComplexSoundDesc::SSoundStats::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SComplexSoundDesc::SSoundStats::CalcCheckSum() const
+uint32_t SComplexSoundDesc::SSoundStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -89,9 +91,9 @@ void SComplexSoundDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ComplexSoundDesc", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "sounds", &sounds, pThis );
-	NMetaInfo::ReportMetaInfo( "Looped", (BYTE*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Looped", (uint8_t*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

@@ -4,13 +4,14 @@
 #include "PlanePreferences.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include <cstdint>
 
 void CPlanePreferences::Init( const SMechUnitRPGStats* _pStats, bool _bCanViolateHeghtLimits )
 {
 	bCanViolateHeghtLimits = _bCanViolateHeghtLimits;
 	pStats =  _pStats;
 }
-WORD CPlanePreferences::GetDivingAngle() const
+uint16_t CPlanePreferences::GetDivingAngle() const
 {
 	return pStats->wDivingAngle;
 }

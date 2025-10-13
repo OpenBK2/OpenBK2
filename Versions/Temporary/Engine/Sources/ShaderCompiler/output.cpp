@@ -3,6 +3,7 @@
 #include "Data.h"
 #include "parser.h"
 
+#include <cstdint>
 
 static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const char *pszPrefix )
 {
@@ -16,7 +17,7 @@ static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const c
 	f << "{-1,(D3DTEXTURESTAGESTATETYPE)0,0} };" << endl;
 }
 
-static void WriteShader( ofstream &f, const DWORD *pRes )
+static void WriteShader( ofstream &f, const uint32_t *pRes )
 {
 	f << "{ 0x";
 	f << hex;
@@ -26,7 +27,7 @@ static void WriteShader( ofstream &f, const DWORD *pRes )
 	f << pRes[i] << " };" << dec << endl;
 }
 
-static void WriteShader( ofstream &f, const string &szName, const vector<DWORD> &shader, string *pszDeclaration )
+static void WriteShader( ofstream &f, const string &szName, const vector<uint32_t> &shader, string *pszDeclaration )
 {
 	if ( !pszDeclaration->empty() )
 		*pszDeclaration += ",";
@@ -35,7 +36,7 @@ static void WriteShader( ofstream &f, const string &szName, const vector<DWORD> 
 		*pszDeclaration += "0";
 		return;
 	}
-	f << "static DWORD " << szName << "[] =";
+	f << "static uint32_t " << szName << "[] =";
 	WriteShader( f, &shader[0] );
 	*pszDeclaration += szName;
 }
@@ -172,7 +173,7 @@ void WriteResult( const char *pszOutput )
 			SPShader &v = pixelShaders[k];
 
 			string szDeclaration;
-			//if ( pCode && ((DWORD*)pCode->GetBufferPointer())[0] == 0xffff0104 )
+			//if ( pCode && ((uint32_t*)pCode->GetBufferPointer())[0] == 0xffff0104 )
 			//	cout << "WARNING, pixel shader " << v.szName << ", using [PS] shader as [PS14] one" << endl;
 			WriteShader( f, "dwps11" + v.szName, v.psShader11, &szDeclaration );
 			WriteShader( f, "dwps14" + v.szName, v.psShader14, &szDeclaration );

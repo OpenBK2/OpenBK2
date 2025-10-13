@@ -9,6 +9,8 @@
 #include "TypeDef.h"
 #include "Parser/LangNodesDefinitions.h"
 
+#include <cstdint>
+
 namespace NCodeGen
 {
 
@@ -130,7 +132,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 	if ( eType != EST_STRUCT )
 		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo() const" << endl;
 	else
-		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const" << endl;
+		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const" << endl;
 
 	pCode->cpp << "{" << endl;
 	bool bPrintEndL = false;
@@ -154,7 +156,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 		pCode->cpp << endl;
 
 	if ( eType != EST_STRUCT )
-		pCode->cpp << tab << "BYTE *pThis = (BYTE*)this;" << endl;
+		pCode->cpp << tab << "uint8_t *pThis = (uint8_t*)this;" << endl;
 
 	for ( NDb::NTypeDef::STypeClass::CFieldsList::iterator iter = pStructBase->fields.begin(); iter != pStructBase->fields.end(); ++iter )
 	{
@@ -188,7 +190,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 				SKnownEnum<NDb::NTypeDef::ETypeType>::ToString( NDb::NTypeDef::TYPE_TYPE_REF ) :
 			SKnownEnum<NDb::NTypeDef::ETypeType>::ToString( pFieldType->eType );
 
-			pCode->cpp << tab << "NMetaInfo::ReportMetaInfo( " << szParamsPrefix << qcomma << field.szName << qcomma << ", (BYTE*)&" << szCodeFieldName << " - pThis, sizeof(" << szCodeFieldName << "), NTypeDef::" << szEnumTypeName << " );" << endl;
+			pCode->cpp << tab << "NMetaInfo::ReportMetaInfo( " << szParamsPrefix << qcomma << field.szName << qcomma << ", (uint8_t*)&" << szCodeFieldName << " - pThis, sizeof(" << szCodeFieldName << "), NTypeDef::" << szEnumTypeName << " );" << endl;
 		}
 	}
 
@@ -294,7 +296,7 @@ static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szFullQualifiedName )
 {
 	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
-	pCode->cpp << "DWORD " << szQualifiedName <<"::CalcCheckSum() const" << endl;
+	pCode->cpp << "uint32_t " << szQualifiedName <<"::CalcCheckSum() const" << endl;
 	pCode->cpp << "{" << endl;
 
 	pCode->cpp << tab << "if ( __dwCheckSum != 0 )" << endl;
@@ -518,7 +520,7 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 	if ( !bNoCheckSum )
 	{
 		pCode->h << szTabs << "private:" << endl;
-		pCode->h << szTabs << tab << "mutable DWORD __dwCheckSum;" << endl;
+		pCode->h << szTabs << tab << "mutable uint32_t __dwCheckSum;" << endl;
 		pCode->h << szTabs << "public:" << endl;
 	}
 	pNamespace->GenerateCode( pCode, szTabs, pStruct, szQualifiedName );
@@ -526,14 +528,14 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 	pCode->h << endl;
 	GenerateStructBaseConstructor( pCode, pStruct, szTabs );
 	pCode->h << szTabs << tab << "//" << endl;
-	pCode->h << szTabs << tab << "void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;" << endl;
+	pCode->h << szTabs << tab << "void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;" << endl;
 	pCode->h << szTabs << tab << "//" << endl;
 	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
 	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
 	if ( !bNoCheckSum )
-		pCode->h << szTabs << tab << "DWORD CalcCheckSum() const;" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
 	else
-		pCode->h << szTabs << tab << "DWORD CalcCheckSum() const { return 0; }" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
 
 	pCode->h << szTabs << "};" << endl;
 }
@@ -570,7 +572,7 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 	if ( !bNoCheckSum )
 	{
 		pCode->h << szTabs << "private:" << endl;
-		pCode->h << szTabs << tab << "mutable DWORD __dwCheckSum;" << endl;
+		pCode->h << szTabs << tab << "mutable uint32_t __dwCheckSum;" << endl;
 		pCode->h << szTabs << "public:" << endl;
 	}
 	pNamespace->GenerateCode( pCode, szTabs, pClass, szQualifiedName );
@@ -590,9 +592,9 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
 	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
 	if ( !bNoCheckSum )
-		pCode->h << szTabs << tab << "DWORD CalcCheckSum() const;" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
 	else
-		pCode->h << szTabs << tab << "DWORD CalcCheckSum() const { return 0; }" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
 
 	pCode->h << szTabs << "};" << endl;
 }

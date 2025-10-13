@@ -25,6 +25,8 @@
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4B5, CBaseGun );
 REGISTER_SAVELOAD_CLASS( 0x1108D4B7, CTurretGun );
 
@@ -94,7 +96,7 @@ BASIC_REGISTER_CLASS( CBasicGun );
 //*													  CGun																	*
 //*******************************************************************
 
-CBasicGun::CBasicGun( class CAIUnit *_pOwner, const BYTE _nShellType, SCommonGunInfo *_pCommonGunInfo, const IGunsFactory::EGunTypes _eType )
+CBasicGun::CBasicGun( class CAIUnit *_pOwner, const uint8_t _nShellType, SCommonGunInfo *_pCommonGunInfo, const IGunsFactory::EGunTypes _eType )
 : pOwner( _pOwner ), shootState( EST_REST ), nShellType( _nShellType ), bAngleLocked( false ), bCanShoot( true ), pCommonGunInfo( _pCommonGunInfo ), eType( _eType ),
 	eRejectReason( ACK_NONE ), bWaitForReload( false ), lastCheck( 0 ), bParallelGun( false ), lastCheckTurnTime( 0 ), 
 	nShotsLast( 0 ), vLastShotPoint( VNULL3 ), pAntiAviationTarget( 0 ), target( VNULL2 ), bAim( false ), lastEnemyPos( VNULL2 ), bCanShootToUnitWOMove( false )
@@ -630,7 +632,7 @@ const CVec2 CBasicGun::GetShootingPoint() const
 	return vEnemyPos;
 }
 
-WORD CBasicGun::GetVisAngleOfAim() const
+uint16_t CBasicGun::GetVisAngleOfAim() const
 {
 	if ( pEnemy == 0 )
 		return 0;
@@ -638,7 +640,7 @@ WORD CBasicGun::GetVisAngleOfAim() const
 		return GetVisibleAngle( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), pEnemy->GetUnitRect() ) / 2;
 }
 
-bool CBasicGun::CanShootWOGunTurn( const BYTE cDeltaAngle, const float fZ )
+bool CBasicGun::CanShootWOGunTurn( const uint8_t cDeltaAngle, const float fZ )
 {
 	return pEnemy ? CanShootWOGunTurn( pEnemy, cDeltaAngle ) :
 		( IsGoodAngle( target, 0, fZ, cDeltaAngle ) && CanShootToPointWOMove( target, fZ ) );
@@ -957,7 +959,7 @@ bool CBasicGun::IsRelaxing() const
 	return curTime - pCommonGunInfo->lastShoot < GetRelaxTime();
 }
 
-bool CBasicGun::CanShootWOGunTurn( CAIUnit *pEnemy, const BYTE cDeltaAngle )
+bool CBasicGun::CanShootWOGunTurn( CAIUnit *pEnemy, const uint8_t cDeltaAngle )
 {
 	return
 		CanShootToUnitWOMove( pEnemy ) &&
@@ -1094,7 +1096,7 @@ bool CBasicGun::CanShootToObjectWOMove( CStaticObject *pObj )
 	{
 		SRect boundRect;
 		pObj->GetBoundRect( &boundRect );
-		const WORD wDir2Obj( GetDirectionByVector( pObj->GetAttackCenter( vOwnerCenter ) - vOwnerCenter ) );
+		const uint16_t wDir2Obj( GetDirectionByVector( pObj->GetAttackCenter( vOwnerCenter ) - vOwnerCenter ) );
 		
 		const int nSide = IsBallisticTrajectory() ? RPG_TOP : boundRect.GetSide( wDir2Obj );
 		if ( GetMaxPossiblePiercing() < pObj->GetStats()->GetMinPossibleArmor( nSide ) )
@@ -1166,7 +1168,7 @@ bool CBasicGun::CanShotBecauseOfObstacles( const CVec2 &point, const float fZ )
 	return true;
 }
 
-bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const WORD wHorAddAngle, const WORD wVertAddAngle, CAIUnit *pEnemy )
+bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle, const uint16_t wVertAddAngle, CAIUnit *pEnemy )
 {
 	const CVec3 v3DTarget( point, fZ );
 
@@ -1244,7 +1246,7 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 	return true;
 }
 
-bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const WORD wHorAddAngle, const WORD wVertAddAngle )
+bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle, const uint16_t wVertAddAngle )
 {
 	if ( !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
 		return CanShootToPointWOMove( point, fZ, wHorAddAngle, wVertAddAngle );
@@ -1260,13 +1262,13 @@ bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const WORD 
 	return true;
 }
 
-bool CBasicGun::IsInShootCone( const CVec2 &point, const WORD wAddAngle ) const
+bool CBasicGun::IsInShootCone( const CVec2 &point, const uint16_t wAddAngle ) const
 {
 	if ( !pOwner->InVisCone( point ) )
 		return false;
 	else
 	{
-		const WORD dirToPoint = GetDirectionByVector( point - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) );
+		const uint16_t dirToPoint = GetDirectionByVector( point - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) );
 
 		if ( IsOnTurret() && !GetTurret()->IsLocked( this ) )
 			return DirsDifference( dirToPoint, pOwner->GetFrontDirection() ) <= GetHorTurnConstraint() + (int)wAddAngle + (int)pWeapon->wDeltaAngle;
@@ -1275,7 +1277,7 @@ bool CBasicGun::IsInShootCone( const CVec2 &point, const WORD wAddAngle ) const
 	}
 }
 
-const float CBasicGun::GetDispRatio( BYTE nShellType, const float fDist ) const
+const float CBasicGun::GetDispRatio( uint8_t nShellType, const float fDist ) const
 {
 	int eTraj = pWeapon->shells[nShellType].etrajectory;
 	float fMax = GetFireRangeMax();
@@ -1503,7 +1505,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 	InitRandoms();
 }
 
-WORD CBasicGun::GetTrajectoryZAngle( const CVec3 &vToAim ) const
+uint16_t CBasicGun::GetTrajectoryZAngle( const CVec3 &vToAim ) const
 {
 	if ( eType == IGunsFactory::VIS_CML_BALLIST_GUN || eType == IGunsFactory::VIS_BURST_BALLIST_GUN )
 		return CBallisticTraj::GetTrajectoryZAngle( vToAim, pOwner->GetStatsModifier()->weaponShellSpeed.Get( pWeapon->shells[nShellType].fSpeed ), pWeapon->shells[nShellType].etrajectory, GetVerTurnConstraint(), GetFireRange(vToAim.z) );
@@ -1571,7 +1573,7 @@ bool CBasicGun::IsBallisticTrajectory() const
 //*													 CTurretGun															*
 //*******************************************************************
 
-CTurretGun::CTurretGun( CAIUnit *pOwner, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType, const int nTurret )
+CTurretGun::CTurretGun( CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType, const int nTurret )
 : CBasicGun( pOwner, nShellType, pCommonGunInfo, eType ), bCircularAttack( false ), bTurnByBestWay( false ),
 	wBestWayDir( 0 )
 { 
@@ -1608,17 +1610,17 @@ bool CTurretGun::CanShootByHeight( CAIUnit *pTarget ) const
 	return CBasicGun::CanShootByHeight( pTarget );
 }	
 
-WORD CTurretGun::CalcVerticalAngle( const class CVec3 &pt ) const
+uint16_t CTurretGun::CalcVerticalAngle( const class CVec3 &pt ) const
 {
-	const WORD wZDesiredAngle = GetZAngle( pt ) + GetTrajectoryZAngle( pt );
+	const uint16_t wZDesiredAngle = GetZAngle( pt ) + GetTrajectoryZAngle( pt );
 
-	const WORD wConstraint = GetVerTurnConstraint() + 65535/4 * 3;
+	const uint16_t wConstraint = GetVerTurnConstraint() + 65535/4 * 3;
 	return (std::min)( wConstraint, wZDesiredAngle );
 }
 
 bool CTurretGun::TurnByVer( const CVec2 &vEnemyCenter, const float zDiff )
 {
-	WORD wZAngle = CalcVerticalAngle( CVec3( vEnemyCenter-pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), zDiff ) );
+	uint16_t wZAngle = CalcVerticalAngle( CVec3( vEnemyCenter-pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), zDiff ) );
 	CTurret *pTurret = GetTurret();
 
 	bool bTurned = false;
@@ -1644,12 +1646,12 @@ bool CTurretGun::TurnByVer( const CVec2 &vEnemyCenter, const float zDiff )
 
 bool CTurretGun::TurnArtilleryToEnemy( const CVec2 &vEnemyCenter )
 {
-	const WORD wToEnemy = GetDirectionByVector( vEnemyCenter - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ) - GetGun().wDirection;
-	WORD wDesirableAngle = WORD( wToEnemy - pOwner->GetFrontDirection() );
+	const uint16_t wToEnemy = GetDirectionByVector( vEnemyCenter - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ) - GetGun().wDirection;
+	uint16_t wDesirableAngle = uint16_t( wToEnemy - pOwner->GetFrontDirection() );
 	CTurret *pTurret = GetTurret();
 
 	bool bTurned = false;
-	const WORD wHorConstraint = GetHorTurnConstraint();
+	const uint16_t wHorConstraint = GetHorTurnConstraint();
 	// желаемый угол вне contraints на поворот
 	if ( wHorConstraint == 0 && wDesirableAngle != 0 ||
 			 wDesirableAngle > wHorConstraint && wDesirableAngle < 65535 - wHorConstraint )
@@ -1675,26 +1677,26 @@ bool CTurretGun::TurnArtilleryToEnemy( const CVec2 &vEnemyCenter )
 	return bTurned;
 }
 
-bool CTurretGun::TurnByBestWay( const WORD wDirToEnemy )
+bool CTurretGun::TurnByBestWay( const uint16_t wDirToEnemy )
 {
 	bTurnByBestWay = true;	
 	
-	const WORD wFrontDir = pOwner->GetFrontDirection();
-	const WORD wBaseTurn = DirsDifference( wFrontDir, wDirToEnemy );
-	const WORD wTurretCurAngle = GetTurret()->GetHorCurAngle() + GetGun().wDirection;
-	const WORD wTurretGlobalAngle = wFrontDir + wTurretCurAngle;
+	const uint16_t wFrontDir = pOwner->GetFrontDirection();
+	const uint16_t wBaseTurn = DirsDifference( wFrontDir, wDirToEnemy );
+	const uint16_t wTurretCurAngle = GetTurret()->GetHorCurAngle() + GetGun().wDirection;
+	const uint16_t wTurretGlobalAngle = wFrontDir + wTurretCurAngle;
 
 	const float fBaseSpeed = pOwner->GetTurnSpeed();
 	const float fTurretSpeed = GetTurret()->GetHorRotateSpeed();
 
-	WORD wFinalTurretDir;
+	uint16_t wFinalTurretDir;
 	if ( IsInTheMinAngle( wTurretGlobalAngle, wFrontDir, wDirToEnemy ) )
 	{
-		const WORD wCommonTurn = DirsDifference( wTurretGlobalAngle, wDirToEnemy );
-		const WORD wResultBaseTurn = fBaseSpeed * wCommonTurn / ( fBaseSpeed + fTurretSpeed );
-		const WORD wResultGunTurn = fTurretSpeed * wCommonTurn / ( fBaseSpeed + fTurretSpeed );
+		const uint16_t wCommonTurn = DirsDifference( wTurretGlobalAngle, wDirToEnemy );
+		const uint16_t wResultBaseTurn = fBaseSpeed * wCommonTurn / ( fBaseSpeed + fTurretSpeed );
+		const uint16_t wResultGunTurn = fTurretSpeed * wCommonTurn / ( fBaseSpeed + fTurretSpeed );
 
-		if ( WORD(wDirToEnemy - wTurretGlobalAngle) == wCommonTurn )
+		if ( uint16_t(wDirToEnemy - wTurretGlobalAngle) == wCommonTurn )
 		{
 			wFinalTurretDir = wTurretCurAngle + wResultGunTurn - GetGun().wDirection;
 
@@ -1725,7 +1727,7 @@ bool CTurretGun::TurnByBestWay( const WORD wDirToEnemy )
 		const float fTurretTurnTime = (float)DirsDifference( wTurretCurAngle, 0 ) / fTurretSpeed;
 		const float fTogetherTime = (std::max)( fBaseTurnTime, fTurretTurnTime );
 
-		const WORD wTurretTurn = DirsDifference( wTurretGlobalAngle, wDirToEnemy );
+		const uint16_t wTurretTurn = DirsDifference( wTurretGlobalAngle, wDirToEnemy );
 		const float fTurretOnlyTime = (float)wTurretTurn / fTurretSpeed;
 
 		// поворачиваем вместе
@@ -1752,7 +1754,7 @@ bool CTurretGun::TurnByBestWay( const WORD wDirToEnemy )
 		}
 	}
 
-	const WORD wTurretTurnWOBase = wDirToEnemy - wFrontDir - GetGun().wDirection;
+	const uint16_t wTurretTurnWOBase = wDirToEnemy - wFrontDir - GetGun().wDirection;
 	if ( DirsDifference( wFrontDir, wBestWayDir ) <= SConsts::MIN_ROTATE_ANGLE && DirsDifference( wTurretTurnWOBase, 0 ) <= GetHorTurnConstraint() )
 	{
 		wBestWayDir = wFrontDir;
@@ -1802,10 +1804,10 @@ bool CTurretGun::TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff )
 			GetTurret()->IsFinished();
 }
 
-bool CTurretGun::IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const
+bool CTurretGun::IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const
 {
-	const WORD wDesirableAngle = WORD( GetDirectionByVector( point - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ) - GetGun().wDirection - pOwner->GetFrontDirection() );
-	const WORD wVerAngle = CalcVerticalAngle( CVec3( point-pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), z-pOwner->GetZ() ) );
+	const uint16_t wDesirableAngle = uint16_t( GetDirectionByVector( point - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ) - GetGun().wDirection - pOwner->GetFrontDirection() );
+	const uint16_t wVerAngle = CalcVerticalAngle( CVec3( point-pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), z-pOwner->GetZ() ) );
 
 	CTurret *pTurret = GetTurret();
 
@@ -1849,8 +1851,8 @@ const NTimer::STime CTurretGun::GetTimeToShootToPoint( const CVec3 &vPoint ) con
 	const float fVertRotSpeed = pTurret->GetVerRotateSpeed();
 	const float fHorRotSpeed = pTurret->GetHorRotateSpeed();
 
-	const WORD wCurVerAngle = pTurret->GetVerCurAngle();
-	const WORD wCurHorAngle = pTurret->GetHorCurAngle() + pOwner->GetFrontDirection();
+	const uint16_t wCurVerAngle = pTurret->GetVerCurAngle();
+	const uint16_t wCurHorAngle = pTurret->GetHorCurAngle() + pOwner->GetFrontDirection();
 
 	const CVec3 vUnitCenter( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ), pOwner->GetZ() );
 
@@ -1902,12 +1904,12 @@ void CTurretGun::StopFire()
 	ToRestState();
 }
 
-const WORD CTurretGun::GetGlobalDir() const
+const uint16_t CTurretGun::GetGlobalDir() const
 {
 	return pOwner->GetDirection() + GetTurret()->GetHorCurAngle() + GetGun().wDirection;
 }
 
-void CTurretGun::TurnToRelativeDir( const WORD wAngle )
+void CTurretGun::TurnToRelativeDir( const uint16_t wAngle )
 {
 	GetTurret()->TurnHor( wAngle );
 }
@@ -1917,7 +1919,7 @@ const float CTurretGun::GetRotateSpeed() const
 	return GetTurret()->GetHorRotateSpeed();
 }
 
-WORD CTurretGun::GetHorTurnConstraint() const
+uint16_t CTurretGun::GetHorTurnConstraint() const
 {
 	if ( !bCircularAttack )
 		return GetTurret()->GetHorTurnConstraint();
@@ -1925,7 +1927,7 @@ WORD CTurretGun::GetHorTurnConstraint() const
 		return 32768;
 }
 
-WORD CTurretGun::GetVerTurnConstraint() const
+uint16_t CTurretGun::GetVerTurnConstraint() const
 {
 	return GetTurret()->GetVerTurnConstraint();
 }
@@ -1965,7 +1967,7 @@ bool CBaseGun::TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff )
 	return pOwner->TurnToDirection( GetDirectionByVector( vEnemyCenter - pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ) - GetGun().wDirection, false, true );
 }
 
-bool CBaseGun::IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle  ) const
+bool CBaseGun::IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle  ) const
 {
 	const SUnitBaseRPGStats *pStats = pOwner->GetStats();
 	
@@ -1979,19 +1981,19 @@ bool CBaseGun::IsGoodAngle( const CVec2 &point, const WORD addAngle, const float
 	{
 		const CAviation * pPlane = checked_cast_ptr<const CAviation*>( pOwner );
 		// check vertical angle
-		const WORD wDesiredVAngle = GetDirectionByVector( fabs(point - vOwnerCenter), z - pOwner->GetZ() );
+		const uint16_t wDesiredVAngle = GetDirectionByVector( fabs(point - vOwnerCenter), z - pOwner->GetZ() );
 		CVec3 vSpeed;
 		pPlane->GetSpeed3( &vSpeed );
-		const WORD wCurrentVAngle = GetDirectionByVector ( fabs( vSpeed.x, vSpeed.y ), vSpeed.z );
+		const uint16_t wCurrentVAngle = GetDirectionByVector ( fabs( vSpeed.x, vSpeed.y ), vSpeed.z );
 		if ( DirsDifference( wCurrentVAngle, wDesiredVAngle ) > 2 * ( wWeaponDeltaAngle + (int)addAngle ) * cDeltaAngle )
 			return false;
 
-		const WORD wDesirableAngle = GetDirectionByVector( point - vOwnerCenter ) - GetGun().wDirection;
+		const uint16_t wDesirableAngle = GetDirectionByVector( point - vOwnerCenter ) - GetGun().wDirection;
 		return DirsDifference( wDesirableAngle, GetDirectionByVector( vSpeed.x, vSpeed.y ) ) <= 
 			( wWeaponDeltaAngle + (int)addAngle ) * cDeltaAngle;
 	}
 
-	const WORD wDesirableAngle = GetDirectionByVector( point - vOwnerCenter ) - GetGun().wDirection;
+	const uint16_t wDesirableAngle = GetDirectionByVector( point - vOwnerCenter ) - GetGun().wDirection;
 	return DirsDifference( wDesirableAngle, pOwner->GetFrontDirection() ) <= 
 				( wWeaponDeltaAngle + (int)addAngle ) * cDeltaAngle;
 }
@@ -2017,7 +2019,7 @@ void CBaseGun::StopFire()
 	ToRestState();
 }
 
-const WORD CBaseGun::GetGlobalDir() const
+const uint16_t CBaseGun::GetGlobalDir() const
 {
 	return pOwner->GetDirection() + GetGun().wDirection;
 }

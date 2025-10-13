@@ -2,6 +2,8 @@
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 class  CCommandHandlerContainer : public ICommandHandlerContainer
 {
 	OBJECT_NOCOPY_METHODS( CCommandHandlerContainer );
@@ -41,9 +43,9 @@ public:
 	void Remove( UINT nType, ICommandHandler *pCommandHandler );
 	void Remove( UINT nType );
 	ICommandHandler* Get( UINT nType );
-	bool HandleCommand( UINT nType, UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck );
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

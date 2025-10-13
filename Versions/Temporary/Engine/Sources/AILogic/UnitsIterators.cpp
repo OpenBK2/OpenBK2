@@ -3,11 +3,13 @@
 #include "UnitsIterators.h"
 #include "Misc/Bresenham.h"
 
+#include <cstdint>
+
 //*******************************************************************
 //*													CGlobalIter															*
 //*******************************************************************
 
-void CGlobalIter::Init( const BYTE cStartDipl, const BYTE cFilter )
+void CGlobalIter::Init( const uint8_t cStartDipl, const uint8_t cFilter )
 {
 	nParties = 0;
 	for ( int i = 0; i < 3; ++i )

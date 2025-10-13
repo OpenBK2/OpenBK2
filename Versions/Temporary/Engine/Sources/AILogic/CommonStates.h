@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "UnitStates.h"
@@ -8,6 +7,8 @@
 #include "DamageToEnemyUpdater.h"
 
 #include "StatusUpdatesHelper.h"
+
+#include <cstdint>
 
 class CAIUnit;
 class CSoldier;
@@ -31,7 +32,7 @@ class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager
 
 	std::vector<float> fProb;
 	EAttackType eAttackType;
-	BYTE nBestSide;
+	uint8_t nBestSide;
 	
 	bool bTurningToBest;
 	int nBestAngle;
@@ -205,7 +206,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pUnit); f.Add(3,&guardPoint); f.Add(4,&wDir); f.Add(5,&nextMove); f.Add(6,&startMoveTime); f.Add(7,&bScanned); f.Add(8,&bWait); f.Add(9,&timeToFinishState); return 0; }
 public:
 	CCommonRestState() : pUnit( 0 ) { }
-	CCommonRestState( const CVec2 &guardPoint, const WORD wDir, CCommonUnit *pUnit, const float fTimeToWait );
+	CCommonRestState( const CVec2 &guardPoint, const uint16_t wDir, CCommonUnit *pUnit, const float fTimeToWait );
 	
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
@@ -216,7 +217,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return guardPoint; }
 
 	const CVec2& GetGuardPoint() const { return guardPoint; }
-	const WORD GetGuardDir() const { return wDir; }
+	const uint16_t GetGuardDir() const { return wDir; }
 
 	// в 1 - некоторое малое время, чтобы произошло обновление, не 0 - т.к. это говорит о первом запуске сегмента
 	void SetNullLastMoveTime() { nextMove = 1; }
@@ -234,10 +235,10 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonRestState*)this); f.Add(2,&pUnit); f.Add(3,&bFinishWhenCanMove); return 0; }
 	void OnSerialize( IBinSaver &saver );
 public:
-	static IUnitState* Instance( class CAIUnit *pUnit, const CVec2 &guardPoint, const WORD wDir, const bool bFinishWnenCanMove, const float fTimeToWait );
+	static IUnitState* Instance( class CAIUnit *pUnit, const CVec2 &guardPoint, const uint16_t wDir, const bool bFinishWnenCanMove, const float fTimeToWait );
 
 	CMechUnitRestState() : pUnit( 0 ) { }
-	CMechUnitRestState( CAIUnit *pUnit, const CVec2 &guardPoint, const WORD wDir, const bool bFinishWnenCanMove, const float fTimeToWait );
+	CMechUnitRestState( CAIUnit *pUnit, const CVec2 &guardPoint, const uint16_t wDir, const bool bFinishWnenCanMove, const float fTimeToWait );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );

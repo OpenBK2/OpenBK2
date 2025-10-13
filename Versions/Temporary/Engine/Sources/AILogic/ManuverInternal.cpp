@@ -12,9 +12,10 @@
 #include "Stats_b2_m1/DBPlaneManuvers.h"
 #include "System/Commands.h"
 
+#include <cstdint>
+
 extern float g = 0.0000983f;
 extern NTimer::STime curTime;
-
 
 //	SPlanesConsts
 
@@ -138,8 +139,8 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesire
 
 	const CVec2 vDesiredNormaleT( 1, 0 );
 	const CVec2 vCurrentNormaleT( vDesiredNormale * *vNormal, k * *vNormal );
-	const WORD wCur( GetDirectionByVector( vCurrentNormaleT ) );
-	const WORD wDesiredDir( GetDirectionByVector( vDesiredNormaleT ) );
+	const uint16_t wCur( GetDirectionByVector( vCurrentNormaleT ) );
+	const uint16_t wDesiredDir( GetDirectionByVector( vDesiredNormaleT ) );
 	const float fDiff( DirsDifference( wDesiredDir, wCur ) );
 	const int nDiffSign( DifferenceSign( wDesiredDir, wCur ) );
 
@@ -160,7 +161,7 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesire
 	{
 		// continue tilt
 		*pnRotation = DifferenceSign( wDesiredDir, wCur );
-		const WORD wCalculatedDir( wCur + WORD(timeDiff * fCurTiltSpeed) );
+		const uint16_t wCalculatedDir( wCur + uint16_t(timeDiff * fCurTiltSpeed) );
 		CVec2 vCalculatedNormale( GetVectorByDirection( wCalculatedDir ) );
 		if ( timeDiff != 0 )
 			*vNormal = vCalculatedNormale.x * vDesiredNormale + vCalculatedNormale.y * k;

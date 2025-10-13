@@ -13,6 +13,8 @@
 #include "System/FileUtils.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 namespace NCodeGenTool
@@ -83,7 +85,7 @@ bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SC
 	}
 }
 
-bool ReadFile( vector<BYTE> &data, const string &szFileName )
+bool ReadFile( vector<uint8_t> &data, const string &szFileName )
 {
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 	if ( !stream.IsOk() ) 
@@ -100,10 +102,10 @@ bool ProcessFile( const string &szSrcFileName, const string &szDstFileName )
 {
 	// check for changed
 	{
-		vector<BYTE> newFile;
+		vector<uint8_t> newFile;
 		if ( ReadFile(newFile, szSrcFileName) == false )
 			return false;
-		vector<BYTE> oldFile;
+		vector<uint8_t> oldFile;
 		if ( ReadFile(oldFile, szDstFileName) != false )
 		{
 			if ( newFile == oldFile )

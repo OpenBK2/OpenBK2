@@ -908,7 +908,7 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 					continue;
 
 				// Player elimination stores the removed player slot in nID.
-				const DWORD dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
+				const uint32_t dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
 				const std::wstring wszPlayerColor = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwColor ) );
 				
 				//const int side = pScenarioTracker->GetPlayerSide( nPlayer );

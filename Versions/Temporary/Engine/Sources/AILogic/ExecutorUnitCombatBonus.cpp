@@ -4,6 +4,8 @@
 #include "UnitStates.h"
 #include "Guns.h"
 
+#include <cstdint>
+
 CExecutorUnitCombatBonus::CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID ) :
 CExecutorUnitBonus ( eAbility, _pUnit, eTID ), modeFlags ( 0 )
 {
@@ -14,7 +16,7 @@ int CExecutorUnitCombatBonus::Segment()
 	if ( !IsExecutorValid() ) 
 		return -1;
 
-	WORD oldMode = modeFlags;
+	uint16_t oldMode = modeFlags;
 	modeFlags = 0;
 	if ( GetAIUnit()->IsMoving() )
 		modeFlags |= EUM_MOVING;

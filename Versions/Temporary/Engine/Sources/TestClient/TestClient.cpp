@@ -15,6 +15,9 @@
 #include "System/RandomGen.h"
 #include "MultiTester.h"
 #include "Pinger.h"
+
+#include <cstdint>
+
 #define LADDER_TEST_LOG
 #undef LADDER_TEST_LOG
 
@@ -390,7 +393,7 @@ void RandomizeList( list<int> *pList )
 	hash_map< int, int > tempHash;
 	int nSize = pList->size();
 	int nMaxRand = nSize - 1;
-	DWORD dwTime = GetTickCount();
+	uint32_t dwTime = GetTickCount();
 	for ( int i = 0; i < dwTime % 100; ++i )
 		NRandom::Random( 0, nMaxRand );
 	for( list<int>::iterator it = pList->begin(); it != pList->end(); ++it )

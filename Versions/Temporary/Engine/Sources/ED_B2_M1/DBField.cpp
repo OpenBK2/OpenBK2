@@ -6,15 +6,17 @@
 #include "System/XmlSaver.h"
 #include "DBField.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SFieldTileDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFieldTileDesc::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Value", (BYTE*)&nValue - pThis, sizeof(nValue), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (BYTE*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Value", (uint8_t*)&nValue - pThis, sizeof(nValue), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (uint8_t*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SFieldTileDesc::operator&( IXmlSaver &saver )
@@ -33,7 +35,7 @@ int SFieldTileDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SFieldTileDesc::CalcCheckSum() const
+uint32_t SFieldTileDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -50,10 +52,10 @@ DWORD SFieldTileDesc::CalcCheckSum() const
 
 
 
-void SFieldObjectDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFieldObjectDesc::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Value", (BYTE*)&pValue - pThis, sizeof(pValue), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (BYTE*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Value", (uint8_t*)&pValue - pThis, sizeof(pValue), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (uint8_t*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SFieldObjectDesc::operator&( IXmlSaver &saver )
@@ -72,7 +74,7 @@ int SFieldObjectDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SFieldObjectDesc::CalcCheckSum() const
+uint32_t SFieldObjectDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -89,10 +91,10 @@ DWORD SFieldObjectDesc::CalcCheckSum() const
 
 
 
-void SFieldPatternSize::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFieldPatternSize::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&nMin - pThis, sizeof(nMin), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&nMax - pThis, sizeof(nMax), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Min", (uint8_t*)&nMin - pThis, sizeof(nMin), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Max", (uint8_t*)&nMax - pThis, sizeof(nMax), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SFieldPatternSize::operator&( IXmlSaver &saver )
@@ -111,7 +113,7 @@ int SFieldPatternSize::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SFieldPatternSize::CalcCheckSum() const
+uint32_t SFieldPatternSize::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -128,10 +130,10 @@ DWORD SFieldPatternSize::CalcCheckSum() const
 
 
 
-void SFieldTileShell::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFieldTileShell::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Tiles", &tiles, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SFieldTileShell::operator&( IXmlSaver &saver )
@@ -150,7 +152,7 @@ int SFieldTileShell::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SFieldTileShell::CalcCheckSum() const
+uint32_t SFieldTileShell::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -167,12 +169,12 @@ DWORD SFieldTileShell::CalcCheckSum() const
 
 
 
-void SFieldObjectShell::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
+void SFieldObjectShell::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Objects", &objects, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "BetweenDistance", (BYTE*)&nBetweenDistance - pThis, sizeof(nBetweenDistance), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Ratio", (BYTE*)&fRatio - pThis, sizeof(fRatio), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "BetweenDistance", (uint8_t*)&nBetweenDistance - pThis, sizeof(nBetweenDistance), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Ratio", (uint8_t*)&fRatio - pThis, sizeof(fRatio), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SFieldObjectShell::operator&( IXmlSaver &saver )
@@ -195,7 +197,7 @@ int SFieldObjectShell::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SFieldObjectShell::CalcCheckSum() const
+uint32_t SFieldObjectShell::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -216,14 +218,14 @@ void SField::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Field", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "TileShells", &tileShells, pThis );
-	NMetaInfo::ReportMetaInfo( "TerraSet", (BYTE*)&pTerraSet - pThis, sizeof(pTerraSet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "TerraSet", (uint8_t*)&pTerraSet - pThis, sizeof(pTerraSet), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "ObjectShells", &objectShells, pThis );
-	NMetaInfo::ReportMetaInfo( "ProfileFileName", (BYTE*)&szProfileFileName - pThis, sizeof(szProfileFileName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Height", (BYTE*)&fHeight - pThis, sizeof(fHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ProfileFileName", (uint8_t*)&szProfileFileName - pThis, sizeof(szProfileFileName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Height", (uint8_t*)&fHeight - pThis, sizeof(fHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "PatternSize", &patternSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "PositiveRatio", (BYTE*)&fPositiveRatio - pThis, sizeof(fPositiveRatio), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "PositiveRatio", (uint8_t*)&fPositiveRatio - pThis, sizeof(fPositiveRatio), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

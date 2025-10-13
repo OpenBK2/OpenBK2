@@ -25,6 +25,8 @@
 #include "DrawToolsDC.h"
 #include "System/GResource.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace 
@@ -112,7 +114,7 @@ void CCFCSceneB2::OnResizeChildFrameWnd( int cx, int cy )
 }
 
 
-bool CCFCSceneB2::KeyPressed( UINT nChar, DWORD dwData )
+bool CCFCSceneB2::KeyPressed( UINT nChar, uint32_t dwData )
 {
 	return ( ( dwData == nChar ) || ( ( GetAsyncKeyState( nChar ) & 0x8000 ) > 0 ) );
 }
@@ -137,7 +139,7 @@ void CCFCSceneB2::ResetCamera( bool bAll )
 }
 
 
-void CCFCSceneB2::UpdateCameraPosition( DWORD dwData )
+void CCFCSceneB2::UpdateCameraPosition( uint32_t dwData )
 {
 	if ( IsPacked2DCoords( dwData ) )
 	{
@@ -153,7 +155,7 @@ void CCFCSceneB2::UpdateCameraPosition( DWORD dwData )
 }
 
 
-void CCFCSceneB2::UpdateCamera( DWORD dwData )
+void CCFCSceneB2::UpdateCamera( uint32_t dwData )
 {
 	if ( ICamera *pCamera = Camera() )
 	{
@@ -271,7 +273,7 @@ void CCFCSceneB2::ClearScene()
 }
 
 
-bool CCFCSceneB2::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CCFCSceneB2::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

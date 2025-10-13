@@ -5,6 +5,7 @@
 #include <DbgHelp.h>
 #endif
 
+#include <cstdint>
 #include <iterator>
 
 template <class TYPE>
@@ -28,7 +29,7 @@ CSymEngine::~CSymEngine()
 }
 
 inline void Clear( CSymString *p ) { if ( p ) *p = "?"; }
-bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
+bool CSymEngine::GetSymbol( uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
 {
 	Clear( pszModule );
 	Clear( pszFile );
@@ -65,7 +66,7 @@ bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *
 		IMAGEHLP_LINE64 lineInfo;
 		ZeroSA( lineInfo );
 		lineInfo.SizeOfStruct = sizeof(lineInfo);
-		DWORD dwDisp;
+		unsigned long dwDisp;
 		if ( SymGetLineFromAddr64( hProcess, dwAddress, &dwDisp, &lineInfo ) )
 		{
 			if ( pnLine )
@@ -77,7 +78,7 @@ bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *
 	return true;
 }
 
-static void Assign( ADDRESS64 *pRes, DWORD dwSeg, DWORD64 dwOffset )
+static void Assign( ADDRESS64 *pRes, uint32_t dwSeg, DWORD64 dwOffset )
 {
 	pRes->Mode = AddrModeFlat;
 	pRes->Offset = dwOffset;
@@ -110,7 +111,7 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 		if ( !bRes || stkFrame.AddrPC.Offset == 0 )
 			break;
 		SCallStackEntry &res = pRes[nEntry];
-		res.dwAddress = (DWORD)stkFrame.AddrPC.Offset;
+		res.dwAddress = (uint32_t)stkFrame.AddrPC.Offset;
 		se.GetSymbol( res.dwAddress, 0, &res.szFile, &res.nLine, &res.szFunc );
 	}
 	return nEntry;

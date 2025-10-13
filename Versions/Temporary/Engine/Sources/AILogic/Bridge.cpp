@@ -16,6 +16,8 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include <cstdint>
+
 REGISTER_SAVELOAD_CLASS_NM( 0x1108D4D1, SSpanLock, CFullBridge );
 REGISTER_SAVELOAD_CLASS( 0x1108D4D0, CFullBridge );
 REGISTER_SAVELOAD_CLASS( 0x1108D49F, CBridgeSpan );
@@ -74,13 +76,13 @@ void CBridgeHeightRemover::Segment()
 //*														CBridgeSpan														*
 //*******************************************************************
 
-CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const WORD _nDir, const int nFrameIndex )
+CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const uint16_t _nDir, const int nFrameIndex )
 : CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ), 
 	bNewBuilt( false ), bLocked( false ), bDeletingAround( false ),
 	nScriptID( -1 )
 {
 	Init();
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
 	// под всем мостом запретить строить окопы.
@@ -143,13 +145,13 @@ void CBridgeSpan::Build()
 	pFullBridge->SpanBuilt( this );
 }
 
-void CBridgeSpan::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
+void CBridgeSpan::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
 
-void CBridgeSpan::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
+void CBridgeSpan::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
@@ -157,7 +159,7 @@ void CBridgeSpan::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPG
 
 void CBridgeSpan::SetHeights()
 {
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 	
 	CArray2D<bool> newHeightsInfo;
@@ -209,7 +211,7 @@ void CBridgeSpan::DisplayBridgeTiles()
 	std::vector<SVector> tiles;
 
 	//Get tiles
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
@@ -234,7 +236,7 @@ void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
 	pTiles->clear();
 
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 	{
@@ -242,7 +244,7 @@ void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 		{
 			const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
 			const SVector tile( GetAIMap()->GetTile( x, y ) );
-			const BYTE val = pass.GetVal( vTileCenter );
+			const uint8_t val = pass.GetVal( vTileCenter );
 			if ( GetAIMap()->IsTileInside( tile ) && val )
 			{
 				EAIClasses aiClassLock = EAC_NONE;
@@ -263,7 +265,7 @@ void CBridgeSpan::LockTiles()
 	if ( !oldTilesInfo.empty() )
 		return;
 
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 	oldTilesInfo.clear();
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
@@ -272,7 +274,7 @@ void CBridgeSpan::LockTiles()
 		{
 			const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
 			const SVector tile( GetAIMap()->GetTile( x, y ) );
-			const BYTE val = pass.GetVal( vTileCenter );
+			const uint8_t val = pass.GetVal( vTileCenter );
 			if ( GetAIMap()->IsTileInside( tile ) && val )
 			{
 				const EAIClasses aiClassLock = ( val & 0x01 ) ? EAC_TERRAIN : EAC_NONE;
@@ -287,7 +289,7 @@ void CBridgeSpan::RealLockTiles()
 	if ( fHP <= 0 || bLocked )
 		return;
 
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
 	bLocked = true;
@@ -301,7 +303,7 @@ void CBridgeSpan::RealLockTiles()
 		{
 			const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
 			const SVector tile( GetAIMap()->GetTile( x, y ) );
-			const BYTE val = pass.GetVal( vTileCenter );
+			const uint8_t val = pass.GetVal( vTileCenter );
 			if ( GetAIMap()->IsTileInside( tile ) && val )
 			{
 				EAIClasses aiClassUnlock = EAC_NONE;
@@ -383,7 +385,7 @@ void CBridgeSpan::Die( const float fDamage )
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	fHP = 0.0f;
 
-	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
 	// убить юнитов, стоявших на этом пролёте
@@ -505,23 +507,23 @@ public:
 	}
 };
 
-static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const WORD wDir, SOnlyDirNeed need )
+static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const uint16_t wDir, SOnlyDirNeed need )
 {
 	CTilesColl a( pTiles );
 
-	//перейдм к DWORD чтобы не переполнялось
-	DWORD arDir[4];
-	DWORD dwDir = wDir;
+	//перейдм к uint32_t чтобы не переполнялось
+	uint32_t arDir[4];
+	uint32_t dwDir = wDir;
 	arDir[0] = GetDirectionByVector( (rect.v1 +rect.v2)/2 - rect.center );
 	arDir[1] = GetDirectionByVector( (rect.v2 +rect.v3)/2 - rect.center );
 	arDir[2] = GetDirectionByVector( (rect.v3 +rect.v4)/2 - rect.center );
 	arDir[3] = GetDirectionByVector( (rect.v4 +rect.v1)/2 - rect.center );
 
 	int iMin = 0;
-	DWORD dwMin = 65535;
+	uint32_t dwMin = 65535;
 	for( int i=0; i< 4; ++i )
 	{
-		const WORD wDirsDiff = DirsDifference( arDir[i], dwDir );
+		const uint16_t wDirsDiff = DirsDifference( arDir[i], dwDir );
 		if( dwMin >  wDirsDiff )
 		{
 			iMin = i;
@@ -552,7 +554,7 @@ static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles
 	}
 }
 
-CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
+CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const uint16_t wDir )
 : pSpan( pSpan )
 {
 	// найти тайлы. запомнить состояние залоченности.
@@ -682,7 +684,7 @@ void CFullBridge::UnlockAllSpans()
 	}
 }
 
-void CFullBridge::LockSpan( CBridgeSpan * pSpan, const WORD wDir )
+void CFullBridge::LockSpan( CBridgeSpan * pSpan, const uint16_t wDir )
 {
 	lockedSpans.push_back( new SSpanLock( pSpan, wDir ) );
 }
@@ -714,7 +716,7 @@ void CFullBridge::EnumSpans( std::vector< CObj<CBridgeSpan> > *pSpans )
 		pSpans->push_back( *it );
 }
 
-const bool CFullBridge::IsVisible( const BYTE cParty ) const
+const bool CFullBridge::IsVisible( const uint8_t cParty ) const
 {
 	CTilesSet tiles;
 	GetTilesForVisibility( &tiles );

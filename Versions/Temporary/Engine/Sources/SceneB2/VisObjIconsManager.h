@@ -4,6 +4,8 @@
 #include "3Dmotor/RectLayout.h"
 #include "SceneTypes.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 	class I2DGameView;
@@ -32,7 +34,7 @@ public:
 		int nScrOffsetX;
 		int nScrOffsetY;
 		float fDepth;
-		DWORD nColor;
+		uint32_t nColor;
 		float fAddHeight;
 		std::vector<int> icons;
 		std::vector<SHPBar> hpBars;

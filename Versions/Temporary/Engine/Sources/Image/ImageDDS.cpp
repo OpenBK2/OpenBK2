@@ -13,6 +13,8 @@
 #include "3dMotor/GfxInternal.h" // ePixelFormat->D3DFormat
 #include "ImageScale.h"
 
+#include <cstdint>
+
 #pragma comment( linker, "/NODEFAULTLIB:libc.lib" )
 
 
@@ -72,7 +74,7 @@ static const char* DXErrorToString( HRESULT hErrorCode )
 #if defined( _DO_ASSERT_SLOW )
 #define NI_ASSERTHR( x, user_text )                        \
 {                                                          \
-	if ( ( static_cast<DWORD>(x) & 0x80000000 ) != 0 )       \
+	if ( ( static_cast<uint32_t>(x) & 0x80000000 ) != 0 )       \
 	{                                                        \
 		char buff[1024];                                       \
 		sprintf( buff, "(0x%X) %s", x, DXErrorToString( x ) ); \
@@ -91,7 +93,7 @@ namespace NImage
 
 bool RecognizeFormatDDS( CDataStream *pStream )
 {
-	DWORD dwSignature = 0;;
+	uint32_t dwSignature = 0;;
 
 	if ( pStream->GetPosition() + 4 >= pStream->GetSize() )
 		return false;
@@ -109,7 +111,7 @@ bool RecognizeFormatDDS( CDataStream *pStream )
 // **
 // ************************************************************************************************************************ //
 
-static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
+static void DecompressARGB( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
 	SPixelConvertInfo pci( hdr.ddspf.dwABitMask, hdr.ddspf.dwRBitMask, hdr.ddspf.dwGBitMask, hdr.ddspf.dwBBitMask );
 	//
@@ -117,7 +119,7 @@ static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCom
 	{
 		case 16:
 			{
-				WORD *pSrc = (WORD*)pCompBytes;
+				uint16_t *pSrc = (uint16_t*)pCompBytes;
 				for ( int i = 0; i < hdr.dwWidth * hdr.dwHeight; ++i )
 					*pRes++ = pci.DecompColor( *pSrc++ );
 			}
@@ -139,7 +141,7 @@ static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCom
 // **
 // ************************************************************************************************************************ //
 
-bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
+bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 {
 	// skip signature
 	pStream->Seek( 4 );
@@ -178,7 +180,7 @@ bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
 		if ( nCompSize > 0 ) 
 		{
 
-			BYTE *buffer = new BYTE[nCompSize];
+			uint8_t *buffer = new uint8_t[nCompSize];
 			pStream->Read( buffer, nCompSize );
 			UnpackDXT( nDxt, hdr.dwWidth, hdr.dwHeight, buffer, pRes );
 			delete []buffer;
@@ -194,7 +196,7 @@ bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
 		else
 		{
 			int nCompSize = hdr.dwWidth * hdr.dwHeight * hdr.ddspf.dwRGBBitCount / 8;
-			BYTE *buffer = new BYTE[nCompSize];
+			uint8_t *buffer = new uint8_t[nCompSize];
 			pStream->Read( buffer, nCompSize );
 			DecompressARGB( &(*pRes)[0][0], hdr, buffer );
 			delete []buffer;
@@ -300,7 +302,7 @@ void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType,
 	}
 }
 
-void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<DWORD> > *pMips, const CArray2D<CVec4> &srcImage,
+void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint32_t> > *pMips, const CArray2D<CVec4> &srcImage,
 																								EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, 
 																								bool bWrapX, bool bWrapY, float fMappingSize )
 {
@@ -314,8 +316,8 @@ void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<DWORD> > *p
 	{
 		// process current mip-map level
 		PrepareImageForCompression( &src, eImageType, bWrapX, bWrapY, fMappingSize );
-		// convert to packed DWORD image and store to i-th mip image
-		CArray2D<DWORD> &dst = (*pMips)[i];
+		// convert to packed uint32_t image and store to i-th mip image
+		CArray2D<uint32_t> &dst = (*pMips)[i];
 		dst.SetSizes( src.GetSizeX(), src.GetSizeY() );
 		Convert( &dst, src );
 
@@ -334,7 +336,7 @@ void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<DWORD> > *p
 // ************************************************************************************************************************ //
 
 static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
-	const std::vector<CArray2D<DWORD> > &mips )
+	const std::vector<CArray2D<uint32_t> > &mips )
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
@@ -357,7 +359,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 
 	for ( int nLevel = 0; nLevel < mips.size(); ++nLevel )
 	{
-		const CArray2D<DWORD> &image = mips[ nLevel ];
+		const CArray2D<uint32_t> &image = mips[ nLevel ];
 		RECT rect;
 		const int nSizeX = image.GetSizeX();
 		const int nSizeY = image.GetSizeY();
@@ -375,7 +377,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 			continue;
 		}
 		hr = D3DXLoadSurfaceFromMemory( pSurfaceLevel, NULL, NULL, &(image[0][0]), D3DFMT_A8R8G8B8,
-			                                      image.GetSizeX() * sizeof(DWORD), NULL, &rect, D3DX_FILTER_NONE, 0 );
+			                                      image.GetSizeX() * sizeof(uint32_t), NULL, &rect, D3DX_FILTER_NONE, 0 );
 		if ( FAILED(hr) ) 
 		{
 			NI_ASSERTHR( hr, StrFmt("Can't load %d level of texture \"%s\", conversion failed", nLevel, szFileName.c_str()) );
@@ -394,19 +396,19 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<CVec4> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
-	std::vector<CArray2D<DWORD> > mips;
+	std::vector<CArray2D<uint32_t> > mips;
 	GenerateMipLevelsAndPrepareForCompression( &mips, srcImage, eImageType, ePixelFormat, 
 		                                         _nNumMipLevels, bWrapX, bWrapY, fMappingSize );
 
 	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
 
-static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<DWORD> &srcImage,
+static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels )
 {
 	int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
 
-	std::vector<CArray2D<DWORD> > mips;
+	std::vector<CArray2D<uint32_t> > mips;
 	mips.resize( nNumMipLevels );
 	mips[0] = srcImage;
 
@@ -414,7 +416,7 @@ static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFil
   {
     const int nSizeX = srcImage.GetSizeX() >> nLevel;
     const int nSizeY = srcImage.GetSizeY() >> nLevel;
-		CArray2D<DWORD> &image = mips[ nLevel ];
+		CArray2D<uint32_t> &image = mips[ nLevel ];
 		image.SetSizes( nSizeX, nSizeY );
 		Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
   }
@@ -422,7 +424,7 @@ static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFil
 }
 
 #define DEF_INV_255 ( 1.0f / 255 )
-void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<DWORD> &srcImage,
+void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
 	if ( pDevice == NULL )

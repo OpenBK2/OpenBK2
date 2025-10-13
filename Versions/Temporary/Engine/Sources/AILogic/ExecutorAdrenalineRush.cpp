@@ -2,12 +2,14 @@
 
 #include "ExecutorAdrenalineRush.h"
 
+#include <cstdint>
+
 CExecutorAdrenalineRush::CExecutorAdrenalineRush( CAIUnit *_pUnit	) :
 CExecutorUnitCombatBonus ( NDb::ABILITY_ADRENALINE_RUSH, _pUnit, TID_ADRENALINE_RUSH )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAdrenalineRush::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAdrenalineRush::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
 	if ( ( GetState() == EASS_READY_TO_ON || GetState() == EASS_SWITCHING_OFF ) && ( newModeFlags & EUM_FIGHTING ) ) 
 		return EACR_FORCE_ACTIVATE;

@@ -11,6 +11,8 @@
 
 #include "Input/Bind.h"
 
+#include <cstdint>
+
 namespace NProfile
 {
 static std::string GetProfileRootDir()
@@ -94,7 +96,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 		// write name
 		{
 			CFileStream stream( szResDir + "name.txt", CFileStream::WIN_CREATE );
-			WORD wUnicodeMagic = 0xFEFF;
+			uint16_t wUnicodeMagic = 0xFEFF;
 			stream.Write( &wUnicodeMagic, 2 );
 			stream.Write( szName.data(), sizeof(wchar_t) * szName.size() );
 		}

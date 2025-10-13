@@ -3,6 +3,8 @@
 #include "mapeditorlib/resourcedefines.h"
 #include "MainFrame.h"
 
+#include <cstdint>
+
 const int CMainFrame::WM_SECTOOLBARWNDNOTIFY = RegisterWindowMessage( _T( "WM_SECTOOLBARWNDNOTIFY" ) );
 
 
@@ -39,7 +41,7 @@ const UINT CMainFrame::TOOLBAR_NAME_ID[TOOLBARS_COUNT] =
 //
 const UINT CMainFrame::TOOLBAR_CONTROL_ID_TO_ARRANGE = AFX_IDW_TOOLBAR + 4;
 //
-const DWORD CMainFrame::TOOLBAR_STYLE[TOOLBARS_COUNT] =
+const uint32_t CMainFrame::TOOLBAR_STYLE[TOOLBARS_COUNT] =
 {
 	CBRS_ALIGN_ANY,
 	CBRS_ALIGN_ANY,
@@ -144,7 +146,7 @@ static UINT TOOLBAR_..._ELEMENTS_ID[TOOLBAR_..._ELEMENTS_COUNT] =
 /**/
 
 
-const DWORD CMainFrame::TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT] =
+const uint32_t CMainFrame::TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT] =
 {
 	TOOLBAR_MAIN_ELEMENTS_COUNT,
 	TOOLBAR_CC_ELEMENTS_COUNT,

@@ -2,13 +2,15 @@
 
 #include "PrimeNumbers.h"
 
+#include <cstdint>
+
 const int N_NUMBERS = 1000;
 
 CPrimeNumbers::CPrimeNumbers()
 {
 	numbers.resize( N_NUMBERS );
 
-	std::vector<BYTE> canBePrime;
+	std::vector<uint8_t> canBePrime;
 	canBePrime.resize( N_NUMBERS * 50, 1 );
 
 	int nFound = 0;

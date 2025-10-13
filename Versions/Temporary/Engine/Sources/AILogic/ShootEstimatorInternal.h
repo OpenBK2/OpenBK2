@@ -1,8 +1,10 @@
-
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "ShootEstimator.h"
 #include "Obstacle.h"
+
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
 class CBasicGun;
@@ -25,8 +27,8 @@ class CTankShootEstimator : public IShootEstimator
 	bool bDamageToCurTargetUpdated;
 
 	float fBestRating;
-	DWORD dwForbidden;
-	DWORD dwDefaultForbidden;
+	uint32_t dwForbidden;
+	uint32_t dwDefaultForbidden;
 	
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 
@@ -42,7 +44,7 @@ public:
 	CTankShootEstimator() : pOwner( 0 ) { }
 	explicit CTankShootEstimator( class CAIUnit *pOwner );
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden );
+	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
 	virtual void AddUnit( class CAIUnit *pEnemy );
 	virtual class CAIUnit* GetBestUnit() const;
 	virtual class CBasicGun* GetBestGun() const;
@@ -71,7 +73,7 @@ class CSoldierShootEstimator : public IShootEstimator
 	bool bUseGrenadeFixed;
 	bool bUseGrenadeAutocast;
 
-	DWORD dwForbidden;
+	uint32_t dwForbidden;
 
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestUnit); f.Add(4,&pBestGun); f.Add(5,&nBestGun); f.Add(6,&pCurTarget); f.Add(7,&bDamageToCurTargetUpdated); f.Add(8,&fBestRating); f.Add(9,&bHasGrenades); f.Add(10,&bThrowGrenade); f.Add(11,&bUseGrenadeFixed); f.Add(12,&bUseGrenadeAutocast); f.Add(13,&dwForbidden); f.Add(14,&pMosinStats); return 0; }
@@ -85,7 +87,7 @@ public:
 	CSoldierShootEstimator() : pOwner( 0 ) { }
 	explicit CSoldierShootEstimator( class CAIUnit *pOwner );
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden );
+	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
 	virtual void AddUnit( class CAIUnit *pEnemy );
 	virtual class CAIUnit* GetBestUnit() const;
 	virtual class CBasicGun* GetBestGun() const;
@@ -117,7 +119,7 @@ public:
 
 	void SetGun( CBasicGun *_pGun);
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden );//dwFirbidden is ignored
+	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );//dwFirbidden is ignored
 	virtual void AddUnit( class CAIUnit *pEnemy );
 	virtual class CAIUnit* GetBestUnit() const;
 	virtual class CBasicGun* GetBestGun() const;
@@ -170,14 +172,14 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pCurEnemy); f.Add(4,&vCenter); f.Add(5,&bestForGuns); f.Add(6,&bestForBombs); f.Add(7,&bestAviation); f.Add(8,&buildings); f.Add(9,&pBestBuilding); return 0; }
 
 	const float CPlaneShturmovikShootEstimator::CalcTimeToOpenFire( CAIUnit *pEnemy ) const;
-	void CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const DWORD dwPossibleGuns );
-	const float CalcRating( CAIUnit *pEnemy, const DWORD dwPossibleGuns ) const;
+	void CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const uint32_t dwPossibleGuns );
+	const float CalcRating( CAIUnit *pEnemy, const uint32_t dwPossibleGuns ) const;
 public:
 	CPlaneShturmovikShootEstimator() : pOwner( 0 ) {  }
 	CPlaneShturmovikShootEstimator( class CAIUnit    *pOwner );
 	void SetCurCenter( const CVec2 &vNewCenter ) { vCenter = vNewCenter; }
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden );//dwFirbidden is ignored
+	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );//dwFirbidden is ignored
 	virtual void AddUnit( class CAIUnit *pEnemy );
 	virtual class CAIUnit* GetBestUnit() const;
 
@@ -210,7 +212,7 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 		ZDATA
 	CPtr<CAIUnit> pOwner;
 	CPtr<CAIUnit> pBestTarget; 
-	DWORD dwForbidden;
+	uint32_t dwForbidden;
 	float fBestRating;
 	bool bDamageToCurTargetUpdated ;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestTarget); f.Add(4,&dwForbidden); f.Add(5,&fBestRating); f.Add(6,&bDamageToCurTargetUpdated); return 0; }
@@ -219,7 +221,7 @@ public:
 
 	CShootEstimatorSupportAAGun() {  }
 	CShootEstimatorSupportAAGun( class CAIUnit *pOwner );
-	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden );
+	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
 	void AddUnit( class CAIUnit *pEnemy );
 	class CAIUnit* GetBestUnit() const { return pBestTarget; }
 

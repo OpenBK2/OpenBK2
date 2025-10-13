@@ -2,6 +2,8 @@
 
 #include "Common_RTS_AI/Path.h"
 
+#include <cstdint>
+
 struct IPath;
 
 class CPresizePath : public ISmoothPath
@@ -25,7 +27,7 @@ class CPresizePath : public ISmoothPath
 	EPresizePathState eState;
 	CVec2 vEndPoint;
 	CVec2 vEndDir;
-	WORD wDesiredDir;
+	uint16_t wDesiredDir;
 
 	CPtr<ISmoothPath> pPathStandart; 
 	CPtr<ISmoothPath> pPathCheat;

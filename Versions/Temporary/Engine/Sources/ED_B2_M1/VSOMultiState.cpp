@@ -9,6 +9,8 @@
 
 #include "VSOMultiState.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 void CVSOMultiState::UpdateEditParameters( UINT nFlags )
@@ -100,7 +102,7 @@ void CVSOMultiState::Leave()
 }
 
 
-bool CVSOMultiState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CVSOMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

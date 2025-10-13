@@ -12,6 +12,8 @@
 #include "AnimationMnemonics.h"
 #include "Misc/StrProc.h"
 
+#include <cstdint>
+
 REGISTER_EXPORTER_IN_DLL( Skeleton, CSkeletonExporter )
 
 
@@ -125,7 +127,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 			int nLastFrame = -1;
 			string szAABBAName;
 			string szAABBDName;
-			DWORD dwWeaponBits = 0;
+			uint32_t dwWeaponBits = 0;
 			bool bLooped = false;
 			float fSpeed = 1.0f;
 			int nActionFrame = 0;

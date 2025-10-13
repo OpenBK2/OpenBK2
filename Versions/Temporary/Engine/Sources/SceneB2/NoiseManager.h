@@ -2,15 +2,17 @@
 
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 class CNoiseAccessor
 {
 	friend class CNoiseManager;
 
-	const CArray2D<BYTE> &noise;
+	const CArray2D<uint8_t> &noise;
 	const unsigned int nXOffset;
 	const unsigned int nYOffset;
 
-	CNoiseAccessor( const CArray2D<BYTE> &_noise ) 
+	CNoiseAccessor( const CArray2D<uint8_t> &_noise )
 		: noise(_noise), 
 			nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() ), 
 			nYOffset( (float)rand() / RAND_MAX * _noise.GetSizeY() ) {}
@@ -25,7 +27,7 @@ public:
 		return *this;
 	}
 
-	BYTE GetValue( unsigned int x, unsigned int y )
+	uint8_t GetValue( unsigned int x, unsigned int y )
 	{
 		NI_ASSERT( ( noise.GetSizeX() > 0 ) && ( noise.GetSizeY() > 0 ), "Empty noise" );
 		return noise[(y + nYOffset) & ( noise.GetSizeY() - 1 )][(x + nXOffset) & ( noise.GetSizeX() - 1 )];
@@ -54,8 +56,8 @@ class CNoiseManager
 	struct SLoadedNoise
 	{
 		std::string szFileName;
-		CArray2D<BYTE> noise;
-		BYTE bLoaded;
+		CArray2D<uint8_t> noise;
+		uint8_t bLoaded;
 	};
 
 	std::vector<SLoadedNoise> noises;

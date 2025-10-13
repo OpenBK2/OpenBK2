@@ -2,6 +2,8 @@
 
 #include <winsock.h>
 
+#include <cstdint>
+
 class CBitStream;
 
 namespace NNet
@@ -36,7 +38,7 @@ private:
 	// info on received pkts (acks on them should be sent)
 	std::vector<UPDATE_ID> receivedPkts;
 	// acknowledgements on packets cache
-	DWORD dwAckedBits;
+	uint32_t dwAckedBits;
 	PACKET_ID nAckedLast;
 	//
 	float fAvrgRTT, fAvrgRTT2;    // RTT statistics

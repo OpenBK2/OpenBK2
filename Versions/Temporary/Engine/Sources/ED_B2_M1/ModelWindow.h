@@ -4,6 +4,8 @@
 #include "ModelState.h"
 #include "ResourceDefines.h"
 
+#include <cstdint>
+
 class CModelWindow : public CResizeDialog, public ICommandHandler
 {
 	bool bCreateControls;
@@ -85,7 +87,7 @@ public:
 	~CModelWindow();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()

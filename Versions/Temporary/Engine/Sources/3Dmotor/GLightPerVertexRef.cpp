@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 
 namespace NGScene
 {
@@ -20,12 +21,12 @@ namespace
 static void CalcDirectionalLighting(
 	const NGfx::SCompactVector *pNormals, int nCount,
 	const SPerVertexLightState &ls, const NGfx::SMMXWord &translucentShade,
-	DWORD *pResColors, DWORD *pResShadow )
+	uint32_t *pResColors, uint32_t *pResShadow )
 {
-	DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+	uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
 	for ( int k = 0; k < nCount; ++k )
 	{
-		DWORD dwNormal = pNormals[k].dw;
+		uint32_t dwNormal = pNormals[k].dw;
 		if ( dwNormal != dwPrevNormal )
 		{
 			uint64_t normal = mmx::punpcklbw( dwNormal, dwNormal );
@@ -184,7 +185,7 @@ static uint64_t PointLightShift()
 
 static void CalcPointLightColorsIndexed(
 	NGfx::SMMXWord *pRes, const NGfx::SMMXWord *pAttenuation,
-	const WORD *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
+	const uint16_t *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
 	const NGfx::SMMXWord &lightColorWord )
 {
 	uint64_t shift = PointLightShift();
@@ -194,7 +195,7 @@ static void CalcPointLightColorsIndexed(
 
 	for ( int k = 0; k < nCount; ++k )
 	{
-		DWORD dwNormal = pNormals[k].dw;
+		uint32_t dwNormal = pNormals[k].dw;
 		const NGfx::SMMXWord *pAtt = &pAttenuation[ pPosIndices[k] ];
 		uint64_t att = mmx::combine64( pAtt->nZ, pAtt->nY, pAtt->nX, pAtt->nW );
 		CalculateLightColor( dwNormal, shift, shift1, lightColor, att, &pRes[k] );
@@ -218,18 +219,18 @@ static void CalcPointLightColorsUniform(
 	const unsigned char *pNormalBytes = reinterpret_cast<const unsigned char *>( pNormals );
 	for ( int k = 0; k < nCount; ++k, pNormalBytes += nNormalStride )
 	{
-		DWORD dwNormal = reinterpret_cast<const NGfx::SCompactVector *>( pNormalBytes )->dw;
+		uint32_t dwNormal = reinterpret_cast<const NGfx::SCompactVector *>( pNormalBytes )->dw;
 		CalculateLightColor( dwNormal, shift, shift1, lightColor, att, &pRes[k] );
 	}
 }
 
-static void AddColors( DWORD *pRes, const DWORD *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
+static void AddColors( uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
 {
 	uint64_t mask = 0x4000400040004000ULL;
 
 	for ( int k = 0; k < nCount; ++k )
 	{
-		DWORD dwColor = pSrc[k];
+		uint32_t dwColor = pSrc[k];
 		uint64_t addColor = mmx::combine64( pAdd[k].nZ, pAdd[k].nY, pAdd[k].nX, pAdd[k].nW );
 
 		uint64_t color = mmx::punpcklbw( dwColor, dwColor );
@@ -259,9 +260,9 @@ static void AddColors( DWORD *pRes, const DWORD *pSrc, const NGfx::SMMXWord *pAd
 }
 
 static void ScaleColors(
-	DWORD *pRes, const DWORD *pSrc, int nSrcStride,
+	uint32_t *pRes, const uint32_t *pSrc, int nSrcStride,
 	const unsigned char *pScale, int nScaleMask,
-	const WORD *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
+	const uint16_t *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
 	bool bMultiplyOnTransparency )
 {
 	NGfx::SMMXWord mTransp;

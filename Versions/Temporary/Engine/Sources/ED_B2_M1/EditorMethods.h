@@ -2,17 +2,18 @@
 
 #include "Misc/2Darray.h"
 
+#include <cstdint>
 
 template<class TEditParameters>
 inline bool GetEditParameters( TEditParameters *pEditParameters, UINT nCommandHandlerType )
 {
-	return SetGetEditParameters( reinterpret_cast<DWORD>( pEditParameters ), nCommandHandlerType, ID_GET_EDIT_PARAMETERS );
+	return SetGetEditParameters( reinterpret_cast<uint32_t>( pEditParameters ), nCommandHandlerType, ID_GET_EDIT_PARAMETERS );
 }
 
 template<class TEditParameters>
 inline bool SetEditParameters( const TEditParameters &rEditParameters, UINT nCommandHandlerType )
 {
-	return SetGetEditParameters( reinterpret_cast<DWORD>( &rEditParameters ), nCommandHandlerType, ID_SET_EDIT_PARAMETERS );
+	return SetGetEditParameters( reinterpret_cast<uint32_t>( &rEditParameters ), nCommandHandlerType, ID_SET_EDIT_PARAMETERS );
 }
 
 

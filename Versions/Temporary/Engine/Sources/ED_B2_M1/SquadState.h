@@ -3,6 +3,8 @@
 #include "MapEditorLib/MultiInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 //
 //			
 //					SQUAD STATE					
@@ -49,7 +51,7 @@ public:
 	void Leave();
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

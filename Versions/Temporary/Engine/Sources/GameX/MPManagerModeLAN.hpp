@@ -3,6 +3,8 @@
 #include "MPManagerMode.h"
 #include "Client/LANClient.h"
 
+#include <cstdint>
+
 class CMPManagerModeLAN : public CMPManagerMode
 {
 	OBJECT_NOCOPY_METHODS( CMPManagerModeLAN );
@@ -28,7 +30,7 @@ class CMPManagerModeLAN : public CMPManagerMode
 
 	CPtr<CLANClient> pLANClient;
 
-	WORD wGameUniqueID;
+	uint16_t wGameUniqueID;
 	EGameState eCurrentState;
 
 	//{ Messages

@@ -9,6 +9,8 @@
 #include "MapEditorLib/Tools_Image.h"
 #include "System/VFSOperations.h"
 
+#include <cstdint>
+
 const int CInputViewDialog::vID[] = 
 {
 	IDC_IV_ORIGINAL_LABEL,										//0
@@ -206,7 +208,7 @@ void CInputViewDialog::LoadGameImage( const string &rszGameImagePath )
 		CFileStream dataStream( NVFS::GetMainVFS(), szGameImagePath );
 		if ( dataStream.IsOk() )
 		{
-			CArray2D<DWORD> imageSource;
+			CArray2D<uint32_t> imageSource;
 			NImage::LoadImageDDS( &imageSource, &dataStream );
 			gameImageBitmap.DeleteObject();
 			NImage::Load2Bitmap( &gameImageBitmap, imageSource );

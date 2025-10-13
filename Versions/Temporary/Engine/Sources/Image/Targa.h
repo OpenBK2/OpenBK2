@@ -2,6 +2,8 @@
 
 #include "ImageConvertor.h"
 
+#include <cstdint>
+
 namespace NImage
 {
 
@@ -28,44 +30,44 @@ enum ETGAImageType
 // describe the color map (if any) used for the image
 struct SColorMapSpecification 
 {
-	WORD wFirstEntryIndex;								// Index of the first color map entry. Index refers to the starting entry in loading the color map.
-	WORD wColorMapLength;									// Total number of color map entries included
-	BYTE cColorMapEntrySize;							// Establishes the number of bits per entry. Typically 15, 16, 24 or 32-bit values are used
+	uint16_t wFirstEntryIndex;								// Index of the first color map entry. Index refers to the starting entry in loading the color map.
+	uint16_t wColorMapLength;									// Total number of color map entries included
+	uint8_t cColorMapEntrySize;							// Establishes the number of bits per entry. Typically 15, 16, 24 or 32-bit values are used
 
 };
 //
 struct SImageDescriptor
 {
-	BYTE cAlphaChannelBits : 4;						// the number of attribute bits per pixel
-	BYTE cLeftToRightOrder : 1;						// left-to-right ordering 
-	BYTE cTopToBottomOrder : 1;						// top-to-bottom ordering 
-	BYTE cUnused           : 2;						// Must be zero to insure future compatibility
+	uint8_t cAlphaChannelBits : 4;						// the number of attribute bits per pixel
+	uint8_t cLeftToRightOrder : 1;						// left-to-right ordering
+	uint8_t cTopToBottomOrder : 1;						// top-to-bottom ordering
+	uint8_t cUnused           : 2;						// Must be zero to insure future compatibility
 };
 // describe the image screen location, size and pixel depth
 struct SImageSpecification
 {
-	WORD wXOrigin;												// absolute horizontal coordinate for the lower left corner of the image as it is positioned on a display device having an origin at the lower left of the screen 
-	WORD wYOrigin;												// absolute vertical coordinate for the lower left corner of the image as it is positioned on a display device having an origin at the lower left of the screen
-	WORD wImageWidth;											// width of the image in pixels
-	WORD wImageHeight;										// height of the image in pixels
-	BYTE cPixelDepth;											// number of bits per pixel. This number includes the Attribute or Alpha channel bits. Common values are 8, 16, 24 and 32 but other pixel depths could be used.
+	uint16_t wXOrigin;												// absolute horizontal coordinate for the lower left corner of the image as it is positioned on a display device having an origin at the lower left of the screen
+	uint16_t wYOrigin;												// absolute vertical coordinate for the lower left corner of the image as it is positioned on a display device having an origin at the lower left of the screen
+	uint16_t wImageWidth;											// width of the image in pixels
+	uint16_t wImageHeight;										// height of the image in pixels
+	uint8_t cPixelDepth;											// number of bits per pixel. This number includes the Attribute or Alpha channel bits. Common values are 8, 16, 24 and 32 but other pixel depths could be used.
 	SImageDescriptor descriptor;					//
 };
 struct STGAFileHeader
 {
-	BYTE cIDLength;												// identifies the number of bytes contained in Field 6, the Image ID Field
-	BYTE cColorMapType;										// indicates the type of color map (if any) included with the image
-	BYTE cImageType;											// TGA File Format can be used to store Pseudo-Color, True-Color and Direct-Color images of various pixel depths
+	uint8_t cIDLength;												// identifies the number of bytes contained in Field 6, the Image ID Field
+	uint8_t cColorMapType;										// indicates the type of color map (if any) included with the image
+	uint8_t cImageType;											// TGA File Format can be used to store Pseudo-Color, True-Color and Direct-Color images of various pixel depths
 	SColorMapSpecification colormap;      //
 	SImageSpecification imagespec;				// 
 };
 struct STGAFileFooter
 {
-	DWORD dwExtensionAreaOffset;					// offset from the beginning of the file to the start of the Extension  Area
-	DWORD dwDeveloperDirectoryOffset;			// offset from the beginning of the file to the start of the Developer Directory
-	BYTE cSignature[16];									// "TRUEVISION-XFILE"
-	BYTE cReservedCharacter;							// must be '.'
-	BYTE cBinaryZeroStringTerminator;			// '\0'
+	uint32_t dwExtensionAreaOffset;					// offset from the beginning of the file to the start of the Extension  Area
+	uint32_t dwDeveloperDirectoryOffset;			// offset from the beginning of the file to the start of the Developer Directory
+	uint8_t cSignature[16];									// "TRUEVISION-XFILE"
+	uint8_t cReservedCharacter;							// must be '.'
+	uint8_t cBinaryZeroStringTerminator;			// '\0'
 };
 #pragma pack()
 
@@ -148,7 +150,7 @@ public:
 		SInt2Type<nColorsEqual> separator;
 		const int nBytesToRead = int(hdr.imagespec.wImageWidth) * int(hdr.imagespec.wImageHeight) * int(hdr.imagespec.cPixelDepth) / 8;
 		int nReadBytes = 0;
-		BYTE cRepetitionCounter = 0;
+		uint8_t cRepetitionCounter = 0;
 		TInColor pixelValue;
 		while ( nReadBytes < nBytesToRead )
 		{
@@ -160,7 +162,7 @@ public:
 				const TOutColor color = convertor( pixelValue );
 				for ( TOutColor *pColor = pColors; pColor != pColors + nNumElements; ++pColor )
 					*pColor = color;
-				//MemSetDWord( reinterpret_cast<DWORD*>(pColors), convertor(pixelValue), nNumElements );
+				//MemSetDWord( reinterpret_cast<uint32_t*>(pColors), convertor(pixelValue), nNumElements );
 			}
 			else															// raw-data packet
 				LoadRaw( pColors, nNumElements, convertor, pStream, &separator );
@@ -200,7 +202,7 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 				case 24:
 					return CTGARawLoader<SColor24, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				case 32:
-					return CTGARawLoader<DWORD, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+					return CTGARawLoader<uint32_t, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				default:
 					NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", hdr.imagespec.cPixelDepth) );
 					return false;
@@ -208,10 +210,10 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 			break;
 
 		case TGAIT_COLOR_MAPPED:
-			return CTGARawLoader<BYTE, TOutColor, CPaletteConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+			return CTGARawLoader<uint8_t, TOutColor, CPaletteConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 
 		case TGAIT_BLACK_WHITE:
-			return CTGARawLoader<BYTE, TOutColor, CGrayConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+			return CTGARawLoader<uint8_t, TOutColor, CGrayConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 
 		case TGAIT_RLE_TRUE_COLOR:
 			switch ( hdr.imagespec.cPixelDepth )
@@ -219,7 +221,7 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 				case 24:
 					return CTGARLELoader<SColor24, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				case 32:
-					return CTGARLELoader<DWORD, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+					return CTGARLELoader<uint32_t, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				default:
 					NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", hdr.imagespec.cPixelDepth) );
 					return false;
@@ -227,10 +229,10 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 			break;
 
 		case TGAIT_RLE_COLOR_MAPPED:
-			return CTGARLELoader<BYTE, TOutColor, CPaletteConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+			return CTGARLELoader<uint8_t, TOutColor, CPaletteConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 
 		case TGAIT_RLE_BLACK_WHITE:
-			return CTGARLELoader<BYTE, TOutColor, CGrayConvertor<TOutColor> >::Load( pColors, hdr, pStream );
+			return CTGARLELoader<uint8_t, TOutColor, CGrayConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 	}
 	return false;
 }
@@ -278,7 +280,7 @@ inline void __fill_tga_header( STGAFileHeader *pHdr )
 	NI_ASSERT( false, "Unknwon format" );
 }
 template <> 
-inline void __fill_tga_header<DWORD>( STGAFileHeader *pHdr )
+inline void __fill_tga_header<uint32_t>( STGAFileHeader *pHdr )
 {
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
@@ -289,7 +291,7 @@ inline void __fill_tga_header<SColor24>( STGAFileHeader *pHdr )
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 }
 template <> 
-inline void __fill_tga_header<BYTE>( STGAFileHeader *pHdr )
+inline void __fill_tga_header<uint8_t>( STGAFileHeader *pHdr )
 {
 	pHdr->cImageType = TGAIT_BLACK_WHITE;
 }

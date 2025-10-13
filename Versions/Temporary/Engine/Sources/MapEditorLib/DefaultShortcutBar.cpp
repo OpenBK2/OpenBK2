@@ -3,6 +3,8 @@
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
 
+#include <cstdint>
+
 BEGIN_MESSAGE_MAP( CDefaultShortcutBar, SECShortcutBar )
 	ON_MESSAGE( TCM_TABSEL, OnNotifyChangeTab )	
 END_MESSAGE_MAP()
@@ -50,7 +52,7 @@ BOOL CDefaultShortcutBar::OnChangeBar( int nShortcutIndex )
 		{
 			nShortcutIndex = INVALID_SHORTCUT_INDEX;
 		}
-		DWORD dwParam = MAKELONG( nTabIndex, nShortcutIndex );
+		uint32_t dwParam = MAKELONG( nTabIndex, nShortcutIndex );
 		DebugTrace( "CDefaultShortcutBar::OnChangeBar(), dwParam: %d(0x%X)", dwParam, dwParam );
 		bool bEnable = false;
 		bool bChecked = false;
@@ -78,7 +80,7 @@ LRESULT CDefaultShortcutBar::OnNotifyChangeTab( WPARAM wParam, LPARAM lParam )
 		{
 			nTabIndex = INVALID_TAB_INDEX;
 		}
-		DWORD dwParam = MAKELONG( nTabIndex, nShortcutIndex );
+		uint32_t dwParam = MAKELONG( nTabIndex, nShortcutIndex );
 		//DebugTrace( "CDefaultShortcutBar::OnNotifyChangeTab(), dwParam: %d(0x%X)", dwParam, dwParam );
 		bool bEnable = false;
 		bool bChecked = false;

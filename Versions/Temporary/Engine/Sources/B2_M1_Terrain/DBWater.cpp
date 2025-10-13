@@ -6,17 +6,19 @@
 #include "System/XmlSaver.h"
 #include "DBWater.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SAnimatedTexture::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SAnimatedTexture::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesX", (BYTE*)&nNumFramesX - pThis, sizeof(nNumFramesX), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesY", (BYTE*)&nNumFramesY - pThis, sizeof(nNumFramesY), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( szAddName + "UseFrames", (BYTE*)&nUseFrames - pThis, sizeof(nUseFrames), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesX", (uint8_t*)&nNumFramesX - pThis, sizeof(nNumFramesX), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesY", (uint8_t*)&nNumFramesY - pThis, sizeof(nNumFramesY), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "UseFrames", (uint8_t*)&nUseFrames - pThis, sizeof(nUseFrames), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SAnimatedTexture::operator&( IXmlSaver &saver )
@@ -39,7 +41,7 @@ int SAnimatedTexture::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SAnimatedTexture::CalcCheckSum() const
+uint32_t SAnimatedTexture::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -60,10 +62,10 @@ void SWaterSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "WaterSet", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Water", &water, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "WhiteHorses", &whiteHorses, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Surf", (BYTE*)&pSurf - pThis, sizeof(pSurf), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Surf", (uint8_t*)&pSurf - pThis, sizeof(pSurf), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -122,14 +124,14 @@ NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const std::stri
 }
 
 
-void SWater::SWaterWaveType::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SWater::SWaterWaveType::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (BYTE*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Period", (BYTE*)&fPeriod - pThis, sizeof(fPeriod), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PeriodVariation", (BYTE*)&fPeriodVariation - pThis, sizeof(fPeriodVariation), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "InvPeriod", (BYTE*)&fInvPeriod - pThis, sizeof(fInvPeriod), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "DeepWaveNumber", (BYTE*)&fDeepWaveNumber - pThis, sizeof(fDeepWaveNumber), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "PhaseOffset", (BYTE*)&fPhaseOffset - pThis, sizeof(fPhaseOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (uint8_t*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Period", (uint8_t*)&fPeriod - pThis, sizeof(fPeriod), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PeriodVariation", (uint8_t*)&fPeriodVariation - pThis, sizeof(fPeriodVariation), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "InvPeriod", (uint8_t*)&fInvPeriod - pThis, sizeof(fInvPeriod), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "DeepWaveNumber", (uint8_t*)&fDeepWaveNumber - pThis, sizeof(fDeepWaveNumber), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PhaseOffset", (uint8_t*)&fPhaseOffset - pThis, sizeof(fPhaseOffset), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SWater::SWaterWaveType::operator&( IXmlSaver &saver )
@@ -156,7 +158,7 @@ int SWater::SWaterWaveType::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SWater::SWaterWaveType::CalcCheckSum() const
+uint32_t SWater::SWaterWaveType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -177,20 +179,20 @@ void SWater::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Water", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Waves", &waves, pThis );
-	NMetaInfo::ReportMetaInfo( "WaterSet", (BYTE*)&pWaterSet - pThis, sizeof(pWaterSet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Light", (BYTE*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "DepthNoise", (BYTE*)&pDepthNoise - pThis, sizeof(pDepthNoise), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "DepthNoiseCoeff", (BYTE*)&fDepthNoiseCoeff - pThis, sizeof(fDepthNoiseCoeff), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "TilesNumPerWaterTexture", (BYTE*)&nTilesNumPerWaterTexture - pThis, sizeof(nTilesNumPerWaterTexture), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "UseWaves", (BYTE*)&bUseWaves - pThis, sizeof(bUseWaves), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "HorDeformMinRadius", (BYTE*)&fHorDeformMinRadius - pThis, sizeof(fHorDeformMinRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HorDeformMaxRadius", (BYTE*)&fHorDeformMaxRadius - pThis, sizeof(fHorDeformMaxRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HorDeformRadiusSpeed", (BYTE*)&fHorDeformRadiusSpeed - pThis, sizeof(fHorDeformRadiusSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HorDeformRotationSpeedMin", (BYTE*)&fHorDeformRotationSpeedMin - pThis, sizeof(fHorDeformRotationSpeedMin), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HorDeformRotationSpeedVariation", (BYTE*)&fHorDeformRotationSpeedVariation - pThis, sizeof(fHorDeformRotationSpeedVariation), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "WaterType", (BYTE*)&eWaterType - pThis, sizeof(eWaterType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "WaterSet", (uint8_t*)&pWaterSet - pThis, sizeof(pWaterSet), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Light", (uint8_t*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DepthNoise", (uint8_t*)&pDepthNoise - pThis, sizeof(pDepthNoise), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DepthNoiseCoeff", (uint8_t*)&fDepthNoiseCoeff - pThis, sizeof(fDepthNoiseCoeff), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "TilesNumPerWaterTexture", (uint8_t*)&nTilesNumPerWaterTexture - pThis, sizeof(nTilesNumPerWaterTexture), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "UseWaves", (uint8_t*)&bUseWaves - pThis, sizeof(bUseWaves), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "HorDeformMinRadius", (uint8_t*)&fHorDeformMinRadius - pThis, sizeof(fHorDeformMinRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HorDeformMaxRadius", (uint8_t*)&fHorDeformMaxRadius - pThis, sizeof(fHorDeformMaxRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HorDeformRadiusSpeed", (uint8_t*)&fHorDeformRadiusSpeed - pThis, sizeof(fHorDeformRadiusSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HorDeformRotationSpeedMin", (uint8_t*)&fHorDeformRotationSpeedMin - pThis, sizeof(fHorDeformRotationSpeedMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HorDeformRotationSpeedVariation", (uint8_t*)&fHorDeformRotationSpeedVariation - pThis, sizeof(fHorDeformRotationSpeedVariation), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WaterType", (uint8_t*)&eWaterType - pThis, sizeof(eWaterType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

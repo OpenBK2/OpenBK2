@@ -1,7 +1,8 @@
-
 #pragma once
 
 #include "Common_RTS_AI/PointChecking.h"
+
+#include <cstdint>
 
 class CAttackPointChecking : public IPointChecking
 {
@@ -32,7 +33,7 @@ class CAttackSideChecking : public IPointChecking
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&wAttackDir); f.Add(3,&wHalfAngle); f.Add(4,&fRangeMin); f.Add(5,&fRangeMax); f.Add(6,&targetTile); f.Add(7,&bIgnoreObstacles); return 0; }
 public:
 	CAttackSideChecking() { }
-	CAttackSideChecking( float _fRangeMin, const float _fRangeMax, const SVector _targetTile, const WORD _wAttackDir, const WORD _wHalfAngle, const bool _bIgnoreObstacles )
+	CAttackSideChecking( float _fRangeMin, const float _fRangeMax, const SVector _targetTile, const uint16_t _wAttackDir, const uint16_t _wHalfAngle, const bool _bIgnoreObstacles )
 		: wAttackDir( _wAttackDir ), wHalfAngle( _wHalfAngle * 4 / 5 ), fRangeMin( _fRangeMin ), fRangeMax( (std::max)(0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) ), targetTile( _targetTile ), bIgnoreObstacles( _bIgnoreObstacles ) { }
 
 	virtual bool IsGoodTile( const SVector &curTile ) const;

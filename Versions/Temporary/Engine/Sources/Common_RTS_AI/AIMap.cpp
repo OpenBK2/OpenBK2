@@ -5,6 +5,7 @@
 #include "Terrain.h"
 #include "Misc/Bresenham.h"
 
+#include <cstdint>
 
 const CVec2 CAIMap::GetCenterOfTile( const float x, const float y ) const
 {
@@ -144,7 +145,7 @@ void CAIMap::AddLinesOdd( const SVector vOffset, std::vector<SVector> &tiles, CA
 	while ( curOffset != vOffset );
 }
 
-SVector CAIMap::GetOffset( const WORD wAngle, const int nDiameter )
+SVector CAIMap::GetOffset( const uint16_t wAngle, const int nDiameter )
 {
 	const float fRadius = nDiameter/2;
 	const CVec2 vAngel = fRadius * GetVectorByDirection( wAngle );
@@ -177,8 +178,8 @@ void CAIMap::RecreateCircles()
 		mask.FillZero();
 
 		const float fDelta = atan2f( 1, 4*nMaxRadius ) * 65536.0f / FP_2PI;
-		const WORD wDelta = fDelta;
-		WORD wAngle = 0;
+		const uint16_t wDelta = fDelta;
+		uint16_t wAngle = 0;
 		SVector vOffset = GetOffset( wAngle, i );
 		do 
 		{

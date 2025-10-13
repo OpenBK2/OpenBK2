@@ -6,16 +6,18 @@
 #include "System/XmlSaver.h"
 #include "dbgameoptions.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "Value", (BYTE*)&szValue - pThis, sizeof(szValue), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "Value", (uint8_t*)&szValue - pThis, sizeof(szValue), NTypeDef::TYPE_TYPE_STRING );
 }
 
 int SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::operator&( IXmlSaver &saver )
@@ -36,7 +38,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::operator&(
 	return 0;
 }
 
-DWORD SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::CalcCheckSum() const
+uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -87,9 +89,9 @@ NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType NDb::Strin
 }
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (BYTE*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (uint8_t*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Values", &values, pThis );
 }
 
@@ -109,7 +111,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::operator&
 	return 0;
 }
 
-DWORD SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::CalcCheckSum() const
+uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -126,15 +128,15 @@ DWORD SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::CalcChe
 
 
 
-void SOptionSystem::SOptionsCategory::SOptionEntry::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::SOptionEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (BYTE*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ProgName", (uint8_t*)&szProgName - pThis, sizeof(szProgName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "States", &states, pThis );
-	NMetaInfo::ReportMetaInfo( szAddName + "EditorType", (BYTE*)&eEditorType - pThis, sizeof(eEditorType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( szAddName + "DefaultValue", (BYTE*)&szDefaultValue - pThis, sizeof(szDefaultValue), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "ModeFlags", (BYTE*)&nModeFlags - pThis, sizeof(nModeFlags), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "EditorType", (uint8_t*)&eEditorType - pThis, sizeof(eEditorType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( szAddName + "DefaultValue", (uint8_t*)&szDefaultValue - pThis, sizeof(szDefaultValue), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ModeFlags", (uint8_t*)&nModeFlags - pThis, sizeof(nModeFlags), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "SliderValues", &sliderValues, pThis );
 }
 
@@ -166,7 +168,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SOptionSystem::SOptionsCategory::SOptionEntry::CalcCheckSum() const
+uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -183,10 +185,10 @@ DWORD SOptionSystem::SOptionsCategory::SOptionEntry::CalcCheckSum() const
 
 
 
-void SOptionSystem::SOptionsCategory::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SOptionSystem::SOptionsCategory::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (uint8_t*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Options", &options, pThis );
 }
 
@@ -208,7 +210,7 @@ int SOptionSystem::SOptionsCategory::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SOptionSystem::SOptionsCategory::CalcCheckSum() const
+uint32_t SOptionSystem::SOptionsCategory::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -229,7 +231,7 @@ void SOptionSystem::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "OptionSystem", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Categories", &categories, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }

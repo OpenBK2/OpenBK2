@@ -1,8 +1,9 @@
-
 #pragma once
 
 #include "Technics.h"
 #include "IPlane.h"
+
+#include <cstdint>
 
 class CUnitGuns;
 class CTurret;
@@ -37,7 +38,7 @@ public:
 	bool IsBombsAutocast() const { return bBombsAutocast; }
 	void SetBombAutocast( const bool _bBombsAutocast ) { bBombsAutocast = _bBombsAutocast; }
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
 	virtual void GetSpeed3( CVec3 *pSpeed ) const ;
 
@@ -60,7 +61,7 @@ public:
 	virtual const EActionNotify GetMovingAction() const { return ACTION_NOTIFY_MOVE; }
 
 	//
-	virtual const bool IsVisible( const BYTE party ) const { return true; }
+	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	
 	virtual NTimer::STime GetDisappearInterval() const { return 0; }
 
@@ -94,7 +95,7 @@ public:
 	const CVec3 GetPlaneShift() const { return vPlanesShift; }
 
 	const SRect & GetUnitRect() const;
-	virtual const WORD GetDir() const;
+	virtual const uint16_t GetDir() const;
 	virtual const CVec2 GetDirVector() const;
 	virtual const float GetSpeed() const;
 

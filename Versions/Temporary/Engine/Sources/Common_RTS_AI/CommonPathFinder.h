@@ -2,8 +2,9 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "AIClasses.h"
+
+#include <cstdint>
 
 struct IPointChecking;
 class CAIMap;
@@ -37,7 +38,7 @@ private:
 
 	std::vector<SVector> stopPoints, addPoints;
 	int mapBufIndex;
-	CArray2D<BYTE> mapBuf;
+	CArray2D<uint8_t> mapBuf;
 	std::vector<int> cyclePoints, segmBegin;
 	bool bPathFound;
 

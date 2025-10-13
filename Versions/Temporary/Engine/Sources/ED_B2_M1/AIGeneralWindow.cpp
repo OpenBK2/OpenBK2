@@ -6,6 +6,8 @@
 #include "aigeneraltypes.h"
 #include "AIGeneralWindow.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 //
@@ -104,7 +106,7 @@ BOOL CAIGeneralPointsWindow::OnInitDialog()
 }
 
 
-bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	SAIGeneralPointsWindowData *pData = reinterpret_cast<SAIGeneralPointsWindowData*>( dwData );
 	//

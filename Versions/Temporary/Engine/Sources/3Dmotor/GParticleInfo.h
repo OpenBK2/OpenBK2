@@ -1,6 +1,9 @@
 #pragma once
+
 #include "System/Dg.h"
 #include "GPixelFormat.h"
+
+#include <cstdint>
 
 namespace NGfx
 {
@@ -69,7 +72,7 @@ class IParticleOutput
 public:
 	virtual const SParticleOrientationInfo& GetOrientationInfo() const = 0;
 	const CVec3& GetDepth() const { return GetOrientationInfo().vDepth; }
-	virtual void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tex,
+	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex,
 		float fDepth ) = 0;
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) = 0;
 };

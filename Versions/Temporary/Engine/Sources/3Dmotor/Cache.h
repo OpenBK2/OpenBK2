@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 namespace NCache
 {
 typedef unsigned int MRU_TYPE;
@@ -19,7 +22,7 @@ template<class T>
 class CShortPtrAllocator
 {
 public:
-	typename typedef DWORD pointer;
+	typename typedef uint32_t pointer;
 	enum EPointer
 	{
 		NIL = 0xffffffff

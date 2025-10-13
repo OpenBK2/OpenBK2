@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 class CFontFormatInfo;
 namespace NFontGen
 {
@@ -21,8 +23,8 @@ struct STFCharacter
 class CFontFormatInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CFontFormatInfo );
-	typedef std::unordered_map<WORD, STFCharacter> CCharacterMap;
-	typedef std::unordered_map<DWORD, int> CKernMap;
+	typedef std::unordered_map<uint16_t, STFCharacter> CCharacterMap;
+	typedef std::unordered_map<uint32_t, int> CKernMap;
 	//
   CCharacterMap chars;                  // all available characters map
   CKernMap kerns;                       // kerning pairs for the characters in the font.
@@ -31,11 +33,11 @@ class CFontFormatInfo: public CObjectBase
 	int nExternalLeading;									// extra leading (space) that the application adds between rows
   int nAveCharWidth;										// average width of characters in the font (generally defined as the width of the letter x).
   int nMaxCharWidth;										// width of the widest character in the font
-  BYTE cCharSet;                        // character set of the font
-	WORD wDefaultChar;										// value of the character to be substituted for characters not in the font
+  uint8_t cCharSet;                        // character set of the font
+	uint16_t wDefaultChar;										// value of the character to be substituted for characters not in the font
 public:
 	// retrieve character description
-  const STFCharacter& GetChar( const WORD c ) const
+  const STFCharacter& GetChar( const uint16_t c ) const
 	{
 		CCharacterMap::const_iterator pos = chars.find( c );
 		if ( pos == chars.end() )
@@ -50,9 +52,9 @@ public:
 		return pos->second;
 	}
 	// retrieve kerning pair width
-	int GetKern( WORD wChar, WORD wLastChar ) const
+	int GetKern( uint16_t wChar, uint16_t wLastChar ) const
 	{
-    CKernMap::const_iterator pos = kerns.find( (DWORD(wLastChar) << 16) | DWORD(wChar) );
+    CKernMap::const_iterator pos = kerns.find( (uint32_t(wLastChar) << 16) | uint32_t(wChar) );
 		return pos != kerns.end() ? pos->second : 0;
 	}
 	//

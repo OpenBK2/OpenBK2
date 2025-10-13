@@ -1,5 +1,9 @@
-#include "System_export.h"
 #pragma once
+
+#include "System_export.h"
+
+#include <cstdint>
+
 // single thread version
 // базовые классы для системы подсчета ссылок на объекты с целью упрощения memory management
 //
@@ -86,7 +90,7 @@ public:
 	void Clear() { AddRef(); DestroyContents(); DecRef(); }
 	//
 	virtual int operator&( struct IBinSaver &f ) { return 0; }
-	virtual DWORD CalcCheckSum() const { return 0; }
+	virtual uint32_t CalcCheckSum() const { return 0; }
 	const char* GetTypeName() const;
 	const char* GetFullTypeName() const;
 	virtual int GetSizeOf() const = 0;

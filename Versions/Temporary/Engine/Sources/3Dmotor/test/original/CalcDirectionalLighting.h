@@ -32,14 +32,14 @@ static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b )
 }
 
 static void CalcDirectionalLighting(
-    const std::vector<WORD> &posIndices,
+    const std::vector<uint16_t> &posIndices,
     const std::vector<NGfx::SCompactVector> &_normals,
     const NGScene::SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
-    std::vector<DWORD> *pResColors, std::vector<DWORD> *pResShadow )
+    std::vector<uint32_t> *pResColors, std::vector<uint32_t> *pResShadow )
 {
     pResColors->resize( posIndices.size() );
     pResShadow->resize( posIndices.size() );
-    DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+    uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
     const void *pDirData = &ls.ambient;
     // transHolder has to outlive the loop; an earlier sketch of this scoped it inside
     // the if and left pTranslucentShade dangling.
@@ -52,12 +52,12 @@ static void CalcDirectionalLighting(
     }
     for ( int k = 0; k < posIndices.size(); ++k )
     {
-        DWORD dwNormal = _normals[k].dw;
+        uint32_t dwNormal = _normals[k].dw;
         if ( dwNormal != dwPrevNormal )
         {
             const uint64_t nResult = CalcDirectionalLightingMMX( pDirData, pTranslucentShade, dwNormal );
-            dwColor = static_cast<DWORD>( nResult );
-            dwShadowColor = static_cast<DWORD>( nResult >> 32 );
+            dwColor = static_cast<uint32_t>( nResult );
+            dwShadowColor = static_cast<uint32_t>( nResult >> 32 );
         }
         (*pResColors)[k] = dwColor;
         (*pResShadow)[k] = dwShadowColor;

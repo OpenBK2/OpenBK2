@@ -3,6 +3,9 @@
 #include "UnitStates.h"
 #include "Common_RTS_AI/Terrain.h"
 #include "StatusUpdatesHelper.h"
+
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMechUnitRPGStats;
@@ -68,7 +71,7 @@ private:
 
 	bool CheckTrenches( const CAIUnit * pUnit, const SRect &rectToTest ) const;
 	bool CheckInfantry( const CAIUnit * pUnit, const SRect &rect ) const;
-	void GetTilesNextToRect( const SRect &rect, const WORD wDirExclude );
+	void GetTilesNextToRect( const SRect &rect, const uint16_t wDirExclude );
 public:
 	static IUnitState* Instance( class CAIUnit * pUnit );
 	

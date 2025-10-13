@@ -11,6 +11,7 @@
 #include "GRenderExecute.h"
 
 #include <algorithm>
+#include <cstdint>
 
 namespace NGScene
 {
@@ -22,7 +23,7 @@ const unsigned int N_OVER_SRC_INFO = N_PARTICLE_OVER_FLAG >> N_PARTICLES_PER_EFF
 // CTransparentRenderer
 
 CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize, 
-	bool _bUseFakeLM, DWORD _dwLitColor, DWORD _dwNormalColor, const SPerVertexLightState *_pLightState )
+	bool _bUseFakeLM, uint32_t _dwLitColor, uint32_t _dwNormalColor, const SPerVertexLightState *_pLightState )
 	: nTotalParticles(0), nLitParticles(0), dwLitColor(_dwLitColor), dwNormalColor(_dwNormalColor),
 	nElementPtr(0), nInfoIdx(-(1<<N_PARTICLES_PER_EFFECT_LG2)), pLightState(_pLightState)
 {
@@ -157,7 +158,7 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, co
 	bc.Add( bv );
 }
 
-void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 	float fDepth )
 {
 	// buffer is full, start a new one
@@ -175,7 +176,7 @@ void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4], DWORD dwCol
 	StartParticlesPiece();
 }
 
-void CTransparentRenderer::AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+void CTransparentRenderer::AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
 	float fDepth )
 {
 	// store particle depth info
@@ -287,7 +288,7 @@ static void ReorderTransparent( std::vector<STriangle> *pRet, const SFBTransform
 	}
 	////
 	std::vector<float> depths( sList.nTris );
-	const std::vector<WORD> &posIndices = pInfo->GetPositionIndices();
+	const std::vector<uint16_t> &posIndices = pInfo->GetPositionIndices();
 	for ( int nTemp = 0; nTemp < sList.nTris; ++nTemp )
 	{
 		const STriangle &sTri = sList.pTri[nTemp];

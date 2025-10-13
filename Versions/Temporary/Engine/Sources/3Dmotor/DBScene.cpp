@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBScene.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 
@@ -15,12 +17,12 @@ void SModel::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Model", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Materials", &materials, pThis );
-	NMetaInfo::ReportMetaInfo( "Geometry", (BYTE*)&pGeometry - pThis, sizeof(pGeometry), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Skeleton", (BYTE*)&pSkeleton - pThis, sizeof(pSkeleton), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Geometry", (uint8_t*)&pGeometry - pThis, sizeof(pGeometry), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Skeleton", (uint8_t*)&pSkeleton - pThis, sizeof(pSkeleton), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Animations", &animations, pThis );
-	NMetaInfo::ReportMetaInfo( "WindPower", (BYTE*)&fWindPower - pThis, sizeof(fWindPower), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WindPower", (uint8_t*)&fWindPower - pThis, sizeof(fWindPower), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -173,21 +175,21 @@ void STexture::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Texture", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "DestName", (BYTE*)&szDestName - pThis, sizeof(szDestName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "ConversionType", (BYTE*)&eConversionType - pThis, sizeof(eConversionType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "AddrType", (BYTE*)&eAddrType - pThis, sizeof(eAddrType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Format", (BYTE*)&eFormat - pThis, sizeof(eFormat), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Width", (BYTE*)&nWidth - pThis, sizeof(nWidth), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Height", (BYTE*)&nHeight - pThis, sizeof(nHeight), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "MappingSize", (BYTE*)&fMappingSize - pThis, sizeof(fMappingSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "NMips", (BYTE*)&nNMips - pThis, sizeof(nNMips), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Gain", (BYTE*)&fGain - pThis, sizeof(fGain), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "AverageColor", (BYTE*)&nAverageColor - pThis, sizeof(nAverageColor), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "InstantLoad", (BYTE*)&bInstantLoad - pThis, sizeof(bInstantLoad), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "IsDXT", (BYTE*)&bIsDXT - pThis, sizeof(bIsDXT), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "FlipY", (BYTE*)&bFlipY - pThis, sizeof(bFlipY), NTypeDef::TYPE_TYPE_BOOL );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "DestName", (uint8_t*)&szDestName - pThis, sizeof(szDestName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "ConversionType", (uint8_t*)&eConversionType - pThis, sizeof(eConversionType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "AddrType", (uint8_t*)&eAddrType - pThis, sizeof(eAddrType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Format", (uint8_t*)&eFormat - pThis, sizeof(eFormat), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Width", (uint8_t*)&nWidth - pThis, sizeof(nWidth), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Height", (uint8_t*)&nHeight - pThis, sizeof(nHeight), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "MappingSize", (uint8_t*)&fMappingSize - pThis, sizeof(fMappingSize), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "NMips", (uint8_t*)&nNMips - pThis, sizeof(nNMips), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Gain", (uint8_t*)&fGain - pThis, sizeof(fGain), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AverageColor", (uint8_t*)&nAverageColor - pThis, sizeof(nAverageColor), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "InstantLoad", (uint8_t*)&bInstantLoad - pThis, sizeof(bInstantLoad), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "IsDXT", (uint8_t*)&bIsDXT - pThis, sizeof(bIsDXT), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "FlipY", (uint8_t*)&bFlipY - pThis, sizeof(bFlipY), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -238,13 +240,13 @@ void SCubeTexture::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "CubeTexture", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "PositiveX", (BYTE*)&pPositiveX - pThis, sizeof(pPositiveX), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PositiveY", (BYTE*)&pPositiveY - pThis, sizeof(pPositiveY), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PositiveZ", (BYTE*)&pPositiveZ - pThis, sizeof(pPositiveZ), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NegativeX", (BYTE*)&pNegativeX - pThis, sizeof(pNegativeX), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NegativeY", (BYTE*)&pNegativeY - pThis, sizeof(pNegativeY), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NegativeZ", (BYTE*)&pNegativeZ - pThis, sizeof(pNegativeZ), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "PositiveX", (uint8_t*)&pPositiveX - pThis, sizeof(pPositiveX), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PositiveY", (uint8_t*)&pPositiveY - pThis, sizeof(pPositiveY), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PositiveZ", (uint8_t*)&pPositiveZ - pThis, sizeof(pPositiveZ), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NegativeX", (uint8_t*)&pNegativeX - pThis, sizeof(pNegativeX), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NegativeY", (uint8_t*)&pNegativeY - pThis, sizeof(pNegativeY), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NegativeZ", (uint8_t*)&pNegativeZ - pThis, sizeof(pNegativeZ), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -275,12 +277,12 @@ int SCubeTexture::operator&( IBinSaver &saver )
 
 
 
-void SSunFlare::ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const
+void SSunFlare::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (BYTE*)&fDistance - pThis, sizeof(fDistance), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( szAddName + "Fade", (BYTE*)&bFade - pThis, sizeof(bFade), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( szAddName + "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Distance", (uint8_t*)&fDistance - pThis, sizeof(fDistance), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "Fade", (uint8_t*)&bFade - pThis, sizeof(bFade), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "Scale", (uint8_t*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SSunFlare::operator&( IXmlSaver &saver )
@@ -303,7 +305,7 @@ int SSunFlare::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SSunFlare::CalcCheckSum() const
+uint32_t SSunFlare::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -324,9 +326,9 @@ void SSunFlares::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SunFlares", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "Flares", &flares, pThis );
-	NMetaInfo::ReportMetaInfo( "OverBright", (BYTE*)&pOverBright - pThis, sizeof(pOverBright), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "OverBright", (uint8_t*)&pOverBright - pThis, sizeof(pOverBright), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -353,50 +355,50 @@ void SAmbientLight::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AmbientLight", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "IncidentShadowColor", &vIncidentShadowColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ParticlesColor", &vParticlesColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Whitening", (BYTE*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Pitch", (BYTE*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Yaw", (BYTE*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ShadowPitch", (BYTE*)&fShadowPitch - pThis, sizeof(fShadowPitch), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ShadowYaw", (BYTE*)&fShadowYaw - pThis, sizeof(fShadowYaw), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Sky", (BYTE*)&pSky - pThis, sizeof(pSky), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Whitening", (uint8_t*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Yaw", (uint8_t*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ShadowPitch", (uint8_t*)&fShadowPitch - pThis, sizeof(fShadowPitch), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ShadowYaw", (uint8_t*)&fShadowYaw - pThis, sizeof(fShadowYaw), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Sky", (uint8_t*)&pSky - pThis, sizeof(pSky), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "GlossColor", &vGlossColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "FogColor", &vFogColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "FogStartDistance", (BYTE*)&fFogStartDistance - pThis, sizeof(fFogStartDistance), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "FogDistance", (BYTE*)&fFogDistance - pThis, sizeof(fFogDistance), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "VapourHeight", (BYTE*)&fVapourHeight - pThis, sizeof(fVapourHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "VapourDensity", (BYTE*)&fVapourDensity - pThis, sizeof(fVapourDensity), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "VapourNoiseParam", (BYTE*)&fVapourNoiseParam - pThis, sizeof(fVapourNoiseParam), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "VapourSpeed", (BYTE*)&fVapourSpeed - pThis, sizeof(fVapourSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "VapourSwitchTime", (BYTE*)&fVapourSwitchTime - pThis, sizeof(fVapourSwitchTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FogStartDistance", (uint8_t*)&fFogStartDistance - pThis, sizeof(fFogStartDistance), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FogDistance", (uint8_t*)&fFogDistance - pThis, sizeof(fFogDistance), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "VapourHeight", (uint8_t*)&fVapourHeight - pThis, sizeof(fVapourHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "VapourDensity", (uint8_t*)&fVapourDensity - pThis, sizeof(fVapourDensity), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "VapourNoiseParam", (uint8_t*)&fVapourNoiseParam - pThis, sizeof(fVapourNoiseParam), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "VapourSpeed", (uint8_t*)&fVapourSpeed - pThis, sizeof(fVapourSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "VapourSwitchTime", (uint8_t*)&fVapourSwitchTime - pThis, sizeof(fVapourSwitchTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "VapourColor", &vVapourColor, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "ShadowColor", &vShadowColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "InGameUse", (BYTE*)&bInGameUse - pThis, sizeof(bInGameUse), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "InGameUse", (uint8_t*)&bInGameUse - pThis, sizeof(bInGameUse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructMetaInfo( "BackColor", &vBackColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "GForce2Light", (BYTE*)&pGForce2Light - pThis, sizeof(pGForce2Light), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "VapourStartHeight", (BYTE*)&fVapourStartHeight - pThis, sizeof(fVapourStartHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "BlurStrength", (BYTE*)&fBlurStrength - pThis, sizeof(fBlurStrength), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "GForce2Light", (uint8_t*)&pGForce2Light - pThis, sizeof(pGForce2Light), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "VapourStartHeight", (uint8_t*)&fVapourStartHeight - pThis, sizeof(fVapourStartHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "BlurStrength", (uint8_t*)&fBlurStrength - pThis, sizeof(fBlurStrength), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "GroundAmbientColor", &vGroundAmbientColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MaxShadowHeight", (BYTE*)&fMaxShadowHeight - pThis, sizeof(fMaxShadowHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SunFlares", (BYTE*)&pSunFlares - pThis, sizeof(pSunFlares), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Haze", (BYTE*)&pHaze - pThis, sizeof(pHaze), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "CloudTex", (BYTE*)&pCloudTex - pThis, sizeof(pCloudTex), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MaxShadowHeight", (uint8_t*)&fMaxShadowHeight - pThis, sizeof(fMaxShadowHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SunFlares", (uint8_t*)&pSunFlares - pThis, sizeof(pSunFlares), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Haze", (uint8_t*)&pHaze - pThis, sizeof(pHaze), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "CloudTex", (uint8_t*)&pCloudTex - pThis, sizeof(pCloudTex), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "CloudSize", &vCloudSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "CloudDir", (BYTE*)&fCloudDir - pThis, sizeof(fCloudDir), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "CloudSpeed", (BYTE*)&fCloudSpeed - pThis, sizeof(fCloudSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Rain", (BYTE*)&pRain - pThis, sizeof(pRain), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SunFlarePitch", (BYTE*)&fSunFlarePitch - pThis, sizeof(fSunFlarePitch), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SunFlareYaw", (BYTE*)&fSunFlareYaw - pThis, sizeof(fSunFlareYaw), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ShadowsMaxDetailLength", (BYTE*)&fShadowsMaxDetailLength - pThis, sizeof(fShadowsMaxDetailLength), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "HeightFog", (BYTE*)&pHeightFog - pThis, sizeof(pHeightFog), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "DepthOfField", (BYTE*)&pDepthOfField - pThis, sizeof(pDepthOfField), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "DistanceFog", (BYTE*)&pDistanceFog - pThis, sizeof(pDistanceFog), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SkyDome", (BYTE*)&pSkyDome - pThis, sizeof(pSkyDome), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "CloudDir", (uint8_t*)&fCloudDir - pThis, sizeof(fCloudDir), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CloudSpeed", (uint8_t*)&fCloudSpeed - pThis, sizeof(fCloudSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Rain", (uint8_t*)&pRain - pThis, sizeof(pRain), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SunFlarePitch", (uint8_t*)&fSunFlarePitch - pThis, sizeof(fSunFlarePitch), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SunFlareYaw", (uint8_t*)&fSunFlareYaw - pThis, sizeof(fSunFlareYaw), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ShadowsMaxDetailLength", (uint8_t*)&fShadowsMaxDetailLength - pThis, sizeof(fShadowsMaxDetailLength), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "HeightFog", (uint8_t*)&pHeightFog - pThis, sizeof(pHeightFog), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DepthOfField", (uint8_t*)&pDepthOfField - pThis, sizeof(pDepthOfField), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DistanceFog", (uint8_t*)&pDistanceFog - pThis, sizeof(pDistanceFog), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SkyDome", (uint8_t*)&pSkyDome - pThis, sizeof(pSkyDome), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "DymanicLightsModifications", &vDymanicLightsModifications, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -508,10 +510,10 @@ void SHeightFog::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "HeightFog", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "FogColor", &vFogColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MinHeight", (BYTE*)&fMinHeight - pThis, sizeof(fMinHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MaxHeight", (BYTE*)&fMaxHeight - pThis, sizeof(fMaxHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MinHeight", (uint8_t*)&fMinHeight - pThis, sizeof(fMinHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MaxHeight", (uint8_t*)&fMaxHeight - pThis, sizeof(fMaxHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -540,9 +542,9 @@ void SDepthOfField::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DepthOfField", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "FocalDist", (BYTE*)&fFocalDist - pThis, sizeof(fFocalDist), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "FocusRange", (BYTE*)&fFocusRange - pThis, sizeof(fFocusRange), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "FocalDist", (uint8_t*)&fFocalDist - pThis, sizeof(fFocalDist), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FocusRange", (uint8_t*)&fFocusRange - pThis, sizeof(fFocusRange), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -569,13 +571,13 @@ void SDistanceFog::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DistanceFog", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "Color", &vColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "MinDist", (BYTE*)&fMinDist - pThis, sizeof(fMinDist), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MaxDist", (BYTE*)&fMaxDist - pThis, sizeof(fMaxDist), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MinZDis", (BYTE*)&fMinZDis - pThis, sizeof(fMinZDis), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MaxZDis", (BYTE*)&fMaxZDis - pThis, sizeof(fMaxZDis), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ColorTexture", (BYTE*)&pColorTexture - pThis, sizeof(pColorTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MinDist", (uint8_t*)&fMinDist - pThis, sizeof(fMinDist), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MaxDist", (uint8_t*)&fMaxDist - pThis, sizeof(fMaxDist), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MinZDis", (uint8_t*)&fMinZDis - pThis, sizeof(fMinZDis), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MaxZDis", (uint8_t*)&fMaxZDis - pThis, sizeof(fMaxZDis), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ColorTexture", (uint8_t*)&pColorTexture - pThis, sizeof(pColorTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -610,9 +612,9 @@ void SSkeleton::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Skeleton", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Animations", &animations, pThis );
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -637,8 +639,8 @@ int SSkeleton::operator&( IBinSaver &saver )
 
 void SAnimBase::ReportMetaInfo() const
 {
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 }
 
 int SAnimBase::operator&( IXmlSaver &saver )
@@ -655,7 +657,7 @@ int SAnimBase::operator&( IBinSaver &saver )
 	return 0;
 }
 
-DWORD SAnimBase::CalcCheckSum() const
+uint32_t SAnimBase::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
@@ -676,9 +678,9 @@ void SAnimLight::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AnimLight", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "SelectNode", (BYTE*)&szSelectNode - pThis, sizeof(szSelectNode), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "SelectNode", (uint8_t*)&szSelectNode - pThis, sizeof(szSelectNode), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -705,11 +707,11 @@ void SParticle::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Particle", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructMetaInfo( "WrapSize", &vWrapSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Bound", (BYTE*)&bound - pThis, sizeof(bound), NTypeDef::TYPE_TYPE_BINARY );
-	NMetaInfo::ReportMetaInfo( "PerParticleFog", (BYTE*)&bPerParticleFog - pThis, sizeof(bPerParticleFog), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "Bound", (uint8_t*)&bound - pThis, sizeof(bound), NTypeDef::TYPE_TYPE_BINARY );
+	NMetaInfo::ReportMetaInfo( "PerParticleFog", (uint8_t*)&bPerParticleFog - pThis, sizeof(bPerParticleFog), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -740,16 +742,16 @@ void SLightInstance::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "LightInstance", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Light", (BYTE*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Light", (uint8_t*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Rotation", &qRotation, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Speed", (BYTE*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Offset", (BYTE*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "EndCycle", (BYTE*)&fEndCycle - pThis, sizeof(fEndCycle), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "CycleCount", (BYTE*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "GlueToBone", (BYTE*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Scale", (uint8_t*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Speed", (uint8_t*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Offset", (uint8_t*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "EndCycle", (uint8_t*)&fEndCycle - pThis, sizeof(fEndCycle), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CycleCount", (uint8_t*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "GlueToBone", (uint8_t*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -834,24 +836,24 @@ void SParticleInstance::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ParticleInstance", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Light", (BYTE*)&eLight - pThis, sizeof(eLight), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Particle", (BYTE*)&pParticle - pThis, sizeof(pParticle), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Light", (uint8_t*)&eLight - pThis, sizeof(eLight), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Particle", (uint8_t*)&pParticle - pThis, sizeof(pParticle), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Rotation", &qRotation, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Speed", (BYTE*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Offset", (BYTE*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "EndCycle", (BYTE*)&fEndCycle - pThis, sizeof(fEndCycle), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "CycleCount", (BYTE*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Scale", (uint8_t*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Speed", (uint8_t*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Offset", (uint8_t*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "EndCycle", (uint8_t*)&fEndCycle - pThis, sizeof(fEndCycle), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CycleCount", (uint8_t*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( "Pivot", &vPivot, pThis ); 
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Textures", &textures, pThis );
-	NMetaInfo::ReportMetaInfo( "IsCrown", (BYTE*)&bIsCrown - pThis, sizeof(bIsCrown), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Static", (BYTE*)&eStatic - pThis, sizeof(eStatic), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "DoesCastShadow", (BYTE*)&bDoesCastShadow - pThis, sizeof(bDoesCastShadow), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "GlueToBone", (BYTE*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "LeaveParticlesWhereStarted", (BYTE*)&bLeaveParticlesWhereStarted - pThis, sizeof(bLeaveParticlesWhereStarted), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "IsCrown", (uint8_t*)&bIsCrown - pThis, sizeof(bIsCrown), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Static", (uint8_t*)&eStatic - pThis, sizeof(eStatic), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "DoesCastShadow", (uint8_t*)&bDoesCastShadow - pThis, sizeof(bDoesCastShadow), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "GlueToBone", (uint8_t*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "LeaveParticlesWhereStarted", (uint8_t*)&bLeaveParticlesWhereStarted - pThis, sizeof(bLeaveParticlesWhereStarted), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -908,16 +910,16 @@ void SModelInstance::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ModelInstance", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Model", (BYTE*)&pModel - pThis, sizeof(pModel), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SkelAnim", (BYTE*)&pSkelAnim - pThis, sizeof(pSkelAnim), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Model", (uint8_t*)&pModel - pThis, sizeof(pModel), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SkelAnim", (uint8_t*)&pSkelAnim - pThis, sizeof(pSkelAnim), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Rotation", &qRotation, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Offset", (BYTE*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "CycleLength", (BYTE*)&fCycleLength - pThis, sizeof(fCycleLength), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "CycleCount", (BYTE*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "GlueToBone", (BYTE*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Scale", (uint8_t*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Offset", (uint8_t*)&fOffset - pThis, sizeof(fOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CycleLength", (uint8_t*)&fCycleLength - pThis, sizeof(fCycleLength), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CycleCount", (uint8_t*)&nCycleCount - pThis, sizeof(nCycleCount), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "GlueToBone", (uint8_t*)&nGlueToBone - pThis, sizeof(nGlueToBone), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -958,13 +960,13 @@ void SEffect::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Effect", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
+	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Instances", &instances, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Lights", &lights, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Models", &models, pThis );
-	NMetaInfo::ReportMetaInfo( "WindAffected", (BYTE*)&bWindAffected - pThis, sizeof(bWindAffected), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "WindPower", (BYTE*)&fWindPower - pThis, sizeof(fWindPower), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Duration", (BYTE*)&fDuration - pThis, sizeof(fDuration), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WindAffected", (uint8_t*)&bWindAffected - pThis, sizeof(bWindAffected), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "WindPower", (uint8_t*)&fWindPower - pThis, sizeof(fWindPower), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Duration", (uint8_t*)&fDuration - pThis, sizeof(fDuration), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -999,13 +1001,13 @@ void SDecal::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Decal", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Radius", (BYTE*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "FadeInTime", (BYTE*)&nFadeInTime - pThis, sizeof(nFadeInTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "NoFadingTime", (BYTE*)&nNoFadingTime - pThis, sizeof(nNoFadingTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "FadeOutTime", (BYTE*)&nFadeOutTime - pThis, sizeof(nFadeOutTime), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "ExplosionHeight", (BYTE*)&fExplosionHeight - pThis, sizeof(fExplosionHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Radius", (uint8_t*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FadeInTime", (uint8_t*)&nFadeInTime - pThis, sizeof(nFadeInTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NoFadingTime", (uint8_t*)&nNoFadingTime - pThis, sizeof(nNoFadingTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "FadeOutTime", (uint8_t*)&nFadeOutTime - pThis, sizeof(nFadeOutTime), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "ExplosionHeight", (uint8_t*)&fExplosionHeight - pThis, sizeof(fExplosionHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1132,18 +1134,18 @@ void SFont::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Font", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
-	NMetaInfo::ReportMetaInfo( "Height", (BYTE*)&nHeight - pThis, sizeof(nHeight), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Thickness", (BYTE*)&nThickness - pThis, sizeof(nThickness), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportMetaInfo( "Italic", (BYTE*)&bItalic - pThis, sizeof(bItalic), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Antialiased", (BYTE*)&bAntialiased - pThis, sizeof(bAntialiased), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Pitch", (BYTE*)&ePitch - pThis, sizeof(ePitch), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Charset", (BYTE*)&eCharset - pThis, sizeof(eCharset), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "FaceName", (BYTE*)&szFaceName - pThis, sizeof(szFaceName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "Name", (BYTE*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportMetaInfo( "CharactersFile", (BYTE*)&szCharactersFile - pThis, sizeof(szCharactersFile), NTypeDef::TYPE_TYPE_STRING );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "Height", (uint8_t*)&nHeight - pThis, sizeof(nHeight), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Thickness", (uint8_t*)&nThickness - pThis, sizeof(nThickness), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Italic", (uint8_t*)&bItalic - pThis, sizeof(bItalic), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Antialiased", (uint8_t*)&bAntialiased - pThis, sizeof(bAntialiased), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&ePitch - pThis, sizeof(ePitch), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Charset", (uint8_t*)&eCharset - pThis, sizeof(eCharset), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "FaceName", (uint8_t*)&szFaceName - pThis, sizeof(szFaceName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "CharactersFile", (uint8_t*)&szCharactersFile - pThis, sizeof(szCharactersFile), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1188,12 +1190,12 @@ void SAIGeometry::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AIGeometry", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Volume", (BYTE*)&fVolume - pThis, sizeof(fVolume), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SolidPart", (BYTE*)&fSolidPart - pThis, sizeof(fSolidPart), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Volume", (uint8_t*)&fVolume - pThis, sizeof(fVolume), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SolidPart", (uint8_t*)&fSolidPart - pThis, sizeof(fSolidPart), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "AABBCenter", &vAABBCenter, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AABBHalfSize", &vAABBHalfSize, pThis ); 
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1226,12 +1228,12 @@ void SGeometry::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Geometry", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "uid", (BYTE*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::ReportStructMetaInfo( "Size", &vSize, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "Center", &vCenter, pThis ); 
-	NMetaInfo::ReportMetaInfo( "AIGeometry", (BYTE*)&pAIGeometry - pThis, sizeof(pAIGeometry), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "NumMeshes", (BYTE*)&nNumMeshes - pThis, sizeof(nNumMeshes), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "AIGeometry", (uint8_t*)&pAIGeometry - pThis, sizeof(pAIGeometry), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "NumMeshes", (uint8_t*)&nNumMeshes - pThis, sizeof(nNumMeshes), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MaterialQuantities", &materialQuantities, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshNames", &meshNames, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshAnimated", &meshAnimated, pThis );
@@ -1434,32 +1436,32 @@ void SMaterial::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Material", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "Bump", (BYTE*)&pBump - pThis, sizeof(pBump), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "SpecFactor", (BYTE*)&fSpecFactor - pThis, sizeof(fSpecFactor), NTypeDef::TYPE_TYPE_FLOAT );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Texture", (uint8_t*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Bump", (uint8_t*)&pBump - pThis, sizeof(pBump), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "SpecFactor", (uint8_t*)&fSpecFactor - pThis, sizeof(fSpecFactor), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( "SpecColor", &vSpecColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "Gloss", (BYTE*)&pGloss - pThis, sizeof(pGloss), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "MetalMirror", (BYTE*)&fMetalMirror - pThis, sizeof(fMetalMirror), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DielMirror", (BYTE*)&fDielMirror - pThis, sizeof(fDielMirror), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "Mirror", (BYTE*)&pMirror - pThis, sizeof(pMirror), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "CastShadow", (BYTE*)&bCastShadow - pThis, sizeof(bCastShadow), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "ReceiveShadow", (BYTE*)&bReceiveShadow - pThis, sizeof(bReceiveShadow), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "Gloss", (uint8_t*)&pGloss - pThis, sizeof(pGloss), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "MetalMirror", (uint8_t*)&fMetalMirror - pThis, sizeof(fMetalMirror), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DielMirror", (uint8_t*)&fDielMirror - pThis, sizeof(fDielMirror), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "Mirror", (uint8_t*)&pMirror - pThis, sizeof(pMirror), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "CastShadow", (uint8_t*)&bCastShadow - pThis, sizeof(bCastShadow), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "ReceiveShadow", (uint8_t*)&bReceiveShadow - pThis, sizeof(bReceiveShadow), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( "TranslucentColor", &vTranslucentColor, pThis ); 
-	NMetaInfo::ReportMetaInfo( "FloatParam", (BYTE*)&fFloatParam - pThis, sizeof(fFloatParam), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DetailTexture", (BYTE*)&pDetailTexture - pThis, sizeof(pDetailTexture), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "DetailScale", (BYTE*)&fDetailScale - pThis, sizeof(fDetailScale), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "ProjectOnTerrain", (BYTE*)&bProjectOnTerrain - pThis, sizeof(bProjectOnTerrain), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "LightingMode", (BYTE*)&eLightingMode - pThis, sizeof(eLightingMode), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "DynamicMode", (BYTE*)&eDynamicMode - pThis, sizeof(eDynamicMode), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "Is2Sided", (BYTE*)&bIs2Sided - pThis, sizeof(bIs2Sided), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "Effect", (BYTE*)&eEffect - pThis, sizeof(eEffect), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "AlphaMode", (BYTE*)&eAlphaMode - pThis, sizeof(eAlphaMode), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportMetaInfo( "AffectedByFog", (BYTE*)&bAffectedByFog - pThis, sizeof(bAffectedByFog), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "AddPlaced", (BYTE*)&bAddPlaced - pThis, sizeof(bAddPlaced), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "IgnoreZBuffer", (BYTE*)&bIgnoreZBuffer - pThis, sizeof(bIgnoreZBuffer), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportMetaInfo( "BackFaceCastShadow", (BYTE*)&bBackFaceCastShadow - pThis, sizeof(bBackFaceCastShadow), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "FloatParam", (uint8_t*)&fFloatParam - pThis, sizeof(fFloatParam), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DetailTexture", (uint8_t*)&pDetailTexture - pThis, sizeof(pDetailTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DetailScale", (uint8_t*)&fDetailScale - pThis, sizeof(fDetailScale), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ProjectOnTerrain", (uint8_t*)&bProjectOnTerrain - pThis, sizeof(bProjectOnTerrain), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "LightingMode", (uint8_t*)&eLightingMode - pThis, sizeof(eLightingMode), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "DynamicMode", (uint8_t*)&eDynamicMode - pThis, sizeof(eDynamicMode), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "Is2Sided", (uint8_t*)&bIs2Sided - pThis, sizeof(bIs2Sided), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "Effect", (uint8_t*)&eEffect - pThis, sizeof(eEffect), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "AlphaMode", (uint8_t*)&eAlphaMode - pThis, sizeof(eAlphaMode), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "AffectedByFog", (uint8_t*)&bAffectedByFog - pThis, sizeof(bAffectedByFog), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "AddPlaced", (uint8_t*)&bAddPlaced - pThis, sizeof(bAddPlaced), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "IgnoreZBuffer", (uint8_t*)&bIgnoreZBuffer - pThis, sizeof(bIgnoreZBuffer), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "BackFaceCastShadow", (uint8_t*)&bBackFaceCastShadow - pThis, sizeof(bBackFaceCastShadow), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1532,8 +1534,8 @@ void SSpot::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Spot", typeID, sizeof(*this) );
 
-	BYTE *pThis = (BYTE*)this;
-	NMetaInfo::ReportMetaInfo( "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 

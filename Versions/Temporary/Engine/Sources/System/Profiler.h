@@ -1,12 +1,14 @@
 #pragma once
 
+#include <cstdint>
+
 namespace NProfiler
 {
 class CProfiler
 {
 	std::string szFile;
 	int nLine;
-	DWORD dwStartTime;
+	uint32_t dwStartTime;
 public:
 	CProfiler( const char* pszFile, const int nLine );
 	~CProfiler();

@@ -2,6 +2,8 @@
 
 #include "SysKeys.h"
 
+#include <cstdint>
+
 //#define LLKHF_EXTENDED       0x00000001
 #define LLKHF_INJECTED       0x00000010
 //#define LLKHF_ALTDOWN        0x00000020
@@ -17,11 +19,11 @@ namespace NSysKeys
 
 struct KBDLLHOOKSTRUCT
 {
-  DWORD vkCode;
-  DWORD scanCode;
-  DWORD flags;
-  DWORD time;
-  DWORD dwExtraInfo;
+  uint32_t vkCode;
+  uint32_t scanCode;
+  uint32_t flags;
+  uint32_t time;
+  uint32_t dwExtraInfo;
 };
 
 // keyboard low-level hook to disable fast task switching
@@ -63,7 +65,7 @@ void EnableSystemKeys( bool bEnable, HINSTANCE hInstance )
 {
 	if ( (bCurrEnable == bEnable) /*|| IsDebuggerPresent()*/ ) 
 		return;
-	const DWORD dwOSVersion = GetVersion();
+	const uint32_t dwOSVersion = GetVersion();
 	if ( dwOSVersion & 0x80000000 ) 
 	{
 		if ( bEnable )

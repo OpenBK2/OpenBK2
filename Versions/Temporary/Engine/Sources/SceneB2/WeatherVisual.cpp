@@ -16,6 +16,8 @@
 
 #include "FullScreenFader.h"
 
+#include <cstdint>
+
 #define DEF_VIS_PATCH_SIZE ( AI2Vis(AI_TILES_IN_PATCH * AI_TILE_SIZE) )
 
 namespace NWeather
@@ -363,7 +365,7 @@ void CWeatherVisual::Recalc()
 	CVec2 vMinCoords( 4*VIS_TILE_SIZE, 4*VIS_TILE_SIZE );
 	CVec2 vMaxCoords( pTerraDesc->nNumPatchesX*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE, pTerraDesc->nNumPatchesY*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE );	
 
-	DWORD dwColor = NGfx::GetDWORDColor( GetParticlesColor() );
+	uint32_t dwColor = NGfx::GetDWORDColor( GetParticlesColor() );
 
 	// Draw one for each patch
 	for ( int i = 0; i < parts.size() * fFadeCoeff; ++i )

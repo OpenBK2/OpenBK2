@@ -6,6 +6,8 @@
 #include "Misc/2Darray.h"
 #include "GfxBuffersInternal.h"
 
+#include <cstdint>
+
 #include <boost/config.hpp>
 
 const int N_SYSMEM_TEXTURES = 2;
@@ -78,7 +80,7 @@ class CLinearBuffer : public CObjectBase
 	CObj<CCache> pCache;
 	int nFormatID;
 	int nStride;
-	DWORD dwNextLockFlags, dwLockFlags, dwFirstLockFlags;
+	uint32_t dwNextLockFlags, dwLockFlags, dwFirstLockFlags;
 	bool bFlushBufferOnNewFrame, bIsThrashing;
 	bool bAccountQueueDepth;
 	struct SBuffersPerFrame
@@ -415,7 +417,7 @@ public:
 	CTB( int _nXSize, int _nYSize, int _nLevels, D3DFORMAT _format, ETextureUsage usage )
 		:format(_format), nXSize(_nXSize), nYSize(_nYSize), nLevels(_nLevels), nLOD(0)
 	{
-		DWORD dwUsage = 0;
+		uint32_t dwUsage = 0;
 		if ( usage == TARGET )
 			dwUsage = D3DUSAGE_RENDERTARGET;
 		if ( usage == DYNAMIC_TEXTURE )
@@ -574,7 +576,7 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_re
 	HRESULT hr;
 	NWin32Helper::com_ptr<IDirect3DSurface9> pTempBuf;
 	//
-	DWORD dwLockFlags = 0;//D3DLOCK_NO_DIRTY_UPDATE;
+	uint32_t dwLockFlags = 0;//D3DLOCK_NO_DIRTY_UPDATE;
 	CTRect<int> lockRect;
 	if ( access != INPLACE && access != INPLACE_READONLY )
 	{
@@ -672,7 +674,7 @@ public:
 	bool Touch() { bool bRes = CBase::Touch(); nFrameUsed = nCurrentFrame; return bRes; }
 	CTexture() : bPointFiltered(false) {}
 	CTexture( CTB *_pTB, EWrap _wrap ): pTB(_pTB), nFrameUsed(0), wrap(_wrap), bPointFiltered(false) { region.SetRect(0, 0, _pTB->GetSizeX(), _pTB->GetSizeY() ); }
-	//CTexture( int _nXSize, int _nYSize, int nLevels, D3DFORMAT _format, DWORD dwUsage );
+	//CTexture( int _nXSize, int _nYSize, int nLevels, D3DFORMAT _format, uint32_t dwUsage );
 	virtual int GetPixelID() { return D3DFormat2PixelID( pTB->GetFormat() ); }
 	virtual I2DBufferLock* Lock( int nLevel, EAccess access );
 	virtual int GetSizeX() const { return region.Width(); }///pTB->GetSizeX(); }
@@ -1057,7 +1059,7 @@ public:
 			// feed into current buffer until full
 			//{
 			int nToDraw = (std::min)( nBuf - nLast, nTris );
-			DWORD dwFlags = D3DLOCK_NOOVERWRITE;
+			uint32_t dwFlags = D3DLOCK_NOOVERWRITE;
 			if ( nToDraw == 0 )
 			{
 				FlushPrimitive();
@@ -1209,7 +1211,7 @@ public:
 		{
 			// feed into current buffer until full
 			int nToDraw = (std::min)( nBuf - nLast, nTris );
-			DWORD dwFlags = D3DLOCK_NOOVERWRITE;
+			uint32_t dwFlags = D3DLOCK_NOOVERWRITE;
 			if ( nToDraw == 0 )
 			{
 				nLast = 0;

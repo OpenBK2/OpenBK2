@@ -1,9 +1,10 @@
-
 #pragma once
 
 #include "Input/GameMessage.h"
 #include "System/Time.h"
 #include "InterfaceCommandDeclare.h"
+
+#include <cstdint>
 
 class CRunModeInterfaceBase : public IInterfaceBase, protected NInput::CGMORegContainer
 {
@@ -18,12 +19,12 @@ public:
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 
 	// methods
-	DWORD GetTime() const { return dwTime; }
+	uint32_t GetTime() const { return dwTime; }
 
 	// members
 protected:
 	CTimeCounter * pTimer;
-	DWORD dwTime;
+	uint32_t dwTime;
 };
 
 

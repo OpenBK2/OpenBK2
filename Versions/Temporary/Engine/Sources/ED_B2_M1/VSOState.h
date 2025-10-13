@@ -9,6 +9,8 @@
 #include "MapInfoStoreInputState.h"
 #include "B2_M1_Terrain/DBVSO.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 namespace NExtraDraw
@@ -23,12 +25,12 @@ namespace NExtraDraw
 		EDM_UPS			= 0x00F00000,
 		EDM_ALL			= EDM_SAMPS | EDM_RIDGES | EDM_VERTS | EDM_HEIGHTS | EDM_LOWS | EDM_UPS,
 	};
-	const DWORD EC_SAMPS		= 0xFFFF0000; // RED
-	const DWORD EC_RIDGES		= 0xFF00FF00; // GREEN
-	const DWORD EC_VERTS		= 0xFF0000FF; // BLUE
-	const DWORD EC_HEIGHTS	= 0xFFFFFF00; // YELLOW
-	const DWORD EC_LOWS			= 0xFF00FFFF; // CYAN
-	const DWORD EC_UPS			= 0xFFFF00FF; // MAGENTA
+	const uint32_t EC_SAMPS		= 0xFFFF0000; // RED
+	const uint32_t EC_RIDGES		= 0xFF00FF00; // GREEN
+	const uint32_t EC_VERTS		= 0xFF0000FF; // BLUE
+	const uint32_t EC_HEIGHTS	= 0xFFFFFF00; // YELLOW
+	const uint32_t EC_LOWS			= 0xFF00FFFF; // CYAN
+	const uint32_t EC_UPS			= 0xFFFF00FF; // MAGENTA
 
 	void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, UINT uMode );
 }
@@ -308,7 +310,7 @@ public:
 	bool PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	void EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
+	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

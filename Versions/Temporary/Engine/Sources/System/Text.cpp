@@ -3,6 +3,8 @@
 #include "FilePath.h"
 #include "VFSOperations.h"
 
+#include <cstdint>
+
 namespace NText
 {
 typedef std::unordered_map<NFile::CFilePath, std::wstring> CUnicodeTextMap;
@@ -12,7 +14,7 @@ bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream )
 {
 	if ( pStream->IsOk() )
 	{
-		WORD wSignature = 0;
+		uint16_t wSignature = 0;
 		pStream->Read( &wSignature, 2 );
 		if ( wSignature != UNICODE_SIGNATURE )
 			return false;

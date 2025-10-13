@@ -5,6 +5,8 @@
 #include "MissionWarFog.h"
 //#include "..\SceneB2\PerlinNoise.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 static int CLOUDS_NOISE_OCTS_NUM = 2;
@@ -49,7 +51,7 @@ void SInterfaceMissionWarFogInfo::Reset( const int _nSizeX, const int _nSizeY, c
 	bIsNoiseOn = NGlobal::GetVar( "clouds_shadow", 0 ) != 0;
 }
 
-void SInterfaceMissionWarFogInfo::SetWarFog( const CArray2D<BYTE> &warFog, float _fScale, NTimer::STime nGameTime )
+void SInterfaceMissionWarFogInfo::SetWarFog( const CArray2D<uint8_t> &warFog, float _fScale, NTimer::STime nGameTime )
 {
 	if ( !bIsWarFog )
 	{
@@ -137,7 +139,7 @@ void SInterfaceMissionWarFogInfo::Update( NTimer::STime nGameTime )
 	SceneSetFarFog( fog );
 }
 
-inline void Convert2BYTE( CArray2D<BYTE> *pDst, const CArray2D<float> &src )
+inline void Convert2BYTE( CArray2D<uint8_t> *pDst, const CArray2D<float> &src )
 {
 	pDst->SetSizes( src.GetSizeX(), src.GetSizeY() );
 	for ( int g = 0; g < src.GetSizeY(); ++g )
@@ -254,7 +256,7 @@ void SInterfaceMissionWarFogInfo::CycleMove( CArray2D<float> *pDst, const CArray
 
 void SInterfaceMissionWarFogInfo::SceneSetFarFog( const CArray2D<float> &src )
 {
-	CArray2D<BYTE> sceneWarFog;
+	CArray2D<uint8_t> sceneWarFog;
 	Convert2BYTE( &sceneWarFog, src );
 	Scene()->SetWarFog( sceneWarFog, fScale );
 	//	Scene()->SetWarFogBlend( 1.0f );
@@ -268,7 +270,7 @@ void SInterfaceMissionWarFogInfo::ApplyCloudDensity( CArray2D<float> *pNoise )
 	{
 		for ( int y = 0; y < nSizeY; ++y )
 		{
-			BYTE b = (BYTE)((*pNoise)[y][x] * 255.0f);
+			uint8_t b = (uint8_t)((*pNoise)[y][x] * 255.0f);
 			(*pNoise)[y][x] = cloudDensities[b];
 		}
 	}

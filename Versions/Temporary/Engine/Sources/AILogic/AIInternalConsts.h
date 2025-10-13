@@ -1,8 +1,10 @@
 #pragma once
+
 #include "aiconsts.h"
 #include "Misc/HashFuncs.h"
 #include "System/det_map.h"
 
+#include <cstdint>
 
 namespace NDb
 {
@@ -34,10 +36,10 @@ public:
 	static const int TURN_TOLERANCE;
 	
 	// стандартный угол обзора
-	static const WORD STANDART_VIS_ANGLE;
+	static const uint16_t STANDART_VIS_ANGLE;
 	
 	// при какой разнице в угле нужно остановиться и поворачиваться
-	static const WORD DIR_DIFF_TO_SMOOTH_TURNING;
+	static const uint16_t DIR_DIFF_TO_SMOOTH_TURNING;
 
 	// максимальная длина пути в тайлах, при котором можно ехать задом
 	static const int MAX_LEN_TO_GO_BACKWARD;
@@ -203,7 +205,7 @@ public:
 	// радиус обзора бинокля
 	static float SPY_GLASS_RADIUS;
 	// угол обзора бинокля
-	static WORD SPY_GLASS_ANGLE;
+	static uint16_t SPY_GLASS_ANGLE;
 	static float HOLD_SECTOR_SIGHT_BONUS;
 	static float HOLD_SECTOR_DISPERSION_BONUS;
 	static int TIME_TO_ENTER_HOLD_SECTOR;
@@ -214,7 +216,7 @@ public:
 	// коэффициент на area damage
 	static float AREA_DAMAGE_COEFF;
 	// минимальный угол, на который можно повернуть базу во время атаки turret-ом, чтобы улучшить свою позицию
-	static WORD MIN_ROTATE_ANGLE;
+	static uint16_t MIN_ROTATE_ANGLE;
 	
 	// радиус кругов от выстрелов, начиная с которого артиллерия начинает antiartillery борьбу
 	static float RADIUS_TO_START_ANTIARTILLERY_FIRE;

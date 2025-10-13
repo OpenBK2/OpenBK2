@@ -3,6 +3,8 @@
 
 #include "StatisticDialog.h"
 
+#include <cstdint>
+
 const int CStatisticDialog::vID[] = 
 {
 	IDC_STATS_TREE,	//0
@@ -53,7 +55,7 @@ BOOL CStatisticDialog::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
 	wndTree.SubclassTreeCtrlId( IDC_STATS_TREE, this );
-	DWORD dwStyle = TVS_HASBUTTONS |
+	uint32_t dwStyle = TVS_HASBUTTONS |
 									TVS_HASLINES |
 									TVS_LINESATROOT |
 									TVS_SHOWSELALWAYS;
@@ -114,10 +116,10 @@ void CStatisticDialog::CreateControls()
 	}
 }
 
-void SizeToStringWithSpaces( DWORD dwSize, CString& szBuffer )
+void SizeToStringWithSpaces( uint32_t dwSize, CString& szBuffer )
 {
-  DWORD dwRest = 0;
-  DWORD dwOldRest = 0;
+  uint32_t dwRest = 0;
+  uint32_t dwOldRest = 0;
   CString szValue;
 
   dwRest = dwSize - ( dwSize / 1000 ) * 1000;

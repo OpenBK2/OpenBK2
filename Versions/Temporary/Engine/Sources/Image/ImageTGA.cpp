@@ -4,6 +4,8 @@
 
 #include "Targa.h"
 
+#include <cstdint>
+
 namespace NImage
 {
 
@@ -78,7 +80,7 @@ bool RecognizeFormatTGA( CDataStream *pStream )
 // **
 // ************************************************************************************************************************ //
 
-bool LoadImageTGA( CArray2D<DWORD> *pRes, CDataStream *pStream )
+bool LoadImageTGA( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 {
 	STGAFileHeader hdr;
 	LoadTGAHeader( &hdr, pStream );
@@ -94,7 +96,7 @@ bool LoadImageTGA( CArray2D<DWORD> *pRes, CDataStream *pStream )
 // **
 // ************************************************************************************************************************ //
 
-bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<DWORD> &image )
+bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<uint32_t> &image )
 {
 	return SaveAsTGA( image, pStream );
 }

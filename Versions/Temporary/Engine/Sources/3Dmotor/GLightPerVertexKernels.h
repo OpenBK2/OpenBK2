@@ -5,6 +5,8 @@
 #include "GPixelFormat.h"
 #include "GLightPerVertex.h"
 
+#include <cstdint>
+
 // Cube root lookup table, built once in GSSEtransform.cpp. AddColors indexes it,
 // so every kernel set needs it; declared here to keep those translation units
 // from pulling in GSSEtransform.h and its glm dependency.
@@ -41,7 +43,7 @@ struct SLightingKernels
 	void ( *pCalcDirectionalLighting )(
 		const NGfx::SCompactVector *pNormals, int nCount,
 		const SPerVertexLightState &ls, const NGfx::SMMXWord &translucentShade,
-		DWORD *pResColors, DWORD *pResShadow );
+		uint32_t *pResColors, uint32_t *pResShadow );
 
 	// Scales nVertices positions into 2 * nVertices 16.14 fixed point x/y pairs.
 	void ( *pSampleWarFogCoords )(
@@ -60,7 +62,7 @@ struct SLightingKernels
 	// Per vertex attenuation, looked up as pAttenuation[pPosIndices[k]].
 	void ( *pCalcPointLightColorsIndexed )(
 		NGfx::SMMXWord *pRes, const NGfx::SMMXWord *pAttenuation,
-		const WORD *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
+		const uint16_t *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
 		const NGfx::SMMXWord &lightColor );
 
 	// One attenuation for every vertex, normals strided through a larger struct.
@@ -70,12 +72,12 @@ struct SLightingKernels
 		const NGfx::SMMXWord &lightColor );
 
 	void ( *pAddColors )(
-		DWORD *pRes, const DWORD *pSrc, const NGfx::SMMXWord *pAdd, int nCount );
+		uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount );
 
 	void ( *pScaleColors )(
-		DWORD *pRes, const DWORD *pSrc, int nSrcStride,
+		uint32_t *pRes, const uint32_t *pSrc, int nSrcStride,
 		const unsigned char *pScale, int nScaleMask,
-		const WORD *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
+		const uint16_t *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
 		bool bMultiplyOnTransparency );
 };
 

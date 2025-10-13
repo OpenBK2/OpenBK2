@@ -2,8 +2,9 @@
 
 #include "System_export.h"
 
-
 #include "FileTime.h"
+
+#include <cstdint>
 
 namespace NVFS
 {
@@ -16,7 +17,7 @@ struct SFileStats
 	//! file size
 	int nSize;
 	//! права доступа (на чтение (1) или на запись (2))
-	DWORD dwAccess;
+	uint32_t dwAccess;
 	//! creation time
 	SWin32Time ctime;
 	//! modification time

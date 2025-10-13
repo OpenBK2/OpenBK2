@@ -2,6 +2,8 @@
 
 #include "AITypes.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SWeaponRPGStats;
@@ -47,14 +49,14 @@ public:
 struct SAINotifyAction : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		WORD typeID;															// action type
+		uint16_t typeID;															// action type
 		int nParam;
 		NTimer::STime time;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&typeID); f.Add(3,&nParam); f.Add(4,&time); return 0; }
 public:
 	//
 	SAINotifyAction() { }
-	SAINotifyAction( const BYTE _typeID, const int nObjUniqueID ) 
+	SAINotifyAction( const uint8_t _typeID, const int nObjUniqueID )
 		: SSuspendedUpdate( nObjUniqueID ), typeID( _typeID ), nParam( -1 ) { }
 };
 
@@ -139,8 +141,8 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	//OLD{
 	CVec2 center;													// (x, y)
 	float z;															// height (mostly for planes)
-	WORD dir;															// direction [0..65535) => [0..2pi), only for units
-	DWORD dwNormal;												// нормаль
+	uint16_t dir;															// direction [0..65535) => [0..2pi), only for units
+	uint32_t dwNormal;												// нормаль
 	//OLD}
 
 	//NEW{
@@ -150,10 +152,10 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 
 	float fSpeed;
 	float fWaterCoeff;											// 0 - dry/shore, 1 - full amphibian water offset
-	BYTE cSoil;														// параметры почвы: дым из-под колёс, следы и т.д.
+	uint8_t cSoil;														// параметры почвы: дым из-под колёс, следы и т.д.
 
 	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
-	SAINotifyPlacement(	const int nObjUniqueID, const CVec2 &_center, const short _z, const WORD _dir, const float _fSpeed )
+	SAINotifyPlacement(	const int nObjUniqueID, const CVec2 &_center, const short _z, const uint16_t _dir, const float _fSpeed )
 		: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ), fSpeed( _fSpeed ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
 
 	// для использования в AILogic
@@ -209,18 +211,18 @@ struct SAINotifyHitInfo
 
 	ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;					// weapon shell was fired
-		WORD wShell;														// shell index in the weapon
-		WORD wDir;															// direction hit was from
+		uint16_t wShell;														// shell index in the weapon
+		uint16_t wDir;															// direction hit was from
 		EHitType eHitType;											// тип попадани
 		int nVictimUniqueID;
 		CVec3 explCoord;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&eHitType); f.Add(6,&nVictimUniqueID); f.Add(7,&explCoord); return 0; }
 public:
 	SAINotifyHitInfo() : pWeapon( 0 ) { }
-	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const WORD _wShell, const WORD &_wDir, const int _nVictimUniqueID, const CVec3 &_explCoord )
+	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, const int _nVictimUniqueID, const CVec3 &_explCoord )
 		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( _nVictimUniqueID ), explCoord( _explCoord ) { }
 
-	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const WORD _wShell, const WORD &_wDir, const CVec3 &_explCoord )
+	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, const CVec3 &_explCoord )
 		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( 0 ), explCoord( _explCoord ) { }
 };
 // aiming: turret turning update
@@ -229,12 +231,12 @@ struct SAINotifyTurretTurn
 	ZDATA
 		int nObjUniqueID;											// object turret belong to
 		int nPlantform;												// turned platform
-		WORD wAngle;													// final angle
+		uint16_t wAngle;													// final angle
 		NTimer::STime endTime;								// final time
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); f.Add(3,&nPlantform); f.Add(4,&wAngle); f.Add(5,&endTime); return 0; }
 public:
 	SAINotifyTurretTurn() : nObjUniqueID( 0 ) { }
-	SAINotifyTurretTurn( const int _nObjUniqueID, const int &_nPlantform, const WORD &_wAngle, const NTimer::STime &_endTime )
+	SAINotifyTurretTurn( const int _nObjUniqueID, const int &_nPlantform, const uint16_t &_wAngle, const NTimer::STime &_endTime )
 		: nObjUniqueID( _nObjUniqueID ), nPlantform( _nPlantform ), wAngle( _wAngle ), endTime( _endTime ) { }
 };
 
@@ -243,25 +245,25 @@ struct SAINotifyBaseShot
 	ZDATA
 		int typeID;														// shot type
 		int nObjUniqueID;											// юнит, который стрелял либо объект, из которого он стрелял
-		BYTE cShell;													// shell number
+		uint8_t cShell;													// shell number
 		NTimer::STime time;										// time, this shot was...
 		CVec3 vDestPos;												// destination point of this shot
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&typeID); f.Add(3,&nObjUniqueID); f.Add(4,&cShell); f.Add(5,&time); f.Add(6,&vDestPos); return 0; }
 public:
 	SAINotifyBaseShot() : nObjUniqueID( 0 ) {  }
-	SAINotifyBaseShot( const BYTE _typeID, const int _nObjUniqueID, const BYTE _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
+	SAINotifyBaseShot( const uint8_t _typeID, const int _nObjUniqueID, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: typeID( _typeID ), nObjUniqueID( _nObjUniqueID ), cShell( _cShell ), time( _time ), vDestPos( _vDestPos ) {  }
 };
 
 struct SAINotifyMechShot : public SAINotifyBaseShot
 {
 	ZDATA_( SAINotifyBaseShot )
-		BYTE cGun;														// gun number
-		BYTE cPlatform;
+		uint8_t cGun;														// gun number
+		uint8_t cPlatform;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAINotifyBaseShot *)this); f.Add(2,&cGun); f.Add(3,&cPlatform); return 0; }
 public:
 	SAINotifyMechShot() { }
-	SAINotifyMechShot( const BYTE _typeID, const int _nObjUniqueID, const BYTE _cGun, const BYTE _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
+	SAINotifyMechShot( const uint8_t _typeID, const int _nObjUniqueID, const uint8_t _cGun, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun ) {  }
 	
 };
@@ -281,7 +283,7 @@ public:
 	int nGun;
 // CRAP}
 	SAINotifyInfantryShot() : pWeapon( 0 ), nSlot( -1 ), nPlatform( 0 ), nGun( 0 ) {  }
-	SAINotifyInfantryShot( const BYTE _typeID, const int nObjUniqueID, const int _nSlot, const BYTE _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
+	SAINotifyInfantryShot( const uint8_t _typeID, const int nObjUniqueID, const int _nSlot, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos ), nSlot( _nSlot ), nPlatform( 0 ), nGun( 0 ) {  }
 };
 

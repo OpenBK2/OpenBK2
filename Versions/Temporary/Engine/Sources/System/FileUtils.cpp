@@ -11,11 +11,12 @@
 #endif
 
 #include <cstdlib>
+#include <cstdint>
 
 namespace NFile
 {
 
-const DWORD BUFFER_SIZE = 1024;
+const uint32_t BUFFER_SIZE = 1024;
 static char buffer[BUFFER_SIZE];
 
 // ************************************************************************************************************************ //
@@ -158,7 +159,7 @@ double GetFreeDiskSpace( const char *pszDrive )
 	} 
 	else 
 	{
-		DWORD dwSectPerClust, dwBytesPerSect, dwFreeClusters, dwTotalClusters;
+		unsigned long dwSectPerClust, dwBytesPerSect, dwFreeClusters, dwTotalClusters;
 		bRetVal = GetDiskFreeSpace( pszDrive, &dwSectPerClust, &dwBytesPerSect,
 																&dwFreeClusters, &dwTotalClusters );
 		fRetVal = double( dwFreeClusters ) * double( dwSectPerClust ) * double( dwBytesPerSect );
@@ -243,7 +244,7 @@ std::string GetFullName( const std::string &szPath )
 void GetFullName( std::string *pResult, const std::string &szPath )
 {
 	char *pszBufferFileName = 0;
-	const DWORD dwLength = GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
+	const uint32_t dwLength = GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
 	pResult->resize( dwLength );
 	memcpy( &((*pResult)[0]), buffer, dwLength );
 }

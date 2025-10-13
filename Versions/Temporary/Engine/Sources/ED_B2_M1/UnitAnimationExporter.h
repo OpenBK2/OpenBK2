@@ -2,11 +2,13 @@
 
 #include "ED_Common/BasicExporter.h"
 
+#include <cstdint>
+
 class CInfantryExporter : public CBasicExporter
 {
 	OBJECT_NOCOPY_METHODS( CInfantryExporter );
 	
-	hash_map<DWORD, list<string> > animsMap;
+	hash_map<uint32_t, list<string> > animsMap;
 	//
 	void BuildAnimsMap();
 	//

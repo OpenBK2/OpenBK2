@@ -2,6 +2,8 @@
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 
+#include <cstdint>
+
 #define DEF_SEL_RAD	0.1f
 
 //
@@ -243,7 +245,7 @@ public:
 	virtual ~CTimeSliderControl() {}
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, DWORD dwData );
+	bool HandleCommand( UINT nCommandID, uint32_t dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// View Setup

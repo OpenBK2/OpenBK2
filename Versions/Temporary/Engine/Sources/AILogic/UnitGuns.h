@@ -1,7 +1,8 @@
-
 #pragma once
 
 #include "Guns.h"
+
+#include <cstdint>
 
 struct IStaticPath;
 
@@ -31,7 +32,7 @@ class CUnitGuns : public CAIObjectBase
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fMaxFireRange); f.Add(3,&bCanShootToPlanes); f.Add(4,&commonGunsInfo); f.Add(5,&guns); f.Add(6,&gunsBegins); f.Add(7,&nCommonGuns); f.Add(8,&nMainGun); return 0; }
 
 	//
-	void FindTimeToTurn( class CAIUnit *pOwner, const WORD wWillPower, class CTurret *pTurret, class CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const;
+	void FindTimeToTurn( class CAIUnit *pOwner, const uint16_t wWillPower, class CTurret *pTurret, class CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const;
 
 	bool FindTimeToStatObjGo( class CAIUnit *pUnit, class CStaticObject *pObj, const SWeaponRPGStats *pStats, CUnitGuns::SWeaponPathInfo &pInfo ) const;
 public:
@@ -41,7 +42,7 @@ public:
 	bool AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo );
 	void SetOwner( class CAIUnit *pUnit );
 	
-	const BYTE GetNTotalGuns() const { return guns.size(); }
+	const uint8_t GetNTotalGuns() const { return guns.size(); }
 	void Segment();
 
 	//

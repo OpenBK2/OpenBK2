@@ -3,11 +3,13 @@
 #include "RectPacker.h"
 #include "3Dmotor/GfxBuffers.h"
 
+#include <cstdint>
+
 namespace NGScene
 {
 struct SLightmapInfo
 {
-	WORD n1, n2, n3, n4;    // vertices indexing
+	uint16_t n1, n2, n3, n4;    // vertices indexing
 	char nOrder1, nOrder2;  // first(1,2,3) | 0x4 for inverse
 };
 
@@ -36,9 +38,9 @@ class CSquarePacker
 		int n1, n2, n3, n4;
 		bool bInverse, bInverse1;
 		char nFirst, nFirst1;
-		WORD nXSize, nYSize;
+		uint16_t nXSize, nYSize;
 		STriInfo() {}
-		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, WORD _nXSize, WORD _nYSize )
+		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, uint16_t _nXSize, uint16_t _nYSize )
 			: n1(_n1), n2(_n2), n3(_n3), bInverse(_bInverse), nFirst(_nFirst), nFirst1(0), bInverse1(false),nXSize(_nXSize), nYSize(_nYSize){}
 	};
 	std::vector<STriInfo> squares;
@@ -362,7 +364,7 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 	const std::vector<CVec3> &pos = src.GetPositions();
 	const std::vector<SUVInfo> &verts = src.GetVertices();
 	const std::vector<SRealVertexWeight> &weights = src.GetWeights();
-	const std::vector<WORD> &posIndices = src.GetPositionIndices();
+	const std::vector<uint16_t> &posIndices = src.GetPositionIndices();
 	pRes->verts.resize( verts.size() );
 	for ( int k = 0; k < verts.size(); ++k )
 	{

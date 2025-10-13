@@ -29,6 +29,8 @@
 
 #include "SceneB2/Scene.h"
 
+#include <cstdint>
+
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
 
 static int s_nInterruptTimeout = 5000;		// No segments for this time before timeout is called
@@ -457,7 +459,7 @@ void CMPTransceiver::CheckRunGame()
 	}
 
 	bool bCanStart = true;
-	DWORD dwWaitFor = 0;
+	uint32_t dwWaitFor = 0;
 	for ( int i = 0; i < players.size(); ++i )
 	{
 		SPlayer &player = players[i];
@@ -584,7 +586,7 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	}
 }
 
-void CMPTransceiver::ReportLags( DWORD dwLaggers,	bool bInitial )
+void CMPTransceiver::ReportLags( uint32_t dwLaggers,	bool bInitial )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }

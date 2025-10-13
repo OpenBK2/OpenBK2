@@ -1,10 +1,13 @@
 #pragma once
+
 #include "UI/Window.h"
 #include "UISpecificB2/DBUISpecificB2.h"
 #include "3Dmotor/GfxBuffers.h"
 #include "System/Dg.h"
 #include "Misc/BitData.h"
 #include "UISpecificB2.h"
+
+#include <cstdint>
 
 class CMiniMapLayer :  public CPtrFuncBase< NGfx::CTexture >
 {
@@ -141,9 +144,9 @@ protected:
 	CVec2 vRotableCenter;
 	CVec2 vRotableSize;
 	STransform rotableTransform;
-	CArray2D<BYTE> warFog;
+	CArray2D<uint8_t> warFog;
 	//CVec2 vPrevRotableDir;
-	const CArray2D<BYTE> *pWarFog;
+	const CArray2D<uint8_t> *pWarFog;
 
 	float fAdditionalScale;
 	float fPrevRotableAngle;
@@ -202,7 +205,7 @@ public:
 
 	void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits );
 	void SetViewport( const std::vector< CVec2 > &vPoints );
-	void SetWarFog( const CArray2D<BYTE> *pWarFogInfo );
+	void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo );
 	void SetMarkers( const std::vector<SMarker> &markers );
 	void SetFigures( const std::vector<SFigure> &figures );
 

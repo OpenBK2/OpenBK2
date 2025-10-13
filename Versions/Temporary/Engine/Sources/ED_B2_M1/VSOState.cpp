@@ -13,6 +13,8 @@
 #include "VSOState.h"
 #include "ED_B2_M1Dll.h"
 
+#include <cstdint>
+
 namespace NExtraDraw
 {
 	void DrawVector( CSceneDrawTool *pSceneDrawTool, UINT uColor, const vector<CVec3> &vPoints )
@@ -210,7 +212,7 @@ void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 				if ( ICamera *pCamera = Camera() )
 				{
 					CTPoint<int> dimensions( 0, 0 );
-					if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<DWORD>( &dimensions ) ) )
+					if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<uint32_t>( &dimensions ) ) )
 					{
 						float vNewZ = 0.0f;
 						{
@@ -1254,7 +1256,7 @@ void CVSOState::SwitchToAddState()
 }
 
 
-bool CVSOState::HandleCommand( UINT nCommandID, DWORD dwData )
+bool CVSOState::HandleCommand( UINT nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{

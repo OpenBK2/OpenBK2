@@ -1,13 +1,14 @@
 #pragma once
 
+#include <cstdint>
 
 class CMapEditorSingletonBase
 {
 protected:
-  bool SendCommand( HWND hWndDst, HWND hWndSrc, DWORD dwCommand, DWORD dwDataLength, const void* pData ) const;
+  bool SendCommand( HWND hWndDst, HWND hWndSrc, uint32_t dwCommand, uint32_t dwDataLength, const void* pData ) const;
 
   static string MAP_FILE_NAME;
-  static const DWORD MAP_FILE_MAX_SIZE;
+  static const uint32_t MAP_FILE_MAX_SIZE;
 public:
 	enum ECommandType
   {

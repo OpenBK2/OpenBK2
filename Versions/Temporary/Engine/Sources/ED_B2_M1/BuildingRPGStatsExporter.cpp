@@ -26,6 +26,8 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Interface_MOD.h"
 
+#include <cstdint>
+
 #include <zconf.h>
 
 REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )
@@ -43,7 +45,7 @@ REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )
 //	генерить пыль при разрушении (по периметру с шагом в 1 тайл)
 //
 
-static bool Passable( const CArray2D<BYTE> &rPassability, int nX, int nY )
+static bool Passable( const CArray2D<uint8_t> &rPassability, int nX, int nY )
 {
 	if ( (nX >= 0 && nX < rPassability.GetSizeX()) &&
 		 (nY >= 0 && nY < rPassability.GetSizeY()) )
@@ -95,7 +97,7 @@ static void AddSmokePoint( IManipulator *pBuildingRPGStatsManipulator, int nOx, 
 
 static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipulator )
 {
-	CArray2D<BYTE> passability;
+	CArray2D<uint8_t> passability;
 	GetPassability( &passability, pBuildingRPGStatsManipulator );	
 
 	int nSizeX = passability.GetSizeX();

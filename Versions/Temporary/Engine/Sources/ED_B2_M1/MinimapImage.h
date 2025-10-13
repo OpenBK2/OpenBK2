@@ -5,6 +5,8 @@
 #include "SceneB2/TerrainInfo.h"
 #include "Image/ImageScale.h"
 
+#include <cstdint>
+
 namespace NMinimapImage
 {
 enum ELayerType
@@ -233,15 +235,15 @@ const NDb::SMinimapLayer* GetMinimapLayer( ELayerType eLayerType, const NDb::SMi
 void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *pTerrainInfo );
 
 // particular layer renderers
-void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, float fRatio, NImage::EImageScaleMethod eScaleMethod );
-void RenderTerrain( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, NImage::EImageScaleMethod eScaleMethod );
-void RenderFlora( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, int nWoodRadius, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadType eRoadType, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderObject( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, NDb::EObjGameType eObjGameType, bool bShowAllBuildingsPassability, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderBridge( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, const CLakeList &rLakeList, const CLakeList &rIslandList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
-void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderLight( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, float fRatio, NImage::EImageScaleMethod eScaleMethod );
+void RenderTerrain( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, NImage::EImageScaleMethod eScaleMethod );
+void RenderFlora( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, int nWoodRadius, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderRiver( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoadType eRoadType, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderObject( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, NDb::EObjGameType eObjGameType, bool bShowAllBuildingsPassability, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderBridge( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderOcean( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, const CLakeList &rLakeList, const CLakeList &rIslandList, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
+void RenderLake( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
 
 // Minimap creation
 void Create( const NDb::SMapInfo *pMapInfo,

@@ -4,6 +4,8 @@
 
 #include "VersionInfo.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 	struct SMaterial;
@@ -80,7 +82,7 @@ struct ITerraManager : public CObjectBase
 	// entrenchment
 	virtual void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth ) = 0;
 	// debris creation
-	virtual void CreateDebris( const std::string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
+	virtual void CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
 														 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 														 const NDebrisBuilder::EMaskSmoothType smoothType = NDebrisBuilder::MASK_SMOOTH_SHARP ) = 0;
 	// geometry editor
@@ -111,15 +113,15 @@ struct ITerraManager : public CObjectBase
 	virtual void ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight ) = 0;
 	virtual void ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 ) = 0;
 	//
-	virtual void UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<BYTE> &mask,
+	virtual void UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask,
 																	 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate = NTerraBrush::TERRA_BRUSH_OVERRIDE ) = 0;
-	virtual void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs ) = 0;
+	virtual void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs ) = 0;
 	virtual void FinalizeTexModifying() = 0;
 	//
 	// reflections
 	virtual void ClampUnderRivers( NMeshData::SMeshData *pData ) = 0;
 	//
-	virtual void GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
+	virtual void GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
 	virtual void GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
 	//
 	virtual void UpdateAfterTilesModifying() = 0;
@@ -127,7 +129,7 @@ struct ITerraManager : public CObjectBase
 	virtual float GetZ( float x, float y ) const = 0;
 	virtual float GetTileHeight( int nX, int nY ) const = 0;
 	virtual void UpdateZ( CVec3 *pvPos ) = 0;
-	virtual DWORD GetNormal( const CVec2 &vPoint ) const = 0;
+	virtual uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;
