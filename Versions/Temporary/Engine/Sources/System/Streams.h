@@ -98,8 +98,6 @@ public:
 	void WriteString( const std::string &res );
 	template<class T> CDataStream& operator>>( T &res ) { Read( &res, sizeof(res) ); return *this; }
 	template<class T> CDataStream& operator<<( const T &res ) { Write( &res, sizeof(res) ); return *this; }
-	template<> CDataStream& operator>>( std::string &res ) { ReadString( res ); return *this; }
-	template<> CDataStream& operator<<( const std::string &res ) { WriteString( res ); return *this; }
 	bool IsOk() const { return ( data.nFlags & F_Broken ) == 0; }
 	bool CanRead() const { return ( data.nFlags & F_CanRead ) != 0; }
 	bool CanWrite() const { return ( data.nFlags & F_CanWrite ) != 0; }
@@ -108,6 +106,9 @@ public:
 	void WriteFrom( CDataStream &src );
 	void SetBroken() { data.nFlags |= F_Broken; }
 };
+
+template<> inline CDataStream& CDataStream::operator>>( std::string &res ) { ReadString( res ); return *this; }
+template<> inline CDataStream& CDataStream::operator<<( const std::string &res ) { WriteString( res ); return *this; }
 
 class SYSTEM_EXPORT CMemoryStream : public CDataStream
 {

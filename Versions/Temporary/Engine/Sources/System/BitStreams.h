@@ -53,11 +53,12 @@ public:
 	//
 	template <class T> inline void Write( const T &a ) { Write( &a, sizeof(a) ); }
 	template <class T> inline void Read( T &a ) { Read( &a, sizeof(a) ); }
-	template<> inline void Write<std::string>( const std::string &a ) { WriteCString( a.c_str() ); }
-	template<> inline void Read<std::string>( std::string &a ) { ReadCString( a ); }
 
 	friend class CBitEmbedded;
 };
+
+template<> SYSTEM_EXPORT inline void CBitStream::Write<std::string>( const std::string &a ) { WriteCString( a.c_str() ); }
+template<> SYSTEM_EXPORT inline void CBitStream::Read<std::string>( std::string &a ) { ReadCString( a ); }
 
 // класс для выполнения побитного и скоростного ввода/вывода в поток общего назначения
 // после того, как с CDataStream начинает работать CBitLocker прямые операции с 
