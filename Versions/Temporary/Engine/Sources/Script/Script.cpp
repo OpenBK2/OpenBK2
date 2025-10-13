@@ -8,12 +8,13 @@
 
 #include "stdafx.h"
 #include "Script.h"
-#ifdef WIN32
-	#include <windows.h>
+
+#if BOOST_OS_WINDOWS
+#include <windows.h>
 #endif
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "lstate.h"
 

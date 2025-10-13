@@ -5,7 +5,7 @@
 ** See Copyright Notice in lua.h
 */
 
-#include <string.h>
+#include <cstring>
 
 #include "lzio.h"
 

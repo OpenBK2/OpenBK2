@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "SymAccess.h"
+
+#if BOOST_OS_WINDOWS
 #include <DbgHelp.h>
+#endif
 
 #include <iterator>
 
@@ -87,11 +90,11 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 	CONTEXT ctx;
 
 	ZeroSA( stkFrame );
-#if defined(_M_IX86)
+#if BOOST_ARCH_X86_32
 	Assign( &stkFrame.AddrPC, pExPtrs->ContextRecord->SegCs, pExPtrs->ContextRecord->Eip );
 	Assign( &stkFrame.AddrFrame, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Ebp );
 	Assign( &stkFrame.AddrStack, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Eip );
-#elif defined(_M_AMD64)
+#elif BOOST_ARCH_X86_64
 	Assign( &stkFrame.AddrPC, pExPtrs->ContextRecord->SegCs, pExPtrs->ContextRecord->Rip );
 	Assign( &stkFrame.AddrFrame, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Rbp );
 	Assign( &stkFrame.AddrStack, pExPtrs->ContextRecord->SegSs, pExPtrs->ContextRecord->Rip );

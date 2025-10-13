@@ -4,7 +4,11 @@
 #include "MainLoop.h"
 #include "System/FileUtils.h"
 #include "System/FilePath.h"
+
+#if BOOST_OS_WINDOWS
 #include <objbase.h>
+#endif
+
 #include "Input/Bind.h"
 
 namespace NProfile

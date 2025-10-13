@@ -12,6 +12,3 @@
 #include <toolkit/olbar.h>								// Objective Toolkit Shortcut bar
 
 #define CStructureSaver IBinSaver
-
-
-

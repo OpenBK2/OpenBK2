@@ -5,11 +5,15 @@
 
 #pragma once
 
-#include <Windows.h>
+#include <boost/predef.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#if BOOST_OS_WINDOWS
+#include <windows.h>
+#endif
+
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 
 #pragma warning( disable: 4267 4018 )
 
@@ -21,7 +25,7 @@
 #endif
 #define NI_ASSERT(a,b) ASSERT( (a) && (b) )
 
-#include <string.h>
+#include <cstring>
 
 #include <list>
 #include <string>
@@ -46,4 +50,3 @@ using std::ofstream;
 //#include <tchar.h>
 
 // TODO: reference additional headers your program requires here
-

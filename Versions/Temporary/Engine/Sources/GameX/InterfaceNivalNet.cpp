@@ -13,7 +13,9 @@
 
 #include <zconf.h>
 
+#if BOOST_OS_WINDOWS
 #include <objbase.h>
+#endif
 
 const int nMIN_PASSWORD = 4;
 const int nMIN_USERNAME = 4;

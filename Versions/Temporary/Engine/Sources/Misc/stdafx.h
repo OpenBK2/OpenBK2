@@ -6,17 +6,27 @@
 
 #pragma once
 #ifndef __AFX__
+
+#include <boost/predef.h>
+
+#if BOOST_OS_WINDOWS
 #include <windows.h>
+#endif
+
 #include <typeinfo>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+
 #else
 //#define _STLP_USE_MFC 1
 
+#if BOOST_OS_WINDOWS
 #include <afxwin.h>											// MFC core and standard components
 #include <afxext.h>											// MFC extensions
 #include <afxdtctl.h>										// MFC support for Internet Explorer 4 Common Controls
+#endif
+
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>											// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
@@ -24,9 +34,8 @@
 #endif // __AFX__
 
 #pragma component( mintypeinfo, on )
-#include <math.h>
-#include <memory.h>
-#include <string.h>
+#include <cmath>
+#include <cstring>
 // 
 #include "Misc/Asserts.h"
 //
@@ -57,5 +66,3 @@ namespace NTimer
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-

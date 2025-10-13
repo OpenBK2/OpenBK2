@@ -1,8 +1,9 @@
 #include "stdafx.h"
 //#include "CallStack.h"
+
+#if BOOST_OS_WINDOWS
 #include <commctrl.h>
-
-
+#endif
 
 static HINSTANCE g_hInst = NULL ;
 HINSTANCE GetBSUInstance()
@@ -35,5 +36,3 @@ BOOL WINAPI DllMain ( HINSTANCE hInst, DWORD dwReason, LPVOID )
 	}
 	return ( bRet ) ;
 }
-
-

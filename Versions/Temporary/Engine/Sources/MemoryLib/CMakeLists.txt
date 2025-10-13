@@ -6,7 +6,7 @@ set(SOURCES
 )
 add_library(MemoryLib SHARED ${SOURCES})
 add_stdafx_pch(MemoryLib)
-target_link_libraries(MemoryLib PRIVATE DbgHelp winapi)
+target_link_libraries(MemoryLib PRIVATE DbgHelp winapi Boost::predef)
 add_export_header(MemoryLib)
 install(TARGETS MemoryLib DESTINATION bin)
 add_version_info(MemoryLib)

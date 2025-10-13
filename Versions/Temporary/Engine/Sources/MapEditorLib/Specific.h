@@ -9,5 +9,3 @@
 #include "vendor/Stingray/Include/Toolkit/ot_treectrl.h"
 #include "vendor/Stingray/Include/Toolkit/ot_tabwnd.h"
 #include "vendor/Stingray/Include/Toolkit/olbar.h"
-
-

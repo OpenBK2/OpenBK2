@@ -2,11 +2,15 @@
 
 #include "Main_export.h"
 
+#include <boost/predef.h>
+
 //#include "..\ui\commandparam.h"
 //#include "..\ui\dbuserinterface.h"
+
+#if BOOST_OS_WINDOWS
 #include <wtypes.h>
 #include <winbase.h>
-
+#endif
 
 #include "Main/MainLoop.h"
 

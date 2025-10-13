@@ -3,7 +3,10 @@
 #include "MemoryLib/SymAccess.h"
 #include "BSUtil.h"
 #include "BSDialogFunctions.h"
+
+#if BOOST_OS_WINDOWS
 #include <CommCtrl.h>
+#endif
 
 //#include "CallStack.h"
 //#include "DialogFunctions.h"

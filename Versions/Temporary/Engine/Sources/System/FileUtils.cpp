@@ -4,10 +4,13 @@
 #include "FilePath.h"
 #include "Misc/StrProc.h"
 
+#if BOOST_OS_WINDOWS
 #include <objbase.h>
-#include <stdlib.h>
 #include <direct.h>
 #include <tchar.h>
+#endif
+
+#include <cstdlib>
 
 namespace NFile
 {

@@ -1,7 +1,11 @@
 #include "stdafx.h"
 
+#include <boost/predef.h>
+
+#if BOOST_OS_WINDOWS
 #include <wtypes.h>
 #include <winbase.h>
+#endif
 
 #include "MainLoopInternal.h"
 

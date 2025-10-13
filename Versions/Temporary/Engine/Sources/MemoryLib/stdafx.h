@@ -12,10 +12,14 @@
 #endif
 
 // normal stdafx.h
+#include <boost/predef.h>
 
+#if BOOST_OS_WINDOWS
 #include <windows.h>
 #include <objbase.h>
-#include <assert.h>
+#endif
+
+#include <cassert>
 
 
 #ifdef _DEBUG

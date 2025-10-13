@@ -13,6 +13,3 @@
 #include <toolkit/ot_tabwnd.h>						// Objective Toolkit Tab controls
 #include <toolkit/olbar.h>								// Objective Toolkit Shortcut bar
 #include <toolkit/browedit.h>
-
-
-

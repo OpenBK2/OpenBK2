@@ -5,8 +5,8 @@
 ** See Copyright Notice in lua.h
 
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "lundump.h"
 

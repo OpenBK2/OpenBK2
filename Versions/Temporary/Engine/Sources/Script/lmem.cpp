@@ -6,8 +6,7 @@
 */
 
 
-#include <stdlib.h>
-#include <malloc.h>
+#include <cstdlib>
 
 
 #include "ldo.h"
@@ -27,9 +26,9 @@
 */
 
 
-#include <assert.h>
-#include <limits.h>
-#include <string.h>
+#include <cassert>
+#include <climits>
+#include <cstring>
 
 #define realloc(b, s)	debug_realloc(b, s)
 #define malloc(b)	debug_realloc(NULL, b)

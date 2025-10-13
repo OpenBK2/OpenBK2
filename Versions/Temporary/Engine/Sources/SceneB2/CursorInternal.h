@@ -1,6 +1,11 @@
 #pragma once
 
+#include <boost/predef.h>
+
+#if BOOST_OS_WINDOWS
 #include <wtypes.h>
+#endif
+
 #include "Cursor.h"
 
 class CCursor : public ICursor

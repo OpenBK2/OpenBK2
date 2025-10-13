@@ -1,5 +1,7 @@
 #include "stdafx.h"
-#include <stdio.h>
+
+#include <cstdio>
+
 #include "Streams.h"
 
 unsigned int CBitStream::nBitsMask[32] = {

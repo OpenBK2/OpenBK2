@@ -3,7 +3,8 @@
 #include "B2_M1_Terrain_export.h"
 
 
-#include <math.h>
+#include <cmath>
+
 #include "DBVSO.h"
 
 #define DEF_EPS 0.0001f

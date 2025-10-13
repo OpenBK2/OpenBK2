@@ -10,7 +10,7 @@
 #include "llimits.h"
 #include "lua.h"
 
-#include <assert.h>
+#include <cassert>
 #define LUA_INTERNALERROR(s)	assert(((void)s,0))
 #define LUA_ASSERT(c,s)		ASSERT(c)
 

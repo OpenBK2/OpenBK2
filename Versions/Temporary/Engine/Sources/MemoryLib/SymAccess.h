@@ -2,6 +2,8 @@
 
 #include "MemoryLib_export.h"
 
+#include <cstring>
+
 struct CSymString
 {
 	enum { N_STRING_CHARS = 1024 };

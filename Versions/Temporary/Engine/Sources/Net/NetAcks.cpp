@@ -1,5 +1,7 @@
 #include "stdafx.h"
-#include <math.h>
+
+#include <cmath>
+
 #include "NetAcks.h"
 //#define LOG
 #ifdef LOG

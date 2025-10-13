@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "BSDialogFunctions.h"
 #include "MemoryLib/SymAccess.h"
+
+#if BOOST_OS_WINDOWS
 #include <CommCtrl.h>
+#endif
 
 namespace NBSU
 {
