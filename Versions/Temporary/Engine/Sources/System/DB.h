@@ -4,6 +4,7 @@
 
 #include "System_export.h"
 
+#include <boost/config.hpp>
 
 // database object identification
 class CDBID
@@ -23,13 +24,14 @@ private:
 			dwHashKey = MakeHashKey();
 	}
 	//
-	__forceinline char ConvertChar( const char chr ) const
+	BOOST_FORCEINLINE char ConvertChar( const char chr ) const
 	{
 		const char temp = chr - '\\';
 		const char mask = (temp >> 7) | ((-temp) >> 7);
 		const char chr1 = (chr & mask) | ('/' & (~mask));
 		return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 	}
+
 	inline bool CompareEqual( const std::string &szOtherKeyName ) const
 	{
 		const int nSize = szOtherKeyName.size();
@@ -197,7 +199,7 @@ class CDBPtr
 	TPtr pObj;
 	mutable bool bLoaded;
 	//
-	__forceinline void LoadObject() const
+	BOOST_FORCEINLINE void LoadObject() const
 	{
 		if ( !bLoaded )
 		{

@@ -1,11 +1,14 @@
 #pragma once
+
 #include "System_export.h"
+
+#include <boost/config.hpp>
 
 namespace NFile
 {
 
 //! Check, is given char folder separator?
-__forceinline bool IsFolderSeparator( const char chr )
+BOOST_FORCEINLINE bool IsFolderSeparator( const char chr )
 {
 	return chr == '/' || chr == '\\';
 }
@@ -39,7 +42,7 @@ SYSTEM_EXPORT bool ComparePathEq( const int nStart1, const int nLength1, const s
 									  const int nStart2, const int nLength2, const std::string &szPath2 );
 //! Compare full pathes on equality, ignore case and path separator type.
 //! \return True if pathes are equal and false in other case
-__forceinline bool ComparePathEq( const std::string &szPath1, const std::string &szPath2 ) { return ComparePathEq( 0, szPath1.size(), szPath1, 0, szPath2.size(), szPath2 ); }
+BOOST_FORCEINLINE bool ComparePathEq( const std::string &szPath1, const std::string &szPath2 ) { return ComparePathEq( 0, szPath1.size(), szPath1, 0, szPath2.size(), szPath2 ); }
 
 //! Compare (sub)pathes on less-then, ignore case and path separator type.
 //! \return True if first (sub)path are less then second one and false in other case
@@ -47,7 +50,7 @@ bool ComparePathLt( const int nStart1, const int nLength1, const std::string &sz
 									 const int nStart2, const int nLength2, const std::string &szPath2 );
 //! Compare full pathes on less-then, ignore case and path separator type.
 //! \return True if first path are less then second and false in other case
-__forceinline bool ComparePathLt( const std::string &szPath1, const std::string &szPath2 ) { return ComparePathLt( 0, szPath1.size(), szPath1, 0, szPath2.size(), szPath2 ); }
+BOOST_FORCEINLINE bool ComparePathLt( const std::string &szPath1, const std::string &szPath2 ) { return ComparePathLt( 0, szPath1.size(), szPath1, 0, szPath2.size(), szPath2 ); }
 
 //! Returns true if supplyed path is in relative form
 SYSTEM_EXPORT bool IsPathRelative( const std::string &szPath );
@@ -58,7 +61,7 @@ SYSTEM_EXPORT void MakeFullPath( std::string *pRes, const std::string &szRelativ
 
 //! Replace all '\' to '/'. One can pass the same string in both parameters
 SYSTEM_EXPORT void NormalizePath( std::string *pRes, const std::string &szFilePath );
-__forceinline void NormalizePath( std::string *pFilePath ) { NormalizePath( pFilePath, *pFilePath ); }
+BOOST_FORCEINLINE void NormalizePath( std::string *pFilePath ) { NormalizePath( pFilePath, *pFilePath ); }
 
 void AppendSlash( std::string *pFilePath, const char cSlash = '\\' );
 void RemoveSlash( std::string *pFilePath, const char cSlash = '\\' );

@@ -1,6 +1,8 @@
 #pragma once
 #include "System/GResource.h"
 
+#include <boost/config.hpp>
+
 namespace NGScene
 {
 
@@ -58,7 +60,7 @@ public:
 		GetValueBinSearch( fT, fScale, pRes );
 	}
 private:
-	__forceinline void GetValueBinSearch( float fT, float fScale, TValue *pRes ) const
+	BOOST_FORCEINLINE void GetValueBinSearch( float fT, float fScale, TValue *pRes ) const
 	{
 		int s = 0, e = nKeys - 1;
 		short nT = Float2Int( fT - 0.5f );

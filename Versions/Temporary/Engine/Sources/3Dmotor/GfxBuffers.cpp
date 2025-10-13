@@ -6,6 +6,8 @@
 #include "Misc/2Darray.h"
 #include "GfxBuffersInternal.h"
 
+#include <boost/config.hpp>
+
 const int N_SYSMEM_TEXTURES = 2;
 const int N_SYSMEM_TEXTURE_SIZE = 1024;
 const int N_MAX_PRESENTS_IN_QUEUE = 4;
@@ -982,7 +984,7 @@ public:
 	virtual CCubeTexture* CreateHandle( CCubeTB *pTB ) { return new CCubeTexture( pTB ); }
 };
 
-static __forceinline void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
+static BOOST_FORCEINLINE void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
 {
 	std::transform(pSrc, pSrc + nSize, pDst, [nShift](uint16_t value) {
 		return value + nShift;
@@ -1695,7 +1697,7 @@ void AddPrimitiveGeometry( CGeometry *pGeom, CTriList *pTriList )
 }
 
 template<class T>
-__forceinline void AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
+BOOST_FORCEINLINE void AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
 	pGeom->DoTouch();
 	int nVBStart = pGeom->GetVBStart(), nVBSize = pGeom->GetVBSize();

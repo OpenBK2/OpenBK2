@@ -14,6 +14,8 @@
 #include "RandomGen.h"
 #include "3DLib/MemObject.h"
 
+#include <boost/config.hpp>
+
 const int N_MIN_FLOOR = -3;
 
 //static NGScene::CResourceTracker aiGeometryCheckers( "AIGeometries" );
@@ -204,7 +206,7 @@ static void SelectPieces( SHullSet *pRes, const TTest &f, CConvexHull *pHull, co
 
 struct SAlwaysTrue
 {
-	__forceinline bool operator()( const CVec3 &p, float f, bool b ) const { return true; }
+	BOOST_FORCEINLINE bool operator()( const CVec3 &p, float f, bool b ) const { return true; }
 };
 
 void GetGeometry( std::vector<SObjectInfo> *pRes, std::vector<SMassSphere> *pSpheres, const NDb::SAIGeometry * pAIGeom, bool *pbClosed )

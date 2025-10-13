@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/config.hpp>
+
 namespace NLXML
 {
 
@@ -168,7 +170,7 @@ public:
 // **
 // ************************************************************************************************************************ //
 
-__forceinline bool IsWhiteSpace( const char chr )
+BOOST_FORCEINLINE bool IsWhiteSpace( const char chr )
 {
 	return (chr == ' ') || ( chr == '\n' ) || ( chr =='\r' ) || ((chr >= 0x09) && (chr <= 0x0d));
 }
@@ -218,7 +220,7 @@ const char* ReadName( const char *p, std::string *pszName );
 const char* ReadText( std::string *pszText, const char *pszBegin, const char *pszEnd,
 										         const std::string &szEndTag, const bool bTrimWhiteSpace );
 
-__forceinline const char* GetChar( const char *p, char *pValue )
+BOOST_FORCEINLINE const char* GetChar( const char *p, char *pValue )
 {
 	if ( *p == '&' )
 		return GetEntity( p + 1, pValue );

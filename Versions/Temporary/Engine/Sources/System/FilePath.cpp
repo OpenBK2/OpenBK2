@@ -3,17 +3,19 @@
 #include "FilePath.h"
 #include "Misc/StrProc.h"
 
+#include <boost/config.hpp>
+
 namespace NFile
 {
 
-__forceinline char ConvertFolderSeparator( const char chr )
+BOOST_FORCEINLINE char ConvertFolderSeparator( const char chr )
 {
 	const char temp = chr - '\\';
 	const char mask = (temp >> 7) | ((-temp) >> 7);
 	return (chr & mask) | ('/' & (~mask));
 }
 
-__forceinline char ConvertChar( const char chr )
+BOOST_FORCEINLINE char ConvertChar( const char chr )
 {
 	const char temp = chr - '\\';
 	const char mask = (temp >> 7) | ((-temp) >> 7);
@@ -118,7 +120,7 @@ void SplitPath( std::list<std::string> *pRes, const std::string &szFullFilePath 
 // **
 // ************************************************************************************************************************ //
 
-__forceinline char ConvertCharASCII( const char chr )
+BOOST_FORCEINLINE char ConvertCharASCII( const char chr )
 {
 	const char temp = chr - '\\';
 	const char mask = (temp >> 7) | ((-temp) >> 7);

@@ -2,6 +2,7 @@
 
 #include "System_export.h"
 
+#include <boost/config.hpp>
 
 struct IRandomSeed : public CObjectBase
 {
@@ -51,13 +52,13 @@ namespace NRandom
 	// get random value
 	SYSTEM_EXPORT UINT Random();
 	// random w/o checks
-	__forceinline unsigned int Random( const unsigned int uMax ) { return Random() % uMax; }
-	__forceinline int Random( const int nMin, const int nMax ) { return nMin + (int)Random( (unsigned int)(nMax - nMin + 1) ); }
-	__forceinline float Random( const float fMin, const float fMax ) { return fMin + float( double(Random()) / double(0xffffffffUL) * double(fMax - fMin) ); }
+	BOOST_FORCEINLINE unsigned int Random( const unsigned int uMax ) { return Random() % uMax; }
+	BOOST_FORCEINLINE int Random( const int nMin, const int nMax ) { return nMin + (int)Random( (unsigned int)(nMax - nMin + 1) ); }
+	BOOST_FORCEINLINE float Random( const float fMin, const float fMax ) { return fMin + float( double(Random()) / double(0xffffffffUL) * double(fMax - fMin) ); }
 	// random with checks
-	__forceinline unsigned int RandomCheck( const unsigned int uMax ) { return uMax == 0 ? 0 : Random( uMax ); }
-	__forceinline int RandomCheck( const int nMin, const int nMax ) { return nMax < nMin ? nMin : Random( nMin, nMax ); }
-	__forceinline int RandomCheck( const float fMin, const float fMax ) { return fMax < fMin ? fMin : Random( fMin, fMax ); }
+	BOOST_FORCEINLINE unsigned int RandomCheck( const unsigned int uMax ) { return uMax == 0 ? 0 : Random( uMax ); }
+	BOOST_FORCEINLINE int RandomCheck( const int nMin, const int nMax ) { return nMax < nMin ? nMin : Random( nMin, nMax ); }
+	BOOST_FORCEINLINE int RandomCheck( const float fMin, const float fMax ) { return fMax < fMin ? fMin : Random( fMin, fMax ); }
 
 	struct SRandomFunc
 	{

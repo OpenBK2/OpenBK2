@@ -1,4 +1,7 @@
 #pragma once
+
+#include <boost/config.hpp>
+
 inline int GetBits( const float *f ) { return *(const int*)f; }
 
 struct SGradientMatrix
@@ -138,7 +141,8 @@ class CRasterizer
 		pRes->nSY = nSY;
 		pRes->nFY = nFY;
 	}
-	__forceinline bool CalcZGradient( SZGradientInfo *pInfo, const CVec3 &vA, const CVec3 &vCB, const CVec3 &vAC )
+
+	BOOST_FORCEINLINE bool CalcZGradient( SZGradientInfo *pInfo, const CVec3 &vA, const CVec3 &vCB, const CVec3 &vAC )
 	{
 		float fArea = -vAC.x * vCB.y + vAC.y * vCB.x;
 		if ( fArea == 0 )

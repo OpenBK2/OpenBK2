@@ -3,6 +3,8 @@
 
 #include <algorithm>
 
+#include <boost/config.hpp>
+
 namespace NStr
 {
 
@@ -92,10 +94,10 @@ inline void ToUpper( std::string *pRes, const std::string &szString )
 }
 
 // to upper
-__forceinline char ASCII_toupper( const char chr ) { return chr >= 'a' && chr <= 'z' ? chr - 'a' + 'A' : chr; }
+BOOST_FORCEINLINE char ASCII_toupper( const char chr ) { return chr >= 'a' && chr <= 'z' ? chr - 'a' + 'A' : chr; }
 
 // упрощённая и ускоренная версия tolower - работает только на первой половине кодовой таблицы!
-__forceinline char ASCII_tolower( const char chr ) { return chr - ( ('A' - 'a') & ( (('A' - chr - 1) & (chr - 'Z' - 1)) >> 7 ) ); }
+BOOST_FORCEINLINE char ASCII_tolower( const char chr ) { return chr - ( ('A' - 'a') & ( (('A' - chr - 1) & (chr - 'Z' - 1)) >> 7 ) ); }
 inline void ToLowerASCII( std::string *pRes )
 {
 	for ( std::string::iterator it = pRes->begin(); it != pRes->end(); ++it )
@@ -134,8 +136,8 @@ MISC_EXPORT bool IsHexNumber( const std::string &szString );
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
 MISC_EXPORT void* StringToBin( const char *pszData, void *pBuffer, int *pnSize );
 MISC_EXPORT const char* BinToString( const void *pData, int nSize, char *pszBuffer );
-__forceinline char HalfByteToHexSymbol( const unsigned char chr ) { return chr >= 10 ? 'a' + ( chr - 10 ) : '0' + chr; }
-__forceinline unsigned char HexSymbolToHalfByte( const char chr )
+BOOST_FORCEINLINE char HalfByteToHexSymbol( const unsigned char chr ) { return chr >= 10 ? 'a' + ( chr - 10 ) : '0' + chr; }
+BOOST_FORCEINLINE unsigned char HexSymbolToHalfByte( const char chr )
 {
 	if ( chr >= 'a' )
 		return chr - 'a' + 10;
@@ -203,15 +205,15 @@ public:
 template <class TChar>
 struct SQuoteTest
 {
-	static __forceinline bool IsOpen( const TChar chr )
+	static BOOST_FORCEINLINE bool IsOpen( const TChar chr )
 	{
 		return ( chr == TChar('\"') );
 	}
-	static __forceinline bool IsClose( const TChar chr )
+	static BOOST_FORCEINLINE bool IsClose( const TChar chr )
 	{
 		return ( chr == TChar('\"') );
 	}
-	static __forceinline TChar GetClose( const TChar chr )
+	static BOOST_FORCEINLINE TChar GetClose( const TChar chr )
 	{
 		return chr == TChar('\"') ? TChar('\"') : TChar( -1 );
 	}
@@ -221,15 +223,15 @@ struct SQuoteTest
 template <class TChar>
 struct SBracketsTest
 {
-	static __forceinline bool IsOpen( const TChar chr )
+	static BOOST_FORCEINLINE bool IsOpen( const TChar chr )
 	{
 		return ( chr == TChar('(') ) || ( chr == TChar('[') ) || ( chr == TChar('{') ) || ( chr == TChar('<') );
 	}
-	static __forceinline bool IsClose( const TChar chr )
+	static BOOST_FORCEINLINE bool IsClose( const TChar chr )
 	{
 		return ( chr == TChar(')') ) || ( chr == TChar(']') ) || ( chr == TChar('}') ) || ( chr == TChar('>') );
 	}
-	static __forceinline TChar GetClose( const TChar chr )
+	static BOOST_FORCEINLINE TChar GetClose( const TChar chr )
 	{
 		switch ( chr )
 		{
@@ -245,15 +247,15 @@ struct SBracketsTest
 template <class TChar>
 struct SBracketsQuoteTest
 {
-	static __forceinline bool IsOpen( const TChar chr )
+	static BOOST_FORCEINLINE bool IsOpen( const TChar chr )
 	{
 		return ( chr == TChar('(') ) || ( chr == TChar('[') ) || ( chr == TChar('{') ) || ( chr == TChar('<') ) || ( chr == TChar('\"') ) || ( chr == TChar('\'') );
 	}
-	static __forceinline bool IsClose( const char chr )
+	static BOOST_FORCEINLINE bool IsClose( const char chr )
 	{
 		return ( chr == TChar(')') ) || ( chr == TChar(']') ) || ( chr == TChar('}') ) || ( chr == TChar('>') ) || ( chr == TChar('\"') ) || ( chr == TChar('\'') );
 	}
-	static __forceinline TChar GetClose( const char chr )
+	static BOOST_FORCEINLINE TChar GetClose( const char chr )
 	{
 		switch ( chr )
 		{

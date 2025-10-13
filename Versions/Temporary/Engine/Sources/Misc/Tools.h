@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include <boost/config.hpp>
 #include <boost/math/special_functions/sign.hpp>
 
 // square root of the 2 and 3
@@ -210,7 +211,7 @@ inline float SignumNormalizeAngleInRadian( const float angle )
 // ** float-to-int преобразование с текущим состоянием процессора
 // ************************************************************************************************************************ //
 // very fast float-to-int conversion. WARNING: uses current FPU rounding state (!)
-__forceinline int Float2Int( const float fVal )
+BOOST_FORCEINLINE int Float2Int( const float fVal )
 {
 	return static_cast<int>(fVal);
 }

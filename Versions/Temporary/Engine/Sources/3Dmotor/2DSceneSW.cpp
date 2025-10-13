@@ -8,6 +8,8 @@
 #include "RectLayout.h"
 #include "GTexture.h"
 
+#include <boost/config.hpp>
+
 namespace NGScene
 {
 	static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash > shareSWTextures(112);
@@ -71,16 +73,18 @@ struct STextureIterator
 		nVMask = (nYSize - 1 ) << nXBits;
 		pMip = &tex[nMip][0][0];
 	}
-	__forceinline const T& Fetch()
+
+	BOOST_FORCEINLINE const T& Fetch()
 	{
 		const T &r = pMip[((nV>>nVShift)&nVMask) + ((nU>>16)&nUMask) ];
 		nU += nDU;
 		nV += nDV;
 		return r;
 	}
+
 	// slow variant for special rare case
 	template<class TT>
-	__forceinline const TT& Fetch( const std::vector< CArray2D<TT> > &tex )
+	BOOST_FORCEINLINE const TT& Fetch( const std::vector< CArray2D<TT> > &tex )
 	{
 		const TT *pData = &tex[nMip][0][0];
 		const TT &r = pData[((nV>>nVShift)&nVMask) + ((nU>>16)&nUMask) ];

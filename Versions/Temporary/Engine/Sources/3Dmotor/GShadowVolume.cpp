@@ -3,6 +3,9 @@
 #include "GCombiner.h"
 #include "GShadowVolume.h"
 #include "Render.h"
+
+#include <boost/config.hpp>
+
 //#include "GMaterial.hpp"
 //#include "GScene.h"
 //#include "GSceneUtils.h"
@@ -172,7 +175,7 @@ public:
 
 // Visible part generator
 
-int __forceinline Float2IntScale( const float fpVar, const float fpScale )
+int BOOST_FORCEINLINE Float2IntScale( const float fpVar, const float fpScale )
 {
 	return static_cast<int>(fpVar * fpScale);
 }
@@ -208,7 +211,8 @@ class CPartsRender: public CRasterizer<CPartsRender>
 		(*pnSX) = (std::max)( *pnSX, 0 );
 		(*pnFX) = (std::min)( *pnFX, nWidth );//N_OCCLUDE_BUFFER_WIDTH );
 	}
-	__forceinline void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
+
+	BOOST_FORCEINLINE void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
 	{
 		ASSERT( pDepthBufferBase == &pHZBuffer->GetDepthBuffer()[0][0] );
 		ASSERT( pIndexBufferBase = &indexBuffer[0][0] );

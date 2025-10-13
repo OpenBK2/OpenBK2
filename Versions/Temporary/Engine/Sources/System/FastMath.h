@@ -1,5 +1,8 @@
 #pragma once
+
 #include "System_export.h"
+
+#include <boost/config.hpp>
 
 namespace NMath
 {
@@ -7,19 +10,19 @@ namespace NMath
 // fast trigonometry section
 // sinus & cosinus
 SYSTEM_EXPORT float Sin( float fAlpha );
-__forceinline float Cos( const float fAlpha ) { return Sin( fAlpha + FP_PI2 ); }
+BOOST_FORCEINLINE float Cos( const float fAlpha ) { return Sin( fAlpha + FP_PI2 ); }
 
 // result depends on current FPU rounding state, don't use in AI, can lead to async
 float FastSin( float fAlpha );	
-__forceinline float FastCos( const float fAlpha ) { return FastSin( fAlpha + FP_PI2 ); }
+BOOST_FORCEINLINE float FastCos( const float fAlpha ) { return FastSin( fAlpha + FP_PI2 ); }
 
 // arc sinus & arc cosinus
 SYSTEM_EXPORT float ASin( float fSin );
-__forceinline float ACos( const float fCos ) { return FP_PI2 - ASin( fCos ); }
+BOOST_FORCEINLINE float ACos( const float fCos ) { return FP_PI2 - ASin( fCos ); }
 
 // result depends on current FPU rounding state, don't use in AI, can lead to async
 float FastASin( float fSin );
-__forceinline float FastACos( const float fCos ) { return FP_PI2 - FastASin( fCos ); }
+BOOST_FORCEINLINE float FastACos( const float fCos ) { return FP_PI2 - FastASin( fCos ); }
 
 // fast SQRT
 SYSTEM_EXPORT float Sqrt( float fVal );

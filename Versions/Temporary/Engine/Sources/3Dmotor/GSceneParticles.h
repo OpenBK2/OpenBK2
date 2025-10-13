@@ -3,6 +3,8 @@
 #include "GRenderCore.h"
 #include "GfxBuffers.h"
 
+#include <boost/config.hpp>
+
 const int N_PARTICLES_BUFFER_SIZE = 4096;
 const float F_MARGIN = 0.45f;
 #pragma warning( disable : 4799 )
@@ -155,7 +157,8 @@ public:
 		orientation = _orientation;
 		vNormal = _vNormal;
 	}
-	__forceinline void WriteParticle( NGfx::SGeomVecFull *pRes, const CVec3 &v, const NGfx::SShortTextureUV &tex, 
+
+	BOOST_FORCEINLINE void WriteParticle( NGfx::SGeomVecFull *pRes, const CVec3 &v, const NGfx::SShortTextureUV &tex,
 		short nLU, short nLV, DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
 		UpdateBounds(vMin, vMax, v);
@@ -168,13 +171,15 @@ public:
 		pRes->texU.dw = dwColor;
 		pRes->texV.dw = 0;
 	}
+
 	void AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
 	}
-	__forceinline void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+
+	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		NGfx::SGeomVecFull *pRes = &pWriteBuffer->res[pWriteBuffer->nTarget];
@@ -202,7 +207,8 @@ public:
 	{
 		orientation = _orientation;
 	}
-	__forceinline void WriteParticle( NGfx::SGeomVecT2C1 *pRes, const CVec3 &v, float fU, float fV,
+
+	BOOST_FORCEINLINE void WriteParticle( NGfx::SGeomVecT2C1 *pRes, const CVec3 &v, float fU, float fV,
 		DWORD dwColor, CVec3 & vMin, CVec3 & vMax )
 	{
 		UpdateBounds(vMin, vMax, v);
@@ -221,7 +227,7 @@ public:
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
 	}
 
-	__forceinline DWORD BlendParticleColor(DWORD dwColor, DWORD dwPColor) {
+	BOOST_FORCEINLINE DWORD BlendParticleColor(DWORD dwColor, DWORD dwPColor) {
 		uint8_t R1 = (dwColor >> 16) & 0xFF;
 		uint8_t G1 = (dwColor >> 8) & 0xFF;
 		uint8_t B1 = (dwColor >> 0) & 0xFF;
@@ -238,7 +244,7 @@ public:
 		return (A << 24) | (R << 16) | (G << 8) | B;
 	}
 
-	__forceinline void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
+	BOOST_FORCEINLINE void RealAddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 		float fDepth )
 	{
 		float fU1 = tPlace.vUVs[3].nU * (1.0f/NGfx::N_VEC_FULL_TEX_SIZE);
