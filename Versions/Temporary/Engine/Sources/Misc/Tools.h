@@ -1,6 +1,8 @@
-
 #pragma once
+
 #include "Misc_export.h"
+
+#include "port/stdcall.h"
 
 #include <cmath>
 
@@ -307,13 +309,13 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
   return true;
 }
 
-MISC_EXPORT void __stdcall DbgTrc( const char *pszFormat, ... );
-MISC_EXPORT const char * __stdcall StrFmt( const char *pszFormat, ... );
+MISC_EXPORT void PORT_STDCALL DbgTrc( const char *pszFormat, ... );
+MISC_EXPORT const char * PORT_STDCALL StrFmt( const char *pszFormat, ... );
 
 #ifndef _FINALRELEASE
 #define DebugTrace DbgTrc
 #else
-inline void __stdcall DebugTrace( const char *pszFormat, ... ) {  }
+inline void PORT_STDCALL DebugTrace( const char *pszFormat, ... ) {  }
 #endif // _FINALRELEASE
 
 #ifdef NIVAL_DLL
@@ -321,4 +323,3 @@ inline void __stdcall DebugTrace( const char *pszFormat, ... ) {  }
 #else
 #define EXTERNVAR extern
 #endif
-

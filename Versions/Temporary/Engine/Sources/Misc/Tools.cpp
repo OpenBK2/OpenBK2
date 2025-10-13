@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Tools.h"
 
+#include "port/stdcall.h"
+
 namespace
 {
 	const int BUF_SIZE = 65536;
@@ -8,7 +10,7 @@ namespace
 	// partial initialization force the whole array to be initialized with zeros
 }
 
-void __stdcall DbgTrc( const char *pszFormat, ... )
+void PORT_STDCALL DbgTrc( const char *pszFormat, ... )
 {
 	va_list va;
 	va_start( va, pszFormat );
@@ -18,7 +20,7 @@ void __stdcall DbgTrc( const char *pszFormat, ... )
 	OutputDebugString( "\n" );
 }
 
-const char * __stdcall StrFmt( const char *pszFormat, ... )
+const char * PORT_STDCALL StrFmt( const char *pszFormat, ... )
 {
 	va_list va;
 	va_start( va, pszFormat );
@@ -26,4 +28,3 @@ const char * __stdcall StrFmt( const char *pszFormat, ... )
 	va_end( va );
 	return charBuff;
 }
-

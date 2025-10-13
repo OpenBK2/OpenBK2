@@ -8,6 +8,8 @@
 #include "System/FileUtils.h"
 #include "System/CmdLine.h"
 
+#include "port/stdcall.h"
+
 namespace
 {
 
@@ -30,7 +32,7 @@ public:
 	bool IsOk() const { return bSuccessfullyOpened; }
 };
 
-void __stdcall Log( const char *pszFormat, ... )
+void PORT_STDCALL Log( const char *pszFormat, ... )
 {
 	static const int BUF_SIZE = 1024;
 	static char charBuff[BUF_SIZE];

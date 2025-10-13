@@ -5,6 +5,8 @@
 #include "BSUtil.h"
 #include "BSUInit.h"
 
+#include "port/stdcall.h"
+
 #include <cinttypes>
 
 static void TypeDebugTrace( const char *buff, const char *pszWhat, const std::vector<SCallStackEntry> &entries )
@@ -30,7 +32,7 @@ namespace NBSU
 {
 
 static SIgnoresList ignores;
-EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDescription, 
+EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition, const char *pszDescription,
 	const char *pszFileName, int nLineNumber )
 {
 	// first, check for ignore

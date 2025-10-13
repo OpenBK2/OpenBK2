@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Misc_export.h"
+
+#include "port/stdcall.h"
 
 // native John Robbins's BSU functions
 
@@ -15,7 +18,7 @@ enum EBSUReport
 
 namespace NBSU
 {
-	MISC_EXPORT EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDescription,
+	MISC_EXPORT EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition, const char *pszDescription,
 		const char *pszFileName, int nLineNumber );
 };
 
