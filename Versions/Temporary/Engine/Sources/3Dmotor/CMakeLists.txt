@@ -13,7 +13,7 @@ set(SOURCES
     AnimAnnotation.cpp
     AnimatedChannel.cpp
     Cache.cpp
-    dbscene.cpp
+    DBScene.cpp
     DecalFader.cpp
     DepthOfField.cpp
     DiscretePos.cpp

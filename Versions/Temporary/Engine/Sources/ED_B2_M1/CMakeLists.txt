@@ -48,7 +48,7 @@ set(SOURCES
     EditorTestState.cpp
     EditorUpdatableWorld.cpp
     EdUnitStartCmd.cpp
-    ED_B2_M1DLL.cpp
+    ED_B2_M1Dll.cpp
     EffectEditor.cpp
     EffectInterface.cpp
     EffectState.cpp

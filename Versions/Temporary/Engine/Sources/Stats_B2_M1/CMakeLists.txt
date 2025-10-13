@@ -30,7 +30,7 @@ set(SOURCES
     RPGStatsAutomagic.cpp
     Season.cpp
     StatusUpdates.cpp
-    stdafx.cpp
+    StdAfx.cpp
     SuperWeaponUpdates.cpp
     UIEntries.cpp
     UnitTypes.cpp

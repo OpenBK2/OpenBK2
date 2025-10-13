@@ -5,7 +5,7 @@ set(SOURCES
     ChapterState.cpp
     EditorAI.cpp
     EditorScene.cpp
-    ED_B2DLL.cpp
+    ED_B2Dll.cpp
     stdafx.cpp
     TerraAIObserver.cpp
 )

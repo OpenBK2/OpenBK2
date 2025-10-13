@@ -2,9 +2,9 @@ project(Common_RTS_AI)
 set(SOURCES
     AIAngle.cpp
     AIMap.cpp
-    AIObjectBase.cpp
+    aiobjectbase.cpp
     BasePathUnit.cpp
-    CheckSumSaver.cpp
+    ChecksumSaver.cpp
     CollisionInternal2.cpp
     CommonPathFinder.cpp
     GroupSmoothPath.cpp

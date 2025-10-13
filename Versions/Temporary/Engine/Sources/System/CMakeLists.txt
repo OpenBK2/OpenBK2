@@ -32,7 +32,7 @@ set(SOURCES
     Serialize.cpp
     Singleton.cpp
     SplashScreen.cpp
-    StdAfx.cpp
+    stdafx.cpp
     Streams.cpp
     Text.cpp
     Time.cpp

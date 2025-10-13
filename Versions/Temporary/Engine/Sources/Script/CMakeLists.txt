@@ -23,7 +23,7 @@ set(SOURCES
     scriptCommon.cpp
     scriptPtr.cpp
     ScriptWrapperInternal.cpp
-    StdAfx.cpp
+    stdafx.cpp
 )
 add_library(Script SHARED ${SOURCES})
 add_stdafx_pch(Script)
