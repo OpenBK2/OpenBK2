@@ -3,6 +3,21 @@
 
 #include <cstdint>
 
+#include <boost/predef.h>
+
+// __rdtsc is a compiler intrinsic, not a library function, so it needs a
+// header: <intrin.h> on Windows, which MSVC and clang-cl both provide, and
+// <x86intrin.h> with GCC and clang elsewhere. Keyed on the target OS rather
+// than on the compiler for the reason port/stdcall.h spells out: under
+// clang-cl BOOST_COMP_MSVC and BOOST_COMP_GNUC are both the *_EMULATED
+// variants and evaluate to 0, and BOOST_COMP_GNUC is 0 for clang on Linux
+// too, so a compiler test would include neither header.
+#if BOOST_OS_WINDOWS
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
+
 using namespace NHPTimer;
 static double fProcFreq1 = 1;
 
