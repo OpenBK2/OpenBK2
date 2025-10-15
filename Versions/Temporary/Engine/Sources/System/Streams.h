@@ -175,7 +175,7 @@ public:
 	typedef CTextStream& (*OpFunc)( CTextStream& );
 	CTextStream( CDataStream &_f ) : f(_f) {}
 	CTextStream& operator<<( const char *p ) { f.Write( p, strlen(p) ); return *this; }
-	CTextStream& operator<<( int n ) { char buf[128]; itoa( n, buf, 10 ); f.Write( buf, strlen(buf) ); return *this; }
+	CTextStream& operator<<( int n ) { std::string tmp = std::to_string(n); f.Write( tmp.c_str(), tmp.length() ); return *this; }
 	CTextStream& operator<<( double n ) { char buf[128]; gcvt( n, 7, buf ); f.Write( buf, strlen(buf) ); return *this; }
 	CTextStream& operator<<( const std::string &s ) { f.Write( s.c_str(), s.length() ); return *this; }
 	CTextStream& operator<<( OpFunc func ) { return func(*this); }

@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <charconv>
+#include <limits>
 #include "BSDialogFunctions.h"
 #include "MemoryLib/SymAccess.h"
 
@@ -44,6 +47,11 @@ std::string GetFileName( const std::string &strFullPath )
 	return strFullPath.substr( strFullPath.rfind( '\\' ) + 1 );
 }
 
+// The longest int is "-2147483648". digits10 is the number of digits that
+// always round-trip, 9 for a 32 bit int; the largest value needs one more,
+// then room for the sign and the terminator, so 12.
+static constexpr size_t nIntStrSize = std::numeric_limits<int>::digits10 + 1 + 1 + 1;
+
 void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entries )
 {
 	SendMessage( hwndCallStack, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
@@ -61,10 +69,13 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 	for ( int i = 0; i < entries.size(); ++i )
 	{
 		const SCallStackEntry &e = entries[i];
-		char buf[100];
+		char buf[nIntStrSize];
 		int nNewLine = ListView_AddItem( hwndCallStack, GetFileName( e.szFile.szStr ), LPARAM(&e), 2000000 );
 		ListView_SetItemText( hwndCallStack, nNewLine, 1, const_cast<char*>( e.szFunc.szStr ) );
-		itoa( e.nLine, buf, 10 );
+		// to_chars returns the end of the range on failure, so leave the last
+		// byte for the terminator and *res.ptr is always in bounds
+		const std::to_chars_result resLine = std::to_chars( buf, buf + sizeof( buf ) - 1, e.nLine );
+		*resLine.ptr = '\0';
 		ListView_SetItemText( hwndCallStack, nNewLine, 2, buf );
 		CSymString szModule;
 		GetSymEngine().GetSymbol( e.dwAddress, &szModule, 0, 0, 0 );

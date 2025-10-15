@@ -121,8 +121,7 @@ static bool luaOutDBUserData( const Script::Object &o )
 
 static std::string IToA( int n )
 {
-	char buf[64];
-	return itoa( n, buf, 10 );
+	return std::to_string( n );
 }
 static std::string IToA( float f )
 {

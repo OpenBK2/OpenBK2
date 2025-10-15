@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <charconv>
+#include <limits>
 #include "resource.h"
 #include "MemoryLib/SymAccess.h"
 #include "BSUtil.h"
@@ -42,14 +45,22 @@ struct SAssertionDlgParams
 		entries(_entries), ignores( newIgnores ), pszExtInfo( szExtInfo ) {  }
 };
 
+// The longest int is "-2147483648". digits10 is the number of digits that
+// always round-trip, 9 for a 32 bit int; the largest value needs one more,
+// then room for the sign and the terminator, so 12.
+static constexpr size_t nIntStrSize = std::numeric_limits<int>::digits10 + 1 + 1 + 1;
+
 EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszFileName, int nLineNumber,
 																		const char *_pszCondition, const char *_pszDescription, 
 																		const std::vector<SCallStackEntry> &entries, SIgnoresList &ignores,
 																		const char *pszExtInfo )
 {
-	char szLineNumber[64];
-	itoa( nLineNumber, szLineNumber, 10 );
+	char szLineNumber[nIntStrSize];
+	// to_chars returns the end of the range on failure, so leave the last
+	// byte for the terminator and *res.ptr is always in bounds
+	const std::to_chars_result resLine = std::to_chars( szLineNumber, szLineNumber + sizeof( szLineNumber ) - 1, nLineNumber );
+	*resLine.ptr = '\0';
 	std::string szDescription = std::string( pszFileName ) + "(" + szLineNumber + "): " + _pszDescription;
 
 	WriteReportToFile( "error.txt", _pszCondition, szDescription.c_str(), entries );
@@ -127,8 +138,9 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM 
 				int nNewLine = ListView_AddItem( hwndList, GetFileName(it->szFileName), LPARAM(&(*it)) );
 				ListView_SetItemText( hwndList, nNewLine, 3, const_cast<char*>(it->szCondition.c_str()) );
 				ListView_SetItemText( hwndList, nNewLine, 1, const_cast<char*>(it->szFunctionName.c_str()) );
-				char buf[100];
-				itoa( it->nLineNumber, buf, 10 );
+				char buf[nIntStrSize];
+				const std::to_chars_result resLine = std::to_chars( buf, buf + sizeof( buf ) - 1, it->nLineNumber );
+				*resLine.ptr = '\0';
 				ListView_SetItemText( hwndList, nNewLine, 2, buf );
 			}
 		}
