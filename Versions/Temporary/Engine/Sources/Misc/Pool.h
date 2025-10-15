@@ -1,4 +1,7 @@
 #pragma once
+
+#include <boost/config.hpp>
+
 template<class T, int N_BLOCK_SIZE = 4096>
 class CPool
 {
@@ -12,7 +15,7 @@ class CPool
 	CPool( const CPool &a ) { ASSERT(0); }
 	void operator=( const CPool &a ) { ASSERT(0); }
 	int operator&( IBinSaver &f ) { ASSERT(0); return 0; }
-	__declspec(noinline) void AllocNewBlock()
+	BOOST_NOINLINE void AllocNewBlock()
 	{
 		SBlock *pBlock = &data.emplace_back();
 		pCurrent = &pBlock->data[-1];
