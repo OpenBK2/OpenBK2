@@ -122,6 +122,6 @@ int CTreeWindMutator::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19132B40, CTreeWindMutator)
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19132B40, CTreeWindMutator)
 
 

@@ -15,6 +15,8 @@
 #include "GetConsts.h"
 #include "UI/ListControlSorters.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 const int nMAX_PLAYERS = 8;
@@ -499,7 +501,7 @@ void CICMPCustomGame::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x32194C00, CInterfaceMPCustomGame );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_CUSTOM_GAME_MENU, CICMPCustomGame );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x32194C00, CInterfaceMPCustomGame );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_CUSTOM_GAME_MENU, CICMPCustomGame );
 
 

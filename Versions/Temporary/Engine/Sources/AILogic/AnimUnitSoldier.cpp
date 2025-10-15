@@ -6,12 +6,15 @@
 #include "Stats_B2_M1/AnimationType.h"
 #include "Formation.h"
 #include "UnitStates.h"
+
+#include "AILogic_export.h"
+
 #include <float.h>
 
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D488, CAnimUnitSoldier );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D488, CAnimUnitSoldier );
 
 void CAnimUnitSoldier::Init( CAIUnit *_pOwner )
 {

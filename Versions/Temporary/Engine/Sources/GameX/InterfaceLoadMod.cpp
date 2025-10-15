@@ -8,6 +8,8 @@
 #include "System/Text.h"
 #include "Main/MODs.h"
 
+#include "GameX_export.h"
+
 const int NO_MOD = -1;
 
 // CInterfaceLoadMod
@@ -299,7 +301,7 @@ void CICLoadMod::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17263C01, CInterfaceLoadMod )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_LOAD_MOD, CICLoadMod )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263C01, CInterfaceLoadMod )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_LOAD_MOD, CICLoadMod )
 
 

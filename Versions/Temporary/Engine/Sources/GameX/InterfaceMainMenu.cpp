@@ -12,6 +12,7 @@
 #include "Main/Profiles.h"
 #include "Main/MODs.h"
 
+#include "GameX_export.h"
 #include "GameX/DBConsts.h"
 #include "GameX/GetConsts.h"
 
@@ -418,7 +419,7 @@ REGISTER_CMD( "menu", StartMainMenu );
 REGISTER_CMD( "main_menu", StartMainMenuIntro );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x1005C445, CInterfaceMainMenu )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MAIN_MENU, CICMainMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1005C445, CInterfaceMainMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MAIN_MENU, CICMainMenu )
 
 

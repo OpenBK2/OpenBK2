@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbprelight.h"
 
+#include "B2_M1_Terrain_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -98,6 +100,6 @@ int STwoSidedLight::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x10082C80, SPreLight ) 
-REGISTER_DATABASE_CLASS( 0x10087440, STwoSidedLight ) 
+REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10082C80, SPreLight )
+REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10087440, STwoSidedLight )
 

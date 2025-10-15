@@ -22,20 +22,22 @@
 // for profiling
 #include "TimeCounter.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4D5, CArtilleryAttackState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4D6, CArtilleryAttackCommonStatObjState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4D7, CArtilleryRestState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4D8, CArtilleryAttackAviationState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A2, CArtilleryInstallTransportState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A4, CArtilleryUninstallTransportState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A5, CArtilleryBeingTowedState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A6, CArtilleryStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A7, CArtilleryMoveToState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A8, CArtilleryTurnToPointState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4A9, CArtilleryBombardmentState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4AA, CArtilleryRangeAreaState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D5, CArtilleryAttackState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D6, CArtilleryAttackCommonStatObjState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D7, CArtilleryRestState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D8, CArtilleryAttackAviationState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A2, CArtilleryInstallTransportState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A4, CArtilleryUninstallTransportState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A5, CArtilleryBeingTowedState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A6, CArtilleryStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A7, CArtilleryMoveToState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A8, CArtilleryTurnToPointState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A9, CArtilleryBombardmentState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AA, CArtilleryRangeAreaState );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CGroupLogic theGroupLogic;

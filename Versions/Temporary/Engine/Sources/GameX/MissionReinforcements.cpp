@@ -12,6 +12,8 @@
 #include "System/Commands.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const char* REINF_STATE_NORMAL = "Normal";
 const char* REINF_STATE_SELECTED = "Selected";
 const char* REINF_STATE_DISABLED = "Disabled";
@@ -27,7 +29,7 @@ static float s_fBlinkDuration = 10.0f; // время мигания кнопки
 static float s_fBlinkPeriod = 60.0f; // время между миганиями кнопки
 static int s_nAutoShowReinf = 1;
 
-REGISTER_SAVELOAD_CLASS( 0x17163380, CMissionReinf )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17163380, CMissionReinf )
 
 // support struct
 

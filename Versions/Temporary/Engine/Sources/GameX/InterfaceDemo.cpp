@@ -6,6 +6,8 @@
 #include "Image/Targa.h"
 #include "UI/BackgroundMutableTexture.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 const char* DEMO_START_SEQUENCE_FILE_NAME = "Demo\\start_frames.xml";
@@ -178,7 +180,7 @@ REGISTER_CMD( "demo_screen", DemoScreen );
 REGISTER_CMD( "demo_screen_final", DemoScreenFinal );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_DEMO_SCREEN, CICInterfaceDemo )
-REGISTER_SAVELOAD_CLASS( 0x17275AC1, CInterfaceDemo )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_DEMO_SCREEN, CICInterfaceDemo )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17275AC1, CInterfaceDemo )
 
 

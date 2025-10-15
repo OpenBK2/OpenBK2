@@ -37,6 +37,6 @@ void CStandartDirectPath::MarkPath( const int nID, const NDebugInfo::EColor colo
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x31224300, CStandartDirectPath );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31224300, CStandartDirectPath );
 
 

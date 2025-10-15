@@ -10,6 +10,8 @@
 #include "SceneB2/Camera.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 #ifndef _FINALRELEASE
 static int nInterfaceMissionBackgroundCount = 0; // sanity check
 #endif
@@ -166,7 +168,7 @@ void CICMissionBackground::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17117B81, CInterfaceMissionBackground )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_BACKGROUND, CICMissionBackground )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17117B81, CInterfaceMissionBackground )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BACKGROUND, CICMissionBackground )
 
 

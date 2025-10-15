@@ -3,6 +3,8 @@
 #include "LightXMLUtils.h"
 #include "XMLReader.h"
 
+#include "System_export.h"
+
 namespace NXml
 {
 
@@ -309,5 +311,5 @@ CXmlReader::CXmlReader( const char *pszBegin, const char *pszEnd )
 }
 
 using namespace NXml;
-REGISTER_SAVELOAD_CLASS( 0x3023C380, CXmlReader );
+REGISTER_SAVELOAD_CLASS( SYSTEM, 0x3023C380, CXmlReader );
 

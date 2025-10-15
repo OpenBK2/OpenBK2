@@ -12,7 +12,7 @@
 
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS(0x11075B80,CWindowScreen)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B80, CWindowScreen)
 
 
 // CWindowScreen

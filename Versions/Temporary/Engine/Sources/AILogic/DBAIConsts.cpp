@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbaiconsts.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -462,5 +464,5 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x11074CC0, SAIGameConsts ) 
+REGISTER_DATABASE_CLASS( AILOGIC, 0x11074CC0, SAIGameConsts )
 

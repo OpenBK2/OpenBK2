@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbterrainspot.h"
 
+#include "B2_M1_Terrain_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -90,5 +92,5 @@ uint32_t STerrainSpotInstance::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x100AC382, STerrainSpotDesc ) 
+REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x100AC382, STerrainSpotDesc )
 

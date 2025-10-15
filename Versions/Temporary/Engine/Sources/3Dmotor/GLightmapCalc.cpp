@@ -942,6 +942,6 @@ void CLightmapsLoader::ReleaseHint()
 
 };
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x2011EB40, CLightmapsHolder )
-REGISTER_SAVELOAD_CLASS( 0x2024BE52, CLightmapsTempHolder )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x2011EB40, CLightmapsHolder )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x2024BE52, CLightmapsTempHolder )
 

@@ -346,6 +346,6 @@ void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) c
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x3121AC40, CStandartPath2 );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x3121AC40, CStandartPath2 );
 
 

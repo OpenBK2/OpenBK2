@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include "3DLib_export.h"
+
 struct SMemBuilderVertex
 {
 	CVec3 point;
@@ -407,5 +409,5 @@ void CMemObject::CalcBound( SBound *pRes ) const
 	::CalcBound( pRes, resPoints, SGetSelf<CVec3>() );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x2012CD00, CMemObject )
+REGISTER_SAVELOAD_CLASS( _3DLIB, 0x2012CD00, CMemObject )
 

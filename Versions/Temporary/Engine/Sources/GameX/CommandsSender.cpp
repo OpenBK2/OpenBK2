@@ -7,6 +7,8 @@
 #include "Main/MainLoop.h"
 #include "ScenarioTracker.h"
 
+#include "GameX_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -132,5 +134,5 @@ void CCommandsSender::SendCommand( IAILogicCommandB2 *pCmd )
 	pTransciver->SendCommand( pCmd );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x3009E581, CCommandsSender );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x3009E581, CCommandsSender );
 

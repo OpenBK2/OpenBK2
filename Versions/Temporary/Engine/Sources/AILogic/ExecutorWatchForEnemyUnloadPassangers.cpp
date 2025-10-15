@@ -8,11 +8,12 @@
 #include "Artillery.h"
 #include "UnitStates.h"
 
+#include "AILogic_export.h"
 #include <map>
 
 extern CGroupLogic theGroupLogic;
 
-REGISTER_SAVELOAD_CLASS( 0x111AE380, CExecutorWatchForEnemyUnloadPassangers )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x111AE380, CExecutorWatchForEnemyUnloadPassangers )
 
 int CExecutorWatchForEnemyUnloadPassangers::Segment()
 {

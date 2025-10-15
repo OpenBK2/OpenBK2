@@ -83,6 +83,6 @@ float CWindowRoundProgressBar::GetPosition() const
 	return fPosition;
 }
 
-REGISTER_SAVELOAD_CLASS(0x171713C2, CWindowRoundProgressBar)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171713C2, CWindowRoundProgressBar)
 
 

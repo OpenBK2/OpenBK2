@@ -8,6 +8,8 @@
 #include "MultiplayerCommandManager.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 // CInterfaceMPWaitPlayers
@@ -139,7 +141,7 @@ void CICMPWaitPlayers::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1713CBC1, CInterfaceMPWaitPlayers );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_WAIT_PLAYERS, CICMPWaitPlayers );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1713CBC1, CInterfaceMPWaitPlayers );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_WAIT_PLAYERS, CICMPWaitPlayers );
 
 

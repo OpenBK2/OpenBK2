@@ -19,6 +19,8 @@
 #include "Misc/Time64.h"
 #include "MPLANTest.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 #define SERVER_DEAD_TIMEOUT 5000
@@ -28,7 +30,7 @@
 UINT64 nAsyncTime;
 const uint32_t ASYNC_EXIT_TIMEOUT = 20000;
 
-REGISTER_SAVELOAD_CLASS( 0x19243482, CMPManagerModeLAN );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19243482, CMPManagerModeLAN );
 
 class CLANPasswordPacket : public CNetPacket
 {
@@ -41,7 +43,7 @@ public:
 	CLANPasswordPacket() { }
 	CLANPasswordPacket( const int nClientID, const std::string &_szPassword ) : CNetPacket( nClientID ), szPassword( _szPassword ) { }
 };
-REGISTER_SAVELOAD_CLASS( 0x19256440, CLANPasswordPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256440, CLANPasswordPacket );
 
 class CRequestLANPasswordPacket : public CNetPacket
 {
@@ -53,7 +55,7 @@ public:
 	CRequestLANPasswordPacket() { }
 	CRequestLANPasswordPacket( const int nClientID ) : CNetPacket( nClientID ) { }
 };
-REGISTER_SAVELOAD_CLASS( 0x19256441, CRequestLANPasswordPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256441, CRequestLANPasswordPacket );
 
 
 CMPManagerModeLAN::CMPManagerModeLAN() :

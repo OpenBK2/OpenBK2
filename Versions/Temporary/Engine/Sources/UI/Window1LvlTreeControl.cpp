@@ -2,7 +2,7 @@
 #include "window1lvltreecontrol.h"
 #include "WindowMSButton.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B81,CWindow1LvlTreeControl)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B81, CWindow1LvlTreeControl)
 
 int CWindow1LvlTreeControl::operator&( IBinSaver &saver )
 {

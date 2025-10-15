@@ -6,6 +6,8 @@
 #include "StrStream.h"
 #include "Parser/LangNodesDefinitions.h"
 
+#include "libdb_export.h"
+
 namespace NCodeGen
 {
 
@@ -33,5 +35,5 @@ void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const std::string &s
 }
 
 using namespace NCodeGen;
-REGISTER_SAVELOAD_CLASS( 0x301B6D04, CForwardDefinition );
+REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D04, CForwardDefinition );
 

@@ -2,6 +2,8 @@
 #include "FontInfo.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NFontGen

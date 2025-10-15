@@ -3,6 +3,8 @@
 
 #include "GPixelFormat.h"
 
+#include "3Dmotor_export.h"
+
 #include <cstdint>
 
 namespace NGScene
@@ -155,5 +157,5 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 
 }
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x02541140, CParticlesLoader );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02541140, CParticlesLoader );
 

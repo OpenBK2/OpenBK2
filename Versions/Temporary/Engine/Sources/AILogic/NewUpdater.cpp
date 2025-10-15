@@ -10,6 +10,8 @@
 #include "Artillery.h"
 #include "Soldier.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 
 //#define N_GRIDCELL_SIZE 8
@@ -22,8 +24,8 @@ extern SCheats theCheats;
 //CUpdateData
 
 det_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
-REGISTER_SAVELOAD_CLASS_NM( 0x110B2C80, CUpdateData , CEventUpdater );
-//REGISTER_SAVELOAD_CLASS_NM( 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
+REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x110B2C80, CUpdateData , CEventUpdater );
+//REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
 
 const int DIVIDER_CONST = AI_TILES_IN_VIS_TILE * 2;
 

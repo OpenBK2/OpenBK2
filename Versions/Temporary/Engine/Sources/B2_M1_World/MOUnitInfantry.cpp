@@ -647,5 +647,5 @@ START_REGISTER( MOUnitInfantry )
 REGISTER_VAR_EX( "test_draw_weapon", NGlobal::VarBoolHandler, &s_bTestDrawWeapon, true, STORAGE_NONE );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x100A7486, CMOUnitInfantry );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7486, CMOUnitInfantry );
 

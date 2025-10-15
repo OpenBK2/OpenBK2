@@ -4,9 +4,11 @@
 #include "CommonUnit.h"
 #include "Common_RTS_AI/PathFinder.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 
-REGISTER_SAVELOAD_CLASS( 0x1508D49E, CBridgeCreation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49E, CBridgeCreation );
 
 //*******************************************************************
 //*												  CBridgeCreation*

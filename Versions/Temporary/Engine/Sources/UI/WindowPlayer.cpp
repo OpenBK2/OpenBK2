@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS(0x170A7B82, CWindowPlayer);
+REGISTER_SAVELOAD_CLASS(UI, 0x170A7B82, CWindowPlayer);
 
 // CWindowPlayer
 

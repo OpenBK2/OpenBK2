@@ -264,6 +264,6 @@ void CScene::ClearSelection()
 	data[eScene]->selectionHandlers.clear();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1311E300, CVisObjSelectionInfo );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1311E300, CVisObjSelectionInfo );
 
 

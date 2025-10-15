@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "listcontrolsorters.h"
 
-REGISTER_SAVELOAD_CLASS(SCRNE_UI_LIST_SORTER_ALPHABET, CListControlSorterAlphabet)
+REGISTER_SAVELOAD_CLASS(UI, SCRNE_UI_LIST_SORTER_ALPHABET, CListControlSorterAlphabet)
 
 bool CListControlSorterAlphabet::Compare( IWindow *pSubItem1, IWindow *pSubItem2 )
 {

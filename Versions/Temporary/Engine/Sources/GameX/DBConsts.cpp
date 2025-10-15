@@ -15,6 +15,8 @@
 
 #include <filesystem>
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -126,5 +128,5 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMa
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x11074CC1, SGameConsts ) 
+REGISTER_DATABASE_CLASS( GAMEX, 0x11074CC1, SGameConsts )
 

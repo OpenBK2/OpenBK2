@@ -5,6 +5,8 @@
 #include "Main/GameTimer.h"
 #include "System/Commands.h"
 
+#include "SceneB2_export.h"
+
 static bool s_bJogTweakMode = false;
 static float s_fJogPeriod1 = FP_2PI;
 static float s_fJogPhaze1 = 0;
@@ -129,6 +131,6 @@ REGISTER_VAR_EX( "jog_amp2", NGlobal::VarFloatHandler, &s_fJogAmp2, 1, STORAGE_N
 FINISH_REGISTER
 
 
-REGISTER_SAVELOAD_CLASS( 0x15095B00, CMechUnitJoggingMutator )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x15095B00, CMechUnitJoggingMutator )
 
 

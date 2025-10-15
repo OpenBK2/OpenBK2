@@ -6,8 +6,8 @@
 #include "Tools.h"
 #include "System/Text.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B43,CForegroundTextString)
-REGISTER_SAVELOAD_CLASS(0x1715A340,CPlacedText)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B43, CForegroundTextString)
+REGISTER_SAVELOAD_CLASS(UI, 0x1715A340, CPlacedText)
 extern CVec2 vScreenRect;
 
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )

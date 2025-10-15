@@ -12,6 +12,8 @@
 #include "Misc/StrProc.h"
 #include "InterfaceMisc.h"
 
+#include "GameX_export.h"
+
 // CInterfaceReplaySaveLoad
 
 CInterfaceReplaySaveLoad::CInterfaceReplaySaveLoad() : CInterfaceScreenBase( "ReplaySaveLoad", "intermission" )
@@ -475,6 +477,6 @@ void CICInterfaceReplaySaveLoad::Configure( const char *pszConfig )
 	szMode = pszConfig;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19288C40, CInterfaceReplaySaveLoad );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_REPLAY_SAVE_LOAD, CICInterfaceReplaySaveLoad );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19288C40, CInterfaceReplaySaveLoad );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_REPLAY_SAVE_LOAD, CICInterfaceReplaySaveLoad );
 

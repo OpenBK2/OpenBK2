@@ -12,6 +12,8 @@
 #include "Diplomacy.h"
 #include "FeedbackSystem.h"
 
+#include "AILogic_export.h"
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CDiplomacy theDipl;
 extern CStaticObjects theStatObjs;
@@ -292,8 +294,8 @@ CAIUnit* CSoldierAttackInEtrenchState::GetTargetUnit() const
 	return pEnemy;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1108D48E, CInEntrenchmentStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x1108D48F, CSoldierRestInEntrenchmentState );
-REGISTER_SAVELOAD_CLASS( 0x1108D490, CSoldierAttackInEtrenchState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D48E, CInEntrenchmentStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D48F, CSoldierRestInEntrenchmentState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D490, CSoldierAttackInEtrenchState );
 
 

@@ -19,7 +19,9 @@
 #include "DifficultyLevel.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4AB, CArtillery );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AB, CArtillery );
 #include "Stats_B2_M1/AdditionalActions.h"
 #include "UnitCreation.h"
 extern CUnitCreation theUnitCreation;

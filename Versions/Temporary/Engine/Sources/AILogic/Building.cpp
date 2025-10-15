@@ -26,9 +26,11 @@
 #include "GlobalWarFog.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D450, CBuildingSimple );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D450, CBuildingSimple );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CKeyBuildingBonusSystem theBonusSystem;
@@ -444,7 +446,7 @@ bool CBuilding::SIllSort::operator()( const CPtr<CSoldier> &a, const CPtr<CSoldi
 //*												  CBuilding																*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CBuilding );
+BASIC_REGISTER_CLASS( AILOGIC, CBuilding );
 
 CBuilding::CBuilding( const SBuildingRPGStats *_pStats, const CVec3 &center, const uint16_t _wDir, const float fHP, const int nFrameIndex, int _nLinkID )
 : pStats( _pStats ), CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex ), pLockingUnit( 0 ),

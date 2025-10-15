@@ -12,8 +12,8 @@
 #include "Main/GameTimer.h"
 #include "Scene.h"
 
-BASIC_REGISTER_CLASS( ICamera );
-REGISTER_SAVELOAD_CLASS( 0x1006D300, CCamera )
+BASIC_REGISTER_CLASS( SCENEB2, ICamera );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1006D300, CCamera )
 
 static float s_fQuakeMinRadius = 8.0f * VIS_TILE_SIZE;
 static float s_fQuakeMaxRadius = 200.0f * VIS_TILE_SIZE;

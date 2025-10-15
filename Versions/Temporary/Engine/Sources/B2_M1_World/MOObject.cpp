@@ -201,5 +201,5 @@ REGISTER_VAR_EX( "misc_draw_grass", NGlobal::VarBoolHandler, &bDrawGrass, true, 
 REGISTER_VAR_EX( "misc_animations_trees", NGlobal::VarBoolHandler, &bAnimateTrees, true, STORAGE_USER )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x100A7484, CMOObject );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7484, CMOObject );
 

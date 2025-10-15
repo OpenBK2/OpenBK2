@@ -12,7 +12,7 @@
 #include "System/WinFrame.h"
 #include "System/WinCursor.h"
 
-BASIC_REGISTER_CLASS( ICursor );
+BASIC_REGISTER_CLASS( SCENEB2, ICursor );
 
 CCursor::CCursor() 
 : nCurrMode( 0 ), bAcquired( false ), bShow( true ), bCanShow( true )
@@ -148,6 +148,6 @@ ICursor *CreateCursor()
 	return new CCursor();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1007AC00, CCursor )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1007AC00, CCursor )
 
 

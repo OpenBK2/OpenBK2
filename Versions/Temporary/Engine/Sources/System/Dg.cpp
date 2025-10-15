@@ -2,6 +2,8 @@
 #include "Dg.h"
 #include "Misc/Pool.h"
 
+#include "System_export.h"
+
 #ifdef _MAPEDIT 
 	const int N_HOLD_TIME = 16384; // must be power of 2
 #else
@@ -33,6 +35,6 @@ void MarkNewDGFrame()
 	holdQueue[ nDGCurrentFrame&(N_HOLD_TIME-1) ].Clear();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1009DCC3, CVersioningBase )
+REGISTER_SAVELOAD_CLASS( SYSTEM, 0x1009DCC3, CVersioningBase )
 
 

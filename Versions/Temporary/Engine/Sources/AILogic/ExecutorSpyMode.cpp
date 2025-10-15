@@ -3,6 +3,8 @@
 #include "ExecutorSpyMode.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CEventUpdater updater;
@@ -119,6 +121,6 @@ int CExecutorSpyMode::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1916C380, CExecutorSpyMode )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1916C380, CExecutorSpyMode )
 
 

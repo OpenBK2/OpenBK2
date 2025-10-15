@@ -2,5 +2,7 @@
 
 #include "CommonAI.h"
 
-BASIC_REGISTER_CLASS( ICommonAI );
+#include "Main_export.h"
+
+BASIC_REGISTER_CLASS( MAIN, ICommonAI );
 

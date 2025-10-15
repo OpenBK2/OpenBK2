@@ -6,6 +6,8 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include "Client_export.h"
+
 //*******************************************************************
 //*                    CFinishConnectionFilter                       *
 //*******************************************************************
@@ -77,7 +79,7 @@ public:
 		: CNetPacket( nClientID ), nClientServerID( _nClientServerID ) { }
 };
 
-REGISTER_SAVELOAD_CLASS( 92, CTestConnectionPacket );
+REGISTER_SAVELOAD_CLASS( CLIENT, 92, CTestConnectionPacket );
 
 //*******************************************************************
 //*                     CSimpleConnection                           *

@@ -7,7 +7,7 @@
 #include "WindowMSButton.h"
 #include "InterfaceConsts.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B8A, CWindowSlider)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B8A, CWindowSlider)
 
 // CWindowSlider
 

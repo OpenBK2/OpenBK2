@@ -9,6 +9,8 @@
 #include "UI/SceneClassIDs.h"
 #include "InterfaceState.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 bool CInterfaceCredits::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
@@ -124,7 +126,7 @@ void CICInterfaceCredist::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1119C382, CInterfaceCredits )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_CREDITS, CICInterfaceCredist )
-REGISTER_SAVELOAD_CLASS_NM( 0x1119C381, CReactions, CInterfaceCredits );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1119C382, CInterfaceCredits )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CREDITS, CICInterfaceCredist )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1119C381, CReactions, CInterfaceCredits );
 

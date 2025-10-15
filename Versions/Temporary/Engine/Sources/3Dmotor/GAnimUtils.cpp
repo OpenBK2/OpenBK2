@@ -2,6 +2,8 @@
 #include "vendor/granny/include/granny.h"
 #include "GAnimUtils.h"
 
+#include "3Dmotor_export.h"
+
 namespace NAnimation
 {
 
@@ -47,5 +49,5 @@ CAddBoneFilter::~CAddBoneFilter()
 
 }
 using namespace NAnimation;
-REGISTER_SAVELOAD_CLASS( 0x10441190, CAddBoneFilter )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x10441190, CAddBoneFilter )
 

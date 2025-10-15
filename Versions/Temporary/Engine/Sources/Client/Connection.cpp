@@ -2,6 +2,8 @@
 
 #include "Connection.h"
 
-BASIC_REGISTER_CLASS( IConnection );
+#include "Client_export.h"
+
+BASIC_REGISTER_CLASS( CLIENT, IConnection );
 
 

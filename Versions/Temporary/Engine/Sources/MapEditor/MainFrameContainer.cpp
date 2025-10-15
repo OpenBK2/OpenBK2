@@ -26,7 +26,7 @@ void CMainFrameContainer::Set( class CMainFrame* _pMainFrame )
 	NLog::SetLogger( pLoggerSink );
 }
 
-BASIC_REGISTER_CLASS(CMainFrameLoggerSink);
+BASIC_REGISTER_CLASS(MAPEDITOR, CMainFrameLoggerSink);
 
 // basement storage  
 

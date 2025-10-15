@@ -2,6 +2,8 @@
 #include "DiscretePos.h"
 #include "3DLib/Transform.h"
 
+#include "3Dmotor_export.h"
+
 static CObj<CFBTransform> pIdentity;
 static struct SInitDiscretePos
 {
@@ -45,6 +47,6 @@ CFBTransform* SDiscretePos::GetTransform() const
 	return pIdentity;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x025a1130, CFBTransform );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x025a1130, CFBTransform );
 
 

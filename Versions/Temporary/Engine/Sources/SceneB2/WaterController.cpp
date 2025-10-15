@@ -1336,6 +1336,6 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 	CreatePatches( waterParams, waterNodes );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x130C8300, SWaterNode );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x130C8300, SWaterNode );
 
 

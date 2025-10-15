@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbscenario.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -962,8 +964,8 @@ uint32_t SMedal::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x10083400, SCampaign ) 
-REGISTER_DATABASE_CLASS( 0x1917A440, SChapterBonus ) 
-REGISTER_DATABASE_CLASS( 0x10083401, SChapter ) 
-REGISTER_DATABASE_CLASS( 0x170C9480, SMedal ) 
+REGISTER_DATABASE_CLASS( GAMEX, 0x10083400, SCampaign )
+REGISTER_DATABASE_CLASS( GAMEX, 0x1917A440, SChapterBonus )
+REGISTER_DATABASE_CLASS( GAMEX, 0x10083401, SChapter )
+REGISTER_DATABASE_CLASS( GAMEX, 0x170C9480, SMedal )
 

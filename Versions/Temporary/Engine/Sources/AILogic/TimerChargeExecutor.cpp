@@ -2,9 +2,11 @@
 
 #include "TimerChargeExecutor.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 
-REGISTER_SAVELOAD_CLASS( 0x12086B40, CTimerChargeExecutor )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x12086B40, CTimerChargeExecutor )
 
 CTimerChargeExecutor::CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffset ) 
 : pCharge( _pObj ), nTimeToExplode( curTime + nOffset ),

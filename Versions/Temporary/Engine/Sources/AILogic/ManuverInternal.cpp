@@ -12,6 +12,8 @@
 #include "Stats_b2_m1/DBPlaneManuvers.h"
 #include "System/Commands.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern float g = 0.0000983f;
@@ -411,9 +413,9 @@ bool CManuverGeneric::Advance( const NTimer::STime timeDiff )
 	return bRet;
 }
 
-BASIC_REGISTER_CLASS( IManuver );
-REGISTER_SAVELOAD_CLASS( 0x1108EB01, CManuverSteepClimb );
-REGISTER_SAVELOAD_CLASS( 0x1108EB02, CManuverGeneric );
-REGISTER_SAVELOAD_CLASS( 0x1109B380, CManuverToHorisontal );
-REGISTER_SAVELOAD_CLASS( 0x111BD3C0, CManuverPrepareGroundAttack )
+BASIC_REGISTER_CLASS( AILOGIC, IManuver );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108EB01, CManuverSteepClimb );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108EB02, CManuverGeneric );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1109B380, CManuverToHorisontal );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x111BD3C0, CManuverPrepareGroundAttack )
 

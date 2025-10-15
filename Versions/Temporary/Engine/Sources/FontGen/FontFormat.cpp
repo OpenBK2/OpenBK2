@@ -15,5 +15,5 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	return 0;	
 }
 
-REGISTER_SAVELOAD_CLASS( 0x02321170, CFontFormatInfo );
+REGISTER_SAVELOAD_CLASS( FONTGEN, 0x02321170, CFontFormatInfo );
 

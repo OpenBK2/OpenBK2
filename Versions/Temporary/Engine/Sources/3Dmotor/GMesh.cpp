@@ -2,6 +2,7 @@
 #include "GMesh.h"
 #include "3DLib/Bound.h"
 
+#include "3Dmotor_export.h"
 
 namespace NGScene
 {
@@ -27,5 +28,5 @@ int CMeshBound::operator&( CStructureSaver &f )
 
 } // namespace
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x12061180, CMeshBound )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x12061180, CMeshBound )
 

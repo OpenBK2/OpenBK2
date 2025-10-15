@@ -2,6 +2,8 @@
 
 #include "GlobeUpdater.h"
 
+#include "AILogic_export.h"
+
 void CUpdates2Globe::AddUpdate( CObjectBase *pUpdate )
 {
 	singleUpdates.push_back( pUpdate );
@@ -25,5 +27,5 @@ void CUpdates2Globe::Segment()
 		singleUpdates.clear();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x30133400, CUpdates2Globe );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x30133400, CUpdates2Globe );
 

@@ -8,6 +8,8 @@
 #include "EffectorB2Move.h"
 #include "DBUISpecificB2.h"
 
+#include "UISpecificB2_export.h"
+
 #include <zconf.h>
 
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const std::string &szAnimatedWindow )
@@ -255,7 +257,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 	return fEffectTime - fFormerElapsedTime;
 }
 
-REGISTER_SAVELOAD_CLASS(0x171B2B80,SWindowContextB2Move)
-REGISTER_SAVELOAD_CLASS(0x171B1C42,CEffectorB2Move)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B2B80, SWindowContextB2Move)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B1C42, CEffectorB2Move)
 
 

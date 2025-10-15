@@ -105,6 +105,6 @@ void CWindowFrameSequence::Reset()
 	timeStart = Singleton<IGameTimer>()->GetAbsTime();
 }
 
-REGISTER_SAVELOAD_CLASS(0x1717A442, CWindowFrameSequence)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1717A442, CWindowFrameSequence)
 
 

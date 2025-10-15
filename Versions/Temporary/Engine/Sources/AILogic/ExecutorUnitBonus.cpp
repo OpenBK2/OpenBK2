@@ -3,6 +3,8 @@
 #include "ExecutorUnitBonus.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 extern CEventUpdater updater;
 
 extern NTimer::STime curTime;
@@ -127,6 +129,6 @@ void CExecutorUnitBonus::ForceActivate()
 	return CExecutorUnitBase::ForceActivate();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19126C80, CExecutorUnitBonus )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19126C80, CExecutorUnitBonus )
 
 

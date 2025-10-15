@@ -12,6 +12,8 @@
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
 
+#include "GameX_export.h"
+
 namespace
 {
 
@@ -272,6 +274,6 @@ START_REGISTER(PlayMovieCommands)
 REGISTER_CMD( "movie_sequence", PlayMovieSequence );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x1005C440, CPlayMovieInterface );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_PLAY_MOVIE, CICPlayMovie );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1005C440, CPlayMovieInterface );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PLAY_MOVIE, CICPlayMovie );
 

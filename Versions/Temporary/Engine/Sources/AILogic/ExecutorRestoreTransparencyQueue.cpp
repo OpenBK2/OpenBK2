@@ -3,6 +3,9 @@
 #include "StaticObject.h"
 #include "ExecutorContainer.h"
 #include "StaticObjectsIters.h"
+
+#include "AILogic_export.h"
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
 
 namespace NRestoreTranspConsts
@@ -92,5 +95,5 @@ bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_even
 	return false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1111BB40, CExecutorRestoreTransparencyQueue )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1111BB40, CExecutorRestoreTransparencyQueue )
 

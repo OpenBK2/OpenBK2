@@ -16,7 +16,7 @@
 
 #include <cstdint>
 
-BASIC_REGISTER_CLASS ( IPointChecking );
+BASIC_REGISTER_CLASS ( COMMON_RTS_AI, IPointChecking );
 
 const uint16_t TURN_TOLERANCE = 0;
 NTimer::STime lastTimeDiff = 50;

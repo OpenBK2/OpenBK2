@@ -2,6 +2,8 @@
 
 #include "AILogicCommand.h"
 
-BASIC_REGISTER_CLASS( IAILogicCommandB2 );
+#include "AILogic_export.h"
+
+BASIC_REGISTER_CLASS( AILOGIC, IAILogicCommandB2 );
 
 

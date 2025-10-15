@@ -5,6 +5,8 @@
 #include "Formation.h"
 #include "Soldier.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern NTimer::STime curTime;
@@ -76,6 +78,6 @@ void CExecutorCamouflage::SwitchOnEnd()
 	}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19139380, CExecutorCamouflage )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19139380, CExecutorCamouflage )
 
 

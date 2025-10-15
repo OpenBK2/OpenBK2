@@ -2,6 +2,8 @@
 #include "UI.h"
 #include "3Dmotor/RectLayout.h"
 
+#include "UI_export.h"
+
 CVec2 vScreenRect( 1024, 768 );
 CVec2 vScreenOrg( VNULL2 );	// origin of virtual screen
 
@@ -137,4 +139,4 @@ void VirtualToScreen( const CTPoint<float> &src, CTPoint<float> *pRes )
 	VirtualToScreenY( src.y, &pRes->y );
 }
 
-BASIC_REGISTER_CLASS( IWindow )
+BASIC_REGISTER_CLASS( UI, IWindow )

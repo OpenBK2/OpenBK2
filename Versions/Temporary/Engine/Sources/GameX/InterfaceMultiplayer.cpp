@@ -9,9 +9,10 @@
 #include "SceneB2/Scene.h"
 #include "InterfaceState.h"
 
-
 #include "ScenarioTracker.h"
 #include "Misc/StrProc.h"
+
+#include "GameX_export.h"
 
 #include <zconf.h>
 
@@ -176,7 +177,7 @@ void CICMultiplayer::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17130C81, CInterfaceMultiplayer );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MULTIPLAYER_MENU, CICMultiplayer );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17130C81, CInterfaceMultiplayer );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MULTIPLAYER_MENU, CICMultiplayer );
 
 #endif // _SINGLE_DEMO

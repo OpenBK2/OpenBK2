@@ -16,11 +16,13 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS_NM( 0x1108D4D1, SSpanLock, CFullBridge );
-REGISTER_SAVELOAD_CLASS( 0x1108D4D0, CFullBridge );
-REGISTER_SAVELOAD_CLASS( 0x1108D49F, CBridgeSpan );
+REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x1108D4D1, SSpanLock, CFullBridge );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D0, CFullBridge );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D49F, CBridgeSpan );
 
 CBridgeHeightRemover theBridgeHeightsRemover;
 

@@ -3,7 +3,9 @@
 #include "IPlane.h"
 #include "Manuver.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11097A80, CPathFractionComplex )
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11097A80, CPathFractionComplex )
 
 
 

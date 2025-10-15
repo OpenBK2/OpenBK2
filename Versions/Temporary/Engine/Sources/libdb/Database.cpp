@@ -12,7 +12,7 @@
 #include "System/VFS.h"
 #include "System/FilePath.h"
 
-BASIC_REGISTER_CLASS(NDb::IDbObserver);
+BASIC_REGISTER_CLASS(LIBDB, NDb::IDbObserver);
 
 
 namespace NDb

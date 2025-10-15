@@ -2,6 +2,8 @@
 #include "GMemFormat.h"
 #include "GGeometry.h"
 
+#include "3DLib_export.h"
+
 namespace NGScene
 {
 
@@ -41,5 +43,5 @@ void CMemObjectInfo::Recalc()
 
 } // namespace
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x02911172, CMemObjectInfo )
+REGISTER_SAVELOAD_CLASS( _3DLIB, 0x02911172, CMemObjectInfo )
 

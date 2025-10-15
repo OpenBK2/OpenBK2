@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbconstructorprofile.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -132,5 +134,5 @@ uint32_t SDBConstructorProfile::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x3013ECC0, SDBConstructorProfile ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x3013ECC0, SDBConstructorProfile )
 

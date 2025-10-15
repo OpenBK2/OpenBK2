@@ -2,9 +2,11 @@
 #include "./pathfractionarc3d.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x11095C02, CPathFractionArc3D )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11095C02, CPathFractionArc3D )
 
 
 //	CPathFractionArc3D

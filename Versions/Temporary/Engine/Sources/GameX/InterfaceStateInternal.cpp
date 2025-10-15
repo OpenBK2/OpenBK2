@@ -12,6 +12,8 @@
 #include "System/Text.h"
 #include "Misc/Win32Random.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
@@ -29,9 +31,9 @@ public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
 
-REGISTER_SAVELOAD_CLASS( 0x300C8D43, CCampaignState )
-REGISTER_SAVELOAD_CLASS( 0x300C8D44, CInterfaceState )
-REGISTER_SAVELOAD_CLASS( 0x1716F400, CCustomMLHandler )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300C8D43, CCampaignState )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300C8D44, CInterfaceState )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1716F400, CCustomMLHandler )
 
 IInterfaceState* CreateInterfaceState()
 {

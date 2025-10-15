@@ -69,9 +69,11 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "GlobalWarFog.h"
 #include "SimpleChecksumCalc.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D441, CAILogic );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D441, CAILogic );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CPlayerReinforcementArray theReinfArray;

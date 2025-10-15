@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GFont.h"
 
+#include "3Dmotor_export.h"
+
 namespace NGScene
 {
 
@@ -15,5 +17,5 @@ void CFileFont::Recalc()
 
 } // namespace
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x02321160, CFileFont );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02321160, CFileFont );
 

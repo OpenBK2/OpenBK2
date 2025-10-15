@@ -2,7 +2,7 @@
 #include "EffectorButtonState.h"
 #include "WindowMSButton.h"
 
-REGISTER_SAVELOAD_CLASS(0x170AE341,CEffectorButtonState)
+REGISTER_SAVELOAD_CLASS(UI, 0x170AE341, CEffectorButtonState)
 
 int CEffectorButtonState::operator&( IBinSaver &saver )
 {

@@ -6,6 +6,7 @@
 
 #include "FullScreenFader.h"
 
+#include "SceneB2_export.h"
 
 class CFullScreenFader : public IFullScreenFader
 {
@@ -143,7 +144,7 @@ IFullScreenFader *CreateFullScreenFader()
 	return new CFullScreenFader;
 }
 
-BASIC_REGISTER_CLASS( IFullScreenFader );
-REGISTER_SAVELOAD_CLASS( 0x3423B300, CFullScreenFader )
+BASIC_REGISTER_CLASS( SCENEB2, IFullScreenFader );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3423B300, CFullScreenFader )
 
 

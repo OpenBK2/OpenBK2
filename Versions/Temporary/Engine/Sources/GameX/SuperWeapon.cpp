@@ -7,6 +7,8 @@
 #include "WorldClient.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
 
+#include "GameX_export.h"
+
 // CMissionSuperWeapon
 
 CMissionSuperWeapon::CMissionSuperWeapon()
@@ -153,6 +155,6 @@ void CMissionSuperWeapon::UpdateObject( CMapObj *_pMO )
 		pUnitFullInfo->UpdateObject( pMO );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17249BC0, CMissionSuperWeapon )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17249BC0, CMissionSuperWeapon )
 
 

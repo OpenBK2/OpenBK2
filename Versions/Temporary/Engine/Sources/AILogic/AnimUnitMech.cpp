@@ -4,11 +4,13 @@
 #include "AIUnit.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D487, CAnimUnitMech );
-BASIC_REGISTER_CLASS( IAnimUnit );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D487, CAnimUnitMech );
+BASIC_REGISTER_CLASS( AILOGIC, IAnimUnit );
 
 void CAnimUnitMech::Init( CAIUnit *_pOwner )
 {

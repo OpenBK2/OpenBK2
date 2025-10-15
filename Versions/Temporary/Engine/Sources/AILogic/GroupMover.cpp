@@ -16,6 +16,7 @@
 
 #include "System/RandomGen.h"
 
+#include "AILogic_export.h"
 #include <map>
 
 extern NTimer::STime curTime;
@@ -298,4 +299,4 @@ CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x31227B40, CGroupMover );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x31227B40, CGroupMover );

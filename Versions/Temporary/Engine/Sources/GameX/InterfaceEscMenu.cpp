@@ -8,6 +8,8 @@
 #include "MultiplayerCommandManager.h"
 #include "SaveLoadHelper.h"
 
+#include "GameX_export.h"
+
 // CInterfaceEscMenu::CReactions
 
 bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
@@ -451,7 +453,7 @@ void CICEscMenu::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x170B6B80, CInterfaceEscMenu )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_ESC_MENU, CICEscMenu )
-REGISTER_SAVELOAD_CLASS_NM( 0x170B6B81, CReactions, CInterfaceEscMenu );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170B6B80, CInterfaceEscMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ESC_MENU, CICEscMenu )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170B6B81, CReactions, CInterfaceEscMenu );
 

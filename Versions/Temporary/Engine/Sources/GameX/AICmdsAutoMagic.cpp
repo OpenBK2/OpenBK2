@@ -4,6 +4,8 @@
 #include "CommonCommands.h"
 #include "AILogicCommandInternal.h"
 
+#include "GameX_export.h"
+
 //*******************************************************************
 //*												CAICmdsAutomagic													*
 //*******************************************************************
@@ -42,5 +44,5 @@ IAICmdsAutoMagic *CreateAICmdsAutoMagic()
 	return new CAICmdsAutomagic();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300A7AC1, CAICmdsAutomagic )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A7AC1, CAICmdsAutomagic )
 

@@ -3,7 +3,7 @@
 #include "rpgstatsautomagic.h"
 #include "UnitTypes.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11078380, CRPGStatsAutomagic )
+REGISTER_SAVELOAD_CLASS( STATS_B2_M1, 0x11078380, CRPGStatsAutomagic )
 
 int CRAP_LinkerTooSmart_FeedBackUpdates();
 

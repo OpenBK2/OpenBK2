@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbgameroot.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -270,5 +272,5 @@ uint32_t SGameRoot::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1007B4C1, SGameRoot ) 
+REGISTER_DATABASE_CLASS( GAMEX, 0x1007B4C1, SGameRoot )
 

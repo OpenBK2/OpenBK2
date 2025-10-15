@@ -6,6 +6,7 @@
 #include "Commands.h"
 #include "FormationStates.h"
 
+#include "AILogic_export.h"
 
 extern CGroupLogic theGroupLogic;
 
@@ -97,5 +98,5 @@ int CExecutorFormationFirstAid::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x11136340, CExecutorFormationFirstAid )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11136340, CExecutorFormationFirstAid )
 

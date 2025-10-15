@@ -22,7 +22,7 @@ int CHECK_DUPLICATE_CHILDREN;
 UI_EXPORT int CHECK_UI_TEXTURES_INSTANT_LOAD;
 bool s_bUICommonShowWarnings;
 
-BASIC_REGISTER_CLASS(CWindow);
+BASIC_REGISTER_CLASS(UI, CWindow);
 
 void CUIMORegConttainer::AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver )
 {

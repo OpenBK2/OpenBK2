@@ -75,9 +75,9 @@ public:
 
 CAckTuning theAckTuning;
 
-REGISTER_SAVELOAD_CLASS( 0x1107C480, CSoundScene2D )
-REGISTER_SAVELOAD_CLASS( 0x11190BC0, CSoundScene ) 
-REGISTER_SAVELOAD_CLASS( 0x11190BC1, CSoundScene3D ) 
+REGISTER_SAVELOAD_CLASS( SOUND, 0x1107C480, CSoundScene2D )
+REGISTER_SAVELOAD_CLASS( SOUND, 0x11190BC0, CSoundScene )
+REGISTER_SAVELOAD_CLASS( SOUND, 0x11190BC1, CSoundScene3D )
 
 NTimer::STime CSoundScene2D::curTime;			// чтобы не передавать всюду
 SIntThree CSoundScene2D::vLimit;						// размер в клетках всей звуковой сцены

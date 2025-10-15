@@ -21,6 +21,8 @@
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -35,12 +37,12 @@ extern CGlobalWarFog theWarFog;
 //BASIC_REGISTER_CLASS( CGeneralIntendant );
 static const unsigned int INTENDANT_TASKS_PER_SEGMENT = 5;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D495, CGeneralTaskCheckCellDanger );
-REGISTER_SAVELOAD_CLASS( 0x1508D496, CGeneralTaskToResupplyCell );
-REGISTER_SAVELOAD_CLASS_NM( 0x1508D497, CWaitForChangePlayer, CGeneralTaskToDefendStorage );
-REGISTER_SAVELOAD_CLASS( 0x1508D498, CResupplyCellInfo );
-REGISTER_SAVELOAD_CLASS( 0x1508D49B, CGeneralTaskToDefendStorage );
-REGISTER_SAVELOAD_CLASS( 0x1508D49C, CGeneralIntendant );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D495, CGeneralTaskCheckCellDanger );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D496, CGeneralTaskToResupplyCell );
+REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x1508D497, CWaitForChangePlayer, CGeneralTaskToDefendStorage );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D498, CResupplyCellInfo );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49B, CGeneralTaskToDefendStorage );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49C, CGeneralIntendant );
 
 //*******************************************************************
 //*								CGeneralTaskToDefendStorage*

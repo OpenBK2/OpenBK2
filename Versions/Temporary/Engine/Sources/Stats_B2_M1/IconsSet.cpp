@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+#include "Stats_B2_M1_export.h"
+
 namespace NDb
 {
 
@@ -348,6 +350,6 @@ int SVisObjIconsSet::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1311B302, SIconsSet ) 
-REGISTER_DATABASE_CLASS( 0x1313C400, SVisObjIconsSet ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1311B302, SIconsSet )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1313C400, SVisObjIconsSet )
 

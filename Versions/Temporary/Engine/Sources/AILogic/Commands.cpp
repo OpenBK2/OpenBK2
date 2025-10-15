@@ -4,7 +4,10 @@
 #include "CommonUnit.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "GroupMover.h"
-REGISTER_SAVELOAD_CLASS( 0x1108D44D, CAICommand );
+
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D44D, CAICommand );
 
 
 extern NTimer::STime curTime;

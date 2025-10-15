@@ -269,5 +269,5 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 	bNeedUpdate = true;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x20147BC0, CIconOutliner )
+REGISTER_SAVELOAD_CLASS( UI, 0x20147BC0, CIconOutliner )
 

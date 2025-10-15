@@ -12,6 +12,8 @@
 #include "Stats_B2_M1/RPGStats.h"
 #include "AILogic/B2AI.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp
@@ -909,6 +911,6 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 
 }
 
-REGISTER_SAVELOAD_CLASS_NM( 0x1117BB00, CScenarioTrackerMultiplayer, NScenarioTracker );
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1117BB00, CScenarioTrackerMultiplayer, NScenarioTracker );
 
 

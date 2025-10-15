@@ -8,18 +8,18 @@
 
 #include "port/cdecl.h"
 
-#define REGISTER_SAVELOAD_CLASS( N, name )  \
-	BASIC_REGISTER_CLASS( name ) \
+#define REGISTER_SAVELOAD_CLASS( module, N, name )  \
+	BASIC_REGISTER_CLASS( module, name ) \
 	static struct name##Register##N { \
 		name##Register##N() { REGISTER_CLASS( N, name )	}	\
 	} init##name##N;
-#define REGISTER_SAVELOAD_TEMPL_CLASS( N, name, className )  \
-	BASIC_REGISTER_CLASS( name ) \
+#define REGISTER_SAVELOAD_TEMPL_CLASS( module, N, name, className )  \
+	BASIC_REGISTER_CLASS( module, name ) \
 	static struct className##Register##N { \
 		className##Register##N() { REGISTER_TEMPL_CLASS( N, name, className ) }	\
 	} init##className##N;
-#define REGISTER_SAVELOAD_CLASS_NM( N, name, nmspace )  \
-	BASIC_REGISTER_CLASS( nmspace::name ) \
+#define REGISTER_SAVELOAD_CLASS_NM( module, N, name, nmspace )  \
+	BASIC_REGISTER_CLASS( module, nmspace::name ) \
 	static struct name##Register##N { \
 		name##Register##N() { REGISTER_CLASS_NM( N, name, nmspace )	}	\
 	} init##name##N;

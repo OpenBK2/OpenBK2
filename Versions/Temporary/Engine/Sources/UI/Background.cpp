@@ -16,7 +16,7 @@ uint32_t FadeColor( uint32_t dwColor, float fFade )
 //		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // вариант с изменением только альфы смотрится хуже
 }
 
-BASIC_REGISTER_CLASS(IWindowPart)
+BASIC_REGISTER_CLASS(UI, IWindowPart)
 using namespace NGScene;
 
 //CBackground

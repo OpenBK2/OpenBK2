@@ -2,6 +2,8 @@
 
 #include "ExecutorAdrenalineRush.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 CExecutorAdrenalineRush::CExecutorAdrenalineRush( CAIUnit *_pUnit	) :
@@ -25,6 +27,6 @@ int CExecutorAdrenalineRush::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19129441, CExecutorAdrenalineRush )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19129441, CExecutorAdrenalineRush )
 
 

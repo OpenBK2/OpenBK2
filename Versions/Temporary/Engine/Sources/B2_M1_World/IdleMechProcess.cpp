@@ -6,9 +6,11 @@
 #include "SceneB2/Scene.h"
 #include "Misc/Win32Random.h"
 
+#include "B2_M1_World_export.h"
+
 #include <zconf.h>
 
-REGISTER_SAVELOAD_CLASS( 0x12118C80, CIdleMechProcess );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x12118C80, CIdleMechProcess );
 
 CIdleMechProcess::CIdleMechProcess( int nObjectID, const std::vector<std::string> &effectBones, const NDb::SComplexEffect *pComplexEffect, const bool _bRandomLocator ) :
 	nID( nObjectID ), pEffect( pComplexEffect->GetSceneEffect() ), times( 0 ), bRandomLocator( _bRandomLocator )

@@ -13,6 +13,8 @@
 #include "Stats_B2_M1/AnimationFromAction.h"
 #include "Stats_B2_M1/AnimModelGet.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 CGraveyard theGraveyard;
@@ -428,6 +430,6 @@ void CGraveyard::OnSerialize( IBinSaver &saver )
 	//CRAP}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4CB, CDeadUnit );
-REGISTER_SAVELOAD_CLASS( 0x3015A500, SKilledUnit );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4CB, CDeadUnit );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x3015A500, SKilledUnit );
 

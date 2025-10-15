@@ -693,8 +693,8 @@ void CWindowPotentialLines::SetupNoise()
 	}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x191B5380, CWindowPotentialLines )
-REGISTER_SAVELOAD_CLASS( 0x191B5B80, CWindowChapterMapLayer )
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x191B5380, CWindowPotentialLines )
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x191B5B80, CWindowChapterMapLayer )
 
 START_REGISTER(WindowPotentialLines)
 REGISTER_VAR_EX( "frontlines_weight_mask", NGlobal::VarFloatHandler, &s_fWeightMaskNoise, 0.00001f, STORAGE_NONE );

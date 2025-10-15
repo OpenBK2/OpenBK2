@@ -5,6 +5,8 @@
 #include "NetPacket.h"
 #include "NetSaver.h"
 
+#include "Server_Client_Common_export.h"
+
 //*******************************************************************
 //*                     CUnknownPacket                              *
 //*******************************************************************
@@ -22,7 +24,7 @@ public:
 	CUnknownPacket() { }
 };
 
-REGISTER_SAVELOAD_CLASS( UNKNOWN_PACKET_TYPE_ID, CUnknownPacket );
+REGISTER_SAVELOAD_CLASS( SERVER_CLIENT_COMMON, UNKNOWN_PACKET_TYPE_ID, CUnknownPacket );
 
 //*******************************************************************
 //*													NetSaver                                 *

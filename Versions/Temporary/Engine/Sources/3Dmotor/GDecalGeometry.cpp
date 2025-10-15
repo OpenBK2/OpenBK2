@@ -594,7 +594,7 @@ void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo 
 
 }
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x00442130, CDecalGeometry )
-REGISTER_SAVELOAD_CLASS( 0x004c2170, CExplosionDecalGeometry )
-REGISTER_SAVELOAD_CLASS( 0x006c2160, CPerPolyDecalGeometry )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x00442130, CDecalGeometry )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x004c2170, CExplosionDecalGeometry )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x006c2160, CPerPolyDecalGeometry )
 

@@ -4,6 +4,8 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "DBScenario.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 // SChapterMapMenuHelper::SArrow
@@ -215,6 +217,6 @@ void SChapterMapMenuHelper::ReReadPotentials()
 	}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1721A380, SChapterMapMenuHelper )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1721A380, SChapterMapMenuHelper )
 
 

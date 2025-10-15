@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbplanemanuvers.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -396,9 +398,9 @@ uint32_t SManuverDescriptor::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1108EB80, SDirectionRange ) 
-REGISTER_DATABASE_CLASS( 0x1108EB81, SSpeedRange ) 
-REGISTER_DATABASE_CLASS( 0x1108EB82, SDistanceRange ) 
-REGISTER_DATABASE_CLASS( 0x1108EB83, SHeightRange ) 
-REGISTER_DATABASE_CLASS( 0x1108EB84, SManuverDescriptor ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB80, SDirectionRange )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB81, SSpeedRange )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB82, SDistanceRange )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB83, SHeightRange )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB84, SManuverDescriptor )
 

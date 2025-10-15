@@ -11,6 +11,8 @@
 #include "Graveyard.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern NTimer::STime curTime;
@@ -736,10 +738,10 @@ ETryStateInterruptResult CTrainCarAttackObjectState::TryInterruptState( class CA
 	return TSIR_YES_IMMIDIATELY;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x191992C1, CTrainCar );
-REGISTER_SAVELOAD_CLASS( 0x191992C0, CTrainCarStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x19199340, CTrainCarPath );
-REGISTER_SAVELOAD_CLASS( 0x19199341, CTrainCarMoveToState );
-REGISTER_SAVELOAD_CLASS( 0x1919DD40, CTrainCarAttackUnitState );
-REGISTER_SAVELOAD_CLASS( 0x1919DD41, CTrainCarAttackObjectState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191992C1, CTrainCar );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191992C0, CTrainCarStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19199340, CTrainCarPath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19199341, CTrainCarMoveToState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1919DD40, CTrainCarAttackUnitState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1919DD41, CTrainCarAttackObjectState );
 

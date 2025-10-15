@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "m1unitactions.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -424,9 +426,9 @@ uint32_t SM1UnitStatsModifier::CalcCheckSum() const
 
 }
 using namespace NDb;
-BASIC_REGISTER_DATABASE_CLASS( SM1UnitSpecAction )
-REGISTER_DATABASE_CLASS( 0x33196B41, SM1UnitActions ) 
-REGISTER_DATABASE_CLASS( 0x331ADBC0, SM1UnitActionBuild ) 
-REGISTER_DATABASE_CLASS( 0x331BEB41, SM1UnitActionTransform ) 
-REGISTER_DATABASE_CLASS( 0x3016A480, SM1UnitStatsModifier ) 
+BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SM1UnitSpecAction )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x33196B41, SM1UnitActions )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x331ADBC0, SM1UnitActionBuild )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x331BEB41, SM1UnitActionTransform )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x3016A480, SM1UnitStatsModifier )
 

@@ -3,7 +3,7 @@
 #include "WindowMSButton.h"
 #include "WindowListCtrl.h"
 
-REGISTER_SAVELOAD_CLASS(0x17122340, CWindowComboBox);
+REGISTER_SAVELOAD_CLASS(UI, 0x17122340, CWindowComboBox);
 
 // CWindowComboBox
 

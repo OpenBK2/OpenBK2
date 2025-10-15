@@ -16,6 +16,8 @@
 //#include "..\System\GlobalVars.h"
 #include "System/Commands.h"
 
+#include "GameX_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -1449,6 +1451,6 @@ REGISTER_VAR_EX( "show_buildings_info", NGlobal::VarBoolHandler, &s_bShowBuildin
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x15078B00, CSelector );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x15078B00, CSelector );
 
 

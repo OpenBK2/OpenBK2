@@ -10,6 +10,8 @@
 #include "System/Text.h"
 #include "3Dmotor/ScreenShot.h"
 
+#include "GameX_export.h"
+
 // CInterfaceSaveLoadMenu::CReactions
 
 bool CInterfaceSaveLoadMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
@@ -775,8 +777,8 @@ void CICInterfaceSaveLoad::Configure( const char *pszConfig )
 	szMode = pszConfig;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x170CC400, CInterfaceSaveLoadMenu );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_SAVE_LOAD_MENU, CICInterfaceSaveLoad );
-REGISTER_SAVELOAD_CLASS_NM( 0x170CC401, CReactions, CInterfaceSaveLoadMenu );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170CC400, CInterfaceSaveLoadMenu );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SAVE_LOAD_MENU, CICInterfaceSaveLoad );
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170CC401, CReactions, CInterfaceSaveLoadMenu );
 
 

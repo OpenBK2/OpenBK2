@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include "UISpecificB2_export.h"
+
 //		CARSetForcedAction
 
 
@@ -60,6 +62,6 @@ int CRAPTooSmartCompilator_UISpecific()
 	return CRAPTooSmartCompilator_UISpecificB2_2();
 }
 
-REGISTER_SAVELOAD_CLASS(0x1508A301, CARSetForcedAction)
-REGISTER_SAVELOAD_CLASS(0x1508D340, CARSetSpecialAbility)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1508A301, CARSetForcedAction)
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1508D340, CARSetSpecialAbility)
 

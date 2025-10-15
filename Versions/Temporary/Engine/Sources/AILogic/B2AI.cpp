@@ -2,5 +2,7 @@
 
 #include "B2AI.h"
 
-BASIC_REGISTER_CLASS( IAILogic );
+#include "AILogic_export.h"
+
+BASIC_REGISTER_CLASS( AILOGIC, IAILogic );
 

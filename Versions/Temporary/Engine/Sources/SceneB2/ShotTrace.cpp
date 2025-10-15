@@ -83,6 +83,6 @@ START_REGISTER( ShotTrace )
 	REGISTER_VAR_EX( "shot_trace_disable", NGlobal::VarBoolHandler, &NShotTrace::s_bDisableTracers, false, STORAGE_NONE )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x1B173C00, CShotTraceObj )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B173C00, CShotTraceObj )
 
 

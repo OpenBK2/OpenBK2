@@ -7,6 +7,8 @@
 #include "Misc/StrProc.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 // CInterfaceArmyBranchDlg
 
 CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() : 
@@ -232,7 +234,7 @@ void CICArmyBranchDlg::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17267B81, CInterfaceArmyBranchDlg )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_ARMY_BRANCH_DLG, CICArmyBranchDlg )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17267B81, CInterfaceArmyBranchDlg )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ARMY_BRANCH_DLG, CICArmyBranchDlg )
 
 

@@ -11,7 +11,7 @@ static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пик
 static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
 static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
 
-REGISTER_SAVELOAD_CLASS(0x11095B00, CWindowConsoleOutput )
+REGISTER_SAVELOAD_CLASS(UI, 0x11095B00, CWindowConsoleOutput )
 
 int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 {

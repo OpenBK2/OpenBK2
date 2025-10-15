@@ -34,11 +34,13 @@
 #include "TimeCounter.h"
 #include "FeedBackSystem.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D444, CTank );
-REGISTER_SAVELOAD_CLASS( 0x1108D445, CAITransportUnit );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D444, CTank );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D445, CAITransportUnit );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CGroupLogic theGroupLogic;
@@ -58,7 +60,7 @@ extern CExecutorContainer theExecutorContainer;
 //*											CMilitaryCar																*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CMilitaryCar );
+BASIC_REGISTER_CLASS( AILOGIC, CMilitaryCar );
 
 const bool CMilitaryCar::IsIdle() const
 {

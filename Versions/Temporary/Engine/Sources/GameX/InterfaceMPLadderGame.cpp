@@ -16,6 +16,8 @@
 #include "CustomMissions.h"
 #include "MapSizeSorter.h"
 
+#include "GameX_export.h"
+
 // CInterfaceMPLadderGame
 
 CInterfaceMPLadderGame::CInterfaceMPLadderGame() : 
@@ -365,7 +367,7 @@ void CICMPLadderGame::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x321B6380, CInterfaceMPLadderGame );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_LADDER_GAME, CICMPLadderGame );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x321B6380, CInterfaceMPLadderGame );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_LADDER_GAME, CICMPLadderGame );
 
 

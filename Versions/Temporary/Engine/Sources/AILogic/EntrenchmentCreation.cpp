@@ -10,13 +10,15 @@
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Entrenchment.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 const static float fNearToNormale = 0.05f; 
 extern CStaticObjects theStatObjs;
 extern CUnitCreation theUnitCreation;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4AA, CEntrenchmentCreation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AA, CEntrenchmentCreation );
 
 void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 {

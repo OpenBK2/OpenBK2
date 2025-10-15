@@ -2,6 +2,7 @@
 #include "./executorburningfuel.h"
 #include "Shell.h"
 
+#include "AILogic_export.h"
 
 extern CShellsStore theShellsStore;
 extern NTimer::STime curTime;
@@ -30,4 +31,4 @@ int CExecutorBurningFuel::Segment()
 		{ RecordRandomCall(); return NRandom::Random( 10 ) + 10; }
 }
 
-REGISTER_SAVELOAD_CLASS( 0x101CE480, CExecutorBurningFuel )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x101CE480, CExecutorBurningFuel )

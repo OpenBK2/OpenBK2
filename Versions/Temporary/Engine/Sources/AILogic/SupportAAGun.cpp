@@ -4,6 +4,8 @@
 #include "Aviation.h"
 #include "ShootEstimatorInternal.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 
 CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit )
@@ -41,5 +43,5 @@ void CSupportAAGun::Segment()
 }
 
 
-REGISTER_SAVELOAD_CLASS( 0x11143C40, CSupportAAGun )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11143C40, CSupportAAGun )
 

@@ -226,5 +226,5 @@ IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetG
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300A7540, CMultiplayerInternal )
+REGISTER_SAVELOAD_CLASS( MAIN, 0x300A7540, CMultiplayerInternal )
 

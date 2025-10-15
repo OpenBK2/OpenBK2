@@ -6,6 +6,8 @@
 #include "Main/Profiles.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 // CInterfaceProfileManager
 
 CInterfaceProfileManager::CInterfaceProfileManager() :
@@ -369,7 +371,7 @@ void CICProfileManager::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19113481, CInterfaceProfileManager )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_PROFILE_MENU, CICProfileManager )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19113481, CInterfaceProfileManager )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PROFILE_MENU, CICProfileManager )
 
 

@@ -94,7 +94,7 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 using namespace NCamera;
-REGISTER_SAVELOAD_CLASS( 0x101ACBC1, CCameraMayaMouseMutator )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101ACBC1, CCameraMayaMouseMutator )
 
 START_REGISTER( MayaCameraMouseMutatorCommands )
 REGISTER_VAR_EX( "maya_camera_scroll_x_sensetivity", NGlobal::VarFloatHandler, &s_fMayaCameraScrollXSensetivity, 1, STORAGE_NONE )

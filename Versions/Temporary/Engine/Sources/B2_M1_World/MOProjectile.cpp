@@ -275,5 +275,5 @@ void CMOProjectile::SetM1Info( CMapObj *_pTarget, const NDb::SWeaponRPGStats* _p
 	fDamage = _fDamage;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300C2400, CMOProjectile )
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x300C2400, CMOProjectile )
 

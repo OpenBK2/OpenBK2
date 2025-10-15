@@ -15,6 +15,8 @@
 #include "GameXClassIDs.h"
 #include "InterfaceMisc.h"
 
+#include "GameX_export.h"
+
 bool g_nSaveToSameSpace;
 
 START_REGISTER(CommandHistory)
@@ -204,5 +206,5 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 	return pRes;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1007AB80, CCommandsHistory );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1007AB80, CCommandsHistory );
 

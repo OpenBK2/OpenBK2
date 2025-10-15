@@ -8,10 +8,12 @@
 #include "Diplomacy.h"
 #include "AIGeometry.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4B3, CUnitTurret );
-REGISTER_SAVELOAD_CLASS( 0x1108D4B4, CMountedTurret );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B3, CUnitTurret );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B4, CMountedTurret );
 
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
@@ -21,7 +23,7 @@ extern CDiplomacy theDipl;
 //*											  CTurret																		*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CTurret );
+BASIC_REGISTER_CLASS( AILOGIC, CTurret );
 
 CTurret::CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool _bReturnToNULLVerAngle )
 {

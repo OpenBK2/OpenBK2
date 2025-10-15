@@ -171,7 +171,7 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 using namespace NCamera;
-REGISTER_SAVELOAD_CLASS( 0x101ACBC0, CCameraGameMouseMutator )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101ACBC0, CCameraGameMouseMutator )
 
 START_REGISTER( GameCameraMouseMutatorCommands )
 REGISTER_VAR_EX( "game_camera_mouse_pitch_invert", NGlobal::VarBoolHandler, &s_bGameCameraMousePitchInvert, false, STORAGE_USER );

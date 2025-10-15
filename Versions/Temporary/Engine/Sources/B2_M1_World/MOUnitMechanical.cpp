@@ -1614,5 +1614,5 @@ void CMOUnitMechanical::SendAcknowledgement( struct IClientAckManager *pAckManag
 		return CMOUnit::SendAcknowledgement( pAckManager, eAck );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x100A7487, CMOUnitMechanical );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7487, CMOUnitMechanical );
 

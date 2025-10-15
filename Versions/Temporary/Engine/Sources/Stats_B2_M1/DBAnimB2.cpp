@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBAnimB2.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -102,5 +104,5 @@ int SAnimB2::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x10093480, SAnimB2 ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x10093480, SAnimB2 )
 

@@ -274,4 +274,4 @@ void CBinkVideoPlayer::PlayFragment( int nStartFrame, int _nEndFrame, int _nFram
 } // namespace
 
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0xB3320170, CBinkVideoPlayer );
+REGISTER_SAVELOAD_CLASS( UI, 0xB3320170, CBinkVideoPlayer );

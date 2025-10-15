@@ -142,9 +142,9 @@ protected:                                                                      
 	protected:                                                                         \
 	virtual void DestroyContents() { classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
 	private:
-#define BASIC_REGISTER_CLASS(classname) \
-template<> __declspec(dllexport) CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
-template<> __declspec(dllexport) classname* CastToUserObjectImpl<classname >( CObjectBase *p, classname*, void* ) { return dynamic_cast<classname*>( p ); }
+#define BASIC_REGISTER_CLASS(module, classname) \
+template<> module##_EXPORT CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
+template<> module##_EXPORT classname* CastToUserObjectImpl<classname >( CObjectBase *p, classname*, void* ) { return dynamic_cast<classname*>( p ); }
 
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, void* );
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, CObjectBase* ) { return p; }

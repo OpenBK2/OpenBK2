@@ -14,10 +14,12 @@
 #include "GetConsts.h"
 #include "Server_Client_Common/GamePackets.h"
 
+#include "GameX_export.h"
+
 static std::wstring s_wszMultiplayerName;
 
-REGISTER_SAVELOAD_CLASS( 0x19245AC0, CSlotNumberPacket );
-REGISTER_SAVELOAD_CLASS( 0x19260C00, CB2GameLostPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19245AC0, CSlotNumberPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19260C00, CB2GameLostPacket );
 START_REGISTER(MultiplayerVars)
 // This GVar is here to force it to be saved in user.cfg
 // Do not remove, please

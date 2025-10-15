@@ -20,6 +20,8 @@
 #include "UI/SceneClassIDs.h"
 #include "3Dmotor/ScreenShot.h"
 
+#include "GameX_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -1563,9 +1565,9 @@ REGISTER_VAR_EX( "front_line_move_duration", NGlobal::VarIntHandler, &s_nFrontLi
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x170C1381, CInterfaceChapterMapMenu )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_CHAPTER_MAP_MENU, CICChapterMapMenu )
-REGISTER_SAVELOAD_CLASS_NM( 0x170C1382, CReactions, CInterfaceChapterMapMenu );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170C1381, CInterfaceChapterMapMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CHAPTER_MAP_MENU, CICChapterMapMenu )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170C1382, CReactions, CInterfaceChapterMapMenu );
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
 
 

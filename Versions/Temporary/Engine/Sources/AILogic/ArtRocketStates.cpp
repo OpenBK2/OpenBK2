@@ -13,9 +13,10 @@
 #include "FeedbackSystem.h"
 #include "Diplomacy.h"
 
+#include "AILogic_export.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4AC, CArtRocketStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x1108D4AD, CArtRocketAttackGroundState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AC, CArtRocketStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AD, CArtRocketAttackGroundState );
 
 extern CDiplomacy theDipl;
 extern CFeedBackSystem theFeedBackSystem;

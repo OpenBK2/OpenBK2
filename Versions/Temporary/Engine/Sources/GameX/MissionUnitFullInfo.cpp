@@ -7,6 +7,8 @@
 #include "B2_M1_World/MOUnitMechanical.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const int SUPPLIES_COUNT = 1000; // CRAP - magic number
 const int SUPPLIES_COUNT_INFINITE = 1000000;
 
@@ -1024,6 +1026,6 @@ void CMissionUnitFullInfo::SetMemberTooltip( IWindow *pWnd )
 		pWnd->SetTooltip( wszTooltipMemberInBuilding );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17169340, CMissionUnitFullInfo )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17169340, CMissionUnitFullInfo )
 
 

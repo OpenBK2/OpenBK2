@@ -9,6 +9,8 @@
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const int N_OBJECTIVES_ROW_COUNT = 8;
 const int MISSION_BRIEFING_ID = 1000000;
 
@@ -449,8 +451,8 @@ void CICMissionObjectives::Configure( const char *pszConfig )
 		nID = NStr::ToInt( pszConfig );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x170CEC41, CInterfaceMissionObjectives );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_OBJECTIVES, CICMissionObjectives );
-REGISTER_SAVELOAD_CLASS_NM( 0x170CEC42, CReactions, CInterfaceMissionObjectives );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170CEC41, CInterfaceMissionObjectives );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_OBJECTIVES, CICMissionObjectives );
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170CEC42, CReactions, CInterfaceMissionObjectives );
 
 

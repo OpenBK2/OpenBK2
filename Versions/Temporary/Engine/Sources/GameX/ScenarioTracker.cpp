@@ -14,7 +14,9 @@
 #include "System/Commands.h"
 #include "System/Text.h"
 
-BASIC_REGISTER_CLASS(IAIScenarioTracker)
+#include "GameX_export.h"
+
+BASIC_REGISTER_CLASS(GAMEX, IAIScenarioTracker)
 
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##s.empty() ? pre_name##name##FileRefs.size() : pre_name##name##s.size() )
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( pre_name##name##s.empty() ? NText::GetText( pre_name##name##FileRefs[index] ) : pre_name##name##s[index]->wszText )
@@ -1997,8 +1999,8 @@ REGISTER_CMD( "add_promotions", AddPromotions )
 REGISTER_VAR_EX( "objective_static_pointer_offset", NGlobal::VarFloatHandler, &s_fStaticPointerOffset, 5.0f, STORAGE_NONE );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS_NM( 0x11165340, CScenarioTracker, NScenarioTracker );
-BASIC_REGISTER_CLASS( IScenarioTracker )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x11165340, CScenarioTracker, NScenarioTracker );
+BASIC_REGISTER_CLASS( GAMEX, IScenarioTracker )
 using namespace NScenarioTracker;
-REGISTER_SAVELOAD_CLASS_NM( 0x33234C40, SLeaderInfo, IScenarioTracker )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x33234C40, SLeaderInfo, IScenarioTracker )
 

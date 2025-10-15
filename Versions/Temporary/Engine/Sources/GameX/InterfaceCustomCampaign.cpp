@@ -9,6 +9,8 @@
 #include "CustomMissions.h"
 #include "CampaignSelectionMenu.h"
 
+#include "GameX_export.h"
+
 const int CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY = 1;
 
 namespace // unnamed
@@ -328,9 +330,9 @@ void CICCustomCampaign::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17263381, CInterfaceCustomCampaign )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_CUSTOM_CAMPAIGN, CICCustomCampaign )
-REGISTER_SAVELOAD_CLASS( 0x17263382, CDifficultyTextViewer )
-REGISTER_SAVELOAD_CLASS( 0x17263383, CDifficultyData )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263381, CInterfaceCustomCampaign )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CUSTOM_CAMPAIGN, CICCustomCampaign )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263382, CDifficultyTextViewer )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263383, CDifficultyData )
 
 

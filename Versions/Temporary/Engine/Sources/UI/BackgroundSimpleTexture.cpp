@@ -6,7 +6,7 @@
 #include "3Dmotor/RectLayout.h"
 #include "UIComponents.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11075B41, CBackgroundSimpleTexture )
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B41, CBackgroundSimpleTexture )
 
 void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 {

@@ -16,6 +16,8 @@
 #include "UISpecificB2/EffectorB2Move.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 #include <algorithm>
@@ -772,11 +774,11 @@ void CICEncyclopediaWait::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17189481, CInterfaceEncyclopedia )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_ENCYCLOPEDIA, CICEncyclopedia )
-REGISTER_SAVELOAD_CLASS_NM( 0x1718A380, CUnitData, CInterfaceEncyclopedia )
-REGISTER_SAVELOAD_CLASS_NM( 0x1718A400, CDataViewer, CInterfaceEncyclopedia )
-REGISTER_SAVELOAD_CLASS( 0x1718CB41, CInterfaceEncyclopediaWait )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_ENCYCLOPEDIA_WAIT, CICEncyclopediaWait )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17189481, CInterfaceEncyclopedia )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ENCYCLOPEDIA, CICEncyclopedia )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1718A380, CUnitData, CInterfaceEncyclopedia )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1718A400, CDataViewer, CInterfaceEncyclopedia )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1718CB41, CInterfaceEncyclopediaWait )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ENCYCLOPEDIA_WAIT, CICEncyclopediaWait )
 
 

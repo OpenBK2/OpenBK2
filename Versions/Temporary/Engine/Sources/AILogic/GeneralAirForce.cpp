@@ -15,6 +15,8 @@
 #include "PlayerREinforcement.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 #include <random>
 
@@ -29,7 +31,7 @@ extern CUnitCreation theUnitCreation;
 extern NTimer::STime curTime;
 extern CSupremeBeing theSupremeBeing;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4AE, CGeneralAirForce );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AE, CGeneralAirForce );
 
 //BASIC_REGISTER_CLASS(CGeneralAirForce);
 

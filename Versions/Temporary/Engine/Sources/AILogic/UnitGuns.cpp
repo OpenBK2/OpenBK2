@@ -7,6 +7,8 @@
 #include "PathFinder.h"
 #include "Weather.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern NTimer::STime curTime;
@@ -16,10 +18,10 @@ extern CWeather theWeather;
 //*										CUnitGuns																			*
 //*******************************************************************
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4C7, CMechUnitGuns );
-REGISTER_SAVELOAD_CLASS( 0x1108D4C8, CInfantryGuns );
-REGISTER_SAVELOAD_CLASS( 0x1108D4C9, SCommonGunInfo );
-BASIC_REGISTER_CLASS( CUnitGuns );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C7, CMechUnitGuns );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C8, CInfantryGuns );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C9, SCommonGunInfo );
+BASIC_REGISTER_CLASS( AILOGIC, CUnitGuns );
 
 bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo )
 {

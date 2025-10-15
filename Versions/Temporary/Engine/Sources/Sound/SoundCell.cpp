@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x110793C2, CSoundCell );
+REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C2, CSoundCell );
 
 //*******************************************************************
 //*															CSoundCell::*

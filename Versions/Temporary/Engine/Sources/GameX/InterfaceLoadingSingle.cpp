@@ -12,6 +12,8 @@
 #include "System/Commands.h"
 #include "UISpecificB2/EffectorB2Move.h"
 
+#include "GameX_export.h"
+
 const float MIN_PROGRESS_DELTA = 0.001f;
 
 static int s_nTransitionEffectToMissionDuration = 400;
@@ -690,11 +692,11 @@ REGISTER_VAR_EX( "pwl_blink_time_sec", NGlobal::VarFloatHandler, &s_fBlinkTime, 
 FINISH_REGISTER
 
 // just for using by MakeObjectVirtual( int nTypeID )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_LOADING_SINGLE_2D, CInterfaceLoadingSingle2D );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_LOADING_SINGLE_2D, CInterfaceLoadingSingle2D );
 
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_LOADING_SINGLE_FINISHED, CICLoadingSingleFinished )
-REGISTER_SAVELOAD_CLASS( 0x171933C0, CInterfaceLoadingSingleFinished )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_LOADING_SINGLE_FINISHED, CICLoadingSingleFinished )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x171933C0, CInterfaceLoadingSingleFinished )
 
-BASIC_REGISTER_CLASS( CInterfaceLoadingBase::CLoadingScene )
+BASIC_REGISTER_CLASS( GAMEX, CInterfaceLoadingBase::CLoadingScene )
 
 

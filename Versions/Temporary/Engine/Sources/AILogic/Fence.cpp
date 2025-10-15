@@ -9,6 +9,8 @@
 #include "StaticObjectsIters.h"
 #include "Cheats.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CDiplomacy theDipl;
@@ -206,5 +208,5 @@ bool CFence::CanUnitGoThrough( const EAIClasses &eClass ) const
 	return ( pStats->nAIPassabilityClass & eClass ) == 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4E4, CFence );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E4, CFence );
 

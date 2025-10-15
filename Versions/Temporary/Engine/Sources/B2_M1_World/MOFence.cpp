@@ -102,5 +102,5 @@ int CMOFence::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x11121C01, CMOFence );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x11121C01, CMOFence );
 

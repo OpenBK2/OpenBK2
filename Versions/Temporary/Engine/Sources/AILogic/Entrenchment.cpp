@@ -16,13 +16,15 @@
 #include "DebugTools/DebugInfoManager.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4CC, CFullEntrenchment );
-REGISTER_SAVELOAD_CLASS( 0x1108D4C1, CEntrenchmentTankPit );
-REGISTER_SAVELOAD_CLASS( 0x1108D497, CEntrenchment );
-REGISTER_SAVELOAD_CLASS( 0x1108D452, CEntrenchmentPart );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4CC, CFullEntrenchment );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C1, CEntrenchmentTankPit );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D497, CEntrenchment );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D452, CEntrenchmentPart );
 
 extern CEventUpdater updater;
 extern CStaticObjects theStatObjs;

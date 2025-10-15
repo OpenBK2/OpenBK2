@@ -8,9 +8,11 @@
 #include "AIUnit.h"
 #include "UnitStates.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4A9, CFenceCreation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A9, CFenceCreation );
 extern CStaticObjects theStatObjs;
 extern CUnitCreation theUnitCreation;
 

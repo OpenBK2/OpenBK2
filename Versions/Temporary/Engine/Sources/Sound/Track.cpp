@@ -138,5 +138,5 @@ int CTrack::operator&( IBinSaver &f )
 	return 0; 
 }
 }
-REGISTER_SAVELOAD_CLASS_NM( 0x111813C3, CTrack, NMusicSystem )
+REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C3, CTrack, NMusicSystem )
 

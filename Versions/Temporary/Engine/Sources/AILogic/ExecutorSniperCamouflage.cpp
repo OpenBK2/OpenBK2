@@ -4,10 +4,12 @@
 #include "UnitsIterators2.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
-REGISTER_SAVELOAD_CLASS( 0x11082300, CExecutorSniperCamouflage )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11082300, CExecutorSniperCamouflage )
 
 
 CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced )

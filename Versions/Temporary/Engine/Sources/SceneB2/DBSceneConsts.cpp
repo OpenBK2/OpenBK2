@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+#include "SceneB2_export.h"
+
 namespace NDb
 {
 
@@ -294,5 +296,5 @@ int SSceneConsts::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x100AC381, SSceneConsts ) 
+REGISTER_DATABASE_CLASS( SCENEB2, 0x100AC381, SSceneConsts )
 

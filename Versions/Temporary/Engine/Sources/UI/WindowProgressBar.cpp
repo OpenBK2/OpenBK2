@@ -2,8 +2,8 @@
 #include "windowprogressbar.h"
 
 
-REGISTER_SAVELOAD_CLASS(0x11075B88, CWindowProgressBar)
-REGISTER_SAVELOAD_CLASS(0x170A53C0, CWindowMultiTextureProgressBar)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B88, CWindowProgressBar)
+REGISTER_SAVELOAD_CLASS(UI, 0x170A53C0, CWindowMultiTextureProgressBar)
 
 int CWindowProgressBar::operator&( IBinSaver &saver ) 
 { 

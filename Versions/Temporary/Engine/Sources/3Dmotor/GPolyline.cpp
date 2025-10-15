@@ -39,5 +39,5 @@ void CMemGeometry::Recalc()
 
 }
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x02911170, CMemGeometry )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02911170, CMemGeometry )
 

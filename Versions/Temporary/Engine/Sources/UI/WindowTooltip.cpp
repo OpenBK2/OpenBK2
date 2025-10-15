@@ -2,7 +2,7 @@
 #include "windowtooltip.h"
 #include "System/Text.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11075B8D, CWindowTooltip)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B8D, CWindowTooltip)
 
 void CWindowTooltip::InitByDesc( const struct NDb::SUIDesc* pDesc )
 {

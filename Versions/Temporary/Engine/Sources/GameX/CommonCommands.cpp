@@ -7,6 +7,8 @@
 #include "AILogic/B2AI.h"
 #include "Misc/2Darray.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 // ************************************************************************************************************************ //
@@ -271,7 +273,7 @@ void CDropPlayerCommand::Execute()
 	Singleton<IAILogic>()->NeutralizePlayer( nPlayerToDrop );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300A73C5, CControlSumCheckCommand )
-REGISTER_SAVELOAD_CLASS( 0x19191B40, CControlSumHistoryCommand )
-REGISTER_SAVELOAD_CLASS( 0x300A73C6, CDropPlayerCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C5, CControlSumCheckCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19191B40, CControlSumHistoryCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C6, CDropPlayerCommand )
 

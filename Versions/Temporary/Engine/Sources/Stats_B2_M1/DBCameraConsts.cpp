@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbcameraconsts.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -114,5 +116,5 @@ uint32_t SCameraLimits::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1007B4C0, SCameraLimits ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1007B4C0, SCameraLimits )
 

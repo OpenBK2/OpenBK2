@@ -3,8 +3,8 @@
 #include "BackgroundMutableTexture.h"
 #include "UIVisitor.h"
 
-REGISTER_SAVELOAD_CLASS( 0x19117340, CBackgroundMutableTexture )
-REGISTER_SAVELOAD_CLASS_NM( 0x17191C00, CTextureData, CBackgroundMutableTexture )
+REGISTER_SAVELOAD_CLASS( UI, 0x19117340, CBackgroundMutableTexture )
+REGISTER_SAVELOAD_CLASS_NM( UI, 0x17191C00, CTextureData, CBackgroundMutableTexture )
 
 //CBackgroundMutableTexture
 

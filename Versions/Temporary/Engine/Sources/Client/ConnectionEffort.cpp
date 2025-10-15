@@ -4,7 +4,9 @@
 #include "ConnectionEffortInternal.h"
 #include "Net/NetDriver.h"
 
-BASIC_REGISTER_CLASS( CConnectionEffort );
+#include "Client_export.h"
+
+BASIC_REGISTER_CLASS( CLIENT, CConnectionEffort );
 
 void CConnectionEffort::SendBreakThroughPacket( const std::string &szIP, const int nPort )
 {

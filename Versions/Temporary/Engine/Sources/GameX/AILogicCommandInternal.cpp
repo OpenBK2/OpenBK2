@@ -4,6 +4,8 @@
 
 #include "AILogic/B2AI.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 // ************************************************************************************************************************ //
@@ -78,8 +80,8 @@ void CUnitCommand::Execute()
 	Singleton<IAILogic>()->UnitCommand( &command, wID, nPlayer );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300A73C0, CRegisterGroupCommand )
-REGISTER_SAVELOAD_CLASS( 0x300A73C1, CUnregisterGroupCommand )
-REGISTER_SAVELOAD_CLASS( 0x300A73C2, CB2GroupCommand )
-REGISTER_SAVELOAD_CLASS( 0x300A73C3, CUnitCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C0, CRegisterGroupCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C1, CUnregisterGroupCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C2, CB2GroupCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C3, CUnitCommand )
 

@@ -11,6 +11,8 @@
 #include "InterfaceMisc.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 #if BOOST_OS_WINDOWS
@@ -432,7 +434,7 @@ void CICNivalNet::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17132441, CInterfaceNivalNet );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_NIVAL_NET_MENU, CICNivalNet );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17132441, CInterfaceNivalNet );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_NIVAL_NET_MENU, CICNivalNet );
 
 #endif // _SINGLE_DEMO

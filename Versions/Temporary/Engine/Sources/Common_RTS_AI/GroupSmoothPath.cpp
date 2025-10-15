@@ -272,6 +272,6 @@ START_REGISTER( GroupSmoothPathVars )
 REGISTER_VAR_EX( "show_group_marker", NGlobal::VarBoolHandler, &s_bShowGroupMarker, false, STORAGE_NONE );
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x310C9B00, CGroupSmoothPath );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x310C9B00, CGroupSmoothPath );
 
 

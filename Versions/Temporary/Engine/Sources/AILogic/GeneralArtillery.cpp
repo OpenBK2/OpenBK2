@@ -13,6 +13,8 @@
 #include "Technics.h"
 #include "GeneralInternal.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern NTimer::STime curTime;
@@ -20,8 +22,8 @@ extern CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4AB, CGeneralArtilleryGoToPosition );
-REGISTER_SAVELOAD_CLASS( 0x1508D4AF, CGeneralArtillery );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AB, CGeneralArtilleryGoToPosition );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AF, CGeneralArtillery );
 
 bool HasTruck( CAIUnit *pUnit )
 {

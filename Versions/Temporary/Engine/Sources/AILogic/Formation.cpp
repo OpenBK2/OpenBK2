@@ -30,9 +30,11 @@
 
 #include "System/Commands.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D498, CFormation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D498, CFormation );
 
 enum ECatchArtilleryType
 {

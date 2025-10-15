@@ -9,6 +9,8 @@
 
 #include "TerraAIObserver.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CEventUpdater updater;
@@ -127,5 +129,5 @@ int CTerraAIObserverInGame::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1B214300, CTerraAIObserverInGame )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1B214300, CTerraAIObserverInGame )
 

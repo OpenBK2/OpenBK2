@@ -10,6 +10,8 @@
 #include "Main/GameTimer.h"
 #include "Misc/Win32Random.h"
 
+#include "UISpecificB2_export.h"
+
 #include <zconf.h>
 
 // CBackgroundFrameSequence
@@ -95,6 +97,6 @@ void CBackgroundFrameSequence::SetTexture( const struct NDb::STexture *pDesc )
 #endif
 }
 
-REGISTER_SAVELOAD_CLASS( 0x171C1B40, CBackgroundFrameSequence )
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x171C1B40, CBackgroundFrameSequence )
 
 

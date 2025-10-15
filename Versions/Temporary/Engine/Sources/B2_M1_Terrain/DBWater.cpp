@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBWater.h"
 
+#include "B2_M1_Terrain_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -237,6 +239,6 @@ int SWater::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x10084340, SWaterSet ) 
-REGISTER_DATABASE_CLASS( 0x10084341, SWater ) 
+REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10084340, SWaterSet )
+REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10084341, SWater )
 

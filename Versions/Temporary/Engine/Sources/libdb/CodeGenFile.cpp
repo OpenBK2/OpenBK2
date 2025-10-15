@@ -8,6 +8,8 @@
 #include "Parser/FileNode.h"
 #include "System/XmlSaver.h"
 
+#include "libdb_export.h"
+
 namespace NCodeGen
 {
 
@@ -140,5 +142,5 @@ int CFile::operator&( IXmlSaver &saver )
 }
 
 using namespace NCodeGen;
-REGISTER_SAVELOAD_CLASS( 0x301B6D05, CFile );
+REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D05, CFile );
 

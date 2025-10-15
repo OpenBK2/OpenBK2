@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbgameoptions.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -253,5 +255,5 @@ int SOptionSystem::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x100CCC01, SOptionSystem ) 
+REGISTER_DATABASE_CLASS( GAMEX, 0x100CCC01, SOptionSystem )
 

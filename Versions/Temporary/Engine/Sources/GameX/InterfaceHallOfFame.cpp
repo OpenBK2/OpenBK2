@@ -7,6 +7,7 @@
 #include "DBGameRoot.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
 
 // CHallOfFame
 
@@ -137,7 +138,7 @@ void CICHallOfFame::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1126D301, CInterfaceHallOfFame )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_SHOW_HALL_OF_FAME, CICHallOfFame )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1126D301, CInterfaceHallOfFame )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SHOW_HALL_OF_FAME, CICHallOfFame )
 
 

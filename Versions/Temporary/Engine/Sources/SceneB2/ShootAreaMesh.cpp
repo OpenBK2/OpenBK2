@@ -262,6 +262,6 @@ void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vec
 	}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x101554C0, CShootAreaMesh )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101554C0, CShootAreaMesh )
 
 

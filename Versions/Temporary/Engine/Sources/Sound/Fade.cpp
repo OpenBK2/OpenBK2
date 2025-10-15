@@ -123,5 +123,5 @@ void CFades::Update()
 	}
 }
 }
-REGISTER_SAVELOAD_CLASS_NM( 0x111813C1, CFade, NMusicSystem )
+REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C1, CFade, NMusicSystem )
 

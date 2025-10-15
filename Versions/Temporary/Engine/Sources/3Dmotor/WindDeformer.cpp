@@ -98,4 +98,4 @@ CObjectBase *GetWindDeformerSource( CObjectBase *p )
 }
 
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x1358BB78, CWindDeformer )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x1358BB78, CWindDeformer )

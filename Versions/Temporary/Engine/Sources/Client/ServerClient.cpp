@@ -233,5 +233,5 @@ IServerClient* IServerClient::Create( const char* pServerIPAddress, const int nN
 	return new CServerClient( pServerIPAddress, nNetGameVersion, nServerPort, nTimeOut );
 }
 
-BASIC_REGISTER_CLASS( IServerClient );
+BASIC_REGISTER_CLASS( CLIENT, IServerClient );
 

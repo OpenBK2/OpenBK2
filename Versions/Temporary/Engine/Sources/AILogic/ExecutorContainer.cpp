@@ -2,11 +2,13 @@
 #include "executorcontainer.h"
 #include "ExecutorSimpleEvent.h"
 
+#include "AILogic_export.h"
+
 CExecutorContainer theExecutorContainer;
 struct IExecutorContainer * pTheExecutorsContainer = 0;
 
 
-REGISTER_SAVELOAD_CLASS( 0x1105F483, CExecutorContainer )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1105F483, CExecutorContainer )
 
 CExecutorContainer::CExecutorContainer()
 {

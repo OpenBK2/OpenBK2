@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbnetconsts.h"
 
+#include "Main_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -54,5 +56,5 @@ int SNetGameConsts::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x300A7B40, SNetGameConsts ) 
+REGISTER_DATABASE_CLASS( MAIN, 0x300A7B40, SNetGameConsts )
 

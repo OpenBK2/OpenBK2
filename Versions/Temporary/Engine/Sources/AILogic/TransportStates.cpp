@@ -29,24 +29,26 @@
 #include "FeedBackSystem.h"
 #include "UnitsIterators2.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 #include <map>
 
-//REGISTER_SAVELOAD_CLASS( 0x1108D4D9, CTransportResupplyHumanResourcesState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4DA, CTransportLoadRuState );
-REGISTER_SAVELOAD_CLASS( 0x1108D496, CTransportLandState );
-REGISTER_SAVELOAD_CLASS( 0x1108D495, CTransportWaitPassengerState );
-REGISTER_SAVELOAD_CLASS( 0x1108D494, CTransportStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x1508D48B, CMoveToPointNotPresize );
-REGISTER_SAVELOAD_CLASS( 0x1508D49A, CTransportRepairBuildingState );
-REGISTER_SAVELOAD_CLASS( 0x1508D49F, CTransportBuildBridgeState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A1, CTransportRepairBridgeState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A4, CTransportPlaceAntitankState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A5, CTransportPlaceMineState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A6, CTransportClearMineState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A7, CTransportBuildEntrenchmentState );
-REGISTER_SAVELOAD_CLASS( 0x1508D4A8, CTransportBuildFenceState );
-REGISTER_SAVELOAD_CLASS( 0x19178340, CTransportWaitForUnload );
+//REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D9, CTransportResupplyHumanResourcesState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DA, CTransportLoadRuState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D496, CTransportLandState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D495, CTransportWaitPassengerState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D494, CTransportStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D48B, CMoveToPointNotPresize );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49A, CTransportRepairBuildingState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49F, CTransportBuildBridgeState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A1, CTransportRepairBridgeState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A4, CTransportPlaceAntitankState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A5, CTransportPlaceMineState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A6, CTransportClearMineState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A7, CTransportBuildEntrenchmentState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A8, CTransportBuildFenceState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19178340, CTransportWaitForUnload );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CDiplomacy theDipl;

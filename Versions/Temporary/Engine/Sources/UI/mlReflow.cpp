@@ -333,5 +333,5 @@ IReflowLayout* CreateReflowLayout()
 } // NAMESPACE
 
 using namespace NML;
-REGISTER_SAVELOAD_CLASS( 0xB5529180, CReflowLayout )
+REGISTER_SAVELOAD_CLASS( UI, 0xB5529180, CReflowLayout )
 

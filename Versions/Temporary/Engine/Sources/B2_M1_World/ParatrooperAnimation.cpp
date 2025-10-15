@@ -36,6 +36,6 @@ bool CParachuteFinishProcess::Update( const NTimer::STime &time )
 	return true;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1015CD00, CParatrooperAnimationProcess );
-REGISTER_SAVELOAD_CLASS( 0x1015E400, CParachuteFinishProcess );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x1015CD00, CParatrooperAnimationProcess );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x1015E400, CParachuteFinishProcess );
 

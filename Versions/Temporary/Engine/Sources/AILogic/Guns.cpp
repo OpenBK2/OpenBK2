@@ -25,10 +25,12 @@
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4B5, CBaseGun );
-REGISTER_SAVELOAD_CLASS( 0x1108D4B7, CTurretGun );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B5, CBaseGun );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B7, CTurretGun );
 
 static int g_nEffectsForBombs = 4;
 
@@ -90,7 +92,7 @@ float GetDispByRadius( const CBasicGun *pGun, const CVec2 &attackerPos, const CV
 	return GetDispByRadius( pGun->GetDispersion(), pGun->GetFireRangeMax(), fabs( attackerPos - explCoord ) );
 }
 
-BASIC_REGISTER_CLASS( CBasicGun );
+BASIC_REGISTER_CLASS( AILOGIC, CBasicGun );
 
 //*******************************************************************
 //*													  CGun																	*

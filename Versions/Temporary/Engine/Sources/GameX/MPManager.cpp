@@ -7,9 +7,11 @@
 #include "GameXClassIDs.h"
 #include "Main/MainLoop.h"
 
+#include "GameX_export.h"
+
 // CMPManager - general methods
 
-REGISTER_SAVELOAD_CLASS( 0x1911AAC0, CMPManager )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1911AAC0, CMPManager )
 
 IMPToUIManager *CreateMPManager()
 {

@@ -6,6 +6,8 @@
 #include "StrStream.h"
 #include "Parser/LangNodesDefinitions.h"
 
+#include "libdb_export.h"
+
 namespace NCodeGen
 {
 
@@ -78,5 +80,5 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 }
 
 using namespace NCodeGen;
-REGISTER_SAVELOAD_CLASS( 0x301B6D03, CFieldDefinition );
+REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D03, CFieldDefinition );
 

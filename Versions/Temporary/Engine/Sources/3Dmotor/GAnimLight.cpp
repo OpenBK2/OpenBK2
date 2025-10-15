@@ -91,6 +91,6 @@ void CLightAnimator::Recalc()
 
 }
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x11062160, CLightAnimator );
-REGISTER_SAVELOAD_CLASS( 0x11062161, CLightLoader );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x11062160, CLightAnimator );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x11062161, CLightLoader );
 

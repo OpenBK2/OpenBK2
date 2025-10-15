@@ -10,6 +10,8 @@
 #include "UI/SceneClassIDs.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 // CInterfaceTestScreen
@@ -85,7 +87,7 @@ START_REGISTER(TestScreenCommands)
 REGISTER_CMD( "test_screen", StartTestScreen )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x171682C1, CInterfaceTestScreen )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_TEST_SCREEN, CICTestScreen )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x171682C1, CInterfaceTestScreen )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_TEST_SCREEN, CICTestScreen )
 
 

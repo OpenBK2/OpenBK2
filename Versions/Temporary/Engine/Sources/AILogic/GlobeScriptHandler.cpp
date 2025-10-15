@@ -2,6 +2,8 @@
 
 #include "GlobeScriptHandler.h"
 
-BASIC_REGISTER_CLASS( IGlobeScriptHandler );
+#include "AILogic_export.h"
+
+BASIC_REGISTER_CLASS( AILOGIC, IGlobeScriptHandler );
 
 

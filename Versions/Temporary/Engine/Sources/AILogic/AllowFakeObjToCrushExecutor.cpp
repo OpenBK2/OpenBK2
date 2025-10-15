@@ -4,6 +4,8 @@
 #include "AllowFakeObjToCrushExecutor.h"
 #include "FakeObjects.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 
 CAllowFakeObjToCrushExecutor::CAllowFakeObjToCrushExecutor()
@@ -40,5 +42,5 @@ int CAllowFakeObjToCrushExecutor::Segment()
 	return -1;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x3014AC01, CAllowFakeObjToCrushExecutor )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x3014AC01, CAllowFakeObjToCrushExecutor )
 

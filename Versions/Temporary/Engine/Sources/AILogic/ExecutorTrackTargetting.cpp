@@ -6,6 +6,8 @@
 #include "GroupLogic.h"
 #include "UnitsIterators2.h"
 
+#include "AILogic_export.h"
+
 extern CGroupLogic theGroupLogic;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
@@ -128,6 +130,6 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 	return false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19152B80, CExecutorTrackTargetting )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19152B80, CExecutorTrackTargetting )
 
 

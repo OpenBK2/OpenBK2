@@ -5,10 +5,12 @@
 #include "Technics.h"
 #include "Common_RTS_AI/StandartSmoothMechPath.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4C4, CPresizePath );
-REGISTER_SAVELOAD_CLASS( 0x11123400, CMechUnitRestOnBoardPath);
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C4, CPresizePath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123400, CMechUnitRestOnBoardPath);
 
 //*******************************************************************
 //*												CPresizePath															*

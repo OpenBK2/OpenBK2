@@ -21,6 +21,8 @@
 #include "System/Text.h"
 #include "InterfaceMisc.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 #include <zconf.h>
@@ -815,8 +817,8 @@ REGISTER_VAR_EX( "mp_allow_start_game", NGlobal::VarBoolHandler, &s_bMPAllowStar
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x3219DAC0, CInterfaceMPGameRoom );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_GAME_ROOM, CICMPGameRoom );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x3219DAC0, CInterfaceMPGameRoom );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_GAME_ROOM, CICMPGameRoom );
 
 #endif // _SINGLE_DEMO
 

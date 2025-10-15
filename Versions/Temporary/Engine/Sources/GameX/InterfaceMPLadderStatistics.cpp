@@ -10,6 +10,8 @@
 #include "System/Text.h"
 #include "DBScenario.h"
 
+#include "GameX_export.h"
+
 // CInterfaceMPLadderStatistics
 
 CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics() :
@@ -386,7 +388,7 @@ void CICMPLadderStatistics::Configure( const char *pszConfig )
 	szNick = pszConfig;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19263380, CInterfaceMPLadderStatistics );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_LADDER_STATISTICS, CICMPLadderStatistics );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19263380, CInterfaceMPLadderStatistics );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_LADDER_STATISTICS, CICMPLadderStatistics );
 
 

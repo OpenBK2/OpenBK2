@@ -201,7 +201,7 @@ void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream )
 	dst.copyToStreams.push_back( nDstStream );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300C8D40, CConsoleBuffer )
+REGISTER_SAVELOAD_CLASS( SYSTEM, 0x300C8D40, CConsoleBuffer )
 START_REGISTER(ConsoleBufferInternal)
 	REGISTER_VAR_EX( "game_writelog", NGlobal::VarBoolHandler, &bWriteLog, false, STORAGE_NONE )
 FINISH_REGISTER

@@ -2,7 +2,7 @@
 #include "./effectorconsolebuffercommand.h"
 
 
-REGISTER_SAVELOAD_CLASS( 0x110953C0, CEffectorConsoleBufferCommand )
+REGISTER_SAVELOAD_CLASS( UI, 0x110953C0, CEffectorConsoleBufferCommand )
 
 
 

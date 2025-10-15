@@ -2,6 +2,8 @@
 
 #include "FontFormat.h"
 
+#include "3Dmotor_export.h"
+
 int CFontFormatInfo::operator&( CStructureSaver &f )
 {
 	f.Add( 10, &nHeight );
@@ -15,5 +17,5 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	return 0;	
 }
 
-REGISTER_SAVELOAD_CLASS( 0x02321170, CFontFormatInfo );
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02321170, CFontFormatInfo );
 

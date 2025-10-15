@@ -6,6 +6,8 @@
 #include "ErrorsAndMessages.h"
 #include "Misc/StrProc.h"
 
+#include "Parser_export.h"
+
 void yyerror_no_line( char *s, ... );
 
 namespace NLang
@@ -392,15 +394,15 @@ CEnumEntryNode* CEnumNode::FindAnyWithCrossedEntries( CNamespace *pNM ) const
 }
 
 using namespace NLang;
-BASIC_REGISTER_CLASS( CTypeNode );
-BASIC_REGISTER_CLASS( CAttributeDefNode );
-BASIC_REGISTER_CLASS( CBaseTypeNode );
-BASIC_REGISTER_CLASS( CEnumEntryNode );
-BASIC_REGISTER_CLASS( CEnumNode );
-BASIC_REGISTER_CLASS( CNamespace );
-BASIC_REGISTER_CLASS( CAttributeNode );
-BASIC_REGISTER_CLASS( CTypeDefNode );
-BASIC_REGISTER_CLASS( CComplexTypeNode );
-BASIC_REGISTER_CLASS( CVariableNode );
-BASIC_REGISTER_CLASS( CVectorNode );
+BASIC_REGISTER_CLASS( PARSER, CTypeNode );
+BASIC_REGISTER_CLASS( PARSER, CAttributeDefNode );
+BASIC_REGISTER_CLASS( PARSER, CBaseTypeNode );
+BASIC_REGISTER_CLASS( PARSER, CEnumEntryNode );
+BASIC_REGISTER_CLASS( PARSER, CEnumNode );
+BASIC_REGISTER_CLASS( PARSER, CNamespace );
+BASIC_REGISTER_CLASS( PARSER, CAttributeNode );
+BASIC_REGISTER_CLASS( PARSER, CTypeDefNode );
+BASIC_REGISTER_CLASS( PARSER, CComplexTypeNode );
+BASIC_REGISTER_CLASS( PARSER, CVariableNode );
+BASIC_REGISTER_CLASS( PARSER, CVectorNode );
 

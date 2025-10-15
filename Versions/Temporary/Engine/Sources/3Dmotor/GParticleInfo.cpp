@@ -367,6 +367,6 @@ void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 }
 
 using namespace NGScene;
-BASIC_REGISTER_CLASS(CStandardParticleEffect)
-BASIC_REGISTER_CLASS(CParticleEffect)
+BASIC_REGISTER_CLASS(_3DMOTOR, CStandardParticleEffect)
+BASIC_REGISTER_CLASS(_3DMOTOR, CParticleEffect)
 

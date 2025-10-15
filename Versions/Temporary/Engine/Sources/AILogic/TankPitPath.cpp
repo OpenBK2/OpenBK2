@@ -4,7 +4,9 @@
 #include "Common_RTS_AI/BasePathUnit.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4C3, CTankPitPath );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C3, CTankPitPath );
 
 //*******************************************************************
 //*												CTankPitPath															*

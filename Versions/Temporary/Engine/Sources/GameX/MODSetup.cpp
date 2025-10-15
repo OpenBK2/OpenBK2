@@ -11,6 +11,8 @@
 #include "GetConsts.h"
 #include "DBGameRoot.h"
 
+#include "GameX_export.h"
+
 namespace NGameX
 {
 	void PostStorageInitialize();
@@ -81,5 +83,5 @@ public:
 }
 
 using namespace NMOD;
-REGISTER_SAVELOAD_CLASS( MOD_PRE_SHUTDOWN, CICMODPreShutdown );
-REGISTER_SAVELOAD_CLASS( MOD_POST_SETUP, CICMODPostSetup );
+REGISTER_SAVELOAD_CLASS( GAMEX, MOD_PRE_SHUTDOWN, CICMODPreShutdown );
+REGISTER_SAVELOAD_CLASS( GAMEX, MOD_POST_SETUP, CICMODPostSetup );

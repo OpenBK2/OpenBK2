@@ -2,6 +2,8 @@
 
 #include "ExecutorSmokeShots.h"
 
+#include "AILogic_export.h"
+
 CExecutorSmokeShots::CExecutorSmokeShots( CAIUnit *_pUnit	) :
 CExecutorUnitBonus ( NDb::ABILITY_SMOKE_SHOTS, _pUnit, TID_SMOKE_SHOTS )
 {
@@ -30,6 +32,6 @@ int CExecutorSmokeShots::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1913B380, CExecutorSmokeShots )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1913B380, CExecutorSmokeShots )
 
 

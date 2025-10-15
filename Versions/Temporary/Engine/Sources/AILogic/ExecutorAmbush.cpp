@@ -2,6 +2,8 @@
 
 #include "ExecutorAmbush.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 CExecutorAmbush::CExecutorAmbush( CAIUnit *_pUnit	) :
@@ -29,6 +31,6 @@ int CExecutorAmbush::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19124C00, CExecutorAmbush )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19124C00, CExecutorAmbush )
 
 

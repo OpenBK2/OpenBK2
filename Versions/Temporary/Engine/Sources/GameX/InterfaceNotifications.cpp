@@ -20,6 +20,8 @@
 #include "System/Commands.h"
 #include "Misc/StrProc.h"
 
+#include "GameX_export.h"
+
 static bool s_bAutosaveObjectiveComplete = false;
 
 const float FADE_DELTA_TIME = 1.0f;
@@ -1371,8 +1373,8 @@ void CVisualNotifications::PlaceMarker( const CVec2 &vPos )
 	timeMarkerExpire = GameTimer()->GetAbsTime() + MP_MARKER_EXPIRE;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x11135C01, CVisualNotifications )
-REGISTER_SAVELOAD_CLASS_NM( 0x171BD2C0, SEvent, CVisualNotifications )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x11135C01, CVisualNotifications )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x171BD2C0, SEvent, CVisualNotifications )
 
 START_REGISTER( InterfaceNotifications )
 REGISTER_VAR_EX( "autosave_objective_complete", NGlobal::VarBoolHandler, &s_bAutosaveObjectiveComplete, false, STORAGE_USER );

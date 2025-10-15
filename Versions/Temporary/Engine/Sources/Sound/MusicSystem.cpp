@@ -271,7 +271,7 @@ int CMusicSystem::operator&( IBinSaver &f )
 }
 }
 
-REGISTER_SAVELOAD_CLASS_NM( 0x11181340, CMusicSystem, NMusicSystem  );
+REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x11181340, CMusicSystem, NMusicSystem  );
 
 START_REGISTER(MusicSystem)
 REGISTER_VAR_EX( "Sound.MusicVolume", NGlobal::VarFloatHandler, &s_fMusicVolume, 0.99f, STORAGE_USER );

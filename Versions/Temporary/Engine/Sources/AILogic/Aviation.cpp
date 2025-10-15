@@ -19,10 +19,12 @@
 #include "UnitsIterators2.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D443, CAviation );
-REGISTER_SAVELOAD_CLASS( 0x1508D490, CPlanesFormation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D443, CAviation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D490, CPlanesFormation );
 
 extern CAAFeedBacks theAAFeedBacks;
 extern CDiplomacy theDipl;

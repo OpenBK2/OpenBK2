@@ -3,6 +3,8 @@
 #include "vendor/granny/include/granny.h"
 #include "WingScaleMutator.h"
 
+#include "SceneB2_export.h"
+
 bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName )
 {
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -48,6 +50,6 @@ void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
 	}
 }
 
-REGISTER_SAVELOAD_CLASS( 0x3119AB00, CWingScaleMutator );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3119AB00, CWingScaleMutator );
 
 

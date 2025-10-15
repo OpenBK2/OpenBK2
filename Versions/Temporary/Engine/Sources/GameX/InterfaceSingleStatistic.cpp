@@ -14,6 +14,8 @@
 #include "Sound/MusicSystem.h"
 #include "DBGameRoot.h"
 
+#include "GameX_export.h"
+
 const int PAUSE_BETWEEN_MEDALS = 200;
 const float UNFADE_TIME = 1.0f;
 
@@ -874,7 +876,7 @@ void CICSingleStatistic::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17194B40, CInterfaceSingleStatistic )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_SINGLE_STATISTIC, CICSingleStatistic )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17194B40, CInterfaceSingleStatistic )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SINGLE_STATISTIC, CICSingleStatistic )
 
 

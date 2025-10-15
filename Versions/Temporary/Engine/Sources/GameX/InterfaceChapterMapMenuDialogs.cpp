@@ -7,6 +7,8 @@
 #include "InterfaceState.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const int BASE_ID_3D = 30000;
 const int DELTA_ID_3D = 100;
 
@@ -799,10 +801,10 @@ void CInterfaceChapterMapMenu::SMissionDesc::Hide()
 		pPanel->ShowWindow( false );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17235340, SChapterReinfUpgrade )
-REGISTER_SAVELOAD_CLASS( 0x172354C0, SChapterReinfComposition )
-REGISTER_SAVELOAD_CLASS_NM( 0x17235BC0, SUnit, SChapterReinfBase )
-REGISTER_SAVELOAD_CLASS_NM( 0x17237BC0, SChapterDesc, CInterfaceChapterMapMenu )
-REGISTER_SAVELOAD_CLASS_NM( 0x17237BC1, SMissionDesc, CInterfaceChapterMapMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17235340, SChapterReinfUpgrade )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x172354C0, SChapterReinfComposition )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x17235BC0, SUnit, SChapterReinfBase )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x17237BC0, SChapterDesc, CInterfaceChapterMapMenu )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x17237BC1, SMissionDesc, CInterfaceChapterMapMenu )
 
 

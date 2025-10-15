@@ -4,6 +4,8 @@
 #include "DBSoundDesc.h"
 #include "System/VFSOperations.h"
 
+#include "Sound_export.h"
+
 bool CSoundSample::b3DSoundShare = false;
 
 // ************************************************************************************************************************ //
@@ -81,5 +83,5 @@ int CSoundSample::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x110B2C00, CSoundSample );
+REGISTER_SAVELOAD_CLASS( SOUND, 0x110B2C00, CSoundSample );
 

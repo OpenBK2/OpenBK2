@@ -62,6 +62,8 @@
 #include "DBAIConsts.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -92,13 +94,13 @@ static uint32_t g_dwTimeForDangerousTurnRound = 3000;
 
 const int MAX_TARGETS_CACHE_SIZE = 15;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4AC, CAIUnitInfoForGeneral );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AC, CAIUnitInfoForGeneral );
 
 //*******************************************************************
 //*											  CAIUnit																		*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CAIUnit );
+BASIC_REGISTER_CLASS( AILOGIC, CAIUnit );
 
 bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 {

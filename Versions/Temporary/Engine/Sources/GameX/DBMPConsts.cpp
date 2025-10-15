@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbmpconsts.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -312,5 +314,5 @@ uint32_t SMultiplayerConsts::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x191B2300, SMultiplayerConsts ) 
+REGISTER_DATABASE_CLASS( GAMEX, 0x191B2300, SMultiplayerConsts )
 

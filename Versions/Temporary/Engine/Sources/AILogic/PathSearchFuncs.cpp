@@ -4,9 +4,11 @@
 #include "Soldier.h"
 #include "PointChecking.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-BASIC_REGISTER_CLASS( IStaticPathFinder );
+BASIC_REGISTER_CLASS( AILOGIC, IStaticPathFinder );
 
 IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, bool bIgnoreObstacles )
 {

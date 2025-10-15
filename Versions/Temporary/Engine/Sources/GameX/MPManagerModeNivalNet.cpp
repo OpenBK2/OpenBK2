@@ -28,6 +28,8 @@
 #include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
 
+#include "GameX_export.h"
+
 const char* NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
 
@@ -36,7 +38,7 @@ const int NIVAL_NET_PORT = 4200;
 static std::wstring s_wszStoredLogin = L"";
 static std::wstring s_wszStoredPassword = L"";
 
-REGISTER_SAVELOAD_CLASS( 0x192444C0, CMPManagerModeNivalNet );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x192444C0, CMPManagerModeNivalNet );
 START_REGISTER(NivalNetGVars)
 // This GVar is here to force it to be saved in user.cfg
 // Do not remove, please

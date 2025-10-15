@@ -253,5 +253,5 @@ int CMOBridge::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x100A7480, CMOBridge );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7480, CMOBridge );
 

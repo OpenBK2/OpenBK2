@@ -3,8 +3,8 @@
 #include "3Dmotor/RectLayout.h"
 #include "UIVisitor.h"
 
-REGISTER_SAVELOAD_CLASS(0x170A6B80, CBitmap);
-REGISTER_SAVELOAD_CLASS(0x170A6B81, CBitmapWindow);
+REGISTER_SAVELOAD_CLASS(UI, 0x170A6B80, CBitmap);
+REGISTER_SAVELOAD_CLASS(UI, 0x170A6B81, CBitmapWindow);
 
 
 // CBitmap

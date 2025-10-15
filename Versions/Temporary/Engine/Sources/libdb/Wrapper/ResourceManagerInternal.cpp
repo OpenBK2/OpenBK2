@@ -226,5 +226,5 @@ bool CResourceManagerWrapper::InitializeVersionControl()
 	return true;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x10074AC0, CResourceManagerWrapper );
+REGISTER_SAVELOAD_CLASS( LIBDB, 0x10074AC0, CResourceManagerWrapper );
 

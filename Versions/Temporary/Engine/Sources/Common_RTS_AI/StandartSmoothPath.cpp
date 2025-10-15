@@ -6,8 +6,8 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 
 
-REGISTER_SAVELOAD_CLASS( STANDART_SMOOTH_SOLDIER_PATH, CStandartSmoothPath );
-REGISTER_SAVELOAD_CLASS( 0x311133C1, CStandartSmoothPathMemento );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, STANDART_SMOOTH_SOLDIER_PATH, CStandartSmoothPath );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x311133C1, CStandartSmoothPathMemento );
 
 bool CStandartSmoothPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit, CAIMap *_pAIMap )
 {

@@ -8,7 +8,7 @@
 #include "WindowMSButton.h"
 #include "InterfaceConsts.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B89, CWindowScrollBar)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B89, CWindowScrollBar)
 
 // Construction/Destruction
 

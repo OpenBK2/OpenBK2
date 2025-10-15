@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbsounddesc.h"
 
+#include "Sound_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -39,5 +41,5 @@ int SSoundDesc::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1107BAC0, SSoundDesc ) 
+REGISTER_DATABASE_CLASS( SOUND, 0x1107BAC0, SSoundDesc )
 

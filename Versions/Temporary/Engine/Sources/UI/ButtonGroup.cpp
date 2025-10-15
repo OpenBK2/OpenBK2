@@ -2,7 +2,7 @@
 #include "./buttongroup.h"
 #include "WindowMSButton.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11075AC0, CButtonGroup )
+REGISTER_SAVELOAD_CLASS( UI, 0x11075AC0, CButtonGroup )
 
 IWindow * CButtonGroup::ChooseDefault()
 {

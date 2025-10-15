@@ -7,8 +7,8 @@
 
 const int DIRECTION_OFFSET = 32;
 
-REGISTER_SAVELOAD_CLASS( 0x3008CB00, CCommonStaticPath );
-BASIC_REGISTER_CLASS( IStaticPath );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x3008CB00, CCommonStaticPath );
+BASIC_REGISTER_CLASS( COMMON_RTS_AI, IStaticPath );
 
 //*******************************************************************
 //*												CCommonStaticPath													*

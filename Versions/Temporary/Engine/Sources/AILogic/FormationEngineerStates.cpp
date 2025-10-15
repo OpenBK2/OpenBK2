@@ -28,13 +28,15 @@
 #include "FeedBackSystem.h"
 #include "EntrenchmentCreation.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D474, CFormationRepairUnitState );
-REGISTER_SAVELOAD_CLASS( 0x1108D475, CFormationLoadRuState );
-REGISTER_SAVELOAD_CLASS( 0x1108D476, CFormationResupplyUnitState );
-REGISTER_SAVELOAD_CLASS( 0x1108D477, CFormationPlaceAntitankState );
-REGISTER_SAVELOAD_CLASS( 0x33230B40, CFormationBuildEntrenchmentState )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D474, CFormationRepairUnitState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D475, CFormationLoadRuState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D476, CFormationResupplyUnitState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D477, CFormationPlaceAntitankState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x33230B40, CFormationBuildEntrenchmentState )
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CSupremeBeing theSupremeBeing;

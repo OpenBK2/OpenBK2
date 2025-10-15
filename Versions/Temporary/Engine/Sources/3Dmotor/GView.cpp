@@ -1901,10 +1901,10 @@ FINISH_REGISTER
 
 }
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS( 0x01741140, CGameView )
-REGISTER_SAVELOAD_CLASS( 0x34256C40, CParticleTexture)
-REGISTER_SAVELOAD_TEMPL_CLASS( 0x028b2122, CResourcePrecache<NAnimation::CGrannyAnimationLoader>, CResourcePrecache )
-BASIC_REGISTER_CLASS( IGameView )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01741140, CGameView )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x34256C40, CParticleTexture)
+REGISTER_SAVELOAD_TEMPL_CLASS( _3DMOTOR, 0x028b2122, CResourcePrecache<NAnimation::CGrannyAnimationLoader>, CResourcePrecache )
+BASIC_REGISTER_CLASS( _3DMOTOR, IGameView )
 using namespace NAnimation;
-REGISTER_SAVELOAD_TEMPL_CLASS( 0x50161480, CAnimatedChannel<CTransparencyToOpacityFunc>, CAnimatedChannel)
+REGISTER_SAVELOAD_TEMPL_CLASS( _3DMOTOR, 0x50161480, CAnimatedChannel<CTransparencyToOpacityFunc>, CAnimatedChannel)
 

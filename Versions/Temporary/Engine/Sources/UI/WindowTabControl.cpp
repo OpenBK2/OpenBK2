@@ -8,7 +8,7 @@
 // CWindowTabControl
 
 
-REGISTER_SAVELOAD_CLASS(0x11075B8B, CWindowTabControl);
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B8B, CWindowTabControl);
 
 int CWindowTabControl::operator&( IBinSaver &saver )
 {

@@ -2,6 +2,8 @@
 #include "InterfaceMissionMovieBorder.h"
 #include "GameXClassIDs.h"
 
+#include "GameX_export.h"
+
 // CInterfaceMissionMovieBorder
 
 CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder() : 
@@ -96,7 +98,7 @@ void CICMissionMovieBorder::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17149C80, CInterfaceMissionMovieBorder );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_BORDER, CICMissionMovieBorder );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17149C80, CInterfaceMissionMovieBorder );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BORDER, CICMissionMovieBorder );
 
 

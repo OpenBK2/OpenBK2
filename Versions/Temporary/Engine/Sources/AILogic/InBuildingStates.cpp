@@ -10,9 +10,11 @@
 #include "Diplomacy.h"
 #include "FeedBackSystem.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4B8, CSoldierAttackInBuildingState ); 
-REGISTER_SAVELOAD_CLASS( 0x1108D48C, CInBuildingStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x1108D48D, CSoldierRestInBuildingState );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B8, CSoldierAttackInBuildingState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D48C, CInBuildingStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D48D, CSoldierRestInBuildingState );
 
 extern CDiplomacy theDipl;
 extern CFeedBackSystem theFeedBackSystem;

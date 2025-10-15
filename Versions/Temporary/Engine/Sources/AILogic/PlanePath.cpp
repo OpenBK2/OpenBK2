@@ -4,10 +4,11 @@
 #include "Aviation.h"
 #include "PlanesFormation.h"
 
+#include "AILogic_export.h"
+
 #include <float.h>
 
-
-REGISTER_SAVELOAD_CLASS( 0x1508D48F, CPlaneInFormationSmoothPath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D48F, CPlaneInFormationSmoothPath );
 extern NTimer::STime curTime;
 
 //*******************************************************************

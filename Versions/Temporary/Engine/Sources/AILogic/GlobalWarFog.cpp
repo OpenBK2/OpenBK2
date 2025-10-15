@@ -19,6 +19,8 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/Commands.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 static const int MAX_UPDATE_AT_SEGMENT = 100;
@@ -670,6 +672,6 @@ REGISTER_CMD( "warfog_dump", DumpWarFog );
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x31261B40, CGlobalWarFog );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x31261B40, CGlobalWarFog );
 
 

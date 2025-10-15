@@ -2,5 +2,7 @@
 
 #include "B2MapObj.h"
 
-BASIC_REGISTER_CLASS( IB2MapObj );
+#include "B2_M1_World_export.h"
+
+BASIC_REGISTER_CLASS( B2_M1_WORLD, IB2MapObj );
 

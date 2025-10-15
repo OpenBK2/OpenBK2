@@ -560,14 +560,14 @@ ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, con
 	return 0;
 }
 
-BASIC_REGISTER_CLASS( ICollisionsCollector );
-REGISTER_SAVELOAD_CLASS( 0x31223C00, CBasePathUnitHolder );
-REGISTER_SAVELOAD_CLASS( 0x31223C02, CCollisionsCollector );
+BASIC_REGISTER_CLASS( COMMON_RTS_AI, ICollisionsCollector );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31223C00, CBasePathUnitHolder );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31223C02, CCollisionsCollector );
 
 // save/load for collisions
 using namespace NCollision;
-REGISTER_SAVELOAD_CLASS( ECN_FREE, CFreeCollision );
-REGISTER_SAVELOAD_CLASS( ECN_WAIT, CWaitingCollision );
-REGISTER_SAVELOAD_CLASS( ECN_GIVE_PLACE, CGivingPlaceCollision );
-REGISTER_SAVELOAD_CLASS( ECN_STOP, CStopCollision );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, ECN_FREE, CFreeCollision );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, ECN_WAIT, CWaitingCollision );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, ECN_GIVE_PLACE, CGivingPlaceCollision );
+REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, ECN_STOP, CStopCollision );
 

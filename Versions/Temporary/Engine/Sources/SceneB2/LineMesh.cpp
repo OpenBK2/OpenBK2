@@ -62,6 +62,6 @@ void CLineMesh::FillVertexData( NGScene::SVertex &vertex )
 	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x101554C1, CLineMesh )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101554C1, CLineMesh )
 
 

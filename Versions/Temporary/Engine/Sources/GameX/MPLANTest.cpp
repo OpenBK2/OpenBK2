@@ -14,6 +14,7 @@
 #include "DBMPConsts.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
 
 #ifndef _FINALRELEASE
 #define LAN_TEST_ENABLED
@@ -41,7 +42,7 @@
 //			The feature is disabled in final release.
 //
 
-REGISTER_SAVELOAD_CLASS( 0x19243C00, CLANTester )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x19243C00, CLANTester )
 
 CLANTester::CLANTester() : bIsServer( NGlobal::GetVar( "LANTEST.Server", 0 ) == 1 ), bAcceptSent( false ),
 	nMySlot( -1 ), bStarted( false ), nPlayersToWait( NGlobal::GetVar( "LANTEST.Players", 2 ) - 1 )

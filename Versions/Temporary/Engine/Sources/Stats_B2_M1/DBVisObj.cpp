@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBVisObj.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -84,5 +86,5 @@ int SVisObj::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x11073C40, SVisObj ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11073C40, SVisObj )
 

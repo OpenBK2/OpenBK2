@@ -3,6 +3,8 @@
 #include "GameTimerInternal.h"
 #include "Misc/StrProc.h"
 
+#include "Main_export.h"
+
 namespace NGameTimer
 {
 
@@ -245,6 +247,6 @@ REGISTER_CMD( "pause_game", NGameTimer::PauseGame );
 FINISH_REGISTER
 
 using namespace NGameTimer;
-REGISTER_SAVELOAD_CLASS( 0x10075C05, CGameTimer );
-REGISTER_SAVELOAD_CLASS( 0x751B4B00, CCSTime2 );
+REGISTER_SAVELOAD_CLASS( MAIN, 0x10075C05, CGameTimer );
+REGISTER_SAVELOAD_CLASS( MAIN, 0x751B4B00, CCSTime2 );
 

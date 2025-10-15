@@ -12,6 +12,8 @@
 #include "UISpecificB2/EffectorB2Move.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const int WAIT_TIME = 300; // msec
 const int STEP_WAIT_TIME = 50; // msec
 const float EXP_PROGRESS_STEP_FRACTION = 0.05f;
@@ -1162,10 +1164,10 @@ void CICArmyScreen::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x171BB441, CInterfaceArmyScreen )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_ARMY_SCREEN, CICArmyScreen )
-REGISTER_SAVELOAD_CLASS_NM( 0x171C4C40, CReinfData, CInterfaceArmyScreen )
-REGISTER_SAVELOAD_CLASS_NM( 0x171C4C41, CReinfViewer, CInterfaceArmyScreen )
-REGISTER_SAVELOAD_CLASS_NM( 0x171C5440, CLeaderInfo, CInterfaceArmyScreen )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x171BB441, CInterfaceArmyScreen )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ARMY_SCREEN, CICArmyScreen )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x171C4C40, CReinfData, CInterfaceArmyScreen )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x171C4C41, CReinfViewer, CInterfaceArmyScreen )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x171C5440, CLeaderInfo, CInterfaceArmyScreen )
 
 

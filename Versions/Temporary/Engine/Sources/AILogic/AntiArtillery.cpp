@@ -9,8 +9,10 @@
 #include "Cheats.h"
 #include "FeedbackSystem.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4A1, CAntiArtillery );
-REGISTER_SAVELOAD_CLASS( 0x191442C0, CRevealCircle );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4A1, CAntiArtillery );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191442C0, CRevealCircle );
 
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;

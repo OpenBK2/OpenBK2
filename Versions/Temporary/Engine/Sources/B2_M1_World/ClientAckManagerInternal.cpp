@@ -11,7 +11,7 @@
 #include "System/Commands.h"
 
 
-REGISTER_SAVELOAD_CLASS( 0x110AE400, CClientAckManager);
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x110AE400, CClientAckManager);
 
 CDBPtr<NDb::SClientGameConsts> CClientAckManager::pConsts;
 IClientAckManager* AckManager() { return Singleton<IClientAckManager>(); }

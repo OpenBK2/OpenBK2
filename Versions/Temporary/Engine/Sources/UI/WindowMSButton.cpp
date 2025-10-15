@@ -8,7 +8,7 @@
 #include "ForegroundTextString.h"
 #include "System/Text.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B87,CWindowMSButton)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B87, CWindowMSButton)
 
 
 // CWindowMSButton

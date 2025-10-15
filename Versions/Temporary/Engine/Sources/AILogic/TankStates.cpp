@@ -16,7 +16,9 @@
 #include "StaticObjectsIters.h"
 #include "FeedBackSystem.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D493, CTankStatesFactory );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D493, CTankStatesFactory );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CGroupLogic theGroupLogic;
@@ -728,6 +730,7 @@ CAIUnit* CMechUnitSupportFireState::GetTargetUnit() const
 		return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1915D340, CMechUnitSupportFireState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1915D340, CMechUnitSupportFireState );
+
 
 

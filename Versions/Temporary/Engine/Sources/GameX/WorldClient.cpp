@@ -32,6 +32,8 @@
 #include "SuperWeapon.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 const int CURSOR_FADE_HALF_SIZE_X = 150;
@@ -3116,7 +3118,7 @@ void CWorldClient::OnReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelect
 	pSelector->ReplaceSelectionGroup( pMOPattern, pMO );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x10078340, CWorldClient );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x10078340, CWorldClient );
 
 
 

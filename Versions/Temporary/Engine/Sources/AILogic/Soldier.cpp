@@ -35,10 +35,12 @@
 #include "Shell.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4DC, CSniper);
-REGISTER_SAVELOAD_CLASS( 0x1108D442, CInfantry );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DC, CSniper);
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D442, CInfantry );
 
 extern CExecutorContainer theExecutorContainer;
 extern CSupremeBeing theSupremeBeing;
@@ -62,7 +64,7 @@ extern CShellsStore theShellsStore;
 //*													CInfantry																*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CSoldier );
+BASIC_REGISTER_CLASS( AILOGIC, CSoldier );
 
 
 CSoldier::~CSoldier()

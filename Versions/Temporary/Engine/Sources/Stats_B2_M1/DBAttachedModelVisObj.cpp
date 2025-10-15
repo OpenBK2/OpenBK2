@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbattachedmodelvisobj.h"
 
+#include "Stats_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -84,5 +86,5 @@ int SAttachedModelVisObj::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x3013FC00, SAttachedModelVisObj ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x3013FC00, SAttachedModelVisObj )
 

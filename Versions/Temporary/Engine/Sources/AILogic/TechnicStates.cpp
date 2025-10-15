@@ -20,6 +20,8 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CDiplomacy theDipl;
@@ -651,7 +653,7 @@ void CMechUnitInsideMechUnitState::OnSerialize( IBinSaver &saver )
 	SerializeOwner( 2, &pUnit, &saver );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x11123380, CMechUnitInsideMechUnitState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4E5, CMechUnitEntrenchSelfState );
-REGISTER_SAVELOAD_CLASS( 0x1108D4C2, CTankPitLeaveState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123380, CMechUnitInsideMechUnitState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E5, CMechUnitEntrenchSelfState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C2, CTankPitLeaveState );
 

@@ -6,6 +6,8 @@
 #include "UnitCreation.h"
 #include "StaticObjects.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CUnitCreation theUnitCreation;
@@ -245,5 +247,5 @@ float CComplexObstacleCreation::GetWorkDone() const
 	else
 		return pFenceCreation->GetWorkDone();
 }
-REGISTER_SAVELOAD_CLASS( 0x11147C00, CComplexObstacleCreation );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11147C00, CComplexObstacleCreation );
 

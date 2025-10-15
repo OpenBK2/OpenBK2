@@ -1015,5 +1015,5 @@ bool CMOBuilding::IsHitbarVisible() const
 	return GetPassangersCount() != 0 || IsSelected() || IsMousePicked() || IsKeyObject();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x100A7481, CMOBuilding );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7481, CMOBuilding );
 

@@ -80,6 +80,6 @@ REGISTER_VAR_EX( "laser_mark_halt_thikness", NGlobal::VarFloatHandler, &LASER_MA
 REGISTER_VAR_EX( "laser_mark_pulsar_time", NGlobal::VarFloatHandler, &LASER_MARK_PULSAR_TIME, 0.2f, STORAGE_NONE )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x311B8340, CLaserMarkTrace )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x311B8340, CLaserMarkTrace )
 
 

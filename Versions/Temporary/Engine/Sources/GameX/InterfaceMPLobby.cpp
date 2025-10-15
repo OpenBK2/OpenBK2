@@ -14,6 +14,8 @@
 #include "InterfaceState.h"
 #include "InterfaceMisc.h"
 
+#include "GameX_export.h"
+
 CInterfaceMPLobby::CInterfaceMPLobby() : 
 CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
@@ -491,7 +493,7 @@ void CICMPLobby::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x321AB300, CInterfaceMPLobby );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_GAME_LOBBY, CICMPLobby );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x321AB300, CInterfaceMPLobby );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_GAME_LOBBY, CICMPLobby );
 
 #endif // _SINGLE_DEMO

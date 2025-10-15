@@ -10,6 +10,8 @@
 #include "Guns.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 extern CGroupLogic theGroupLogic;
@@ -277,7 +279,7 @@ void CExecutorCounterFire::RegisterOnEvents( IExecutorContainer *pContainer )
 	pContainer->RegisterOnEvent( this, par );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1912D300, CExecutorCounterFire )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1912D300, CExecutorCounterFire )
 
 
 

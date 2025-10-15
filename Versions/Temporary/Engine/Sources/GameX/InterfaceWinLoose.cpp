@@ -10,6 +10,8 @@
 #include "System/Commands.h"
 #include "Sound/MusicSystem.h"
 
+#include "GameX_export.h"
+
 static float END_GAME_FADE_TIME = 2.5f;
 static float END_GAME_ROTATE_TIME = 10.0f;
 static float END_GAME_CAMERA_YAW_SPEED = 1.0f;
@@ -262,7 +264,7 @@ REGISTER_VAR_EX( "win_loose_fade_time", NGlobal::VarFloatHandler, &END_GAME_FADE
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x11119CC0, CInterfaceWinLoose )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_WIN_LOOSE, CICWinLooseDialog )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x11119CC0, CInterfaceWinLoose )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_WIN_LOOSE, CICWinLooseDialog )
 
 

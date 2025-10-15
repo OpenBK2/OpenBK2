@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "windowscrollablecontainer.h"
 
-REGISTER_SAVELOAD_CLASS(0x170AF301, CWindowScrollableContainer)
+REGISTER_SAVELOAD_CLASS(UI, 0x170AF301, CWindowScrollableContainer)
 
 int CWindowScrollableContainer::operator&( IBinSaver &saver )
 {

@@ -7,6 +7,8 @@
 #include "Misc/StrProc.h"
 #include "System/Text.h"
 
+#include "GameX_export.h"
+
 const float TEXTURE_POINT_X = 4.0f; 
 const float TEXTURE_POINT_Y = 7.0f;
 
@@ -162,7 +164,7 @@ void CICMissionBriefing::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17264481, CInterfaceMissionBriefing )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_BRIEFING, CICMissionBriefing )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17264481, CInterfaceMissionBriefing )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BRIEFING, CICMissionBriefing )
 
 

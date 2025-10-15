@@ -5,7 +5,9 @@
 #include "DebugTools/DebugInfoManager.h"
 #include "Misc/StrProc.h"
 
-REGISTER_SAVELOAD_CLASS(0x11095C81, CPahtFractionArcLineArc3D)
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C81, CPahtFractionArcLineArc3D)
 
 
 //	CPahtFractionArcLineArc

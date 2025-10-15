@@ -6,9 +6,11 @@
 #include "UnitStates.h"
 #include "System/FastMath.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-BASIC_REGISTER_CLASS(CLongObjectCreation);
+BASIC_REGISTER_CLASS(AILOGIC, CLongObjectCreation);
 
 uint16_t CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 {

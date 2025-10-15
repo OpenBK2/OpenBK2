@@ -2,9 +2,9 @@
 #include "windowlistctrl.h"
 #include "InterfaceConsts.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11075B86, CWindowListCtrl)
-REGISTER_SAVELOAD_CLASS( 0x11075B85, CWindowListItem )
-REGISTER_SAVELOAD_CLASS( 0x11075B84, CWindowListHeader )
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B86, CWindowListCtrl)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B85, CWindowListItem )
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B84, CWindowListHeader )
 
 
 //	CWindowListHeader

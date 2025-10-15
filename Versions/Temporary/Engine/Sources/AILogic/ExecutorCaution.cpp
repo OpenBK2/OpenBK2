@@ -2,6 +2,8 @@
 
 #include "ExecutorCaution.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 CExecutorCaution::CExecutorCaution( CAIUnit *_pUnit	) :
@@ -62,6 +64,6 @@ void CExecutorCaution::SwitchingOffEnd()
 	CExecutorUnitCombatBonus::SwitchingOffEnd();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19129440, CExecutorCaution )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19129440, CExecutorCaution )
 
 

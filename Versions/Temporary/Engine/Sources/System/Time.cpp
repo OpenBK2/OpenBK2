@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Time.h"
 
+#include "System_export.h"
+
 // CTimeCounter
 
 CTimeCounter::CTimeCounter() 
@@ -38,6 +40,6 @@ void CTimeCounter::Advance( float fMult, STime currentTime )
 		pTime->Set( pTime->GetValue() + nDeltaT );
 	prevTime = currentTime;
 }
-REGISTER_SAVELOAD_CLASS( 0x0251100c, CCTime )
+REGISTER_SAVELOAD_CLASS( SYSTEM, 0x0251100c, CCTime )
 
 

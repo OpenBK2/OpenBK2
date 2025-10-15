@@ -2,6 +2,8 @@
 
 #include "ExecutorLinkedGrenades.h"
 
+#include "AILogic_export.h"
+
 CExecutorLinkedGrenades::CExecutorLinkedGrenades( CAIUnit *_pUnit	) :
 CExecutorUnitBonus ( NDb::ABILITY_LINKED_GRENADES, _pUnit, TID_LINKED_GRENADES )
 {
@@ -31,6 +33,6 @@ int CExecutorLinkedGrenades::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19140C00, CExecutorLinkedGrenades )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19140C00, CExecutorLinkedGrenades )
 
 

@@ -25,6 +25,6 @@ IStatSystem *CreateStatSystem()
 	return new CStatsSystem;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x110AA3C0, CStatsSystem );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x110AA3C0, CStatsSystem );
 
 

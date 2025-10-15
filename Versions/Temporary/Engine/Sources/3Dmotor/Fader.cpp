@@ -185,6 +185,6 @@ IFader *CreateSimpleFader( const SFaderInfo &faderInfo )
 } // namespace NGScene
 
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS(0x13168C40, CSimpleFader)
-BASIC_REGISTER_CLASS( IFader )
+REGISTER_SAVELOAD_CLASS(_3DMOTOR, 0x13168C40, CSimpleFader)
+BASIC_REGISTER_CLASS( _3DMOTOR, IFader )
 

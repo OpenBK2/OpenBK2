@@ -265,6 +265,6 @@ void CScene::RemoveIcon( const int nID )
 		data[eScene]->pVisObjIconsManager->RemoveIcon( nID );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1311E302, CVisObjIconInfo );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1311E302, CVisObjIconInfo );
 
 

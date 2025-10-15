@@ -16,6 +16,8 @@
 #include "GetConsts.h"
 #include "ScenarioTracker.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 class CVisualNotificationsEmpty : public IVisualNotifications
@@ -138,5 +140,5 @@ int CInterfaceMissionBase::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x11135C00, CVisualNotificationsEmpty );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x11135C00, CVisualNotificationsEmpty );
 

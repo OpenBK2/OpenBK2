@@ -4,7 +4,7 @@
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"
 
-REGISTER_SAVELOAD_CLASS( 0x110793C1, CSound );
+REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C1, CSound );
 
 //*******************************************************************
 //*															CSound*

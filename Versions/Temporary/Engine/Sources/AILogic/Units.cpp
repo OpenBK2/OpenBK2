@@ -7,9 +7,11 @@
 #include "UnitsIterators.h"
 #include "UnitsIterators2.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D440, CUnits );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D440, CUnits );
 
 extern CSupremeBeing theSupremeBeing;
 CUnits units;

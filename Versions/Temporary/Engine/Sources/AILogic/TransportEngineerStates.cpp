@@ -24,11 +24,12 @@
 #include "FeedBackSystem.h"
 #include "DebugTools/DebugInfoManager.h"
 
+#include "AILogic_export.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D470, CTransportRepairState );
-REGISTER_SAVELOAD_CLASS( 0x1108D471, CTransportResupplyState );
-REGISTER_SAVELOAD_CLASS( 0x1108D472, CTransportHookArtilleryState );
-REGISTER_SAVELOAD_CLASS( 0x1108D473, CTransportUnhookArtilleryState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D470, CTransportRepairState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D471, CTransportResupplyState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D472, CTransportHookArtilleryState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D473, CTransportUnhookArtilleryState );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CDiplomacy theDipl;

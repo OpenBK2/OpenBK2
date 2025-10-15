@@ -12,6 +12,8 @@
 #include "System/Text.h"
 #include "SceneB2/Cursor.h"
 
+#include "GameX_export.h"
+
 static bool s_bCampaignAutostartMission = false;
 
 const int MAX_CAMPAIGN_COUNT = 3;
@@ -542,7 +544,7 @@ REGISTER_CMD( "demo_campaign_selection_menu", DemoCampaignSelectionMenu );
 
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x170C0B41, CInterfaceCampaignSelectionMenu )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_CAMPAIGN_SELECTION_MENU, CICCampaignSelectionMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170C0B41, CInterfaceCampaignSelectionMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CAMPAIGN_SELECTION_MENU, CICCampaignSelectionMenu )
 
 #endif // _MP_DEMO

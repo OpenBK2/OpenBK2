@@ -6,6 +6,8 @@
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CShellsStore theShellsStore;
@@ -186,8 +188,8 @@ int CTorpedoPath::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x191644C0, CUnitTorpedo );
-REGISTER_SAVELOAD_CLASS( 0x191644C1, CTorpedoStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x19164B00, CTorpedoAttackState );
-REGISTER_SAVELOAD_CLASS( 0x1917A2C0, CTorpedoPath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191644C0, CUnitTorpedo );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191644C1, CTorpedoStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19164B00, CTorpedoAttackState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1917A2C0, CTorpedoPath );
 

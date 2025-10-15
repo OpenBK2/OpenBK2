@@ -86,5 +86,5 @@ void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const std::
 	Multiply( pmRelativePos, mBoneLocalPos, mMulti );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x101BCCC0, CSmokeTrailEffect )
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x101BCCC0, CSmokeTrailEffect )
 

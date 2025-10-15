@@ -17,6 +17,8 @@
 #include "3Dmotor/GAutoDetect.h"
 #include "3Dmotor/GfxBenchmark.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 const int ITEM_DELTA_X = 3;
@@ -815,7 +817,7 @@ REGISTER_CMD( "set_quality", CommandQuality )
 REGISTER_VAR_EX( "gfx_quality", NGlobal::VarFloatHandler, &s_fQuality, -1.0f, STORAGE_USER )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x170BDBC0, CInterfaceOptionsMenu )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_OPTIONS_MENU, CICOptionsMenu )
-REGISTER_SAVELOAD_CLASS_NM( 0x170BDBC1, CReactions, CInterfaceOptionsMenu );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x170BDBC0, CInterfaceOptionsMenu )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_OPTIONS_MENU, CICOptionsMenu )
+REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170BDBC1, CReactions, CInterfaceOptionsMenu );
 

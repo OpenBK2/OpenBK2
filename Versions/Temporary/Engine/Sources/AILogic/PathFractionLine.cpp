@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "./pathfractionline.h"
 
-REGISTER_SAVELOAD_CLASS(0x11095C00, CPathFractionLine )
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C00, CPathFractionLine )
 
 
 

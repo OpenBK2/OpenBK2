@@ -241,6 +241,6 @@ void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
   }
 }
 
-REGISTER_SAVELOAD_CLASS( 0x130AB3C0, CTracksManager );
-REGISTER_SAVELOAD_CLASS( 0x110B8C00, CTrackObjInfo );
+REGISTER_SAVELOAD_CLASS( B2_M1_TERRAIN, 0x130AB3C0, CTracksManager );
+REGISTER_SAVELOAD_CLASS( B2_M1_TERRAIN, 0x110B8C00, CTrackObjInfo );
 

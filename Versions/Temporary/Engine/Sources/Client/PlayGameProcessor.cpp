@@ -9,6 +9,8 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
 
+#include "Client_export.h"
+
 #include <cstdint>
 
 static const uint32_t dwWaitingPacketTimeout = 300000;
@@ -418,6 +420,6 @@ void CPlayGameProcessor::TogglePauseConnectGamer( const int nGamer, bool bPause 
 		iter->second->TogglePauseNet( bPause );
 }
 
-BASIC_REGISTER_CLASS( CPlayGameProcessor )
+BASIC_REGISTER_CLASS( CLIENT, CPlayGameProcessor )
 
 

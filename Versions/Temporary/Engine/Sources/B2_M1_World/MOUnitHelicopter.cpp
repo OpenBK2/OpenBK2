@@ -16,7 +16,7 @@ static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
 
-REGISTER_SAVELOAD_CLASS( 0x31197AC0, CMOUnitHelicopter );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x31197AC0, CMOUnitHelicopter );
 
 static const int GetAttachedGunID( const int nPlatform, const int nGun )
 {

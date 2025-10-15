@@ -52,8 +52,8 @@ int ConvertToNAngle( const uint16_t _wAngle )
 
 int CExistingObjectModifyAI::bProhibited = 0;
 
-REGISTER_SAVELOAD_CLASS( 0x1108D44F, CSimpleStaticObject );
-REGISTER_SAVELOAD_CLASS( 0x110B8BC0, CTerraMeshStaticObject );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D44F, CSimpleStaticObject );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x110B8BC0, CTerraMeshStaticObject );
 
 extern CGlobalWarFog theWarFog;
 extern CEventUpdater updater;
@@ -66,7 +66,7 @@ extern NTimer::STime curTime;
 //*												  CStaticObject														*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CStaticObject );
+BASIC_REGISTER_CLASS( AILOGIC, CStaticObject );
 
 const uint8_t CStaticObject::GetPlayer() const
 { 
@@ -110,7 +110,7 @@ bool CStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 //*												  CExistingObject													*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CExistingObject );
+BASIC_REGISTER_CLASS( AILOGIC, CExistingObject );
 
 unsigned long CExistingObject::globalMark = 0;
 
@@ -615,7 +615,7 @@ const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) co
 //*												 CCommonStaticObject											*
 //*******************************************************************
 
-BASIC_REGISTER_CLASS( CCommonStaticObject );
+BASIC_REGISTER_CLASS( AILOGIC, CCommonStaticObject );
 
 void CCommonStaticObject::Die( const float fDamage )
 {

@@ -9,6 +9,8 @@
 #include "TypeDef.h"
 #include "Parser/LangNodesDefinitions.h"
 
+#include "libdb_export.h"
+
 #include <cstdint>
 
 namespace NCodeGen
@@ -635,5 +637,5 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTa
 }
 
 using namespace NCodeGen;
-REGISTER_SAVELOAD_CLASS( 0x301B6D02, CTypeDefinition );
+REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D02, CTypeDefinition );
 

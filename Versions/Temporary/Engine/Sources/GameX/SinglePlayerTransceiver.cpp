@@ -9,6 +9,8 @@
 
 #include "SceneB2/Scene.h"
 
+#include "GameX_export.h"
+
 // CSinglePlayerTransceiver
 
 CSinglePlayerTransceiver::CSinglePlayerTransceiver()
@@ -155,6 +157,6 @@ ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic
 	return new CSinglePlayerTransceiver( pHistory, pAI );
 }
 
-BASIC_REGISTER_CLASS( IAILogicCommandB2 )
-REGISTER_SAVELOAD_CLASS( 0x1007AB40, CSinglePlayerTransceiver )
+BASIC_REGISTER_CLASS( GAMEX, IAILogicCommandB2 )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1007AB40, CSinglePlayerTransceiver )
 

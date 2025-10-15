@@ -3,7 +3,9 @@
 #include "IPlane.h"
 #include "DebugTools/DebugInfoManager.h"
 
-REGISTER_SAVELOAD_CLASS( 0x11097AC0, CPathFractionComposite )
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11097AC0, CPathFractionComposite )
 
 
 void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) const

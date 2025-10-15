@@ -5,7 +5,7 @@
 
 //CEffectorSendUIMessage
 
-REGISTER_SAVELOAD_CLASS(0x11075C06, CEffectorSendUIMessage );
+REGISTER_SAVELOAD_CLASS(UI, 0x11075C06, CEffectorSendUIMessage );
 
 int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 {

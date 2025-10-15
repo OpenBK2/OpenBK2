@@ -7,6 +7,8 @@
 #include "UnitStates.h"
 #include "B2AI.h"
 
+#include "AILogic_export.h"
+
 extern CGroupLogic theGroupLogic;
 
 static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
@@ -126,5 +128,5 @@ int CExecutorTransportReinforcement::Segment()
 		return GetNextTime();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19174C40, CExecutorTransportReinforcement )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19174C40, CExecutorTransportReinforcement )
 

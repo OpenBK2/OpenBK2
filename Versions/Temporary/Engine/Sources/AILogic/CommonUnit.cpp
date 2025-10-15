@@ -23,6 +23,8 @@
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "System/Commands.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CDiplomacy theDipl;
@@ -35,7 +37,7 @@ extern bool g_bNewLock;
 
 static int g_nDefaultCommandsLimit = -1;
 
-BASIC_REGISTER_CLASS( CCommonUnit );
+BASIC_REGISTER_CLASS( AILOGIC, CCommonUnit );
 
 const float CCommonUnit::GetMaxDamage( CCommonUnit *pTarget ) const
 {

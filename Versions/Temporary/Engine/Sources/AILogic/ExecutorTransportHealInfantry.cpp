@@ -3,7 +3,9 @@
 #include "UnitsIterators2.h"
 #include "AIUnit.h"
 
-REGISTER_SAVELOAD_CLASS(0x1105F484,CExecutorTransportHealInfantry)
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x1105F484, CExecutorTransportHealInfantry)
 
 int CExecutorTransportHealInfantry::Segment()
 {

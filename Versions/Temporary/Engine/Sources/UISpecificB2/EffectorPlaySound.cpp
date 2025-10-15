@@ -4,7 +4,9 @@
 #include "Sound/SoundScene.h"
 #include "DBUISpecificB2.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075C02,CEffectorPlaySound)
+#include "UISpecificB2_export.h"
+
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x11075C02, CEffectorPlaySound)
 
 int CEffectorPlaySound::operator&( IBinSaver &saver )
 {

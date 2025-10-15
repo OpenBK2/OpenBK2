@@ -3,7 +3,7 @@
 #include "UIVisitor.h"
 #include "UIComponents.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B42,CBackgroundTiledTexture)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B42, CBackgroundTiledTexture)
 
 
 // CBackgroundTiledTexture

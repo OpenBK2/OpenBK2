@@ -7,6 +7,8 @@
 #include "Misc/StrProc.h"
 #include "MultiplayerNetPackets.h"
 
+#include "GameX_export.h"
+
 // CEmptyServerClient
 
 CNetPacket* CEmptyServerClient::GetPacket()
@@ -282,7 +284,7 @@ bool CMPUITestServerClient::OnB2GameRoomPlayerPacket( class CB2GameRoomPlayerPac
 	return true;
 }*/
 
-REGISTER_SAVELOAD_CLASS( 0x17130C40, CEmptyServerClient );
-//REGISTER_SAVELOAD_CLASS( 0x17130B00, CMPUITestServerClient );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17130C40, CEmptyServerClient );
+//REGISTER_SAVELOAD_CLASS( GAMEX, 0x17130B00, CMPUITestServerClient );
 
 

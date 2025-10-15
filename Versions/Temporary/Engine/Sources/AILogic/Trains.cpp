@@ -12,6 +12,8 @@
 #include "Graveyard.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CEventUpdater updater;
@@ -931,12 +933,12 @@ ETryStateInterruptResult CLocomotiveAttackObjState::TryInterruptState( class CAI
 	return TSIR_YES_IMMIDIATELY;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x19171400, CTrainLocomotive );
-REGISTER_SAVELOAD_CLASS( 0x19171401, CLocomotiveStatesFactory );
-REGISTER_SAVELOAD_CLASS( 0x19172B80, CLocomotivePath );
-REGISTER_SAVELOAD_CLASS( 0x19172C80, CLocomotiveMoveState );
-REGISTER_SAVELOAD_CLASS( 0x19173C40, CLocomotiveAttackUnitState );
-REGISTER_SAVELOAD_CLASS( 0x19174380, CLocomotiveAttackObjState );
-REGISTER_SAVELOAD_CLASS( 0x191BF340, CTrainRestState );
-REGISTER_SAVELOAD_CLASS( 0x1926A3C0, SLocomotivePathMemento );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19171400, CTrainLocomotive );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19171401, CLocomotiveStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19172B80, CLocomotivePath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19172C80, CLocomotiveMoveState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19173C40, CLocomotiveAttackUnitState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19174380, CLocomotiveAttackObjState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x191BF340, CTrainRestState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1926A3C0, SLocomotivePathMemento );
 

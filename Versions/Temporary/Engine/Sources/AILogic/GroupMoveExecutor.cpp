@@ -10,11 +10,13 @@
 #include "Common_RTS_AI/StaticPathInternal.h"
 #include "System/Commands.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
 
-REGISTER_SAVELOAD_CLASS( 0x31130B40, CGroupMoveExecutor );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x31130B40, CGroupMoveExecutor );
 
 // коэфициент для получения расстояния между юнитами в группе
 static float AABB_HALF_SIZE_X_MULTIPLIER = 7.0f;

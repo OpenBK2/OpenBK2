@@ -3,6 +3,8 @@
 #include "CmdLine.h"
 #include "Misc/StrProc.h"
 
+#include "System_export.h"
+
 namespace NCmdLine
 {
 
@@ -230,7 +232,7 @@ CCmdLine::EProcessResult CCmdLine::Process( const std::vector<std::string> &args
 
 }
 
-BASIC_REGISTER_CLASS( NCmdLine::CCmdLine::IObserver );
+BASIC_REGISTER_CLASS( SYSTEM, NCmdLine::CCmdLine::IObserver );
 /*
 using namespace NCmdLine;
 namespace NTest

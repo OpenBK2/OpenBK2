@@ -7,6 +7,8 @@
 #include "System/Commands.h"
 #include "Misc/2Darray.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 bool g_bThickLock;
@@ -283,5 +285,5 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 	return false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x30156B00, CObjectProfile )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x30156B00, CObjectProfile )
 

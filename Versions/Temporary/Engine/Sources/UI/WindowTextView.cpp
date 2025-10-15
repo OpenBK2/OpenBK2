@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS(0x11075B8C, CWindowTextView)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B8C, CWindowTextView)
 extern CVec2 vScreenRect;
 bool g_bNoInitText = false;
 

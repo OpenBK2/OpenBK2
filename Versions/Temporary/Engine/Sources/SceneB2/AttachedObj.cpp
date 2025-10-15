@@ -10,7 +10,7 @@
 #include "Sound/DBSound.h"
 
 
-BASIC_REGISTER_CLASS( IAttachedObject );
+BASIC_REGISTER_CLASS( SCENEB2, IAttachedObject );
 
 //*******************************************************************
 //*										 IAttachedObject														 *
@@ -604,16 +604,16 @@ void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )
 	//CAttachedObject::Destroy( time );			
 }
 
-REGISTER_SAVELOAD_CLASS( 0x3013D340, CStaticAttachedObj );
-REGISTER_SAVELOAD_CLASS( 0x3013D341, CAnimatedAttachedObj );
-REGISTER_SAVELOAD_CLASS( 0x3013D342, CAttachedEffect );
-REGISTER_SAVELOAD_CLASS( 0x191462C0, CAttachedLightEffectTransform );
-REGISTER_SAVELOAD_CLASS( 0x1914BC80, CAlwaysVerticalTransform );
-REGISTER_SAVELOAD_CLASS( 0x19144300, CAttachedLightEffect );
-REGISTER_SAVELOAD_CLASS( 0x19144C40, CAttachedStaticLightEffect );
-REGISTER_SAVELOAD_CLASS( 0xB4416170, CAttachedLightEffectPos );
-REGISTER_SAVELOAD_CLASS( 0xB4416171, CAttachedLightEffectDir );
-REGISTER_SAVELOAD_CLASS( 0x3116CD01, CConstantOffsetTransform );
-REGISTER_SAVELOAD_CLASS( 0x17243B80, CCenterOffsetTransform );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3013D340, CStaticAttachedObj );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3013D341, CAnimatedAttachedObj );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3013D342, CAttachedEffect );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x191462C0, CAttachedLightEffectTransform );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1914BC80, CAlwaysVerticalTransform );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19144300, CAttachedLightEffect );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19144C40, CAttachedStaticLightEffect );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0xB4416170, CAttachedLightEffectPos );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0xB4416171, CAttachedLightEffectDir );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3116CD01, CConstantOffsetTransform );
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x17243B80, CCenterOffsetTransform );
 
 

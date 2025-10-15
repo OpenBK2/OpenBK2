@@ -95,7 +95,7 @@ CLadderCacheLocker::~CLadderCacheLocker()
 	pClients->UnlockLadderInfo( szNick );
 }
 
-BASIC_REGISTER_CLASS( CLadderConsts )
+BASIC_REGISTER_CLASS( SERVER, CLadderConsts )
 
 void CLadderLobby::Initialize( const string &_szCfgFile )
 {
@@ -1017,5 +1017,5 @@ namespace NLadder{
 
 #undef STEP_LENGTH_TIME
 
-BASIC_REGISTER_CLASS( CLadderClient ) 
+BASIC_REGISTER_CLASS( SERVER, CLadderClient )
 

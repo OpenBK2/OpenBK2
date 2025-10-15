@@ -10,7 +10,9 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "FeedBackSystem.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4B0, CMineStaticObject );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B0, CMineStaticObject );
 
 extern CFeedBackSystem theFeedBackSystem;
 extern CStaticObjects theStatObjs;

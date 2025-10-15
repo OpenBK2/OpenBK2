@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "CheckSumLog.h"
 
-BASIC_REGISTER_CLASS( ICheckSumLog )
+#include "System_export.h"
+
+BASIC_REGISTER_CLASS( SYSTEM, ICheckSumLog )
 

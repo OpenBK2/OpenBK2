@@ -8,8 +8,10 @@
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/Net.h"
 
-BASIC_REGISTER_CLASS( CSimpleClientEffort );
-BASIC_REGISTER_CLASS( CSimpleServerEffort );
+#include "Client_export.h"
+
+BASIC_REGISTER_CLASS( CLIENT, CSimpleClientEffort );
+BASIC_REGISTER_CLASS( CLIENT, CSimpleServerEffort );
 
 //*******************************************************************
 //*                     CSimpleClientEffort                         *

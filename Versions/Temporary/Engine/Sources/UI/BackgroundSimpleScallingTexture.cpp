@@ -5,7 +5,7 @@
 #include "3Dmotor/DBScene.h"
 #include "UIComponents.h"
 
-REGISTER_SAVELOAD_CLASS(0x11075B40,CBackgroundSimpleScallingTexture)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075B40, CBackgroundSimpleScallingTexture)
 
 
 //CBackgroundSimpleScallingTexture

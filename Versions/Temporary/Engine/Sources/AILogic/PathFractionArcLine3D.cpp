@@ -4,7 +4,9 @@
 #include "PathFractionLine.h"
 #include "DebugTools/DebugInfoManager.h"
 
-REGISTER_SAVELOAD_CLASS(0x11095C41, CPathFractionArcLine3D)
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C41, CPathFractionArcLine3D)
 
 
 #ifndef _FINALRELEASE

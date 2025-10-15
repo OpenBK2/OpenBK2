@@ -3,6 +3,8 @@
 #include "ExecutorExactShot.h"
 #include "NewUpdater.h"
 
+#include "AILogic_export.h"
+
 extern CGroupLogic theGroupLogic;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
@@ -96,6 +98,6 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 	return false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1112D400, CExecutorExactShot )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1112D400, CExecutorExactShot )
 
 

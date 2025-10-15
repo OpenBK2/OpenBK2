@@ -20,6 +20,8 @@
 //#include "..\Scene\Statistics.h"
 #include "PlayerREinforcement.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 
@@ -30,8 +32,8 @@ extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
 
-//BASIC_REGISTER_CLASS( CGeneral );
-REGISTER_SAVELOAD_CLASS( 0x1508D4B3, CGeneral );
+//BASIC_REGISTER_CLASS( AILOGIC, CGeneral );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B3, CGeneral );
 
 //*******************************************************************
 //*														CGeneral															*

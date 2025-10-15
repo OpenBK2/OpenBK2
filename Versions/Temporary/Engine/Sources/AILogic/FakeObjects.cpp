@@ -11,6 +11,8 @@
 #include "NewUpdater.h"
 #include "StaticObjects.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 extern CDiplomacy theDipl;
@@ -129,5 +131,5 @@ bool CFakeCorpseStaticObject::ProcessAreaDamage( const class CExplosion *pExpl, 
 	return false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x110BA300, CFakeCorpseStaticObject );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x110BA300, CFakeCorpseStaticObject );
 

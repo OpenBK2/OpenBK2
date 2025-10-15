@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "./pathfractionarc.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS(0x11095C40, CPathFractionArc)
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C40, CPathFractionArc)
 
 
 //	CPathFractionArc

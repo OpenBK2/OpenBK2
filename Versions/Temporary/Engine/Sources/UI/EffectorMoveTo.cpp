@@ -9,7 +9,7 @@
 
 // Construction/Destruction
 
-REGISTER_SAVELOAD_CLASS(0x11075C01,CEffectorMoveTo)
+REGISTER_SAVELOAD_CLASS(UI, 0x11075C01, CEffectorMoveTo)
 
 int CEffectorMoveTo::operator&( IBinSaver &saver )
 {

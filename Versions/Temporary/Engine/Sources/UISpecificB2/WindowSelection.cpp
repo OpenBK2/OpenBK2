@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "./windowselection.h"
 
-REGISTER_SAVELOAD_CLASS(0x110BD481, CWindowSelection);
+REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x110BD481, CWindowSelection);
 
 void CWindowSelection::Visit( struct IUIVisitor *pVisitor )
 {

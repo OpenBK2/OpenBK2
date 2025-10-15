@@ -5,9 +5,11 @@
 #include "NewUpdater.h"
 #include "Stats_B2_M1/AbilityActions.h"
 
+#include "AILogic_export.h"
+
 extern CEventUpdater updater;
 
-REGISTER_SAVELOAD_CLASS( 0x1509C340, CExecutorThrowGrenade )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1509C340, CExecutorThrowGrenade )
 
 CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility ) 
 : CExecutor(TID_THROW_GRENADE, 1000/SConsts::AI_SEGMENT_DURATION), pUnit( _pUnit ), eAbility( _eAbility )

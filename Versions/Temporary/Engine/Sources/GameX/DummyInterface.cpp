@@ -3,6 +3,7 @@
 #include "DummyInterface.h"
 #include "GameXClassIDs.h"
 
+#include "GameX_export.h"
 
 // ************************************************************************************************************************ //
 // **
@@ -21,7 +22,7 @@ CDummyInterface::~CDummyInterface()
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x160AC441, CDummyInterface );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_DUMMY, CICDummy );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x160AC441, CDummyInterface );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_DUMMY, CICDummy );
 
 

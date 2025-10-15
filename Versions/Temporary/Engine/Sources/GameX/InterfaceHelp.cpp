@@ -5,6 +5,8 @@
 #include "System/Text.h"
 #include "SceneB2/Cursor.h"
 
+#include "GameX_export.h"
+
 // CInterfaceHelp
 
 CInterfaceHelp::CInterfaceHelp() : 
@@ -127,7 +129,7 @@ void CICHelp::Configure( const char *pszConfig )
 	szInterfaceType = pszConfig;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17136B01, CInterfaceHelp );
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_HELP_SCREEN, CICHelp );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17136B01, CInterfaceHelp );
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_HELP_SCREEN, CICHelp );
 
 

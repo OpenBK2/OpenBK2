@@ -687,6 +687,6 @@ START_REGISTER( Weather )
 	REGISTER_VAR_EX( "weather_wnd_affects_coeff", NGlobal::VarFloatHandler, &NWeather::s_fWndAffectsCoeff, 0.05f, STORAGE_NONE )
 FINISH_REGISTER
 
-REGISTER_SAVELOAD_CLASS( 0x1B1A5C80, CWeatherVisual )
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B1A5C80, CWeatherVisual )
 
 

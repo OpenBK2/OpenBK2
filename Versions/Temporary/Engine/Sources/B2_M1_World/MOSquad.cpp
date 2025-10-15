@@ -473,5 +473,5 @@ void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 		pArtillery->SetCrewSoldier( *units.begin() );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x100A7485, CMOSquad );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7485, CMOSquad );
 

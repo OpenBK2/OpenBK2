@@ -1037,6 +1037,6 @@ ISkeletonAnimator *CreateSkeletonAnimator(
 
 } // namespace
 using namespace NAnimation;
-BASIC_REGISTER_CLASS( IAnimMutator )
-REGISTER_SAVELOAD_CLASS( 0x01321150, CSkeletonAnimator )
-BASIC_REGISTER_CLASS( ISkeletonAnimator )
+BASIC_REGISTER_CLASS( _3DMOTOR, IAnimMutator )
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01321150, CSkeletonAnimator )
+BASIC_REGISTER_CLASS( _3DMOTOR, ISkeletonAnimator )

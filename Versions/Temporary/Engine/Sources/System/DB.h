@@ -170,12 +170,12 @@ namespace NDb
 	inline const char *GetResName( const CResource *pRes ) { return pRes->GetDBID().ToString().c_str(); }
 };
 
-#define BASIC_REGISTER_DATABASE_CLASS(classname) \
-BASIC_REGISTER_CLASS(classname)	\
-template<> __declspec(dllexport) const NDb::CResource* CastToDBResourceImpl<classname >( const classname *p, const void* ) { return p; }  \
-template<> __declspec(dllexport) const classname* CastToDBUserObjectImpl<classname >( const NDb::CResource *p, const classname*, const void* ) { return dynamic_cast<const classname*>( p ); }
+#define BASIC_REGISTER_DATABASE_CLASS(module, classname) \
+BASIC_REGISTER_CLASS(module, classname)	\
+template<> module##_EXPORT const NDb::CResource* CastToDBResourceImpl<classname >( const classname *p, const void* ) { return p; }  \
+template<> module##_EXPORT const classname* CastToDBUserObjectImpl<classname >( const NDb::CResource *p, const classname*, const void* ) { return dynamic_cast<const classname*>( p ); }
 
-template<class TUserObj> __declspec(dllimport) const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const void* );
+template<class TUserObj> SYSTEM_EXPORT const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const void* );
 template<class TUserObj> const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const NDb::CResource* ) { return p; }
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const void * );
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const NDb::CResource* ) { return dynamic_cast<const TUserObj*>( p ); }
@@ -275,8 +275,8 @@ template<typename T> struct std::hash<CDBPtr<T>> {
 	std::size_t operator()(const CDBPtr<T> &p) const { return std::hash<const T*>()(p.GetPtr()); }
 };
 
-#define REGISTER_DATABASE_CLASS( N, name )  \
-	BASIC_REGISTER_DATABASE_CLASS( name ) \
+#define REGISTER_DATABASE_CLASS( module, N, name )  \
+	BASIC_REGISTER_DATABASE_CLASS( module, name ) \
 	static struct name##Register##N { name##Register##N() {  \
 	REGISTER_CLASS( N, name )			\
 	CPtr<name> pTemp = new name;	\

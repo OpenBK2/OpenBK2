@@ -3,6 +3,8 @@
 #include "GroupLogic.h"
 #include "Soldier.h"
 
+#include "AILogic_export.h"
+
 extern CGroupLogic theGroupLogic;
 
 CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
@@ -126,5 +128,5 @@ void CExecutorSoldierEntrench::RegisterOnEvents( IExecutorContainer *pContainer 
 	RegisterOnUnitEvents( pContainer, events, pUnit->GetUniqueId() );
 }
 
-REGISTER_SAVELOAD_CLASS( 0x110AB2C0, CExecutorSoldierEntrench )
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x110AB2C0, CExecutorSoldierEntrench )
 

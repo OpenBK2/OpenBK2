@@ -2,7 +2,7 @@
 
 #include "PacketProcessor.h"
 
-BASIC_REGISTER_CLASS( IPacketProcessorFun );
+BASIC_REGISTER_CLASS( SERVER_CLIENT_COMMON, IPacketProcessorFun );
 
 bool CPacketProcessorBase::ProcessPacket( CNetPacket *pPacket )
 {

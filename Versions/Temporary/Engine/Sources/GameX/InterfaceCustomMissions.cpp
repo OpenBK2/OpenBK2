@@ -8,6 +8,8 @@
 #include "System/Text.h"
 #include "CustomMissions.h"
 
+#include "GameX_export.h"
+
 const int CUSTOM_MISSION_DEFAULT_DIFFICULTY = 1;
 
 namespace // unnamed
@@ -379,9 +381,9 @@ void CICCustomMissions::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1716B381, CInterfaceCustomMissions )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_CUSTOM_MISSIONS, CICCustomMissions )
-REGISTER_SAVELOAD_CLASS( 0x172623C0, CDifficultyTextViewer )
-REGISTER_SAVELOAD_CLASS( 0x172623C1, CDifficultyData )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1716B381, CInterfaceCustomMissions )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CUSTOM_MISSIONS, CICCustomMissions )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x172623C0, CDifficultyTextViewer )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x172623C1, CDifficultyData )
 
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)

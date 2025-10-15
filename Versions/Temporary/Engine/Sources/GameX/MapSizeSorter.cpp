@@ -3,7 +3,9 @@
 #include "MapSizeSorter.h"
 #include "Misc/StrProc.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1927ABC1, CListControlSorterMapSize )
+#include "GameX_export.h"
+
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1927ABC1, CListControlSorterMapSize )
 
 bool CListControlSorterMapSize::Compare( IWindow *pSubItem1, IWindow *pSubItem2 )
 {

@@ -3,11 +3,13 @@
 #include "EnemyRememberer.h"
 #include "CommonUnit.h"
 
-//BASIC_REGISTER_CLASS( CEnemyRememberer );
+#include "AILogic_export.h"
+
+//BASIC_REGISTER_CLASS( AILOGIC, CEnemyRememberer );
 
 extern NTimer::STime curTime;
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4A0, CEnemyRememberer );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A0, CEnemyRememberer );
 
 //*******************************************************************
 //*											CEnemyRememberer*

@@ -4,8 +4,10 @@
 #include "Common_RTS_AI/BasePathUnit.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4BA, CArtilleryCrewPath );
-REGISTER_SAVELOAD_CLASS( 0x1108D4BB, CArtilleryBeingTowedPath );
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4BA, CArtilleryCrewPath );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4BB, CArtilleryBeingTowedPath );
 
 ////BASIC_REGISTER_CLASS( CArtilleryBeingTowedPath );
 

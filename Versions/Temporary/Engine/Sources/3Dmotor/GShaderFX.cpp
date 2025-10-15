@@ -7,6 +7,8 @@
 #include "GShaderFX.h"
 #include "GShaderFX.hpp"
 
+#include "3Dmotor_export.h"
+
 #include "port/cdecl.h"
 
 #include <cstdint>
@@ -383,8 +385,5 @@ HRESULT CStatesManager::SetPixelShaderConstantB( UINT RegisterIndex, CONST BOOL 
 } // namespace
 
 using namespace NGfx;
-BASIC_REGISTER_CLASS( CPixelShader )
-BASIC_REGISTER_CLASS( CVertexShader )
-
-
-
+BASIC_REGISTER_CLASS( _3DMOTOR, CPixelShader )
+BASIC_REGISTER_CLASS( _3DMOTOR, CVertexShader )

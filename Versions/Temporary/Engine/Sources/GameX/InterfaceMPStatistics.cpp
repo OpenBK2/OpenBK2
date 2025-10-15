@@ -14,6 +14,8 @@
 #include "SceneB2/Camera.h"
 #include "SceneB2/FullScreenFader.h"
 
+#include "GameX_export.h"
+
 const float UNFADE_TIME = 1.0f;
 
 // CInterfaceMPStatistics
@@ -381,7 +383,7 @@ void CICMPStatistics::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1719C300, CInterfaceMPStatistics )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_STATISTICS, CICMPStatistics )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1719C300, CInterfaceMPStatistics )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_STATISTICS, CICMPStatistics )
 
 

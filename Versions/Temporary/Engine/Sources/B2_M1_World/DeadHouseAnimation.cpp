@@ -5,9 +5,11 @@
 #include "DeadHouseAnimation.h"
 #include "SceneB2/Scene.h"
 
+#include "B2_M1_World_export.h"
+
 #include <zconf.h>
 
-REGISTER_SAVELOAD_CLASS( 0x12118C81, CDeadHouseAnimation );
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x12118C81, CDeadHouseAnimation );
 
 void CDeadHouseAnimation::Init( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation )
 {

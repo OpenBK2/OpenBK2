@@ -16,6 +16,8 @@
 #include "UnitStates.h"
 #include "B2AI.h"
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -28,11 +30,11 @@ extern CUnitCreation theUnitCreation;
 const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats );
 
 
-REGISTER_SAVELOAD_CLASS( 0x1508D489, CGeneralSwarmWaitForReady );
-REGISTER_SAVELOAD_CLASS( 0x1508D48A, CGeneralTaskToSwarmToPoint );
-REGISTER_SAVELOAD_CLASS( 0x1508D499, CGeneralTaskRecaptureStorage );
-REGISTER_SAVELOAD_CLASS( 0x1508D4B1, CGeneralTaskToHoldReinforcement );
-REGISTER_SAVELOAD_CLASS( 0x1508D4B2, CGeneralTaskToDefendPatch );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D489, CGeneralSwarmWaitForReady );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D48A, CGeneralTaskToSwarmToPoint );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D499, CGeneralTaskRecaptureStorage );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B1, CGeneralTaskToHoldReinforcement );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B2, CGeneralTaskToDefendPatch );
 
 
 //*******************************************************************

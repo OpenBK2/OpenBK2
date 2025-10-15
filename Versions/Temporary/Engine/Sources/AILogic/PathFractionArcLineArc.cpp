@@ -3,7 +3,9 @@
 #include "PathFractionArc.h"
 #include "PathFractionLine.h"
 
-REGISTER_SAVELOAD_CLASS(0x11095C80, CPahtFractionArcLineArc)
+#include "AILogic_export.h"
+
+REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C80, CPahtFractionArcLineArc)
 
 
 //	CPahtFractionArcLineArc

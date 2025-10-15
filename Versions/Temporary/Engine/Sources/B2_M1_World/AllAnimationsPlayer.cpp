@@ -55,5 +55,5 @@ void CAllAnimationsPlayer::Update()
 	bSwitchToNextAnimation = false;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x300BA500, CAllAnimationsPlayer )
+REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x300BA500, CAllAnimationsPlayer )
 

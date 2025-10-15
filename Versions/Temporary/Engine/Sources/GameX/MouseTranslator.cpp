@@ -7,6 +7,8 @@
 #include "SceneB2/Camera.h"
 #include "UI/UI.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 // ************************************************************************************************************************ //
@@ -17,7 +19,7 @@
 // **
 // ************************************************************************************************************************ //
 
-BASIC_REGISTER_CLASS( CMouseTranslator );
+BASIC_REGISTER_CLASS( GAMEX, CMouseTranslator );
 
 #define MIN_ACTION_DIST 20.0f
 #define MIN_ACTION_TIME 200
@@ -457,8 +459,8 @@ bool CMouseTranslator::IsDownSameTime( const NTimer::STime &curTime ) const
 	return curTime - downTime < MIN_ACTION_TIME;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1507B440, CMouseTranslatorB1 );
-REGISTER_SAVELOAD_CLASS( 0x1117AB80, CMouseTranslatorB2Game );
-REGISTER_SAVELOAD_CLASS( 0x1117AB81, CMouseTranslatorB2Replay );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1507B440, CMouseTranslatorB1 );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1117AB80, CMouseTranslatorB2Game );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1117AB81, CMouseTranslatorB2Replay );
 
 

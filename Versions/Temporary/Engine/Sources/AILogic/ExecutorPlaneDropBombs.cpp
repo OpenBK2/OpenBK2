@@ -6,6 +6,9 @@
 #include "Commands.h"
 #include "ExecutorPlaneDropBombs.h"
 #include "Diplomacy.h"
+
+#include "AILogic_export.h"
+
 extern CGroupLogic theGroupLogic;
 extern CDiplomacy theDipl;
 
@@ -135,5 +138,5 @@ void CExecutorPlaneDropBombsObject::SwitchOnStart( const class CAICommand *pComm
 	ForceRecharge();
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1115AAC1, CExecutorPlaneDropBombsObject );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1115AAC1, CExecutorPlaneDropBombsObject );
 

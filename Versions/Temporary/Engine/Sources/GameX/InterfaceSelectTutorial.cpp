@@ -9,6 +9,8 @@
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
 
+#include "GameX_export.h"
+
 // CInterfaceSelectTutorial
 
 CInterfaceSelectTutorial::CInterfaceSelectTutorial() :
@@ -242,7 +244,7 @@ void CICSelectTutorial::Configure( const char *pszConfig )
 {
 }
 
-REGISTER_SAVELOAD_CLASS( 0x17255300, CInterfaceSelectTutorial )
-REGISTER_SAVELOAD_CLASS( ML_COMMAND_SELECT_TUTORIAL, CICSelectTutorial )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x17255300, CInterfaceSelectTutorial )
+REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SELECT_TUTORIAL, CICSelectTutorial )
 
 

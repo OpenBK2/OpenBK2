@@ -29,6 +29,8 @@
 
 #include "SceneB2/Scene.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
@@ -66,8 +68,8 @@ public:
 	CTransciverCommonPacket( EType _eType ) : CNetPacket( 0 ), eType( _eType ) {}
 };
 
-REGISTER_SAVELOAD_CLASS( 111, CAISegmentFinishedPacket );
-REGISTER_SAVELOAD_CLASS( 112, CTransciverCommonPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 111, CAISegmentFinishedPacket );
+REGISTER_SAVELOAD_CLASS( GAMEX, 112, CTransciverCommonPacket );
 
 // CMPTransceiver
 
@@ -699,7 +701,7 @@ CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameP
 	return pTransceiver;
 }
 
-REGISTER_SAVELOAD_CLASS( 0x1713C440, CMPTransceiver );
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x1713C440, CMPTransceiver );
 
 START_REGISTER(MPTransceiver)
 REGISTER_VAR_EX( "multiplayer_pause_timeout", NGlobal::VarIntHandler, &s_nInterruptTimeout, 5000, STORAGE_NONE );

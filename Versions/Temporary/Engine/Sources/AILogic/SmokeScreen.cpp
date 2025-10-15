@@ -6,11 +6,13 @@
 #include "Common_RTS_AI/AIMap.h"
 #include "GlobalWarFog.h"
 
+#include "AILogic_export.h"
+
 extern NTimer::STime curTime;
 extern CStaticObjects theStatObjs;
 extern CGlobalWarFog theWarFog; 
 
-REGISTER_SAVELOAD_CLASS( 0x1508D4B5, CSmokeScreen );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B5, CSmokeScreen );
 
 CSmokeScreen::CSmokeScreen( const CVec3 &_vCenter, const float _fRadius, const int _nTransparency, const int nTime )
 : vCenter( _vCenter ), fRadius( _fRadius ), nTransparency( _nTransparency ), timeOfDissapear( curTime + nTime ),

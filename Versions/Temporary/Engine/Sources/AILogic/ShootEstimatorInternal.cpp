@@ -16,13 +16,15 @@ extern CUnitCreation theUnitCreation;
 // for profiling
 #include "TimeCounter.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS( 0x1108D4DF, CTankShootEstimator );
-REGISTER_SAVELOAD_CLASS( 0x1108D4E0, CSoldierShootEstimator );
-REGISTER_SAVELOAD_CLASS( 0x1108D4E1, CPlaneDeffensiveFireShootEstimator );
-REGISTER_SAVELOAD_CLASS( 0x1108D4E2, CPlaneShturmovikShootEstimator );
-REGISTER_SAVELOAD_CLASS( 0x11144380, CShootEstimatorSupportAAGun );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DF, CTankShootEstimator );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E0, CSoldierShootEstimator );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E1, CPlaneDeffensiveFireShootEstimator );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E2, CPlaneShturmovikShootEstimator );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11144380, CShootEstimatorSupportAAGun );
 
 extern CDiplomacy theDipl;
 extern CUnits units;
@@ -35,10 +37,10 @@ extern CSupremeBeing theSupremeBeing;
 //*											 CTankShootEstimator												*
 //*******************************************************************
 
-//BASIC_REGISTER_CLASS( CTankShootEstimator );
-BASIC_REGISTER_CLASS( IShootEstimator );
-//BASIC_REGISTER_CLASS( CPlaneDeffensiveFireShootEstimator );
-//BASIC_REGISTER_CLASS( CPlaneShturmovikShootEstimator );
+//BASIC_REGISTER_CLASS( AILOGIC, CTankShootEstimator );
+BASIC_REGISTER_CLASS( AILOGIC, IShootEstimator );
+//BASIC_REGISTER_CLASS( AILOGIC, CPlaneDeffensiveFireShootEstimator );
+//BASIC_REGISTER_CLASS( AILOGIC, CPlaneShturmovikShootEstimator );
 
 const float F( const float fHPPercent, const float fT0, const float fT1, const float fT2, const float fPrice )
 {
