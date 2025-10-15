@@ -242,11 +242,11 @@ float CalcRadius2( const SBound &b, const SHMatrix &fwd )
 	ASSERT( b.ptHalfBox.y >= 0 );
 	ASSERT( b.ptHalfBox.z >= 0 );
 	float fSign;
-	CVec3 ptRes = fwd.x3 * b.ptHalfBox.x;
-	fSign = fwd.x3 * fwd.y3 < 0 ? -1 : 1;
-	ptRes += fwd.y3 * (b.ptHalfBox.y * fSign);
-	fSign = ptRes * fwd.z3 < 0 ? -1 : 1;
-	ptRes += fwd.z3 * (b.ptHalfBox.z * fSign);
+	CVec3 ptRes = fwd.x3() * b.ptHalfBox.x;
+	fSign = fwd.x3() * fwd.y3() < 0 ? -1 : 1;
+	ptRes += fwd.y3() * (b.ptHalfBox.y * fSign);
+	fSign = ptRes * fwd.z3() < 0 ? -1 : 1;
+	ptRes += fwd.z3() * (b.ptHalfBox.z * fSign);
 	return fabs2( ptRes );
 }
 
@@ -322,8 +322,8 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 	ret._33 = Q;
 	ret._34 = -Q*near_plane;
 	ret._43 = 1;
-	ret.x += vShift.x * ret.w;
-	ret.y += vShift.y * ret.w;
+	ret.SetX(ret.x() + vShift.x * ret.w());
+	ret.SetY(ret.y() + vShift.y * ret.w());
 	Init( ret );
 
 	PrepareClipPlanes();
@@ -424,9 +424,9 @@ bool CTransformStack::GetCoverRect( CTRect<float> *pRes, const CVec3 &_ptCenter,
 		return true;
 	}
 
-	float fSX = CalcScale( m.x );
-	float fSY = CalcScale( m.y );
-	float fSW = CalcScale( m.w );
+	float fSX = CalcScale( m.x() );
+	float fSY = CalcScale( m.y() );
+	float fSW = CalcScale( m.w() );
 
 	float fR1 = 1 / fRadius;
 	float fB = ptCenter.w / fSW * fR1;
@@ -711,8 +711,8 @@ void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &
 {
 	const SFBTransform &projection = ts.GetProjection();
 	SHMatrix m = projection.forward;
-	m.x = m.x * (1.0f / vSize.x) + m.w * ( ( 1 - 2 * vOrigin.x - vSize.x ) / vSize.x );
-	m.y = m.y * (1.0f / vSize.y) + m.w * ( (-1 + 2 * vOrigin.y + vSize.y ) / vSize.y );
+	m.SetX(m.x() * (1.0f / vSize.x) + m.w() * ( ( 1 - 2 * vOrigin.x - vSize.x ) / vSize.x ));
+	m.SetY(m.y() * (1.0f / vSize.y) + m.w() * ( (-1 + 2 * vOrigin.y + vSize.y ) / vSize.y ));
 	pRes->Make( m );
 	pRes->Push43( projection.backward * ts.Get().forward );
 }

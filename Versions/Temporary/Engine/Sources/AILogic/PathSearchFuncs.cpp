@@ -145,7 +145,7 @@ bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1+vShift, rMoving.v2+vShift, rMoving.v3+vShift, rMoving.v4+vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
 	
 	SRect rStanding = Standing->GetUnitRect();
 	rMovingFinal.Compress( 1.2f );
@@ -163,7 +163,7 @@ bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Pat
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1+vShift, rMoving.v2+vShift, rMoving.v3+vShift, rMoving.v4+vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
 
 	rMovingFinal.center = Path->GetFinishPoint();
 
@@ -181,7 +181,7 @@ bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Pa
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1+vShift, rMoving.v2+vShift, rMoving.v3+vShift, rMoving.v4+vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
 
 	SRect rStanding;
 	standing->GetBoundRect( &rStanding );

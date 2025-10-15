@@ -74,8 +74,8 @@ CAIMap::CAIMap( const int _nSizeX, const int _nSizeY, const int _nTileSize,
 
 bool CAIMap::IsRectInside( const SRect &rect ) const
 {
-	return IsPointInside( rect.v1 ) && IsPointInside( rect.v2 ) &&
-				 IsPointInside( rect.v3 ) && IsPointInside( rect.v4 );
+	return IsPointInside( rect.v1() ) && IsPointInside( rect.v2() ) &&
+				 IsPointInside( rect.v3() ) && IsPointInside( rect.v4() );
 }
 
 static std::vector< std::vector<SVector> > circleTiles;
@@ -212,7 +212,7 @@ std::vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
 
 bool CAIMap::IsRectOnLockedTiles( const SRect &rect, const EAIClasses aiClass )
 {
-	return ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, (std::list<SVector>*)0, aiClass, SGenericNumber<0>() );
+	return ProcessQuadrangleTiles( rect.v1(), rect.v2(), rect.v3(), rect.v4(), (std::list<SVector>*)0, aiClass, SGenericNumber<0>() );
 }
 
 bool CAIMap::IsCircleOnLockedTiles( const CCircle &circle, const EAIClasses aiClass )

@@ -51,7 +51,7 @@ static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &sc
 	int nGeometries = scene.GetGeometriesNum();
 	if ( geomDepths.size() < nGeometries )
 		geomDepths.resize( nGeometries );
-	CVec4 vW = pRC->GetTransform().forward.w;
+	CVec4 vW = pRC->GetTransform().forward.w();
 	CVec3 wDir( vW.x, vW.y, vW.z );
 	for ( int k = 0; k < nGeometries; ++k )
 		geomDepths[k] = scene.GetStaticInfo( k ).bv.s.ptCenter * wDir;

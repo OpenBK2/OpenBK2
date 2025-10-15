@@ -97,10 +97,10 @@ inline CVec2 GetTexCoords( const SShortTextureUV &src )
 }
 inline void MakeLMToScreenMatrix( SHMatrix *pM, int nXTargetSize, int nYTargetSize )
 {
-	pM->x = CVec4( 2.0f / 65536, 0, 0, 1 - 1 - 1.0f / nXTargetSize ); // N_RENDER_TARGET_SIZE
-	pM->y = CVec4( 0,-2.0f / 65536, 0, -1 + 1 + 1.0f / nYTargetSize );
-	pM->z = CVec4( 0, 0, 1, 0.5f ); // since texture is expanded to (u,v,0,1) this works and matrix has inverse
-	pM->w = CVec4( 0, 0, 0, 1 );
+	pM->SetX(CVec4( 2.0f / 65536, 0, 0, 1 - 1 - 1.0f / nXTargetSize )); // N_RENDER_TARGET_SIZE
+	pM->SetY(CVec4( 0,-2.0f / 65536, 0, -1 + 1 + 1.0f / nYTargetSize ));
+	pM->SetZ(CVec4( 0, 0, 1, 0.5f )); // since texture is expanded to (u,v,0,1) this works and matrix has inverse
+	pM->SetW(CVec4( 0, 0, 0, 1 ));
 }
 struct SGeomVecFull
 {

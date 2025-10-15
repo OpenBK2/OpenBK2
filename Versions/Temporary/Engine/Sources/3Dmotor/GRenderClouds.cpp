@@ -64,8 +64,8 @@ void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &
 	rc.SetVSConst( 25, renderInfo.nlp.vTexU );
 	rc.SetVSConst( 26, renderInfo.nlp.vTexV );
 	rc.SetVSConst( 27, renderInfo.nlp.vShift );
-	rc.SetVSConst( 28, proj.x );
-	rc.SetVSConst( 29, proj.y );
+	rc.SetVSConst( 28, proj.x() );
+	rc.SetVSConst( 29, proj.y() );
 	
 	const SNLProjectionInfo &nlp = depthInfo.nlp;
 	float fDet = 1 / ( nlp.vTexU.x * nlp.vTexV.y - nlp.vTexU.y * nlp.vTexV.x );
@@ -99,8 +99,8 @@ void CCloudMover::Recalc()
 	float fX = cos( ToRadian( fAngle ) ), fY = sin( ToRadian( fAngle ) );
 	float fDeltaX = fmod( fX * fScroll, 1 );
 	float fDeltaY = fmod( fY * fScroll, 1 );
-	value.x = CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX );
-	value.y = CVec4( 0, 1 / vWrapSize.y, 0, fDeltaY );
+	value.SetX(CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX ));
+	value.SetY(CVec4( 0, 1 / vWrapSize.y, 0, fDeltaY ));
 }
 }
 using namespace NGScene;

@@ -89,7 +89,7 @@ void CFence::Init()
 
 	SRect boundRect;
 	GetBoundRect( &boundRect );
-	const float fR = fabs( boundRect.v1 - boundRect.v3 ) * 2.0f;
+	const float fR = fabs( boundRect.v1() - boundRect.v3() ) * 2.0f;
 	for ( CStObjCircleIter<false> iter( CVec2(GetCenter().x,GetCenter().y), fR ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CExistingObject *pObj = *iter;

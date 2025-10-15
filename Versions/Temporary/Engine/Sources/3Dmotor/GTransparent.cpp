@@ -280,7 +280,7 @@ static void ReorderTransparent( std::vector<STriangle> *pRet, const SFBTransform
 	}
 	const std::vector<CVec3> &xfpos = *pTransofmedPos;
 	std::vector<float> pointsDepth( xfpos.size() );
-	const CVec4 &vW = sTransform.forward.w;
+	CVec4 vW = sTransform.forward.w();
 	for ( int nTemp = 0; nTemp < xfpos.size(); ++nTemp )
 	{
 		const CVec3 &v = xfpos[nTemp];

@@ -455,7 +455,7 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 	if ( profile.bRect )
 	{
 		const SRect &rect( profile.rect );
-		pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+		pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 	}
 	else
 	{
@@ -514,7 +514,7 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 		if ( pos->second.profile.bRect )
 		{
 			const SRect &rect( pos->second.profile.rect );
-			pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+			pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 		}
 		else
 		{
@@ -663,7 +663,7 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 		if ( profile.bRect )
 		{
 			const SRect &rect( profile.rect );
-			pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+			pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 		}
 		else
 		{
@@ -1742,7 +1742,7 @@ int CTerrain::ShowUnitLock( const int nUnitID, const int nMarkerID ) const
 		if ( pos->second.profile.bRect )
 		{
 			const SRect &rect( pos->second.profile.rect );
-			pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+			pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 		}
 		else
 		{
@@ -1761,7 +1761,7 @@ int CTerrain::TemporaryLockUnitProfile( const SUnitProfile &profile, const EAICl
 	if ( profile.bRect )
 	{
 		const SRect &rect( profile.rect );
-		pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+		pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 	}
 	else
 	{

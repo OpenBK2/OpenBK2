@@ -120,10 +120,10 @@ void CScene::CreateRect( const NDebugInfo::SDebugInfoRect *pRect )
 {
 	std::vector<CVec3> points;
 	std::vector<uint16_t> indices;
-	points.push_back( CVec3( pRect->rect.v1, pRect->fZ ) );
-	points.push_back( CVec3( pRect->rect.v2, pRect->fZ ) );
-	points.push_back( CVec3( pRect->rect.v3, pRect->fZ ) );
-	points.push_back( CVec3( pRect->rect.v4, pRect->fZ ) );
+	points.push_back( CVec3( pRect->rect.v1(), pRect->fZ ) );
+	points.push_back( CVec3( pRect->rect.v2(), pRect->fZ ) );
+	points.push_back( CVec3( pRect->rect.v3(), pRect->fZ ) );
+	points.push_back( CVec3( pRect->rect.v4(), pRect->fZ ) );
 	indices.push_back( 0 );
 	indices.push_back( 1 );
 	indices.push_back( 1 );

@@ -200,8 +200,8 @@ static void RenderParallelDepth( IRender *pRender, NGfx::CRenderContext *pRC,
 	SHMatrix mTrans = ts.Get().forward;
 	SDirectionalDepthInfo &depthInfo = *pDepthInfo;
 	NGfx::GetTexMapFromProjection( &mTrans, N_DEFAULT_RT_RESOLUTION );
-	depthInfo.vVecU = mTrans.x;
-	depthInfo.vVecV = mTrans.y;
+	depthInfo.vVecU = mTrans.x();
+	depthInfo.vVecV = mTrans.y();
 	float fRange1 = 1.0f / fRange;
 	//depthInfo.vDepth = CVec4( -vDir * fRange1, 0.5f + fRange1 * ( vDir * vEnter ) );//0, 0, 1 / 20.0f, 0 ); //_fMaxHeight
 	depthInfo.vDepth = CVec4( 0, 0, 1 / F_MAX_SCENE_HEIGHT, 0 );
@@ -393,12 +393,12 @@ static void RenderCubeMapDepth(
 		CVec4 vZ( 0, 0, 1, -_vCenter.z );
 		switch ( nDir )
 		{
-		case 0: face = NGfx::POSITIVE_X; camera.x = -vZ; camera.y = -vY; camera.z =  vX; break;
-		case 1: face = NGfx::POSITIVE_Y; camera.x =  vX; camera.y =  vZ; camera.z =  vY; break;
-		case 2: face = NGfx::POSITIVE_Z; camera.x =  vX; camera.y = -vY; camera.z =  vZ; break;
-		case 3: face = NGfx::NEGATIVE_X; camera.x =  vZ; camera.y = -vY; camera.z = -vX; break;
-		case 4: face = NGfx::NEGATIVE_Y; camera.x =  vX; camera.y = -vZ; camera.z = -vY; break;
-		case 5: face = NGfx::NEGATIVE_Z; camera.x = -vX; camera.y = -vY; camera.z = -vZ; break;
+		case 0: face = NGfx::POSITIVE_X; camera.SetX(-vZ); camera.SetY(-vY); camera.SetZ(vX); break;
+		case 1: face = NGfx::POSITIVE_Y; camera.SetX(vX); camera.SetY(vZ); camera.SetZ(vY); break;
+		case 2: face = NGfx::POSITIVE_Z; camera.SetX(vX); camera.SetY(-vY); camera.SetZ(vZ); break;
+		case 3: face = NGfx::NEGATIVE_X; camera.SetX(vZ); camera.SetY(-vY); camera.SetZ(-vX); break;
+		case 4: face = NGfx::NEGATIVE_Y; camera.SetX(vX); camera.SetY(-vZ); camera.SetZ(-vY); break;
+		case 5: face = NGfx::NEGATIVE_Z; camera.SetX(-vX); camera.SetY(-vY); camera.SetZ(-vZ); break;
 		default: face = NGfx::POSITIVE_X; ASSERT(0); break;
 		}
 		// gather occluders
@@ -413,12 +413,12 @@ static void RenderCubeMapDepth(
 		pRender->FormDepthList( &tsFrustrum, vDir, IRender::DT_STATIC, &geom );
 
 		// form transform stack for render
-		camera.y = -camera.y;
-		camera.w = CVec4(0,0,0,1);
+		camera.SetY(-camera.y());
+		camera.SetW(CVec4(0,0,0,1));
 		ts.Push43( camera );
 		camera = ts.Get().forward;
-		camera.x = camera.x - (1.0f / nResolution ) * camera.w;
-		camera.y = camera.y + (1.0f / nResolution ) * camera.w;
+		camera.SetX(camera.x() - (1.0f / nResolution ) * camera.w());
+		camera.SetY(camera.y() + (1.0f / nResolution ) * camera.w());
 		ts.Init( camera );
 		rc.SetCubeTextureRT( pDepth, face, 0 );
 		rc.ClearBuffers( 0xffffffff );
@@ -458,7 +458,7 @@ static void MakeLMTS( CTransformStack *pTS, CVec4 &vZ, int nLMSize )
 	CTransformStack &ts = *pTS;
 	SHMatrix m;
 	NGfx::MakeLMToScreenMatrix( &m, nLMSize, nLMSize );
-	m.z = vZ;
+	m.SetZ(vZ);
 	ts.Init( m );
 }
 

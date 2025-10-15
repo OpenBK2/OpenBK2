@@ -105,10 +105,10 @@ bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 	if ( GetAIMap()->IsRectOnLockedTiles( rect, EAC_ANY ) )
 		return false;
 
-	int nMinX = (std::min)( (std::min)( rect.v1.x, rect.v2.x ), (std::min)( rect.v3.x, rect.v4.x ) );
-	int nMinY = (std::min)( (std::min)( rect.v1.y, rect.v2.y ), (std::min)( rect.v3.y, rect.v4.y ) );
-	int nMaxX = (std::max)( (std::max)( rect.v1.x, rect.v2.x ), (std::max)( rect.v3.x, rect.v4.x ) );
-	int nMaxY = (std::max)( (std::max)( rect.v1.y, rect.v2.y ), (std::max)( rect.v3.y, rect.v4.y ) );
+	int nMinX = (std::min)( (std::min)( rect.v1().x, rect.v2().x ), (std::min)( rect.v3().x, rect.v4().x ) );
+	int nMinY = (std::min)( (std::min)( rect.v1().y, rect.v2().y ), (std::min)( rect.v3().y, rect.v4().y ) );
+	int nMaxX = (std::max)( (std::max)( rect.v1().x, rect.v2().x ), (std::max)( rect.v3().x, rect.v4().x ) );
+	int nMaxY = (std::max)( (std::max)( rect.v1().y, rect.v2().y ), (std::max)( rect.v3().y, rect.v4().y ) );
 
 	const CVec2 vAABBHalfSize( ( nMinX + nMaxX ) * 0.5f, ( nMinY + nMaxY ) * 0.5f );
 

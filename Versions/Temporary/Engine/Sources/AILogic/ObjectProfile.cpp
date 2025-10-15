@@ -184,10 +184,10 @@ CObjectProfile::CObjectProfile( const SRect &unitRect, const bool bForceThickLoc
 	profile.polygons.resize( 1 );
 	profile.polygons[0].verts.resize( 5 );
 
-	profile.polygons[0].verts[0] = unitRect.v1 - unitRect.center;
-	profile.polygons[0].verts[1] = unitRect.v2 - unitRect.center;
-	profile.polygons[0].verts[2] = unitRect.v3 - unitRect.center;
-	profile.polygons[0].verts[3] = unitRect.v4 - unitRect.center;
+	profile.polygons[0].verts[0] = unitRect.v1() - unitRect.center;
+	profile.polygons[0].verts[1] = unitRect.v2() - unitRect.center;
+	profile.polygons[0].verts[2] = unitRect.v3() - unitRect.center;
+	profile.polygons[0].verts[3] = unitRect.v4() - unitRect.center;
 	profile.polygons[0].verts[4] = profile.polygons[0].verts[0];
 
 	Init( profile, unitRect.center, CVec2( 1, 0 ), bForceThickLock );
@@ -266,7 +266,7 @@ bool CObjectProfile::IsTileInside( const SVector &tile ) const
 
 bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 {
-	if ( IsPointInside( unitRect.v1 ) || IsPointInside( unitRect.v2 ) || IsPointInside( unitRect.v3 ) || IsPointInside( unitRect.v4 ) )
+	if ( IsPointInside( unitRect.v1() ) || IsPointInside( unitRect.v2() ) || IsPointInside( unitRect.v3() ) || IsPointInside( unitRect.v4() ) )
 		return true;
 	
 	for ( int k = 0; k < profile.polygons.size(); ++k )

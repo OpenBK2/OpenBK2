@@ -309,10 +309,10 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 	std::vector<SRenderPartSet> &listParts = *pListParts;
 	SHMatrix sRes;
 	sRes = pTS->Get().forward;
-	sRes.x = ( sRes.x * 0.5f + sRes.w * 0.5f ) * pr.GetWidth();
-	sRes.y = ( sRes.y * 0.5f + sRes.w * 0.5f ) * pr.GetHeight();
-	// listParts.sort( SCompareRPS(sRes.w) );
-	std::stable_sort(listParts.begin(), listParts.end(), SCompareRPS(sRes.w) );
+	sRes.SetX(( sRes.x() * 0.5f + sRes.w() * 0.5f ) * pr.GetWidth());
+	sRes.SetY(( sRes.y() * 0.5f + sRes.w() * 0.5f ) * pr.GetHeight());
+	// listParts.sort( SCompareRPS(sRes.w()) );
+	std::stable_sort(listParts.begin(), listParts.end(), SCompareRPS(sRes.w()) );
 
 	pr.InitRefs( CountParts( listParts ) + 1 );
 	int nIDCounter = 0;

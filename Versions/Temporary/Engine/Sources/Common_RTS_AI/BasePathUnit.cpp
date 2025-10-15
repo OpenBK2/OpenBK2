@@ -546,7 +546,7 @@ void CBasePathUnit::StaticLockTiles() const
 		if ( profile.bRect )
 		{
 			const SRect &rect( profile.rect );
-			pAIMap->GetTilesCoveredByQuadrangle( rect.v1, rect.v2, rect.v3, rect.v4, &tiles );
+			pAIMap->GetTilesCoveredByQuadrangle( rect.v1(), rect.v2(), rect.v3(), rect.v4(), &tiles );
 		}
 		else
 		{
@@ -1013,8 +1013,8 @@ const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 	if ( unitProfile.bRect )
 	{
 		return 
-			pAIMap->IsPointInside( unitProfile.rect.v1 ) && pAIMap->IsPointInside( unitProfile.rect.v2 ) &&
-			pAIMap->IsPointInside( unitProfile.rect.v3 ) && pAIMap->IsPointInside( unitProfile.rect.v4 );
+			pAIMap->IsPointInside( unitProfile.rect.v1() ) && pAIMap->IsPointInside( unitProfile.rect.v2() ) &&
+			pAIMap->IsPointInside( unitProfile.rect.v3() ) && pAIMap->IsPointInside( unitProfile.rect.v4() );
 	}
 	else
 	{
@@ -1041,8 +1041,8 @@ const bool CBasePathUnit::IsValidDirection( const uint16_t _wDirection )
 	if ( unitProfile.bRect )
 	{
 		return 
-			pAIMap->IsPointInside( unitProfile.rect.v1 ) && pAIMap->IsPointInside( unitProfile.rect.v2 ) &&
-			pAIMap->IsPointInside( unitProfile.rect.v3 ) && pAIMap->IsPointInside( unitProfile.rect.v4 );
+			pAIMap->IsPointInside( unitProfile.rect.v1() ) && pAIMap->IsPointInside( unitProfile.rect.v2() ) &&
+			pAIMap->IsPointInside( unitProfile.rect.v3() ) && pAIMap->IsPointInside( unitProfile.rect.v4() );
 	}
 	else
 	{

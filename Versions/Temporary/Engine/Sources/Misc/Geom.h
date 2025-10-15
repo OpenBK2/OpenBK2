@@ -162,7 +162,7 @@ public:
   {
     struct { float x, y, z, w; };
     struct { float r, g, b, a; };				// for color components
-    struct { float u, v, q, w; };				// for texture coord
+    struct { float u, v, q; };				// for texture coord, the 4th float is w / a / m[3]
 		float m[4];
   };
 public:
@@ -585,16 +585,16 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 struct SPlane
 {
 public:
-  union
-  {
-    struct { CVec3 n; float d; };
-		struct { CVec4 vec4; };
-  };
-public:
+  // storage is the normal and the distance, not the CVec4: almost every caller
+  // reads or writes n and d, so they stay plain members and stay assignable.
+  // the CVec4 form is needed in only a few places, so that is the computed one.
+  CVec3 n;
+  float d;
+  CVec4 vec4() const noexcept { return CVec4( n.x, n.y, n.z, d ); }
   SPlane() {  }
   SPlane( const CVec3 &vNormale, const float fDist ) : n( vNormale ), d( fDist ) {  }
-  SPlane( const CVec4 &v ) : vec4( v ) {  }
-	SPlane( const SPlane &plane ) : vec4( plane.vec4 ) {  }
+  SPlane( const CVec4 &v ) : n( v.x, v.y, v.z ), d( v.w ) {  }
+	SPlane( const SPlane &plane ) : n( plane.n ), d( plane.d ) {  }
   // setup functions
   bool Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, bool bNormalize );
   void Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 );
@@ -641,18 +641,21 @@ public :
 			float zx, zy, zz, zw;
 			float wx, wy, wz, ww;
 		};
-		struct
-		{
-			CVec4 x, y, z, w;
-		};
-		struct
-		{
-			CVec3 x3; float xw3;
-			CVec3 y3; float yw3;
-			CVec3 z3; float zw3;
-			CVec3 w3; float ww3;
-		};
 	};
+	void SetX(const CVec4 & v) noexcept { xx = v.x; xy = v.y; xz = v.z; xw = v.w; }
+	void SetY(const CVec4 & v) noexcept { yx = v.x, yy = v.y; yz = v.z; yw = v.w; }
+	void SetZ(const CVec4 & v) noexcept { zx = v.x; zy = v.y; zz = v.z; zw = v.w; }
+	void SetW(const CVec4 & v) noexcept { wx = v.x; wy = v.y; wz = v.z; ww = v.w; }
+
+	CVec4 x() const noexcept { return CVec4{xx, xy, xz, xw}; }
+	CVec4 y() const noexcept { return CVec4{yx, yy, yz, yw}; }
+	CVec4 z() const noexcept { return CVec4{zx, zy, zz, zw}; }
+	CVec4 w() const noexcept { return CVec4{wx, wy, wz, ww}; }
+
+	CVec3 x3() const noexcept { return CVec3{xx, xy, xz}; }
+	CVec3 y3() const noexcept { return CVec3{yx, yy, yz}; }
+	CVec3 z3() const noexcept { return CVec3{zx, zy, zz}; }
+	CVec3 w3() const noexcept { return CVec3{wx, wy, wz}; }
 public :
 	SHMatrix() {  }
 	SHMatrix( float __11, float __12, float __13, float __14,
@@ -675,9 +678,9 @@ public :
 		        float __31, float __32, float __33, float __34,
 		        float __41, float __42, float __43, float __44 );
 	// axis access
-	const CVec3& GetXAxis3() const { return x3; }
-	const CVec3& GetYAxis3() const { return y3; }
-	const CVec3& GetZAxis3() const { return z3; }
+	CVec3 GetXAxis3() const { return CVec3(xx, xy, xz); }
+	CVec3 GetYAxis3() const { return CVec3(yx, yy, yz); }
+	CVec3 GetZAxis3() const { return CVec3(zx, zy, zz); }
 	const CVec3 GetTrans3() const { return CVec3( _14, _24, _34 ); }
 	const CVec4 GetTrans4() const { return CVec4( _14, _24, _34, _44 ); }
 	// matrix-vector multiplication
@@ -712,16 +715,10 @@ struct SFBTransform
 
 class CQuat
 {
-  union
-  {
-    struct { float i, j, k, s; };
-    struct { float x, y, z, w; };
-    struct { CVec3 n; float r; };
-		struct { CVec4 vec4; };
-  };
+	CVec4 vec4;
 	// for use in the internal functions
 	// to avoid ambiguity with angle-axis constructor
-  CQuat( float fX, float fY, float fZ, float fW, int, int ) : x( fX ), y( fY ), z( fZ ), w( fW ) {  }
+  CQuat( float fX, float fY, float fZ, float fW, int, int ) : vec4( fX , fY , fZ , fW ) {  }
 public:
   CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
   CQuat( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis = false );
@@ -732,7 +729,7 @@ public:
 	void FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
 	void FromEulerMatrix( const SHMatrix &m );
   void FromEulerAngles( float yaw, float pitch, float roll );
-	void FromComponents( float _x, float _y, float _z, float _w ) { x = _x; y = _y; z = _z; w = _w; }
+	void FromComponents( float _x, float _y, float _z, float _w ) { vec4 = CVec4{_x, _y, _z, _w}; }
 	void FromComponents( const CVec4 &_vec4 ) { vec4 = _vec4; }
 	// decomposition
 	void DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const;
@@ -741,19 +738,19 @@ public:
 	MISC_EXPORT void DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll );
 	void DecompReversedEulerMatrix( SHMatrix *pMatrix ) const;
   // internal data non-math modification
-  bool Normalize() { return ::Normalize(x, y, z, w); }
-  void Maximize( const CQuat &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); w = (std::max)( w, v.w ); }
-  void Minimize( const CQuat &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); w = (std::min)( w, v.w ); }
+  bool Normalize() { return ::Normalize(vec4.x, vec4.y, vec4.z, vec4.w); }
+  void Maximize( const CQuat &v ) { vec4.x = (std::max)( vec4.x, v.vec4.x ); vec4.y = (std::max)( vec4.y, v.vec4.y ); vec4.z = (std::max)( vec4.z, v.vec4.z ); vec4.w = (std::max)( vec4.w, v.vec4.w ); }
+  void Minimize( const CQuat &v ) { vec4.x = (std::min)( vec4.x, v.vec4.x ); vec4.y = (std::min)( vec4.y, v.vec4.y ); vec4.z = (std::min)( vec4.z, v.vec4.z ); vec4.w = (std::min)( vec4.w, v.vec4.w ); }
   //
-  void Negate( const CQuat &q ) { x = -q.x; y = -q.y; z = -q.z; w = -q.w; } // this = -v
-  void Negate() { x = -x; y = -y; z = -z; w = -w; }     // this = -this
+  void Negate( const CQuat &q ) { vec4.x = -q.vec4.x; vec4.y = -q.vec4.y; vec4.z = -q.vec4.z; vec4.w = -q.vec4.w; } // this = -v
+  void Negate() { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; vec4.w = -vec4.w; }     // this = -this
 	bool Inverse( const CQuat &q );
 	bool Inverse();
-	void UnitInverse( const CQuat &q ) { x = -q.x; y = -q.y; z = -q.z; w = q.w; }
-	void UnitInverse() { x = -x; y = -y; z = -z; }
-  void UnitInverseX() { x = -x; }
-  void UnitInverseY() { y = -y; }
-  void UnitInverseZ() { z = -z; }
+	void UnitInverse( const CQuat &q ) { vec4.x = -q.vec4.x; vec4.y = -q.vec4.y; vec4.z = -q.vec4.z; vec4.w = q.vec4.w; }
+	void UnitInverse() { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; }
+  void UnitInverseX() { vec4.x = -vec4.x; }
+  void UnitInverseY() { vec4.y = -vec4.y; }
+  void UnitInverseZ() { vec4.z = -vec4.z; }
   //
   void Deriv( const CQuat &q, const CVec3 &v );
   // some neccessary operators
@@ -761,11 +758,11 @@ public:
   friend const CQuat operator/( const CQuat &a, const CQuat &b );
   CQuat& operator*=( const CQuat &quat );
 	CQuat& operator/=( const CQuat &quat );
-	const CQuat operator+( const CQuat &q ) const { return CQuat( x + q.x, y + q.y, z + q.z, w + q.w, 0, 0 ); }
-	const CQuat operator-() const { return CQuat( -x, -y, -z, -w, 0, 0 ); }        // unary minus
-	float Dot( const CQuat &quat ) const { return x*quat.x + y*quat.y + z*quat.z + w*quat.w; }
+	const CQuat operator+( const CQuat &q ) const { return CQuat( vec4.x + q.vec4.x, vec4.y + q.vec4.y, vec4.z + q.vec4.z, vec4.w + q.vec4.w, 0, 0 ); }
+	const CQuat operator-() const { return CQuat( -vec4.x, -vec4.y, -vec4.z, -vec4.w, 0, 0 ); }        // unary minus
+	float Dot( const CQuat &quat ) const { return vec4.x * quat.vec4.x + vec4.y * quat.vec4.y + vec4.z * quat.vec4.z + vec4.w * quat.vec4.w; }
 	//
-	void MinimizeRotationAngle() { if ( w < 0 ) { x = -x; y = -y; z = -z; w = -w; } }
+	void MinimizeRotationAngle() { if ( vec4.w < 0 ) { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; vec4.w = -vec4.w; } }
 	// mathematical functions
   const CQuat Exp() const;
   const CQuat Log() const;
@@ -784,7 +781,7 @@ public:
   void GetYAxis( CVec3 *pResult ) const;
   void GetZAxis( CVec3 *pResult ) const;
   //
-  friend float fabs2( const CQuat &q ) { return fabs2( q.x, q.y, q.z, q.w ); }
+  friend float fabs2( const CQuat &q ) { return fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w ); }
   friend float fabs( const CQuat &q ) { return static_cast<float>( sqrt( fabs2(q) ) ); }
   
   const CVec4& GetInternalVector() const { return vec4; }
@@ -1390,10 +1387,10 @@ inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool b
 
 	fAngle *= 0.5f;
   const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( vAxis ) : sin( fAngle );
-  x = vAxis.x * fSinAlpha;
-  y = vAxis.y * fSinAlpha;
-  z = vAxis.z * fSinAlpha;
-  w = cos( fAngle );
+  vec4.x = vAxis.x * fSinAlpha;
+  vec4.y = vAxis.y * fSinAlpha;
+  vec4.z = vAxis.z * fSinAlpha;
+  vec4.w = cos( fAngle );
 }
 inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
 {
@@ -1401,10 +1398,10 @@ inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, floa
 	
 	fAngle *= 0.5f;
   const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : sin( fAngle );
-  x = fAxisX * fSinAlpha;
-  y = fAxisY * fSinAlpha;
-  z = fAxisZ * fSinAlpha;
-  w = cos( fAngle );
+  vec4.x = fAxisX * fSinAlpha;
+  vec4.y = fAxisY * fSinAlpha;
+  vec4.z = fAxisZ * fSinAlpha;
+  vec4.w = cos( fAngle );
 }
 
 // create quaternion from Euler matrix
@@ -1425,38 +1422,38 @@ inline void CQuat::FromEulerMatrix( const SHMatrix &m )
   switch ( n )
   {
     case 0:
-      w = static_cast<float>( sqrt( qs2 ) );
-      tmp = 0.25f / w;
-      x = ( m.zy - m.yz ) * tmp;
-      y = ( m.xz - m.zx ) * tmp;
-      z = ( m.yx - m.xy ) * tmp;
+      vec4.w = static_cast<float>( sqrt( qs2 ) );
+      tmp = 0.25f / vec4.w;
+      vec4.x = ( m.zy - m.yz ) * tmp;
+      vec4.y = ( m.xz - m.zx ) * tmp;
+      vec4.z = ( m.yx - m.xy ) * tmp;
       break;
     case 1:
-      x = static_cast<float>( sqrt( qx2 ) );
-      tmp = 0.25f / x;
-      w = ( m.zy - m.yz ) * tmp;
-      y = ( m.xy + m.yx ) * tmp;
-      z = ( m.xz + m.zx ) * tmp;
+      vec4.x = static_cast<float>( sqrt( qx2 ) );
+      tmp = 0.25f / vec4.x;
+      vec4.w = ( m.zy - m.yz ) * tmp;
+      vec4.y = ( m.xy + m.yx ) * tmp;
+      vec4.z = ( m.xz + m.zx ) * tmp;
       break;
     case 2:
-      y = static_cast<float>( sqrt( qy2 ) );
-      tmp = 0.25f / y;
-      w = ( m.xz - m.zx ) * tmp;
-      z = ( m.yz + m.zy ) * tmp;
-      x = ( m.yx + m.xy ) * tmp;
+      vec4.y = static_cast<float>( sqrt( qy2 ) );
+      tmp = 0.25f / vec4.y;
+      vec4.w = ( m.xz - m.zx ) * tmp;
+      vec4.z = ( m.yz + m.zy ) * tmp;
+      vec4.x = ( m.yx + m.xy ) * tmp;
       break;
     case 3:
-      z = static_cast<float>( sqrt( qz2 ) );
-      tmp = 0.25f / z;
-      w = ( m.yx - m.xy ) * tmp;
-      x = ( m.zx + m.xz ) * tmp;
-      y = ( m.zy + m.yz ) * tmp;
+      vec4.z = static_cast<float>( sqrt( qz2 ) );
+      tmp = 0.25f / vec4.z;
+      vec4.w = ( m.yx - m.xy ) * tmp;
+      vec4.x = ( m.zx + m.xz ) * tmp;
+      vec4.y = ( m.zy + m.yz ) * tmp;
       break;
   }
   // for consistency, force positive scalar component [ (s; v) = (-s; -v) ]
   MinimizeRotationAngle();
   // normalize
-  ::Normalize( x, y, z, w );
+  ::Normalize( vec4.x, vec4.y, vec4.z, vec4.w );
 }
 
 //  converts 3 euler angles (in radians) to a quaternion
@@ -1476,10 +1473,10 @@ inline void CQuat::FromEulerAngles( float yaw, float pitch, float roll )
   const float fCosRoll = cos( fHalfRoll );
   const float fSinRoll = sin( fHalfRoll );
 
-  x = fSinRoll*fCosPitch*fCosYaw - fCosRoll*fSinPitch*fSinYaw;
-  y = fCosRoll*fSinPitch*fCosYaw + fSinRoll*fCosPitch*fSinYaw;
-  z = fCosRoll*fCosPitch*fSinYaw - fSinRoll*fSinPitch*fCosYaw;
-  w = fCosRoll*fCosPitch*fCosYaw + fSinRoll*fSinPitch*fSinYaw;
+  vec4.x = fSinRoll*fCosPitch*fCosYaw - fCosRoll*fSinPitch*fSinYaw;
+  vec4.y = fCosRoll*fSinPitch*fCosYaw + fSinRoll*fCosPitch*fSinYaw;
+  vec4.z = fCosRoll*fCosPitch*fSinYaw - fSinRoll*fSinPitch*fCosYaw;
+  vec4.w = fCosRoll*fCosPitch*fCosYaw + fSinRoll*fSinPitch*fSinYaw;
 }
 
 inline CQuat::CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
@@ -1494,60 +1491,60 @@ inline CQuat::CQuat( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis
 
 inline void CQuat::Deriv( const CQuat &q, const CVec3 &v )
 {
-  x = 0.5f * (  q.w*v.x - q.z*v.y + q.y*v.z );
-  y = 0.5f * (  q.z*v.x + q.w*v.y - q.x*v.z );
-  z = 0.5f * ( -q.y*v.x + q.x*v.y + q.w*v.z );
-  w = 0.5f * ( -q.x*v.x - q.y*v.y - q.z*v.z );
+  vec4.x = 0.5f * (  q.vec4.w * v.x - q.vec4.z * v.y + q.vec4.y * v.z );
+  vec4.y = 0.5f * (  q.vec4.z * v.x + q.vec4.w * v.y - q.vec4.x * v.z );
+  vec4.z = 0.5f * ( -q.vec4.y * v.x + q.vec4.x * v.y + q.vec4.w * v.z );
+  vec4.w = 0.5f * ( -q.vec4.x * v.x - q.vec4.y * v.y - q.vec4.z * v.z );
 }
 
 // rotations
 inline const CVec3 CQuat::GetXAxis() const
 {
-	return CVec3( w*w - (x*x + y*y + z*z) + 2.0f*x*x, (z*w + x*y)*2.0f, (-y*w + x*z)*2.0f );
+	return CVec3( vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.x * vec4.x, (vec4.z * vec4.w + vec4.x * vec4.y) * 2.0f, (-vec4.y * vec4.w + vec4.x * vec4.z) * 2.0f );
 }
 inline const CVec3 CQuat::GetYAxis() const
 {
-	return CVec3( (-z*w + y*x)*2.0f, w*w - (x*x + y*y + z*z) + 2.0f*y*y, (x*w + y*z)*2.0f );
+	return CVec3( (-vec4.z * vec4.w + vec4.y * vec4.x) * 2.0f, vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.y * vec4.y, (vec4.x * vec4.w + vec4.y * vec4.z) * 2.0f );
 }
 inline const CVec3 CQuat::GetZAxis() const
 {
-	return CVec3( (y*w + z*x)*2.0f, (-x*w + z*y)*2.0f, w*w - (x*x + y*y + z*z) + 2.0f*z*z );
+	return CVec3( (vec4.y * vec4.w + vec4.z * vec4.x) * 2.0f, (-vec4.x * vec4.w + vec4.z * vec4.y) * 2.0f, vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.z * vec4.z );
 }
 inline void CQuat::GetXAxis( CVec3 *pRes ) const
 {
-	pRes->x = w*w - (x*x + y*y + z*z) + 2.0f*x*x;
-	pRes->y = (z*w + x*y)*2.0f;
-	pRes->z = (-y*w + x*z)*2.0f;
+	pRes->x = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.x * vec4.x;
+	pRes->y = (vec4.z * vec4.w + vec4.x * vec4.y) * 2.0f;
+	pRes->z = (-vec4.y * vec4.w + vec4.x * vec4.z) * 2.0f;
 }
 inline void CQuat::GetYAxis( CVec3 *pRes ) const
 {
-	pRes->x = (-z*w + y*x)*2.0f;
-	pRes->y = w*w - (x*x + y*y + z*z) + 2.0f*y*y;
-	pRes->z = (x*w + y*z)*2.0f;
+	pRes->x = (-vec4.z * vec4.w + vec4.y * vec4.x) * 2.0f;
+	pRes->y = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.y * vec4.y;
+	pRes->z = (vec4.x * vec4.w + vec4.y * vec4.z) * 2.0f;
 }
 inline void CQuat::GetZAxis( CVec3 *pRes ) const
 {
-	pRes->x = (y*w + z*x)*2.0f;
-	pRes->y = (-x*w + z*y)*2.0f;
-	pRes->z = w*w - (x*x + y*y + z*z) + 2.0f*z*z;
+	pRes->x = (vec4.y * vec4.w + vec4.z * vec4.x) * 2.0f;
+	pRes->y = (-vec4.x * vec4.w + vec4.z * vec4.y) * 2.0f;
+	pRes->z = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.z * vec4.z;
 }
 inline const CVec3 CQuat::Rotate( const CVec3 &r ) const
 {
-	const CVec3 L( x, y, z );
-	return ( r*(w*w - L*L) + (2.0f*w)*(L^r) + (2.0f*(L*r))*L );
+	const CVec3 L( vec4.x, vec4.y, vec4.z );
+	return ( r * (vec4.w * vec4.w - L * L) + (2.0f * vec4.w) * (L ^ r) + (2.0f * (L * r)) * L );
 }
 inline void CQuat::Rotate( CVec3 *pRes, const CVec3 &vec ) const
 {
-	const CVec3 L( x, y, z );
-	*pRes = ( vec*(w*w - L*L) + (2.0f*w)*(L^vec) + (2.0f*(L*vec))*L );
+	const CVec3 L( vec4.x, vec4.y, vec4.z );
+	*pRes = ( vec * (vec4.w * vec4.w - L * L) + (2.0f * vec4.w) * (L ^ vec) + (2.0f * (L * vec)) * L );
 }
 
 inline const CQuat operator*( const CQuat &a, const CQuat &b )
 {
-	return CQuat( a.w*b.x + b.w*a.x + (a.y*b.z - a.z*b.y),
-  							a.w*b.y + b.w*a.y + (a.z*b.x - a.x*b.z),
-  							a.w*b.z + b.w*a.z + (a.x*b.y - a.y*b.x),
-                a.w*b.w - (a.x*b.x + a.y*b.y + a.z*b.z), 0, 0 );
+	return CQuat( a.vec4.w * b.vec4.x + b.vec4.w * a.vec4.x + (a.vec4.y * b.vec4.z - a.vec4.z * b.vec4.y),
+                a.vec4.w * b.vec4.y + b.vec4.w * a.vec4.y + (a.vec4.z * b.vec4.x - a.vec4.x * b.vec4.z),
+                a.vec4.w * b.vec4.z + b.vec4.w * a.vec4.z + (a.vec4.x * b.vec4.y - a.vec4.y * b.vec4.x),
+                a.vec4.w * b.vec4.w - (a.vec4.x * b.vec4.x + a.vec4.y * b.vec4.y + a.vec4.z * b.vec4.z), 0, 0 );
 }
 
 // divide quaternion 'A' on quaternion 'B'
@@ -1563,11 +1560,11 @@ inline const CQuat operator/( const CQuat &a, const CQuat &b )
 // quaternion's multiplication with assignment (this = a*this)
 inline CQuat& CQuat::operator*=( const CQuat &a )
 {
-  float xtmp = a.w*x + w*a.x + (a.y*z - a.z*y);
-  float ytmp = a.w*y + w*a.y + (a.z*x - a.x*z);
-  float ztmp = a.w*z + w*a.z + (a.x*y - a.y*x);
-  float wtmp = a.w*w - ( a.x*x + a.y*y + a.z*z );
-  x = xtmp; y = ytmp; z = ztmp; w = wtmp;
+  float xtmp = a.vec4.w * vec4.x + vec4.w * a.vec4.x + (a.vec4.y * vec4.z - a.vec4.z * vec4.y);
+  float ytmp = a.vec4.w * vec4.y + vec4.w * a.vec4.y + (a.vec4.z * vec4.x - a.vec4.x * vec4.z);
+  float ztmp = a.vec4.w * vec4.z + vec4.w * a.vec4.z + (a.vec4.x * vec4.y - a.vec4.y * vec4.x);
+  float wtmp = a.vec4.w * vec4.w - ( a.vec4.x * vec4.x + a.vec4.y * vec4.y + a.vec4.z * vec4.z );
+  vec4.x = xtmp; vec4.y = ytmp; vec4.z = ztmp; vec4.w = wtmp;
 
   return *this;
 }
@@ -1586,14 +1583,14 @@ inline CQuat& CQuat::operator/=( const CQuat &q )
 // inverse quaternion
 inline bool CQuat::Inverse( const CQuat &q )
 {
-  float norm = fabs2( q.x, q.y, q.z, q.w );
+  float norm = fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w );
   if ( norm > FP_EPSILON2 )
   {
     norm = 1.0f / static_cast<float>( sqrt( norm ) );
-    x = -q.x * norm;
-    y = -q.y * norm;
-    z = -q.z * norm;
-    w =  q.w * norm;
+    vec4.x = -q.vec4.x * norm;
+    vec4.y = -q.vec4.y * norm;
+    vec4.z = -q.vec4.z * norm;
+    vec4.w =  q.vec4.w * norm;
     return true;
   }
   else
@@ -1603,14 +1600,14 @@ inline bool CQuat::Inverse( const CQuat &q )
 // inverse quaternion
 inline bool CQuat::Inverse()
 {
-  float norm = fabs2( x, y, z, w );
+  float norm = fabs2( vec4.x, vec4.y, vec4.z, vec4.w );
   if ( norm > FP_EPSILON2 )
   {
     norm = 1.0f / static_cast<float>( sqrt( norm ) );
-    x *= -norm;
-    y *= -norm;
-    z *= -norm;
-    w *=  norm;
+    vec4.x *= -norm;
+    vec4.y *= -norm;
+    vec4.z *= -norm;
+    vec4.w *=  norm;
     return true;
   }
   else
@@ -1622,14 +1619,14 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const
 {
 	// The quaternion representing the rotation is
 	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
-  float len = fabs2( x, y, z );
+  float len = fabs2( vec4.x, vec4.y, vec4.z );
   if ( len > 1e-8f )
   {
-    *pfAngle = 2.0f * acos( w );
+    *pfAngle = 2.0f * acos( vec4.w );
     len = 1.0f / float( sqrt(len) );
-    pvAxis->x = x * len;
-    pvAxis->y = y * len;
-    pvAxis->z = z * len;
+    pvAxis->x = vec4.x * len;
+    pvAxis->y = vec4.y * len;
+    pvAxis->z = vec4.z * len;
   }
   else
   {
@@ -1644,14 +1641,14 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, float *pfAxisX, float *pfAxi
 {
 	// The quaternion representing the rotation is
 	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
-  float len = x*x + y*y + z*z;
+  float len = vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z;
   if ( len > 1e-8f )
   {
-    *pfAngle = 2.0f * acos( w );
+    *pfAngle = 2.0f * acos( vec4.w );
     len = 1.0f / float( sqrt(len) );
-    *pfAxisX = x * len;
-    *pfAxisY = y * len;
-    *pfAxisZ = z * len;
+    *pfAxisX = vec4.x * len;
+    *pfAxisY = vec4.y * len;
+    *pfAxisZ = vec4.z * len;
   }
   else
   {
@@ -1666,18 +1663,18 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, float *pfAxisX, float *pfAxi
 // decompose quaternion to Euler matrix
 inline void CQuat::DecompEulerMatrix( SHMatrix *pRes ) const
 {
-  const float tx  = x + x;
-  const float ty  = y + y;
-  const float tz  = z + z;
-  const float twx = tx*w;
-  const float twy = ty*w;
-  const float twz = tz*w;
-  const float txx = tx*x;
-  const float txy = ty*x;
-  const float txz = tz*x;
-  const float tyy = ty*y;
-  const float tyz = tz*y;
-  const float tzz = tz*z;
+  const float tx  = vec4.x + vec4.x;
+  const float ty  = vec4.y + vec4.y;
+  const float tz  = vec4.z + vec4.z;
+  const float twx = tx * vec4.w;
+  const float twy = ty * vec4.w;
+  const float twz = tz * vec4.w;
+  const float txx = tx * vec4.x;
+  const float txy = ty * vec4.x;
+  const float txz = tz * vec4.x;
+  const float tyy = ty * vec4.y;
+  const float tyz = tz * vec4.y;
+  const float tzz = tz * vec4.z;
 
 	pRes->_11 = 1.0f - (tyy + tzz);
 	pRes->_12 = txy - twz;
@@ -1695,18 +1692,18 @@ inline void CQuat::DecompEulerMatrix( SHMatrix *pRes ) const
 // decompose quaternion to reversed Euler matrix (reverse transform)
 inline void CQuat::DecompReversedEulerMatrix( SHMatrix *pRes ) const
 {
-  const float tx  = -( x + x );
-  const float ty  = -( y + y );
-  const float tz  = -( z + z );
-  const float twx =  tx*w;
-  const float twy =  ty*w;
-  const float twz =  tz*w;
-  const float txx = -tx*x;
-  const float txy = -ty*x;
-  const float txz = -tz*x;
-  const float tyy = -ty*y;
-  const float tyz = -tz*y;
-  const float tzz = -tz*z;
+  const float tx  = -( vec4.x + vec4.x );
+  const float ty  = -( vec4.y + vec4.y );
+  const float tz  = -( vec4.z + vec4.z );
+  const float twx =  tx * vec4.w;
+  const float twy =  ty * vec4.w;
+  const float twz =  tz * vec4.w;
+  const float txx = -tx * vec4.x;
+  const float txy = -ty * vec4.x;
+  const float txz = -tz * vec4.x;
+  const float tyy = -ty * vec4.y;
+  const float tyz = -tz * vec4.y;
+  const float tzz = -tz * vec4.z;
 
 	pRes->_11 = 1.0f - (tyy + tzz);
 	pRes->_12 = txy - twz;
@@ -1727,24 +1724,24 @@ inline const CQuat CQuat::Exp() const
   // If q = A*(x*i+y*j+z*k) where (x,y,z) is unit length, then
   // exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
   // use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
-  const double angle = fabs( x, y, z );
+  const double angle = fabs( vec4.x, vec4.y, vec4.z );
   const double sn = sin( angle );
   CQuat result;
 
-  result.w = float( cos(angle) );
+  result.vec4.w = float( cos(angle) );
 
   if ( fabs(sn) >= FP_QUAT_EPSILON )
   {
     const float coeff = float( sn / angle );
-    result.x = coeff * x;
-    result.y = coeff * y;
-    result.z = coeff * z;
+    result.vec4.x = coeff * vec4.x;
+    result.vec4.y = coeff * vec4.y;
+    result.vec4.z = coeff * vec4.z;
   }
   else
   {
-    result.x = x;
-    result.y = y;
-    result.z = z;
+    result.vec4.x = vec4.x;
+    result.vec4.y = vec4.y;
+    result.vec4.z = vec4.z;
   }
 
   return result;
@@ -1756,18 +1753,18 @@ inline const CQuat CQuat::Log() const
   // If q = cos(A) + sin(A)*(x*i + y*j + z*k) where (x,y,z) is unit length, then
   // log(q) = A*(x*i + y*j + z*k).  If sin(A) is near zero, use log(q) =
   // sin(A)*(x*i + y*j + z*k) since sin(A)/A has limit 1.
-  if ( fabs(w) < 1.0f )
+  if ( fabs(vec4.w) < 1.0f )
   {
-    const double angle = acos( w );
+    const double angle = acos( vec4.w );
     const double sn = sin( angle );
     if ( fabs(sn) >= FP_QUAT_EPSILON )
     {
       const float coeff = float( angle / sn );
-      return CQuat( coeff*x, coeff*y, coeff*z, 0, 0, 0 );
+      return CQuat( coeff * vec4.x, coeff * vec4.y, coeff * vec4.z, 0, 0, 0 );
     }
   }
 
-  return CQuat( x, y, z, 0, 0, 0 );
+  return CQuat( vec4.x, vec4.y, vec4.z, 0, 0, 0 );
 }
 
 // Spherical Linear intERPolation between two quaternions (SLERP) (from 'p' to 'q' with coeff 'factor')
@@ -1776,7 +1773,7 @@ inline void CQuat::Slerp( const float factor, const CQuat &p, const CQuat &q )
 	float scale0, scale1;
   CQuat q1( q );
 	// use the dot product to get the cosine of the angle between the quaternions
-	float cosom = p.x*q.x + p.y*q.y + p.z*q.z + p.w*q.w;
+	float cosom = p.vec4.x * q.vec4.x + p.vec4.y * q.vec4.y + p.vec4.z * q.vec4.z + p.vec4.w * q.vec4.w;
   // adjust signs (if necessary)
   if ( cosom < 0.0 )
 	{
@@ -1797,10 +1794,10 @@ inline void CQuat::Slerp( const float factor, const CQuat &p, const CQuat &q )
     scale1 = factor;
   }
   // calculate final values
-  x = scale0*p.x + scale1*q1.x;
-  y = scale0*p.y + scale1*q1.y;
-  z = scale0*p.z + scale1*q1.z;
-  w = scale0*p.w + scale1*q1.w;
+  vec4.x = scale0 * p.vec4.x + scale1 * q1.vec4.x;
+  vec4.y = scale0 * p.vec4.y + scale1 * q1.vec4.y;
+  vec4.z = scale0 * p.vec4.z + scale1 * q1.vec4.z;
+  vec4.w = scale0 * p.vec4.w + scale1 * q1.vec4.w;
 }
 
 // ************************************************************************************************************************ //
@@ -1994,11 +1991,17 @@ enum ESide
 
 struct MISC_EXPORT SRect
 {
-	union
-	{
-		struct { CVec2 v[4]; };
-		struct { CVec2 v1, v2, v3, v4; };
-	};
+	CVec2 v[4];
+	// v[] elements are real subobjects, so these can hand out references and a
+	// corner stays assignable the way the old v1..v4 members were
+	CVec2 &       v1()       noexcept { return v[0]; }
+	CVec2 &       v2()       noexcept { return v[1]; }
+	CVec2 &       v3()       noexcept { return v[2]; }
+	CVec2 &       v4()       noexcept { return v[3]; }
+	const CVec2 & v1() const noexcept { return v[0]; }
+	const CVec2 & v2() const noexcept { return v[1]; }
+	const CVec2 & v3() const noexcept { return v[2]; }
+	const CVec2 & v4() const noexcept { return v[3]; }
 	CVec2 dir, dirPerp, center;
 	float lengthAhead, lengthBack, width;
 

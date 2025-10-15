@@ -64,20 +64,20 @@ void CEntrenchmentPart::Init()
 	if ( NGlobal::GetVar( "show_entrenchment_boundrects", 0 ) )
 	{
 		CSegment segm;
-		segm.p1 = boundRect.v1;
-		segm.p2 = boundRect.v2;
+		segm.p1 = boundRect.v1();
+		segm.p2 = boundRect.v2();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 1, NDebugInfo::WHITE );
-		segm.p1 = boundRect.v2;
-		segm.p2 = boundRect.v3;
+		segm.p1 = boundRect.v2();
+		segm.p2 = boundRect.v3();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 1, NDebugInfo::WHITE );
-		segm.p1 = boundRect.v3;
-		segm.p2 = boundRect.v4;
+		segm.p1 = boundRect.v3();
+		segm.p2 = boundRect.v4();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 1, NDebugInfo::WHITE );
-		segm.p1 = boundRect.v4;
-		segm.p2 = boundRect.v1;
+		segm.p1 = boundRect.v4();
+		segm.p2 = boundRect.v1();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 1, NDebugInfo::WHITE );
 	}
@@ -303,20 +303,20 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 	if ( NGlobal::GetVar( "entrenchment_markers", 0 ) != 0 )
 	{
 		CSegment segm;
-		segm.p1 = rect.v1;
-		segm.p2 = rect.v2;
+		segm.p1 = rect.v1();
+		segm.p2 = rect.v2();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
-		segm.p1 = rect.v2;
-		segm.p2 = rect.v3;
+		segm.p1 = rect.v2();
+		segm.p2 = rect.v3();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
-		segm.p1 = rect.v3;
-		segm.p2 = rect.v4;
+		segm.p1 = rect.v3();
+		segm.p2 = rect.v4();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
-		segm.p1 = rect.v4;
-		segm.p2 = rect.v1;
+		segm.p1 = rect.v4();
+		segm.p2 = rect.v1();
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
 	}

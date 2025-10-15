@@ -350,7 +350,7 @@ inline void CAIMap::GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const fl
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles )
 {
-	ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, pTiles, EAC_NONE, SGenericNumber<1>() );
+	ProcessQuadrangleTiles( rect.v1(), rect.v2(), rect.v3(), rect.v4(), pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
 // для GetTilesCoveredByRectSides
@@ -376,10 +376,10 @@ inline void CAIMap::GetTilesCoveredByRectSides( const SRect &rect, TContainter *
 {
 	CTilesCollector<TContainter> a( pTiles, this );
 
-	MakeLine2( rect.v1.x/GetTileSize(), rect.v1.y/GetTileSize(), rect.v2.x/GetTileSize(), rect.v2.y/GetTileSize(), a );
-	MakeLine2( rect.v2.x/GetTileSize(), rect.v2.y/GetTileSize(), rect.v3.x/GetTileSize(), rect.v3.y/GetTileSize(), a );
-	MakeLine2( rect.v3.x/GetTileSize(), rect.v3.y/GetTileSize(), rect.v4.x/GetTileSize(), rect.v4.y/GetTileSize(), a );
-	MakeLine2( rect.v4.x/GetTileSize(), rect.v4.y/GetTileSize(), rect.v1.x/GetTileSize(), rect.v1.y/GetTileSize(), a );
+	MakeLine2( rect.v1().x / GetTileSize(), rect.v1().y / GetTileSize(), rect.v2().x / GetTileSize(), rect.v2().y / GetTileSize(), a );
+	MakeLine2( rect.v2().x / GetTileSize(), rect.v2().y / GetTileSize(), rect.v3().x / GetTileSize(), rect.v3().y / GetTileSize(), a );
+	MakeLine2( rect.v3().x / GetTileSize(), rect.v3().y / GetTileSize(), rect.v4().x / GetTileSize(), rect.v4().y / GetTileSize(), a );
+	MakeLine2( rect.v4().x / GetTileSize(), rect.v4().y / GetTileSize(), rect.v1().x / GetTileSize(), rect.v1().y / GetTileSize(), a );
 }
 
 

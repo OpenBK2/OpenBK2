@@ -64,6 +64,9 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 static void Split( SPolyhedron *pRes, const SPlane &p )
 {
 	SPolyhedron src = *pRes;
+	// SPlane stores the normal and the distance, so build the CVec4 form once
+	// rather than rebuilding it for every vertex below
+	const CVec4 planeVec4 = p.vec4();
 	std::vector<SEdge> edges;
 	pRes->facets.resize(0);
 	for ( int k = 0; k < src.facets.size(); ++k )
@@ -76,14 +79,14 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 				s.vertices[k] = -s.vertices[k];
 		}
 		int iPrev = s.vertices.size() - 1;
-		float fPrevSide = p.vec4 * s.vertices[iPrev], fSide;
+		float fPrevSide = planeVec4 * s.vertices[iPrev], fSide;
 		CVec4 vEnter, vExit;
 		bool bWasIntersected = false;
 		for ( int i = 0; i < s.vertices.size(); iPrev = i, fPrevSide = fSide, ++i )
 		{
 			const CVec4 &vPrev = s.vertices[ iPrev ];
 			const CVec4 &v = s.vertices[ i ];
-			fSide = p.vec4 * v;
+			fSide = planeVec4 * v;
 			if ( fPrevSide < 0 )
 			{
 				if ( fSide < 0 )
@@ -146,7 +149,7 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 			if ( !bFound )
 				break;
 		}
-		onPlane.vPlane = CVec4( -p.vec4.x, -p.vec4.y, -p.vec4.z, p.vec4.w );
+		onPlane.vPlane = CVec4( -p.n.x, -p.n.y, -p.n.z, p.d );
 		pRes->facets.push_back( onPlane );
 	}
 }
@@ -539,7 +542,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		for ( int i = 0; i < p.vertices.size(); ++i )
 		{
 			CVec3 vPos = Unhomogen( p.vertices[i] );
-			fMinW	= (std::min)( fMinW, Dot4( mCamera.w, CVec4(vPos,1) ) );
+			fMinW	= (std::min)( fMinW, Dot4( mCamera.w(), CVec4(vPos,1) ) );
 
 			float fX = xDir * vPos;
 			float fY = yDir * vPos;

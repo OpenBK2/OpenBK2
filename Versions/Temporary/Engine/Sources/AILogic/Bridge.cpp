@@ -514,10 +514,10 @@ static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles
 	//перейдм к uint32_t чтобы не переполнялось
 	uint32_t arDir[4];
 	uint32_t dwDir = wDir;
-	arDir[0] = GetDirectionByVector( (rect.v1 +rect.v2)/2 - rect.center );
-	arDir[1] = GetDirectionByVector( (rect.v2 +rect.v3)/2 - rect.center );
-	arDir[2] = GetDirectionByVector( (rect.v3 +rect.v4)/2 - rect.center );
-	arDir[3] = GetDirectionByVector( (rect.v4 +rect.v1)/2 - rect.center );
+	arDir[0] = GetDirectionByVector( (rect.v1() +rect.v2())/2 - rect.center );
+	arDir[1] = GetDirectionByVector( (rect.v2() +rect.v3())/2 - rect.center );
+	arDir[2] = GetDirectionByVector( (rect.v3() +rect.v4())/2 - rect.center );
+	arDir[3] = GetDirectionByVector( (rect.v4() +rect.v1())/2 - rect.center );
 
 	int iMin = 0;
 	uint32_t dwMin = 65535;
@@ -535,22 +535,22 @@ static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles
 
 	if ( need(iMin,0) )
 	{//wDir не лежит между arDir[0] и arDir[1]
-		MakeLine2( rect.v1.x/nTileSize, rect.v1.y/nTileSize, rect.v2.x/nTileSize, rect.v2.y/nTileSize, a );
+		MakeLine2( rect.v1().x / nTileSize, rect.v1().y / nTileSize, rect.v2().x / nTileSize, rect.v2().y / nTileSize, a );
 	}
 
 	if ( need(iMin,1) )
 	{//wDir не лежит между arDir[1] и arDir[2]
-		MakeLine2( rect.v2.x/nTileSize, rect.v2.y/nTileSize, rect.v3.x/nTileSize, rect.v3.y/nTileSize, a );
+		MakeLine2( rect.v2().x / nTileSize, rect.v2().y / nTileSize, rect.v3().x / nTileSize, rect.v3().y / nTileSize, a );
 	}
 
 	if ( need(iMin,2) )
 	{//wDir no лежит между arDir[1] и arDir[2]
-		MakeLine2( rect.v3.x/nTileSize, rect.v3.y/nTileSize, rect.v4.x/nTileSize, rect.v4.y/nTileSize, a );
+		MakeLine2( rect.v3().x / nTileSize, rect.v3().y / nTileSize, rect.v4().x / nTileSize, rect.v4().y / nTileSize, a );
 	}
 
 	if ( need(iMin,3) )
 	{//wDir no лежит между arDir[1] и arDir[2]
-		MakeLine2( rect.v4.x/nTileSize, rect.v4.y/nTileSize, rect.v1.x/nTileSize, rect.v1.y/nTileSize, a );
+		MakeLine2( rect.v4().x / nTileSize, rect.v4().y / nTileSize, rect.v1().x / nTileSize, rect.v1().y / nTileSize, a );
 	}
 }
 
