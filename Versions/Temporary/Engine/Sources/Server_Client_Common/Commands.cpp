@@ -77,7 +77,7 @@ static SStringToCommand szCommandsList[] =
 
 #define REGISTER_PARSE( cmd, FuncName, _bServer )	\
 if ( _bServer == bServer )	\
-parseCmdFuncs[cmd] = &CCommands::##FuncName;
+parseCmdFuncs[cmd] = &CCommands::FuncName;
 
 CCommands::CCommands( const bool _bServer )
 : bServer( _bServer )

@@ -43,7 +43,7 @@
 //#include "../Stats_B2_M1/DBMapInfo.h"
 
 
-#define REGISTER_UPDATE( RPGName, Name ) newFuncs[RPGName::typeID] = Name##::New##Name
+#define REGISTER_UPDATE( RPGName, Name ) newFuncs[RPGName::typeID] = Name::New##Name
 
 #define SELECTION_DELTA 90.0f
 

@@ -49,13 +49,13 @@ namespace NObjectFactory
 		void UnRegisterTypeName( int nTypeID, TT* ) { NObjectFactory::UnRegisterType( nTypeID, &typeid(TT) ); }
 };
 // MACROses to register class
-#define REGISTER_CLASS( N, name ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, name##::New##name, (name*)0 ); }
+#define REGISTER_CLASS( N, name ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, name::New##name, (name*)0 ); }
 #define UNREGISTER_CLASS( N, name ) NObjectFactory::UnRegisterTypeName( N, (name*)0 );
 
-#define REGISTER_TEMPL_CLASS( N, name, className ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, name##::New##className, (name*)0 ); }
+#define REGISTER_TEMPL_CLASS( N, name, className ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, name::New##className, (name*)0 ); }
 #define UNREGISTER_TEMPL_CLASS( N, name ) NObjectFactory::UnRegisterTypeName( N, (name*)0 );
 
-#define REGISTER_CLASS_NM( N, name, nmspace ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, nmspace::name##::New##name, (nmspace::name*)0 ); }
+#define REGISTER_CLASS_NM( N, name, nmspace ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, nmspace::name::New##name, (nmspace::name*)0 ); }
 #define UNREGISTER_CLASS_NM( N, name, nmspace ) NObjectFactory::UnRegisterTypeName( N, (nmspace::name*)0 );
 // make object by TypeID from objects factory
 template <class TYPE> 
