@@ -27,7 +27,7 @@ class CConsoleBuffer : public IConsoleBuffer
 	std::unordered_map<int, SPipeChannel> pipes;
 	int nSlowCompress;
 
-	int CConsoleBuffer::operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver )
 	{
 		if ( saver.IsChecksum() )
 			return 0;

@@ -135,7 +135,7 @@ public:
 	void Segment();
 
 	virtual void CancelRequest( int nRequestID, enum EForceType eType  );
-	virtual int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
+	virtual int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
 
 	
 	// для очагов сопротивления
