@@ -2,6 +2,11 @@
 
 #include "System_export.h"
 
+#include <charconv>
+#include <cstring>
+#include <cwchar>
+#include <system_error>
+
 
 // func is called on var set or cmd call
 #define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
@@ -36,13 +41,46 @@ private:
 		copy( pszString, pszString + nLen, szVal.begin() );
 	}
 public:
+	// Parse the leading number out of a string the way atof did, but without
+	// the locale dependency and without exceptions. from_chars is the only
+	// standard parser specified to ignore LC_NUMERIC. Trailing junk is not an
+	// error, so "1024x768" still gives 1024; anything that does not start with
+	// a number gives 0.
+	static float ParseFloat( const char *pszVal, size_t nLen )
+	{
+		// from_chars does not skip leading whitespace, atof did
+		while ( nLen > 0 && ( *pszVal == ' ' || *pszVal == '\t' ) )
+		{
+			++pszVal;
+			--nLen;
+		}
+		float fRes = 0.0f;
+		const std::from_chars_result res = std::from_chars( pszVal, pszVal + nLen, fRes );
+		if ( res.ec != std::errc() )
+		{
+			return 0.0f;
+		}
+		return fRes;
+	}
+	// numbers are ASCII, so narrowing is enough to reuse the same parser
+	static float ParseFloat( const wchar_t *pszVal, size_t nLen )
+	{
+		std::string szNarrow;
+		szNarrow.reserve( nLen );
+		for ( size_t i = 0; i < nLen; ++i )
+		{
+			szNarrow += ( pszVal[i] > 0 && pszVal[i] < 0x80 ) ? char( pszVal[i] ) : '?';
+		}
+		return ParseFloat( szNarrow.c_str(), szNarrow.size() );
+	}
+
 	CValue() : fVal( 0 ) {}
 	CValue( float _fVal ) : fVal( _fVal ) { SetVal( StrFmt("%g", _fVal) ); }
 	CValue( int _n ) : fVal( _n ) { SetVal( StrFmt( "%g", fVal ) ); }
-	CValue( const std::wstring &_szVal )	: fVal( _wtof( _szVal.c_str() ) ), szVal( _szVal ) {}
-	CValue( const wchar_t *pszVal )	: fVal( _wtof( pszVal ) ), szVal(pszVal) {}
-	CValue( const std::string &_szVal )	: fVal( atof( _szVal.c_str() ) ) { SetVal( _szVal.c_str() ); }
-	CValue( const char *pszVal )	: fVal( atof( pszVal ) ) { SetVal( pszVal ); }
+	CValue( const std::wstring &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
+	CValue( const wchar_t *pszVal )	: fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal(pszVal) {}
+	CValue( const std::string &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ) { SetVal( _szVal.c_str() ); }
+	CValue( const char *pszVal )	: fVal( ParseFloat( pszVal, strlen( pszVal ) ) ) { SetVal( pszVal ); }
 
 	float GetFloat() const { return fVal; }
 	const std::wstring& GetString() const { return szVal; }
