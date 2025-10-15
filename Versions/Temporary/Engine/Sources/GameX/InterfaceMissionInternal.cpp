@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include "MemoryLib_export.h"
 
 #include "UI/UI.h"
@@ -1671,7 +1674,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 
 bool CInterfaceMission::StepLocal( bool bAppActive )
 {
-	Sleep( 1 );
+	std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 
 	if ( IsValid( pTransceiver ) )
 		pTransceiver->DoSegments();

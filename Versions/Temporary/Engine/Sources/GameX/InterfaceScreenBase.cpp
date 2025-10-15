@@ -232,7 +232,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 	// do local step for overloaded interface
 	if ( (StepLocal(bAppActive) == false) || (bAppActive == false) /*|| !pGFX->IsActive()*/ )
 	{
-//		Sleep( 10 );
+//		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 		return;
 	}
 	// update sound

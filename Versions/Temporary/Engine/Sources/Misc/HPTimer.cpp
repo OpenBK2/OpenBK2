@@ -2,6 +2,8 @@
 #include "HPTimer.h"
 
 #include <cstdint>
+#include <thread>
+#include <chrono>
 
 #include <boost/predef.h>
 
@@ -79,7 +81,7 @@ void NHPTimer::UpdateHPTimerFrequency()
 	{
 		QueryPerformanceFrequency( (_LARGE_INTEGER*) &freq );
 	}
-//	Sleep( 100 );
+//	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	bUpdateInitiated = true;
 	dwStart = GetTickCount();
 	GetTime( &tStart );
@@ -93,7 +95,7 @@ static void InitHPTimer()
 		UpdateHPTimerFrequency();
 		if ( fProcFreq1 != 1 )
 			break;
-		Sleep( 100 );
+		std::this_thread::sleep_for( std::chrono::milliseconds(100) );
 	}
 	//cout << "freq = " << fpProcFreq / 1000000 <<  "Mhz" << endl;
 }

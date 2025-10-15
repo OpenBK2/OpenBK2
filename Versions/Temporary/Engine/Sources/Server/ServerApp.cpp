@@ -13,7 +13,9 @@
 #include "Scintilla/Scintilla.h"
 #include "Server_Client_Common/Commands.h"
 
+#include <chrono>
 #include <cstdint>
+#include <thread>
 
 CServerApp theApp;
 
@@ -86,7 +88,7 @@ int CServerApp::ExitInstance()
 
 void CServerApp::Segment()
 {
-	Sleep( 20 );
+	std::this_thread::sleep_for( std::chrono::milliseconds( 20 ) );
 	pGameServer->Segment();
 	//pConsole->Segment();
 }

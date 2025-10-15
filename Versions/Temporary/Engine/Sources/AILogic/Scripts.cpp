@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include "Scripts.h"
 
 #include "NewUpdater.h"
@@ -4068,7 +4071,7 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 
 	for ( bool bAllInarea = false; !bAllInarea; )
 	{
-		Sleep( 100 + NRandom::Random( 1000 ) ); RecordRandomCall();    // CRAP: This is very bad!!!
+		std::this_thread::sleep_for( std::chrono::milliseconds( 100 + NRandom::Random( 1000 ) ) ); RecordRandomCall();    // CRAP: This is very bad!!!
 		if ( script.GetObject( 3 ).IsNumber() )
 		{
 			CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "WaitForGroupInArea: 2nd parameter isn't a X", script );

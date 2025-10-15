@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include "FileUtils.h"
 #include "RandomGenInternal.h"
 #include "Commands.h"
@@ -359,7 +362,7 @@ void CRandomGenSeed::FillRandRsl()
 		if ( bHaveNotZero == FALSE )
 		{
 			bSuccess = FALSE;
-			Sleep( 10 );
+			std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 		}
 		for ( i = 0; i < RANDSIZ; i++ )
 			rnd.randrsl[i] ^= rand();

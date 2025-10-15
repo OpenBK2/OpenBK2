@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <thread>
+#include <chrono>
 #include "InterfaceLoadingSingle.h"
 #include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"
@@ -324,7 +327,7 @@ void CInterfaceLoadingBase::PlayOnEnterTransitEffect()
 		NGScene::RenderFrameTransition();
 		NGScene::Flip();
 
-		Sleep( 10 );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 	}
 }
 
@@ -426,7 +429,7 @@ void CInterfaceLoadingSingle2D::ShowOnEnterMoveEffect()
 	{
 		GetScreen()->Segment( 10 );
 		Draw();
-		Sleep( 10 );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 	}
 	
 	ShowFirstElement();

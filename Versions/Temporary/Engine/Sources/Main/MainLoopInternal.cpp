@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include <boost/predef.h>
 
 #if BOOST_OS_WINDOWS
@@ -255,7 +258,7 @@ static void LimitInterfaceFrameRate( bool bActive )
 		const LONGLONG nTicksLeft = nFrameTicks - nElapsedTicks;
 		const uint32_t nSleepMS = uint32_t( nTicksLeft * 1000 / frequency.QuadPart );
 		if ( nSleepMS > 1 )
-			Sleep( nSleepMS - 1 );
+			std::this_thread::sleep_for( std::chrono::milliseconds( nSleepMS - 1 ) );
 		else
 			Sleep( 0 );
 

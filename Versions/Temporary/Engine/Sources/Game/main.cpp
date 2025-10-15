@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include <crtdbg.h>
 #include <mimalloc-new-delete.h>
 #include "resource.h"
@@ -195,7 +198,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		if ( !NMainLoop::StepApp(bAppActive) )
 			break;
 		if ( !bAppActive )
-			Sleep( 40 );
+			std::this_thread::sleep_for( std::chrono::milliseconds( 40 ) );
 	}
 	//
 	NMainLoop::ResetStack();

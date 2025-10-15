@@ -14,7 +14,9 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include <chrono>
 #include <cstdint>
+#include <thread>
 
 string GetGrannyExportSettingsFileName( const string &szTypeName )
 {
@@ -399,7 +401,7 @@ bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bRep
 		// check file existance
 		if ( !NFile::DoesFileExist( szFileName ) )
 		{
-			Sleep( 1000 );
+			std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 			continue;
 		}
 		// check file size
@@ -408,7 +410,7 @@ bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bRep
 			if ( stream.IsOk() && stream.GetSize() != 0 )
 				return true;
 		}
-		Sleep( 1000 );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 	} while ( NHPTimer::GetTimePassed( &timeCurr ) < fMaxWaitTime * 0.001 );
 	// error - stream doesn't exist
 	ILogger *pLogger = NLog::GetLogger();

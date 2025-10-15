@@ -4,7 +4,9 @@
 #include "Server_Client_Common/Commands.h"
 #include "Misc/win32helper.h"
 
+#include <chrono>
 #include <cstdint>
+#include <thread>
 
 const int INPUT_BUFFER_SIZE = 255;
 
@@ -17,7 +19,7 @@ static uint32_t WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 	CTerminal* pTerminal = reinterpret_cast<CTerminal*>(lpParameter);
 	while (1)
 	{
-		Sleep( 30 );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 30 ) );
 		pTerminal->MTSegment();
 	}
 	return 0;
@@ -104,7 +106,7 @@ void CTerminal::MTSegment()
 				OutString( "\nConnected to Nival.Net\n" );
 				while ( bClientIsOK )
 				{
-					Sleep( 200 );
+					std::this_thread::sleep_for( std::chrono::milliseconds( 200 ) );
 					ReadToCache();
 				}
 			}

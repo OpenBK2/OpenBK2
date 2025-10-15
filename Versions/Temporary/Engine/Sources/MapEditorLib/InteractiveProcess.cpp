@@ -2,7 +2,9 @@
 
 #include "InteractiveProcess.h"
 
+#include <chrono>
 #include <cstdint>
+#include <thread>
 
 namespace
 {
@@ -378,7 +380,7 @@ bool CInteractiveProcess::Execute( const string &szScript, const string &szRespo
 			}
 			else
 			{
-				Sleep( SLEEP_STEP );
+				std::this_thread::sleep_for( std::chrono::milliseconds( SLEEP_STEP ) );
 				nSleepDuration += SLEEP_STEP;
 				if( nSleepDuration > RESPONSEWAIT_TIMEOUT )
 				{

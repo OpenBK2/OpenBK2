@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include "Misc/win32helper.h"
 #include "System/Time.h"
 #include "NetA4.h"
@@ -142,7 +145,7 @@ static unsigned long WINAPI TheThreadProc( LPVOID lpParameter )
 	pNet->StartThread();
 	while ( pNet->CanWork()  )
 	{
-		Sleep( 1 );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 		pNet->Step();
 	}
 	pNet->FinishThread();

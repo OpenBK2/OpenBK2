@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <thread>
+#include <chrono>
 #include "ObjectRecordIDAllocator.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"
@@ -25,7 +28,7 @@ public:
 	{
 		do
 		{
-			::Sleep(100);
+			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 			lock = ::CreateFile(szFileLockName.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, 0);
 			// FIXME: проверять GetLastError на sharing error, а то при просто некорректном имени файла всё повиснет
 		}

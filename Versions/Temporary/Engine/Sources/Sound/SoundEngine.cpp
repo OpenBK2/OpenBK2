@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <chrono>
+
 #include "UI/commandparam.h"
 #include "UI/dbuserinterface.h"
 #include "SoundEngine.h"
@@ -98,7 +101,7 @@ void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 			{
 				int nSleepTime = i > 0 ? entry.nStartTime - log[( i - 1 + nStartPos ) % SOUND_PLAY_LOG_SIZE].nStartTime : 0;
 				nSleepTime = Clamp( nSleepTime, 0, 1000 );
-				Sleep( nSleepTime );
+				std::this_thread::sleep_for( std::chrono::milliseconds( nSleepTime ) );
 				DebugTrace( "SoundLog play: %s", entry.szName );
 
 				const int nSize = stream.GetSize();
