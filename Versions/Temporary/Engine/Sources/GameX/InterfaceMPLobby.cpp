@@ -16,6 +16,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 CInterfaceMPLobby::CInterfaceMPLobby() : 
 CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
@@ -316,7 +318,7 @@ bool CInterfaceMPLobby::OnShortInfoMessage( struct SMPUIShortInfoMessage *pMsg )
 
 	ITextView *pInfoLevel = GetChildChecked<ITextView>( pInfoArea, "Client_Level", true );
 	if ( pInfoLevel )
-		pInfoLevel->SetText( pInfoLevel->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pMsg->nLevel ) ) );
+		pInfoLevel->SetText( pInfoLevel->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nLevel ) ) );
 	ITextView *pInfoRank = GetChildChecked<ITextView>( pInfoArea, "Client_Rank", true );
 	if ( pInfoRank )
 		pInfoRank->SetText( pInfoRank->GetDBText() + pMsg->wszRank );
@@ -402,7 +404,7 @@ bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 			int nElapsedMin = nElapsedSec / 60;
 			nElapsedSec %= 60;
 
-			std::wstring wszText = pWaitingForLadder->GetDBText() + NStr::ToUnicode( StrFmt( " %d:%02d", nElapsedMin, nElapsedSec ) );
+			std::wstring wszText = pWaitingForLadder->GetDBText() + NStr::ToUnicode( fmt::format( " {}:{:02d}", nElapsedMin, nElapsedSec ) );
 			if ( bLadderGameFound )
 				wszText = wszText + GetScreen()->GetTextEntry( "T_LADDER_GAME_FOUND" );
 			pWaitingForLadder->SetText( wszText );

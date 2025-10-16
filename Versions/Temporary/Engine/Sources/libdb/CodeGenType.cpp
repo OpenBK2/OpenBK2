@@ -13,13 +13,15 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NCodeGen
 {
 
 CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pComplexTypeNode );
-	NI_VERIFY( iter != nodes2TypeDefs.end(), StrFmt( "can't find typedef for node %s", pComplexTypeNode->GetName().c_str() ), return );
+	NI_VERIFY( iter != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pComplexTypeNode->GetName() ), return );
 	pType = GetRealType( iter->second );
 
 	NI_ASSERT( !pType->GetTypeName().empty(), "type with empty name" );
@@ -32,7 +34,7 @@ CTypeDefinition::CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2Type
 : bTerminal( false )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pEnumNode );
-	NI_VERIFY( iter != nodes2TypeDefs.end(), StrFmt( "can't find typedef for node %s", pEnumNode->GetName().c_str() ), return );
+	NI_VERIFY( iter != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pEnumNode->GetName() ), return );
 	pType = GetRealType( iter->second );
 	NI_ASSERT( !pType->GetTypeName().empty(), "type with empty name" );
 }
@@ -568,7 +570,7 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 		pCode->h << szTabs << tab << "OBJECT_BASIC_METHODS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 	pCode->h << szTabs << "public:" << endl;
 	if ( bTerminal )
-		pCode->h << szTabs << tab << "enum { typeID = " << StrFmt( "0x%X", pClass->nClassTypeID ) << " };" << endl;
+		pCode->h << szTabs << tab << "enum { typeID = " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << " };" << endl;
 
 	const bool bNoCheckSum = IsNoCheckSum( pClass );
 	if ( !bNoCheckSum )
@@ -608,7 +610,7 @@ static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass
 	GenerateBaseStructCPPFile( pCode, pClass, bTerminal ? EST_CLASS_TERMINAL : EST_CLASS_NOT_TERMINAL, szNewQualifiedName );
 
 	if ( bTerminal )
-		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << StrFmt( "0x%X", pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " ) " << endl;
+		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " ) " << endl;
 	else
 		pCode->cppEOF << "BASIC_REGISTER_DATABASE_CLASS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 }
@@ -631,7 +633,7 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTa
 	else if ( CDynamicCast<NDb::NTypeDef::STypeClass> pTypeClass = pType )
 		GenerateClass( pCode, pTypeClass, szTabs, pNamespace, bTerminal, szQualifiedName );
 	else
-		NI_ASSERT( false, StrFmt( "can't generate type definition of type %s", typeid( *pType ).name() ) );
+		NI_ASSERT( false, fmt::format( "can't generate type definition of type {}", typeid( *pType ).name() ) );
 }
 
 }

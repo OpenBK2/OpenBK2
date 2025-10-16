@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x11075CC4,CCheckRunScript)
 REGISTER_SAVELOAD_CLASS(UI, 0x11075CC5, CCheckPreprogrammed)
 REGISTER_SAVELOAD_CLASS(UI, 0x15083383, CCheckIsWindowEnabled)
@@ -25,7 +27,7 @@ int CCheckRunScript::operator&( IBinSaver &saver )
 
 int CCheckRunScript::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
 {
-	NI_ASSERT( pScript != 0, StrFmt( "CCheckRunScript function = \"%s\" but don't have script loaded", pDesc->szScriptFunction.c_str() ) );
+	NI_ASSERT( pScript != 0, fmt::format( "CCheckRunScript function = \"{}\" but don't have script loaded", pDesc->szScriptFunction ) );
 	if ( pScript )
 	{
 		return pScript->CallScriptFunction( pDesc->szScriptFunction.c_str() );
@@ -53,7 +55,7 @@ int CCheckPreprogrammed::operator&( IBinSaver &saver )
 }
 int CCheckPreprogrammed::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
 {
-	NI_ASSERT( pProg != 0, StrFmt("try to call check \"%s\" without preprogrammed checks provided", pDesc->szCheckName.c_str()) );
+	NI_ASSERT( pProg != 0, fmt::format("try to call check \"{}\" without preprogrammed checks provided", pDesc->szCheckName) );
 	return ( pProg->NeedFlags() ? pProg->Check( pDesc->szCheckName, wKeyboardFlags ) : pProg->Check( pDesc->szCheckName ) );
 }
 
@@ -142,7 +144,7 @@ int CCheckIsTabActive::Check( struct IScreen *pScreen, struct IScriptWrapper *pS
 	if ( !pWnd || !(pWnd->IsVisible()) )
 		return 0;
 	ITabControl *pTab = dynamic_cast<ITabControl*>(pScreen->GetElement( pDesc->szTabControlName, true ));
-	NI_ASSERT( pTab != 0, StrFmt( "tab control with name \"%s\" not found", pDesc->szTabControlName ) );
+	NI_ASSERT( pTab != 0, fmt::format( "tab control with name \"{}\" not found", pDesc->szTabControlName ) );
 	if ( pTab->GetActive() != pDesc->nTab )
 		return 0;
 	return 1;

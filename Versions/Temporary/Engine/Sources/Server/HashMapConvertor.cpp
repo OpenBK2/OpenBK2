@@ -35,7 +35,7 @@ void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vect
 			pVector->push_back( it->second );
 			++i;
 			szName.erase( szPrefix.size(), szName.size() - szPrefix.size() );
-			szName += StrFmt( "%d", i );
+			szName += std::to_string(  i );
 			it = pHashMap->find( szName );
 		}
 	}
@@ -46,7 +46,7 @@ void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vect
 		szName = szPrefix;
 		for ( int i = 0; i < pVector->size(); ++i )
 		{
-			szName += StrFmt( "%d", i );
+			szName += std::to_string(  i );
 			(*pHashMap)[szName] = (*pVector)[i];
 			szName.erase( szPrefix.size(), szName.size() - szPrefix.size() );
 		}

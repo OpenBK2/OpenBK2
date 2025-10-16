@@ -14,6 +14,8 @@
 #include "Sound/MusicSystem.h"
 #include "UI/WindowTooltip.h"
 
+#include <fmt/format.h>
+
 const wchar_t* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
 const wchar_t* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
 const wchar_t* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
@@ -122,9 +124,9 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 	IWindow *pUnitsArea = GetChildChecked<IWindow>( pReinfDescUpgrade, "ReinfDescUnitsArea2", true );
 	for ( int i = 0; i < 5; ++i )
 	{
-		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, StrFmt( "ReinfDescButton%1d", i + 1 ), true );
+		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, fmt::format( "ReinfDescButton{:1d}", i + 1 ), true );
 		if ( pButton )
-			pButton->SetName( StrFmt( "ReinfDescButtonUpg%1d", i + 1 ) );
+			pButton->SetName( fmt::format( "ReinfDescButtonUpg{:1d}", i + 1 ) );
 	}
 	// } Reinf Desc
 
@@ -207,7 +209,7 @@ void CInterfaceChapterMapMenu::InitReinforcements()
 			reinfButtons[nIndex].pBonusWnd = pUpgradableWnd;
 			if ( pUpgradableWnd )
 			{
-				pUpgradableWnd->SetName( StrFmt( "FixUpgrade%d", nIndex ) );
+				pUpgradableWnd->SetName( fmt::format( "FixUpgrade{}", nIndex ) );
 				pUpgradableWnd->SetPlacement( nButtonX + vReinfGridUpgradableTemplateDelta.x, 
 					nButtonY + vReinfGridUpgradableTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			}
@@ -278,7 +280,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 		nX = target.nX - nX / 2;
 		nY = target.nY - nY / 2;
 
-		pElement->SetName( StrFmt( "Target%d", nIndex ) );
+		pElement->SetName( fmt::format( "Target{}", nIndex ) );
 		pElement->ShowWindow( true );
 		pElement->SetPlacement( nX, nY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 
@@ -332,7 +334,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 		if ( bFinalLocked )
 		{
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
-			std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", pST->GetMissionToEnableCount() ) );
+			std::wstring wszCount = NStr::ToUnicode( std::to_string( pST->GetMissionToEnableCount() ) );
 			params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_FINAL_MISSION_LOCKS, wszCount ) );
 		}
 		SetDynamicTooltip( pElement, wszTooltipTemplate, params );
@@ -366,7 +368,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 				if ( pTooltip )
 					wszRewardPrefix = pTooltip->GetText();
 			}
-			pRewardButton->SetName( StrFmt( "Reward%d_%d", nIndex, i ) );
+			pRewardButton->SetName( fmt::format( "Reward{}_{}", nIndex, i ) );
 			// Position symbol
 			pRewardButton->SetPlacement( nX, nY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			//nX += nSizeX + 1;
@@ -378,7 +380,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 			{
 			case NDb::CBT_ADD_CALLS:
 				{
-					NI_ASSERT( 0, StrFmt( "Design: Illegal reward type CBT_ADD_CALLS for mission %d", nIndex ) );
+					NI_ASSERT( 0, fmt::format( "Design: Illegal reward type CBT_ADD_CALLS for mission {}", nIndex ) );
 					/*pRewardButton->SetState( 2 );
 					pRewardButton->SetTextString( NStr::ToUnicode( StrFmt( "<center>%d", pBonus->nNumberOfCalls ) ) );
 					pReinfIcon->ShowWindow( false );*/
@@ -386,7 +388,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 				break;
 
 			case NDb::CBT_REINF_DISABLE:
-				NI_ASSERT( 0, StrFmt( "Design: Illegal reward type CBT_REINF_DISABLE for mission %d", nIndex ) );
+				NI_ASSERT( 0, fmt::format( "Design: Illegal reward type CBT_REINF_DISABLE for mission {}", nIndex ) );
 				/*pRewardButton->SetState( pBonus->bApplyToEnemy ? 1 : 0 );
 				pReinfIcon->GetChild( 0 )->ShowWindow( true );			// Show cross-over
 				for ( int j = 0; j < pUIC->reinfButtons.size(); ++j )

@@ -10,6 +10,8 @@
 #include "System/FilePath.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 int yyparse( void );
 
 extern int yydebug;			/*  nonzero means print parse trace	*/
@@ -113,7 +115,7 @@ bool Parse( const std::vector<std::string> &files, const std::string &_szBaseFil
 		NStr::ToLower( &szFile );
 
 		if ( !NLang::OpenFile( szFile ) )
-			NErrors::ShowErrorNoLine( StrFmt( "can't open file %s", szFile.c_str() ) );
+			NErrors::ShowErrorNoLine( fmt::format( "can't open file {}", szFile ) );
 		else
 			yyparse();
 	}
@@ -150,8 +152,8 @@ bool CheckEnumEntryNotExist( const std::string &szEnumEntryName )
 
 	CEnumEntryNode *pEnumEntry = pFile->FindEnumEntry( szEnumEntryName, true );
 	VERIFY( pEnumEntry == 0,
-					StrFmt( "%s redifinition,\n\t%s(%d) previous definition was a 'enumerator'",
-						szEnumEntryName.c_str(), pEnumEntry->GetFile().c_str(), pEnumEntry->GetLine() ),
+					fmt::format( "{} redifinition,\n\t{}({}) previous definition was a 'enumerator'",
+						szEnumEntryName, pEnumEntry->GetFile(), pEnumEntry->GetLine() ),
 					return false );
 
 	return true;
@@ -173,11 +175,11 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 	if ( !pRawType )
 		pRawType = pFile->FindForward( szTypeName, false );
 
-	VERIFY( pRawType != 0, StrFmt( "can't find type %s", szTypeName.c_str() ), return );
+	VERIFY( pRawType != 0, fmt::format( "can't find type {}", szTypeName ), return );
 	CDynamicCast<CTypeNode> pType = pRawType;
 	VERIFY( pType != 0,
-					StrFmt( "wrong type (%s) of variable, see %s(%d)",
-						szTypeName.c_str(), pRawType->GetFile().c_str(), pRawType->GetLine() ),
+					fmt::format( "wrong type ({}) of variable, see {}({})",
+						szTypeName, pRawType->GetFile(), pRawType->GetLine() ),
 					return );
 
 	CDynamicCast<CTypeDefNode> pTypeDefNode = pRawType;
@@ -189,25 +191,25 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 		CVariable *pVar = *iter;
 
 		if ( pTypeDefNode )
-			VERIFY( !(pVar->IsPointer() && pTypeDefNode->IsPointer()), StrFmt( "pointer to pointer, see %s", pVar->GetName().c_str() ), return );
+			VERIFY( !(pVar->IsPointer() && pTypeDefNode->IsPointer()), fmt::format( "pointer to pointer, see {}", pVar->GetName() ), return );
 
 		bool bVarPointer = pVar->IsPointer() || pTypeDefNode && pTypeDefNode->IsPointer();
 
 		if ( CDynamicCast<CEnumNode> pRealEnum = pRealType )
-		{ VERIFY( !bVarPointer, StrFmt( "pointer to enum" ), return ); }
+		{ VERIFY( !bVarPointer, "pointer to enum", return ); }
 		else
-			VERIFY( !pRealType->IsForward() || bVarPointer, StrFmt( "non-pointer to forward type" ), return );
+			VERIFY( !pRealType->IsForward() || bVarPointer,"non-pointer to forward type", return );
 
 		CDynamicCast<CComplexTypeNode> pComplexType = pRealType;
 		CDynamicCast<CBaseTypeNode> pBaseType = pRealType;
 		bool bClass = pComplexType && pComplexType->IsClass() || pBaseType && pBaseType->IsClass();
 		if ( bClass )
-			{ VERIFY( bVarPointer, StrFmt( "non-pointer to class %s", szTypeName.c_str() ), return ); }
+			{ VERIFY( bVarPointer, fmt::format( "non-pointer to class {}", szTypeName ), return ); }
 		else
-			VERIFY( !bVarPointer, StrFmt( "pointer to not class %s", szTypeName.c_str() ), return );
+			VERIFY( !bVarPointer, fmt::format( "pointer to not class {}", szTypeName ), return );
 
 		CDynamicCast<CEnumNode> pEnum = pRealType;
-		VERIFY( !pEnum || !bVarPointer, StrFmt( "pointer to enum %s", szTypeName.c_str() ), return );
+		VERIFY( !pEnum || !bVarPointer, fmt::format( "pointer to enum {}", szTypeName ), return );
 
 		if ( pVar->HasDefault() )
 		{
@@ -216,8 +218,8 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 				CDynamicCast<CEnumNode> pEnum = pRealType;
 				VERIFY( pEnum != 0, "default value not compliant with variable type", return );
 				VERIFY( pEnum->GetEnumEntry( pVar->GetDefault().GetEnum() ) != 0,
-																		 StrFmt( "entry %s doesn't exist in enum, see %s(%d)",
-																			pVar->GetDefault().GetEnum().c_str(), pEnum->GetFile().c_str(), pEnum->GetLine() ),
+																		 fmt::format( "entry {} doesn't exist in enum, see {}({})",
+																			pVar->GetDefault().GetEnum(), pEnum->GetFile(), pEnum->GetLine() ),
 								return );
 			}
 			else
@@ -271,7 +273,7 @@ void ConstructRndType( const std::string &szRefType, const std::string &szFlagTy
 
 		AddTypeToNamespace( pTypeNodeNamespace, pElementType );
 
-		const std::string szTypeDefs = StrFmt( "%s;TRefType;%s;EFlagType", szRefType.c_str(), szFlagType.c_str() );
+		const std::string szTypeDefs = fmt::format( "{};TRefType;{};EFlagType", szRefType, szFlagType );
 		CPtr<CLangNode> pTypeDefs = NLang::CreateAttrDef( "type_defs", szTypeDefs, true );
 		CPtr<CLangNode> pAttributes = NLang::CreateAttrListNode( pTypeDefs );
 		NLang::AddAttrToComplexTypeNode( pTypeNode, pAttributes );
@@ -302,17 +304,17 @@ void SetRndTypeToVars( CLangNode *pVarListNode, const std::string &szTypeName )
 		CLangNode *pRefType = pFile->FindDef( szRefType, false );
 		if ( pRefType == 0 )
 			pRefType = pFile->FindForward( szRefType, false );
-		VERIFY( pRefType != 0, StrFmt( "can't find definition of type %s", szRefType.c_str() ), return );
+		VERIFY( pRefType != 0, fmt::format( "can't find definition of type {}", szRefType ), return );
 		CDynamicCast<CComplexTypeNode> pComplexRefType = pRefType;
-		VERIFY( pComplexRefType != 0 && pComplexRefType->IsClass(), StrFmt( "type %s isn't a class", szRefType.c_str() ), return );
+		VERIFY( pComplexRefType != 0 && pComplexRefType->IsClass(), fmt::format( "type {} isn't a class", szRefType ), return );
 
 		if ( szFlagType != "int" )
 		{
 			CLangNode *pFlagType = pFile->FindDef( szFlagType, false );
-			VERIFY( pFlagType != 0, StrFmt( "can't find definition of enum %s", szFlagType.c_str() ), return );
+			VERIFY( pFlagType != 0, fmt::format( "can't find definition of enum {}", szFlagType ), return );
 			CDynamicCast<CEnumNode> pEnumFlagType = pFlagType;
-			VERIFY( pEnumFlagType != 0, StrFmt( "type %s isn't enum,\n%s(%d) see definition",
-																					szFlagType.c_str(), pFlagType->GetFile().c_str(), pFlagType->GetLine() ), return );
+			VERIFY( pEnumFlagType != 0, fmt::format( "type {} isn't enum,\n{}({}) see definition",
+																					szFlagType, pFlagType->GetFile(), pFlagType->GetLine() ), return );
 		}
 
 		ConstructRndType( szRefType, szFlagType, szCodeTypeName );
@@ -409,7 +411,7 @@ CLangNode* CreateVarNode( const std::string &szVarName )
 CLangNode* CreateVectorNode( const std::string &szVectorName, const std::string &szMinAmount, const std::string &szMaxAmount )
 {
 	int nMinAmount = NStr::ToInt( szMinAmount );
-	VERIFY( nMinAmount >= 0, StrFmt( "wrong array lower bound %d", nMinAmount ), return 0 );
+	VERIFY( nMinAmount >= 0, fmt::format( "wrong array lower bound {}", nMinAmount ), return 0 );
 
 	int nMaxAmount = 0;
 	if ( szMaxAmount == "unbounded" )
@@ -417,8 +419,8 @@ CLangNode* CreateVectorNode( const std::string &szVectorName, const std::string 
 	else
 	{
 		nMaxAmount = NStr::ToInt( szMaxAmount );
-		VERIFY( nMaxAmount >= 0, StrFmt( "wrong array upper bound %d", nMaxAmount ), return 0 );
-		VERIFY( nMaxAmount >= nMinAmount, StrFmt( "wrong array bounds [%d..%d]", nMinAmount, nMaxAmount ), return 0 );
+		VERIFY( nMaxAmount >= 0, fmt::format( "wrong array upper bound {}", nMaxAmount ), return 0 );
+		VERIFY( nMaxAmount >= nMinAmount, fmt::format( "wrong array bounds [{}..{}]", nMinAmount, nMaxAmount ), return 0 );
 	}
 
 	return new CVectorNode( szVectorName, nMinAmount, nMaxAmount, GetParsingFileName(), nyyLineNumber );
@@ -482,22 +484,22 @@ void AddParentToParentsList( CLangNode *pRawComplexTypeList, const std::string &
 
 	CFileNode *pFileNode = GetCurFileNode();
 	CLangNode *pNode = pFileNode->FindDef( szTypeName, false );
-	VERIFY( pNode != 0, StrFmt( "can't find parent %s", szTypeName.c_str() ), return );
+	VERIFY( pNode != 0, fmt::format( "can't find parent {}", szTypeName ), return );
 
 	CDynamicCast<CComplexTypeNode> pTypeNode = pNode;
 	if ( !pTypeNode )
 	{
 		CDynamicCast<CTypeDefNode> pTypeDefNode = pNode;
-		VERIFY( pTypeDefNode != 0, StrFmt( "wrong parent %s type, struct or class expected", szTypeName.c_str() ), return );
+		VERIFY( pTypeDefNode != 0, fmt::format( "wrong parent {} type, struct or class expected", szTypeName ), return );
 		pTypeNode = pTypeDefNode->GetReferencedType( true );
-		VERIFY( pTypeNode != 0, StrFmt( "wrong parent %s type, struct or class expected", szTypeName.c_str() ), return );
+		VERIFY( pTypeNode != 0, fmt::format( "wrong parent {} type, struct or class expected", szTypeName ), return );
 	}
 
 	for ( std::list< CPtr<CComplexTypeNode> >::const_iterator iter = pComplexTypeList->GetNodes().begin(); iter != pComplexTypeList->GetNodes().end(); ++iter )
 	{
 		CComplexTypeNode *pParent = *iter;
 		VERIFY( pParent->GetName() != szTypeName,
-						StrFmt( "%s is already direct base class of %s", szTypeName.c_str(), szTypeName.c_str() ),
+						fmt::format( "{} is already direct base class of {}", szTypeName, szTypeName ),
 						return );
 	}
 
@@ -570,7 +572,7 @@ void AddParentsOfComplexType( CLangNode *pRawNode, CLangNode *pRawParentsList )
 	{
 		CComplexTypeNode *pParent = *iter;
 		VERIFY( pParent->IsClass() == pNode->IsClass(),
-						StrFmt( "wrong parent %s of type %s (class <-> struct)", pParent->GetName().c_str(), pNode->GetName().c_str() ),
+						fmt::format( "wrong parent {} of type {} (class <-> struct)", pParent->GetName(), pNode->GetName() ),
 						return );
 	}
 
@@ -585,10 +587,10 @@ CLangNode* CreateComplexTypeNode( const std::string &szTypeName, bool bClass )
 
 	CFileNode *pFile = GetCurFileNode();
 	CLangNode *pTypeNode = pFile->FindDef( szTypeName, true );
-	VERIFY( pTypeNode == 0, StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pTypeNode->GetFile().c_str(), pTypeNode->GetLine() ), return 0 );
+	VERIFY( pTypeNode == 0, fmt::format( "type {} redifinition, see {}({})", szTypeName, pTypeNode->GetFile(), pTypeNode->GetLine() ), return 0 );
 
 	CTypeNode *pForwardTypeNode = pFile->FindForward( szTypeName, true );
-	VERIFY( pForwardTypeNode == 0 || IsEqualDefs( pForwardTypeNode, pResult ), StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pForwardTypeNode->GetFile().c_str(), pForwardTypeNode->GetLine() ), return 0 );
+	VERIFY( pForwardTypeNode == 0 || IsEqualDefs( pForwardTypeNode, pResult ), fmt::format( "type {} redifinition, see {}({})", szTypeName, pForwardTypeNode->GetFile(), pForwardTypeNode->GetLine() ), return 0 );
 
 	return pResult;
 }
@@ -600,11 +602,11 @@ CLangNode* CreateForwardComplexType( const std::string &szTypeName, bool bIsClas
 
 	CLangNode *pNode = pFile->FindDef( szTypeName, true );
 	if ( pNode )
-		VERIFY( IsEqualDefs( pNode, pResult ), StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pNode->GetFile().c_str(), pNode->GetLine() ), return 0 );
+		VERIFY( IsEqualDefs( pNode, pResult ), fmt::format( "type {} redifinition, see {}({})", szTypeName, pNode->GetFile(), pNode->GetLine() ), return 0 );
 
 	CLangNode *pNodeForward = pFile->FindForward( szTypeName, true );
 	if ( pNodeForward )
-		VERIFY( IsEqualDefs( pNodeForward, pResult ), StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pNodeForward->GetFile().c_str(), pNodeForward->GetLine() ), return 0 );
+		VERIFY( IsEqualDefs( pNodeForward, pResult ), fmt::format( "type {} redifinition, see {}({})", szTypeName, pNodeForward->GetFile(), pNodeForward->GetLine() ), return 0 );
 
 	CheckEnumEntryNotExist( szTypeName );
 
@@ -627,7 +629,7 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const std::string &sz
 
 	{
 		CLangNode *pNode = pCurFile->FindDef( szTypeName, true );
-		VERIFY( pNode == 0, StrFmt( "type %s redifinition, see %s(%d)", szTypeName.c_str(), pNode->GetFile().c_str(), pNode->GetLine() ), return 0 );
+		VERIFY( pNode == 0, fmt::format( "type {} redifinition, see {}({})", szTypeName, pNode->GetFile(), pNode->GetLine() ), return 0 );
 	}
 
 	CLangNode *pNode = pCurFile->FindDef( szReferencedTypeName, false );
@@ -635,8 +637,8 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const std::string &sz
 	{
 		CDynamicCast<CTypeNode> pTypeNode = pNode;
 		VERIFY( pTypeNode != 0,
-						StrFmt( "%s cannot be overloaded as typedef, \n	%s(%d): see declaration of %s",
-						szReferencedTypeName.c_str(), pTypeNode->GetFile().c_str(), pTypeNode->GetLine(), szReferencedTypeName.c_str() ),
+						fmt::format( "{} cannot be overloaded as typedef, \n	{}({}): see declaration of {}",
+						szReferencedTypeName, pTypeNode->GetFile(), pTypeNode->GetLine(), szReferencedTypeName ),
 						return 0 );
 		CDynamicCast<CEnumNode> pEnum = pNode;
 		VERIFY( !bPointer || !pEnum, "pointer to enum", return 0 );
@@ -671,7 +673,7 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const std::string &sz
 		return new CTypeDefNode( szTypeName, pAttrListNode, pForwardNode, bPointer, GetParsingFileName(), nyyLineNumber );
 	}
 
-	VERIFY( false, StrFmt( "can't find type %s", szReferencedTypeName.c_str() ), return 0 );
+	VERIFY( false, fmt::format( "can't find type {}", szReferencedTypeName ), return 0 );
 
 	return 0;
 }
@@ -740,7 +742,7 @@ CLangNode* CreateAttrDef( const std::string &szAttrName, const std::string &szRa
 	if ( szAttrName != "comments" )
 	{
 		pAttrDef = pCurFileNode->FindAttrDef( szAttrName );
-		VERIFY( pAttrDef != 0, StrFmt( "unknown attribute %s", szAttrName.c_str() ), return 0 );
+		VERIFY( pAttrDef != 0, fmt::format( "unknown attribute {}", szAttrName ), return 0 );
 	}
 
 	CAttributeNode *pNode = new CAttributeNode( szAttrName, szAttrValue, bStringValue, GetParsingFileName(), nyyLineNumber );
@@ -748,8 +750,8 @@ CLangNode* CreateAttrDef( const std::string &szAttrName, const std::string &szRa
 	{
 		VERIFY( IsTypesEqual( pNode->GetType(), pAttrDef->GetType() ) ||
 						pAttrDef->GetType() == EST_BOOL && pNode->GetType() == EST_NOTYPE,
-							StrFmt( "wrong attribute \"%s\" of type \"%s\", \"%s\" expected",
-							szAttrName.c_str(), GetTypeName( pNode->GetType() ), GetTypeName( pAttrDef->GetType() ) ), return 0 );
+							fmt::format( "wrong attribute \"{}\" of type \"{}\", \"{}\" expected",
+							szAttrName, GetTypeName( pNode->GetType() ), GetTypeName( pAttrDef->GetType() ) ), return 0 );
 	}
 
 	return pNode;
@@ -766,14 +768,14 @@ CLangNode* CreateForwardEnumNode( const std::string &szEnumName )
 	if ( pNode )
 	{
 		CDynamicCast<CEnumNode> pEnum = pNode;
-		VERIFY( pEnum != 0, StrFmt( "type %s redifinition, see %s(%d)", szEnumName.c_str(), pNode->GetFile().c_str(), pNode->GetLine() ), return 0 );
+		VERIFY( pEnum != 0, fmt::format( "type {} redifinition, see {}({})", szEnumName, pNode->GetFile(), pNode->GetLine() ), return 0 );
 	}
 
 	CLangNode *pForwardNode = pFile->FindForward( szEnumName, true );
 	if ( pForwardNode )
 	{
 		CDynamicCast<CEnumNode> pEnum = pForwardNode;
-		VERIFY( pEnum != 0, StrFmt( "type %s redifinition, see %s(%d)", szEnumName.c_str(), pForwardNode->GetFile().c_str(), pForwardNode->GetLine() ), return 0 );
+		VERIFY( pEnum != 0, fmt::format( "type {} redifinition, see {}({})", szEnumName, pForwardNode->GetFile(), pForwardNode->GetLine() ), return 0 );
 	}
 
 	return new CEnumNode( szEnumName, true, GetParsingFileName(), nyyLineNumber );
@@ -807,7 +809,7 @@ void AddEnumEntry( CLangNode *pRawEnumNode, CLangNode *pRawEnumEntryNode )
 	for ( CEnumNode::TEntriesIter iter = pEnumNode->EntriesBegin(); iter != pEnumNode->EntriesEnd(); ++iter )
 	{
 		CEnumEntryNode *pNode = *iter;
-		VERIFY( pNode->GetName() != pEnumEntryNode->GetName(), StrFmt( "second enum entry (%s) found", pEnumEntryNode->GetName() ), return );
+		VERIFY( pNode->GetName() != pEnumEntryNode->GetName(), fmt::format( "second enum entry ({}) found", pEnumEntryNode->GetName() ), return );
 	}
 
 	CEnumEntryNode *pLastEntry = 0;
@@ -856,7 +858,7 @@ CLangNode* CreateEnumEntryNode( const std::string &szEntryName, const std::strin
 		if ( bDefaultValueNumber )
 		{
 			VERIFY( NStr::IsInt( szDefaultValue ) || NStr::IsHexNumber( szDefaultValue ),
-							StrFmt( "value %s of enum entry is not a number", szDefaultValue ),
+							fmt::format( "value {} of enum entry is not a number", szDefaultValue ),
 							return new CEnumEntryNode( szEntryName, GetParsingFileName(), nyyLineNumber ) );
 
 			return new CEnumEntryNode( szEntryName, NStr::ToInt( szDefaultValue ), GetParsingFileName(), nyyLineNumber );
@@ -867,7 +869,7 @@ CLangNode* CreateEnumEntryNode( const std::string &szEntryName, const std::strin
 			CNamespace *pNM = pFile->GetNamespace();
 
 			CEnumEntryNode *pNode = pFile->FindEnumEntry( szDefaultValue, true );
-			VERIFY( pNode != 0, StrFmt( "can't find enumerator %s", szDefaultValue.c_str() ), return 0 );
+			VERIFY( pNode != 0, fmt::format( "can't find enumerator {}", szDefaultValue ), return 0 );
 			return	pNode->IsValueDefined() ?
 							new CEnumEntryNode( szEntryName, pNode->GetValue(), GetParsingFileName(), nyyLineNumber ) :
 							new CEnumEntryNode( szEntryName, GetParsingFileName(), nyyLineNumber );
@@ -929,7 +931,7 @@ static void AddAttrDef( CAttributeDefNode *pAttrDefNode )
 	CAttributeDefNode* pAttrDefNode2 = pFile->FindAttrDef( pAttrDefNode->GetName() );
 	if ( pAttrDefNode2 != 0 )
 	{
-		NErrors::ShowErrorNoLine( StrFmt( "second definition of attribute %s found, see %s(%d)", pAttrDefNode2->GetName().c_str(), pAttrDefNode2->GetFile().c_str(), pAttrDefNode2->GetLine() ) );
+		NErrors::ShowErrorNoLine( fmt::format( "second definition of attribute {} found, see {}({})", pAttrDefNode2->GetName(), pAttrDefNode2->GetFile(), pAttrDefNode2->GetLine() ) );
 		return;
 	}
 	else
@@ -954,20 +956,20 @@ void AddDef( CLangNode *pRawNode )
 			{
 				CLangNode *pNodeDef = pFile->FindDef( pRawNode->GetName(), true );
 				if ( pNodeDef )
-					VERIFY( IsEqualDefs( pRawNode, pNodeDef ) == true, StrFmt( "type %s redifinition, see %s(%d)", pRawNode->GetName().c_str(), pNodeDef->GetFile().c_str(), pNodeDef->GetLine() ), return );
+					VERIFY( IsEqualDefs( pRawNode, pNodeDef ) == true, fmt::format( "type {} redifinition, see {}({})", pRawNode->GetName(), pNodeDef->GetFile(), pNodeDef->GetLine() ), return );
 
 				CLangNode *pForwardNodeDef = pFile->FindForward( pRawNode->GetName(), true );
 				if ( pForwardNodeDef )
-					VERIFY( IsEqualDefs( pRawNode, pForwardNodeDef ) == true, StrFmt( "%type s redifinition, see %s(%d)", pRawNode->GetName().c_str(), pForwardNodeDef->GetFile().c_str(), pForwardNodeDef->GetLine() ), return );
+					VERIFY( IsEqualDefs( pRawNode, pForwardNodeDef ) == true, fmt::format( "type {} redifinition, see {}({})", pRawNode->GetName(), pForwardNodeDef->GetFile(), pForwardNodeDef->GetLine() ), return );
 			}
 			else
 			{
 				CLangNode *pForwardNode = pFile->FindForward( pRawNode->GetName(), true );
 				if ( pForwardNode )
-					VERIFY( IsEqualDefs( pRawNode, pForwardNode ) == true, StrFmt( "type %s redifinition, see %s(%d)", pRawNode->GetName().c_str(), pForwardNode->GetFile().c_str(), pForwardNode->GetLine() ), return );
+					VERIFY( IsEqualDefs( pRawNode, pForwardNode ) == true, fmt::format( "type {} redifinition, see {}({})", pRawNode->GetName(), pForwardNode->GetFile(), pForwardNode->GetLine() ), return );
 
 				CLangNode *pNode1 = pFile->FindDef( pRawNode->GetName(), true );
-				VERIFY( pNode1 == 0, StrFmt( "type %s redifinition, see %s(%d)", pRawNode->GetName().c_str(), pNode1->GetFile().c_str(), pNode1->GetLine() ), return );
+				VERIFY( pNode1 == 0, fmt::format( "type {} redifinition, see {}({})", pRawNode->GetName(), pNode1->GetFile(), pNode1->GetLine() ), return );
 			}
 		}
 

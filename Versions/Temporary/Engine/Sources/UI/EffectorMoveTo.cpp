@@ -7,6 +7,8 @@
 
 #include "Window.h"
 
+#include <fmt/format.h>
+
 // Construction/Destruction
 
 REGISTER_SAVELOAD_CLASS(UI, 0x11075C01, CEffectorMoveTo)
@@ -51,7 +53,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	bForward = true;
 
 	pElement = dynamic_cast<CWindow*>( pScreen->GetElement( elementToMove.Get(), true ) );
-	NI_ASSERT( pElement != 0, StrFmt( "no element \"%s\"", elementToMove.Get().c_str() ) );
+	NI_ASSERT( pElement != 0, fmt::format( "no element \"{}\"", elementToMove.Get() ) );
 	if ( pElement )
 	{
 		if ( fMoveTime == 0 ) 

@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пикселах
 static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
 static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
@@ -24,7 +26,7 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
 : szString( pszStr ), dwColor( col ) 
 {  
-	const std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
+	const std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
 	pGfxText = CreateML();
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( szText, 0 );

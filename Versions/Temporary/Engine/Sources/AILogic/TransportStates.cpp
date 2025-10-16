@@ -34,6 +34,8 @@
 #include <cstdint>
 #include <map>
 
+#include <fmt/format.h>
+
 //REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D9, CTransportResupplyHumanResourcesState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DA, CTransportLoadRuState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D496, CTransportLandState );
@@ -370,12 +372,12 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 		break;*/
 	case ACTION_COMMAND_REPAIR:
-		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
+		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, fmt::format( "Wrong preferred unit {}",typeid( *pObj ).name()) );
 		pResult = CTransportRepairState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
 
 		break;
 	case ACTION_COMMAND_RESUPPLY:
-		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
+		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, fmt::format( "Wrong preferred unit {}",typeid( *pObj ).name()) );
 		pResult = CTransportResupplyState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
 		
 		break;

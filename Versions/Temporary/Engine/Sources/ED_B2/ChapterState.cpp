@@ -19,6 +19,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // CChapterState
 
 CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
@@ -348,7 +350,7 @@ void CChapterState::LoadChapterMap()
 
 			ITextView *pNumber = dynamic_cast<ITextView*>( AddWindowCopy( pWnd, (i == 0) ? pBigNumberView : pNumberView ) );
 			if ( pNumber )
-				pNumber->SetText( pNumber->GetDBText() + NStr::ToUnicode( StrFmt( "%d", i ) ) );
+				pNumber->SetText( pNumber->GetDBText() + NStr::ToUnicode( std::to_string(i) ) );
 
 			for ( int j = 0; j < mission.arrows.size(); ++j )
 			{
@@ -504,7 +506,7 @@ void CChapterState::SetMaskManipulatorMission( SChapterMapMenuHelper::SMission *
 {
 	IView *pView = ClearView();
 
-	const string szMask = StrFmt( "MissionPath.[%d].", pMission->nIndex );
+	const string szMask = fmt::format( "MissionPath.[{}].", pMission->nIndex );
 	pMaskManipulator = new CMaskManipulator( szMask, pChapterEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
 	pMaskManipulator->AddName( "PotentialIncomplete", false, "", INVALID_NODE_ID, false );
@@ -525,7 +527,7 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 		pMapManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( 
 			"MapInfo", pHelper->pDetailsMap->GetDBID().ToString() );
 	}
-	const string szMask = StrFmt( "Roads.[%d].", pArrow->nID );
+	const string szMask = fmt::format( "Roads.[{}].", pArrow->nID );
 	pMaskManipulator = new CMaskManipulator( szMask, pMapManipulator, CMaskManipulator::SMART_MODE );
 
 	pMaskManipulator->AddName( "CMArrowType", false, "", INVALID_NODE_ID, false );

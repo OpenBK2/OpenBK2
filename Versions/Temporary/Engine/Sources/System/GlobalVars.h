@@ -7,6 +7,8 @@
 #include <cwchar>
 #include <system_error>
 
+#include <fmt/format.h>
+
 
 // func is called on var set or cmd call
 #define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
@@ -34,11 +36,10 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fVal); f.Add(3,&szVal); return 0; }
 private:
 	//
-	void SetVal( const char *pszString )
-	{
-		const int nLen = strlen( pszString );
-		szVal.resize( nLen );
-		copy( pszString, pszString + nLen, szVal.begin() );
+
+	void SetVal (std::string_view s) {
+		szVal.resize( s.length() );
+		copy( s.data(), s.data() + s.length(), szVal.begin() );
 	}
 public:
 	// Parse the leading number out of a string the way atof did, but without
@@ -75,8 +76,8 @@ public:
 	}
 
 	CValue() : fVal( 0 ) {}
-	CValue( float _fVal ) : fVal( _fVal ) { SetVal( StrFmt("%g", _fVal) ); }
-	CValue( int _n ) : fVal( _n ) { SetVal( StrFmt( "%g", fVal ) ); }
+	CValue( float _fVal ) : fVal( _fVal ) { SetVal( fmt::format( "{:g}", _fVal ).c_str() ); }
+	CValue( int _n ) : fVal( _n ) { SetVal( fmt::format( "{:g}", fVal ).c_str() ); }
 	CValue( const std::wstring &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
 	CValue( const wchar_t *pszVal )	: fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal(pszVal) {}
 	CValue( const std::string &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ) { SetVal( _szVal.c_str() ); }

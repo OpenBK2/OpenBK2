@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <fmt/format.h>
+
 #include "MPManagerMode.h"
 #include "MultiplayerNetPackets.h"
 #include "Server_Client_Common/GamePackets.h"
@@ -73,7 +75,7 @@ bool CMPManagerMode::OnGameClientRemoved( class CGameClientRemoved *pPacket )
 		"RX",
 		"CGameClientRemoved",
 		pPacket->nClientID,
-		StrFmt( "running=%d in_room=%d", IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
+		fmt::format( "running={} in_room={}", IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
 	RemoveClient( pPacket->nClientID, false );
 	return true;
 }
@@ -86,7 +88,7 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 		"RX",
 		"CGameKilled",
 		pPacket->nClientID,
-		StrFmt( "game=%d running=%d in_room=%d", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
+		fmt::format( "game={} running={} in_room={}", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
 	if ( pPacket->nGame != nGameID )
 	{
 		NGameX::MatchPacketTrace_Log(
@@ -94,7 +96,7 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 			"RX",
 			"CGameKilledIgnoredWrongGame",
 			pPacket->nClientID,
-			StrFmt( "packet_game=%d local_game=%d", pPacket->nGame, nGameID ) );
+			fmt::format( "packet_game={} local_game={}", pPacket->nGame, nGameID ) );
 		return true;
 	}
 
@@ -112,7 +114,7 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 			"RX",
 			"CGameKilledIgnoredRunningGame",
 			pPacket->nClientID,
-			StrFmt( "game=%d present=%08X host_id=%d", pPacket->nGame, GetPresentMask(), nHostClientID ) );
+			fmt::format( "game={} present={:08X} host_id={}", pPacket->nGame, GetPresentMask(), nHostClientID ) );
 		return true;
 	}
 
@@ -246,7 +248,7 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 		"RX",
 		"CB2SuggestKickPacket",
 		pPacket->nClientID,
-		StrFmt( "slot_to_kick=%d voter_slot=%d pre_votes=%08X post_votes=%08X", nSlotToKick, nVoterSlot, dwPreVotes, lags[nSlotToKick].dwHatedBy ) );
+		fmt::format( "slot_to_kick={} voter_slot={} pre_votes={:08X} post_votes={:08X}", nSlotToKick, nVoterSlot, dwPreVotes, lags[nSlotToKick].dwHatedBy ) );
 
 	return true;
 }
@@ -265,7 +267,7 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 		"RX",
 		"CB2LagTimeUpdatePacket",
 		pPacket->nClientID,
-		StrFmt( "player=%d pre_time_left=%d post_time_left=%d", pPacket->nPlayer, nPreLagLeft, lag.nLagLeft ) );
+		fmt::format( "player={} pre_time_left={} post_time_left={}", pPacket->nPlayer, nPreLagLeft, lag.nLagLeft ) );
 
 	return true;
 }
@@ -289,7 +291,7 @@ bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 		"RX",
 		"CB2UserPausePacket",
 		pPacket->nClientID,
-		StrFmt( "slot=%d paused=%d pre_user_pause_mask=%08X post_user_pause_mask=%08X",
+		fmt::format( "slot={} paused={} pre_user_pause_mask={:08X} post_user_pause_mask={:08X}",
 			nSlot, pPacket->bPaused ? 1 : 0, dwPreUserPausedPlayers, dwUserPausedPlayers ) );
 
 	return true;
@@ -305,7 +307,7 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 		"RX",
 		"CB2DropPlayerAtSegmentPacket",
 		pPacket->nClientID,
-		StrFmt( "slot=%d target_seg=%d host_id=%d", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+		fmt::format( "slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 
 	const int nSlotToDrop = pPacket->nSlotToDrop;
 	const bool bDropsCurrentHost =
@@ -319,7 +321,7 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 			"RX",
 			"CB2DropPlayerAtSegmentPacketRejected",
 			pPacket->nClientID,
-			StrFmt( "slot=%d target_seg=%d host_id=%d", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+			fmt::format( "slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 		return true;
 	}
 
@@ -332,7 +334,7 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 			"DECISION",
 			"ClampHostDropToLocalSegment",
 			GetOwnClientID(),
-			StrFmt( "slot=%d packet_seg=%d local_seg=%d", nSlotToDrop, pPacket->nSegment, nDropSegment ) );
+			fmt::format( "slot={} packet_seg={} local_seg={}", nSlotToDrop, pPacket->nSegment, nDropSegment ) );
 	}
 
 	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, nDropSegment );
@@ -349,7 +351,7 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 		"RX",
 		"CB2GameLostPacket",
 		pPacket->nClientID,
-		StrFmt( "game_id=%d segment=%d", pPacket->nGameID, pPacket->nSegment ) );
+		fmt::format( "game_id={} segment={}", pPacket->nGameID, pPacket->nSegment ) );
 
 	//DebugTrace( "+++ GameLost packet" );
 	for ( int i = 0; i < slots.size(); ++i )

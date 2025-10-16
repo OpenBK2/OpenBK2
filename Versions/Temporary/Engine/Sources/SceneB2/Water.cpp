@@ -14,6 +14,8 @@
 
 #include <boost/config.hpp>
 
+#include <fmt/format.h>
+
 #define DEF_INV_255 ( 1.0f / 255.0f )
 #define DEF_HEIGHT_BIAS 0.1f
 
@@ -938,7 +940,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 
 	// load noise
 	CFileStream noiseStream( NVFS::GetMainVFS(), pDesc->pDepthNoise->szFileName );
-	NI_ASSERT( noiseStream.IsOk(), StrFmt("Can't load %s", pDesc->pDepthNoise->szFileName) );
+	NI_ASSERT( noiseStream.IsOk(), fmt::format("Can't load {}", pDesc->pDepthNoise->szFileName) );
 	NImage::LoadTGAImage( noise, &noiseStream );
 
 	return true;

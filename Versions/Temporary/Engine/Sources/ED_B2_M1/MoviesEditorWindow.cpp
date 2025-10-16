@@ -173,7 +173,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 		if ( nAnimSpeedIndex > 0 )
 			speeds.push_back( StrFmt( "+%d", nAnimSpeedIndex ) );
 		else
-			speeds.push_back( StrFmt( "%d", nAnimSpeedIndex ) );
+			speeds.push_back( std::to_string(  nAnimSpeedIndex ) );
 	}
 	SetComboBoxEditParameters( speeds, 10, &wndSpeedCombo, true, true );
 

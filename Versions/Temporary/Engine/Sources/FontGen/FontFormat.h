@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #pragma pack( 4 )
 // complete necessary one letter description
 struct STFCharacter
@@ -39,7 +41,7 @@ public:
 			pos = chars.find( wDefaultChar );
 			if ( pos == chars.end() )
 			{
-				NI_ASSERT( false, StrFmt("Can't find neither target character (0x%.2x) nor default one (0x%.2x)", (unsigned int)(c), (unsigned int)(wDefaultChar)) );
+				NI_ASSERT( false, fmt::format("Can't find neither target character (0x{:02x}) nor default one (0x{:02x})", (unsigned int)(c), (unsigned int)(wDefaultChar)) );
 				return chars.begin()->second;
 			}
 		}

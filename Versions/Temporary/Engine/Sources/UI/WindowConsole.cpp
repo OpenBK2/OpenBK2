@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static int nConsoleSize = 100;
 
 void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
@@ -529,7 +531,7 @@ IWindow * CDebugSingleton::GetDebugInfoWindow( const int nWindow )
 		CreateDebugInfo();
 	if ( !pDebugInfo )
 		return 0;
-	return pDebugInfo->GetChild( StrFmt( "DebugWindow%i", nWindow ), false );
+	return pDebugInfo->GetChild( fmt::format( "DebugWindow{}", nWindow ), false );
 }
 
 void CDebugSingleton::ShowDebugInfo( const bool bShow )

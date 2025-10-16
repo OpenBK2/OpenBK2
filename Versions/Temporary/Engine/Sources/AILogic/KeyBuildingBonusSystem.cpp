@@ -6,6 +6,8 @@
 #include "LinkObject.h"
 #include "ScenarioTracker.h"
 
+#include <fmt/format.h>
+
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
 
@@ -86,7 +88,8 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 				if ( pos->second.playerBonuses.size() > i )
 				{
 					const int nPositionID = pos->second.playerBonuses[i].nPointID;
-					CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "Reinforcement point %i taken from player %i", nPositionID, i ) );
+					const auto message = fmt::format( "Reinforcement point {} taken from player {}", nPositionID, i );
+					CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 					theReinfArray[i].EnablePosition( nPositionID, false );
 				}
 			}
@@ -106,7 +109,8 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 				{
 					const int nPositionID = pos->second.playerBonuses[i].nPointID;
 					theReinfArray[i].EnablePosition( nPositionID, true );
-					CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "New reinforcement point %i given to player %i", nPositionID, i ) );
+					const auto message =  fmt::format( "New reinforcement point {} given to player {}", nPositionID, i );
+					CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 				}
 			}
 		}

@@ -30,6 +30,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
 CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
@@ -581,7 +583,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 				str += "empty group !!!";
 			else
 			{
-				str += StrFmt( "%d", groups[0]->GetUniqueID() );
+				str += std::to_string(  groups[0]->GetUniqueID() );
 				for ( int i = 1; i < groups.size(); ++i )
 					str += StrFmt( ", %d", groups[i]->GetUniqueID() );
 			}
@@ -851,12 +853,12 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 			vResult = cmd.vPos;
 			break;
 		case 1:
-			NI_ASSERT( dynamic_cast<CCommonUnit*>(GetObjectByCmd( cmd )) != 0, StrFmt( "Non-compliance for command %d", cmd.nCmdType ) );
+			NI_ASSERT( dynamic_cast<CCommonUnit*>(GetObjectByCmd( cmd )) != 0, fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
 			vResult = checked_cast<CCommonUnit*>(GetObjectByCmd( cmd ))->GetCenterPlain();
 			break;
 		case 2:
 			{
-				NI_ASSERT( dynamic_cast<CStaticObject*>(GetObjectByCmd( cmd )) != 0, StrFmt( "Non-compliance for command %d", cmd.nCmdType ) );
+				NI_ASSERT( dynamic_cast<CStaticObject*>(GetObjectByCmd( cmd )) != 0, fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
 				CStaticObject* pObj = dynamic_cast<CStaticObject*>(GetObjectByCmd( cmd ));
 				if ( pObj->GetObjectType() == ESOT_BUILDING )
 				{

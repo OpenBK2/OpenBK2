@@ -11,6 +11,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 extern CWeather theWeather;
 
@@ -121,7 +123,7 @@ void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const uint16_t wWillPower, CTur
 		if ( dirsDiff > wWillPower )
 		{
 			const uint16_t wHorizontalRotationSpeed = pTurret->GetHorRotateSpeed();
-			NI_ASSERT( wHorizontalRotationSpeed != 0, StrFmt("horizontal rotation speed == 0 for \"%s\"", pOwner->GetStats()->szKeyName.c_str()) );
+			NI_ASSERT( wHorizontalRotationSpeed != 0, fmt::format("horizontal rotation speed == 0 for \"{}\"", pOwner->GetStats()->szKeyName) );
 			*pTimeToTurn += DirsDifference( startAngle, finalAngle ) / wHorizontalRotationSpeed;
 		}
 	}
@@ -209,20 +211,20 @@ void CUnitGuns::SetOwner( CAIUnit *pUnit )
 
 const SBaseGunRPGStats& CUnitGuns::GetCommonGunStats( const int nCommonGun ) const
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	return guns[gunsBegins[nCommonGun]]->GetGun();
 }
 
 int CUnitGuns::GetNAmmo( const int nCommonGun ) const
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	return commonGunsInfo[nCommonGun]->nAmmo;
 }
 
 // nAmmo со знаком
 void CUnitGuns::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	commonGunsInfo[nCommonGun]->nAmmo += nAmmo;
 	commonGunsInfo[nCommonGun]->nAmmo = Clamp( commonGunsInfo[nCommonGun]->nAmmo, 0, GetNAmmo( nCommonGun ) );
 }
@@ -396,7 +398,7 @@ void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 	for ( int i = 0; i < pStats->GetGunsSize( nUnitUniqueID, 0 ); ++i )
 	{
 		bool bSuccess = AddGun( CUnitsGunsFactory( pUnit, i, -1 ), 0, i, pStats->GetGun( nUnitUniqueID, 0, i ).pWeapon, &nGuns, pStats->GetGun( nUnitUniqueID, 0, i ).nAmmo );
-		NI_ASSERT( bSuccess, StrFmt("Can't add gun to unit \"%s\"", NDb::GetResName(pStats)) );
+		NI_ASSERT( bSuccess, fmt::format("Can't add gun to unit \"{}\"", NDb::GetResName(pStats)) );
 	}
 }
 

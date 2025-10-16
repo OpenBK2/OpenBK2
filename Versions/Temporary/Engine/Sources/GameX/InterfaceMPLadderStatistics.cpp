@@ -12,6 +12,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceMPLadderStatistics
 
 CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics() :
@@ -146,15 +148,15 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	ITextView *pGameTime = GetChildChecked<ITextView>( pMain, "InfoGameTime", true );
 
 	pPicture->SetTexture( pMPConsts->sides[info.nRace].ladderRanks[pMsg->nRank].pTexture );
-	pXP->SetText( pXP->GetDBText() + NStr::ToUnicode( StrFmt( "%d/%d", info.nXP, info.nNextLevelXP ) ) );
+	pXP->SetText( pXP->GetDBText() + NStr::ToUnicode( fmt::format( "{}/{}", info.nXP, info.nNextLevelXP ) ) );
 	float fPBPos = info.nXP - info.nLevelXP;
 	fPBPos = ( info.nNextLevelXP - info.nLevelXP > 0 ) ? ( fPBPos / ( info.nNextLevelXP - info.nLevelXP ) ) : 1.0f;
 	pXPProgress->SetPosition( fPBPos );
-	pLevel->SetText( pLevel->GetDBText() + NStr::ToUnicode( StrFmt( "%d", info.nLevel ) ) );
+	pLevel->SetText( pLevel->GetDBText() + NStr::ToUnicode( std::to_string( info.nLevel ) ) );
 	pRank->SetText( pLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->sides[info.nRace].ladderRanks[pMsg->nRank]., Name ) );
-	pBattles->SetText( pBattles->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nWins + nLosses ) ) );
-	pWinLose->SetText( pWinLose->GetDBText() + NStr::ToUnicode( StrFmt( "%d/%d", nWins, nLosses ) ) );
-	pGameTime->SetText( pGameTime->GetDBText() + NStr::ToUnicode( StrFmt( "%d:%02d:%02d", nPlayDays, nPlayHours, nPlayMinutes ) ) );
+	pBattles->SetText( pBattles->GetDBText() + NStr::ToUnicode( std::to_string( nWins + nLosses ) ) );
+	pWinLose->SetText( pWinLose->GetDBText() + NStr::ToUnicode( fmt::format( "{}/{}", nWins, nLosses ) ) );
+	pGameTime->SetText( pGameTime->GetDBText() + NStr::ToUnicode( fmt::format( "{}:{:02d}:{:02d}", nPlayDays, nPlayHours, nPlayMinutes ) ) );
 
 	//////////////////////////////////////////// Medals Panel
 	IScrollableContainer *pMedalsList = GetChildChecked<IScrollableContainer>( pMain, "MedalsList", true );
@@ -182,7 +184,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			}
 
 			SMedalDesc aMedal;
-			aMedal.szControlName = StrFmt( "ShowMedal%d", nMedalCounter++ );
+			aMedal.szControlName = fmt::format( "ShowMedal{}", nMedalCounter++ );
 
 			IWindow *pItem = AddWindowCopy( pMedalsList, pMedalTemplate );
 			ITextView *pMedalName = GetChildChecked<ITextView>( pItem, "ItemMedalName", true );
@@ -201,7 +203,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			else
 			{
 				if ( pMedalName ) 
-					pMedalName->SetText( pMedalName->GetDBText() + NStr::ToUnicode( StrFmt( "Medal %d", i ) ) );
+					pMedalName->SetText( pMedalName->GetDBText() + NStr::ToUnicode( fmt::format( "Medal {}", i ) ) );
 			}
 			medals.push_back( aMedal );
 			pItem->ShowWindow( true );
@@ -222,9 +224,9 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	// Efficiency
 	int nOverallEff = ( info.nKeyPointEff * 30 + info.nUnitEff * 70 ) / 100;
 	Add1Line( GetScreen()->GetTextEntry( "T_HDR_AVERAGE_EFF" ) );
-	Add2Line( GetScreen()->GetTextEntry( "T_HDR_OVERALL" ), NStr::ToUnicode( StrFmt( "%d%%", nOverallEff ) ) );
-	Add2Line( GetScreen()->GetTextEntry( "T_HDR_TACTICAL" ), NStr::ToUnicode( StrFmt( "%d%%", info.nKeyPointEff ) ) );
-	Add2Line( GetScreen()->GetTextEntry( "T_HDR_STRATEGIC" ), NStr::ToUnicode( StrFmt( "%d%%", info.nUnitEff ) ) );
+	Add2Line( GetScreen()->GetTextEntry( "T_HDR_OVERALL" ), NStr::ToUnicode( fmt::format( "{}%", nOverallEff ) ) );
+	Add2Line( GetScreen()->GetTextEntry( "T_HDR_TACTICAL" ), NStr::ToUnicode( fmt::format( "{}%", info.nKeyPointEff ) ) );
+	Add2Line( GetScreen()->GetTextEntry( "T_HDR_STRATEGIC" ), NStr::ToUnicode( fmt::format( "{}%", info.nUnitEff ) ) );
 	Add1Line( L"" );
 
 	// Favourite things
@@ -277,15 +279,15 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 		nLosses += nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
 	}
 	int nPercent = ( nWins + nLosses > 0 ) ?  nWins * 100 / ( nWins + nLosses ) : 0;
-	Add4Line( wszName, NStr::ToUnicode( StrFmt( "%d", nWins ) ), 
-		NStr::ToUnicode( StrFmt( "%d", nLosses ) ), NStr::ToUnicode( StrFmt( "%d%%", nPercent ) ) );
+	Add4Line( wszName, NStr::ToUnicode( std::to_string( nWins ) ),
+		NStr::ToUnicode( std::to_string( nLosses ) ), NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
 	for ( int i = 0; i < countryNames.size(); ++i )
 	{
 		nWins = nUseSolo * info.raceWinsSolo[i] + nUseTeam * info.raceWinsTeam[i];
 		nLosses = nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
 		nPercent = ( nWins + nLosses > 0 ) ?  nWins * 100 / ( nWins + nLosses ) : 0;
-		Add4Line( countryNames[i], NStr::ToUnicode( StrFmt( "%d", nWins ) ), 
-			NStr::ToUnicode( StrFmt( "%d", nLosses ) ), NStr::ToUnicode( StrFmt( "%d%%", nPercent ) ) );
+		Add4Line( countryNames[i], NStr::ToUnicode( std::to_string( nWins ) ),
+			NStr::ToUnicode( std::to_string( nLosses ) ), NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
 	}
 	Add4Line( L"", L"", L"", L"" );
 }

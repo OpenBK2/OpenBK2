@@ -39,6 +39,8 @@
 #include <client/crash_report_database.h>
 #include <client/settings.h>
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 //
@@ -57,7 +59,7 @@ namespace NGameX
 bool ProcessCommandLine( LPSTR lpCmdLine );
 static void StoreBuildInfo()
 {
-	const std::string szVersion = StrFmt( "Build %d, %s %s", NVersionInfo::nBuild, NVersionInfo::szDate.c_str(), NVersionInfo::szTime.c_str() );
+	const std::string szVersion = fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
 	NGlobal::SetVar( "version.info", szVersion );
 }
 
@@ -232,13 +234,13 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		// check for '-' at the begining
 		if ( szString == "-show-version" )
 		{
-			std::string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion = fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			printf( szVersion.c_str() );
 			return false;
 		}
 		else if ( szString == "-show-version-mb" )
 		{
-			std::string szVersion = StrFmt( "Version: %s\nBuild date/time: %s\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion = fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			::MessageBox( 0, szVersion.c_str(), "Build version", MB_OK | MB_ICONEXCLAMATION );
 			return false;
 		}
@@ -274,7 +276,7 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		if ( nFirstQuotePos != std::string::npos )
 		{
 			const int nLastQuotePos = szString.rfind( '\"' );
-			NI_ASSERT( nLastQuotePos != string::npos, StrFmt("Can't read string from cmd line string entry \"%s\"", szString.c_str()) );
+			NI_ASSERT( nLastQuotePos != string::npos, fmt::format("Can't read string from cmd line string entry \"{}\"", szString) );
 			const std::string szVarName = szString.substr( 0, nFirstQuotePos );
 			const std::string szValue = szString.substr( nFirstQuotePos + 1, nLastQuotePos - nFirstQuotePos );
 			NGlobal::SetVar( szVarName, szValue );

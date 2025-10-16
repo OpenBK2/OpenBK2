@@ -12,6 +12,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 // Интерфейс MessageBox
@@ -85,7 +87,7 @@ bool CInterfaceMessageBox::Init()
 void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstring &szText )
 {
 	IWindow *pWindow = pScreen->GetChild( szName, true );
-	NI_ASSERT( pWindow, StrFmt( "Main window: '%s' for message box not found", szName.c_str() ) );
+	NI_ASSERT( pWindow, fmt::format( "Main window: '{}' for message box not found", szName ) );
 	pWindow->ShowWindow( true );
 
 	IWindow *pTextWindow = pScreen->GetVisibleChild( "MessageBoxTextWindow", true );
@@ -181,12 +183,12 @@ void CICMessageBox::Configure( const char *pszConfig )
 	while ( *pCurrPos != '0' )
 	{
 		const char *p = strchr( pCurrPos, ':' );
-		NI_ASSERT( p , StrFmt( "incorrect string format: %s", pszConfig ) );
+		NI_ASSERT( p , fmt::format( "incorrect string format: {}", pszConfig ) );
 		std::string s( pCurrPos, p - pCurrPos );
 		if ( s == "type" )
 		{
 			const char *p2 = strchr( p + 1, ';' );
-			NI_ASSERT( p2 , StrFmt( "incorrect string format: %s", pszConfig ) );
+			NI_ASSERT( p2 , fmt::format( "incorrect string format: {}", pszConfig ) );
 			szMainWindowName = std::string( p + 1, p2 - (p + 1) );
 			pCurrPos = p2 + 1;
 		}
@@ -197,7 +199,7 @@ void CICMessageBox::Configure( const char *pszConfig )
 		}
 		else
 		{
-			NI_ASSERT( 0, StrFmt( "incorrect string format: %s", pszConfig ) );
+			NI_ASSERT( 0, fmt::format( "incorrect string format: {}", pszConfig ) );
 		}
 	}
 }

@@ -20,7 +20,7 @@ virtual void PostLoad( bool bInEditor )
 	{
 		if ( objects[i].nPlayer >= nNumPlayers )
 		{
-			NI_ASSERT( objects[i].nPlayer < nNumPlayers, StrFmt("Object %d (placed at {%g; %g}) on the map \"%s\" has invalid player (%d of %d) - setting neutral!", i, objects[i].vPos.x, objects[i].vPos.y, GetDBID().ToString().c_str(), objects[i].nPlayer, nNumPlayers) );
+			NI_ASSERT( objects[i].nPlayer < nNumPlayers, fmt::format("Object {} (placed at {{{:g}; {:g}}}) on the map \"{}\" has invalid player ({} of {}) - setting neutral!", i, objects[i].vPos.x, objects[i].vPos.y, GetDBID().ToString().c_str(), objects[i].nPlayer, nNumPlayers) );
 			objects[i].nPlayer = nNumPlayers - 1;
 		}
 	}

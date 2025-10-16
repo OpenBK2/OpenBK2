@@ -29,6 +29,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CExecutorContainer theExecutorContainer;
 extern CWeather theWeather;
 extern CScripts *pScripts;
@@ -238,13 +240,13 @@ void CUnitCreation::Clear()
 
 const SPartyDependentInfo * CUnitCreation::GetPartyDependentInfo( const int nDipl ) const 
 {
-	NI_ASSERT( nDipl < partyDependentInfo.size(), StrFmt("Wrong party Number ( %i )", nDipl ) );
+	NI_ASSERT( nDipl < partyDependentInfo.size(), fmt::format("Wrong party Number ( {} )", nDipl ) );
 	return partyDependentInfo[nDipl];
 }
 
 CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const class CVec3 &vPoint, const int nPlayer )
 {
-	NI_ASSERT( nPlayer < inGameUnits.size(), StrFmt( "no mines for player %d", nPlayer ) );
+	NI_ASSERT( nPlayer < inGameUnits.size(), fmt::format( "no mines for player {}", nPlayer ) );
 	
 //	const SPartyDependentInfo *pInfo = GetPartyDependentInfo( nDipl );
 
@@ -268,7 +270,7 @@ CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const 
 		pMineStats = pConsts->common.pLandMine;
 		break;
 	default: 
-		NI_ASSERT( false, StrFmt( "wrong mine type %d", nType ) );
+		NI_ASSERT( false, fmt::format( "wrong mine type {}", int( nType ) ) );
 		return 0;
 	}
 
@@ -293,7 +295,7 @@ CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 {
 	const int nDipl = pPlane->GetPlayer();
 	
-	NI_ASSERT( nDipl < inGameUnits.size(), StrFmt( "wrong player %d", nDipl ) );
+	NI_ASSERT( nDipl < inGameUnits.size(), fmt::format( "wrong player {}", nDipl ) );
 
 	const SSquadRPGStats *pStats = inGameUnits[pPlane->GetPlayer()].pParatrooper;
 	if ( !pStats )
@@ -320,7 +322,7 @@ CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 
 CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit )const
 {
-	NI_ASSERT( pWithUnit->GetPlayer() < inGameUnits.size(), StrFmt( "wrong player %d",pWithUnit->GetPlayer()) );
+	NI_ASSERT( pWithUnit->GetPlayer() < inGameUnits.size(), fmt::format( "wrong player {}",pWithUnit->GetPlayer()) );
 	
 	const SSquadRPGStats *pStats = GetPartyDependentInfo( pWithUnit->GetPlayer())->pResupplyEngineerSquad;
 	
@@ -350,7 +352,7 @@ CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit 
 
 CFormation * CUnitCreation::CreateCrew( CArtillery *pUnit, const int nUnits, const CVec3 &vPos, const int _nPlayer, const bool bImmidiateAttach )const
 {
-	NI_ASSERT( (_nPlayer == -1 ? pUnit->GetPlayer() : _nPlayer ) < inGameUnits.size(), StrFmt( "wrong player GetPlayer = %d, nPlayer = %d", pUnit->GetPlayer(), _nPlayer ) );
+	NI_ASSERT( (_nPlayer == -1 ? pUnit->GetPlayer() : _nPlayer ) < inGameUnits.size(), fmt::format( "wrong player GetPlayer = {}, nPlayer = {}", pUnit->GetPlayer(), _nPlayer ) );
 	
 	CVec3 vCreatePos (vPos);
 	if ( -1 == vPos.x )
@@ -460,7 +462,7 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 	else if ( pStats->IsArmor() || pStats->IsSPG() )
 		pUnit = MakeObject<CAIUnit>( AI_TANK );
 	else
-		NI_ASSERT( false, StrFmt( "Unknown unit's type (DBID \"%s\", type %d)", NDb::GetResName(pStats), pStats->etype ) );
+		NI_ASSERT( false, fmt::format( "Unknown unit's type (DBID \"{}\", type {})", NDb::GetResName(pStats), int( pStats->etype ) ) );
 	NI_ASSERT( pUnit != 0, "cannot create unit" );
 	if ( pUnit == 0 )
 		return 0;
@@ -636,7 +638,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	{
 		if ( pStats->members[i] == 0 )
 		{
-			NI_ASSERT( pStats->members[i] != 0, StrFmt("Squad \"%s\" has ZERO member %d", NDb::GetResName(pStats), i) );
+			NI_ASSERT( pStats->members[i] != 0, fmt::format("Squad \"{}\" has ZERO member {}", NDb::GetResName(pStats), i) );
 			return 0;
 		}
 	}
@@ -768,7 +770,7 @@ const NDb::SAIExpLevel * CUnitCreation::GetExpLevels( const enum EUnitRPGType eT
 		if ( eType == pConsts->common.expLevels[i]->eType )
 			return pConsts->common.expLevels[i];
 	}
-	NI_ASSERT( false, StrFmt( "cannot find expLevels for UnitRPGType %i", eType ) );
+	NI_ASSERT( false, fmt::format( "cannot find expLevels for UnitRPGType {}", int( eType ) ) );
 	return pConsts->common.expLevels[0];
 }
 

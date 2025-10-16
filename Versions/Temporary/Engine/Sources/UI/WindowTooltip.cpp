@@ -26,7 +26,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 	
 	CWindow * pChild = dynamic_cast<CWindow*>(GetChild( "TooltipText", false ));
 	ITextView *pText = dynamic_cast<ITextView*>( pChild );
-	NI_ASSERT( pText != 0, StrFmt( "tooltip window must have TextView child" ) );
+	NI_ASSERT( pText != 0, "tooltip window must have TextView child" );
 	
 	CWindow *pScreen = dynamic_cast<CWindow*>( _pScreen );
 	if ( pText && pScreen )

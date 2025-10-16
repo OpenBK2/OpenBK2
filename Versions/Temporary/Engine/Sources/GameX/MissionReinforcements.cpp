@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const char* REINF_STATE_NORMAL = "Normal";
 const char* REINF_STATE_SELECTED = "Selected";
 const char* REINF_STATE_DISABLED = "Disabled";
@@ -146,7 +148,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pCommonInfo->GetChild( StrFmt( "ReinfInfoUnit%d", i ), true );
+			IWindow *pWnd = pCommonInfo->GetChild( fmt::format( "ReinfInfoUnit{}", i ), true );
 			if ( !pWnd )
 				break;
 				
@@ -157,7 +159,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 
 			info.pButton = GetChildChecked<IButton>( info.pWnd, "UnitButton", true );
 			if ( info.pButton )
-				info.pButton->SetName( StrFmt( "UnitButton%d", i ) );
+				info.pButton->SetName( fmt::format( "UnitButton{}", i ) );
 
 			info.pIcon = GetChildChecked<IWindow>( info.pButton, "Icon", true );
 			info.pFlagBg = GetChildChecked<IWindow>( info.pButton, "InfoUnitFlagBg", true );
@@ -176,7 +178,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	// hide all buttons
 	for ( int i = 1; ; ++i )
 	{
-		IWindow *pWnd = pReinfPanel->GetChild( StrFmt( "ButtonReinf%02d", i ), true );
+		IWindow *pWnd = pReinfPanel->GetChild( fmt::format( "ButtonReinf{:02d}", i ), true );
 		if ( !dynamic_cast<IButton*>( pWnd ) )
 			break;
 			
@@ -225,7 +227,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 
 				for ( int j = 0; j <= 3; ++j )
 				{
-					IWindow *pWnd = GetChildChecked<IWindow>( pButton, StrFmt( "Chevron%02d", j ), true );
+					IWindow *pWnd = GetChildChecked<IWindow>( pButton, fmt::format( "Chevron{:02d}", j ), true );
 					info.chevrons.push_back( pWnd );
 				}
 				info.ShowChevron( -1 );
@@ -663,7 +665,7 @@ void CMissionReinf::UpdateEnable()
 		{
 			int nMinutes = nSeconds / 60;
 			nSeconds = nSeconds % 60;
-			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + NStr::ToUnicode( StrFmt( "%d:%02d", nMinutes, nSeconds ) );
+			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + NStr::ToUnicode( fmt::format( "{}:{:02d}", nMinutes, nSeconds ) );
 			pRoller1->SetTooltip( wszTooltip );
 			pRoller2->SetTooltip( wszTooltip );
 		}
@@ -932,7 +934,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 			tmpReinfEntry.pStats = entry.pMechUnit;
 			if ( !tmpReinfEntry.pStats )
 				tmpReinfEntry.pStats = entry.pSquad;
-			NI_VERIFY( tmpReinfEntry.pStats, StrFmt("Incorrect data in reinforcement \"%s\" entry %d", pReinf->GetDBID().ToString().c_str(), i), continue );
+			NI_VERIFY( tmpReinfEntry.pStats, fmt::format("Incorrect data in reinforcement \"{}\" entry {}", pReinf->GetDBID().ToString(), i), continue );
 			tmpReinfEntry.nCount = 1;
 			
 			tmpReinfEntries.push_back( tmpReinfEntry );
@@ -982,7 +984,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 				info.pFlagBg->SetTexture( pFlagBgTexture );
 				
 			if ( info.pCountView )
-				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", info.nCount ) ) );
+				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( std::to_string(  info.nCount ) ) );
 		}
 
 		if ( pName )

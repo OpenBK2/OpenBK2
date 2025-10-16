@@ -4,6 +4,8 @@
 #include "actioncommand.h"
 #include "ActionsRemap.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 PCConstructorInfo & ConstructorInfo()
@@ -93,7 +95,7 @@ const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 {
 	if ( -1 == nCmd ) 
 		return false;
-	NI_ASSERT( (nCmd >= 0 && nCmd < pActions->availCommands.GetSize()) || (nCmd >= 1000), StrFmt( "Wrong command ( %d )\n", nCmd ) );
+	NI_ASSERT( (nCmd >= 0 && nCmd < pActions->availCommands.GetSize()) || (nCmd >= 1000), fmt::format( "Wrong command ( {} )\n", nCmd ) );
 	return nCmd >= 1000 ? true : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData(nCmd) : false );
 }
 void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const

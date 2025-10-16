@@ -87,6 +87,6 @@ set(SOURCES
 add_library(SceneB2 SHARED ${SOURCES})
 add_export_header(SceneB2)
 add_stdafx_pch(SceneB2)
-target_link_libraries(SceneB2 PRIVATE 3DLib 3Dmotor B2_M1_Terrain DebugTools Image Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib granny)
+target_link_libraries(SceneB2 PRIVATE 3DLib 3Dmotor B2_M1_Terrain DebugTools Image Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib granny fmt::fmt-header-only)
 install(TARGETS SceneB2 DESTINATION bin)
 add_version_info(SceneB2)

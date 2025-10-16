@@ -88,7 +88,7 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 	wndPalyerComboBox.ResetContent();
 	for ( int nPlayerIndex = 0; nPlayerIndex < pData->nPlayerCount; ++nPlayerIndex )
 	{
-		const int nStringNumber = wndPalyerComboBox.AddString( StrFmt( "%d", nPlayerIndex ) );
+		const int nStringNumber = wndPalyerComboBox.AddString( std::to_string(  nPlayerIndex ) );
 		wndPalyerComboBox.SetItemData( nStringNumber, nPlayerIndex );
 	}
 	wndPalyerComboBox.SelectString( 0, StrFmt("%d", pData->nPlayerIndex) );

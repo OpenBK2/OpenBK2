@@ -21,6 +21,8 @@
 
 #include "AILogic_export.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AB, CArtillery );
 #include "Stats_B2_M1/AdditionalActions.h"
 #include "UnitCreation.h"
@@ -364,7 +366,7 @@ bool CArtillery::IsInstallActionFinished()
 		case ACTION_NOTIFY_UNINSTALL_MOVE:			return curTime - installActionTime >= pStats->nUninstallRotate;
 		case ACTION_NOTIFY_UNINSTALL_ROTATE:		return curTime - installActionTime >= pStats->nUninstallRotate;
 
-		default: NI_ASSERT( false, StrFmt( "Wrong curInstallAction (%d)", int( eCurInstallAction ) ) );
+		default: NI_ASSERT( false, fmt::format( "Wrong curInstallAction ({})", int( eCurInstallAction ) ) );
 	}
 
 	return true;
@@ -380,7 +382,7 @@ bool CArtillery::ShouldSendInstallAction( const EActionNotify &eAction ) const
 		case ACTION_NOTIFY_UNINSTALL_TRANSPORT: return pStats->nUninstallTransport != 0;
 		case ACTION_NOTIFY_UNINSTALL_MOVE:			return pStats->nUninstallRotate != 0;
 		case ACTION_NOTIFY_UNINSTALL_ROTATE:		return pStats->nUninstallRotate != 0;
-		default: NI_ASSERT( false, StrFmt( "Wrong eAction (%d)", int( eAction ) ) );
+		default: NI_ASSERT( false, fmt::format( "Wrong eAction ({})", int( eAction ) ) );
 	}
 
 	return true;
@@ -641,7 +643,7 @@ void CArtillery::Segment()
 	{
 		if ( (curTime - lastCheckToInstall >= 1500 + NRandom::Random( 0, 500 )) & RecordRandomCall() )
 		{
-			NI_ASSERT( IsInstallAction( GetOppositeInstallState( eCurrentStateOfInstall ) ), StrFmt( "Wrong current install state (%d)", int(eCurrentStateOfInstall) ) );
+			NI_ASSERT( IsInstallAction( GetOppositeInstallState( eCurrentStateOfInstall ) ), fmt::format( "Wrong current install state ({})", int(eCurrentStateOfInstall) ) );
 			InstallAction( GetOppositeInstallState( eCurrentStateOfInstall ) );
 		}
 	}
@@ -882,7 +884,7 @@ const uint32_t CArtillery::GetNormale( const CVec2 &vArtCenter ) const
 		const CVec2 vArtCenter = GetCenterPlain();
 		const CVec3 vArtCenter3D( vArtCenter, GetHeights()->GetVisZ( vArtCenter.x, vArtCenter.y ) );
 		const SMechUnitRPGStats *pArt = checked_cast<const SMechUnitRPGStats*>( GetStats() );
-		NI_VERIFY( fabs( pArt->vTowPoint.y ) >= FP_EPSILON, StrFmt( "DESIGNERS BUG: invalid tow point for unit %s", NDb::GetResName( pArt ) ), return CAIUnit::GetNormale() );
+		NI_VERIFY( fabs( pArt->vTowPoint.y ) >= FP_EPSILON, fmt::format( "DESIGNERS BUG: invalid tow point for unit {}", NDb::GetResName( pArt ) ), return CAIUnit::GetNormale() );
 
 		const CVec3 vTraHookPoint3D = pTransport->GetHookPoint3D();
 

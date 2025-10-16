@@ -151,7 +151,7 @@ void CScenarioTracker::MapStart()
 		for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[0].reinforcementTypes.begin();
 			it != pMission->players[0].reinforcementTypes.end(); ++it )
 		{
-			NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player 0" ) );
+			NI_ASSERT( *it != 0, "empty reinforcement entry for player 0" );
 			if ( *it )
 				playerMission[(*it)->eType] = *it;
 		}
@@ -161,7 +161,7 @@ void CScenarioTracker::MapStart()
 			for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = pMission->players[nMainEnemy].reinforcementTypes.begin();
 				it != pMission->players[nMainEnemy].reinforcementTypes.end(); ++it )
 			{
-				NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player %d", nMainEnemy ) );
+				NI_ASSERT( *it != 0, fmt::format( "empty reinforcement entry for player {}", nMainEnemy ) );
 				if ( *it )
 					enemyMission[(*it)->eType] = *it;
 			}
@@ -258,7 +258,7 @@ void CScenarioTracker::ApplyMissionBonus( const NDb::SChapterBonus *pBonus, SMis
 		{
 			if ( !pBonus->bApplyToEnemy )
 			{
-				NI_ASSERT( pBonus->pReinforcementSet, StrFmt( "Null reinforcement (ChapterBonus \"%s\")", NDb::GetResName(pBonus) ) );
+				NI_ASSERT( pBonus->pReinforcementSet, fmt::format( "Null reinforcement (ChapterBonus \"{}\")", NDb::GetResName(pBonus) ) );
 				if ( pBonus->pReinforcementSet )
 				{
 					playerChapter[pBonus->pReinforcementSet->eType] = pBonus->pReinforcementSet;
@@ -274,7 +274,7 @@ void CScenarioTracker::ApplyMissionBonus( const NDb::SChapterBonus *pBonus, SMis
 			}
 			else
 			{
-				NI_ASSERT( 0, StrFmt( "Attempt to add reinforcement to enemy (ChapterBonus \"%s\")", NDb::GetResName(pBonus) ) );
+				NI_ASSERT( 0, fmt::format( "Attempt to add reinforcement to enemy (ChapterBonus \"{}\")", NDb::GetResName(pBonus) ) );
 			}
 		}
 		break;
@@ -286,7 +286,7 @@ void CScenarioTracker::ApplyMissionBonus( const NDb::SChapterBonus *pBonus, SMis
 			}
 			else
 			{
-				NI_ASSERT( 0, StrFmt( "Attempt to remove reinforcement from player (ChapterBonus \"%s\")", NDb::GetResName(pBonus) ) );
+				NI_ASSERT( 0, fmt::format( "Attempt to remove reinforcement from player (ChapterBonus \"{}\")", NDb::GetResName(pBonus) ) );
 			}
 		}
 		break;
@@ -298,7 +298,7 @@ void CScenarioTracker::ApplyMissionBonus( const NDb::SChapterBonus *pBonus, SMis
 			}
 			else
 			{
-				NI_ASSERT( 0, StrFmt( "Attempt to add mission calls to enemy (ChapterBonus \"%s\")", NDb::GetResName(pBonus) ) );
+				NI_ASSERT( 0, fmt::format( "Attempt to add mission calls to enemy (ChapterBonus \"{}\")", NDb::GetResName(pBonus) ) );
 			}
 		}
 		break;
@@ -574,7 +574,7 @@ void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 	for ( int i = 0; i < pChapter->missionPath.size(); ++i )
 	{
 		const NDb::SMapInfo *pMap = pChapter->missionPath[i].pMap;
-		NI_ASSERT( pMap != 0, StrFmt( "Designers: pMap == 0 (Chapter ID: \"%s\", MissionPath: %d)", NDb::GetResName(pChapter), i ) );
+		NI_ASSERT( pMap != 0, fmt::format( "Designers: pMap == 0 (Chapter ID: \"{}\", MissionPath: {})", NDb::GetResName(pChapter), i ) );
 		missionsToEnable[pMap->GetDBID()] = pChapter->missionPath[i].nMissionsToEnable;
 	}
 
@@ -782,13 +782,13 @@ void CScenarioTracker::NextChapter()
 
 				if ( !pBonus )
 				{
-					NI_ASSERT( 0, StrFmt( "Empty mission reward, chapter \"%s\", mission %d, reward %d", NDb::GetResName( pBonus ), i, j ) );
+					NI_ASSERT( 0, fmt::format( "Empty mission reward, chapter \"{}\", mission {}, reward {}", NDb::GetResName( pBonus ), i, j ) );
 					continue;
 				}
 
 				if ( pBonus->eBonusType == NDb::CBT_REINF_CHANGE )
 				{
-					NI_ASSERT( pBonus->pReinforcementSet, StrFmt( "No reinforcement specified in ChapterBonus \"%s\"", NDb::GetResName(pBonus) ) );
+					NI_ASSERT( pBonus->pReinforcementSet, fmt::format( "No reinforcement specified in ChapterBonus \"{}\"", NDb::GetResName(pBonus) ) );
 					if ( pBonus->pReinforcementSet )
 					{
 						const NDb::EReinforcementType eType = pBonus->pReinforcementSet->eType;
@@ -977,8 +977,8 @@ void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjective
 	if ( !GetCurrentMission() )
 		return; // запущена карта без миссии
 
-	NI_VERIFY( nID >= 0 && nID < objectives.size(), StrFmt("Objective ID (%d) out of range [0..%d]", nID, objectives.size()), return );
-	NI_VERIFY( eState >= EMOS_MIN && eState <= EMOS_MAX, StrFmt("Objective state (%d) invalid (must be in range [%d..%d])", eState, EMOS_MIN + 1, EMOS_MAX - 1), return );
+	NI_VERIFY( nID >= 0 && nID < objectives.size(), fmt::format("Objective ID ({}) out of range [0..{}]", nID, objectives.size()), return );
+	NI_VERIFY( eState >= EMOS_MIN && eState <= EMOS_MAX, fmt::format("Objective state ({}) invalid (must be in range [{}..{}])", int( eState ), EMOS_MIN + 1, EMOS_MAX - 1), return );
 
 	if ( objectives[nID] == EMOS_WAITING && eState != EMOS_WAITING )
 	{
@@ -1104,7 +1104,7 @@ void CScenarioTracker::SearchPotentialReinforcements()
 
 			if ( pBonus->eBonusType == NDb::CBT_REINF_CHANGE )
 			{
-				NI_ASSERT( pBonus->pReinforcementSet, StrFmt( "No reinforcement specified in ChapterBonus \"%s\"", NDb::GetResName(pBonus) ) );
+				NI_ASSERT( pBonus->pReinforcementSet, fmt::format( "No reinforcement specified in ChapterBonus \"{}\"", NDb::GetResName(pBonus) ) );
 				const NDb::EReinforcementType eType = pBonus->pReinforcementSet->eType;
 
 				if ( !pBonus->bApplyToEnemy )
@@ -1128,7 +1128,7 @@ void CScenarioTracker::SearchPotentialReinforcements()
 			for( std::vector<CDBPtr<NDb::SReinforcement> >::const_iterator it = GetCurrentMission()->players[0].reinforcementTypes.begin();
 				it != GetCurrentMission()->players[0].reinforcementTypes.end(); ++it )
 			{
-				NI_ASSERT( *it != 0, StrFmt( "empty reinforcement entry for player 0" ));
+				NI_ASSERT( *it != 0, "empty reinforcement entry for player 0" );
 				if ( *it && (*it)->eType == i )
 				{
 					eState = ERS_NOT_ENABLED;
@@ -1686,7 +1686,7 @@ const NDb::SPartyDependentInfo *CScenarioTracker::GetPlayerParty( const int nPla
 	if ( !pMapInfo )
 		return 0;
 
-	NI_VERIFY( nPlayer >= 0 && nPlayer < pMapInfo->players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, pMapInfo->players.size() ), return 0 );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < pMapInfo->players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, pMapInfo->players.size() ), return 0 );
 
 	return pMapInfo->players[nPlayer].pPartyInfo; 
 }
@@ -1836,7 +1836,7 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetLeaderModifier( int nPlayer,
 	if ( it == leaders.end() )
 		return 0;
 
-	NI_ASSERT( 0 <= it->second.info.nRank && it->second.info.nRank < pCampaign->leaderRanks.size(), StrFmt( "Rank index (%d) out of range (0..%d)", it->second.info.nRank, pCampaign->leaderRanks.size() ) );
+	NI_ASSERT( 0 <= it->second.info.nRank && it->second.info.nRank < pCampaign->leaderRanks.size(), fmt::format( "Rank index ({}) out of range (0..{})", it->second.info.nRank, pCampaign->leaderRanks.size() ) );
 	const int nRank = Clamp<int>( it->second.info.nRank, 0, pCampaign->leaderRanks.size()-1 );
 	return pCampaign->leaderRanks[nRank].pStatsBonus;
 }

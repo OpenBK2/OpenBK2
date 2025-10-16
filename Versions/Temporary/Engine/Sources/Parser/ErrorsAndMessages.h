@@ -2,13 +2,14 @@
 
 #include "Parser_export.h"
 
+#include <fmt/format.h>
 
 #define CHECK_TYPE( TDesiredType, pRawNode, statement )\
 {\
 	CDynamicCast< TDesiredType > pNode = pRawNode ? pRawNode : 0;\
 	if ( pNode == 0 )\
 	{\
-		std::string szError = StrFmt( "%s expected, %s recieved\n", #TDesiredType, typeid( *pNode ).name() );\
+		std::string szError = fmt::format( "{} expected, {} recieved\n", #TDesiredType, typeid( *pNode ).name() );\
 		NErrors::ShowErrorNoLine( szError );\
 		{ statement; }\
 	}\

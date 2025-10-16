@@ -9,6 +9,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const float TEXTURE_POINT_X = 4.0f; 
 const float TEXTURE_POINT_Y = 7.0f;
 
@@ -146,7 +148,8 @@ void CInterfaceMissionBriefing::MissionStart()
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
+	const auto command = fmt::format( "{};normal", pMapInfo->GetDBID().ToString() );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 
 // CICMissionBriefing

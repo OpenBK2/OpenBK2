@@ -2,6 +2,7 @@
 
 #include "TableManipulator.h"
 
+#include <fmt/format.h>
 
 CTableManipulatorWrapper::CTableManipulatorWrapper( std::vector<STypeClass *> &classes )
 {
@@ -39,7 +40,7 @@ UINT CTableManipulatorWrapper::GetID( const std::string &szName ) const
 		return pType->nClassTypeID;
 	else
 	{
-		NI_ASSERT( pType, StrFmt("CTableManipulatorWrapper::GetID( \"%s\" )", szName.c_str() ) );
+		NI_ASSERT( pType, fmt::format("CTableManipulatorWrapper::GetID( \"{}\" )", szName ) );
 		return -1;
 	}
 }

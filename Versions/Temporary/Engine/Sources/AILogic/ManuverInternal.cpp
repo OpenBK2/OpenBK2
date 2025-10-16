@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern float g = 0.0000983f;
 extern NTimer::STime curTime;
 
@@ -273,8 +275,8 @@ void CManuver::CheckToHorisontal()
 	{
 		//DEBUG{
 		static int nRedirect = 0;
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, 
-			StrFmt( "Change Height impossible, redirect #%i (%.2f,%.2f,%.2f)", nRedirect, vNewTarget.x, vNewTarget.y, vNewTarget.z ) );
+		const auto message = fmt::format( "Change Height impossible, redirect #{} ({:.2f},{:.2f},{:.2f})", nRedirect, vNewTarget.x, vNewTarget.y, vNewTarget.z );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str());
 		++nRedirect;
 		//DEBUG}
 

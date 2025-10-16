@@ -12,6 +12,8 @@ class CString;	// без такой ботвы #include "../../MapEditorLib/Inte
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NFolderManipulator
 {
 
@@ -31,7 +33,7 @@ bool CheckedFileOperation( const std::string &szOperationDescription, bool bFile
 			(LPTSTR) &lpMsgBuf,
 			0, NULL );
 
-		std::string szErrorMessage = StrFmt( "rename failed: %s, %s", szOperationDescription.c_str(), lpMsgBuf );
+		std::string szErrorMessage = fmt::format( "rename failed: {}, {}", szOperationDescription, lpMsgBuf );
 		LocalFree(lpMsgBuf);
 
 		return false;
@@ -42,12 +44,12 @@ bool CheckedFileOperation( const std::string &szOperationDescription, bool bFile
 
 bool CheckedMove( const std::string &szFrom, const std::string &szTo )
 {
-	return CheckedFileOperation( StrFmt( "move %s -> %s", szFrom.c_str(), szTo.c_str() ), MoveFile( szFrom.c_str(), szTo.c_str() ) );
+	return CheckedFileOperation( fmt::format( "move {} -> {}", szFrom, szTo ), MoveFile( szFrom.c_str(), szTo.c_str() ) );
 }
 
 bool CheckedCopy( const std::string &szFrom, const std::string &szTo )
 {
-	return CheckedFileOperation( StrFmt( "copy %s -> %s", szFrom.c_str(), szTo.c_str() ), CopyFile( szFrom.c_str(), szTo.c_str(), false ) );
+	return CheckedFileOperation( fmt::format( "copy {} -> {}", szFrom, szTo ), CopyFile( szFrom.c_str(), szTo.c_str(), false ) );
 }
 
 struct SReplaceEntry

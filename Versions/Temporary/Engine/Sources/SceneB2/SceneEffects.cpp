@@ -4,9 +4,11 @@
 #include "SceneInternal.h"
 #include "SceneHoldQueue.h"
 
+#include <fmt/format.h>
+
 int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &_vPos, const CQuat &qRot )
 {
-	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return -1 );
+	NI_VERIFY( pEffect != 0, fmt::format("Adding effect {} with empty descriptor", nID), return -1 );
 	//
 	CVec3 vPos;
 	AI2Vis( &vPos, _vPos );
@@ -31,7 +33,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	else
 	{
 		const int nObjectID = GetID( nID );
-		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), StrFmt("Object 0x%.8x already exist", nObjectID) );
+		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", nObjectID) );
 		pVOD->nID = nObjectID;
 		data[eScene]->visObjects[nObjectID] = pVOD;
 		return nObjectID;
@@ -40,7 +42,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 
 int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
-	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return -1 );
+	NI_VERIFY( pEffect != 0, fmt::format("Adding effect {} with empty descriptor", nID), return -1 );
 	//
 	CPtr<SEffectVisObjBase> pVOD;
 	if ( nID == OBJECT_ID_FORGET )
@@ -62,7 +64,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	else
 	{
 		const int nObjectID = GetID( nID );
-		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), StrFmt("Object 0x%.8x already exist", nObjectID) );
+		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", nObjectID) );
 		pVOD->nID = nObjectID;
 		data[eScene]->visObjects[nObjectID] = pVOD;
 		return nObjectID;
@@ -71,7 +73,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 
 void CScene::AddEffect( const int nID, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
-	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return );
+	NI_VERIFY( pEffect != 0, fmt::format("Adding effect {} with empty descriptor", nID), return );
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nID );
 	if ( pAnimator == 0 )
 		return;

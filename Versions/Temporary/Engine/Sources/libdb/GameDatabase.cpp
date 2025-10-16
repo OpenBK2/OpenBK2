@@ -12,6 +12,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 	void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
@@ -216,7 +218,7 @@ bool CGameDatabase::IsFileRegistered( const std::string &szFileName )
 
 bool CGameDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 {
-	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), StrFmt("Resource \"%s\" already exist!", dbid.ToString().c_str()), return false );
+	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), fmt::format("Resource \"{}\" already exist!", dbid.ToString()), return false );
 	// read object header
 	STypeObjectHeader header;
 	if ( ReadResourceHeader( &header, dbid ) )
@@ -239,9 +241,9 @@ CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 		else
 		{
 			CName2TypeIDMap::const_iterator posTypeID = name2typeIDmap.find( posElement->second.typeHeader.szClassTypeName );
-			NI_VERIFY( posTypeID != name2typeIDmap.end(), StrFmt("Can't find class typeID for \"%s\"", posElement->second.typeHeader.szClassTypeName.c_str()), return 0 );
+			NI_VERIFY( posTypeID != name2typeIDmap.end(), fmt::format("Can't find class typeID for \"{}\"", posElement->second.typeHeader.szClassTypeName), return 0 );
 			posElement->second.pObj = MakeObject<CResource>( posTypeID->second );
-			NI_VERIFY( posElement->second.pObj != 0, StrFmt("Can't create object of type 0x%.8x", posTypeID->second), return 0 );
+			NI_VERIFY( posElement->second.pObj != 0, fmt::format("Can't create object of type 0x{:08x}", posTypeID->second), return 0 );
 			CResourceHelper::SetDBID( posElement->second.pObj, dbid );
 			return posElement->second.pObj;
 		}
@@ -309,14 +311,14 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 			CProfiler profiler( dbid );
 			//			DebugTrace( "Loading DB object \"%s\"", GetFileName(dbid).c_str() );
 			CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
-			NI_VERIFY( pSaver != 0, StrFmt("Can't create saver to load DB object \"%s\"", dbid.ToString().c_str()), return 0 );
+			NI_VERIFY( pSaver != 0, fmt::format("Can't create saver to load DB object \"{}\"", dbid.ToString()), return 0 );
 			pSaver->AddPolymorphicBase( 0, pObj );
 			CResourceHelper::SetLoaded( pObj );
 			forceLoadGuard.Close();
 			CResourceHelper::CallPostLoad( pObj, false );
 			return pObj;
 		}
-		NI_ASSERT( false, StrFmt("Can't create stream to load DB object \"%s\"", dbid.ToString().c_str()) );
+		NI_ASSERT( false, fmt::format("Can't create stream to load DB object \"{}\"", dbid.ToString()) );
 		return 0;
 	}
 }
@@ -333,7 +335,7 @@ bool CGameDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTy
 			break;
 		}
 	}
-	NI_VERIFY( !szClassTypeName.empty(), StrFmt("Can't find class type name for 0x%.8x", nClassTypeID), return false );
+	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", nClassTypeID), return false );
 	// get objects list by class type name
 	pRes->resize( 0 );
 	pRes->reserve( 512 );

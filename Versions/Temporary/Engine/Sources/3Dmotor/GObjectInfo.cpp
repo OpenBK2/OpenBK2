@@ -260,7 +260,7 @@ const char *ConvertWeightsFromGrannyEx(
 		{
 			if ( pSkeleton && pSkeleton->Name && pszBoneName )
 			{
-				NI_ASSERT( false, StrFmt( "Vertex was binded to non-present bone. Skeleton = \"%s\" Bone = \"%s\"/n", pSkeleton->Name, pszBoneName ) );
+				NI_ASSERT( false, fmt::format( "Vertex was binded to non-present bone. Skeleton = \"{}\" Bone = \"{}\"/n", pSkeleton->Name, pszBoneName ) );
 			}
 			else
 				ASSERT( 0 && "Vertex was binded to non-present bone" );

@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NAIConsts
 {
 	const int WAR_FOG_FULL_UPDATE() { return SAIConsts::WAR_FOG_FULL_UPDATE; }
@@ -514,12 +516,14 @@ void SConsts::Load()
 	if ( AI_CALL_FOR_HELP_RADIUS > 3840 )
 	{
 		AI_CALL_FOR_HELP_RADIUS = 3840;
-		CONSOLE_BUFFER_LOG2( PIPE_CHAT, StrFmt("AICallForHelpRadius is too big, reduced to %d", AI_CALL_FOR_HELP_RADIUS ), 0xffff0000, true );
+		const auto message = fmt::format("AICallForHelpRadius is too big, reduced to {}", AI_CALL_FOR_HELP_RADIUS );
+		CONSOLE_BUFFER_LOG2( PIPE_CHAT, message.c_str(), 0xffff0000, true );
 	}
 	if ( CALL_FOR_HELP_RADIUS > 3840 )
 	{
 		CALL_FOR_HELP_RADIUS = 3840;
-		CONSOLE_BUFFER_LOG2( PIPE_CHAT, StrFmt("CallForHelpRadius is too big, reduced to %d", CALL_FOR_HELP_RADIUS ), 0xffff0000, true );
+		const auto message = fmt::format("CallForHelpRadius is too big, reduced to {}", CALL_FOR_HELP_RADIUS );
+		CONSOLE_BUFFER_LOG2( PIPE_CHAT, message.c_str(), 0xffff0000, true );
 	}
 	
 }

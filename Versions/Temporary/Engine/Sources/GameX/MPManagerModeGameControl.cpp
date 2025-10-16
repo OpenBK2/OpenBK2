@@ -26,6 +26,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
 
 void CMPManagerMode::StartGame()
@@ -97,7 +99,7 @@ void CMPManagerMode::StartGame()
 		NI_ASSERT( nTranSlot <= nSlotsUsed, "PRG: Incorrectly counted used slots." );
 	}
 	pScenarioTracker->SetMultiplayerInfo( scenarioInfo );
-	NI_ASSERT( nTranSlot == nSlotsUsed, StrFmt( "PRG: Incorrectly counted used slots - %d/%d.", nTranSlot, nSlotsUsed ) );
+	NI_ASSERT( nTranSlot == nSlotsUsed, fmt::format( "PRG: Incorrectly counted used slots - {}/{}.", nTranSlot, nSlotsUsed ) );
 	pScenarioTracker->SetLocalPlayer( nOwnSlot );
 
 	NGlobal::SetVar( "multiplayer_time_limit", -1 );
@@ -145,7 +147,7 @@ void CMPManagerMode::StartGame()
 		"STATE",
 		"StartGame",
 		GetOwnClientID(),
-		StrFmt( "slots_used=%d initial_players=%08X", nSlotsUsed, dwInitialPlayers ) );
+		fmt::format( "slots_used={} initial_players={:08X}", nSlotsUsed, dwInitialPlayers ) );
 
 	timeEndMatch = 0;
 	bOutcomeKnown = false;
@@ -183,7 +185,7 @@ void CMPManagerMode::ScheduleWinGame()
 		"DECISION",
 		"ScheduleWinGame",
 		GetOwnClientID(),
-		StrFmt( "game_id=%d", nGameID ) );
+		fmt::format( "game_id={}", nGameID ) );
 	pTransceiver->ScheduleGameEnd( 0 );
 	bWinOnGameEnd = true;
 	bOutcomeKnown = true;
@@ -196,7 +198,7 @@ void CMPManagerMode::ScheduleLoseGame()
 		"TX",
 		"CB2GameLostPacket",
 		GetOwnClientID(),
-		StrFmt( "game_id=%d", nGameID ) );
+		fmt::format( "game_id={}", nGameID ) );
 	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( 0 ) );
 	pClient->SendGamePacket( pPkt, true );
 	bWinOnGameEnd = false;
@@ -228,7 +230,7 @@ void CMPManagerMode::EndGame()
 		"STATE",
 		"EndGame",
 		GetOwnClientID(),
-		StrFmt( "winning_side=%d", nWinningSide ) );
+		fmt::format( "winning_side={}", nWinningSide ) );
 	NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 	NGameX::MatchPacketTrace_Flush( "match_end" );
 
@@ -487,7 +489,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						"DECISION",
 						"HostLagDropAuthorityAssumed",
 						GetOwnClientID(),
-						StrFmt( "slot=%d old_host=%d new_host=%d", i, nOldHostClientID, nHostClientID ) );
+						fmt::format( "slot={} old_host={} new_host={}", i, nOldHostClientID, nHostClientID ) );
 					ScheduleSynchronizedPlayerDrop( i, nDropSegment );
 					BroadcastSynchronizedPlayerDrop( i, nDropSegment, "host_lag_timeout" );
 				}
@@ -498,7 +500,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						"DECISION",
 						"HostLagAwaitingReplacementAuthority",
 						GetOwnClientID(),
-						StrFmt( "slot=%d replacement=%d", i, nReplacementHostClientID ) );
+						fmt::format( "slot={} replacement={}", i, nReplacementHostClientID ) );
 				}
 			}
 			else if ( bLaggingGameControlHost && bUserPaused )
@@ -508,7 +510,7 @@ void CMPManagerMode::AnalyzeLaggers()
 					"DECISION",
 					"HostLagUserPauseObserved",
 					GetOwnClientID(),
-					StrFmt( "slot=%d user_pause_mask=%08X", i, dwUserPausedPlayers ) );
+					fmt::format( "slot={} user_pause_mask={:08X}", i, dwUserPausedPlayers ) );
 			}
 		}
 		else if ( HasPlayerStoppedLagging( i ) )
@@ -524,7 +526,7 @@ void CMPManagerMode::AnalyzeLaggers()
 				"TX",
 				"CB2LagTimeUpdatePacket",
 				GetOwnClientID(),
-				StrFmt( "player=%d time_left=%d", i, lagInfo.nLagLeft ) );
+				fmt::format( "player={} time_left={}", i, lagInfo.nLagLeft ) );
 			pClient->SendGamePacket( pPkt, true );
 			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft ); 
 		}
@@ -541,7 +543,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						"TX",
 						"CB2SuggestKickPacket",
 						GetOwnClientID(),
-						StrFmt( "slot_to_kick=%d", i ) );
+						fmt::format( "slot_to_kick={}", i ) );
 					pClient->SendGamePacket( pPkt, true );
 					const uint32_t dwPreVoteMask = lagInfo.dwHatedBy;
 					lagInfo.dwHatedBy |= ( 1UL << nOwnSlot );
@@ -550,7 +552,7 @@ void CMPManagerMode::AnalyzeLaggers()
 						"DECISION",
 						"SetOwnKickVote",
 						GetOwnClientID(),
-						StrFmt( "slot=%d pre_votes=%08X post_votes=%08X", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
+						fmt::format( "slot={} pre_votes={:08X} post_votes={:08X}", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
 				}
 				// Kick voting is game-control-host authoritative; authority migrates if the original host leaves.
 				const uint32_t dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
@@ -573,7 +575,7 @@ void CMPManagerMode::AnalyzeLaggers()
 							"DECISION",
 							"LagKickConsensusReached",
 							GetOwnClientID(),
-							StrFmt( "slot=%d eligible=%08X votes=%08X control_host=%d replacement=%d",
+							fmt::format( "slot={} eligible={:08X} votes={:08X} control_host={} replacement={}",
 								i, dwEligibleVoters, lagInfo.dwHatedBy, bLaggingGameControlHost ? 1 : 0, nReplacementHostClientID ) );
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
 						BroadcastSynchronizedPlayerDrop( i, nDropSegment, bLaggingGameControlHost ? "host_lag_timeout" : "lag_kick" );
@@ -612,7 +614,7 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 	std::string szDebugOut = "+++ Rehash slots:";
 	for ( int i = 0; i < order.size(); ++i )
 	{
-		szDebugOut += StrFmt( " %d,", order[i] );
+		szDebugOut += fmt::format( " {},", order[i] );
 	}
 	DebugTrace( szDebugOut.c_str() );
 

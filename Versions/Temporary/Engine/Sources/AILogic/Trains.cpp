@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 extern SRailRoadSystem theRailRoadSystem;
@@ -68,7 +70,7 @@ void CTrainLocomotive::Init( const CVec2 &center, const int z, const SUnitBaseRP
 	fBackOffset = 1;
 	fBackLink = 1;
 	const NDb::SMechUnitRPGStats *pMechStats = static_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
-	NI_ASSERT( pMechStats, StrFmt( "Not MechUnit stats in unit \"%s\" (locomotive)", NDb::GetResName(GetStats()) ) );
+	NI_ASSERT( pMechStats, fmt::format( "Not MechUnit stats in unit \"{}\" (locomotive)", NDb::GetResName(GetStats()) ) );
 	if ( pMechStats )
 	{
 		fFrontOffset = fabs( pMechStats->vFrontWheel.y );

@@ -2305,7 +2305,7 @@ void CMapInfoEditor::RunGame()
 	configFile.Load( szStartFolder + GAME_CFG_FILE_PATH, STREAM_PATH_ABSOLUTE );
 	configFile.RemoveKeyword( "main_menu", true );
 	configFile.RemoveKeyword( "map", true );
-	configFile.AddKeyword( "map", StrFmt( "%d", GetObjectSet().objectNameSet.begin()->first ) );
+	configFile.AddKeyword( "map", std::to_string(  GetObjectSet().objectNameSet.begin()->first ) );
 	configFile.Save( szStartFolder + GAME_CFG_NEW_FILE_PATH, STREAM_PATH_ABSOLUTE );
 	//
 	const string szRunGameBatFilePath = szStartFolder + RUN_GAME_BAT_FILE_PATH;

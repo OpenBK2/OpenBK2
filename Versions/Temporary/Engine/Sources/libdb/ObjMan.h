@@ -3,6 +3,8 @@
 #include "Variant.h"
 #include "TypeDef.h"
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 struct IObjManIterator;
@@ -82,7 +84,7 @@ struct IObjMan : public CObjectBase
 		int i = 0;
 		for ( TContainer<TValue>::const_iterator it = container.begin(); it != container.end(); ++it, ++i )
 		{
-			if ( SetValue(szName + StrFmt(".[%d]", i), *it) == false )
+			if ( SetValue(szName + fmt::format(".[{}]", i), *it) == false )
 				return false;
 		}
 		return true;
@@ -209,7 +211,7 @@ struct IObjMan : public CObjectBase
 		for ( int i = 0; i < nSize; ++i )
 		{
 			TValue value;
-			if ( GetValue(szName + StrFmt(".[%d]", i), &((*pContainer)[i])) == false )
+			if ( GetValue(szName + fmt::format(".[{}]", i), &((*pContainer)[i])) == false )
 				return false;
 		}
 		return true;

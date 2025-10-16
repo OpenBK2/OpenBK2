@@ -23,6 +23,8 @@
 
 #include "port/time.h"
 
+#include <fmt/format.h>
+
 namespace NVFS
 {
 	LIBDB_EXPORT void VFSSegmentProfiler();
@@ -286,7 +288,7 @@ bool StepApp( bool bActive )
 		//NI_ASSERT( !interfaces.empty(), "Can't perform execution more: empty interfaces stack... leaving..." );
 		return false;
 	}
-	NI_ASSERT( IsValid(interfaces.back()), StrFmt("Invalid Interface of class \"%s\"", typeid(*interfaces.back()).name()) );
+	NI_ASSERT( IsValid(interfaces.back()), fmt::format("Invalid Interface of class \"{}\"", typeid(*interfaces.back()).name()) );
 	// update game timer
 	Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
 	// process messages

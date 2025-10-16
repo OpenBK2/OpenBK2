@@ -12,6 +12,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1508EAC0, CWindowMiniMap);
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x15099C00, CMiniMapLayer);
 
@@ -749,7 +751,8 @@ bool CWindowMiniMap::OnButtonDown( const CVec2 &vPos, const int nButton )
 		NInput::PostEvent( "minimap_down", PackCoords( vAIPos ), nButton );
 #ifndef _FINALRELEASE
 		static int nCount = 0;
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, StrFmt( "minimap_down (%.0f,%.0f) from window pos (%.0f, %.0f), #%i", vAIPos.x, vAIPos.y, vPos.x, vPos.y, nCount++ ) );
+		const auto message = fmt::format( "minimap_down ({:.0f},{:.0f}) from window pos ({:.0f}, {:.0f}), #{}", vAIPos.x, vAIPos.y, vPos.x, vPos.y, nCount++ );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2,  message.c_str());
 #endif
 		return true;
 	}
@@ -804,7 +807,8 @@ bool CWindowMiniMap::OnMouseMove( const CVec2 &vPos, const int nButton )
 			NInput::PostEvent( "minimap_move", PackCoords( vAIPos ), nButton );
 #ifndef _FINALRELEASE
 			static int nCount = 0;
-			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, StrFmt( "minimap_move (%.0f,%.0f) from window pos (%.0f, %.0f), #%i", vAIPos.x, vAIPos.y, vPos.x, vPos.y, nCount++ ) );
+			const auto message = fmt::format( "minimap_move ({:.0f},{:.0f}) from window pos ({:.0f}, {:.0f}), #{}", vAIPos.x, vAIPos.y, vPos.x, vPos.y, nCount++ );
+			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str() );
 #endif
 		}
 		return true;

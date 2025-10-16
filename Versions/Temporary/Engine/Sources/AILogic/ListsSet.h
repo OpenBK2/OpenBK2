@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 //*******************************************************************
 //*								  Set of lists, stored in arrays									*
 //*******************************************************************
@@ -37,7 +39,7 @@ class CListsSet
 	int GetFreePos();
 	void AddToFree( int pos )
 	{	
-		NI_ASSERT( pos < nexts.size(), StrFmt( "Wrong pos (%d)", pos ) );
+		NI_ASSERT( pos < nexts.size(), fmt::format( "Wrong pos ({})", pos ) );
 		nexts[pos] = freePtr;
 		freePtr = pos;
 	}
@@ -143,7 +145,7 @@ const int CListsSet<T>::Add( int listNum, const T &value )
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
 		++cnt;
 
-	NI_ASSERT( cnt == GetSize( listNum ), StrFmt( "Wrong size of list %d", listNum ) );
+	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
 	
 	const int newPos = GetFreePos();
@@ -168,7 +170,7 @@ int CListsSet<T>::InsertAfter( const int listNum, const int nPos, const T &value
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
 		++cnt;
 
-	NI_ASSERT( cnt == GetSize( listNum ), StrFmt( "Wrong size of list %d", listNum ) );
+	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
 	
 	const int newPos = GetFreePos();
@@ -205,7 +207,7 @@ const int CListsSet<T>::Erase( int listNum, tEnumerator pos )
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
 		++cnt;
 
-	NI_ASSERT( cnt == GetSize( listNum ), StrFmt( "Wrong size of list %d", listNum ) );
+	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
 	
 	nexts[preds[pos]] = nexts[pos];
@@ -253,7 +255,7 @@ void CListsSet<T>::CheckSizes() const
 {
 	for ( int nListNum = 0; nListNum < sizes.size(); ++nListNum )
 	{
-		std::string strResult = StrFmt( "+++ %s : Checking size for list %d, size = %d: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
+		std::string strResult = fmt::format( "+++ {} : Checking size for list {}, size = {}: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
 		//DebugTrace( "%s : Checking size for list %d with size %d ...", typeid(*this).name(), nListNum, GetSize( nListNum ) );
 		det_set<int> visited;
 		int nCount = 0;
@@ -263,7 +265,7 @@ void CListsSet<T>::CheckSizes() const
 			if ( visited.find( i ) != visited.end() )
 			{
 				//DebugTrace( "... Element %d in list %d visited twice", i, nListNum );
-				strResult = strResult + StrFmt( "ERROR: Element %d visited twice", i );
+				strResult = strResult + fmt::format( "ERROR: Element {} visited twice", i );
 				bTwice = true;
 				break;
 			}
@@ -274,7 +276,7 @@ void CListsSet<T>::CheckSizes() const
 		if ( !bTwice )
 		{
 			if ( nCount != GetSize( nListNum ) )
-				strResult = strResult + StrFmt( "ERROR: Wrong size. Real size = %d", nCount );
+				strResult = strResult + fmt::format( "ERROR: Wrong size. Real size = {}", nCount );
 			else 
 				strResult = strResult + "OK";
 		}

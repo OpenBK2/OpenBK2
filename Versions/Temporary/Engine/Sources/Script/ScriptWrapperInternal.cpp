@@ -2,6 +2,8 @@
 #include "ScriptWrapperInternal.h"
 #include "System/VFSOperations.h"
 
+#include <fmt/format.h>
+
 CPtr<NScript::CScriptWrapper> pScript;
 
 IScriptWrapper* CreateScriptWrapper()
@@ -59,7 +61,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		Script::Object obj = pScript->GetScript()->GetObject( i );
 
 		if ( obj.IsNumber() )
-			szAnswer += std::string( StrFmt( "%d", int(obj) ) );
+			szAnswer += std::to_string( int(obj) );
 		else if ( const char *pszAnswer = obj.GetString() )
 			szAnswer += pszAnswer;
 
@@ -120,7 +122,7 @@ int CScriptWrapper::RunScript( const char *pszScriptText )
 int CScriptWrapper::RunScriptFile( const char *pszFileName )
 {
 	CFileStream stream( NVFS::GetMainVFS(), pszFileName );
-	NI_ASSERT( stream.IsOk() != 0, StrFmt( "Can't find script file \"%s\"", pszFileName ) );
+	NI_ASSERT( stream.IsOk() != 0, fmt::format( "Can't find script file \"{}\"", pszFileName ) );
 	const int nSize = stream.GetSize();
 	// +10 на всякий случай
 	std::vector<char> buffer( nSize + 10 );

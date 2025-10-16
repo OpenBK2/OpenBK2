@@ -75,6 +75,8 @@ extern CUnderConstructionObject theUnderConstructionObject;
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D441, CAILogic );
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -132,7 +134,7 @@ void CAILogic::PickedObj( const int nObjID )
 			{
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
-					pStatsSystemWindow->UpdateEntry( L"Pick", NStr::ToUnicode(StrFmt( "%d", pObj->GetUniqueId() )), 0xff00ff00 );
+					pStatsSystemWindow->UpdateEntry( L"Pick", NStr::ToUnicode(std::to_string( pObj->GetUniqueId() )), 0xff00ff00 );
 			}
 		}
 	}
@@ -267,7 +269,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 			object.pObject->GetTypeID() == NDb::SBridgeRPGStats::typeID ||
 			object.pObject->GetTypeID() == NDb::SFenceRPGStats::typeID ||
 			object.pObject->GetTypeID() == NDb::SEntrenchmentRPGStats::typeID;
-		NI_ASSERT( bGoodVisObj , StrFmt( "object (ID = \"%s\") of type \"%s\" with empty visual part, ignoring", NDb::GetResName(object.pObject), typeid(*object.pObject.GetPtr()).name() ) );
+		NI_ASSERT( bGoodVisObj , fmt::format( "object (ID = \"{}\") of type \"{}\" with empty visual part, ignoring", NDb::GetResName(object.pObject), typeid(*object.pObject.GetPtr()).name() ) );
 		if ( !bGoodVisObj ) 
 			return 0;
 	}
@@ -302,7 +304,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 					}
 					else if ( pPassedStats != 0 )
 					{
-						NI_ASSERT( dynamic_cast<const SUnitBaseRPGStats*>(pPassedStats) != 0, StrFmt( "Unit expected, passed object (%s)", pPassedStats->szKeyName.c_str() ) );
+						NI_ASSERT( dynamic_cast<const SUnitBaseRPGStats*>(pPassedStats) != 0, fmt::format( "Unit expected, passed object ({})", pPassedStats->szKeyName.c_str() ) );
 						const SUnitBaseRPGStats *pStats = checked_cast<const SUnitBaseRPGStats*>(pPassedStats);
 						NI_ASSERT( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ), "ground unit is outside map" );
 						if ( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ) )
@@ -355,7 +357,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 				}
 				else
 				{
-					NI_ASSERT( !pStats->members.empty() && pStats->members[0] != 0, StrFmt("Invalid squad \"%s\" - empty or invalid members list", NDb::GetResName(pStats)) );
+					NI_ASSERT( !pStats->members.empty() && pStats->members[0] != 0, fmt::format("Invalid squad \"{}\" - empty or invalid members list", NDb::GetResName(pStats)) );
 					pResult = 0;
 				}
 				// pResult can be null in the case of incorrect squad <= defensive programming
@@ -445,7 +447,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 				}
 				else
 				{
-					NI_ASSERT( object.nFrameIndex != -1, StrFmt("Can't add fence \"%s\" with frame index -1", NDb::GetResName(object.pObject)) );
+					NI_ASSERT( object.nFrameIndex != -1, fmt::format("Can't add fence \"{}\" with frame index -1", NDb::GetResName(object.pObject)) );
 				}
 			}
 
@@ -454,7 +456,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 		case SGVOGT_FLAG:
 		{
-			NI_ASSERT( false, StrFmt( "DESIGN: Object has type SGVOGT_FLAG, LinkID %d", object.link.nLinkID ) );
+			NI_ASSERT( false, fmt::format( "DESIGN: Object has type SGVOGT_FLAG, LinkID {}", object.link.nLinkID ) );
 
 			break;
 		}
@@ -465,14 +467,14 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				NI_ASSERT( dynamic_cast<const SInfantryRPGStats*>( pPassedStats ) == 0,	StrFmt( "Soldier witout squad on map." ) );
-				NI_ASSERT( dynamic_cast_ptr<const SInfantryRPGStats*>( object.pObject ) == 0, StrFmt( "Soldier witout squad on map." ) );
+				NI_ASSERT( dynamic_cast<const SInfantryRPGStats*>( pPassedStats ) == 0,	"Soldier witout squad on map." );
+				NI_ASSERT( dynamic_cast_ptr<const SInfantryRPGStats*>( object.pObject ) == 0, "Soldier witout squad on map." );
 
 				if ( pPassedStats == 0 ) 
 					pPassedStats = object.pObject;
 				if ( pPassedStats != 0 && dynamic_cast<const SObjectBaseRPGStats*>(pPassedStats) == 0 ) 
 				{
-					NI_ASSERT( dynamic_cast<const SObjectBaseRPGStats*>(pPassedStats) != 0, StrFmt("Incorrect object \"%s\" of type \"%s\" - trying to treat as simple object", NDb::GetResName(pPassedStats), typeid(*pPassedStats).name()) );
+					NI_ASSERT( dynamic_cast<const SObjectBaseRPGStats*>(pPassedStats) != 0, fmt::format("Incorrect object \"{}\" of type \"{}\" - trying to treat as simple object", NDb::GetResName(pPassedStats), typeid(*pPassedStats).name()) );
 					return 0;
 				}
 				
@@ -491,7 +493,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 	if ( pResult != 0 )
 	{
-		NI_ASSERT( dynamic_cast<CLinkObject*>( pResult ) != 0, StrFmt("Wrong object of type \"%s\" created - CLinkObject expected", typeid(*pResult).name()) );
+		NI_ASSERT( dynamic_cast<CLinkObject*>( pResult ) != 0, fmt::format("Wrong object of type \"{}\" created - CLinkObject expected", typeid(*pResult).name()) );
 		CLinkObject *pLinkResult = checked_cast<CLinkObject*>( pResult );
 		pLinkResult->SetLink( object.link.nLinkID );
 
@@ -518,7 +520,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		{
 			const NDb::EDBUnitRPGType eUnitRPGType = 
 				checked_cast_ptr<const NDb::SUnitBaseRPGStats*>(pMapInfo->objects[i].pObject)->eDBtype;
-			NI_ASSERT( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER, StrFmt("Object %d (MechUnit \"%s\") in the map \"%s\" are treated as Infantry", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
+			NI_ASSERT( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER, fmt::format("Object {} (MechUnit \"{}\") in the map \"{}\" are treated as Infantry", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
 			if ( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER )
 				continue;
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
@@ -528,7 +530,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		{
 			const NDb::EDBUnitRPGType eUnitRPGType = 
 				checked_cast_ptr<const NDb::SUnitBaseRPGStats*>(pMapInfo->objects[i].pObject)->eDBtype;
-			NI_ASSERT( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER, StrFmt("Object %d (Infantry \"%s\") in the map \"%s\" are treated as MechUnit", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
+			NI_ASSERT( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER, fmt::format("Object {} (Infantry \"{}\") in the map \"{}\" are treated as MechUnit", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
 			if ( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER )
 				continue;
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
@@ -549,7 +551,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 				const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 			
 				CObjectBase *pObj = AddObject( nUniqueID, pMapInfo->objects[i], linksInfo, true, 0 );
-				NI_ASSERT( pObj != 0, StrFmt( "Failed to add %d object (\"%s\" : \"%s\") to map \"%s\" at (%g, %g)", i, typeid(*pMapInfo->objects[i].pObject).name(), NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo), pMapInfo->objects[i].vPos.x, pMapInfo->objects[i].vPos.y) );
+				NI_ASSERT( pObj != 0, fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})", i, typeid(*pMapInfo->objects[i].pObject).name(), NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo), pMapInfo->objects[i].vPos.x, pMapInfo->objects[i].vPos.y) );
 			}
 			else
 				transports.push_back( i );
@@ -563,7 +565,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 
 		const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 		CObjectBase *pObj = AddObject( nUniqueID, mapObj, linksInfo, true, 0 );
-		NI_ASSERT( pObj != 0, StrFmt( "Failed to add %d object (\"%s\" : \"%s\") to map \"%s\" at (%g, %g)", *iter, typeid(*mapObj.pObject).name(), NDb::GetResName(mapObj.pObject), NDb::GetResName(pMapInfo), mapObj.vPos.x, mapObj.vPos.y) );
+		NI_ASSERT( pObj != 0, fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})", *iter, typeid(*mapObj.pObject).name(), NDb::GetResName(mapObj.pObject), NDb::GetResName(pMapInfo), mapObj.vPos.x, mapObj.vPos.y) );
 	}
 		
 }
@@ -646,7 +648,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 								NI_ASSERT( false, "Wrong link" );
 						}
 						else
-							NI_ASSERT( false, StrFmt( "Wrong link, linked object does not exist for unit: %s", 
+							NI_ASSERT( false, fmt::format( "Wrong link, linked object does not exist for unit: {}",
 								pTrainUnit->GetStats() ? pTrainUnit->GetStats()->GetDBID().ToString() : "???" ) );
 					}
 				}
@@ -793,7 +795,7 @@ void CAILogic::LoadEntrenchments( const std::vector<SEntrenchmentInfo> &entrench
 			{
 				const int nLink = entrenchments[i].sections[j].data[k];
 				CLinkObject *pObj = CLinkObject::GetObjectByLink( nLink );
-				NI_ASSERT( pObj != 0, StrFmt("Section of entrenchment (link = %d) doesn't exist", nLink) );
+				NI_ASSERT( pObj != 0, fmt::format("Section of entrenchment (link = {}) doesn't exist", nLink) );
 				if ( pObj )
 					segments.push_back( pObj );
 			}
@@ -1499,7 +1501,7 @@ void CAILogic::ToGarbage( CCommonUnit *pUnit )
 
 int CAILogic::GetUniqueIDOfObject( CObjectBase *pObj )
 {
-	NI_ASSERT( dynamic_cast<CLinkObject*>(pObj) != 0, StrFmt("Wrong object of type \"%s\" - CLinkObject expected", typeid(*pObj).name()) );
+	NI_ASSERT( dynamic_cast<CLinkObject*>(pObj) != 0, fmt::format("Wrong object of type \"{}\" - CLinkObject expected", typeid(*pObj).name()) );
 
 	return checked_cast<CLinkObject*>(pObj)->GetUniqueId();
 }

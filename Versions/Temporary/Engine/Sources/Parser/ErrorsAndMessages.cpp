@@ -4,6 +4,8 @@
 #include "FileRead.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 void yyerror (char *s, ... );
 void yyerror_no_line( char *s, ... );
 extern int nyyLineNumber;
@@ -27,7 +29,7 @@ void ShowError( const std::string &szError )
 	yyerror( const_cast<char*>( szError.c_str() ) );
 	bNoTrace = false;
 
-	std::string szErr = StrFmt( "%s(%d) error: %s", NLang::GetParsingFileName(), nyyLineNumber, szError.c_str() );
+	std::string szErr = fmt::format( "{}({}) error: {}", NLang::GetParsingFileName(), nyyLineNumber, szError.c_str() );
 	std::vector<std::string> strings;
 	NStr::SplitString( szErr, &strings, '\n' );
 	for ( int i = 0; i < strings.size(); ++i )

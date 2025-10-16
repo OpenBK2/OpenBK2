@@ -22,6 +22,8 @@
 
 #include <algorithm>
 
+#include <fmt/format.h>
+
 namespace NGScene
 {
 _3DMOTOR_EXPORT EXTERNVAR int nTextureUseMip;
@@ -588,7 +590,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 			IWindow3DControl::SObject object;
 			object.nID = 0;
 			object.pModel = GetModel( pStats->pvisualObject, NDb::SEASON_SUMMER );
-			NI_ASSERT( object.pModel, StrFmt( "No model for object: \"%s\"", NDb::GetResName(pStats) ) );
+			NI_ASSERT( object.pModel, fmt::format( "No model for object: \"{}\"", NDb::GetResName(pStats) ) );
 			object.vPos = param.vPos;
 			object.vSize = param.vSize;
 			objects.push_back( object );

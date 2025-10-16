@@ -16,6 +16,8 @@
 #include "Sound/DBSoundDesc.h"
 #include "System/VFSOperations.h"
 
+#include <fmt/format.h>
+
 extern CBasicShare<CDBID, CSoundSample> shareSoundSample;
 
 static NWin32Helper::CCriticalSection critSection;
@@ -59,7 +61,7 @@ void CPlayLog::SaveToFile( const std::string &szFileName )
 	const int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos + 1;
 	const int nStartPos = bLogIsFull ? ( nCurPos + SOUND_PLAY_LOG_SIZE - 1 ) % SOUND_PLAY_LOG_SIZE : 0;
 	
-	CFileStream stream( StrFmt( "%s.soundlog", szFileName.c_str() ), CFileStream::WIN_CREATE );
+	CFileStream stream( fmt::format( "{}.soundlog", szFileName ), CFileStream::WIN_CREATE );
 
 	nChannels = FSOUND_GetMaxChannels();
 	eOutput = (ESFXOutputType)FSOUND_GetOutput();
@@ -74,7 +76,7 @@ void CPlayLog::SaveToFile( const std::string &szFileName )
 
 void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 {
-	CFileStream stream( StrFmt( "%s.soundlog", szFileName.c_str() ), CFileStream::WIN_READ_ONLY );
+	CFileStream stream( fmt::format( "{}.soundlog", szFileName ), CFileStream::WIN_READ_ONLY );
 
 	if ( !stream.IsOk() )
 		return;
@@ -206,7 +208,7 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 	if ( !SearchDevices() )
 		return false;
 	
-	NI_ASSERT( nDriver < drivers.size(), StrFmt("Can't find driver %d (max found %d)", nDriver, drivers.size()) );
+	NI_ASSERT( nDriver < drivers.size(), fmt::format("Can't find driver {} (max found {})", nDriver, drivers.size()) );
 	FSOUND_SetDriver( nDriver );
 	bSoundCardPresent = true;
 	FSOUND_SetHWND( hWnd );
@@ -282,7 +284,7 @@ void CSoundEngine::SetDistanceFactor( float fFactor )
 
 void CSoundEngine::SetRolloffFactor( float fFactor )
 {
-	NI_VERIFY( (fFactor >= 0) && (fFactor <= 10), StrFmt("Rolloff factor (%g) must be in range [0..10]", fFactor), return );
+	NI_VERIFY( (fFactor >= 0) && (fFactor <= 10), fmt::format("Rolloff factor ({:g}) must be in range [0..10]", fFactor), return );
 	FSOUND_3D_SetRolloffFactor( fFactor );
 }
 
@@ -315,7 +317,7 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 	IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
 	IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 	if ( pStatsSystemWindow )
-		pStatsSystemWindow->UpdateEntry( L"SoundChannels", NStr::ToUnicode(StrFmt( "%d", nNumChannels )), 0xff00ff00 );
+		pStatsSystemWindow->UpdateEntry( L"SoundChannels", NStr::ToUnicode(std::to_string( nNumChannels )), 0xff00ff00 );
 #endif // _FINALRELEASE
 
 	if ( nNumChannels > 0 )

@@ -56,7 +56,7 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
 	NFile::NormalizePath( &szSource );
 	const string szParticleFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
-	//const string szDestination = szParticleFolder + StrFmt( "%d", nObjectID );
+	//const string szDestination = szParticleFolder + std::to_string(  nObjectID );
 	string szDestination = BuildDestFilePath( pManipulator, szParticleFolder ); // uid
 	NFile::NormalizePath( &szDestination );
 	// check for source and destination times if not forced mode

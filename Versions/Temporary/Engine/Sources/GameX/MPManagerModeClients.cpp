@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <fmt/format.h>
+
 #include "MPManagerMode.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Client/ServerClientInterface.h"
@@ -199,7 +201,7 @@ void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 		"STATE",
 		"PromoteGameControlHostAfterRemoval",
 		GetOwnClientID(),
-		StrFmt( "old_host=%d new_host=%d removed=%d", nOldHostClientID, nHostClientID, nRemovedClientID ) );
+		fmt::format( "old_host={} new_host={} removed={}", nOldHostClientID, nHostClientID, nRemovedClientID ) );
 	OnGameControlHostChanged( nOldHostClientID, nHostClientID, nRemovedClientID );
 }
 
@@ -227,7 +229,7 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 				"STATE",
 				"PromoteGameControlHostFromDropPacket",
 				GetOwnClientID(),
-				StrFmt( "old_host=%d new_host=%d slot=%d target_seg=%d",
+				fmt::format( "old_host={} new_host={} slot={} target_seg={}",
 					nOldHostClientID, nHostClientID, nSlotToDrop, pPacket->nSegment ) );
 			OnGameControlHostChanged( nOldHostClientID, nHostClientID, nOldHostClientID );
 			return true;
@@ -250,7 +252,7 @@ void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, c
 		"TX",
 		"CB2DropPlayerAtSegmentPacket",
 		GetOwnClientID(),
-		StrFmt( "slot=%d target_seg=%d reason=%s", nSlot, nSegment, szReason ? szReason : "" ) );
+		fmt::format( "slot={} target_seg={} reason={}", nSlot, nSegment, szReason ? szReason : "" ) );
 	pClient->SendGamePacket( new CB2DropPlayerAtSegmentPacket( 0, nSlot, nSegment ), true );
 }
 
@@ -283,7 +285,7 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 		"DECISION",
 		"ScheduleSynchronizedPlayerDrop",
 		GetOwnClientID(),
-		StrFmt( "slot=%d target_seg=%d prev_target_seg=%d pre_laggers=%08X post_laggers=%08X pre_laggers_old=%08X post_laggers_old=%08X",
+		fmt::format( "slot={} target_seg={} prev_target_seg={} pre_laggers={:08X} post_laggers={:08X} pre_laggers_old={:08X} post_laggers_old={:08X}",
 			nSlot, nSegment, nCurrent, dwLaggersBefore, dwLaggers, dwLaggersOldBefore, dwLaggersOld ) );
 
 	// Defer both lockstep and manager-side removal to the same segment boundary.
@@ -317,7 +319,7 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 				"STATE",
 				"ApplyScheduledSlotDrops",
 				GetOwnClientID(),
-				StrFmt( "slot=%d target_seg=%d applied_seg=%d pre_present=%08X post_present=%08X",
+				fmt::format( "slot={} target_seg={} applied_seg={} pre_present={:08X} post_present={:08X}",
 					i, nDropSegment, nCommonSegment, dwPrePresentMask, dwPostPresentMask ) );
 			NGameX::MatchPacketTrace_RecordDropApplied( i, nCommonSegment );
 		}
@@ -331,7 +333,7 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 		"DECISION",
 		"RemoveClient",
 		nClientID,
-		StrFmt( "kicked=%d running=%d in_room=%d room_host=%d control_host=%d host_id=%d",
+		fmt::format( "kicked={} running={} in_room={} room_host={} control_host={} host_id={}",
 			bKicked ? 1 : 0, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0,
 			IsGameHost() ? 1 : 0, IsGameControlHost() ? 1 : 0, nHostClientID ) );
 
@@ -383,7 +385,7 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 								"DECISION",
 								"RemoveClientLocalDropFallback",
 								GetOwnClientID(),
-								StrFmt( "slot=%d target_seg=%d", i, nDropSegment ) );
+								fmt::format( "slot={} target_seg={}", i, nDropSegment ) );
 						}
 					}
 					else
@@ -393,7 +395,7 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 							"DECISION",
 							"RemoveClientAwaitingDropAuthority",
 							GetOwnClientID(),
-							StrFmt( "slot=%d authority=%d", i, bRemovingGameControlHost ? nReplacementHostClientID : nHostClientID ) );
+							fmt::format( "slot={} authority={}", i, bRemovingGameControlHost ? nReplacementHostClientID : nHostClientID ) );
 					}
 				}
 				else if ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID )

@@ -10,6 +10,8 @@
 
 #include "UISpecificB2_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const std::string &szAnimatedWindow )
@@ -19,7 +21,7 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	SWindowContextB2Move *pContext = dynamic_cast<SWindowContextB2Move*>( _pContext );
 
 	pElement = dynamic_cast<IWindow*>( pScreen->GetElement( pCmd->szElementToMove, true ) );
-	NI_ASSERT( pElement != 0, StrFmt( "no element \"%s\"", pCmd->szElementToMove.c_str() ) );
+	NI_ASSERT( pElement != 0, fmt::format( "no element \"{}\"", pCmd->szElementToMove.c_str() ) );
 	if ( !pElement )
 	{
 		bFinished = true;

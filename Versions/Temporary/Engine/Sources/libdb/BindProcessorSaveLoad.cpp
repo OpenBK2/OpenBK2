@@ -8,6 +8,8 @@
 #include "System/XmlUtils.h"
 #include "System/FilePath.h"
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 namespace NBind
@@ -75,7 +77,7 @@ bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode,
 			NXml::ConvertToString( &szValue );
 
 		field.pType->FromString( pRes, szValue );
-		NI_VERIFY( pRes->GetType() != CVariant::VT_NULL, StrFmt("Can't convert text to value for \"%s\"", szFullFieldName.c_str()), return false );
+		NI_VERIFY( pRes->GetType() != CVariant::VT_NULL, fmt::format("Can't convert text to value for \"{}\"", szFullFieldName), return false );
 	}
 	return true;
 }
@@ -103,7 +105,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 					continue;
 				const bool bValueSet = SetValue( szFullFieldName, value );
 				NI_VERIFY( bValueSet != false, 
-					StrFmt("Can't set value \"%s\" for field \"%s\"", itField->pType->ToString(value).c_str(), szFullFieldName.c_str()), continue );
+					fmt::format("Can't set value \"{}\" for field \"{}\"", itField->pType->ToString(value), szFullFieldName), continue );
 			}
 			else
 			{
@@ -112,7 +114,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 				{
 					const bool bValueSet = SetValue( szFullFieldName, vtDefVal );
 					NI_VERIFY( bValueSet != false, 
-						StrFmt("Can't set value \"%s\" for field \"%s\"", itField->pType->ToString(vtDefVal).c_str(), szFullFieldName.c_str()), continue );
+						fmt::format("Can't set value \"{}\" for field \"{}\"", itField->pType->ToString(vtDefVal), szFullFieldName), continue );
 				}
 			}
 		}
@@ -152,20 +154,20 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 								continue;
 							const bool bValueSet = pBindArray->SetValue( "", i, value, arrReqs.pRawVector, arrReqs.pContained );
 							NI_VERIFY( bValueSet != false, 
-								StrFmt("Can't set value \"%s\" for field \"%s.[%d]\"", arrReqs.pTypeArray->field.pType->ToString(value).c_str(), szFullFieldName.c_str(), i), continue );
+								fmt::format("Can't set value \"{}\" for field \"{}.[{}]\"", arrReqs.pTypeArray->field.pType->ToString(value), szFullFieldName, i), continue );
 						}
 					}
 					else if ( pTypeArray->field.pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 					{
 						CObj<IArrayObjMan> pMan = checked_cast<IArrayObjMan*>( pParent->CreateManipulator( szFullFieldName ) );
 						ILoadableObjMan *pLoadMan = dynamic_cast_ptr<ILoadableObjMan*>( pMan );
-						NI_VERIFY( pMan != 0, ("During loading, can't create manipulator for " + szFullFieldName).c_str(), continue );
+						NI_VERIFY( pMan != 0, ("During loading, can't create manipulator for " + szFullFieldName), continue );
 						for ( int i = 0; i < nSize; ++i )
 						{
 							pMan->SetIndex( i );
 							const NXml::CXmlNode *pArrayNode = nodes[i];
 							NI_VERIFY( pLoadMan->LoadXML( "", checked_cast_ptr<NTypeDef::STypeStructBase*>(pTypeArray->field.pType), pArrayNode ) != false,
-								StrFmt("Can't load %d element for %s", i, szFullFieldName.c_str()), continue );
+								fmt::format("Can't load {} element for {}", i, szFullFieldName), continue );
 						}
 					}
 				}
@@ -290,7 +292,7 @@ bool SBindProcessor::SaveXML( const std::string &szAddName, NTypeDef::STypeStruc
 					//
 					pMan->SetIndex( i );
 					NI_VERIFY( pSaveMan->SaveXML( "", checked_cast_ptr<NTypeDef::STypeStructBase*>(pTypeArray->field.pType), pItem ) != false,
-						StrFmt("Can't save %d element for %s", i, szFullFieldName.c_str()), continue );
+						fmt::format("Can't save {} element for {}", i, szFullFieldName), continue );
 				}
 			}
 		}

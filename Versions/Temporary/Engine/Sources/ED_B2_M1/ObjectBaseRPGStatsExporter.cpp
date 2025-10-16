@@ -207,7 +207,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	try
 	{
 		if ( !WaitForFile( szDestination, 10000 ) )
-			szDestination = szGeometriesFolder + StrFmt( "%d", pGeometry->GetRecordID() );
+			szDestination = szGeometriesFolder + std::to_string(  pGeometry->GetRecordID() );
 
 		CGrannyFileInfoGuard fileInfo( szDestination );
 		// Записываем высоту объекта (из модели)

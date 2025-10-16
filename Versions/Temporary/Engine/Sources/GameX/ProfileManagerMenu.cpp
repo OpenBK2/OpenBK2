@@ -8,6 +8,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceProfileManager
 
 CInterfaceProfileManager::CInterfaceProfileManager() :
@@ -117,7 +119,7 @@ void CInterfaceProfileManager::FillScreenList()
 		NI_ASSERT( pElement, "Could not create Profile list entry" );
 		if ( pElement )
 			pElement->ShowWindow( true );
-		pElement->SetName( StrFmt("Profile%d", i ) );
+		pElement->SetName( fmt::format("Profile{}", i ) );
 		ITextView *pName = GetChildChecked<ITextView>( pElement, "NameText", true );
 		if ( pName )
 			pName->SetText( pName->GetDBText() + item.wszName );

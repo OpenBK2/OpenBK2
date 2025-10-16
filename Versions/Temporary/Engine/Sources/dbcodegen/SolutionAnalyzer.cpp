@@ -5,6 +5,8 @@
 #include "System/FileUtils.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 namespace NSlnAnalyzer
 {
 
@@ -178,7 +180,7 @@ static void LoadSln( const char *pszData, vector<SSection> *pRes, const string &
 	pRes->resize(0);
 	int nHdrSize = strlen( pszSlnHeader );
 	if ( strncmp( pszData, pszSlnHeader, nHdrSize ) != 0 )
-		throw CCodeGenException( StrFmt( "unknown solution format, file %s", szSlnFile.c_str() ) );
+		throw CCodeGenException( fmt::format( "unknown solution format, file {}", szSlnFile ) );
 
 	pszData += nHdrSize;
 	while ( *pszData )

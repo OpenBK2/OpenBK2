@@ -66,6 +66,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CBalanceTest theBalanceTest;
 extern CExecutorContainer theExecutorContainer;
@@ -2515,13 +2517,13 @@ const int CAIUnit::GetAbilityLevel()
 
 void CAIUnit::InitSpecialAbilities( int nFromLevel )
 {
-	NI_ASSERT( GetStats()->GetActions() != 0, StrFmt("Empty actions set for unit \"%s\" of type \"%s\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
+	NI_ASSERT( GetStats()->GetActions() != 0, fmt::format("Empty actions set for unit \"{}\" of type \"{}\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
 	pShootInMovementExecutor = 0;
 	// start SpecialAbility executors (that are possible for this unit)
 	const int nActiveAbilities = (std::min<int>)( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
 	for ( int i = nFromLevel; i < nActiveAbilities; ++i )
 	{
-		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0, StrFmt("Empty ability %d for unit \"%s\" of type \"%s\"", i, NDb::GetResName(GetStats()), typeid(*GetStats()).name()) )
+		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0, fmt::format("Empty ability {} for unit \"{}\" of type \"{}\"", i, NDb::GetResName(GetStats()), typeid(*GetStats()).name()) )
 		if ( GetStats()->GetActions()->specialAbilities[i] != 0 )
 			InitAbility( GetStats()->GetActions()->specialAbilities[i]->eName );
 	}
@@ -2698,7 +2700,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		break;
 	case NDb::ABILITY_ANTIATRILLERY_FIRE:				// AKA Counter-Fire
 		{
-			NI_ASSERT( GetStats()->IsArtillery(), StrFmt("Skill (Counter-fire) suitable for artillery only (type %s, ID = \"%s\")", typeid(*GetStats()).name(), NDb::GetResName(GetStats())) );
+			NI_ASSERT( GetStats()->IsArtillery(), fmt::format("Skill (Counter-fire) suitable for artillery only (type {}, ID = \"{}\")", typeid(*GetStats()).name(), NDb::GetResName(GetStats())) );
 			if ( GetStats()->IsArtillery() )
 			{
 				CArtillery *pArtUnit = dynamic_cast<CArtillery*>( this );
@@ -3059,14 +3061,14 @@ const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUni
 	const int nMaxAbilityCount = (std::min<int>)( GetAbilityLevel(), abilities.size() );
 	for ( int i = 0; i < nMaxAbilityCount; ++i )
 	{
-		NI_ASSERT( abilities[i], StrFmt("No ability desc. Unit \"%s\", ability %d", NDb::GetResName(GetStats()), i ) );
+		NI_ASSERT( abilities[i], fmt::format("No ability desc. Unit \"{}\", ability {}", NDb::GetResName(GetStats()), i ) );
 		if ( abilities[i]->eName == eAbility )
 		{
 			if ( eAbility == NDb::ABILITY_RADIO_CONTROLLED_MODE )
 			{
 				for ( int n = i+1; n < abilities.size(); ++n )
 				{
-					NI_ASSERT( abilities[n], StrFmt("No ability desc. Unit \"%s\", ability %d", NDb::GetResName(GetStats()), n ) );
+					NI_ASSERT( abilities[n], fmt::format("No ability desc. Unit \"{}\", ability {}", NDb::GetResName(GetStats()), n ) );
 					if ( abilities[n]->eName == eType )
 						return abilities[n];
 				}

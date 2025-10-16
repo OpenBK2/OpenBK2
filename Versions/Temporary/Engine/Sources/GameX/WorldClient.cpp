@@ -36,6 +36,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 const int CURSOR_FADE_HALF_SIZE_X = 150;
 const int CURSOR_FADE_HALF_SIZE_Y = 150;
 
@@ -784,7 +786,7 @@ void CWorldClient::UnHideFromSelectionGroup( CMapObj *pMapObj )
 
 void CWorldClient::RegisterUserAction( NDb::EUserAction nAction, uint32_t flags, USER_ACTION pfnUserAction )
 {
-	NI_ASSERT( (flags != 0) && (pfnUserAction), StrFmt("Can't register action %d with NULL functions and/or flags", nAction) );
+	NI_ASSERT( (flags != 0) && (pfnUserAction), fmt::format("Can't register action {} with NULL functions and/or flags", int( nAction )) );
 	SActionDesc &action = userActionsMap[nAction];
 	action.flags = flags;
 	action.pfnAction = pfnUserAction;
@@ -858,7 +860,7 @@ void CWorldClient::SetCursor( NDb::EUserAction _eAction )
 
 void CWorldClient::SetForcedAction( NDb::EUserAction _eForcedAction )
 {
-	NI_ASSERT( _eForcedAction == NDb::USER_ACTION_UNKNOWN || GetAction(_eForcedAction, SActionDesc::FORCED) != 0, StrFmt("Can't set user action %d as forced - no execution function", _eForcedAction) );
+	NI_ASSERT( _eForcedAction == NDb::USER_ACTION_UNKNOWN || GetAction(_eForcedAction, SActionDesc::FORCED) != 0, fmt::format("Can't set user action {} as forced - no execution function", int( _eForcedAction )) );
 	NDb::EUserAction eOldForcedAction = eForcedAction;
 	if ( _eForcedAction != NDb::USER_ACTION_UNKNOWN && GetAction(_eForcedAction, SActionDesc::FORCED) == 0 ) 
 		eForcedAction = NDb::USER_ACTION_UNKNOWN;
@@ -1020,7 +1022,7 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 	{
 		eUserAction = GetForcedAction();
 		pfnAction = GetAction( eUserAction, SActionDesc::FORCED );
-		NI_ASSERT( pfnAction != 0, StrFmt( "Forced action (%d) not registred", GetForcedAction() ) );
+		NI_ASSERT( pfnAction != 0, fmt::format( "Forced action ({}) not registred", int( GetForcedAction() ) ) );
 	}
 	else
 	{
@@ -1042,7 +1044,7 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 				return;
 		}
 		pfnAction = GetAction( eUserAction, (eFlags & EKF_CTRL) != 0 ? SActionDesc::FORCED : SActionDesc::AUTO );
-		NI_ASSERT( pfnAction != 0, StrFmt( "Auto action (%d) not registred", eUserAction ) );
+		NI_ASSERT( pfnAction != 0, fmt::format( "Auto action ({}) not registred", int( eUserAction )) );
 		bSelfAction = pSelector->IsSelected( pMO );
 	}
 
@@ -1568,9 +1570,9 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 				CMOUnit * pUnit = dynamic_cast<CMOUnit*>( pMO );
 				if ( pUnit )
 				{
-					Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + nDebugWindow, 
-						StrFmt( "UnitID = %i, pos = (%.2f, %.2f, %.2f)", 
-						pUnit->GetID(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetCenter().z ) );
+					const auto message = fmt::format( "UnitID = {}, pos = ({:.2f}, {:.2f}, {:.2f})",
+						pUnit->GetID(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetCenter().z );
+					Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + nDebugWindow, message.c_str());
 				}
 			}
 #endif
@@ -1599,7 +1601,8 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 			if ( fabs2( vAIPos - vLastBuildPos ) < 50 )		//Some distance
 				break;
 
-			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, StrFmt("TerrainPos ( %f, %f )", vAIPos.x, vAIPos.y ) );
+			const auto message = fmt::format("TerrainPos ( {}, {} )", vAIPos.x, vAIPos.y );
+			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, message.c_str() );
 
 			ClampToAIMap( vAIPos );												// Ensure it is inside AI map
 
@@ -2822,7 +2825,7 @@ void CWorldClient::OnActionOnSlot( int nSlot, uint16_t wKeyboardFlags )
 		
 	NDb::EUserAction eUserAction = GetForcedAction();
 	USER_ACTION pfnAction = GetAction( eUserAction, SActionDesc::FORCED );
-	NI_ASSERT( pfnAction != 0, StrFmt( "Forced action (%d) not registred", GetForcedAction() ) );
+	NI_ASSERT( pfnAction != 0, fmt::format( "Forced action ({}) not registred", int( GetForcedAction() ) ) );
 
 	DoAction( pfnAction, eUserAction, VNULL2, pMO, false, (wKeyboardFlags & EKF_SHIFT) != 0, IsForcedAction() );
 }

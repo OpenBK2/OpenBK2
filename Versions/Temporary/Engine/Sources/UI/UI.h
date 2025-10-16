@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 enum EKeyboardFlags
 {
 	EKF_NONE		= 0,
@@ -609,7 +611,7 @@ inline TCheck* GetChildChecked( IWindow *pParent, const std::string &szName, con
 		return 0;
 	IWindow *pWnd = pParent->GetChild( szName, bRecursive );
 	TCheck *pCheck = dynamic_cast<TCheck*>( pWnd );
-	NI_ASSERT( !s_bUICommonShowWarnings || pCheck, StrFmt( "Window not found: \"%s\"", szName.c_str() ) );
+	NI_ASSERT( !s_bUICommonShowWarnings || pCheck, fmt::format( "Window not found: \"{}\"", szName ) );
 	return pCheck;
 }
 

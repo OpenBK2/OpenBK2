@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 class CRegisterGroupCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CRegisterGroupCommand );
@@ -25,9 +27,9 @@ public:
 	virtual std::string GetDebugInfo() const
 	{
 		std::string szDebug;
-		szDebug = StrFmt( "GroupID = %i, UnitIDs: ", nID );
+		szDebug = fmt::format( "GroupID = {}, UnitIDs: ", nID );
 		for ( int i = 0; i < unitsIDs.size(); ++i )
-			szDebug += StrFmt( "%i, ", unitsIDs[i] );
+			szDebug += fmt::format( "{}, ", unitsIDs[i] );
 		return szDebug;
 	}
 #endif
@@ -51,7 +53,7 @@ public:
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
-		return StrFmt( "UnregisterGroup %i", nGroup );
+		return fmt::format( "UnregisterGroup {}", nGroup );
 	}
 #endif
 
@@ -77,7 +79,7 @@ public:
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
-		return StrFmt( "GroupCommand CmdID %i, GroupID %i, (%f,%f)", int(command.nCmdType), wGroup, command.vPos.x, command.vPos.y  );
+		return fmt::format( "GroupCommand CmdID {}, GroupID {}, ({:f},{:f})", int(command.nCmdType), wGroup, command.vPos.x, command.vPos.y  );
 	}
 #endif
 
@@ -103,7 +105,7 @@ public:
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
-		return StrFmt( "UnitCommand CmdID %i, Player %i, (%f,%f)", int(command.nCmdType), nPlayer, command.vPos.x, command.vPos.y  );
+		return fmt::format( "UnitCommand CmdID {}, Player {}, ({:f},{:f})", int(command.nCmdType), nPlayer, command.vPos.x, command.vPos.y  );
 	}
 #endif
 };

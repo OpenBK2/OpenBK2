@@ -134,7 +134,7 @@ void CTooltips::SetTooltipContext( const int _nContext, class CWindowScreen *pSc
 	if ( CUIFactory::GetConsts()->contexts[nContext]->pWindow == 0 )
 		return;
 	
-	NI_ASSERT( CUIFactory::GetConsts()->contexts.size() > nContext, StrFmt( "no such context") );
+	NI_ASSERT( CUIFactory::GetConsts()->contexts.size() > nContext, "no such context" );
 }
 
 

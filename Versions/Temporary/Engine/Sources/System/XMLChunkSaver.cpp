@@ -6,6 +6,8 @@
 #include "XmlUtils.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 typedef IXmlSaver::chunk_id chunk_id;
 static const int START_CHUNK_LEVELS = 50;
 
@@ -118,7 +120,7 @@ void CXMLChunkSaver::Finish()
 			{
 				CPtr<CXmlResource> pElement = *it;
 				int nClassTypeID = NObjectFactory::GetObjectTypeID( pElement );
-				NI_ASSERT( nClassTypeID != -1, StrFmt("Unregistered object of type \"%s\"", typeid(*pElement.GetPtr()).name()) );
+				NI_ASSERT( nClassTypeID != -1, fmt::format("Unregistered object of type \"{}\"", typeid(*pElement.GetPtr()).name()) );
 				if ( StartChunk("Item", nCounter) != false )
 				{
 					Add( "__ClassTypeID", &nClassTypeID );
@@ -151,7 +153,7 @@ bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 			if ( nChunkNumber - 1 < nodes.size() )
 			{
 				const NXml::CXmlNode *pNode = nodes[nChunkNumber - 1];
-				NI_ASSERT( (pNode->GetName() == "Item") || (pNode->GetName() == "item"), StrFmt("Wrong %dth item of container (%s)", nChunkNumber, pNode->GetName().ToString().c_str()) );
+				NI_ASSERT( (pNode->GetName() == "Item") || (pNode->GetName() == "item"), fmt::format("Wrong {}th item of container ({})", nChunkNumber, pNode->GetName().ToString()) );
 				PushReadChunkLevel( pReadNode );
 				pReadNode = pNode;
 				return true;
@@ -373,7 +375,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 	{
 		CXMLElement *pElement = new CXMLElement();
 		pElement->SetValue( idChunk );
-		pElement->SetText( StrFmt("%d", *pnData) );
+		pElement->SetText( fmt::format("{}", *pnData) );
 		pCurrNode->AddChild( pElement );
 		return true;
 	}
@@ -420,7 +422,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChun
 	{
 		CXMLElement *pElement = new CXMLElement();
 		pElement->SetValue( idChunk );
-		pElement->SetText( StrFmt("%g", *pfData) );
+		pElement->SetText( fmt::format("{:g}", *pfData) );
 		pCurrNode->AddChild( pElement );
 		return true;
 	}
@@ -441,7 +443,7 @@ static bool String2Bool( const char *pszStr )
 	case '0':
 		return false;
 	}
-	NI_ASSERT( false, StrFmt("Can't convert value to bool" ) );
+	NI_ASSERT( false, "Can't convert value to bool" );
 	return false;
 }
 
@@ -681,7 +683,7 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject )
 	{
-		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, StrFmt( "trying to save unregistered object \"%s\"", typeid(*pObject).name() ) );
+		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
 	}	
 
 	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
@@ -776,7 +778,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, int *pData )
 	{
 		if ( pCurrNode )
 		{
-			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, StrFmt("%d", *pData) );
+			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, fmt::format("{}", *pData) );
 			return true;
 		}
 	}
@@ -800,7 +802,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, float *pData )
 	{
 		if ( pCurrNode )
 		{
-			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, StrFmt("%g", *pData) );
+			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, fmt::format("{:g}", *pData) );
 			return true;
 		}
 	}

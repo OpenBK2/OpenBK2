@@ -11,6 +11,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CVec3 &vHalfSize, const CQuat &rot )
 {
 	SHMatrix matrix;
@@ -144,7 +146,8 @@ bool CScene::CheckObjExist( int nObjectID ) const
 #if !defined(_BETARELEASE) && !defined(_FINALRELEASE)
 	if ( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end() )
 		return false;
-	DebugTrace( StrFmt( "Object 0x%.8x already exist", nObjectID ) );
+	const auto message = fmt::format( "Object 0x{:.8x} already exist", nObjectID );
+	DebugTrace( message.c_str() );
 	return true;
 #else
 	return data[eScene]->visObjects.find(nObjectID) != data[eScene]->visObjects.end();
@@ -162,7 +165,7 @@ void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *p
 		const int nObjectID = nID;//GetID( nID );
 		CPtr<SAnimatedVisObjDescBase> pVOD = new SAnimatedStaticVisObjDesc(); 
 		// create animator
-		NI_VERIFY( pModel->pSkeleton != 0, StrFmt( "Model \"%s\" doesn't have skeleton", pModel->GetDBID().ToString().c_str() ), return );
+		NI_VERIFY( pModel->pSkeleton != 0, fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ), return );
 		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( NAnimation::SGrannySkeletonHandle(pModel->pSkeleton, 0), data[eScene]->pAbsTimer );
 		// check for successful animator
 		if ( pVOD->pAnimator == 0 )
@@ -215,7 +218,7 @@ void CScene::RemoveInterfaceObject( IWindow *pScreen, const int nID )
 int CScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale, 
 											 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
 {
-	NI_VERIFY( pModel != 0, StrFmt("Adding object %d with empty model", nID), return -1 );
+	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
 	const bool bAnimated = ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED ) || 
 												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC ) ||
 												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS ) ||
@@ -230,7 +233,7 @@ int CScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &_v
 int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, 
 														const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
 {
-	NI_VERIFY( pModel != 0, StrFmt("Adding object %d with empty model", nID), return -1 );
+	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
 	
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
@@ -279,7 +282,7 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 															 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
 {
 //	AddInterfaceObject( nID, pModel, CVec2(NGlobal::GetVar("pos_x", 400), NGlobal::GetVar("pos_y", 700)), CVec2(128, 128) );
-	NI_VERIFY( pModel != 0, StrFmt("Adding object %d with empty model", nID), return -1 );
+	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
@@ -296,7 +299,7 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 		pVOD = new SAnimatedVisObjDesc();
 	// create animator
 	NAnimation::SGrannySkeletonHandle handle;
-	NI_VERIFY( pModel->pSkeleton != 0, StrFmt( "Model \"%s\" doesn't have skeleton", pModel->GetDBID().ToString().c_str() ), return -1 );
+	NI_VERIFY( pModel->pSkeleton != 0, fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ), return -1 );
 	handle.pSkeleton = pModel->pSkeleton;
 	handle.nModelInFile = 0;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )

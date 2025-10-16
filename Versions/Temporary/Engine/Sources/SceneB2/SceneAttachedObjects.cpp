@@ -4,6 +4,8 @@
 #include "SceneInternal.h"
 #include "Main/GameTimer.h"
 
+#include <fmt/format.h>
+
 IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const std::string &szBoneName )
 {
 	// try to find the bone in attached objects
@@ -158,7 +160,7 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 	case ESAT_NO_REPLACE:
 		break;
 	default:
-		NI_ASSERT( false, StrFmt( "Wrong attach mode (%d)", (int)eMode ) );
+		NI_ASSERT( false, fmt::format( "Wrong attach mode ({})", (int)eMode ) );
 		return false;
 	}
 
@@ -305,7 +307,7 @@ void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEf
 	else
 	{
 		CDynamicCast<SStaticVisObjDesc> pStaticVO = data[eScene]->visObjects[nTargetID];
-		NI_ASSERT( pStaticVO, StrFmt( "VisObject %d is neither animated nor static", nTargetID ) );
+		NI_ASSERT( pStaticVO, fmt::format( "VisObject {} is neither animated nor static", nTargetID ) );
 
 		if ( pStaticVO ) 
 		{

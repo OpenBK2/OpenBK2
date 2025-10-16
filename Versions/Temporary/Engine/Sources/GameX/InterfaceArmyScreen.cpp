@@ -14,12 +14,14 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int WAIT_TIME = 300; // msec
 const int STEP_WAIT_TIME = 50; // msec
 const float EXP_PROGRESS_STEP_FRACTION = 0.05f;
 const wchar_t* TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
 const wchar_t* DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
-const char* DYNAMIC_TAG_RANK_NAME_FORMAT = "rank%d_name";
+const char* DYNAMIC_TAG_RANK_NAME_FORMAT = "rank{}_name";
 
 class CInterfaceArmyScreen::CReinfData : public CObjectBase
 {
@@ -272,7 +274,7 @@ void CInterfaceArmyScreen::GetElements()
 	
 	for ( int i = 1; ; ++i )
 	{
-		IWindow *pWnd = pLeftPanel ? pLeftPanel->GetChild( StrFmt( "Ability%d", i ), true ) : 0;
+		IWindow *pWnd = pLeftPanel ? pLeftPanel->GetChild( fmt::format( "Ability{}", i ), true ) : 0;
 		if ( !pWnd )
 			break;
 
@@ -381,7 +383,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	}
 	
 	if ( pPromotionsView )
-		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
+		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string(  pST->GetAvailablePromotions() ) ) );
 
 	for ( int i = 0; i < reinforcements.size(); ++i )
 	{
@@ -403,7 +405,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	{
 		SVisAbility &visAbility = visAbilities[i];
 
-		std::wstring wszTag = NStr::ToUnicode( StrFmt( DYNAMIC_TAG_RANK_NAME_FORMAT, i + 1 ) );
+		std::wstring wszTag = NStr::ToUnicode( fmt::format( DYNAMIC_TAG_RANK_NAME_FORMAT, i + 1 ) );
 		std::wstring wszRankName;
 		if ( i < pCampaign->leaderRanks.size() )
 		{
@@ -500,7 +502,7 @@ void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLe
 	if ( pPromotionsView )
 	{
 		pPromotionsView->ShowWindow( !bAssigned );
-		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nPromotionCount ) ) );
+		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( nPromotionCount ) ) );
 	}
 	if ( pCommanderInfoBlock )
 		pCommanderInfoBlock->ShowWindow( bAssigned );
@@ -757,7 +759,7 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 		FillLeaderInfo( pSelection, undo );
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -821,7 +823,7 @@ void CInterfaceArmyScreen::AutoAssignCommanders()
 	UpdateSelectionInfo();
 
 	if ( pPromotionsView )
-		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
+		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 }
 
 void CInterfaceArmyScreen::Back()
@@ -913,7 +915,7 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 		}
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -941,7 +943,7 @@ void CInterfaceArmyScreen::UndoAssignCommander()
 		pSelection->pLeader = 0;
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string(  pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -1120,18 +1122,18 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	if ( pLeaderRankView )
 		pLeaderRankView->SetText( pLeaderRankView->GetDBText() + wszRank );
 
-	std::wstring wszRankNumber = NStr::ToUnicode( StrFmt( "%d", pLeader->nRank + 1 ) );
+	std::wstring wszRankNumber = NStr::ToUnicode( std::to_string(  pLeader->nRank + 1 ) );
 	std::vector< std::pair<std::wstring, std::wstring> > params;
 	params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_RANK_NUMBER, wszRankNumber ) );
 	SetDynamicTextView( pLeaderRankLabel, params );
 	
-	std::wstring wszKilled = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurKilled ) );
+	std::wstring wszKilled = NStr::ToUnicode( std::to_string( pLeader->lastSeen.nCurKilled ) );
 	if ( pLeader->lastSeen.bKilledChanged && pLeader->lastSeen.nCurKilled == pLeader->nKilled )
 		wszKilled = wszChangedValueTag + wszKilled;
 	if ( pLeaderKilledView )
 		pLeaderKilledView->SetText( pLeaderKilledView->GetDBText() + wszKilled );
 
-	std::wstring wszLost = NStr::ToUnicode( StrFmt( "%d", pLeader->lastSeen.nCurLost ) );
+	std::wstring wszLost = NStr::ToUnicode( std::to_string( pLeader->lastSeen.nCurLost ) );
 	if ( pLeader->lastSeen.bLostChanged && pLeader->lastSeen.nCurLost == pLeader->nLost )
 		wszLost = wszChangedValueTag + wszLost;
 	if ( pLeaderLostView )

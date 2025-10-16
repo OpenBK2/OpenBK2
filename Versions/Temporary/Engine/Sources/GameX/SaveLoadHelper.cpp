@@ -18,6 +18,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NSaveLoad
 {
 
@@ -326,7 +328,7 @@ std::string GetUniqueFileName( const CSaveList &saves )
 		}
 		nIndex = max( nIndex, nFileIndex + 1 );
 	}
-	return StrFmt( "%s%04d", SAVE_NAME_PREFIX, nIndex );
+	return fmt::format( "{}{:04d}", SAVE_NAME_PREFIX, nIndex );
 }
 
 // SWaitLoadData
@@ -362,7 +364,7 @@ void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAut
 		}
 	}
 
-	NI_VERIFY( NFile::IsValidDirName( szName ), StrFmt("Wrong file name \"%s\"", szName.c_str()), return );
+	NI_VERIFY( NFile::IsValidDirName( szName ), fmt::format("Wrong file name \"{}\"", szName), return );
 
 	NSaveLoad::SSaveInfo info;
 	info.Write( GetSavePath() + szName + INFO_FILE_EXTENSION, 
@@ -374,7 +376,7 @@ void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAut
 
 bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const std::string &szFileName, const bool bRead )
 {
-	CFileStream file( StrFmt( "%s%s%s", GetReplayPath().c_str(), szFileName.c_str(), REPLAY_INFO_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
+	CFileStream file( fmt::format( "{}{}{}", GetReplayPath(), szFileName, REPLAY_INFO_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &file, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaver ) )
 		return false;
@@ -390,7 +392,8 @@ void GetReplayList( CReplays *pReplays )
 	const std::string szPath = GetReplayPath();
 
 	std::list<std::string> names;
-	NFile::GetDirectoryFiles( szPath.c_str(), StrFmt( "*%s", REPLAY_INFO_EXTENSION ), &names, false );
+	const auto mask = fmt::format( "*{}", REPLAY_INFO_EXTENSION );
+	NFile::GetDirectoryFiles( szPath.c_str(), mask.c_str(), &names, false );
 	pReplays->clear();
 	for ( std::list<std::string>::iterator it = names.begin(); it != names.end(); ++it )
 	{

@@ -4,6 +4,8 @@
 #include "Type.h"
 #include "TypeDef.h"
 
+#include <fmt/format.h>
+
 namespace NHungarian
 {
 
@@ -126,12 +128,12 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType, const ND
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_CLASS || pType->eType == NDb::NTypeDef::TYPE_TYPE_STRUCT )
 	{
 		if ( pType->GetTypeName() == "Resource" )
-			return StrFmt( "C%s", pType->GetTypeName() );
+			return fmt::format( "C{}", pType->GetTypeName() );
 		else
-			return StrFmt( "S%s", pType->GetTypeName() );
+			return fmt::format( "S{}", pType->GetTypeName() );
 	}
 	else if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
-		return StrFmt( "E%s", pType->GetTypeName() );
+		return fmt::format( "E{}", pType->GetTypeName() );
 
 	return pType->GetTypeName();
 }

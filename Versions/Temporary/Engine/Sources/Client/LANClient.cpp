@@ -7,6 +7,8 @@
 #include "Server_Client_Common/CommonPackets.h"
 #include "Net/NetAddress.h"
 
+#include <fmt/format.h>
+
 CLANClient *CLANClient::Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut )
 {
 	NNet::SNetDriverConsts netConsts( _nTimeOut );
@@ -126,7 +128,7 @@ void CLANClient::Segment()
 				}
 				else
 				{
-					NI_ASSERT( 0, StrFmt( "PRG:Client %d not present", nClientID ) );
+					NI_ASSERT( 0, fmt::format( "PRG:Client {} not present", nClientID ) );
 				}
 			}
 			break;
@@ -142,7 +144,7 @@ void CLANClient::Segment()
 				}
 				else
 				{
-					NI_ASSERT( 0, StrFmt( "PRG:Client %d not present", nClientID ) );
+					NI_ASSERT( 0, fmt::format( "PRG:Client {} not present", nClientID ) );
 				}
 			}
 			break;

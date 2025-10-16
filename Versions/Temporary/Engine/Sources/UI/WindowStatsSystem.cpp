@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 int CWindowStatsSystem::SColorString::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &szString );
@@ -20,7 +22,7 @@ CWindowStatsSystem::SColorString::SColorString( const wchar_t *pszStr, uint32_t 
 
 void CWindowStatsSystem::SColorString::SetText( const wchar_t *pszStr, uint32_t col, const int nWidth )
 {
-	std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%.8X>", col ) ) + pszStr;
+	std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
 	pGfxText->SetText( szText, 0 );
 	pGfxText->Generate( VirtualToScreenX( nWidth ) );
 }

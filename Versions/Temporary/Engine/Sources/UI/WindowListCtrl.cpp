@@ -2,6 +2,8 @@
 #include "windowlistctrl.h"
 #include "InterfaceConsts.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B86, CWindowListCtrl)
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B85, CWindowListItem )
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B84, CWindowListHeader )
@@ -350,7 +352,7 @@ void CWindowListItem::SetColumnSizes( const std::vector<int> &sizes )
 	for ( int i = 0; i < sizes.size(); ++i )
 	{
 		IWindow *pChild = subitems[i];
-		NI_ASSERT( pChild != 0, StrFmt( "cannot find subitem %i", i ) );
+		NI_ASSERT( pChild != 0, fmt::format( "cannot find subitem {}", i ) );
 		pChild->SetPlacement( nPosSoFar, 0, sizes[i], 0, EWPF_POS_X | EWPF_SIZE_X );
 		nPosSoFar += sizes[i];
 	}

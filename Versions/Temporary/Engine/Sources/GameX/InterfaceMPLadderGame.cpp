@@ -18,6 +18,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceMPLadderGame
 
 CInterfaceMPLadderGame::CInterfaceMPLadderGame() : 
@@ -145,7 +147,7 @@ void CInterfaceMPLadderGame::SetControls()
 		pGameTypeBox->AddItem( pData );
 		for ( int i = 1; i < 5; ++i )
 		{
-			pData = new CTextData( NStr::ToUnicode( StrFmt( "%d v %d", i, i ) ) );
+			pData = new CTextData( NStr::ToUnicode( fmt::format( "{} v {}", i, i ) ) );
 			pGameTypeBox->AddItem( pData );
 		}
 		pGameTypeBox->Select( 0 );		
@@ -201,8 +203,8 @@ void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	NMPSetData::SetChildText( pItem,  "ItemMapName", GET_TEXT_PRE( pInfo->pMapDesc->, MapName ) );
-	NMPSetData::SetChildText( pItem,  "ItemMapSize", 	NStr::ToUnicode( StrFmt( "%d x %d", pInfo->pMapDesc->nSizeX, pInfo->pMapDesc->nSizeY ) ) );
-	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers", NStr::ToUnicode( StrFmt( "%d", pInfo->pMapDesc->nPlayers ) ) );
+	NMPSetData::SetChildText( pItem,  "ItemMapSize", 	NStr::ToUnicode( fmt::format( "{} x {}", pInfo->pMapDesc->nSizeX, pInfo->pMapDesc->nSizeY ) ) );
+	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers", NStr::ToUnicode( std::to_string( pInfo->pMapDesc->nPlayers ) ) );
 	pInfo->pSwitch = GetChildChecked<IButton>( pItem, "Status", true );
 	if ( pInfo->pSwitch )
 	{
@@ -291,7 +293,7 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 
 	if ( !pSelected || !pSelected->pMap )
 	{
-		NI_ASSERT( 0, StrFmt( "DATA: Invalid MP map descriptor: %s", NDb::GetResName( pSelected )  ) );
+		NI_ASSERT( 0, fmt::format( "DATA: Invalid MP map descriptor: {}", NDb::GetResName( pSelected )  ) );
 		return true;
 	}
 	wszName = GET_TEXT_PRE( pSelected->, MapName );

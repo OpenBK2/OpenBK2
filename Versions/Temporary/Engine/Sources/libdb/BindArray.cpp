@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 namespace NBind
@@ -83,7 +85,7 @@ public:
 		else
 			szFullName = szAddName;
 		//
-		return !szFullName.empty() ? szFullName + StrFmt( ".[%d]", nIndex ) : StrFmt( "[%d]", nIndex );
+		return !szFullName.empty() ? szFullName + fmt::format( ".[{}]", nIndex ) : fmt::format( "[{}]", nIndex );
 	}
 	// main fields manipulation functions
 	bool SetValue( const std::string &szName, const CVariant &value )
@@ -416,7 +418,7 @@ CArrayIterator::CArrayIterator( const int nIndex, const std::string &_szAddName,
 	else
 	{
 		NI_VERIFY( pParent->GetValue( szAddName, &nNumArrayElements ) != false, 
-			StrFmt("Can't get number of elements for array iterator \"%s\"", szAddName.c_str()), nNumArrayElements = 0 );
+			fmt::format("Can't get number of elements for array iterator \"{}\"", szAddName), nNumArrayElements = 0 );
 	}
 	if ( pTypeArray->field.pType->IsSimpleType() == false && bArrayElementLocked )
 	{
@@ -441,7 +443,7 @@ bool CArrayIterator::Next()
 			if ( nCurrElementIndex < nNumArrayElements )
 			{
 				NTypeDef::STypeStructBase *pTypeStruct = checked_cast_ptr<NTypeDef::STypeStructBase *>( pTypeArray->field.pType );
-				const std::string szFieldName = szAddName.empty() ? "" : szAddName + StrFmt(".[%d].", nCurrElementIndex);
+				const std::string szFieldName = szAddName.empty() ? "" : szAddName + fmt::format(".[{}].", nCurrElementIndex);
 				pIterator = new CStructIterator( szFieldName, pTypeStruct, pParent, bShowHidden );
 				return !pIterator->IsEnd();
 			}
@@ -478,7 +480,7 @@ bool CArrayIterator::IsEnd() const
 std::string CArrayIterator::GetName() const
 {
 	if ( pTypeArray->field.pType->IsSimpleType() || pIterator == 0 )
-		return szAddName.empty() ? "" : szAddName + StrFmt(".[%d]", nCurrElementIndex);
+		return szAddName.empty() ? "" : szAddName + fmt::format(".[{}]", nCurrElementIndex);
 	else if ( pIterator )
 		return pIterator->GetName();
 	else

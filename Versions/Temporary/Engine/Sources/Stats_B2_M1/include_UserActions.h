@@ -16,19 +16,19 @@ bool IsEmpty() const { return ( actions[0] | actions[1] ) == 0; }
 //
 const bool HasAction( const int nAction ) const
 {
-	NI_ASSERT( (nAction >= 0) && (nAction <= 63), StrFmt("Invalid action %d must be in [0..63]", nAction) );
+	NI_ASSERT( (nAction >= 0) && (nAction <= 63), fmt::format("Invalid action {} must be in [0..63]", nAction) );
 	const int nIndex = nAction >> 5;
 	return actions[nIndex] & ( 1UL << (nAction - nIndex*32) );
 }
 void SetAction( const int nAction )
 {
-	NI_ASSERT( (nAction >= 0) && (nAction <= 63), StrFmt("Invalid action %d must be in [0..63]", nAction) );
+	NI_ASSERT( (nAction >= 0) && (nAction <= 63), fmt::format("Invalid action {} must be in [0..63]", nAction) );
 	const int nIndex = nAction >> 5;
 	actions[nIndex] |= ( 1UL << (nAction - nIndex*32) );
 }
 void RemoveAction( const int nAction )
 {
-	NI_ASSERT( (nAction >= 0) && (nAction <= 63), StrFmt("Invalid action %d must be in [0..63]", nAction) );
+	NI_ASSERT( (nAction >= 0) && (nAction <= 63), fmt::format("Invalid action {} must be in [0..63]", nAction) );
 	const int nIndex = nAction >> 5;
 	actions[nIndex] &= ~( 1UL << (nAction - nIndex*32) );
 }

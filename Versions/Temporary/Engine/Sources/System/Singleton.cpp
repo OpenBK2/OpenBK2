@@ -2,6 +2,8 @@
 #include "ConsoleBufferInternal.h"
 #include "Misc/HashFuncs.h"
 
+#include <fmt/format.h>
+
 namespace NSingleton
 {
 
@@ -33,7 +35,7 @@ CObjectBase *Singleton( const int nTypeID )
 
 void RegisterSingleton( CObjectBase *pObj, const int nTypeID )
 {
-	NI_ASSERT( objects.find(nTypeID) == objects.end(), StrFmt("Object (%d) (\"%s\") already registered", nTypeID, typeid(*pObj).name()) );
+	NI_ASSERT( objects.find(nTypeID) == objects.end(), fmt::format("Object ({}) (\"{}\") already registered", nTypeID, typeid(*pObj).name()) );
 	objects[nTypeID] = pObj;
 }
 

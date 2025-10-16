@@ -1028,7 +1028,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 		editParameters.terrainSizeList.clear();
 		for ( int nTerrainSizeIndex = 8; nTerrainSizeIndex <= 64; ++nTerrainSizeIndex )
 		{
-			editParameters.terrainSizeList.push_back( StrFmt( "%d", nTerrainSizeIndex ) );
+			editParameters.terrainSizeList.push_back( std::to_string(  nTerrainSizeIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_TERRAIN_SIZE_INDEX )
@@ -1070,7 +1070,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 		editParameters.animCountList.clear();
 		for ( int nAnimCountIndex = 0; nAnimCountIndex <= 64; ++nAnimCountIndex )
 		{
-			editParameters.animCountList.push_back( StrFmt( "%d", nAnimCountIndex ) );
+			editParameters.animCountList.push_back( std::to_string(  nAnimCountIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_COUNT_INDEX )
@@ -1090,7 +1090,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 		editParameters.animSpeedList.clear();
 		for ( int nAnimSpeedIndex = -10; nAnimSpeedIndex <= 10; ++nAnimSpeedIndex )
 		{
-			editParameters.animSpeedList.push_back( StrFmt( "%d", nAnimSpeedIndex ) );
+			editParameters.animSpeedList.push_back( std::to_string(  nAnimSpeedIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_SPEED_INDEX )
@@ -1114,7 +1114,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 		editParameters.animRadiusList.clear();
 		for ( int nAnimRadiusIndex = 2; nAnimRadiusIndex <= 32; ++nAnimRadiusIndex )
 		{
-			editParameters.animRadiusList.push_back( StrFmt( "%d", nAnimRadiusIndex ) );
+			editParameters.animRadiusList.push_back( std::to_string(  nAnimRadiusIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_RADIUS_INDEX )
@@ -1134,7 +1134,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 		editParameters.animDistanceList.clear();
 		for ( int nAnimDistanceIndex = 2; nAnimDistanceIndex <= 16; ++nAnimDistanceIndex )
 		{
-			editParameters.animDistanceList.push_back( StrFmt( "%d", nAnimDistanceIndex ) );
+			editParameters.animDistanceList.push_back( std::to_string(  nAnimDistanceIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_DISTANCE_INDEX )

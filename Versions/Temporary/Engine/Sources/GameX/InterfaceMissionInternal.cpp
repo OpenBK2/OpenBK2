@@ -64,6 +64,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static int WARFOG_HARD_RECT_WIDTH = 2;
 static int WARFOG_MIN_VALUE = 128;
 static int WARFOG_UPDATE_PERIOD = 1000;
@@ -636,7 +638,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	}
 
 	// show mission id (for testers and debug purpose)
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "map: %s", _pMap->GetDBID().ToString().c_str() ) );
+	const auto message = fmt::format( "map: {}", _pMap->GetDBID().ToString() );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
 	NGlobal::SetVar( "Current.Mission", _pMap->GetDBID().ToString(), STORAGE_SAVE );
 
 	pMission = _pMap;
@@ -735,7 +738,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 		pProgress->SetNumSteps( nCommonSteps + nLoadMapSubSteps + nLoadAISubSteps + nUpdateAISubSteps + nDrawSubSteps );
 	//
 	const NDb::SMapInfo *pMapInfo = pMission;
-	NI_ASSERT( pMapInfo, StrFmt( "No map info available for mission %s", pMission->GetDBID().ToString().c_str() ) );
+	NI_ASSERT( pMapInfo, fmt::format( "No map info available for mission {}", pMission->GetDBID().ToString() ) );
 	if ( !pMapInfo )
 		return;
 
@@ -908,7 +911,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		// get ability slots
 		SSlotPosition slot;
 		IWindow *pWnd;
-		for ( int i = 1; ( pWnd = pScreen->GetElement( StrFmt( "ability_slot_%d", i ), true )) != 0 ; ++i)
+		for ( int i = 1; ( pWnd = pScreen->GetElement( fmt::format( "ability_slot_{}", i ), true )) != 0 ; ++i)
 		{
 			pWnd->GetPlacement( &slot.x, &slot.y, &slot.sizeX, &slot.sizeY );
 			vAbilitySlots.push_back( slot );
@@ -928,7 +931,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		pBackground->PostLoad( false );
 		pBackground->nColor = color.dwColor;
 		// get icons slots
-		for ( int i = 1; ( pWnd = pMultiselectWnd->GetChild( StrFmt( "unit_slot_%d", i ), true )) != 0 ; ++i)
+		for ( int i = 1; ( pWnd = pMultiselectWnd->GetChild( fmt::format( "unit_slot_{}", i ), true )) != 0 ; ++i)
 		{
 			IButton *pBtn = dynamic_cast<IButton*>( pWnd );
 			if ( !pBtn )
@@ -969,7 +972,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 
 		for ( int i = 0; i <  pUIConsts->actionButtons.size(); ++i )
 		{
-			NI_ASSERT( pUIConsts->actionButtons[i].pButton != 0, StrFmt("Empty button %d in pUIConsts->actionButtons", i) );
+			NI_ASSERT( pUIConsts->actionButtons[i].pButton != 0, fmt::format("Empty button {} in pUIConsts->actionButtons", i) );
 			if ( pUIConsts->actionButtons[i].pButton == 0 )
 				continue;
 			const NDb::EUserAction eAction = pUIConsts->actionButtons[i].eAction;
@@ -987,7 +990,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			{
 				for ( int i = 1; ; ++i )
 				{
-					IWindow *pWnd = pSlotsWnd->GetChild( StrFmt( "Slot%02d", i ), true );
+					IWindow *pWnd = pSlotsWnd->GetChild( fmt::format( "Slot{:02d}", i ), true );
 					if ( !pWnd )
 						break;
 					int nX;
@@ -1063,12 +1066,12 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 
 #ifndef _FINALRELEASE
 							if ( !CHECK_TEXT_NOT_EMPTY_PRE(pDBAction->,Tooltip) )
-								pBtn->SetTooltip( NStr::ToUnicode( StrFmt( "UserAction id: %d", (int)( pDBAction->eAction ) ) ) ); // CRAP - test only
+								pBtn->SetTooltip( NStr::ToUnicode( fmt::format( "UserAction id: {}", (int)( pDBAction->eAction ) ) ) ); // CRAP - test only
 #endif //_FINALRELEASE
 
 							pBtn->ShowWindow( false );
-							pBtn->SetName( StrFmt( "NewActionButton%d", (int)( pDBAction->eAction ) ) );
-							action.pIconBgDisabledWnd->SetName( StrFmt( "NewActionDisabledButton%d", (int)( pDBAction->eAction ) ) );
+							pBtn->SetName( fmt::format( "NewActionButton{}", (int)( pDBAction->eAction ) ) );
+							action.pIconBgDisabledWnd->SetName( fmt::format( "NewActionDisabledButton{}", (int)( pDBAction->eAction ) ) );
 							pBtn->RegisterObservers();
 
 //							if ( action.pIconBgWnd )
@@ -1196,7 +1199,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			// Buttons 01-06 map directly to special-group indices 0-5.
 			for ( int i = 1; i <= 6; ++i )
 			{
-				CDynamicCast<IButton> pBtn = pScreen->GetChild( StrFmt( "Button%02d", i ), true );
+				CDynamicCast<IButton> pBtn = pScreen->GetChild( fmt::format( "Button{:02d}", i ), true );
 				if ( !pBtn )
 					break;
 				pBtn->ShowWindow( false );
@@ -1397,7 +1400,7 @@ void CInterfaceMission::BlinkActionButton( int nButton, bool bOn )
 	CNewActionButtons::iterator it = newActionButtons.find( (NDb::EUserAction)( nButton ) );
 	if ( it == newActionButtons.end() )
 	{
-		NI_ASSERT( 0, StrFmt( "Script: button index (%d) out of range (NDb::EUserAction)", nButton ) );
+		NI_ASSERT( 0, fmt::format( "Script: button index ({}) out of range (NDb::EUserAction)", nButton ) );
 		return;
 	}
 	SNewActionButton &button = it->second;
@@ -1535,7 +1538,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		uint32_t r = (dwColor >> 16) & 0xFF;
 		uint32_t g = (dwColor >> 8) & 0xFF;
 		uint32_t b = (dwColor >> 0) & 0xFF;
-		std::wstring szText = NStr::ToUnicode( StrFmt( "<color=%02X%02X%02X%02X>", a, r, g, b ) );
+		std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:02X}{:02X}{:02X}{:02X}>", a, r, g, b ) );
 		szText += szReadText;
 		pView->SetText( szText.c_str() );
 		int nX, nY, nSizeX, nSizeY;
@@ -1943,14 +1946,14 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	}
 	ITextView *pFriendlyScore = GetChildChecked<ITextView>( pScreen, "FriendlyScore", true );
 	ITextView *pEnemyScore = GetChildChecked<ITextView>( pScreen, "EnemyScore", true );
-	pEnemyScore->SetText( NStr::ToUnicode( StrFmt( "%i", nLocalParty == 0 ? nScore1 : nScore0 ) ) );
-	pFriendlyScore->SetText( NStr::ToUnicode( StrFmt( "%i", nLocalParty == 1 ? nScore1 : nScore0 ) ) );
+	pEnemyScore->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 0 ? nScore1 : nScore0 ) ) );
+	pFriendlyScore->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 1 ? nScore1 : nScore0 ) ) );
 
 	std::pair<int,int> buildings = pScenarioTracker->GetKeyBuildingSummary();
 	ITextView *pEnemyKeyBuildings = GetChildChecked<ITextView>( pScreen, "EnemyKeyBuildings", true );
 	ITextView *pFriendlyKeyBuildings = GetChildChecked<ITextView>( pScreen, "FriendlyKeyBuildings", true );
-	pEnemyKeyBuildings->SetText( NStr::ToUnicode( StrFmt( "%i", nLocalParty == 0 ? buildings.second : buildings.first ) ) );
-	pFriendlyKeyBuildings->SetText( NStr::ToUnicode( StrFmt( "%i", nLocalParty == 1 ? buildings.second : buildings.first ) ) );
+	pEnemyKeyBuildings->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 0 ? buildings.second : buildings.first ) ) );
+	pFriendlyKeyBuildings->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 1 ? buildings.second : buildings.first ) ) );
 
 	const int nTimelimit = NGlobal::GetVar( "multiplayer_time_limit", -1 );
 	ITextView *pTimeRemaining = GetChildChecked<ITextView>( pScreen, "TimeRemaining", true );
@@ -1964,7 +1967,7 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		int hours = nTimeRemaining / 3600;
 		int minutes = (nTimeRemaining % 3600) / 60;
 		int seconds = nTimeRemaining % 60;
-		pTimeRemaining->SetText( NStr::ToUnicode( StrFmt( "%i:%02i:%02i", hours, minutes, seconds ) ) );
+		pTimeRemaining->SetText( NStr::ToUnicode( fmt::format( "{}:{:02}:{:02}", hours, minutes, seconds ) ) );
 	}
 
 	ITextView *timeForNextReinf = GetChildChecked<ITextView>( pScreen, "RecycleHintTime", true );
@@ -1975,7 +1978,7 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		int minutes = totalSeconds / 60;
 		int seconds = totalSeconds % 60;
 
-		timeForNextReinf->SetText(NStr::ToUnicode(StrFmt( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>%d:%02d", minutes, seconds )));
+		timeForNextReinf->SetText(NStr::ToUnicode(fmt::format( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>{}:{:02}", minutes, seconds )));
 
 		timeForNextReinf->ShowWindow(true);
 
@@ -1994,14 +1997,14 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		pWinText->ShowWindow( nLocalParty == 0 );
 		pLooseText->ShowWindow( nLocalParty != 0 );
 		pTimeToLooseOrWin->ShowWindow( true );
-		pTimeToLooseOrWin->SetText( NStr::ToUnicode( StrFmt( "%i", nTimeToLooseOrWin ) ) );
+		pTimeToLooseOrWin->SetText( NStr::ToUnicode( std::to_string( nTimeToLooseOrWin ) ) );
 	}
 	else if ( nTimeToLooseOrWin != -1 && buildings.first == 0 && buildings.second != 0 )
 	{
 		pWinText->ShowWindow( nLocalParty != 0 );
 		pLooseText->ShowWindow( nLocalParty == 0 );
 		pTimeToLooseOrWin->ShowWindow( true );
-		pTimeToLooseOrWin->SetText( NStr::ToUnicode( StrFmt( "%i", nTimeToLooseOrWin ) ) );
+		pTimeToLooseOrWin->SetText( NStr::ToUnicode( std::to_string( nTimeToLooseOrWin ) ) );
 	}
 	else
 	{
@@ -2051,10 +2054,10 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
 				{
-					pStatsSystemWindow->UpdateEntry( L"TerrainPos", NStr::ToUnicode(StrFmt( "%.2f,%.2f", vZeroPos.x, vZeroPos.y )), 0xff00ff00 );
+					pStatsSystemWindow->UpdateEntry( L"TerrainPos", NStr::ToUnicode(fmt::format( "{:.2f},{:.2f}", vZeroPos.x, vZeroPos.y )), 0xff00ff00 );
 					CVec3 vTerrainPos;
 					Scene()->PickTerrain( &vTerrainPos, vPos );
-					pStatsSystemWindow->UpdateEntry( L"MousePos", NStr::ToUnicode(StrFmt( "%.2f x %.2f x %.2f", vTerrainPos.x, vTerrainPos.y, vTerrainPos.z )), 0xffffff00 );
+					pStatsSystemWindow->UpdateEntry( L"MousePos", NStr::ToUnicode(fmt::format( "{:.2f} x {:.2f} x {:.2f}", vTerrainPos.x, vTerrainPos.y, vTerrainPos.z )), 0xffffff00 );
 				}
 			}
 		}
@@ -2578,7 +2581,7 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 		{
 			slot.pCountView->ShowWindow( nCount != 1 );
 			if ( nCount != 1 )
-				slot.pCountView->SetText( slot.pCountView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nCount ) ) );
+				slot.pCountView->SetText( slot.pCountView->GetDBText() + NStr::ToUnicode( std::to_string(  nCount ) ) );
 		}
 
 		bool bSquad;
@@ -2694,7 +2697,7 @@ bool CInterfaceMission::OnFullInfoWeaponOverOff( const std::string &szSender )
 
 void CInterfaceMission::MakeAbilityTooltip( IWindow *pWnd, int nSlot )
 {
-	MakeActionTooltip( pWnd, StrFmt( "user_ability_slot_%02d", nSlot ), !GetActionOwnReaction( pWnd ).empty() );
+	MakeActionTooltip( pWnd, fmt::format( "user_ability_slot_{:02}", nSlot ), !GetActionOwnReaction( pWnd ).empty() );
 }
 
 void CInterfaceMission::MakeCommandTooltip( IWindow *pWnd )
@@ -2752,7 +2755,7 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 
 #ifndef _FINALRELEASE
 		if ( wszTooltip.empty() )
-			wszTooltip = NStr::ToUnicode( StrFmt( "UserAction id: %d", (int)( eUserAction ) ) );
+			wszTooltip = NStr::ToUnicode( fmt::format( "UserAction id: {}", (int)( eUserAction ) ) );
 #endif //_FINALRELEASE
 
 		// Set even an empty tooltip so a previous ability-specific description is cleared.
@@ -2778,7 +2781,7 @@ void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nS
 				pTooltipOverride = &wszAbilityTooltip;
 		}
 
-		const std::string szCommand = bFixedPlace ? action.szHotkeyCmd : StrFmt( "user_ability_slot_%02d", nSlot );
+		const std::string szCommand = bFixedPlace ? action.szHotkeyCmd : fmt::format( "user_ability_slot_{:02d}", nSlot );
 		MakeActionTooltip( eUserAction, szCommand, bFixedPlace || !action.bPassive, pTooltipOverride );
 	}
 }
@@ -2927,7 +2930,7 @@ void CInterfaceMission::UpdateActionButtons()
 					ability.bEnabled = action.bEnabled;
 				}
 
-				NI_ASSERT( ability.bFixedPlace || ability.nTier >= 0, StrFmt( "Wrong ability (%d) tier", eAction ) );
+				NI_ASSERT( ability.bFixedPlace || ability.nTier >= 0, fmt::format( "Wrong ability ({}) tier", int( eAction ) ) );
 
 				abilities.push_back( ability );
 			}
@@ -3927,7 +3930,7 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 
 	// report about game speed changed to chat
 	std::wstring wszText = InterfaceState()->GetTextEntry( "T_GAME_SPEED_CHANGED" ) +
-			NStr::ToUnicode( StrFmt( "%d", GameTimer()->GetSpeed() ) );
+			NStr::ToUnicode( std::to_string(  GameTimer()->GetSpeed() ) );
 	if ( GameTimer()->GetSpeed() == GameTimer()->GetMinSpeed() )
 	{
 		wszText += InterfaceState()->GetTextEntry( "T_GAME_SPEED_CHANGED_MIN" );
@@ -4187,7 +4190,8 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 		const NDb::SMapInfo *pInfo = GetMapInfo( szStrings[0] );
 		if ( !pInfo )
 		{
-			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "Map (%s) not found", szStrings[0].c_str() ) );
+			const auto message = fmt::format( "Map ({}) not found", szStrings[0] );
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
 			return;
 		}
 		Singleton<IScenarioTracker>()->Clear();
@@ -4218,7 +4222,8 @@ void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &pa
 	{
 		szPlayerForWarFog = NStr::ToMBCS( paramsSet[1] );
 	}
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "replay;%s;%s", szVal.c_str(), szPlayerForWarFog .c_str() ) );
+	const auto command = fmt::format( "replay;{};{}", szVal, szPlayerForWarFog );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 #ifndef _FINALRELEASE
 #include "System/CheckSumLog.h"

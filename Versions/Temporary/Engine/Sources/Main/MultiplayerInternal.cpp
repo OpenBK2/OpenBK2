@@ -51,7 +51,7 @@ bool CMultiplayerInternal::CreateAsClient( const char *pszIPAddress )
 		pNetDriver->ConnectGame( address, CMemoryStream() );
 
 		Singleton<IConsoleBuffer>()->WriteASCII(
-			CONSOLE_STREAM_CONSOLE, StrFmt( "request for connect is sent" ), 0xffffff00, true
+			CONSOLE_STREAM_CONSOLE, "request for connect is sent", 0xffffff00, true
 		);
 
 		return true;
@@ -153,7 +153,7 @@ CMultiplayerCommand* CMultiplayerInternal::GetCommand()
 		case NNet::IDriver::NEW_CLIENT:
 			pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_ADDED, nClientID, -1, 0 );
 			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE, StrFmt( "new client" ), 0xffffff00, true
+				CONSOLE_STREAM_CONSOLE, "new client", 0xffffff00, true
 				);
 			break;
 

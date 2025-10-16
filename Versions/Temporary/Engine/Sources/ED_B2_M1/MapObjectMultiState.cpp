@@ -25,7 +25,7 @@ void CMapObjectMultiState::UpdateEditParameters( UINT nFlags )
 			pEditParameters->playerList.clear();
 			for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
-				pEditParameters->playerList.push_back( StrFmt( "%d", nPlayerIndex ) );
+				pEditParameters->playerList.push_back( std::to_string(  nPlayerIndex ) );
 			}
 		}
 		if ( pEditParameters->nFlags & MIMOSEP_DIRECTION )

@@ -48,7 +48,7 @@ bool GetPCItemStringValue( string *pszValue,
 				return CPCIntInputEditor::GetPCItemStringValue( pszValue, rValue, pDesc ); 
 		case PCIE_INT_SLIDER:
 		case PCIE_INT_COMBO:
-			( *pszValue ) = StrFmt( "%d", (int)rValue );
+			( *pszValue ) = std::to_string(  (int)rValue );
 			return true;
 		case PCIE_INT_COLOR:
 		case PCIE_INT_COLOR_WITH_ALPHA:

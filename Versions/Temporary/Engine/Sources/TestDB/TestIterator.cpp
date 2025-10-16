@@ -5,6 +5,8 @@
 #include "libdb/TypeDef.h"
 #include "MeasureTimer.h"
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 struct SIteratorTestData
@@ -479,15 +481,15 @@ bool TestMainIterator( NDb::IObjMan *pObjMan, SIteratorTestData *pTestData, cons
 //		DebugTrace( "{ %s, \"%s\", %d, \"%s\" },", pszHidden, szFieldName.c_str(), pField->pType->eType, pField->pType->GetTypeName() );
 
 		NI_VERIFY( szFieldName == pTestData[i].szFieldName, 
-			StrFmt("Mismatch in field's name: \"%s\" != \"%s\" for %d test element", szFieldName.c_str(), pTestData[i].szFieldName.c_str(), i),
+			fmt::format("Mismatch in field's name: \"{}\" != \"{}\" for {} test element", szFieldName, pTestData[i].szFieldName, i),
 			return false );
 		// check field's type and type name
 		const NDb::NTypeDef::STypeStructBase::SField *pField = pIterator->GetDesc();
 		NI_VERIFY( pField->pType->eType == pTestData[i].nType, 
-			StrFmt("Mismatch in field's type: %d != %d for %d test element", pField->pType->eType, pTestData[i].nType, i),
+			fmt::format("Mismatch in field's type: {} != {} for {} test element", int( pField->pType->eType ), pTestData[i].nType, i),
 			return false );
 		NI_VERIFY( pTestData[i].szTypeName == pField->pType->GetTypeName(),
-			StrFmt("Mismatch in field's type name: \"%s\" != \"%s\" for %d test element", pField->pType->GetTypeName(), pTestData[i].szTypeName.c_str(), i),
+			fmt::format("Mismatch in field's type name: \"{}\" != \"{}\" for {} test element", pField->pType->GetTypeName(), pTestData[i].szTypeName, i),
 			return false );
 	}
 	return true;
@@ -527,11 +529,11 @@ bool TestDirectGetProp( NDb::IObjMan *pObjMan, const SDirectPropGetData *pData, 
 	for ( const SDirectPropGetData *pCurr = pData; pCurr->nType != -1; ++pCurr )
 	{
 		const NDb::NTypeDef::STypeStructBase::SField *pField = pObjMan->GetDesc( pCurr->szFieldName );
-		NI_VERIFY( (pCurr->bValid && pField != 0) || (!pCurr->bValid && pField == 0), StrFmt("Direct property get \"%s\" failed", pCurr->szFieldName.c_str()), return false );
+		NI_VERIFY( (pCurr->bValid && pField != 0) || (!pCurr->bValid && pField == 0), fmt::format("Direct property get \"{}\" failed", pCurr->szFieldName), return false );
 		if ( pField == 0 )
 			continue;
 		//
-		NI_VERIFY( pField->pType->eType == pCurr->nType && pField->pType->GetTypeName() == pCurr->szTypeName, StrFmt("Incorrent direct property \"%s\"", pCurr->szFieldName.c_str()), return false );
+		NI_VERIFY( pField->pType->eType == pCurr->nType && pField->pType->GetTypeName() == pCurr->szTypeName, fmt::format("Incorrent direct property \"{}\"", pCurr->szFieldName), return false );
 	}
 	return true;
 }

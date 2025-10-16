@@ -4,6 +4,8 @@
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
 
+#include <fmt/format.h>
+
 #define FLOAT_EPSILON 1e-5
 
 // variant type
@@ -85,7 +87,7 @@ bool CVariant::GetBool() const
 {
 	if(m_eType == VT_BOOL)
 		return m_bool;
-	NI_ASSERT( false, StrFmt("Can't convert type %d to bool", m_eType) );
+	NI_ASSERT( false, fmt::format("Can't convert type {} to bool", int( m_eType )) );
 	return false;
 }
 
@@ -94,7 +96,7 @@ int CVariant::GetInt() const
 	if ( m_eType == VT_INT )
 		return m_int;
 	// TODO change all places in code where NULL variant assumes (int)0
-	NI_ASSERT( false, StrFmt("Can't convert type %d to int", m_eType) );
+	NI_ASSERT( false, fmt::format("Can't convert type {} to int", int( m_eType )) );
 	return 0;
 }
 
@@ -102,7 +104,7 @@ float CVariant::GetFloat() const
 {
 	if ( m_eType == VT_FLOAT )
 		return m_float;
-	NI_ASSERT( false, StrFmt("Can't convert type %d to float", m_eType) );
+	NI_ASSERT( false, fmt::format("Can't convert type {} to float", int( m_eType )) );
 	return 0;
 }
 
@@ -115,7 +117,7 @@ const char *CVariant::GetStr() const
 	case VT_DBID:
 		return m_dbid->ToString().c_str();
 	default:
-		NI_ASSERT( false, StrFmt("Can't convert type %d to string", m_eType) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to string", int( m_eType )) );
 		return "";
 	}
 }
@@ -124,7 +126,7 @@ const wchar_t *CVariant::GetWStr() const
 {
 	if ( m_eType == VT_WSTR )
 		return m_pwstr->c_str();
-	NI_ASSERT( false, StrFmt("Can't convert type %d to wstring", m_eType) );
+	NI_ASSERT( false, fmt::format("Can't convert type {} to wstring", int( m_eType )) );
 	return L"";
 }
 
@@ -139,7 +141,7 @@ std::string CVariant::GetStringRecode() const
 	case VT_WSTR:
 		return NStr::ToMBCS( *m_pwstr );
 	default:
-		NI_ASSERT( false, StrFmt("Can't recode (!) type %d to string", m_eType) );
+		NI_ASSERT( false, fmt::format("Can't recode (!) type {} to string", int( m_eType )) );
 		return "";
 	}
 }
@@ -153,7 +155,7 @@ std::wstring CVariant::GetWStringRecode() const
 	case VT_STR:
 		return NStr::ToUnicode( *m_pstr );
 	default:
-		NI_ASSERT( false, StrFmt("Can't recode (!) type %d to wstring", m_eType) );
+		NI_ASSERT( false, fmt::format("Can't recode (!) type {} to wstring", int( m_eType )) );
 		return L"";
 	}
 }
@@ -163,7 +165,7 @@ const CDBID &CVariant::GetDBID() const
 	static CDBID dummy;
 	if ( m_eType == VT_DBID )
 		return *m_dbid;
-	NI_ASSERT( false, StrFmt("Can't convert type %d to CDBID", m_eType) );
+	NI_ASSERT( false, fmt::format("Can't convert type {} to CDBID", int( m_eType )) );
 	return dummy;
 }
 
@@ -217,7 +219,7 @@ CVariant::operator int() const
 					return 0;
 				else
 				{
-					NI_ASSERT( false, StrFmt("Can't convert binary data of invalid size (%d) to int", GetBlobSize()) );
+					NI_ASSERT( false, fmt::format("Can't convert binary data of invalid size ({}) to int", GetBlobSize()) );
 					return 0;
 				}
 			default:
@@ -314,13 +316,13 @@ bool CVariant::ToText( std::string *pszText ) const
 	switch( m_eType )
 	{
 		case VT_NULL:
-			( *pszText ) = StrFmt( "NULL" );
+			( *pszText ) = "NULL";
 			break;
 		case VT_INT:
-			( *pszText ) = StrFmt( "%d", m_int );
+			( *pszText ) = std::to_string(  m_int );
 			break;
 		case VT_FLOAT:
-			( *pszText ) = StrFmt( "%.4ff", m_float );
+			( *pszText ) = fmt::format( "{:.4f}f", m_float );
 			break;
 		case VT_STR:
 			( *pszText ) = ( *m_pstr );
@@ -332,7 +334,7 @@ bool CVariant::ToText( std::string *pszText ) const
 			( *pszText ) = m_bool ? "true" : "false";
 			break;
 		case VT_POINTER:
-			( *pszText ) = StrFmt( "0x%X", m_pblob->m_ptr );
+			( *pszText ) = fmt::format( "0x{:X}", m_pblob->m_ptr );
 			break;
 		case VT_DBID:
 			*pszText = m_dbid->ToString();
@@ -529,7 +531,7 @@ int CVariant::operator&( IXmlSaver &saver )
 		break;
 
 	default:
-		NI_ASSERT( false, StrFmt("Unsupported type %d to serialize!", m_eType) );
+		NI_ASSERT( false, fmt::format("Unsupported type {} to serialize!", int( m_eType )) );
 	}
 	return 0;
 }

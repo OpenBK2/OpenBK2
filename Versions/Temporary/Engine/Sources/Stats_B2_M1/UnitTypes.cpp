@@ -2,6 +2,8 @@
 #include "UnitTypes.h"
 #include "RPGStats.h"
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 	EUnitRPGType GetMainType( EUnitRPGType type ) { return EUnitRPGType( type & 0xffff0000 ); }
@@ -57,7 +59,7 @@ namespace NDb
 		case DB_RPG_TYPE_TRAIN_ARMOR					:return RPG_TYPE_TRAIN_ARMOR				;
 		case DB_RPG_TYPE_AVIA_STRAT_BOMBER				:return RPG_TYPE_AVIA_STRAT_BOMBER				;
 		}
-		NI_ASSERT( false, StrFmt( "wrong type %i", eType ) );
+		NI_ASSERT( false, fmt::format( "wrong type {}", int( eType ) ) );
 		return RPG_TYPE_INFANTRY;
 	};
 	const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )

@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 
@@ -56,15 +58,15 @@ static const STestDataStruct1 s_ComplexArrayTestData[5] =
 bool CheckMetaSetGet( NDb::IObjMan *pBind, const string &szFieldName, const CVariant &value )
 {
 	CVariant var;
-	NI_VERIFY( pBind->SetValue( szFieldName, value ) != false, StrFmt("Failed to set value \"%s\" to complex array", szFieldName.c_str()), return false );
-	NI_VERIFY( pBind->GetValue( szFieldName, &var ) != false, StrFmt("Failed to get value \"%s\" from complex array", szFieldName.c_str()), return false );
+	NI_VERIFY( pBind->SetValue( szFieldName, value ) != false, fmt::format("Failed to set value \"{}\" to complex array", szFieldName), return false );
+	NI_VERIFY( pBind->GetValue( szFieldName, &var ) != false, fmt::format("Failed to get value \"{}\" from complex array", szFieldName), return false );
 	NI_VERIFY( var == value, "Values mistmatch after set/get!", return false );
 	return true;
 }
 
 bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldName, const int nIndex, const STestDataStruct1 *pData )
 {
-	const string szStructName = StrFmt( "%s.[%d].", szFieldName.c_str(), nIndex );
+	const string szStructName = fmt::format( "{}.[{}].", szFieldName, nIndex );
 	NI_VERIFY( CheckMetaSetGet(pBind, szStructName + "TypeInt", pData->nVal) != false, "Failed set/get test for field in array element!", return false );
 	NI_VERIFY( CheckMetaSetGet(pBind, szStructName + "TypeFloat", pData->fVal) != false, "Failed set/get test for field in array element!", return false );
 	NI_VERIFY( CheckMetaSetGet(pBind, szStructName + "TypeBool", pData->bVal) != false, "Failed set/get test for field in array element!", return false );
@@ -78,7 +80,7 @@ bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldN
 
 bool TestComplexArrayInsertRemove( NDb::IObjMan *pBind, const string &szFieldName )
 {
-	const string szTestName = StrFmt( "Complex array \"%s\"", szFieldName.c_str() );
+	const string szTestName = fmt::format( "Complex array \"{}\"", szFieldName );
 	NTest::CMeasureTimer timer( szTestName.c_str() );
 	CVariant value;
 	// insert at the begining (2 elements)
@@ -125,7 +127,7 @@ bool TestComplexArrayInsertRemove( NDb::IObjMan *pBind, const string &szFieldNam
 
 bool TestComplexArray2InsertRemove( NDb::IObjMan *pBind, const string &szFieldName )
 {
-	const string szTestName = StrFmt( "Complex array 2 \"%s\"", szFieldName.c_str() );
+	const string szTestName = fmt::format( "Complex array 2 \"{}\"", szFieldName );
 	NTest::CMeasureTimer timer( szTestName.c_str() );
 	CVariant value;
 	string szFullFieldName = szFieldName;

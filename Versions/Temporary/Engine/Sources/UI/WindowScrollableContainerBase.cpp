@@ -5,6 +5,8 @@
 #include "UIVisitor.h"
 #include "windowsimple.h"
 
+#include <fmt/format.h>
+
 int CWindowScrollableContainerBase::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -229,7 +231,7 @@ void CWindowScrollableContainerBase::RemoveElement( CWindow *pElement )
 	CWindowScrollableContainerBase::CElements::iterator pos = GetAfter( pElement );
 	
 	const int nID = NStr::ToInt( pElement->GetName() );
-	NI_ASSERT( nID != 0, StrFmt("not native element \"%s\"", pElement->GetName() ));
+	NI_ASSERT( nID != 0, fmt::format("not native element \"{}\"", pElement->GetName() ));
 	elementIDs.Return( nID );
 	pContainer->RemoveChild( pElement );
 	Update();
@@ -291,13 +293,13 @@ void CWindowScrollableContainerBase::EnsureElementVisible( IWindow *pElement )
 
 void CWindowScrollableContainerBase::AddElement( CWindow *pElement, const bool _bSelectable, const int _nPosSize, CWindow *pNegativeSelection )
 {
-	pElement->SetName( StrFmt( "%i", elementIDs.Get()) );
+	pElement->SetName( std::to_string(elementIDs.Get()) );
 	pContainer->AddChild( pElement, false );
 	pElement->SetClickNotify( this );
 	pElement->ShowWindow( true );
 	if ( pNegativeSelection )
 	{
-		pNegativeSelection->SetName( StrFmt( "%s_sel", pElement->GetName() ) );
+		pNegativeSelection->SetName( fmt::format( "{}_sel", pElement->GetName() ) );
 		pContainer->AddChild( pNegativeSelection, false );
 		UpdateSelectionPosition( pNegativeSelection, pElement );
 		pNegativeSelection->ShowWindow( true );

@@ -8,6 +8,8 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/PrimeNumbers.h"
 
+#include <fmt/format.h>
+
 CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckConnect )
 {
 	pServer = _pServer;
@@ -62,7 +64,7 @@ bool CConnectServerProcessor::Segment()
 
 			break;
 		default:
-			NI_ASSERT( false, StrFmt( "Uknown connection state %d", (int)eConnectState ) );
+			NI_ASSERT( false, fmt::format( "Uknown connection state {}", (int)eConnectState ) );
 	}
 
 	return true;
@@ -104,7 +106,7 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 			++nCnt;
 		}
 
-		NI_ASSERT( false, StrFmt( "Can't factorize number %d", pCheckConnectPacket->nNumber ) );
+		NI_ASSERT( false, fmt::format( "Can't factorize number {}", pCheckConnectPacket->nNumber ) );
 	}
 
 	return true;

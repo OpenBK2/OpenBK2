@@ -10,6 +10,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
 
 bool bMouseDisabledDebug = false;
@@ -898,19 +900,19 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	switch( GET_DIDEVICE_TYPE( didInstance.dwDevType ) )
 	{
 	case DI8DEVTYPE_GAMEPAD:
-		sDeviceEnum.szName = StrFmt( "GAMEPAD%d", nCounter[0] );
+		sDeviceEnum.szName = fmt::format( "GAMEPAD{}", nCounter[0] );
 		nCounter[0]++;
 		break;
 	case DI8DEVTYPE_DRIVING:
-		sDeviceEnum.szName = StrFmt( "DRIVING%d", nCounter[1] );
+		sDeviceEnum.szName = fmt::format( "DRIVING{}", nCounter[1] );
 		nCounter[1]++;
 		break;
 	case DI8DEVTYPE_JOYSTICK:
-		sDeviceEnum.szName = StrFmt( "JOYSTICK%d", nCounter[2] );
+		sDeviceEnum.szName = fmt::format( "JOYSTICK{}", nCounter[2] );
 		nCounter[2]++;
 		break;
 	default:
-		sDeviceEnum.szName = StrFmt( "GAMECTRL%d", nCounter[3] );
+		sDeviceEnum.szName = fmt::format( "GAMECTRL{}", nCounter[3] );
 		nCounter[3]++;
 		break;
 	}
@@ -1079,7 +1081,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	{
 		eType = CT_AXIS;
 		szControlName = psDeviceEnum->szName;
-		szControlName += StrFmt( "_SLIDER%d", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
+		szControlName += fmt::format( "_SLIDER{}", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
 		diObjectFormat.pguid = &GUID_Slider;
 
 		return DIENUM_CONTINUE;
@@ -1088,7 +1090,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	{
 		eType = CT_KEY;
 		szControlName = psDeviceEnum->szName;
-		szControlName += StrFmt( "_BUTTON%d", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
+		szControlName += fmt::format( "_BUTTON{}", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
 		diObjectFormat.pguid = &GUID_Button;
 
 		if( DIDFT_GETINSTANCE( lpdidObject->dwType ) > 32 )
@@ -1100,7 +1102,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	{
 		eType = CT_KEY;
 		szControlName = psDeviceEnum->szName;
-		szControlName += StrFmt( "_KEY%d", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
+		szControlName += fmt::format( "_KEY{}", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
 		diObjectFormat.pguid = &GUID_Key;
 
 		return DIENUM_CONTINUE;
@@ -1109,7 +1111,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	{
 		eType = CT_KEY;
 		szControlName = psDeviceEnum->szName;
-		szControlName += StrFmt( "_UNKNOWN%d", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
+		szControlName += fmt::format( "_UNKNOWN{}", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
 		diObjectFormat.pguid = &GUID_Unknown;
 
 		return DIENUM_CONTINUE;

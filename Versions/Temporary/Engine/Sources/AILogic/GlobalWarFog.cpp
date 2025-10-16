@@ -216,7 +216,7 @@ void CGlobalWarFog::RemoveTileValid( const int x, const int y )
 
 void CGlobalWarFog::SetTileHeight( const int x, const int y, const float fHeight )
 {
-	NI_VERIFY( IsTileInside( x, y ), StrFmt( "Tile (%d x %d) outside heights map", x, y ), return );
+	NI_VERIFY( IsTileInside( x, y ), fmt::format( "Tile ({} x {}) outside heights map", x, y ), return );
 
 	heights[y][x] = fHeight * HEIGHT_MULTIPLYER;
 	RemoveTileValid( x, y );
@@ -224,9 +224,9 @@ void CGlobalWarFog::SetTileHeight( const int x, const int y, const float fHeight
 
 void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, const int nParty )
 {
-	NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), StrFmt( "Trying add unit %d with wrong position (%d x %d), size of map: %d x %d", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
-	//NI_ASSERT( updateInfo.nRadius <= GetMaxRadius(), StrFmt( "WARNING: nMaxRadius exceed (nMaxRadius = %d, updateInfo.nRadius = %d)", GetMaxRadius(), updateInfo.nRadius ) );
-	NI_ASSERT( units.find( nID ) == units.end(), StrFmt( "Unit with id = %d already exists in warfog.", nID ) );
+	NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), fmt::format( "Trying add unit {} with wrong position ({} x {}), size of map: {} x {}", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
+	//NI_ASSERT( updateInfo.nRadius <= GetMaxRadius(), fmt::format( "WARNING: nMaxRadius exceed (nMaxRadius = {}, updateInfo.nRadius = {})", GetMaxRadius(), updateInfo.nRadius ) );
+	NI_ASSERT( units.find( nID ) == units.end(), fmt::format( "Unit with id = {} already exists in warfog.", nID ) );
 
 	if ( !IsValidParty( nParty ) )
 		return;

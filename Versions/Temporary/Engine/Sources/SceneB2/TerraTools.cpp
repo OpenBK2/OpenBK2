@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static int GetGrannyTypedefOffset( granny_data_type_definition *pType, const char *name )
 {
 	int nRet = 0;
@@ -66,9 +68,9 @@ void GetTriangles( granny_mesh *pMesh, std::vector<STriangle> *pRes )
 void LoadGrannyModel( const std::string &szFileName, std::vector<CVec3> *pVerts, std::vector<STriangle> *pTrgs, CVec3 *vMin, CVec3 *vMax )
 {
 	granny_file *pFile = GrannyReadEntireFile( szFileName.c_str() );
-	NI_ASSERT( pFile, StrFmt("Can't read model from %s", szFileName) );
+	NI_ASSERT( pFile, fmt::format("Can't read model from {}", szFileName) );
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
-	NI_ASSERT( pInfo, StrFmt("Can't read model info from %s", szFileName) );
+	NI_ASSERT( pInfo, fmt::format("Can't read model info from {}", szFileName) );
 	if ( pInfo->MeshCount > 0 )
 	{
 		pVerts->reserve( 512 );

@@ -12,6 +12,8 @@
 #include "InterfaceEncyclopedia.h"
 #include "System/Text.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 // CInterfaceChapterMapMenu -- ReinfDesc window
@@ -42,7 +44,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 	reinfDescUnits.resize( 5 );
 	for ( int i = 0; i < 5; ++i )
 	{
-		IButton *pButton = GetChildChecked<IButton>( pCurrentWindow, StrFmt( "ReinfDescButton%1d", i + 1 ), true );
+		IButton *pButton = GetChildChecked<IButton>( pCurrentWindow, fmt::format( "ReinfDescButton{:1d}", i + 1 ), true );
 		if ( pButton )
 		{
 			reinfDescUnits[i].pButton = pButton;
@@ -119,7 +121,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf,
 	reinfDescUnits.resize( 5 );
 	for ( int i = 0; i < 5; ++i )
 	{
-		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, StrFmt( "ReinfDescButton%1d", i + 1 ), true );
+		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, fmt::format( "ReinfDescButton{:1d}", i + 1 ), true );
 		if ( pButton )
 		{
 			reinfDescUnits[i].pButton = pButton;
@@ -134,7 +136,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf,
 	reinfDescUnits2.resize( 5 );
 	for ( int i = 0; i < 5; ++i )
 	{
-		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, StrFmt( "ReinfDescButtonUpg%1d", i + 1 ), true );
+		IButton *pButton = GetChildChecked<IButton>( pUnitsArea, fmt::format( "ReinfDescButtonUpg{:1d}", i + 1 ), true );
 		if ( pButton )
 		{
 			reinfDescUnits2[i].pButton = pButton;
@@ -292,7 +294,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 			}
 			else 
 			{
-				NI_ASSERT( false, StrFmt( "DESIGN: Invalid reinforcement entry ReinfID \"%s\", entry %d", NDb::GetResName(pReinf), i ) );
+				NI_ASSERT( false, fmt::format( "DESIGN: Invalid reinforcement entry ReinfID \"{}\", entry {}", NDb::GetResName(pReinf), i ) );
 			}
 		}
 		else
@@ -306,7 +308,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 		if ( !pUnitQty )
 			continue;
 		if ( units[j].nQuantity > 1 )
-			pUnitQty->SetText( pUnitQty->GetDBText() + NStr::ToUnicode( StrFmt( "%2d", units[j].nQuantity ) ) );
+			pUnitQty->SetText( pUnitQty->GetDBText() + NStr::ToUnicode( fmt::format( "{:2d}", units[j].nQuantity ) ) );
 		else
 			pUnitQty->SetText( L"" );
 	}
@@ -429,10 +431,10 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 		pEncyclopedia->ShowWindow( false );
 
 	pUnitName->SetText( pUnitName->GetDBText() + wszUnitName );
-	pUnitHP->SetText( pUnitHP->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nHP ) ) );
-	pUnitArmor->SetText( pUnitArmor->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nArmor ) ) );
-	pUnitDamage->SetText( pUnitDamage->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nDamage ) ) );
-	pUnitPiercing->SetText( pUnitPiercing->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nPiercing ) ) );
+	pUnitHP->SetText( pUnitHP->GetDBText() + NStr::ToUnicode( std::to_string( nHP ) ) );
+	pUnitArmor->SetText( pUnitArmor->GetDBText() + NStr::ToUnicode( std::to_string( nArmor ) ) );
+	pUnitDamage->SetText( pUnitDamage->GetDBText() + NStr::ToUnicode( std::to_string( nDamage ) ) );
+	pUnitPiercing->SetText( pUnitPiercing->GetDBText() + NStr::ToUnicode( std::to_string( nPiercing ) ) );
 }
 
 void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
@@ -445,7 +447,7 @@ void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
 	{
 		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
-		NStr::ToUnicode( StrFmt( "No Encyclopedia for infantry" ) ) ).c_str() );
+		NStr::ToUnicode( "No Encyclopedia for infantry" ) ).c_str() );
 	}
 }
 

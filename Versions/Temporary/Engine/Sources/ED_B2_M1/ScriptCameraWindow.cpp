@@ -220,7 +220,7 @@ bool CScriptCameraWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 			if ( dwData > 0 )
 			{
 				bIsDataSetting = true;
-				SetDlgItemText( IDC_SMOV_FOV_EDIT, StrFmt( "%d", *(int*)( dwData ) ) );
+				SetDlgItemText( IDC_SMOV_FOV_EDIT, std::to_string(  *(int*)( dwData ) ) );
 				bIsDataSetting = false;
 			}
 			return true;

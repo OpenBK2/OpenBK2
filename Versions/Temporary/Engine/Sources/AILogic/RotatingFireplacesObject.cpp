@@ -4,6 +4,8 @@
 #include "Soldier.h"
 #include "Guns.h"
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 
 void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplace )
@@ -24,7 +26,7 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 	if ( pSoldier->IsInFirePlace() )
 	{
 		iter->nLastFireplace = nFireplace;
-		NI_ASSERT( iter->nLastFireplace < GetNFirePlaces(), StrFmt( "Wrong number of fireplace (%d), number of fireplaces (%d)", iter->nLastFireplace, GetNFirePlaces() ) );
+		NI_ASSERT( iter->nLastFireplace < GetNFirePlaces(), fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})", iter->nLastFireplace, GetNFirePlaces() ) );
 	}
 	else
 	{

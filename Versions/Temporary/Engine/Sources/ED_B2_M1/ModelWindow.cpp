@@ -350,11 +350,11 @@ bool CModelWindow::SetEditParameters( const CModelState::SEditParameters &rEditP
 	//
 	if ( rEditParameters.nFlags & MODEL_EP_FOV )
 	{
-		SetDlgItemText( IDC_MODEL_FOV_EDIT, StrFmt( "%d", rEditParameters.nFOV ) );
+		SetDlgItemText( IDC_MODEL_FOV_EDIT, std::to_string(  rEditParameters.nFOV ) );
 	}
 	if ( rEditParameters.nFlags & MODEL_EP_TERRAIN_COLOR_OPACITY )
 	{
-		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_OPACITY_EDIT, StrFmt( "%d", rEditParameters.nTerrainColorOpacity ) );
+		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_OPACITY_EDIT, std::to_string(  rEditParameters.nTerrainColorOpacity ) );
 	}
 	if ( rEditParameters.nFlags & MODEL_EP_COLOR )
 	{

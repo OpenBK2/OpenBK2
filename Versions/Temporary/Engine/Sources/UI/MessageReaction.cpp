@@ -14,6 +14,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // здесь генерируется отдельный ID, который потом прописывается в в файле include_?????????????.h
 REGISTER_SAVELOAD_CLASS(UI, 0x11075CC0, CARSetGlobalVar)
 REGISTER_SAVELOAD_CLASS(UI, 0x11075CC1, CARRemoveGlobalVar)
@@ -45,7 +47,7 @@ bool CMessageReactionB2::Execute( struct IScreen *pScreen, struct IScriptWrapper
 
 		CMessageSequences::const_iterator it = branches.find( nCustomCheckReturn );
 		//DebugTrace( "\t\t\tCustomCheck \t%d \n", nCustomCheckReturn );
-		NI_ASSERT( it != branches.end(), StrFmt( "branche \"%d\" not found", nCustomCheckReturn ) );
+		NI_ASSERT( it != branches.end(), fmt::format( "branche \"{}\" not found", nCustomCheckReturn ) );
 
 		if ( !it->second.empty() )
 			bRes &= Execute( &it->second, pScreen, pScript, pProg, wKeyboardFlags );
@@ -218,7 +220,7 @@ void CARSendGameMessage::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 bool CARSiwtchTab::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 	CWindowTabControl *pTab = dynamic_cast<CWindowTabControl *>(pScreen->GetElement( pDesc->szTabControlName, true ));
-	NI_ASSERT( pTab != 0, StrFmt( "tab control with name \"%s\" not found", pDesc->szTabControlName ) );
+	NI_ASSERT( pTab != 0, fmt::format( "tab control with name \"{}\" not found", pDesc->szTabControlName ) );
 	pTab->SetActive( pDesc->nTab );
 	return true;
 }

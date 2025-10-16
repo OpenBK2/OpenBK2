@@ -27,6 +27,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
 extern CGlobalWarFog theWarFog;
@@ -474,7 +476,7 @@ const uint32_t CCommonUnit::GetNormale( const CVec2 &vCenter ) const
 
 void CCommonUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 { 
-	NI_ASSERT( timeDiff <= SConsts::AI_SEGMENT_DURATION, StrFmt( "wrong segment time %i", timeDiff ) );
+	NI_ASSERT( timeDiff <= SConsts::AI_SEGMENT_DURATION, fmt::format( "wrong segment time {}", timeDiff ) );
 	const float t = Clamp( (float)timeDiff/(float)(SConsts::AI_SEGMENT_DURATION), 0.0f, 1.0f );
 	//DebugTrace( "CCommonUnit::GetPlacement t = %2.3f", t );
 

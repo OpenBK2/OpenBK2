@@ -93,7 +93,7 @@ void VariantToString( string *pString, const CVariant &variant, EPCIEType ePCITy
 		break;
 
 	case CVariant::VT_INT:
-		*pString = StrFmt( "%d", (int)variant );
+		*pString = std::to_string(  (int)variant );
 		break;
 
 	case CVariant::VT_FLOAT:

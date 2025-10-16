@@ -600,7 +600,7 @@ void CTestClient::Segment()
 			}
 			else if ( bCanCreateTester )
 			{
-				string szName = StrFmt( "%d", i + nTestersNameShift );
+				string szName = std::to_string(  i + nTestersNameShift );
 				testers[i] = CreateMultiTester();
 				testers[i]->Init( szIP, nNetVersion, nPort, 30, szName, szName, szName, MTM_LADDER | MTM_CHAT );
 				testers[i]->Segment();

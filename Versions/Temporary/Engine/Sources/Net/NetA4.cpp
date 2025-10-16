@@ -16,6 +16,8 @@
 #include <iostream>
 #endif
 
+#include <fmt/format.h>
+
 const int PACKET_SIZE = 500;
 
 namespace NNet
@@ -102,7 +104,7 @@ static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 
 static void WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
 {
-	NI_ASSERT( pkt.GetSize() < N_STREAM_BUFFER - 1000, StrFmt( "Wrong memory stream size (%d)", pkt.GetSize() ) );
+	NI_ASSERT( pkt.GetSize() < N_STREAM_BUFFER - 1000, fmt::format( "Wrong memory stream size ({})", pkt.GetSize() ) );
 	CMemoryStream &b = pDst->emplace_back();
 	int nSize = pkt.GetSize();
 	if ( nSize >= 128 )

@@ -26,6 +26,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NAI::CTimeCounter timeCounter;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
@@ -107,7 +109,7 @@ bool CGeneralTaskToDefendStorage::EnumWorker( class CCommonUnit *pUnit, const en
 
 		return false;
 	default:
-		NI_ASSERT(false, StrFmt( "didn't asked worker of type %i", eType ) );
+		NI_ASSERT(false, fmt::format( "didn't asked worker of type {}", int( eType ) ) );
 
 	}
 	return false;
@@ -419,7 +421,7 @@ const bool CResupplyCellInfo::IsDangerous() const
 void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const uint8_t cRes )
 {
 	NI_ASSERT( 0 !=  cRes, "unit doesn't need resupply" );
-	NI_ASSERT( cRes < (1<<_ERT_COUNT), StrFmt( "wrong resupply mask %d", cRes ) ) ;
+	NI_ASSERT( cRes < (1<<_ERT_COUNT), fmt::format( "wrong resupply mask {}", cRes ) ) ;
 	
 //	const int nID = pUnit->GetUniqueId();
 //	const float fPrice = pUnit->GetPriceMax();
@@ -495,7 +497,7 @@ bool CResupplyCellInfo::IsUnitSuitable( const class CCommonUnit * pUnit, const e
 	case ERT_MEDICINE:
 		return pUnit->CanCommandBeExecutedByStats( ACTION_COMMAND_HEAL_INFANTRY );
 	default:
-		NI_ASSERT( false, StrFmt( "unknown resupply type asked %d", eType ) );
+		NI_ASSERT( false, fmt::format( "unknown resupply type asked {}", int( eType ) ) );
 		return false;
 	}
 }

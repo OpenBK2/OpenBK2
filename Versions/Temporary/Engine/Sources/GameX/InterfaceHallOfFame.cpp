@@ -63,7 +63,7 @@ void CInterfaceHallOfFame::MakeInterior()
 	int nMaxEntries = 0;
 	for ( int i = 1; ; ++i )
 	{
-		if ( !pScreen->GetChild( StrFmt( "%i", i ), true ) )
+		if ( !pScreen->GetChild( std::to_string( i ), true ) )
 		{
 			nMaxEntries = i-1;
 			break;
@@ -94,13 +94,13 @@ void CInterfaceHallOfFame::MakeInterior()
 	// fill screen
 	for ( int i = 0; i < nMaxEntries && i < entries.size(); ++i )
 	{
-		IWindow * pEntry = pScreen->GetChild( StrFmt( "%i", i+1 ), true );
+		IWindow * pEntry = pScreen->GetChild( std::to_string( i + 1 ), true );
 		ITextView * pName = GetChildChecked<ITextView>( pEntry, "NameEntry", false );
 		ITextView * pScore = GetChildChecked<ITextView>( pEntry, "ScoreEntry", false );
 		if ( pName && pScore )
 		{
 			pName->SetText( pName->GetDBText() + entries[i].wszName );
-			pScore->SetText( pScore->GetDBText() + NStr::ToUnicode( StrFmt( "%i", entries[i].nScore ) ) );
+			pScore->SetText( pScore->GetDBText() + NStr::ToUnicode( std::to_string( entries[i].nScore ) ) );
 		}
 	}
 }

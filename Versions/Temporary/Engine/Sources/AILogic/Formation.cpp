@@ -34,6 +34,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D498, CFormation );
 
 enum ECatchArtilleryType
@@ -350,7 +352,7 @@ bool CFormation::CanCommandBeExecuted( class CAICommand *pCommand )
 	// проверять на возможность исполнения только user команды
 	if ( nCmd < 1000 )
 	{
-		NI_ASSERT( nCmd >= 0 && nCmd < availCommands.GetSize(), StrFmt( "Wrong command ( %d )\n", nCmd ) );
+		NI_ASSERT( nCmd >= 0 && nCmd < availCommands.GetSize(), fmt::format( "Wrong command ( {} )\n", nCmd ) );
 		if ( !availCommands.GetData( nCmd ) )
 			return false;
 	}
@@ -388,7 +390,7 @@ bool CFormation::CanCommandBeExecutedByStats( int nCmd ) const
 	// проверять на возможность исполнения только user команды
 	if ( nCmd < 1000 )
 	{
-		NI_ASSERT( nCmd >= 0 && nCmd < availCommands.GetSize(), StrFmt( "Wrong command ( %d )", nCmd ) );
+		NI_ASSERT( nCmd >= 0 && nCmd < availCommands.GetSize(), fmt::format( "Wrong command ( {} )", nCmd ) );
 		if ( !availCommands.GetData( nCmd ) )
 			return false;
 	}
@@ -704,7 +706,7 @@ struct SGetNAvailableSeats
 	const int operator()( CMilitaryCar *pCar ) { return pCar->GetNAvailableSeats(); }
 	const int operator()( CBuilding *pBuilding ) { return pBuilding->GetNFreePlaces(); }
 	const int operator()( CEntrenchment *pEntrenchment ) { return 1000000; }
-	const int operator()( CObjectBase *pObj ) { NI_ASSERT( false, StrFmt( "Unknown object (%s) to get number of seats", typeid( *pObj ).name() ) ); return 0; }
+	const int operator()( CObjectBase *pObj ) { NI_ASSERT( false, fmt::format( "Unknown object ({}) to get number of seats", typeid( *pObj ).name() ) ); return 0; }
 };
 struct SGetLoadPoint
 {
@@ -727,10 +729,10 @@ const TResult GetLoadInfo( CAICommand *pCommand, T &functor, TResult* )
 			case ESOT_ENTRENCHMENT: return functor( dynamic_cast<CEntrenchment*>( pObj ) );
 			case ESOT_ENTR_PART:		return functor( dynamic_cast<CEntrenchmentPart*>(pObj)->GetOwner() );
 			case ESOT_BUILDING:			return functor( dynamic_cast<CBuilding*>(pObj) );
-			default: NI_ASSERT( false, StrFmt( "Can't enter to object of type %d", pObj->GetObjectType() ) );
+			default: NI_ASSERT( false, fmt::format( "Can't enter to object of type {}", pObj->GetObjectType() ) );
 			}
 		}
-	default: NI_ASSERT( false, StrFmt( "Unknown load command (%d)", cmd.nCmdType ) ); return TResult();
+	default: NI_ASSERT( false, fmt::format( "Unknown load command ({})", cmd.nCmdType ) ); return TResult();
 	}
 	else
 		CFormationCenter::UnitCommand( pCommand, bPlaceInQueue, false );
@@ -885,7 +887,7 @@ EUnitAckType CFormation::GetGunsRejectReason() const
 
 const int CFormation::GetVirtualUnitSlotInStats( const int nVirtualUnit ) const
 {
-	NI_ASSERT( nVirtualUnit < VirtualUnitsSize(), StrFmt( "Wrong number of virtual unit (%d), size of virtual units (%d)", nVirtualUnit, VirtualUnitsSize() ) );
+	NI_ASSERT( nVirtualUnit < VirtualUnitsSize(), fmt::format( "Wrong number of virtual unit ({}), size of virtual units ({})", nVirtualUnit, VirtualUnitsSize() ) );
 	return virtualUnits[nVirtualUnit].nSlotInStats;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v

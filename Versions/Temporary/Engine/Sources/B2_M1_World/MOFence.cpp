@@ -2,13 +2,15 @@
 #include "MOFence.h"
 #include "Common_RTS_AI/AIClasses.h"
 
+#include <fmt/format.h>
+
 bool CMOFence::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
 	const NDb::SModel *pModel = GetModel( GetStatsLocal()->GetVisObjByFrameIndex( pUpdate->info.nFrameIndex ), eSeason );
 	//ChooseVisObjForHP( fNewHP ), eSeason );
 
-	NI_ASSERT( pModel != 0, StrFmt( "Wrong fence \"%s\" - no model", GetStats()->GetDBID().ToString().c_str() ) );
+	NI_ASSERT( pModel != 0, fmt::format( "Wrong fence \"{}\" - no model", GetStats()->GetDBID().ToString().c_str() ) );
 	if ( !pModel )
 		return false;
 

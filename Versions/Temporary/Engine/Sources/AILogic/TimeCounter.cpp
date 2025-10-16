@@ -2,6 +2,8 @@
 
 #include "TimeCounter.h"
 
+#include <fmt/format.h>
+
 NAI::CTimeCounter timeCounter;
 extern NTimer::STime curTime;
 
@@ -148,23 +150,29 @@ void CTimeCounter::PrintCounters()
 	{
 		const int name = i;
 		const double fTime = counters[i];
-		if ( fTime > 0.0f )
-			pConsoleBuffer->WriteASCII( 11, StrFmt( "%s = %g", names[name].c_str(), fTime ), 0, true );
+		if ( fTime > 0.0f ) {
+			const auto message = fmt::format( "{} = {:g}", names[name].c_str(), fTime );
+			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
+		}
 	}
 	
 	for ( det_map<std::string, double>::const_iterator iter = szCounters.begin(); iter != szCounters.end(); ++iter )
 	{
 		const double fTime = iter->second;
-		if ( fTime > 0.0f )
-			pConsoleBuffer->WriteASCII( 11, StrFmt( "%s = %g", (iter->first).c_str(), fTime ), 0, true );
+		if ( fTime > 0.0f ) {
+			const auto message = fmt::format( "{} = {:g}", iter->first, fTime );
+			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
+		}
 	}
 
 	pConsoleBuffer->WriteASCII( 11, "", 0, true );
 	pConsoleBuffer->WriteASCII( 11, "Variables", 0, true );
 	for ( int i = 0; i <= nMaxVar; ++i )
 	{
-		if ( variables[i] != 0 )
-			pConsoleBuffer->WriteASCII( 11, StrFmt( "variable %d = %g", i, variables[i] ), 0, true );
+		if ( variables[i] != 0 ) {
+			const auto message = fmt::format( "variable {} = {:g}", i, variables[i] );
+			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
+		}
 	}
 
 	pConsoleBuffer->WriteASCII( 11, "=================================================", 0, true );

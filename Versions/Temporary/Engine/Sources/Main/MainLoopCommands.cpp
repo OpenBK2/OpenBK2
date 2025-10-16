@@ -3,6 +3,8 @@
 #include "Profiles.h"
 #include "System/WinVFS.h"
 
+#include <fmt/format.h>
+
 class CICExitGame : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICExitGame );
@@ -83,7 +85,7 @@ public:
 		{
 			case STG_START:
 			{
-				const std::string szReport = StrFmt( "Saving at \"%s\"...", GetSavePathName( GetFileName() ).c_str() );
+				const std::string szReport = fmt::format( "Saving at \"{}\"...", GetSavePathName( GetFileName() ) );
 				WriteToPipe( PIPE_CHAT, szReport.c_str(), 0xffff0000 );
 			}
 			break;

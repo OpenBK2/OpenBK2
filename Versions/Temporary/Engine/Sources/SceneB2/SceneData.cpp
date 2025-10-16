@@ -8,6 +8,8 @@
 #include "DBSceneConsts.h"
 #include "VisObjSelection.h"
 
+#include <fmt/format.h>
+
 namespace NImage
 {
 	template <> void __fill_tga_header<NGfx::SPixel8888>( STGAFileHeader *pHdr )
@@ -28,7 +30,7 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 	SYSTEMTIME systime;
 	GetLocalTime( &systime );
 	const std::string szFileName =
-		StrFmt( "screenshots\\shot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga", 
+		fmt::format( "screenshots\\shot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
 		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
 		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
 

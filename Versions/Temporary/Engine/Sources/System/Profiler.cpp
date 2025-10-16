@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NProfiler
 {
 
@@ -54,7 +56,7 @@ CProfiler::CProfiler( const char* pszFile, const int _nLine )
 CProfiler::~CProfiler()
 {
 	const uint32_t dwTime = GetCurrentTimeMilliseconds() - dwStartTime;
-	const std::string szHash = StrFmt( "%s(%d)", szFile.c_str(), nLine );
+	const std::string szHash = fmt::format( "{}({})", szFile.c_str(), nLine );
 
 	if ( pTimes )
 	{

@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include <fmt/format.h>
 
 class CMemoryConsumeCheck
 {
@@ -21,7 +22,7 @@ class CMemoryConsumeCheck
 		for ( CMemoryUsed::iterator it = memoryUsed.begin(); it != memoryUsed.end(); ++it )
 		{
 			memoryUsedSummed[it->first] += it->second;
-			pConsoleBuffer->WriteASCII( 11, StrFmt( "%d = %f Kbytes/sec, Total = %f", it->first, it->second / 20 / 1024, memoryUsedSummed[it->first] / 20 / 1024 ), 0, true );
+			pConsoleBuffer->WriteASCII( 11, fmt::format( "{} = {:f} Kbytes/sec, Total = {:f}", it->first, it->second / 20 / 1024, memoryUsedSummed[it->first] / 20 / 1024 ), 0, true );
 			it->second = 0;
 		}	
 		pConsoleBuffer->WriteASCII( 11, "=================================================", 0, true );

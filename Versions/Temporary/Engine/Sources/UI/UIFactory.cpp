@@ -7,6 +7,7 @@
 #include "UIML.h"
 #include "DBUIConsts.h"
 
+#include <fmt/format.h>
 
 CDBPtr<NDb::SUIGameConsts> NUIFactory::pConsts;
 extern CVec2 vScreenRect;
@@ -124,7 +125,7 @@ CWindow * CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
 	if ( !pDesc ) 
 		return 0;
 
-	NI_ASSERT( checked_cast<const NDb::SWindow*>(pDesc)->pShared != 0, StrFmt( "shared part is empty, WindowName \"%s\"", checked_cast<const NDb::SWindow*>(pDesc)->szName.c_str() ) );
+	NI_ASSERT( checked_cast<const NDb::SWindow*>(pDesc)->pShared != 0, fmt::format( "shared part is empty, WindowName \"{}\"", checked_cast<const NDb::SWindow*>(pDesc)->szName ) );
 	CWindow * p = MakeObjectVirtual<CWindow>( pDesc->nClassTypeID );
 
 	p->InitByDesc( pDesc );
@@ -146,7 +147,7 @@ IMessageReactionB2 * CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc 
 		return 0;
 	static int nCurrentID = 0;
 	
-	NI_ASSERT( nCurrentID != pDesc->nClassTypeID, StrFmt( "attempt to create cyclic Reactions DBID = \"%s\"", pDesc->GetDBID().ToString().c_str() ) );
+	NI_ASSERT( nCurrentID != pDesc->nClassTypeID, fmt::format( "attempt to create cyclic Reactions DBID = \"{}\"", pDesc->GetDBID().ToString() ) );
 	nCurrentID = pDesc->nClassTypeID;
 	
 	IMessageReactionB2 *p = MakeObject<IMessageReactionB2>( pDesc->nClassTypeID );

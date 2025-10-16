@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 template<class T>
 class CArray2DRLEWrapper
 {
@@ -214,7 +216,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 
 			delete []pRLE;
 
-			NI_ASSERT( cnt == nSizeX * nSizeY, StrFmt( "Cnt(%d) != nSizeY * nSizeY(%d)", cnt, nSizeX * nSizeY ) );
+			NI_ASSERT( cnt == nSizeX * nSizeY, fmt::format( "Cnt({}) != nSizeY * nSizeY({})", cnt, nSizeX * nSizeY ) );
 		}
 	}
 

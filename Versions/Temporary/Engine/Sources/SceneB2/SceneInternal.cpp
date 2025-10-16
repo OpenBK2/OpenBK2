@@ -44,6 +44,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 CUIVisitor theUIVisitor;
 void TakeScreenShotMsg( const SGameMessage &msg );
 
@@ -387,13 +389,13 @@ bool CScene::IsShowOn( ESceneShow eShow )
 
 static void OutputStat( const char *pszName, const int nValue, uint32_t dwColor, IStatSystem *pSS )
 {
-	const std::string szValue = StrFmt( "%d", nValue );
+	const std::string szValue = std::to_string(  nValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
 static void OutputStat( const char *pszName, const float fValue, uint32_t dwColor, IStatSystem *pSS )
 {
-	const std::string szValue = StrFmt( "%g", fValue );
+	const std::string szValue = fmt::format( "{:g}", fValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
@@ -411,7 +413,7 @@ static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 
 static void OutputStat( const char *pszName, const CVec3 &vValue, uint32_t dwColor, IStatSystem *pSS )
 {
-	const std::string szValue = StrFmt( "%g %g %g", vValue.x, vValue.y, vValue.z );
+	const std::string szValue = fmt::format( "{:g} {:g} {:g}", vValue.x, vValue.y, vValue.z );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
@@ -669,7 +671,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 					if ( data[eScene]->nFPSDropCounter > s_fMinDynamicFPSMeasurePeriods )
 					{
 						csSystem << CC_RED << "FPS Too Low!!!" << endl;
-						csSystem << CC_RED << StrFmt("FPS = %g, but minimal allowed = %g", fFPS, s_fMinDynamicFPS ) << endl;
+						csSystem << CC_RED << fmt::format("FPS = {:g}, but minimal allowed = {:g}", fFPS, s_fMinDynamicFPS ) << endl;
 						data[eScene]->nFPSDropCounter = 0;
 					}
 				}
@@ -938,7 +940,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	//
 	SYSTEMTIME systime;
 	GetLocalTime( &systime );
-	const std::string szFileName = StrFmt( "screenshots\\mapshot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga",
+	const std::string szFileName = fmt::format( "screenshots\\mapshot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
 		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
 		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
 	//

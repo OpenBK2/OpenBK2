@@ -3,6 +3,8 @@
 #include "LinkObject.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
 
+#include <fmt/format.h>
+
 SLinkObjData * SLinkObjDataAutoMagic::pLinkObjData = 0;
 SLinkObjDataAutoMagic magic;
 
@@ -117,7 +119,7 @@ void CLinkObject::ClearLinks()
 CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
 { 
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
-	NI_ASSERT( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end(), StrFmt( "Wrong unique id (%d)", nUniqueID ) );
+	NI_ASSERT( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end(), fmt::format( "Wrong unique id ({})", nUniqueID ) );
 	det_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
 	return pos == SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end() ? 0 : pos->second;
 }

@@ -14,6 +14,8 @@
 #include <vector>
 #include <string>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** random generator
@@ -49,8 +51,9 @@ namespace NRandom
 #ifndef _FINALRELEASE
 		if ( s_bLogRandomCalls )
 		{
+			const auto message = fmt::format("RandomCall {}", nRandomCalls);
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 2, 
-				StrFmt( "RandomCall %i", nRandomCalls ) );
+				 message.c_str());
 			DebugTrace( "RandomCall %i", nRandomCalls );
 			++nRandomCalls;
 		}

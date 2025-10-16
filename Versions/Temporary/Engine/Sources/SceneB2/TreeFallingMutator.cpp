@@ -5,6 +5,8 @@
 #include "Misc/Win32Random.h"
 #include "Scene.h"
 
+#include <fmt/format.h>
+
 void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,
 																 const std::vector<std::string> &leafNames, int _nEffectID, const CVec3 &vPos,
 																 float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart )
@@ -15,7 +17,7 @@ void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir
 	{
 		leafBones.emplace_back();
 		leafBones.back().nBoneIndex = pGetBone->GetBoneIndex( it->c_str() );
-		NI_ASSERT( leafBones.back().nBoneIndex != -1, StrFmt( "Wrong bone name: %s", it->c_str() ) );
+		NI_ASSERT( leafBones.back().nBoneIndex != -1, fmt::format( "Wrong bone name: {}", *it ) );
 		leafBones.back().fMaxRotAngle = NWin32Random::Random( -1.0f, 1.0f ) * FP_PI * 0.25f;
 		leafBones.back().fNormalRotAngle = fEndAngle + NWin32Random::Random( -1.0f, 1.0f ) * FP_PI * 0.125f;
 		if ( leafBones.back().fNormalRotAngle > FP_PI * 0.5f )

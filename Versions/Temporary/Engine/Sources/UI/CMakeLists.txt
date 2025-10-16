@@ -76,6 +76,6 @@ set_source_files_properties(
     UIML.cpp
     PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 add_export_header(UI)
-target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared)
+target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
 install(TARGETS UI DESTINATION bin)
 add_version_info(UI)

@@ -12,6 +12,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B80, CWindowScreen)
 
 
@@ -75,7 +77,7 @@ void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	for ( std::vector<NDb::SCommandSequienceEntry>::const_iterator it = pDesc->commandSequiences.begin();
 				it != pDesc->commandSequiences.end(); ++it )
 	{
-		NI_ASSERT( commandSequiences.find( it->szName ) == commandSequiences.end(), StrFmt( "duplicate reaction name \"%s\"", it->szName.c_str() ) );
+		NI_ASSERT( commandSequiences.find( it->szName ) == commandSequiences.end(), fmt::format( "duplicate reaction name \"{}\"", it->szName ) );
 		commandSequiences[it->szName] = it->sequence;
 	}
 }
@@ -443,7 +445,7 @@ void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq, IWind
 		else
 		{
 			CCommandSequiences::const_iterator cs = commandSequiences.find( szCmdSeq );
-			NI_ASSERT( cs != commandSequiences.end(), StrFmt( "unknown commad sequience number %s", szCmdSeq.c_str() ) );
+			NI_ASSERT( cs != commandSequiences.end(), fmt::format( "unknown commad sequience number {}", szCmdSeq ) );
 			if ( cs != commandSequiences.end() )
 			{
 				const NDb::SUIStateSequence &seq = cs->second;
@@ -463,7 +465,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		return;
 
 	CCommandSequiences::const_iterator cs = commandSequiences.find( szCmdSeq );
-	NI_ASSERT( cs != commandSequiences.end(), StrFmt( "unknown commad sequience number \"%s\"", szCmdSeq.c_str() ) );
+	NI_ASSERT( cs != commandSequiences.end(), fmt::format( "unknown commad sequience number \"{}\"", szCmdSeq ) );
 	
 	if ( bForward )
 	{
@@ -498,7 +500,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		{
 			if ( szCmdSeq == it->GetName() ) 
 			{
-				NI_ASSERT( !bFound, StrFmt( "duplicate sequience to reverse found in stateSequieces \"%s\"", szCmdSeq.c_str()) );
+				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in stateSequieces \"{}\"", szCmdSeq) );
 				it->Reverse();
 				it->SetContext( pContext );
 				StartEffectAndDeleteIfNeeded( it, stateSequiences, 0, this );
@@ -509,7 +511,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		{
 			if ( szCmdSeq == it->GetName() ) 
 			{
-				NI_ASSERT( !bFound, StrFmt( "duplicate sequience to reverse found in finishedAnimations \"%s\"", szCmdSeq.c_str() ) );
+				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in finishedAnimations \"{}\"", szCmdSeq ) );
 				it->Reverse();
 				it->SetContext( pContext );
 				it->Segment( 1, this ); // advance a little (to run all imidiate reactions)
@@ -522,18 +524,18 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 			else
 				++it;
 		}
-		NI_ASSERT( bFound, StrFmt( "sequience \"%s\" not found in reversable list", szCmdSeq.c_str() ) );
+		NI_ASSERT( bFound, fmt::format( "sequience \"{}\" not found in reversable list", szCmdSeq ) );
 	}
 }
 
 void CWindowScreen::SetWindowText( const std::string &szWindowName, const std::wstring &szText )
 {
 	CWindow *pChild = GetDeepChild( szWindowName );
-	NI_ASSERT( pChild != 0, StrFmt( "cannot find deeper child \"%s\"", szWindowName.c_str() ) );
+	NI_ASSERT( pChild != 0, fmt::format( "cannot find deeper child \"{}\"", szWindowName ) );
 	if ( pChild )
 	{
 		ITextView *pText = dynamic_cast<ITextView*>( pChild );
-		NI_ASSERT( pText != 0, StrFmt( "attemt to set text \"%s\" to window that doesn't have text \"%d\"", NStr::ToMBCS(szText.c_str()).c_str(), szWindowName.c_str() ) );
+		NI_ASSERT( pText != 0, fmt::format( "attemt to set text \"{}\" to window that doesn't have text \"{}\"", NStr::ToMBCS(szText.c_str()), szWindowName ) );
 		if ( pText )
 			pText->SetText( szText );
 	}

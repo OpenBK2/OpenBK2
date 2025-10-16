@@ -35,6 +35,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
 
 static int s_nInterruptTimeout = 5000;		// No segments for this time before timeout is called
@@ -120,7 +122,7 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 		"STATE",
 		"PlayerRemoved",
 		players[nPlayer].nClientID,
-		StrFmt( "slot=%d pre_active_mask=%08X post_active_mask=%08X wait_mask=%08X",
+		fmt::format( "slot={} pre_active_mask={:08X} post_active_mask={:08X} wait_mask={:08X}",
 			nPlayer, ulMaskBefore, wMask, wWaitMask ) );
 	Singleton<IScenarioTracker>()->RemovePlayer( nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
@@ -148,7 +150,7 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 		"DECISION",
 		"SchedulePlayerRemoval",
 		players[nPlayer].nClientID,
-		StrFmt( "slot=%d requested_seg=%d sim_remove_seg=%d queued_seg=%d prev_seg=%d",
+		fmt::format( "slot={} requested_seg={} sim_remove_seg={} queued_seg={} prev_seg={}",
 			nPlayer, nSegment, nSimulationRemovalSegment, playerRemovalSegments[nPlayer], nCurrent ) );
 
 	// Late packet fallback: apply immediately if this segment has already passed locally.
@@ -233,7 +235,7 @@ void CMPTransceiver::ApplyScheduledPlayerRemovals()
 				"STATE",
 				"ApplyScheduledPlayerRemovals",
 				players[i].nClientID,
-				StrFmt( "slot=%d target_seg=%d apply_seg=%d", i, nSegment, nCommonSegment ) );
+				fmt::format( "slot={} target_seg={} apply_seg={}", i, nSegment, nCommonSegment ) );
 			PlayerRemoved( i );
 			playerRemovalSegments[i] = -1;
 		}
@@ -324,7 +326,7 @@ void CMPTransceiver::FinalizeSegmentPack()
 		"TX",
 		"CAISegmentFinishedPacket",
 		players[nMyLogicID].nClientID,
-		StrFmt( "segment=%d checksum=%u cmd_count=%d", pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
+		fmt::format( "segment={} checksum={} cmd_count={}", pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
 	aiCommandsToSend.clear();
 	pClient->SendGamePacket( pPacket, true );
 }
@@ -353,7 +355,7 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 		"RX",
 		"CAISegmentFinishedPacket",
 		pPacket->nClientID,
-		StrFmt( "from_slot=%d segment=%d checksum=%u cmd_count=%d", nPlayer, pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
+		fmt::format( "from_slot={} segment={} checksum={} cmd_count={}", nPlayer, pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
 	int nPlayerSegment = pPacket->nSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
 	if ( IsPlayerWaitedFor( nPlayer ) )
@@ -430,7 +432,7 @@ void CMPTransceiver::StopWaitingForPlayer( int nPlayer, int nDropSegment )
 		"STATE",
 		"PlayerStoppedWaiting",
 		players[nPlayer].nClientID,
-		StrFmt( "slot=%d drop_seg=%d pre_wait_mask=%08X post_wait_mask=%08X active_mask=%08X",
+		fmt::format( "slot={} drop_seg={} pre_wait_mask={:08X} post_wait_mask={:08X} active_mask={:08X}",
 			nPlayer, nDropSegment, ulWaitMaskBefore, wWaitMask, wMask ) );
 }
 
@@ -497,7 +499,7 @@ void CMPTransceiver::EndGame()
 void CMPTransceiver::LeaveOutOfSync()
 {
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "You were kicked because you were out of sync" ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, "You were kicked because you were out of sync" );
 	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "LeaveOutOfSync", players[nMyLogicID].nClientID, "async_detected=1" );
 	NGameX::MatchPacketTrace_SetFinalState( 0, 0, wWaitMask );
 	NGameX::MatchPacketTrace_Flush( "async" );
@@ -572,7 +574,8 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	pTimer->Pause( bOn, PAUSE_TYPE_MP_NO_SEGMENT_DATA );
 	if ( bOn )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, StrFmt( "WAIT(%d/%d)", segmFinished[nSegment], wWaitMask ) );
+		const auto message = fmt::format( "WAIT({}/{})", segmFinished[nSegment], wWaitMask );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str());
 		NTimer::STime curTime = pTimer->GetAbsTime();
 		if ( timeStartWaiting == 0 )
 			timeStartWaiting = curTime;
@@ -584,7 +587,7 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	}
 	else
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, StrFmt( "" ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, "" );
 		ReportLags( 0, false );
 		timeStartWaiting = 0;
 	}
@@ -618,7 +621,7 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 			continue;
 
 		std::string playerName = string_conversion::wstring_to_utf8(playerInfos[nPlayerIndex].wszName);
-		checksumsTxt += StrFmt("%d,\t\t%d,\t\t%s,\t\t%d,\t\t%d\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
+		checksumsTxt += fmt::format("{},\t\t{},\t\t{},\t\t{},\t\t{}\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
 	}
 	fprintf(fl, "%s", checksumsTxt.c_str());
 	fclose(fl);
@@ -647,7 +650,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	if ( nCommonSegment <= nLatency )
 		return false;
 
-	std::string szCheckSums = StrFmt( "Segment %d: ", nSegment );
+	std::string szCheckSums = fmt::format( "Segment {}: ", nSegment );
 	unsigned long nMyCheckSum = checkSums[nMyLogicID][nSegment];
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
@@ -655,7 +658,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 		if ( !IsPlayerWaitedFor( nPlayerIndex ) )
 			continue;
 
-		szCheckSums += StrFmt( "%d,", checkSums[nPlayerIndex][nSegment] );
+		szCheckSums += fmt::format( "{},", checkSums[nPlayerIndex][nSegment] );
 		if ( checkSums[nPlayerIndex][nSegment] != nMyCheckSum )
 			++nOutOfSyncs;
 	}
@@ -664,7 +667,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 		if ( NGlobal::GetVar( "save_on_async", 0 ) != 0 )
 		{
 			NSaveLoad::SSaveInfo info;
-			std::string szFilename = StrFmt( "async_%1d_%03d", nMyLogicID, nSegment );
+			std::string szFilename = fmt::format( "async_{:1d}_{:03d}", nMyLogicID, nSegment );
 			NMainLoop::Command( CreateICSave( szFilename ) );
 			info.Write( NSaveLoad::GetSavePath() + szFilename + NSaveLoad::INFO_FILE_EXTENSION, NStr::ToUnicode( szCheckSums ), false, false, false );
 			NGlobal::SetVar( "save_on_async", 0 );

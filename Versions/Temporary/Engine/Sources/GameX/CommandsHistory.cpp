@@ -17,6 +17,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 bool g_nSaveToSameSpace;
 
 START_REGISTER(CommandHistory)
@@ -47,7 +49,7 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 
 const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, const bool bRead )
 {
-	CFileStream streamMain( StrFmt( "%s%s%s", NSaveLoad::GetReplayPath().c_str(), szFileName.c_str(), NSaveLoad::REPLAY_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
+	CFileStream streamMain( fmt::format( "{}{}{}", NSaveLoad::GetReplayPath(), szFileName, NSaveLoad::REPLAY_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaverMain = CreateBinSaver( &streamMain, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaverMain ) )
 		return false;
@@ -196,7 +198,7 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 	{
 		if ( !pRes->LoadHistory( replay.szReplayName ) )
 		{
-			NI_ASSERT( false, StrFmt( "Cannot load replay from file \"%s\"", replay.szReplayName ) );
+			NI_ASSERT( false, fmt::format( "Cannot load replay from file \"{}\"", replay.szReplayName ) );
 			NGlobal::SetVar( "History.Playing", 0 );
 		}
 	}

@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #define DEF_WATER_PATCH_SIZE_X 6
 #define DEF_WATER_PATCH_SIZE_Y 6
 
@@ -1320,7 +1322,7 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 		if ( !(waterParams[i].szNoiseFileName.empty()) )
 		{
 			CFileStream noiseStream( NVFS::GetMainVFS(), waterParams[i].szNoiseFileName );
-			NI_ASSERT( noiseStream.IsOk(), StrFmt("Can't load water noise %s", waterParams[i].szNoiseFileName) );
+			NI_ASSERT( noiseStream.IsOk(), fmt::format("Can't load water noise {}", waterParams[i].szNoiseFileName) );
 			if ( noiseStream.IsOk() )
 				NImage::LoadTGAImage( noises[i], &noiseStream );
 			else

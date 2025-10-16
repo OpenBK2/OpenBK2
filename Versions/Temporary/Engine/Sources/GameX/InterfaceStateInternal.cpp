@@ -18,6 +18,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
 #define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
@@ -116,7 +118,7 @@ const CDBID &CCampaignState::GetDBID() const
 
 std::string CCampaignState::GetProfileVarAbbr( const std::string &szName ) const
 {
-	return StrFmt( "Campaign.%s.%s", dbidCampaign.ToString().c_str(), szName.c_str() );
+	return fmt::format( "Campaign.{}.{}", dbidCampaign.ToString(), szName );
 }
 
 int CCampaignState::GetProfileVar( const std::string &szName, const int nDefault ) const
@@ -245,7 +247,7 @@ const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const std::string &s
 		const NDb::SUIScreenEntry *pEntry = &(*it);
 		return pEntry;
 	}
-	NI_ASSERT( 0, StrFmt( "interface screen entry '%s' not found", szName.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "interface screen entry '{}' not found", szName ) );
 	return 0;
 }
 
@@ -258,7 +260,7 @@ const std::wstring& CInterfaceState::GetTextEntry( const std::string &szTextID )
 	{
 		return GET_TEXT_PRE( (*it)->,Text);
 	}
-	NI_ASSERT( 0, StrFmt( "text entry '%s' not found", szTextID.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "text entry '{}' not found", szTextID ) );
 	static std::wstring empty;
 	return empty;
 }
@@ -272,7 +274,7 @@ const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const std::string 
 	{
 		return it->pSound;
 	}
-	NI_ASSERT( 0, StrFmt( "interface sound entry '%s' not found", szName.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "interface sound entry '{}' not found", szName ) );
 	return 0;
 }
 
@@ -285,7 +287,7 @@ const NDb::STexture* CInterfaceState::GetTextureEntry( const std::string &szID )
 	{
 		return it->pTexture;
 	}
-	NI_ASSERT( 0, StrFmt( "texture entry '%s' not found", szID.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "texture entry '{}' not found", szID ) );
 	return 0;
 }
 
@@ -304,7 +306,7 @@ const std::wstring& CInterfaceState::GetMLTag( const std::wstring &wszName ) con
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(it->,Text) )
 			return GET_TEXT_PRE(it->,Text);
 	}
-	NI_ASSERT( 0, StrFmt( "Designers: custom ML tag '%s' not found", szName.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "Designers: custom ML tag '{}' not found", szName ) );
 	return empty;
 }
 
@@ -359,7 +361,7 @@ std::wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) co
 	if ( !pMapInfo )
 		return wszEmpty; 
 		
-	std::wstring wszSize = NStr::ToUnicode( StrFmt( "%dx%d", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
+	std::wstring wszSize = NStr::ToUnicode( fmt::format( "{}x{}", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
 	return wszSize;
 }
 
@@ -384,13 +386,13 @@ ICampaignState* CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
 void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty )
 {
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
-	NI_VERIFY( pCampaign, StrFmt( "Start single mission: campaign \"%s\" not found", dbidCampaign.ToString().c_str() ), return );
-	NI_VERIFY( nChapterNumber >= 0 && nChapterNumber < pCampaign->chapters.size(), StrFmt( "Start single mission: chapter number out of range" ), return );
+	NI_VERIFY( pCampaign, fmt::format( "Start single mission: campaign \"{}\" not found", dbidCampaign.ToString() ), return );
+	NI_VERIFY( nChapterNumber >= 0 && nChapterNumber < pCampaign->chapters.size(), "Start single mission: chapter number out of range", return );
 	const NDb::SChapter *pChapter = pCampaign->chapters[nChapterNumber];
-	NI_VERIFY( pChapter, StrFmt( "Start single mission: chapter not found" ), return );
-	NI_VERIFY( nMissionNumber >= 0 && nMissionNumber < pChapter->missionPath.size(), StrFmt( "Start single mission: mission number out of range" ), return );
+	NI_VERIFY( pChapter, "Start single mission: chapter not found", return );
+	NI_VERIFY( nMissionNumber >= 0 && nMissionNumber < pChapter->missionPath.size(), "Start single mission: mission number out of range", return );
 	const NDb::SMapInfo *pMission = pChapter->missionPath[nMissionNumber].pMap;
-	NI_VERIFY( pMission, StrFmt( "Start single mission: mission not found" ), return );
+	NI_VERIFY( pMission, "Start single mission: mission not found", return );
 
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 	
@@ -402,7 +404,8 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapte
 	NGlobal::RemoveVar( "Multiplayer.Host" );
 	NGlobal::RemoveVar( "Multiplayer.Client" );
 
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMission->GetDBID().ToString().c_str() ) );
+	const auto command = fmt::format( "{};normal", pMission->GetDBID().ToString() );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 
 NGScene::CScreenshotTexture* CInterfaceState::GetScreenShotTexture()
@@ -429,7 +432,7 @@ void CInterfaceState::WriteToMissionConsoleSelected( const std::wstring &wszText
 
 std::wstring CInterfaceState::GetMissionConsoleMLTag() const
 {
-	std::wstring wszText = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwMissionChatColor ) );
+	std::wstring wszText = NStr::ToUnicode( fmt::format( "<color=0x{:X}>", dwMissionChatColor ) );
 	return wszText;
 }
 
@@ -792,10 +795,10 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 		return NStr::ToInt( szMissionName );
 	//
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
-	NI_VERIFY( pCampaign, StrFmt( "Campaign \"%s\" not found", dbidCampaign.ToString().c_str() ), return 0 );
-	NI_VERIFY( nChapterIndex >= 0 && nChapterIndex < pCampaign->chapters.size(), StrFmt( "Chapter (%d) out of range (%d)", nChapterIndex, pCampaign->chapters.size() ), return 0 );
+	NI_VERIFY( pCampaign, fmt::format( "Campaign \"{}\" not found", dbidCampaign.ToString() ), return 0 );
+	NI_VERIFY( nChapterIndex >= 0 && nChapterIndex < pCampaign->chapters.size(), fmt::format( "Chapter ({}) out of range ({})", nChapterIndex, pCampaign->chapters.size() ), return 0 );
 	const NDb::SChapter *pChapter = pCampaign->chapters[nChapterIndex];
-	NI_VERIFY( pChapter, StrFmt( "Chapter %d empty", nChapterIndex ), return 0 );
+	NI_VERIFY( pChapter, fmt::format( "Chapter {} empty", nChapterIndex ), return 0 );
 	//
 	const CDBID dbidMission = szMissionName;
 	for ( int i = 0; i < pChapter->missionPath.size(); ++i )

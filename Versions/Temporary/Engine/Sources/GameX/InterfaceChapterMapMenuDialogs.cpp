@@ -9,6 +9,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int BASE_ID_3D = 30000;
 const int DELTA_ID_3D = 100;
 
@@ -127,12 +129,12 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 		pCountWnd->ShowWindow( data.nCount > 1 );
 	if ( data.nCount > 1 )
 	{
-		std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", data.nCount ) );
+		std::wstring wszCount = NStr::ToUnicode( std::to_string( data.nCount ) );
 		if ( pCountView )
 			pCountView->SetText( pCountView->GetDBText() + wszCount );
 	}
 	
-	std::wstring wszHP = NStr::ToUnicode( StrFmt( "%d", data.nHP ) );
+	std::wstring wszHP = NStr::ToUnicode( std::to_string( data.nHP ) );
 	if ( pHPView )
 		pHPView->SetText( pHPView->GetDBText() + wszHP );
 
@@ -149,10 +151,10 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 	bool bShowArmor = (data.armors.size() >= NUnitFullInfo::ES_ARMOR_COUNT);
 	if ( bShowArmor )
 	{
-		std::wstring wszArmorFront = NStr::ToUnicode( StrFmt( "%d", data.armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
-		std::wstring wszArmorSide = NStr::ToUnicode( StrFmt( "%d", data.armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
-		std::wstring wszArmorTop = NStr::ToUnicode( StrFmt( "%d", data.armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
-		std::wstring wszArmorBack = NStr::ToUnicode( StrFmt( "%d", data.armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
+		std::wstring wszArmorFront = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
+		std::wstring wszArmorSide = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
+		std::wstring wszArmorTop = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
+		std::wstring wszArmorBack = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
 		if ( pArmorFrontView )
 			pArmorFrontView->SetText( pArmorFrontView->GetDBText() + wszArmorFront );
 		if ( pArmorLeftView )
@@ -232,7 +234,7 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 			if ( !pVisObj )
 				pVisObj = pMember->pvisualObject;
 			object.pModel = NUnitFullInfo::GetModel( pVisObj, NDb::SEASON_SUMMER );
-			NI_ASSERT( object.pModel, StrFmt( "Designers: no model for object: %s", pStats->GetDBID().ToString() ) );
+			NI_ASSERT( object.pModel, fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
 			object.vPos = param.vPos;
 			object.vSize = param.vSize;
 			object.pAnim = NUnitFullInfo::FindAnimation( pMember ) ;
@@ -252,7 +254,7 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 				pVisObj = pStats->pvisualObject;
 		}
 		object.pModel = pStats ? NUnitFullInfo::GetModel( pVisObj, NDb::SEASON_SUMMER ) : 0;
-		NI_ASSERT( !pStats || object.pModel, StrFmt( "Designers: no model for object: %s", pStats->GetDBID().ToString() ) );
+		NI_ASSERT( !pStats || object.pModel, fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
 		object.vPos = param.vPos;
 		object.vSize = param.vSize;
 		data.objects3D.push_back( object );
@@ -271,7 +273,7 @@ void SChapterReinfBase::InitUnitInfoControls( IWindow *pBaseWnd )
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pBaseWnd->GetChild( StrFmt( "UnitWeapon%d", i ), true );
+			IWindow *pWnd = pBaseWnd->GetChild( fmt::format( "UnitWeapon{}", i ), true );
 			if ( !pWnd )
 				break;
 			weapons.push_back( SUnitWeapon() );
@@ -319,16 +321,16 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 			weapon.pIconWnd->SetTexture( weaponInfo.pWeapon ? weaponInfo.pWeapon->pWeaponTypeTexture : 0 );
 			weapon.pIconWnd->SetTooltip( wszTooltip );
 		}
-		std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", weaponInfo.nCount ) );
+		std::wstring wszCount = NStr::ToUnicode( std::to_string( weaponInfo.nCount ) );
 		if ( weapon.pCountView )
 			weapon.pCountView->SetText( weapon.pCountView->GetDBText() + wszCount );
-		std::wstring wszDamage = NStr::ToUnicode( StrFmt( "%d", weaponInfo.nDamage ) );
+		std::wstring wszDamage = NStr::ToUnicode( std::to_string( weaponInfo.nDamage ) );
 		if ( weapon.pDamageView )
 			weapon.pDamageView->SetText( weapon.pDamageView->GetDBText() + wszDamage );
-		std::wstring wszPenetration = NStr::ToUnicode( StrFmt( "%d", weaponInfo.nPenetration ) );
+		std::wstring wszPenetration = NStr::ToUnicode( std::to_string( weaponInfo.nPenetration ) );
 		if ( weapon.pPenetrationView )
 			weapon.pPenetrationView->SetText( weapon.pPenetrationView->GetDBText() + wszPenetration );
-		std::wstring wszAmmo = NStr::ToUnicode( StrFmt( "%d", weaponInfo.nAmmo ) );
+		std::wstring wszAmmo = NStr::ToUnicode( std::to_string( weaponInfo.nAmmo ) );
 		if ( weapon.pAmmoView )
 			weapon.pAmmoView->SetText( weapon.pAmmoView->GetDBText() + wszAmmo );
 	}
@@ -344,7 +346,7 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 	if ( pUnitSupplyView )
 	{
 		pUnitSupplyView->ShowWindow( bIsSupply );
-		pUnitSupplyView->SetText( pUnitSupplyView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", SUPPLIES_COUNT ) ) );
+		pUnitSupplyView->SetText( pUnitSupplyView->GetDBText() + NStr::ToUnicode( std::to_string(  SUPPLIES_COUNT ) ) );
 	}
 }
 
@@ -428,8 +430,8 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 		}
 		line.pUnit1 = new SUnit();
 		line.pUnit2 = new SUnit();
-		line.pUnit1->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel1", true ), StrFmt( "UnitBtnOld%d", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i) );
-		line.pUnit2->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel2", true ), StrFmt( "UnitBtnNew%d", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i + 1) );
+		line.pUnit1->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel1", true ), fmt::format( "UnitBtnOld{}", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i) );
+		line.pUnit2->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel2", true ), fmt::format( "UnitBtnNew{}", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i + 1) );
 		line.pUnit1->data.nCount = 0;
 		line.pUnit2->data.nCount = 0;
 		
@@ -553,12 +555,12 @@ void SChapterReinfComposition::InitControls( IWindow *_pBaseWnd )
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pCompositionPanel->GetChild( StrFmt( "Unit%d", i ), true );
+			IWindow *pWnd = pCompositionPanel->GetChild( fmt::format( "Unit{}", i ), true );
 			if ( !pWnd )
 				break;
 			units.push_back( new SUnit() );
 			SUnit *pUnit = units.back();
-			pUnit->InitControls( pWnd, StrFmt( "UnitBtn%d", i ), BASE_ID_3D + DELTA_ID_3D * i );
+			pUnit->InitControls( pWnd, fmt::format( "UnitBtn{}", i ), BASE_ID_3D + DELTA_ID_3D * i );
 		}
 	}
 

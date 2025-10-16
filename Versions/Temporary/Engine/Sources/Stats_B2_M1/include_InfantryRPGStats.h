@@ -14,7 +14,7 @@ virtual const SInfantryGun& GetGun( const int nUniqueID, const int nPlatform, co
 		return guns[nGunIdx];
 	else 
 	{
-		NI_ASSERT( false, StrFmt( "wrong gun index, %i", nGunIdx ) );
+		NI_ASSERT( false, fmt::format( "wrong gun index, {}", nGunIdx ) );
 		return guns[0];
 	}
 }

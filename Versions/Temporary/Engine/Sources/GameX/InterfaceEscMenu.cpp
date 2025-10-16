@@ -10,6 +10,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceEscMenu::CReactions
 
 bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
@@ -422,7 +424,8 @@ void CInterfaceEscMenu::DoRestartMission()
 		
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
+	const auto command = fmt::format( "{};normal", pMapInfo->GetDBID().ToString() );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 
 bool CInterfaceEscMenu::ProcessEvent( const SGameMessage &msg )

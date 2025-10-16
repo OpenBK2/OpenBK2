@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 CPlayerReinforcementArray theReinfArray;
@@ -173,7 +175,7 @@ const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb:
 	{
 		if ( eType == pConsts->typedTemplates[i].eType )
 		{
-			NI_ASSERT( pConsts->typedTemplates[i].pTemplate != 0, StrFmt( "Map Design Error: typed deploy template for reinforcement type %i is NULL", eType ) );
+			NI_ASSERT( pConsts->typedTemplates[i].pTemplate != 0, fmt::format( "Map Design Error: typed deploy template for reinforcement type {} is NULL", int( eType ) ) );
 			if ( pConsts->typedTemplates[i].pTemplate )
 			{
 				pTemplate = pConsts->typedTemplates[i].pTemplate;
@@ -186,7 +188,7 @@ const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb:
 	{
 		if ( eType == positionToDeploy.typedTemplates[i].eType )
 		{
-			NI_ASSERT( positionToDeploy.typedTemplates[i].pTemplate != 0, StrFmt( "Map Design Error: typed deploy template for reinforcement type %i is NULL", eType ) );
+			NI_ASSERT( positionToDeploy.typedTemplates[i].pTemplate != 0, fmt::format( "Map Design Error: typed deploy template for reinforcement type {} is NULL", int( eType ) ) );
 			if ( positionToDeploy.typedTemplates[i].pTemplate )
 			{
 				pTemplate = positionToDeploy.typedTemplates[i].pTemplate;
@@ -325,14 +327,14 @@ void CPlayerReinforcement::UpdateButtonsAfterCall( const NDb::EReinforcementType
 	UpdateReinfButtonState( false, timeReinfButtonEnable, 0.0f );
 }
 
-void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bOnWater, const CVec2 &vTarget )
-{
+void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bOnWater, const CVec2 &vTarget ) {
 	if ( !GetScenarioTracker() )
 		return;
 
 	if ( curTime < timeReinfButtonEnable )
 	{
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "Reinforcement cannot be called, wait %i seconds", (timeReinfButtonEnable - curTime) / 1000 + 1 ) );
+		const auto message = fmt::format( "Reinforcement cannot be called, wait {} seconds", (timeReinfButtonEnable - curTime) / 1000 + 1 );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 		return;
 	}
 	CInfos::iterator pos = reinforcementInfos.find( eType );
@@ -343,7 +345,8 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int
 		bool bAviaReinf = pReinf->IsAviation();
 		if ( !posPositions->second.second )
 		{
-			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "Point %i is disabled", nPointID) );
+			const auto message = fmt::format( "Point {} is disabled", nPointID);
+			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 			return;
 		}
 
@@ -368,8 +371,9 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int
 			const NDb::SReinforcement *pReinf = pos->second;
 			if ( pReinf->transports.size() == 0 )
 			{
-				CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "Reinforcement #%i has no transport ships.", eType ) );
-				NI_ASSERT( 0, StrFmt( "DESIGN(CHAPTER): Reinforcement \"%s\" is called from sea, but has no transports", NDb::GetResName(pReinf) ) );
+				const auto message = fmt::format( "Reinforcement #{} has no transport ships.", static_cast<int>(eType) );
+				CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
+				NI_ASSERT( 0, fmt::format( "DESIGN(CHAPTER): Reinforcement \"{}\" is called from sea, but has no transports", NDb::GetResName(pReinf) ) );
 				return;
 			}
 
@@ -378,10 +382,13 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int
 		}
 
 		UpdateButtonsAfterCall( eType );
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "Player %i called reinf #%i to point %i. %i calls left.", nPlayer, eType, nPointID, Singleton<IAIScenarioTracker>()->GetReinforcementCallsLeft( nPlayer ) + nMapReinforcementBonus ) );
+		const auto message = fmt::format( "Player {} called reinf #{} to point {}. {} calls left.", nPlayer, static_cast<int>(eType), nPointID, Singleton<IAIScenarioTracker>()->GetReinforcementCallsLeft( nPlayer ) + nMapReinforcementBonus );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 	}
-	else 
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "CallReinforcement: cannot call reinforcement type %i to point %i for player %i (no point or no reinforcement)", eType, nPointID, nPlayer ) );
+	else {
+		const auto message = fmt::format( "CallReinforcement: cannot call reinforcement type {} to point {} for player {} (no point or no reinforcement)", static_cast<int>(eType), nPointID, nPlayer );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
+	}
 }
 
 void CPlayerReinforcement::ShotSuperWeapon()

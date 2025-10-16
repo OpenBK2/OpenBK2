@@ -267,7 +267,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 	case NDb::ETET_ALL:
 		break;
 	default:
-		NI_ASSERT( false, StrFmt( "wrong edit line type %i", pInstance->eTextEntryType ) );
+		NI_ASSERT( false, fmt::format( "wrong edit line type {}", int( pInstance->eTextEntryType ) ) );
 		return false;
 	}
 	return true;

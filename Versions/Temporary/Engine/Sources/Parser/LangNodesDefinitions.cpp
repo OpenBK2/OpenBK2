@@ -8,6 +8,8 @@
 
 #include "Parser_export.h"
 
+#include <fmt/format.h>
+
 void yyerror_no_line( char *s, ... );
 
 namespace NLang
@@ -125,18 +127,18 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 			continue;
 
 		VERIFY_NOLINE( insideDefs.find( szDefName ) == insideDefs.end(), 
-			StrFmt( "%s(%d) error: type %s redifinition, see \n\t\t%s(%d):", 
-			pNM->insideDefs[szDefName]->GetFile().c_str(), pNM->insideDefs[szDefName]->GetLine(), szDefName.c_str(),
-			insideDefs[szDefName]->GetFile().c_str(), insideDefs[szDefName]->GetLine() ), return );
+			fmt::format( "{}({}) error: type {} redifinition, see \n\t\t{}({}):",
+			pNM->insideDefs[szDefName]->GetFile(), pNM->insideDefs[szDefName]->GetLine(), szDefName,
+			insideDefs[szDefName]->GetFile(), insideDefs[szDefName]->GetLine() ), return );
 
 		CDynamicCast<CEnumNode> pEnum = pNode;
 		if ( pEnum )
 		{
 			CEnumEntryNode *pWithEqualEntries = pEnum->FindAnyWithCrossedEntries( this );
 			WARNING_NOLINE(	pWithEqualEntries == 0,
-				StrFmt( "%s(%d) warning: enum entry \"%s\" redifinition, enum %s, see\n\t\t%s(%d):",
-				pEnum->GetFile().c_str(), pEnum->GetLine(), pWithEqualEntries->GetName().c_str(), pEnum->GetName().c_str(),
-				pWithEqualEntries->GetFile().c_str(), pWithEqualEntries->GetLine() ) );
+				fmt::format( "{}({}) warning: enum entry \"{}\" redifinition, enum {}, see\n\t\t{}({}):",
+				pEnum->GetFile(), pEnum->GetLine(), pWithEqualEntries->GetName(), pEnum->GetName(),
+				pWithEqualEntries->GetFile(), pWithEqualEntries->GetLine() ) );
 		}
 
 		insideDefs[iter->first] = iter->second;
@@ -152,10 +154,10 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 			continue;
 
 		VERIFY_NOLINE( insideAttrs.find( szAttrrDefName ) == insideAttrs.end(), 
-			StrFmt( "%s(%d): type %s redifinition, see\n\t\t %s(%d)", 
-			pNM->insideAttrs[szAttrrDefName]->GetFile().c_str(), pNM->insideAttrs[szAttrrDefName]->GetLine(),
-			szAttrrDefName.c_str(),
-			insideAttrs[szAttrrDefName]->GetFile().c_str(), insideAttrs[szAttrrDefName]->GetLine() ),
+			fmt::format( "{}({}): type {} redifinition, see\n\t\t {}({})",
+			pNM->insideAttrs[szAttrrDefName]->GetFile(), pNM->insideAttrs[szAttrrDefName]->GetLine(),
+			szAttrrDefName,
+			insideAttrs[szAttrrDefName]->GetFile(), insideAttrs[szAttrrDefName]->GetLine() ),
 			return );
 
 		insideAttrs[iter->first] = iter->second;
@@ -177,9 +179,9 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 			CTypeNode *pOurType = forwList.front();
 
 			VERIFY_NOLINE( IsEqualDefs( pType, pOurType ),
-											StrFmt( "%s(%d): type %s redifinition, see %s(%d)",
-											pType->GetFile().c_str(), pType->GetLine(), pType->GetName().c_str(), 
-											pOurType->GetFile().c_str(), pOurType->GetLine() ),
+											fmt::format( "{}({}): type {} redifinition, see {}({})",
+											pType->GetFile(), pType->GetLine(), pType->GetName(),
+											pOurType->GetFile(), pOurType->GetLine() ),
 											return );
 		}
 
@@ -211,15 +213,15 @@ void CNamespace::ResolveForwards()
 		CLangNode *pRawRealType = FindInsideDef( szName );
 
 		VERIFY_NOLINE( pRawRealType != 0,
-			StrFmt( "%s(%d) error: can't find corresponding type for forward %s",
-			pForwardNode->GetFile().c_str(), pForwardNode->GetLine(), szName.c_str() ), return );
+			fmt::format( "{}({}) error: can't find corresponding type for forward {}",
+			pForwardNode->GetFile(), pForwardNode->GetLine(), szName ), return );
 
 		CTypeNode *pForward = forwards.front();
 		CDynamicCast<CTypeNode> pRealType = pRawRealType;
 		VERIFY_NOLINE( pRealType != 0,
-			StrFmt( "%s(%d) error: %s type redifinition, see %s(%d)", 
-			pForwardNode->GetFile().c_str(), pForwardNode->GetLine(), szName.c_str(),
-			pRealType->GetFile().c_str(), pRealType->GetLine() ),
+			fmt::format( "{}({}) error: {} type redifinition, see {}({})",
+			pForwardNode->GetFile(), pForwardNode->GetLine(), szName,
+			pRealType->GetFile(), pRealType->GetLine() ),
 			return );
 
 		for ( std::list< CObj<CTypeNode> >::iterator iterList = forwards.begin(); iterList != forwards.end(); ++iterList )
@@ -297,7 +299,7 @@ bool CTypeDefNode::IsPointer() const
 	{
 		bool bRefPointer = pType->IsPointer();
 
-		VERIFY_NOLINE( !(bPointer && bRefPointer), StrFmt( "%s(%d): pointer to pointer", GetFile().c_str(), GetLine() ), return true );
+		VERIFY_NOLINE( !(bPointer && bRefPointer), fmt::format( "{}({}): pointer to pointer", GetFile(), GetLine() ), return true );
 		return bPointer || bRefPointer;
 	}
 }

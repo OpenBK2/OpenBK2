@@ -9,6 +9,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int SUPPLIES_COUNT = 1000; // CRAP - magic number
 const int SUPPLIES_COUNT_INFINITE = 1000000;
 
@@ -81,7 +83,7 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 	{
 		for ( int i = 0; ; ++i )
 		{
-			IWindow *pItem = pWeaponsWnd->GetChild( StrFmt( "WeaponBrief%02d", i + 1 ), true );
+			IWindow *pItem = pWeaponsWnd->GetChild( fmt::format( "WeaponBrief{:02d}", i + 1 ), true );
 			if ( !pItem )
 				break;
 
@@ -94,11 +96,11 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 			weaponItem.pPenetration = GetChildChecked<ITextView>( pItem, "WeaponBriefPenetration", true );
 			weaponItem.pAmmo = GetChildChecked<ITextView>( pItem, "WeaponBriefAmmo", true );
 			weaponItem.pCount = GetChildChecked<ITextView>( pItem, "WeaponBriefCount", true );
-			weaponItem.pIconBtn = dynamic_cast<IButton*>( pItem->GetChild( StrFmt( "WeaponBtn%d", i ), true ) );
+			weaponItem.pIconBtn = dynamic_cast<IButton*>( pItem->GetChild( fmt::format( "WeaponBtn{}", i ), true ) );
 			if ( !weaponItem.pIconBtn )
 			{
 				weaponItem.pIconBtn = GetChildChecked<IButton>( pItem, "WeaponBtn", true );
-				weaponItem.pIconBtn->SetName( StrFmt( "%s%d", weaponItem.pIconBtn->GetName().c_str(), i ) );
+				weaponItem.pIconBtn->SetName( fmt::format( "{}{}", weaponItem.pIconBtn->GetName(), i ) );
 			}
 			weaponItem.pIcon = GetChildChecked<IWindow>( pItem, "WeaponIcon", true );
 		}
@@ -112,7 +114,7 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pMembersWnd->GetChild( StrFmt( "Member%02d", i ), true );
+			IWindow *pWnd = pMembersWnd->GetChild( fmt::format( "Member{:02d}", i ), true );
 			IButton *pBtn = dynamic_cast<IButton*>( pWnd );
 			if ( !pBtn )
 				break;
@@ -686,10 +688,10 @@ void CMissionUnitFullInfo::ShowArmor()
 	if ( pArmorsWnd )
 		pArmorsWnd->ShowWindow( true );
 		
-	std::wstring wszArmorFront = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
-	std::wstring wszArmorSide = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
-	std::wstring wszArmorBack = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
-	std::wstring wszArmorTop = NStr::ToUnicode( StrFmt( "%d", armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
+	std::wstring wszArmorFront = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
+	std::wstring wszArmorSide = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
+	std::wstring wszArmorBack = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
+	std::wstring wszArmorTop = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
 	
 	if ( pArmorFrontView )
 	{
@@ -741,10 +743,10 @@ void CMissionUnitFullInfo::ShowWeapons()
 		if ( weaponItems[i].pItem )
 			weaponItems[i].pItem->ShowWindow( true );
 			
-		std::wstring wszDamage = NStr::ToUnicode( StrFmt( "%d", weapons[i].nDamage ) );
-		std::wstring wszPenetration = NStr::ToUnicode( StrFmt( "%d", weapons[i].nPenetration ) );
-		std::wstring wszAmmo = NStr::ToUnicode( StrFmt( "%d/%d", weapons[i].nAmmo, weapons[i].nMaxAmmo ) );
-		std::wstring wszCount = NStr::ToUnicode( StrFmt( "%d", weapons[i].nCount ) );
+		std::wstring wszDamage = NStr::ToUnicode( std::to_string(  weapons[i].nDamage ) );
+		std::wstring wszPenetration = NStr::ToUnicode( std::to_string(  weapons[i].nPenetration ) );
+		std::wstring wszAmmo = NStr::ToUnicode( fmt::format( "{}/{}", weapons[i].nAmmo, weapons[i].nMaxAmmo ) );
+		std::wstring wszCount = NStr::ToUnicode( std::to_string(  weapons[i].nCount ) );
 		
 		if ( weaponItems[i].pDamage )
 			weaponItems[i].pDamage->SetText( weaponItems[i].pDamage->GetDBText() + wszDamage );
@@ -806,9 +808,9 @@ void CMissionUnitFullInfo::ShowResources()
 	}
 	else
 	{
-		std::wstring wszValue = NStr::ToUnicode( StrFmt( "%d", nMaxSupplies ) );
+		std::wstring wszValue = NStr::ToUnicode( std::to_string(  nMaxSupplies ) );
 		if ( nCurSupplies >= 0 )
-			wszValue = NStr::ToUnicode( StrFmt( "%d", nCurSupplies ) ) + L"/" + wszValue;
+			wszValue = NStr::ToUnicode( std::to_string(  nCurSupplies ) ) + L"/" + wszValue;
 		if ( pSuppliesCountView )
 			pSuppliesCountView->SetText( pSuppliesCountView->GetDBText() + wszValue );
 	}
@@ -902,7 +904,7 @@ void CMissionUnitFullInfo::ShowHP()
 
 //		float fHP = hps[0].fFraction * hps[0].fMax;
 //		int nHP = fHP > 1.0f ? fHP : ( fHP != 0.0f ? 1.0f : 0.0f );
-		std::wstring wszValue = NStr::ToUnicode( StrFmt( "%d", hps[0].nHP ) );
+		std::wstring wszValue = NStr::ToUnicode( std::to_string(  hps[0].nHP ) );
 		if ( pHPView )
 		{
 			pHPView->SetText( pHPView->GetDBText() + wszValue );

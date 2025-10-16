@@ -6,6 +6,8 @@
 #include "Soldier.h"
 #include "GeneralAirForce.h"
 
+#include <fmt/format.h>
+
 //
 // Contains CGeneral functionality related to calling in reinforcements
 //
@@ -172,7 +174,7 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 
 	//Check validity of values, and reset to least harmful
 	NI_VERIFY( eUType >= 0 && eUType < NDb::DB_RPG_TYPE_COUNT, 
-		StrFmt("Invalid unit type %d", eUType ), eUType = NDb::DB_RPG_TYPE_SOLDIER );
+		fmt::format("Invalid unit type {}", int( eUType ) ), eUType = NDb::DB_RPG_TYPE_SOLDIER );
 
 	if ( eRType < 0 || eRType >= _RT_NONE )
 		eRType = NReinforcement::GetReinforcementType( eUType );

@@ -4,6 +4,8 @@
 #include "ActionsRemap.h"
 #include "Misc/HashFuncs.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 static const int actionCommandToUserAction[][2] = 
@@ -186,7 +188,7 @@ NDb::EUserAction GetActionByCommand( EActionCommand actionCommand )
 NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
 	const int nIndex = (int)specialAbility;
-	NI_ASSERT( (nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT), StrFmt( "Unknown ability index: %d", nIndex ) );
+	NI_ASSERT( (nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT), fmt::format( "Unknown ability index: {}", nIndex ) );
 	return ( nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT ) ? mapAbilityToAction[nIndex] : NDb::USER_ACTION_UNKNOWN;
 }
 

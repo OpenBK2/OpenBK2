@@ -17,6 +17,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 const int nMAX_PLAYERS = 8;
@@ -98,7 +100,7 @@ void CInterfaceMPCustomGame::SetFiltersData()
 		pNumPlayersBox->AddItem( pData );
 		for ( int i = 1; i <= 4; ++i )
 		{
-			std::wstring wszPlayers = NStr::ToUnicode( StrFmt( "%d", i * 2 ) );
+			std::wstring wszPlayers = NStr::ToUnicode( std::to_string( i * 2 ) );
 			pData = new CTextData( wszPlayers );
 			pNumPlayersBox->AddItem( pData );
 		}	
@@ -166,10 +168,10 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	ITextView *pTxt = GetChildChecked<ITextView> ( pItem, "ItemGameType", true );		
 	//NMPSetData::SetGameType( pTxt, info.pMPMap->pMap, 0/*info.nGameType*/ );
 
-	NMPSetData::SetChildText( pItem, "ItemMapSize", NStr::ToUnicode( StrFmt( "%d x %d", info.nSizeX, info.nSizeY ) ) );		
+	NMPSetData::SetChildText( pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );
 
-	NMPSetData::SetChildText( pItem, "ItemNumPlayers", NStr::ToUnicode( StrFmt( "%d / %d", info.nPlayers, info.nPlayersMax ) ) );		
-	//NMPSetData::SetChildText( pItem, "ItemPing", NStr::ToUnicode( StrFmt( "%d", info.nPing ) ) );	
+	NMPSetData::SetChildText( pItem, "ItemNumPlayers", NStr::ToUnicode( fmt::format( "{} / {}", info.nPlayers, info.nPlayersMax ) ) );
+	//NMPSetData::SetChildText( pItem, "ItemPing", NStr::ToUnicode( std::to_string(  info.nPing ) ) );
 
 	CPtr<IWindow> pPassword = GetChildChecked<IWindow>( pItem, "ItemPassword", true );
 	pPassword->ShowWindow( info.bPwdReq );

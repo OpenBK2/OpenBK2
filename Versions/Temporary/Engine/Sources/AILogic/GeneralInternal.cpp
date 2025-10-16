@@ -69,7 +69,7 @@ void CGeneral::EnumWorkers( const enum EForceType eType, IWorkerEnumerator *pEnu
 		break;
 
 	default:
-		NI_ASSERT( false, StrFmt( "wrong type asked from commander %d", eType ) );
+		NI_ASSERT( false, fmt::format( "wrong type asked from commander {}", int( eType ) ) );
 		break;
 	}
 }

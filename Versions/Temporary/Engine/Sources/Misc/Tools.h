@@ -273,7 +273,6 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 }
 
 MISC_EXPORT void PORT_STDCALL DbgTrc( const char *pszFormat, ... );
-MISC_EXPORT const char * PORT_STDCALL StrFmt( const char *pszFormat, ... );
 
 #ifndef _FINALRELEASE
 #define DebugTrace DbgTrc

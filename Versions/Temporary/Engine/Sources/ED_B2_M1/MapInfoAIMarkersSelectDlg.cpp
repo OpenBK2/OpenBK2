@@ -56,7 +56,7 @@ BOOL CMapInfoAIMarkersSelectDlg::OnInitDialog()
 
 	for ( int i = 0; i < nPlayersNumber; ++i )
 	{
-		int nItem = cbPlayer.InsertString( 0, StrFmt( "%d", i+1 ) );
+		int nItem = cbPlayer.InsertString( 0, std::to_string(  i+1 ) );
 		cbPlayer.SetItemData( nItem, i );	
 	}
 	if ( nPlayersNumber > 0 )
@@ -112,7 +112,7 @@ void CMapInfoAIMarkersSelectDlg::SetDD()
 	//
 	btnChkSelection.SetCheck( pMarkerSettings->bForSelectionOnly ? 1 : 0 );
 	//
-	cbPlayer.SelectString( 0, StrFmt( "%d", pMarkerSettings->nPlayer ) );
+	cbPlayer.SelectString( 0, std::to_string(  pMarkerSettings->nPlayer ) );
 	//
 }
 

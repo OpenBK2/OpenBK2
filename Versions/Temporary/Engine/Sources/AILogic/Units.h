@@ -121,7 +121,7 @@ public:
 
 	const int GetNUnitsOfType( const int nParty, const int nType )
 	{
-		NI_ASSERT( nParty >= 0 && nParty < 3, StrFmt( "Wrong number of party (%d)", nParty ) );
+		NI_ASSERT( nParty >= 0 && nParty < 3, fmt::format( "Wrong number of party ({})", nParty ) );
 		return nUnitsOfType[nParty][nType];
 	}
 

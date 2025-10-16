@@ -57,14 +57,14 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 	{
 		for ( int i = 0; ; ++i )
 		{
-			IWindow *pWnd = pBranchesBlock->GetChild( StrFmt( "Branch%02d", i + 1 ), true );
+			IWindow *pWnd = pBranchesBlock->GetChild( fmt::format( "Branch{:02d}", i + 1 ), true );
 			if ( !pWnd )
 				break;
 				
 			SVisSlot visSlot;
 			visSlot.pWnd = pWnd;
 			visSlot.pBtn = GetChildChecked<IButton>( pWnd, "BranchBtn", true );
-			visSlot.szBtnName = StrFmt( "BranchBtn%02d", i + 1 );
+			visSlot.szBtnName = fmt::format( "BranchBtn{:02d}", i + 1 );
 			if ( visSlot.pBtn )
 				visSlot.pBtn->SetName( visSlot.szBtnName );
 			visSlot.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );

@@ -7,6 +7,8 @@
 #include "Sound/DBSound.h"
 #include "System/Commands.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 int g_nProjectileFallSoundMaxTime = 2000;
@@ -227,7 +229,7 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitAir;
 			break;
 		default:
-			NI_VERIFY( false, StrFmt( "Invalid hit type %d", eHitType), return );
+			NI_VERIFY( false, fmt::format( "Invalid hit type {}", int( eHitType )), return );
 	}
 
 	if ( pComplexEffect != 0 )

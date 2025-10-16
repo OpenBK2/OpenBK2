@@ -220,6 +220,6 @@ set(SOURCES
 add_library(AILogic SHARED ${SOURCES})
 add_export_header(AILogic)
 add_stdafx_pch(AILogic)
-target_link_libraries(AILogic PRIVATE B2_M1_Terrain B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script Stats_B2_M1 System zlib winapi)
+target_link_libraries(AILogic PRIVATE B2_M1_Terrain B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script Stats_B2_M1 System zlib winapi fmt::fmt-header-only)
 install(TARGETS AILogic DESTINATION bin)
 add_version_info(AILogic)

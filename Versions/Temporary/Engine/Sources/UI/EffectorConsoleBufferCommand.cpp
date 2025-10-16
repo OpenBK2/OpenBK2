@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "./effectorconsolebuffercommand.h"
 
+#include <fmt/format.h>
 
 REGISTER_SAVELOAD_CLASS( UI, 0x110953C0, CEffectorConsoleBufferCommand )
 
@@ -35,9 +36,9 @@ const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, struct ISc
 	// check IWindow that is passed as a param for string.
 	// then pass this string to console buffer
 	IWindow * pWnd = pScreen->GetElement( szEditBoxName, true );
-	NI_ASSERT( pWnd != 0, StrFmt( "cannot find window \"%s\" to ask string", szEditBoxName.c_str() ) );
+	NI_ASSERT( pWnd != 0, fmt::format( "cannot find window \"{}\" to ask string", szEditBoxName ) );
 	IEditLine *pEdit = dynamic_cast<IEditLine*>( pWnd );
-	NI_ASSERT( pEdit != 0, StrFmt( "it is not edit line \"%s\" ", szEditBoxName.c_str() ) );
+	NI_ASSERT( pEdit != 0, fmt::format( "it is not edit line \"{}\" ", szEditBoxName ) );
 
 	WriteToPipe( PIPE_CONSOLE_CMDS, pEdit->GetText() );
 	pEdit->SetText( L"" );

@@ -8,6 +8,8 @@
 #include "System/FileUtils.h"
 #include "System/Commands.h"
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 namespace NObjectIDAllocator
@@ -56,8 +58,9 @@ int AllocateNewObjectID( const std::string &szClassTypeName )
 	char buffer[1024];
 	GetPrivateProfileString( "ClassTypeIDs", szClassTypeName.c_str(), "1000000", buffer, 1024, szFileName.c_str() );
 	const int nObjectRecordID = buffer[0] == 0 ? 1000000 : NStr::ToInt( buffer );
+	const auto sObjectRecordID = std::to_string(nObjectRecordID + 1);
 	WritePrivateProfileString( "ClassTypeIDs", szClassTypeName.c_str(), 
-		                         StrFmt("%d", nObjectRecordID + 1), szFileName.c_str() );
+		                         sObjectRecordID.c_str(), szFileName.c_str() );
 	return nObjectRecordID;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	

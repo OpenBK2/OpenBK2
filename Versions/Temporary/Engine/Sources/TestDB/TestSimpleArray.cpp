@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 
@@ -64,24 +66,24 @@ static const SSimpleArrayTestData testdata[] =
 bool CheckMetaGetForArray( NDb::IObjMan *pBind, const string &szFieldName, const int nPos, const CVariant &var )
 {
 	CVariant value;
-	const string szFullFieldName = StrFmt( "%s.[%d]", szFieldName.c_str(), nPos );
-	NI_VERIFY( pBind->GetValue( szFullFieldName, &value ) != false, StrFmt("Get %d value from array failed!", nPos), return false );
-	NI_VERIFY( var == value, StrFmt("Values mismatch for %d element!", nPos), return false );
+	const string szFullFieldName = fmt::format( "{}.[{}]", szFieldName, nPos );
+	NI_VERIFY( pBind->GetValue( szFullFieldName, &value ) != false, fmt::format("Get {} value from array failed!", nPos), return false );
+	NI_VERIFY( var == value, fmt::format("Values mismatch for {} element!", nPos), return false );
 	return true;
 }
 
 bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldName, const int nPos, const CVariant &var )
 {
 	CVariant value;
-	const string szFullFieldName = StrFmt( "%s.[%d]", szFieldName.c_str(), nPos );
-	NI_VERIFY( pBind->SetValue( szFullFieldName, var ) != false, StrFmt("Set %d value for array failed!", nPos), return false );
+	const string szFullFieldName = fmt::format( "{}.[{}]", szFieldName, nPos );
+	NI_VERIFY( pBind->SetValue( szFullFieldName, var ) != false, fmt::format("Set {} value for array failed!", nPos), return false );
 	NI_VERIFY( CheckMetaGetForArray( pBind, szFieldName, nPos, var ) != false, "Failed to check Meta Get for array", return false );
 	return true;
 }
 
 bool TestSimpleArrayInsertRemove( NDb::IObjMan *pBind, const SSimpleArrayTestData *pData )
 {
-	const string szTestName = StrFmt( "Simple array \"%s\"", pData->szFieldName.c_str() );
+	const string szTestName = fmt::format( "Simple array \"{}\"", pData->szFieldName );
 	NTest::CMeasureTimer timer( szTestName.c_str() );
 	CVariant value;
 	// insert at the begining (2 elements)

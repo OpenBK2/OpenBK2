@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #pragma pack ( 1 )
 struct SColor24 
 { 
@@ -110,7 +112,7 @@ public:
 				}
 				break;
 			default:
-				NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", nColorMapEntrySize) );
+				NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", nColorMapEntrySize) );
 		}
 	}
 	//
@@ -144,7 +146,7 @@ public:
 				pStream->Read( &(palette[0]), sizeof(SColor24) * palette.size() );
 				break;
 			default:
-				NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", nColorMapEntrySize) );
+				NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", nColorMapEntrySize) );
 		}
 	}
 	//
@@ -178,7 +180,7 @@ public:
 				}
 				break;
 			default:
-				NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", nColorMapEntrySize) );
+				NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", nColorMapEntrySize) );
 		}
 	}
 	//
@@ -212,7 +214,7 @@ public:
 				}
 				break;
 			default:
-				NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", nColorMapEntrySize) );
+				NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", nColorMapEntrySize) );
 		}
 	}
 	//

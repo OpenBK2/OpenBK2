@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #define DEF_RIVER_SAMPLES_PER_PATCH 4
 //
 #define DEF_RIVER_HIGH_BORDER_RAND 0.5f
@@ -700,7 +702,7 @@ void CTerraGen::RemoveRiver( const int nVSOID )
 	}
 	if ( itRiver == terrainInfo.rivers.end() )
 	{
-		NI_ASSERT( itRiver != terrainInfo.rivers.end(), StrFmt("Removed river is not exists: %d", nVSOID) );
+		NI_ASSERT( itRiver != terrainInfo.rivers.end(), fmt::format("Removed river is not exists: {}", nVSOID) );
 		return;
 	}
 
@@ -723,7 +725,7 @@ void CTerraGen::RemoveRiverInfo( const int nVSOID )
 			return;
 		}
 	}
-	NI_ASSERT( false, StrFmt("Couldn't find info for river with ID=%d", nVSOID) );
+	NI_ASSERT( false, fmt::format("Couldn't find info for river with ID={}", nVSOID) );
 }
 
 void CTerraGen::RemoveRiverGfxInfo( const int nVSOID )
@@ -736,7 +738,7 @@ void CTerraGen::RemoveRiverGfxInfo( const int nVSOID )
 			return;
 		}
 	}
-	NI_ASSERT( false, StrFmt( "Couldn't find GFX info for river with ID=%d", nVSOID ) );
+	NI_ASSERT( false, fmt::format( "Couldn't find GFX info for river with ID={}", nVSOID ) );
 }
 
 void CTerraGen::AddAllRivers()

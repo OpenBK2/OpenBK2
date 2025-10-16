@@ -4,6 +4,8 @@
 
 #include "port/stdcall.h"
 
+#include <string>
+
 // native John Robbins's BSU functions
 
 // our wrapper for BSU - smart asserts
@@ -41,16 +43,19 @@ namespace NBSU
 if ( !(x) )                                                           \
 {                                                                     \
 	static bool bIgnore;                                                \
+	/* the text is a literal from most callers and the std::string that */ \
+	/* fmt::format returns from the rest; bind it once so both work     */ \
+	const std::string szAssertText( user_text );                        \
 	if ( !bIgnore )                                                     \
 	{                                                                   \
 		if ( IsDebuggerPresent() )                                        \
 		{																																	\
-			OutputDebugString( user_text );																	\
+			OutputDebugString( szAssertText.c_str() );																	\
 			__debugbreak();                                                 \
 		}																																	\
 		else                                                              \
 		{                                                                 \
-			switch( NBSU::ReportAssert(msg, user_text, __FILE__, __LINE__) )\
+			switch( NBSU::ReportAssert(msg, szAssertText.c_str(), __FILE__, __LINE__) )\
 			{                                                               \
 				case BSU_CONTINUE: break;                                     \
 				case BSU_DEBUG: __debugbreak(); break;                        \

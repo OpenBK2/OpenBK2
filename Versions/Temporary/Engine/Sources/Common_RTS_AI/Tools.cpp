@@ -3,6 +3,8 @@
 #include "BasePathUnit.h"
 #include "Tools.h"
 
+#include <fmt/format.h>
+
 const float BOUND_RECT_FACTOR = 1.0f;
 const int SPEED_FACTOR = 800;
 
@@ -116,7 +118,8 @@ int CBSpline ::operator&( IBinSaver &saver )
 
 void CBSpline::DumpState() const
 {
-	Singleton<IConsoleBuffer>()->WriteASCII( 500, StrFmt("spline: x=(%g,%g), dx=(%g,%g), d2x=(%g,%g), d3x=(%g,%g)", x.x, x.y, dx.x, dx.y, d2x.x, d2x.y, d3x.x, d3x.y ), 0, true );
+	const auto message = fmt::format("spline: x=({:g},{:g}), dx=({:g},{:g}), d2x=({:g},{:g}), d3x=({:g},{:g})", x.x, x.y, dx.x, dx.y, d2x.x, d2x.y, d3x.x, d3x.y );
+	Singleton<IConsoleBuffer>()->WriteASCII( 500, message.c_str(), 0, true );
 }
 
 

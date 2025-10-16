@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Type.h"
 
+#include <fmt/format.h>
+
 NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string &szName )
 {
 	if ( szName == "TYPE_TYPE_UNKNOWN" )
@@ -30,7 +32,7 @@ NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string 
 	if ( szName == "TYPE_TYPE_ARRAY" )
 		return NDb::NTypeDef::TYPE_TYPE_ARRAY;
 
-	NI_ASSERT( false, StrFmt( "unknown enum %s", szName.c_str() ) );
+	NI_ASSERT( false, fmt::format( "unknown enum {}", szName ) );
 	return NDb::NTypeDef::TYPE_TYPE_UNKNOWN;
 }
 

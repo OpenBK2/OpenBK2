@@ -14,6 +14,6 @@ set(SOURCES
 add_library(Client SHARED ${SOURCES})
 add_stdafx_pch(Client)
 add_export_header(Client)
-target_link_libraries(Client PRIVATE MemoryLib Misc Net Server_Client_Common System winapi)
+target_link_libraries(Client PRIVATE MemoryLib Misc Net Server_Client_Common System winapi fmt::fmt-header-only)
 install(TARGETS Client DESTINATION bin)
 add_version_info(Client)

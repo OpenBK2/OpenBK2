@@ -36,6 +36,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CStatistics theStatistics;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DD, CFormationSwarmState );
@@ -385,18 +387,18 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 				pResult = CFormationEnterBuildingState::Instance( pFormation, checked_cast<CBuilding*>(pObj) );
 				break;
 			default:
-				NI_ASSERT( false, StrFmt( "Can't enter to object of type %d, from AI flag %d", pObj->GetObjectType(), (int)cmd.bFromAI ) );
+				NI_ASSERT( false, fmt::format( "Can't enter to object of type {}, from AI flag {}", int( pObj->GetObjectType() ), (int)cmd.bFromAI ) );
 			}
 		}
 
 		break;
 	case ACTION_COMMAND_IDLE_BUILDING:
-		NI_ASSERT( dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) ) != 0, StrFmt( "Wrong static object (%s) is passed, command ACTION_COMMAND_IDLE_BUILDING", typeid(*GetObjectByCmd( cmd )).name() ) );
+		NI_ASSERT( dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) ) != 0, fmt::format( "Wrong static object ({}) is passed, command ACTION_COMMAND_IDLE_BUILDING", typeid(*GetObjectByCmd( cmd )).name() ) );
 		pResult = CFormationIdleBuildingState::Instance( pFormation, checked_cast<CBuilding*>( GetObjectByCmd( cmd ) ) );
 
 		break;
 	case ACTION_COMMAND_IDLE_TRENCH:
-		NI_ASSERT( dynamic_cast<CEntrenchment*>( GetObjectByCmd( cmd ) ) != 0, StrFmt( "Wrong static object (%s) is passed, command ACTION_COMMAND_IDLE_TRENCH", typeid(*GetObjectByCmd( cmd )).name() ) );
+		NI_ASSERT( dynamic_cast<CEntrenchment*>( GetObjectByCmd( cmd ) ) != 0, fmt::format( "Wrong static object ({}) is passed, command ACTION_COMMAND_IDLE_TRENCH", typeid(*GetObjectByCmd( cmd )).name() ) );
 		pResult = CFormationIdleEntrenchmentState::Instance( pFormation, checked_cast<CEntrenchment*>( GetObjectByCmd( cmd ) ) );
 
 		break;
@@ -473,7 +475,7 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 		break;
 	case ACTION_COMMAND_ATTACK_OBJECT:
 		{
-			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), StrFmt( "Wrong static object to attack (%s)", typeid(GetObjectByCmd( cmd )).name() ) );
+			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), fmt::format( "Wrong static object to attack ({})", typeid(GetObjectByCmd( cmd )).name() ) );
 			// attack the artillery
 			if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
 			{
@@ -537,14 +539,14 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 		break;
 	case ACTION_COMMAND_LOAD:
 		{
-			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), StrFmt( "Wrong unit to load to %s",typeid( *pObj ).name()) );
+			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), fmt::format( "Wrong unit to load to {}",typeid( *pObj ).name()) );
 			pResult = CFormationEnterTransportState::Instance( pFormation, pCar );
 		}
 
 		break;
 	case ACTION_COMMAND_LOAD_NOW:
 		{
-			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), StrFmt( "Wrong unit to load to %s",typeid( *pObj ).name()) );
+			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), fmt::format( "Wrong unit to load to {}",typeid( *pObj ).name()) );
 			pResult = CFormationEnterTransportNowState::Instance( pFormation, pCar );
 		}
 
@@ -565,7 +567,7 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 
 		break;
 	case ACTION_MOVE_RESUPPLY_UNIT:
-		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
+		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, fmt::format( "Wrong preferred unit {}",typeid( *pObj ).name()) );
 		pResult = CFormationResupplyUnitState::Instance( pFormation, checked_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
 
 		break;
@@ -3086,7 +3088,7 @@ IUnitState* CFormationEnterBuildingNowState::Instance( CFormation *pFormation, C
 CFormationEnterBuildingNowState::CFormationEnterBuildingNowState( CFormation *_pFormation, CBuilding *pBuilding )
 : pFormation( _pFormation )
 {
-	NI_ASSERT( pBuilding->GetNEntrancePoints() != 0, StrFmt( "infantry inside Building without entrance points, Building Link ID = %i, at pos (%.0f, %.0f), DBID = \"%s\"", pBuilding->GetLink(), pBuilding->GetCenter().x, pBuilding->GetCenter().y, NDb::GetResName(pBuilding->GetStats()) ) );
+	NI_ASSERT( pBuilding->GetNEntrancePoints() != 0, fmt::format( "infantry inside Building without entrance points, Building Link ID = {}, at pos ({:.0f}, {:.0f}), DBID = \"{}\"", pBuilding->GetLink(), pBuilding->GetCenter().x, pBuilding->GetCenter().y, NDb::GetResName(pBuilding->GetStats()) ) );
 	if ( pBuilding->GetNEntrancePoints() != 0 )
 	{
 		for ( int i = 0; i < pFormation->Size(); ++i )

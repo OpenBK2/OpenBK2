@@ -10,6 +10,8 @@
 
 #include "port/cdecl.h"
 
+#include <fmt/format.h>
+
 //
 using namespace NDb::NCodeGenTool;
 
@@ -62,7 +64,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	cmdLine.AddOption( "-all", &eCodeGenOpts, CODE_GEN_NORMAL, "generate types.xml and sources" );
 	cmdLine.AddOption( "-nocopy", &eCodeGenOpts, CODE_GEN_NOCOPY, "only generate new source files (and don't copy to version)" );
 	cmdLine.AddOption( "-types", &eCodeGenOpts, CODE_GEN_TYPES, "only generate new types.xml" );
-	cmdLine.AddOption( "--config-file", &szConfigFileName, StrFmt("set name for config file (default: \"%s\")", szConfigFileName.c_str()) );
+	cmdLine.AddOption( "--config-file", &szConfigFileName, fmt::format("set name for config file (default: \"{}\")", szConfigFileName) );
 	cmdLine.AddOption( "--types-path", &szTypesPath, "set path to store types.xml (default: current dir)" );
 	cmdLine.AddOption( "--sources-path", &szSourcesPath, "set path to get .cll sources from (default: current dir)" );
 	//

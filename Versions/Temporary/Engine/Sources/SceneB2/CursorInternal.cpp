@@ -12,6 +12,8 @@
 #include "System/WinFrame.h"
 #include "System/WinCursor.h"
 
+#include <fmt/format.h>
+
 BASIC_REGISTER_CLASS( SCENEB2, ICursor );
 
 CCursor::CCursor() 
@@ -38,7 +40,7 @@ void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 
 	//
 	HCURSOR hCursor = NWinCursor::LoadCursor( szFileName );
-	NI_ASSERT( hCursor != 0, StrFmt("Can't load cursor \"%s\" from file", szFileName.c_str()) );
+	NI_ASSERT( hCursor != 0, fmt::format("Can't load cursor \"{}\" from file", szFileName) );
 	if ( hCursor != 0 ) 
 	{
 		modes[nMode] = hCursor;

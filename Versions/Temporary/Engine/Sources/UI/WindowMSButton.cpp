@@ -8,6 +8,8 @@
 #include "ForegroundTextString.h"
 #include "System/Text.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B87, CWindowMSButton)
 
 
@@ -42,9 +44,9 @@ void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	pShared = checked_cast_ptr<const NDb::SWindowMSButtonShared *>( pDesc->pShared );
 
-	NI_VERIFY( !pInstance->buttonStates.empty(), StrFmt( "ButtonStates not defined for button \"%s\"", pInstance->szName.c_str() ), return );
-	NI_VERIFY( !pShared->visualStates.empty(), StrFmt( "VisualStates not defined for button \"%s\"", pInstance->szName.c_str() ), return );
-	NI_VERIFY( pInstance->buttonStates.size() == pShared->visualStates.size(), StrFmt( "VisualStates is not equal ButtonStates for button \"%s\"", pInstance->szName.c_str() ), return );
+	NI_VERIFY( !pInstance->buttonStates.empty(), fmt::format( "ButtonStates not defined for button \"{}\"", pInstance->szName ), return );
+	NI_VERIFY( !pShared->visualStates.empty(), fmt::format( "VisualStates not defined for button \"{}\"", pInstance->szName ), return );
+	NI_VERIFY( pInstance->buttonStates.size() == pShared->visualStates.size(), fmt::format( "VisualStates is not equal ButtonStates for button \"{}\"", pInstance->szName ), return );
 
 	states.resize( pShared->visualStates.size() );
 	for ( int i = 0; i < pShared->visualStates.size(); ++i )
@@ -280,7 +282,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					if ( pInstance->bAutoChangeState ) 
 						SetNextState();
 					// run logical state Sequience
-					NI_ASSERT( pInstance->buttonStates.size() > GetState(), StrFmt("button states(in instance) have less states then button states in shared.") );
+					NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
 					GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnEnterState, this );
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
@@ -294,7 +296,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					BackAnimation();
 
 					// run logical state Sequience
-					NI_ASSERT( pInstance->buttonStates.size() > GetState(), StrFmt("button states(in instance) have less states then button states in shared.") );
+					NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
 					GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnRightClick, this );
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
@@ -427,7 +429,7 @@ bool CWindowMSButton::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 {
 	if ( !CWindow::OnButtonDblClk( _vPos, nButton ) )
 	{
-		NI_ASSERT( pInstance->buttonStates.size() > GetState(), StrFmt("button states(in instance) have less states then button states in shared.") );
+		NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
 		if ( !pShared->bIgnoreDblClick && (nButton & MSTATE_BUTTON1) && !pInstance->buttonStates[GetState()].commandsOnLDblKlick.commands.empty() )
 		{
 			GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnLDblKlick, this );

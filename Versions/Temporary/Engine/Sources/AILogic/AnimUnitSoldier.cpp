@@ -106,10 +106,10 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 		case NDb::ANIMATION_UNINSTALL_ROT:
 		case NDb::ANIMATION_INSTALL_PUSH:
 		case NDb::ANIMATION_UNINSTALL_PUSH:
-			NI_ASSERT( false, StrFmt( "Wrong animation for soldier (%d)", nAnimation ) );
+			NI_ASSERT( false, fmt::format( "Wrong animation for soldier ({})", nAnimation ) );
 
 		default:
-			NI_ASSERT( false, StrFmt( "Unknown animation for soldier (%d)", nAnimation ) );
+			NI_ASSERT( false, fmt::format( "Unknown animation for soldier ({})", nAnimation ) );
 	}
 }
 

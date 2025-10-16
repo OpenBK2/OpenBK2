@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static bool s_bShowAllObjectsInfo = false;
 static bool s_bShowBuildingsInfo = false;
 
@@ -227,7 +229,7 @@ void CSelector::AddObj( CMOSelectable *pSO )
 	{
 		std::string szResult = "Selction IDs: ";
 		for ( int i = 0; i < objList.size(); ++i )
-			szResult += StrFmt( "%i   ", objList[i]->GetID() );
+			szResult += fmt::format( "{}   ", objList[i]->GetID() );
 		Singleton<IStatSystem>()->UpdateEntry( "SelectionIDs", szResult.c_str() );
 	}
 

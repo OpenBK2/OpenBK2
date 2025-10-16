@@ -2,9 +2,10 @@
 
 #include "Server_Client_Common_export.h"
 
-
 #include "NetPacket.h"
 #include "ChatPackets.h"
+
+#include <fmt/format.h>
 
 #define REGISTER_PACKET_PROCESSOR( FuncName )	Register( this, FuncName );
 
@@ -50,7 +51,7 @@ protected:
 		const int nTypeID = NObjectFactory::GetObjectTypeID( typeid( TPacket ) );
 		NI_ASSERT( nTypeID > 0, "Unregistered save/load class" );
 		NI_ASSERT( packetProcessorFuns.find( nTypeID ) == packetProcessorFuns.end(),
-			StrFmt( "Packet %d already registered", nTypeID ) );
+			fmt::format( "Packet {} already registered", nTypeID ) );
 
 		packetProcessorFuns[nTypeID] = new CPacketProcessorFun<TObj, TPacket>( pObj, pfnProcessFun );
 	}

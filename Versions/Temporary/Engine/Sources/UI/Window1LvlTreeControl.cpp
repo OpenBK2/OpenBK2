@@ -2,6 +2,8 @@
 #include "window1lvltreecontrol.h"
 #include "WindowMSButton.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B81, CWindow1LvlTreeControl)
 
 int CWindow1LvlTreeControl::operator&( IBinSaver &saver )
@@ -103,7 +105,7 @@ void CWindow1LvlTreeControl::Init()
 IWindow * CWindow1LvlTreeControl::AddSubItem( IWindow *pItem )
 {
 	SItem *pCont = GetContainer( pItem );
-	NI_ASSERT( pCont != 0, StrFmt( "not found container \"%s\"", dynamic_cast<CWindow*>(pItem)->GetName().c_str() ) );
+	NI_ASSERT( pCont != 0, fmt::format( "not found container \"{}\"", dynamic_cast<CWindow*>(pItem)->GetName() ) );
 	if ( pCont )
 	{
 		IWindow *pPrev;

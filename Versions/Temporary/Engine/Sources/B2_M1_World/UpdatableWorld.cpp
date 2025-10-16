@@ -40,6 +40,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 //#include "../Stats_B2_M1/DBMapInfo.h"
 
 
@@ -701,7 +703,7 @@ void CUpdatableWorld::UpdateTreeBroken( const SAIBasicUpdate * _pUpdate )
 	const int nUniqueID = pUpdate->nObjUniqueID;
 
 	CPtr<CMOObject> pTree = checked_cast<CMOObject*>( GetMapObj( nUniqueID ) );
-	NI_ASSERT( pTree, StrFmt( "Trying to trample (as a tree) object # %d", nUniqueID ) );
+	NI_ASSERT( pTree, fmt::format( "Trying to trample (as a tree) object # {}", nUniqueID ) );
 	if ( pTree != 0 )
 		pTree->AIUpdateFall( pUpdate );
 }
@@ -1523,7 +1525,7 @@ void CUpdatableWorld::ProcessUpdate( const SAINewProjectileUpdate *pUpdate )
 	if ( CMapObj *pMO = GetMapObj( pUpdate->info.nSourceUniqueID ) )
 	{
 		IMOUnit *pMOUnit = dynamic_cast<IMOUnit*>( pMO );
-		NI_ASSERT( pMOUnit != 0, StrFmt( "Unknown object type %s tried to fire", typeid(*pMO).name() ) );
+		NI_ASSERT( pMOUnit != 0, fmt::format( "Unknown object type {} tried to fire", typeid(*pMO).name() ) );
 
 		if ( pMOUnit )
 		{
@@ -1811,7 +1813,7 @@ void CUpdatableWorld::Update()
 void CUpdatableWorld::ProcessUpdate( const SAIPointLightUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
-	NI_ASSERT( pMO != 0, StrFmt( "Unknown object %d", pUpdate->nObjUniqueID ) );
+	NI_ASSERT( pMO != 0, fmt::format( "Unknown object {}", pUpdate->nObjUniqueID ) );
 
 	NI_ASSERT( false, "This method of using Point Lights is disabled" )
 	/*if ( pMO )
@@ -1844,7 +1846,7 @@ void CUpdatableWorld::UpdateSwitchLightFX( const SAIBasicUpdate * _pUpdate )
 void CUpdatableWorld::ProcessUpdate( const SAIHeadLightUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
-	NI_ASSERT( pMO != 0, StrFmt( "Unknown object %d", pUpdate->nObjUniqueID ) );
+	NI_ASSERT( pMO != 0, fmt::format( "Unknown object {}", pUpdate->nObjUniqueID ) );
 
 	NI_ASSERT( false, "This method of using Lights is disabled" )
 	/*if ( pMO )
@@ -1854,12 +1856,12 @@ void CUpdatableWorld::ProcessUpdate( const SAIHeadLightUpdate *pUpdate )
 void CUpdatableWorld::ProcessUpdate( const SAIToggleDayNightWindowsUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
-	NI_ASSERT( pMO != 0, StrFmt( "Unknown object %d", pUpdate->nObjUniqueID ) );
+	NI_ASSERT( pMO != 0, fmt::format( "Unknown object {}", pUpdate->nObjUniqueID ) );
 
 	if ( pMO )
 	{
 		CMOBuilding *pMOBuilding = dynamic_cast<CMOBuilding*>( pMO );
-		NI_ASSERT( pMOBuilding != 0, StrFmt( "Object %s, id %d, can't update windows", typeid(*pMO).name(), pUpdate->nObjUniqueID ) );
+		NI_ASSERT( pMOBuilding != 0, fmt::format( "Object {}, id {}, can't update windows", typeid(*pMO).name(), pUpdate->nObjUniqueID ) );
 
 		if ( pMOBuilding )
 			pMOBuilding->ToggleNightWindows( pUpdate->bNightOn, eSeason );
@@ -1869,12 +1871,12 @@ void CUpdatableWorld::ProcessUpdate( const SAIToggleDayNightWindowsUpdate *pUpda
 void CUpdatableWorld::ProcessUpdate( const SAIBreakWindowUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
-	NI_ASSERT( pMO != 0, StrFmt( "Unknown object %d", pUpdate->nObjUniqueID ) );
+	NI_ASSERT( pMO != 0, fmt::format( "Unknown object {}", pUpdate->nObjUniqueID ) );
 
 	if ( pMO )
 	{
 		CMOBuilding *pMOBuilding = dynamic_cast<CMOBuilding*>( pMO );
-		NI_ASSERT( pMOBuilding != 0, StrFmt( "Object %s, id %d< can't update windows", typeid(*pMO).name(), pUpdate->nObjUniqueID ) );
+		NI_ASSERT( pMOBuilding != 0, fmt::format( "Object {}, id {}< can't update windows", typeid(*pMO).name(), pUpdate->nObjUniqueID ) );
 
 		if ( pMOBuilding )
 		{

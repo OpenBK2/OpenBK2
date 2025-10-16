@@ -90,7 +90,7 @@ void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDat
 
 CTextData::CTextData( int i )
 {
-	wszText = NStr::ToUnicode( StrFmt("%d", i ) ); 
+	wszText = NStr::ToUnicode( std::to_string(i) );
 }
 
 void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
@@ -119,7 +119,7 @@ void NMPSetData::SetText( ITextView *pText, const std::wstring &szText )
 
 void NMPSetData::SetNum( ITextView *pWindow, int nText )
 {	
-	std::wstring newstring = NStr::ToUnicode( StrFmt( "%d", nText ) );
+	std::wstring newstring = NStr::ToUnicode( std::to_string(  nText ) );
 	SetText( pWindow, newstring );	
 }
 

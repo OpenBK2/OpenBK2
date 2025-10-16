@@ -95,13 +95,13 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 			string szPwd = passwords[i];
 			string szEmail = emails[i];
 			if ( !pClients->IsNickRegistered( szName ) )
-				pClients->Register( szName, szPwd, szName + szPwd + StrFmt( "%d", names.size() ), szEmail );
+				pClients->Register( szName, szPwd, szName + szPwd + std::to_string(  names.size() ), szEmail );
 		}
 	}
 
 //		for ( int i = 0; i < 10000; ++i )
 //		{
-//			string szText = StrFmt( "%d", i );
+//			string szText = std::to_string(  i );
 //			pClients->Register( szText, szText, szText );
 //		}
 

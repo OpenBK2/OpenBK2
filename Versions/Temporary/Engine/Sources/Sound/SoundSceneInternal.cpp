@@ -10,6 +10,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 //#pragma comment(lib, "dsound.lib")
 
 class CAckTuning 
@@ -34,7 +36,8 @@ public:
 
 		for ( CPlayedAcks::iterator it = playedAcks.begin(); it != playedAcks.end(); ++it )
 		{
-			fprintf( pFile, StrFmt( "%s,%i\n", it->first.c_str(), it->second) );
+			const auto message = fmt::format( "{},{}\n", it->first.c_str(), it->second);
+			fprintf( pFile, "%s", message.c_str());
 		}
 		fclose( pFile );
 	}
@@ -90,7 +93,7 @@ static bool s_bSound5_1 = false;
 
 void CSoundScene2D::CSoundsCollector::operator()( int nRadius, const SIntThree & vCell )
 {
-	NI_ASSERT( cellsWSound.find(vCell) != cellsWSound.end(), StrFmt("Can't find cell at {%d : %d : %d}", vCell.x, vCell.y, vCell.z) );
+	NI_ASSERT( cellsWSound.find(vCell) != cellsWSound.end(), fmt::format("Can't find cell at {{{} : {} : {}}}", vCell.x, vCell.y, vCell.z) );
 	cellsWSound[vCell]->EnumHearableSounds( nRadius, *this );
 }
 
@@ -339,7 +342,7 @@ CSoundCell * CSoundScene2D::GetSoundCell( const SIntThree &vCell )
 void CSoundScene2D::AddSound( const SIntThree &vCell, CSound *pSound )
 {
 	CSoundCell *pCell = GetSoundCell( vCell );
-	NI_ASSERT( pCell != 0, StrFmt( "Can't get cell at {%d : %d : %d}", vCell.x, vCell.y, vCell.z ) );
+	NI_ASSERT( pCell != 0, fmt::format( "Can't get cell at {{{} : {} : {}}}", vCell.x, vCell.y, vCell.z ) );
 	soundCellsWithSound[vCell] = pCell;
 	const float fFormerRadius = pCell->GetRadius();
 	pCell->AddSound( pSound );
@@ -454,7 +457,7 @@ void CSoundScene2D::SetSoundPos( const uint16_t wID, const CVec3 &vPos )
 		CSoundCell *pNewCell = GetSoundCell( vNewCell );
 		
 		// add sound to new cell
-		NI_ASSERT( pNewCell != 0, StrFmt( "cannot create cell at (%d, %d )", vNewCell.x, vNewCell.y ) );
+		NI_ASSERT( pNewCell != 0, fmt::format( "cannot create cell at ({}, {} )", vNewCell.x, vNewCell.y ) );
 		const int nFormerRadiusNewCell = pNewCell->GetRadius();
 		pNewCell->AddSound( pSound );
 		const int nNewRadiusNewCell = pNewCell->GetRadius();
@@ -530,7 +533,7 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 				// ------------- удалить все доигравшие звуки
 				for ( CSoundCellsWithSound::iterator it = soundCellsWithSound.begin(); it != soundCellsWithSound.end(); ++it )
 				{
-					NI_ASSERT( IsValid( it->second ), StrFmt("Invalid cell at ( delete finished sounds ){%d : %d}", it->first.x, it->first.y) );
+					NI_ASSERT( IsValid( it->second ), fmt::format("Invalid cell at ( delete finished sounds ){{{} : {}}}", it->first.x, it->first.y) );
 					CSoundCell * pCell = (*it).second;
 					const int nFormerRadius = pCell->GetRadius();
 					pCell->Update( pSFX );
@@ -548,7 +551,7 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 				// -- взять все звуки, которые слышны в центральной клетке
 				for ( CSoundCellsWithSound::iterator it = soundCellsWithSound.begin(); it != soundCellsWithSound.end(); ++it )
 				{
-					NI_ASSERT( IsValid( it->second ), StrFmt("Invalid cell at ( enum all sounds ){%d : %d}", it->first.x, it->first.y) );
+					NI_ASSERT( IsValid( it->second ), fmt::format("Invalid cell at ( enum all sounds ){{{} : {}}}", it->first.x, it->first.y) );
 					const int nRadius = abs( vListenerCell.x - (*it).first.x ) + abs( vListenerCell.y - (*it).first.y );
 					(*it).second->EnumAllSounds( collector, nRadius );
 				}

@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4CC, CFullEntrenchment );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C1, CEntrenchmentTankPit );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D497, CEntrenchment );
@@ -124,7 +126,7 @@ void CEntrenchmentPart::Segment()
 				else if ( pOwner )
 					pOwner->SetVisible();
 				else
-					NI_ASSERT( false, StrFmt( "Entrenchment part without parents, link ID %d", GetLink() ) );
+					NI_ASSERT( false, fmt::format( "Entrenchment part without parents, link ID {}", GetLink() ) );
 				break;
 			}
 		}
@@ -574,7 +576,7 @@ bool CEntrenchment::CanRotateSoldier( CSoldier *pSoldier ) const
 
 void CEntrenchment::ExchangeUnitToFireplace( CSoldier *pSoldier, int nFirePlace )
 {
-	NI_ASSERT( nFirePlace < GetNFirePlaces(), StrFmt( "Wrong number of fireplace (%d), number of fireplaces (%d)", nFirePlace, GetNFirePlaces() ) );
+	NI_ASSERT( nFirePlace < GetNFirePlaces(), fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})", nFirePlace, GetNFirePlaces() ) );
 
 	CSoldier *pDeletedSoldier = GetSoldierInFireplace( nFirePlace );
 

@@ -586,7 +586,7 @@ void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pH
 void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string &szNick )
 {
 	pInfo->clear();
-	const string szClientDBID = StrFmt( "%d", GetDBUserIDbyNick( szNick ) );
+	const string szClientDBID = std::to_string(  GetDBUserIDbyNick( szNick ) );
 	const string szQuery = "SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
   MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
@@ -608,7 +608,7 @@ void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string
 void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string,int> &ladderInfo )
 {
 	const int nClientDBID = GetDBUserIDbyNick( szNick );
-	const string szClientDBID = StrFmt( "%d", nClientDBID );
+	const string szClientDBID = std::to_string(  nClientDBID );
 	{
 		hash_map<string,int>::const_iterator statsIDiter = ladderInfo.find( "statsID" );
 		if ( statsIDiter != ladderInfo.end() && statsIDiter->second != nClientDBID )

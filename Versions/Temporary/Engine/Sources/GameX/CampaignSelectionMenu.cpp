@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 static bool s_bCampaignAutostartMission = false;
 
 const int MAX_CAMPAIGN_COUNT = 3;
@@ -96,7 +98,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	campaignWnds.resize( CAMPAIGN_WINDOW_COUNT );
 	for ( int i = 0; i < campaignWnds.size(); ++i )
 	{
-		IWindow *pWnd = GetChildChecked<IWindow>( pMain, StrFmt( "CampaignPanel%d", i + 1 ), true );
+		IWindow *pWnd = GetChildChecked<IWindow>( pMain, fmt::format( "CampaignPanel{}", i + 1 ), true );
 		if ( pWnd )
 			pWnd->ShowWindow( false );
 		campaignWnds[i] = pWnd;
@@ -162,7 +164,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 			continue;
 		}
 
-		bool bEnableCampaign = !bDemo || NGlobal::GetVar( StrFmt("DEMO_CAMPAIGN_ENABLE_%d", i), 0 );
+		bool bEnableCampaign = !bDemo || NGlobal::GetVar( fmt::format("DEMO_CAMPAIGN_ENABLE_{}", i), 0 );
 		if ( campaign.pBtn )
 			campaign.pBtn->Enable( bEnableCampaign );
 
@@ -224,7 +226,7 @@ void CInterfaceCampaignSelectionMenu::AddCampaignWindow( int nWndIndex, int nCam
 	campaign.pBackgroundWnd = GetChildChecked<IWindow>( campaign.pWnd, "Background", true );
 	if ( campaign.pDescCont && campaign.pDescView )
 		campaign.pDescCont->PushBack( campaign.pDescView, false );
-	campaign.szBtnName = StrFmt( "SelectCampaignBtn%d", nWndIndex );
+	campaign.szBtnName = fmt::format( "SelectCampaignBtn{}", nWndIndex );
 	if ( campaign.pBtn )
 		campaign.pBtn->SetName( campaign.szBtnName );
 	campaign.nDBCampaign = nCampaignIndex;
@@ -314,7 +316,7 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 		// 0 = USA
 		// 1 = Germany
 		// 2 = USSR
-		const std::string szMissionGlobalVarName = StrFmt( "DEMO_MISSION_%d_%d", nSelected, nDifficulty );
+		const std::string szMissionGlobalVarName = fmt::format( "DEMO_MISSION_{}_{}", nSelected, nDifficulty );
 		std::wstring wszCommand = NGlobal::GetVar( szMissionGlobalVarName );
 		std::string szCommand = NStr::ToMBCS( wszCommand );
 		NStr::TrimBoth( szCommand, '\"' );
@@ -343,7 +345,8 @@ bool CInterfaceCampaignSelectionMenu::OnPlayOutro()
 	{
 		SCampaign &campaign = campaigns[nSelected];
 
-		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, StrFmt( "%s;campaign_selection_nothing", campaign.szOutro.c_str() ) );
+		const auto command = fmt::format( "{};campaign_selection_nothing", campaign.szOutro );
+		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, command.c_str() );
 	}
 
 	return true;

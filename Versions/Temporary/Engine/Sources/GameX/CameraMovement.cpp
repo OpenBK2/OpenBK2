@@ -2,6 +2,7 @@
 #include "./cameramovement.h"
 #include "SceneB2/Camera.h"
 
+#include <fmt/format.h>
 
 int CCameraMovement::operator&( IBinSaver &saver )
 {
@@ -50,7 +51,7 @@ bool CCameraMovement::Segment( const NTimer::STime curTime )
 // move to
 void CCameraMovement::SetFinishPoint( const int nPoint, const int _nTimeToMove, const NTimer::STime _curTime )
 {
-	NI_ASSERT( nPoint < pMapInfo->cameraPositions.size(), StrFmt( "attempt to move camera to position number %i, in map there is only %i positions", nPoint, pMapInfo->cameraPositions.size() ) ) ;
+	NI_ASSERT( nPoint < pMapInfo->cameraPositions.size(), fmt::format( "attempt to move camera to position number {}, in map there is only {} positions", nPoint, pMapInfo->cameraPositions.size() ) ) ;
 	if ( nPoint < pMapInfo->cameraPositions.size() )
 	{
 		start.vAnchor = pCamera->GetAnchor();

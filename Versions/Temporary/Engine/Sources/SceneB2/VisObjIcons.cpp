@@ -7,6 +7,8 @@
 #include "DBSceneConsts.h"
 #include "VisObjIcons.h"
 
+#include <fmt/format.h>
+
 #define DEF_ICON_SIZE 1.5f
 //#define DEF_ICON_ADD_HEIGHT_SCALE 0.1f
 #define DEF_ICON_HPBAR_WIDTH ( 0.15f / 2 )
@@ -219,7 +221,7 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 
 inline void GetVisObjIconsBase( CVec3 *pvPos, const SModelVisObjDesc *pVOD )
 {
-	NI_ASSERT( pVOD->pModel, StrFmt( "No model for VisObj %d", pVOD->GetID()) );
+	NI_ASSERT( pVOD->pModel, fmt::format( "No model for VisObj {}", pVOD->GetID()) );
 	if ( pVOD->pModel )
 	{
 		pVOD->GetPlacement().forward.RotateHVector( pvPos, pVOD->pModel->pGeometry->vCenter );

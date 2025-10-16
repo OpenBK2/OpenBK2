@@ -306,7 +306,7 @@ string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder
 	bool bResult = CManipulatorManager::GetValue( &varUID, pManipulator, "uid" );
 	if ( !bResult )
 	{
-		return szDestFolder + StrFmt( "%d", pManipulator->GetID( "" ) );
+		return szDestFolder + std::to_string(  pManipulator->GetID( "" ) );
 	}
 	GUID uid;
 	memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );

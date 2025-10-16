@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceReplaySaveLoad
 
 CInterfaceReplaySaveLoad::CInterfaceReplaySaveLoad() : CInterfaceScreenBase( "ReplaySaveLoad", "intermission" )
@@ -47,7 +49,7 @@ void CInterfaceReplaySaveLoad::SetMode( const std::string &szMode )
 		ShowHideControls();
 		return;
 	}
-	NI_ASSERT( 0, StrFmt( "PRG: Wrong parameter (%s) passed to ReplaySaveLoad", szMode.c_str() ) );
+	NI_ASSERT( 0, fmt::format( "PRG: Wrong parameter ({}) passed to ReplaySaveLoad", szMode ) );
 }
 
 void CInterfaceReplaySaveLoad::ShowHideControls()
@@ -157,7 +159,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		ITextView *pItemPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 		if ( pItemName )
 			pItemName->SetText( pItemName->GetDBText() + NStr::ToUnicode( entry.szName ) );
-		std::wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d<br>%02d:%02d",
+		std::wstring wszDate = NStr::ToUnicode( fmt::format("{:02d}.{:02d}.{:04d}<br>{:02d}:{:02d}",
 			entry.time.wDay, entry.time.wMonth, entry.time.wYear,
 			entry.time.wHour, entry.time.wMinute ) );
 		if ( pItemDate )
@@ -170,7 +172,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 				++nNumPlayers;
 		}
 		if ( pItemPlayers )
-			pItemPlayers->SetText( pItemPlayers->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nNumPlayers ) ) );
+			pItemPlayers->SetText( pItemPlayers->GetDBText() + NStr::ToUnicode( std::to_string(  nNumPlayers ) ) );
 
 		entry.pItem = pWnd;
 		pReplayList->PushBack( pWnd, true );
@@ -391,7 +393,7 @@ bool CInterfaceReplaySaveLoad::OnLoad()
 		}
 	}
 
-	std::string szCmd = "replay " + entry.szName + StrFmt( " %d", nPlayFor );
+	std::string szCmd = "replay " + entry.szName + fmt::format( " {}", nPlayFor );
 
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NGlobal::ProcessCommand( NStr::ToUnicode( szCmd ) );

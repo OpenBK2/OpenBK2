@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NImage
 {
 
@@ -169,7 +171,7 @@ public:
 			pColors += nNumElements;
 			nReadBytes += nNumElements * sizeof( TInColor );
 		}
-		NI_ASSERT( nReadBytes == nBytesToRead, StrFmt("Can't load image - not enough bytes %d != %d", nReadBytes, nBytesToRead) );
+		NI_ASSERT( nReadBytes == nBytesToRead, fmt::format("Can't load image - not enough bytes {} != {}", nReadBytes, nBytesToRead) );
 		return nReadBytes == nBytesToRead;
 	}
 };
@@ -204,7 +206,7 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 				case 32:
 					return CTGARawLoader<uint32_t, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				default:
-					NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", hdr.imagespec.cPixelDepth) );
+					NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", hdr.imagespec.cPixelDepth) );
 					return false;
 			}
 			break;
@@ -223,7 +225,7 @@ bool LoadTGAImageData( TOutColor *pColors, const STGAFileHeader &hdr, CDataStrea
 				case 32:
 					return CTGARLELoader<uint32_t, TOutColor, CRawColorConvertor<TOutColor> >::Load( pColors, hdr, pStream );
 				default:
-					NI_ASSERT( 0, StrFmt("unsupported bit depth (%d) - still not realized", hdr.imagespec.cPixelDepth) );
+					NI_ASSERT( 0, fmt::format("unsupported bit depth ({}) - still not realized", hdr.imagespec.cPixelDepth) );
 					return false;
 			}
 			break;
@@ -320,7 +322,7 @@ bool SaveAsTGA( const CArray2D<TColor> &image, CDataStream *pStream )
 	// write color data
 	const int nNumElements = int(hdr.imagespec.wImageWidth) * int(hdr.imagespec.wImageHeight);
 	const int nWriteSizeInBytes = nNumElements * sizeof(TColor);
-	NI_ASSERT( nWriteSizeInBytes > 0, StrFmt("image size %d : %d are too big (>2GB) - can't save it", int(hdr.imagespec.wImageWidth), int(hdr.imagespec.wImageHeight)) );
+	NI_ASSERT( nWriteSizeInBytes > 0, fmt::format("image size {} : {} are too big (>2GB) - can't save it", int(hdr.imagespec.wImageWidth), int(hdr.imagespec.wImageHeight)) );
 	pStream->Write( &(image[0][0]), nWriteSizeInBytes );
 	// compose and write TGA file footer
 	STGAFileFooter footer;

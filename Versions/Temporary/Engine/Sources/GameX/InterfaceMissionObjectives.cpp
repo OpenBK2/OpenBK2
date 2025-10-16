@@ -11,6 +11,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int N_OBJECTIVES_ROW_COUNT = 8;
 const int MISSION_BRIEFING_ID = 1000000;
 
@@ -197,7 +199,7 @@ void CInterfaceMissionObjectives::MakeObjectives()
 				objective.pStatus = GetChildChecked<IButton>( pWnd, "ObjectiveItemStatus", true );
 				objective.pButton = GetChildChecked<IButton>( pWnd, "ObjectiveItemButton", true );
 				if ( objective.pButton )
-					objective.pButton->SetName( StrFmt( "ObjectiveItemButton%d", i ) );
+					objective.pButton->SetName( fmt::format( "ObjectiveItemButton{}", i ) );
 			}
 		}
 	}

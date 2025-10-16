@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 using namespace NWinFrame;
 using namespace NWin32Helper;
 
@@ -30,12 +32,12 @@ struct SSaveCursorClip
 
 static void Report( const char *pszText, int nVal = -0x7fffffff )
 {
-	const char *pszMsg;
+	std::string message;
 	if ( nVal != -0x7fffffff )
-		pszMsg = StrFmt( "%s%d\n", pszText, nVal );
+		message = fmt::format( "{}{}\n", pszText, nVal );
 	else
-		pszMsg = StrFmt( "%s\n", pszText );
-	OutputDebugString( pszMsg );
+		message = fmt::format( "{}\n", pszText );
+	OutputDebugString( message.c_str() );
 }
 
 bool NWinFrame::GetMessage( SWindowsMsg *pRes )

@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 
 // remove this for final version
@@ -350,7 +352,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject )
 	{
-		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, StrFmt( "trying to save unregistered object \"%s\"", typeid(*pObject).name() ) );
+		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
 	}	
 	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
 	{
@@ -362,7 +364,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 #ifndef _FINALRELEASE
 	for ( int i = 0; i < checkers.size(); ++i )
 	{
-		NI_ASSERT( checkers[i]->CheckObj( pObject ), StrFmt( "object %s checking failed", typeid( *pObject ).name() ) );
+		NI_ASSERT( checkers[i]->CheckObj( pObject ), fmt::format( "object {} checking failed", typeid( *pObject ).name() ) );
 	}
 #endif
 
@@ -515,7 +517,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			obj.Read( &pServer, bMode64 ? sizeof(void*) : 4);
 			obj.Read( &bValid,1 );
 			CObjectBase *pObject = NObjectFactory::MakeObject( nTypeID );
-			NI_ASSERT( pObject, StrFmt("Can't create object of type 0x%.8x", nTypeID) );
+			NI_ASSERT( pObject, fmt::format("Can't create object of type 0x{:08x}", nTypeID) );
 			if ( !pObject )
 			{
 				if ( IsDebuggerPresent() )

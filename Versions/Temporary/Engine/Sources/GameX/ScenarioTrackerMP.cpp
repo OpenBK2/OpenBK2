@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp
@@ -184,7 +186,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 		UpdateReinforcements( i );
 	}
 
-	NI_ASSERT( nNeutralPlayer != -1, StrFmt( "No neutral player present on map \"%s\"", NDb::GetResName(pMission) ) );
+	NI_ASSERT( nNeutralPlayer != -1, fmt::format( "No neutral player present on map \"{}\"", NDb::GetResName(pMission) ) );
 
 	bNoKeyBuildings = true;
 	// Init key buildings
@@ -760,7 +762,7 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
 		return;
 
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, players.size() ), return );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return );
 	players[nPlayer].nMultiplayerSide = nNewSide;
 
 	if ( players[nPlayer].nMultiplayerSide < 0 || players[nPlayer].nMultiplayerSide >= pMPConsts->sides.size() )
@@ -771,7 +773,7 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 
 const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( const int nPlayer )
 {
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, players.size() ), return 0 );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return 0 );
 
 	if ( GetPlayerSide( nPlayer ) == 2 )			// Neutral party is taken from map
 	{
@@ -795,7 +797,7 @@ const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( con
 
 void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nNewTeam )
 {
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, players.size() ), return );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return );
 	if ( nNewTeam < 0 || nNewTeam > 2 )
 		players[nPlayer].nDiplomacySide = 2;
 	else
@@ -875,7 +877,8 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 		return;
 
 	players[nPlayer].nReinforcementCallsLeft += nCalls;
-	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, StrFmt( "Player %d reinf qty increase", nPlayer ) );
+	const auto message = fmt::format( "Player {} reinf qty increase", nPlayer );
+	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, message.c_str() );
 }
 
 const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColor( int nPlayer ) const
@@ -900,7 +903,7 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 {
 	int nSide = GetPlayerSide( nPlayer );
 
-	NI_ASSERT( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size(), StrFmt( "DATA: No info in MPConsts.diplomacyInfo for diplomacy side %d", nSide ) );
+	NI_ASSERT( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size(), fmt::format( "DATA: No info in MPConsts.diplomacyInfo for diplomacy side {}", nSide ) );
 	if ( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size() )
 	{
 		if ( pMPConsts->diplomacyInfo[nSide] )

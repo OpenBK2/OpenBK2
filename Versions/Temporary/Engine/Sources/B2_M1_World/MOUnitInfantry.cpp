@@ -401,11 +401,11 @@ void CMOUnitInfantry::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb:
 CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
 {
 	const NDb::SWeaponRPGStats *pWeapon = GetStatsLocal()->GetGun( GetID(), pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
-	NI_ASSERT( pWeapon != 0, StrFmt( "Can't find weapon for mechunit \"%s\", nCommonGun %d", GetStatsLocal()->GetDBID().ToString().c_str(), pUpdate->info.nGun ) );
+	NI_ASSERT( pWeapon != 0, fmt::format( "Can't find weapon for mechunit \"{}\", nCommonGun {}", GetStatsLocal()->GetDBID().ToString(), pUpdate->info.nGun ) );
 	if ( pWeapon == 0 )
 		return 0;
 
-	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), StrFmt( "Wrong number of shell (%d), total number of shells (%d)", pUpdate->info.nShell, pWeapon->shells.size() ) );
+	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), fmt::format( "Wrong number of shell ({}), total number of shells ({})", pUpdate->info.nShell, pWeapon->shells.size() ) );
 	if ( pUpdate->info.nShell >= pWeapon->shells.size() )
 		return 0;
 	//
@@ -616,7 +616,7 @@ const CVec3 CMOUnitInfantry::GetFirePoint( const int nPlatform, const int nGun )
 	if ( !pAnimator )
 		return VNULL3;
 	SHMatrix mShootPoint;
-	NI_VERIFY( pAnimator->GetBonePosition( pStats->szGunBoneName.c_str(), &mShootPoint ), StrFmt( "Shoot point not found for infantry gun (bone's name \"%s\")", pStats->szGunBoneName.c_str() ), return VNULL3 );
+	NI_VERIFY( pAnimator->GetBonePosition( pStats->szGunBoneName.c_str(), &mShootPoint ), fmt::format( "Shoot point not found for infantry gun (bone's name \"{}\")", pStats->szGunBoneName ), return VNULL3 );
 	return CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 );
 }
 

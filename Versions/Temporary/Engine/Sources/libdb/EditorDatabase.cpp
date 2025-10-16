@@ -13,6 +13,8 @@
 #include "Logger.h"
 #include "DBWatcherClient.h"
 
+#include <fmt/format.h>
+
 EXTERNVAR CLogger theLogger;
 
 namespace NDb
@@ -195,18 +197,18 @@ bool CEditorDatabase::LoadTypesMap()
 	}
 	else
 	{
-		theLogger.WriteLog( StrFmt("ERROR: Failed to open file with type descriptions (%s)", TYPES_FILE_NAME) );
+		theLogger.WriteLog( fmt::format("ERROR: Failed to open file with type descriptions ({})", TYPES_FILE_NAME) );
 		return false;
 	}
 	if ( topLevelTypes.empty() )
-		theLogger.WriteLog( StrFmt("WARNING: %s has loaded but contain no types", TYPES_FILE_NAME) );
+		theLogger.WriteLog( fmt::format("WARNING: {} has loaded but contain no types", TYPES_FILE_NAME) );
 	//
 	for ( std::vector< CObj<NDb::NTypeDef::STypeDef> >::iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
 	{
 		if ( (*it)->eType == NDb::NTypeDef::TYPE_TYPE_CLASS )
 		{
 			NDb::NTypeDef::STypeClass *pTypeClass = checked_cast_ptr<NDb::NTypeDef::STypeClass*>( *it );
-			NI_VERIFY( pTypeClass->nClassTypeID != -1, StrFmt("Non-terminal class \"%s\" registering!", pTypeClass->szTypeName.c_str()), continue );
+			NI_VERIFY( pTypeClass->nClassTypeID != -1, fmt::format("Non-terminal class \"{}\" registering!", pTypeClass->szTypeName), continue );
 			pTypeClass->RegisterTerminalType();
 		}
 		typesMap[ (*it)->GetTypeName() ] = *it;
@@ -252,10 +254,10 @@ NMetaInfo::SStructMetaInfo *CEditorDatabase::GetStructMetaInfo( const std::strin
 	if ( !IsValid(pMetaInfo->pStructTypeDef) )
 	{
 		CTypesMap::iterator pos = typesMap.find( szTypeName );
-		NI_VERIFY( pos != typesMap.end(), StrFmt("Can't find type meta info for \"%s\"", szTypeName.c_str()), return 0 );
+		NI_VERIFY( pos != typesMap.end(), fmt::format("Can't find type meta info for \"{}\"", szTypeName), return 0 );
 		//
 		NTypeDef::STypeClass *pTypeClass = dynamic_cast_ptr<NTypeDef::STypeClass *>( pos->second );
-		NI_VERIFY( pTypeClass != 0, StrFmt("Can't find type meta info for \"%s\"", szTypeName.c_str()), return 0 );
+		NI_VERIFY( pTypeClass != 0, fmt::format("Can't find type meta info for \"{}\"", szTypeName), return 0 );
 		pMetaInfo->LinkWithTypeDef( "", pTypeClass );
 	}
 	return pMetaInfo;
@@ -294,7 +296,7 @@ bool CEditorDatabase::RegisterResourceFile( const std::string &szFileName )
 
 bool CEditorDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 {
-	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), StrFmt("Resource \"%s\" already exist!", dbid.ToString().c_str()), return false );
+	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), fmt::format("Resource \"{}\" already exist!", dbid.ToString()), return false );
 	// read object header
 	STypeObjectHeader header;
 	if ( ReadResourceHeader( &header, dbid ) )
@@ -337,13 +339,13 @@ IObjMan *CEditorDatabase::GetObjManInternal( const CDBID &_dbid )
 		DebugTrace( "Can't get object manipulator for \"%s\"", dbid.ToString().c_str() );
 		return 0;
 	}
-//	NI_VERIFY( DoesObjectExist(dbid) != false, StrFmt("Can't get object manipulator for \"%s\"", dbid.ToString().c_str()), return 0 );
+//	NI_VERIFY( DoesObjectExist(dbid) != false, fmt::format("Can't get object manipulator for \"{}\"", dbid.ToString()), return 0 );
 	//
 	CElementsMap::iterator pos = elementsMap.find( dbid );
 	if ( pos->second.pBind == 0 )
 		pos->second.pBind = CreateNewBind( pos->second.typeHeader );
 	NBind::CBindStruct *pBind = pos->second.pBind;
-	NI_VERIFY( pBind != 0, StrFmt("Can't get bind for \"%s\" to create manipulator", dbid.ToString().c_str()), return 0 );
+	NI_VERIFY( pBind != 0, fmt::format("Can't get bind for \"{}\" to create manipulator", dbid.ToString()), return 0 );
 	if ( pBind->IsLoaded() )
 		return pBind;
 	else if ( !SEditorDbForceLoadGuard::CanLoad() )
@@ -353,7 +355,7 @@ IObjMan *CEditorDatabase::GetObjManInternal( const CDBID &_dbid )
 	}
 	else
 	{
-		NI_VERIFY( LoadObject( pBind, dbid ) != false, StrFmt("Can't load data for object \"%s\"", dbid.ToString().c_str()), return 0 );
+		NI_VERIFY( LoadObject( pBind, dbid ) != false, fmt::format("Can't load data for object \"{}\"", dbid.ToString()), return 0 );
 		forceLoadGuard.Close();
 		CResourceHelper::CallPostLoad( pBind->GetObject(), true );
 		return pBind;
@@ -362,12 +364,12 @@ IObjMan *CEditorDatabase::GetObjManInternal( const CDBID &_dbid )
 
 bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 {
-	NI_VERIFY( pBind->IsLoaded() == false, StrFmt("Trying to load already loaded object \"%s\"", dbid.ToString().c_str()), return true );
+	NI_VERIFY( pBind->IsLoaded() == false, fmt::format("Trying to load already loaded object \"{}\"", dbid.ToString()), return true );
 	//
 	pBind->SetDBID( dbid );
 	const std::string szFileName = GetFileName( dbid );
 	CFileStream stream( GetVFS(), szFileName );
-	NI_VERIFY( stream.IsOk(), StrFmt("Can't open stream \"%s\" to load db object", szFileName.c_str()), return false );
+	NI_VERIFY( stream.IsOk(), fmt::format("Can't open stream \"{}\" to load db object", szFileName), return false );
 
 	//
 	const char *pBuffer = (const char*)stream.GetBuffer();
@@ -378,7 +380,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 
 	const NXml::SXmlValue &name = pRootElement->GetName();
 	NI_ASSERT( name == pBind->GetTypeName(),
-						StrFmt("Base node name (%s) and type name (%s) mismatch!", name.ToString().c_str(), pBind->GetTypeName().c_str()) );
+						fmt::format("Base node name ({}) and type name ({}) mismatch!", name.ToString(), pBind->GetTypeName()) );
 	// load attributes and objectID
 	{
 		int nObjectRecordID = -1;
@@ -393,7 +395,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 	}
 	// load main object
 	NI_VERIFY( pBind->LoadXML( "", pBind->GetMetaInfo()->pStructTypeDef, pRootElement ) != false, 
-						  StrFmt("Can't load data for object \"%s\"", szFileName.c_str()), return false );
+						  fmt::format("Can't load data for object \"{}\"", szFileName), return false );
 	CResourceHelper::SetLoaded( pBind->GetObject() );
 	//
 	return true;
@@ -406,7 +408,7 @@ IObjMan *CEditorDatabase::CreateNewObject( const std::string &szClassTypeName )
 	NTypeDef::STypeClass *pTypeClass = dynamic_cast_ptr<NTypeDef::STypeClass *>( pMetaInfo->pStructTypeDef );
 	CObj<CResource> pStruct = dynamic_cast<CResource*>( NObjectFactory::MakeObject( pTypeClass->nClassTypeID ) );
 	NI_VERIFY( !(pStruct == 0 && pTypeClass->nClassTypeID != -1 && pMetaInfo->nNumCodeValues != 0), 
-		         StrFmt("Can't create new object of type \"%s\" correctly", szClassTypeName.c_str()), return 0 );
+		         fmt::format("Can't create new object of type \"{}\" correctly", szClassTypeName), return 0 );
 	NBind::CBindStruct *pBind = new NBind::CBindStruct( pStruct, pMetaInfo );
 	pBind->SetDefault( "", pTypeClass );
 	pBind->SetLoaded();
@@ -418,7 +420,7 @@ IObjMan *CEditorDatabase::CreateNewObject( const std::string &szClassTypeName )
 void CEditorDatabase::AddNewObjectInternal( const CDBID &dbid, IObjMan *pObjMan )
 {
 	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct *>( pObjMan );
-	NI_VERIFY( pBind != 0, StrFmt("Trying to add wrong object \"%s\" to database", dbid.ToString().c_str()), return );
+	NI_VERIFY( pBind != 0, fmt::format("Trying to add wrong object \"{}\" to database", dbid.ToString()), return );
 	elementsMap[dbid].pBind = pBind;
 	elementsMap[dbid].typeHeader.szClassTypeName = pBind->GetTypeName();
 	pBind->SetDBID( dbid );
@@ -430,7 +432,7 @@ bool CEditorDatabase::AddNewObject( const std::string &szFilePath, const CDBID &
 	//
 	CDBID dbid;
 	NormalizeDBID( &dbid, _dbid );
-	NI_VERIFY( DoesObjectExist(dbid) == false, StrFmt("Element \"%s\" already exists!", dbid.ToString().c_str()), return false );
+	NI_VERIFY( DoesObjectExist(dbid) == false, fmt::format("Element \"{}\" already exists!", dbid.ToString()), return false );
 	AddNewObjectInternal( dbid, pObjMan );
 	dynamic_cast<NBind::CBindStruct *>(pObjMan)->SetNew( true );
 	SetIndexChanged();
@@ -533,7 +535,7 @@ void CEditorDatabase::SaveChanges()
 				xmlDocument.AddChild( pBaseNode );
 				// save object to root element
 				NI_VERIFY( itElement->second.pBind->SaveXML( "", itElement->second.pBind->GetMetaInfo()->pStructTypeDef, pBaseNode ) != false,
-					StrFmt("Can't save object \"%s\" to file", itElement->first.ToString().c_str()), continue );
+					fmt::format("Can't save object \"{}\" to file", itElement->first.ToString()), continue );
 				itElement->second.pBind->SetNew( false );
 				//
 				NLXML_STREAM stream( &fileStream );
@@ -541,7 +543,7 @@ void CEditorDatabase::SaveChanges()
 			}
 			else
 			{
-				theLogger.WriteLog( StrFmt("Can't create stream \"%s\" to save object \"%s\" to file", szFileName.c_str(), itElement->first.ToString().c_str()) );
+				theLogger.WriteLog( fmt::format("Can't create stream \"{}\" to save object \"{}\" to file", szFileName, itElement->first.ToString()) );
 				bHasFailedElements = true;
 			}
 		}
@@ -619,7 +621,7 @@ bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClass
 			}
 		}
 	}
-	NI_VERIFY( !szClassTypeName.empty(), StrFmt("Can't find class type name for 0x%.8x", nClassTypeID), return false );
+	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", nClassTypeID), return false );
 	// get objects list by class type name
 	return GetObjectsList( pRes, szClassTypeName );
 }

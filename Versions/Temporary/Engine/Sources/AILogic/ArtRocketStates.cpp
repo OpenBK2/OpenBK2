@@ -15,6 +15,8 @@
 
 #include "AILogic_export.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AC, CArtRocketStatesFactory );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AD, CArtRocketAttackGroundState );
 
@@ -404,7 +406,7 @@ void CArtRocketAttackGroundState::Segment()
 				}
 
 				break;
-			default: NI_ASSERT( false, StrFmt( "Wrong CArtRocketAttackGroundState (%d)", (int)eState ) );
+			default: NI_ASSERT( false, fmt::format( "Wrong CArtRocketAttackGroundState ({})", (int)eState ) );
 		}
 	}
 }

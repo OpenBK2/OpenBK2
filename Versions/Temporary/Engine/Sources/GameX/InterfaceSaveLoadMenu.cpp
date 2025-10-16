@@ -12,6 +12,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfaceSaveLoadMenu::CReactions
 
 bool CInterfaceSaveLoadMenu::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
@@ -213,7 +215,7 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		if ( save.pWindow )
 		{
 			save.pWindow->ShowWindow( true );
-			save.pWindow->SetName( StrFmt( "Item%d", i ) );
+			save.pWindow->SetName( fmt::format( "Item{}", i ) );
 		}
 
 		IWindow *pFlag = GetChildChecked<IWindow>( save.pWindow, "SubItemFlag", true );		//Get subitems
@@ -230,7 +232,7 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		if ( pName )
 			pName->SetText( pName->GetDBText() + save.wszName );
 		
-		std::wstring wszDate = NStr::ToUnicode( StrFmt("%02d.%02d.%04d %02d:%02d",
+		std::wstring wszDate = NStr::ToUnicode( fmt::format("{:02d}.{:02d}.{:04d} {:02d}:{:02d}",
 			save.time.wDay, save.time.wMonth, save.time.wYear,
 			save.time.wHour, save.time.wMinute ) );
 		if ( pDate )

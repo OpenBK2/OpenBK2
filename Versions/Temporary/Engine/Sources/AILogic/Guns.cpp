@@ -29,6 +29,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B5, CBaseGun );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B7, CTurretGun );
 
@@ -1466,7 +1468,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 			break;
 		case IGunsFactory::PLANE_GUN:
 			{
-				NI_ASSERT( dynamic_cast_ptr<CAviation*>(pOwner)!=0, StrFmt("unit \"%s\" weapon \"%s\": only planes can shoot with bombs", NDb::GetResName(pOwner->GetStats()), NDb::GetResName(pWeapon)) );
+				NI_ASSERT( dynamic_cast_ptr<CAviation*>(pOwner)!=0, fmt::format("unit \"{}\" weapon \"{}\": only planes can shoot with bombs", NDb::GetResName(pOwner->GetStats()), NDb::GetResName(pWeapon)) );
 				CAviation *pAvia = checked_cast_ptr<CAviation*>(pOwner);
 				CVec3 vSpeed3 ( pAvia->GetSpeedB2() );
 				const CVec3 vOwnerCenter3D( pAvia->GetPosB2() );

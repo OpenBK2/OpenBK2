@@ -14,6 +14,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 extern CGroupLogic theGroupLogic;
 extern SCheats theCheats;
@@ -52,8 +54,8 @@ void CBalanceTest::PrintBalanceTestData()
 
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 	{
-		bool bIsMech = NGlobal::GetVar( StrFmt( "balance_params_is_mech_%i", nPlayer ), true );
-		const std::string szDBID = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
+		bool bIsMech = NGlobal::GetVar( fmt::format( "balance_params_is_mech_{}", nPlayer ), true );
+		const std::string szDBID = NStr::ToMBCS( NGlobal::GetVar( fmt::format( "balance_params_unit_id_{}", nPlayer ), "" ).GetString() );
 		const std::wstring wszName = bIsMech ?
 			NText::GetText( NDb::Get<SMechUnitRPGStats>(szDBID)->szLocalizedNameFileRef ) :
 			NText::GetText( NDb::Get<SSquadRPGStats>(szDBID)->szLocalizedNameFileRef );
@@ -65,13 +67,13 @@ void CBalanceTest::PrintBalanceTestData()
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
 	szTitle += "| ID ";
-	szSide[0]  += StrFmt( "| %i", int(NGlobal::GetVar( "balance_params_unit_id_0", 0 )) );
-	szSide[1] += StrFmt( "| %i", int(NGlobal::GetVar( "balance_params_unit_id_1", 0 )) );
+	szSide[0]  += fmt::format( "| {}", int(NGlobal::GetVar( "balance_params_unit_id_0", 0 )) );
+	szSide[1] += fmt::format( "| {}", int(NGlobal::GetVar( "balance_params_unit_id_1", 0 )) );
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
 	szTitle += "| Qty";
-	szSide[0]  += StrFmt( "| %i", int(NGlobal::GetVar( "balance_params_quantity_0", 0 )) );
-	szSide[1] += StrFmt( "| %i", int(NGlobal::GetVar( "balance_params_quantity_1", 0 )) );
+	szSide[0]  += fmt::format( "| {}", int(NGlobal::GetVar( "balance_params_quantity_0", 0 )) );
+	szSide[1] += fmt::format( "| {}", int(NGlobal::GetVar( "balance_params_quantity_1", 0 )) );
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
 	szTitle += "| Swarm";
@@ -92,22 +94,22 @@ void CBalanceTest::PrintBalanceTestData()
 
 	for ( int nIteration = 0; nIteration < NGlobal::GetVar( "balance_test_n_iteration", 0 ); ++nIteration )
 	{
-		szTitle += StrFmt( "| #%i", nIteration );
+		szTitle += fmt::format( "| #{}", nIteration );
 
 		std::vector<bool> bCanBeVictory( 2, false );
 
 		for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 		{
-			const int nDamaged = NGlobal::GetVar( StrFmt( "balance_test_iter_%i_player_%i_damaged", nIteration, nPlayer ) );
-			const int nFullHealth = NGlobal::GetVar( StrFmt( "balance_test_iter_%i_player_%i_full_health", nIteration, nPlayer ) );
-			const int nTotal = NGlobal::GetVar( StrFmt( "balance_test_iter_%i_player_%i_total", nIteration, nPlayer ) );
+			const int nDamaged = NGlobal::GetVar( fmt::format( "balance_test_iter_{}_player_{}_damaged", nIteration, nPlayer ) );
+			const int nFullHealth = NGlobal::GetVar( fmt::format( "balance_test_iter_{}_player_{}_full_health", nIteration, nPlayer ) );
+			const int nTotal = NGlobal::GetVar( fmt::format( "balance_test_iter_{}_player_{}_total", nIteration, nPlayer ) );
 			nDamagedTotal[nPlayer] += nDamaged;
 			nFullHealthTotal[nPlayer] += nFullHealth;
 			nDeadTotal[nPlayer] += nTotal - nDamaged - nFullHealth;
 
 			const bool bSomeAreAlive = nDamaged + nFullHealth != 0;
 			bCanBeVictory[nPlayer] = bSomeAreAlive;
-			szSide[nPlayer] += bSomeAreAlive ?  StrFmt( "| %i - %i - %i", nTotal - nDamaged - nFullHealth, nDamaged, nFullHealth ) :
+			szSide[nPlayer] += bSomeAreAlive ?  fmt::format( "| {} - {} - {}", nTotal - nDamaged - nFullHealth, nDamaged, nFullHealth ) :
 			"| All dead";
 		}
 		if ( bCanBeVictory[0] && !bCanBeVictory[1] )
@@ -120,8 +122,8 @@ void CBalanceTest::PrintBalanceTestData()
 	szSide[0] += "|";
 	szSide[1] += "|";
 
-	szSide[0] += StrFmt( " %i ", nVictories[0] );
-	szSide[1] += StrFmt( " %i ", nVictories[1] );
+	szSide[0] += fmt::format( " {} ", nVictories[0] );
+	szSide[1] += fmt::format( " {} ", nVictories[1] );
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
 	szTitle += "| Percentage";
@@ -135,8 +137,8 @@ void CBalanceTest::PrintBalanceTestData()
 		nDamagedTotal[nPlayer] = 100 * nDamagedTotal[nPlayer] / nTotal;
 		nFullHealthTotal[nPlayer] = 100 * nFullHealthTotal[nPlayer] / nTotal;
 	}
-	szSide[0] += StrFmt( " %i - %i - %i", nDeadTotal[0], nDamagedTotal[0], nFullHealthTotal[0] );
-	szSide[1] += StrFmt( " %i - %i - %i", nDeadTotal[1], nDamagedTotal[1], nFullHealthTotal[1] );
+	szSide[0] += fmt::format( " {} - {} - {}", nDeadTotal[0], nDamagedTotal[0], nFullHealthTotal[0] );
+	szSide[1] += fmt::format( " {} - {} - {}", nDeadTotal[1], nDamagedTotal[1], nFullHealthTotal[1] );
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
 	szTitle += "|";
@@ -185,7 +187,7 @@ void CBalanceTest::CollectBalanceTestData( int nIteration )
 {
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 	{
-		bool bIsMech = NGlobal::GetVar( StrFmt( "balance_params_is_mech_%i", nPlayer ), true );
+		bool bIsMech = NGlobal::GetVar( fmt::format( "balance_params_is_mech_{}", nPlayer ), true );
 		int nFullHealth = 0;
 		int nDamaged = 0;
 
@@ -215,8 +217,8 @@ void CBalanceTest::CollectBalanceTestData( int nIteration )
 				}
 			}
 		}
-		NGlobal::SetVar( StrFmt( "balance_test_iter_%i_player_%i_damaged", nIteration, nPlayer ), nDamaged );
-		NGlobal::SetVar( StrFmt( "balance_test_iter_%i_player_%i_full_health", nIteration, nPlayer ), nFullHealth );
+		NGlobal::SetVar( fmt::format( "balance_test_iter_{}_player_{}_damaged", nIteration, nPlayer ), nDamaged );
+		NGlobal::SetVar( fmt::format( "balance_test_iter_{}_player_{}_full_health", nIteration, nPlayer ), nFullHealth );
 	}
 }
 
@@ -243,18 +245,18 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 	NI_ASSERT( pMapInfo->players.size() >= 3, "MAP error: need 2 players and neutral" );
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 	{
-		int nPoint = NGlobal::GetVar( StrFmt( "balance_params_point_%i", nPlayer ), 0 );
-		NI_ASSERT( !pMapInfo->players[nPlayer].reinforcementPoints.empty(), StrFmt( "MAP ERROR: no reinforcement point for player %i", nPlayer ) );
+		int nPoint = NGlobal::GetVar( fmt::format( "balance_params_point_{}", nPlayer ), 0 );
+		NI_ASSERT( !pMapInfo->players[nPlayer].reinforcementPoints.empty(), fmt::format( "MAP ERROR: no reinforcement point for player {}", nPlayer ) );
 		vEnemyPoint[1-nPlayer] = pMapInfo->players[nPlayer].reinforcementPoints[nPoint].vPosition;
 	}
 
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
 	{
-		bool bIsMech = NGlobal::GetVar( StrFmt( "balance_params_is_mech_%i", nPlayer ), true );
-		int nPoint = NGlobal::GetVar( StrFmt( "balance_params_point_%i", nPlayer ), 0 );
-		const std::string szUnit = NStr::ToMBCS( NGlobal::GetVar( StrFmt( "balance_params_unit_id_%i", nPlayer ), "" ).GetString() );
-		int nQuantity = NGlobal::GetVar( StrFmt( "balance_params_quantity_%i", nPlayer ), 0 );
-		bool bSwarm = NGlobal::GetVar( StrFmt( "balance_params_is_moving_%i", nPlayer ), 0 );
+		bool bIsMech = NGlobal::GetVar( fmt::format( "balance_params_is_mech_{}", nPlayer ), true );
+		int nPoint = NGlobal::GetVar( fmt::format( "balance_params_point_{}", nPlayer ), 0 );
+		const std::string szUnit = NStr::ToMBCS( NGlobal::GetVar( fmt::format( "balance_params_unit_id_{}", nPlayer ), "" ).GetString() );
+		int nQuantity = NGlobal::GetVar( fmt::format( "balance_params_quantity_{}", nPlayer ), 0 );
+		bool bSwarm = NGlobal::GetVar( fmt::format( "balance_params_is_moving_{}", nPlayer ), 0 );
 
 		std::vector<NDb::SReinforcementEntry> entries;
 		entries.resize( nQuantity );
@@ -306,7 +308,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 					++nTotal;
 			}
 		}
-		NGlobal::SetVar( StrFmt( "balance_test_iter_%i_player_%i_total", nIteration, nPlayer ), nTotal );
+		NGlobal::SetVar( fmt::format( "balance_test_iter_{}_player_{}_total", nIteration, nPlayer ), nTotal );
 	}
 }
 

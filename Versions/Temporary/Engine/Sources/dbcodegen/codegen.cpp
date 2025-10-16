@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 namespace NCodeGenTool
@@ -31,7 +33,7 @@ struct STypesSort
 bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const vector<string> &files, const string &szDescriptorsPath )
 {
 	bool bParse = NLang::Parse( files, szDescriptorsPath + "base.cll" );
-	NI_VERIFY( bParse != false, StrFmt("Can't parse type definitions from \"%s\"", szDescriptorsPath.c_str()), return false );
+	NI_VERIFY( bParse != false, fmt::format("Can't parse type definitions from \"{}\"", szDescriptorsPath), return false );
 
 	if ( NLang::GetRootFile() && NLang::GetRootFile()->GetNamespace() )
 	{
@@ -58,7 +60,7 @@ bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInf
 			return true;
 		}
 	}
-	NI_ASSERT( false, StrFmt("Can't save compiled types to \"%s\"", szTypesFilePath.c_str()) );
+	NI_ASSERT( false, fmt::format("Can't save compiled types to \"{}\"", szTypesFilePath) );
 	return false;
 }
 

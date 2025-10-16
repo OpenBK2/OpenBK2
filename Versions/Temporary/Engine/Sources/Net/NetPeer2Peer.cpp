@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #if !defined(_FINALRELEASE) || defined(_DEVVERSION)
 //#define __LOG__
 #endif // !defined(_FINALRELEASE) || defined(_DEVVERSION)
@@ -68,20 +70,20 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 				
 				Singleton<IConsoleBuffer>()->WriteASCII(
 					CONSOLE_STREAM_CONSOLE, 
-					StrFmt( "p2p: direct from %d, msg %d", _from, (int)cMsgID ), 0xffffff00, true );
+					fmt::format( "p2p: direct from {}, msg {}", _from, (int)cMsgID ), 0xffffff00, true );
 			}
 
 			break;
 		case NEW_CIENT: 
 			Singleton<IConsoleBuffer>()->WriteASCII(
 				CONSOLE_STREAM_CONSOLE, 
-				StrFmt( "p2p: new client from %d", _from ), 0xffffff00, true );
+				fmt::format( "p2p: new client from {}", _from ), 0xffffff00, true );
 
 			break;
 		case REMOVE_CLIENT: 
 			Singleton<IConsoleBuffer>()->WriteASCII(
 				CONSOLE_STREAM_CONSOLE, 
-				StrFmt( "p2p: del client %d", _from ), 0xffffff00, true );
+				fmt::format( "p2p: del client {}", _from ), 0xffffff00, true );
 
 			break;
 	}
@@ -419,7 +421,7 @@ void CP2PTracker::SendDirect( UCID addr, CMemoryStream &data )
 
 	uint8_t cMsgID;
 	data >> cMsgID;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "p2p: send direct to %d, msg %d", addr, (int)cMsgID ), 0xffffff00, true );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: send direct to {}, msg {}", addr, (int)cMsgID ), 0xffffff00, true );
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -545,8 +547,10 @@ void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 	
 	uint8_t cMsgID;
 	data >> cMsgID;
-	if ( cMsgID != 9 )
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "p2p: send broadcast, msg %d", (int)cMsgID ), 0xffffff00, true );
+	if ( cMsgID != 9 ) {}
+		const auto message = fmt::format( "p2p: send broadcast, msg {}", (int)cMsgID );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str(), 0xffffff00, true );
+	}
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////

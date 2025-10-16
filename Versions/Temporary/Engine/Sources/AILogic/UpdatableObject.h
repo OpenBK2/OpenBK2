@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 typedef std::vector<SVector> CTilesSet;
 namespace NDb
 {
@@ -22,7 +24,7 @@ protected:
 	void SetAlive( const bool _bIsAlive ) { bIsAlive = _bIsAlive; bIsAliveSet = true; }
 public:
 	CUpdatableObj() : bIsAlive( true ), bIsAliveSet( false ) {}
-	bool IsAlive() const { NI_ASSERT( bIsAliveSet, StrFmt( "IsAlive( %s ) is not set", typeid(this).name() ) ); return bIsAlive; }
+	bool IsAlive() const { NI_ASSERT( bIsAliveSet, fmt::format( "IsAlive( {} ) is not set", typeid(this).name() ) ); return bIsAlive; }
 
 	virtual bool IsSelectable()const{ NI_ASSERT( false, "Wrong call of IsSelectable" );return false;};
 	virtual int GetMovingType() const { NI_ASSERT( false, "Wrong call of GetMovingType" ); return 0; }

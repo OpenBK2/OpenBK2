@@ -22,6 +22,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 static bool s_bAutosaveObjectiveComplete = false;
 
 const float FADE_DELTA_TIME = 1.0f;
@@ -768,7 +770,7 @@ void CVisualNotifications::UpdateMarkers()
 	const NDb::SMapInfo * pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( pMapInfo && pMapInfo->nNortType > 0 && pMapInfo->nNortType < 5 )
 	{
-		const NDb::STexture *pNorthTexture = InterfaceState()->GetTextureEntry( StrFmt( "TX_MINIMAP_NORTH_MARKER%i", pMapInfo->nNortType ) );
+		const NDb::STexture *pNorthTexture = InterfaceState()->GetTextureEntry( fmt::format( "TX_MINIMAP_NORTH_MARKER{}", pMapInfo->nNortType ) );
 		if ( pNorthTexture )
 			pMiniMap->SetNortDirectionTexture( pNorthTexture );
 	}
@@ -869,7 +871,7 @@ CVisualNotifications::SEvent* CVisualNotifications::CreateEventItem( const SEven
 	pEvent->pItemWnd = AddWindowCopy( pParent, pItemTemplateWnd );
 	pEvent->pDBEvent = pDBEvent;
 	pEvent->fVisibleTime = 0.0f;
-	pEvent->szName = StrFmt( "%s%d", EVENT_NAME_PREFIX, nFreeEvent );
+	pEvent->szName = fmt::format( "{}{}", EVENT_NAME_PREFIX, nFreeEvent );
 	pEvent->positions = params.positions;
 	pEvent->objects = params.objects;
 	pEvent->nID = params.nID;
@@ -911,7 +913,7 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 
 				// Player elimination stores the removed player slot in nID.
 				const uint32_t dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
-				const std::wstring wszPlayerColor = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwColor ) );
+				const std::wstring wszPlayerColor = NStr::ToUnicode( fmt::format( "<color=0x{:X}>", dwColor ) );
 				
 				//const int side = pScenarioTracker->GetPlayerSide( nPlayer );
 
@@ -1049,7 +1051,8 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 		case NDb::NEVT_OBJECTIVE_COMPLETED:
 		case NDb::NEVT_OBJECTIVE_FAILED:
 		{
-			NMainLoop::Command( ML_COMMAND_MISSION_OBJECTIVES, StrFmt( "%d", pEvent->nID ) );
+			const auto command = std::to_string(  pEvent->nID );
+			NMainLoop::Command( ML_COMMAND_MISSION_OBJECTIVES, command.c_str() );
 			break;
 		}
 
@@ -1263,7 +1266,7 @@ const NDb::SMissionObjective* CVisualNotifications::GetObjective( int nID )
 	if ( !pMapInfo )
 		return 0;
 
-	NI_VERIFY( nID < pMapInfo->objectives.size(), StrFmt( "Index out of range (%d:%d)", nID, pMapInfo->objectives.size() ), return 0 );
+	NI_VERIFY( nID < pMapInfo->objectives.size(), fmt::format( "Index out of range ({}:{})", nID, pMapInfo->objectives.size() ), return 0 );
 
 	const NDb::SMissionObjective *pObjective = pMapInfo->objectives[nID];
 	NI_ASSERT( pObjective, "No objective" );

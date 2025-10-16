@@ -10,6 +10,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 // CInterfaceMPWaitPlayers
@@ -84,7 +86,7 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 
 	if ( bOwnLag )
 	{
-		std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
+		std::wstring wszTime = NStr::ToUnicode( fmt::format( "{}:{:02d}", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
 		if ( pOwnTime )
 			pOwnTime->SetText( pOwnTime->GetDBText() + wszTime );
 	}
@@ -119,7 +121,7 @@ void CInterfaceMPWaitPlayers::AddPlayerLine( const std::string &szName, const in
 	{
 		if ( nTime >= 0 )
 		{
-			std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d:%02d", nTime / 60, nTime % 60 ) );
+			std::wstring wszTime = NStr::ToUnicode( fmt::format( "{}:{:02d}", nTime / 60, nTime % 60 ) );
 			pTime->SetText( pTime->GetDBText() + wszTime );
 		}
 	}

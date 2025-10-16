@@ -30,6 +30,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const char* NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
 
@@ -170,7 +172,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 		}
 		else
 		{
-			szDebugOut += StrFmt( "Connect( %d != %d )", slots[0].wConnectedTo, slots[nOwnSlot].wConnectedTo );
+			szDebugOut += fmt::format( "Connect( {} != {} )", slots[0].wConnectedTo, slots[nOwnSlot].wConnectedTo );
 		}
 	}
 	DebugTrace( szDebugOut.c_str() );
@@ -206,7 +208,7 @@ void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, c
 		"TX",
 		"CGameHeartBeatPacket",
 		GetOwnClientID(),
-		StrFmt( "game_id=%d reason=%s update_info=%d", nGameID, szReason ? szReason : "", bUpdateGameInfo ? 1 : 0 ) );
+		fmt::format( "game_id={} reason={} update_info={}", nGameID, szReason ? szReason : "", bUpdateGameInfo ? 1 : 0 ) );
 
 	if ( bUpdateGameInfo && gameDesc.pMPMap )
 	{
@@ -225,7 +227,7 @@ void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, c
 			"TX",
 			"CUpdateGameInfo",
 			GetOwnClientID(),
-			StrFmt( "game_id=%d players=%d reason=%s", nGameID, pGameInfo->nPlayers, szReason ? szReason : "" ) );
+			fmt::format( "game_id={} players={} reason={}", nGameID, pGameInfo->nPlayers, szReason ? szReason : "" ) );
 	}
 }
 
@@ -358,7 +360,7 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 			"TX",
 			"CGameKickClient",
 			GetOwnClientID(),
-			StrFmt( "slot=%d kicked_client=%d game_id=%d", nSlot, slots[nSlot].nClientID, nGameID ) );
+			fmt::format( "slot={} kicked_client={} game_id={}", nSlot, slots[nSlot].nClientID, nGameID ) );
 		pClient->SendPacket( pKickPkt );
 	}
 }
@@ -913,7 +915,7 @@ bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *
 		"RX",
 		"CGameClientWasKicked",
 		pPacket->nClientID,
-		StrFmt( "kicked=%d in_room=%d", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
+		fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
 		if ( nMyClientID == pPacket->nKicked )
@@ -963,7 +965,7 @@ bool CMPManagerModeNivalNet::OnGameClientDeadPacket( class CGameClientDead *pPac
 		"RX",
 		"CGameClientDead",
 		pPacket->nClientID,
-		StrFmt( "dead_client=%d", pPacket->nDeadClient ) );
+		fmt::format( "dead_client={}", pPacket->nDeadClient ) );
 	RemoveClient( pPacket->nDeadClient, false );
 	return true;
 }
@@ -972,7 +974,7 @@ bool CMPManagerModeNivalNet::OnLadderShortStatisticsPacket( class CLadderShortSt
 {
 	if ( pPacket->nRace < 0 || pPacket->nRace >= pMPConsts->sides.size() )
 	{
-		NI_ASSERT( 0, StrFmt( "MP: Passed race (%d) is out of bounds", pPacket->nRace ) );
+		NI_ASSERT( 0, fmt::format( "MP: Passed race ({}) is out of bounds", pPacket->nRace ) );
 		return true;
 	}
 
@@ -1022,7 +1024,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 			nOwnSlot = nSlot;
 			szDebugLadder += "*";
 		}
-		szDebugLadder += StrFmt( "%d, ", slot.nClientID );
+		szDebugLadder += fmt::format( "{}, ", slot.nClientID );
 	}
 	szDebugLadder += "Team2 (Axis) - ";
 	for ( std::list<int>::iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it, ++nSlot )
@@ -1038,7 +1040,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 			eMySide = NDb::HS_AXIS;
 			szDebugLadder += "*";
 		}
-		szDebugLadder += StrFmt( "%d, ", slot.nClientID );
+		szDebugLadder += fmt::format( "{}, ", slot.nClientID );
 	}
 	NI_VERIFY( nOwnSlot >= 0, "NNet Ladder Invite: Could not find own client ID", return true );
 	bHost = ( nOwnSlot == 0 );

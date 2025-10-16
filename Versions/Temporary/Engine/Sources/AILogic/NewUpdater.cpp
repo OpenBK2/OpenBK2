@@ -14,6 +14,8 @@
 
 #include <algorithm>
 
+#include <fmt/format.h>
+
 //#define N_GRIDCELL_SIZE 8
 
 CEventUpdater updater;
@@ -627,8 +629,8 @@ void CEventUpdater::DumpSizes()
 	std::string str2 = "Total";
 	for ( TDumpUpdatesHash::const_iterator itUpd = allUpdates.begin(); itUpd != allUpdates.end(); ++itUpd )
 	{
-		str1 = str1 + StrFmt( "\t0x%04x", itUpd->first );
-		str2 = str2 + StrFmt( "\t%d/%d", itUpd->second.nValidCount, itUpd->second.nInvalidCount );
+		str1 = str1 + fmt::format( "\t0x{:04x}", static_cast<int>(itUpd->first) );
+		str2 = str2 + fmt::format( "\t{}/{}", itUpd->second.nValidCount, itUpd->second.nInvalidCount );
 	}
 
 	DebugTrace( str1.c_str() );
@@ -638,7 +640,7 @@ void CEventUpdater::DumpSizes()
 		if ( *it == -1 )
 			str = "Invalid";
 		else
-			str = StrFmt( "%d", *it );
+			str = std::to_string(  *it );
 
 		TDumpObjectsHash::const_iterator pos = objects.find( *it );
 		const TDumpUpdatesHash &thisUpdates = pos->second;
@@ -646,9 +648,9 @@ void CEventUpdater::DumpSizes()
 		{
 			TDumpUpdatesHash::const_iterator posUpd = thisUpdates.find( itUpd->first );
 			if ( posUpd != thisUpdates.end() )
-				str = str + StrFmt( "\t%d/%d", posUpd->second.nValidCount, posUpd->second.nInvalidCount );
+				str = str + fmt::format( "\t{}/{}", posUpd->second.nValidCount, posUpd->second.nInvalidCount );
 			else
-				str = str + StrFmt( "\t-/-" );
+				str = str +  "\t-/-" ;
 		}
 		DebugTrace( str.c_str() );
 	}

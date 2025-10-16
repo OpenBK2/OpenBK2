@@ -5,6 +5,8 @@
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "3Dmotor/GAnimation.hpp"
 
+#include <fmt/format.h>
+
 bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -15,7 +17,7 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 	const NDb::SVisObj *pVO = GetVisObjForHP( fNewHP, &nDamagedState );
 	const NDb::SModel *pModel = GetModel( pVO, eSeason );
 
-	NI_ASSERT( pModel != 0, StrFmt( "Wrong vis for bridge \"%s\"", GetStats()->GetDBID().ToString().c_str() ) );
+	NI_ASSERT( pModel != 0, fmt::format( "Wrong vis for bridge \"{}\"", GetStats()->GetDBID().ToString() ) );
 	if ( !pModel )
 		return false;
 
@@ -109,15 +111,15 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 
 	int nDamagedState = 0;
 	const NDb::SVisObj *pVO = GetVisObjForHP( 0, &nDamagedState );
-	NI_ASSERT( pVO, StrFmt( "No VisObject for destroyed Bridge state (object %d)", GetID() ) );
+	NI_ASSERT( pVO, fmt::format( "No VisObject for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pVO )
 		return;
 	const NDb::SModel *pModel = GetModel( pVO, eSeason );
-	NI_ASSERT( pModel, StrFmt( "No Model for destroyed Bridge state (object %d)", GetID() ) );
+	NI_ASSERT( pModel, fmt::format( "No Model for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pModel )
 		return;
 	CDBPtr<NDb::SSkeleton> pSkeleton = pModel->pSkeleton;
-	NI_ASSERT( pSkeleton, StrFmt( "No Skeleton for destroyed Bridge state (object %d)", GetID() ) );
+	NI_ASSERT( pSkeleton, fmt::format( "No Skeleton for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pSkeleton )
 		return;
 	std::vector< const NDb::SAnimB2* > deathAnims;

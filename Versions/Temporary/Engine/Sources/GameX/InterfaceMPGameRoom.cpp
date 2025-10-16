@@ -27,6 +27,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 static bool s_bMPAllowStartGame;
@@ -220,7 +222,7 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 			break;
 		}
 	}
-	NI_VERIFY( nIndex >= 0, StrFmt( "Combo change received from unknown control '%s'", szSender ), return true );
+	NI_VERIFY( nIndex >= 0, fmt::format( "Combo change received from unknown control '{}'", szSender ), return true );
 	SUISlot &slot = slots[nIndex];
 	bool bWantClosed = ( slot.pPlayerCombo->GetSelectedIndex() == 1 );
 
@@ -427,7 +429,7 @@ void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 {
 	if ( !pTimeLimit )
 		return;	  	
-	std::wstring wszText = NStr::ToUnicode( StrFmt( "%d min.", nTimeLimit ) );
+	std::wstring wszText = NStr::ToUnicode( fmt::format( "{} min.", nTimeLimit ) );
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );	
 }
 
@@ -488,11 +490,11 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 	// Prepare info for slots (country list, colour list)
 	pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE(pMPConsts->techLevels[gameDesc.nTechLevel].,Name) );
-	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nPlayers ) ) );
+	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string(  nPlayers ) ) );
 	pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
-	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( StrFmt( "%d min", gameDesc.nTimeLimit ) ) );
-	pCaptureTime->SetText( pCaptureTime->GetDBText() + NStr::ToUnicode( StrFmt( "%d sec", gameDesc.nCaptureTime ) ) );
-	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( StrFmt( "%d", gameDesc.nGameSpeed ) ) );
+	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( fmt::format( "{} min", gameDesc.nTimeLimit ) ) );
+	pCaptureTime->SetText( pCaptureTime->GetDBText() + NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
+	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( std::to_string(  gameDesc.nGameSpeed ) ) );
 	pUnitExperience->SetState( gameDesc.bUnitExp ? 1 : 0 );
 
 	IButton *pRandomPlacement = GetChildChecked<IButton>( pAdvancedPopup, "RandomPlacement", true );
@@ -513,9 +515,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		pList->PushBack( pWnd, true );
 		slot.pPlayerName = GetChildChecked<IWindow>( pWnd, "PlayerName", true );
 		slot.pPlayerNameText = GetChildChecked<ITextView>( slot.pPlayerName, "PlayerNameText", true );
-		slot.pPlayerName->SetName( StrFmt( "Name%d", i ) );
+		slot.pPlayerName->SetName( fmt::format( "Name{}", i ) );
 		slot.pCountry = GetChildChecked<IComboBox>( pWnd, "Country", true );
-		slot.pCountry->SetName( StrFmt( "Country%d", i ) );
+		slot.pCountry->SetName( fmt::format( "Country{}", i ) );
 
 		//Set viewer
 		slot.pCountry->SetViewer( new CTextureViewer() );	
@@ -533,19 +535,19 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		}
 
 		slot.pTeam = GetChildChecked<IButton>( pWnd, "Team", true );
-		slot.pTeam->SetName( StrFmt( "Team%d", i ) );
+		slot.pTeam->SetName( fmt::format( "Team{}", i ) );
 		slot.pColour = GetChildChecked<IComboBox>( pWnd, "Colour", true );
-		slot.pColour->SetName( StrFmt( "Colour%d", i ) );
+		slot.pColour->SetName( fmt::format( "Colour{}", i ) );
 		slot.pColour->SetViewer( new CColorViewer() );	
 		for ( int j = 0; j < pMPConsts->playerColorInfos.size(); ++j )
 			slot.pColour->AddItem( new CColorData( pMPConsts->playerColorInfos[j].nColor | 0xff000000 ) );
 
 		slot.pAccept = GetChildChecked<IButton>( pWnd, "Status", true );
-		slot.pAccept->SetName( StrFmt( "Status%d", i ) );
+		slot.pAccept->SetName( fmt::format( "Status{}", i ) );
 
 		slot.pPlayerCombo = GetChildChecked<IComboBox>( pWnd, "PlayerCombo", true );
 		slot.pPlayerCombo->ShowWindow( false );
-		slot.pPlayerCombo->SetName( StrFmt( "PlayerCombo%d", i ) );
+		slot.pPlayerCombo->SetName( fmt::format( "PlayerCombo{}", i ) );
 
 		slot.pPing = GetChildChecked<IButton>( pWnd, "Ping", true );
 
@@ -658,7 +660,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 			}
 			else 
 			{
-				wszPingTooltip += NStr::ToUnicode( StrFmt( " %d ", slot.info.nPing ) );
+				wszPingTooltip += NStr::ToUnicode( fmt::format( " {} ", slot.info.nPing ) );
 				if ( slot.info.nPing < PING_GOOD )
 				{
 					slot.pPing->SetState( 4 );

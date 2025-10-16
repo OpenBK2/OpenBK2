@@ -17,6 +17,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 extern CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
@@ -611,7 +613,7 @@ void CGeneralArtilleryTask::Segment()
 
 					if ( bIsAntiArtilleryFight && timeToSendAntiArtilleryAck != 0 && timeToSendAntiArtilleryAck <= curTime )
 					{
-						NI_ASSERT( vAntiArtilleryAckCenter.x >= 0.0f && vAntiArtilleryAckCenter.y >= 0.0f, StrFmt( "Wrong vAntiArtilleryAckCenter (%g,%g)", vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
+						NI_ASSERT( vAntiArtilleryAckCenter.x >= 0.0f && vAntiArtilleryAckCenter.y >= 0.0f, fmt::format( "Wrong vAntiArtilleryAckCenter ({:g},{:g})", vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
 						updater.AddUpdate( EFB_ENEMY_STARTED_ANTIARTILLERY, MAKELONG( vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
 						timeToSendAntiArtilleryAck = 0;
 					}
@@ -623,7 +625,7 @@ void CGeneralArtilleryTask::Segment()
 
 				break;
 			default:
-				NI_ASSERT( false, StrFmt( "Wrong bombardment state (%d)", int(eState) ) );
+				NI_ASSERT( false, fmt::format( "Wrong bombardment state ({})", int(eState) ) );
 		}
 	}
 }

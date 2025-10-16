@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 namespace NMetaInfo
@@ -142,7 +144,7 @@ bool SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, uin
 	}
 	else
 	{
-		NI_ASSERT( false, StrFmt("Can't convert type %d to binary", value.GetType()) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to binary", int( value.GetType() )) );
 		return false;
 	}
 }
@@ -312,7 +314,7 @@ bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, uint8_
 	}
 	else
 	{
-		NI_ASSERT( false, StrFmt("Can't convert type %d to binary", value.GetType()) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to binary", int( value.GetType() )) );
 		return false;
 	}
 	return true;

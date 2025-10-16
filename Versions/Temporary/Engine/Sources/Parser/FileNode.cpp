@@ -8,6 +8,8 @@
 #include "System/FilePath.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 int yyparse( void );
 extern int nyyLineNumber;
 extern bool bInTestMode;
@@ -105,8 +107,8 @@ void CFileNode::CloseNamespace( bool bResolveForwards )
 
 void CFileNode::Parse()
 {
-	VERIFY_NOLINE( eParseState != EPS_INPARSING, StrFmt( "cyclic include of file %s", szFullFileName.c_str() ), return );
-	VERIFY_NOLINE( bFileExist = true, StrFmt( "file %s is included by doesn't exist", szFullFileName.c_str() ), return );
+	VERIFY_NOLINE( eParseState != EPS_INPARSING, fmt::format( "cyclic include of file {}", szFullFileName ), return );
+	VERIFY_NOLINE( bFileExist = true, fmt::format( "file {} is included by doesn't exist", szFullFileName ), return );
 	if ( eParseState == EPS_PARSED )
 		return;
 
@@ -139,13 +141,13 @@ void CFileNode::Parse()
 		for ( std::unordered_map< std::string, CObj<CFileNode> >::iterator iter = includes.begin(); iter != includes.end(); ++iter )
 		{
 			CFileNode *pNode = iter->second;
-			VERIFY_NOLINE( pNode->IsParsed(), StrFmt( "cyclic include of file %s", iter->first ), return );
+			VERIFY_NOLINE( pNode->IsParsed(), fmt::format( "cyclic include of file {}", iter->first ), return );
 		}
 	}
 	else
 	{
 		OpenNewNamespace( 0 );
-		VERIFY_NOLINE( NLang::OpenFile( GetName() ), StrFmt( "file %s not found", GetName().c_str() ), { eParseState = EPS_PARSED; return; } );
+		VERIFY_NOLINE( NLang::OpenFile( GetName() ), fmt::format( "file {} not found", GetName() ), { eParseState = EPS_PARSED; return; } );
 		
 		nyyLineNumber = 1;
 		yyparse();
@@ -191,14 +193,14 @@ void AddInclude( const std::string &szFileName )
 	if ( !szPartialName.empty() )
 		NStr::SplitString( szPartialName, &szPartialPath, '/' );
 	szPartialPath.push_back( NFile::GetFileName( szFileName ) );
-	VERIFY( !szPartialPath.back().empty(), StrFmt( "empty include (\"%s\")", szFileName.c_str() ), return );
+	VERIFY( !szPartialPath.back().empty(), fmt::format( "empty include (\"{}\")", szFileName ), return );
 
 	int nCurFull = 0;
 	for ( int i = 0; i < szPartialPath.size(); ++i )
 	{
 		if ( szPartialPath[i] == ".."  )
 		{
-			VERIFY( !szFullPath.empty(), StrFmt( "wrong include %s", szFileName ), return );
+			VERIFY( !szFullPath.empty(), fmt::format( "wrong include {}", szFileName ), return );
 			szFullPath.pop_back();
 		}
 		else

@@ -4,6 +4,8 @@
 #include "Terrain.h"
 #include "GenTerrain.h"
 
+#include <fmt/format.h>
+
 // precipice
 
 void CMeshDataPatch::Recalc()
@@ -234,21 +236,21 @@ void CRoad::CreatePatches( NGScene::IGameView *pGView )
 				if ( pInfo->pDesc->center.materials[0] )
 					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->center.materials[0] ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->center.materials[0], StrFmt( "Center material is not set for road %d", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->center.materials[0], fmt::format( "Center material is not set for road {}", pInfo->nID ) );
 				break;
 
 			case SRoadGFXInfo::LEFT_BORDER:
 				if ( pInfo->pDesc->leftBorder.pMaterial )
 					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->leftBorder.pMaterial ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->leftBorder.pMaterial, StrFmt( "Left border material is not set for road %d", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->leftBorder.pMaterial, fmt::format( "Left border material is not set for road {}", pInfo->nID ) );
 				break;
 
 			case SRoadGFXInfo::RIGHT_BORDER:
 				if ( pInfo->pDesc->rightBorder.pMaterial )
 					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->rightBorder.pMaterial ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->rightBorder.pMaterial, StrFmt( "Right border material is not set for road %d", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->rightBorder.pMaterial, fmt::format( "Right border material is not set for road {}", pInfo->nID ) );
 				break;
 		}
 		patches.push_back( patch );

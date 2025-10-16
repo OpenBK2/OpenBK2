@@ -21,6 +21,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 const int ITEM_DELTA_X = 3;
 const int ITEM_DELTA_Y = 3;
 
@@ -206,7 +208,7 @@ void CInterfaceOptionsMenu::FillScreen()
 		if ( nOptionsInCategory ) 
 		{		//Add non-empty categories
 			IWindow *pElement = AddWindowCopy( pGroupPanel, pButtonTemplate );
-			pElement->SetName( StrFmt( "Category%d", i ) );
+			pElement->SetName( fmt::format( "Category{}", i ) );
 			pElement->ShowWindow( true );
 			pElement->SetTextString( pElement->GetDBText() + GET_TEXT_PRE(pOptionSystem->categories[i].,Name) );
 			pElement->SetPlacement( nButtonX + i * categoryOffset.x, nButtonY + nScreenPos * categoryOffset.y, 
@@ -249,7 +251,7 @@ bool CInterfaceOptionsMenu::StepLocal( bool bAppActive )
 void CInterfaceOptionsMenu::ChangeResolution()
 {
 	CVec2 vScreenSize = Scene()->GetScreenRect();
-	const std::wstring wszResolution = NStr::ToUnicode( StrFmt( "%dx%d", int(vScreenSize.x), int(vScreenSize.y) ) );
+	const std::wstring wszResolution = NStr::ToUnicode( fmt::format( "{}x{}", int(vScreenSize.x), int(vScreenSize.y) ) );
 
 	bool bGFXOptionsChanged = false;
 	for ( int i = 0; i < options.size(); ++i )
@@ -276,7 +278,7 @@ void CInterfaceOptionsMenu::ChangeResolution()
 
 			if ( entry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER )
 			{
-				NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", options[i].fSliderPosition ) ) );
+				NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( fmt::format( "{:f}", options[i].fSliderPosition ) ) );
 				options[i].fSliderPosition = NGlobal::GetVar( "gfx_quality" );
 			}
 			else
@@ -386,7 +388,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 		pElement->GetPlacement( &nItemX, &nItemY, &nItemSX, &nItemSY );
 		pElement->SetPlacement( 0, i * ( nItemSY + ITEM_DELTA_Y ), nWidthAll, 0, 
 			EWPF_POS_X | EWPF_POS_Y | EWPF_SIZE_X );
-		pElement->SetName( StrFmt("Option%d", i ) );
+		pElement->SetName( fmt::format("Option{}", i ) );
 		pElement->SetTooltip( GET_TEXT_PRE(pEntry.,Tooltip) );
 
 		ITextView *pOptionName = GetChildChecked<ITextView>( pElement, "OptionName", true );
@@ -396,7 +398,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 			EWPF_POS_X | EWPF_POS_Y | EWPF_SIZE_X );
 
 		IWindow *pOptionControl = GetChildChecked<IWindow>( pElement, "OptionControl", true );
-		pOptionControl->SetName( StrFmt( "Control%d", i ) );
+		pOptionControl->SetName( fmt::format( "Control{}", i ) );
 		pOptionControl->SetTooltip( GET_TEXT_PRE(pEntry.,Tooltip) );
 		uint32_t dwFlags = EWPF_POS_X | EWPF_POS_Y;
 		switch ( pEntry.eEditorType )
@@ -548,7 +550,7 @@ void CInterfaceOptionsMenu::OnControlChange( const std::string &szSender )
 					for ( std::vector<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
 					{
 						if ( it->nXSize > 600 && it->nYSize > 450 )
-							resolutions.push_back( StrFmt( "%dx%d", it->nXSize, it->nYSize ) );
+							resolutions.push_back( fmt::format( "{}x{}", it->nXSize, it->nYSize ) );
 					}
 					const NGlobal::CValue resolutionValue = NGlobal::GetVar( "gfx_resolution", "1024x768" );
 					const std::string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
@@ -808,7 +810,7 @@ static void CommandAutodetect( const std::string &szID, const std::vector<std::w
 	fPerfomance = min( fPerfomance, max( 0, (performanceInfo.fTriangleRate - 5.0f)/5.0f ) );
 	fPerfomance = Clamp( fPerfomance, 0.0f, 1.0f );
 
-	NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( StrFmt( "%f", fPerfomance ) ) );
+	NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( fmt::format( "{:f}", fPerfomance ) ) );
 }
 
 START_REGISTER(CInterfaceOptionsMenu)

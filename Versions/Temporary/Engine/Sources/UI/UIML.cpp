@@ -8,6 +8,8 @@
 #include "UIMLHandlers.h"
 #include "System/Commands.h"
 
+#include <fmt/format.h>
+
 static const int N_TAB_SIZE = 4;
 static std::string s_DefaultFontName = "System";
 
@@ -54,7 +56,7 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	if ( !pFont )
 		return;
 
-	NI_VERIFY( pFont, StrFmt( "Font not found: %s", sSearch.szName.c_str() ), return );
+	NI_VERIFY( pFont, fmt::format( "Font not found: {}", sSearch.szName ), return );
 	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo( pFont->GetFormatInfo() );
 	pInfo.Refresh();
 	pFontInfo->pFont = pFont;

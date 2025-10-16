@@ -28,6 +28,6 @@ set(SOURCES
 add_library(Sound SHARED ${SOURCES})
 add_stdafx_pch(Sound)
 add_export_header(Sound)
-target_link_libraries(Sound PRIVATE libdb MemoryLib Misc System zlib fmod winapi)
+target_link_libraries(Sound PRIVATE libdb MemoryLib Misc System zlib fmod winapi fmt::fmt-header-only)
 install(TARGETS Sound DESTINATION bin)
 add_version_info(Sound)

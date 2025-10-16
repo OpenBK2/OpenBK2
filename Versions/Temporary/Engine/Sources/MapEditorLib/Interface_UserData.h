@@ -1,3 +1,4 @@
+#include <fmt/format.h>
 #pragma once
 
 #include "interface_view.h"
@@ -327,7 +328,7 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szEditorSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = StrFmt( "Editor\\%sEditor", rszTypeName.c_str() );
+					szSettingsFileName = fmt::format( "Editor\\{}Editor", rszTypeName.c_str() );
 				}
 				break;
 			}
@@ -336,7 +337,7 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szExporterSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = StrFmt( "Editor\\%sExporter", rszTypeName.c_str() );
+					szSettingsFileName = fmt::format( "Editor\\{}Exporter", rszTypeName.c_str() );
 				}
 				break;
 			}
@@ -345,13 +346,13 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szBuilderSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = StrFmt( "Editor\\%sBuilder", rszTypeName.c_str() );
+					szSettingsFileName = fmt::format( "Editor\\{}Builder", rszTypeName.c_str() );
 				}
 				break;
 			}
 			case PRIVATE_SETTINGS:
 			{
-				szSettingsFileName = StrFmt( "Editor\\%s", rszTypeName.c_str() );
+				szSettingsFileName = fmt::format( "Editor\\{}", rszTypeName.c_str() );
 				break;
 			}
 			default:

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 enum EStreamSeek
 {
 	E_STREAM_SEEK_SET	= 0,
@@ -46,7 +48,7 @@ namespace NImage
 				case E_STREAM_SEEK_END:
 					return pPSDfile->Seek( pPSDfile->GetSize() + offset );
 				default:
-					NI_ASSERT( false, StrFmt( "unknown seek origin %d", (int)origin ) );
+					NI_ASSERT( false, fmt::format( "unknown seek origin {}", (int)origin ) );
 					return false;
 			}
 		}// End of Seek definition

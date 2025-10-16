@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 int CRAPTooSmartCompiler_DBTools_TypeDef()
 {
 	return 0;
@@ -26,7 +28,7 @@ namespace NTypeDef
 
 void STypeInt::ToString( std::string *pRes, const CVariant &value ) const
 {
-	*pRes = StrFmt( "%d", (int)value );
+	*pRes = std::to_string(  (int)value );
 }
 void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
 {
@@ -35,7 +37,7 @@ void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
 
 void STypeFloat::ToString( std::string *pRes, const CVariant &value ) const
 {
-	*pRes = StrFmt( "%g", (float)value );
+	*pRes = fmt::format( "{:g}", (float)value );
 }
 void STypeFloat::FromString( CVariant *pRes, const std::string &szValue ) const
 {
@@ -54,7 +56,7 @@ void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
 		*pRes = true;
 	else
 	{
-		NI_ASSERT( false, StrFmt("Unknown string value \"%s\" for 'bool' type (can be: 0, 1, true, false)", szValue.c_str()) );
+		NI_ASSERT( false, fmt::format("Unknown string value \"{}\" for 'bool' type (can be: 0, 1, true, false)", szValue) );
 		*pRes = false;
 	}
 }
@@ -143,7 +145,7 @@ void STypeEnum::FromString( CVariant *pRes, const std::string &szValue ) const
 
 void STypeArray::ToString( std::string *pRes, const CVariant &value ) const
 {
-	*pRes = StrFmt( "%d", (int)value );
+	*pRes = std::to_string(  (int)value );
 }
 void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
 {
@@ -152,7 +154,7 @@ void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
 
 void STypeRef::ToString( std::string *pRes, const CVariant &value ) const
 {
-	NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL, StrFmt("Can't convert type %d to DBID", value.GetType()), return );
+	NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL, fmt::format("Can't convert type {} to DBID", int( value.GetType() )), return );
 	if ( value.GetType() == CVariant::VT_NULL )
 		pRes->clear();
 	else
@@ -341,7 +343,7 @@ void STypeClass::RegisterTerminalType( STypeClass *pClass )
 	}
 	else
 	{
-		NI_ASSERT( derivedTerminalTypes.empty(), StrFmt("Terminal class %s has derived classes!!!", szTypeName.c_str()) );
+		NI_ASSERT( derivedTerminalTypes.empty(), fmt::format("Terminal class {} has derived classes!!!", szTypeName) );
 		if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass*>( pBaseType ) )
 			pBaseClass->RegisterTerminalType( this );
 	}

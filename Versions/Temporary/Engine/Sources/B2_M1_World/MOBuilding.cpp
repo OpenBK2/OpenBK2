@@ -12,6 +12,8 @@
 #include "AILogic/ScenarioTracker.h"
 #include "System/Text.h"
 
+#include <fmt/format.h>
+
 namespace
 {
 
@@ -807,7 +809,7 @@ const int CMOBuilding::AttachWindow( const int nWindow, const NDb::ESeason eSeas
 const int CMOBuilding::BreakWindow( const int nWindow, const NDb::ESeason eSeason )
 {
 	const std::vector<NDb::SBuildingRPGStats::SSlot> &slots = GetStats()->slots;
-	NI_ASSERT( nWindow < slots.size(), StrFmt( "Wrong number of window (%d), building %s, total slots %d", nWindow, GetStats()->GetDBID().ToString().c_str(), slots.size() ) );
+	NI_ASSERT( nWindow < slots.size(), fmt::format( "Wrong number of window ({}), building {}, total slots {}", nWindow, GetStats()->GetDBID().ToString(), slots.size() ) );
 
 	if ( nWindow < slots.size() && attachedWindows[nWindow] != EWS_DESTROYED )
 	{

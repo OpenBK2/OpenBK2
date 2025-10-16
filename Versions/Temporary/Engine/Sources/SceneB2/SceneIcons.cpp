@@ -3,6 +3,9 @@
 #include "DBSceneConsts.h"
 #include "Camera.h"
 #include "SceneInternal.h"
+
+#include <fmt/format.h>
+
 //#include "TerrUtils.h"
 
 void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
@@ -119,7 +122,7 @@ inline void CSceneIconInfo::MoveIcon( const CVec3 &_vCenter )
 int CScene::AddSceneIcon( const int nID, const CVec3 &vCenter, const CVec2 &vSize, const CVec2 &vTexMin, const CVec2 &vTexMax,
 													const NDb::SMaterial *pMaterial )
 {
-	NI_ASSERT( nID >= 0, StrFmt( "Wrong icon id (%d)", nID ) );
+	NI_ASSERT( nID >= 0, fmt::format( "Wrong icon id ({})", nID ) );
 
 	CSceneIconHolder &iconsHolder = data[eScene]->iconsMap[nID];
 

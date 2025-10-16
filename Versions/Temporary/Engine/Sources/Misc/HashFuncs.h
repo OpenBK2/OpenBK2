@@ -2,11 +2,13 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 struct STilesHash
 {
 	int operator()( const SVector &tile ) const 
 	{ 
-		NI_ASSERT( tile.x >=0 && tile.y >= 0 && tile.x <= 4095 && tile.y <= 4095, StrFmt( "Can't hash tile ( %d, %d )\n", tile.x, tile.y ) );
+		NI_ASSERT( tile.x >=0 && tile.y >= 0 && tile.x <= 4095 && tile.y <= 4095, fmt::format( "Can't hash tile ( {}, {} )\n", tile.x, tile.y ) );
 		return ( tile.x << 12 ) | tile.y;
 	}
 };

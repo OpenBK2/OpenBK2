@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <fmt/format.h>
+
 #include "MPManagerModeLAN.hpp"
 
 #include "Misc/StrProc.h"
@@ -251,7 +253,7 @@ bool CMPManagerModeLAN::OnGameClientWasKicked( class CGameClientWasKicked *pPack
 		"RX",
 		"CGameClientWasKicked",
 		pPacket->nClientID,
-		StrFmt( "kicked=%d in_room=%d", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
+		fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
 		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
@@ -369,7 +371,7 @@ void CMPManagerModeLAN::CompileAndSendLANServerInfo()
 	pLANClient->StopGameInfoSend();
 
 	NNet::IDriver::SGameInfo netInfo;
-	netInfo.wszServerName = NStr::ToUnicode( StrFmt( "%s", szSessionName ) );
+	netInfo.wszServerName = NStr::ToUnicode( szSessionName );
 	netInfo.nCurPlayers = nSlotsUsed;
 	netInfo.nMaxPlayers = gameDesc.nPlayers;
 	netInfo.bPasswordRequired = ( szPassword.length() != 0 );
@@ -444,7 +446,7 @@ void CMPManagerModeLAN::KickPlayerFromSlot( const int nSlot )
 			"TX",
 			"CGameClientWasKicked",
 			GetOwnClientID(),
-			StrFmt( "slot=%d kicked_client=%d", nSlot, slots[nSlot].nClientID ) );
+			fmt::format( "slot={} kicked_client={}", nSlot, slots[nSlot].nClientID ) );
 		pLANClient->SendPacket( pKickPkt );
 
 		//pLANClient->Kick( slots[nSlot].nClientID );

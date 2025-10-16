@@ -14,7 +14,7 @@ set(SOURCES
 add_library(Parser SHARED ${SOURCES})
 add_stdafx_pch(Parser)
 add_export_header(Parser)
-target_link_libraries(Parser PRIVATE MemoryLib Misc System zlib winapi)
+target_link_libraries(Parser PRIVATE MemoryLib Misc System zlib winapi fmt::fmt-header-only)
 install(TARGETS Parser DESTINATION bin)
 add_version_info(Parser)
 

@@ -9,6 +9,8 @@
 #include "Misc/Bresenham.h"
 #include "System/Commands.h"
 
+#include <fmt/format.h>
+
 static const int LONG_PATH_LENGTH = 2000;
 static const int STEP_LENGTH_THERE = 30;
 static const int MAX_NUM_OF_ATTEMPTS_THERE = 4;
@@ -225,7 +227,7 @@ const SVector CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, c
 					{
 //						if ( nCyclePoints >= LONG_PATH_LENGTH )
 #ifndef _FINALRELEASE
-							NI_VERIFY( nCyclePoints < cyclePoints.size(), StrFmt( "Index out of range, %d x %d - %d x %d", startPoint.x, startPoint.y, finishPoint.x, finishPoint.y ), cyclePoints.resize( cyclePoints.size() * 2 ) );
+							NI_VERIFY( nCyclePoints < cyclePoints.size(), fmt::format( "Index out of range, {} x {} - {} x {}", startPoint.x, startPoint.y, finishPoint.x, finishPoint.y ), cyclePoints.resize( cyclePoints.size() * 2 ) );
 #endif							
 							cyclePoints[nCyclePoints++] = i;
 					}

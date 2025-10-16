@@ -7,6 +7,8 @@
 #include "VSOConsts.h"
 #include "VersionInfo.h"
 
+#include <fmt/format.h>
+
 #define DEF_CRAG_HIGH_BORDER_RAND 1.0f
 #define DEF_CRAG_HEIGHT 0.1f
 #define DEF_CRAG_HEIGHT_ERROR 0.025f
@@ -588,7 +590,7 @@ void CTerraGen::RemoveCrag( const int nVSOID )
 			return;
 		}
 	}
-	NI_ASSERT( false, StrFmt("Removed crag is not exists: %d", nVSOID) );
+	NI_ASSERT( false, fmt::format("Removed crag is not exists: {}", nVSOID) );
 }
 
 void CTerraGen::UpdateCrag( const int nVSOID )
@@ -607,7 +609,7 @@ void CTerraGen::RemoveCragInfo( const int nVSOID )
 			return;
 		}
 	}
-	NI_ASSERT( false, StrFmt("Couldn't find info for crag with ID=%d", nVSOID) );
+	NI_ASSERT( false, fmt::format("Couldn't find info for crag with ID={}", nVSOID) );
 }
 
 void CTerraGen::AddAllCrags()

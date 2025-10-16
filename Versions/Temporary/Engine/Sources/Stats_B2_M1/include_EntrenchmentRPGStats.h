@@ -57,7 +57,7 @@ virtual const int GetTypeFromIndex( const int nIndex ) const
 		return ENTRENCHMENT_TERMINATOR;
 	if ( find(arcs.begin(), arcs.end(), nIndex) != arcs.end() )
 		return ENTRENCHMENT_ARC;
-	NI_ASSERT( false, StrFmt("Wrong index %d in entrenchment \"%s\"", nIndex, szParentName.c_str()) );
+	NI_ASSERT( false, fmt::format("Wrong index {} in entrenchment \"{}\"", nIndex, szParentName) );
 	return -1;
 }
 
@@ -74,7 +74,7 @@ virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const
 	case ENTRENCHMENT_ARC:
 		return GetArcIndex( pCurRandomSeed );
 	}
-	NI_ASSERT( false, StrFmt("Wrong type %d in entrenchment \"%s\"", nType, szParentName.c_str()) );
+	NI_ASSERT( false, fmt::format("Wrong type {} in entrenchment \"{}\"", nType, szParentName) );
 	return -1;
 }
 // 

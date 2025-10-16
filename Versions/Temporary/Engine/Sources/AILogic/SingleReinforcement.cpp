@@ -21,6 +21,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CSupremeBeing theSupremeBeing;
 extern CEventUpdater updater;
@@ -108,7 +110,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 	det_map<int,int> linksDistrib;
 	for ( int i = 0; i < entries.size(); ++i )
 	{
-		NI_ASSERT( i < pos.size(), StrFmt( "MAP DESIGN: not enough positions in deploy mask, need %i, unit not deployed", i+1 )  );
+		NI_ASSERT( i < pos.size(), fmt::format( "MAP DESIGN: not enough positions in deploy mask, need {}, unit not deployed", i+1 )  );
 		if ( i < pos.size() )
 		{
 			CVec2 vPos2( vPosition + MoveVectorByDirection( pos[i].vPosition, wDirection ) );
@@ -122,7 +124,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 			{
 				pStats = entries[i].pSquad;
 
-				NI_ASSERT( pStats, StrFmt( "Null entry %d in reinforcement (no mech, no squad)", i ) );
+				NI_ASSERT( pStats, fmt::format( "Null entry {} in reinforcement (no mech, no squad)", i ) );
 
 				if ( !pStats )
 					continue;
@@ -246,7 +248,7 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 	if ( pReinf->pTemplateOverride )
 		pFinalTemplate = pReinf->pTemplateOverride;
 
-	NI_ASSERT( pFinalTemplate != 0, StrFmt( "Map design error: No deploy template for player = %i reinforcement type = %i", nPlayer, pReinf->eType ) );
+	NI_ASSERT( pFinalTemplate != 0, fmt::format( "Map design error: No deploy template for player = {} reinforcement type = {}", nPlayer, int( pReinf->eType ) ) );
 	if ( pFinalTemplate == 0 )
 		return;
 

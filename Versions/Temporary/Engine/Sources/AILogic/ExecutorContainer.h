@@ -3,6 +3,7 @@
 #include "Executor.h"
 #include "System/FreeIDs.h"
 
+#include <fmt/format.h>
 
 // executors may be delayed for this amount of segments
 #define MAX_SEGMENT_DELAY 0x80
@@ -65,7 +66,7 @@ public:
 
 	inline int MakeIndex( const int nTimeShift ) const
 	{
-		NI_ASSERT( nTimeShift < MAX_SEGMENT_DELAY, StrFmt("cannot add with delay %i, maximum is %i", nTimeShift, MAX_SEGMENT_DELAY) );
+		NI_ASSERT( nTimeShift < MAX_SEGMENT_DELAY, fmt::format("cannot add with delay {}, maximum is {}", nTimeShift, MAX_SEGMENT_DELAY) );
 		return (nCurTime + nTimeShift) & MAKE_INDEX_HELPER;
 	}
 public:

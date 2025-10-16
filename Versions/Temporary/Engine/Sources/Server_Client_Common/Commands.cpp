@@ -5,6 +5,8 @@
 #include "LobbiesIDs.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 struct SStringToCommand
 {
 	const char *pszCommand;
@@ -196,7 +198,7 @@ void CCommands::ParseEnterLobby( std::vector<std::string> &szWords, SCommand *pC
 	static std::string szOut;
 	if ( szWords[1] != "custom" && szWords[1] != "ladder" )
 	{
-		szOut = StrFmt( "Unknown lobby %s\n", szWords[1].c_str() );
+		szOut = fmt::format( "Unknown lobby {}\n", szWords[1] );
 		{ SetErrorMsg( szOut ); return; }
 	}
 
@@ -260,7 +262,7 @@ void CCommands::ParseChatIgnore( std::vector<std::string> &szWords, SCommand *pC
 	static std::string szOut;
 	if ( szWords[2] != "1" && szWords[2] != "0" )
 	{
-		szOut = StrFmt( "Use 0 or 1 instead of %s\n", szWords[2].c_str() );
+		szOut = fmt::format( "Use 0 or 1 instead of {}\n", szWords[2] );
 		{ SetErrorMsg( szOut ); return; }
 	}
 
@@ -291,7 +293,7 @@ void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand
 	static std::string szOut;
 	if ( szWords[1] != "online" && szWords[1] != "away" && szWords[1] != "ingame" )
 	{
-		szOut = StrFmt( "Unknown state %s\n", szWords[1].c_str() );
+		szOut = fmt::format( "Unknown state {}\n", szWords[1] );
 		{ SetErrorMsg( szOut ); return; }
 	}
 
@@ -303,7 +305,7 @@ void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand
 	if ( szWords[1] == "ingame" )
 		eState = ES_INGAME;
 
-	pCmd->params.push_back( StrFmt( "%d", (int)eState ) );
+	pCmd->params.push_back( std::to_string(  (int)eState ) );
 }
 
 void CCommands::ParseClientsList( std::vector<std::string> &szWords, SCommand *pCmd )
@@ -317,11 +319,11 @@ void CCommands::ParseClientsList( std::vector<std::string> &szWords, SCommand *p
 		static std::string szOut;
 		if ( szWords[1] != "custom" )
 		{
-			szOut = StrFmt( "unknown lobby %s\n", szWords[1].c_str() );
+			szOut = fmt::format( "unknown lobby {}\n", szWords[1] );
 			{ SetErrorMsg( szOut ); return; }
 		}
 
-		pCmd->params.push_back( StrFmt( "%d", (int)ERID_CUSTOM ) );
+		pCmd->params.push_back( std::to_string(  (int)ERID_CUSTOM ) );
 	}
 }
 
@@ -367,7 +369,7 @@ void CCommands::ParseGames( std::vector<std::string> &szWords, SCommand *pCmd )
 	static std::string szOut;
 	if ( szWords[1] != "custom" )
 	{
-		szOut = StrFmt( "Unknown lobby %s", szWords[1].c_str() );
+		szOut = fmt::format( "Unknown lobby {}", szWords[1] );
 		{ SetErrorMsg( szOut ); return; }
 	}
 }
@@ -421,7 +423,7 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 		while ( szCommandsList[i].pszCommand != 0 )
 		{
 			if ( szCommandsList[i].bServerCommand == bServer )
-				szStr += StrFmt( "    %s\n", szCommandsList[i].pszCommand );
+				szStr += fmt::format( "    {}\n", szCommandsList[i].pszCommand );
 
 			++i;
 		}
@@ -436,7 +438,7 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 			if ( szWords[1] == szCommandsList[i].pszCommand && szCommandsList[i].bServerCommand == bServer )
 			{
 				static std::string szOut;
-				szOut = StrFmt( "%s\n", szCommandsList[i].pszHelp );
+				szOut = fmt::format( "{}\n", szCommandsList[i].pszHelp );
 				{ SetErrorMsg( szOut ); return; }
 			}
 
@@ -444,7 +446,7 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 		}
 
 		static std::string szOut;
-		szOut = StrFmt( "command %s not found\n", szWords[1].c_str() );
+		szOut = fmt::format( "command {} not found\n", szWords[1] );
 		{ SetErrorMsg( szOut ); return; }
 	}
 }
@@ -635,13 +637,13 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 		EServerClientCommands eCmd = FindCmd( szWords[0] );
 		if ( eCmd == ESC_NONE )
 		{
-			*pszErr = StrFmt( "Unknown command %s\n", szWords[0].c_str() );
+			*pszErr = fmt::format( "Unknown command {}\n", szWords[0] );
 			return false;
 		}
 		else
 		{
 			std::unordered_map<int, PARSE_CMD_FUNC>::iterator iter = parseCmdFuncs.find( eCmd );
-			NI_ASSERT( iter != parseCmdFuncs.end(), StrFmt( "Can't parse command %s", szWords[0].c_str() ) );
+			NI_ASSERT( iter != parseCmdFuncs.end(), fmt::format( "Can't parse command {}", szWords[0] ) );
 
 			if ( iter == parseCmdFuncs.end() )
 				return false;

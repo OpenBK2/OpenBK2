@@ -7,7 +7,7 @@ void ToAIUnits( bool bInEditor )
 		int nMaxType = 0;
 		for ( std::vector<SAckType>::const_iterator it = types.begin(); it != types.end(); ++it )
 			nMaxType = (std::max)( nMaxType, int(it->eAckType) );
-		NI_ASSERT( nMaxType + 1 >= types.size(), StrFmt("Wrong acks in \"%s\" set", szParentName.c_str()) );
+		NI_ASSERT( nMaxType + 1 >= types.size(), fmt::format("Wrong acks in \"{}\" set", szParentName) );
 		// copy acks to the new positions in accordance with it's type
 		std::vector<SAckType> types2( nMaxType + 1 );
 		for ( std::vector<SAckType>::const_iterator it = types.begin(); it != types.end(); ++it )

@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 const float SOLID_ICON_ALPHA = 1.0f;
 float FADED_ICON_ALPHA = 0.25f;
 const float MOUSE_PICKED_ALPHA_BONUS = 0.6f;
@@ -147,8 +149,8 @@ bool CMapObj::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	const bool bCreated = CreateSceneObject( nUniqueID, pUpdate, eSeason, bInEditor );
 	
 	fHP = pUpdate->info.fHitPoints / pStats->fMaxHP;
-	NI_ASSERT( fHP <= 1.0f, StrFmt( "From AILogic: (Create) current unit's hp exceed maximum hp (%s)", 
-		pStats ? pStats->GetDBID().ToString().c_str() : "" ) );
+	NI_ASSERT( fHP <= 1.0f, fmt::format( "From AILogic: (Create) current unit's hp exceed maximum hp ({})",
+		pStats ? pStats->GetDBID().ToString() : "" ) );
 	eDiplomacy = pUpdate->info.eDipl;
 
 	return bCreated;
@@ -252,8 +254,8 @@ void CMapObj::ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewM
 
 int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats, IScene * pScene, NDb::ESeason eSeason )
 {
-	NI_ASSERT( fNewHP <= 1.0f, StrFmt( "From AILogic: (CommonUpdateHP) current unit's hp exceed maximum hp (%s)", 
-		pStats ? pStats->GetDBID().ToString().c_str() : "" ) );
+	NI_ASSERT( fNewHP <= 1.0f, fmt::format( "From AILogic: (CommonUpdateHP) current unit's hp exceed maximum hp ({})",
+		pStats ? pStats->GetDBID().ToString() : "" ) );
 	int nResult = -1;
 	if ( fNewHP != fHP )
 	{

@@ -4,10 +4,11 @@
 #include "PlayGameProcessor.h"
 #include "ServerClient.h"
 
-
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
+
+#include <fmt/format.h>
 
 //*******************************************************************
 //*                     CPacketsConvertor                            *
@@ -93,7 +94,7 @@ CNetPacket* CServerClient::GetPacket()
 	{
 		CNetPacket *pPacket = pPlayGameProcessor->GetPacket();
 		if ( pPacket && pPacket->nClientID == 0 )
-			GetNetLogger()->Log( "client", StrFmt("from net %s", GetPacketInfo( pPacket )) );
+			GetNetLogger()->Log( "client", fmt::format("from net {}", GetPacketInfo( pPacket )) );
 
 		return pPacket;
 	}
@@ -106,7 +107,7 @@ void CServerClient::GetPacketsFromNet()
 
 	while ( CPtr<CNetPacket> pPacket = pNet->ReceivePacket() )
 	{
-		GetNetLogger()->Log( "client", StrFmt("receive net %s", GetPacketInfo( pPacket )) );
+		GetNetLogger()->Log( "client", fmt::format("receive net {}", GetPacketInfo( pPacket )) );
 
 		bool bProcessed = false;
 
@@ -133,7 +134,7 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 	bool bProcessed = false;
 	CPtr<CNetPacket> pPacket = pPacket2Process;
 
-	GetNetLogger()->Log( "client", StrFmt("send %s", GetPacketInfo( pPacket )) );
+	GetNetLogger()->Log( "client", fmt::format("send {}", GetPacketInfo( pPacket )) );
 
 	// direct packet to client
 	if ( pPacket->nClientID != 0 )
@@ -191,7 +192,7 @@ void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 
 	
 	CPtr<CNetPacket> pPacket = _pPacket;
-	GetNetLogger()->Log( "client", StrFmt("send game %s, broadcast %d", GetPacketInfo( pPacket ), int(bBroadcast)) );
+	GetNetLogger()->Log( "client", fmt::format("send game {}, broadcast {}", GetPacketInfo( pPacket ), int(bBroadcast)) );
 	pPlayGameProcessor->SendGamePacket( pPacket, bBroadcast );
 }
 

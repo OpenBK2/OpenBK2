@@ -18,6 +18,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 int CHECK_DUPLICATE_CHILDREN;
 UI_EXPORT int CHECK_UI_TEXTURES_INSTANT_LOAD;
 bool s_bUICommonShowWarnings;
@@ -676,7 +678,7 @@ IWindow* CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 #ifndef _FINALRELEASE
 	if ( CHECK_DUPLICATE_CHILDREN != 0 )
 	{
-		NI_ASSERT( CheckNamedChildrenCount( _szName, bRecursive ) <= 1, StrFmt( "Duplicate window name %s", _szName.c_str() ) );
+		NI_ASSERT( CheckNamedChildrenCount( _szName, bRecursive ) <= 1, fmt::format( "Duplicate window name {}", _szName ) );
 	}
 #endif
 	for ( int i = 0; i < drawOrder.Size(); ++i )
@@ -766,7 +768,7 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 	if ( !IsEnabled() )
 		return false;
 
-	NI_ASSERT( nButton >= 0, StrFmt( "don't understand such buttons %i", nButton) );
+	NI_ASSERT( nButton >= 0, fmt::format( "don't understand such buttons {}", nButton) );
 	pressed.resize( (std::max)( (int)pressed.size(), nButton + 1 ) );
 
 	CPtr<CWindow> pTmp = pressed[nButton];
@@ -791,7 +793,7 @@ bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( !IsEnabled() )
 		return false;
-	NI_ASSERT( nButton >= 0, StrFmt( "don't understand such buttons %i", nButton) );
+	NI_ASSERT( nButton >= 0, fmt::format( "don't understand such buttons {}", nButton) );
 
 //	if ( CWindow *pChild = PickInternal( vPos, false ) )
 //		return pChild->OnButtonUp( vPos, nButton );
@@ -1123,7 +1125,7 @@ bool CWindow::ProcessMessage( const struct SBUIMessage &msg )
 	HM_TYPE::iterator it = handleMap.find( msg.szMessageID );
 	bool bRes = false;
 	
-	NI_ASSERT( it != handleMap.end(), StrFmt( "window recieves unregistered message \"%s\"", msg.szMessageID.c_str() ) );
+	NI_ASSERT( it != handleMap.end(), fmt::format( "window recieves unregistered message \"{}\"", msg.szMessageID ) );
 	if ( it != handleMap.end() )
 	{
 		bRes = it->second.Execute( msg, this );
@@ -1154,7 +1156,7 @@ void CWindow::CopyBackground( const IWindow *pSrcWnd )
 
 void CWindow::SetTexture( const struct NDb::STexture *_pDesc )
 {
-	NI_ASSERT( pBackground != 0, StrFmt( "Window \"%s\" has no background. Cannot change texture.", GetInstance()->szName ) );
+	NI_ASSERT( pBackground != 0, fmt::format( "Window \"{}\" has no background. Cannot change texture.", GetInstance()->szName ) );
 	if ( pBackground != 0 )
 		pBackground->SetTexture( _pDesc );
 }
@@ -1251,7 +1253,7 @@ UI_EXPORT void CheckInstantLoadTexture( const NDb::STexture *pTexture )
 	if ( pTexture )
 	{
 		NI_ASSERT( pTexture->eType == NDb::STexture::TEXTURE_2D || pTexture->bInstantLoad, 
-			StrFmt( "UI should use instant load of textures, dbid = \"%s\"", pTexture->GetDBID().ToString().c_str() ) );
+			fmt::format( "UI should use instant load of textures, dbid = \"{}\"", pTexture->GetDBID().ToString() ) );
 	}
 }
 

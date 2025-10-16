@@ -74,7 +74,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	// convert AI price
 	if ( !bInEditor )
 	{
-		const std::string szVarName = StrFmt( "AIPrice.%x", int(etype) );
+		const std::string szVarName = fmt::format( "AIPrice.{:x}", int(etype) );
 		fPrice *= NGlobal::GetVar( szVarName.c_str(), 1.0f );
 	}
 

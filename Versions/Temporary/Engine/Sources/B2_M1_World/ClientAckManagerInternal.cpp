@@ -10,6 +10,7 @@
 #include "Misc/StrProc.h"
 #include "System/Commands.h"
 
+#include <fmt/format.h>
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x110AE400, CClientAckManager);
 
@@ -33,7 +34,7 @@ const NDb::SAckParameter* GetParam( const NDb::EUnitAckType eAck, const CUnitAck
 		return 0;
 	}
 
-	NI_ASSERT( pConsts->acksParameters.size() > posAck->second, StrFmt( "no ack in database %i", eAck ) );
+	NI_ASSERT( pConsts->acksParameters.size() > posAck->second, fmt::format( "no ack in database {}", int( eAck ) ) );
 	if ( !pConsts->acksParameters.empty() )
 		return &pConsts->acksParameters[posAck->second];
 	else
@@ -436,7 +437,7 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 
 						std::string szMessage;
 						if ( debugAckNames[i].eAckType != addedAck.eAck )
-							szMessage = StrFmt( "unknown ack %d", addedAck.eAck );
+							szMessage = fmt::format( "unknown ack {}", static_cast<int>(addedAck.eAck) );
 						else
 							szMessage = debugAckNames[i].pszName;
 						szMessage = "														ack " + szMessage;
@@ -475,7 +476,7 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSo
 
 void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject )
 {
-	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
+	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), fmt::format( "unredistered Ack {}", int( eBored ) ) );
 	NI_ASSERT( !pObject->IsRefInvalid(), "added ack from invalid unit" );
 
 	boredUnits[eBored].AddUnit( pObject );
@@ -483,7 +484,7 @@ void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, struct 
 
 void CClientAckManager::UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject )
 {
-	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
+	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), fmt::format( "unredistered Ack {}", int( eBored ) ) );
 	boredUnits[eBored].DelUnit( pObject );
 }
 

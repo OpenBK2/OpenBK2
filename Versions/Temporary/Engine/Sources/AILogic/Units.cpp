@@ -11,6 +11,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D440, CUnits );
 
 extern CSupremeBeing theSupremeBeing;
@@ -94,7 +96,7 @@ void CUnits::CheckCorrectness( const SVector &tile )
 
 void CUnits::AddUnitToLeveledCells( CAIUnit *pUnit, const SVector &bigCell, const int nVis )
 {
-	NI_ASSERT( nVis < 2, StrFmt( "Wrong nVis (%d)", nVis ) );
+	NI_ASSERT( nVis < 2, fmt::format( "Wrong nVis ({})", nVis ) );
 
 	const int nUnitParty = pUnit->GetParty();
 	const bool bUnitMech = pUnit->IsMech();
@@ -107,7 +109,7 @@ void CUnits::AddUnitToLeveledCells( CAIUnit *pUnit, const SVector &bigCell, cons
 
 void CUnits::DelUnitFromLeveledCells( CAIUnit *pUnit, const SVector &bigCell, const int nVis )
 {
-	NI_ASSERT( nVis < 2, StrFmt( "Wrong nVis (%d)", nVis ) );
+	NI_ASSERT( nVis < 2, fmt::format( "Wrong nVis ({})", nVis ) );
 
 	const int nUnitParty = pUnit->GetParty();
 	const bool bUnitMech = pUnit->IsMech();
@@ -226,7 +228,7 @@ void CUnits::DelUnitFromCell( CAIUnit *pUnit, bool bWithLeveledCelles )
 void CUnits::AddUnitToUnits( CAIUnit *pUnit, const int nPlayer, const int nUnitType )
 {
 	const int nParty = theDipl.GetNParty( nPlayer );
-	NI_ASSERT( nParty >= 0 && nParty < 3, StrFmt( "Wrong number of player (%d)", nPlayer ) );
+	NI_ASSERT( nParty >= 0 && nParty < 3, fmt::format( "Wrong number of player ({})", nPlayer ) );
 	NI_ASSERT( pUnit != 0, "epmty unit added to units" );
 	const int nUniqueID = pUnit->GetUniqueId();
 	idsRemap[nUniqueID] = units.Add( nParty, pUnit );
@@ -295,7 +297,7 @@ void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
 void CUnits::FullUnitDelete( CAIUnit *pUnit )
 {
 	const int nParty = pUnit->GetParty();
-	NI_ASSERT( nParty >= 0 && nParty < 3, StrFmt( "Wrong number of player (%d)", nParty ) );
+	NI_ASSERT( nParty >= 0 && nParty < 3, fmt::format( "Wrong number of player ({})", nParty ) );
 
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 	CIDsRemap::iterator pos = idsRemap.find( nUnitUniqueID );
@@ -320,14 +322,14 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 	const bool bInOldCell = IsUnitInCell( nUnitID );
 
 	NI_ASSERT( !bInOldCell || IsBigCellInside( oldBigCell ), 
-								StrFmt( "Wrong old big cell (%d,%d)", oldBigCell.x, oldBigCell.y ) );
+								fmt::format( "Wrong old big cell ({},{})", oldBigCell.x, oldBigCell.y ) );
 	if ( oldBigCell != newBigCell || !bInOldCell )
 	{
 		//DEBUG{
 		/*
 #ifndef _FINALRELEASE
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
-			StrFmt( "Unit %i ChangedPosition (%i, %i) > (%i, %i) TIME %i", pUnit->GetUniqueId(), oldBigCell.x, oldBigCell.y, newBigCell.x, newBigCell.y, curTime ) );
+			fmt::format( "Unit {} ChangedPosition ({}, {}) > ({}, {}) TIME {}", pUnit->GetUniqueId(), oldBigCell.x, oldBigCell.y, newBigCell.x, newBigCell.y, curTime ) );
 #endif
 			*/
 		//DEBUG}
@@ -339,7 +341,7 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 		const bool bInNewCell = IsUnitInCell( nUnitID );
 
 		const int nVisIndex = pUnit->GetNVisIndexInUnits();
-		NI_ASSERT( nVisIndex < 2, StrFmt( "Wrong nVis (%d)", nVisIndex ) );
+		NI_ASSERT( nVisIndex < 2, fmt::format( "Wrong nVis ({})", nVisIndex ) );
 
 		// leveled cells
 		const int nUnitParty = pUnit->GetParty();
@@ -374,11 +376,11 @@ CAIUnit* CUnits::operator[]( const int id )
 		return 0;			// Cheat to avoid assert for trains
 	CAIUnit * pUnit = units.GetEl( id );
 
-//	NI_ASSERT( pUnit != 0, StrFmt("zero ID (id = %d)", id) );
+//	NI_ASSERT( pUnit != 0, fmt::format("zero ID (id = {})", id) );
 	if ( pUnit == 0 )
 		return 0;
 
-	NI_ASSERT( pUnit->IsRefValid(), StrFmt("Invalid Ref (id = %d)", id) );
+	NI_ASSERT( pUnit->IsRefValid(), fmt::format("Invalid Ref (id = {})", id) );
 	if ( !pUnit->IsRefValid() )
 		return 0;
 

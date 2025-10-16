@@ -4,6 +4,8 @@
 #include "Misc/2Darray.h"
 #include "DBAIConsts.h"
 
+#include <fmt/format.h>
+
 namespace NReinforcement
 {
 
@@ -34,7 +36,7 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 			if ( fValue >= 0.0f && fValue <= 1.0f ) 
 				expediencyValues[ i ][ j ] = fValue;
 			else
-				NI_ASSERT( false, StrFmt( "Invalid Expediency value (%d, %d)", i, j ) );
+				NI_ASSERT( false, fmt::format( "Invalid Expediency value ({}, {})", i, j ) );
 		}
 	}
 }
@@ -44,7 +46,7 @@ const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUni
 	det_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( eType );
 	if ( pos == reinfTypes.end() )
 	{
-		NI_ASSERT( 0, StrFmt( "Reinforcement type not found for NDb::EUnitRPGType: %d", eType ) );
+		NI_ASSERT( 0, fmt::format( "Reinforcement type not found for NDb::EUnitRPGType: {}", int( eType ) ) );
 		return NDb::_RT_NONE;
 	}
 	return pos->second;
@@ -55,7 +57,7 @@ const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eU
 	det_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( int(ReMapRPGType(eUnitRpgType)) );
 	if ( pos != reinfTypes.end() )
 		return pos->second;
-	NI_ASSERT( 0, StrFmt( "Reinforcement type not found for NDb::EDBUnitRPGType: %d", eUnitRpgType ) );
+	NI_ASSERT( 0, fmt::format( "Reinforcement type not found for NDb::EDBUnitRPGType: {}", int( eUnitRpgType ) ) );
 	return NDb::_RT_NONE;
 }
 

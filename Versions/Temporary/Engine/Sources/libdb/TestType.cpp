@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "TypeDef.h"
 
+#include <fmt/format.h>
+
 using namespace NDb::NTypeDef;
 namespace NTest
 {
@@ -37,7 +39,7 @@ static SSimpleTypesAutoMagic aSSimpleTypesAutoMagic;
 STypeDef* GetSimpleType( const std::string &szName )
 {
 	CSimpleTypesMap::iterator pos = simpleTypes.find( szName );
-	NI_ASSERT( pos != simpleTypes.end(), StrFmt("Unknown type \"%s\"", szName.c_str()) );
+	NI_ASSERT( pos != simpleTypes.end(), fmt::format("Unknown type \"{}\"", szName) );
 	return pos != simpleTypes.end() ? pos->second : 0;
 }
 

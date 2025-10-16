@@ -39,6 +39,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D444, CTank );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D445, CAITransportUnit );
 
@@ -120,7 +122,7 @@ uint32_t CMilitaryCar::InitSupportAntiAircraftGuns()
 			dwDissalow |= (1<<nGun);
 			// create special AA-only behavior
 			CTurret *pTurret = pGun->GetTurret();
-			NI_ASSERT( pTurret != 0, StrFmt("Anti Aircraft gun \"%s\" don't have turret", NDb::GetResName(pStats)) );
+			NI_ASSERT( pTurret != 0, fmt::format("Anti Aircraft gun \"{}\" don't have turret", NDb::GetResName(pStats)) );
 			if ( pTurret )
 			{
 				CSupportAAGuns::iterator pos = supportAAGuns.find( pTurret->GetUniqueId() );

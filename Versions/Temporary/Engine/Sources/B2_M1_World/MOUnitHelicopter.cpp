@@ -11,6 +11,9 @@
 #include "SceneB2/AttachedObj.h"
 #include "Stats_B2_M1/M1UnitSpecific.h"
 #include "Stats_B2_M1/IClientGameConsts.h"
+
+#include <fmt/format.h>
+
 typedef std::unordered_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
@@ -171,7 +174,7 @@ void CMOUnitHelicopter::SetPropellersSpeed( const float _fPropSpeed, NDb::ESeaso
 					{
 						vPropellers[i].pAnimator->ClearAllAnimations();
 						vPropellers[i].pScaleMutator = MakeObject<IWingScaleMutator>( IWingScaleMutator::typeID );
-						if ( vPropellers[i].pScaleMutator->Setup( vPropellers[i].pAnimator, StrFmt( "wingScaled%02d_", i+1 ), StrFmt( "wingsStatic%02d", i+1 ) ) )
+						if ( vPropellers[i].pScaleMutator->Setup( vPropellers[i].pAnimator, fmt::format( "wingScaled{:02d}_", i+1 ), fmt::format( "wingsStatic{:02d}", i+1 ) ) )
 						{
 							vPropellers[i].pScaleMutator->ShowStatic( _fPropSpeed < pHelicopterStats->axes[i].fHideStaticSpeed );
 							vPropellers[i].pScaleMutator->SetScale( _fPropSpeed < pHelicopterStats->axes[i].fStartScaleSpeed ? 0.0f : ( _fPropSpeed - pHelicopterStats->axes[i].fStartScaleSpeed )/( 1.0f - pHelicopterStats->axes[i].fStartScaleSpeed ) );
@@ -482,7 +485,7 @@ void CMOUnitHelicopter::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		const NDb::SComplexEffect *pComplexEffect = gun.pWeapon->shells[shot.cShell].pEffectGunFire;
 		if ( !pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ) )
 		{
-			NI_ASSERT( 0, StrFmt( "Shoot point not found for gun %d at platform %d (bone's name \"%s\")", shot.cGun, shot.cPlatform, gun.szShootPoint.c_str() ) );
+			NI_ASSERT( 0, fmt::format( "Shoot point not found for gun {} at platform {} (bone's name \"{}\")", shot.cGun, shot.cPlatform, gun.szShootPoint ) );
 			return;
 		}
 		if ( pStats->animdescs.size() > NDb::ANIMATION_SHOOT && !pStats->animdescs[NDb::ANIMATION_SHOOT].anims.empty() )
@@ -537,11 +540,11 @@ CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate
 {
 	const int nID = GetID();
 	const NDb::SWeaponRPGStats *pWeapon = pStats->GetGun( nID, pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
-	NI_ASSERT( pWeapon != 0, StrFmt( "Can't find weapon for mechunit \"%s\", nCommonGun %d", pStats->GetDBID().ToString().c_str(), pUpdate->info.nGun ) );
+	NI_ASSERT( pWeapon != 0, fmt::format( "Can't find weapon for mechunit \"{}\", nCommonGun {}", pStats->GetDBID().ToString().c_str(), pUpdate->info.nGun ) );
 	if ( pWeapon == 0 )
 		return 0;
 
-	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), StrFmt( "Wrong number of shell (%d), total number of shells (%d)", pUpdate->info.nShell, pWeapon->shells.size() ) );
+	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), fmt::format( "Wrong number of shell ({}), total number of shells ({})", pUpdate->info.nShell, pWeapon->shells.size() ) );
 	if ( pUpdate->info.nShell >= pWeapon->shells.size() )
 		return 0;
 
@@ -566,7 +569,7 @@ CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate
 	SHMatrix mLocalPlatformPose;
 	if ( !pPlatformAnimator->GetBonePosition( szPlatformBoneName.c_str(), &mLocalPlatformPose ) )
 	{
-		NI_ASSERT( 0, StrFmt( "Platform rotate point not found for platform %d (bone's name \"%s\")", pUpdate->info.nPlatform, gun.szShootPoint.c_str() ) );
+		NI_ASSERT( 0, fmt::format( "Platform rotate point not found for platform {} (bone's name \"{}\")", pUpdate->info.nPlatform, gun.szShootPoint.c_str() ) );
 		return 0;
 	}
 	CQuat qRot;

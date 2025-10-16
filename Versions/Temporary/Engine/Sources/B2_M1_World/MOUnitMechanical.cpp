@@ -21,6 +21,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace
 {
 
@@ -546,12 +548,12 @@ const CVec3 CMOUnitMechanical::GetFirePoint( const int nPlatform, const int nGun
 {
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( GetID(), nPlatform, nGun );
-	NI_VERIFY( !gun.szShootPoint.empty(), StrFmt( "Shoot point not defined for gun %d at platform %d", nGun, nPlatform ), return VNULL3 );
+	NI_VERIFY( !gun.szShootPoint.empty(), fmt::format( "Shoot point not defined for gun {} at platform {}", nGun, nPlatform ), return VNULL3 );
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID(), gun.szShootPoint );
 	if ( !pAnimator )
 		return VNULL3;
 	SHMatrix mShootPoint;
-	NI_VERIFY( pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ), StrFmt( "Shoot point not found for gun %d at platform %d (bone's name \"%s\")", nGun, nPlatform, gun.szShootPoint.c_str() ), return VNULL3 );
+	NI_VERIFY( pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ), fmt::format( "Shoot point not found for gun {} at platform {} (bone's name \"{}\")", nGun, nPlatform, gun.szShootPoint ), return VNULL3 );
 	return CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 );
 }
 
@@ -574,7 +576,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		const NDb::SComplexEffect *pComplexEffect = gun.pWeapon->shells[shot.cShell].pEffectGunFire;
 		if ( !pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ) )
 		{
-			NI_ASSERT( 0, StrFmt( "Shoot point not found for gun %d at platform %d (bone's name \"%s\")", shot.cGun, shot.cPlatform, gun.szShootPoint.c_str() ) );
+			NI_ASSERT( 0, fmt::format( "Shoot point not found for gun {} at platform {} (bone's name \"{}\")", shot.cGun, shot.cPlatform, gun.szShootPoint ) );
 			return;
 		}
 		if ( pStats->animdescs.size() > NDb::ANIMATION_SHOOT && !pStats->animdescs[NDb::ANIMATION_SHOOT].anims.empty() )
@@ -1554,11 +1556,11 @@ CMOProjectile* CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 {
 	const int nID = GetID();
 	const NDb::SWeaponRPGStats *pWeapon = GetStatsLocal()->GetGun( nID, pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
-	NI_ASSERT( pWeapon != 0, StrFmt( "Can't find weapon for mechunit \"%s\", nCommonGun %d", GetStatsLocal()->GetDBID().ToString().c_str(), pUpdate->info.nGun ) );
+	NI_ASSERT( pWeapon != 0, fmt::format( "Can't find weapon for mechunit \"{}\", nCommonGun {}", GetStatsLocal()->GetDBID().ToString(), pUpdate->info.nGun ) );
 	if ( pWeapon == 0 )
 		return 0;
 
-	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), StrFmt( "Wrong number of shell (%d), total number of shells (%d)", pUpdate->info.nShell, pWeapon->shells.size() ) );
+	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), fmt::format( "Wrong number of shell ({}), total number of shells ({})", pUpdate->info.nShell, pWeapon->shells.size() ) );
 	if ( pUpdate->info.nShell >= pWeapon->shells.size() )
 		return 0;
 

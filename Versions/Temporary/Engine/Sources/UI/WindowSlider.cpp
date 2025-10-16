@@ -7,6 +7,8 @@
 #include "WindowMSButton.h"
 #include "InterfaceConsts.h"
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B8A, CWindowSlider)
 
 // CWindowSlider
@@ -51,7 +53,7 @@ void CWindowSlider::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	//}
 
 	pLever = dynamic_cast<CWindowMSButton*>( CUIFactory::MakeWindow( pShared->pLever ) );
-	NI_ASSERT( pLever, StrFmt( "Lever not found for slider: \"%s\"", pInstance->szName.c_str() ) );
+	NI_ASSERT( pLever, fmt::format( "Lever not found for slider: \"{}\"", pInstance->szName ) );
 	AddChild( pLever, false );	
 }
 

@@ -2,6 +2,8 @@
 #include "System/XMLSAXParser.h"
 #include "System/VFSOperations.h"
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 
@@ -263,7 +265,7 @@ public:
 bool TestXmlSaxParser( const char *pszTestFileName )
 {
 	CFileStream stream( NVFS::GetMainVFS(), pszTestFileName );
-	NI_VERIFY( stream.IsOk(), StrFmt("Can't open test file \"%s\" to perform XML SAX parser test!", pszTestFileName), return false );
+	NI_VERIFY( stream.IsOk(), fmt::format("Can't open test file \"{}\" to perform XML SAX parser test!", pszTestFileName), return false );
 	CObj<CTestXmlSaxVisitor> pVisitor = new CTestXmlSaxVisitor();
 	NLXML::ParseXML( pVisitor, &stream );
 	return pVisitor->HasTestPassed();

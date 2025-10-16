@@ -6,6 +6,8 @@
 #include "TypeDef.h"
 #include "Parser/ErrorsAndMessages.h"
 
+#include <fmt/format.h>
+
 namespace NCompileCLike
 {
 
@@ -28,7 +30,7 @@ bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDe
 			CDynamicCast<NDb::NTypeDef::STypeClass> pClass = pTypeDef;
 			if ( pClass && pClass->nClassTypeID == -1 )
 			{
-				NErrors::ShowErrorNoLine( StrFmt( "attribute \"typeID\" in class %s doesn't exist", pClass->szTypeName.c_str() ) );
+				NErrors::ShowErrorNoLine( fmt::format( "attribute \"typeID\" in class {} doesn't exist", pClass->szTypeName ) );
 				return false;
 			}
 		}

@@ -144,7 +144,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	string szSrcScenePath;
 	BuildSrcFilePath( &szSrcScenePath, pManipulator, "SrcName" );
 	string szDestinationFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + GetAddPath();
-	//string szDestinationPath = szDestinationFolder + StrFmt( "%d", nObjectID );
+	//string szDestinationPath = szDestinationFolder + std::to_string(  nObjectID );
 	string szDestinationPath = BuildDestFilePath( pManipulator, szDestinationFolder );
 	NStr::ReplaceAllChars( &szDestinationPath, '\\', '/' );
 	string szObjName( rszObjectName );
@@ -160,7 +160,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	if ( WaitForFile( szDestinationPath, 10000, false ) == false ) 
 	{
 		// old file name style ?
-		string _szDestinationPath = szDestinationFolder + StrFmt( "%d", pManipulator->GetID( "" ) );
+		string _szDestinationPath = szDestinationFolder + std::to_string(  pManipulator->GetID( "" ) );
 		if ( !NFile::DoesFileExist( _szDestinationPath ) ) 
 		{
 			const string szError = StrFmt( "Object \"%s\" (of type \"%s\") destination file \"%s\" doesn't exist (not exported yet?)\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szDestinationPath.c_str() );

@@ -11,6 +11,8 @@
 #include <cstdint>
 #include <memory>
 
+#include <fmt/format.h>
+
 namespace NCompileCLike
 {
 
@@ -71,7 +73,7 @@ void CVisitor::Visit( NLang::CBaseTypeNode *pBaseTypeNode )
 	else
 	{
 		std::unordered_map< std::string, SSimpleType>::iterator iter = simpleTypes.find( pBaseTypeNode->GetName() );
-		NI_VERIFY( iter != simpleTypes.end(), StrFmt( "can't find corresponding type for \"%s\"", pBaseTypeNode->GetName().c_str() ), return );
+		NI_VERIFY( iter != simpleTypes.end(), fmt::format( "can't find corresponding type for \"{}\"", pBaseTypeNode->GetName() ), return );
 		SSimpleType &simpleType = iter->second;
 		pCreatedType = CastToUserObject( simpleType.pfnFunc(), (NDb::NTypeDef::STypeDef*)0 );
 		nodes2TypeDefs[pBaseTypeNode] = pCreatedType;
@@ -92,8 +94,8 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 				pClass->nClassTypeID = nTypeID;
 			}
 			else
-				NErrors::ShowWarningNoLine( StrFmt( "warning: attribute \"typeID\" in struct %s found, skipping", 
-																						pStruct->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "warning: attribute \"typeID\" in struct {} found, skipping",
+																						pStruct->szTypeName ) );
 
 			attr.erase( "typeID" );
 			attr.erase( "comments" );
@@ -122,11 +124,11 @@ void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 				pStruct->szTypeName[0] = 'C';
 
 			if ( pStruct->szTypeName[0] != 'C' )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong class %s, prefix \"C\" expected", 
-																							pComplexTypeNode->GetFile().c_str(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong class {}, prefix \"C\" expected",
+																							pComplexTypeNode->GetFile(), pComplexTypeNode->GetLine(), pStruct->szTypeName ) );
 			else if ( pStruct->szTypeName.size() == 1 )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong class %s name, no symbols after standart prefix", 
-																							pComplexTypeNode->GetFile().c_str(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong class {} name, no symbols after standart prefix",
+																							pComplexTypeNode->GetFile(), pComplexTypeNode->GetLine(), pStruct->szTypeName ) );
 			else
 				pStruct->szTypeName.erase( 0, 1 );
 		}
@@ -138,11 +140,11 @@ void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 				pStruct->szTypeName[0] = 'S';
 
 			if ( pStruct->szTypeName[0] != 'S' )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong struct %s, prefix \"S\" expected", 
-																						pComplexTypeNode->GetFile().c_str(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong struct {}, prefix \"S\" expected",
+																						pComplexTypeNode->GetFile(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
 			else if ( pStruct->szTypeName.size() == 1 )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong struct %s name, no symbols after standart prefix",
-																						pComplexTypeNode->GetFile().c_str(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong struct {} name, no symbols after standart prefix",
+																						pComplexTypeNode->GetFile(), pComplexTypeNode->GetLine(), pStruct->szTypeName.c_str() ) );
 			else
 				pStruct->szTypeName.erase( 0, 1 );
 		}
@@ -210,7 +212,7 @@ CVariant Val2Variant( const NLang::CSimpleValue &value )
 				return CVariant( wszValue );
 			}
 		default:
-			NI_VERIFY( false, StrFmt( "Unknown type %d", (int)value.GetType() ), return CVariant( "" ) );
+			NI_VERIFY( false, fmt::format( "Unknown type {}", (int)value.GetType() ), return CVariant( "" ) );
 	}
 
 	return CVariant( "" );
@@ -303,11 +305,11 @@ void CVisitor::Visit( NLang::CEnumNode *pEnumNode )
 		{
 			CPtr<NDb::NTypeDef::STypeEnum> pTypeEnum = new NDb::NTypeDef::STypeEnum( pEnumNode->GetName() );
 			if ( pTypeEnum->szTypeName[0] != 'E' )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong enum %s, prefix \"E\" expected", 
-																						pEnumNode->GetFile().c_str(), pEnumNode->GetLine(), pTypeEnum->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong enum {}, prefix \"E\" expected",
+																						pEnumNode->GetFile(), pEnumNode->GetLine(), pTypeEnum->szTypeName ) );
 			else if ( pTypeEnum->szTypeName.size() == 1 )
-				NErrors::ShowWarningNoLine( StrFmt( "%s(%d) warning: wrong enum %s name, no symbols after standart prefix",
-																						pEnumNode->GetFile().c_str(), pEnumNode->GetLine(), pTypeEnum->szTypeName.c_str() ) );
+				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong enum {} name, no symbols after standart prefix",
+																						pEnumNode->GetFile(), pEnumNode->GetLine(), pTypeEnum->szTypeName ) );
 			else
 				pTypeEnum->szTypeName.erase( 0, 1 );
 
@@ -479,7 +481,7 @@ void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STy
 	}
 	else
 	{
-		NI_ASSERT( false, StrFmt( "can't recognize node %s", typeid( *pNode ).name() ) );
+		NI_ASSERT( false, fmt::format( "can't recognize node {}", typeid( *pNode ).name() ) );
 	}
 }
 

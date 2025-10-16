@@ -41,6 +41,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CAAFeedBacks theAAFeedBacks;
 extern CSupremeBeing theSupremeBeing;
 extern CUnitCreation theUnitCreation;
@@ -324,7 +326,7 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 			pResult = CSoldierEnterEntrenchmentState::Instance( pUnit, pEntrenchmentPart->GetOwner() );
 		}
 		else
-			NI_ASSERT( false, StrFmt( "Wrong number %g in command Enter", cmd.fNumber ) );
+			NI_ASSERT( false, fmt::format( "Wrong number {:g} in command Enter", cmd.fNumber ) );
 		
 		break;
 	case ACTION_COMMAND_IDLE_BUILDING:
@@ -399,7 +401,7 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 
 		break;
 	case ACTION_COMMAND_USE:
-		NI_ASSERT( cmd.fNumber >= 0, StrFmt( "Wrong number of use animation (%d)", (int)cmd.fNumber ) );
+		NI_ASSERT( cmd.fNumber >= 0, fmt::format( "Wrong number of use animation ({})", (int)cmd.fNumber ) );
 		pResult = CSoldierUseState::Instance( pUnit, EActionNotify((int)cmd.fNumber) );
 
 		break;
@@ -2152,7 +2154,7 @@ CSoldierUseState::CSoldierUseState( CAIUnit *_pUnit, const EActionNotify &_eStat
 	pUnit->Stop();
 	updater.AddUpdate( 0, eState, pUnit, -1 );
 	
-	NI_ASSERT( eState == ACTION_NOTIFY_USE_UP || eState == ACTION_NOTIFY_USE_DOWN, StrFmt( "Wrong action (%d) in UseState", (int)eState ) );
+	NI_ASSERT( eState == ACTION_NOTIFY_USE_UP || eState == ACTION_NOTIFY_USE_DOWN, fmt::format( "Wrong action ({}) in UseState", (int)eState ) );
 }
 
 void CSoldierUseState::Segment()

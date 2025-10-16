@@ -11,6 +11,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** CControlSumCheckCommand
@@ -231,8 +233,8 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		Singleton<IGameTimer>()->Pause( true, 0 );
 		//DEBUG}
 		NGlobal::SetVar( "out_of_sync", 1 );
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
-			StrFmt( "ASYNC( %d with %d )", nOutOfSyncs, nOutOfSyncWith ) );
+		const auto mesage = fmt::format( "ASYNC( {} with {} )", nOutOfSyncs, nOutOfSyncWith );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, mesage.c_str());
 
 		// Drop out if many players
 		if ( nOutOfSyncWith > 1 )

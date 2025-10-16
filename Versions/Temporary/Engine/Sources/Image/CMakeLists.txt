@@ -15,6 +15,6 @@ set(SOURCES
 add_library(Image SHARED ${SOURCES})
 add_stdafx_pch(Image)
 add_export_header(Image)
-target_link_libraries(Image PRIVATE MemoryLib Misc System dxsdk::d3dx9 winapi)
+target_link_libraries(Image PRIVATE MemoryLib Misc System dxsdk::d3dx9 winapi fmt::fmt-header-only)
 install(TARGETS Image DESTINATION bin)
 add_version_info(Image)

@@ -7,6 +7,8 @@
 #include <zconf.h>
 #include <zlib.h>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** single zip file
@@ -212,7 +214,7 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 		}
 		else
 		{
-			NI_ASSERT( false, StrFmt("File \"%s\" has wrong compression! Only Deflate and Store methods allowed (-9 and -0 options for zip.exe)", hdr.GetName()) );
+			NI_ASSERT( false, fmt::format("File \"{}\" has wrong compression! Only Deflate and Store methods allowed (-9 and -0 options for zip.exe)", hdr.GetName()) );
 		}
 	}
 }

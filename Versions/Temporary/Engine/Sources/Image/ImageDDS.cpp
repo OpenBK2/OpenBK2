@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #pragma comment( linker, "/NODEFAULTLIB:libc.lib" )
 
 
@@ -344,7 +346,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 	D3DFORMAT fmt = NGfx::PixelID2D3DFormat( ePixelFormat );
 	if ( fmt == D3DFMT_A8R8G8B8 && ePixelFormat != NGfx::CF_A8R8G8B8 )
 	{
-		NI_ASSERT( 0, StrFmt("Wrong destination format, DXT conversion failed (\"%s\")", szFileName.c_str()) );
+		NI_ASSERT( 0, fmt::format("Wrong destination format, DXT conversion failed (\"{}\")", szFileName) );
 		return;
 	}
 
@@ -353,7 +355,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 		                                   D3DPOOL_MANAGED, pDstTexture.GetAddr(), 0 );
 	if ( FAILED(hr) )
 	{
-		NI_ASSERTHR( hr, StrFmt("Can't create DXT texture \"%s\", DXT conversion failed", szFileName.c_str()) );
+		NI_ASSERTHR( hr, fmt::format("Can't create DXT texture \"{}\", DXT conversion failed", szFileName) );
 		return;
 	}
 
@@ -373,14 +375,14 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 		HRESULT hr = pDstTexture->GetSurfaceLevel( nLevel, pSurfaceLevel.GetAddr() );
 		if ( FAILED(hr) ) 
 		{
-			NI_ASSERTHR( hr, StrFmt("Can't get %d level of texture \"%s\", conversion failed", nLevel, szFileName.c_str()) );
+			NI_ASSERTHR( hr, fmt::format("Can't get {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
 			continue;
 		}
 		hr = D3DXLoadSurfaceFromMemory( pSurfaceLevel, NULL, NULL, &(image[0][0]), D3DFMT_A8R8G8B8,
 			                                      image.GetSizeX() * sizeof(uint32_t), NULL, &rect, D3DX_FILTER_NONE, 0 );
 		if ( FAILED(hr) ) 
 		{
-			NI_ASSERTHR( hr, StrFmt("Can't load %d level of texture \"%s\", conversion failed", nLevel, szFileName.c_str()) );
+			NI_ASSERTHR( hr, fmt::format("Can't load {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
 			continue;
 		}
 	}
@@ -389,7 +391,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 	hr = D3DXSaveTextureToFile( szFileName.c_str(), D3DXIFF_DDS, pDstTexture, NULL );
 	if ( FAILED(hr) )
 	{
-		NI_ASSERTHR( hr, StrFmt("Can't write final DXT texture \"%s\", DXT conversion failed", szFileName.c_str()) );
+		NI_ASSERTHR( hr, fmt::format("Can't write final DXT texture \"{}\", DXT conversion failed", szFileName) );
 	}
 }
 

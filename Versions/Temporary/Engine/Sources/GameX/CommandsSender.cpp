@@ -90,8 +90,10 @@ void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uin
 		cmd.bFromAI = false;
 
 #ifndef _FINALRELEASE
-		if ( NGlobal::GetVar( "m1", 0 ) == 0 && NGlobal::GetVar( "autosave_enable", 0 ) )
-			NMainLoop::Command( nCommandSaveID, StrFmt( "autosave_%04d", ++AUTOSAVE_ID ) );
+		if ( NGlobal::GetVar( "m1", 0 ) == 0 && NGlobal::GetVar( "autosave_enable", 0 ) ) {
+			const auto command = fmt::format( "autosave_{:04d}", ++AUTOSAVE_ID );
+			NMainLoop::Command( nCommandSaveID, command.c_str() );
+		}
 #endif
 
 		IAILogicCommandB2 *pAICmd = new CB2GroupCommand( &cmd, wGroup, bPlaceInQueue );

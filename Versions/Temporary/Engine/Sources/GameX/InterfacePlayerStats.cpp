@@ -9,6 +9,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 // CInterfacePlayerStats
 
 CInterfacePlayerStats::CInterfacePlayerStats() :
@@ -87,13 +89,13 @@ void CInterfacePlayerStats::MakeInterior()
 	int nKilled = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_KILLED );
 	int nLost = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_LOST );
 	if ( pUnitsKilledView )
-		pUnitsKilledView->SetText( pUnitsKilledView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nKilled ) ) );
+		pUnitsKilledView->SetText( pUnitsKilledView->GetDBText() + NStr::ToUnicode( std::to_string(  nKilled ) ) );
 	if ( pUnitsLostView )
-		pUnitsLostView->SetText( pUnitsLostView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nLost ) ) );
+		pUnitsLostView->SetText( pUnitsLostView->GetDBText() + NStr::ToUnicode( std::to_string(  nLost ) ) );
 
 	int nMissionsPassed = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_MISSIONS_PASSED );
 	if ( pMissionsPassedView )
-		pMissionsPassedView->SetText( pMissionsPassedView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nMissionsPassed ) ) );
+		pMissionsPassedView->SetText( pMissionsPassedView->GetDBText() + NStr::ToUnicode( std::to_string(  nMissionsPassed ) ) );
 
 	int nInGameTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_TIME );
 	int nSec = nInGameTime % 60;
@@ -105,9 +107,9 @@ void CInterfacePlayerStats::MakeInterior()
 	std::wstring wszInGameTime;
 	if ( IScreen *pScreen = GetScreen() )
 	{
-		wszInGameTime = NStr::ToUnicode( StrFmt( "%2d", nHour ) );
+		wszInGameTime = NStr::ToUnicode( fmt::format( "{:2d}", nHour ) );
 		wszInGameTime += pScreen->GetTextEntry( "T_HOUR" );
-		wszInGameTime += NStr::ToUnicode( StrFmt( "%2d", nMin ) );
+		wszInGameTime += NStr::ToUnicode( fmt::format( "{:2d}", nMin ) );
 		wszInGameTime += pScreen->GetTextEntry( "T_MINUTE" );
 	}
 	if ( pInGameTimeView )
@@ -125,7 +127,7 @@ void CInterfacePlayerStats::MakeInterior()
 
 	ExpProgressStep();
 
-	std::wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d",
+	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
 		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pNextRankProgressView )

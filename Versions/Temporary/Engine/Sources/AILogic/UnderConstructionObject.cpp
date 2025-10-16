@@ -7,6 +7,8 @@
 #include "Diplomacy.h"
 #include "Stats_B2_m1/ActionCommand.h"
 
+#include <fmt/format.h>
+
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 CUnderConstructionObject theUnderConstructionObject;
@@ -99,7 +101,7 @@ void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, c
 
 		break;
 	default:
-		NI_ASSERT( false, StrFmt( "wrong build command %i", eCommand ) );
+		NI_ASSERT( false, fmt::format( "wrong build command {}", int( eCommand ) ) );
 	}
 }
 

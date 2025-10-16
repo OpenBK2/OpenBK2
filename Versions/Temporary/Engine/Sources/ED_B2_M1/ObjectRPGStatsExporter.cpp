@@ -45,7 +45,7 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 					bool bFileExist = WaitForFile( szSkeletonFileName, 10000 );
 					if ( !bFileExist )
 					{
-						szSkeletonFileName = szSkeletonFolder + StrFmt( "%d", pDBSkeleton->GetRecordID() );
+						szSkeletonFileName = szSkeletonFolder + std::to_string(  pDBSkeleton->GetRecordID() );
 						bFileExist =  WaitForFile( szSkeletonFileName, 10000 );
 					}
 					if ( bFileExist )

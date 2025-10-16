@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NDb
 {
 
@@ -178,7 +180,7 @@ void SStructMetaInfo::DestructStruct( uint8_t *pThis, NBind::UValue *values, boo
 
 void SStructMetaInfo::AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType )
 {
-	NI_ASSERT( fields.find(szName) == fields.end(), StrFmt("Field \"%s\" already exists!", szName.c_str() ) );
+	NI_ASSERT( fields.find(szName) == fields.end(), fmt::format("Field \"{}\" already exists!", szName ) );
 	SField &field = fields[szName];
 	field.nShift = nShift;
 	field.main.type = eType;
@@ -193,7 +195,7 @@ void SStructMetaInfo::AddField( const std::string &szName, int nShift, int nSize
 void SStructMetaInfo::AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType,
 							                  int nContainedSize, NTypeDef::ETypeType eContainedType )
 {
-	NI_ASSERT( fields.find(szName) == fields.end(), StrFmt("Field \"%s\" already exists!", szName.c_str() ) );
+	NI_ASSERT( fields.find(szName) == fields.end(), fmt::format("Field \"{}\" already exists!", szName ) );
 	SField &field = fields[szName];
 	field.nShift = nShift;
 	field.main.type = eType;
@@ -316,7 +318,7 @@ void SetupSetGetOwnFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeType e
 		break;
 
 	default:
-		NI_ASSERT( false, StrFmt("Unknown terminal type %d", eType) );
+		NI_ASSERT( false, fmt::format("Unknown terminal type {}", int( eType )) );
 	}
 }
 void SetupSetGetStructFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeType eType )
@@ -369,7 +371,7 @@ void SetupSetGetStructFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeTyp
 		break;
 
 	default:
-		NI_ASSERT( false, StrFmt("Unknown terminal type %d", eType) );
+		NI_ASSERT( false, fmt::format("Unknown terminal type {}", int( eType )) );
 	}
 }
 
@@ -384,7 +386,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 			// add nocode (own) value
 			AddField( szFullFieldName, (uint32_t(nNumOwnValues) << 16) | 0x8000ffff, pType->GetTypeSize(), pType->eType );
 			posField = fields.find( szFullFieldName );
-			NI_ASSERT( posField != fields.end(), StrFmt("New field \"%s\" was not added", szFullFieldName.c_str()) );
+			NI_ASSERT( posField != fields.end(), fmt::format("New field \"{}\" was not added", szFullFieldName) );
 			SetupSetGetOwnFuncs( &posField->second, pType->eType );
 			++nNumOwnValues;
 //			DebugTrace( "\tNew nocode field \"%s\" of type %d added!", szFullFieldName.c_str(), pType->eType );
@@ -395,11 +397,11 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 			++nNumCodeValues;
 		}
 		posField->second.pTypeDef = pType;
-		NI_ASSERT( pType->GetTypeSize() == int(posField->second.main.size), StrFmt("Size mismatch in struct meta info and type definition for \"%s\"", szFullFieldName.c_str()) );
+		NI_ASSERT( pType->GetTypeSize() == int(posField->second.main.size), fmt::format("Size mismatch in struct meta info and type definition for \"{}\"", szFullFieldName) );
 //		DebugTrace( "\tField \"%s\" of type %d linked!", szFullFieldName.c_str(), pType->eType );
 		if ( posField->second.GetType() != pType->eType )
 		{
-			NI_ASSERT( posField->second.GetType() == pType->eType, StrFmt("Different types in structure and meta-info (%d != %d) field \"%s\". Removing field!", posField->second.GetType(), pType->eType, szFullFieldName.c_str()) );
+			NI_ASSERT( posField->second.GetType() == pType->eType, fmt::format("Different types in structure and meta-info ({} != {}) field \"{}\". Removing field!", int( posField->second.GetType() ), int( pType->eType ), szFullFieldName) );
 			fields.erase( posField );
 		}
 	}
@@ -437,7 +439,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 				posField->second.pContained->singleField.pTypeDef = pTypeArray->field.pType;
 		}
 			//
-			NI_ASSERT( posField != fields.end(), StrFmt("New field \"%s\" was not added", szFullFieldName.c_str()) );
+			NI_ASSERT( posField != fields.end(), fmt::format("New field \"{}\" was not added", szFullFieldName) );
 		}
 		else
 		{
@@ -468,7 +470,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 	}
 	else
 	{
-		NI_ASSERT( 0, StrFmt("Unknown or unsupported type \"%s\"!", SKnownEnum<NDb::NTypeDef::ETypeType>::ToString(pType->eType)) );
+		NI_ASSERT( 0, fmt::format("Unknown or unsupported type \"{}\"!", SKnownEnum<NDb::NTypeDef::ETypeType>::ToString(pType->eType)) );
 	}
 }
 

@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern NTimer::STime curTime;
 extern SRailRoadSystem theRailRoadSystem;
 extern CGroupLogic theGroupLogic;				
@@ -231,7 +233,7 @@ void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	fFrontLink = 1;
 	fBackLink = 1;
 	const NDb::SMechUnitRPGStats *pMechStats = static_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
-	NI_ASSERT( pMechStats, StrFmt( "Not MechUnit stats in unit \"%s\" (train car)", NDb::GetResName(GetStats()) ) );
+	NI_ASSERT( pMechStats, fmt::format( "Not MechUnit stats in unit \"{}\" (train car)", NDb::GetResName(GetStats()) ) );
 	if ( pMechStats )
 	{
 		fFrontOffset = fabs( pMechStats->vFrontWheel.y );
@@ -367,7 +369,7 @@ void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 		if ( pLinkToLocomotive )
 			LinkToLocomotive( pLinkToLocomotive );
 		else
-			NI_ASSERT( 0, StrFmt( "Wrong link for train car (not another car or locomotive), link ID %d ", GetLink() ) );
+			NI_ASSERT( 0, fmt::format( "Wrong link for train car (not another car or locomotive), link ID {} ", GetLink() ) );
 	}
 }
 

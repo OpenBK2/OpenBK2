@@ -339,7 +339,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		GetTempAIGeometryName( &szTempCenterAIGeometryName, *itVisualObject, objectDBID, AIG_CENTER );
 		GetTempAIGeometryName( &szTempBorderAIGeometryName, *itVisualObject, objectDBID, AIG_BORDER );
 		//
-		//const string szDestination = szGeometryFolder + StrFmt( "%d", nGeometryID );
+		//const string szDestination = szGeometryFolder + std::to_string(  nGeometryID );
 		const string szMAIDestination = szTempMAIGeometryName;
 		const string szCenterDestination = szTempCenterAIGeometryName;
 		const string szBorderDestination = szTempBorderAIGeometryName;

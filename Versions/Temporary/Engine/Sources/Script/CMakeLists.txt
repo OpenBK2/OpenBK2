@@ -28,6 +28,6 @@ set(SOURCES
 add_library(Script SHARED ${SOURCES})
 add_stdafx_pch(Script)
 add_export_header(Script)
-target_link_libraries(Script PRIVATE MemoryLib Misc System winapi)
+target_link_libraries(Script PRIVATE MemoryLib Misc System winapi fmt::fmt-header-only)
 install(TARGETS Script DESTINATION bin)
 add_version_info(Script)

@@ -32,6 +32,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D474, CFormationRepairUnitState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D475, CFormationLoadRuState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D476, CFormationResupplyUnitState );
@@ -1730,9 +1732,9 @@ bool CFormationGunCrewState::ClearState()
 	{
 		crew.clear();
 		// определить сколько мест нам нужно, чтобы распределить всю команду
-		NI_ASSERT( pStats->gunners.size() == EGSS_MOVE + 1, StrFmt("gunners structure has wrong size (%d)", pStats->gunners.size()) );
+		NI_ASSERT( pStats->gunners.size() == EGSS_MOVE + 1, fmt::format("gunners structure has wrong size ({})", pStats->gunners.size()) );
 		crew.resize( pStats->gunners[eGunState].gunners.size() );
-		NI_ASSERT( !crew.empty(), StrFmt( "locators for gunner places in artillery %s are not exist", pStats->GetParentName()) );
+		NI_ASSERT( !crew.empty(), fmt::format( "locators for gunner places in artillery {} are not exist", pStats->GetParentName()) );
 
 		pArtillery->SetOperable( 1.0f );
 		wGunTurretDir =  pArtillery->GetFrontDirection() + pArtillery->GetTurret( 0 )->GetHorCurAngle();
@@ -1904,7 +1906,7 @@ void CFormationGunCrewState::RecountPoints( const CVec2 &vGunDir, const CVec2 &v
 
 	const int nCrew = crew.size();
 	const int nDesiredSize = pStats->gunners[eGunState].gunners.size();
-	NI_ASSERT( nDesiredSize != 0, StrFmt("%s in state %d has 0 gunners", pStats->szKeyName, eGunState) );
+	NI_ASSERT( nDesiredSize != 0, fmt::format("{} in state {} has 0 gunners", pStats->szKeyName, int( eGunState )) );
 
 	for ( int i = 0; i < nCrew; ++i )
 	{
@@ -2144,7 +2146,7 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 						animation.wDirection = wGunBaseDir;
 					else
 						animation.wDirection = wGunTurretDir;
-					NI_ASSERT( 1 >= pArtillery->GetNCommonGuns(), StrFmt("artillery (%s) with %d guns, error", NDb::GetResName(pArtillery->GetStats()), pArtillery->GetNCommonGuns()) );
+					NI_ASSERT( 1 >= pArtillery->GetNCommonGuns(), fmt::format("artillery ({}) with {} guns, error", NDb::GetResName(pArtillery->GetStats()), pArtillery->GetNCommonGuns()) );
 					const bool bAttackingNow =	IsGunAttacking();
 					if ( !bAttackingNow )
 						animation.eAction = ACTION_NOTIFY_IDLE;

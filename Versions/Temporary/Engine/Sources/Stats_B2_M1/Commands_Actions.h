@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** user commands (128 bits)
@@ -19,19 +21,19 @@ public:
 
 	void RemoveData( const int nBit )
 	{
-		NI_ASSERT( (nBit >= 0) && (nBit <= 127), StrFmt("Invalid action %d must be in [0..127]", nBit) );
+		NI_ASSERT( (nBit >= 0) && (nBit <= 127), fmt::format("Invalid action {} must be in [0..127]", nBit) );
 		const int nIndex = nBit / 8;
 		actions[nIndex] &= ~( 1UL << (nBit - nIndex*8) );
 	}
 	void SetData( const int nBit )
 	{
-		NI_ASSERT( (nBit >= 0) && (nBit <= 127), StrFmt("Invalid action %d must be in [0..127]", nBit) );
+		NI_ASSERT( (nBit >= 0) && (nBit <= 127), fmt::format("Invalid action {} must be in [0..127]", nBit) );
 		const int nIndex = nBit / 8;
 		actions[nIndex] |= ( 1UL << (nBit - nIndex*8) );
 	}
 	const bool GetData( const int nBit ) const
 	{
-		NI_ASSERT( (nBit >= 0) && (nBit <= 127), StrFmt("Invalid action %d must be in [0..127]", nBit) );
+		NI_ASSERT( (nBit >= 0) && (nBit <= 127), fmt::format("Invalid action {} must be in [0..127]", nBit) );
 		const int nIndex = nBit / 8;
 		return actions[nIndex] & ( 1UL << (nBit - nIndex*8) );
 	}
@@ -78,19 +80,19 @@ public:
 	//
 	const bool HasAction( const int nAction ) const
 	{
-		NI_ASSERT( (nAction >= 0) && (nAction <= 127), StrFmt("Invalid action %d must be in [0..127]", nAction) );
+		NI_ASSERT( (nAction >= 0) && (nAction <= 127), fmt::format("Invalid action {} must be in [0..127]", nAction) );
 		const int nIndex = nAction / 32;
 		return actions[nIndex] & ( 1UL << (nAction - nIndex*32) );
 	}
 	void SetAction( const int nAction )
 	{
-		NI_ASSERT( (nAction >= 0) && (nAction <= 127), StrFmt("Invalid action %d must be in [0..127]", nAction) );
+		NI_ASSERT( (nAction >= 0) && (nAction <= 127), fmt::format("Invalid action {} must be in [0..127]", nAction) );
 		const int nIndex = nAction / 32;
 		actions[nIndex] |= ( 1UL << (nAction - nIndex*32) );
 	}
 	void RemoveAction( const int nAction )
 	{
-		NI_ASSERT( (nAction >= 0) && (nAction <= 127), StrFmt("Invalid action %d must be in [0..127]", nAction) );
+		NI_ASSERT( (nAction >= 0) && (nAction <= 127), fmt::format("Invalid action {} must be in [0..127]", nAction) );
 		const int nIndex = nAction / 32;
 		actions[nIndex] &= ~( 1UL << (nAction - nIndex*32) );
 	}

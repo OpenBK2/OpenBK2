@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // Приведения типов
 
 template <class TPoint>
@@ -728,7 +730,7 @@ template<class TPoint>
 void RotateEdgeToPI2( TPoint *pvBegin, TPoint *pvEnd )
 {
 	NI_ASSERT( ( pvBegin != 0 ) && ( pvEnd != 0 ),
-						 StrFmt( "Wrong parameters: pvBegin %x, pvEnd %x\n", pvBegin, pvEnd ) );
+						 fmt::format( "Wrong parameters: pvBegin {:x}, pvEnd {:x}\n", pvBegin, pvEnd ) );
 
 	const TPoint m = 0.5f * ( ( *pvBegin ) + ( *pvEnd ) );
 	const TPoint v = ( *pvEnd ) - ( *pvBegin );
@@ -742,7 +744,7 @@ template<class TPoint>
 void FlipEdgeToPI( TPoint *pvBegin, TPoint *pvEnd )
 {
 	NI_ASSERT( ( pvBegin != 0 ) && ( pvEnd != 0 ),
-						 StrFmt( "Wrong parameters: pvBegin %x, pvEnd %x\n", pvBegin, pvEnd ) );
+						 fmt::format( "Wrong parameters: pvBegin {:x}, pvEnd {:x}\n", pvBegin, pvEnd ) );
 
 	const TPoint vTemp = ( *pvEnd );
 	( *pvEnd ) = ( *pvBegin );
@@ -810,7 +812,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 			if ( endClassifyEdge != CE_RIGHT )
 			{
 				NI_ASSERT( classifyIntersect == CI_SKEW,
-									 StrFmt( "Invalid Intersection: ( %g, %g )--( %g, %g ) with ( %g, %g )--( %g, %g )",
+									 fmt::format( "Invalid Intersection: ( {:g}, {:g} )--( {:g}, {:g} ) with ( {:g}, {:g} )--( {:g}, {:g} )",
 													 rvBegin.x, rvBegin.y, rvEnd.x, rvEnd.y,
 													 itSourcePoint0->x, itSourcePoint0->x, itSourcePoint1->x, itSourcePoint1->y ) );
 				if ( classifyIntersect != CI_SKEW )
@@ -843,7 +845,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 			if ( endClassifyEdge != CE_LEFT )
 			{
 				NI_ASSERT( classifyIntersect == CI_SKEW,
-									 StrFmt( "Invalid Intersection: ( %g, %g )--( %g, %g ) with ( %g, %g )--( %g, %g )",
+									 fmt::format( "Invalid Intersection: ( {:g}, {:g} )--( {:g}, {:g} ) with ( {:g}, {:g} )--( {:g}, {:g} )",
 													 rvBegin.x, rvBegin.y, rvEnd.x, rvEnd.y,
 													 itSourcePoint0->x, itSourcePoint0->x, itSourcePoint1->x, itSourcePoint1->y ) );
 				if ( classifyIntersect != CI_SKEW )
@@ -916,7 +918,7 @@ template<class TPolygon, class TPoint>
 bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, TPolygon *pCutPolygon )
 {
 	NI_ASSERT( pCutPolygon != 0,
-						 StrFmt( "CutByPolygonCore() Wrong parameter: pCutPolygon %x\n", pCutPolygon ) );
+						 fmt::format( "CutByPolygonCore() Wrong parameter: pCutPolygon {:x}\n", pCutPolygon ) );
 
 	if ( rPolygonCore.empty() )
 	{
@@ -998,7 +1000,7 @@ template<class TPolygon, class TPoint>
 bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const std::vector<float> &weights, const TPoint &rPoint, float fWeight, TPolygon *pVoronoyPolygon )
 {
 	NI_ASSERT( pVoronoyPolygon != 0,
-		StrFmt( "Wrong parameter: pVoronoyPolygon %x\n", pVoronoyPolygon ) );
+		fmt::format( "Wrong parameter: pVoronoyPolygon {:x}\n", pVoronoyPolygon ) );
 	ASSERT( rPoints.size() == weights.size() );
 
 	if ( rBoundingPolygon.empty() )
@@ -1055,7 +1057,7 @@ template<class TPolygon, class TPoint>
 bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const TPoint &rPoint, TPolygon *pVoronoyPolygon )
 {
 	NI_ASSERT( pVoronoyPolygon != 0,
-						 StrFmt( "Wrong parameter: pVoronoyPolygon %x\n", pVoronoyPolygon ) );
+						 fmt::format( "Wrong parameter: pVoronoyPolygon {:x}\n", pVoronoyPolygon ) );
 
 	if ( rBoundingPolygon.empty() )
 	{
@@ -1140,7 +1142,7 @@ template<class TPolygon, class TPoint>
 void UniquePolygon( TPolygon *pPolygon, float fRange )
 {
 	NI_ASSERT( pPolygon != 0,
-						 StrFmt( "Wrong parameter: %x\n", pPolygon ) );
+						 fmt::format( "Wrong parameter: {:x}\n", pPolygon ) );
 	pPolygon->erase( unique( pPolygon->begin(),
 													 pPolygon->end(),
 													 SInRangeFunctional<TPoint>( fRange ) ),
@@ -1177,7 +1179,7 @@ template<class TPolygon>
 void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBox )
 {
 	NI_ASSERT( pBoundingBox != 0,
-						 StrFmt( "Wrong parameter: %x\n", pBoundingBox ) );
+						 fmt::format( "Wrong parameter: {:x}\n", pBoundingBox ) );
 
 	pBoundingBox->Set( 0.0f, 0.0f, 0.0f, 0.0f );
 	//вырожденный случай
@@ -1229,9 +1231,9 @@ template<class TPoint>
 TPoint GetRandomEdgePoint( const TPoint &rvBegin, const TPoint &rvEnd, float fMinSideDistanceRatio, const CTPoint<float> &rShiftRatio, EClassifyEdge classifyEdge )
 {
 	NI_ASSERT( ( fMinSideDistanceRatio >= 0.0f ) && ( fMinSideDistanceRatio <= 0.5f ),
-						 StrFmt( "Invalid fMinSideDistanceRatio %g [0, 0.5]", fMinSideDistanceRatio ) );
+						 fmt::format( "Invalid fMinSideDistanceRatio {:g} [0, 0.5]", fMinSideDistanceRatio ) );
 	NI_ASSERT( rShiftRatio.min <= rShiftRatio.max,
-						 StrFmt( "Invalid fShiftRatio %g < %g", rShiftRatio.min, rShiftRatio.max ) );
+						 fmt::format( "Invalid fShiftRatio {:g} < {:g}", rShiftRatio.min, rShiftRatio.max ) );
 	
 	const TPoint vEdge = rvEnd - rvBegin;
 	
@@ -1259,7 +1261,7 @@ template<class TPolygon, class TPoint>
 bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSideDistanceRatio, const CTPoint<float> &rShiftRatio, TPolygon *pRandomizedSequence, float fMinEdgeLength, float fMaxEdgeLength, bool bPolygon )
 {
 	NI_ASSERT( pRandomizedSequence != 0,
-						 StrFmt( "Wrong parameter: pRandomizedSequence %x\n", pRandomizedSequence ) );
+						 fmt::format( "Wrong parameter: pRandomizedSequence {:x}\n", pRandomizedSequence ) );
 
 	if ( rSourceSequence.empty() )
 	{
@@ -1391,7 +1393,7 @@ template<class TPolygon, class TPoint>
 bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPolygon, float fDistance, TPolygon *pEnlargedPolygon )
 {
 	NI_ASSERT( pEnlargedPolygon != 0,
-						 StrFmt( "Wrong parameter: pEnlargedPolygon %x\n", pEnlargedPolygon ) );
+						 fmt::format( "Wrong parameter: pEnlargedPolygon {:x}\n", pEnlargedPolygon ) );
 
 	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
 	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
@@ -1636,7 +1638,7 @@ inline bool IsValidPointSlow( const TRect &rBounds, const TPoint &rPoint )
 template<class TRect, class TPoint>
 inline int ValidatePoint( const TRect &rBounds, TPoint *pPoint )
 {
-	NI_ASSERT_T( pPoint != 0, StrFmt( "Wrong parameter: %x\n", pPoint ) );
+	NI_ASSERT_T( pPoint != 0, fmt::format( "Wrong parameter: {:x}\n", pPoint ) );
 
 	int nResult = 1;
 	//Определяем границы

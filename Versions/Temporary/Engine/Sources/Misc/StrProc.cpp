@@ -7,6 +7,8 @@
 #include <cstring>
 #include <system_error>
 
+#include <fmt/format.h>
+
 namespace NStr 
 {
 
@@ -387,7 +389,7 @@ void MBCSToUTF8( std::string *pRes, const std::string &szSrc )
 // GUID => string
 void GUID2String( std::string *pString, const GUID &guid )
 {
-	*pString = StrFmt( "%.8X-%.4X-%.4X-%.2X%.2X-%.2X%.2X%.2X%.2X%.2X%.2X", guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], 
+	*pString = fmt::format( "{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}", guid.Data1, guid.Data2, guid.Data3, guid.Data4[0],
 		guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7] );
 }
 void String2GUID( const std::string &szString, GUID *pGuid )

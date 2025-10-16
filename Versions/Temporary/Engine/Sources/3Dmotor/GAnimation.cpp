@@ -7,6 +7,7 @@
 #include "GAnimUtils.h"
 #include "DBScene.h"
 
+#include <fmt/format.h>
 
 namespace NAnimation
 {
@@ -128,7 +129,7 @@ void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBa
 	{
 		if ( _skeletonH.pSkeleton )
 		{
-			NI_ASSERT( 0, StrFmt("Can't create skeleton \"%s\"", _skeletonH.pSkeleton->GetDBID().ToString().c_str() ) );
+			NI_ASSERT( 0, fmt::format("Can't create skeleton \"{}\"", _skeletonH.pSkeleton->GetDBID().ToString() ) );
 		}
 		else
 		{
@@ -143,7 +144,7 @@ void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBa
 	{
 		if ( _skeletonH.pSkeleton )
 		{
-			NI_ASSERT( 0, StrFmt("Can't create skeleton \"%s\"", _skeletonH.pSkeleton->GetDBID().ToString().c_str() ) );
+			NI_ASSERT( 0, fmt::format("Can't create skeleton \"{}\"", _skeletonH.pSkeleton->GetDBID().ToString() ) );
 		}
 		else
 		{
@@ -539,7 +540,7 @@ CSkeletonAnimator::SAnimID CSkeletonAnimator::AddAnimation(
 
 void CSkeletonAnimator::SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed )
 {
-	NI_ASSERT( (animID >= 0 && animID < animHolders.size()), StrFmt("Invalid anim index \"%d\"", animID) );
+	NI_ASSERT( (animID >= 0 && animID < animHolders.size()), fmt::format("Invalid anim index \"{}\"", animID) );
 	if ( animID >= 0 && animID < animHolders.size() )
 	{
 		NI_ASSERT( nAnimWithMovement == -1, "Only one globmove animation at a time supported" );

@@ -16,6 +16,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const float UNFADE_TIME = 1.0f;
 
 // CInterfaceMPStatistics
@@ -82,11 +84,11 @@ void CInterfaceMPStatistics::MakeInterior()
 	if ( pMissionTimeView )
 	{
 		int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(), IScenarioTracker::ESK_TIME );
-		std::string szText = StrFmt( "%02d", nTime % 60 );
+		std::string szText = fmt::format( "{:02d}", nTime % 60 );
 		nTime = nTime / 60;
-		szText = StrFmt( "%02d:", nTime % 60 ) + szText;
+		szText = fmt::format( "{:02d}:", nTime % 60 ) + szText;
 		nTime = nTime / 60;
-		szText = StrFmt( "%d:", nTime ) + szText;
+		szText = std::to_string( nTime ) + szText;
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + NStr::ToUnicode( szText ) );
 	}
 
@@ -222,11 +224,11 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &t
 		if ( pItemTeamColour )
 			pItemTeamColour->SetState( item.nTeam );
 
-		pItemLost->SetText( pItemLost->GetDBText() + NStr::ToUnicode( StrFmt( "%d", item.nUnitsLost ) ) );
-		pItemKilled->SetText( pItemKilled->GetDBText() + NStr::ToUnicode( StrFmt( "%d", item.nUnitsKilled ) ) );
-		pItemScore1->SetText( pItemScore1->GetDBText() + NStr::ToUnicode( StrFmt( "%d%%", item.nScoreTactics ) ) );
-		pItemScore2->SetText( pItemScore2->GetDBText() + NStr::ToUnicode( StrFmt( "%d%%", item.nScoreStrategy ) ) );
-		pItemScoreTotal->SetText( pItemScoreTotal->GetDBText() + NStr::ToUnicode( StrFmt( "%d", item.nScore ) ) );
+		pItemLost->SetText( pItemLost->GetDBText() + NStr::ToUnicode( std::to_string(  item.nUnitsLost ) ) );
+		pItemKilled->SetText( pItemKilled->GetDBText() + NStr::ToUnicode( std::to_string(  item.nUnitsKilled ) ) );
+		pItemScore1->SetText( pItemScore1->GetDBText() + NStr::ToUnicode( fmt::format( "{}%", item.nScoreTactics ) ) );
+		pItemScore2->SetText( pItemScore2->GetDBText() + NStr::ToUnicode( fmt::format( "{}%", item.nScoreStrategy ) ) );
+		pItemScoreTotal->SetText( pItemScoreTotal->GetDBText() + NStr::ToUnicode( std::to_string(  item.nScore ) ) );
 
 		pPlayerList->PushBack( pItemWnd, false );
 	}
@@ -288,9 +290,9 @@ bool CInterfaceMPStatistics::OnGameAftermathMessage( struct SMPUIGameAftemathMes
 
 	pPlayerRankView->SetText( pPlayerRankView->GetDBText() +
 		GET_TEXT_PRE( pMPConsts->sides[pMsg->nCountry].ladderRanks[pMsg->nRank]., Name ) );
-	pPlayerLevelView->SetText( pPlayerLevelView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pMsg->nLevel ) ) );
-	pExpEarnedView->SetText( pExpEarnedView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pMsg->nExpEarned ) ) );
-	pExpTotalView->SetText( pExpTotalView->GetDBText() + NStr::ToUnicode( StrFmt( "%d / %d", pMsg->nExpTotal1, pMsg->nExpTotal2 ) ) );
+	pPlayerLevelView->SetText( pPlayerLevelView->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nLevel ) ) );
+	pExpEarnedView->SetText( pExpEarnedView->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nExpEarned ) ) );
+	pExpTotalView->SetText( pExpTotalView->GetDBText() + NStr::ToUnicode( fmt::format( "{} / {}", pMsg->nExpTotal1, pMsg->nExpTotal2 ) ) );
 	if ( pMsg->nExpTotal2 != 0 )
 		pExpTotalProgress->SetPosition( float( pMsg->nExpTotal1 ) / pMsg->nExpTotal2 );
 	else
@@ -340,7 +342,7 @@ void CInterfaceMPStatistics::ShowLevelPopup( int nLevel, int nLevelOld, int nCou
 
 	pCongrats->ShowWindow( nLevel > nLevelOld );
 	pBadNews->ShowWindow( nLevel < nLevelOld );
-	pLevel->SetText( pLevel->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nLevel ) ) );
+	pLevel->SetText( pLevel->GetDBText() + NStr::ToUnicode( std::to_string( nLevel ) ) );
 
 	pRankUp->ShowWindow( nRank > nRankOld );
 	pRankDown->ShowWindow( nRank < nRankOld );

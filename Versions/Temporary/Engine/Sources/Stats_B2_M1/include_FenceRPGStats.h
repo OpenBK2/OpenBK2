@@ -53,7 +53,7 @@ const SSegments& GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) 
 	
 	if ( nCur < destroyedSegments.visObjes.size() )
 		return destroyedSegments;
-	NI_ASSERT( false, StrFmt( "wrong frame index for fence, %i", nFrameIndex ) );
+	NI_ASSERT( false, fmt::format( "wrong frame index for fence, {}", nFrameIndex ) );
 	return centerSegments;
 }
 
@@ -145,7 +145,7 @@ int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 		}
 	case ETOL_DESTROYED:
 		{
-			NI_VERIFY( !destroyedSegments.visObjes.empty(), StrFmt( "can't find destroyed segment for SFenceRPGStats \"%s\"", GetDBID().ToString().c_str() ), return -1 );
+			NI_VERIFY( !destroyedSegments.visObjes.empty(), fmt::format( "can't find destroyed segment for SFenceRPGStats \"{}\"", GetDBID().ToString() ), return -1 );
 			RecordRandomCall();
 			return
 				centerSegments.visObjes.size() + damagedSegmentsOtherSide.visObjes.size() +
@@ -166,14 +166,14 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 		return ETOL_SAFE;
 	else if ( _nFrameIndex >= nMaxIndexSafe && _nFrameIndex < nMaxIndexLeft )
 	{
-		NI_VERIFY( HasLeftDamaged(), StrFmt( "[MAP DESIGNER ERROR] Invalid frame index (%d). Object \"%d\" has no left damage.", GetDBID().ToString().c_str() ), return ETOL_DESTROYED );
+		NI_VERIFY( HasLeftDamaged(), fmt::format( "[MAP DESIGNER ERROR] Invalid frame index ({}). Object \"{}\" has no left damage.", _nFrameIndex, GetDBID().ToString() ), return ETOL_DESTROYED );
 		return ETOL_LEFT;
 	}
 	else if ( _nFrameIndex >= nMaxIndexLeft && _nFrameIndex < nMaxIndexRight )
 		return ETOL_RIGHT;
 	else if ( _nFrameIndex >= nMaxIndexRight && _nFrameIndex < nMaxIndexDestroyed )
 		return ETOL_DESTROYED;
-	NI_ASSERT( false, StrFmt( "[MAP DESIGNER ERROR] Invalid frame index (%d). Object \"%d\" has no appropriate lite type.", GetDBID().ToString().c_str() ) );
+	NI_ASSERT( false, fmt::format( "[MAP DESIGNER ERROR] Invalid frame index ({}). Object \"{}\" has no appropriate lite type.", _nFrameIndex, GetDBID().ToString() ) );
 	return ETOL_SAFE;
 }
 

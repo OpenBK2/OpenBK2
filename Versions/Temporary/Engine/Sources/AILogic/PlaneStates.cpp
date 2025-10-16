@@ -34,6 +34,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 extern CWeather theWeather;
 extern CScripts *pScripts;
 extern CSupremeBeing theSupremeBeing;
@@ -1609,7 +1611,7 @@ CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState ( CAviation *_pPlane, c
 
 	const float fVertTurnRadius = fTurnRadius;
 	const float fDiveAngle = pStats->wDivingAngle * 2.0f * PI / 65535;
-	NI_ASSERT( pStats->wDivingAngle != 0, StrFmt("DESIGNER'S BUG: GROUND ATTACK PLANE \"%s\" DIVING ANGLE == 0", NDb::GetResName(pStats)) );
+	NI_ASSERT( pStats->wDivingAngle != 0, fmt::format("DESIGNER'S BUG: GROUND ATTACK PLANE \"{}\" DIVING ANGLE == 0", NDb::GetResName(pStats)) );
 	if ( pStats->wDivingAngle != 0 )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
@@ -1857,8 +1859,8 @@ void CPlaneShturmovikPatrolState::Segment()
 	//DEBUG{
 	if ( eState != eRem )
 	{
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, 
-			StrFmt( "GunplaneSubstate =  \"%s\"", nameconv[eState] ) );
+		const auto message = fmt::format( "GunplaneSubstate =  \"{}\"", nameconv[eState] );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, message.c_str());
 		Singleton<IStatSystem>()->UpdateEntry( "test: ", nameconv[eState], 0xffff0000 );
 	}
 	//DEBUG}

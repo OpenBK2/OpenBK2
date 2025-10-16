@@ -11,7 +11,7 @@
 bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCIntInputEditor::GetPCItemStringValue() pszValue == 0" );
-	( *pszValue ) = StrFmt( "%d", (int)rValue );
+	( *pszValue ) = std::to_string(  (int)rValue );
 	return true;
 }
 

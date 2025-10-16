@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 namespace NTest
 {
 
@@ -73,10 +75,10 @@ bool TestMetaSetGet( NDb::IObjMan *pBind, const STestSetGetData *pData )
 {
 	CVariant variant;
 	bool bSetSuccessfull = pBind->SetValue( pData->pszFieldName, pData->varFirstValue );
-	NI_VERIFY( bSetSuccessfull != false, StrFmt("Incorrect 'Set' for field \"%s\"", pData->pszFieldName), return false );
+	NI_VERIFY( bSetSuccessfull != false, fmt::format("Incorrect 'Set' for field \"{}\"", pData->pszFieldName), return false );
 	bool bGetSuccessfull = pBind->GetValue( pData->pszFieldName, &variant );
-	NI_VERIFY( bGetSuccessfull != false, StrFmt("Incorrect 'Get' for field \"%s\"", pData->pszFieldName), return false );
-	NI_VERIFY( variant == pData->varFirstValue, StrFmt("Incorrect value after set/get for field \"%s\"", pData->pszFieldName), return false );
+	NI_VERIFY( bGetSuccessfull != false, fmt::format("Incorrect 'Get' for field \"{}\"", pData->pszFieldName), return false );
+	NI_VERIFY( variant == pData->varFirstValue, fmt::format("Incorrect value after set/get for field \"{}\"", pData->pszFieldName), return false );
 	return true;
 }
 
@@ -92,8 +94,8 @@ template <class TField>
 bool TestMetaSetDirectGet( TField *pField, const char *pszFieldName )
 {
 	const STestSetGetData *pData = FindTestData( pszFieldName );
-	NI_VERIFY( pData != 0, StrFmt("Can't find field \"%s\"", pszFieldName), return false );
-	NI_VERIFY( pData->varSecondValue == CVariant(*pField), StrFmt("Incorrect meta-set/direct-get for field \"%s\"", pszFieldName), return false );
+	NI_VERIFY( pData != 0, fmt::format("Can't find field \"{}\"", pszFieldName), return false );
+	NI_VERIFY( pData->varSecondValue == CVariant(*pField), fmt::format("Incorrect meta-set/direct-get for field \"{}\"", pszFieldName), return false );
 	return true;
 }
 
@@ -132,8 +134,8 @@ bool TestMetaSetDirectGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 	// ref type
 	{
 		const STestSetGetData *pData = FindTestData( "Weapon" );
-		NI_VERIFY( pData != 0, StrFmt("Can't find field \"%s\"", "Weapon"), return false );
-		NI_VERIFY( pMechUnit->pWeapon->GetDBID() == pData->varSecondValue.GetDBID(), StrFmt("Incorrect meta-set/direct-get for field \"%s\"", "Weapon"), return false );
+		NI_VERIFY( pData != 0, "Can't find field \"Weapon\"", return false );
+		NI_VERIFY( pMechUnit->pWeapon->GetDBID() == pData->varSecondValue.GetDBID(), "Incorrect meta-set/direct-get for field \"Weapon\"", return false );
 	}
 	return true;
 }
@@ -145,7 +147,7 @@ template <class TField>
 bool TestDirectSetMetaGet( TField *pField, const char *pszFieldName )
 {
 	const STestSetGetData *pData = FindTestData( pszFieldName );
-	NI_VERIFY( pData != 0, StrFmt("Can't find field \"%s\"", pszFieldName), return false );
+	NI_VERIFY( pData != 0, fmt::format("Can't find field \"{}\"", pszFieldName), return false );
 	*pField = GetFromVariant<TField>( pData->varFirstValue );
 	return true;
 }
@@ -182,8 +184,8 @@ bool TestDirectSetMetaGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 		if ( pData->bHasCode )
 		{
 			CVariant value;
-			NI_VERIFY( pBind->GetValue( pData->pszFieldName, &value ) != false, StrFmt("Can't meta-get value for field \"%s\"", pData->pszFieldName), return false );
-			NI_VERIFY( pData->varFirstValue == value, StrFmt("Incorrect direct-set/meta-get for field \"%s\"", pData->pszFieldName), return false );
+			NI_VERIFY( pBind->GetValue( pData->pszFieldName, &value ) != false, fmt::format("Can't meta-get value for field \"{}\"", pData->pszFieldName), return false );
+			NI_VERIFY( pData->varFirstValue == value, fmt::format("Incorrect direct-set/meta-get for field \"{}\"", pData->pszFieldName), return false );
 		}
 	}
 	return true;

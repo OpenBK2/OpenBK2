@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;
 static int s_nExpandEffectDuration = 400;
@@ -452,7 +454,8 @@ void CInterfaceChapterMapMenu::PlayMissionStartMission()
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapToStart->GetDBID().ToString().c_str() ) );
+	const auto command = fmt::format( "{};normal", pMapToStart->GetDBID().ToString() );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 
 void CInterfaceChapterMapMenu::FadeMapElements( float fFade )
@@ -808,7 +811,7 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 				}
 				else
 				{
-					NI_ASSERT( false, StrFmt( "DESIGN: Incorrect ChapterBonus: chapterID \"%s\", mission %d, bonusID \"%s\"", pChapter->GetDBID().ToString().c_str(), nIndex, pBonus->GetDBID().ToString().c_str() ) );
+					NI_ASSERT( false, fmt::format( "DESIGN: Incorrect ChapterBonus: chapterID \"{}\", mission {}, bonusID \"{}\"", pChapter->GetDBID().ToString(), nIndex, pBonus->GetDBID().ToString() ) );
 					bonusButtons[i].pButton->SetState( 2 );
 					bonusButtons[i].pIcon->ShowWindow( false );
 
@@ -1536,7 +1539,8 @@ void ChapterMapAutostartMission( const std::string &szID, const std::vector<std:
 			pST->MissionStart( pMap );
 
 			NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-			NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMap->GetDBID().ToString().c_str() ) );
+			const auto command = fmt::format( "{};normal", pMap->GetDBID().ToString() );
+			NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 		}
 	}
 }

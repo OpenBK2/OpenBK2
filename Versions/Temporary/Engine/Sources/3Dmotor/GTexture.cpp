@@ -351,7 +351,7 @@ void CFileTexture::Recalc()
 			pValue = LoadConvertTo16Bit( file.GetStream(), hdr.header, eUsage, eWrap, nCutMips, hdr.header.dwWidth, hdr.header.dwHeight, hdr.header.dwMipMapCount );
 			if ( !pValue )
 			{
-				NI_ASSERT( pValue != 0, StrFmt("Can't load texture %s from stream \"%s\"", pTex->GetDBID().ToString().c_str(), pTex->szDestName.c_str()) );
+				NI_ASSERT( pValue != 0, fmt::format("Can't load texture {} from stream \"{}\"", pTex->GetDBID().ToString(), pTex->szDestName) );
 				CreateChecker();
 			}
 		}
@@ -360,7 +360,7 @@ void CFileTexture::Recalc()
 			pValue = MakeTexture( hdr.header, eUsage, eWrap, nCutMips );
 			if ( !RealLoadTexture( pValue.GetPtr(), file.GetStream(), hdr.header, 0, 0, hdr.header.dwWidth, hdr.header.dwHeight, hdr.header.dwMipMapCount, nCutMips ) )
 			{
-				NI_ASSERT( false, StrFmt("Can't load texture %s from stream \"%s\"", pTex->GetDBID().ToString().c_str(), pTex->szDestName.c_str()) );
+				NI_ASSERT( false, fmt::format("Can't load texture {} from stream \"{}\"", pTex->GetDBID().ToString(), pTex->szDestName) );
 				CreateChecker();
 			}
 		}

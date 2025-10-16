@@ -20,6 +20,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 #include <zconf.h>
 
 // CInterfaceMPCreateCustomGame
@@ -125,7 +127,7 @@ void CInterfaceMPCreateCustomGame::SetControls()
 			if ( CHECK_TEXT_NOT_EMPTY_PRE(pMPConsts->techLevels[i].,Name) )
 				pData = new CTextData( GET_TEXT_PRE(pMPConsts->techLevels[i].,Name) );
 			else
-				pData = new CTextData( NStr::ToUnicode( StrFmt( "!Level%d!", i ) ) );
+				pData = new CTextData( NStr::ToUnicode( fmt::format( "!Level{}!", i ) ) );
 			pTechLevelBox->AddItem( pData );
 		}
 		pTechLevelBox->Select( 0 );
@@ -181,7 +183,7 @@ void CInterfaceMPCreateCustomGame::SliderPosition( const float fPosition, CWindo
 		return;	
 	int nPos = fPosition; // 
 	int nShown = nPos - pSliderGameSpeed->GetNSpecialPositions() / 2;
-	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( StrFmt("  %+d", nShown ) );
+	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( fmt::format("  {:+d}", nShown ) );
 	pGameSpeedText->SetText( newtext );
 }
 
@@ -229,9 +231,9 @@ void CInterfaceMPCreateCustomGame::CItemCustomGameListViewer::MakeInterior( CObj
 	NMPSetData::SetChildText( pItem,  "ItemMapName", info.wszMapName );
 	NMPSetData::SetChildText( pItem,  "ItemGameType", info.wszGameType );
 	NMPSetData::SetChildText( pItem,  "ItemMapSize", 
-		NStr::ToUnicode( StrFmt( "%d x %d", info.nMapSizeX, info.nMapSizeY ) ) );
+		NStr::ToUnicode( fmt::format( "{} x {}", info.nMapSizeX, info.nMapSizeY ) ) );
 	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers",
-		NStr::ToUnicode( StrFmt( "%d",info.nPlayersMax ) ) );
+		NStr::ToUnicode( std::to_string( info.nPlayersMax ) ) );
 }
 
 void CInterfaceMPCreateCustomGame::OnGetFocus( bool bFocus )

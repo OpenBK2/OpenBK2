@@ -128,7 +128,7 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 			bFound = true;
 		}
 	}
-	NI_ASSERT( nSize == 0 || !bFound, StrFmt( "Unitialized data at chunk %d", idChunk ) );
+	NI_ASSERT( nSize == 0 || !bFound, fmt::format( "Unitialized data at chunk {}", idChunk ) );
 #endif
 
 	static int nFirstCount = NGlobal::GetVar( "start_count", -1 );

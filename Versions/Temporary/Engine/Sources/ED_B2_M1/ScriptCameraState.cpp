@@ -550,7 +550,7 @@ bool CScriptCameraState::AddScriptPlacement()
 {
 	bool bReturn = false;
 
-	string szNewCameraName = StrFmt( "%d", GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
+	string szNewCameraName = std::to_string(  GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
 	//CScriptCameraAddDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szNewCameraName, dialogData.scriptCameras );
 	//if ( dlg.DoModal() == IDOK )
 	{

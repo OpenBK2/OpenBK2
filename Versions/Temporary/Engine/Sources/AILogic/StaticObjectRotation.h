@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 template <class TCont, class TArray2D>
 class CRotatedArray2D
 {
@@ -25,7 +27,7 @@ public:
 		case 2: return -(array.GetSizeX() - 1 );
 		case 3: return 0;
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
 	}
 
@@ -38,7 +40,7 @@ public:
 		case 2: return -(array.GetSizeY() - 1);
 		case 3: return -(array.GetSizeX() - 1);
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
 	}
 
@@ -51,7 +53,7 @@ public:
 		case 2: return 0;
 		case 3: return (array.GetSizeY()-1);
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
 	}
 
@@ -64,7 +66,7 @@ public:
 		case 2: return 0;
 		case 3: return 0;
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
 	}
 
@@ -77,7 +79,7 @@ public:
 		case 2: return array[-nY][-nX];
 		case 3: return array[nX][-nY];
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
 	}
 
@@ -90,7 +92,7 @@ public:
 		case 2: return array[-nY][-nX];
 		case 3: return array[nX][-nY];
 		}
-		NI_ASSERT( false, StrFmt( "wrong rotation %i", nRotation ) );
+		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
 	}
 	int GetSizeX() const 

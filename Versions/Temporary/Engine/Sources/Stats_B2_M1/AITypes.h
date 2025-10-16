@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** diplomacy info
@@ -67,21 +69,21 @@ struct SShootArea
 	const uint32_t GetColor() const
 	{
 		static const uint32_t colors[] = { 0x0000ff00, 0x000000ff, 0x00ff0000, 0x0000ff00 };
-		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
+		NI_ASSERT( int( eType ) < 4, fmt::format( "Wrong type of area ({})", (int)eType ) );
 		return colors[eType];
 	}
 
 	const uint16_t GetMiniMapCircleColor() const
 	{
 		static const uint16_t colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
-		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
+		NI_ASSERT( int( eType ) < 4, fmt::format( "Wrong type of area ({})", (int)eType ) );
 		return colors[eType];
 	}
 
 	const uint16_t GetMiniMapSectorColor() const
 	{
 		static const uint16_t colors[] = { 0xf0f0, 0xf00a, 0xff00, 0xf0f0 };
-		NI_ASSERT( int( eType ) < 4, StrFmt( "Wrong type of area (%d)", (int)eType ) );
+		NI_ASSERT( int( eType ) < 4, fmt::format( "Wrong type of area ({})", (int)eType ) );
 		return colors[eType];
 	}
 	

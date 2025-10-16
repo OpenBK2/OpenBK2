@@ -94,7 +94,7 @@ bool CPCIntSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditor
 void CPCIntSliderEditor::SetValue( const CVariant &rValue )
 {
 	const int nValue = CStringManager::NormalizeValue( (int)rValue, nStep );
-	CVariant value = string( StrFmt( "%d", nValue ) ); 
+	CVariant value = string( std::to_string(  nValue ) );
 	CPCStringSliderEditor::SetValue( value );
 	GetSlider()->SetPos( nValue );
 }
@@ -133,7 +133,7 @@ void CPCIntSliderEditor::GetValue( CVariant *pValue )
 void CPCIntSliderEditor::OnChangePos( int nPos )
 {
 	int nSliderPos = CStringManager::NormalizeValue( GetSlider()->GetPos(), nStep );
-	SetWindowText( StrFmt( "%d", nSliderPos ) );
+	SetWindowText( std::to_string(  nSliderPos ) );
 }
 
 // basement storage  

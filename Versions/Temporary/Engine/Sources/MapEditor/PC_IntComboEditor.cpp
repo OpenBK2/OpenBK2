@@ -41,7 +41,7 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 				int nValue = 0;
 				if ( sscanf( szNumberList.c_str(), "%d", &nValue ) == 1 )
 				{
-					const string szValue = StrFmt( "%d", nValue );
+					const string szValue = std::to_string(  nValue );
 					stringList.push_back( szValue );
 				}
 				else
@@ -66,7 +66,7 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 					}
 					for ( int nValue = nMinValue; nValue <= nMaxValue; nValue += nStep )
 					{
-						const string szValue = StrFmt( "%d", nValue );
+						const string szValue = std::to_string(  nValue );
 						stringList.push_back( szValue );
 					}
 				}
@@ -100,7 +100,7 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 
 void CPCIntComboEditor::SetValue( const CVariant &rValue )
 {
-	CVariant value = string( StrFmt( "%d", (int)rValue ) );
+	CVariant value = string( std::to_string(  (int)rValue ) );
 	CPCStringComboEditor::SetValue( value );
 }
 

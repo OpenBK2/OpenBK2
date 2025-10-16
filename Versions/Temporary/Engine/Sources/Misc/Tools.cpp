@@ -19,12 +19,3 @@ void PORT_STDCALL DbgTrc( const char *pszFormat, ... )
 	OutputDebugString( charBuff );
 	OutputDebugString( "\n" );
 }
-
-const char * PORT_STDCALL StrFmt( const char *pszFormat, ... )
-{
-	va_list va;
-	va_start( va, pszFormat );
-	_vsnprintf( charBuff, BUF_SIZE - 1, pszFormat, va );
-	va_end( va );
-	return charBuff;
-}

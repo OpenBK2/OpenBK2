@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <fmt/format.h>
+
 #include "MPManagerMode.h"
 #include "Server_Client_Common/ChatPackets.h"
 #include "Client/ServerClientInterface.h"
@@ -185,7 +187,7 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 		"STATE",
 		"OnLagMessage",
 		GetOwnClientID(),
-		StrFmt( "initial=%d pre_laggers=%08X post_laggers=%08X", pMsg->bInitialWait ? 1 : 0, dwLaggersBefore, dwLaggers ) );
+		fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}", pMsg->bInitialWait ? 1 : 0, dwLaggersBefore, dwLaggers ) );
 	if ( pMsg->dwLaggingPlayers == 0 )								// Turning it off
 		ShowWaitWindow( false );
 	else if ( dwLaggersOld == 0 )											// Turning it on
@@ -203,7 +205,7 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 		"DECISION",
 		"OnLeaveGameMessage",
 		GetOwnClientID(),
-		StrFmt( "running=%d", IsGameRunning() ? 1 : 0 ) );
+		fmt::format( "running={}", IsGameRunning() ? 1 : 0 ) );
 	if ( IsGameRunning() )
 	{
 		if ( IsGameControlHost() && IsValid( pTransceiver ) )
@@ -249,7 +251,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 			"TX",
 			"CB2UserPausePacket",
 			GetOwnClientID(),
-			StrFmt( "slot=%d paused=%d user_pause_mask=%08X", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
+			fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
 	}
 
 	pTransceiver->CommandTimeOut( bPauseOn );

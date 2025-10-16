@@ -18,7 +18,7 @@ int GetAnimActionTime( int nAnim ) const
 		return 0;
 	else
 	{
-		NI_ASSERT( animdescs[nAnim].anims[0].nAction < animdescs[nAnim].anims[0].nLength, StrFmt("AnimPoint is incorrect (too large) for unit \"%s\" animation %d", GetDBID().ToString().c_str(), nAnim ) );
+		NI_ASSERT( animdescs[nAnim].anims[0].nAction < animdescs[nAnim].anims[0].nLength, fmt::format("AnimPoint is incorrect (too large) for unit \"{}\" animation {}", GetDBID().ToString(), nAnim ) );
 		if ( animdescs[nAnim].anims[0].nAction < animdescs[nAnim].anims[0].nLength )
 			return animdescs[nAnim].anims[0].nAction;
 		else

@@ -119,7 +119,7 @@ void CClients::DBLogRawGameResult( const hash_map<string,int> &info )
 
 	for ( hash_map<string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
-		const string &szColumnValue = StrFmt( "%d", it->second );
+		const string &szColumnValue = std::to_string(  it->second );
 		szQuery += "'" + szColumnValue + "',";
 	}
 	szQuery.erase( szQuery.size() - 1, 1 );

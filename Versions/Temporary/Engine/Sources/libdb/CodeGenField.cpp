@@ -8,13 +8,15 @@
 
 #include "libdb_export.h"
 
+#include <fmt/format.h>
+
 namespace NCodeGen
 {
 
 CFieldDefinition::CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2TypeDefs &nodes2TypeDefs )
 {
 	CNodes2TypeDefs::const_iterator iterNodes = nodes2TypeDefs.find( pVarNode );
-	NI_VERIFY( iterNodes != nodes2TypeDefs.end(), StrFmt( "can't find typedef for node %s", pVarNode->GetName().c_str() ), return );
+	NI_VERIFY( iterNodes != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pVarNode->GetName() ), return );
 	pType = GetRealType( iterNodes->second );
 	NI_ASSERT( pType != 0, "null type" );
 
@@ -37,7 +39,7 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 
 		++nField;
 	}
-	NI_VERIFY( nField < pStruct->fields.size(), StrFmt( "can't find field %s of struct %s", szFieldName.c_str(), pStruct->GetTypeName() ), return );
+	NI_VERIFY( nField < pStruct->fields.size(), fmt::format( "can't find field {} of struct {}", szFieldName, pStruct->GetTypeName() ), return );
 
 	const NDb::NTypeDef::STypeStructBase::SField &field = pStruct->fields[nField];
 	NDb::NTypeDef::STypeDef *pVarType = field.pType;
@@ -55,7 +57,7 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 	}
 
 	NI_ASSERT( pVarType->eType != NDb::NTypeDef::TYPE_TYPE_CLASS,
-						 StrFmt( "variable %s is not-reference ty type %s", field.szName.c_str(), pVarType->GetTypeName() ) );
+						 fmt::format( "variable {} is not-reference ty type {}", field.szName, pVarType->GetTypeName() ) );
 
 	if ( pVarType->eType == NDb::NTypeDef::TYPE_TYPE_REF )
 	{

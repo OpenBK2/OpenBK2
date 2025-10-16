@@ -16,6 +16,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int PAUSE_BETWEEN_MEDALS = 200;
 const float UNFADE_TIME = 1.0f;
 
@@ -100,7 +102,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pInfoPanel->GetChild( StrFmt( "Line%02d", i ), true );
+			IWindow *pWnd = pInfoPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
 				break;
 				
@@ -122,7 +124,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	{
 		for ( int i = 1; ; ++i )
 		{
-			IWindow *pWnd = pRewardPanel->GetChild( StrFmt( "Line%02d", i ), true );
+			IWindow *pWnd = pRewardPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
 				break;
 				
@@ -133,7 +135,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 			reinf.pBtn = GetChildChecked<IButton>( pWnd, "BlockBtn", true );
 			reinf.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
 			reinf.pNameView = GetChildChecked<ITextView>( pWnd, "NameView", true );
-			reinf.szButtonName = StrFmt( "BlockBtn%02d", i );
+			reinf.szButtonName = fmt::format( "BlockBtn{:02d}", i );
 			if ( reinf.pBtn )
 				reinf.pBtn->SetName( reinf.szButtonName );
 			reinfs.push_back( reinf );
@@ -259,7 +261,7 @@ void CInterfaceSingleStatistic::MakeCampaignStatistics()
 
 	ExpProgressStep();
 
-	std::wstring wszRankHP = NStr::ToUnicode( StrFmt( "%d/%d",
+	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
 		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pExpView )
@@ -327,17 +329,17 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 		int nUnitsLost = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
 		if ( player.pLostView )
 			player.pLostView->SetText( player.pLostView->GetDBText() + 
-				NStr::ToUnicode( StrFmt( "%d", nUnitsLost ) ) );
+				NStr::ToUnicode( std::to_string(  nUnitsLost ) ) );
 
 		int nUnitsKilled = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_KILLED );
 		if ( player.pKilledView )
 			player.pKilledView->SetText( player.pKilledView->GetDBText() + 
-				NStr::ToUnicode( StrFmt( "%d", nUnitsKilled ) ) );
+				NStr::ToUnicode( std::to_string(  nUnitsKilled ) ) );
 
 		int nReinfCalled = pST->GetStatistics( i, IScenarioTracker::ESK_REINFORCEMENTS_CALLED );
 		if ( player.pReinfView )
 			player.pReinfView->SetText( player.pReinfView->GetDBText() + 
-				NStr::ToUnicode( StrFmt( "%d", nReinfCalled ) ) );
+				NStr::ToUnicode( std::to_string(  nReinfCalled ) ) );
 	}
 }
 
@@ -577,7 +579,8 @@ bool CInterfaceSingleStatistic::OnRestartMission()
 	Singleton<IScenarioTracker>()->MissionStart( pMapInfo );
 		
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
+	const auto command = fmt::format( "{};normal", pMapInfo->GetDBID().ToString() );
+	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 
 	return true;
 }
@@ -738,16 +741,16 @@ void CInterfaceSingleStatistic::NextMenu()
 
 std::wstring CInterfaceSingleStatistic::GetFormattedTime( int nTime ) const
 {
-	std::wstring wszTime = NStr::ToUnicode( StrFmt( "%d", nTime % 60 ) ) + wszTime3;
+	std::wstring wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime3;
 	nTime /= 60;
 	if ( nTime > 0 )
 	{
-		wszTime = NStr::ToUnicode( StrFmt( "%d", nTime % 60 ) ) + wszTime2 + wszTime;
+		wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime2 + wszTime;
 		nTime /= 60;
 	}
 	if ( nTime > 0 )
 	{
-		wszTime = NStr::ToUnicode( StrFmt( "%d", nTime % 60 ) ) + wszTime1 + wszTime;
+		wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime1 + wszTime;
 	}
 	
 	return wszTime;

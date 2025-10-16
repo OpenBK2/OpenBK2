@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 static const uint32_t dwWaitingPacketTimeout = 300000;
 const int CONNECTION_TIMEOUT = 20;
 
@@ -137,7 +139,7 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 	{
 		while ( CPtr<CNetPacket> pPacket = pAcceptGamersNet->ReceivePacket() )
 		{
-			GetNetLogger()->Log( "client", StrFmt( "receive acceptgamers net %s", GetPacketInfo( pPacket ) ) );
+			GetNetLogger()->Log( "client", fmt::format( "receive acceptgamers net {}", GetPacketInfo( pPacket ) ) );
 			// wait for pAcceptGamersNet packet processed
 			bool bProcessed = ProcessPacket( pPacket );
 
@@ -281,7 +283,7 @@ void CPlayGameProcessor::ProcessConnectServerPacket( CConnectServerPacket *pPack
 	{
 		CPtr<CNetPacket> pNewGameConnectPacket = new CNewGameConnectingClient( 0, nMyServerID, 0 );
 		pAcceptGamersNet->SendPacket( pNewGameConnectPacket );
-		GetNetLogger()->Log( "client", StrFmt("send acceptgamers net %s", GetPacketInfo( pPacket )) );
+		GetNetLogger()->Log( "client", fmt::format("send acceptgamers net {}", GetPacketInfo( pPacket )) );
 
 		pConnectServerProcessor = 0;
 	}

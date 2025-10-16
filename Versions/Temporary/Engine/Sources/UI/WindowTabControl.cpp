@@ -4,6 +4,7 @@
 #include "WindowScrollableContainer.h"
 #include "ButtonGroup.h"
 
+#include <fmt/format.h>
 
 // CWindowTabControl
 
@@ -144,12 +145,12 @@ const std::string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pT
 	{
 		if ( pTab )
 		{
-			NI_ASSERT( GetChild( pTab->GetName(), true ) == 0, StrFmt( "Tab \"%s\" already exists", pTab->GetName().c_str() ) );
+			NI_ASSERT( GetChild( pTab->GetName(), true ) == 0, fmt::format( "Tab \"{}\" already exists", pTab->GetName() ) );
 			tabNames[nTab] = pTab->GetName();
 		}
 		else
 		{
-			tabNames[nTab] = StrFmt( "%i", nTab );
+			tabNames[nTab] = std::to_string(nTab);
 		}
 	}
 	return tabNames[nTab];

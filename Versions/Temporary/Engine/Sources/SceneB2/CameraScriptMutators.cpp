@@ -4,6 +4,8 @@
 #include "SceneB2/Scene.h"
 #include "CameraScriptMutators.h"
 
+#include <fmt/format.h>
+
 void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll, 
 									const float fYaw1, const float fPitch1, const float fRoll1,
 									const float fYaw2, const float fPitch2, const float fRoll2, 
@@ -545,7 +547,7 @@ void CScriptMoviesMutatorHolder::ScriptCallback( int nKeyID )
 {
 	if ( !szCallbackFuncName.empty() )
 	{
-		WriteToPipe( PIPE_SCRIPT_CMDS, StrFmt("%s(%d)", szCallbackFuncName.c_str(), nKeyID) );
+		WriteToPipe( PIPE_SCRIPT_CMDS, fmt::format("{}({})", szCallbackFuncName, nKeyID) );
 	}
 }
 

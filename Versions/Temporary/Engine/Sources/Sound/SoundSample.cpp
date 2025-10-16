@@ -57,7 +57,7 @@ void CSoundSample::SetKey( const CDBID &dbid )
 	dbidSound = dbid;
 	// load info
 	const NDb::SSoundDesc *pDesc = NDb::Get<NDb::SSoundDesc>( dbidSound );
-	NI_ASSERT( pDesc != 0, StrFmt( "wrong sound Desc DBID \"%s\"", dbidSound.ToString().c_str() ) );
+	NI_ASSERT( pDesc != 0, fmt::format( "wrong sound Desc DBID \"{}\"", dbidSound.ToString() ) );
 	if ( pDesc )
 	{
 		CFileStream stream( NVFS::GetMainVFS(), pDesc->szSoundPath );

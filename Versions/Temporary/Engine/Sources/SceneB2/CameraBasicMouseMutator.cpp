@@ -2,6 +2,8 @@
 
 #include "CameraBasicMouseMutator.h"
 
+#include <fmt/format.h>
+
 namespace NCamera
 {
 
@@ -120,7 +122,7 @@ void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType
 		//
 		default:
 		{
-			NI_ASSERT( false, StrFmt("Unknown limits type %d", eLimitsType) );
+			NI_ASSERT( false, fmt::format("Unknown limits type {}", int( eLimitsType )) );
 		}
 	}
 }

@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 // ************************************************************************************************************************ //
 // **
 // ** helper fucntions to get/set global vars
@@ -25,7 +27,7 @@ int ScriptErrorOut( struct lua_State *state )
 {
 	Script script( state );
 	Script::Object obj = script.GetObject(script.GetTop());
-	const std::string szError = StrFmt( "Script error: %s", obj.GetString() );
+	const std::string szError = fmt::format( "Script error: {}", obj.GetString() );
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szError.c_str(), 0xffff0000, true );
 	DebugTrace( "%s\n", szError.c_str() );
 	return 0;
@@ -119,7 +121,7 @@ bool CMessageReactions::Execute( const std::string &szSender, const std::string 
 		(pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags ) : pProg->Execute( szSender, szReactionKey )  ) ) return true;
 		
 	CReactions::iterator it = reactions.find( szReactionKey );
-	NI_ASSERT( it != reactions.end(), StrFmt( "unregistered reaction \"%s\"", szReactionKey.c_str() ) );
+	NI_ASSERT( it != reactions.end(), fmt::format( "unregistered reaction \"{}\"", szReactionKey ) );
 	if ( it != reactions.end() )
 		return it->second->Execute( pScreen, pScript, pProg, wKeyboardFlags );
 	return false;

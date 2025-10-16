@@ -30,6 +30,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D450, CBuildingSimple );
 
 extern CFeedBackSystem theFeedBackSystem;
@@ -792,7 +794,7 @@ void CBuilding::SeatSoldierToFireSlot()
 void CBuilding::DelSoldierFromFirePlace( CSoldier *pSoldier )
 {
 	const SStaticObjectSlotInfo slotInfo = pSoldier->GetSlotInfo();
-	NI_ASSERT( slotInfo.nType == 0, StrFmt( "Wrong of soldier slot type (%d)", slotInfo.nType ) );
+	NI_ASSERT( slotInfo.nType == 0, fmt::format( "Wrong of soldier slot type ({})", slotInfo.nType ) );
 
 	// CRAP{
 	if ( slotInfo.nIndex < fire.Size() )
@@ -822,7 +824,7 @@ void CBuilding::DelSoldierFromFirePlace( CSoldier *pSoldier )
 void CBuilding::DelSoldierFromMedicalPlace( CSoldier *pSoldier )
 {
 	const SStaticObjectSlotInfo slotInfo = pSoldier->GetSlotInfo();
-	NI_ASSERT( slotInfo.nType == 1, StrFmt( "Wrong of soldier slot type (%d)", slotInfo.nType ) );
+	NI_ASSERT( slotInfo.nType == 1, fmt::format( "Wrong of soldier slot type ({})", slotInfo.nType ) );
 
 	medical[slotInfo.nIndex] = 0;
 	medical.Erase( slotInfo.nIndex );
@@ -833,7 +835,7 @@ void CBuilding::DelSoldierFromMedicalPlace( CSoldier *pSoldier )
 void CBuilding::DelSoldierFromRestPlace( CSoldier *pSoldier )
 {
 	const SStaticObjectSlotInfo slotInfo = pSoldier->GetSlotInfo();
-	NI_ASSERT( slotInfo.nType == 2, StrFmt( "Wrong of soldier slot type (%d)", slotInfo.nType ) );
+	NI_ASSERT( slotInfo.nType == 2, fmt::format( "Wrong of soldier slot type ({})", slotInfo.nType ) );
 
 	// CRAP{
 	if ( slotInfo.nIndex < rest.Size() )
@@ -1672,14 +1674,14 @@ void CBuilding::Unlock( CCommonUnit *pUnit )
 
 const int CBuilding::GetNGunsInFireSlot( const int nSlot )
 {
-	NI_ASSERT( nSlot < guns.size(), StrFmt( "Wrong number of slot (%d)", nSlot ) );
+	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 
 	return guns[nSlot]->GetNTotalGuns();
 }
 
 CBasicGun* CBuilding::GetGunInFireSlot( const int nSlot, const int nGun )
 {
-	NI_ASSERT( nSlot < guns.size(), StrFmt( "Wrong number of slot (%d)", nSlot ) );
+	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 
 	if ( nGun >= guns[nSlot]->GetNTotalGuns() || guns[nSlot]->GetGun(nGun)->GetWeapon() == 0 )
 		return 0;
@@ -1689,13 +1691,13 @@ CBasicGun* CBuilding::GetGunInFireSlot( const int nSlot, const int nGun )
 
 CTurret* CBuilding::GetTurretInFireSlot( const int nSlot )
 {
-	NI_ASSERT( nSlot < guns.size(), StrFmt( "Wrong number of slot (%d)", nSlot ) );
+	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 	return turrets[nSlot];
 }
 
 float CBuilding::GetMaxFireRangeInSlot( const int nSlot ) const
 {
-	NI_ASSERT( nSlot < guns.size(), StrFmt( "Wrong number of slot (%d)", nSlot ) );
+	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 	return guns[nSlot]->GetMaxFireRange( 0 );
 }
 
@@ -1849,7 +1851,7 @@ bool CBuilding::IsBetterChangeObservationSoldier( CSoldier *pSoldier, CSoldier *
 
 CSoldier* CBuilding::GetSoldierOnSide( const int nSide )
 {
-	NI_ASSERT( nSide < 4, StrFmt( "Wrong side passed (%d)", nSide ) );
+	NI_ASSERT( nSide < 4, fmt::format( "Wrong side passed ({})", nSide ) );
 	for ( int i = 0; i < sides[nSide].nObservationPoints; ++i )
 	{
 		if ( firePlace2Soldier[observationPlaces[nSide][i]] != 0 )
@@ -1861,7 +1863,7 @@ CSoldier* CBuilding::GetSoldierOnSide( const int nSide )
 
 const int CBuilding::GetMiddleObservationPoint( const int nSide ) const
 {
-	NI_ASSERT( nSide < 4, StrFmt( "Wrong side passed (%d)", nSide ) );
+	NI_ASSERT( nSide < 4, fmt::format( "Wrong side passed ({})", nSide ) );
 
 	if ( sides[nSide].nObservationPoints == 0 )
 		return -1;
@@ -1873,7 +1875,7 @@ const int CBuilding::GetMiddleObservationPoint( const int nSide ) const
 
 void CBuilding::GetSidesObservationPoints( const int nSide, int *pnLeftPoint, int *pnRightPoint ) const
 {
-	NI_ASSERT( nSide < 4, StrFmt( "Wrong side passed (%d)", nSide ) );
+	NI_ASSERT( nSide < 4, fmt::format( "Wrong side passed ({})", nSide ) );
 
 	if ( sides[nSide].nObservationPoints == 0 )
 		*pnLeftPoint = *pnRightPoint = -1;
@@ -1890,7 +1892,7 @@ void CBuilding::GetSidesObservationPoints( const int nSide, int *pnLeftPoint, in
 		*pnLeftPoint = observationPlaces[nSide][2];
 	}
 	else
-		NI_ASSERT( false, StrFmt( "Wrong number of observation points (%d)", sides[nSide].nObservationPoints ) );
+		NI_ASSERT( false, fmt::format( "Wrong number of observation points ({})", sides[nSide].nObservationPoints ) );
 }
 
 const int CBuilding::ChooseSideToSetSoldier( CSoldier *pSoldier ) const

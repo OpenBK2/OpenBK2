@@ -5,6 +5,8 @@
 #include "StringNumbers.h"
 #include "Misc/StrProc.h"
 
+#include <fmt/format.h>
+
 namespace NLang
 {
 
@@ -99,7 +101,7 @@ void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 		dwHexValue = NStr::ToInt( szDefValue );
 	}
 	else
-		VERIFY( false, StrFmt( "unknown attr value %s", szDefValue.c_str() ), return );
+		VERIFY( false, fmt::format( "unknown attr value {}", szDefValue ), return );
 }
 
 }

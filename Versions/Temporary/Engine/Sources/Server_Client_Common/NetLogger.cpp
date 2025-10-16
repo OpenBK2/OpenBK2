@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <sys/timeb.h>
 
+#include <fmt/format.h>
+
 #ifdef _FINALRELEASE
 	#define _DONT_LOG_PACKETS
 #endif
@@ -66,7 +68,7 @@ void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 
 		struct __timeb64 tstruct;
 		_ftime64( &tstruct );
-		szStr += StrFmt(".%d\n", tstruct.millitm );
+		szStr += fmt::format(".{}\n", tstruct.millitm );
 
 		szStr += "\t" + szLog + "\n";
 
