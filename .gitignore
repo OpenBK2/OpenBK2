@@ -73,6 +73,9 @@ Icon?
 BetaRelease
 out/build
 
+# CLion
+cmake-build-*
+
 # CMake
 *_export.h
 
