@@ -3,6 +3,8 @@
 
 #include "port/stdcall.h"
 
+#include <cstdarg>
+
 namespace
 {
 	const int BUF_SIZE = 65536;

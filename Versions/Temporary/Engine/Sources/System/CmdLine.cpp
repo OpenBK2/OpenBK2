@@ -5,6 +5,8 @@
 
 #include "System_export.h"
 
+#include <cstdarg>
+
 namespace NCmdLine
 {
 
