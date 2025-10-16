@@ -134,9 +134,6 @@ struct IDriver : public CObjectBase
 
 	virtual const std::string GetIP( const int nClientID ) = 0;
 	virtual const int GetPort( const int nClientID ) = 0;
-	
-	// for debug
-	virtual const char* GetAddressByClientID( const int nClientID ) const { return "Unknown"; }
 };
 
 NET_EXPORT IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );

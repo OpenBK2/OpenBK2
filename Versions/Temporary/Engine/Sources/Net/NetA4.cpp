@@ -1003,17 +1003,6 @@ const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 		return iter->second.acks.GetTimeSinceLastRecv();	
 }
 
-// for debug
-const char* CNetDriver::GetAddressByClientID( const int nClientID ) const
-{
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
-	CPeerList::const_iterator iter = clients.find( nClientID );
-	if ( iter == clients.end() )
-		return StrFmt( "Invalid client %d", nClientID );
-	else
-		return iter->second.currentAddr.GetFastName().c_str();
-}
-
 const std::string CNetDriver::GetIP( const int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );

@@ -168,9 +168,6 @@ public:
 
 	virtual const std::string GetIP( const int nClientID );
 	virtual const int GetPort( const int nClientID );
-	// 
-	// for debug
-	virtual const char* GetAddressByClientID( const int nClientID ) const;
 
 
 	virtual void PauseNet();
