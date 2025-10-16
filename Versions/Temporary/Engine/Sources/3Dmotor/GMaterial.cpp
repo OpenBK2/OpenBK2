@@ -10,7 +10,7 @@
 #include "GInit.h"
 #include "System/Commands.h"
 
-
+#include "port/time.h"
 
 //bool bSimpleLightmaps = false;
 static bool s_bShadowOnTrees = true;
@@ -216,7 +216,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 
 
 	float fMul =  1.0f / NGfx::N_VEC_FULL_TEX_SIZE;
-	float Time = GetTickCount() * 0.001f * fAngVel; 
+	float Time = GetCurrentTimeMilliseconds() * 0.001f * fAngVel;
 
 	float si=sin(Time);
 	float co=cos(Time);
@@ -272,7 +272,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 				//FIXME!
 				pRC->SetVertexShader( vsG3DiffuseTexEXT );
 				float WindTime = 0.0f;
-				WindTime = GetTickCount() * 0.003f; 
+				WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
 				float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 				float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
@@ -304,7 +304,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 			//FIXME!
 			pRC->SetVertexShader( vsG3TransparentGeomEXT );
 			float WindTime = 0.0f;
-			WindTime = GetTickCount() * 0.003f; 
+			WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
 			float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 			float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
@@ -1064,7 +1064,7 @@ bool CSurfMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &
 	pRC->SetPixelShader( psG3DiffuseTex );
 	pRC->SetVertexShader( vsG3Surf );
 	SetupPShadows( pRC, p1.pFastInfo, lightInfo );
-	//const float fTrans = (float)GetTickCount() / 8000.0f;
+	//const float fTrans = (float)GetCurrentTimeMilliseconds() / 8000.0f;
 	float fTrans = 0.0f;
 	fTrans = p1.pFastInfo->tTime / 6000.0f;
 	//pRC->SetVSConst( 31, CVec4( 1.0f/65536, 0.5f, 0, 0 ) );
@@ -1187,7 +1187,7 @@ bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLig
 		}
 
 
-		float fOffset = GetTickCount() / s_fWaterWaveFrequence;
+		float fOffset = GetCurrentTimeMilliseconds() / s_fWaterWaveFrequence;
 
 		const float fAmplitude = s_fWaterAmplitude;
 		const float fWaveLength = s_fWaterWaveLength;
@@ -1203,7 +1203,7 @@ bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLig
 		const float fTexScaleY = 1.0f / 4.0f;
 
 
-		const int nFrame = ( (int) GetTickCount() / 75 ) % ( nNumFramesX * nNumFramesY ) ;
+		const int nFrame = ( (int) GetCurrentTimeMilliseconds() / 75 ) % ( nNumFramesX * nNumFramesY ) ;
 		const float fOffsX = fTexScaleX * ( nFrame % nNumFramesX );
 		const float fOffsY = fTexScaleY * ( nFrame / nNumFramesY );
 
@@ -1422,7 +1422,7 @@ void CCloudsH5Material::Precache()
 
 CVec3 CCloudsH5Material::CalcShift()
 {
-	float fShift = GetTickCount() / ( 1024.0f ) * fWrapsPerSecond;
+	float fShift = GetCurrentTimeMilliseconds() / ( 1024.0f ) * fWrapsPerSecond;
 	fShift = fShift - floor( fShift );
 	return CVec3( 0, fShift, 0 );
 }

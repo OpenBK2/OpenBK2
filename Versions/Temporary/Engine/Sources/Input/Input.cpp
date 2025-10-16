@@ -6,6 +6,8 @@
 #include "Misc/Win32Helper.h"
 #include "Misc/StrProc.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
@@ -463,7 +465,7 @@ void PumpMessages( bool bFocus )
 	if ( !bFocusCaptured )
 		return;
 
-	uint32_t dwTest = GetTickCount();
+	uint32_t dwTest = GetCurrentTimeMilliseconds();
 	if ( dwTest - dwPrevPump < 1 )
 		return;
 	dwPrevPump = dwTest;
@@ -622,7 +624,7 @@ static void ResyncDevice( const SInputDevice &sDevice )
 					sKey.nAction, sKey.ePOVAxis, sKey.eType,
 					(int)dwData - (int)sKey.dwLastValue,
 					bState,
-					GetTickCount() )
+					GetCurrentTimeMilliseconds() )
 			);
 
 			sKey.dwLastValue = dwData;
@@ -636,7 +638,7 @@ bool GetMessage( SMessage *pMsg )
 	if ( messages.empty() )
 	{
 		pMsg->cType = CT_TIME;
-		pMsg->tTime = GetTickCount();
+		pMsg->tTime = GetCurrentTimeMilliseconds();
 		return false;
 	}
 	*pMsg = messages.front();
@@ -803,7 +805,7 @@ static bool SetFocus( bool bFocus )
 static void ReleaseKeyboardState()
 {
 	DebugTrace("Release keyboard state");
-	const uint32_t dwTime = GetTickCount();
+	const uint32_t dwTime = GetCurrentTimeMilliseconds();
 	for ( std::unordered_map<uint32_t, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); ++iTemp )
 	{
 		SKey &sKey = iTemp->second;

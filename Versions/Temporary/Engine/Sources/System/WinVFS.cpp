@@ -9,6 +9,8 @@
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 static NWin32Helper::CCriticalSection g_WinVFSCriticalSection;
@@ -261,10 +263,10 @@ class CProfiler
 	const std::string szPath;
 	const uint32_t dwStartTime;
 public:
-	CProfiler( const std::string &_szPath ) : szPath( szPath ), dwStartTime( GetTickCount() ) { }
+	CProfiler( const std::string &_szPath ) : szPath( szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
 	~CProfiler()
 	{
-		const float fLoadTime = float(GetTickCount() - dwStartTime)/1000.0f;
+		const float fLoadTime = float(GetCurrentTimeMilliseconds() - dwStartTime)/1000.0f;
 		//		if ( fLoadTime > 0.1 )
 		//			DbgTrc( "load: %s loaded in %f sec", szPath.c_str(), fLoadTime );
 
@@ -275,7 +277,7 @@ public:
 
 void VFSSegmentProfiler()
 {
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
 		if ( fBigTimeForLoad != 0.0f )

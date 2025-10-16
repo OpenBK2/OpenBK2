@@ -16,6 +16,8 @@
 #include "MultiTester.h"
 #include "Pinger.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 #define LADDER_TEST_LOG
@@ -88,7 +90,7 @@ CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
 		pSaver->Add( "PingerName", &szPingerName );
 		pSaver->Add( "PingerPassword", &szPingerPwd );
 	}
-	dwLastTesterCreationTime = GetTickCount();
+	dwLastTesterCreationTime = GetCurrentTimeMilliseconds();
 	pPinger = new CPinger( nPingerPeriod, szPingerName, szPingerPwd, szIP, nPort, nNetVersion );
 
 	ForcePacketRegistration();
@@ -393,7 +395,7 @@ void RandomizeList( list<int> *pList )
 	hash_map< int, int > tempHash;
 	int nSize = pList->size();
 	int nMaxRand = nSize - 1;
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	for ( int i = 0; i < dwTime % 100; ++i )
 		NRandom::Random( 0, nMaxRand );
 	for( list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
@@ -444,7 +446,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 		pPacket->nTeamSize, pPacket->techLevels, pPacket->maps, 0 );
 
 #ifdef LADDER_TEST_LOG
-	int nTime = GetTickCount();
+	int nTime = GetCurrentTimeMilliseconds();
 	string szFileName = StrFmt( "../ladder_test_request_%d.xml", nTime ); 
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
@@ -493,7 +495,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 	pServerClient->SendPacket( pResultPacket );
 
 #ifdef LADDER_TEST_LOG
-	int nTime = GetTickCount();
+	int nTime = GetCurrentTimeMilliseconds();
 	string szFileName = StrFmt( "../ladder_test_result_%d.xml", nTime ); 
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
@@ -540,7 +542,7 @@ void CTestClient::CommandPing( const SCommand &cmd )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 		return;
 	}
-	CNetPacket *pPacket = new CPingPacket( 0, pTestClientProcessor->GetMyID(), GetTickCount() );
+	CNetPacket *pPacket = new CPingPacket( 0, pTestClientProcessor->GetMyID(), GetCurrentTimeMilliseconds() );
 	pServerClient->SendPacket( pPacket );
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Ping sent.\n"	);
 
@@ -587,7 +589,7 @@ void CTestClient::Segment()
 	if ( pPinger )
 		pPinger->Segment();
 
-	bool bCanCreateTester = ( GetTickCount() > ( TESTER_CREATION_TIMEOUT + dwLastTesterCreationTime ) );
+	bool bCanCreateTester = ( GetCurrentTimeMilliseconds() > ( TESTER_CREATION_TIMEOUT + dwLastTesterCreationTime ) );
 	if ( !testers.empty() ) 
 	{
 		for ( int i = 0; i < testers.size(); ++i )
@@ -603,7 +605,7 @@ void CTestClient::Segment()
 				testers[i]->Init( szIP, nNetVersion, nPort, 30, szName, szName, szName, MTM_LADDER | MTM_CHAT );
 				testers[i]->Segment();
 				bCanCreateTester = false;
-				dwLastTesterCreationTime = GetTickCount();
+				dwLastTesterCreationTime = GetCurrentTimeMilliseconds();
 			}
 		}
 	}

@@ -2,6 +2,8 @@
 
 #include "Profiler.h"
 
+#include "port/time.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -45,13 +47,13 @@ void DumpStats()
 }
 
 CProfiler::CProfiler( const char* pszFile, const int _nLine )
-: szFile( pszFile ), nLine( _nLine ), dwStartTime( GetTickCount() )
+: szFile( pszFile ), nLine( _nLine ), dwStartTime( GetCurrentTimeMilliseconds() )
 {
 }
 
 CProfiler::~CProfiler()
 {
-	const uint32_t dwTime = GetTickCount() - dwStartTime;
+	const uint32_t dwTime = GetCurrentTimeMilliseconds() - dwStartTime;
 	const std::string szHash = StrFmt( "%s(%d)", szFile.c_str(), nLine );
 
 	if ( pTimes )

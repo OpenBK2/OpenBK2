@@ -9,6 +9,8 @@
 
 #include "SceneB2/Scene.h"
 
+#include "port/time.h"
+
 #include "GameX_export.h"
 
 // CSinglePlayerTransceiver
@@ -39,7 +41,7 @@ void CSinglePlayerTransceiver::StartMission( const NDb::SMapInfo *_pMap, IAILogi
 	//
 	NGlobal::RemoveVar( "MultiplayerGame" );	
 	// reset timer
-	Scene()->ResetTimer( GetTickCount() );
+	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 
 	nCommonSegment = 0;
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();

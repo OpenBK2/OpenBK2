@@ -14,6 +14,8 @@
 
 #include "Image/ImageTGA.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 namespace NGfx
@@ -325,8 +327,8 @@ static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, 
 		SHMatrix cloudProjection;
 		pLight->CalcCloudProjection( &cloudProjection );
 
-		b2 += GetTickCount() * 0.002f;
-		c2 += GetTickCount() * 0.001f;
+		b2 += GetCurrentTimeMilliseconds() * 0.002f;
+		c2 += GetCurrentTimeMilliseconds() * 0.001f;
 
 		c1 *= 0.02f;
 		b1 *= 0.02f;

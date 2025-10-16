@@ -9,6 +9,8 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
 
+#include "port/time.h"
+
 #include "Client_export.h"
 
 #include <cstdint>
@@ -164,7 +166,7 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 
 			// some new client, we didn't start accepting packets from him yet
 			if ( !bProcessed && pPacket->nClientID != 0 )
-				waitingPackets.push_back( SWaitingPacket( pPacket, GetTickCount() ) );
+				waitingPackets.push_back( SWaitingPacket( pPacket, GetCurrentTimeMilliseconds() ) );
 		}
 	}
 
@@ -218,7 +220,7 @@ bool CPlayGameProcessor::Segment()
 
 	ProcessEfforts();
 
-	uint32_t dwCurTime = GetTickCount();
+	uint32_t dwCurTime = GetCurrentTimeMilliseconds();
 	std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
 	while ( iter != waitingPackets.end() )
 	{

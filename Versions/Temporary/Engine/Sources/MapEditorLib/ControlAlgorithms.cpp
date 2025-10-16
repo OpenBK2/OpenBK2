@@ -4,6 +4,8 @@
 #include "ControlAlgorithms.h"
 #include "Misc/StrProc.h"
 
+#include "port/time.h"
+
 namespace NCA
 {
 	bool IsParent( HTREEITEM hItem, HTREEITEM hParentItem, const SECTreeCtrl *pTreeControl )
@@ -366,7 +368,7 @@ namespace NCA
 			acceleratorMessage.message = nMessage;
 			acceleratorMessage.wParam = wParam;
 			acceleratorMessage.lParam = lParam;
-			acceleratorMessage.time = ::GetTickCount();
+			acceleratorMessage.time = ::GetCurrentTimeMilliseconds();
 			acceleratorMessage.pt.x = 0;
 			acceleratorMessage.pt.y = 0;
 			return ::TranslateAccelerator( ::AfxGetMainWnd()->m_hWnd, hAcceleratorTable, &acceleratorMessage );

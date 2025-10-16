@@ -8,6 +8,8 @@
 #include "Commands.h"
 #include "XmlSaver.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -323,7 +325,7 @@ void CRandomGenSeed::FillRandRsl()
 	if ( i == nSize )
 		return; // cannot find any hd, run without initialization
 	//
-	srand( GetTickCount() );
+	srand( GetCurrentTimeMilliseconds() );
 	char pszFindedName[256];
 	BOOL bSuccess = FALSE;
 	
@@ -341,7 +343,7 @@ void CRandomGenSeed::FillRandRsl()
 		HANDLE hFile = CreateFile( pszFindedName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if ( hFile != INVALID_HANDLE_VALUE )
 		{
-			srand( GetTickCount() );
+			srand( GetCurrentTimeMilliseconds() );
 			SetFilePointer( hFile, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
 			unsigned long dwReadBytes = 0;
 			if ( ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) != TRUE || (dwReadBytes != sizeof(rnd.randrsl)) )

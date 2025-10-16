@@ -69,6 +69,8 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "GlobalWarFog.h"
 #include "SimpleChecksumCalc.h"
 
+#include "port/time.h"
+
 #include "AILogic_export.h"
 
 #include <cstdint>
@@ -1818,12 +1820,12 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 
 	for ( int i = 0; i < 500; ++i )
 	{
-		const int dwTickStart = GetTickCount();
+		const int dwTickStart = GetCurrentTimeMilliseconds();
 
 		CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
 		pPathFinder->SetPathParameters( 0, EAC_HUMAN, GetAIMap()->GetPointByTile( vStartTile ), GetAIMap()->GetPointByTile( vFinishTile ), vStartTile, GetAIMap() );
 		pPathFinder->DoesPathExist();
-    const int dwTickCount = GetTickCount() - dwTickStart;
+    const int dwTickCount = GetCurrentTimeMilliseconds() - dwTickStart;
 		if ( dwTickCount > 5 )
 		{
 			//csSystem << "prolonged (" << dwTickCount << ") path searching from " << vStartTile.x << " x " << vStartTile.y << " to " << vFinishTile.x << " x " << vFinishTile.y << endl;

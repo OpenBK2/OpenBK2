@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "HPTimer.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 #include <thread>
 #include <chrono>
@@ -64,7 +66,7 @@ void NHPTimer::UpdateHPTimerFrequency()
 		STime tTest( tStart );
 		fPassed = GetTimePassed( &tTest );
 		QueryPerformanceCounter( (_LARGE_INTEGER*) &fin );
-		uint32_t dwFinish = GetTickCount();
+		uint32_t dwFinish = GetCurrentTimeMilliseconds();
 		if ( dwFinish - dwStart < 50 )
 			return;
 		fTStart = double( start );
@@ -83,7 +85,7 @@ void NHPTimer::UpdateHPTimerFrequency()
 	}
 //	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	bUpdateInitiated = true;
-	dwStart = GetTickCount();
+	dwStart = GetCurrentTimeMilliseconds();
 	GetTime( &tStart );
 	QueryPerformanceCounter( (_LARGE_INTEGER*) &start );
 }

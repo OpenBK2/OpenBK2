@@ -6,6 +6,8 @@
 #include "VSOConsts.h"
 #include "Scene.h"
 
+#include "port/time.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -757,9 +759,9 @@ void CTerraGen::AddAllRivers()
 	//		it->fRadius = bFlag ? 1.0f : 0.0f;
 	//		it->fReserved = 1.0f;
 	//	}
-	//	AddRiver( &firstInst, GetTickCount() );
+	//	AddRiver( &firstInst, GetCurrentTimeMilliseconds() );
 	//	for ( int i = 1; i < pDesc->rivers.size(); ++i )
-	//		AddRiver( &(pDesc->rivers[i]), GetTickCount() );
+	//		AddRiver( &(pDesc->rivers[i]), GetCurrentTimeMilliseconds() );
 	//}
 }
 

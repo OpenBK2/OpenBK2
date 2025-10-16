@@ -29,6 +29,8 @@
 
 #include "SceneB2/Scene.h"
 
+#include "port/time.h"
+
 #include "GameX_export.h"
 
 #include <cstdint>
@@ -87,7 +89,7 @@ void CMPTransceiver::StartMission()
 	nCommonSegment = 0;
 	nFinalSegment = -1;
 	pAI->NetGameStarted();
-	Scene()->ResetTimer( GetTickCount() );
+	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	pTimer->SetSpeed( nGameSpeed );
 	pCmdsHistory->StartNewGame( pMapInfo );
 	NMainLoop::Command( new CICMission( this ) );
@@ -482,7 +484,7 @@ void CMPTransceiver::CheckRunGame()
 	bIsGameRunning = true;
 	ReportLags( 0, false );
 	pAI->NetGameStarted();
-	Scene()->ResetTimer( GetTickCount() );
+	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 }
 
 void CMPTransceiver::EndGame()

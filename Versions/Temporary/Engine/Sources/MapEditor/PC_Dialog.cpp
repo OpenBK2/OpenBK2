@@ -3,6 +3,8 @@
 
 #include "PC_Dialog.h"
 
+#include "port/time.h"
+
 const UINT	CPCDialog::PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCDialog::PC_TREE_COLUMN_FORMAT[PC_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };
 const int		CPCDialog::PC_TREE_COLUMN_WIDTH [PC_TREE_COLUMN_COUNT] = { 100, 50, 100 };
@@ -19,7 +21,7 @@ LRESULT CPCDialog::WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
 		staticPCDialogMsg.message = message;
     staticPCDialogMsg.wParam = wParam;
     staticPCDialogMsg.lParam = lParam;
-		staticPCDialogMsg.time = ::GetTickCount();
+		staticPCDialogMsg.time = GetCurrentTimeMilliseconds();
     staticPCDialogMsg.pt.x = 0;
     staticPCDialogMsg.pt.y = 0;
 		::TranslateAccelerator( AfxGetMainWnd()->m_hWnd, hAccel, &staticPCDialogMsg );

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 namespace NProgressHook
@@ -19,13 +21,13 @@ static std::list<SLockInfo> locks;
 
 void DebugLock( const std::string &szFileName, const int nLine )
 {
-	locks.push_back( SLockInfo( szFileName, nLine, GetTickCount() ) );
+	locks.push_back( SLockInfo( szFileName, nLine, GetCurrentTimeMilliseconds() ) );
 }
 
 void DebugUnLock( const std::string &szFileName, const int nLine )
 {
 	NI_VERIFY( !locks.empty(), "wrong lock/unlock sequence", return );
-	const uint32_t dwTime = GetTickCount();
+	const uint32_t dwTime = GetCurrentTimeMilliseconds();
 	const SLockInfo lockStart = locks.back();
 	locks.pop_back();
 

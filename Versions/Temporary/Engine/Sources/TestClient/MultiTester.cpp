@@ -10,6 +10,8 @@
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 enum EMultiTesterStage
@@ -60,11 +62,11 @@ void CMultiTester::Init( const string& _szServerAddress, const int _nNetVersion,
 	nStage = LOGIN;
 	nStatus = ACTIVE;
 	bCancelled = false;
-	dwLastChatChannelChangeTime = GetTickCount();
-	dwLastChatMessageTime = GetTickCount();
-	dwLastSegmentTime = GetTickCount();
-	dwGameStartTime = GetTickCount();
-	dwLastGameHeartBeatTime = GetTickCount();
+	dwLastChatChannelChangeTime = GetCurrentTimeMilliseconds();
+	dwLastChatMessageTime = GetCurrentTimeMilliseconds();
+	dwLastSegmentTime = GetCurrentTimeMilliseconds();
+	dwGameStartTime = GetCurrentTimeMilliseconds();
+	dwLastGameHeartBeatTime = GetCurrentTimeMilliseconds();
 	bLadderInfoSend = false;
 	bIsInGame = false;
 	pServerClient = new CServerClient( szServerAddress.c_str(), nNetVersion, nServerPort, nTimeOut );
@@ -102,7 +104,7 @@ bool CMultiTester::Segment()
 		return false;
 
 	// В режиме ожидания ответа сервера только обрабатываем пакеты
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( !IsActive() )
 		return true;
 
@@ -166,13 +168,13 @@ void CMultiTester::EnterChatStage()
 void CMultiTester::ChangeChatChannel( const string &szChannelName )
 {
 	pServerClient->SendPacket( new CChatChannelPacket( 0, szChannelName ) );
-	dwLastChatChannelChangeTime = GetTickCount();
+	dwLastChatChannelChangeTime = GetCurrentTimeMilliseconds();
 }
 
 void CMultiTester::SendChatMessage( const string &szMessage )
 {
 	pServerClient->SendPacket( new CChatPacket( 0, NStr::ToUnicode( szMessage ), "", 0, true ) );
-	dwLastChatMessageTime = GetTickCount();
+	dwLastChatMessageTime = GetCurrentTimeMilliseconds();
 }
 
 bool CMultiTester::ProcessChatPacket( CChatPacket *pPacket )
@@ -198,7 +200,7 @@ bool CMultiTester::ProcessClientRemoved( CNetRemoveClient *pPacket )
 
 void CMultiTester::MainStage()
 {
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime < dwLastSegmentTime + SEGMENT_DURATION )
 		return;
 	dwLastSegmentTime = dwTime;
@@ -214,7 +216,7 @@ void CMultiTester::MainStage()
 
 void CMultiTester::TestChat()
 {
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime > CHAT_CHANNEL_CHANGE_PERIOD + dwLastChatChannelChangeTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
 		string szChannelName = StrFmt( "TEST_CHAT_CHANNEL_%d", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
@@ -262,7 +264,7 @@ void CMultiTester::TestLadder()
 	}
 	if ( bIsInGame )
 	{
-		const uint32_t dwTime = GetTickCount();
+		const uint32_t dwTime = GetCurrentTimeMilliseconds();
 		if ( dwTime > 5000 + dwLastGameHeartBeatTime )
 		{
 			pServerClient->SendPacket( new CGameHeartBeatPacket( 0, nGameID ) );
@@ -308,7 +310,7 @@ bool CMultiTester::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 	pServerClient->SendPacket( new CConnectGamePacket( 0, nGameID, "" ) );
 	bIsInGame = true;
 	bLadderInfoSend = false;
-	dwGameStartTime = GetTickCount() - NWin32Random::Random( 0, 60000 );
+	dwGameStartTime = GetCurrentTimeMilliseconds() - NWin32Random::Random( 0, 60000 );
 	return true;
 }
 

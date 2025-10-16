@@ -22,6 +22,8 @@
 #include <iomanip>
 #include <sstream>
 
+#include "port/time.h"
+
 #include <cstdint>
 
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
@@ -42,7 +44,7 @@ void CMPManagerMode::StartGame()
 	if ( nOwnSlot >= 0 && nOwnSlot < slots.size() )
 		slots[nOwnSlot].nClientID = GetOwnClientID();
 
-	Scene()->ResetTimer( GetTickCount() );
+	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
 	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( gameDesc.pMPMap->pMap, gameDesc.nTechLevel );

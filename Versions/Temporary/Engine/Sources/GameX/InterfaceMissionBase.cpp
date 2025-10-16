@@ -16,6 +16,8 @@
 #include "GetConsts.h"
 #include "ScenarioTracker.h"
 
+#include "port/time.h"
+
 #include "GameX_export.h"
 
 #include <zconf.h>
@@ -91,7 +93,7 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	pWorld->LoadMap( pMap );
 	Singleton<IAILogic>()->InitAfterMapLoad( pMap );
 
-	Scene()->ResetTimer( GetTickCount() );
+	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	Singleton<IAILogic>()->ToggleWarFog( false );
 	Singleton<IAILogic>()->PostMapLoad();
 	pWorld->Update();

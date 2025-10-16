@@ -10,6 +10,8 @@
 
 #include "Client_export.h"
 
+#include "port/time.h"
+
 BASIC_REGISTER_CLASS( CLIENT, CSimpleClientEffort );
 BASIC_REGISTER_CLASS( CLIENT, CSimpleServerEffort );
 
@@ -36,7 +38,7 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nCl
 	CMemoryStream pwd;
 	pConnet2PlayersNet->ConnectGame( serverAddress, pwd );
 	pConnectServerProcessor = new CConnectServerProcessor( pConnet2PlayersNet, false );
-	fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();
+	fPredBreakThroughSend = fStartConnectClientTime = GetCurrentTimeMilliseconds();
 }
 
 IConnection* CSimpleClientEffort::CreateConnection() const
@@ -67,7 +69,7 @@ bool CSimpleClientEffort::Segment()
 
 	if ( eState != ES_SUCCESS && eState != ES_FAILED && eSubState == ECONNECT_CLIENT )
 	{
-		const float fCurTime = GetTickCount();
+		const float fCurTime = GetCurrentTimeMilliseconds();
 		if ( fStartConnectClientTime + 1000 * pConnet2PlayersNet->GetTimeOut() < fCurTime )
 			eState = ES_FAILED;
 		else if ( fPredBreakThroughSend + 3000 < fCurTime )
@@ -118,7 +120,7 @@ bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPac
 		pConnectServerProcessor = new CConnectServerProcessor( pConnet2PlayersNet, false );
 
 		eSubState = ECONNECT_CLIENT;
-		fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();
+		fPredBreakThroughSend = fStartConnectClientTime = GetCurrentTimeMilliseconds();
 
 		return true;
 	}
@@ -172,14 +174,14 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nCl
 	REGISTER_PACKET_PROCESSOR( &CSimpleServerEffort::ProcessClientIdentity );
 
 	SendBreakThroughPacket( szClientIP, nClientPort );
-	fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();
+	fPredBreakThroughSend = fStartConnectClientTime = GetCurrentTimeMilliseconds();
 }
 
 bool CSimpleServerEffort::Segment()
 {
 	if ( eState != ES_SUCCESS && eState != ES_FAILED )
 	{
-		const float fCurTime = GetTickCount();
+		const float fCurTime = GetCurrentTimeMilliseconds();
 		if ( fStartConnectClientTime + 1000 * pAcceptGamersNet->GetTimeOut() < fCurTime )
 			eState = ES_FAILED;
 		else if ( fPredBreakThroughSend + 3000 < fCurTime )

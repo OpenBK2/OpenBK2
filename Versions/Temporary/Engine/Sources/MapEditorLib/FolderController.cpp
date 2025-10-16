@@ -5,6 +5,8 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 bool CFolderController::UndoWithoutUpdateViews()
@@ -64,7 +66,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 	bool bResult = true;
 	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
 	{
-		uint32_t dwTime = ::GetTickCount();
+		uint32_t dwTime = GetCurrentTimeMilliseconds();
 		switch ( itUndoData->eType )
 		{
 			///////////////////////////////////////////
@@ -151,7 +153,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 			default:
 				bResult = false;
 		}
-		dwTime = ::GetTickCount() - dwTime;
+		dwTime = GetCurrentTimeMilliseconds() - dwTime;
 		DebugTrace( "CFolderController: operation:%d, type: <%s>, dest:<%s>, source:<%s>, result:%s, time: %dmc",
 								itUndoData->eType,
 								GetObjectSet().szObjectTypeName.c_str(),

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GPostEffects.h"
 
+#include "port/time.h"
+
 namespace NGfx
 {
 
@@ -18,13 +20,13 @@ void CMonochromeEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pT
 
 void CTwilightEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
-	float fTimeVal = ( Float2Int( GetTickCount() * fTime ) % 1000 ) / 500.0f ;
+	float fTimeVal = ( Float2Int( GetCurrentTimeMilliseconds() * fTime ) % 1000 ) / 500.0f ;
 
 	static float o1=0.0f;
 	static float o2=0.0f;
 
-	o1=0.01f*sin(GetTickCount()*0.01f);
-	o2=0.0f*cos(GetTickCount()*0.01f);
+	o1=0.01f*sin(GetCurrentTimeMilliseconds()*0.01f);
+	o2=0.0f*cos(GetCurrentTimeMilliseconds()*0.01f);
 
 
 	pRC->SetAlphaCombine(NGfx::COMBINE_ALPHA );

@@ -3,6 +3,8 @@
 #include "CameraMayaMouseMutator.h"
 #include "System/Commands.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 namespace NCamera
@@ -22,7 +24,7 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void CCameraMayaMouseMutator::Recalc()
 	{
-		const uint32_t currTime = GetTickCount();
+		const uint32_t currTime = GetCurrentTimeMilliseconds();
 		const float fTimeDiff = GetTimeLastUpdate() < currTime ? currTime - GetTimeLastUpdate() : 0;
 		SetTimeLastUpdate( currTime );
 		CVec3 vDir;

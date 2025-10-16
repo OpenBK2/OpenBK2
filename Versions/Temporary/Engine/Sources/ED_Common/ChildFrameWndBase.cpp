@@ -12,6 +12,8 @@
 #include "UI/UI.h"
 #include "ChildFrameWndBase.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
@@ -627,7 +629,7 @@ void CChildFrameWndBase::OnUpdateSceneTimer()
 		}
 		else
 		{
-			Singleton<IGameTimer>()->Update( GetTickCount() );
+			Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
 			RedrawWindow( 0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_NOERASE );
 		}
 	}

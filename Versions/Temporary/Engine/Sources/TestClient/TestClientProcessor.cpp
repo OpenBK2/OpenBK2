@@ -11,6 +11,8 @@
 #include "Server_Client_Common/LoginPackets.h"
 #include "Server_Client_Common/ChatPackets.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
@@ -394,7 +396,7 @@ bool CTestClientProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 	else
 	{
 		pServerClient->SendPacket( pPacket );
-		dwLastGameUpdate = GetTickCount();
+		dwLastGameUpdate = GetCurrentTimeMilliseconds();
 		nGameID = nMyID;
 	}
 
@@ -435,7 +437,7 @@ bool CTestClientProcessor::ProcessUpdateGameInfo( CUpdateGameInfo *pPacket )
 		pPacket->gameInfo.nID = nGameID;
 		pServerClient->SendPacket( pPacket );
 
-		dwLastGameUpdate = GetTickCount();
+		dwLastGameUpdate = GetCurrentTimeMilliseconds();
 	}
 
 	return true;
@@ -790,7 +792,7 @@ bool CTestClientProcessor::Segment()
 {
 	if ( nGameID != -1 )
 	{
-		const uint32_t dwCurTime = GetTickCount();
+		const uint32_t dwCurTime = GetCurrentTimeMilliseconds();
 		if ( dwCurTime - dwLastGameUpdate > dwHeartBeatPeriod )
 		{
 			CNetPacket *pPacket = new CGameHeartBeatPacket( 0, nGameID );

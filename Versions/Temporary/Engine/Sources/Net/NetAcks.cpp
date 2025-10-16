@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/time.h"
+
 #include <cmath>
 
 #include "NetAcks.h"
@@ -23,7 +25,7 @@ const float MAX_WINDOWS_SIZE = 10.0f;
 
 CAckTracker::CAckTracker()
 {
-	uint32_t dwTick = GetTickCount();
+	uint32_t dwTick = GetCurrentTimeMilliseconds();
 	float fRTT;
 	fRTT = F_INITIAL_RTT;
 	fAvrgRTT = fRTT;

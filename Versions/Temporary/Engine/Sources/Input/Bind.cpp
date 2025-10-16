@@ -7,6 +7,8 @@
 #include "Input/Bind.h"
 #include "Input/BindInternal.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 using namespace NStr;
@@ -290,7 +292,7 @@ void MakeEvent( SGameMessage *pMsg,  const std::string &szGameMessage, int _nPar
 		pMsg->commands.push_back( &(iTemp->second) );
 
 	pMsg->mMessage.cType = ct;
-	pMsg->mMessage.tTime = GetTickCount();
+	pMsg->mMessage.tTime = GetCurrentTimeMilliseconds();
 	pMsg->mMessage.bState = false;
 	pMsg->mMessage.nAction = -1;
 

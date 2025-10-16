@@ -38,6 +38,8 @@
 #include "GfxRender.h"
 #include "GRenderLight.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 //#define DEBUG_LIGHTING
@@ -1265,7 +1267,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 
 #ifdef FADE_TEST
 	{
-		float fFade =sin( GetTickCount() / 1000.0f );
+		float fFade =sin( GetCurrentTimeMilliseconds() / 1000.0f );
 		for ( int k = 0; k < fadeTestObjects.size(); ++k )
 		{
 			CObjectBase *p = fadeTestObjects[k];
@@ -1277,7 +1279,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 #ifdef DEBUG_LIGHTING
 	static CObj<CObjectBase> pHoldPL;
 	static int nPrevWarFog;
-	int nTickCount = GetTickCount();
+	int nTickCount = GetCurrentTimeMilliseconds();
 	if ( ( nTickCount % 37 ) == 0 )
 	{
 		float fX = ( rand() & 255 ) / 255.0f;

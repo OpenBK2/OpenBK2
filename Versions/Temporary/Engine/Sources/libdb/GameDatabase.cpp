@@ -8,6 +8,8 @@
 #include "System/xmlreader.h"
 #include "Misc/Win32Helper.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 namespace NTest
@@ -255,10 +257,10 @@ class CProfiler
 	const std::string szObjName;
 	const uint32_t dwStartTime;
 public:
-	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetTickCount() ) { }
+	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
 	~CProfiler()
 	{
-		const float fLoadTime = float(GetTickCount() - dwStartTime)/1000.0f;
+		const float fLoadTime = float(GetCurrentTimeMilliseconds() - dwStartTime)/1000.0f;
 //		if ( fLoadTime > 0.1 )
 //			DbgTrc( "load: %s loaded in %f sec", szObjName.c_str(), fLoadTime );
 
@@ -269,7 +271,7 @@ public:
 
 LIBDB_EXPORT void SegmentProfiler()
 {
-	uint32_t dwTime = GetTickCount();
+	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
 		if ( fBigTimeForLoad != 0.0f )

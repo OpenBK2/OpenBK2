@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
@@ -585,7 +587,7 @@ std::wstring CInterfaceState::GetRandomCitation()
 	std::wstring wszText;
 	if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
 	{
-		NWin32Random::Seed( GetTickCount() );
+		NWin32Random::Seed( GetCurrentTimeMilliseconds() );
 		int nSize = GET_ARRAY_SIZE(pGameRoot->,citation);
 		if ( nSize > 0 )
 			wszText = GET_ARRAY_ELEMENT(pGameRoot->,citation,NWin32Random::Random( 0, nSize - 1 ));

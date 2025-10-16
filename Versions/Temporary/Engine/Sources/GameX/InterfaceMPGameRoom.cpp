@@ -21,6 +21,8 @@
 #include "System/Text.h"
 #include "InterfaceMisc.h"
 
+#include "port/time.h"
+
 #include "GameX_export.h"
 
 #include <cstdint>
@@ -65,7 +67,7 @@ bool CInterfaceMPGameRoom::Init()
 	SetControls();
 	bConnected = false;
 	pWaitMessage->ShowWindow( true );
-	NWin32Random::Seed( GetTickCount() );
+	NWin32Random::Seed( GetCurrentTimeMilliseconds() );
 	return true;
 }
 

@@ -21,6 +21,8 @@
 #include "System/GResource.h"
 #include "libdb/Db.h"
 
+#include "port/time.h"
+
 namespace NVFS
 {
 	LIBDB_EXPORT void VFSSegmentProfiler();
@@ -286,7 +288,7 @@ bool StepApp( bool bActive )
 	}
 	NI_ASSERT( IsValid(interfaces.back()), StrFmt("Invalid Interface of class \"%s\"", typeid(*interfaces.back()).name()) );
 	// update game timer
-	Singleton<IGameTimer>()->Update( GetTickCount() );
+	Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
 	// process messages
 	NInput::PumpMessages( bActive );
 

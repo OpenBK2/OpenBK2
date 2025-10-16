@@ -2,6 +2,8 @@
 #include "NetLogin.h"
 #include "Misc/HPTimer.h"
 
+#include "port/time.h"
+
 const float F_KEEP_ACCEPTED_TIME = 2000;
 const int N_MAX_ACCEPTED_LIST_SIZE = 30;
 namespace NNet
@@ -198,7 +200,7 @@ void CLoginSupport::StartLogin( const CNodeAddress &addr, const CMemoryStream &b
 	pwd = buf;
 	fLoginTimeLeft = 0;
 	fLoginInterval = 0.1f;
-	nLoginAttempt = (int)GetTickCount();
+	nLoginAttempt = (int)GetCurrentTimeMilliseconds();
 }
 /////////////////////////////////////////////////////////////////////////////////////
 }

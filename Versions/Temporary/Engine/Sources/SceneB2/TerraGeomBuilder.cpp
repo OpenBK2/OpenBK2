@@ -4,6 +4,8 @@
 #include "GenTerrain.h"
 #include "Misc/HPTimer.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
 void CTerraGen::GenerateTerrain()
@@ -42,7 +44,7 @@ void CTerraGen::GenerateTerrain()
 	terrainInfo.nNumPatchesY = pDesc->nNumPatchesY;
 	terrainInfo.tiles.SetSizes( pDesc->nNumPatchesX * DEF_PATCH_SIZE, pDesc->nNumPatchesY * DEF_PATCH_SIZE );
 
-	terrainInfo.nRecreateRandSeed = GetTickCount();
+	terrainInfo.nRecreateRandSeed = GetCurrentTimeMilliseconds();
 
 	TIME_STAT_FINISH( GenerateTerraGeometry )
 }

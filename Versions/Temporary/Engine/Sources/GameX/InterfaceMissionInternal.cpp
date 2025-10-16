@@ -57,6 +57,8 @@
 
 #include "B2_M1_World/ClientAckManager.h"
 
+#include "port/time.h"
+
 #include "GameX_export.h"
 
 #include <algorithm>
@@ -1885,7 +1887,7 @@ void CInterfaceMission::CheckInactiveInput()
 	const int nSecondsToWait = NGlobal::GetVar( "time_input_inactive", 0 );
 	if ( nSecondsToWait )
 	{
-		if ( GetTickCount() - NInput::GetLastEventTime() >= nSecondsToWait * 1000 )
+		if ( GetCurrentTimeMilliseconds() - NInput::GetLastEventTime() >= nSecondsToWait * 1000 )
 		{
 			if ( NGlobal::GetVar( "inactive_input_reaction_done", 0 ) == 0 )
 			{

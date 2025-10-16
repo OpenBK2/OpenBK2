@@ -6,6 +6,8 @@
 #include "System/Commands.h"
 #include "Misc/Win32Random.h"
 
+#include "port/time.h"
+
 namespace NGScene
 {
 
@@ -106,11 +108,11 @@ void RenderFrameTransition()
 
 	if ( bStartTimeInvalid )
 	{
-		nStartTime = GetTickCount();
+		nStartTime = GetCurrentTimeMilliseconds();
 		bStartTimeInvalid = false;
 	}
 
-	unsigned int nTimeDelta = GetTickCount() - nStartTime;
+	unsigned int nTimeDelta = GetCurrentTimeMilliseconds() - nStartTime;
 
 	const CVec2 vScreenRect = NGfx::GetScreenRect();
 

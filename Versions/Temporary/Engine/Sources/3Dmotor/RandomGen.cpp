@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "RandomGen.h"
 
+#include "port/time.h"
+
 #include <cstdint>
 
-SRandomSeed::SRandomSeed() : nSeed( GetTickCount() )
+SRandomSeed::SRandomSeed() : nSeed( GetCurrentTimeMilliseconds() )
 {
 }
 
@@ -11,7 +13,7 @@ SRandomSeed::SRandomSeed( int seed ) : nSeed( seed )
 {
 }
 
-SRand::SRand() : seed( GetTickCount() )
+SRand::SRand() : seed( GetCurrentTimeMilliseconds() )
 {
 	Get( 4 );
 }
@@ -183,8 +185,8 @@ BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBas
 // It's uses first RANDSIZ values from random file for this
 void CRandomGenerator::FillRandRsl()
 {
-	srand( GetTickCount() );
-	int n = GetTickCount();
+	srand( GetCurrentTimeMilliseconds() );
+	int n = GetCurrentTimeMilliseconds();
 	for ( int k = 0; k < RANDSIZ; ++k )
 	{
 		randrsl[k] = n;
