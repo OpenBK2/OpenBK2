@@ -38,10 +38,15 @@ void CPlayList::NextComposition()
 		}
 
 		nStillSong = 0;
-		LaunchComposition( pList->stillOrder[nStillSong] );
+		if (pList->stillOrder.size() > nStillSong) {
+			LaunchComposition(pList->stillOrder[nStillSong]);
+		}
 	}
-	else
-		LaunchComposition( pList->stillOrder[nStillSong] );
+	else {
+		if (pList->stillOrder.size() > nStillSong) {
+			LaunchComposition(pList->stillOrder[nStillSong]);
+		}
+	}
 }
 
 void CPlayList::LaunchComposition( const NDb::SComposition *_pComposition )
