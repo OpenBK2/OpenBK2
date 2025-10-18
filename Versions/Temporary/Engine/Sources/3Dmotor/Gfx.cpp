@@ -811,7 +811,7 @@ void Flip()
 
 	if ( nLastTexCheckFrame >= N_TEX_CHECK_FRAMES )
 	{
-		const int nCurMem = pDevice->GetAvailableTextureMem();
+		const unsigned nCurMem = pDevice->GetAvailableTextureMem();
 		if ( nCurMem < N_MIN_TEX_MEM )
 		{
 			++nPrevTexLOD;
