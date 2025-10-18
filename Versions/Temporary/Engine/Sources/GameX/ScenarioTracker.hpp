@@ -28,7 +28,7 @@ class CScenarioTracker : public IScenarioTracker
 	typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
 	typedef std::unordered_map< CDBPtr<NDb::SMapInfo>, SMissionStats, SDBPtrHash > CMissionsStats;
 	typedef std::unordered_map<int/*NDb::EReinforcementType*/, SLeaderInfo > CLeaderList;
-	typedef std::vector<bool> CKnownReinforcements;
+	typedef std::vector<char> CKnownReinforcements;
 	typedef std::vector< CPtr<CMapObj> > CObjectiveObjects;
 	typedef std::unordered_map< int, CObjectiveObjects > CObjectivesObjects;
 	
