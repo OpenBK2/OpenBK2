@@ -79,6 +79,7 @@ bool CInterfaceMainMenu::Init()
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
 	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
+	wszVersion = L"OpenBK2 " + wszVersion + L" ";
 	if ( pVersionView )
 		pVersionView->SetText( pVersionView->GetDBText() + wszVersion );
 #endif
