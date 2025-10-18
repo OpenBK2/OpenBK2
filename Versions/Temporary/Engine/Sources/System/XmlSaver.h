@@ -243,6 +243,14 @@ private:
 			DoHashMap( *pHash );
 			FinishChunk();
 		}
+	template<class T,class T1, class T2>
+		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_set<T1,T2> *pHash )
+		{
+			if ( !StartChunk(idChunk, nChunkNumber) )
+				return;
+			DoHashSet( *pHash );
+			FinishChunk();
+		}
 	template <class T, class T1, class T2> 
 		void __cdecl AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::pair<T1, T2> *pData )
 		{
@@ -379,6 +387,23 @@ private:
 			}
 			if ( nSize > 0 )
 				DataChunk( "Data", &data[0], sizeof(T) * nSize, 0 );
+		}
+	template <class T1, class T2>
+		void DoHashSet(std::unordered_set<T1, T2>& data)
+		{
+			if (IsReading())
+			{
+				std::vector<T1> vectorData;
+				DoDataVector(vectorData);
+
+				data.clear();
+				data.insert(vectorData.begin(), vectorData.end());
+			}
+			else
+			{
+				std::vector<T1> vectorData(data.begin(), data.end());
+				DoDataVector(vectorData);
+			}
 		}
 	// hash_map
 	template <class T1, class T2, class T3> 

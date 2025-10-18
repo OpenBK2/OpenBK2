@@ -161,6 +161,25 @@ private:
 				Add( 2, &data[ indices[i] ], i + 1 );
 		}
 	}
+
+	template <class T1, class T2>
+		void DoHashSet( std::unordered_set<T1, T2> &data )
+	{
+		if (IsReading())
+		{
+			std::vector<T1> vectorData;
+			Add(1, &vectorData);
+
+			data.clear();
+			data.insert(vectorData.begin(), vectorData.end());
+		}
+		else
+		{
+			std::vector<T1> vectorData(data.begin(), data.end());
+			Add(1, &vectorData);
+		}
+	}
+
 	template <class T1,class T2> 
 		void DoSet( std::set<T1,T2> &data )
 	{
@@ -270,6 +289,14 @@ public:
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashMap( *pHash );
+		FinishChunk();
+	}
+	template<class T1, class T2>
+		void Add( const chunk_id idChunk, std::unordered_set<T1,T2> *pHash, int nChunkNumber = 1 )
+	{
+		if ( !StartChunk( idChunk, nChunkNumber ) )
+			return;
+		DoHashSet( *pHash );
 		FinishChunk();
 	}
 #if 0

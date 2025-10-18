@@ -268,7 +268,7 @@ struct SDBPtrHash
 };
 
 template<typename T> struct std::hash<CDBPtr<T>> {
-	std::size_t operator()(const CDBPtr<T> &p) const { return std::hash<T*>()(p.GetPtr()); }
+	std::size_t operator()(const CDBPtr<T> &p) const { return std::hash<const T*>()(p.GetPtr()); }
 };
 
 #define REGISTER_DATABASE_CLASS( N, name )  \
