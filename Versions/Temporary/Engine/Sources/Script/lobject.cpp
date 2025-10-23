@@ -74,6 +74,9 @@ void __cdecl luaO_verror (lua_State *L, const char *fmt, ...) {
 
 
 void __cdecl luaO_chunkid (char *out, const char *source, int bufflen) {
+  if (!source) {
+    return;
+  }
   if (*source == '=') {
     strncpy(out, source+1, bufflen);  /* remove first char */
     out[bufflen-1] = '\0';  /* ensures null termination */

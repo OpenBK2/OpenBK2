@@ -419,7 +419,7 @@ static void SaveStackForErrorMessage( lua_State *pState, const char *s )
 		{
 			SLUAError::SLUAStackTrace trace;
 			trace.nDepth = nDepth;
-			if ( strlen( debugInfo.source ) < 20 )
+			if ( debugInfo.source && strlen( debugInfo.source ) < 20 )
 				trace.szSource = debugInfo.source;
 			else
 				trace.szSource = "no file";
