@@ -8,8 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EDITOR "build editor" OFF)
 
+include(cmake/arch.cmake)
+
 if(MSVC)
-  add_compile_options("/arch:AVX2")
   add_compile_options("/nologo")
   add_link_options("/nologo")
   add_compile_options("/wd4251")
