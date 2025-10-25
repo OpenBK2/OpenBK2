@@ -4189,7 +4189,7 @@ OMG_I_USE_GOTO_AGAIN:
 				const std::string szPathName = NProfile::GetCurrentProfileDir() + "Saves\\" + szParam + ".sav";
 
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
-				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ );
+				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
 				if ( pSaver == 0 )
 					return;
 				NMainLoop::Serialize( *pSaver );
@@ -4207,7 +4207,7 @@ OMG_I_USE_GOTO_AGAIN:
 				const std::string szPathName = NProfile::GetCurrentProfileDir() + "Saves\\" + szParam + ".sav";
 
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
-				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ );
+				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
 				if ( pSaver == 0 )
 					return;
 				NMainLoop::Serialize( *pSaver );

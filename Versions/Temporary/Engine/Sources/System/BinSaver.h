@@ -33,9 +33,14 @@ template <class T> class CArray2D;
 
 enum ESaverMode
 {
+	// always reads/writes pointers as 32-bit (4 bytes)
 	SAVER_MODE_READ		= 1,
 	SAVER_MODE_WRITE	= 2,
 	SAVER_MODE_WRITE_COMPRESSED = 3,
+	// on x64, reads/writes pointers as 64-bit (8 bytes)
+	SAVER_MODE_READ_64 = 4,
+	SAVER_MODE_WRITE_64 = 5,
+	SAVER_MODE_WRITE_COMPRESSED_64 = 6,
 };
 
 // ************************************************************************************************************************ //

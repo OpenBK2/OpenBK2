@@ -355,7 +355,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 		toStore.push_back( pObject );
 		storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
 	}
-	RawData( &pObject, 4 );
+	RawData( &pObject, bMode64 ? sizeof(void*) : 4 );
 
 #ifndef _FINALRELEASE
 	for ( int i = 0; i < checkers.size(); ++i )
@@ -375,7 +375,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 CObjectBase* CStructureSaver::LoadObject()
 {
 	void *pServerPtr = 0;
-	RawData( &pServerPtr, 4 );
+	RawData( &pServerPtr, bMode64 ? sizeof(void*) : 4 );
 	if ( pServerPtr != 0 )
 	{
 		CObjectsHash::iterator pFound = objects.find( pServerPtr );
@@ -510,7 +510,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			void *pServer = 0;
 			bool bValid;
 			obj.Read( &nTypeID, 4 );
-			obj.Read( &pServer, 4 );
+			obj.Read( &pServer, bMode64 ? sizeof(void*) : 4);
 			obj.Read( &bValid,1 );
 			CObjectBase *pObject = NObjectFactory::MakeObject( nTypeID );
 			NI_ASSERT( pObject, StrFmt("Can't create object of type 0x%.8x", nTypeID) );
@@ -540,7 +540,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			CObjectBase *pObject;
 			const bool bStartChunkResult = StartChunk( (chunk_id) 1, i + 1 );
 			ASSERT( bStartChunkResult );
-			DataChunk( 0, &pServer, 4, 1 );
+			DataChunk( 0, &pServer, bMode64 ? sizeof(void*) : 4, 1 );
 			pObject = objects[pServer];
 			ASSERT( pObject );
 			if ( pObject )
@@ -644,12 +644,12 @@ void CStructureSaver::Finish()
 				continue;
 			}
 			obj.Write( &nTypeID, 4 );
-			obj.Write( &pObject, 4 );
+			obj.Write( &pObject, bMode64 ? sizeof(void*) : 4 );
 			obj.Write( &bValid, 1 );
 			// save object data
 			const bool bStartChunkResult = StartChunk( (chunk_id) 1, nObject );
 			ASSERT( bStartChunkResult );
-			DataChunk( 0, &pObject, 4, 1 );
+			DataChunk( 0, &pObject, bMode64 ? sizeof(void*) : 4, 1 );
 			//
 			if ( StartChunk( 1, 1 ) )
 			{

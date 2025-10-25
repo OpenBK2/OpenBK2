@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BinSaver.h"
 #include "Misc/HashFuncs.h"
 
 // a) chunk structure
@@ -39,7 +40,7 @@ private:
 	CMemoryStream data;
 	std::list<SChunkLevel> chunks;
 	typedef std::list<SChunkLevel>::iterator CChunkLevelIterator;
-	bool bIsReading, bPackResult;
+	bool bIsReading, bPackResult, bMode64;
 	// maps objects addresses during save(first) to addresses during load(second) - during loading
 	// or serves as a sign that some object has been already stored - during storing
 	typedef std::unordered_map<void*,CPtr<CObjectBase>> CObjectsHash;
@@ -77,21 +78,26 @@ private:
 
 	bool IsReading() { return bIsReading; }
 	int GetVersion() const { return nVersion; }
+
+	void SetMode(const ESaverMode mode) {
+		bIsReading = mode == SAVER_MODE_READ || mode == SAVER_MODE_READ_64;
+		bPackResult = mode == SAVER_MODE_WRITE_COMPRESSED || mode == SAVER_MODE_WRITE_COMPRESSED_64;
+		bMode64 = mode == SAVER_MODE_READ_64 || mode == SAVER_MODE_WRITE_64 || mode == SAVER_MODE_WRITE_COMPRESSED_64;
+	}
+
 public:
 	CStructureSaver() : pRes( 0 ) {}
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext )
 		: pRes( _pRes )
 	{
-		bIsReading = mode == SAVER_MODE_READ;
-		bPackResult = mode == SAVER_MODE_WRITE_COMPRESSED;
+		SetMode(mode);
 		Start( ext ); 
 	}
 
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext, std::vector< CPtr<IDebugSaveCheckObj> > &_checkers )
 		: pRes( _pRes ), checkers( _checkers ), bDestroy( false )
 	{
-		bIsReading = mode == SAVER_MODE_READ;
-		bPackResult = mode == SAVER_MODE_WRITE_COMPRESSED;
+		SetMode(mode);
 		Start( ext ); 
 	}
 
