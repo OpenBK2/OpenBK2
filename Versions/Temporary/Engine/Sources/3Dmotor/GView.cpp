@@ -400,6 +400,9 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 	if ( !pModel )
 		return;
 	const NDb::SGeometry *pGeometry = pModel->pGeometry;
+	if (!pGeometry) {
+		return;
+	}
 	if ( !CResourceFileOpener::DoesExist( "Geometries", GetIntResKey( pGeometry ) ) )
 	{
 		//ASSERT(0 & "Geometry);
