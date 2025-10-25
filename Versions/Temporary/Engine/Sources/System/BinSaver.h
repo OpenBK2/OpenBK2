@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "System_export.h"
 
 #define REGISTER_SAVELOAD_CLASS( N, name )  \
@@ -72,6 +74,8 @@ private:
 		int __cdecl TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2>
 		int __cdecl TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
+	template<class T1, class T2, class T3>
+		int __cdecl TestDataPath(std::priority_queue<T1, T2, T3>*) { return 0; }
 	template<class T1, class T2>
 		int __cdecl TestDataPath( std::set<T1,T2>* ) { return 0; }
 	template<class T1, class T2>
@@ -183,6 +187,21 @@ private:
 			std::vector<T1> vectorData(data.begin(), data.end());
 			Add(1, &vectorData);
 		}
+	}
+
+	template <class T, class Container, class Compare>
+	struct PriorityQueueAccessor : public std::priority_queue<T, Container, Compare> {
+		using Base = std::priority_queue<T, Container, Compare>;
+		using Base::c;
+		using Base::comp;
+	};
+
+	template <class T1, class T2, class T3>
+		void DoPriorityQueue( std::priority_queue<T1, T2, T3> &data )
+	{
+		auto& c = static_cast<PriorityQueueAccessor<T1, T2, T3>&>(data).c;
+
+		Add(1, &c);
 	}
 
 	template <class T1,class T2> 
@@ -302,6 +321,14 @@ public:
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashSet( *pHash );
+		FinishChunk();
+	}
+	template<class T1, class T2, class T3>
+	void Add(const chunk_id idChunk, std::priority_queue<T1, T2, T3>* pQueue, int nChunkNumber = 1)
+	{
+		if (!StartChunk(idChunk, nChunkNumber))
+			return;
+		DoPriorityQueue(*pQueue);
 		FinishChunk();
 	}
 #if 0
