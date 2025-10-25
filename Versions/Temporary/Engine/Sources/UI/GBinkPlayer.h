@@ -23,6 +23,7 @@ namespace NGScene
 		virtual bool Stop() = 0;
 		virtual bool Pause(bool bPause) = 0;
 		virtual bool IsPlaying() const = 0;
+		virtual bool OpenVideo() = 0;
 
 		virtual int GetCurrentFrame() const = 0;
 		virtual void SetCurrentFrame(int nFrame) = 0;

@@ -43,8 +43,6 @@ protected:
 	void Recalc() override;
 	bool NeedUpdate() override;
 
-	bool OpenVideo();
-
 public:
 	CBinkVideoPlayer() = default;
 	CBinkVideoPlayer( const std::string &filename, DWORD dwFlags );
@@ -54,6 +52,7 @@ public:
 	void Play() override;
 	bool Stop() override;
 	bool Pause( bool bPause )override;
+	bool OpenVideo() override;
 	bool IsPlaying() const override;
 
 	int GetCurrentFrame() const override;

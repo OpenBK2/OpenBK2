@@ -218,6 +218,9 @@ void CWindowPlayer::UpdatePlayer()
 	if ( nCurrMovie < movies.size() )
 	{
 		pPlayer = NGScene::CreateVideoPlayer( movies[nCurrMovie].szFileName + ".bik", GetSceneFlags() );
+		if (!pPlayer || !pPlayer->OpenVideo()) {
+			pPlayer = NGScene::CreateVideoPlayer( movies[nCurrMovie].szFileName + ".ogm", GetSceneFlags() );
+		}
 		if ( pPlayer )
 			pPlayer->Play();
 	}
