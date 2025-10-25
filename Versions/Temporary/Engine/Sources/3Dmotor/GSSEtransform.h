@@ -116,15 +116,13 @@ struct SMMXFixups
 	NGfx::SMMXWord normalFixup, shiftedFixup;
 };
 
-inline void CreateFixups( SMMXFixups *pRes )
-{
-	short nShift = (short)0x8000;
-	NGfx::SMMXWord &a = pRes->normalFixup;
-	a.nZ = nShift; a.nY = nShift; a.nX = nShift; a.nW = 0;
-	NGfx::SMMXWord &b = pRes->shiftedFixup;
-	short nFixShift = (short)0x8080;
-	b.nX = nFixShift; b.nY = nFixShift; b.nZ = nFixShift; b.nW = 0; 
-}
+static constexpr short normalFixupValue = static_cast<short>(0x8000);
+static constexpr short shiftedFixupValue = static_cast<short>(0x8080);
+
+static constexpr SMMXFixups fixups = {
+	{normalFixupValue, normalFixupValue, normalFixupValue, 0},
+	{shiftedFixupValue, shiftedFixupValue, shiftedFixupValue, 0}
+};
 
 static void AssignTransposed( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 {
@@ -182,7 +180,6 @@ static uint64_t NormalizeAndShift(uint64_t mm)
 static void MMXTransformVectorGeneral(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
-	const SMMXFixups* pFixups,
 	const NGfx::SCompactTransformer* pTrans1, char w1 = 0,
 	const NGfx::SCompactTransformer* pTrans2 = nullptr, char w2 = 0,
 	const NGfx::SCompactTransformer* pTrans3 = nullptr, char w3 = 0)
@@ -194,10 +191,10 @@ static void MMXTransformVectorGeneral(
 	uint64_t mm0 = mmx::punpcklbw(0, low);
 
 	short fix[4] = {
-		pFixups->normalFixup.nZ,
-		pFixups->normalFixup.nY,
-		pFixups->normalFixup.nX,
-		pFixups->normalFixup.nW
+		fixups.normalFixup.nZ,
+		fixups.normalFixup.nY,
+		fixups.normalFixup.nX,
+		fixups.normalFixup.nW
 	};
 
 	short mm0_words[4];
@@ -239,10 +236,10 @@ static void MMXTransformVectorGeneral(
 	short w[4];
 	mmx::split64(mm, w);
 
-	w[0] += pFixups->shiftedFixup.nZ;
-	w[1] += pFixups->shiftedFixup.nY;
-	w[2] += pFixups->shiftedFixup.nX;
-	w[3] += pFixups->shiftedFixup.nW;
+	w[0] += fixups.shiftedFixup.nZ;
+	w[1] += fixups.shiftedFixup.nY;
+	w[2] += fixups.shiftedFixup.nX;
+	w[3] += fixups.shiftedFixup.nW;
 
 	for (int i = 0; i < 4; ++i) {
 		int val = 0xFF & (w[i] >> 8);
@@ -258,28 +255,25 @@ static void MMXTransformVectorGeneral(
 static void MMXTransformVector(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
-	const SMMXFixups* pFixups,
 	const NGfx::SCompactTransformer* pTrans)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans);
+	MMXTransformVectorGeneral(pRes, pSrc, pTrans);
 }
 
 static void MMXTransformVector2(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
-	const SMMXFixups* pFixups,
 	const NGfx::SCompactTransformer* pTrans,
 	char w1,
 	const NGfx::SCompactTransformer* pTrans2,
 	char w2)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans, w1, pTrans2, w2);
+	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2);
 }
 
 static void MMXTransformVector3(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
-	const SMMXFixups* pFixups,
 	const NGfx::SCompactTransformer* pTrans,
 	char w1,
 	const NGfx::SCompactTransformer* pTrans2,
@@ -287,5 +281,5 @@ static void MMXTransformVector3(
 	const NGfx::SCompactTransformer* pTrans3,
 	char w3)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pFixups, pTrans, w1, pTrans2, w2, pTrans3, w3);
+	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2, pTrans3, w3);
 }

@@ -17,11 +17,10 @@ TEST(MMXEmulation, MMXTransformVector) {
         NGfx::SCompactTransformer trans{};
 
         randomizeVector(src);
-        randomizeFixup(fixups);
         randomizeTransformer(trans);
 
-        original::MMXTransformVector(&resExpected, &src, &fixups, &trans);
-        MMXTransformVector(&resActual, &src, &fixups, &trans);
+        original::MMXTransformVector(&resExpected, &src, &trans);
+        MMXTransformVector(&resActual, &src, &trans);
 
         EXPECT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
     }
@@ -31,18 +30,16 @@ TEST(MMXEmulation, MMXTransformVector2) {
 
     for (int i = 0; i < iterations; ++i) {
         NGfx::SCompactVector src{}, resExpected{}, resActual{};
-        SMMXFixups fixups{};
         NGfx::SCompactTransformer trans{}, trans2{};
 
         randomizeVector(src);
-        randomizeFixup(fixups);
         randomizeTransformer(trans);
         randomizeTransformer(trans2);
         char w1 = random_uint8();
         char w2 = random_uint8();
 
-        original::MMXTransformVector2(&resExpected, &src, &fixups, &trans, w1, &trans2, w2);
-        MMXTransformVector2(&resActual, &src, &fixups, &trans,w1, &trans2, w2);
+        original::MMXTransformVector2(&resExpected, &src, &trans, w1, &trans2, w2);
+        MMXTransformVector2(&resActual, &src, &trans,w1, &trans2, w2);
 
         ASSERT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
     }
@@ -52,11 +49,9 @@ TEST(MMXEmulation, MMXTransformVector3) {
 
     for (int i = 0; i < iterations; ++i) {
         NGfx::SCompactVector src{}, resExpected{}, resActual{};
-        SMMXFixups fixups{};
         NGfx::SCompactTransformer trans{}, trans2{}, trans3{};
 
         randomizeVector(src);
-        randomizeFixup(fixups);
         randomizeTransformer(trans);
         randomizeTransformer(trans2);
         randomizeTransformer(trans3);
@@ -64,8 +59,8 @@ TEST(MMXEmulation, MMXTransformVector3) {
         char w2 = random_uint8();
         char w3 = random_uint8();
 
-        original::MMXTransformVector3(&resExpected, &src, &fixups, &trans, w1, &trans2, w2, &trans3, w3);
-        MMXTransformVector3(&resActual, &src, &fixups, &trans, w1, &trans2, w2, &trans3, w3);
+        original::MMXTransformVector3(&resExpected, &src, &trans, w1, &trans2, w2, &trans3, w3);
+        MMXTransformVector3(&resActual, &src, &trans, w1, &trans2, w2, &trans3, w3);
 
         ASSERT_EQ(0, memcmp(&resExpected, &resActual, sizeof(NGfx::SCompactVector)));
     }

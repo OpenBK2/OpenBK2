@@ -114,7 +114,7 @@ namespace original {
 	    __asm emms
 	}
 
-	static void MMXTransformVector(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+    static void MMXTransformVectorImpl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
 	    const NGfx::SCompactTransformer* pTrans)
 	{
 	    _asm
@@ -175,7 +175,13 @@ namespace original {
 	    }
 	}
 
-	static void MMXTransformVector2(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+	static void MMXTransformVector(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
+		const NGfx::SCompactTransformer* pTrans) {
+
+        MMXTransformVectorImpl(pRes, pSrc, &fixups, pTrans);
+    }
+
+	static void MMXTransformVector2Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
 	    const NGfx::SCompactTransformer* pTrans, char w1,
 	    const NGfx::SCompactTransformer* pTrans2, char w2)
 	{
@@ -253,7 +259,14 @@ namespace original {
 	    }
 	}
 
-	static void MMXTransformVector3(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+	static void MMXTransformVector2(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
+		const NGfx::SCompactTransformer* pTrans, char w1,
+		const NGfx::SCompactTransformer* pTrans2, char w2) {
+
+        MMXTransformVector2Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2);
+    }
+
+	static void MMXTransformVector3Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
 	    const NGfx::SCompactTransformer* pTrans, char w1,
 	    const NGfx::SCompactTransformer* pTrans2, char w2,
 	    const NGfx::SCompactTransformer* pTrans3, char w3)
@@ -344,6 +357,14 @@ namespace original {
 	        emms
 	    }
 	}
+
+	static void MMXTransformVector3(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
+		const NGfx::SCompactTransformer* pTrans, char w1,
+		const NGfx::SCompactTransformer* pTrans2, char w2,
+		const NGfx::SCompactTransformer* pTrans3, char w3) {
+
+        MMXTransformVector3Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2, pTrans3, w3);
+    }
 
 	static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
     {
