@@ -51,3 +51,26 @@ static void random_mmx_word(T & word) {
     word.nZ = random_uint16();
     word.nW = random_uint16();
 }
+
+template<typename T>
+static void randomizeVector(T &vec) {
+    vec.z = random_uint8();
+    vec.y = random_uint8();
+    vec.x = random_uint8();
+    vec.w = random_uint8();
+}
+
+template<typename T>
+static void randomizeFixup(T &fix) {
+
+    random_mmx_word(fix.normalFixup);
+    random_mmx_word(fix.shiftedFixup);
+}
+
+template<typename T>
+static void randomizeTransformer(T &t) {
+
+    random_mmx_word(t.a);
+    random_mmx_word(t.b);
+    random_mmx_word(t.c);
+}

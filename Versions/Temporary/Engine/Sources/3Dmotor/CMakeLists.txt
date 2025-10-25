@@ -113,3 +113,4 @@ install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)
 
 add_subdirectory(test)
+add_subdirectory(benchmark)

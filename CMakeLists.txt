@@ -36,6 +36,7 @@ include(cmake/sdl.cmake)
 include(cmake/sdl_mixer.cmake)
 
 include(cmake/googletest.cmake)
+include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
 include(cmake/glm.cmake)
 include(cmake/dxsdk.cmake)

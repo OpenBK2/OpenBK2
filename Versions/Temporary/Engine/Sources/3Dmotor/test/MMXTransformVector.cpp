@@ -9,26 +9,6 @@
 
 enum { iterations = 100000 };
 
-static void randomizeVector(NGfx::SCompactVector &vec) {
-    vec.z = random_uint8();
-    vec.y = random_uint8();
-    vec.x = random_uint8();
-    vec.w = random_uint8();
-}
-
-static void randomizeFixup(SMMXFixups &fix) {
-
-    random_mmx_word(fix.normalFixup);
-    random_mmx_word(fix.shiftedFixup);
-}
-
-static void randomizeTransformer(NGfx::SCompactTransformer &t) {
-
-    random_mmx_word(t.a);
-    random_mmx_word(t.b);
-    random_mmx_word(t.c);
-}
-
 TEST(MMXEmulation, MMXTransformVector) {
 
     for (int i = 0; i < iterations; ++i) {

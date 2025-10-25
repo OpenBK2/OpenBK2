@@ -1,6 +1,7 @@
 #pragma once
 
 #include "3Dmotor/GLightPerVertex.h"
+#include "3DLib/GGeometry.h"
 
 namespace original {
     static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> &mult )
