@@ -243,6 +243,24 @@ static ShortVector4 NormalizeAndShift(const ShortVector4 & v)
 	return w;
 }
 
+static glm::vec4 LoadCompactVector(const NGfx::SCompactVector & src) {
+
+	auto convert = [](const int component) {
+		return (component - 128.0) / 127.0f;
+	};
+
+	return {convert(src.x), convert(src.y), convert(src.z), 0.0f};
+}
+
+static NGfx::SCompactVector SaveCompactVector(const glm::vec3 & src) {
+
+	auto convert = [](const float component) -> uint8_t {
+		return std::clamp( static_cast<int>( component * 127 ) + 128, 0, 255 );
+	};
+
+	return {convert(src.z), convert(src.y), convert(src.x), 0};
+}
+
 // General template function for N transforms (1..3)
 static void MMXTransformVectorGeneral(
 	NGfx::SCompactVector & res,
@@ -251,72 +269,28 @@ static void MMXTransformVectorGeneral(
 	const std::optional<SHMatrix> & transform2 = std::nullopt, uint8_t weight2 = 0,
 	const std::optional<SHMatrix> & transform3 = std::nullopt, uint8_t weight3 = 0)
 {
-	ShortVector4 mm0;
-	// mm0 *= 256, SCompactVector scaled from range [0, 255] into [0, 65535]
-	mm0.z = static_cast<short>(src.z) << 8;
-	mm0.y = static_cast<short>(src.y) << 8;
-	mm0.x = static_cast<short>(src.x) << 8;
-	mm0.w = 0;
+	glm::mat4 matrix1 = LoadMatrix(transform1);
+	glm::vec4 vec = LoadCompactVector(src);
 
-	// subtract 0x8000 = 32768, range [-32768, 32767]
-	mm0.z -= fixups.normalFixup.nZ;
-	mm0.y -= fixups.normalFixup.nY;
-	mm0.x -= fixups.normalFixup.nX;
+	glm::vec4 result = matrix1 * vec;
 
-	NGfx::SCompactTransformer compact1;
-	AssignRegular(&compact1, transform1);
-
-	// Apply first transform
-	const ShortVector4 a1 = {compact1.a.nX, compact1.a.nY, compact1.a.nZ, compact1.a.nW };
-	const ShortVector4 b1 = {compact1.b.nX, compact1.b.nY, compact1.b.nZ, compact1.b.nW };
-	const ShortVector4 c1 = {compact1.c.nX, compact1.c.nY, compact1.c.nZ, compact1.c.nW };
-	ShortVector4 mm = ApplyTransform(mm0, a1, b1, c1);
-
-	// Second transform
 	if (transform2.has_value()) {
-		mm = ApplyWeight(mm, weight1);
 
-		NGfx::SCompactTransformer compact2;
-		AssignRegular(&compact2, transform2.value());
-		const ShortVector4 a2 = {compact2.a.nX, compact2.a.nY, compact2.a.nZ, compact2.a.nW };
-		const ShortVector4 b2 = {compact2.b.nX, compact2.b.nY, compact2.b.nZ, compact2.b.nW };
-		const ShortVector4 c2 = {compact2.c.nX, compact2.c.nY, compact2.c.nZ, compact2.c.nW };
-		ShortVector4 mm2 = ApplyTransform(mm0, a2, b2, c2);
-		mm2 = ApplyWeight(mm2, weight2);
+		glm::mat4 matrix2 = LoadMatrix(transform2.value());
+		glm::vec4 result2 = matrix2 * vec;
 
-		mm.x += mm2.x;
-		mm.y += mm2.y;
-		mm.z += mm2.z;
+		result = result * (weight1 / 255.f) + result2 * (weight2 / 255.f);
 	}
-
-	// Third transform
 	if (transform3.has_value()) {
-		NGfx::SCompactTransformer compact3;
-		AssignRegular(&compact3, transform3.value());
-		const ShortVector4 a3 = {compact3.a.nX, compact3.a.nY, compact3.a.nZ, compact3.a.nW };
-		const ShortVector4 b3 = {compact3.b.nX, compact3.b.nY, compact3.b.nZ, compact3.b.nW };
-		const ShortVector4 c3 = {compact3.c.nX, compact3.c.nY, compact3.c.nZ, compact3.c.nW };
-		ShortVector4 mm3 = ApplyTransform(mm0, a3, b3, c3);
-		mm3 = ApplyWeight(mm3, weight3);
 
-		mm.x += mm3.x;
-		mm.y += mm3.y;
-		mm.z += mm3.z;
+		glm::mat4 matrix3 = LoadMatrix(transform3.value());
+		glm::vec4 result3 = matrix3 * vec;
+
+		result += result3 * (weight3 / 255.f);
 	}
+	glm::vec3 normal = glm::normalize(glm::vec3{ result.x, result.y, result.z });
 
-	ShortVector4 w = NormalizeAndShift(mm);
-
-	w.z += fixups.shiftedFixup.nZ;
-	w.y += fixups.shiftedFixup.nY;
-	w.x += fixups.shiftedFixup.nX;
-
-	w.z = static_cast<short>(std::clamp(0xFF & (w.z >> 8), 0, 255));
-	w.y = static_cast<short>(std::clamp(0xFF & (w.y >> 8), 0, 255));
-	w.x = static_cast<short>(std::clamp(0xFF & (w.x >> 8), 0, 255));
-
-	res.z = static_cast<unsigned char>(w.z);
-	res.y = static_cast<unsigned char>(w.y);
-	res.x = static_cast<unsigned char>(w.x);
+	res = SaveCompactVector(normal);
 	res.w = src.w;
 }
 
