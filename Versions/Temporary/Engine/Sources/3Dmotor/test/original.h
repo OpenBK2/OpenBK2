@@ -182,8 +182,8 @@ namespace original {
     }
 
 	static void MMXTransformVector2Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
-	    const NGfx::SCompactTransformer* pTrans, char w1,
-	    const NGfx::SCompactTransformer* pTrans2, char w2)
+	    const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+	    const NGfx::SCompactTransformer* pTrans2, uint8_t w2)
 	{
 	    _asm
 	    {
@@ -260,16 +260,16 @@ namespace original {
 	}
 
 	static void MMXTransformVector2(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
-		const NGfx::SCompactTransformer* pTrans, char w1,
-		const NGfx::SCompactTransformer* pTrans2, char w2) {
+		const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+		const NGfx::SCompactTransformer* pTrans2, uint8_t w2) {
 
         MMXTransformVector2Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2);
     }
 
 	static void MMXTransformVector3Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
-	    const NGfx::SCompactTransformer* pTrans, char w1,
-	    const NGfx::SCompactTransformer* pTrans2, char w2,
-	    const NGfx::SCompactTransformer* pTrans3, char w3)
+	    const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+	    const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
+	    const NGfx::SCompactTransformer* pTrans3, uint8_t w3)
 	{
 	    _asm
 	    {
@@ -359,9 +359,9 @@ namespace original {
 	}
 
 	static void MMXTransformVector3(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
-		const NGfx::SCompactTransformer* pTrans, char w1,
-		const NGfx::SCompactTransformer* pTrans2, char w2,
-		const NGfx::SCompactTransformer* pTrans3, char w3) {
+		const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+		const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
+		const NGfx::SCompactTransformer* pTrans3, uint8_t w3) {
 
         MMXTransformVector3Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2, pTrans3, w3);
     }

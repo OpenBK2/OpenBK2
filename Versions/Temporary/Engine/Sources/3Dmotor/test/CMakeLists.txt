@@ -11,6 +11,14 @@ function(add_unit_test filename)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $<TARGET_FILE:GTest::gtest>
             $<TARGET_FILE_DIR:${target_name}>)
+    add_custom_command(TARGET ${target_name} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:Misc>
+            $<TARGET_FILE_DIR:${target_name}>)
+    add_custom_command(TARGET ${target_name} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:MemoryLib>
+            $<TARGET_FILE_DIR:${target_name}>)
 endfunction()
 
 add_unit_test(MultiplyOnColor)

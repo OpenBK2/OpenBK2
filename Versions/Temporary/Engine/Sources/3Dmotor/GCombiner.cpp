@@ -286,8 +286,6 @@ struct STGenericTransformer
 			return CopyTransform( pObjInfo, _pSrc, nVerties, pCache, bv, pRes );
 		}
 
-		int k = 0;
-
 		const std::vector<WORD> &posIndices = pObjInfo->GetPositionIndices();
 		ASSERT( nVerties == posIndices.size() );
 		xformedNormals.resize( posIndices.size() );

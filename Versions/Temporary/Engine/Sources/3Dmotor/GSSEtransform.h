@@ -124,132 +124,202 @@ static constexpr SMMXFixups fixups = {
 	{shiftedFixupValue, shiftedFixupValue, shiftedFixupValue, 0}
 };
 
+static int FloatToMMXTransformScale(const float value) {
+	// multiply by 2048 (2^11) to integer fixed point
+	return Float2Int( value * 0x800 );
+}
+
 static void AssignTransposed( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 {
-	pRes->a.nZ = Float2Int( m._33 * 0x800 );  pRes->a.nY = Float2Int( m._22 * 0x800 );  pRes->a.nX = Float2Int( m._11 * 0x800 );  pRes->a.nW = 0;
-	pRes->b.nZ = Float2Int( m._13 * 0x800 );  pRes->b.nY = Float2Int( m._32 * 0x800 );  pRes->b.nX = Float2Int( m._21 * 0x800 );  pRes->b.nW = 0;
-	pRes->c.nZ = Float2Int( m._23 * 0x800 );  pRes->c.nY = Float2Int( m._12 * 0x800 );  pRes->c.nX = Float2Int( m._31 * 0x800 );  pRes->c.nW = 0;
+	//   z  y  x  w
+	// a 33 22 11 0
+	// b 13 32 21 0
+	// c 23 12 31 0
+	//   z  y  x
+	//   x  z  y
+	//   y  x  z
+
+	//   x  y  z  w
+	// a 11 22 33 0
+	// b 21 32 13 0
+	// c 31 12 23 0
+	//   x  y  z
+	//   y  z  x
+	//   z  x  y
+
+	// transposed
+	//   x  y  z  w
+	// a 11 21 31 0 [x y z]
+	// b 22 32 12 0 [y z x]
+	// c 33 13 23 0 [z x y]
+	pRes->a.nZ = FloatToMMXTransformScale( m._33 );  pRes->a.nY = FloatToMMXTransformScale( m._22 );  pRes->a.nX = FloatToMMXTransformScale( m._11 );  pRes->a.nW = 0;
+	pRes->b.nZ = FloatToMMXTransformScale( m._13 );  pRes->b.nY = FloatToMMXTransformScale( m._32 );  pRes->b.nX = FloatToMMXTransformScale( m._21 );  pRes->b.nW = 0;
+	pRes->c.nZ = FloatToMMXTransformScale( m._23 );  pRes->c.nY = FloatToMMXTransformScale( m._12 );  pRes->c.nX = FloatToMMXTransformScale( m._31 );  pRes->c.nW = 0;
 }
 
 static void Assign( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 {
-	pRes->a.nZ = Float2Int( m._33 * 0x800 );  pRes->a.nY = Float2Int( m._22 * 0x800 );  pRes->a.nX = Float2Int( m._11 * 0x800 );  pRes->a.nW = 0;
-	pRes->b.nZ = Float2Int( m._31 * 0x800 );  pRes->b.nY = Float2Int( m._23 * 0x800 );  pRes->b.nX = Float2Int( m._12 * 0x800 );  pRes->b.nW = 0;
-	pRes->c.nZ = Float2Int( m._32 * 0x800 );  pRes->c.nY = Float2Int( m._21 * 0x800 );  pRes->c.nX = Float2Int( m._13 * 0x800 );  pRes->c.nW = 0;
+	//   z  y  x  w
+	// a 33 22 11 0 [z y x]
+	// b 31 23 12 0 [x z y]
+	// c 32 31 13 0 [y x z]
+
+	//   x  y  z  w
+	// a 11 22 33 0 [x y z]
+	// b 12 23 31 0 [y z x]
+	// c 13 31 32 0 [z x y]
+	pRes->a.nZ = FloatToMMXTransformScale( m._33 );  pRes->a.nY = FloatToMMXTransformScale( m._22 );  pRes->a.nX = FloatToMMXTransformScale( m._11 );  pRes->a.nW = 0;
+	pRes->b.nZ = FloatToMMXTransformScale( m._31 );  pRes->b.nY = FloatToMMXTransformScale( m._23 );  pRes->b.nX = FloatToMMXTransformScale( m._12 );  pRes->b.nW = 0;
+	pRes->c.nZ = FloatToMMXTransformScale( m._32 );  pRes->c.nY = FloatToMMXTransformScale( m._21 );  pRes->c.nX = FloatToMMXTransformScale( m._13 );  pRes->c.nW = 0;
 }
+
+struct ShortVector4 { short x, y, z, w; };
 
 // Helper: apply a single transform with optional shuffle, returns mm64 result
-static uint64_t ApplyTransform(
-	uint64_t mm0,
-	const short a[4],
-	const short b[4],
-	const short c[4])
-{
-	uint64_t mmA = mmx::pmulhw(mm0, mmx::combine64(a));
-	uint64_t mmB = mmx::pmulhw(mmx::shuffleTransform(mm0, 16, 32), mmx::combine64(b));
-	uint64_t mmC = mmx::pmulhw(mmx::shuffleTransform(mm0, 32, 16), mmx::combine64(c));
-	mmA = mmx::paddsw(mmA, mmB);
-	mmA = mmx::paddsw(mmA, mmC);
-	return mmA;
+static ShortVector4 ApplyTransform(
+	const ShortVector4 & mm0,
+	const ShortVector4 & a,
+	const ShortVector4 & b,
+	const ShortVector4 & c) {
+	ShortVector4 va, vb, vc;
+
+	auto dot = [](const ShortVector4 & v1, const ShortVector4 & v2){
+		ShortVector4 r;
+		r.x = (v1.x * v2.x) >> 16;
+		r.y = (v1.y * v2.y) >> 16;
+		r.z = (v1.z * v2.z) >> 16;
+		r.w = 0;
+		return r;
+	};
+
+	va = dot(mm0, a);
+	vb = dot(ShortVector4{mm0.y, mm0.z, mm0.x}, b);
+	vc = dot(ShortVector4{mm0.z, mm0.x, mm0.y}, c);
+
+	ShortVector4 result;
+	int x = va.x + vb.x + vc.x;
+	int y = va.y + vb.y + vc.y;
+	int z = va.z + vb.z + vc.z;
+	result.x = std::clamp(x, -32768, 32767);
+	result.y = std::clamp(y, -32768, 32767);
+	result.z = std::clamp(z, -32768, 32767);
+	result.w = 0;
+
+	return result;
 }
 
-// Helper: apply weight to a transform result
-static uint64_t ApplyWeight(uint64_t mm, unsigned char wIdx)
+// Helper: apply weight to a transform result (weight is in range [0, 255])
+static ShortVector4 ApplyWeight(const ShortVector4 & v, unsigned char wIdx)
 {
-	mm = mmx::psllw(mm, 4); // shift before weight
-	short wArr[4] = { mmxWeights[wIdx].nZ, mmxWeights[wIdx].nY, mmxWeights[wIdx].nX, mmxWeights[wIdx].nW };
-	return mmx::pmulhw(mm, mmx::combine64(wArr));
+	ShortVector4 a;
+	const int shift1 = 4;
+	a.x = (v.x << shift1);
+	a.y = (v.y << shift1);
+	a.z = (v.z << shift1);
+	ShortVector4 result;
+	auto w = wIdx;
+	const int shift2 = 10;
+	result.x = (a.x * w) >> shift2;
+	result.y = (a.y * w) >> shift2;
+	result.z = (a.z * w) >> shift2;
+	result.w = 0;
+	return result;
 }
 
 // Shared final normalization
-static uint64_t NormalizeAndShift(uint64_t mm)
+static ShortVector4 NormalizeAndShift(const ShortVector4 & v)
 {
-	mm = mmx::psllw(mm, 3);
-	uint64_t mmSq = mmx::pmaddwd(mm, mm);
-	uint32_t sumSquares = static_cast<uint32_t>(mmSq & 0xFFFFFFFFULL) +
-		static_cast<uint32_t>((mmSq >> 32) & 0xFFFFFFFFULL);
-	uint32_t idx = std::min(sumSquares >> 18, 16383U);
-	short normalize = nNormalizeTable[idx];
-	short normWords[4] = { normalize, normalize, normalize, normalize };
-	mm = mmx::pmulhw(mm, mmx::combine64(normWords));
-	mm = mmx::psllw(mm, 5);
-	return mm;
+	ShortVector4 w;
+	w.x = v.x << 3;
+	w.y = v.y << 3;
+	w.z = v.z << 3;
+	w.w = 0;
+
+	uint32_t sumSquares = w.x * w.x + w.y * w.y + w.z * w.z;
+
+	uint32_t idx = sumSquares >> 18;
+
+	short normalize = (std::min)( 0x7fff, Float2Int( (64 * (127 * 16)) / sqrt( idx + 0.99f ) ) );
+
+	// divide back by 2048 (2^11)
+	const size_t shift = 11;
+	w.x = (w.x * normalize) >> shift;
+	w.y = (w.y * normalize) >> shift;
+	w.z = (w.z * normalize) >> shift;
+	w.w = 0;
+
+	return w;
 }
 
 // General template function for N transforms (1..3)
 static void MMXTransformVectorGeneral(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
-	const NGfx::SCompactTransformer* pTrans1, char w1 = 0,
-	const NGfx::SCompactTransformer* pTrans2 = nullptr, char w2 = 0,
-	const NGfx::SCompactTransformer* pTrans3 = nullptr, char w3 = 0)
+	const NGfx::SCompactTransformer* pTrans1, uint8_t w1 = 0,
+	const NGfx::SCompactTransformer* pTrans2 = nullptr, uint8_t w2 = 0,
+	const NGfx::SCompactTransformer* pTrans3 = nullptr, uint8_t w3 = 0)
 {
-	uint32_t src32 = *(const uint32_t*)pSrc;
-	uint32_t low = src32 & 0x00FFFFFF;
-	uint32_t high = src32 & 0xFF000000;
+	ShortVector4 mm0;
+	// mm0 *= 256, SCompactVector scaled from range [0, 255] into [0, 65535]
+	mm0.z = static_cast<short>(pSrc->z) << 8;
+	mm0.y = static_cast<short>(pSrc->y) << 8;
+	mm0.x = static_cast<short>(pSrc->x) << 8;
+	mm0.w = 0;
 
-	uint64_t mm0 = mmx::punpcklbw(0, low);
-
-	short fix[4] = {
-		fixups.normalFixup.nZ,
-		fixups.normalFixup.nY,
-		fixups.normalFixup.nX,
-		fixups.normalFixup.nW
-	};
-
-	short mm0_words[4];
-	mmx::split64(mm0, mm0_words);
-	for (int i = 0; i < 4; ++i) mm0_words[i] -= fix[i];
-	mm0 = mmx::combine64(mm0_words);
+	// subtract 0x8000 = 32768, range [-32768, 32767]
+	mm0.z -= fixups.normalFixup.nZ;
+	mm0.y -= fixups.normalFixup.nY;
+	mm0.x -= fixups.normalFixup.nX;
 
 	// Apply first transform
-	short a1[4] = { pTrans1->a.nZ, pTrans1->a.nY, pTrans1->a.nX, pTrans1->a.nW };
-	short b1[4] = { pTrans1->b.nZ, pTrans1->b.nY, pTrans1->b.nX, pTrans1->b.nW };
-	short c1[4] = { pTrans1->c.nZ, pTrans1->c.nY, pTrans1->c.nX, pTrans1->c.nW };
-	uint64_t mm = ApplyTransform(mm0, a1, b1, c1);
+	const ShortVector4 a1 = {pTrans1->a.nX, pTrans1->a.nY, pTrans1->a.nZ, pTrans1->a.nW };
+	const ShortVector4 b1 = {pTrans1->b.nX, pTrans1->b.nY, pTrans1->b.nZ, pTrans1->b.nW };
+	const ShortVector4 c1 = {pTrans1->c.nX, pTrans1->c.nY, pTrans1->c.nZ, pTrans1->c.nW };
+	ShortVector4 mm = ApplyTransform(mm0, a1, b1, c1);
 
 	// Second transform
 	if (pTrans2) {
 
-		mm = ApplyWeight(mm, static_cast<unsigned char>(w1));
+		mm = ApplyWeight(mm, w1);
 
-		short a2[4] = { pTrans2->a.nZ, pTrans2->a.nY, pTrans2->a.nX, pTrans2->a.nW };
-		short b2[4] = { pTrans2->b.nZ, pTrans2->b.nY, pTrans2->b.nX, pTrans2->b.nW };
-		short c2[4] = { pTrans2->c.nZ, pTrans2->c.nY, pTrans2->c.nX, pTrans2->c.nW };
-		uint64_t mm2 = ApplyTransform(mm0, a2, b2, c2);
-		mm2 = ApplyWeight(mm2, static_cast<unsigned char>(w2));
-		mm = mmx::paddsw(mm, mm2);
+		const ShortVector4 a2 = {pTrans2->a.nX, pTrans2->a.nY, pTrans2->a.nZ, pTrans2->a.nW };
+		const ShortVector4 b2 = {pTrans2->b.nX, pTrans2->b.nY, pTrans2->b.nZ, pTrans2->b.nW };
+		const ShortVector4 c2 = {pTrans2->c.nX, pTrans2->c.nY, pTrans2->c.nZ, pTrans2->c.nW };
+		ShortVector4 mm2 = ApplyTransform(mm0, a2, b2, c2);
+		mm2 = ApplyWeight(mm2, w2);
+
+		mm.x += mm2.x;
+		mm.y += mm2.y;
+		mm.z += mm2.z;
 	}
 
 	// Third transform
 	if (pTrans3) {
-		short a3[4] = { pTrans3->a.nZ, pTrans3->a.nY, pTrans3->a.nX, pTrans3->a.nW };
-		short b3[4] = { pTrans3->b.nZ, pTrans3->b.nY, pTrans3->b.nX, pTrans3->b.nW };
-		short c3[4] = { pTrans3->c.nZ, pTrans3->c.nY, pTrans3->c.nX, pTrans3->c.nW };
-		uint64_t mm3 = ApplyTransform(mm0, a3, b3, c3);
-		mm3 = ApplyWeight(mm3, static_cast<unsigned char>(w3));
-		mm = mmx::paddsw(mm, mm3);
+		const ShortVector4 a3 = {pTrans3->a.nX, pTrans3->a.nY, pTrans3->a.nZ, pTrans3->a.nW };
+		const ShortVector4 b3 = {pTrans3->b.nX, pTrans3->b.nY, pTrans3->b.nZ, pTrans3->b.nW };
+		const ShortVector4 c3 = {pTrans3->c.nX, pTrans3->c.nY, pTrans3->c.nZ, pTrans3->c.nW };
+		ShortVector4 mm3 = ApplyTransform(mm0, a3, b3, c3);
+		mm3 = ApplyWeight(mm3, w3);
+
+		mm.x += mm3.x;
+		mm.y += mm3.y;
+		mm.z += mm3.z;
 	}
 
-	mm = NormalizeAndShift(mm);
+	ShortVector4 w = NormalizeAndShift(mm);
 
-	short w[4];
-	mmx::split64(mm, w);
+	w.z += fixups.shiftedFixup.nZ;
+	w.y += fixups.shiftedFixup.nY;
+	w.x += fixups.shiftedFixup.nX;
 
-	w[0] += fixups.shiftedFixup.nZ;
-	w[1] += fixups.shiftedFixup.nY;
-	w[2] += fixups.shiftedFixup.nX;
-	w[3] += fixups.shiftedFixup.nW;
+	w.z = static_cast<short>(std::clamp(0xFF & (w.z >> 8), 0, 255));
+	w.y = static_cast<short>(std::clamp(0xFF & (w.y >> 8), 0, 255));
+	w.x = static_cast<short>(std::clamp(0xFF & (w.x >> 8), 0, 255));
 
-	for (int i = 0; i < 4; ++i) {
-		int val = 0xFF & (w[i] >> 8);
-		w[i] = static_cast<short>(std::clamp(val, 0, 255));
-	}
-
-	pRes->z = static_cast<unsigned char>(w[0]);
-	pRes->y = static_cast<unsigned char>(w[1]);
-	pRes->x = static_cast<unsigned char>(w[2]);
-	pRes->w = static_cast<unsigned char>(w[3]) | pSrc->w;
+	pRes->z = static_cast<unsigned char>(w.z);
+	pRes->y = static_cast<unsigned char>(w.y);
+	pRes->x = static_cast<unsigned char>(w.x);
+	pRes->w = pSrc->w;
 }
 
 static void MMXTransformVector(
@@ -264,9 +334,9 @@ static void MMXTransformVector2(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
 	const NGfx::SCompactTransformer* pTrans,
-	char w1,
+	uint8_t w1,
 	const NGfx::SCompactTransformer* pTrans2,
-	char w2)
+	uint8_t w2)
 {
 	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2);
 }
@@ -275,11 +345,11 @@ static void MMXTransformVector3(
 	NGfx::SCompactVector* pRes,
 	const NGfx::SCompactVector* pSrc,
 	const NGfx::SCompactTransformer* pTrans,
-	char w1,
+	uint8_t w1,
 	const NGfx::SCompactTransformer* pTrans2,
-	char w2,
+	uint8_t w2,
 	const NGfx::SCompactTransformer* pTrans3,
-	char w3)
+	uint8_t w3)
 {
 	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2, pTrans3, w3);
 }

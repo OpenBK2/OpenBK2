@@ -160,6 +160,7 @@ struct SShortTextureUV
 	};
 };
 
+// range [0, 255], from float [-1.0, 1.0], value 128 represents zero
 struct SCompactVector
 {
 	union
@@ -168,6 +169,7 @@ struct SCompactVector
 		DWORD dw;
 	};
 };
+
 inline void CalcCompactVector( SCompactVector *pRes, const CVec3 &v )
 {
 	pRes->x = Clamp( Float2Int( v.x * 127 ) + 128, 0, 255 );
@@ -175,6 +177,7 @@ inline void CalcCompactVector( SCompactVector *pRes, const CVec3 &v )
 	pRes->z = Clamp( Float2Int( v.z * 127 ) + 128, 0, 255 );
 	pRes->w = 255;
 }
+
 inline CVec3 GetVector( const SCompactVector &a )
 {
 	return CVec3( ( ((int)a.x) - 128 ) / 127.0f, ( ((int)a.y) - 128 ) / 127.0f, ( ((int)a.z) - 128 ) / 127.0f );

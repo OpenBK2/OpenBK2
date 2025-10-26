@@ -73,4 +73,5 @@ static void randomizeTransformer(T &t) {
     random_mmx_word(t.a);
     random_mmx_word(t.b);
     random_mmx_word(t.c);
+    t.a.nW = t.b.nW = t.c.nW = 0;
 }
