@@ -261,45 +261,20 @@ static NGfx::SCompactVector SaveCompactVector(const glm::vec3 & src) {
 	return {convert(src.z), convert(src.y), convert(src.x), 0};
 }
 
-// General template function for N transforms (1..3)
-static void MMXTransformVectorGeneral(
+static void MMXTransformVector(
 	NGfx::SCompactVector & res,
 	const NGfx::SCompactVector & src,
-	const SHMatrix & transform1, uint8_t weight1 = 0,
-	const std::optional<SHMatrix> & transform2 = std::nullopt, uint8_t weight2 = 0,
-	const std::optional<SHMatrix> & transform3 = std::nullopt, uint8_t weight3 = 0)
+	const SHMatrix & transform1)
 {
 	glm::mat4 matrix1 = LoadMatrix(transform1);
 	glm::vec4 vec = LoadCompactVector(src);
 
 	glm::vec4 result = matrix1 * vec;
 
-	if (transform2.has_value()) {
-
-		glm::mat4 matrix2 = LoadMatrix(transform2.value());
-		glm::vec4 result2 = matrix2 * vec;
-
-		result = result * (weight1 / 255.f) + result2 * (weight2 / 255.f);
-	}
-	if (transform3.has_value()) {
-
-		glm::mat4 matrix3 = LoadMatrix(transform3.value());
-		glm::vec4 result3 = matrix3 * vec;
-
-		result += result3 * (weight3 / 255.f);
-	}
 	glm::vec3 normal = glm::normalize(glm::vec3{ result.x, result.y, result.z });
 
 	res = SaveCompactVector(normal);
 	res.w = src.w;
-}
-
-static void MMXTransformVector(
-	NGfx::SCompactVector & res,
-	const NGfx::SCompactVector & src,
-	const SHMatrix & trans)
-{
-	MMXTransformVectorGeneral(res, src, trans);
 }
 
 static void MMXTransformVector2(
@@ -310,7 +285,20 @@ static void MMXTransformVector2(
 	const SHMatrix & transform2,
 	uint8_t weight2)
 {
-	MMXTransformVectorGeneral(res, src, transform1, weight1, transform2, weight2);
+	glm::mat4 matrix1 = LoadMatrix(transform1);
+	glm::vec4 vec = LoadCompactVector(src);
+
+	glm::vec4 result = matrix1 * vec;
+
+	glm::mat4 matrix2 = LoadMatrix(transform2);
+	glm::vec4 result2 = matrix2 * vec;
+
+	result = result * (weight1 / 255.f) + result2 * (weight2 / 255.f);
+
+	glm::vec3 normal = glm::normalize(glm::vec3{ result.x, result.y, result.z });
+
+	res = SaveCompactVector(normal);
+	res.w = src.w;
 }
 
 static void MMXTransformVector3(
@@ -323,5 +311,20 @@ static void MMXTransformVector3(
 	const SHMatrix & transform3,
 	uint8_t weight3)
 {
-	MMXTransformVectorGeneral(res, src, transform1, weight1, transform2, weight2, transform3, weight3);
+	glm::mat4 matrix1 = LoadMatrix(transform1);
+	glm::vec4 vec = LoadCompactVector(src);
+
+	glm::vec4 result = matrix1 * vec;
+
+	glm::mat4 matrix2 = LoadMatrix(transform2);
+	glm::vec4 result2 = matrix2 * vec;
+
+	glm::mat4 matrix3 = LoadMatrix(transform3);
+	glm::vec4 result3 = matrix3 * vec;
+
+	result = result * (weight1 / 255.f) + result2 * (weight2 / 255.f) + result3 * (weight3 / 255.f);
+	glm::vec3 normal = glm::normalize(glm::vec3{ result.x, result.y, result.z });
+
+	res = SaveCompactVector(normal);
+	res.w = src.w;
 }
