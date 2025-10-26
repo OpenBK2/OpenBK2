@@ -2,6 +2,8 @@
 #include "GPixelFormat.h"
 #include "MMXhelpers.h"
 
+#include <optional>
+
 #include <glm/glm.hpp>
 
 extern bool bIsSSEPresent;
@@ -173,6 +175,14 @@ static void Assign( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 	pRes->c.nZ = FloatToMMXTransformScale( m._32 );  pRes->c.nY = FloatToMMXTransformScale( m._21 );  pRes->c.nX = FloatToMMXTransformScale( m._13 );  pRes->c.nW = 0;
 }
 
+// no shuffle, store columns in a, b, c
+static void AssignRegular( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
+{
+	pRes->a.nX = FloatToMMXTransformScale( m.xx );  pRes->a.nY = FloatToMMXTransformScale( m.yx );  pRes->a.nZ = FloatToMMXTransformScale( m.zx );  pRes->a.nW = 0;
+	pRes->b.nX = FloatToMMXTransformScale( m.xy );  pRes->b.nY = FloatToMMXTransformScale( m.yy );  pRes->b.nZ = FloatToMMXTransformScale( m.zy );  pRes->b.nW = 0;
+	pRes->c.nX = FloatToMMXTransformScale( m.xz );  pRes->c.nY = FloatToMMXTransformScale( m.yz );  pRes->c.nZ = FloatToMMXTransformScale( m.zz );  pRes->c.nW = 0;
+}
+
 struct ShortVector4 { short x, y, z, w; };
 
 // Helper: apply a single transform with optional shuffle, returns mm64 result
@@ -181,35 +191,18 @@ static ShortVector4 ApplyTransform(
 	const ShortVector4 & a,
 	const ShortVector4 & b,
 	const ShortVector4 & c) {
-	ShortVector4 va, vb, vc;
-
-	auto dot = [](const ShortVector4 & v1, const ShortVector4 & v2){
-		ShortVector4 r;
-		r.x = (v1.x * v2.x) >> 16;
-		r.y = (v1.y * v2.y) >> 16;
-		r.z = (v1.z * v2.z) >> 16;
-		r.w = 0;
-		return r;
-	};
-
-	va = dot(mm0, a);
-	vb = dot(ShortVector4{mm0.y, mm0.z, mm0.x}, b);
-	vc = dot(ShortVector4{mm0.z, mm0.x, mm0.y}, c);
 
 	ShortVector4 result;
-	int x = va.x + vb.x + vc.x;
-	int y = va.y + vb.y + vc.y;
-	int z = va.z + vb.z + vc.z;
-	result.x = std::clamp(x, -32768, 32767);
-	result.y = std::clamp(y, -32768, 32767);
-	result.z = std::clamp(z, -32768, 32767);
+	result.x = ((mm0.x * a.x) >> 16) + ((mm0.y * b.x) >> 16) + ((mm0.z * c.x) >> 16);
+	result.y = ((mm0.x * a.y) >> 16) + ((mm0.y * b.y) >> 16) + ((mm0.z * c.y) >> 16);
+	result.z = ((mm0.x * a.z) >> 16) + ((mm0.y * b.z) >> 16) + ((mm0.z * c.z) >> 16);
 	result.w = 0;
 
 	return result;
 }
 
 // Helper: apply weight to a transform result (weight is in range [0, 255])
-static ShortVector4 ApplyWeight(const ShortVector4 & v, unsigned char wIdx)
+static ShortVector4 ApplyWeight(const ShortVector4 & v, uint8_t weight)
 {
 	ShortVector4 a;
 	const int shift1 = 4;
@@ -217,11 +210,10 @@ static ShortVector4 ApplyWeight(const ShortVector4 & v, unsigned char wIdx)
 	a.y = (v.y << shift1);
 	a.z = (v.z << shift1);
 	ShortVector4 result;
-	auto w = wIdx;
 	const int shift2 = 10;
-	result.x = (a.x * w) >> shift2;
-	result.y = (a.y * w) >> shift2;
-	result.z = (a.z * w) >> shift2;
+	result.x = (a.x * weight) >> shift2;
+	result.y = (a.y * weight) >> shift2;
+	result.z = (a.z * weight) >> shift2;
 	result.w = 0;
 	return result;
 }
@@ -253,17 +245,17 @@ static ShortVector4 NormalizeAndShift(const ShortVector4 & v)
 
 // General template function for N transforms (1..3)
 static void MMXTransformVectorGeneral(
-	NGfx::SCompactVector* pRes,
-	const NGfx::SCompactVector* pSrc,
-	const NGfx::SCompactTransformer* pTrans1, uint8_t w1 = 0,
-	const NGfx::SCompactTransformer* pTrans2 = nullptr, uint8_t w2 = 0,
-	const NGfx::SCompactTransformer* pTrans3 = nullptr, uint8_t w3 = 0)
+	NGfx::SCompactVector & res,
+	const NGfx::SCompactVector & src,
+	const SHMatrix & transform1, uint8_t weight1 = 0,
+	const std::optional<SHMatrix> & transform2 = std::nullopt, uint8_t weight2 = 0,
+	const std::optional<SHMatrix> & transform3 = std::nullopt, uint8_t weight3 = 0)
 {
 	ShortVector4 mm0;
 	// mm0 *= 256, SCompactVector scaled from range [0, 255] into [0, 65535]
-	mm0.z = static_cast<short>(pSrc->z) << 8;
-	mm0.y = static_cast<short>(pSrc->y) << 8;
-	mm0.x = static_cast<short>(pSrc->x) << 8;
+	mm0.z = static_cast<short>(src.z) << 8;
+	mm0.y = static_cast<short>(src.y) << 8;
+	mm0.x = static_cast<short>(src.x) << 8;
 	mm0.w = 0;
 
 	// subtract 0x8000 = 32768, range [-32768, 32767]
@@ -271,22 +263,26 @@ static void MMXTransformVectorGeneral(
 	mm0.y -= fixups.normalFixup.nY;
 	mm0.x -= fixups.normalFixup.nX;
 
+	NGfx::SCompactTransformer compact1;
+	AssignRegular(&compact1, transform1);
+
 	// Apply first transform
-	const ShortVector4 a1 = {pTrans1->a.nX, pTrans1->a.nY, pTrans1->a.nZ, pTrans1->a.nW };
-	const ShortVector4 b1 = {pTrans1->b.nX, pTrans1->b.nY, pTrans1->b.nZ, pTrans1->b.nW };
-	const ShortVector4 c1 = {pTrans1->c.nX, pTrans1->c.nY, pTrans1->c.nZ, pTrans1->c.nW };
+	const ShortVector4 a1 = {compact1.a.nX, compact1.a.nY, compact1.a.nZ, compact1.a.nW };
+	const ShortVector4 b1 = {compact1.b.nX, compact1.b.nY, compact1.b.nZ, compact1.b.nW };
+	const ShortVector4 c1 = {compact1.c.nX, compact1.c.nY, compact1.c.nZ, compact1.c.nW };
 	ShortVector4 mm = ApplyTransform(mm0, a1, b1, c1);
 
 	// Second transform
-	if (pTrans2) {
+	if (transform2.has_value()) {
+		mm = ApplyWeight(mm, weight1);
 
-		mm = ApplyWeight(mm, w1);
-
-		const ShortVector4 a2 = {pTrans2->a.nX, pTrans2->a.nY, pTrans2->a.nZ, pTrans2->a.nW };
-		const ShortVector4 b2 = {pTrans2->b.nX, pTrans2->b.nY, pTrans2->b.nZ, pTrans2->b.nW };
-		const ShortVector4 c2 = {pTrans2->c.nX, pTrans2->c.nY, pTrans2->c.nZ, pTrans2->c.nW };
+		NGfx::SCompactTransformer compact2;
+		AssignRegular(&compact2, transform2.value());
+		const ShortVector4 a2 = {compact2.a.nX, compact2.a.nY, compact2.a.nZ, compact2.a.nW };
+		const ShortVector4 b2 = {compact2.b.nX, compact2.b.nY, compact2.b.nZ, compact2.b.nW };
+		const ShortVector4 c2 = {compact2.c.nX, compact2.c.nY, compact2.c.nZ, compact2.c.nW };
 		ShortVector4 mm2 = ApplyTransform(mm0, a2, b2, c2);
-		mm2 = ApplyWeight(mm2, w2);
+		mm2 = ApplyWeight(mm2, weight2);
 
 		mm.x += mm2.x;
 		mm.y += mm2.y;
@@ -294,12 +290,14 @@ static void MMXTransformVectorGeneral(
 	}
 
 	// Third transform
-	if (pTrans3) {
-		const ShortVector4 a3 = {pTrans3->a.nX, pTrans3->a.nY, pTrans3->a.nZ, pTrans3->a.nW };
-		const ShortVector4 b3 = {pTrans3->b.nX, pTrans3->b.nY, pTrans3->b.nZ, pTrans3->b.nW };
-		const ShortVector4 c3 = {pTrans3->c.nX, pTrans3->c.nY, pTrans3->c.nZ, pTrans3->c.nW };
+	if (transform3.has_value()) {
+		NGfx::SCompactTransformer compact3;
+		AssignRegular(&compact3, transform3.value());
+		const ShortVector4 a3 = {compact3.a.nX, compact3.a.nY, compact3.a.nZ, compact3.a.nW };
+		const ShortVector4 b3 = {compact3.b.nX, compact3.b.nY, compact3.b.nZ, compact3.b.nW };
+		const ShortVector4 c3 = {compact3.c.nX, compact3.c.nY, compact3.c.nZ, compact3.c.nW };
 		ShortVector4 mm3 = ApplyTransform(mm0, a3, b3, c3);
-		mm3 = ApplyWeight(mm3, w3);
+		mm3 = ApplyWeight(mm3, weight3);
 
 		mm.x += mm3.x;
 		mm.y += mm3.y;
@@ -316,40 +314,40 @@ static void MMXTransformVectorGeneral(
 	w.y = static_cast<short>(std::clamp(0xFF & (w.y >> 8), 0, 255));
 	w.x = static_cast<short>(std::clamp(0xFF & (w.x >> 8), 0, 255));
 
-	pRes->z = static_cast<unsigned char>(w.z);
-	pRes->y = static_cast<unsigned char>(w.y);
-	pRes->x = static_cast<unsigned char>(w.x);
-	pRes->w = pSrc->w;
+	res.z = static_cast<unsigned char>(w.z);
+	res.y = static_cast<unsigned char>(w.y);
+	res.x = static_cast<unsigned char>(w.x);
+	res.w = src.w;
 }
 
 static void MMXTransformVector(
-	NGfx::SCompactVector* pRes,
-	const NGfx::SCompactVector* pSrc,
-	const NGfx::SCompactTransformer* pTrans)
+	NGfx::SCompactVector & res,
+	const NGfx::SCompactVector & src,
+	const SHMatrix & trans)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pTrans);
+	MMXTransformVectorGeneral(res, src, trans);
 }
 
 static void MMXTransformVector2(
-	NGfx::SCompactVector* pRes,
-	const NGfx::SCompactVector* pSrc,
-	const NGfx::SCompactTransformer* pTrans,
-	uint8_t w1,
-	const NGfx::SCompactTransformer* pTrans2,
-	uint8_t w2)
+	NGfx::SCompactVector & res,
+	const NGfx::SCompactVector & src,
+	const SHMatrix & transform1,
+	uint8_t weight1,
+	const SHMatrix & transform2,
+	uint8_t weight2)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2);
+	MMXTransformVectorGeneral(res, src, transform1, weight1, transform2, weight2);
 }
 
 static void MMXTransformVector3(
-	NGfx::SCompactVector* pRes,
-	const NGfx::SCompactVector* pSrc,
-	const NGfx::SCompactTransformer* pTrans,
-	uint8_t w1,
-	const NGfx::SCompactTransformer* pTrans2,
-	uint8_t w2,
-	const NGfx::SCompactTransformer* pTrans3,
-	uint8_t w3)
+	NGfx::SCompactVector & res,
+	const NGfx::SCompactVector & src,
+	const SHMatrix & transform1,
+	uint8_t weight1,
+	const SHMatrix & transform2,
+	uint8_t weight2,
+	const SHMatrix & transform3,
+	uint8_t weight3)
 {
-	MMXTransformVectorGeneral(pRes, pSrc, pTrans, w1, pTrans2, w2, pTrans3, w3);
+	MMXTransformVectorGeneral(res, src, transform1, weight1, transform2, weight2, transform3, weight3);
 }

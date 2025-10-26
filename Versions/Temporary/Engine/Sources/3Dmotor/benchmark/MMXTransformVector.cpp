@@ -10,24 +10,24 @@ static void BM_original(benchmark::State& state) {
     for (auto _ : state) {
 
         NGfx::SCompactVector src{}, res{};
-        NGfx::SCompactTransformer trans{};
+        SHMatrix transform{};
 
         randomizeVector(src);
-        randomizeTransformer(trans);
+        randomizeMatrix(transform);
 
-        original::MMXTransformVector(&res, &src, &trans);
+        original::MMXTransformVector(res, src, transform);
     }
 }
 
 static void BM_current(benchmark::State& state) {
     for (auto _ : state) {
         NGfx::SCompactVector src{}, res{};
-        NGfx::SCompactTransformer trans{};
+        SHMatrix transform{};
 
         randomizeVector(src);
-        randomizeTransformer(trans);
+        randomizeMatrix(transform);
 
-        MMXTransformVector(&res, &src, &trans);
+        MMXTransformVector(res, src, transform);
     }
 }
 

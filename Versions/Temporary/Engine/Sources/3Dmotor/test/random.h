@@ -75,3 +75,27 @@ static void randomizeTransformer(T &t) {
     random_mmx_word(t.c);
     t.a.nW = t.b.nW = t.c.nW = 0;
 }
+
+template<typename T>
+static void randomizeMatrix(T &t) {
+
+    t.xx = random_float();
+    t.xy = random_float();
+    t.xz = random_float();
+    t.xw = 0.0f;
+
+    t.yx = random_float();
+    t.yy = random_float();
+    t.yz = random_float();
+    t.yw = 0.0f;
+
+    t.zx = random_float();
+    t.zy = random_float();
+    t.zz = random_float();
+    t.zw = 0.0f;
+
+    t.wx = 0.0f;
+    t.wy = 0.0f;
+    t.wz = 0.0f;
+    t.ww = 0.0f;
+}

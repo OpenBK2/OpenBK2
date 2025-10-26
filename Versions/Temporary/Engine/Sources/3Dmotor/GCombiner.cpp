@@ -267,12 +267,12 @@ struct STGenericTransformer
 		SCacheLightingInfo *pCache, const SBound &bv,
 		const SFBTransform &trans, TRes *pRes )
 	{
-		NGfx::SCompactTransformer transformer;
-		AssignTransposed( &transformer, trans.backward );
+		SHMatrix transformer;
+		Transpose(&transformer, trans.backward);
 
 		xformedNormals.resize( nVertices );
 		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
-			MMXTransformVector( &xformedNormals[k], &pSrc[k].normal, &transformer );
+			MMXTransformVector( xformedNormals[k], pSrc[k].normal, transformer );
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
 	}
@@ -295,23 +295,26 @@ struct STGenericTransformer
 			const SRealVertexWeight *pWeight = _pWeight + posIndices[k];
 			if ( pWeight->nWeights[1] == 0 )
 			{
-				const NGfx::SCompactTransformer &blend = matrices[ pWeight->cBoneIndices[0] ];
-				MMXTransformVector( &xformedNormals[k], &pSrc->normal, &blend );
+				const auto & blend = blends[pWeight->cBoneIndices[0]];
+				MMXTransformVector(xformedNormals[k], pSrc->normal, blend);
 			}
 			else if ( pWeight->nWeights[2] == 0 )
 			{
-				const NGfx::SCompactTransformer &blend1 = matrices[ pWeight->cBoneIndices[0] ];
-				const NGfx::SCompactTransformer &blend2 = matrices[ pWeight->cBoneIndices[1] ];
 				BYTE nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1];
-				MMXTransformVector2( &xformedNormals[k], &pSrc->normal, &blend1, nW1, &blend2, nW2 );
+
+				const auto & blend1 = blends[pWeight->cBoneIndices[0]];
+				const auto & blend2 = blends[pWeight->cBoneIndices[1]];
+				MMXTransformVector2( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2 );
 			}
 			else
 			{
-				const NGfx::SCompactTransformer &blend1 = matrices[ pWeight->cBoneIndices[0] ];
-				const NGfx::SCompactTransformer &blend2 = matrices[ pWeight->cBoneIndices[1] ];
-				const NGfx::SCompactTransformer &blend3 = matrices[ pWeight->cBoneIndices[2] ];
+				const auto & blend1 = blends[pWeight->cBoneIndices[0]];
+				const auto & blend2 = blends[pWeight->cBoneIndices[1]];
+				const auto & blend3 = blends[pWeight->cBoneIndices[2]];
+
 				BYTE nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
-				MMXTransformVector3( &xformedNormals[k], &pSrc->normal, &blend1, nW1, &blend2, nW2, &blend3, nW3 );
+
+				MMXTransformVector3( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2, blend3, nW3 );
 			}
 		}
 		CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );

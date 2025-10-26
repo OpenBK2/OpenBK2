@@ -175,10 +175,12 @@ namespace original {
 	    }
 	}
 
-	static void MMXTransformVector(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
-		const NGfx::SCompactTransformer* pTrans) {
+	static void MMXTransformVector(NGfx::SCompactVector & res, const NGfx::SCompactVector& src,
+		const SHMatrix & transform) {
 
-        MMXTransformVectorImpl(pRes, pSrc, &fixups, pTrans);
+        NGfx::SCompactTransformer compact_transform;
+        Assign(&compact_transform, transform);
+        MMXTransformVectorImpl(&res, &src, &fixups, &compact_transform);
     }
 
 	static void MMXTransformVector2Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
@@ -259,17 +261,20 @@ namespace original {
 	    }
 	}
 
-	static void MMXTransformVector2(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
-		const NGfx::SCompactTransformer* pTrans, uint8_t w1,
-		const NGfx::SCompactTransformer* pTrans2, uint8_t w2) {
+	static void MMXTransformVector2(NGfx::SCompactVector & res, const NGfx::SCompactVector & src,
+		const SHMatrix & transform1, uint8_t weight1,
+		const SHMatrix & transform2, uint8_t weight2) {
 
-        MMXTransformVector2Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2);
+        NGfx::SCompactTransformer compact_transform1, compact_transform2;
+        Assign(&compact_transform1, transform1);
+        Assign(&compact_transform2, transform2);
+        MMXTransformVector2Impl(&res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2);
     }
 
 	static void MMXTransformVector3Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
-	    const NGfx::SCompactTransformer* pTrans, uint8_t w1,
-	    const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
-	    const NGfx::SCompactTransformer* pTrans3, uint8_t w3)
+	const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+	const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
+	const NGfx::SCompactTransformer* pTrans3, uint8_t w3)
 	{
 	    _asm
 	    {
@@ -358,12 +363,16 @@ namespace original {
 	    }
 	}
 
-	static void MMXTransformVector3(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc,
-		const NGfx::SCompactTransformer* pTrans, uint8_t w1,
-		const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
-		const NGfx::SCompactTransformer* pTrans3, uint8_t w3) {
+	static void MMXTransformVector3(NGfx::SCompactVector & res, const NGfx::SCompactVector & src,
+		const SHMatrix & transform1, uint8_t weight1,
+		const SHMatrix & transform2, uint8_t weight2,
+		const SHMatrix & transform3, uint8_t weight3) {
 
-        MMXTransformVector3Impl(pRes, pSrc, &fixups, pTrans, w1, pTrans2, w2, pTrans3, w3);
+        NGfx::SCompactTransformer compact_transform1, compact_transform2, compact_transform3;
+        Assign(&compact_transform1, transform1);
+        Assign(&compact_transform2, transform2);
+        Assign(&compact_transform3, transform3);
+        MMXTransformVector3Impl(&res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2, &compact_transform3, weight3);
     }
 
 	static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
