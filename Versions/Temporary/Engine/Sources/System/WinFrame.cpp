@@ -188,6 +188,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	//Report( "WndProc_", uMsg );
 	//
 	bool bCallDefWindowProc = false;
+	NGlobal::CValue always_active = NGlobal::GetVar("force_app_always_active");
 	switch ( uMsg )
 	{
 		case WM_PAINT:
@@ -255,6 +256,11 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 */
 		case WM_ACTIVATEAPP:
 			//Report( "WndProc::WM_activateapp ", wParam );
+			if (always_active.GetFloat() != 0)
+			{
+				SetActive(true);
+				break;
+			}
 			SetActive( wParam != 0 );
 			break;
 		case WM_SIZE:
@@ -280,6 +286,8 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						}
 						break;
 					case WA_INACTIVE:						// deactivate window
+						if (always_active.GetFloat() != 0)
+							break;
 						SetActive( false );
 						ClipCursor(0);
 						//Report( "WndProc::WM_activate, WA_INACTIVE ", wParam );
