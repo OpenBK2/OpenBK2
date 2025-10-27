@@ -57,9 +57,6 @@ static void StoreBuildInfo()
 static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	CreateMutex( 0, TRUE, "NIVAL_RTS_ENGINE" ); // при выходе система сама уничтожит этот mutex
-	if ( GetLastError() == ERROR_ALREADY_EXISTS )
-		return 0xDEAD;
 #ifndef _FINALRELEASE
 	if ( !IsRunningOnLocalDrive() ) 
 	{
