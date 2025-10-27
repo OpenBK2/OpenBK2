@@ -306,6 +306,8 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 
 		std::vector< CMOSelectable* >selection;
 		pSelector->GetSelection( &selection );
+
+		// Iterate thourgh all selected units and apply the unload command
 		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
@@ -317,14 +319,15 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 				
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
-			std::vector<int> group;
-			group.push_back( pContainer->GetID() );
+			 std::vector<int> group;
+			 group.push_back( pContainer->GetID() );
+			
+			 const int groupID = pCommandsSender->CommandRegisterGroup( group );
 
 			SAIUnitCmd command( ACTION_COMMAND_UNLOAD );
 			command.nObjectID = nUnitIndex;
-			command.fNumber = (float)ALP_POSITION_INVALID;
+			command.fNumber = float( (int)ALP_POSITION_INVALID );
 			command.vPos = CVec2( 300.0f, 300.0f );
-			const int groupID = pCommandsSender->CommandRegisterGroup( group );
 			pCommandsSender->CommandGroupCommand( &command, groupID, GetPlaceInQueue(), ML_COMMAND_SAVE_GAME );
 			pCommandsSender->CommandUnregisterGroup( groupID );
 			return true;

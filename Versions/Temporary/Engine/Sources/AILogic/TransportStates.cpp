@@ -164,7 +164,10 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 				{
 					if ( pUnitToUnload->IsFormation() )
 					{
-						if ( pUnit->IsTowing() && !pUnitToUnload->IsSelectable() )
+						CFormation *formation = checked_cast<CFormation*>(GetObjectByCmd(cmd));
+						// the old pUnitToUnload->IsSelectable() is NOT a deterministic data, so it was replaced by the usage of more fitting
+						// UniqueID comparison, which is a deterministic variable
+						if ( pUnit->IsTowing() && formation->GetUniqueID() == pUnit->GetTowedArtilleryCrew()->GetUniqueID())
 						{
 							// This is a gun crew, unhook
 							pResult = CTransportUnhookArtilleryState::Instance( pUnit, VNULL2, true );
@@ -648,6 +651,7 @@ void CTransportLandState::Segment()
 			{
 				InitStatus();
 				// найти все формации в транспорте, которые не принадлежат пушке, которая болтается сзади
+				// find all formations in the transport that do not belong to the gun hanging out at the back
 				CPtr<CArtillery> pArt = pTransport->GetTowedArtillery();
 				CFormation *pGunCrew = !IsValidObj( pArt ) ? 0 : pTransport->GetTowedArtilleryCrew();
 				const int nGunCrew = pGunCrew == 0 ? 0 : pGunCrew->Size();
@@ -660,6 +664,7 @@ void CTransportLandState::Segment()
 					if ( !pFormation )
 					{
 						// найти формацию, которую нужно высадить
+						// find a formation to land
 						for ( int i = 0; i < nPassangers && pFormation == 0; ++i )
 						{
 							CFormation *pTmp = pTransport->GetPassenger( i )->GetFormation();
