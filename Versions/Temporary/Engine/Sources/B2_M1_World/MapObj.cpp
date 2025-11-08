@@ -87,7 +87,9 @@ CMapObj::~CMapObj()
 	for ( int i = 0; i < attachedSounds.size(); ++i )
 		DetachSound( (EAttachedSoundType)i );
 
-	Scene()->RemoveAllAttached( GetID(), ESSOT_LIGHT );
+	auto scene = Scene();
+	if (scene)
+		scene->RemoveAllAttached( GetID(), ESSOT_LIGHT );
 }
 
 void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
