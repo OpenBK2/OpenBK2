@@ -14,6 +14,11 @@
 #include "Misc/Win32Random.h"
 #include "CommandsHistory.h"
 
+#include <iostream>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
 
 void CMPManagerMode::StartGame()
@@ -130,13 +135,33 @@ void CMPManagerMode::ScheduleLoseGame()
 	bOutcomeKnown = true;
 }
 
+std::string GenerateDateTimeReplayFilename() {
+    // Get current time
+    auto now = std::chrono::system_clock::now();
+    auto time_t = std::chrono::system_clock::to_time_t(now);
+    
+    // Convert to local time
+    std::tm local_time = *std::localtime(&time_t);
+    
+    // Create string stream for formatting
+    std::ostringstream oss;
+    
+    // Format: "MatchFrom_YYYY-MM-DD_HOURS-MINS-SECONDS"
+    oss << "MatchFrom_"
+        << std::put_time(&local_time, "%Y-%m-%d_%H-%M-%S");
+    
+    return oss.str();
+}
+
 void CMPManagerMode::EndGame()
 {
 	if ( IsValid( pTransceiver ) )
 		pCommandsHistory = dynamic_cast<CCommandsHistory*>(pTransceiver->GetCommandsHistory());
 	else
 		pCommandsHistory = 0;
-	SaveReplay( "LastMatch" );
+	// Improve the replay file name
+	std::string Filename = GenerateDateTimeReplayFilename();
+	SaveReplay( Filename );
 	pTransceiver = 0;
 }
 
