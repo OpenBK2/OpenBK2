@@ -75,3 +75,6 @@ out/build
 
 # CMake
 *_export.h
+
+# build folder
+build/
