@@ -382,7 +382,7 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 	int nLength = pSound->GetLenght();
 	int nSampleRate = pSound->GetSampleRate();
 	int nTimeLength = 1000 * nLength / nSampleRate;
-	if ( bLooped )
+	if ( bLooped && nTimeLength > 0)
 		nStartPos %= nTimeLength;
 	if ( nTimeLength == 0 )
 		return 0;
