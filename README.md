@@ -9,20 +9,13 @@ The game is still available on [Steam](https://store.steampowered.com/app/313500
 In 2025, the game's source code was released under a [special license](LICENSE.md) that prohibits commercial use but is completely open for the game's community, education and research.
 Please review the terms of the [license agreement](LICENSE.md) carefully before using it.
 
-## Original Tech stack
+## Tech stack
 
-- **Game engine**: Custom 3D engine, mostly written in C++
-- **Scripting language**: Lua
-- **Animation**: Granny Animation (RAD Game Tools) ⚠️ *Commercial license - not included*
-- **Video**: Bink Video Technology ⚠️ *Commercial license - not included*
-- **Audio**: FMOD sound system ⚠️ *Commercial license - not included*
-
-## New Tech stack
-
-- **Game engine**: Custom 3D engine, mostly written in C++
+- **Game engine**: Custom 3D "Enigma" engine, mostly written in C++
 - **Scripting language**: Lua
 - **Animation**: Granny Animation (RAD Game Tools) - from [uesp-esoapps](https://github.com/uesp/uesp-esoapps.git)
 - **Audio**: FLESSD sound system - Open source version of FMOD
+- **Video**: FFMPEG video library
 
 ## New changes
 
@@ -30,7 +23,6 @@ Please review the terms of the [license agreement](LICENSE.md) carefully before 
 - BK2 can now also be compiled as 64 bit app
 - Replaced FMOD with FLESSD
 - Removed dependence on S3TC lib
-- Videos are disabled for now - to be implemented with FFMPEG in the future
 - Some new features:
     - Added an option to disable certain techlevels for certain nations in MP
     - Reworked reinforcement inheritance system in MP
@@ -90,13 +82,6 @@ This project is released under a **special non-commercial license** from NIVAL I
 - **zlib compression library** - zlib License (permissive, commercial use allowed)
 - **Game scripts, assets, and data** - Custom license from NIVAL INTERNATIONAL LTD (non-commercial use only)
 
-### ⚠️ Additional tools not included in source code:
-- **FMOD Audio System**
-- **Bink Video Technology**
-- **Granny3D Animation System**
-- **Stingray Studio UI Components**
-- **MySQL Database**
-- **S3TC Texture Compression**
 
 ### 📋 Third-party licenses:
 - **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlib License
