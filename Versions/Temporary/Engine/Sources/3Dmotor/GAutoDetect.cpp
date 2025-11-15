@@ -290,7 +290,9 @@ void AutoDetectVideoConfig()
 
 	if ( !NGfx::CanStreamGeometry() || perf.fCPUclock < 1400 )
 		nDefaultSpeed = CV_VHIGH;
-	NGlobal::SetVar( "gfx_16bit_mode", nDefault16bppMode );
+
+	// Disable 16 bit mode by default
+	NGlobal::SetVar( "gfx_16bit_mode", 0 );
 
 	csSystem << CC_GREEN << "AUTODETECTED: Speed: " << nDefaultSpeed << " Texture: " << nDefaultTexture << " FSAA: " << nDefaultFSAA << endl;
 	SetSpeedMode( (EConfigValue)nDefaultSpeed );

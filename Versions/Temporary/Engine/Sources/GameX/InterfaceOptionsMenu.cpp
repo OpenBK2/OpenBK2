@@ -540,7 +540,7 @@ void CInterfaceOptionsMenu::OnControlChange( const std::string &szSender )
 				if ( pOption->szProgName == "gfx_resolution" )
 				{
 					std::list<NGfx::SVideoMode> modeList;
-					NGfx::GetModesList( &modeList, ( NGlobal::GetVar( "gfx_16bit_mode", 0 ) == 1 ) ? 16 : 32 );
+					NGfx::GetModesList( &modeList, 32 );
 					std::list<std::string> resolutions;
 					for ( std::list<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
 					{
