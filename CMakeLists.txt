@@ -44,6 +44,7 @@ include(cmake/fmod.cmake)
 include(cmake/granny.cmake)
 include(cmake/fmt.cmake)
 include(cmake/ffmpeg.cmake)
+include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)
 
 add_subdirectory("Versions/Temporary/Engine/Sources")

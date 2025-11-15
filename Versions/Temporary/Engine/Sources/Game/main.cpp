@@ -31,6 +31,10 @@
 #include "System/SplashScreen.h"
 #include "Main/MODs.h"
 
+#include <client/crashpad_client.h>
+#include <client/crash_report_database.h>
+#include <client/settings.h>
+
 #include <zconf.h>
 
 //
@@ -45,7 +49,6 @@ namespace NGameX
 	bool Initialize();
 	void PostStorageInitialize();
 };
-bool IsRunningOnLocalDrive();
 
 bool ProcessCommandLine( LPSTR lpCmdLine );
 static void StoreBuildInfo()
@@ -54,17 +57,26 @@ static void StoreBuildInfo()
 	NGlobal::SetVar( "version.info", szVersion );
 }
 
+namespace {
+	bool InitCrashpad() {
+		base::FilePath handler(L"crashpad_handler.exe");
+		base::FilePath db(L"crashpad_db");
+		base::FilePath metrics(L"crashpad_metrics");
+
+		auto database = crashpad::CrashReportDatabase::Initialize(db);
+		if (!database) {
+			return false;
+		}
+		database->GetSettings()->SetUploadsEnabled(false);
+
+		crashpad::CrashpadClient client;
+		return client.StartHandler(handler, db, metrics, "", "", {}, {}, true, false);
+	}
+}
+
 static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-#ifndef _FINALRELEASE
-	if ( !IsRunningOnLocalDrive() ) 
-	{
-		MessageBox( 0, "IsRunningOnLocalDrive", "Error", MB_OK );
-		return 0xDEAD;
-	}
-#endif
-	//
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	StoreBuildInfo();
 	//
@@ -73,10 +85,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	const int nLeakId = -1;
 	_CrtSetBreakAlloc( nLeakId );
 
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set Structured exception handler 
-	SetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
+	// crashpad will generate a crash report and write minidump
+	InitCrashpad();
+
 	// disable system-critical errors displaying - just send it to calling process
 	SetErrorMode( SEM_FAILCRITICALERRORS );
 	//
@@ -196,12 +207,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	NDb::SaveChanges();
 	NDb::CloseDatabase();
 	NSingleton::DoneSingletons();
-	//
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// reset StructuredExceptionHandler 
-	ResetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
-	//
 	return 0;
 }
 

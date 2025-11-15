@@ -82,11 +82,6 @@ BOOL CELKApp::InitInstance()
 		/**/
 	}
 
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set StructuredExceptionHandler 
-	SetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
-
 	CString strRegistryPathName;
 	strRegistryPathName.LoadString( IDS_REGISTRY_PATH );
 	SetRegistryKey( strRegistryPathName );

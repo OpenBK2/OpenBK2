@@ -50,11 +50,6 @@ BOOL CTestClientApp::InitInstance()
 {
 	CWinApp::InitInstance();
 
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set StructuredExceptionHandler 
-	SetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
-
 	::CoInitialize( 0 );
 	HINSTANCE hInstance = ::AfxGetResourceHandle();
 	Scintilla_RegisterClasses( hInstance );
@@ -73,11 +68,6 @@ BOOL CTestClientApp::InitInstance()
 
 int CTestClientApp::ExitInstance() 
 {
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set StructuredExceptionHandler 
-	ResetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
-	//
 	Scintilla_ReleaseResources();
 	::CoUninitialize();
 

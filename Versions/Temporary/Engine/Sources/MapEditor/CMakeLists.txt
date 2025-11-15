@@ -19,7 +19,6 @@ set(SOURCES
     ExporterContainer.cpp
     FindTextDlg.cpp
     FolderCallback.cpp
-    Initialization.cpp
     LogWindow.cpp
     LuaEditor.cpp
     MainFrame.cpp

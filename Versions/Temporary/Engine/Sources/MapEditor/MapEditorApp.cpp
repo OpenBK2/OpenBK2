@@ -42,8 +42,6 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
-bool IsRunningOnLocalDrive();
-
 
 EXTERNVAR CLogger theLogger;
 
@@ -365,10 +363,6 @@ bool CEditorApp::ParseCommandLine( const string &rszCommandLine )
 
 BOOL CEditorApp::InitInstance()
 {
-	if ( !IsRunningOnLocalDrive() ) 
-	{
-		return false;
-	}
 	//
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	NGlobal::LoadConfig( "..\\profiles\\editor.cfg" );
@@ -405,10 +399,6 @@ BOOL CEditorApp::InitInstance()
 		pSplashScreen = NSplash::CreateSplashScreen( "..\\splash.bmp", false );
 
 	// Нет такого же приложения, продолжаем инициализацию
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set StructuredExceptionHandler 
-	SetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
 
 	// Загружаем данные пользователя с диска (UserData.xml и ConstUserData.xml)
 	CreateUserDataSingleton();
@@ -493,11 +483,6 @@ BOOL CEditorApp::InitInstance()
 
 int CEditorApp::ExitInstance() 
 {
-#if defined( _DO_SEH ) && !defined( _DEBUG )
-	// set StructuredExceptionHandler 
-	ResetCrashHandler();
-#endif // defined( _DO_SEH ) && !defined( _DEBUG )
-	//
 	// Убираем все созданные в редакторе Singletons
 	DestroySingletons();
 	//

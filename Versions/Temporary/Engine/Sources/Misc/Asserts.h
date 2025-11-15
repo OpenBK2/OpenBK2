@@ -1,12 +1,7 @@
 #pragma once
 #include "Misc_export.h"
 
-
 // native John Robbins's BSU functions
-
-// Sets the filter function that will be called when there is a fatal crash
-void SetCrashHandler();
-MISC_EXPORT void ResetCrashHandler();
 
 // our wrapper for BSU - smart asserts
 
@@ -20,8 +15,6 @@ enum EBSUReport
 
 namespace NBSU
 {
-	EBSUReport __stdcall ReportAssertHR( HRESULT dxrval, const char *pszDescription, 
-		const char *pszFileName, int nLineNumber );
 	MISC_EXPORT EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDescription,
 		const char *pszFileName, int nLineNumber );
 };
@@ -111,4 +104,3 @@ inline TOut checked_cast_ptr( TIn ptr )
 #undef ASSERT
 #endif
 #define ASSERT(a) NI_ASSERT(a,#a)
-
