@@ -302,6 +302,12 @@ void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWate
 				pNewStaticPath = pBackStaticPath;
 		}
 	}
+
+	// pNewStaticPath can still be null.. so just pull some crap out to prevent this rare crash
+	// idk if this approach is good or not, but it's better than crash!
+	if ( !pNewStaticPath )
+		pNewStaticPath = pPathFinder->CreatePath( false );
+
 	InitByStaticPath( dynamic_cast_ptr<CCommonStaticPath*>( pNewStaticPath ), vPoint, pNewStaticPath->GetFinishPoint(), true );
 }
 
