@@ -101,6 +101,8 @@ private:
 	bool IsAsyncDetected( int nSegment );
 	void SetLagState( int nSegment, bool bOn );
 
+	void ReportAsnycToFile(int segment);
+
 	bool OnTransciverCommonPacket( class CTransciverCommonPacket *pPacket );
 	bool OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket );
 

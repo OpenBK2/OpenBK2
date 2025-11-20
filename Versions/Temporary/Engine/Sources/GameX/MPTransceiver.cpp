@@ -472,6 +472,26 @@ void CMPTransceiver::ReportLags( DWORD dwLaggers,	bool bInitial )
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }
 
+void CMPTransceiver::ReportAsnycToFile(int segment)
+{
+	FILE* fl = fopen("last_async.txt", "w");
+	fprintf(fl, "PlayerID,\tPlayerTeam,\tLastChecksum\n");
+
+	std::string checksumsTxt = "";
+	for (int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex)
+	{
+		if (!IsPlayerPresent(nPlayerIndex))
+			continue;
+
+		checksumsTxt += StrFmt("%d,\t\t%d,\t\t%d\n", nPlayerIndex, players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
+	}
+	fprintf(fl, "%s", checksumsTxt.c_str());
+	fclose(fl);
+
+	// TODO: add the entire checksum process/list to debug file too
+	
+}
+
 bool CMPTransceiver::IsAsyncDetected( int nSegment )
 {
 	if ( nCommonSegment <= nLatency )
@@ -500,6 +520,8 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 			NGlobal::SetVar( "save_on_async", 0 );
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", L"ASYNC<br>Save created" ).c_str() );
 			//pAI->DumpAfterAssinc();
+
+			ReportAsnycToFile(nSegment);
 		}
 
 		if ( NGlobal::GetVar( "pause_on_async", 0 ) != 0 )
