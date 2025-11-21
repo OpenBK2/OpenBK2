@@ -15,6 +15,8 @@ namespace NDb
 	struct SMapInfo;
 }
 
+#define CHECKSUM_LIST_DEBUG
+
 struct SB2StartGameParams
 {
 	struct SClient
@@ -43,6 +45,10 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	CPtr<ICommandsHistory> pCmdsHistory;
 	bool bIsGameRunning;
 	bool bIsGameEnded;
+
+#ifdef CHECKSUM_LIST_DEBUG
+	std::vector<int> myHistoryHashes;
+#endif
 
 	int nLatency;
 	int nSegmentsPackSize;

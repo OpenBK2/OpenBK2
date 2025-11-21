@@ -221,6 +221,9 @@ void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned lon
 void CMPTransceiver::FinalizeSegmentPack()
 {
 	unsigned long ulCheckSum = pCmdsHistory->GetLastChecksum();
+#ifdef CHECKSUM_LIST_DEBUG
+	myHistoryHashes.push_back(ulCheckSum);
+#endif
 	SetSegmentFinished( nMyLogicID, nSegment, ulCheckSum );
 	CAISegmentFinishedPacket *pPacket = new CAISegmentFinishedPacket();
 	pPacket->nSegment = nCommonSegment;	
@@ -489,7 +492,17 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 	fclose(fl);
 
 	// TODO: add the entire checksum process/list to debug file too
-	
+	#ifdef CHECKSUM_LIST_DEBUG
+	FILE* fd = fopen("last_async_debug.txt", "w");
+
+	fprintf(fd, "seg,\thash\n");
+	for (int i = 0; i < myHistoryHashes.size(); i++)
+	{
+		fprintf(fd, "%d,\t%d\n", i, myHistoryHashes[i]);
+	}
+
+	fclose(fd);
+	#endif
 }
 
 bool CMPTransceiver::IsAsyncDetected( int nSegment )
