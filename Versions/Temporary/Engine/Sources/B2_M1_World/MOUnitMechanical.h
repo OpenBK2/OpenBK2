@@ -45,7 +45,7 @@ private:
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
 	const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2( 
 		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
-		const NDb::EAnimationType eAnimType, const int nAnimID );
+		const NDb::EAnimationType eAnimType, const int nAnimID, bool skipAnimdescs = false );
 
 	void PlayAnimDesc( NAnimation::ISkeletonAnimator *pAnimator, const NDb::SModel *pModel, 
 										 const std::vector<NDb::Svector_AnimDescs> &animdescs,

@@ -2543,7 +2543,7 @@ namespace NDb
 		float fReinforcementPrice;
 		float fFuel;
 		std::vector< EManuverID > allowedPlaneManuvers;
-		CDBPtr< SVisObj > pAnimableModel;
+		CDBPtr< SVisObj > pAnimableModel;					// Artillery and trucks should use this for (primarly death) animations
 		CDBPtr< SVisObj > pTransportableModel;
 		SShipEffects shipEffects;
 		std::vector< SBoardedMechUnitPosition > boardedMechUnitPosition;

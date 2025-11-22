@@ -865,10 +865,30 @@ void CMOUnitMechanical::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 
 const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 	const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
-	const NDb::EAnimationType eAnimType, const int nAnimID )
+	const NDb::EAnimationType eAnimType, const int nAnimID, bool skipAnimdescs )
 {
 	if ( pModel && pModel->pSkeleton )
 	{
+		// When skipping the (already kinda useless) animdescs, just iterate through all anims of the same type and pick the one with index that's nAnimID
+		if ( skipAnimdescs )
+		{
+			const auto& anims = pModel->pSkeleton->animations;
+			if ( anims.size() < 1 )
+				return 0;
+
+			int currentIndex = -1;
+			for ( int i = 0; i < anims.size(); i++ )
+			{
+				auto anim = dynamic_cast_ptr<const NDb::SAnimB2*>(anims[i]);
+				if (anim->eType == eAnimType)
+					currentIndex++;
+				if (currentIndex == nAnimID)
+					return anim;
+			}
+
+			return 0;
+		}
+
 		if ( eAnimType < animdescs.size() && nAnimID >= 0 && nAnimID < animdescs[eAnimType].anims.size() )
 		{
 			const int nAnimSkeletonIndex = animdescs[eAnimType].anims[nAnimID].nFrameIndex;
@@ -914,14 +934,46 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 	const int nID = GetID();
 	NDb::EAnimationType eAnimType = NDb::ANIMATION_DEATH;
 	const int nStartTime = (std::min)( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
-	if ( pUpdate->dieAnimation.nParam != -1 ) 
+	const NDb::SMechUnitRPGStats* pStats = checked_cast<const NDb::SMechUnitRPGStats*>(GetStats());
+
+	const NDb::SModel* deathModel = GetModelDesc();
+
+	int nParam = pUpdate->dieAnimation.nParam;
+	const NDb::SAnimB2* pAnimB2 = nullptr;
+	bool isAnimable = false;
+
+	// Use animable model for artillery and trucks
+	if ((pStats->IsArtillery() || pStats->IsTransport()) && pStats->pAnimableModel != 0)
 	{
-		eAnimType = NDb::EAnimationType( ( pUpdate->dieAnimation.nParam >> 16 ) & 0x00000fff );
-		const int nAnimID = pUpdate->dieAnimation.nParam & 0x0000ffff;
-		const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
+		deathModel = GetModel(pStats->pAnimableModel, eSeason);
+
+		// "Hack" the shitty nParam to some valid death animation
+		int deathAnimCount = 0;
+
+		if ( deathModel && deathModel->pSkeleton )
+		{
+			const auto& anims = deathModel->pSkeleton->animations;
+			for (int i = 0; i < anims.size(); i++)
+			{
+				auto anim = dynamic_cast_ptr<const NDb::SAnimB2*>(anims[i]);
+				if ( anim->eType == eAnimType )
+					deathAnimCount++;
+			}
+		}
+
+		nParam = 20 << 16 | ( deathAnimCount > 0 ? NRandom::Random(0, deathAnimCount - 1) : 0 );
+
+		isAnimable = true;
+	}
+
+	if ( nParam != -1 ) 
+	{
+		eAnimType = NDb::EAnimationType( ( nParam >> 16 ) & 0x00000fff );
+		const int nAnimID = nParam & 0x0000ffff;
 
 		NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nID );
-		const NDb::SAnimB2* pAnimB2 = GetAnimB2( GetModelDesc(), pStats->animdescs, eAnimType, nAnimID );
+
+		pAnimB2 = GetAnimB2( deathModel, pStats->animdescs, eAnimType, nAnimID, isAnimable );
 		if ( pAnimB2 && pAnimator )
 		{
 			pAnimator->ClearAllAnimations();
