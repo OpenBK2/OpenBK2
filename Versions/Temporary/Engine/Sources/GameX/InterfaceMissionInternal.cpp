@@ -1953,7 +1953,10 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	if ( nTimelimit != -1 )
 	{
 		const int nTimeRemaining =  (std::max)( 0, int(nTimelimit - Singleton<IGameTimer>()->GetGameTime()/1000) );
-		pTimeRemaining->SetText( NStr::ToUnicode( StrFmt( "%i", nTimeRemaining ) ) );
+		int hours = nTimeRemaining / 3600;
+		int minutes = (nTimeRemaining % 3600) / 60;
+		int seconds = nTimeRemaining % 60;
+		pTimeRemaining->SetText( NStr::ToUnicode( StrFmt( "%i:%02i:%02i", hours, minutes, seconds ) ) );
 	}
 
 	ITextView *pTimeToLooseOrWin = GetChildChecked<ITextView>( pScreen, "TimeToLooseOrWin", true );

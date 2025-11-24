@@ -233,13 +233,10 @@ bool CMPManagerMode::CheckScoreWinLose()
 	if ( timeEndMatch == 0 )
 		timeEndMatch = curGameTime + gameDesc.nTimeLimit * 60000 * fTimeSpeedMultiplier;
 
-	if ( timeEndMatch - curGameTime < 60000 )
-	{
-		if ( curGameTime > timeEndMatch )
-			NGlobal::SetVar( "multiplayer_time_limit", -1 );
-		else
-			NGlobal::SetVar( "multiplayer_time_limit", int(timeEndMatch) / 1000 );
-	}
+	if ( curGameTime > timeEndMatch )
+		NGlobal::SetVar( "multiplayer_time_limit", -1 );
+	else
+		NGlobal::SetVar( "multiplayer_time_limit", int(timeEndMatch) / 1000 );
 
 	if ( timeEndMatch > 0 && curGameTime > timeEndMatch )
 	{
