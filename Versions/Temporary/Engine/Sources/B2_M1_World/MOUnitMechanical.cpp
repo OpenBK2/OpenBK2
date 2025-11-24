@@ -961,7 +961,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 			}
 		}
 
-		nParam = 20 << 16 | ( deathAnimCount > 0 ? NRandom::Random(0, deathAnimCount - 1) : 0 );
+		nParam = 20 << 16 | ( deathAnimCount > 0 ? NWin32Random::Random(0, deathAnimCount - 1) : 0 );
 
 		isAnimable = true;
 	}
