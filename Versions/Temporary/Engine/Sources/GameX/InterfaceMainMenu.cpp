@@ -79,9 +79,9 @@ bool CInterfaceMainMenu::Init()
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
 	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
-	wszVersion = L"OpenBK2 " + wszVersion + L" ";
+	wszVersion = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" ";
 	if ( pVersionView )
-		pVersionView->SetText( pVersionView->GetDBText() + wszVersion );
+		pVersionView->SetText( wszVersion );
 #endif
 
 	// music
