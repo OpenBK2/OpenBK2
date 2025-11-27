@@ -189,7 +189,9 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			else
 			{
 				pUnit->ResetHoldSector();
-				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+				// The part: pUnit->GetPlayer() != theDipl.GetMyNumber() likely causes ASYNC in MP!
+				// The decent way to handle it is to simply disable AI/player checks in MP - any unit will move out of a tank pit!
+				if ( pUnit->IsInTankPit() && !theDipl.IsNetGame() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 					//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pUnit );
