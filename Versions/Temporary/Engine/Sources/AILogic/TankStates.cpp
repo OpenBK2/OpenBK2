@@ -292,7 +292,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		else if ( !pUnit->NeedDeinstall() )
 		{
 			pUnit->ResetHoldSector();
-			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+			if (pUnit->IsInTankPit() && (theDipl.IsNetGame() || ( !theDipl.IsNetGame() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) ) ) ) // сначала выйти из TankPit, потом поехать куда послали
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
@@ -323,7 +323,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		else 
 		{
 			pUnit->ResetHoldSector();
-			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+			if (pUnit->IsInTankPit() && (theDipl.IsNetGame() || ( !theDipl.IsNetGame() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) ) ) ) // сначала выйти из TankPit, потом поехать куда послали
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
@@ -377,7 +377,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			else
 			{
 				pUnit->ResetHoldSector();
-				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+				if (pUnit->IsInTankPit() && (theDipl.IsNetGame() || ( !theDipl.IsNetGame() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) ) ) ) // сначала выйти из TankPit, потом поехать куда послали
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
