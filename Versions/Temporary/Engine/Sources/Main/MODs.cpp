@@ -8,6 +8,8 @@
 #include "Misc/StrProc.h"
 #include "libdb/Db.h"
 
+#include <filesystem>
+
 #define MOD_ATTACH_COMMAND 0x10268440
 
 namespace NGameX
@@ -123,6 +125,11 @@ public:
 	void Exec()
 	{
 		AttachMODInternal( NMainLoop::GetBaseDir() + "Data\\", szFullFolderPath, eMode );
+		auto modConfigPath = std::filesystem::path( szFullFolderPath.c_str() ) / "mod_config.cfg";
+		if ( std::filesystem::exists( modConfigPath ) )
+		{
+			NGlobal::LoadConfig( modConfigPath.string() );
+		}
 	}
 };
 
