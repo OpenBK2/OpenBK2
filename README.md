@@ -71,6 +71,8 @@ Please review the terms of the [license agreement](LICENSE.md) carefully before 
 
 See [Contributing.md](https://github.com/OpenBK2/OpenBK2/blob/port/Contributing.md) file.
 
+For support you can join the [discord](https://discord.gg/unC4RCM9n4) server.
+
 ---
 
 ## License Information
