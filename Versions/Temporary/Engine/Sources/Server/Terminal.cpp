@@ -74,8 +74,8 @@ void CTerminal::Segment()
 {
 	if ( !readCache.empty() )
 	{
-		string szError;
-		string szLineEntered;
+		std::string szError;
+		std::string szLineEntered;
 		{
 			NWin32Helper::CCriticalSectionLock lock( csClientSocketReading );
 			szLineEntered = readCache.front();
@@ -110,7 +110,7 @@ void CTerminal::MTSegment()
 	}
 }
 
-void CTerminal::OutString( const string &szString )
+void CTerminal::OutString( const std::string &szString )
 {
 	NWin32Helper::CCriticalSectionLock lock( csClientSocketWriting );
 	writeCache.push_back( szString );
@@ -118,7 +118,7 @@ void CTerminal::OutString( const string &szString )
 	{
 		while ( !writeCache.empty() && bClientIsOK )
 		{
-			const string &szOutString = writeCache.front();
+			const std::string &szOutString = writeCache.front();
 			int nSent = send( acceptedSocket, szOutString.c_str(), szOutString.size(), 0 );
 			if ( nSent == SOCKET_ERROR )
 			{
@@ -131,7 +131,7 @@ void CTerminal::OutString( const string &szString )
 
 void CTerminal::ReadToCache()
 {
-	static vector<char> buffer( INPUT_BUFFER_SIZE + 1 );
+	static std::vector<char> buffer( INPUT_BUFFER_SIZE + 1 );
 	buffer[ INPUT_BUFFER_SIZE ] = 0;
 	int nBytesReceived = 0;
 	while ( bClientIsOK )	

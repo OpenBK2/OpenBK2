@@ -9,17 +9,17 @@ struct IStatisticsData : public CObjectBase
 
 struct IStatisticsCollector : public CObjectBase
 {
-	virtual void SetSpecific( const string &szName, IStatisticsData* pData ) = 0;
-	virtual IStatisticsData* operator[]( const string &szName ) = 0;
+	virtual void SetSpecific( const std::string &szName, IStatisticsData* pData ) = 0;
+	virtual IStatisticsData* operator[]( const std::string &szName ) = 0;
 };
 
 namespace NStatistics
 {
-	IStatisticsCollector* CreateCollector( const string &szCollectorName );
-	void SetGlobalCounter( const string &szName, IStatisticsData* pData );
-	IStatisticsData* GetGlobal( const string &szName );
-	string DumpToString();
-	void DumpToNameValueVectors( vector<string> *pNames, vector<float> *pValues );
+	IStatisticsCollector* CreateCollector( const std::string &szCollectorName );
+	void SetGlobalCounter( const std::string &szName, IStatisticsData* pData );
+	IStatisticsData* GetGlobal( const std::string &szName );
+	std::string DumpToString();
+	void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues );
 	IStatisticsData * CreateAverageTimePerEventCounter();
 	IStatisticsData * CreateAverageValuePerTimeCounter();
 	IStatisticsData * CreateAverageValueCounter();

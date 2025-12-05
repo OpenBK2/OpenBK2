@@ -27,7 +27,7 @@ BEGIN_MESSAGE_MAP(CConsole, CWnd)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-CConsole::CConsole( CCommandsBase *_pCommands, const string &szWindowName )
+CConsole::CConsole( CCommandsBase *_pCommands, const std::string &szWindowName )
 : CWnd(), nConsoleSequenceID(0)
 {
 	m_bShowCalltips = false;
@@ -41,7 +41,7 @@ CConsole::CConsole( CCommandsBase *_pCommands, const string &szWindowName )
 
 	pCommands = _pCommands;
 
-	vector<string> cmds;
+	std::vector<std::string> cmds;
 	pCommands->GetStringCommands( &cmds );
 	SetAutoComplete( cmds );
 }
@@ -68,11 +68,11 @@ void CConsole::ClearAll()
 	Sci(SCI_CLEARALL);
 }
 
-void CConsole::SetAutoComplete( const vector<string> &vszKeywords )
+void CConsole::SetAutoComplete( const std::vector<std::string> &vszKeywords )
 {
 	vszScriptKeywords = vszKeywords;
-	string sz;
-	for ( vector<string>::const_iterator i = vszKeywords.begin(); i != vszKeywords.end(); ++i )
+	std::string sz;
+	for ( std::vector<std::string>::const_iterator i = vszKeywords.begin(); i != vszKeywords.end(); ++i )
 		sz += *i + " ";
 	//
 	szAutoComplete = sz;
@@ -185,7 +185,7 @@ void CConsole::AutoComplete()
 
 		for ( int i = 0; i < vszScriptKeywords.size(); ++i )
 		{
-			const string &keyword = vszScriptKeywords[i];
+			const std::string &keyword = vszScriptKeywords[i];
 			if ( keyword.find( linebuf ) == 0 )
 			{
 				Sci( SCI_AUTOCSHOW, nCnt, (LPARAM)szAutoComplete.c_str() );
@@ -195,7 +195,7 @@ void CConsole::AutoComplete()
 	}
 }
 
-void CConsole::AddText( const string &szText )
+void CConsole::AddText( const std::string &szText )
 {
 	int nTextEnd = Sci( SCI_GETLENGTH );
 	if ( nTextEnd > MAX_CONSOLE_SIZE )
@@ -221,11 +221,11 @@ void CConsole::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		const int nLineLength = Sci( SCI_LINELENGTH, nLineNum );
 		if ( nLineLength > 0 )
 		{
-			string szLine;
+			std::string szLine;
 			szLine.resize( nLineLength );
 			Sci( SCI_GETLINE, nLineNum,	reinterpret_cast<LPARAM>(szLine.c_str()));
 
-			string szErr;
+			std::string szErr;
 			if ( !pCommands->LineEntered( szLine, &szErr ) )
 				AddText( szErr );
 		}

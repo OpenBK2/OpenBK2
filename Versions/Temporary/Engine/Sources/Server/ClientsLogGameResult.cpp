@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "clients.h"
 #include "LadderLobby.h"
+#if 0
 #include "vendor/MySQL/include/mysql.h"
+#endif
 #include "Misc/StrProc.h"
 #include "Statistics.h"
 #include "HashMapConvertor.h"
@@ -35,14 +37,14 @@ struct SPlayerInfoToLog
 	int nTechPlayed;
 	int nWin;
 	int nGameLength;
-	vector<int> mapsRequested;
-	vector<int> techsRequested;
-	vector<int> unitsKilled;
-	vector<int> unitsLost;
-	vector<int> reinfXP;
-	vector<int> reinfUsed;
+	std::vector<int> mapsRequested;
+	std::vector<int> techsRequested;
+	std::vector<int> unitsKilled;
+	std::vector<int> unitsLost;
+	std::vector<int> reinfXP;
+	std::vector<int> reinfUsed;
 	
-	void ConvertToHashMap( hash_map<string,int> *pHashMap )
+	void ConvertToHashMap( std::unordered_map<std::string,int> *pHashMap )
 	{
 #define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(var), false )
 #define CONVERT_VECTOR( name, var ) NHashMapConvertor::ConvertVector( pHashMap, name, &(var), false )
@@ -66,7 +68,7 @@ struct SPlayerInfoToLog
 
 void CClients::DBLogGameResult( SLadderGameInfo *pGameInfo )
 {
-	for ( hash_map<int,string>::const_iterator it = pGameInfo->nickByID.begin(); it != pGameInfo->nickByID.end(); ++it )
+	for ( std::unordered_map<int,std::string>::const_iterator it = pGameInfo->nickByID.begin(); it != pGameInfo->nickByID.end(); ++it )
 	{
 		SPlayerInfoToLog info;
 		info.nDBID = GetDBUserIDbyNick( it->second );
@@ -77,30 +79,31 @@ void CClients::DBLogGameResult( SLadderGameInfo *pGameInfo )
 		info.mapsRequested = pGameInfo->mapsRequested[nPlayerID];
 		info.techsRequested = pGameInfo->techsRequested[nPlayerID];
 		info.nGameLength = ( pGameInfo->nDeathTime - pGameInfo->nStartTime ) / 1000;
-		hash_map<string,int> buffer;
+		std::unordered_map<std::string,int> buffer;
 		info.ConvertToHashMap( &buffer );
 		DBLogRawGameResult( buffer );
 	}
 }
 
-void CClients::DBLogRawGameResult( const hash_map<string,int> &info )
+void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &info )
 {
+#if 0
 #ifdef LOG_FULL_GAME_RESULT
 #ifdef CHECK_TABLE_STRUCTURE
 	{
-		hash_set<string> availableColumns = GetTableColumns( "ResultsLog" );
-		list<string> columnsToCreate;
-		for ( hash_map<string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+		std::unordered_set<std::string> availableColumns = GetTableColumns( "ResultsLog" );
+		std::list<std::string> columnsToCreate;
+		for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 		{
-			const string &szStatsName = it->first;
+			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
 				columnsToCreate.push_back( szStatsName );
 		}
 		columnsToCreate.sort();
-		string szQuery = "ALTER TABLE ResultsLog  ";
-		for ( list<string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
+		std::string szQuery = "ALTER TABLE ResultsLog  ";
+		for ( std::list<std::string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
-			const string &szColumnName = *it;
+			const std::string &szColumnName = *it;
 			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
@@ -108,24 +111,25 @@ void CClients::DBLogRawGameResult( const hash_map<string,int> &info )
 	}
 #endif
 
-	string szQuery = "INSERT INTO `ResultsLog` (  ";
-	for ( hash_map<string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+	std::string szQuery = "INSERT INTO `ResultsLog` (  ";
+	for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
-		const string &szColumnName = it->first;
+		const std::string &szColumnName = it->first;
 		szQuery += szColumnName + ",";
 	}
 	szQuery.erase( szQuery.size() - 1, 1 );
 	szQuery += ") VALUES (  ";
 
-	for ( hash_map<string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+	for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
-		const string &szColumnValue = StrFmt( "%d", it->second );
+		const std::string &szColumnValue = StrFmt( "%d", it->second );
 		szQuery += "'" + szColumnValue + "',";
 	}
 	szQuery.erase( szQuery.size() - 1, 1 );
 	szQuery += ")";
 
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+#endif
 #endif
 }
 

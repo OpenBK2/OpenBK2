@@ -38,7 +38,7 @@ protected:
 	virtual bool PlayerNeedSpecificGameInfo() const { return true; }
 public:
 	CCustomLobby() { }
-	CCustomLobby( class CClients *pClients, const string &szCfgFile );
+	CCustomLobby( class CClients *pClients, const std::string &szCfgFile );
 
 	virtual bool Segment();
 

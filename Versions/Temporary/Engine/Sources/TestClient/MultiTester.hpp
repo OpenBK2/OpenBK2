@@ -10,13 +10,13 @@ class CMultiTester : public CPacketProcessor, public IMultiTester
 	OBJECT_NOCOPY_METHODS( CMultiTester )
 private:
 	CObj<CServerClient> pServerClient;
-	string szServerAddress;
+	std::string szServerAddress;
 	int nServerPort;
 	int nNetVersion;
 	int nTimeOut;
-	string szName;
-	string szPassword;
-	string szCDKey;
+	std::string szName;
+	std::string szPassword;
+	std::string szCDKey;
 	int nTestMode;
 	int nStage;
 	int nStatus;
@@ -32,10 +32,10 @@ private:
 	bool bLadderInfoSend;
 	bool bIsInGame;
 
-	hash_set<int> playersToWait;
+	std::unordered_set<int> playersToWait;
 	int nGameID;
-	hash_set<int> winnersSet;
-	hash_map<int,int> playersRaces;
+	std::unordered_set<int> winnersSet;
+	std::unordered_map<int,int> playersRaces;
 
 	void LoginStage();
 	void EnterLobbyStage();
@@ -45,8 +45,8 @@ private:
 	void TestChat();
 	void TestLadder();
 
-	void ChangeChatChannel( const string &szChannelName );
-	void SendChatMessage( const string &szMessage );
+	void ChangeChatChannel( const std::string &szChannelName );
+	void SendChatMessage( const std::string &szMessage );
 
 	void WaitForResponse();
 	void Activate();
@@ -54,8 +54,8 @@ private:
 public:
 	CMultiTester();
 
-	void Init( const string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
-		const string &_szName, const string &_szPassword, const string &_szCDKey, const int _cTestMode );
+	void Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
+		const std::string &_szName, const std::string &_szPassword, const std::string &_szCDKey, const int _cTestMode );
 	virtual bool Segment();
 	bool IsActive() const;
 	bool IsCancelled() const { return bCancelled; }

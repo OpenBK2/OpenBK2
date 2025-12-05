@@ -20,16 +20,16 @@ public:
 	int nTotalPlayTime;
 	int nTotalGamesPlayed;
 	int nWinsInSeries;
-	vector<int> raceWinsSolo;
-	vector<int> raceWinsTeam;
-	vector<int> raceLossesSolo;
-	vector<int> raceLossesTeam;
-	vector<int> reinforcementUsed;
-	vector<int> winsAgainst;
-	vector<int> lossesAgainst;
-	vector<int> mapsPlayed;
-	vector<int> techsPlayed;
-	vector<int> medals;
+	std::vector<int> raceWinsSolo;
+	std::vector<int> raceWinsTeam;
+	std::vector<int> raceLossesSolo;
+	std::vector<int> raceLossesTeam;
+	std::vector<int> reinforcementUsed;
+	std::vector<int> winsAgainst;
+	std::vector<int> lossesAgainst;
+	std::vector<int> mapsPlayed;
+	std::vector<int> techsPlayed;
+	std::vector<int> medals;
 
 	int GetFavouriteRace() const
 	{

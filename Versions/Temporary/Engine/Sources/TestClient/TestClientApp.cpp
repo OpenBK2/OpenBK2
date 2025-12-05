@@ -23,23 +23,23 @@ CTestClientApp::CTestClientApp()
 }
 
 
-void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime )
+void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime )
 {
 	theApp.Segment();
 }
 
-const string GetBaseDir()
+const std::string GetBaseDir()
 {
 	char buffer[1024];
 	GetCurrentDirectory( 1024, buffer );
 	//
-	string szTemp = buffer;
+	std::string szTemp = buffer;
 	NI_ASSERT( !szTemp.empty(), "Can't get current directory" );
 	if ( szTemp[szTemp.size() - 1] != '\\' )
 		szTemp += '\\';
 	szTemp += "..\\";
 
-	string szBaseDir;
+	std::string szBaseDir;
 	NFile::GetFullName( &szBaseDir, szTemp );
 	NStr::ToLower( &szBaseDir );
 
@@ -58,7 +58,7 @@ BOOL CTestClientApp::InitInstance()
 	pConsole = new CConsole( pCmds, "Client" );
 	m_pMainWnd = pConsole;
 
-	const string szBaseDir = GetBaseDir();
+	const std::string szBaseDir = GetBaseDir();
 	pTestClient = new CTestClient( pCmds, szBaseDir + "client.xml" );
 
 	SetTimer( 0, 1, 50, &TimerProc );

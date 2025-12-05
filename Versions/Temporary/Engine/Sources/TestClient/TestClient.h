@@ -13,18 +13,18 @@ class CTestClient : virtual public CObjectBase
 	CPtr<CCommands> pCommands;
 
 	typedef void (CTestClient::*PROCESS_CMD_FUNC)( const SCommand &cmd );
-	hash_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
+	std::unordered_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
 
 	CPtr<class CServerClient> pServerClient;
 	CPtr<class CTestClientProcessor> pTestClientProcessor;
 	CObj<CPinger> pPinger;
 
-	list< CPtr<class CNetPacket> > consoleCommandPackets;
+	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
 
 	int nNetVersion, nPort;
-	string szIP;
+	std::string szIP;
 
-	vector< CObj<IMultiTester> > testers;
+	std::vector< CObj<IMultiTester> > testers;
 	int nTestersNameShift;
 	DWORD dwLastTesterCreationTime;
 	//
@@ -72,7 +72,7 @@ class CTestClient : virtual public CObjectBase
 	void CommandMultiTestServer( const SCommand &cmd );
 public:
 	CTestClient() { }
-	CTestClient( CCommands *pCommands, const string &szCfgFile );
+	CTestClient( CCommands *pCommands, const std::string &szCfgFile );
 
 	void Segment();
 };

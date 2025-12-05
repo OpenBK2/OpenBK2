@@ -7,17 +7,17 @@ class CPinger : public CPacketProcessor
 	OBJECT_NOCOPY_METHODS( CPinger )
 	UINT64 nLastConnectTime;
 	CObj<class CServerClient> pServerClient;
-	string szName;
-	string szPassword;
+	std::string szName;
+	std::string szPassword;
 	int nConnectPeriod;
-	string szIP;
+	std::string szIP;
 	int nPort;
 	int nNetVersion;
 	int nAttemptsLeft;
 	bool bConnectNow;
 public:
 	CPinger();
-	CPinger( const int &nPeriod, const string &_szName, const string &_szPassword, const string &_szIP,
+	CPinger( const int &nPeriod, const std::string &_szName, const std::string &_szPassword, const std::string &_szIP,
 		const int &_nPort, const int &_nNetVersion );
 
 	bool Segment();

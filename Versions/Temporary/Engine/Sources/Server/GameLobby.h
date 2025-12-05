@@ -10,22 +10,22 @@ class CGameLobby : public CPacketProcessor
 	CUpdatableList clientsVersions;
 	CUpdatableList gamesVersions;
 
-	hash_set<int> lobbyClients;
+	std::unordered_set<int> lobbyClients;
 	CPtr<class CClients> pClients;
-	hash_map< int, hash_set<int> > throughServerClients;
+	std::unordered_map< int, std::unordered_set<int> > throughServerClients;
 
 	DWORD dwGameTimeOut;
 	DWORD dwGameLoadingTimeOut;
-	string szCfgFile;
+	std::string szCfgFile;
 
 	struct SLobbyGameInfo
 	{
 		UINT64 nLastGameHeartBeat;
-		hash_set<int> clients;
+		std::unordered_set<int> clients;
 		SGameInfo gameInfo;
 		CPtr<class CSpecificGameInfo> pSpecificGameInfo;
 	};
-	hash_map<int, SLobbyGameInfo> lobbyGames;
+	std::unordered_map<int, SLobbyGameInfo> lobbyGames;
 	int nGamesCounter;
 
 	struct SGetGameInfoFunc
@@ -40,7 +40,7 @@ class CGameLobby : public CPacketProcessor
 	void ClientEntered( const int nID );
 	void ClientLeaved( const int nID );
 	const bool GetGameInfo( const int nGameID, SGameInfo *pInfo ) const;
-	bool GetGameClients( const int nGame, hash_set<int> *pClients );
+	bool GetGameClients( const int nGame, std::unordered_set<int> *pClients );
 	void SetClientGameID( const int nClientID, const int nGameID );
 	void EraseGameClients( const int nGameID );
 	void SetClientLobbyID( const int nClientID, const BYTE cLobbyID );
@@ -69,7 +69,7 @@ protected:
 	virtual bool PlayerNeedSpecificGameInfo() const = 0;
 public:
 	CGameLobby() : nGamesCounter( 0 ) { }
-	CGameLobby( class CClients *pClients, const string &szCfgFile );
+	CGameLobby( class CClients *pClients, const std::string &szCfgFile );
 
 	virtual bool Segment();
 	bool CanBePaused() { return false; }
@@ -121,9 +121,9 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 	pOutPacket->dwVersion = updateInfo.dwVersion;
 	pOutPacket->bFullUpdate = updateInfo.bFullUpdate;
 
-	for ( list<int>::iterator iter = updateInfo.added.begin(); iter != updateInfo.added.end(); ++iter )
+	for ( std::list<int>::iterator iter = updateInfo.added.begin(); iter != updateInfo.added.end(); ++iter )
 	{
-		pOutPacket->added.insert( pOutPacket->added.end() );
+		pOutPacket->added.emplace_back();
 		if ( !GetInfoFunc( *iter, &(pOutPacket->added.back()) ) )
 			pOutPacket->added.pop_back();
 	}
@@ -131,9 +131,9 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 	if ( !pOutPacket->bFullUpdate )
 	{
 		pOutPacket->removed.splice( pOutPacket->removed.begin(), updateInfo.removed );
-		for ( list<int>::iterator iter = updateInfo.changed.begin(); iter != updateInfo.changed.end(); ++iter )
+		for ( std::list<int>::iterator iter = updateInfo.changed.begin(); iter != updateInfo.changed.end(); ++iter )
 		{
-			pOutPacket->changed.insert( pOutPacket->changed.end() );
+			pOutPacket->changed.emplace_back();
 			if ( !GetInfoFunc( *iter, &(pOutPacket->changed.back()) ) )
 				pOutPacket->changed.pop_back();
 		}

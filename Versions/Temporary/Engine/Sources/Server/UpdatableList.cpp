@@ -44,7 +44,7 @@ void CUpdatableList::GetFullUpdate( const int nNoIncludeID, SUpdateInfo *pUpdate
 	pUpdate->dwVersion = dwVersion;
 	pUpdate->bFullUpdate = true;
 
-	for ( hash_set<int>::iterator iter = now.begin(); iter != now.end(); ++iter )
+	for ( std::unordered_set<int>::iterator iter = now.begin(); iter != now.end(); ++iter )
 	{
 		if ( *iter != nNoIncludeID )
 			pUpdate->added.push_back( *iter );
@@ -57,7 +57,7 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion
 	pUpdate->dwVersion = dwVersion;
 	pUpdate->bFullUpdate = false;
 
-	hash_set<int> added, changed;
+	std::unordered_set<int> added, changed;
 
 	const DWORD dwStart = ( dwOldVersion + 1 ) & MASK;
 	const DWORD dwFinish = ( dwVersion + 1 ) & MASK;
@@ -76,7 +76,7 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion
 				break;
 			case EC_REMOVED:
 				{
-					hash_set<int>::iterator iter = added.find( nID );
+					std::unordered_set<int>::iterator iter = added.find( nID );
 					if ( iter == added.end() )
 						pUpdate->removed.push_back( nID );
 					else
@@ -96,9 +96,9 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const DWORD dwOldVersion
 		dwNow = (dwNow + 1) & MASK;
 	}
 
-	for ( hash_set<int>::iterator iter = added.begin(); iter != added.end(); ++iter )
+	for ( std::unordered_set<int>::iterator iter = added.begin(); iter != added.end(); ++iter )
 		pUpdate->added.push_back( *iter );
-	for ( hash_set<int>::iterator iter = changed.begin(); iter != changed.end(); ++iter )
+	for ( std::unordered_set<int>::iterator iter = changed.begin(); iter != changed.end(); ++iter )
 		pUpdate->changed.push_back( *iter );
 }
 

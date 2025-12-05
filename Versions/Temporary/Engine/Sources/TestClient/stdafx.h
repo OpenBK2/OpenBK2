@@ -7,7 +7,7 @@
 #pragma once
 #ifndef __AFX__
 #include <windows.h>
-#include <typeinfo.h>
+#include <typeinfo>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>

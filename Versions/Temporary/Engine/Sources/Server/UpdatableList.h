@@ -4,9 +4,9 @@ struct SUpdateInfo
 {
 	DWORD dwVersion;
 	bool bFullUpdate;
-	list<int> removed;
-	list<int> added;
-	list<int> changed;
+	std::list<int> removed;
+	std::list<int> added;
+	std::list<int> changed;
 
 	void Clear()
 	{
@@ -36,8 +36,8 @@ class CUpdatableList
 		SChange() : change( EC_NOP ) { }
 	};
 
-	vector<SChange> changes;
-	hash_set<int> now;
+	std::vector<SChange> changes;
+	std::unordered_set<int> now;
 	DWORD dwVersion;
 
 	//

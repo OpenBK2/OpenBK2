@@ -93,12 +93,5 @@ REGISTER_SAVELOAD_CLASS( 69, CLadderShortStatisticsPacket )
 REGISTER_SAVELOAD_CLASS( 70, CLadderSurrenderPacket )
 REGISTER_SAVELOAD_CLASS( 71, CLadderInvalidStatisticsPacket )
 
-// For too smart linker
-void ForcePacketRegistration()
-{
-	static int nForcePackerRegistration = 0;
-	++nForcePackerRegistration;
-}
-
 REGISTER_SAVELOAD_CLASS( 0x19245C01, SGameInfo );
 

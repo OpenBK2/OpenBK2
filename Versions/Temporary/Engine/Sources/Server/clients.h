@@ -24,13 +24,13 @@ struct SGameConnection
 {
 	struct SAddressInfo
 	{
-		string szIP;
+		std::string szIP;
 		int nPort;
 
 		SAddressInfo() : nPort( 0 ) { }
 	};
 
-	hash_map<int, SAddressInfo> connections;
+	std::unordered_map<int, SAddressInfo> connections;
 };
 enum EIgnoreFriendList
 {
@@ -44,37 +44,37 @@ class CClients : public CObjectBase
 
 	MYSQL *pMySQL;
 	CObj<IStatisticsCollector> pStatisticsCollector;
-	hash_map<int, string> nickByID;
-	hash_map<string, int> idByNick;
-	hash_map<string, int> DBUserIDByNick; // cache for online users. use GetDBUserIDByNick instead!!
+	std::unordered_map<int, std::string> nickByID;
+	std::unordered_map<std::string, int> idByNick;
+	std::unordered_map<std::string, int> DBUserIDByNick; // cache for online users. use GetDBUserIDByNick instead!!
 
-	hash_set<string> onLineNicks;
+	std::unordered_set<std::string> onLineNicks;
 
-	hash_map<int, SCommonClientInfo> onLine;
-	hash_map<int, SGameConnection> gameConnections;
+	std::unordered_map<int, SCommonClientInfo> onLine;
+	std::unordered_map<int, SGameConnection> gameConnections;
 	
-	hash_map< string, CPtr<SLadderDBInfo> > ladderInfoCache;
-	hash_map< string, int > ladderInfoCacheLockCounter;
+	std::unordered_map< std::string, CPtr<SLadderDBInfo> > ladderInfoCache;
+	std::unordered_map< std::string, int > ladderInfoCacheLockCounter;
 
-	hash_map< int, hash_set<int> > ignoreList; // <recipient, sender>
-	hash_map< int, hash_set<int> > friendList; // <player, list of friends >
+	std::unordered_map< int, std::unordered_set<int> > ignoreList; // <recipient, sender>
+	std::unordered_map< int, std::unordered_set<int> > friendList; // <player, list of friends >
 	int nQueries;
 	UINT64 dwQueriesCountTime;
 	float fQueriesPerSecond;
 	float fPrevQueriesPerSecond;
 
 	int nMaxXP;
-	string EscapeString( const string &szString ) const;
+	std::string EscapeString( const std::string &szString ) const;
 	
 	void LoadIgnoreFriendList();
 	void AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList );
 	void DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList );
-	int GetDBUserIDbyNick( const string &szNick );
-	hash_set<string> GetTableColumns( const string &szTableName );
-	void GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string &szNick );
-	void PutRawLadderInfoToDB( const string &szNick, const hash_map<string,int> &ladderInfo );
-	void ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pHashMap, const bool bReadFromHashMap ) const;
-	void DBLogRawGameResult( const hash_map<string,int> &info );
+	int GetDBUserIDbyNick( const std::string &szNick );
+	std::unordered_set<std::string> GetTableColumns( const std::string &szTableName );
+	void GetRawLadderInfoFromDB( std::unordered_map<std::string,int> *pInfo, const std::string &szNick );
+	void PutRawLadderInfoToDB( const std::string &szNick, const std::unordered_map<std::string,int> &ladderInfo );
+	void ConvertLadderInfo( SLadderDBInfo *pInfo, std::unordered_map<std::string,int> *pHashMap, const bool bReadFromHashMap ) const;
+	void DBLogRawGameResult( const std::unordered_map<std::string,int> &info );
 public:
 	CClients() { }
 	CClients( MYSQL *pMySQL );
@@ -83,50 +83,50 @@ public:
 	float GetQPS() const { return fQueriesPerSecond; }
 	void RecalcDBOverload();
 
-	bool IsBadNick( const string &szNick );
-	bool IsBannedNick( const string &szNick );
-	bool IsBannedCDKey( const string &szCDKey );
+	bool IsBadNick( const std::string &szNick );
+	bool IsBannedNick( const std::string &szNick );
+	bool IsBannedCDKey( const std::string &szCDKey );
 
-	const string GetCDKey( const string &szNick );
-	const string GetPassword( const string &szNick );
+	const std::string GetCDKey( const std::string &szNick );
+	const std::string GetPassword( const std::string &szNick );
 
-	bool IsCorrectCDKey( const string &szCDKey );
-	bool IsNickRegistered( const string &szNick );
-	bool IsOnLine( const string &szNick ) const;
+	bool IsCorrectCDKey( const std::string &szCDKey );
+	bool IsNickRegistered( const std::string &szNick );
+	bool IsOnLine( const std::string &szNick ) const;
 	bool IsOnLine( const int nClientID ) const;
-	bool IsCDKeyOnline( const string &szCDKey );
+	bool IsCDKeyOnline( const std::string &szCDKey );
 
-	void Register( const string &szNick, const string &szPassword, const string &szCDKey );
-	void Register( const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail );
-	const string GetEmail( const string &szNick );
+	void Register( const std::string &szNick, const std::string &szPassword, const std::string &szCDKey );
+	void Register( const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail );
+	const std::string GetEmail( const std::string &szNick );
 
-	void SetOnLine( const string &szNick, const int nClientID );
+	void SetOnLine( const std::string &szNick, const int nClientID );
 	void SetOffLine( const int nClientID );
-	void SetGameConnectInfo( const int nClientID, const int nConnection, const string &szIP, const int nGameConnectPort );
+	void SetGameConnectInfo( const int nClientID, const int nConnection, const std::string &szIP, const int nGameConnectPort );
 	bool GetGameConnectInfo( const int nClientID, const int nConnection, SGameConnection::SAddressInfo *pAddressInfo ) const;
 
-	const bool GetNick( const int nClientID, string *pszNick ) const;
-	const bool GetClientID( const string &szNick, int *pnClientID ) const;
+	const bool GetNick( const int nClientID, std::string *pszNick ) const;
+	const bool GetClientID( const std::string &szNick, int *pnClientID ) const;
 	const bool GetCommonClientInfo( const int nClientID, SCommonClientInfo *pCommonClientInfo ) const;
 	void SetCommonClientInfo( const int nClientID, const SCommonClientInfo &commonClientInfo );
 
-	const hash_map<int, SCommonClientInfo>& GetOnLine() const { return onLine; }
+	const std::unordered_map<int, SCommonClientInfo>& GetOnLine() const { return onLine; }
 
-	void AddIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList );
-	void DeleteIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList );
-	bool InIgnoreFriendList( const int nRecipient, const string &szSender, EIgnoreFriendList eList );
-	list<string> GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList );
+	void AddIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList );
+	void DeleteIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList );
+	bool InIgnoreFriendList( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList );
+	std::list<std::string> GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList );
 
-	SLadderDBInfo* GetLadderInfoFromDB( const string &szNick );
-	void PutLadderInfoToDB( const string &szNick );
+	SLadderDBInfo* GetLadderInfoFromDB( const std::string &szNick );
+	void PutLadderInfoToDB( const std::string &szNick );
 	
 	void DBLogGameResult( SLadderGameInfo *pGameInfo );
 	//
-	void Log( const int nClientID, const string &szMsg ) const;
-	void DBLogServerStatistics( const vector<string> &names, const vector<float> &values );
+	void Log( const int nClientID, const std::string &szMsg ) const;
+	void DBLogServerStatistics( const std::vector<std::string> &names, const std::vector<float> &values );
 
-	void LockLadderInfo( const string &szNick );
-  void UnlockLadderInfo( const string &szNick );
+	void LockLadderInfo( const std::string &szNick );
+  void UnlockLadderInfo( const std::string &szNick );
 
 	int GetMaxXP() const { return nMaxXP; }
 };

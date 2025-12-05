@@ -23,9 +23,7 @@ const int TESTER_CREATION_TIMEOUT = 2000;
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
 processCmdsFuncs[cmd] = &CTestClient::##FuncName;
 
-void ForcePacketRegistration(); // For too smart linker
-
-CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
+CTestClient::CTestClient( CCommands *_pCommands, const std::string &szCfgFile )
 {
 	pCommands = _pCommands;
 
@@ -72,8 +70,8 @@ CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
 	pTestClientProcessor = new CTestClientProcessor( szCfgFile );
 
 	int nPingerPeriod;
-	string szPingerName;
-	string szPingerPwd;
+	std::string szPingerName;
+	std::string szPingerPwd;
 	{
 		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
@@ -87,8 +85,6 @@ CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
 	}
 	dwLastTesterCreationTime = GetTickCount();
 	pPinger = new CPinger( nPingerPeriod, szPingerName, szPingerPwd, szIP, nPort, nNetVersion );
-
-	ForcePacketRegistration();
 }
 
 void CTestClient::CommandLogin( const SCommand &cmd )
@@ -223,7 +219,7 @@ void CTestClient::CommandEnterLobby( const SCommand &cmd )
 	if ( pServerClient )
 	{
 		CNetPacket *pPacket;
-		if ( cmd.GetStr( 0 ) == string( "custom" ) )
+		if ( cmd.GetStr( 0 ) == std::string( "custom" ) )
 			pPacket = new CEnterLobbyPacket( 0, ERID_CUSTOM );
 		else
 			pPacket = new CEnterLobbyPacket( 0, ERID_LADDER );
@@ -385,15 +381,15 @@ void CTestClient::CommandPauseClient( const SCommand &cmd )
 		pServerClient->TogglePause( cmd.GetInt( 0 ) );
 }
 
-void RandomizeList( list<int> *pList )
+void RandomizeList( std::list<int> *pList )
 {
-	hash_map< int, int > tempHash;
+	std::unordered_map< int, int > tempHash;
 	int nSize = pList->size();
 	int nMaxRand = nSize - 1;
 	DWORD dwTime = GetTickCount();
 	for ( int i = 0; i < dwTime % 100; ++i )
 		NRandom::Random( 0, nMaxRand );
-	for( list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
+	for( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
 	{
 		int nRandNum = NRandom::Random( 0, nMaxRand );
 		while( tempHash.find( nRandNum ) != tempHash.end() )
@@ -454,8 +450,8 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 	pServerClient->SendPacket( pPacketToSend );
 }
 
-extern list<int> ladderGameTeam1;
-extern list<int> ladderGameTeam2;
+extern std::list<int> ladderGameTeam1;
+extern std::list<int> ladderGameTeam2;
 
 void CTestClient::CommandLadderWin( const SCommand &cmd )
 {
@@ -464,7 +460,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 		return;
 	}
-	hash_set<int> winners;
+	std::unordered_set<int> winners;
 	winners.clear();
 	for ( int i = 1; i < cmd.params.size(); ++i )
 	{
@@ -472,14 +468,14 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 		winners.insert( nID );
 	}
 
-	hash_map<int,int> races;
+	std::unordered_map<int,int> races;
 	races.clear();
 
-	for ( list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
+	for ( std::list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
 	{
 		races[*it] = NRandom::Random( 0, 3 );
 	}
-	for ( list<int>::iterator it = ladderGameTeam2.begin(); it != ladderGameTeam2.end(); ++it )
+	for ( std::list<int>::iterator it = ladderGameTeam2.begin(); it != ladderGameTeam2.end(); ++it )
 	{
 		races[*it] = NRandom::Random( 0, 3 );
 	}
@@ -549,7 +545,7 @@ void CTestClient::ProcessCommands()
 
 	while ( pCommands->GetCommand( &cmd ) )
 	{
-		hash_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
+		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
 //		NI_ASSERT( iter != processCmdsFuncs.end(), StrFmt( "Can't process cmd %d", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
@@ -595,7 +591,7 @@ void CTestClient::Segment()
 			}
 			else if ( bCanCreateTester )
 			{
-				string szName = StrFmt( "%d", i + nTestersNameShift );
+				std::string szName = StrFmt( "%d", i + nTestersNameShift );
 				testers[i] = CreateMultiTester();
 				testers[i]->Init( szIP, nNetVersion, nPort, 30, szName, szName, szName, MTM_LADDER | MTM_CHAT );
 				testers[i]->Segment();

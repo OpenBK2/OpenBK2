@@ -10,8 +10,8 @@ class CConsole : public CWnd
 	CUIntArray m_pages;
 	BOOL m_bShowCalltips;
 	CString m_strCallTip;
-	string szAutoComplete;
-	vector<string> vszScriptKeywords;
+	std::string szAutoComplete;
+	std::vector<std::string> vszScriptKeywords;
 	int nConsoleSequenceID;
 
 	CPtr<CCommandsBase> pCommands;
@@ -20,9 +20,9 @@ class CConsole : public CWnd
 	int Sci(int nCmd, int wParam = 0, int lParam = 0 );
 	void SetStyles();
 	void InitScintilla();
-	void AddText( const string &szText );
+	void AddText( const std::string &szText );
 public:
-	CConsole( CCommandsBase *pCommands, const string &szWindowName );
+	CConsole( CCommandsBase *pCommands, const std::string &szWindowName );
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -31,7 +31,7 @@ public:
 
 	void ClearAll();
 	void AutoComplete();
-	void SetAutoComplete( const vector<string> &szKeywords );
+	void SetAutoComplete( const std::vector<std::string> &szKeywords );
 
 	void Segment();
 

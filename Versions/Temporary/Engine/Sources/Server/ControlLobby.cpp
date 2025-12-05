@@ -11,17 +11,17 @@
 
 #include "Statistics.h"
 
-CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const string &_szCfgFile )
+CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const std::string &_szCfgFile )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
-	REGISTER_PACKET_PROCESSOR( ProcessCheckConnectAnswer );
-	REGISTER_PACKET_PROCESSOR( ProcessRemoveClient );
-	REGISTER_PACKET_PROCESSOR( ProcessCommonClientStatePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessNewConnectingClient );
-	REGISTER_PACKET_PROCESSOR( ProcessDirectClientPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessThroughServerGamePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessPingPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessForgottenPasswordPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessNewClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessCheckConnectAnswer );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessRemoveClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessCommonClientStatePacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessNewConnectingClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessDirectClientPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessThroughServerGamePacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessPingPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessForgottenPasswordPacket );
 	pClients = _pClients;
 	pNet = _pNet;
 	pPrime = new CPrimeNumbers();
@@ -116,7 +116,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 		return true;
 	}
 
-	const string szCDKey = 
+	const std::string szCDKey =
 		pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER ? pPacket->szCDKey : pClients->GetCDKey( pPacket->szNick );
 
 	// already online?
@@ -187,7 +187,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	// wrong password?
 	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_LOGIN )
 	{
-		const string szStr = pClients->GetPassword( pPacket->szNick );
+		const std::string szStr = pClients->GetPassword( pPacket->szNick );
 		if ( szStr != pPacket->szPassword )
 		{
 			CConnectServerPacket *pAnswerPacket = 
@@ -227,7 +227,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 
 bool CControlLobby::ProcessRemoveClient( CNetRemoveClient *pNetRemoveClient )
 {
-	string szNick;
+	std::string szNick;
 	if ( pClients->GetNick( pNetRemoveClient->nClientID, &szNick ) )
 	{
 #ifndef CONSOLE_LOG_SILENCE	
@@ -269,7 +269,7 @@ bool CControlLobby::ProcessNewConnectingClient( CNewGameConnectingClient *pPacke
 
 bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 {
-	swap( pPacket->nClient, pPacket->nClientID );
+	std::swap( pPacket->nClient, pPacket->nClientID );
 	PushPacket( pPacket );
 
 	return true;
@@ -277,7 +277,7 @@ bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 
 bool CControlLobby::ProcessThroughServerGamePacket( CThroughServerGamePacket *pPacket )
 {
-	swap( pPacket->nClient, pPacket->nClientID );
+	std::swap( pPacket->nClient, pPacket->nClientID );
 	PushPacket( pPacket );
 
 	return true;
@@ -299,7 +299,7 @@ bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pP
 		PushPacket( pAnswerPacket );
 		return true;
 	}
-	string szEmail = pClients->GetEmail( pPacket->szNick );
+	std::string szEmail = pClients->GetEmail( pPacket->szNick );
 
 	if ( pPacket->szEMail != szEmail )
 	{

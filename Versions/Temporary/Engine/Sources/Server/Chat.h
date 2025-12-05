@@ -11,13 +11,13 @@ class CChatLobby : public CPacketProcessor
 	OBJECT_NOCOPY_METHODS( CChatLobby );
 	
 	CPtr<CClients> pClients;
-	hash_map<int, string> clientChannel;
-	hash_map<string, list<int> > channelClients;
-	TVersionBaseList<string> channels;
-	hash_map<int,string> clientNicks;
+	std::unordered_map<int, std::string> clientChannel;
+	std::unordered_map<std::string, std::list<int> > channelClients;
+	TVersionBaseList<std::string> channels;
+	std::unordered_map<int,std::string> clientNicks;
 
-	string szCfgFile;
-	static wstring wszWelcomeText;
+	std::string szCfgFile;
+	static std::wstring wszWelcomeText;
 	UINT64 nLastRefreshTime;
 	int nRefreshTime; // time interval between refreshes
 	int nMaxFriends;
@@ -25,11 +25,11 @@ class CChatLobby : public CPacketProcessor
 	void DeleteOfflineClients();
 	void CloseEmptyChannels();
 protected:
-	void NotifyClientJoinChannel( const int nID, const string &szChannelName );
-	void NotifyClientLeaveChannel( const int nID, const string &szChannelName );
-	void NotifyChannelOpened( const string &szChannelName );
-	void NotifyChannelClosed( const string &szChannelName );
-	void SendChatPacket( const int nClientID, const wstring &wszMessage, const string &szFromNick, const int nFromID, bool bIsBroadcast );
+	void NotifyClientJoinChannel( const int nID, const std::string &szChannelName );
+	void NotifyClientLeaveChannel( const int nID, const std::string &szChannelName );
+	void NotifyChannelOpened( const std::string &szChannelName );
+	void NotifyChannelClosed( const std::string &szChannelName );
+	void SendChatPacket( const int nClientID, const std::wstring &wszMessage, const std::string &szFromNick, const int nFromID, bool bIsBroadcast );
 	void SendIgnoreFriendList( const int nClientID );
 	void NotifyFriends( const int nClientID, const EChatStatus eStatus, const bool bNewClient );
 public:
@@ -46,10 +46,10 @@ public:
 	void Initialize();	
 	void ReloadConfig();
 	CChatLobby() { Initialize(); }
-	CChatLobby( CClients *_pClients, const string& szCfgFileName );
+	CChatLobby( CClients *_pClients, const std::string& szCfgFileName );
 	bool CanBePaused() { return true; }
 
-	static void SetWelcomeText( const wstring& _wszWelcomeText ) { wszWelcomeText = _wszWelcomeText; }
+	static void SetWelcomeText( const std::wstring& _wszWelcomeText ) { wszWelcomeText = _wszWelcomeText; }
 };
 
 

@@ -18,8 +18,8 @@ public:
 	unsigned int uCheckSum;
 	int nLevel;
 	//SLadderStatistics dbInfo;
-	hash_set< int > techLevels;
-	hash_set< int > maps;
+	std::unordered_set< int > techLevels;
+	std::unordered_set< int > maps;
 	UINT64 nStartTime;
 	CLadderClient() {}
 	bool CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pConsts );
@@ -28,36 +28,36 @@ public:
 class CLadderCacheLocker : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CLadderCacheLocker )
-	string szNick;
+	std::string szNick;
 	CPtr<CClients> pClients;
 	CLadderCacheLocker() {}
 public:
-	CLadderCacheLocker( CClients* _pClients, const string &_szNick );
+	CLadderCacheLocker( CClients* _pClients, const std::string &_szNick );
 	~CLadderCacheLocker();
 };
 
 struct SLadderGameInfo 
 {
-	list<int> team1Players;
-	list<int> team2Players; // fascist
-	hash_map<int,string> nickByID;
+	std::list<int> team1Players;
+	std::list<int> team2Players; // fascist
+	std::unordered_map<int,std::string> nickByID;
 	int nMapID;
 	int nTechLevel;
 	bool bHistoricity;
 	UINT64 nStartTime;
 	UINT64 nDeathTime;
 	bool bIsDead;
-	hash_set<int> winners;
-	hash_map<int,int> playerRaces;
-	hash_map<int,vector<int> > reinfUsed;
-	hash_map<int,int> playerUnitsEff;
-	hash_map<int,int> playerKeyPointEff;
-	hash_map<int,int> unitsKilled;
-	hash_map<int,int> unitsLost;
+	std::unordered_set<int> winners;
+	std::unordered_map<int,int> playerRaces;
+	std::unordered_map<int,std::vector<int> > reinfUsed;
+	std::unordered_map<int,int> playerUnitsEff;
+	std::unordered_map<int,int> playerKeyPointEff;
+	std::unordered_map<int,int> unitsKilled;
+	std::unordered_map<int,int> unitsLost;
 
-	hash_map<int,int> winXP;
-	hash_map<int,int> loseXP;
-	hash_set<int> updatedPlayers;
+	std::unordered_map<int,int> winXP;
+	std::unordered_map<int,int> loseXP;
+	std::unordered_set<int> updatedPlayers;
 	bool bInvalid;
 	enum EInvalidReason
 	{
@@ -73,11 +73,11 @@ struct SLadderGameInfo
 	};
 	EInvalidReason eInvalidReason;
 // for DB logging
-	hash_map<int,int> teamLevels;
-	hash_map<int,CPtr<SLadderDBInfo> > playerInfo;
-	hash_map<int,vector<int> > mapsRequested;
-	hash_map<int,vector<int> > techsRequested;
-	list< CPtr<CLadderCacheLocker> > lockers; 
+	std::unordered_map<int,int> teamLevels;
+	std::unordered_map<int,CPtr<SLadderDBInfo> > playerInfo;
+	std::unordered_map<int,std::vector<int> > mapsRequested;
+	std::unordered_map<int,std::vector<int> > techsRequested;
+	std::list< CPtr<CLadderCacheLocker> > lockers;
 };
 
 class CLadderLobby : public CGameLobby
@@ -85,17 +85,17 @@ class CLadderLobby : public CGameLobby
 	OBJECT_NOCOPY_METHODS( CLadderLobby )
 
 	CPtr<CClients> pClients;
-	hash_map< int, string > nickByID;
-	list<int> waitingList;
-	hash_map< int, CPtr<CLadderClient> > ladderClients;
-	hash_map< int, SLadderGameInfo > games;
+	std::unordered_map< int, std::string > nickByID;
+	std::list<int> waitingList;
+	std::unordered_map< int, CPtr<CLadderClient> > ladderClients;
+	std::unordered_map< int, SLadderGameInfo > games;
 	CPtr<CLadderConsts> pConsts;
 	CObj<IStatisticsCollector> pStatisticsCollector;
 	UINT64 nLastStepTime;
 
-	string szCfgFile;
+	std::string szCfgFile;
 
-	void Initialize( const string &szCfgFile );
+	void Initialize( const std::string &szCfgFile );
 	bool MatchMakingStep();
 	void UpdateGames();
 	void CalcResults( const int nGameID );
@@ -104,7 +104,7 @@ class CLadderLobby : public CGameLobby
 
 
 	bool CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLastGame, const int nUnitsLostInLastGame );
-	void SendLadderInfoToPlayer( const int nClientID, const string& szClientNick, const bool bFullStatistics );
+	void SendLadderInfoToPlayer( const int nClientID, const std::string& szClientNick, const bool bFullStatistics );
 
 protected:
 	virtual const int GetLobbyID() const { return ERID_LADDER; }
@@ -118,7 +118,7 @@ protected:
 	virtual bool PlayerNeedSpecificGameInfo() const { return false; }
 public:
 	CLadderLobby() : CGameLobby() { }
-	CLadderLobby( class CClients *_pClients, const string &szCfgFile )
+	CLadderLobby( class CClients *_pClients, const std::string &szCfgFile )
 		: CGameLobby( _pClients, szCfgFile ), pClients( _pClients ) { Initialize( szCfgFile ); }
 
 	virtual bool Segment();

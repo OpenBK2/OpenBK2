@@ -11,48 +11,48 @@
 #include "Server_Client_Common/LoginPackets.h"
 #include "Server_Client_Common/ChatPackets.h"
 
-CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
+CTestClientProcessor::CTestClientProcessor( const std::string &szCfgFile )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult );
-	REGISTER_PACKET_PROCESSOR( ProcessChatPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessMyIDPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessRemoveClient );
-	REGISTER_PACKET_PROCESSOR( ProcessEnteredLobby );
-	REGISTER_PACKET_PROCESSOR( ProcessGetLobbyClientsPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessCustomLobbyClients );
-	REGISTER_PACKET_PROCESSOR( ProcessCreateGame );
-	REGISTER_PACKET_PROCESSOR( ProcessUpdateGameInfo );
-	REGISTER_PACKET_PROCESSOR( ProcessGetLobbyGamesPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessCustomLobbyGamesPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessKillGame );
-	REGISTER_PACKET_PROCESSOR( ProcessLeaveGame );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectGameFailed );
-	REGISTER_PACKET_PROCESSOR( ProcessGameClientRemoved );
-	REGISTER_PACKET_PROCESSOR( ProcessNewGameClient );
-	REGISTER_PACKET_PROCESSOR( ProcessGameKilled );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectGame );
-	REGISTER_PACKET_PROCESSOR( ProcessGameTestBroadcastMsg );
-	REGISTER_PACKET_PROCESSOR( ProcessGameTestDirectMsg );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectedGameID );
-	REGISTER_PACKET_PROCESSOR( ProcessClientWasKicked );
-	REGISTER_PACKET_PROCESSOR( ProcessGameKickClient );
-	REGISTER_PACKET_PROCESSOR( ProcessTestDirectPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessShowGameClients );
-	REGISTER_PACKET_PROCESSOR( ProcessSendSpecGameInfo );
-	REGISTER_PACKET_PROCESSOR( ProcessReceiveSpecificGameInfo );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessConnectServerResult );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessMyIDPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessRemoveClient );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessEnteredLobby );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGetLobbyClientsPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessCustomLobbyClients );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessCreateGame );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessUpdateGameInfo );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGetLobbyGamesPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessCustomLobbyGamesPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessKillGame );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessLeaveGame );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessConnectGameFailed );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGameClientRemoved );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessNewGameClient );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGameKilled );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessConnectGame );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGameTestBroadcastMsg );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGameTestDirectMsg );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessConnectedGameID );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessClientWasKicked );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessGameKickClient );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessTestDirectPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessShowGameClients );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessSendSpecGameInfo );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessReceiveSpecificGameInfo );
 
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelClientsListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatClientListChangeNotifyPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelsListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatIgnoreListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelByNickPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatFriendNotifyPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatChannelClientsListPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatClientListChangeNotifyPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatChannelsListPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatIgnoreListPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatChannelByNickPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessChatFriendNotifyPacket );
 
-	REGISTER_PACKET_PROCESSOR( ProcessLadderInvitePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessLadderStatisticsPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessForgottenPasswordAnswerPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessWelcomePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessPingPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessLadderInvitePacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessLadderStatisticsPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessForgottenPasswordAnswerPacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessWelcomePacket );
+	REGISTER_PACKET_PROCESSOR( &CTestClientProcessor::ProcessPingPacket );
 
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
@@ -72,7 +72,7 @@ bool CTestClientProcessor::ProcessConnectServerResult( CConnectServerPacket *pPa
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 
-	string szMessage;
+	std::string szMessage;
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_SUCCESS )
 		szMessage = "Connected!\n";
 	else
@@ -162,7 +162,7 @@ bool CTestClientProcessor::ProcessChatChannelClientsListPacket( CChatChannelClie
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Channel clients:\n" );
-	for ( list<SIDNickPair>::iterator it = pPacket->clientsList.begin(); it != pPacket->clientsList.end(); ++it )
+	for ( std::list<SIDNickPair>::iterator it = pPacket->clientsList.begin(); it != pPacket->clientsList.end(); ++it )
 	{
 		const SIDNickPair &listPair = *it;
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", listPair.szNick ) );
@@ -189,7 +189,7 @@ bool CTestClientProcessor::ProcessChatChannelsListPacket( CChatChannelsListPacke
 	CPtr<CNetPacket> pDelete = pPacket;
 	// Please, process the differences list correctly in your own code.. I'm so lazy..
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Channel(s):\n" );
-	for ( list<string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
+	for ( std::list<std::string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
 	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
 	}
@@ -202,7 +202,7 @@ bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPac
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Your ignore list:\n" );
 	if ( !pPacket->ignoreList.empty() )
 	{
-		for ( list<string>::iterator it = pPacket->ignoreList.begin(); it != pPacket->ignoreList.end(); ++it )
+		for ( std::list<std::string>::iterator it = pPacket->ignoreList.begin(); it != pPacket->ignoreList.end(); ++it )
 		{
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
 		}
@@ -215,7 +215,7 @@ bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPac
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Your friend list:\n" );
 	if ( !pPacket->friendList.empty() )
 	{
-		for ( list<string>::iterator it = pPacket->friendList.begin(); it != pPacket->friendList.end(); ++it )
+		for ( std::list<std::string>::iterator it = pPacket->friendList.begin(); it != pPacket->friendList.end(); ++it )
 		{
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
 		}
@@ -234,7 +234,7 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( pPacket->szChannel != "" )
 	{
-		string szOutString = StrFmt( "User %s is in ", pPacket->szNick ) + pPacket->szChannel + ".\n";
+		std::string szOutString = StrFmt( "User %s is in ", pPacket->szNick ) + pPacket->szChannel + ".\n";
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szOutString.c_str() );
 	}
 	else
@@ -246,7 +246,7 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 bool CTestClientProcessor::ProcessChatFriendNotifyPacket( CChatFriendNotifyPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	string szStatus;
+	std::string szStatus;
 	switch( EChatStatus( pPacket->cChatStatus ) )
 	{
 	case ONLINE:
@@ -320,31 +320,31 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 	if ( pPacket->bFullUpdate )
 		lobbyClients.clear();
 
-	for ( list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
+	for ( std::list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
 		lobbyClients.erase( *iter );
 
 	if ( pPacket->added.empty() && pPacket->changed.empty() && lobbyClients.empty() )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "no clients except me\n" );
 	else
 	{
-		for ( list<SCustomLobbyClientInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end(); ++iter )
+		for ( std::list<SCustomLobbyClientInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end(); ++iter )
 		{
 			SCustomLobbyClientInfo &info = *iter;
 			lobbyClients[info.nID] = info;
 		}
 
-		for ( list<SCustomLobbyClientInfo>::iterator iter = pPacket->changed.begin(); iter != pPacket->changed.end(); ++iter )
+		for ( std::list<SCustomLobbyClientInfo>::iterator iter = pPacket->changed.begin(); iter != pPacket->changed.end(); ++iter )
 		{
 			SCustomLobbyClientInfo &info = *iter;
 			lobbyClients[info.nID] = info;
 		}
 
-		string szStr = StrFmt( "lobby clients received, version %d", dwClientsVersion );
+		std::string szStr = StrFmt( "lobby clients received, version %d", dwClientsVersion );
 		if ( pPacket->bFullUpdate )
 			szStr += ", fullupdate";
 		szStr += ":\n";
 
-		for ( hash_map<int, SCustomLobbyClientInfo>::iterator iter = lobbyClients.begin(); iter != lobbyClients.end(); ++iter )
+		for ( std::unordered_map<int, SCustomLobbyClientInfo>::iterator iter = lobbyClients.begin(); iter != lobbyClients.end(); ++iter )
 		{
 			SCustomLobbyClientInfo &info = iter->second;
 			szStr += StrFmt( "    client %s, ", info.szNick.c_str() );
@@ -456,31 +456,31 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 	if ( pPacket->bFullUpdate )
 		lobbyGames.clear();
 
-	for ( list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
+	for ( std::list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
 		lobbyGames.erase( *iter );
 
 	if ( pPacket->added.empty() && pPacket->changed.empty() && lobbyGames.empty() )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "no games in the lobby\n" );
 	else
 	{
-		for ( list<SGameInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end(); ++iter )
+		for ( std::list<SGameInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end(); ++iter )
 		{
 			SGameInfo &info = *iter;
 			lobbyGames[info.nID] = info;
 		}
 
-		for ( list<SGameInfo>::iterator iter = pPacket->changed.begin(); iter != pPacket->changed.end(); ++iter )
+		for ( std::list<SGameInfo>::iterator iter = pPacket->changed.begin(); iter != pPacket->changed.end(); ++iter )
 		{
 			SGameInfo &info = *iter;
 			lobbyGames[info.nID] = info;
 		}
 
-		string szStr = StrFmt( "lobby games received, version %d", dwGamesVersion );
+		std::string szStr = StrFmt( "lobby games received, version %d", dwGamesVersion );
 		if ( pPacket->bFullUpdate )
 			szStr += ", fullupdate";
 		szStr += ":\n";
 
-		for ( hash_map<int, SGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
+		for ( std::unordered_map<int, SGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
 		{
 			SGameInfo &info = iter->second;
 			szStr += StrFmt( "    \"%s\", id %d, max players %d", info.szName.c_str(), info.nID, info.nMaxPlayers );
@@ -520,7 +520,7 @@ bool CTestClientProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 
-	string szStr = "connection to game failed";
+	std::string szStr = "connection to game failed";
 
 	switch ( pPacket->eReason )
 	{
@@ -688,8 +688,8 @@ bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket
 		WriteMSG( "not in a game now" );
 	else
 	{
-		string szStr = StrFmt( "game %d clients: %d", nGameID, nMyID );
-		for ( hash_set<int>::iterator iter = gameClients.begin(); iter != gameClients.end(); ++iter )
+		std::string szStr = StrFmt( "game %d clients: %d", nGameID, nMyID );
+		for ( std::unordered_set<int>::iterator iter = gameClients.begin(); iter != gameClients.end(); ++iter )
 			szStr += StrFmt( ", %d", *iter );
 		szStr += "\n";
 
@@ -699,24 +699,24 @@ bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket
 	return true;
 }
 
-list<int> ladderGameTeam1;
-list<int> ladderGameTeam2;
+std::list<int> ladderGameTeam1;
+std::list<int> ladderGameTeam2;
 
 bool CTestClientProcessor::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 {
 	ladderGameTeam1 = pPacket->team1;
 	ladderGameTeam2 = pPacket->team2;
-	string szText = "";
+	std::string szText = "";
 	WriteMSG( "Starting ladder game..\n" );
 	szText = "Team 1 : ";
-	for ( list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
+	for ( std::list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
 	{
 		szText += StrFmt( "%d ", *it );
 	}
 	szText += "\n";
 	WriteMSG( szText.c_str() );
 	szText = "Team 2 : ";
-	for ( list<int>::iterator it = ladderGameTeam2.begin(); it != ladderGameTeam2.end(); ++it )
+	for ( std::list<int>::iterator it = ladderGameTeam2.begin(); it != ladderGameTeam2.end(); ++it )
 	{
 		szText += StrFmt( "%d ", *it );
 	}

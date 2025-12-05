@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EDITOR "build editor" OFF)
+option(BUILD_SERVER "build server" ON)
 
 include(cmake/arch.cmake)
 

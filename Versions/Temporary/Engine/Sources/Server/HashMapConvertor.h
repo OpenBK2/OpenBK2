@@ -3,8 +3,8 @@
 
 namespace NHashMapConvertor
 {
-	void ConvertNumber( hash_map<string,int> *pHashMap, const string &szName, int *pValue, const bool bRead );
-	void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vector<int> *pValue, const bool bRead );
+	void ConvertNumber( std::unordered_map<std::string,int> *pHashMap, const std::string &szName, int *pValue, const bool bRead );
+	void ConvertVector( std::unordered_map<std::string,int> *pHashMap, const std::string &szPrefix, std::vector<int> *pValue, const bool bRead );
 };
 
 

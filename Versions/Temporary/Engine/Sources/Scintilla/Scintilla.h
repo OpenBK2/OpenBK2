@@ -11,14 +11,16 @@
 #ifndef SCINTILLA_H
 #define SCINTILLA_H
 
+#include "Scintilla_export.h"
+
 // (syntax coloring)
 #define SCI_LEXER 1
 //
 
 #if PLAT_WIN
 // Return false on failure:
-bool Scintilla_RegisterClasses(void *hInstance);
-bool Scintilla_ReleaseResources();
+SCINTILLA_EXPORT bool Scintilla_RegisterClasses(void *hInstance);
+SCINTILLA_EXPORT bool Scintilla_ReleaseResources();
 #endif
 int Scintilla_LinkLexers();
 

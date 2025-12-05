@@ -33,19 +33,19 @@ const int GAME_LENGTH = 200000;
 
 CMultiTester::CMultiTester()
 {
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelClientsListPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessMyIDPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessChatPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessEnteredLobby )
-	REGISTER_PACKET_PROCESSOR( ProcessClientRemoved )
-	REGISTER_PACKET_PROCESSOR( ProcessLadderInvitePacket )
-	REGISTER_PACKET_PROCESSOR( ProcessGameKilled )
-	REGISTER_PACKET_PROCESSOR( ProcessNewGameClient )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessConnectServerResult )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessChatChannelClientsListPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessMyIDPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessChatPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessEnteredLobby )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessClientRemoved )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessLadderInvitePacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessGameKilled )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessNewGameClient )
 }
 
-void CMultiTester::Init( const string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
-												 const string &_szName, const string &_szPassword, const string &_szCDKey, const int _nTestMode )
+void CMultiTester::Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
+												 const std::string &_szName, const std::string &_szPassword, const std::string &_szCDKey, const int _nTestMode )
 {
 	nTestMode = _nTestMode;
 	szServerAddress = _szServerAddress;
@@ -161,13 +161,13 @@ void CMultiTester::EnterChatStage()
 	nStage = MAIN_STAGE;
 }
 
-void CMultiTester::ChangeChatChannel( const string &szChannelName )
+void CMultiTester::ChangeChatChannel( const std::string &szChannelName )
 {
 	pServerClient->SendPacket( new CChatChannelPacket( 0, szChannelName ) );
 	dwLastChatChannelChangeTime = GetTickCount();
 }
 
-void CMultiTester::SendChatMessage( const string &szMessage )
+void CMultiTester::SendChatMessage( const std::string &szMessage )
 {
 	pServerClient->SendPacket( new CChatPacket( 0, NStr::ToUnicode( szMessage ), "", 0, true ) );
 	dwLastChatMessageTime = GetTickCount();
@@ -215,26 +215,26 @@ void CMultiTester::TestChat()
 	DWORD dwTime = GetTickCount();
 	if ( dwTime > CHAT_CHANNEL_CHANGE_PERIOD + dwLastChatChannelChangeTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
-		string szChannelName = StrFmt( "TEST_CHAT_CHANNEL_%d", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
+		std::string szChannelName = StrFmt( "TEST_CHAT_CHANNEL_%d", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
 		ChangeChatChannel( szChannelName );
 		return;
 	}
 
 	if ( dwTime > CHAT_MESSAGE_SEND_PERIOD + dwLastChatMessageTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
-		string szMessage = "В чащах юга жил был цитрус. Но фальшивый экземпляр.";
+		std::string szMessage = "В чащах юга жил был цитрус. Но фальшивый экземпляр.";
 		SendChatMessage( szMessage );
 		return;
 	}
 }
 
-void RandomizeList( list<int> *pList );
+void RandomizeList( std::list<int> *pList );
 
 void CMultiTester::TestLadder()
 {
 	if ( !bLadderInfoSend && !bIsInGame )
 	{
-		list<int> maps;
+		std::list<int> maps;
 		for ( int i = 0; i < 10; ++i )
 		{
 			maps.push_back( i );
@@ -245,7 +245,7 @@ void CMultiTester::TestLadder()
 		maps.pop_front();
 		maps.pop_front();
 
-		list<int> techLevels;
+		std::list<int> techLevels;
 		for ( int i = 0; i < 4; ++i )
 		{
 			techLevels.push_back( i );
@@ -284,7 +284,7 @@ bool CMultiTester::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 	winnersSet.clear();
 	playersRaces.clear();
 
-	for ( list<int>::const_iterator it = pPacket->team1.begin(); it != pPacket->team1.end(); ++it )
+	for ( std::list<int>::const_iterator it = pPacket->team1.begin(); it != pPacket->team1.end(); ++it )
 	{
 		const int nPlayerID = *it;
 		if ( nPlayerID != nMyID )
@@ -293,7 +293,7 @@ bool CMultiTester::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 			winnersSet.insert( nPlayerID );
 		playersRaces[nPlayerID] = 0;
 	}
-	for ( list<int>::const_iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it )
+	for ( std::list<int>::const_iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it )
 	{
 		const int nPlayerID = *it;
 		if ( nPlayerID != nMyID )
@@ -316,11 +316,11 @@ bool CMultiTester::ProcessNewGameClient( CNewGameClient *pPacket )
 
   if ( playersToWait.empty() )
 	{
-		hash_map<int, vector<int> >	units;
-		for ( hash_map<int,int>::iterator it = playersRaces.begin(); it != playersRaces.end(); ++it )
+		std::unordered_map<int, std::vector<int> >	units;
+		for ( std::unordered_map<int,int>::iterator it = playersRaces.begin(); it != playersRaces.end(); ++it )
 		{
 			const int nPlayerID = it->first;
-			units[nPlayerID] = vector<int>( 20, 1 );
+			units[nPlayerID] = std::vector<int>( 20, 1 );
 		}
 		pServerClient->SendPacket( new CLadderGameResultPacket( 0, nGameID, winnersSet, playersRaces, units ) );
 	}

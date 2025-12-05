@@ -18,18 +18,18 @@
 
 #include "Statistics.h"
 
-#include <typeinfo.h>
+#include <typeinfo>
+#if 0
 #include "vendor/MySQL/include/mysql.h"
-
+#endif
 
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
 processCmdsFuncs[cmd] = &CGameServer::##FuncName;
 
-void ForcePacketRegistration(); // For too smart linker
-
-CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
+CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 : pCommands( _pCommands )
 {
+#if 0
 	REGISTER_CMD_FUNC( ESC_CLIENTS, CommandClientsList );
 	REGISTER_CMD_FUNC( ESC_CLIENT_STATE, CommandClientState );
 	REGISTER_CMD_FUNC( ESC_KICK, CommandKick );
@@ -42,7 +42,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 	mysql_init( pMySQL );
 
 	int nNetVersion, nPort;
-	string szServerName, szDBName;
+	std::string szServerName, szDBName;
 	int nTerminalPort;
 	{
 		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
@@ -57,14 +57,14 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 	}
 
 	const bool bRegisterClosedBetaUsers = false;
-	vector<string> names;
-	vector<string> passwords;
-	vector<string> emails;
+	std::vector<std::string> names;
+	std::vector<std::string> passwords;
+	std::vector<std::string> emails;
 	if ( bRegisterClosedBetaUsers )
 	{
 
 		mysql_real_connect( pMySQL, "127.0.0.1", "NivalNET", "", "test", 0, 0, 0 );
-		string szQuery = "SELECT name, pwd, email FROM users";
+		std::string szQuery = "SELECT name, pwd, email FROM users";
 		mysql_real_query( pMySQL, szQuery.c_str(), szQuery.size() );
 		MYSQL_RES *pResult = 0;
 		pResult = mysql_store_result( pMySQL );
@@ -91,9 +91,9 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 	{
 		for ( int i = 0; i < names.size(); ++i )
 		{
-			string szName = names[i];
-			string szPwd = passwords[i];
-			string szEmail = emails[i];
+			std::string szName = names[i];
+			std::string szPwd = passwords[i];
+			std::string szEmail = emails[i];
 			if ( !pClients->IsNickRegistered( szName ) )
 				pClients->Register( szName, szPwd, szName + szPwd + StrFmt( "%d", names.size() ), szEmail );
 		}
@@ -101,7 +101,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 
 //		for ( int i = 0; i < 10000; ++i )
 //		{
-//			string szText = StrFmt( "%d", i );
+//			std::string szText = StrFmt( "%d", i );
 //			pClients->Register( szText, szText, szText );
 //		}
 
@@ -123,6 +123,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const string &szCfgFile )
 	nMySQLLastPingTime = GetLongTickCount();
 	nLastStatisticsLogTime = GetLongTickCount() - nServerStatisticsLogPeriod;
 	pTerminal = new CTerminal( pCommands, nTerminalPort );
+#endif
 }
 
 void CGameServer::AddLobby( CPacketProcessor *pLobby )
@@ -135,7 +136,7 @@ void CGameServer::ProcessCommands()
 	SCommand cmd;
 	while ( pCommands->GetCommand( &cmd ) )
 	{
-		hash_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
+		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
 //		NI_ASSERT( iter != processCmdsFuncs.end(), StrFmt( "Can't process cmd %d", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
@@ -195,6 +196,7 @@ void CGameServer::SendPackets()
 
 void CGameServer::Segment()
 {
+#if 0
 	RecievePackets();
 	for ( int i = 0; i < lobbies.size(); ++i )
 		lobbies[i]->Segment();
@@ -213,14 +215,15 @@ void CGameServer::Segment()
 	if ( nTime > nLastStatisticsLogTime + nServerStatisticsLogPeriod )
 	{
 		nLastStatisticsLogTime = nTime;
-		vector<string> names;
-		vector<float> values;
+		std::vector<std::string> names;
+		std::vector<float> values;
 		NStatistics::DumpToNameValueVectors( &names, &values );
 		NStatistics::Reset();
 		pClients->DBLogServerStatistics( names, values );
 	}
 
 	pTerminal->Segment();
+#endif
 }
 
 void CGameServer::CommandClientsList( const SCommand &cmd )
@@ -232,8 +235,8 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 	}
 	else
 	{
-		const hash_map<int, SCommonClientInfo> &onLine = pClients->GetOnLine();
-		string szList;
+		const std::unordered_map<int, SCommonClientInfo> &onLine = pClients->GetOnLine();
+		std::string szList;
 		if ( onLine.empty() )
 			szList = "no clients online\n";
 		else
@@ -241,9 +244,9 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 			if ( onLine.size() < 20 )
 			{
 				szList = "clients list: \n";
-				for ( hash_map<int, SCommonClientInfo>::const_iterator iter = onLine.begin(); iter != onLine.end(); ++iter )
+				for ( std::unordered_map<int, SCommonClientInfo>::const_iterator iter = onLine.begin(); iter != onLine.end(); ++iter )
 				{
-					string szNick;
+					std::string szNick;
 					if ( !pClients->GetNick( iter->first, &szNick ) )
 						szList += StrFmt( "  something wrong with client %d\n", iter->first );
 					else
@@ -259,8 +262,8 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 
 void CGameServer::CommandKick( const SCommand &cmd )
 {
-	string szStr;
-	const string szNick = cmd.GetStr( 0 );
+	std::string szStr;
+	const std::string szNick = cmd.GetStr( 0 );
 	if ( pClients->IsOnLine( szNick ) )
 	{
 		int nID;
@@ -286,7 +289,7 @@ void CGameServer::CommandGames( const SCommand &cmd )
 
 void CGameServer::CommandClientState( const SCommand &cmd )
 {
-	string szStr;
+	std::string szStr;
 	
 	int nID;
 	if ( !pClients->GetClientID( cmd.GetStr( 0 ), &nID ) )
@@ -335,7 +338,7 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 
 void CGameServer::CommandReloadConfig( const SCommand &cmd )
 {
-	for ( vector< CPtr<CPacketProcessor> >::iterator it = lobbies.begin(); it != lobbies.end(); ++it )
+	for ( std::vector< CPtr<CPacketProcessor> >::iterator it = lobbies.begin(); it != lobbies.end(); ++it )
 	{
 		CPacketProcessor * pLobby = *it;
 		pLobby->ReloadConfig();
@@ -351,18 +354,18 @@ void CGameServer::CommandShowStatistics( const SCommand &cmd )
 
 void CGameServer::CommandBroadcast( const SCommand &cmd )
 {
-	const string szFileName = "../Messages/" + cmd.params[0];
-	string szText;
+	const std::string szFileName = "../Messages/" + cmd.params[0];
+	std::string szText;
 	{
 		CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 		if ( pSaver )
 			pSaver->Add( "Text", &szText );
 	}
-	wstring wszText = NStr::ToUnicode( szText );
+	std::wstring wszText = NStr::ToUnicode( szText );
 	CChatLobby::SetWelcomeText( wszText );
-	const hash_map<int, SCommonClientInfo>& onlineClients = pClients->GetOnLine();
-	for ( hash_map<int, SCommonClientInfo>::const_iterator it = onlineClients.begin(); it != onlineClients.end(); ++it )
+	const std::unordered_map<int, SCommonClientInfo>& onlineClients = pClients->GetOnLine();
+	for ( std::unordered_map<int, SCommonClientInfo>::const_iterator it = onlineClients.begin(); it != onlineClients.end(); ++it )
 	{
 		const int nID = it->first;
 		pNet->SendPacket( new CSystemBroadcastPacket( nID, wszText ) );
@@ -371,8 +374,10 @@ void CGameServer::CommandBroadcast( const SCommand &cmd )
 
 CGameServer::~CGameServer()
 {
+#if 0
 	mysql_close( pMySQL );
 	delete pMySQL;
+#endif
 }
 
 #undef REGISTER_CMD_FUNC

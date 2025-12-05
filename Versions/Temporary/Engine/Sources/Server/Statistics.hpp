@@ -6,41 +6,41 @@
 class CStatisticsCollector : public IStatisticsCollector
 {
 	OBJECT_NOCOPY_METHODS( CStatisticsCollector )
-	static hash_map< string, CObj<IStatisticsData> > globalData;			//	name -> data
-	static hash_map< string, CObj<CStatisticsCollector> > collectors;	//  name -> collector
+	static std::unordered_map< std::string, CObj<IStatisticsData> > globalData;			//	name -> data
+	static std::unordered_map< std::string, CObj<CStatisticsCollector> > collectors;	//  name -> collector
 
-	hash_map< string, CObj<IStatisticsData> > specificData;						//	name -> data
-	string szSpecificName;																						//	name of collector
+	std::unordered_map< std::string, CObj<IStatisticsData> > specificData;						//	name -> data
+	std::string szSpecificName;																						//	name of collector
 
 	static UINT64 nStartTime;
 
-	string DumpToStringSpecific() const;
+	std::string DumpToStringSpecific() const;
 	void ResetSpecific();
-	void DumpToNameValueVectorsSpecific( vector<string> *pNames, vector<float> *pValues );
+	void DumpToNameValueVectorsSpecific( std::vector<std::string> *pNames, std::vector<float> *pValues );
 public:
 	CStatisticsCollector() {}
-	CStatisticsCollector( const string &szCollectorName ) : szSpecificName( szCollectorName ) 
+	CStatisticsCollector( const std::string &szCollectorName ) : szSpecificName( szCollectorName )
 	{
 		collectors[szCollectorName] = this; 
 		nStartTime = GetLongTickCount(); 
 	} 
-	virtual void SetSpecific( const string &szName, IStatisticsData* pData ) { specificData[szName] = pData; }
-	virtual IStatisticsData* operator[]( const string &szName ) 
+	virtual void SetSpecific( const std::string &szName, IStatisticsData* pData ) { specificData[szName] = pData; }
+	virtual IStatisticsData* operator[]( const std::string &szName )
 	{
 		NI_ASSERT( specificData.find( szName ) != specificData.end(), 
 			StrFmt( "Statistics counter %s for collector %s is not set", szName.c_str(), szSpecificName.c_str() ) )
 		return specificData[szName]; 
 	}
-	static IStatisticsData* GetGlobal( const string &szName )
+	static IStatisticsData* GetGlobal( const std::string &szName )
 	{ 
 		NI_ASSERT( globalData.find( szName ) != globalData.end(), 
 			StrFmt( "Global statistics counter %s is not set", szName.c_str() ) );
 		return globalData[szName]; 
 	}
-	static void SetGlobal( const string &szName, IStatisticsData* pData ) { globalData[szName] = pData; }
+	static void SetGlobal( const std::string &szName, IStatisticsData* pData ) { globalData[szName] = pData; }
 	static void Reset();
-	static string DumpToString();
-	static void DumpToNameValueVectors( vector<string> *pNames, vector<float> *pValues );
+	static std::string DumpToString();
+	static void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues );
 };
 
 class CAverageTimeBetweenEvents : public IStatisticsData
@@ -93,16 +93,16 @@ public:
 
 namespace NStatistics
 {
-	IStatisticsCollector* CreateCollector( const string &szCollectorName ) { return new CStatisticsCollector( szCollectorName ); }
-	void SetGlobalCounter( const string &szName, IStatisticsData* pData ) { CStatisticsCollector::SetGlobal( szName, pData ); }
+	IStatisticsCollector* CreateCollector( const std::string &szCollectorName ) { return new CStatisticsCollector( szCollectorName ); }
+	void SetGlobalCounter( const std::string &szName, IStatisticsData* pData ) { CStatisticsCollector::SetGlobal( szName, pData ); }
 	IStatisticsData * CreateAverageTimePerEventCounter() { return new CAverageTimeBetweenEvents(); }
 	IStatisticsData * CreateAverageValuePerTimeCounter() { return new CAverageValuePerTime(); }
 	IStatisticsData * CreateAverageValueCounter() { return new CAverageValue(); }
 	IStatisticsData * CreateEventsCounter() { return new CEventsCount(); }
-	IStatisticsData* GetGlobal( const string &szName ) { return CStatisticsCollector::GetGlobal( szName ); } 
+	IStatisticsData* GetGlobal( const std::string &szName ) { return CStatisticsCollector::GetGlobal( szName ); }
 	void Reset() { CStatisticsCollector::Reset(); }
-	string DumpToString() { return CStatisticsCollector::DumpToString(); }
-	void DumpToNameValueVectors( vector<string> *pNames, vector<float> *pValues ) { CStatisticsCollector::DumpToNameValueVectors( pNames, pValues ); }
+	std::string DumpToString() { return CStatisticsCollector::DumpToString(); }
+	void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues ) { CStatisticsCollector::DumpToNameValueVectors( pNames, pValues ); }
 }
 
 

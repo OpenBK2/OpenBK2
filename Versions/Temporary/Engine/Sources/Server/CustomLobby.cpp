@@ -7,7 +7,7 @@
 #include "Server_Client_Common/LobbiesIDs.h"
 #include "Statistics.h"
 
-CCustomLobby::CCustomLobby( class CClients *pClients, const string &szCfgFile )
+CCustomLobby::CCustomLobby( class CClients *pClients, const std::string &szCfgFile )
 : CGameLobby( pClients, szCfgFile )
 {
 	nLobbyID = ERID_CUSTOM;
@@ -24,7 +24,7 @@ CCustomLobby::CCustomLobby( class CClients *pClients, const string &szCfgFile )
 const bool CCustomLobby::GetClientInfo( const int nClientID, SCustomLobbyClientInfo *pInfo ) const
 {
 	SCommonClientInfo commonClientInfo;
-	string szNick;
+	std::string szNick;
 	if ( GetClients()->GetCommonClientInfo( nClientID, &commonClientInfo ) && GetClients()->GetNick( nClientID, &szNick ) )
 	{
 		pInfo->eState = commonClientInfo.eState;
