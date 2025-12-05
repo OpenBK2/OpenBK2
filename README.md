@@ -14,12 +14,12 @@ Please review the terms of the [license agreement](LICENSE.md) carefully before 
 - **Game engine**: Custom 3D "Enigma" engine, mostly written in C++
 - **Scripting language**: Lua
 - **Animation**: Granny Animation (RAD Game Tools) - from [uesp-esoapps](https://github.com/uesp/uesp-esoapps.git)
-- **Audio**: FLESSD sound system - Open source version of FMOD
-- **Video**: FFMPEG video library
+- **Audio**: FLESSD sound system - Open source version of FMOD (based on [SDL3](https://wiki.libsdl.org/SDL3/FrontPage))
+- **Video**: [FFMPEG](https://www.ffmpeg.org/) video library
 
 ## New changes
 
-- Old BK2 source code was ported to modern Visual Studio 2022, CMake
+- Old BK2 source code was ported to modern Visual Studio 2026, CMake
 - BK2 can now also be compiled as 64 bit app
 - Replaced FMOD with FLESSD
 - Removed dependence on S3TC lib
@@ -71,7 +71,7 @@ Please review the terms of the [license agreement](LICENSE.md) carefully before 
 
 See [Contributing.md](https://github.com/OpenBK2/OpenBK2/blob/port/Contributing.md) file.
 
-For support you can join the [discord](https://discord.gg/unC4RCM9n4) server.
+For support, you can join the [discord](https://discord.gg/unC4RCM9n4) server.
 
 ---
 
@@ -81,12 +81,11 @@ This project is released under a **special non-commercial license** from NIVAL I
 
 ### ✅ What's included and open source:
 - **Game engine source code** - Custom license from NIVAL INTERNATIONAL LTD (non-commercial use only)
-- **zlib compression library** - zlib License (permissive, commercial use allowed)
+- ~~**zlib compression library** - zlib License (permissive, commercial use allowed)~~ replaced by [zlib-ng](https://github.com/zlib-ng/zlib-ng)
 - **Game scripts, assets, and data** - Custom license from NIVAL INTERNATIONAL LTD (non-commercial use only)
 
 
 ### 📋 Third-party licenses:
-- **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlib License
+- ~~**zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlib License~~ replaced by [zlib-ng](https://github.com/zlib-ng/zlib-ng)
 
 Please review the complete [license agreement](LICENSE.md) before using this code.
-
