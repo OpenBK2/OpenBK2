@@ -283,6 +283,7 @@ private:
 	CUpdateList interpolatableUpdates;
 	CUpdateList::iterator pendingIt;
 	//basic updates catalog
+	// QUESTIONABLE DETERMINSM!!! - if the iteration order matters, then this is NOT DETERMINISTIC!
 	typedef std::unordered_map< CPtr<CUpdatableObj>, CUpdateList > CUpdateMap;
 	CUpdateMap updatesHash;
 	//current segment time
