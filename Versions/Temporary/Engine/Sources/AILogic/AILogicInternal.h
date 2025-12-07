@@ -54,6 +54,7 @@ class CAILogic : public IAILogic
 
 	CPtr<ICheckSumLog> pCheckSumLog;
 	
+	// QUESTIONABLE determinism - iteration order is NOT DETERMINISTIC!
 	typedef std::unordered_set<CDBPtr<SMechUnitRPGStats>> CAvailTrucks;
 	CAvailTrucks availableTrucks;
 	
