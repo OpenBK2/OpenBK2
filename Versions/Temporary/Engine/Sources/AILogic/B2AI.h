@@ -80,6 +80,8 @@ struct IAILogic : public ICommonB2M1AI
 	virtual void NetGameStarted() = 0;
 	virtual bool IsNetGameStarted() const = 0;
 
+	virtual void WriteDetailedChecksumInfo() = 0;
+
 	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber ) = 0;
 	virtual void SetNPlayers( const int nPlayers ) = 0;
 	virtual void SetNetGame( const bool bNetGame ) = 0;

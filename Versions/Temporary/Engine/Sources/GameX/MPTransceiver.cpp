@@ -491,6 +491,8 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 	fprintf(fl, "%s", checksumsTxt.c_str());
 	fclose(fl);
 
+	pAI->WriteDetailedChecksumInfo();
+
 	// TODO: add the entire checksum process/list to debug file too
 	#ifdef CHECKSUM_LIST_DEBUG
 	FILE* fd = fopen("last_async_debug.txt", "w");

@@ -1176,6 +1176,47 @@ void CAILogic::UpdateCheckSum( bool bSend )
 	}
 }
 
+struct UnitDebugInfo
+{
+	CVec2 position;
+	WORD dir;
+	float hp;
+
+	UnitDebugInfo(CVec2 pos, WORD direction, float healthPoints) : position(pos), dir(direction), hp(healthPoints)
+	{
+	}
+
+	uLong GetChecksum(uLong base)
+	{
+		return adler32(base, (BYTE*)&position, sizeof(position));
+		return adler32(base, (BYTE*)&dir, sizeof(dir));
+		return adler32(base, (BYTE*)&hp, sizeof(hp));
+	}
+};
+
+void CAILogic::WriteDetailedChecksumInfo()
+{
+	FILE* f = fopen("last_async_detailed_debug.txt", "w");
+
+	uLong baseChecksum = 1;
+
+	fprintf(f, "Unit checksums [UID, checksum]:\n");
+	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
+	{
+		CAIUnit *pUnit = *iter;
+		const CVec2 vCenter = pUnit->GetCenterPlain();
+		const WORD wDir = pUnit->GetFrontDirection();
+		const float fHP = pUnit->GetHitPoints();
+
+		auto checksum = UnitDebugInfo(vCenter, wDir, fHP).GetChecksum(baseChecksum);
+		fprintf(f, "\t%d, %lu\n", pUnit->GetUniqueID(), checksum);
+	}
+
+	// TODO: checksum shells and current time (curTime) too!
+
+	fclose(f);
+}
+
 void CAILogic::Segment()
 {
 	// set control word for FP co-processor

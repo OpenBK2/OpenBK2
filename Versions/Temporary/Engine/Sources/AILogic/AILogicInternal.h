@@ -100,6 +100,8 @@ public:
 
 	IAIScenarioTracker *GetScenarioTracker() { return pScenarioTracker; }
 
+	virtual void WriteDetailedChecksumInfo();
+
 	void ToGarbage( class CCommonUnit *pUnit );
 	virtual void Suspend();
 	virtual void Resume();
