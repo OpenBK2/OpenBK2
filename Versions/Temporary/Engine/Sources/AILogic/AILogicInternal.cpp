@@ -64,6 +64,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "Misc/Win32Helper.h"
 #include "Input/Bind.h"
 #include "GlobalWarFog.h"
+#include "SimpleChecksumCalc.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D441, CAILogic );
 
@@ -1176,29 +1177,11 @@ void CAILogic::UpdateCheckSum( bool bSend )
 	}
 }
 
-struct UnitDebugInfo
-{
-	CVec2 position;
-	WORD dir;
-	float hp;
-
-	UnitDebugInfo(CVec2 pos, WORD direction, float healthPoints) : position(pos), dir(direction), hp(healthPoints)
-	{
-	}
-
-	uLong GetChecksum(uLong base)
-	{
-		return adler32(base, (BYTE*)&position, sizeof(position));
-		return adler32(base, (BYTE*)&dir, sizeof(dir));
-		return adler32(base, (BYTE*)&hp, sizeof(hp));
-	}
-};
-
 void CAILogic::WriteDetailedChecksumInfo()
 {
 	FILE* f = fopen("last_async_detailed_debug.txt", "w");
 
-	uLong baseChecksum = 1;
+	uLong baseChecksum = 11123;
 
 	fprintf(f, "Unit checksums [UID, checksum]:\n");
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
@@ -1208,11 +1191,17 @@ void CAILogic::WriteDetailedChecksumInfo()
 		const WORD wDir = pUnit->GetFrontDirection();
 		const float fHP = pUnit->GetHitPoints();
 
-		auto checksum = UnitDebugInfo(vCenter, wDir, fHP).GetChecksum(baseChecksum);
-		fprintf(f, "\t%d, %lu\n", pUnit->GetUniqueID(), checksum);
+		auto checksum = CalculateChecksum(baseChecksum, vCenter.x, vCenter.y, wDir, fHP);
+		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu\n", (int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum);
 	}
+	fprintf(f, "\n");
 
-	// TODO: checksum shells and current time (curTime) too!
+	// checksums for shells, theGroupLogic and current time (curTime) too!
+	theShellsStore.UpdateDebugChecksums(f);
+
+	theGroupLogic.UpdateDebugChecksums(f);
+
+	fprintf(f, "Time checksum: %lu\n", CalculateChecksum(baseChecksum, curTime));
 
 	fclose(f);
 }

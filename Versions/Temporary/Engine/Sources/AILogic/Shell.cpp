@@ -17,6 +17,7 @@
 #include "StaticObjectsIters.h"
 #include "AIGeometry.h"
 //#include "..\Scene\Scene.h"
+#include "SimpleChecksumCalc.h"
 
 #include "Common_RTS_AI/CheckSums.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
@@ -695,6 +696,40 @@ void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
 	}
 
 	adler32( *pCheckSum, &(checkSumBuf.buf[0]), checkSumBuf.nCnt );
+}
+
+void CShellsStore::UpdateDebugChecksums(FILE* f)
+{
+	fprintf(f, "Explosions:\n");
+	CInvisShells copyQueue = invisShells;
+	while ( !copyQueue.empty() )
+	{
+		CInvisShell *pShell = copyQueue.top();
+		copyQueue.pop();
+		
+		const CVec3 vExplCenter = pShell->GetExplCoordinates();
+		const NTimer::STime explTime = pShell->GetExplTime();
+
+		uLong checksum = 12347;
+		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, explTime);
+
+		fprintf(f, "\nExplosion: %lu\n", checksum);
+	}
+	fprintf(f, "\n");
+
+	fprintf(f, "Shells:\n");
+	for ( CVisShellList::iterator iter = visShells.begin(); iter != visShells.end(); ++iter )
+	{
+		CVisShell *pShell = *iter;
+		const CVec3 vExplCenter = pShell->GetExplCoordinates();
+		const CVec3 vCurCenter = pShell->GetCoordinates();
+		const NTimer::STime explTime = pShell->GetExplTime();
+		uLong checksum = 71717;
+		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, vCurCenter.x, vCurCenter.y, vCurCenter.z, explTime);
+		
+		fprintf(f, "\tPlayer[%d] Shell[%d]: %lu\n", (int)pShell->GetPlayer(), pShell->GetUniqueId(), checksum);
+	}
+	fprintf(f, "\n");
 }
 
 //*******************************************************************

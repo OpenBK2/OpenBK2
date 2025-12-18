@@ -874,7 +874,7 @@ void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter, const CVec2 &vGr
 	}
 }
 #include "Common_RTS_AI/CheckSums.h"
-
+#include "SimpleChecksumCalc.h"
 
 void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 {
@@ -889,4 +889,26 @@ void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 	}
 }
 
+
+void CGroupLogic::UpdateDebugChecksums(FILE* f)
+{
+	fprintf(f, "GroupSegmentUnits:\n");
+	uLong baseChecksum = 555111;
+	for ( int n = 0; n < NSegmObjs::SEGM_UNITS_SIZE; ++n )
+	{
+		for ( int i = segmUnits[1].begin( n ); i != segmUnits[1].end(); i = segmUnits[1].GetNext( i ) )
+		{
+			CCommonUnit * pUnit = segmUnits[1].GetEl( i );
+			int id = pUnit->GetUniqueId();
+			CVec2 pos = pUnit->GetCenterPlain();
+			WORD dir = pUnit->GetDirection();
+			
+			BYTE player = pUnit->GetPlayer();
+			uLong checksum = CalculateChecksum(baseChecksum, id, pos.x, pos.y, dir);
+
+			fprintf(f, "\tPlayer[%d] SegmUnit[%d]: %lu\n", (int)player, pUnit->GetUniqueID(), checksum);
+		}
+	}
+	fprintf(f, "\n");
+}
 

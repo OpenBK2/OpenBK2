@@ -122,6 +122,7 @@ public:
 
 	void UnitSetToAmbush( class CCommonUnit *pUnit );
 	void GetCheckSum( unsigned long *ulChecksum );
+	void UpdateDebugChecksums(FILE* f);
 };
 
 const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd );

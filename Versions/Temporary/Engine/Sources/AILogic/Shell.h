@@ -439,6 +439,7 @@ public:
 	
 	// для тестирования multiplayer
 	void UpdateCheckSum( uLong *pCheckSum );
+	void UpdateDebugChecksums(FILE* f);
 };
 
 
