@@ -906,7 +906,7 @@ void CGroupLogic::UpdateDebugChecksums(FILE* f)
 			BYTE player = pUnit->GetPlayer();
 			uLong checksum = CalculateChecksum(baseChecksum, id, pos.x, pos.y, dir);
 
-			fprintf(f, "\tPlayer[%d] SegmUnit[%d]: %lu\n", (int)player, pUnit->GetUniqueID(), checksum);
+			fprintf(f, "\tPlayer[%d] SegmUnit[%d]: %lu - { pos (%f, %f), dir: %hu }\n", (int)player, pUnit->GetUniqueID(), checksum, pos.x, pos.y, dir);
 		}
 	}
 	fprintf(f, "\n");

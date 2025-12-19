@@ -1192,7 +1192,7 @@ void CAILogic::WriteDetailedChecksumInfo()
 		const float fHP = pUnit->GetHitPoints();
 
 		auto checksum = CalculateChecksum(baseChecksum, vCenter.x, vCenter.y, wDir, fHP);
-		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu\n", (int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum);
+		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu - { pos: (%f, %f), dir: %hu, hp: %f }\n", (int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP);
 	}
 	fprintf(f, "\n");
 
