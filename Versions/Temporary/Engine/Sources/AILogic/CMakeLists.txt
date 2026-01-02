@@ -1,4 +1,9 @@
 project(AILogic)
+
+if(MSVC)
+    add_compile_options("/fp:strict")
+endif()
+
 set(SOURCES
     AAFeedBacks.cpp
     AckManager.cpp
