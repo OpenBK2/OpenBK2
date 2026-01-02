@@ -1310,7 +1310,7 @@ const float CAIUnit::GetTargetScanRadius()
 		const float fCallForHelpRadius = theDipl.IsAIPlayer( GetPlayer() ) ? SConsts::AI_CALL_FOR_HELP_RADIUS : SConsts::CALL_FOR_HELP_RADIUS;
 		float fFireRange = GetSightRadius();
 		for(int i = 0; i < GetNGuns(); i++)
-			fFireRange = (std::max)(fFireRange, GetGun(i)->GetFireRange(i));
+			fFireRange = (std::max)(fFireRange, GetGun(i)->GetFireRange(0.0f));
 
 		return (std::min)( fCallForHelpRadius, fFireRange );
 	}
