@@ -408,7 +408,7 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 	if ( pMsg->szName.empty() )
 		wszText = pMsg->wszText;
 	else
-		wszText = NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
+		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	pChatWrapper->AddItem( wszText );
 	return true;
 };

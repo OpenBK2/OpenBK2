@@ -12,6 +12,8 @@
 #include "GetConsts.h"
 #include "InterfaceState.h"
 #include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "Misc/StringConversions.h"
 
 // CMPManagerMode - UI->MP message handlers
 
@@ -236,7 +238,31 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 
 		pClient->SendGamePacket( new CChatPacket( slot.nClientID, wszFilteredText, szMPName, slot.nClientID, !pMsg->bTeamOnly ), false );
 	}
-	InterfaceState()->AddMPChatMessage( NStr::ToUnicode( szMPName ) + L": " + wszFilteredText );
+
+	auto scenario = Singleton<IScenarioTracker>();
+
+	int playerID = -1;
+	const auto& players = scenario->GetMultiplayerInfo()->players;
+	for(int i = 0; i < players.size(); i++)
+	{
+		if (players[i].wszName == NStr::ToUnicode(szMPName))
+		{
+			playerID = i;
+			break;
+		}
+	}
+
+	std::wstring colorStr = L"", colorEndStr = L"";
+	if (playerID >= 0)
+	{
+		DWORD color = scenario->GetPlayerColor(playerID).dwColor;
+		colorStr = L"<color = " + string_conversion::utf8_to_wstring(string_conversion::RGBA_to_hex(color)) + L">";
+		colorEndStr = L"<color = FFFFFFFF>";
+	}
+
+	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + NStr::ToUnicode( szMPName ) + colorEndStr + L": " + wszFilteredText;
+
+	InterfaceState()->AddMPChatMessage( txt );
 	return true;
 }
 

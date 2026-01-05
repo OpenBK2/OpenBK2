@@ -122,13 +122,13 @@ bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 {
 	std::wstring wszText;
 	if ( pMsg->szName.empty() )
-		wszText = pMsg->wszText;
+		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + pMsg->wszText;
 	else
 	{
 		std::wstring wszPrivate;
 		if ( pMsg->bPrivate )
 			wszPrivate = InterfaceState()->GetTextEntry( "T_PRIVATE_MESSAGE_PREFIX" );
-		wszText = NStr::ToUnicode( pMsg->szName ) + wszPrivate + L" : " + pMsg->wszText;
+		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	}
 	pChatOutput->AddItem( wszText );
 	return true;
