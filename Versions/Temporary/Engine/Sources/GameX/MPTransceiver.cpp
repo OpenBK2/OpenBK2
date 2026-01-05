@@ -18,6 +18,7 @@
 #include "GameXClassIDs.h"
 #include "MultiplayerCommandManager.h"
 #include "Misc/StrProc.h"
+#include "Misc/StringConversions.h"
 #include "Main/MainLoop.h"
 #include "Main/MainLoopCommands.h"
 #include "System/GlobalVars.h"
@@ -478,7 +479,11 @@ void CMPTransceiver::ReportLags( DWORD dwLaggers,	bool bInitial )
 void CMPTransceiver::ReportAsnycToFile(int segment)
 {
 	FILE* fl = fopen("last_async.txt", "w");
-	fprintf(fl, "PlayerID,\tPlayerTeam,\tLastChecksum\n");
+
+	fprintf(fl, "Segment: %d\n", segment);
+	fprintf(fl, "PlayerID,\tPlayerClientID,\tPlayerNick,\tPlayerTeam,\tLastChecksum\n");
+
+	auto scenario = Singleton<IScenarioTracker>();
 
 	std::string checksumsTxt = "";
 	for (int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex)
@@ -486,7 +491,8 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 		if (!IsPlayerPresent(nPlayerIndex))
 			continue;
 
-		checksumsTxt += StrFmt("%d,\t\t%d,\t\t%d\n", nPlayerIndex, players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
+		std::string playerName = string_conversion::wstring_to_utf8(scenario->GetMultiplayerInfo()->players[nPlayerIndex].wszName);
+		checksumsTxt += StrFmt("%d,\t\t%d,\t\t%s,\t\t%d,\t\t%d\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
 	}
 	fprintf(fl, "%s", checksumsTxt.c_str());
 	fclose(fl);
