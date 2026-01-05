@@ -15,7 +15,7 @@ namespace NDb
 	struct SMapInfo;
 }
 
-#define CHECKSUM_LIST_DEBUG
+//#define CHECKSUM_LIST_DEBUG
 
 struct SB2StartGameParams
 {
