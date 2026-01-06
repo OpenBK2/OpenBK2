@@ -157,7 +157,11 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 			colorEndStr = L"<color = FFFFFFFF>";
 		}
 
-		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick + colorEndStr + L": " + pPacket->wszMessage;
+		std::wstring teamOnly = L"";
+		if (!pPacket->bIsBroadcast)
+			teamOnly = L" (Team)";
+
+		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick + colorEndStr + teamOnly + L": " + pPacket->wszMessage;
 
 		InterfaceState()->AddMPChatMessage( txt );
 		return true;

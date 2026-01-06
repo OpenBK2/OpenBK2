@@ -260,7 +260,11 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 		colorEndStr = L"<color = FFFFFFFF>";
 	}
 
-	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + NStr::ToUnicode( szMPName ) + colorEndStr + L": " + wszFilteredText;
+	std::wstring teamOnly = L"";
+	if (pMsg->bTeamOnly)
+		teamOnly = L" (Team)";
+
+	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + NStr::ToUnicode( szMPName ) + colorEndStr + teamOnly + L": " + wszFilteredText;
 
 	InterfaceState()->AddMPChatMessage( txt );
 	return true;
