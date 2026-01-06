@@ -654,8 +654,6 @@ void CMissionReinf::UpdateEnable()
 	if ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
 	{
 		int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
-		
-		// TODO: make the time until next reinf label too!
 		if ( nSeconds > 0 )
 		{
 			int nMinutes = nSeconds / 60;

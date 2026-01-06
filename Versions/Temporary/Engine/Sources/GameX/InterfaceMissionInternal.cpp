@@ -1959,6 +1959,23 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		pTimeRemaining->SetText( NStr::ToUnicode( StrFmt( "%i:%02i:%02i", hours, minutes, seconds ) ) );
 	}
 
+	ITextView *timeForNextReinf = GetChildChecked<ITextView>( pScreen, "RecycleHintTime", true );
+	if (timeForNextReinf != nullptr)
+	{
+		int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
+
+		int minutes = totalSeconds / 60;
+		int seconds = totalSeconds % 60;
+
+		timeForNextReinf->SetText(NStr::ToUnicode(StrFmt( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>%d:%02d", minutes, seconds )));
+
+		timeForNextReinf->ShowWindow(true);
+
+		IWindow* parent = timeForNextReinf->GetParentWindow();
+		parent->ShowWindow(true);
+		parent->SetPlacement(0, 0, 1024, 768, 1);
+	}
+
 	ITextView *pTimeToLooseOrWin = GetChildChecked<ITextView>( pScreen, "TimeToLooseOrWin", true );
 	ITextView *pWinText = GetChildChecked<ITextView>( pScreen, "WinText", true );
 	ITextView *pLooseText = GetChildChecked<ITextView>( pScreen, "LooseText", true );
