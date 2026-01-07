@@ -380,6 +380,20 @@ void NWinFrame::EnableCursorManagement( bool bEnable )
 	bManageCursor = bEnable;
 }
 
+void NWinFrame::FlashTaskbarIfInactive()
+{
+	HWND hwnd = NWinFrame::GetWnd();
+	if (!IsWindowVisible(hwnd) || GetForegroundWindow() != hwnd)
+	{
+		FLASHWINFO fi = { 0 };
+		fi.cbSize = sizeof(FLASHWINFO);
+		fi.hwnd = hwnd;
+		fi.dwFlags = FLASHW_TRAY;
+
+		FlashWindowEx(&fi);
+	}
+}
+
 START_REGISTER(WinFrame)
 REGISTER_VAR_EX( "minimize_on_deactivate", NGlobal::VarBoolHandler, &s_bMinimizeOnDeactivate, true, STORAGE_NONE );
 REGISTER_VAR_EX( "app_always_active", NGlobal::VarBoolHandler, &bAppAlwaysActive, false, STORAGE_USER );

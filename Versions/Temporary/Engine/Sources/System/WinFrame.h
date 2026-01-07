@@ -45,6 +45,7 @@ namespace NWinFrame
 	SYSTEM_EXPORT void SetCursor( HCURSOR _hCursor );
 	void ShowCursor( bool bShow );
 	void EnableCursorManagement( bool bEnable );
+	void __declspec(dllexport) FlashTaskbarIfInactive();
 };
 
 

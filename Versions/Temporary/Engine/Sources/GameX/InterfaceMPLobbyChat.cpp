@@ -131,6 +131,10 @@ bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	}
 	pChatOutput->AddItem( wszText );
+
+	// notify the user if the app is minimized or unfocused
+	NWinFrame::FlashTaskbarIfInactive();
+
 	return true;
 };
 

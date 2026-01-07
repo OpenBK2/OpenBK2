@@ -12,6 +12,7 @@
 #include "ScenarioTracker.h"
 #include "DBMPConsts.h"
 #include "InterfaceState.h"
+#include "System/WinFrame.h"
 
 #include "MPLANTest.h"
 
@@ -164,6 +165,10 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick + colorEndStr + teamOnly + L": " + pPacket->wszMessage;
 
 		InterfaceState()->AddMPChatMessage( txt );
+
+		// notify the user if the app is minimized or unfocused
+		NWinFrame::FlashTaskbarIfInactive();
+
 		return true;
 	}
 	CPtr<SMPUIChatMessage> pMsg = new SMPUIChatMessage( pPacket->szNick, pPacket->wszMessage );
