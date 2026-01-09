@@ -11,7 +11,6 @@ struct IRandomSeed;
 typedef uLong CLogType;
 typedef std::unordered_map<int/*#entry*/,CLogType> ChecksumLog;
 typedef std::unordered_map<int/*#segment*/, std::pair<CLogType,ChecksumLog> > CSegmentChecksum;
-typedef std::unordered_map<int, std::list<CPtr<IAILogicCommandB2> > > CHistory;
 
 struct SMultiplayerReplayInfo
 {
@@ -78,6 +77,7 @@ public:
 
 	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry );
 	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }
+	CHistory GetCommandsHistory() const;
 };
 
 

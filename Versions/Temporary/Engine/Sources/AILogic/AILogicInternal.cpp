@@ -43,6 +43,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "ExecutorRestoreTransparencyQueue.h"
 //#include "../Common_RTS_AI/CollisionInternal.h"
 #include "System/CheckSumLog.h"
+#include "System/Text.h"
 
 
 //#include "../SCeneB2/AIDebugInfo.h"
@@ -62,6 +63,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "PlayerReinforcement.h"
 #include "Common_RTS_AI/CheckSums.h"
 #include "Misc/Win32Helper.h"
+#include "Misc/StringConversions.h"
 #include "Input/Bind.h"
 #include "GlobalWarFog.h"
 #include "SimpleChecksumCalc.h"
@@ -1190,9 +1192,22 @@ void CAILogic::WriteDetailedChecksumInfo()
 		const CVec2 vCenter = pUnit->GetCenterPlain();
 		const WORD wDir = pUnit->GetFrontDirection();
 		const float fHP = pUnit->GetHitPoints();
+		
+		std::string unitName = "<NO_NAME>";
+		auto stats = pUnit->GetStats();
+		if (stats)
+			unitName = string_conversion::wstring_to_utf8(NText::GetText(stats->szLocalizedNameFileRef));
 
+		int isA = pUnit->IsAviation();
+		int isF = pUnit->IsFormation();
+		int isI = pUnit->IsInfantry();
+		int isM = pUnit->IsMech();
+		int isT = pUnit->IsTrain();
+		int isV = pUnit->IsVirtualTankPit();
 		auto checksum = CalculateChecksum(baseChecksum, vCenter.x, vCenter.y, wDir, fHP);
-		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu - { pos: (%f, %f), dir: %hu, hp: %f }\n", (int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP);
+		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu - { pos: (%f, %f), dir: %hu, hp: %f, AFIMTV: %d%d%d%d%d%d } - %s\n", 
+			(int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP, isA, isF, isI, isM, isT, isV, unitName.c_str()
+		);
 	}
 	fprintf(f, "\n");
 

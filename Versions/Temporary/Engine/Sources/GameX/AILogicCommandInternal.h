@@ -23,7 +23,7 @@ public:
 	virtual std::string GetDebugInfo() const
 	{
 		std::string szDebug;
-		StrFmt( "GroupID = %i, UnitIDs: ", nID );
+		szDebug = StrFmt( "GroupID = %i, UnitIDs: ", nID );
 		for ( int i = 0; i < unitsIDs.size(); ++i )
 			szDebug += StrFmt( "%i, ", unitsIDs[i] );
 		return szDebug;
@@ -71,6 +71,7 @@ public:
 	void Execute();
 	//
 	bool NeedToBeStored() const { return true; }
+	SAIUnitCmd *GetCommand() { return &command; }
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
@@ -96,6 +97,7 @@ public:
 	void Execute();
 	//
 	bool NeedToBeStored() const { return true; }
+	SAIUnitCmd *GetCommand() { return &command; }
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{

@@ -131,6 +131,13 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	return true;
 }
 
+CHistory CCommandsHistory::GetCommandsHistory() const
+{
+	if (savingHistory.size() > 0)
+		return savingHistory;
+	return loadedHistory;
+}
+
 void CCommandsHistory::AddCommand( const int nSegment, IAILogicCommandB2 *pCmd )
 {
 	if ( bCanAddCommand && pCmd->NeedToBeStored() )
