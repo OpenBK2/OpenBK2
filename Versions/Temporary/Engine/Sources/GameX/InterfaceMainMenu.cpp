@@ -12,6 +12,9 @@
 #include "Main/Profiles.h"
 #include "Main/MODs.h"
 
+#include "GameX/DBConsts.h"
+#include "GameX/GetConsts.h"
+
 static bool bVisited = false;
 
 const char* PROFILE_MANAGER_VISITED = "ProfileManagerVisited";
@@ -79,7 +82,8 @@ bool CInterfaceMainMenu::Init()
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
 	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
-	wszVersion = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" ";
+	wszVersion =	L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" " +
+					NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum())) + L" ";
 	if ( pVersionView )
 		pVersionView->SetText( wszVersion );
 #endif
