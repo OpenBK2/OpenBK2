@@ -5,6 +5,10 @@
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
 #include "DBConsts.h"
+#include "AILogic/SimpleChecksumCalc.h"
+#include "DBMPConsts.h"
+#include "Main/DBNetConsts.h"
+#include "AILogic//DBAIConsts.h"
 
 namespace NDb
 {
@@ -63,6 +67,22 @@ DWORD SGameConsts::CalcCheckSum() const
 		__dwCheckSum = 1;
 
 	return __dwCheckSum;
+}
+
+DWORD SGameConsts::GetMPDataVersionChecksum() const
+{
+	DWORD ret = 123321;
+
+	// AI Consts checksum
+	ret = CalculateChecksum(ret, pAI->CalcCheckSum());
+
+	// Net Consts checksum, port param discluded
+	ret = CalculateChecksum(ret, pNet->nMaxLatency, pNet->nTimeToStartLagByNoSegmentData, pNet->nTimeToAllowDropByLag, pNet->nTimeOutTime, pNet->nTimeBWTimeOuts);
+
+	// MP Consts checksum
+	ret = CalculateChecksum(ret, pMultiplayer->CalcCheckSum());
+
+	return ret;
 }
 
 }

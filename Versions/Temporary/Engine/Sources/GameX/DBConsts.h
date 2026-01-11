@@ -41,6 +41,7 @@ namespace NDb
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
 		DWORD CalcCheckSum() const;
+		DWORD GetMPDataVersionChecksum() const;
 	};
 }
 
