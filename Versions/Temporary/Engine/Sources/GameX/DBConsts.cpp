@@ -8,7 +8,7 @@
 #include "AILogic/SimpleChecksumCalc.h"
 #include "DBMPConsts.h"
 #include "Main/DBNetConsts.h"
-#include "AILogic//DBAIConsts.h"
+#include "AILogic/DBAIConsts.h"
 
 namespace NDb
 {
