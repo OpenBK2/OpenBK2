@@ -9,6 +9,7 @@
 #include "DBMPConsts.h"
 #include "Main/DBNetConsts.h"
 #include "AILogic/DBAIConsts.h"
+#include "Misc/StringConversions.h"
 
 namespace NDb
 {
@@ -81,6 +82,12 @@ DWORD SGameConsts::GetMPDataVersionChecksum() const
 
 	// MP Consts checksum
 	ret = CalculateChecksum(ret, pMultiplayer->CalcCheckSum());
+
+	// game.exe version
+	auto gameVersionStr = string_conversion::wstring_to_utf8(NGlobal::GetVar("code_version_number", "0.0.0.0").GetString());
+	int v1 = 0, v2 = 0, v3 = 0, v4 = 0;
+	sscanf(gameVersionStr.c_str(), "%d.%d.%d.%d", &v1, &v2, &v3, &v4);
+	ret = CalculateChecksum(ret, v1, v2, v3, v4);
 
 	return ret;
 }
