@@ -144,6 +144,13 @@ __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 	else
 		return chr - '0';
 }
+inline std::string ToHex(int number)
+{
+	std::stringstream stream;
+	stream << std::hex << std::uppercase << number;
+	std::string result( stream.str() );
+	return result;
+}
 
 // перевод UNICODE => UTF-8 и обратно
 MISC_EXPORT void UnicodeToUTF8( std::string *pRes, const std::wstring &szString );
