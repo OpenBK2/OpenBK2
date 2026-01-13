@@ -13,6 +13,7 @@
 #include "InterfaceState.h"
 #include "System/Text.h"
 #include "System/Commands.h"
+#include "DBConsts.h"
 
 #include "Misc/Time64.h"
 #include "MPLANTest.h"
@@ -400,7 +401,8 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
-	ulGameCheckSum = GetCheckSum( gameDesc.pMPMap );
+	// TODO: check if this client has the map or not?
+	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	if ( ulHostCheckSum != ulGameCheckSum )
 	{
 		DebugTrace( "+++ Checksums differ: host %d, me %d", ulHostCheckSum, ulGameCheckSum );

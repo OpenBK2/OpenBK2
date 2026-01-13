@@ -10,6 +10,7 @@
 #include "Main/DBNetConsts.h"
 #include "AILogic/DBAIConsts.h"
 #include "Misc/StringConversions.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 namespace NDb
 {
@@ -88,6 +89,15 @@ DWORD SGameConsts::GetMPDataVersionChecksum() const
 	int v1 = 0, v2 = 0, v3 = 0, v4 = 0;
 	sscanf(gameVersionStr.c_str(), "%d.%d.%d.%d", &v1, &v2, &v3, &v4);
 	ret = CalculateChecksum(ret, v1, v2, v3, v4);
+
+	return ret;
+}
+
+DWORD SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
+{
+	DWORD ret = GetMPDataVersionChecksum();
+	
+	ret = CalculateChecksum(ret, map->CalcCheckSum());
 
 	return ret;
 }

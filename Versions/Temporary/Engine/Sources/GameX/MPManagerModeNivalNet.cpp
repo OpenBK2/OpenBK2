@@ -24,6 +24,7 @@
 #include "Misc/Win32Random.h"
 #include "InterfaceMisc.h"
 #include "MultiplayerTestNet.h"
+#include "DBConsts.h"
 
 const char* NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
@@ -142,7 +143,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{
-		ulGameCheckSum = GetCheckSum( gameDesc.pMPMap );
+		ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 		if ( ulHostCheckSum != ulGameCheckSum )
 		{
 			DebugTrace( "+++ Checksums differ: host %d, me %d", ulHostCheckSum, ulGameCheckSum );

@@ -14,6 +14,7 @@
 #include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
 #include "Misc/StringConversions.h"
+#include "DBConsts.h"
 
 // CMPManagerMode - UI->MP message handlers
 
@@ -41,7 +42,7 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 
 	bGameRoomInit = false;
 
-	ulGameCheckSum = GetCheckSum( gameDesc.pMPMap );
+	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	ulHostCheckSum = ulGameCheckSum;
 
 	TryToCreateGame();

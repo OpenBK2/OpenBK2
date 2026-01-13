@@ -14,6 +14,7 @@ namespace NDb
 	struct SSceneConsts;
 	struct SMultiplayerConsts;
 	struct SNetGameConsts;
+	struct SMultiplayerMap;
 
 	struct SGameConsts : public CResource
 	{
@@ -42,6 +43,7 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		DWORD CalcCheckSum() const;
 		DWORD GetMPDataVersionChecksum() const;
+		DWORD GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
 	};
 }
 
