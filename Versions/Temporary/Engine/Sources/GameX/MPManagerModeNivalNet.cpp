@@ -141,6 +141,13 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
+	if ( !gameDesc.pMPMap )
+	{
+		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+		OnLeaveGame();
+		return;
+	}
+
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{
 		ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
