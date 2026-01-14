@@ -402,12 +402,12 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
 	// Check if this client has the map or not?
-	if ( !gameDesc.pMPMap )
-	{
-		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
-		OnLeaveGame();
-		return;
-	}
+	// if ( !gameDesc.pMPMap )
+	// {
+	// 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+	// 	OnLeaveGame();
+	// 	return;
+	// }
 
 	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	if ( ulHostCheckSum != ulGameCheckSum )
