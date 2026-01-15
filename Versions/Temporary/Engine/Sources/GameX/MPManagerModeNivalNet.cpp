@@ -141,13 +141,12 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
-	// This won't work because pMPMap is always non existent at start..
-	// if ( !gameDesc.pMPMap )
-	// {
-	// 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
-	// 	OnLeaveGame();
-	// 	return;
-	// }
+	 if ( !gameDesc.pMPMap && nOwnSlot != -1 )
+	 {
+	 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+	 	OnLeaveGame();
+	 	return;
+	 }
 
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{

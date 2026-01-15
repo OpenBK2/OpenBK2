@@ -401,13 +401,13 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
-	// Check if this client has the map or not?
-	// if ( !gameDesc.pMPMap )
-	// {
-	// 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
-	// 	OnLeaveGame();
-	// 	return;
-	// }
+	// Check if this client has the map or not? - only when the player got his slot first
+	if ( !gameDesc.pMPMap && nOwnSlot != -1 )
+	{
+		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+		OnLeaveGame();
+		return;
+	}
 
 	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	if ( ulHostCheckSum != ulGameCheckSum )
