@@ -402,7 +402,7 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
 	// Check if this client has the map or not? - only when the player got his slot first
-	if ( !gameDesc.pMPMap && nOwnSlot != -1 )
+	if ( !gameDesc.pMPMap && nOwnSlot != -1 && gameDesc.nPlayers > 0 )
 	{
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 		OnLeaveGame();

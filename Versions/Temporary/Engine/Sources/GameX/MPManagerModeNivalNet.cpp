@@ -141,7 +141,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
-	 if ( !gameDesc.pMPMap && nOwnSlot != -1 )
+	 if ( !gameDesc.pMPMap && nOwnSlot != -1 && gameDesc.nPlayers > 0 )
 	 {
 	 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 	 	OnLeaveGame();
