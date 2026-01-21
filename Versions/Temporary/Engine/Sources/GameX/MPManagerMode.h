@@ -96,6 +96,9 @@ protected:
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
 
+	#define MAX_ALLOWED_TICKS_TO_JOIN 3
+	int joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;	// For skipping the deadlock in case of missing MP map on the client, since only the interrupt from the client itself could end it, which was not good!
+
 	std::list<int> pendingClients;				// NEW_CLIENT-s that are received when we do not have our slot number yet
 
 	// (Custom) Games List

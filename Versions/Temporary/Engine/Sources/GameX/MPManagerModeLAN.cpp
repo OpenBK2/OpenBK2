@@ -308,6 +308,7 @@ void CMPManagerModeLAN::TryToCreateGame()
 
 void CMPManagerModeLAN::TryToJoinGame( const SNetGameInfo &game )
 {
+	joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 	pLANClient->ConnectGame( game.lanNode );
 
 	eCurrentState = EGS_JOINING;
@@ -402,8 +403,9 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
 	// Check if this client has the map or not? - only when the player got his slot first
-	if ( !gameDesc.pMPMap && nOwnSlot != -1 && gameDesc.nPlayers > 0 )
+	if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 )
 	{
+		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 		OnLeaveGame();
 		return;
@@ -412,6 +414,7 @@ void CMPManagerModeLAN::OnGameSpecificInfo()
 	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	if ( ulHostCheckSum != ulGameCheckSum )
 	{
+		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 		DebugTrace( "+++ Checksums differ: host %d, me %d", ulHostCheckSum, ulGameCheckSum );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 		OnLeaveGame();

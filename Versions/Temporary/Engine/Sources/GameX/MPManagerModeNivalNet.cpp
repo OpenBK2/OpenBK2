@@ -115,6 +115,7 @@ void CMPManagerModeNivalNet::TryToJoinGame( const SNetGameInfo &game )
 {
 	nGameID = -1;
 	gameDesc.pMPMap = 0;
+	joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 	CPtr<CConnectGamePacket> pConnectPkt = new CConnectGamePacket( 0, game.nGameID, szPassword );
 	pClient->SendPacket( pConnectPkt );
 
@@ -141,8 +142,9 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
-	 if ( !gameDesc.pMPMap && nOwnSlot != -1 && gameDesc.nPlayers > 0 )
+	 if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 )
 	 {
+		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 	 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 	 	OnLeaveGame();
 	 	return;
@@ -150,6 +152,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{
+		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 		ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 		if ( ulHostCheckSum != ulGameCheckSum )
 		{
