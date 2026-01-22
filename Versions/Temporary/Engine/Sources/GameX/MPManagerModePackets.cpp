@@ -145,7 +145,7 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		{
 			if (players[i].wszName == nick)
 			{
-				playerID = i;
+				playerID = players[i].nIndex;
 				break;
 			}
 		}

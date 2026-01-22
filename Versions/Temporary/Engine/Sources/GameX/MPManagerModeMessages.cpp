@@ -248,7 +248,7 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	{
 		if (players[i].wszName == NStr::ToUnicode(szMPName))
 		{
-			playerID = i;
+			playerID = players[i].nIndex;
 			break;
 		}
 	}
