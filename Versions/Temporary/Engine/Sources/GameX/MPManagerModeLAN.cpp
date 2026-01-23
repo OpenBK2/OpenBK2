@@ -86,7 +86,7 @@ bool CMPManagerModeLAN::Segment()
 		}
 		else
 		{
-			if ( lastAllowedTickTriggered && eState == EGS_JOINING )
+			if ( lastAllowedTickTriggered && eCurrentState == EGS_JOINING )
 			{
 				connectingTimeoutTimer -= Singleton<IGameTimer>()->GetSegmentDuration();
 				if (connectingTimeoutTimer <= 0)
