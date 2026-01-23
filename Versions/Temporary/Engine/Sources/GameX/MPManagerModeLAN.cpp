@@ -86,6 +86,16 @@ bool CMPManagerModeLAN::Segment()
 		}
 		else
 		{
+			if ( lastAllowedTickTriggered && eState == EGS_JOINING )
+			{
+				connectingTimeoutTimer -= Singleton<IGameTimer>()->GetSegmentDuration();
+				if (connectingTimeoutTimer <= 0)
+				{
+					PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+					OnLeaveGame();
+				}
+			}
+
 			if ( NGlobal::GetVar( "MP_async", 0 ) == 2 )
 			{
 				nAsyncTime = GetLongTickCount();
@@ -309,6 +319,9 @@ void CMPManagerModeLAN::TryToCreateGame()
 void CMPManagerModeLAN::TryToJoinGame( const SNetGameInfo &game )
 {
 	joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
+	lastAllowedTickTriggered = false;
+	connectingTimeoutTimer = CONNECTING_TIMEOUT_TIME;
+
 	pLANClient->ConnectGame( game.lanNode );
 
 	eCurrentState = EGS_JOINING;
@@ -403,11 +416,9 @@ void CMPManagerModeLAN::OnGameRoomClientRemoved()
 void CMPManagerModeLAN::OnGameSpecificInfo()
 {
 	// Check if this client has the map or not? - only when the player got his slot first
-	if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 )
+	if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 && !lastAllowedTickTriggered )
 	{
-		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
-		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
-		OnLeaveGame();
+		lastAllowedTickTriggered = true;
 		return;
 	}
 

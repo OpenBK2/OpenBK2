@@ -116,6 +116,8 @@ void CMPManagerModeNivalNet::TryToJoinGame( const SNetGameInfo &game )
 	nGameID = -1;
 	gameDesc.pMPMap = 0;
 	joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
+	lastAllowedTickTriggered = false;
+	connectingTimeoutTimer = CONNECTING_TIMEOUT_TIME;
 	CPtr<CConnectGamePacket> pConnectPkt = new CConnectGamePacket( 0, game.nGameID, szPassword );
 	pClient->SendPacket( pConnectPkt );
 
@@ -142,17 +144,14 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
-	 if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 )
+	 if ( !gameDesc.pMPMap && nOwnSlot != -1 && --joiningHeartbeatTicksLeft <= 0 && !lastAllowedTickTriggered )
 	 {
-		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
-	 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
-	 	OnLeaveGame();
+		lastAllowedTickTriggered = true;
 	 	return;
 	 }
 
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{
-		joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;
 		ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 		if ( ulHostCheckSum != ulGameCheckSum )
 		{
@@ -200,6 +199,16 @@ bool CMPManagerModeNivalNet::Segment()
 		CPtr<CGameHeartBeatPacket> pHeartbeat = new CGameHeartBeatPacket( 0, nGameID );
 		pClient->SendPacket( pHeartbeat );
 		//DebugTrace( "+++ Send Heartbeat, game %d, time %d", nGameID, Singleton<IGameTimer>()->GetAbsTime() );
+	}
+
+	if ( lastAllowedTickTriggered && eState == EGS_JOINING )
+	{
+		connectingTimeoutTimer -= Singleton<IGameTimer>()->GetSegmentDuration();
+		if (connectingTimeoutTimer <= 0)
+		{
+			PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
+	 		OnLeaveGame();
+		}
 	}
 
 	if ( updateChannels.CheckNeedUpdate() )
