@@ -113,12 +113,6 @@ protected:
 
 	CObj<CLANTester> pLanTester;
 
-	#define MAX_ALLOWED_TICKS_TO_JOIN 3
-	int joiningHeartbeatTicksLeft = MAX_ALLOWED_TICKS_TO_JOIN;	// For skipping the deadlock in case of missing MP map on the client, since only the interrupt from the client itself could end it, which was not good!
-	
-	bool lastAllowedTickTriggered = false;
-	#define CONNECTING_TIMEOUT_TIME (32 * 1000)		// * 1000 because it's in MS
-	float connectingTimeoutTimer = CONNECTING_TIMEOUT_TIME;
 private:
 	//{ Messages
 	bool OnCreateGameMessage( SMPUICreateGameMessage *pMsg );

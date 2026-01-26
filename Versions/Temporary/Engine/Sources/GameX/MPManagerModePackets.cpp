@@ -123,6 +123,10 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 {
 	//DebugTrace( "+++ SpecificInfo packet from client %d, players %d", pPacket->nClientID, pPacket->info.nPlayers );
 
+	// Absolute shit (or in nival devs terms: CRAP) of solution, but it should work really well when detecting if the client has the MP map or not
+	if (pPacket->info.pMPMap.GetBarePtrNoLoad() == nullptr)
+		pPacket->info.nPlayers = -1;
+
 	if ( !IsInGameRoom() || IsGameHost() )
 		return true;
 
