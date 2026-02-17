@@ -14,14 +14,14 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     strategy:
       matrix:
         preset: [Windows-x64-Release, Windows-x86-Release]
 
     steps:
       - name: Checkout repository (with submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -31,7 +31,7 @@ jobs:
           arch: ${{ contains(matrix.preset, 'x64') && 'x64' || 'x86' }}
 
       - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@v5
+        uses: seanmiddleditch/gha-setup-ninja@v6
 
       - name: Set DXSDK env
         shell: bash
@@ -40,7 +40,7 @@ jobs:
           echo "DXSDK_ROOT=$DXSDK_ROOT_WIN" >> $GITHUB_ENV
 
       - name: Cache DXSDK
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: $HOME/cache
           key: DXSDK-Jun2010
