@@ -216,7 +216,7 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 		if ( i == nOwnSlot || !IsPlayerPresent( i ) )
 			continue;
 
-		lags[pPacket->nSlotToKick].dwHatedBy &= ( 1UL << i );
+		lags[pPacket->nSlotToKick].dwHatedBy &= ( 1UL << i );		// should &= be changed to |= ?
 		break;
 	}
 

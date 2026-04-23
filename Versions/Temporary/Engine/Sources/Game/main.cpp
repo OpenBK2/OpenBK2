@@ -164,7 +164,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// 
 	pSplashScreen = 0;
 	// setup video mode
-	if ( !Scene()->SetupMode(SCENE_MODE_CONFIG, false) )
+	if ( !Scene()->SetupMode(SCENE_MODE_WINDOWED, false) )
 	{
 		MessageBox( 0, "Can't setup scene mode from config", "Error", MB_OK );
 		return 0xDEAD;

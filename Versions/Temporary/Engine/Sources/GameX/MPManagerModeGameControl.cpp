@@ -349,6 +349,8 @@ void CMPManagerMode::AnalyzeLaggers()
 {
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
 
+	// TODO: inspect!
+
 	if ( bInitialLoadInProgress )
 	{
 		if ( lagsUpdate.CheckNeedUpdate() )
@@ -376,7 +378,7 @@ void CMPManagerMode::AnalyzeLaggers()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( IsPlayerPresent( i ) )
-			dwPlayers &= ( 1UL << i );
+			dwPlayers &= ( 1UL << i );		// change from &= to |= , is that ok???
 	}
 
 	// Analyze other laggers
@@ -411,7 +413,7 @@ void CMPManagerMode::AnalyzeLaggers()
 				{
 					CPtr<CB2SuggestKickPacket> pPkt = new CB2SuggestKickPacket( 0, i );
 					pClient->SendGamePacket( pPkt, true );
-					lagInfo.dwHatedBy &= ( 1UL << nOwnSlot );
+					lagInfo.dwHatedBy &= ( 1UL << nOwnSlot );		// change from &= to |= ???
 				}
 				if ( lagInfo.dwHatedBy == ( dwPlayers & ~dwLaggers ) )				// FINISH HIM!!!
 				{

@@ -13,7 +13,7 @@ static std::unordered_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType> rei
 // 0 is completely inefficient, 1 is "eliminates without losses", 0.5 is "balance each other"
 // These are default values, real values are taken from DB (AIConsts base)
 // (NB: Table is not exactly symmetric, to allow for ineffective calls, i.e. fighter planes vs land units)
-#define NUMBER_OF_REINF_TYPES			20
+#define NUMBER_OF_REINF_TYPES			((int)EReinforcementType::_RT_NONE - 1)	// Changed to better method
 static CArray2D<float> expediencyValues;
 
 void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )

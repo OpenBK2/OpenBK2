@@ -296,6 +296,9 @@ bool CMPTransceiver::OnTransciverCommonPacket( class CTransciverCommonPacket *pP
 {
 	int nPlayer = GetPlayerByClient( pPacket->nClientID );
 
+	if (nPlayer < 0)
+		return false;
+
 	switch ( pPacket->eType )
 	{
 	case CTransciverCommonPacket::ET_LOADED:
