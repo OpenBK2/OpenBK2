@@ -3,8 +3,8 @@ include(FetchContent)
 FetchContent_Declare(
         SDL_mixer
         GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-        #GIT_TAG da02588817a565fccfa60fa2f0bb661a3c77b8f0  # newer version (test one though)
-        GIT_TAG 93685a9006952fdc49c58fa0f95306a9cff1ed83
+        GIT_TAG cedfeef30e93db35eee6b25759117da63f8e5a4f
+        #GIT_TAG 93685a9006952fdc49c58fa0f95306a9cff1ed83 (old version)
         GIT_PROGRESS TRUE
 )
 
