@@ -25,6 +25,8 @@
 #include "InterfaceMisc.h"
 #include "MultiplayerTestNet.h"
 #include "DBConsts.h"
+#include "MPPacketTraceLog.h"
+#include "MPTransceiver.h"
 
 const char* NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
@@ -307,6 +309,12 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 	if ( IsInGameRoom() && IsGameHost() )
 	{
 		CPtr<CGameKickClient> pKickPkt = new CGameKickClient( 0, nGameID, slots[nSlot].nClientID );
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX",
+			"CGameKickClient",
+			GetOwnClientID(),
+			StrFmt( "slot=%d kicked_client=%d game_id=%d", nSlot, slots[nSlot].nClientID, nGameID ) );
 		pClient->SendPacket( pKickPkt );
 	}
 }
@@ -855,10 +863,18 @@ bool CMPManagerModeNivalNet::OnEnterLobbyPacket( class CEnterLobbyPacket *pPacke
 bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *pPacket )
 {
 	//DebugTrace( "+++ ClientWasKicked packet for client %d", pPacket->nKicked );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CGameClientWasKicked",
+		pPacket->nClientID,
+		StrFmt( "kicked=%d in_room=%d", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
 		if ( nMyClientID == pPacket->nKicked )
 		{
+			NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+			NGameX::MatchPacketTrace_Flush( "kicked" );
 			PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_KICKED ) );
 			OnLeaveGame();
 		}
@@ -897,6 +913,12 @@ bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pP
 
 bool CMPManagerModeNivalNet::OnGameClientDeadPacket( class CGameClientDead *pPacket )
 {
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CGameClientDead",
+		pPacket->nClientID,
+		StrFmt( "dead_client=%d", pPacket->nDeadClient ) );
 	RemoveClient( pPacket->nDeadClient, false );
 	return true;
 }

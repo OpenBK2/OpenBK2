@@ -53,6 +53,7 @@ CMPManagerMode::CMPManagerMode()
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnSlotNumberPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2SuggestKickPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2LagTimeUpdatePacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2DropPlayerAtSegmentPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2GameLostPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnPingPacket );
 
@@ -96,6 +97,8 @@ bool CMPManagerMode::Segment()
 
 	if ( IsGameRunning() )
 	{
+		// Keep manager-side slot visibility in sync with transceiver drop segment processing.
+		ApplyScheduledSlotDrops();
 		AnalyzeLaggers();
 		CheckEndGameConditions();
 	}

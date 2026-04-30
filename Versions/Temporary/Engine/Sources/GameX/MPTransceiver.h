@@ -96,6 +96,7 @@ private:
 	int nGameSpeed;
 
 	int nFinalSegment;
+	std::vector<int> playerRemovalSegments;
 private:
 	bool Segment() { return false; }
 	bool IsSegmentPackFinished();
@@ -119,6 +120,7 @@ private:
 	void ReportLags( DWORD dwLaggers, bool bInitial );
 	bool IsPlayerPresent( int nPlayer ) const;
 	int GetSegmentToExecute( const int nSegment ) const;
+	void ApplyScheduledPlayerRemovals();
 public:
 	CMPTransceiver();
 	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) {}
@@ -129,6 +131,7 @@ public:
 	const NDb::SMapInfo *GetMap() const;
 	void EndGame();
 	void PlayerRemoved( int nPlayer );
+	void SchedulePlayerRemoval( int nPlayer, int nSegment );
 	static const bool IsGamePacket( const CNetPacket *pPacket );
 	int operator&( IBinSaver &f ) { return 0; }
 	void Init( IServerClient *_pClient, const SB2StartGameParams &params, int nMySlot );
@@ -141,6 +144,8 @@ public:
 
 	bool IsGameEnded() { return bIsGameEnded; }
 	bool IsGameRunning() const;
+	int GetCurrentCommonSegment() const { return nCommonSegment; }
+	unsigned long GetPlayerMask() const { return wMask; }
 
 	int ScheduleGameEnd( const int _nSegment );
 	ICommandsHistory *GetCommandsHistory() { return pCmdsHistory; }

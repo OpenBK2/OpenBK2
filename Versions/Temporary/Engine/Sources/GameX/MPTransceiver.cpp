@@ -25,6 +25,7 @@
 #include "System/Commands.h"
 #include "GetConsts.h"
 #include "InterfaceMisc.h"
+#include "MPPacketTraceLog.h"
 
 #include "SceneB2/Scene.h"
 
@@ -104,8 +105,40 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	if ( nPlayer < 0 || !IsPlayerPresent( nPlayer ) )
 		return;
 
+	const unsigned long ulMaskBefore = wMask;
+	// Keep lockstep player mask and AI/scenario state in sync at exactly one code path.
 	wMask &= ~( 1UL << nPlayer );
+	NGameX::MatchPacketTrace_RecordDropApplied( nPlayer, nCommonSegment );
+	NGameX::MatchPacketTrace_Log(
+		nCommonSegment,
+		"STATE",
+		"PlayerRemoved",
+		players[nPlayer].nClientID,
+		StrFmt( "slot=%d pre_wmask=%08X post_wmask=%08X", nPlayer, ulMaskBefore, wMask ) );
+	Singleton<IScenarioTracker>()->RemovePlayer( nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
+}
+
+void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
+{
+	if ( nPlayer < 0 || nPlayer >= playerRemovalSegments.size() )
+		return;
+
+	// Idempotent queueing: keep the earliest segment for the same player.
+	const int nCurrent = playerRemovalSegments[nPlayer];
+	if ( nCurrent < 0 || nSegment < nCurrent )
+		playerRemovalSegments[nPlayer] = nSegment;
+	NGameX::MatchPacketTrace_RecordDropScheduled( nPlayer, playerRemovalSegments[nPlayer] );
+	NGameX::MatchPacketTrace_Log(
+		nCommonSegment,
+		"DECISION",
+		"SchedulePlayerRemoval",
+		players[nPlayer].nClientID,
+		StrFmt( "slot=%d requested_seg=%d queued_seg=%d prev_seg=%d", nPlayer, nSegment, playerRemovalSegments[nPlayer], nCurrent ) );
+
+	// Late packet fallback: apply immediately if this segment has already passed locally.
+	if ( playerRemovalSegments[nPlayer] >= 0 && playerRemovalSegments[nPlayer] <= nCommonSegment )
+		ApplyScheduledPlayerRemovals();
 }
 
 // perform segments for AI
@@ -127,6 +160,9 @@ void CMPTransceiver::DoSegments()
 	if ( bWaiting || bIsGameEnded )
 		return;
 
+	// Apply pending player drops before segment processing so wait-mask checks use up-to-date membership.
+	ApplyScheduledPlayerRemovals();
+
 	if ( nFinalSegment > 0 && nCommonSegment >= nFinalSegment )
 	{
 		EndGame();
@@ -134,6 +170,9 @@ void CMPTransceiver::DoSegments()
 
 	while ( pTimer->CanStartNextSegment() )
 	{
+		// Keep removal processing inside the loop as well, because network packets can arrive between updates.
+		ApplyScheduledPlayerRemovals();
+
 		if ( IsSegmentPackFinished() )
 		{
 			// прибавляется MAX_LATENCY, т.к. модуль от отрицательных чисел считается неправильно
@@ -163,6 +202,25 @@ void CMPTransceiver::DoSegments()
 		}
 		else
 			AdvanceToNextSegment();
+	}
+}
+
+void CMPTransceiver::ApplyScheduledPlayerRemovals()
+{
+	for ( int i = 0; i < playerRemovalSegments.size(); ++i )
+	{
+		const int nSegment = playerRemovalSegments[i];
+		if ( nSegment >= 0 && nSegment <= nCommonSegment )
+		{
+			NGameX::MatchPacketTrace_Log(
+				nCommonSegment,
+				"STATE",
+				"ApplyScheduledPlayerRemovals",
+				players[i].nClientID,
+				StrFmt( "slot=%d target_seg=%d apply_seg=%d", i, nSegment, nCommonSegment ) );
+			PlayerRemoved( i );
+			playerRemovalSegments[i] = -1;
+		}
 	}
 }
 
@@ -245,6 +303,12 @@ void CMPTransceiver::FinalizeSegmentPack()
 		}
 	}
 	//DebugTrace( "+++ send SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nMyLogicID, nSegment, nCommonSegment, ulCheckSum, pPacket->aiCommands.size() );
+	NGameX::MatchPacketTrace_Log(
+		nCommonSegment,
+		"TX",
+		"CAISegmentFinishedPacket",
+		players[nMyLogicID].nClientID,
+		StrFmt( "segment=%d checksum=%u cmd_count=%d", pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
 	aiCommandsToSend.clear();
 	pClient->SendGamePacket( pPacket, true );
 }
@@ -268,6 +332,12 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	const int nPlayer = GetPlayerByClient( pPacket->nClientID );
 	if ( nPlayer < 0 || !IsPlayerPresent( nPlayer ) )
 		return true;
+	NGameX::MatchPacketTrace_Log(
+		nCommonSegment,
+		"RX",
+		"CAISegmentFinishedPacket",
+		pPacket->nClientID,
+		StrFmt( "from_slot=%d segment=%d checksum=%u cmd_count=%d", nPlayer, pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
 	int nPlayerSegment = pPacket->nSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
 	SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
@@ -388,6 +458,9 @@ void CMPTransceiver::LeaveOutOfSync()
 {
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "You were kicked because you were out of sync" ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "LeaveOutOfSync", players[nMyLogicID].nClientID, "async_detected=1" );
+	NGameX::MatchPacketTrace_SetFinalState( 0, 0, wMask );
+	NGameX::MatchPacketTrace_Flush( "async" );
 	Singleton<IScenarioTracker>()->MissionCancel();
 	EndGame();
 }
@@ -440,6 +513,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	nGameSpeed = params.nSpeedAdjustment;
 	checkSums.SetSizes( pConsts->nMaxLatency, players.size() );
 	segmFinished.resize( pConsts->nMaxLatency, 0 );
+	playerRemovalSegments.assign( players.size(), -1 );
 	cmds.Clear();
 	cmds.SetSizes( players.size(), pConsts->nMaxLatency );
 	checkSums.FillZero();
@@ -494,7 +568,11 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 		if (!IsPlayerPresent(nPlayerIndex))
 			continue;
 
-		std::string playerName = string_conversion::wstring_to_utf8(scenario->GetMultiplayerInfo()->players[nPlayerIndex].wszName);
+		const auto& playerInfos = scenario->GetMultiplayerInfo()->players;
+		if (nPlayerIndex >= playerInfos.size())
+			continue;
+
+		std::string playerName = string_conversion::wstring_to_utf8(playerInfos[nPlayerIndex].wszName);
 		checksumsTxt += StrFmt("%d,\t\t%d,\t\t%s,\t\t%d,\t\t%d\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
 	}
 	fprintf(fl, "%s", checksumsTxt.c_str());

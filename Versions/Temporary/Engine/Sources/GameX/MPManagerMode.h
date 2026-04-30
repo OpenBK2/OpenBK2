@@ -95,6 +95,7 @@ protected:
 	bool bWaitWindowShown;
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
+	std::vector<int> scheduledDropSegmentBySlot;
 
 	std::list<int> pendingClients;				// NEW_CLIENT-s that are received when we do not have our slot number yet
 
@@ -140,6 +141,7 @@ private:
 	bool OnSlotNumberPacket( class CSlotNumberPacket *pPacket );
 	bool OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket );
 	bool OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPacket );
+	bool OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket );
 	bool OnB2GameLostPacket( class CB2GameLostPacket *pPacket );
 	bool OnPingPacket( class CPingPacket *pPacket );
 	//}
@@ -155,10 +157,14 @@ protected:
 	void ShowWaitWindow( bool bShow );
 	void SendLagInfo();
 	void AnalyzeLaggers();
+	DWORD GetPresentMask() const;
 	bool IsPlayerPresent( int nPlayer );
 	bool IsPlayerLagging( int nPlayer );
 	bool HasPlayerStoppedLagging( int nPlayer );
 	bool HasPlayerStartedLagging( int nPlayer );
+	int GetSlotByClientID( int nClientID ) const;
+	void ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
+	void ApplyScheduledSlotDrops();
 	void SendStartGamePacket();
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();

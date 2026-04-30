@@ -89,6 +89,7 @@ set(SOURCES
     MPManagerModeNivalNet.cpp
     MPManagerModeNivalNetChat.cpp
     MPManagerModePackets.cpp
+    MPPacketTraceLog.cpp
     MPTransceiver.cpp
     MultiplayerCommandProcessor.cpp
     MultiplayerNetPackets.cpp

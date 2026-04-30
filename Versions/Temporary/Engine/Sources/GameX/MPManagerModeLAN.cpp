@@ -14,6 +14,7 @@
 #include "System/Text.h"
 #include "System/Commands.h"
 #include "DBConsts.h"
+#include "MPPacketTraceLog.h"
 
 #include "Misc/Time64.h"
 #include "MPLANTest.h"
@@ -241,8 +242,16 @@ bool CMPManagerModeLAN::OnConnectGameFailed( class CConnectGameFailed *pPacket )
 bool CMPManagerModeLAN::OnGameClientWasKicked( class CGameClientWasKicked *pPacket )
 {
 	//DebugTrace( "+++ ClientWasKicked packet from client %d", pPacket->nClientID );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CGameClientWasKicked",
+		pPacket->nClientID,
+		StrFmt( "kicked=%d in_room=%d", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
+		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+		NGameX::MatchPacketTrace_Flush( "kicked" );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_KICKED ) );
 		OnLeaveGame();
 	}
@@ -426,6 +435,12 @@ void CMPManagerModeLAN::KickPlayerFromSlot( const int nSlot )
 	if ( IsInGameRoom() && IsGameHost() )
 	{
 		CPtr<CGameClientWasKicked> pKickPkt = new CGameClientWasKicked( slots[nSlot].nClientID, slots[nSlot].nClientID );
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX",
+			"CGameClientWasKicked",
+			GetOwnClientID(),
+			StrFmt( "slot=%d kicked_client=%d", nSlot, slots[nSlot].nClientID ) );
 		pLANClient->SendPacket( pKickPkt );
 
 		//pLANClient->Kick( slots[nSlot].nClientID );

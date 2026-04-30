@@ -10,9 +10,12 @@
 #include "Client/ServerClientInterface.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
+#include "MultiplayerNetPackets.h"
+#include "MPPacketTraceLog.h"
 #include "SceneB2/Scene.h"
 #include "Misc/Win32Random.h"
 #include "CommandsHistory.h"
+#include "System/Text.h"
 
 #include <iostream>
 #include <chrono>
@@ -44,6 +47,8 @@ void CMPManagerMode::StartGame()
 	bWaitWindowShown = false;
 	bInitialLoadInProgress = true;
 	lags.resize( slots.size() );
+	// Track already-scheduled removals to keep host announcements idempotent.
+	scheduledDropSegmentBySlot.assign( slots.size(), -1 );
 	lagsUpdate.bUpdating = false;
 	lagsUpdate.timeUpdatePeriod = 500;
 	int nMaxLagTime = ( NGameX::GetMPConsts()->nTimeUserMPLag + NGameX::GetMPConsts()->nTimeUserMPPause ) * 1000;
@@ -101,6 +106,39 @@ void CMPManagerMode::StartGame()
 	pTransceiver->Init( pClient, tranParams, nOwnSlot );
 	pTransceiver->StartMission();
 
+	// Start a fresh per-client trace file for this match with stable identifiers and masks.
+	std::vector<NGameX::SMatchPacketTraceSlot> traceSlots;
+	traceSlots.reserve( slots.size() );
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		NGameX::SMatchPacketTraceSlot traceSlot;
+		traceSlot.nSlot = i;
+		traceSlot.nClientID = slots[i].nClientID;
+		traceSlot.nTeam = slots[i].nTeam;
+		traceSlot.bPresent = slots[i].bPresent;
+		traceSlots.push_back( traceSlot );
+	}
+	const std::string szMapName = gameDesc.pMPMap ? NStr::ToMBCS( GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) ) : std::string( "unknown" );
+	NGameX::MatchPacketTrace_Reset();
+	NGameX::MatchPacketTrace_SetHeader(
+		nGameID,
+		szSessionName,
+		szMapName,
+		ulGameCheckSum,
+		GetOwnClientID(),
+		nOwnSlot,
+		nHostClientID,
+		dwInitialPlayers,
+		GetPresentMask(),
+		IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0,
+		traceSlots );
+	NGameX::MatchPacketTrace_Log(
+		pTransceiver->GetCurrentCommonSegment(),
+		"STATE",
+		"StartGame",
+		GetOwnClientID(),
+		StrFmt( "slots_used=%d initial_players=%08X", nSlotsUsed, dwInitialPlayers ) );
+
 	timeEndMatch = 0;
 	bOutcomeKnown = false;
 }
@@ -129,6 +167,12 @@ void CMPManagerMode::LoseGame()
 
 void CMPManagerMode::ScheduleLoseGame()
 {
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"TX",
+		"CB2GameLostPacket",
+		GetOwnClientID(),
+		StrFmt( "game_id=%d", nGameID ) );
 	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( 0 ) );
 	pClient->SendGamePacket( pPkt, true );
 	bWinOnGameEnd = false;
@@ -155,6 +199,15 @@ std::string GenerateDateTimeReplayFilename() {
 
 void CMPManagerMode::EndGame()
 {
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"STATE",
+		"EndGame",
+		GetOwnClientID(),
+		StrFmt( "winning_side=%d", nWinningSide ) );
+	NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+	NGameX::MatchPacketTrace_Flush( "match_end" );
+
 	if ( IsValid( pTransceiver ) )
 		pCommandsHistory = dynamic_cast<CCommandsHistory*>(pTransceiver->GetCommandsHistory());
 	else
@@ -378,7 +431,7 @@ void CMPManagerMode::AnalyzeLaggers()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( IsPlayerPresent( i ) )
-			dwPlayers &= ( 1UL << i );		// change from &= to |= , is that ok???
+			dwPlayers |= ( 1UL << i );
 	}
 
 	// Analyze other laggers
@@ -401,6 +454,12 @@ void CMPManagerMode::AnalyzeLaggers()
 			lagInfo.dwHatedBy = 0;
 			lagInfo.timeStartLag = 0;
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
+			NGameX::MatchPacketTrace_Log(
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"TX",
+				"CB2LagTimeUpdatePacket",
+				GetOwnClientID(),
+				StrFmt( "player=%d time_left=%d", i, lagInfo.nLagLeft ) );
 			pClient->SendGamePacket( pPkt, true );
 			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft ); 
 		}
@@ -412,14 +471,47 @@ void CMPManagerMode::AnalyzeLaggers()
 				if ( !( lagInfo.dwHatedBy & ( 1UL << nOwnSlot ) ) )
 				{
 					CPtr<CB2SuggestKickPacket> pPkt = new CB2SuggestKickPacket( 0, i );
+					NGameX::MatchPacketTrace_Log(
+						IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+						"TX",
+						"CB2SuggestKickPacket",
+						GetOwnClientID(),
+						StrFmt( "slot_to_kick=%d", i ) );
 					pClient->SendGamePacket( pPkt, true );
-					lagInfo.dwHatedBy &= ( 1UL << nOwnSlot );		// change from &= to |= ???
+					const DWORD dwPreVoteMask = lagInfo.dwHatedBy;
+					lagInfo.dwHatedBy |= ( 1UL << nOwnSlot );
+					NGameX::MatchPacketTrace_Log(
+						IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+						"DECISION",
+						"SetOwnKickVote",
+						GetOwnClientID(),
+						StrFmt( "slot=%d pre_votes=%08X post_votes=%08X", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
 				}
-				if ( lagInfo.dwHatedBy == ( dwPlayers & ~dwLaggers ) )				// FINISH HIM!!!
+				// Kick voting is host-authoritative: once everyone eligible voted, host schedules deterministic drop.
+				const DWORD dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
+				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
 				{
-					KickPlayerFromSlot( i );
-					slots[i].bPresent = false;
-					pTransceiver->PlayerRemoved( i );
+					if ( IsGameHost() && IsValid( pTransceiver ) &&
+						i >= 0 && i < scheduledDropSegmentBySlot.size() &&
+						scheduledDropSegmentBySlot[i] < 0 )
+					{
+						KickPlayerFromSlot( i );
+						const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
+						NGameX::MatchPacketTrace_Log(
+							nDropSegment,
+							"DECISION",
+							"LagKickConsensusReached",
+							GetOwnClientID(),
+							StrFmt( "slot=%d eligible=%08X votes=%08X", i, dwEligibleVoters, lagInfo.dwHatedBy ) );
+						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
+						NGameX::MatchPacketTrace_Log(
+							nDropSegment,
+							"TX",
+							"CB2DropPlayerAtSegmentPacket",
+							GetOwnClientID(),
+							StrFmt( "slot=%d target_seg=%d reason=lag_kick", i, nDropSegment ) );
+						pClient->SendGamePacket( new CB2DropPlayerAtSegmentPacket( 0, i, nDropSegment ), true );
+					}
 				}
 			}
 		}

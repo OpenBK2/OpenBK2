@@ -13,6 +13,7 @@
 #include "DBMPConsts.h"
 #include "InterfaceState.h"
 #include "System/WinFrame.h"
+#include "MPPacketTraceLog.h"
 
 #include "MPLANTest.h"
 
@@ -67,6 +68,12 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 bool CMPManagerMode::OnGameClientRemoved( class CGameClientRemoved *pPacket )
 {
 	DebugTrace( "+++ Client Removed packet from client %d", pPacket->nClientID );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CGameClientRemoved",
+		pPacket->nClientID,
+		StrFmt( "running=%d in_room=%d", IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
 	RemoveClient( pPacket->nClientID, false );
 	return true;
 }
@@ -74,8 +81,16 @@ bool CMPManagerMode::OnGameClientRemoved( class CGameClientRemoved *pPacket )
 bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 {
 	DebugTrace( "+++ GameKilled packet from client %d, game %d", pPacket->nClientID, pPacket->nGame );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CGameKilled",
+		pPacket->nClientID,
+		StrFmt( "game=%d running=%d in_room=%d", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
+		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+		NGameX::MatchPacketTrace_Flush( "game_killed" );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_GAME_KILLED ) );
 		OnLeaveGame();
 	}
@@ -211,14 +226,23 @@ bool CMPManagerMode::OnConnectGameFailedPacket( class CConnectGameFailed *pPacke
 
 bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket )
 {
-	for ( int i = 0; i < slots.size(); ++i )
-	{
-		if ( i == nOwnSlot || !IsPlayerPresent( i ) )
-			continue;
+	// Vote accounting must use packet sender identity, not local slot order, to stay deterministic across peers.
+	const int nVoterSlot = GetSlotByClientID( pPacket->nClientID );
+	if ( nVoterSlot < 0 || nVoterSlot >= slots.size() || !IsPlayerPresent( nVoterSlot ) )
+		return true;
 
-		lags[pPacket->nSlotToKick].dwHatedBy &= ( 1UL << i );		// should &= be changed to |= ?
-		break;
-	}
+	const int nSlotToKick = pPacket->nSlotToKick;
+	if ( nSlotToKick < 0 || nSlotToKick >= slots.size() || !IsPlayerPresent( nSlotToKick ) )
+		return true;
+
+	const DWORD dwPreVotes = lags[nSlotToKick].dwHatedBy;
+	lags[nSlotToKick].dwHatedBy |= ( 1UL << nVoterSlot );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CB2SuggestKickPacket",
+		pPacket->nClientID,
+		StrFmt( "slot_to_kick=%d voter_slot=%d pre_votes=%08X post_votes=%08X", nSlotToKick, nVoterSlot, dwPreVotes, lags[nSlotToKick].dwHatedBy ) );
 
 	return true;
 }
@@ -230,8 +254,35 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 
 	SLagInfo &lag = lags[pPacket->nPlayer];
 	//DebugTrace( "*** LAG UPDATE player %d, time %d --> %d", pPacket->nPlayer, lag.nLagLeft, pPacket->nTimeLeft );
+	const int nPreLagLeft = lag.nLagLeft;
 	lag.nLagLeft = (std::min)( pPacket->nTimeLeft, int( lag.nLagLeft ) );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CB2LagTimeUpdatePacket",
+		pPacket->nClientID,
+		StrFmt( "player=%d pre_time_left=%d post_time_left=%d", pPacket->nPlayer, nPreLagLeft, lag.nLagLeft ) );
 
+	return true;
+}
+
+bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket )
+{
+	if ( !IsGameRunning() )
+		return true;
+
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CB2DropPlayerAtSegmentPacket",
+		pPacket->nClientID,
+		StrFmt( "slot=%d target_seg=%d host_id=%d", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+
+	// Only host-issued drop packets are authoritative.
+	if ( pPacket->nClientID != nHostClientID )
+		return true;
+
+	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
 	return true;
 }
 
@@ -239,6 +290,13 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 {
 	if ( !IsGameRunning() || bOutcomeKnown || pPacket->nGameID != nGameID )
 		return true;
+
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CB2GameLostPacket",
+		pPacket->nClientID,
+		StrFmt( "game_id=%d segment=%d", pPacket->nGameID, pPacket->nSegment ) );
 
 	//DebugTrace( "+++ GameLost packet" );
 	for ( int i = 0; i < slots.size(); ++i )

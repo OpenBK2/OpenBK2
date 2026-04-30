@@ -74,4 +74,19 @@ public:
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft ) : CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft ) {}
 };
 
+// Host-authoritative packet: remove player from lockstep on a deterministic segment.
+class CB2DropPlayerAtSegmentPacket : public CNetPacket
+{
+	OBJECT_NOCOPY_METHODS( CB2DropPlayerAtSegmentPacket );
+public:
+	ZDATA
+		BYTE nSlotToDrop;
+		int nSegment;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlotToDrop); f.Add(3,&nSegment); return 0; }
+
+	CB2DropPlayerAtSegmentPacket() : nSlotToDrop( 0 ), nSegment( 0 ) {}
+	CB2DropPlayerAtSegmentPacket( int nClientID, int _nSlotToDrop, int _nSegment )
+		: CNetPacket( nClientID ), nSlotToDrop( BYTE( _nSlotToDrop ) ), nSegment( _nSegment ) {}
+};
+
 

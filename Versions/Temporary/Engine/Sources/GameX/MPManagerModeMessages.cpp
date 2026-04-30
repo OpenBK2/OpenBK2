@@ -15,6 +15,7 @@
 #include "ScenarioTracker.h"
 #include "Misc/StringConversions.h"
 #include "DBConsts.h"
+#include "MPPacketTraceLog.h"
 
 // CMPManagerMode - UI->MP message handlers
 
@@ -162,6 +163,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 {
+	const DWORD dwLaggersBefore = dwLaggers;
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
 	{
 		dwLaggersOld = 0;
@@ -171,6 +173,12 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 		return true;
 
 	dwLaggers = pMsg->dwLaggingPlayers;
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"STATE",
+		"OnLagMessage",
+		GetOwnClientID(),
+		StrFmt( "initial=%d pre_laggers=%08X post_laggers=%08X", pMsg->bInitialWait ? 1 : 0, dwLaggersBefore, dwLaggers ) );
 	if ( pMsg->dwLaggingPlayers == 0 )								// Turning it off
 		ShowWaitWindow( false );
 	else if ( dwLaggersOld == 0 )											// Turning it on
@@ -183,6 +191,12 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 
 bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 {
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"DECISION",
+		"OnLeaveGameMessage",
+		GetOwnClientID(),
+		StrFmt( "running=%d", IsGameRunning() ? 1 : 0 ) );
 	if ( IsGameRunning() )
 	{
 		OnSurrender();
@@ -193,6 +207,12 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 {
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"DECISION",
+		"OnInterruptMessage",
+		GetOwnClientID(),
+		"interrupt=1" );
 	OnLeaveGame();
 	return true;
 }
