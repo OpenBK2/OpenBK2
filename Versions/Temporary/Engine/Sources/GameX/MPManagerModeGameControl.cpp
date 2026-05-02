@@ -165,6 +165,22 @@ void CMPManagerMode::LoseGame()
 	EndGame();
 }
 
+void CMPManagerMode::ScheduleWinGame()
+{
+	if ( bOutcomeKnown || !IsValid( pTransceiver ) )
+		return;
+
+	NGameX::MatchPacketTrace_Log(
+		pTransceiver->GetCurrentCommonSegment(),
+		"DECISION",
+		"ScheduleWinGame",
+		GetOwnClientID(),
+		StrFmt( "game_id=%d", nGameID ) );
+	pTransceiver->ScheduleGameEnd( 0 );
+	bWinOnGameEnd = true;
+	bOutcomeKnown = true;
+}
+
 void CMPManagerMode::ScheduleLoseGame()
 {
 	NGameX::MatchPacketTrace_Log(
@@ -265,7 +281,7 @@ bool CMPManagerMode::CheckAllLeftWin()
 
 		if ( nOppositePlayers == 0 )
 		{
-			WinGame();
+			ScheduleWinGame();
 			return true;
 		}
 	}
@@ -487,11 +503,11 @@ void CMPManagerMode::AnalyzeLaggers()
 						GetOwnClientID(),
 						StrFmt( "slot=%d pre_votes=%08X post_votes=%08X", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
 				}
-				// Kick voting is host-authoritative: once everyone eligible voted, host schedules deterministic drop.
+				// Kick voting is game-control-host authoritative; authority migrates if the original host leaves.
 				const DWORD dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
 				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
 				{
-					if ( IsGameHost() && IsValid( pTransceiver ) &&
+					if ( IsGameControlHost() && IsValid( pTransceiver ) &&
 						i >= 0 && i < scheduledDropSegmentBySlot.size() &&
 						scheduledDropSegmentBySlot[i] < 0 )
 					{
@@ -504,13 +520,7 @@ void CMPManagerMode::AnalyzeLaggers()
 							GetOwnClientID(),
 							StrFmt( "slot=%d eligible=%08X votes=%08X", i, dwEligibleVoters, lagInfo.dwHatedBy ) );
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
-						NGameX::MatchPacketTrace_Log(
-							nDropSegment,
-							"TX",
-							"CB2DropPlayerAtSegmentPacket",
-							GetOwnClientID(),
-							StrFmt( "slot=%d target_seg=%d reason=lag_kick", i, nDropSegment ) );
-						pClient->SendGamePacket( new CB2DropPlayerAtSegmentPacket( 0, i, nDropSegment ), true );
+						BroadcastSynchronizedPlayerDrop( i, nDropSegment, "lag_kick" );
 					}
 				}
 			}

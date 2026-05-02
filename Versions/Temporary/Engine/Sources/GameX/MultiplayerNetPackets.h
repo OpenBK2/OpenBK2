@@ -74,7 +74,10 @@ public:
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft ) : CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft ) {}
 };
 
-// Host-authoritative packet: remove player from lockstep on a deterministic segment.
+// Game-control-host packet: stop waiting for a player at a deterministic segment.
+// Simulation-side removal is delayed by the transceiver latency so every survivor
+// skips the same first unsafe command segment.
+// The control host starts as the game host and migrates when that client leaves.
 class CB2DropPlayerAtSegmentPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CB2DropPlayerAtSegmentPacket );

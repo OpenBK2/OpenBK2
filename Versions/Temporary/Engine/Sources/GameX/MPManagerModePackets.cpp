@@ -278,11 +278,35 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 		pPacket->nClientID,
 		StrFmt( "slot=%d target_seg=%d host_id=%d", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 
-	// Only host-issued drop packets are authoritative.
-	if ( pPacket->nClientID != nHostClientID )
-		return true;
+	const int nSlotToDrop = pPacket->nSlotToDrop;
+	const bool bDropsCurrentHost =
+		nSlotToDrop >= 0 && nSlotToDrop < slots.size() &&
+		slots[nSlotToDrop].nClientID == nHostClientID;
 
-	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
+	if ( !IsAuthoritativeDropPacket( pPacket ) )
+	{
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CB2DropPlayerAtSegmentPacketRejected",
+			pPacket->nClientID,
+			StrFmt( "slot=%d target_seg=%d host_id=%d", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+		return true;
+	}
+
+	int nDropSegment = pPacket->nSegment;
+	if ( bDropsCurrentHost && IsValid( pTransceiver ) && nDropSegment > pTransceiver->GetCurrentCommonSegment() )
+	{
+		nDropSegment = pTransceiver->GetCurrentCommonSegment();
+		NGameX::MatchPacketTrace_Log(
+			nDropSegment,
+			"DECISION",
+			"ClampHostDropToLocalSegment",
+			GetOwnClientID(),
+			StrFmt( "slot=%d packet_seg=%d local_seg=%d", nSlotToDrop, pPacket->nSegment, nDropSegment ) );
+	}
+
+	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, nDropSegment );
 	return true;
 }
 

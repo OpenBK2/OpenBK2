@@ -106,15 +106,16 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 		return;
 
 	const unsigned long ulMaskBefore = wMask;
-	// Keep lockstep player mask and AI/scenario state in sync at exactly one code path.
 	wMask &= ~( 1UL << nPlayer );
+	wWaitMask &= ~( 1UL << nPlayer );
 	NGameX::MatchPacketTrace_RecordDropApplied( nPlayer, nCommonSegment );
 	NGameX::MatchPacketTrace_Log(
 		nCommonSegment,
 		"STATE",
 		"PlayerRemoved",
 		players[nPlayer].nClientID,
-		StrFmt( "slot=%d pre_wmask=%08X post_wmask=%08X", nPlayer, ulMaskBefore, wMask ) );
+		StrFmt( "slot=%d pre_active_mask=%08X post_active_mask=%08X wait_mask=%08X",
+			nPlayer, ulMaskBefore, wMask, wWaitMask ) );
 	Singleton<IScenarioTracker>()->RemovePlayer( nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
 }
@@ -124,17 +125,25 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 	if ( nPlayer < 0 || nPlayer >= playerRemovalSegments.size() )
 		return;
 
-	// Idempotent queueing: keep the earliest segment for the same player.
+	StopWaitingForPlayer( nPlayer, nSegment );
+
+	// Stop executing this player's commands at the first segment that cannot be
+	// guaranteed to have reached every survivor. The actual scenario removal is
+	// delayed by latency, because commands for segment N execute at common N+latency.
+	const int nSimulationRemovalSegment = nSegment + nLatency;
+
+	// Idempotent queueing: keep the earliest simulation removal for the same player.
 	const int nCurrent = playerRemovalSegments[nPlayer];
-	if ( nCurrent < 0 || nSegment < nCurrent )
-		playerRemovalSegments[nPlayer] = nSegment;
+	if ( nCurrent < 0 || nSimulationRemovalSegment < nCurrent )
+		playerRemovalSegments[nPlayer] = nSimulationRemovalSegment;
 	NGameX::MatchPacketTrace_RecordDropScheduled( nPlayer, playerRemovalSegments[nPlayer] );
 	NGameX::MatchPacketTrace_Log(
 		nCommonSegment,
 		"DECISION",
 		"SchedulePlayerRemoval",
 		players[nPlayer].nClientID,
-		StrFmt( "slot=%d requested_seg=%d queued_seg=%d prev_seg=%d", nPlayer, nSegment, playerRemovalSegments[nPlayer], nCurrent ) );
+		StrFmt( "slot=%d requested_seg=%d sim_remove_seg=%d queued_seg=%d prev_seg=%d",
+			nPlayer, nSegment, nSimulationRemovalSegment, playerRemovalSegments[nPlayer], nCurrent ) );
 
 	// Late packet fallback: apply immediately if this segment has already passed locally.
 	if ( playerRemovalSegments[nPlayer] >= 0 && playerRemovalSegments[nPlayer] <= nCommonSegment )
@@ -160,7 +169,8 @@ void CMPTransceiver::DoSegments()
 	if ( bWaiting || bIsGameEnded )
 		return;
 
-	// Apply pending player drops before segment processing so wait-mask checks use up-to-date membership.
+	// Apply simulation-side player drops before segment processing.
+	// Waiting for network packets is stopped as soon as the drop is scheduled.
 	ApplyScheduledPlayerRemovals();
 
 	if ( nFinalSegment > 0 && nCommonSegment >= nFinalSegment )
@@ -260,7 +270,7 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 
 bool CMPTransceiver::IsSegmentFinishedByAll( int nSegment )
 {
-	return ( segmFinished[nSegment] & wMask ) == wMask;
+	return ( segmFinished[nSegment] & wWaitMask ) == wWaitMask;
 }
 
 bool CMPTransceiver::IsSegmentPackFinished()
@@ -340,7 +350,8 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 		StrFmt( "from_slot=%d segment=%d checksum=%u cmd_count=%d", nPlayer, pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
 	int nPlayerSegment = pPacket->nSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
-	SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
+	if ( IsPlayerWaitedFor( nPlayer ) )
+		SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
 	const int nSegmentToExecuteCommand = GetSegmentToExecute( pPacket->nSegment );
 	for ( std::list<SRawCommand>::iterator it = pPacket->aiCommands.begin(); it != pPacket->aiCommands.end(); ++it )
 	{
@@ -392,6 +403,29 @@ int CMPTransceiver::GetPlayerByClient( int nClient ) const
 bool CMPTransceiver::IsPlayerPresent( int nPlayer ) const
 {
 	return wMask & ( 1UL << nPlayer );
+}
+
+bool CMPTransceiver::IsPlayerWaitedFor( int nPlayer ) const
+{
+	return wWaitMask & ( 1UL << nPlayer );
+}
+
+void CMPTransceiver::StopWaitingForPlayer( int nPlayer, int nDropSegment )
+{
+	if ( nPlayer < 0 || nPlayer >= players.size() )
+		return;
+	if ( !IsPlayerWaitedFor( nPlayer ) )
+		return;
+
+	const unsigned long ulWaitMaskBefore = wWaitMask;
+	wWaitMask &= ~( 1UL << nPlayer );
+	NGameX::MatchPacketTrace_Log(
+		nCommonSegment,
+		"STATE",
+		"PlayerStoppedWaiting",
+		players[nPlayer].nClientID,
+		StrFmt( "slot=%d drop_seg=%d pre_wait_mask=%08X post_wait_mask=%08X active_mask=%08X",
+			nPlayer, nDropSegment, ulWaitMaskBefore, wWaitMask, wMask ) );
 }
 
 bool CMPTransceiver::IsGameRunning() const
@@ -459,7 +493,7 @@ void CMPTransceiver::LeaveOutOfSync()
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "You were kicked because you were out of sync" ) );
 	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "LeaveOutOfSync", players[nMyLogicID].nClientID, "async_detected=1" );
-	NGameX::MatchPacketTrace_SetFinalState( 0, 0, wMask );
+	NGameX::MatchPacketTrace_SetFinalState( 0, 0, wWaitMask );
 	NGameX::MatchPacketTrace_Flush( "async" );
 	Singleton<IScenarioTracker>()->MissionCancel();
 	EndGame();
@@ -490,6 +524,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	pAI = Singleton<IAILogic>();
 	pTimer = Singleton<IGameTimer>();
 	wMask = 0;
+	wWaitMask = 0;
 	nGameID = params.nGameID;
 	int nCurrentPlayers = params.clients.size();
 	pMapInfo = params.pMapInfo;
@@ -502,6 +537,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 		player.nClientID = client.nClientID;
 		player.nTeam = client.nTeam;
 		wMask |= (1UL << client.nPlayer);
+		wWaitMask |= (1UL << client.nPlayer);
 		DebugTrace( "+++ MPT: %d - plr %d, CID %d, team %d", i, client.nPlayer, client.nClientID, client.nTeam );
 	}
 	nMyLogicID = nMySlot;
@@ -530,14 +566,14 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	pTimer->Pause( bOn, PAUSE_TYPE_MP_NO_SEGMENT_DATA );
 	if ( bOn )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, StrFmt( "WAIT(%d/%d)", segmFinished[nSegment], wMask ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, StrFmt( "WAIT(%d/%d)", segmFinished[nSegment], wWaitMask ) );
 		NTimer::STime curTime = pTimer->GetAbsTime();
 		if ( timeStartWaiting == 0 )
 			timeStartWaiting = curTime;
 		else
 		{
 			if ( curTime - timeStartWaiting > s_nInterruptTimeout )
-				ReportLags( wMask & ~segmFinished[nSegment], false );
+				ReportLags( wWaitMask & ~segmFinished[nSegment], false );
 		}
 	}
 	else
@@ -565,7 +601,7 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 	std::string checksumsTxt = "";
 	for (int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex)
 	{
-		if (!IsPlayerPresent(nPlayerIndex))
+		if (!IsPlayerWaitedFor(nPlayerIndex))
 			continue;
 
 		const auto& playerInfos = scenario->GetMultiplayerInfo()->players;
@@ -604,7 +640,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{
-		if ( !IsPlayerPresent( nPlayerIndex ) )
+		if ( !IsPlayerWaitedFor( nPlayerIndex ) )
 			continue;
 
 		szCheckSums += StrFmt( "%d,", checkSums[nPlayerIndex][nSegment] );

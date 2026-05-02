@@ -165,6 +165,11 @@ protected:
 	int GetSlotByClientID( int nClientID ) const;
 	void ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
 	void ApplyScheduledSlotDrops();
+	bool IsGameControlHost();
+	int GetReplacementHostClientID( int nRemovedClientID ) const;
+	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );
+	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
+	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();
@@ -172,6 +177,7 @@ protected:
 	
 	void WinGame();
 	void LoseGame();
+	void ScheduleWinGame();
 	void ScheduleLoseGame();
 	virtual void EndGame();
 

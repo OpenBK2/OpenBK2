@@ -38,6 +38,7 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	slots[0].szName = szMPName;			// Add self
 	slots[0].bPresent = true;
 	slots[0].nClientID = GetOwnClientID();
+	nHostClientID = slots[0].nClientID;
 	nOwnSlot = 0;
 	nSlotsUsed = 1;
 

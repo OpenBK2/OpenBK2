@@ -59,6 +59,7 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	bool bCommandsFromHistory;
 	std::vector<WORD> segmFinished;
 	WORD wMask;
+	WORD wWaitMask;
 	typedef std::list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
 	CArray2D<CAILogicCommandsList> cmds;
 
@@ -119,7 +120,9 @@ private:
 	void LeaveOutOfSync();
 	void ReportLags( DWORD dwLaggers, bool bInitial );
 	bool IsPlayerPresent( int nPlayer ) const;
+	bool IsPlayerWaitedFor( int nPlayer ) const;
 	int GetSegmentToExecute( const int nSegment ) const;
+	void StopWaitingForPlayer( int nPlayer, int nDropSegment );
 	void ApplyScheduledPlayerRemovals();
 public:
 	CMPTransceiver();
@@ -145,7 +148,7 @@ public:
 	bool IsGameEnded() { return bIsGameEnded; }
 	bool IsGameRunning() const;
 	int GetCurrentCommonSegment() const { return nCommonSegment; }
-	unsigned long GetPlayerMask() const { return wMask; }
+	unsigned long GetPlayerMask() const { return wWaitMask; }
 
 	int ScheduleGameEnd( const int _nSegment );
 	ICommandsHistory *GetCommandsHistory() { return pCmdsHistory; }
