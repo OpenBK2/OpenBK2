@@ -4216,6 +4216,7 @@ int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "Sight", &fSight );
 	saver.Add( "SightPower", &fSightPower );
 	saver.Add( "Speed", &fSpeed );
+	saver.Add( "ReverseSpeedModifier", &fReverseSpeedModifier );
 	saver.Add( "RotateSpeed", &fRotateSpeed );
 	saver.Add( "Passability", &fPassability );
 	saver.Add( "Priority", &nPriority );
@@ -4277,6 +4278,7 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 32, &fUninstallRotate );
 	saver.Add( 33, &pArmorPattern );
 	saver.Add( 34, &fExpPrice );
+	saver.Add( 35, &fReverseSpeedModifier );
 
 	return 0;
 }

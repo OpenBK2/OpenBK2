@@ -177,7 +177,15 @@ public:
 
 	// CBasePathUnit
 	virtual const float GetTurnSpeed() const;
-	virtual const float GetMaxPossibleSpeed() const { return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); }
+	virtual const float GetMaxPossibleSpeed() const 
+	{ 
+		float speed = GetStatsModifier()->speed.Get(GetStats()->fSpeed);
+		if (!IsGoForward() && CanGoBackward() && IsMech())
+			speed *= GetStats()->fReverseSpeedModifier;
+		return speed;
+
+		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); 
+	}
 	virtual const float GetPassability() const;
 	virtual const int GetBoundTileRadius() const { return GetStats()->nBoundTileRadius; }
 	//virtual struct IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking );

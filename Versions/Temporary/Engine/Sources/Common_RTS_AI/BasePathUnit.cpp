@@ -248,6 +248,11 @@ void CBasePathUnit::SetGoForward( const bool _bGoForward )
 	{
 		bGoForward = _bGoForward;
 		wDirection += 32768;
+
+		ResetDesiredSpeed();
+
+		if ( _bGoForward )
+			GetMaxSpeedHere();
 	}
 }
 

@@ -2016,6 +2016,7 @@ namespace NDb
 		float fSight;
 		float fSightPower;
 		float fSpeed;
+		float fReverseSpeedModifier;
 		float fRotateSpeed;
 		float fPassability;
 		int nPriority;
@@ -2049,6 +2050,7 @@ namespace NDb
 			fSight( 20 ),
 			fSightPower( 1 ),
 			fSpeed( 0.0f ),
+			fReverseSpeedModifier( 1.0f ),
 			fRotateSpeed( 0.0f ),
 			fPassability( 0.0f ),
 			nPriority( 0 ),
