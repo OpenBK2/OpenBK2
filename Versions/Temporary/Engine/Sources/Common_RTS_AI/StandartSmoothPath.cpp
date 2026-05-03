@@ -93,7 +93,9 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	if ( GetSplineDX() != VNULL2 )
 		GetUnit()->SetDirectionVec( GetSplineDX() );
 
-	const float fRemain = _fSpeed * timeDiff;
+	// Clamp consumed movement speed to the unit's current cap (terrain + desired speed + reverse modifier).
+	const float fSpeed = (std::min)( _fSpeed, GetUnit()->GetMaxSpeedHere() );
+	const float fRemain = fSpeed * timeDiff;
 	const CVec2 vCenter = GetUnit()->GetCenterPlain();
 	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain ) 
 	{
@@ -124,7 +126,6 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	if ( GetSplineDX() != VNULL2 )
 		GetUnit()->SetDirectionVec( GetSplineDX() );
 
-	float fSpeed = (std::min)( _fSpeed, GetUnit()->GetMaxPossibleSpeed() );
 	const CVec2 vResult = fabs( GetSplinePoint() - vCenter ) < fRemain ? GetSplinePoint() : vCenter + Norm( GetSplinePoint() - vCenter ) * fRemain;
 
 	return vResult;

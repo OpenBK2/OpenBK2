@@ -510,6 +510,9 @@ bool CStandartSmoothMechPath::UpdateDirection()
 
 const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, const float fSpeed )
 {
+	// Clamp consumed movement speed to the unit's current cap (terrain + desired speed + reverse modifier).
+	const float fMoveSpeed = (std::min)( fSpeed, GetUnit()->GetMaxSpeedHere() );
+
 	if ( IsFinished() || ( circles.empty() && IsSplinePointsEqual() ) )
 	{
 		if ( !IsFinished() )
@@ -527,7 +530,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	// если есть окружности, по которым ехать, используем их !!!
 	if ( !circles.empty() ) 
 	{
-		const float fLength = circles.front().Iterate( fSpeed * timeDiff );
+		const float fLength = circles.front().Iterate( fMoveSpeed * timeDiff );
 		const CVec2 vResult = circles.front().GetX();
 		if ( fLength > 0 )
 		{
@@ -583,7 +586,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 			lastCheckToRightTurn += timeDiff;
 	}
 
-	const float fRemain = fSpeed * timeDiff;
+	const float fRemain = fMoveSpeed * timeDiff;
 	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain )
 	{
 		while ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() < CBSpline::N_OF_ITERATONS )

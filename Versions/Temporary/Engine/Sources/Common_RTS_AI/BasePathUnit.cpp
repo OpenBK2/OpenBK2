@@ -249,10 +249,15 @@ void CBasePathUnit::SetGoForward( const bool _bGoForward )
 		bGoForward = _bGoForward;
 		wDirection += 32768;
 
+		// Direction directly affects the speed cap (reverse modifier), so refresh desired
+		// speed and immediately clamp/switch the current speed to a valid value.
 		ResetDesiredSpeed();
+		const float maxSpeedHere = GetMaxSpeedHere();
 
 		if ( _bGoForward )
-			GetMaxSpeedHere();
+			fSpeed = maxSpeedHere;
+		else
+			fSpeed = (std::min)( fSpeed, maxSpeedHere );
 	}
 }
 
