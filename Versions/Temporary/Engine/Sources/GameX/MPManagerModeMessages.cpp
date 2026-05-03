@@ -200,6 +200,8 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 		StrFmt( "running=%d", IsGameRunning() ? 1 : 0 ) );
 	if ( IsGameRunning() )
 	{
+		if ( IsGameControlHost() && IsValid( pTransceiver ) )
+			BroadcastSynchronizedPlayerDrop( nOwnSlot, pTransceiver->GetCurrentCommonSegment(), "control_host_leave" );
 		OnSurrender();
 		LoseGame();
 	}

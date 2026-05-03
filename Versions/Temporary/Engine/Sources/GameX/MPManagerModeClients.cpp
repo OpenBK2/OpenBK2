@@ -152,19 +152,35 @@ int CMPManagerMode::GetSlotByClientID( int nClientID ) const
 	return -1;
 }
 
+int CMPManagerMode::GetSlotClientID( int nSlot )
+{
+	if ( nSlot < 0 || nSlot >= slots.size() )
+		return -1;
+
+	if ( nSlot == nOwnSlot )
+	{
+		const int nOwnClientID = GetOwnClientID();
+		if ( nOwnClientID >= 0 )
+			return nOwnClientID;
+	}
+
+	return slots[nSlot].nClientID;
+}
+
 bool CMPManagerMode::IsGameControlHost()
 {
 	const int nOwnClientID = GetOwnClientID();
 	return nOwnClientID >= 0 && nOwnClientID == nHostClientID;
 }
 
-int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID ) const
+int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 {
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		const SMPSlot &slot = slots[i];
-		if ( slot.bPresent && slot.nClientID >= 0 && slot.nClientID != nRemovedClientID )
-			return slot.nClientID;
+		const int nClientID = GetSlotClientID( i );
+		if ( slot.bPresent && nClientID >= 0 && nClientID != nRemovedClientID )
+			return nClientID;
 	}
 	return -1;
 }
@@ -189,19 +205,17 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 	if ( !pPacket )
 		return false;
 
-	if ( pPacket->nClientID == nHostClientID )
-		return true;
-
 	const int nSlotToDrop = pPacket->nSlotToDrop;
 	if ( nSlotToDrop < 0 || nSlotToDrop >= slots.size() )
 		return false;
 
-	// If the current game-control host is the player being dropped, accept the
-	// packet from the deterministic replacement host and migrate authority.
-	if ( slots[nSlotToDrop].nClientID == nHostClientID )
+	// If the current game-control host is being dropped, accept either its own
+	// clean leave packet or a packet from the deterministic replacement host.
+	if ( GetSlotClientID( nSlotToDrop ) == nHostClientID )
 	{
 		const int nReplacementHostClientID = GetReplacementHostClientID( nHostClientID );
-		if ( nReplacementHostClientID >= 0 && pPacket->nClientID == nReplacementHostClientID )
+		if ( pPacket->nClientID == nHostClientID ||
+			nReplacementHostClientID >= 0 && pPacket->nClientID == nReplacementHostClientID )
 		{
 			const int nOldHostClientID = nHostClientID;
 			nHostClientID = nReplacementHostClientID;
@@ -215,6 +229,9 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 			return true;
 		}
 	}
+
+	if ( pPacket->nClientID == nHostClientID )
+		return true;
 
 	return false;
 }

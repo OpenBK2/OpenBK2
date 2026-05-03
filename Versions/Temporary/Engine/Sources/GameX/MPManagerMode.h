@@ -163,10 +163,11 @@ protected:
 	bool HasPlayerStoppedLagging( int nPlayer );
 	bool HasPlayerStartedLagging( int nPlayer );
 	int GetSlotByClientID( int nClientID ) const;
+	int GetSlotClientID( int nSlot );
 	void ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
 	void ApplyScheduledSlotDrops();
 	bool IsGameControlHost();
-	int GetReplacementHostClientID( int nRemovedClientID ) const;
+	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );
 	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );

@@ -37,6 +37,9 @@ void CMPManagerMode::StartGame()
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_MULTI );
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 
+	if ( nOwnSlot >= 0 && nOwnSlot < slots.size() )
+		slots[nOwnSlot].nClientID = GetOwnClientID();
+
 	Scene()->ResetTimer( GetTickCount() );
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
 	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
@@ -457,11 +460,41 @@ void CMPManagerMode::AnalyzeLaggers()
 			continue;
 
 		SLagInfo &lagInfo = lags[i];
+		const bool bLaggingGameControlHost = ( GetSlotClientID( i ) == nHostClientID );
 
 		if ( HasPlayerStartedLagging( i ) )
 		{
 			lagInfo.timeStartLag = curTime;
 			//DebugTrace( "*** LAG START for player %d at time %d", i, curTime );
+			if ( bLaggingGameControlHost && IsValid( pTransceiver ) &&
+				i >= 0 && i < scheduledDropSegmentBySlot.size() &&
+				scheduledDropSegmentBySlot[i] < 0 )
+			{
+				const int nReplacementHostClientID = GetReplacementHostClientID( nHostClientID );
+				if ( nReplacementHostClientID >= 0 && GetOwnClientID() == nReplacementHostClientID )
+				{
+					const int nOldHostClientID = nHostClientID;
+					PromoteGameControlHostAfterRemoval( nOldHostClientID );
+					const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
+					NGameX::MatchPacketTrace_Log(
+						nDropSegment,
+						"DECISION",
+						"HostLagDropAuthorityAssumed",
+						GetOwnClientID(),
+						StrFmt( "slot=%d old_host=%d new_host=%d", i, nOldHostClientID, nHostClientID ) );
+					ScheduleSynchronizedPlayerDrop( i, nDropSegment );
+					BroadcastSynchronizedPlayerDrop( i, nDropSegment, "host_lag_timeout" );
+				}
+				else
+				{
+					NGameX::MatchPacketTrace_Log(
+						pTransceiver->GetCurrentCommonSegment(),
+						"DECISION",
+						"HostLagAwaitingReplacementAuthority",
+						GetOwnClientID(),
+						StrFmt( "slot=%d replacement=%d", i, nReplacementHostClientID ) );
+				}
+			}
 		}
 		else if ( HasPlayerStoppedLagging( i ) )
 		{

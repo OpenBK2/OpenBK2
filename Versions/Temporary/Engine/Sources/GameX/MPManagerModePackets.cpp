@@ -204,6 +204,7 @@ bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 	nOwnSlot = pPacket->nSlot;
 	++nSlotsUsed;
 	slots[nOwnSlot].szName = szMPName;
+	slots[nOwnSlot].nClientID = GetOwnClientID();
 	slots[nOwnSlot].nTeam = nOwnSlot % 2;
 	slots[nOwnSlot].nColour = nOwnSlot % ( (pMPConsts) ? pMPConsts->playerColorInfos.size() : 4 );
 	slots[nOwnSlot].bPresent = true;
@@ -281,7 +282,7 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 	const int nSlotToDrop = pPacket->nSlotToDrop;
 	const bool bDropsCurrentHost =
 		nSlotToDrop >= 0 && nSlotToDrop < slots.size() &&
-		slots[nSlotToDrop].nClientID == nHostClientID;
+		GetSlotClientID( nSlotToDrop ) == nHostClientID;
 
 	if ( !IsAuthoritativeDropPacket( pPacket ) )
 	{
