@@ -171,7 +171,11 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 		bInitialLoadInProgress = false;
 	}
 	else if ( dwLaggers == pMsg->dwLaggingPlayers )
+	{
+		if ( pMsg->dwLaggingPlayers == 0 )
+			ShowWaitWindow( false );
 		return true;
+	}
 
 	dwLaggers = pMsg->dwLaggingPlayers;
 	NGameX::MatchPacketTrace_Log(

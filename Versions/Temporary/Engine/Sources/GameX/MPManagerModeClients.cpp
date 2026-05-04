@@ -270,6 +270,8 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	dwLaggers &= ~( 1UL << nSlot );
 	dwLaggersOld &= ~( 1UL << nSlot );
 	lags[nSlot].dwHatedBy = 0;
+	if ( dwLaggers == 0 )
+		ShowWaitWindow( false );
 	NGameX::MatchPacketTrace_RecordDropScheduled( nSlot, nSegment );
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
