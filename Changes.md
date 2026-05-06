@@ -1,0 +1,59 @@
+
+# Changes to the game
+
+- Game was ported to x64 architecture
+- Ported the video player from old Bink to FFPMEG, allowing the use of modern video formats such as mp4
+- Sound API was ported from FMOD to SDL mixer as the adapter
+- Reinforcement slot inheritance was removed (in MP) - making the mechanic more flexible
+- Base stealing bug (green team advantage) was fixed by making the cap bar yellow if both teams have units in the base circle, the base will get capped when filled and when only one team has units around the circle left
+    - the yellow color is defined in `Consts/All/VisObjIconsSet_Texture.dds` after all player colors (16 of them) from MP
+- Extended support for 16 player colors in MP
+- Added the `Disabled` option to the MP tech levels, allowing the modders to disable some nations in some techlevels, the default value of this property is `false` - so all nations are enabled by default in a techlevel
+- Max possible `CallForHelpRadius` constant was increased to 3840
+- Mods can now have `mod_config.cfg` file in their folder that'll be execute for the update of scripted game constants
+- Replay file names now include the date & time of the match in their name
+- Fixed the rare - but troubling and random sound system division by 0 crash that was tormenting all previous BK2 versions
+- Added crashpad as a crash reporter (for debugging)
+- The game now calculates its data checksum (data folder + current mod) for MP and displays it in hexadecimal form next to the game version, that value is also used to check if game versions match during MP room joining
+- Fixed the 2 know ASYNC bugs from AI Logic code - ones that are easy to reporoduce
+- 16 bit color mode is now disabled by default as modern systems do not support it - it can still be "enabled" in the settings, but it's actually always 32 bit color now!
+- MP chat from players in the game room is not outlined
+- The player chat messages are now outline and the player name now matches his units' color
+- Game will now do a windows ping if someone sends a new chat message in MP (both in game and in the room)
+- Added plenty of new RT_TYPES:
+    - RT_EXTRA_GROUND_1 = 21
+	- RT_EXTRA_GROUND_2 = 22
+	- RT_EXTRA_GROUND_3 = 23
+	- RT_EXTRA_GROUND_4 = 24
+	- RT_EXTRA_GROUND_5 = 25
+	- RT_EXTRA_GROUND_6 = 26
+	- RT_EXTRA_GROUND_7 = 27
+	- RT_EXTRA_GROUND_8 = 28
+	- RT_EXTRA_GROUND_9 = 29
+	- RT_EXTRA_GROUND_10 = 30
+	- RT_EXTRA_AIR_1 = 31
+	- RT_EXTRA_AIR_2 = 32
+	- RT_EXTRA_AIR_3 = 33
+	- RT_EXTRA_AIR_4 = 34
+	- RT_EXTRA_AIR_5 = 35
+	- RT_EXTRA_MIXED_1 = 36
+	- RT_EXTRA_MIXED_2 = 37
+	- RT_EXTRA_MIXED_3 = 38
+	- RT_EXTRA_MIXED_4 = 39
+	- RT_EXTRA_MIXED_5 = 40
+	- RT_EXTRA_MAXLVL_GROUND_1 = 41
+	- RT_EXTRA_MAXLVL_GROUND_2 = 42
+	- RT_EXTRA_MAXLVL_GROUND_3 = 43
+	- RT_EXTRA_MAXLVL_GROUND_4 = 44
+	- RT_EXTRA_MAXLVL_GROUND_5 = 45
+	- RT_EXTRA_MAXLVL_AIR_1 = 46
+	- RT_EXTRA_MAXLVL_AIR_2 = 47
+	- RT_EXTRA_MAXLVL_AIR_3 = 48
+	- RT_EXTRA_MAXLVL_AIR_4 = 49
+	- RT_EXTRA_MAXLVL_AIR_5 = 50
+	- RT_EXTRA_MAXLVL_MIXED_1 = 51
+	- RT_EXTRA_MAXLVL_MIXED_2 = 52
+	- RT_EXTRA_MAXLVL_MIXED_3 = 53
+	- RT_EXTRA_MAXLVL_MIXED_4 = 54
+	- RT_EXTRA_MAXLVL_MIXED_5 = 55
+	- _RT_NONE = 56 (it was moved)
