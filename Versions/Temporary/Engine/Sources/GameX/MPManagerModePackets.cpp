@@ -87,6 +87,17 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 		"CGameKilled",
 		pPacket->nClientID,
 		StrFmt( "game=%d running=%d in_room=%d", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
+	if ( pPacket->nGame != nGameID )
+	{
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CGameKilledIgnoredWrongGame",
+			pPacket->nClientID,
+			StrFmt( "packet_game=%d local_game=%d", pPacket->nGame, nGameID ) );
+		return true;
+	}
+
 	if ( IsInGameRoom() )
 	{
 		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
@@ -96,21 +107,13 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 	}
 	else if ( IsGameRunning() )
 	{
-		int nLostTeam = GetTeamWithLowestScore();
-		int nOwnTeam = slots[nOwnSlot].nTeam;
-
-		if ( nOwnTeam == nLostTeam )
-		{
-//			WriteToPipe( PIPE_CHAT, StrFmt( "Game time over, lost by score" ) );
-			LoseGame();
-			return true;
-		}
-		else
-		{
-//			WriteToPipe( PIPE_CHAT, StrFmt( "Game time over, won by score" ) );
-			WinGame();
-			return true;
-		}
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CGameKilledIgnoredRunningGame",
+			pPacket->nClientID,
+			StrFmt( "game=%d present=%08X host_id=%d", pPacket->nGame, GetPresentMask(), nHostClientID ) );
+		return true;
 	}
 
 	return true;
