@@ -198,6 +198,7 @@ void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 		"PromoteGameControlHostAfterRemoval",
 		GetOwnClientID(),
 		StrFmt( "old_host=%d new_host=%d removed=%d", nOldHostClientID, nHostClientID, nRemovedClientID ) );
+	OnGameControlHostChanged( nOldHostClientID, nHostClientID, nRemovedClientID );
 }
 
 bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket )
@@ -226,6 +227,7 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 				GetOwnClientID(),
 				StrFmt( "old_host=%d new_host=%d slot=%d target_seg=%d",
 					nOldHostClientID, nHostClientID, nSlotToDrop, pPacket->nSegment ) );
+			OnGameControlHostChanged( nOldHostClientID, nHostClientID, nOldHostClientID );
 			return true;
 		}
 	}

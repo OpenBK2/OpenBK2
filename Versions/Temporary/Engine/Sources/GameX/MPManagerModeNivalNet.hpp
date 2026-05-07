@@ -52,10 +52,12 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	virtual void EndGame();
 	virtual void KickPlayerFromSlot( const int nSlot );
 	virtual void OnSurrender();
+	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID );
 
 	void CheckJoinGameConditions();
 	void SetServerGameInfo( struct SGameInfo *pInfo );
 	bool ShouldSendHeartbeatNow();
+	void RefreshServerGameKeepalive( bool bUpdateGameInfo, const char *szReason, int nRemovedClientID );
 	void InitLobby();
 	void RequestChatChannels( DWORD dwVersion );
 	void CreateServerClient();

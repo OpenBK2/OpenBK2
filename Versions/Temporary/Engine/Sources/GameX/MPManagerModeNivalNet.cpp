@@ -45,7 +45,7 @@ REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredPassword", NGlobal::VarWStrHandler,
 FINISH_REGISTER
 
 CMPManagerModeNivalNet::CMPManagerModeNivalNet() :
-nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false )
+nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false ), timeNextGameHeartbeat( 0 )
 {
 	// Messages
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LOGIN_NIVAL_NET, SMPUILoginNivalNetMessage, &CMPManagerModeNivalNet::OnLoginNivalNetMessage );
@@ -192,13 +192,55 @@ bool CMPManagerModeNivalNet::ShouldSendHeartbeatNow()
 		&& nGameID >= 0 && ( Singleton<IGameTimer>()->GetAbsTime() > timeNextGameHeartbeat ) );
 }
 
+void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, const char *szReason, int nRemovedClientID )
+{
+	if ( nGameID < 0 )
+		return;
+
+	timeNextGameHeartbeat = Singleton<IGameTimer>()->GetAbsTime() + HEARTBEAT_PERIOD;
+	pClient->SendPacket( new CGameHeartBeatPacket( 0, nGameID ) );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"TX",
+		"CGameHeartBeatPacket",
+		GetOwnClientID(),
+		StrFmt( "game_id=%d reason=%s update_info=%d", nGameID, szReason ? szReason : "", bUpdateGameInfo ? 1 : 0 ) );
+
+	if ( bUpdateGameInfo && gameDesc.pMPMap )
+	{
+		CPtr<SGameInfo> pGameInfo = new SGameInfo;
+		SetServerGameInfo( pGameInfo );
+		pGameInfo->bCanConnect = false;
+		pGameInfo->nPlayers = 0;
+		for ( int i = 0; i < slots.size(); ++i )
+		{
+			if ( IsPlayerPresent( i ) && GetSlotClientID( i ) != nRemovedClientID )
+				++pGameInfo->nPlayers;
+		}
+		pClient->SendPacket( new CUpdateGameInfo( 0, *pGameInfo ) );
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX",
+			"CUpdateGameInfo",
+			GetOwnClientID(),
+			StrFmt( "game_id=%d players=%d reason=%s", nGameID, pGameInfo->nPlayers, szReason ? szReason : "" ) );
+	}
+}
+
+void CMPManagerModeNivalNet::OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID )
+{
+	if ( !IsGameRunning() )
+		return;
+
+	const bool bOwnsGameControl = ( GetOwnClientID() == nNewHostClientID );
+	RefreshServerGameKeepalive( bOwnsGameControl, "control_host_changed", nRemovedClientID );
+}
+
 bool CMPManagerModeNivalNet::Segment()
 {
 	if ( ShouldSendHeartbeatNow() )
 	{
-		timeNextGameHeartbeat = Singleton<IGameTimer>()->GetAbsTime() + HEARTBEAT_PERIOD;
-		CPtr<CGameHeartBeatPacket> pHeartbeat = new CGameHeartBeatPacket( 0, nGameID );
-		pClient->SendPacket( pHeartbeat );
+		RefreshServerGameKeepalive( false, "periodic", -1 );
 		//DebugTrace( "+++ Send Heartbeat, game %d, time %d", nGameID, Singleton<IGameTimer>()->GetAbsTime() );
 	}
 
@@ -816,6 +858,7 @@ bool CMPManagerModeNivalNet::OnConnectedGameIDPacket( class CConnectedGameID *pP
 
 	if ( eState == EGS_JOINING && !bHost )
 	{
+		timeNextGameHeartbeat = 0;
 		CheckJoinGameConditions();
 		return true;
 	}

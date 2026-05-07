@@ -171,6 +171,7 @@ protected:
 	bool IsGameControlHost();
 	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );
+	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID ) {}
 	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
