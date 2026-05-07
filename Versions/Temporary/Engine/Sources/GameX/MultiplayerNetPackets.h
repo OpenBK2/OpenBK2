@@ -74,6 +74,18 @@ public:
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft ) : CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft ) {}
 };
 
+class CB2UserPausePacket : public CNetPacket
+{
+	OBJECT_NOCOPY_METHODS( CB2UserPausePacket );
+public:
+	ZDATA
+	bool bPaused;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bPaused); return 0; }
+
+	CB2UserPausePacket() : bPaused( false ) {}
+	CB2UserPausePacket( int nClientID, bool _bPaused ) : CNetPacket( nClientID ), bPaused( _bPaused ) {}
+};
+
 // Game-control-host packet: stop waiting for a player at a deterministic segment.
 // Simulation-side removal is delayed by the transceiver latency so every survivor
 // skips the same first unsafe command segment.

@@ -269,6 +269,7 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	// Stop local lag accounting for this slot immediately to avoid repeated kick scheduling.
 	dwLaggers &= ~( 1UL << nSlot );
 	dwLaggersOld &= ~( 1UL << nSlot );
+	dwUserPausedPlayers &= ~( 1UL << nSlot );
 	lags[nSlot].dwHatedBy = 0;
 	if ( dwLaggers == 0 )
 		ShowWaitWindow( false );

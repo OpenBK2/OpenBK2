@@ -90,6 +90,7 @@ protected:
 	int nSlotsUsed;
 	DWORD dwLaggers;								// Waiting for these players
 	DWORD dwLaggersOld;							// same, previous state, used to find changes in AnalyzeLag();
+	DWORD dwUserPausedPlayers;					// Players that explicitly toggled MP pause
 	DWORD dwInitialPlayers;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
@@ -141,6 +142,7 @@ private:
 	bool OnSlotNumberPacket( class CSlotNumberPacket *pPacket );
 	bool OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket );
 	bool OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPacket );
+	bool OnB2UserPausePacket( class CB2UserPausePacket *pPacket );
 	bool OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket );
 	bool OnB2GameLostPacket( class CB2GameLostPacket *pPacket );
 	bool OnPingPacket( class CPingPacket *pPacket );

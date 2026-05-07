@@ -30,7 +30,7 @@ FINISH_REGISTER
 
 
 CMPManagerMode::CMPManagerMode()
-: nGameID( -1 ), nHostClientID( -1 )
+: nGameID( -1 ), nHostClientID( -1 ), dwUserPausedPlayers( 0 )
 {
 	// Messages
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CREATE_GAME, SMPUICreateGameMessage, &CMPManagerMode::OnCreateGameMessage );
@@ -53,6 +53,7 @@ CMPManagerMode::CMPManagerMode()
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnSlotNumberPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2SuggestKickPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2LagTimeUpdatePacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2UserPausePacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2DropPlayerAtSegmentPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2GameLostPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnPingPacket );

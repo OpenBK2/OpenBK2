@@ -267,6 +267,31 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	return true;
 }
 
+bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
+{
+	if ( !IsGameRunning() )
+		return true;
+
+	const int nSlot = GetSlotByClientID( pPacket->nClientID );
+	if ( nSlot < 0 || nSlot >= slots.size() || !IsPlayerPresent( nSlot ) )
+		return true;
+
+	const DWORD dwPreUserPausedPlayers = dwUserPausedPlayers;
+	if ( pPacket->bPaused )
+		dwUserPausedPlayers |= ( 1UL << nSlot );
+	else
+		dwUserPausedPlayers &= ~( 1UL << nSlot );
+	NGameX::MatchPacketTrace_Log(
+		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		"RX",
+		"CB2UserPausePacket",
+		pPacket->nClientID,
+		StrFmt( "slot=%d paused=%d pre_user_pause_mask=%08X post_user_pause_mask=%08X",
+			nSlot, pPacket->bPaused ? 1 : 0, dwPreUserPausedPlayers, dwUserPausedPlayers ) );
+
+	return true;
+}
+
 bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket )
 {
 	if ( !IsGameRunning() )

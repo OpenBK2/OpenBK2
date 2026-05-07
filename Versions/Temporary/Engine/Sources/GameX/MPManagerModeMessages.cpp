@@ -234,7 +234,23 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 	if ( !bPausedNow && lags[nOwnSlot].nLagLeft < NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
 		return true;
 
-	pTransceiver->CommandTimeOut( !bPausedNow );
+	const bool bPauseOn = !bPausedNow;
+	if ( nOwnSlot >= 0 && nOwnSlot < slots.size() )
+	{
+		if ( bPauseOn )
+			dwUserPausedPlayers |= ( 1UL << nOwnSlot );
+		else
+			dwUserPausedPlayers &= ~( 1UL << nOwnSlot );
+		pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX",
+			"CB2UserPausePacket",
+			GetOwnClientID(),
+			StrFmt( "slot=%d paused=%d user_pause_mask=%08X", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
+	}
+
+	pTransceiver->CommandTimeOut( bPauseOn );
 	if ( bPausedNow )							// Pause off
 	{
 		dwLaggers &= ~( 1UL << nOwnSlot );

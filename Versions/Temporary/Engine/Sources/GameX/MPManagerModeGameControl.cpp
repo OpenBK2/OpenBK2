@@ -47,6 +47,7 @@ void CMPManagerMode::StartGame()
 
 	dwLaggers = 0;
 	dwLaggersOld = 0;
+	dwUserPausedPlayers = 0;
 	bWaitWindowShown = false;
 	bInitialLoadInProgress = true;
 	lags.resize( slots.size() );
@@ -461,12 +462,13 @@ void CMPManagerMode::AnalyzeLaggers()
 
 		SLagInfo &lagInfo = lags[i];
 		const bool bLaggingGameControlHost = ( GetSlotClientID( i ) == nHostClientID );
+		const bool bUserPaused = ( dwUserPausedPlayers & ( 1UL << i ) ) != 0;
 
 		if ( HasPlayerStartedLagging( i ) )
 		{
 			lagInfo.timeStartLag = curTime;
 			//DebugTrace( "*** LAG START for player %d at time %d", i, curTime );
-			if ( bLaggingGameControlHost && IsValid( pTransceiver ) &&
+			if ( bLaggingGameControlHost && !bUserPaused && IsValid( pTransceiver ) &&
 				i >= 0 && i < scheduledDropSegmentBySlot.size() &&
 				scheduledDropSegmentBySlot[i] < 0 )
 			{
@@ -495,6 +497,15 @@ void CMPManagerMode::AnalyzeLaggers()
 						StrFmt( "slot=%d replacement=%d", i, nReplacementHostClientID ) );
 				}
 			}
+			else if ( bLaggingGameControlHost && bUserPaused )
+			{
+				NGameX::MatchPacketTrace_Log(
+					IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+					"DECISION",
+					"HostLagUserPauseObserved",
+					GetOwnClientID(),
+					StrFmt( "slot=%d user_pause_mask=%08X", i, dwUserPausedPlayers ) );
+			}
 		}
 		else if ( HasPlayerStoppedLagging( i ) )
 		{
@@ -502,6 +513,7 @@ void CMPManagerMode::AnalyzeLaggers()
 			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
 			lagInfo.dwHatedBy = 0;
 			lagInfo.timeStartLag = 0;
+			dwUserPausedPlayers &= ~( 1UL << i );
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
 			NGameX::MatchPacketTrace_Log(
 				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -540,20 +552,27 @@ void CMPManagerMode::AnalyzeLaggers()
 				const DWORD dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
 				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
 				{
-					if ( IsGameControlHost() && IsValid( pTransceiver ) &&
+					const int nReplacementHostClientID = bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;
+					const bool bOwnsDropAuthority =
+						IsGameControlHost() || ( bLaggingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
+					if ( bOwnsDropAuthority && IsValid( pTransceiver ) &&
 						i >= 0 && i < scheduledDropSegmentBySlot.size() &&
 						scheduledDropSegmentBySlot[i] < 0 )
 					{
-						KickPlayerFromSlot( i );
+						if ( bLaggingGameControlHost )
+							PromoteGameControlHostAfterRemoval( nHostClientID );
+						else
+							KickPlayerFromSlot( i );
 						const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
 						NGameX::MatchPacketTrace_Log(
 							nDropSegment,
 							"DECISION",
 							"LagKickConsensusReached",
 							GetOwnClientID(),
-							StrFmt( "slot=%d eligible=%08X votes=%08X", i, dwEligibleVoters, lagInfo.dwHatedBy ) );
+							StrFmt( "slot=%d eligible=%08X votes=%08X control_host=%d replacement=%d",
+								i, dwEligibleVoters, lagInfo.dwHatedBy, bLaggingGameControlHost ? 1 : 0, nReplacementHostClientID ) );
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
-						BroadcastSynchronizedPlayerDrop( i, nDropSegment, "lag_kick" );
+						BroadcastSynchronizedPlayerDrop( i, nDropSegment, bLaggingGameControlHost ? "host_lag_timeout" : "lag_kick" );
 					}
 				}
 			}
