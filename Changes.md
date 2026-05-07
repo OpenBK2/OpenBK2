@@ -2,6 +2,9 @@
 # Changes to the game
 
 - Game was ported to x64 architecture
+- Fixed bugs from the given BK2 1.0 ~beta version:
+	- Reinf time text not showing was fixed
+ 	- Fixed the bug where units would not engage with each other due to poorly written weapon range pick logic (it now picks the weapon with the largest range, not the first one from the weapons array)
 - Ported the video player from old Bink to FFPMEG, allowing the use of modern video formats such as mp4
 - Sound API was ported from FMOD to SDL mixer as the adapter
 - Reinforcement slot inheritance was removed (in MP) - making the mechanic more flexible
@@ -17,8 +20,8 @@
 - The game now calculates its data checksum (data folder + current mod) for MP and displays it in hexadecimal form next to the game version, that value is also used to check if game versions match during MP room joining
 - Fixed the 2 know ASYNC bugs from AI Logic code - ones that are easy to reporoduce
 - 16 bit color mode is now disabled by default as modern systems do not support it - it can still be "enabled" in the settings, but it's actually always 32 bit color now!
-- MP chat from players in the game room is not outlined
-- The player chat messages are now outline and the player name now matches his units' color
+- MP chat from players in the game room is now outlined
+- The player chat messages are now outlined and the player name now matches his units' color
 - Game will now do a windows ping if someone sends a new chat message in MP (both in game and in the room)
 - Added plenty of new RT_TYPES:
     - RT_EXTRA_GROUND_1 = 21
