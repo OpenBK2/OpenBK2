@@ -608,6 +608,7 @@ void CShellsStore::AddShell( CInvisShell *pShell )
 	if ( !invisShells.empty() )
 		t1 = invisShells.top()->GetExplTime();
 	//DEBUG}
+	pShell->SetOrder( nNextInvisShellOrder++ );
 	invisShells.push( pShell );
 	theCombatEstimator.AddShell( curTime, pShell->GetMaxDamage() );
 	
@@ -661,6 +662,7 @@ void CShellsStore::Clear()
 		invisShells.pop();
 
 	visShells.clear();
+	nNextInvisShellOrder = 0;
 }
 
 void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
@@ -678,9 +680,11 @@ void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
 		
 		const CVec3 vExplCenter = pShell->GetExplCoordinates();
 		const NTimer::STime explTime = pShell->GetExplTime();
+		const int nOrder = pShell->GetOrder();
 
 		CopyToBuf( &checkSumBuf, vExplCenter );
 		CopyToBuf( &checkSumBuf, explTime );
+		CopyToBuf( &checkSumBuf, nOrder );
 	}
 
 	for ( CVisShellList::iterator iter = visShells.begin(); iter != visShells.end(); ++iter )
@@ -709,11 +713,12 @@ void CShellsStore::UpdateDebugChecksums(FILE* f)
 		
 		const CVec3 vExplCenter = pShell->GetExplCoordinates();
 		const NTimer::STime explTime = pShell->GetExplTime();
+		const int nOrder = pShell->GetOrder();
 
 		uLong checksum = 12347;
-		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, explTime);
+		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, explTime, nOrder);
 
-		fprintf(f, "\nExplosion: %lu\n", checksum);
+		fprintf(f, "\nExplosion[%d]: %lu\n", nOrder, checksum);
 	}
 	fprintf(f, "\n");
 

@@ -346,13 +346,15 @@ class CInvisShell : public CAIObjectBase, public CShell
 {
 	OBJECT_BASIC_METHODS( CInvisShell );
 	ZDATA_(CShell)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CShell*)this); return 0; }
+	int nOrder;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CShell*)this); f.Add(2,&nOrder); return 0; }
 public:
-	CInvisShell() { }
+	CInvisShell() : nOrder( 0 ) { }
 	CInvisShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun )
-		: CShell( explTime, expl, nGun ) { }
+		: CShell( explTime, expl, nGun ), nOrder( 0 ) { }
 
-	//bool operator < ( const CInvisShell &shell ) { return GetExplTime() > shell.GetExplTime(); }
+	void SetOrder( const int _nOrder ) { nOrder = _nOrder; }
+	const int GetOrder() const { return nOrder; }
 };
 
 // видимый снаряд
@@ -411,7 +413,13 @@ public:
 struct SInvisShellCompare
 {
 	bool operator()( const SInvisShell &s1, const SInvisShell &s2 ) const
-		{	return s1.ptr->GetExplTime() > s2.ptr->GetExplTime(); }
+	{
+		const NTimer::STime s1e = s1.ptr->GetExplTime();
+		const NTimer::STime s2e = s2.ptr->GetExplTime();
+		if ( s1e != s2e )
+			return s1e > s2e;
+		return s1.ptr->GetOrder() > s2.ptr->GetOrder();
+	}
 };
 typedef std::list< CObj<CVisShell> > CVisShellList;
 
@@ -424,11 +432,12 @@ class CShellsStore
 	CInvisShells invisShells;
 	// все видимые снаряды
 	CVisShellList visShells;
+	int nNextInvisShellOrder;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); f.Add(4,&nNextInvisShellOrder); return 0; }
 
 public:
-	CShellsStore() { }
+	CShellsStore() : nNextInvisShellOrder( 0 ) { }
 	void Clear();
 
 	void AddShell( CMomentShell	&shell ); 
