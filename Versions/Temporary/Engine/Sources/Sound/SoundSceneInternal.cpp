@@ -1117,7 +1117,8 @@ void CSoundScene::Init()
 
 void CSoundScene::Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE )
 {
-	b3DSound = s_bSound5_1;//NGlobal::GetVar( "sound_5.1", false );
+	//b3DSound = s_bSound5_1;//NGlobal::GetVar( "sound_5.1", false );
+	b3DSound = false;	// force disable 3D sound! - it's buggy!
 	if ( b3DSound )
 	{
 		pScene = new CSoundScene3D;
