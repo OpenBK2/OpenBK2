@@ -245,9 +245,23 @@ void CCumulativeExpl::Explode()
 	bool bSoldierHit = false;
 	
 	// по юнитам
-	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, vExplCoord, 0.0f ); !iter.IsFinished(); iter.Iterate() )
+	// Ensure that the units within explosion are iterated deterministically by UniqueID
+	std::vector<CAIUnit*> units;
+	units.reserve(32);
+	CUnitsIter<0,0> iter( 0, ANY_PARTY, vExplCoord, 0.0f );
+	while (!iter.IsFinished())
 	{
-		CAIUnit *pTarget = *iter;
+		units.push_back(*iter);
+		iter.Iterate();
+	}
+	// sort ensures the deterministic iteration
+	std::sort(units.begin(), units.end(), [](CAIUnit* u1, CAIUnit* u2) {
+		return u1->GetUniqueId() > u2->GetUniqueId();
+	});
+
+	for ( size_t i = 0; i < units.size(); i++ )
+	{
+		CAIUnit *pTarget = units[i];
 		if ( IsValidObj( pTarget ) && pUnit != pTarget )
 		{
 			if ( nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
@@ -276,7 +290,8 @@ void CCumulativeExpl::Explode()
 	{
 		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
 		// итератор нужен, значит здесь нельзя заводить итератор.
-		std::list<CExistingObject*> hitObjects;
+		std::vector<CExistingObject*> hitObjects;
+		hitObjects.reserve(32);
 		
 		// по статическим объектам
 		for ( CStObjCircleIter<false> iter( vExplCoord, 0 ); !iter.IsFinished(); iter.Iterate() )
@@ -285,8 +300,12 @@ void CCumulativeExpl::Explode()
 			if ( pObj->IsAlive() )
 				hitObjects.push_back( pObj );
 		}
-		
-		for ( std::list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
+		// Ensure deterministic iteration
+		std::sort(hitObjects.begin(), hitObjects.end(), [](CExistingObject* o1, CExistingObject* o2) {
+			return o1->GetUniqueId() > o2->GetUniqueId();
+		});
+
+		for ( std::vector<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
 			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
 			const bool bExplResult = (*it)->ProcessCumulativeExpl( this, nArmorDir, false );
@@ -348,9 +367,23 @@ void CBurstExpl::Explode()
 
 	bool bHit = false;
 	// по юнитам
-	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, explCoord, fRadius ); !iter.IsFinished(); iter.Iterate() )
+	// Ensure that the units within explosion are iterated deterministically by UniqueID
+	std::vector<CAIUnit*> units;
+	units.reserve(32);
+	CUnitsIter<0,0> iter( 0, ANY_PARTY, explCoord, fRadius );
+	while (!iter.IsFinished())
 	{
-		CAIUnit *pTarget = *iter;
+		units.push_back(*iter);
+		iter.Iterate();
+	}
+	// sort ensures the deterministic iteration
+	std::sort(units.begin(), units.end(), [](CAIUnit* u1, CAIUnit* u2) {
+		return u1->GetUniqueId() > u2->GetUniqueId();
+	});
+
+	for ( size_t i = 0; i < units.size(); i++ )
+	{
+		CAIUnit *pTarget = units[i];
 		if ( IsValidObj( pTarget ) )
 		{
 			if ( pTarget != pUnit &&
@@ -377,8 +410,9 @@ void CBurstExpl::Explode()
 		// по статическим объектам
 		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
 		// итератор нужен, значит здесь нельзя заводить итератор.
-		std::list<CExistingObject*> hitObjects;
-		
+		std::vector<CExistingObject*> hitObjects;
+		hitObjects.reserve(32);
+
 		// по статическим объектам
 		for ( CStObjCircleIter<false> iter( explCoord, fSmallRadius + 300.0f ); !iter.IsFinished(); iter.Iterate() )
 		{
@@ -386,7 +420,12 @@ void CBurstExpl::Explode()
 			if ( IsValidObj( pObj ) )
 				hitObjects.push_back( pObj );
 		}
-		for ( std::list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
+		// Ensure deterministic iteration
+		std::sort(hitObjects.begin(), hitObjects.end(), [](CExistingObject* o1, CExistingObject* o2) {
+			return o1->GetUniqueId() > o2->GetUniqueId();
+		});
+
+		for ( std::vector<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
 			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
 			const bool bExplResult = (*it)->ProcessBurstExpl( this, nArmorDir, fRadius, fSmallRadius );
