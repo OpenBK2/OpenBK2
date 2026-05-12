@@ -64,7 +64,7 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 		//его можно прострелить
 		if ( pChosenGun != 0 )
 		{
-			static NTimer::STime timeToShoot = DirsDifference( GetDirectionByVector( pTarget->GetCenterPlain() - pUnit->GetCenterPlain() ), pChosenGun->GetGlobalDir() );
+			NTimer::STime timeToShoot = DirsDifference( GetDirectionByVector( pTarget->GetCenterPlain() - pUnit->GetCenterPlain() ), pChosenGun->GetGlobalDir() );
 			const bool bCanShoot = pChosenGun->CanShootToUnit( pTarget );
 			if ( pResult == 0 )
 			{
