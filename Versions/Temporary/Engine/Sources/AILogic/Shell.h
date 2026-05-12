@@ -367,10 +367,11 @@ public: int operator&( IBinSaver &saver ); private:
 	CVec3 speed;
 	bool bVisible;
 	int nPlatform;
+	int nOrder;
 	
 	void CalcVisibility();
 public:
-	CVisShell() { }
+	CVisShell() : nOrder( 0 ) { }
 	CVisShell( CExplosion *_expl, IBallisticTraj *_pTraj, const int nGun, const int nPlatform );
 
 	const NTimer::STime GetStartTime() const { return pTraj->GetStartTime(); }
@@ -389,6 +390,9 @@ public:
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
 	
 	virtual const bool IsVisibleByPlayer() const;
+
+	void SetOrder( const int _nOrder ) { nOrder = _nOrder; }
+	const int GetOrder() const { return nOrder; }
 };
 
 //*******************************************************************
@@ -422,6 +426,19 @@ struct SInvisShellCompare
 	}
 };
 typedef std::list< CObj<CVisShell> > CVisShellList;
+struct SVisShellCompare
+{
+	bool operator()( const CObj<CVisShell> &s1, const CObj<CVisShell> &s2 ) const
+	{
+		const NTimer::STime s1e = s1->GetExplTime();
+		const NTimer::STime s2e = s2->GetExplTime();
+		if ( s1e != s2e )
+			return s1e < s2e;
+		if ( s1->GetOrder() != s2->GetOrder() )
+			return s1->GetOrder() < s2->GetOrder();
+		return s1->GetUniqueId() < s2->GetUniqueId();
+	}
+};
 
 class CShellsStore
 {
@@ -433,11 +450,12 @@ class CShellsStore
 	// все видимые снаряды
 	CVisShellList visShells;
 	int nNextInvisShellOrder;
+	int nNextVisShellOrder;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); f.Add(4,&nNextInvisShellOrder); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); f.Add(4,&nNextInvisShellOrder); f.Add(5,&nNextVisShellOrder); return 0; }
 
 public:
-	CShellsStore() : nNextInvisShellOrder( 0 ) { }
+	CShellsStore() : nNextInvisShellOrder( 0 ), nNextVisShellOrder( 0 ) { }
 	void Clear();
 
 	void AddShell( CMomentShell	&shell ); 

@@ -553,7 +553,7 @@ CObjectBase* CShell::GetWhoFired() const
 CVisShell::CVisShell( CExplosion *_expl, IBallisticTraj *_pTraj, const int nGun, const int _nPlatform )
 : CShell( _pTraj->GetExplTime(), _expl, nGun ), pTraj( _pTraj ),
 	center( _pTraj->GetStartPoint() ), speed( VNULL3 ), bVisible( false ),
-	nPlatform( _nPlatform )
+	nPlatform( _nPlatform ), nOrder( 0 )
 { 
 	NI_ASSERT( pTraj != 0, "trajectory cannot be null" );
 	SetUniqueIdForObjects(); 
@@ -658,6 +658,8 @@ void CShellsStore::AddShell( CInvisShell *pShell )
 
 void CShellsStore::AddShell( CVisShell *pShell )
 {
+	// Visible shells can share an explosion time; order keeps processing stable.
+	pShell->SetOrder( nNextVisShellOrder++ );
 	visShells.push_back( pShell );
 	updater.AddUpdate( 0, ACTION_NOTIFY_NEW_PROJECTILE, pShell, -1 );
 
@@ -676,6 +678,7 @@ void CShellsStore::Segment()
 	}
 
 	// обновить видимые
+	visShells.sort( SVisShellCompare() );
 	CVisShellList::iterator iter = visShells.begin();
 	while ( iter != visShells.end() )
 	{
@@ -702,6 +705,7 @@ void CShellsStore::Clear()
 
 	visShells.clear();
 	nNextInvisShellOrder = 0;
+	nNextVisShellOrder = 0;
 }
 
 void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
@@ -726,16 +730,20 @@ void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
 		CopyToBuf( &checkSumBuf, nOrder );
 	}
 
-	for ( CVisShellList::iterator iter = visShells.begin(); iter != visShells.end(); ++iter )
+	CVisShellList sortedVisShells = visShells;
+	sortedVisShells.sort( SVisShellCompare() );
+	for ( CVisShellList::iterator iter = sortedVisShells.begin(); iter != sortedVisShells.end(); ++iter )
 	{
 		CVisShell *pShell = *iter;
 		const CVec3 vExplCenter = pShell->GetExplCoordinates();
 		const CVec3 vCurCenter = pShell->GetCoordinates();
 		const NTimer::STime explTime = pShell->GetExplTime();
+		const int nOrder = pShell->GetOrder();
 
 		CopyToBuf( &checkSumBuf, vExplCenter );
 		CopyToBuf( &checkSumBuf, vCurCenter );
 		CopyToBuf( &checkSumBuf, explTime );
+		CopyToBuf( &checkSumBuf, nOrder );
 	}
 
 	adler32( *pCheckSum, &(checkSumBuf.buf[0]), checkSumBuf.nCnt );
@@ -762,16 +770,19 @@ void CShellsStore::UpdateDebugChecksums(FILE* f)
 	fprintf(f, "\n");
 
 	fprintf(f, "Shells:\n");
-	for ( CVisShellList::iterator iter = visShells.begin(); iter != visShells.end(); ++iter )
+	CVisShellList sortedVisShells = visShells;
+	sortedVisShells.sort( SVisShellCompare() );
+	for ( CVisShellList::iterator iter = sortedVisShells.begin(); iter != sortedVisShells.end(); ++iter )
 	{
 		CVisShell *pShell = *iter;
 		const CVec3 vExplCenter = pShell->GetExplCoordinates();
 		const CVec3 vCurCenter = pShell->GetCoordinates();
 		const NTimer::STime explTime = pShell->GetExplTime();
+		const int nOrder = pShell->GetOrder();
 		uLong checksum = 71717;
-		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, vCurCenter.x, vCurCenter.y, vCurCenter.z, explTime);
+		checksum = CalculateChecksum(checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, vCurCenter.x, vCurCenter.y, vCurCenter.z, explTime, nOrder);
 		
-		fprintf(f, "\tPlayer[%d] Shell[%d]: %lu\n", (int)pShell->GetPlayer(), pShell->GetUniqueId(), checksum);
+		fprintf(f, "\tPlayer[%d] Shell[%d] Order[%d]: %lu\n", (int)pShell->GetPlayer(), pShell->GetUniqueId(), nOrder, checksum);
 	}
 	fprintf(f, "\n");
 }

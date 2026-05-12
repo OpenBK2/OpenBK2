@@ -14,6 +14,7 @@ int CVisShell::operator&( IBinSaver &saver )
 		saver.Add( 6, &bVisible );
 	
 	saver.Add( 7, &nPlatform );
+	saver.Add( 8, &nOrder );
 
 	return 0;
 }

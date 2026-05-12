@@ -363,7 +363,7 @@ struct SSortCollisions
 		CCollisionsCollector::TCollisions::const_iterator pos1 = pCollector->collisions.find( nIndex1 );
 		CCollisionsCollector::TCollisions::const_iterator pos2 = pCollector->collisions.find( nIndex2 );
 		if ( pos1 == pos2 )
-			return nIndex1 >= nIndex2;
+			return nIndex1 >= nIndex2;	// CRAP: this is bad as std::sort wants only > instead of >=, but indexes are unique so it's not critical
 		else if ( pos1 != pCollector->collisions.end() && pos2 != pCollector->collisions.end() )
 		{
 			if ( pos1->second.pushers.size() == pos2->second.pushers.size() )
