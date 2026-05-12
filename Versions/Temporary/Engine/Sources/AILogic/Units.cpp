@@ -190,14 +190,15 @@ void CUnits::DelUnitFromCell( CAIUnit *pUnit, bool bWithLeveledCelles )
 		unitsInCells[nVisIndex].GetEl( unitPos.nUnitPos ) = 0;
 		unitPos.nCellID = 0;
 		unitPos.nUnitPos = 0;
-		cell.x = 0;
-		cell.y = 0;
 
 		if ( --nUnitsCell[cell.y][cell.x] == 0 )
 			cellsIds.Return( nCell[cell.y][cell.x] );
 
 		if ( bWithLeveledCelles )
 			DelUnitFromLeveledCells( pUnit, cell, nVisIndex );
+
+		cell.x = 0;
+		cell.y = 0;
 
 		NI_ASSERT( unitsInCellsSet.find( nUnitID ) != unitsInCellsSet.end(), "Unit is not in cell" );
 		unitsInCellsSet.erase( nUnitID );
