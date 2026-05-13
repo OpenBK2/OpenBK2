@@ -35,6 +35,10 @@ struct ICommandsHistory : public ICheckSumLog
 		if (cmds.size() > 0)
 		{
 			FILE* f = fopen(path.c_str(), "w");
+
+			if (!f)
+				return;
+
 			fprintf(f, "Commands:\n");
 			using cmd_pair = std::pair<int, std::list<CPtr<IAILogicCommandB2>>>;
 			std::vector<cmd_pair> all;

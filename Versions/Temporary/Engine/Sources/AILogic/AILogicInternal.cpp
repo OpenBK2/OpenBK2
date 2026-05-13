@@ -1183,6 +1183,9 @@ void CAILogic::WriteDetailedChecksumInfo()
 {
 	FILE* f = fopen("last_async_detailed_debug.txt", "w");
 
+	if (!f)
+		return;
+
 	uLong baseChecksum = 11123;
 
 	fprintf(f, "Unit checksums [UID, checksum]:\n");

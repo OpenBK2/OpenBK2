@@ -593,6 +593,9 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 {
 	FILE* fl = fopen("last_async.txt", "w");
 
+	if (!fl)
+		return;
+
 	fprintf(fl, "Segment: %d\n", segment);
 	fprintf(fl, "PlayerID,\tPlayerClientID,\tPlayerNick,\tPlayerTeam,\tLastChecksum\n");
 
@@ -619,6 +622,9 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 
 	#ifdef CHECKSUM_LIST_DEBUG
 	FILE* fd = fopen("last_async_debug.txt", "w");
+
+	if (!fd)
+		return;
 
 	fprintf(fd, "seg,\thash\n");
 	for (int i = 0; i < myHistoryHashes.size(); i++)
