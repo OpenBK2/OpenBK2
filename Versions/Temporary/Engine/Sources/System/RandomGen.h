@@ -17,10 +17,23 @@ struct IRandomSeed : public CObjectBase
 
 namespace NRandom
 {
+	struct SDebugState
+	{
+		unsigned int randcnt;
+		unsigned int randa;
+		unsigned int randb;
+		unsigned int randc;
+		unsigned long randrslChecksum;
+		unsigned long randmemChecksum;
+		unsigned __int64 randomCalls;
+	};
+
 	// initialize random generator with random seed
 	SYSTEM_EXPORT void SetRandomSeed( IRandomSeed *pSeed );
 	// create copy of the current random gen seed and return it
 	SYSTEM_EXPORT IRandomSeed *CreateRandomSeedCopy();
+	// copy compact debug info for ASYNC diagnostics without consuming RNG values
+	SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
 	// get random value
 	SYSTEM_EXPORT UINT Random();
 	// random w/o checks

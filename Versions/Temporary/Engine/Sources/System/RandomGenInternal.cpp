@@ -17,6 +17,7 @@ static bool s_bLogRandomCalls = false;
 namespace NRandom
 {
 	SRandData rnd;
+	unsigned __int64 nRandomCallsTotal;
 #ifndef _FINALRELEASE
 	int nRandomCalls;
 #endif
@@ -27,9 +28,12 @@ namespace NRandom
 	void SetRandomSeed( IRandomSeed *pSeed );
 	// create copy of the current random gen seed and return it
 	IRandomSeed *CreateRandomSeedCopy();
+	// copy compact debug info for ASYNC diagnostics
+	void GetDebugState( SDebugState *pState );
 	// get random value
 	UINT Random()
 	{
+		++nRandomCallsTotal;
 		//DEBUG{
 #ifndef _FINALRELEASE
 		if ( s_bLogRandomCalls )
@@ -47,6 +51,31 @@ namespace NRandom
 			rnd.randcnt = RANDSIZ - 1;
 		}
 		return rnd.randrsl[rnd.randcnt];
+	}
+
+	static unsigned long CalcDebugChecksum( const unsigned _int32 *pValues, const int nCount )
+	{
+		unsigned long nChecksum = 2166136261u;
+		for ( int i = 0; i < nCount; ++i )
+		{
+			nChecksum ^= pValues[i];
+			nChecksum *= 16777619u;
+		}
+		return nChecksum;
+	}
+
+	void GetDebugState( SDebugState *pState )
+	{
+		if ( pState == 0 )
+			return;
+
+		pState->randcnt = rnd.randcnt;
+		pState->randa = rnd.randa;
+		pState->randb = rnd.randb;
+		pState->randc = rnd.randc;
+		pState->randrslChecksum = CalcDebugChecksum( rnd.randrsl, RANDSIZ );
+		pState->randmemChecksum = CalcDebugChecksum( rnd.randmem, RANDSIZ );
+		pState->randomCalls = nRandomCallsTotal;
 	}
 
 	static SRandomFunc rndFunc;
@@ -116,6 +145,7 @@ SRandomGenAutoMagic automagic;
 
 void NRandom::SetRandomSeed( IRandomSeed *pSeed )
 {
+	nRandomCallsTotal = 0;
 #ifndef _FINALRELEASE
 	nRandomCalls = 0;
 #endif

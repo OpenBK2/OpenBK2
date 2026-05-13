@@ -43,6 +43,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "ExecutorRestoreTransparencyQueue.h"
 //#include "../Common_RTS_AI/CollisionInternal.h"
 #include "System/CheckSumLog.h"
+#include "System/RandomGen.h"
 #include "System/Text.h"
 
 
@@ -1187,6 +1188,15 @@ void CAILogic::WriteDetailedChecksumInfo()
 		return;
 
 	uLong baseChecksum = 11123;
+	NRandom::SDebugState randomDebugState;
+	NRandom::GetDebugState( &randomDebugState );
+
+	fprintf(f, "Random state:\n");
+	fprintf(f, "\tCalls: %I64u\n", randomDebugState.randomCalls);
+	fprintf(f, "\tISAAC: randcnt=%u randa=%u randb=%u randc=%u randrsl=%lu randmem=%lu\n",
+		randomDebugState.randcnt, randomDebugState.randa, randomDebugState.randb, randomDebugState.randc,
+		randomDebugState.randrslChecksum, randomDebugState.randmemChecksum);
+	fprintf(f, "\n");
 
 	fprintf(f, "Unit checksums [UID, checksum]:\n");
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
