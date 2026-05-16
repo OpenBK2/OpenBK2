@@ -16,6 +16,8 @@
 
 #include "System/RandomGen.h"
 
+#include <map>
+
 extern NTimer::STime curTime;
 
 static const float DIST_THRESHOLD = 256.0f;
@@ -96,6 +98,11 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	forces.reserve( units.size() );
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
 		forces.push_back( SForce( it->second.pUnit->GetUniqueID(), it->second.vPosition ) );
+
+	// sort forces by uniqueID for determinism
+	std::sort(forces.begin(), forces.end(), [](const SForce& f1, const SForce& f2) {
+		return f1.nUnitID < f2.nUnitID;
+	});
   
 	bool bNullForces = false;
 	for ( int i = 0; i < BALANCE_STEP_COUNT && !bNullForces; ++i )
@@ -132,10 +139,17 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	}
 
 	int nCount = 0;
-	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it, ++nCount )
+	std::map<int, SSubGroupUnitInfo*> sortedUnits;
+
+	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
 	{
-		it->second.vPosition = GetAIMap()->GetTerrain()->GetValidPoint( it->second.pUnit->GetBoundTileRadius(), vPosition, forces[nCount].vPosition, it->second.pUnit->GetAIPassabilityClass(), false, GetAIMap() );
-		it->second.vPosition = forces[nCount].vPosition;
+		sortedUnits[it->first] = &it->second;
+	}
+
+	for (auto it = sortedUnits.begin(); it != sortedUnits.end(); it++, nCount++)
+	{
+		it->second->vPosition = GetAIMap()->GetTerrain()->GetValidPoint( it->second->pUnit->GetBoundTileRadius(), vPosition, forces[nCount].vPosition, it->second->pUnit->GetAIPassabilityClass(), false, GetAIMap() );
+		it->second->vPosition = forces[nCount].vPosition;
 	}
 }
 
@@ -192,40 +206,40 @@ const bool CGroupMover::CalcPositions()
 		return true;
 
 	// reset subgroups for units
-	typedef std::unordered_map<int, CPtr<CCommonUnit> > TUnitsHashSet;
-	TUnitsHashSet unsortedUnits;
+	typedef std::map<int, CPtr<CCommonUnit> > TUnitsHashSet;
+	TUnitsHashSet sortedUnits;
 	for ( TGroup::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
 		if ( IsValid( it->second ) )
 		{
 			it->second->SetSubGroup( -1 );
-			unsortedUnits[it->second->GetUniqueID()] = it->second;
+			sortedUnits[it->second->GetUniqueID()] = it->second;
 		}
 	}
 
 	// split all units to subgroups
 	int nCurrentGroup = 0;
 	TUnitsHashSet unitsToCheck;
-	while( !unsortedUnits.empty() || !unitsToCheck.empty() )
+	while( !sortedUnits.empty() || !unitsToCheck.empty() )
 	{
 		if ( unitsToCheck.empty() )
 		{
 			++nCurrentGroup;
-			TUnitsHashSet::iterator pos = unsortedUnits.begin();
+			TUnitsHashSet::iterator pos = sortedUnits.begin();
 			pos->second->SetSubGroup( nCurrentGroup - 1 );
 			unitsToCheck[pos->second->GetUniqueID()] = pos->second;
-			unsortedUnits.erase( pos );
+			sortedUnits.erase( pos );
 		}
 		else
 		{
 			TUnitsHashSet::iterator pos = unitsToCheck.begin();
-			for( TUnitsHashSet::iterator it = unsortedUnits.begin(); it != unsortedUnits.end(); )
+			for( TUnitsHashSet::iterator it = sortedUnits.begin(); it != sortedUnits.end(); )
 			{
 				if ( CanBeOneGroup( pos->second, it->second ) )
 				{
 					it->second->SetSubGroup( nCurrentGroup - 1 );
 					unitsToCheck[it->second->GetUniqueID()] = it->second;
-					unsortedUnits.erase( it++ );
+					sortedUnits.erase( it++ );
 				} 
 				else
 					++it;

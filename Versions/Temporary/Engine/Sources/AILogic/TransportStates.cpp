@@ -28,6 +28,8 @@
 #include "FeedBackSystem.h"
 #include "UnitsIterators2.h"
 
+#include <map>
+
 //REGISTER_SAVELOAD_CLASS( 0x1108D4D9, CTransportResupplyHumanResourcesState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4DA, CTransportLoadRuState );
 REGISTER_SAVELOAD_CLASS( 0x1108D496, CTransportLandState );
@@ -1434,7 +1436,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 	}
 
 	// Tell infantry to unload
-	std::unordered_map<int, bool> formations;
+	std::map<int, bool> formations;	// use map instead of unorderd_map for better determinism
 	for ( int i = 0; i < pTransport->GetNPassengers(); ++i )
 	{
 		CSoldier *pPass = pTransport->GetPassenger( i );
@@ -1442,7 +1444,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 			continue;
 		formations[pPass->GetFormation()->GetUniqueId()] = true;
 	}
-	for ( std::unordered_map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
+	for ( std::map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
 		CFormation *pPass = checked_cast<CFormation*>( CLinkObject::GetObjectByUniqueId( it->first ) );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_UNLOAD, pTransport->GetUniqueId() ), pPass, false );

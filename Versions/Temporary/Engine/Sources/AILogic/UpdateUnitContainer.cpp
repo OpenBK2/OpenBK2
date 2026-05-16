@@ -77,7 +77,15 @@ int CUpdateUnitContainer::Pop()
 	{
 		if ( !updateLists[i].empty() )
 		{
-			CUpdateUnitList::iterator pos = updateLists[i].begin();
+			// Remove the unit with the smallest uniqueID for better determinism
+			// CUpdateUnitList::iterator pos = updateLists[i].begin();
+			CUpdateUnitList::iterator pos = updateLists[i].end();
+			for (CUpdateUnitList::iterator it = updateLists[i].begin(); it != updateLists[i].end(); ++it)
+				if (pos == updateLists[i].end())
+					pos = it;
+				else if (pos->first > it->first)
+					pos = it;
+				
 			const int nResult = pos->first;
 			updateLists[i].erase( pos );
 			return nResult;

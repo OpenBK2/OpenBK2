@@ -1102,10 +1102,18 @@ void CScripts::DelInvalidBegin( const int targetId )
 				break;
 		}
 
-		int nDeleted;
+		int nDeleted = INT32_MIN;
+		std::vector<int> sorted;
+		sorted.reserve(groupUnits.size() + 1);
 		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
-			const int nUniqueId = it->first;
+			sorted.push_back(it->first);
+		}
+		std::sort(sorted.begin(), sorted.end());
+
+		for (int i = 0; i < sorted.size(); i++)
+		{
+			const int nUniqueId = sorted[i];
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
 			if ( !pObj || !pObj->IsRefValid() || dynamic_cast<CStaticObject*>(pObj) == 0 && !pObj->IsAlive() )
 				nDeleted = nUniqueId;
@@ -1113,7 +1121,8 @@ void CScripts::DelInvalidBegin( const int targetId )
 				break;
 		}
 
-		groupUnits.erase( nDeleted );
+		if (nDeleted > INT32_MIN)
+			groupUnits.erase( nDeleted );
 	}
 }
 
@@ -4040,7 +4049,7 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 
 	for ( bool bAllInarea = false; !bAllInarea; )
 	{
-		Sleep( 100 + NRandom::Random( 1000 ) );
+		Sleep( 100 + NRandom::Random( 1000 ) );    // CRAP: This is very bad!!!
 		if ( script.GetObject( 3 ).IsNumber() )
 		{
 			CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "WaitForGroupInArea: 2nd parameter isn't a X", script );
