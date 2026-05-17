@@ -1613,8 +1613,9 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 	const SUnitBaseRPGStats *pStats = GetStats();
 	
 
+	const SMechUnitRPGStats* mechStats = dynamic_cast<const SMechUnitRPGStats*>(pStats);
 	// for ships play fatality on deep water & ordinary death on shallow water
-	if ( !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
+	if ( (mechStats && (mechStats->eUnitType == EDesignUnitType::Torpedo_Boat || mechStats->eUnitType == EDesignUnitType::Landing_Boat)) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
 	{
 		// shallow water 
 		return -1;
