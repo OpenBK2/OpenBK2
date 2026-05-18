@@ -11,6 +11,7 @@
 #include "FakeObjects.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Stats_B2_M1/AnimationFromAction.h"
+#include "Stats_B2_M1/AnimModelGet.h"
 
 CGraveyard theGraveyard;
 
@@ -128,13 +129,18 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 	CPtr<SKilledUnit> pKillInfo = new SKilledUnit();
 	
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
+	const SMechUnitRPGStats* mech = dynamic_cast<const SMechUnitRPGStats*>(pStats);
+	std::vector<const NDb::SAnimB2*> animable_anims;
 	// играем fatality
 	if ( nFatality > -1 )
 	{
 		pKillInfo->bAnimFinished = false;
 		pKillInfo->endFogTime = 0;
 
-		const int nAABBD = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_D;
+		int nAABBD = -1;
+		
+		if (pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality)
+			nAABBD = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_D;
 
 		SRect finishRect;
 		const CVec2 vFrontDir = GetVectorByDirection( pUnit->GetFrontDirection() );
@@ -144,6 +150,12 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 		{
 			vRectCenter = pStats->aabb_as[nAABBD].vCenter;
 			vRectHalfSize = pStats->aabb_as[nAABBD].vHalfSize;
+		}
+
+		if (nAABBD == -1)
+		{
+			vRectCenter = pStats->vAABBCenter;
+			vRectHalfSize = pStats->vAABBHalfSize;
 		}
 
 		finishRect.InitRect( pUnit->GetCenterPlain() + ( (vRectCenter) ^ vRectTurn ), vFrontDir,
@@ -157,8 +169,20 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 			pKillInfo->timeToEndDieAnimation = 0;
 			pKillInfo->bAnimFinished = false;
 		}
-		else
+		else if (pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality)
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+		else
+		{
+			if (!mech || !mech->pAnimableModel)
+				return;	// fatal error
+
+			animable_anims = GetVisObjAnimsFromModel(mech->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY);
+			
+			if (animable_anims.size() < nFatality)
+				return;
+
+			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + animable_anims[nFatality]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+		}
 	}
 	else
 	{
@@ -172,6 +196,10 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 		const int nAnimIndex = - ( nFatality + 2 );
 		if ( nAnimation >= 0 && pStats->animdescs.size() > nAnimation && !pStats->animdescs[nAnimation].anims.empty() && nFatality != -1 && nAnimIndex < pStats->animdescs[nAnimation].anims.size() )
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + pStats->animdescs[nAnimation].anims[nAnimIndex].nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+		else if (nAnimation >= 0 && mech && mech->pAnimableModel && animable_anims.size() > nAnimation)
+		{
+			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + animable_anims[nAnimation]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+		}
 		else
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + 2 * SConsts::AI_SEGMENT_DURATION;
 		if ( timeOfVisDeath == 0 )

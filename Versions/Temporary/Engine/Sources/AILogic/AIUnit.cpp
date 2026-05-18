@@ -54,6 +54,7 @@
 
 #include "UnitCreation.h"
 #include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/AnimModelGet.h"
 #include "System/Commands.h"
 
 #include "BalanceTest.h"
@@ -1611,11 +1612,10 @@ void CAIUnit::WarFogChanged()
 const int CAIUnit::ChooseFatality( const float fDamage )
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
-	
 
 	const SMechUnitRPGStats* mechStats = dynamic_cast<const SMechUnitRPGStats*>(pStats);
 	// for ships play fatality on deep water & ordinary death on shallow water
-	if ( (mechStats && (mechStats->eUnitType == EDesignUnitType::Torpedo_Boat || mechStats->eUnitType == EDesignUnitType::Landing_Boat)) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
+	if ( (mechStats && (mechStats->eUnitType == EDesignUnitType::Torpedo_Boat || mechStats->eUnitType == EDesignUnitType::Landing_Boat || mechStats->IsNaval())) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
 	{
 		// shallow water 
 		return -1;
@@ -1653,7 +1653,67 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 			if ( bFree )
 				return nFatality;
 		}
+		else if (mechStats && mechStats->pAnimableModel)
+		{
+			auto fatality_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY);
+
+			if (fatality_anims.size() < 1)
+			{
+				auto death_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH);
+
+				if (death_anims.empty())
+					return -1;
+
+				goto death_animable_anim;
+			}
+
+			const int nFatality = NRandom::Random( fatality_anims.size() );
+			
+			int nRect = -1;
+			
+			if (pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality)
+				nRect = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_A;
+
+			CVec2 vRectCenter(VNULL2), vRectHalfSize(VNULL2);
+			if ( !pStats->aabb_as.empty() && nRect != -1 && pStats->aabb_as.size() > nRect )
+			{
+				vRectCenter = pStats->aabb_as[nRect].vCenter;
+				vRectHalfSize = pStats->aabb_as[nRect].vHalfSize;
+			}
+			if (nRect == -1)
+			{
+				vRectCenter = pStats->vAABBCenter;
+				vRectHalfSize = pStats->vAABBHalfSize;
+			}
+
+			SRect fatalityRect;
+
+			const CVec2 vFrontDir = GetVectorByDirection( GetFrontDirection() );
+			const CVec2 vRectTurn( vFrontDir.y, -vFrontDir.x );
+			
+			fatalityRect.InitRect( GetCenterPlain() + ( (vRectCenter) ^ vRectTurn ), vFrontDir, vRectHalfSize.y, vRectHalfSize.x );
+
+			UnlockTiles();
+			bool bFree = IsMapFullyFree( fatalityRect, this );
+			LockTiles();
+
+			if ( bFree )
+				return nFatality;
+		}
 	}
+
+	death_animable_anim:
+	// Decide the param for death anim
+	if ((pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty()) && mechStats && mechStats->pAnimableModel)
+	{
+		auto death_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH);
+
+		if (death_anims.empty())
+			return -1;
+		
+		return -1 * int( NRandom::Random( death_anims.size() ) + 2 );
+	}
+
 	if ( pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty() )
 		return -1;
 	else

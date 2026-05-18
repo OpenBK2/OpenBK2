@@ -15,6 +15,7 @@
 #include "Sound/SoundScene.h"
 #include "Stats_B2_M1/AdditionalActions.h"
 #include "Stats_B2_M1/IClientGameConsts.h"
+#include "Stats_B2_M1/AnimModelGet.h"
 #include "System/Text.h"
 #include "Common_RTS_AI/AIClasses.h"
 
@@ -869,6 +870,13 @@ const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 {
 	if ( pModel && pModel->pSkeleton )
 	{
+		if ( eAnimType < animdescs.size() && nAnimID >= 0 && nAnimID < animdescs[eAnimType].anims.size() )
+		{
+			const int nAnimSkeletonIndex = animdescs[eAnimType].anims[nAnimID].nFrameIndex;
+			if ( nAnimSkeletonIndex >= 0 && nAnimSkeletonIndex < pModel->pSkeleton->animations.size() )			
+				return dynamic_cast_ptr<const NDb::SAnimB2*>(pModel->pSkeleton->animations[nAnimSkeletonIndex]);
+		}
+
 		// When skipping the (already kinda useless) animdescs, just iterate through all anims of the same type and pick the one with index that's nAnimID
 		if ( skipAnimdescs )
 		{
@@ -887,13 +895,6 @@ const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 			}
 
 			return 0;
-		}
-
-		if ( eAnimType < animdescs.size() && nAnimID >= 0 && nAnimID < animdescs[eAnimType].anims.size() )
-		{
-			const int nAnimSkeletonIndex = animdescs[eAnimType].anims[nAnimID].nFrameIndex;
-			if ( nAnimSkeletonIndex >= 0 && nAnimSkeletonIndex < pModel->pSkeleton->animations.size() )			
-				return dynamic_cast_ptr<const NDb::SAnimB2*>(pModel->pSkeleton->animations[nAnimSkeletonIndex]);
 		}
 	}
 
@@ -943,28 +944,8 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 	bool isAnimable = false;
 
 	// Use animable model for artillery and trucks
-	if ((pStats->IsArtillery() || pStats->IsTransport()) && pStats->pAnimableModel != 0)
-	{
-		deathModel = GetModel(pStats->pAnimableModel, eSeason);
-
-		// "Hack" the shitty nParam to some valid death animation
-		int deathAnimCount = 0;
-
-		if ( deathModel && deathModel->pSkeleton )
-		{
-			const auto& anims = deathModel->pSkeleton->animations;
-			for (int i = 0; i < anims.size(); i++)
-			{
-				auto anim = dynamic_cast_ptr<const NDb::SAnimB2*>(anims[i]);
-				if ( anim->eType == eAnimType )
-					deathAnimCount++;
-			}
-		}
-
-		nParam = 20 << 16 | ( deathAnimCount > 0 ? NWin32Random::Random(0, deathAnimCount - 1) : 0 );
-
+	if (pStats->pAnimableModel != 0)
 		isAnimable = true;
-	}
 
 	if ( nParam != -1 ) 
 	{
@@ -1157,6 +1138,7 @@ void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 
 void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason )
 {
+	const NDb::SMechUnitRPGStats* mech = GetStatsLocal();
 	switch ( pUpdate->eUpdateType ) 
 	{
 	case ACTION_NOTIFY_INSTALL_TRANSPORT:
@@ -1165,9 +1147,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 		{
 			if ( pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_TRANSPORT )
 			{
-				const NDb::SVisObj *pVisObj = GetStatsLocal()->pvisualObject; 
-				if ( GetStatsLocal()->pAnimableModel != 0 )
-					pVisObj = GetStatsLocal()->pAnimableModel;
+				const NDb::SVisObj *pVisObj = mech->pvisualObject; 
+				if ( mech->pAnimableModel != 0 )
+					pVisObj = mech->pAnimableModel;
 				ChangeModelToAnimable( GetModel( pVisObj, eSeason ), eSeason );
 			}
 			const NDb::EAnimationType eType = pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_ROTATE ? 
@@ -1195,6 +1177,27 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 							AddAnimation( pAnim, pUpdate->nUpdateTime, pAnimator, pAnim->bLooped, fAnimSpeed );
 						}
 					}
+				}
+			} else if (mech->pAnimableModel)
+			{
+				auto anims = GetVisObjAnimsFromModel(mech->pAnimableModel, eType);
+
+				if (anims.size() < 1)
+					return;
+				
+				auto pAnim = anims[0];
+				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
+				{
+					if ( HasLoopedAnimation() )
+					{
+						pAnimator->ClearAllAnimations();
+						SetLoopedAnimation( false );
+					}
+					//
+					SetLoopedAnimation( pAnim->bLooped );
+					const float fActionTime = eType == NDb::ANIMATION_INSTALL_ROT ? GetStatsLocal()->fUninstallRotate : GetStatsLocal()->fUninstallTransport;
+					const float fAnimSpeed = pAnim->nLength * 0.001f / fActionTime;
+					AddAnimation( pAnim, pUpdate->nUpdateTime, pAnimator, pAnim->bLooped, fAnimSpeed );
 				}
 			}
 		}
@@ -1234,6 +1237,28 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 							AddAnimation( pAnim, pUpdate->nUpdateTime, pAnimator, pAnim->bLooped, fAnimSpeed  );
 						}
 					}
+				}
+			} else if (mech->pAnimableModel)
+			{
+				auto anims = GetVisObjAnimsFromModel(mech->pAnimableModel, eType);
+
+				if (anims.size() < 1)
+					return;
+				
+				auto pAnim = anims[0];
+
+				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
+				{
+					if ( HasLoopedAnimation() )
+					{
+						pAnimator->ClearAllAnimations();
+						SetLoopedAnimation( false );
+					}
+					//
+					SetLoopedAnimation( pAnim->bLooped );
+					const float fActionTime = eType == NDb::ANIMATION_UNINSTALL_ROT ? GetStatsLocal()->fUninstallRotate : GetStatsLocal()->fUninstallTransport;
+					const float fAnimSpeed = pAnim->nLength * 0.001f / fActionTime;
+					AddAnimation( pAnim, pUpdate->nUpdateTime, pAnimator, pAnim->bLooped, fAnimSpeed  );
 				}
 			}
 		}
