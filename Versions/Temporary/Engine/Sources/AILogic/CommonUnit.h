@@ -185,6 +185,8 @@ public:
 	virtual void UnsetDesirableSpeed();
 	virtual float GetDesirableSpeed() const;
 	virtual void AdjustWithDesirableSpeed( float *pfMaxSpeed ) const;
+	// Used by group-level forward move commands to avoid inheriting a unit's transient reverse state.
+	virtual const float GetMaxPossibleForwardSpeed() const { return GetMaxPossibleSpeed(); }
 
 	// follow state - мы за кем-то следуем
 	void SetFollowState( class CCommonUnit *pFollowedUnit );

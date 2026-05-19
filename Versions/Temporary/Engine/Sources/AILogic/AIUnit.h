@@ -186,6 +186,8 @@ public:
 
 		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); 
 	}
+	// Group forward move should use the "forward cap" and ignore temporary reverse-direction state.
+	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get(GetStats()->fSpeed); }
 	virtual const float GetPassability() const;
 	virtual const int GetBoundTileRadius() const { return GetStats()->nBoundTileRadius; }
 	//virtual struct IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking );

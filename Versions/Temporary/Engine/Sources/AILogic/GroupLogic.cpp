@@ -615,9 +615,11 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 					for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 					{
 						CCommonUnit *pUnit = *iter;
-
-						if ( pUnit->CanMove() && pUnit->GetMaxPossibleSpeed() > 0.0f && pUnit->GetMaxPossibleSpeed() < fDesGroupSpeed )
-							fDesGroupSpeed = pUnit->GetMaxPossibleSpeed();
+						// For forward move/swarm commands, align group speed by forward cap:
+						// this prevents stale reverse-state units from slowing all units down.
+						const float fForwardSpeed = pUnit->GetMaxPossibleForwardSpeed();
+						if ( pUnit->CanMove() && fForwardSpeed > 0.0f && fForwardSpeed < fDesGroupSpeed )
+							fDesGroupSpeed = fForwardSpeed;
 					}
 				}
 				for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )

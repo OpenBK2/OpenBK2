@@ -194,6 +194,8 @@ public:
 	void UpdateAmmoBoxVisibility( const bool bVisibilityChanged, const bool bVisible );
 	EActionNotify GetFinishInstallUpdate( EActionNotify eAction );
 	virtual const float GetMaxPossibleSpeed() const;
+	// Keep forward-speed queries consistent with hooked-artillery speed delegation.
+	virtual const float GetMaxPossibleForwardSpeed() const;
 
 	//
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const;

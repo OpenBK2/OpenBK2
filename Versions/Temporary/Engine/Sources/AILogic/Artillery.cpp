@@ -978,6 +978,12 @@ const float CArtillery::GetMaxPossibleSpeed() const
 	return IsBeingHooked() ? pHookingTransport->GetMaxPossibleSpeed() : CAIUnit::GetMaxPossibleSpeed();
 }
 
+const float CArtillery::GetMaxPossibleForwardSpeed() const
+{
+	// If this gun is currently hooked, use the transport's forward cap for group speed alignment.
+	return IsBeingHooked() ? pHookingTransport->GetMaxPossibleForwardSpeed() : CAIUnit::GetMaxPossibleForwardSpeed();
+}
+
 const bool CArtillery::CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const
 {
 	return false;

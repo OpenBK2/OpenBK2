@@ -221,7 +221,9 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 				{
 					pos = cells.find( nPriority );
 					nPrevPriority = nPriority;
-					fMaxGroupSpeed = (std::min)( it->pUnit->GetMaxPossibleSpeed(), fMaxGroupSpeed );
+					// For forward group movement, cap by forward speed only:
+					// one unit that was reversing must not throttle the whole group.
+					fMaxGroupSpeed = (std::min)( it->pUnit->GetMaxPossibleForwardSpeed(), fMaxGroupSpeed );
 				}
 
 				it->pUnit->SetGroupShift( pos->second[ it->nCell ] );
