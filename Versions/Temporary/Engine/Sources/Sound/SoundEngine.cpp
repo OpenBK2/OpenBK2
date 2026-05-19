@@ -132,6 +132,8 @@ public:
 		if ( sample == 0 )
 			return -1;
 		const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, sample, 0, true );
+		if (nChannel < 0)
+			return -1;
 		pSound->SetChannel( nChannel );
 		pSFX->MapSound( pSound, nChannel );
 		pSound->Update( pSFX );
@@ -143,6 +145,8 @@ public:
 		if ( sample == 0 )
 			return -1;
 		const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, sample, 0, true );
+		if (nChannel < 0)
+			return -1;
 		pSound->SetChannel( nChannel );
 		pSFX->MapSound( pSound, nChannel );
 		pSound->Update( pSFX );

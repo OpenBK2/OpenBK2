@@ -72,6 +72,8 @@ void CTrack::Segment()
 			if ( !GetMusicSystem()->GetChannel( eType ) )
 			{
 				int nTime = FSOUND_Stream_GetLengthMs( pStreamingSound );
+				if (nTime == 0)
+					break;
 				int nTrackTime = timePlayed % nTime;
 				PlayTrack( nTrackTime );
 			}

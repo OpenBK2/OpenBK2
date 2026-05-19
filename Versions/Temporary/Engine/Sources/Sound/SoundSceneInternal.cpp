@@ -918,6 +918,10 @@ WORD CSoundScene3D::AddSound( 	const NDb::SComplexSoundDesc *pStats,
 	else
 	{
 		pSound = CSoundManager::CreateSound3D( pRandomSound->pPathName, bLooped );
+
+		if (!pSound)
+			return 0;
+
 #ifndef _FINALRELEASE
 		if ( nVolumeType == 1 )
 			theAckTuning.Add( pRandomSound->pPathName->szSoundPath );

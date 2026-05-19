@@ -204,7 +204,7 @@ int CMusicSystem::GetPlayList() const
 
 void CMusicSystem::ChangePlayList( int _nPlayList ) 
 {
-	if ( _nPlayList >= playlists.size() )
+	if ( _nPlayList >= playlists.size() || _nPlayList < 0 )
 		return;
 
 	if ( CanChangePlayList() )
