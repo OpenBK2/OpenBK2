@@ -1531,6 +1531,16 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 
 BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
 {
+	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, false );
+}
+
+BYTE CAIUnit::AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
+{
+	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, true );
+}
+
+BYTE CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving )
+{
 	if ( IsTimeToAnalyzeTargetScan() && theScanLimiter.CanScan() )
 	{
 		GetLastBehTime() = curTime;
@@ -1550,6 +1560,10 @@ BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated,
 					 checked_cast<CSoldier*>(pTarget)->IsInBuilding() && checked_cast<CSoldier*>(pTarget)->GetBuilding() == pCheckBuilding )
 				pTarget = 0;
 
+			// Formation recovery may scan for nearby threats, but should not start an attack that needs a move first.
+			if ( bOnlyShootWithoutMoving && pTarget && ( !pGun || !pGun->CanShootToUnitWOMove( pTarget ) ) )
+				pTarget = 0;
+
 			if ( AttackTarget( pTarget, pCurTarget ) )
 				return 3;
 			else if ( !pTarget && bScanForObstacles )
@@ -1567,7 +1581,17 @@ BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated,
 		return 2;
 	}
 	else
-		return AttackTarget( GetBestShootEstimatedUnit(), pCurTarget ) ? 3 : 0;
+	{
+		CAIUnit *pTarget = GetBestShootEstimatedUnit();
+		if ( bOnlyShootWithoutMoving && pTarget )
+		{
+			CBasicGun *pGun = GetBestShootEstimatedGun();
+			if ( !pGun || !pGun->CanShootToUnitWOMove( pTarget ) )
+				pTarget = 0;
+		}
+
+		return AttackTarget( pTarget, pCurTarget ) ? 3 : 0;
+	}
 }
 
 void CAIUnit::SetAmbush()

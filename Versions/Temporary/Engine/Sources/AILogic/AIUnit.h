@@ -97,6 +97,7 @@ private:
 	void UpdateEnableAblitiy( const int nAbility );
 	void InitAbility( const NDb::EUnitSpecialAbility nAbility );
 	void UpdateUnitProfile();
+	BYTE AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving );
 	bool LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun, 
 		const float fRange, const bool bIteratePlanes, const bool bIterateBuildings );
 	void SetTargetScanRandom();
@@ -346,6 +347,7 @@ public:
 	// просканировать, если пора; если нашли цель, то атаковать
 	// возвращает: в младшем бите - была ли найдена цель, во втором бите - было ли произведено сканирование
 	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
+	BYTE AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
 	// поискать цель, текущая цель для атаки - pCurTarget
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 	// поискать цель вдалеке для артиллерийского обстрела, текущая цель для атаки - pCurTarget

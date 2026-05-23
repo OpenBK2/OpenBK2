@@ -458,7 +458,17 @@ void CSoldierRestState::Segment()
 		
 		if ( pUnit->GetFormation()->IsInWaitingState() )
 		{
-			const BYTE cResult = pUnit->AnalyzeTargetScan( 0, false, false );
+			guardPoint = pUnit->GetUnitPointInFormation();
+			const bool bNeedFormationPoint =
+				pUnit->CanMoveForGuard() &&
+				CheckGuardPoint() &&
+				fabs2( guardPoint - pUnit->GetCenterPlain() ) > 200.0f;
+
+			// While returning to formation, allow only attacks that can be fired from the current position.
+			const BYTE cResult =
+				bNeedFormationPoint ?
+				pUnit->AnalyzeTargetScanWithoutMoving( 0, false, false ) :
+				pUnit->AnalyzeTargetScan( 0, false, false );
 
 			if ( cResult & 2 )
 				bScanned = true;
