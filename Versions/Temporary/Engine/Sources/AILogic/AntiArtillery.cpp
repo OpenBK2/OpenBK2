@@ -50,7 +50,7 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 
 void CAntiArtillery::Scan( const CVec2 &center )
 {
-	memset( &(closestEnemyDist2[0]), 0, closestEnemyDist2.size() );
+	std::fill(closestEnemyDist2.begin(), closestEnemyDist2.end(), 0.0f);
 	
 	for ( CUnitsIter<0,3> iter( nParty, EDI_ENEMY, center, fMaxRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
