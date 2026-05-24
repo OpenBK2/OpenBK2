@@ -5,6 +5,9 @@
 #include "Commands.h"
 #include "XmlSaver.h"
 
+#include <vector>
+#include <string>
+
 // ************************************************************************************************************************ //
 // **
 // ** random generator
@@ -76,6 +79,40 @@ namespace NRandom
 		pState->randrslChecksum = CalcDebugChecksum( rnd.randrsl, RANDSIZ );
 		pState->randmemChecksum = CalcDebugChecksum( rnd.randmem, RANDSIZ );
 		pState->randomCalls = nRandomCallsTotal;
+	}
+
+	std::vector<RngCall> Calls;
+	int ci = 0;
+
+	void RecordCall(const std::string& file, int line, const std::string& func)
+	{
+		static const int MAX_CALLS_STORAGE = 256;
+
+		std::string location = file + ":" + std::to_string(line) + " at: " + func;
+
+		if (Calls.size() < MAX_CALLS_STORAGE)
+		{
+			Calls.push_back({ci, location});
+			ci++;
+			return;
+		}
+
+		size_t modIndex = ci % MAX_CALLS_STORAGE;
+		Calls[modIndex] = {ci, location};
+		ci++;
+	}
+
+	void DumpRecords(FILE* f)
+	{
+		std::vector<RngCall> calls = Calls;
+		std::sort(calls.begin(), calls.end(), [](const RngCall& c1, const RngCall& c2) {
+			return c1.callNumber < c2.callNumber;
+		});
+
+		for (size_t i = 0; i < calls.size(); i++)
+		{
+			fprintf(f, "\t#%d %s\n", calls[i].callNumber, calls[i].location.c_str());
+		}
 	}
 
 	static SRandomFunc rndFunc;

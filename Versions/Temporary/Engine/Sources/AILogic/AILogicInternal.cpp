@@ -1197,6 +1197,9 @@ void CAILogic::WriteDetailedChecksumInfo()
 		randomDebugState.randcnt, randomDebugState.randa, randomDebugState.randb, randomDebugState.randc,
 		randomDebugState.randrslChecksum, randomDebugState.randmemChecksum);
 	fprintf(f, "\n");
+	fprintf(f, "Rng Calls:\n");
+	NRandom::DumpRecords(f);
+	fprintf(f, "\n");
 
 	fprintf(f, "Unit checksums [UID, checksum]:\n");
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )

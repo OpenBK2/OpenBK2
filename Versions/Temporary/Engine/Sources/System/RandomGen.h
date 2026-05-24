@@ -28,6 +28,15 @@ namespace NRandom
 		unsigned __int64 randomCalls;
 	};
 
+	struct RngCall
+	{
+		int callNumber = 0;
+		std::string location;
+	};
+
+	SYSTEM_EXPORT void RecordCall(const std::string& file, int line, const std::string& func);
+	SYSTEM_EXPORT void DumpRecords(FILE* f);
+
 	// initialize random generator with random seed
 	SYSTEM_EXPORT void SetRandomSeed( IRandomSeed *pSeed );
 	// create copy of the current random gen seed and return it
@@ -52,4 +61,4 @@ namespace NRandom
 	const SRandomFunc& RndFunc();
 };
 
-
+#define RecordRandomCall() NRandom::RecordCall(__FILE__, __LINE__, __func__)
