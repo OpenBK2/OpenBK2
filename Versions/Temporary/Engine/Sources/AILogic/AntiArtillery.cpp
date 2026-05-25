@@ -59,6 +59,12 @@ void CAntiArtillery::Scan( const CVec2 &center )
 			const float fR2 = fabs2( center - (*iter)->GetCenterPlain() );
 			if ( fR2 <= sqr( fMaxRadius ) )
 				closestEnemyDist2[ (*iter)->GetParty() ] = fR2;
+		} 
+		else
+		{
+			const float fR2 = fabs2( center - (*iter)->GetCenterPlain() );
+			if ( fR2 <= sqr( fMaxRadius ) && closestEnemyDist2[ (*iter)->GetParty() ] > fR2 )
+				closestEnemyDist2[ (*iter)->GetParty() ] = fR2;
 		}
 	}
 
