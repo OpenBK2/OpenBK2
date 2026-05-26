@@ -673,7 +673,7 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 		CVec3 vSpeed3D( pUnit->GetSpeedB2() );
 		CVec2 vSpeed( vSpeed3D.x, vSpeed3D.y );
 		if ( VNULL2 == vSpeed )
-			vSpeed = GetVectorByDirection( NRandom::Random(65535) );
+			{ vSpeed = GetVectorByDirection( NRandom::Random(65535) ); RecordRandomCall(); }
 		else
 			Normalize( &vSpeed );
 		
@@ -684,7 +684,7 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 
 		const float fTriangleLength = pref.GetR( pref.GetMaxSpeed() );
 		const CVec2 vPoint1( vPos + vSpeed * fTriangleLength );
-		const int nRot = NRandom::Random(0,1) == 0 ? 1 : -1;
+		const int nRot = NRandom::Random(0,1) == 0 ? 1 : -1; RecordRandomCall();
 		const CVec2 vPoint2( vPos + fTriangleLength * ( ( sqrt(3.0f) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
 		const CVec2 vPoint3( vPos + fTriangleLength * ( - ( sqrt(3.0f) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
 
@@ -1025,7 +1025,7 @@ void CPlaneParaDropState::Segment()
 					
 					const CVec2 vDropPoint = vLastDrop + 2.0f * ( nDroppingSoldier % 2 - 0.5f ) * 
 						NRandom::Random( SConsts::PLANE_PARADROP_INTERVAL_PERP_MIN, SConsts::PLANE_PARADROP_INTERVAL_PERP_MAX ) *
-						GetVectorByDirection( pPlane->GetDirection() + 65535 / 4 );
+						GetVectorByDirection( pPlane->GetDirection() + 65535 / 4 ); RecordRandomCall();
 					// вычислить возможно ли приземление где-нить.
 					bool bSafeLanding = CanDrop( vDropPoint );
 					//
@@ -1288,7 +1288,7 @@ void CPlaneFighterPatrolState::Segment()
 			( pEnemie->GetBoundTileRadius() + pPlane->GetBoundTileRadius() ) * 32 )
 		{
 			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-			const CVec3 vAdd( 0, 0, NRandom::Random( 0, 2 ) * 250 );
+			const CVec3 vAdd( 0, 0, NRandom::Random( 0, 2 ) * 250 ); RecordRandomCall();
 			CVec3 vSpeed( pPlane->GetSpeedB2() );
 			Normalize( &vSpeed );
 			pFormation->CreatePointManuver( vAdd + pPlane->GetPosB2() - vSpeed * 1000, false );
@@ -2036,9 +2036,9 @@ CPlaneFlyDeadState::CPlaneFlyDeadState ( CAviation *_pPlane )
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pPlane->GetStats() );
 	bFatality = pStats->pEffectFatality != 0;
 	if ( bFatality )
-		bExplodeInstantly = NRandom::Random( 1 );
+		{ bExplodeInstantly = NRandom::Random( 1 ); RecordRandomCall(); }
 	if ( !bExplodeInstantly )
-		timeStart = curTime + NRandom::Random( 0, SConsts::DIVE_BEFORE_EXPLODE_TIME );
+		{ timeStart = curTime + NRandom::Random( 0, SConsts::DIVE_BEFORE_EXPLODE_TIME ); RecordRandomCall(); }
 
 	const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts(); 
 	bGroundCrash = pPlane->GetStats()->vAABBHalfSize.y < pConsts->nGroundCrashPlaneSize;

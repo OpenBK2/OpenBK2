@@ -1565,7 +1565,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 					for ( int i = 0; i < objIDs.size(); ++i )
 					{
 						id[0] = objIDs[i];
-						tmpCmd.vPos = command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+						tmpCmd.vPos = command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) ); RecordRandomCall(); RecordRandomCall();
 						const int nGroup = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GenerateGroupNumber();
 						Singleton<IAILogic>()->RegisterGroup( id, nGroup );
 						Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
@@ -1596,7 +1596,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 				if ( fDispersion != 0.0f )
 				{
 					SAIUnitCmd tmpCmd( command );
-					tmpCmd.vPos = command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+					tmpCmd.vPos = command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) ); RecordRandomCall(); RecordRandomCall();
 					Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
 					Singleton<IAILogic>()->UnregisterGroup( nGroup );
 					Singleton<IAILogic>()->SetNeedNewGroupNumber();
@@ -2879,7 +2879,7 @@ int CScripts::RandomFloat( struct lua_State *pState )
 {
 	Script script( pState );
 
-	script.PushNumber( NRandom::Random( 0.0f, 1.0f ) );
+	script.PushNumber( NRandom::Random( 0.0f, 1.0f ) ); RecordRandomCall();
 
 	return 1;
 }
@@ -2895,7 +2895,7 @@ int CScripts::RandomInt( struct lua_State *pState )
 	if ( n == 1 )
 		script.PushNumber( 0 );
 	else
-		script.PushNumber( NRandom::Random( 0, n - 1 ) );
+		script.PushNumber( NRandom::Random( 0, n - 1 ) ); RecordRandomCall();
 
 	return 1;
 }
@@ -4049,7 +4049,7 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 
 	for ( bool bAllInarea = false; !bAllInarea; )
 	{
-		Sleep( 100 + NRandom::Random( 1000 ) );    // CRAP: This is very bad!!!
+		Sleep( 100 + NRandom::Random( 1000 ) ); RecordRandomCall();    // CRAP: This is very bad!!!
 		if ( script.GetObject( 3 ).IsNumber() )
 		{
 			CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "WaitForGroupInArea: 2nd parameter isn't a X", script );

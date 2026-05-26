@@ -663,7 +663,7 @@ void CGeneralTaskToSwarmToPoint::Run()
 		theGroupLogic.UnregisterGroup( nGroup );
 		Singleton<IAILogic>()->SetNeedNewGroupNumber();
 	}
-	timeNextCheck = curTime + 1000* (SGeneralConsts::TIME_SWARM_DURATION + NRandom::Random( SGeneralConsts::TIME_SWARM_DURATION_RANDOM ));
+	timeNextCheck = curTime + 1000* (SGeneralConsts::TIME_SWARM_DURATION + NRandom::Random( SGeneralConsts::TIME_SWARM_DURATION_RANDOM )); RecordRandomCall();
 	eState = ESS_ATTACKING;
 
 
@@ -700,7 +700,7 @@ void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 		
 		eState = ESS_PREPEARING;
 		theSupremeBeing.RegisterDelayedTask( new CGeneralSwarmWaitForReady(this) );
-		timeNextCheck = curTime + 1000*(SGeneralConsts::TIME_TO_WAIT_SWARM_READY + NRandom::Random( SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM ));
+		timeNextCheck = curTime + 1000*(SGeneralConsts::TIME_TO_WAIT_SWARM_READY + NRandom::Random( SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM )); RecordRandomCall();
 
 		//CRAP{for testing
 		{
@@ -769,7 +769,7 @@ void CGeneralTaskToSwarmToPoint::Segment()
 		if ( !swarmingTanks.empty() )
 		{
 			SendToGroupPoint();
-			nAdditionalIterations = NRandom::Random( 0, SGeneralConsts::SWARM_ADDITIONAL_ITERATIONS );
+			nAdditionalIterations = NRandom::Random( 0, SGeneralConsts::SWARM_ADDITIONAL_ITERATIONS ); RecordRandomCall();
 			bReleaseWorkers = false;
 		}
 		else if ( timeNextCheck < curTime )

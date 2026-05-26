@@ -31,10 +31,12 @@ namespace NRandom
 	struct RngCall
 	{
 		int callNumber = 0;
-		std::string location;
+		const char* file;
+		int line;
+		const char* function;
 	};
 
-	SYSTEM_EXPORT void RecordCall(const std::string& file, int line, const std::string& func);
+	SYSTEM_EXPORT bool RecordCall(const std::string& file, int line, const std::string& func);
 	SYSTEM_EXPORT void DumpRecords(FILE* f);
 
 	// initialize random generator with random seed

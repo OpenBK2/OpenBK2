@@ -145,7 +145,7 @@ const float CStormableObject::GetDamage( CBasicGun *pGun, CSoldier *pTarget ) co
 			fDamage += pGun->GetRandomDamage();
 			/*
 			CVec2 vHitPoint;
-			RandQuadrInCircle( fDispRadius, &vHitPoint );
+			RandQuadrInCircle( fDispRadius, &vHitPoint ); RecordRandomCall(); RecordRandomCall();
 			vHitPoint += pTarget->GetCenterPlain();
 
 			if ( combatRect.IsPointInside( vHitPoint ) )
@@ -200,7 +200,7 @@ bool CStormableObject::Segment()
 			
 			if ( nActiveAttackers != 0 )
 			{
-				const int nAttacker = NRandom::Random( nActiveAttackers );
+				const int nAttacker = NRandom::Random( nActiveAttackers ); RecordRandomCall();
 
 				int i = 0, predI = 0;
 				int nParty = 0;
@@ -231,7 +231,7 @@ bool CStormableObject::Segment()
 
 					NI_ASSERT( i != attackers.end(), "Wrong attacker chosen" );
 					CSoldier *pAttacker = attackers.GetEl( i );
-					CSoldier *pDefender = GetUnit( NRandom::Random( GetNDefenders() ) );
+					CSoldier *pDefender = GetUnit( NRandom::Random( GetNDefenders() ) ); RecordRandomCall();
 
 					NI_ASSERT( IsValidObj( pAttacker ), "Wrong attacking unit is inside of building" );
 					NI_ASSERT( IsValidObj( pDefender ), "Wrong defending unit is inside of building" );

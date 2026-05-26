@@ -180,8 +180,8 @@ void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints,
 			int nNumPointsFound = 0;
 			for ( int nCycle = 0; nCycle < N_MAX_CYCLES_NUM; ++nCycle )
 			{
-				vRayOrig.x += NRandom::Random( 0.0f, fDx );
-				vRayOrig.z += NRandom::Random( 0.0f, fDz );
+				vRayOrig.x += NRandom::Random( 0.0f, fDx ); RecordRandomCall();
+				vRayOrig.z += NRandom::Random( 0.0f, fDz ); RecordRandomCall();
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;
@@ -215,8 +215,8 @@ void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints,
 			int nNumPointsFound = 0;
 			for ( int nCycle = 0; nCycle < N_MAX_CYCLES_NUM; ++nCycle )
 			{
-				vRayOrig.y += NRandom::Random( 0.0f, fDy );
-				vRayOrig.z += NRandom::Random( 0.0f, fDz );
+				vRayOrig.y += NRandom::Random( 0.0f, fDy ); RecordRandomCall();
+				vRayOrig.z += NRandom::Random( 0.0f, fDz ); RecordRandomCall();
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;

@@ -57,6 +57,7 @@ int CExecutorRestoreTransparencyQueue::Segment()
 			}
 			objectQueue.pop_front();
 		}
+		RecordRandomCall();
 		return nCalcPeriod + NRandom::Random( 0, nCalcPeriodRandom );
 	}
 	else

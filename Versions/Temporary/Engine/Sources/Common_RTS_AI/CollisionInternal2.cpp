@@ -323,7 +323,7 @@ void CWaitingCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, co
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
 	pUnit->NotifyAboutClosestThreat( pPushUnit, fDistance );
 	pUnit->UpdateCollisionStayTime( pPushUnit->GetStayTime() );
-	timeToWait = NRandom::Random( 2000, 5000 );
+	timeToWait = NRandom::Random( 2000, 5000 ); RecordRandomCall();
 }
 
 void CWaitingCollision::Segment( const NTimer::STime timeDiff )
@@ -342,7 +342,7 @@ void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 void CStopCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority )
 {
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
-	timeLeft = NRandom::Random( 1000, 3000 );
+	timeLeft = NRandom::Random( 1000, 3000 ); RecordRandomCall();
 	pUnit->ForceLockTiles();
 }
 

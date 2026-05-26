@@ -213,9 +213,9 @@ int luaRandom( lua_State* state )
 	if ( !script.GetObject( 1 ).IsNumber() )
 		script.PushNumber( 0 );
 	else if ( script.GetTop() == 0 )
-		script.PushNumber( NRandom::Random() );
+		{ script.PushNumber( NRandom::Random() ); RecordRandomCall(); }
 	else if ( script.GetTop() > 1 )
-		script.PushNumber( NRandom::Random( script.GetObject(1).GetInteger(), script.GetObject(2).GetInteger() ) );
+		{ script.PushNumber( NRandom::Random( script.GetObject(1).GetInteger(), script.GetObject(2).GetInteger() ) ); RecordRandomCall(); }
 	else
 		return 1;
 	return 1;

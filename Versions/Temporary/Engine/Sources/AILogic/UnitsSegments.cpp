@@ -26,6 +26,8 @@ const NTimer::STime CFreezeSegments::ProcessSegment()
 //	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 	pUnit->FreezeSegment();
 //	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
+
+	RecordRandomCall();
 	return curTime + NRandom::Random( 500, 1500 );
 }
 
@@ -138,7 +140,8 @@ void CStayTimeSegments::ProcessSegment()
 		const NTimer::STime collStayTime = pUnit->GetCollStayTime();
 		if ( collStayTime != 0 )
 		{
-			const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( collStayTime );
+			const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( collStayTime ); RecordRandomCall();
+			RecordRandomCall();
 			if ( NRandom::Random( 0.0f, 1.0f ) > fProb )
 			{
 				CPtr<ICollision> pCollison = CreateCollision( pUnit, 0, -1, NCollision::ECN_STOP );

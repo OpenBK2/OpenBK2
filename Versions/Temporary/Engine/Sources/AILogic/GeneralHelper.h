@@ -22,6 +22,7 @@ struct SGeneralHelper
 	{
 		int operator()( int N )
 		{
+			RecordRandomCall();
 			return NRandom::Random( N );
 		}
 	};

@@ -73,7 +73,7 @@ void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGSta
 	fDispersionBonus = 1.0f;
 	
 	CAIUnit::Init( center, z, fHP, dir, player, pCollisionsCollector );
-	timeLastHeal = NRandom::Random( GetBehUpdateDuration() );
+	timeLastHeal = NRandom::Random( GetBehUpdateDuration() ); RecordRandomCall();
 
 
 	//медицинские грузовички лечат пехоту в радиусе
@@ -561,7 +561,7 @@ void CTank::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShe
 	{
 		// отрывает гусеницу, всегда, даже на Easy, дизайнеры захотели
 		// cannot recive ->special from DB
-		if ( /*theDifficultyLevel.GetLevel() != 0 &&*/ pShell && ( NRandom::Random( 0.0f, 1.0f ) < pShell->fBrokeTrackProbability ) || ( pShotUnit && pShotUnit->IsTargetingTrack() ) )
+		if ( /*theDifficultyLevel.GetLevel() != 0 &&*/ pShell && ( (NRandom::Random( 0.0f, 1.0f ) < pShell->fBrokeTrackProbability) & RecordRandomCall() ) || ( pShotUnit && pShotUnit->IsTargetingTrack() ) )
 		{
 			Stop();
 			updater.AddUpdate( 0, ACTION_NOTIFY_BREAK_TRACK, this, -1 );
@@ -656,7 +656,7 @@ void CTank::ScanForDangerousDir()
 			bDangerousDirSetInertia = bDangerousDirSet;
 
 		bDangerousDirSet = bNewDangerousDirSet;
-		nextTimeOfDangerousDirScan = curTime + 1000 + NRandom::Random( 0, 2000 );
+		nextTimeOfDangerousDirScan = curTime + 1000 + NRandom::Random( 0, 2000 ); RecordRandomCall();
 	}
 }
 

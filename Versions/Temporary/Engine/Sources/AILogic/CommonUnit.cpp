@@ -224,7 +224,7 @@ void CCommonUnit::FreezeSegment()
 {
 	if ( bCanBeFrozenByState && nextFreezeScan < curTime )
 	{
-		nextFreezeScan = curTime + NRandom::Random( 1500, 3000 );
+		nextFreezeScan = curTime + NRandom::Random( 1500, 3000 ); RecordRandomCall();
 
 		if ( !IsIdle() )
 			bCanBeFrozenByScan = false;
@@ -566,7 +566,7 @@ const bool CCommonUnit::TryExecuteCommand( CAICommand *pCommand, const bool bPla
 			if ( !availEnemies.empty() )
 			{
 				nCommandLeft = g_nDefaultCommandsLimit;
-				ChangePlayer( availEnemies[NRandom::Random( 0, availEnemies.size()-1 )] );
+				ChangePlayer( availEnemies[NRandom::Random( 0, availEnemies.size()-1 )] ); RecordRandomCall();
 			}
 			return false;
 		}

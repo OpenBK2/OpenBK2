@@ -90,8 +90,8 @@ CBasicGun::CBasicGun( class CAIUnit *_pOwner, const BYTE _nShellType, SCommonGun
 
 void CBasicGun::InitRandoms()
 {
-	fRandom4Aim = NRandom::Random( 1.0f, SConsts::COEFF_FOR_RANDOM_DELAY );
-	fRandom4Relax = NRandom::Random( 1.0f, SConsts::COEFF_FOR_RANDOM_DELAY );
+	fRandom4Aim = NRandom::Random( 1.0f, SConsts::COEFF_FOR_RANDOM_DELAY ); RecordRandomCall();
+	fRandom4Relax = NRandom::Random( 1.0f, SConsts::COEFF_FOR_RANDOM_DELAY ); RecordRandomCall();
 }
 
 void CBasicGun::GetMechShotInfo( SAINotifyMechShot *pMechShotInfo, const NTimer::STime &time ) const
@@ -391,7 +391,7 @@ void CBasicGun::Aiming()
 				{
 					const float fZ = GetHeights()->GetVisZ( target.x, target.y );
 					const float fDisp = GetDispByRadius( this, fabs( pOwner->GetCenterPlain() - target ) );
-					z = (std::max)( fZ, NRandom::Random( z - fDisp, z + fDisp ) );
+					z = (std::max)( fZ, NRandom::Random( z - fDisp, z + fDisp ) ); RecordRandomCall();
 				}
 			}
 
@@ -1390,7 +1390,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 					fTimeToFly = CBombBallisticTraj::GetTimeOfFly( vOwnerCenter3D.z - vTrajFinish.z, vSpeed3.z );
 					fDispRadius = GetDispersion() * ( pOwner->GetZ() - vTrajFinish.z ) / GetFireRangeMax();
 					fAcceleration = fDispRadius * 2 / sqr( fTimeToFly );
-					RandQuadrInCircle( fAcceleration, &vRandAcc );
+					RandQuadrInCircle( fAcceleration, &vRandAcc ); RecordRandomCall(); RecordRandomCall();
 					vTrajFinish = CBombBallisticTraj::CalcTrajectoryFinish( vOwnerCenter3D, vSpeed3, vRandAcc, fTimeToFly );
 				}
 

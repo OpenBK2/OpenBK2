@@ -42,6 +42,7 @@ const float CWeather::GetNextTimeRandom()
 	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f )		// No bad weather
 		return 0;
 
+	RecordRandomCall();
 	return 1000 * ( theUnitCreation.GetMap()->weather.fWeatherPeriod + 
 		NRandom::Random( 0.0f, theUnitCreation.GetMap()->weather.fWeatherPeriodRandom ));
 }

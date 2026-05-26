@@ -27,7 +27,7 @@ int CExecutorBurningFuel::Segment()
 	if ( curTime > timeBurn )
 		return -1;
 	else
-		return NRandom::Random( 10 ) + 10;
+		{ RecordRandomCall(); return NRandom::Random( 10 ) + 10; }
 }
 
 REGISTER_SAVELOAD_CLASS( 0x101CE480, CExecutorBurningFuel )

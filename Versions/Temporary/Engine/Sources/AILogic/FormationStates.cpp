@@ -1418,7 +1418,7 @@ CFormationLeaveBuildingState::CFormationLeaveBuildingState( CFormation *_pFormat
 	if ( ALP_POSITION_VALID == param )
 		point = _point;
 	else // choose point by random
-		point = pBuilding->GetEntrancePoint( NRandom::Random( pBuilding->GetNEntrancePoints() ) );
+		{ point = pBuilding->GetEntrancePoint( NRandom::Random( pBuilding->GetNEntrancePoints() ) ); RecordRandomCall(); }
 }
 
 void CFormationLeaveBuildingState::Segment()
@@ -3661,6 +3661,7 @@ void CFormationFirstAidState::Segment()
 						if ( bValidPatientFound )
 						{
 							healingPairs[i].SetNewPatient( pNewPatient );
+							RecordRandomCall();
 							CPtr<IStaticPath> pPath = CreateStaticPathToPoint( 
 													pNewPatient->GetCenterPlain() + SConsts::TILE_SIZE * GetVectorByDirection( NRandom::Random( 65535 ) ), 
 													VNULL2, 

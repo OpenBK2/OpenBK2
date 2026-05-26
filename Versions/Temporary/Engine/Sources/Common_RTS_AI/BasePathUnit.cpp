@@ -625,7 +625,8 @@ void CBasePathUnit::FirstSegment( const NTimer::STime timeDiff )
 		{
 			if ( GetCollStayTime() != 0 )
 			{
-				const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( GetCollStayTime() );
+				const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( GetCollStayTime() ); RecordRandomCall();
+				RecordRandomCall();
 				if ( NRandom::Random( 0.0f, 1.0f ) > fProb )
 				{
 					CPtr<ICollision> pCollision = CreateCollision( this, 0, -1, NCollision::ECN_STOP );
@@ -726,7 +727,7 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 		fSpeed = 0.0f;
 		LockTiles();
 
-		SetNextSecondPathSegmTime( NRandom::Random( 250, 550 ) );
+		SetNextSecondPathSegmTime( NRandom::Random( 250, 550 ) ); RecordRandomCall();
 	}
 
 	CalculateIdle();

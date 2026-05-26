@@ -405,7 +405,7 @@ void CPlayerReinforcement::CallSuperWeapon()
 		NI_VERIFY( pReinfUnit->platforms.size() > 0 && pReinfUnit->platforms[0].guns.size() > 0 && pReinfUnit->platforms[0].guns[0].pWeapon, "Invalid weapon for SuperWeapon shell", return );
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon = pReinfUnit->platforms[0].guns[0].pWeapon;
 		if ( pWeapon )
-			vTarget += GetVectorByDirection( NRandom::Random( (int)0, (int)65535 ) )*NRandom::Random( pWeapon->fDispersion );
+			{ vTarget += GetVectorByDirection( NRandom::Random( (int)0, (int)65535 ) )*NRandom::Random( pWeapon->fDispersion ); RecordRandomCall(); RecordRandomCall(); }
 	}
 	const bool bOnWater = GetTerrain()->GetTerrainType( GetAIMap()->GetTile( pos->second.first.vPosition ) ) == ETT_WATER_TERRAIN;
 	const CVec2 vDeployPoint = pos->second.first.vAviationPosition;
@@ -630,6 +630,7 @@ int CPlayerReinforcement::GetRandomPointID() const
 	if ( pointIDs.empty() )
 		return -1;
 	
+	RecordRandomCall();
 	return pointIDs[NRandom::Random( pointIDs.size() )];
 }
 

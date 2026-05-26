@@ -132,7 +132,7 @@ int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter, const float fRad
 {
 	std::list<CAIUnit*> bombardmentUnits;
 	// сформировать список атакующей артиллерии
-	int nMaxUnits = (std::min)( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) );
+	int nMaxUnits = (std::min)( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) ); RecordRandomCall();
 	int cnt = 0;
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end() && cnt < nMaxUnits; )
 	{

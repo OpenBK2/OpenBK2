@@ -10,6 +10,7 @@ CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION, 
 	NDb::ABILITY_ENTRENCH_SELF )
 {
+	RecordRandomCall();
 	for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;

@@ -635,7 +635,7 @@ void CArtillery::Segment()
 		lastCheckToInstall = curTime;
 	else if ( !IsInstalled() && !IsInInstallAction() && IsOperable() )
 	{
-		if ( curTime - lastCheckToInstall >= 1500 + NRandom::Random( 0, 500 ) )
+		if ( (curTime - lastCheckToInstall >= 1500 + NRandom::Random( 0, 500 )) & RecordRandomCall() )
 		{
 			NI_ASSERT( IsInstallAction( GetOppositeInstallState( eCurrentStateOfInstall ) ), StrFmt( "Wrong current install state (%d)", int(eCurrentStateOfInstall) ) );
 			InstallAction( GetOppositeInstallState( eCurrentStateOfInstall ) );

@@ -48,7 +48,7 @@ bool CInGroupPathBasis::Init( CBasePathUnit *_pUnit, CGroupSmoothPath *_pGroupSm
 
 void CInGroupPathBasis::CantFindPathToFormation()
 {
-	timeToSearchPathToBack = PERIOD_OF_PATH_TO_FORMATION_SEARCH + NRandom::Random( 0, PERIOD_OF_PATH_TO_FORMATION_SEARCH );
+	timeToSearchPathToBack = PERIOD_OF_PATH_TO_FORMATION_SEARCH + NRandom::Random( 0, PERIOD_OF_PATH_TO_FORMATION_SEARCH ); RecordRandomCall();
 }
 
 void CInGroupPathBasis::CutDriveToFormationPath( IStaticPath *pPath )

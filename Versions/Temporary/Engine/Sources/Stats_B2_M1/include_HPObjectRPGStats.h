@@ -10,6 +10,7 @@ virtual int GetMinPossibleArmor( const int n ) const { return defences[n].nArmor
 virtual int GetMaxPossibleArmor( const int n ) const { return defences[n].nArmorMax; }
 virtual int GetRandomArmor( const int n ) const 
 { 
+	RecordRandomCall();
 	return NRandom::RandomCheck( defences[n].nArmorMin, defences[n].nArmorMax ); 
 }
 //

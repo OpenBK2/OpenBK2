@@ -42,8 +42,9 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	const CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
 	const WORD wDirToEnemy = GetDirectionByVector( vDirToEnemy );
 
-	const WORD wRandomAngle = NRandom::Random( 0, 65536 / 5 );
+	const WORD wRandomAngle = NRandom::Random( 0, 65536 / 5 ); RecordRandomCall();
 	WORD wResultDir;
+	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
 		wResultDir = wDirToEnemy - wRandomAngle;
 	else
@@ -51,14 +52,15 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 
 	float fRandomDist;
 	// ползти
+	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.7f )
 	{
-		fRandomDist = NRandom::Random( float( 0.4f * SConsts::TILE_SIZE ), float( 2.0f * SConsts::TILE_SIZE ) );
+		fRandomDist = NRandom::Random( float( 0.4f * SConsts::TILE_SIZE ), float( 2.0f * SConsts::TILE_SIZE ) ); RecordRandomCall();
 		bForceStaying = false;
 	}
 	else
 	{
-		fRandomDist = NRandom::Random( float( 2.0f * SConsts::TILE_SIZE ), float( 4.0f * SConsts::TILE_SIZE ) );
+		fRandomDist = NRandom::Random( float( 2.0f * SConsts::TILE_SIZE ), float( 4.0f * SConsts::TILE_SIZE ) ); RecordRandomCall();
 		bForceStaying = true;
 	}
 
@@ -105,13 +107,13 @@ void CRndRunUpToEnemy::Segment()
 		{
 			if ( curTime >= checkTime )
 			{
-				if ( pOwner->IsIdle() && vLastOwnerPos == pOwner->GetCenterPlain() && NRandom::Random( 0.0f, 1.0f ) <= 0.7f )
+				if ( pOwner->IsIdle() && vLastOwnerPos == pOwner->GetCenterPlain() && ((NRandom::Random( 0.0f, 1.0f ) <= 0.7f) & RecordRandomCall()) )
 					SendOwnerToRandomRun();
 
 				if ( !bRunningToEnemy )
 				{
 					vLastOwnerPos = pOwner->GetCenterPlain();
-					checkTime = curTime + NRandom::Random( 2000, 5000 );
+					checkTime = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
 				}
 			}
 		}
@@ -119,7 +121,7 @@ void CRndRunUpToEnemy::Segment()
 		{
 			bRunningToEnemy = false;
 			vLastOwnerPos = pOwner->GetCenterPlain();
-			checkTime = curTime + NRandom::Random( 2000, 5000 );
+			checkTime = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
 
 			if ( bForceStaying )
 			{

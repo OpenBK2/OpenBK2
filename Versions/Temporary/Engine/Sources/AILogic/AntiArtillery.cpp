@@ -118,7 +118,7 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 			{
 				const float fOldRadius = GetRadius( nHeardShots[i] - 1, fGunRadius );
 
-				RandQuadrInCircle( fCurRadius, &newCenter );
+				RandQuadrInCircle( fCurRadius, &newCenter ); RecordRandomCall(); RecordRandomCall();
 				newCenter += center;
 			}
 

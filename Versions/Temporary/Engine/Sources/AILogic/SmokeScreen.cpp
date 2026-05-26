@@ -20,13 +20,13 @@ CSmokeScreen::CSmokeScreen( const CVec3 &_vCenter, const float _fRadius, const i
 
 void CSmokeScreen::Init()
 {
-	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
+	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
 	theStatObjs.RegisterSegment( this );
 }
 
 void CSmokeScreen::Segment()
 {
-	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
+	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
 	if ( curTime >= timeOfDissapear )
 	{
 		RemoveTransparencies();

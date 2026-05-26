@@ -63,19 +63,25 @@ enum EAIClass
 
 inline int GetRandom( int nAverage, int nRandom )
 {
-	return nRandom <= 0 ? nAverage : NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
+	if (nRandom <= 0)
+		return nAverage;
+
+	RecordRandomCall(); return NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
 }
 inline float GetRandom( float fAverage, int nRandom )
 {
-	return nRandom <= 0 ? fAverage : NRandom::RandomCheck( fAverage - float(nRandom), fAverage + float(nRandom) );
+	if (nRandom <= 0)
+		return fAverage;
+
+	RecordRandomCall(); return NRandom::RandomCheck( fAverage - float(nRandom), fAverage + float(nRandom) );
 }
 inline int GetPositiveRandom( int nAverage, int nRandom )
 {
-	return (std::max)( 0, NRandom::Random( nAverage - nRandom,  nAverage + nRandom) );
+	RecordRandomCall(); return (std::max)( 0, NRandom::Random( nAverage - nRandom,  nAverage + nRandom) );
 }
 inline float GetPositiveRandom( float fAverage, int nRandom )
 {
-	return (std::max)( 0.0f, NRandom::Random( fAverage - float(nRandom), fAverage + float(nRandom) ) );
+	RecordRandomCall(); return (std::max)( 0.0f, NRandom::Random( fAverage - float(nRandom), fAverage + float(nRandom) ) );
 }
 
 // Special Ability

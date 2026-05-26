@@ -79,6 +79,7 @@ CAIUnit* CFormation::CCarryedMortar::CreateMortar( class CFormation *pOwner )
 	{
 		bCanPlace = false;
 		// find first unlocked place and move mortar here
+		RecordRandomCall();
 		const WORD wRandStart = NRandom::Random( 65535 );
 		for ( int nDistance = 0; nDistance < 50 && !bCanPlace; nDistance += 2 )
 		{

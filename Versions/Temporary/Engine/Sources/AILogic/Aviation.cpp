@@ -255,7 +255,7 @@ void CAviation::Segment()
 			}
 		}
 
-		timeNextGroundScan = curTime + 1000 + NRandom::Random( 0, 2000 );
+		timeNextGroundScan = curTime + 1000 + NRandom::Random( 0, 2000 ); RecordRandomCall();
 	}
 }
 

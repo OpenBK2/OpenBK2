@@ -278,8 +278,8 @@ float fRange = 0;
 void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WORD dir, const BYTE _player, ICollisionsCollector *pCollisionsCollector )
 {
 	lastScanTime = curTime;
-	realScanDuration = NRandom::Random( 1500, 2500 );
-	targetScanRandom = NRandom::Random( 800, 1000 );
+	realScanDuration = NRandom::Random( 1500, 2500 ); RecordRandomCall();
+	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
 	//nAbilityLevel = -1;
 	bTrampled = false;
 	pStatsModifiers = new NDb::SUnitStatsModifier;
@@ -500,7 +500,7 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 			theGraveyard.AddToSoonBeDead( this, fDamage );
 
 			if ( fromExplosion && GetStats()->IsInfantry() && IsFree() )
-				timeToDeath = curTime + NRandom::Random( 0, 1000 );
+				{ timeToDeath = curTime + NRandom::Random( 0, 1000 ); RecordRandomCall(); }
 			else
 				timeToDeath = curTime;
 			//}
@@ -652,13 +652,13 @@ void CAIUnit::CheckForReveal()
 {
 	if ( !theDipl.IsNetGame() && nextRevealCheck <= curTime )
 	{
-		nextRevealCheck = curTime + 1000 + NRandom::Random( 0, 1000 );
+		nextRevealCheck = curTime + 1000 + NRandom::Random( 0, 1000 ); RecordRandomCall();
 		if ( bQueredToReveal )
 		{
 			bQueredToReveal = false;
 			if ( !bRevealed )
 			{
-				bRevealed = NRandom::Random( 0.0f, 1.0f ) < SConsts::REVEAL_INFO[GetStats()->etype].fRevealByQuery;
+				bRevealed = NRandom::Random( 0.0f, 1.0f ) < SConsts::REVEAL_INFO[GetStats()->etype].fRevealByQuery; RecordRandomCall();
 				if ( bRevealed )
 					timeOfReveal = curTime;
 			}
@@ -671,7 +671,7 @@ void CAIUnit::CheckForReveal()
 			bRevealed =
 				timeOfReveal + SConsts::REVEAL_INFO[nType].nTimeOfReveal >= curTime &&
 				fabs2( GetCenterPlain() - vPlaceOfReveal ) < sqr(SConsts::REVEAL_INFO[nType].fForgetRevealDistance) && 
-				NRandom::Random( 0.0f, 1.0f ) < 1 - SConsts::REVEAL_INFO[nType].fRevealByMovingOff;
+				NRandom::Random( 0.0f, 1.0f ) < 1 - SConsts::REVEAL_INFO[nType].fRevealByMovingOff; RecordRandomCall();
 		}
 	}
 }
@@ -1241,14 +1241,14 @@ void CAIUnit::ResetTargetScan()
 {
 	GetLastBehTime() = 0;
 //	SetTargetScanRandom();	
-	targetScanRandom = NRandom::Random( 800, 1000 );
+	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
 }
 
 void CAIUnit::ResetGunChoosing()
 {
 	GetLastBehTime() = curTime;
 //	SetTargetScanRandom();	
-	targetScanRandom = NRandom::Random( 800, 1000 );
+	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
 }
 
 CBasicGun* CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
@@ -1271,16 +1271,16 @@ void CAIUnit::SetTargetScanRandom()
 	{
 		if ( GetState() && GetState()->IsAttackingState() )
 		{
-			targetScanRandom = NRandom::Random( 800, 2500 );
+			targetScanRandom = NRandom::Random( 800, 2500 ); RecordRandomCall();
 		}
 		else
 		{
-			targetScanRandom = NRandom::Random( 800, 3500 );
+			targetScanRandom = NRandom::Random( 800, 3500 ); RecordRandomCall();
 		}
 	}
 	else
 	{	
-		targetScanRandom = NRandom::Random( 800, 1000 );
+		targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
 	}
 }
 
@@ -1440,12 +1440,12 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 			if ( GetStats()->IsInfantry() )
 			{
 				if ( GetState() && GetState()->IsAttackingState() )
-					realScanDuration = NRandom::Random( 2500, 6000 );
+					{ realScanDuration = NRandom::Random( 2500, 6000 ); RecordRandomCall(); }
 				else
-					realScanDuration = NRandom::Random( 3500, 7000 );
+					{ realScanDuration = NRandom::Random( 3500, 7000 ); RecordRandomCall(); }
 			}
 			else
-				realScanDuration = NRandom::Random( 1500, 3000 );
+				{ realScanDuration = NRandom::Random( 1500, 3000 ); RecordRandomCall(); }
 		}
 
 
@@ -1646,15 +1646,15 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 	}
 	if ( !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) || // deep water
 			 (
-			 NRandom::Random( 0.0f, 1.0f ) < SConsts::FATALITY_PROBABILITY ||
+			 ((NRandom::Random( 0.0f, 1.0f ) < SConsts::FATALITY_PROBABILITY) & RecordRandomCall()) ||
 			 fDamage / GetStats()->fMaxHP > SConsts::DAMAGE_FOR_MASSIVE_DAMAGE_FATALITY && 
-			 NRandom::Random( 0.0f, 0.1f ) < SConsts::MASSIVE_DAMAGE_FATALITY_PROBABILITY
+			 ((NRandom::Random( 0.0f, 0.1f ) < SConsts::MASSIVE_DAMAGE_FATALITY_PROBABILITY) & RecordRandomCall())
 			 )
 		 )
 	{
 		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && !pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.empty() )
 		{
-			const int nFatality = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() );
+			const int nFatality = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() ); RecordRandomCall();
 
 			const int nRect = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_A;
 			CVec2 vRectCenter(VNULL2), vRectHalfSize(VNULL2);
@@ -1691,7 +1691,7 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 				goto death_animable_anim;
 			}
 
-			const int nFatality = NRandom::Random( fatality_anims.size() );
+			const int nFatality = NRandom::Random( fatality_anims.size() ); RecordRandomCall();
 			
 			int nRect = -1;
 			
@@ -1735,13 +1735,17 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 		if (death_anims.empty())
 			return -1;
 		
+		RecordRandomCall();
 		return -1 * int( NRandom::Random( death_anims.size() ) + 2 );
 	}
 
 	if ( pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty() )
 		return -1;
 	else
-		return -1 * int( NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH].anims.size() ) + 2 );
+	{
+		RecordRandomCall();
+		return -1 * int(NRandom::Random(pStats->animdescs[NDb::ANIMATION_DEATH].anims.size()) + 2);
+	}
 }
 
 void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const
@@ -2077,6 +2081,7 @@ const float CAIUnit::GetCover() const
 
 bool CAIUnit::IsSavedByCover() const
 { 
+	RecordRandomCall();
 	return 
 		NRandom::Random( 0.0f, 1.0f ) >= GetCover();
 }

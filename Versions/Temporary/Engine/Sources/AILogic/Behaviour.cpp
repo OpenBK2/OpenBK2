@@ -140,6 +140,7 @@ void CStandartBehaviour::UponFire( class CCommonUnit *pUnit, class CAIUnit *pWho
 bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 {
 	const int nParty = pUnit->GetParty();	
+	RecordRandomCall();
 	if ( curTime - fleeTraceEnemyTime >= 3000 + NRandom::Random( 0, 1000 ) && pUnit->GetNGuns() > 0 )
 	{
 		fleeTraceEnemyTime = curTime;
@@ -221,13 +222,14 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 			else if ( pUnit->GetTurret( 0 )->IsFinished() )
 			{
 			 if ( ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) ||
-							lastTimeOfRotate != NTimer::STime( -1 ) && curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) ) )
+							lastTimeOfRotate != NTimer::STime( -1 ) && (curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) & RecordRandomCall()) ) )
 				{
 					// если танк с перебитой гусеницей или зенитка
 					if ( pUnit->GetTurret( 0 )->GetHorTurnConstraint() != 0 && 
 							( !pUnit->CanMove() && pUnit->GetStats()->IsArmor() || pUnit->GetStats()->etype == RPG_TYPE_ART_AAGUN ) 
 						 )
 					{
+						RecordRandomCall();
 						if ( NRandom::Random( 0.0f, 1.0f ) > 0.7f )
 						{
 							CTurret *pTurret = pUnit->GetTurret( 0 );
@@ -244,7 +246,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 							
 							if ( wMaxRotateAngle > 0 && (int)wMaxRotateAngle - (int)wMinRotateAngle + 1 != 0 )
 							{
-								WORD wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle );
+								WORD wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle ); RecordRandomCall();
 
 								bool bClockWise = false;
 								bool bCounterClockWise = false;
@@ -262,9 +264,9 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 								if ( bClockWise && bCounterClockWise )
 								{
 									if ( nLastSign == 1 )
-										nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.6f ) ? 1 : -1;
+										{ nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.6f ) ? 1 : -1; RecordRandomCall(); }
 									else
-										nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.4f ) ? 1 : -1;
+										{ nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.4f ) ? 1 : -1; RecordRandomCall(); }
 								}
 								if ( !bClockWise && !bCounterClockWise )
 								{
@@ -287,7 +289,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 			}
 		}
 
-		underFireAnalyzeTime = curTime + SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0, 1000 );
+		underFireAnalyzeTime = curTime + SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0, 1000 ); RecordRandomCall();
 	}
 }
 

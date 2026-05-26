@@ -502,7 +502,7 @@ void CSoldierRestState::Segment()
 				if ( !bSent )
 					pUnit->RegisterAsBored( ACK_BORED_IDLE );
 
-				nextMove = curTime + NRandom::Random( 1500, 2000 );
+				nextMove = curTime + NRandom::Random( 1500, 2000 ); RecordRandomCall();
 
 				pUnit->FreezeByState( true );
 			}
@@ -643,7 +643,7 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 			}
 
 			lastEnemyTile = pEnemy->GetCenterTile();
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
 		}
 	}
 }
@@ -695,7 +695,7 @@ void CSoldierAttackState::AnalyzeMovingPosition()
 			}
 
 			lastEnemyTile = pEnemy->GetCenterTile();			
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
 		}
 	}
 }
@@ -748,7 +748,7 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 	if ( nCount == 2 && vBestSides[0] == 0 && vBestSides[1] == 49152 )
 		wMinAngle = 40960;
 
-	const WORD wAngle = wMinAngle + NRandom::Random( 0, 16384*nCount );
+	const WORD wAngle = wMinAngle + NRandom::Random( 0, 16384*nCount ); RecordRandomCall();
 	const CVec2 vAngle = GetVectorByDirection( wAngle );
 
 	IStaticPath *pBestPath = 
@@ -798,7 +798,7 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 				}
 			}
 
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
 			lastEnemyTile = curEnemyTile;
 			wLastEnemyDir = wCurEnemyDir;
 		}

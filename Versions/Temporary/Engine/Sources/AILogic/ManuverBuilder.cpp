@@ -94,7 +94,7 @@ struct IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttit
 		const float fSpeed( fabs( vSpeed ) );
 		CVec3 vPerp ( -vSpeed.y, vSpeed.x, 0 );
 		Normalize( &vPerp );
-		vPerp *= ( NRandom::Random(0,1) == 1 ? -1 : 1 );
+		vPerp *= ( NRandom::Random(0,1) == 1 ? -1 : 1 ); RecordRandomCall();
 
 		const CVec3 vPoint( pPos->GetPosB2() + 2.1f * vPerp * pPos->GetPreferencesB2().GetR( fSpeed ) );
 		return CreatePointManuver( pPos, vPoint, false );

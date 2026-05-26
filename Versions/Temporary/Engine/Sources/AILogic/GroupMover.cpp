@@ -121,7 +121,7 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 					if ( fDistance >= FP_EPSILON )
 						vDirection /= fDistance;
 					else
-						vDirection = GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+						{ vDirection = GetVectorByDirection( NRandom::Random( 0, 65535 ) ); RecordRandomCall(); }
 
 					const CVec2 vForce = FORCE_COEFF * ( DIST_THRESHOLD - fDistance ) * vDirection;
 					it->vForce += vForce;

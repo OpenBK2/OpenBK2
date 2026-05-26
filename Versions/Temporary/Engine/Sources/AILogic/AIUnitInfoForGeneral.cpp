@@ -21,7 +21,7 @@ CAIUnitInfoForGeneral::CAIUnitInfoForGeneral( CAIUnit *_pOwner )
 	lastVisibleAntiArtTime( 0 ), vLastVisibleAntiArtCenter( VNULL2 ), fDistToLastVisibleAntiArt( -1.0f ),
 	fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 )
 {
-	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
+	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::Segment()
@@ -29,7 +29,7 @@ void CAIUnitInfoForGeneral::Segment()
 	// если это юнит не управляемый AI и пришло время рассказать генералу о своём состоянии
 	if ( curTime >= nextTimeToReportGeneral && theDipl.GetNeutralParty() != pOwner->GetParty() )
 	{
-		nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
+		nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
 
 		const int nEnemyParty = 1 - pOwner->GetParty();
 		if ( pOwner->IsVisible( nEnemyParty ) )

@@ -30,12 +30,12 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 	{
 		const int nFireplaces = GetNFirePlaces();
 		if ( nFireplaces > 1 )
-			iter->nLastFireplace = NRandom::Random( 0, nFireplaces - 1 );
+			{ iter->nLastFireplace = NRandom::Random( 0, nFireplaces - 1 ); RecordRandomCall(); }
 		else
 			iter->nLastFireplace = 0;
 	}
 
-	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 );
+	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 ); RecordRandomCall();
 }
 
 void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
@@ -123,7 +123,7 @@ void CRotatingFireplacesObject::Segment()
 				{
 					if ( curTime >= iter->lastFireplaceChange )
 					{
-						iter->lastFireplaceChange = curTime + NRandom::Random( 500, 2000 ) ;
+						iter->lastFireplaceChange = curTime + NRandom::Random( 500, 2000 ) ; RecordRandomCall();
 						if ( CanRotateSoldier( pSoldier ) )
 						{
 							iter->nLastFireplace = ( iter->nLastFireplace + 1 ) % GetNFirePlaces();	

@@ -17,12 +17,14 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 		CVec2 vRandomCant( VNULL2 );
 		if ( fRandomCant != 0.0f )
 		{
-			const float fRandomDist = NRandom::Random( 0.0f, fRandomCant );
+			const float fRandomDist = NRandom::Random( 0.0f, fRandomCant ); RecordRandomCall();
 			CVec2 vDirFromEnemy = pUnit->GetCenterPlain() - pTarget->GetCenterPlain();
 			Normalize( &vDirFromEnemy );
 			const CVec2 vPerpDir( -vDirFromEnemy.y, vDirFromEnemy.x );
 
 			vRandomCant = vPerpDir * fRandomDist;
+			
+			RecordRandomCall();
 			if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
 				vRandomCant = -vRandomCant;
 		}

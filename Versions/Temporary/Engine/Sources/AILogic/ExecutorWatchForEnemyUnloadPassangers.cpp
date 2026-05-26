@@ -20,6 +20,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 	{
 		if ( !pUnit->GetNPassengers() )
 		{
+			RecordRandomCall();
 			return GetNextTime() + NRandom::Random( 20 );
 		}
 		else // scan for enemies
@@ -55,6 +56,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 							theGroupLogic.InsertUnitCommand( cmd, pUnit );
 						}
 					}
+					RecordRandomCall();
 					return GetNextTime() + NRandom::Random( 20 );
 				}
 			}
@@ -63,6 +65,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 	else
 		return -1;
 
+	RecordRandomCall();
 	return GetNextTime() + NRandom::Random( 50 );
 }
 

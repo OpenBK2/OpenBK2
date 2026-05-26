@@ -8,7 +8,7 @@ virtual void ToAIUnits( bool bInEditor );
 virtual int GetArmor( const int n ) const { return ( armors[n].nMin + armors[n].nMax ) / 2; }
 virtual int GetMinPossibleArmor( const int n ) const { return armors[n].nMin; }
 virtual int GetMaxPossibleArmor( const int n ) const { return armors[n].nMax; }
-virtual int GetRandomArmor( const int n ) const { return NRandom::RandomCheck( armors[n].nMin, armors[n].nMax ); }
+virtual int GetRandomArmor( const int n ) const { RecordRandomCall(); return NRandom::RandomCheck( armors[n].nMin, armors[n].nMax ); }
 //
 bool HasDieselEffect() const { return pEffectDiesel != 0; }
 bool HasSmokeEffect() const { return pEffectSmoke != 0; }

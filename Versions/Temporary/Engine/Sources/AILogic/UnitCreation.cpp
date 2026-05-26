@@ -110,7 +110,7 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const
 		{
 			CVec2 res ( CVec2( vStartOffset.x, vStartOffset.y)+ CVec2( -resize * i * box.y, 0 ) );
 			if ( bRandom )
-				res.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM );
+				{ res.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM ); RecordRandomCall(); }
 
 			positions->push_back( res/*^direction*/ );
 			if ( positions->size() == nMax )
@@ -120,7 +120,7 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const
 			{
 				CVec2 res ( CVec2( vStartOffset.x, -vStartOffset.y )+ CVec2( -resize * i * box.y, 0 ) );
 				if ( bRandom )
-					res.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM );
+					{ res.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM ); RecordRandomCall(); }
 				positions->push_back( res /*^ direction*/ );
 				if ( positions->size() == nMax )
 					return ;
@@ -590,7 +590,11 @@ const SFenceRPGStats *CUnitCreation::GetWireFence() const
 
 const SMechUnitRPGStats * CUnitCreation::GetFoxHole( const bool bCanDig ) const
 {
-	return pConsts == 0 ? 0 : pConsts->foxHoles[NRandom::Random( pConsts->foxHoles.size() )];
+	if (pConsts == 0)
+		return 0;
+	
+	RecordRandomCall();
+	return pConsts->foxHoles[NRandom::Random( pConsts->foxHoles.size() )];
 }
 
 const SMechUnitRPGStats * CUnitCreation::GetRandomTankPit( const class CVec2 &vSize, const bool bCanDig, float *pfResize ) const

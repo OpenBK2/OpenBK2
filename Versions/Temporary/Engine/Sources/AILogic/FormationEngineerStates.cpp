@@ -917,6 +917,7 @@ void CFormationLoadRuState::Segment()
 			const CVec2 vEntrance = pStorage->GetEntrancePoint( nEntrance );
 			for ( int i = 0; i < pUnit->Size(); ++i )
 			{
+				RecordRandomCall();
 				const CVec2 vDestPoint = vEntrance + GetVectorByDirection( NRandom::Random(0,65535) ) * 32.0f;
 				CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( vDestPoint, VNULL2, (*pUnit)[i], true, GetAIMap() );
 				if ( pStaticPath )
@@ -1057,6 +1058,7 @@ void CFormationPlaceAntitankState::Segment()
 			const int nSize = pUnit->Size();
 			for ( int i = 0; i < nSize; ++i )
 			{
+				RecordRandomCall();
 				const CVec2 vShift( GetVectorByDirection( WORD(NRandom::Random(0, 65535) ) * SConsts::TILE_SIZE ) );
 				CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vDesiredPoint, vShift, (*pUnit)[i], true, GetAIMap() );
 				if ( pPath )

@@ -14,7 +14,7 @@ namespace NWV
 	{
 		static int GetRandom( int nMax ) //[0...n-1]
 		{
-			return NRandom::Random( nMax ); //[0...n-1]
+			RecordRandomCall(); return NRandom::Random( nMax ); //[0...n-1]
 		}
 	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

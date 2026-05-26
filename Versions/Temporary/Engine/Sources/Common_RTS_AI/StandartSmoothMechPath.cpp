@@ -557,6 +557,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	// если едем задом, проверить - нельзя ли развернуться, чтобы поехать передом
 	if ( !GetUnit()->IsGoForward() )
 	{
+		RecordRandomCall();
 		if ( lastCheckToRightTurn >= (NTimer::STime)( NRandom::Random( 200, 500 ) ) )
 		{
 			lastCheckToRightTurn = 0;

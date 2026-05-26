@@ -94,7 +94,7 @@ void CExplosion::Init(	CAIUnit *_pUnit,
 	{
 		const float fFireRangeMax = GetFireRangeMax( pWeapon, pUnit );
 		const float fDispRadius = GetDispByRadius( fDispersion, fFireRangeMax, fabs( vDiff ) );
-		RandQuadrInCircle( fDispRadius, &vRand, fDispRatio, CVec2(vDiff.x, vDiff.y) );
+		RandQuadrInCircle( fDispRadius, &vRand, fDispRatio, CVec2(vDiff.x, vDiff.y) ); RecordRandomCall(); RecordRandomCall();
 	}
 
 	explCoord = _explCoord + CVec3( vRand, 0 );

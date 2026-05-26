@@ -132,7 +132,7 @@ void CEntrenchmentPart::Segment()
 		theStatObjs.UnregisterSegment( this );
 
 	// random вызывать всегда - для mutliplayer
-	nextSegmTime = curTime + NRandom::Random( 500, 2000 );
+	nextSegmTime = curTime + NRandom::Random( 500, 2000 ); RecordRandomCall();
 }
 
 void CEntrenchmentPart::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
@@ -483,6 +483,7 @@ void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, 
 
 		for ( list<SInsiderInfo>::iterator iter = insiders.begin(); iter != insiders.end(); ++iter )
 		{
+			RecordRandomCall();
 			if ( NRandom::Random( 0.0f, 1.0f ) < fProbability )
 				dead.push_back( iter->pUnit );
 		}
@@ -541,7 +542,7 @@ const BYTE CEntrenchment::GetPlayer() const
 
 void CEntrenchment::Segment() 
 { 
-	nextSegmTime = curTime + NRandom::Random( 200, 1000 );
+	nextSegmTime = curTime + NRandom::Random( 200, 1000 ); RecordRandomCall();
 
 	if ( !IsUnitsInside() )
 		theStatObjs.UnregisterSegment( this );

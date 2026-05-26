@@ -586,7 +586,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 		// мультиплера
 		if ( groupUnits.GetSize(wGroup) != 0 )
 		{
-			int nRandom = NRandom::Random( groupUnits.GetSize(wGroup) );
+			int nRandom = NRandom::Random( groupUnits.GetSize(wGroup) ); RecordRandomCall();
 			if ( !command.bFromAI )
 			{
 				// выбрать по рандому юнит, который будет говорить аск на подтверждение команды

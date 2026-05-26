@@ -1313,7 +1313,7 @@ void CAILogic::Segment()
 			if ( bPresent != bLocalPlayerUnitsPresent )
 				updater.AddUpdate( EFB_LOCAL_PLAYER_UNITS_PRESENT, bPresent, 0 );
 			bLocalPlayerUnitsPresent = bPresent;
-			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 );
+			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 ); RecordRandomCall();
 		}
 	}
 
@@ -1805,8 +1805,8 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 {
 	const int nMaxX = GetAIMap()->GetSizeX();
 	const int nMaxY = GetAIMap()->GetSizeY();
-	SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
-	SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+	SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
+	SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
 
 	for ( int i = 0; i < 500; ++i )
 	{
@@ -1822,8 +1822,8 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 		}
 		else
 		{
-			SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
-			SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+			SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
+			SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
 		}
 	}
 }

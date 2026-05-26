@@ -84,22 +84,21 @@ namespace NRandom
 	std::vector<RngCall> Calls;
 	int ci = 0;
 
-	void RecordCall(const std::string& file, int line, const std::string& func)
+	bool RecordCall(const std::string& file, int line, const std::string& func)
 	{
-		static const int MAX_CALLS_STORAGE = 256;
-
-		std::string location = file + ":" + std::to_string(line) + " at: " + func;
+		static const int MAX_CALLS_STORAGE = 512;
 
 		if (Calls.size() < MAX_CALLS_STORAGE)
 		{
-			Calls.push_back({ci, location});
+			Calls.push_back({ci, file.c_str(), line, func.c_str()});
 			ci++;
-			return;
+			return true;
 		}
 
 		size_t modIndex = ci % MAX_CALLS_STORAGE;
-		Calls[modIndex] = {ci, location};
+		Calls[modIndex] = {ci, file.c_str(), line, func.c_str()};
 		ci++;
+		return true;
 	}
 
 	void DumpRecords(FILE* f)
@@ -111,7 +110,8 @@ namespace NRandom
 
 		for (size_t i = 0; i < calls.size(); i++)
 		{
-			fprintf(f, "\t#%d %s\n", calls[i].callNumber, calls[i].location.c_str());
+			std::string location = std::string(calls[i].file) + ":" + std::to_string(calls[i].line) + " at: " + calls[i].function;
+			fprintf(f, "\t#%d %s\n", calls[i].callNumber, location.c_str());
 		}
 	}
 

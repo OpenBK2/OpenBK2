@@ -9,8 +9,8 @@ inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
 
 	do
 	{
-		pvRand->x = fR * NRandom::Random( -1.0f, 1.0f );
-		pvRand->y = fR * NRandom::Random( -1.0f, 1.0f );
+		pvRand->x = fR * NRandom::Random( -1.0f, 1.0f ); RecordRandomCall();
+		pvRand->y = fR * NRandom::Random( -1.0f, 1.0f ); RecordRandomCall();
 	} while ( sqr( pvRand->x ) + sqr( pvRand->y ) > sqr( fR ) );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

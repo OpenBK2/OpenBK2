@@ -716,7 +716,7 @@ void CTransportLandState::Segment()
 bool CTransportLandState::FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
-	WORD wStartDir = NRandom::Random( 0, 65535 );
+	WORD wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
 	CVec2 vCenterPoint = *vDropPoint;
 	const int nIterations = 8;
 	for ( float fRadius = 150; fRadius < 1000; fRadius += 50 )

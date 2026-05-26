@@ -191,6 +191,7 @@ void CGeneralTaskToDefendStorage::Segment()
 	case TS_START_RECAPTURE:
 		// storage was captured. 
 		// after some time we will ask for support ( to recapture storage )
+		RecordRandomCall();
 		if ( NRandom::Random( 0.0f, 1.0f ) < SGeneralConsts::RECAPTURE_STORAGE_PROBALITY )
 		{
 			eState = TS_RECAPTURE;
@@ -214,6 +215,7 @@ void CGeneralTaskToDefendStorage::Segment()
 		}
 		break;
 	case TS_START_REPAIR:
+		RecordRandomCall();
 		if ( NRandom::Random( 0.0f, 1.0f ) < SGeneralConsts::REPAIR_STORAGE_PROBABILITY ) 
 		{
 			eState = TS_REPAIR;
@@ -946,7 +948,7 @@ void CGeneralIntendant::MarkCellsDangerous( const SVector &vCell )
 	const int nRadius = SGeneralConsts::INTENDANT_DANGEROUS_CELL_RADIUS / ( SConsts::GENERAL_CELL_SIZE ) + 1;
 	const NTimer::STime timeDanger = curTime + 
 								1000 * (SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH +
-									NRandom::Random( SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND ) );
+									NRandom::Random( SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND ) ); RecordRandomCall();
 
 
 	// mark as dangerous cells in given radius from given cell

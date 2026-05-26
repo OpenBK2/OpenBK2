@@ -222,7 +222,7 @@ bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &_vPos,
 	{
 		CVec2 vHorDirection( _vSpeed.x, _vSpeed.y );
 		if ( vHorDirection == VNULL2 )
-			vHorDirection = GetVectorByDirection( NRandom::Random( 65535 ) );
+			{ vHorDirection = GetVectorByDirection( NRandom::Random( 65535 ) ); RecordRandomCall(); }
 		Normalize( &vHorDirection );
 
 		// calculate offset to exit from dive

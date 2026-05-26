@@ -185,7 +185,7 @@ bool CMPUITestServerClient::OnGetRoomGamesPacket( class CGetLobbyGamesPacket *pP
 	CLobbyGamesPacket *pInfoPacket = new CLobbyGamesPacket( 0 );
 //	pPacket->dwVersion = 0;
 	pInfoPacket->bFullUpdate = true;
-	int nCount = NRandom::Random( 0, 10 );
+	int nCount = NRandom::Random( 0, 10 ); RecordRandomCall();
 	for ( int i = 0; i < nCount; ++i )
 	{
 		SGameInfo info;

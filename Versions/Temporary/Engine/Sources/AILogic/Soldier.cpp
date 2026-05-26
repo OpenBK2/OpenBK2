@@ -712,13 +712,14 @@ void CSoldier::Segment()
 		if ( timeBWSegments < 700 )
 			timeBWSegments += 20;
 
-		nextLogicSegmTime = curTime + NRandom::Random( 0, timeBWSegments );
+		nextLogicSegmTime = curTime + NRandom::Random( 0, timeBWSegments ); RecordRandomCall();
 	}
-	nextSegmTime = curTime + NRandom::Random( 0, 250 );
+	nextSegmTime = curTime + NRandom::Random( 0, 250 ); RecordRandomCall();
 }
 
 void CSoldier::FreezeSegment()
 {
+	RecordRandomCall();
 	if ( curTime - lastCheck >= SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0.0f, SConsts::STAND_LIE_RANDOM_DELAY ) )
 	{
 		lastCheck = curTime;
@@ -739,7 +740,7 @@ void CSoldier::FreezeSegment()
 	}
 
 	// обстрел закончился
-	if ( bLying && ( !IsInFormation() || GetFormation()->IsAllowedStandUp() ) && curTime - lastHit >= SConsts::TIME_OF_LYING_UNDER_FIRE + NRandom::Random( 0.0f, SConsts::STAND_LIE_RANDOM_DELAY ) )
+	if ( bLying && ( !IsInFormation() || GetFormation()->IsAllowedStandUp() ) && ((curTime - lastHit >= SConsts::TIME_OF_LYING_UNDER_FIRE + NRandom::Random( 0.0f, SConsts::STAND_LIE_RANDOM_DELAY )) & RecordRandomCall()) )
 		StandUp();
 
 	CAIUnit::FreezeSegment();
@@ -1315,7 +1316,7 @@ void CSoldier::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CA
 void CSoldier::FirstSegment( const NTimer::STime timeDiff )
 {
 	CBasePathUnit::FirstSegment( timeDiff );
-	nextPathSegmTime = curTime + NRandom::Random( 500, 1000 );
+	nextPathSegmTime = curTime + NRandom::Random( 500, 1000 ); RecordRandomCall();
 }
 
 const float CSoldier::GetPathSegmentsPeriod() const
@@ -1407,6 +1408,7 @@ void CSniper::Segment()
 		fCamouflageRemoveWhenShootProbability = 0.0f;
 
 	// analyze camouflage and go to camouflage if not bein seed
+	RecordRandomCall();
 	if ( curTime - lastVisibilityCheck >= 1000 + NRandom::Random( 0, 5 * SConsts::AI_SEGMENT_DURATION ) )
 	{
 		if ( IsInBuilding() && GetBuilding() )

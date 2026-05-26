@@ -1284,7 +1284,7 @@ void CBuilding::DistributeFiringSoldiers()
 				}
 				else
 				{
-					nLastFreeFireSoldierChoice += NRandom::Random( 0, pStats->aiSlots.size() );
+					nLastFreeFireSoldierChoice += NRandom::Random( 0, pStats->aiSlots.size() ); RecordRandomCall();
 					const int nNewFireSlot = GetFreeFireSlot();
 
 					DelSoldierFromFirePlace( pSoldier );
@@ -1320,7 +1320,7 @@ void CBuilding::ExchangeSoldiersToTurrets()
 
 void CBuilding::Segment()
 {
-	nextSegmTime = curTime + NRandom::Random( 2 * SConsts::AI_SEGMENT_DURATION, 10 * SConsts::AI_SEGMENT_DURATION );
+	nextSegmTime = curTime + NRandom::Random( 2 * SConsts::AI_SEGMENT_DURATION, 10 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
 
 	if ( !IsUnitsInside() )
 	{
@@ -1475,7 +1475,7 @@ void CBuilding::DriveOut( CSoldier *pSoldier, std::unordered_set<int> *pFormatio
 	if ( GetNEntrancePoints() && pFormations->find( nFormationID ) == pFormations->end() )
 	{
 		pFormations->insert( nFormationID );
-		const int nEntrancePoint = NRandom::Random( 0, GetNEntrancePoints() - 1 );
+		const int nEntrancePoint = NRandom::Random( 0, GetNEntrancePoints() - 1 ); RecordRandomCall();
 		const CVec2 vEntrancePoint( GetEntrancePoint( nEntrancePoint ) );
 		CVec2 vDirFromCenter( vEntrancePoint - CVec2(GetCenter().x,GetCenter().y) );
 		Normalize( &vDirFromCenter );
@@ -1562,6 +1562,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 					for ( int i = 0; i < medical.Size(); ++i )
 					{
 						// не жилец
+						RecordRandomCall();
 						if ( NRandom::Random( 0.0f, 1.0f ) < fProbability )
 							dead.push_back( medical[i] );
 					}
@@ -1569,6 +1570,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 					for ( int i = 0; i < rest.Size(); ++i )
 					{
 						// не жилец
+						RecordRandomCall();
 						if ( NRandom::Random( 0.0f, 1.0f ) < fProbability )
 							dead.push_back( rest[i] );
 					}
@@ -1576,6 +1578,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 					for ( int i = 0; i < fire.Size(); ++i )
 					{
 						// не жилец
+						RecordRandomCall();
 						if ( NRandom::Random( 0.0f, 1.0f ) < fProbability )
 							dead.push_back( fire[i] );
 					}
@@ -1916,7 +1919,7 @@ const int CBuilding::ChooseSideToSetSoldier( CSoldier *pSoldier ) const
 				nBestSide = i;
 				nBestSideSoldiers = nSoldiersInObservationPoints;
 			}
-			else if ( nSoldiersInObservationPoints == nBestSideSoldiers && NRandom::Random( 0.0f, 1.0f ) < 0.5f )
+			else if ( nSoldiersInObservationPoints == nBestSideSoldiers && ((NRandom::Random( 0.0f, 1.0f ) < 0.5f) & RecordRandomCall()) )
 			{
 				nBestSide = i;
 				nBestSideSoldiers = nSoldiersInObservationPoints;

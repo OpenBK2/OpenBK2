@@ -11,6 +11,7 @@ CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_
 CExecutorUnitBase ( eTID, /*SConsts::AI_SEGMENT_DURATION **/ NRandom::Random( 1, 10 ), eAbility ), pUnit( _pUnit ), timeLastUpdate( curTime ),
 bBonusApplied( false ), eStatus( EUS_UNDEFINED )
 {
+	RecordRandomCall();
 	//Init bonus pointer
 	SetAbilityDesc( pUnit->GetUnitAbilityDesc( eAbility ) );
 	if ( GetAbilityDesc() )

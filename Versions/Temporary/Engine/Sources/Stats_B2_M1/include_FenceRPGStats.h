@@ -132,18 +132,21 @@ int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 	switch( eType )
 	{
 	case ETOL_SAFE:
-		return NRandom::Random( 0, centerSegments.visObjes.size() -1);
+		{ RecordRandomCall(); return NRandom::Random( 0, centerSegments.visObjes.size() -1); }
 	case ETOL_LEFT:
 		if ( HasLeftDamaged() )
-			return centerSegments.visObjes.size() + NRandom::Random( 0, damagedSegmentsOtherSide.visObjes.size() -1 );
+			{ RecordRandomCall(); return centerSegments.visObjes.size() + NRandom::Random( 0, damagedSegmentsOtherSide.visObjes.size() -1 ); }
 	case ETOL_RIGHT:
-		return centerSegments.visObjes.size() +
-					 damagedSegmentsOtherSide.visObjes.size() + 
-					 NRandom::Random( 0, damagedSegments.visObjes.size() -1);
+		{
+			RecordRandomCall();
+			return centerSegments.visObjes.size() +
+						damagedSegmentsOtherSide.visObjes.size() + 
+						NRandom::Random( 0, damagedSegments.visObjes.size() -1);
+		}
 	case ETOL_DESTROYED:
 		{
 			NI_VERIFY( !destroyedSegments.visObjes.empty(), StrFmt( "can't find destroyed segment for SFenceRPGStats \"%s\"", GetDBID().ToString().c_str() ), return -1 );
-
+			RecordRandomCall();
 			return
 				centerSegments.visObjes.size() + damagedSegmentsOtherSide.visObjes.size() +
 				damagedSegments.visObjes.size() + NRandom::Random( 0, destroyedSegments.visObjes.size() -1 );

@@ -17,9 +17,9 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 {
 	if ( curTime - lastCheck >= TIME_TO_CHECK )
 	{
-		const int nRandom = NRandom::Random( 0, 300 );
+		const int nRandom = NRandom::Random( 0, 300 ); RecordRandomCall();
 		if ( nRandom < curTime )
-			lastCheck = curTime - NRandom::Random( 0, 500 );
+			{ lastCheck = curTime - NRandom::Random( 0, 500 ); RecordRandomCall(); }
 		else
 			lastCheck = curTime;
 		

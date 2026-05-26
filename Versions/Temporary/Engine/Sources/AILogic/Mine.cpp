@@ -103,7 +103,7 @@ bool CMineStaticObject::CheckToDetonate( CAIUnit *pUnit )
 
 void CMineStaticObject::Segment()
 {
-	nextSegmTime = curTime + NRandom::Random( 500, 1000 );
+	nextSegmTime = curTime + NRandom::Random( 500, 1000 ); RecordRandomCall();
 
   CDBPtr<SMineRPGStats> pMineStats = checked_cast<const SMineRPGStats*>( GetStats() ); 
 	if ( pMineStats->etype != MT_CHARGE )

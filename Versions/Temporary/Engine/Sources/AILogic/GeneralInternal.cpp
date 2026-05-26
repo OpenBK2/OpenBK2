@@ -251,7 +251,7 @@ void CGeneral::Segment()
 		if ( NGlobal::GetVar( "temp.general_reinforcement", true ) )
 			CheckAvailableReinforcement();
 
-		timeNextUpdate = curTime + SGeneralConsts::GENERAL_UPDATE_PERIOD + NRandom::Random( 1000 );
+		timeNextUpdate = curTime + SGeneralConsts::GENERAL_UPDATE_PERIOD + NRandom::Random( 1000 ); RecordRandomCall();
 		
 		//Singleton<IStatistics>()->UpdateEntry( "General: visible enemies", "" );
 		//Singleton<IStatistics>()->UpdateEntry( "General: antiartillery circles", "" );
@@ -279,7 +279,7 @@ void CGeneral::GiveCommandToBombardment()
 	// можно бомбить
 	if ( cnt > 0 )
 	{
-		const int nRegion = NRandom::Random( 1, cnt );
+		const int nRegion = NRandom::Random( 1, cnt ); RecordRandomCall();
 		
 		cnt = 0;
 		iter = resContainer.begin();
@@ -293,7 +293,7 @@ void CGeneral::GiveCommandToBombardment()
 		}
 
 		const CVec2 vCellCenter = SResistance::GetResistanceCellCenter( (*iter).GetCellNumber() );
-		const float fRadius = SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE + NRandom::Random( 0, 2 ) * SConsts::TILE_SIZE;
+		const float fRadius = SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE + NRandom::Random( 0, 2 ) * SConsts::TILE_SIZE; RecordRandomCall();
 
 		CVec2 vCenter( VNULL2 );
 		int nUnits = 0;
@@ -404,7 +404,7 @@ void CGeneral::Bombardment()
 	// можно бомбить
 	if ( cnt > 0 )
 	{
-		const int nRegion = NRandom::Random( 1, cnt );
+		const int nRegion = NRandom::Random( 1, cnt ); RecordRandomCall();
 
 		cnt = 0;
 		iter = resContainer.begin();
@@ -418,7 +418,7 @@ void CGeneral::Bombardment()
 		}
 
 		const CVec2 vCellCenter = SResistance::GetResistanceCellCenter( (*iter).GetCellNumber() );
-		const float fRadius = SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE + NRandom::Random( 0, 2 ) * SConsts::TILE_SIZE;
+		const float fRadius = SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE + NRandom::Random( 0, 2 ) * SConsts::TILE_SIZE; RecordRandomCall();
 
 		CVec2 vCenter( VNULL2 );
 		int nUnits = 0;
@@ -466,7 +466,7 @@ void CGeneral::Bombardment()
 								pUnit->SetLastVisibleTime( 0 );
 						}
 					}
-					pAirForce->RequestForSupport( vCenter, availFroces[NRandom::Random(0, availFroces.size() -1)], (*iter).GetCellNumber() );
+					pAirForce->RequestForSupport( vCenter, availFroces[NRandom::Random(0, availFroces.size() -1)], (*iter).GetCellNumber() ); RecordRandomCall();
 				}
 			}
 			else	
@@ -534,7 +534,7 @@ void CGeneral::BombardmentSegment()
 				const float fProbNow = fProbability >= 1.0f ? 1.0f : 1 - exp( 1.0f/((float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f) * log( 1.0f - fProbability ) );
 
 				// нужно стрелять
-				const float fRand = NRandom::Random( 0.0f, 1.0f );
+				const float fRand = NRandom::Random( 0.0f, 1.0f ); RecordRandomCall();
 				if ( fRand < fProbNow )
 				{
 					// check if artillery can reach

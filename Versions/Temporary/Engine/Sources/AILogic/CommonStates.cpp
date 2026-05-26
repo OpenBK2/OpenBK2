@@ -1043,7 +1043,7 @@ void CCommonRestState::Segment()
 					pUnit->UnRegisterAsBored( ACK_BORED_IDLE );
 			}
 
-			nextMove = curTime + NRandom::Random( 2000, 6000 );
+			nextMove = curTime + NRandom::Random( 2000, 6000 ); RecordRandomCall();
 		}
 	}
 }
@@ -1583,6 +1583,7 @@ IUnitState* CCommonMoveToGridState::Instance( CCommonUnit *pUnit, const CVec2 &v
 CCommonMoveToGridState::CCommonMoveToGridState( CCommonUnit *_pUnit, const CVec2 &_vPoint, const CVec2 &_vDir )
 : pUnit( _pUnit ), vPoint( _vPoint ), vDir( _vDir ), startMoveTime( curTime + NRandom::Random( 200, 600 ) ), eState( ES_WAIT )
 {
+	RecordRandomCall();
 }
 
 void CCommonMoveToGridState::Segment()

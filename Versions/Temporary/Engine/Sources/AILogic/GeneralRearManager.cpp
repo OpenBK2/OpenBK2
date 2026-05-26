@@ -118,7 +118,7 @@ void CGeneral::CheckAvailableReinforcement()
 	{
 		//theReinfArray[nParty].CallReinforcement( NDb::EReinforcementType( nReinfTypeToCall ),	theReinfArray[nParty].GetRandomPoint(), -1 );
 		//CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "Calling reinforcement %d", nReinfTypeToCall ) );
-		float fRandValue = NRandom::Random( 0.0f, fSum );
+		float fRandValue = NRandom::Random( 0.0f, fSum ); RecordRandomCall();
 		int i = 0;
 		for ( ; i < nARQuantity - 1; ++i ) 
 		{
