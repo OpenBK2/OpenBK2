@@ -36,7 +36,10 @@ struct SResistanceCmp
 {
 	bool operator()( const SResistance &r1, const SResistance &r2 ) const
 	{
-		return r1.GetWeight() > r2.GetWeight();
+		if (r1.GetWeight() != r2.GetWeight())
+			return r1.GetWeight() > r2.GetWeight();
+		
+		return r1.nCellNumber > r2.nCellNumber;
 	}
 };
 

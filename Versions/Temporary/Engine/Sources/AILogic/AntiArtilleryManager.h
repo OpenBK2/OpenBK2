@@ -7,7 +7,7 @@ class CAntiArtillery;
 class CAntiArtilleryManager
 {
 	// круги от выстрелов от собственной артиллерии для каждой из сторон
-	typedef std::unordered_set<int> CAntiArtilleries;
+	typedef std::set<int> CAntiArtilleries;
 	ZDATA
 	std::vector<CAntiArtilleries> antiArtilleries;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&antiArtilleries); return 0; }
