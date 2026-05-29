@@ -27,8 +27,8 @@ const NTimer::STime CFreezeSegments::ProcessSegment()
 	pUnit->FreezeSegment();
 //	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 
-	RecordRandomCall();
-	return curTime + NRandom::Random( 500, 1500 );
+
+	RecordRandomCall(); return curTime + NRandom::Random( 500, 1500 );
 }
 
 //*******************************************************************
