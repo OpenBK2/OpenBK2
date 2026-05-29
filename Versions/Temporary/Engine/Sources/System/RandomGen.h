@@ -36,7 +36,8 @@ namespace NRandom
 		const char* function;
 	};
 
-	SYSTEM_EXPORT bool RecordCall(const std::string& file, int line, const std::string& func);
+	// Keep raw macro pointers here: wrapping __FILE__/__func__ in temporary strings leaves dangling c_str() pointers in the ring buffer.
+	SYSTEM_EXPORT bool RecordCall(const char* file, int line, const char* func);
 	SYSTEM_EXPORT void DumpRecords(FILE* f);
 
 	// initialize random generator with random seed
