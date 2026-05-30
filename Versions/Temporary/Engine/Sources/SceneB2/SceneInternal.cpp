@@ -557,7 +557,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 				{
 					data[eScene]->pAIMapVisitor->Sync();
 
-					fastRender.Init( pCamera->GetTransform(), 24 );
+					fastRender.Init( pCamera->GetTransform(), 32 );
 					data[eScene]->pAIMap->TraceGrid( &fastRender, -1, NAI::IAIMap::STH_SORT_INTERVALS );
 				}
 			}

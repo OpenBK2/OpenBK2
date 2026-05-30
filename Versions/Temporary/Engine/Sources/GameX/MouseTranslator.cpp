@@ -60,23 +60,30 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 			RaiseEvent ( "cancel_direction", vPos );
 		break;
 	case AS_SELECT:
+	{
+		const bool bSelectByRect = !IsDownSamePos();
 		if ( !IsShiftDown() )
 		{
-			if ( IsDownSamePos() ) 
+			if ( !bSelectByRect )
 				nSelectAction = SA_CLEAR_ALWAYS;
 			else 
 				nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
 		}
-		else if ( IsDownSamePos() )
+		else if ( !bSelectByRect )
 			nSelectAction = SA_INVERSE;
 		else
 			nSelectAction = SA_PRESERVE;
-		if ( IsCtrlDown() && IsDownSamePos() ) 
+		if ( IsCtrlDown() && !bSelectByRect )
 			nSelectAction |= SA_ONE_TYPE;
-		if ( !IsDownSamePos() )
+		if ( bSelectByRect )
+		{
 			nSelectAction |= SA_SELECT_BY_RECT;
+			// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
+			RaiseEvent( "update_selection", vPos );
+		}
 		RaiseEvent( "end_selection", nSelectAction );
 		break;
+	}
 	}
 }
 
@@ -177,19 +184,26 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 			RaiseEvent ( "cancel_direction", vPos );
 		break;
 	case AS_SELECT:
+	{
+		const bool bSelectByRect = !IsDownSamePos();
 		if ( !IsShiftDown() ) 
 			nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
-		else if ( IsDownSamePos() )
+		else if ( !bSelectByRect )
 			nSelectAction = SA_INVERSE;
 		else
 			nSelectAction = SA_PRESERVE;
 		if ( IsCtrlDown() ) 
 			nSelectAction |= SA_ONE_TYPE;
-		if ( !IsDownSamePos() )
+		if ( bSelectByRect )
+		{
 			nSelectAction |= SA_SELECT_BY_RECT;
+			// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
+			RaiseEvent( "update_selection", vPos );
+		}
 		RaiseEvent( "end_selection", nSelectAction );
 		Camera()->SwitchManualScrolling( "mouse_translator", true );
 		break;
+	}
 	}
 }
 

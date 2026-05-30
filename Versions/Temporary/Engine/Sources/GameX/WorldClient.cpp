@@ -2,6 +2,7 @@
 
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "b2_m1_world/MapObj.h"
+#include "3DLib/Transform.h"
 #include "Misc/StrProc.h"
 #include "WorldClient.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
@@ -112,6 +113,111 @@ int GetObjectRate( const CMapObj &pMapObject )
 	default:
 		return 0;
 	}
+}
+
+static void BuildScreenRect( CVec2 *pMin, CVec2 *pMax, const CVec2 &vPoint1, const CVec2 &vPoint2 )
+{
+	*pMin = CVec2( (std::min)( vPoint1.x, vPoint2.x ), (std::min)( vPoint1.y, vPoint2.y ) );
+	*pMax = CVec2( (std::max)( vPoint1.x, vPoint2.x ), (std::max)( vPoint1.y, vPoint2.y ) );
+}
+
+static bool DoScreenRectsOverlap( const CVec2 &vMin1, const CVec2 &vMax1, const CVec2 &vMin2, const CVec2 &vMax2 )
+{
+	return vMin1.x <= vMax2.x && vMax1.x >= vMin2.x &&
+				 vMin1.y <= vMax2.y && vMax1.y >= vMin2.y;
+}
+
+static bool ProjectWorldPointToScreen( CVec2 *pScreenPos, const CTransformStack &transform, const CVec2 &vScreenRect, const CVec3 &vWorldPos )
+{
+	CVec4 vProjected;
+	transform.Get().forward.RotateHVector( &vProjected, vWorldPos );
+
+	const float fW = fabs( vProjected.w );
+	if ( fW < 0.000001f )
+		return false;
+
+	pScreenPos->x = vProjected.x / fW * vScreenRect.x * 0.5f + vScreenRect.x * 0.5f;
+	pScreenPos->y = -vProjected.y / fW * vScreenRect.y * 0.5f + vScreenRect.y * 0.5f;
+	return _finite( pScreenPos->x ) != 0 && _finite( pScreenPos->y ) != 0;
+}
+
+static bool AddProjectedPointToScreenRect( CVec2 *pMin, CVec2 *pMax, bool *pHasRect,
+																					 const CTransformStack &transform, const CVec2 &vScreenRect, const CVec3 &vWorldPos )
+{
+	CVec2 vScreenPos;
+	if ( !ProjectWorldPointToScreen( &vScreenPos, transform, vScreenRect, vWorldPos ) )
+		return false;
+
+	if ( !*pHasRect )
+	{
+		*pMin = vScreenPos;
+		*pMax = vScreenPos;
+		*pHasRect = true;
+	}
+	else
+	{
+		pMin->Minimize( vScreenPos );
+		pMax->Maximize( vScreenPos );
+	}
+	return true;
+}
+
+static bool DoesMapObjectOverlapScreenRect( const CMapObj *pMO, const CVec2 &vSelectionMin, const CVec2 &vSelectionMax,
+																						const CTransformStack &transform, const CVec2 &vScreenRect )
+{
+	NI_ASSERT( pMO != 0, "Map object is missing" );
+
+	CVec2 vObjectMin, vObjectMax;
+	bool bHasProjectedRect = false;
+
+	if ( const NDb::SModel *pModel = pMO->GetModelDesc() )
+	{
+		if ( pModel->pGeometry )
+		{
+			CVec3 vPos, vScale;
+			CQuat qRot;
+			pMO->GetPlacement( &vPos, &qRot, &vScale );
+
+			// CMapObj placement is stored in AI space; project the same visual-space placement used by scene rendering.
+			CVec3 vVisPos;
+			AI2Vis( &vVisPos, vPos );
+
+			SFBTransform objectTransform;
+			MakeMatrix( &objectTransform, vScale, vVisPos, qRot );
+
+			const CVec3 vCenter = pModel->pGeometry->vCenter;
+			const CVec3 vHalfSize = pModel->pGeometry->vSize * 0.5f;
+
+			// Project all object-box corners, then collapse them to a plain 2D screen AABB.
+			for ( int iX = 0; iX < 2; ++iX )
+			{
+				for ( int iY = 0; iY < 2; ++iY )
+				{
+					for ( int iZ = 0; iZ < 2; ++iZ )
+					{
+						const CVec3 vLocalCorner(
+							vCenter.x + ( iX == 0 ? -vHalfSize.x : vHalfSize.x ),
+							vCenter.y + ( iY == 0 ? -vHalfSize.y : vHalfSize.y ),
+							vCenter.z + ( iZ == 0 ? -vHalfSize.z : vHalfSize.z ) );
+
+						CVec3 vWorldCorner;
+						objectTransform.forward.RotateHVector( &vWorldCorner, vLocalCorner );
+						AddProjectedPointToScreenRect( &vObjectMin, &vObjectMax, &bHasProjectedRect, transform, vScreenRect, vWorldCorner );
+					}
+				}
+			}
+		}
+	}
+
+	if ( !bHasProjectedRect )
+	{
+		// Some map objects do not have a model/geometry descriptor; use their 3D center as a point-sized box.
+		CVec3 vVisCenter;
+		AI2Vis( &vVisCenter, pMO->GetCenter() );
+		AddProjectedPointToScreenRect( &vObjectMin, &vObjectMax, &bHasProjectedRect, transform, vScreenRect, vVisCenter );
+	}
+
+	return bHasProjectedRect && DoScreenRectsOverlap( vObjectMin, vObjectMax, vSelectionMin, vSelectionMax );
 }
 
 // CWorldClient::SUISelection
@@ -1109,12 +1215,20 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 		std::list<int> ids;
 		std::list<CMapObj*> objects;
 		int nCurrentSelectionRate = 0;
+		CVec2 vSelectionMin, vSelectionMax;
+		BuildScreenRect( &vSelectionMin, &vSelectionMax, vSelectionFirstPoint, vSelectionLastPoint );
+		const CVec2 vScreenRect = Scene()->GetScreenRect();
+		const CTransformStack &cameraTransform = Camera()->GetTransform();
 		Scene()->PickObjects( ids, vSelectionFirstPoint, vSelectionLastPoint, IScene::PO_CENTER_INSIDE );
 		for ( std::list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
 		{
 			CMapObj *pMO = GetMapObj( *it );
 			if ( pMO && pSelector->CanSelect( pMO ) )
 			{
+				const bool bOverlapsSelectionRect = DoesMapObjectOverlapScreenRect( pMO, vSelectionMin, vSelectionMax, cameraTransform, vScreenRect );
+				if ( !bOverlapsSelectionRect )
+					continue;
+
 				const int nSelectionRate = GetObjectRate( *pMO );
 				if ( nSelectionRate > nCurrentSelectionRate )
 				{
