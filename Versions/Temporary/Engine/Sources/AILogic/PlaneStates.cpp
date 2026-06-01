@@ -43,6 +43,22 @@ extern CShellsStore theShellsStore;
 static float g_fBombDiveDistance = 0.0f;
 static const float LEAVE_DISSAPEAR_DISTANCE = 512.0f;
 
+static bool GetStrategicBomberBombingPoint( const SAIUnitCmd &cmd, CAviation *pPlane, CVec2 *pPoint )
+{
+	CLinkObject *pObject = CLinkObject::GetObjectByUniqueIdSafe( cmd.nObjectID );
+	if ( CAIUnit *pTarget = dynamic_cast<CAIUnit*>( pObject ) )
+	{
+		*pPoint = pTarget->GetCenterPlain();
+		return true;
+	}
+	if ( CBuilding *pBuilding = dynamic_cast<CBuilding*>( pObject ) )
+	{
+		*pPoint = pBuilding->GetAttackCenter( pPlane->GetCenterPlain() );
+		return true;
+	}
+	return false;
+}
+
 START_REGISTER(SuicideVars)
 REGISTER_VAR_EX( "AI.Aviation.FAU2_DiveDistance", NGlobal::VarFloatHandler, &g_fBombDiveDistance, 0.0f, STORAGE_NONE );
 FINISH_REGISTER
@@ -72,12 +88,14 @@ bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 			cmdType == ACTION_MOVE_FLY_DEAD ||
 			cmdType == ACTION_COMMAND_MOVE_TO  ||
 			cmdType == ACTION_COMMAND_ATTACK_UNIT ||
+			cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
 			cmdType == ACTION_MOVE_ATTACKPLANE_SETPOINT ||
 			cmdType == ACTION_MOVE_FIGHTER_SETPOINT ||
 			cmdType == ACTION_COMMAND_UNLOAD ||
 			cmdType == ACTION_COMMAND_SWARM_TO ||
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_TARGET ||
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
+			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
 			cmdType == ACTION_COMMAND_PATROL
 		);
 }
@@ -123,12 +141,24 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 
 		break;
 	case ACTION_MOVE_ATTACKPLANE_SETPOINT:
-		pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
+		// Strategic bombers must never enter the dive-bomber attack state.
+		if ( pUnit->IsStrategicBomber() )
+			pResult = new CPlaneBombState( pUnit, cmd.vPos );
+		else
+			pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
 
 		break;
 	case ACTION_MOVE_DROP_BOMBS_TO_TARGET:
 		{
-			if ( 0 == cmd.nNumber )
+			if ( pUnit->IsStrategicBomber() )
+			{
+				CVec2 vBombingPoint;
+				if ( GetStrategicBomberBombingPoint( cmd, pUnit, &vBombingPoint ) )
+					pResult = new CPlaneBombState( pUnit, vBombingPoint );
+				else
+					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
+			}
+			else if ( 0 == cmd.nNumber )
 			{
 				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
 				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
@@ -175,7 +205,15 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 
 		break;
 	case ACTION_COMMAND_ATTACK_OBJECT:
-		if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
+		if ( pUnit->IsStrategicBomber() )
+		{
+			CVec2 vBombingPoint;
+			if ( GetStrategicBomberBombingPoint( cmd, pUnit, &vBombingPoint ) )
+				pResult = new CPlaneBombState( pUnit, vBombingPoint );
+			else
+				pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
+		}
+		else if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
 		{
 			CLinkObject *pLinkObject = CLinkObject::GetObjectByUniqueIdSafe( cmd.nObjectID );
 			CBuilding *pBuilding = dynamic_cast<CBuilding*>( pLinkObject );
@@ -188,7 +226,15 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 		break;
 	case ACTION_COMMAND_ATTACK_UNIT:
 		{
-			if ( 0 == cmd.nNumber )
+			if ( pUnit->IsStrategicBomber() )
+			{
+				CVec2 vBombingPoint;
+				if ( GetStrategicBomberBombingPoint( cmd, pUnit, &vBombingPoint ) )
+					pResult = new CPlaneBombState( pUnit, vBombingPoint );
+				else
+					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
+			}
+			else if ( 0 == cmd.nNumber )
 			{
 				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
 				if ( pTarget->GetStats()->IsAviation() )
@@ -877,6 +923,11 @@ void CPlaneBombState::Segment()
 		{
 			if ( bHaveBombs )
 				eState = ECBS_GAIN_DISTANCE;
+			else if ( pPlane->IsStrategicBomber() )
+			{
+				// Strategic bombers leave after spending bombs even if the player queued more orders.
+				Escape();
+			}
 			else if ( pPlane->GetStats()->etype == RPG_TYPE_AVIA_BOMBER && pPlane->GetNextCommand() == 0 )
 				Escape();
 			else
@@ -894,6 +945,11 @@ void CPlaneBombState::Segment()
 
 ETryStateInterruptResult CPlaneBombState::TryInterruptState( class CAICommand *pCommand )
 {
+	if ( pPlane->IsStrategicBomber() && !IsBombsPresent() )
+	{
+		// Once bombs are spent, queued or late player orders must not prevent the strategic bomber from leaving.
+		return TSIR_NO_COMMAND_INCOMPATIBLE;
+	}
 	
 	pPlane->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;

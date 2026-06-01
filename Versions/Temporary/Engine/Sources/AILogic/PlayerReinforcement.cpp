@@ -6,6 +6,7 @@
 #include "Diplomacy.h"
 #include "GroupLogic.h"
 #include "CommonUnit.h"
+#include "Aviation.h"
 #include "Stats_B2_M1/ReinfUpdates.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "DBAIConsts.h"
@@ -202,36 +203,59 @@ void CPlayerReinforcement::AddCallReinforcementCommand( NDb::EReinforcementType 
 void CPlayerReinforcement::SendReinforcementToPoint( std::list< std::pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam )
 {
 	std::vector<int> ids;
+	std::vector<int> strategicBomberIds;
 	for ( std::list< std::pair<int, CObjectBase*> >::iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		CCommonUnit * pUnit = checked_cast<CCommonUnit*>( it->second );
 		if ( pUnit->IsEmptyCmdQueue() )
-			ids.push_back( checked_cast<CLinkObject*>( it->second )->GetUniqueId() );
+		{
+			const int nUnitId = checked_cast<CLinkObject*>( it->second )->GetUniqueId();
+			CAviation *pPlane = dynamic_cast<CAviation*>( pUnit );
+			if ( !bIsParatroops && fCmdParam == 0.0f && pPlane && pPlane->IsStrategicBomber() )
+				strategicBomberIds.push_back( nUnitId );
+			else
+				ids.push_back( nUnitId );
+		}
 	}
-	const int nGroup = theGroupLogic.GenerateGroupNumber();
-	theGroupLogic.RegisterGroup( ids, nGroup );
-
-	SAIUnitCmd cmd;
-	if ( bIsParatroops )
+	if ( !ids.empty() )
 	{
-		cmd.nCmdType = ACTION_COMMAND_UNLOAD;
-		cmd.fNumber = float(int(ALP_POSITION_VALID));
-		cmd.vPos = vPoint;
-		theGroupLogic.GroupCommand( cmd, nGroup, false );
-	}
-	else
-	{
-		cmd.nCmdType = ACTION_COMMAND_MOVE_TO;
-		cmd.vPos = vPoint;
-		cmd.fNumber = fCmdParam;
-		theGroupLogic.GroupCommand( cmd, nGroup, false );
+		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		theGroupLogic.RegisterGroup( ids, nGroup );
 
-		cmd.nCmdType = ACTION_COMMAND_SWARM_TO;
-		cmd.vPos = vPoint;
-		cmd.fNumber = fCmdParam;
-		theGroupLogic.GroupCommand( cmd, nGroup, false );
+		SAIUnitCmd cmd;
+		if ( bIsParatroops )
+		{
+			cmd.nCmdType = ACTION_COMMAND_UNLOAD;
+			cmd.fNumber = float(int(ALP_POSITION_VALID));
+			cmd.vPos = vPoint;
+			theGroupLogic.GroupCommand( cmd, nGroup, false );
+		}
+		else
+		{
+			cmd.nCmdType = ACTION_COMMAND_MOVE_TO;
+			cmd.vPos = vPoint;
+			cmd.fNumber = fCmdParam;
+			theGroupLogic.GroupCommand( cmd, nGroup, false );
+
+			cmd.nCmdType = ACTION_COMMAND_SWARM_TO;
+			cmd.vPos = vPoint;
+			cmd.fNumber = fCmdParam;
+			theGroupLogic.GroupCommand( cmd, nGroup, false );
+		}
+		theGroupLogic.UnregisterGroup( nGroup );
 	}
-	theGroupLogic.UnregisterGroup( nGroup );
+	if ( !strategicBomberIds.empty() )
+	{
+		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		theGroupLogic.RegisterGroup( strategicBomberIds, nGroup );
+
+		// Called strategic bombers start with a bomb run to the requested point, but player orders can still interrupt it.
+		SAIUnitCmd cmd;
+		cmd.nCmdType = ACTION_MOVE_DROP_BOMBS_TO_POINT;
+		cmd.vPos = vPoint;
+		theGroupLogic.GroupCommand( cmd, nGroup, false );
+		theGroupLogic.UnregisterGroup( nGroup );
+	}
 	Singleton<IAILogic>()->SetNeedNewGroupNumber();
 }
 

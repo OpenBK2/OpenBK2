@@ -48,6 +48,7 @@ CRPGStatsAutomagic::CRPGStatsAutomagic()
 	i2s[NDb::RPG_TYPE_AVIA_FIGHTER] = "avia_fighter";
 	i2s[NDb::RPG_TYPE_AVIA_SUPER] = "avia_super";
 	i2s[NDb::RPG_TYPE_AVIA_LANDER] = "avia_lander";
+	i2s[NDb::RPG_TYPE_AVIA_STRAT_BOMBER] = "avia_strat_bomber";
 	// train
 	i2s[NDb::RPG_TYPE_TRAIN_LOCOMOTIVE] = "train_locomotive";
 	i2s[NDb::RPG_TYPE_TRAIN_CARGO] = "train_cargo";

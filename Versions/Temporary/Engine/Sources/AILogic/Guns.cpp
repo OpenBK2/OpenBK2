@@ -446,7 +446,7 @@ void CBasicGun::Shooting()
 	{
 		bool bShowBombEffect = true;
 		if ( pOwner && pOwner->GetStats() &&
-			( pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER ) &&
+			( pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_STRAT_BOMBER ) &&
 			nShotsLast%g_nEffectsForBombs != 0 )
 			bShowBombEffect = false;
 		// check if actual shooting can be done ( some buildings, movement during aim can change conditions)

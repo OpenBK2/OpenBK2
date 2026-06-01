@@ -70,6 +70,8 @@ public:
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	
 	virtual bool IsMech() const { return true; }
+	// Strategic bombers use normal plane movement, but their attacks are forced through horizontal bombing.
+	bool IsStrategicBomber() const { return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER; }
 	
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_NONE; }
 	virtual const bool CanGoBackward() const { return false; }

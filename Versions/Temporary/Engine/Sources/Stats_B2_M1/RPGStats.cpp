@@ -3910,6 +3910,8 @@ std::string EnumToString( NDb::EDBUnitRPGType eValue )
 		return "DB_RPG_TYPE_TRAIN_SUPER";
 	case NDb::DB_RPG_TYPE_TRAIN_ARMOR:
 		return "DB_RPG_TYPE_TRAIN_ARMOR";
+	case NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER:
+		return "DB_RPG_TYPE_AVIA_STRAT_BOMBER";
 	case NDb::DB_RPG_TYPE_COUNT:
 		return "DB_RPG_TYPE_COUNT";
 	default:
@@ -3993,6 +3995,8 @@ NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const std::string &szV
 		return NDb::DB_RPG_TYPE_TRAIN_SUPER;
 	if ( szValue == "DB_RPG_TYPE_TRAIN_ARMOR" )
 		return NDb::DB_RPG_TYPE_TRAIN_ARMOR;
+	if ( szValue == "DB_RPG_TYPE_AVIA_STRAT_BOMBER" )
+		return NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER;
 	if ( szValue == "DB_RPG_TYPE_COUNT" )
 		return NDb::DB_RPG_TYPE_COUNT;
 	return NDb::DB_RPG_TYPE_SOLDIER;
@@ -4605,6 +4609,8 @@ std::string EnumToString( NDb::EDesignUnitType eValue )
 		return "Train";
 	case NDb::Super:
 		return "Super";
+	case NDb::Strategic_Bomber:
+		return "Strategic_Bomber";
 	default:
 		return "UNIT_TYPE_UNKNOWN";
 	}
@@ -4670,6 +4676,8 @@ NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const std::string &s
 		return NDb::Train;
 	if ( szValue == "Super" )
 		return NDb::Super;
+	if ( szValue == "Strategic_Bomber" )
+		return NDb::Strategic_Bomber;
 	return NDb::UNIT_TYPE_UNKNOWN;
 }
 

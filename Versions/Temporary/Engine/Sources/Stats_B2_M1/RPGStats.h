@@ -1929,7 +1929,8 @@ namespace NDb
 		DB_RPG_TYPE_TRAIN_CARRIER = 34,
 		DB_RPG_TYPE_TRAIN_SUPER = 35,
 		DB_RPG_TYPE_TRAIN_ARMOR = 36,
-		DB_RPG_TYPE_COUNT = 37,
+		DB_RPG_TYPE_AVIA_STRAT_BOMBER = 37,
+		DB_RPG_TYPE_COUNT = 38,
 	};
 
 	enum EUnitPoliticalSide
@@ -2241,6 +2242,7 @@ namespace NDb
 		Torpedo_Boat = 26,
 		Train = 27,
 		Super = 28,
+		Strategic_Bomber = 29
 	};
 
 	struct SMechUnitRPGStats : public SUnitBaseRPGStats
