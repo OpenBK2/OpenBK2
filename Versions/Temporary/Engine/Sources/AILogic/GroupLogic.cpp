@@ -540,8 +540,10 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
  	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
 	{
 		// пойти с сохранением относительной позиции
-		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO || 
-					command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE || 
+		// Called strategic bombers use the internal point-bomb command, but still need group-relative shifts.
+		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO ||
+					command.nCmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
+					command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
 					command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
 					command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
 					command.nCmdType == ACTION_COMMAND_REPAIR )
