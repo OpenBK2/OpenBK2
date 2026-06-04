@@ -5124,6 +5124,95 @@ DWORD SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 
 
 
+void SAmphibianStats::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "AmphibianStats", typeID, sizeof(*this) );
+
+	BYTE *pThis = (BYTE*)this;
+
+	NMetaInfo::ReportMetaInfo( "WaterZOffset", (BYTE*)&waterZOffset - pThis, sizeof(waterZOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WaterOffsetBlendTiles", (BYTE*)&waterOffsetBlendTiles - pThis, sizeof(waterOffsetBlendTiles), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WaterStatsModifier", (BYTE*)&waterStatsModifier - pThis, sizeof(waterStatsModifier), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PrepareToWaterTime", (BYTE*)&prepareToWaterTime - pThis, sizeof(prepareToWaterTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "PrepareToLandTime", (BYTE*)&prepareToLandTime - pThis, sizeof(prepareToLandTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "EnterWaterEffect", (BYTE*)&enterWaterEffect - pThis, sizeof(enterWaterEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ExitWaterEffect", (BYTE*)&exitWaterEffect - pThis, sizeof(exitWaterEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "WaterMoveEffect", (BYTE*)&waterMoveEffect - pThis, sizeof(waterMoveEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterMoveLocators", &waterMoveLocators, pThis );
+	NMetaInfo::ReportMetaInfo( "WaterIdleEffect", (BYTE*)&waterIdleEffect - pThis, sizeof(waterIdleEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterIdleLocators", &waterIdleLocators, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterMoveJx", &waterMoveJx, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterMoveJy", &waterMoveJy, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterIdleJx", &waterIdleJx, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterIdleJy", &waterIdleJy, pThis );
+	NMetaInfo::ReportMetaInfo( "RemoveCorpseInWater", (BYTE*)&removeCorpseInWater - pThis, sizeof(removeCorpseInWater), NTypeDef::TYPE_TYPE_BOOL );
+
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SAmphibianStats::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &waterZOffset );
+	saver.Add( 3, &waterOffsetBlendTiles );
+	saver.Add( 4, &waterStatsModifier );
+	saver.Add( 5, &prepareToWaterTime );
+	saver.Add( 6, &prepareToLandTime );
+	saver.Add( 7, &enterWaterEffect );
+	saver.Add( 8, &exitWaterEffect );
+	saver.Add( 9, &waterMoveEffect );
+	saver.Add( 10, &waterMoveLocators );
+	saver.Add( 11, &waterIdleEffect );
+	saver.Add( 12, &waterIdleLocators );
+	saver.Add( 13, &waterMoveJx );
+	saver.Add( 14, &waterMoveJy );
+	saver.Add( 15, &waterIdleJx );
+	saver.Add( 16, &waterIdleJy );
+	saver.Add( 17, &removeCorpseInWater );
+	
+	return 0;
+}
+
+int SAmphibianStats::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+
+	saver.Add( "WaterZOffset", &waterZOffset );
+	saver.Add( "WaterOffsetBlendTiles", &waterOffsetBlendTiles );
+	saver.Add( "WaterStatsModifier", &waterStatsModifier );
+	saver.Add( "PrepareToWaterTime", &prepareToWaterTime );
+	saver.Add( "PrepareToLandTime", &prepareToLandTime );
+	saver.Add( "EnterWaterEffect", &enterWaterEffect );
+	saver.Add( "ExitWaterEffect", &exitWaterEffect );
+	saver.Add( "WaterMoveEffect", &waterMoveEffect );
+	saver.Add( "WaterMoveLocators", &waterMoveLocators );
+	saver.Add( "WaterIdleEffect", &waterIdleEffect );
+	saver.Add( "WaterIdleLocators", &waterIdleLocators );
+	saver.Add( "WaterMoveJx", &waterMoveJx );
+	saver.Add( "WaterMoveJy", &waterMoveJy );
+	saver.Add( "WaterIdleJx", &waterIdleJx );
+	saver.Add( "WaterIdleJy", &waterIdleJy );
+	saver.Add( "RemoveCorpseInWater", &removeCorpseInWater );
+
+	return 0;
+}
+
+DWORD SAmphibianStats::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << waterZOffset << waterOffsetBlendTiles << waterStatsModifier << prepareToWaterTime << prepareToLandTime << enterWaterEffect << exitWaterEffect << waterMoveEffect << waterMoveLocators << waterIdleEffect << waterIdleLocators << waterMoveJx << waterMoveJy << waterIdleJx << waterIdleJy << removeCorpseInWater;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
 void SMechUnitRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MechUnitRPGStats", typeID, sizeof(*this) );
@@ -5194,6 +5283,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "BoardedMechUnitPosition", &boardedMechUnitPosition, pThis );
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AmphibianStats", (BYTE*)&amphibianStats - pThis, sizeof(amphibianStats), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5265,6 +5355,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "BoardedMechUnitPosition", &boardedMechUnitPosition );
 	saver.Add( "DestructableCorpse", &bDestructableCorpse );
 	saver.Add( "InnerUnitBonus", &pInnerUnitBonus );
+	saver.Add( "AmphibianStats", &amphibianStats );
 
 	return 0;
 }
@@ -5336,6 +5427,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 63, &boardedMechUnitPosition );
 	saver.Add( 64, &bDestructableCorpse );
 	saver.Add( 65, &pInnerUnitBonus );
+	saver.Add( 66, &amphibianStats );
 
 	return 0;
 }
@@ -5347,7 +5439,7 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus;
+	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -6488,6 +6580,7 @@ REGISTER_DATABASE_CLASS( 0x1711A341, SArmorPatternPlacement )
 REGISTER_DATABASE_CLASS( 0x1711A340, SArmorPattern ) 
 REGISTER_DATABASE_CLASS( 0x11069B81, SInfantryRPGStats ) 
 REGISTER_DATABASE_CLASS( 0x11069B80, SMechUnitRPGStats ) 
+REGISTER_DATABASE_CLASS( 0x7DA66901, SAmphibianStats ) 
 REGISTER_DATABASE_CLASS( 0x11069BC2, SSquadRPGStats ) 
 REGISTER_DATABASE_CLASS( 0x120C4CC0, SDeployTemplate ) 
 REGISTER_DATABASE_CLASS( 0x120A6B80, SReinforcement ) 

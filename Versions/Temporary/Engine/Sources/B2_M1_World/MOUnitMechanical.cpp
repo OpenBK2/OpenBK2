@@ -492,8 +492,22 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
 		return;
-	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
+	
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+
+	if (pStats->IsAmphibious() && pStats->amphibianStats)
+	{
+		// TODO: add check if the unit is acutally in the water for offset to apply!
+		auto ampStats = pStats->amphibianStats;
+		SAINotifyPlacement new_placement = placement;
+		new_placement.vPlacement.z += ampStats->waterZOffset;
+		CMOUnit::AIUpdatePlacement( new_placement, pScene, pSoundScene, eSeason );
+	}
+	else
+	{
+		CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
+	}
+
 	// in-transport units don't leave tracks, no tracks on zero speed
 	if ( ( pStats->bLeavesTracks || pStats->pEffectWheelDust != 0 ) && !pTransport && placement.fSpeed > 0.0f ) 
 	{

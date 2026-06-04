@@ -17,6 +17,7 @@
 #include "prefix_rpgstats.h"
 #include "unittypes.h"
 #include "System/FilePath.h"
+#include "Common_RTS_AI/AIClasses.h"
 
 struct IXmlSaver;
 
@@ -2245,6 +2246,7 @@ namespace NDb
 		Strategic_Bomber = 29
 	};
 
+	struct SAmphibianStats;
 	struct SMechUnitRPGStats : public SUnitBaseRPGStats
 	{
 		OBJECT_BASIC_METHODS( SMechUnitRPGStats )
@@ -2553,6 +2555,7 @@ namespace NDb
 		std::vector< SBoardedMechUnitPosition > boardedMechUnitPosition;
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
+		CDBPtr< SAmphibianStats > amphibianStats;
 
 		#include "include_mechunitrpgstats.h"
 
@@ -2591,6 +2594,52 @@ namespace NDb
 		//
 		int GetTypeID() const { return typeID; }
 		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		DWORD CalcCheckSum() const;
+	};
+	struct SAmphibianStats : public CResource
+	{
+		OBJECT_BASIC_METHODS( SAmphibianStats )
+	private:
+		mutable DWORD __dwCheckSum;
+
+	public:
+		enum { typeID = 0x7DA66901 };	// madeup random number, imma use 7DA669 as a prefix for my new resource types
+		int GetTypeID() const { return typeID; }
+
+		float waterZOffset;
+		float waterOffsetBlendTiles;
+		CDBPtr< SUnitStatsModifier > waterStatsModifier;
+
+		float prepareToWaterTime;
+		float prepareToLandTime;
+
+		CDBPtr< SComplexEffect > enterWaterEffect;
+		CDBPtr< SComplexEffect > exitWaterEffect;
+		CDBPtr< SComplexEffect > waterMoveEffect;
+		std::vector< std::string > waterMoveLocators;
+		CDBPtr< SComplexEffect > waterIdleEffect;
+		std::vector< std::string > waterIdleLocators;
+
+		SMechUnitRPGStats::SJoggingParams waterMoveJx;
+		SMechUnitRPGStats::SJoggingParams waterMoveJy;
+		SMechUnitRPGStats::SJoggingParams waterIdleJx;
+		SMechUnitRPGStats::SJoggingParams waterIdleJy;
+
+		bool removeCorpseInWater;
+
+		SAmphibianStats() :
+			__dwCheckSum( 0 ),
+			waterZOffset( 0.0f ),
+			waterOffsetBlendTiles( 0.0f ),
+			prepareToWaterTime( 0.0f ),
+			prepareToLandTime( 0.0f ),
+			removeCorpseInWater( true )
+		{ }
+
 		void ReportMetaInfo() const;
 		//
 		int operator&( IBinSaver &saver );

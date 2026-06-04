@@ -823,6 +823,17 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 			eResult = (EFreeTileInfo)((int)eResult | (int)FREE_TERRAIN);
 		}
 	}
+	if ( eResult == FREE_NONE && ( aiClass & EAC_WATER ) && ( aiClass & EAC_TERRAIN ) )
+	{
+		const int nClassIndexAny = GetClassIndexFast( EAC_ANY );
+
+		// Amphibious units can straddle land/water borders, where neither pure side
+		// has enough clearance for the whole footprint.
+		if ( maxesSmooth[eMode][ nClassIndexAny ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 )
+		{
+			eResult = ( GetTerrainType( tile ) == ETT_WATER_TERRAIN ) ? FREE_WATER : FREE_TERRAIN;
+		}
+	}
 	return eResult;
 }
 

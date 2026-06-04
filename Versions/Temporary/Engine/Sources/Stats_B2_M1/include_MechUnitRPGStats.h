@@ -62,3 +62,7 @@ const int GetPlatformsSize( const int nUniqueID ) const
 	return platforms.size();
 }
 
+bool IsAmphibious() const
+{
+	return (nAIPassabilityClass & EAC_WATER) != 0 && (nAIPassabilityClass & EAC_TERRAIN) != 0;
+}
