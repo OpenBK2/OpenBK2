@@ -112,7 +112,8 @@ bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2
 
 void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 {
-	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), newCenter, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
+	if ( !pUnit->CanMoveBetweenTiles( pAIMap->GetTile( pUnit->GetCenterPlain() ), pAIMap->GetTile( newCenter ) ) ||
+		pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), newCenter, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 	{
 		const bool bDrive = DriveToFormation( pUnit->GetCenterPlain(), false );
 		// идти никуда не может, а формация остановилась
@@ -131,7 +132,8 @@ void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 	if ( pAIMap->GetTile( vCenterAhead ) == vNewCenterTile )
 		vCenterAhead += pUnit->GetDirectionVector() * pAIMap->GetTileSize() / 2;
 
-	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), vCenterAhead, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
+	if ( !pUnit->CanMoveBetweenTiles( vNewCenterTile, pAIMap->GetTile( vCenterAhead ) ) ||
+		pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), vCenterAhead, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 	{
 		const bool bDrive = DriveToFormation( newCenter, false );
 		// идти никуда не может, а формация остановилась
@@ -251,8 +253,9 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	if ( pAIMap->GetTile( result ) != pAIMap->GetTile( vCenter ) )
 	{
 		// далеко от нужного положения
+		const bool bCanStep = pUnit->CanMoveBetweenTiles( pAIMap->GetTile( vCenter ), pAIMap->GetTile( result ) );
 		const bool bCanGoToPoint = 
-			( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), result, pUnit->GetAIPassabilityClass(), pAIMap ) != FREE_NONE );
+			bCanStep && ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), result, pUnit->GetAIPassabilityClass(), pAIMap ) != FREE_NONE );
 		if ( lineShift <= 0 && fDiff > 6 * pAIMap->GetTileSize() && bCanGoToPoint )
 		{
 			if ( DriveToFormation( result, true ) )
@@ -344,5 +347,3 @@ void CInGroupPathBasis::OnSerialize( IBinSaver &f )
 	SerializeBasePathUnit( f, 2, &pUnit );
 	SerializeBasePathUnit( f, 3, &pFormation );
 }
-
-

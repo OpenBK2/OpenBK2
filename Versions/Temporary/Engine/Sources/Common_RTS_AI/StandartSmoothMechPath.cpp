@@ -33,7 +33,8 @@ public:
 
 	bool operator()( const SVector tile )
 	{
-		return ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
+		return pUnit->CanMoveBetweenTiles( pUnit->GetCenterTile(), tile ) &&
+			( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
 
@@ -49,7 +50,8 @@ public:
 	bool operator()( const SVector tile )
 	{
 		pTiles->push_back( tile );
-		return ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
+		return pUnit->CanMoveBetweenTiles( pUnit->GetCenterTile(), tile ) &&
+			( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
 

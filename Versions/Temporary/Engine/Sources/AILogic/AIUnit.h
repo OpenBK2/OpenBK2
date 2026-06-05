@@ -15,6 +15,7 @@ namespace NDb
 {
 	enum EReinforcementType;
 	struct SUnitStatsModifier;
+	struct SAmphibianStats;
 	enum EUnitSpecialAbility;
 	struct SUnitBaseRPGStats;
 };
@@ -73,6 +74,7 @@ class CAIUnit: public CCommonUnit
 	std::list< CPtr<CAIUnit> > targetsCache;
 	NTimer::STime realScanDuration;
 	NTimer::STime lastScanTime;
+	bool bAmphibianWaterModifierApplied;
 protected:
 	CObjectBase *pObjInside;
 private:
@@ -91,6 +93,10 @@ private:
 	const SAINotifyHitInfo::EHitType ProcessExactHit( const SRect &combatRect, const CVec2 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
 	// sends to general request according to units's current state; quite slow.
 	void UpdateUnitsRequestsForResupply();
+	const NDb::SAmphibianStats* GetAmphibianStats() const;
+	bool IsAmphibianWaterTile( const SVector &tile ) const;
+	bool IsAmphibianWaterPoint( const CVec2 &point ) const;
+	void UpdateAmphibianWaterModifier();
 	void UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible  );
 	void InitializeShootArea( struct SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const;
 	void CheckForReveal();
@@ -126,7 +132,7 @@ protected:
 	virtual DWORD InitSupportAntiAircraftGuns() { return 0; }
 	CObjectBase * GetObjInside() { return pObjInside; }
 public:
-	CAIUnit() : pObjInside( 0 ), bTrampled( false ), nMultipleShots(1), bTargetingTrack(false), bIgnoreAABBCoeff(false), timeLastAttackedAck( 0 ), timeLastAttacked( 0 ) { }
+	CAIUnit() : pObjInside( 0 ), bTrampled( false ), nMultipleShots(1), bTargetingTrack(false), bIgnoreAABBCoeff(false), timeLastAttackedAck( 0 ), timeLastAttacked( 0 ), bAmphibianWaterModifierApplied( false ) { }
 	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector ) = 0;
 	void InitSpecialAbilities( int nFromLevel = 0 );			// Parameter is used on level-up
 	static CAIUnit * GetUnitByUniqueID( const int nUniqueID );
@@ -137,7 +143,7 @@ public:
 	// для updater-а
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
-	//virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual const NTimer::STime GetTimeOfDeath() const { return timeToDeath; }
 
 	virtual const CVec2 GetGunCenter( const int nGun, const int nPlatform ) const;
@@ -191,6 +197,7 @@ public:
 	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get(GetStats()->fSpeed); }
 	virtual const float GetPassability() const;
 	virtual const int GetBoundTileRadius() const { return GetStats()->nBoundTileRadius; }
+	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const;
 	//virtual struct IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking );
 
 	virtual const CVec2 &GetAABBHalfSize() const { return GetStats()->vAABBHalfSize; }
@@ -241,6 +248,8 @@ public:
 	//Camouflage needs to be removed, probably. Is made obsolete by the following method:
 	void ApplyStatsModifier( const NDb::SUnitStatsModifier * pModifier, const bool bForward );
 	const NDb::SUnitStatsModifier * GetStatsModifier() const { return pStatsModifiers; }
+	bool IsInWater() const;
+	const float GetAmphibianWaterCoeff( const CVec2 &point ) const;
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand );

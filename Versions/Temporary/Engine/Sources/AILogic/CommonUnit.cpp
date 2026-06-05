@@ -487,6 +487,7 @@ void CCommonUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	pPlacement->vPlacement = vPosition;
 	
 	pPlacement->fSpeed = GetSpeed();
+	pPlacement->fWaterCoeff = 0.0f;
 	pPlacement->nObjUniqueID = GetUniqueID();
 
 	const SVector tile = AICellsTiles::GetTile( pPlacement->center );

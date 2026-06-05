@@ -283,6 +283,7 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WOR
 	//nAbilityLevel = -1;
 	bTrampled = false;
 	pStatsModifiers = new NDb::SUnitStatsModifier;
+	bAmphibianWaterModifierApplied = false;
 	bIgnoreAABBCoeff = false;
 	fCamoflage = 1.0f;
 	bRestInside = false;
@@ -312,6 +313,7 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WOR
 	pAnimUnit->Init( this );
 
 	CCommonUnit::Init( CVec3( center, z ), dir, pCollisionsCollector );
+	UpdateAmphibianWaterModifier();
 	
 	{//reinforcement price init
 		const SUnitBaseRPGStats *pStats = GetStats();
@@ -371,6 +373,119 @@ void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->eReinfType = GetReinforcementType();
 	// Since this level is used to count abilities, send ability level
 	pNewUnitInfo->nExpLevel = theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
+}
+
+const NDb::SAmphibianStats* CAIUnit::GetAmphibianStats() const
+{
+	const SUnitBaseRPGStats *pStats = GetStats();
+	if ( !pStats || pStats->GetTypeID() != SMechUnitRPGStats::typeID )
+		return 0;
+
+	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats*>( pStats );
+	if ( !pMechStats->IsAmphibious() || !pMechStats->amphibianStats )
+		return 0;
+
+	return pMechStats->amphibianStats;
+}
+
+bool CAIUnit::IsAmphibianWaterTile( const SVector &tile ) const
+{
+	return GetAIMap()->IsTileInside( tile ) &&
+		GetTerrain()->GetTerrainType( tile ) == ETT_WATER_TERRAIN;
+}
+
+bool CAIUnit::IsAmphibianWaterPoint( const CVec2 &point ) const
+{
+	return GetAIMap()->IsPointInside( point ) && IsAmphibianWaterTile( GetAIMap()->GetTile( point ) );
+}
+
+bool CAIUnit::IsInWater() const
+{
+	return GetMovementPlane() == PLANE_WATER && IsAmphibianWaterTile( GetCenterTile() );
+}
+
+const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
+{
+	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
+	if ( !pAmphibianStats || !IsAmphibianWaterPoint( point ) )
+		return 0.0f;
+
+	const float fBlendTiles = pAmphibianStats->waterOffsetBlendTiles;
+	if ( fBlendTiles <= 0.0f )
+		return 1.0f;
+
+	const SVector centerTile = GetAIMap()->GetTile( point );
+	const int nTileSize = GetAIMap()->GetTileSize();
+	const int nSearchRadius = int( fBlendTiles ) + 2;
+	float fNearestLandDist2 = FLT_MAX;
+
+	for ( int y = centerTile.y - nSearchRadius; y <= centerTile.y + nSearchRadius; ++y )
+	{
+		for ( int x = centerTile.x - nSearchRadius; x <= centerTile.x + nSearchRadius; ++x )
+		{
+			const SVector tile( x, y );
+			if ( !GetAIMap()->IsTileInside( tile ) || IsAmphibianWaterTile( tile ) )
+				continue;
+
+			const CVec2 vTilePoint = GetAIMap()->GetPointByTile( tile );
+			fNearestLandDist2 = (std::min)( fNearestLandDist2, fabs2( vTilePoint - point ) );
+		}
+	}
+
+	if ( fNearestLandDist2 == FLT_MAX )
+		return 1.0f;
+
+	// Blend visual sinking by distance from the nearest non-water shore tile.
+	const float fNearestLandTiles = sqrtf( fNearestLandDist2 ) / float( nTileSize );
+	return Clamp( fNearestLandTiles / fBlendTiles, 0.0f, 1.0f );
+}
+
+void CAIUnit::UpdateAmphibianWaterModifier()
+{
+	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
+	if ( !pAmphibianStats || !pAmphibianStats->waterStatsModifier )
+		return;
+
+	const bool bNeedModifier = IsInWater();
+	if ( bNeedModifier == bAmphibianWaterModifierApplied )
+		return;
+
+	ApplyStatsModifier( pAmphibianStats->waterStatsModifier, bNeedModifier );
+	bAmphibianWaterModifierApplied = bNeedModifier;
+
+	// Water modifiers can change speed, so immediately keep movement caps coherent.
+	ResetDesiredSpeed();
+	SetSpeed( (std::min)( GetSpeed(), GetMaxSpeedHere() ) );
+}
+
+const bool CAIUnit::CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const
+{
+	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
+	if ( !pAmphibianStats || fromTile == toTile || !GetAIMap()->IsTileInside( fromTile ) || !GetAIMap()->IsTileInside( toTile ) )
+		return true;
+
+	const bool bFromWater = IsAmphibianWaterTile( fromTile );
+	const bool bToWater = IsAmphibianWaterTile( toTile );
+	if ( bFromWater == bToWater )
+		return true;
+
+	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats*>( GetStats() );
+	if ( pMechStats->fMaxHeight <= 0.0f && !pMechStats->IsAmphibious() )
+		return true;
+
+	const SVector &landTile = bFromWater ? toTile : fromTile;
+	const SVector &waterTile = bFromWater ? fromTile : toTile;
+	const float fLandHeight = GetHeights()->GetZ( GetAIMap()->GetPointByTile( landTile ) );
+	const float fWaterHeight = GetHeights()->GetZ( GetAIMap()->GetPointByTile( waterTile ) );
+	return (std::abs)(fLandHeight - fWaterHeight) <= pMechStats->fMaxHeight;
+}
+
+void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
+{
+	CCommonUnit::GetPlacement( pPlacement, timeDiff );
+
+	const CVec2 vPlacement = pPlacement->bNewFormat ? CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y ) : pPlacement->center;
+	pPlacement->fWaterCoeff = bRestInside ? 0.0f : GetAmphibianWaterCoeff( vPlacement );
 }
 /*
 
@@ -679,7 +794,10 @@ void CAIUnit::CheckForReveal()
 void CAIUnit::Segment()
 {
 	if ( IsAlive() )
+	{
 		CCommonUnit::Segment();
+		UpdateAmphibianWaterModifier();
+	}
 
 	bIsInTankPit = IsValidObj( pTankPit );
 

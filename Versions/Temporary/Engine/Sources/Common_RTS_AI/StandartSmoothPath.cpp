@@ -137,7 +137,17 @@ void CStandartSmoothPathBasis::Segment( const NTimer::STime timeDiff )
 	{
 		const CVec2 vNewCenter = MoveUnit( timeDiff, GetUnit()->GetSpeed() );
 		if ( !IsFinished() )  
+		{
+			const SVector vOldTile = pAIMap->GetTile( GetUnit()->GetCenterPlain() );
+			const SVector vNewTile = pAIMap->GetTile( vNewCenter );
+			if ( !GetUnit()->CanMoveBetweenTiles( vOldTile, vNewTile ) )
+			{
+				// Amphibian shore-height gates can reject a path step even when passability is clear.
+				FinishPath();
+				return;
+			}
 			ValidateCurrentPath( GetUnit()->GetCenterPlain(), vNewCenter );
+		}
 		const float fZ = ( GetUnit()->GetMovementPlane() == PLANE_TERRAIN ) ? pAIMap->GetHeights()->GetZ( vNewCenter ) : 0.0f;
 		GetUnit()->SetCenter( CVec3( vNewCenter, fZ ) );
 	}
@@ -162,7 +172,8 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 		{
 			if ( fabs2( iterPoint - iter.x ) >= sqr( pAIMap->GetTileSize() ) / 2 )
 			{
-				if ( pAIMap->GetTerrain()->CanUnitGoToPoint( GetUnit()->GetBoundTileRadius(), iter.x, GetUnit()->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
+				const bool bBadStep = !GetUnit()->CanMoveBetweenTiles( pAIMap->GetTile( iterPoint ), pAIMap->GetTile( iter.x ) );
+				if ( bBadStep || pAIMap->GetTerrain()->CanUnitGoToPoint( GetUnit()->GetBoundTileRadius(), iter.x, GetUnit()->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 				{
 					if ( !bBad )
 						bBad = true;

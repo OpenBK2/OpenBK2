@@ -75,6 +75,7 @@ int CAIUnit::operator&( IBinSaver &saver )
 	saver.Add( 73, &realScanDuration );
 	saver.Add( 74, &bIsInTankPit );
 	saver.Add( 75, &timeLastAttacked );
+	saver.Add( 76, &bAmphibianWaterModifierApplied );
 
 	return 0;
 }

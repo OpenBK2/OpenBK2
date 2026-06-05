@@ -497,10 +497,16 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 
 	if (pStats->IsAmphibious() && pStats->amphibianStats)
 	{
-		// TODO: add check if the unit is acutally in the water for offset to apply!
 		auto ampStats = pStats->amphibianStats;
 		SAINotifyPlacement new_placement = placement;
-		new_placement.vPlacement.z += ampStats->waterZOffset;
+		// fWaterCoeff always starts at ~0.11, not 0.0, so adjust a little bit to it
+		const float fWaterCoeffStartOffset = 0.11f;
+		const float fWaterOffset = ampStats->waterZOffset * Clamp( (placement.fWaterCoeff - fWaterCoeffStartOffset) / (1.0f - fWaterCoeffStartOffset), 0.0f, 1.0f );
+		if (fWaterOffset < 0.0f)
+			DebugTrace("fWaterOffset: %f, waterCoeff: %f", fWaterOffset, placement.fWaterCoeff);
+		// AI computes the shore/water coefficient; the visual unit only applies the offset.
+		new_placement.vPlacement.z += fWaterOffset;
+		new_placement.z += fWaterOffset;
 		CMOUnit::AIUpdatePlacement( new_placement, pScene, pSoundScene, eSeason );
 	}
 	else

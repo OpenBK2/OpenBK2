@@ -311,6 +311,7 @@ public:
 	virtual const float GetSmoothTurnThreshold() const = 0;
 	virtual const float GetPassability() const = 0;
 	virtual const bool CanGoToPoint( const CVec2 &point ) const = 0;
+	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const { return true; }
 	virtual const bool CanTurnInstant() const { return false; }
 	virtual const bool CanChangeSpeedInstand() const { return false; }
 	virtual const bool ShouldScatter() const { return false; }

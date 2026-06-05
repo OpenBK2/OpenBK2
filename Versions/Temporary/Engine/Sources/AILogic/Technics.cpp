@@ -186,6 +186,7 @@ void CMilitaryCar::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::S
 			pPlacement->center.y = vPosition.y;
 			pPlacement->z = vPosition.z;
 			pPlacement->dir = pInside->GetBoardedDirection( this, timeDiff );
+			pPlacement->fWaterCoeff = 0.0f;
 		}
 	}
 	//CRAP}

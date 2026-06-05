@@ -149,11 +149,12 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	//NEW}
 
 	float fSpeed;
+	float fWaterCoeff;											// 0 - dry/shore, 1 - full amphibian water offset
 	BYTE cSoil;														// параметры почвы: дым из-под колёс, следы и т.д.
 
-	SAINotifyPlacement() : bNewFormat( false ), cSoil( 0 ) { }
+	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
 	SAINotifyPlacement(	const int nObjUniqueID, const CVec2 &_center, const short _z, const WORD _dir, const float _fSpeed )
-		: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ), fSpeed( _fSpeed ), cSoil( 0 ) { }
+		: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ), fSpeed( _fSpeed ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
 
 	// для использования в AILogic
 	virtual int operator&( IBinSaver &saver )
@@ -175,6 +176,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 		}
 		saver.Add( 9, &fSpeed );
 		saver.Add( 10, &cSoil );
+		saver.Add( 11, &fWaterCoeff );
 		
 		return 0;
 	}
