@@ -23,6 +23,12 @@ class CMOUnitMechanical : public CMOUnit
 		bool bArtilleryHooked;
 		std::vector< CPtr<CMOSelectable> > vPassangers;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
+		bool bAmphibianInWater;
+		bool bAmphibianWaterEffectsActive;
+		int nJoggingBasisBoneIndex;
+		int nJoggingMode;
+		int nLastWaterMoveEffectTime;
+		CVec2 vLastWaterMoveEffectPos;
 		bool bMoved;
 		std::vector<CVec3> lastTrackPoints;
 		std::vector<CVec3> trackPoints;
@@ -35,13 +41,17 @@ class CMOUnitMechanical : public CMOUnit
 		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		CPtr<IMOUnit> pOneFromCrew;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); f.Add(16,&bAmphibianInWater); f.Add(17,&nJoggingBasisBoneIndex); f.Add(18,&nJoggingMode); f.Add(19,&nLastWaterMoveEffectTime); f.Add(20,&vLastWaterMoveEffectPos); f.Add(21,&bAmphibianWaterEffectsActive); return 0; }
 	void OnSerialize( IBinSaver &f );
 private:
 	
 	bool IsInside( const int nID );
 	const NDb::SMechUnitRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() ); }
 	int GetMechPassangersCount() const;
+	void SetJoggingMode( const int nMode, const bool bPlay );
+	void UpdateAmphibianJogging( const bool bMoving );
+	void AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const;
+	void UpdateWaterMoveEffects( const struct SAINotifyPlacement &placement, IScene *pScene );
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
 	const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2( 
 		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,

@@ -27,9 +27,31 @@ static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
 
+enum EMechJoggingMode
+{
+	EJM_NONE = 0,
+	EJM_LAND_MOVE,
+	EJM_WATER_MOVE,
+	EJM_WATER_IDLE,
+};
+
+static const float AMPHIBIAN_WATER_COEFF_START_OFFSET = 0.11f;
+static const float AMPHIBIAN_WATER_EFFECTS_MIN_COEFF = 0.51f;
+
 static const int GetAttachedGunID( const int nPlatform, const int nGun )
 {
 	return (nPlatform << 6) | nGun;
+}
+
+static float GetAdjustedAmphibianWaterCoeff( const float fWaterCoeff )
+{
+	return Clamp( ( fWaterCoeff - AMPHIBIAN_WATER_COEFF_START_OFFSET ) / ( 1.0f - AMPHIBIAN_WATER_COEFF_START_OFFSET ), 0.0f, 1.0f );
+}
+
+static IMechUnitJoggingMutator::SJoggingParams ConvertJoggingParams( const NDb::SMechUnitRPGStats::SJoggingParams &params )
+{
+	const IMechUnitJoggingMutator::SJoggingParams result = { params.fPeriod1, params.fPeriod2, params.fAmp1, params.fAmp2, params.fPhaze1, params.fPhaze2 };
+	return result;
 }
 
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
@@ -68,6 +90,106 @@ bool CMOUnitMechanical::IsInside( const int nID )
 			return true;
 	}
 	return false;
+}
+
+void CMOUnitMechanical::SetJoggingMode( const int nMode, const bool bPlay )
+{
+	if ( !pJoggingMutator || nJoggingBasisBoneIndex < 0 )
+		return;
+
+	if ( nMode == EJM_NONE )
+	{
+		pJoggingMutator->Stop();
+		nJoggingMode = nMode;
+		return;
+	}
+
+	if ( nJoggingMode != nMode )
+	{
+		const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+		const NDb::SMechUnitRPGStats::SJoggingParams *pJx = &pStats->jx;
+		const NDb::SMechUnitRPGStats::SJoggingParams *pJy = &pStats->jy;
+
+		if ( pStats->IsAmphibious() && pStats->amphibianStats )
+		{
+			const NDb::SAmphibianStats *pAmphibianStats = pStats->amphibianStats;
+			if ( nMode == EJM_WATER_MOVE )
+			{
+				pJx = &pAmphibianStats->waterMoveJx;
+				pJy = &pAmphibianStats->waterMoveJy;
+			}
+			else if ( nMode == EJM_WATER_IDLE )
+			{
+				pJx = &pAmphibianStats->waterIdleJx;
+				pJy = &pAmphibianStats->waterIdleJy;
+			}
+		}
+
+		pJoggingMutator->Setup( nJoggingBasisBoneIndex, ConvertJoggingParams( *pJx ), ConvertJoggingParams( *pJy ) );
+		nJoggingMode = nMode;
+	}
+
+	if ( bPlay )
+		pJoggingMutator->Play();
+	else
+		pJoggingMutator->Stop();
+}
+
+void CMOUnitMechanical::UpdateAmphibianJogging( const bool bMoving )
+{
+	if ( pTransport )
+	{
+		if ( pJoggingMutator )
+			pJoggingMutator->Stop();
+		return;
+	}
+
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	const bool bUseWaterJogging = bAmphibianInWater && pStats->IsAmphibious() && pStats->amphibianStats;
+
+	if ( bMoving )
+		SetJoggingMode( bUseWaterJogging ? EJM_WATER_MOVE : EJM_LAND_MOVE, true );
+	else if ( bUseWaterJogging )
+		SetJoggingMode( EJM_WATER_IDLE, true );
+	else
+		SetJoggingMode( EJM_LAND_MOVE, false );
+}
+
+void CMOUnitMechanical::AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const
+{
+	if ( !pScene || locators.empty() || !pComplexEffect || !pComplexEffect->GetSceneEffect() )
+		return;
+
+	for ( int i = 0; i < locators.size(); ++i )
+		pScene->AttachEffect( GetID(), ESSOT_WATER_DROPS, locators[i], pComplexEffect->GetSceneEffect(), time, ESAT_NO_REPLACE );
+}
+
+void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placement, IScene *pScene )
+{
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	if ( !bAmphibianWaterEffectsActive || !pStats->IsAmphibious() || !pStats->amphibianStats || placement.fSpeed <= 0.0f )
+	{
+		nLastWaterMoveEffectTime = -1;
+		return;
+	}
+
+	const NDb::SAmphibianStats *pAmphibianStats = pStats->amphibianStats;
+	if ( pAmphibianStats->waterMoveLocators.empty() || !pAmphibianStats->waterMoveEffect || !IsVisible() )
+		return;
+
+	const NTimer::STime time = GameTimer()->GetGameTime();
+	const CVec2 vPlacement( placement.center.x, placement.center.y );
+	const float fMinDistance = (std::max)( 1.0f, pStats->vAABBHalfSize.y * 2.0f * (std::max)( 0.1f, pStats->fTrackFrequency ) );
+
+	if ( nLastWaterMoveEffectTime >= 0 &&
+		fabs2( vPlacement - vLastWaterMoveEffectPos ) < sqr( fMinDistance ) &&
+		time - nLastWaterMoveEffectTime < 500 )
+		return;
+
+	// Moving water effects are pulsed like track/dust effects to avoid piling up attaches every placement packet.
+	AttachComplexEffectToLocators( pScene, pAmphibianStats->waterMoveLocators, pAmphibianStats->waterMoveEffect, time );
+	nLastWaterMoveEffectTime = time;
+	vLastWaterMoveEffectPos = vPlacement;
 }
 
 void CMOUnitMechanical::SetDiveSound( bool bDive )
@@ -115,6 +237,12 @@ void CMOUnitMechanical::InitAttached( const NDb::ESeason eSeason, IChooseAttache
 bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	bMoved = false;
+	bAmphibianInWater = false;
+	bAmphibianWaterEffectsActive = false;
+	nJoggingBasisBoneIndex = -1;
+	nJoggingMode = EJM_NONE;
+	nLastWaterMoveEffectTime = -1;
+	vLastWaterMoveEffectPos = VNULL2;
 	bArtilleryHooked = false;
 	nLastTrackTime = -1;
 	wLastTrackDir = 0;
@@ -152,13 +280,9 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 			const int nBoneIndex = pGetBone->GetBoneIndex( "Basis" );
 			if ( nBoneIndex >= 0 )
 			{
+				nJoggingBasisBoneIndex = nBoneIndex;
 				pJoggingMutator = MakeObject<IMechUnitJoggingMutator>( IMechUnitJoggingMutator::typeID );
-				const IMechUnitJoggingMutator::SJoggingParams jx = { pStats->jx.fPeriod1, pStats->jx.fPeriod2, pStats->jx.fAmp1, 
-					pStats->jx.fAmp2, pStats->jx.fPhaze1, pStats->jx.fPhaze2 };
-				const IMechUnitJoggingMutator::SJoggingParams jy = { pStats->jy.fPeriod1, pStats->jy.fPeriod2, pStats->jy.fAmp1, 
-					pStats->jy.fAmp2, pStats->jy.fPhaze1, pStats->jy.fPhaze2 };
-				if ( pJoggingMutator )
-					pJoggingMutator->Setup( nBoneIndex, jx, jy );
+				SetJoggingMode( EJM_LAND_MOVE, false );
 				pAnimator->SetSpecialMutator( pJoggingMutator );
 			}
 			// run default animation (idle)
@@ -488,22 +612,36 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 	}
 }
 
+float DragCurve(float x, float d, float k)
+{
+    k = std::clamp(k, -12.0f, 12.0f);
+
+    return x / (x + (1.0f - x) * std::exp(k * (x - d)));
+}
+
 void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
 		return;
 	
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->amphibianStats;
+	const float fAdjustedWaterCoeff = bHasAmphibianStats ? GetAdjustedAmphibianWaterCoeff( placement.fWaterCoeff ) : 0.0f;
+	bAmphibianInWater = !pTransport && bHasAmphibianStats && placement.fWaterCoeff > 0.0f;
+	// Let shore interpolation start early, but delay particles until the unit is mostly in water.
+	bAmphibianWaterEffectsActive = !pTransport && bHasAmphibianStats && fAdjustedWaterCoeff >= AMPHIBIAN_WATER_EFFECTS_MIN_COEFF;
 
-	if (pStats->IsAmphibious() && pStats->amphibianStats)
+	if ( bHasAmphibianStats )
 	{
 		auto ampStats = pStats->amphibianStats;
 		SAINotifyPlacement new_placement = placement;
+
+		// Drag curve kinda sucks so skip it for now..
+		//float draggedWaterCoeff = DragCurve(fAdjustedWaterCoeff, 0.8f, -6.0f);
+
 		// fWaterCoeff always starts at ~0.11, not 0.0, so adjust a little bit to it
-		const float fWaterCoeffStartOffset = 0.11f;
-		const float fWaterOffset = ampStats->waterZOffset * Clamp( (placement.fWaterCoeff - fWaterCoeffStartOffset) / (1.0f - fWaterCoeffStartOffset), 0.0f, 1.0f );
-		if (fWaterOffset < 0.0f)
-			DebugTrace("fWaterOffset: %f, waterCoeff: %f", fWaterOffset, placement.fWaterCoeff);
+		const float fWaterOffset = ampStats->waterZOffset * fAdjustedWaterCoeff;
+
 		// AI computes the shore/water coefficient; the visual unit only applies the offset.
 		new_placement.vPlacement.z += fWaterOffset;
 		new_placement.z += fWaterOffset;
@@ -513,6 +651,8 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	{
 		CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
 	}
+	UpdateAmphibianJogging( bMoved || placement.fSpeed > 0.0f );
+	UpdateWaterMoveEffects( placement, pScene );
 
 	// in-transport units don't leave tracks, no tracks on zero speed
 	if ( ( pStats->bLeavesTracks || pStats->pEffectWheelDust != 0 ) && !pTransport && placement.fSpeed > 0.0f ) 
@@ -718,6 +858,9 @@ void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport )
 	DetachSound( EAST_MOVEMENT );
 	DetachSound( EAST_IDLE );
 	bMoved = FALSE;
+	bAmphibianInWater = false;
+	bAmphibianWaterEffectsActive = false;
+	nLastWaterMoveEffectTime = -1;
 
 	if ( bChanged )
 		UpdateVisibility( true );
@@ -731,8 +874,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 
 	if ( _bMove )
 	{
-		if ( pJoggingMutator )
-			pJoggingMutator->Play();
+		UpdateAmphibianJogging( true );
 		if ( !bMoved )
 		{
 			bMoved = true;
@@ -755,10 +897,13 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 		const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 		if ( pStats->pSoundMoveStop ) 
 			pSoundScene->AddSound( pStats->pSoundMoveStop, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
-		if ( pJoggingMutator )
-			pJoggingMutator->Stop();
 		bMoved = false;
-		if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
+		UpdateAmphibianJogging( false );
+		if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->amphibianStats &&
+			   pStats->amphibianStats->waterIdleEffect != 0 && pStats->amphibianStats->waterIdleEffect->GetSceneEffect() &&
+			   !pStats->amphibianStats->waterIdleLocators.empty() )
+			pIdleProcess = new CIdleMechProcess( GetID(), pStats->amphibianStats->waterIdleLocators, pStats->amphibianStats->waterIdleEffect, true );
+		else if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
 			pIdleProcess = new CIdleMechProcess( GetID(), pStats->shipEffects.boardSideLocators, pStats->shipEffects.pBoardSideEffect );
 		//
 		if ( pStats->pSoundIdle )
