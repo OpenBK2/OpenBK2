@@ -35,13 +35,14 @@ public:
 		NTimer::STime timeToEndDieAnimation;
 		// кончилсась анимация смерти и проинициализировались и endFogTime
 		bool bAnimFinished;
+		bool bRemoveCorpseAfterAnimation;
 
 		std::list<SObjTileInfo> lockedTiles; // залоканные тайлы
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&endFogTime); f.Add(4,&timeToEndDieAnimation); f.Add(5,&bAnimFinished); f.Add(6,&lockedTiles); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&endFogTime); f.Add(4,&timeToEndDieAnimation); f.Add(5,&bAnimFinished); f.Add(6,&lockedTiles); f.Add(7,&bRemoveCorpseAfterAnimation); return 0; }
 
-	SKilledUnit() { }
-	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( 0 ), bAnimFinished( false ) {}
-	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation, const NTimer::STime _endFogTime ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( _endFogTime ), bAnimFinished( false ) {}
+	SKilledUnit() : endFogTime( 0 ), timeToEndDieAnimation( 0 ), bAnimFinished( false ), bRemoveCorpseAfterAnimation( false ) { }
+	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( 0 ), bAnimFinished( false ), bRemoveCorpseAfterAnimation( false ) {}
+	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation, const NTimer::STime _endFogTime ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( _endFogTime ), bAnimFinished( false ), bRemoveCorpseAfterAnimation( false ) {}
 };
 
 //*******************************************************************
@@ -63,8 +64,10 @@ void CGraveyard::Segment()
 			if ( !pKilled->pUnit->IsInfantry() )
 			{
 				GetTerrain()->RemoveStaticObjectTiles( pKilled->lockedTiles );
-				const bool bIsShip = ( pKilled->pUnit->GetAIPassabilityClass() & EAC_WATER );
-				if ( !bIsShip )
+				const SMechUnitRPGStats *pMechStats = dynamic_cast<const SMechUnitRPGStats*>( pKilled->pUnit->GetStats() );
+				const bool bIsAmphibian = pMechStats && pMechStats->IsAmphibious() && pMechStats->amphibianStats;
+				const bool bIsShip = ( pKilled->pUnit->GetAIPassabilityClass() & EAC_WATER ) && !bIsAmphibian;
+				if ( !bIsShip && !pKilled->bRemoveCorpseAfterAnimation )
 					CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( pKilled->pUnit, pKilled->lockedTiles, pKilled->pUnit->IsTrampled() );
 				else
 				{
@@ -120,7 +123,7 @@ void CGraveyard::Segment()
 	}
 }
 
-void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDeath, const int nFatality )
+void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDeath, const int nFatality, const int nDeathAnimType )
 {
 	pUnit->UnfixUnlocking();
 	if ( pUnit->CanLockTiles() )
@@ -131,6 +134,8 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
 	const SMechUnitRPGStats* mech = dynamic_cast<const SMechUnitRPGStats*>(pStats);
 	std::vector<const NDb::SAnimB2*> animable_anims;
+	const NDb::SAmphibianStats *pAmphibianStats = mech && mech->IsAmphibious() ? mech->amphibianStats : 0;
+	const bool bRemoveAmphCorpseInWater = pAmphibianStats && pAmphibianStats->removeCorpseInWater && pUnit->IsInWater();
 	// играем fatality
 	if ( nFatality > -1 )
 	{
@@ -192,13 +197,17 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 
 		GetAIMap()->GetTilesCoveredByRect( pUnit->GetUnitRect(), &(pKillInfo->lockedTiles) );
 
-		const int nAnimation = GetAnimationFromAction( pUnit->GetDieAction() );
+		const int nAnimation = nDeathAnimType >= 0 ? nDeathAnimType : GetAnimationFromAction( pUnit->GetDieAction() );
 		const int nAnimIndex = - ( nFatality + 2 );
 		if ( nAnimation >= 0 && pStats->animdescs.size() > nAnimation && !pStats->animdescs[nAnimation].anims.empty() && nFatality != -1 && nAnimIndex < pStats->animdescs[nAnimation].anims.size() )
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + pStats->animdescs[nAnimation].anims[nAnimIndex].nLength + 2 * SConsts::AI_SEGMENT_DURATION;
-		else if (nAnimation >= 0 && mech && mech->pAnimableModel && animable_anims.size() > nAnimation)
+		else if ( nAnimation >= 0 && mech && mech->pAnimableModel )
 		{
-			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + animable_anims[nAnimation]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+			animable_anims = GetVisObjAnimsFromModel( mech->pAnimableModel, NDb::EAnimationType( nAnimation ) );
+			if ( nFatality != -1 && nAnimIndex >= 0 && nAnimIndex < animable_anims.size() )
+				pKillInfo->timeToEndDieAnimation = timeOfVisDeath + animable_anims[nAnimIndex]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+			else
+				pKillInfo->timeToEndDieAnimation = timeOfVisDeath + 2 * SConsts::AI_SEGMENT_DURATION;
 		}
 		else
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + 2 * SConsts::AI_SEGMENT_DURATION;
@@ -208,6 +217,7 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 		}
 	}
 
+	pKillInfo->bRemoveCorpseAfterAnimation = bRemoveAmphCorpseInWater;
 	pUnit->UnlockTiles();
 	pUnit->FixUnlocking();
 
@@ -251,14 +261,15 @@ void CGraveyard::CheckSoonBeDead()
 		if ( pUnit->GetTimeOfDeath() <= curTime )
 		{
 			const float fDamage = iter->second.second;
-			const int nFatality = pUnit->ChooseFatality( fDamage );
+			NDb::EAnimationType eDeathAnimType = NDb::ANIMATION_DEATH;
+			const int nFatality = pUnit->ChooseFatality( fDamage, &eDeathAnimType );
 			const bool bPutMud = !GetTerrain()->IsBridge( pUnit->GetCenterTile() );
 			//pUnit->CalcVisibility( true );
 			
 			if ( !pUnit->IsInSolidPlace() )
 			{
-				updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_UNIT, new CDeadUnit( pUnit, curTime, pUnit->GetDieAction(), nFatality, bPutMud ), -1 );
-				AddKilledUnit( pUnit, curTime, nFatality );
+				updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_UNIT, new CDeadUnit( pUnit, curTime, pUnit->GetDieAction(), nFatality, bPutMud, eDeathAnimType ), -1 );
+				AddKilledUnit( pUnit, curTime, nFatality, eDeathAnimType );
 			}
 			else
 			{
@@ -301,7 +312,7 @@ void CGraveyard::AddToSoonBeDead( CAIUnit *pUnit, const float fDamage )
 void CGraveyard::AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier )
 {
 	//CRAP{
-	CDeadUnit *pDeadUnit = new CDeadUnit( pSoldier, 0, ACTION_NOTIFY_NONE, /*pSoldier->GetDBID()*/ 0, false );
+	CDeadUnit *pDeadUnit = new CDeadUnit( pSoldier, 0, ACTION_NOTIFY_NONE, /*pSoldier->GetDBID()*/ 0, false, NDb::ANIMATION_DEATH );
 	//CRAP}
 	bridgeDeadSoldiers[GetTileNum( tile )].push_back( pDeadUnit );
 }
@@ -310,15 +321,15 @@ void CGraveyard::AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier 
 //*												CDeadUnit																	*
 //*******************************************************************
 
-CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, bool _bPutMud )
-: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( -1 ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
+CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, bool _bPutMud, const int _nDeathAnimType )
+: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( -1 ), nDeathAnimType( _nDeathAnimType ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
 }
 
-CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, const int _nFatality, bool _bPutMud )
-: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( _nFatality ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
+CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, const int _nFatality, bool _bPutMud, const int _nDeathAnimType )
+: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( _nFatality ), nDeathAnimType( _nDeathAnimType ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
@@ -360,7 +371,7 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 		if ( nFatality >= 0 )
 			pDyingInfo->nParam = ( NDb::ANIMATION_DEATH_FATALITY << 16 ) | nFatality ;
 		else
-			pDyingInfo->nParam = ( NDb::ANIMATION_DEATH << 16 ) | ( -nFatality - 2 );
+			pDyingInfo->nParam = ( nDeathAnimType << 16 ) | ( -nFatality - 2 );
 	}
 	else
 	{

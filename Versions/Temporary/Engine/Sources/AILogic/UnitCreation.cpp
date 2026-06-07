@@ -18,6 +18,7 @@
 #include "ExecutorFormationFirstAid.h"
 #include "ExecutorContainer.h"
 #include "Statistics.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "Stats_B2_M1/DBVisObj.h"
 #include "UnitTorpedo.h"
 #include "UnitsIterators.h"
@@ -557,10 +558,11 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 	if ( pUnit->GetHitPoints() == 0.0f )
 	{
 		pUnit->PrepareToDelete();
-		const int nFatality = pUnit->ChooseFatality( 0 );
+		NDb::EAnimationType eDeathAnimType = NDb::ANIMATION_DEATH;
+		const int nFatality = pUnit->ChooseFatality( 0, &eDeathAnimType );
 		const bool bPutMud = !GetTerrain()->IsBridge( pUnit->GetCenterTile() );
-		updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_UNIT, new CDeadUnit( pUnit, 0, pUnit->GetDieAction(), nFatality, bPutMud ), -1 );
-		theGraveyard.AddKilledUnit( pUnit, 0, nFatality );
+		updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_UNIT, new CDeadUnit( pUnit, 0, pUnit->GetDieAction(), nFatality, bPutMud, eDeathAnimType ), -1 );
+		theGraveyard.AddKilledUnit( pUnit, 0, nFatality, eDeathAnimType );
 	}
 
 	const int nRes = pUnit->GetUniqueId();

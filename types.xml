@@ -4810,8 +4810,12 @@
 					<Value>42</Value>
 				</Item>
 				<Item>
-					<Name>__ANIMATION_TYPE_COUNTER</Name>
+					<Name>ANIMATION_DEATH_WATER</Name>
 					<Value>43</Value>
+				</Item>
+				<Item>
+					<Name>__ANIMATION_TYPE_COUNTER</Name>
+					<Value>44</Value>
 				</Item>
 			</Entries>
 			<Attributes />

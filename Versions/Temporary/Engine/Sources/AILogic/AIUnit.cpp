@@ -1751,11 +1751,39 @@ void CAIUnit::WarFogChanged()
 	}
 }
 
-const int CAIUnit::ChooseFatality( const float fDamage )
+const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDeathAnimType )
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
+	if ( pDeathAnimType )
+		*pDeathAnimType = NDb::ANIMATION_DEATH;
 
 	const SMechUnitRPGStats* mechStats = dynamic_cast<const SMechUnitRPGStats*>(pStats);
+	const bool bAmphibianWaterDeath = GetAmphibianStats() != 0 && IsInWater();
+	if ( bAmphibianWaterDeath )
+	{
+		// Amphibians that die in water never use fatality; prefer the dedicated water death if present.
+		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_WATER && !pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.empty() )
+		{
+			const int nDeathAnim = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.size() ); RecordRandomCall();
+			if ( pDeathAnimType )
+				*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
+			return -1 * int( nDeathAnim + 2 );
+		}
+		else if ( mechStats && mechStats->pAnimableModel )
+		{
+			auto water_death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_WATER );
+			if ( !water_death_anims.empty() )
+			{
+				const int nDeathAnim = NRandom::Random( water_death_anims.size() ); RecordRandomCall();
+				if ( pDeathAnimType )
+					*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
+				return -1 * int( nDeathAnim + 2 );
+			}
+		}
+
+		goto death_animable_anim;
+	}
+
 	// for ships play fatality on deep water & ordinary death on shallow water
 	if ( (mechStats && (mechStats->eUnitType == EDesignUnitType::Torpedo_Boat || mechStats->eUnitType == EDesignUnitType::Landing_Boat || mechStats->IsNaval())) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
 	{
@@ -1845,6 +1873,8 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 	}
 
 	death_animable_anim:
+	if ( pDeathAnimType )
+		*pDeathAnimType = NDb::ANIMATION_DEATH;
 	// Decide the param for death anim
 	if ((pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty()) && mechStats && mechStats->pAnimableModel)
 	{

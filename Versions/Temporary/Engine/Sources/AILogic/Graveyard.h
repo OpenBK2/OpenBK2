@@ -15,16 +15,17 @@ class CDeadUnit : public CLinkObject
 	NTimer::STime dieTime;
 	EActionNotify dieAction;
 	int nFatality;
+	int nDeathAnimType;
 	bool bPutMud;
 
 	SVector tileCenter;
 	bool bVisibleWhenDie;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pDieObj); f.Add(3,&dieTime); f.Add(4,&dieAction); f.Add(5,&nFatality); f.Add(6,&bPutMud); f.Add(7,&tileCenter); f.Add(8,&bVisibleWhenDie); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pDieObj); f.Add(3,&dieTime); f.Add(4,&dieAction); f.Add(5,&nFatality); f.Add(6,&bPutMud); f.Add(7,&tileCenter); f.Add(8,&bVisibleWhenDie); f.Add(9,&nDeathAnimType); return 0; }
 
 public:
 	CDeadUnit() { }
-	CDeadUnit( class CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, bool bPutMud );
-	CDeadUnit( class CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, const int _nFatality, bool bPutMud );
+	CDeadUnit( class CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, bool bPutMud, const int _nDeathAnimType );
+	CDeadUnit( class CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, const int _nFatality, bool bPutMud, const int _nDeathAnimType );
 
 	virtual void GetDyingInfo( struct SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie );
 
@@ -62,7 +63,7 @@ public:
 
 	bool IsDiedVisible( int nUniqieID );
 
-	void AddKilledUnit( class CAIUnit *pUnit, const NTimer::STime &timeOfVisDeath, const int nFatality );
+	void AddKilledUnit( class CAIUnit *pUnit, const NTimer::STime &timeOfVisDeath, const int nFatality, const int nDeathAnimType );
 	void AddToSoonBeDead( class CAIUnit *pUnit, const float fDamage );
 	void AddToDissapeared( CAIUnit *pUnit );
 

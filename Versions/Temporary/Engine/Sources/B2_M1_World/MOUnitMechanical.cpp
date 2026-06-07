@@ -1071,7 +1071,14 @@ void CMOUnitMechanical::PlayAnimDescForAttached( IAttachedObject *pObject, const
 {
 	if ( pObject )
 	{
-		const NDb::SAnimB2* pAnimB2 = GetAnimB2( pObject->GetModel(), animdescs, eAnimType, nAnimID );
+		NDb::EAnimationType eEffectiveAnimType = eAnimType;
+		const NDb::SAnimB2* pAnimB2 = GetAnimB2( pObject->GetModel(), animdescs, eEffectiveAnimType, nAnimID );
+		if ( !pAnimB2 && eAnimType == NDb::ANIMATION_DEATH_WATER )
+		{
+			// Water death is optional per model; fall back to the matching regular death slot.
+			eEffectiveAnimType = NDb::ANIMATION_DEATH;
+			pAnimB2 = GetAnimB2( pObject->GetModel(), animdescs, eEffectiveAnimType, nAnimID );
+		}
 		if ( pAnimB2 && pObject->GetAnimator() )
 		{
 			SFBTransform transform;
@@ -1120,6 +1127,12 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 		NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nID );
 
 		pAnimB2 = GetAnimB2( deathModel, pStats->animdescs, eAnimType, nAnimID, isAnimable );
+		if ( !pAnimB2 && eAnimType == NDb::ANIMATION_DEATH_WATER )
+		{
+			// Some amph units may rely on ordinary death until a dedicated water death is authored.
+			eAnimType = NDb::ANIMATION_DEATH;
+			pAnimB2 = GetAnimB2( deathModel, pStats->animdescs, eAnimType, nAnimID, isAnimable );
+		}
 		if ( pAnimB2 && pAnimator )
 		{
 			pAnimator->ClearAllAnimations();

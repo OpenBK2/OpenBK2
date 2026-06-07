@@ -100,6 +100,8 @@ std::string EnumToString( NDb::EAnimationType eValue )
 		return "ANIMATION_INSTALL_PUSH";
 	case NDb::ANIMATION_UNINSTALL_PUSH:
 		return "ANIMATION_UNINSTALL_PUSH";
+	case NDb::ANIMATION_DEATH_WATER:
+		return "ANIMATION_DEATH_WATER";
 	case NDb::__ANIMATION_TYPE_COUNTER:
 		return "__ANIMATION_TYPE_COUNTER";
 	default:
@@ -195,6 +197,8 @@ NDb::EAnimationType NDb::StringToEnum_NDb_EAnimationType( const std::string &szV
 		return NDb::ANIMATION_INSTALL_PUSH;
 	if ( szValue == "ANIMATION_UNINSTALL_PUSH" )
 		return NDb::ANIMATION_UNINSTALL_PUSH;
+	if ( szValue == "ANIMATION_DEATH_WATER" )
+		return NDb::ANIMATION_DEATH_WATER;
 	if ( szValue == "__ANIMATION_TYPE_COUNTER" )
 		return NDb::__ANIMATION_TYPE_COUNTER;
 	return NDb::ANIMATION_UNKNOWN;

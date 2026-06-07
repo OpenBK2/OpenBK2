@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommonUnit.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
 
@@ -307,7 +308,7 @@ public:
 	// заметен ли юнитом pUnit, радиус обнаружения fNoticeRadius
 	virtual bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius );
 	
-	const int ChooseFatality( const float fDamage );
+	const int ChooseFatality( const float fDamage, NDb::EAnimationType *pDeathAnimType );
 	
 	void NullCollisions();
 
