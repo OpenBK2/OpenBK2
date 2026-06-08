@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AnimB2>
+	<SrcName href="/1.mb" />
+	<uid>3E34531C-81E6-4613-9B76-A31DE9A5620A</uid>
+	<RootJoint>Basis</RootJoint>
+	<Type>ANIMATION_DEATH_WATER</Type>
+	<ActionFrame>0</ActionFrame>
+	<Action>0</Action>
+	<Length>1633</Length>
+	<Looped>false</Looped>
+	<FirstFrame>110</FirstFrame>
+	<LastFrame>159</LastFrame>
+	<AABBAName />
+	<AABBDName />
+	<WeaponsToUseWith>0</WeaponsToUseWith>
+	<aabb_a>
+		<Center>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</Center>
+		<HalfSize>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</HalfSize>
+	</aabb_a>
+	<aabb_d>
+		<Center>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</Center>
+		<HalfSize>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</HalfSize>
+	</aabb_d>
+	<MoveSpeed>1</MoveSpeed>
+</AnimB2>

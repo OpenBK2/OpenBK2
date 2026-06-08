@@ -32943,6 +32943,20 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
+					<Type>f02acd10</Type>
+					<Name>Disabled</Name>
+					<ChunkID>2</ChunkID>
+					<Description>is this nation disabld in this tech level?</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
 					<Type>6897ce11</Type>
 					<Name>StartingUnits</Name>
 					<ChunkID>3</ChunkID>
@@ -51852,6 +51866,21 @@
 					<Name>ExpPrice</Name>
 					<ChunkID>34</ChunkID>
 					<Description>exp to receive, then kill this unit</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>7033cd10</Type>
+					<Name>ReverseSpeedModifier</Name>
+					<ChunkID>35</ChunkID>
+					<Description>Should the unit use different speed in reverse?</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>

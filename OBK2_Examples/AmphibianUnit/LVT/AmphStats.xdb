@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AmphibianStats>
+	<WaterZOffset>-29.87</WaterZOffset>
+	<WaterOffsetBlendTiles>5.5</WaterOffsetBlendTiles>
+	<WaterStatsModifier href="/Other/UnitStatsModifier/Game/InWaterStats/InWaterStats.xdb#xpointer(/UnitStatsModifier)" />
+	<PrepareToWaterTime>0</PrepareToWaterTime>
+	<PrepareToLandTime>0</PrepareToLandTime>
+	<EnterWaterEffect href="" />
+	<ExitWaterEffect href="" />
+	<WaterMoveEffect href="/Scene/Effects/All/Exhaust/WaterTrailFront_ComplexEffect.xdb#xpointer(/ComplexEffect)" />
+	<WaterMoveLocators>
+		<Item>LWaterMove01</Item>
+		<Item>LWaterMove02</Item>
+	</WaterMoveLocators>
+	<WaterIdleEffect href="/Scene/Effects/All/Exhaust/WaterHitsShip_ComplexEffect.xdb#xpointer(/ComplexEffect)" />
+	<WaterIdleLocators>
+		<Item>LWaterIdle01</Item>
+		<Item>LWaterIdle02</Item>
+	</WaterIdleLocators>
+	<WaterMoveJx>
+		<Period1>1.8</Period1>
+		<Period2>0.8</Period2>
+		<Amp1>0.6</Amp1>
+		<Amp2>0.5</Amp2>
+		<Phaze1>0.1</Phaze1>
+		<Phaze2>2.2</Phaze2>
+	</WaterMoveJx>
+	<WaterMoveJy>
+		<Period1>1</Period1>
+		<Period2>0.4</Period2>
+		<Amp1>0.4</Amp1>
+		<Amp2>0.6</Amp2>
+		<Phaze1>0.3</Phaze1>
+		<Phaze2>2</Phaze2>
+	</WaterMoveJy>
+	<WaterIdleJx>
+		<Period1>1.8</Period1>
+		<Period2>0.8</Period2>
+		<Amp1>0.6</Amp1>
+		<Amp2>0.5</Amp2>
+		<Phaze1>0.1</Phaze1>
+		<Phaze2>2.2</Phaze2>
+	</WaterIdleJx>
+	<WaterIdleJy>
+		<Period1>1</Period1>
+		<Period2>0.4</Period2>
+		<Amp1>0.4</Amp1>
+		<Amp2>0.6</Amp2>
+		<Phaze1>0.3</Phaze1>
+		<Phaze2>1.9</Phaze2>
+	</WaterIdleJy>
+	<RemoveCorpseInWater>true</RemoveCorpseInWater>
+</AmphibianStats>

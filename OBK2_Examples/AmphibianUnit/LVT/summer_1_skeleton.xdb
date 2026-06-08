@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Skeleton ObjectRecordID="1448">
+	<SrcName href="/1.mb" />
+	<RootJoint>Basis</RootJoint>
+	<MSRFormat>true</MSRFormat>
+	<Animations>
+		<Item href="summer_1_death_01_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_02_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_03_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_04_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_05_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_06_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_07_animb2.xdb#xpointer(/AnimB2)" />
+		<Item href="summer_1_death_08_animb2.xdb#xpointer(/AnimB2)" />
+	</Animations>
+	<uid>2D677077-F67A-4A29-9D65-2F841348300B</uid>
+</Skeleton>
