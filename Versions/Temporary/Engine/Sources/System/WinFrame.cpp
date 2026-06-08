@@ -16,8 +16,10 @@ static CCriticalSection msgs;
 static std::list< SWindowsMsg > msgList;
 static HCURSOR hCursor;
 static bool bManageCursor = true;
-static bool s_bMinimizeOnDeactivate = true;
-static bool bAppAlwaysActive = false;
+
+// Force disable app minimisation - alt + tab is still ok though
+static bool s_bMinimizeOnDeactivate = false;
+static bool bAppAlwaysActive = true;
 
 struct SSaveCursorClip
 {
@@ -55,6 +57,8 @@ bool NWinFrame::IsAppActive()
 
 static void SetActive( bool _bActive )
 {
+	return; // no mimising/sleep allowed!
+
  	if ( bAppAlwaysActive )
 		return;
 
@@ -394,9 +398,10 @@ void NWinFrame::FlashTaskbarIfInactive()
 	}
 }
 
-START_REGISTER(WinFrame)
-REGISTER_VAR_EX( "minimize_on_deactivate", NGlobal::VarBoolHandler, &s_bMinimizeOnDeactivate, true, STORAGE_NONE );
-REGISTER_VAR_EX( "app_always_active", NGlobal::VarBoolHandler, &bAppAlwaysActive, false, STORAGE_USER );
-FINISH_REGISTER
+// no sleep or mimizing!!!
+// START_REGISTER(WinFrame)
+// REGISTER_VAR_EX( "minimize_on_deactivate", NGlobal::VarBoolHandler, &s_bMinimizeOnDeactivate, true, STORAGE_NONE );
+// REGISTER_VAR_EX( "app_always_active", NGlobal::VarBoolHandler, &bAppAlwaysActive, false, STORAGE_USER );
+// FINISH_REGISTER
 
 
