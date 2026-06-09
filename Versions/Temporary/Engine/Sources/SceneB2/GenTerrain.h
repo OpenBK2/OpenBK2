@@ -209,6 +209,7 @@ class CTerraGen : public CObjectBase
 	void PutCragToAI( const NDb::SVSOInstance *pCragInstance ) const;
 	void PutAllCragsToAI() const;
 	void PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const;
+	void PutRiverCliffsToAI( const STerrainInfo::SRiver &river ) const;
 	void PutAllRiversToAI() const;
 	void PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const;
 	void PutAllRoadsToAI() const;

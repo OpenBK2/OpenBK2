@@ -60,6 +60,8 @@ public:
 	virtual void AddRiver( const NDb::SVSOInstance *pInstance );
 
 	virtual void AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake );
+	virtual void ClearRiverCliffTiles();
+	virtual void AddRiverCliffTiles( const std::list<SVector> &tiles );
 	//
 	virtual void UpdateZ( CVec3 *pvPos );
 	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params );

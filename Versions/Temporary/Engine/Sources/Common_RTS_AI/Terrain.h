@@ -150,6 +150,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	std::vector<BYTE> terrSubTypes;
 	CArray2D1Bit digImpossible;		// невозможность строительства окопов на тайле
 	CArray2D1Bit bridgeTiles;
+	CArray2D1Bit riverCliffTiles;
 	CArray2D<BYTE> soil;
 	std::vector<BYTE> tileDigImpossible;
 	std::vector<BYTE> soilParams;
@@ -210,6 +211,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	const int GetClassIndexFast( const BYTE aiClass ) const { return classIndices[aiClass]; }
 	bool IsStaticLockedWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
+	bool HasRiverCliffTiles( const SVector &tile, const int nBoundTileRadius ) const;
 
 	void SmoothLock( const int xMin, const int yMin, const int xMax, const int yMax, const EAIClasses aiClass );
 #ifndef _FINALRELEASE
@@ -227,6 +229,8 @@ public:
 	
 	void AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
 	void AddMarineTiles( const std::list<SVector> coastTiles, const BYTE coastSoilType, const std::list<SVector> waterTiles, const BYTE waterSoilType );
+	void ClearRiverCliffTiles();
+	void AddRiverCliffTiles( const std::list<SVector> &tiles );
 
 	// залокано конкретно для этого класса статическим объектом
 	bool IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const;

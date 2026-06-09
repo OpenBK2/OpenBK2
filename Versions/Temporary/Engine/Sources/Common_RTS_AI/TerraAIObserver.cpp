@@ -69,6 +69,19 @@ void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const b
 														waterTiles, SVectorStripeObject::ESP_SPLASH );
 }
 
+void CTerraAIObserver::ClearRiverCliffTiles()
+{
+	if ( pTerrain )
+		pTerrain->ClearRiverCliffTiles();
+}
+
+
+void CTerraAIObserver::AddRiverCliffTiles( const std::list<SVector> &tiles )
+{
+	if ( pTerrain )
+		pTerrain->AddRiverCliffTiles( tiles );
+}
+
 
 void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, std::list<SVector> *pTiles, const SSingleSide &singleSide, bool bInverse )
 {

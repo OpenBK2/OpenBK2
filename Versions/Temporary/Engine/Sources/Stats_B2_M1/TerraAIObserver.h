@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 
 //
 //		specific part, required by terragen
@@ -11,6 +12,8 @@ namespace NDb
 	struct SVSOInstance;
 }
 
+struct SVector;
+
 struct ITerraAIObserver : public CObjectBase
 {
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) = 0;
@@ -21,6 +24,8 @@ struct ITerraAIObserver : public CObjectBase
 	virtual void AddRiver( const NDb::SVSOInstance *pInstance ) = 0;
 	virtual void AddCrag( const NDb::SVSOInstance *pInstance ) = 0;
 	virtual void AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake ) = 0;
+	virtual void ClearRiverCliffTiles() = 0;
+	virtual void AddRiverCliffTiles( const std::list<SVector> &tiles ) = 0;
 	//
 	virtual float GetZ( float x, float y ) const = 0;
 	virtual float GetTileHeight( int nX, int nY ) const = 0;

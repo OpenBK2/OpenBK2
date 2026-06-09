@@ -1,9 +1,53 @@
 #include "stdafx.h"
 
 #include "GenTerrain.h"
+#include "Misc/Bresenham.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
 
 #define DEF_WATER_TYPE 0xff
+
+namespace
+{
+	// Matches DEF_MIN_PRECIPICE_HEIGHT in PrecipicesRender.cpp: only visible
+	// river-bank precipices should become forbidden amphibious transition tiles.
+	static const float RIVER_CLIFF_MASK_MIN_HEIGHT = 0.025f;
+
+	SVector GetAIRiverCliffTile( const CVec3 &vPos )
+	{
+		return SVector( int( Vis2AIFast( vPos.x ) / AI_TILE_SIZE ), int( Vis2AIFast( vPos.y ) / AI_TILE_SIZE ) );
+	}
+
+
+	void AddRiverCliffSegmentTiles( std::list<SVector> *pTiles, const SVector &vStart, const SVector &vEnd )
+	{
+		CBres bres;
+		bres.InitPoint( vStart, vEnd );
+		pTiles->push_back( bres.GetDirection() );
+
+		while ( bres.GetDirection() != vEnd )
+		{
+			bres.MakePointStep();
+			pTiles->push_back( bres.GetDirection() );
+		}
+	}
+
+
+	void AddRiverCliffBankTiles( std::list<SVector> *pTiles, const std::vector<CVec3> &verts, const std::vector<float> &heights )
+	{
+		const int nCount = min( int( verts.size() ), int( heights.size() ) );
+		if ( nCount < 2 )
+			return;
+
+		for ( int i = 0; i < nCount - 1; ++i )
+		{
+			const bool bCliffStart = fabs( verts[i].z - heights[i] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
+			const bool bCliffEnd = fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
+
+			if ( bCliffStart || bCliffEnd )
+				AddRiverCliffSegmentTiles( pTiles, GetAIRiverCliffTile( verts[i] ), GetAIRiverCliffTile( verts[i + 1] ) );
+		}
+	}
+}
 
 bool CTerraGen::IsPointOnBridge( float x, float y ) const
 {
@@ -144,6 +188,20 @@ void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 }
 
 
+void CTerraGen::PutRiverCliffsToAI( const STerrainInfo::SRiver &river ) const
+{
+	if ( !pAIObserver )
+		return;
+
+	std::list<SVector> tiles;
+	AddRiverCliffBankTiles( &tiles, river.precVertsL, river.precHeightsL );
+	AddRiverCliffBankTiles( &tiles, river.precVertsR, river.precHeightsR );
+
+	if ( !tiles.empty() )
+		pAIObserver->AddRiverCliffTiles( tiles );
+}
+
+
 void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutRoadToAI - AI Observer does not exist", return )
@@ -182,7 +240,10 @@ void CTerraGen::PutAllRiversToAI() const
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance ) 
+			{
 				PutRiverToAI( pInstance );
+				PutRiverCliffsToAI( *it );
+			}
 		}
 	}
 }
@@ -228,6 +289,9 @@ void CTerraGen::PutAllWaterToAI() const
 
 void CTerraGen::PutAllFeaturesToAI() const
 {
+	if ( pAIObserver )
+		pAIObserver->ClearRiverCliffTiles();
+
 	PutAllRoadsToAI();
 	PutAllWaterToAI();
 	PutAllRiversToAI();

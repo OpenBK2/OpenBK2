@@ -52,6 +52,9 @@ CTerrain::CTerrain( CAIMap *_pAIMap, const bool _bInitMode )
 	bridgeTiles.SetSizes( nSizeX, nSizeY );
 	bridgeTiles.FillZero();
 
+	riverCliffTiles.SetSizes( nSizeX, nSizeY );
+	riverCliffTiles.FillZero();
+
 	terrainTypes.SetSizes( nSizeX, nSizeY );
 	terrainTypes.FillZero();
 
@@ -348,6 +351,22 @@ void CTerrain::AddMarineTiles( const std::list<SVector> coastTiles, const BYTE c
 			terrainTypes.SetData( it->x, it->y, ETT_EARTH_TERRAIN );
 			soil[it->y][it->x] = waterSoilType;
 		}
+	}
+}
+
+void CTerrain::ClearRiverCliffTiles()
+{
+	if ( !riverCliffTiles.IsEmpty() )
+		riverCliffTiles.FillZero();
+}
+
+
+void CTerrain::AddRiverCliffTiles( const std::list<SVector> &tiles )
+{
+	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	{
+		if ( pAIMap->IsTileInside( *it ) )
+			riverCliffTiles.SetData( it->x, it->y );
 	}
 }
 
@@ -760,6 +779,29 @@ void CTerrain::RemoveBridgeTile( const SVector &tile )
 		bridgeTiles.RemoveData( tile.x, tile.y );
 }
 
+bool CTerrain::HasRiverCliffTiles( const SVector &tile, const int nBoundTileRadius ) const
+{
+	if ( riverCliffTiles.IsEmpty() )
+		return false;
+
+	const int nMinX = (std::max)( 0, tile.x - nBoundTileRadius );
+	const int nMinY = (std::max)( 0, tile.y - nBoundTileRadius );
+	const int nMaxX = (std::min)( pAIMap->GetSizeX() - 1, tile.x + nBoundTileRadius );
+	const int nMaxY = (std::min)( pAIMap->GetSizeY() - 1, tile.y + nBoundTileRadius );
+
+	for ( int y = nMinY; y <= nMaxY; ++y )
+	{
+		for ( int x = nMinX; x <= nMaxX; ++x )
+		{
+			const SVector checkTile( x, y );
+			if ( riverCliffTiles.GetData( x, y ) && !IsBridge( checkTile ) )
+				return true;
+		}
+	}
+
+	return false;
+}
+
 bool CTerrain::IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const
 { 
 	return ( !pAIMap->IsTileInside( x, y ) || ( (buf[y][x] & aiClass) == aiClass ) );
@@ -800,6 +842,12 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 {
 	if ( !pAIMap->IsTileInside( tile.x, tile.y ) )
 		return FREE_NONE;
+
+	// River visual cliffs are only a problem for amphibious units trying to switch
+	// between water and terrain; pure land and pure water classes keep normal rules.
+	if ( ( aiClass & EAC_WATER ) && ( aiClass & EAC_TERRAIN ) && HasRiverCliffTiles( tile, nBoundTileRadius ) )
+		return FREE_NONE;
+
 	EFreeTileInfo eResult = FREE_NONE;
 	if ( aiClass & EAC_WATER )
 	{
