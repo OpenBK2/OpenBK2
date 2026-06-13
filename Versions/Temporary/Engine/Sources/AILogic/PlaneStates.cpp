@@ -698,7 +698,7 @@ bool CPlanePatrolState::PathSegment()
 void CPlanePatrolState::InitPathToEnemyPlane( class CPlanesFormation *_pEnemy )
 {
 	CPlanesFormation * pFormation = pPlane->GetPlanesFormation();
-	if ( pFormation )
+	if ( pFormation && _pEnemy )
 	{
 		pFormation->CreateManuver( _pEnemy );
 		bEconomyMode = false;
@@ -1420,9 +1420,15 @@ void CPlaneFighterPatrolState::Segment()
 void CPlaneFighterPatrolState::TryInitPathToEnemie( const bool _bNewEnemy )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-	if ( nextPathUpdate < curTime || (_bNewEnemy || pFormation->IsManuverFinished()) && IsValidObj( pEnemie ) )
+	if ( pFormation && IsValidObj( pEnemie ) && ( nextPathUpdate < curTime || (_bNewEnemy || pFormation->IsManuverFinished()) ) )
 	{
-		pFormation->CreateManuver( pEnemie->GetPlanesFormation() );
+		if ( pEnemie->IsHelicopter() )
+		{
+			// Helicopters do not fly in plane formations, so fighters intercept their current point.
+			InitPathToPoint( pEnemie->GetPosB2(), false, false );
+		}
+		else
+			InitPathToEnemyPlane( pEnemie->GetPlanesFormation() );
 		nextPathUpdate = curTime + 1000;
 	}
 }
@@ -1746,7 +1752,12 @@ void CPlaneShturmovikPatrolState::Segment()
 			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 
 			if ( CAviation *pEnemyPlane = enemie.GetAviationEnemy() )
-				InitPathToEnemyPlane( pEnemyPlane->GetPlanesFormation() );
+			{
+				if ( pEnemyPlane->IsHelicopter() )
+					InitPathToPoint( pEnemyPlane->GetPosB2(), false, false );
+				else
+					InitPathToEnemyPlane( pEnemyPlane->GetPlanesFormation() );
+			}
 			else if ( !bFirstApproach )
 			{
 				TryInitPathToEnemie( true );
@@ -2074,7 +2085,12 @@ void CPlaneShturmovikPatrolState::TryInitPathToEnemie( const bool bForceNewPath 
 	if ( pFormation && ( pFormation->IsManuverFinished() || bForceNewPath ) )
 	{
 		if ( CAviation *pEnemyPlane = enemie.GetAviationEnemy() )
-			InitPathToEnemyPlane( pEnemyPlane->GetPlanesFormation() );
+		{
+			if ( pEnemyPlane->IsHelicopter() )
+				InitPathToPoint( pEnemyPlane->GetPosB2(), false, false );
+			else
+				InitPathToEnemyPlane( pEnemyPlane->GetPlanesFormation() );
+		}
 		else 
 			InitPathToPoint( CVec3( enemie.GetCenter(), enemie.GetZ() ), false, false );
 	}

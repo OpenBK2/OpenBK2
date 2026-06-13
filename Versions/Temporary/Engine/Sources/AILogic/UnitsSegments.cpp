@@ -103,7 +103,7 @@ const NTimer::STime CSecondPathSegments::ProcessSegment()
 	{
 		pUnit->SecondSegment( SConsts::AI_SEGMENT_DURATION );
 
-		if ( pUnit->GetStats()->IsAviation() )
+		if ( pUnit->GetStats()->IsAviation() && !pUnit->IsHelicopter() )
 			pUnit->Moved();
 		else
 		{
@@ -152,5 +152,4 @@ void CStayTimeSegments::ProcessSegment()
 		pUnit->ResetCollisionsCount();
 	}
 }
-
 

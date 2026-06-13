@@ -11,6 +11,7 @@
 #include "FormationStates.h"
 #include "ArtilleryStates.h"
 #include "ArtRocketStates.h"
+#include "HelicopterStates.h"
 #include "Soldier.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CStaticMembers::operator&( IBinSaver &saver )
@@ -62,6 +63,7 @@ int CStaticMembers::operator&( IBinSaver &saver )
 	{
 		saver.Add( 23, &CArtilleryStatesFactory::pFactory );
 		saver.Add( 24, &CArtRocketStatesFactory::pFactory	);
+		saver.Add( 25, &CHelicopterStatesFactory::pFactory );
 	}
 	saver.Add( 26, &CExistingObject::globalMark );
 	saver.Add( 27, &SConsts::PRIORITIES );

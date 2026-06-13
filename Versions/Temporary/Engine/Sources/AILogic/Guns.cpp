@@ -1984,6 +1984,14 @@ bool CBaseGun::IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const f
 	if ( pStats->IsAviation() )
 	{
 		const CAviation * pPlane = checked_cast_ptr<const CAviation*>( pOwner );
+		if ( pPlane && pPlane->IsHelicopter() )
+		{
+			// Helicopters may hover with zero velocity, so use their nose direction instead of plane speed.
+			const uint16_t wDesirableAngle = GetDirectionByVector( point - vOwnerCenter ) - GetGun().wDirection;
+			return DirsDifference( wDesirableAngle, pOwner->GetFrontDirection() ) <=
+				( wWeaponDeltaAngle + (int)addAngle ) * cDeltaAngle;
+		}
+
 		// check vertical angle
 		const uint16_t wDesiredVAngle = GetDirectionByVector( fabs(point - vOwnerCenter), z - pOwner->GetZ() );
 		CVec3 vSpeed;

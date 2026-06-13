@@ -447,6 +447,7 @@ public:
 	bool IsRevealed() const;
 	
 	virtual const bool IsInfantry() const;
+	virtual bool IsHelicopter() const { return false; }
 	// обстрелян юнитом pUnit
 	virtual void Grazed( CAIUnit *pUnit ) { }
 	
