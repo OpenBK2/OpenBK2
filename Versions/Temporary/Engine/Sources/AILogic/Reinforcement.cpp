@@ -3,6 +3,7 @@
 #include "Reinforcement.h"
 #include "Misc/2Darray.h"
 #include "DBAIConsts.h"
+#include "Stats_B2_M1/UnitTypes.h"
 
 namespace NReinforcement
 {
@@ -20,6 +21,10 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 {
 	for ( int i = 0; i < _pConsts->reinforcementTypes.size(); ++i )
 		reinfTypes[int(ReMapRPGType(_pConsts->reinforcementTypes[i].eUnitRPGType))] = _pConsts->reinforcementTypes[i].eReinfType;
+
+	// Helicopters use the first extra air reinforcement slot unless the DB remaps them elsewhere.
+	if ( reinfTypes.find( NDb::RPG_TYPE_AVIA_HELICOPTER ) == reinfTypes.end() )
+		reinfTypes[NDb::RPG_TYPE_AVIA_HELICOPTER] = NDb::RT_EXTRA_AIR_1;
 
 	//Init reinf.expediency matrix
 	expediencyValues.SetSizes( NUMBER_OF_REINF_TYPES, NUMBER_OF_REINF_TYPES );

@@ -36,9 +36,10 @@ class CMOUnitHelicopter :public CMOUnit
 		float fPropSpeed;
 		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		bool bMove;
+		bool bDeadPlane;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); f.Add(2,&pStats); f.Add(3,&pHelicopterStats); f.Add(4,&vPassangers); f.Add(5,&vPropellers); f.Add(6,&fPropSpeed); f.Add(7,&smokeTrails); f.Add(8,&bMove); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); f.Add(2,&pStats); f.Add(3,&pHelicopterStats); f.Add(4,&vPassangers); f.Add(5,&vPropellers); f.Add(6,&fPropSpeed); f.Add(7,&smokeTrails); f.Add(8,&bMove); f.Add(9,&bDeadPlane); return 0; }
 private:
 	const int CMOUnitHelicopter::GetMechPassangersCount() const;
 	bool IsInside( const int nID );

@@ -11,6 +11,7 @@
 #include "StaticObjects.h"
 #include "Weather.h"
 #include "Aviation.h"
+#include "Helicopter.h"
 #include "Scripts.h"
 #include "ScenarioTracker.h"
 #include "Graveyard.h"
@@ -436,6 +437,11 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 	{
 		pUnit = pStats->etype == RPG_TYPE_SNIPER ?
 						MakeObject<CAIUnit>( AI_SNIPER ) : MakeObject<CAIUnit>( AI_INFANTRY );
+	}
+	else if ( pStats->etype == RPG_TYPE_AVIA_HELICOPTER )
+	{
+		// Helicopters stay in the aviation list, but need their own hovering movement and command states.
+		pUnit = MakeObject<CAIUnit>( AI_HELICOPTER );
 	}
 	else if ( pStats->IsAviation() )
 		pUnit = MakeObject<CAIUnit>( AI_AVIATION );

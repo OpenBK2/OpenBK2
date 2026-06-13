@@ -13,6 +13,7 @@ class CAviation : public CMilitaryCar, public IPlane
 {
 	OBJECT_NOCOPY_METHODS( CAviation );
 	
+protected:
 		ZDATA_(CMilitaryCar)
 	CDBPtr<SMechUnitRPGStats> pStats;
 
@@ -72,6 +73,7 @@ public:
 	virtual bool IsMech() const { return true; }
 	// Strategic bombers use normal plane movement, but their attacks are forced through horizontal bombing.
 	bool IsStrategicBomber() const { return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER; }
+	virtual bool IsHelicopter() const { return false; }
 	
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_NONE; }
 	virtual const bool CanGoBackward() const { return false; }
@@ -120,7 +122,7 @@ public:
 	virtual const class CPlanePreferences & GetPreferencesB2() const;
 	
 	// fuel control
-	void DecFuel( const bool bEconomyMode );
+	virtual void DecFuel( const bool bEconomyMode );
 	float GetFuel() const;
 
 	virtual class CArtillery* GetTowedArtillery() const { return 0; }

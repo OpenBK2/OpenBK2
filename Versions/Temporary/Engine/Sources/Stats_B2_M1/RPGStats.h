@@ -63,6 +63,7 @@ namespace NDb
 	enum EReinforcementType;
 	enum EUserAction;
 	struct SPartyDependentInfo;
+	struct SHelicopterStats;
 	struct SMechUnitRPGStats;
 	struct SInfantryRPGStats;
 
@@ -1931,7 +1932,8 @@ namespace NDb
 		DB_RPG_TYPE_TRAIN_SUPER = 35,
 		DB_RPG_TYPE_TRAIN_ARMOR = 36,
 		DB_RPG_TYPE_AVIA_STRAT_BOMBER = 37,
-		DB_RPG_TYPE_COUNT = 38,
+		DB_RPG_TYPE_AVIA_HELICOPTER = 38,
+		DB_RPG_TYPE_COUNT = 39,
 	};
 
 	enum EUnitPoliticalSide
@@ -2243,7 +2245,52 @@ namespace NDb
 		Torpedo_Boat = 26,
 		Train = 27,
 		Super = 28,
-		Strategic_Bomber = 29
+		Strategic_Bomber = 29,
+		Helicopter_Unit = 30
+	};
+
+	struct SHelicopterStats : public CResource
+	{
+		OBJECT_BASIC_METHODS( SHelicopterStats )
+	public:
+		enum { typeID = 0x1919A2C0 };
+	private:
+		mutable DWORD __dwCheckSum;
+	public:
+		float fMovmentAngleDownRadians;
+		float fMovementAngleDownSpeedRPS;
+		float fSideRotatingAngleRad;
+		float fSideRotatingAngleRPS;
+		float fStandingDeviationRadius;
+		float fStandingDeviationSpeed;
+		float fSpiralRadius;
+		float fSpiralSteps;
+		float fSpiralDownSpeed;
+		float fDeathSelfPointRotationSpeedRad;
+		float fStandingFuelDrainModifier;
+
+		SHelicopterStats() :
+			__dwCheckSum( 0 ),
+			fMovmentAngleDownRadians( 0.5f ),
+			fMovementAngleDownSpeedRPS( 1.5f ),
+			fSideRotatingAngleRad( 0.4f ),
+			fSideRotatingAngleRPS( 1.1f ),
+			fStandingDeviationRadius( 0.2f ),
+			fStandingDeviationSpeed( 0.5f ),
+			fSpiralRadius( 11.0f ),
+			fSpiralSteps( 2.5f ),
+			fSpiralDownSpeed( 15.0f ),
+			fDeathSelfPointRotationSpeedRad( 2.1f ),
+			fStandingFuelDrainModifier( 0.5f )
+		{ }
+		//
+		int GetTypeID() const { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		DWORD CalcCheckSum() const;
 	};
 
 	struct SAmphibianStats;
@@ -2556,6 +2603,7 @@ namespace NDb
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 		CDBPtr< SAmphibianStats > amphibianStats;
+		CDBPtr< SHelicopterStats > pHelicopterStats;
 
 		#include "include_mechunitrpgstats.h"
 

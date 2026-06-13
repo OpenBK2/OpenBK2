@@ -3912,6 +3912,8 @@ std::string EnumToString( NDb::EDBUnitRPGType eValue )
 		return "DB_RPG_TYPE_TRAIN_ARMOR";
 	case NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER:
 		return "DB_RPG_TYPE_AVIA_STRAT_BOMBER";
+	case NDb::DB_RPG_TYPE_AVIA_HELICOPTER:
+		return "DB_RPG_TYPE_AVIA_HELICOPTER";
 	case NDb::DB_RPG_TYPE_COUNT:
 		return "DB_RPG_TYPE_COUNT";
 	default:
@@ -3997,6 +3999,8 @@ NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const std::string &szV
 		return NDb::DB_RPG_TYPE_TRAIN_ARMOR;
 	if ( szValue == "DB_RPG_TYPE_AVIA_STRAT_BOMBER" )
 		return NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER;
+	if ( szValue == "DB_RPG_TYPE_AVIA_HELICOPTER" )
+		return NDb::DB_RPG_TYPE_AVIA_HELICOPTER;
 	if ( szValue == "DB_RPG_TYPE_COUNT" )
 		return NDb::DB_RPG_TYPE_COUNT;
 	return NDb::DB_RPG_TYPE_SOLDIER;
@@ -4611,6 +4615,8 @@ std::string EnumToString( NDb::EDesignUnitType eValue )
 		return "Super";
 	case NDb::Strategic_Bomber:
 		return "Strategic_Bomber";
+	case NDb::Helicopter_Unit:
+		return "Helicopter_Unit";
 	default:
 		return "UNIT_TYPE_UNKNOWN";
 	}
@@ -4678,6 +4684,8 @@ NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const std::string &s
 		return NDb::Super;
 	if ( szValue == "Strategic_Bomber" )
 		return NDb::Strategic_Bomber;
+	if ( szValue == "Helicopter_Unit" )
+		return NDb::Helicopter_Unit;
 	return NDb::UNIT_TYPE_UNKNOWN;
 }
 
@@ -5123,6 +5131,79 @@ DWORD SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 }
 
 
+void SHelicopterStats::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "HelicopterStats", typeID, sizeof(*this) );
+
+	BYTE *pThis = (BYTE*)this;
+
+	NMetaInfo::ReportMetaInfo( "MovmentAngleDownRadians", (BYTE*)&fMovmentAngleDownRadians - pThis, sizeof(fMovmentAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MovementAngleDownSpeedRPS", (BYTE*)&fMovementAngleDownSpeedRPS - pThis, sizeof(fMovementAngleDownSpeedRPS), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRad", (BYTE*)&fSideRotatingAngleRad - pThis, sizeof(fSideRotatingAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRPS", (BYTE*)&fSideRotatingAngleRPS - pThis, sizeof(fSideRotatingAngleRPS), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingDeviationRadius", (BYTE*)&fStandingDeviationRadius - pThis, sizeof(fStandingDeviationRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingDeviationSpeed", (BYTE*)&fStandingDeviationSpeed - pThis, sizeof(fStandingDeviationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralRadius", (BYTE*)&fSpiralRadius - pThis, sizeof(fSpiralRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralSteps", (BYTE*)&fSpiralSteps - pThis, sizeof(fSpiralSteps), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralDownSpeed", (BYTE*)&fSpiralDownSpeed - pThis, sizeof(fSpiralDownSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DeathSelfPointRotationSpeedRad", (BYTE*)&fDeathSelfPointRotationSpeedRad - pThis, sizeof(fDeathSelfPointRotationSpeedRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (BYTE*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
+
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SHelicopterStats::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+
+	saver.Add( "MovmentAngleDownRadians", &fMovmentAngleDownRadians );
+	saver.Add( "MovementAngleDownSpeedRPS", &fMovementAngleDownSpeedRPS );
+	saver.Add( "SideRotatingAngleRad", &fSideRotatingAngleRad );
+	saver.Add( "SideRotatingAngleRPS", &fSideRotatingAngleRPS );
+	saver.Add( "StandingDeviationRadius", &fStandingDeviationRadius );
+	saver.Add( "StandingDeviationSpeed", &fStandingDeviationSpeed );
+	saver.Add( "SpiralRadius", &fSpiralRadius );
+	saver.Add( "SpiralSteps", &fSpiralSteps );
+	saver.Add( "SpiralDownSpeed", &fSpiralDownSpeed );
+	saver.Add( "DeathSelfPointRotationSpeedRad", &fDeathSelfPointRotationSpeedRad );
+	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
+
+	return 0;
+}
+
+int SHelicopterStats::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &fMovmentAngleDownRadians );
+	saver.Add( 3, &fMovementAngleDownSpeedRPS );
+	saver.Add( 4, &fSideRotatingAngleRad );
+	saver.Add( 5, &fSideRotatingAngleRPS );
+	saver.Add( 6, &fStandingDeviationRadius );
+	saver.Add( 7, &fStandingDeviationSpeed );
+	saver.Add( 8, &fSpiralRadius );
+	saver.Add( 9, &fSpiralSteps );
+	saver.Add( 10, &fSpiralDownSpeed );
+	saver.Add( 11, &fDeathSelfPointRotationSpeedRad );
+	saver.Add( 12, &fStandingFuelDrainModifier );
+
+	return 0;
+}
+
+DWORD SHelicopterStats::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownSpeed << fDeathSelfPointRotationSpeedRad << fStandingFuelDrainModifier;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
 
 void SAmphibianStats::ReportMetaInfo() const
 {
@@ -5284,6 +5365,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "AmphibianStats", (BYTE*)&amphibianStats - pThis, sizeof(amphibianStats), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "HelicopterStats", (BYTE*)&pHelicopterStats - pThis, sizeof(pHelicopterStats), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5356,6 +5438,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "DestructableCorpse", &bDestructableCorpse );
 	saver.Add( "InnerUnitBonus", &pInnerUnitBonus );
 	saver.Add( "AmphibianStats", &amphibianStats );
+	saver.Add( "HelicopterStats", &pHelicopterStats );
 
 	return 0;
 }
@@ -5428,6 +5511,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 64, &bDestructableCorpse );
 	saver.Add( 65, &pInnerUnitBonus );
 	saver.Add( 66, &amphibianStats );
+	saver.Add( 67, &pHelicopterStats );
 
 	return 0;
 }
@@ -5439,7 +5523,7 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats;
+	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats << pHelicopterStats;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -6579,6 +6663,7 @@ BASIC_REGISTER_DATABASE_CLASS( SUnitBaseRPGStats )
 REGISTER_DATABASE_CLASS( 0x1711A341, SArmorPatternPlacement ) 
 REGISTER_DATABASE_CLASS( 0x1711A340, SArmorPattern ) 
 REGISTER_DATABASE_CLASS( 0x11069B81, SInfantryRPGStats ) 
+REGISTER_DATABASE_CLASS( 0x1919A2C0, SHelicopterStats )
 REGISTER_DATABASE_CLASS( 0x11069B80, SMechUnitRPGStats ) 
 REGISTER_DATABASE_CLASS( 0x7DA66901, SAmphibianStats ) 
 REGISTER_DATABASE_CLASS( 0x11069BC2, SSquadRPGStats ) 

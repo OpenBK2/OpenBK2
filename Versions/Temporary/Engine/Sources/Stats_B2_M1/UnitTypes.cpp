@@ -56,6 +56,7 @@ namespace NDb
 		case DB_RPG_TYPE_TRAIN_SUPER					:return RPG_TYPE_TRAIN_SUPER				;
 		case DB_RPG_TYPE_TRAIN_ARMOR					:return RPG_TYPE_TRAIN_ARMOR				;
 		case DB_RPG_TYPE_AVIA_STRAT_BOMBER				:return RPG_TYPE_AVIA_STRAT_BOMBER				;
+		case DB_RPG_TYPE_AVIA_HELICOPTER				:return RPG_TYPE_AVIA_HELICOPTER				;
 		}
 		NI_ASSERT( false, StrFmt( "wrong type %i", eType ) );
 		return RPG_TYPE_INFANTRY;
@@ -86,5 +87,4 @@ namespace NDb
 		return RPG_CLASS_UNKNOWN;
 	}
 }
-
 

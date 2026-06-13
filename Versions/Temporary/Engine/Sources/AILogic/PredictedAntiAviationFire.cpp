@@ -204,7 +204,13 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 	for ( int i = 0; i < 3; ++i )
 	{
 		nTime = pGunAbleToShoot->GetTimeToShootToPoint( vPredict );
-		vPredict = pPlane->GetManuver()->GetProspectivePoint( nTime );
+		if ( pPlane->IsHelicopter() )
+		{
+			// Helicopters do not own plane maneuvers; AA uses deterministic linear prediction for them.
+			vPredict = pPlane->GetPosB2() + pPlane->GetSpeedB2() * float( nTime );
+		}
+		else
+			vPredict = pPlane->GetManuver()->GetProspectivePoint( nTime );
 	}
 
 	const int nTimeToShoot = nTime / SConsts::AI_SEGMENT_DURATION * SConsts::AI_SEGMENT_DURATION;

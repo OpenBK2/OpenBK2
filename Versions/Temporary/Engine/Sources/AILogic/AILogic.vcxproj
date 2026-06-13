@@ -315,6 +315,8 @@ $(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.ob
     <ClInclude Include="ArtRocketStates.h" />
     <ClInclude Include="Aviation.h" />
     <ClInclude Include="AviationUnit.h" />
+    <ClInclude Include="Helicopter.h" />
+    <ClInclude Include="HelicopterStates.h" />
     <ClInclude Include="B2AI.h" />
     <ClInclude Include="BalanceTest.h" />
     <ClInclude Include="Behaviour.h" />
@@ -536,6 +538,8 @@ $(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.ob
     <ClCompile Include="ArtilleryStates.cpp" />
     <ClCompile Include="ArtRocketStates.cpp" />
     <ClCompile Include="Aviation.cpp" />
+    <ClCompile Include="Helicopter.cpp" />
+    <ClCompile Include="HelicopterStates.cpp" />
     <ClCompile Include="B2AI.cpp" />
     <ClCompile Include="BalanceTest.cpp" />
     <ClCompile Include="Behaviour.cpp" />

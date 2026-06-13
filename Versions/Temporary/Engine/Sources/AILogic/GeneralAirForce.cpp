@@ -131,6 +131,9 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 	for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 	{
 		CAviation *pPlane = *iter;
+		if ( pPlane->IsHelicopter() )
+			continue;
+
 		if ( pPlane->IsAlive() &&
 			RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype && 
 			EDI_FRIEND == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
@@ -142,6 +145,9 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 	for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 	{
 		CAviation *pPlane = *iter;
+		if ( pPlane->IsHelicopter() )
+			continue;
+
 		if ( pPlane->IsAlive() &&
 				 RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype && 
 				 EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
@@ -410,7 +416,11 @@ void CGeneralAirForce::CancelRequest( int nRequestID, enum EForceType eType )
 
 void CGeneralAirForce::Give( CCommonUnit *pWorker )
 {
-	createdAviation.push_back( checked_cast<CAIUnit*>( pWorker ) );
+	CAIUnit *pUnit = checked_cast<CAIUnit*>( pWorker );
+	if ( pUnit->IsHelicopter() )
+		return;
+
+	createdAviation.push_back( pUnit );
 }
 
 void CGeneralAirForce::DeleteAA( CAIUnit *pUnit )

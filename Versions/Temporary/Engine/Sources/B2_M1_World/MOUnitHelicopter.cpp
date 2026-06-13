@@ -64,6 +64,8 @@ bool CMOUnitHelicopter::Create( const int nUniqueID, const SAIBasicUpdate *pUpda
 
 	vPropellers.resize( pHelicopterStats->axes.size(), SPropellerInfo() );
 	fPropSpeed = -1.0f;
+	bMove = false;
+	bDeadPlane = false;
 	SetPropellersSpeed( 0.0f, eSeason );
 
 	if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID()) )
@@ -234,8 +236,18 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateMovement( const NTimer::STim
 
 void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
-	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
-	SetPropellersSpeed( placement.fSpeed, eSeason );
+	SAINotifyPlacement visualPlacement( placement );
+	if ( visualPlacement.bNewFormat && IsAlive() && !bDeadPlane && placement.fSpeed <= 0.001f && pStats->pHelicopterStats )
+	{
+		// Hover drift is client-only: it makes a standing helicopter feel airborne without touching AI simulation.
+		const NDb::SHelicopterStats *pHeliStats = pStats->pHelicopterStats.GetPtr();
+		const float fPhase = float( GameTimer()->GetGameTime() ) * 0.001f * pHeliStats->fStandingDeviationSpeed + float( GetID() & 1023 );
+		visualPlacement.vPlacement.x += cosf( fPhase ) * pHeliStats->fStandingDeviationRadius;
+		visualPlacement.vPlacement.y += sinf( fPhase * 1.37f ) * pHeliStats->fStandingDeviationRadius;
+	}
+
+	CMOUnit::AIUpdatePlacement( visualPlacement, pScene, pSoundScene, eSeason );
+	SetPropellersSpeed( IsAlive() && !bDeadPlane ? 1.0f : 0.0f, eSeason );
 	if ( !smokeTrails.empty() )
 	{
 		CVec3 vPos, vScale;
@@ -263,6 +275,7 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPG
 
 void CMOUnitHelicopter::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::ESeason eSeason )
 {
+	bDeadPlane = true;
 	DetachSound( EAST_MOVEMENT );
 	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );

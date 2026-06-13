@@ -98,6 +98,7 @@
 		<Item>40118e10</Item>
 		<Item>901b8e10</Item>
 		<Item>0169a67d</Item>
+		<Item>c0a21919</Item>
 		<Item>d01d8e10</Item>
 		<Item>c0de4c11</Item>
 		<Item>00d54c11</Item>
@@ -10925,8 +10926,12 @@
 					<Value>37</Value>
 				</Item>
 				<Item>
-					<Name>DB_RPG_TYPE_COUNT</Name>
+					<Name>DB_RPG_TYPE_AVIA_HELICOPTER</Name>
 					<Value>38</Value>
+				</Item>
+				<Item>
+					<Name>DB_RPG_TYPE_COUNT</Name>
+					<Value>39</Value>
 				</Item>
 			</Entries>
 			<Attributes />
@@ -11395,6 +11400,10 @@
 				<Item>
 					<Name>Strategic_Bomber</Name>
 					<Value>29</Value>
+				</Item>
+				<Item>
+					<Name>Helicopter_Unit</Name>
+					<Value>30</Value>
 				</Item>
 			</Entries>
 			<Attributes />
@@ -22229,6 +22238,16 @@
 					<Name>AmphibianStats</Name>
 					<ChunkID>66</ChunkID>
 					<Description>Stats for amphibian units</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue><Type>00000000</Type></DefaultValue>
+					<ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>d0a21919</Type>
+					<Name>HelicopterStats</Name>
+					<ChunkID>67</ChunkID>
+					<Description>helicopter-specific movement and crash parameters</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue><Type>00000000</Type></DefaultValue>
@@ -64724,6 +64743,35 @@
 			<__ServerPtr>1069a67d</__ServerPtr>
 			<Type>TYPE_TYPE_REF</Type>
 			<RefType>0169a67d</RefType>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082826</__ClassTypeID>
+			<__ServerPtr>c0a21919</__ServerPtr>
+			<Type>TYPE_TYPE_CLASS</Type>
+			<TypeName>HelicopterStats</TypeName>
+			<Attributes />
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item><Type>7033cd10</Type><Name>MovmentAngleDownRadians</Name><ChunkID>2</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>MovementAngleDownSpeedRPS</Name><ChunkID>3</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>1.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>SideRotatingAngleRad</Name><ChunkID>4</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.4</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>SideRotatingAngleRPS</Name><ChunkID>5</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>1.1</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>StandingDeviationRadius</Name><ChunkID>6</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.2</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>StandingDeviationSpeed</Name><ChunkID>7</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>SpiralRadius</Name><ChunkID>8</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>11</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>SpiralSteps</Name><ChunkID>9</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>2.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>SpiralDownSpeed</Name><ChunkID>10</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>15</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>DeathSelfPointRotationSpeedRad</Name><ChunkID>11</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>2.1</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>StandingFuelDrainModifier</Name><ChunkID>12</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+			</Fields>
+			<TypeID>421110464</TypeID>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082828</__ClassTypeID>
+			<__ServerPtr>d0a21919</__ServerPtr>
+			<Type>TYPE_TYPE_REF</Type>
+			<RefType>c0a21919</RefType>
 		</Item>
 		<Item>
 			<__ClassTypeID>270062596</__ClassTypeID>
