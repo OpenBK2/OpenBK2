@@ -4,6 +4,7 @@
 #include "MOProjectile.h"
 #include "MOUnitHelicopter.h"
 #include "MOUnitMechanical.h"
+#include "UpdatableProcess.h"
 
 #include "Input/Bind.h"
 #include "Main/GameTimer.h"
@@ -17,6 +18,31 @@ CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
 
 REGISTER_SAVELOAD_CLASS( 0x31197AC0, CMOUnitHelicopter );
+
+class CHelicopterRotationProcess : public IClientUpdatableProcess
+{
+	OBJECT_NOCOPY_METHODS( CHelicopterRotationProcess );
+
+	ZDATA
+		CPtr<CMOUnitHelicopter> pHelicopter;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pHelicopter); return 0; }
+
+	CHelicopterRotationProcess() {}
+public:
+	CHelicopterRotationProcess( CMOUnitHelicopter *_pHelicopter ) : pHelicopter( _pHelicopter ) {}
+
+	bool Update( const NTimer::STime &time )
+	{
+		return IsValid( pHelicopter ) && pHelicopter->UpdateSmoothRotation( time );
+	}
+};
+
+REGISTER_SAVELOAD_CLASS( 0x31197AC1, CHelicopterRotationProcess );
+
+static const NTimer::STime GetHelicopterRotationSmoothTime()
+{
+	return (std::max)( NTimer::STime( 1 ), NTimer::STime( NGlobal::GetVar( "AI_SEGMENT_DURATION", 200 ).GetFloat() ) );
+}
 
 static const int GetAttachedGunID( const int nPlatform, const int nGun )
 {
@@ -66,6 +92,14 @@ bool CMOUnitHelicopter::Create( const int nUniqueID, const SAIBasicUpdate *pUpda
 	fPropSpeed = -1.0f;
 	bMove = false;
 	bDeadPlane = false;
+	bSmoothRotationActive = false;
+	bSmoothRotationProcessRegistered = false;
+	bSmoothRotationInitialized = true;
+	timeSmoothRotationStart = GameTimer()->GetGameTime();
+	timeSmoothRotationFinish = timeSmoothRotationStart;
+	CVec3 vPos, vScale;
+	GetPlacement( &vPos, &qSmoothRotationTarget, &vScale );
+	qSmoothRotationStart = qSmoothRotationTarget;
 	SetPropellersSpeed( 0.0f, eSeason );
 
 	if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID()) )
@@ -246,7 +280,22 @@ void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		visualPlacement.vPlacement.y += sinf( fPhase * 1.37f ) * pHeliStats->fStandingDeviationRadius;
 	}
 
+	const bool bSmoothRotation = visualPlacement.bNewFormat && IsAlive() && !bDeadPlane && bSmoothRotationInitialized;
+	const CQuat qTargetRotation = visualPlacement.rotation;
+	CQuat qStartRotation = qTargetRotation;
+	if ( bSmoothRotation )
+	{
+		CVec3 vPos, vScale;
+		GetPlacement( &vPos, &qStartRotation, &vScale );
+		visualPlacement.rotation = qStartRotation;
+	}
+
 	CMOUnit::AIUpdatePlacement( visualPlacement, pScene, pSoundScene, eSeason );
+	if ( bSmoothRotation )
+		StartSmoothRotation( qStartRotation, qTargetRotation );
+	else
+		bSmoothRotationActive = false;
+
 	SetPropellersSpeed( IsAlive() && !bDeadPlane ? 1.0f : 0.0f, eSeason );
 	if ( !smokeTrails.empty() )
 	{
@@ -258,6 +307,49 @@ void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		for ( std::vector< CObj<CSmokeTrailEffect> >::iterator it = smokeTrails.begin(); it != smokeTrails.end(); ++it )
 			(*it)->UpdatePlacement( vPos, qRot, currTime, IsVisible() );
 	}
+}
+
+void CMOUnitHelicopter::StartSmoothRotation( const CQuat &qStart, const CQuat &qTarget )
+{
+	qSmoothRotationStart = qStart;
+	qSmoothRotationTarget = qTarget;
+	timeSmoothRotationStart = GameTimer()->GetGameTime();
+	timeSmoothRotationFinish = timeSmoothRotationStart + GetHelicopterRotationSmoothTime();
+	// Pitch/roll effect deltas can be small, so keep smoothing active below a tighter no-op threshold.
+	bSmoothRotationActive = fabs( qSmoothRotationStart.Dot( qSmoothRotationTarget ) ) < 0.999999f;
+
+	if ( bSmoothRotationActive && !bSmoothRotationProcessRegistered )
+	{
+		bSmoothRotationProcessRegistered = true;
+		NUpdatableProcess::Register( new CHelicopterRotationProcess( this ) );
+	}
+}
+
+bool CMOUnitHelicopter::UpdateSmoothRotation( const NTimer::STime &time )
+{
+	if ( !bSmoothRotationActive || !IsAlive() || bDeadPlane )
+	{
+		bSmoothRotationProcessRegistered = false;
+		return false;
+	}
+
+	const float fDuration = float( (std::max)( NTimer::STime( 1 ), timeSmoothRotationFinish - timeSmoothRotationStart ) );
+	const float fCoeff = Clamp( float( time - timeSmoothRotationStart ) / fDuration, 0.0f, 1.0f );
+	CVec3 vPos, vScale;
+	CQuat qRot;
+	GetPlacement( &vPos, &qRot, &vScale );
+	qRot.Interpolate( qSmoothRotationStart, qSmoothRotationTarget, fCoeff );
+	SetPlacement( vPos, qRot );
+	Scene()->MoveObject( GetID(), vPos, qRot, vScale );
+
+	if ( fCoeff >= 1.0f )
+	{
+		bSmoothRotationActive = false;
+		bSmoothRotationProcessRegistered = false;
+		return false;
+	}
+
+	return true;
 }
 
 IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
@@ -276,6 +368,8 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPG
 void CMOUnitHelicopter::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	bDeadPlane = true;
+	bSmoothRotationActive = false;
+	bSmoothRotationProcessRegistered = false;
 	DetachSound( EAST_MOVEMENT );
 	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
@@ -594,6 +688,8 @@ CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate
 
 void CMOUnitHelicopter::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
+	bSmoothRotationActive = false;
+	bSmoothRotationProcessRegistered = false;
 	DetachSound( EAST_MOVEMENT );
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 }

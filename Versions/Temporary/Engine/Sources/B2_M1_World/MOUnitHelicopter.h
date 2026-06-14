@@ -38,12 +38,20 @@ class CMOUnitHelicopter :public CMOUnit
 		bool bMove;
 		bool bDeadPlane;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
+		CQuat qSmoothRotationStart;
+		CQuat qSmoothRotationTarget;
+		NTimer::STime timeSmoothRotationStart;
+		NTimer::STime timeSmoothRotationFinish;
+		bool bSmoothRotationActive;
+		bool bSmoothRotationProcessRegistered;
+		bool bSmoothRotationInitialized;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); f.Add(2,&pStats); f.Add(3,&pHelicopterStats); f.Add(4,&vPassangers); f.Add(5,&vPropellers); f.Add(6,&fPropSpeed); f.Add(7,&smokeTrails); f.Add(8,&bMove); f.Add(9,&bDeadPlane); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); f.Add(2,&pStats); f.Add(3,&pHelicopterStats); f.Add(4,&vPassangers); f.Add(5,&vPropellers); f.Add(6,&fPropSpeed); f.Add(7,&smokeTrails); f.Add(8,&bMove); f.Add(9,&bDeadPlane); f.Add(10,&qSmoothRotationStart); f.Add(11,&qSmoothRotationTarget); f.Add(12,&timeSmoothRotationStart); f.Add(13,&timeSmoothRotationFinish); f.Add(14,&bSmoothRotationActive); f.Add(15,&bSmoothRotationProcessRegistered); f.Add(16,&bSmoothRotationInitialized); return 0; }
 private:
 	const int CMOUnitHelicopter::GetMechPassangersCount() const;
 	bool IsInside( const int nID );
 	void SetPropellersSpeed( const float fPropSpeed, NDb::ESeason eSeason );
+	void StartSmoothRotation( const CQuat &qStart, const CQuat &qTarget );
 	/*
 	void SetPropeller( const int nAxis, const EPropellerState eState, const NDb::ESeason eSeason );
 	void SetRotationSpeed( const int nAxis, const float fSpeed );
@@ -56,6 +64,7 @@ protected:
 
 public:
 	bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
+	bool UpdateSmoothRotation( const NTimer::STime &time );
 
 //passangers functions
 	bool Load( struct IMOUnit *pMO, bool bEnter );

@@ -37,6 +37,17 @@ namespace
 		const float fDelta = Clamp( fTarget - fCurrent, -fMaxStep, fMaxStep );
 		return fCurrent + fDelta;
 	}
+
+	WORD InterpolateDirection( const WORD wStart, const WORD wFinish, const float fCoeff )
+	{
+		int nDelta = int( wFinish ) - int( wStart );
+		if ( nDelta > 32767 )
+			nDelta -= 65536;
+		else if ( nDelta < -32768 )
+			nDelta += 65536;
+
+		return WORD( int( wStart ) + Float2Int( float( nDelta ) * fCoeff ) );
+	}
 }
 
 CHelicopter::CHelicopter()
@@ -56,7 +67,13 @@ CHelicopter::CHelicopter()
 	fDeathSelfRotation( 0.0f ),
 	fMovementVisualAngle( 0.0f ),
 	fSideVisualAngle( 0.0f ),
-	timeDeathStarted( 0 )
+	fVisualStartMovementAngle( 0.0f ),
+	fVisualFinishMovementAngle( 0.0f ),
+	fVisualStartSideAngle( 0.0f ),
+	fVisualFinishSideAngle( 0.0f ),
+	timeDeathStarted( 0 ),
+	wVisualStartDirection( 0 ),
+	wVisualFinishDirection( 0 )
 {
 }
 
@@ -80,6 +97,12 @@ void CHelicopter::Init( const CVec2 &center, const int z, const SUnitBaseRPGStat
 	vNormale = vHeliNextNormal;
 
 	SetSpeed( 0.0f );
+	wVisualStartDirection = dir;
+	wVisualFinishDirection = dir;
+	fVisualStartMovementAngle = 0.0f;
+	fVisualFinishMovementAngle = 0.0f;
+	fVisualStartSideAngle = 0.0f;
+	fVisualFinishSideAngle = 0.0f;
 }
 
 IStatesFactory* CHelicopter::GetStatesFactory() const
@@ -164,6 +187,20 @@ void CHelicopter::SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &
 	vHeliNextNormal = _vNormal;
 	SetCenter( _vPos );
 	SetSpeed( fabs( CVec2( _vSpeed.x, _vSpeed.y ) ) );
+	wVisualStartDirection = GetFrontDirection();
+	wVisualFinishDirection = GetFrontDirection();
+	fVisualStartMovementAngle = fMovementVisualAngle;
+	fVisualFinishMovementAngle = fMovementVisualAngle;
+	fVisualStartSideAngle = fSideVisualAngle;
+	fVisualFinishSideAngle = fSideVisualAngle;
+}
+
+void CHelicopter::UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )
+{
+	// Helicopter placement builds its own pitch/roll quaternion, so keep yaw interpolation data here.
+	wVisualStartDirection = bNeedUpdate ? wOldDirection : GetFrontDirection();
+	wVisualFinishDirection = GetFrontDirection();
+	CCommonUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
 }
 
 void CHelicopter::Segment()
@@ -212,7 +249,7 @@ void CHelicopter::SecondSegment( const NTimer::STime timeDiff )
 		const float fDist = fabs( vToTarget );
 		const float fMaxMove = GetMaxPossibleSpeed() * float( timeDiff );
 
-		if ( fDist <= (std::max)( fMaxMove, 0.001f ) )
+		if ( fDist <= 0.001f )
 		{
 			vHeliNextPos = CVec3( vMoveTarget, GetFlightZ( vMoveTarget ) );
 			bMoveTargetSet = false;
@@ -221,10 +258,25 @@ void CHelicopter::SecondSegment( const NTimer::STime timeDiff )
 		{
 			CVec2 vDir( vToTarget );
 			Normalize( &vDir );
-			const CVec2 vNewPoint( vOldPoint + vDir * fMaxMove );
-			vHeliNextPos = CVec3( vNewPoint, GetFlightZ( vNewPoint ) );
-			vHeliNextSpeed = ( vHeliNextPos - GetCenter() ) / float( timeDiff );
-			TurnToDirection( GetDirectionByVector( vDir ), false, true );
+			// Do not translate until deterministic body rotation has caught up to the requested course.
+			if ( TurnToDirection( GetDirectionByVector( vDir ), false, true ) )
+			{
+				if ( fDist <= (std::max)( fMaxMove, 0.001f ) )
+				{
+					vHeliNextPos = CVec3( vMoveTarget, GetFlightZ( vMoveTarget ) );
+					bMoveTargetSet = false;
+				}
+				else
+				{
+					const CVec2 vNewPoint( vOldPoint + vDir * fMaxMove );
+					vHeliNextPos = CVec3( vNewPoint, GetFlightZ( vNewPoint ) );
+					vHeliNextSpeed = ( vHeliNextPos - GetCenter() ) / float( timeDiff );
+				}
+			}
+			else
+			{
+				vHeliNextPos = CVec3( vOldPoint, GetFlightZ( vOldPoint ) );
+			}
 		}
 	}
 	else
@@ -235,25 +287,42 @@ void CHelicopter::SecondSegment( const NTimer::STime timeDiff )
 	if ( const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats() )
 	{
 		const float fSeconds = float( timeDiff ) / 1000.0f;
-		const float fTargetMoveAngle = bMoveTargetSet && !bAttackTilt ? pHeliStats->fMovmentAngleDownRadians : 0.0f;
+		const bool bTranslating = fabs( CVec2( vHeliNextSpeed.x, vHeliNextSpeed.y ) ) > 0.001f;
+		const float fTargetMoveAngle = bTranslating && !bAttackTilt ? pHeliStats->fMovmentAngleDownRadians : 0.0f;
 		float fTargetSideAngle = 0.0f;
-		if ( bMoveTargetSet || IsTurning() )
+		if ( !bTranslating && ( bMoveTargetSet || bVisualAimPointSet || IsTurning() ) )
 		{
 			const CVec2 vAimPoint( bVisualAimPointSet ? CVec2( vVisualAimPoint.x, vVisualAimPoint.y ) : vMoveTarget );
-			const WORD wDesired = GetDirectionByVector( vAimPoint - GetCenterPlain() );
-			const WORD wClockWise = wDesired - GetFrontDirection();
-			const float fSign = wClockWise < 32768 ? 1.0f : -1.0f;
-			fTargetSideAngle = fSign * pHeliStats->fSideRotatingAngleRad;
+			const CVec2 vAimDir( vAimPoint - GetCenterPlain() );
+			if ( fabs2( vAimDir ) > 0.0001f )
+			{
+				const WORD wDesired = GetDirectionByVector( vAimDir );
+				if ( DirsDifference( wDesired, GetFrontDirection() ) > 64 )
+				{
+					const WORD wClockWise = wDesired - GetFrontDirection();
+					// The visual side tilt follows the model basis, which is opposite to the yaw turn sign.
+					const float fSign = wClockWise < 32768 ? -1.0f : 1.0f;
+					fTargetSideAngle = fSign * pHeliStats->fSideRotatingAngleRad;
+				}
+			}
 		}
 
-		// Visual tilt changes are smoothed in AI segments so replay/network state stays deterministic.
+		// Store visual-only tilt endpoints so the renderer can interpolate between deterministic AI segments.
+		fVisualStartMovementAngle = fMovementVisualAngle;
+		fVisualStartSideAngle = fSideVisualAngle;
 		fMovementVisualAngle = ApproachAngle( fMovementVisualAngle, fTargetMoveAngle, pHeliStats->fMovementAngleDownSpeedRPS * fSeconds );
 		fSideVisualAngle = ApproachAngle( fSideVisualAngle, fTargetSideAngle, pHeliStats->fSideRotatingAngleRPS * fSeconds );
+		fVisualFinishMovementAngle = fMovementVisualAngle;
+		fVisualFinishSideAngle = fSideVisualAngle;
 	}
 	else
 	{
 		fMovementVisualAngle = 0.0f;
 		fSideVisualAngle = 0.0f;
+		fVisualStartMovementAngle = 0.0f;
+		fVisualFinishMovementAngle = 0.0f;
+		fVisualStartSideAngle = 0.0f;
+		fVisualFinishSideAngle = 0.0f;
 	}
 
 	SetCenter( vHeliNextPos );
@@ -267,13 +336,18 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	pPlacement->nObjUniqueID = GetUniqueId();
 
 	const float fCoeff = Clamp( float( timeDiff ) / float( SConsts::AI_SEGMENT_DURATION ), 0.0f, 1.0f );
+	const float fVisualCoeff = 1.0f - fCoeff;
+	const WORD wVisualDirection = InterpolateDirection( wVisualStartDirection, wVisualFinishDirection, fVisualCoeff );
+	const CVec2 vVisualFrontDirection( GetVectorByDirection( wVisualDirection ) );
+	const float fVisualMovementAngle = fVisualStartMovementAngle + ( fVisualFinishMovementAngle - fVisualStartMovementAngle ) * fVisualCoeff;
+	const float fVisualSideAngle = fVisualStartSideAngle + ( fVisualFinishSideAngle - fVisualStartSideAngle ) * fVisualCoeff;
 	const CVec3 vInterpolatedSpeed( GetSpeedNext() - fCoeff * ( GetSpeedNext() - vSpeed ) );
 	const CVec3 vInterpolatedNormal( GetNormalNext() - fCoeff * ( GetNormalNext() - vNormale ) );
 	const CVec3 vInterpolatedPos( GetPosNext() - fCoeff * ( GetPosNext() - vPos ) );
 
 	CVec3 vVisualSpeed( vInterpolatedSpeed );
 	if ( fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) < 0.001f )
-		vVisualSpeed = CVec3( GetFrontDirectionVector(), 0.0f );
+		vVisualSpeed = CVec3( vVisualFrontDirection, 0.0f );
 
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( bDeadSpiralStarted )
@@ -286,22 +360,23 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		const float fPitch = Clamp( atan2f( (std::max)( 0.0f, GetCenter().z - vVisualAimPoint.z ), fHorizontalDist ), 0.0f, 80.0f / 180.0f * FP_PI );
 		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * tanf( fPitch );
 	}
-	else if ( pHeliStats && fabs( fMovementVisualAngle ) > 0.001f )
+	else if ( pHeliStats && fabs( fVisualMovementAngle ) > 0.001f )
 	{
-		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * tanf( fMovementVisualAngle );
+		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * tanf( fVisualMovementAngle );
 	}
 
 	CVec3 vVisualNormal( fabs( vInterpolatedNormal ) > 0.001f ? vInterpolatedNormal : V3_AXIS_Z );
-	if ( pHeliStats && !bDeadSpiralStarted && fabs( fSideVisualAngle ) > 0.001f )
+	if ( pHeliStats && !bDeadSpiralStarted && fabs( fVisualSideAngle ) > 0.001f )
 	{
-		const CVec2 vSide( GetFrontDirectionVector().y, -GetFrontDirectionVector().x );
-		vVisualNormal += CVec3( vSide * tanf( fSideVisualAngle ), 0.0f );
+		const CVec2 vSide( vVisualFrontDirection.y, -vVisualFrontDirection.x );
+		vVisualNormal += CVec3( vSide * tanf( fVisualSideAngle ), 0.0f );
 	}
 
 	Normalize( &vVisualNormal );
 	MakeQuatBySpeedAndNormale( &pPlacement->rotation, vVisualSpeed, vVisualNormal );
 	if ( bDeadSpiralStarted )
 		pPlacement->rotation *= CQuat( fDeathSelfRotation, V3_AXIS_Y );
+	pPlacement->dir = wVisualDirection;
 	pPlacement->vPlacement = vInterpolatedPos;
 	pPlacement->fSpeed = GetSpeed();
 	pPlacement->fWaterCoeff = 0.0f;
@@ -342,6 +417,10 @@ void CHelicopter::StartDeathSpiral()
 	fDeathSelfRotation = 0.0f;
 	fMovementVisualAngle = 0.0f;
 	fSideVisualAngle = 0.0f;
+	fVisualStartMovementAngle = 0.0f;
+	fVisualFinishMovementAngle = 0.0f;
+	fVisualStartSideAngle = 0.0f;
+	fVisualFinishSideAngle = 0.0f;
 	timeDeathStarted = curTime;
 }
 
