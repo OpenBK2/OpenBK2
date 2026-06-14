@@ -258,6 +258,8 @@ void CCumulativeExpl::Explode()
 	std::sort(units.begin(), units.end(), [](CAIUnit* u1, CAIUnit* u2) {
 		return u1->GetUniqueId() > u2->GetUniqueId();
 	});
+	// Clear out the potential duplicates
+	units.erase(std::unique(units.begin(), units.end()), units.end());
 
 	for ( size_t i = 0; i < units.size(); i++ )
 	{
@@ -304,6 +306,8 @@ void CCumulativeExpl::Explode()
 		std::sort(hitObjects.begin(), hitObjects.end(), [](CExistingObject* o1, CExistingObject* o2) {
 			return o1->GetUniqueId() > o2->GetUniqueId();
 		});
+		// Clear out the potential duplicates
+		hitObjects.erase(std::unique(hitObjects.begin(), hitObjects.end()), hitObjects.end());
 
 		for ( std::vector<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
@@ -380,6 +384,8 @@ void CBurstExpl::Explode()
 	std::sort(units.begin(), units.end(), [](CAIUnit* u1, CAIUnit* u2) {
 		return u1->GetUniqueId() > u2->GetUniqueId();
 	});
+	// Clear out the potential duplicates
+	units.erase(std::unique(units.begin(), units.end()), units.end());
 
 	for ( size_t i = 0; i < units.size(); i++ )
 	{
@@ -424,6 +430,8 @@ void CBurstExpl::Explode()
 		std::sort(hitObjects.begin(), hitObjects.end(), [](CExistingObject* o1, CExistingObject* o2) {
 			return o1->GetUniqueId() > o2->GetUniqueId();
 		});
+		// Clear out the potential duplicates
+		hitObjects.erase(std::unique(hitObjects.begin(), hitObjects.end()), hitObjects.end());
 
 		for ( std::vector<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
