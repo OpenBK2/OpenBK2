@@ -126,6 +126,24 @@ const int CUnits::GetVisIndex( CAIUnit *pUnit )
 
 void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bWithLeveledCelles )
 {
+	const int nUnitUniqueID = pUnit->GetUniqueId();
+	CIDsRemap::const_iterator pos = idsRemap.find( nUnitUniqueID );
+	if ( pos == idsRemap.end() )
+	{
+		NI_ASSERT( false, "Unit added to cell without being added to units first" );
+		return;
+	}
+
+	const int nUnitID = pos->second;
+	const int nVisIndex = pUnit->GetNVisIndexInUnits();
+
+	if ( IsUnitInCell( nUnitID ) )
+	{
+		// Re-adding without removing first leaves a stale unit entry in unitsInCells.
+		// That stale entry can later produce duplicate collision/explosion candidates.
+		DelUnitFromCell( pUnit, bWithLeveledCelles );
+	}
+
 	// если юнит единственный в свой ячейке, записать ячейку в список
 	if ( ++nUnitsCell[cell.y][cell.x] == 1 )
 		nCell[cell.y][cell.x] = cellsIds.Get();
@@ -138,10 +156,6 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 		unitsInCells[0].IncreaseListsNum( newId * 1.5 );
 		unitsInCells[1].IncreaseListsNum( newId * 1.5 );
 	}
-
-	const int nUnitUniqueID = pUnit->GetUniqueId();
-	const int nUnitID = idsRemap[nUnitUniqueID];
-	const int nVisIndex = pUnit->GetNVisIndexInUnits();
 
 //	NI_ASSERT( !IsUnitInCell( nUnitID ), "Unit is in cell, trying to add to another cell" );
 
@@ -526,5 +540,4 @@ void CUnits::ApplyModifierToAll( const NDb::SUnitStatsModifier *pBonus, const bo
 		pUnit->WarFogChanged();
 	}
 }
-
 
