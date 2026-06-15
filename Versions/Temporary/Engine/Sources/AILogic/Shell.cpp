@@ -46,6 +46,192 @@ extern CWeather theWeather;
 extern CDifficultyLevel theDifficultyLevel;
 extern SCheats theCheats;
 
+namespace NAsyncExplosionDebug
+{
+	enum { AREA_DAMAGE_TRACE_SIZE = 256 };
+
+	struct SAreaDamageContext
+	{
+		bool bValid;
+		const CExplosion *pExpl;
+		CAIUnit *pTarget;
+		int nRawIndex;
+		int nSortedIndex;
+		int nDuplicateCount;
+		int nRawCount;
+		int nUniqueCount;
+
+		SAreaDamageContext() : bValid( false ), pExpl( 0 ), pTarget( 0 ), nRawIndex( -1 ), nSortedIndex( -1 ),
+			nDuplicateCount( 0 ), nRawCount( 0 ), nUniqueCount( 0 ) { }
+	};
+
+	struct SAreaDamageRecord
+	{
+		unsigned int nSeq;
+		NTimer::STime nTime;
+		const char *szStage;
+
+		int nShooterUID;
+		int nShooterPlayer;
+		int nShellType;
+		int nTrajectory;
+		CVec3 vExpl;
+		float fRadius;
+		float fSmallRadius;
+
+		int nTargetUID;
+		int nTargetPlayer;
+		int nTargetParty;
+		CVec2 vTarget;
+		float fTargetZ;
+
+		int nRawIndex;
+		int nSortedIndex;
+		int nDuplicateCount;
+		int nRawCount;
+		int nUniqueCount;
+
+		int nArmorDir;
+		float fDist2;
+		float fZDiff;
+		bool bPreconditionsPassed;
+		bool bCoverCalled;
+		bool bSavedByCover;
+		bool bCircleHit;
+		bool bArmorPassed;
+		bool bDamageApplied;
+		unsigned __int64 nRngBefore;
+		unsigned __int64 nRngAfter;
+
+		SAreaDamageRecord() : nSeq( 0 ), nTime( 0 ), szStage( "" ), nShooterUID( 0 ), nShooterPlayer( -1 ),
+			nShellType( -1 ), nTrajectory( -1 ), vExpl( VNULL3 ), fRadius( 0 ), fSmallRadius( 0 ),
+			nTargetUID( 0 ), nTargetPlayer( -1 ), nTargetParty( -1 ), vTarget( VNULL2 ), fTargetZ( 0 ),
+			nRawIndex( -1 ), nSortedIndex( -1 ), nDuplicateCount( 0 ), nRawCount( 0 ), nUniqueCount( 0 ),
+			nArmorDir( 0 ), fDist2( 0 ), fZDiff( 0 ), bPreconditionsPassed( false ), bCoverCalled( false ),
+			bSavedByCover( false ), bCircleHit( false ), bArmorPassed( false ), bDamageApplied( false ),
+			nRngBefore( 0 ), nRngAfter( 0 ) { }
+	};
+
+	static SAreaDamageContext s_areaDamageContext;
+	static SAreaDamageRecord s_areaDamageRecords[AREA_DAMAGE_TRACE_SIZE];
+	static unsigned int s_nextAreaDamageSeq = 1;
+	static int s_nextAreaDamageRecord = 0;
+
+	unsigned __int64 GetRandomCallCounter()
+	{
+		return NRandom::GetRandomCallsCounter();
+	}
+
+	void SetAreaDamageCandidate( const CExplosion *pExpl, CAIUnit *pTarget, int nRawIndex, int nSortedIndex, int nDuplicateCount, int nRawCount, int nUniqueCount )
+	{
+		s_areaDamageContext.bValid = true;
+		s_areaDamageContext.pExpl = pExpl;
+		s_areaDamageContext.pTarget = pTarget;
+		s_areaDamageContext.nRawIndex = nRawIndex;
+		s_areaDamageContext.nSortedIndex = nSortedIndex;
+		s_areaDamageContext.nDuplicateCount = nDuplicateCount;
+		s_areaDamageContext.nRawCount = nRawCount;
+		s_areaDamageContext.nUniqueCount = nUniqueCount;
+	}
+
+	void ClearAreaDamageCandidate()
+	{
+		s_areaDamageContext = SAreaDamageContext();
+	}
+
+	void RecordAreaDamageTrace( const char *szStage, const CExplosion *pExpl, CAIUnit *pTarget, int nArmorDir, float fRadius, float fSmallRadius,
+		bool bPreconditionsPassed, bool bCoverCalled, bool bSavedByCover, bool bCircleHit, bool bArmorPassed, bool bDamageApplied,
+		float fDist2, float fZDiff, unsigned __int64 nRngBefore, unsigned __int64 nRngAfter )
+	{
+		SAreaDamageRecord &record = s_areaDamageRecords[s_nextAreaDamageRecord];
+		s_nextAreaDamageRecord = ( s_nextAreaDamageRecord + 1 ) % AREA_DAMAGE_TRACE_SIZE;
+
+		record = SAreaDamageRecord();
+		record.nSeq = s_nextAreaDamageSeq++;
+		record.nTime = curTime;
+		record.szStage = szStage ? szStage : "";
+		record.nArmorDir = nArmorDir;
+		record.fRadius = fRadius;
+		record.fSmallRadius = fSmallRadius;
+		record.bPreconditionsPassed = bPreconditionsPassed;
+		record.bCoverCalled = bCoverCalled;
+		record.bSavedByCover = bSavedByCover;
+		record.bCircleHit = bCircleHit;
+		record.bArmorPassed = bArmorPassed;
+		record.bDamageApplied = bDamageApplied;
+		record.fDist2 = fDist2;
+		record.fZDiff = fZDiff;
+		record.nRngBefore = nRngBefore;
+		record.nRngAfter = nRngAfter;
+
+		if ( pExpl )
+		{
+			CAIUnit *pShooter = pExpl->GetWhoFire();
+			if ( IsValidObj( pShooter ) )
+			{
+				record.nShooterUID = pShooter->GetUniqueId();
+				record.nShooterPlayer = pShooter->GetPlayer();
+			}
+			record.nShellType = pExpl->GetShellType();
+			record.nTrajectory = pExpl->GetTrajectoryType();
+			record.vExpl = pExpl->GetExplCoordinates();
+		}
+
+		if ( IsValidObj( pTarget ) )
+		{
+			record.nTargetUID = pTarget->GetUniqueId();
+			record.nTargetPlayer = pTarget->GetPlayer();
+			record.nTargetParty = pTarget->GetParty();
+			record.vTarget = pTarget->GetCenterPlain();
+			record.fTargetZ = pTarget->GetVisZ();
+		}
+
+		if ( s_areaDamageContext.bValid && s_areaDamageContext.pExpl == pExpl && s_areaDamageContext.pTarget == pTarget )
+		{
+			record.nRawIndex = s_areaDamageContext.nRawIndex;
+			record.nSortedIndex = s_areaDamageContext.nSortedIndex;
+			record.nDuplicateCount = s_areaDamageContext.nDuplicateCount;
+			record.nRawCount = s_areaDamageContext.nRawCount;
+			record.nUniqueCount = s_areaDamageContext.nUniqueCount;
+		}
+	}
+
+	void ResetAreaDamageTrace()
+	{
+		s_areaDamageContext = SAreaDamageContext();
+		for ( int i = 0; i < AREA_DAMAGE_TRACE_SIZE; ++i )
+			s_areaDamageRecords[i] = SAreaDamageRecord();
+		s_nextAreaDamageSeq = 1;
+		s_nextAreaDamageRecord = 0;
+	}
+
+	void DumpAreaDamageTrace( FILE* f )
+	{
+		if ( !f )
+			return;
+
+		fprintf( f, "Area damage trace (last %d records):\n", AREA_DAMAGE_TRACE_SIZE );
+		for ( int i = 0; i < AREA_DAMAGE_TRACE_SIZE; ++i )
+		{
+			const int nIndex = ( s_nextAreaDamageRecord + i ) % AREA_DAMAGE_TRACE_SIZE;
+			const SAreaDamageRecord &record = s_areaDamageRecords[nIndex];
+			if ( record.nSeq == 0 )
+				continue;
+
+			fprintf( f,
+				"\t#%u time=%d stage=%s shooterUID=%d shooterPlayer=%d shell=%d traj=%d expl=(%f,%f,%f) radius=(%f,%f) targetUID=%d targetPlayer=%d targetParty=%d target=(%f,%f,%f) raw=%d sorted=%d dup=%d counts=(%d,%d) armorDir=%d dist2=%f zDiff=%f pre=%d cover=%d saved=%d circle=%d armor=%d damage=%d rng=%I64u->%I64u\n",
+				record.nSeq, (int)record.nTime, record.szStage, record.nShooterUID, record.nShooterPlayer,
+				record.nShellType, record.nTrajectory, record.vExpl.x, record.vExpl.y, record.vExpl.z,
+				record.fRadius, record.fSmallRadius, record.nTargetUID, record.nTargetPlayer, record.nTargetParty,
+				record.vTarget.x, record.vTarget.y, record.fTargetZ, record.nRawIndex, record.nSortedIndex,
+				record.nDuplicateCount, record.nRawCount, record.nUniqueCount, record.nArmorDir, record.fDist2,
+				record.fZDiff, record.bPreconditionsPassed, record.bCoverCalled, record.bSavedByCover,
+				record.bCircleHit, record.bArmorPassed, record.bDamageApplied, record.nRngBefore, record.nRngAfter );
+		}
+		fprintf( f, "\n" );
+	}
+}
+
 //*******************************************************************
 //*														CHitInfo															*
 //*******************************************************************
@@ -380,6 +566,7 @@ void CBurstExpl::Explode()
 		units.push_back(*iter);
 		iter.Iterate();
 	}
+	std::vector<CAIUnit*> rawUnits = units;
 	// sort ensures the deterministic iteration
 	std::sort(units.begin(), units.end(), [](CAIUnit* u1, CAIUnit* u2) {
 		return u1->GetUniqueId() > u2->GetUniqueId();
@@ -392,13 +579,27 @@ void CBurstExpl::Explode()
 		CAIUnit *pTarget = units[i];
 		if ( IsValidObj( pTarget ) )
 		{
+			int nRawIndex = -1;
+			int nDuplicateCount = 0;
+			for ( int nRaw = 0; nRaw < (int)rawUnits.size(); ++nRaw )
+			{
+				if ( rawUnits[nRaw] == pTarget )
+				{
+					if ( nRawIndex == -1 )
+						nRawIndex = nRaw;
+					++nDuplicateCount;
+				}
+			}
+
 			if ( pTarget != pUnit &&
 					 ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || 
 					 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ) )
 				pTarget->Grazed( pUnit );
 
 			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений
+			NAsyncExplosionDebug::SetAreaDamageCandidate( this, pTarget, nRawIndex, (int)i, nDuplicateCount, (int)rawUnits.size(), (int)units.size() );
 			const bool bExplResult = pTarget->ProcessBurstExpl( this, nArmorDir, fRadius, fSmallRadius );
+			NAsyncExplosionDebug::ClearAreaDamageCandidate();
 			bHit = bHit || bExplResult;
 
 			if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || 
@@ -714,6 +915,7 @@ void CShellsStore::Clear()
 	visShells.clear();
 	nNextInvisShellOrder = 0;
 	nNextVisShellOrder = 0;
+	NAsyncExplosionDebug::ResetAreaDamageTrace();
 }
 
 void CShellsStore::UpdateCheckSum( uLong *pCheckSum )

@@ -507,6 +507,131 @@ void CUnits::CheckUnitCell()
 	*/
 }
 
+void CUnits::WriteSpatialCellDebugInfo( FILE* f )
+{
+	if ( !f )
+		return;
+
+	std::unordered_map<int, int> unitListHits;
+	int nOccupiedCells = 0;
+	int nListEntries = 0;
+	int nBadListEntries = 0;
+	int nCountMismatches = 0;
+
+	fprintf( f, "Spatial cell list anomalies:\n" );
+	for ( int y = 0; y < nBigCellsSizeY; ++y )
+	{
+		for ( int x = 0; x < nBigCellsSizeX; ++x )
+		{
+			if ( nUnitsCell[y][x] == 0 )
+				continue;
+
+			++nOccupiedCells;
+			int nRealCellEntries = 0;
+			const SVector cell( x, y );
+
+			for ( int nVis = 0; nVis < 2; ++nVis )
+			{
+				for ( int nParty = 0; nParty < 3; ++nParty )
+				{
+					for ( int nInfantry = 0; nInfantry < 2; ++nInfantry )
+					{
+						const int nListID = nCell[y][x] * 2 * 3 + 2 * nParty + nInfantry + 1;
+						for ( int nIter = unitsInCells[nVis].begin( nListID ); nIter != unitsInCells[nVis].end(); nIter = unitsInCells[nVis].GetNext( nIter ) )
+						{
+							++nRealCellEntries;
+							++nListEntries;
+
+							const int nUnitID = unitsInCells[nVis].GetEl( nIter ).nValue;
+							++unitListHits[nUnitID];
+
+							CAIUnit *pCellUnit = 0;
+							bool bBadEntry = false;
+							bool bWrongTrackedPos = false;
+							bool bWrongActualCell = false;
+							bool bSolidUnitInCell = false;
+							int nUID = 0;
+							int nPlayer = -1;
+							SVector actualCell( 0, 0 );
+
+							if ( nUnitID <= 0 || nUnitID >= (int)posUnitInCell.size() )
+								bBadEntry = true;
+							else
+							{
+								pCellUnit = (*this)[nUnitID];
+								if ( !pCellUnit )
+									bBadEntry = true;
+								else
+								{
+									nUID = pCellUnit->GetUniqueId();
+									nPlayer = pCellUnit->GetPlayer();
+									actualCell = AICellsTiles::GetBigCell( pCellUnit->GetCenterPlain() );
+									bWrongActualCell = !( actualCell == cell );
+									bSolidUnitInCell = pCellUnit->IsInSolidPlace();
+									bWrongTrackedPos = posUnitInCell[nUnitID].nCellID != nListID || posUnitInCell[nUnitID].nUnitPos != nIter;
+								}
+							}
+
+							if ( bBadEntry || bWrongTrackedPos || bWrongActualCell || bSolidUnitInCell )
+							{
+								++nBadListEntries;
+								fprintf( f, "\tCell(%d,%d) vis=%d party=%d infantry=%d list=%d iter=%d unitID=%d uid=%d player=%d actualCell=(%d,%d) bad=%d wrongTracked=%d wrongActualCell=%d solid=%d\n",
+									x, y, nVis, nParty, nInfantry, nListID, nIter, nUnitID, nUID, nPlayer,
+									actualCell.x, actualCell.y, bBadEntry, bWrongTrackedPos, bWrongActualCell, bSolidUnitInCell );
+							}
+						}
+					}
+				}
+			}
+
+			if ( nRealCellEntries != nUnitsCell[y][x] )
+			{
+				++nCountMismatches;
+				fprintf( f, "\tCell(%d,%d) count mismatch: nUnitsCell=%d realListEntries=%d cellID=%d\n",
+					x, y, (int)nUnitsCell[y][x], nRealCellEntries, (int)nCell[y][x] );
+			}
+		}
+	}
+
+	fprintf( f, "\tSummary: occupiedCells=%d listEntries=%d badEntries=%d countMismatches=%d\n",
+		nOccupiedCells, nListEntries, nBadListEntries, nCountMismatches );
+	fprintf( f, "\n" );
+
+	fprintf( f, "Spatial cell membership [UID, UnitID, Player, Party, ActualCell, TrackedCell, CellID, UnitPos, VisIndex, InSet, ListHits]:\n" );
+	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
+	{
+		CAIUnit *pUnit = *iter;
+		if ( !pUnit )
+			continue;
+
+		const int nUID = pUnit->GetUniqueId();
+		CIDsRemap::const_iterator pos = idsRemap.find( nUID );
+		const int nUnitID = pos != idsRemap.end() ? pos->second : 0;
+		const SVector actualCell = AICellsTiles::GetBigCell( pUnit->GetCenterPlain() );
+		const int nVisIndex = pUnit->GetNVisIndexInUnits();
+
+		SVector trackedCell( 0, 0 );
+		int nCellID = 0;
+		int nUnitPos = 0;
+		bool bInCell = false;
+		if ( nUnitID > 0 && nUnitID < (int)posUnitInCell.size() )
+		{
+			bInCell = IsUnitInCell( nUnitID );
+			trackedCell = posUnitInCell[nUnitID].cell;
+			nCellID = posUnitInCell[nUnitID].nCellID;
+			nUnitPos = posUnitInCell[nUnitID].nUnitPos;
+		}
+
+		const int nInSet = unitsInCellsSet.find( nUnitID ) != unitsInCellsSet.end();
+		const int nListHits = unitListHits[nUnitID];
+		fprintf( f, "\tUID=%d UnitID=%d Player=%d Party=%d actual=(%d,%d) tracked=(%d,%d) cellID=%d unitPos=%d vis=%d inSet=%d listHits=%d inSolid=%d inCell=%d\n",
+			nUID, nUnitID, (int)pUnit->GetPlayer(), (int)pUnit->GetParty(),
+			actualCell.x, actualCell.y, trackedCell.x, trackedCell.y, nCellID, nUnitPos, nVisIndex,
+			nInSet, nListHits, pUnit->IsInSolidPlace(), bInCell );
+	}
+	fprintf( f, "\n" );
+}
+
 void CUnits::UpdateUnitVis4Enemy( CAIUnit *pUnit )
 {
 	const int nVisIndex = GetVisIndex( pUnit );

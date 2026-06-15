@@ -33,6 +33,8 @@ namespace NRandom
 	IRandomSeed *CreateRandomSeedCopy();
 	// copy compact debug info for ASYNC diagnostics
 	void GetDebugState( SDebugState *pState );
+	// cheap counter-only accessor for hot-path diagnostics
+	unsigned __int64 GetRandomCallsCounter();
 	// get random value
 	UINT Random()
 	{
@@ -79,6 +81,11 @@ namespace NRandom
 		pState->randrslChecksum = CalcDebugChecksum( rnd.randrsl, RANDSIZ );
 		pState->randmemChecksum = CalcDebugChecksum( rnd.randmem, RANDSIZ );
 		pState->randomCalls = nRandomCallsTotal;
+	}
+
+	unsigned __int64 GetRandomCallsCounter()
+	{
+		return nRandomCallsTotal;
 	}
 
 	std::vector<RngCall> Calls;

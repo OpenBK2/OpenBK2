@@ -133,6 +133,7 @@ public:
 	// for debug
 	void CheckCorrectness( const SVector &tile );
 	void CheckUnitCell();
+	void WriteSpatialCellDebugInfo( FILE* f );
 	
 	friend class CIter<CCircleIter>;
 	friend class CIter<CRectIter>;

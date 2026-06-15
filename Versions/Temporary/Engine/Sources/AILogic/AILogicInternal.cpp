@@ -1227,8 +1227,12 @@ void CAILogic::WriteDetailedChecksumInfo()
 	}
 	fprintf(f, "\n");
 
+	units.WriteSpatialCellDebugInfo(f);
+
 	// checksums for shells, theGroupLogic and current time (curTime) too!
 	theShellsStore.UpdateDebugChecksums(f);
+
+	NAsyncExplosionDebug::DumpAreaDamageTrace(f);
 
 	theGroupLogic.UpdateDebugChecksums(f);
 
