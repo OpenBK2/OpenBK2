@@ -197,10 +197,10 @@ void CHelicopter::SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &
 
 void CHelicopter::UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )
 {
-	// Helicopter placement builds its own pitch/roll quaternion, so keep yaw interpolation data here.
+	// Helicopter placement builds its own visual quaternion, but AI cells/profiles still must be updated.
 	wVisualStartDirection = bNeedUpdate ? wOldDirection : GetFrontDirection();
 	wVisualFinishDirection = GetFrontDirection();
-	CCommonUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
+	CAIUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
 }
 
 void CHelicopter::Segment()
