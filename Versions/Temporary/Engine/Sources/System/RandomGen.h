@@ -46,6 +46,8 @@ namespace NRandom
 	SYSTEM_EXPORT IRandomSeed *CreateRandomSeedCopy();
 	// copy compact debug info for ASYNC diagnostics without consuming RNG values
 	SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
+	// cheap counter-only accessor for hot-path ASYNC diagnostics
+	SYSTEM_EXPORT unsigned __int64 GetRandomCallsCounter();
 	// get random value
 	SYSTEM_EXPORT UINT Random();
 	// random w/o checks

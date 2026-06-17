@@ -240,6 +240,18 @@ public:
 	void AddHitToSend( CHitInfo *pHit );
 };
 
+namespace NAsyncExplosionDebug
+{
+	unsigned __int64 GetRandomCallCounter();
+	void SetAreaDamageCandidate( const CExplosion *pExpl, CAIUnit *pTarget, int nRawIndex, int nSortedIndex, int nDuplicateCount, int nRawCount, int nUniqueCount );
+	void ClearAreaDamageCandidate();
+	void RecordAreaDamageTrace( const char *szStage, const CExplosion *pExpl, CAIUnit *pTarget, int nArmorDir, float fRadius, float fSmallRadius,
+		bool bPreconditionsPassed, bool bCoverCalled, bool bSavedByCover, bool bCircleHit, bool bArmorPassed, bool bDamageApplied,
+		float fDist2, float fZDiff, unsigned __int64 nRngBefore, unsigned __int64 nRngAfter );
+	void ResetAreaDamageTrace();
+	void DumpAreaDamageTrace( FILE* f );
+}
+
 class CBurstExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CBurstExpl );

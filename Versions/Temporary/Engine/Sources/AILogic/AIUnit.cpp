@@ -232,22 +232,51 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	const CVec3 vExplCoord3D( pExpl->GetExplCoordinates() );
+	const CVec2 vExplCoord2D( vExplCoord3D.x, vExplCoord3D.y );
+	const CVec2 vUnitCenter( GetCenterPlain() );
+	const float fDist2 = fabs2( vUnitCenter - vExplCoord2D );
+	const float fZDiff = fabs( GetVisZ() - vExplCoord3D.z );
+	const unsigned __int64 nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
 
-	if ( !IsInSolidPlace() && fabs( GetVisZ() - vExplCoord3D.z ) < 2.0f * SConsts::TILE_SIZE && !IsSavedByCover() )
+	bool bPreconditionsPassed = false;
+	bool bCoverCalled = false;
+	bool bSavedByCover = false;
+	bool bCircleHit = false;
+	bool bArmorPassed = false;
+	bool bDamageApplied = false;
+
+	if ( !IsInSolidPlace() && fZDiff < 2.0f * SConsts::TILE_SIZE )
 	{
-		SRect unitRect = GetUnitRect();
-		if ( nArmorDir != 1 )
-			unitRect.Compress( GetRemissiveCoeff() );
+		bPreconditionsPassed = true;
+		bCoverCalled = true;
+		bSavedByCover = IsSavedByCover();
 
-		if ( unitRect.IsIntersectCircle( CVec2(vExplCoord3D.x, vExplCoord3D.y ), fSmallRadius ) && 
-				GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <= SConsts::ARMOR_FOR_AREA_DAMAGE )
+		if ( !bSavedByCover )
 		{
-			TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF, &pExpl->GetShellStats(), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
-			return true;
+			SRect unitRect = GetUnitRect();
+			if ( nArmorDir != 1 )
+				unitRect.Compress( GetRemissiveCoeff() );
+
+			bCircleHit = unitRect.IsIntersectCircle( vExplCoord2D, fSmallRadius );
+			if ( bCircleHit )
+			{
+				bArmorPassed = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <= SConsts::ARMOR_FOR_AREA_DAMAGE;
+				if ( bArmorPassed )
+				{
+					TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF, &pExpl->GetShellStats(), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
+					bDamageApplied = true;
+				}
+			}
 		}
 	}
 
-	return false;
+	const unsigned __int64 nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
+	// Keep the last area-damage decisions in the async dump so candidate/order/RNG drift can be compared across clients.
+	NAsyncExplosionDebug::RecordAreaDamageTrace( "unit_area", pExpl, this, nArmorDir, fRadius, fSmallRadius,
+		bPreconditionsPassed, bCoverCalled, bSavedByCover, bCircleHit, bArmorPassed, bDamageApplied,
+		fDist2, fZDiff, nRngBefore, nRngAfter );
+
+	return bDamageApplied;
 }
 
 bool CAIUnit::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )

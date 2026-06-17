@@ -1136,17 +1136,39 @@ bool CSoldier::IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeR
 bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	const CVec3 vExpl( pExpl->GetExplCoordinates() );
+	const CVec2 vExpl2D( vExpl.x, vExpl.y );
+	const CVec2 vUnitCenter( GetCenterPlain() );
+	const float fDist2 = fabs2( vUnitCenter - vExpl2D );
+	const float fZDiff = fabs( GetVisZ() - vExpl.z );
 
-	if ( !IsInBuilding() && !IsInSolidPlace() && fabs( GetVisZ() - vExpl.z ) <= GetStats()->vAABBHalfSize.y )
+	if ( !IsInBuilding() && !IsInSolidPlace() && fZDiff <= GetStats()->vAABBHalfSize.y )
 	{
 		if ( !CAIUnit::ProcessAreaDamage( pExpl, nArmorDir, fRadius, fSmallRadius ) )
 		{
-			if ( IsFree() && !IsLying() && fabs2( GetCenter() - pExpl->GetExplCoordinates() ) <= sqr( fRadius ) )
+			const bool bCanUseFallback = IsFree() && !IsLying();
+			const bool bCircleHit = bCanUseFallback && fabs2( GetCenter() - pExpl->GetExplCoordinates() ) <= sqr( fRadius );
+			const unsigned __int64 nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
+			bool bDamageApplied = false;
+			if ( bCircleHit )
 			{
 				TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF, &(pExpl->GetShellStats()), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
-				return true;
+				bDamageApplied = true;
 			}
+
+			const unsigned __int64 nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
+			// Soldier fallback damage is separate from CAIUnit::ProcessAreaDamage, so log it explicitly for async comparison.
+			NAsyncExplosionDebug::RecordAreaDamageTrace( "soldier_fallback", pExpl, this, nArmorDir, fRadius, fSmallRadius,
+				bCanUseFallback, false, false, bCircleHit, true, bDamageApplied, fDist2, fZDiff, nRngBefore, nRngAfter );
+
+			if ( bDamageApplied )
+				return true;
 		}
+	}
+	else
+	{
+		const unsigned __int64 nRngCounter = NAsyncExplosionDebug::GetRandomCallCounter();
+		NAsyncExplosionDebug::RecordAreaDamageTrace( "soldier_gate", pExpl, this, nArmorDir, fRadius, fSmallRadius,
+			false, false, false, false, false, false, fDist2, fZDiff, nRngCounter, nRngCounter );
 	}
 
 	return false;
