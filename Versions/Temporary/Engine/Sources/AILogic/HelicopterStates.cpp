@@ -237,6 +237,7 @@ CHelicopterAttackUnitState::CHelicopterAttackUnitState( CHelicopter *pUnit, CAIU
 
 void CHelicopterAttackUnitState::OnFinish()
 {
+	StopAllGuns();
 	damageUpdater.UnsetDamageFromEnemy( pTarget );
 	ApplyAirModifier( false );
 }
@@ -253,6 +254,20 @@ void CHelicopterAttackUnitState::ApplyAirModifier( const bool bApply )
 	bAirModifierApplied = bApply;
 }
 
+bool CHelicopterAttackUnitState::IsGunCompatible( CBasicGun *pCheckGun ) const
+{
+	if ( !pCheckGun || !IsValidObj( pTarget ) )
+		return false;
+
+	const NDb::SWeaponRPGStats::SShell &shell = pCheckGun->GetShell();
+	return
+		pCheckGun->GetNAmmo() > 0 &&
+		shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
+		shell.etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
+		( pTarget->IsAviation() || !pCheckGun->GetGun().bTargetAAOnly ) &&
+		( pCheckGun->CanBreakArmor( pTarget ) || pHelicopter->IsTargetingTrack() );
+}
+
 bool CHelicopterAttackUnitState::RefreshGun()
 {
 	if ( !IsValidObj( pTarget ) )
@@ -260,8 +275,9 @@ bool CHelicopterAttackUnitState::RefreshGun()
 
 	pHelicopter->ResetShootEstimator( pTarget, false, pHelicopter->GetForbiddenGuns() );
 	pGun = pHelicopter->GetBestShootEstimatedGun();
-	if ( pGun )
+	if ( IsGunCompatible( pGun ) )
 		return true;
+	pGun = 0;
 
 	// The normal estimator treats an aviation unit as locked, so a gun can be rejected
 	// merely because the helicopter has not yet moved into range or turned into its arc.
@@ -275,15 +291,9 @@ bool CHelicopterAttackUnitState::RefreshGun()
 	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
 	{
 		CBasicGun *pCandidate = pHelicopter->GetGun( i );
-		const NDb::SWeaponRPGStats::SShell &shell = pCandidate->GetShell();
 		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 ||
-			pCandidate->GetNAmmo() <= 0 ||
-			shell.eDamageType != NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH ||
-			( !pTarget->IsAviation() && pCandidate->GetGun().bTargetAAOnly ) ||
-			( !pCandidate->CanBreakArmor( pTarget ) && !pHelicopter->IsTargetingTrack() ) )
-		{
+			!IsGunCompatible( pCandidate ) )
 			continue;
-		}
 
 		// Keep this weapon selected while movement and body rotation make the shot possible.
 		pGun = pCandidate;
@@ -293,10 +303,41 @@ bool CHelicopterAttackUnitState::RefreshGun()
 	return false;
 }
 
+void CHelicopterAttackUnitState::StartAvailableGuns()
+{
+	const DWORD dwForbiddenGuns = pHelicopter->GetForbiddenGuns();
+	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
+	{
+		CBasicGun *pAvailableGun = pHelicopter->GetGun( i );
+		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 ||
+			!IsGunCompatible( pAvailableGun ) ||
+			pAvailableGun->IsFiring() ||
+			pAvailableGun->IsRelaxing() ||
+			!pAvailableGun->CanShootToUnitWOMove( pTarget ) )
+		{
+			continue;
+		}
+
+		// Fixed weapons wait for body alignment. Turret weapons may start now and rotate independently.
+		if ( pAvailableGun->IsOnTurret() || pAvailableGun->CanShootWOGunTurn( pTarget, 1 ) )
+			pAvailableGun->StartEnemyBurst( pTarget, false );
+	}
+}
+
+void CHelicopterAttackUnitState::StopAllGuns()
+{
+	if ( !pHelicopter )
+		return;
+
+	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
+		pHelicopter->GetGun( i )->StopFire();
+}
+
 void CHelicopterAttackUnitState::Segment()
 {
 	if ( ShouldLeaveMap() )
 	{
+		StopAllGuns();
 		ApplyAirModifier( false );
 		damageUpdater.UnsetDamageFromEnemy( pTarget );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE ), pHelicopter, false );
@@ -323,7 +364,7 @@ void CHelicopterAttackUnitState::Segment()
 	if ( bSwarmAttack )
 		pHelicopter->AnalyzeTargetScan( pTarget, damageUpdater.IsDamageUpdated(), false );
 
-	if ( ( !pGun || !pGun->CanShootToUnitWOMove( pTarget ) ) && !RefreshGun() )
+	if ( ( !IsGunCompatible( pGun ) || !pGun->CanShootToUnitWOMove( pTarget ) ) && !RefreshGun() )
 	{
 		pHelicopter->SendAcknowledgement( pHelicopter->GetGunsRejectReason() );
 		ApplyAirModifier( false );
@@ -335,11 +376,6 @@ void CHelicopterAttackUnitState::Segment()
 	if ( pGun && pGun->CanShootToUnitWOMove( pTarget ) )
 	{
 		pHelicopter->BeginHover();
-		// Rotate the helicopter into the selected weapon's firing arc before starting the burst.
-		// Turret guns may start aiming immediately; fixed guns wait for smooth body alignment.
-		const bool bCanStartAiming = pGun->IsOnTurret() || pGun->CanShootWOGunTurn( pTarget, 1 );
-		if ( !pGun->IsFiring() && !pGun->IsRelaxing() && bCanStartAiming )
-			pGun->StartEnemyBurst( pTarget, false );
 	}
 	else
 	{
@@ -347,12 +383,15 @@ void CHelicopterAttackUnitState::Segment()
 		pHelicopter->AimAtUnit( pTarget, pGun );
 		pHelicopter->SetAttackTilt( !pTarget->IsAviation() );
 	}
+
+	// As with planes, fire every compatible weapon that can currently engage,
+	// including longer-ranged weapons while the helicopter is still approaching.
+	StartAvailableGuns();
 }
 
 ETryStateInterruptResult CHelicopterAttackUnitState::TryInterruptState( CAICommand *pCommand )
 {
-	if ( pGun )
-		pGun->StopFire();
+	StopAllGuns();
 	damageUpdater.UnsetDamageFromEnemy( pTarget );
 	ApplyAirModifier( false );
 	return CHelicopterBaseState::TryInterruptState( pCommand );
