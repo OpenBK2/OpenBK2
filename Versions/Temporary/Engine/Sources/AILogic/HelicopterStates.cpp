@@ -85,8 +85,8 @@ IUnitState* CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand
 		return new CHelicopterRestState( pHelicopter );
 	case ACTION_COMMAND_GUARD:
 		pHelicopter->Stop();
-		pHelicopter->SetDirection( WORD( cmd.fNumber ) );
-		return new CHelicopterRestState( pHelicopter );
+		return new CHelicopterRotateState( pHelicopter,
+			pHelicopter->GetCenterPlain() + GetVectorByDirection( WORD( cmd.fNumber ) ) );
 	case ACTION_COMMAND_PATROL:
 		{
 			CVec2 vTarget( cmd.vPos );
@@ -282,7 +282,7 @@ void CHelicopterAttackUnitState::Segment()
 	}
 
 	ApplyAirModifier( pTarget->IsAviation() );
-	pHelicopter->AimAtUnit( pTarget );
+	pHelicopter->AimAtUnit( pTarget, pGun );
 	pHelicopter->SetAttackTilt( !pTarget->IsAviation() );
 	pHelicopter->DecFuel( false );
 	if ( pGun )
@@ -305,13 +305,16 @@ void CHelicopterAttackUnitState::Segment()
 	if ( pGun && pGun->CanShootToUnitWOMove( pTarget ) )
 	{
 		pHelicopter->BeginHover();
-		if ( !pGun->IsFiring() && !pGun->IsRelaxing() && pGun->CanShootWOGunTurn( pTarget, 1 ) )
+		// Rotate the helicopter into the selected weapon's firing arc before starting the burst.
+		// Turret guns may start aiming immediately; fixed guns wait for smooth body alignment.
+		const bool bCanStartAiming = pGun->IsOnTurret() || pGun->CanShootWOGunTurn( pTarget, 1 );
+		if ( !pGun->IsFiring() && !pGun->IsRelaxing() && bCanStartAiming )
 			pGun->StartEnemyBurst( pTarget, false );
 	}
 	else
 	{
 		pHelicopter->BeginMoveTo( pTarget->GetCenterPlain() );
-		pHelicopter->AimAtUnit( pTarget );
+		pHelicopter->AimAtUnit( pTarget, pGun );
 		pHelicopter->SetAttackTilt( !pTarget->IsAviation() );
 	}
 }

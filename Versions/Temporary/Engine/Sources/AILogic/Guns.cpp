@@ -325,7 +325,8 @@ void CBasicGun::Turning()
 	{
 		lastCheck = curTime;
 		shootState = EST_AIMING;
-		if ( !pOwner->IsInfantry() && pCommonGunInfo->nGun != 1 )
+		// Helicopters aim by rotating their body; the generic aiming animation may rotate the model root.
+		if ( !pOwner->IsInfantry() && !pOwner->IsHelicopter() && pCommonGunInfo->nGun != 1 )
 			updater.AddUpdate( 0, pOwner->GetAimAction(), pOwner, -1 );
 
 		lastEnemyPos = VNULL2;
@@ -740,7 +741,7 @@ void CBasicGun::StartPlaneBurst( CAIUnit *_pEnemy, bool bReAim )
 											!bReAim || pOwner->GetStats()->IsAviation() ) )
 		{
 			shootState = EST_AIMING;
-			if ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() )
+			if ( !pOwner->IsHelicopter() && ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() ) )
 				updater.AddUpdate( 0, pOwner->GetAimAction(), pOwner, -1 );
 		}
 	}
@@ -764,7 +765,7 @@ void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 		{
 			shootState = EST_AIMING;
 
-			if ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() )
+			if ( !pOwner->IsHelicopter() && ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() ) )
 				updater.AddUpdate( 0, pOwner->GetAimAction(), pOwner, -1 );
 		}
 		else
@@ -797,7 +798,7 @@ void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
 		{
 			shootState = EST_AIMING;
 
-			if ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() )
+			if ( !pOwner->IsHelicopter() && ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() ) )
 				updater.AddUpdate( 0, pOwner->GetAimAction(), pOwner, -1 );
 		}
 		else
@@ -836,7 +837,7 @@ void CBasicGun::StartEnemyBurst( CAIUnit *_pEnemy, bool bReAim )
 
 			if ( bAim || curTime - pCommonGunInfo->lastShoot < GetRelaxTime() )
 			{
-				if ( !pOwner->IsInfantry() && pCommonGunInfo->nGun != 1 )
+				if ( !pOwner->IsInfantry() && !pOwner->IsHelicopter() && pCommonGunInfo->nGun != 1 )
 					updater.AddUpdate( 0, pOwner->GetAimAction(), pOwner, -1 );
 			}
 		}
