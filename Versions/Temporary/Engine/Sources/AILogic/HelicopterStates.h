@@ -97,7 +97,10 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 	CDamageToEnemyUpdater damageUpdater;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&pTarget); f.Add(3,&pGun); f.Add(4,&bSwarmAttack); f.Add(5,&bAirModifierApplied); f.Add(6,&damageUpdater); return 0; }
 	void ApplyAirModifier( const bool bApply );
+	bool IsGunCompatible( CBasicGun *pCheckGun ) const;
 	bool RefreshGun();
+	void StartAvailableGuns();
+	void StopAllGuns();
 public:
 	CHelicopterAttackUnitState() : pTarget( 0 ), pGun( 0 ), bSwarmAttack( false ), bAirModifierApplied( false ) { }
 	CHelicopterAttackUnitState( CHelicopter *pUnit, CAIUnit *pTarget, const bool _bSwarmAttack );
