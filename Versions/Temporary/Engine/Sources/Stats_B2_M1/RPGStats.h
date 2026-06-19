@@ -2268,6 +2268,7 @@ namespace NDb
 		float fSpiralDownSpeed;
 		float fDeathSelfPointRotationSpeedRad;
 		float fStandingFuelDrainModifier;
+		float fMaxAttackAngleDownRadians;
 
 		SHelicopterStats() :
 			__dwCheckSum( 0 ),
@@ -2281,7 +2282,8 @@ namespace NDb
 			fSpiralSteps( 2.5f ),
 			fSpiralDownSpeed( 15.0f ),
 			fDeathSelfPointRotationSpeedRad( 2.1f ),
-			fStandingFuelDrainModifier( 0.5f )
+			fStandingFuelDrainModifier( 0.5f ),
+			fMaxAttackAngleDownRadians( 0.872664626f )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }

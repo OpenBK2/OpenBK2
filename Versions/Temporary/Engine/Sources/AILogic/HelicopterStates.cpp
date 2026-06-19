@@ -260,7 +260,37 @@ bool CHelicopterAttackUnitState::RefreshGun()
 
 	pHelicopter->ResetShootEstimator( pTarget, false, pHelicopter->GetForbiddenGuns() );
 	pGun = pHelicopter->GetBestShootEstimatedGun();
-	return pGun != 0;
+	if ( pGun )
+		return true;
+
+	// The normal estimator treats an aviation unit as locked, so a gun can be rejected
+	// merely because the helicopter has not yet moved into range or turned into its arc.
+	const bool bCanPursue =
+		pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_FIRE_RANGE ) ||
+		pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_ATTACK_ANGLE );
+	if ( !bCanPursue )
+		return false;
+
+	const DWORD dwForbiddenGuns = pHelicopter->GetForbiddenGuns();
+	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
+	{
+		CBasicGun *pCandidate = pHelicopter->GetGun( i );
+		const NDb::SWeaponRPGStats::SShell &shell = pCandidate->GetShell();
+		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 ||
+			pCandidate->GetNAmmo() <= 0 ||
+			shell.eDamageType != NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH ||
+			( !pTarget->IsAviation() && pCandidate->GetGun().bTargetAAOnly ) ||
+			( !pCandidate->CanBreakArmor( pTarget ) && !pHelicopter->IsTargetingTrack() ) )
+		{
+			continue;
+		}
+
+		// Keep this weapon selected while movement and body rotation make the shot possible.
+		pGun = pCandidate;
+		return true;
+	}
+
+	return false;
 }
 
 void CHelicopterAttackUnitState::Segment()

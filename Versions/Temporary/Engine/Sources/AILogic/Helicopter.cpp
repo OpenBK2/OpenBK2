@@ -368,7 +368,7 @@ void CHelicopter::SecondSegment( const NTimer::STime timeDiff )
 		{
 			const float fHorizontalDist = (std::max)( fabs( CVec2( vVisualAimPoint.x, vVisualAimPoint.y ) - GetCenterPlain() ), 1.0f );
 			fTargetAttackAngle = Clamp( atan2f( (std::max)( 0.0f, GetCenter().z - vVisualAimPoint.z ), fHorizontalDist ),
-				0.0f, 80.0f / 180.0f * FP_PI );
+				0.0f, pHeliStats->fMaxAttackAngleDownRadians );
 		}
 		// Attack orientation uses only yaw and forward pitch; do not add a banking axis.
 		if ( !bAttackTilt && !bTranslating && ( bMoveTargetSet || bVisualAimPointSet || IsTurning() ) )

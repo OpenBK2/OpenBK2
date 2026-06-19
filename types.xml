@@ -64764,6 +64764,7 @@
 				<Item><Type>7033cd10</Type><Name>SpiralDownSpeed</Name><ChunkID>10</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>15</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 				<Item><Type>7033cd10</Type><Name>DeathSelfPointRotationSpeedRad</Name><ChunkID>11</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>2.1</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 				<Item><Type>7033cd10</Type><Name>StandingFuelDrainModifier</Name><ChunkID>12</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>7033cd10</Type><Name>MaxAttackAngleDownRadians</Name><ChunkID>13</ChunkID><Description>maximum visual nose-down angle while attacking</Description><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.872664626</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 			</Fields>
 			<TypeID>421110464</TypeID>
 		</Item>
