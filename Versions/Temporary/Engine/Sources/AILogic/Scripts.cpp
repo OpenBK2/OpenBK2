@@ -24,6 +24,7 @@
 #include "GlobeScriptHandler.h"
 #include "Sound/MusicSystem.h"
 #include "Sound/DBMusicSystem.h"
+#include "System/det_map.h"
 
 #include "SingleReinforcement.h"
 #include "ScenarioTracker.h"
@@ -2029,7 +2030,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 	const int nUniqueID = script.GetObject( 1 );
 	const int nPlayer = script.GetObject( 2 );
 
-	std::unordered_map<int,bool> ids;
+	det_map<int,bool> ids;
 
 	if ( CLinkObject::IsLinkObjectExists( nUniqueID ) )
 	{
@@ -2061,7 +2062,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 		}
 	}
 
-	for ( std::unordered_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+	for ( det_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
 		script.PushNumber( it->first );	
 	return ids.size();
 }

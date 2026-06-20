@@ -3,6 +3,8 @@
 #include <queue>
 
 #include "System_export.h"
+#include "det_map.h"
+#include "det_set.h"
 
 #define REGISTER_SAVELOAD_CLASS( N, name )  \
 	BASIC_REGISTER_CLASS( name ) \
@@ -74,6 +76,10 @@ private:
 		int __cdecl TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2>
 		int __cdecl TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
+	template<class T1, class T2, class T3, class T4>
+		int __cdecl TestDataPath( det_map<T1,T2,T3,T4>* ) { return 0; }
+	template<class T1, class T2, class T3>
+		int __cdecl TestDataPath( det_set<T1,T2,T3>* ) { return 0; }
 	template<class T1, class T2, class T3>
 		int __cdecl TestDataPath(std::priority_queue<T1, T2, T3>*) { return 0; }
 	template<class T1, class T2>
@@ -186,6 +192,77 @@ private:
 		{
 			std::vector<T1> vectorData(data.begin(), data.end());
 			Add(1, &vectorData);
+		}
+	}
+
+	// Deterministic containers use the same chunk layout as unordered containers,
+	// but save and restore their remembered insertion order.
+	template <class T1, class T2, class T3, class T4>
+		void DoDetMap( det_map<T1, T2, T3, T4> &data )
+	{
+		if ( IsReading() )
+		{
+			data.clear();
+			int nSize, i;
+			if ( GetVersion() < 2 )
+				nSize = CountChunks( 1 );
+			else
+				Add( 3, &nSize );
+			if ( GetVersion() > 3 )
+			{
+				// Keep the chunk compatible with unordered_map saves. The exact
+				// bucket layout is irrelevant because iteration comes from the list.
+				int nBuckets;
+				Add( 4, &nBuckets );
+			}
+			data.reserve( nSize );
+
+			std::vector<T1> indices;
+			indices.resize( nSize );
+			for ( i = 0; i < nSize; ++i )
+				Add( 1, &indices[i], i + 1 );
+			for ( i = 0; i < nSize; ++i )
+				Add( 2, &data[ indices[i] ], i + 1 );
+		}
+		else
+		{
+			int nSize = data.size();
+			int nBuckets = data.bucket_count();
+			Add( 3, &nSize );
+			Add( 4, &nBuckets );
+
+			std::vector<T1> indices;
+			indices.reserve( nSize );
+			for ( typename det_map<T1, T2, T3, T4>::iterator pos = data.begin(); pos != data.end(); ++pos )
+				indices.push_back( pos->first );
+
+			for ( int i = 0; i < nSize; ++i )
+				Add( 1, &indices[i], i + 1 );
+
+			int i = 1;
+			for ( typename det_map<T1, T2, T3, T4>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+				Add( 2, &pos->second, i );
+		}
+	}
+
+	template <class T1, class T2, class T3>
+		void DoDetSet( det_set<T1, T2, T3> &data )
+	{
+		if ( IsReading() )
+		{
+			std::vector<T1> vectorData;
+			Add( 1, &vectorData );
+
+			data.clear();
+			data.reserve( vectorData.size() );
+			for ( typename std::vector<T1>::const_iterator it = vectorData.begin(); it != vectorData.end(); ++it )
+				data.insert( *it );
+		}
+		else
+		{
+			// det_set iteration already follows insertion order.
+			std::vector<T1> vectorData( data.begin(), data.end() );
+			Add( 1, &vectorData );
 		}
 	}
 
@@ -321,6 +398,22 @@ public:
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashSet( *pHash );
+		FinishChunk();
+	}
+	template<class T1, class T2, class T3, class T4>
+		void Add( const chunk_id idChunk, det_map<T1,T2,T3,T4> *pMap, int nChunkNumber = 1 )
+	{
+		if ( !StartChunk( idChunk, nChunkNumber ) )
+			return;
+		DoDetMap( *pMap );
+		FinishChunk();
+	}
+	template<class T1, class T2, class T3>
+		void Add( const chunk_id idChunk, det_set<T1,T2,T3> *pSet, int nChunkNumber = 1 )
+	{
+		if ( !StartChunk( idChunk, nChunkNumber ) )
+			return;
+		DoDetSet( *pSet );
 		FinishChunk();
 	}
 	template<class T1, class T2, class T3>
