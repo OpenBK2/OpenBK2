@@ -254,9 +254,11 @@ void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 void CGraveyard::CheckSoonBeDead()
 {
 	// The quection is: to be or not to be?...
-	std::vector<CAIUnit*> deadObjs{16};
+	std::vector<CAIUnit*> deadObjs;
+	deadObjs.reserve(16);
 
-	std::vector<std::pair<CObj<CAIUnit>, float>> soonToDie{16};
+	std::vector<std::pair<CObj<CAIUnit>, float>> soonToDie;
+	soonToDie.reserve(16);
 	for ( UpdateObjSet::iterator iter = soonBeDead.begin(); iter != soonBeDead.end(); ++iter )
 		soonToDie.push_back(iter->second);
 	
