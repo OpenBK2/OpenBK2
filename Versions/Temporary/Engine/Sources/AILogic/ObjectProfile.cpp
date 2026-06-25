@@ -15,9 +15,9 @@ FINISH_REGISTER
 
 struct STilesCollector
 {
-	std::unordered_set<SVector, STilesHash> *pTilesUnder;
+	det_set<SVector, STilesHash> *pTilesUnder;
 
-	STilesCollector( std::unordered_set<SVector, STilesHash> *_pTilesUnder )
+	STilesCollector( det_set<SVector, STilesHash> *_pTilesUnder )
 		: pTilesUnder( _pTilesUnder ) { }
 
 	void operator()( const int x, const int y )
@@ -165,7 +165,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 	AddCentersOfSmallPolygons();
 
 	tilesUnderVector.reserve( tilesUnder.size() );
-	for ( std::unordered_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
+	for ( det_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
 		tilesUnderVector.push_back( *iter );
 }
 

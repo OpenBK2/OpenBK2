@@ -539,7 +539,7 @@ void CGlobalWarFog::RemoveStaticObjectTile( const SVector &vTile, const int nObj
 	}
 }
 
-void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const std::unordered_set<int> &oldIDs )
+void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const det_set<int> &oldIDs )
 {
 	for ( int x = 0; x < GetSizeX(); ++x )
 	{

@@ -4,11 +4,11 @@
 #include "CheckSums.h"
 #include "System/CheckSumLog.h"
 
+using object_storage_type = det_map<int, CObjectBase*>;
 
-
-std::unordered_map<int, CObjectBase*> & GetStorage()
+object_storage_type & GetStorage()
 {
-	static std::unordered_map<int, CObjectBase*> storage;
+	static object_storage_type storage;
 	return storage;
 }
 
@@ -19,7 +19,7 @@ void AddObject( int nObject, CObjectBase * p )
 
 void CheckAIObjectBase( int nObj )
 {
-	std::unordered_map<int, CObjectBase*>::iterator pos = GetStorage().find( nObj );
+	object_storage_type::iterator pos = GetStorage().find( nObj );
 	if ( pos != GetStorage().end() )
 	{
 		CCheckSumSaver saver;
@@ -30,7 +30,7 @@ void CheckAIObjectBase( int nObj )
 void CheckAIObjectBase()
 {
 	CCheckSumSaver saver;
-	for ( std::unordered_map<int, CObjectBase*>::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
+	for ( object_storage_type::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
 		(it->second)->operator&( saver );
 }
 /*

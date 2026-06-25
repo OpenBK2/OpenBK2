@@ -28,7 +28,7 @@ public:
 	int operator&( IBinSaver &saver ); 
 private:
 CFreeGroupIDs groupIds;
-	std::unordered_set<int> registeredGroups;
+	det_set<int> registeredGroups;
 	CQueuesSet< CPtr<CCommonUnit> > groupUnits;
 	std::list< CPtr<CCommonUnit> > followingUnits;
 
@@ -53,7 +53,7 @@ CFreeGroupIDs groupIds;
 	};
 	typedef std::list< std::list<SAmbushInfo> > CAmbushGroups;
 	CAmbushGroups ambushGroups;
-	std::unordered_set<int> ambushUnits;
+	det_set<int> ambushUnits;
 	NTimer::STime lastAmbushCheck;
 	CPtr<ICollisionsCollector> pCollisionsCollector;
 

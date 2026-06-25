@@ -254,7 +254,7 @@ void CListsSet<T>::CheckSizes() const
 	{
 		std::string strResult = StrFmt( "+++ %s : Checking size for list %d, size = %d: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
 		//DebugTrace( "%s : Checking size for list %d with size %d ...", typeid(*this).name(), nListNum, GetSize( nListNum ) );
-		std::unordered_set<int> visited;
+		det_set<int> visited;
 		int nCount = 0;
 		bool bTwice = false;
 		for ( int i = begin( nListNum ); i != end(); i = GetNext( i ) )

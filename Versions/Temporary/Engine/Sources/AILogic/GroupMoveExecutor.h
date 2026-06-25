@@ -32,9 +32,9 @@ public:
 	SPriorityGroupPosition( const float x, const float y ) : nCount( 1 ), vUnitSize( x, y ) {}
 };
 
-typedef std::unordered_map< int, SPriorityGroupPosition > CPriorityGroupMap;
+typedef det_map< int, SPriorityGroupPosition > CPriorityGroupMap;
 typedef std::list< SUnitListInfo > CUnitsList;
-typedef std::unordered_map< int, std::vector<CVec2> > CCellsMap;
+typedef det_map< int, std::vector<CVec2> > CCellsMap;
 
 class CGroupMoveExecutorEvent : public CExecutorEvent
 {

@@ -99,7 +99,7 @@ ZDATA
 	int nCurParty;
 	int nParties;
 	std::vector<BYTE> parties;
-	std::unordered_set<int> visitedUnits;
+	det_set<int> visitedUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&iter); f.Add(3,&nCurParty); f.Add(4,&nParties); f.Add(5,&parties); f.Add(6,&visitedUnits); return 0; }
 public:
 	CGlobalIter() : parties( 3/*SAIConsts::MAX_NUM_OF_PARTIES*/ ) { }

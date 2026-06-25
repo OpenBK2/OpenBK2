@@ -114,7 +114,7 @@ void CGraveyard::Segment()
 	}
 	dissapeared.clear();
 
-	for ( std::unordered_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
+	for ( det_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
 	{
 		if ( !CLinkObject::IsLinkObjectExists( it->first ) )
 			diedVisible.erase( it++ );

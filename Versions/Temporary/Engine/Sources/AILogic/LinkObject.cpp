@@ -118,7 +118,7 @@ CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
 { 
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
 	NI_ASSERT( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end(), StrFmt( "Wrong unique id (%d)", nUniqueID ) );
-	std::unordered_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
+	det_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
 	return pos == SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end() ? 0 : pos->second;
 }
 

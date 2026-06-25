@@ -441,7 +441,7 @@ void CGroupLogic::ProcessAmbushGroups()
 	if ( lastAmbushCheck + 5000 < curTime )
 	{
 		lastAmbushCheck = curTime;
-		std::unordered_set<int> checkedUnits;
+		det_set<int> checkedUnits;
 
 		CAmbushGroups::iterator iter = ambushGroups.begin();
 		while ( iter != ambushGroups.end() )
@@ -628,7 +628,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
           (*iter)->SetDesiredSpeed( fDesGroupSpeed );
 			}
 
-			std::unordered_set<int> memFormationIDs;
+			det_set<int> memFormationIDs;
 			//DebugTrace( "Command from AI: %s", pCommand->IsFromAI() ? "true" : "false" );
 			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{

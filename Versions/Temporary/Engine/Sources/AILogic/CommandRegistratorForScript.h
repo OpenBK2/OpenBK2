@@ -3,7 +3,7 @@
 
 class CCommandRegistratorForScript
 {
-	typedef std::unordered_map<int,bool> CRegisteredCommands;
+	typedef det_map<int,bool> CRegisteredCommands;
 	ZDATA
 		CRegisteredCommands registeredCommands;
 public:

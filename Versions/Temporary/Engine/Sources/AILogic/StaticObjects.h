@@ -34,7 +34,7 @@ class CStaticObjects : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CStaticObjects );
 	
 	typedef CAreaMap<IObstacle, CPtr<IObstacle>, SVector, int > ObstacleAreaMap;
-	typedef std::unordered_map< int, CPtr<IObstacle> > ObstacleObjectMap;
+	typedef det_map< int, CPtr<IObstacle> > ObstacleObjectMap;
 	typedef CAreaMap<CExistingObject, CObj<CExistingObject>, SVector, int> StaticObjectsAreaMap;
 	struct SSegmentObjectsSort
 	{
@@ -54,7 +54,7 @@ public:
 	// для хранения информации о складах RU 
 	class CStoragesContainer
 	{
-		typedef std::unordered_map< int, CObj<CBuilding> > CStorages;
+		typedef det_map< int, CObj<CBuilding> > CStorages;
 		typedef std::list< CObj<CBuilding> > CStoragesList;
 
 		ZDATA
@@ -82,7 +82,7 @@ public:
 	};
 
 private:
-	typedef std::unordered_map< int, CObj<CExistingObject> > CObjectsHashSet;
+	typedef det_map< int, CObj<CExistingObject> > CObjectsHashSet;
 
 	ZDATA
 	ObstacleAreaMap obstacles;
@@ -101,7 +101,7 @@ private:
 	CObjectsHashSet terraObjs;
 	CObjectsHashSet deletedObjects;
 
-	std::unordered_set<int> burningObjects;
+	det_set<int> burningObjects;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&obstacles); f.Add(3,&obstacleObjects); f.Add(4,&areaMap); f.Add(5,&containersAreaMap); f.Add(6,&nObjs); f.Add(7,&bridges); f.Add(8,&entrenchments); f.Add(9,&bIterCreated); f.Add(10,&storagesContainer); f.Add(11,&terraObjs); f.Add(12,&deletedObjects); f.Add(13,&burningObjects); return 0; }
 
 	//

@@ -32,10 +32,10 @@ class CExecutorContainer :	public IExecutorContainer
 
 	typedef std::list<SExID> CExecutorIDList;
   typedef std::vector<CExecutorIDList> CExecutors;
-	typedef std::unordered_map<CPtr<CExecutor>, bool, SExecutorPtrHash> CSleepingExecutors;
+	typedef det_map<CPtr<CExecutor>, bool, SExecutorPtrHash> CSleepingExecutors;
 
 	typedef std::list< CPtr<CExecutor> > CExecutorList;
-	typedef std::unordered_map<SExecutorEventParam, CExecutorList, SExecutorEventParamHash> CEvents;
+	typedef det_map<SExecutorEventParam, CExecutorList, SExecutorEventParamHash> CEvents;
 
 
 	CSleepingExecutors::iterator checkIter;				// not all invalid sleeping checked every segment

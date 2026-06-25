@@ -33,19 +33,19 @@ int CStaticMembers::operator&( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 
-		std::unordered_map<int, CPtr<CLinkObject> > objs;
+		det_map<int, CPtr<CLinkObject> > objs;
 		saver.Add( 18 ,&objs );
 		int nMax = 0;
-		for ( std::unordered_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
+		for ( det_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
 			nMax = (std::max)( nMax, it->first );
 
 		SLinkObjDataAutoMagic::pLinkObjData->link2object.resize( nMax + 1, 0 );
-		for ( std::unordered_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
+		for ( det_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
 			SLinkObjDataAutoMagic::pLinkObjData->link2object[it->first] = it->second;
 	}
 	else if ( !saver.IsChecksum() )
 	{
-		std::unordered_map<int, CPtr<CLinkObject> > objs;
+		det_map<int, CPtr<CLinkObject> > objs;
 		for ( int i = 0; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size(); ++i )
 		{
 			if ( SLinkObjDataAutoMagic::pLinkObjData->link2object[i] != 0 )

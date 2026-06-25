@@ -104,7 +104,7 @@ class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
 	Script *pScript;
 	const NDb::SScriptArea *pArea;
 	int nUnits;
-	std::unordered_map<int, bool> squads;
+	det_map<int, bool> squads;
 
 public:
 	CUnitsInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea ) 
@@ -969,7 +969,7 @@ void CScripts::LandSuspendedReiforcements()
 				CVec2 vShift( VNULL2 );
 				if ( CanLandWithShift( reinforcsIter->mapObject, &vShift ) )
 				{
-					std::unordered_set<int> candidates;
+					det_set<int> candidates;
 					const int nLink = reinforcsIter->mapObject.link.nLinkID;
 					candidates.insert( nLink );
 					CReinfList candObjects;
@@ -1106,7 +1106,7 @@ void CScripts::DelInvalidBegin( const int targetId )
 		int nDeleted = INT32_MIN;
 		std::vector<int> sorted;
 		sorted.reserve(groupUnits.size() + 1);
-		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		for( det_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			sorted.push_back(it->first);
 		}
@@ -1142,7 +1142,7 @@ void CScripts::DelInvalidUnits( const int scriptId )
 		}
 
 		std::list<int> deleted;
-		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		for( det_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			const int nUniqueId = it->first;
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
@@ -1306,7 +1306,7 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 	return 1;
 }
 
-void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_map<int, int> *pOld2NewLinks )
+void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, det_map<int, int> *pOld2NewLinks )
 {
 	// set new links (not intersected with existing)
 	std::list<int> freeLinks;
@@ -1328,7 +1328,7 @@ void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_ma
 
 void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec2 &vShift )
 {
-	std::unordered_map<int, int> old2NewLinks;
+	det_map<int, int> old2NewLinks;
 	SetNewLinksToReinforcement( pReinf, &old2NewLinks );
 
 	std::list<CCommonUnit*> pUnits;
@@ -1645,7 +1645,7 @@ class CUnitsEnumerator : public IEnumerator
 {
 	Script *pScript;
 	int nResult;
-	std::unordered_set<int> squads;
+	det_set<int> squads;
 public:
 	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}
 	bool AddUnit( CAIUnit *pUnit )
@@ -2927,7 +2927,7 @@ int CScripts::ReturnScriptIDs( struct lua_State *pState )
 	Script script( pState );
 
 	const int nReturns = script.GetTop();
-	std::unordered_set<int> selectedUnits;
+	det_set<int> selectedUnits;
 	for ( int i = 1; i <= nReturns; ++i )
 	{
 		NI_ASSERT( script.GetObject( i ).IsNumber(  ), "ReturnScriptIDs: %d parameter isn't a number" );
@@ -4708,7 +4708,7 @@ void CScripts::RemoveUnit( CAIUnit * pUnit )
 int CScripts::RemoveAllUnitsTmp( struct lua_State *pState )
 {
 	Script script( pState );
-	std::unordered_map<int, bool> excluded;
+	det_map<int, bool> excluded;
 	for ( int i = 1; script.GetObject( i ).IsNumber(); ++i )
 		excluded[script.GetObject(i).GetNumber()] = true;
 

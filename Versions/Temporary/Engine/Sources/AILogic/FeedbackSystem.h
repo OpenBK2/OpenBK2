@@ -33,7 +33,7 @@ class CFeedBackSystem
 			: vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
 	};
 	typedef std::list<SFeedBackCell> CCells;
-	typedef std::unordered_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
+	typedef det_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
 
 	CFeedbacks feedbacks;
 	CFreeIds clientIDs;

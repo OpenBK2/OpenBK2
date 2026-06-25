@@ -1639,7 +1639,7 @@ void CPlaneShturmovikPatrolState::Segment()
 //		pPlane->SetCommandFinished();
 
 	//DEBUG{
-	static std::unordered_map<int, std::string> nameconv;
+	static det_map<int, std::string> nameconv;
 	if ( nameconv.empty() )
 	{
 		nameconv[PSPS_ESCAPE] = "PSPS_ESCAPE";

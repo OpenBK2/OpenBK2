@@ -13,7 +13,7 @@ class CObjectProfile : public CObjectBase
 		CVec2 vCenter;
 		CVec2 vRotation;
 		CTRect<float> aabbRect;
-		std::unordered_set<SVector, STilesHash> tilesUnder;	// for check
+		det_set<SVector, STilesHash> tilesUnder;	// for check
 		std::vector<SVector> tilesUnderVector;	// for get tiles
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&profile); f.Add(3,&vCenter); f.Add(4,&vRotation); f.Add(5,&aabbRect); f.Add(6,&tilesUnder); f.Add(7,&tilesUnderVector); return 0; }
 

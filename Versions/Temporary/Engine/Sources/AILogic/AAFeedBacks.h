@@ -1,9 +1,11 @@
 #pragma once
 
+#include "System/det_map.h"
+
 class CAAFeedBacks
 {
 	typedef std::list<int/*Planes unique id*/> CTargetList;
-	typedef std::unordered_map<int/*AA Unique ID*/,CTargetList>  CAAFeedBacksList;
+	typedef det_map<int/*AA Unique ID*/,CTargetList>  CAAFeedBacksList;
 
 	CAAFeedBacksList feedbacks;
 public:

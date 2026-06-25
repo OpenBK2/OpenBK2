@@ -2,6 +2,7 @@
 #pragma once
 
 #include "StaticObject.h"
+#include "System/det_map.h"
 
 class CFullBridge;
 // remember in what order bridges applied heigths and ensures heights removal in reverse order.
@@ -10,7 +11,7 @@ class CBridgeHeightRemover
 	typedef std::list<int/*heightID*/> CHeightsOrder;
 	ZDATA
 	CHeightsOrder heightsOrder;
-	std::unordered_map<int/*heightID*/, bool> heightToRemove;
+	det_map<int/*heightID*/, bool> heightToRemove;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&heightsOrder); f.Add(3,&heightToRemove); return 0; }
 	void RegisterOrder( const int nHeightID );

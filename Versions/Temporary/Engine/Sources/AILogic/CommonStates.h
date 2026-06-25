@@ -409,7 +409,7 @@ public:
 struct SPatrolWaypoints
 {
 	typedef std::vector<CVec2> CPatrolPoints;
-	typedef std::unordered_map<int /*Unit ID*/, CPatrolPoints> CPatrolPointsMap;
+	typedef det_map<int /*Unit ID*/, CPatrolPoints> CPatrolPointsMap;
 
 	CPatrolPointsMap points;
 

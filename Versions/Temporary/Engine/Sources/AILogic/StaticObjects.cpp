@@ -516,7 +516,7 @@ void CStaticObjects::Segment()
 
 	// горящие объекты
 	std::list<int> burningList;
-	for ( std::unordered_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
+	for ( det_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
 		burningList.push_back( *iter );
 
 	for ( std::list<int>::iterator iter = burningList.begin(); iter != burningList.end(); ++iter )
@@ -551,7 +551,7 @@ void CStaticObjects::UpdateAllObjectsPos()
 		}
 	}
 
-	std::unordered_map<int, CPtr<CFullBridge> > fullBridges;
+	det_map<int, CPtr<CFullBridge> > fullBridges;
 	for ( CStObjGlobalIter<false> iter; !iter.IsFinished(); iter.Iterate() )
 	{
 		CExistingObject *pObj = *iter;
@@ -572,7 +572,7 @@ void CStaticObjects::UpdateAllObjectsPos()
 		}
 	}
 
-	for ( std::unordered_map<int, CPtr<CFullBridge> >::iterator it = fullBridges.begin(); it != fullBridges.end(); ++it )
+	for ( det_map<int, CPtr<CFullBridge> >::iterator it = fullBridges.begin(); it != fullBridges.end(); ++it )
 		it->second->InitEntireBridge();
 	
 }

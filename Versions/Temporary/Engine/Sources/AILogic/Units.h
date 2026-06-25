@@ -35,11 +35,11 @@ private:
 		SInitializedWord( int _nValue ) : nValue ( _nValue ) {}
 	};
 
-	typedef std::unordered_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
+	typedef det_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
 	CIDsRemap idsRemap;
 	// все юниты, распределённые по дипл. сторонам
 	CListsSet< CObj<CAIUnit> > units;
-	std::unordered_map< int, CObj<CFormation> > formations;
+	det_map< int, CObj<CFormation> > formations;
 	std::vector<int> sizes;
 	// самолёты
 	std::list< CObj<CAviation> > planes;
@@ -67,14 +67,14 @@ private:
 	// для нумерации ячеек
 	CFreeIds cellsIds;
 	// для сериализации
-	std::unordered_map< int, SVector > cellIdToCoord;
+	det_map< int, SVector > cellIdToCoord;
 
 
 	// CRAP{ for debug
-	std::unordered_set<int> unitsInCellsSet;
+	det_set<int> unitsInCellsSet;
 	// CRAP}
 	
-	std::vector< std::unordered_map<int, int> > nUnitsOfType;
+	std::vector< det_map<int, int> > nUnitsOfType;
 	
 	//
 	void AddUnitToConcreteCell( class CAIUnit* pUnit, const SVector &cell, bool bWithLeveledCelles );

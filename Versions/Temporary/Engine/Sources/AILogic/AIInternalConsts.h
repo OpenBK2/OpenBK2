@@ -1,6 +1,7 @@
 #pragma once
 #include "aiconsts.h"
 #include "Misc/HashFuncs.h"
+#include "System/det_map.h"
 
 
 namespace NDb
@@ -433,7 +434,7 @@ public:
 
 		SRevealInfo() : fRevealByQuery( 0.0f ), fRevealByMovingOff( 0.0f ), fForgetRevealDistance( 0.0f ), nTimeOfReveal( 0 ) { }
 	};
-	static std::unordered_map<int, SRevealInfo> REVEAL_INFO;
+	static det_map<int, SRevealInfo> REVEAL_INFO;
 
 	// infantry will be healed to full health during this time
 	static NTimer::STime INFANTRY_FULL_HEAL_TIME;
@@ -441,10 +442,10 @@ public:
 	//
 	static void Load();
 	//
-	static std::unordered_map< NDb::EDesignUnitType, int, SEnumHash > PRIORITIES;
+	static det_map< NDb::EDesignUnitType, int, SEnumHash > PRIORITIES;
 	static const int GetUnitPriority( const NDb::EDesignUnitType &unitType )
 	{
-		std::unordered_map< NDb::EDesignUnitType, int, SEnumHash >::const_iterator pos = PRIORITIES.find( unitType );
+		det_map< NDb::EDesignUnitType, int, SEnumHash >::const_iterator pos = PRIORITIES.find( unitType );
 		if ( pos == PRIORITIES.end() )
 			return 0;
 		else

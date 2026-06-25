@@ -56,9 +56,9 @@ class CResistancesContainer
 		SSellInfo() : fCellWeight( 0.0f ), bInUse( false ), bAllowShoot( true ) { }
 		SSellInfo( const float _fCellWeight, const bool _bInUse, const bool _bAllowShoot ) : fCellWeight( _fCellWeight ), bInUse( _bInUse ), bAllowShoot( _bAllowShoot ) { }
 	};
-	typedef std::unordered_map<int, SSellInfo> CCellsWeights;
+	typedef det_map<int, SSellInfo> CCellsWeights;
 
-	typedef std::unordered_map<int, int> CCellsWithGoodWeight;
+	typedef det_map<int, int> CCellsWithGoodWeight;
 
 	ZDATA
 	CResistance resistances;

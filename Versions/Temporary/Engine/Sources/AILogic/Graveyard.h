@@ -38,11 +38,11 @@ public:
 
 class CGraveyard
 {
-	typedef std::unordered_map< int, std::pair<CObj<CAIUnit>, float> > UpdateObjSet;
-	typedef std::unordered_map<int, std::list< CObj<CDeadUnit> > > CBridgeDeadSoldiers;
+	typedef det_map< int, std::pair<CObj<CAIUnit>, float> > UpdateObjSet;
+	typedef det_map<int, std::list< CObj<CDeadUnit> > > CBridgeDeadSoldiers;
 	typedef std::vector< CObj<CAIUnit> > CDissapeared;
 
-	std::unordered_map<int,bool> diedVisible;	// for units that died visible and went under warfog, not used when counting checksum, store it's separately
+	det_map<int,bool> diedVisible;	// for units that died visible and went under warfog, not used when counting checksum, store it's separately
 	ZDATA
 	ZONSERIALIZE
 	std::list< CPtr<SKilledUnit> > killed;
