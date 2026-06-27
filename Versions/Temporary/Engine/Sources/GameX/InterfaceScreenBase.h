@@ -91,6 +91,7 @@ public:
 	virtual bool Init( struct ITransceiver *pTransceiver ) { return CInterfaceScreenBase::Init(); }
 
 	void Step( bool bAppActive );
+	bool ShouldLimitFrameRate() const;
 	virtual void OnGetFocus( bool bFocus );
 	virtual void StartInterface();
 	virtual int operator&( IBinSaver &saver );

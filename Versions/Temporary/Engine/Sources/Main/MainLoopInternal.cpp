@@ -213,6 +213,55 @@ static bool ProcessEvent( const SGameMessage &msg )
 	return false;
 }
 
+static void LimitInterfaceFrameRate( bool bActive )
+{
+	static const int nMaxInterfaceFPS = 720;
+	static LARGE_INTEGER frequency;
+	static LARGE_INTEGER timeLastFrame;
+	static bool bHaveLastFrame = false;
+
+	IInterfaceBase *pInterface = GetTopInterface();
+	if ( !bActive || !pInterface || !pInterface->ShouldLimitFrameRate() )
+	{
+		bHaveLastFrame = false;
+		return;
+	}
+
+	if ( frequency.QuadPart == 0 )
+	{
+		if ( !QueryPerformanceFrequency( &frequency ) || frequency.QuadPart == 0 )
+			return;
+	}
+
+	LARGE_INTEGER timeNow;
+	QueryPerformanceCounter( &timeNow );
+
+	if ( !bHaveLastFrame )
+	{
+		timeLastFrame = timeNow;
+		bHaveLastFrame = true;
+		return;
+	}
+
+	const LONGLONG nFrameTicks = ( frequency.QuadPart + nMaxInterfaceFPS - 1 ) / nMaxInterfaceFPS;
+	LONGLONG nElapsedTicks = timeNow.QuadPart - timeLastFrame.QuadPart;
+
+	while ( nElapsedTicks < nFrameTicks )
+	{
+		const LONGLONG nTicksLeft = nFrameTicks - nElapsedTicks;
+		const DWORD nSleepMS = DWORD( nTicksLeft * 1000 / frequency.QuadPart );
+		if ( nSleepMS > 1 )
+			Sleep( nSleepMS - 1 );
+		else
+			Sleep( 0 );
+
+		QueryPerformanceCounter( &timeNow );
+		nElapsedTicks = timeNow.QuadPart - timeLastFrame.QuadPart;
+	}
+
+	timeLastFrame = timeNow;
+}
+
 bool StepApp( bool bActive )
 {
 	NDb::SegmentProfiler();
@@ -279,6 +328,7 @@ bool StepApp( bool bActive )
 				return false;
 		}
 	}
+	LimitInterfaceFrameRate( bActive );
 	return true;
 }
 }

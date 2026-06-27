@@ -277,6 +277,12 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 	}
 }
 
+bool CInterfaceScreenBase::ShouldLimitFrameRate() const
+{
+	// Keep menus and other GUI-only screens from rendering thousands of frames per second.
+	return szInterfaceType != "Mission";
+}
+
 bool CInterfaceScreenBase::ChangeResolution()
 {
 	CVec2 vScreenSize = Scene()->GetScreenRect();
