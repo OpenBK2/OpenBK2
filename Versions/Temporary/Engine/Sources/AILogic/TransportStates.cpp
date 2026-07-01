@@ -335,7 +335,7 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 				CFormation *pForm = pInf->GetFormation();
 				if ( pForm && pForm->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 				{
-					CFormationGunCrewState *pGSState = checked_cast<CFormationGunCrewState *>( pForm->GetState() );
+					CFormationGunCrewState *pGSState = dynamic_cast<CFormationGunCrewState *>( pForm->GetState() );
 					CArtillery * pArtillery = pGSState->GetArtillery();
 					pResult = CTransportHookArtilleryState::Instance( pUnit, pArtillery, VNULL2 );
 				}
@@ -356,12 +356,12 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		break;*/
 	case ACTION_COMMAND_REPAIR:
 		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
-		pResult = CTransportRepairState::Instance( pUnit, cmd.vPos, checked_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
+		pResult = CTransportRepairState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
 
 		break;
 	case ACTION_COMMAND_RESUPPLY:
 		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
-		pResult = CTransportResupplyState::Instance( pUnit, cmd.vPos, checked_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
+		pResult = CTransportResupplyState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
 		
 		break;
 	case ACTION_COMMAND_DIE:
@@ -375,7 +375,7 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 		break;
 	case ACTION_COMMAND_WAIT_FOR_UNITS:
-		pResult = CTransportWaitPassengerState::Instance( pUnit, checked_cast<CFormation*>(GetObjectByCmd( cmd )) );
+		pResult = CTransportWaitPassengerState::Instance( pUnit, dynamic_cast<CFormation*>(GetObjectByCmd( cmd )) );
 
 		break;
 	case ACTION_COMMAND_ROTATE_TO:
@@ -432,10 +432,10 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 				if ( pTarget->IsAlive() )
 				{
-					if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pTarget)->IsInBuilding() )
-						pResult = CSoldierAttackUnitInBuildingState::Instance( pUnit, checked_cast<CSoldier*>(pTarget), cmd.fNumber == 0, bSwarmAttack );
+					if ( pTarget->GetStats()->IsInfantry() && dynamic_cast<CSoldier*>(pTarget)->IsInBuilding() )
+						pResult = CSoldierAttackUnitInBuildingState::Instance( pUnit, dynamic_cast<CSoldier*>(pTarget), cmd.fNumber == 0, bSwarmAttack );
 					else
-						pResult = CMechAttackUnitState::Instance( pUnit, checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
+						pResult = CMechAttackUnitState::Instance( pUnit, dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
 				}
 			}
 			else
