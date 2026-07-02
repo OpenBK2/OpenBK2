@@ -158,15 +158,22 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 				else
 					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 			}
-			else if ( 0 == cmd.nNumber )
+			else
 			{
-				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
-				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
-			}
-			else if ( 1 == cmd.nNumber )
-			{
-				CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) );
-				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pTarget, true );
+				// cmd.nNumber cannot be properly assigned in PerformGroupAction, so fuck it, decide what to attack by type
+				CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
+				if (pTarget)
+				{
+					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
+					break;
+				}
+
+				CBuilding *pBuildingTarget = dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) );
+				if (pBuildingTarget)
+				{
+					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pBuildingTarget, true );
+					break;
+				}
 			}
 		}
 
@@ -234,9 +241,11 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 				else
 					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 			}
-			else if ( 0 == cmd.nNumber )
+			else if ( CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) )
 			{
-				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
+				if (!pTarget)
+					return nullptr;
+
 				if ( pTarget->GetStats()->IsAviation() )
 				{
 					if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pTarget->GetStats()->etype != RPG_TYPE_AVIA_BOMBER )
@@ -252,11 +261,10 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 						pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 				}
 			}
-			else if ( 1 == cmd.nNumber )
+			else if ( CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) ) )
 			{
 				if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
 				{
-					CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) );
 					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pTarget, false );
 				}
 				else
