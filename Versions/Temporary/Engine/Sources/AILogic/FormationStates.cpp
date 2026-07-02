@@ -439,7 +439,10 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			else if ( pTarget->GetStats()->IsArtillery()  )
 			{
 				NI_ASSERT( dynamic_cast<CArtillery*>( GetObjectByCmd( cmd ) ) != 0, "must be artillery unit" );
-				CArtillery *pArt = checked_cast<CArtillery*>( GetObjectByCmd( cmd ) );
+				CArtillery *pArt = dynamic_cast<CArtillery*>( GetObjectByCmd( cmd ) );
+				if (!pArt)
+					break;
+
 				if ( pArt->GetCrew() )
 					pResult = CFormationAttackFormationState::Instance( pFormation, pArt->GetCrew(), bSwarmAttack );
 				else
