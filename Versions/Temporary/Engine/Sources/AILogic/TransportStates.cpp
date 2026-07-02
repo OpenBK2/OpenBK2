@@ -211,7 +211,8 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 		break;
 	case ACTION_COMMAND_FILL_RU:
-		pResult = CTransportLoadRuState::Instance( pUnit, false, checked_cast<CBuilding*>( GetObjectByCmd( cmd ) ) );
+		if ( auto target = dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) ) )
+			pResult = CTransportLoadRuState::Instance( pUnit, false, target );
 
 		break;
 	case ACTION_MOVE_TO_NOT_PRESIZE:
