@@ -161,7 +161,7 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 			if ( action != PARAM_ABILITY_ON )
 				break;
 
-			CPtr<CAIUnit> pTargetUnit = CAIUnit::GetUnitByUniqueID( cmd.nObjectID );
+			auto pTargetUnit = dynamic_cast<CAIUnit*>(CLinkObject::GetObjectByUniqueId( cmd.nObjectID ));
 			if ( !IsValid( pTargetUnit ) )
 				break;
 			
