@@ -337,6 +337,9 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 				if ( pForm && pForm->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 				{
 					CFormationGunCrewState *pGSState = dynamic_cast<CFormationGunCrewState *>( pForm->GetState() );
+					if (!pGSState)
+						break;
+
 					CArtillery * pArtillery = pGSState->GetArtillery();
 					pResult = CTransportHookArtilleryState::Instance( pUnit, pArtillery, VNULL2 );
 				}

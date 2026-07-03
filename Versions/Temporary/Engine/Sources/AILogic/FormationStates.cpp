@@ -490,8 +490,9 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			else
 			{
 				CObjectBase *pTarget = GetObjectByCmd( cmd );
-				if ( pTarget )
-					pThrowGrenadeState->AddTarget( checked_cast<CAIUnit*>( pTarget ), cmd.vPos, cmd.nNumber );
+				CAIUnit* unit = dynamic_cast<CAIUnit*>( pTarget );
+				if ( unit )
+					pThrowGrenadeState->AddTarget( unit, cmd.vPos, cmd.nNumber );
 			}
 		}
 		break;
