@@ -18,6 +18,7 @@
 #include "InterfaceArmyBranchDlg.h"
 #include "SaveLoadHelper.h"
 #include "System/Commands.h"
+#include "Misc/StrProc.h"
 
 static bool s_bAutosaveObjectiveComplete = false;
 
@@ -892,7 +893,33 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 	if ( pDescView )
 	{
 		std::wstring wszFormat = InterfaceState()->GetMissionConsoleMLTag();
-		pDescView->SetText( pDescView->GetDBText() + wszFormat + pEvent->wszText );
+		std::wstring wszText = pEvent->wszText;
+
+		if ( pDBEvent->eType == NDb::NEVT_PLAYER_ELIMINATED )
+		{
+			const int nPlayer = pEvent->nID;
+			IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
+			IScenarioTracker::SMultiplayerInfo *pMPInfo = pScenarioTracker->GetMultiplayerInfo();
+
+			for ( int i = 0; pMPInfo && i < pMPInfo->players.size(); ++i )
+			{
+				const IScenarioTracker::SMultiplayerInfo::SPlayer &player = pMPInfo->players[i];
+				if ( player.nIndex != nPlayer || player.wszName.empty() )
+					continue;
+
+				// Player elimination stores the removed player slot in nID.
+				const DWORD dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
+				const std::wstring wszPlayerColor = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwColor ) );
+
+				wszText += L": ";
+				wszText += wszPlayerColor;
+				wszText += player.wszName;
+				wszText += wszFormat;
+				break;
+			}
+		}
+
+		pDescView->SetText( pDescView->GetDBText() + wszFormat + wszText );
 	}
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBEvent->,Tooltip) )
 	{
