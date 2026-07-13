@@ -22234,6 +22234,20 @@
 					<DefaultValue><Type>00000000</Type></DefaultValue>
 					<ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>60aece11</Type>
+					<Name>AntiAviationModifier</Name>
+					<ChunkID>67</ChunkID>
+					<Description>Temporarily applied while firing at aviation targets</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285645696</TypeID>
 		</Item>

@@ -5284,6 +5284,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "AmphibianStats", (BYTE*)&amphibianStats - pThis, sizeof(amphibianStats), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AntiAviationModifier", (BYTE*)&pAntiAviationModifier - pThis, sizeof(pAntiAviationModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5356,6 +5357,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "DestructableCorpse", &bDestructableCorpse );
 	saver.Add( "InnerUnitBonus", &pInnerUnitBonus );
 	saver.Add( "AmphibianStats", &amphibianStats );
+	saver.Add( "AntiAviationModifier", &pAntiAviationModifier );
 
 	return 0;
 }
@@ -5428,6 +5430,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 64, &bDestructableCorpse );
 	saver.Add( 65, &pInnerUnitBonus );
 	saver.Add( 66, &amphibianStats );
+	saver.Add( 67, &pAntiAviationModifier );
 
 	return 0;
 }
@@ -5439,7 +5442,7 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats;
+	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats << pAntiAviationModifier;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

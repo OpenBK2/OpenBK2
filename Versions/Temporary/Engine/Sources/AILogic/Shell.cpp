@@ -272,6 +272,15 @@ void CExplosion::Init(	CAIUnit *_pUnit,
 	pWeapon = _pWeapon;
 	nShellType = _nShellType;
 	nPlayerOfShoot = _nPlayerOfShoot;
+	// Snapshot shot-time weapon modifiers so delayed shells keep the bonuses used when fired.
+	weaponDamageModifier = NDb::SUnitStatsModifier::SParameterModifier();
+	weaponPiercingModifier = NDb::SUnitStatsModifier::SParameterModifier();
+	if ( pUnit )
+	{
+		weaponDamageModifier = pUnit->GetStatsModifier()->weaponDamage;
+		weaponPiercingModifier = pUnit->GetStatsModifier()->weaponPiercing;
+	}
+
 
 	CVec2 vRand( VNULL2 );
 	const CVec3 vDiff( _explCoord - attackerPos );
@@ -321,28 +330,17 @@ const SAINotifyHitInfo::EHitType CExplosion::ProcessExactHit( CAIUnit *pTarget, 
 
 const int CExplosion::GetRandomPiercing() const
 {
-	if ( pUnit )
-		return pUnit->GetStatsModifier()->weaponPiercing.Get( pWeapon->shells[nShellType].GetRandomPiercing() );
-	else
-		return pWeapon->shells[nShellType].GetRandomPiercing();		//For non-weapon damage (e.g. mines)
+	return weaponPiercingModifier.Get( pWeapon->shells[nShellType].GetRandomPiercing() );
 }
 
 float CExplosion::GetMaxDamage() const
 {
-	if ( pUnit )
-		return pUnit->GetStatsModifier()->weaponDamage.Get( pWeapon->shells[nShellType].fDamagePower 
-			+ pWeapon->shells[nShellType].nDamageRandom );
-	else
-		return pWeapon->shells[nShellType].fDamagePower + pWeapon->shells[nShellType].nDamageRandom;		//For non-weapon damage (e.g. mines)
+	return weaponDamageModifier.Get( pWeapon->shells[nShellType].fDamagePower + pWeapon->shells[nShellType].nDamageRandom );
 }
 
 const float CExplosion::GetRandomDamage() const
 {
-	if ( pUnit )
-		return
-		pUnit->GetStatsModifier()->weaponDamage.Get( pWeapon->shells[nShellType].GetRandomDamage() );
-	else
-		return pWeapon->shells[nShellType].GetRandomDamage();		//For non-weapon damage (e.g. mines)
+	return weaponDamageModifier.Get( pWeapon->shells[nShellType].GetRandomDamage() );
 }
 
 const int CExplosion::GetPartyOfShoot() const 

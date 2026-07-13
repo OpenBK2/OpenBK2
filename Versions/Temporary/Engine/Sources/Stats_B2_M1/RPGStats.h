@@ -2556,6 +2556,7 @@ namespace NDb
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 		CDBPtr< SAmphibianStats > amphibianStats;
+		CDBPtr< SUnitStatsModifier > pAntiAviationModifier; // Temporarily applied only while firing at aviation targets.
 
 		#include "include_mechunitrpgstats.h"
 
@@ -3101,7 +3102,7 @@ namespace NDb
 			//
 			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
-			int operator&( IBinSaver &saver );
+			__declspec(dllexport) int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};

@@ -200,8 +200,10 @@ protected:
 	int nPlayerOfShoot;
 
 	CPtr<CHitInfo> pHitToSend;
+	NDb::SUnitStatsModifier::SParameterModifier weaponDamageModifier;
+	NDb::SUnitStatsModifier::SParameterModifier weaponPiercingModifier;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); f.Add(9,&weaponDamageModifier); f.Add(10,&weaponPiercingModifier); return 0; }
 protected:
 	//
 	const SAINotifyHitInfo::EHitType ProcessExactHit( class CAIUnit *pTarget, const SRect &combatRect, const CVec3 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
