@@ -3082,7 +3082,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 
-		struct SParameterModifier
+		struct STATS_B2_M1_EXPORT SParameterModifier
 		{
 		private:
 			mutable DWORD __dwCheckSum;
@@ -3102,7 +3102,7 @@ namespace NDb
 			//
 			void ReportMetaInfo( const std::string &szAddName, BYTE *pThis ) const;
 			//
-			__declspec(dllexport) int operator&( IBinSaver &saver );
+			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
 			DWORD CalcCheckSum() const;
 		};
