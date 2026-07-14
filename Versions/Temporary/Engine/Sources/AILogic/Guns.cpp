@@ -1377,7 +1377,9 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				Normalize( &vDir );
 				const CVec2 vExplosion( vOwnerCenter + vDir * GetFireRangeMax() );
 				// to disallow kill themselves
-				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, pWeapon->shells[nShellType].fArea ) ) );
+				// Use modified flame radius here too; this offset protects the shooter from its own flame burst.
+				const float fStartArea = pOwner->GetStatsModifier()->weaponArea.Get( pWeapon->shells[nShellType].fArea );
+				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, fStartArea ) ) );
 				
 				CPtr<CFlameThrowerExpl> pExpl = new CFlameThrowerExpl( pOwner, this, CVec3( vExplosion, z ), CVec3( vStart, fOwnerZ ), nShellType );
 				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );

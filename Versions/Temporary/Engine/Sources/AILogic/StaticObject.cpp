@@ -201,7 +201,7 @@ bool CExistingObject::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmor
 	const CVec3 vExpl( pExpl->GetExplCoordinates() );
 	const CVec2 vExpl2( vExpl.x, vExpl.y );
 	const CVec2 vCntr( GetAttackCenter( vExpl2 ) );
-	const float fAreaRadius = pExpl->GetShellStats().fArea;
+	const float fAreaRadius = pExpl->GetArea();
 	const bool bCanDamageByArea = ( fabs( vCntr - vExpl2 ) < fAreaRadius ) && GetStats();	
 
 	if ( vExpl.z - GetHeights()->GetVisZ( GetCenter().x, GetCenter().y ) <= AI_TILE_SIZE * 2.0f && ( IsPointInside( vExpl2 ) || bCanDamageByArea ) )
