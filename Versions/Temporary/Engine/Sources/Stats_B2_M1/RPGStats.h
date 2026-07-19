@@ -158,6 +158,8 @@ namespace NDb
 		bool bStopCurrentAction;
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedDescFileRef;
+		CDBPtr< STexture > pAbilityIconTextureNormal;
+		CDBPtr< STexture > pAbilityIconTextureDisabled;
 
 		#include "include_unitspecialablitydesc.h"
 
@@ -171,7 +173,9 @@ namespace NDb
 			eGroupID( ABILITY_GROUP_NOGROUP ),
 			nDisableGroupTime( 0 ),
 			fParameter( 0 ),
-			bStopCurrentAction( false )
+			bStopCurrentAction( false ),
+			pAbilityIconTextureNormal( 0 ),
+			pAbilityIconTextureDisabled( 0 )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }

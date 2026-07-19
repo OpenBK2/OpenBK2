@@ -47,6 +47,7 @@ public:
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetEnabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
+	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
 	virtual void Select( bool bSelect );
 	void SetSelectionGroup( int nSelectionGroup );

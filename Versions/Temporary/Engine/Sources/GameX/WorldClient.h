@@ -439,6 +439,7 @@ public:
 	void GetSelectionEnabledActions( CUserActions *pActions ) { return pSelector->GetEnabledActions( pActions ); }
 	void SetMaxUnits( const int nMaxUnitSlots, const int nMaxUnitPerSlot ) { pSelector->SetMaxUnits( nMaxUnitSlots, nMaxUnitPerSlot ); }
 	int GetAbilityTier( NDb::EUserAction eAction ) const { return pSelector->GetAbilityTier( eAction ); }
+	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const { return pSelector->GetAbilityDesc( eAction ); }
 	//
 	void ScreenToAI( CVec2 *pvAI, const CVec2 &vScreen );
 	CVec3 ScreenToAI( const CVec2 &vScreen );

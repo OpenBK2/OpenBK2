@@ -348,6 +348,23 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 	return -1;
 }
 
+const NDb::SUnitSpecialAblityDesc* CMOSquad::GetAbilityDesc( NDb::EUserAction eAction ) const
+{
+	// A squad exposes the descriptor belonging to the first living unit with this ability.
+	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
+	{
+		IMOUnit *pUnit = *it;
+		if ( !pUnit->IsAlive() )
+			continue;
+
+		const NDb::SUnitSpecialAblityDesc *pDesc = pUnit->GetAbilityDesc( eAction );
+		if ( pDesc )
+			return pDesc;
+	}
+	return 0;
+}
+
+
 bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 {
 	if ( bEnter )

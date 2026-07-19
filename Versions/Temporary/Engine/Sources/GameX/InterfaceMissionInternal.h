@@ -20,6 +20,7 @@ namespace NDb
 	struct SUIConstsB2;
 	struct SMapInfo;
 	struct SWeaponRPGStats;
+	struct SUnitSpecialAblityDesc;
 }
 
 enum EActiveControl 
@@ -310,8 +311,8 @@ private:
 	
 	void InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts );
 
-	void MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey );
-	void MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot );
+	void MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey, const std::wstring *pTooltipOverride = 0 );
+	void MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot, const NDb::SUnitSpecialAblityDesc *pAbilityDesc, bool bFixedPlace );
 	void MakeCommandTooltip( NDb::EUserAction eUserAction );
 	
 	bool IsAbility( NDb::EUserAction eAction ) const;
@@ -425,7 +426,7 @@ protected:
 	bool OnChatInputFocusLost();
 	
 	void ResetAbilityButtons();
-	void AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace );
+	void AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace, const NDb::SUnitSpecialAblityDesc *pAbilityDesc );
 	void SetArmyPoints( int nPoints );
 	void UpdateMultiUnitsInfo( CMapObj *pMO, int nCount );
 	bool OnClickFullInfoMember( const std::string &szSender );

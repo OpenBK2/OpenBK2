@@ -89,6 +89,7 @@ public:
 	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
+	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
 	void SetSquad( struct IMOSquad *_pSquad ) { }
 	virtual struct IMOSquad* GetSquad() const {	return 0; }

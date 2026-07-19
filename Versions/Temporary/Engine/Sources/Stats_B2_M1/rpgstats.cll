@@ -167,6 +167,10 @@ class SUnitSpecialAblityDesc
 	bool _StopCurrentAction = false;
 	TextFileRef _LocalizedNameFileRef;
 	TextFileRef _LocalizedDescFileRef;
+	// Optional per-ability UI icons; action-button icons remain the fallback.
+	[no_checksum] STexture *_AbilityIconTextureNormal;
+	[no_checksum] STexture *_AbilityIconTextureDisabled;
+
 
 	#include "include_unitspecialablitydesc.h"
 };

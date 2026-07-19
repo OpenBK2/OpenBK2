@@ -1114,6 +1114,20 @@ int CSelector::GetAbilityTier( const std::vector< CPtr<CMOSelectable> > &objects
 	return -1;
 }
 
+const NDb::SUnitSpecialAblityDesc* CSelector::GetAbilityDesc( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction )
+{
+	// The action panel has one button per action, so use the first matching selected descriptor.
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	{
+		CMOSelectable *pSO = *it;
+		const NDb::SUnitSpecialAblityDesc *pDesc = pSO->GetAbilityDesc( eAction );
+		if ( pDesc )
+			return pDesc;
+	}
+	return 0;
+}
+
+
 void CSelector::SetSelectionGroup( const int nIndex )
 {
 	if ( 0 <= nIndex && nIndex < vAbilityGroups.size() )
@@ -1249,6 +1263,11 @@ void CSelector::SetMaxUnits( const int _nMaxUnitSlots, const int _nMaxUnitPerSlo
 int CSelector::GetAbilityTier( NDb::EUserAction eAction ) const
 {
 	return GetAbilityTier( superActives, eAction );
+}
+
+const NDb::SUnitSpecialAblityDesc* CSelector::GetAbilityDesc( NDb::EUserAction eAction ) const
+{
+	return GetAbilityDesc( superActives, eAction );
 }
 
 bool CSelector::IsSameType( const CMapObj *_pMO, const CMapObj *_pMO2 )

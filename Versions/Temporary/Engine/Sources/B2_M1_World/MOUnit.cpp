@@ -237,6 +237,21 @@ int CMOUnit::GetAbilityTier( NDb::EUserAction eAction ) const
 	return -1;
 }
 
+const NDb::SUnitSpecialAblityDesc* CMOUnit::GetAbilityDesc( NDb::EUserAction eAction ) const
+{
+	if ( GetStatsLocal() && GetStatsLocal()->GetActions() )
+	{
+		for ( int i = 0; i < GetStatsLocal()->GetActions()->specialAbilities.size(); ++i )
+		{
+			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
+			if ( pDesc && GetActionByAbility( pDesc->eName ) == eAction )
+				return pDesc;
+		}
+	}
+	return 0;
+}
+
+
 void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 {
 	abilityList.clear();

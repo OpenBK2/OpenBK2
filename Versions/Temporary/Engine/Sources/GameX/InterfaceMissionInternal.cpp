@@ -2164,14 +2164,40 @@ void CInterfaceMission::ResetAbilityButtons()
 	nCurrentSlot = 0;
 }
 
-void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace )
+void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace, const NDb::SUnitSpecialAblityDesc *pAbilityDesc )
 {
 	if ( !pWnd )
 		return;
+
+	CNewActionButtons::iterator it = newActionButtons.find( eAction );
+	if ( it != newActionButtons.end() )
+	{
+		SNewActionButton &action = it->second;
+		const NDb::STexture *pNormalIcon = action.pIcon;
+		const NDb::STexture *pDisabledIcon = action.pIconDisabled;
+		if ( pAbilityDesc )
+		{
+			if ( pAbilityDesc->pAbilityIconTextureNormal )
+				pNormalIcon = pAbilityDesc->pAbilityIconTextureNormal;
+			if ( pAbilityDesc->pAbilityIconTextureDisabled )
+				pDisabledIcon = pAbilityDesc->pAbilityIconTextureDisabled;
+		}
+
+		// Restore the action textures when the selected ability does not override them.
+		if ( !action.bPassive )
+		{
+			if ( action.pBtn )
+				action.pBtn->SetTexture( pNormalIcon );
+			if ( action.pIconBgDisabledWnd )
+				action.pIconBgDisabledWnd->SetTexture( pDisabledIcon );
+		}
+		else if ( action.pIconBgDisabledWnd )
+			action.pIconBgDisabledWnd->SetTexture( pNormalIcon );
+	}
 	if ( bFixedPlace )
 	{
 		pWnd->ShowWindow( true );
-		MakeCommandTooltip( eAction );
+		MakeAbilityTooltip( eAction, nCurrentSlot, pAbilityDesc, true );
 	}
 	else if ( nCurrentSlot < vAbilitySlots.size() )
 	{
@@ -2182,7 +2208,7 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 		if ( pProgress )
 			pProgress->SetPosition( 0 );*/
 
-		MakeAbilityTooltip( eAction, nCurrentSlot );
+		MakeAbilityTooltip( eAction, nCurrentSlot, pAbilityDesc, false );
 
 		lActiveAbilities.push_back( CActionButton( eAction, pWnd ) );
 		nCurrentSlot++;
@@ -2675,19 +2701,19 @@ string CInterfaceMission::GetActionOwnReaction( IWindow *pWnd ) const
 	return string();
 }*/
 
-void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey )
+void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey, const std::wstring *pTooltipOverride )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
 	{
 		SNewActionButton &action = it->second;
+		const std::wstring &wszBaseTooltip = pTooltipOverride ? *pTooltipOverride : action.wszTooltip;
+		std::wstring wszTooltip = wszBaseTooltip;
 
-		if ( !action.wszTooltip.empty() )
+		if ( !wszBaseTooltip.empty() )
 		{
 			std::list<NInput::SBind> binds;
 			NInput::GetBind( szCommand, &binds );
-
-			std::wstring wszTooltip = action.wszTooltip;
 
 			if ( bHotkey && !szButtonsBindSection.empty() )
 			{
@@ -2704,23 +2730,38 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 					}
 				}
 			}
-
-			if ( action.pBtn )
-				action.pBtn->SetTooltip( wszTooltip );
-			if ( action.pIconBgDisabledWnd )
-				action.pIconBgDisabledWnd->SetTooltip( wszTooltip );
 		}
+
+#ifndef _FINALRELEASE
+		if ( wszTooltip.empty() )
+			wszTooltip = NStr::ToUnicode( StrFmt( "UserAction id: %d", (int)( eUserAction ) ) );
+#endif //_FINALRELEASE
+
+		// Set even an empty tooltip so a previous ability-specific description is cleared.
+		if ( action.pBtn )
+			action.pBtn->SetTooltip( wszTooltip );
+		if ( action.pIconBgDisabledWnd )
+			action.pIconBgDisabledWnd->SetTooltip( wszTooltip );
 	}
 }
 
-void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot )
+void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot, const NDb::SUnitSpecialAblityDesc *pAbilityDesc, bool bFixedPlace )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
 	{
 		SNewActionButton &action = it->second;
+		std::wstring wszAbilityTooltip;
+		const std::wstring *pTooltipOverride = 0;
+		if ( pAbilityDesc && CHECK_TEXT_NOT_EMPTY_PRE(pAbilityDesc->,LocalizedDesc) )
+		{
+			wszAbilityTooltip = GET_TEXT_PRE(pAbilityDesc->,LocalizedDesc);
+			if ( !wszAbilityTooltip.empty() )
+				pTooltipOverride = &wszAbilityTooltip;
+		}
 
-		MakeActionTooltip( eUserAction, StrFmt( "user_ability_slot_%02d", nSlot ), !action.bPassive );
+		const std::string szCommand = bFixedPlace ? action.szHotkeyCmd : StrFmt( "user_ability_slot_%02d", nSlot );
+		MakeActionTooltip( eUserAction, szCommand, bFixedPlace || !action.bPassive, pTooltipOverride );
 	}
 }
 
@@ -2801,6 +2842,7 @@ struct SAbility
 	int nTier;
 	NDb::EUserAction eAction;
 	IWindow *pWnd;
+	const NDb::SUnitSpecialAblityDesc *pDesc;
 	bool bFixedPlace;
 	bool bEnabled;
 };
@@ -2850,6 +2892,7 @@ void CInterfaceMission::UpdateActionButtons()
 				ability.nTier = pWorld->GetAbilityTier( eAction );
 				ability.eAction = eAction;
 				ability.pWnd = pWnd;
+				ability.pDesc = pWorld->GetAbilityDesc( eAction );
 				ability.bFixedPlace = false;
 				ability.bEnabled = false;
 
@@ -2876,7 +2919,7 @@ void CInterfaceMission::UpdateActionButtons()
 	for ( std::vector<SAbility>::iterator it = abilities.begin(); it != abilities.end(); ++it )
 	{
 		SAbility &ability = *it;
-		AddAbilityButton( ability.eAction, ability.pWnd, ability.bFixedPlace );
+		AddAbilityButton( ability.eAction, ability.pWnd, ability.bFixedPlace, ability.pDesc );
 	}
 
 	// update unit full info buttons

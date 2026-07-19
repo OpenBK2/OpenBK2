@@ -101,6 +101,7 @@ private:
 	static void GetEnabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
 	static void GetDisabledActions( CUserActions *pActions, const std::vector< CPtr<CMOSelectable> > &objects, EActionsType eActions );
 	static int GetAbilityTier( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction );
+	static const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction );
 private:
 	struct SObjectsSort
 	{
@@ -293,6 +294,7 @@ public:
 	void GetEnabledSuperActiveActions( CUserActions *pActions );
 	void SetMaxUnits( const int nMaxUnitSlots, const int nMaxUnitPerSlot );
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
+	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const;
 
 	void DoUpdateSelectedUnits();
 	void DoUpdatePreselectedUnits();
