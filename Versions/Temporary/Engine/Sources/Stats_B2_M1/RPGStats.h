@@ -160,6 +160,8 @@ namespace NDb
 		NFile::CFilePath szLocalizedDescFileRef;
 		CDBPtr< STexture > pAbilityIconTextureNormal;
 		CDBPtr< STexture > pAbilityIconTextureDisabled;
+		CDBPtr< STexture > pAbilityIconTextureForegroundNormal;
+		CDBPtr< STexture > pAbilityIconTextureForegroundDisabled;
 
 		#include "include_unitspecialablitydesc.h"
 
@@ -175,7 +177,9 @@ namespace NDb
 			fParameter( 0 ),
 			bStopCurrentAction( false ),
 			pAbilityIconTextureNormal( 0 ),
-			pAbilityIconTextureDisabled( 0 )
+			pAbilityIconTextureDisabled( 0 ),
+			pAbilityIconTextureForegroundNormal( 0 ),
+			pAbilityIconTextureForegroundDisabled( 0 )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }

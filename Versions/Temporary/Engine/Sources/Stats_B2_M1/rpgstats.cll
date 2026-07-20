@@ -170,6 +170,8 @@ class SUnitSpecialAblityDesc
 	// Optional per-ability UI icons; action-button icons remain the fallback.
 	[no_checksum] STexture *_AbilityIconTextureNormal;
 	[no_checksum] STexture *_AbilityIconTextureDisabled;
+	[no_checksum] STexture *_AbilityIconTextureForegroundNormal;
+	[no_checksum] STexture *_AbilityIconTextureForegroundDisabled;
 
 
 	#include "include_unitspecialablitydesc.h"

@@ -2175,12 +2175,18 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 		SNewActionButton &action = it->second;
 		const NDb::STexture *pNormalIcon = action.pIcon;
 		const NDb::STexture *pDisabledIcon = action.pIconDisabled;
+		const NDb::STexture *pForegroundNormalIcon = action.pForegroundIcon;
+		const NDb::STexture *pForegroundDisabledIcon = action.pForegroundIconDisabled;
 		if ( pAbilityDesc )
 		{
 			if ( pAbilityDesc->pAbilityIconTextureNormal )
 				pNormalIcon = pAbilityDesc->pAbilityIconTextureNormal;
 			if ( pAbilityDesc->pAbilityIconTextureDisabled )
 				pDisabledIcon = pAbilityDesc->pAbilityIconTextureDisabled;
+			if ( pAbilityDesc->pAbilityIconTextureForegroundNormal )
+				pForegroundNormalIcon = pAbilityDesc->pAbilityIconTextureForegroundNormal;
+			if ( pAbilityDesc->pAbilityIconTextureForegroundDisabled )
+				pForegroundDisabledIcon = pAbilityDesc->pAbilityIconTextureForegroundDisabled;
 		}
 
 		// Restore the action textures when the selected ability does not override them.
@@ -2188,8 +2194,12 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 		{
 			if ( action.pBtn )
 				action.pBtn->SetTexture( pNormalIcon );
+			if ( action.pIconFgWnd )
+				action.pIconFgWnd->SetTexture( pForegroundNormalIcon );
 			if ( action.pIconBgDisabledWnd )
 				action.pIconBgDisabledWnd->SetTexture( pDisabledIcon );
+			if ( action.pIconFgDisabledWnd )
+				action.pIconFgDisabledWnd->SetTexture( pForegroundDisabledIcon );
 		}
 		else if ( action.pIconBgDisabledWnd )
 			action.pIconBgDisabledWnd->SetTexture( pNormalIcon );

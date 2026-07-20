@@ -321,6 +321,8 @@ void SUnitSpecialAblityDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (BYTE*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "AbilityIconTextureNormal", (BYTE*)&pAbilityIconTextureNormal - pThis, sizeof(pAbilityIconTextureNormal), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "AbilityIconTextureDisabled", (BYTE*)&pAbilityIconTextureDisabled - pThis, sizeof(pAbilityIconTextureDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureForegroundNormal", (BYTE*)&pAbilityIconTextureForegroundNormal - pThis, sizeof(pAbilityIconTextureForegroundNormal), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureForegroundDisabled", (BYTE*)&pAbilityIconTextureForegroundDisabled - pThis, sizeof(pAbilityIconTextureForegroundDisabled), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -341,6 +343,8 @@ int SUnitSpecialAblityDesc::operator&( IXmlSaver &saver )
 	saver.Add( "LocalizedDescFileRef", &szLocalizedDescFileRef );
 	saver.Add( "AbilityIconTextureNormal", &pAbilityIconTextureNormal );
 	saver.Add( "AbilityIconTextureDisabled", &pAbilityIconTextureDisabled );
+	saver.Add( "AbilityIconTextureForegroundNormal", &pAbilityIconTextureForegroundNormal );
+	saver.Add( "AbilityIconTextureForegroundDisabled", &pAbilityIconTextureForegroundDisabled );
 
 	return 0;
 }
@@ -361,6 +365,8 @@ int SUnitSpecialAblityDesc::operator&( IBinSaver &saver )
 	saver.Add( 13, &szLocalizedDescFileRef );
 	saver.Add( 14, &pAbilityIconTextureNormal );
 	saver.Add( 15, &pAbilityIconTextureDisabled );
+	saver.Add( 16, &pAbilityIconTextureForegroundNormal );
+	saver.Add( 17, &pAbilityIconTextureForegroundDisabled );
 
 	return 0;
 }

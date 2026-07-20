@@ -37583,6 +37583,60 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureForegroundNormal</Name>
+					<ChunkID>16</ChunkID>
+					<Description>Optional normal foreground icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureForegroundDisabled</Name>
+					<ChunkID>17</ChunkID>
+					<Description>Optional disabled foreground icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285749952</TypeID>
 		</Item>
