@@ -235,6 +235,11 @@ SRegFunction CScripts::pRegList[] =
 	{ "GiveXPToReinforcement",					CScripts::GiveXPToReinforcement },
 	{ "GiveXPToPlayer",									CScripts::GiveXPToPlayer },
 
+	{ "IsMultiplayerMatch", 				CScripts::IsMultiplayerMatch },
+	{ "GetMultiplayerMatchTechLevel", 		CScripts::GetMultiplayerMatchTechLevel },
+	{ "GetPlayerMultiplayerNation", 		CScripts::GetPlayerMultiplayerNation },
+	{ "GetPlayerSide", 						CScripts::GetPlayerSide },
+
 	// 3
 	{ "GetObjectHPs",										CScripts::GetObjectHPs },
 	{ "ChangePlayer",										CScripts::ChangePlayer },
@@ -4684,6 +4689,62 @@ int CScripts::GiveXPToPlayer( struct lua_State *pState )
 
 	return 0;
 }
+
+// params: <none>; returns: 1 if the match is MP, 0 if not
+int CScripts::IsMultiplayerMatch( struct lua_State *pState )
+{
+	Script script( pState );
+	// Diplomacy owns the authoritative network-game flag used by AILogic.
+	script.PushNumber( theDipl.IsNetGame() );
+	return 1;
+}
+
+// params: <none>; returns: -1 if the match is not MP, otherwise: current match tech level id from mp consts (number >= 0)
+int CScripts::GetMultiplayerMatchTechLevel( struct lua_State *pState )
+{
+	Script script( pState );
+	int nTechLevel = -1;
+	if ( theDipl.IsNetGame() )
+	{
+		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+			nTechLevel = pScenarioTracker->GetMultiplayerTechLevel();
+	}
+
+	script.PushNumber( nTechLevel );
+	return 1;
+}
+
+// params: <player no>; returns: -1 if the match is not MP, otherwise: players nation id from mp consts (number >= 0)
+int CScripts::GetPlayerMultiplayerNation( struct lua_State *pState )
+{
+	Script script( pState );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GetPlayerMultiplayerNation: parameter 1 isn't a player number", script );
+	const int nPlayer = script.GetObject( 1 ).GetNumber();
+	CHECK_ERROR( nPlayer >= 0 && nPlayer < theDipl.GetNPlayers(), "GetPlayerMultiplayerNation: player number is out of range", script );
+
+	int nNation = -1;
+	if ( theDipl.IsNetGame() )
+	{
+		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+			nNation = pScenarioTracker->GetPlayerMultiplayerNation( nPlayer );
+	}
+
+	script.PushNumber( nNation );
+	return 1;
+}
+
+// params: <player no>; returns: side of the player (0, 1 or 2)
+int CScripts::GetPlayerSide( struct lua_State *pState )
+{
+	Script script( pState );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GetPlayerSide: parameter 1 isn't a player number", script );
+	const int nPlayer = script.GetObject( 1 ).GetNumber();
+	CHECK_ERROR( nPlayer >= 0 && nPlayer < theDipl.GetNPlayers(), "GetPlayerSide: player number is out of range", script );
+
+	script.PushNumber( theDipl.GetNParty( nPlayer ) );
+	return 1;
+}
+
 
 void CScripts::RemoveUnit( CAIUnit * pUnit )
 {

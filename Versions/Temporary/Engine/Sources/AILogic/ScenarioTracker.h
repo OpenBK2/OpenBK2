@@ -70,6 +70,9 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual void SetLocalPlayer( int nPlayer ) = 0;
 	virtual int GetNPlayers() const = 0;
 	virtual int GetPlayerSide( int nPlayer ) const = 0;
+	// Multiplayer-only values exposed to AILogic scripts; single-player trackers keep the invalid default.
+	virtual int GetMultiplayerTechLevel() const { return -1; }
+	virtual int GetPlayerMultiplayerNation( int nPlayer ) const { return -1; }
 	virtual const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer ) = 0;
 
 	virtual bool IsMissionActive() const = 0;

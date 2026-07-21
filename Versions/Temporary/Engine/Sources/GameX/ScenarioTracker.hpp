@@ -413,6 +413,12 @@ public:
 	// mission statistics
 	int GetNPlayers() const;
 	int GetPlayerSide( int nPlayer ) const;
+	int GetMultiplayerTechLevel() const { return nTechLevel; }
+	int GetPlayerMultiplayerNation( int nPlayer ) const
+	{
+		// Neutral or otherwise unassigned map slots do not have an MP nation.
+		return nPlayer >= 0 && nPlayer < players.size() ? players[nPlayer].nMultiplayerSide : -1;
+	}
 
 	// campaign
 	void CampaignStart( const NDb::SCampaign * pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom ) { NI_ASSERT( false, "wrong call" ); }

@@ -455,6 +455,16 @@ public:
 	// params: <player no> <amount of xp>; returns: none
 	static int GiveXPToPlayer( struct lua_State *pState );
 
+	// params: <none>; returns: 1 if the match is MP, 0 if not
+	static int IsMultiplayerMatch( struct lua_State *pState );
+	// params: <none>; returns: -1 if the match is not MP, otherwise: current tech level id from mp consts (number >= 0)
+	static int GetMultiplayerMatchTechLevel( struct lua_State *pState );
+	// params: <player no>; returns: -1 if the match is not MP, otherwise: players nation id from mp consts (number >= 0)
+	static int GetPlayerMultiplayerNation( struct lua_State *pState );
+	// params: <player no>; returns: side of the player (0, 1 or 2)
+	static int GetPlayerSide( struct lua_State *pState );
+	
+
 	static int GlobeCommand( struct lua_State *pState );
 	//
 	// script camera
