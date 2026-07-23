@@ -1065,7 +1065,10 @@ void CMissionReinf::Step()
 
 const NDb::SReinforcement* CMissionReinf::GetReinfContext( const NDb::EReinforcementType eType ) const
 {
-	return Singleton<IScenarioTracker>()->GetReinforcement( 0, eType );
+	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
+	// Multiplayer clients can occupy any player slot, while single-player data belongs to player 0.
+	const int nPlayer = pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ? 0 : pScenarioTracker->GetLocalPlayer();
+	return pScenarioTracker->GetReinforcement( nPlayer, eType );
 }
 
 const NDb::SReinforcementTypes* CMissionReinf::GetReinfTypes() const
