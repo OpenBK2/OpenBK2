@@ -214,6 +214,9 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 				{
 					if ( info.pIconWnd )
 						info.pIconWnd->SetTexture( pContext->pIconTexture );
+					// Keep the UI-constants disabled texture as the fallback for legacy reinforcement data.
+					if ( info.pIconDisabledWnd && pContext->pDisabledIconTexture )
+						info.pIconDisabledWnd->SetTexture( pContext->pDisabledIconTexture );
 //					if ( pContext->pTooltip )
 //						info.pIconWnd->SetHelpContext( pContext->pTooltip );
 				}

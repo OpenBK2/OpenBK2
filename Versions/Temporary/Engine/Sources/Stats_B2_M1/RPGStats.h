@@ -2936,6 +2936,7 @@ namespace NDb
 	public:
 		EReinforcementType eType;
 		CDBPtr< STexture > pIconTexture;
+		CDBPtr< STexture > pDisabledIconTexture;
 		NFile::CFilePath szLocalizedNameFileRef;
 		std::vector< SReinforcementEntry > entries;
 		NFile::CFilePath szTooltipFileRef;

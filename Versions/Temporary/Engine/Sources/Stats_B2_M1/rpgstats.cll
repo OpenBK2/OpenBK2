@@ -1767,6 +1767,9 @@ class SReinforcement
 {
 	EReinforcementType _Type = RT_TANKS;
 	STexture *_IconTexture;
+	// Optional; the reinforcement-button UI uses its default disabled texture when this is null.
+	[chunkID = 10]
+	STexture *_DisabledIconTexture;
 	TextFileRef _LocalizedNameFileRef;
 	SReinforcementEntry _Entries[1..];
 	TextFileRef _TooltipFileRef;

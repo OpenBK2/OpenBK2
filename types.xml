@@ -28885,6 +28885,20 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
+					<Type>08d6ce11</Type>
+					<Name>DisabledIconTexture</Name>
+					<ChunkID>10</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
 					<Type>4037cd10</Type>
 					<Name>LocalizedNameFileRef</Name>
 					<ChunkID>4</ChunkID>

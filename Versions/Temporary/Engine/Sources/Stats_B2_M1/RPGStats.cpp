@@ -6167,6 +6167,7 @@ void SReinforcement::ReportMetaInfo() const
 	BYTE *pThis = (BYTE*)this;
 	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "IconTexture", (BYTE*)&pIconTexture - pThis, sizeof(pIconTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DisabledIconTexture", (BYTE*)&pDisabledIconTexture - pThis, sizeof(pDisabledIconTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( "Entries", &entries, pThis );
 	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -6181,6 +6182,7 @@ int SReinforcement::operator&( IXmlSaver &saver )
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
 	saver.Add( "Type", &eType );
 	saver.Add( "IconTexture", &pIconTexture );
+	saver.Add( "DisabledIconTexture", &pDisabledIconTexture );
 	saver.Add( "LocalizedNameFileRef", &szLocalizedNameFileRef );
 	saver.Add( "Entries", &entries );
 	saver.Add( "TooltipFileRef", &szTooltipFileRef );
@@ -6195,6 +6197,7 @@ int SReinforcement::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
 	saver.Add( 3, &pIconTexture );
+	saver.Add( 10, &pDisabledIconTexture );
 	saver.Add( 4, &szLocalizedNameFileRef );
 	saver.Add( 5, &entries );
 	saver.Add( 6, &szTooltipFileRef );
