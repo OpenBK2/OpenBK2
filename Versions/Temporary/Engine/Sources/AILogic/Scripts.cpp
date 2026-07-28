@@ -507,6 +507,15 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 		command.vPos.y = script.GetObject( 5 );
 
 		break;
+	case ACTION_COMMAND_REVERSE_TO:
+		// Reverse uses the same point arguments as the ordinary move command.
+		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "Give ACTION_COMMAND_REVERSE_TO command : the 4 parameter is not an X coordinate", script );
+		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "Give ACTION_COMMAND_REVERSE_TO command : the 5 parameter is not an Y coordinate", script );
+
+		command.vPos.x = script.GetObject( 4 );
+		command.vPos.y = script.GetObject( 5 );
+
+		break;
 	case ACTION_COMMAND_ATTACK_UNIT:
 		CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "Give ACTION_COMMAND_ATTACK_UNIT command : the third parameter is not a script id", script );
 

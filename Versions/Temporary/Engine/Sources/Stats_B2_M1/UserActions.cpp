@@ -206,6 +206,8 @@ std::string EnumToString( NDb::EUserAction eValue )
 		return "USER_ACTION_MOVE_WHELL";
 	case NDb::USER_ACTION_MOVE_HUMAN:
 		return "USER_ACTION_MOVE_HUMAN";
+	case NDb::USER_ACTION_REVERSE:
+		return "USER_ACTION_REVERSE";
 	default:
 		return "USER_ACTION_UNKNOWN";
 	}
@@ -405,6 +407,8 @@ NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const std::string &szValue )
 		return NDb::USER_ACTION_MOVE_WHELL;
 	if ( szValue == "USER_ACTION_MOVE_HUMAN" )
 		return NDb::USER_ACTION_MOVE_HUMAN;
+	if ( szValue == "USER_ACTION_REVERSE" )
+		return NDb::USER_ACTION_REVERSE;
 	return NDb::USER_ACTION_UNKNOWN;
 }
 

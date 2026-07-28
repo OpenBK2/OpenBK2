@@ -151,12 +151,14 @@ class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 	CVec2 point;
 	SAIAngle wDirToPoint;
 	bool bLongMove;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&pUnit); f.Add(3,&startTime); f.Add(4,&bWaiting); f.Add(5,&point); f.Add(6,&wDirToPoint); f.Add(7,&bLongMove); return 0; }
+	bool bForceReverse;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&pUnit); f.Add(3,&startTime); f.Add(4,&bWaiting); f.Add(5,&point); f.Add(6,&wDirToPoint); f.Add(7,&bLongMove); f.Add(8,&bForceReverse); return 0; }
+	void SetReversePathMode( const bool bEnable );
 public:
-	static IUnitState* Instance( CAIUnit *pUnit, const CVec2 &point );
+	static IUnitState* Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse = false );
 
-	CSoldierMoveToState() : pUnit( 0 ) { }
-	CSoldierMoveToState( class CAIUnit *pUnit, const CVec2 &point );
+	CSoldierMoveToState() : pUnit( 0 ), bForceReverse( false ) { }
+	CSoldierMoveToState( class CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse );
 
 	virtual void Segment();
 

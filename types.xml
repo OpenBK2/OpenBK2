@@ -38335,6 +38335,10 @@
 					<Name>USER_ACTION_MOVE_HUMAN</Name>
 					<Value>95</Value>
 				</Item>
+				<Item>
+					<Name>USER_ACTION_REVERSE</Name>
+					<Value>96</Value>
+				</Item>
 			</Entries>
 			<Attributes />
 		</Item>

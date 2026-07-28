@@ -335,6 +335,7 @@ public:
 	void UpdateSpecialSelection( int nID, CMapObj *pMO );
 	//
 	bool ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
+	bool ActionReverse( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionRotate( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionMoveToGrid( const CVec2 &vPos, const CMapObj *pMO, bool bForced );

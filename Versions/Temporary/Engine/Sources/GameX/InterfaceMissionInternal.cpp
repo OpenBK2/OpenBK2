@@ -2788,6 +2788,9 @@ void CInterfaceMission::MakeCommandTooltip( NDb::EUserAction eUserAction )
 
 bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 {
+	// Reverse was added after the ability range, but it is a fixed movement command like Move.
+	if ( eAction == NDb::USER_ACTION_REVERSE )
+		return false;
 //	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
 //		return false;
 	return eAction > NDb::USER_ACTION_ABILITY ||

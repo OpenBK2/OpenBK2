@@ -396,6 +396,14 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 			if ( (pStats->nAIPassabilityClass & EAC_WHELL) != 0 )
 				pActions->SetAction( NDb::USER_ACTION_MOVE_WHELL );
 		}
+
+		// Reverse is supplied by code for powered ground vehicles, so unit DB action sets stay compatible.
+		const bool bCanReverseByType = pStats && ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
+			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
+		if ( bCanReverseByType && !bArtilleryHooked && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+			pActions->SetAction( NDb::USER_ACTION_REVERSE );
+		else
+			pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
 	}
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
@@ -441,12 +449,27 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 	}
 }
 
+void CMOUnitMechanical::GetPossibleActions( CUserActions *pActions ) const
+{
+	CMOUnit::GetPossibleActions( pActions );
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+
+	// Keep the action in the unit's stable button set; transient towing/movement state disables it below.
+	const bool bCanReverseByType = pStats && ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
+		pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
+	if ( bCanReverseByType && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		pActions->SetAction( NDb::USER_ACTION_REVERSE );
+}
+
 void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CMOUnit::GetDisabledActions( pActions, eActions );
 
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
+		// Reverse has the same mobility restrictions as move, plus towing prevents backing up.
+		if ( bArtilleryHooked || pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+			pActions->SetAction( NDb::USER_ACTION_REVERSE );
 		if ( vPassangers.empty() /*|| bArtilleryHooked*/ )
 			pActions->SetAction( NDb::USER_ACTION_LEAVE );
 		if ( !IsOpen() || (pTransport && !pTransport->IsOpen()) )

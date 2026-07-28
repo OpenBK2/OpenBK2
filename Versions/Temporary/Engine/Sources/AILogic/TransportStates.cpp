@@ -76,6 +76,7 @@ bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		(
 			cmdType == ACTION_COMMAND_DIE					||
 			cmdType == ACTION_COMMAND_MOVE_TO			||
+			cmdType == ACTION_COMMAND_REVERSE_TO		||
 			cmdType == ACTION_COMMAND_WAIT_FOR_UNITS ||
 			cmdType == ACTION_COMMAND_ROTATE_TO		||
 			cmdType == ACTION_MOVE_BY_DIR					||
@@ -373,9 +374,10 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 		break;
 	case ACTION_COMMAND_MOVE_TO:
+	case ACTION_COMMAND_REVERSE_TO:
 		pUnit->UnsetFollowState();
 		//pResult = CTransportPlaceMineState::Instance( pUnit, cmd.vPos );
-		pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos );
+		pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 
 		break;
 	case ACTION_COMMAND_WAIT_FOR_UNITS:

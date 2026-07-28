@@ -930,17 +930,30 @@ const CVec2 CSoldierAttackState::GetPurposePoint() const
 //*										  CSoldierMoveToState													*
 //*******************************************************************
 
-IUnitState* CSoldierMoveToState::Instance( CAIUnit *pUnit, const CVec2 &point )
+IUnitState* CSoldierMoveToState::Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse )
 {
-	return new CSoldierMoveToState( pUnit, point );
+	return new CSoldierMoveToState( pUnit, point, bForceReverse );
 }
 
-CSoldierMoveToState::CSoldierMoveToState( CAIUnit *_pUnit, const CVec2 &_point )
+CSoldierMoveToState::CSoldierMoveToState( CAIUnit *_pUnit, const CVec2 &_point, const bool _bForceReverse )
 : pUnit( _pUnit ), startTime( curTime ), bWaiting( true ), CFreeFireManager( _pUnit ),
-	point( _point ), wDirToPoint( _pUnit->GetFrontDirection() ), bLongMove( false )
+	point( _point ), wDirToPoint( _pUnit->GetFrontDirection() ), bLongMove( false ), bForceReverse( _bForceReverse )
 {
 	pUnit->UnlockTiles();
 	pUnit->FixUnlocking();
+}
+
+void CSoldierMoveToState::SetReversePathMode( const bool bEnable )
+{
+	if ( !pUnit )
+		return;
+
+	ISmoothPath *pDefaultPath = pUnit->GetDefaultPath();
+	ISmoothPath *pSmoothPath = pUnit->GetSmoothPath();
+	if ( pDefaultPath )
+		pDefaultPath->SetForceGoBackward( bEnable );
+	if ( pSmoothPath && pSmoothPath != pDefaultPath )
+		pSmoothPath->SetForceGoBackward( bEnable );
 }
 
 void CSoldierMoveToState::Segment()
@@ -960,10 +973,14 @@ void CSoldierMoveToState::Segment()
 				CBasicGun *pMainGun = pUnit->GetGuns()->GetMainGun();
 				if ( pMainGun )
 					pUnit->Lock( pMainGun );
-				pUnit->SendAlongPath( pStaticPath, pUnit->GetGroupShift(), true );
+				// Set the policy before Init so path rebuilds inherit it, and disable forward turn arcs for reverse.
+				SetReversePathMode( bForceReverse );
+				pUnit->SendAlongPath( pStaticPath, pUnit->GetGroupShift(), !bForceReverse );
+				SetReversePathMode( bForceReverse );
 			}
 			else
 			{
+				SetReversePathMode( false );
 				pUnit->SendAcknowledgement( ACK_NEGATIVE );
 				pUnit->SetCommandFinished();
 			}
@@ -973,6 +990,8 @@ void CSoldierMoveToState::Segment()
 	}
 	else
 	{
+		if ( bForceReverse )
+			SetReversePathMode( true );
 		if ( !pUnit->GetStats()->IsInfantry() && ( pUnit->GetBehaviourFire() == SBehaviour::EFAtWill || pUnit->CanShootInMovement() ) )
 			CFreeFireManager::Analyze( pUnit, 0 );
 		if ( pUnit->IsIdle() || pUnit->GetNextCommand() != 0 && fabs2( pUnit->GetCenterPlain() - point ) <= sqr( 2.5f * (float)SConsts::TILE_SIZE ) )
@@ -989,6 +1008,7 @@ void CSoldierMoveToState::Segment()
 					pUnit->SendAcknowledgement( NDb::ACK_MOVE_END, pUnit->GetPlayer() == theDipl.GetMyNumber() );
 			}
 
+			SetReversePathMode( false );
 			pUnit->SetCommandFinished();
 		}
 	}
@@ -996,6 +1016,7 @@ void CSoldierMoveToState::Segment()
 
 ETryStateInterruptResult CSoldierMoveToState::TryInterruptState( class CAICommand *pCommand )
 { 
+	SetReversePathMode( false );
 	pUnit->UnfixUnlocking();
 
 	CBasicGun *pMainGun = pUnit->GetGuns()->GetMainGun();

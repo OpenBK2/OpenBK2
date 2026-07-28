@@ -113,6 +113,12 @@ bool CWorldClient::ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForc
 	return bResult;
 }
 
+bool CWorldClient::ActionReverse( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	// Reverse is always an explicit point command; objects under the cursor do not change its meaning.
+	return PerformGroupAction( ACTION_COMMAND_REVERSE_TO, vPos, GetPlaceInQueue() );
+}
+
 bool CWorldClient::ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( !pMO )

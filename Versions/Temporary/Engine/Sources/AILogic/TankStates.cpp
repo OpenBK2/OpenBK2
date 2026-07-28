@@ -44,6 +44,7 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	return 
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
+			cmdType == ACTION_COMMAND_REVERSE_TO				||
 			cmdType == ACTION_COMMAND_ATTACK_UNIT			||
 			cmdType == ACTION_COMMAND_ATTACK_OBJECT		||
 			cmdType == ACTION_COMMAND_ROTATE_TO				||
@@ -181,6 +182,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 		break;
 	case ACTION_COMMAND_MOVE_TO:
+	case ACTION_COMMAND_REVERSE_TO:
 		{
 			pUnit->UnsetFollowState();
 
@@ -198,7 +200,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 				}
 				else
-					pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos );
+					pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 			}
 		}
 		break;

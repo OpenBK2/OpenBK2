@@ -458,6 +458,7 @@ void CWorldClient::InitPrivate()
 	AddObserver( "center_current_selection", &CWorldClient::MsgCenterCurrentSelection );
 
 	RegisterUserAction( NDb::USER_ACTION_MOVE, SActionDesc::AUTO | SActionDesc::FORCED, &CWorldClient::ActionMove );
+	RegisterUserAction( NDb::USER_ACTION_REVERSE, SActionDesc::FORCED, &CWorldClient::ActionReverse );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_TO_GRID, SActionDesc::FORCED, &CWorldClient::ActionMoveToGrid );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN, SActionDesc::AUTO, &CWorldClient::ActionMove );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_TRACK, SActionDesc::AUTO, &CWorldClient::ActionMove );
@@ -1041,7 +1042,7 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 
 	if ( pfnAction != 0 ) 
 	{
-		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_SUPPRESS) ?
+		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_SUPPRESS) ?
 													0 : PickTopMapObj( vPos, eUserAction );
 		CVec2 vTarget;
 		if ( bMiniMap )
@@ -1076,7 +1077,7 @@ void CWorldClient::DoAction( USER_ACTION pfnAction, NDb::EUserAction eUserAction
 			else
 				NInput::PostEvent( "notify_forced_action", 0, 0 );
 		}
-		if ( pMO == 0 && (eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_ATTACK) )
+		if ( pMO == 0 && (eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_ATTACK) )
 		{
 			ShowSelectionDst( vTarget );
 		}

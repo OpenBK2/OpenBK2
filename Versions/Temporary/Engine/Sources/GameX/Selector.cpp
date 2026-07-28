@@ -77,6 +77,7 @@ bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 {
 	const bool bAllUnitsCommand = ( 
 		eCommand == ACTION_COMMAND_MOVE_TO ||
+		eCommand == ACTION_COMMAND_REVERSE_TO ||
 		eCommand == ACTION_COMMAND_FOLLOW ||
 		eCommand == ACTION_COMMAND_SWARM_TO ||
 		eCommand == ACTION_COMMAND_ART_BOMBARDMENT ||
@@ -832,10 +833,21 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 		for ( std::vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
 		{
 			CMOSelectable *pSO = *it;
-			
+
+			if ( pCommand->nCmdType == ACTION_COMMAND_REVERSE_TO )
+			{
+				// A mixed selection may contain units without vehicle reverse support.
+				CUserActions enabledActions;
+				pSO->GetEnabledActions( &enabledActions, ACTIONS_BY );
+				if ( !enabledActions.HasAction( NDb::USER_ACTION_REVERSE ) )
+					continue;
+			}
 			buffer.push_back( pSO->GetID() );
 		}
 	}
+
+	if ( buffer.empty() )
+		return false;
 
 	const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 	pCommandsSender->CommandGroupCommand( pCommand, wAIGroup, bPlaceInQueue, ML_COMMAND_SAVE_GAME );

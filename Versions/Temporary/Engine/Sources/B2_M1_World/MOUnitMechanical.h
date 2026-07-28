@@ -89,6 +89,7 @@ public:
 	//
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
+	void GetPossibleActions( CUserActions *pActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager );
 	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );

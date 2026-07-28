@@ -941,6 +941,11 @@ void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 
 bool CAIUnit::CanCommandBeExecuted( CAICommand *pCommand )
 {
+	if ( pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_REVERSE_TO )
+	{
+		// Reverse is a code-provided movement command for ground mechanical units, not a per-unit DB command.
+		return CanCommandBeExecutedByStats( ACTION_COMMAND_REVERSE_TO ) && CanGoBackward();
+	}
 	return GetStats()->HasCommand( int( pCommand->ToUnitCmd().nCmdType ) );
 }
 
@@ -951,6 +956,15 @@ bool CAIUnit::CanCommandBeExecutedByStats( CAICommand *pCommand )
 
 bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 {
+	if ( nCmd == ACTION_COMMAND_REVERSE_TO )
+	{
+		const NDb::SUnitBaseRPGStats *pStats = GetStats();
+		// Only powered ground-vehicle state factories implement explicit reverse.
+		return pStats->GetTypeID() == NDb::SMechUnitRPGStats::typeID &&
+			( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
+			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
+			pStats->HasCommand( ACTION_COMMAND_MOVE_TO );
+	}
 	return GetStats()->HasCommand( nCmd );
 }
 
