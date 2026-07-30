@@ -19,6 +19,17 @@ bool HasMoveStopSound() const { return pSoundMoveStop != 0; }
 virtual const float GetTurnRadius() const { return fTurnRadius; }
 //
 const std::vector<CVec2>* GetGunners( const int nMode ) const { return nMode < gunners.size() ? &(gunners[nMode].gunners) : 0; }
+
+// A unit has configured gunners if any movement mode contains at least one gunner position.
+bool HasConfiguredGunners() const
+{
+	for ( int nMode = 0; nMode < gunners.size(); ++nMode )
+	{
+		if ( !gunners[nMode].gunners.empty() )
+			return true;
+	}
+	return false;
+}
 //
 
 #include "include_constructorinfo.h"

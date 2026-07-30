@@ -44,12 +44,15 @@ class CArtilleryMoveToState : public IUnitState
 
 	NTimer::STime startTime;
 	CPtr<IStaticPath> pStaticPath;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bToFinish); f.Add(4,&pArtillery); f.Add(5,&startTime); f.Add(6,&pStaticPath); return 0; }
-public:
-	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &point );
+	bool bForceReverse;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bToFinish); f.Add(4,&pArtillery); f.Add(5,&startTime); f.Add(6,&pStaticPath); f.Add(7,&bForceReverse); return 0; }
 
-	CArtilleryMoveToState() : pArtillery( 0 ) { }
-	CArtilleryMoveToState( class CArtillery *pArtillery, const CVec2 &point );
+	void SetReversePathMode( const bool bEnable );
+public:
+	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse = false );
+
+	CArtilleryMoveToState() : pArtillery( 0 ), bForceReverse( false ) { }
+	CArtilleryMoveToState( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState(class CAICommand *pCommand);

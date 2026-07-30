@@ -397,8 +397,11 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 				pActions->SetAction( NDb::USER_ACTION_MOVE_WHELL );
 		}
 
-		// Reverse is supplied by code for powered ground vehicles, so unit DB action sets stay compatible.
-		const bool bCanReverseByType = pStats && ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
+		// Rocket/AA artillery must be gunnerless; Move still filters out its static variants.
+		const bool bReverseArtilleryType = pStats && ( pStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+			pStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN );
+		const bool bCanReverseByType = pStats &&
+			( bReverseArtilleryType ? !pStats->HasConfiguredGunners() : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
 			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
 		if ( bCanReverseByType && !bArtilleryHooked && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 			pActions->SetAction( NDb::USER_ACTION_REVERSE );
@@ -454,11 +457,16 @@ void CMOUnitMechanical::GetPossibleActions( CUserActions *pActions ) const
 	CMOUnit::GetPossibleActions( pActions );
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
 
-	// Keep the action in the unit's stable button set; transient towing/movement state disables it below.
-	const bool bCanReverseByType = pStats && ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
+	// Keep the action stable for gunnerless mobile rocket/AA artillery; static guns have no Move action.
+	const bool bReverseArtilleryType = pStats && ( pStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+		pStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN );
+	const bool bCanReverseByType = pStats &&
+		( bReverseArtilleryType ? !pStats->HasConfiguredGunners() : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
 		pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
 	if ( bCanReverseByType && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 		pActions->SetAction( NDb::USER_ACTION_REVERSE );
+	else
+		pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
 }
 
 void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const

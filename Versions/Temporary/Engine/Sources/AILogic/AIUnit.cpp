@@ -959,11 +959,18 @@ bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 	if ( nCmd == ACTION_COMMAND_REVERSE_TO )
 	{
 		const NDb::SUnitBaseRPGStats *pStats = GetStats();
-		// Only powered ground-vehicle state factories implement explicit reverse.
-		return pStats->GetTypeID() == NDb::SMechUnitRPGStats::typeID &&
-			( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) &&
-			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
-			pStats->HasCommand( ACTION_COMMAND_MOVE_TO );
+		if ( pStats->GetTypeID() != NDb::SMechUnitRPGStats::typeID )
+			return false;
+
+		const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats*>( pStats );
+		// Rocket/AA artillery may reverse only when no movement mode defines gunner positions.
+		const bool bReverseArtilleryType = pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+			pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN;
+		const bool bCanReverseByType = bReverseArtilleryType ? !pMechStats->HasConfiguredGunners() :
+			( pMechStats->IsArmor() || pMechStats->IsSPG() || pMechStats->IsTransport() );
+		return bCanReverseByType &&
+			pMechStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
+			pMechStats->HasCommand( ACTION_COMMAND_MOVE_TO );
 	}
 	return GetStats()->HasCommand( nCmd );
 }

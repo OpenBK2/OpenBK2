@@ -64,6 +64,7 @@ bool CArtilleryStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	return 
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
+			cmdType == ACTION_COMMAND_REVERSE_TO				||
 			cmdType == ACTION_COMMAND_ATTACK_UNIT			||
 			cmdType == ACTION_COMMAND_ATTACK_OBJECT		||
 			cmdType == ACTION_COMMAND_ROTATE_TO				||
@@ -223,6 +224,7 @@ IUnitState* CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_MOVE_TO:
+		case ACTION_COMMAND_REVERSE_TO:
 			pArtillery->ResetHoldSector();
 			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
 			{
@@ -233,7 +235,7 @@ IUnitState* CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			else
 			{
 				pArtillery->UnsetFollowState();				
-				pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos );
+				pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 			}
 
 			break;
@@ -461,16 +463,30 @@ IUnitState* CArtilleryStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 //*										  CArtilleryMoveToState												*
 //*******************************************************************
 
-IUnitState* CArtilleryMoveToState::Instance( CArtillery *pArtillery, const CVec2 &point )
+IUnitState* CArtilleryMoveToState::Instance( CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse )
 {
-	return new CArtilleryMoveToState( pArtillery, point );
+	return new CArtilleryMoveToState( pArtillery, point, bForceReverse );
 }
 
-CArtilleryMoveToState::CArtilleryMoveToState( CArtillery *_pArtillery, const CVec2 &_point )
-: pArtillery( _pArtillery ), startTime( curTime ), eState( EAMTS_WAIT_FOR_PATH ), bToFinish( false )
+CArtilleryMoveToState::CArtilleryMoveToState( CArtillery *_pArtillery, const CVec2 &_point, const bool _bForceReverse )
+: pArtillery( _pArtillery ), startTime( curTime ), eState( EAMTS_WAIT_FOR_PATH ), bToFinish( false ),
+	bForceReverse( _bForceReverse )
 {
 	pArtillery->UnlockTiles();
 	pArtillery->FixUnlocking();
+}
+
+void CArtilleryMoveToState::SetReversePathMode( const bool bEnable )
+{
+	if ( !pArtillery )
+		return;
+
+	ISmoothPath *pDefaultPath = pArtillery->GetDefaultPath();
+	ISmoothPath *pSmoothPath = pArtillery->GetSmoothPath();
+	if ( pDefaultPath )
+		pDefaultPath->SetForceGoBackward( bEnable );
+	if ( pSmoothPath && pSmoothPath != pDefaultPath )
+		pSmoothPath->SetForceGoBackward( bEnable );
 }
 
 void CArtilleryMoveToState::Segment()
@@ -516,7 +532,10 @@ void CArtilleryMoveToState::Segment()
 			if ( pArtillery->IsUninstalled() )
 			{
 				if ( bToFinish )
+				{
+					SetReversePathMode( false );
 					pArtillery->SetCommandFinished();
+				}
 				else
 					eState = EAMTS_START_MOVING;
 			}
@@ -525,23 +544,37 @@ void CArtilleryMoveToState::Segment()
 		case EAMTS_START_MOVING:
 			{
 				if ( !pStaticPath )
+				{
+					SetReversePathMode( false );
 					pArtillery->SetCommandFinished();
+				}
 				else
 				{
-					pArtillery->SendAlongPath( pStaticPath, pArtillery->GetGroupShift(), true );
+					// Set the policy before and after Init so rebuilt smooth paths keep forced reverse.
+					SetReversePathMode( bForceReverse );
+					pArtillery->SendAlongPath( pStaticPath, pArtillery->GetGroupShift(), !bForceReverse );
+					SetReversePathMode( bForceReverse );
 					eState = EAMTS_MOVING;
 				}
 			}
 
 			break;
 		case EAMTS_MOVING:
+			if ( bForceReverse )
+				SetReversePathMode( true );
 			if ( pArtillery->IsOperable() )
 			{
 				if ( pArtillery->IsIdle() )
+				{
+					SetReversePathMode( false );
 					pArtillery->SetCommandFinished();
+				}
 			}
 			else if ( !pArtillery->HasServeCrew() )
+			{
+				SetReversePathMode( false );
 				pArtillery->SetCommandFinished();
+			}
 
 			break;
 		}
@@ -550,6 +583,7 @@ void CArtilleryMoveToState::Segment()
 
 ETryStateInterruptResult CArtilleryMoveToState::TryInterruptState(class CAICommand *pCommand)
 { 
+	SetReversePathMode( false );
 	pArtillery->UnfixUnlocking();
 	if ( pArtillery->MustHaveCrewToOperate() )
 	{
