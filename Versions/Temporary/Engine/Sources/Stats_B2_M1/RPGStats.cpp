@@ -145,6 +145,8 @@ std::string EnumToString( NDb::EUnitSpecialAbility eValue )
 		return "ABILITY_RADIO_CONTROLLED_MODE";
 	case NDb::_ABILITY_COUNT:
 		return "_ABILITY_COUNT";
+	case NDb::ABILITY_FIRE_ROCKETS:
+		return "ABILITY_FIRE_ROCKETS";
 	default:
 		return "ABILITY_NOT_ABILITY";
 	}
@@ -276,6 +278,8 @@ NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const std::s
 		return NDb::ABILITY_RADIO_CONTROLLED_MODE;
 	if ( szValue == "_ABILITY_COUNT" )
 		return NDb::_ABILITY_COUNT;
+	if ( szValue == "ABILITY_FIRE_ROCKETS" )
+		return NDb::ABILITY_FIRE_ROCKETS;
 	return NDb::ABILITY_NOT_ABILITY;
 }
 

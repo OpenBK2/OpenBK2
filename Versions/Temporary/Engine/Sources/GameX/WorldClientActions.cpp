@@ -797,6 +797,15 @@ bool CWorldClient::ActionSupressFire( const CVec2 &vPos, const CMapObj *pMO, boo
 	}
 }
 
+bool CWorldClient::ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	if ( pMO )
+		return false;
+
+	// Unlike suppressive fire, this command always completes after one burst/salvo.
+	return PerformGroupAction( ACTION_COMMAND_FIRE_ROCKETS, vPos, GetPlaceInQueue() );
+}
+
 bool CWorldClient::ActionCriticalTargetting( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	return PerformGroupAction( ACTION_COMMAND_CRITICAL_TARGETING, (float)eCurrentAbilityParam, GetPlaceInQueue() );

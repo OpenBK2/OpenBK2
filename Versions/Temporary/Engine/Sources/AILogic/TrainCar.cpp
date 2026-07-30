@@ -62,7 +62,8 @@ bool CTrainCarStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		cmdType == ACTION_COMMAND_PATROL									||
 		cmdType == ACTION_COMMAND_UNLOAD									||
 		cmdType == ACTION_COMMAND_WAIT										||
-		cmdType == ACTION_COMMAND_ART_BOMBARDMENT
+		cmdType == ACTION_COMMAND_ART_BOMBARDMENT			||
+		cmdType == ACTION_COMMAND_FIRE_ROCKETS
 		);
 }
 
@@ -151,10 +152,15 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 		}
 		break;
 	case ACTION_COMMAND_ART_BOMBARDMENT:
+	case ACTION_COMMAND_FIRE_ROCKETS:
 		if ( pUnit->GetFirstArtilleryGun() != 0 )
 		{ 
 			if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
-				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, cmd.fNumber );
+			{
+				// Use one burst for the finite ability; preserve Suppress' existing count semantics.
+				const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
+				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+			}
 			else
 				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 		}

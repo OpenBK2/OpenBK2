@@ -213,13 +213,14 @@ class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	float fInitialHeight ;
 	float fStartAttackDist;
 	bool bHaveBombs;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); f.Add(4,&fInitialHeight); f.Add(5,&fStartAttackDist); f.Add(6,&bHaveBombs); return 0; }
+	bool bSingleSalvo;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); f.Add(4,&fInitialHeight); f.Add(5,&fStartAttackDist); f.Add(6,&bHaveBombs); f.Add(7,&bSingleSalvo); return 0; }
 	
 	float RecalcStartAttack() const;
 public:
 
-	CPlaneBombState() { }
-	CPlaneBombState( CAviation *pUnit, const CVec2 &vPoint );
+	CPlaneBombState() : bSingleSalvo( false ) { }
+	CPlaneBombState( CAviation *pUnit, const CVec2 &vPoint, bool bSingleSalvo = false );
 
 	virtual void Segment();
 

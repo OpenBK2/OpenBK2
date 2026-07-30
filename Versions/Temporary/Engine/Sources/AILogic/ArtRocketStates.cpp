@@ -43,6 +43,7 @@ bool CArtRocketStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT	||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
 			cmdType == ACTION_COMMAND_ROTATE_TO				||
 			cmdType == ACTION_COMMAND_INSTALL					||
 			cmdType == ACTION_COMMAND_UNINSTALL				||
@@ -180,6 +181,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:
+		case ACTION_COMMAND_FIRE_ROCKETS:
 			pResult = CArtRocketAttackGroundState::Instance( pArtillery, cmd.vPos );
 
 			break;

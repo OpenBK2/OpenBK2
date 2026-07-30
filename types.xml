@@ -37217,8 +37217,12 @@
 					<Value>60</Value>
 				</Item>
 				<Item>
-					<Name>_ABILITY_COUNT</Name>
+					<Name>ABILITY_FIRE_ROCKETS</Name>
 					<Value>61</Value>
+				</Item>
+				<Item>
+					<Name>_ABILITY_COUNT</Name>
+					<Value>62</Value>
 				</Item>
 			</Entries>
 			<Attributes />
@@ -38338,6 +38342,10 @@
 				<Item>
 					<Name>USER_ACTION_REVERSE</Name>
 					<Value>96</Value>
+				</Item>
+				<Item>
+					<Name>USER_ACTION_FIRE_ROCKETS</Name>
+					<Value>97</Value>
 				</Item>
 			</Entries>
 			<Attributes />

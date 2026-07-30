@@ -96,6 +96,7 @@ bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_TARGET ||
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS ||
 			cmdType == ACTION_COMMAND_PATROL
 		);
 }
@@ -182,6 +183,11 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 	case ACTION_COMMAND_ART_BOMBARDMENT:
 		pResult = new CPlaneBombState( pUnit, cmd.vPos );
 		
+		break;
+	case ACTION_COMMAND_FIRE_ROCKETS:
+		// Aircraft make one bombing pass for the finite single-salvo ability.
+		pResult = new CPlaneBombState( pUnit, cmd.vPos, true );
+
 		break;
 	case ACTION_MOVE_FIGHTER_SETPOINT:
 		pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
@@ -799,10 +805,10 @@ ETryStateInterruptResult CPlaneRestState::TryInterruptState( class CAICommand *p
 //*										  CPlaneBombState															*
 //*******************************************************************
 
-CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint )
+CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint, bool _bSingleSalvo )
 : CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
 	eState( ECBS_ESTIMATE ), fInitialHeight ( _pPlane->GetCenter().z ), 
-	fStartAttackDist( 0.0f ), bHaveBombs( true )
+	fStartAttackDist( 0.0f ), bHaveBombs( true ), bSingleSalvo( _bSingleSalvo )
 {
 	bHaveBombs = IsBombsPresent();
 	SetPoint( vPoint + _pPlane->GetGroupShift() );
@@ -929,7 +935,9 @@ void CPlaneBombState::Segment()
 		break;
 	case ECBS_AIM_TO_NEXT_POINT_2:
 		{
-			if ( bHaveBombs )
+			if ( bSingleSalvo && bHaveBombs )
+				TryInterruptState( 0 );
+			else if ( bHaveBombs )
 				eState = ECBS_GAIN_DISTANCE;
 			else if ( pPlane->IsStrategicBomber() )
 			{

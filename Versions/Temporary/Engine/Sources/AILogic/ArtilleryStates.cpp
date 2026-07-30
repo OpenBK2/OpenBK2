@@ -73,6 +73,7 @@ bool CArtilleryStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_INSTALL					||
 			cmdType == ACTION_COMMAND_UNINSTALL				||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT	||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
 			cmdType == ACTION_COMMAND_DISAPPEAR				||
 			cmdType == ACTION_MOVE_BEING_TOWED				||
 			cmdType == ACTION_COMMAND_LEAVE						||
@@ -349,8 +350,13 @@ IUnitState* CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:
+		case ACTION_COMMAND_FIRE_ROCKETS:
 			if ( pArtillery->GetFirstArtilleryGun() != 0 )
-				pResult = CArtilleryBombardmentState::Instance( pArtillery, cmd.vPos, cmd.fNumber );
+			{
+				// A count of one makes the existing bombardment state finish after one complete burst.
+				const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
+				pResult = CArtilleryBombardmentState::Instance( pArtillery, cmd.vPos, nBurstCount );
+			}
 			else
 				pArtillery->SendAcknowledgement( pCommand, ACK_NEGATIVE, !pCommand->IsFromAI() );
 

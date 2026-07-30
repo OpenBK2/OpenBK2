@@ -81,6 +81,7 @@ bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 		eCommand == ACTION_COMMAND_FOLLOW ||
 		eCommand == ACTION_COMMAND_SWARM_TO ||
 		eCommand == ACTION_COMMAND_ART_BOMBARDMENT ||
+		eCommand == ACTION_COMMAND_FIRE_ROCKETS ||
 		eCommand == ACTION_COMMAND_RANGE_AREA ||
 		eCommand == ACTION_COMMAND_ATTACK_UNIT ||
 		eCommand == ACTION_COMMAND_ATTACK_OBJECT ||

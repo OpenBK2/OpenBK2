@@ -54,6 +54,7 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_TRACK_TARGETING	||
 			cmdType == ACTION_COMMAND_RANGE_AREA			||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
 			cmdType == ACTION_COMMAND_DISAPPEAR				||
 			cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH ||
 			cmdType == ACTION_COMMAND_FOLLOW					||
@@ -357,10 +358,15 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		
 		break;*/
 	case ACTION_COMMAND_ART_BOMBARDMENT:
+	case ACTION_COMMAND_FIRE_ROCKETS:
 		if ( pUnit->GetFirstArtilleryGun() != 0 )
 		{ 
 			if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
-				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, cmd.fNumber );
+			{
+				// FIRE_ROCKETS is deliberately finite even for non-rocket artillery weapons.
+				const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
+				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+			}
 			else
 				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 		}

@@ -110,6 +110,7 @@ namespace NDb
 		USER_ACTION_MOVE_WHELL = 94,
 		USER_ACTION_MOVE_HUMAN = 95,
 		USER_ACTION_REVERSE = 96,
+		USER_ACTION_FIRE_ROCKETS = 97,
 	};
 
 	enum ESpecialAbilityParam
