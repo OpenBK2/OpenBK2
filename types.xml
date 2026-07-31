@@ -37221,8 +37221,12 @@
 					<Value>61</Value>
 				</Item>
 				<Item>
-					<Name>_ABILITY_COUNT</Name>
+					<Name>ABILITY_USE_FLAMETHROWER</Name>
 					<Value>62</Value>
+				</Item>
+				<Item>
+					<Name>_ABILITY_COUNT</Name>
+					<Value>63</Value>
 				</Item>
 			</Entries>
 			<Attributes />
@@ -38346,6 +38350,10 @@
 				<Item>
 					<Name>USER_ACTION_FIRE_ROCKETS</Name>
 					<Value>97</Value>
+				</Item>
+				<Item>
+					<Name>USER_ACTION_USE_FLAMETHROWER</Name>
+					<Value>98</Value>
 				</Item>
 			</Entries>
 			<Attributes />

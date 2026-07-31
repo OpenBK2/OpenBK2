@@ -740,6 +740,7 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 		break;
 	case ACTION_COMMAND_ART_BOMBARDMENT:
 	case ACTION_COMMAND_FIRE_ROCKETS:
+	case ACTION_COMMAND_USE_FLAMETHROWER:
 		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "Give point-fire command : the 4 parameter is not an X coordinate", script );
 		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "Give point-fire command : the 5 parameter is not an Y coordinate", script );
 

@@ -75,6 +75,7 @@ bool CArtilleryStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_UNINSTALL				||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT	||
 			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_DISAPPEAR				||
 			cmdType == ACTION_MOVE_BEING_TOWED				||
 			cmdType == ACTION_COMMAND_LEAVE						||
@@ -361,6 +362,11 @@ IUnitState* CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			}
 			else
 				pArtillery->SendAcknowledgement( pCommand, ACK_NEGATIVE, !pCommand->IsFromAI() );
+
+			break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			// Unlike artillery bombardment, this path ignores every non-flame shell.
+			pResult = CArtilleryBombardmentState::Instance( pArtillery, cmd.vPos, 1, true );
 
 			break;
 		case ACTION_COMMAND_RANGE_AREA:
@@ -697,17 +703,118 @@ const CVec2 CArtilleryTurnToPointState::GetPurposePoint() const
 //*										CArtilleryBombardmentState										*
 //*******************************************************************
 
-IUnitState* CArtilleryBombardmentState::Instance( CAIUnit *pUnit, const CVec2 &point, const int nShotCount )
+IUnitState* CArtilleryBombardmentState::Instance( CAIUnit *pUnit, const CVec2 &point, const int nShotCount, const bool bFlamethrowerOnly )
 {
-	return new CArtilleryBombardmentState( pUnit, point, nShotCount );
+	return new CArtilleryBombardmentState( pUnit, point, nShotCount, bFlamethrowerOnly );
 }
 
-CArtilleryBombardmentState::CArtilleryBombardmentState( CAIUnit *_pUnit, const CVec2 &_point, const int _nShotCount )
+CArtilleryBombardmentState::CArtilleryBombardmentState( CAIUnit *_pUnit, const CVec2 &_point, const int _nShotCount, const bool _bFlamethrowerOnly )
 : CStatusUpdatesHelper( EUS_SUPPRESSIVE_FIRE, _pUnit ), pUnit( _pUnit ), point( _point ), bStop( false ), eState( EABS_START ),
-	bSaidNoAmmo( false ), nShotCount( _nShotCount )
+	bSaidNoAmmo( false ), nShotCount( _nShotCount ), bFlamethrowerOnly( _bFlamethrowerOnly ), bBurstStarted( false )
 {
 	if ( nShotCount == 0 )
 		nShotCount = -1;
+}
+
+bool CArtilleryBombardmentState::IsFlamethrowerGun( const CBasicGun *pGun ) const
+{
+	return pGun && pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
+}
+
+CBasicGun* CArtilleryBombardmentState::ChoosePointFireGun( bool *pCanShootWOMove, bool *pNeedTurn ) const
+{
+	*pCanShootWOMove = false;
+	*pNeedTurn = false;
+
+	if ( !bFlamethrowerOnly )
+	{
+		CBasicGun *pGun = pUnit->GetFirstArtilleryGun();
+		if ( !pGun )
+			return 0;
+
+		*pCanShootWOMove = pGun->CanShootToPointWOMove( point, 0.0f );
+		if ( !*pCanShootWOMove && pGun->GetRejectReason() == ACK_NOT_IN_ATTACK_ANGLE && pUnit->CanRotate() )
+		{
+			*pCanShootWOMove = true;
+			*pNeedTurn = true;
+		}
+		return pGun;
+	}
+
+	CBasicGun *pFirstFlamethrower = 0;
+	CBasicGun *pTurnCandidate = 0;
+	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( !IsFlamethrowerGun( pGun ) )
+			continue;
+
+		if ( !pFirstFlamethrower )
+			pFirstFlamethrower = pGun;
+		if ( pGun->CanShootToPointWOMove( point, 0.0f ) )
+		{
+			*pCanShootWOMove = true;
+			return pGun;
+		}
+		if ( !pTurnCandidate && pGun->GetRejectReason() == ACK_NOT_IN_ATTACK_ANGLE && pUnit->CanRotate() )
+			pTurnCandidate = pGun;
+	}
+
+	if ( pTurnCandidate )
+	{
+		*pCanShootWOMove = true;
+		*pNeedTurn = true;
+		return pTurnCandidate;
+	}
+	return pFirstFlamethrower;
+}
+
+bool CArtilleryBombardmentState::StartFlamethrowerBurst()
+{
+	bool bStarted = false;
+	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( IsFlamethrowerGun( pGun ) && pGun->CanShootToPointWOMove( point, 0.0f ) )
+		{
+			// Start each flame shell directly so linked cannon or machine-gun shells cannot join the order.
+			pGun->StartPointBurst( point, false, false );
+			bStarted = true;
+		}
+	}
+	return bStarted;
+}
+
+bool CArtilleryBombardmentState::IsAnyFlamethrowerGunFiring() const
+{
+	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( IsFlamethrowerGun( pGun ) && pGun->IsFiring() )
+			return true;
+	}
+	return false;
+}
+
+bool CArtilleryBombardmentState::IsAnyFlamethrowerGunBursting() const
+{
+	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( IsFlamethrowerGun( pGun ) && pGun->IsBursting() )
+			return true;
+	}
+	return false;
+}
+
+void CArtilleryBombardmentState::StopFlamethrowerGuns()
+{
+	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( IsFlamethrowerGun( pGun ) )
+			pGun->StopFire();
+	}
 }
 
 void CArtilleryBombardmentState::Segment()
@@ -720,16 +827,14 @@ void CArtilleryBombardmentState::Segment()
 				{
 					pUnit->Stop();
 
-					bool bCanShootWOMove = pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( point, 0 );
+					bool bCanShootWOMove = false;
 					bool bNeedTurn = false;
-
-					if ( !bCanShootWOMove && pUnit->GetFirstArtilleryGun()->GetRejectReason() == ACK_NOT_IN_ATTACK_ANGLE )
+					CBasicGun *pPointFireGun = ChoosePointFireGun( &bCanShootWOMove, &bNeedTurn );
+					if ( !pPointFireGun )
 					{
-						if ( pUnit->CanRotate() )
-						{
-							bCanShootWOMove = true;
-							bNeedTurn = true;
-						}
+						pUnit->SendAcknowledgement( ACK_NEGATIVE );
+						pUnit->SetCommandFinished();
+						break;
 					}
 					
 					if ( bCanShootWOMove )
@@ -763,7 +868,7 @@ void CArtilleryBombardmentState::Segment()
 					}
 					else
 					{
-						const EUnitAckType eReject = pUnit->GetFirstArtilleryGun()->GetRejectReason();
+						const EUnitAckType eReject = pPointFireGun->GetRejectReason();
 						pUnit->SendAcknowledgement( eReject );
 						if ( eReject == ACK_NO_AMMO && pUnit->GetPlayer() == theDipl.GetMyNumber() )
 							theFeedBackSystem.AddFeedbackAndForget( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_NO_AMMO, -1 );
@@ -781,6 +886,29 @@ void CArtilleryBombardmentState::Segment()
 
 				break;
 			case EABS_FIRING:
+				if ( bFlamethrowerOnly )
+				{
+					if ( bStop && !IsAnyFlamethrowerGunBursting() )
+						TryInterruptState( 0 );
+					else if ( pUnit->CanShoot() )
+					{
+						if ( !bBurstStarted )
+						{
+							bBurstStarted = true;
+							if ( !StartFlamethrowerBurst() )
+							{
+								bool bCanShootWOMove = false;
+								bool bNeedTurn = false;
+								CBasicGun *pGun = ChoosePointFireGun( &bCanShootWOMove, &bNeedTurn );
+								pUnit->SendAcknowledgement( pGun ? pGun->GetRejectReason() : ACK_NEGATIVE );
+								pUnit->SetCommandFinished();
+							}
+						}
+						else if ( !IsAnyFlamethrowerGunFiring() )
+							pUnit->SetCommandFinished();
+					}
+					break;
+				}
 				if ( 
 						 !pUnit->GetFirstArtilleryGun()->IsBursting() && 
 						 ( bStop || !pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( point, 0 ) )
@@ -821,6 +949,18 @@ void CArtilleryBombardmentState::Segment()
 
 ETryStateInterruptResult CArtilleryBombardmentState::TryInterruptState( CAICommand *pCommand )
 {
+	if ( bFlamethrowerOnly )
+	{
+		if ( pCommand == 0 || !IsAnyFlamethrowerGunBursting() )
+		{
+			StopFlamethrowerGuns();
+			pUnit->SetCommandFinished();
+			return TSIR_YES_IMMIDIATELY;
+		}
+		bStop = true;
+		return TSIR_YES_WAIT;
+	}
+
 	if ( pCommand == 0 || !pUnit->GetFirstArtilleryGun()->IsBursting() )
 	{
 		pUnit->GetFirstArtilleryGun()->StopFire();

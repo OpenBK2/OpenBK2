@@ -806,6 +806,15 @@ bool CWorldClient::ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, boo
 	return PerformGroupAction( ACTION_COMMAND_FIRE_ROCKETS, vPos, GetPlaceInQueue() );
 }
 
+bool CWorldClient::ActionUseFlamethrower( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	if ( pMO )
+		return false;
+
+	// The ground point supplies a direction even when there is no target object there.
+	return PerformGroupAction( ACTION_COMMAND_USE_FLAMETHROWER, vPos, GetPlaceInQueue() );
+}
+
 bool CWorldClient::ActionCriticalTargetting( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	return PerformGroupAction( ACTION_COMMAND_CRITICAL_TARGETING, (float)eCurrentAbilityParam, GetPlaceInQueue() );

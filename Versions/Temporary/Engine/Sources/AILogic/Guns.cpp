@@ -813,7 +813,7 @@ void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 	}
 }
 
-void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
+void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim, bool bStartParallelGuns )
 {
 	if ( !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != 0 || target != _target ) )
 	{
@@ -842,8 +842,12 @@ void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
 
 		pEnemy = 0;
 
-		for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
-			(*iter)->StartPointBurst( _target, bReAim );
+		// Filtered point-fire abilities can prevent linked guns with another shell trajectory from joining in.
+		if ( bStartParallelGuns )
+		{
+			for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
+				(*iter)->StartPointBurst( _target, bReAim );
+		}
 	}
 }
 
@@ -1918,10 +1922,10 @@ void CTurretGun::StartPointBurst( const CVec3 &target, bool bReAim )
 	CBasicGun::StartPointBurst( target, bReAim );
 }
 
-void CTurretGun::StartPointBurst( const CVec2 &target, bool bReAim )
+void CTurretGun::StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns )
 {
 	bTurnByBestWay = false;
-	CBasicGun::StartPointBurst( target, bReAim );
+	CBasicGun::StartPointBurst( target, bReAim, bStartParallelGuns );
 }
 
 void CTurretGun::StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim )
@@ -2008,5 +2012,4 @@ const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner )
 {
 	return pStats->fRangeMax;
 }
-
 

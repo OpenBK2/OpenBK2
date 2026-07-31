@@ -60,7 +60,7 @@ public:
 	void SetCircularAttack( const bool bCanAttack );
 
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
-	virtual void StartPointBurst( const CVec2 &target, bool bReAim );
+	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
 	
 	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const;

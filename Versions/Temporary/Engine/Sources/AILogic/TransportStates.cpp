@@ -6,6 +6,7 @@
 #include "Common_RTS_AI/PathFinder.h"
 #include "TransportStates.h"
 #include "SoldierStates.h"
+#include "ArtilleryStates.h"
 #include "Technics.h"
 #include "GroupLogic.h"
 #include "Commands.h"
@@ -116,6 +117,7 @@ bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_MOVE_MECH_ENTER_NOW ||
 			cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
 			cmdType == ACTION_COMMAND_HOLD_SECTOR ||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_PATROL ||
 			cmdType == ACTION_MOVE_BY_FORMATION
 		);
@@ -312,6 +314,11 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 			NI_ASSERT( false, "Wrong param to ACTION_COMMAND_HOLD_SECTOR" );
 			break;
 		}
+		break;
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		// Armed transports share the flame-only point-burst path with other ground vehicles.
+		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+
 		break;
 	case ACTION_MOVE_LOAD_RU:
 		pResult = CTransportLoadRuState::Instance( pUnit );

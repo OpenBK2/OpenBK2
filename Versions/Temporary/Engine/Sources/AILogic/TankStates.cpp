@@ -55,6 +55,7 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_RANGE_AREA			||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
 			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_DISAPPEAR				||
 			cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH ||
 			cmdType == ACTION_COMMAND_FOLLOW					||
@@ -370,6 +371,11 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			else
 				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 		}
+
+		break;
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		// The shared point-fire state selects every flame-trajectory gun and performs one burst.
+		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
 
 		break;
 	case ACTION_COMMAND_RANGE_AREA:

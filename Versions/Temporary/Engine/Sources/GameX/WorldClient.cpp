@@ -515,6 +515,7 @@ void CWorldClient::InitPrivate()
 	RegisterUserAction( NDb::USER_ACTION_TRACK_TARGETING, SActionDesc::FORCED, &CWorldClient::ActionUseTrackTargeting );
 	RegisterUserAction( NDb::USER_ACTION_SUPPRESS, SActionDesc::FORCED, &CWorldClient::ActionSupressFire );
 	RegisterUserAction( NDb::USER_ACTION_FIRE_ROCKETS, SActionDesc::FORCED, &CWorldClient::ActionFireRockets );
+	RegisterUserAction( NDb::USER_ACTION_USE_FLAMETHROWER, SActionDesc::FORCED, &CWorldClient::ActionUseFlamethrower );
 
 	RegisterUserAction( NDb::USER_ACTION_CRITICAL_TARGETTING, SActionDesc::INSTANT, &CWorldClient::ActionCriticalTargetting );
 	RegisterUserAction( NDb::USER_ACTION_RAPID_FIRE, SActionDesc::INSTANT, &CWorldClient::ActionRapidFire );
@@ -1043,8 +1044,8 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 
 	if ( pfnAction != 0 ) 
 	{
-		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_SUPPRESS || eUserAction == NDb::USER_ACTION_FIRE_ROCKETS) ?
-													0 : PickTopMapObj( vPos, eUserAction );
+		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_SUPPRESS || eUserAction == NDb::USER_ACTION_FIRE_ROCKETS || eUserAction == NDb::USER_ACTION_USE_FLAMETHROWER) ?
+											0 : PickTopMapObj( vPos, eUserAction );
 		CVec2 vTarget;
 		if ( bMiniMap )
 			vTarget = vPos;

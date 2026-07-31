@@ -171,7 +171,7 @@ public:
 	virtual bool TooCloseToFire( const CVec3 &vPoint ) const;
 
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
-	virtual void StartPointBurst( const CVec2 &target, bool bReAim );
+	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
 	void Segment();
 	void SetAntiAviationTarget( class CAIUnit *pTarget );
@@ -306,5 +306,4 @@ float GetDispByRadius( const class CBasicGun *pGun, const float fDist );
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist );
 
 const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner );
-
 

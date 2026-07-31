@@ -824,6 +824,7 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 		case ACTION_COMMAND_RANGE_AREA:					nType = -1; break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:		nType = -1; break;
 		case ACTION_COMMAND_FIRE_ROCKETS:			nType = -1; break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:	nType = -1; break;
 		case ACTION_COMMAND_INSTALL:						nType = -1; break;
 		case ACTION_COMMAND_UNINSTALL:					nType = -1; break;
 		case ACTION_COMMAND_RESUPPLY:						nType = -1; break;

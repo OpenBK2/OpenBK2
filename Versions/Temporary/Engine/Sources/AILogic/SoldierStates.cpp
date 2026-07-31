@@ -33,6 +33,7 @@
 #include "AAFeedBacks.h"
 #include "Common_RTS_AI/StandartDirPath.h"
 #include "Artillery.h"
+#include "ArtilleryStates.h"
 #include "System/Commands.h"
 #include "GlobalWarFog.h"
 
@@ -108,6 +109,7 @@ bool CSoldierStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
 			cmdType == ACTION_COMMAND_THROW_GRENADE ||
 			cmdType == ACTION_COMMAND_THROW_ANTITANK_GRENADE ||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_SPY_MODE ||
 			cmdType == ACTION_COMMAND_ENTRENCH_SELF ||
 			cmdType == ACTION_MOVE_SELF_ENTRENCH ||
@@ -127,6 +129,11 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 	
 	switch ( cmd.nCmdType )
 	{
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		// Individual flamethrower soldiers use the same one-burst, flame-only point-fire state.
+		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+
+		break;
 	case ACTION_MOVE_SELF_ENTRENCH:
 	case ACTION_COMMAND_ENTRENCH_SELF:
 		pResult = new CSoldierEntrenchSelfState( checked_cast<CSoldier*>( pUnit ) );

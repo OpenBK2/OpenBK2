@@ -63,7 +63,8 @@ bool CTrainCarStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		cmdType == ACTION_COMMAND_UNLOAD									||
 		cmdType == ACTION_COMMAND_WAIT										||
 		cmdType == ACTION_COMMAND_ART_BOMBARDMENT			||
-		cmdType == ACTION_COMMAND_FIRE_ROCKETS
+		cmdType == ACTION_COMMAND_FIRE_ROCKETS				||
+		cmdType == ACTION_COMMAND_USE_FLAMETHROWER
 		);
 }
 
@@ -164,6 +165,11 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 			else
 				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 		}
+
+		break;
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		// Train weapons use the same deterministic flame-only point-burst path as ground units.
+		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
 
 		break;
 	default:

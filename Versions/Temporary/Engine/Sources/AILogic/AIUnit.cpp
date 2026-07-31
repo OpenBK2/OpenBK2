@@ -2634,6 +2634,9 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 	case NDb::ABILITY_FIRE_ROCKETS:
 		UpdateEnableAblitiy( nAbility );
 		break;																// Single-salvo point fire is handled by unit states
+	case NDb::ABILITY_USE_FLAMETHROWER:
+		UpdateEnableAblitiy( nAbility );
+		break;																// Flame-only point fire is handled by unit states
 	case NDb::ABILITY_SUPPORT_FIRE:
 		UpdateEnableAblitiy( nAbility );
 		break;																// Support fire is handled elsewhere

@@ -388,6 +388,7 @@ public:
 	bool ActionUseTrackTargeting( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionSupressFire( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
+	bool ActionUseFlamethrower( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 
 	bool ActionCriticalTargetting( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionRapidFire( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
