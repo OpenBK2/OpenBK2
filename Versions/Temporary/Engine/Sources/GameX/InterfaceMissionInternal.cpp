@@ -3246,11 +3246,8 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 		pWorld->OnSelectSpecialGroup( 1 );
 	else if ( szSender == "Button03" )
 		pWorld->OnSelectSpecialGroup( 2 );
+	// Keep superweapons on Button04 for compatibility with vanilla UI data.
 	else if ( szSender == "Button04" )
-		pWorld->OnSelectSpecialGroup( 3 );
-	else if ( szSender == "Button05" )
-		pWorld->OnSelectSpecialGroup( 4 );
-	else if ( szSender == "Button06" )
 	{
 		if ( pSuperWeapon->CanActivate() )
 		{
@@ -3258,13 +3255,17 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 			pSuperWeapon->Activate();
 		}
 	}
+	else if ( szSender == "Button05" )
+		pWorld->OnSelectSpecialGroup( 4 );
+	else if ( szSender == "Button06" )
+		pWorld->OnSelectSpecialGroup( 5 );
 
 	return true;
 }
 
 bool CInterfaceMission::OnUnselectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags )
 {
-	if ( szSender == "Button06" )
+	if ( szSender == "Button04" )
 	{
 		pSuperWeapon->Deactivate();
 		SetActionMode( EAM_SELECT );

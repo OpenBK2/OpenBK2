@@ -2161,19 +2161,19 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 			sgReconPlanes[pSO->GetID()] = pSO;
 			NInput::PostEvent( "mission_update_special_select_btn", 2, 1 );
 		}
+		if ( IsSuperWeapon( pSO ) )
+		{
+			sgSuperWeapons[nID] = pSO;
+			NInput::PostEvent( "mission_update_special_select_btn", 3, 1 );
+		}
 		if ( IsStratBomber( pSO ) )
 		{
 			sgStratBombers[pSO->GetID()] = pSO;
-			NInput::PostEvent( "mission_update_special_select_btn", 3, 1 );
+			NInput::PostEvent( "mission_update_special_select_btn", 4, 1 );
 		}
 		if ( IsHelicopter( pSO ) )
 		{
 			sgHelicopters[pSO->GetID()] = pSO;
-			NInput::PostEvent( "mission_update_special_select_btn", 4, 1 );
-		}
-		if ( IsSuperWeapon( pSO ) )
-		{
-			sgSuperWeapons[nID] = pSO;
 			NInput::PostEvent( "mission_update_special_select_btn", 5, 1 );
 		}
 	}
@@ -2197,22 +2197,22 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 			if ( sgReconPlanes.empty() )
 				NInput::PostEvent( "mission_update_special_select_btn", 2, 0 );
 		}
+		if ( !sgSuperWeapons.empty() )
+		{
+			sgSuperWeapons.erase( nID );
+			if ( sgSuperWeapons.empty() )
+				NInput::PostEvent( "mission_update_special_select_btn", 3, 0 );
+		}
 		if ( !sgStratBombers.empty() )
 		{
 			sgStratBombers.erase( nID );
 			if ( sgStratBombers.empty() )
-				NInput::PostEvent( "mission_update_special_select_btn", 3, 0 );
+				NInput::PostEvent( "mission_update_special_select_btn", 4, 0 );
 		}
 		if ( !sgHelicopters.empty() )
 		{
 			sgHelicopters.erase( nID );
 			if ( sgHelicopters.empty() )
-				NInput::PostEvent( "mission_update_special_select_btn", 4, 0 );
-		}
-		if ( !sgSuperWeapons.empty() )
-		{
-			sgSuperWeapons.erase( nID );
-			if ( sgSuperWeapons.empty() )
 				NInput::PostEvent( "mission_update_special_select_btn", 5, 0 );
 		}
 	}
@@ -2841,15 +2841,15 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 		break;
 
 		case 3:
-			pGroup = &sgStratBombers;
+			pGroup = &sgSuperWeapons;
 		break;
 
 		case 4:
-			pGroup = &sgHelicopters;
+			pGroup = &sgStratBombers;
 		break;
 
 		case 5:
-			pGroup = &sgSuperWeapons;
+			pGroup = &sgHelicopters;
 		break;
 	}
 	if ( !pGroup )
