@@ -17,7 +17,8 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 {
 	pWorld = _pWorld;
 
-	pSuperWeaponBtn = GetChildChecked<IButton>( pScr, "Button04", true );
+	// Button06 is reserved for super weapons after adding strategic bombers and helicopters.
+	pSuperWeaponBtn = GetChildChecked<IButton>( pScr, "Button06", true );
 	pSuperWeaponProgress = GetChildChecked<IWindowRoundProgressBar>( pSuperWeaponBtn, "Progress", true );
 	pSuperWeaponMaskWnd = GetChildChecked<IWindow>( pSuperWeaponBtn, "Mask", true );
 	if ( pSuperWeaponBtn )

@@ -17,7 +17,7 @@ struct IAILogic;
 struct IScenarioTracker;
 struct IMissionSuperWeapon;
 
-typedef	std::unordered_map< NDb::EUserAction, std::string, SEnumHash > CEventsMap;
+typedef	det_map< NDb::EUserAction, std::string, SEnumHash > CEventsMap;
 
 enum EActionMode
 {
@@ -54,7 +54,7 @@ private:
 		EBS_COMPLETE,
 	};
 
-	typedef std::unordered_map<int, SActionDesc> CActionsMap;
+	typedef det_map<int, SActionDesc> CActionsMap;
 	
 	struct SMapCommandAck
 	{
@@ -118,10 +118,12 @@ private:
 	bool bOnMinimapOff; // don't save
 	std::vector<SSoundTerrainInfo> terrainSounds;
 	
-	typedef std::unordered_map< int, CPtr<CMOSelectable> > CSpecialGroup;
+	typedef det_map< int, CPtr<CMOSelectable> > CSpecialGroup;
 	CSpecialGroup sgFighters;
 	CSpecialGroup sgGroundAttackPlanes;
 	CSpecialGroup sgReconPlanes;
+	CSpecialGroup sgStratBombers;
+	CSpecialGroup sgHelicopters;
 	CSpecialGroup sgSuperWeapons;
 
 	CPtr<IScenarioTracker> pScenarioTracker;
@@ -132,7 +134,7 @@ private:
 	CVec2 vUISelectionMovePos; // don't save
 	std::vector<int> uiVisSelections; // don't save
 
-	typedef std::unordered_map< int, CPtr<CMapObj> > CObjMap;
+	typedef det_map< int, CPtr<CMapObj> > CObjMap;
 	CObjMap ownAvia;
 	
 	struct SUnitIcon
@@ -142,13 +144,13 @@ private:
 		float fLastTime;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMOUnit); f.Add(3,&fLastTime); return 0; }
 	};
-	typedef std::unordered_map< int, SUnitIcon > CUnitIconMap;
+	typedef det_map< int, SUnitIcon > CUnitIconMap;
 	CUnitIconMap unitIcons;
 	
 	std::vector<CVec4> minimapColors;
 	bool bIsOwnUnitsPresent;
 
-	std::vector< std::unordered_map< int, int > > xrayUnits; // vector by players < id, time >, don't save
+	std::vector< det_map< int, int > > xrayUnits; // vector by players < id, time >, don't save
 	NTimer::STime timeAbs; // don't save
 	
 	CPtr<IMissionSuperWeapon> pSuperWeapon;
@@ -209,6 +211,8 @@ private:
 	bool IsGroundAttackPlane( CMapObj *pMO ) const;
 	bool IsReconPlane( CMapObj *pMO ) const;
 	bool IsSuperWeapon( CMapObj *pMO ) const;
+	bool IsStratBomber( CMapObj *pMO ) const;
+	bool IsHelicopter( CMapObj *pMO ) const;
 	bool IsAviation( CMapObj *pMO ) const;
 	// pMO == 0 - remove object
 	void UpdateSpecialGroups( int nID, CMapObj *pMO );

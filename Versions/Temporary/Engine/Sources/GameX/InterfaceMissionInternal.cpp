@@ -1186,7 +1186,8 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		if ( pScreen /*&& pTopCenterPanel*/ )
 		{
 //			pTopCenterPanel->ShowWindow( true );
-			for ( int i = 1; i <= 3; ++i )
+			// Buttons 01-06 map directly to special-group indices 0-5.
+			for ( int i = 1; i <= 6; ++i )
 			{
 				CDynamicCast<IButton> pBtn = pScreen->GetChild( StrFmt( "Button%02d", i ), true );
 				if ( !pBtn )
@@ -3246,6 +3247,10 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 	else if ( szSender == "Button03" )
 		pWorld->OnSelectSpecialGroup( 2 );
 	else if ( szSender == "Button04" )
+		pWorld->OnSelectSpecialGroup( 3 );
+	else if ( szSender == "Button05" )
+		pWorld->OnSelectSpecialGroup( 4 );
+	else if ( szSender == "Button06" )
 	{
 		if ( pSuperWeapon->CanActivate() )
 		{
@@ -3259,7 +3264,7 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 
 bool CInterfaceMission::OnUnselectSpecialGroup( const std::string &szSender, WORD wKeyboardFlags )
 {
-	if ( szSender == "Button04" )
+	if ( szSender == "Button06" )
 	{
 		pSuperWeapon->Deactivate();
 		SetActionMode( EAM_SELECT );

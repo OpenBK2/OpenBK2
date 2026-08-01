@@ -1,0 +1,22 @@
+Required game-data work
+Besides adding the button references to Mission_WindowScreenShared.xdb, you’ll need to:
+Convert Button04 into the strategic-bomber selector. It should be a normal one-state selector like buttons 1–3, invoke MissionSelectSpecialGroup, and have <Name>Button04</Name>.
+
+Create Button05 for helicopters with <Name>Button05</Name> and the same MissionSelectSpecialGroup reaction.
+
+Move/copy the existing superweapon button definition to Button06, with <Name>Button06</Name>.
+
+Preserve the superweapon button’s special features in Button06:
+Progress and Mask children from the current [Button04_WindowMSButtonShared.xdb](Data/UI/Game/Mission/Panels/TopCenterPanel/Button04_WindowMSButtonShared.xdb:4).
+Its two states.
+MissionSelectSpecialGroup on activation.
+MissionUnselectSpecialGroup through Unselect_UISRunReaction.xdb on deactivation.
+
+Add or repoint the normal/pressed/disabled backgrounds and textures for Button04 and Button05. The current Button04 superweapon artwork can move to Button06.
+
+Add tooltip references/localized text for strategic bombers and helicopters. Keep selectsuperweapons.txt on Button06.
+
+Also add buttons 5 and 6 to TopCenterPanel_WindowSimpleShared.xdb
+
+No SUIConstsB2, action-button data, reinforcement definitions, or new UI reaction type is needed.
+Until the UI data contains Button06, the new code and old UI database are intentionally incompatible: CMissionSuperWeapon::Init() now expects that named child.
