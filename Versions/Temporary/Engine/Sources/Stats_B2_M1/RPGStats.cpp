@@ -5152,7 +5152,6 @@ void SAmphibianStats::ReportMetaInfo() const
 
 	NMetaInfo::ReportMetaInfo( "WaterZOffset", (BYTE*)&waterZOffset - pThis, sizeof(waterZOffset), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "WaterOffsetBlendTiles", (BYTE*)&waterOffsetBlendTiles - pThis, sizeof(waterOffsetBlendTiles), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "EnterExitAngle", (BYTE*)&enterExitAngle - pThis, sizeof(enterExitAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "WaterStatsModifier", (BYTE*)&waterStatsModifier - pThis, sizeof(waterStatsModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "PrepareToWaterTime", (BYTE*)&prepareToWaterTime - pThis, sizeof(prepareToWaterTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "PrepareToLandTime", (BYTE*)&prepareToLandTime - pThis, sizeof(prepareToLandTime), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5175,7 +5174,6 @@ int SAmphibianStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &waterZOffset );
 	saver.Add( 3, &waterOffsetBlendTiles );
-	saver.Add( 18, &enterExitAngle );
 	saver.Add( 4, &waterStatsModifier );
 	saver.Add( 5, &prepareToWaterTime );
 	saver.Add( 6, &prepareToLandTime );
@@ -5200,7 +5198,6 @@ int SAmphibianStats::operator&( IXmlSaver &saver )
 
 	saver.Add( "WaterZOffset", &waterZOffset );
 	saver.Add( "WaterOffsetBlendTiles", &waterOffsetBlendTiles );
-	saver.Add( "EnterExitAngle", &enterExitAngle );
 	saver.Add( "WaterStatsModifier", &waterStatsModifier );
 	saver.Add( "PrepareToWaterTime", &prepareToWaterTime );
 	saver.Add( "PrepareToLandTime", &prepareToLandTime );
@@ -5226,7 +5223,7 @@ DWORD SAmphibianStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << waterZOffset << waterOffsetBlendTiles << enterExitAngle << waterStatsModifier << prepareToWaterTime << prepareToLandTime << enterWaterEffect << exitWaterEffect << waterMoveEffect << waterMoveLocators << waterIdleEffect << waterIdleLocators << waterMoveJx << waterMoveJy << waterIdleJx << waterIdleJy << removeCorpseInWater;
+	checkSum << waterZOffset << waterOffsetBlendTiles << waterStatsModifier << prepareToWaterTime << prepareToLandTime << enterWaterEffect << exitWaterEffect << waterMoveEffect << waterMoveLocators << waterIdleEffect << waterIdleLocators << waterMoveJx << waterMoveJy << waterIdleJx << waterIdleJy << removeCorpseInWater;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
