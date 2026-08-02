@@ -271,6 +271,7 @@ static std::list<SMessage> messages;
 ///
 static bool SetCoopLevel();
 static bool SetFocus( bool bFocus );
+static void ReleaseKeyboardState();
 static void ResyncDevice( const SInputDevice &sDevice );
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize );
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice );
@@ -456,7 +457,9 @@ void PumpMessages( bool bFocus )
 	if ( !bInitialized )
 		return;
 
-	SetFocus( bFocus );
+	// Background simulation may keep bFocus true after the window is deactivated.
+	// DirectInput focus must still follow the actual foreground window.
+	SetFocus( bFocus && GetForegroundWindow() == hWindow );
 	if ( !bFocusCaptured )
 		return;
 
@@ -780,6 +783,10 @@ static bool SetFocus( bool bFocus )
 	}
 	else
 	{
+		// Key-up events are not delivered after DirectInput loses foreground access.
+		// Release every tracked keyboard key so Alt+Tab cannot leave a bind active.
+		ReleaseKeyboardState();
+
 		for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 		{
 			hRes = iTempDevice->pdiDevice->Unacquire();
@@ -791,6 +798,32 @@ static bool SetFocus( bool bFocus )
 	bFocusCaptured = bFocus;
 
 	return true;
+}
+
+static void ReleaseKeyboardState()
+{
+	DebugTrace("Release keyboard state");
+	const DWORD dwTime = GetTickCount();
+	for ( std::unordered_map<DWORD, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); ++iTemp )
+	{
+		SKey &sKey = iTemp->second;
+		if ( sKey.nDevType != DI8DEVTYPE_KEYBOARD || sKey.eType != CT_KEY )
+			continue;
+
+		if ( sKey.dwLastValue & 0x80 )
+		{
+			messages.push_back(
+				SMessage(
+					sKey.nAction, sKey.ePOVAxis, sKey.eType,
+					-(int)sKey.dwLastValue,
+					false,
+					dwTime )
+			);
+		}
+
+		sKey.dwLastValue = 0;
+		sKey.dwLastPressed = 0;
+	}
 }
 
 // добавить информацию про девайс
