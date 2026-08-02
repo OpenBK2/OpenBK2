@@ -327,6 +327,7 @@ public:
 	//send update
 	void AddUpdate( EFeedBack eFeedBack, int nParam = -1, CObjectBase *pParam = 0 );
 	void AddUpdate( SAIBasicUpdate *pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam );
+	void AddUpdate( SAIBasicUpdate *pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam, const NTimer::STime &nEventTime );
 	//inform on visible tiles in WarFog's coordinates !!!!!! (not AI tiles but vis one)
 	void TileBecameVisibleFromWarFog( const SVector &vPos, const int nParty );
 	//inform on object deletion

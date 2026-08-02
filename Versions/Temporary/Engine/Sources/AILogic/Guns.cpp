@@ -449,15 +449,7 @@ void CBasicGun::WaitForActionPoint()
 		pCommonGunInfo->lastShoot = curTime - GetFireRate();
 
 		vLastShotPoint = CVec3( target, z );
-
-		if ( pOwner->GetStats()->IsInfantry() )	
-		{
-			if ( pCommonGunInfo->nGun != 1 )	// animation for grenades is played in advance
-				updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, -1 );
-		}
-		// для зениток выстрел нужно присылать на каждый снаряд, action point отсутствует
-		else if ( pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN && pOwner->GetStats()->etype != RPG_TYPE_ART_ROCKET )
-			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
+		// Non-grenade shot effects are sent after each actual Fire() call in Shooting().
 	}
 }
 
@@ -475,6 +467,7 @@ void CBasicGun::Shooting()
 
 	while ( curTime - pCommonGunInfo->lastShoot >= GetFireRate() && nShotsLast > 0 && pCommonGunInfo->nAmmo > 0 )
 	{
+		const bool bFirstShotInBurst = nShotsLast == pWeapon->nAmmoPerBurst;
 		bool bShowBombEffect = true;
 		if ( pOwner && pOwner->GetStats() &&
 			( pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_STRAT_BOMBER ) &&
@@ -503,12 +496,19 @@ void CBasicGun::Shooting()
 			}
 		}
 
-		if ( pOwner->GetStats()->etype == RPG_TYPE_ART_AAGUN || pOwner->GetStats()->etype == RPG_TYPE_ART_ROCKET )
-			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
-
 		--nShotsLast;
 
 		pCommonGunInfo->lastShoot += GetFireRate();
+
+		// Emit one visual event per successful logical shot for every owner type. The
+		// exact scheduled time preserves burst spacing when several shots share an AI tick.
+		if ( pOwner->GetStats()->IsInfantry() )
+		{
+			if ( pCommonGunInfo->nGun != 1 ) // grenade animation/effect is started in advance
+				updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
+		}
+		else
+			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
 		
 		// Subtract appropriate number of shells
 		pCommonGunInfo->nAmmo -= (std::min)( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );
@@ -2012,4 +2012,3 @@ const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner )
 {
 	return pStats->fRangeMax;
 }
-
