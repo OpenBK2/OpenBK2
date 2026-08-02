@@ -3249,6 +3249,9 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 	// Keep superweapons on Button04 for compatibility with vanilla UI data.
 	else if ( szSender == "Button04" )
 	{
+		// Button04 also selects every owned unit tracked as a DB super type.
+		pWorld->OnSelectSpecialGroup( 3 );
+
 		if ( pSuperWeapon->CanActivate() )
 		{
 			SetActionMode( EAM_SUPER_WEAPON );
