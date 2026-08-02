@@ -180,7 +180,7 @@ public:
 	// для отложенных updates
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	//virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
+	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
 	virtual const DWORD GetNormale() const;
 
 	// CBasePathUnit

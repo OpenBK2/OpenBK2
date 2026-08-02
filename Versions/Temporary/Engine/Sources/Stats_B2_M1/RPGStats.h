@@ -2623,6 +2623,7 @@ namespace NDb
 
 		float waterZOffset;
 		float waterOffsetBlendTiles;
+		float enterExitAngle;		// Radians in [0, pi]; bow down entering water and bow up exiting it.
 		CDBPtr< SUnitStatsModifier > waterStatsModifier;
 
 		float prepareToWaterTime;
@@ -2646,6 +2647,7 @@ namespace NDb
 			__dwCheckSum( 0 ),
 			waterZOffset( 0.0f ),
 			waterOffsetBlendTiles( 0.0f ),
+			enterExitAngle( 0.0f ),
 			prepareToWaterTime( 0.0f ),
 			prepareToLandTime( 0.0f ),
 			removeCorpseInWater( true )
@@ -3528,4 +3530,3 @@ struct SKnownEnum<NDb::EReinforcementType>
 	static std::string ToString( NDb::EReinforcementType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EReinforcementType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EReinforcementType( szValue ); }
 };
-

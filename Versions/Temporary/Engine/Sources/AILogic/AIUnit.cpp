@@ -428,6 +428,18 @@ bool CAIUnit::IsAmphibianWaterPoint( const CVec2 &point ) const
 	return GetAIMap()->IsPointInside( point ) && IsAmphibianWaterTile( GetAIMap()->GetTile( point ) );
 }
 
+const DWORD CAIUnit::GetNormale( const CVec2 &vCenter ) const
+{
+	if ( GetAmphibianStats() && IsAmphibianWaterPoint( vCenter ) )
+	{
+		// Riverbed and cliff geometry remains below the water surface, so amphibians
+		// must use the level water plane instead of following its hidden normal.
+		return Vec3ToDWORD( V3_AXIS_Z );
+	}
+
+	return CCommonUnit::GetNormale( vCenter );
+}
+
 bool CAIUnit::IsInWater() const
 {
 	return GetMovementPlane() == PLANE_WATER && IsAmphibianWaterTile( GetCenterTile() );
@@ -515,6 +527,33 @@ void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime 
 
 	const CVec2 vPlacement = pPlacement->bNewFormat ? CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y ) : pPlacement->center;
 	pPlacement->fWaterCoeff = bRestInside ? 0.0f : GetAmphibianWaterCoeff( vPlacement );
+
+	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
+	if ( !pAmphibianStats || !pPlacement->bNewFormat || pPlacement->fWaterCoeff <= 0.0f )
+		return;
+
+	float fEnterExitPitch = 0.0f;
+	const float fEnterExitAngle = Clamp( pAmphibianStats->enterExitAngle, 0.0f, FP_PI );
+	if ( pPlacement->fSpeed > 0.0f && fEnterExitAngle > 0.0f )
+	{
+		// Look one tile ahead along the path. An increasing water coefficient means
+		// entry (bow down); a decreasing one means exit (bow up).
+		const CVec2 vAhead = vPlacement + GetMoveDirection() * SConsts::TILE_SIZE;
+		const float fAheadWaterCoeff = GetAmphibianWaterCoeff( vAhead );
+		const float fWaterCoeffDelta = fAheadWaterCoeff - pPlacement->fWaterCoeff;
+		if ( fWaterCoeffDelta > 0.001f )
+			fEnterExitPitch = -fEnterExitAngle;
+		else if ( fWaterCoeffDelta < -0.001f )
+			fEnterExitPitch = fEnterExitAngle;
+	}
+
+	// Preserve interpolated yaw, discard terrain pitch/roll, and apply only the
+	// explicit amphibian shore pitch around the unit's local X axis.
+	float fYaw = 0.0f;
+	float fIgnoredPitch = 0.0f;
+	float fIgnoredRoll = 0.0f;
+	pPlacement->rotation.DecompEulerAngles( &fYaw, &fIgnoredPitch, &fIgnoredRoll );
+	pPlacement->rotation = CQuat( fYaw, V3_AXIS_Z ) * CQuat( fEnterExitPitch, V3_AXIS_X );
 }
 /*
 
@@ -773,7 +812,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 
 const DWORD CAIUnit::GetNormale() const
 {
-	return CCommonUnit::GetNormale( GetCenterPlain() );
+	return GetNormale( GetCenterPlain() );
 }
 
 void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const 
