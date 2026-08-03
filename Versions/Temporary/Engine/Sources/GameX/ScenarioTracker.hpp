@@ -11,7 +11,7 @@ struct IScriptWrapper;
 
 namespace NScenarioTracker
 {
-typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+typedef det_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
 typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
 typedef std::unordered_map<NDb::EReinforcementType, float, SEnumHash> CReinforcementXPs;
 typedef std::unordered_map<NDb::EReinforcementType, int, SEnumHash> CReinforcementLevels;
@@ -23,7 +23,7 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission, CReinforcem
 class CScenarioTracker : public IScenarioTracker
 {
 	OBJECT_NOCOPY_METHODS( CScenarioTracker );
-	typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+	typedef det_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
 	typedef std::vector<EReinforcementState> CReinforcementEnableStates;
 	typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
 	typedef std::unordered_map< CDBPtr<NDb::SMapInfo>, SMissionStats, SDBPtrHash > CMissionsStats;

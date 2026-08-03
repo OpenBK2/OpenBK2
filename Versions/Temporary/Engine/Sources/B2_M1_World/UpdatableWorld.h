@@ -10,9 +10,9 @@
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;
 struct ICommonB2M1AI;
-typedef std::unordered_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
+typedef det_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
 typedef std::list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
-typedef std::unordered_map<int, CPtr<CMapObj> > CKeyBuildings;
+typedef det_map<int, CPtr<CMapObj> > CKeyBuildings;
 
 class CCombatMusic
 {

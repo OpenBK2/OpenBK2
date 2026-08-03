@@ -17,7 +17,7 @@ class det_map {
 public:
     using key_type        = Key;
     using mapped_type     = T;
-    using value_type      = std::pair<const Key, T>;
+    using value_type      = std::pair<Key, T>;
     using size_type       = std::size_t;
     using hasher          = Hash;
     using key_equal       = KeyEqual;
