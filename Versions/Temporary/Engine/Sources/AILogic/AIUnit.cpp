@@ -796,7 +796,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 
 const DWORD CAIUnit::GetNormale() const
 {
-	return GetNormale( GetCenterPlain() );
+	return CCommonUnit::GetNormale( GetCenterPlain() );
 }
 
 void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const 
