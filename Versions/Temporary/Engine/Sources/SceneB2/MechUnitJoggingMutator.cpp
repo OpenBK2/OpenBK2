@@ -12,24 +12,27 @@ static float s_fJogAmp1 = 1;
 static float s_fJogPeriod2 = FP_2PI;
 static float s_fJogPhaze2 = 0;
 static float s_fJogAmp2 = 1;
+
+static float GetJoggingWaveValue( const float fDeltaTime, const float fPeriod, const float fAmp, const float fPhaze )
+{
+	// Each wave is optional; a disabled wave must not suppress the other one.
+	if ( fPeriod == 0.0f )
+		return 0.0f;
+
+	const float fAngle = fmod( fDeltaTime * FP_2PI / fPeriod, FP_2PI ) + fPhaze;
+	return fAmp * NMath::Cos( fAngle );
+}
+
 float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nDeltaTime ) const
 {
+	// Jogging periods are authored in seconds, while the game timer uses milliseconds.
+	const float fDeltaTime = (float)nDeltaTime / 1000.0f;
 	if ( s_bJogTweakMode )
-	{
-		if ( (s_fJogPeriod1 == 0) || (s_fJogPeriod2 == 0) )
-			return 0;
-		const float fAngle1 = fmod( (float)nDeltaTime*FP_2PI/s_fJogPeriod1, FP_2PI ) + s_fJogPhaze1;
-		const float fAngle2 = fmod( (float)nDeltaTime*FP_2PI/s_fJogPeriod2, FP_2PI ) + s_fJogPhaze2;
-		return s_fJogAmp1 * NMath::Cos( fAngle1 ) + s_fJogAmp2 * NMath::Cos( fAngle2 );
-	}
+		return GetJoggingWaveValue( fDeltaTime, s_fJogPeriod1, s_fJogAmp1, s_fJogPhaze1 ) +
+			GetJoggingWaveValue( fDeltaTime, s_fJogPeriod2, s_fJogAmp2, s_fJogPhaze2 );
 	else
-	{
-		if ( (fPeriod1 == 0) || (fPeriod2 == 0) )
-			return 0;
-		const float fAngle1 = fmod( (float)nDeltaTime*FP_2PI/fPeriod1, FP_2PI ) + fPhaze1;
-		const float fAngle2 = fmod( (float)nDeltaTime*FP_2PI/fPeriod2, FP_2PI ) + fPhaze2;
-		return fAmp1 * NMath::Cos( fAngle1 ) + fAmp2 * NMath::Cos( fAngle2 );
-	}
+		return GetJoggingWaveValue( fDeltaTime, fPeriod1, fAmp1, fPhaze1 ) +
+			GetJoggingWaveValue( fDeltaTime, fPeriod2, fAmp2, fPhaze2 );
 }
 
 void CMechUnitJoggingMutator::Setup( const int _nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY )
