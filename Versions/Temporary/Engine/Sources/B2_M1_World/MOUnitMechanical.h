@@ -48,6 +48,7 @@ private:
 	bool IsInside( const int nID );
 	const NDb::SMechUnitRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() ); }
 	int GetMechPassangersCount() const;
+	IClientUpdatableProcess *CreateIdleEffectProcess() const;
 	void SetJoggingMode( const int nMode, const bool bPlay );
 	void UpdateAmphibianJogging( const bool bMoving );
 	void AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const;
