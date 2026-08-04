@@ -20,9 +20,9 @@ class CGeneral : public CCommander, public IEnemyContainer
 {
 	OBJECT_BASIC_METHODS(CGeneral);
 
-	typedef std::unordered_map< int/*request ID*/, CPtr<IGeneralTask> > RequestedTasks;
+	typedef det_map< int/*request ID*/, CPtr<IGeneralTask> > RequestedTasks;
 	typedef std::pair< CPtr<CAIUnit>, NTimer::STime> CUnitTimeSeen;
-	typedef std::unordered_map< int/* unit unique ID*/, CUnitTimeSeen > CEnemyVisibility;
+	typedef det_map< int/* unit unique ID*/, CUnitTimeSeen > CEnemyVisibility;
 
 	//{ do not save these, it is only for IN-Segment use
 	CEnemyVisibility::iterator curProcessed;	// cannot be saved, so there will be some tricks
@@ -44,7 +44,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 	CommonUnits transportsFree;
 
 	NTimer::STime timeNextUpdate;					// next update of this general
-	std::unordered_set<int> mobileReinforcementGroupIDs;
+	det_set<int> mobileReinforcementGroupIDs;
 
 	//Distribution of availability of own units in reinforcements.
 	std::vector<float>	enemyByRType;					// Current balance of forces (enemy's distribution of reinfs minus own forces)

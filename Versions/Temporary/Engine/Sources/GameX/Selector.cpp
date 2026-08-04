@@ -77,9 +77,12 @@ bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 {
 	const bool bAllUnitsCommand = ( 
 		eCommand == ACTION_COMMAND_MOVE_TO ||
+		eCommand == ACTION_COMMAND_REVERSE_TO ||
 		eCommand == ACTION_COMMAND_FOLLOW ||
 		eCommand == ACTION_COMMAND_SWARM_TO ||
 		eCommand == ACTION_COMMAND_ART_BOMBARDMENT ||
+		eCommand == ACTION_COMMAND_FIRE_ROCKETS ||
+		eCommand == ACTION_COMMAND_USE_FLAMETHROWER ||
 		eCommand == ACTION_COMMAND_RANGE_AREA ||
 		eCommand == ACTION_COMMAND_ATTACK_UNIT ||
 		eCommand == ACTION_COMMAND_ATTACK_OBJECT ||
@@ -832,10 +835,21 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 		for ( std::vector< CPtr<CMOSelectable> >::iterator it = slot.objects.begin(); it != slot.objects.end(); ++it )
 		{
 			CMOSelectable *pSO = *it;
-			
+
+			if ( pCommand->nCmdType == ACTION_COMMAND_REVERSE_TO )
+			{
+				// A mixed selection may contain units without vehicle reverse support.
+				CUserActions enabledActions;
+				pSO->GetEnabledActions( &enabledActions, ACTIONS_BY );
+				if ( !enabledActions.HasAction( NDb::USER_ACTION_REVERSE ) )
+					continue;
+			}
 			buffer.push_back( pSO->GetID() );
 		}
 	}
+
+	if ( buffer.empty() )
+		return false;
 
 	const WORD wAIGroup = pCommandsSender->CommandRegisterGroup( buffer );
 	pCommandsSender->CommandGroupCommand( pCommand, wAIGroup, bPlaceInQueue, ML_COMMAND_SAVE_GAME );
@@ -1114,6 +1128,20 @@ int CSelector::GetAbilityTier( const std::vector< CPtr<CMOSelectable> > &objects
 	return -1;
 }
 
+const NDb::SUnitSpecialAblityDesc* CSelector::GetAbilityDesc( const std::vector< CPtr<CMOSelectable> > &objects, NDb::EUserAction eAction )
+{
+	// The action panel has one button per action, so use the first matching selected descriptor.
+	for ( std::vector< CPtr<CMOSelectable> >::const_iterator it = objects.begin(); it != objects.end(); ++it )
+	{
+		CMOSelectable *pSO = *it;
+		const NDb::SUnitSpecialAblityDesc *pDesc = pSO->GetAbilityDesc( eAction );
+		if ( pDesc )
+			return pDesc;
+	}
+	return 0;
+}
+
+
 void CSelector::SetSelectionGroup( const int nIndex )
 {
 	if ( 0 <= nIndex && nIndex < vAbilityGroups.size() )
@@ -1249,6 +1277,11 @@ void CSelector::SetMaxUnits( const int _nMaxUnitSlots, const int _nMaxUnitPerSlo
 int CSelector::GetAbilityTier( NDb::EUserAction eAction ) const
 {
 	return GetAbilityTier( superActives, eAction );
+}
+
+const NDb::SUnitSpecialAblityDesc* CSelector::GetAbilityDesc( NDb::EUserAction eAction ) const
+{
+	return GetAbilityDesc( superActives, eAction );
 }
 
 bool CSelector::IsSameType( const CMapObj *_pMO, const CMapObj *_pMO2 )

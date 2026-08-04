@@ -39,6 +39,7 @@ namespace NDb
 	struct SHPObjectRPGStats;
 	enum EUnitAckType;
 	struct SAnimB2;
+	struct SUnitSpecialAblityDesc;
 }
 namespace NAnimation
 {
@@ -301,6 +302,7 @@ public:
 	virtual bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update ) { return false; }
 	virtual void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason ) {  }
 	virtual int GetAbilityTier( NDb::EUserAction eAction ) const { return -1; }
+	virtual const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const { return 0; }
 	void AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer::STime startTime );
 	// for animations testing
 	// returns: if nAnimation >= number of anims, when -1, else <length of animation, is anim looped>

@@ -140,7 +140,7 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 	if ( !CanCommandBeExecutedByStats( pCommand ) )
 	{
  		const EActionCommand &cmd = pCommand->ToUnitCmd().nCmdType;					
-		if ( cmd == ACTION_COMMAND_MOVE_TO || cmd == ACTION_COMMAND_SWARM_TO )
+		if ( cmd == ACTION_COMMAND_MOVE_TO || cmd == ACTION_COMMAND_REVERSE_TO || cmd == ACTION_COMMAND_SWARM_TO )
 			SendAcknowledgement( pCommand, ACK_NEGATIVE );
 
 		return;

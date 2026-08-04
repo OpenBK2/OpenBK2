@@ -22,7 +22,7 @@ class CContainer
 	public: int operator&( IBinSaver &saver ); private:;
 
 	CListsSet<TPObj> container;
-	std::unordered_set<int> registerdObjects;
+	det_set<int> registerdObjects;
 
 	typedef TPObj TObjType;
 public:

@@ -1466,7 +1466,7 @@ void CBuilding::SetHitPoints( const float fNewHP )
 	}	
 }
 
-void CBuilding::DriveOut( CSoldier *pSoldier, std::unordered_set<int> *pFormations )
+void CBuilding::DriveOut( CSoldier *pSoldier, det_set<int> *pFormations )
 {
 	NI_ASSERT( GetNEntrancePoints() != 0, "building without entrance points" );
 
@@ -1503,7 +1503,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 			bEscaped = GetHitPoints() <= GetEscapeHitPoints() && bShouldEscape;
 			if ( bEscaped )
 			{
-				std::unordered_set<int> formations;
+				det_set<int> formations;
 				for ( int i = 0; i < fire.Size(); ++i )
 					DriveOut( fire[i], &formations );
 				for ( int i = 0; i < medical.Size(); ++i )

@@ -6,6 +6,8 @@
 #include "BasePathUnit.h"
 #include "StandartSmoothPath.h"
 
+#include <map>
+
 struct SGeometryCellInfo
 {
 	CVec2 vCellPosition;
@@ -42,7 +44,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	//! набор положений внутри группы
 	typedef std::vector<SCellInfo> CCells;
 	//! связь между набором положений и типом (priority) юнитов
-	typedef std::unordered_map< int, CCells > CPriorityCells;
+	typedef std::map< int, CCells > CPriorityCells;
 	//
 	struct SGeometry
 	{
@@ -91,7 +93,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 				return unitInfo1.nPriority > unitInfo2.nPriority;
 		}
 	};
-	typedef std::unordered_map< int, SUnitInfo > CUnitsMap;
+	typedef std::map< int, SUnitInfo > CUnitsMap;
   //
 	OBJECT_BASIC_METHODS( CGroupSmoothPath )
 	ZDATA_( CStandartSmoothPathBasis )

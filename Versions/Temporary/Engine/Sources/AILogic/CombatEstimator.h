@@ -15,7 +15,7 @@ class CCombatEstimator
 			:time( time ), fDamage( fDamage ) { }
 	};
 
-	typedef std::unordered_set<int> CRegisteredUnits;
+	typedef det_set<int> CRegisteredUnits;
 	typedef std::list<SShellInfo> CShellTimes;
 ZDATA
 	float fDamage;

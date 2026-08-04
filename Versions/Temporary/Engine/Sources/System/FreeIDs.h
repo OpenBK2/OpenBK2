@@ -12,7 +12,7 @@ class SYSTEM_EXPORT CFreeIds
 {
 	enum { NUM_OF_ELEMENTS = 200 };
 
-	typedef std::unordered_map<int, bool> CGivenIDMap;
+	typedef det_map<int, bool> CGivenIDMap;
 	CGivenIDMap givenIDs;
 	
 	std::vector<int> nexts;

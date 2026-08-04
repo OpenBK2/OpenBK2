@@ -136,6 +136,8 @@ enum EUnitSpecialAbility
 	ABILITY_SURVIVAL,
 	ABILITY_TANK_HUNTER,
 	ABILITY_RADIO_CONTROLLED_MODE,
+	ABILITY_FIRE_ROCKETS,
+	ABILITY_USE_FLAMETHROWER,
 	_ABILITY_COUNT,
 };
 
@@ -167,6 +169,12 @@ class SUnitSpecialAblityDesc
 	bool _StopCurrentAction = false;
 	TextFileRef _LocalizedNameFileRef;
 	TextFileRef _LocalizedDescFileRef;
+	// Optional per-ability UI icons; action-button icons remain the fallback.
+	[no_checksum] STexture *_AbilityIconTextureNormal;
+	[no_checksum] STexture *_AbilityIconTextureDisabled;
+	[no_checksum] STexture *_AbilityIconTextureForegroundNormal;
+	[no_checksum] STexture *_AbilityIconTextureForegroundDisabled;
+
 
 	#include "include_unitspecialablitydesc.h"
 };
@@ -1761,6 +1769,9 @@ class SReinforcement
 {
 	EReinforcementType _Type = RT_TANKS;
 	STexture *_IconTexture;
+	// Optional; the reinforcement-button UI uses its default disabled texture when this is null.
+	[chunkID = 10]
+	STexture *_DisabledIconTexture;
 	TextFileRef _LocalizedNameFileRef;
 	SReinforcementEntry _Entries[1..];
 	TextFileRef _TooltipFileRef;

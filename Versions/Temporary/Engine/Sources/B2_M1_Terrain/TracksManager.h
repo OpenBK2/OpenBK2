@@ -79,7 +79,7 @@ class B2_M1_TERRAIN_EXPORT CTracksManager : public CObjectBase
   std::vector<int> delQueue;
   std::vector<int> updatedTracks;
   //
-  typedef std::unordered_map<int, int> CTracksMap;
+  typedef det_map<int, int> CTracksMap;
   CTracksMap tracksMap;
 	//
 	CDBPtr<NDb::SMaterial> pTracksMaterial;

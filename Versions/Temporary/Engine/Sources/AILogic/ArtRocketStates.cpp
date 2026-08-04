@@ -42,7 +42,10 @@ bool CArtRocketStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	return 
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
+			cmdType == ACTION_COMMAND_REVERSE_TO				||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT	||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_ROTATE_TO				||
 			cmdType == ACTION_COMMAND_INSTALL					||
 			cmdType == ACTION_COMMAND_UNINSTALL				||
@@ -166,6 +169,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			
 			break;
 		case ACTION_COMMAND_MOVE_TO:
+		case ACTION_COMMAND_REVERSE_TO:
 			{
 				pArtillery->UnsetFollowState();				
 				pArtillery->ResetHoldSector();
@@ -175,12 +179,18 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 				}
 				else 
-					pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos );
+					pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 			}
 
 			break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:
+		case ACTION_COMMAND_FIRE_ROCKETS:
 			pResult = CArtRocketAttackGroundState::Instance( pArtillery, cmd.vPos );
+
+			break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			// Rocket artillery uses its normal state above; this ability explicitly selects flame shells instead.
+			pResult = CArtilleryBombardmentState::Instance( pArtillery, cmd.vPos, 1, true );
 
 			break;
 		case ACTION_COMMAND_ROTATE_TO:

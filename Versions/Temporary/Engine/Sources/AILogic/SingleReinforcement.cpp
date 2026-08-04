@@ -103,7 +103,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 	std::list<int> freeLinks;
 	CLinkObject::GetFreeLinks( &freeLinks, entries.size() );
 	std::list<int>::const_iterator itLink = freeLinks.begin();
-	std::unordered_map<int,int> linksDistrib;
+	det_map<int,int> linksDistrib;
 	for ( int i = 0; i < entries.size(); ++i )
 	{
 		NI_ASSERT( i < pos.size(), StrFmt( "MAP DESIGN: not enough positions in deploy mask, need %i, unit not deployed", i+1 )  );

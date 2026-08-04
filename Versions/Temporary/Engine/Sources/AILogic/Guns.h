@@ -85,6 +85,8 @@ protected:
 
 	// юнит, по которому стреляем ( в случае стрельбы по юниту )
 	CPtr<CAIUnit> pEnemy;
+	// Aviation target kept for predicted AA fire, which shoots at a point instead of pEnemy.
+	CPtr<CAIUnit> pAntiAviationTarget;
 	// куда стрелять
 	CVec2 target;
 	// время начала прицеливания или начала отдыха, в зависимости от состояния
@@ -106,7 +108,7 @@ private:
 	CPtr<CAIUnit> pCanShootCachedEnemy;
 	bool bCanShootToUnitWOMove;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasicGunCRAPSaver*)this); f.Add(3,&shootState); f.Add(4,&bWaitForReload); f.Add(5,&bCanShoot); f.Add(6,&nShotsLast); f.Add(7,&eType); f.Add(8,&eRejectReason); f.Add(9,&vLastShotPoint); f.Add(10,&fRandom4Aim); f.Add(11,&fRandom4Relax); f.Add(12,&nShellType); f.Add(13,&pOwner); f.Add(14,&nOwnerParty); f.Add(15,&pCommonGunInfo); f.Add(16,&pEnemy); f.Add(17,&target); f.Add(18,&lastCheck); f.Add(19,&lastEnemyPos); f.Add(20,&bAngleLocked); f.Add(21,&bAim); f.Add(22,&bGrenade); f.Add(23,&z); f.Add(24,&parallelGuns); f.Add(25,&bParallelGun); f.Add(26,&lastCheckTurnTime); f.Add(27,&bIgnoreObstacles); f.Add(28,&pCanShootCachedEnemy); f.Add(29,&bCanShootToUnitWOMove); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasicGunCRAPSaver*)this); f.Add(3,&shootState); f.Add(4,&bWaitForReload); f.Add(5,&bCanShoot); f.Add(6,&nShotsLast); f.Add(7,&eType); f.Add(8,&eRejectReason); f.Add(9,&vLastShotPoint); f.Add(10,&fRandom4Aim); f.Add(11,&fRandom4Relax); f.Add(12,&nShellType); f.Add(13,&pOwner); f.Add(14,&nOwnerParty); f.Add(15,&pCommonGunInfo); f.Add(16,&pEnemy); f.Add(17,&target); f.Add(18,&lastCheck); f.Add(19,&lastEnemyPos); f.Add(20,&bAngleLocked); f.Add(21,&bAim); f.Add(22,&bGrenade); f.Add(23,&z); f.Add(24,&parallelGuns); f.Add(25,&bParallelGun); f.Add(26,&lastCheckTurnTime); f.Add(27,&bIgnoreObstacles); f.Add(28,&pCanShootCachedEnemy); f.Add(29,&bCanShootToUnitWOMove); f.Add(30,&pAntiAviationTarget); return 0; }
 
 private:
 
@@ -143,8 +145,9 @@ protected:
 	bool CanShootToTargetWOMove();
 
 	void InitRandoms();
+	const NDb::SUnitStatsModifier* GetAntiAviationModifier() const;
 public:
-	CBasicGun() : pOwner( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3	), lastCheckTurnTime( 0 ), bCanShootToUnitWOMove( false ) { }
+	CBasicGun() : pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3	), lastCheckTurnTime( 0 ), bCanShootToUnitWOMove( false ) { }
 	CBasicGun( class CAIUnit *pOwner, const BYTE nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType );
 
 	virtual int GetShellType() const { return nShellType; } 
@@ -168,9 +171,10 @@ public:
 	virtual bool TooCloseToFire( const CVec3 &vPoint ) const;
 
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
-	virtual void StartPointBurst( const CVec2 &target, bool bReAim );
+	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
 	void Segment();
+	void SetAntiAviationTarget( class CAIUnit *pTarget );
 
 	bool IsWaitForReload() const { return bWaitForReload; }
 	virtual void ClearWaitForReload() { bWaitForReload = false; }
@@ -302,5 +306,4 @@ float GetDispByRadius( const class CBasicGun *pGun, const float fDist );
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist );
 
 const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner );
-
 

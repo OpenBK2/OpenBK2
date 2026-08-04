@@ -18,6 +18,7 @@ struct IInterfaceBase : virtual public CObjectBase
 	//
 	virtual void Step( bool bAppActive ) = 0;
 	virtual bool ProcessEvent( const struct SGameMessage &msg ) = 0;
+	virtual bool ShouldLimitFrameRate() const { return false; }
 	// переход к этому интерфейсу из другого полноэкранного
 	virtual void StartInterface() {}
 	// call it after load form save file

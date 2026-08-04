@@ -1186,7 +1186,8 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		if ( pScreen /*&& pTopCenterPanel*/ )
 		{
 //			pTopCenterPanel->ShowWindow( true );
-			for ( int i = 1; i <= 3; ++i )
+			// Buttons 01-06 map directly to special-group indices 0-5.
+			for ( int i = 1; i <= 6; ++i )
 			{
 				CDynamicCast<IButton> pBtn = pScreen->GetChild( StrFmt( "Button%02d", i ), true );
 				if ( !pBtn )
@@ -2164,14 +2165,50 @@ void CInterfaceMission::ResetAbilityButtons()
 	nCurrentSlot = 0;
 }
 
-void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace )
+void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace, const NDb::SUnitSpecialAblityDesc *pAbilityDesc )
 {
 	if ( !pWnd )
 		return;
+
+	CNewActionButtons::iterator it = newActionButtons.find( eAction );
+	if ( it != newActionButtons.end() )
+	{
+		SNewActionButton &action = it->second;
+		const NDb::STexture *pNormalIcon = action.pIcon;
+		const NDb::STexture *pDisabledIcon = action.pIconDisabled;
+		const NDb::STexture *pForegroundNormalIcon = action.pForegroundIcon;
+		const NDb::STexture *pForegroundDisabledIcon = action.pForegroundIconDisabled;
+		if ( pAbilityDesc )
+		{
+			if ( pAbilityDesc->pAbilityIconTextureNormal )
+				pNormalIcon = pAbilityDesc->pAbilityIconTextureNormal;
+			if ( pAbilityDesc->pAbilityIconTextureDisabled )
+				pDisabledIcon = pAbilityDesc->pAbilityIconTextureDisabled;
+			if ( pAbilityDesc->pAbilityIconTextureForegroundNormal )
+				pForegroundNormalIcon = pAbilityDesc->pAbilityIconTextureForegroundNormal;
+			if ( pAbilityDesc->pAbilityIconTextureForegroundDisabled )
+				pForegroundDisabledIcon = pAbilityDesc->pAbilityIconTextureForegroundDisabled;
+		}
+
+		// Restore the action textures when the selected ability does not override them.
+		if ( !action.bPassive )
+		{
+			if ( action.pBtn )
+				action.pBtn->SetTexture( pNormalIcon );
+			if ( action.pIconFgWnd )
+				action.pIconFgWnd->SetTexture( pForegroundNormalIcon );
+			if ( action.pIconBgDisabledWnd )
+				action.pIconBgDisabledWnd->SetTexture( pDisabledIcon );
+			if ( action.pIconFgDisabledWnd )
+				action.pIconFgDisabledWnd->SetTexture( pForegroundDisabledIcon );
+		}
+		else if ( action.pIconBgDisabledWnd )
+			action.pIconBgDisabledWnd->SetTexture( pNormalIcon );
+	}
 	if ( bFixedPlace )
 	{
 		pWnd->ShowWindow( true );
-		MakeCommandTooltip( eAction );
+		MakeAbilityTooltip( eAction, nCurrentSlot, pAbilityDesc, true );
 	}
 	else if ( nCurrentSlot < vAbilitySlots.size() )
 	{
@@ -2182,7 +2219,7 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 		if ( pProgress )
 			pProgress->SetPosition( 0 );*/
 
-		MakeAbilityTooltip( eAction, nCurrentSlot );
+		MakeAbilityTooltip( eAction, nCurrentSlot, pAbilityDesc, false );
 
 		lActiveAbilities.push_back( CActionButton( eAction, pWnd ) );
 		nCurrentSlot++;
@@ -2675,19 +2712,19 @@ string CInterfaceMission::GetActionOwnReaction( IWindow *pWnd ) const
 	return string();
 }*/
 
-void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey )
+void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey, const std::wstring *pTooltipOverride )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
 	{
 		SNewActionButton &action = it->second;
+		const std::wstring &wszBaseTooltip = pTooltipOverride ? *pTooltipOverride : action.wszTooltip;
+		std::wstring wszTooltip = wszBaseTooltip;
 
-		if ( !action.wszTooltip.empty() )
+		if ( !wszBaseTooltip.empty() )
 		{
 			std::list<NInput::SBind> binds;
 			NInput::GetBind( szCommand, &binds );
-
-			std::wstring wszTooltip = action.wszTooltip;
 
 			if ( bHotkey && !szButtonsBindSection.empty() )
 			{
@@ -2704,23 +2741,38 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 					}
 				}
 			}
-
-			if ( action.pBtn )
-				action.pBtn->SetTooltip( wszTooltip );
-			if ( action.pIconBgDisabledWnd )
-				action.pIconBgDisabledWnd->SetTooltip( wszTooltip );
 		}
+
+#ifndef _FINALRELEASE
+		if ( wszTooltip.empty() )
+			wszTooltip = NStr::ToUnicode( StrFmt( "UserAction id: %d", (int)( eUserAction ) ) );
+#endif //_FINALRELEASE
+
+		// Set even an empty tooltip so a previous ability-specific description is cleared.
+		if ( action.pBtn )
+			action.pBtn->SetTooltip( wszTooltip );
+		if ( action.pIconBgDisabledWnd )
+			action.pIconBgDisabledWnd->SetTooltip( wszTooltip );
 	}
 }
 
-void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot )
+void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot, const NDb::SUnitSpecialAblityDesc *pAbilityDesc, bool bFixedPlace )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
 	{
 		SNewActionButton &action = it->second;
+		std::wstring wszAbilityTooltip;
+		const std::wstring *pTooltipOverride = 0;
+		if ( pAbilityDesc && CHECK_TEXT_NOT_EMPTY_PRE(pAbilityDesc->,LocalizedDesc) )
+		{
+			wszAbilityTooltip = GET_TEXT_PRE(pAbilityDesc->,LocalizedDesc);
+			if ( !wszAbilityTooltip.empty() )
+				pTooltipOverride = &wszAbilityTooltip;
+		}
 
-		MakeActionTooltip( eUserAction, StrFmt( "user_ability_slot_%02d", nSlot ), !action.bPassive );
+		const std::string szCommand = bFixedPlace ? action.szHotkeyCmd : StrFmt( "user_ability_slot_%02d", nSlot );
+		MakeActionTooltip( eUserAction, szCommand, bFixedPlace || !action.bPassive, pTooltipOverride );
 	}
 }
 
@@ -2737,6 +2789,9 @@ void CInterfaceMission::MakeCommandTooltip( NDb::EUserAction eUserAction )
 
 bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 {
+	// Reverse was added after the ability range, but it is a fixed movement command like Move.
+	if ( eAction == NDb::USER_ACTION_REVERSE )
+		return false;
 //	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
 //		return false;
 	return eAction > NDb::USER_ACTION_ABILITY ||
@@ -2801,6 +2856,7 @@ struct SAbility
 	int nTier;
 	NDb::EUserAction eAction;
 	IWindow *pWnd;
+	const NDb::SUnitSpecialAblityDesc *pDesc;
 	bool bFixedPlace;
 	bool bEnabled;
 };
@@ -2850,6 +2906,7 @@ void CInterfaceMission::UpdateActionButtons()
 				ability.nTier = pWorld->GetAbilityTier( eAction );
 				ability.eAction = eAction;
 				ability.pWnd = pWnd;
+				ability.pDesc = pWorld->GetAbilityDesc( eAction );
 				ability.bFixedPlace = false;
 				ability.bEnabled = false;
 
@@ -2876,7 +2933,7 @@ void CInterfaceMission::UpdateActionButtons()
 	for ( std::vector<SAbility>::iterator it = abilities.begin(); it != abilities.end(); ++it )
 	{
 		SAbility &ability = *it;
-		AddAbilityButton( ability.eAction, ability.pWnd, ability.bFixedPlace );
+		AddAbilityButton( ability.eAction, ability.pWnd, ability.bFixedPlace, ability.pDesc );
 	}
 
 	// update unit full info buttons
@@ -3189,14 +3246,22 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, WORD 
 		pWorld->OnSelectSpecialGroup( 1 );
 	else if ( szSender == "Button03" )
 		pWorld->OnSelectSpecialGroup( 2 );
+	// Keep superweapons on Button04 for compatibility with vanilla UI data.
 	else if ( szSender == "Button04" )
 	{
+		// Button04 also selects every owned unit tracked as a DB super type.
+		pWorld->OnSelectSpecialGroup( 3 );
+
 		if ( pSuperWeapon->CanActivate() )
 		{
 			SetActionMode( EAM_SUPER_WEAPON );
 			pSuperWeapon->Activate();
 		}
 	}
+	else if ( szSender == "Button05" )
+		pWorld->OnSelectSpecialGroup( 4 );
+	else if ( szSender == "Button06" )
+		pWorld->OnSelectSpecialGroup( 5 );
 
 	return true;
 }

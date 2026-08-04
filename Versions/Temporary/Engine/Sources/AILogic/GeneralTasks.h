@@ -69,7 +69,7 @@ public:
 class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnumerator
 {
 	OBJECT_BASIC_METHODS(CGeneralTaskToHoldReinforcement);
-	typedef std::unordered_map<int, CVec2> UnitsPositions;
+	typedef det_map<int, CVec2> UnitsPositions;
 	ZDATA
 	CommonUnits tanksFree;
 	NDb::SAIGeneralParcel patchInfo;

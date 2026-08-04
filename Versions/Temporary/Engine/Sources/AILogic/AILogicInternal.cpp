@@ -857,7 +857,7 @@ void CAILogic::InitStartCommands()
 	}
 }
 
-void CAILogic::InitStartCommands( const LinkInfo &linksInfo, std::unordered_map<int, int> &old2NewLinks )
+void CAILogic::InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks )
 {
 	for ( std::vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
 	{
@@ -905,7 +905,7 @@ void CAILogic::InitReservePositions()
 	}
 }
 
-void CAILogic::InitReservePositions( std::unordered_map<int, int> &old2NewLinks )
+void CAILogic::InitReservePositions( det_map<int, int> &old2NewLinks )
 {
 	for ( std::vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
 	{

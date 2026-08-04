@@ -166,7 +166,7 @@ public:
 	// количество HP, когда пора убегать из здания ( убегать, если их станет меньше )
 	const float GetEscapeHitPoints() const;
 	// выгнать формацию солдата из дома, pFormations - список уже выгнанных формаций
-	void DriveOut( CSoldier *pSoldier, std::unordered_set<int> *pFormations );
+	void DriveOut( CSoldier *pSoldier, det_set<int> *pFormations );
 	void KillAllInsiders();
 protected:
 

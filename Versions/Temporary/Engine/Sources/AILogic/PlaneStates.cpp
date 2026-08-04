@@ -96,6 +96,7 @@ bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_TARGET ||
 			cmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS ||
 			cmdType == ACTION_COMMAND_PATROL
 		);
 }
@@ -158,15 +159,22 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 				else
 					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 			}
-			else if ( 0 == cmd.nNumber )
+			else
 			{
-				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
-				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
-			}
-			else if ( 1 == cmd.nNumber )
-			{
-				CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) );
-				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pTarget, true );
+				// cmd.nNumber cannot be properly assigned in PerformGroupAction, so fuck it, decide what to attack by type
+				CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
+				if (pTarget)
+				{
+					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
+					break;
+				}
+
+				CBuilding *pBuildingTarget = dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) );
+				if (pBuildingTarget)
+				{
+					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pBuildingTarget, true );
+					break;
+				}
 			}
 		}
 
@@ -175,6 +183,11 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 	case ACTION_COMMAND_ART_BOMBARDMENT:
 		pResult = new CPlaneBombState( pUnit, cmd.vPos );
 		
+		break;
+	case ACTION_COMMAND_FIRE_ROCKETS:
+		// Aircraft make one bombing pass for the finite single-salvo ability.
+		pResult = new CPlaneBombState( pUnit, cmd.vPos, true );
+
 		break;
 	case ACTION_MOVE_FIGHTER_SETPOINT:
 		pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
@@ -234,9 +247,11 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 				else
 					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 			}
-			else if ( 0 == cmd.nNumber )
+			else if ( CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) )
 			{
-				CAIUnit *pTarget = checked_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
+				if (!pTarget)
+					return nullptr;
+
 				if ( pTarget->GetStats()->IsAviation() )
 				{
 					if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pTarget->GetStats()->etype != RPG_TYPE_AVIA_BOMBER )
@@ -252,11 +267,10 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 						pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 				}
 			}
-			else if ( 1 == cmd.nNumber )
+			else if ( CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) ) )
 			{
 				if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
 				{
-					CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) );
 					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pTarget, false );
 				}
 				else
@@ -791,10 +805,10 @@ ETryStateInterruptResult CPlaneRestState::TryInterruptState( class CAICommand *p
 //*										  CPlaneBombState															*
 //*******************************************************************
 
-CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint )
+CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint, bool _bSingleSalvo )
 : CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
 	eState( ECBS_ESTIMATE ), fInitialHeight ( _pPlane->GetCenter().z ), 
-	fStartAttackDist( 0.0f ), bHaveBombs( true )
+	fStartAttackDist( 0.0f ), bHaveBombs( true ), bSingleSalvo( _bSingleSalvo )
 {
 	bHaveBombs = IsBombsPresent();
 	SetPoint( vPoint + _pPlane->GetGroupShift() );
@@ -921,7 +935,9 @@ void CPlaneBombState::Segment()
 		break;
 	case ECBS_AIM_TO_NEXT_POINT_2:
 		{
-			if ( bHaveBombs )
+			if ( bSingleSalvo && bHaveBombs )
+				TryInterruptState( 0 );
+			else if ( bHaveBombs )
 				eState = ECBS_GAIN_DISTANCE;
 			else if ( pPlane->IsStrategicBomber() )
 			{
@@ -1645,7 +1661,7 @@ void CPlaneShturmovikPatrolState::Segment()
 //		pPlane->SetCommandFinished();
 
 	//DEBUG{
-	static std::unordered_map<int, std::string> nameconv;
+	static det_map<int, std::string> nameconv;
 	if ( nameconv.empty() )
 	{
 		nameconv[PSPS_ESCAPE] = "PSPS_ESCAPE";

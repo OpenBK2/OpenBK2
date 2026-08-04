@@ -37,7 +37,7 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 {
 	pTiles->clear();
 
-	std::unordered_set<SVector, STilesHash> entranceTiles;
+	det_set<SVector, STilesHash> entranceTiles;
 	int nEntrances = entrances.size();
 	for ( int i = 0; i < nEntrances; ++i )
 	{

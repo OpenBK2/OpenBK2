@@ -8,9 +8,9 @@ class CCommonUnit;
 // sends updates to client
 class CPlayerReinforcement
 {
-	typedef std::unordered_map<int, std::pair<NDb::SReinforcementPosition,bool> > CPositions;
-	typedef std::unordered_map<int/*EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CInfos;
-	typedef std::unordered_map<int/*EReinforcementType*/, NTimer::STime> CRecycleTimes;
+	typedef det_map<int, std::pair<NDb::SReinforcementPosition,bool> > CPositions;
+	typedef det_map<int/*EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CInfos;
+	typedef det_map<int/*EReinforcementType*/, NTimer::STime> CRecycleTimes;
 
 	struct SCallReinforcementCommand
 	{

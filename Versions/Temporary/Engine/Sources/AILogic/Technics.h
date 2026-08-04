@@ -14,8 +14,8 @@ class CSupportAAGun;
 // просто военная машинка, базовый класс
 class CMilitaryCar : public CAIUnit
 {
-	typedef std::unordered_map<int/*unitID*/, int/*board number*/> CBoardOrder;
-	typedef std::unordered_map<int/*turret UniqueID*/, CObj<CSupportAAGun> > CSupportAAGuns;
+	typedef det_map<int/*unitID*/, int/*board number*/> CBoardOrder;
+	typedef det_map<int/*turret UniqueID*/, CObj<CSupportAAGun> > CSupportAAGuns;
 
 
 	ZDATA_(CAIUnit)
@@ -35,7 +35,7 @@ class CMilitaryCar : public CAIUnit
 	NTimer::STime timeLastHeal;						// последнее время лечения
 	
 	// mech units, currently On The Way to board
-	std::unordered_map<int, CPtr<CAIUnit> > boarding;
+	det_map<int, CPtr<CAIUnit> > boarding;
 	std::vector<CPtr<CAIUnit> > onBoard;
 	CBoardOrder boardOrder;
 	bool bCanUnload;								// if entrance point is locked - disable unload 

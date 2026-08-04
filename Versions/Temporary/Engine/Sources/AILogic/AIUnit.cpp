@@ -428,6 +428,18 @@ bool CAIUnit::IsAmphibianWaterPoint( const CVec2 &point ) const
 	return GetAIMap()->IsPointInside( point ) && IsAmphibianWaterTile( GetAIMap()->GetTile( point ) );
 }
 
+const DWORD CAIUnit::GetNormale( const CVec2 &vCenter ) const
+{
+	if ( GetAmphibianStats() && IsAmphibianWaterPoint( vCenter ) )
+	{
+		// Riverbed and cliff geometry remains below the water surface, so amphibians
+		// must use the level water plane instead of following its hidden normal.
+		return Vec3ToDWORD( V3_AXIS_Z );
+	}
+
+	return CCommonUnit::GetNormale( vCenter );
+}
+
 bool CAIUnit::IsInWater() const
 {
 	return GetMovementPlane() == PLANE_WATER && IsAmphibianWaterTile( GetCenterTile() );
@@ -515,6 +527,17 @@ void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime 
 
 	const CVec2 vPlacement = pPlacement->bNewFormat ? CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y ) : pPlacement->center;
 	pPlacement->fWaterCoeff = bRestInside ? 0.0f : GetAmphibianWaterCoeff( vPlacement );
+
+	if ( !GetAmphibianStats() || !pPlacement->bNewFormat || pPlacement->fWaterCoeff <= 0.0f )
+		return;
+
+	// Preserve interpolated yaw and discard terrain pitch/roll so amphibians
+	// remain level instead of following hidden river or cliff geometry.
+	float fYaw = 0.0f;
+	float fIgnoredPitch = 0.0f;
+	float fIgnoredRoll = 0.0f;
+	pPlacement->rotation.DecompEulerAngles( &fYaw, &fIgnoredPitch, &fIgnoredRoll );
+	pPlacement->rotation = CQuat( fYaw, V3_AXIS_Z );
 }
 /*
 
@@ -941,6 +964,11 @@ void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 
 bool CAIUnit::CanCommandBeExecuted( CAICommand *pCommand )
 {
+	if ( pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_REVERSE_TO )
+	{
+		// Reverse is a code-provided movement command for ground mechanical units, not a per-unit DB command.
+		return CanCommandBeExecutedByStats( ACTION_COMMAND_REVERSE_TO ) && CanGoBackward();
+	}
 	return GetStats()->HasCommand( int( pCommand->ToUnitCmd().nCmdType ) );
 }
 
@@ -951,6 +979,22 @@ bool CAIUnit::CanCommandBeExecutedByStats( CAICommand *pCommand )
 
 bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 {
+	if ( nCmd == ACTION_COMMAND_REVERSE_TO )
+	{
+		const NDb::SUnitBaseRPGStats *pStats = GetStats();
+		if ( pStats->GetTypeID() != NDb::SMechUnitRPGStats::typeID )
+			return false;
+
+		const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats*>( pStats );
+		// Rocket/AA artillery may reverse only when no movement mode defines gunner positions.
+		const bool bReverseArtilleryType = pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+			pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN;
+		const bool bCanReverseByType = bReverseArtilleryType ? !pMechStats->HasConfiguredGunners() :
+			( pMechStats->IsArmor() || pMechStats->IsSPG() || pMechStats->IsTransport() );
+		return bCanReverseByType &&
+			pMechStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
+			pMechStats->HasCommand( ACTION_COMMAND_MOVE_TO );
+	}
 	return GetStats()->HasCommand( nCmd );
 }
 
@@ -2610,6 +2654,12 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 	case NDb::ABILITY_SUPRESS:
 		UpdateEnableAblitiy( nAbility );
 		break;																// Suppress fire is handled elsewhere
+	case NDb::ABILITY_FIRE_ROCKETS:
+		UpdateEnableAblitiy( nAbility );
+		break;																// Single-salvo point fire is handled by unit states
+	case NDb::ABILITY_USE_FLAMETHROWER:
+		UpdateEnableAblitiy( nAbility );
+		break;																// Flame-only point fire is handled by unit states
 	case NDb::ABILITY_SUPPORT_FIRE:
 		UpdateEnableAblitiy( nAbility );
 		break;																// Support fire is handled elsewhere

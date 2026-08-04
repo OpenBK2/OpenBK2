@@ -58,6 +58,8 @@ namespace NTimer
 #include "System/ConsoleBuffer.h"
 #include "System/LogStream.h"
 #include "System/DB.h"
+#include "System/det_map.h"
+#include "System/det_set.h"
 // in the file 'Specific.h' one can define ow n project-specific includes
 #include "Specific.h"
 

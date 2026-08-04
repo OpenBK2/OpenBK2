@@ -44,6 +44,7 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	return 
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
+			cmdType == ACTION_COMMAND_REVERSE_TO				||
 			cmdType == ACTION_COMMAND_ATTACK_UNIT			||
 			cmdType == ACTION_COMMAND_ATTACK_OBJECT		||
 			cmdType == ACTION_COMMAND_ROTATE_TO				||
@@ -53,6 +54,8 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_TRACK_TARGETING	||
 			cmdType == ACTION_COMMAND_RANGE_AREA			||
 			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
+			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_DISAPPEAR				||
 			cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH ||
 			cmdType == ACTION_COMMAND_FOLLOW					||
@@ -181,6 +184,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 		break;
 	case ACTION_COMMAND_MOVE_TO:
+	case ACTION_COMMAND_REVERSE_TO:
 		{
 			pUnit->UnsetFollowState();
 
@@ -198,7 +202,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 				}
 				else
-					pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos );
+					pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 			}
 		}
 		break;
@@ -355,13 +359,23 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		
 		break;*/
 	case ACTION_COMMAND_ART_BOMBARDMENT:
+	case ACTION_COMMAND_FIRE_ROCKETS:
 		if ( pUnit->GetFirstArtilleryGun() != 0 )
 		{ 
 			if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
-				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, cmd.fNumber );
+			{
+				// FIRE_ROCKETS is deliberately finite even for non-rocket artillery weapons.
+				const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
+				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+			}
 			else
 				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 		}
+
+		break;
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		// The shared point-fire state selects every flame-trajectory gun and performs one burst.
+		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
 
 		break;
 	case ACTION_COMMAND_RANGE_AREA:

@@ -222,7 +222,7 @@ public:
 		};
 	private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		static std::unordered_map< int, CPtr<IUpdateTransformer> > clientTransformers;
+		static det_map< int, CPtr<IUpdateTransformer> > clientTransformers;
 
 	protected:
 		CUpdateData() {}
@@ -284,7 +284,7 @@ private:
 	CUpdateList::iterator pendingIt;
 	//basic updates catalog
 	// QUESTIONABLE DETERMINSM!!! - if the iteration order matters, then this is NOT DETERMINISTIC!
-	typedef std::unordered_map< CPtr<CUpdatableObj>, CUpdateList > CUpdateMap;
+	typedef det_map< CPtr<CUpdatableObj>, CUpdateList > CUpdateMap;
 	CUpdateMap updatesHash;
 	//current segment time
 	NTimer::STime nTime;
@@ -295,13 +295,13 @@ private:
 	//player's party
 	int nMyParty;
 	//visible tiles registrator
-	std::unordered_set<SVector, STilesHash> visibleTiles;
+	det_set<SVector, STilesHash> visibleTiles;
 	//legacy
 	bool bShowAreas;
 	EActionNotify eAreaType;
 	std::list< CPtr<CUpdatableObj> > shootGroupUnits;
 
-	std::unordered_set<int> updatedPlacements;
+	det_set<int> updatedPlacements;
 	NTimer::STime lastTimeUpTo;
 
 	void DestroyContents();	
@@ -327,6 +327,7 @@ public:
 	//send update
 	void AddUpdate( EFeedBack eFeedBack, int nParam = -1, CObjectBase *pParam = 0 );
 	void AddUpdate( SAIBasicUpdate *pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam );
+	void AddUpdate( SAIBasicUpdate *pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam, const NTimer::STime &nEventTime );
 	//inform on visible tiles in WarFog's coordinates !!!!!! (not AI tiles but vis one)
 	void TileBecameVisibleFromWarFog( const SVector &vPos, const int nParty );
 	//inform on object deletion

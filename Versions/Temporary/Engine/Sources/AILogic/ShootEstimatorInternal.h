@@ -155,7 +155,7 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 		STargetInfo() { Reset(); }
 	};
 
-	typedef std::unordered_set< int/*unique id of building*/ >  CBuildings;
+	typedef det_set< int/*unique id of building*/ >  CBuildings;
 	ZDATA
 	CPtr<CAIUnit> pOwner;
 	CPtr<CAIUnit> pCurEnemy;

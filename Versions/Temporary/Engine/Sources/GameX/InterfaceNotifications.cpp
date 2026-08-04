@@ -18,6 +18,7 @@
 #include "InterfaceArmyBranchDlg.h"
 #include "SaveLoadHelper.h"
 #include "System/Commands.h"
+#include "Misc/StrProc.h"
 
 static bool s_bAutosaveObjectiveComplete = false;
 
@@ -892,7 +893,51 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 	if ( pDescView )
 	{
 		std::wstring wszFormat = InterfaceState()->GetMissionConsoleMLTag();
-		pDescView->SetText( pDescView->GetDBText() + wszFormat + pEvent->wszText );
+		std::wstring wszText = pEvent->wszText;
+
+		if ( pDBEvent->eType == NDb::NEVT_PLAYER_ELIMINATED )
+		{
+			const int nPlayer = pEvent->nID;
+			IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
+			IScenarioTracker::SMultiplayerInfo *pMPInfo = pScenarioTracker->GetMultiplayerInfo();
+
+			for ( int i = 0; pMPInfo && i < pMPInfo->players.size(); ++i )
+			{
+				const IScenarioTracker::SMultiplayerInfo::SPlayer &player = pMPInfo->players[i];
+				if ( player.nIndex != nPlayer || player.wszName.empty() )
+					continue;
+
+				// Player elimination stores the removed player slot in nID.
+				const DWORD dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
+				const std::wstring wszPlayerColor = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwColor ) );
+				
+				//const int side = pScenarioTracker->GetPlayerSide( nPlayer );
+
+				// TODO: these should be loaded from some text files, not hardcoded like this crap
+				// std::wstring wszSideText = L"";
+				// if (side == 0)
+				// {
+				// 	wszSideText += L"<color=0x00FF00FF>\n[Green]";
+				// }
+				// else if (side == 1)
+				// {
+				// 	wszSideText += L"<color=0x0000FFFF>\n[Red]";
+				// }
+				// else
+				// {
+				// 	wszSideText += L"<color=0xEEEEEEFF>\n[Neutral]";
+				// }
+
+				wszText += L": ";
+				wszText += wszPlayerColor;
+				wszText += player.wszName;
+				// wszText += wszSideText;
+				wszText += wszFormat;
+				break;
+			}
+		}
+
+		pDescView->SetText( pDescView->GetDBText() + wszFormat + wszText );
 	}
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBEvent->,Tooltip) )
 	{

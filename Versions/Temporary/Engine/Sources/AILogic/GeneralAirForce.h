@@ -22,7 +22,7 @@ class CGeneralAirForce : public CCommander
 		bool operator()( const CVec2 &v1, const CVec2 &v2 ) {	return fabs2(v1-v2) < sqr(SConsts::PLANE_GUARD_STATE_RADIUS/2); }
 	};
 
-	typedef std::unordered_map< int, CPtr<CEnemyRememberer> > AntiAviation;
+	typedef det_map< int, CPtr<CEnemyRememberer> > AntiAviation;
 
 	struct IEnemyContainer *pEnemyContainer;
 
@@ -47,8 +47,8 @@ class CGeneralAirForce : public CCommander
 	bool bOurTurn;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); f.Add(2,&nParty); f.Add(3,&players); f.Add(4,&requestsID); f.Add(5,&antiAviation); f.Add(6,&createdAviation); f.Add(7,&timeWaitForReinforceSystem); f.Add(8,&nCurrentRequest); f.Add(9,&bOurTurn); return 0; }
 public:
-	typedef std::unordered_map< int /*request ID*/, SSupportInfo > Requests;
-	typedef std::unordered_map<int, Requests> RequestsByForceType;
+	typedef det_map< int /*request ID*/, SSupportInfo > Requests;
+	typedef det_map<int, Requests> RequestsByForceType;
 private:
 
 	RequestsByForceType requests;

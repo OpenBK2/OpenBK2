@@ -736,7 +736,7 @@ void CFullBridge::GetTilesForVisibility( CTilesSet *pTiles ) const
 
 void CFullBridge::InitEntireBridge()
 {
-	std::unordered_set<int> ids;
+	det_set<int> ids;
 	for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
 		ids.insert( (*it)->GetUniqueId() );
 	theWarFog.ReplaceStaticObjects( GetUniqueId(), ids );

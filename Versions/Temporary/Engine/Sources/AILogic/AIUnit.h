@@ -180,7 +180,7 @@ public:
 	// для отложенных updates
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	//virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
+	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
 	virtual const DWORD GetNormale() const;
 
 	// CBasePathUnit
@@ -196,6 +196,12 @@ public:
 	}
 	// Group forward move should use the "forward cap" and ignore temporary reverse-direction state.
 	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get(GetStats()->fSpeed); }
+	// Group reverse move should use the reverse cap even before the path switches direction.
+	virtual const float GetMaxPossibleBackwardSpeed() const
+	{
+		const float speed = GetMaxPossibleForwardSpeed();
+		return IsMech() && CanGoBackward() ? speed * GetStats()->fReverseSpeedModifier : speed;
+	}
 	virtual const float GetPassability() const;
 	virtual const int GetBoundTileRadius() const { return GetStats()->nBoundTileRadius; }
 	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const;

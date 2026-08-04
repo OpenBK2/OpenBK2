@@ -158,6 +158,8 @@ void CPredictedAntiAviationFire::Aim()
 	{
 		pGun->DontShoot();
 		pGun->StartPointBurst( aimPoint.GetPt(), false );
+		// Predicted AA fire shoots at a point, so remember the plane only for shot-time modifiers.
+		pGun->SetAntiAviationTarget( pPlane );
 	}	
 }
 

@@ -21,12 +21,12 @@ enum EResupplyType
 class CSupremeBeing
 {
 	public: int operator&( IBinSaver &saver ); private:;
-	typedef std::unordered_map<int, CObj<CGeneral> > Generals;
+	typedef det_map<int, CObj<CGeneral> > Generals;
 	Generals generals;
 	typedef std::list< CPtr<IGeneralDelayedTask> > DelayedTasks;
 	DelayedTasks delayedTasks;
 
-	std::unordered_set<int/*Link ID*/> ironmans;
+	det_set<int/*Link ID*/> ironmans;
 
 public:
 	void Segment();

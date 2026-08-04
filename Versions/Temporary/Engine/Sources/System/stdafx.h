@@ -41,6 +41,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include "det_map.h"
+#include "det_set.h"
 #include <set>
 
 namespace NTimer

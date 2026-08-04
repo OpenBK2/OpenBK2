@@ -206,6 +206,12 @@ std::string EnumToString( NDb::EUserAction eValue )
 		return "USER_ACTION_MOVE_WHELL";
 	case NDb::USER_ACTION_MOVE_HUMAN:
 		return "USER_ACTION_MOVE_HUMAN";
+	case NDb::USER_ACTION_REVERSE:
+		return "USER_ACTION_REVERSE";
+	case NDb::USER_ACTION_FIRE_ROCKETS:
+		return "USER_ACTION_FIRE_ROCKETS";
+	case NDb::USER_ACTION_USE_FLAMETHROWER:
+		return "USER_ACTION_USE_FLAMETHROWER";
 	default:
 		return "USER_ACTION_UNKNOWN";
 	}
@@ -405,6 +411,12 @@ NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const std::string &szValue )
 		return NDb::USER_ACTION_MOVE_WHELL;
 	if ( szValue == "USER_ACTION_MOVE_HUMAN" )
 		return NDb::USER_ACTION_MOVE_HUMAN;
+	if ( szValue == "USER_ACTION_REVERSE" )
+		return NDb::USER_ACTION_REVERSE;
+	if ( szValue == "USER_ACTION_FIRE_ROCKETS" )
+		return NDb::USER_ACTION_FIRE_ROCKETS;
+	if ( szValue == "USER_ACTION_USE_FLAMETHROWER" )
+		return NDb::USER_ACTION_USE_FLAMETHROWER;
 	return NDb::USER_ACTION_UNKNOWN;
 }
 

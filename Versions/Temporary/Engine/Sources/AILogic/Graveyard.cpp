@@ -114,7 +114,7 @@ void CGraveyard::Segment()
 	}
 	dissapeared.clear();
 
-	for ( std::unordered_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
+	for ( det_map<int,bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
 	{
 		if ( !CLinkObject::IsLinkObjectExists( it->first ) )
 			diedVisible.erase( it++ );
@@ -254,13 +254,26 @@ void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 void CGraveyard::CheckSoonBeDead()
 {
 	// The quection is: to be or not to be?...
-	std::list<CAIUnit*> deadObjs;
+	std::vector<CAIUnit*> deadObjs;
+	deadObjs.reserve(16);
+
+	std::vector<std::pair<CObj<CAIUnit>, float>> soonToDie;
+	soonToDie.reserve(16);
 	for ( UpdateObjSet::iterator iter = soonBeDead.begin(); iter != soonBeDead.end(); ++iter )
+		soonToDie.push_back(iter->second);
+	
+	std::sort(soonToDie.begin(), soonToDie.end(), [](std::pair<CObj<CAIUnit>, float> u1, std::pair<CObj<CAIUnit>, float> u2)
 	{
-		CAIUnit *pUnit = iter->second.first;
+		return u1.first->GetUniqueId() > u2.first->GetUniqueID();
+	});
+
+	for ( size_t i = 0; i < soonToDie.size(); i++ )
+	{
+		auto& iter = soonToDie[i];
+		CAIUnit *pUnit = iter.first;
 		if ( pUnit->GetTimeOfDeath() <= curTime )
 		{
-			const float fDamage = iter->second.second;
+			const float fDamage = iter.second;
 			NDb::EAnimationType eDeathAnimType = NDb::ANIMATION_DEATH;
 			const int nFatality = pUnit->ChooseFatality( fDamage, &eDeathAnimType );
 			const bool bPutMud = !GetTerrain()->IsBridge( pUnit->GetCenterTile() );
@@ -283,7 +296,7 @@ void CGraveyard::CheckSoonBeDead()
 		}
 	}
 
-	for ( std::list<CAIUnit*>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
+	for ( std::vector<CAIUnit*>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
 		soonBeDead.erase( (*iter)->GetUniqueId() );
 }
 

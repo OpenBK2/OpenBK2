@@ -288,7 +288,8 @@ IStaticPath* CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 
 CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 {
-	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO || 
+	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
+		command.nCmdType == ACTION_COMMAND_SWARM_TO ||
 		command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE || 
 		command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
 		command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||

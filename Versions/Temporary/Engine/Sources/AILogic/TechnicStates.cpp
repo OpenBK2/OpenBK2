@@ -133,7 +133,7 @@ struct SVectorHash
 		return (v.x * 65535) + v.y;
 	}
 };
-typedef std::unordered_map<SVector, bool, SVectorHash> CSVectorHash;
+typedef det_map<SVector, bool, SVectorHash> CSVectorHash;
 
 void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WORD wDirExclude )
 {

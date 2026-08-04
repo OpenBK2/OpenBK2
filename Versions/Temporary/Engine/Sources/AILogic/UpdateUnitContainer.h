@@ -22,7 +22,7 @@ struct SUpdateUnitInfo
 
 };
 
-typedef std::unordered_map<int, SUpdateUnitInfo> CUpdateUnitList;
+typedef det_map<int, SUpdateUnitInfo> CUpdateUnitList;
 
 class CUpdateUnitContainer : public CAIObjectBase
 {

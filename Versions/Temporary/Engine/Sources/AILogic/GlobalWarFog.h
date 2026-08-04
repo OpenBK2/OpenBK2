@@ -85,9 +85,9 @@ class CGlobalWarFog : public CAIObjectBase
 	};
 
 // internal types
-	typedef	std::unordered_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
+	typedef	det_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
 	typedef CArray2D<SWarFogTileInfo> TWarFog;
-	typedef std::unordered_set<SVector, STilesHash> TTilesToSmooth;
+	typedef det_set<SVector, STilesHash> TTilesToSmooth;
 
 	OBJECT_NOCOPY_METHODS( CGlobalWarFog );
 	CArray2D<CArray1Bit> areas;					// calculated spirals for every point
@@ -124,7 +124,7 @@ class CGlobalWarFog : public CAIObjectBase
 		std::vector<TWarFog> warFog;
 
 		CArray2D1Bit areasOpenTiles;
-		std::unordered_set<std::string> scriptAreas;
+		det_set<std::string> scriptAreas;
 
 		CArray2D<int> staticObjects;
 
@@ -196,7 +196,7 @@ public:
 
 	void AddStaticObjectTile( const SVector &vTile, const int nObjectID, const float fHeight );
 	void RemoveStaticObjectTile( const SVector &vTile, const int nObjectID );
-	void ReplaceStaticObjects( const int nNewID, const std::unordered_set<int> &oldIDs );
+	void ReplaceStaticObjects( const int nNewID, const det_set<int> &oldIDs );
 
 	bool IsTraceable( const SVector &tile1, const SVector &tile2 );
 

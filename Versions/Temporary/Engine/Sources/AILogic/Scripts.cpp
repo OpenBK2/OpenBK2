@@ -24,6 +24,7 @@
 #include "GlobeScriptHandler.h"
 #include "Sound/MusicSystem.h"
 #include "Sound/DBMusicSystem.h"
+#include "System/det_map.h"
 
 #include "SingleReinforcement.h"
 #include "ScenarioTracker.h"
@@ -103,7 +104,7 @@ class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
 	Script *pScript;
 	const NDb::SScriptArea *pArea;
 	int nUnits;
-	std::unordered_map<int, bool> squads;
+	det_map<int, bool> squads;
 
 public:
 	CUnitsInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea ) 
@@ -233,6 +234,11 @@ SRegFunction CScripts::pRegList[] =
 	{ "GetReinforcementCallsLeft",			CScripts::GetReinforcementCallsLeft },
 	{ "GiveXPToReinforcement",					CScripts::GiveXPToReinforcement },
 	{ "GiveXPToPlayer",									CScripts::GiveXPToPlayer },
+
+	{ "IsMultiplayerMatch", 				CScripts::IsMultiplayerMatch },
+	{ "GetMultiplayerMatchTechLevel", 		CScripts::GetMultiplayerMatchTechLevel },
+	{ "GetPlayerMultiplayerNation", 		CScripts::GetPlayerMultiplayerNation },
+	{ "GetPlayerSide", 						CScripts::GetPlayerSide },
 
 	// 3
 	{ "GetObjectHPs",										CScripts::GetObjectHPs },
@@ -501,6 +507,15 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 		command.vPos.y = script.GetObject( 5 );
 
 		break;
+	case ACTION_COMMAND_REVERSE_TO:
+		// Reverse uses the same point arguments as the ordinary move command.
+		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "Give ACTION_COMMAND_REVERSE_TO command : the 4 parameter is not an X coordinate", script );
+		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "Give ACTION_COMMAND_REVERSE_TO command : the 5 parameter is not an Y coordinate", script );
+
+		command.vPos.x = script.GetObject( 4 );
+		command.vPos.y = script.GetObject( 5 );
+
+		break;
 	case ACTION_COMMAND_ATTACK_UNIT:
 		CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "Give ACTION_COMMAND_ATTACK_UNIT command : the third parameter is not a script id", script );
 
@@ -724,8 +739,10 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 
 		break;
 	case ACTION_COMMAND_ART_BOMBARDMENT:
-		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "Give ACTION_COMMAND_ART_BOMBARDMENT command : the 4 parameter is not an X coordinate", script );
-		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "Give ACTION_COMMAND_ART_BOMBARDMENT command : the 5 parameter is not an Y coordinate", script );
+	case ACTION_COMMAND_FIRE_ROCKETS:
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "Give point-fire command : the 4 parameter is not an X coordinate", script );
+		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "Give point-fire command : the 5 parameter is not an Y coordinate", script );
 
 		command.vPos.x = script.GetObject( 4 );
 		command.vPos.y = script.GetObject( 5 );
@@ -968,7 +985,7 @@ void CScripts::LandSuspendedReiforcements()
 				CVec2 vShift( VNULL2 );
 				if ( CanLandWithShift( reinforcsIter->mapObject, &vShift ) )
 				{
-					std::unordered_set<int> candidates;
+					det_set<int> candidates;
 					const int nLink = reinforcsIter->mapObject.link.nLinkID;
 					candidates.insert( nLink );
 					CReinfList candObjects;
@@ -1105,7 +1122,7 @@ void CScripts::DelInvalidBegin( const int targetId )
 		int nDeleted = INT32_MIN;
 		std::vector<int> sorted;
 		sorted.reserve(groupUnits.size() + 1);
-		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		for( det_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			sorted.push_back(it->first);
 		}
@@ -1141,7 +1158,7 @@ void CScripts::DelInvalidUnits( const int scriptId )
 		}
 
 		std::list<int> deleted;
-		for( std::unordered_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
+		for( det_map< int, int>::iterator it = groupUnits.begin(); it != groupUnits.end(); ++it )
 		{
 			const int nUniqueId = it->first;
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
@@ -1305,7 +1322,7 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 	return 1;
 }
 
-void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_map<int, int> *pOld2NewLinks )
+void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, det_map<int, int> *pOld2NewLinks )
 {
 	// set new links (not intersected with existing)
 	std::list<int> freeLinks;
@@ -1327,7 +1344,7 @@ void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_ma
 
 void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec2 &vShift )
 {
-	std::unordered_map<int, int> old2NewLinks;
+	det_map<int, int> old2NewLinks;
 	SetNewLinksToReinforcement( pReinf, &old2NewLinks );
 
 	std::list<CCommonUnit*> pUnits;
@@ -1644,7 +1661,7 @@ class CUnitsEnumerator : public IEnumerator
 {
 	Script *pScript;
 	int nResult;
-	std::unordered_set<int> squads;
+	det_set<int> squads;
 public:
 	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}
 	bool AddUnit( CAIUnit *pUnit )
@@ -2029,7 +2046,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 	const int nUniqueID = script.GetObject( 1 );
 	const int nPlayer = script.GetObject( 2 );
 
-	std::unordered_map<int,bool> ids;
+	det_map<int,bool> ids;
 
 	if ( CLinkObject::IsLinkObjectExists( nUniqueID ) )
 	{
@@ -2061,7 +2078,7 @@ int CScripts::GetPassangers( struct lua_State *state )
 		}
 	}
 
-	for ( std::unordered_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+	for ( det_map<int,bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
 		script.PushNumber( it->first );	
 	return ids.size();
 }
@@ -2926,7 +2943,7 @@ int CScripts::ReturnScriptIDs( struct lua_State *pState )
 	Script script( pState );
 
 	const int nReturns = script.GetTop();
-	std::unordered_set<int> selectedUnits;
+	det_set<int> selectedUnits;
 	for ( int i = 1; i <= nReturns; ++i )
 	{
 		NI_ASSERT( script.GetObject( i ).IsNumber(  ), "ReturnScriptIDs: %d parameter isn't a number" );
@@ -4684,6 +4701,62 @@ int CScripts::GiveXPToPlayer( struct lua_State *pState )
 	return 0;
 }
 
+// params: <none>; returns: 1 if the match is MP, 0 if not
+int CScripts::IsMultiplayerMatch( struct lua_State *pState )
+{
+	Script script( pState );
+	// Diplomacy owns the authoritative network-game flag used by AILogic.
+	script.PushNumber( theDipl.IsNetGame() );
+	return 1;
+}
+
+// params: <none>; returns: -1 if the match is not MP, otherwise: current match tech level id from mp consts (number >= 0)
+int CScripts::GetMultiplayerMatchTechLevel( struct lua_State *pState )
+{
+	Script script( pState );
+	int nTechLevel = -1;
+	if ( theDipl.IsNetGame() )
+	{
+		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+			nTechLevel = pScenarioTracker->GetMultiplayerTechLevel();
+	}
+
+	script.PushNumber( nTechLevel );
+	return 1;
+}
+
+// params: <player no>; returns: -1 if the match is not MP, otherwise: players nation id from mp consts (number >= 0)
+int CScripts::GetPlayerMultiplayerNation( struct lua_State *pState )
+{
+	Script script( pState );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GetPlayerMultiplayerNation: parameter 1 isn't a player number", script );
+	const int nPlayer = script.GetObject( 1 ).GetNumber();
+	CHECK_ERROR( nPlayer >= 0 && nPlayer < theDipl.GetNPlayers(), "GetPlayerMultiplayerNation: player number is out of range", script );
+
+	int nNation = -1;
+	if ( theDipl.IsNetGame() )
+	{
+		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+			nNation = pScenarioTracker->GetPlayerMultiplayerNation( nPlayer );
+	}
+
+	script.PushNumber( nNation );
+	return 1;
+}
+
+// params: <player no>; returns: side of the player (0, 1 or 2)
+int CScripts::GetPlayerSide( struct lua_State *pState )
+{
+	Script script( pState );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GetPlayerSide: parameter 1 isn't a player number", script );
+	const int nPlayer = script.GetObject( 1 ).GetNumber();
+	CHECK_ERROR( nPlayer >= 0 && nPlayer < theDipl.GetNPlayers(), "GetPlayerSide: player number is out of range", script );
+
+	script.PushNumber( theDipl.GetNParty( nPlayer ) );
+	return 1;
+}
+
+
 void CScripts::RemoveUnit( CAIUnit * pUnit )
 {
 	CTerrain * pTerrain = GetTerrain();
@@ -4707,7 +4780,7 @@ void CScripts::RemoveUnit( CAIUnit * pUnit )
 int CScripts::RemoveAllUnitsTmp( struct lua_State *pState )
 {
 	Script script( pState );
-	std::unordered_map<int, bool> excluded;
+	det_map<int, bool> excluded;
 	for ( int i = 1; script.GetObject( i ).IsNumber(); ++i )
 		excluded[script.GetObject(i).GetNumber()] = true;
 

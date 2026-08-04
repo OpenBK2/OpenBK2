@@ -44,12 +44,15 @@ class CArtilleryMoveToState : public IUnitState
 
 	NTimer::STime startTime;
 	CPtr<IStaticPath> pStaticPath;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bToFinish); f.Add(4,&pArtillery); f.Add(5,&startTime); f.Add(6,&pStaticPath); return 0; }
-public:
-	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &point );
+	bool bForceReverse;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bToFinish); f.Add(4,&pArtillery); f.Add(5,&startTime); f.Add(6,&pStaticPath); f.Add(7,&bForceReverse); return 0; }
 
-	CArtilleryMoveToState() : pArtillery( 0 ) { }
-	CArtilleryMoveToState( class CArtillery *pArtillery, const CVec2 &point );
+	void SetReversePathMode( const bool bEnable );
+public:
+	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse = false );
+
+	CArtilleryMoveToState() : pArtillery( 0 ), bForceReverse( false ) { }
+	CArtilleryMoveToState( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState(class CAICommand *pCommand);
@@ -100,13 +103,22 @@ class CArtilleryBombardmentState : public IUnitAttackingState, public CStatusUpd
 	bool bStop;
 	bool bSaidNoAmmo;
 	int nShotCount;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&point); f.Add(5,&bStop); f.Add(6,&bSaidNoAmmo); f.Add(7,&nShotCount); return 0; }
-public:
-	static IUnitState* Instance( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount );
+	bool bFlamethrowerOnly;
+	bool bBurstStarted;
 
-	CArtilleryBombardmentState() : pUnit( 0 ) { }
-	CArtilleryBombardmentState( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount );
+	class CBasicGun* ChoosePointFireGun( bool *pCanShootWOMove, bool *pNeedTurn ) const;
+	bool IsFlamethrowerGun( const class CBasicGun *pGun ) const;
+	bool StartFlamethrowerBurst();
+	bool IsAnyFlamethrowerGunFiring() const;
+	bool IsAnyFlamethrowerGunBursting() const;
+	void StopFlamethrowerGuns();
+public:
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&point); f.Add(5,&bStop); f.Add(6,&bSaidNoAmmo); f.Add(7,&nShotCount); f.Add(8,&bFlamethrowerOnly); f.Add(9,&bBurstStarted); return 0; }
+public:
+	static IUnitState* Instance( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount, const bool bFlamethrowerOnly = false );
+
+	CArtilleryBombardmentState() : pUnit( 0 ), bFlamethrowerOnly( false ), bBurstStarted( false ) { }
+	CArtilleryBombardmentState( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount, const bool bFlamethrowerOnly );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );

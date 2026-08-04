@@ -60,7 +60,7 @@ struct SLinkObjData
 	std::list<int> deletedObjects;
 	std::list<int> deletedUniqueObjects;
 
-	std::unordered_map< int, CObj<CLinkObject> > unitsID2object;
+	det_map< int, CObj<CLinkObject> > unitsID2object;
 	int nCurUniqueID;
 	SLinkObjData() : nCurUniqueID( 0 ) {  }
 };

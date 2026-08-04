@@ -11,7 +11,7 @@ struct IScriptWrapper;
 
 namespace NScenarioTracker
 {
-typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+typedef det_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
 typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
 typedef std::unordered_map<NDb::EReinforcementType, float, SEnumHash> CReinforcementXPs;
 typedef std::unordered_map<NDb::EReinforcementType, int, SEnumHash> CReinforcementLevels;
@@ -23,7 +23,7 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission, CReinforcem
 class CScenarioTracker : public IScenarioTracker
 {
 	OBJECT_NOCOPY_METHODS( CScenarioTracker );
-	typedef std::unordered_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
+	typedef det_map<int/*NDb::EReinforcementType*/, CDBPtr<NDb::SReinforcement> > CReinforcementTypes;
 	typedef std::vector<EReinforcementState> CReinforcementEnableStates;
 	typedef std::vector<CDBPtr<NDb::SMapInfo> > CWonMissions;
 	typedef std::unordered_map< CDBPtr<NDb::SMapInfo>, SMissionStats, SDBPtrHash > CMissionsStats;
@@ -413,6 +413,12 @@ public:
 	// mission statistics
 	int GetNPlayers() const;
 	int GetPlayerSide( int nPlayer ) const;
+	int GetMultiplayerTechLevel() const { return nTechLevel; }
+	int GetPlayerMultiplayerNation( int nPlayer ) const
+	{
+		// Neutral or otherwise unassigned map slots do not have an MP nation.
+		return nPlayer >= 0 && nPlayer < players.size() ? players[nPlayer].nMultiplayerSide : -1;
+	}
 
 	// campaign
 	void CampaignStart( const NDb::SCampaign * pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom ) { NI_ASSERT( false, "wrong call" ); }

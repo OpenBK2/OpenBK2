@@ -407,10 +407,13 @@ bool CStandartSmoothMechPath::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _
 		bCanGoForward = true;
 		bCanGoBackward = ( GetUnit() != 0 && GetUnit()->CanGoBackward() );
 
-		if ( _bCheckTurn && GetPath()->ShouldCheckTurn() )
+		if ( bForceGoBackward )
+			SetForceGoBackward( true );
+
+		if ( !bForceGoBackward && _bCheckTurn && GetPath()->ShouldCheckTurn() )
 			CheckTurn( GetDirectionByVector( GetSplineDX() ) );
 
-		if ( GetPath() && _bSmoothTurn )
+		if ( !bForceGoBackward && GetPath() && _bSmoothTurn )
 			AddSmoothTurn();
 	}
 
@@ -497,11 +500,14 @@ bool CStandartSmoothMechPath::UpdateDirection()
 {
 	if ( GetSplineDX() != VNULL2 )
 	{
+		if ( bForceGoBackward )
+			GetUnit()->SetGoForward( false );
+
 		// слишком велика разница между старым и новым направлениями, нужно повернуться
 		const WORD wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
 		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff	> DIR_DIFF_TO_SMOOTH_TURNING ) )
 		{
-			if ( !GetUnit()->TurnToDirection( GetDirectionByVector( GetSplineDX() ) , true, true ) )
+			if ( !GetUnit()->TurnToDirection( GetDirectionByVector( GetSplineDX() ), true, !bForceGoBackward ) )
 				return true;
 		}
 		else
@@ -557,7 +563,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 
 	const CVec2 vCenter = GetUnit()->GetCenterPlain();
 	// если едем задом, проверить - нельзя ли развернуться, чтобы поехать передом
-	if ( !GetUnit()->IsGoForward() )
+	if ( !bForceGoBackward && !GetUnit()->IsGoForward() )
 	{
 		RecordRandomCall();
 		if ( lastCheckToRightTurn >= (NTimer::STime)( NRandom::Random( 200, 500 ) ) )
@@ -661,6 +667,20 @@ const bool CStandartSmoothMechPath::CanGoBackward() const
 	}
 	else
 		return false;
+}
+
+void CStandartSmoothMechPath::SetForceGoBackward( const bool bForce )
+{
+	bForceGoBackward = bForce;
+	if ( !bForceGoBackward || GetUnit() == 0 )
+		return;
+
+	// Forced reverse never consumes a forward smooth-turn arc or switches back to forward travel.
+	circles.clear();
+	bSkipNextSegment = false;
+	bCanGoForward = false;
+	bCanGoBackward = GetUnit()->CanGoBackward();
+	GetUnit()->SetGoForward( false );
 }
 
 void CStandartSmoothMechPath::Stop()

@@ -2,6 +2,7 @@
 #include "System/Commands.h"
 #include "ManuverInternal.h"
 #include "Stats_B2_M1/RPGStatsAutomagic.h"
+#include "System/det_map.h"
 #include "DBAIConsts.h"
 
 namespace NAIConsts
@@ -257,8 +258,8 @@ int SConsts::SHOW_ALL_TIME_COEFF = 5;
 
 int SConsts::TIME_TO_ALLOW_KILL_CRUSHED_OBJ = 20000;
 
-std::unordered_map<int, SConsts::SRevealInfo> SConsts::REVEAL_INFO;
-std::unordered_map< NDb::EDesignUnitType, int, SEnumHash > SConsts::PRIORITIES;
+det_map<int, SConsts::SRevealInfo> SConsts::REVEAL_INFO;
+det_map< NDb::EDesignUnitType, int, SEnumHash > SConsts::PRIORITIES;
 
 float SConsts::REINFORCEMENT_GROUP_DISTANCE = 900.0f;
 NTimer::STime SConsts::INFANTRY_FULL_HEAL_TIME = 2000;

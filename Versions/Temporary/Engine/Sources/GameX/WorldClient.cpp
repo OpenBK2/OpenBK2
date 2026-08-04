@@ -458,6 +458,7 @@ void CWorldClient::InitPrivate()
 	AddObserver( "center_current_selection", &CWorldClient::MsgCenterCurrentSelection );
 
 	RegisterUserAction( NDb::USER_ACTION_MOVE, SActionDesc::AUTO | SActionDesc::FORCED, &CWorldClient::ActionMove );
+	RegisterUserAction( NDb::USER_ACTION_REVERSE, SActionDesc::FORCED, &CWorldClient::ActionReverse );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_TO_GRID, SActionDesc::FORCED, &CWorldClient::ActionMoveToGrid );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN, SActionDesc::AUTO, &CWorldClient::ActionMove );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_TRACK, SActionDesc::AUTO, &CWorldClient::ActionMove );
@@ -513,6 +514,8 @@ void CWorldClient::InitPrivate()
 	RegisterUserAction( NDb::USER_ACTION_HOLD_SECTOR, SActionDesc::FORCED, &CWorldClient::ActionUseHoldSector );
 	RegisterUserAction( NDb::USER_ACTION_TRACK_TARGETING, SActionDesc::FORCED, &CWorldClient::ActionUseTrackTargeting );
 	RegisterUserAction( NDb::USER_ACTION_SUPPRESS, SActionDesc::FORCED, &CWorldClient::ActionSupressFire );
+	RegisterUserAction( NDb::USER_ACTION_FIRE_ROCKETS, SActionDesc::FORCED, &CWorldClient::ActionFireRockets );
+	RegisterUserAction( NDb::USER_ACTION_USE_FLAMETHROWER, SActionDesc::FORCED, &CWorldClient::ActionUseFlamethrower );
 
 	RegisterUserAction( NDb::USER_ACTION_CRITICAL_TARGETTING, SActionDesc::INSTANT, &CWorldClient::ActionCriticalTargetting );
 	RegisterUserAction( NDb::USER_ACTION_RAPID_FIRE, SActionDesc::INSTANT, &CWorldClient::ActionRapidFire );
@@ -1041,8 +1044,8 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 
 	if ( pfnAction != 0 ) 
 	{
-		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_SUPPRESS) ?
-													0 : PickTopMapObj( vPos, eUserAction );
+		const CMapObj *pMO = (bMiniMap || eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_SUPPRESS || eUserAction == NDb::USER_ACTION_FIRE_ROCKETS || eUserAction == NDb::USER_ACTION_USE_FLAMETHROWER) ?
+											0 : PickTopMapObj( vPos, eUserAction );
 		CVec2 vTarget;
 		if ( bMiniMap )
 			vTarget = vPos;
@@ -1076,7 +1079,7 @@ void CWorldClient::DoAction( USER_ACTION pfnAction, NDb::EUserAction eUserAction
 			else
 				NInput::PostEvent( "notify_forced_action", 0, 0 );
 		}
-		if ( pMO == 0 && (eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_ATTACK) )
+		if ( pMO == 0 && (eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE || eUserAction == NDb::USER_ACTION_ATTACK) )
 		{
 			ShowSelectionDst( vTarget );
 		}
@@ -1958,7 +1961,7 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 		{
 			for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 			{
-				std::unordered_map< int, int > &units = xrayUnits[nPlayer];
+				det_map< int, int > &units = xrayUnits[nPlayer];
 				units.clear();
 			}
 		}
@@ -1970,7 +1973,7 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 			int nPlayer = pCurMO->GetPlayer();
 			if ( nPlayer >= 0 && nPlayer < xrayUnits.size() )
 			{
-				std::unordered_map< int, int > &units = xrayUnits[nPlayer];
+				det_map< int, int > &units = xrayUnits[nPlayer];
 				units[*it] = 0; // reset unit's timer
 			}
 		}
@@ -1979,10 +1982,10 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 
 		for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 		{
-			std::unordered_map< int, int > &units = xrayUnits[nPlayer];
+			det_map< int, int > &units = xrayUnits[nPlayer];
 
 			std::list<int> objects;
-			for ( std::unordered_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
+			for ( det_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
 			{
 				objects.push_back( it->first );
 			}
@@ -2114,6 +2117,22 @@ bool CWorldClient::IsSuperWeapon( CMapObj *pMO ) const
 	return false;
 }
 
+bool CWorldClient::IsStratBomber( CMapObj *pMO ) const
+{
+	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
+	{
+		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER )
+			return true;
+	}
+	return false;
+}
+
+bool CWorldClient::IsHelicopter( CMapObj *pMO ) const
+{
+	// TODO change when actual helicopters get added
+	return false;
+}
+
 bool CWorldClient::IsAviation( CMapObj *pMO ) const
 {
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
@@ -2147,6 +2166,16 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 			sgSuperWeapons[nID] = pSO;
 			NInput::PostEvent( "mission_update_special_select_btn", 3, 1 );
 		}
+		if ( IsStratBomber( pSO ) )
+		{
+			sgStratBombers[pSO->GetID()] = pSO;
+			NInput::PostEvent( "mission_update_special_select_btn", 4, 1 );
+		}
+		if ( IsHelicopter( pSO ) )
+		{
+			sgHelicopters[pSO->GetID()] = pSO;
+			NInput::PostEvent( "mission_update_special_select_btn", 5, 1 );
+		}
 	}
 	else
 	{
@@ -2173,6 +2202,18 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 			sgSuperWeapons.erase( nID );
 			if ( sgSuperWeapons.empty() )
 				NInput::PostEvent( "mission_update_special_select_btn", 3, 0 );
+		}
+		if ( !sgStratBombers.empty() )
+		{
+			sgStratBombers.erase( nID );
+			if ( sgStratBombers.empty() )
+				NInput::PostEvent( "mission_update_special_select_btn", 4, 0 );
+		}
+		if ( !sgHelicopters.empty() )
+		{
+			sgHelicopters.erase( nID );
+			if ( sgHelicopters.empty() )
+				NInput::PostEvent( "mission_update_special_select_btn", 5, 0 );
 		}
 	}
 }
@@ -2578,6 +2619,9 @@ int CWorldClient::operator&( IBinSaver &saver )
 	saver.Add( 33, &unitIcons );
 	saver.Add( 34, &minimapColors );
 	saver.Add( 35, &bIsOwnUnitsPresent );
+	// Append new groups so the established IDs of existing save fields stay unchanged.
+	saver.Add( 36, &sgStratBombers );
+	saver.Add( 37, &sgHelicopters );
 
 	return 0;
 }
@@ -2674,7 +2718,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 																							 (vPos.y - fRadius) / VIS_TILE_SIZE, 
 																							 (vPos.x + fRadius) / VIS_TILE_SIZE,
 																							 (vPos.y + fRadius) / VIS_TILE_SIZE );
-	std::unordered_map<int, SSoundTerrainInfo> infos;
+	det_map<int, SSoundTerrainInfo> infos;
 	for ( int x = 0; x < areaTypes.GetSizeX(); ++x )
 	{
 		for ( int y = 0; y < areaTypes.GetSizeY(); ++y )
@@ -2686,7 +2730,7 @@ void CWorldClient::GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, in
 	}
 	pData->resize( infos.size() );
 	int i = 0;
-	for ( std::unordered_map<int, SSoundTerrainInfo>::const_iterator it = infos.begin(); it != infos.end(); ++it )
+	for ( det_map<int, SSoundTerrainInfo>::const_iterator it = infos.begin(); it != infos.end(); ++it )
 	{
 		(*pData)[i].fWeight = it->second.fWeight;
 		(*pData)[i].vPos = it->second.vPos / it->second.fWeight;
@@ -2798,6 +2842,14 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 
 		case 3:
 			pGroup = &sgSuperWeapons;
+		break;
+
+		case 4:
+			pGroup = &sgStratBombers;
+		break;
+
+		case 5:
+			pGroup = &sgHelicopters;
 		break;
 	}
 	if ( !pGroup )
@@ -3003,7 +3055,7 @@ void CWorldClient::UpdateXRayUnits( int nDeltaTime )
 {
 	for ( int nPlayer = 0; nPlayer < xrayUnits.size(); ++nPlayer )
 	{
-		std::unordered_map< int, int > &units = xrayUnits[nPlayer];
+		det_map< int, int > &units = xrayUnits[nPlayer];
 		if ( !IsXRayMode() )
 		{
 			units.clear();
@@ -3012,7 +3064,7 @@ void CWorldClient::UpdateXRayUnits( int nDeltaTime )
 		
 		std::vector<int> toRemoveUnits;
 		toRemoveUnits.reserve( units.size() );
-		for ( std::unordered_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
+		for ( det_map< int, int >::iterator it = units.begin(); it != units.end(); ++it )
 		{
 			it->second += nDeltaTime;
 			if ( it->second > MAX_XRAY_TIME )

@@ -45,6 +45,34 @@ extern CUnitCreation theUnitCreation;
 extern CGlobalWarFog theWarFog;
 extern NAI::CTimeCounter timeCounter;
 
+namespace
+{
+	class CScopedStatsModifier
+	{
+		CAIUnit *pUnit;
+		const NDb::SUnitStatsModifier *pModifier;
+
+	public:
+		CScopedStatsModifier( CAIUnit *_pUnit, const NDb::SUnitStatsModifier *_pModifier )
+			: pUnit( _pUnit ), pModifier( _pModifier )
+		{
+			// AA modifier affects only values read while the shot objects are being created.
+			if ( pUnit && pModifier )
+			{
+				pUnit->ApplyStatsModifier( pModifier, true );
+			}
+		}
+
+		~CScopedStatsModifier()
+		{
+			if ( pUnit && pModifier )
+			{
+				pUnit->ApplyStatsModifier( pModifier, false );
+			}
+		}
+	};
+}
+
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist )
 {
 	return fDispRadius / fRangeMax * fDist;
@@ -69,7 +97,7 @@ BASIC_REGISTER_CLASS( CBasicGun );
 CBasicGun::CBasicGun( class CAIUnit *_pOwner, const BYTE _nShellType, SCommonGunInfo *_pCommonGunInfo, const IGunsFactory::EGunTypes _eType )
 : pOwner( _pOwner ), shootState( EST_REST ), nShellType( _nShellType ), bAngleLocked( false ), bCanShoot( true ), pCommonGunInfo( _pCommonGunInfo ), eType( _eType ),
 	eRejectReason( ACK_NONE ), bWaitForReload( false ), lastCheck( 0 ), bParallelGun( false ), lastCheckTurnTime( 0 ), 
-	nShotsLast( 0 ), vLastShotPoint( VNULL3 ), target( VNULL2 ), bAim( false ), lastEnemyPos( VNULL2 ), bCanShootToUnitWOMove( false )
+	nShotsLast( 0 ), vLastShotPoint( VNULL3 ), pAntiAviationTarget( 0 ), target( VNULL2 ), bAim( false ), lastEnemyPos( VNULL2 ), bCanShootToUnitWOMove( false )
 {
 	SetUniqueIdForObjects();
 	bGrenade = pOwner && pOwner->GetStats()->IsInfantry() && pCommonGunInfo->nGun == 1;
@@ -259,6 +287,8 @@ void CBasicGun::ToRestStateWOParallel()
 	shootState = EST_REST;
 	lastCheck = curTime;
 	pCommonGunInfo->bFiring = false;
+	// Keep parallel guns untouched here; they may still be waiting to fire the same AA burst.
+	pAntiAviationTarget = 0;
 	target = VNULL2;
 
 	StopTracing();
@@ -277,6 +307,7 @@ void CBasicGun::ToRestState()
 	shootState = EST_REST;
 	lastCheck = curTime;
 	pCommonGunInfo->bFiring = false;
+	SetAntiAviationTarget( 0 );
 	target = VNULL2;
 
 	StopTracing();
@@ -419,15 +450,7 @@ void CBasicGun::WaitForActionPoint()
 		pCommonGunInfo->lastShoot = curTime - GetFireRate();
 
 		vLastShotPoint = CVec3( target, z );
-
-		if ( pOwner->GetStats()->IsInfantry() )	
-		{
-			if ( pCommonGunInfo->nGun != 1 )	// animation for grenades is played in advance
-				updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, -1 );
-		}
-		// для зениток выстрел нужно присылать на каждый снаряд, action point отсутствует
-		else if ( pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN && pOwner->GetStats()->etype != RPG_TYPE_ART_ROCKET )
-			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
+		// Non-grenade shot effects are sent after each actual Fire() call in Shooting().
 	}
 }
 
@@ -445,6 +468,7 @@ void CBasicGun::Shooting()
 
 	while ( curTime - pCommonGunInfo->lastShoot >= GetFireRate() && nShotsLast > 0 && pCommonGunInfo->nAmmo > 0 )
 	{
+		const bool bFirstShotInBurst = nShotsLast == pWeapon->nAmmoPerBurst;
 		bool bShowBombEffect = true;
 		if ( pOwner && pOwner->GetStats() &&
 			( pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_STRAT_BOMBER ) &&
@@ -473,12 +497,19 @@ void CBasicGun::Shooting()
 			}
 		}
 
-		if ( pOwner->GetStats()->etype == RPG_TYPE_ART_AAGUN || pOwner->GetStats()->etype == RPG_TYPE_ART_ROCKET )
-			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
-
 		--nShotsLast;
 
 		pCommonGunInfo->lastShoot += GetFireRate();
+
+		// Emit one visual event per successful logical shot for every owner type. The
+		// exact scheduled time preserves burst spacing when several shots share an AI tick.
+		if ( pOwner->GetStats()->IsInfantry() )
+		{
+			if ( pCommonGunInfo->nGun != 1 ) // grenade animation/effect is started in advance
+				updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
+		}
+		else
+			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
 		
 		// Subtract appropriate number of shells
 		pCommonGunInfo->nAmmo -= (std::min)( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );
@@ -726,6 +757,7 @@ void CBasicGun::StartPlaneBurst( CAIUnit *_pEnemy, bool bReAim )
 {
 	if ( _pEnemy && _pEnemy->IsRefValid() && _pEnemy->IsAlive() )
 	{
+		SetAntiAviationTarget( _pEnemy );
 		pEnemy = _pEnemy;
 		lastCheck = curTime;
 		bAim = bReAim;
@@ -756,6 +788,7 @@ void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 		z = _target.z;
 		lastCheck = curTime;
 		bAim = bReAim;
+		SetAntiAviationTarget( 0 );
 		lastEnemyPos = VNULL2;
 		pCommonGunInfo->bFiring = true;
 
@@ -781,7 +814,7 @@ void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 	}
 }
 
-void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
+void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim, bool bStartParallelGuns )
 {
 	if ( !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != 0 || target != _target ) )
 	{
@@ -789,6 +822,7 @@ void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
 		z = 0;
 		lastCheck = curTime;
 		bAim = bReAim;
+		SetAntiAviationTarget( 0 );
 		lastEnemyPos = VNULL2;
 		pCommonGunInfo->bFiring = true;
 
@@ -809,8 +843,12 @@ void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim )
 
 		pEnemy = 0;
 
-		for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
-			(*iter)->StartPointBurst( _target, bReAim );
+		// Filtered point-fire abilities can prevent linked guns with another shell trajectory from joining in.
+		if ( bStartParallelGuns )
+		{
+			for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
+				(*iter)->StartPointBurst( _target, bReAim );
+		}
 	}
 }
 
@@ -818,6 +856,7 @@ void CBasicGun::StartEnemyBurst( CAIUnit *_pEnemy, bool bReAim )
 {
 	if ( IsValidObj( _pEnemy ) && !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != _pEnemy ) )
 	{
+		SetAntiAviationTarget( _pEnemy );
 		pEnemy = _pEnemy;
 		lastCheck = curTime;
 		bAim = bReAim;
@@ -850,6 +889,33 @@ void CBasicGun::StartEnemyBurst( CAIUnit *_pEnemy, bool bReAim )
 		for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
 			(*iter)->StartEnemyBurst( _pEnemy, bReAim );
 	}
+}
+
+void CBasicGun::SetAntiAviationTarget( CAIUnit *pTarget )
+{
+	if ( pTarget && pTarget->IsRefValid() && pTarget->GetStats() && pTarget->GetStats()->IsAviation() )
+		pAntiAviationTarget = pTarget;
+	else
+		pAntiAviationTarget = 0;
+
+	for ( CParallelGuns::iterator iter = parallelGuns.begin(); iter != parallelGuns.end(); ++iter )
+		(*iter)->SetAntiAviationTarget( pAntiAviationTarget );
+}
+
+const NDb::SUnitStatsModifier* CBasicGun::GetAntiAviationModifier() const
+{
+	const CAIUnit *pTarget = pAntiAviationTarget;
+	if ( !pTarget )
+		pTarget = pEnemy;
+
+	if ( !pTarget || !pTarget->IsRefValid() || !pTarget->GetStats() || !pTarget->GetStats()->IsAviation() )
+		return 0;
+
+	const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pOwner ? pOwner->GetStats() : 0 );
+	if ( !pMechStats )
+		return 0;
+
+	return pMechStats->pAntiAviationModifier;
 }
 
 const SBaseGunRPGStats& CBasicGun::GetGun() const
@@ -1289,6 +1355,8 @@ IBallisticTraj* CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 
 void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEffect )
 {
+	CScopedStatsModifier antiAviationModifier( pOwner, GetAntiAviationModifier() );
+
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "gunfire_markers", 0 ) )
 	{
@@ -1314,7 +1382,9 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				Normalize( &vDir );
 				const CVec2 vExplosion( vOwnerCenter + vDir * GetFireRangeMax() );
 				// to disallow kill themselves
-				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, pWeapon->shells[nShellType].fArea ) ) );
+				// Use modified flame radius here too; this offset protects the shooter from its own flame burst.
+				const float fStartArea = pOwner->GetStatsModifier()->weaponArea.Get( pWeapon->shells[nShellType].fArea );
+				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, fStartArea ) ) );
 				
 				CPtr<CFlameThrowerExpl> pExpl = new CFlameThrowerExpl( pOwner, this, CVec3( vExplosion, z ), CVec3( vStart, fOwnerZ ), nShellType );
 				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
@@ -1853,10 +1923,10 @@ void CTurretGun::StartPointBurst( const CVec3 &target, bool bReAim )
 	CBasicGun::StartPointBurst( target, bReAim );
 }
 
-void CTurretGun::StartPointBurst( const CVec2 &target, bool bReAim )
+void CTurretGun::StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns )
 {
 	bTurnByBestWay = false;
-	CBasicGun::StartPointBurst( target, bReAim );
+	CBasicGun::StartPointBurst( target, bReAim, bStartParallelGuns );
 }
 
 void CTurretGun::StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim )
@@ -1951,5 +2021,3 @@ const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner )
 {
 	return pStats->fRangeMax;
 }
-
-

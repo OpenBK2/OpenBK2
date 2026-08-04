@@ -130,7 +130,9 @@ namespace NDb
 		ABILITY_SURVIVAL = 58,
 		ABILITY_TANK_HUNTER = 59,
 		ABILITY_RADIO_CONTROLLED_MODE = 60,
-		_ABILITY_COUNT = 61,
+		ABILITY_FIRE_ROCKETS = 61,
+		ABILITY_USE_FLAMETHROWER = 62,
+		_ABILITY_COUNT = 63,
 	};
 
 	enum EUnitSpecialAbilityGroup
@@ -159,6 +161,10 @@ namespace NDb
 		bool bStopCurrentAction;
 		NFile::CFilePath szLocalizedNameFileRef;
 		NFile::CFilePath szLocalizedDescFileRef;
+		CDBPtr< STexture > pAbilityIconTextureNormal;
+		CDBPtr< STexture > pAbilityIconTextureDisabled;
+		CDBPtr< STexture > pAbilityIconTextureForegroundNormal;
+		CDBPtr< STexture > pAbilityIconTextureForegroundDisabled;
 
 		#include "include_unitspecialablitydesc.h"
 
@@ -172,7 +178,11 @@ namespace NDb
 			eGroupID( ABILITY_GROUP_NOGROUP ),
 			nDisableGroupTime( 0 ),
 			fParameter( 0 ),
-			bStopCurrentAction( false )
+			bStopCurrentAction( false ),
+			pAbilityIconTextureNormal( 0 ),
+			pAbilityIconTextureDisabled( 0 ),
+			pAbilityIconTextureForegroundNormal( 0 ),
+			pAbilityIconTextureForegroundDisabled( 0 )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
@@ -2605,6 +2615,7 @@ namespace NDb
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 		CDBPtr< SAmphibianStats > amphibianStats;
+		CDBPtr< SUnitStatsModifier > pAntiAviationModifier; // Temporarily applied only while firing at aviation targets.
 		CDBPtr< SHelicopterStats > pHelicopterStats;
 
 		#include "include_mechunitrpgstats.h"
@@ -2977,6 +2988,7 @@ namespace NDb
 	public:
 		EReinforcementType eType;
 		CDBPtr< STexture > pIconTexture;
+		CDBPtr< STexture > pDisabledIconTexture;
 		NFile::CFilePath szLocalizedNameFileRef;
 		std::vector< SReinforcementEntry > entries;
 		NFile::CFilePath szTooltipFileRef;
@@ -3131,7 +3143,7 @@ namespace NDb
 		mutable DWORD __dwCheckSum;
 	public:
 
-		struct SParameterModifier
+		struct STATS_B2_M1_EXPORT SParameterModifier
 		{
 		private:
 			mutable DWORD __dwCheckSum;
@@ -3566,4 +3578,3 @@ struct SKnownEnum<NDb::EReinforcementType>
 	static std::string ToString( NDb::EReinforcementType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EReinforcementType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EReinforcementType( szValue ); }
 };
-

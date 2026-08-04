@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stats_B2_M1/AIAckTypes.h"
+#include "System/det_map.h"
 
 class CAIUnit;
 namespace NDb
@@ -13,8 +14,8 @@ class CAckManager
 	public: int operator&( IBinSaver &saver ); private:;
 
 	typedef std::pair<CPtr<CAIUnit>, bool> CUnitBoredPresence;
-	typedef std::unordered_map< int/*unit unique ID */, CUnitBoredPresence> CBoredPresence;
-	typedef std::unordered_map<int, CBoredPresence> CAckTypeBoredPrecence;
+	typedef det_map< int/*unit unique ID */, CUnitBoredPresence> CBoredPresence;
+	typedef det_map<int, CBoredPresence> CAckTypeBoredPrecence;
 	CAckTypeBoredPrecence bored;
 
 	typedef std::vector<SAIAcknowledgment> CAcknowledgments;

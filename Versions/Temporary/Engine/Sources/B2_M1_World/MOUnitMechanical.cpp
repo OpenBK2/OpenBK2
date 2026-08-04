@@ -192,6 +192,26 @@ void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placem
 	vLastWaterMoveEffectPos = vPlacement;
 }
 
+IClientUpdatableProcess *CMOUnitMechanical::CreateIdleEffectProcess() const
+{
+	if ( pTransport )
+		return 0;
+
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->amphibianStats &&
+		 pStats->amphibianStats->waterIdleEffect != 0 && pStats->amphibianStats->waterIdleEffect->GetSceneEffect() &&
+		 !pStats->amphibianStats->waterIdleLocators.empty() )
+	{
+		// Use the per-locator scheduler so every configured water-idle locator can emit effects.
+		return new CIdleMechProcess( GetID(), pStats->amphibianStats->waterIdleLocators, pStats->amphibianStats->waterIdleEffect );
+	}
+
+	if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
+		return new CIdleMechProcess( GetID(), pStats->shipEffects.boardSideLocators, pStats->shipEffects.pBoardSideEffect );
+
+	return 0;
+}
+
 void CMOUnitMechanical::SetDiveSound( bool bDive )
 {
 	if ( GetStatsLocal()->pSoundDive )
@@ -250,6 +270,11 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 	bTrackBroken = false;
 	const bool bResult = CMOUnit::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
+	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
+	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->amphibianStats;
+	const float fAdjustedWaterCoeff = bHasAmphibianStats ? GetAdjustedAmphibianWaterCoeff( pUpdate->info.fWaterCoeff ) : 0.0f;
+	bAmphibianInWater = bHasAmphibianStats && pUpdate->info.fWaterCoeff > 0.0f;
+	bAmphibianWaterEffectsActive = bHasAmphibianStats && fAdjustedWaterCoeff >= AMPHIBIAN_WATER_EFFECTS_MIN_COEFF;
 
 	if ( pStats->eSelectionType == NDb::SELECTION_TYPE_CANNOT_SELECT )
 		SetCanSelect( false );
@@ -309,6 +334,15 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 		// hide attached
 		if ( !IsVisible() )
 			Scene()->ShowObject( GetID(), IsVisible() );
+	}
+
+	if ( bResult && !bInEditor && bAmphibianWaterEffectsActive )
+	{
+		// Mission-start units may never receive a stop-movement update, so register
+		// their water idle process directly from the initial placement information.
+		pIdleProcess = CreateIdleEffectProcess();
+		if ( pIdleProcess )
+			NUpdatableProcess::Register( pIdleProcess );
 	}
 
 	return bResult;
@@ -396,6 +430,17 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 			if ( (pStats->nAIPassabilityClass & EAC_WHELL) != 0 )
 				pActions->SetAction( NDb::USER_ACTION_MOVE_WHELL );
 		}
+
+		// Rocket/AA artillery must be gunnerless; Move still filters out its static variants.
+		const bool bReverseArtilleryType = pStats && ( pStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+			pStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN );
+		const bool bCanReverseByType = pStats &&
+			( bReverseArtilleryType ? !pStats->HasConfiguredGunners() : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
+			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
+		if ( bCanReverseByType && !bArtilleryHooked && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+			pActions->SetAction( NDb::USER_ACTION_REVERSE );
+		else
+			pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
 	}
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
@@ -441,12 +486,32 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 	}
 }
 
+void CMOUnitMechanical::GetPossibleActions( CUserActions *pActions ) const
+{
+	CMOUnit::GetPossibleActions( pActions );
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+
+	// Keep the action stable for gunnerless mobile rocket/AA artillery; static guns have no Move action.
+	const bool bReverseArtilleryType = pStats && ( pStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
+		pStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN );
+	const bool bCanReverseByType = pStats &&
+		( bReverseArtilleryType ? !pStats->HasConfiguredGunners() : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
+		pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
+	if ( bCanReverseByType && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		pActions->SetAction( NDb::USER_ACTION_REVERSE );
+	else
+		pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
+}
+
 void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CMOUnit::GetDisabledActions( pActions, eActions );
 
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
+		// Reverse has the same mobility restrictions as move, plus towing prevents backing up.
+		if ( bArtilleryHooked || pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+			pActions->SetAction( NDb::USER_ACTION_REVERSE );
 		if ( vPassangers.empty() /*|| bArtilleryHooked*/ )
 			pActions->SetAction( NDb::USER_ACTION_LEAVE );
 		if ( !IsOpen() || (pTransport && !pTransport->IsOpen()) )
@@ -626,6 +691,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
 	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->amphibianStats;
+	const bool bWaterEffectsWereActive = bAmphibianWaterEffectsActive;
 	const float fAdjustedWaterCoeff = bHasAmphibianStats ? GetAdjustedAmphibianWaterCoeff( placement.fWaterCoeff ) : 0.0f;
 	bAmphibianInWater = !pTransport && bHasAmphibianStats && placement.fWaterCoeff > 0.0f;
 	// Let shore interpolation start early, but delay particles until the unit is mostly in water.
@@ -653,6 +719,15 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	}
 	UpdateAmphibianJogging( bMoved || placement.fSpeed > 0.0f );
 	UpdateWaterMoveEffects( placement, pScene );
+
+	if ( !bMoved && bWaterEffectsWereActive != bAmphibianWaterEffectsActive )
+	{
+		// Initial placement has no stop-movement update, so refresh the idle process
+		// when a stationary amphibian enters or leaves the water-effects range.
+		pIdleProcess = CreateIdleEffectProcess();
+		if ( pIdleProcess )
+			NUpdatableProcess::Register( pIdleProcess );
+	}
 
 	// in-transport units don't leave tracks, no tracks on zero speed
 	if ( ( pStats->bLeavesTracks || pStats->pEffectWheelDust != 0 ) && !pTransport && placement.fSpeed > 0.0f ) 
@@ -899,12 +974,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 			pSoundScene->AddSound( pStats->pSoundMoveStop, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
 		bMoved = false;
 		UpdateAmphibianJogging( false );
-		if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->amphibianStats &&
-			   pStats->amphibianStats->waterIdleEffect != 0 && pStats->amphibianStats->waterIdleEffect->GetSceneEffect() &&
-			   !pStats->amphibianStats->waterIdleLocators.empty() )
-			pIdleProcess = new CIdleMechProcess( GetID(), pStats->amphibianStats->waterIdleLocators, pStats->amphibianStats->waterIdleEffect, true );
-		else if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
-			pIdleProcess = new CIdleMechProcess( GetID(), pStats->shipEffects.boardSideLocators, pStats->shipEffects.pBoardSideEffect );
+		pIdleProcess = CreateIdleEffectProcess();
 		//
 		if ( pStats->pSoundIdle )
 			AttachSound( EAST_IDLE, pStats->pSoundIdle, true );

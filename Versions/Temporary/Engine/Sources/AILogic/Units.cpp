@@ -512,7 +512,7 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 	if ( !f )
 		return;
 
-	std::unordered_map<int, int> unitListHits;
+	det_map<int, int> unitListHits;
 	int nOccupiedCells = 0;
 	int nListEntries = 0;
 	int nBadListEntries = 0;

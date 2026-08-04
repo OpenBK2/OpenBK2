@@ -22244,6 +22244,20 @@
 					<ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue>
 				</Item>
 				<Item>
+					<Type>60aece11</Type>
+					<Name>AntiAviationModifier</Name>
+					<ChunkID>67</ChunkID>
+					<Description>Temporarily applied while firing at aviation targets</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
 					<Type>d0a21919</Type>
 					<Name>HelicopterStats</Name>
 					<ChunkID>67</ChunkID>
@@ -28879,6 +28893,20 @@
 					<Type>08d6ce11</Type>
 					<Name>IconTexture</Name>
 					<ChunkID>3</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>DisabledIconTexture</Name>
+					<ChunkID>10</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes />
@@ -37208,8 +37236,16 @@
 					<Value>60</Value>
 				</Item>
 				<Item>
-					<Name>_ABILITY_COUNT</Name>
+					<Name>ABILITY_FIRE_ROCKETS</Name>
 					<Value>61</Value>
+				</Item>
+				<Item>
+					<Name>ABILITY_USE_FLAMETHROWER</Name>
+					<Value>62</Value>
+				</Item>
+				<Item>
+					<Name>_ABILITY_COUNT</Name>
+					<Value>63</Value>
 				</Item>
 			</Entries>
 			<Attributes />
@@ -37522,6 +37558,114 @@
 									<Data>
 										<Type>01000000</Type>
 										<Data>2</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureNormal</Name>
+					<ChunkID>14</ChunkID>
+					<Description>Optional normal icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureDisabled</Name>
+					<ChunkID>15</ChunkID>
+					<Description>Optional disabled icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureForegroundNormal</Name>
+					<ChunkID>16</ChunkID>
+					<Description>Optional normal foreground icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>08d6ce11</Type>
+					<Name>AbilityIconTextureForegroundDisabled</Name>
+					<ChunkID>17</ChunkID>
+					<Description>Optional disabled foreground icon override for this concrete ability.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
 									</Data>
 								</Item>
 							</Attributes>
@@ -38217,6 +38361,18 @@
 				<Item>
 					<Name>USER_ACTION_MOVE_HUMAN</Name>
 					<Value>95</Value>
+				</Item>
+				<Item>
+					<Name>USER_ACTION_REVERSE</Name>
+					<Value>96</Value>
+				</Item>
+				<Item>
+					<Name>USER_ACTION_FIRE_ROCKETS</Name>
+					<Value>97</Value>
+				</Item>
+				<Item>
+					<Name>USER_ACTION_USE_FLAMETHROWER</Name>
+					<Value>98</Value>
 				</Item>
 			</Entries>
 			<Attributes />

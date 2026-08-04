@@ -8,7 +8,7 @@ extern CEventUpdater updater;
 extern CManuverBuilder theManuverBuilder;
 extern NTimer::STime curTime;
 int CPlanesFormation::nIDSoFar = 1;
-std::unordered_map<int, bool> CPlanesFormation::existence;
+det_map<int, bool> CPlanesFormation::existence;
 
 //*******************************************************************
 //*														CPlaneManuverHistory*

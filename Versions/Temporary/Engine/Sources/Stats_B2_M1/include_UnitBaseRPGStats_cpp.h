@@ -98,6 +98,10 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		animdescs.clear();
 		animdescs.resize( NDb::__ANIMATION_TYPE_COUNTER );
 		const SSkeleton *pSkeleton = 0;
+
+		if (!pvisualObject)
+			return;
+		
 		for ( int i = 0; i < pvisualObject->models.size(); ++i )
 		{
 			if ( pvisualObject->models[i].eSeason == SEASON_SUMMER )

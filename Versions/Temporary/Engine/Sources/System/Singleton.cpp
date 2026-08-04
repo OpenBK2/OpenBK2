@@ -5,7 +5,7 @@
 namespace NSingleton
 {
 
-typedef std::unordered_map< int, CObj<CObjectBase> > CObjectsMap;
+typedef det_map< int, CObj<CObjectBase> > CObjectsMap;
 static CObjectsMap objects;
 
 struct SSingletonAutoMagic

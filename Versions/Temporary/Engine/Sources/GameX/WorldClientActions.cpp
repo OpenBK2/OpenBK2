@@ -113,6 +113,12 @@ bool CWorldClient::ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForc
 	return bResult;
 }
 
+bool CWorldClient::ActionReverse( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	// Reverse is always an explicit point command; objects under the cursor do not change its meaning.
+	return PerformGroupAction( ACTION_COMMAND_REVERSE_TO, vPos, GetPlaceInQueue() );
+}
+
 bool CWorldClient::ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( !pMO )
@@ -789,6 +795,24 @@ bool CWorldClient::ActionSupressFire( const CVec2 &vPos, const CMapObj *pMO, boo
 		bool bResult = PerformGroupAction( ACTION_COMMAND_ART_BOMBARDMENT, vPos, GetPlaceInQueue() );
 		return bResult;
 	}
+}
+
+bool CWorldClient::ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	if ( pMO )
+		return false;
+
+	// Unlike suppressive fire, this command always completes after one burst/salvo.
+	return PerformGroupAction( ACTION_COMMAND_FIRE_ROCKETS, vPos, GetPlaceInQueue() );
+}
+
+bool CWorldClient::ActionUseFlamethrower( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
+{
+	if ( pMO )
+		return false;
+
+	// The ground point supplies a direction even when there is no target object there.
+	return PerformGroupAction( ACTION_COMMAND_USE_FLAMETHROWER, vPos, GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionCriticalTargetting( const CVec2 &vPos, const CMapObj *pMO, bool bForced )

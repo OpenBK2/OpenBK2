@@ -890,7 +890,7 @@ class CFormationBuildEntrenchmentState : public IUnitState
 	CObj<CEntrenchmentCreation> pCreation;
 	bool bEndPointSelected;
 	float fCompletion;										// степень готовности
-	std::unordered_map<int,CVec2> targetPoints;
+	det_map<int,CVec2> targetPoints;
 	CVec2 vStartPoint;
 	CVec2 vEndPoint;
 	int nMaxIndex;

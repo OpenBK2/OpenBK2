@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "System/det_map.h"
 
 namespace NDb
 {
@@ -28,8 +29,8 @@ struct IScriptAreaEnumerator : public IEnumerator
 };
 
 typedef std::list<CPtr<CUpdatableObj> > CScriptGroup;
-typedef std::unordered_map<int, CScriptGroup > CScriptGroups;
-typedef std::unordered_map<int/*attackGroupID*/, int/*ExecutorID*/> CAttackGroup;
+typedef det_map<int, CScriptGroup > CScriptGroups;
+typedef det_map<int/*attackGroupID*/, int/*ExecutorID*/> CAttackGroup;
 
 class CScripts
 {
@@ -69,21 +70,21 @@ class CScripts
 			: mapObject( _mapObject ), pStats( _pStats )/*, pScenarioUnit( _pScenarioUnit ) */{ }
 	};
 	typedef std::list<SReinforcementObject> CReinfList;
-	std::unordered_map<int, CReinfList> reinforcs;
+	det_map<int, CReinfList> reinforcs;
 	// отложенные (некуда поставить) подкрепления
 	CReinfList suspendedReinforcs;
 	CReinfList::iterator reinforcsIter;
 	NTimer::STime lastTimeToCheckSuspendedReinforcs;
 
-	std::unordered_map<int, int> reservePositions;
+	det_map<int, int> reservePositions;
 
 	// юнит - номер скриптовой группы
-	std::unordered_map< int, int> groupUnits;
+	det_map< int, int> groupUnits;
 	
 	// для сегмента
-	std::unordered_map<int, SScriptInfo>::iterator segmIter;
+	det_map<int, SScriptInfo>::iterator segmIter;
 
-	std::unordered_map<std::string, NDb::SScriptArea> areas;
+	det_map<std::string, NDb::SScriptArea> areas;
 
 	CPtr<IConsoleBuffer> pConsole;
 	bool bShowErrors;
@@ -99,7 +100,7 @@ class CScripts
 	void OutScriptError( const char *pszString );
 
 	// проставить новые линки подкреплению
-	void SetNewLinksToReinforcement( CReinfList *pReinf, std::unordered_map<int, int> *pOld2NewLinks );
+	void SetNewLinksToReinforcement( CReinfList *pReinf, det_map<int, int> *pOld2NewLinks );
 	//
 	bool CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift );
 	bool CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
@@ -453,6 +454,16 @@ public:
 	static int GiveXPToReinforcement( struct lua_State *pState );
 	// params: <player no> <amount of xp>; returns: none
 	static int GiveXPToPlayer( struct lua_State *pState );
+
+	// params: <none>; returns: 1 if the match is MP, 0 if not
+	static int IsMultiplayerMatch( struct lua_State *pState );
+	// params: <none>; returns: -1 if the match is not MP, otherwise: current tech level id from mp consts (number >= 0)
+	static int GetMultiplayerMatchTechLevel( struct lua_State *pState );
+	// params: <player no>; returns: -1 if the match is not MP, otherwise: players nation id from mp consts (number >= 0)
+	static int GetPlayerMultiplayerNation( struct lua_State *pState );
+	// params: <player no>; returns: side of the player (0, 1 or 2)
+	static int GetPlayerSide( struct lua_State *pState );
+	
 
 	static int GlobeCommand( struct lua_State *pState );
 	//

@@ -11,8 +11,8 @@ class CTimeCounter
 	std::vector<NHPTimer::STime> startTimes;
 	std::vector<std::string> names;
 
-	std::unordered_map<std::string, double> szCounters;
-	std::unordered_map<std::string, NHPTimer::STime> szStartTimes;
+	det_map<std::string, double> szCounters;
+	det_map<std::string, NHPTimer::STime> szStartTimes;
 
 	NTimer::STime printTime;
 	int nMaxIndex;

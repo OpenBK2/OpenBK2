@@ -214,6 +214,9 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 				{
 					if ( info.pIconWnd )
 						info.pIconWnd->SetTexture( pContext->pIconTexture );
+					// Keep the UI-constants disabled texture as the fallback for legacy reinforcement data.
+					if ( info.pIconDisabledWnd && pContext->pDisabledIconTexture )
+						info.pIconDisabledWnd->SetTexture( pContext->pDisabledIconTexture );
 //					if ( pContext->pTooltip )
 //						info.pIconWnd->SetHelpContext( pContext->pTooltip );
 				}
@@ -1065,7 +1068,10 @@ void CMissionReinf::Step()
 
 const NDb::SReinforcement* CMissionReinf::GetReinfContext( const NDb::EReinforcementType eType ) const
 {
-	return Singleton<IScenarioTracker>()->GetReinforcement( 0, eType );
+	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
+	// Multiplayer clients can occupy any player slot, while single-player data belongs to player 0.
+	const int nPlayer = pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ? 0 : pScenarioTracker->GetLocalPlayer();
+	return pScenarioTracker->GetReinforcement( nPlayer, eType );
 }
 
 const NDb::SReinforcementTypes* CMissionReinf::GetReinfTypes() const

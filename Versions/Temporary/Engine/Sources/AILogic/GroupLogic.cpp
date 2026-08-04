@@ -318,7 +318,8 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	{
 		CCommonUnit *pUnit = groupUnits.GetEl( i );
 		pUnit->vShift = pUnit->GetCenterPlain() - centers[pUnit->nSubGroup];
-		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO )
+		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
+			command.nCmdType == ACTION_COMMAND_SWARM_TO )
 		{
 			const CVec2 vAngle( NMath::Cos( command.fNumber ), NMath::Sin( command.fNumber ) );
 			pUnit->vShift ^= vAngle;
@@ -441,7 +442,7 @@ void CGroupLogic::ProcessAmbushGroups()
 	if ( lastAmbushCheck + 5000 < curTime )
 	{
 		lastAmbushCheck = curTime;
-		std::unordered_set<int> checkedUnits;
+		det_set<int> checkedUnits;
 
 		CAmbushGroups::iterator iter = ambushGroups.begin();
 		while ( iter != ambushGroups.end() )
@@ -541,7 +542,8 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 	{
 		// пойти с сохранением относительной позиции
 		// Called strategic bombers use the internal point-bomb command, but still need group-relative shifts.
-		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO ||
+		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
+					command.nCmdType == ACTION_COMMAND_SWARM_TO ||
 					command.nCmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
 					command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
 					command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
@@ -604,35 +606,48 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
+				if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !pUnit->CanCommandBeExecuted( pCommand ) )
+					continue;
 				pCommand->AddUnit( pUnit );
 			}
 
-			//выравнивание скорости только для команд ACTION_COMMAND_MOVE_TO и ACTION_COMMAND_SWARM_TO
+			// Align speeds for point movement commands, including explicit reverse movement.
 			if ( NGlobal::GetVar( "adjust_group_speed", 0 ) )
 			{
 				float fDesGroupSpeed = -1.0f;
-				if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO )
+				if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
+					command.nCmdType == ACTION_COMMAND_SWARM_TO )
 				{
+					const bool bReverseMove = command.nCmdType == ACTION_COMMAND_REVERSE_TO;
 					fDesGroupSpeed = FP_MAX_VALUE;
 					for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 					{
 						CCommonUnit *pUnit = *iter;
-						// For forward move/swarm commands, align group speed by forward cap:
-						// this prevents stale reverse-state units from slowing all units down.
-						const float fForwardSpeed = pUnit->GetMaxPossibleForwardSpeed();
-						if ( pUnit->CanMove() && fForwardSpeed > 0.0f && fForwardSpeed < fDesGroupSpeed )
-							fDesGroupSpeed = fForwardSpeed;
+						if ( bReverseMove && !pUnit->CanCommandBeExecuted( pCommand ) )
+							continue;
+						const float fCommandSpeed = bReverseMove ?
+							pUnit->GetMaxPossibleBackwardSpeed() : pUnit->GetMaxPossibleForwardSpeed();
+						if ( pUnit->CanMove() && fCommandSpeed > 0.0f && fCommandSpeed < fDesGroupSpeed )
+							fDesGroupSpeed = fCommandSpeed;
 					}
 				}
 				for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
-          (*iter)->SetDesiredSpeed( fDesGroupSpeed );
+				{
+					if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO &&
+						!(*iter)->CanCommandBeExecuted( pCommand ) )
+						continue;
+					(*iter)->SetDesiredSpeed( fDesGroupSpeed );
+				}
 			}
 
-			std::unordered_set<int> memFormationIDs;
+			det_set<int> memFormationIDs;
 			//DebugTrace( "Command from AI: %s", pCommand->IsFromAI() ? "true" : "false" );
 			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
+
+				if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !pUnit->CanCommandBeExecuted( pCommand ) )
+					continue;
 
 				bool bSendCommand = true;
 				if ( command.nCmdType == ACTION_COMMAND_FORM_FORMATION && pUnit->IsFormation() )
@@ -790,6 +805,7 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 	switch ( cmd.nCmdType )
 	{
 		case ACTION_COMMAND_MOVE_TO:						nType =  0; break;
+		case ACTION_COMMAND_REVERSE_TO:					nType =  0; break;
 		case ACTION_COMMAND_ATTACK_UNIT:				nType =  1; break;
 		case ACTION_COMMAND_ATTACK_OBJECT:			nType =  2; break;
 		case ACTION_COMMAND_SWARM_TO:						nType =  0; break;
@@ -807,6 +823,8 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 		case ACTION_COMMAND_AMBUSH:							nType = -1; break;
 		case ACTION_COMMAND_RANGE_AREA:					nType = -1; break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:		nType = -1; break;
+		case ACTION_COMMAND_FIRE_ROCKETS:			nType = -1; break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:	nType = -1; break;
 		case ACTION_COMMAND_INSTALL:						nType = -1; break;
 		case ACTION_COMMAND_UNINSTALL:					nType = -1; break;
 		case ACTION_COMMAND_RESUPPLY:						nType = -1; break;

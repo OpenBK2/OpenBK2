@@ -159,6 +159,7 @@ bool CFormationStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_ENTRENCH_SELF ||
 			cmdType == ACTION_COMMAND_WAIT ||
 			cmdType == ACTION_COMMAND_SPY_MODE ||
+			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
 			cmdType == ACTION_COMMAND_PATROL ||
 			cmdType == ACTION_MOVE_FIRST_AID ||
 			cmdType == ACTION_COMMAND_ENTRENCH_BEGIN ||
@@ -277,6 +278,18 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			for ( int i = 0; i < pFormation->Size(); ++i )
 			{
 				theGroupLogic.UnitCommand( cmd, (*pFormation)[i], false );
+			}
+		}
+		break;
+	case ACTION_COMMAND_USE_FLAMETHROWER:
+		{
+			pResult = ProduceRestState( pFormation );
+			for ( int i = 0; i < pFormation->Size(); ++i )
+			{
+				CSoldier *pSoldier = (*pFormation)[i];
+				// A squad exposes the union of its members' abilities; only equipped members receive the order.
+				if ( pSoldier->GetStats()->HasCommand( ACTION_COMMAND_USE_FLAMETHROWER ) )
+					theGroupLogic.UnitCommand( cmd, pSoldier, false );
 			}
 		}
 		break;
@@ -439,7 +452,10 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			else if ( pTarget->GetStats()->IsArtillery()  )
 			{
 				NI_ASSERT( dynamic_cast<CArtillery*>( GetObjectByCmd( cmd ) ) != 0, "must be artillery unit" );
-				CArtillery *pArt = checked_cast<CArtillery*>( GetObjectByCmd( cmd ) );
+				CArtillery *pArt = dynamic_cast<CArtillery*>( GetObjectByCmd( cmd ) );
+				if (!pArt)
+					break;
+
 				if ( pArt->GetCrew() )
 					pResult = CFormationAttackFormationState::Instance( pFormation, pArt->GetCrew(), bSwarmAttack );
 				else
@@ -487,8 +503,9 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			else
 			{
 				CObjectBase *pTarget = GetObjectByCmd( cmd );
-				if ( pTarget )
-					pThrowGrenadeState->AddTarget( checked_cast<CAIUnit*>( pTarget ), cmd.vPos, cmd.nNumber );
+				CAIUnit* unit = dynamic_cast<CAIUnit*>( pTarget );
+				if ( unit )
+					pThrowGrenadeState->AddTarget( unit, cmd.vPos, cmd.nNumber );
 			}
 		}
 		break;

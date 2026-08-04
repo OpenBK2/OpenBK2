@@ -21,7 +21,7 @@ extern SCheats theCheats;
 
 //CUpdateData
 
-std::unordered_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
+det_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
 REGISTER_SAVELOAD_CLASS_NM( 0x110B2C80, CUpdateData , CEventUpdater );
 //REGISTER_SAVELOAD_CLASS_NM( 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
 
@@ -84,7 +84,7 @@ void CEventUpdater::CUpdateData::Init()
 
 SAIBasicUpdate* CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
 {
-	std::unordered_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
+	det_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
 	if ( it != clientTransformers.end() )
 	{
 		SAIBasicUpdate *pUpdate = it->second->Transform( this, nReturnTime );
@@ -208,6 +208,11 @@ void CEventUpdater::AddUpdate( EFeedBack eFeedBack, int nParam, CObjectBase *pPa
 
 void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam )
 {
+	AddUpdate( _pUpdate, eUpdateType, pObj, nParam, nTime );
+}
+
+void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam, const NTimer::STime &nEventTime )
+{
 	CPtr<SAIBasicUpdate> pUpdate = _pUpdate; // чтоб не потерялся
 	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT )
 	{
@@ -221,15 +226,17 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		return;
 	
 	++nCounter;
-	CUpdateData *pData = new CUpdateData( nTime, nCounter, eUpdateType, pObj, nParam );
+	CUpdateData *pData = new CUpdateData( nEventTime, nCounter, eUpdateType, pObj, nParam );
 	
 	// animation processing
 	static std::vector<CPtr<CUpdateData> > updatesBush(3);
 	updatesBush.resize(0);
 
 	updatesBush.push_back( pData );
+	// Follow-up shot events carry effects only; the first event keeps the full burst animation.
+	const bool bStartAnimation = ( eUpdateType != ACTION_NOTIFY_MECH_SHOOT && eUpdateType != ACTION_NOTIFY_INFANTRY_SHOOT ) || nParam != 0;
 	const int nAnimation = GetAnimationFromAction( eUpdateType );
-	if ( nAnimation != -1 )
+	if ( nAnimation != -1 && bStartAnimation )
 	{
 		pObj->AnimationSet( nAnimation );
 		if ( (eUpdateType & 1) == 1 )
@@ -253,11 +260,11 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	else if ( eUpdateType == ACTION_NOTIFY_MECH_SHOOT )
 	{
 		SAIMechShotUpdate *pInternalData = new SAIMechShotUpdate;
-		pObj->GetMechShotInfo( &(pInternalData->info), nTime );
+		pObj->GetMechShotInfo( &(pInternalData->info), nEventTime );
 		pInternalData->eUpdateType = ACTION_NOTIFY_MECH_SHOOT;
-		pInternalData->nUpdateTime = nTime;
+		pInternalData->nUpdateTime = nEventTime;
 		const int nShotAnimation = GetAnimationFromAction( pInternalData->info.typeID );
-		if ( nShotAnimation != -1 )
+		if ( nShotAnimation != -1 && bStartAnimation )
 		{
 			CUpdatableObj *pObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pInternalData->info.nObjUniqueID );
 			if ( pObj && pObj->IsRefValid() )
@@ -269,11 +276,11 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	else if ( eUpdateType == ACTION_NOTIFY_INFANTRY_SHOOT )
 	{
 		SAIInfantryShotUpdate *pInternalData = new SAIInfantryShotUpdate;
-		pObj->GetInfantryShotInfo( &(pInternalData->info), nTime );
+		pObj->GetInfantryShotInfo( &(pInternalData->info), nEventTime );
 		pInternalData->eUpdateType = ACTION_NOTIFY_INFANTRY_SHOOT;
-		pInternalData->nUpdateTime = nTime;
+		pInternalData->nUpdateTime = nEventTime;
 		const int nShotAnimation = GetAnimationFromAction( pInternalData->info.typeID );
-		if ( nShotAnimation != -1 )
+		if ( nShotAnimation != -1 && bStartAnimation )
 		{
 			CSoldier *pSoldier = GetObjectByUniqueIdSafe<CSoldier>(pInternalData->info.nObjUniqueID);
 			if ( pSoldier )
@@ -294,7 +301,7 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		if ( pUpdate != 0 )
 		{
 			pData->pData->eUpdateType = eUpdateType;
-			pData->pData->nUpdateTime = nTime;
+			pData->pData->nUpdateTime = nEventTime;
 		}
 	}
 	
@@ -446,7 +453,7 @@ void CEventUpdater::PumpUpdates()
 	bool bSuspendableUpdatesChanged = false;
 	CUpdateData *pUpdate;
 	// find updates, that became visible
-	for ( std::unordered_set<SVector, STilesHash>::const_iterator it = visibleTiles.begin(); it != visibleTiles.end(); ++it )
+	for ( det_set<SVector, STilesHash>::const_iterator it = visibleTiles.begin(); it != visibleTiles.end(); ++it )
 	{
 		TUpdatesList &lst = suspended[(*it).y][(*it).x];
 		for ( TUpdatesList::const_iterator lit = lst.begin(); lit != lst.end(); ++lit )
@@ -578,9 +585,9 @@ struct SUpdateInfo
 	SUpdateInfo() : nValidCount( 0 ), nInvalidCount( 0 ) {}
 };
 
-typedef std::unordered_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info
+typedef det_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info
 
-typedef std::unordered_map<int, TDumpUpdatesHash> TDumpObjectsHash; // object id (-1 for invalid) -> object's updates
+typedef det_map<int, TDumpUpdatesHash> TDumpObjectsHash; // object id (-1 for invalid) -> object's updates
 
 void CEventUpdater::DumpSizes()
 {

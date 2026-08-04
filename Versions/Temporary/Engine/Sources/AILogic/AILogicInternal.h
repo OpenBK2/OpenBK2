@@ -3,6 +3,7 @@
 #include "Scripts.h"
 #include "B2AI.h"
 #include "Common_RTS_AI/Terrain.h"
+#include "System/det_map.h"
 
 namespace NDb
 {
@@ -19,7 +20,7 @@ struct SAIBasicUpdate;
 struct ICheckSumLog;
 struct ICollisionsCollector;
 
-typedef std::unordered_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
+typedef det_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
 
 class CAILogic : public IAILogic
 {
@@ -55,7 +56,7 @@ class CAILogic : public IAILogic
 	CPtr<ICheckSumLog> pCheckSumLog;
 	
 	// QUESTIONABLE determinism - iteration order is NOT DETERMINISTIC!
-	typedef std::unordered_set<CDBPtr<SMechUnitRPGStats>> CAvailTrucks;
+	typedef det_set<CDBPtr<SMechUnitRPGStats>> CAvailTrucks;
 	CAvailTrucks availableTrucks;
 	
 	CPtr<IProgressHook> pProgress;
@@ -159,8 +160,8 @@ public:
 	virtual bool ToggleShow( const int nShowType );
 
 	virtual bool IsCombatSituation();
-	void InitStartCommands( const LinkInfo &linksInfo, std::unordered_map<int, int> &old2NewLinks );
-	void InitReservePositions( std::unordered_map<int, int> &old2NewLinks );
+	void InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks );
+	void InitReservePositions( det_map<int, int> &old2NewLinks );
 	
 	bool IsSegment() const { return bSegment; }
 	

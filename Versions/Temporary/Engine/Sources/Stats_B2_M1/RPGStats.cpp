@@ -145,6 +145,10 @@ std::string EnumToString( NDb::EUnitSpecialAbility eValue )
 		return "ABILITY_RADIO_CONTROLLED_MODE";
 	case NDb::_ABILITY_COUNT:
 		return "_ABILITY_COUNT";
+	case NDb::ABILITY_FIRE_ROCKETS:
+		return "ABILITY_FIRE_ROCKETS";
+	case NDb::ABILITY_USE_FLAMETHROWER:
+		return "ABILITY_USE_FLAMETHROWER";
 	default:
 		return "ABILITY_NOT_ABILITY";
 	}
@@ -276,6 +280,10 @@ NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const std::s
 		return NDb::ABILITY_RADIO_CONTROLLED_MODE;
 	if ( szValue == "_ABILITY_COUNT" )
 		return NDb::_ABILITY_COUNT;
+	if ( szValue == "ABILITY_FIRE_ROCKETS" )
+		return NDb::ABILITY_FIRE_ROCKETS;
+	if (szValue == "ABILITY_USE_FLAMETHROWER" )
+		return NDb::ABILITY_USE_FLAMETHROWER;
 	return NDb::ABILITY_NOT_ABILITY;
 }
 
@@ -319,6 +327,10 @@ void SUnitSpecialAblityDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "StopCurrentAction", (BYTE*)&bStopCurrentAction - pThis, sizeof(bStopCurrentAction), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (BYTE*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureNormal", (BYTE*)&pAbilityIconTextureNormal - pThis, sizeof(pAbilityIconTextureNormal), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureDisabled", (BYTE*)&pAbilityIconTextureDisabled - pThis, sizeof(pAbilityIconTextureDisabled), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureForegroundNormal", (BYTE*)&pAbilityIconTextureForegroundNormal - pThis, sizeof(pAbilityIconTextureForegroundNormal), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AbilityIconTextureForegroundDisabled", (BYTE*)&pAbilityIconTextureForegroundDisabled - pThis, sizeof(pAbilityIconTextureForegroundDisabled), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -337,6 +349,10 @@ int SUnitSpecialAblityDesc::operator&( IXmlSaver &saver )
 	saver.Add( "StopCurrentAction", &bStopCurrentAction );
 	saver.Add( "LocalizedNameFileRef", &szLocalizedNameFileRef );
 	saver.Add( "LocalizedDescFileRef", &szLocalizedDescFileRef );
+	saver.Add( "AbilityIconTextureNormal", &pAbilityIconTextureNormal );
+	saver.Add( "AbilityIconTextureDisabled", &pAbilityIconTextureDisabled );
+	saver.Add( "AbilityIconTextureForegroundNormal", &pAbilityIconTextureForegroundNormal );
+	saver.Add( "AbilityIconTextureForegroundDisabled", &pAbilityIconTextureForegroundDisabled );
 
 	return 0;
 }
@@ -355,6 +371,10 @@ int SUnitSpecialAblityDesc::operator&( IBinSaver &saver )
 	saver.Add( 11, &bStopCurrentAction );
 	saver.Add( 12, &szLocalizedNameFileRef );
 	saver.Add( 13, &szLocalizedDescFileRef );
+	saver.Add( 14, &pAbilityIconTextureNormal );
+	saver.Add( 15, &pAbilityIconTextureDisabled );
+	saver.Add( 16, &pAbilityIconTextureForegroundNormal );
+	saver.Add( 17, &pAbilityIconTextureForegroundDisabled );
 
 	return 0;
 }
@@ -5368,6 +5388,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "AmphibianStats", (BYTE*)&amphibianStats - pThis, sizeof(amphibianStats), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AntiAviationModifier", (BYTE*)&pAntiAviationModifier - pThis, sizeof(pAntiAviationModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "HelicopterStats", (BYTE*)&pHelicopterStats - pThis, sizeof(pHelicopterStats), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -5441,6 +5462,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "DestructableCorpse", &bDestructableCorpse );
 	saver.Add( "InnerUnitBonus", &pInnerUnitBonus );
 	saver.Add( "AmphibianStats", &amphibianStats );
+	saver.Add( "AntiAviationModifier", &pAntiAviationModifier );
 	saver.Add( "HelicopterStats", &pHelicopterStats );
 
 	return 0;
@@ -5514,7 +5536,8 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 64, &bDestructableCorpse );
 	saver.Add( 65, &pInnerUnitBonus );
 	saver.Add( 66, &amphibianStats );
-	saver.Add( 67, &pHelicopterStats );
+	saver.Add( 67, &pAntiAviationModifier );
+	saver.Add( 68, &pHelicopterStats );
 
 	return 0;
 }
@@ -5526,7 +5549,7 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats << pHelicopterStats;
+	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats << pAntiAviationModifier << pHelicopterStats;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -6239,6 +6262,7 @@ void SReinforcement::ReportMetaInfo() const
 	BYTE *pThis = (BYTE*)this;
 	NMetaInfo::ReportMetaInfo( "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "IconTexture", (BYTE*)&pIconTexture - pThis, sizeof(pIconTexture), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DisabledIconTexture", (BYTE*)&pDisabledIconTexture - pThis, sizeof(pDisabledIconTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( "Entries", &entries, pThis );
 	NMetaInfo::ReportMetaInfo( "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -6253,6 +6277,7 @@ int SReinforcement::operator&( IXmlSaver &saver )
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
 	saver.Add( "Type", &eType );
 	saver.Add( "IconTexture", &pIconTexture );
+	saver.Add( "DisabledIconTexture", &pDisabledIconTexture );
 	saver.Add( "LocalizedNameFileRef", &szLocalizedNameFileRef );
 	saver.Add( "Entries", &entries );
 	saver.Add( "TooltipFileRef", &szTooltipFileRef );
@@ -6267,6 +6292,7 @@ int SReinforcement::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
 	saver.Add( 3, &pIconTexture );
+	saver.Add( 10, &pDisabledIconTexture );
 	saver.Add( 4, &szLocalizedNameFileRef );
 	saver.Add( 5, &entries );
 	saver.Add( 6, &szTooltipFileRef );

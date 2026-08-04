@@ -12,7 +12,7 @@ namespace NDb
 
 
 typedef std::list<int> CManuverIndices;
-typedef std::unordered_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
+typedef det_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
 class CManuverBuilder 
 {
 	static CManuverStateDesc state;				// temprorary value, used inside CreateManuver()
@@ -39,9 +39,9 @@ class CManuverBuilder
 		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random(65535) ) { RecordRandomCall(); }
 	};
 
-	typedef std::unordered_map<int, SGRoundAttackTarget> CGroundAttacks;
+	typedef det_map<int, SGRoundAttackTarget> CGroundAttacks;
 	typedef std::vector<std::pair<int,CVec3> > CAttackerOffsets;
-	typedef std::unordered_map<int, CAttackerOffsets> CAviaAttacks;
+	typedef det_map<int, CAttackerOffsets> CAviaAttacks;
 	
 	ZDATA
 	CDBPtr<NDb::SAIGameConsts> pConsts;

@@ -19,9 +19,10 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 		bool bSkipNextSegment;
 
 		bool bCanGoForward, bCanGoBackward;
+		bool bForceGoBackward;
 		NTimer::STime lastCheckToRightTurn;
 		SVector vLastStopPosition;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartSmoothPathBasis*)this); f.Add(2,&vLastValidatedPoint); f.Add(3,&circles); f.Add(4,&bSmoothTurn); f.Add(5,&bSkipNextSegment); f.Add(6,&bCanGoForward); f.Add(7,&bCanGoBackward); f.Add(8,&lastCheckToRightTurn); f.Add(9,&vLastStopPosition); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartSmoothPathBasis*)this); f.Add(2,&vLastValidatedPoint); f.Add(3,&circles); f.Add(4,&bSmoothTurn); f.Add(5,&bSkipNextSegment); f.Add(6,&bCanGoForward); f.Add(7,&bCanGoBackward); f.Add(8,&lastCheckToRightTurn); f.Add(9,&vLastStopPosition); f.Add(10,&bForceGoBackward); return 0; }
 	//
 	void AddSmoothTurn();
 
@@ -42,7 +43,7 @@ protected:
 	virtual const bool ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint );
 public:
 	CStandartSmoothMechPath() : vLastValidatedPoint( VNULL2 ), bSmoothTurn( false ), bSkipNextSegment( false ),
-		bCanGoForward( false ), bCanGoBackward( false ), lastCheckToRightTurn( 0 ), vLastStopPosition( -1, -1 ) {}
+		bCanGoForward( false ), bCanGoBackward( false ), bForceGoBackward( false ), lastCheckToRightTurn( 0 ), vLastStopPosition( -1, -1 ) {}
 
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 
@@ -50,6 +51,7 @@ public:
 
 	virtual const bool CanGoBackward() const;
 	virtual const bool CanGoForward() const { return bCanGoForward; }
+	virtual void SetForceGoBackward( const bool bForce );
 };
 
 

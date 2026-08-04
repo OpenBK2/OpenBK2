@@ -52,6 +52,8 @@ struct ISmoothPath : public CAIObjectBase
 
 	virtual const bool CanGoBackward() const = 0;
 	virtual const bool CanGoForward() const = 0;
+	// Optional direction policy used by explicit reverse movement; non-mechanical paths ignore it.
+	virtual void SetForceGoBackward( const bool bForce ) {}
 
 	virtual const CVec2 PeekPathPoint( const int nShift ) const = 0;
 	virtual IMemento* CreateMemento() const = 0;

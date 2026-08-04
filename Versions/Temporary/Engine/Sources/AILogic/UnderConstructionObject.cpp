@@ -27,7 +27,7 @@ void CUnderConstructionObject::Clear()
 class CSimpleChecksumLog : public ICheckSumLog
 { 
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );
-	std::unordered_map<int, unsigned long> entries1;
+	det_map<int, unsigned long> entries1;
 	bool bEntries2;
 public:
 	CSimpleChecksumLog() : bEntries2( false ) {  }
