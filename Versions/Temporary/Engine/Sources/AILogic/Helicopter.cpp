@@ -23,6 +23,7 @@ extern NTimer::STime curTime;
 namespace
 {
 	const WORD HELICOPTER_MOVE_WHILE_TURNING_ANGLE = 4096; // 22.5 degrees.
+	const float HELICOPTER_LEAVE_DISTANCE = 512.0f;
 
 	const CVec2 GetSafeDirection( const CVec2 &vDirection, const CVec2 &vFallback )
 	{
@@ -551,24 +552,24 @@ CVec2 CHelicopter::GetLeavePoint() const
 {
 	const float fMapX = float( GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() );
 	const float fMapY = float( GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() );
-	const float fMargin = float( GetAIMap()->GetTileSize() );
 	const CVec2 vCur( GetCenterPlain() );
 	const CVec2 vDir( GetSafeDirection( GetFrontDirectionVector(), vCur - CVec2( fMapX * 0.5f, fMapY * 0.5f ) ) );
 
+	// Continue along the current course to the map border, then far enough beyond it
+	// that the model is fully off-screen before the leave state removes the unit.
 	float fScale = FLT_MAX;
 	if ( vDir.x > 0.001f )
-		fScale = (std::min)( fScale, ( fMapX - fMargin - vCur.x ) / vDir.x );
+		fScale = (std::min)( fScale, ( fMapX - vCur.x ) / vDir.x );
 	else if ( vDir.x < -0.001f )
-		fScale = (std::min)( fScale, ( fMargin - vCur.x ) / vDir.x );
+		fScale = (std::min)( fScale, -vCur.x / vDir.x );
 
 	if ( vDir.y > 0.001f )
-		fScale = (std::min)( fScale, ( fMapY - fMargin - vCur.y ) / vDir.y );
+		fScale = (std::min)( fScale, ( fMapY - vCur.y ) / vDir.y );
 	else if ( vDir.y < -0.001f )
-		fScale = (std::min)( fScale, ( fMargin - vCur.y ) / vDir.y );
+		fScale = (std::min)( fScale, -vCur.y / vDir.y );
 
 	if ( fScale == FLT_MAX || fScale < 0.0f )
-		fScale = (std::max)( fMapX, fMapY );
+		fScale = 0.0f;
 
-	return CVec2( Clamp( vCur.x + vDir.x * fScale, fMargin, fMapX - fMargin ),
-		Clamp( vCur.y + vDir.y * fScale, fMargin, fMapY - fMargin ) );
+	return vCur + vDir * ( fScale + HELICOPTER_LEAVE_DISTANCE );
 }

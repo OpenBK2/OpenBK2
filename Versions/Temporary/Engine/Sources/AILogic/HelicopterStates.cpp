@@ -106,7 +106,7 @@ IUnitState* CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand
 			return 0;
 		}
 	case ACTION_MOVE_PLANE_LEAVE:
-		return new CHelicopterLeaveState( pHelicopter, VNULL2, false );
+		return new CHelicopterLeaveState( pHelicopter, pHelicopter->GetLeavePoint(), false );
 	case ACTION_MOVE_FLY_DEAD:
 		return new CHelicopterFlyDeadState( pHelicopter );
 	case ACTION_COMMAND_DISAPPEAR:
@@ -403,8 +403,10 @@ const CVec2 CHelicopterAttackUnitState::GetPurposePoint() const
 }
 
 CHelicopterLeaveState::CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets )
-: CHelicopterBaseState( pUnit )
-{}
+: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
+{
+	// The target is serialized with the state so save/load and multiplayer keep the same exit route.
+}
 
 void CHelicopterLeaveState::Segment()
 {
