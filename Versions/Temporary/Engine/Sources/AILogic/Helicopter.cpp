@@ -436,13 +436,54 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	const CVec3 vInterpolatedPos( GetPosNext() - fCoeff * ( GetPosNext() - vPos ) );
 
 	CVec3 vVisualSpeed( vInterpolatedSpeed );
-	if ( fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) < 0.001f )
+	CVec3 vVisualPos( vInterpolatedPos );
+	float fVisualDeathSelfRotation = fDeathSelfRotation;
+	float fVisualDeathDownwardsAngle = 0.1f;
+	CVec2 vVisualDeathDirection( vVisualFrontDirection );
+	if ( !bDeadSpiralStarted && fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) < 0.001f )
 		vVisualSpeed = CVec3( vVisualFrontDirection, 0.0f );
 
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( bDeadSpiralStarted )
 	{
-		vVisualSpeed.z -= (std::max)( 1.0f, pStats->fSpeed );
+		const float fDownSpeed = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownSpeed : 15.0f );
+		const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
+		const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
+		const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
+		const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
+		const float fOldProgress = Clamp( ( vDeathStartPos.z - vPos.z ) / fFallHeight, 0.0f, 1.0f );
+		const float fVisualProgress = Clamp( ( vDeathStartPos.z - vInterpolatedPos.z ) / fFallHeight, 0.0f, 1.0f );
+		const float fOldAngle = fSteps * FP_2PI * fOldProgress;
+		const float fVisualAngle = fSteps * FP_2PI * fVisualProgress;
+		const CVec2 vSpiralDirection( GetSafeDirection( CVec2( vDeathVelocity.x, vDeathVelocity.y ), GetFrontDirectionVector() ) );
+		const CVec2 vSpiralSide( -vSpiralDirection.y, vSpiralDirection.x );
+		const CVec2 vOldSpiralLocal( NMath::Cos( fOldAngle ) * fRadius * fOldProgress,
+			NMath::Sin( fOldAngle ) * fRadius * fOldProgress );
+		const CVec2 vVisualSpiralLocal( NMath::Cos( fVisualAngle ) * fRadius * fVisualProgress,
+			NMath::Sin( fVisualAngle ) * fRadius * fVisualProgress );
+		const CVec2 vOldSpiral( vSpiralDirection * vOldSpiralLocal.x + vSpiralSide * vOldSpiralLocal.y );
+		const CVec2 vVisualSpiral( vSpiralDirection * vVisualSpiralLocal.x + vSpiralSide * vVisualSpiralLocal.y );
+		const float fVisualElapsedMs = fVisualCoeff * float( SConsts::AI_SEGMENT_DURATION );
+
+		// Evaluate the curve between deterministic AI endpoints instead of drawing a five-Hz polyline.
+		const CVec2 vVisualPoint( CVec2( vPos.x, vPos.y ) + CVec2( vDeathVelocity.x, vDeathVelocity.y ) * fVisualElapsedMs
+			+ ( vVisualSpiral - vOldSpiral ) );
+		vVisualPos.x = vVisualPoint.x;
+		vVisualPos.y = vVisualPoint.y;
+
+		// Use the analytical spiral tangent so orientation remains smooth throughout every AI segment.
+		const float fProgressSpeed = fDownSpeed / fFallHeight;
+		const float fAngleSpeed = fSteps * FP_2PI * fProgressSpeed;
+		const float fCurrentRadius = fRadius * fVisualProgress;
+		const float fRadiusSpeed = fRadius * fProgressSpeed;
+		const CVec2 vSpiralSpeedLocal(
+			fRadiusSpeed * NMath::Cos( fVisualAngle ) - fCurrentRadius * NMath::Sin( fVisualAngle ) * fAngleSpeed,
+			fRadiusSpeed * NMath::Sin( fVisualAngle ) + fCurrentRadius * NMath::Cos( fVisualAngle ) * fAngleSpeed );
+		const CVec2 vSpiralSpeed( vSpiralDirection * vSpiralSpeedLocal.x + vSpiralSide * vSpiralSpeedLocal.y );
+		vVisualSpeed = CVec3( CVec2( vDeathVelocity.x, vDeathVelocity.y ) * 1000.0f + vSpiralSpeed, -fDownSpeed );
+		fVisualDeathSelfRotation = fSelfRotSpeed * fVisualProgress * fFallHeight / fDownSpeed;
+		fVisualDeathDownwardsAngle = Clamp( pHeliStats ? pHeliStats->fDeathSpiralDownwardsAngleRad : 0.1f, 0.0f, FP_PI2 );
+		vVisualDeathDirection = GetSafeDirection( CVec2( vVisualSpeed.x, vVisualSpeed.y ), vVisualFrontDirection );
 	}
 	else if ( pHeliStats && fabs( fVisualMovementAngle ) > 0.001f )
 	{
@@ -457,7 +498,16 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	}
 
 	Normalize( &vVisualNormal );
-	if ( !bDeadSpiralStarted && ( ( bAttackTilt && bVisualAimPointSet ) || fabs( fVisualAttackAngle ) > 0.001f ) )
+	if ( bDeadSpiralStarted )
+	{
+		// Spin around local Z while level, then apply a stable configured pitch around the spun local X axis.
+		const WORD wDeathDirection = GetDirectionByVector( vVisualDeathDirection );
+		const float fDeathYaw = float( wDeathDirection ) / 65536.0f * FP_2PI;
+		pPlacement->rotation = CQuat( fDeathYaw, V3_AXIS_Z )
+			* CQuat( fVisualDeathSelfRotation, V3_AXIS_Z )
+			* CQuat( -fVisualDeathDownwardsAngle, V3_AXIS_X );
+	}
+	else if ( ( bAttackTilt && bVisualAimPointSet ) || fabs( fVisualAttackAngle ) > 0.001f )
 	{
 		// Smoothly enter and leave the attack pose, using only yaw (Z) and local forward pitch (X).
 		const float fYaw = float( wVisualDirection ) / 65536.0f * FP_2PI;
@@ -465,10 +515,8 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	}
 	else
 		MakeQuatBySpeedAndNormale( &pPlacement->rotation, vVisualSpeed, vVisualNormal );
-	if ( bDeadSpiralStarted )
-		pPlacement->rotation *= CQuat( fDeathSelfRotation, V3_AXIS_Y );
 	pPlacement->dir = wVisualDirection;
-	pPlacement->vPlacement = vInterpolatedPos;
+	pPlacement->vPlacement = vVisualPos;
 	pPlacement->fSpeed = GetSpeed();
 	pPlacement->fWaterCoeff = 0.0f;
 	pPlacement->cSoil = 0;
@@ -521,23 +569,30 @@ void CHelicopter::StartDeathSpiral()
 bool CHelicopter::AdvanceDeathSpiral( const NTimer::STime timeDiff )
 {
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
-	const float fDownSpeed = pHeliStats ? pHeliStats->fSpiralDownSpeed : 15.0f;
-	const float fRadius = pHeliStats ? pHeliStats->fSpiralRadius : 11.0f;
+	const float fDownSpeed = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownSpeed : 15.0f );
+	const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
 	const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
 	const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
 	const float fSeconds = float( timeDiff ) / 1000.0f;
-	const float fFallHeight = (std::max)( 1.0f, vDeathStartPos.z - fDeathGroundZ );
-	const float fTotalFallTime = (std::max)( 0.001f, fFallHeight / fDownSpeed );
-
-	const float fOldSpiralAngle = fDeathSpiralAngle;
-	fDeathSpiralAngle += fSteps * FP_2PI * fSeconds / fTotalFallTime;
-	fDeathSelfRotation += fSelfRotSpeed * fSeconds;
-
-	const CVec2 vDrift( vDeathVelocity.x * float( timeDiff ), vDeathVelocity.y * float( timeDiff ) );
-	const CVec2 vOldSpiral( NMath::Cos( fOldSpiralAngle ) * fRadius, NMath::Sin( fOldSpiralAngle ) * fRadius );
-	const CVec2 vNewSpiral( NMath::Cos( fDeathSpiralAngle ) * fRadius, NMath::Sin( fDeathSpiralAngle ) * fRadius );
-	const CVec2 vNewPoint( GetCenterPlain() + vDrift + ( vNewSpiral - vOldSpiral ) );
+	const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
 	const float fNewZ = (std::max)( fDeathGroundZ, GetCenter().z - fDownSpeed * fSeconds );
+	const float fOldProgress = Clamp( ( vDeathStartPos.z - GetCenter().z ) / fFallHeight, 0.0f, 1.0f );
+	const float fNewProgress = Clamp( ( vDeathStartPos.z - fNewZ ) / fFallHeight, 0.0f, 1.0f );
+	const float fOldSpiralAngle = fSteps * FP_2PI * fOldProgress;
+	fDeathSpiralAngle = fSteps * FP_2PI * fNewProgress;
+	fDeathSelfRotation = fSelfRotSpeed * fNewProgress * fFallHeight / fDownSpeed;
+
+	// SpiralRadius is the final radius; grow it linearly from zero over the complete fall.
+	const CVec2 vSpiralDirection( GetSafeDirection( CVec2( vDeathVelocity.x, vDeathVelocity.y ), GetFrontDirectionVector() ) );
+	const CVec2 vSpiralSide( -vSpiralDirection.y, vSpiralDirection.x );
+	const CVec2 vOldSpiralLocal( NMath::Cos( fOldSpiralAngle ) * fRadius * fOldProgress,
+		NMath::Sin( fOldSpiralAngle ) * fRadius * fOldProgress );
+	const CVec2 vNewSpiralLocal( NMath::Cos( fDeathSpiralAngle ) * fRadius * fNewProgress,
+		NMath::Sin( fDeathSpiralAngle ) * fRadius * fNewProgress );
+	const CVec2 vOldSpiral( vSpiralDirection * vOldSpiralLocal.x + vSpiralSide * vOldSpiralLocal.y );
+	const CVec2 vNewSpiral( vSpiralDirection * vNewSpiralLocal.x + vSpiralSide * vNewSpiralLocal.y );
+	const CVec2 vDrift( vDeathVelocity.x * float( timeDiff ), vDeathVelocity.y * float( timeDiff ) );
+	const CVec2 vNewPoint( GetCenterPlain() + vDrift + ( vNewSpiral - vOldSpiral ) );
 
 	vHeliNextSpeed = ( CVec3( vNewPoint, fNewZ ) - GetCenter() ) / float( timeDiff );
 	vHeliNextPos = CVec3( vNewPoint, fNewZ );
