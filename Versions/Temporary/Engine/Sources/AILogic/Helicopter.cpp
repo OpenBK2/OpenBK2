@@ -439,7 +439,6 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	CVec3 vVisualPos( vInterpolatedPos );
 	float fVisualDeathSelfRotation = fDeathSelfRotation;
 	float fVisualDeathDownwardsAngle = 0.1f;
-	CVec2 vVisualDeathDirection( vVisualFrontDirection );
 	if ( !bDeadSpiralStarted && fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) < 0.001f )
 		vVisualSpeed = CVec3( vVisualFrontDirection, 0.0f );
 
@@ -471,19 +470,8 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		vVisualPos.x = vVisualPoint.x;
 		vVisualPos.y = vVisualPoint.y;
 
-		// Use the analytical spiral tangent so orientation remains smooth throughout every AI segment.
-		const float fProgressSpeed = fDownSpeed / fFallHeight;
-		const float fAngleSpeed = fSteps * FP_2PI * fProgressSpeed;
-		const float fCurrentRadius = fRadius * fVisualProgress;
-		const float fRadiusSpeed = fRadius * fProgressSpeed;
-		const CVec2 vSpiralSpeedLocal(
-			fRadiusSpeed * NMath::Cos( fVisualAngle ) - fCurrentRadius * NMath::Sin( fVisualAngle ) * fAngleSpeed,
-			fRadiusSpeed * NMath::Sin( fVisualAngle ) + fCurrentRadius * NMath::Cos( fVisualAngle ) * fAngleSpeed );
-		const CVec2 vSpiralSpeed( vSpiralDirection * vSpiralSpeedLocal.x + vSpiralSide * vSpiralSpeedLocal.y );
-		vVisualSpeed = CVec3( CVec2( vDeathVelocity.x, vDeathVelocity.y ) * 1000.0f + vSpiralSpeed, -fDownSpeed );
 		fVisualDeathSelfRotation = fSelfRotSpeed * fVisualProgress * fFallHeight / fDownSpeed;
 		fVisualDeathDownwardsAngle = Clamp( pHeliStats ? pHeliStats->fDeathSpiralDownwardsAngleRad : 0.1f, 0.0f, FP_PI2 );
-		vVisualDeathDirection = GetSafeDirection( CVec2( vVisualSpeed.x, vVisualSpeed.y ), vVisualFrontDirection );
 	}
 	else if ( pHeliStats && fabs( fVisualMovementAngle ) > 0.001f )
 	{
@@ -500,9 +488,8 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	Normalize( &vVisualNormal );
 	if ( bDeadSpiralStarted )
 	{
-		// Spin around local Z while level, then apply a stable configured pitch around the spun local X axis.
-		const WORD wDeathDirection = GetDirectionByVector( vVisualDeathDirection );
-		const float fDeathYaw = float( wDeathDirection ) / 65536.0f * FP_2PI;
+		// Keep the death heading fixed so only the configured local-Z spin changes yaw, then apply a stable pitch.
+		const float fDeathYaw = float( GetFrontDirection() ) / 65536.0f * FP_2PI;
 		pPlacement->rotation = CQuat( fDeathYaw, V3_AXIS_Z )
 			* CQuat( fVisualDeathSelfRotation, V3_AXIS_Z )
 			* CQuat( -fVisualDeathDownwardsAngle, V3_AXIS_X );
@@ -538,6 +525,8 @@ void CHelicopter::DecFuel( const bool bEconomyMode )
 void CHelicopter::Die( const bool fromExplosion, const float fDamage )
 {
 	vDeathVelocity = vHeliNextSpeed;
+	// Start immediately; waiting for the queued fly-dead state leaves a visible pause after the hit.
+	StartDeathSpiral();
 	CAviation::Die( fromExplosion, fDamage );
 }
 
