@@ -553,23 +553,23 @@ CVec2 CHelicopter::GetLeavePoint() const
 	const float fMapX = float( GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() );
 	const float fMapY = float( GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() );
 	const CVec2 vCur( GetCenterPlain() );
-	const CVec2 vDir( GetSafeDirection( GetFrontDirectionVector(), vCur - CVec2( fMapX * 0.5f, fMapY * 0.5f ) ) );
 
-	// Continue along the current course to the map border, then far enough beyond it
-	// that the model is fully off-screen before the leave state removes the unit.
-	float fScale = FLT_MAX;
-	if ( vDir.x > 0.001f )
-		fScale = (std::min)( fScale, ( fMapX - vCur.x ) / vDir.x );
-	else if ( vDir.x < -0.001f )
-		fScale = (std::min)( fScale, -vCur.x / vDir.x );
+	// Project onto the closest map edge so returning helicopters always take the
+	// shortest route, then continue beyond that edge before disappearing.
+	float fClosestDistance = vCur.x;
+	CVec2 vTarget( -HELICOPTER_LEAVE_DISTANCE, vCur.y );
+	if ( fMapX - vCur.x < fClosestDistance )
+	{
+		fClosestDistance = fMapX - vCur.x;
+		vTarget = CVec2( fMapX + HELICOPTER_LEAVE_DISTANCE, vCur.y );
+	}
+	if ( vCur.y < fClosestDistance )
+	{
+		fClosestDistance = vCur.y;
+		vTarget = CVec2( vCur.x, -HELICOPTER_LEAVE_DISTANCE );
+	}
+	if ( fMapY - vCur.y < fClosestDistance )
+		vTarget = CVec2( vCur.x, fMapY + HELICOPTER_LEAVE_DISTANCE );
 
-	if ( vDir.y > 0.001f )
-		fScale = (std::min)( fScale, ( fMapY - vCur.y ) / vDir.y );
-	else if ( vDir.y < -0.001f )
-		fScale = (std::min)( fScale, -vCur.y / vDir.y );
-
-	if ( fScale == FLT_MAX || fScale < 0.0f )
-		fScale = 0.0f;
-
-	return vCur + vDir * ( fScale + HELICOPTER_LEAVE_DISTANCE );
+	return vTarget;
 }
