@@ -336,6 +336,12 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 			Scene()->ShowObject( GetID(), IsVisible() );
 	}
 
+	if ( bResult && !bInEditor && pUpdate->info.fSpeed <= 0.0f && pStats->pHelicopterStats && pStats->pSoundIdle )
+	{
+		// A helicopter can stay idle without receiving a movement update, so start its loop on creation.
+		AttachSound( EAST_IDLE, pStats->pSoundIdle, true );
+	}
+
 	if ( bResult && !bInEditor && bAmphibianWaterEffectsActive )
 	{
 		// Mission-start units may never receive a stop-movement update, so register
