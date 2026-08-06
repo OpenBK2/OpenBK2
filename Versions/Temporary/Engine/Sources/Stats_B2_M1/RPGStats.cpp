@@ -5177,6 +5177,8 @@ void SHelicopterStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DeathSpiralDownwardsAngleRad", (uint8_t*)&fDeathSpiralDownwardsAngleRad - pThis, sizeof(fDeathSpiralDownwardsAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (uint8_t*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "MaxAttackAngleDownRadians", (uint8_t*)&fMaxAttackAngleDownRadians - pThis, sizeof(fMaxAttackAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "PropellerObjects", &propellerObjects, pThis );
+	NMetaInfo::ReportStructArrayMetaInfo( "PropellerSpeedsRad", &propellerSpeedsRad, pThis );
 
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -5198,6 +5200,8 @@ int SHelicopterStats::operator&( IXmlSaver &saver )
 	saver.Add( "DeathSpiralDownwardsAngleRad", &fDeathSpiralDownwardsAngleRad );
 	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
 	saver.Add( "MaxAttackAngleDownRadians", &fMaxAttackAngleDownRadians );
+	saver.Add( "PropellerObjects", &propellerObjects );
+	saver.Add( "PropellerSpeedsRad", &propellerSpeedsRad );
 
 	return 0;
 }
@@ -5217,6 +5221,8 @@ int SHelicopterStats::operator&( IBinSaver &saver )
 	saver.Add( 14, &fDeathSpiralDownwardsAngleRad );
 	saver.Add( 12, &fStandingFuelDrainModifier );
 	saver.Add( 13, &fMaxAttackAngleDownRadians );
+	saver.Add( 15, &propellerObjects );
+	saver.Add( 16, &propellerSpeedsRad );
 
 	return 0;
 }
@@ -5228,7 +5234,7 @@ uint32_t SHelicopterStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownSpeed << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians;
+	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownSpeed << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

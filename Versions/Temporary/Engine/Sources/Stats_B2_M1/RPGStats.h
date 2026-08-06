@@ -2284,6 +2284,8 @@ namespace NDb
 		float fDeathSpiralDownwardsAngleRad;
 		float fStandingFuelDrainModifier;
 		float fMaxAttackAngleDownRadians;
+		std::vector<std::string> propellerObjects;
+		std::vector<CVec3> propellerSpeedsRad;
 
 		SHelicopterStats() :
 			__dwCheckSum( 0 ),

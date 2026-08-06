@@ -338,14 +338,25 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID()) )
 		{
-			// setup jogging
+			// Jogging and propellers share one pose mutator so their local bone rotations compose.
 			CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
-			const int nBoneIndex = pGetBone->GetBoneIndex( "Basis" );
-			if ( nBoneIndex >= 0 )
+			const int nBoneIndex = pGetBone ? pGetBone->GetBoneIndex( "Basis" ) : -1;
+			const NDb::SHelicopterStats *pHelicopterStats = pStats->pHelicopterStats ? pStats->pHelicopterStats.GetPtr() : 0;
+			const bool bHasPropellers = pHelicopterStats && !pHelicopterStats->propellerObjects.empty() &&
+				!pHelicopterStats->propellerSpeedsRad.empty();
+			if ( nBoneIndex >= 0 || bHasPropellers )
 			{
-				nJoggingBasisBoneIndex = nBoneIndex;
 				pJoggingMutator = MakeObject<IMechUnitJoggingMutator>( IMechUnitJoggingMutator::typeID );
-				SetJoggingMode( EJM_LAND_MOVE, false );
+				if ( nBoneIndex >= 0 )
+				{
+					nJoggingBasisBoneIndex = nBoneIndex;
+					SetJoggingMode( EJM_LAND_MOVE, false );
+				}
+				if ( bHasPropellers )
+				{
+					pJoggingMutator->SetupPropellers( pAnimator, pHelicopterStats->propellerObjects,
+						pHelicopterStats->propellerSpeedsRad );
+				}
 				pAnimator->SetSpecialMutator( pJoggingMutator );
 			}
 			// run default animation (idle)
@@ -1443,7 +1454,11 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 																				 ISoundScene *pSoundScene, struct IClientAckManager *pAckManager )
 {
 	if ( pJoggingMutator )
+	{
 		pJoggingMutator->Stop();
+		// The wreck keeps the last visual propeller phase instead of continuing to spin.
+		pJoggingMutator->SetPropellersEnabled( false );
+	}
 	//
 	if ( !IsVisible() )
 	{
@@ -1542,6 +1557,9 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 
 void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 {
+	if ( pJoggingMutator )
+		pJoggingMutator->SetPropellersEnabled( false );
+
 	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	if ( pUpdate->nParam == -1 )		// started to dive, make burn effect
