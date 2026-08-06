@@ -34,18 +34,16 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 	std::vector<int> propellerBoneIndices;
 	std::vector<CVec3> propellerSpeedsRad;
 	NTimer::STime nPropellerStartTime;
-	bool bPropellersEnabled;
 
 	bool NeedUpdate();
 
 public:
 	CMechUnitJoggingMutator() : nStartTime( 0 ), nStopTime( 0 ), bStopped( true ), nBasisBoneIndex( -1 ),
-		nPropellerStartTime( 0 ), bPropellersEnabled( false ) {}
+		nPropellerStartTime( 0 ) {}
 
 	void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY );
 	void SetupPropellers( ISkeletonAnimator *pAnimator, const std::vector<std::string> &propellerObjects,
 							 const std::vector<CVec3> &propellerSpeedsRad );
-	void SetPropellersEnabled( const bool bEnabled );
 	void Play();
 	void Stop();
 
