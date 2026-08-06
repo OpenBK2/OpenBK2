@@ -82,6 +82,26 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 
 } //namespace
 
+class CMechanicalHelicopterDeviationProcess : public IClientUpdatableProcess
+{
+	OBJECT_NOCOPY_METHODS( CMechanicalHelicopterDeviationProcess );
+
+	ZDATA
+		CPtr<CMOUnitMechanical> pUnit;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); return 0; }
+
+	CMechanicalHelicopterDeviationProcess() {}
+public:
+	CMechanicalHelicopterDeviationProcess( CMOUnitMechanical *_pUnit ) : pUnit( _pUnit ) {}
+
+	bool Update( const NTimer::STime &time )
+	{
+		return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time );
+	}
+};
+
+REGISTER_SAVELOAD_CLASS( 0x31197AC2, CMechanicalHelicopterDeviationProcess );
+
 bool CMOUnitMechanical::IsInside( const int nID )
 {
 	for ( std::vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
@@ -268,6 +288,14 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 	wLastTrackDir = 0;
 	bForwardMoving = false;
 	bTrackBroken = false;
+	vStandingDeviationBasePlacement = VNULL3;
+	vStandingDeviationOffset = VNULL3;
+	vStandingDeviationTarget = VNULL3;
+	timeStandingDeviationLastUpdate = GameTimer()->GetGameTime();
+	dwStandingDeviationRandomState = DWORD( nUniqueID ) ^ 0xA511E9B3u;
+	if ( dwStandingDeviationRandomState == 0 )
+		dwStandingDeviationRandomState = 0x6D2B79F5u;
+	bStandingDeviationActive = false;
 	const bool bResult = CMOUnit::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
@@ -298,6 +326,12 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 
 	if ( bResult ) 
 	{
+		if ( !bInEditor && pStats->pHelicopterStats )
+		{
+			// The active helicopter visual class is CMOUnitMechanical, so update hover drift here every client frame.
+			NUpdatableProcess::Register( new CMechanicalHelicopterDeviationProcess( this ) );
+		}
+
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID()) )
 		{
 			// setup jogging
@@ -690,6 +724,158 @@ float DragCurve(float x, float d, float k)
     return x / (x + (1.0f - x) * std::exp(k * (x - d)));
 }
 
+float CMOUnitMechanical::NextStandingDeviationRandom()
+{
+	// A per-unit PRNG keeps this visual effect independent from gameplay and other client effects.
+	dwStandingDeviationRandomState ^= dwStandingDeviationRandomState << 13;
+	dwStandingDeviationRandomState ^= dwStandingDeviationRandomState >> 17;
+	dwStandingDeviationRandomState ^= dwStandingDeviationRandomState << 5;
+	return float( dwStandingDeviationRandomState & 0x00FFFFFFu ) / float( 0x01000000u );
+}
+
+CVec3 CMOUnitMechanical::GetRandomStandingDeviationPoint( const float fRadius )
+{
+	for ( int i = 0; i < 16; ++i )
+	{
+		const CVec3 vPoint( NextStandingDeviationRandom() * 2.0f - 1.0f,
+			NextStandingDeviationRandom() * 2.0f - 1.0f,
+			NextStandingDeviationRandom() * 2.0f - 1.0f );
+		if ( fabs2( vPoint ) <= 1.0f )
+			return vPoint * fRadius;
+	}
+
+	return VNULL3;
+}
+
+void CMOUnitMechanical::ChooseStandingDeviationTarget( const float fRadius )
+{
+	// Aim through a random inner point and continue to the sphere boundary. At the
+	// boundary the next chord necessarily points back into the allowed volume.
+	const CVec3 vInnerPoint( GetRandomStandingDeviationPoint( fRadius * 0.65f ) );
+	CVec3 vDirection( vInnerPoint - vStandingDeviationOffset );
+	if ( fabs2( vDirection ) < 0.000001f )
+		vDirection = CVec3( 1.0f, 0.0f, 0.0f );
+	Normalize( &vDirection );
+
+	const float fDirectionDotOffset = vDirection.x * vStandingDeviationOffset.x
+		+ vDirection.y * vStandingDeviationOffset.y + vDirection.z * vStandingDeviationOffset.z;
+	const float fDiscriminant = (std::max)( 0.0f, fDirectionDotOffset * fDirectionDotOffset
+		+ fRadius * fRadius - fabs2( vStandingDeviationOffset ) );
+	const float fDistanceToBoundary = -fDirectionDotOffset + float( sqrt( fDiscriminant ) );
+	vStandingDeviationTarget = vStandingDeviationOffset + vDirection * fDistanceToBoundary;
+}
+
+void CMOUnitMechanical::UpdateStandingDeviationPlacement( SAINotifyPlacement *pPlacement )
+{
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	const NDb::SHelicopterStats *pHeliStats = pStats->pHelicopterStats ? pStats->pHelicopterStats.GetPtr() : 0;
+	const bool bShouldDeviate = pPlacement->bNewFormat && IsAlive() && pHeliStats
+		&& pHeliStats->fStandingDeviationRadius > 0.0f && pHeliStats->fStandingDeviationSpeed > 0.0f
+		&& !bMoved && pPlacement->fSpeed <= 0.001f;
+
+	vStandingDeviationBasePlacement = pPlacement->bNewFormat
+		? pPlacement->vPlacement : CVec3( pPlacement->center, pPlacement->z );
+
+	if ( bShouldDeviate && !bStandingDeviationActive )
+	{
+		// Begin at the authoritative position so entering hover never causes a visual jump.
+		vStandingDeviationOffset = VNULL3;
+		ChooseStandingDeviationTarget( pHeliStats->fStandingDeviationRadius );
+		timeStandingDeviationLastUpdate = GameTimer()->GetGameTime();
+	}
+	else if ( !bShouldDeviate )
+	{
+		vStandingDeviationOffset = VNULL3;
+		vStandingDeviationTarget = VNULL3;
+		timeStandingDeviationLastUpdate = GameTimer()->GetGameTime();
+	}
+
+	bStandingDeviationActive = bShouldDeviate;
+	if ( bStandingDeviationActive )
+	{
+		pPlacement->vPlacement += vStandingDeviationOffset;
+		pPlacement->center = CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y );
+		pPlacement->z = pPlacement->vPlacement.z;
+	}
+}
+
+bool CMOUnitMechanical::UpdateStandingDeviation( const NTimer::STime &time )
+{
+	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
+	const NDb::SHelicopterStats *pHeliStats = pStats->pHelicopterStats ? pStats->pHelicopterStats.GetPtr() : 0;
+	if ( !pHeliStats )
+		return false;
+
+	if ( !IsAlive() )
+	{
+		if ( bStandingDeviationActive )
+		{
+			// Do not leave a dead helicopter at its last client-only hover offset.
+			CVec3 vPosition, vScale;
+			CQuat qRotation;
+			GetPlacement( &vPosition, &qRotation, &vScale );
+			SetPlacement( vStandingDeviationBasePlacement, qRotation );
+			Scene()->MoveObject( GetID(), vStandingDeviationBasePlacement, qRotation, vScale );
+		}
+		bStandingDeviationActive = false;
+		vStandingDeviationOffset = VNULL3;
+		vStandingDeviationTarget = VNULL3;
+		return false;
+	}
+
+	if ( !bStandingDeviationActive )
+	{
+		timeStandingDeviationLastUpdate = time;
+		return true;
+	}
+
+	const float fRadius = (std::max)( 0.0f, pHeliStats->fStandingDeviationRadius );
+	const float fSpeed = (std::max)( 0.0f, pHeliStats->fStandingDeviationSpeed );
+	const NTimer::STime timeDiff = (std::max)( NTimer::STime( 0 ), time - timeStandingDeviationLastUpdate );
+	timeStandingDeviationLastUpdate = time;
+	if ( fRadius <= 0.0f || fSpeed <= 0.0f || timeDiff <= 0 )
+		return true;
+
+	if ( fabs2( vStandingDeviationOffset ) > fRadius * fRadius )
+	{
+		Normalize( &vStandingDeviationOffset );
+		vStandingDeviationOffset *= fRadius;
+		ChooseStandingDeviationTarget( fRadius );
+	}
+
+	float fMovementLeft = fSpeed * float( timeDiff ) / 1000.0f;
+	for ( int i = 0; i < 32 && fMovementLeft > 0.0f; ++i )
+	{
+		CVec3 vToTarget( vStandingDeviationTarget - vStandingDeviationOffset );
+		const float fDistance = fabs( vToTarget );
+		if ( fDistance <= 0.000001f )
+		{
+			ChooseStandingDeviationTarget( fRadius );
+			continue;
+		}
+
+		if ( fMovementLeft < fDistance )
+		{
+			vStandingDeviationOffset += vToTarget * ( fMovementLeft / fDistance );
+			fMovementLeft = 0.0f;
+		}
+		else
+		{
+			vStandingDeviationOffset = vStandingDeviationTarget;
+			fMovementLeft -= fDistance;
+			ChooseStandingDeviationTarget( fRadius );
+		}
+	}
+
+	CVec3 vPosition, vScale;
+	CQuat qRotation;
+	GetPlacement( &vPosition, &qRotation, &vScale );
+	vPosition = vStandingDeviationBasePlacement + vStandingDeviationOffset;
+	SetPlacement( vPosition, qRotation );
+	Scene()->MoveObject( GetID(), vPosition, qRotation, vScale );
+	return true;
+}
+
 void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
@@ -703,10 +889,10 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	// Let shore interpolation start early, but delay particles until the unit is mostly in water.
 	bAmphibianWaterEffectsActive = !pTransport && bHasAmphibianStats && fAdjustedWaterCoeff >= AMPHIBIAN_WATER_EFFECTS_MIN_COEFF;
 
+	SAINotifyPlacement visualPlacement( placement );
 	if ( bHasAmphibianStats )
 	{
 		auto ampStats = pStats->amphibianStats;
-		SAINotifyPlacement new_placement = placement;
 
 		// Drag curve kinda sucks so skip it for now..
 		//float draggedWaterCoeff = DragCurve(fAdjustedWaterCoeff, 0.8f, -6.0f);
@@ -715,14 +901,12 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		const float fWaterOffset = ampStats->waterZOffset * fAdjustedWaterCoeff;
 
 		// AI computes the shore/water coefficient; the visual unit only applies the offset.
-		new_placement.vPlacement.z += fWaterOffset;
-		new_placement.z += fWaterOffset;
-		CMOUnit::AIUpdatePlacement( new_placement, pScene, pSoundScene, eSeason );
+		visualPlacement.vPlacement.z += fWaterOffset;
+		visualPlacement.z += fWaterOffset;
 	}
-	else
-	{
-		CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
-	}
+
+	UpdateStandingDeviationPlacement( &visualPlacement );
+	CMOUnit::AIUpdatePlacement( visualPlacement, pScene, pSoundScene, eSeason );
 	UpdateAmphibianJogging( bMoved || placement.fSpeed > 0.0f );
 	UpdateWaterMoveEffects( placement, pScene );
 
