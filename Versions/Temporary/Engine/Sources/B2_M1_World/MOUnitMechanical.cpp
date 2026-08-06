@@ -1440,11 +1440,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 																				 ISoundScene *pSoundScene, struct IClientAckManager *pAckManager )
 {
 	if ( pJoggingMutator )
-	{
 		pJoggingMutator->Stop();
-		// The wreck keeps the last visual propeller phase instead of continuing to spin.
-		pJoggingMutator->SetPropellersEnabled( false );
-	}
 	//
 	if ( !IsVisible() )
 	{
@@ -1543,9 +1539,6 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 
 void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 {
-	if ( pJoggingMutator )
-		pJoggingMutator->SetPropellersEnabled( false );
-
 	const NTimer::STime timeEffect = (std::min)( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	if ( pUpdate->nParam == -1 )		// started to dive, make burn effect

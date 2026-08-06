@@ -61,7 +61,6 @@ void CMechUnitJoggingMutator::SetupPropellers(
 {
 	propellerBoneIndices.clear();
 	propellerSpeedsRad.clear();
-	bPropellersEnabled = false;
 
 	CDynamicCast<IGetBone> pGetBone = pAnimator;
 	if ( !pGetBone )
@@ -81,20 +80,13 @@ void CMechUnitJoggingMutator::SetupPropellers(
 
 	// Game time advances every rendered frame, unlike fixed-step segment time.
 	nPropellerStartTime = GameTimer()->GetGameTime();
-	bPropellersEnabled = !propellerBoneIndices.empty();
-}
-
-void CMechUnitJoggingMutator::SetPropellersEnabled( const bool bEnabled )
-{
-	bPropellersEnabled = bEnabled && !propellerBoneIndices.empty();
 }
 
 bool CMechUnitJoggingMutator::NeedUpdate()
 {
 	IGameTimer *pTimer = GameTimer();
 	const bool bJoggingNeedsUpdate = !bStopped && pTimer->GetSegmentTime() > nStartTime;
-	const bool bPropellersNeedUpdate = bPropellersEnabled && !propellerBoneIndices.empty() &&
-		pTimer->GetGameTime() > nPropellerStartTime;
+	const bool bPropellersNeedUpdate = !propellerBoneIndices.empty() && pTimer->GetGameTime() > nPropellerStartTime;
 	return pTimer->GetPauseType() == -1 && ( bJoggingNeedsUpdate || bPropellersNeedUpdate );
 }
 
@@ -126,7 +118,7 @@ void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 		pRootTransform->Flags |= GrannyHasOrientation;
 	}
 
-	if ( bPropellersEnabled )
+	if ( !propellerBoneIndices.empty() )
 	{
 		const NTimer::STime nDeltaTime = GameTimer()->GetGameTime() - nPropellerStartTime;
 		const float fSeconds = (float)nDeltaTime / 1000.0f;
@@ -176,7 +168,6 @@ int CMechUnitJoggingMutator::operator&( IBinSaver &saver )
 	saver.Add( 7, &propellerBoneIndices );
 	saver.Add( 8, &propellerSpeedsRad );
 	saver.Add( 9, &nPropellerStartTime );
-	saver.Add( 10, &bPropellersEnabled );
 
 	return 0;
 }

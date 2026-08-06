@@ -33,7 +33,6 @@ struct IMechUnitJoggingMutator : public IAnimMutator
 	// Propeller entries are paired by index; missing entries and unknown model-part names are ignored.
 	virtual void SetupPropellers( ISkeletonAnimator *pAnimator, const std::vector<std::string> &propellerObjects,
 									const std::vector<CVec3> &propellerSpeedsRad ) = 0;
-	virtual void SetPropellersEnabled( const bool bEnabled ) = 0;
 	virtual void Play() = 0;
 	virtual void Stop() = 0;
 };
