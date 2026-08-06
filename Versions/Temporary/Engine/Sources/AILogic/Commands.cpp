@@ -51,6 +51,15 @@ void CAICommand::DeleteUnit( const int nUnitID )
 		pMover->DeleteUnit( nUnitID );
 }
 
+CVec2 CAICommand::GetMoveTarget( CCommonUnit *pUnit )
+{
+	// Helicopters do not create terrain paths, but still need the group mover's
+	// queued, deterministic formation destination.
+	const CVec2 vTarget = pMover ? pMover->GetMoveTarget( pUnit ) : unitCmd.vPos + pUnit->GetGroupShift();
+	pUnit->SetGroupShift( VNULL2 );
+	return vTarget;
+}
+
 IStaticPath* CAICommand::CreateStaticPath( CCommonUnit *pUnit )
 {
 	if ( pMover )

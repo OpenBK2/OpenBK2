@@ -68,9 +68,9 @@ IUnitState* CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand
 	switch ( cmd.nCmdType )
 	{
 	case ACTION_COMMAND_MOVE_TO:
-		return new CHelicopterMoveState( pHelicopter, cmd.vPos, false );
+		return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), false );
 	case ACTION_COMMAND_SWARM_TO:
-		return new CHelicopterMoveState( pHelicopter, cmd.vPos, true );
+		return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), true );
 	case ACTION_COMMAND_ROTATE_TO:
 		return new CHelicopterRotateState( pHelicopter, cmd.vPos );
 	case ACTION_COMMAND_ROTATE_TO_DIR:

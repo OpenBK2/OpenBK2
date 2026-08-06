@@ -286,6 +286,23 @@ IStaticPath* CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 		return CreatePathToPoint( pUnit, vPosition );
 }
 
+CVec2 CGroupMover::GetMoveTarget( CCommonUnit *pUnit )
+{
+	if ( !CalcPositions() || !IsValid( pUnit ) )
+		return vPosition;
+
+	const int nUnitSubGroup = pUnit->GetSubGroup();
+	if ( nUnitSubGroup >= 0 && nUnitSubGroup < subGroups.size() )
+	{
+		const SSubGroup::TSubGroupUnits &units = subGroups[nUnitSubGroup].units;
+		SSubGroup::TSubGroupUnits::const_iterator pos = units.find( pUnit->GetUniqueID() );
+		if ( pos != units.end() )
+			return pos->second.vPosition;
+	}
+
+	return vPosition;
+}
+
 CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 {
 	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||

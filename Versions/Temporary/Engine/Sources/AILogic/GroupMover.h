@@ -65,6 +65,8 @@ public:
 	void AddUnit( CCommonUnit *pUnit );
 	void DeleteUnit( const int nUnitID );
 
+	// Return the same deterministic per-unit destination that path-based units receive.
+	CVec2 GetMoveTarget( CCommonUnit *pUnit );
 	IStaticPath* CreateStaticPath( CCommonUnit *pUnit );
 };
 

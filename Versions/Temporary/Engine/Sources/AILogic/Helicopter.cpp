@@ -445,13 +445,18 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( bDeadSpiralStarted )
 	{
-		const float fDownSpeed = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownSpeed : 15.0f );
+		const float fDownAcceleration = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownAcceleration : 15.0f );
 		const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
 		const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
 		const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
 		const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
 		const float fOldProgress = Clamp( ( vDeathStartPos.z - vPos.z ) / fFallHeight, 0.0f, 1.0f );
-		const float fVisualProgress = Clamp( ( vDeathStartPos.z - vInterpolatedPos.z ) / fFallHeight, 0.0f, 1.0f );
+		const float fOldFallDistance = fOldProgress * fFallHeight;
+		const float fOldDownSpeed = sqrtf( 2.0f * fDownAcceleration * fOldFallDistance );
+		const float fVisualSeconds = fVisualCoeff * float( SConsts::AI_SEGMENT_DURATION ) / 1000.0f;
+		const float fVisualFallDistance = (std::min)( fFallHeight,
+			fOldFallDistance + fOldDownSpeed * fVisualSeconds + 0.5f * fDownAcceleration * sqr( fVisualSeconds ) );
+		const float fVisualProgress = Clamp( fVisualFallDistance / fFallHeight, 0.0f, 1.0f );
 		const float fOldAngle = fSteps * FP_2PI * fOldProgress;
 		const float fVisualAngle = fSteps * FP_2PI * fVisualProgress;
 		const CVec2 vSpiralDirection( GetSafeDirection( CVec2( vDeathVelocity.x, vDeathVelocity.y ), GetFrontDirectionVector() ) );
@@ -464,13 +469,14 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		const CVec2 vVisualSpiral( vSpiralDirection * vVisualSpiralLocal.x + vSpiralSide * vVisualSpiralLocal.y );
 		const float fVisualElapsedMs = fVisualCoeff * float( SConsts::AI_SEGMENT_DURATION );
 
-		// Evaluate the curve between deterministic AI endpoints instead of drawing a five-Hz polyline.
+		// Evaluate the accelerating fall and spiral between deterministic AI endpoints.
 		const CVec2 vVisualPoint( CVec2( vPos.x, vPos.y ) + CVec2( vDeathVelocity.x, vDeathVelocity.y ) * fVisualElapsedMs
 			+ ( vVisualSpiral - vOldSpiral ) );
 		vVisualPos.x = vVisualPoint.x;
 		vVisualPos.y = vVisualPoint.y;
+		vVisualPos.z = vDeathStartPos.z - fVisualFallDistance;
 
-		fVisualDeathSelfRotation = fSelfRotSpeed * fVisualProgress * fFallHeight / fDownSpeed;
+		fVisualDeathSelfRotation = fSelfRotSpeed * sqrtf( 2.0f * fVisualFallDistance / fDownAcceleration );
 		fVisualDeathDownwardsAngle = Clamp( pHeliStats ? pHeliStats->fDeathSpiralDownwardsAngleRad : 0.1f, 0.0f, FP_PI2 );
 	}
 	else if ( pHeliStats && fabs( fVisualMovementAngle ) > 0.001f )
@@ -558,18 +564,24 @@ void CHelicopter::StartDeathSpiral()
 bool CHelicopter::AdvanceDeathSpiral( const NTimer::STime timeDiff )
 {
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
-	const float fDownSpeed = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownSpeed : 15.0f );
+	const float fDownAcceleration = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownAcceleration : 15.0f );
 	const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
 	const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
 	const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
 	const float fSeconds = float( timeDiff ) / 1000.0f;
 	const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
-	const float fNewZ = (std::max)( fDeathGroundZ, GetCenter().z - fDownSpeed * fSeconds );
 	const float fOldProgress = Clamp( ( vDeathStartPos.z - GetCenter().z ) / fFallHeight, 0.0f, 1.0f );
-	const float fNewProgress = Clamp( ( vDeathStartPos.z - fNewZ ) / fFallHeight, 0.0f, 1.0f );
+	const float fOldFallDistance = fOldProgress * fFallHeight;
+	const float fOldDownSpeed = sqrtf( 2.0f * fDownAcceleration * fOldFallDistance );
+	// Integrating from the distance-derived speed keeps the simulation deterministic
+	// without adding another serialized velocity field.
+	const float fNewFallDistance = (std::min)( fFallHeight,
+		fOldFallDistance + fOldDownSpeed * fSeconds + 0.5f * fDownAcceleration * sqr( fSeconds ) );
+	const float fNewZ = vDeathStartPos.z - fNewFallDistance;
+	const float fNewProgress = Clamp( fNewFallDistance / fFallHeight, 0.0f, 1.0f );
 	const float fOldSpiralAngle = fSteps * FP_2PI * fOldProgress;
 	fDeathSpiralAngle = fSteps * FP_2PI * fNewProgress;
-	fDeathSelfRotation = fSelfRotSpeed * fNewProgress * fFallHeight / fDownSpeed;
+	fDeathSelfRotation = fSelfRotSpeed * sqrtf( 2.0f * fNewFallDistance / fDownAcceleration );
 
 	// SpiralRadius is the final radius; grow it linearly from zero over the complete fall.
 	const CVec2 vSpiralDirection( GetSafeDirection( CVec2( vDeathVelocity.x, vDeathVelocity.y ), GetFrontDirectionVector() ) );

@@ -63,6 +63,7 @@ public:
 
 	const int GetID() const { return id; }
 
+	CVec2 GetMoveTarget( class CCommonUnit *pUnit );
 	struct IStaticPath* CreateStaticPath( class CCommonUnit *pUnit );
 
 	const int GetFlag() const { return nFlag; }
