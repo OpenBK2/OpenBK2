@@ -5172,7 +5172,7 @@ void SHelicopterStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "StandingDeviationSpeed", (uint8_t*)&fStandingDeviationSpeed - pThis, sizeof(fStandingDeviationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SpiralRadius", (uint8_t*)&fSpiralRadius - pThis, sizeof(fSpiralRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SpiralSteps", (uint8_t*)&fSpiralSteps - pThis, sizeof(fSpiralSteps), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SpiralDownSpeed", (uint8_t*)&fSpiralDownSpeed - pThis, sizeof(fSpiralDownSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralDownAcceleration", (uint8_t*)&fSpiralDownAcceleration - pThis, sizeof(fSpiralDownAcceleration), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "DeathSelfPointRotationSpeedRad", (uint8_t*)&fDeathSelfPointRotationSpeedRad - pThis, sizeof(fDeathSelfPointRotationSpeedRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "DeathSpiralDownwardsAngleRad", (uint8_t*)&fDeathSpiralDownwardsAngleRad - pThis, sizeof(fDeathSpiralDownwardsAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (uint8_t*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5195,7 +5195,7 @@ int SHelicopterStats::operator&( IXmlSaver &saver )
 	saver.Add( "StandingDeviationSpeed", &fStandingDeviationSpeed );
 	saver.Add( "SpiralRadius", &fSpiralRadius );
 	saver.Add( "SpiralSteps", &fSpiralSteps );
-	saver.Add( "SpiralDownSpeed", &fSpiralDownSpeed );
+	saver.Add( "SpiralDownAcceleration", &fSpiralDownAcceleration );
 	saver.Add( "DeathSelfPointRotationSpeedRad", &fDeathSelfPointRotationSpeedRad );
 	saver.Add( "DeathSpiralDownwardsAngleRad", &fDeathSpiralDownwardsAngleRad );
 	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
@@ -5216,7 +5216,7 @@ int SHelicopterStats::operator&( IBinSaver &saver )
 	saver.Add( 7, &fStandingDeviationSpeed );
 	saver.Add( 8, &fSpiralRadius );
 	saver.Add( 9, &fSpiralSteps );
-	saver.Add( 10, &fSpiralDownSpeed );
+	saver.Add( 10, &fSpiralDownAcceleration );
 	saver.Add( 11, &fDeathSelfPointRotationSpeedRad );
 	saver.Add( 14, &fDeathSpiralDownwardsAngleRad );
 	saver.Add( 12, &fStandingFuelDrainModifier );
@@ -5234,7 +5234,7 @@ uint32_t SHelicopterStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownSpeed << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
+	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownAcceleration << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
