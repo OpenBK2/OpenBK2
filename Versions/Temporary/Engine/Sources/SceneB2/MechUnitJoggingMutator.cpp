@@ -54,36 +54,97 @@ void CMechUnitJoggingMutator::Setup( const int _nBasisBoneIndex, const SJoggingP
 	nBasisBoneIndex = _nBasisBoneIndex;
 }
 
+void CMechUnitJoggingMutator::SetupPropellers(
+	ISkeletonAnimator *pAnimator,
+	const std::vector<std::string> &propellerObjects,
+	const std::vector<CVec3> &speedsRad )
+{
+	propellerBoneIndices.clear();
+	propellerSpeedsRad.clear();
+	bPropellersEnabled = false;
+
+	CDynamicCast<IGetBone> pGetBone = pAnimator;
+	if ( !pGetBone )
+		return;
+
+	// Pair the configuration by index and keep only names present in this model's skeleton.
+	const int nPropellerCount = (int)(std::min)( propellerObjects.size(), speedsRad.size() );
+	for ( int i = 0; i < nPropellerCount; ++i )
+	{
+		const int nBoneIndex = pGetBone->GetBoneIndex( propellerObjects[i].c_str() );
+		if ( nBoneIndex < 0 )
+			continue;
+
+		propellerBoneIndices.push_back( nBoneIndex );
+		propellerSpeedsRad.push_back( speedsRad[i] );
+	}
+
+	// Game time advances every rendered frame, unlike fixed-step segment time.
+	nPropellerStartTime = GameTimer()->GetGameTime();
+	bPropellersEnabled = !propellerBoneIndices.empty();
+}
+
+void CMechUnitJoggingMutator::SetPropellersEnabled( const bool bEnabled )
+{
+	bPropellersEnabled = bEnabled && !propellerBoneIndices.empty();
+}
+
 bool CMechUnitJoggingMutator::NeedUpdate()
 {
 	IGameTimer *pTimer = GameTimer();
-	return !bStopped && pTimer->GetPauseType() == -1 && pTimer->GetSegmentTime() > nStartTime ;
+	const bool bJoggingNeedsUpdate = !bStopped && pTimer->GetSegmentTime() > nStartTime;
+	const bool bPropellersNeedUpdate = bPropellersEnabled && !propellerBoneIndices.empty() &&
+		pTimer->GetGameTime() > nPropellerStartTime;
+	return pTimer->GetPauseType() == -1 && ( bJoggingNeedsUpdate || bPropellersNeedUpdate );
 }
 
 void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {
-	const NTimer::STime nDeltaTime = bStopped ? nStopTime - nStartTime : GameTimer()->GetSegmentTime() - nStartTime;
+	if ( nBasisBoneIndex >= 0 )
+	{
+		const NTimer::STime nDeltaTime = bStopped ? nStopTime - nStartTime : GameTimer()->GetSegmentTime() - nStartTime;
 
-	const float fValueX = joggingX.GetValue( nDeltaTime );
-	const float fValueY = s_bJogTweakMode ? 0 : joggingY.GetValue( nDeltaTime );
-//	const float fValueZ = joggingZ.GetValue( nDeltaTime );
+		const float fValueX = joggingX.GetValue( nDeltaTime );
+		const float fValueY = s_bJogTweakMode ? 0 : joggingY.GetValue( nDeltaTime );
+//		const float fValueZ = joggingZ.GetValue( nDeltaTime );
 
-	CQuat qResult( ToRadian(fValueX), V3_AXIS_X );
-	const CQuat qY( ToRadian(fValueY), V3_AXIS_Y );
-	qResult *= qY;
+		CQuat qResult( ToRadian(fValueX), V3_AXIS_X );
+		const CQuat qY( ToRadian(fValueY), V3_AXIS_Y );
+		qResult *= qY;
 
-	granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, nBasisBoneIndex );
-	CQuat qBoneOrientation;
-	memcpy( &qBoneOrientation, &(pRootTransform->Orientation), sizeof( float ) * 4 );
-	qBoneOrientation *= qResult;
-	memcpy( &(pRootTransform->Orientation), &qBoneOrientation, sizeof( float ) * 4 );
-	CVec3 vOldBonePos, vBonePos;
-	memcpy( &vOldBonePos, &(pRootTransform->Position), sizeof( float ) * 3 );
-	SHMatrix mTrans( qResult );
-	mTrans.RotateVector( &vBonePos, vOldBonePos );
-	memcpy( &(pRootTransform->Position), &vBonePos, sizeof( float ) * 3 );
-	pRootTransform->Flags |= GrannyHasPosition;
-	pRootTransform->Flags |= GrannyHasOrientation;
+		granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, nBasisBoneIndex );
+		CQuat qBoneOrientation;
+		memcpy( &qBoneOrientation, &(pRootTransform->Orientation), sizeof( float ) * 4 );
+		qBoneOrientation *= qResult;
+		memcpy( &(pRootTransform->Orientation), &qBoneOrientation, sizeof( float ) * 4 );
+		CVec3 vOldBonePos, vBonePos;
+		memcpy( &vOldBonePos, &(pRootTransform->Position), sizeof( float ) * 3 );
+		SHMatrix mTrans( qResult );
+		mTrans.RotateVector( &vBonePos, vOldBonePos );
+		memcpy( &(pRootTransform->Position), &vBonePos, sizeof( float ) * 3 );
+		pRootTransform->Flags |= GrannyHasPosition;
+		pRootTransform->Flags |= GrannyHasOrientation;
+	}
+
+	if ( bPropellersEnabled )
+	{
+		const NTimer::STime nDeltaTime = GameTimer()->GetGameTime() - nPropellerStartTime;
+		const float fSeconds = (float)nDeltaTime / 1000.0f;
+		for ( int i = 0; i < (int)propellerBoneIndices.size(); ++i )
+		{
+			const CVec3 &vSpeed = propellerSpeedsRad[i];
+			CQuat qPropeller;
+			// Vector components are local X/Y/Z Euler angular velocities in radians per second.
+			qPropeller.FromEulerAngles( fmod( vSpeed.z * fSeconds, FP_2PI ),
+				fmod( vSpeed.y * fSeconds, FP_2PI ), fmod( vSpeed.x * fSeconds, FP_2PI ) );
+			granny_transform *pTransform = GrannyGetLocalPoseTransform( pPose, propellerBoneIndices[i] );
+			CQuat qBoneOrientation;
+			memcpy( &qBoneOrientation, &(pTransform->Orientation), sizeof( float ) * 4 );
+			qBoneOrientation *= qPropeller;
+			memcpy( &(pTransform->Orientation), &qBoneOrientation, sizeof( float ) * 4 );
+			pTransform->Flags |= GrannyHasOrientation;
+		}
+	}
 }
 
 void CMechUnitJoggingMutator::Play()
@@ -112,6 +173,10 @@ int CMechUnitJoggingMutator::operator&( IBinSaver &saver )
 	saver.Add( 4, &nStopTime );
 	saver.Add( 5, &nBasisBoneIndex );
 	saver.Add( 6, &bStopped );
+	saver.Add( 7, &propellerBoneIndices );
+	saver.Add( 8, &propellerSpeedsRad );
+	saver.Add( 9, &nPropellerStartTime );
+	saver.Add( 10, &bPropellersEnabled );
 
 	return 0;
 }

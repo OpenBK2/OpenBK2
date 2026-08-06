@@ -64922,6 +64922,8 @@
 				<Item><Type>7033cd10</Type><Name>DeathSpiralDownwardsAngleRad</Name><ChunkID>14</ChunkID><Description>visual nose-down angle during the death spiral</Description><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.1</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 				<Item><Type>7033cd10</Type><Name>StandingFuelDrainModifier</Name><ChunkID>12</ChunkID><Description /><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.5</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 				<Item><Type>7033cd10</Type><Name>MaxAttackAngleDownRadians</Name><ChunkID>13</ChunkID><Description>maximum visual nose-down angle while attacking</Description><Constraints /><Attributes /><DefaultValue><Type>01000000</Type><Data>0.872664626</Data></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>20344b11</Type><Name>PropellerObjects</Name><ChunkID>15</ChunkID><Description>model parts rotated as helicopter propellers</Description><Constraints /><Attributes /><DefaultValue><Type>00000000</Type></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
+				<Item><Type>00094b11</Type><Name>PropellerSpeedsRad</Name><ChunkID>16</ChunkID><Description>local X/Y/Z Euler rotation speeds in radians per second</Description><Constraints /><Attributes /><DefaultValue><Type>00000000</Type></DefaultValue><ComplexDefaultValue><Type>00000000</Type></ComplexDefaultValue></Item>
 			</Fields>
 			<TypeID>421110464</TypeID>
 		</Item>
