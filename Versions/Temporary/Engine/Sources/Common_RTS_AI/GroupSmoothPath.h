@@ -44,7 +44,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	//! набор положений внутри группы
 	typedef std::vector<SCellInfo> CCells;
 	//! связь между набором положений и типом (priority) юнитов
-	typedef std::map< int, CCells > CPriorityCells;
+	typedef std::unordered_map< int, CCells > CPriorityCells; // Using std::unoreded_map is fine here since no iteration is done!
 	//
 	struct SGeometry
 	{
@@ -93,7 +93,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 				return unitInfo1.nPriority > unitInfo2.nPriority;
 		}
 	};
-	typedef std::map< int, SUnitInfo > CUnitsMap;
+	typedef det_map< int, SUnitInfo > CUnitsMap;
   //
 	OBJECT_BASIC_METHODS( CGroupSmoothPath )
 	ZDATA_( CStandartSmoothPathBasis )
