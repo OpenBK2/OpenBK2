@@ -55,6 +55,8 @@ public:
 	virtual const bool TurnToDirection( const WORD wDirection, const bool bCanBackward, const bool bCanForward );
 
 	virtual bool IsHelicopter() const { return true; }
+	// Unlike planes, a hovering helicopter can rotate its whole body to bring fixed guns onto a target.
+	virtual bool IsLocked( const CBasicGun *pGun ) const { return false; }
 	virtual const bool IsIdle() const { return !bMoveTargetSet && !bDeadSpiralStarted; }
 	virtual const bool IsMoving() const { return bMoveTargetSet || fabs( vHeliNextSpeed ) > 0.001f; }
 	virtual const NTimer::STime GetNextSecondPathSegmTime() const { return 0; }
