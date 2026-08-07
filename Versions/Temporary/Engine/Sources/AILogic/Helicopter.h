@@ -59,6 +59,8 @@ public:
 	virtual bool IsLocked( const CBasicGun *pGun ) const { return false; }
 	virtual const bool IsIdle() const { return !bMoveTargetSet && !bDeadSpiralStarted; }
 	virtual const bool IsMoving() const { return bMoveTargetSet || fabs( vHeliNextSpeed ) > 0.001f; }
+	// Fast aircraft can cross a target's visible area during the normal ground-unit scan delay.
+	virtual const NTimer::STime GetBehUpdateDuration() const { return SConsts::AA_BEH_UPDATE_DURATION; }
 	virtual const NTimer::STime GetNextSecondPathSegmTime() const { return 0; }
 
 	virtual const WORD GetDir() const { return GetFrontDirection(); }

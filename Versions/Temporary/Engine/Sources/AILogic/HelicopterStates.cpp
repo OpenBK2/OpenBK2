@@ -178,6 +178,9 @@ CHelicopterMoveState::CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vT
 : CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
 {
 	pHelicopter->BeginMoveTo( vTarget );
+	// A swarm order must inspect its route immediately instead of inheriting an old scan cooldown.
+	if ( bScanTargets )
+		pHelicopter->ResetTargetScan();
 }
 
 void CHelicopterMoveState::Segment()
@@ -194,7 +197,10 @@ void CHelicopterMoveState::Segment()
 	if ( bScanTargets )
 		pHelicopter->AnalyzeTargetScan( 0, false, false );
 
-	if ( pHelicopter->IsNearTarget( vTarget, 2.0f * SConsts::TILE_SIZE ) )
+	// Swarming helicopters must settle on their individual formation slots; the broad
+	// movement tolerance makes several nearby slots look like the same destination.
+	const float fArrivalRadius = bScanTargets ? 0.25f * SConsts::TILE_SIZE : 2.0f * SConsts::TILE_SIZE;
+	if ( pHelicopter->IsNearTarget( vTarget, fArrivalRadius ) )
 	{
 		pHelicopter->BeginHover();
 		Finish();

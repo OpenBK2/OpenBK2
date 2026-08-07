@@ -300,6 +300,17 @@ CVec2 CGroupMover::GetMoveTarget( CCommonUnit *pUnit )
 			return pos->second.vPosition;
 	}
 
+	// A swarm attack temporarily replaces the movement state. Resolve the saved slot by
+	// unit ID as a fallback in case another state changed the unit's subgroup metadata.
+	// NOTE: THIS DOESN'T SEEM TO WORK WELL AT ALL!	
+	// for ( int i = 0; i < subGroups.size(); ++i )
+	// {
+	// 	const SSubGroup::TSubGroupUnits &units = subGroups[i].units;
+	// 	SSubGroup::TSubGroupUnits::const_iterator pos = units.find( pUnit->GetUniqueID() );
+	// 	if ( pos != units.end() )
+	// 		return pos->second.vPosition;
+	// }
+
 	return vPosition;
 }
 
