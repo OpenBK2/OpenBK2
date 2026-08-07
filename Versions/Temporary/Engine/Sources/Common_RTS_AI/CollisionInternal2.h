@@ -51,7 +51,7 @@ class CCollisionsCollector : public ICollisionsCollector
 		SCollision( CBasePathUnit *pUnit1, CBasePathUnit *pUnit2, const float fDistance, const NCollision::ECollideType eCollideType ) { pUnit = new CBasePathUnitHolder( pUnit1 ); pushers.push_back( SPusherInfo( pUnit2, fDistance, eCollideType ) ); }
 		void AddPusher( CBasePathUnit *_pUnit, const float fDistance, const NCollision::ECollideType eCollideType ) { pushers.push_back( SPusherInfo( _pUnit, fDistance, eCollideType ) ); }
 	};
-	typedef std::map<int, SCollision> TCollisions;
+	typedef det_map<int, SCollision> TCollisions;
 	OBJECT_NOCOPY_METHODS( CCollisionsCollector )
 	ZDATA
 		TCollisions collisions;
