@@ -2276,6 +2276,7 @@ namespace NDb
 		float fSpiralRadius;
 		float fSpiralSteps;
 		float fSpiralDownAcceleration;
+		float fSpiralDownRandCoeff;
 		float fDeathSelfPointRotationSpeedRad;
 		float fDeathSpiralDownwardsAngleRad;
 		float fStandingFuelDrainModifier;
@@ -2294,6 +2295,7 @@ namespace NDb
 			fSpiralRadius( 11.0f ),
 			fSpiralSteps( 2.5f ),
 			fSpiralDownAcceleration( 15.0f ),
+			fSpiralDownRandCoeff( 0.1f ),
 			fDeathSelfPointRotationSpeedRad( 2.1f ),
 			fDeathSpiralDownwardsAngleRad( 0.1f ),
 			fStandingFuelDrainModifier( 0.5f ),

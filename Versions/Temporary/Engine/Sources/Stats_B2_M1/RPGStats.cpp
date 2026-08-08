@@ -5166,6 +5166,7 @@ void SHelicopterStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SpiralRadius", (BYTE*)&fSpiralRadius - pThis, sizeof(fSpiralRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SpiralSteps", (BYTE*)&fSpiralSteps - pThis, sizeof(fSpiralSteps), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SpiralDownAcceleration", (BYTE*)&fSpiralDownAcceleration - pThis, sizeof(fSpiralDownAcceleration), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralDownRandCoeff", (BYTE*)&fSpiralDownRandCoeff - pThis, sizeof(fSpiralDownRandCoeff), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "DeathSelfPointRotationSpeedRad", (BYTE*)&fDeathSelfPointRotationSpeedRad - pThis, sizeof(fDeathSelfPointRotationSpeedRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "DeathSpiralDownwardsAngleRad", (BYTE*)&fDeathSpiralDownwardsAngleRad - pThis, sizeof(fDeathSpiralDownwardsAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (BYTE*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
@@ -5189,6 +5190,7 @@ int SHelicopterStats::operator&( IXmlSaver &saver )
 	saver.Add( "SpiralRadius", &fSpiralRadius );
 	saver.Add( "SpiralSteps", &fSpiralSteps );
 	saver.Add( "SpiralDownAcceleration", &fSpiralDownAcceleration );
+	saver.Add( "SpiralDownRandCoeff", &fSpiralDownRandCoeff );
 	saver.Add( "DeathSelfPointRotationSpeedRad", &fDeathSelfPointRotationSpeedRad );
 	saver.Add( "DeathSpiralDownwardsAngleRad", &fDeathSpiralDownwardsAngleRad );
 	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
@@ -5210,6 +5212,7 @@ int SHelicopterStats::operator&( IBinSaver &saver )
 	saver.Add( 8, &fSpiralRadius );
 	saver.Add( 9, &fSpiralSteps );
 	saver.Add( 10, &fSpiralDownAcceleration );
+	saver.Add( 17, &fSpiralDownRandCoeff );
 	saver.Add( 11, &fDeathSelfPointRotationSpeedRad );
 	saver.Add( 14, &fDeathSpiralDownwardsAngleRad );
 	saver.Add( 12, &fStandingFuelDrainModifier );
@@ -5227,7 +5230,7 @@ DWORD SHelicopterStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownAcceleration << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
+	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownAcceleration << fSpiralDownRandCoeff << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

@@ -19,6 +19,9 @@ class CHelicopter : public CAviation
 	CVec3 vDeathStartPos;
 	CVec3 vDeathVelocity;
 	float fDeathGroundZ;
+	float fDeathSpiralRadius;
+	float fDeathSpiralSteps;
+	float fDeathSpiralDownAcceleration;
 	float fDeathSpiralAngle;
 	float fDeathSelfRotation;
 	float fMovementVisualAngle;
@@ -39,7 +42,7 @@ protected:
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate );
 	bool AdvanceDesiredDirection( const NTimer::STime timeDiff );
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAviation*)this); f.Add(2,&vHeliNextPos); f.Add(3,&vHeliNextSpeed); f.Add(4,&vHeliNextNormal); f.Add(5,&vMoveTarget); f.Add(6,&vVisualAimPoint); f.Add(7,&bMoveTargetSet); f.Add(8,&bVisualAimPointSet); f.Add(9,&bAttackTilt); f.Add(10,&bDeadSpiralStarted); f.Add(11,&vDeathStartPos); f.Add(12,&vDeathVelocity); f.Add(13,&fDeathGroundZ); f.Add(14,&fDeathSpiralAngle); f.Add(15,&fDeathSelfRotation); f.Add(16,&fMovementVisualAngle); f.Add(17,&fSideVisualAngle); f.Add(18,&timeDeathStarted); f.Add(19,&wVisualStartDirection); f.Add(20,&wVisualFinishDirection); f.Add(21,&fVisualStartMovementAngle); f.Add(22,&fVisualFinishMovementAngle); f.Add(23,&fVisualStartSideAngle); f.Add(24,&fVisualFinishSideAngle); f.Add(25,&wDesiredDirection); f.Add(26,&bDesiredDirectionSet); f.Add(27,&fAttackVisualAngle); f.Add(28,&fVisualStartAttackAngle); f.Add(29,&fVisualFinishAttackAngle); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAviation*)this); f.Add(2,&vHeliNextPos); f.Add(3,&vHeliNextSpeed); f.Add(4,&vHeliNextNormal); f.Add(5,&vMoveTarget); f.Add(6,&vVisualAimPoint); f.Add(7,&bMoveTargetSet); f.Add(8,&bVisualAimPointSet); f.Add(9,&bAttackTilt); f.Add(10,&bDeadSpiralStarted); f.Add(11,&vDeathStartPos); f.Add(12,&vDeathVelocity); f.Add(13,&fDeathGroundZ); f.Add(14,&fDeathSpiralAngle); f.Add(15,&fDeathSelfRotation); f.Add(16,&fMovementVisualAngle); f.Add(17,&fSideVisualAngle); f.Add(18,&timeDeathStarted); f.Add(19,&wVisualStartDirection); f.Add(20,&wVisualFinishDirection); f.Add(21,&fVisualStartMovementAngle); f.Add(22,&fVisualFinishMovementAngle); f.Add(23,&fVisualStartSideAngle); f.Add(24,&fVisualFinishSideAngle); f.Add(25,&wDesiredDirection); f.Add(26,&bDesiredDirectionSet); f.Add(27,&fAttackVisualAngle); f.Add(28,&fVisualStartAttackAngle); f.Add(29,&fVisualFinishAttackAngle); f.Add(30,&fDeathSpiralRadius); f.Add(31,&fDeathSpiralSteps); f.Add(32,&fDeathSpiralDownAcceleration); return 0; }
 
 	CHelicopter();
 

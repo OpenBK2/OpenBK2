@@ -67,6 +67,9 @@ CHelicopter::CHelicopter()
 	vDeathStartPos( VNULL3 ),
 	vDeathVelocity( VNULL3 ),
 	fDeathGroundZ( 0.0f ),
+	fDeathSpiralRadius( 11.0f ),
+	fDeathSpiralSteps( 2.5f ),
+	fDeathSpiralDownAcceleration( 15.0f ),
 	fDeathSpiralAngle( 0.0f ),
 	fDeathSelfRotation( 0.0f ),
 	fMovementVisualAngle( 0.0f ),
@@ -445,9 +448,9 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( bDeadSpiralStarted )
 	{
-		const float fDownAcceleration = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownAcceleration : 15.0f );
-		const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
-		const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
+		const float fDownAcceleration = fDeathSpiralDownAcceleration;
+		const float fRadius = fDeathSpiralRadius;
+		const float fSteps = fDeathSpiralSteps;
 		const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
 		const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
 		const float fOldProgress = Clamp( ( vDeathStartPos.z - vPos.z ) / fFallHeight, 0.0f, 1.0f );
@@ -547,6 +550,23 @@ void CHelicopter::StartDeathSpiral()
 	fAttackVisualAngle = 0.0f;
 	fVisualStartAttackAngle = 0.0f;
 	fVisualFinishAttackAngle = 0.0f;
+	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
+	fDeathSpiralRadius = pHeliStats ? pHeliStats->fSpiralRadius : 11.0f;
+	fDeathSpiralSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
+	fDeathSpiralDownAcceleration = pHeliStats ? pHeliStats->fSpiralDownAcceleration : 15.0f;
+
+	// Sample each death-path component once. Recording and serializing the resulting
+	// values keeps multiplayer, replays, rendering, and save/load on the same path.
+	const float fRandCoeff = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralDownRandCoeff : 0.1f );
+	if ( fRandCoeff > 0.0f )
+	{
+		fDeathSpiralRadius *= 1.0f + NRandom::Random( -fRandCoeff, fRandCoeff ); RecordRandomCall();
+		fDeathSpiralSteps *= 1.0f + NRandom::Random( -fRandCoeff, fRandCoeff ); RecordRandomCall();
+		fDeathSpiralDownAcceleration *= 1.0f + NRandom::Random( -fRandCoeff, fRandCoeff ); RecordRandomCall();
+	}
+	fDeathSpiralRadius = (std::max)( 0.0f, fDeathSpiralRadius );
+	fDeathSpiralSteps = (std::max)( 0.0f, fDeathSpiralSteps );
+	fDeathSpiralDownAcceleration = (std::max)( 0.001f, fDeathSpiralDownAcceleration );
 	bDeadSpiralStarted = true;
 	vDeathStartPos = GetCenter();
 	fDeathGroundZ = GetAIMap()->GetHeights()->GetZ( GetCenterPlain() );
@@ -564,9 +584,9 @@ void CHelicopter::StartDeathSpiral()
 bool CHelicopter::AdvanceDeathSpiral( const NTimer::STime timeDiff )
 {
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
-	const float fDownAcceleration = (std::max)( 0.001f, pHeliStats ? pHeliStats->fSpiralDownAcceleration : 15.0f );
-	const float fRadius = (std::max)( 0.0f, pHeliStats ? pHeliStats->fSpiralRadius : 11.0f );
-	const float fSteps = pHeliStats ? pHeliStats->fSpiralSteps : 2.5f;
+	const float fDownAcceleration = fDeathSpiralDownAcceleration;
+	const float fRadius = fDeathSpiralRadius;
+	const float fSteps = fDeathSpiralSteps;
 	const float fSelfRotSpeed = pHeliStats ? pHeliStats->fDeathSelfPointRotationSpeedRad : 2.1f;
 	const float fSeconds = float( timeDiff ) / 1000.0f;
 	const float fFallHeight = (std::max)( 0.001f, vDeathStartPos.z - fDeathGroundZ );
