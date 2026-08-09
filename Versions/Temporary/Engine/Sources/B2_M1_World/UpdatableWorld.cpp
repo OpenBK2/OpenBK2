@@ -483,8 +483,6 @@ void CUpdatableWorld::UpdateDeadPlane( const SAIBasicUpdate * _pUpdate )
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
 	if ( CMOUnitMechanical *pMO = dynamic_cast<CMOUnitMechanical *>( GetMapObj(pUpdate->nObjUniqueID) ) )
 		pMO->AIUpdateDeadPlane( pUpdate );
-	else if ( CMOUnitHelicopter *pMOHelicopter = dynamic_cast<CMOUnitHelicopter *>( GetMapObj(pUpdate->nObjUniqueID) ) )
-		pMOHelicopter->AIUpdateDeadPlane( pUpdate, GetSeason() );
 }
 
 void CUpdatableWorld::UpdateReinfTypeAvail( const SAIBasicUpdate * _pUpdate )
@@ -1729,7 +1727,12 @@ void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, 
 			if ( pUpdate )
 			{
 				const NDb::SMechUnitRPGStats *pMechUnitRPGStats = dynamic_cast_ptr<const NDb::SMechUnitRPGStats*>( pUpdate->info.pStats );
-				if ( pMechUnitRPGStats && pMechUnitRPGStats->pM1UnitSpecific )
+				if ( pMechUnitRPGStats && pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_HELICOPTER )
+				{
+					// Current helicopters are identified by their regular RPG type, not the legacy M1 extension.
+					pMO = new CMOUnitHelicopter();
+				}
+				else if ( pMechUnitRPGStats && pMechUnitRPGStats->pM1UnitSpecific )
 				{
 					switch ( pMechUnitRPGStats->pM1UnitSpecific->GetTypeID() )
 					{

@@ -13,12 +13,9 @@ namespace NDb
 	enum EAnimationType;
 }
 
-class CMechanicalHelicopterDeviationProcess;
-
 class CMOUnitMechanical : public CMOUnit
 {
 	OBJECT_NOCOPY_METHODS( CMOUnitMechanical );
-	friend class CMechanicalHelicopterDeviationProcess;
 
 	CObj<IClientUpdatableProcess> pIdleProcess;
 	ZDATA_( CMOUnit )
@@ -43,15 +40,8 @@ class CMOUnitMechanical : public CMOUnit
 		bool bTrackBroken;
 		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		CPtr<IMOUnit> pOneFromCrew;
-		// Client-only hover drift is kept separate from the placement received from AI.
-		CVec3 vStandingDeviationBasePlacement;
-		CVec3 vStandingDeviationOffset;
-		CVec3 vStandingDeviationTarget;
-		NTimer::STime timeStandingDeviationLastUpdate;
-		DWORD dwStandingDeviationRandomState;
-		bool bStandingDeviationActive;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); f.Add(16,&bAmphibianInWater); f.Add(17,&nJoggingBasisBoneIndex); f.Add(18,&nJoggingMode); f.Add(19,&nLastWaterMoveEffectTime); f.Add(20,&vLastWaterMoveEffectPos); f.Add(21,&bAmphibianWaterEffectsActive); f.Add(22,&vStandingDeviationBasePlacement); f.Add(23,&vStandingDeviationOffset); f.Add(24,&vStandingDeviationTarget); f.Add(25,&timeStandingDeviationLastUpdate); f.Add(26,&dwStandingDeviationRandomState); f.Add(27,&bStandingDeviationActive); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); f.Add(16,&bAmphibianInWater); f.Add(17,&nJoggingBasisBoneIndex); f.Add(18,&nJoggingMode); f.Add(19,&nLastWaterMoveEffectTime); f.Add(20,&vLastWaterMoveEffectPos); f.Add(21,&bAmphibianWaterEffectsActive); return 0; }
 	void OnSerialize( IBinSaver &f );
 private:
 	
@@ -64,11 +54,6 @@ private:
 	void AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const;
 	void UpdateWaterMoveEffects( const struct SAINotifyPlacement &placement, IScene *pScene );
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
-	float NextStandingDeviationRandom();
-	CVec3 GetRandomStandingDeviationPoint( const float fRadius );
-	void ChooseStandingDeviationTarget( const float fRadius );
-	void UpdateStandingDeviationPlacement( struct SAINotifyPlacement *pPlacement );
-	bool UpdateStandingDeviation( const NTimer::STime &time );
 	const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2( 
 		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 		const NDb::EAnimationType eAnimType, const int nAnimID, bool skipAnimdescs = false );
@@ -79,6 +64,11 @@ private:
 	void PlayAnimDescForAttached( IAttachedObject *pObject, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 																const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID );
 protected:
+	// Derived vehicle visuals can extend the shared pose mutator and placement without duplicating mechanical-unit behavior.
+	IMechUnitJoggingMutator *GetOrCreateJoggingMutator();
+	virtual void SetupSpecialAnimationMutator( NAnimation::ISkeletonAnimator *pAnimator );
+	virtual void AdjustVisualPlacement( struct SAINotifyPlacement *pPlacement );
+	bool HasMoved() const { return bMoved; }
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc );
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
 public:
