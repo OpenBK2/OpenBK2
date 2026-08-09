@@ -2129,7 +2129,12 @@ bool CWorldClient::IsStratBomber( CMapObj *pMO ) const
 
 bool CWorldClient::IsHelicopter( CMapObj *pMO ) const
 {
-	// TODO change when actual helicopters get added
+	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
+	{
+		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_HELICOPTER )
+			return true;
+	}
+
 	return false;
 }
 
