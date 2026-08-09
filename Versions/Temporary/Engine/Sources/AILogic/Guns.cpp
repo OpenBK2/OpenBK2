@@ -456,6 +456,13 @@ void CBasicGun::WaitForActionPoint()
 
 void CBasicGun::Shooting()
 {
+	if ( pEnemy && IsValidObj( pEnemy ) && pEnemy->GetHitPoints() <= 0.0f )
+	{
+		// Crashing aviation remains simulation-alive while falling, but it is no longer a combat target.
+		ToRestState();
+		return;
+	}
+
 	if ( pEnemy && ( !IsValidObj( pEnemy ) || !pEnemy->IsAlive() ) )
 	{
 		shootState = EST_REST;
@@ -648,6 +655,14 @@ void CBasicGun::Segment()
 	SetAlive( GetOwner()->IsAlive() );
 	NI_ASSERT( !pOwner || nOwnerParty == pOwner->GetParty(), "Wrong owner party" );
 
+	// Aviation keeps IsAlive() true for its crash path. Zero HP must still stop every
+	// gun immediately, including a burst that was already being released.
+	if ( shootState != EST_REST && IsValid( pEnemy ) && pEnemy->GetHitPoints() <= 0.0f )
+	{
+		ToRestState();
+		return;
+	}
+
 	// врага убили
 	if ( shootState != EST_REST && IsValid( pEnemy ) && !pEnemy->IsAlive() )
 	{
@@ -755,7 +770,7 @@ void CBasicGun::OnAimState()
 
 void CBasicGun::StartPlaneBurst( CAIUnit *_pEnemy, bool bReAim )
 {
-	if ( _pEnemy && _pEnemy->IsRefValid() && _pEnemy->IsAlive() )
+	if ( _pEnemy && _pEnemy->IsRefValid() && _pEnemy->IsAlive() && _pEnemy->GetHitPoints() > 0.0f )
 	{
 		SetAntiAviationTarget( _pEnemy );
 		pEnemy = _pEnemy;
@@ -854,7 +869,8 @@ void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim, bool bStartP
 
 void CBasicGun::StartEnemyBurst( CAIUnit *_pEnemy, bool bReAim )
 {
-	if ( IsValidObj( _pEnemy ) && !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != _pEnemy ) )
+	if ( IsValidObj( _pEnemy ) && _pEnemy->GetHitPoints() > 0.0f &&
+		!(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != _pEnemy ) )
 	{
 		SetAntiAviationTarget( _pEnemy );
 		pEnemy = _pEnemy;
@@ -969,14 +985,17 @@ bool CBasicGun::AnalyzeLimitedAngle( class CCommonUnit *pUnit, const CVec2 &poin
 
 bool CBasicGun::CanShootToUnitWOMove( CAIUnit *pTarget )
 {
-	if ( pCanShootCachedEnemy == pTarget )
-		return bCanShootToUnitWOMove;
-
-	if ( !pTarget || !pTarget->IsAlive() || pTarget == GetOwner() ||  pTarget->GetState()->GetName() == EUSN_PARTROOP )
+	if ( !pTarget || !pTarget->IsAlive() || pTarget->GetHitPoints() <= 0.0f ||
+		pTarget == GetOwner() || pTarget->GetState()->GetName() == EUSN_PARTROOP )
 	{
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
 	}
+
+	// Validate HP before consulting the per-segment cache: an aviation target can die
+	// after a positive result while remaining IsAlive() for its falling animation.
+	if ( pCanShootCachedEnemy == pTarget )
+		return bCanShootToUnitWOMove;
 
 	if( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_TORPEDO )
 	{
@@ -1023,7 +1042,7 @@ bool CBasicGun::CanShootToUnitWOMove( CAIUnit *pTarget )
 
 bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 {
-	if ( !pEnemy || !pEnemy->IsAlive() || pEnemy == GetOwner() )
+	if ( !pEnemy || !pEnemy->IsAlive() || pEnemy->GetHitPoints() <= 0.0f || pEnemy == GetOwner() )
 	{
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
