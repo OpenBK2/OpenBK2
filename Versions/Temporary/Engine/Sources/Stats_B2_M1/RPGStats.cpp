@@ -1426,6 +1426,44 @@ int SProjectile::operator&( IBinSaver &saver )
 }
 
 
+void SMissleParams::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "MissleParams", typeID, sizeof(*this) );
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportStructMetaInfo( "VisProjectileRotationRad", &vVisProjectileRotationRad, pThis );
+	NMetaInfo::ReportMetaInfo( "StrayModeTime", (uint8_t*)&fStrayModeTime - pThis, sizeof(fStrayModeTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "TurnRateRad", (uint8_t*)&fTurnRateRad - pThis, sizeof(fTurnRateRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SMissleParams::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.Add( "VisProjectileRotationRad", &vVisProjectileRotationRad );
+	saver.Add( "StrayModeTime", &fStrayModeTime );
+	saver.Add( "TurnRateRad", &fTurnRateRad );
+
+	return 0;
+}
+
+int SMissleParams::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &vVisProjectileRotationRad );
+	saver.Add( 3, &fStrayModeTime );
+	saver.Add( 4, &fTurnRateRad );
+
+	return 0;
+}
+
+uint32_t SMissleParams::CalcCheckSum() const
+{
+	CCheckSum checkSum;
+	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad;
+	return checkSum.GetCheckSum();
+}
+
+
 std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 {
 	switch ( eValue )
@@ -1448,6 +1486,8 @@ std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 		return "TRAJECTORY_AA_ROCKET";
 	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER:
 		return "TRAJECTORY_FLAME_THROWER";
+	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE:
+		return "TRAJECTORY_ATGM_LINE";
 	default:
 		return "TRAJECTORY_LINE";
 	}
@@ -1473,6 +1513,8 @@ NDb::SWeaponRPGStats::SShell::ETrajectoryType StringToEnum_NDb_SWeaponRPGStats_S
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_AA_ROCKET;
 	if ( szValue == "TRAJECTORY_FLAME_THROWER" )
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
+	if ( szValue == "TRAJECTORY_ATGM_LINE" )
+		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE;
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
 }
 
@@ -1534,6 +1576,7 @@ void SWeaponRPGStats::SShell::ReportMetaInfo( const std::string &szAddName, uint
 	NMetaInfo::ReportMetaInfo( szAddName + "FireRate", (uint8_t*)&fFireRate - pThis, sizeof(fFireRate), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "RelaxTime", (uint8_t*)&fRelaxTime - pThis, sizeof(fRelaxTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "visProjectile", (uint8_t*)&pvisProjectile - pThis, sizeof(pvisProjectile), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "MissleParams", (uint8_t*)&pMissleParams - pThis, sizeof(pMissleParams), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
@@ -1567,6 +1610,7 @@ int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
 	saver.Add( "FireRate", &fFireRate );
 	saver.Add( "RelaxTime", &fRelaxTime );
 	saver.Add( "visProjectile", &pvisProjectile );
+	saver.Add( "MissleParams", &pMissleParams );
 
 	return 0;
 }
@@ -1602,6 +1646,7 @@ int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 	saver.Add( 28, &fFireRate );
 	saver.Add( 29, &fRelaxTime );
 	saver.Add( 30, &pvisProjectile );
+	saver.Add( 31, &pMissleParams );
 
 	return 0;
 }
@@ -1613,7 +1658,7 @@ uint32_t SWeaponRPGStats::SShell::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime;
+	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime << pMissleParams;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -6696,6 +6741,7 @@ REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x111C33C0, SBurningFuel )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SStaticObjectRPGStats )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120AEBC0, SCraterSet ) 
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B80, SProjectile ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B81, SMissleParams ) 
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B82, SWeaponRPGStats ) 
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x140BAB41, SDynamicDebrisSet ) 
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SObjectBaseRPGStats )

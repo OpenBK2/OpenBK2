@@ -707,6 +707,31 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
+	// Guidance and presentation settings used by guided missile shells.
+	struct SMissleParams : public CResource
+	{
+		OBJECT_BASIC_METHODS( SMissleParams )
+	public:
+		enum { typeID = 0x300C3B81 };
+		CVec3 vVisProjectileRotationRad;
+		float fStrayModeTime;
+		float fTurnRateRad;
+
+		SMissleParams() :
+			vVisProjectileRotationRad( VNULL3 ),
+			fStrayModeTime( 1.0f ),
+			fTurnRateRad( 1.048f )
+		{ }
+		//
+		int GetTypeID() const { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
+
 	struct SWeaponRPGStats : public SCommonRPGStats
 	{
 		OBJECT_BASIC_METHODS( SWeaponRPGStats )
@@ -733,6 +758,7 @@ namespace NDb
 				TRAJECTORY_TORPEDO = 6,
 				TRAJECTORY_AA_ROCKET = 7,
 				TRAJECTORY_FLAME_THROWER = 8,
+				TRAJECTORY_ATGM_LINE = 9,
 			};
 
 			enum EShellDamageType
@@ -770,6 +796,7 @@ namespace NDb
 			float fFireRate;
 			float fRelaxTime;
 			CDBPtr< SProjectile > pvisProjectile;
+			CDBPtr< SMissleParams > pMissleParams;
 
 			#include "include_WeaponRPGStats_Shell.h"
 

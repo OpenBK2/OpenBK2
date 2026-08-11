@@ -6,6 +6,8 @@ int GetRandomPiercing() const { return GetPositiveRandom( nPiercing, nPiercingRa
 int GetMaxPossiblePiercing() const { return nPiercing + nPiercingRandom; }
 int GetMinPossiblePiercing() const { return (std::max)( 0, nPiercing - nPiercingRandom ); }
 const bool HasCraters() const { return pCraters != 0; }
+// Guided ATGMs use the same side-armor and direct-fire rules as ordinary line shells.
+bool IsLineTrajectory() const { return etrajectory == TRAJECTORY_LINE || etrajectory == TRAJECTORY_ATGM_LINE; }
 //const string& GetRandomCrater() const { return craters[rand() % craters.size()]; }
 // преобразовать из человеческих единиц в AI
 bool ToAIUnits( bool bInEditor )

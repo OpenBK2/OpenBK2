@@ -204,7 +204,7 @@ float CBasicGun::GetFireRange( float fZ ) const
 {
 	const SUnitBaseRPGStats * pStats = GetOwner()->GetStats();
 
-	if (	GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE &&
+	if (	GetShell().IsLineTrajectory() &&
 				!pStats->IsAviation() && ( pStats->etype != RPG_TYPE_ART_AAGUN || fZ == 0.0f ) )
 	{
 		return (std::min)( GetFireRangeMax(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
@@ -235,7 +235,7 @@ bool CBasicGun::InFireRange( CAIUnit *pTarget ) const
 		fMaxRange = GetFireRangeMax() / SConsts::TILE_SIZE;
 	else
 	{
-		if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+		if ( GetShell().IsLineTrajectory() )
 			fMaxRange = (std::min)( GetFireRange( pTarget->GetZ() ), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 		else
 			fMaxRange = GetFireRange( pTarget->GetZ() );
@@ -1078,7 +1078,7 @@ bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 	
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && 
 		   !pOwner->NeedDeinstall() && 
-			 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+			 pWeapon->shells[nShellType].IsLineTrajectory() )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1146,19 +1146,17 @@ bool CBasicGun::CanShootToObject( CStaticObject *pObj )
 	if ( !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
 		return CanShootToObjectWOMove( pObj );
 
-	const NDb::SWeaponRPGStats::SShell::ETrajectoryType eTraj = pWeapon->shells[nShellType].etrajectory;
-
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   eTraj == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+		   pWeapon->shells[nShellType].IsLineTrajectory() )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
 	}
 
 	const int nMaxPossiblePiercing = GetMaxPossiblePiercing();
-	if ( eTraj != NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE && 
+	if ( !pWeapon->shells[nShellType].IsLineTrajectory() &&
 		   nMaxPossiblePiercing < pObj->GetStats()->defences[RPG_TOP].nArmorMin ||
-			 eTraj == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE && 
+			 pWeapon->shells[nShellType].IsLineTrajectory() &&
 			 nMaxPossiblePiercing < pObj->GetStats()->GetMinPossibleArmor( RPG_FRONT ) )
 	{
 		//SetRejectReason( ACK_CANNOT_PIERCE );
@@ -1218,8 +1216,7 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 	}
 
 	// disallow shooting to static object under war fog
-	const NDb::SWeaponRPGStats::SShell::ETrajectoryType eTraj = pWeapon->shells[nShellType].etrajectory;
-	if ( !pEnemy && eTraj == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+	if ( !pEnemy && pWeapon->shells[nShellType].IsLineTrajectory() )
 	{
 		const SVector vAttackTile( AICellsTiles::GetTile( point ) );
 		if ( !theWarFog.IsTileVisible( vAttackTile, pOwner->GetParty() ) )
@@ -1260,7 +1257,7 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 	}
 
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   eTraj == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+		   pWeapon->shells[nShellType].IsLineTrajectory() )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1276,7 +1273,7 @@ bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const uint1
 		return CanShootToPointWOMove( point, fZ, wHorAddAngle, wVertAddAngle );
 
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+		   pWeapon->shells[nShellType].IsLineTrajectory() )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1345,7 +1342,7 @@ bool CBasicGun::CanBreach( const CCommonUnit *pTarget ) const
 	{
 		return GetMaxPossiblePiercing() >= pTarget->GetArmor( RPG_TOP );
 	}
-	else if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+	else if ( pWeapon->shells[nShellType].IsLineTrajectory() )
 		return GetMaxPossiblePiercing() >= pTarget->GetMinArmor();
 	else
 		return GetMaxPossiblePiercing() >= pTarget->GetArmor( RPG_TOP );
@@ -1353,7 +1350,7 @@ bool CBasicGun::CanBreach( const CCommonUnit *pTarget ) const
 
 bool CBasicGun::CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) const
 {
-	if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+	if ( pWeapon->shells[nShellType].IsLineTrajectory() )
 		return GetMaxPossiblePiercing() >= pStats->GetMinPossibleArmor( nSide );
 	else
 		return GetMaxPossiblePiercing() >= pStats->GetMinPossibleArmor( RPG_TOP );
@@ -1361,7 +1358,7 @@ bool CBasicGun::CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) co
 
 bool CBasicGun::CanBreach( const CCommonUnit *pTarget, const int nSide ) const
 {
-	if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+	if ( pWeapon->shells[nShellType].IsLineTrajectory() )
 		return GetMaxPossiblePiercing() >= pTarget->GetMinPossibleArmor( nSide );
 	else
 		return GetMaxPossiblePiercing() >= pTarget->GetMinPossibleArmor( RPG_TOP );
@@ -1369,11 +1366,22 @@ bool CBasicGun::CanBreach( const CCommonUnit *pTarget, const int nSide ) const
 
 bool CBasicGun::IsCommonEqual( const CBasicGun *pGun ) const
 {
-	return pGun != 0 && pOwner == pGun->GetOwner() && GetCommonGunNumber() == pGun->GetCommonGunNumber();
+	// Shell alternatives of one weapon share the exact same common state object.
+	// Stats gun numbers alone are ambiguous because they restart on every platform.
+	return pGun != 0 && pOwner == pGun->GetOwner() &&
+		pCommonGunInfo.GetPtr() == pGun->pCommonGunInfo.GetPtr();
 }
 
 IBallisticTraj* CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 {
+	if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+	{
+		CVec3 vStart = GetHeights()->Get3DPoint( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) );
+		// Keep the missile clear of minor ground undulations at launch.
+		vStart.z += AI_TILE_SIZE;
+		return new CATGMTraj( vStart, vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pEnemy, nOwnerParty, GetShell().pMissleParams );
+	}
+
 	switch ( eType )
 	{
 		case IGunsFactory::MOMENT_CML_GUN:
@@ -1431,7 +1439,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				const CVec2 vStart ( vOwnerCenter + vDir * ( 64 + (std::min)( GetWeapon()->fRangeMin, fStartArea ) ) );
 				
 				CPtr<CFlameThrowerExpl> pExpl = new CFlameThrowerExpl( pOwner, this, CVec3( vExplosion, z ), CVec3( vStart, fOwnerZ ), nShellType );
-				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
+				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetStatsGunNumber(), GetPlatform() ) );
 			}
 
 			break;
@@ -1440,7 +1448,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				new CInvisShell( 
 				curTime + fabs( fabs(target - vOwnerCenter), fOwnerZ - z ) / pOwner->GetStatsModifier()->weaponShellSpeed.Get( pWeapon->shells[nShellType].fSpeed ), 
 				new CCumulativeExpl( pOwner, this, CVec3(target, z), CVec3( vOwnerCenter, fOwnerZ), nShellType ), 
-				GetCommonGunNumber() 
+				GetStatsGunNumber()
 				)
 				);
 
@@ -1450,7 +1458,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				new CInvisShell( 
 				curTime + fabs( fabs(target - vOwnerCenter), fOwnerZ - z ) / pOwner->GetStatsModifier()->weaponShellSpeed.Get( pWeapon->shells[nShellType].fSpeed ), 
 				new CBurstExpl( pOwner, this, CVec3(target, z), CVec3(vOwnerCenter,fOwnerZ), nShellType, true, 0, true ),
-				GetCommonGunNumber() 
+				GetStatsGunNumber()
 				)
 				);
 
@@ -1458,14 +1466,14 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 		case IGunsFactory::VIS_CML_BALLIST_GUN:
 			{
 				CPtr<CCumulativeExpl> pExpl = new CCumulativeExpl( pOwner, this, CVec3( target, z ), CVec3( vOwnerCenter, fOwnerZ ), nShellType );
-				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
+				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetStatsGunNumber(), GetPlatform() ) );
 			}
 
 			break;
 		case IGunsFactory::VIS_BURST_BALLIST_GUN:
 			{
 				CPtr<CBurstExpl> pExpl = new CBurstExpl( pOwner, this, CVec3( target, z ), CVec3( vOwnerCenter, fOwnerZ ), nShellType, true, 0, true );
-				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
+				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetStatsGunNumber(), GetPlatform() ) );
 			}
 
 			break;
@@ -1483,7 +1491,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 		case IGunsFactory::ROCKET_GUN:
 			{
 				CPtr<CBurstExpl> pExpl = new CBurstExpl( pOwner, this, CVec3( target, z ), CVec3( vOwnerCenter, fOwnerZ ), nShellType, true, 0, true );
-				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetCommonGunNumber(), GetPlatform() ) );
+				theShellsStore.AddShell( new CVisShell( pExpl, CreateTraj( pExpl->GetExplCoordinates() ), GetStatsGunNumber(), GetPlatform() ) );
 			}
 			break;
 		case IGunsFactory::PLANE_GUN:
@@ -1512,7 +1520,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				CPtr<IBallisticTraj> pTraj = new CBombBallisticTraj( vOwnerCenter3D, vSpeed3, curTime + fTimeToFly, vRandAcc );
 
 				CPtr<CBurstExpl> pExpl = new CBurstExpl( pOwner, this, vTrajFinish, vOwnerCenter3D, nShellType, false, 2, bShowBombEffect );
-				CPtr<CVisShell> pShell = new CVisShell( pExpl, pTraj, GetCommonGunNumber(), GetPlatform() );
+				CPtr<CVisShell> pShell = new CVisShell( pExpl, pTraj, GetStatsGunNumber(), GetPlatform() );
 				theShellsStore.AddShell( pShell	);
 			}
 
@@ -1520,17 +1528,29 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 		}
 	}				// end for( multiple shots )
 
-	if ( z > GetHeights()->GetVisZ( target.x, target.y ) )
-		pOwner->Fired( - ( GetAIMap()->GetSizeX() + GetAIMap()->GetSizeY() ), pCommonGunInfo->nGun );	
-	//CRAP?: if shot above ground, give negative radius to indicate that it is an AA gun
-	else
-		pOwner->Fired( pWeapon->fRevealRadius, pCommonGunInfo->nGun );
+	// Ammo APIs use a dense common-gun index, while nGun is only local to a stats platform.
+	const int nCommonGun = pOwner->GetCommonGunIndex( this );
+	NI_ASSERT( nCommonGun >= 0, __FUNCTION__ );
+	if ( nCommonGun >= 0 )
+	{
+		if ( z > GetHeights()->GetVisZ( target.x, target.y ) )
+			pOwner->Fired( - ( GetAIMap()->GetSizeX() + GetAIMap()->GetSizeY() ), nCommonGun );
+		//CRAP?: if shot above ground, give negative radius to indicate that it is an AA gun
+		else
+			pOwner->Fired( pWeapon->fRevealRadius, nCommonGun );
+	}
 
 	InitRandoms();
 }
 
 uint16_t CBasicGun::GetTrajectoryZAngle( const CVec3 &vToAim ) const
 {
+	if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+	{
+		// The turret's zero-elevation direction is encoded as three quarters of a turn.
+		// Using numeric zero here prevents direct-fire ATGM guns from ever finishing aim.
+		return 16384 * 3;
+	}
 	if ( eType == IGunsFactory::VIS_CML_BALLIST_GUN || eType == IGunsFactory::VIS_BURST_BALLIST_GUN )
 		return CBallisticTraj::GetTrajectoryZAngle( vToAim, pOwner->GetStatsModifier()->weaponShellSpeed.Get( pWeapon->shells[nShellType].fSpeed ), pWeapon->shells[nShellType].etrajectory, GetVerTurnConstraint(), GetFireRange(vToAim.z) );
 	else
