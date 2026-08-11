@@ -1213,7 +1213,7 @@ namespace
 		return *pEnter <= *pExit;
 	}
 
-	float GetATGMSegmentRectRatio( const CVec3 &vFrom, const CVec3 &vTo, const SRect &rect, bool bAcceptStartInside )
+	float GetATGMSegmentRectRatio( const CVec3 &vFrom, const CVec3 &vTo, const SRect &rect )
 	{
 		const CVec2 vStart( vFrom.x - rect.center.x, vFrom.y - rect.center.y );
 		const CVec2 vDelta( vTo.x - vFrom.x, vTo.y - vFrom.y );
@@ -1221,7 +1221,10 @@ namespace
 		const float fStartY = vStart.x * rect.dirPerp.x + vStart.y * rect.dirPerp.y;
 		const bool bInside = fStartX >= -rect.lengthBack && fStartX <= rect.lengthAhead && fabs( fStartY ) <= rect.width;
 		if ( bInside )
-			return bAcceptStartInside ? 0.0f : 2.0f;
+		{
+			// Starting on or inside collision geometry is an immediate hit, not a missed sweep.
+			return 0.0f;
+		}
 
 		const float fDeltaX = vDelta.x * rect.dir.x + vDelta.y * rect.dir.y;
 		const float fDeltaY = vDelta.x * rect.dirPerp.x + vDelta.y * rect.dirPerp.y;
@@ -1235,10 +1238,12 @@ namespace
 
 	bool IsATGMBlockingStaticObject( CExistingObject *pObject )
 	{
-		if ( pObject == 0 )
+		if ( !IsValidObj( pObject ) || ( !pObject->IsAlive() && pObject->GetHitPoints() <= 0.0f ) )
 			return false;
 
 		const EStaticObjType eType = pObject->GetObjectType();
+		if ( eType == ESOT_FENCE && pObject->GetPassProfile() == 0 )
+			return false;
 		if ( eType == ESOT_COMMON )
 		{
 			const NDb::SHPObjectRPGStats *pStats = pObject->GetStats();
@@ -1344,7 +1349,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 	for ( std::vector<CAIUnit*>::const_iterator iter = unitTargets.begin(); iter != unitTargets.end(); ++iter )
 	{
 		CAIUnit *pUnit = *iter;
-		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pUnit->GetUnitRect(), true );
+		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pUnit->GetUnitRect() );
 		if ( fRatio < fBestRatio && fRatio <= 1.0f )
 		{
 			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
@@ -1379,7 +1384,8 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 	for ( CStObjCircleIter<false> iter( vMid, fSearchRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CExistingObject *pObject = *iter;
-		if ( pObject && pObject->IsAlive() && IsATGMBlockingStaticObject( pObject ) )
+		// Remaining physical geometry keeps blocking ATGMs even if a damage state cleared IsAlive().
+		if ( IsATGMBlockingStaticObject( pObject ) )
 			objects.push_back( pObject );
 	}
 	std::sort( objects.begin(), objects.end(), []( CExistingObject *pA, CExistingObject *pB ) { return pA->GetUniqueId() < pB->GetUniqueId(); } );
@@ -1390,7 +1396,8 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 		CExistingObject *pObject = *iter;
 		SRect rect;
 		pObject->GetBoundRect( &rect );
-		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, rect, false );
+		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, rect );
+		//DebugTrace("ATGM iter object: %s, ratio: %f", pObject->GetStats()->szLocalizedNameFileRef.c_str(), fRatio);
 		if ( fRatio >= fBestRatio || fRatio > 1.0f )
 			continue;
 		const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( pObject->GetStats() );
@@ -1403,6 +1410,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 			fBestRatio = fRatio;
 			*ppHitTarget = 0;
 			*ppHitObject = pObject;
+			//DebugTrace("ATGM hit object: %s, ratio: %f", pObject->GetStats()->szLocalizedNameFileRef.c_str(), fRatio);
 		}
 	}
 
@@ -1490,7 +1498,7 @@ void CATGMTraj::Segment()
 			// The sweep confirmed contact; use the unit center for normal direct-hit and armor processing.
 			vCenter = CVec3( pHitTarget->GetCenterPlain(), pHitTarget->GetVisZ() );
 		}
-		else if ( IsValidObj( pHitObject ) && pHitObject->IsAlive() )
+		else if ( IsATGMBlockingStaticObject( pHitObject ) )
 		{
 			// Move confirmed static-object contact just inside its footprint for normal direct-hit processing.
 			const CVec3 vSweepImpact = vCenter + ( vNextCenter - vCenter ) * fImpactRatio;
