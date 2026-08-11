@@ -1295,7 +1295,7 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 	const int nMinPiercing = nPiercing - nPiercingRandom;
 	const int nMaxPiercing = nPiercing + nPiercingRandom;
 
-	if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
+	if ( pGun->GetShell().IsLineTrajectory() )
 	{
 		for ( int i = 0; i < 4; ++i )
 		{
@@ -2017,7 +2017,7 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 		CBasicGun *pGun = 0;
 		for ( int i = 0; i < GetNGuns(); ++i )
 		{
-			if ( GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE ||
+			if ( GetGun( i )->GetShell().IsLineTrajectory() ||
 					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ||
 					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET
 					)
@@ -2308,6 +2308,8 @@ bool CAIUnit::IsSavedByCover() const
 }
 
 const int CAIUnit::GetNCommonGuns() const { return GetGuns() ? GetGuns()->GetNCommonGuns() : 0; }
+
+int CAIUnit::GetCommonGunIndex( const CBasicGun *pGun ) const { return GetGuns() ? GetGuns()->GetCommonGunIndex( pGun ) : -1; }
 
 const SBaseGunRPGStats& CAIUnit::GetCommonGunStats( const int nCommonGun ) const { return GetGuns()->GetCommonGunStats( nCommonGun ); }
 

@@ -56,6 +56,8 @@ public:
 	float GetMaxFireRange( const class CAIUnit *pOwner ) const;
 	
 	const int GetNCommonGuns() const { return nCommonGuns; }
+	// Returns the dense common-gun index used by ammo and resupply bookkeeping.
+	int GetCommonGunIndex( const CBasicGun *pGun ) const;
 	const SBaseGunRPGStats& GetCommonGunStats( const int nCommonGun ) const;
 	int GetNAmmo( const int nCommonGun ) const;
 	// nAmmo со знаком

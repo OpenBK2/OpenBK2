@@ -45,6 +45,14 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 		
 		if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			pGun = gunsFactory.CreateGun( IGunsFactory::PLANE_GUN, i, commonGunsInfo[nCommonGun] );//when create bomb
+		else if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+		{
+			// ATGMs are always visible, dynamically updated projectiles.
+			if ( pWeapon->shells[i].fArea2 == 0 )
+				pGun = gunsFactory.CreateGun( IGunsFactory::VIS_CML_BALLIST_GUN, i, commonGunsInfo[nCommonGun] );
+			else
+				pGun = gunsFactory.CreateGun( IGunsFactory::VIS_BURST_BALLIST_GUN, i, commonGunsInfo[nCommonGun] );
+		}
 		else if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE )
 		{
 			if ( pWeapon->shells[i].fArea2 == 0 )
@@ -203,6 +211,18 @@ void CUnitGuns::SetOwner( CAIUnit *pUnit )
 		guns[i]->SetOwner( pUnit );
 }
 
+int CUnitGuns::GetCommonGunIndex( const CBasicGun *pGun ) const
+{
+	// A stats gun number is local to its platform and is therefore not a valid
+	// index into commonGunsInfo when a unit has weapons on multiple platforms.
+	for ( int i = 0; i < nCommonGuns; ++i )
+	{
+		if ( guns[gunsBegins[i]]->IsCommonEqual( pGun ) )
+			return i;
+	}
+	return -1;
+}
+
 const SBaseGunRPGStats& CUnitGuns::GetCommonGunStats( const int nCommonGun ) const
 {
 	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
@@ -315,7 +335,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 	int i = 0;
 	while ( i < GetNGuns() && 
 					(
-						NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE == GetGun(i)->GetShell().etrajectory ||
+						GetGun(i)->GetShell().IsLineTrajectory() ||
 						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_MORALE ||
 						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_FOG
 					)
@@ -331,7 +351,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 			int j = 0;
 			while ( j < i && 
 							( GetGun( j )->GetGun().nPriority != 0 || 
-							  GetGun( j )->GetCommonGunNumber() == GetGun( i )->GetCommonGunNumber() ) )
+							  GetGun( j )->IsCommonEqual( GetGun( i ) ) ) )
 				++j;
 
 			if ( j < i )
@@ -348,7 +368,7 @@ bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShe
 	int i = 0;
 	while ( i < GetNGuns() && 
 					(
-					NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE == GetGun(i)->GetShell().etrajectory ||
+					GetGun(i)->GetShell().IsLineTrajectory() ||
 					GetGun(i)->GetShell().eDamageType != eShellType
 					)
 				)

@@ -1609,7 +1609,9 @@ CMOProjectile* CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 //	qRot.FromEulerMatrix( mLocalPlatformPose );
 
 	CPtr<CMOProjectile> pProjectile = new CMOProjectile();
-	if ( pProjectile->Create( pUpdate, pWeapon->shells[pUpdate->info.nShell].pvisProjectile, vShootPointTransition, qShootPointRotation, pWeapon->shells[pUpdate->info.nShell].pEffectTrajectory ) )
+	const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[pUpdate->info.nShell];
+	const CVec3 vRotationSpeedRad = shell.pMissleParams ? shell.pMissleParams->vVisProjectileRotationRad : VNULL3;
+	if ( pProjectile->Create( pUpdate, shell.pvisProjectile, vShootPointTransition, qShootPointRotation, shell.pEffectTrajectory, vRotationSpeedRad ) )
 		return pProjectile.Extract();
 	else
 		return 0;

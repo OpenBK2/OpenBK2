@@ -303,6 +303,7 @@ public:
 	
 	// патроны
 	const int GetNCommonGuns() const;
+	int GetCommonGunIndex( const CBasicGun *pGun ) const;
 	const SBaseGunRPGStats& GetCommonGunStats( const int nCommonGun ) const;
 	virtual int GetNAmmo( const int nCommonGun ) const;
 	// nAmmo со знаком

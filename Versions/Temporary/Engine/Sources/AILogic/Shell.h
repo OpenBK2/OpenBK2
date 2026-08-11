@@ -58,6 +58,11 @@ public:
 	virtual const WORD GetStart2DDir() const = 0;
 
 	virtual const CVec3 GetCoordinates() const = 0;
+	virtual const CVec3 GetVelocity() const { return VNULL3; }
+
+	// Dynamic trajectories advance explicitly; analytic trajectories need no work here.
+	virtual void Segment() { }
+	virtual bool IsFinished( const NTimer::STime &time ) const { return GetExplTime() <= time; }
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const = 0;
 };
@@ -183,6 +188,46 @@ public:
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET; }
 };
+
+// A deterministic, target-aware trajectory for wire/radio-guided ATGMs.
+class CATGMTraj : public IBallisticTraj
+{
+	OBJECT_BASIC_METHODS( CATGMTraj );
+	ZDATA
+	CVec3 vStart3D;
+	CVec3 vCenter;
+	CVec3 vVelocity;
+	CVec3 vFixedTarget;
+	CPtr<CAIUnit> pTarget;
+	int nShooterParty;
+	float fSpeed;
+	float fTurnRateRad;
+	float fStrayModeTime;
+	NTimer::STime startTime;
+	NTimer::STime lastUpdateTime;
+	NTimer::STime explTime;
+	SAIAngle wStartDir;
+	bool bStrayMode;
+	bool bFinished;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); return 0; }
+
+	CVec3 GetGuidancePoint() const;
+	void EnterStrayMode();
+	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const;
+public:
+	CATGMTraj() : nShooterParty( -1 ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), bStrayMode( false ), bFinished( false ) { }
+	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pTarget, int nShooterParty, const NDb::SMissleParams *pParams );
+
+	virtual const NTimer::STime& GetExplTime() const { return explTime; }
+	virtual const NTimer::STime& GetStartTime() const { return startTime; }
+	virtual const CVec3& GetStartPoint() const { return vStart3D; }
+	virtual const WORD GetStart2DDir() const { return wStartDir; }
+	virtual const CVec3 GetCoordinates() const { return vCenter; }
+	virtual const CVec3 GetVelocity() const { return vVelocity; }
+	virtual void Segment();
+	virtual bool IsFinished( const NTimer::STime &time ) const { return bFinished; }
+	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE; }
+};
 //*******************************************************************
 //*								  Взрывы																					*
 //*******************************************************************
@@ -227,6 +272,9 @@ public:
 	const BYTE GetShellType() const { return nShellType; }
 	const SWeaponRPGStats::SShell& GetShellStats() const { return pWeapon->shells[nShellType]; }
 	const WORD GetAttackDir() const { return attackDir; }
+	// Guided shells update the eventual impact as their path changes.
+	void SetExplCoordinates( const CVec3 &vCoordinates ) { explCoord = vCoordinates; }
+	void SetAttackDir( const CVec3 &vVelocity ) { attackDir = GetDirectionByVector( -vVelocity.x, -vVelocity.y ); }
 
 	const int GetRandomPiercing() const;
 	const float GetRandomDamage() const;
@@ -341,6 +389,7 @@ public:
 protected:
 	const float GetStartVisZ() const { return vStartVisZ; }
 	const float GetFinishVisZ() const { return vFinishVisZ; }
+	void SetDynamicImpact( const CVec3 &vCoordinates, const CVec3 &vVelocity ) { expl->SetExplCoordinates( vCoordinates ); expl->SetAttackDir( vVelocity ); }
 public:
 	CShell() { }
 	CShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun );
@@ -393,6 +442,8 @@ public:
 	CVisShell( CExplosion *_expl, IBallisticTraj *_pTraj, const int nGun, const int nPlatform );
 
 	const NTimer::STime GetStartTime() const { return pTraj->GetStartTime(); }
+	const NTimer::STime GetExplTime() const { return pTraj->GetExplTime(); }
+	bool IsFinished( const NTimer::STime &time ) const { return pTraj->IsFinished( time ); }
 
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual void GetSpeed3( CVec3 *pSpeed ) const { *pSpeed = speed; }

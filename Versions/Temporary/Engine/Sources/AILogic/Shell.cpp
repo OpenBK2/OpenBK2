@@ -28,6 +28,7 @@ REGISTER_SAVELOAD_CLASS( 0x1108D446, CFakeBallisticTraj );
 REGISTER_SAVELOAD_CLASS( 0x1108D447, CBombBallisticTraj );
 REGISTER_SAVELOAD_CLASS( 0x1108D448, CBallisticTraj );
 REGISTER_SAVELOAD_CLASS( 0x19184C00, CAARocketTraj );
+REGISTER_SAVELOAD_CLASS( 0x19184C01, CATGMTraj );
 REGISTER_SAVELOAD_CLASS( 0x1108D449, CVisShell );
 REGISTER_SAVELOAD_CLASS( 0x1108D44A, CInvisShell );
 REGISTER_SAVELOAD_CLASS( 0x1108D44B, CBurstExpl );
@@ -534,14 +535,14 @@ void CCumulativeExpl::Explode()
 CBurstExpl::CBurstExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 {
-	if ( pWeapon->shells[nShellType].etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
+	if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
 		nArmorDir = 2;
 }
 
 CBurstExpl::CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pWeapon, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 { 
-	if ( pWeapon->shells[nShellType].etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
+	if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
 		nArmorDir = 2;
 }
 
@@ -603,7 +604,7 @@ void CBurstExpl::Explode()
 			}
 
 			if ( pTarget != pUnit &&
-					 ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || 
+					 ( pWeapon->shells[nShellType].IsLineTrajectory() ||
 					 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ) )
 				pTarget->Grazed( pUnit );
 
@@ -613,7 +614,7 @@ void CBurstExpl::Explode()
 			NAsyncExplosionDebug::ClearAreaDamageCandidate();
 			bHit = bHit || bExplResult;
 
-			if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || 
+			if ( pWeapon->shells[nShellType].IsLineTrajectory() ||
 				pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 			{
 				CAIUnit *pWhoFire = GetWhoFire();
@@ -814,7 +815,10 @@ void CVisShell::Segment()
 		return;
 	//
 	const CVec3 oldCenter( center );
+	pTraj->Segment();
 	center = pTraj->GetCoordinates();
+	if ( pTraj->GetTrajType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+		SetDynamicImpact( center, pTraj->GetVelocity() );
 	if ( center == oldCenter )
 		return;
 	speed = ( center - oldCenter ) / SConsts::AI_SEGMENT_DURATION;
@@ -883,7 +887,7 @@ void CShellsStore::AddShell( CVisShell *pShell )
 	visShells.push_back( pShell );
 	updater.AddUpdate( 0, ACTION_NOTIFY_NEW_PROJECTILE, pShell, -1 );
 
-	if ( pShell->GetTrajectoryType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE ||
+	if ( pShell->GetWeapon()->shells[pShell->GetShellType()].IsLineTrajectory() ||
 			 pShell->GetTrajectoryType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 		theCombatEstimator.AddShell( curTime, pShell->GetMaxDamage() );
 }
@@ -903,8 +907,9 @@ void CShellsStore::Segment()
 	while ( iter != visShells.end() )
 	{
 		CVisShell *shell = *iter;
-		// долетел
-		if ( shell->GetExplTime() <= curTime )
+		const bool bDynamicTrajectory = shell->GetTrajectoryType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE;
+		// Preserve the legacy pre-update expiry behavior for analytic trajectories.
+		if ( !bDynamicTrajectory && shell->IsFinished( curTime ) )
 		{
 			shell->Explode();
 			updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_PROJECTILE, shell, -1 );
@@ -913,7 +918,15 @@ void CShellsStore::Segment()
 		else
 		{
 			shell->Segment();
-			++iter;
+			// ATGMs can finish during their swept movement update.
+			if ( shell->IsFinished( curTime ) )
+			{
+				shell->Explode();
+				updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_PROJECTILE, shell, -1 );
+				iter = visShells.erase( iter );
+			}
+			else
+				++iter;
 		}
 	}
 }
@@ -1161,6 +1174,266 @@ const CVec3 CAARocketTraj::GetCoordinates() const
 	const float fT = curTime - startTime;
 	const CVec3 vRet = vStart3D + vSpeed * fT;
 	return vRet;
+}
+
+//*******************************************************************
+//*                                                   CATGMTraj      *
+//*******************************************************************
+
+namespace
+{
+	bool ClipATGMSegmentAxis( float fStart, float fDelta, float fMin, float fMax, float *pEnter, float *pExit )
+	{
+		if ( fabs( fDelta ) < 1e-6f )
+			return fStart >= fMin && fStart <= fMax;
+
+		float fT1 = ( fMin - fStart ) / fDelta;
+		float fT2 = ( fMax - fStart ) / fDelta;
+		if ( fT1 > fT2 )
+			std::swap( fT1, fT2 );
+		*pEnter = (std::max)( *pEnter, fT1 );
+		*pExit = (std::min)( *pExit, fT2 );
+		return *pEnter <= *pExit;
+	}
+
+	float GetATGMSegmentRectRatio( const CVec3 &vFrom, const CVec3 &vTo, const SRect &rect, bool bAcceptStartInside )
+	{
+		const CVec2 vStart( vFrom.x - rect.center.x, vFrom.y - rect.center.y );
+		const CVec2 vDelta( vTo.x - vFrom.x, vTo.y - vFrom.y );
+		const float fStartX = vStart.x * rect.dir.x + vStart.y * rect.dir.y;
+		const float fStartY = vStart.x * rect.dirPerp.x + vStart.y * rect.dirPerp.y;
+		const bool bInside = fStartX >= -rect.lengthBack && fStartX <= rect.lengthAhead && fabs( fStartY ) <= rect.width;
+		if ( bInside )
+			return bAcceptStartInside ? 0.0f : 2.0f;
+
+		const float fDeltaX = vDelta.x * rect.dir.x + vDelta.y * rect.dir.y;
+		const float fDeltaY = vDelta.x * rect.dirPerp.x + vDelta.y * rect.dirPerp.y;
+		float fEnter = 0.0f;
+		float fExit = 1.0f;
+		if ( !ClipATGMSegmentAxis( fStartX, fDeltaX, -rect.lengthBack, rect.lengthAhead, &fEnter, &fExit ) ||
+			 !ClipATGMSegmentAxis( fStartY, fDeltaY, -rect.width, rect.width, &fEnter, &fExit ) )
+			return 2.0f;
+		return fEnter;
+	}
+
+	bool IsATGMBlockingStaticObject( CExistingObject *pObject )
+	{
+		if ( pObject == 0 )
+			return false;
+
+		const EStaticObjType eType = pObject->GetObjectType();
+		if ( eType == ESOT_COMMON )
+		{
+			const NDb::SHPObjectRPGStats *pStats = pObject->GetStats();
+			const char *szResourceName = pStats ? NDb::GetResName( pStats ) : 0;
+			// Flora resources and fallable tree-like props do not obstruct guided missiles.
+			// return !pObject->CanFall() && ( szResourceName == 0 || strstr( szResourceName, /Objects/Flora/ ) == 0 );
+		}
+
+		// Mines, corpses, flags, smoke screens, and other gameplay helpers are ignored.
+		return eType == ESOT_BUILDING || eType == ESOT_ENTR_PART || eType == ESOT_ENTRENCHMENT ||
+			eType == ESOT_TERRA || eType == ESOT_BRIDGE_SPAN || eType == ESOT_TANKPIT ||
+			eType == ESOT_FENCE;
+	}
+}
+
+CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *_pTarget, int _nShooterParty, const NDb::SMissleParams *pParams )
+	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pTarget( _pTarget ), nShooterParty( _nShooterParty ),
+	  fSpeed( (std::max)( fV, 0.001f ) ), fTurnRateRad( pParams ? pParams->fTurnRateRad : 1.048f ),
+	  fStrayModeTime( pParams ? pParams->fStrayModeTime : 1.0f ), startTime( curTime ), lastUpdateTime( curTime ),
+	  bStrayMode( false ), bFinished( false )
+{
+	CVec3 vDirection = GetGuidancePoint() - vCenter;
+	if ( vDirection == VNULL3 )
+		vDirection = V3_AXIS_X;
+	Normalize( &vDirection );
+	vVelocity = vDirection * fSpeed;
+	wStartDir = GetDirectionByVector( vDirection.x, vDirection.y );
+	explTime = startTime + fabs( GetGuidancePoint() - vCenter ) / fSpeed;
+}
+
+CVec3 CATGMTraj::GetGuidancePoint() const
+{
+	if ( IsValidObj( pTarget ) && !bStrayMode )
+	{
+		CVec3 vAim( pTarget->GetCenterPlain(), pTarget->GetVisZ() + AI_TILE_SIZE );
+		const CVec2 vTargetVelocity = pTarget->GetDirectionVector() * pTarget->GetSpeed();
+		const CVec3 vRelative = vAim - vCenter;
+		const float fA = vTargetVelocity.x * vTargetVelocity.x + vTargetVelocity.y * vTargetVelocity.y - fSpeed * fSpeed;
+		const float fB = 2.0f * ( vRelative.x * vTargetVelocity.x + vRelative.y * vTargetVelocity.y );
+		const float fC = vRelative.x * vRelative.x + vRelative.y * vRelative.y + vRelative.z * vRelative.z;
+		float fLeadTime = 0.0f;
+		if ( fabs( fA ) < 1e-6f )
+		{
+			if ( fabs( fB ) > 1e-6f )
+				fLeadTime = -fC / fB;
+		}
+		else
+		{
+			const float fDiscriminant = fB * fB - 4.0f * fA * fC;
+			if ( fDiscriminant >= 0.0f )
+			{
+				const float fRoot = sqrt( fDiscriminant );
+				const float fT1 = ( -fB - fRoot ) / ( 2.0f * fA );
+				const float fT2 = ( -fB + fRoot ) / ( 2.0f * fA );
+				if ( fT1 > 0.0f && fT2 > 0.0f )
+					fLeadTime = (std::min)( fT1, fT2 );
+				else
+					fLeadTime = (std::max)( fT1, fT2 );
+			}
+		}
+		if ( fLeadTime > 0.0f )
+			vAim += CVec3( vTargetVelocity * fLeadTime, 0.0f );
+		return vAim;
+	}
+	return vFixedTarget;
+}
+
+void CATGMTraj::EnterStrayMode()
+{
+	if ( bStrayMode )
+		return;
+	bStrayMode = true;
+	// The deadline is fixed once, so later visibility changes cannot extend the missile's life.
+	explTime = curTime + (NTimer::STime)( (std::max)( fStrayModeTime, 0.0f ) * 1000.0f );
+}
+
+float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const
+{
+	float fBestRatio = 2.0f;
+
+	// Only the intended target participates in unit collision; all other units are intentionally ignored.
+	if ( IsValidObj( pTarget ) && !bStrayMode )
+	{
+		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pTarget->GetUnitRect(), true );
+		if ( fRatio <= 1.0f )
+		{
+			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
+			if ( fabs( fZ - pTarget->GetVisZ() ) <= AI_TILE_SIZE * 2.0f )
+				fBestRatio = fRatio;
+		}
+	}
+	else if ( pTarget == 0 && !bStrayMode )
+	{
+		// Point-targeted missiles still detonate at their commanded destination.
+		const CVec3 vDelta = vTo - vFrom;
+		const float fLength2 = vDelta.x * vDelta.x + vDelta.y * vDelta.y + vDelta.z * vDelta.z;
+		if ( fLength2 > 1e-6f )
+		{
+			const CVec3 vTargetDelta = vFixedTarget - vFrom;
+			const float fRatio = ( vTargetDelta.x * vDelta.x + vTargetDelta.y * vDelta.y + vTargetDelta.z * vDelta.z ) / fLength2;
+			if ( fRatio >= 0.0f && fRatio <= 1.0f )
+			{
+				const CVec3 vClosest = vFrom + vDelta * fRatio;
+				if ( fabs( vClosest - vFixedTarget ) <= 1.0f )
+					fBestRatio = fRatio;
+			}
+		}
+	}
+
+	const CVec2 vMid( ( vFrom.x + vTo.x ) * 0.5f, ( vFrom.y + vTo.y ) * 0.5f );
+	const float fSearchRadius = fabs( CVec2( vTo.x - vFrom.x, vTo.y - vFrom.y ) ) * 0.5f + AI_TILE_SIZE;
+	std::vector<CExistingObject*> objects;
+	for ( CStObjCircleIter<false> iter( vMid, fSearchRadius ); !iter.IsFinished(); iter.Iterate() )
+	{
+		CExistingObject *pObject = *iter;
+		if ( pObject && pObject->IsAlive() && IsATGMBlockingStaticObject( pObject ) )
+			objects.push_back( pObject );
+	}
+	std::sort( objects.begin(), objects.end(), []( CExistingObject *pA, CExistingObject *pB ) { return pA->GetUniqueId() < pB->GetUniqueId(); } );
+	objects.erase( std::unique( objects.begin(), objects.end() ), objects.end() );
+
+	for ( std::vector<CExistingObject*>::const_iterator iter = objects.begin(); iter != objects.end(); ++iter )
+	{
+		CExistingObject *pObject = *iter;
+		SRect rect;
+		pObject->GetBoundRect( &rect );
+		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, rect, false );
+		if ( fRatio >= fBestRatio || fRatio > 1.0f )
+			continue;
+		const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( pObject->GetStats() );
+		const float fObjectHeight = pStats ? (float)pStats->nObjectHeight : AI_TILE_SIZE * 2.0f;
+		const CVec3 &vObjectCenter = pObject->GetCenter();
+		const float fObjectTop = GetHeights()->GetVisZ( vObjectCenter.x, vObjectCenter.y ) + vObjectCenter.z + fObjectHeight;
+		const float fMissileZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
+		if ( fMissileZ <= fObjectTop )
+			fBestRatio = fRatio;
+	}
+
+	// Sampling at half-tile intervals catches cliffs and terrain that actually rises into the flight path.
+	const float fHorizontalLength = fabs( CVec2( vTo.x - vFrom.x, vTo.y - vFrom.y ) );
+	const int nSamples = (std::max)( 1, (int)ceil( fHorizontalLength / ( AI_TILE_SIZE * 0.5f ) ) );
+	for ( int i = 1; i <= nSamples; ++i )
+	{
+		const float fRatio = (float)i / nSamples;
+		if ( fRatio >= fBestRatio )
+			break;
+		const CVec3 vPoint = vFrom + ( vTo - vFrom ) * fRatio;
+		if ( GetHeights()->GetVisZ( vPoint.x, vPoint.y ) >= vPoint.z )
+		{
+			fBestRatio = fRatio;
+			break;
+		}
+	}
+
+	return fBestRatio;
+}
+
+void CATGMTraj::Segment()
+{
+	if ( bFinished || curTime <= lastUpdateTime )
+		return;
+
+	if ( !bStrayMode && IsValidObj( pTarget ) && ( !pTarget->IsAlive() || !pTarget->IsVisible( nShooterParty ) ) )
+		EnterStrayMode();
+	else if ( !bStrayMode && pTarget != 0 && !IsValidObj( pTarget ) )
+		EnterStrayMode();
+
+	const NTimer::STime stepStartTime = lastUpdateTime;
+	NTimer::STime stepEndTime = curTime;
+	if ( bStrayMode && explTime < stepEndTime )
+		stepEndTime = explTime;
+	const float fTimeDiff = (float)( (std::max)( stepEndTime - stepStartTime, (NTimer::STime)0 ) );
+
+	if ( !bStrayMode )
+	{
+		CVec3 vDesiredDirection = GetGuidancePoint() - vCenter;
+		if ( vDesiredDirection != VNULL3 )
+		{
+			Normalize( &vDesiredDirection );
+			CVec3 vCurrentDirection = vVelocity;
+			Normalize( &vCurrentDirection );
+			const float fDot = Clamp( vCurrentDirection.x * vDesiredDirection.x + vCurrentDirection.y * vDesiredDirection.y + vCurrentDirection.z * vDesiredDirection.z, -1.0f, 1.0f );
+			const float fAngle = acos( fDot );
+			const float fMaxTurn = (std::max)( fTurnRateRad, 0.0f ) * fTimeDiff / 1000.0f;
+			if ( fAngle > fMaxTurn && fAngle > 1e-6f )
+			{
+				const float fSinAngle = sin( fAngle );
+				if ( fabs( fSinAngle ) > 1e-6f )
+					vDesiredDirection = vCurrentDirection * ( sin( fAngle - fMaxTurn ) / fSinAngle ) + vDesiredDirection * ( sin( fMaxTurn ) / fSinAngle );
+				else
+					vDesiredDirection = vCurrentDirection + ( vDesiredDirection - vCurrentDirection ) * ( fMaxTurn / fAngle );
+				Normalize( &vDesiredDirection );
+			}
+			vVelocity = vDesiredDirection * fSpeed;
+		}
+		explTime = curTime + fabs( GetGuidancePoint() - vCenter ) / fSpeed;
+	}
+
+	const CVec3 vNextCenter = vCenter + vVelocity * fTimeDiff;
+	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter );
+	if ( fImpactRatio <= 1.0f )
+	{
+		vCenter += ( vNextCenter - vCenter ) * fImpactRatio;
+		explTime = stepStartTime + (NTimer::STime)( fTimeDiff * fImpactRatio );
+		bFinished = true;
+	}
+	else
+		vCenter = vNextCenter;
+
+	lastUpdateTime = curTime;
+	if ( bStrayMode && curTime >= explTime )
+		bFinished = true;
 }
 
 

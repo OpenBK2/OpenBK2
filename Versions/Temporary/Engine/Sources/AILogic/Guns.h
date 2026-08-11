@@ -238,7 +238,8 @@ public:
 	virtual bool IsCommonEqual( const CBasicGun *pGun ) const;
 
 	// "номер ствола" ( gun-ы, отличающиеся только патронами, но находящиеся в одном стволе )
-	int GetCommonGunNumber() const { return pCommonGunInfo->nGun; }
+	// This is a stats-platform slot, not the dense index used by commonGunsInfo.
+	int GetStatsGunNumber() const { return pCommonGunInfo->nGun; }
 	int GetPlatform() const { return pCommonGunInfo->nPlatform; }
 
 	int GetNAmmo() const { return pCommonGunInfo->nAmmo; }

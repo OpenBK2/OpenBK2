@@ -147,7 +147,7 @@ float SConsts::SNIPER_CAMOUFLAGE_DECREASE_PER_SHOOT = 0.1f;
 float SConsts::SNIPER_CAMOUFLAGE_INCREASE = 0.0004f;
 float SConsts::AMBUSH_ATTACK_BEGIN_CIRTERIA = 0.5f;
 float SConsts::ARTILLERY_REVEAL_COEEFICIENT = 200.0f;
-float SConsts::dispersionRatio[9][2] =
+float SConsts::dispersionRatio[10][2] =
 {
 	{ 1.0f,		1.0f },
 	{ 1.0f,		2.0f },
@@ -158,6 +158,7 @@ float SConsts::dispersionRatio[9][2] =
 	{ 1.0f,		1.0f },
 	{ 1.0f,		1.0f },
 	{ 1.0f,		1.0f },
+	{ 1.0f,		1.0f }, // ATGM line
 };
 
 float SConsts::COEFF_FOR_RANDOM_DELAY = 1.21f;
@@ -385,6 +386,8 @@ START_REGISTER(AILogicConsts)
 
 	REGISTER_VAR_EX( "AI.Artillery.DispersionRatio.FlameMin", NGlobal::VarFloatHandler, &SConsts::dispersionRatio[8][0], 1.0f, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Artillery.DispersionRatio.FlameMax", NGlobal::VarFloatHandler, &SConsts::dispersionRatio[8][1], 1.0f, STORAGE_NONE );
+	REGISTER_VAR_EX( "AI.Artillery.DispersionRatio.ATGMLineMin", NGlobal::VarFloatHandler, &SConsts::dispersionRatio[9][0], 1.0f, STORAGE_NONE );
+	REGISTER_VAR_EX( "AI.Artillery.DispersionRatio.ATGMLineMax", NGlobal::VarFloatHandler, &SConsts::dispersionRatio[9][1], 1.0f, STORAGE_NONE );
 
 	REGISTER_VAR_EX( "AI.Common.CoeffForRandomDelay",	NGlobal::VarFloatHandler, &SConsts::COEFF_FOR_RANDOM_DELAY	, 1.2f, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Common.HeightForVisRadiusInc",	NGlobal::VarFloatHandler, &SConsts::HEIGHT_FOR_VIS_RADIUS_INC, 10.0f, STORAGE_NONE );

@@ -238,6 +238,7 @@
 		<Item>e0104b11</Item>
 		<Item>c08d0d10</Item>
 		<Item>a03b4b11</Item>
+		<Item>a0f0ad12</Item>
 		<Item>40a20c10</Item>
 		<Item>009f0d10</Item>
 		<Item>c0140c10</Item>
@@ -28369,6 +28370,62 @@
 				</Item>
 			</Fields>
 			<TypeID>806108032</TypeID>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082826</__ClassTypeID>
+			<__ServerPtr>a0f0ad12</__ServerPtr>
+			<Type>TYPE_TYPE_CLASS</Type>
+			<TypeName>MissleParams</TypeName>
+			<Attributes />
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item>
+					<Type>40ad0c10</Type>
+					<Name>VisProjectileRotationRad</Name>
+					<ChunkID>2</ChunkID>
+					<Description>local Euler rotation speed of the visible projectile, in radians per second</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>7033cd10</Type>
+					<Name>StrayModeTime</Name>
+					<ChunkID>3</ChunkID>
+					<Description>seconds before a missile explodes after losing its target</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1.0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>7033cd10</Type>
+					<Name>TurnRateRad</Name>
+					<ChunkID>4</ChunkID>
+					<Description>maximum missile turn rate, in radians per second</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1.048</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+			</Fields>
+			<TypeID>806108033</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
@@ -60052,6 +60109,20 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>c0f0ad12</Type>
+					<Name>MissleParams</Name>
+					<ChunkID>31</ChunkID>
+					<Description>optional guided missile parameters</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 		</Item>
 		<Item>
@@ -64053,6 +64124,10 @@
 					<Name>TRAJECTORY_FLAME_THROWER</Name>
 					<Value>8</Value>
 				</Item>
+				<Item>
+					<Name>TRAJECTORY_ATGM_LINE</Name>
+					<Value>9</Value>
+				</Item>
 			</Entries>
 			<Attributes />
 		</Item>
@@ -64082,6 +64157,12 @@
 			<__ServerPtr>60a8ce11</__ServerPtr>
 			<Type>TYPE_TYPE_REF</Type>
 			<RefType>a03b4b11</RefType>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082828</__ClassTypeID>
+			<__ServerPtr>c0f0ad12</__ServerPtr>
+			<Type>TYPE_TYPE_REF</Type>
+			<RefType>a0f0ad12</RefType>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082828</__ClassTypeID>

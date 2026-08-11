@@ -67,7 +67,7 @@ CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
 			int j = 0;
 			while ( j < i && 
 							( pOwner->GetGun( j )->GetGun().nPriority != 0 || 
-							  pOwner->GetGun( j )->GetCommonGunNumber() == pOwner->GetGun( i )->GetCommonGunNumber() ) )
+							  pOwner->GetGun( j )->IsCommonEqual( pOwner->GetGun( i ) ) ) )
 				++j;
 
 			if ( j < i )
@@ -1095,7 +1095,7 @@ void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
 
 const float CShootEstimatorSupportAAGun::CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
-	const float fTimeToGo = fabs( pEnemy->GetCenterPlain() - pOwner->GetGunCenter( pGun->GetCommonGunNumber(), pGun->GetPlatform() ) ) / pEnemy->GetSpeed();
+	const float fTimeToGo = fabs( pEnemy->GetCenterPlain() - pOwner->GetGunCenter( pGun->GetStatsGunNumber(), pGun->GetPlatform() ) ) / pEnemy->GetSpeed();
 
 	float fKillEnemySpeed;
 	if ( !bDamageToCurTargetUpdated )

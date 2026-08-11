@@ -62,10 +62,11 @@ void CMOProjectile::InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRo
 		pTrailEffect = 0;
 }
 
-bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SProjectile *_pProjectile, const CVec3 &vVisPos, const CQuat &qRot, const NDb::SComplexEffect *_pTrajectoryEffect )
+bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SProjectile *_pProjectile, const CVec3 &vVisPos, const CQuat &qRot, const NDb::SComplexEffect *_pTrajectoryEffect, const CVec3 &_vRotationSpeedRad )
 {
 	pProjectile = _pProjectile;
 	pTrajectoryEffect = _pTrajectoryEffect;
+	vRotationSpeedRad = _vRotationSpeedRad;
 	SetID( pUpdate->info.nObjUniqueID );
 
 	bModelExists = pProjectile != 0 && pProjectile->pModel != 0;
@@ -141,6 +142,13 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 		// move main object
 		MakeOrientation( &projPlacement.rotation, DWORDToVec3(placement.dwNormal) );
 	}
+
+	// Apply an absolute local-space Euler spin on top of the flight-path orientation.
+	const float fElapsedSeconds = (std::max)( 0.0f, ( curTime - startTime ) / 1000.0f );
+	const CQuat qLocalSpin = CQuat( vRotationSpeedRad.x * fElapsedSeconds, V3_AXIS_X ) *
+		CQuat( vRotationSpeedRad.y * fElapsedSeconds, V3_AXIS_Y ) *
+		CQuat( vRotationSpeedRad.z * fElapsedSeconds, V3_AXIS_Z );
+	projPlacement.rotation = projPlacement.rotation * qLocalSpin;
 
 	
 	

@@ -414,7 +414,9 @@ CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *
 	vShootPointTransition += CVec3( 0, 0, 1 );
 	//
 	CPtr<CMOProjectile> pProjectile = new CMOProjectile();
-	if ( pProjectile->Create( pUpdate, pWeapon->shells[pUpdate->info.nShell].pvisProjectile, vShootPointTransition, QNULL, pWeapon->shells[pUpdate->info.nShell].pEffectTrajectory ) )
+	const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[pUpdate->info.nShell];
+	const CVec3 vRotationSpeedRad = shell.pMissleParams ? shell.pMissleParams->vVisProjectileRotationRad : VNULL3;
+	if ( pProjectile->Create( pUpdate, shell.pvisProjectile, vShootPointTransition, QNULL, shell.pEffectTrajectory, vRotationSpeedRad ) )
 		return pProjectile.Extract();
 	else
 		return 0;
