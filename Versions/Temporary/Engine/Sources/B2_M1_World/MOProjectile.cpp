@@ -231,6 +231,15 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 		case SAINotifyHitInfo::EHitType::EHT_WATER:
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitWater;
 			break;
+		case SAINotifyHitInfo::EHitType::EHT_AIR_WITH_CRATER:
+			{
+				// Match the authoritative hit update if this combined outcome reaches projectile prediction.
+				const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
+				pComplexEffect = shell.pEffectHitAir;
+				if ( shell.pCraters != 0 )
+					PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
+			}
+			break;
 		case SAINotifyHitInfo::EHitType::EHT_AIR:
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitAir;
 			break;

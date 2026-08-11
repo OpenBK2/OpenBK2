@@ -63,6 +63,7 @@ public:
 	// Dynamic trajectories advance explicitly; analytic trajectories need no work here.
 	virtual void Segment() { }
 	virtual bool IsFinished( const NTimer::STime &time ) const { return GetExplTime() <= time; }
+	virtual bool IsAirBurst() const { return false; }
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const = 0;
 };
@@ -198,6 +199,7 @@ class CATGMTraj : public IBallisticTraj
 	CVec3 vCenter;
 	CVec3 vVelocity;
 	CVec3 vFixedTarget;
+	CPtr<CAIUnit> pShooter;
 	CPtr<CAIUnit> pTarget;
 	int nShooterParty;
 	float fSpeed;
@@ -209,14 +211,15 @@ class CATGMTraj : public IBallisticTraj
 	SAIAngle wStartDir;
 	bool bStrayMode;
 	bool bFinished;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); return 0; }
+	bool bAirBurst;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); f.Add(17,&pShooter); f.Add(18,&bAirBurst); return 0; }
 
 	CVec3 GetGuidancePoint() const;
 	void EnterStrayMode();
-	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const;
+	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget ) const;
 public:
-	CATGMTraj() : nShooterParty( -1 ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), bStrayMode( false ), bFinished( false ) { }
-	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pTarget, int nShooterParty, const NDb::SMissleParams *pParams );
+	CATGMTraj() : nShooterParty( -1 ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), bStrayMode( false ), bFinished( false ), bAirBurst( false ) { }
+	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pShooter, CAIUnit *pTarget, int nShooterParty, const NDb::SMissleParams *pParams );
 
 	virtual const NTimer::STime& GetExplTime() const { return explTime; }
 	virtual const NTimer::STime& GetStartTime() const { return startTime; }
@@ -226,6 +229,7 @@ public:
 	virtual const CVec3 GetVelocity() const { return vVelocity; }
 	virtual void Segment();
 	virtual bool IsFinished( const NTimer::STime &time ) const { return bFinished; }
+	virtual bool IsAirBurst() const { return bAirBurst; }
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE; }
 };
 //*******************************************************************
@@ -249,8 +253,9 @@ protected:
 	NDb::SUnitStatsModifier::SParameterModifier weaponPiercingModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponAreaModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponArea2Modifier;
+	bool bForceAirEffect;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); f.Add(9,&weaponDamageModifier); f.Add(10,&weaponPiercingModifier); f.Add(11,&weaponAreaModifier); f.Add(12,&weaponArea2Modifier); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); f.Add(9,&weaponDamageModifier); f.Add(10,&weaponPiercingModifier); f.Add(11,&weaponAreaModifier); f.Add(12,&weaponArea2Modifier); f.Add(13,&bForceAirEffect); return 0; }
 protected:
 	//
 	const SAINotifyHitInfo::EHitType ProcessExactHit( class CAIUnit *pTarget, const SRect &combatRect, const CVec3 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
@@ -261,7 +266,7 @@ protected:
 		return fabs(GetExplCoordinates().z - fExplTerrainZ) <= SConsts::TILE_SIZE; 
 	}
 public:
-	CExplosion() : nPlayerOfShoot( -1 ) { }
+	CExplosion() : nPlayerOfShoot( -1 ), bForceAirEffect( false ) { }
 	CExplosion( CAIUnit *pUnit, const class CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize = true );
 	CExplosion( CAIUnit *pUnit, const struct SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize = true );
 
@@ -275,6 +280,7 @@ public:
 	// Guided shells update the eventual impact as their path changes.
 	void SetExplCoordinates( const CVec3 &vCoordinates ) { explCoord = vCoordinates; }
 	void SetAttackDir( const CVec3 &vVelocity ) { attackDir = GetDirectionByVector( -vVelocity.x, -vVelocity.y ); }
+	void SetForceAirEffect( bool bForce ) { bForceAirEffect = bForce; }
 
 	const int GetRandomPiercing() const;
 	const float GetRandomDamage() const;
@@ -389,7 +395,7 @@ public:
 protected:
 	const float GetStartVisZ() const { return vStartVisZ; }
 	const float GetFinishVisZ() const { return vFinishVisZ; }
-	void SetDynamicImpact( const CVec3 &vCoordinates, const CVec3 &vVelocity ) { expl->SetExplCoordinates( vCoordinates ); expl->SetAttackDir( vVelocity ); }
+	void SetDynamicImpact( const CVec3 &vCoordinates, const CVec3 &vVelocity, bool bAirBurst ) { expl->SetExplCoordinates( vCoordinates ); expl->SetAttackDir( vVelocity ); expl->SetForceAirEffect( bAirBurst ); }
 public:
 	CShell() { }
 	CShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun );

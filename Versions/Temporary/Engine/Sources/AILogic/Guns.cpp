@@ -1354,7 +1354,7 @@ IBallisticTraj* CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 		CVec3 vStart = GetHeights()->Get3DPoint( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) );
 		// Keep the missile clear of minor ground undulations at launch.
 		vStart.z += AI_TILE_SIZE;
-		return new CATGMTraj( vStart, vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pEnemy, nOwnerParty, GetShell().pMissleParams );
+		return new CATGMTraj( vStart, vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pOwner, pEnemy, nOwnerParty, GetShell().pMissleParams );
 	}
 
 	switch ( eType )

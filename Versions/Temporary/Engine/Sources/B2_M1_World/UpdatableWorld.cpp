@@ -824,6 +824,15 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate * _pUpdate )
 		pComplexEffect = pUpdate->info.pWeapon->shells[pUpdate->info.wShell].pEffectHitWater;
 		//		DebugTrace( "EHT_WATER" );
 		break;
+	case SAINotifyHitInfo::EHitType::EHT_AIR_WITH_CRATER:
+		{
+			// Air-burst ATGMs keep their air effect while leaving a crater on terrain below.
+			const NDb::SWeaponRPGStats::SShell &shell = pUpdate->info.pWeapon->shells[pUpdate->info.wShell];
+			pComplexEffect = shell.pEffectHitAir;
+			if ( shell.pCraters != 0 )
+				PlaceCrater( shell.pCraters, eSeason, CVec2( pUpdate->info.explCoord.x, pUpdate->info.explCoord.y ) );
+		}
+		break;
 	case SAINotifyHitInfo::EHitType::EHT_AIR:
 		pComplexEffect = pUpdate->info.pWeapon->shells[pUpdate->info.wShell].pEffectHitAir;
 		//		DebugTrace( "EHT_AIR" );

@@ -205,7 +205,7 @@ public:
 // hit update
 struct SAINotifyHitInfo
 {
-	enum EHitType { EHT_NONE, EHT_HIT, EHT_MISS, EHT_REFLECT, EHT_GROUND, EHT_WATER, EHT_AIR };	
+	enum EHitType { EHT_NONE, EHT_HIT, EHT_MISS, EHT_REFLECT, EHT_GROUND, EHT_WATER, EHT_AIR, EHT_AIR_WITH_CRATER };
 
 	ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;					// weapon shell was fired

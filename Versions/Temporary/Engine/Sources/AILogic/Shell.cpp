@@ -278,6 +278,7 @@ void CExplosion::Init(	CAIUnit *_pUnit,
 	weaponPiercingModifier = NDb::SUnitStatsModifier::SParameterModifier();
 	weaponAreaModifier = NDb::SUnitStatsModifier::SParameterModifier();
 	weaponArea2Modifier = NDb::SUnitStatsModifier::SParameterModifier();
+	bForceAirEffect = false;
 	if ( pUnit )
 	{
 		weaponDamageModifier = pUnit->GetStatsModifier()->weaponDamage;
@@ -516,7 +517,15 @@ void CCumulativeExpl::Explode()
 	}
 	
 	// ни в кого не попало
-	if ( !bHit )
+	if ( bForceAirEffect )
+	{
+		// Timed ATGM self-detonations use the air effect, but still scar solid terrain below.
+		const SAINotifyHitInfo::EHitType eHitType = GetHitType( vExplCoord ) == SAINotifyHitInfo::EHT_GROUND
+			? SAINotifyHitInfo::EHT_AIR_WITH_CRATER : SAINotifyHitInfo::EHT_AIR;
+		updater.AddUpdate( 0, ACTION_NOTIFY_HIT,
+			new CHitInfo( pWeapon, nShellType, attackDir, vExplCoord3D, eHitType ), -1 );
+	}
+	else if ( !bHit )
 	{
 		if ( InOnGround( fExplTerrainZ ) )
 			updater.AddUpdate( 0, ACTION_NOTIFY_HIT, new CHitInfo( pWeapon, nShellType, attackDir, vExplCoord3D,	GetHitType( vExplCoord ) ), -1 );
@@ -663,7 +672,15 @@ void CBurstExpl::Explode()
 	if ( !bShowEffect && pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
 		nShellType+1 < pWeapon->shells.size() && pWeapon->shells[nShellType+1].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 		nExplodeShellType = nShellType + 1;
-	if ( !bHit )
+	if ( bForceAirEffect )
+	{
+		// Timed ATGM self-detonations remain air bursts while retaining terrain craters.
+		const SAINotifyHitInfo::EHitType eHitType = GetHitType( explCoord ) == SAINotifyHitInfo::EHT_GROUND
+			? SAINotifyHitInfo::EHT_AIR_WITH_CRATER : SAINotifyHitInfo::EHT_AIR;
+		updater.AddUpdate( 0, ACTION_NOTIFY_HIT,
+			new CHitInfo( pWeapon, nExplodeShellType, attackDir, vExplCoord, eHitType ), -1 );
+	}
+	else if ( !bHit )
 	{
 		if ( InOnGround( fExplTerrainZ ) ) 
 		{
@@ -818,7 +835,7 @@ void CVisShell::Segment()
 	pTraj->Segment();
 	center = pTraj->GetCoordinates();
 	if ( pTraj->GetTrajType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
-		SetDynamicImpact( center, pTraj->GetVelocity() );
+		SetDynamicImpact( center, pTraj->GetVelocity(), pTraj->IsAirBurst() );
 	if ( center == oldCenter )
 		return;
 	speed = ( center - oldCenter ) / SConsts::AI_SEGMENT_DURATION;
@@ -1237,11 +1254,11 @@ namespace
 	}
 }
 
-CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *_pTarget, int _nShooterParty, const NDb::SMissleParams *pParams )
-	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pTarget( _pTarget ), nShooterParty( _nShooterParty ),
+CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *_pShooter, CAIUnit *_pTarget, int _nShooterParty, const NDb::SMissleParams *pParams )
+	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pShooter( _pShooter ), pTarget( _pTarget ), nShooterParty( _nShooterParty ),
 	  fSpeed( (std::max)( fV, 0.001f ) ), fTurnRateRad( pParams ? pParams->fTurnRateRad : 1.048f ),
 	  fStrayModeTime( pParams ? pParams->fStrayModeTime : 1.0f ), startTime( curTime ), lastUpdateTime( curTime ),
-	  bStrayMode( false ), bFinished( false )
+	  bStrayMode( false ), bFinished( false ), bAirBurst( false )
 {
 	CVec3 vDirection = GetGuidancePoint() - vCenter;
 	if ( vDirection == VNULL3 )
@@ -1298,22 +1315,46 @@ void CATGMTraj::EnterStrayMode()
 	explTime = curTime + (NTimer::STime)( (std::max)( fStrayModeTime, 0.0f ) * 1000.0f );
 }
 
-float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const
+float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget ) const
 {
 	float fBestRatio = 2.0f;
+	*ppHitTarget = 0;
 
-	// Only the intended target participates in unit collision; all other units are intentionally ignored.
-	if ( IsValidObj( pTarget ) && !bStrayMode )
+	std::vector<CAIUnit*> unitTargets;
+	if ( bStrayMode )
 	{
-		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pTarget->GetUnitRect(), true );
-		if ( fRatio <= 1.0f )
+		// Once guidance is lost, the first living unit crossing the missile path can be hit.
+		const CVec2 vMid( ( vFrom.x + vTo.x ) * 0.5f, ( vFrom.y + vTo.y ) * 0.5f );
+		const float fSearchRadius = fabs( CVec2( vTo.x - vFrom.x, vTo.y - vFrom.y ) ) * 0.5f + SConsts::MAX_UNIT_RADIUS;
+		for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, vMid, fSearchRadius ); !iter.IsFinished(); iter.Iterate() )
 		{
-			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
-			if ( fabs( fZ - pTarget->GetVisZ() ) <= AI_TILE_SIZE * 2.0f )
-				fBestRatio = fRatio;
+			CAIUnit *pUnit = *iter;
+			if ( IsValidObj( pUnit ) && pUnit->IsAlive() && pUnit != pShooter && !pUnit->IsInSolidPlace() )
+				unitTargets.push_back( pUnit );
 		}
 	}
-	else if ( pTarget == 0 && !bStrayMode )
+	else if ( IsValidObj( pTarget ) && pTarget->IsAlive() )
+		unitTargets.push_back( pTarget );
+
+	// Stable ordering makes equal-distance collision choices deterministic in multiplayer.
+	std::sort( unitTargets.begin(), unitTargets.end(), []( CAIUnit *pA, CAIUnit *pB ) { return pA->GetUniqueId() < pB->GetUniqueId(); } );
+	unitTargets.erase( std::unique( unitTargets.begin(), unitTargets.end() ), unitTargets.end() );
+
+	for ( std::vector<CAIUnit*>::const_iterator iter = unitTargets.begin(); iter != unitTargets.end(); ++iter )
+	{
+		CAIUnit *pUnit = *iter;
+		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pUnit->GetUnitRect(), true );
+		if ( fRatio < fBestRatio && fRatio <= 1.0f )
+		{
+			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
+			if ( fabs( fZ - pUnit->GetVisZ() ) <= AI_TILE_SIZE * 2.0f )
+			{
+				fBestRatio = fRatio;
+				*ppHitTarget = pUnit;
+			}
+		}
+	}
+	if ( unitTargets.empty() && pTarget == 0 && !bStrayMode )
 	{
 		// Point-targeted missiles still detonate at their commanded destination.
 		const CVec3 vDelta = vTo - vFrom;
@@ -1357,7 +1398,10 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const
 		const float fObjectTop = GetHeights()->GetVisZ( vObjectCenter.x, vObjectCenter.y ) + vObjectCenter.z + fObjectHeight;
 		const float fMissileZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
 		if ( fMissileZ <= fObjectTop )
+		{
 			fBestRatio = fRatio;
+			*ppHitTarget = 0;
+		}
 	}
 
 	// Sampling at half-tile intervals catches cliffs and terrain that actually rises into the flight path.
@@ -1372,6 +1416,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo ) const
 		if ( GetHeights()->GetVisZ( vPoint.x, vPoint.y ) >= vPoint.z )
 		{
 			fBestRatio = fRatio;
+			*ppHitTarget = 0;
 			break;
 		}
 	}
@@ -1384,7 +1429,9 @@ void CATGMTraj::Segment()
 	if ( bFinished || curTime <= lastUpdateTime )
 		return;
 
-	if ( !bStrayMode && IsValidObj( pTarget ) && ( !pTarget->IsAlive() || !pTarget->IsVisible( nShooterParty ) ) )
+	if ( !bStrayMode && ( !IsValidObj( pShooter ) || !pShooter->IsAlive() ) )
+		EnterStrayMode();
+	else if ( !bStrayMode && IsValidObj( pTarget ) && ( !pTarget->IsAlive() || !pTarget->IsVisible( nShooterParty ) ) )
 		EnterStrayMode();
 	else if ( !bStrayMode && pTarget != 0 && !IsValidObj( pTarget ) )
 		EnterStrayMode();
@@ -1405,26 +1452,42 @@ void CATGMTraj::Segment()
 			Normalize( &vCurrentDirection );
 			const float fDot = Clamp( vCurrentDirection.x * vDesiredDirection.x + vCurrentDirection.y * vDesiredDirection.y + vCurrentDirection.z * vDesiredDirection.z, -1.0f, 1.0f );
 			const float fAngle = acos( fDot );
-			const float fMaxTurn = (std::max)( fTurnRateRad, 0.0f ) * fTimeDiff / 1000.0f;
-			if ( fAngle > fMaxTurn && fAngle > 1e-6f )
+			if ( fAngle > ToRadian( 89.0f ) )
 			{
-				const float fSinAngle = sin( fAngle );
-				if ( fabs( fSinAngle ) > 1e-6f )
-					vDesiredDirection = vCurrentDirection * ( sin( fAngle - fMaxTurn ) / fSinAngle ) + vDesiredDirection * ( sin( fMaxTurn ) / fSinAngle );
-				else
-					vDesiredDirection = vCurrentDirection + ( vDesiredDirection - vCurrentDirection ) * ( fMaxTurn / fAngle );
-				Normalize( &vDesiredDirection );
+				// A target behind the missile cannot be reacquired without orbiting around it.
+				EnterStrayMode();
 			}
-			vVelocity = vDesiredDirection * fSpeed;
+			else
+			{
+				const float fMaxTurn = (std::max)( fTurnRateRad, 0.0f ) * fTimeDiff / 1000.0f;
+				if ( fAngle > fMaxTurn && fAngle > 1e-6f )
+				{
+					const float fSinAngle = sin( fAngle );
+					if ( fabs( fSinAngle ) > 1e-6f )
+						vDesiredDirection = vCurrentDirection * ( sin( fAngle - fMaxTurn ) / fSinAngle ) + vDesiredDirection * ( sin( fMaxTurn ) / fSinAngle );
+					else
+						vDesiredDirection = vCurrentDirection + ( vDesiredDirection - vCurrentDirection ) * ( fMaxTurn / fAngle );
+					Normalize( &vDesiredDirection );
+				}
+				vVelocity = vDesiredDirection * fSpeed;
+			}
 		}
-		explTime = curTime + fabs( GetGuidancePoint() - vCenter ) / fSpeed;
+		if ( !bStrayMode )
+			explTime = curTime + fabs( GetGuidancePoint() - vCenter ) / fSpeed;
 	}
 
 	const CVec3 vNextCenter = vCenter + vVelocity * fTimeDiff;
-	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter );
+	CAIUnit *pHitTarget = 0;
+	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter, &pHitTarget );
 	if ( fImpactRatio <= 1.0f )
 	{
-		vCenter += ( vNextCenter - vCenter ) * fImpactRatio;
+		if ( IsValidObj( pHitTarget ) && pHitTarget->IsAlive() )
+		{
+			// The sweep confirmed contact; use the unit center for normal direct-hit and armor processing.
+			vCenter = CVec3( pHitTarget->GetCenterPlain(), pHitTarget->GetVisZ() );
+		}
+		else
+			vCenter += ( vNextCenter - vCenter ) * fImpactRatio;
 		explTime = stepStartTime + (NTimer::STime)( fTimeDiff * fImpactRatio );
 		bFinished = true;
 	}
@@ -1432,8 +1495,12 @@ void CATGMTraj::Segment()
 		vCenter = vNextCenter;
 
 	lastUpdateTime = curTime;
-	if ( bStrayMode && curTime >= explTime )
+	if ( !bFinished && bStrayMode && curTime >= explTime )
+	{
+		// A timed stray detonation is explicitly an air burst, even close to terrain.
+		bAirBurst = true;
 		bFinished = true;
+	}
 }
 
 
