@@ -1315,10 +1315,11 @@ void CATGMTraj::EnterStrayMode()
 	explTime = curTime + (NTimer::STime)( (std::max)( fStrayModeTime, 0.0f ) * 1000.0f );
 }
 
-float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget ) const
+float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget, CExistingObject **ppHitObject ) const
 {
 	float fBestRatio = 2.0f;
 	*ppHitTarget = 0;
+	*ppHitObject = 0;
 
 	std::vector<CAIUnit*> unitTargets;
 	if ( bStrayMode )
@@ -1401,6 +1402,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 		{
 			fBestRatio = fRatio;
 			*ppHitTarget = 0;
+			*ppHitObject = pObject;
 		}
 	}
 
@@ -1417,6 +1419,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 		{
 			fBestRatio = fRatio;
 			*ppHitTarget = 0;
+			*ppHitObject = 0;
 			break;
 		}
 	}
@@ -1478,13 +1481,21 @@ void CATGMTraj::Segment()
 
 	const CVec3 vNextCenter = vCenter + vVelocity * fTimeDiff;
 	CAIUnit *pHitTarget = 0;
-	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter, &pHitTarget );
+	CExistingObject *pHitObject = 0;
+	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter, &pHitTarget, &pHitObject );
 	if ( fImpactRatio <= 1.0f )
 	{
 		if ( IsValidObj( pHitTarget ) && pHitTarget->IsAlive() )
 		{
 			// The sweep confirmed contact; use the unit center for normal direct-hit and armor processing.
 			vCenter = CVec3( pHitTarget->GetCenterPlain(), pHitTarget->GetVisZ() );
+		}
+		else if ( IsValidObj( pHitObject ) && pHitObject->IsAlive() )
+		{
+			// Move confirmed static-object contact just inside its footprint for normal direct-hit processing.
+			const CVec3 vSweepImpact = vCenter + ( vNextCenter - vCenter ) * fImpactRatio;
+			const CVec2 vAttackCenter = pHitObject->GetAttackCenter( CVec2( vSweepImpact.x, vSweepImpact.y ) );
+			vCenter = CVec3( vAttackCenter, GetHeights()->GetVisZ( vAttackCenter.x, vAttackCenter.y ) );
 		}
 		else
 			vCenter += ( vNextCenter - vCenter ) * fImpactRatio;

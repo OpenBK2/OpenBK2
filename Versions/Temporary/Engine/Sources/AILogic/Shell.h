@@ -7,6 +7,7 @@
 #include <queue>
 
 class CAIUnit;
+class CExistingObject;
 
 //*******************************************************************
 //*														Hits																	*
@@ -216,7 +217,7 @@ class CATGMTraj : public IBallisticTraj
 
 	CVec3 GetGuidancePoint() const;
 	void EnterStrayMode();
-	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget ) const;
+	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget, CExistingObject **ppHitObject ) const;
 public:
 	CATGMTraj() : nShooterParty( -1 ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), bStrayMode( false ), bFinished( false ), bAirBurst( false ) { }
 	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pShooter, CAIUnit *pTarget, int nShooterParty, const NDb::SMissleParams *pParams );
