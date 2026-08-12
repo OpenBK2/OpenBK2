@@ -45,7 +45,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 		
 		if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			pGun = gunsFactory.CreateGun( IGunsFactory::PLANE_GUN, i, commonGunsInfo[nCommonGun] );//when create bomb
-		else if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+		else if ( pWeapon->shells[i].IsATGMTrajectory() )
 		{
 			// ATGMs are always visible, dynamically updated projectiles.
 			if ( pWeapon->shells[i].fArea2 == 0 )
@@ -336,6 +336,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 	while ( i < GetNGuns() && 
 					(
 						GetGun(i)->GetShell().IsLineTrajectory() ||
+						GetGun(i)->GetShell().IsATGMTrajectory() ||
 						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_MORALE ||
 						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_FOG
 					)
@@ -369,6 +370,7 @@ bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShe
 	while ( i < GetNGuns() && 
 					(
 					GetGun(i)->GetShell().IsLineTrajectory() ||
+					GetGun(i)->GetShell().IsATGMTrajectory() ||
 					GetGun(i)->GetShell().eDamageType != eShellType
 					)
 				)

@@ -198,7 +198,7 @@ float CBasicGun::GetFireRange( float fZ ) const
 {
 	const SUnitBaseRPGStats * pStats = GetOwner()->GetStats();
 
-	if (	GetShell().IsLineTrajectory() &&
+	if (	( GetShell().IsLineTrajectory() || GetShell().IsATGMTrajectory() ) &&
 				!pStats->IsAviation() && ( pStats->etype != RPG_TYPE_ART_AAGUN || fZ == 0.0f ) )
 	{
 		return (std::min)( GetFireRangeMax(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
@@ -229,7 +229,7 @@ bool CBasicGun::InFireRange( CAIUnit *pTarget ) const
 		fMaxRange = GetFireRangeMax() / SConsts::TILE_SIZE;
 	else
 	{
-		if ( GetShell().IsLineTrajectory() )
+		if ( GetShell().IsLineTrajectory() || GetShell().IsATGMTrajectory() )
 			fMaxRange = (std::min)( GetFireRange( pTarget->GetZ() ), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 		else
 			fMaxRange = GetFireRange( pTarget->GetZ() );
@@ -1053,7 +1053,7 @@ bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 	
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && 
 		   !pOwner->NeedDeinstall() && 
-			 pWeapon->shells[nShellType].IsLineTrajectory() )
+			 ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ) )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1097,7 +1097,9 @@ bool CBasicGun::CanShootToObjectWOMove( CStaticObject *pObj )
 		pObj->GetBoundRect( &boundRect );
 		const WORD wDir2Obj( GetDirectionByVector( pObj->GetAttackCenter( vOwnerCenter ) - vOwnerCenter ) );
 		
-		const int nSide = IsBallisticTrajectory() ? RPG_TOP : boundRect.GetSide( wDir2Obj );
+		// Top-attack ATGMs use top armor even though they remain guided direct-fire projectiles.
+		const int nSide = GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK || IsBallisticTrajectory()
+			? RPG_TOP : boundRect.GetSide( wDir2Obj );
 		if ( GetMaxPossiblePiercing() < pObj->GetStats()->GetMinPossibleArmor( nSide ) )
 		{
 			//SetRejectReason( ACK_CANNOT_PIERCE );
@@ -1122,7 +1124,7 @@ bool CBasicGun::CanShootToObject( CStaticObject *pObj )
 		return CanShootToObjectWOMove( pObj );
 
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   pWeapon->shells[nShellType].IsLineTrajectory() )
+		   ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ) )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1191,7 +1193,7 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 	}
 
 	// disallow shooting to static object under war fog
-	if ( !pEnemy && pWeapon->shells[nShellType].IsLineTrajectory() )
+	if ( !pEnemy && ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ) )
 	{
 		const SVector vAttackTile( AICellsTiles::GetTile( point ) );
 		if ( !theWarFog.IsTileVisible( vAttackTile, pOwner->GetParty() ) )
@@ -1232,7 +1234,7 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 	}
 
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   pWeapon->shells[nShellType].IsLineTrajectory() )
+		   ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ) )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1248,7 +1250,7 @@ bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const WORD 
 		return CanShootToPointWOMove( point, fZ, wHorAddAngle, wVertAddAngle );
 
 	if ( GetNAmmo() == 0 && pOwner->CanMove() && !pOwner->NeedDeinstall() && 
-		   pWeapon->shells[nShellType].IsLineTrajectory() )
+		   ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ) )
 	{
 		SetRejectReason( ACK_NO_AMMO );
 		return false;
@@ -1349,12 +1351,12 @@ bool CBasicGun::IsCommonEqual( const CBasicGun *pGun ) const
 
 IBallisticTraj* CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 {
-	if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+	if ( GetShell().IsATGMTrajectory() )
 	{
 		CVec3 vStart = GetHeights()->Get3DPoint( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) );
 		// Keep the missile clear of minor ground undulations at launch.
 		vStart.z += AI_TILE_SIZE;
-		return new CATGMTraj( vStart, vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pOwner, pEnemy, nOwnerParty, GetShell().pMissleParams );
+		return new CATGMTraj( vStart, vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pOwner, pEnemy, nOwnerParty, GetShell().etrajectory, GetShell().pMissleParams );
 	}
 
 	switch ( eType )
@@ -1520,7 +1522,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 
 WORD CBasicGun::GetTrajectoryZAngle( const CVec3 &vToAim ) const
 {
-	if ( GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+	if ( GetShell().IsATGMTrajectory() )
 	{
 		// The turret's zero-elevation direction is encoded as three quarters of a turn.
 		// Using numeric zero here prevents direct-fire ATGM guns from ever finishing aim.

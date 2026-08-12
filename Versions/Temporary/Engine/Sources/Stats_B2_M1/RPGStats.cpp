@@ -1430,6 +1430,8 @@ void SMissleParams::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "VisProjectileRotationRad", &vVisProjectileRotationRad, pThis );
 	NMetaInfo::ReportMetaInfo( "StrayModeTime", (BYTE*)&fStrayModeTime - pThis, sizeof(fStrayModeTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "TurnRateRad", (BYTE*)&fTurnRateRad - pThis, sizeof(fTurnRateRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AimsForTop", (BYTE*)&bAimsForTop - pThis, sizeof(bAimsForTop), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "TopTargetingHeight", (BYTE*)&fTopTargetingHeight - pThis, sizeof(fTopTargetingHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1439,6 +1441,8 @@ int SMissleParams::operator&( IXmlSaver &saver )
 	saver.Add( "VisProjectileRotationRad", &vVisProjectileRotationRad );
 	saver.Add( "StrayModeTime", &fStrayModeTime );
 	saver.Add( "TurnRateRad", &fTurnRateRad );
+	saver.Add( "AimsForTop", &bAimsForTop );
+	saver.Add( "TopTargetingHeight", &fTopTargetingHeight );
 
 	return 0;
 }
@@ -1448,6 +1452,8 @@ int SMissleParams::operator&( IBinSaver &saver )
 	saver.Add( 2, &vVisProjectileRotationRad );
 	saver.Add( 3, &fStrayModeTime );
 	saver.Add( 4, &fTurnRateRad );
+	saver.Add( 5, &bAimsForTop );
+	saver.Add( 6, &fTopTargetingHeight );
 
 	return 0;
 }
@@ -1455,7 +1461,7 @@ int SMissleParams::operator&( IBinSaver &saver )
 DWORD SMissleParams::CalcCheckSum() const
 {
 	CCheckSum checkSum;
-	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad;
+	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad << bAimsForTop << fTopTargetingHeight;
 	return checkSum.GetCheckSum();
 }
 
@@ -1484,6 +1490,8 @@ std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 		return "TRAJECTORY_FLAME_THROWER";
 	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE:
 		return "TRAJECTORY_ATGM_LINE";
+	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK:
+		return "TRAJECTORY_ATGM_TOP_ATTACK";
 	default:
 		return "TRAJECTORY_LINE";
 	}
@@ -1511,6 +1519,8 @@ NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGSt
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
 	if ( szValue == "TRAJECTORY_ATGM_LINE" )
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE;
+	if ( szValue == "TRAJECTORY_ATGM_TOP_ATTACK" )
+		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK;
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
 }
 

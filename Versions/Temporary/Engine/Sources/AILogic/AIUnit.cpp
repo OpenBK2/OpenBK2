@@ -184,10 +184,17 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 		SRect unitRect = GetUnitRect();
 		const CVec3 vExplCoord3D( pExpl->GetExplCoordinates() );
 		const CVec2 vExplCoord( vExplCoord3D.x, vExplCoord3D.y );
+		const NDb::SWeaponRPGStats::SShell &shell = pExpl->GetShellStats();
+		const bool bConfiguredOverheadImpact =
+			shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK &&
+			shell.pMissleParams && shell.pMissleParams->bAimsForTop &&
+			fabs( GetVisZ() + AI_TILE_SIZE + shell.pMissleParams->fTopTargetingHeight - vExplCoord3D.z ) <= AI_TILE_SIZE * 2.0f;
 
 		// попали визуально
 		// DebugTrace( "Player %d: %2.3f, %s", player, fabs( GetCenterPlain() - vExplCoord ), unitRect.IsPointInside( vExplCoord ) ? "true" : "false" );
-		if ( fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE && unitRect.IsPointInside( vExplCoord ) )
+		// An overhead fuse is an exact hit at its configured visual height, even beyond legacy unit-height tolerance.
+		if ( ( bConfiguredOverheadImpact || fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE ) &&
+			 unitRect.IsPointInside( vExplCoord ) )
 		{
 			const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect );
 			// если бьёт снизу, or with ignore AABBCoef ability on, то не сжимать
@@ -2018,6 +2025,7 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 		for ( int i = 0; i < GetNGuns(); ++i )
 		{
 			if ( GetGun( i )->GetShell().IsLineTrajectory() ||
+					 GetGun( i )->GetShell().IsATGMTrajectory() ||
 					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ||
 					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET
 					)

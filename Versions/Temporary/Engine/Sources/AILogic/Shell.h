@@ -203,24 +203,29 @@ class CATGMTraj : public IBallisticTraj
 	CPtr<CAIUnit> pShooter;
 	CPtr<CAIUnit> pTarget;
 	int nShooterParty;
+	NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType;
 	float fSpeed;
 	float fTurnRateRad;
 	float fStrayModeTime;
+	float fTopTargetingHeight;
 	NTimer::STime startTime;
 	NTimer::STime lastUpdateTime;
 	NTimer::STime explTime;
 	SAIAngle wStartDir;
+	bool bAimsForTop;
 	bool bStrayMode;
 	bool bFinished;
 	bool bAirBurst;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); f.Add(17,&pShooter); f.Add(18,&bAirBurst); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); f.Add(17,&pShooter); f.Add(18,&bAirBurst); f.Add(19,&eTrajectoryType); f.Add(20,&bAimsForTop); f.Add(21,&fTopTargetingHeight); return 0; }
 
+	bool IsAimingForTargetTop() const;
+	float GetTargetAimZ( const CAIUnit *pUnit ) const;
 	CVec3 GetGuidancePoint() const;
 	void EnterStrayMode();
 	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget, CExistingObject **ppHitObject ) const;
 public:
-	CATGMTraj() : nShooterParty( -1 ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), bStrayMode( false ), bFinished( false ), bAirBurst( false ) { }
-	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pShooter, CAIUnit *pTarget, int nShooterParty, const NDb::SMissleParams *pParams );
+	CATGMTraj() : nShooterParty( -1 ), eTrajectoryType( NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), fTopTargetingHeight( 0.0f ), bAimsForTop( false ), bStrayMode( false ), bFinished( false ), bAirBurst( false ) { }
+	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pShooter, CAIUnit *pTarget, int nShooterParty, NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType, const NDb::SMissleParams *pParams );
 
 	virtual const NTimer::STime& GetExplTime() const { return explTime; }
 	virtual const NTimer::STime& GetStartTime() const { return startTime; }
@@ -231,7 +236,7 @@ public:
 	virtual void Segment();
 	virtual bool IsFinished( const NTimer::STime &time ) const { return bFinished; }
 	virtual bool IsAirBurst() const { return bAirBurst; }
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE; }
+	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return eTrajectoryType; }
 };
 //*******************************************************************
 //*								  Взрывы																					*

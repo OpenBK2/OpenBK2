@@ -714,11 +714,15 @@ namespace NDb
 		CVec3 vVisProjectileRotationRad;
 		float fStrayModeTime;
 		float fTurnRateRad;
+		bool bAimsForTop;
+		float fTopTargetingHeight;
 
 		SMissleParams() :
 			vVisProjectileRotationRad( VNULL3 ),
 			fStrayModeTime( 1.0f ),
-			fTurnRateRad( 1.048f )
+			fTurnRateRad( 1.048f ),
+			bAimsForTop( false ),
+			fTopTargetingHeight( 0.0f )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
@@ -757,6 +761,7 @@ namespace NDb
 				TRAJECTORY_AA_ROCKET = 7,
 				TRAJECTORY_FLAME_THROWER = 8,
 				TRAJECTORY_ATGM_LINE = 9,
+				TRAJECTORY_ATGM_TOP_ATTACK = 10,
 			};
 
 			enum EShellDamageType

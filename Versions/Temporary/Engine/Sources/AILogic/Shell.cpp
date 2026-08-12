@@ -406,7 +406,9 @@ void CExplosion::AddHitToSend( CHitInfo *pHit )
 CCumulativeExpl::CCumulativeExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize )
 {
-	if ( pUnit && pUnit->GetZ() > GetExplCoordinates().z )
+	// Top-attack ATGMs always resolve against roof/top armor, regardless of their visual approach angle.
+	if ( pGun->GetWeapon()->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK ||
+		 ( pUnit && pUnit->GetZ() > GetExplCoordinates().z ) )
 		nArmorDir = 2;
 	else
 		nArmorDir = 0;
@@ -439,7 +441,9 @@ void CCumulativeExpl::Explode()
 		return;
 	}
 
-	theHitsStore.AddHit( vExplCoord, CHitsStore::EHT_OPEN_SIGHT );
+	// Top-attack hits are recorded as overhead so cover/suppression consumers classify them consistently.
+	const bool bTopAttack = pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK;
+	theHitsStore.AddHit( vExplCoord, bTopAttack ? CHitsStore::EHT_OVER_SIGHT : CHitsStore::EHT_OPEN_SIGHT );
 
 	bool bHit = false;
 	bool bSoldierHit = false;
@@ -466,7 +470,9 @@ void CCumulativeExpl::Explode()
 		CAIUnit *pTarget = units[i];
 		if ( IsValidObj( pTarget ) && pUnit != pTarget )
 		{
-			if ( nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
+			// nShellType is an ammunition index; trajectory behavior must come from the selected shell stats.
+			if ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ||
+				 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 				pTarget->Grazed( pUnit );
 			
 			// target жив, target не тот, кто стрелял и по высоте совпадает с высотой взрыва
@@ -478,7 +484,8 @@ void CCumulativeExpl::Explode()
 
 				bSoldierHit = bSoldierHit || bExplResult && pTarget->GetStats()->IsInfantry();
 				
-				if ( nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
+				if ( pWeapon->shells[nShellType].IsLineTrajectory() || pWeapon->shells[nShellType].IsATGMTrajectory() ||
+					 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 				{
 					CAIUnit *pWhoFire = GetWhoFire();
 					if ( IsValidObj( pWhoFire ) )
@@ -615,6 +622,7 @@ void CBurstExpl::Explode()
 
 			if ( pTarget != pUnit &&
 					 ( pWeapon->shells[nShellType].IsLineTrajectory() ||
+					 pWeapon->shells[nShellType].IsATGMTrajectory() ||
 					 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ) )
 				pTarget->Grazed( pUnit );
 
@@ -625,6 +633,7 @@ void CBurstExpl::Explode()
 			bHit = bHit || bExplResult;
 
 			if ( pWeapon->shells[nShellType].IsLineTrajectory() ||
+				pWeapon->shells[nShellType].IsATGMTrajectory() ||
 				pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 			{
 				CAIUnit *pWhoFire = GetWhoFire();
@@ -835,7 +844,7 @@ void CVisShell::Segment()
 	const CVec3 oldCenter( center );
 	pTraj->Segment();
 	center = pTraj->GetCoordinates();
-	if ( pTraj->GetTrajType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+	if ( GetWeapon()->shells[GetShellType()].IsATGMTrajectory() )
 		SetDynamicImpact( center, pTraj->GetVelocity(), pTraj->IsAirBurst() );
 	if ( center == oldCenter )
 		return;
@@ -906,6 +915,7 @@ void CShellsStore::AddShell( CVisShell *pShell )
 	updater.AddUpdate( 0, ACTION_NOTIFY_NEW_PROJECTILE, pShell, -1 );
 
 	if ( pShell->GetWeapon()->shells[pShell->GetShellType()].IsLineTrajectory() ||
+			 pShell->GetWeapon()->shells[pShell->GetShellType()].IsATGMTrajectory() ||
 			 pShell->GetTrajectoryType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 		theCombatEstimator.AddShell( curTime, pShell->GetMaxDamage() );
 }
@@ -925,7 +935,7 @@ void CShellsStore::Segment()
 	while ( iter != visShells.end() )
 	{
 		CVisShell *shell = *iter;
-		const bool bDynamicTrajectory = shell->GetTrajectoryType() == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE;
+		const bool bDynamicTrajectory = shell->GetWeapon()->shells[shell->GetShellType()].IsATGMTrajectory();
 		// Preserve the legacy pre-update expiry behavior for analytic trajectories.
 		if ( !bDynamicTrajectory && shell->IsFinished( curTime ) )
 		{
@@ -1260,10 +1270,11 @@ namespace
 	}
 }
 
-CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *_pShooter, CAIUnit *_pTarget, int _nShooterParty, const NDb::SMissleParams *pParams )
-	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pShooter( _pShooter ), pTarget( _pTarget ), nShooterParty( _nShooterParty ),
+CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *_pShooter, CAIUnit *_pTarget, int _nShooterParty, NDb::SWeaponRPGStats::SShell::ETrajectoryType _eTrajectoryType, const NDb::SMissleParams *pParams )
+	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pShooter( _pShooter ), pTarget( _pTarget ), nShooterParty( _nShooterParty ), eTrajectoryType( _eTrajectoryType ),
 	  fSpeed( (std::max)( fV, 0.001f ) ), fTurnRateRad( pParams ? pParams->fTurnRateRad : 1.048f ),
-	  fStrayModeTime( pParams ? pParams->fStrayModeTime : 1.0f ), startTime( curTime ), lastUpdateTime( curTime ),
+	  fStrayModeTime( pParams ? pParams->fStrayModeTime : 1.0f ), fTopTargetingHeight( pParams ? pParams->fTopTargetingHeight : 0.0f ),
+	  startTime( curTime ), lastUpdateTime( curTime ), bAimsForTop( pParams ? pParams->bAimsForTop : false ),
 	  bStrayMode( false ), bFinished( false ), bAirBurst( false )
 {
 	CVec3 vDirection = GetGuidancePoint() - vCenter;
@@ -1275,11 +1286,22 @@ CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUn
 	explTime = startTime + fabs( GetGuidancePoint() - vCenter ) / fSpeed;
 }
 
+bool CATGMTraj::IsAimingForTargetTop() const
+{
+	return eTrajectoryType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK && bAimsForTop;
+}
+
+float CATGMTraj::GetTargetAimZ( const CAIUnit *pUnit ) const
+{
+	// A deterministic one-tile approximation is used for unit top height throughout ATGM simulation.
+	return pUnit->GetVisZ() + AI_TILE_SIZE + ( IsAimingForTargetTop() ? fTopTargetingHeight : 0.0f );
+}
+
 CVec3 CATGMTraj::GetGuidancePoint() const
 {
 	if ( IsValidObj( pTarget ) && !bStrayMode )
 	{
-		CVec3 vAim( pTarget->GetCenterPlain(), pTarget->GetVisZ() + AI_TILE_SIZE );
+		CVec3 vAim( pTarget->GetCenterPlain(), GetTargetAimZ( pTarget ) );
 		const CVec2 vTargetVelocity = pTarget->GetDirectionVector() * pTarget->GetSpeed();
 		const CVec3 vRelative = vAim - vCenter;
 		const float fA = vTargetVelocity.x * vTargetVelocity.x + vTargetVelocity.y * vTargetVelocity.y - fSpeed * fSpeed;
@@ -1354,7 +1376,9 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 		if ( fRatio < fBestRatio && fRatio <= 1.0f )
 		{
 			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
-			if ( fabs( fZ - pUnit->GetVisZ() ) <= AI_TILE_SIZE * 2.0f )
+			const float fTargetZ = !bStrayMode && pUnit == pTarget && IsAimingForTargetTop()
+				? GetTargetAimZ( pUnit ) : pUnit->GetVisZ();
+			if ( fabs( fZ - fTargetZ ) <= AI_TILE_SIZE * 2.0f )
 			{
 				fBestRatio = fRatio;
 				*ppHitTarget = pUnit;
@@ -1501,8 +1525,10 @@ void CATGMTraj::Segment()
 	{
 		if ( IsValidObj( pHitTarget ) && pHitTarget->IsAlive() )
 		{
-			// The sweep confirmed contact; use the unit center for normal direct-hit and armor processing.
-			vCenter = CVec3( pHitTarget->GetCenterPlain(), pHitTarget->GetVisZ() );
+			// Keep overhead-fuzed missiles visibly above their target while preserving an exact horizontal hit.
+			const float fImpactZ = !bStrayMode && pHitTarget == pTarget && IsAimingForTargetTop()
+				? GetTargetAimZ( pHitTarget ) : pHitTarget->GetVisZ();
+			vCenter = CVec3( pHitTarget->GetCenterPlain(), fImpactZ );
 		}
 		else if ( IsATGMBlockingStaticObject( pHitObject ) )
 		{
