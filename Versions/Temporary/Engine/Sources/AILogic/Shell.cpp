@@ -16,6 +16,7 @@
 #include "Cheats.h"
 #include "StaticObjectsIters.h"
 #include "AIGeometry.h"
+#include "Entrenchment.h"
 //#include "..\Scene\Scene.h"
 #include "SimpleChecksumCalc.h"
 
@@ -1394,6 +1395,11 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 	for ( std::vector<CExistingObject*>::const_iterator iter = objects.begin(); iter != objects.end(); ++iter )
 	{
 		CExistingObject *pObject = *iter;
+		
+		// skip tank pits during the scan
+		if ( dynamic_cast<CEntrenchmentTankPit*>( pObject ) )
+			continue;
+
 		SRect rect;
 		pObject->GetBoundRect( &rect );
 		const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, rect );
