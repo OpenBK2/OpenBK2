@@ -191,7 +191,7 @@ public:
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET; }
 };
 
-// A deterministic, target-aware trajectory for wire/radio-guided ATGMs.
+// A deterministic, target-aware trajectory for guided ATGMs and SAMs.
 class CATGMTraj : public IBallisticTraj
 {
 	OBJECT_BASIC_METHODS( CATGMTraj );

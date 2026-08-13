@@ -164,7 +164,13 @@ const NTimer::STime CBasicGun::GetActionPoint() const
 bool CBasicGun::CanBreakArmor( CAIUnit *pTarget ) const
 {
 	int nSide ;
-	if ( pOwner->GetZ() > pTarget->GetZ() ) // стрельба из самолета по крышам 
+	if ( GetShell().IsSAMTrajectory() )
+	{
+		if ( !pTarget->GetStats()->IsAviation() )
+			return false;
+		nSide = RPG_BOTTOM;
+	}
+	else if ( pOwner->GetZ() > pTarget->GetZ() ) // стрельба из самолета по крышам
 	{
 		nSide = RPG_TOP;
 	}
@@ -485,7 +491,7 @@ void CBasicGun::Shooting()
 		if ( fabs( z ) < SConsts::TILE_SIZE && eType != IGunsFactory::ROCKET_GUN )
 		{
 			const float fZ = GetHeights()->GetVisZ( target.x, target.y ); 
-			if ( CanShotBecauseOfObstacles( target, fZ ) )
+			if ( GetShell().IsSAMTrajectory() || CanShotBecauseOfObstacles( target, fZ ) )
 				Fire( target, fZ, bShowBombEffect );
 			else
 			{
@@ -495,7 +501,7 @@ void CBasicGun::Shooting()
 		}
 		else
 		{
-			if ( CanShotBecauseOfObstacles( target, z ) )
+			if ( GetShell().IsSAMTrajectory() || CanShotBecauseOfObstacles( target, z ) )
 				Fire( target, z, bShowBombEffect );
 			else
 			{
@@ -796,6 +802,9 @@ void CBasicGun::StartPlaneBurst( CAIUnit *_pEnemy, bool bReAim )
 
 void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 {
+	if ( GetShell().IsSAMTrajectory() )
+		return;
+
 	if ( !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != 0 || CVec3( target, z ) != _target ) )
 	{
 		target.x = _target.x;
@@ -831,6 +840,9 @@ void CBasicGun::StartPointBurst( const CVec3 &_target, bool bReAim )
 
 void CBasicGun::StartPointBurst( const CVec2 &_target, bool bReAim, bool bStartParallelGuns )
 {
+	if ( GetShell().IsSAMTrajectory() )
+		return;
+
 	if ( !(pCommonGunInfo->bFiring) && ( shootState == EST_REST || pEnemy != 0 || target != _target ) )
 	{
 		target = _target;
@@ -991,6 +1003,11 @@ bool CBasicGun::CanShootToUnitWOMove( CAIUnit *pTarget )
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
 	}
+	if ( GetShell().IsSAMTrajectory() && !pTarget->GetStats()->IsAviation() )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
 
 	// Validate HP before consulting the per-segment cache: an aviation target can die
 	// after a positive result while remaining IsAlive() for its falling animation.
@@ -1047,6 +1064,11 @@ bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
 	}
+	if ( GetShell().IsSAMTrajectory() && !pEnemy->GetStats()->IsAviation() )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
 	
 	if ( !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
 		return CanShootToUnitWOMove( pEnemy );
@@ -1077,6 +1099,11 @@ bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 bool CBasicGun::CanShootToObjectWOMove( CStaticObject *pObj )
 {
 	if ( !pObj->IsRefValid() || !pObj->IsAlive() )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
+	if ( GetShell().IsSAMTrajectory() )
 	{
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
@@ -1115,6 +1142,11 @@ bool CBasicGun::CanShootToObjectWOMove( CStaticObject *pObj )
 bool CBasicGun::CanShootToObject( CStaticObject *pObj )
 {
 	if ( !pObj->IsRefValid() || !pObj->IsAlive() )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
+	if ( GetShell().IsSAMTrajectory() )
 	{
 		SetRejectReason( ACK_INVALID_TARGET );
 		return false;
@@ -1170,8 +1202,13 @@ bool CBasicGun::CanShotBecauseOfObstacles( const CVec2 &point, const float fZ )
 bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const WORD wHorAddAngle, const WORD wVertAddAngle, CAIUnit *pEnemy )
 {
 	const CVec3 v3DTarget( point, fZ );
+	if ( GetShell().IsSAMTrajectory() && ( !pEnemy || !pEnemy->GetStats()->IsAviation() ) )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
 
-	if ( !IsBallisticTrajectory() && !CanShotBecauseOfObstacles( point, fZ ) )
+	if ( !IsBallisticTrajectory() && !GetShell().IsSAMTrajectory() && !CanShotBecauseOfObstacles( point, fZ ) )
 	{
 		SetRejectReason( ACK_NOT_IN_FIRE_RANGE );
 		return false;
@@ -1246,6 +1283,12 @@ bool CBasicGun::CanShootToPointWOMove( const CVec2 &point, const float fZ, const
 
 bool CBasicGun::CanShootToPoint( const CVec2 &point, const float fZ, const WORD wHorAddAngle, const WORD wVertAddAngle )
 {
+	if ( GetShell().IsSAMTrajectory() )
+	{
+		SetRejectReason( ACK_INVALID_TARGET );
+		return false;
+	}
+
 	if ( !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
 		return CanShootToPointWOMove( point, fZ, wHorAddAngle, wVertAddAngle );
 
@@ -1315,7 +1358,9 @@ const int CBasicGun::GetFireRate() const
 
 bool CBasicGun::CanBreach( const CCommonUnit *pTarget ) const
 {
-	if ( pOwner->GetZ() > pTarget->GetZ() ) // сирельба из самолета по крышам 
+	if ( GetShell().IsSAMTrajectory() )
+		return pTarget->IsAviation() && GetMaxPossiblePiercing() >= pTarget->GetArmor( RPG_BOTTOM );
+	else if ( pOwner->GetZ() > pTarget->GetZ() ) // сирельба из самолета по крышам
 	{
 		return GetMaxPossiblePiercing() >= pTarget->GetArmor( RPG_TOP );
 	}
@@ -1327,7 +1372,9 @@ bool CBasicGun::CanBreach( const CCommonUnit *pTarget ) const
 
 bool CBasicGun::CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) const
 {
-	if ( pWeapon->shells[nShellType].IsLineTrajectory() )
+	if ( GetShell().IsSAMTrajectory() )
+		return false;
+	else if ( pWeapon->shells[nShellType].IsLineTrajectory() )
 		return GetMaxPossiblePiercing() >= pStats->GetMinPossibleArmor( nSide );
 	else
 		return GetMaxPossiblePiercing() >= pStats->GetMinPossibleArmor( RPG_TOP );
@@ -1335,7 +1382,9 @@ bool CBasicGun::CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) co
 
 bool CBasicGun::CanBreach( const CCommonUnit *pTarget, const int nSide ) const
 {
-	if ( pWeapon->shells[nShellType].IsLineTrajectory() )
+	if ( GetShell().IsSAMTrajectory() )
+		return pTarget->IsAviation() && GetMaxPossiblePiercing() >= pTarget->GetMinPossibleArmor( RPG_BOTTOM );
+	else if ( pWeapon->shells[nShellType].IsLineTrajectory() )
 		return GetMaxPossiblePiercing() >= pTarget->GetMinPossibleArmor( nSide );
 	else
 		return GetMaxPossiblePiercing() >= pTarget->GetMinPossibleArmor( RPG_TOP );

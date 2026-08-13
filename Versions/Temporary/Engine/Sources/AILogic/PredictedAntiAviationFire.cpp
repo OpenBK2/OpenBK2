@@ -157,9 +157,17 @@ void CPredictedAntiAviationFire::Aim()
 	if ( CTurret *pTurret = pGun->GetTurret() )
 	{
 		pGun->DontShoot();
-		pGun->StartPointBurst( aimPoint.GetPt(), false );
-		// Predicted AA fire shoots at a point, so remember the plane only for shot-time modifiers.
-		pGun->SetAntiAviationTarget( pPlane );
+		if ( pGun->GetShell().IsSAMTrajectory() )
+		{
+			// Guided SAMs must retain the plane as their actual trajectory target.
+			pGun->StartEnemyBurst( pPlane, false );
+		}
+		else
+		{
+			pGun->StartPointBurst( aimPoint.GetPt(), false );
+			// Predicted AA fire shoots at a point, so remember the plane only for shot-time modifiers.
+			pGun->SetAntiAviationTarget( pPlane );
+		}
 	}	
 }
 

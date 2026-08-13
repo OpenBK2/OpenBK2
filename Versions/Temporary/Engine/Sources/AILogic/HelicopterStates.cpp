@@ -270,7 +270,7 @@ bool CHelicopterAttackUnitState::IsGunCompatible( CBasicGun *pCheckGun ) const
 		pCheckGun->GetNAmmo() > 0 &&
 		shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
 		shell.etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
-		( pTarget->IsAviation() || !pCheckGun->GetGun().bTargetAAOnly ) &&
+		( pTarget->IsAviation() || ( !pCheckGun->GetGun().bTargetAAOnly && !shell.IsSAMTrajectory() ) ) &&
 		( pCheckGun->CanBreakArmor( pTarget ) || pHelicopter->IsTargetingTrack() );
 }
 

@@ -111,7 +111,7 @@ DWORD CMilitaryCar::InitSupportAntiAircraftGuns()
 	{
 		CBasicGun * pGun = GetGun( nGun );
 		const SBaseGunRPGStats &stats = pGun->GetGun();
-		if ( stats.bTargetAAOnly )
+		if ( stats.bTargetAAOnly || pGun->GetShell().IsSAMTrajectory() )
 		{
 			// gun able to shoot only to planes
 			dwDissalow |= (1<<nGun);

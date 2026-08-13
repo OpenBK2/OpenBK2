@@ -406,8 +406,12 @@ void CExplosion::AddHitToSend( CHitInfo *pHit )
 CCumulativeExpl::CCumulativeExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize )
 {
+	const NDb::SWeaponRPGStats::SShell &shell = pGun->GetWeapon()->shells[nShellType];
+	// SAMs approach aviation from below and always resolve against bottom armor.
+	if ( shell.IsSAMTrajectory() )
+		nArmorDir = 1;
 	// Top-attack ATGMs always resolve against roof/top armor, regardless of their visual approach angle.
-	if ( pGun->GetWeapon()->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK ||
+	else if ( shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK ||
 		 ( pUnit && pUnit->GetZ() > GetExplCoordinates().z ) )
 		nArmorDir = 2;
 	else
@@ -527,8 +531,9 @@ void CCumulativeExpl::Explode()
 	// ни в кого не попало
 	if ( bForceAirEffect )
 	{
-		// Timed ATGM self-detonations use the air effect, but still scar solid terrain below.
-		const SAINotifyHitInfo::EHitType eHitType = GetHitType( vExplCoord ) == SAINotifyHitInfo::EHT_GROUND
+		// SAM self-detonations never create craters; ground-attack ATGMs retain them.
+		const SAINotifyHitInfo::EHitType eHitType = !pWeapon->shells[nShellType].IsSAMTrajectory() &&
+			GetHitType( vExplCoord ) == SAINotifyHitInfo::EHT_GROUND
 			? SAINotifyHitInfo::EHT_AIR_WITH_CRATER : SAINotifyHitInfo::EHT_AIR;
 		updater.AddUpdate( 0, ACTION_NOTIFY_HIT,
 			new CHitInfo( pWeapon, nShellType, attackDir, vExplCoord3D, eHitType ), -1 );
@@ -552,14 +557,18 @@ void CCumulativeExpl::Explode()
 CBurstExpl::CBurstExpl( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pGun, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 {
-	if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
+	if ( pWeapon->shells[nShellType].IsSAMTrajectory() )
+		nArmorDir = 1;
+	else if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
 		nArmorDir = 2;
 }
 
 CBurstExpl::CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool _bShowEffect )
 : CExplosion( pUnit, pWeapon, explCoord, attackerPos, nShellType, bRandomize ), nArmorDir( ArmorDir ), bShowEffect( _bShowEffect )
 { 
-	if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
+	if ( pWeapon->shells[nShellType].IsSAMTrajectory() )
+		nArmorDir = 1;
+	else if ( !pWeapon->shells[nShellType].IsLineTrajectory() || (pUnit && pUnit->GetZ() > GetExplCoordinates().z) )
 		nArmorDir = 2;
 }
 
@@ -684,8 +693,9 @@ void CBurstExpl::Explode()
 		nExplodeShellType = nShellType + 1;
 	if ( bForceAirEffect )
 	{
-		// Timed ATGM self-detonations remain air bursts while retaining terrain craters.
-		const SAINotifyHitInfo::EHitType eHitType = GetHitType( explCoord ) == SAINotifyHitInfo::EHT_GROUND
+		// SAM self-detonations never create craters; ground-attack ATGMs retain them.
+		const SAINotifyHitInfo::EHitType eHitType = !pWeapon->shells[nShellType].IsSAMTrajectory() &&
+			GetHitType( explCoord ) == SAINotifyHitInfo::EHT_GROUND
 			? SAINotifyHitInfo::EHT_AIR_WITH_CRATER : SAINotifyHitInfo::EHT_AIR;
 		updater.AddUpdate( 0, ACTION_NOTIFY_HIT,
 			new CHitInfo( pWeapon, nExplodeShellType, attackDir, vExplCoord, eHitType ), -1 );
@@ -1293,6 +1303,9 @@ bool CATGMTraj::IsAimingForTargetTop() const
 
 float CATGMTraj::GetTargetAimZ( const CAIUnit *pUnit ) const
 {
+	// Aviation GetVisZ is already the airborne target's impact height.
+	if ( eTrajectoryType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_SAM )
+		return pUnit->GetVisZ();
 	// A deterministic one-tile approximation is used for unit top height throughout ATGM simulation.
 	return pUnit->GetVisZ() + AI_TILE_SIZE + ( IsAimingForTargetTop() ? fTopTargetingHeight : 0.0f );
 }
@@ -1348,6 +1361,25 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 	float fBestRatio = 2.0f;
 	*ppHitTarget = 0;
 	*ppHitObject = 0;
+
+	if ( eTrajectoryType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_SAM )
+	{
+		// SAMs ignore terrain, static objects, and every unit except their assigned aviation target.
+		if ( IsValidObj( pTarget ) && pTarget->IsAlive() && pTarget->GetStats()->IsAviation() )
+		{
+			const float fRatio = GetATGMSegmentRectRatio( vFrom, vTo, pTarget->GetUnitRect() );
+			if ( fRatio <= 1.0f )
+			{
+				const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
+				if ( fabs( fZ - GetTargetAimZ( pTarget ) ) <= AI_TILE_SIZE * 2.0f )
+				{
+					*ppHitTarget = pTarget;
+					return fRatio;
+				}
+			}
+		}
+		return fBestRatio;
+	}
 
 	std::vector<CAIUnit*> unitTargets;
 	if ( bStrayMode )

@@ -1363,18 +1363,33 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 	const int nMinPiercing = nPiercing - nPiercingRandom;
 	const int nMaxPiercing = nPiercing + nPiercingRandom;
 
-	for ( int i = 0; i < 4; ++i )
+	if ( pGun->GetShell().IsSAMTrajectory() )
 	{
-		if ( pGun->CanBreach( pEnemy, i ) )
-		{
-			const int nMinArmor = pEnemy->GetMinPossibleArmor( i );
-			const int nMaxArmor = pEnemy->GetMaxPossibleArmor( i );
+		if ( !pEnemy->GetStats()->IsAviation() )
+			return 0.0f;
 
-			fPiercingProbability += CalculateProbability( nMinPiercing, nMinArmor, nMaxPiercing, nMaxArmor ) * weights[i];
+		if ( pGun->CanBreach( pEnemy, RPG_BOTTOM ) )
+		{
+			const int nMinArmor = pEnemy->GetMinPossibleArmor( RPG_BOTTOM );
+			const int nMaxArmor = pEnemy->GetMaxPossibleArmor( RPG_BOTTOM );
+			fPiercingProbability = CalculateProbability( nMinPiercing, nMinArmor, nMaxPiercing, nMaxArmor );
 		}
 	}
+	else
+	{
+		for ( int i = 0; i < 4; ++i )
+		{
+			if ( pGun->CanBreach( pEnemy, i ) )
+			{
+				const int nMinArmor = pEnemy->GetMinPossibleArmor( i );
+				const int nMaxArmor = pEnemy->GetMaxPossibleArmor( i );
 
-	fPiercingProbability /= ( weights[0] + weights[1] + weights[2] + weights[3] );
+				fPiercingProbability += CalculateProbability( nMinPiercing, nMinArmor, nMaxPiercing, nMaxArmor ) * weights[i];
+			}
+		}
+
+		fPiercingProbability /= ( weights[0] + weights[1] + weights[2] + weights[3] );
+	}
 
 	if ( fPiercingProbability == 0.0f )
 		return 0;

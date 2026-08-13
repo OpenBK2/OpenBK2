@@ -1492,6 +1492,8 @@ std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 		return "TRAJECTORY_ATGM_LINE";
 	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK:
 		return "TRAJECTORY_ATGM_TOP_ATTACK";
+	case NDb::SWeaponRPGStats::SShell::TRAJECTORY_SAM:
+		return "TRAJECTORY_SAM";
 	default:
 		return "TRAJECTORY_LINE";
 	}
@@ -1521,6 +1523,8 @@ NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGSt
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE;
 	if ( szValue == "TRAJECTORY_ATGM_TOP_ATTACK" )
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK;
+	if ( szValue == "TRAJECTORY_SAM" )
+		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_SAM;
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
 }
 

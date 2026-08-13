@@ -64162,6 +64162,10 @@
 					<Name>TRAJECTORY_ATGM_TOP_ATTACK</Name>
 					<Value>10</Value>
 				</Item>
+				<Item>
+					<Name>TRAJECTORY_SAM</Name>
+					<Value>11</Value>
+				</Item>
 			</Entries>
 			<Attributes />
 		</Item>

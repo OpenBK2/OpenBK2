@@ -762,6 +762,7 @@ namespace NDb
 				TRAJECTORY_FLAME_THROWER = 8,
 				TRAJECTORY_ATGM_LINE = 9,
 				TRAJECTORY_ATGM_TOP_ATTACK = 10,
+				TRAJECTORY_SAM = 11,
 			};
 
 			enum EShellDamageType

@@ -281,7 +281,7 @@ public:
 	// это значение делится на revealRadous и умножается на AntiArtilleryRadius
 	static float ARTILLERY_REVEAL_COEEFICIENT;
 	// минимальный и максимальный разброс для всех типов траекторий
-	static float dispersionRatio[11][2];
+	static float dispersionRatio[12][2];
 	
 	static float COEFF_FOR_RANDOM_DELAY;
 	
