@@ -8,8 +8,9 @@ int GetMinPossiblePiercing() const { return (std::max)( 0, nPiercing - nPiercing
 const bool HasCraters() const { return pCraters != 0; }
 // Only side-attack ATGMs use line-shell armor selection.
 bool IsLineTrajectory() const { return etrajectory == TRAJECTORY_LINE || etrajectory == TRAJECTORY_ATGM_LINE; }
-// Both ATGM variants share guided-projectile and direct-fire handling.
-bool IsATGMTrajectory() const { return etrajectory == TRAJECTORY_ATGM_LINE || etrajectory == TRAJECTORY_ATGM_TOP_ATTACK; }
+// ATGMs and SAMs share target-aware guidance and visible-projectile handling.
+bool IsATGMTrajectory() const { return etrajectory == TRAJECTORY_ATGM_LINE || etrajectory == TRAJECTORY_ATGM_TOP_ATTACK || etrajectory == TRAJECTORY_SAM; }
+bool IsSAMTrajectory() const { return etrajectory == TRAJECTORY_SAM; }
 //const string& GetRandomCrater() const { return craters[rand() % craters.size()]; }
 // преобразовать из человеческих единиц в AI
 bool ToAIUnits( bool bInEditor )
