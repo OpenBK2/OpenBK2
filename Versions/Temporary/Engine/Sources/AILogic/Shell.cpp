@@ -3,6 +3,7 @@
 #include "System/Time.h"
 #include "Shell.h"
 #include "AIUnit.h"
+#include "Aviation.h"
 #include "Randomize.h"
 #include "UnitsIterators2.h"
 #include "NewUpdater.h"
@@ -1284,6 +1285,7 @@ CATGMTraj::CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUn
 	: vStart3D( vStart ), vCenter( vStart ), vFixedTarget( vFinish ), pShooter( _pShooter ), pTarget( _pTarget ), nShooterParty( _nShooterParty ), eTrajectoryType( _eTrajectoryType ),
 	  fSpeed( (std::max)( fV, 0.001f ) ), fTurnRateRad( pParams ? pParams->fTurnRateRad : 1.048f ),
 	  fStrayModeTime( pParams ? pParams->fStrayModeTime : 1.0f ), fTopTargetingHeight( pParams ? pParams->fTopTargetingHeight : 0.0f ),
+	  fProximityRadius( pParams ? (std::max)( pParams->fProximityRadius, 0.0f ) * AI_TILE_SIZE : 0.0f ),
 	  startTime( curTime ), lastUpdateTime( curTime ), bAimsForTop( pParams ? pParams->bAimsForTop : false ),
 	  bStrayMode( false ), bFinished( false ), bAirBurst( false )
 {
@@ -1497,6 +1499,40 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit 
 	return fBestRatio;
 }
 
+float CATGMTraj::FindSAMProximityRatio( const CVec3 &vFrom, const CVec3 &vTo, float fTimeDiff, const NTimer::STime &stepEndTime ) const
+{
+	if ( eTrajectoryType != NDb::SWeaponRPGStats::SShell::TRAJECTORY_SAM || fProximityRadius <= 0.0f ||
+		 !IsValidObj( pTarget ) || !pTarget->IsAlive() || !pTarget->GetStats()->IsAviation() )
+		return 2.0f;
+
+	CAIUnit *pTargetUnit = pTarget;
+	const CAviation *pAviation = dynamic_cast<const CAviation*>( pTargetUnit );
+	if ( pAviation == 0 )
+		return 2.0f;
+
+	// Reconstruct the aircraft's linear motion over this missile step. The relative sweep catches
+	// closest approaches between 200 ms AI updates instead of testing only the two endpoints.
+	const CVec3 vTargetVelocity = pAviation->GetSpeedB2();
+	const float fEndTimeOffset = (float)( curTime - stepEndTime );
+	const CVec3 vTargetAtCurrentTime( pTarget->GetCenterPlain(), GetTargetAimZ( pTarget ) );
+	const CVec3 vTargetEnd = vTargetAtCurrentTime - vTargetVelocity * fEndTimeOffset;
+	const CVec3 vTargetStart = vTargetEnd - vTargetVelocity * fTimeDiff;
+	const CVec3 vRelativeStart = vFrom - vTargetStart;
+	const CVec3 vRelativeDelta = ( vTo - vFrom ) - ( vTargetEnd - vTargetStart );
+	const float fRelativeLength2 = vRelativeDelta.x * vRelativeDelta.x + vRelativeDelta.y * vRelativeDelta.y + vRelativeDelta.z * vRelativeDelta.z;
+
+	float fClosestRatio = 0.0f;
+	if ( fRelativeLength2 > 1e-6f )
+	{
+		fClosestRatio = -( vRelativeStart.x * vRelativeDelta.x + vRelativeStart.y * vRelativeDelta.y + vRelativeStart.z * vRelativeDelta.z ) / fRelativeLength2;
+		fClosestRatio = Clamp( fClosestRatio, 0.0f, 1.0f );
+	}
+
+	const CVec3 vClosestDelta = vRelativeStart + vRelativeDelta * fClosestRatio;
+	const float fClosestDistance2 = vClosestDelta.x * vClosestDelta.x + vClosestDelta.y * vClosestDelta.y + vClosestDelta.z * vClosestDelta.z;
+	return fClosestDistance2 <= fProximityRadius * fProximityRadius ? fClosestRatio : 2.0f;
+}
+
 void CATGMTraj::Segment()
 {
 	if ( bFinished || curTime <= lastUpdateTime )
@@ -1553,9 +1589,18 @@ void CATGMTraj::Segment()
 	CAIUnit *pHitTarget = 0;
 	CExistingObject *pHitObject = 0;
 	const float fImpactRatio = FindImpactRatio( vCenter, vNextCenter, &pHitTarget, &pHitObject );
-	if ( fImpactRatio <= 1.0f )
+	const float fProximityRatio = FindSAMProximityRatio( vCenter, vNextCenter, fTimeDiff, stepEndTime );
+	const bool bProximityDetonation = fProximityRatio <= 1.0f && fProximityRatio <= fImpactRatio;
+	const float fDetonationRatio = bProximityDetonation ? fProximityRatio : fImpactRatio;
+	if ( fDetonationRatio <= 1.0f )
 	{
-		if ( IsValidObj( pHitTarget ) && pHitTarget->IsAlive() )
+		if ( bProximityDetonation )
+		{
+			// Keep the burst at the swept closest-approach point so normal area-damage processing is used.
+			vCenter += ( vNextCenter - vCenter ) * fDetonationRatio;
+			bAirBurst = true;
+		}
+		else if ( IsValidObj( pHitTarget ) && pHitTarget->IsAlive() )
 		{
 			// Keep overhead-fuzed missiles visibly above their target while preserving an exact horizontal hit.
 			const float fImpactZ = !bStrayMode && pHitTarget == pTarget && IsAimingForTargetTop()
@@ -1565,13 +1610,13 @@ void CATGMTraj::Segment()
 		else if ( IsATGMBlockingStaticObject( pHitObject ) )
 		{
 			// Move confirmed static-object contact just inside its footprint for normal direct-hit processing.
-			const CVec3 vSweepImpact = vCenter + ( vNextCenter - vCenter ) * fImpactRatio;
+			const CVec3 vSweepImpact = vCenter + ( vNextCenter - vCenter ) * fDetonationRatio;
 			const CVec2 vAttackCenter = pHitObject->GetAttackCenter( CVec2( vSweepImpact.x, vSweepImpact.y ) );
 			vCenter = CVec3( vAttackCenter, GetHeights()->GetVisZ( vAttackCenter.x, vAttackCenter.y ) );
 		}
 		else
-			vCenter += ( vNextCenter - vCenter ) * fImpactRatio;
-		explTime = stepStartTime + (NTimer::STime)( fTimeDiff * fImpactRatio );
+			vCenter += ( vNextCenter - vCenter ) * fDetonationRatio;
+		explTime = stepStartTime + (NTimer::STime)( fTimeDiff * fDetonationRatio );
 		bFinished = true;
 	}
 	else

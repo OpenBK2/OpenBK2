@@ -716,13 +716,15 @@ namespace NDb
 		float fTurnRateRad;
 		bool bAimsForTop;
 		float fTopTargetingHeight;
+		float fProximityRadius;
 
 		SMissleParams() :
 			vVisProjectileRotationRad( VNULL3 ),
 			fStrayModeTime( 1.0f ),
 			fTurnRateRad( 1.048f ),
 			bAimsForTop( false ),
-			fTopTargetingHeight( 0.0f )
+			fTopTargetingHeight( 0.0f ),
+			fProximityRadius( 0.0f )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }

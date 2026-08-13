@@ -28454,6 +28454,21 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>7033cd10</Type>
+					<Name>ProximityRadius</Name>
+					<ChunkID>7</ChunkID>
+					<Description>SAM proximity-fuze radius in range units; zero disables the fuze</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>0.0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>806108033</TypeID>
 		</Item>
