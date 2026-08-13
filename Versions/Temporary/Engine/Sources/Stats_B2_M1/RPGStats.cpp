@@ -1436,6 +1436,7 @@ void SMissleParams::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "TurnRateRad", (uint8_t*)&fTurnRateRad - pThis, sizeof(fTurnRateRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "AimsForTop", (uint8_t*)&bAimsForTop - pThis, sizeof(bAimsForTop), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "TopTargetingHeight", (uint8_t*)&fTopTargetingHeight - pThis, sizeof(fTopTargetingHeight), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ProximityRadius", (uint8_t*)&fProximityRadius - pThis, sizeof(fProximityRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1447,6 +1448,7 @@ int SMissleParams::operator&( IXmlSaver &saver )
 	saver.Add( "TurnRateRad", &fTurnRateRad );
 	saver.Add( "AimsForTop", &bAimsForTop );
 	saver.Add( "TopTargetingHeight", &fTopTargetingHeight );
+	saver.Add( "ProximityRadius", &fProximityRadius );
 
 	return 0;
 }
@@ -1458,6 +1460,7 @@ int SMissleParams::operator&( IBinSaver &saver )
 	saver.Add( 4, &fTurnRateRad );
 	saver.Add( 5, &bAimsForTop );
 	saver.Add( 6, &fTopTargetingHeight );
+	saver.Add( 7, &fProximityRadius );
 
 	return 0;
 }
@@ -1465,7 +1468,7 @@ int SMissleParams::operator&( IBinSaver &saver )
 uint32_t SMissleParams::CalcCheckSum() const
 {
 	CCheckSum checkSum;
-	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad << bAimsForTop << fTopTargetingHeight;
+	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad << bAimsForTop << fTopTargetingHeight << fProximityRadius;
 	return checkSum.GetCheckSum();
 }
 
