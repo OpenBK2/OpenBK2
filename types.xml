@@ -40170,6 +40170,21 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
+					<Type>f02acd10</Type>
+					<Name>ForcePlayAllBurstEffects</Name>
+					<ChunkID>15</ChunkID>
+					<Description>play the weapon fire effect for every shot in a burst, regardless of owner unit type</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
 					<Type>7033cd10</Type>
 					<Name>RangeMax</Name>
 					<ChunkID>7</ChunkID>

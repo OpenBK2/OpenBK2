@@ -1708,6 +1708,7 @@ void SWeaponRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Dispersion", (BYTE*)&fDispersion - pThis, sizeof(fDispersion), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "AimingTime", (BYTE*)&fAimingTime - pThis, sizeof(fAimingTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "AmmoPerBurst", (BYTE*)&nAmmoPerBurst - pThis, sizeof(nAmmoPerBurst), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "ForcePlayAllBurstEffects", (BYTE*)&bForcePlayAllBurstEffects - pThis, sizeof(bForcePlayAllBurstEffects), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "RangeMax", (BYTE*)&fRangeMax - pThis, sizeof(fRangeMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "RangeMin", (BYTE*)&fRangeMin - pThis, sizeof(fRangeMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Ceiling", (BYTE*)&nCeiling - pThis, sizeof(nCeiling), NTypeDef::TYPE_TYPE_INT );
@@ -1728,6 +1729,7 @@ int SWeaponRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "Dispersion", &fDispersion );
 	saver.Add( "AimingTime", &fAimingTime );
 	saver.Add( "AmmoPerBurst", &nAmmoPerBurst );
+	saver.Add( "ForcePlayAllBurstEffects", &bForcePlayAllBurstEffects );
 	saver.Add( "RangeMax", &fRangeMax );
 	saver.Add( "RangeMin", &fRangeMin );
 	saver.Add( "Ceiling", &nCeiling );
@@ -1748,6 +1750,7 @@ int SWeaponRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 4, &fDispersion );
 	saver.Add( 5, &fAimingTime );
 	saver.Add( 6, &nAmmoPerBurst );
+	saver.Add( 15, &bForcePlayAllBurstEffects );
 	saver.Add( 7, &fRangeMax );
 	saver.Add( 8, &fRangeMin );
 	saver.Add( 9, &nCeiling );
@@ -1767,7 +1770,7 @@ DWORD SWeaponRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SCommonRPGStats::CalcCheckSum() << eWeaponType << fDispersion << fAimingTime << nAmmoPerBurst << fRangeMax << fRangeMin << nCeiling << fRevealRadius << fDeltaAngle << shells;
+	checkSum << SCommonRPGStats::CalcCheckSum() << eWeaponType << fDispersion << fAimingTime << nAmmoPerBurst << bForcePlayAllBurstEffects << fRangeMax << fRangeMin << nCeiling << fRevealRadius << fDeltaAngle << shells;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
