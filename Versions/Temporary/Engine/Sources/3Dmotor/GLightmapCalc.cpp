@@ -668,11 +668,11 @@ static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, boo
 {
 	CTransformStack ts;
 	ts.MakeParallel( 1000, 1000, -1000, 1000 );
-	std::list<SRenderPartSet> parts;
+	std::vector<SRenderPartSet> parts;
 	SGroupSelect mask( 0xffff, 0 );
 	pRender->FormPartList( &ts, &parts, IRender::DT_ALL, mask );
 
-	for ( std::list<SRenderPartSet>::iterator i = parts.begin(); i != parts.end(); ++i )
+	for ( std::vector<SRenderPartSet>::iterator i = parts.begin(); i != parts.end(); ++i )
 	{
 		const SRenderPartSet &r = *i;
 		for ( int k = 0; k < r.pParts->size(); ++k )

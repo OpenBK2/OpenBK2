@@ -434,7 +434,7 @@ class CSW2DScene: public ISW2DScene
 	OBJECT_BASIC_METHODS(CSW2DScene);
 private:
 	ZDATA
-	std::list< CPtr<ISWRects> > rects;
+	std::vector< CPtr<ISWRects> > rects;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&rects); return 0; }
 
 	template<class T, class TSet>

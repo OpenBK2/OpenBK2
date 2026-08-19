@@ -14,7 +14,7 @@ public:
 };
 
 void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
-	std::list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask );
+	std::vector<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask );
 
 typedef std::unordered_map<CPtr<CObjectBase>,CPartFlags,SPtrHash> CIgnorePartsHash;
 

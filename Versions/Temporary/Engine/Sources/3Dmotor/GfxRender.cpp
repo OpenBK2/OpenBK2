@@ -88,7 +88,7 @@ const int N_SAMPLER_STATES = 14;
 static DWORD renderStates[210], tssStates[8][33], samplerStates[8][14];
 static std::vector<CMObj<CQuery> > queries;
 static bool bDoesSupportOcclusionQueries = false, bDoesSupportEventQueries = false;
-static std::list<CObj<IQuery> > lagQueries;
+static std::deque<CObj<IQuery> > lagQueries;
 static int nMaxLag = 1;
 static float fRegisterResolution = 1;
 

@@ -281,7 +281,7 @@ public:
 	{
 		ZDATA
 		std::vector<CObj<CCombinedPart> > transparent, normal;
-		std::list<CPtr<CCombinedPart> > elements;
+		std::vector<CPtr<CCombinedPart> > elements;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&transparent); f.Add(3,&normal); f.Add(4,&elements); return 0; }
 
 		CCombinedPart* AllocCombinerPart( std::vector<CObj<CCombinedPart> > *pRes, int nFloorMask, SFullStaticTrackers *pTrackers, bool bIsDynamic )
@@ -306,7 +306,7 @@ public:
 		}
 		bool IsEmpty() const
 		{
-			for ( std::list<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
+			for ( std::vector<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
 			{
 				ASSERT( IsValid( *i ) );
 				if ( (*i)->GetCombiner()->GetSize() != 0 )
@@ -331,7 +331,7 @@ public:
 	//
 	ZDATA_(CParent)
 	SPerMaterialHolder staticParts, dynamicParts;
-	std::list<CPtr<CParticles> > particles;
+	std::vector<CPtr<CParticles> > particles;
 	SUpdatableObjects updatable;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CParent*)this); f.Add(2,&staticParts); f.Add(3,&dynamicParts); f.Add(4,&particles); f.Add(5,&updatable); return 0; }
 

@@ -666,7 +666,7 @@ bool SetMode( const SVideoMode &m, const SRenderTargetsInfo &_rtInfo )
 	return D3D_OK == hr;
 }
 
-void GetModesList( std::list<SVideoMode> *pRes, int nBpp )
+void GetModesList( std::vector<SVideoMode> *pRes, int nBpp )
 {
 	if ( b16BitModeOnly )
 		nBpp = 16;
