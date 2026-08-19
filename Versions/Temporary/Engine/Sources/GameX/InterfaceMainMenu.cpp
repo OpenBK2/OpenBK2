@@ -81,11 +81,18 @@ bool CInterfaceMainMenu::Init()
 
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
-	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"" );
+	std::wstring wszVersion = NGlobal::GetVar("code_version_number", L"0.0.0.0");
+	auto versionShort = L"OpenBK2 " + wszVersion + L" " + NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
 	wszVersion =	L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" " +
-					NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum())) + L" ";
+					NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
 	if ( pVersionView )
-		pVersionView->SetText( wszVersion );
+	{
+		pVersionView->SetText(wszVersion);
+		pVersionView->SetTooltip(versionShort);
+		auto placement = pVersionView->GetPlacement();
+		placement.SetRect(placement.minx - 7, placement.miny, placement.maxx - 4, placement.maxy);
+		pVersionView->SetPlacement(placement, EWindowPlacementFlags::EWPF_ALL);
+	}
 #endif
 
 	// music
