@@ -46,3 +46,4 @@ add_unit_test(MMXhelpers 3Dmotor Misc)
 add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 add_unit_test(MMXTransformVector 3Dmotor Misc OriginalMMX)
+add_unit_test(BitOps Misc)
