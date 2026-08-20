@@ -7,6 +7,12 @@
 #include "GSSETransform.h"
 #include "3DLib/Bound.h"
 
+#include "System/Arch.h"
+
+#if HAS_SSE2
+#include <emmintrin.h>
+#endif
+
 #include <algorithm>
 
 template<class T>
@@ -148,6 +154,179 @@ static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> 
 // calc colors
 
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x * b.x, a.y * b.y, a.z * b.z ); }
+
+#if HAS_SSE2 //SSE2 way of calculating, two lighting infos per register, compared to only one in old MMX
+static inline __m128i LoadMMXWord64( const NGfx::SMMXWord &w )
+{
+	// SMMXWord is laid out exactly like the old 64-bit MMX operand: z, y, x, w.
+	return _mm_loadl_epi64( reinterpret_cast<const __m128i*>( &w ) );
+}
+
+static inline __m128i LoadMMXWord128( const NGfx::SMMXWord &w )
+{
+	const __m128i value = LoadMMXWord64( w );
+	return _mm_unpacklo_epi64( value, value );
+}
+
+struct SDirectionalLightingSSE2Data
+{
+	__m128i shift;
+	__m128i dirLight;
+	__m128i ambient;
+	__m128i lightColor;
+	__m128i incidentShadowColor;
+	__m128i shadeColor;
+	__m128i translucentShade;
+	__m128i allBits;
+};
+
+static inline void CalcDirectionalLightingSSE2x1(
+	DWORD dwNormal, const SDirectionalLightingSSE2Data &data, DWORD *pColor, DWORD *pShadowColor )
+{
+	__m128i normal = _mm_cvtsi32_si128( static_cast<int>( dwNormal ) );
+	normal = _mm_unpacklo_epi8( normal, normal );
+
+	__m128i shiftedNormal = _mm_sub_epi16( normal, data.shift );
+	shiftedNormal = _mm_madd_epi16( shiftedNormal, data.dirLight );
+	__m128i normalHigh = _mm_srli_epi64( shiftedNormal, 32 );
+	shiftedNormal = _mm_add_epi32( shiftedNormal, normalHigh );
+	shiftedNormal = _mm_srai_epi32( shiftedNormal, 15 );
+	shiftedNormal = _mm_unpacklo_epi16( shiftedNormal, shiftedNormal );
+	shiftedNormal = _mm_unpacklo_epi32( shiftedNormal, shiftedNormal );
+
+	__m128i sign = _mm_srai_epi16( shiftedNormal, 16 );
+	__m128i negativeF = _mm_and_si128( shiftedNormal, sign );
+	__m128i f = _mm_andnot_si128( sign, shiftedNormal );
+	negativeF = _mm_xor_si128( negativeF, data.allBits );
+
+	__m128i vRes = data.ambient;
+	__m128i vResShadow = vRes;
+	__m128i lightColor = _mm_mulhi_epi16( data.lightColor, f );
+	__m128i incidentShadowColor = _mm_mulhi_epi16( data.incidentShadowColor, f );
+	__m128i translucentShade = _mm_mulhi_epi16( data.translucentShade, negativeF );
+	__m128i shadeColor = _mm_mulhi_epi16( data.shadeColor, negativeF );
+
+	vRes = _mm_add_epi16( vRes, lightColor );
+	vResShadow = _mm_add_epi16( vResShadow, incidentShadowColor );
+	vRes = _mm_add_epi16( vRes, translucentShade );
+	vResShadow = _mm_add_epi16( vResShadow, shadeColor );
+	vRes = _mm_srai_epi16( vRes, 4 );
+	vResShadow = _mm_srai_epi16( vResShadow, 4 );
+
+	*pColor = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_packus_epi16( vRes, vRes ) ) );
+	*pShadowColor = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_packus_epi16( vResShadow, vResShadow ) ) );
+}
+
+static inline void CalcDirectionalLightingSSE2x2(
+	DWORD dwNormal0, DWORD dwNormal1, const SDirectionalLightingSSE2Data &data,
+	DWORD *pColor0, DWORD *pShadowColor0, DWORD *pColor1, DWORD *pShadowColor1 )
+{
+	// Each 64-bit half follows the original MMX code for one normal.
+	__m128i normal = _mm_or_si128(
+		_mm_cvtsi32_si128( static_cast<int>( dwNormal0 ) ),
+		_mm_slli_si128( _mm_cvtsi32_si128( static_cast<int>( dwNormal1 ) ), 4 ) );
+	normal = _mm_unpacklo_epi8( normal, normal );
+
+	__m128i shiftedNormal = _mm_sub_epi16( normal, data.shift );
+	shiftedNormal = _mm_madd_epi16( shiftedNormal, data.dirLight );
+	__m128i normalHigh = _mm_srli_epi64( shiftedNormal, 32 );
+	shiftedNormal = _mm_add_epi32( shiftedNormal, normalHigh );
+	shiftedNormal = _mm_srai_epi32( shiftedNormal, 15 );
+	shiftedNormal = _mm_shufflelo_epi16( shiftedNormal, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+	shiftedNormal = _mm_shufflehi_epi16( shiftedNormal, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+
+	__m128i sign = _mm_srai_epi16( shiftedNormal, 16 );
+	__m128i negativeF = _mm_and_si128( shiftedNormal, sign );
+	__m128i f = _mm_andnot_si128( sign, shiftedNormal );
+	negativeF = _mm_xor_si128( negativeF, data.allBits );
+
+	__m128i vRes = data.ambient;
+	__m128i vResShadow = vRes;
+	__m128i lightColor = _mm_mulhi_epi16( data.lightColor, f );
+	__m128i incidentShadowColor = _mm_mulhi_epi16( data.incidentShadowColor, f );
+	__m128i translucentShade = _mm_mulhi_epi16( data.translucentShade, negativeF );
+	__m128i shadeColor = _mm_mulhi_epi16( data.shadeColor, negativeF );
+
+	vRes = _mm_add_epi16( vRes, lightColor );
+	vResShadow = _mm_add_epi16( vResShadow, incidentShadowColor );
+	vRes = _mm_add_epi16( vRes, translucentShade );
+	vResShadow = _mm_add_epi16( vResShadow, shadeColor );
+	vRes = _mm_srai_epi16( vRes, 4 );
+	vResShadow = _mm_srai_epi16( vResShadow, 4 );
+
+	__m128i packedColor = _mm_packus_epi16( vRes, vRes );
+	__m128i packedShadowColor = _mm_packus_epi16( vResShadow, vResShadow );
+	*pColor0 = static_cast<DWORD>( _mm_cvtsi128_si32( packedColor ) );
+	*pShadowColor0 = static_cast<DWORD>( _mm_cvtsi128_si32( packedShadowColor ) );
+	*pColor1 = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_srli_si128( packedColor, 4 ) ) );
+	*pShadowColor1 = static_cast<DWORD>( _mm_cvtsi128_si32( _mm_srli_si128( packedShadowColor, 4 ) ) );
+}
+
+static void CalcDirectionalLighting(
+	const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
+	const SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
+	std::vector<DWORD> *pResColors, std::vector<DWORD> *pResShadow )
+{
+	pResColors->resize( posIndices.size() );
+	pResShadow->resize( posIndices.size() );
+	DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+	const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
+	NGfx::SMMXWord transHolder{};
+	if ( bTranslucent )
+	{
+		ConvertColor( &transHolder, MulPerComp( ls.vLightColor, vTranslucentColor ) );
+		pTranslucentShade = &transHolder;
+	}
+
+	SDirectionalLightingSSE2Data lightingData;
+	lightingData.shift = LoadMMXWord128( ls.shift );
+	lightingData.dirLight = LoadMMXWord128( ls.dirLight );
+	lightingData.ambient = LoadMMXWord128( ls.ambient );
+	lightingData.lightColor = LoadMMXWord128( ls.lightColor );
+	lightingData.incidentShadowColor = LoadMMXWord128( ls.incidentShadowColor );
+	lightingData.shadeColor = LoadMMXWord128( ls.shadeColor );
+	lightingData.translucentShade = LoadMMXWord128( *pTranslucentShade );
+	lightingData.allBits = _mm_cmpeq_epi16( lightingData.shift, lightingData.shift );
+
+	const int nSize = static_cast<int>( posIndices.size() );
+	for ( int k = 0; k < nSize; ++k )
+	{
+		DWORD dwNormal = _normals[k].dw;
+		if ( dwNormal != dwPrevNormal )
+		{
+			if ( k + 1 < nSize )
+			{
+				DWORD dwNextNormal = _normals[k + 1].dw;
+				if ( dwNextNormal != dwNormal )
+				{
+					DWORD dwNextColor = 0, dwNextShadowColor = 0;
+					CalcDirectionalLightingSSE2x2(
+						dwNormal, dwNextNormal, lightingData,
+						&dwColor, &dwShadowColor, &dwNextColor, &dwNextShadowColor );
+
+					(*pResColors)[k] = dwColor;
+					(*pResShadow)[k] = dwShadowColor;
+					(*pResColors)[k + 1] = dwNextColor;
+					(*pResShadow)[k + 1] = dwNextShadowColor;
+
+					dwColor = dwNextColor;
+					dwShadowColor = dwNextShadowColor;
+					dwPrevNormal = dwNextNormal;
+					++k;
+					continue;
+				}
+			}
+
+			CalcDirectionalLightingSSE2x1( dwNormal, lightingData, &dwColor, &dwShadowColor );
+		}
+
+		(*pResColors)[k] = dwColor;
+		(*pResShadow)[k] = dwShadowColor;
+		dwPrevNormal = dwNormal;
+	}
+}
+#else // Classic "scalar" (pray to the compiler to optimize it better) way of computing dir lighting
 static void CalcDirectionalLighting(
 	const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
@@ -217,7 +396,132 @@ static void CalcDirectionalLighting(
 		dwPrevNormal = dwNormal;
 	}
 }
+#endif
 
+#if HAS_SSE2
+struct SWarFogSSE2Sample
+{
+	DWORD fogValues;
+	int xWeights;
+	int yWeights;
+};
+
+static inline SWarFogSSE2Sample PrepareWarFogSSE2Sample(
+	int nX, int nY, int nMask, const CArray2D<unsigned char> &fog )
+{
+	const int nYU = ( nY >> 14 ) & nMask;
+	const int nYfi = nY & 0x3fff;
+	const int nXL = ( nX >> 14 ) & nMask;
+	const int nXfi = nX & 0x3fff;
+	const unsigned char *pUp = (&fog[nYU][0]) + nXL;
+	const unsigned char *pDown = pUp + nMask + 2;
+
+	SWarFogSSE2Sample sample;
+	sample.fogValues = static_cast<DWORD>( pUp[0] ) |
+		( static_cast<DWORD>( pUp[1] ) << 8 ) |
+		( static_cast<DWORD>( pDown[0] ) << 16 ) |
+		( static_cast<DWORD>( pDown[1] ) << 24 );
+	sample.xWeights = ( 0x4000 - nXfi ) | ( nXfi << 16 );
+	sample.yWeights = ( 0x4000 - nYfi ) | ( nYfi << 16 );
+	return sample;
+}
+
+static inline WORD SampleWarFogIntSSE2x2( const SWarFogSSE2Sample &sample0, const SWarFogSSE2Sample &sample1 )
+{
+	const __m128i zero = _mm_setzero_si128();
+	__m128i fogValues = _mm_set_epi32(
+		0, 0, static_cast<int>( sample1.fogValues ), static_cast<int>( sample0.fogValues ) );
+	fogValues = _mm_unpacklo_epi8( fogValues, zero );
+
+	const __m128i xWeights = _mm_set_epi32(
+		sample1.xWeights, sample1.xWeights, sample0.xWeights, sample0.xWeights );
+	__m128i horizontal = _mm_madd_epi16( fogValues, xWeights );
+	horizontal = _mm_srai_epi32( horizontal, 14 );
+	horizontal = _mm_packs_epi32( horizontal, horizontal );
+
+	const __m128i yWeights = _mm_set_epi32(
+		sample1.yWeights, sample0.yWeights, sample1.yWeights, sample0.yWeights );
+	__m128i vertical = _mm_madd_epi16( horizontal, yWeights );
+	vertical = _mm_srai_epi32( vertical, 14 );
+	vertical = _mm_packs_epi32( vertical, vertical );
+	vertical = _mm_packus_epi16( vertical, vertical );
+	return static_cast<WORD>( _mm_extract_epi16( vertical, 0 ) );
+}
+
+static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
+{
+	ASSERT( fog.GetSizeX() == fog.GetSizeY() );
+	ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
+	if ( nVertices <= 0 )
+		return;
+
+	unsigned char *pRes = &(*_pRes)[0];
+	const int nMask = fog.GetSizeX() - 2;
+	int k = 0;
+	for ( ; k + 1 < nVertices; k += 2 )
+	{
+		const SWarFogSSE2Sample sample0 = PrepareWarFogSSE2Sample(
+			intCoords[k * 2], intCoords[k * 2 + 1], nMask, fog );
+		const SWarFogSSE2Sample sample1 = PrepareWarFogSSE2Sample(
+			intCoords[k * 2 + 2], intCoords[k * 2 + 3], nMask, fog );
+		const WORD result = SampleWarFogIntSSE2x2( sample0, sample1 );
+		pRes[k] = static_cast<unsigned char>( result );
+		pRes[k + 1] = static_cast<unsigned char>( result >> 8 );
+	}
+
+	if ( k < nVertices )
+	{
+		const SWarFogSSE2Sample sample = PrepareWarFogSSE2Sample(
+			intCoords[k * 2], intCoords[k * 2 + 1], nMask, fog );
+		const SWarFogSSE2Sample emptySample{};
+		pRes[k] = static_cast<unsigned char>( SampleWarFogIntSSE2x2( sample, emptySample ) );
+	}
+}
+
+static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
+	std::vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
+{
+	if ( srcPos.empty() )
+		return;
+	int nVertices = srcPos.size();
+	if ( _pRes1->size() < nVertices )
+		_pRes1->resize( nVertices );
+	if ( _pRes2 && _pRes2->size() < nVertices )
+		_pRes2->resize( nVertices );
+
+	static std::vector<int> tmp;
+	if ( tmp.size() < nVertices * 2 )
+		tmp.resize( nVertices * 2 );
+
+	// Convert with double intermediates to retain the old x87 float-product precision.
+	const float fpScale = fScale * 0x4000;
+	const __m128d scale = _mm_set1_pd( static_cast<double>( fpScale ) );
+	int k = 0;
+	for ( ; k + 1 < nVertices; k += 2 )
+	{
+		const __m128 positions = _mm_set_ps(
+			srcPos[k + 1].y, srcPos[k + 1].x, srcPos[k].y, srcPos[k].x );
+		const __m128d positions0 = _mm_cvtps_pd( positions );
+		const __m128d positions1 = _mm_cvtps_pd( _mm_movehl_ps( positions, positions ) );
+		const __m128i coords0 = _mm_cvtpd_epi32( _mm_mul_pd( positions0, scale ) );
+		const __m128i coords1 = _mm_cvtpd_epi32( _mm_mul_pd( positions1, scale ) );
+		const __m128i coords = _mm_unpacklo_epi64( coords0, coords1 );
+		_mm_storeu_si128( reinterpret_cast<__m128i*>( &tmp[k * 2] ), coords );
+	}
+
+	if ( k < nVertices )
+	{
+		const __m128 positions = _mm_set_ps( 0, 0, srcPos[k].y, srcPos[k].x );
+		const __m128d positionsDouble = _mm_cvtps_pd( positions );
+		const __m128i coords = _mm_cvtpd_epi32( _mm_mul_pd( positionsDouble, scale ) );
+		_mm_storel_epi64( reinterpret_cast<__m128i*>( &tmp[k * 2] ), coords );
+	}
+
+	SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
+	if ( _pRes2 )
+		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
+}
+#else
 // sample fog of war array with bilinear filteration and store result to pRes
 #pragma warning( disable : 4799 )
 static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
@@ -282,6 +586,7 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 	if ( _pRes2 )
 		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
 }
+#endif
 
 const float F_PL_RADIUS2 = 64;
 const float F_PL_MIN_DISTANCE_NORMALIZED = 0.25f;
@@ -305,6 +610,7 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const 
 	}
 }
 
+#if !HAS_SSE2
 static void CalculateLightColor(uint32_t dwNormal, uint64_t shift, uint64_t shift1, uint64_t lightColor, uint64_t att, NGfx::SMMXWord *pResColor) {
 
 	uint64_t resColor = mmx::combine64( pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW );
@@ -332,7 +638,84 @@ static void CalculateLightColor(uint32_t dwNormal, uint64_t shift, uint64_t shif
 	result = mmx::paddsw(result, resColor);
 	mmx::split64(result, pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW);
 }
+#endif
 
+#if HAS_SSE2
+struct SPointLightColorsSSE2Data
+{
+	__m128i shift;
+	__m128i attenuation;
+	__m128i lightColor;
+	__m128i rounding;
+};
+
+static inline __m128i CalcPointLightColorsSSE2x2(
+	__m128i packedNormals, __m128i resColors, const SPointLightColorsSSE2Data &data )
+{
+	// Each 64-bit half follows the original MMX calculation for one vertex.
+	__m128i normals = _mm_unpacklo_epi8( packedNormals, packedNormals );
+	normals = _mm_sub_epi16( normals, data.shift );
+	normals = _mm_madd_epi16( normals, data.attenuation );
+	normals = _mm_add_epi32( normals, _mm_srli_epi64( normals, 32 ) );
+	normals = _mm_srai_epi32( normals, 15 );
+
+	// Saturate and broadcast the dot product separately within both 64-bit halves.
+	normals = _mm_packs_epi32( normals, normals );
+	normals = _mm_shufflelo_epi16( normals, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+	normals = _mm_shufflehi_epi16( normals, _MM_SHUFFLE( 2, 2, 2, 2 ) );
+	normals = _mm_and_si128( normals, _mm_cmpgt_epi16( normals, _mm_setzero_si128() ) );
+
+	const __m128i productsLow = _mm_mullo_epi16( normals, data.lightColor );
+	const __m128i productsHigh = _mm_mulhi_epi16( normals, data.lightColor );
+	__m128i products0 = _mm_unpacklo_epi16( productsLow, productsHigh );
+	__m128i products1 = _mm_unpackhi_epi16( productsLow, productsHigh );
+	products0 = _mm_srai_epi32( _mm_add_epi32( products0, data.rounding ), 13 );
+	products1 = _mm_srai_epi32( _mm_add_epi32( products1, data.rounding ), 13 );
+
+	const __m128i lightContribution = _mm_packs_epi32( products0, products1 );
+	return _mm_adds_epi16( resColors, lightContribution );
+}
+
+static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+	const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<WORD> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
+	const CVec3 &_vColor )
+{
+	NGfx::SMMXWord shift{};
+	shift.nX = shift.nY = shift.nZ = (short)0x8000;
+	NGfx::SMMXWord lightColor{};
+	lightColor.nX = Float2Int( _vColor.x * 32767 );
+	lightColor.nY = Float2Int( _vColor.y * 32767 );
+	lightColor.nZ = Float2Int( _vColor.z * 32767 );
+
+	SPointLightColorsSSE2Data data;
+	data.shift = LoadMMXWord128( shift );
+	data.lightColor = LoadMMXWord128( lightColor );
+	data.rounding = _mm_set1_epi32( 1 << 12 );
+
+	const int nSize = static_cast<int>( posIndices.size() );
+	int k = 0;
+	for ( ; k + 1 < nSize; k += 2 )
+	{
+		const __m128i packedNormals = _mm_loadl_epi64( reinterpret_cast<const __m128i*>( &_normals[k] ) );
+		data.attenuation = _mm_unpacklo_epi64(
+			LoadMMXWord64( attenuation[ posIndices[k] ] ),
+			LoadMMXWord64( attenuation[ posIndices[k + 1] ] ) );
+		const __m128i resColors = _mm_loadu_si128( reinterpret_cast<const __m128i*>( &(*pRes)[k] ) );
+		const __m128i result = CalcPointLightColorsSSE2x2( packedNormals, resColors, data );
+		_mm_storeu_si128( reinterpret_cast<__m128i*>( &(*pRes)[k] ), result );
+	}
+
+	if ( k < nSize )
+	{
+		const __m128i packedNormal = _mm_cvtsi32_si128( static_cast<int>( _normals[k].dw ) );
+		data.attenuation = LoadMMXWord64( attenuation[ posIndices[k] ] );
+		const __m128i resColor = LoadMMXWord64( (*pRes)[k] );
+		const __m128i result = CalcPointLightColorsSSE2x2( packedNormal, resColor, data );
+		_mm_storel_epi64( reinterpret_cast<__m128i*>( &(*pRes)[k] ), result );
+	}
+}
+#else
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
@@ -352,7 +735,45 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 		CalculateLightColor(dwNormal, shift, shift1, lightColor, att, pResColor);
 	}
 }
+#endif
 
+#if HAS_SSE2
+static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+	const NGfx::SMMXWord &attenuation, const SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
+{
+	NGfx::SMMXWord shift{};
+	shift.nX = shift.nY = shift.nZ = (short)0x8000;
+	NGfx::SMMXWord lightColor{};
+	lightColor.nX = Float2Int( _vColor.x * 32767 );
+	lightColor.nY = Float2Int( _vColor.y * 32767 );
+	lightColor.nZ = Float2Int( _vColor.z * 32767 );
+
+	SPointLightColorsSSE2Data data;
+	data.shift = LoadMMXWord128( shift );
+	data.attenuation = LoadMMXWord128( attenuation );
+	data.lightColor = LoadMMXWord128( lightColor );
+	data.rounding = _mm_set1_epi32( 1 << 12 );
+
+	int k = 0;
+	for ( ; k + 1 < _nSize; k += 2 )
+	{
+		const __m128i packedNormals = _mm_or_si128(
+			_mm_cvtsi32_si128( static_cast<int>( pSrc[k].normal.dw ) ),
+			_mm_slli_si128( _mm_cvtsi32_si128( static_cast<int>( pSrc[k + 1].normal.dw ) ), 4 ) );
+		const __m128i resColors = _mm_loadu_si128( reinterpret_cast<const __m128i*>( &(*pRes)[k] ) );
+		const __m128i result = CalcPointLightColorsSSE2x2( packedNormals, resColors, data );
+		_mm_storeu_si128( reinterpret_cast<__m128i*>( &(*pRes)[k] ), result );
+	}
+
+	if ( k < _nSize )
+	{
+		const __m128i packedNormal = _mm_cvtsi32_si128( static_cast<int>( pSrc[k].normal.dw ) );
+		const __m128i resColor = LoadMMXWord64( (*pRes)[k] );
+		const __m128i result = CalcPointLightColorsSSE2x2( packedNormal, resColor, data );
+		_mm_storel_epi64( reinterpret_cast<__m128i*>( &(*pRes)[k] ), result );
+	}
+}
+#else
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const NGfx::SMMXWord &attenuation, const SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
 {
@@ -384,7 +805,71 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 		}
 	}
 }
+#endif
 
+#if HAS_SSE2
+static inline __m128i CalcAddColorIndicesSSE2( __m128i packedColors, __m128i addColors )
+{
+	// Each 64-bit half reproduces the four word lanes of one old MMX calculation.
+	__m128i colors = _mm_unpacklo_epi8( packedColors, packedColors );
+	colors = _mm_srli_epi16( colors, 1 );
+
+	__m128i colorSquares = _mm_mulhi_epi16( colors, colors );
+	colorSquares = _mm_slli_epi16( colorSquares, 1 );
+
+	__m128i colorCubesHigh = _mm_mulhi_epi16( colorSquares, colors );
+	__m128i colorCubesLow = _mm_mullo_epi16( colorSquares, colors );
+	colorCubesHigh = _mm_slli_epi16( colorCubesHigh, 1 );
+	colorCubesHigh = _mm_adds_epi16( colorCubesHigh, addColors );
+	colorCubesHigh = _mm_srli_epi16( colorCubesHigh, 1 );
+
+	colorCubesLow = _mm_srli_epi16( colorCubesLow, 2 );
+	colorCubesLow = _mm_or_si128( colorCubesLow, _mm_set1_epi16( 0x4000 ) );
+	const __m128i highIsZero = _mm_cmpeq_epi16( colorCubesHigh, _mm_setzero_si128() );
+	return _mm_or_si128(
+		_mm_and_si128( colorCubesLow, highIsZero ),
+		_mm_andnot_si128( highIsZero, colorCubesHigh ) );
+}
+
+static inline DWORD LookupCubicRootColorSSE2( __m128i indices )
+{
+	const int nZ = _mm_extract_epi16( indices, 0 ) & 0x7fff;
+	const int nY = _mm_extract_epi16( indices, 1 ) & 0x7fff;
+	const int nX = _mm_extract_epi16( indices, 2 ) & 0x7fff;
+	return static_cast<DWORD>( nCubicRoot[nZ] ) |
+		( static_cast<DWORD>( nCubicRoot[nY] ) << 8 ) |
+		( static_cast<DWORD>( nCubicRoot[nX] ) << 16 );
+}
+
+static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
+{
+	ASSERT( pRes->size() >= add.size() );
+	ASSERT( src.size() >= add.size() );
+	int nSize = add.size();
+	if ( nSize == 0 )
+		return;
+
+	DWORD *pResPtr = &(*pRes)[0];
+	const DWORD *pSrcPtr = &src[0];
+	const NGfx::SMMXWord *pAdd = &add[0];
+	int k = 0;
+	for ( ; k + 1 < nSize; k += 2 )
+	{
+		const __m128i packedColors = _mm_loadl_epi64( reinterpret_cast<const __m128i*>( pSrcPtr + k ) );
+		const __m128i addColors = _mm_unpacklo_epi64( LoadMMXWord64( pAdd[k] ), LoadMMXWord64( pAdd[k + 1] ) );
+		const __m128i indices = CalcAddColorIndicesSSE2( packedColors, addColors );
+		pResPtr[k] = LookupCubicRootColorSSE2( indices );
+		pResPtr[k + 1] = LookupCubicRootColorSSE2( _mm_srli_si128( indices, 8 ) );
+	}
+
+	if ( k < nSize )
+	{
+		const __m128i packedColor = _mm_cvtsi32_si128( static_cast<int>( pSrcPtr[k] ) );
+		const __m128i indices = CalcAddColorIndicesSSE2( packedColor, LoadMMXWord64( pAdd[k] ) );
+		pResPtr[k] = LookupCubicRootColorSSE2( indices );
+	}
+}
+#else
 static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
 {
 	ASSERT( pRes->size() >= add.size() );
@@ -427,6 +912,7 @@ static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, 
 		*pResPtr = dwColor;
 	}
 }
+#endif
 
 static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
