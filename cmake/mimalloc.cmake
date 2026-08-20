@@ -9,6 +9,11 @@ set(MI_BUILD_TESTS OFF CACHE BOOL mimalloc FORCE)
 set(MI_OVERRIDE ON CACHE BOOL mimalloc FORCE)
 set(MI_WIN_REDIRECT ON CACHE BOOL mimalloc FORCE)
 
+# This is not the best solution, but 32 bit ARM on windows is now outdated, other 32 bit archs for windows (PowerPC, MIPS are super niche now too)
+if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(CMAKE_SYSTEM_PROCESSOR x86)
+endif()
+
 FetchContent_Declare(
         mimalloc
         GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
