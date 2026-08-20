@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <crtdbg.h>
+#include <mimalloc-new-delete.h>
 #include "resource.h"
 #include "Misc/2Darray.h"
 #include "stats_b2_m1/IconsSet.h"
@@ -77,6 +78,10 @@ namespace {
 static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
+    // Keep mimalloc in the executable's import table so its redirect DLL can
+    // replace the CRT allocator for every game module before initialization.
+    (void)mi_version();
+
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	StoreBuildInfo();
 	//

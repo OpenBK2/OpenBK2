@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 project(b2)
 
 enable_testing()
@@ -38,6 +38,7 @@ include(cmake/sdl_mixer.cmake)
 include(cmake/googletest.cmake)
 include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
+include(cmake/mimalloc.cmake)
 include(cmake/glm.cmake)
 include(cmake/dxsdk.cmake)
 include(cmake/fmod.cmake)
