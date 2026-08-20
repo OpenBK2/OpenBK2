@@ -6,6 +6,12 @@
 
 #include <glm/glm.hpp>
 
+#include "System/Arch.h"
+
+#if HAS_SSE2
+#include <emmintrin.h>
+#endif
+
 extern bool bIsSSEPresent;
 
 inline glm::mat4 LoadMatrix(const SHMatrix & m) {
@@ -261,6 +267,72 @@ static NGfx::SCompactVector SaveCompactVector(const glm::vec3 & src) {
 	return {convert(src.z), convert(src.y), convert(src.x), 0};
 }
 
+#if HAS_SSE2
+static void MMXTransformVector(
+	NGfx::SCompactVector & res,
+	const NGfx::SCompactVector & src,
+	const SHMatrix & transform1)
+{
+	const __m128i zero = _mm_setzero_si128();
+	const __m128i packedSource = _mm_cvtsi32_si128( static_cast<int>( src.dw ) );
+	const __m128i sourceWords = _mm_unpacklo_epi8( packedSource, zero );
+	__m128i sourceDwords = _mm_unpacklo_epi16( sourceWords, zero );
+
+	// SCompactVector is laid out as z, y, x, w; calculations use x, y, z, w.
+	sourceDwords = _mm_shuffle_epi32( sourceDwords, _MM_SHUFFLE( 3, 0, 1, 2 ) );
+	__m128 source = _mm_cvtepi32_ps( sourceDwords );
+	source = _mm_div_ps(
+		_mm_sub_ps( source, _mm_set1_ps( 128.0f ) ),
+		_mm_set1_ps( 127.0f ) );
+	source = _mm_and_ps(
+		source,
+		_mm_castsi128_ps( _mm_set_epi32( 0, -1, -1, -1 ) ) );
+
+	// Load SHMatrix rows, then transpose them so all four output components
+	// can be accumulated in parallel from the matrix columns.
+	__m128 column0 = _mm_loadu_ps( &transform1._11 );
+	__m128 column1 = _mm_loadu_ps( &transform1._21 );
+	__m128 column2 = _mm_loadu_ps( &transform1._31 );
+	__m128 column3 = _mm_loadu_ps( &transform1._41 );
+	_MM_TRANSPOSE4_PS( column0, column1, column2, column3 );
+
+	__m128 transformed = _mm_mul_ps(
+		column0, _mm_shuffle_ps( source, source, _MM_SHUFFLE( 0, 0, 0, 0 ) ) );
+	transformed = _mm_add_ps(
+		transformed,
+		_mm_mul_ps( column1, _mm_shuffle_ps( source, source, _MM_SHUFFLE( 1, 1, 1, 1 ) ) ) );
+	transformed = _mm_add_ps(
+		transformed,
+		_mm_mul_ps( column2, _mm_shuffle_ps( source, source, _MM_SHUFFLE( 2, 2, 2, 2 ) ) ) );
+	transformed = _mm_add_ps(
+		transformed,
+		_mm_mul_ps( column3, _mm_shuffle_ps( source, source, _MM_SHUFFLE( 3, 3, 3, 3 ) ) ) );
+
+	// Keep GLM's x*x + y*y + z*z evaluation order and exact sqrt/reciprocal
+	// normalization; the approximate reciprocal-square-root changes packed bytes.
+	const __m128 squared = _mm_mul_ps( transformed, transformed );
+	__m128 lengthSquared = _mm_add_ss(
+		squared,
+		_mm_shuffle_ps( squared, squared, _MM_SHUFFLE( 1, 1, 1, 1 ) ) );
+	lengthSquared = _mm_add_ss(
+		lengthSquared,
+		_mm_shuffle_ps( squared, squared, _MM_SHUFFLE( 2, 2, 2, 2 ) ) );
+	__m128 inverseLength = _mm_div_ss( _mm_set_ss( 1.0f ), _mm_sqrt_ss( lengthSquared ) );
+	inverseLength = _mm_shuffle_ps( inverseLength, inverseLength, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+	const __m128 normal = _mm_mul_ps( transformed, inverseLength );
+
+	// cvttps matches static_cast<int>; the two packs implement clamp(0, 255).
+	__m128i resultDwords = _mm_cvttps_epi32( _mm_mul_ps( normal, _mm_set1_ps( 127.0f ) ) );
+	resultDwords = _mm_add_epi32( resultDwords, _mm_set1_epi32( 128 ) );
+	resultDwords = _mm_shuffle_epi32( resultDwords, _MM_SHUFFLE( 3, 0, 1, 2 ) );
+	const __m128i resultWords = _mm_packs_epi32( resultDwords, resultDwords );
+	const __m128i resultBytes = _mm_packus_epi16( resultWords, resultWords );
+
+	const uint8_t sourceW = src.w;
+	res.dw = static_cast<DWORD>( _mm_cvtsi128_si32( resultBytes ) );
+	res.w = sourceW;
+}
+#else
 static void MMXTransformVector(
 	NGfx::SCompactVector & res,
 	const NGfx::SCompactVector & src,
@@ -276,6 +348,7 @@ static void MMXTransformVector(
 	res = SaveCompactVector(normal);
 	res.w = src.w;
 }
+#endif
 
 static void MMXTransformVector2(
 	NGfx::SCompactVector & res,
