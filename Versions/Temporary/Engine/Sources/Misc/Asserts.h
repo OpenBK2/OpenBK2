@@ -61,7 +61,6 @@ if ( !(x) )                                                           \
 				case BSU_DEBUG: __debugbreak(); break;                        \
 				case BSU_IGNORE: break;                                       \
 				case BSU_ABORT:                                               \
-					ResetCrashHandler();      																  \
 					FatalExit( 0xDEAD );                                        \
 					break;																									  	\
 			}                                                               \
