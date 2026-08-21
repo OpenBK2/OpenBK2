@@ -591,6 +591,61 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 const float F_PL_RADIUS2 = 64;
 const float F_PL_MIN_DISTANCE_NORMALIZED = 0.25f;
 const int N_PL_ATTENUATION_SCALE = 8191;
+
+#if HAS_SSE2
+static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
+{
+	const int nSize = static_cast<int>( srcPos.size() );
+	pRes->resize( nSize );
+	if ( nSize == 0 )
+		return;
+
+	const float fAttScale = F_PL_RADIUS2 / sqr( _fRadius );
+	const float fRadius2 = sqr( _fRadius );
+	const float fCutMult = N_PL_ATTENUATION_SCALE / fRadius2;
+	const float fAttAdd = F_PL_MIN_DISTANCE_NORMALIZED;
+
+	// Both vectors use the SMMXWord lane order: z, y, x, w.
+	const __m128 center = _mm_set_ps( 0.0f, _vCenter.x, _vCenter.y, _vCenter.z );
+	const __m128 radiusSquared = _mm_set_ss( fRadius2 );
+	const __m128 attenuationScale = _mm_set_ss( fAttScale );
+	const __m128 cutMultiplier = _mm_set_ss( fCutMult );
+	const __m128 attenuationAdd = _mm_set_ss( fAttAdd );
+	const __m128 zero = _mm_setzero_ps();
+
+	for ( int k = 0; k < nSize; ++k )
+	{
+		const CVec3 &position = srcPos[k];
+		const __m128 packedPosition = _mm_set_ps( 0.0f, position.x, position.y, position.z );
+		__m128 delta = _mm_sub_ps( center, packedPosition );
+
+		// Sum in the same (z*z + y*y) + x*x order as the original assembly.
+		__m128 distanceSquared = _mm_mul_ps( delta, delta );
+		__m128 shuffledSquares = _mm_shuffle_ps( distanceSquared, distanceSquared, 0xe1 );
+		distanceSquared = _mm_add_ss( distanceSquared, shuffledSquares );
+		shuffledSquares = _mm_shuffle_ps( shuffledSquares, shuffledSquares, 0xe2 );
+		distanceSquared = _mm_add_ss( distanceSquared, shuffledSquares );
+
+		__m128 cut = _mm_sub_ss( radiusSquared, distanceSquared );
+		__m128 denominator = _mm_mul_ss( distanceSquared, attenuationScale );
+		const __m128 inverseDistance = _mm_rsqrt_ss( distanceSquared );
+		cut = _mm_mul_ss( cut, cutMultiplier );
+		denominator = _mm_add_ss( denominator, attenuationAdd );
+		cut = _mm_max_ss( cut, zero );
+		denominator = _mm_rcp_ss( denominator );
+		__m128 attenuation = _mm_mul_ss( cut, inverseDistance );
+		attenuation = _mm_mul_ss( attenuation, denominator );
+		attenuation = _mm_shuffle_ps( attenuation, attenuation, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+		delta = _mm_mul_ps( delta, attenuation );
+
+		// cvtps2dq uses the same MXCSR rounding as cvtps2pi; packssdw saturates
+		// the four converted components to the original signed 16-bit result.
+		const __m128i converted = _mm_cvtps_epi32( delta );
+		const __m128i packed = _mm_packs_epi32( converted, converted );
+		_mm_storel_epi64( reinterpret_cast<__m128i*>( &(*pRes)[k] ), packed );
+	}
+}
+#else
 static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
 {
 	int nSize = srcPos.size();
@@ -609,6 +664,7 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const 
 		n.nW = 0;
 	}
 }
+#endif
 
 #if !HAS_SSE2
 static void CalculateLightColor(uint32_t dwNormal, uint64_t shift, uint64_t shift1, uint64_t lightColor, uint64_t att, NGfx::SMMXWord *pResColor) {
