@@ -10,6 +10,10 @@
 #include <limits.h>
 #include <stddef.h>
 
+#include <charconv>
+#include <cstring>
+#include <system_error>
+
 
 
 /*
@@ -40,12 +44,73 @@
 
 typedef LUA_NUM_TYPE Number;
 
-/* function to convert a Number to a string */
+/* Both directions used to go through the C library, sprintf("%.16g") one way
+** and strtod the other, and both take the decimal point from LC_NUMERIC.
+** Scenario scripts drive the simulation, so a locale with a comma decimal
+** point would change what every numeric literal means. to_chars and
+** from_chars ignore the locale; general with a precision of 16 is what
+** "%.16g" produced.
+*/
+/* still used by lundump.cpp for an error message */
 #define NUMBER_FMT	"%.16g"		/* LUA_NUMBER */
-#define lua_number2str(s,n)	sprintf((s), NUMBER_FMT, (n))
+/* the precision NUMBER_FMT asks for, kept beside it so the two cannot
+** drift apart */
+constexpr int LUA_NUMBER_PRECISION = 16;
+
+/* function to convert a Number to a string */
+template<size_t N>
+inline void lua_number2str( char (&s)[N], Number n )
+{
+	/* general with precision P needs at most: sign, leading digit, point,
+	** P-1 more digits, 'e', exponent sign and three exponent digits for a
+	** double, plus the terminator. The fixed form is never longer. This is
+	** checked for every caller rather than assumed. */
+	static_assert( N >= 1 + 1 + 1 + ( LUA_NUMBER_PRECISION - 1 ) + 1 + 1 + 3 + 1,
+	               "buffer too small to hold a Number in general format" );
+	/* to_chars sets ptr to the end of the range when it does not fit, so
+	** leave the last byte for the terminator and *res.ptr stays in bounds */
+	const std::to_chars_result res = std::to_chars( s, s + N - 1, double( n ), std::chars_format::general, LUA_NUMBER_PRECISION );
+	*res.ptr = '\0';
+}
 
 /* function to convert a string to a Number */
-#define lua_str2number(s,p)	strtod((s), (p))
+inline Number lua_str2number( const char *s, char **ppEnd )
+{
+	const char *p = s;
+	/* strtod skipped leading whitespace and accepted a leading +, from_chars
+	** does neither */
+	while ( *p == ' ' || *p == '\t' || *p == '\n' || *p == '\r' )
+	{
+		++p;
+	}
+	const bool bNegative = ( *p == '-' );
+	if ( *p == '+' || *p == '-' )
+	{
+		++p;
+	}
+	const char *const pEnd = s + strlen( s );
+	double dRes = 0;
+	std::from_chars_result res;
+	if ( p[0] == '0' && ( p[1] == 'x' || p[1] == 'X' ) )
+	{
+		/* C99 strtod accepted a 0x prefix, which a script can reach through
+		** tonumber("0xFF"); from_chars wants the prefix removed and the
+		** format named */
+		res = std::from_chars( p + 2, pEnd, dRes, std::chars_format::hex );
+	}
+	else
+	{
+		res = std::from_chars( p, pEnd, dRes );
+	}
+	if ( res.ec != std::errc() )
+	{
+		/* luaO_str2d detects "no conversion" by comparing against the start */
+		*ppEnd = const_cast<char*>( s );
+		return 0;
+	}
+	*ppEnd = const_cast<char*>( res.ptr );
+	return Number( bNegative ? -dRes : dRes );
+}
 
 
 
