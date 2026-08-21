@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <thread>
+
 #include "3DMotor/GfxBuffers.h"
 #include "GBinkPlayer.h"
 #include "System/VFSOperations.h"
@@ -98,7 +100,7 @@ void CBinkVideoPlayer::SetCurrentFrame( int nFrame )
 		// "SlideShow" mode
 		while ( !ffmpeg_player->Wait() )
 		{
-			Sleep( 0 );
+			std::this_thread::yield();
 		}
 	}
 }

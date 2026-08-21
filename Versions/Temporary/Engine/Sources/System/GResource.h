@@ -1,4 +1,6 @@
 #pragma once
+
+#include <thread>
 #include "System_export.h"
 
 
@@ -105,7 +107,7 @@ public:
 		{ 
 			pStuff.Refresh();
 			while ( !pStuff->GetValue() )
-				Sleep(0);
+				std::this_thread::yield();
 		}
 	}
 };

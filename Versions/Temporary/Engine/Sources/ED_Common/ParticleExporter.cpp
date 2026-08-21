@@ -14,6 +14,8 @@
 
 #include "3Dmotor/GParticleFormat.h"
 
+#include <thread>
+
 REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
 //
 #define ADD_PATH "bin\\effects\\"
@@ -147,7 +149,7 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const string &szObjName,
 	NGScene::CParticlesInfo *pInfo = pFunc->GetValue();
 	while ( pInfo == 0 )
 	{
-		Sleep( 0 );
+		std::this_thread::yield();
 		pInfo = pFunc->GetValue();
 	}
 	if ( pInfo == 0 )

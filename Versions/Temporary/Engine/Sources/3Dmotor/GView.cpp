@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <thread>
 #include "RenderNode.h"
 #include "GSceneUtils.h"
 #include "GScene.h"
@@ -1087,7 +1089,7 @@ void CGameView::LoadEverythingInt()
 		{
 			if ( pWaitLoading )
 				pWaitLoading->LeftToLoad( CountFileRequestsInFly() );
-			Sleep(0);
+			std::this_thread::yield();
 		}
 		MarkNewDGFrame();
 		if ( pCalcTerrain )

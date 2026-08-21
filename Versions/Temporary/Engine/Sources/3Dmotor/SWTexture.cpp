@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <thread>
 #include "SWTexture.h"
 #include "DBScene.h"
 #include "Image/DDS.h"
@@ -132,7 +134,7 @@ void CSWTexture::Recalc()
 {
 	//ASSERT(0);
 	while ( !IsReady() )
-		Sleep(0);
+		std::this_thread::yield();
 }
 
 // CSWTextureData

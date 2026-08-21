@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <thread>
+
 #include "3DLib_export.h"
 
 #include <D3D9.h>
@@ -188,7 +190,7 @@ static HRESULT ResetDevice()
 		{
 			pQ->Issue( D3DISSUE_BEGIN );
 			while ( pQ->GetData( &vcache, sizeof(vcache), D3DGETDATA_FLUSH ) != S_OK )
-				Sleep(0);
+				std::this_thread::yield();
 			pQ->Release();
 			if ( vcache.Pattern == 0x48434143 )
 				nVCacheSize = vcache.CacheSize;

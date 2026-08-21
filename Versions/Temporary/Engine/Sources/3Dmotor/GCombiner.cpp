@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <thread>
 #include "GfxBuffers.h"
 #include "GfxRender.h"
 #include "GScene.h"
@@ -39,7 +41,7 @@ void IPart::RefreshObjectInfo()
 { 
 	pObjInfo.Refresh();
 	while ( !pObjInfo->GetValue() )
-		Sleep(0);
+		std::this_thread::yield();
 }
 
 void IPart::ResetCachedTransform()

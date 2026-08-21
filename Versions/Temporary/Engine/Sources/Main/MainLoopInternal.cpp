@@ -260,7 +260,7 @@ static void LimitInterfaceFrameRate( bool bActive )
 		if ( nSleepMS > 1 )
 			std::this_thread::sleep_for( std::chrono::milliseconds( nSleepMS - 1 ) );
 		else
-			Sleep( 0 );
+			std::this_thread::yield();
 
 		QueryPerformanceCounter( &timeNow );
 		nElapsedTicks = timeNow.QuadPart - timeLastFrame.QuadPart;

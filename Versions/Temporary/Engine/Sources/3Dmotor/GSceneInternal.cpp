@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <thread>
 #include "Gfx.h"
 #include "GfxEffects.h"
 #include "LoadingCounter.h"
@@ -1649,7 +1651,7 @@ void CGScene::LoadEverything()
 					pLoadingCounter->LeftToLoad( nToLoad );
 				}
 
-				Sleep( 0 );
+				std::this_thread::yield();
 			}
 			else
 				bWaitForLoad = false;
