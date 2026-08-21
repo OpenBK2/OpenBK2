@@ -205,11 +205,13 @@ static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, co
 static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SRealVertexWeight *pWeight, const std::vector<SHMatrix> &blends )
 {
 	int nCount = srcPos.size();
+#pragma warning(disable: 4311 4302)
 	if ( nCount > 0 && bIsSSEPresent && (((int)(&blends[0]))&0xf) == 0 )
 	{
 		ASSERT( sizeof(SSSEVertexWeight) == sizeof(SRealVertexWeight) );
 		SSESkinning( &srcPos[0], pRes, (SSSEVertexWeight*)pWeight, blends, nCount );
 	}
+#pragma warning(default: 4311 4302)
 	else
 	{
 		for ( int k = 0; k < nCount; ++k, ++pWeight )
@@ -271,6 +273,7 @@ struct STGenericTransformer
 		Transpose(&transformer, trans.backward);
 
 		xformedNormals.resize( nVertices );
+		// most of these are often very small in size.. (less than 128 elements - not very worthy of parallelization here)
 		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
 			MMXTransformVector( xformedNormals[k], pSrc[k].normal, transformer );
 
