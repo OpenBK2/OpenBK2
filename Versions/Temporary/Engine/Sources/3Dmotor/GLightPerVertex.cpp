@@ -1237,6 +1237,87 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );
 }
 
+#if HAS_SSE2
+struct SScaleColorsSSE2Data
+{
+	__m128i alpha;
+	__m128i transparencyMask;
+};
+
+static inline __m128i ScaleColorsSSE2x2(
+	DWORD color0, DWORD color1, int scale0, int scale1,
+	int transparencyScale0, int transparencyScale1,
+	const SScaleColorsSSE2Data &data )
+{
+	// Each 64-bit half reproduces the original four-word MMX pipeline.
+	__m128i colors = _mm_or_si128(
+		_mm_cvtsi32_si128( static_cast<int>( color0 ) ),
+		_mm_slli_si128( _mm_cvtsi32_si128( static_cast<int>( color1 ) ), 4 ) );
+	colors = _mm_unpacklo_epi8( colors, colors );
+	colors = _mm_srli_epi16( colors, 1 );
+
+	const __m128i scales = _mm_set_epi16(
+		scale1, scale1, scale1, scale1,
+		scale0, scale0, scale0, scale0 );
+	colors = _mm_mulhi_epi16( colors, scales );
+	colors = _mm_or_si128( colors, data.alpha );
+
+	__m128i transparencyScales = _mm_set_epi16(
+		transparencyScale1, transparencyScale1, transparencyScale1, transparencyScale1,
+		transparencyScale0, transparencyScale0, transparencyScale0, transparencyScale0 );
+	transparencyScales = _mm_or_si128( transparencyScales, data.transparencyMask );
+	colors = _mm_mulhi_epi16( colors, transparencyScales );
+	return _mm_packus_epi16( colors, colors );
+}
+
+static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
+	unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
+	bool bMultiplyOnTransparency )
+{
+	const int nSize = static_cast<int>( posIndices.size() );
+	if ( pRes->size() < nSize )
+		pRes->resize( nSize );
+	if ( nSize == 0 )
+		return;
+
+	ASSERT( sizeof(DWORD) == sizeof(transp[0]) );
+	NGfx::SMMXWord alpha{};
+	alpha.nW = 0x1ff;
+	NGfx::SMMXWord transparencyMask{};
+	if ( !bMultiplyOnTransparency )
+	{
+		transparencyMask.nX = transparencyMask.nY = transparencyMask.nZ = 0x7fff;
+	}
+
+	SScaleColorsSSE2Data data;
+	data.alpha = LoadMMXWord128( alpha );
+	data.transparencyMask = LoadMMXWord128( transparencyMask );
+
+	const int sourceStride = nSrcStride / 4;
+	const DWORD *pSrc = _pSrc;
+	int k = 0;
+	for ( ; k + 1 < nSize; k += 2, pSrc += sourceStride * 2 )
+	{
+		const int scale0 = static_cast<int>( pScale[ posIndices[k] & nScaleMask ] ) << 2;
+		const int scale1 = static_cast<int>( pScale[ posIndices[k + 1] & nScaleMask ] ) << 2;
+		const int transparencyScale0 = static_cast<int>( transp[k].w ) << 7;
+		const int transparencyScale1 = static_cast<int>( transp[k + 1].w ) << 7;
+		const __m128i result = ScaleColorsSSE2x2(
+			pSrc[0], pSrc[sourceStride], scale0, scale1,
+			transparencyScale0, transparencyScale1, data );
+		_mm_storel_epi64( reinterpret_cast<__m128i*>( &(*pRes)[k] ), result );
+	}
+
+	if ( k < nSize )
+	{
+		const int scale = static_cast<int>( pScale[ posIndices[k] & nScaleMask ] ) << 2;
+		const int transparencyScale = static_cast<int>( transp[k].w ) << 7;
+		const __m128i result = ScaleColorsSSE2x2(
+			*pSrc, 0, scale, 0, transparencyScale, 0, data );
+		(*pRes)[k] = static_cast<DWORD>( _mm_cvtsi128_si32( result ) );
+	}
+}
+#else
 static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
 	unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
 	bool bMultiplyOnTransparency )
@@ -1283,6 +1364,7 @@ static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcS
 		*p = src & 0xFFFFFFFFUL;
 	}
 }
+#endif
 
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,
