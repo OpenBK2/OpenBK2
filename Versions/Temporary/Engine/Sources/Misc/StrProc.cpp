@@ -2,7 +2,10 @@
 
 #include "StrProc.h"
 
+#include <charconv>
 #include <cstdint>
+#include <cstring>
+#include <system_error>
 
 namespace NStr 
 {
@@ -94,28 +97,117 @@ void TrimInside( std::string &szString, const char *pszTrim )
   szString.erase( remove_if(szString.begin(), szString.end(), CSymbolCheckFunctional(pszTrim)), szString.end() );
 }
 
+// sscanf took the decimal point from LC_NUMERIC and said nothing when the
+// input did not parse. from_chars ignores the locale and reports an error;
+// on any error these keep returning 0, which is what callers saw before for
+// input that did not parse.
+// sscanf also skipped leading whitespace and accepted a leading +, and
+// from_chars does neither, so both are handled here.
+static const char *SkipSpace( const char *pszString )
+{
+	while ( *pszString == ' ' || *pszString == '\t' || *pszString == '\n' || *pszString == '\r' )
+	{
+		++pszString;
+	}
+	return pszString;
+}
+// "%i" picked the radix from the prefix; from_chars needs it spelled out
+static int PickRadix( const char **ppString )
+{
+	const char *p = *ppString;
+	if ( p[0] == '0' && ( p[1] == 'x' || p[1] == 'X' ) )
+	{
+		*ppString = p + 2;
+		return 16;
+	}
+	if ( p[0] == '0' && p[1] >= '0' && p[1] <= '7' )
+	{
+		return 8;
+	}
+	return 10;
+}
 int ToInt( const char *pszString )
 {
-	int nNumber = 0;
-	sscanf( pszString, "%i", &nNumber );
-	return nNumber;
+	const char *p = SkipSpace( pszString );
+	const bool bNegative = ( *p == '-' );
+	if ( *p == '+' || *p == '-' )
+	{
+		++p;
+	}
+	const int nRadix = PickRadix( &p );
+	unsigned int nMagnitude = 0;
+	const std::from_chars_result res = std::from_chars( p, p + strlen( p ), nMagnitude, nRadix );
+	if ( res.ec != std::errc() )
+	{
+		return 0;
+	}
+	return bNegative ? -static_cast<int>( nMagnitude ) : static_cast<int>( nMagnitude );
 }
 float ToFloat( const char *pszString )
 {
+	const char *p = SkipSpace( pszString );
+	const bool bNegative = ( *p == '-' );
+	if ( *p == '+' || *p == '-' )
+	{
+		++p;
+	}
+	const char *const pEnd = p + strlen( p );
 	float fNumber = 0;
-	sscanf( pszString, "%f", &fNumber );
-	return fNumber;
+	std::from_chars_result res;
+	if ( p[0] == '0' && ( p[1] == 'x' || p[1] == 'X' ) )
+	{
+		// "%f" accepted a hex float; from_chars wants the prefix removed
+		res = std::from_chars( p + 2, pEnd, fNumber, std::chars_format::hex );
+	}
+	else
+	{
+		res = std::from_chars( p, pEnd, fNumber );
+	}
+	if ( res.ec != std::errc() )
+	{
+		return 0;
+	}
+	return bNegative ? -fNumber : fNumber;
 }
 double ToDouble( const char *pszString )
 {
+	const char *p = SkipSpace( pszString );
+	const bool bNegative = ( *p == '-' );
+	if ( *p == '+' || *p == '-' )
+	{
+		++p;
+	}
+	const char *const pEnd = p + strlen( p );
 	double fNumber = 0;
-	sscanf( pszString, "%lf", &fNumber );
-	return fNumber;
+	std::from_chars_result res;
+	if ( p[0] == '0' && ( p[1] == 'x' || p[1] == 'X' ) )
+	{
+		// "%f" accepted a hex float; from_chars wants the prefix removed
+		res = std::from_chars( p + 2, pEnd, fNumber, std::chars_format::hex );
+	}
+	else
+	{
+		res = std::from_chars( p, pEnd, fNumber );
+	}
+	if ( res.ec != std::errc() )
+	{
+		return 0;
+	}
+	return bNegative ? -fNumber : fNumber;
 }
 unsigned long ToULong( const char *pszString )
 {
+	const char *p = SkipSpace( pszString );
+	if ( *p == '+' )
+	{
+		++p;
+	}
 	unsigned long ulNumber = 0;
-	sscanf( pszString, "%ul", &ulNumber );
+	const std::from_chars_result res = std::from_chars( p, p + strlen( p ), ulNumber );
+	if ( res.ec != std::errc() )
+	{
+		return 0;
+	}
 	return ulNumber;
 }
 
