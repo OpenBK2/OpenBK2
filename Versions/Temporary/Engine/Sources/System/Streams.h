@@ -1,6 +1,9 @@
 #pragma once
 #include "System_export.h"
 
+#include <charconv>
+#include <system_error>
+
 namespace NVFS
 {
 	struct IVFS;
@@ -176,7 +179,25 @@ public:
 	CTextStream( CDataStream &_f ) : f(_f) {}
 	CTextStream& operator<<( const char *p ) { f.Write( p, strlen(p) ); return *this; }
 	CTextStream& operator<<( int n ) { std::string tmp = std::to_string(n); f.Write( tmp.c_str(), tmp.length() ); return *this; }
-	CTextStream& operator<<( double n ) { char buf[128]; gcvt( n, 7, buf ); f.Write( buf, strlen(buf) ); return *this; }
+	// gcvt is not standard and its decimal point follows LC_NUMERIC. to_chars
+	// ignores the locale; general with a precision of 7 is what gcvt( n, 7 ) did.
+	CTextStream& operator<<( double n )
+	{
+		// general with precision P needs at most: sign, leading digit, point,
+		// P-1 more digits, 'e', exponent sign and three exponent digits for a
+		// double, plus the terminator. The fixed form is never longer.
+		constexpr int nPrecision = 7;
+		constexpr size_t nBufSize = 1 + 1 + 1 + ( nPrecision - 1 ) + 1 + 1 + 3 + 1;
+		char buf[nBufSize];
+		const std::to_chars_result res = std::to_chars( buf, buf + sizeof( buf ), n, std::chars_format::general, nPrecision );
+		// on failure to_chars sets ptr to the end of the range, so check
+		// rather than write whatever the buffer happened to hold
+		if ( res.ec == std::errc() )
+		{
+			f.Write( buf, res.ptr - buf );
+		}
+		return *this;
+	}
 	CTextStream& operator<<( const std::string &s ) { f.Write( s.c_str(), s.length() ); return *this; }
 	CTextStream& operator<<( OpFunc func ) { return func(*this); }
 };
