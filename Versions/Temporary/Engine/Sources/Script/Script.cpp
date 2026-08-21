@@ -16,6 +16,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include "Misc/StrProc.h"
+
 #include "lstate.h"
 
 
@@ -207,7 +209,7 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 			switch( cTypeID )
 			{
 				case 'n':
-					param.f = atof( szDefaultValue.c_str() );
+					param.f = NStr::ToFloat( szDefaultValue );
 					param.n = param.f;
 					break;
 				case 's':

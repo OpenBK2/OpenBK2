@@ -795,7 +795,7 @@ static void CommandBindConfigure( const std::string &szID, const std::vector<std
 		return;
 	}
 
-	NInput::SetControlCoeff( NStr::ToMBCS( paramsSet[0] ), _wtof( paramsSet[1].c_str() ) );
+	NInput::SetControlCoeff( NStr::ToMBCS( paramsSet[0] ), NStr::ToFloat( NStr::ToMBCS( paramsSet[1] ) ) );
 }
 
 static void CommandBindUpdate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
