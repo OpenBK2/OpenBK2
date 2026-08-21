@@ -111,8 +111,11 @@ set(SOURCES
 add_library(3Dmotor SHARED ${SOURCES})
 add_export_header(3Dmotor)
 add_stdafx_pch(3Dmotor)
-target_link_libraries(3Dmotor PRIVATE 3DLib Image libdb MemoryLib Misc System zlib granny::granny dxsdk::d3d9 dxsdk::d3dx9 dxsdk::dxerr dxsdk::dxguid winapi Boost::sort fmt::fmt-header-only)
+target_link_libraries(3Dmotor PRIVATE 3DLib Image libdb MemoryLib Misc System zlib granny::granny Boost::sort fmt::fmt-header-only)
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)
+if(WIN32)
+    target_link_libraries(3Dmotor PRIVATE dxsdk::d3d9 dxsdk::d3dx9 dxsdk::dxerr dxsdk::dxguid winapi)
+endif()
 install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)
 
