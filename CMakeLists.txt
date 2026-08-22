@@ -1,4 +1,7 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
+# 3.23 is what CMakePresets.json already asks for, and presets are how both
+# the documented build and CI configure this, so nothing older has worked
+# here in a long time. It also covers TARGET_RUNTIME_DLLS, added in 3.21.
+CMAKE_MINIMUM_REQUIRED(VERSION 3.23)
 # ASM_MASM is for the MMX reference implementations under 3Dmotor/test/original/.
 # MSVC accepts __asm on x86 only, so keeping those references as inline assembly
 # made the bit-exactness tests unbuildable on x64.
