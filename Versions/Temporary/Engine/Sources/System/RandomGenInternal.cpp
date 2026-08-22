@@ -1,16 +1,11 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
-
-#include "FileUtils.h"
 #include "RandomGenInternal.h"
 #include "Commands.h"
 #include "XmlSaver.h"
 
-#include "port/time.h"
-
 #include <cstdint>
+#include <random>
 #include <vector>
 #include <string>
 
@@ -266,7 +261,16 @@ void CRandomGenSeed::Init()
 	//Zero( rnd.randrsl );
 	//DEBUG}
 
-	FillRandRsl();
+	// randrsl is the seed ISAAC scrambles, and it wants 1 KB of entropy.
+	// This used to be gathered by enumerating the logical drives, walking the
+	// filesystem for a file bigger than 1 KB and reading bytes out of it at an
+	// offset picked with rand(). random_device asks the OS for the same thing
+	// and does it in three lines.
+	std::random_device rd;
+	for ( uint32_t &rSeed : rnd.randrsl )
+	{
+		rSeed = rd();
+	}
 
 	SFLB0_InitVariables();
 }
@@ -275,103 +279,6 @@ void CRandomGenSeed::InitByZeroSeed()
 {
 	Zero( rnd.randrsl );
 	SFLB0_InitVariables();
-}
-
-const int N_FROM_START = 1024;
-bool CRandomGenSeed::RecFindFile( LPSTR pszFindedName, LPCSTR pszBaseMask, int nToFind, int* pnTotFinded )
-{
-	for ( NFile::CFileIterator fileFind( pszBaseMask ); !fileFind.IsEnd(); ++fileFind )
-	{
-		if ( fileFind.IsDots() || fileFind.IsSystem() || fileFind.IsHidden() )
-			continue;
-		if ( fileFind.IsDirectory() )
-		{
-			if ( RecFindFile( pszFindedName, (fileFind.GetFullName() + "\\*.*").c_str(), nToFind, pnTotFinded ) == TRUE )
-				return true;
-			continue;
-		}
-		if ( *pnTotFinded >= nToFind )
-		{
-			if ( fileFind.GetLength() >= N_FROM_START + sizeof(rnd.randrsl) )
-			{
-				strcpy( pszFindedName, fileFind.GetFullName().c_str() );
-				return true;
-			}
-			( *pnTotFinded )--;
-		}
-		( *pnTotFinded )++;
-	}
-	return false;
-}
-
-// The purpose of this func is to fill randrsl[RANDSIZ] arrays
-// with initial random values
-// It's uses first RANDSIZ values from random file for this
-void CRandomGenSeed::FillRandRsl()
-{
-	// find first drive
-	char buf[1024];
-	char pszMaskToFindFiles[256];
-	int nSize = GetLogicalDriveStrings( sizeof(buf), buf );
-	int i;
-	for ( i = 0; i < nSize; )
-	{
-		char* pDrive = buf + i;
-		i += strlen( pDrive ) + 1;
-		if ( GetDriveType(pDrive) == DRIVE_FIXED || GetDriveType(pDrive) == DRIVE_REMOTE )
-		{
-			strcpy( pszMaskToFindFiles, pDrive );
-			strcat( pszMaskToFindFiles, "*.*" );
-			break;
-		}
-	}
-	if ( i == nSize )
-		return; // cannot find any hd, run without initialization
-	//
-	srand( GetCurrentTimeMilliseconds() );
-	char pszFindedName[256];
-	bool bSuccess = false;
-	
-	while ( !bSuccess )
-	{
-		int nTotFinded = 0;
-		if ( !RecFindFile( pszFindedName, pszMaskToFindFiles, rand() % 512 + 1, &nTotFinded ) )
-		{
-			int nToFind = rand() % ( nTotFinded - 1 ) + 1;
-			nTotFinded = 0;
-			if ( !RecFindFile( pszFindedName, pszMaskToFindFiles, nToFind, &nTotFinded ) )
-				continue;
-		}
-		bSuccess = true;
-		HANDLE hFile = CreateFile( pszFindedName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-		if ( hFile != INVALID_HANDLE_VALUE )
-		{
-			srand( GetCurrentTimeMilliseconds() );
-			SetFilePointer( hFile, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
-			unsigned long dwReadBytes = 0;
-			if ( !ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) || (dwReadBytes != sizeof(rnd.randrsl)) )
-				bSuccess = false;
-			CloseHandle( hFile );
-		}
-		else
-			bSuccess = false;
-		bool bHaveNotZero = false;
-		for ( int i = 0; i < RANDSIZ; i++ )
-		{
-			if ( rnd.randrsl[i] )
-			{
-				bHaveNotZero = true;
-				break;
-			}
-		}
-		if ( bHaveNotZero == FALSE )
-		{
-			bSuccess = FALSE;
-			std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
-		}
-		for ( i = 0; i < RANDSIZ; i++ )
-			rnd.randrsl[i] ^= rand();
-	}
 }
 
 void CRandomGenSeed::Store( CDataStream *pStream )

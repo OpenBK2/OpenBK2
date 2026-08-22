@@ -23,8 +23,6 @@ class CRandomGenSeed : public IRandomSeed
 	//
 	SRandData rnd;
 	//
-	bool RecFindFile( LPSTR pszFindedName, LPCSTR pszBaseMask, int nToFind, int* pnTotFinded );
-	void FillRandRsl();
 	void SFLB0_InitVariables();
 public:
 	void Init();
