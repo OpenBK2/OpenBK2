@@ -6,6 +6,7 @@ set(SOURCES
     Test.cpp
     WinFrame2Input.cpp
     dpi_aware.manifest
+    utf8.manifest
 )
 add_executable(Game WIN32 ${SOURCES})
 add_stdafx_pch(Game)
