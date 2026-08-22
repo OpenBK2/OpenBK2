@@ -18,35 +18,12 @@ else()
         PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
-function(add_unit_test filename)
-    set(target_name ${filename}_test)
-    add_executable(${target_name} EXCLUDE_FROM_ALL ${filename}.cpp ${ARGN})
-    target_link_libraries(${target_name} PRIVATE GTest::gtest_main 3Dmotor Misc)
-    set_target_properties(${target_name} PROPERTIES FOLDER "unittest")
-    add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:GTest::gtest_main>
-            $<TARGET_FILE_DIR:${target_name}>)
-    add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:GTest::gtest>
-            $<TARGET_FILE_DIR:${target_name}>)
-    add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:Misc>
-            $<TARGET_FILE_DIR:${target_name}>)
-    add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:MemoryLib>
-            $<TARGET_FILE_DIR:${target_name}>)
-endfunction()
-
-add_unit_test(MultiplyOnColor ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(CalcDirectionalLighting ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(CalcPointLightColors ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(AddColors ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(ScaleColors ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(MMXTransformVector)
-add_unit_test(SampleWarFogInt ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(SampleWarFog ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(MMXhelpers)
+add_unit_test(MultiplyOnColor 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(CalcDirectionalLighting 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(CalcPointLightColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(AddColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(ScaleColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(SampleWarFogInt 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(SampleWarFog 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(MMXTransformVector 3Dmotor Misc)
+add_unit_test(MMXhelpers 3Dmotor Misc)
