@@ -1493,7 +1493,7 @@ void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 void CInterfaceMission::UpdateChat( NTimer::STime nDeltaTime )
 {
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
-	NTimer::STime nDeltaAbsTime = (nChatTime == 0) ? 0 : max( 0, nCurrTime - nChatTime );
+	NTimer::STime nDeltaAbsTime = (nChatTime == 0) ? 0 : (std::max<NTimer::STime>)( 0, nCurrTime - nChatTime );
 	UpdateChatAbs( nDeltaAbsTime );
 	nChatTime = nCurrTime;
 }

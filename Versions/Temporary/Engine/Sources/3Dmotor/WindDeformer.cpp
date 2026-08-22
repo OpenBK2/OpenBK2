@@ -5,6 +5,7 @@
 #include "WindDeformer.h"
 #include "GfxBuffers.h"
 
+#include <algorithm>
 #include <cstdint>
 
 namespace NGScene
@@ -58,7 +59,7 @@ void CWindDeformer::Recalc()
 
 	angle = (x11 + x12 + r * 3.0f ) * 0.2f;
 
-	int s = min( v.size(), posInds.size() );
+	int s = (std::min)( v.size(), posInds.size() );
 
 	for( int j=0; j < s; ++j)
 	{

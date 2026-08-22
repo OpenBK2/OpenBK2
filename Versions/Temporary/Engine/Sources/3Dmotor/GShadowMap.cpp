@@ -3,6 +3,8 @@
 #include "3DLib/Transform.h"
 #include "4dCalcs.h"
 
+#include <algorithm>
+
 namespace NGeometry
 {
 
@@ -547,11 +549,11 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 			float fX = xDir * vPos;
 			float fY = yDir * vPos;
 
-			fMinX = min ( fX, fMinX );
-			fMinY = min ( fY, fMinY );
+			fMinX = (std::min)( fX, fMinX );
+			fMinY = (std::min)( fY, fMinY );
 
-			fMaxX = max ( fX, fMaxX );
-			fMaxY = max ( fY, fMaxY );
+			fMaxX = (std::max)( fX, fMaxX );
+			fMaxY = (std::max)( fY, fMaxY );
 
 			vMin.Minimize( vPos );
 			vMax.Maximize( vPos );

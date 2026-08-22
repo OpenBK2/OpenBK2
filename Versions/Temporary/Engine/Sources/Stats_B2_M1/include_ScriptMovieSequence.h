@@ -11,12 +11,12 @@ float GetLength() const
 	for ( std::vector<SScriptMovieKeyPos>::const_iterator itPosKey = posKeys.begin();
 																									 itPosKey != posKeys.end(); ++itPosKey )
 	{
-		fLen = max( fLen, itPosKey->fStartTime );
+		fLen = (std::max)( fLen, itPosKey->fStartTime );
 	}
 	for ( std::vector<SScriptMovieKeyFollow>::const_iterator itFollowKey = followKeys.begin();
 																									 itFollowKey != followKeys.end(); ++itFollowKey )
 	{
-		fLen = max( fLen, itFollowKey->fStartTime );
+		fLen = (std::max)( fLen, itFollowKey->fStartTime );
 	}
 
 	return fLen;

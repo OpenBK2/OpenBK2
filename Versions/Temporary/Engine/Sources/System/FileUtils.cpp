@@ -10,6 +10,7 @@
 #include <tchar.h>
 #endif
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstdint>
 
@@ -191,7 +192,7 @@ bool DoesFolderExist( const std::string &szFolderName )
 bool IsValidFileName( const std::string &szFileName )
 {
 	const char *pszFileName = szFileName.c_str();
-	const char *_pszFileName = max( strrchr( pszFileName, '\\' ), strrchr( pszFileName, '/' ) );
+	const char *_pszFileName = (std::max)( strrchr( pszFileName, '\\' ), strrchr( pszFileName, '/' ) );
 	if ( 0 == _pszFileName )
 		_pszFileName = pszFileName;
 	else

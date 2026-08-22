@@ -30,6 +30,7 @@
 
 #include "AILogic_export.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -1458,7 +1459,7 @@ void CFormationBuildEntrenchmentState::SetEndPoint( const CVec2 &vPos )
 	}
 	bEndPointSelected = true;
 	const int nSize = pFormation->Size();
-	nMaxIndex = min( pCreation->GetMaxIndex(), pCreation->GetCurIndex() + ( nSize + 1 ) / nBuildersPerSegment );
+	nMaxIndex = (std::min)( pCreation->GetMaxIndex(), pCreation->GetCurIndex() + ( nSize + 1 ) / nBuildersPerSegment );
 }
 
 void CFormationBuildEntrenchmentState::Segment()

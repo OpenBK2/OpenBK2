@@ -500,7 +500,7 @@ inline float GetDistToSegment( const CVec2 &v, const CVec2 &v1, const CVec2 &v2 
 		const CVec2 p( v1.x + (v2.x - v1.x) * t, v1.y + (v2.y - v1.y) * t );
 		return fabs2( v - p );
 	}
-	return min( fabs2(v - v1), fabs2(v - v2) );
+	return (std::min)( fabs2(v - v1), fabs2(v - v2) );
 }
 
 // return error between source point and point on segment
@@ -515,7 +515,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx
 			const float y = v1.y + ( v2.y - v1.y ) * t - v.y;
 			return y * y;
 		}
-		return min( fabs2(v.x - v1.x) + fabs2(v.y - v1.y), fabs2(v.x - v2.x) + fabs2(v.y - v2.y) );
+		return (std::min)( fabs2(v.x - v1.x) + fabs2(v.y - v1.y), fabs2(v.x - v2.x) + fabs2(v.y - v2.y) );
 	}
 	else
 		if ( fabs(v2.y - v1.y) > DEF_EPS )
@@ -527,7 +527,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx
 				const float x = v1.x + ( v2.x - v1.x ) * t - v.x;
 				return x * x;
 			}
-			return min( fabs2(v.x - v1.x) + fabs2(v.y - v1.y), fabs2(v.x - v2.x) + fabs2(v.y - v2.y) );
+			return (std::min)( fabs2(v.x - v1.x) + fabs2(v.y - v1.y), fabs2(v.x - v2.x) + fabs2(v.y - v2.y) );
 		}
 	return FP_MAX_VALUE;
 }
@@ -541,7 +541,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 		(*pRes) = t;
 		if ( (t > -DEF_EPS) && (t < (1.0 + DEF_EPS)) )
 			return y * y;
-		return min( (v.x - v1.x) * (v.x - v1.x) + (y - v1.y) * (y - v1.y),
+		return (std::min)( (v.x - v1.x) * (v.x - v1.x) + (y - v1.y) * (y - v1.y),
 								(v.x - v2.x) * (v.x - v2.x) + (y - v2.y) * (y - v2.y) );
 	}
 	else
@@ -552,7 +552,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 			(*pRes) = t;
 			if ( (t > -DEF_EPS) && (t < (1.0 + DEF_EPS)) )
 				return x * x;
-			return min( (x - v1.x) * (x - v1.x) + (v.y - v1.y) * (v.y - v1.y),
+			return (std::min)( (x - v1.x) * (x - v1.x) + (v.y - v1.y) * (v.y - v1.y),
 									(x - v2.x) * (x - v2.x) + (v.y - v2.y) * (v.y - v2.y) );
 		}
 		return FP_MAX_VALUE;

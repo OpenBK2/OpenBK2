@@ -22,3 +22,6 @@ target_compile_definitions(winapi INTERFACE "NTDDI_VERSION=${WINAPI_VERSION}0000
 # DirectInput
 # https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ee416756(v=vs.85)
 target_compile_definitions(winapi INTERFACE "DIRECTINPUT_VERSION=0x0800")
+
+# doesn't play well with Boost headers
+target_compile_definitions(winapi INTERFACE "NOMINMAX")

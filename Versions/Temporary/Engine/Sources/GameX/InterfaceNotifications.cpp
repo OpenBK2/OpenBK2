@@ -22,6 +22,8 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 static bool s_bAutosaveObjectiveComplete = false;
@@ -234,7 +236,7 @@ bool CVisualNotifications::Notify( EVisualNotification eType, CMapObj *pMO )
 void CVisualNotifications::Step( const NTimer::STime nDeltaGameTime, bool bAppActive )
 {
 	NTimer::STime nAbsCurrTime = Singleton<IGameTimer>()->GetAbsTime();
-	float fDeltaAbsTime = (nAbsTime == 0) ? 0.0f : max( 0.0f, (float)(nAbsCurrTime - nAbsTime) / 1000.0f );
+	float fDeltaAbsTime = (nAbsTime == 0) ? 0.0f : (std::max)( 0.0f, (float)(nAbsCurrTime - nAbsTime) / 1000.0f );
 
 	StepAbs( fDeltaAbsTime, bAppActive );
 	nAbsTime = nAbsCurrTime;

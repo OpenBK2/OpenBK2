@@ -55,6 +55,7 @@
 #include "GlobalWarFog.h"
 #include "Aviation.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -4900,7 +4901,7 @@ int CScripts::AddAmmoToAllUnits( struct lua_State *pState )
 		CAIUnit *pUnit = *iter;
 		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer )
 		{
-			const int nAmmoToAdd = min( pUnit->GetNCommonGuns(), ammoToAdd.size() );
+			const int nAmmoToAdd = (std::min<int>)( pUnit->GetNCommonGuns(), ammoToAdd.size() );
 			for ( int i = 0; i < nAmmoToAdd; ++i )
 			{
 				pUnit->ChangeAmmo( i, ammoToAdd[i] );

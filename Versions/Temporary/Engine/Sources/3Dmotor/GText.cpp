@@ -1,7 +1,9 @@
 #include "stdafx.h"
-#include <limits>
 #include "GText.h"
 #include "Misc/StrProc.h"
+
+#include <algorithm>
+#include <limits>
 
 namespace NGScene
 {
@@ -198,19 +200,19 @@ void CTextFormater::Generate()
 			if ( eLastChar == CHAR_ALNUM )
 			{
 				fLineWidth += fWordWidth;
-				fLineHeight = max( fLineHeight, fWordHeight );
+				fLineHeight = (std::max)( fLineHeight, fWordHeight );
 				chunksList.push_back( SChunk( CHAR_ALNUM, nWordBegin, sState, wsText.substr( nWordBegin, nTemp - nWordBegin ) ) );
 			}
 			else if ( ( eLastChar == CHAR_SPACE ) && !chunksList.empty() )
 			{
 				fLineWidth += fWordWidth;
-				fLineHeight = max( fLineHeight, fWordHeight );
+				fLineHeight = (std::max)( fLineHeight, fWordHeight );
 				chunksList.push_back( SChunk( CHAR_SPACE, nWordBegin, sState, nTemp - nWordBegin ) );
 			}
 			else if ( eLastChar == CHAR_TAB )
 			{
 				fLineWidth += fWordWidth;
-				fLineHeight = max( fLineHeight, fWordHeight );
+				fLineHeight = (std::max)( fLineHeight, fWordHeight );
 				chunksList.push_back( SChunk( CHAR_TAB, nWordBegin, sState, fWordWidth ) );
 			}
 
@@ -238,7 +240,7 @@ void CTextFormater::Generate()
 				fLineHeight = fLastLineHeight;
 
 			GenerateLine();
-			sRealSize.x = max( fLineWidth, sRealSize.x );
+			sRealSize.x = (std::max)( fLineWidth, sRealSize.x );
 			sRealSize.y += fLineHeight;
 
 			fLastLineHeight = fLineHeight;
@@ -371,7 +373,7 @@ void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 			fLineHeight = fLastLineHeight;
 
 		GenerateLine();
-		sRealSize.x = max( fLineWidth, sRealSize.x );
+		sRealSize.x = (std::max)( fLineWidth, sRealSize.x );
 		sRealSize.y += fLineHeight;
 
 		fLastLineHeight = fLineHeight;

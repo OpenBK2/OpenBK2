@@ -6,6 +6,8 @@
 
 #include "mlReflow.h"
 
+#include <algorithm>
+
 namespace NML
 {
 
@@ -92,14 +94,14 @@ void CReflowState::AddObject( IVisReflowObject *pObject )
 
 			line.push_back( pObject );
 			fLineWidth += visSize.x;
-			fLineHeight = max( visSize.y, fLineHeight );
+			fLineHeight = (std::max)( visSize.y, fLineHeight );
 			break;
 		}
 	case EHA_NOWRAP:
 		{
 			line.push_back( pObject );
 			fLineWidth += visSize.x;
-			fLineHeight = max( visSize.y, fLineHeight );
+			fLineHeight = (std::max)( visSize.y, fLineHeight );
 			break;
 		}
 	case EHA_WRAP_LEFT:
@@ -211,7 +213,7 @@ void CReflowState::ProcessWraped()
 		size.x = (std::max)( size.x, rangeLeft.fValue + visSize.x );
 
 		rangeLeft.fValue += visSize.x;
-		rangeLeft.fHeight = max( rangeLeft.fHeight, size.y + visSize.y );
+		rangeLeft.fHeight = (std::max)( rangeLeft.fHeight, size.y + visSize.y );
 	}
 
 	for( TVisObjects::iterator iTemp = lineRight.begin(); iTemp != lineRight.end(); ++iTemp )
@@ -222,7 +224,7 @@ void CReflowState::ProcessWraped()
 		size.x = (std::max)( size.x, rangeRight.fValue );
 
 		rangeRight.fValue -= visSize.x;
-		rangeRight.fHeight = max( rangeRight.fHeight, size.y + visSize.y );
+		rangeRight.fHeight = (std::max)( rangeRight.fHeight, size.y + visSize.y );
 	}
 
 	lineLeft.clear();

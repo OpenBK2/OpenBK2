@@ -40,6 +40,7 @@
 
 #include "port/time.h"
 
+#include <algorithm>
 #include <cstdint>
 
 //#define DEBUG_LIGHTING
@@ -425,7 +426,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 		//
 		for ( int nMesh = 0; nMesh < pModel->pGeometry->nNumMeshes; ++nMesh )
 		{
-			const int nModelMaterial = min( nMesh, pModel->materials.size() - 1 );
+			const int nModelMaterial = (std::min<int>)( nMesh, pModel->materials.size() - 1 );
 			if ( pModel->materials.empty() || ( pModel->materials[nModelMaterial] == 0 ) )
 			{
 				continue;
@@ -1185,8 +1186,8 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 
 			int nX = fX;
 			int nY = fY;
-			int nX1 = min( nX+1, fogColors.GetSizeX()-1 );
-			int nY1 = min( nY+1, fogColors.GetSizeY()-1 );
+			int nX1 = (std::min)( nX+1, fogColors.GetSizeX()-1 );
+			int nY1 = (std::min)( nY+1, fogColors.GetSizeY()-1 );
 
 			fX -= nX;
 			fY -= fY;

@@ -97,7 +97,7 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 		}
 		else
 		{
-			if ( (fabs(v1.y - rV.y) < DEF_EPS) && (rV.x >= min(v1.x, v2.x)) && (rV.x <= max(v1.x, v2.x)) )
+			if ( (fabs(v1.y - rV.y) < DEF_EPS) && (rV.x >= (std::min)(v1.x, v2.x)) && (rV.x <= (std::max)(v1.x, v2.x)) )
 				return false;
 			fLastX = -FP_MAX_VALUE;
 		}
@@ -151,7 +151,7 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 		}
 		else
 		{
-			if ( (fabs(v1.y - rV.y) < DEF_EPS) && (rV.x >= min(v1.x, v2.x)) && (rV.x <= max(v1.x, v2.x)) )
+			if ( (fabs(v1.y - rV.y) < DEF_EPS) && (rV.x >= (std::min)(v1.x, v2.x)) && (rV.x <= (std::max)(v1.x, v2.x)) )
 				return false;
 			fLastX = -FP_MAX_VALUE;
 		}

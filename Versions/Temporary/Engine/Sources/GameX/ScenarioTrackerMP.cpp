@@ -14,6 +14,8 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 #include <zconf.h>
@@ -543,7 +545,7 @@ bool CScenarioTrackerMultiplayer::AddReinfExp( float *pExp, const int nPlayer, N
 		{
 			const float fXP = GetReinforcementXP( nPlayer, eReinfType );
 			const float fXPToNextLevel = GetReinforcementXPForLevel( eReinfType, nLevel + 1 ) - fXP;
-      const float fXPToAdd = min( *pExp, fXPToNextLevel );
+      const float fXPToAdd = (std::min)( *pExp, fXPToNextLevel );
 			SetReinforcementXP( nPlayer, eReinfType, fXP + fXPToAdd );
 			if ( fXPToNextLevel == fXPToAdd )
 			{

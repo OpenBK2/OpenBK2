@@ -6,6 +6,7 @@
 #include "Misc/2Darray.h"
 #include "GfxBuffersInternal.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <boost/config.hpp>
@@ -459,12 +460,12 @@ public:
 	int GetRawSizeNotSetMip( int nMip ) const
 	{
 		if ( nMip != nLOD )
-			return ( nXSize * nYSize * D3DFormat2PixelBitSize( format ) >> ( min( nMip, nLevels - 1 ) * 2 ) ) >> 3;
+			return ( nXSize * nYSize * D3DFormat2PixelBitSize( format ) >> ( (std::min)( nMip, nLevels - 1 ) * 2 ) ) >> 3;
 		return 0;
 	}
 	void SetLOD( int _nLOD )
 	{
-		const int nMinLOD = min( _nLOD, nLevels - 1 );
+		const int nMinLOD = (std::min)( _nLOD, nLevels - 1 );
 		if ( nMinLOD != nLOD )
 		{
 			nLOD = nMinLOD;

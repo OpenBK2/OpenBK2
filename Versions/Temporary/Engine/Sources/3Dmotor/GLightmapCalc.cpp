@@ -23,6 +23,7 @@
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 
+#include <algorithm>
 #include <cstdint>
 
 const float F_MAX_SCENE_HEIGHT = 20; // CRAP need to store max height in single place
@@ -154,7 +155,7 @@ static void AddPart( const SSphere &highResLM, std::vector<SLMGroup> *pRes, ISom
 	CTPoint<int> lmSize, lmPos;
 	SBound geomBound;
 	geomBound.BoxInit( pPart->vBVMin, pPart->vBVMax );
-	float fLMResolution = min ( 3.0f, CalcLMRes( highResLM, geomBound ) );
+	float fLMResolution = (std::min)( 3.0f, CalcLMRes( highResLM, geomBound ) );
 	std::vector<SLMQuad> lmQuads;
 	MakeLMCalcGeometry( &lmData, &lmSize, data, fLMResolution, N_LM_TEXTURE_SIZE, CTPoint<int>(0,0), &lmQuads );
 

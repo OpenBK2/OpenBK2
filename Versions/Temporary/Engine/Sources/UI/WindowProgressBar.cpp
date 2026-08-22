@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "windowprogressbar.h"
 
+#include <algorithm>
 
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B88, CWindowProgressBar)
 REGISTER_SAVELOAD_CLASS(UI, 0x170A53C0, CWindowMultiTextureProgressBar)
@@ -189,7 +190,7 @@ int CWindowMultiTextureProgressBar::FindStateIndex( float fProgress )
 		if ( fProgress <= state.fValue )
 			break;
 	}
-	return min( nIndex, parts.size() - 1 );
+	return (std::min<int>)( nIndex, parts.size() - 1 );
 }
 
 

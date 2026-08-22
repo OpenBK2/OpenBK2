@@ -3,6 +3,8 @@
 #include "WindowMSButton.h"
 #include "WindowListCtrl.h"
 
+#include <algorithm>
+
 REGISTER_SAVELOAD_CLASS(UI, 0x17122340, CWindowComboBox);
 
 // CWindowComboBox
@@ -89,7 +91,7 @@ void CWindowComboBox::ResizeList()
 	if ( pList && nMaxVisibleRows > 0 )
 	{
 		NI_ASSERT( GetItemCount() <= nMaxVisibleRows, "Too many items at combo box" );
-		pList->SetPlacement( 0, 0, 0, nListBaseHeight + nRowHeight * min( nMaxVisibleRows, GetItemCount() ), EWPF_SIZE_Y );
+		pList->SetPlacement( 0, 0, 0, nListBaseHeight + nRowHeight * (std::min)( nMaxVisibleRows, GetItemCount() ), EWPF_SIZE_Y );
 	}
 }
 

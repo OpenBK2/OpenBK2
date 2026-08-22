@@ -8,6 +8,8 @@
 #include "UIMLHandlers.h"
 #include "System/Commands.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 static const int N_TAB_SIZE = 4;
@@ -640,7 +642,7 @@ void CMLLayout::Generate(  float fWidth )
 
 				sInfo.line.push_back( pObject );
 				sInfo.fLineWidth += sSize.x;
-				sInfo.fLineHeight = max( sSize.y, sInfo.fLineHeight );
+				sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
 				break;
 			case SState::HORALIGN_NOWRAP:
 				if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
@@ -648,7 +650,7 @@ void CMLLayout::Generate(  float fWidth )
 
 				sInfo.line.push_back( pObject );
 				sInfo.fLineWidth += sSize.x;
-				sInfo.fLineHeight = max( sSize.y, sInfo.fLineHeight );
+				sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
 				break;
 			case SState::HORALIGN_WRAP_LEFT:
 				sInfo.leftWraped.push_back( pObject );
@@ -805,7 +807,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sLeft.fValue + sSize.x );
 
 		pInfo->sLeft.fValue += sSize.x;
-		pInfo->sLeft.fHeight = max( pInfo->sLeft.fHeight, pInfo->fY + sSize.y );
+		pInfo->sLeft.fHeight = (std::max)( pInfo->sLeft.fHeight, pInfo->fY + sSize.y );
 	}
 	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->rightWraped.begin(); iTemp != pInfo->rightWraped.end(); iTemp++ )
 	{
@@ -815,7 +817,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sRight.fValue );
 
 		pInfo->sRight.fValue -= sSize.x;
-		pInfo->sRight.fHeight = max( pInfo->sRight.fHeight, pInfo->fY + sSize.y );
+		pInfo->sRight.fHeight = (std::max)( pInfo->sRight.fHeight, pInfo->fY + sSize.y );
 	}
 
 	pInfo->leftWraped.clear();

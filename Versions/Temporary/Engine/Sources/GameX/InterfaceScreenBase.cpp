@@ -21,6 +21,8 @@
 #include "UI/UI.h"
 #include "MultiplayerCommandManager.h"
 
+#include <algorithm>
+
 namespace NISB
 {
 	static CVec2 vCursorStoredPos = VNULL2;
@@ -261,7 +263,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 	
 	// call UI screen segment
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
-	int nDeltaTime = (nTime == 0) ? 0 : max( 0, nCurrTime - nTime );
+	int nDeltaTime = (nTime == 0) ? 0 : (std::max<int>)( 0, nCurrTime - nTime );
 	if ( pScreen )
 		pScreen->Segment( nDeltaTime );
 	nTime = nCurrTime;

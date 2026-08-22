@@ -10,6 +10,8 @@
 
 #include "UISpecificB2_export.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 #include <zconf.h>
@@ -52,7 +54,7 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 		(vAccelCoeffBounceIn.y <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeffBounceIn.y );
 	fMoveTime2 = pCmd->fMoveTimeBounce;
 	
-	fWaitTime = max( 0.0f, max( pCmd->fMaxMoveTime, (pContext ? pContext->fMaxMoveTime : 0.0f) ) - fMoveTime );
+	fWaitTime = (std::max)( 0.0f, (std::max)( pCmd->fMaxMoveTime, (pContext ? pContext->fMaxMoveTime : 0.0f) ) - fMoveTime );
 
 	int x, y, w, h;
 	pElement->GetPlacement( &x, &y, &w, &h );
@@ -149,7 +151,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 			}
 			else
 			{
-				vCurrPos = vInitialPos + GetDelta( vSpeed, vAccel, max( 0.0f, fElapsedTime - fWaitTime ) );
+				vCurrPos = vInitialPos + GetDelta( vSpeed, vAccel, (std::max)( 0.0f, fElapsedTime - fWaitTime ) );
 				fEffectTime = fElapsedTime;
 			}
 			break;

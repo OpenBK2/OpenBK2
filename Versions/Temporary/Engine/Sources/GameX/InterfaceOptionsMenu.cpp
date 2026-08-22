@@ -19,6 +19,7 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -805,9 +806,9 @@ static void CommandAutodetect( const std::string &szID, const std::vector<std::w
 
 	int nSpeed = NGScene::GetSpeedMode();
 
-	float fPerfomance = max( 0.5f, (performanceInfo.fCPUclock - 1500.0f)/1500.0f );	
-	fPerfomance = min( fPerfomance, max( 0, (performanceInfo.fFillRate - 100.0f)/100.0f ) );
-	fPerfomance = min( fPerfomance, max( 0, (performanceInfo.fTriangleRate - 5.0f)/5.0f ) );
+	float fPerfomance = (std::max)( 0.5f, (performanceInfo.fCPUclock - 1500.0f)/1500.0f );
+	fPerfomance = (std::min)( fPerfomance, (std::max)( 0.f, (performanceInfo.fFillRate - 100.0f)/100.0f ) );
+	fPerfomance = (std::min)( fPerfomance, (std::max)( 0.f, (performanceInfo.fTriangleRate - 5.0f)/5.0f ) );
 	fPerfomance = Clamp( fPerfomance, 0.0f, 1.0f );
 
 	NGlobal::ProcessCommand( std::wstring( L"set_quality " ) + NStr::ToUnicode( fmt::format( "{:f}", fPerfomance ) ) );

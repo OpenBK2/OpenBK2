@@ -16,6 +16,7 @@
 #include "GameXClassIDs.h"
 #include "Main/MODs.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -125,8 +126,8 @@ void SSaveInfo::GenerateInfo()
 			int nChapterMapSizeX = VirtualToScreenX( CHAPTERMAP_X_SIZE );
 			int nChapterMapSizeY = VirtualToScreenY( CHAPTERMAP_Y_SIZE );
 
-			nChapterMapSizeX = min( nChapterMapSizeX, tmpScreenShot.GetSizeX() - nScreenShotOffsetX );
-			nChapterMapSizeY = min( nChapterMapSizeY, tmpScreenShot.GetSizeY() - nScreenShotOffsetY );
+			nChapterMapSizeX = (std::min)( nChapterMapSizeX, tmpScreenShot.GetSizeX() - nScreenShotOffsetX );
+			nChapterMapSizeY = (std::min)( nChapterMapSizeY, tmpScreenShot.GetSizeY() - nScreenShotOffsetY );
 
 			image1.SetSizes( nChapterMapSizeX, nChapterMapSizeY );
 			for ( int y = 0; y < image1.GetSizeY(); ++y )
@@ -326,7 +327,7 @@ std::string GetUniqueFileName( const CSaveList &saves )
 			NStr::TrimLeft( szText, '0' );
 			nFileIndex = NStr::ToInt( szText );
 		}
-		nIndex = max( nIndex, nFileIndex + 1 );
+		nIndex = (std::max)( nIndex, nFileIndex + 1 );
 	}
 	return fmt::format( "{}{:04d}", SAVE_NAME_PREFIX, nIndex );
 }
