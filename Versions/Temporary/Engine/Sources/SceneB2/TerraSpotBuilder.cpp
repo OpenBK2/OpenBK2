@@ -46,10 +46,10 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 	GetLineEq( v3.x, v3.y, v4.x, v4.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
 	GetLineEq( v4.x, v4.y, v1.x, v1.y, &(coeffs[3].x), &(coeffs[3].y), &(coeffs[3].z) );
 
-	const int nTileX1 = Clamp( int( min( min(v1.x, v2.x), min(v3.x, v4.x) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int( min( min(v1.y, v2.y), min(v3.y, v4.y) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int( max( max(v1.x, v2.x), max(v3.x, v4.x) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int( max( max(v1.y, v2.y), max(v3.y, v4.y) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int( (std::min)( (std::min)(v1.x, v2.x), (std::min)(v3.x, v4.x) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int( (std::min)( (std::min)(v1.y, v2.y), (std::min)(v3.y, v4.y) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int( (std::max)( (std::max)(v1.x, v2.x), (std::max)(v3.x, v4.x) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int( (std::max)( (std::max)(v1.y, v2.y), (std::max)(v3.y, v4.y) ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	pSpot->vMin.Set( nTileX1, nTileY1 );
 	pSpot->vMax.Set( nTileX2, nTileY2 );
@@ -84,11 +84,11 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
-					max( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_TERRASPOT_HEIGHT );
+					(std::max)( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_TERRASPOT_HEIGHT );
 				const CVec3 vert2( tile.vertices[it->i2].x, tile.vertices[it->i2].y,
-					max( tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f ) + DEF_TERRASPOT_HEIGHT );
+					(std::max)( tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f ) + DEF_TERRASPOT_HEIGHT );
 				const CVec3 vert3( tile.vertices[it->i3].x, tile.vertices[it->i3].y,
-					max( tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f ) + DEF_TERRASPOT_HEIGHT );
+					(std::max)( tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f ) + DEF_TERRASPOT_HEIGHT );
 				const bool bFlag1 = IsInside( coeffs, vert1 );
 				const bool bFlag2 = IsInside( coeffs, vert2 );
 				const bool bFlag3 = IsInside( coeffs, vert3 );

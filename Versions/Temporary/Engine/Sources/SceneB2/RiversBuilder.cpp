@@ -54,7 +54,7 @@ inline uint8_t CalculateAlphaValue( const int nWaterSamplesNum, const int nAlpha
 {
 	const float fAlphaL = x < nAlphaCellsNumL ? ( (float)x * fAlphaCellsCoeffL ) : 1.0f;
 	const float fAlphaR = x > ( nWaterSamplesNum - 1 - nAlphaCellsNumR ) ? ( (float)( nWaterSamplesNum - 1 - x ) * fAlphaCellsCoeffR ) : 1.0f;
-	return Clamp( Float2Int( min( fAlphaL, fAlphaR ) * fOpacity * 255.0f	), 0, 255 );
+	return Clamp( Float2Int( (std::min)( fAlphaL, fAlphaR ) * fOpacity * 255.0f	), 0, 255 );
 }
 
 static void UpdateGfxHeights( SRiverGFXInfo *pGfxInfo, const STerrainInfo::SRiver *pRiver, const float fBottomHeight, const float fWaterHeight,
@@ -69,10 +69,10 @@ static void UpdateGfxHeights( SRiverGFXInfo *pGfxInfo, const STerrainInfo::SRive
 	{
 		int nAlpha2CellsNumL = nAlphaCellsNumL * DEF_WATER2_TO_WATER_COEFF;
 		if ( nAlphaCellsNumL >= 1 )
-			nAlpha2CellsNumL = max( nAlpha2CellsNumL, 1 );
+			nAlpha2CellsNumL = (std::max)( nAlpha2CellsNumL, 1 );
 		int nAlpha2CellsNumR = nAlphaCellsNumR * DEF_WATER2_TO_WATER_COEFF;
 		if ( nAlphaCellsNumR >= 1 )
-			nAlpha2CellsNumR = max( nAlpha2CellsNumR, 1 );
+			nAlpha2CellsNumR = (std::max)( nAlpha2CellsNumR, 1 );
 		const float fAlphaCellsCoeffL = 1.0f / nAlphaCellsNumL;
 		const float fAlphaCellsCoeffR = 1.0f / nAlphaCellsNumR;
 		const float fAlpha2CellsCoeffL = 1.0f / nAlpha2CellsNumL;
@@ -230,7 +230,7 @@ bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSee
 	if ( !curRiverInfo.pDesc->waterLayers.empty() )
 		curRiverInfo.nWaterSamplesNum = curRiverInfo.pDesc->waterLayers[0].nNumCells;
 
-	curRiverInfo.nWater2SamplesNum = max( curRiverInfo.nWaterSamplesNum * DEF_WATER2_TO_WATER_COEFF, 1 );
+	curRiverInfo.nWater2SamplesNum = (std::max)( curRiverInfo.nWaterSamplesNum * DEF_WATER2_TO_WATER_COEFF, 1.f );
 	if ( curRiverInfo.pDesc->waterLayers.size() > 1 )
 		curRiverInfo.nWater2SamplesNum = curRiverInfo.pDesc->waterLayers[1].nNumCells;
 
@@ -259,10 +259,10 @@ bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSee
 		const float fTerraHeightR = GetTerraHeight( xr, yr );
 		curRiverInfo.samples[nInd].Set( xl, yl, curRiverInfo.ridgeL[nInd].z/*fTerraHeightL*/, 0 );
 		curRiverInfo.samples[curRiverInfo.samples.size() - 1 - nInd].Set( xr, yr, curRiverInfo.ridgeR[nInd].z/*fTerraHeightR*/, 0 );
-		curRiverInfo.vBBMin.x = min( curRiverInfo.vBBMin.x, min(xl, xr) );
-		curRiverInfo.vBBMin.y = min( curRiverInfo.vBBMin.y, min(yl, yr) );
-		curRiverInfo.vBBMax.x = max( curRiverInfo.vBBMax.x, max(xl, xr) );
-		curRiverInfo.vBBMax.y = max( curRiverInfo.vBBMax.y, max(yl, yr) );
+		curRiverInfo.vBBMin.x = (std::min)( curRiverInfo.vBBMin.x, (std::min)(xl, xr) );
+		curRiverInfo.vBBMin.y = (std::min)( curRiverInfo.vBBMin.y, (std::min)(yl, yr) );
+		curRiverInfo.vBBMax.x = (std::max)( curRiverInfo.vBBMax.x, (std::max)(xl, xr) );
+		curRiverInfo.vBBMax.y = (std::max)( curRiverInfo.vBBMax.y, (std::max)(yl, yr) );
 
 		// precipice
 		//const float fMinHeight = min( fTerraHeightL - DEF_RIVER_DEPTH, fTerraHeightR - DEF_RIVER_DEPTH );
@@ -305,8 +305,8 @@ void CTerraGen::UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo 
 		const int nInvInd = pRiver->precVertsL.size() - 1 - i;
 		const float fTerraHeightL = GetTerraHeightNative( pRiver->precVertsL[i].x, pRiver->precVertsL[i].y );
 		const float fTerraHeightR = GetTerraHeightNative( pRiver->precVertsR[nInvInd].x, pRiver->precVertsR[nInvInd].y );
-		const float fBottomPreHeight = min( min( fTerraHeightL, fTerraHeightR ) - DEF_RIVER_DEPTH, fPrevHeight );
-		const float fBottomHeight = max( fBottomPreHeight, 0.0f/*0.05f*/ );
+		const float fBottomPreHeight = (std::min)( (std::min)( fTerraHeightL, fTerraHeightR ) - DEF_RIVER_DEPTH, fPrevHeight );
+		const float fBottomHeight = (std::max)( fBottomPreHeight, 0.0f/*0.05f*/ );
 		pRiver->precHeightsL[i] = fBottomHeight;
 		pRiver->precHeightsR[nInvInd] = fBottomHeight;
 
@@ -855,12 +855,12 @@ float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 		{
 			if ( GetIncRidgeHeight(v, it->ridgeL, &fH, ridgeProfile) )
 			{
-				fHeight = max( fHeight, fH );
+				fHeight = (std::max)( fHeight, fH );
 				bFlag = true;
 			}
 			if ( GetIncRidgeHeight(v, it->ridgeR, &fH, ridgeProfile) )
 			{
-				fHeight = max( fHeight, fH );
+				fHeight = (std::max)( fHeight, fH );
 				bFlag = true;
 			}
 		}
@@ -936,23 +936,23 @@ void CTerraGen::UpdateRiversDepthes()
 
 								GetBaryCoords( vert1, v1, v3, v2, &vBary );
 								if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
-									fMinHeight1 = min( fMinHeight1, (v3.z - v1.z) * vBary.x + (v2.z - v1.z) * vBary.y + v1.z );
+									fMinHeight1 = (std::min)( fMinHeight1, (v3.z - v1.z) * vBary.x + (v2.z - v1.z) * vBary.y + v1.z );
 								GetBaryCoords( vert1, v4, v2, v3, &vBary );
 								if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
-									fMinHeight1 = min( fMinHeight1, (v2.z - v4.z) * vBary.x + (v3.z - v4.z) * vBary.y + v4.z );
+									fMinHeight1 = (std::min)( fMinHeight1, (v2.z - v4.z) * vBary.x + (v3.z - v4.z) * vBary.y + v4.z );
 
 								GetBaryCoords( vert2, v1, v3, v2, &vBary );
 								if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
-									fMinHeight2 = min( fMinHeight2, (v3.z - v1.z) * vBary.x + (v2.z - v1.z) * vBary.y + v1.z );
+									fMinHeight2 = (std::min)( fMinHeight2, (v3.z - v1.z) * vBary.x + (v2.z - v1.z) * vBary.y + v1.z );
 								GetBaryCoords( vert2, v4, v2, v3, &vBary );
 								if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
-									fMinHeight2 = min( fMinHeight2, (v2.z - v4.z) * vBary.x + (v3.z - v4.z) * vBary.y + v4.z );
+									fMinHeight2 = (std::min)( fMinHeight2, (v2.z - v4.z) * vBary.x + (v3.z - v4.z) * vBary.y + v4.z );
 							}
 						}
 					}
 				}
 
-				const float fMinHeight = min( fMinHeight1, fMinHeight2 );
+				const float fMinHeight = (std::min)( fMinHeight1, fMinHeight2 );
 
 				if ( fMinHeight < vert1.z )
 				{
@@ -962,7 +962,7 @@ void CTerraGen::UpdateRiversDepthes()
 					itCurRiver->precHeightsR[nInvI] = fMinHeight;
 
 					const int nFirst = i - DEF_DEPTH_INTERPOLATE_LEN;
-					const int nFirstInd = max( nFirst, 0 );
+					const int nFirstInd = (std::max)( nFirst, 0 );
 					for ( int k = nFirstInd; k < i; ++k )
 					{
 						const float fCoeff = (float)( k - nFirst ) * DEF_DEPTH_INTERPOLATE_COEFF;
@@ -978,7 +978,7 @@ void CTerraGen::UpdateRiversDepthes()
 				for ( int i = 0; i < itCurRiver->precHeightsL.size(); ++i )
 				{
 					const int nInvInd = itCurRiver->precHeightsL.size() - 1 - i;
-					fPrevHeight = min( fPrevHeight, min(itCurRiver->precHeightsL[i], itCurRiver->precHeightsR[nInvInd]) );
+					fPrevHeight = (std::min)( fPrevHeight, (std::min)(itCurRiver->precHeightsL[i], itCurRiver->precHeightsR[nInvInd]) );
 					itCurRiver->precHeightsL[i] = fPrevHeight;
 					itCurRiver->precHeightsR[nInvInd] = fPrevHeight;
 				}
@@ -988,16 +988,16 @@ void CTerraGen::UpdateRiversDepthes()
 				{
 					int nBottomInd = 0, nWaterInd = 0, nWater2Ind = 0;
 					int nPatchInd = 0, nCurPatch = 0;
-					const int nWaterSamplesNum = max( itCurRiver->nWaterSamplesNum, DEF_WATER_SAMPLES_NUM );
-					const int nWater2SamplesNum = max( itCurRiver->nWater2SamplesNum, DEF_WATER2_SAMPLES_NUM );
+					const int nWaterSamplesNum = (std::max)( itCurRiver->nWaterSamplesNum, DEF_WATER_SAMPLES_NUM );
+					const int nWater2SamplesNum = (std::max)( itCurRiver->nWater2SamplesNum, DEF_WATER2_SAMPLES_NUM );
 					const NDb::SVSOInstance *pRiverInstance = FindRiver( itCurRiver->nID );
 					for ( int i = 0; i < itCurRiver->precHeightsL.size(); ++i )
 					{
 						const int nInvInd = itCurRiver->precVertsL.size() - 1 - i;
 
-						const float fHeight = min( itCurRiver->precHeightsL[i], itCurRiver->precHeightsR[itCurRiver->precHeightsR.size() - 1 - i] );
+						const float fHeight = (std::min)( itCurRiver->precHeightsL[i], itCurRiver->precHeightsR[itCurRiver->precHeightsR.size() - 1 - i] );
 						//const float fHeight = min( itCurRiver->precHeightsL[i], itCurRiver->precHeightsR[i] );
-						const float fWaterHeight = min( fHeight + DEF_RIVER_WATER_LEVEL, pGfxInfo->waterPatches[nCurPatch].vertices[nWaterInd].pos.z );
+						const float fWaterHeight = (std::min)( fHeight + DEF_RIVER_WATER_LEVEL, pGfxInfo->waterPatches[nCurPatch].vertices[nWaterInd].pos.z );
 
 						const float fTerraHeightL = GetTerraHeightNative( itCurRiver->precVertsL[i].x, itCurRiver->precVertsL[i].y );
 						const float fTerraHeightR = GetTerraHeightNative( itCurRiver->precVertsR[nInvInd].x, itCurRiver->precVertsR[nInvInd].y );
@@ -1263,13 +1263,13 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 						// check source vertices
 						if ( IsPointUnderTrg(v1.pos, p1, p2, p3, vNorm, fDist, fDiff) )
 							bFlag1 = true;
-						fAlpha1 = max( fAlpha1, fDiff );
+						fAlpha1 = (std::max)( fAlpha1, fDiff );
 						if ( IsPointUnderTrg(v2.pos, p1, p2, p3, vNorm, fDist, fDiff) )
 							bFlag2 = true;
-						fAlpha2 = max( fAlpha2, fDiff );
+						fAlpha2 = (std::max)( fAlpha2, fDiff );
 						if ( IsPointUnderTrg(v3.pos, p1, p2, p3, vNorm, fDist, fDiff) )
 							bFlag3 = true;
-						fAlpha3 = max( fAlpha3, fDiff );
+						fAlpha3 = (std::max)( fAlpha3, fDiff );
 
 						GetIntersectionOfTrgAndSegment( intersVerts, v1.pos, v2.pos, vNorm, fDist, p1, p2, p3 );
 						GetIntersectionOfTrgAndSegment( intersVerts, v2.pos, v3.pos, vNorm, fDist, p1, p2, p3 );

@@ -67,13 +67,13 @@ inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const std::vector<CVec3fEx>
 		const float fH1 = GetHeight( v, ridge[k+1], ridge[ridge.size()-k-2], ridge[k], heightCalc );
 		if ( fH1 >= 0.0f )
 		{
-			*pIncHeight = max( fH1, *pIncHeight );
+			*pIncHeight = (std::max)( fH1, *pIncHeight );
 			bFlag = true;
 		}
 		const float fH2 = GetHeightInv( v, ridge[ridge.size()-k-1], ridge[k], ridge[ridge.size()-k-2], heightCalc );
 		if ( fH2 >= 0.0f )
 		{
-			*pIncHeight = max( fH2, *pIncHeight );
+			*pIncHeight = (std::max)( fH2, *pIncHeight );
 			bFlag = true;
 		}
 	}
@@ -92,13 +92,13 @@ inline bool GetIncRidgeHeightMinLaw( const CVec2 &v, const std::vector<CVec3fEx>
 		const float fH1 = GetHeight( v, ridge[k+1], ridge[ridge.size()-k-2], ridge[k], heightCalc );
 		if ( fH1 >= 0.0f )
 		{
-			*pIncHeight = min( fH1, *pIncHeight );
+			*pIncHeight = (std::min)( fH1, *pIncHeight );
 			bFlag = true;
 		}
 		const float fH2 = GetHeightInv( v, ridge[ridge.size()-k-1], ridge[k], ridge[ridge.size()-k-2], heightCalc );
 		if ( fH2 >= 0.0f )
 		{
-			*pIncHeight = min( fH2, *pIncHeight );
+			*pIncHeight = (std::min)( fH2, *pIncHeight );
 			bFlag = true;
 		}
 	}
@@ -114,9 +114,9 @@ inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &ver
 
 	for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 	{
-		const CVec3 v1( tile.vertices[it->i1].x, tile.vertices[it->i1].y, max(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) );
-		const CVec3 v2( tile.vertices[it->i2].x, tile.vertices[it->i2].y, max(tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f) );
-		const CVec3 v3( tile.vertices[it->i3].x, tile.vertices[it->i3].y, max(tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f) );
+		const CVec3 v1( tile.vertices[it->i1].x, tile.vertices[it->i1].y, (std::max)(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) );
+		const CVec3 v2( tile.vertices[it->i2].x, tile.vertices[it->i2].y, (std::max)(tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f) );
+		const CVec3 v3( tile.vertices[it->i3].x, tile.vertices[it->i3].y, (std::max)(tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f) );
 
 		if ( (fabs2(v1 - vert) < DEF_EPS) || (fabs2(v2 - vert) < DEF_EPS) || (fabs2(v3 - vert) < DEF_EPS) )
 		{

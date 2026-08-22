@@ -334,7 +334,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			if ( (nPrevVertsNum > 0) && (nCurVertsNum > 0) )
 			{
 				float fDist = 0.0f;
-				const int nMaxVertsNum = max( nPrevVertsNum, nCurVertsNum );
+				const int nMaxVertsNum = (std::max)( nPrevVertsNum, nCurVertsNum );
 				const float fCoeff1 = nPrevVertsNum > nCurVertsNum ? 1.0f : (float)nPrevVertsNum / nCurVertsNum;
 				const float fCoeff2 = nCurVertsNum > nPrevVertsNum ? 1.0f : (float)nCurVertsNum / nPrevVertsNum;
 				for ( int g = 0; g < nMaxVertsNum; ++g )
@@ -342,7 +342,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 					const int nInd1 = fCoeff1 * g;
 					const int nInd2 = fCoeff2 * g;
 					//fDist = max( fDist, fabs( vertices[nPrevVertsOffset + nInd1].pos - vertices[nVertsOffsetBeforeAdded + nInd2].pos ) );
-					fDist = max( fDist, fabs(GetVec2(vertices[nPrevVertsOffset + nInd1].pos) - GetVec2(vertices[nVertsOffsetBeforeAdded + nInd2].pos)) );
+					fDist = (std::max)( fDist, fabs(GetVec2(vertices[nPrevVertsOffset + nInd1].pos) - GetVec2(vertices[nVertsOffsetBeforeAdded + nInd2].pos)) );
 				}
 				fTexX += fDist * fTexScaleX;
 			}
@@ -360,7 +360,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			// fill triangles
 			if ( (nPrevVertsNum > 0) && (nCurVertsNum > 0) && (pCurPrec->nodes[i] != pCurPrec->nodes[i - 1]) )
 			{
-				const int nMaxVertsNum = max( nPrevVertsNum, nCurVertsNum );
+				const int nMaxVertsNum = (std::max)( nPrevVertsNum, nCurVertsNum );
 				const float fCoeff1 = nPrevVertsNum > nCurVertsNum ? 1.0f : (float)nPrevVertsNum / nCurVertsNum;
 				const float fCoeff2 = nCurVertsNum > nPrevVertsNum ? 1.0f : (float)nCurVertsNum / nPrevVertsNum;
 				for ( int g = 0; g < ( nMaxVertsNum - 1 ); ++g )
@@ -517,7 +517,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	for ( int i = 0; i < nPatchesNum; ++i )
 	{
 		const int nFirstNode = i * DEF_PRECIPICE_SAMPLES_PER_PATCH;
-		const int nLastNode = min( ( i + 1 ) * DEF_PRECIPICE_SAMPLES_PER_PATCH, pCurPrec->nodes.size() - 1 );
+		const int nLastNode = (std::min<size_t>)( ( i + 1 ) * DEF_PRECIPICE_SAMPLES_PER_PATCH, pCurPrec->nodes.size() - 1 );
 		if ( i > 0 )
 			nVertsOffs -= nodeVertsNum[nFirstNode];
 		nLastOffs = nVertsOffs;

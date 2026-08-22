@@ -123,7 +123,7 @@ CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float 
 void CShootAreaMesh::BuildCircle( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadius )
 {	
 	const float fSRadius = fRadius - fWidth;
-	const int nSegments = max( int( fRadius * FP_2PI / 4.0f ), 16 );
+	const int nSegments = (std::max)( int( fRadius * FP_2PI / 4.0f ), 16 );
 	const float fStep = FP_2PI / nSegments;
 	verts.resize( nSegments * 2 );
 	tris.resize( nSegments * 2 );

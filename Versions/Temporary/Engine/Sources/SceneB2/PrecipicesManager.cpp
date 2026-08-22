@@ -21,8 +21,8 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 			it->fDepthRand += fDepthRand;
 			it->fRandX += fRandX;
 			it->fRandY += fRandY;
-			it->fMinHeight = min( it->fMinHeight, fMin );
-			it->fMaxHeight = max( it->fMaxHeight, fMax );
+			it->fMinHeight = (std::min)( it->fMinHeight, fMin );
+			it->fMaxHeight = (std::max)( it->fMaxHeight, fMax );
 			++it->nCount;
 			AddUnique( &(it->precs), nID );
 			it->verts.resize( 0 );
@@ -63,8 +63,8 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 			it->fDepthRand += fDepthRand1 + fDepthRand2;
 			it->fRandX += fRandX1 + fRandX2;
 			it->fRandY += fRandY1 + fRandY2;
-			it->fMinHeight = min( it->fMinHeight, fMin );
-			it->fMaxHeight = max( it->fMaxHeight, fMax );
+			it->fMinHeight = (std::min)( it->fMinHeight, fMin );
+			it->fMaxHeight = (std::max)( it->fMaxHeight, fMax );
 			it->nCount += 2;
 			AddUnique( &(it->precs), nID1 );
 			AddUnique( &(it->precs), nID2 );
@@ -202,8 +202,8 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 	{
 		addPrec.vMin.Minimize( CVec2(posArr[i].x, posArr[i].y) );
 		addPrec.vMax.Maximize( CVec2(posArr[i].x, posArr[i].y) );
-		const float fMinH = min( posArr[i].z, heightsArr[i] );
-		const float fMaxH = max( posArr[i].z, heightsArr[i] );
+		const float fMinH = (std::min)( posArr[i].z, heightsArr[i] );
+		const float fMaxH = (std::max)( posArr[i].z, heightsArr[i] );
 		const int nNodeInd = PrecAddUniqueNode( CVec2(posArr[i].x, posArr[i].y), normsArr[i], fMinH, fMaxH, addPrec.nID,
 			fDepth, fDepthRand, fRandX, fRandY );
 		AddToPrecipice( addPrec, nNodeInd, normsArr[i], fMinH, fMaxH );
@@ -269,8 +269,8 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 								const float fXH1 = itPrecipice->maxHeights[i - 1] + ( itPrecipice->maxHeights[i] - itPrecipice->maxHeights[i - 1] ) * t;
 								if ( fXH1 < fNH1 )
 									continue;
-								const float fMinH1 = min( fNH1, fXH1 );
-								const float fMaxH1 = max( fNH1, fXH1 );
+								const float fMinH1 = (std::min)( fNH1, fXH1 );
+								const float fMaxH1 = (std::max)( fNH1, fXH1 );
 								//const float fNH2 = addPrec.nExcludeRiverID < 0 ?
 								//	( GetTerraHeight( vPos.x, vPos.y ) +
 								//	itPrecipice->nExcludeRiverID < 0 ? GetMaxCragHeight2( vPos, nID, itPrecipice->nID ) : GetMaxCragHeight( vPos, nID ) ) :
@@ -284,9 +284,9 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 								const float fXH2 = addPrec.maxHeights[g - 1] + ( addPrec.maxHeights[g] - addPrec.maxHeights[g - 1] ) * k;
 								if ( fXH2 < fNH2 )
 									continue;
-								const float fMinH2 = min( fNH2, fXH2 );
-								const float fMaxH2 = max( fNH2, fXH2 );
-/*!!!!!!!!*/		const int nNodeInd = PrecAddUniqueNode2( vPos, vNorm2, vNorm1/*vNorm1, vNorm2*/, min(fMinH1, fMinH2), max(fMaxH1, fMaxH2),
+								const float fMinH2 = (std::min)( fNH2, fXH2 );
+								const float fMaxH2 = (std::max)( fNH2, fXH2 );
+/*!!!!!!!!*/		const int nNodeInd = PrecAddUniqueNode2( vPos, vNorm2, vNorm1/*vNorm1, vNorm2*/, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2),
 																												 addPrec.nID, itPrecipice->nID, addPrec.fDepth, itPrecipice->fDepth, addPrec.fDepthRand, itPrecipice->fDepthRand,
 																												 addPrec.fRandX, itPrecipice->fRandX, addPrec.fRandY, itPrecipice->fRandY );
 
@@ -311,15 +311,15 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 												precInters.push_back( curInters );
 												//
 												curInters.fDist = t;
-												curInters.fMinHeight = min( fMaxH1, fMaxH2 );
-												curInters.fMaxHeight = max( fMaxH1, fMaxH2 );
+												curInters.fMinHeight = (std::min)( fMaxH1, fMaxH2 );
+												curInters.fMaxHeight = (std::max)( fMaxH1, fMaxH2 );
 												precInters.push_back( curInters );
 											}
 											else
 											{
 												curInters.fDist = t - DEF_EPS;
-												curInters.fMinHeight = min( fMaxH1, fMaxH2 );
-												curInters.fMaxHeight = max( fMaxH1, fMaxH2 );
+												curInters.fMinHeight = (std::min)( fMaxH1, fMaxH2 );
+												curInters.fMaxHeight = (std::max)( fMaxH1, fMaxH2 );
 												precInters.push_back( curInters );
 												//
 												curInters.fDist = t;
@@ -349,15 +349,15 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 											}
 											//
 											curInters.fDist = t;
-											curInters.fMinHeight = min( fMinH1, fMinH2 );
-											curInters.fMaxHeight = max( fMaxH1, fMaxH2 );
+											curInters.fMinHeight = (std::min)( fMinH1, fMinH2 );
+											curInters.fMaxHeight = (std::max)( fMaxH1, fMaxH2 );
 											precInters.push_back( curInters );
 										}
 										else
 										{
 											curInters.fDist = t - DEF_EPS;
-											curInters.fMinHeight = min( fMinH1, fMinH2 );
-											curInters.fMaxHeight = max( fMaxH1, fMaxH2 );
+											curInters.fMinHeight = (std::min)( fMinH1, fMinH2 );
+											curInters.fMaxHeight = (std::max)( fMaxH1, fMaxH2 );
 											precInters.push_back( curInters );
 											//
 											if ( addPrec.nExcludeRiverID < 0 )
@@ -380,11 +380,11 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 											if ( addPrec.minHeights[g - 1] <= addPrec.minHeights[g] )
 											{
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, fMaxH2 );
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, min(fMaxH1, fMaxH2), max(fMaxH1, fMaxH2) );
+												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMaxH1, fMaxH2), (std::max)(fMaxH1, fMaxH2) );
 											}
 											else
 											{
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, min(fMaxH1, fMaxH2), max(fMaxH1, fMaxH2) );
+												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMaxH1, fMaxH2), (std::max)(fMaxH1, fMaxH2) );
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, fMaxH2 );
 											}
 										}
@@ -399,11 +399,11 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 										{
 											if ( itPrecipice->nExcludeRiverID < 0 )
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/fMinH1 );
-											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, min(fMinH1, fMinH2), max(fMaxH1, fMaxH2) );
+											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2) );
 										}
 										else
 										{
-											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, min(fMinH1, fMinH2), max(fMaxH1, fMaxH2) );
+											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2) );
 											if ( itPrecipice->nExcludeRiverID < 0 )
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/fMinH1 );
 										}

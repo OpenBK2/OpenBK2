@@ -183,9 +183,9 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 	else
 		vSunDir.Set( 0, 0, 0 );
 
-	nAnimMaxFrames = max( nFramesX * nFramesY, 1 );
-	nNumFramesX = max( nFramesX, 1 );
-	nNumFramesY = max( nFramesY, 1 );
+	nAnimMaxFrames = (std::max)( nFramesX * nFramesY, 1 );
+	nNumFramesX = (std::max)( nFramesX, 1 );
+	nNumFramesY = (std::max)( nFramesY, 1 );
 	fTexCoordOffsetX = 1.0f / nNumFramesX;
 	fTexCoordOffsetY = 1.0f / nNumFramesY;
 	fTexCoord2OffsetX = 1.0f / nNumFramesX - DEF_TEX_ERROR * 2.0f;
@@ -561,10 +561,10 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 		for ( int i = 0; i < nPatchesX; ++i )
 		{
 			// Tiles in the current water patch
-			const int nFirstX = max( i * DEF_WATER_PATCH_SIZE_X, 0 );
-			const int nFirstY = max( g * DEF_WATER_PATCH_SIZE_Y, 0 );
-			const int nLastX = min( (i + 1) * DEF_WATER_PATCH_SIZE_X + 1, waterNodes.GetSizeX() - 1 );
-			const int nLastY = min( (g + 1) * DEF_WATER_PATCH_SIZE_Y + 1, waterNodes.GetSizeY() - 1 );
+			const int nFirstX = (std::max)( i * DEF_WATER_PATCH_SIZE_X, 0 );
+			const int nFirstY = (std::max)( g * DEF_WATER_PATCH_SIZE_Y, 0 );
+			const int nLastX = (std::min)( (i + 1) * DEF_WATER_PATCH_SIZE_X + 1, waterNodes.GetSizeX() - 1 );
+			const int nLastY = (std::min)( (g + 1) * DEF_WATER_PATCH_SIZE_Y + 1, waterNodes.GetSizeY() - 1 );
 
 			// check for used parameters
 			useParams.resize( 0 );
@@ -1197,8 +1197,8 @@ void CWaterController::InitSilentWater( const CArray2D<uint8_t> &seaMap,
 			{
 				const int nX1 = i * nPatchSize;
 				const int nY1 = g * nPatchSize;
-				const int nX2 = min( ( i + 1 ) * nPatchSize, seaMap.GetSizeX() - 1 );
-				const int nY2 = min( ( g + 1 ) * nPatchSize, seaMap.GetSizeY() - 1 );
+				const int nX2 = (std::min)( ( i + 1 ) * nPatchSize, seaMap.GetSizeX() - 1 );
+				const int nY2 = (std::min)( ( g + 1 ) * nPatchSize, seaMap.GetSizeY() - 1 );
 
 				locMap.FillZero();
 				bFlag = false;

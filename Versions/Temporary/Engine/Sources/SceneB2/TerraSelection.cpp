@@ -73,7 +73,7 @@ void CTerraGen::CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin,
 			std::vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
 			for ( ; itVert != terrainInfo.tiles[g][i].vertices.end(); ++itVert, ++itHeight )
 			{
-				vert.pos.Set( itVert->x, itVert->y, max( itVert->z + ( *itHeight ), fMinHeight ) + DEF_SELECTION_HEIGHT );
+				vert.pos.Set( itVert->x, itVert->y, (std::max)( itVert->z + ( *itHeight ), fMinHeight ) + DEF_SELECTION_HEIGHT );
 				vert.tex.Set( fTexX1 + ( itVert->x - fOrgX ) * fCoeffX, fTexY1 + ( itVert->y - fOrgY ) * fCoeffY );
 				pData->vertices.push_back( vert );
 				++nVertOffs;

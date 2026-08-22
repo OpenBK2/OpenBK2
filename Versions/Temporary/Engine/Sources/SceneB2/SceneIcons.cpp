@@ -10,7 +10,7 @@
 
 void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
 {
-	const float fMaxSize = max( vHalfSize.x * 2.0f, vHalfSize.y * 2.0f );
+	const float fMaxSize = (std::max)( vHalfSize.x * 2.0f, vHalfSize.y * 2.0f );
 	const SHMatrix matr( fMaxSize, 0,				0,				vCenter.x,
 											 0,				fMaxSize, 0,				vCenter.y,
 											 0,				0,				fMaxSize, vCenter.z,
@@ -95,7 +95,7 @@ void CSceneIconInfo::CreateIcon( const int _nID, const CVec3 &_vCenter, const CV
 	data.triangles[1].Set( 2, 3, 0 );
 
 	SBound bound;
-	const float fMaxHalfSize = max( vHalfSize.x, vHalfSize.y );
+	const float fMaxHalfSize = (std::max)( vHalfSize.x, vHalfSize.y );
 	vBBHalfSize.Set( fMaxHalfSize, fMaxHalfSize, fMaxHalfSize );
 	bound.BoxInit( vCenter - vBBHalfSize, vCenter + vBBHalfSize );
 

@@ -104,8 +104,8 @@ void CTerraGen::PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *p
 																	 const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3,
 																	 const CVec3 &vBase1, const CVec3 &vBase2, const CVec3 &vBase3 )
 {
-	const int nTileX1 = Clamp( int(min(min(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int(min(min(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int((std::min)((std::min)(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int((std::min)((std::min)(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	AddTileTriangle( 0, pDataArr, v1, v2, v3, vSecTex1, vSecTex2, vSecTex3, nTileX1, nTileY1,
 									 nTileX1 >> DEF_PATCH_SIZE_BITS, nTileY1 >> DEF_PATCH_SIZE_BITS, &vRealPos1, &vRealPos2, &vRealPos3,
@@ -236,7 +236,7 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 			{
 				//vRes = tile.vertices[0]; vRes.z += tile.addHeights[0];
 				const CVec3fEx &tileVert = tile.vertices[0];
-				vRes.Set( tileVert.x, tileVert.y, max(tileVert.z + tile.addHeights[0], 0.0f), tileVert.flag );
+				vRes.Set( tileVert.x, tileVert.y, (std::max)(tileVert.z + tile.addHeights[0], 0.0f), tileVert.flag );
 				*fAddHeight = tile.addHeights[0];
 				fDist = GetDist2( v, vRes );
 				bFlag = false;
@@ -244,13 +244,13 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 			for ( int k = 0; k < tile.vertices.size(); ++k )
 			{
 				const CVec3fEx &vCur = tile.vertices[k];
-				const float t = GetDist2( v, CVec3fEx(vCur.x, vCur.y, max(vCur.z + tile.addHeights[k], 0.0f), vCur.flag) );
+				const float t = GetDist2( v, CVec3fEx(vCur.x, vCur.y, (std::max)(vCur.z + tile.addHeights[k], 0.0f), vCur.flag) );
 				if ( t < fDist )
 				{
 					fDist = t;
 					//vRes = vCur; vRes.z += tile.addHeights[k];
 					*fAddHeight = tile.addHeights[k];
-					vRes.Set( vCur.x, vCur.y, max(vCur.z + tile.addHeights[k], 0.0f), vCur.flag );
+					vRes.Set( vCur.x, vCur.y, (std::max)(vCur.z + tile.addHeights[k], 0.0f), vCur.flag );
 				}
 			}
 		}
@@ -280,10 +280,10 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
 		return;
 
-	const int nTileX1 = Clamp( int(min(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int(min(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int(max(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int(max(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int((std::min)(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int((std::min)(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int((std::max)(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int((std::max)(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	int nX1, nY1, nX2, nY2;
 	if ( nTileX1 <= nTileX2 )
@@ -329,7 +329,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
-						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, max(curVert.z + addHeights[k], 0.0f)), t) );
+						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, (std::max)(curVert.z + addHeights[k], 0.0f)), t) );
 					}
 				}
 				else
@@ -339,7 +339,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
-						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, max(curVert.z + addHeights[k], 0.0f)), t) );
+						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, (std::max)(curVert.z + addHeights[k], 0.0f)), t) );
 					}
 				}
 			}

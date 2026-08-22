@@ -35,10 +35,10 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 	const CVec2 vt3( (float)v3.x * DEF_TILE_SIZE, (float)v3.y * DEF_TILE_SIZE );
 	const CVec2 vt4( (float)v4.x * DEF_TILE_SIZE, (float)v4.y * DEF_TILE_SIZE );
 
-	const CVec2i vMin( min(min( v1.x, v2.x), min(v3.x, v4.x)) - DEF_EXPAND_TILES_NUM_EXT,
-										 min(min( v1.y, v2.y), min(v3.y, v4.y)) - DEF_EXPAND_TILES_NUM_EXT );
-	const CVec2i vMax( max(max( v1.x, v2.x), max(v3.x, v4.x)) + DEF_EXPAND_TILES_NUM_EXT,
-										 max(max( v1.y, v2.y), max(v3.y, v4.y)) + DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMin( (std::min)((std::min)( v1.x, v2.x), (std::min)(v3.x, v4.x)) - DEF_EXPAND_TILES_NUM_EXT,
+										 (std::min)((std::min)( v1.y, v2.y), (std::min)(v3.y, v4.y)) - DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMax( (std::max)((std::max)( v1.x, v2.x), (std::max)(v3.x, v4.x)) + DEF_EXPAND_TILES_NUM_EXT,
+										 (std::max)((std::max)( v1.y, v2.y), (std::max)(v3.y, v4.y)) + DEF_EXPAND_TILES_NUM_EXT );
 
 	CArray2D<uint8_t> objMask( vMax.x - vMin.x + 1, vMax.y - vMin.y + 1 );
 	objMask.FillZero();
@@ -67,7 +67,7 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 		{
 			if ( objMask[g][i] == 1 )
 			{
-				fMinHeight = min( fMinHeight, terrainInfo.heights[g + vMin.y][i + vMin.x] );
+				fMinHeight = (std::min)( fMinHeight, terrainInfo.heights[g + vMin.y][i + vMin.x] );
 				bFlag = true;
 			}
 		}
@@ -98,7 +98,7 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 					const float fDist3 = GetDistToSegment( CVec2(fX, fY), vt3, vt4 );
 					const float fDist4 = GetDistToSegment( CVec2(fX, fY), vt4, vt1 );
 
-					const float fDist = sqrt( min(min(fDist1, fDist2), min(fDist3, fDist4)) );
+					const float fDist = sqrt( (std::min)((std::min)(fDist1, fDist2), (std::min)(fDist3, fDist4)) );
 					const float fCoeff = GetObjTerraProfile( Clamp((fDist - DEF_CONST_DIST) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f) );
 					terrainInfo.heights[nIndY][nIndX] = terrainInfo.heights[nIndY][nIndX] * fCoeff + fMinHeight * ( 1.0f - fCoeff );
 					terrainAIInfo.heights[nIndY][nIndX] = Vis2AIFast( terrainInfo.heights[nIndY][nIndX] );

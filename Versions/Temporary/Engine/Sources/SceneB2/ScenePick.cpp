@@ -72,7 +72,7 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::li
 
 inline float GetGridPosition( float fPosition, int nGridSize )
 {
-	return min( (int)(fPosition*nGridSize), nGridSize-1 );
+	return (std::min)( (int)(fPosition*nGridSize), nGridSize-1 );
 }
 
 void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )

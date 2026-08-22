@@ -64,10 +64,10 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 																		 const float fAlpha1, const float fAlpha2, const float fAlpha3,
 																		 NMeshData::SMeshData *pData )
 {
-	const int nTileX1 = Clamp( int(min(min(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int(min(min(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int(max(max(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int(max(max(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int((std::min)((std::min)(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int((std::min)((std::min)(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int((std::max)((std::max)(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int((std::max)((std::max)(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	CVec2 vBary1, vBary2, vBary3, vBary;
 
@@ -85,11 +85,11 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
-													 max(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) + DEF_ROAD_HEIGHT );
+													 (std::max)(tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f) + DEF_ROAD_HEIGHT );
 				const CVec3 vert2( tile.vertices[it->i2].x, tile.vertices[it->i2].y,
-													 max(tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f) + DEF_ROAD_HEIGHT );
+													 (std::max)(tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f) + DEF_ROAD_HEIGHT );
 				const CVec3 vert3( tile.vertices[it->i3].x, tile.vertices[it->i3].y,
-													 max(tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f) + DEF_ROAD_HEIGHT );
+													 (std::max)(tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f) + DEF_ROAD_HEIGHT );
 				GetBaryCoords( vert1, v1, v2, v3, &vBary1 );
 				const bool bFlag1 = ( vBary1.x > -DEF_EPS ) && ( vBary1.y > -DEF_EPS ) && ( (vBary1.x + vBary1.y) < (1.0f + DEF_EPS) );
 				GetBaryCoords( vert2, v1, v2, v3, &vBary2 );
@@ -218,10 +218,10 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 	GetLineEq( v3.x, v3.y, v4.x, v4.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
 	GetLineEq( v4.x, v4.y, v1.x, v1.y, &(coeffs[3].x), &(coeffs[3].y), &(coeffs[3].z) );
 
-	const int nTileX1 = Clamp( int(min(min(v1.x, v2.x), min(v3.x, v4.x)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int(min(min(v1.y, v2.y), min(v3.y, v4.y)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int(max(max(v1.x, v2.x), max(v3.x, v4.x)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int(max(max(v1.y, v2.y), max(v3.y, v4.y)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int((std::min)((std::min)(v1.x, v2.x), (std::min)(v3.x, v4.x)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int((std::min)((std::min)(v1.y, v2.y), (std::min)(v3.y, v4.y)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int((std::max)((std::max)(v1.x, v2.x), (std::max)(v3.x, v4.x)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int((std::max)((std::max)(v1.y, v2.y), (std::max)(v3.y, v4.y)) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	CVec2 bary;
 
@@ -239,11 +239,11 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
 				const CVec3 vert1( tile.vertices[it->i1].x, tile.vertices[it->i1].y,
-					max( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_ROAD_HEIGHT );
+					(std::max)( tile.vertices[it->i1].z + tile.addHeights[it->i1], 0.0f ) + DEF_ROAD_HEIGHT );
 				const CVec3 vert2( tile.vertices[it->i2].x, tile.vertices[it->i2].y,
-					max( tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f ) + DEF_ROAD_HEIGHT );
+					(std::max)( tile.vertices[it->i2].z + tile.addHeights[it->i2], 0.0f ) + DEF_ROAD_HEIGHT );
 				const CVec3 vert3( tile.vertices[it->i3].x, tile.vertices[it->i3].y,
-					max( tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f ) + DEF_ROAD_HEIGHT );
+					(std::max)( tile.vertices[it->i3].z + tile.addHeights[it->i3], 0.0f ) + DEF_ROAD_HEIGHT );
 				const bool bFlag1 = IsInside( coeffs, vert1 );
 				const bool bFlag2 = IsInside( coeffs, vert2 );
 				const bool bFlag3 = IsInside( coeffs, vert3 );
@@ -465,8 +465,8 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 	const float fMinTexX = (float)gfxInfo.pDesc->center.nUseFromPixel / nCenterTexWidth;
 	const float fMaxTexX = (float)gfxInfo.pDesc->center.nUseToPixel / nCenterTexWidth;
 
-	float fGlobalMinTexX = min( fMinTexX, fMaxTexX );
-	float fGlobalMaxTexX = max( fMinTexX, fMaxTexX );
+	float fGlobalMinTexX = (std::min)( fMinTexX, fMaxTexX );
+	float fGlobalMaxTexX = (std::max)( fMinTexX, fMaxTexX );
 
 	float fLeftMinTexX = 0.0f, fLeftMaxTexX = 0.0f;
 	if ( gfxInfo.pDesc->leftBorder.pMaterial )
@@ -474,8 +474,8 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 		const int nLeftTexWidth = gfxInfo.pDesc->leftBorder.pMaterial->pTexture->nWidth;
 		fLeftMinTexX = (float)gfxInfo.pDesc->leftBorder.nUseFromPixel / nLeftTexWidth;
 		fLeftMaxTexX = (float)gfxInfo.pDesc->leftBorder.nUseToPixel / nLeftTexWidth;
-		fGlobalMinTexX = min( fGlobalMinTexX, min(fLeftMinTexX, fLeftMaxTexX) );
-		fGlobalMaxTexX = max( fGlobalMaxTexX, max(fLeftMinTexX, fLeftMaxTexX) );
+		fGlobalMinTexX = (std::min)( fGlobalMinTexX, (std::min)(fLeftMinTexX, fLeftMaxTexX) );
+		fGlobalMaxTexX = (std::max)( fGlobalMaxTexX, (std::max)(fLeftMinTexX, fLeftMaxTexX) );
 	}
 
 	float fRightMinTexX = 0.0f, fRightMaxTexX = 0.0f;
@@ -484,8 +484,8 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 		const int nRightTexWidth = gfxInfo.pDesc->rightBorder.pMaterial->pTexture->nWidth;
 		fRightMinTexX = (float)gfxInfo.pDesc->rightBorder.nUseFromPixel / nRightTexWidth;
 		fRightMaxTexX = (float)gfxInfo.pDesc->rightBorder.nUseToPixel / nRightTexWidth;
-		fGlobalMinTexX = min( fGlobalMinTexX, min(fRightMinTexX, fRightMaxTexX) );
-		fGlobalMaxTexX = max( fGlobalMaxTexX, max(fRightMinTexX, fRightMaxTexX) );
+		fGlobalMinTexX = (std::min)( fGlobalMinTexX, (std::min)(fRightMinTexX, fRightMaxTexX) );
+		fGlobalMaxTexX = (std::max)( fGlobalMaxTexX, (std::max)(fRightMinTexX, fRightMaxTexX) );
 	}
 
 	const float fTexCoeffX = fGlobalMaxTexX - fGlobalMinTexX;
@@ -496,7 +496,7 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 	for ( int i = 0; i < nPatchesNum; ++i )
 	{
 		const int nFirstInd = i * DEF_ROAD_SAMPS_PER_PATCH;
-		const int nLastInd = min( ( i + 1 ) * DEF_ROAD_SAMPS_PER_PATCH, points.size() - 1 );
+		const int nLastInd = (std::min<size_t>)( ( i + 1 ) * DEF_ROAD_SAMPS_PER_PATCH, points.size() - 1 );
 
 		ReservePatchData( &gfxInfo.patches[i] );
 		ReservePatchData( &leftGfxInfo.patches[i] );

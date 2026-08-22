@@ -34,7 +34,7 @@ namespace
 
 	void AddRiverCliffBankTiles( std::list<SVector> *pTiles, const std::vector<CVec3> &verts, const std::vector<float> &heights )
 	{
-		const int nCount = min( int( verts.size() ), int( heights.size() ) );
+		const int nCount = (std::min)( int( verts.size() ), int( heights.size() ) );
 		if ( nCount < 2 )
 			return;
 
@@ -143,7 +143,7 @@ void CTerraGen::UpdateAllAIInfo()
 	{
 		for ( int i = 0; i < nMaxX; ++i )
 		{
-			terrainAIInfo.heights[g][i] = max( Vis2AI(GetFullTerraHeight(i, g)), 0.0f );
+			terrainAIInfo.heights[g][i] = (std::max)( Vis2AI(GetFullTerraHeight(i, g)), 0.0f );
 		}
 	}
 

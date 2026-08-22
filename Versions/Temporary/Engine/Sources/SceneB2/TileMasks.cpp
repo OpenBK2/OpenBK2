@@ -116,10 +116,10 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 
 	int nVal;
 
-	const int nBlurX1 = max( nX1, nFilterHalfSize );
-	const int nBlurY1 = max( nY1, nFilterHalfSize );
-	const int nBlurX2 = min( nX2, nLastClearSizeX );
-	const int nBlurY2 = min( nY2, nLastClearSizeY );
+	const int nBlurX1 = (std::max)( nX1, nFilterHalfSize );
+	const int nBlurY1 = (std::max)( nY1, nFilterHalfSize );
+	const int nBlurX2 = (std::min)( nX2, nLastClearSizeX );
+	const int nBlurY2 = (std::min)( nY2, nLastClearSizeY );
 
 	for ( int g = nBlurY1; g <= nBlurY2; ++g )
 	{
@@ -138,8 +138,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 	}
 
 	{
-		const int nColumnX1 = max( 0, nX1 );
-		const int nColumnX2 = min( nFilterHalfSize - 1, nX2 );
+		const int nColumnX1 = (std::max)( 0, nX1 );
+		const int nColumnX2 = (std::min)( nFilterHalfSize - 1, nX2 );
 		for ( int i = nColumnX1; i <= nColumnX2; ++i )
 		{
 			const int nStartFilterX = nFilterHalfSize - i;
@@ -148,8 +148,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 	}
 	{
 		const int nStartX = srcMask.GetSizeX() - nFilterHalfSize;
-		const int nColumnX1 = max( nStartX, nX1 );
-		const int nColumnX2 = min( srcMask.GetSizeX() - 1, nX2 );
+		const int nColumnX1 = (std::max)( nStartX, nX1 );
+		const int nColumnX2 = (std::min)( srcMask.GetSizeX() - 1, nX2 );
 		for ( int i = nColumnX1; i <= nColumnX2; ++i )
 		{
 			const int nEndFilterX = filter.GetSizeX() - 1 - ( i - nStartX );
@@ -158,13 +158,13 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 	}
 
 	const int nLastX = srcMask.GetSizeX() - nFilterHalfSize - 1;
-	const int nRowX1 = max( nFilterHalfSize, nX1 );
-	const int nRowX2 = min( nLastX, nX2 );
+	const int nRowX1 = (std::max)( nFilterHalfSize, nX1 );
+	const int nRowX2 = (std::min)( nLastX, nX2 );
 	for ( int i = nRowX1; i <= nRowX2; ++i )
 	{
 		{
-			const int nRowY1 = max( 0, nY1 );
-			const int nRowY2 = min( nFilterHalfSize - 1, nY2 );
+			const int nRowY1 = (std::max)( 0, nY1 );
+			const int nRowY2 = (std::min)( nFilterHalfSize - 1, nY2 );
 			for ( int g = nRowY1; g <= nRowY2; ++g )
 			{
 				const int nStartFilterY = nFilterHalfSize - g;
@@ -173,8 +173,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 		}
 		{
 			const int nStartY = srcMask.GetSizeY() - nFilterHalfSize;
-			const int nRowY1 = max( nStartY, nY1 );
-			const int nRowY2 = min( srcMask.GetSizeY() - 1, nY2 );
+			const int nRowY1 = (std::max)( nStartY, nY1 );
+			const int nRowY2 = (std::min)( srcMask.GetSizeY() - 1, nY2 );
 			for ( int g = nRowY1; g <= nRowY2; ++g )
 			{
 				const int nEndFilterY = filter.GetSizeY() - 1 - ( g - nStartY );
@@ -268,14 +268,14 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 	}
 	std::sort( tilesOrder.begin(), tilesOrder.end() );
 
-	const int nBlurX1 = max( nX1 - DEF_TILES_BLUR_FILTER_HX, 0 );
-	const int nBlurY1 = max( nY1 - DEF_TILES_BLUR_FILTER_HX, 0 );
-	const int nBlurX2 = min( nX2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeX() - 1 );
-	const int nBlurY2 = min( nY2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeY() - 1 );
-	const int nAffectX1 = max( nBlurX1 - DEF_TILES_BLUR_FILTER_HX, 0 );
-	const int nAffectY1 = max( nBlurY1 - DEF_TILES_BLUR_FILTER_HY, 0 );
-	const int nAffectX2 = min( nBlurX2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeX() - 1 );
-	const int nAffectY2 = min( nBlurY2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeY() - 1 );
+	const int nBlurX1 = (std::max)( nX1 - DEF_TILES_BLUR_FILTER_HX, 0 );
+	const int nBlurY1 = (std::max)( nY1 - DEF_TILES_BLUR_FILTER_HX, 0 );
+	const int nBlurX2 = (std::min)( nX2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeX() - 1 );
+	const int nBlurY2 = (std::min)( nY2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeY() - 1 );
+	const int nAffectX1 = (std::max)( nBlurX1 - DEF_TILES_BLUR_FILTER_HX, 0 );
+	const int nAffectY1 = (std::max)( nBlurY1 - DEF_TILES_BLUR_FILTER_HY, 0 );
+	const int nAffectX2 = (std::min)( nBlurX2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeX() - 1 );
+	const int nAffectY2 = (std::min)( nBlurY2 + DEF_TILES_BLUR_FILTER_HX, terrainInfo.tileTerraMap.GetSizeY() - 1 );
 
 	for ( int k = 0; k < tileTerraMasks.size(); ++k )
 	{
@@ -324,10 +324,10 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 
 	if ( bNeedGeomUpdate )
 	{
-		const int nPatchX1 = min( nBlurX1 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesX - 1 );
-		const int nPatchY1 = min( nBlurY1 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesY - 1 );
-		const int nPatchX2 = min( nBlurX2 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesX - 1 );
-		const int nPatchY2 = min( nBlurY2 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesY - 1 );
+		const int nPatchX1 = (std::min)( nBlurX1 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesX - 1 );
+		const int nPatchY1 = (std::min)( nBlurY1 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesY - 1 );
+		const int nPatchX2 = (std::min)( nBlurX2 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesX - 1 );
+		const int nPatchY2 = (std::min)( nBlurY2 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesY - 1 );
 
 		UpdateGfxInfo( nPatchX1, nPatchY1, nPatchX2 + 1, nPatchY2 + 1 );
 	}
@@ -348,10 +348,10 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 	const int nX2 = nX1 + mask.GetSizeX() - 1;
 	const int nY2 = nY1 + mask.GetSizeY() - 1;
 
-	const int nTileX1 = max( nX1, 0 );
-	const int nTileY1 = max( nY1, 0 );
-	const int nTileX2 = min( nX2, terrainInfo.tileTerraMap.GetSizeX() - 1 );
-	const int nTileY2 = min( nY2, terrainInfo.tileTerraMap.GetSizeY() - 1 );
+	const int nTileX1 = (std::max)( nX1, 0 );
+	const int nTileY1 = (std::max)( nY1, 0 );
+	const int nTileX2 = (std::min)( nX2, terrainInfo.tileTerraMap.GetSizeX() - 1 );
+	const int nTileY2 = (std::min)( nY2, terrainInfo.tileTerraMap.GetSizeY() - 1 );
 
 	if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
 	{
@@ -364,10 +364,10 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 		}
 		else
 		{
-			nDiffTileX1 = min( nDiffTileX1, nTileX1 );
-			nDiffTileY1 = min( nDiffTileY1, nTileY1 );
-			nDiffTileX2 = max( nDiffTileX2, nTileX2 );
-			nDiffTileY2 = max( nDiffTileY2, nTileY2 );
+			nDiffTileX1 = (std::min)( nDiffTileX1, nTileX1 );
+			nDiffTileY1 = (std::min)( nDiffTileY1, nTileY1 );
+			nDiffTileX2 = (std::max)( nDiffTileX2, nTileX2 );
+			nDiffTileY2 = (std::max)( nDiffTileY2, nTileY2 );
 		}
 	}
 
@@ -399,28 +399,28 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 
 	if ( vTexModMin.x < 0 ) // first initialization
 	{
-		vTexModMin.x = min( nTileX1, nTileX2 );
-		vTexModMin.y = min( nTileY1, nTileY2 );
-		vTexModMax.x = max( nTileX1, nTileX2 );
-		vTexModMax.y = max( nTileY1, nTileY2 );
+		vTexModMin.x = (std::min)( nTileX1, nTileX2 );
+		vTexModMin.y = (std::min)( nTileY1, nTileY2 );
+		vTexModMax.x = (std::max)( nTileX1, nTileX2 );
+		vTexModMax.y = (std::max)( nTileY1, nTileY2 );
 	}
 	else
 	{
-		vTexModMin.x = min( vTexModMin.x, min( nTileX1, nTileX2 ) );
-		vTexModMin.y = min( vTexModMin.y, min( nTileY1, nTileY2 ) );
-		vTexModMax.x = max( vTexModMax.x, max( nTileX1, nTileX2 ) );
-		vTexModMax.y = max( vTexModMax.y, max( nTileY1, nTileY2 ) );
+		vTexModMin.x = (std::min)( vTexModMin.x, (std::min)( nTileX1, nTileX2 ) );
+		vTexModMin.y = (std::min)( vTexModMin.y, (std::min)( nTileY1, nTileY2 ) );
+		vTexModMax.x = (std::max)( vTexModMax.x, (std::max)( nTileX1, nTileX2 ) );
+		vTexModMax.y = (std::max)( vTexModMax.y, (std::max)( nTileY1, nTileY2 ) );
 	}
 
-	vTexModMin.x = min( vTexModMin.x, terrainInfo.tiles.GetSizeX() - 1 );
-	vTexModMin.y = min( vTexModMin.y, terrainInfo.tiles.GetSizeY() - 1 );
-	vTexModMax.x = min( vTexModMax.x, terrainInfo.tiles.GetSizeX() - 1 );
-	vTexModMax.y = min( vTexModMax.y, terrainInfo.tiles.GetSizeY() - 1 );
+	vTexModMin.x = (std::min)( vTexModMin.x, terrainInfo.tiles.GetSizeX() - 1 );
+	vTexModMin.y = (std::min)( vTexModMin.y, terrainInfo.tiles.GetSizeY() - 1 );
+	vTexModMax.x = (std::min)( vTexModMax.x, terrainInfo.tiles.GetSizeX() - 1 );
+	vTexModMax.y = (std::min)( vTexModMax.y, terrainInfo.tiles.GetSizeY() - 1 );
 
-	const int nPatchX1 = Clamp( ( min( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
-	const int nPatchY1 = Clamp( ( min( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
-	const int nPatchX2 = Clamp( ( max( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
-	const int nPatchY2 = Clamp( ( max( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
+	const int nPatchX1 = Clamp( ( (std::min)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
+	const int nPatchY1 = Clamp( ( (std::min)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
+	const int nPatchX2 = Clamp( ( (std::max)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
+	const int nPatchY2 = Clamp( ( (std::max)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
 
 	for ( int g = nPatchY1; g <= nPatchY2; ++g )
 	{
@@ -545,10 +545,10 @@ void CTerraGen::FinalizeTexModifying()
 
 void CTerraGen::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
-	const int nTileX1 = max( min(nX1, nX2), 0 );
-	const int nTileY1 = max( min(nY1, nY2), 0 );
-	const int nTileX2 = min( max(nX1, nX2), terrainInfo.tileTerraMap.GetSizeX() - 1 );
-	const int nTileY2 = min( max(nY1, nY2), terrainInfo.tileTerraMap.GetSizeY() - 1 );
+	const int nTileX1 = (std::max)( (std::min)(nX1, nX2), 0 );
+	const int nTileY1 = (std::max)( (std::min)(nY1, nY2), 0 );
+	const int nTileX2 = (std::min)( (std::max)(nX1, nX2), terrainInfo.tileTerraMap.GetSizeX() - 1 );
+	const int nTileY2 = (std::min)( (std::max)(nY1, nY2), terrainInfo.tileTerraMap.GetSizeY() - 1 );
 	if ( ( nTileX1 <= nTileX2 ) && ( nTileY1 <= nTileY2 ) )
 	{
 		pAreaTypes->SetSizes( nTileX2 - nTileX1 + 1, nTileY2 - nTileY1 + 1 );

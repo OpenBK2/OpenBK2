@@ -27,7 +27,7 @@ float CTerraGen::GetTerraHeight( const int nx, const int ny ) const
 #ifdef VERSION_DEV_M1
 	return terrainInfo.heights[ny][nx];
 #else // old code
-	return max( GetTerraHeightWORivers(nx, ny) + terrainInfo.riverHeights[ny][nx], 0 );
+	return (std::max)( GetTerraHeightWORivers(nx, ny) + terrainInfo.riverHeights[ny][nx], 0.f );
 #endif
 
 }
@@ -212,9 +212,9 @@ CVec3 CTerraGen::GetTerraNorm( const CVec3 &vPos ) const
 
 		if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
 		{
-			const CVec3 vNorm1 = FindNormalInVertex( CVec3(v1.x, v1.y, max(v1.z + tile.addHeights[it->i1], 0.0f)), nTileX, nTileY );
-			const CVec3 vNorm2 = FindNormalInVertex( CVec3(v2.x, v2.y, max(v2.z + tile.addHeights[it->i2], 0.0f)), nTileX, nTileY );
-			const CVec3 vNorm3 = FindNormalInVertex( CVec3(v3.x, v3.y, max(v3.z + tile.addHeights[it->i3], 0.0f)), nTileX, nTileY );
+			const CVec3 vNorm1 = FindNormalInVertex( CVec3(v1.x, v1.y, (std::max)(v1.z + tile.addHeights[it->i1], 0.0f)), nTileX, nTileY );
+			const CVec3 vNorm2 = FindNormalInVertex( CVec3(v2.x, v2.y, (std::max)(v2.z + tile.addHeights[it->i2], 0.0f)), nTileX, nTileY );
+			const CVec3 vNorm3 = FindNormalInVertex( CVec3(v3.x, v3.y, (std::max)(v3.z + tile.addHeights[it->i3], 0.0f)), nTileX, nTileY );
 			return ( vNorm2 - vNorm1 ) * vBary.x + ( vNorm3 - vNorm1 ) * vBary.y + vNorm1;
 		}
 	}

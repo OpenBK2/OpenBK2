@@ -42,6 +42,9 @@
 #pragma warning( disable: 4273)
 #endif
 
+// std::min / std::max: this project's sources used to call the Windows.h
+// min/max macros, which the guard above only pulls in on Windows
+#include <algorithm>
 #include <list>
 #include <string>
 #include <vector>

@@ -125,15 +125,15 @@ void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples, const int nTileX
 		if ( IsTrgSingular( newSamples[0], newSamples[1], newSamples[2] ) && IsTrgSingular( newSamples[0], newSamples[1], newSamples[3] ) )
 			continue;
 
-		const double fMinX = min( min(newSamples[0].x, newSamples[1].x), min(newSamples[2].x, newSamples[3].x) );
-		const double fMinY = min( min(newSamples[0].y, newSamples[1].y), min(newSamples[2].y, newSamples[3].y) );
-		const double fMaxX = max( max(newSamples[0].x, newSamples[1].x), max(newSamples[2].x, newSamples[3].x) );
-		const double fMaxY = max( max(newSamples[0].y, newSamples[1].y), max(newSamples[2].y, newSamples[3].y) );
+		const double fMinX = (std::min)( (std::min)(newSamples[0].x, newSamples[1].x), (std::min)(newSamples[2].x, newSamples[3].x) );
+		const double fMinY = (std::min)( (std::min)(newSamples[0].y, newSamples[1].y), (std::min)(newSamples[2].y, newSamples[3].y) );
+		const double fMaxX = (std::max)( (std::max)(newSamples[0].x, newSamples[1].x), (std::max)(newSamples[2].x, newSamples[3].x) );
+		const double fMaxY = (std::max)( (std::max)(newSamples[0].y, newSamples[1].y), (std::max)(newSamples[2].y, newSamples[3].y) );
 
-		const int nx1 = max( nTileX1, int(fMinX * DEF_INV_TILE_SIZE) );
-		const int ny1 = max( nTileY1, int(fMinY * DEF_INV_TILE_SIZE) );
-		const int nx2 = min( nTileX2, int(fMaxX * DEF_INV_TILE_SIZE) );
-		const int ny2 = min( nTileY2, int(fMaxY * DEF_INV_TILE_SIZE) );
+		const int nx1 = (std::max)( nTileX1, int(fMinX * DEF_INV_TILE_SIZE) );
+		const int ny1 = (std::max)( nTileY1, int(fMinY * DEF_INV_TILE_SIZE) );
+		const int nx2 = (std::min)( nTileX2, int(fMaxX * DEF_INV_TILE_SIZE) );
+		const int ny2 = (std::min)( nTileY2, int(fMaxY * DEF_INV_TILE_SIZE) );
 
 		//const int nx1 = Clamp( int( fMinX * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
 		//const int ny1 = Clamp( int( fMinY * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );

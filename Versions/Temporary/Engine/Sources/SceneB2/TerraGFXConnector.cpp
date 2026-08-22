@@ -637,10 +637,10 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 		const int nTileY2 = _nTileY1 + ( ndy + 1 ) * DEF_BREAK_TERRA_PATCHES_STEP;
 
 		// create normals for patch
-		const int nX1 = max( nTileX1 - 1, 0 );
-		const int nY1 = max( nTileY1 - 1, 0 );
-		const int nX2 = min( nTileX2 + 1, terrainInfo.tiles.GetSizeX() );
-		const int nY2 = min( nTileY2 + 1, terrainInfo.tiles.GetSizeY() );
+		const int nX1 = (std::max)( nTileX1 - 1, 0 );
+		const int nY1 = (std::max)( nTileY1 - 1, 0 );
+		const int nX2 = (std::min)( nTileX2 + 1, terrainInfo.tiles.GetSizeX() );
+		const int nY2 = (std::min)( nTileY2 + 1, terrainInfo.tiles.GetSizeY() );
 
 		static CPatchNormsHash patchNorms( 1024 );
 		static CPatchNormsCntHash patchNormsCnt( 1024 );
@@ -649,10 +649,10 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 
 		CVec3 vNorm;
 
-		const int ntx1 = max( nTileX1 - 1, 0 );
-		const int nty1 = max( nTileY1 - 1, 0 );
-		const int ntx2 = min( nTileX2 + 1, terrainInfo.tiles.GetSizeX() );
-		const int nty2 = min( nTileY2 + 1, terrainInfo.tiles.GetSizeY() );
+		const int ntx1 = (std::max)( nTileX1 - 1, 0 );
+		const int nty1 = (std::max)( nTileY1 - 1, 0 );
+		const int ntx2 = (std::min)( nTileX2 + 1, terrainInfo.tiles.GetSizeX() );
+		const int nty2 = (std::min)( nTileY2 + 1, terrainInfo.tiles.GetSizeY() );
 
 		for ( int g = nty1; g < nty2; ++g )
 		{
@@ -664,9 +664,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
 					const CVec3fEx &_v3 = tile.vertices[it->i3];
-					const CVec3 v1( _v1.x, _v1.y, max(_v1.z + tile.addHeights[it->i1], 0.0f) );
-					const CVec3 v2( _v2.x, _v2.y, max(_v2.z + tile.addHeights[it->i2], 0.0f) );
-					const CVec3 v3( _v3.x, _v3.y, max(_v3.z + tile.addHeights[it->i3], 0.0f) );
+					const CVec3 v1( _v1.x, _v1.y, (std::max)(_v1.z + tile.addHeights[it->i1], 0.0f) );
+					const CVec3 v2( _v2.x, _v2.y, (std::max)(_v2.z + tile.addHeights[it->i2], 0.0f) );
+					const CVec3 v3( _v3.x, _v3.y, (std::max)(_v3.z + tile.addHeights[it->i3], 0.0f) );
 					CalcTerraNorm( &vNorm, v1, v2, v3 );
 					AddNormFromVertex( v1, vNorm, patchNorms, patchNormsCnt );
 					AddNormFromVertex( v2, vNorm, patchNorms, patchNormsCnt );
@@ -718,9 +718,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
 					const CVec3fEx &_v3 = tile.vertices[it->i3];
-					const CVec3 v1( _v1.x, _v1.y, max(_v1.z + tile.addHeights[it->i1], 0.0f) );
-					const CVec3 v2( _v2.x, _v2.y, max(_v2.z + tile.addHeights[it->i2], 0.0f) );
-					const CVec3 v3( _v3.x, _v3.y, max(_v3.z + tile.addHeights[it->i3], 0.0f) );
+					const CVec3 v1( _v1.x, _v1.y, (std::max)(_v1.z + tile.addHeights[it->i1], 0.0f) );
+					const CVec3 v2( _v2.x, _v2.y, (std::max)(_v2.z + tile.addHeights[it->i2], 0.0f) );
+					const CVec3 v3( _v3.x, _v3.y, (std::max)(_v3.z + tile.addHeights[it->i3], 0.0f) );
 					const int nInd1 = AddGfxVertex( &vertsHash, v1, fPatchX, fPatchY, patchNorms );
 					const int nInd2 = AddGfxVertex( &vertsHash, v2, fPatchX, fPatchY, patchNorms );
 					const int nInd3 = AddGfxVertex( &vertsHash, v3, fPatchX, fPatchY, patchNorms );
@@ -744,18 +744,18 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						if ( k < (maskLayers.size() - 1) )
 						{
 							const CArray2D<uint8_t> &mask = tileTerraMasks[nLayer];
-							nAlpha1 = min( nAlpha1 + mask[g][i], 255 );
-							nAlpha2 = min( nAlpha2 + mask[g][i + 1], 255 );
-							nAlpha3 = min( nAlpha3 + mask[g + 1][i], 255 );
-							nAlpha4 = min( nAlpha4 + mask[g + 1][i + 1], 255 );
+							nAlpha1 = (std::min)( nAlpha1 + mask[g][i], 255 );
+							nAlpha2 = (std::min)( nAlpha2 + mask[g][i + 1], 255 );
+							nAlpha3 = (std::min)( nAlpha3 + mask[g + 1][i], 255 );
+							nAlpha4 = (std::min)( nAlpha4 + mask[g + 1][i + 1], 255 );
 						}
 						else
 							nAlpha1 = nAlpha2 = nAlpha3 = nAlpha4 = 255;
 						const int nSub1 = nAlpha2 - nAlpha1;
 						const int nSub2 = nAlpha4 - nAlpha3;
-						const uint8_t cA1 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
-						const uint8_t cA2 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
-						const uint8_t cA3 = min( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
+						const uint8_t cA1 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
+						const uint8_t cA2 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
+						const uint8_t cA3 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
 						std::unordered_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
 						const int &nRealNum = tilesOrder[nLayer].nPrevNum;
 						//NMeshData::SMeshData &curData = data[nRealNum];
@@ -770,9 +770,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						if ( pDesc->pTerraSet->bWrapTexture )
 							WrapChapterTexture( &curData.vertices, pDesc->nNumPatchesX, pDesc->nNumPatchesY, fTexScaleCoeff );
 
-						curData.vertices[nLayerInd1].normal.w = max( cA1, curData.vertices[nLayerInd1].normal.w );
-						curData.vertices[nLayerInd2].normal.w = max( cA2, curData.vertices[nLayerInd2].normal.w );
-						curData.vertices[nLayerInd3].normal.w = max( cA3, curData.vertices[nLayerInd3].normal.w );
+						curData.vertices[nLayerInd1].normal.w = (std::max)( cA1, curData.vertices[nLayerInd1].normal.w );
+						curData.vertices[nLayerInd2].normal.w = (std::max)( cA2, curData.vertices[nLayerInd2].normal.w );
+						curData.vertices[nLayerInd3].normal.w = (std::max)( cA3, curData.vertices[nLayerInd3].normal.w );
 
 						if ( nLayerInd1 == nLayerInd2 || nLayerInd1 == nLayerInd3 || nLayerInd2 == nLayerInd3 )
 						{

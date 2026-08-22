@@ -114,7 +114,7 @@ void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMesh
 	for ( int i = 0; i < pMeshInfo->parts.size(); ++i )
 	{
 		data[eScene]->visObjReflections.push_back( CVisObjReflectionInfoHolder() );
-		const int nModelMaterial = min( i, pModel->materials.size() - 1 );
+		const int nModelMaterial = (std::min<size_t>)( i, pModel->materials.size() - 1 );
 
 		data[eScene]->visObjReflections.back().pPatch = new CVisObjReflectionInfo( data[eScene]->pTerraManager );
 

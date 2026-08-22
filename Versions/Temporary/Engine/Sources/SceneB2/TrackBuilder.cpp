@@ -110,8 +110,8 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 
 	const float fMaxTexX = fabs( p2 - p1 ) / ( fWidth * 2.0f );
 
-	const int nTileX = min( p1.x, p2.x ) * DEF_INV_TILE_SIZE;
-	const int nTileY = min( p1.y, p2.y ) * DEF_INV_TILE_SIZE;
+	const int nTileX = (std::min)( p1.x, p2.x ) * DEF_INV_TILE_SIZE;
+	const int nTileY = (std::min)( p1.y, p2.y ) * DEF_INV_TILE_SIZE;
 
 	if ( (nTileX < 0) || (nTileX >= (terrainInfo.tiles.GetSizeX() - 1)) ||
 			 (nTileY < 0) || (nTileY >= (terrainInfo.tiles.GetSizeY() - 1)) )
@@ -167,7 +167,7 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 	CVec2 vInters1, vInters2;
 	STriangle trg;
 
-	if ( fMidX < max(p1.x, p2.x) )
+	if ( fMidX < (std::max)(p1.x, p2.x) )
 	{
 		const float t1 = GetIntersectX( fMidX, p1, p2, &vInters1 );
 		vert.pos.Set( vInters1.x + vNorm.x * fWidth, vInters1.y + vNorm.y * fWidth, DEF_TRACK_HEIGHT );
@@ -182,7 +182,7 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 		data.vertices.push_back( vert );
 		vBBMin.Minimize( vert.pos );
 		vBBMax.Maximize( vert.pos );
-		if ( fMidY < max( p1.y, p2.y ) ) // there are two intersections
+		if ( fMidY < (std::max)( p1.y, p2.y ) ) // there are two intersections
 		{
 			const float t2 = GetIntersectY( fMidY, p1, p2, &vInters2 );
 			vert.pos.Set( vInters2.x + vNorm.x * fWidth, vInters2.y + vNorm.y * fWidth, DEF_TRACK_HEIGHT );
@@ -242,7 +242,7 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 	}
 	else
 	{
-		if ( fMidY < max( p1.y, p2.y ) ) // there is one intersection with horizontal
+		if ( fMidY < (std::max)( p1.y, p2.y ) ) // there is one intersection with horizontal
 		{
 			const float t2 = GetIntersectY( fMidY, p1, p2, &vInters2 );
 			vert.pos.Set( vInters2.x + vNorm.x * fWidth, vInters2.y + vNorm.y * fWidth, DEF_TRACK_HEIGHT );

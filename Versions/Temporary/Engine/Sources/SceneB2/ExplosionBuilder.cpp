@@ -58,7 +58,7 @@ void CTerraGen::CreateExplosionData( NMeshData::SMeshData *pData, const CVec2 &v
 			std::vector<float>::const_iterator itHeight = terrainInfo.tiles[g][i].addHeights.begin();
 			for ( ; itVert != terrainInfo.tiles[g][i].vertices.end(); ++itVert, ++itHeight )
 			{
-				vert.pos.Set( itVert->x, itVert->y, max( itVert->z + ( *itHeight ), 0.0f ) + DEF_EXPLOSION_HEIGHT_BASE + DEF_EXPLOSION_HEIGHT * nIncHeight );
+				vert.pos.Set( itVert->x, itVert->y, (std::max)( itVert->z + ( *itHeight ), 0.0f ) + DEF_EXPLOSION_HEIGHT_BASE + DEF_EXPLOSION_HEIGHT * nIncHeight );
 				const float tx = fTexX1 + ( itVert->x - fOrgX ) * fCoeffX;
 				const float ty = fTexY1 + ( itVert->y - fOrgY ) * fCoeffY;
 				vert.tex.Set( tx, ty );

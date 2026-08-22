@@ -73,7 +73,7 @@ void CPeak::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 	for ( int g = 0; g < pInfo->patches.size(); ++g )
 	{
 		std::vector<NMeshData::SMeshDataTex2> &patchesArr = pInfo->patches[g];
-		const int nSize = min( patchesArr.size(), pTerraDesc->pTerraSet->terraTypes.size() );
+		const int nSize = (std::min)( patchesArr.size(), pTerraDesc->pTerraSet->terraTypes.size() );
 		std::vector<SPeakPatchHolder> &visPatches = patches[g];
 		for ( int i = 0; i < nSize; ++i )
 		{

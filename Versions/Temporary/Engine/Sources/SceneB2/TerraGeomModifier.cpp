@@ -28,8 +28,8 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 	//
 	const int nBrushStartX = nOffsX >= 0 ? 0 : -nOffsX;
 	const int nBrushStartY = nOffsY >= 0 ? 0 : -nOffsY;
-	const int nBrushSizeX = min( nOffsX + brush.GetSizeX(), terrainInfo.heights.GetSizeX() ) - nOffsX;
-	const int nBrushSizeY = min( nOffsY + brush.GetSizeY(), terrainInfo.heights.GetSizeY() ) - nOffsY;
+	const int nBrushSizeX = (std::min)( nOffsX + brush.GetSizeX(), terrainInfo.heights.GetSizeX() ) - nOffsX;
+	const int nBrushSizeY = (std::min)( nOffsY + brush.GetSizeY(), terrainInfo.heights.GetSizeY() ) - nOffsY;
 
 	if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
 	{
@@ -42,10 +42,10 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 		}
 		else
 		{
-			nDiffHeightsX1 = min( nDiffHeightsX1, nOffsX + nBrushStartX );
-			nDiffHeightsY1 = min( nDiffHeightsY1, nOffsY + nBrushStartY );
-			nDiffHeightsX2 = max( nDiffHeightsX2, nOffsX + nBrushSizeX - 1 );
-			nDiffHeightsY2 = max( nDiffHeightsY2, nOffsY + nBrushSizeY - 1 );
+			nDiffHeightsX1 = (std::min)( nDiffHeightsX1, nOffsX + nBrushStartX );
+			nDiffHeightsY1 = (std::min)( nDiffHeightsY1, nOffsY + nBrushStartY );
+			nDiffHeightsX2 = (std::max)( nDiffHeightsX2, nOffsX + nBrushSizeX - 1 );
+			nDiffHeightsY2 = (std::max)( nDiffHeightsY2, nOffsY + nBrushSizeY - 1 );
 		}
 	}
 
@@ -58,8 +58,8 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 			const int nIndY = g + nOffsY;
 
 			const float fVal = ( terraBrushUpdate != NTerraBrush::TERRA_BRUSH_SUB ) ?
-													 max( terrainInfo.heights[nIndY][nIndX] + brush[g][i], 0.0f ) :
-													 max( terrainInfo.heights[nIndY][nIndX] - brush[g][i], 0.0f );
+													 (std::max)( terrainInfo.heights[nIndY][nIndX] + brush[g][i], 0.0f ) :
+													 (std::max)( terrainInfo.heights[nIndY][nIndX] - brush[g][i], 0.0f );
 
 			const float fReallyAdded = fVal - terrainInfo.heights[nIndY][nIndX];
 			if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
@@ -89,10 +89,10 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 	}
 	else
 	{
-		vGeomModAreaMin.x = min( vGeomModAreaMin.x, nFirstTileX );
-		vGeomModAreaMin.y = min( vGeomModAreaMin.y, nFirstTileY );
-		vGeomModAreaMax.x = max( vGeomModAreaMax.x, nLastTileX );
-		vGeomModAreaMax.y = max( vGeomModAreaMax.y, nLastTileY );
+		vGeomModAreaMin.x = (std::min)( vGeomModAreaMin.x, nFirstTileX );
+		vGeomModAreaMin.y = (std::min)( vGeomModAreaMin.y, nFirstTileY );
+		vGeomModAreaMax.x = (std::max)( vGeomModAreaMax.x, nLastTileX );
+		vGeomModAreaMax.y = (std::max)( vGeomModAreaMax.y, nLastTileY );
 	}
 
 	const int nPatchX1 = nFirstTileX >> DEF_PATCH_SIZE_BITS;
@@ -253,10 +253,10 @@ void CTerraGen::UpdateAllObjectsInGeomModifyingArea()
 
 void CTerraGen::GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
-	const int nTileX1 = max( min(nX1, nX2), 0 );
-	const int nTileY1 = max( min(nY1, nY2), 0 );
-	const int nTileX2 = min( max(nX1, nX2), terrainInfo.heights.GetSizeX() - 1 );
-	const int nTileY2 = min( max(nY1, nY2), terrainInfo.heights.GetSizeY() - 1 );
+	const int nTileX1 = (std::max)( (std::min)(nX1, nX2), 0 );
+	const int nTileY1 = (std::max)( (std::min)(nY1, nY2), 0 );
+	const int nTileX2 = (std::min)( (std::max)(nX1, nX2), terrainInfo.heights.GetSizeX() - 1 );
+	const int nTileY2 = (std::min)( (std::max)(nY1, nY2), terrainInfo.heights.GetSizeY() - 1 );
 	if ( (nTileX1 <= nTileX2) && (nTileY1 <= nTileY2) )
 	{
 		pAreaHeights->SetSizes( nTileX2 - nTileX1 + 1, nTileY2 - nTileY1 + 1 );

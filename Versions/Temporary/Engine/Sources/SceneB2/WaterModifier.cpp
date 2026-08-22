@@ -124,10 +124,10 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 		boundPoints[i].Set( AI2Vis(vPos.x), AI2Vis(vPos.y), 0.0f, 1 );
 		const int x = Float2Int( boundPoints[i].x * DEF_INV_TILE_SIZE );
 		const int y = Float2Int( boundPoints[i].y * DEF_INV_TILE_SIZE );
-		vMin.x = min( vMin.x, x );
-		vMin.y = min( vMin.y, y );
-		vMax.x = max( vMax.x, x );
-		vMax.y = max( vMax.y, y );
+		vMin.x = (std::min)( vMin.x, x );
+		vMin.y = (std::min)( vMin.y, y );
+		vMax.x = (std::max)( vMax.x, x );
+		vMax.y = (std::max)( vMax.y, y );
 	}
 
 	// expand for i2fp optimization
@@ -203,7 +203,7 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vect
 				if ( fCurHeight < 0 )
 					fCurHeight = fIncHeight;
 				else
-					fCurHeight = min( fCurHeight, fIncHeight );
+					fCurHeight = (std::min)( fCurHeight, fIncHeight );
 			}
 		}
 	}
@@ -463,7 +463,7 @@ static void SetMinOfTwoArrays( CArray2D<float> *pDst, const CArray2D<float> &src
 		for ( int i = 0; i < pDst->GetSizeX(); ++i )
 		{
 			float &fVal = (*pDst)[g][i];
-			fVal = min( fVal, src[g][i] );
+			fVal = (std::min)( fVal, src[g][i] );
 		}
 	}
 }
@@ -621,17 +621,17 @@ void CTerraGen::UpdateWater()
 				if ( (prevMask[g][i] != terrainInfo.seaMask[g][i]) ||
 						 (prevWaterHeights[g][i] != terrainInfo.waterHeightCoeffs[g][i]) )
 				{
-					vBBMin.x = min( vBBMin.x, i );
-					vBBMin.y = min( vBBMin.y, g );
-					vBBMax.x = max( vBBMax.x, i );
-					vBBMax.y = max( vBBMax.y, g );
+					vBBMin.x = (std::min)( vBBMin.x, i );
+					vBBMin.y = (std::min)( vBBMin.y, g );
+					vBBMax.x = (std::max)( vBBMax.x, i );
+					vBBMax.y = (std::max)( vBBMax.y, g );
 				}
 			}
 		}
-		vBBMin.x = max( vBBMin.x, 0 );
-		vBBMin.y = max( vBBMin.y, 0 );
-		vBBMax.x = min( vBBMax.x, terrainInfo.tiles.GetSizeX() - 1 );
-		vBBMax.y = min( vBBMax.y, terrainInfo.tiles.GetSizeY() - 1 );
+		vBBMin.x = (std::max)( vBBMin.x, 0 );
+		vBBMin.y = (std::max)( vBBMin.y, 0 );
+		vBBMax.x = (std::min)( vBBMax.x, terrainInfo.tiles.GetSizeX() - 1 );
+		vBBMax.y = (std::min)( vBBMax.y, terrainInfo.tiles.GetSizeY() - 1 );
 	}
 	else
 	{

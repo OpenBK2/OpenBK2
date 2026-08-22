@@ -1079,8 +1079,8 @@ void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int 
 	const CVec2 v4Rot( v4.x * fAngleCos - v4.y * fAngleSin + vOffs.x, v4.x * fAngleSin + v4.y * fAngleCos + vOffs.y );
 
 	SBound bound;
-	bound.BoxInit( CVec3(min(min(vOffs.x, v2Rot.x), min(v3Rot.x, v4Rot.x)), min(min(vOffs.y, v2Rot.y), min(v3Rot.y, v4Rot.y)), fMinPossibleHeight),
-								 CVec3(max(max(vOffs.x, v2Rot.x), max(v3Rot.x, v4Rot.x)), max(max(vOffs.y, v2Rot.y), max(v3Rot.y, v4Rot.y)), fMaxPossibleHeight) );
+	bound.BoxInit( CVec3((std::min)((std::min)(vOffs.x, v2Rot.x), (std::min)(v3Rot.x, v4Rot.x)), (std::min)((std::min)(vOffs.y, v2Rot.y), (std::min)(v3Rot.y, v4Rot.y)), fMinPossibleHeight),
+								 CVec3((std::max)((std::max)(vOffs.x, v2Rot.x), (std::max)(v3Rot.x, v4Rot.x)), (std::max)((std::max)(vOffs.y, v2Rot.y), (std::max)(v3Rot.y, v4Rot.y)), fMaxPossibleHeight) );
 	CCSBound *pBound = new CCSBound();
 	pBound->Set( bound );
 	patches.push_back( new CWaterPatch(pDesc, pTimer, pBound) );

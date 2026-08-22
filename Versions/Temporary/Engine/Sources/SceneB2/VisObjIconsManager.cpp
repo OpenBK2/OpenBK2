@@ -74,9 +74,9 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 
 	rectLayout.rects.reserve( 256 );
 
-	fHPColOffset = max( ( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 ) -
+	fHPColOffset = (std::max)( ( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 ) -
 		( hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x2 - hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x1 ) ), 1.0f );
-	fHPColExpand = max( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 - fHPColOffset ) * 2, 0.0f );
+	fHPColExpand = (std::max)( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 - fHPColOffset ) * 2, 0.0f );
 
 	bNeedUpdate = true;
 }

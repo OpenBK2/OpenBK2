@@ -151,7 +151,7 @@ void CTerraGen::CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArra
 	const CVec3 vPosUp = vPos - p1.vPos + (p2.vPos - p1.vPos) * t * 3.0f;
 	const float fMaxHeight1 = GetMaxCragHeight( CVec2(vPos.x, vPos.y), nExcludeID );
 	const float fMaxHeight2 = 0;// GetTerraHeight( vPos.x, vPos.y );
-	const float fMaxHeight = max( fMaxHeight1, fMaxHeight2 );
+	const float fMaxHeight = (std::max)( fMaxHeight1, fMaxHeight2 );
 #else // old code
 	const float fMaxHeight = GetMaxCragHeight( CVec2(vPos.x, vPos.y), nExcludeID );
 #endif
@@ -496,7 +496,7 @@ float CTerraGen::GetMaxCragHeight( const CVec2 &v, const int nExcludeID ) const
 				SRidgeProfile ridgeProfile;
 				float fHeight;
 				if ( GetIncRidgeHeight(v, it->ridge, &fHeight, ridgeProfile) )
-					fMaxHeight = max( fMaxHeight, fHeight );
+					fMaxHeight = (std::max)( fMaxHeight, fHeight );
 			}
 		}
 	}
@@ -515,7 +515,7 @@ float CTerraGen::GetMaxCragHeight2( const CVec2 &v, const int nExcludeID1, const
 			if ( IsInsideBB(v, it->vBBMin, it->vBBMax) )
 			{
 				if ( GetIncRidgeHeight(v, it->ridge, &fHeight, ridgeProfile) )
-					fMaxHeight = max( fMaxHeight, fHeight );
+					fMaxHeight = (std::max)( fMaxHeight, fHeight );
 			}
 		}
 	}
@@ -538,7 +538,7 @@ bool CTerraGen::GetMaxCragHeightEx( const CVec2 &v, float *pHeight ) const
 		{
 			if ( GetIncRidgeHeight(v, it->ridge, &fH, ridgeProfile) )
 			{
-				(*pHeight) = max( (*pHeight), fH );
+				(*pHeight) = (std::max)( (*pHeight), fH );
 				bResult = true;
 			}
 		}

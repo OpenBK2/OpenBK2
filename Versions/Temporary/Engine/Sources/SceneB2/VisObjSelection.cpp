@@ -198,7 +198,7 @@ void CScene::UpdateSelectionHandlers()
 
 				pHandler->visObjSelection.Recreate();
 				MakeSelection( pHandler->visObjSelection, 0, pHandler->vPos, pHandler->fScale, 
-					pHandler->eSelType, max(0.001f, pHandler->nFadeOut * 0.001f), false );
+					pHandler->eSelType, (std::max)(0.001f, pHandler->nFadeOut * 0.001f), false );
 			}
 		}
 		
