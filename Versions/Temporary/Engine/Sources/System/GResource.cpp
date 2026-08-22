@@ -6,6 +6,9 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 namespace NGScene
 {
 
@@ -35,13 +38,11 @@ inline std::string GetFileResourceName( const char *pszResName, int nFileID )
 	return szBuf;
 }
 
-inline std::string GetFileResourceUidName( const char *pszResName, const GUID &fileUID )
+inline std::string GetFileResourceUidName( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
-	if ( NBinResources::IsEmptyGUID( fileUID ) )
+	if (fileUID.is_nil())
 		return pszResName;
-	char szBuf[1024];
-	sprintf( szBuf, "bin\\%s\\%s", pszResName, NBinResources::GUIDToString( fileUID ).c_str() );
-	return szBuf;
+	return fmt::format("bin\\{}\\{}", pszResName, boost::uuids::to_string(fileUID));
 }
 
 static inline bool DoesFileExist( const char *pszResName, int nID )
@@ -49,9 +50,9 @@ static inline bool DoesFileExist( const char *pszResName, int nID )
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceName( pszResName, nID ) );
 }
 
-static inline bool DoesFileExist( const char *pszResName, const GUID &fileUID )
+static inline bool DoesFileExist( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
-	if ( NBinResources::IsEmptyGUID( fileUID ) )
+	if (fileUID.is_nil())
 		return false;
 
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceUidName( pszResName, fileUID ) );

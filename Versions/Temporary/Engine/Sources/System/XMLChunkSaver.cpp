@@ -2,9 +2,13 @@
 
 #include "FilePath.h"
 #include "XMLChunkSaver.h"
+
 #include "XmlReader.h"
 #include "XmlUtils.h"
 #include "Misc/StrProc.h"
+
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
 #include <fmt/format.h>
 
@@ -530,7 +534,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	return true;
 }
 
-bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber )
+bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber )
 {
 	if ( idChunk != 0 && StartChunk(idChunk, nChunkNumber) == false )
 		return false;
@@ -541,13 +545,13 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, GUID *pgData, int nChunk
 	{
 		if ( DataChunkString(szValue) )
 		{
-			NStr::String2GUID( szValue, pgData );
+			*pgData = boost::uuids::string_generator()(szValue);
 			bRetVal = true;
 		}
 	}
 	else
 	{
-		NStr::GUID2String( &szValue, *pgData );
+		szValue = boost::uuids::to_string(*pgData);
 		bRetVal = DataChunkString( szValue );
 	}
 	FinishChunk();

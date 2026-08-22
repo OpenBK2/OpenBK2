@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbterrain.h"
 
+#include "System/UuidChunk.h"
+
 #include "B2_M1_Terrain_export.h"
 
 #include <cstdint>
@@ -406,7 +408,7 @@ int STerrain::operator&( IBinSaver &saver )
 	saver.Add( 15, &bHasCoast );
 	saver.Add( 16, &coast );
 	saver.Add( 17, &vCoastMidPoint );
-	saver.Add( 18, &uid );
+	AddUuidChunk( saver, 18, &uid );
 
 	return 0;
 }

@@ -9,6 +9,8 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -374,7 +376,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B8A };
 		std::vector< CDBPtr< SAnimBase > > animations;
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		SSkeleton() { }
 		//
@@ -393,7 +395,7 @@ namespace NDb
 	private:
 		mutable uint32_t __dwCheckSum;
 	public:
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		#include "include_AnimBase.h"
 
@@ -414,7 +416,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1206A301 };
 		std::string szSelectNode;
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		SAnimLight() { }
 		//
@@ -435,7 +437,7 @@ namespace NDb
 		CVec2 vWrapSize;
 		SBound bound;
 		bool bPerParticleFog;
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		SParticle() :
 			vWrapSize( VNULL2 ),
@@ -668,7 +670,7 @@ namespace NDb
 			THAI = 14,
 		};
 		CDBPtr< STexture > pTexture;
-		GUID uid;
+		boost::uuids::uuid uid;
 		int nHeight;
 		int nThickness;
 		bool bItalic;
@@ -707,7 +709,7 @@ namespace NDb
 		float fSolidPart;
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		SAIGeometry() :
 			fVolume( 0.0f ),
@@ -730,7 +732,7 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SGeometry )
 	public:
 		enum { typeID = 0x12069B85 };
-		GUID uid;
+		boost::uuids::uuid uid;
 		CVec3 vSize;
 		CVec3 vCenter;
 		CDBPtr< SAIGeometry > pAIGeometry;

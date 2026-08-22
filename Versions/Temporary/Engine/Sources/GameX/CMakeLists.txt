@@ -136,6 +136,7 @@ target_link_libraries(GameX PRIVATE
     UISpecificB2
     UI
     zlib
+    Boost::uuid
 )
 if(WIN32)
     target_link_libraries(GameX PRIVATE winapi)

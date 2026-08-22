@@ -10,6 +10,8 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+
 struct IXmlSaver;
 
 namespace NDb
@@ -220,7 +222,7 @@ namespace NDb
 		bool bHasCoast;
 		SVSOInstance coast;
 		CVec3 vCoastMidPoint;
-		GUID uid;
+		boost::uuids::uuid uid;
 
 		STerrain() :
 			__dwCheckSum( 0 ),

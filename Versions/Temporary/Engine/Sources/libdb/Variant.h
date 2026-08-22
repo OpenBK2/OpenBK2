@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+
 //#include "DBIDDef.h"
 
 /**
@@ -157,7 +159,7 @@ public:
 	CVariant( const char cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
 	CVariant( const uint8_t cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
 	//
-	CVariant( const GUID &guid )				: m_eType( VT_POINTER ), m_pblob( new SBlob((void*)&guid, sizeof(guid)) ) {}
+	CVariant( const boost::uuids::uuid &guid )				: m_eType( VT_POINTER ), m_pblob( new SBlob((void*)&guid, sizeof(guid)) ) {}
 private:
 	//CVariant не может определить размер блока по указателю, поэтому без указания размера
 	//конструктор от void* не имеет смысла

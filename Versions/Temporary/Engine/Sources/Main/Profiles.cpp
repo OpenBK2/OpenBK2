@@ -13,6 +13,10 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 namespace NProfile
 {
 static std::string GetProfileRootDir()
@@ -88,10 +92,8 @@ static std::string GetProfileDir( const std::wstring &szName )
 				return it.GetFullName() + "\\";
 		}
 		// create dir
-		GUID guid;
-		CoCreateGuid( &guid );
-		NStr::GUID2String( &szResDir, guid );
-		szResDir = szRoot + szResDir + '\\';
+		const auto guid = boost::uuids::random_generator()();
+		szResDir = szRoot + boost::uuids::to_string(guid) + '\\';
 		NFile::CreatePath( szResDir );
 		// write name
 		{

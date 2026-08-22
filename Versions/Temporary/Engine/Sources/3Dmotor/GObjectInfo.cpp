@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "System/BasicShare.h"
 #include "GObjectInfo.h"
+
+#include <boost/uuid/uuid_io.hpp>
+
 #include "vendor/granny/include/granny.h"
 #include "GSkeleton.h"
 #include "System/BinaryResources.h"
@@ -436,24 +439,20 @@ void CGrannyMeshLoader::Recalc()
 	{
 		bool bNewWay = false;
 	    bool bLightMap = false;
-		char buff[1024];
+		std::string buff;
 
 		bLightMap = key.nLightMapped != 0;
 
-		if( !NBinResources::IsEmptyGUID( key.pGeometry->uid ) )
+		if( !key.pGeometry->uid.is_nil() )
 		{
-			sprintf( buff, "bin\\Geometries\\%s_%i_%i_%i_%i_%i", 
-				NBinResources::GUIDToString( key.pGeometry->uid ).c_str(),
+			buff = fmt::format("bin\\Geometries\\{}_{}_{}_{}_{}_{}",
+				boost::uuids::to_string(key.pGeometry->uid ),
 				key.pGeometry->GetRecordID(), 
 				key.nGeometryPart, 
 				key.nMaterialPart,
 				key.pSkeleton->GetRecordID(), 
 				key.nSkeletonPart
 				);
-		}
-		else
-		{
-			buff[0] = 0;
 		}
 
 		std::string szFileName = buff;

@@ -19,6 +19,10 @@
 #include <objbase.h>
 #endif
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 const int nMIN_PASSWORD = 4;
 const int nMIN_USERNAME = 4;
 
@@ -351,10 +355,9 @@ bool CInterfaceNivalNet::OnRegisterOkReaction( const std::string &szSender )
 	std::wstring wszName = pRegistrationUserName->GetText();
 	std::wstring wszEmail = pEmail->GetText();
 
-	std::string szGUID;
-	GUID guidCDKey;
-	CoCreateGuid( &guidCDKey );
-	NStr::GUID2String( &szGUID, guidCDKey );
+
+	const auto guidCDKey = boost::uuids::random_generator()();
+	const auto szGUID = boost::uuids::to_string(guidCDKey);
 	std::wstring wszCDKey = NStr::ToUnicode( szGUID ); //pCDKey->GetText();
 
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIRegisterMessage( wszName, wszPass, wszCDKey, wszEmail ) );

@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBScene.h"
 
+#include "System/UuidChunk.h"
+
 #include "3Dmotor_export.h"
 
 #include <cstdint>
@@ -632,7 +634,7 @@ int SSkeleton::operator&( IXmlSaver &saver )
 int SSkeleton::operator&( IBinSaver &saver )
 {
 	saver.Add( 3, &animations );
-	saver.Add( 4, &uid );
+	AddUuidChunk( saver, 4, &uid );
 
 	return 0;
 }
@@ -654,7 +656,7 @@ int SAnimBase::operator&( IXmlSaver &saver )
 
 int SAnimBase::operator&( IBinSaver &saver )
 {
-	saver.Add( 3, &uid );
+	AddUuidChunk( saver, 3, &uid );
 
 	return 0;
 }
@@ -698,7 +700,7 @@ int SAnimLight::operator&( IXmlSaver &saver )
 int SAnimLight::operator&( IBinSaver &saver )
 {
 	saver.Add( 3, &szSelectNode );
-	saver.Add( 4, &uid );
+	AddUuidChunk( saver, 4, &uid );
 
 	return 0;
 }
@@ -733,7 +735,7 @@ int SParticle::operator&( IBinSaver &saver )
 	saver.Add( 3, &vWrapSize );
 	saver.Add( 4, &bound );
 	saver.Add( 5, &bPerParticleFog );
-	saver.Add( 6, &uid );
+	AddUuidChunk( saver, 6, &uid );
 
 	return 0;
 }
@@ -1172,7 +1174,7 @@ int SFont::operator&( IXmlSaver &saver )
 int SFont::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pTexture );
-	saver.Add( 3, &uid );
+	AddUuidChunk( saver, 3, &uid );
 	saver.Add( 4, &nHeight );
 	saver.Add( 5, &nThickness );
 	saver.Add( 6, &bItalic );
@@ -1219,7 +1221,7 @@ int SAIGeometry::operator&( IBinSaver &saver )
 	saver.Add( 4, &fSolidPart );
 	saver.Add( 5, &vAABBCenter );
 	saver.Add( 6, &vAABBHalfSize );
-	saver.Add( 7, &uid );
+	AddUuidChunk( saver, 7, &uid );
 
 	return 0;
 }
@@ -1261,7 +1263,7 @@ int SGeometry::operator&( IXmlSaver &saver )
 
 int SGeometry::operator&( IBinSaver &saver )
 {
-	saver.Add( 3, &uid );
+	AddUuidChunk( saver, 3, &uid );
 	saver.Add( 4, &vSize );
 	saver.Add( 5, &vCenter );
 	saver.Add( 6, &pAIGeometry );

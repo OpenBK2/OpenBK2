@@ -5,6 +5,8 @@
 
 #include <fmt/format.h>
 
+#include <boost/uuid/uuid.hpp>
+
 namespace NDb
 {
 struct IObjManIterator;
@@ -128,13 +130,13 @@ struct IObjMan : public CObjectBase
 		return true;
 	}
 	template <>
-		bool GetValue<GUID>( const std::string &szName, GUID *pValue )
+		bool GetValue<boost::uuids::uuid>( const std::string &szName, boost::uuids::uuid *pValue )
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
 			return false;
-		NI_VERIFY( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == sizeof(GUID), "Incorrect BLOB for GUID", return false );
-		memcpy( pValue, value.GetPtr(), sizeof(GUID) );
+		NI_VERIFY( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == sizeof(boost::uuids::uuid), "Incorrect BLOB for GUID", return false );
+		memcpy( pValue, value.GetPtr(), sizeof(boost::uuids::uuid) );
 		return true;
 	}
 	template <>

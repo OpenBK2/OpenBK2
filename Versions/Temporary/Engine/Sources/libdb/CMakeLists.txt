@@ -49,6 +49,7 @@ target_link_libraries(libdb PRIVATE
     System
     zlib
     fmt::fmt-header-only
+    Boost::uuid
 )
 if(WIN32)
     target_link_libraries(libdb PRIVATE winapi)

@@ -123,10 +123,10 @@ bool SStructMetaInfo::SField::SetValueToStructWString( const CVariant &value, ui
 }
 bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
-	if ( value.GetBlobSize() != sizeof(GUID) )
+	if ( value.GetBlobSize() != sizeof(boost::uuids::uuid) )
 		return false;
 	void *pData = pThis + GetBinaryShift();
-	memcpy( pData, value.GetPtr(), sizeof(GUID) );
+	memcpy( pData, value.GetPtr(), sizeof(boost::uuids::uuid) );
 	return true;
 }
 bool SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
@@ -291,10 +291,10 @@ bool SStructMetaInfo::SField::SetValueToOwnWString( const CVariant &value, uint8
 }
 bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 {
-	if ( value.GetBlobSize() != sizeof(GUID) )
+	if ( value.GetBlobSize() != sizeof(boost::uuids::uuid) )
 		return false;
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
-	memcpy( data.pGUID, value.GetPtr(), sizeof(GUID) );
+	memcpy( data.pGUID, value.GetPtr(), sizeof(boost::uuids::uuid) );
 	return true;
 }
 bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
@@ -387,7 +387,7 @@ bool SStructMetaInfo::SField::GetValueFromOwnWString( CVariant *pValue, uint8_t 
 bool SStructMetaInfo::SField::GetValueFromOwnGUID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
-	*pValue = CVariant( data.pGUID, sizeof(GUID) );
+	*pValue = CVariant( data.pGUID, sizeof(boost::uuids::uuid) );
 	return true;
 }
 bool SStructMetaInfo::SField::GetValueFromOwnBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const

@@ -86,7 +86,7 @@ void SStructMetaInfo::SField::ConstructBinary( uint8_t *pThis, NBind::UValue *va
 			break;
 
 		case NTypeDef::TYPE_TYPE_GUID:
-			data.pGUID = new GUID();
+			data.pGUID = new boost::uuids::uuid();
 			break;
 
 		case NTypeDef::TYPE_TYPE_BINARY:

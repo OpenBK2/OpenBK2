@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+
 namespace NFile
 {
 	class CFilePath;
@@ -41,7 +43,7 @@ inline NTypeDef::ETypeType GetSimpleTypeDef( float * ) { return NTypeDef::TYPE_T
 inline NTypeDef::ETypeType GetSimpleTypeDef( bool * ) { return NTypeDef::TYPE_TYPE_BOOL; }
 inline NTypeDef::ETypeType GetSimpleTypeDef( std::string * ) { return NTypeDef::TYPE_TYPE_STRING; }
 inline NTypeDef::ETypeType GetSimpleTypeDef( std::wstring * ) { return NTypeDef::TYPE_TYPE_WSTRING; }
-inline NTypeDef::ETypeType GetSimpleTypeDef( GUID * ) { return NTypeDef::TYPE_TYPE_GUID; }
+inline NTypeDef::ETypeType GetSimpleTypeDef( boost::uuids::uuid * ) { return NTypeDef::TYPE_TYPE_GUID; }
 inline NTypeDef::ETypeType GetSimpleTypeDef( NFile::CFilePath * ) { return NTypeDef::TYPE_TYPE_STRING; }
 //
 template <class TYPE>

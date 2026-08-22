@@ -48,7 +48,7 @@ class CXMLChunkSaver : public IXmlSaver
 	bool DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber );
 	bool DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber );
 	bool DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber );
-	bool DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber );
+	bool DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber );
 	bool DataChunkDBID( CDBID *pDBID );
 	bool DataChunkFilePath( NFile::CFilePath *pFilePath );
 	bool DataChunkString( std::string &data );

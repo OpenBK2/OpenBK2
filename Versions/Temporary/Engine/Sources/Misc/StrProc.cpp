@@ -386,35 +386,6 @@ void MBCSToUTF8( std::string *pRes, const std::string &szSrc )
 	UnicodeToUTF8( pRes, wszTemp );
 }
 
-// GUID => string
-void GUID2String( std::string *pString, const GUID &guid )
-{
-	*pString = fmt::format( "{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}", guid.Data1, guid.Data2, guid.Data3, guid.Data4[0],
-		guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7] );
-}
-void String2GUID( const std::string &szString, GUID *pGuid )
-{
-	((uint8_t*)&pGuid->Data1)[3] = ( HexSymbolToHalfByte( szString[0] ) << 4 ) | HexSymbolToHalfByte( szString[1] );
-	((uint8_t*)&pGuid->Data1)[2] = ( HexSymbolToHalfByte( szString[2] ) << 4 ) | HexSymbolToHalfByte( szString[3] );
-	((uint8_t*)&pGuid->Data1)[1] = ( HexSymbolToHalfByte( szString[4] ) << 4 ) | HexSymbolToHalfByte( szString[5] );
-	((uint8_t*)&pGuid->Data1)[0] = ( HexSymbolToHalfByte( szString[6] ) << 4 ) | HexSymbolToHalfByte( szString[7] );
-
-	((uint8_t*)&pGuid->Data2)[1] = ( HexSymbolToHalfByte( szString[9] ) << 4 ) | HexSymbolToHalfByte( szString[10] );
-	((uint8_t*)&pGuid->Data2)[0] = ( HexSymbolToHalfByte( szString[11] ) << 4 ) | HexSymbolToHalfByte( szString[12] );
-
-	((uint8_t*)&pGuid->Data3)[1] = ( HexSymbolToHalfByte( szString[14] ) << 4 ) | HexSymbolToHalfByte( szString[15] );
-	((uint8_t*)&pGuid->Data3)[0] = ( HexSymbolToHalfByte( szString[16] ) << 4 ) | HexSymbolToHalfByte( szString[17] );
-
-	pGuid->Data4[0] = ( HexSymbolToHalfByte( szString[19] ) << 4 ) | HexSymbolToHalfByte( szString[20] );
-	pGuid->Data4[1] = ( HexSymbolToHalfByte( szString[21] ) << 4 ) | HexSymbolToHalfByte( szString[22] );
-	pGuid->Data4[2] = ( HexSymbolToHalfByte( szString[24] ) << 4 ) | HexSymbolToHalfByte( szString[25] );
-	pGuid->Data4[3] = ( HexSymbolToHalfByte( szString[26] ) << 4 ) | HexSymbolToHalfByte( szString[27] );
-	pGuid->Data4[4] = ( HexSymbolToHalfByte( szString[28] ) << 4 ) | HexSymbolToHalfByte( szString[29] );
-	pGuid->Data4[5] = ( HexSymbolToHalfByte( szString[30] ) << 4 ) | HexSymbolToHalfByte( szString[31] );
-	pGuid->Data4[6] = ( HexSymbolToHalfByte( szString[32] ) << 4 ) | HexSymbolToHalfByte( szString[33] );
-	pGuid->Data4[7] = ( HexSymbolToHalfByte( szString[34] ) << 4 ) | HexSymbolToHalfByte( szString[35] );
-}
-
 }; // end of namespace NStr
 
 

@@ -4,6 +4,7 @@
 #include "libdb/Manipulator.h"
 
 #include <cstdint>
+#include <boost/uuid/uuid_io.hpp>
 
 //
 #define REFINFO_MAKE_UNIQUE_LIST	0x00000001
@@ -473,10 +474,10 @@ public:
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
-		GUID guid;
+		boost::uuids::uuid guid;
 		if ( GetValue( &guid, pManipulator, rszName ) )
 		{
-			( *pData ) = NBinResources::GUIDToString(guid);
+			*pData = boost::uuids::to_string(guid);
 			return true;
 		}
 		return false;

@@ -6,6 +6,8 @@
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
 
+#include <boost/uuid/uuid.hpp>
+
 //
 // TODO: equivalence function and equality function!
 //
@@ -212,7 +214,7 @@ public:
 	//
 	CVariant GetDefaultValue() const;
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_GUID; }
-	int GetTypeSize() const { return sizeof(GUID); }
+	int GetTypeSize() const { return sizeof(boost::uuids::uuid); }
 	const std::string GetTypeName() const { return "GUID"; }
 	//
 	void ToString( std::string *pRes, const CVariant &value ) const;

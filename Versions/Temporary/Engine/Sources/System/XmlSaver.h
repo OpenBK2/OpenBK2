@@ -7,6 +7,8 @@
 
 #include "port/cdecl.h"
 
+#include <boost/uuid/uuid.hpp>
+
 template <class T> class CArray2D;
 template <class TUserObj, typename TPtr> class CDBPtr;
 class CDBID;
@@ -108,7 +110,7 @@ private:
 		}
 	// simple built-in data specialization
 	template <> 
-		void PORT_CDECL CallObjectSerialize<GUID>( const chunk_id idChunk, int nChunkNumber, GUID *pData, SInt2Type<1> *pp )
+		void PORT_CDECL CallObjectSerialize<boost::uuids::uuid>( const chunk_id idChunk, int nChunkNumber, boost::uuids::uuid *pData, SInt2Type<1> *pp )
 		{
 			DataChunk( idChunk, pData, nChunkNumber );
 		}
@@ -478,7 +480,7 @@ private:
 	virtual bool DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber ) = 0;
 	virtual bool DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber ) = 0;
 	virtual bool DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber ) = 0;
-	virtual bool DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber ) = 0;
+	virtual bool DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber ) = 0;
 	virtual bool DataChunkDBID( CDBID *pDBID ) = 0;
 	virtual bool DataChunkFilePath( NFile::CFilePath *pFilePath ) = 0;
 	virtual bool DataChunkString( std::string &data ) = 0;

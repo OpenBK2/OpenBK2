@@ -2,13 +2,10 @@
 
 #include "System_export.h"
 
+#include <boost/uuid/uuid.hpp>
 
 namespace NBinResources
 {
-	SYSTEM_EXPORT bool IsEmptyGUID( const GUID &uid );
-	SYSTEM_EXPORT std::string GUIDToString( const GUID &uid );
-	std::string GetBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const GUID &uid );
-	std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const GUID &uid );
+	std::string GetBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
+	std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
 }
-
-

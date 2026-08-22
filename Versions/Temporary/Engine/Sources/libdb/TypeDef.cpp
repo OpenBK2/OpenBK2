@@ -5,6 +5,9 @@
 #include "libdb_export.h"
 
 #include <cstdint>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <fmt/format.h>
 
@@ -83,12 +86,12 @@ void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) cons
 
 void STypeGUID::ToString( std::string *pRes, const CVariant &value ) const
 {
-	NStr::GUID2String( pRes, *((GUID*)value.GetPtr()) );
+	*pRes = boost::uuids::to_string(*static_cast<const boost::uuids::uuid*>(value.GetPtr()));
 }
+
 void STypeGUID::FromString( CVariant *pRes, const std::string &szValue ) const
 {
-	GUID guid;
-	NStr::String2GUID( szValue, &guid );
+	const boost::uuids::uuid guid = boost::uuids::string_generator()(szValue);
 	*pRes = CVariant( &guid, sizeof(guid) );
 }
 
@@ -208,9 +211,7 @@ bool STypeRef::CheckRefType( const int nClassTypeID ) const
 
 CVariant STypeGUID::GetDefaultValue() const 
 { 
-	GUID guid;
-	CoCreateGuid( &guid );
-	return guid;
+	return boost::uuids::random_generator()();
 }
 
 CVariant STypeBinary::GetDefaultValue() const 

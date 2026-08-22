@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/uuid/uuid.hpp>
+
 namespace NDb
 {
 struct IObjMan;
@@ -14,7 +16,7 @@ union UValue
 	bool bValue;
 	std::string *pString;
 	std::wstring *pWString;
-	GUID *pGUID;
+	boost::uuids::uuid *pGUID;
 	void *pBLOB;
 	CBindArray *pArray;
 	IObjMan *pObjMan;

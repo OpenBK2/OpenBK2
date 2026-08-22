@@ -14,6 +14,10 @@
 #include <cstdlib>
 #include <cstdint>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 namespace NFile
 {
 
@@ -44,12 +48,12 @@ const CFileIterator& CFileIterator::FindFirstFile( const std::string &_szMask )
 		szPath = szPath.substr( 0, pos );
 	}
 	//
-	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' ) 
+	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' )
 		szPath += "\\";
 	// create absolute path from the relative one
 	NFile::GetFullName( &szPath, szPath );
 	//
-	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' ) 
+	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' )
 		szPath += "\\";
 	//
 	hFind = ::FindFirstFile( _szMask.c_str(), &findinfo );
@@ -65,15 +69,15 @@ const CFileIterator& CFileIterator::Next()
 	return *this;
 }
 
-bool CFileIterator::Close() 
-{ 
-	if ( IsValid() ) 
+bool CFileIterator::Close()
+{
+	if ( IsValid() )
 	{
-		const bool bRet = ::FindClose( hFind ) != 0; 
+		const bool bRet = ::FindClose( hFind ) != 0;
 		hFind = INVALID_HANDLE_VALUE;
 		return bRet;
 	}
-	return true; 
+	return true;
 }
 
 // ************************************************************************************************************************ //
@@ -157,8 +161,8 @@ double GetFreeDiskSpace( const char *pszDrive )
 	 bRetVal = (*pfnGetDiskFreeSpaceEx)( pszDrive, &i64FreeBytesToCaller,
 																	     &i64TotalBytes, &i64FreeBytes );
 	 fRetVal = double( __int64(i64FreeBytesToCaller.QuadPart) );
-	} 
-	else 
+	}
+	else
 	{
 		unsigned long dwSectPerClust, dwBytesPerSect, dwFreeClusters, dwTotalClusters;
 		bRetVal = GetDiskFreeSpace( pszDrive, &dwSectPerClust, &dwBytesPerSect,
@@ -202,8 +206,8 @@ bool IsValidFileName( const std::string &szFileName )
 }
 
 static const char *pszWrongNames[] = {
-	"con", "prn", "aux", "clock$", "nul", 
-	"com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9", 
+	"con", "prn", "aux", "clock$", "nul",
+	"com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9",
 	"lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
 	0
 };
@@ -265,11 +269,8 @@ std::string GetTempPath()
 }
 std::string GetTempFileName()
 {
-	GUID guid;
-	::CoCreateGuid( &guid );
-	std::string szFileName;
-	NStr::GUID2String( &szFileName, guid );
-	return GetTempPath() + szFileName;
+	const auto guid = boost::uuids::random_generator()();
+	return GetTempPath() + boost::uuids::to_string(guid);
 }
 
 std::string GetCurrDir()

@@ -34,17 +34,3 @@ struct SEnumHash
 	template <class T>
 		int operator()( const T a ) const { return int( a ); }
 };
-
-struct SGUIDHash
-{
-	int operator()( const GUID a ) const 
-	{ 
-		uint32_t *__s = (uint32_t*)(&a);
-		uint32_t __h = *__s;
-		for ( int i = 1; i < 4; ++i)
-			__h ^= __s[i];
-		return __h;
-	}
-};
-
-

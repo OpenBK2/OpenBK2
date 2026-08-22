@@ -121,6 +121,7 @@ target_link_libraries(3Dmotor PRIVATE
     zlib
     granny::granny
     Boost::sort
+    Boost::uuid
     fmt::fmt-header-only
 )
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)

@@ -25,6 +25,7 @@ target_link_libraries(Main PRIVATE
     System
     UI
     zlib
+    Boost::uuid
 )
 if(WIN32)
     target_link_libraries(Main PRIVATE winapi)

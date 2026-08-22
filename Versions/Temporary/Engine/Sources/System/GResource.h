@@ -1,26 +1,31 @@
 #pragma once
 
-#include <thread>
 #include "System_export.h"
 
-
 #include "Dg.h"
+
+#include <boost/uuid/uuid.hpp>
+
+#include "UuidChunk.h"
+
+#include <thread>
+
 namespace NGScene
 {
 
 template<class TKey>
 struct SResKey
 {
-	GUID uidKey;
+	boost::uuids::uuid uidKey;
 	TKey tKey;
 
 	SResKey() {}
-	SResKey( const GUID &uid, const TKey &key ): uidKey(uid), tKey(key) {}
+	SResKey( const boost::uuids::uuid &uid, const TKey &key ): uidKey(uid), tKey(key) {}
 	SResKey( const TKey &key ): tKey(key) { Zero(uidKey); }   // TODO: create a uid field in NDb resources and remove this constructor
 
-	int operator&( IBinSaver &f ) { f.Add( 1, &tKey ); f.Add( 2, &uidKey ); return 0; }
+	int operator&( IBinSaver &f ) { f.Add( 1, &tKey ); AddUuidChunk( f, 2, &uidKey ); return 0; }
 
-	bool operator==( const SResKey<TKey> &a ) const { return IsEqualGUID( uidKey, a.uidKey ) && tKey == a.tKey; }
+	bool operator==( const SResKey<TKey> &a ) const { return uidKey == a.uidKey && tKey == a.tKey; }
 	int operator()( const SResKey<TKey> &k ) const { return k.tKey.nID; }
 };
 
@@ -32,7 +37,7 @@ protected:
 	const SResKey<TKey>& GetKey() const { return key; }
 public:
 	CResourceLoader() {}
-	void SetKey( const TKey &_key, const GUID &uid ) { key = SResKey<TKey>( uid, _key ); }
+	void SetKey( const TKey &_key, const boost::uuids::uuid &uid ) { key = SResKey<TKey>( uid, _key ); }
 	void SetKey( const SResKey<TKey> &_key ) { key = _key; }
 	int operator&( IBinSaver &f ) { f.Add( 1, &key ); return 0; }
 };
@@ -159,7 +164,7 @@ class SYSTEM_EXPORT CFileRequest : public CObjectBase
 	OBJECT_NOCOPY_METHODS(CFileRequest);
 	const char *pszResName;
 	int  nID;
-	GUID uid;
+	boost::uuids::uuid uid;
 	bool bIsReady, bDelayedLoad;
 	CMemoryStream data;
 public:

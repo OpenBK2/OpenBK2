@@ -1,6 +1,9 @@
 #include "stdafx.h"
 
 #include "BinaryResources.h"
+
+#include <boost/uuid/uuid_io.hpp>
+
 #include "VFSOperations.h"
 #include "Misc/StrProc.h"
 
@@ -9,32 +12,19 @@
 namespace NBinResources
 {
 
-bool IsEmptyGUID( const GUID &uid )
-{
-	const GUID uidNull = { 0, 0, 0, {0,0,0,0,0,0,0,0} };
-	return IsEqualGUID( uid, uidNull );
-}
-
-std::string GUIDToString( const GUID &uid )
-{
-	return fmt::format( "{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}", uid.Data1, uid.Data2,
-		uid.Data3, uid.Data4[0], uid.Data4[1], uid.Data4[2], uid.Data4[3], uid.Data4[4], 
-		uid.Data4[5], uid.Data4[6], uid.Data4[7] );
-}
-
-std::string GetBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const GUID &uid )
+std::string GetBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const boost::uuids::uuid &uid )
 {
 	std::string szDirPrefix = rszDirPrefix;
 	NStr::TrimRight( szDirPrefix, '\\' );
-	if ( IsEmptyGUID( uid ) )
+	if (uid.is_nil())
 	{
 		DebugTrace( "Empty resource GUID: %s\\%d", szDirPrefix.c_str(), nRecordID );
 		return fmt::format( "{}\\{}", szDirPrefix, nRecordID );
 	}
-	return fmt::format( "{}\\{}", szDirPrefix, GUIDToString( uid ) );
+	return fmt::format( "{}\\{}", szDirPrefix, boost::uuids::to_string(uid) );
 }
 
-std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const GUID &uid )
+std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const boost::uuids::uuid &uid )
 {
 	std::string szName = GetBinaryFileName( rszDirPrefix, nRecordID, uid );
 

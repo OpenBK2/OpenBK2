@@ -169,10 +169,6 @@ inline std::wstring ToUnicode( const std::string &szSrc ) { std::wstring szDst; 
 MISC_EXPORT void UTF8ToMBCS( std::string *pRes, const std::string &szSrc );
 MISC_EXPORT void MBCSToUTF8( std::string *pRes, const std::string &szSrc );
 
-// GUID => string conversion
-MISC_EXPORT void GUID2String( std::string *pString, const GUID &guid );
-MISC_EXPORT void String2GUID( const std::string &szString, GUID *pGuid );
-
 template <class TChar>
 void ReplaceAllChars( std::basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )
 {
