@@ -13,7 +13,6 @@ inline CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x
 inline CVec4 MulPerComp( const CVec4 &a, const CVec4 &b ) { return CVec4(a.x*b.x, a.y*b.y, a.z*b.z, a.w*b.w); }
 
 class CTransformStack;
-class CWorkerPool;
 namespace NGfx
 {
 	class CRenderContext;
@@ -29,10 +28,6 @@ class IPart;
 class CSceneFragments;
 class IMaterial;
 class CTransparentRenderer;
-
-// Shared persistent pool used only for CPU-side render preparation.
-CWorkerPool& GetRenderWorkerPool();
-void ShutdownRenderWorkerPool();
 
 //const TPartFlags PF_ALL_PARTS = 0xffffffff;
 const int N_BLOCKS_IN_PART_FLAGS = 8;//16;
@@ -149,8 +144,6 @@ public:
 	int GetPartsNum() const { return partBVs.size(); }
 	virtual CFuncBase<std::vector< CPtr<IPart> > > * GetCombiner() const { return 0; }
 	virtual void FreeMemory() {}
-	// Queue CPU-only geometry preparation; graphics-buffer upload remains on the render thread.
-	virtual void QueueParallelRecalc( CWorkerPool &workerPool ) {}
 	bool IsValidValue() const { return IsValid( pValue ); }
 };
 struct SRenderGeometryInfo
