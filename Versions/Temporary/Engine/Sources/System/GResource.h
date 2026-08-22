@@ -186,7 +186,7 @@ SYSTEM_EXPORT void AddToPrecachedUpdate( IPrecache *pAdd );
 //void AddResourceDir( const char *pszName );
 //void ClearResourceDirs();
 //void CloseAllResources();
-void __declspec(dllexport) SFLB3_RunResourceLoadingThread();
+SYSTEM_EXPORT void SFLB3_RunResourceLoadingThread();
 SYSTEM_EXPORT void ReleaseFileRequestHolder();
 SYSTEM_EXPORT void AddFileRequest( NGScene::CFileRequest *pReq );
 SYSTEM_EXPORT bool HasFileRequestsInFly();

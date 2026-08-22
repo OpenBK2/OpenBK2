@@ -212,7 +212,7 @@ void ReleaseFileRequestHolder()
 		holdRequests.clear();
 }
 
-void __declspec(dllexport) SFLB3_RunResourceLoadingThread()
+void SFLB3_RunResourceLoadingThread()
 {
 	unsigned long dwThread;
 	hLoaderThread = CreateThread( 0, 102400, LoaderThread, 0, 0, &dwThread );

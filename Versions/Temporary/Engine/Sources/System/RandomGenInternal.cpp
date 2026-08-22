@@ -226,7 +226,7 @@ IRandomSeed *NRandom::CreateRandomSeedCopy()
 // **
 // ************************************************************************************************************************ //
 
-void __declspec(dllexport) CRandomGenSeed::SFLB0_InitVariables()
+void CRandomGenSeed::SFLB0_InitVariables()
 {
 	rnd.randa = rnd.randb = rnd.randc = 0;
 	unsigned _int32 *m = rnd.randmem;

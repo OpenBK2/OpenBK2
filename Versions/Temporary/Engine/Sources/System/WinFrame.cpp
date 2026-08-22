@@ -140,7 +140,7 @@ static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam );
-bool __declspec(dllexport) SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
+bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
 {
   // create and register class style
         // Register the windows class
@@ -346,7 +346,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
-bool __declspec(dllexport) NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
+bool NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
 {
 	int nXSize = 10000;
 	int nYSize = 10000;

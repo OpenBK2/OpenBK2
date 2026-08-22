@@ -107,7 +107,7 @@ void ResetStack()
 	interfaces.clear();
 }
 
-void __declspec(dllexport) SFLB4_PushInterface( IInterfaceBase *pInterface )
+void SFLB4_PushInterface( IInterfaceBase *pInterface )
 {
 	if ( !interfaces.empty() ) 
 		interfaces.back()->OnGetFocus( false );
