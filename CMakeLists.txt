@@ -21,9 +21,25 @@ if(MSVC)
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/wd4251>")
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/wd4275>")
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/FS>")
+  # /Zi routes debug info through mspdbsrv.exe, which every parallel cl.exe
+  # then serializes on (and which is why /FS above is needed). /Z7 puts the
+  # debug info in the .obj instead, so Ninja can actually keep all cores busy.
+  # It also makes objects cacheable, which /Zi output is not, should a compiler
+  # cache ever be wired up. The cost is fatter .obj files and more link work.
+  #
+  # All configurations, not just Debug: the Release presets map to
+  # RelWithDebInfo, whose default flags carry /Zi, so that is the build that
+  # was paying for it. Release and MinSizeRel have no /Zi to replace today,
+  # and are listed so they stay correct if debug info is ever added to them.
   foreach(flag_var
           CMAKE_CXX_FLAGS_DEBUG
-          CMAKE_C_FLAGS_DEBUG)
+          CMAKE_CXX_FLAGS_RELEASE
+          CMAKE_CXX_FLAGS_RELWITHDEBINFO
+          CMAKE_CXX_FLAGS_MINSIZEREL
+          CMAKE_C_FLAGS_DEBUG
+          CMAKE_C_FLAGS_RELEASE
+          CMAKE_C_FLAGS_RELWITHDEBINFO
+          CMAKE_C_FLAGS_MINSIZEREL)
     string(REPLACE "/Zi" "/Z7" ${flag_var} "${${flag_var}}")
   endforeach()
   add_definitions("-D_CRT_SECURE_NO_WARNINGS=1")
