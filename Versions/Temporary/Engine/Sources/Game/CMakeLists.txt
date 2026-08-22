@@ -24,6 +24,17 @@ install(TARGETS Game DESTINATION bin)
 # here as well, which is harmless.
 if(WIN32)
     install(FILES $<TARGET_RUNTIME_DLLS:Game> DESTINATION bin)
+
+    # Also put them next to Game.exe in the build tree. Each module builds into
+    # its own directory, and Windows looks for a DLL beside the executable or
+    # on PATH, never in the working directory, so without this the build tree
+    # can only be run after installing it. Setting the working directory does
+    # not help: that governs where the game looks for its data.
+    add_custom_command(TARGET Game POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_RUNTIME_DLLS:Game> $<TARGET_FILE_DIR:Game>
+        COMMAND_EXPAND_LISTS
+        VERBATIM)
 endif()
 add_version_info(Game)
 if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4)
