@@ -343,12 +343,11 @@ void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 
 	std::vector<std::string> cmdsSet;
 	NStr::SplitString( szBuffer.c_str(), &cmdsSet, '\n' );
-	NWin32Helper::CControl87Guard control87guard;
-#ifdef _M_AMD64
-	_controlfp(_RC_CHOP, _MCW_RC);
-#else
-	_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
-#endif
+	// every client must parse these floats identically to stay in sync during
+	// multiplayer. Each of these carries its own guard, so the state is put
+	// back on the way out.
+	NWin32Helper::CRoundingControl roundingControl( NWin32Helper::CRoundingControl::RCM_CHOP );
+	NWin32Helper::CPrecisionControl precisionControl( NWin32Helper::CPrecisionControl::PCM_LOW );
 	for ( std::vector<std::string>::const_iterator iTemp = cmdsSet.begin(); iTemp != cmdsSet.end(); ++iTemp )
 	{
 	  if ( iTemp->empty() )
@@ -523,12 +522,11 @@ static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> 
 	if ( paramsSet[1].compare( L"=" ) != 0 )
 		return;
 
-	NWin32Helper::CControl87Guard control87guard;
-#ifdef _M_AMD64
-	_controlfp(_RC_CHOP, _MCW_RC);
-#else
-	_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
-#endif
+	// every client must parse these floats identically to stay in sync during
+	// multiplayer. Each of these carries its own guard, so the state is put
+	// back on the way out.
+	NWin32Helper::CRoundingControl roundingControl( NWin32Helper::CRoundingControl::RCM_CHOP );
+	NWin32Helper::CPrecisionControl precisionControl( NWin32Helper::CPrecisionControl::PCM_LOW );
 	NGlobal::SetVar( NStr::ToMBCS( paramsSet[0] ), NGlobal::CValue( paramsSet[2] ) );
 }
 

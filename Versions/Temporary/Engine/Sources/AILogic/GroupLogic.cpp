@@ -10,7 +10,7 @@
 #include "UnitStates.h"
 #include "Formation.h"
 #include "Shell.h"
-#include <float.h>
+#include <cfenv>
 #include "ScanLimiter.h"
 #include "Building.h"
 #include "GridCreation.h"
@@ -732,7 +732,7 @@ void CGroupLogic::Segment()
 	updater.ClearInterpolatable();
 
 	const NTimer::STime roundedCurTime = curTime - curTime % SConsts::AI_SEGMENT_DURATION;
-	_control87( _RC_NEAR, _MCW_RC );
+	std::fesetround( FE_TONEAREST );
 
 	// states юнитов
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[0], (CStateSegments*)0 );
@@ -764,7 +764,7 @@ void CGroupLogic::Segment()
 	lastSegmTime = curTime - curTime % SConsts::AI_SEGMENT_DURATION + SConsts::AI_SEGMENT_DURATION;
 
 	ProcessAmbushGroups();
-	NI_ASSERT( (_MCW_RC  & _control87( 0, 0 )) == 0, "something changed processor control word" );
+	NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
 }
 
 void CGroupLogic::UpdateAllAreas( const std::vector<int> &units, const EActionNotify eAction )

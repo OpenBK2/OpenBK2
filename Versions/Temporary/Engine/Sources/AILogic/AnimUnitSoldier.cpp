@@ -9,7 +9,7 @@
 
 #include "AILogic_export.h"
 
-#include <float.h>
+#include <cfenv>
 
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
@@ -77,7 +77,7 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 		case NDb::ANIMATION_SHOOT_DOWN:
 			bMustFinishCurAnimation = true;
 			{
-				NI_ASSERT( (_MCW_RC & _control87( 0, 0 )) == 0, "something changed processor control word" );
+				NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
 				const SInfantryRPGStats::SInfantryGun &gun = pOwnerStats->GetGun( pOwner->GetUniqueID(), 0, 0 );
 				timeOfFinishAnimation = curTime + 
 					(std::max)( pOwnerStats->GetAnimTime( nAnimation ),

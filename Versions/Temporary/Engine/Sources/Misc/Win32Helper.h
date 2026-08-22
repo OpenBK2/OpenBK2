@@ -1,6 +1,11 @@
 
 #pragma once
-#include <float.h>
+
+#include <boost/predef.h>
+
+#include <cfenv>
+// _control87 and the _PC_ constants, for the x87 precision field only
+#include <cfloat>
 
 namespace NWin32Helper
 {
@@ -24,58 +29,60 @@ public:
 	T** GetAddr() { Free(); pData = 0; return &pData; }
 };
 
+// Saves the floating-point environment and puts it back on scope exit.
+// fegetenv/fesetenv cover the whole environment, where the Win32 version
+// restored the rounding and denormal bits on x64 and the entire control word
+// on x86. The one thing they also carry that the control word did not is the
+// accumulated exception status, which nothing here reads.
 class CControl87Guard
 {
-	unsigned int nPrevState;
+	std::fenv_t prevState;
 public:
-	CControl87Guard() {
-#ifdef _M_AMD64
-		nPrevState = _controlfp( 0, 0 );
-#else
-		nPrevState = _control87( 0, 0 );
-#endif
-	}
-	~CControl87Guard() {
-#ifdef _M_AMD64
-		_controlfp(nPrevState, _MCW_DN | _MCW_RC);
-#else
-		_control87( nPrevState, 0xffffffff );
-#endif
-	}
+	CControl87Guard() { std::fegetenv( &prevState ); }
+	~CControl87Guard() { std::fesetenv( &prevState ); }
 };
 
+// Precision control is a field of the x87 control word: it says what width
+// arithmetic is rounded to regardless of the operand type. SSE has no such
+// thing and neither does <cfenv>, so this stays Windows x86 only, which is
+// what it already was - the x64 path never set it.
 class CPrecisionControl
 {
 	CControl87Guard guard;
 public:
-	enum EPrecisionControlMode{ PCM_HIGH = _PC_64, PCM_MEDIUM = _PC_53, PCM_LOW = _PC_24 };
+	enum EPrecisionControlMode{ PCM_HIGH, PCM_MEDIUM, PCM_LOW };
 	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) {
-		Set(mode);
+		Set( mode );
 	}
 	void Set( EPrecisionControlMode mode ) {
-#ifdef _M_AMD64
-		// _MCW_PC is not supported on amd64
+#if BOOST_OS_WINDOWS && BOOST_ARCH_X86_32
+		switch ( mode )
+		{
+			case PCM_HIGH: _control87( _PC_64, _MCW_PC ); break;
+			case PCM_MEDIUM: _control87( _PC_53, _MCW_PC ); break;
+			case PCM_LOW: _control87( _PC_24, _MCW_PC ); break;
+		}
 #else
-		_control87( mode, _MCW_PC );
+		(void)mode;
 #endif
-	};
+	}
 };
 
+// Rounding, unlike precision, is standard. Note that this now takes effect on
+// x64, where Set used to do nothing at all and the guard therefore restored an
+// environment nothing had changed. Every caller asks for RCM_NEAR, which is
+// already the default, so this only matters if something else moved it.
 class CRoundingControl
 {
 	CControl87Guard guard;
 public:
-	enum ERoundingControlMode{ RCM_NEAR = _RC_NEAR, RCM_DOWN = _RC_DOWN, RCM_UP = _RC_UP, RCM_CHOP = _RC_CHOP };
+	enum ERoundingControlMode{ RCM_NEAR = FE_TONEAREST, RCM_DOWN = FE_DOWNWARD, RCM_UP = FE_UPWARD, RCM_CHOP = FE_TOWARDZERO };
 	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) {
-		Set(mode);
+		Set( mode );
 	}
 	void Set( ERoundingControlMode mode ) {
-#ifdef _M_AMD64
-		// _MCW_PC is not supported on amd64
-#else
-		_control87(mode, _MCW_RC);
-#endif
-	};
+		std::fesetround( mode );
+	}
 };
 
 }

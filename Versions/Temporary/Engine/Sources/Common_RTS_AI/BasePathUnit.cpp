@@ -10,7 +10,7 @@
 
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "System/RandomGen.h"
-#include <float.h>
+#include <cfenv>
 
 #include "PointChecking.h"
 
@@ -287,7 +287,7 @@ const bool CBasePathUnit::MakeTurnToDirection( const uint16_t _wDirection )
 		else
 		{
 			const int nTurnMultiply = ( wClockWise < wAntiClockWise ) ? int( lastTimeDiff ) : -int( lastTimeDiff );
-			NI_ASSERT( (_MCW_RC  & _control87( 0, 0 )) == 0, "something changed processor control word" );
+			NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
 			SetDirection( GetDirection() + Float2Int( nTurnMultiply * GetTurnSpeed() ) );
 			bTurning = true;
 			return false;
