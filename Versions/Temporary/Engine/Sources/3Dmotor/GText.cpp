@@ -11,7 +11,7 @@ namespace NGScene
 //! Размер TAB-а
 const int
 	N_TAB_SIZE		= 32;
-const WCHAR
+const wchar_t
 	WC_TAG_BEGIN	= L'<',
 	WC_TAG_END		= L'>';
 const int
@@ -154,7 +154,7 @@ void CTextFormater::Generate()
 {
 	int nTemp = 0, nWordBegin = 0;
 	float fWordWidth = 0, fWordHeight = 0;
-	WCHAR wcChar = 0, wcLastChar = 0;
+	wchar_t wcChar = 0, wcLastChar = 0;
 	ECharType eThisChar = CHAR_NEWLINE, eLastChar = CHAR_NEWLINE ;
 
 	bDynamic = false;
@@ -326,7 +326,7 @@ void CTextFormater::GenerateLine()
 
 		if ( iTemp->eType == CHAR_ALNUM )
 		{
-			WCHAR wcLastChar = 0;
+			wchar_t wcLastChar = 0;
 			CRectLayout* pLayout = GetLayout( iTemp->sState.sFont );
 
 			int nCount = 0;
@@ -423,7 +423,7 @@ void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )
 {
 	int nTemp = 0, nWordBegin = 0;
 	bool bBracketsBlock = false;
-	WCHAR wcChar;
+	wchar_t wcChar;
 	ECharType eThisChar = CHAR_SPACE, eLastChar = CHAR_SPACE;
 
 	do
@@ -486,7 +486,7 @@ void CTextFormater::TagFont( const std::wstring &wsTag )
 				sNewFont.nSize = FONT_SIZE_XXLARGE;
 			else
 			{
-				WCHAR wsString[128];
+				wchar_t wsString[128];
 				int nParams = swscanf( iTemp->wsString.c_str(), L"%d%2s", &sNewFont.nSize, wsString );
 
 				if ( nParams > 1 )

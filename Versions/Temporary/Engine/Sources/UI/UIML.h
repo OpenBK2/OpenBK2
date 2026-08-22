@@ -133,7 +133,7 @@ public:
 	void Seek( int nSeek ) { ASSERT( nSeek <= wsText.length() ); nPos = nSeek; }
 	void IncSeek() { ++nPos; }
 
- 	WCHAR GetChar() const { return wsText[nPos]; }
+	wchar_t GetChar() const { return wsText[nPos]; }
 	bool IsEof() const { return nPos >= nSize; }
 	void GetString( int nStart, int nSize, std::wstring *pRes );
 	void InsertString( const std::wstring &wsText );

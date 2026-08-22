@@ -452,12 +452,12 @@ void ResetVarsToDefault( EStorageClass storage )
 static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes )
 {
 	std::vector<std::wstring> params;
-	std::list<WCHAR> stackBrackets;
+	std::list<wchar_t> stackBrackets;
 	int i, nLastPos = 0;
 	//
 	for ( i = 0; i < szCmd.size(); ++i )
 	{
-		WCHAR c = szCmd[i];
+		wchar_t c = szCmd[i];
 		if ( NStr::SBracketsTest<wchar_t>::IsOpen(c) )
 			stackBrackets.push_back( NStr::SBracketsTest<wchar_t>::GetClose( c ) );
 		else if ( stackBrackets.empty() )

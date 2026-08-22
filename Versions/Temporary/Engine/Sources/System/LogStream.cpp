@@ -63,7 +63,7 @@ CLogStream& CLogStream::operator<< ( const double &dVal )
 CLogStream& CLogStream::operator<< ( const char* szText )
 {
 	int nLen = 0;
-	WCHAR wszText[1024];
+	wchar_t wszText[1024];
 	
 	bConsoleUpdated = true;
 	nLen = MultiByteToWideChar( CP_ACP, 0, szText, strlen( szText ), wszText, 1024 );

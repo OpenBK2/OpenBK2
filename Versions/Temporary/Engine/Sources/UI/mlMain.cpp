@@ -125,7 +125,7 @@ void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
 
 	for ( bool bContinue = true; bContinue; )
 	{
-		WCHAR wcChar = 0;
+		wchar_t wcChar = 0;
 		if ( !pStream->IsEof() )
 			wcChar = pStream->GetChar();
 		else

@@ -105,7 +105,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 		{
 			nFlags |= N_FONTOBJECT_SIZE;
 
-			WCHAR wsString[128];
+			wchar_t wsString[128];
 			int nParams = swscanf( wsParam.c_str(), L"%d%2s", &font.nSize, wsString );
 
 			if ( nParams > 1 )

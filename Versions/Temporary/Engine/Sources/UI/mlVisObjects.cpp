@@ -106,11 +106,11 @@ void CTextObject::Update( IReflowState *pState )
 
 	int nCount = 0;
 	float fX = 0;
-	WCHAR nLastChar = 0;
+	wchar_t nLastChar = 0;
 	pStream->Seek( nStrStart );
 	for ( int nTemp = 0; nTemp < nStrSize; nTemp++ )
 	{
-		WCHAR nChar = pStream->GetChar();
+		wchar_t nChar = pStream->GetChar();
 
 		float fSX = state.nOutlineBorder * screenSize.x / 1024;
 		float fSY = state.nOutlineBorder * screenSize.y / 768;

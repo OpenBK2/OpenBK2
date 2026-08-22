@@ -161,11 +161,11 @@ void CMLTextObject::Generate(  )
 	pTexture = sFontInfo.pFont->GetTexture();
 
 	float fX = 0;
-	WCHAR wcLastChar = 0;
+	wchar_t wcLastChar = 0;
 	pStream->Seek( nStrStart );
 	for ( int nTemp = 0; nTemp < nStrSize; nTemp++ )
 	{
-		WCHAR wcChar = pStream->GetChar();
+		wchar_t wcChar = pStream->GetChar();
 
 		float fS = sState.nOutlineBorder * vScreenRect.x / 1024;
 
@@ -956,7 +956,7 @@ void CML::Generate( int nWidth )
 
 	for ( bool bContinue = true; bContinue; )
 	{
-		WCHAR wcChar = 0;
+		wchar_t wcChar = 0;
 		if ( !pStream->IsEof() )
 			wcChar = pStream->GetChar();
 		else

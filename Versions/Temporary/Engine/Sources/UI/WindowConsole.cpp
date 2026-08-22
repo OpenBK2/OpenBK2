@@ -50,7 +50,7 @@ static const int TEXT_LEFT_SPACE = 20;			//Отступ от левого кра
 static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
 static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
 static const int CURSOR_ANIMATION_TIME = 400;		//период переключения курсора
-static const WCHAR szPrefix[] = L">>";
+static const wchar_t szPrefix[] = L">>";
 
 CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID(0)
 {
