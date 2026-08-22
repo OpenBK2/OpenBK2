@@ -4,6 +4,8 @@
 #include "GfxRender.h"
 #include "3DLib/Transform.h"
 #include "GfxShaders.h"
+#include "System/WorkerPool.h"
+#include "System/Commands.h"
 
 #include <algorithm>
 
@@ -11,6 +13,47 @@ namespace NGScene
 {
 extern bool bNewShadows;
 extern bool bLowRAM;
+static int nRenderWorkerThreads = 4;
+static CWorkerPool *pRenderWorkerPool = 0;
+
+CWorkerPool& GetRenderWorkerPool()
+{
+	const std::size_t nRequestedThreads = static_cast<std::size_t>(
+		(std::max)( 0, nRenderWorkerThreads ) );
+	if ( !pRenderWorkerPool )
+		pRenderWorkerPool = new CWorkerPool( nRequestedThreads );
+	else if ( pRenderWorkerPool->GetThreadCount() != nRequestedThreads )
+		pRenderWorkerPool->SetThreadCount( nRequestedThreads );
+	return *pRenderWorkerPool;
+}
+
+void ShutdownRenderWorkerPool()
+{
+	// Stop and join the persistent workers before the renderer module is unloaded.
+	delete pRenderWorkerPool;
+	pRenderWorkerPool = 0;
+}
+
+static void PrepareVisibleGeometry( const CSceneFragments &scene )
+{
+	CWorkerPool &workerPool = GetRenderWorkerPool();
+	std::vector<SRenderGeometryInfo*> geometry;
+	const int nGeometries = scene.GetGeometriesNum();
+	geometry.reserve( nGeometries );
+	for ( int k = 0; k < nGeometries; ++k )
+	{
+		if ( scene.GetGeometryFlags( k ) == FST_REJECT )
+			continue;
+		SRenderGeometryInfo *pGeometry = scene.GetGeometryInfo( k );
+		geometry.push_back( pGeometry );
+		pGeometry->pVertices->QueueParallelRecalc( workerPool );
+	}
+
+	// All CPU tasks finish before the render thread creates or locks D3D9 buffers.
+	workerPool.WaitForAll();
+	for ( SRenderGeometryInfo *pGeometry : geometry )
+		pGeometry->pVertices.Refresh();
+}
 
 struct SCompareOps
 {
@@ -390,6 +433,7 @@ static void ExecOps( NGfx::CRenderContext *pRC, const std::vector<CRenderCmdList
 	if ( ops.empty() )
 		return;
 
+	PrepareVisibleGeometry( scene );
 	InitGeomDepths( pRC, scene );
 
 	std::vector<const CRenderCmdList::SOperation*> renderThem;
@@ -439,7 +483,7 @@ void Execute( IRender *pRender, NGfx::CRenderContext *pRC, const CTransformStack
 }
 
 }
-//START_REGISTER(GSceneInternal)
-//	REGISTER_VAR( "gfx_depth_sort", NGlobal::VarBoolHandler, &bUseHWHSR, 1, true )
-//FINISH_REGISTER
+START_REGISTER(GRenderExecute)
+	REGISTER_VAR_EX( "gfx_worker_threads", NGlobal::VarIntHandler, &NGScene::nRenderWorkerThreads, 4, STORAGE_USER )
+FINISH_REGISTER
 

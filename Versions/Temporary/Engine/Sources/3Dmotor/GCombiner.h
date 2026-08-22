@@ -159,6 +159,23 @@ class CVBCombiner: public IVBCombiner
 	CDGPtr<CFuncBase<SPerVertexLightState> > pLightState;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IVBCombiner*)this); f.Add(2,&pCombiner); f.Add(3,&ct); f.Add(4,&pAnimation); f.Add(5,&pLightState); return 0; }
 	bool bNeedXForm, bNeedRecalc, bDroppedXForm;
+	std::vector< CPtr<IPart> > parallelParts;
+	std::vector<int> parallelPartOffsets;
+	std::vector<const SFBTransform*> parallelSimpleTransforms;
+	std::vector<const std::vector<SHMatrix>*> parallelAnimations;
+	std::vector<const std::vector<NGfx::SCompactTransformer>*> parallelMMXAnimations;
+	std::vector<char> parallelVertices;
+	bool bParallelPrepared = false;
+	bool bParallelTnL = false;
+	bool bParallelLowRAM = false;
+	int nParallelVertices = 0;
+	unsigned int nParallelMXCSR = 0;
+	unsigned int nParallelFPUControl = 0;
+	template<class TVertex>
+		void PreparePartRange( int nBegin, int nEnd, const SPerVertexLightState *pLightStateValue );
+	template<class TVertex>
+		void UploadParallelGeometry();
+	void ClearParallelPreparation();
 	template<class TTrans>
 		void SimpleTransform( TTrans *p );
 protected:
@@ -176,6 +193,7 @@ public:
 	virtual const std::vector<SSphere>& GetBounds() { if ( NeedXForm() ) XFormPosition(); return partBVs; }
 	virtual CFuncBase<std::vector< CPtr<IPart> > > * GetCombiner() const { return pCombiner; }
 	virtual void FreeMemory();
+	virtual void QueueParallelRecalc( CWorkerPool &workerPool );
 };
 
 // CIBCombiner
