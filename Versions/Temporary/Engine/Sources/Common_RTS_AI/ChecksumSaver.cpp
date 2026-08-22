@@ -4,6 +4,8 @@
 #include "Checksums.h"
 #include "System/CheckSumLog.h"
 
+#include "port/debugging.h"
+
 #include <cstdint>
 using object_storage_type = det_map<int, CObjectBase*>;
 
@@ -140,7 +142,7 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 		if ( nBreakCount == nCount && nSegment == nSegmentBreak )
 		{
 			DebugTrace( "break_count/break_segment reached: segment %i, count %i, data[0] = %i", nSegment, nCount, *((int*)pData) );
-			__debugbreak();
+			breakpoint();
 		}
 
 		*checkSumData = adler32( *checkSumData, (const uint8_t*)&idChunk, sizeof(idChunk) );
@@ -194,7 +196,7 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 		pCommandsHistory->AddChecksumLog( nSegment, *checkSumData, nCount );
 	if ( nBreakCount == nCount && nSegment == nSegmentBreak )
 	{
-		__debugbreak();
+		breakpoint();
 	}
 	++nCount;
 

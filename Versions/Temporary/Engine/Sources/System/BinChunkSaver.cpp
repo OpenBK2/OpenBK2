@@ -2,6 +2,8 @@
 #include "BinChunkSaver.h"
 #include "Cruncher.h"
 
+#include "port/debugging.h"
+
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -520,8 +522,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			NI_ASSERT( pObject, fmt::format("Can't create object of type 0x{:08x}", nTypeID) );
 			if ( !pObject )
 			{
-				if ( IsDebuggerPresent() )
-					__debugbreak();
+				breakpoint_if_debugging();
 				continue;
 			}
 			if ( !bValid )

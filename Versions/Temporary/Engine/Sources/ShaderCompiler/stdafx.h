@@ -15,11 +15,13 @@
 #include <cstdlib>
 #include <cassert>
 
+#include "port/debugging.h"
+
 #pragma warning( disable: 4267 4018 )
 
 #undef ASSERT
 #ifdef _DEBUG
-#  define ASSERT( a ) if ( !(a) ) __debugbreak();
+#  define ASSERT( a ) if ( !(a) ) breakpoint();
 #else
 #  define ASSERT( a ) ((void)0)
 #endif

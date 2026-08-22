@@ -6,6 +6,8 @@
 #include "Misc/2Darray.h"
 #include "GfxBuffersInternal.h"
 
+#include "port/debugging.h"
+
 #include <algorithm>
 #include <cstdint>
 
@@ -436,7 +438,7 @@ public:
 			0 );
 
 		bIsDynamic = usage == DYNAMIC_TEXTURE;
-		if ( IsDebuggerPresent() )
+		if ( is_debugger_present() )
 		{
 			if ( hRes == D3DERR_OUTOFVIDEOMEMORY )
 				ASSERT( 0 );
@@ -753,7 +755,7 @@ public:
 			usage == REGULAR ? D3DPOOL_MANAGED : D3DPOOL_DEFAULT,
 			obj.GetAddr(),
 			0 );
-		if ( IsDebuggerPresent() )
+		if ( is_debugger_present() )
 		{
 			if ( hRes == D3DERR_OUTOFVIDEOMEMORY )
 				ASSERT( 0 );

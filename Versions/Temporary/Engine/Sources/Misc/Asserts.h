@@ -2,6 +2,7 @@
 
 #include "Misc_export.h"
 
+#include "port/debugging.h"
 #include "port/stdcall.h"
 
 #include <string>
@@ -48,17 +49,17 @@ if ( !(x) )                                                           \
 	const std::string szAssertText( user_text );                        \
 	if ( !bIgnore )                                                     \
 	{                                                                   \
-		if ( IsDebuggerPresent() )                                        \
+		if ( is_debugger_present() )                                      \
 		{																																	\
 			OutputDebugString( szAssertText.c_str() );																	\
-			__debugbreak();                                                 \
+			breakpoint();                                                   \
 		}																																	\
 		else                                                              \
 		{                                                                 \
 			switch( NBSU::ReportAssert(msg, szAssertText.c_str(), __FILE__, __LINE__) )\
 			{                                                               \
 				case BSU_CONTINUE: break;                                     \
-				case BSU_DEBUG: __debugbreak(); break;                        \
+				case BSU_DEBUG: breakpoint(); break;                          \
 				case BSU_IGNORE: break;                                       \
 				case BSU_ABORT:                                               \
 					FatalExit( 0xDEAD );                                        \

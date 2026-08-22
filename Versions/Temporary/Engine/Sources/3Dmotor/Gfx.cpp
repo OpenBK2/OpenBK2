@@ -14,6 +14,8 @@
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
 
+#include "port/debugging.h"
+
 #include <cstdint>
 
 namespace NGfx
@@ -974,7 +976,7 @@ void Done3D()
 
 void D3DASSERT( HRESULT hRes, const char *pDescr, ... )
 {
-	if ( IsDebuggerPresent() )
+	if ( is_debugger_present() )
 		ASSERT( hRes == D3D_OK );
 	////
 	if ( hRes == D3D_OK )

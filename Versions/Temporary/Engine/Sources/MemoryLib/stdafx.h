@@ -21,12 +21,14 @@
 
 #include <cassert>
 
+#include "port/debugging.h"
+
 
 #ifdef _DEBUG
 #  ifdef FAST_DEBUG
-#    define ASSERT( a ) if ( !(a) ) __debugbreak();
+#    define ASSERT( a ) if ( !(a) ) breakpoint();
 #  else
-#    define ASSERT( aParam ) if ( !(aParam) ) { char szBuf[1024]; sprintf( szBuf, "%s(%d) assertion %s failed", __FILE__, __LINE__, #aParam ); MessageBox( 0, szBuf, "Error", MB_OK ); __debugbreak(); }
+#    define ASSERT( aParam ) if ( !(aParam) ) { char szBuf[1024]; sprintf( szBuf, "%s(%d) assertion %s failed", __FILE__, __LINE__, #aParam ); MessageBox( 0, szBuf, "Error", MB_OK ); breakpoint(); }
 #  endif
 #else
 #  define ASSERT( a ) ((void)0)

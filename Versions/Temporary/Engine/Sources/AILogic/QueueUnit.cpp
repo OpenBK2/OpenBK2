@@ -317,7 +317,7 @@ void CQueueUnit::Segment()
 					if ( GetStatesFactory()->CanCommandBeExecuted( pCmd ) )
 					{
 //						if ( curTime == 750 && GetUniqueIdQU() == 19 )
-//							__debugbreak();
+//							breakpoint();
 
 						pNewState = GetStatesFactory()->ProduceState( this, pCmd );
 						if ( pNewState )

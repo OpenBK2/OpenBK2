@@ -6,6 +6,7 @@
 #include "Misc/Win32Helper.h"
 #include "Misc/StrProc.h"
 
+#include "port/debugging.h"
 #include "port/time.h"
 
 #include <cstdint>
@@ -303,7 +304,7 @@ bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampl
 
 	// disable mouse in debugger for win2k and earlier versions
 	bool bMouseEnabled = true;
-	if ( IsDebuggerPresent() && !bDebugMouse )
+	if ( is_debugger_present() && !bDebugMouse )
 	{
 		// Figure out which OS we are on.
 		OSVERSIONINFO stOSVI;
@@ -408,7 +409,7 @@ static bool SetCoopLevel()
 	{
 		HRESULT hRes;
 
-		if ( ( IsDebuggerPresent() && ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != DI8DEVTYPE_MOUSE ) ) || bNonExclusiveMode )
+		if ( ( is_debugger_present() && ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != DI8DEVTYPE_MOUSE ) ) || bNonExclusiveMode )
 			hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND );
 		else
 		{

@@ -42,6 +42,8 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include "port/debugging.h"
+
 
 EXTERNVAR CLogger theLogger;
 
@@ -392,7 +394,7 @@ BOOL CEditorApp::InitInstance()
 		}
 	}
 
-	const bool bShowSplashScreen = ( !IsDebuggerPresent() ) && ( NGlobal::GetVar( "disable_splash_screen", 0 ) == 0 );
+	const bool bShowSplashScreen = ( !is_debugger_present() ) && ( NGlobal::GetVar( "disable_splash_screen", 0 ) == 0 );
 	CObj<CObjectBase> pSplashScreen;
 	//Показать SplashScreen
 	if ( bShowSplashScreen )

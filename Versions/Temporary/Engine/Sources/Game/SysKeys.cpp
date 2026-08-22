@@ -61,7 +61,7 @@ LRESULT CALLBACK LowLevelKeyboardProc( INT nCode, WPARAM wParam, LPARAM lParam )
 
 void EnableSystemKeys( bool bEnable, HINSTANCE hInstance )
 {
-	if ( (bCurrEnable == bEnable) /*|| IsDebuggerPresent()*/ ) 
+	if ( (bCurrEnable == bEnable) /*|| is_debugger_present()*/ ) 
 		return;
 	const uint32_t dwOSVersion = GetVersion();
 	if ( dwOSVersion & 0x80000000 ) 

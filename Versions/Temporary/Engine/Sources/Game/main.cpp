@@ -35,6 +35,8 @@
 #include "System/SplashScreen.h"
 #include "Main/MODs.h"
 
+#include "port/debugging.h"
+
 #include <client/crashpad_client.h>
 #include <client/crash_report_database.h>
 #include <client/settings.h>
@@ -132,7 +134,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// load and initialize all dll modules, register and initialize singletons
 	NGameX::Initialize();
 	//
-	CObj<CObjectBase> pSplashScreen = IsDebuggerPresent() ? 0 :NSplash::CreateSplashScreen( NMainLoop::GetBaseDir() + "splash.bmp", true );
+	CObj<CObjectBase> pSplashScreen = is_debugger_present() ? 0 :NSplash::CreateSplashScreen( NMainLoop::GetBaseDir() + "splash.bmp", true );
 	//
 	CreateAI();
 	//
