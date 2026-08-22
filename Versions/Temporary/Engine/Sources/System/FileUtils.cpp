@@ -153,7 +153,7 @@ double GetFreeDiskSpace( const char *pszDrive )
 	typedef BOOL (WINAPI *GDFSE)( LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER );
 
 	GDFSE pfnGetDiskFreeSpaceEx = (GDFSE)GetProcAddress( GetModuleHandle("kernel32.dll"), "GetDiskFreeSpaceExA" );
-	BOOL bRetVal = FALSE;
+	bool bRetVal = false;
 	double fRetVal = 0;
 	if ( pfnGetDiskFreeSpaceEx )
 	{

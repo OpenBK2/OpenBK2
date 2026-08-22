@@ -53,14 +53,14 @@ class CMemoryMappedFile : public CMappedStream
 	{
 		if ( p )
 		{
-			BOOL bTest = UnmapViewOfFile( p );
+			bool bTest = UnmapViewOfFile( p );
 			ASSERT( bTest );
 		}
 		file.UnmapFile();
 	}
 	void FlushFile( void *p )
 	{
-		BOOL bTest = FlushViewOfFile( p, 0 );
+		bool bTest = FlushViewOfFile( p, 0 );
 		ASSERT( bTest );
 	}
 	CMemoryMappedFile( const CMemoryMappedFile& );

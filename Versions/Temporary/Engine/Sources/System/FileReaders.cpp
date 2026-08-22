@@ -98,7 +98,7 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 		HANDLE hFile = pFile->GetFile();
 		SetFilePointer( hFile, nOffset, 0, FILE_BEGIN );
 		unsigned long dwRes;
-		BOOL bRead = ReadFile( hFile, pszBuf, nSize, &dwRes, 0 );
+		bool bRead = ReadFile( hFile, pszBuf, nSize, &dwRes, 0 );
 		ASSERT( bRead && dwRes == nSize );
 		return pszBuf;
 	}
@@ -114,7 +114,7 @@ void CMemoryMappedFileFragment::UnmapFile( void *p )
 		int nAllocGranularity = GetAllocGranularity();
 		int nShift = nOffset & ( nAllocGranularity - 1 );
 		void *pAligned = (void*)( ((intptr_t)p) - nShift );
-		BOOL bTest = UnmapViewOfFile( pAligned );
+		bool bTest = UnmapViewOfFile( pAligned );
 		ASSERT( bTest );
 	}
 	else
@@ -128,7 +128,7 @@ void CMemoryMappedFileFragment::FlushFile( void *p )
 	HANDLE hMapping = pFile->GetMapping();
 	if ( hMapping )
 	{
-		BOOL bTest = FlushViewOfFile( p, 0 );
+		bool bTest = FlushViewOfFile( p, 0 );
 		ASSERT( bTest );
 	}
 	else

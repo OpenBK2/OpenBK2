@@ -38,7 +38,7 @@ LRESULT CALLBACK LowLevelKeyboardProc( INT nCode, WPARAM wParam, LPARAM lParam )
   // By returning a non-zero value from the hook procedure, the
   // message does not get passed to the target window
   KBDLLHOOKSTRUCT *pkbhs = (KBDLLHOOKSTRUCT *)lParam;
-  BOOL bControlKeyDown = 0;
+  bool bControlKeyDown = 0;
 
   switch ( nCode )
   {
@@ -58,8 +58,6 @@ LRESULT CALLBACK LowLevelKeyboardProc( INT nCode, WPARAM wParam, LPARAM lParam )
   }
   return CallNextHookEx( hHook, nCode, wParam, lParam );
 }
-
-extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
 
 void EnableSystemKeys( bool bEnable, HINSTANCE hInstance )
 {

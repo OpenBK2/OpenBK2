@@ -146,7 +146,7 @@ void CRandomGenerator::Init()
 // --------------------------- FillRandRsl() ---------------------------------------------------------------
 const int N_FROM_START = 1024;
 
-BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBaseMask, int nToFind, int* pnTotFinded )
+bool CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBaseMask, int nToFind, int* pnTotFinded )
 {
 	WIN32_FIND_DATA ff;
 	HANDLE hf = FindFirstFile( pszBaseMask, &ff );
@@ -154,14 +154,14 @@ BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBas
 	szPath = szPath.substr( 0, szPath.length() - 3 );
 	if ( hf != INVALID_HANDLE_VALUE )
 	{
-		for ( BOOL bCont = TRUE; bCont; bCont = FindNextFile( hf, &ff ) )
+		for ( bool bCont = true; bCont; bCont = FindNextFile( hf, &ff ) )
 		{
 			if ( ff.cFileName[0] == '.' || (ff.dwFileAttributes & (FILE_ATTRIBUTE_HIDDEN|FILE_ATTRIBUTE_SYSTEM)) != 0 )
 				continue;
 			if ( ff.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
 			{
 				if ( RecFindFile( szFoundName, (szPath + ff.cFileName + "\\*.*").c_str(), nToFind, pnTotFinded ) == TRUE )
-					return TRUE;
+					return true;
 				continue;
 			}
 			if ( *pnTotFinded >= nToFind )
@@ -169,7 +169,7 @@ BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBas
 				if ( ff.nFileSizeLow >= N_FROM_START + sizeof( randrsl ) )
 				{
 					szFoundName = szPath + ff.cFileName;
-					return TRUE;
+					return true;
 				}
 				( *pnTotFinded )--;
 			}
@@ -177,7 +177,7 @@ BOOL CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBas
 		}
 		FindClose( hf );
 	}
-	return FALSE;
+	return false;
 }
 
 // The purpose of this func is to fill randrsl[RANDSIZ] arrays
@@ -217,14 +217,14 @@ void CRandomGenerator::FillRandRsl()
 			if ( !bIsRead )
 				continue;
 		}
-		BOOL bHaveNotZero = FALSE;
+		bool bHaveNotZero = false;
 		for ( int i = 0; i < RANDSIZ; i++ )
 			if ( randrsl[i] )
 			{
-				bHaveNotZero = TRUE;
+				bHaveNotZero = true;
 				break;
 			}
-		if ( bHaveNotZero == FALSE )
+		if ( !bHaveNotZero )
 			continue;
 		break;
 	}

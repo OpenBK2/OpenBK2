@@ -330,7 +330,7 @@ void CRandomGenSeed::FillRandRsl()
 	//
 	srand( GetCurrentTimeMilliseconds() );
 	char pszFindedName[256];
-	BOOL bSuccess = FALSE;
+	bool bSuccess = false;
 	
 	while ( !bSuccess )
 	{
@@ -342,25 +342,25 @@ void CRandomGenSeed::FillRandRsl()
 			if ( !RecFindFile( pszFindedName, pszMaskToFindFiles, nToFind, &nTotFinded ) )
 				continue;
 		}
-		bSuccess = TRUE;
+		bSuccess = true;
 		HANDLE hFile = CreateFile( pszFindedName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if ( hFile != INVALID_HANDLE_VALUE )
 		{
 			srand( GetCurrentTimeMilliseconds() );
 			SetFilePointer( hFile, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
 			unsigned long dwReadBytes = 0;
-			if ( ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) != TRUE || (dwReadBytes != sizeof(rnd.randrsl)) )
-				bSuccess = FALSE;
+			if ( !ReadFile( hFile, rnd.randrsl, sizeof(rnd.randrsl), &dwReadBytes, 0 ) || (dwReadBytes != sizeof(rnd.randrsl)) )
+				bSuccess = false;
 			CloseHandle( hFile );
 		}
 		else
-			bSuccess = FALSE;
-		BOOL bHaveNotZero = FALSE;
+			bSuccess = false;
+		bool bHaveNotZero = false;
 		for ( int i = 0; i < RANDSIZ; i++ )
 		{
 			if ( rnd.randrsl[i] )
 			{
-				bHaveNotZero = TRUE;
+				bHaveNotZero = true;
 				break;
 			}
 		}

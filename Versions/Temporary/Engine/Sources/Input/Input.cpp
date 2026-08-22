@@ -12,8 +12,6 @@
 
 #include <fmt/format.h>
 
-extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
-
 bool bMouseDisabledDebug = false;
 static const int POV_RANGE_VALUE = 1000;
 static const int AXIS_RANGE_VALUE = 10000;

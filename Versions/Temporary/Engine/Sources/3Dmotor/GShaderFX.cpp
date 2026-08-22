@@ -292,7 +292,7 @@ HRESULT CStatesManager::SetLight(unsigned long Index, CONST D3DLIGHT9 *pLight )
 	return S_OK;
 }
 
-HRESULT CStatesManager::LightEnable(unsigned long Index, BOOL Enable )
+HRESULT CStatesManager::LightEnable(unsigned long Index, int Enable )
 {
 	ASSERT( 0 );
 	return S_OK;
@@ -352,7 +352,7 @@ HRESULT CStatesManager::SetVertexShaderConstantI( unsigned RegisterIndex, CONST 
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetVertexShaderConstantB( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount )
+HRESULT CStatesManager::SetVertexShaderConstantB( unsigned RegisterIndex, CONST int *pConstantData, unsigned RegisterCount )
 {
 	pDevice->SetVertexShaderConstantB( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
@@ -376,7 +376,7 @@ HRESULT CStatesManager::SetPixelShaderConstantI( unsigned RegisterIndex, CONST I
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetPixelShaderConstantB( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount )
+HRESULT CStatesManager::SetPixelShaderConstantB( unsigned RegisterIndex, CONST int *pConstantData, unsigned RegisterCount )
 {
 //	pDevice->SetPixelShaderConstantB( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;

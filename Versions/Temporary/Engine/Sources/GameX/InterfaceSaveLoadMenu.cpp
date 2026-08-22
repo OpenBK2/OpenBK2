@@ -292,7 +292,7 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 		case CONFIRM_DELETE:
 			{
 				//Delete file
-				BOOL bResult = DeleteFile( saves[nSelected].szFileName.c_str() );
+				bool bResult = DeleteFile( saves[nSelected].szFileName.c_str() );
 				NI_ASSERT( bResult, "File removal failed");
 
 				//Remove extra-info file

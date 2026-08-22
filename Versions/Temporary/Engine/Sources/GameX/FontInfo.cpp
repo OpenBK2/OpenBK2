@@ -151,7 +151,7 @@ bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<uint16_t
 	// translate MBCS chars to UNICODE and re-map kerns and chars
 	{
 		CHARSETINFO cs;
-		BOOL bRetVal = TranslateCharsetInfo( (unsigned long*)source.dwCharSet, &cs, TCI_SRCCHARSET );
+		TranslateCharsetInfo( (unsigned long*)source.dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
 		NStr::SetCodePage( cs.ciACP );
 		// form string
