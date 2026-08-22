@@ -5,21 +5,6 @@
 namespace NWin32Helper
 {
 
-class CEvent
-{
-	HANDLE h;
-	CEvent( const CEvent& ) {}
-	CEvent& operator=( const CEvent& ) {}
-public:
-	CEvent( bool bInitState = false, bool bManualReset = true ) { h = CreateEvent(0, bManualReset, bInitState, 0 ); }
-	~CEvent() { CloseHandle(h); }
-	bool Set() { return SetEvent(h) != 0; }
-	bool Pulse() { return SetEvent(h) != 0; }
-	bool Reset() { return ResetEvent(h) != 0; }
-	void Wait() { WaitForSingleObject(h, INFINITE ); }
-	bool IsSet() { return WaitForSingleObject( h, 0 ) == WAIT_OBJECT_0; }
-};
-
 template <class T>
 class com_ptr
 {

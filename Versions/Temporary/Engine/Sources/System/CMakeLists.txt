@@ -50,7 +50,7 @@ set(SOURCES
 add_library(System SHARED ${SOURCES})
 add_stdafx_pch(System)
 add_export_header(System)
-target_link_libraries(System PRIVATE MemoryLib Misc zlib)
+target_link_libraries(System PRIVATE MemoryLib Misc zlib Threads::Threads)
 target_link_libraries(System PUBLIC fmt::fmt-header-only Boost::uuid Boost::filesystem Boost::interprocess)
 if(WIN32)
     target_link_libraries(System PRIVATE winapi)

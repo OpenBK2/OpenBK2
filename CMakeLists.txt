@@ -16,6 +16,11 @@ option(BUILD_EDITOR "build editor" OFF)
 
 include(cmake/arch.cmake)
 
+# std::thread and std::condition_variable need an explicit threading
+# library everywhere but Windows
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 if(MSVC)
   add_compile_options("/nologo")
   add_link_options("/nologo")

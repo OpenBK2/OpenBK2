@@ -2,10 +2,11 @@
 #include "BinaryResources.h"
 #include "GResource.h"
 #include "VFSOperations.h"
-#include "Misc/Win32Helper.h"
 
+#include <condition_variable>
 #include <cstdint>
 #include <mutex>
+#include <thread>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -144,38 +145,34 @@ void CFileRequest::Read()
 
 // Resource loading thread
 
-static std::mutex reqQueue, pendingCheck;
-static NWin32Helper::CEvent newRequest;
-static HANDLE hLoaderThread;
+static std::mutex reqQueue;
+static std::condition_variable newRequest;
+static std::thread loaderThread;
 static std::list<CPtr<CFileRequest> > holdRequests;
 static std::list<CFileRequest*> requests;
 
-static unsigned long WINAPI LoaderThread( void* )
+static void LoaderThread()
 {
 	for (;;)
 	{
-		newRequest.Wait();
-		newRequest.Reset();
-		// process new requests
-		CFileRequest *pRes;
-		for(;;)
+		CFileRequest *pRes = 0;
 		{
-			std::lock_guard lp( pendingCheck );
-			{
-				std::lock_guard l( reqQueue );
-				if ( requests.empty() )
-					break;
-				pRes = requests.front();
-				requests.pop_front();
-			}
-			if ( pRes == 0 )
-				return 0;
-			if ( !IsValid(pRes) )
-				continue;
-			pRes->Read();
+			// the manual-reset event this replaces was signalled on every push
+			// and cleared here, so an arrival between the wait and the reset
+			// could be missed. Waiting on the queue itself cannot lose one.
+			std::unique_lock l( reqQueue );
+			newRequest.wait( l, [] { return !requests.empty(); } );
+			pRes = requests.front();
+			requests.pop_front();
 		}
+		// a null request means stop, and ~SKillLoaderThread puts it at the
+		// front so shutdown does not wait for the queue to drain
+		if ( pRes == 0 )
+			return;
+		if ( !IsValid(pRes) )
+			continue;
+		pRes->Read();
 	}
-	return 0;
 }
 
 void AddFileRequest( NGScene::CFileRequest *pReq )
@@ -187,10 +184,13 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 		pReq->Read();
 		return;
 	}
-	std::lock_guard l( reqQueue );
-	holdRequests.push_front( pReq );
-	requests.push_front( pReq );
-	newRequest.Set();
+	{
+		std::lock_guard l( reqQueue );
+		holdRequests.push_front( pReq );
+		// newest first: the request made last is the one being waited on
+		requests.push_front( pReq );
+	}
+	newRequest.notify_one();
 }
 
 bool HasFileRequestsInFly()
@@ -214,23 +214,25 @@ void ReleaseFileRequestHolder()
 
 void SFLB3_RunResourceLoadingThread()
 {
-	unsigned long dwThread;
-	hLoaderThread = CreateThread( 0, 102400, LoaderThread, 0, 0, &dwThread );
+	// assigning over a running std::thread calls std::terminate, where
+	// CreateThread would only have leaked the old handle
+	if ( loaderThread.joinable() )
+		return;
+	loaderThread = std::thread( LoaderThread );
 }
 
 struct SKillLoaderThread
 {
 	~SKillLoaderThread()
 	{
-		if ( hLoaderThread )
+		if ( !loaderThread.joinable() )
+			return;
 		{
-			{
-				std::lock_guard l( reqQueue );
-				newRequest.Set();
-				requests.push_front( 0 );
-			}
-			WaitForSingleObject( hLoaderThread, INFINITE );
+			std::lock_guard l( reqQueue );
+			requests.push_front( 0 );
 		}
+		newRequest.notify_one();
+		loaderThread.join();
 	}
 } killLoaderThread;
 }
