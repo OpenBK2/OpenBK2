@@ -3,6 +3,11 @@
 
 #include "port/unicode.h"
 
+#include <boost/predef.h>
+
+#include <fmt/format.h>
+#include <fmt/xchar.h>
+
 namespace NLog
 {
 
@@ -45,6 +50,7 @@ class CDebugDumper : public ILogDumper
 	{
 		// no conversion at all now, and no buffer to overrun: the debugger
 		// takes wide text directly
+#if BOOST_OS_WINDOWS
 		if ( wszString.empty() || wszString[wszString.size() - 1] != L'\n' )
 		{
 			OutputDebugStringW( ( wszString + L'\n' ).c_str() );
@@ -53,6 +59,16 @@ class CDebugDumper : public ILogDumper
 		{
 			OutputDebugStringW( wszString.c_str() );
 		}
+#else
+		// nothing to attach a debug output stream to, so stderr it is, which
+		// is where DbgTrc already goes
+		const std::string szLine = WideToUTF8( wszString );
+		fprintf( stderr, "%s", szLine.c_str() );
+		if ( szLine.empty() || szLine[szLine.size() - 1] != '\n' )
+		{
+			fputc( '\n', stderr );
+		}
+#endif
 	}
 };
 ILogDumper *CreateDebugDumper() { return new CDebugDumper(); }
@@ -78,25 +94,21 @@ CLogger &CLogger::operator<<( const bool bVal )
 
 CLogger &CLogger::operator<<( const int nVal )
 {
-	wchar_t wszBuffer[1024];
-	swprintf( wszBuffer, L"%d", nVal );
-	wszLogBuffer += wszBuffer;
+	wszLogBuffer += std::to_wstring( nVal );
 	return *this;
 }
 
 CLogger &CLogger::operator<<( const long lVal )
 {
-	wchar_t wszBuffer[1024];
-	swprintf( wszBuffer, L"%d", lVal );
-	wszLogBuffer += wszBuffer;
+	wszLogBuffer += std::to_wstring( lVal );
 	return *this;
 }
 
 CLogger &CLogger::operator<<( const double fVal )
 {
-	wchar_t wszBuffer[1024];
-	swprintf( wszBuffer, L"%g", fVal );
-	wszLogBuffer += wszBuffer;
+	// {:g} is fmt's spelling of printf's %g; to_wstring would give %f, which
+	// prints six decimals for every value
+	wszLogBuffer += fmt::format( L"{:g}", fVal );
 	return *this;
 }
 

@@ -4,6 +4,11 @@
 
 #include "port/unicode.h"
 
+// xchar.h is what makes fmt::format( L"..." ) available, so a number
+// never has to be formatted narrow and converted back
+#include <fmt/format.h>
+#include <fmt/xchar.h>
+
 int nID = 0;
 bool bConsoleUpdated = false;
 std::list<SConsoleLine> consoleLines;
@@ -24,41 +29,31 @@ CLogStream& CLogStream::operator<< ( const bool &bVal )
 
 CLogStream& CLogStream::operator<< ( const std::size_t &nVal )
 {
-	wchar_t wszBuffer[1024];
-
 	bConsoleUpdated = true;
-	swprintf( wszBuffer, L"%zu", nVal );
-	wsStreamBuffer = wsStreamBuffer + wszBuffer;
+	wsStreamBuffer += std::to_wstring( nVal );
 	return *this;
 }
 
 CLogStream& CLogStream::operator<< ( const int &nVal )
 {
-	wchar_t wszBuffer[1024];
-
 	bConsoleUpdated = true;
-	swprintf( wszBuffer, L"%d", nVal );
-	wsStreamBuffer = wsStreamBuffer + wszBuffer;
+	wsStreamBuffer += std::to_wstring( nVal );
 	return *this;
 }
 
 CLogStream& CLogStream::operator<< ( const long &lVal )
 {
-	wchar_t wszBuffer[1024];
-	
 	bConsoleUpdated = true;
-	swprintf( wszBuffer, L"%d", lVal );
-	wsStreamBuffer = wsStreamBuffer + wszBuffer;
+	wsStreamBuffer += std::to_wstring( lVal );
 	return *this;
 }
 
 CLogStream& CLogStream::operator<< ( const double &dVal )
 {
-	wchar_t wszBuffer[1024];
-	
 	bConsoleUpdated = true;
-	swprintf( wszBuffer, L"%g", dVal );
-	wsStreamBuffer = wsStreamBuffer + wszBuffer;
+	// {:g} is fmt's spelling of printf's %g; to_wstring would give %f, which
+	// prints six decimals for every value
+	wsStreamBuffer += fmt::format( L"{:g}", dVal );
 	return *this;
 }
 
