@@ -41,7 +41,6 @@ set(SOURCES
     WinCursor.cpp
     WinFrame.cpp
     WinVFS.cpp
-    WorkerPool.cpp
     XMLChunkSaver.cpp
     XMLReader.cpp
     XMLSAXPArser.cpp

@@ -8,8 +8,6 @@
 #include "Misc/HashFuncs.h"
 
 #include <boost/sort/spreadsort/integer_sort.hpp>
-#include <System/WorkerPool.h>
-#include <float.h>
 
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;
@@ -249,14 +247,13 @@ inline void CalcPerVertexLight( T *pRes, CObjectInfo *p, const std::vector<CVec3
 	CalcPerVertexLight( pRes, srcPos, pSrc, p->GetPositionIndices(), normals, p->GetAttribute( GATTR_VERTEX_COLOR ), ls, pCache, bv );
 }
 
+static std::vector<NGfx::SCompactVector> xformedNormals;
 template<class TParam>
 struct STGenericTransformer
 {
 	enum E { PASS_MMX_BLENDS = 1 };
 	typedef TParam TRes;
 	const SPerVertexLightState &ls;
-	// A transformer belongs to one task, so its reusable normal buffer is worker-local.
-	std::vector<NGfx::SCompactVector> xformedNormals;
 
 	STGenericTransformer( const SPerVertexLightState &_ls ) : ls(_ls) {}
 	void CopyTransform( CObjectInfo *pObjInfo, const SUVInfo *pSrc, int nVertices,
@@ -366,10 +363,7 @@ struct SPartTransformer : public T
 {
 	SPartTransformer() {}
 	SPartTransformer( const SPerVertexLightState &_ls ) : T(_ls) {}
-	int DoTransform( IPart *p, typename T::TRes *pRes, const std::vector<CVec3> &transformed,
-		const SFBTransform *pPreparedSimpleTransform = 0,
-		const std::vector<SHMatrix> *pPreparedAnimation = 0,
-		const std::vector<NGfx::SCompactTransformer> *pPreparedMMXAnimation = 0 )
+	int DoTransform( IPart *p, typename T::TRes *pRes, const std::vector<CVec3> &transformed )
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
 		if ( !pObjInfo )
@@ -387,31 +381,19 @@ struct SPartTransformer : public T
 				pRes );
 			break;
 		case TT_SIMPLE:
-			{
-			const SFBTransform &simpleTransform = pPreparedSimpleTransform
-				? *pPreparedSimpleTransform : p->GetSimplePos();
 			SimpleTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 				&p->cacheLighting, bv,
-				simpleTransform, pRes );
-			}
+				p->GetSimplePos(), pRes );
 			break;
 		case TT_SINGLE_SKIN:
-			{
-				const std::vector<SHMatrix> &animation = pPreparedAnimation
-					? *pPreparedAnimation : p->GetAnimation();
-				if ( T::PASS_MMX_BLENDS )
-				{
-					const std::vector<NGfx::SCompactTransformer> &mmxAnimation = pPreparedMMXAnimation
-						? *pPreparedMMXAnimation : p->GetMMXAnimation();
-					SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
-						&p->cacheLighting, bv,
-						&(pObjInfo->GetWeights()[0]), animation, mmxAnimation, pRes );
-				}
-				else
-					SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
-						&p->cacheLighting, bv,
-						&(pObjInfo->GetWeights()[0]), animation, *(std::vector<NGfx::SCompactTransformer>*)0, pRes );
-			}
+			if ( T::PASS_MMX_BLENDS )
+				SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
+					&p->cacheLighting, bv,
+					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), p->GetMMXAnimation(), pRes );
+			else
+				SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
+					&p->cacheLighting, bv,
+					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), *(std::vector<NGfx::SCompactTransformer>*)0, pRes );
 			break;
 		default:
 			ASSERT(0);
@@ -547,220 +529,10 @@ void CVBCombiner::SimpleTransform( TTrans *p )
 	}
 }
 
-template<class TVertex>
-void CVBCombiner::PreparePartRange( int nBegin, int nEnd, const SPerVertexLightState *pLightStateValue )
-{
-#if HAS_SSE2
-	// Match the render thread's rounding and denormal modes for bit-identical SIMD output.
-	_mm_setcsr( nParallelMXCSR );
-#endif
-#ifdef _M_AMD64
-	_controlfp( nParallelFPUControl, _MCW_DN | _MCW_RC );
-#else
-	_control87( nParallelFPUControl, 0xffffffff );
-#endif
-	// One transformer per job reuses its normal scratch across all parts in the range.
-	SPartTransformer<STGenericTransformer<TVertex> > transformer( *pLightStateValue );
-	for ( int k = nBegin; k < nEnd; ++k )
-	{
-		IPart *pPart = parallelParts[k];
-		const int nFirstVertex = parallelPartOffsets[k];
-		const int nPartVertices = parallelPartOffsets[k + 1] - nFirstVertex;
-		const int nPartBytes = nPartVertices * sizeof(TVertex);
-
-		if ( !bParallelLowRAM && pPart->gfxData.GetSize() == nPartBytes )
-			continue;
-
-		TVertex *pResult = 0;
-		if ( bParallelLowRAM )
-			pResult = reinterpret_cast<TVertex*>( parallelVertices.data() ) + nFirstVertex;
-		else
-		{
-			pPart->gfxData.Resize( nPartBytes );
-			pResult = reinterpret_cast<TVertex*>( &pPart->gfxData[0] );
-		}
-
-		const int nTransformed = transformer.DoTransform(
-			pPart, pResult, pPart->xformedPositions,
-			parallelSimpleTransforms[k],
-			parallelAnimations[k], parallelMMXAnimations[k] );
-		ASSERT( nTransformed == nPartVertices );
-	}
-}
-
-template<class TVertex>
-void CVBCombiner::UploadParallelGeometry()
-{
-	// D3D9 buffer creation, locking and upload intentionally stay on the render thread.
-	NGfx::CBufferLock<TVertex> geometry( &pValue, nParallelVertices, NGfx::DYNAMIC );
-	if ( bParallelLowRAM )
-	{
-		std::memcpy( &geometry[0], parallelVertices.data(),
-			static_cast<size_t>( nParallelVertices ) * sizeof(TVertex) );
-		return;
-	}
-
-	// Cached part data is already the final output, avoiding an extra full-size staging copy.
-	for ( int k = 0; k < parallelParts.size(); ++k )
-	{
-		const int nFirstVertex = parallelPartOffsets[k];
-		const int nPartVertices = parallelPartOffsets[k + 1] - nFirstVertex;
-		std::memcpy( &geometry[nFirstVertex], &parallelParts[k]->gfxData[0],
-			static_cast<size_t>( nPartVertices ) * sizeof(TVertex) );
-	}
-}
-
-void CVBCombiner::ClearParallelPreparation()
-{
-	parallelParts.clear();
-	parallelPartOffsets.clear();
-	parallelSimpleTransforms.clear();
-	parallelAnimations.clear();
-	parallelMMXAnimations.clear();
-	if ( bParallelLowRAM )
-		std::vector<char>().swap( parallelVertices );
-	else
-		parallelVertices.clear();
-	nParallelVertices = 0;
-	bParallelPrepared = false;
-	bParallelTnL = false;
-	bParallelLowRAM = false;
-}
-
-void CVBCombiner::QueueParallelRecalc( CWorkerPool &workerPool )
-{
-	if ( bParallelPrepared )
-		return;
-
-	// Refresh all dependency-graph nodes on the master before workers see their values.
-	if ( !NeedUpdate() && IsValid( pValue ) )
-		return;
-	if ( bNeedXForm || bDroppedXForm )
-		XFormPosition();
-
-	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();
-	parallelParts.clear();
-	parallelPartOffsets.clear();
-	parallelSimpleTransforms.clear();
-	parallelAnimations.clear();
-	parallelMMXAnimations.clear();
-	parallelPartOffsets.push_back( 0 );
-	nParallelVertices = 0;
-	for ( int k = 0; k < parts.size(); ++k )
-	{
-		IPart *pPart = parts[k];
-		pPart->RefreshObjectInfo();
-		CObjectInfo *pObjInfo = pPart->GetObjectInfo();
-		if ( !pObjInfo )
-			continue;
-
-		const int nPartVertices = static_cast<int>( pObjInfo->GetVertices().size() );
-		if ( nPartVertices == 0 )
-		{
-			pPart->gfxData.Clear();
-			continue;
-		}
-
-		// Transform accessors may touch dependency-graph values, so call them only on the master.
-		const SFBTransform *pSimpleTransformValue = 0;
-		const std::vector<SHMatrix> *pAnimationValue = 0;
-		const std::vector<NGfx::SCompactTransformer> *pMMXAnimationValue = 0;
-		if ( pPart->GetTransformType() == TT_SINGLE_SKIN )
-		{
-			pAnimationValue = &pPart->GetAnimation();
-			pMMXAnimationValue = &pPart->GetMMXAnimation();
-		}
-		else if ( pPart->GetTransformType() == TT_SIMPLE )
-			pSimpleTransformValue = &pPart->GetSimplePos();
-
-		parallelParts.push_back( pPart );
-		parallelSimpleTransforms.push_back( pSimpleTransformValue );
-		parallelAnimations.push_back( pAnimationValue );
-		parallelMMXAnimations.push_back( pMMXAnimationValue );
-		nParallelVertices += nPartVertices;
-		parallelPartOffsets.push_back( nParallelVertices );
-	}
-
-	bParallelTnL = NGfx::IsTnLDevice();
-	bParallelLowRAM = bLowRAM;
-#if HAS_SSE2
-	nParallelMXCSR = _mm_getcsr();
-#endif
-#ifdef _M_AMD64
-	nParallelFPUControl = _controlfp( 0, 0 );
-#else
-	nParallelFPUControl = _control87( 0, 0 );
-#endif
-	const size_t nVertexSize = bParallelTnL ? sizeof(STnLVertex) : sizeof(SGfxVertex);
-	if ( bParallelLowRAM )
-		parallelVertices.resize( static_cast<size_t>( nParallelVertices ) * nVertexSize );
-	else
-		parallelVertices.clear();
-	bParallelPrepared = true;
-	if ( nParallelVertices == 0 )
-		return;
-
-	const SPerVertexLightState *pLightStateValue = &pLightState->GetValue();
-	const int N_MIN_VERTICES_PER_TASK = 512;
-	int nBegin = 0;
-	int nVerticesInTask = 0;
-	for ( int k = 0; k < parallelParts.size(); ++k )
-	{
-		nVerticesInTask += parallelPartOffsets[k + 1] - parallelPartOffsets[k];
-		if ( nVerticesInTask < N_MIN_VERTICES_PER_TASK && k + 1 < parallelParts.size() )
-			continue;
-
-		const int nEnd = k + 1;
-		if ( bParallelTnL )
-		{
-			workerPool.AddTask( [this, nBegin, nEnd, pLightStateValue]
-			{
-				PreparePartRange<STnLVertex>( nBegin, nEnd, pLightStateValue );
-			} );
-		}
-		else
-		{
-			workerPool.AddTask( [this, nBegin, nEnd, pLightStateValue]
-			{
-				PreparePartRange<SGfxVertex>( nBegin, nEnd, pLightStateValue );
-			} );
-		}
-		nBegin = nEnd;
-		nVerticesInTask = 0;
-	}
-}
-
 // possible optimization: amount of animated geometry could be reduced by separating maximal octree node size
 // for static & dynamic geometry
 void CVBCombiner::DoRecalc()
 {
-	// Render paths without an explicit multi-combiner prepass still parallelize their parts.
-	if ( !bParallelPrepared )
-	{
-		CWorkerPool &workerPool = GetRenderWorkerPool();
-		QueueParallelRecalc( workerPool );
-		workerPool.WaitForAll();
-	}
-
-	if ( bParallelPrepared )
-	{
-		bNeedRecalc = false;
-		if ( nParallelVertices == 0 )
-		{
-			pValue = 0;
-			bound.BoxInit( CVec3(0,0,0), CVec3(0,0,0) );
-			for ( int k = 0; k < partBVs.size(); ++k )
-				partBVs[k] = bound.s;
-		}
-		else if ( bParallelTnL )
-			UploadParallelGeometry<STnLVertex>();
-		else
-			UploadParallelGeometry<SGfxVertex>();
-
-		ClearParallelPreparation();
-		return;
-	}
-
 	if ( bNeedXForm || bDroppedXForm )
 		XFormPosition();
 	bNeedRecalc = false;
@@ -813,7 +585,7 @@ bool CVBCombiner::NeedUpdate()
 				parts[i]->ResetCachedLighting();
 		}
 	}
-	return bParallelPrepared | NeedXForm() | bNeedRecalc | bLightState;
+	return NeedXForm() | bNeedRecalc | bLightState;
 }
 
 void CVBCombiner::Recalc()

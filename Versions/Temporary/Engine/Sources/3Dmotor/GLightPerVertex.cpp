@@ -456,8 +456,7 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 	if ( _pRes2 && _pRes2->size() < nVertices )
 		_pRes2->resize( nVertices );
 
-	// Each persistent render worker keeps its own reusable coordinate scratch buffer.
-	static thread_local std::vector<int> tmp;
+	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
 		tmp.resize( nVertices * 2 );
 
@@ -1201,8 +1200,7 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 	if ( _pRes2 && _pRes2->size() < nVertices )
 		_pRes2->resize( nVertices );
 
-	// Each persistent render worker keeps its own reusable coordinate scratch buffer.
-	static thread_local std::vector<int> tmp;
+	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
 		tmp.resize( nVertices * 2 );
 
@@ -1658,8 +1656,7 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 	if ( _pRes2 && _pRes2->size() < nVertices )
 		_pRes2->resize( nVertices );
 
-	// Each persistent render worker keeps its own reusable coordinate scratch buffer.
-	static thread_local std::vector<int> tmp;
+	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
 		tmp.resize( nVertices * 2 );
 
@@ -1873,8 +1870,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 	std::vector<NGfx::SMMXWord> *pColors,
 	SCacheLightingInfo *pCache, const SBound &bv )
 {
-	// Point-light calculations for different parts may run on separate workers.
-	static thread_local std::vector<NGfx::SMMXWord> attenuation;
+	static std::vector<NGfx::SMMXWord> attenuation;
 	if ( pCache->bReplaceWithDirectional )
 	{
 		float fScale = F_PL_RADIUS2 / sqr( p.fRadius );
@@ -1905,9 +1901,9 @@ struct SPVLightCalcer
 	unsigned char cFogHold;
 	unsigned char *pWarFogNew, *pWarFogOld;
 	std::vector<DWORD> *pColors, *pShadowColors;
-	static thread_local std::vector<DWORD> colorsHold, shadowColorsHold;
-	static thread_local std::vector<NGfx::SMMXWord> pointColors;
-	static thread_local std::vector<unsigned char> warFogNewHold, warFogOldHold;
+	static std::vector<DWORD> colorsHold, shadowColorsHold;
+	static std::vector<NGfx::SMMXWord> pointColors;
+	static std::vector<unsigned char> warFogNewHold, warFogOldHold;
 
 	SPVLightCalcer() : pWarFogNew(0), pWarFogOld(0), pColors(0), pShadowColors(0) {}
 
@@ -2118,10 +2114,9 @@ void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &l
 	}
 }
 
-// Scratch storage persists for the lifetime of each worker without being shared between jobs.
-thread_local std::vector<DWORD> SPVLightCalcer::colorsHold, SPVLightCalcer::shadowColorsHold;
-thread_local std::vector<NGfx::SMMXWord> SPVLightCalcer::pointColors;
-thread_local std::vector<unsigned char> SPVLightCalcer::warFogNewHold, SPVLightCalcer::warFogOldHold;
+std::vector<DWORD> SPVLightCalcer::colorsHold, SPVLightCalcer::shadowColorsHold;
+std::vector<NGfx::SMMXWord> SPVLightCalcer::pointColors;
+std::vector<unsigned char> SPVLightCalcer::warFogNewHold, SPVLightCalcer::warFogOldHold;
 
 void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<WORD> &posIndices,

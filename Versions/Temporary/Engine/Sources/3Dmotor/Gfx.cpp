@@ -12,11 +12,6 @@
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
 
-namespace NGScene
-{
-void ShutdownRenderWorkerPool();
-}
-
 namespace NGfx
 {
 
@@ -970,7 +965,6 @@ bool Init3D( HWND _hWnd )
 
 void Done3D()
 {
-	NGScene::ShutdownRenderWorkerPool();
 	DeviceFinalRelease();
 }
 
