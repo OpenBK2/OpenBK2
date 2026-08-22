@@ -249,12 +249,12 @@ public:
 
 namespace NAsyncExplosionDebug
 {
-	unsigned __int64 GetRandomCallCounter();
+	uint64_t GetRandomCallCounter();
 	void SetAreaDamageCandidate( const CExplosion *pExpl, CAIUnit *pTarget, int nRawIndex, int nSortedIndex, int nDuplicateCount, int nRawCount, int nUniqueCount );
 	void ClearAreaDamageCandidate();
 	void RecordAreaDamageTrace( const char *szStage, const CExplosion *pExpl, CAIUnit *pTarget, int nArmorDir, float fRadius, float fSmallRadius,
 		bool bPreconditionsPassed, bool bCoverCalled, bool bSavedByCover, bool bCircleHit, bool bArmorPassed, bool bDamageApplied,
-		float fDist2, float fZDiff, unsigned __int64 nRngBefore, unsigned __int64 nRngAfter );
+		float fDist2, float fZDiff, uint64_t nRngBefore, uint64_t nRngAfter );
 	void ResetAreaDamageTrace();
 	void DumpAreaDamageTrace( FILE* f );
 }

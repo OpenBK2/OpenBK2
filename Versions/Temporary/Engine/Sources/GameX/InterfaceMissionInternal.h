@@ -241,7 +241,7 @@ private:
 	float fViewportBottom;
 	
 //	int nMissionTime; // at seconds
-	__int64 nMissionTimeMSec;
+	int64_t nMissionTimeMSec;
 	NTimer::STime timeMissionLastCheck; // don't save
 	
 	CPtr<IScenarioTracker> pScenarioTracker;

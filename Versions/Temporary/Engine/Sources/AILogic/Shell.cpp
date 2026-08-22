@@ -104,8 +104,8 @@ namespace NAsyncExplosionDebug
 		bool bCircleHit;
 		bool bArmorPassed;
 		bool bDamageApplied;
-		unsigned __int64 nRngBefore;
-		unsigned __int64 nRngAfter;
+		uint64_t nRngBefore;
+		uint64_t nRngAfter;
 
 		SAreaDamageRecord() : nSeq( 0 ), nTime( 0 ), szStage( "" ), nShooterUID( 0 ), nShooterPlayer( -1 ),
 			nShellType( -1 ), nTrajectory( -1 ), vExpl( VNULL3 ), fRadius( 0 ), fSmallRadius( 0 ),
@@ -121,7 +121,7 @@ namespace NAsyncExplosionDebug
 	static unsigned int s_nextAreaDamageSeq = 1;
 	static int s_nextAreaDamageRecord = 0;
 
-	unsigned __int64 GetRandomCallCounter()
+	uint64_t GetRandomCallCounter()
 	{
 		return NRandom::GetRandomCallsCounter();
 	}
@@ -145,7 +145,7 @@ namespace NAsyncExplosionDebug
 
 	void RecordAreaDamageTrace( const char *szStage, const CExplosion *pExpl, CAIUnit *pTarget, int nArmorDir, float fRadius, float fSmallRadius,
 		bool bPreconditionsPassed, bool bCoverCalled, bool bSavedByCover, bool bCircleHit, bool bArmorPassed, bool bDamageApplied,
-		float fDist2, float fZDiff, unsigned __int64 nRngBefore, unsigned __int64 nRngAfter )
+		float fDist2, float fZDiff, uint64_t nRngBefore, uint64_t nRngAfter )
 	{
 		SAreaDamageRecord &record = s_areaDamageRecords[s_nextAreaDamageRecord];
 		s_nextAreaDamageRecord = ( s_nextAreaDamageRecord + 1 ) % AREA_DAMAGE_TRACE_SIZE;

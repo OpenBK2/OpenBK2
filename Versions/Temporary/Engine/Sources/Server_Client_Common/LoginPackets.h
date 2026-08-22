@@ -2,6 +2,8 @@
 
 #include "NetPacket.h"
 
+#include <cstdint>
+
 class CLoginPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLoginPacket );
@@ -67,11 +69,11 @@ class CCheckConnectPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CCheckConnectPacket )
 public:
 	ZDATA
-		__int64 nNumber;
+		int64_t nNumber;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nNumber); return 0; }
 
 	CCheckConnectPacket() { }
-	CCheckConnectPacket( const __int64 _nNumber ) : nNumber( _nNumber ) { }
+	CCheckConnectPacket( const int64_t _nNumber ) : nNumber( _nNumber ) { }
 };
 
 class CCheckConnectAnswerPacket : public CNetPacket

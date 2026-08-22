@@ -28,7 +28,7 @@ static bool s_bLogRandomCalls = false;
 namespace NRandom
 {
 	SRandData rnd;
-	unsigned __int64 nRandomCallsTotal;
+	uint64_t nRandomCallsTotal;
 #ifndef _FINALRELEASE
 	int nRandomCalls;
 #endif
@@ -42,7 +42,7 @@ namespace NRandom
 	// copy compact debug info for ASYNC diagnostics
 	void GetDebugState( SDebugState *pState );
 	// cheap counter-only accessor for hot-path diagnostics
-	unsigned __int64 GetRandomCallsCounter();
+	uint64_t GetRandomCallsCounter();
 	// get random value
 	UINT Random()
 	{
@@ -92,7 +92,7 @@ namespace NRandom
 		pState->randomCalls = nRandomCallsTotal;
 	}
 
-	unsigned __int64 GetRandomCallsCounter()
+	uint64_t GetRandomCallsCounter()
 	{
 		return nRandomCallsTotal;
 	}

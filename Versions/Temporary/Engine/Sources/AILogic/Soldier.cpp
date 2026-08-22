@@ -1151,7 +1151,7 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl, const int nArmorDir, 
 		{
 			const bool bCanUseFallback = IsFree() && !IsLying();
 			const bool bCircleHit = bCanUseFallback && fabs2( GetCenter() - pExpl->GetExplCoordinates() ) <= sqr( fRadius );
-			const unsigned __int64 nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
+			const uint64_t nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
 			bool bDamageApplied = false;
 			if ( bCircleHit )
 			{
@@ -1159,7 +1159,7 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl, const int nArmorDir, 
 				bDamageApplied = true;
 			}
 
-			const unsigned __int64 nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
+			const uint64_t nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
 			// Soldier fallback damage is separate from CAIUnit::ProcessAreaDamage, so log it explicitly for async comparison.
 			NAsyncExplosionDebug::RecordAreaDamageTrace( "soldier_fallback", pExpl, this, nArmorDir, fRadius, fSmallRadius,
 				bCanUseFallback, false, false, bCircleHit, true, bDamageApplied, fDist2, fZDiff, nRngBefore, nRngAfter );
@@ -1170,7 +1170,7 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl, const int nArmorDir, 
 	}
 	else
 	{
-		const unsigned __int64 nRngCounter = NAsyncExplosionDebug::GetRandomCallCounter();
+		const uint64_t nRngCounter = NAsyncExplosionDebug::GetRandomCallCounter();
 		NAsyncExplosionDebug::RecordAreaDamageTrace( "soldier_gate", pExpl, this, nArmorDir, fRadius, fSmallRadius,
 			false, false, false, false, false, false, fDist2, fZDiff, nRngCounter, nRngCounter );
 	}

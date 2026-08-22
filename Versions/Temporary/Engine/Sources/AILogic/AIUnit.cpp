@@ -242,7 +242,7 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 	const CVec2 vUnitCenter( GetCenterPlain() );
 	const float fDist2 = fabs2( vUnitCenter - vExplCoord2D );
 	const float fZDiff = fabs( GetVisZ() - vExplCoord3D.z );
-	const unsigned __int64 nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
+	const uint64_t nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
 
 	bool bPreconditionsPassed = false;
 	bool bCoverCalled = false;
@@ -276,7 +276,7 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 		}
 	}
 
-	const unsigned __int64 nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
+	const uint64_t nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
 	// Keep the last area-damage decisions in the async dump so candidate/order/RNG drift can be compared across clients.
 	NAsyncExplosionDebug::RecordAreaDamageTrace( "unit_area", pExpl, this, nArmorDir, fRadius, fSmallRadius,
 		bPreconditionsPassed, bCoverCalled, bSavedByCover, bCircleHit, bArmorPassed, bDamageApplied,

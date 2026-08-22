@@ -8,6 +8,8 @@
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/PrimeNumbers.h"
 
+#include <cstdint>
+
 #include <fmt/format.h>
 
 CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckConnect )
@@ -79,11 +81,11 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 		int nCnt = 0;
 		while ( nCnt < pPrime->GetNNumbers() && pPrime->GetPrime( nCnt ) <=	sqrt( double(pCheckConnectPacket->nNumber )) )
 		{
-			const __int64 nPrime1 = pPrime->GetPrime( nCnt );
-			const __int64 nModule = pCheckConnectPacket->nNumber % nPrime1;
+			const int64_t nPrime1 = pPrime->GetPrime( nCnt );
+			const int64_t nModule = pCheckConnectPacket->nNumber % nPrime1;
 			if ( nModule == 0 )
 			{
-				const __int64 nPrime2 = pCheckConnectPacket->nNumber / nPrime1;
+				const int64_t nPrime2 = pCheckConnectPacket->nNumber / nPrime1;
 				NI_ASSERT( pPrime->IsPrime( nPrime2 ), "Wrong prime" );
 
 				CNetPacket *pPacket;

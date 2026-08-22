@@ -11,6 +11,8 @@
 
 #include "Statistics.h"
 
+#include <cstdint>
+
 CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const string &_szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
@@ -45,10 +47,10 @@ bool CControlLobby::ProcessNewClient( CNetNewClient *pPacket )
 	connecting.insert( pPacket->nClientID );
 
 	const int nPrimes = pPrime->GetNNumbers();
-	const __int64 nPrimeNumber1 = pPrime->GetPrime( rand() % nPrimes );
-	const __int64 nPrimeNumber2 = pPrime->GetPrime( rand() % nPrimes );
+	const int64_t nPrimeNumber1 = pPrime->GetPrime( rand() % nPrimes );
+	const int64_t nPrimeNumber2 = pPrime->GetPrime( rand() % nPrimes );
 
-	const __int64 nAskedNumber = nPrimeNumber1 * nPrimeNumber2;
+	const int64_t nAskedNumber = nPrimeNumber1 * nPrimeNumber2;
 	askedNumbers[pPacket->nClientID] = nAskedNumber;
 
 	CCheckConnectPacket *pCheckPacket = new CCheckConnectPacket( nAskedNumber );
@@ -70,7 +72,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	}
 
 	if ( !pPrime->IsPrime( pPacket->nPrime1 ) || !pPrime->IsPrime( pPacket->nPrime2 ) ||
-				(__int64)pPacket->nPrime1 * (__int64)pPacket->nPrime2 != askedNumbers[pPacket->nClientID] )
+				(int64_t)pPacket->nPrime1 * (int64_t)pPacket->nPrime2 != askedNumbers[pPacket->nClientID] )
 	{
 		pNet->Kick( pPacket->nClientID );
 		connecting.erase( pPacket->nClientID );

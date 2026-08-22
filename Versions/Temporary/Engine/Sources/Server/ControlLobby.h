@@ -14,7 +14,7 @@ class CControlLobby : public CPacketProcessor
 	bool bCheckCDKeyIsValid;
 
 	hash_set<int> connecting;
-	hash_map<int, __int64> askedNumbers;
+	hash_map<int, int64_t> askedNumbers;
 public:
 	CControlLobby() { }
 	CControlLobby( class CClients *pClients, class CNet *pNet, const string &szCfgFile );

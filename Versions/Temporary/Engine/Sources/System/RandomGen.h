@@ -4,6 +4,8 @@
 
 #include <boost/config.hpp>
 
+#include <cstdint>
+
 struct IRandomSeed : public CObjectBase
 {
 	// re-initialize random seed
@@ -26,7 +28,7 @@ namespace NRandom
 		unsigned int randc;
 		unsigned long randrslChecksum;
 		unsigned long randmemChecksum;
-		unsigned __int64 randomCalls;
+		uint64_t randomCalls;
 	};
 
 	struct RngCall
@@ -48,7 +50,7 @@ namespace NRandom
 	// copy compact debug info for ASYNC diagnostics without consuming RNG values
 	SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
 	// cheap counter-only accessor for hot-path ASYNC diagnostics
-	SYSTEM_EXPORT unsigned __int64 GetRandomCallsCounter();
+	SYSTEM_EXPORT uint64_t GetRandomCallsCounter();
 	// get random value
 	SYSTEM_EXPORT UINT Random();
 	// random w/o checks
