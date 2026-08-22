@@ -4,6 +4,7 @@
 #include "Commands.h"
 
 #include <cstdint>
+#include <mutex>
 
 #include <fmt/format.h>
 
@@ -16,7 +17,7 @@ static HINSTANCE hInstance = 0;                  // instance handle
 static ATOM atomWndClassName = 0;                // atom window class name identification (assigned during registration)
 static volatile bool bExit = false;
 static volatile bool bActive = true;
-static CCriticalSection msgs;
+static std::mutex msgs;
 static std::list< SWindowsMsg > msgList;
 static HCURSOR hCursor;
 static bool bManageCursor = true;
@@ -42,7 +43,7 @@ static void Report( const char *pszText, int nVal = -0x7fffffff )
 
 bool NWinFrame::GetMessage( SWindowsMsg *pRes )
 {
-	CCriticalSectionLock lock( msgs );
+	std::lock_guard lock( msgs );
 	if ( !msgList.empty() )
 	{
 		*pRes = msgList.front();
@@ -129,7 +130,7 @@ static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
 {
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
-	CCriticalSectionLock lock( msgs );
+	std::lock_guard lock( msgs );
 	SWindowsMsg &m = msgList.emplace_back();
 	m.time = time;
 	m.msg = msg;

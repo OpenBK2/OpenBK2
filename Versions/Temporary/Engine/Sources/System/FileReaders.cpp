@@ -3,6 +3,7 @@
 #include "Misc/Win32Helper.h"
 
 #include <cstdint>
+#include <mutex>
 
 int CMMFile::GetFileSize()
 {
@@ -90,8 +91,8 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 	}
 	else
 	{
-		static NWin32Helper::CCriticalSection directRead;
-		NWin32Helper::CCriticalSectionLock dr( directRead );
+		static std::mutex directRead;
+		std::lock_guard dr( directRead );
 		ASSERT( !CanWrite() );
 		char *pszBuf = new char[ nSize ];
 		HANDLE hFile = pFile->GetFile();

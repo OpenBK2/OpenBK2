@@ -16,11 +16,13 @@
 #include "Sound/DBSoundDesc.h"
 #include "System/VFSOperations.h"
 
+#include <mutex>
+
 #include <fmt/format.h>
 
 extern CBasicShare<CDBID, CSoundSample> shareSoundSample;
 
-static NWin32Helper::CCriticalSection critSection;
+static std::mutex critSection;
 REGISTER_SAVELOAD_CLASS( SOUND, 0x1107BC01, CSoundEngine );
 static float s_fDistanceFactor = 10.0f;
 static float s_fDopplerFactor = 1.0f;

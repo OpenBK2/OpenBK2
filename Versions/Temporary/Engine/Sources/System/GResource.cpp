@@ -5,6 +5,7 @@
 #include "Misc/Win32Helper.h"
 
 #include <cstdint>
+#include <mutex>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -126,14 +127,14 @@ CFileRequest::CFileRequest( const char *_pszResName, const SResKey<int> &key, bo
 {
 }
 
-static NWin32Helper::CCriticalSection readResource;
+static std::mutex readResource;
 static bool bIsFileReading = false;
 void CFileRequest::Read()
 {
 	ASSERT(!bIsReady);
 	if ( bIsReady )
 		return;
-	NWin32Helper::CCriticalSectionLock l( readResource );
+	std::lock_guard l( readResource );
 	bIsFileReading = true;
 	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid ) : GetFileResourceName( pszResName, nID );
 	
@@ -150,7 +151,7 @@ void CFileRequest::Read()
 
 // Resource loading thread
 
-static NWin32Helper::CCriticalSection reqQueue, pendingCheck;
+static std::mutex reqQueue, pendingCheck;
 static NWin32Helper::CEvent newRequest;
 static HANDLE hLoaderThread;
 static std::list<CPtr<CFileRequest> > holdRequests;
@@ -166,9 +167,9 @@ static unsigned long WINAPI LoaderThread( void* )
 		CFileRequest *pRes;
 		for(;;)
 		{
-			NWin32Helper::CCriticalSectionLock lp( pendingCheck );
+			std::lock_guard lp( pendingCheck );
 			{
-				NWin32Helper::CCriticalSectionLock l( reqQueue );
+				std::lock_guard l( reqQueue );
 				if ( requests.empty() )
 					break;
 				pRes = requests.front();
@@ -193,7 +194,7 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 		pReq->Read();
 		return;
 	}
-	NWin32Helper::CCriticalSectionLock l( reqQueue );
+	std::lock_guard l( reqQueue );
 	holdRequests.push_front( pReq );
 	requests.push_front( pReq );
 	newRequest.Set();
@@ -201,19 +202,19 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 
 bool HasFileRequestsInFly()
 {
-	NWin32Helper::CCriticalSectionLock l( reqQueue );
+	std::lock_guard l( reqQueue );
 	return bIsFileReading || !requests.empty();
 }
 
 int CountFileRequestsInFly()
 {
-	NWin32Helper::CCriticalSectionLock l( reqQueue );
+	std::lock_guard l( reqQueue );
 	return requests.size();
 }
 
 void ReleaseFileRequestHolder()
 {
-	NWin32Helper::CCriticalSectionLock l( reqQueue );
+	std::lock_guard l( reqQueue );
 	if ( requests.empty() )
 		holdRequests.clear();
 }
@@ -231,7 +232,7 @@ struct SKillLoaderThread
 		if ( hLoaderThread )
 		{
 			{
-				NWin32Helper::CCriticalSectionLock l( reqQueue );
+				std::lock_guard l( reqQueue );
 				newRequest.Set();
 				requests.push_front( 0 );
 			}

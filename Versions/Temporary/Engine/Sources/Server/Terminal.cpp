@@ -6,12 +6,13 @@
 
 #include <chrono>
 #include <cstdint>
+#include <mutex>
 #include <thread>
 
 const int INPUT_BUFFER_SIZE = 255;
 
-static NWin32Helper::CCriticalSection csClientSocketReading;
-static NWin32Helper::CCriticalSection csClientSocketWriting;
+static std::mutex csClientSocketReading;
+static std::mutex csClientSocketWriting;
 CObj<CTerminal> pTheTerminal;
 
 static uint32_t WINAPI TheTerminalThreadProc( LPVOID lpParameter )
@@ -81,7 +82,7 @@ void CTerminal::Segment()
 		string szError;
 		string szLineEntered;
 		{
-			NWin32Helper::CCriticalSectionLock lock( csClientSocketReading );
+			std::lock_guard lock( csClientSocketReading );
 			szLineEntered = readCache.front();
 			readCache.pop_front();
 		}
@@ -99,7 +100,7 @@ void CTerminal::MTSegment()
 			if ( newSocket != SOCKET_ERROR )
 			{
 				{
-					NWin32Helper::CCriticalSectionLock lock( csClientSocketWriting );
+					std::lock_guard lock( csClientSocketWriting );
 					acceptedSocket = newSocket;
 					bClientIsOK = true;
 				}
@@ -116,7 +117,7 @@ void CTerminal::MTSegment()
 
 void CTerminal::OutString( const string &szString )
 {
-	NWin32Helper::CCriticalSectionLock lock( csClientSocketWriting );
+	std::lock_guard lock( csClientSocketWriting );
 	writeCache.push_back( szString );
 	if ( bClientIsOK ) 
 	{
@@ -148,7 +149,7 @@ void CTerminal::ReadToCache()
 		}
 		buffer[ nBytesReceived ] = 0;
 		{
-			NWin32Helper::CCriticalSectionLock lock( csClientSocketReading );
+			std::lock_guard lock( csClientSocketReading );
 			readCache.push_back( &buffer[0] );
 		}
 	}

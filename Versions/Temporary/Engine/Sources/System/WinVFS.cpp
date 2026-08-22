@@ -12,8 +12,10 @@
 #include "port/time.h"
 
 #include <cstdint>
+#include <mutex>
 
-static NWin32Helper::CCriticalSection g_WinVFSCriticalSection;
+static std::mutex g_WinVFSCriticalSection;
+
 namespace NVFS
 {
 
@@ -197,7 +199,7 @@ CWinVFS::~CWinVFS()
 
 CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 {
-	NWin32Helper::CCriticalSectionLock csLock( g_WinVFSCriticalSection );
+	std::lock_guard csLock( g_WinVFSCriticalSection );
 	// first, check for registered file
 	CStreamEntriesMap::iterator pos = streamEntriesMap.find( szPath );
 	if ( pos != streamEntriesMap.end() ) 
@@ -322,7 +324,7 @@ bool CWinVFS::GetFileStats( SFileStats *pStats, const std::string &_szPath )
 
 void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder )
 {
-	NWin32Helper::CCriticalSectionLock csLock( g_WinVFSCriticalSection );
+	std::lock_guard csLock( g_WinVFSCriticalSection );
 	if ( !bArchiveOnly )
 	{
 		if ( bAllWinFilesChecked == false )

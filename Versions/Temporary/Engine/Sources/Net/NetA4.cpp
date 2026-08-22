@@ -8,6 +8,7 @@
 #include "NetA4.h"
 
 #include <cstdint>
+#include <mutex>
 
 // for testing
 
@@ -23,7 +24,7 @@ const int PACKET_SIZE = 500;
 namespace NNet
 {
 using namespace NWin32Helper;
-static NWin32Helper::CCriticalSection netDriverCriticalSection;
+static std::mutex netDriverCriticalSection;
 const float MIN_TIME_BETWEEN_PACKETS_PER_PEER = 0.050f;
 
 // interaction with master server is accomplished with different object
@@ -157,7 +158,7 @@ static unsigned long WINAPI TheThreadProc( LPVOID lpParameter )
 IDriver::EState CNetDriver::GetState() const 
 {
 	// Тут не локаем треды, так как большой погоды это не делает, а производительность ест и мешает работать с сетью
-//	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+//	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	return state; 
 }
 
@@ -211,7 +212,7 @@ CNetDriver::~CNetDriver()
 {
 	KillThread();
 
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	switch ( state )
 	{
@@ -321,7 +322,7 @@ void CNetDriver::RemoveClient( CP2PTracker::UCID nID )
 
 bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	if ( state != ACTIVE )
 		return false;
@@ -337,7 +338,7 @@ bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 
 bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	CMemoryStream pkt = _pkt;
 
 	// CRAP{ for traffic measurement
@@ -356,7 +357,7 @@ bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 
 void CNetDriver::Kick( int nClient )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	SPeer *pDst = GetClient( nClient );
 //	NI_ASSERT( pDst != 0, "pDst == 0 " );
@@ -403,7 +404,7 @@ bool CNetDriver::AnalyzeLags()
 
 bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 #ifdef __TEST_LAGS__
 if ( !AnalyzeLags() )
@@ -838,7 +839,7 @@ int nTrafficTotalSize;
 
 void CNetDriver::Step()
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	if ( !CanWork() )
 		return;
@@ -895,7 +896,7 @@ void CNetDriver::Step()
 
 void CNetDriver::StartGame()
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	NI_ASSERT( state == INACTIVE, "Wrong state of the game" );
 	state = ACTIVE;
@@ -903,7 +904,7 @@ void CNetDriver::StartGame()
 
 void CNetDriver::ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	state = CONNECTING;
 	login.StartLogin( addr, pwd );
@@ -914,7 +915,7 @@ void CNetDriver::ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd
 
 void CNetDriver::StartGameInfoSend( const CMemoryStream &pkt )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	serverInfo.StartReply( pkt );
 }
 
@@ -932,14 +933,14 @@ void CNetDriver::StartGameInfoSend( const SGameInfo &_gameInfo )
 
 void CNetDriver::StopGameInfoSend()
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	serverInfo.StopReply();
 }
 
 bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	CServerInfoSupport::CServerInfoList &servers = serverInfo.GetServers();
 	CServerInfoSupport::CServerInfoList::iterator k = servers.begin();
@@ -971,21 +972,21 @@ bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion
 
 void CNetDriver::StartNewPlayerAccept() 
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	bAcceptNewClients = true;
 }
 
 void CNetDriver::StopNewPlayerAccept()
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	bAcceptNewClients = false;
 }
 
 const float CNetDriver::GetPing( int nClientID )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	CPeerList::const_iterator iter = clients.find( nClientID );
 	if ( iter == clients.end() )
@@ -996,7 +997,7 @@ const float CNetDriver::GetPing( int nClientID )
 
 const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	
 	CPeerList::const_iterator iter = clients.find( nClientID );
 	if ( iter == clients.end() )
@@ -1007,14 +1008,14 @@ const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 
 const std::string CNetDriver::GetIP( const int nClientID )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	CPeerList::iterator iter = clients.find( nClientID );
 	return iter == clients.end() ? 0 : iter->second.currentAddr.GetIP();
 }
 
 const int CNetDriver::GetPort( const int nClientID )
 {
-	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 	CPeerList::iterator iter = clients.find( nClientID );
 	return iter == clients.end() ? 0 : iter->second.currentAddr.GetPort();
 }

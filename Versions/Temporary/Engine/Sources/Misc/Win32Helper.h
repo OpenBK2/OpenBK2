@@ -20,34 +20,6 @@ public:
 	bool IsSet() { return WaitForSingleObject( h, 0 ) == WAIT_OBJECT_0; }
 };
 
-template<class TSection>
-class CTLock
-{
-	TSection &lock;
-public:
-	CTLock( TSection &_lock ): lock(_lock) { lock.Enter(); }
-	~CTLock() { lock.Leave(); }
-
-	__declspec(deprecated) void Enter() { lock.Enter(); } // DANGEROUS!
-	__declspec(deprecated) void Leave() { lock.Leave(); } // DANGEROUS!
-};
-
-class CCriticalSection
-{
-	CRITICAL_SECTION sect;
-	CCriticalSection( const CCriticalSection & ) {}
-	CCriticalSection& operator=( const CCriticalSection &) {}
-	//
-	void Enter() { EnterCriticalSection( &sect ); }
-	void Leave() { LeaveCriticalSection( &sect ); }
-public:
-	CCriticalSection() { InitializeCriticalSection( &sect ); }
-	~CCriticalSection() { DeleteCriticalSection( &sect ); }
-	friend class CTLock<CCriticalSection>;
-};
-
-typedef CTLock<CCriticalSection> CCriticalSectionLock;
-
 template <class T>
 class com_ptr
 {
