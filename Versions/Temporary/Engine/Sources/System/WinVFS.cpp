@@ -12,7 +12,10 @@
 #include "port/time.h"
 
 #include <cstdint>
+#include <ctime>
 #include <mutex>
+
+#include <boost/filesystem/operations.hpp>
 
 static std::mutex g_WinVFSCriticalSection;
 
@@ -79,22 +82,18 @@ bool GetWinFileStats( struct SFileStats *pStats, const std::string &szPath )
 {
 	pStats->pszName = 0;
 	pStats->nSize = 0;
-	pStats->atime = 0;
-	pStats->ctime = 0;
 	pStats->mtime = 0;
-	HANDLE hFile = CreateFile( szPath.c_str(), GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
-	if ( hFile == INVALID_HANDLE_VALUE )
+	// the error_code overloads report a missing file rather than throwing,
+	// which is what the callers expect from a false return
+	boost::system::error_code ec;
+	const boost::uintmax_t nSize = boost::filesystem::file_size( szPath, ec );
+	if ( ec )
 		return false;
-	BY_HANDLE_FILE_INFORMATION info;
-	bool bRes = ::GetFileInformationByHandle( hFile, &info );
-	CloseHandle( hFile );
-	if ( !bRes )
+	const std::time_t mtime = boost::filesystem::last_write_time( szPath, ec );
+	if ( ec )
 		return false;
-	pStats->nSize = info.nFileSizeLow;
-	pStats->atime = FILETIMEToWin32DateTime( info.ftLastAccessTime );
-	pStats->ctime = FILETIMEToWin32DateTime( info.ftCreationTime );
-	pStats->mtime = FILETIMEToWin32DateTime( info.ftLastWriteTime );
-	pStats->pszName = 0;
+	pStats->nSize = int( nSize );
+	pStats->mtime = PackFileTime( mtime );
 	return true;
 }
 

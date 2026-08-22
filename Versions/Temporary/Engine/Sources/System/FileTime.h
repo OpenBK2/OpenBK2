@@ -1,14 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <ctime>
 
-#include <boost/predef.h>
-
-#if BOOST_OS_WINDOWS
-#include <winbase.h>
-#endif
-
-#include <time.h>
+#include "port/time.h"
 
 struct SWin32Time
 {
@@ -38,25 +33,37 @@ struct SWin32Time
 	operator uint32_t() const { return dwFulltime; }
 };
 
-// transforms DOS date/time format (time_t) to the Win32 date/time format (SWin32Time)
-inline uint32_t DOSToWin32DateTime( time_t dostime )
+// pack a time_t into the MS-DOS layout above, via local time.
+// the zip central directory stores this layout, so packing the loose file's
+// time is what makes the two comparable
+inline uint32_t PackFileTime( std::time_t fileTime )
 {
-	// transform DOS time to local time 'tm' structure
-	tm *pTime = localtime( &dostime );
-	// fill 'SWin32Time' structure to automagically convert to Win32 date/time format
-	SWin32Time filetime;
-	filetime.year    = pTime->tm_year - 80;	// due to 'tm' year relative to 1900 year, but we need relative to 1980
-	filetime.month   = pTime->tm_mon + 1;		// due to the month represented in the '0..11' format, but we need in '1..12'
-	filetime.day     = pTime->tm_mday;			// day in '1..31' format
-	filetime.hours   = pTime->tm_hour;			// hours in '0..23' format
-	filetime.minutes = pTime->tm_min;				// minutes in '0..59' format
-	filetime.seconds = pTime->tm_sec / 2;		// due to win32 seconds resolution are 2 sec. (i.e. seconds represented in '0..29' format)
+	std::tm local;
+	if ( !GetLocalTime( &local, fileTime ) )
+	{
+		return 0;
+	}
+	// the layout counts years from 1980 and std::tm counts from 1900, so a
+	// year outside 1980..2107 has nowhere to go in seven bits. Clamping keeps
+	// the ordering monotonic instead of wrapping into a wrong century.
+	const int nYear = local.tm_year - 80;
+	if ( nYear < 0 )
+	{
+		return 0;
+	}
+	SWin32Time packed;
+	packed.year    = nYear > 127 ? 127 : nYear;
+	packed.month   = local.tm_mon + 1;		// std::tm counts months from 0, this layout from 1
+	packed.day     = local.tm_mday;			// 1..31
+	packed.hours   = local.tm_hour;			// 0..23
+	packed.minutes = local.tm_min;			// 0..59
+	packed.seconds = local.tm_sec / 2;		// two second resolution, so 0..29
 
-	return filetime;
+	return packed;
 }
 
-// transforms Win32 date/time format (SWin32Time) to the DOS date/time format (time_t)
-inline time_t Win32ToDOSDateTime( const uint32_t _w32time )
+// the inverse of PackFileTime
+inline time_t UnpackFileTime( const uint32_t _w32time )
 {
 	struct SConvert
 	{
@@ -89,60 +96,3 @@ inline time_t Win32ToDOSDateTime( const uint32_t _w32time )
 	time_t result = mktime( &tmTime );
 	return result;
 }
-
-// transforms FILETIME to Win32 date/time (SWin32Time)
-inline uint32_t FILETIMEToWin32DateTime( const FILETIME &filetime )
-{
-	FILETIME localfiletime;
-	FileTimeToLocalFileTime( &filetime, &localfiletime );
-	SWin32Time win32time;
-	FileTimeToDosDateTime( &localfiletime, &win32time.wDate, &win32time.wTime );
-	return win32time;
-}
-
-// transforms FILETIME to TM time 
-inline void FILETIMEToTMTime( const FILETIME &filetime, tm *pTMTime )
-{
-	struct SConvert
-	{
-		union
-		{
-			struct  
-			{
-				uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
-				uint32_t minutes : 6;								// minutes (0..59)
-				uint32_t hours   : 5;								// hours (0..23)
-				uint32_t day     : 5;								// day (1..31)
-				uint32_t month   : 4;								// month(1..12)
-				uint32_t year    : 7;								// year (0..119 relative to 1980)
-			};
-			uint32_t dwFullTime;
-		};
-	};
-	SConvert w32time;
-	FILETIME localfiletime;
-	FileTimeToLocalFileTime( &filetime, &localfiletime );
-	SWin32Time win32time;
-	FileTimeToDosDateTime( &localfiletime, &win32time.wDate, &win32time.wTime );
-	w32time.dwFullTime = win32time;
-	// compose 'tm' structure. for details you can see a function above
-	Zero( *pTMTime );
-	pTMTime->tm_year = int( w32time.year ) + 80;
-	pTMTime->tm_mon  = int( w32time.month ) - 1;
-	pTMTime->tm_mday = int( w32time.day );
-	pTMTime->tm_hour = int( w32time.hours );
-	pTMTime->tm_min  = int( w32time.minutes );
-	pTMTime->tm_sec  = int( w32time.seconds ) * 2;
-}
-
-// transforms Win32 date/time (SWin32Time) to FILETIME
-inline FILETIME Win32DateTimeToFILETIME( const uint32_t win32time )
-{
-	FILETIME localft;
-	DosDateTimeToFileTime( HIWORD(win32time), LOWORD(win32time), &localft );
-	FILETIME filetime;
-	LocalFileTimeToFileTime( &localft, &filetime );
-	return filetime;
-}
-
-

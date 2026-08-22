@@ -18,12 +18,9 @@ struct SFileStats
 	int nSize;
 	//! права доступа (на чтение (1) или на запись (2))
 	uint32_t dwAccess;
-	//! creation time
-	SWin32Time ctime;
-	//! modification time
+	//! modification time, packed as in FileTime.h so that a file on disk and
+	//! an entry in an archive can be compared directly
 	SWin32Time mtime;
-	//! last access time
-	SWin32Time atime;
 };
 
 //! Virtual file system.

@@ -3,6 +3,9 @@
 #include "System_export.h"
 
 #include <cstdint>
+#include <ctime>
+
+#include <boost/filesystem/operations.hpp>
 
 namespace NFile
 {
@@ -40,10 +43,14 @@ public:
 			       ( (findinfo.cFileName[1] == '\0') || 
 						   ((findinfo.cFileName[1] == '.') && (findinfo.cFileName[2] == '\0')) ) );
 	}
-	// file time attributes
-	//FILETIME GetCreationTime() const { return findinfo.ftCreationTime; }
-	//FILETIME GetLastAccessTime() const { return findinfo.ftLastAccessTime; }
-	const FILETIME &GetLastWriteTime() const { return findinfo.ftLastWriteTime; }
+	// file time attributes. findinfo holds the bare name, so the full path has
+	// to be rebuilt before asking the filesystem about it
+	std::time_t GetLastWriteTime() const
+	{
+		boost::system::error_code ec;
+		const std::time_t t = boost::filesystem::last_write_time( GetFullName(), ec );
+		return ec ? 0 : t;
+	}
 	// file length
 	int GetLength() const { return findinfo.nFileSizeLow; }
 	// file name (title + ext), full path (absolute path + name)

@@ -54,7 +54,7 @@ class CWinVFS : public IVFS
 				if ( pStats == 0 ) 
 					return false;
 				pStats->nSize = zipfile.GetFileLen( nIndex );
-				pStats->atime = pStats->ctime = pStats->mtime = zipfile.GetModDateTime( nIndex );
+				pStats->mtime = zipfile.GetModDateTime( nIndex );
 				pStats->pszName = 0;
 				return true;
 			}
@@ -73,7 +73,7 @@ class CWinVFS : public IVFS
 			if ( it.GetLength() <= 0 ) 
 				return;
 			//
-			const uint32_t dwCheckTime = FILETIMEToWin32DateTime( it.GetLastWriteTime() );
+			const uint32_t dwCheckTime = PackFileTime( it.GetLastWriteTime() );
 			NFile::CFilePath szFileName = it.GetFullName();
 			szFileName.erase( 0, szBasePath.size() );
 			CStreamEntriesMap::iterator pos = pVFS->streamEntriesMap.find( szFileName );
