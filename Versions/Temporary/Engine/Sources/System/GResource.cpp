@@ -75,13 +75,6 @@ CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
 {
 }
 
-static void TypeReq( const char *pszResName, int nID )
-{
-	char szBuf[1024];
-	sprintf( szBuf, "%s %x\n", pszResName, nID );
-	OutputDebugString( szBuf );
-}
-
 struct SDoesExistKey
 {
 	std::string szRes;
