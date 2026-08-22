@@ -37,6 +37,7 @@ set(SOURCES
     UserActions.cpp
 )
 add_library(Stats_B2_M1 SHARED ${SOURCES})
+add_stdafx_pch(Stats_B2_M1)
 add_export_header(Stats_B2_M1)
 target_link_libraries(Stats_B2_M1 PRIVATE 3Dmotor B2_M1_Terrain libdb MemoryLib Misc Sound System UI zlib winapi)
 install(TARGETS Stats_B2_M1 DESTINATION bin)

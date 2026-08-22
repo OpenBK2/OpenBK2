@@ -55,6 +55,7 @@ include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)
 include(cmake/exportheader.cmake)
+include(cmake/pch.cmake)
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
 

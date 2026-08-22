@@ -5,6 +5,7 @@ set(SOURCES
     stdafx.cpp
 )
 add_library(Input SHARED ${SOURCES})
+add_stdafx_pch(Input)
 add_export_header(Input)
 target_link_libraries(Input PRIVATE MemoryLib Misc System dinput8 dxguid winapi)
 install(TARGETS Input DESTINATION bin)

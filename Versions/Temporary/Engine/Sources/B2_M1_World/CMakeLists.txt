@@ -25,6 +25,7 @@ set(SOURCES
     UpdatableWorld.cpp
 )
 add_library(B2_M1_World SHARED ${SOURCES})
+add_stdafx_pch(B2_M1_World)
 add_export_header(B2_M1_World)
 target_link_libraries(B2_M1_World PRIVATE 3DLib 3Dmotor DebugTools Input libdb Main MemoryLib Misc SceneB2 Script Sound Stats_B2_M1 System zlib winapi)
 install(TARGETS B2_M1_World DESTINATION bin)

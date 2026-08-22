@@ -48,6 +48,7 @@ set(SOURCES
     ZipArchieve.cpp
 )
 add_library(System SHARED ${SOURCES})
+add_stdafx_pch(System)
 add_export_header(System)
 target_link_libraries(System PRIVATE MemoryLib Misc zlib winapi)
 install(TARGETS System DESTINATION bin)

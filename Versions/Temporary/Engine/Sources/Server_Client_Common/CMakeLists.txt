@@ -14,6 +14,7 @@ set(SOURCES
     ZipPacket.cpp
 )
 add_library(Server_Client_Common SHARED ${SOURCES})
+add_stdafx_pch(Server_Client_Common)
 add_export_header(Server_Client_Common)
 target_link_libraries(Server_Client_Common PRIVATE MemoryLib Misc Net System zlib winapi)
 install(TARGETS Server_Client_Common DESTINATION bin)

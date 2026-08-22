@@ -33,6 +33,7 @@ set(SOURCES
     WindowSimpleSharedState.cpp
 )
 add_library(ED_Common SHARED ${SOURCES})
+add_stdafx_pch(ED_Common)
 add_export_header(ED_Common)
 target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc System stingray winapi)
 install(TARGETS ED_Common DESTINATION bin)

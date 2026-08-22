@@ -17,6 +17,7 @@ set(SOURCES
     Win32Random.cpp
 )
 add_library(Misc SHARED ${SOURCES})
+add_stdafx_pch(Misc)
 add_export_header(Misc)
 target_link_libraries(Misc PRIVATE MemoryLib Comctl32 winapi)
 target_link_libraries(Misc PUBLIC Boost::math)

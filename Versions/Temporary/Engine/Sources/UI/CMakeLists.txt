@@ -61,6 +61,7 @@ set(SOURCES
 )
 
 add_library(UI SHARED ${SOURCES})
+add_stdafx_pch(UI)
 add_export_header(UI)
 target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared)
 install(TARGETS UI DESTINATION bin)

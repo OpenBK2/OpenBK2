@@ -54,6 +54,7 @@ set(SOURCES
     Tools_UniqueList.cpp
 )
 add_library(MapEditorLib SHARED ${SOURCES})
+add_stdafx_pch(MapEditorLib)
 add_export_header(MapEditorLib)
 target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System winapi)
 install(TARGETS MapEditorLib DESTINATION bin)

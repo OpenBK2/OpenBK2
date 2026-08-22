@@ -12,6 +12,7 @@ set(SOURCES
     StringNumbers.cpp
 )
 add_library(Parser SHARED ${SOURCES})
+add_stdafx_pch(Parser)
 add_export_header(Parser)
 target_link_libraries(Parser PRIVATE MemoryLib Misc System zlib winapi)
 install(TARGETS Parser DESTINATION bin)

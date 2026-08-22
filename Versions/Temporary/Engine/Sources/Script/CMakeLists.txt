@@ -26,6 +26,7 @@ set(SOURCES
     StdAfx.cpp
 )
 add_library(Script SHARED ${SOURCES})
+add_stdafx_pch(Script)
 add_export_header(Script)
 target_link_libraries(Script PRIVATE MemoryLib Misc System winapi)
 install(TARGETS Script DESTINATION bin)

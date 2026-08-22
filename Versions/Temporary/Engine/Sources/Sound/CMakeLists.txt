@@ -26,6 +26,7 @@ set(SOURCES
     Track.cpp
 )
 add_library(Sound SHARED ${SOURCES})
+add_stdafx_pch(Sound)
 add_export_header(Sound)
 target_link_libraries(Sound PRIVATE libdb MemoryLib Misc System zlib fmod winapi)
 install(TARGETS Sound DESTINATION bin)

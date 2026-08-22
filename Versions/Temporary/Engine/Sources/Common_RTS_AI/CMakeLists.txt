@@ -27,6 +27,7 @@ set(SOURCES
     Tools.cpp
 )
 add_library(Common_RTS_AI SHARED ${SOURCES})
+add_stdafx_pch(Common_RTS_AI)
 add_export_header(Common_RTS_AI)
 target_link_libraries(Common_RTS_AI PRIVATE DebugTools Image libdb MemoryLib Misc System zlib winapi)
 install(TARGETS Common_RTS_AI DESTINATION bin)

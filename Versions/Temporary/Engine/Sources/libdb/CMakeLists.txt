@@ -39,6 +39,7 @@ set(SOURCES
     Wrapper/TableManipulator.cpp
 )
 add_library(libdb SHARED ${SOURCES})
+add_stdafx_pch(libdb)
 add_export_header(libdb)
 target_include_directories(libdb PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(libdb PRIVATE MemoryLib Misc Parser System zlib winapi)

@@ -13,6 +13,7 @@ set(SOURCES
     stdafx.cpp
 )
 add_library(Image SHARED ${SOURCES})
+add_stdafx_pch(Image)
 add_export_header(Image)
 target_link_libraries(Image PRIVATE MemoryLib Misc System dxsdk::d3dx9 winapi)
 install(TARGETS Image DESTINATION bin)

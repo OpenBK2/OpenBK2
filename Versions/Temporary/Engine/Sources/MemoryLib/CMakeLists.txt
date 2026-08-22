@@ -5,6 +5,7 @@ set(SOURCES
     Trace.cpp
 )
 add_library(MemoryLib SHARED ${SOURCES})
+add_stdafx_pch(MemoryLib)
 target_link_libraries(MemoryLib PRIVATE DbgHelp winapi)
 add_export_header(MemoryLib)
 install(TARGETS MemoryLib DESTINATION bin)
