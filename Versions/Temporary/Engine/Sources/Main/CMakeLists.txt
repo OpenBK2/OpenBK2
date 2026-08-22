@@ -15,7 +15,17 @@ set(SOURCES
 add_library(Main SHARED ${SOURCES})
 add_stdafx_pch(Main)
 add_export_header(Main)
-target_link_libraries(Main PRIVATE Image Input libdb MemoryLib Misc Net System UI zlib)
+target_link_libraries(Main PRIVATE
+    Image
+    Input
+    libdb
+    MemoryLib
+    Misc
+    Net
+    System
+    UI
+    zlib
+)
 if(WIN32)
     target_link_libraries(Main PRIVATE winapi)
 endif()

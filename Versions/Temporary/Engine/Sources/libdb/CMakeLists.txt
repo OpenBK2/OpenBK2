@@ -42,7 +42,14 @@ add_library(libdb SHARED ${SOURCES})
 add_stdafx_pch(libdb)
 add_export_header(libdb)
 target_include_directories(libdb PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(libdb PRIVATE MemoryLib Misc Parser System zlib fmt::fmt-header-only)
+target_link_libraries(libdb PRIVATE
+    MemoryLib
+    Misc
+    Parser
+    System
+    zlib
+    fmt::fmt-header-only
+)
 if(WIN32)
     target_link_libraries(libdb PRIVATE winapi)
 endif()
