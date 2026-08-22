@@ -30,7 +30,6 @@ static bool LoadRefFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, const 
 		const std::string szAttrVal = pAttribute->value.ToString();
 		std::string szResult;
 		std::string szString = szAttrVal.substr( 0, szAttrVal.rfind( '#' ) );
-		NStr::UTF8ToMBCS( &szString, szString );
 		NFile::MakeFullPath( &szResult, szString, GetFileName(dbidParent) );
 		NFile::NormalizePath( &szResult );
 		*pRes = CDBID( szResult );
@@ -47,18 +46,15 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 		std::string szResult;
 		std::string szString = pAttribute->value.ToString();
 		NXml::ConvertToString( &szString );
-		NStr::UTF8ToMBCS( &szString, szString );
 		NFile::MakeFullPath( &szResult, szString, GetFileName(dbidParent) );
 		NFile::NormalizePath( &szResult );
 		*pRes = szResult;
 	}
 	else
 	{
-		std::string szTemp;
 		std::string szValue = pNode->GetValue().ToString();
 		NXml::ConvertToString( &szValue );
-		NStr::UTF8ToMBCS( &szTemp, szValue );
-		*pRes = szTemp;
+		*pRes = szValue;
 	}
 }
 
@@ -194,7 +190,6 @@ static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const 
 			const std::string szParentFileName = GetFileName( dbidParent );
 			NFile::MakeRelativePath( &szRelPath, szFullFileName, szParentFileName );
 			NFile::NormalizePath( &szRelPath );
-			NStr::MBCSToUTF8( &szRelPath, szRelPath );
 			szRelPath += "#xpointer(/" + szClassTypeName + ")";
 		}
 	}
@@ -204,8 +199,8 @@ static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const 
 
 static void SaveFilePathToNode( NLXML::CXMLNode *pNode, const CVariant &value, const CDBID &dbidParent )
 {
-	std::string szRelPath, szTemp;
-	NStr::MBCSToUTF8( &szTemp, value.GetStr() );
+	std::string szRelPath;
+	const std::string szTemp = value.GetStr();
 	NFile::MakeRelativePath( &szRelPath, szTemp, GetFileName(dbidParent) );
 	NFile::NormalizePath( &szRelPath );
 	checked_cast<NLXML::CXMLElement*>(pNode)->SetAttribute( "href", szRelPath );

@@ -6,6 +6,8 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "Misc/HPTimer.h"
 
+#include "port/unicode.h"
+
 #include <cstdint>
 
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
@@ -62,10 +64,7 @@ void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFile
 					wszText = wszText.substr( 0, nLastIndex + 1 );
 				}
 				// переводим в СString
-				const int nBufferLength = ::WideCharToMultiByte( ::GetACP(), 0, wszText.c_str(), wszText.length(), 0, 0, 0, 0 );
-				LPTSTR lptStr = pstrText->GetBuffer( nBufferLength );
-				::WideCharToMultiByte( ::GetACP(), 0, wszText.c_str(), wszText.length(), lptStr, nBufferLength, 0, 0 );
-				pstrText->ReleaseBuffer();
+				*pstrText = WideToUTF8( wszText ).c_str();
 			}
 		}
 	}

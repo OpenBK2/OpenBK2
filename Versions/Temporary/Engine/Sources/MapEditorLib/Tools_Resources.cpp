@@ -6,6 +6,8 @@
 #include "System/WinVFS.h"
 #include "System/VFSOperations.h"
 
+#include "port/unicode.h"
+
 #include <cstdint>
 
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
@@ -346,13 +348,7 @@ void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage )
 		pstrText->Empty();
 		if ( !rwszText.empty() )
 		{
-			const int nBufferLength = ::WideCharToMultiByte( nCodePage, 0, rwszText.c_str(), rwszText.length(), 0, 0, 0, 0 );
-			if ( nBufferLength > 0 )
-			{
-				LPTSTR lptStr = pstrText->GetBuffer( nBufferLength );
-				::WideCharToMultiByte( nCodePage, 0, rwszText.c_str(), rwszText.length(), lptStr, nBufferLength, 0, 0 );
-				pstrText->ReleaseBuffer( nBufferLength );
-			}
+			*pstrText = WideToUTF8( rwszText ).c_str();
 		}
 	}
 }
@@ -365,12 +361,7 @@ void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
 		pwszText->clear();
 		if ( !rstrText.IsEmpty() )
 		{
-			const int nBufferLength = ::MultiByteToWideChar( nCodePage, 0, rstrText, -1, 0, 0 ) - 1;
-			if ( nBufferLength > 0 )
-			{
-				pwszText->resize( nBufferLength );
-				::MultiByteToWideChar( nCodePage, 0, rstrText, -1, &( ( *pwszText )[0] ), pwszText->size() );
-			}
+			*pwszText = UTF8ToWide( std::string( (const char *)rstrText ) );
 		}
 	}
 }

@@ -383,7 +383,6 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		CHARSETINFO cs;
 		BOOL bRetVal = TranslateCharsetInfo( (uint32_t*)dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
-		NStr::SetCodePage( cs.ciACP );
 		// form string
 		string szCharacters;
 		szCharacters.resize( chars.size() );

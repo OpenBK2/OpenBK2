@@ -123,7 +123,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 		else if ( wsID.compare( L"face" ) == 0  )
 		{
 			nFlags |= N_FONTOBJECT_NAME;
-			NStr::UnicodeToUTF8( &font.szName, wsParam );
+			font.szName = WideToUTF8( wsParam );
 		}
 		else if ( wsID.compare( L"outlinesize" ) == 0  )
 		{

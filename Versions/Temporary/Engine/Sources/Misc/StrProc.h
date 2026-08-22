@@ -1,6 +1,8 @@
 #pragma once
 #include "Misc_export.h"
 
+#include "port/unicode.h"
+
 #include <algorithm>
 
 #include <boost/config.hpp>
@@ -154,20 +156,13 @@ inline std::string ToHex(int number)
 	return result;
 }
 
-// перевод UNICODE => UTF-8 и обратно
-MISC_EXPORT void UnicodeToUTF8( std::string *pRes, const std::wstring &szString );
-MISC_EXPORT void UTF8ToUnicode( std::wstring *pRes, const std::string &szString );
-
-// перевод MBCS => Unicode и обратно
-MISC_EXPORT void SetCodePage( const int nCodePage );
-MISC_EXPORT void ToMBCS( std::string *pRes, const std::wstring &szSrc );
-inline std::string ToMBCS( const std::wstring &szSrc ) { std::string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
-MISC_EXPORT void ToUnicode( std::wstring *pRes, const std::string &szSrc );
-inline std::wstring ToUnicode( const std::string &szSrc ) { std::wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
-
-// перевод MBCS => UTF-8 и обратно
-MISC_EXPORT void UTF8ToMBCS( std::string *pRes, const std::string &szSrc );
-MISC_EXPORT void MBCSToUTF8( std::string *pRes, const std::string &szSrc );
+// Narrow <=> wide. The narrow encoding is UTF-8, so the UnicodeToUTF8 and
+// UTF8ToUnicode pair these used to sit beside is the same conversion and is
+// gone, as are UTF8ToMBCS and MBCSToUTF8, which are now the identity.
+inline void ToMBCS( std::string *pRes, const std::wstring &szSrc ) { *pRes = WideToUTF8( szSrc ); }
+inline std::string ToMBCS( const std::wstring &szSrc ) { return WideToUTF8( szSrc ); }
+inline void ToUnicode( std::wstring *pRes, const std::string &szSrc ) { *pRes = UTF8ToWide( szSrc ); }
+inline std::wstring ToUnicode( const std::string &szSrc ) { return UTF8ToWide( szSrc ); }
 
 template <class TChar>
 void ReplaceAllChars( std::basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )

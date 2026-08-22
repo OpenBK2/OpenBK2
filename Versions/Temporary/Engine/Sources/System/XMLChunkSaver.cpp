@@ -7,6 +7,8 @@
 #include "XmlUtils.h"
 #include "Misc/StrProc.h"
 
+#include "port/unicode.h"
+
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
@@ -572,7 +574,6 @@ bool CXMLChunkSaver::DataChunkDBID( CDBID *pDBID )
 					std::string szDBID = szRef.substr( 0, szRef.rfind('#') );
 					if ( !szDBID.empty() )
 					{
-						NStr::UTF8ToMBCS( &szDBID, szDBID );
 						if ( szDBID[0] == '/' || szDBID[0] == '\\' )
 							*pDBID = szDBID.c_str() + 1;
 						else
@@ -623,7 +624,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 			if ( szFilePath.empty() )
 				*pFilePath = "";
 			else
-				NStr::UTF8ToMBCS( pFilePath, szFilePath );
+				*pFilePath = szFilePath;
 			//
 			return true;
 		}
@@ -632,8 +633,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 	{
 		if ( pCurrNode )
 		{
-			std::string szFilePath;
-			NStr::MBCSToUTF8( &szFilePath, *pFilePath );
+			const std::string szFilePath = *pFilePath;
 			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( HREF_ATTRIBUTE_NAME, "/" + szFilePath );
 			return true;
 		}
@@ -669,14 +669,13 @@ bool CXMLChunkSaver::DataChunkString( std::wstring &data )
 		{
 			std::string szData = pReadNode->GetValue().ToString();
 			NXml::ConvertToString( &szData );
-			NStr::UTF8ToUnicode( &data, szData );
+			data = UTF8ToWide( szData );
 			return true;
 		}
 	}
 	else if ( pCurrNode ) 
 	{
-		std::string szString;
-		NStr::UnicodeToUTF8( &szString, data );
+		const std::string szString = WideToUTF8( data );
 		checked_cast<CXMLElement*>(pCurrNode)->SetText( szString );
 		return true;
 	}
@@ -826,7 +825,6 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 					std::string szHRef = pAttribute->value.ToString();
 					if ( !szHRef.empty() )
 					{
-						NStr::UTF8ToMBCS( &szHRef, szHRef );
 						if ( szHRef[0] == '/' || szHRef[0] == '\\' )
 							*pData = szHRef.c_str() + 1;
 						else
@@ -839,7 +837,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 			}
 			else if ( const NXml::SXmlAttribute *pAttribute = pReadNode->GetAttribute( attrName ) )
 			{
-				NStr::UTF8ToMBCS( pData, pAttribute->value.ToString() );
+				*pData = pAttribute->value.ToString();
 				return true;
 			}
 		}
@@ -848,8 +846,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 	{
 		if ( pCurrNode )
 		{
-			std::string szVal;
-			NStr::MBCSToUTF8( &szVal, *pData );
+			const std::string szVal = *pData;
 			if ( strcmp(attrName, HREF_ATTRIBUTE_NAME) == 0 )
 				checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, "/" + szVal );
 			else
@@ -868,7 +865,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::wstring *pData 
 		{
 			if ( const NXml::SXmlAttribute *pAttribute = pReadNode->GetAttribute(attrName) )
 			{
-				NStr::UTF8ToUnicode( pData, pAttribute->value.ToString() );
+				*pData = UTF8ToWide( pAttribute->value.ToString() );
 				return true;
 			}
 		}
@@ -877,8 +874,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::wstring *pData 
 	{
 		if ( pCurrNode )
 		{
-			std::string szRes;
-			NStr::UnicodeToUTF8( &szRes, *pData );
+			const std::string szRes = WideToUTF8( *pData );
 			checked_cast<CXMLElement*>(pCurrNode)->SetAttribute( attrName, szRes );
 		}
 	}

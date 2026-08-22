@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/unicode.h"
+
 #include "Db.h"
 #include "StructMetaInfo.h"
 #include "Bind.h"
@@ -389,7 +391,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 		{
 			const NXml::SXmlAttribute *pAttr = *itAttribute;
 			std::wstring wszUnicodeAttribute;
-			NStr::UTF8ToUnicode( &wszUnicodeAttribute, pAttr->value.ToString() );
+			wszUnicodeAttribute = UTF8ToWide( pAttr->value.ToString() );
 			pBind->SetAttribute( pAttr->name.ToString(), wszUnicodeAttribute );
 		}
 	}
@@ -529,7 +531,7 @@ void CEditorDatabase::SaveChanges()
 				for ( NBind::CAttributesList::const_iterator itAttribute = attributes.begin(); itAttribute != attributes.end(); ++itAttribute )
 				{
 					std::string szUTF8Attribute;
-					NStr::UnicodeToUTF8( &szUTF8Attribute, itAttribute->second );
+					szUTF8Attribute = WideToUTF8( itAttribute->second );
 					pBaseNode->SetAttribute( itAttribute->first, szUTF8Attribute );
 				}
 				xmlDocument.AddChild( pBaseNode );

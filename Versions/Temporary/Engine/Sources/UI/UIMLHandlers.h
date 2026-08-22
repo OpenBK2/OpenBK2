@@ -1,6 +1,8 @@
 #pragma once
 #include "UIML.h"
 
+#include "port/unicode.h"
+
 inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade = 1.0f )
 {
 	NGfx::SPixel8888 sColor;
@@ -186,7 +188,7 @@ public:
 
 				}
 				else if ( wsID.compare( L"face" ) == 0  )
-					NStr::UnicodeToUTF8( &sState.sFont.szName, wsParam );
+					sState.sFont.szName = WideToUTF8( wsParam );
 				else if ( wsID.compare( L"outlinesize" ) == 0  )
 					sState.nOutlineBorder = _wtol( wsParam.c_str() );
 				else if ( wsID.compare( L"outlinecolor" ) == 0  )

@@ -2,6 +2,8 @@
 //#include "Commands.h"
 #include "LogStream.h"
 
+#include "port/unicode.h"
+
 int nID = 0;
 bool bConsoleUpdated = false;
 std::list<SConsoleLine> consoleLines;
@@ -62,17 +64,10 @@ CLogStream& CLogStream::operator<< ( const double &dVal )
 
 CLogStream& CLogStream::operator<< ( const char* szText )
 {
-	int nLen = 0;
-	wchar_t wszText[1024];
-	
+	// same overrun as the two in Logger.cpp: wchar_t[1024] handed to
+	// MultiByteToWideChar as its own size, then indexed at the result
 	bConsoleUpdated = true;
-	nLen = MultiByteToWideChar( CP_ACP, 0, szText, strlen( szText ), wszText, 1024 );
-
-	if ( nLen > 0 )
-	{
-		wszText[nLen] = 0;
-		*this << std::wstring( wszText );
-	}
+	*this << UTF8ToWide( szText );
 
 	return *this;
 }

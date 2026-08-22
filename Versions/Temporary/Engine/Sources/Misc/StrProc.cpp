@@ -12,8 +12,6 @@
 namespace NStr 
 {
 
-static int gs_nCodePage = GetACP();
-
 // разделить строку на массив строк по заданному разделителю
 template <class T1>
 static void SplitStringT( const std::basic_string<T1> &szString, std::vector< std::basic_string<T1> > *pVector, const T1 tSeparator )
@@ -285,105 +283,6 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 	if ( pnSize ) 
 		*pnSize = int( pData - (uint8_t*)pBuffer );
 	return pBuffer;
-}
-
-// ************************************************************************************************************************ //
-// **
-// ** перевод Unicode <=> UTF-8
-// ** bytes | bits | representation
-// **     1 |    7 | 0vvvvvvv
-// **     2 |   11 | 110vvvvv 10vvvvvv
-// **     3 |   16 | 1110vvvv 10vvvvvv 10vvvvvv
-// **     4 |   21 | 11110vvv 10vvvvvv 10vvvvvv 10vvvvvv
-// **
-// ************************************************************************************************************************ //
-
-void UnicodeToUTF8( std::string *pRes, const std::wstring &szString )
-{
-	pRes->resize( 0 );
-	pRes->reserve( szString.size() * 2 );
-	for ( std::wstring::const_iterator it = szString.begin(); it != szString.end(); ++it )
-	{
-		const wchar_t chr = *it;
-		if ( chr < 0x80 )
-			*pRes += ( chr );
-		else if ( chr < 0x800 ) 
-		{
-			*pRes += ( 0xC0 | chr>>6 );
-			*pRes += ( 0x80 | chr & 0x3F );
-		}
-		else
-		{
-			*pRes += ( 0xE0 | chr>>12 );
-			*pRes += ( 0x80 | chr>>6 & 0x3F );
-			*pRes += ( 0x80 | chr & 0x3F );
-		}
-	}
-}
-void UTF8ToUnicode( std::wstring *pRes, const std::string &szString )
-{
-	pRes->resize( 0 );
-	pRes->reserve( szString.size() );
-	std::string::const_iterator it = szString.begin();
-	while ( it != szString.end() ) 
-	{
-		uint8_t chr = uint8_t( *it );
-		if ( (chr & 0x80) == 0 ) 
-			*pRes += chr;
-		else if ( (chr & 0xe0) == 0xc0 )	// check first 3 bits ( wchar < 0x800 )
-		{
-			wchar_t res = (chr & 0x1f) << 6;
-			++it;
-			chr = uint8_t( *it );
-			res |= ( chr & 0x3f );
-			*pRes += res;
-		}
-		else if ( (*it & 0xf0) == 0xe0 ) 	// check first 4 bits ( wchar < 0xffff )
-		{
-			wchar_t res = ( chr & 0x0f ) << 12;
-			++it;
-			chr = uint8_t( *it );
-			res |= ( chr & 0x3f ) << 6;
-			++it;
-			chr = uint8_t( *it );
-			res |= chr & 0x3f;
-			*pRes += res;
-		}
-		++it;
-	}
-}
-
-// перевод MBCS <=> Unicode
-void SetCodePage( const int nCodePage )
-{
-	gs_nCodePage = nCodePage;
-}
-void ToMBCS( std::string *pRes, const std::wstring &szSrc )
-{
-	const int nBuffLen = szSrc.length()*2 + 10;
-	pRes->resize( nBuffLen );
-	const int nLength = WideCharToMultiByte( gs_nCodePage, 0, szSrc.c_str(), szSrc.length(), &((*pRes)[0]), nBuffLen, 0, 0 );
-	pRes->resize( nLength );
-}
-void ToUnicode( std::wstring *pRes, const std::string &szSrc )
-{
-	const int nBuffLen = szSrc.length() + 3;
-	pRes->resize( nBuffLen );
-	const int nLength = MultiByteToWideChar( gs_nCodePage, 0, szSrc.c_str(), szSrc.length(), &((*pRes)[0]), nBuffLen );
-	pRes->resize( nLength );
-}
-
-void UTF8ToMBCS( std::string *pRes, const std::string &szSrc )
-{
-	std::wstring wszTemp;
-	UTF8ToUnicode( &wszTemp, szSrc );
-	ToMBCS( pRes, wszTemp );
-}
-void MBCSToUTF8( std::string *pRes, const std::string &szSrc )
-{
-	std::wstring wszTemp;
-	ToUnicode( &wszTemp, szSrc );
-	UnicodeToUTF8( pRes, wszTemp );
 }
 
 }; // end of namespace NStr

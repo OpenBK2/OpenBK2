@@ -153,7 +153,6 @@ bool CFontInfo::LoadFontInfo( const SSourceParams &_source, std::vector<uint16_t
 		CHARSETINFO cs;
 		TranslateCharsetInfo( (unsigned long*)source.dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
-		NStr::SetCodePage( cs.ciACP );
 		// form string
 		std::string szCharacters;
 		szCharacters.resize( pChars->size() );

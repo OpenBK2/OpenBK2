@@ -7,6 +7,8 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "System/FilePath.h"
 
+#include "port/unicode.h"
+
 #include <cstdint>
 
 #define NUM_SYSTEM_CHUNKS 1
@@ -111,7 +113,7 @@ void VariantToString( string *pString, const CVariant &variant, EPCIEType ePCITy
 		break;
 
 	case CVariant::VT_WSTR:
-		NStr::UnicodeToUTF8( pString, variant.GetWStr() );
+		*pString = WideToUTF8( variant.GetWStr() );
 		if ( bConvertSysChars )
 			ConvertXMLSysChars( pString );
 		break;
@@ -359,14 +361,8 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 											fclose( txtfile );
 										}
 									}
-									// convert MBCS string to UTF-8 one
-									if ( (pDesc->szTypeRename == "wstring") || 
-										   (szTypeName == "Text" && szFullFieldName == "Original") )
-									{
-										wstring wszUnicodeValue;
-										NStr::ToUnicode( &wszUnicodeValue, szValue );
-										NStr::UnicodeToUTF8( &szValue, wszUnicodeValue );
-									}
+									// the narrow encoding is UTF-8 already, so the round trip
+									// through wide that used to happen here is the identity
 									// convert type-rename int and uint32_t to int value before saving
 									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "uint32_t" )
 									{

@@ -75,12 +75,12 @@ void STypeString::FromString( CVariant *pRes, const std::string &szValue ) const
 
 void STypeWString::ToString( std::string *pRes, const CVariant &value ) const
 {
-	NStr::UnicodeToUTF8( pRes, value.GetWStr() );
+	*pRes = WideToUTF8( value.GetWStr() );
 }
 void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) const
 {
 	std::wstring wszRes;
-	NStr::UTF8ToUnicode( &wszRes, szValue );
+	wszRes = UTF8ToWide( szValue );
 	*pRes = wszRes;
 }
 

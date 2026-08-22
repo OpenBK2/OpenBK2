@@ -7,6 +7,8 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
 
+#include "port/unicode.h"
+
 #include <cstdint>
 
 const char CPCStringDirRefEditor::FOLDER_PATH_LABEL[] = "_FOLDER_";
@@ -114,16 +116,15 @@ void CPCStringDirRefEditor::OnBrowse()
 	
 			if ( SUCCEEDED( hResult ) )
 			{
-				OLECHAR olePath[_MAX_PATH];
-				::ZeroMemory( olePath, sizeof( olePath ) );
-
 				LPITEMIDLIST pidl = NULL;
 				uint32_t dwEaten   = 0;
 				uint32_t dwAttribs = 0;
 
-				::MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szInitialDir.c_str(), -1, olePath, _MAX_PATH );
+				// no _MAX_PATH buffer to overflow, and no silent truncation of
+				// a longer path either
+				std::wstring wszPath = UTF8ToWide( szInitialDir );
 
-				hResult = pShellFolder->ParseDisplayName( NULL, NULL, olePath, &dwEaten, &pidl, &dwAttribs );
+				hResult = pShellFolder->ParseDisplayName( NULL, NULL, &wszPath[0], &dwEaten, &pidl, &dwAttribs );
 
 				if( SUCCEEDED( hResult ) )
 				{

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Logger.h"
 
+#include "port/unicode.h"
+
 namespace NLog
 {
 
@@ -24,13 +26,12 @@ public:
 	{
 		if ( FILE *f = fopen(szFullFileName.c_str(), "a") )
 		{
-			char szBuffer[1024];
-			int nLength = WideCharToMultiByte( GetACP(), 0, wszString.c_str(), wszString.length(), szBuffer, 1024, 0, 0 );
-			if ( nLength > 0 )
-			{
-				szBuffer[nLength] = 0;
-				fprintf( f, szBuffer );
-			}
+			// the buffer this used to fill was char[1024] and was passed to
+			// WideCharToMultiByte as its own size, so a line of exactly 1024
+			// bytes put the terminator one past the end. The %s is not
+			// decoration either: the line was the format string.
+			const std::string szLine = WideToUTF8( wszString );
+			fprintf( f, "%s", szLine.c_str() );
 			fclose( f );
 		}
 	}
@@ -42,14 +43,15 @@ class CDebugDumper : public ILogDumper
 	OBJECT_BASIC_METHODS( CDebugDumper );
 	void Dump( const std::wstring &wszString )
 	{
-		char szBuffer[1024];
-		int nLength = WideCharToMultiByte( GetACP(), 0, wszString.c_str(), wszString.length(), szBuffer, 1024, 0, 0 );
-		if ( nLength > 0 )
+		// no conversion at all now, and no buffer to overrun: the debugger
+		// takes wide text directly
+		if ( wszString.empty() || wszString[wszString.size() - 1] != L'\n' )
 		{
-			if ( szBuffer[nLength - 1] != '\n' )
-				szBuffer[nLength++] = '\n';
-			szBuffer[nLength] = 0;
-			OutputDebugString( szBuffer );
+			OutputDebugStringW( ( wszString + L'\n' ).c_str() );
+		}
+		else
+		{
+			OutputDebugStringW( wszString.c_str() );
 		}
 	}
 };
@@ -100,13 +102,7 @@ CLogger &CLogger::operator<<( const double fVal )
 
 CLogger &CLogger::operator<<( const char cVal )
 {
-	wchar_t wszText[8];
-	int nLength = MultiByteToWideChar( GetACP(), 0, &cVal, 1, wszText, 8 );
-	if ( nLength > 0 )
-	{
-		wszText[nLength] = 0;
-		wszLogBuffer += wszText;
-	}
+	wszLogBuffer += UTF8ToWide( std::string( 1, cVal ) );
 	return *this;
 }
 CLogger &CLogger::operator<<( const wchar_t wcVal )
@@ -117,15 +113,9 @@ CLogger &CLogger::operator<<( const wchar_t wcVal )
 
 CLogger &CLogger::operator<<( const char *pszText )
 {
-	int nLen = 0;
-	wchar_t wszText[1024];
-	nLen = MultiByteToWideChar( GetACP(), 0, pszText, strlen(pszText), wszText, 1024 );
-
-	if ( nLen > 0 )
-	{
-		wszText[nLen] = 0;
-		wszLogBuffer += wszText;
-	}
+	// the wchar_t[1024] this replaces truncated any longer line, and wrote
+	// its terminator one element past the end when the line was exactly 1024
+	wszLogBuffer += UTF8ToWide( pszText );
 
 	return *this;
 }

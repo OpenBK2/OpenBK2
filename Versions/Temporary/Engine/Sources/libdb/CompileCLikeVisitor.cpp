@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/unicode.h"
+
 #include "CompileCLikeVisitor.h"
 #include "Hungarian.h"
 #include "TypeDefType.h"
@@ -192,7 +194,7 @@ CVariant Val2Variant( const NLang::CSimpleValue &value )
 				std::wstring wszValue;
 				NStr::ToUnicode( &wszValue, szValue );
 				std::string szUTFValue;
-				NStr::UnicodeToUTF8( &szUTFValue, wszValue );
+				szUTFValue = WideToUTF8( wszValue );
 
 				return CVariant( szUTFValue );
 			}
@@ -340,7 +342,7 @@ static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pFi
 		if ( attr.find( "comments" ) != attr.end() )
 		{
 			const std::string szDesc = attr["comments"].GetStr();
-			NStr::UTF8ToUnicode( &(pField->wszDesc), szDesc );
+			pField->wszDesc = UTF8ToWide( szDesc );
 			attr.erase( "comments" );
 		}
 
