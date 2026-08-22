@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./executorattackgroup.h"
+#include "ExecutorAttackGroup.h"
 
 #include "GroupLogic.h"
 #include "CommonUnit.h"

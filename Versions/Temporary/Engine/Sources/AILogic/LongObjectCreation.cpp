@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "longobjectcreation.h"
+#include "LongObjectCreation.h"
 #include "UnitsIterators2.h"
 #include "AIUnit.h"
 #include "UnitStates.h"

@@ -2,7 +2,7 @@
 
 #include <thread>
 
-#include "3DMotor/GfxBuffers.h"
+#include "3Dmotor/GfxBuffers.h"
 #include "GBinkPlayer.h"
 #include "System/VFSOperations.h"
 #include "ffmpeg_facade.h"

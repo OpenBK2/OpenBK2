@@ -21,7 +21,7 @@
 #include "Stats_B2_M1/AIAckTypes.h"
 #include "Stats_B2_M1/FeedBackUpdates.h"
 #include "Sound/SoundScene.h"
-#include "Stats_B2_m1/ReinfUpdates.h"
+#include "Stats_B2_M1/ReinfUpdates.h"
 #include "Stats_B2_M1/M1UnitSpecific.h"
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "Sound/MusicSystem.h"

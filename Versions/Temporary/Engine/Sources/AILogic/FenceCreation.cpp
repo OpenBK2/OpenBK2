@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./fencecreation.h"
+#include "FenceCreation.h"
 #include "StaticObjects.h"
 #include "Fence.h"
 #include "Stats_B2_M1/AIUpdates.h"

@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "3dmotor_export.h"
+#include "3Dmotor_export.h"
 
 #include "Misc/Geom.h"
 #include "System/FilePath.h"
@@ -247,7 +247,7 @@ namespace NDb
 		CDBPtr< SModel > pSkyDome;
 		CVec3 vDymanicLightsModifications;
 
-		#include "include_ambientlight.h"
+		#include "include_AmbientLight.h"
 
 		SAmbientLight() :
 			vLightColor( VNULL3 ),

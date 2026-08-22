@@ -8,7 +8,7 @@
 #include "Tools.h"
 #include "UIScreen.h"
 #include "Window.h"
-#include "uiinternal.h"
+#include "UIInternal.h"
 #include "Window.h"
 #include "WindowTooltip.h"
 #include "Misc/PlaneGeometry.h"

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "windowscrollablecontainer.h"
+#include "WindowScrollableContainer.h"
 
 REGISTER_SAVELOAD_CLASS(UI, 0x170AF301, CWindowScrollableContainer)
 

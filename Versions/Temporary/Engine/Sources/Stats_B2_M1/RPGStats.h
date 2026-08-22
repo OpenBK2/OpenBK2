@@ -6,16 +6,16 @@
 
 #include "3Dmotor/DBScene.h"
 #include "AckTypes.h"
-#include "dbpassprofile.h"
-#include "dbplanemanuvers.h"
+#include "DBPassProfile.h"
+#include "DBPlaneManuvers.h"
 #include "Season.h"
-#include "useractions.h"
+#include "UserActions.h"
 #include "3Dmotor/DBScene.h"
-#include "commands_actions.h"
-#include "constructorinfo.h"
+#include "Commands_Actions.h"
+#include "ConstructorInfo.h"
 #include "IconsSet.h"
-#include "prefix_rpgstats.h"
-#include "unittypes.h"
+#include "prefix_RPGStats.h"
+#include "UnitTypes.h"
 #include "System/FilePath.h"
 #include "Common_RTS_AI/AIClasses.h"
 
@@ -167,7 +167,7 @@ namespace NDb
 		CDBPtr< STexture > pAbilityIconTextureForegroundNormal;
 		CDBPtr< STexture > pAbilityIconTextureForegroundDisabled;
 
-		#include "include_unitspecialablitydesc.h"
+		#include "include_UnitSpecialAblityDesc.h"
 
 		SUnitSpecialAblityDesc() :
 			__dwCheckSum( 0 ),
@@ -247,7 +247,7 @@ namespace NDb
 		EObjectVisType eVisType;
 		EObjGameType eGameType;
 
-		#include "include_commonrpgstats.h"
+		#include "include_CommonRPGStats.h"
 
 		SCommonRPGStats() :
 			__dwCheckSum( 0 ),
@@ -271,7 +271,7 @@ namespace NDb
 		std::vector< CDBPtr< SEffect > > sceneEffects;
 		CDBPtr< SComplexSoundDesc > pSoundEffect;
 
-		#include "include_complexeffect.h"
+		#include "include_ComplexEffect.h"
 
 		SComplexEffect() { }
 		//
@@ -331,7 +331,7 @@ namespace NDb
 		std::vector< SAckType > types;
 		int nVoiceNumber;
 
-		#include "include_acksetrpgstats.h"
+		#include "include_AckSetRPGStats.h"
 
 		SAckSetRPGStats() :
 			nVoiceNumber( 0 )
@@ -547,7 +547,7 @@ namespace NDb
 		CDBPtr< SIconsSet > pIconsSet;
 		SIconsSetParams iconsSetParams;
 
-		#include "include_hpobjectrpgstats.h"
+		#include "include_HPObjectRPGStats.h"
 
 		SHPObjectRPGStats() :
 			__dwCheckSum( 0 ),
@@ -605,7 +605,7 @@ namespace NDb
 		bool bDestructableCorpse;
 		CDBPtr< SBurningFuel > pShootOnDestruction;
 
-		#include "include_staticobjectrpgstats.h"
+		#include "include_StaticObjectRPGStats.h"
 
 		SStaticObjectRPGStats() :
 			__dwCheckSum( 0 ),
@@ -770,7 +770,7 @@ namespace NDb
 			float fRelaxTime;
 			CDBPtr< SProjectile > pvisProjectile;
 
-			#include "include_weaponrpgstats_shell.h"
+			#include "include_WeaponRPGStats_Shell.h"
 
 			SShell() :
 				__dwCheckSum( 0 ),
@@ -834,7 +834,7 @@ namespace NDb
 		CDBPtr< SVisObj > pVisObj;
 		NFile::CFilePath szLocalizedNameFileRef;
 
-		#include "include_weaponrpgstats.h"
+		#include "include_WeaponRPGStats.h"
 
 		SWeaponRPGStats() :
 			__dwCheckSum( 0 ),
@@ -876,7 +876,7 @@ namespace NDb
 		float fReloadCost;
 		bool bTargetAAOnly;
 
-		#include "include_basegunrpgstats.h"
+		#include "include_BaseGunRPGStats.h"
 
 		SBaseGunRPGStats() :
 			__dwCheckSum( 0 ),
@@ -1030,7 +1030,7 @@ namespace NDb
 		CDBPtr< SComplexSeasonedEffect > pSeasonedEffectDeath;
 		CDBPtr< SComplexSeasonedEffect > pSeasonedFallEffect;
 
-		#include "include_objectbaserpgstats.h"
+		#include "include_ObjectBaseRPGStats.h"
 
 		SObjectBaseRPGStats() :
 			__dwCheckSum( 0 ),
@@ -1069,7 +1069,7 @@ namespace NDb
 			SByteArray2 visibility;
 			CVec2 vVisOrigin;
 
-			#include "include_terraobjsetrpgstats_segment.h"
+			#include "include_TerraObjSetRPGStats_Segment.h"
 
 			SSegment() :
 				__dwCheckSum( 0 ),
@@ -1087,7 +1087,7 @@ namespace NDb
 		std::vector< int > fronts;
 		std::vector< int > backs;
 
-		#include "include_terraobjsetrpgstats.h"
+		#include "include_TerraObjSetRPGStats.h"
 
 		STerraObjSetRPGStats() :
 			__dwCheckSum( 0 )
@@ -1207,7 +1207,7 @@ namespace NDb
 			bool bStormable;
 			int nDir;
 
-			#include "include_buildingrpgstats_entrance.h"
+			#include "include_BuildingRPGStats_Entrance.h"
 
 			SEntrance() :
 				__dwCheckSum( 0 ),
@@ -1243,7 +1243,7 @@ namespace NDb
 			CDBPtr< SUnitStatsModifier > pSoldierStatsModifier;
 			float fSightMultiplier;
 
-			#include "include_buildingrpgstats_slot.h"
+			#include "include_BuildingRPGStats_Slot.h"
 
 			SSlot() :
 				__dwCheckSum( 0 ),
@@ -1278,7 +1278,7 @@ namespace NDb
 			float fCoverage;
 			CVec2 vPicturePosition;
 
-			#include "include_buildingrpgstats_firepoint.h"
+			#include "include_BuildingRPGStats_FirePoint.h"
 
 			SFirePoint() :
 				__dwCheckSum( 0 ),
@@ -1306,7 +1306,7 @@ namespace NDb
 			float fVerticalAngle;
 			CVec2 vPicturePosition;
 
-			#include "include_buildingrpgstats_directionexplosion.h"
+			#include "include_BuildingRPGStats_DirectionExplosion.h"
 
 			SDirectionExplosion() :
 				__dwCheckSum( 0 ),
@@ -1338,7 +1338,7 @@ namespace NDb
 		CDBPtr< SArmorPattern > pArmorPattern;
 		float fDamageCoeff;
 
-		#include "include_buildingrpgstats.h"
+		#include "include_BuildingRPGStats.h"
 
 		SBuildingRPGStats() :
 			__dwCheckSum( 0 ),
@@ -1396,7 +1396,7 @@ namespace NDb
 			CDBPtr< SVisObj > pVisObj;
 			int nFrameIndex;
 
-			#include "include_bridgerpgstats_segmentrpgstats.h"
+			#include "include_BridgeRPGStats_SegmentRPGStats.h"
 
 			SSegmentRPGStats() :
 				__dwCheckSum( 0 ),
@@ -1474,7 +1474,7 @@ namespace NDb
 			std::string szFireEffect;
 			CVec2 vPicturePosition;
 
-			#include "include_bridgerpgstats_firepoint.h"
+			#include "include_BridgeRPGStats_FirePoint.h"
 
 			SBridgeFirePoint() :
 				__dwCheckSum( 0 ),
@@ -1502,7 +1502,7 @@ namespace NDb
 			std::string szFireEffect;
 			CVec2 vPicturePosition;
 
-			#include "include_bridgerpgstats_directionexplosion.h"
+			#include "include_BridgeRPGStats_DirectionExplosion.h"
 
 			SBridgeDirectionExplosion() :
 				__dwCheckSum( 0 ),
@@ -1576,7 +1576,7 @@ namespace NDb
 		std::string szDirExplosionEffect;
 		float fSightMultiplier;
 
-		#include "include_bridgerpgstats.h"
+		#include "include_BridgeRPGStats.h"
 
 		SBridgeRPGStats() :
 			__dwCheckSum( 0 ),
@@ -1623,7 +1623,7 @@ namespace NDb
 			std::vector< CVec2 > fireplaces;
 			EEntrenchSegmType eType;
 
-			#include "include_entrenchmentrpgstats_segmentrpgstats.h"
+			#include "include_EntrenchmentRPGStats_SegmentRPGStats.h"
 
 			SEntrenchSegmentRPGStats() :
 				__dwCheckSum( 0 ),
@@ -1646,7 +1646,7 @@ namespace NDb
 		std::vector< int > arcs;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
 
-		#include "include_entrenchmentrpgstats.h"
+		#include "include_EntrenchmentRPGStats.h"
 
 		SEntrenchmentRPGStats() :
 			__dwCheckSum( 0 )
@@ -1703,7 +1703,7 @@ namespace NDb
 			CVec2 vVisOrigin;
 			int nSpriteIndex;
 
-			#include "include_fencerpgstats_segmentrpgstats.h"
+			#include "include_FenceRPGStats_SegmentRPGStats.h"
 
 			SFenceSegmentRPGStats() :
 				__dwCheckSum( 0 ),
@@ -1772,7 +1772,7 @@ namespace NDb
 		SSegments destroyedSegments;
 		float fFenceHeight;
 
-		#include "include_fencerpgstats.h"
+		#include "include_FenceRPGStats.h"
 
 		SFenceRPGStats() :
 			__dwCheckSum( 0 ),
@@ -1890,7 +1890,7 @@ namespace NDb
 		CUserActions availUserExposures;
 		std::vector< CDBPtr< SUnitSpecialAblityDesc > > specialAbilities;
 
-		#include "include_unitbaserpgstats_actions.h"
+		#include "include_UnitBaseRPGStats_Actions.h"
 
 		SUnitActions() :
 			__dwCheckSum( 0 )
@@ -2006,7 +2006,7 @@ namespace NDb
 			CVec2 vCenter;
 			CVec2 vHalfSize;
 
-			#include "include_unitbaserpgstats_aabbdesc.h"
+			#include "include_UnitBaseRPGStats_AABBDesc.h"
 
 			SAABBDesc() :
 				__dwCheckSum( 0 ),
@@ -2055,7 +2055,7 @@ namespace NDb
 		CDBPtr< SArmorPattern > pArmorPattern;
 		float fExpPrice;
 
-		#include "include_unitbaserpgstats.h"
+		#include "include_UnitBaseRPGStats.h"
 
 		SUnitBaseRPGStats() :
 			__dwCheckSum( 0 ),
@@ -2167,7 +2167,7 @@ namespace NDb
 		float fArmor;
 		std::string szGunBoneName;
 
-		#include "include_infantryrpgstats.h"
+		#include "include_InfantryRPGStats.h"
 
 		SInfantryRPGStats() :
 			__dwCheckSum( 0 ),
@@ -2312,7 +2312,7 @@ namespace NDb
 			float fMin;
 			float fMax;
 
-			#include "include_mechunitrpgstats_constraint.h"
+			#include "include_MechUnitRPGStats_Constraint.h"
 
 			SConstraint() :
 				__dwCheckSum( 0 ),
@@ -2346,7 +2346,7 @@ namespace NDb
 			int nParentPlatform;
 			std::vector< SMechUnitGun > guns;
 
-			#include "include_mechunitrpgstats_platform.h"
+			#include "include_MechUnitRPGStats_Platform.h"
 
 			SPlatform() :
 				__dwCheckSum( 0 ),
@@ -2374,7 +2374,7 @@ namespace NDb
 			float fMin;
 			float fMax;
 
-			#include "include_mechunitrpgstats_armor.h"
+			#include "include_MechUnitRPGStats_Armor.h"
 
 			SArmor() :
 				__dwCheckSum( 0 ),
@@ -2572,7 +2572,7 @@ namespace NDb
 		CDBPtr< SAmphibianStats > amphibianStats;
 		CDBPtr< SUnitStatsModifier > pAntiAviationModifier; // Temporarily applied only while firing at aviation targets.
 
-		#include "include_mechunitrpgstats.h"
+		#include "include_MechUnitRPGStats.h"
 
 		SMechUnitRPGStats() :
 			__dwCheckSum( 0 ),
@@ -2714,7 +2714,7 @@ namespace NDb
 				CVec2 vPos;
 				float fDir;
 
-				#include "include_squadrpgstats_formation_entry.h"
+				#include "include_SquadRPGStats_Formation_Entry.h"
 
 				SEntry() :
 					__dwCheckSum( 0 ),
@@ -2749,7 +2749,7 @@ namespace NDb
 			float fCoverBonus;
 			float fVisibleBonus;
 
-			#include "include_squadrpgstats_formation.h"
+			#include "include_SquadRPGStats_Formation.h"
 
 			SFormation() :
 				__dwCheckSum( 0 ),
@@ -2781,7 +2781,7 @@ namespace NDb
 		float fReinforcementPrice;
 		float fEntrenchCover;
 
-		#include "include_squadrpgstats.h"
+		#include "include_SquadRPGStats.h"
 
 		SSquadRPGStats() :
 			__dwCheckSum( 0 ),
@@ -3072,7 +3072,7 @@ namespace NDb
 		EReinforcementType eDBType;
 		std::vector< SLevel > levels;
 
-		#include "include_aiexplevel.h"
+		#include "include_AIExpLevel.h"
 
 		SAIExpLevel() :
 			__dwCheckSum( 0 ),
@@ -3106,7 +3106,7 @@ namespace NDb
 			float fMultBonus;
 			int nZeroCount;
 
-			#include "include_unitstatsmodifier_parametermodifier.h"
+			#include "include_UnitStatsModifier_ParameterModifier.h"
 
 			SParameterModifier() :
 				__dwCheckSum( 0 ),
@@ -3139,7 +3139,7 @@ namespace NDb
 		SParameterModifier weaponArea2;
 		SParameterModifier cover;
 
-		#include "include_unitstatsmodifier.h"
+		#include "include_UnitStatsModifier.h"
 
 		SUnitStatsModifier() :
 			__dwCheckSum( 0 )

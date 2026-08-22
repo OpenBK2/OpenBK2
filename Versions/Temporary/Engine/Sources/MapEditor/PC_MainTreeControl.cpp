@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "wmdefines.h"
-#include "pc_constants.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "pc_maintreecontrol.h"
-#include "pc_dblinkdialog.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "WMDefines.h"
+#include "PC_Constants.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "PC_MainTreeControl.h"
+#include "PC_DBLinkDialog.h"
 
 #include "PC_MainTreeControl.h"
 

@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "SceneB2/dbsceneconsts.h"
+#include "SceneB2/DBSceneConsts.h"
 
 #include <cstdint>
 

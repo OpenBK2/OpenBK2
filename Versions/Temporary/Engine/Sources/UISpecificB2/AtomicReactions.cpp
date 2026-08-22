@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "atomicreactions.h"
+#include "AtomicReactions.h"
 
 #include "Input/Bind.h"
 

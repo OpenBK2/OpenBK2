@@ -5,7 +5,7 @@
 #include "Index.h"
 #include "libdb/TypeDef.h"
 #include "System/VFS.h"
-#include "System/xmlreader.h"
+#include "System/XMLReader.h"
 #include "Misc/Win32Helper.h"
 
 #include "port/time.h"

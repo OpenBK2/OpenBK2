@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/dbmapinfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "AIGeneralTypes.h"
 
 #include <zconf.h>

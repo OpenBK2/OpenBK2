@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "objectprofile.h"
+#include "ObjectProfile.h"
 #include "System/Time.h"
 #include "AIUnit.h"
 #include "AllowFakeObjToCrushExecutor.h"

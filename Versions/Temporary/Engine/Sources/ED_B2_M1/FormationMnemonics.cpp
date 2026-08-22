@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 #include "FormationMnemonics.h"
 
 #include <zconf.h>

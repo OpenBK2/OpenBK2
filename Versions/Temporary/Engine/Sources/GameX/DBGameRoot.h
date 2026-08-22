@@ -2,10 +2,10 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/RPGStats.h"
-#include "stats_b2_m1/uientries.h"
-#include "dbscenario.h"
-#include "UI/dbuserinterface.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/UIEntries.h"
+#include "DBScenario.h"
+#include "UI/DBUserInterface.h"
 #include "System/FilePath.h"
 
 #include <cstdint>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "statsystem.h"
+#include "StatSystem.h"
 
 #include <cstdint>
 

@@ -4,7 +4,7 @@
 #include "System/BasicShare.h"
 //#include "GFileSkin.h"
 //#include "PrecalcSpheres.h"
-#include "aiGeometryFormat.h"
+#include "AIGeometryFormat.h"
 #include "GAnimFormat.h"
 #include "vendor/granny/include/granny.h"
 #include "DBScene.h"

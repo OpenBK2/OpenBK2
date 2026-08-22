@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
-#include "libdb/manipulator.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "libdb/Manipulator.h"
 #include "MapEditorLib/MultiInputState.h"
 #include "MapInfoStoreInputState.h"
 #include "Tools_SceneDraw.h"

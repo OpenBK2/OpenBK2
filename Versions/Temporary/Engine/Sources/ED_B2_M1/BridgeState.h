@@ -1,7 +1,7 @@
 
 #pragma once
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
 #include "BridgeInfoData.h"
 #include "MapObjectState.h"

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "scintilla/Platform.h"
+#include "Scintilla/Platform.h"
 #include "LuaEditor.h"
 
 #include "Scintilla/SciLexer.h"

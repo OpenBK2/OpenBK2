@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "checksumsaver.h"
+#include "ChecksumSaver.h"
 
-#include "CheckSums.h"
+#include "Checksums.h"
 #include "System/CheckSumLog.h"
 
 #include <cstdint>

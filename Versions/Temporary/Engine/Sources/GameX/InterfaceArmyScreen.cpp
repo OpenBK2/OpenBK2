@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "stats_b2_m1/actioncommand.h"
+#include "Stats_B2_M1/ActionCommand.h"
 #include "InterfaceArmyScreen.h"
 #include "GameXClassIDs.h"
 #include "Misc/StrProc.h"

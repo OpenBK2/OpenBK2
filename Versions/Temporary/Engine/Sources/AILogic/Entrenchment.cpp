@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Misc/bresenham.h"
+#include "Misc/Bresenham.h"
 #include "System/Time.h"
 #include "Entrenchment.h"
 #include "Soldier.h"

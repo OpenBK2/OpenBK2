@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./executorstaticobjectsegment.h"
+#include "ExecutorStaticObjectSegment.h"
 #include "StaticObject.h"
 
 #include "AILogic_export.h"

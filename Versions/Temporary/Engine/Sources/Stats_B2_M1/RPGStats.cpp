@@ -9,9 +9,9 @@
 #include "AnimationType.h"
 #include "DBAnimB2.h"
 #include "DBVisObj.h"
-#include "include_infantryrpgstats_cpp.h"
-#include "include_mechunitrpgstats_cpp.h"
-#include "include_unitbaserpgstats_cpp.h"
+#include "include_InfantryRPGStats_cpp.h"
+#include "include_MechUnitRPGStats_cpp.h"
+#include "include_UnitBaseRPGStats_cpp.h"
 
 #include "Stats_B2_M1_export.h"
 

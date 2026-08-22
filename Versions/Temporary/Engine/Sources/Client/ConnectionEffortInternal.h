@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Net/netaddress.h"
+#include "Net/NetAddress.h"
 #include "ConnectionEffort.h"
 
 class CNet;

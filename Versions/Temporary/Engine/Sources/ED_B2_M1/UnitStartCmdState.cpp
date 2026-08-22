@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "UnitStartCmdState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 

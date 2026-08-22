@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
-#include "dbmpconsts.h"
+#include "DBMPConsts.h"
 #include "ScenarioTracker.h"
 #include "Misc/HashFuncs.h"
 

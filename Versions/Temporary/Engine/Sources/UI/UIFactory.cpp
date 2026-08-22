@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "uifactory.h"
+#include "UIFactory.h"
 
 #include "IMessageReaction.h"
 #include "3Dmotor/RectLayout.h"

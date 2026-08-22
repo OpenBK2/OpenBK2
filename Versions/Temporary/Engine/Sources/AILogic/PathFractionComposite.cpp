@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./pathfractioncomposite.h"
+#include "PathFractionComposite.h"
 #include "IPlane.h"
 #include "DebugTools/DebugInfoManager.h"
 

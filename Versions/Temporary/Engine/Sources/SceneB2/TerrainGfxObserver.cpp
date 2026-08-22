@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "b2_m1_terrain/dbterrain.h"
-#include "terraingfxinfo.h"
+#include "B2_M1_Terrain/DBTerrain.h"
+#include "TerrainGfxInfo.h"
 #include "Terrain.h"
 #include "3Dmotor/GView.h"
 #include "System/Commands.h"

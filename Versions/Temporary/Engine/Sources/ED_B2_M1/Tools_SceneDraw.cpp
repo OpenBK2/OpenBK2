@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "mapeditorlib/tools_hashset.h"
+#include "MapEditorLib/Tools_HashSet.h"
 #include "Tools_SceneDraw.h"
 #include "Stats_B2_M1/AnimModes.h"
 

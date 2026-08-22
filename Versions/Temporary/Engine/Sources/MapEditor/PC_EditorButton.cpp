@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"
-#include "wmdefines.h"
-#include "pc_constants.h"
+#include "WMDefines.h"
+#include "PC_Constants.h"
 #include "PC_EditorButton.h"
 
 CPCEditorButton::CPCEditorButton() : pwndTargetWindow( 0 ), pwndNextWindow( 0 ), pwndPreviousWindow( 0 )

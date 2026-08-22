@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "grendermodes.h"
+#include "GRenderModes.h"
 #include "GRenderPathTnl.h"
 #include "GRenderLight.h"
 #include "GTransparent.h"

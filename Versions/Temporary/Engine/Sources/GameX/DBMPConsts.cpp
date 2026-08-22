@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbmpconsts.h"
+#include "DBMPConsts.h"
 
 #include "GameX_export.h"
 

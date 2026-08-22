@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "commandhandlerdefines.h"
+#include "CommandHandlerDefines.h"
 #include "StringResources.h"
 #include "ScriptAreaWindow.h"
 

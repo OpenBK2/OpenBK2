@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "wmdefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "WMDefines.h"
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"
 #include "PC_BuildDataDialog.h"

@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "3Dmotor/rectlayout.h"
-#include "backgroundsimplescallingtexture.h"
+#include "3Dmotor/RectLayout.h"
+#include "BackgroundSimpleScallingTexture.h"
 #include "UIVisitor.h"
 #include "3Dmotor/DBScene.h"
 #include "UIComponents.h"

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "soundcell.h"
+#include "SoundCell.h"
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
 

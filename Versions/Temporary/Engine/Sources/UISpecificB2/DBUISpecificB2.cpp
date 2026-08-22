@@ -4,8 +4,8 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbuispecificb2.h"
-#include "dbuispecificcpp.h"
+#include "DBUISpecificB2.h"
+#include "DBUISpecificCpp.h"
 
 #include "UISpecificB2_export.h"
 

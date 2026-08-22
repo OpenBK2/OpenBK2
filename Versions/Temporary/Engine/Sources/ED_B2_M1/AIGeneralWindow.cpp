@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "commandhandlerdefines.h"
-#include "stringresources.h"
-#include "aigeneraltypes.h"
+#include "CommandHandlerDefines.h"
+#include "StringResources.h"
+#include "AIGeneralTypes.h"
 #include "AIGeneralWindow.h"
 
 #include <cstdint>

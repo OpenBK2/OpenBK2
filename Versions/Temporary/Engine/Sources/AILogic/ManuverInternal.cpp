@@ -9,7 +9,7 @@
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "System/FastMath.h"
 #include "System/RandomGen.h"
-#include "Stats_b2_m1/DBPlaneManuvers.h"
+#include "Stats_B2_M1/DBPlaneManuvers.h"
 #include "System/Commands.h"
 
 #include "AILogic_export.h"

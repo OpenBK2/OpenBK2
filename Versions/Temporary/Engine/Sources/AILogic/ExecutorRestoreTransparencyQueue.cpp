@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./executorrestoretransparencyqueue.h"
+#include "ExecutorRestoreTransparencyQueue.h"
 #include "StaticObject.h"
 #include "ExecutorContainer.h"
 #include "StaticObjectsIters.h"

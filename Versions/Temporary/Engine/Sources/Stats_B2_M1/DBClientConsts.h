@@ -3,9 +3,9 @@
 // automatically generated file, don't change manually!
 
 #include "AckTypes.h"
-#include "m1actions.h"
+#include "M1Actions.h"
 #include "RPGStats.h"
-#include "useractions.h"
+#include "UserActions.h"
 #include "System/FilePath.h"
 
 #include <cstdint>

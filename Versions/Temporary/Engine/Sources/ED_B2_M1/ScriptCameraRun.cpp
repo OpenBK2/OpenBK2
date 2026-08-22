@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "ScriptCameraRun.h"
-#include "./scriptcamerarun.h"
+#include "ScriptCameraRun.h"
 
 //
 //

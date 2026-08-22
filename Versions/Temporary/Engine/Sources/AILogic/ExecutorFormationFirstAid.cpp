@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "executorformationfirstaid.h"
+#include "ExecutorFormationFirstAid.h"
 #include "GroupLogic.h"
 #include "Formation.h"
 #include "Commands.h"

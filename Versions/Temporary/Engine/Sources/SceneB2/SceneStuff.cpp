@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "3Dmotor/Gfx.h"
 #include "3Dmotor/G2DView.h"
 #include "Main/GameTimer.h"

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./executorsnipercamouflage.h"
+#include "ExecutorSniperCamouflage.h"
 #include "Soldier.h"
 #include "UnitsIterators2.h"
 #include "NewUpdater.h"

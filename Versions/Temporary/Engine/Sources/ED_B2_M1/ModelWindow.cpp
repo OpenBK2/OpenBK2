@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 #include "ModelWindow.h"
 #include "MapEditorLib/EditParameter.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "Image/ImageColor.h"
-#include "./modelwindow.h"
+#include "ModelWindow.h"
 
 #include <cstdint>
 

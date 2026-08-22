@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "resourcedefines.h"
-#include "commandhandlerdefines.h"
-#include "pc_constants.h"
-#include "pc_dblinkdialog.h"
+#include "ResourceDefines.h"
+#include "CommandHandlerDefines.h"
+#include "PC_Constants.h"
+#include "PC_DBLinkDialog.h"
 
 #include "PC_TextFileEditor.h"
 #include "Misc/StrProc.h"
@@ -15,7 +15,7 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "TextEditorDialog.h"
-#include "Scripteditor.h"
+#include "ScriptEditor.h"
 #include "System/Text.h"
 
 // CPCItemEditor

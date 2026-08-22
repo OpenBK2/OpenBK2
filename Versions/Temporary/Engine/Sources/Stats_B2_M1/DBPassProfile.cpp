@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbpassprofile.h"
+#include "DBPassProfile.h"
 
 #include <cstdint>
 

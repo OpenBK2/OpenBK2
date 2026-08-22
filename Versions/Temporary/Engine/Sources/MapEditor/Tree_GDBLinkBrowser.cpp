@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "wmdefines.h"
-#include "tree_gdbbrowserbase_constants.h"
+#include "WMDefines.h"
+#include "Tree_GDBBrowserBase_Constants.h"
 #include "ResourceDefines.h"
 //#include "afxdlgs.h"
 

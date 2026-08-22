@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "dbminimap.h"
+#include "DBMinimap.h"
 #include "MinimapMnemonics.h"
 
 CMinimapLayerMnemonics::CMinimapLayerMnemonics() : 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "./soundsample.h"
+#include "SoundSample.h"
 #include "DBSoundDesc.h"
 #include "System/VFSOperations.h"
 

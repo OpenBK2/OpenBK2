@@ -3,7 +3,7 @@
 #include "Tools_SceneGeometry.h"
 #include "MapInfoStoreInputState.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "MapEditorLib/Interface_Mainframe.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo )
 {

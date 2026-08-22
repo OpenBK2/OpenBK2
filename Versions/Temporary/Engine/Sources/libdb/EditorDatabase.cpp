@@ -9,7 +9,7 @@
 #include "System/LightXML.h"
 #include "System/XMLReader.h"
 #include "System/VFS.h"
-#include "System/xmlreader.h"
+#include "System/XMLReader.h"
 #include "Logger.h"
 #include "DBWatcherClient.h"
 

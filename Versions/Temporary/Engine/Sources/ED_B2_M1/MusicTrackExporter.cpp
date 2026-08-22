@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./musictrackexporter.h"
+#include "MusicTrackExporter.h"
 
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"

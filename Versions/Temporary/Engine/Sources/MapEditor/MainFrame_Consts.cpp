@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "mapeditorlib/resourcedefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MainFrame.h"
 
 #include <cstdint>

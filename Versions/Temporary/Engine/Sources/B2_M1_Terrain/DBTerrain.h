@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "dbterrainspot.h"
+#include "DBTerrainSpot.h"
 #include "DBVSO.h"
 #include "System/FilePath.h"
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "commandregistratorforscript.h"
+#include "CommandRegistratorForScript.h"
 #include "Scripts.h"
 
 #include <fmt/format.h>

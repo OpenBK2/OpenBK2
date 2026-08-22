@@ -2,8 +2,8 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/dbreinforcements.h"
-#include "stats_b2_m1/RPGStats.h"
+#include "Stats_B2_M1/dbreinforcements.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 #include <cstdint>
 

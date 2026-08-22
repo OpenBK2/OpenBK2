@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Tools_SceneGeometry.h"
 #include "MapEditorLib/Tools_Geometry.h"
 #include "SceneB2/Camera.h"
 #include "EditorScene.h"
-#include "stats_b2_m1/Vis2AI.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 #include <zconf.h>
 

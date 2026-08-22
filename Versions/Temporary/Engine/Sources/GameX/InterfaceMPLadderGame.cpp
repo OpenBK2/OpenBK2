@@ -10,7 +10,7 @@
 #include "DBGameRoot.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "UISpecificB2/DBUIspecificB2.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 #include "GameRoomData.h"
 #include "System/Text.h"
 #include "CustomMissions.h"

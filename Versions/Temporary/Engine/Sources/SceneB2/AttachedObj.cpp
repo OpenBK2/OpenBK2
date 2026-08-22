@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "dbsceneconsts.h"
+#include "DBSceneConsts.h"
 #include "AttachedObj.hpp"
 #include "SceneHoldQueue.h"
-#include "3Dmotor/AIVisitor.h"
+#include "3Dmotor/aiVisitor.h"
 #include "3Dmotor/GScene.h"
 
 #include "Sound/SoundScene.h"

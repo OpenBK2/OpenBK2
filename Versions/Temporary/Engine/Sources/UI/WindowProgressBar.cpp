@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "windowprogressbar.h"
+#include "WindowProgressBar.h"
 
 #include <algorithm>
 

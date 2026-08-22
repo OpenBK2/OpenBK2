@@ -4,7 +4,7 @@
 #include "GfxBuffers.h"
 //#include "..\Misc\HPTimer.h"
 #include <mmintrin.h>
-#include "GSSETransform.h"
+#include "GSSEtransform.h"
 #include "3DLib/Bound.h"
 
 #include "GLightPerVertexKernels.h"

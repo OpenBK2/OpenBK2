@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Misc/bresenham.h"
+#include "Misc/Bresenham.h"
 #include "System/Time.h"
 #include "Stats_B2_M1/AbilityActions.h"
 #include "TechnicsStates.h"

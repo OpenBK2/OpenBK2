@@ -6,7 +6,7 @@
 #include "GScene.h"
 #include "GCombiner.h"
 #include "RadixSort.h"
-#include "GSSETransform.h"
+#include "GSSEtransform.h"
 #include "Misc/HashFuncs.h"
 
 #include <cstdint>

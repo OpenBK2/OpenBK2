@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "terrainsounds.h"
+#include "TerrainSounds.h"
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"
 #include "SoundManager.h"

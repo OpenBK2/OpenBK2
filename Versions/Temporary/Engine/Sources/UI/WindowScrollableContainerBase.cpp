@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "windowscrollablecontainerbase.h"
+#include "WindowScrollableContainerBase.h"
 
 #include "WindowScrollBar.h"
 #include "UIVisitor.h"
-#include "windowsimple.h"
+#include "WindowSimple.h"
 
 #include <fmt/format.h>
 

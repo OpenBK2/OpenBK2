@@ -3,9 +3,9 @@
 #include "B2_M1_World_export.h"
 
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/actioncommand.h"
-#include "stats_b2_m1/specialabilities.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/ActionCommand.h"
+#include "Stats_B2_M1/SpecialAbilities.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "B2MapObj.h"
 #include "Stats_B2_M1/DBVisObj.h"
 #include "UpdatableProcess.h"

@@ -8,7 +8,7 @@
 #include "Guns.h"
 #include "GroupLogic.h"
 #include "UnitCreation.h"
-#include "STaticObjects.h"
+#include "StaticObjects.h"
 #include "Diplomacy.h"
 #include "FeedbackSystem.h"
 

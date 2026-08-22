@@ -4,7 +4,7 @@
 #include "Bind.h"
 #include "EditorDb.h"
 #include "System/LightXML.h"
-#include "System/XmlReader.h"
+#include "System/XMLReader.h"
 #include "System/XmlUtils.h"
 #include "System/FilePath.h"
 

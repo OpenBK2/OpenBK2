@@ -2,8 +2,8 @@
 
 #include "UISpecificB2_export.h"
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "UI/UI.h"
 #include "3Dmotor/Gfx.h"
 #include "Stats_B2_M1/DBNotifications.h"

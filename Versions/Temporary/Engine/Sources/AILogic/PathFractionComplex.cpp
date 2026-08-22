@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./pathfractioncomplex.h"
+#include "PathFractionComplex.h"
 #include "IPlane.h"
 #include "Manuver.h"
 

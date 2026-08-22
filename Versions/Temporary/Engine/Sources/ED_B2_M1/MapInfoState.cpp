@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/commoneditormethods.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "SceneB2/Scene.h"
-#include "mapeditorlib/objectcontroller.h"
-#include "simpleobjectinfodata.h"
+#include "MapEditorLib/ObjectController.h"
+#include "SimpleObjectInfoData.h"
 
 #include "MapEditorLib/DefaultTabWindow.h"
 

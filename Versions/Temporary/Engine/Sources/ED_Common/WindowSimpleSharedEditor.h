@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/DefaultView.h"

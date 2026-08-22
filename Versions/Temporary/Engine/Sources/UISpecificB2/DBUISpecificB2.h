@@ -2,13 +2,13 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/dbmapinfo.h"
-#include "stats_b2_m1/m1actions.h"
-#include "stats_b2_m1/RPGStats.h"
-#include "stats_b2_m1/Season.h"
-#include "stats_b2_m1/useractions.h"
-#include "UI/dbuiconsts.h"
-#include "UI/dbuserinterface.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/M1Actions.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/Season.h"
+#include "Stats_B2_M1/UserActions.h"
+#include "UI/DBUIConsts.h"
+#include "UI/DBUserInterface.h"
 #include "System/FilePath.h"
 
 #include <cstdint>
@@ -29,7 +29,7 @@ namespace NDb
 		EUserAction eAbility;
 		ESpecialAbilityParam eAbilityParam;
 
-		#include "include_arsetspecialability.h"
+		#include "include_ARSetSpecialAbility.h"
 
 		SARSetSpecialAbility() :
 			eAbility( USER_ACTION_UNKNOWN ),
@@ -53,7 +53,7 @@ namespace NDb
 		EUserAction eUserAction;
 		EM1Action eM1UserAction;
 
-		#include "include_arsetforcedaction.h"
+		#include "include_ARSetForcedAction.h"
 
 		SARSetForcedAction() :
 			eUserAction( USER_ACTION_UNKNOWN ),
@@ -464,7 +464,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1508E481 };
 
-		#include "include_windowminimap.h"
+		#include "include_WindowMiniMap.h"
 
 		SWindowMiniMap() { }
 		//
@@ -502,7 +502,7 @@ namespace NDb
 		enum { typeID = 0x110BD480 };
 		CDBPtr< SBackground > pSelectorTexture;
 
-		#include "include_windowselection.h"
+		#include "include_WindowSelection.h"
 
 		SWindowSelection() { }
 		//
@@ -543,7 +543,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x171713C1 };
 
-		#include "include_windowroundprogressbar.h"
+		#include "include_WindowRoundProgressBar.h"
 
 		SWindowRoundProgressBar() { }
 		//
@@ -601,7 +601,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x17176400 };
 
-		#include "include_window3dcontrol.h"
+		#include "include_Window3DControl.h"
 
 		SWindow3DControl() { }
 		//
@@ -654,7 +654,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1717A441 };
 
-		#include "include_windowframesequence.h"
+		#include "include_WindowFrameSequence.h"
 
 		SWindowFrameSequence() { }
 		//
@@ -675,7 +675,7 @@ namespace NDb
 		enum { typeID = 0x11075C03 };
 		CParam<CDBPtr<SComplexSoundDesc> > pSoundToPlay;
 
-		#include "include_uisplaysound.h"
+		#include "include_UISPlaySound.h"
 
 		SUISPlaySound() { }
 		//
@@ -726,7 +726,7 @@ namespace NDb
 		bool bBorder;
 		float fMaxMoveTime;
 
-		#include "include_uisb2move.h"
+		#include "include_UISB2Move.h"
 
 		SUISB2Move() :
 			vOffset( VNULL2 ),
@@ -774,7 +774,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x191B53C1 };
 
-		#include "include_windowpotentiallines.h"
+		#include "include_WindowPotentialLines.h"
 
 		SWindowPotentialLines() { }
 		//
@@ -802,7 +802,7 @@ namespace NDb
 		bool bRandomStartFrame;
 		int nRandomAddTime;
 
-		#include "include_backgroundframesequence.h"
+		#include "include_BackgroundFrameSequence.h"
 
 		SBackgroundFrameSequence() :
 			vFrameSize( VNULL2 ),

@@ -7,7 +7,7 @@
 #include "WindowMessageHandle.h"
 #include "Misc/HashFuncs.h"
 #include "Misc/Heap.h"
-#include "UI/uifactory.h"
+#include "UI/UIFactory.h"
 
 #include <cstdint>
 

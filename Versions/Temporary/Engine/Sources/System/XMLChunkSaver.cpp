@@ -3,7 +3,7 @@
 #include "FilePath.h"
 #include "XMLChunkSaver.h"
 
-#include "XmlReader.h"
+#include "XMLReader.h"
 #include "XmlUtils.h"
 #include "Misc/StrProc.h"
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "wmdefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "WMDefines.h"
 
 #include "libdb/ResourceManager.h"
 #include "SelectTablesDialog.h"

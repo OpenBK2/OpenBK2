@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "interface_commandhandler.h"
+#include "Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 

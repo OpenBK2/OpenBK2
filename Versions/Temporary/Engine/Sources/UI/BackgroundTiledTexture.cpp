@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "backgroundtiledtexture.h"
+#include "BackgroundTiledTexture.h"
 #include "UIVisitor.h"
 #include "UIComponents.h"
 

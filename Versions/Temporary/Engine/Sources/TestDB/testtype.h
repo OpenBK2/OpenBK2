@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "binaryflags.h"
+#include "BinaryFlags.h"
 
 #include <cstdint>
 

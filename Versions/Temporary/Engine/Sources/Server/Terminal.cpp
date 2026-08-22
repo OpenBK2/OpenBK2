@@ -2,7 +2,7 @@
 
 #include "Terminal.h"
 #include "Server_Client_Common/Commands.h"
-#include "Misc/win32helper.h"
+#include "Misc/Win32Helper.h"
 
 #include <chrono>
 #include <cstdint>

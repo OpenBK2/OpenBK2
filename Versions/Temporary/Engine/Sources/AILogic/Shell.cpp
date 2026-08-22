@@ -19,7 +19,7 @@
 //#include "..\Scene\Scene.h"
 #include "SimpleChecksumCalc.h"
 
-#include "Common_RTS_AI/CheckSums.h"
+#include "Common_RTS_AI/Checksums.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 

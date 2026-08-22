@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "pc_constants.h"
+#include "PC_Constants.h"
 #include "PC_BoolComboEditor.h"
 
 // CPCItemEditor

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mapeditorlib/interface_commandhandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Exporter.h"
 
 #include <cstdint>

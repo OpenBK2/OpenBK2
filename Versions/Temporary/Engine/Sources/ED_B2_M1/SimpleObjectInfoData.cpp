@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
-#include "mapeditorlib/multimanipulator.h"
+#include "MapEditorLib/MultiManipulator.h"
 #include "SimpleObjectInfoData.h"
 
 #include "Stats_B2_M1/M1UnitType.h"

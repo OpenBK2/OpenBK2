@@ -1,5 +1,5 @@
 #pragma once
-#include "background.h"
+#include "Background.h"
 #include "IconOutline.h"
 
 // texture draw only part that will fit to background size

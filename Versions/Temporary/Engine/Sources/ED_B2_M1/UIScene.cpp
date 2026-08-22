@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "UI/commandparam.h"
+#include "UI/CommandParam.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "UIScene.hpp"
 #include "ED_Common/UIVisitor.hpp"
 

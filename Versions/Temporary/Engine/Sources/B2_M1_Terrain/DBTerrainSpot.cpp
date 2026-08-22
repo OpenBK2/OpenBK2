@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbterrainspot.h"
+#include "DBTerrainSpot.h"
 
 #include "B2_M1_Terrain_export.h"
 

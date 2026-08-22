@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "grendermodes.h"
+#include "GRenderModes.h"
 #include "GTransparent.h"
 #include "3DLib/Transform.h"
 #include "GfxUtils.h"

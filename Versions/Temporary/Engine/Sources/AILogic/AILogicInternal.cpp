@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "System/Time.h"
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 
 #include "AILogicInternal.h"
 #include "Commands.h"
@@ -62,7 +62,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "FeedbackSystem.h"
 #include "DBAIConsts.h"
 #include "PlayerReinforcement.h"
-#include "Common_RTS_AI/CheckSums.h"
+#include "Common_RTS_AI/Checksums.h"
 #include "Misc/Win32Helper.h"
 #include "Misc/StringConversions.h"
 #include "Input/Bind.h"

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "terraaiobserver.h"
+#include "TerraAIObserver.h"
 #include "EditorAI.h"
 
 

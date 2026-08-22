@@ -1,5 +1,5 @@
 #pragma once
-#include "background.h"
+#include "Background.h"
 #include "3Dmotor/RectLayout.h"
 
 // tiled background. consists of following elements. 

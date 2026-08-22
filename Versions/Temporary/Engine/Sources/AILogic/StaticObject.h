@@ -3,7 +3,7 @@
 #include "LinkObject.h"
 #include "StaticObjectRotation.h"
 #include "Common_RTS_AI/Terrain.h"
-#include "Stats_b2_m1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 #include <cstdint>
 

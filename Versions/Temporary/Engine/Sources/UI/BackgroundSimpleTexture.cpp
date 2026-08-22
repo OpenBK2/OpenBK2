@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "backgroundsimpletexture.h"
+#include "BackgroundSimpleTexture.h"
 #include "UIVisitor.h"
 #include "Tools.h"
 #include "3Dmotor/DBScene.h"

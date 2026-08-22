@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "windowlistctrl.h"
+#include "WindowListCtrl.h"
 #include "InterfaceConsts.h"
 
 #include <fmt/format.h>

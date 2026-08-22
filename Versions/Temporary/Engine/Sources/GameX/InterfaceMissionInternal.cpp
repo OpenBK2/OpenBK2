@@ -7,7 +7,7 @@
 
 #include "UI/UI.h"
 #include "Misc/StrProc.h"
-#include "stats_b2_m1/rpgstatsautomagic.h"
+#include "Stats_B2_M1/RPGStatsAutomagic.h"
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "InterfaceMissionInternal.h"
 #include "InterfaceMisc.h"
@@ -24,7 +24,7 @@
 #include "Transceiver.h"
 #include "SceneB2/Cursor.h"
 #include "Sound/SoundScene.h"
-#include "Sound/musicsystem.h"
+#include "Sound/MusicSystem.h"
 #include "System/Commands.h"
 #include "UI/SceneClassIDs.h"
 #include "UISpecificB2/DBUISpecificB2.h"

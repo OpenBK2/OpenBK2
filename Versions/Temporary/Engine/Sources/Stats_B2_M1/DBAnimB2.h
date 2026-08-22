@@ -3,7 +3,7 @@
 // automatically generated file, don't change manually!
 
 #include "3Dmotor/DBScene.h"
-#include "animationtype.h"
+#include "AnimationType.h"
 
 #include <cstdint>
 

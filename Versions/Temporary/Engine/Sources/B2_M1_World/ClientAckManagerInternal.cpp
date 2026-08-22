@@ -3,7 +3,7 @@
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "DebugAckHelper.hpp"
 #include "MapObj.h"
-#include "clientackmanagerinternal.h"
+#include "ClientAckManagerInternal.h"
 
 #include "Main/GameTimer.h"
 #include "Sound/SoundScene.h"

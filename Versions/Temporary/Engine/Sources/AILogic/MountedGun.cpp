@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "stats_b2_m1/Actions.h"
+#include "Stats_B2_M1/Actions.h"
 #include "MountedGun.h"
 #include "Turret.h"
 #include "Building.h"

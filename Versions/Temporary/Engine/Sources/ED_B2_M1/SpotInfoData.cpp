@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
-#include "mapeditorlib/objectcontroller.h"
+#include "MapEditorLib/ObjectController.h"
 
 #include "SpotInfoData.h"
 #include "MapInfoEditor.h"

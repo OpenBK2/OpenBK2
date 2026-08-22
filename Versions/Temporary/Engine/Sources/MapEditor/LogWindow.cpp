@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "scintilla/scintilla.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "Scintilla/Scintilla.h"
 #include "ResourceDefines.h"
 #include "LogWindow.h"
 

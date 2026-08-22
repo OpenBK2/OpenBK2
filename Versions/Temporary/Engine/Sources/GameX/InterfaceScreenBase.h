@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Input/gamemessage.h"
+#include "Input/GameMessage.h"
 #include "Main/MainLoop.h"
 #include "UISpecificB2/UISpecificB2.h"
 

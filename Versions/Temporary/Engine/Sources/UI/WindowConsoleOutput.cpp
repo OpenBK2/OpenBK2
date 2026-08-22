@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./windowconsoleoutput.h"
+#include "WindowConsoleOutput.h"
 
 #include "UIVisitor.h"
 

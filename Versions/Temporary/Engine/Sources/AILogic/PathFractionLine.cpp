@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./pathfractionline.h"
+#include "PathFractionLine.h"
 
 #include "AILogic_export.h"
 

@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "./underconstructionobject.h"
+#include "UnderConstructionObject.h"
 #include "NewUpdater.h"
 #include "EntrenchmentCreation.h"
 #include "ComplexObstacleCreation.h"
 #include "StaticObject.h"
 #include "Diplomacy.h"
-#include "Stats_B2_m1/ActionCommand.h"
+#include "Stats_B2_M1/ActionCommand.h"
 
 #include <fmt/format.h>
 

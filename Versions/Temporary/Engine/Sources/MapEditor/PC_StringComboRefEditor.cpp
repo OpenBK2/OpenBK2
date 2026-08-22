@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "pc_constants.h"
+#include "PC_Constants.h"
 #include "PC_StringComboRefEditor.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/PCIEMnemonics.h"

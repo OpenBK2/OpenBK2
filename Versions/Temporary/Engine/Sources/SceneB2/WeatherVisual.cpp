@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "3DLib/ggeometry.h"
+#include "3DLib/GGeometry.h"
 #include "WeatherVisual.h"
 #include "Scene.h"
 #include "TerraGen.h"

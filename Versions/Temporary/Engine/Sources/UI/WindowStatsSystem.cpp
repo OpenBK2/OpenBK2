@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./windowstatssystem.h"
+#include "WindowStatsSystem.h"
 #include "UIVisitor.h"
 
 #include "UIML.h"

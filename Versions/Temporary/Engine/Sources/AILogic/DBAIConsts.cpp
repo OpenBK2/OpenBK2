@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbaiconsts.h"
+#include "DBAIConsts.h"
 
 #include "AILogic_export.h"
 

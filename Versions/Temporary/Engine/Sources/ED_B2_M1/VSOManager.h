@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "MapEditorLib/Tools_Geometry.h"
 #include "EditorScene.h"
 #include "Tools_SceneDraw.h"

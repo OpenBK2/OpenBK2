@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "commandhandlerdefines.h"
+#include "CommandHandlerDefines.h"
 #include "CameraPositionWindow.h"
 
 #include <cstdint>

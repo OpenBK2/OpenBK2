@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "SceneB2/Scene.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "EditorOptions.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Logger.h"

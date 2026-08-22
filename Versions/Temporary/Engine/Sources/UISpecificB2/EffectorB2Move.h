@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "UI/UI.h"
 
 struct SWindowContextB2Move : public SWindowContext

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "pc_constants.h"
-#include "pc_itemeditor.h"
+#include "PC_Constants.h"
+#include "PC_ItemEditor.h"
 #include "PC_ItemEditor.h"
 #include "Misc/StrProc.h"
 #include "MapEditorLib/StringManager.h"
@@ -12,7 +12,7 @@
 #include "PC_GUIDEditor.h"
 #include "PC_TextFileEditor.h"
 #include "PC_ExTextFileEditor.h"
-#include "PC_Vec3Coloreditor.h"
+#include "PC_Vec3ColorEditor.h"
 
 bool CPCItemEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {

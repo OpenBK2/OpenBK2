@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "mapsounds.h"
+#include "MapSounds.h"
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
 

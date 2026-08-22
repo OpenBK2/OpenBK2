@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "mapeditorlib/interface_commandhandler.h"
-#include "UI/commandparam.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "UI/CommandParam.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 

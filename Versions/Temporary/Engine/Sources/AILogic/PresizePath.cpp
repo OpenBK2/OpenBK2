@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "PresizePath.h"
-#include "TankpitPath.h"
+#include "TankPitPath.h"
 #include "Technics.h"
 #include "Common_RTS_AI/StandartSmoothMechPath.h"
 

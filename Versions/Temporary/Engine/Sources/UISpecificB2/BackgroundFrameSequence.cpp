@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "Misc/2Darray.h"
 #include "System/Time.h"
 #include "BackgroundFrameSequence.h"

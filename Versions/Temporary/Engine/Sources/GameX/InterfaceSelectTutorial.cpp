@@ -5,7 +5,7 @@
 #include "DBGameRoot.h"
 #include "System/Text.h"
 #include "GetConsts.h"
-#include "Stats_B2_M1/DbMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
 

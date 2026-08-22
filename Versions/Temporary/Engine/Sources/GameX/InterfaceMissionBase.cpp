@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "Stats_B2_M1/DBCameraConsts.h"

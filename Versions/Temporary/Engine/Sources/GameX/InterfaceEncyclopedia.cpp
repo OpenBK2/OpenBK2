@@ -2,12 +2,12 @@
 
 #include "3Dmotor_export.h"
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
-#include "Input/gamemessage.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
+#include "Input/GameMessage.h"
 #include "UI/UI.h"
 #include "Misc/2Darray.h"
-#include "UI/uifactory.h"
+#include "UI/UIFactory.h"
 #include "InterfaceEncyclopedia.h"
 #include "GameXClassIDs.h"
 #include "B2_M1_World/MapObj.h"

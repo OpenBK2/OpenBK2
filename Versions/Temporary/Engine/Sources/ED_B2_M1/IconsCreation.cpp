@@ -19,8 +19,8 @@
 
 #include "Image/ImageTGA.h"
 
-#include "stats_b2_m1/RPGStats.h"
-#include "stats_b2_m1/DBVisObj.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/DBVisObj.h"
 
 #include "SceneB2/Camera.h"
 

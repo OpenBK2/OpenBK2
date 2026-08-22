@@ -2,7 +2,7 @@
 
 #include "UI_export.h"
 
-#include "commandparam.h"
+#include "CommandParam.h"
 
 #include <cstdint>
 

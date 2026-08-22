@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "wmdefines.h"
-#include "tree_gdbbrowserbase_constants.h"
-#include "pc_constants.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "WMDefines.h"
+#include "Tree_GDBBrowserBase_Constants.h"
+#include "PC_Constants.h"
 
 //#include "../Scene/Scene.h"
 //#include "../Scene/Camera.h"
@@ -12,7 +12,7 @@
 #include <HtmlHelp.h>
 
 #include "libdb/ResourceManager.h"
-#include "MapeditorApp.h"
+#include "MapEditorApp.h"
 #include "MainFrame.h"
 #include "MapEditorLib/MapEditorModule.h"
 #include "AboutDialog.h"

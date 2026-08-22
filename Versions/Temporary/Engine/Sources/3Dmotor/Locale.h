@@ -1,6 +1,6 @@
 #pragma once
 
-#include "3dmotor_export.h"
+#include "3Dmotor_export.h"
 
 namespace NGScene
 {

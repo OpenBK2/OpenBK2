@@ -18,7 +18,7 @@
 #include "AILogicInternal.h"
 
 //#include "..\Scene\Statistics.h"
-#include "PlayerREinforcement.h"
+#include "PlayerReinforcement.h"
 
 #include "AILogic_export.h"
 

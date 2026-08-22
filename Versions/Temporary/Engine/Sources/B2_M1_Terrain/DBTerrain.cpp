@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbterrain.h"
+#include "DBTerrain.h"
 
 #include "System/UuidChunk.h"
 

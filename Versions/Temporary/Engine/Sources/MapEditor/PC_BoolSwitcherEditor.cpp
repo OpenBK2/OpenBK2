@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "wmdefines.h"
-#include "pc_constants.h"
+#include "WMDefines.h"
+#include "PC_Constants.h"
 #include "PC_BoolSwitcherEditor.h"
 
 CPCBoolSwitcherEditor::CPCBoolSwitcherEditor() : bDefaultValue( false )

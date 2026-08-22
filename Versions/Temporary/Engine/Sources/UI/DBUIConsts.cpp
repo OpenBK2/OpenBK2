@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbuiconsts.h"
+#include "DBUIConsts.h"
 
 #include "UI_export.h"
 

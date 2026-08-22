@@ -22,7 +22,7 @@ namespace NDb
 		bool bWhitening;
 		float fPitch;
 
-		#include "include_prelight.h"
+		#include "include_PreLight.h"
 
 		SPreLight() :
 			vLightColor( VNULL3 ),
@@ -55,7 +55,7 @@ namespace NDb
 		float fPitch;
 		float fYaw;
 
-		#include "include_twosidedlight.h"
+		#include "include_TwoSidedLight.h"
 
 		STwoSidedLight() :
 			vLightColor( VNULL3 ),

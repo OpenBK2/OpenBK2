@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "commandhandlerdefines.h"
-#include "seasonmnemonics.h"
+#include "CommandHandlerDefines.h"
+#include "SeasonMnemonics.h"
 #include "PointListDialog.h"
 
 #include <cstdint>

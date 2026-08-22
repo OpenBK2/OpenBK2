@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
-#include "MapeditorLib/MapEditorModule.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "MapEditorLib/MapEditorModule.h"
 #include "EditorAI.h"
 #include "EditorScene.h"
 

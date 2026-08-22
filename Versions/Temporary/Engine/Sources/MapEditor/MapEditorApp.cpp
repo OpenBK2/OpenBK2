@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "scintilla/Platform.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Scintilla/Platform.h"
 
 #include <crtdbg.h>
 #include <Shlwapi.h>
@@ -33,7 +33,7 @@
 #include "ProgressHook.h"
 #include "MODContainer.h"
 
-#include "MapeditorLib/MapEditorModule.h"
+#include "MapEditorLib/MapEditorModule.h"
 
 #include "MapEditorApp.h"
 #include "libdb/EditorDb.h"

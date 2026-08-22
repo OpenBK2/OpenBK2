@@ -4,7 +4,7 @@
 
 #include "Stats_B2_M1/TerraAIObserver.h"
 #include "B2_M1_Terrain/fmtVSO.h"
-#include "b2_m1_terrain/DBVSO.h"
+#include "B2_M1_Terrain/DBVSO.h"
 #include "StaticMapHeights.h"
 #include "AIMap.h"
 #include "Terrain.h"

@@ -52,7 +52,7 @@ namespace NDb
 		std::vector< SSoundStats > sounds;
 		bool bLooped;
 
-		#include "include_complexsounddesc.h"
+		#include "include_ComplexSoundDesc.h"
 
 		SComplexSoundDesc() :
 			bLooped( false )

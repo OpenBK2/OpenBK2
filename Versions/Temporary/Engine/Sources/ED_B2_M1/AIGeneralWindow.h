@@ -2,7 +2,7 @@
 
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
-#include "Stats_B2_M1/DBMapinfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>

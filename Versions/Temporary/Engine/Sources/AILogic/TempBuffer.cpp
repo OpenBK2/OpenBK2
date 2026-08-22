@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "tempbuffer.h"
+#include "TempBuffer.h"
 
 #include <cstdint>
 

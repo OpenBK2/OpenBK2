@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Stats_B2_M1/DBClientConsts.h"
-#include "b2_m1_world/MapObj.h"
+#include "B2_M1_World/MapObj.h"
 #include "3DLib/Transform.h"
 #include "Misc/StrProc.h"
 #include "WorldClient.h"

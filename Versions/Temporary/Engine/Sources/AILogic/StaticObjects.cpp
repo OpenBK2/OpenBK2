@@ -14,7 +14,7 @@
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "SmokeScreen.h"
-#include "ObstacleINternal.h"
+#include "ObstacleInternal.h"
 #include "Graveyard.h"
 #include "Cheats.h"
 

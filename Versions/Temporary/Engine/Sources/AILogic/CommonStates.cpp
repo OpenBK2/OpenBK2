@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "groupmoveexecutor.h"
+#include "GroupMoveExecutor.h"
 #include "System/Time.h"
 #include "CommonStates.h"
 #include "Building.h"

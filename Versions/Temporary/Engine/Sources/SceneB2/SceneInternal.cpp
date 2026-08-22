@@ -3,8 +3,8 @@
 #include <thread>
 #include <chrono>
 
-#include "UI/commandparam.h"
-#include "UI/dbuserinterface.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "3Dmotor/Gfx.h"
 #include "3Dmotor/GInit.h"
 #include "3Dmotor/GRTInfo.h"

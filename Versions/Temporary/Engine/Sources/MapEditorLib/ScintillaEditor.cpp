@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "scintilla/scintilla.h"
+#include "Scintilla/Scintilla.h"
 #include "ScintillaEditor.h"
 
 #include <cstdint>

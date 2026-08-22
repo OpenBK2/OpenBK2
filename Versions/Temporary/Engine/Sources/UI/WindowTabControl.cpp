@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./windowtabcontrol.h"
+#include "WindowTabControl.h"
 #include "WindowMSButton.h"
 #include "WindowScrollableContainer.h"
 #include "ButtonGroup.h"

@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "m1unittype.h"
+#include "M1UnitType.h"
 
 #include "Stats_B2_M1_export.h"
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "pc_dialog.h"
+#include "PC_Dialog.h"
 #include "Tree_GDBBrowserBase.h"
 #include "Tree_GDBBrowser_InputState.h"
 

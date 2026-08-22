@@ -1,7 +1,7 @@
 #include <fmt/format.h>
 #pragma once
 
-#include "interface_view.h"
+#include "Interface_View.h"
 #include "Interface_Builder.h" //CTableSet;
 #include "Tools_Resources.h"
 #include "ControlSelection.h"

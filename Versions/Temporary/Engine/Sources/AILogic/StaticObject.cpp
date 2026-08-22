@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "System/Time.h"
-#include "Misc/bresenham.h"
+#include "Misc/Bresenham.h"
 #include "StaticObject.h"
 #include "NewUpdater.h"
 #include "Diplomacy.h"
@@ -16,7 +16,7 @@
 #include "AIDebugInfo.h"
 #include "System/FastMath.h"
 #include "AILock.h"
-#include "FeedBackSystem.h"
+#include "FeedbackSystem.h"
 #include "ExecutorBurningFuel.h"
 
 #include <cstdint>

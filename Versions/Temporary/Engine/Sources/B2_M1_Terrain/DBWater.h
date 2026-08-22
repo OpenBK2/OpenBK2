@@ -23,7 +23,7 @@ namespace NDb
 		int nNumFramesY;
 		int nUseFrames;
 
-		#include "include_animatedtexture.h"
+		#include "include_AnimatedTexture.h"
 
 		SAnimatedTexture() :
 			__dwCheckSum( 0 ),
@@ -86,7 +86,7 @@ namespace NDb
 			float fDeepWaveNumber;
 			float fPhaseOffset;
 
-			#include "include_waterwavetype.h"
+			#include "include_WaterWaveType.h"
 
 			SWaterWaveType() :
 				__dwCheckSum( 0 ),
@@ -118,7 +118,7 @@ namespace NDb
 		float fHorDeformRotationSpeedVariation;
 		EWaterType eWaterType;
 
-		#include "include_water.h"
+		#include "include_Water.h"
 
 		SWater() :
 			fDepthNoiseCoeff( 0.0f ),

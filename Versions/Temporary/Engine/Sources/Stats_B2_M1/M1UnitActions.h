@@ -2,9 +2,9 @@
 
 // automatically generated file, don't change manually!
 
-#include "m1actions.h"
+#include "M1Actions.h"
 #include "RPGStats.h"
-#include "commands_actions.h"
+#include "Commands_Actions.h"
 
 #include <cstdint>
 

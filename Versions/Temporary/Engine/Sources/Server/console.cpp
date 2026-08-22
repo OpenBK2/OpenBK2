@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "scintilla/scintilla.h"
+#include "Scintilla/Scintilla.h"
 #include "console.h"
 #include "CommandsInterface.h"
 

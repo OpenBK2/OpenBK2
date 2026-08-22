@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbnetconsts.h"
+#include "DBNetConsts.h"
 
 #include "Main_export.h"
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "unitssegments.h"
+#include "UnitsSegments.h"
 #include "System/Time.h"
 #include "GroupLogic.h"
 #include "Commands.h"
@@ -899,7 +899,7 @@ void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter, const CVec2 &vGr
 		UnitCommand( moveToCmd, pUnit, bPlaceInQueue );
 	}
 }
-#include "Common_RTS_AI/CheckSums.h"
+#include "Common_RTS_AI/Checksums.h"
 #include "SimpleChecksumCalc.h"
 
 void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )

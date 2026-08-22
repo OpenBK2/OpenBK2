@@ -2,7 +2,7 @@
 
 #include "GeneralIntendant.h"
 
-#include "STaticObjects.h"
+#include "StaticObjects.h"
 #include "Building.h"
 #include "AIUnit.h"
 #include "GroupLogic.h"

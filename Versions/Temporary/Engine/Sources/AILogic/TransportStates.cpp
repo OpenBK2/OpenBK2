@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Misc/bresenham.h"
+#include "Misc/Bresenham.h"
 #include "System/Time.h"
 #include <float.h>
 #include "Common_RTS_AI/PathFinder.h"
@@ -26,7 +26,7 @@
 #include "PathFinder.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
-#include "FeedBackSystem.h"
+#include "FeedbackSystem.h"
 #include "UnitsIterators2.h"
 
 #include "AILogic_export.h"

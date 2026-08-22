@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./pathfractionarclinearc.h"
+#include "PathFractionArcLineArc.h"
 #include "PathFractionArc.h"
 #include "PathFractionLine.h"
 

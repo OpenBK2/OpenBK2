@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 
 #include "Image/ImageColor.h"
 #include "PC_IntColorEditor.h"

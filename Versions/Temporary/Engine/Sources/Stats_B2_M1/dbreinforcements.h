@@ -58,7 +58,7 @@ namespace NDb
 	public:
 		std::vector< SReinforcementGroupInfoEntry > infos;
 
-		#include "include_reinforcementgroupinfo.h"
+		#include "include_ReinforcementGroupInfo.h"
 
 		SReinforcementGroupInfo() :
 			__dwCheckSum( 0 )

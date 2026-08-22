@@ -185,7 +185,7 @@ namespace NDb
 		EManuverDestination eDestination;
 		EPlanesAttitude eAttitude;
 
-		#include "include_manuverdescriptor.h"
+		#include "include_ManuverDescriptor.h"
 
 		SManuverDescriptor() :
 			__dwCheckSum( 0 ),

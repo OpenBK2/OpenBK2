@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "DeadHouseAnimations.h"
 #include "SceneB2/Scene.h"
 

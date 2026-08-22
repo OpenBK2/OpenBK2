@@ -10,7 +10,7 @@
 #include "System/FilePath.h"
 #include "GUnpackDXT.h"
 #include "ImageMip.h"
-#include "3dMotor/GfxInternal.h" // ePixelFormat->D3DFormat
+#include "3Dmotor/GfxInternal.h" // ePixelFormat->D3DFormat
 #include "ImageScale.h"
 
 #include <cstdint>

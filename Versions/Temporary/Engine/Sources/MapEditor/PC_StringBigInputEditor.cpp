@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "pc_constants.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "PC_Constants.h"
 
 
 #include "PC_StringBigInputEditor.h"
 #include "TextEditorDialog.h"
 #include "Misc/StrProc.h"
 #include "MapEditorLib/StringManager.h"
-#include "Scripteditor.h"
+#include "ScriptEditor.h"
 
 // CPCItemEditor
 

@@ -2,7 +2,7 @@
 
 #include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Misc/GeomMisc.h"
 #include "Image/Targa.h"
 #include "Image/ImageTGA.h"

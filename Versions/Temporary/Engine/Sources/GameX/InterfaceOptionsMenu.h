@@ -1,7 +1,7 @@
 
 #pragma once
 #include "InterfaceScreenBase.h"
-#include "DBGameOptions.h"
+#include "dbgameoptions.h"
 
 class CInterfaceOptionsMenu : public CInterfaceScreenBase, public ISliderNotify
 {

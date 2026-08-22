@@ -2,8 +2,8 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/RPGStats.h"
-#include "stats_b2_m1/uientries.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/UIEntries.h"
 #include "System/FilePath.h"
 
 struct IXmlSaver;

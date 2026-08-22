@@ -4,7 +4,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "commandparam.h"
+#include "CommandParam.h"
 #include "System/FilePath.h"
 
 #include <cstdint>
@@ -135,7 +135,7 @@ namespace NDb
 		CParam<float> fMoveTime;
 		CParam<std::string> szElementToMove;
 
-		#include "include_uismoveto.h"
+		#include "include_UISMoveTo.h"
 
 		SUISMoveTo() { }
 		//
@@ -156,7 +156,7 @@ namespace NDb
 		CParam<std::string> szReactionForward;
 		CParam<std::string> szReactionBack;
 
-		#include "include_uisrunreaction.h"
+		#include "include_UISRunReaction.h"
 
 		SUISRunReaction() { }
 		//
@@ -179,7 +179,7 @@ namespace NDb
 		CParam<int> nForwardParam;
 		CParam<int> nBackParam;
 
-		#include "include_uissenduimessage.h"
+		#include "include_UISSendUIMessage.h"
 
 		SUISSendUIMessage() { }
 		//
@@ -199,7 +199,7 @@ namespace NDb
 		enum { typeID = 0x110953C1 };
 		std::string szEditBoxName;
 
-		#include "include_uiconsolecommand.h"
+		#include "include_UIConsoleCommand.h"
 
 		SUIConsoleCommand() { }
 		//
@@ -220,7 +220,7 @@ namespace NDb
 		CDBPtr< SUIDesc > pReactionForward;
 		CDBPtr< SUIDesc > pReactionBackward;
 
-		#include "include_uisdirectrunreaction.h"
+		#include "include_UISDirectRunReaction.h"
 
 		SUISDirectRunReaction() { }
 		//
@@ -282,7 +282,7 @@ namespace NDb
 		enum { typeID = 0x1106CB03 };
 		CVec2 vSize;
 
-		#include "include_backgroundsimplescallingtexture.h"
+		#include "include_BackgroundSimpleScallingTexture.h"
 
 		SBackgroundSimpleScallingTexture() :
 			vSize( VNULL2 )
@@ -306,7 +306,7 @@ namespace NDb
 		EPositionAllign eTextureX;
 		EPositionAllign eTextureY;
 
-		#include "include_backgroundsimpletexture.h"
+		#include "include_BackgroundSimpleTexture.h"
 
 		SBackgroundSimpleTexture() :
 			eTextureX( EPA_LOW_END ),
@@ -359,7 +359,7 @@ namespace NDb
 		SSubRect rB;
 		SSubRect rF;
 
-		#include "include_backgroundtiledtexture.h"
+		#include "include_BackgroundTiledTexture.h"
 
 		SBackgroundTiledTexture() { }
 		//
@@ -566,7 +566,7 @@ namespace NDb
 		CDBPtr< SForegroundTextStringShared > pShared;
 		NFile::CFilePath szTextStringFileRef;
 
-		#include "include_foregroundtextstring.h"
+		#include "include_ForegroundTextString.h"
 
 		SForegroundTextString() { }
 		//
@@ -587,7 +587,7 @@ namespace NDb
 		SWindowPlacement placement;
 		NFile::CFilePath szFormatStringFileRef;
 
-		#include "include_textformat.h"
+		#include "include_TextFormat.h"
 
 		STextFormat() { }
 		//
@@ -623,7 +623,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1107C380 };
 
-		#include "include_windowsimple.h"
+		#include "include_WindowSimple.h"
 
 		SWindowSimple() { }
 		//
@@ -681,7 +681,7 @@ namespace NDb
 		enum { typeID = 0x1106BC41 };
 		std::string szScriptFunction;
 
-		#include "include_checkrunscript.h"
+		#include "include_CheckRunScript.h"
 
 		SCheckRunScript() { }
 		//
@@ -701,7 +701,7 @@ namespace NDb
 		enum { typeID = 0x1106BC42 };
 		std::string szCheckName;
 
-		#include "include_checkpreprogrammed.h"
+		#include "include_CheckPreprogrammed.h"
 
 		SCheckPreprogrammed() { }
 		//
@@ -722,7 +722,7 @@ namespace NDb
 		std::string szWindowName;
 		std::string szParentWindowName;
 
-		#include "include_checkiswindowenabled.h"
+		#include "include_CheckIsWindowEnabled.h"
 
 		SCheckIsWindowEnabled() { }
 		//
@@ -743,7 +743,7 @@ namespace NDb
 		std::string szWindowName;
 		std::string szParentWindowName;
 
-		#include "include_checkiswindowvisible.h"
+		#include "include_CheckIsWindowVisible.h"
 
 		SCheckIsWindowVisible() { }
 		//
@@ -764,7 +764,7 @@ namespace NDb
 		std::string szTabControlName;
 		int nTab;
 
-		#include "include_checkistabactive.h"
+		#include "include_CheckIsTabActive.h"
 
 		SCheckIsTabActive() :
 			nTab( 0 )
@@ -789,7 +789,7 @@ namespace NDb
 		SMessageSequence commonBefore;
 		SMessageSequence commonAfter;
 
-		#include "include_messagereactioncomplex.h"
+		#include "include_MessageReactionComplex.h"
 
 		SMessageReactionComplex() { }
 		//
@@ -810,7 +810,7 @@ namespace NDb
 		std::string szVarName;
 		std::string szVarValue;
 
-		#include "include_arsetglobalvar.h"
+		#include "include_ARSetGlobalVar.h"
 
 		SARSetGlobalVar() { }
 		//
@@ -830,7 +830,7 @@ namespace NDb
 		enum { typeID = 0x1106BC45 };
 		std::string szVarName;
 
-		#include "include_arremoveglobalvar.h"
+		#include "include_ARRemoveGlobalVar.h"
 
 		SARRemoveGlobalVar() { }
 		//
@@ -852,7 +852,7 @@ namespace NDb
 		std::string szStringParam;
 		int nIntParam;
 
-		#include "include_arsenduimessage.h"
+		#include "include_ARSendUIMessage.h"
 
 		SARSendUIMessage() :
 			nIntParam( 0 )
@@ -875,7 +875,7 @@ namespace NDb
 		std::string szEventName;
 		int nIntParam;
 
-		#include "include_arsendgamemessage.h"
+		#include "include_ARSendGameMessage.h"
 
 		SARSendGameMessage() :
 			nIntParam( 0 )
@@ -898,7 +898,7 @@ namespace NDb
 		std::string szTabControlName;
 		int nTab;
 
-		#include "include_arswitchtab.h"
+		#include "include_ARSwitchTab.h"
 
 		SARSwitchTab() :
 			nTab( 0 )
@@ -1016,7 +1016,7 @@ namespace NDb
 		int nTooltipContext;
 		std::vector< SScreenTextEntry > relatedTexts;
 
-		#include "include_screen.h"
+		#include "include_Screen.h"
 
 		SWindowScreen() :
 			nTooltipContext( 0 )
@@ -1064,7 +1064,7 @@ namespace NDb
 		enum { typeID = 0x1106C402 };
 		float fProgress;
 
-		#include "include_windowprogressbar.h"
+		#include "include_WindowProgressBar.h"
 
 		SWindowProgressBar() :
 			fProgress( 0.0f )
@@ -1146,7 +1146,7 @@ namespace NDb
 		bool bSolid;
 		float fPieceSize;
 
-		#include "include_windowmultitextureprogressbar.h"
+		#include "include_WindowMultiTextureProgressBar.h"
 
 		SWindowMultiTextureProgressBar() :
 			bSolid( true ),
@@ -1197,7 +1197,7 @@ namespace NDb
 		bool bResizeOnTextSet;
 		CDBPtr< STextFormat > pTextFormat;
 
-		#include "include_windowtextview.h"
+		#include "include_WindowTextView.h"
 
 		SWindowTextView() :
 			bResizeOnTextSet( true )
@@ -1240,7 +1240,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C40A };
 
-		#include "include_windowtooltip.h"
+		#include "include_WindowTooltip.h"
 
 		SWindowTooltip() { }
 		//
@@ -1278,7 +1278,7 @@ namespace NDb
 		std::string szSequenceName;
 		bool bMaintainAspectRatio;
 
-		#include "include_windowplayer.h"
+		#include "include_WindowPlayer.h"
 
 		SWindowPlayer() :
 			bMaintainAspectRatio( true )
@@ -1352,7 +1352,7 @@ namespace NDb
 		int nTabOrder;
 		SUIStateSequence sequienceOnFocusLost;
 
-		#include "include_windoweditline.h"
+		#include "include_WindowEditLine.h"
 
 		SWindowEditLine() :
 			nMaxLength( -1 ),
@@ -1397,7 +1397,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x11095B01 };
 
-		#include "include_windowconsoleoutput.h"
+		#include "include_WindowConsoleOutput.h"
 
 		SWindowConsoleOutput() { }
 		//
@@ -1433,7 +1433,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x110AC4C0 };
 
-		#include "include_windowstatssystem.h"
+		#include "include_WindowStatsSystem.h"
 
 		SWindowStatsSystem() { }
 		//
@@ -1474,7 +1474,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C304 };
 
-		#include "include_windowconsole.h"
+		#include "include_WindowConsole.h"
 
 		SWindowConsole() { }
 		//
@@ -1557,7 +1557,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1107C381 };
 
-		#include "include_windowscrollablecontainer.h"
+		#include "include_WindowScrollableContainer.h"
 
 		SWindowScrollableContainer() { }
 		//
@@ -1595,7 +1595,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C3C1 };
 
-		#include "include_window1lvltreecontrol.h"
+		#include "include_Window1LvlTreeControl.h"
 
 		SWindow1LvlTreeControl() { }
 		//
@@ -1636,7 +1636,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C2C2 };
 
-		#include "include_windowlistheader.h"
+		#include "include_WindowListHeader.h"
 
 		SWindowListHeader() { }
 		//
@@ -1673,7 +1673,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C2C3 };
 
-		#include "include_windowlistitem.h"
+		#include "include_WindowListItem.h"
 
 		SWindowListItem() { }
 		//
@@ -1711,7 +1711,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x1106C302 };
 
-		#include "include_windowlistctrl.h"
+		#include "include_WindowListCtrl.h"
 
 		SWindowListCtrl() { }
 		//
@@ -1771,7 +1771,7 @@ namespace NDb
 		};
 		std::vector< STab > tabs;
 
-		#include "include_windowtabcontrol.h"
+		#include "include_WindowTabControl.h"
 
 		SWindowTabControl() { }
 		//
@@ -1816,7 +1816,7 @@ namespace NDb
 		int nMaxVisibleRows;
 		SUIStateSequence onSelection;
 
-		#include "include_windowcombobox.h"
+		#include "include_WindowComboBox.h"
 
 		SWindowComboBox() :
 			nListPriority( 0 ),
@@ -1957,7 +1957,7 @@ namespace NDb
 		NFile::CFilePath szTextFileRef;
 		CDBPtr< STextFormat > pTextFormat;
 
-		#include "include_windowmsbutton.h"
+		#include "include_WindowMSButton.h"
 
 		SWindowMSButton() :
 			nButtonGroupID( 0 ),
@@ -2006,7 +2006,7 @@ namespace NDb
 		enum { typeID = 0x1106C400 };
 		int nSpecialPositions;
 
-		#include "include_windowslider.h"
+		#include "include_WindowSlider.h"
 
 		SWindowSlider() :
 			nSpecialPositions( 0 )
@@ -2052,7 +2052,7 @@ namespace NDb
 		enum { typeID = 0x1106C384 };
 		SUIStateSequence effects;
 
-		#include "include_windowscrollbar.h"
+		#include "include_WindowScrollBar.h"
 
 		SWindowScrollBar() { }
 		//
@@ -2075,7 +2075,7 @@ namespace NDb
 		float fWaitTime;
 		CParam<std::string> szButton;
 
-		#include "include_uisbuttonsubstate.h"
+		#include "include_UISButtonSubstate.h"
 
 		SUISButtonSubstate() :
 			eSubstate( BST_NORMAL ),

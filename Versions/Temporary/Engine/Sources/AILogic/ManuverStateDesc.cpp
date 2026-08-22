@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "./manuverstatedesc.h"
+#include "ManuverStateDesc.h"
 #include "IPlane.h"
 #include "PlanePreferences.h"
 #include "ManuverInternal.h"

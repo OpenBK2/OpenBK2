@@ -1,5 +1,5 @@
 #pragma once
-#include "resourceDefines.h"
+#include "ResourceDefines.h"
 
 class IFindNextEvent: public CObjectBase
 {

@@ -4,12 +4,12 @@
 
 #include "Stats_B2_M1_export.h"
 
-#include "b2_m1_terrain/dbterrain.h"
-#include "dbconstructorprofile.h"
+#include "B2_M1_Terrain/DBTerrain.h"
+#include "DBConstructorProfile.h"
 #include "dbreinforcements.h"
 #include "RPGStats.h"
 #include "Season.h"
-#include "prefix_dbmapinfo.h"
+#include "prefix_DBMapInfo.h"
 #include "System/FilePath.h"
 
 #include <cstdint>
@@ -191,7 +191,7 @@ namespace NDb
 		std::vector< SScriptMovieKeyPos > posKeys;
 		std::vector< SScriptMovieKeyFollow > followKeys;
 
-		#include "include_scriptmoviesequence.h"
+		#include "include_ScriptMovieSequence.h"
 
 		SScriptMovieSequence() :
 			__dwCheckSum( 0 )
@@ -212,7 +212,7 @@ namespace NDb
 		std::vector< SScriptCameraPlacement > scriptCameraPlacements;
 		std::vector< SScriptMovieSequence > scriptMovieSequences;
 
-		#include "include_scriptmovies.h"
+		#include "include_ScriptMovies.h"
 
 		SScriptMovies() :
 			__dwCheckSum( 0 )
@@ -407,7 +407,7 @@ namespace NDb
 		bool bFromExplosion;
 		float fNumber;
 
-		#include "include_aistartcommand.h"
+		#include "include_AIStartCommand.h"
 
 		SAIStartCommand() :
 			__dwCheckSum( 0 ),
@@ -502,7 +502,7 @@ namespace NDb
 		CVec2 vCenter;
 		float fDirection;
 
-		#include "include_reinforcepoint.h"
+		#include "include_ReinforcePoint.h"
 
 		SReinforcePoint() :
 			__dwCheckSum( 0 ),
@@ -530,7 +530,7 @@ namespace NDb
 		float fDefenceDirection;
 		int nMinUnitsToReinforce;
 
-		#include "include_aigeneralparcelinfo.h"
+		#include "include_AIGeneralParcelInfo.h"
 
 		SAIGeneralParcel() :
 			__dwCheckSum( 0 ),
@@ -769,7 +769,7 @@ namespace NDb
 		std::vector< CDBPtr< SComplexEffect > > scriptEffects;
 		std::vector< CDBPtr< SDifficultyLevel > > customDifficultyLevels;
 
-		#include "include_mapinfo.h"
+		#include "include_MapInfo.h"
 
 		SMapInfo() :
 			__dwCheckSum( 0 ),

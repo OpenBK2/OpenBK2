@@ -2,9 +2,9 @@
 
 #include "UI_export.h"
 
-#include "background.h"
+#include "Background.h"
 #include "Misc/2Darray.h"
-#include "3Dmotor/GFXBuffers.h"
+#include "3Dmotor/GfxBuffers.h"
 #include "System/Dg.h"
 
 

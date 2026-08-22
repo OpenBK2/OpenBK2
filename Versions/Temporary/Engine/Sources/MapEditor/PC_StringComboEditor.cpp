@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "wmdefines.h"
-#include "pc_constants.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "WMDefines.h"
+#include "PC_Constants.h"
 
 #include "PC_StringComboEditor.h"
 

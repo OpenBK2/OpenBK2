@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 
 #include "PC_Dialog.h"
 

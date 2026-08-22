@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "System/Dg.h"
-#include "effectorplaysound.h"
+#include "EffectorPlaySound.h"
 #include "Sound/SoundScene.h"
 #include "DBUISpecificB2.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MapeditorLib/Tools_FreeIDCollector.h"
+#include "MapEditorLib/Tools_FreeIDCollector.h"
 #include "VSOManager.h"
 
 #include <cstdint>

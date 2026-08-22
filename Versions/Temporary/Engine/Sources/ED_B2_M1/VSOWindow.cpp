@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/MultiManipulator.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"

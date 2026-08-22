@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "3Dmotor/rectlayout.h"
-#include "uivisitor.h"
+#include "3Dmotor/RectLayout.h"
+#include "UIVisitor.h"
 #include "WindowPlayer.h"
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"

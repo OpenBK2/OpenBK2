@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "scintilla/scintilla.h"
-#include "wmdefines.h"
-#include "pc_constants.h"
+#include "Scintilla/Scintilla.h"
+#include "WMDefines.h"
+#include "PC_Constants.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "PC_MultilineStringEditor.h"
 

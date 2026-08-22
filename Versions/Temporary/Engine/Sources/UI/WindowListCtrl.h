@@ -1,6 +1,6 @@
 #pragma once
 
-#include "windowScrollableContainerBase.h"
+#include "WindowScrollableContainerBase.h"
 #include "UIComponents.h"
 
 class CWindowMSButton;

@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "wmdefines.h"
-#include "tree_gdbbrowserbase_constants.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "WMDefines.h"
+#include "Tree_GDBBrowserBase_Constants.h"
 #include "ResourceDefines.h"
 //#include "afxdlgs.h"
 

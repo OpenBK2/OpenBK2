@@ -3,7 +3,7 @@
 #include "Net_export.h"
 
 
-#include "netaddress.h"
+#include "NetAddress.h"
 #include "NetDriver.h"
 
 namespace NNet

@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "pc_constants.h"
-#include "pc_dblinkdialog.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "PC_Constants.h"
+#include "PC_DBLinkDialog.h"
 
 #include "PC_StringNewRefEditor.h"
 #include "Misc/StrProc.h"

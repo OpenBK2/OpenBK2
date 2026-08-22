@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "dbsounddesc.h"
+#include "DBSoundDesc.h"
 
 #include "Sound_export.h"
 

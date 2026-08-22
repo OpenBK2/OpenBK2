@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "mapeditorlib/resourcedefines.h"
-#include "mapeditorlib/commandhandlerdefines.h"
-#include "mapeditorlib/interface_commandhandler.h"
-#include "mapeditorlib/commoneditormethods.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "Misc/2Darray.h"
-#include "stats_b2_m1/IconsSet.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_UserData.h"
@@ -17,7 +17,7 @@
 #include "SceneB2/Camera.h"
 
 #include "EditorOptions.h"
-#include "stats_b2_m1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 #include <zconf.h>
 

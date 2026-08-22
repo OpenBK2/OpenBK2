@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "listcontrolsorters.h"
+#include "ListControlSorters.h"
 
 REGISTER_SAVELOAD_CLASS(UI, SCRNE_UI_LIST_SORTER_ALPHABET, CListControlSorterAlphabet)
 

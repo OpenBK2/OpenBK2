@@ -1,7 +1,7 @@
 #pragma once
 // LuaEditor.h : header file
 //
-#include "Scintilla/scintilla.h"
+#include "Scintilla/Scintilla.h"
 #include "ReplaceTextDlg.h"
 
 #include <cstdint>

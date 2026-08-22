@@ -2,7 +2,7 @@
 
 #include "System/FastMath.h"
 #include "System/Time.h"
-#include "Misc/bresenham.h"
+#include "Misc/Bresenham.h"
 #include "Bridge.h"
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"

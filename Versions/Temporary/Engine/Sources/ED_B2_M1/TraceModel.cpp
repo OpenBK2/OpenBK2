@@ -5,7 +5,7 @@
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "System/Randomgen.h"
+#include "System/RandomGen.h"
 #include "System/BinaryResources.h"
 #include "3Dmotor/DBScene.h"
 #include "TraceModel.h"

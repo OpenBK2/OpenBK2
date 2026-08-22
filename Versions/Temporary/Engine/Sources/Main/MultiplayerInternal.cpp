@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Net/netaddress.h"
+#include "Net/NetAddress.h"
 #include "MultiplayerInternal.h"
 #include "NetMessages.h"
 #include "DBNetConsts.h"
