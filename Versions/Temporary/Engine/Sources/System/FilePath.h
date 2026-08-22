@@ -67,8 +67,9 @@ void AppendSlash( std::string *pFilePath, const char cSlash = '\\' );
 void RemoveSlash( std::string *pFilePath, const char cSlash = '\\' );
 SYSTEM_EXPORT void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo );
 
-//! Create path on the disk
-SYSTEM_EXPORT void CreatePath( const std::string &szFullPath );
+//! Create every missing directory in the path. True if the path exists
+//! afterwards, which includes the case where it already did.
+SYSTEM_EXPORT bool CreatePath( const std::string &szFullPath );
 
 class CFilePath : public std::string
 {

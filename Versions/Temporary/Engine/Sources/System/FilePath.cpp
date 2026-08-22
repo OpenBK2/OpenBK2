@@ -1,6 +1,10 @@
 #include "stdafx.h"
 
 #include "FilePath.h"
+
+#include <filesystem>
+#include <system_error>
+
 #include "Misc/StrProc.h"
 
 #include <boost/config.hpp>
@@ -241,28 +245,32 @@ void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo )
 	}
 }
 
-void CreatePath( const std::string &_szFullPath )
+bool CreatePath( const std::string &_szFullPath )
 {
-	static char buffer[1024];
-	std::string szFullPath = _szFullPath;
-	NStr::ReplaceAllChars( &szFullPath, '/', '\\' );
-	// remember current directory
-	GetCurrentDirectory( 1024, buffer );
-	// create entire path dir by dir
-	std::string szDir;
-	for ( NStr::CStringIterator<char> it(szFullPath, '\\'); !it.IsEnd(); it.Next() )
+	// GetFilePath yields an empty string for a name with no directory part,
+	// and several callers hand that straight over. There is nothing to create
+	// and nothing wrong, but create_directories calls it a missing path.
+	if ( _szFullPath.empty() )
 	{
-		it.Get( &szDir );
-		if ( !szDir.empty() )
-		{
-			CreateDirectory( szDir.c_str(), 0 );
-			SetCurrentDirectory( (szDir + "\\").c_str() );
-		}
-		else
-			break;
+		return true;
 	}
-	// restore old current directory
-	SetCurrentDirectory( buffer );
+
+	// The path is used as given. Callers that build one with a raw backslash
+	// are wrong off Windows, where a backslash is an ordinary filename
+	// character and the whole thing becomes a single directory, but rewriting
+	// separators here would hide those callers rather than fix them.
+	//
+	// The throwing overload would turn a full disk or a denied directory into
+	// an exception at fourteen call sites that have never handled one. The
+	// error_code overload reports it instead.
+	//
+	// The return value cannot be used: it is false when the directory was
+	// already there, and also false on success when the path ends in a
+	// separator, which is the common case here because callers pass the result
+	// of GetFilePath. Only the error_code says whether anything went wrong.
+	std::error_code ec;
+	std::filesystem::create_directories( _szFullPath, ec );
+	return !ec;
 }
 
 // ************************************************************************************************************************ //
