@@ -156,8 +156,11 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 	if ( !mmf.IsOk() )
 		return;
 	nTotalSize = mmf.GetFileSize();
-	if ( ( GetVersion() & 0x80000000 ) == 0 )
-		mmf.MapFile( nTotalSize, false );
+	// The check this replaces was for the Windows 9x family, which had no
+	// file mapping. A failure here is still handled: CMemoryMappedFileFragment
+	// reads the file directly whenever IsMapped is false, so an archive too
+	// large to map is slower rather than fatal.
+	mmf.MapFile( nTotalSize, false );
 	// Assuming no extra comment at the end, read the whole end record.
 	int cdhOffset = nTotalSize - sizeof( SZipCentralDirHeader );
 	if ( cdhOffset < 0 )
@@ -221,8 +224,7 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 
 CZipFile::~CZipFile()
 {
-	if ( ( GetVersion() & 0x80000000 ) == 0 )
-		mmf.UnmapFile();
+	mmf.UnmapFile();
 }
 
 void CZipFile::GetFileName( int nIndex, std::string *pString ) const
