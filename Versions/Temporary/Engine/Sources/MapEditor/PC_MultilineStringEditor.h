@@ -16,7 +16,7 @@ class CPCMultilineStringEditor : public CScintillaEditorWindow, public CPCItemEd
 protected:
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg void OnKillFocus( CWnd* pNewWnd );
-	afx_msg void OnChar( UINT nChar, UINT nRepCnt, UINT nFlags );
+	afx_msg void OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 public:
 	CPCMultilineStringEditor();	
@@ -33,11 +33,11 @@ public:
 	void SetValue( const CVariant &rValue );
 	void GetValue( CVariant *pValue );
 	//
-	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam );
+	void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

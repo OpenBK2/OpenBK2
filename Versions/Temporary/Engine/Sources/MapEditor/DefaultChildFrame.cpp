@@ -24,7 +24,7 @@ BOOL CDefaultChildFrame::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 }
 
 
-BOOL CDefaultChildFrame::OnCmdMsg( UINT nID, int nCode, void *pExtra, AFX_CMDHANDLERINFO *pHandlerInfo )
+BOOL CDefaultChildFrame::OnCmdMsg( unsigned nID, int nCode, void *pExtra, AFX_CMDHANDLERINFO *pHandlerInfo )
 {
 	if ( pwndContents )
 	{

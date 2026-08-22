@@ -252,7 +252,7 @@ int CControllerContainer::RemoveTemporaryControllers( const string &rszTemporary
 }
 
 
-bool CControllerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CControllerContainer::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -270,7 +270,7 @@ bool CControllerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CControllerContainer::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CControllerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CControllerContainer::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CControllerContainer::UpdateCommand(), pbCheck == 0" );

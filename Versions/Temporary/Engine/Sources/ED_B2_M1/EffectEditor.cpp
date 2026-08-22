@@ -43,7 +43,7 @@ void CEffectEditor::Create()
 	// check, do we have desired MapInfo object
 	const string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
 	/**
-	UINT nMapID = -1;
+	unsigned nMapID = -1;
 	if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
 	{
 		string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );

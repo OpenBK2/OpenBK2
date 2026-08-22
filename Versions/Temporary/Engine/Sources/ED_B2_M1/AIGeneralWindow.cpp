@@ -106,7 +106,7 @@ BOOL CAIGeneralPointsWindow::OnInitDialog()
 }
 
 
-bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CAIGeneralPointsWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SAIGeneralPointsWindowData *pData = reinterpret_cast<SAIGeneralPointsWindowData*>( dwData );
 	//
@@ -134,7 +134,7 @@ bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CAIGeneralPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CAIGeneralPointsWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAIGeneralPointsWindow::UpdateCommand(), pbCheck == 0" );

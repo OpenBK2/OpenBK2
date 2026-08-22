@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-bool CPCBaseDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCBaseDialog::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -36,7 +36,7 @@ bool CPCBaseDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCBaseDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCBaseDialog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCBaseDialog::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCBaseDialog::UpdateCommand(), pbCheck == 0" );

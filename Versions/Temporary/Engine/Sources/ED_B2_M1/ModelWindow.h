@@ -47,32 +47,32 @@ protected:
 	afx_msg void OnClickedSceneColorButton();
 	afx_msg void OnClickedTerrainColorButton();
 	//
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer( unsigned nIDEvent );
 
 	int32_t nSceneColorTimer;
-  inline UINT GetSceneColorID() { return 1; }
-  inline UINT GetSceneColorTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline unsigned GetSceneColorID() { return 1; }
+  inline unsigned GetSceneColorTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetSceneColorTimer();
   void KillSceneColorTimer();
   void OnSceneColorTimer();
 	//
 	int32_t nTerrainColorTimer;
-  inline UINT GetTerrainColorID() { return 2; }
-  inline UINT GetTerrainColorTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline unsigned GetTerrainColorID() { return 2; }
+  inline unsigned GetTerrainColorTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetTerrainColorTimer();
   void KillTerrainColorTimer();
   void OnTerrainColorTimer();
 	//
 	int32_t nTerrainColorOpacityTimer;
-  inline UINT GetTerrainColorOpacityID() { return 3; }
-  inline UINT GetTerrainColorOpacityTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline unsigned GetTerrainColorOpacityID() { return 3; }
+  inline unsigned GetTerrainColorOpacityTimerInterval() { return 500; }	// Частота в миллисекундах
   void SetTerrainColorOpacityTimer();
   void KillTerrainColorOpacityTimer();
   void OnTerrainColorOpacityTimer();
 	//
 	int32_t nFOVTimer;
-  inline UINT GetFOVID() { return 4; }
-  inline UINT GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
+  inline unsigned GetFOVID() { return 4; }
+  inline unsigned GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
   void SetFOVTimer();
   void KillFOVTimer();
   void OnFOVTimer();
@@ -87,8 +87,8 @@ public:
 	~CModelWindow();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

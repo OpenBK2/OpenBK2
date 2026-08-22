@@ -13,7 +13,7 @@
 
 #include <zconf.h>
 
-void CVSOMultiState::UpdateEditParameters( UINT nFlags )
+void CVSOMultiState::UpdateEditParameters( unsigned nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -22,7 +22,7 @@ void CVSOMultiState::UpdateEditParameters( UINT nFlags )
 }
 
 
-bool CVSOMultiState::PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
+bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
 	const int nActiveStateIndex = GetActiveInputStateIndex();
 	const int nStateCount = GetCount();
@@ -102,7 +102,7 @@ void CVSOMultiState::Leave()
 }
 
 
-bool CVSOMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CVSOMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -149,7 +149,7 @@ bool CVSOMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CVSOMultiState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CVSOMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOMultiState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CVSOMultiState::UpdateCommand(), pbCheck == 0" );
@@ -189,7 +189,7 @@ int CVSOMultiState::SEditParameters::operator&( IXmlSaver &xs )
 	xs.Add( "Thumbnails", &bThumbnails );
 	//
 	//do not serialise this fields:
-	// UINT nFlags;
+	// unsigned nFlags;
 	return 0;
 }
 

@@ -18,7 +18,7 @@ const float	CPolygonState::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;
 const uint32_t	CPolygonState::CONTROL_POINT_COLOR	= 0xFFFF4040;
 const uint32_t	CPolygonState::CONTROL_LINE_COLOR		= 0xFFFF4040;
 
-void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -47,7 +47,7 @@ void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CPolygonSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -76,7 +76,7 @@ void CPolygonSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CPolygonSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -94,7 +94,7 @@ void CPolygonSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CPolygonEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -159,7 +159,7 @@ void CPolygonEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -231,7 +231,7 @@ void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CPolygonEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -249,7 +249,7 @@ void CPolygonEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CPolygonEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -271,7 +271,7 @@ void CPolygonEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CPolygonEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -345,7 +345,7 @@ void CPolygonEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 void CPolygonAddState::InsertPolygon()
 {
-	UINT nNewPolygonID = INVALID_NODE_ID;
+	unsigned nNewPolygonID = INVALID_NODE_ID;
 	if ( pParentState->PrepareControlPoints( &( pParentState->controlPointList ) ) )
 	{
 		bool bPolygonIsValid = true;
@@ -407,7 +407,7 @@ void CPolygonAddState::InsertPolygon()
 }
 
 
-void CPolygonAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -421,7 +421,7 @@ void CPolygonAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CPolygonAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -442,7 +442,7 @@ void CPolygonAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CPolygonAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -468,7 +468,7 @@ void CPolygonAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CPolygonAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CPolygonAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -478,7 +478,7 @@ void CPolygonAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CPolygonAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CPolygonAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -661,7 +661,7 @@ void CPolygonState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CPolygonState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPolygonState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -677,7 +677,7 @@ bool CPolygonState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPolygonState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPolygonState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPolygonState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPolygonState::UpdateCommand(), pbCheck == 0" );

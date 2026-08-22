@@ -28,12 +28,12 @@ class CScriptCameraWindow : public CResizeDialog, public ICommandHandler
 	int32_t nYawTimerID;
 	int32_t nPitchTimerID;
 	int32_t nFOVTimerID;
-	inline UINT GetYawTimerID() { return 4; }
-	inline UINT GetPitchTimerID() { return 5; }
-	inline UINT GetFOVTimerID() { return 6; }
-	inline UINT GetYawTimerInterval() { return 500; } // Частота в миллисекундах
-	inline UINT GetPitchTimerInterval() { return 500; } // Частота в миллисекундах
-	inline UINT GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
+	inline unsigned GetYawTimerID() { return 4; }
+	inline unsigned GetPitchTimerID() { return 5; }
+	inline unsigned GetFOVTimerID() { return 6; }
+	inline unsigned GetYawTimerInterval() { return 500; } // Частота в миллисекундах
+	inline unsigned GetPitchTimerInterval() { return 500; } // Частота в миллисекундах
+	inline unsigned GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
 	void SetYawTimer();
 	void SetPitchTimer();
 	void SetFOVTimer();
@@ -63,14 +63,14 @@ public:
 	}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	void NotifyHandler( SScriptCameraWindowData::EScriptCameraLastAction eAction );
 
 	virtual void OnOK() {};
 	virtual void OnCancel() {};
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedScriptCameraAdd();
@@ -83,7 +83,7 @@ public:
 	afx_msg void OnChangePitch();
 	afx_msg void OnChangeFOV();
 	//
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer( unsigned nIDEvent );
 };
 
 

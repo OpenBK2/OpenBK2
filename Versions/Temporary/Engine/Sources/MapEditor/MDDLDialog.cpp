@@ -21,7 +21,7 @@ BEGIN_MESSAGE_MAP(CMDDLDialog, CDialog)
 END_MESSAGE_MAP()
 
 
-void CMDDLDialog::SetParams( UINT _nCommandID, const CDescriptionList &rValueList )
+void CMDDLDialog::SetParams( unsigned _nCommandID, const CDescriptionList &rValueList )
 {
 	nCommandID = _nCommandID;
 	valueList = rValueList;

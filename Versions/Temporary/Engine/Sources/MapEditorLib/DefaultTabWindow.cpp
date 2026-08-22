@@ -50,7 +50,7 @@ CWnd* CDefault3DTabWindow::GetTabWindow( int nTabIndex )
 
 // Необходимо делать так, иначе родительскому окну не идут сообщения
 
-LRESULT CDefault3DTabWindow::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CDefault3DTabWindow::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	if ( message == TCM_TABSEL )
 	{

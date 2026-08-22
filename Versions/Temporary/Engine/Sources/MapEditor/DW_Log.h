@@ -15,7 +15,7 @@ class CDWLog : public SECControlBar, public ICommandHandler
 
 protected:
 	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 
 public:
 	CDWLog();
@@ -25,8 +25,8 @@ public:
 	void ClearLog();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

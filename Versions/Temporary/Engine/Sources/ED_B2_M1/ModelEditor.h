@@ -9,7 +9,7 @@
 
 #define TOOLBAR_MODEL_ELEMENTS_COUNT 13
 
-EXTERNVAR const UINT TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
+EXTERNVAR const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
 
 
 class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHandler
@@ -17,7 +17,7 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	friend class CModelState;
 	OBJECT_NOCOPY_METHODS( CModelEditor );
 
-	UINT nModelToolbarID;
+	unsigned nModelToolbarID;
 	SECControlBar *pwndTool;
 	CModelWindow modelWindow;
 	bool bPreviousCameraHandleType;
@@ -47,8 +47,8 @@ public:
 	void Redo( IController* pController ) {}
 	
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// Icons creations
 	void CreateIcon();

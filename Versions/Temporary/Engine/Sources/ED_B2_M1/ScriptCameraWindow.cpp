@@ -119,7 +119,7 @@ void CScriptCameraWindow::DoDataExchange( CDataExchange *pDX )
 }
 
 
-bool CScriptCameraWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SScriptCameraWindowData *pData = reinterpret_cast<SScriptCameraWindowData*>( dwData );
 	NI_VERIFY( pData, "SScriptCameraWindowData::HandleCommand(): dwData == 0", return false );
@@ -231,7 +231,7 @@ bool CScriptCameraWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CScriptCameraWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CScriptCameraWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptCameraWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CScriptCameraWindow::UpdateCommand(), pbCheck == 0" );
@@ -388,7 +388,7 @@ void CScriptCameraWindow::GetDialogData( SScriptCameraWindowData *pData )
 }
 
 
-void CScriptCameraWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CScriptCameraWindow::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{
@@ -440,7 +440,7 @@ void CScriptCameraWindow::OnChangeFOV()
 }
 
 
-void CScriptCameraWindow::OnTimer( UINT nIDEvent ) 
+void CScriptCameraWindow::OnTimer( unsigned nIDEvent ) 
 {
   if ( nIDEvent == GetYawTimerID() )
 		OnYawTimer();

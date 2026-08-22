@@ -63,7 +63,7 @@ void CPCStringInputEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCStringInputEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCStringInputEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -176,7 +176,7 @@ void CPCStringInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCStringInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCStringInputEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -205,7 +205,7 @@ bool CPCStringInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCStringInputEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCStringInputEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringInputEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCStringInputEditor::UpdateCommand(), pbCheck == 0" );

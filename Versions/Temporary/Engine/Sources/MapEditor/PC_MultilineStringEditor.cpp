@@ -71,7 +71,7 @@ void CPCMultilineStringEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCMultilineStringEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCMultilineStringEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( nChar == VK_ESCAPE )
 	{		
@@ -168,7 +168,7 @@ void CPCMultilineStringEditor::SetDefaultValue()
 }
 
 
-bool CPCMultilineStringEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCMultilineStringEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	/**
 	switch( nCommandID )
@@ -181,7 +181,7 @@ bool CPCMultilineStringEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCMultilineStringEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCMultilineStringEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCMultilineStringEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCMultilineStringEditor::UpdateCommand(), pbCheck == 0" );
@@ -197,7 +197,7 @@ bool CPCMultilineStringEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, b
 }
 
 
-void CPCMultilineStringEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam )
+void CPCMultilineStringEditor::ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam )
 {
 	if ( nMessage == WM_ENABLE )
 	{

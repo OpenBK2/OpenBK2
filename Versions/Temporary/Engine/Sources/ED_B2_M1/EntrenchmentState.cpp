@@ -59,7 +59,7 @@ void CEntrenchmentState::InsertObjectDraw( CPaintDC *pPaintDC )
 }
 
 
-bool CEntrenchmentState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
+bool CEntrenchmentState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	designTool.ProcessMovePoint( rTerrainPos ); 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -67,7 +67,7 @@ bool CEntrenchmentState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerra
 }
 
 
-bool CEntrenchmentState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos )
+bool CEntrenchmentState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	bool bResult = designTool.ProcessLClickPoint( rTerrainPos ); 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -75,7 +75,7 @@ bool CEntrenchmentState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTer
 }
 
 
-bool CEntrenchmentState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CEntrenchmentState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	bool bResult = designTool.ProcessRClickPoint( rTerrainPos ); 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -83,7 +83,7 @@ bool CEntrenchmentState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerra
 }
 
 
-bool CEntrenchmentState::InsertObjectLButtonDblClk( UINT nFlags, const CVec3 &rTerrainPos )
+bool CEntrenchmentState::InsertObjectLButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	designTool.Complete();
 	InsertEntrenchment();
@@ -91,7 +91,7 @@ bool CEntrenchmentState::InsertObjectLButtonDblClk( UINT nFlags, const CVec3 &rT
 }
 
 
-bool CEntrenchmentState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
+bool CEntrenchmentState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( nChar == VK_ESCAPE )
 	{
@@ -142,7 +142,7 @@ void CEntrenchmentState::InsertEntrenchment()
 		designTool.GetSegmentsInfo( &createInfo.segmentsInfo );
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 		{
-			UINT nEntrenchmentInfoID = INVALID_NODE_ID;
+			unsigned nEntrenchmentInfoID = INVALID_NODE_ID;
 			if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = 
 				GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SEntrenchmentInfo*>( 0 ), &nEntrenchmentInfoID ) )
 			{
@@ -166,7 +166,7 @@ void CEntrenchmentState::InsertEntrenchment()
 }
 
 
-bool CEntrenchmentState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CEntrenchmentState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -186,7 +186,7 @@ bool CEntrenchmentState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CEntrenchmentState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CEntrenchmentState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CEntrenchmentState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CEntrenchmentState::UpdateCommand(), pbCheck == 0" );

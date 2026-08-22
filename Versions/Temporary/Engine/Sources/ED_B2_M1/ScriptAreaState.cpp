@@ -102,7 +102,7 @@ void CScriptAreaState::GetScriptAreaMap()
 }
 
 
-void CScriptAreaState::UpdateScriptArea( UINT nScriptAreaID )
+void CScriptAreaState::UpdateScriptArea( unsigned nScriptAreaID )
 {
 	if ( ( pMapInfoEditor == 0 ) || ( pMapInfoEditor->GetViewManipulator() == 0  ) )
 	{
@@ -144,7 +144,7 @@ void CScriptAreaState::UpdateScriptArea( UINT nScriptAreaID )
 }
 
 
-UINT CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
+unsigned CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
 																				 const string &rszName,
 																				 const CVec3 &rStart,
 																				 const CVec3 &rFinish )
@@ -182,7 +182,7 @@ UINT CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
 }
 
 
-void CScriptAreaState::RemoveScriptArea( UINT nScriptAreaID )
+void CScriptAreaState::RemoveScriptArea( unsigned nScriptAreaID )
 {
 	if ( ( pMapInfoEditor == 0 ) || ( pMapInfoEditor->GetViewManipulator() == 0  ) )
 	{
@@ -347,7 +347,7 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 }
 
 
-UINT CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
+unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
 	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Area name", "Area name" );
 	if ( enterNameDialog.DoModal() == IDOK )
@@ -473,7 +473,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 }
 
 
-bool CScriptAreaState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CScriptAreaState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -492,7 +492,7 @@ bool CScriptAreaState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CScriptAreaState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CScriptAreaState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptAreaState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CScriptAreaState::UpdateCommand(), pbCheck == 0" );
@@ -514,7 +514,7 @@ bool CScriptAreaState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 }
 
 
-void CScriptAreaState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CScriptAreaState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_SHIFT )
 	{

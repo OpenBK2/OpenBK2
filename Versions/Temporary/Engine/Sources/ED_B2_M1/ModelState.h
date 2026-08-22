@@ -53,7 +53,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 			AIGT_SOLID				= 1,
 		};
 		//
-		UINT nFlags;
+		unsigned nFlags;
 		//
 		vector<string> lightList;
 		int nLightIndex;
@@ -112,8 +112,8 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 	void SaveCameraForRPGStats();
 	void ResetCamera( bool bDefaultCamera );
 	//
-	void GetEditParameters( UINT nFlags ); // editParameters -> editorSettings
-	void SetEditParameters( UINT nFlags ); // editorSettings -> editParameters
+	void GetEditParameters( unsigned nFlags ); // editParameters -> editorSettings
+	void SetEditParameters( unsigned nFlags ); // editorSettings -> editParameters
 	//
 	CObjectBase* BuildPlane( const CVec3 &vStart, const CVec2 &vSize, const CVec4 &color, int nXStripCount, int nYStripCount, bool bDoubleSided );
 	CObjectBase* BuildPlane( const CVec3 &vStart, const CVec2 &vSize, const CVec4 &color, int nXStripCount, int nYStripCount, float fDiff, bool bDoubleSided );
@@ -125,12 +125,12 @@ public:
 	void Enter();
 	void Leave();
 	void OnContextMenu( const CTPoint<int> &rMousePoint );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

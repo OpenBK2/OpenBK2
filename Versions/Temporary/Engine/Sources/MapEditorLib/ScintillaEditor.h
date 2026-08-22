@@ -19,7 +19,7 @@ public:
 	CScintillaEditorWindow();
 	virtual ~CScintillaEditorWindow();
 	//
-	virtual BOOL CreateEx( CWnd* pwndParentWindow, uint32_t dwStyleEx, uint32_t dwStyle, const CRect &rStartRect, UINT nControlID /**, CWnd *_pwndTargetWindow **/ );
+	virtual BOOL CreateEx( CWnd* pwndParentWindow, uint32_t dwStyleEx, uint32_t dwStyle, const CRect &rStartRect, unsigned nControlID /**, CWnd *_pwndTargetWindow **/ );
 	int Command( int nCommand, int wParam = 0, int lParam = 0 );
 	//
 	void SetStatusStringWindow( CWnd* _pwndStatusStringWindow );

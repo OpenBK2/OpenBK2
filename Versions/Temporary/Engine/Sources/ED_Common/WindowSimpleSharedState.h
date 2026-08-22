@@ -52,11 +52,11 @@ public:
 	void Enter();
 	void Leave();
 	void PostDraw( class CPaintDC *pPaintDC );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// methods
 	void UndoChange( const string & szTypeName, const CDBID &rDBID, const string & szName, const CVariant & oldValue );

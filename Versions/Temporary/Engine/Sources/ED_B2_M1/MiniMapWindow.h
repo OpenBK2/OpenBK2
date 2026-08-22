@@ -49,9 +49,9 @@ class CMiniMapWindow : public CWnd, public ICommandHandler
 
 protected:
 	afx_msg void OnPaint();
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnMouseMove( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonUp( UINT nFlags, CPoint point );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
 	afx_msg void OnContextMenu( CWnd* pWnd, CPoint point );
 
 	void RecreateImage();
@@ -67,8 +67,8 @@ public:
 	void SetMapInfoEditorSize( const int nSizeX, const int nSizeY );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	DECLARE_MESSAGE_MAP()
 };

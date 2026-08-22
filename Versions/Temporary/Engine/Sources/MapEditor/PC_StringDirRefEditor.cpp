@@ -12,7 +12,7 @@
 const char CPCStringDirRefEditor::FOLDER_PATH_LABEL[] = "_FOLDER_";
 
 
-static int CALLBACK CPCStringDirRefEditor_BrowseForFolderProc( HWND hwnd, UINT nCode, LPARAM lParam, LPARAM pData )
+static int CALLBACK CPCStringDirRefEditor_BrowseForFolderProc( HWND hwnd, unsigned nCode, LPARAM lParam, LPARAM pData )
 {
 	//BFFM_ENABLEOK:
 	//BFFM_SETEXPANDED:

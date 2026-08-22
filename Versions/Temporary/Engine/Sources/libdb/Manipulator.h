@@ -147,7 +147,7 @@ struct IManipulatorIterator : public CObjectBase
 	// get current item type
 	virtual bool GetType( std::string *pszType ) const = 0;
 	// get current item id
-	virtual UINT GetID() const = 0;
+	virtual unsigned GetID() const = 0;
 	// is it folder
 	virtual bool IsFolder() const = 0;
 };
@@ -163,7 +163,7 @@ enum ECacheType
 
 struct IManipulator : public CObjectBase
 {
-	typedef std::unordered_map<std::string, UINT> CNameMap;
+	typedef std::unordered_map<std::string, unsigned> CNameMap;
 	//
 	// begin to iterate through all properties
 	virtual IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache ) = 0;
@@ -172,11 +172,11 @@ struct IManipulator : public CObjectBase
 	// get item type by name
 	virtual bool GetType( const std::string &rszName, std::string *pszType ) const = 0;
 	// get item id by name
-	virtual UINT GetID( const std::string &rszName ) const = 0;
+	virtual unsigned GetID( const std::string &rszName ) const = 0;
 	// get object DBID
 	virtual CDBID GetDBID() const { return CDBID(); }
 	// get item id by name
-	virtual bool GetName( UINT nID, std::string *pszName ) const = 0;
+	virtual bool GetName( unsigned nID, std::string *pszName ) const = 0;
 	// add one more element to list
 	virtual bool InsertNode( const std::string &rszName, int nNodeIndex = NODE_ADD_INDEX ) = 0;
 	// remove element from list (or all elements)

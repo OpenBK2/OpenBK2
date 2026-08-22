@@ -65,7 +65,7 @@ void CPCFloatInputEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCFloatInputEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCFloatInputEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -198,7 +198,7 @@ void CPCFloatInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCFloatInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCFloatInputEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -227,7 +227,7 @@ bool CPCFloatInputEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCFloatInputEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCFloatInputEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
  	NI_ASSERT( pbEnable != 0, "CPCFloatInputEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCFloatInputEditor::UpdateCommand(), pbCheck == 0" );

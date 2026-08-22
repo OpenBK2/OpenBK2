@@ -158,8 +158,8 @@ namespace NMapInfoEditor
 			for ( CSegmentLinkIDList::const_iterator itSegmentLinkID = itSegmentLinkIDList->begin(); itSegmentLinkID != itSegmentLinkIDList->end(); ++itSegmentLinkID )
 			{
 				// получаем расположенние объекта в базе данных
-				const UINT nLinkID = *itSegmentLinkID;
-				const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
+				const unsigned nLinkID = *itSegmentLinkID;
+				const unsigned nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
 				NI_ASSERT( nObjectIndex != INVALID_NODE_ID, StrFmt( "Invalid trench index for LinkID: %d", nLinkID ) );
 				if ( nObjectIndex == INVALID_NODE_ID )
 				{
@@ -216,7 +216,7 @@ namespace NMapInfoEditor
 	bool SEntrenchmentInfo::RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		bool bResult = SObjectInfo::RemoveFromDB( pObjectController, pManipulator );
-		const UINT nEntrenchmentIndex = pObjectInfoCollector->trenchIDToIndexCollector.Get( nEntrenchmentID );
+		const unsigned nEntrenchmentIndex = pObjectInfoCollector->trenchIDToIndexCollector.Get( nEntrenchmentID );
 		if ( nEntrenchmentIndex != INVALID_NODE_ID )
 		{
 			bResult = bResult && pObjectController->AddRemoveOperation( "Entrenchments", nEntrenchmentIndex, pManipulator );
@@ -252,7 +252,7 @@ namespace NMapInfoEditor
 		// заполняем сцену и проставляем ссылки в mapInfo
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
-			const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
+			const unsigned nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 			const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats = dynamic_cast<const NDb::SEntrenchmentRPGStats*>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
 			const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats *pSeg = GetSegmentInfo( pEntrenchmentRPGStats, itMapInfoElement->second.nFrameIndex );
 			CVec3 vObjectScenePosition = vPosition + itMapInfoElement->second.vPosition;
@@ -267,7 +267,7 @@ namespace NMapInfoEditor
 			uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 			GetEntrenchmentSegmentPositionOnTerrain(	&vTerrainPos, &qRot, &dwNormal, &vScale, pSeg->vAABBHalfSize.x, vObjectScenePosition, fObjectSceneDirection );
 			//
-			const UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+			const unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 			if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 			{
 				pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;

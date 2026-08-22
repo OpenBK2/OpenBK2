@@ -211,7 +211,7 @@ void CWindowSimpleSharedState::ResetSelection()
 }
 
 
-void CWindowSimpleSharedState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CWindowSimpleSharedState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWaitCursor wc;
 	switch( nChar )
@@ -299,7 +299,7 @@ void CWindowSimpleSharedState::OnKeyBack()
 }
 
 
-void CWindowSimpleSharedState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CWindowSimpleSharedState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	//CVec2 vScreenPos;
 	//Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2(rMousePoint.x, rMousePoint.y), &vScreenPos );
@@ -323,7 +323,7 @@ void CWindowSimpleSharedState::OnLButtonDown( UINT nFlags, const CTPoint<int> &r
 }
 
 
-void CWindowSimpleSharedState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CWindowSimpleSharedState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
 	{
@@ -344,7 +344,7 @@ void CWindowSimpleSharedState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMo
 	CDefaultInputState::OnLButtonUp( nFlags, rMousePoint );
 }
 
-void CWindowSimpleSharedState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CWindowSimpleSharedState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
 	{
@@ -362,7 +362,7 @@ void CWindowSimpleSharedState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMo
 }
 
 
-void CWindowSimpleSharedState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CWindowSimpleSharedState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	CWaitCursor wc;
 

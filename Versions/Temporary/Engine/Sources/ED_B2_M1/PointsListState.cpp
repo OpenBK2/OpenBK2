@@ -23,7 +23,7 @@
 //
 //
 
-CPointsListState::CPointsListState( UINT _nCHID, UINT _nInstanceID, CBuildingEditor* _pBuildingEditor )
+CPointsListState::CPointsListState( unsigned _nCHID, unsigned _nInstanceID, CBuildingEditor* _pBuildingEditor )
 	:	pBuildingEditor( _pBuildingEditor ),
 		pMaskManipulator( 0 ),
 		nCHID( _nCHID ),
@@ -227,7 +227,7 @@ void CPointsListState::SetMaskManipulator()
 }
 
 
-bool CPointsListState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPointsListState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -303,7 +303,7 @@ void CPointsListState::RefreshState()
 }
 
 
-bool CPointsListState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPointsListState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPointsListState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPointsListState::UpdateCommand(), pbCheck == 0" );
@@ -321,7 +321,7 @@ void CPointsListState::PostDraw( CPaintDC *pPaintDC )
 }
 
 
-void CPointsListState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CPointsListState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( nChar == 'G' )
 	{

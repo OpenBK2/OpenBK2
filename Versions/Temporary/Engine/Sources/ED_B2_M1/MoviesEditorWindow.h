@@ -47,8 +47,8 @@ class CMoviesEditorWindow : public CResizeDialog, public ICommandHandler
 
 	bool bIsDataSetting;
 	bool bIsSliderEnabled;
-	UINT nSliderMode;
-	UINT nMovieMode;
+	unsigned nSliderMode;
+	unsigned nMovieMode;
 
 	SScriptMovieEditorData::EMoviesEditorLastAction eLastAction;
 	SScriptMovieEditorData dialogData;
@@ -101,8 +101,8 @@ public:
 	void ResetDialog();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	virtual void NotifyHandler( SScriptMovieEditorData::EMoviesEditorLastAction eAction );
 
@@ -120,19 +120,19 @@ public:
 	afx_msg void OnCbnSelchangeComboMovie();
 	afx_msg void OnCbnSelChangeTimerSpeed();
 	afx_msg void OnPaint();
-	afx_msg void OnTimer( UINT nIDEvent );
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonUp( UINT nFlags, CPoint point );
-	afx_msg void OnMouseMove( UINT nFlags, CPoint point );
-	afx_msg void OnMButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnMButtonUp( UINT nFlags, CPoint point );
-	afx_msg BOOL OnMouseWheel( UINT nFlags, short zDelta, CPoint pt );
+	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
+	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
+	afx_msg void OnMButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnMButtonUp( unsigned nFlags, CPoint point );
+	afx_msg BOOL OnMouseWheel( unsigned nFlags, short zDelta, CPoint pt );
 
-	afx_msg void OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrollBar );
+	afx_msg void OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar *pScrollBar );
 	afx_msg void OnContextMenu( CWnd *pWnd, CPoint point );
 
-	inline UINT GetMovieTimerID() { return 3; }
-	inline UINT GetMovieTimerInterval() { return 100; }	// timer update interval
+	inline unsigned GetMovieTimerID() { return 3; }
+	inline unsigned GetMovieTimerInterval() { return 100; }	// timer update interval
 	void SetMovieTimer();
 	void KillMovieTimer();
 };

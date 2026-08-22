@@ -10,7 +10,7 @@
 
 class CPCDialog : public CResizeDialog, public CPCBaseDialog
 {
-	static const UINT	PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT];
+	static const unsigned	PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT];
 	static const int	PC_TREE_COLUMN_FORMAT[PC_TREE_COLUMN_COUNT];
 	static const int	PC_TREE_COLUMN_WIDTH [PC_TREE_COLUMN_COUNT];
 
@@ -28,7 +28,7 @@ class CPCDialog : public CResizeDialog, public CPCBaseDialog
 	//void SetStatusBarMessage( const string &rszMessage );
 	
 protected:
-	//virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 	virtual void DoDataExchange( CDataExchange* pDX );
 	virtual BOOL OnInitDialog();
 	//

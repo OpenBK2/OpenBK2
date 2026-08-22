@@ -51,7 +51,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfo::Pick( UINT nSceneID )
+	bool SObjectInfo::Pick( unsigned nSceneID )
 	{
 		CSceneElementMap::const_iterator itSceneElement = sceneElementMap.find( nSceneID );
 		return ( itSceneElement != sceneElementMap.end() );
@@ -477,7 +477,7 @@ namespace NMapInfoEditor
 									dwNormal = EditorScene()->GetNormal( CVec2( vObjectScenePosition.x, vObjectScenePosition.y ) );
 									MakeOrientation( &qObjectSceneRotation, DWORDToVec3( dwNormal ) );
 								}
-								const UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+								const unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 								if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 								{
 									pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -545,7 +545,7 @@ namespace NMapInfoEditor
 					dwNormal = EditorScene()->GetNormal( CVec2( vObjectScenePosition.x, vObjectScenePosition.y ) );
 					MakeOrientation( &qObjectSceneRotation, DWORDToVec3( dwNormal ) );
 				}
-				const UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+				const unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 				if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 				{
 					pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -944,7 +944,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfo::CheckLinkCapability( UINT nLinkToSceneID ) const
+	bool SObjectInfo::CheckLinkCapability( unsigned nLinkToSceneID ) const
 	{
 		bool bLinkCapability = false;
 		if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoBySceneID( nLinkToSceneID ) )
@@ -954,14 +954,14 @@ namespace NMapInfoEditor
 			{
 				const string szLinkToObjectRPGStatsTypeName = pLinkToMapInfoElement->szRPGStatsTypeName;
 				const CDBID linkToObjectRPGStatsDBID = pLinkToMapInfoElement->rpgStatsDBID;
-				const UINT nLinkToFrameIndex = pLinkToMapInfoElement->nFrameIndex;
+				const unsigned nLinkToFrameIndex = pLinkToMapInfoElement->nFrameIndex;
 				if ( !szLinkToObjectRPGStatsTypeName.empty() && !linkToObjectRPGStatsDBID.IsEmpty() )
 				{
 					for ( SObjectInfo::CMapInfoElementMap::const_iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 					{
 						const string szObjectRPGStatsTypeName = itMapInfoElement->second.szRPGStatsTypeName;
 						const CDBID objectRPGStatsDBID = itMapInfoElement->second.rpgStatsDBID;
-						const UINT nFrameIndex = itMapInfoElement->second.nFrameIndex;
+						const unsigned nFrameIndex = itMapInfoElement->second.nFrameIndex;
 						if ( !szObjectRPGStatsTypeName.empty() && !objectRPGStatsDBID.IsEmpty() )
 						{
 							if ( NMapInfoEditor::CheckLinkCapability( szObjectRPGStatsTypeName, objectRPGStatsDBID, nFrameIndex,
@@ -979,7 +979,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfo::InsertLink( bool bUpdateDB, UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfo::InsertLink( bool bUpdateDB, unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		bool bResult = true;
 		if ( CheckLinkCapability( nLinkToSceneID ) )
@@ -989,7 +989,7 @@ namespace NMapInfoEditor
 			//
 			if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoBySceneID( nLinkToSceneID ) )
 			{
-				UINT nLinkToLinkID = pLinkToObjectInfo->GetLinkIDBySceneID( nLinkToSceneID );
+				unsigned nLinkToLinkID = pLinkToObjectInfo->GetLinkIDBySceneID( nLinkToSceneID );
 				if ( SMapInfoElement* pLinkToMapInfoElement = pLinkToObjectInfo->GetMapInfoElementByLinkID( nLinkToLinkID ) )
 				{
 					for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
@@ -1013,7 +1013,7 @@ namespace NMapInfoEditor
 						{
 							const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 							const string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
-							bResult = bResult && pObjectController->AddChangeValueOperation<UINT>( szObjectProperty + "Link.LinkWith", nLinkToLinkID, pManipulator );
+							bResult = bResult && pObjectController->AddChangeValueOperation<unsigned>( szObjectProperty + "Link.LinkWith", nLinkToLinkID, pManipulator );
 						}
 						itMapInfoElement->second.nLinkToLinkID = nLinkToLinkID;
 					}
@@ -1089,7 +1089,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfo::UpdateByController( UINT nLinkID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
+	void SObjectInfo::UpdateByController( unsigned nLinkID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
 		if ( SMapInfoElement* pMapInfoElement = GetMapInfoElementByLinkID( nLinkID ) )
 		{
@@ -1228,7 +1228,7 @@ namespace NMapInfoEditor
 		mapInfoElementMap.clear();
 		for ( SObjectInfo::CMapInfoElementMap::const_iterator itOldMapInfoElement = oldMapInfoElementMap.begin(); itOldMapInfoElement != oldMapInfoElementMap.end(); ++itOldMapInfoElement )
 		{
-			UINT nLinkID = pObjectInfoCollector->linkIDCollector.LockID();
+			unsigned nLinkID = pObjectInfoCollector->linkIDCollector.LockID();
 			mapInfoElementMap[nLinkID] = itOldMapInfoElement->second;
 			( *pNew2OldLinkIDMap )[nLinkID] = itOldMapInfoElement->first;
 			( *pOld2NewLinkIDMap )[itOldMapInfoElement->first] = nLinkID;

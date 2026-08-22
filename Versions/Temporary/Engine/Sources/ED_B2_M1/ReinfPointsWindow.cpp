@@ -147,7 +147,7 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 }
 
 
-bool CReinfPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CReinfPointsWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SReinfPointsWindowData *pData = reinterpret_cast<SReinfPointsWindowData*>( dwData );
 
@@ -171,7 +171,7 @@ bool CReinfPointsWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CReinfPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CReinfPointsWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CReinfPointsWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CReinfPointsWindow::UpdateCommand(), pbCheck == 0" );
@@ -289,7 +289,7 @@ void CReinfPointsWindow::OnLvnDblclkListReinfPoints( NMHDR *pNMHDR, LRESULT *pRe
 }
 
 
-void CReinfPointsWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CReinfPointsWindow::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{

@@ -180,7 +180,7 @@ void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -247,7 +247,7 @@ bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CAIGeneralPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CAIGeneralPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAIGeneralPointsState::UpdateCommand(), pbCheck == 0" );
@@ -281,7 +281,7 @@ bool CAIGeneralPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 }
 
 
-void CAIGeneralPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( dialogData.players[dialogData.nCurrentPlayer].parcels.size() == 0 )
 		return;
@@ -356,7 +356,7 @@ void CAIGeneralPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMou
 }
 
 
-void CAIGeneralPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CAIGeneralPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint )
 	{
@@ -371,7 +371,7 @@ void CAIGeneralPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CAIGeneralPointsState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CAIGeneralPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	bMoveParcel = false;
 	bMovePoint = false;
@@ -384,7 +384,7 @@ void CAIGeneralPointsState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CAIGeneralPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !(bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint) )
 		return;
@@ -450,7 +450,7 @@ void CAIGeneralPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CAIGeneralPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CAIGeneralPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{

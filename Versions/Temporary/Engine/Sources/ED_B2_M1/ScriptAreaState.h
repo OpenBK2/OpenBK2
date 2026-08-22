@@ -35,13 +35,13 @@ public:
 		void Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const;
 		bool Pick( const CVec3 &rPoint ) const;
 	};
-	typedef hash_map<UINT, SScriptArea> CScriptAreaMap;
+	typedef hash_map<unsigned, SScriptArea> CScriptAreaMap;
 	//
 private:
 	CMapInfoEditor *pMapInfoEditor;
 	//
 	CScriptAreaMap scriptAreaMap;
-	CIndexCollector<UINT> scriptAreaIDToIndexCollector;
+	CIndexCollector<unsigned> scriptAreaIDToIndexCollector;
 	CFreeIDCollector scriptAreaIDCollector;
 	//
 	SScriptAreaWindowData dialogData;			// данные окна редактора
@@ -55,9 +55,9 @@ private:
 
 	void Clear();
 	void GetScriptAreaMap();
-	void UpdateScriptArea( UINT nScriptAreaID );
-	UINT InsertScriptArea( NDb::EScriptAreaTypes eType, const string &rszName, const CVec3 &rStart, const CVec3 &rFinish );
-	void RemoveScriptArea( UINT nScriptAreaID );
+	void UpdateScriptArea( unsigned nScriptAreaID );
+	unsigned InsertScriptArea( NDb::EScriptAreaTypes eType, const string &rszName, const CVec3 &rStart, const CVec3 &rFinish );
+	void RemoveScriptArea( unsigned nScriptAreaID );
 
 public:
 	CScriptAreaState( CMapInfoEditor *pMapInfoEditor = 0 );
@@ -67,7 +67,7 @@ public:
 	void Enter();
 	void Leave();
 	void Draw( CPaintDC *pPaintDC );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CPolygonState
 	virtual bool SkipEnterAfterInsert() { return true; }
@@ -81,12 +81,12 @@ public:
 	virtual bool PrepareControlPoints( CControlPointList *pControlPointList );
 	virtual void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList );
 	virtual void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
-	virtual UINT InsertPolygon( const CControlPointList &rControlPointList );
+	virtual unsigned InsertPolygon( const CControlPointList &rControlPointList );
 	virtual void RemovePolygon( int nPolygonID );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	void PostDraw( CPaintDC *pPaintDC );
 };

@@ -45,7 +45,7 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedTypedRemove();
 	afx_msg void OnNMClickListReinfPointsTypedTemplate(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	afx_msg void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 

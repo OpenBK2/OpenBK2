@@ -114,14 +114,14 @@ protected:
 	void InsertObjectLeave();
 	void InsertObjectDraw( class CPaintDC *pPaintDC );
 	///
-	bool InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectLButtonDblClk	( UINT nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectLButtonDblClk	( unsigned nFlags, const CVec3 &rTerrainPos );
 	///
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	///
 };
 

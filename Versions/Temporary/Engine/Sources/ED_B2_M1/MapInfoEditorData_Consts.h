@@ -81,9 +81,9 @@ namespace NMapInfoEditor
 	typedef vector<CVec3> CSelectionSquare;
 	typedef list<int> CSceneIDList;
 	typedef list<int> CIndicesList;
-	typedef hash_map<UINT, int> CObjectInfoIDSet;
-	typedef vector<UINT> CLinkIDList;
-	typedef hash_map<UINT, UINT> CLinkIDMap;
+	typedef hash_map<unsigned, int> CObjectInfoIDSet;
+	typedef vector<unsigned> CLinkIDList;
+	typedef hash_map<unsigned, unsigned> CLinkIDMap;
 
 	enum EObjectInfoType
 	{
@@ -97,7 +97,7 @@ namespace NMapInfoEditor
 	struct SControllerChangeInfo
 	{
 		int nIndex;
-		UINT nFlags;
+		unsigned nFlags;
 
 		SControllerChangeInfo() : nIndex( INVALID_NODE_ID ), nFlags( 0 ) {}
 		SControllerChangeInfo( int _nIndex ) : nIndex( _nIndex ), nFlags( 0 ) {}
@@ -120,8 +120,8 @@ namespace NMapInfoEditor
 	struct SObjectLoadInfo
 	{
 		int nObjectIndex;
-		UINT nLinkID;
-		UINT nLinkWith;
+		unsigned nLinkID;
+		unsigned nLinkWith;
 		bool bSearchIndices;
 		//
 		bool bAdditionalDataFilled;
@@ -129,8 +129,8 @@ namespace NMapInfoEditor
 		CDBID rpgStatsDBID;
 		CVec3 vPosition;
 		float fDirection;
-		UINT nFrameIndex;
-		UINT nPlayer;
+		unsigned nFrameIndex;
+		unsigned nPlayer;
 		float fHP;
 		//
 		SObjectLoadInfo()
@@ -157,8 +157,8 @@ namespace NMapInfoEditor
 		string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		//
-		UINT nFrameIndex;
-		UINT nPlayer;
+		unsigned nFrameIndex;
+		unsigned nPlayer;
 		float fHP;
 		//
 		bool bFitToGrid;
@@ -296,8 +296,8 @@ namespace NMapInfoEditor
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool CheckLinkCapability( const string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, UINT nFrameIndex,
-														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, UINT nLinkToFrameIndex );
+	bool CheckLinkCapability( const string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
+														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex );
 };
 
 

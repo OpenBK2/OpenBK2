@@ -14,7 +14,7 @@ class CComboBoxGDBBrowser : public ICommandHandler
 	int nGDBBrowserID;
 	CWnd *pwndParent;
 	CComboBox wndComboBox;
-	UINT nControlID;
+	unsigned nControlID;
 	CImageList typesImageList;
 	CImageList headerImageList;
 	bool bEnableEdit;
@@ -29,7 +29,7 @@ public:
 	virtual ~CComboBoxGDBBrowser();
 	//
 	void MoveWindow( const CRect &rRect );
-	bool Create( CWnd *_pwndParent, UINT _nControlID );
+	bool Create( CWnd *_pwndParent, unsigned _nControlID );
 	//
 	void SwitchTabs();
 	bool GetActiveTab( CTreeGDBBrowserBase** ppwndActiveTab );
@@ -112,8 +112,8 @@ public:
 	void EnableEdit( bool bEnable );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

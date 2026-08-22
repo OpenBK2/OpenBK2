@@ -22,7 +22,7 @@ END_MESSAGE_MAP()
 
 list<CPointListDialog*> CPointListDialog::otherDialogs;
 
-CPointListDialog::CPointListDialog( UINT _nInstanceID, const CString &rszLabel )
+CPointListDialog::CPointListDialog( unsigned _nInstanceID, const CString &rszLabel )
 	:	CResizeDialog( CPointListDialog::IDD ),
 	szLabel( rszLabel ), 
 	nInstanceID( _nInstanceID ),
@@ -218,7 +218,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 }
 
 
-bool CPointListDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPointListDialog::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
 	
@@ -250,7 +250,7 @@ bool CPointListDialog::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPointListDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPointListDialog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPointListDialog::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPointListDialog::UpdateCommand(), pbCheck == 0" );

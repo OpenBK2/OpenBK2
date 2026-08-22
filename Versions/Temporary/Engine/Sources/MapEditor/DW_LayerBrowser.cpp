@@ -35,7 +35,7 @@ int CDWLayerBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 }
 
 
-void CDWLayerBrowser::OnSize( UINT nType, int cx, int cy ) 
+void CDWLayerBrowser::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 	

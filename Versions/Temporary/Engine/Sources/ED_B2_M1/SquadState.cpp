@@ -110,14 +110,14 @@ void CSquadState::Leave()
 }
 
 
-bool CSquadState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CSquadState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
  	switch( nCommandID )
 	{
 		case ID_SQUAD_CHANGE_STATE:
 		{
-			UINT nShortcutIndex = HIWORD( dwData );
-			UINT nTabIndex = LOWORD( dwData );
+			unsigned nShortcutIndex = HIWORD( dwData );
+			unsigned nTabIndex = LOWORD( dwData );
 			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) &&
 					 ( nShortcutIndex >= 0 ) &&
 					 ( nShortcutIndex < GetCount() ) )
@@ -143,7 +143,7 @@ bool CSquadState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CSquadState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CSquadState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CSquadState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CSquadState::UpdateCommand(), pbCheck == 0" );

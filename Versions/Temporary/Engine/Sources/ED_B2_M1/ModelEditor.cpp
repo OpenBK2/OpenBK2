@@ -24,7 +24,7 @@
 REGISTER_EDITOR_IN_DLL( Model, CModelEditor )
 
 
-const UINT TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] = 
+const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] = 
 {
 	ID_MODEL_RELOAD_EDITOR,
 	ID_SEPARATOR,
@@ -55,7 +55,7 @@ void CModelEditor::CreateControls()
 	NHPTimer::GetTime( &time );
 	//
 	// создаем minimap docking window
-	UINT nID = ID_MODEL_EDITOR_DW;
+	unsigned nID = ID_MODEL_EDITOR_DW;
 	CString strPaneLabel;
 	strPaneLabel.LoadString( theEDB2M1Instance, IDS_MODEL_TOOL_WINDOW_NAME  );
 	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel, CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
@@ -177,7 +177,7 @@ void CModelEditor::Destroy()
 }
 
 
-bool CModelEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CModelEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -202,7 +202,7 @@ bool CModelEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 	return false;
 }
 
-bool CModelEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CModelEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CModelEditor::UpdateCommand(), pbCheck == 0" );

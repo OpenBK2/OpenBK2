@@ -51,7 +51,7 @@ NMapInfoEditor::CVSOInstanceList* CCragState::GetVSOList()
 void CCragState::PrepareInsertVSO()
 {
 	pSelectedCragDesc = 0;
-	const UINT nObjectTypeID = NDb::SCragDesc::typeID;
+	const unsigned nObjectTypeID = NDb::SCragDesc::typeID;
 	SObjectSet objectSet;
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{

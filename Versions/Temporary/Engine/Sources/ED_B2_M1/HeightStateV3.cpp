@@ -35,7 +35,7 @@ const int CHeightStateV3::HEIGHT_BRUSH_SIZE[5] = { 3, 5, 9, 13, 17 };
 const int	CHeightStateV3::TILE_BRUSH_SIZE[5] = { 2, 4, 8, 12, 16 };
 
 
-void CHeightTileStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightTileStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -44,7 +44,7 @@ void CHeightTileStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CHeightTileStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightTileStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
 	{
@@ -58,7 +58,7 @@ void CHeightTileStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 
 // CHeightUpStateV3
 
-void CHeightUpStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightUpStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -76,7 +76,7 @@ void CHeightUpStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CHeightUpStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightUpStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -94,7 +94,7 @@ void CHeightUpStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CHeightUpStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightUpStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -104,7 +104,7 @@ void CHeightUpStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CHeightUpStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightUpStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
 	{
@@ -129,7 +129,7 @@ void CHeightUpStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 
 // CHeightDownState
 
-void CHeightDownStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightDownStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -147,7 +147,7 @@ void CHeightDownStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CHeightDownStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightDownStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -165,7 +165,7 @@ void CHeightDownStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CHeightDownStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightDownStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -175,7 +175,7 @@ void CHeightDownStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CHeightDownStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightDownStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
 	{
@@ -200,7 +200,7 @@ void CHeightDownStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 
 // CHeightRoundState
 
-void CHeightRoundStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightRoundStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -219,7 +219,7 @@ void CHeightRoundStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightRoundStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightRoundStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -237,7 +237,7 @@ void CHeightRoundStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightRoundStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightRoundStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -248,7 +248,7 @@ void CHeightRoundStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightRoundStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightRoundStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
 	{
@@ -272,7 +272,7 @@ void CHeightRoundStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 
 // CHeightPlatoState
 
-void CHeightPlatoStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightPlatoStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -291,7 +291,7 @@ void CHeightPlatoStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightPlatoStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightPlatoStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -309,7 +309,7 @@ void CHeightPlatoStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightPlatoStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightPlatoStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -320,7 +320,7 @@ void CHeightPlatoStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CHeightPlatoStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightPlatoStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
 	{
@@ -769,7 +769,7 @@ void CHeightStateV3::SetCornerTile( SHeightPattern *pPattern, const CTPoint<int>
 }
 
 
-void CHeightStateV3::GetEditParameters( UINT nFlags )
+void CHeightStateV3::GetEditParameters( unsigned nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -808,7 +808,7 @@ void CHeightStateV3::GetEditParameters( UINT nFlags )
 }
 
 
-void CHeightStateV3::SetEditParameters( UINT nFlags )
+void CHeightStateV3::SetEditParameters( unsigned nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -1107,7 +1107,7 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 				//	const CVec3 vMin( 0, 0, 0 );
 				//	const CVec3 vMax( 100, 100, 0 );
 				//	//
-				//	list<UINT> objectsSceneIDList;
+				//	list<unsigned> objectsSceneIDList;
 				//	pMapInfoEditor->objectInfoCollector.CreateSelection( objectsSceneIDList );
 				//	//
 				//	NMapInfoEditor::SObjectEditInfo objectEditInfo;
@@ -1440,7 +1440,7 @@ void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CHeightStateV3::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CHeightStateV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -1480,7 +1480,7 @@ bool CHeightStateV3::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CHeightStateV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CHeightStateV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CHeightStateV3::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CHeightStateV3::UpdateCommand(), pbCheck == 0" );
@@ -1509,7 +1509,7 @@ bool CHeightStateV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 }
 
 
-void CHeightStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMouseMove( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1524,7 +1524,7 @@ void CHeightStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CHeightStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1541,7 +1541,7 @@ void CHeightStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CHeightStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1558,7 +1558,7 @@ void CHeightStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CHeightStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1575,7 +1575,7 @@ void CHeightStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CHeightStateV3::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1597,7 +1597,7 @@ void CHeightStateV3::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CHeightStateV3::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonUp( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1619,7 +1619,7 @@ void CHeightStateV3::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CHeightStateV3::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CHeightStateV3::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonUp( nFlags, rMousePoint );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1641,7 +1641,7 @@ void CHeightStateV3::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CHeightStateV3::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CHeightStateV3::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1692,7 +1692,7 @@ void CHeightStateV3::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CHeightStateV3::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CHeightStateV3::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	pStoreInputState->OnKeyUp( nChar, nRepCnt, nFlags );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1718,7 +1718,7 @@ int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 	xs.Add( "HeightBrushSizeList", &heightBrushSizeList );
 	//
 	//do not serialise this fields:
-	// UINT nFlags;
+	// unsigned nFlags;
 	// vector<string> tileList;
 	return 0;
 }

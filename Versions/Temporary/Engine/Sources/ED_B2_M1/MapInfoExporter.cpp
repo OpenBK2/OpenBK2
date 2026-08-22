@@ -74,10 +74,10 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	}
 	bool bResult = true;
 	// Проверяем окопы:
-	//CIndexCollector<UINT> objectIDToIndexCollector( INVALID_NODE_ID );			// Список индексов объектов ( прямое отображение ID->Index )
-	//CIndexCollector<UINT> objectLinkIDToIndexCollector( INVALID_NODE_ID );	// Список индексов объектов ( прямое отображение LinkID->Index )
-	//CIndexCollector<UINT> entrenchmentIDToIndexCollector( INVALID_NODE_ID );
-	CIndexCollector<UINT> entrenchmentLinkIDToIndexCollector( INVALID_NODE_ID );
+	//CIndexCollector<unsigned> objectIDToIndexCollector( INVALID_NODE_ID );			// Список индексов объектов ( прямое отображение ID->Index )
+	//CIndexCollector<unsigned> objectLinkIDToIndexCollector( INVALID_NODE_ID );	// Список индексов объектов ( прямое отображение LinkID->Index )
+	//CIndexCollector<unsigned> entrenchmentIDToIndexCollector( INVALID_NODE_ID );
+	CIndexCollector<unsigned> entrenchmentLinkIDToIndexCollector( INVALID_NODE_ID );
 
 	NLog::GetLogger()->Log( LT_NORMAL, StrFmt( "Check map: %s\n", szObjectName.c_str() ) );
 
@@ -86,7 +86,7 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	//
 	int nObjectCount = 0;
 	CManipulatorManager::GetValue( &nObjectCount, pObjectManipulator, "Objects" );
-	for ( UINT nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
+	for ( unsigned nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 	{
 		const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 		//
@@ -99,7 +99,7 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 			continue;
 		}
 		//
-		UINT nObjectLinkID = INVALID_NODE_ID;
+		unsigned nObjectLinkID = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nObjectLinkID, pObjectManipulator, StrFmt("%s.Link.LinkID", szObjectPrefix.c_str()) );
 		if ( nObjectLinkID == INVALID_NODE_ID )
 		{
@@ -114,15 +114,15 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	}
 	//
 	int nEntrenchmentCount = 0;
-	hash_map<UINT, UINT> entrenchmentUsedLinkIDList;
+	hash_map<unsigned, unsigned> entrenchmentUsedLinkIDList;
 	CManipulatorManager::GetValue( &nEntrenchmentCount, pObjectManipulator, "Entrenchments" );
-	for ( UINT nEntrenchmentIndex = 0; nEntrenchmentIndex < nObjectCount; ++nEntrenchmentIndex )
+	for ( unsigned nEntrenchmentIndex = 0; nEntrenchmentIndex < nObjectCount; ++nEntrenchmentIndex )
 	{
 		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
 		//
 		int nSectionCount = 0;
 		CManipulatorManager::GetValue( &nSectionCount, pObjectManipulator, StrFmt("%s.sections", szEntrenchmentPrefix.c_str()) );
-		for ( UINT nSectionIndex = 0; nSectionIndex < nSectionCount; ++nSectionIndex )
+		for ( unsigned nSectionIndex = 0; nSectionIndex < nSectionCount; ++nSectionIndex )
 		{
 			const string szSectionPrefix = StrFmt( "%s.sections.[%d]", szEntrenchmentPrefix.c_str(), nSectionIndex );
 			//
@@ -138,7 +138,7 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 			}
 		}
 	}
-	for ( CIndexCollector<UINT>::CIDToIndexMap::const_iterator itIDToIndex = entrenchmentLinkIDToIndexCollector.GetIDToIndexMap().begin(); itIDToIndex != entrenchmentLinkIDToIndexCollector.GetIDToIndexMap().end(); ++itIDToIndex )
+	for ( CIndexCollector<unsigned>::CIDToIndexMap::const_iterator itIDToIndex = entrenchmentLinkIDToIndexCollector.GetIDToIndexMap().begin(); itIDToIndex != entrenchmentLinkIDToIndexCollector.GetIDToIndexMap().end(); ++itIDToIndex )
 	{
 		if ( entrenchmentUsedLinkIDList.find( itIDToIndex->first ) == entrenchmentUsedLinkIDList.end() )
 		{
@@ -212,7 +212,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 }
 
 
-bool CMapInfoExporter::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapInfoExporter::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SObjectSet objectSet;
 	bool bResult = false;
@@ -251,7 +251,7 @@ bool CMapInfoExporter::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMapInfoExporter::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapInfoExporter::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAnimationBuilder::UpdateCommand(), pbCheck == 0" );

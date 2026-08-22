@@ -41,7 +41,7 @@ public:
 	{
 		typedef vector<string> CFieldList;
 
-		UINT nFlags;
+		unsigned nFlags;
 		//
 		EMoveType eMoveType;
 		CFieldList fieldList;
@@ -108,7 +108,7 @@ private:
 	CControlPointList controlPointList;
 
 	SEditParameters* GetEditParameters();
-	void UpdateEditParameters( UINT nFlags );
+	void UpdateEditParameters( unsigned nFlags );
 
 	typedef list<CVec2> CFieldPolygon;
 	typedef vector<int> CXPosList;
@@ -160,13 +160,13 @@ public:
 	bool PrepareControlPoints( CControlPointList *pControlPointList );
 	void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) {}
 	void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
-	UINT InsertPolygon( const CControlPointList &rControlPointList ) { controlPointList = rControlPointList; return 0; }
+	unsigned InsertPolygon( const CControlPointList &rControlPointList ) { controlPointList = rControlPointList; return 0; }
 	void RemovePolygon( int nPolygonID ) {}
 
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	// CFieldState
 	CFieldState() : pMapInfoEditor( 0 )

@@ -173,7 +173,7 @@ void CReinfPointsTypedDlg::GetDialogData()
 	}
 }
 
-void CReinfPointsTypedDlg::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CReinfPointsTypedDlg::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{

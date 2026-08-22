@@ -200,7 +200,7 @@ void CPixelShader::Begin()
 
 	pPSEffect->SetTechnique( hTechnique );
 
-	UINT nPasses;
+	unsigned nPasses;
 	HRESULT hRes = pPSEffect->Begin( &nPasses, 0 );
 	ASSERT( nPasses == 1 );
 	ASSERT( SUCCEEDED( hRes ) );
@@ -340,19 +340,19 @@ HRESULT CStatesManager::SetVertexShader( LPDIRECT3DVERTEXSHADER9 pShader )
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetVertexShaderConstantF( UINT RegisterIndex, CONST FLOAT *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetVertexShaderConstantF( unsigned RegisterIndex, CONST FLOAT *pConstantData, unsigned RegisterCount )
 {
 	pDevice->SetVertexShaderConstantF( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetVertexShaderConstantI( UINT RegisterIndex, CONST INT *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetVertexShaderConstantI( unsigned RegisterIndex, CONST INT *pConstantData, unsigned RegisterCount )
 {
 	pDevice->SetVertexShaderConstantI( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetVertexShaderConstantB( UINT RegisterIndex, CONST BOOL *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetVertexShaderConstantB( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount )
 {
 	pDevice->SetVertexShaderConstantB( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
@@ -364,19 +364,19 @@ HRESULT CStatesManager::SetPixelShader( LPDIRECT3DPIXELSHADER9 pShader )
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetPixelShaderConstantF( UINT RegisterIndex, CONST FLOAT *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetPixelShaderConstantF( unsigned RegisterIndex, CONST FLOAT *pConstantData, unsigned RegisterCount )
 {
 //	pDevice->SetPixelShaderConstantF( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetPixelShaderConstantI( UINT RegisterIndex, CONST INT *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetPixelShaderConstantI( unsigned RegisterIndex, CONST INT *pConstantData, unsigned RegisterCount )
 {
 //	pDevice->SetPixelShaderConstantI( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;
 }
 
-HRESULT CStatesManager::SetPixelShaderConstantB( UINT RegisterIndex, CONST BOOL *pConstantData, UINT RegisterCount )
+HRESULT CStatesManager::SetPixelShaderConstantB( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount )
 {
 //	pDevice->SetPixelShaderConstantB( RegisterIndex, pConstantData, RegisterCount );
 	return S_OK;

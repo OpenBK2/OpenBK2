@@ -11,7 +11,7 @@
 
 class CPCBuildDataDialog : public CResizeDialog, public CPCBaseDialog
 {
-	static const UINT	PC_BD_TREE_COLUMN_NAME  [PC_BD_TREE_COLUMN_COUNT];
+	static const unsigned	PC_BD_TREE_COLUMN_NAME  [PC_BD_TREE_COLUMN_COUNT];
 	static const int	PC_BD_TREE_COLUMN_FORMAT[PC_BD_TREE_COLUMN_COUNT];
 	static const int	PC_BD_TREE_COLUMN_WIDTH [PC_BD_TREE_COLUMN_COUNT];
 

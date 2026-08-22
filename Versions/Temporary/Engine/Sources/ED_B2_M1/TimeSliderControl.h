@@ -224,10 +224,10 @@ private:
 protected:
 	afx_msg void OnPaint();
 
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonUp( UINT nFlags, CPoint point );
-	afx_msg void OnMouseMove( UINT nFlags, CPoint point );
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
+	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 
 	DECLARE_MESSAGE_MAP()
 
@@ -245,8 +245,8 @@ public:
 	virtual ~CTimeSliderControl() {}
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// View Setup
 	bool HasActiveKeys() const { return data.HasActiveKeys(); }

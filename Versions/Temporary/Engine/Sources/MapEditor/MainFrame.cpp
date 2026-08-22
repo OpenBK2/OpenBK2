@@ -78,7 +78,7 @@ END_MESSAGE_MAP()
 
 /**
 CWMMnemonicCodes mnemonicCodes;
-LRESULT CMainFrame::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CMainFrame::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	DebugTrace( "Message: %s, wParam: 0x%X(%u), lParam: 0x%X\n", mnemonicCodes.Get( message ).c_str(), wParam, wParam, lParam );
 	return SECWorkbook::WindowProc( message, wParam, lParam );
@@ -175,7 +175,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 		pToolBarMgr->DefineDefaultToolBar( TOOLBAR_CONTROL_ID[0],
 																			 strToolbarName,
 																			 TOOLBAR_ELEMENTS_COUNT[0],
-																			 const_cast<UINT*>( TOOLBAR_ELEMENTS_ID[0] ),
+																			 const_cast<unsigned*>( TOOLBAR_ELEMENTS_ID[0] ),
 																			 TOOLBAR_STYLE[0],
 																			 AFX_IDW_DOCKBAR_TOP,
 																			 0,
@@ -188,7 +188,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 			pToolBarMgr->DefineDefaultToolBar( TOOLBAR_CONTROL_ID[nElementIndex],
 																				 strToolbarName,
 																				 TOOLBAR_ELEMENTS_COUNT[nElementIndex],
-																				 const_cast<UINT*>( TOOLBAR_ELEMENTS_ID[nElementIndex] ),
+																				 const_cast<unsigned*>( TOOLBAR_ELEMENTS_ID[nElementIndex] ),
 																				 TOOLBAR_STYLE[nElementIndex],
 																				 AFX_IDW_DOCKBAR_TOP,
 																				 TOOLBAR_CONTROL_ID[nElementIndex - 1],
@@ -199,7 +199,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//Создаем StatusBar
 	if ( !wndStatusBar.Create( this ) ||
 			 !wndStatusBar.SetIndicators( STATUSBAR_INDICATORS_ID,
-																		sizeof( STATUSBAR_INDICATORS_ID ) / sizeof( UINT ) ) )
+																		sizeof( STATUSBAR_INDICATORS_ID ) / sizeof( unsigned ) ) )
 	{
 		return -1;
 	}
@@ -217,7 +217,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	EnableDocking( CBRS_ALIGN_ANY );
 	//pToolBarMgr->SetDefaultDockState();
 	//
-	UINT nDWID = 0;
+	unsigned nDWID = 0;
 	CString strDWName;
 	const uint32_t dwDWStyle = WS_CHILD | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
 	const uint32_t dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
@@ -378,8 +378,8 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 LRESULT CMainFrame::OnSECToolBarNotify( WPARAM wParam, LPARAM lParam )
 {
 	/**
-	UINT nNotifyCode = HIWORD( wParam );
-	UINT nControlID = LOWORD( wParam );
+	unsigned nNotifyCode = HIWORD( wParam );
+	unsigned nControlID = LOWORD( wParam );
 	
 	HWND hWnd	= reinterpret_cast<HWND>( lParam );
 	NI_ASSERT( ::IsWindow( hWnd ), StrFmt( "Not a window: 0x%X", hWnd ) );
@@ -560,7 +560,7 @@ void CMainFrame::OpenResource( const string &rszResourceName )
 }
 
 
-void CMainFrame::OnUserCommand( UINT nCommandID )
+void CMainFrame::OnUserCommand( unsigned nCommandID )
 {
 	bool bEnable = false;
 	bool bChecked = false;
@@ -573,7 +573,7 @@ void CMainFrame::OnUserCommand( UINT nCommandID )
 
 void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 {
-	UINT nMenuID = INVALID_NODE_ID;
+	unsigned nMenuID = INVALID_NODE_ID;
 	const SUserData::CRecentList *pRecentList = 0;
 	if ( ( pCmdUI->m_nID >= ID_MAIN_RECENT_0 )  && ( pCmdUI->m_nID <= ID_MAIN_RECENT_0 ) )
 	{
@@ -638,7 +638,7 @@ void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 }
 
 
-void CMainFrame::OnViewToolBar( UINT nCommandID )
+void CMainFrame::OnViewToolBar( unsigned nCommandID )
 {
 	if ( CControlBar *pBar = GetControlBar( TOOLBAR_CONTROL_ID[nCommandID - ID_VIEW_TOOLBAR_MAIN] ) )
 	{
@@ -757,7 +757,7 @@ void CMainFrame::OnDWGDBBrowserRemove()
 }
 
 
-void CMainFrame::OnDWGDBBrowserWindow( UINT nCommandID )
+void CMainFrame::OnDWGDBBrowserWindow( unsigned nCommandID )
 {
 	const int nGDBBrowserIndex = nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST;
 	int nWindowIndex = 0;
@@ -898,7 +898,7 @@ void CMainFrame::OnToolsCustomize()
 		strToolbarName.LoadString( TOOLBAR_NAME_ID[nElementIndex] );
 		cmdPage.DefineBtnGroup( strToolbarName,
 														TOOLBAR_ELEMENTS_COUNT[nElementIndex],
-														const_cast<UINT*>( TOOLBAR_ELEMENTS_ID[nElementIndex] ) );
+														const_cast<unsigned*>( TOOLBAR_ELEMENTS_ID[nElementIndex] ) );
 	}
 
 	CEditorApp *pApp = dynamic_cast<CEditorApp *>( AfxGetApp() );
@@ -908,7 +908,7 @@ void CMainFrame::OnToolsCustomize()
 	{
 		cmdPage.DefineBtnGroup( cursomToolBarInfoList[nElementIndex].strName,
 														cursomToolBarInfoList[nElementIndex].nCount,
-														const_cast<UINT*>( cursomToolBarInfoList[nElementIndex].pButtons ) );
+														const_cast<unsigned*>( cursomToolBarInfoList[nElementIndex].pButtons ) );
 	}
 
 	strToolbarName.LoadString( IDS_TOOLBAR_MENU );
@@ -955,7 +955,7 @@ void CMainFrame::OnUpdateHelpContents( CCmdUI *pCmdUI )
 
 
 bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
-																								UINT nButtonID,
+																								unsigned nButtonID,
 																								CTPoint<int> *pLeftBottomPos )
 {
 	CControlBar* pControlBar;
@@ -1002,7 +1002,7 @@ bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 }
 
 
-SECWorksheet* CMainFrame::CreateChildFrame( UINT nResource )
+SECWorksheet* CMainFrame::CreateChildFrame( unsigned nResource )
 {
 	return dynamic_cast<SECWorksheet*>( CreateNewChild( RUNTIME_CLASS( CDefaultChildFrame ), nResource, 0, 0 ) );
 }
@@ -1022,10 +1022,10 @@ bool CMainFrame::SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, cla
 }
 
 
-SECControlBar* CMainFrame::CreateControlBar( UINT *pnID,
+SECControlBar* CMainFrame::CreateControlBar( unsigned *pnID,
 																						 const CString &rstrTitle,
-																						 const UINT nStyle,
-																						 const UINT nPlace,
+																						 const unsigned nStyle,
+																						 const unsigned nPlace,
 																						 const float fRate,
 																						 const int nWidth )
 {
@@ -1069,7 +1069,7 @@ bool CMainFrame::SetControlBarWindowContents( SECControlBar* _pwndDockingWindow,
 }
 
 
-bool CMainFrame::AddMenuResources( vector<UINT> &rIDs )
+bool CMainFrame::AddMenuResources( vector<unsigned> &rIDs )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
 	{
@@ -1167,7 +1167,7 @@ bool CMainFrame::AddMenuResources( vector<UINT> &rIDs )
 }
 
 
-void CMainFrame::ShowMenu( const UINT nResourceID )
+void CMainFrame::ShowMenu( const unsigned nResourceID )
 {
 	m_nIDCurMenuRsrc = nResourceID;
 	if ( ::IsWindow( m_pMenuBar->m_hWnd ) )
@@ -1181,7 +1181,7 @@ void CMainFrame::ShowMenu( const UINT nResourceID )
 }
 
 
-bool CMainFrame::AddToolBarResource( const UINT nStandartResourceID, const UINT nLargeResourceID )
+bool CMainFrame::AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
 	{
@@ -1192,12 +1192,12 @@ bool CMainFrame::AddToolBarResource( const UINT nStandartResourceID, const UINT 
 }
 
 
-void CMainFrame::CreateToolBar( UINT *pnID,
+void CMainFrame::CreateToolBar( unsigned *pnID,
 																const CString &rstrTitle,
-																const UINT nButtonCount,
-																const UINT* pButtonIDMap,
+																const unsigned nButtonCount,
+																const unsigned* pButtonIDMap,
 																const uint32_t dwAlignment,
-																const UINT nStyle,
+																const unsigned nStyle,
 																const bool bDocked,
 																const bool bVisible,
 																const bool bMainToolBar )
@@ -1215,7 +1215,7 @@ void CMainFrame::CreateToolBar( UINT *pnID,
 		pToolBarMgr->DefineDefaultToolBar( *pnID,
 																			 rstrTitle,
 																			 nButtonCount,
-																			 const_cast<UINT*>( pButtonIDMap ),
+																			 const_cast<unsigned*>( pButtonIDMap ),
 																			 dwAlignment,
 																			 nStyle,
 																			 bMainToolBar ? TOOLBAR_CONTROL_ID_TO_ARRANGE : ( *pnID ) - 1,
@@ -1225,7 +1225,7 @@ void CMainFrame::CreateToolBar( UINT *pnID,
 }
 
 
-SECCustomToolBar* CMainFrame::GetToolBar( UINT nID )
+SECCustomToolBar* CMainFrame::GetToolBar( unsigned nID )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
 	{
@@ -1560,7 +1560,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 }
 
 
-bool CMainFrame::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMainFrame::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -1597,7 +1597,7 @@ bool CMainFrame::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMainFrame::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMainFrame::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMainFrame::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMainFrame::UpdateCommand(), pbCheck == 0" );

@@ -7,8 +7,8 @@
 class CDefaultShortcutBar : public SECShortcutBar
 {
 	vector<CWnd*> shortcutList;
-	UINT nCommandHandlerID;
-	UINT nCommandID;
+	unsigned nCommandHandlerID;
+	unsigned nCommandID;
 
 protected:
 	BOOL OnChangeBar( int nShortcutIndex );
@@ -35,9 +35,9 @@ public:
 	void RemoveAllShortcuts();
 	CWnd* GetShortcutWindow( int nShortcutIndex );
 	//
-	void SetCommandHandlerID( UINT _nCommandHandlerID, UINT _nCommandID ) { nCommandHandlerID = _nCommandHandlerID; nCommandID = _nCommandID; }
-	UINT GetCommandHandlerID() { return nCommandHandlerID; }
-	UINT GetCommand() { return nCommandID; }
+	void SetCommandHandlerID( unsigned _nCommandHandlerID, unsigned _nCommandID ) { nCommandHandlerID = _nCommandHandlerID; nCommandID = _nCommandID; }
+	unsigned GetCommandHandlerID() { return nCommandHandlerID; }
+	unsigned GetCommand() { return nCommandID; }
 };
 
 

@@ -141,7 +141,7 @@ void CCameraPositionState::SavePosition()
 }
 
 
-bool CCameraPositionState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CCameraPositionState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -180,7 +180,7 @@ bool CCameraPositionState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CCameraPositionState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CCameraPositionState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCameraPositionState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CCameraPositionState::UpdateCommand(), pbCheck == 0" );
@@ -303,7 +303,7 @@ void CCameraPositionState::PostDraw( CPaintDC *pPaintDC )
 }
 
 
-void CCameraPositionState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
 		return;
@@ -335,7 +335,7 @@ void CCameraPositionState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMous
 }
 
 
-void CCameraPositionState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
 		return;
@@ -363,7 +363,7 @@ void CCameraPositionState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CCameraPositionState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CCameraPositionState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !bMove )
 		return;

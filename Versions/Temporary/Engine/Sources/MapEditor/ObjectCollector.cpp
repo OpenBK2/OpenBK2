@@ -427,7 +427,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const str
 {
 	if ( pObjectParams )
 	{
-		UINT nFlags = 0;
+		unsigned nFlags = 0;
 		CDataExtractorMap::iterator posDataExtractor = dataExtractorMap.find( rszDataExtractorType );
 		if ( posDataExtractor == dataExtractorMap.end() )
 		{

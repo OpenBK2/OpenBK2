@@ -100,7 +100,7 @@ CAnimationMnemonics::CAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIM
 };
 
 
-NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType, string *pszMnemonicLabel, UINT *pnNumber )
+NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType, string *pszMnemonicLabel, unsigned *pnNumber )
 {
 	int nPos = 0;
 	while( nPos != string::npos )
@@ -116,7 +116,7 @@ NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType,
 				{
 					const string szNumber = rszMnemonicType.substr( nPos );
 
-					UINT nNumber = INVALID_NODE_ID;
+					unsigned nNumber = INVALID_NODE_ID;
 					if ( sscanf( szNumber.c_str(), "%d", &nNumber ) == 1 )
 					{
 						( *pnNumber ) = nNumber;

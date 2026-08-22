@@ -24,7 +24,7 @@ static bool isMore = false;
 static bool needSaveLog = true;
 
 
-static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam );
+static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam );
 static bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam );
 
 struct SAssertionDlgParams
@@ -96,7 +96,7 @@ inline SAssertionDlgParams *GetParams( LPARAM lParam )
 	return reinterpret_cast<SAssertionDlgParams*>(lParam);
 }
 
-static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam ) 
+static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam ) 
 { 
 	switch (message)
 	{ 

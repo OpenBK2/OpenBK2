@@ -6,7 +6,7 @@
 template<class TList, class TElement>
 class CUniqueList
 {
-	typedef hash_map<TElement, UINT> CElementMap;
+	typedef hash_map<TElement, unsigned> CElementMap;
 	//
 	CElementMap elementMap;
 	TList elementList;

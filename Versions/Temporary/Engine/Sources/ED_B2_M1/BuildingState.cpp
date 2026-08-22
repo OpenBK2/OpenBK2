@@ -90,7 +90,7 @@ void CBuildingState::Enter()
 	
 	// читаем установки MapInfoEditor, чтобы выбрать террейн
 
-	//UINT nMapID = -1;
+	//unsigned nMapID = -1;
 	//if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
 	//{
 	//	string szMapName = NEditorOptions::GetBgMap( pBuildingEditor->GetCurrSeason() );
@@ -132,15 +132,15 @@ void CBuildingState::Leave()
 }
 
 
-bool CBuildingState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CBuildingState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	//DebugTrace( "Changing building state: nCommandID = %d, dwData = %d", nCommandID, dwData );
  	switch( nCommandID )
 	{
 		case ID_BUILDING_CHANGE_STATE:
 		{
-			UINT nShortcutIndex = HIWORD( dwData );
-			UINT nTabIndex = LOWORD( dwData );
+			unsigned nShortcutIndex = HIWORD( dwData );
+			unsigned nTabIndex = LOWORD( dwData );
 			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) &&
 					 ( nShortcutIndex >= 0 ) &&
 					 ( nShortcutIndex < GetCount() ) )
@@ -164,7 +164,7 @@ bool CBuildingState::HandleCommand( UINT nCommandID, uint32_t dwData )
 	return false;
 }
 
-bool CBuildingState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CBuildingState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CBuildingState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CBuildingState::UpdateCommand(), pbCheck == 0" );

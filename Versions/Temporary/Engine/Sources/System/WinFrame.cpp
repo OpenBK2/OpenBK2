@@ -139,7 +139,7 @@ static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
 	m.dwFlags = dwFlags;
 }
 
-static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam );
 bool __declspec(dllexport) SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
 {
   // create and register class style
@@ -192,7 +192,7 @@ static void SetClipCursorRect( HWND _hWnd )
 }
 
 // did not know how to return NCHitTest
-static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
 {
 	//Report( "WndProc_", uMsg );
 	//

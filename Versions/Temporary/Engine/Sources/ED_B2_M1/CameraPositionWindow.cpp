@@ -97,7 +97,7 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 }
 
 
-bool CCameraPositionWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CCameraPositionWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SCameraPositionWindowData *pData = reinterpret_cast<SCameraPositionWindowData*>(dwData);
 	switch( nCommandID ) 
@@ -119,7 +119,7 @@ bool CCameraPositionWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CCameraPositionWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CCameraPositionWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCameraPositionWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CCameraPositionWindow::UpdateCommand(), pbCheck == 0" );

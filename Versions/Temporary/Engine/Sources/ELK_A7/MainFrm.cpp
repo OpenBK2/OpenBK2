@@ -94,7 +94,7 @@ IMPLEMENT_DYNAMIC(CMainFrame, SECFrameWnd)
 
 
 int wmAppToolBarWndNotify = RegisterWindowMessage( _T( "WM_SECTOOLBARWNDNOTIFY" ) );
-static UINT WM_FINDREPLACE = ::RegisterWindowMessage( FINDMSGSTRING );
+static unsigned WM_FINDREPLACE = ::RegisterWindowMessage( FINDMSGSTRING );
 
 
 BEGIN_MESSAGE_MAP(CMainFrame, SECFrameWnd)
@@ -175,7 +175,7 @@ END_MESSAGE_MAP()
 //	ON_UPDATE_COMMAND_UI_RANGE(ID_RECENT_ELK_0, ID_RECENT_ELK_9, OnUpdateRecentElkRange)
 
 
-static UINT INDICATORS[] =
+static unsigned INDICATORS[] =
 {
 	ID_SEPARATOR,           // status line indicator
 	ID_INDICATOR_CAPS,
@@ -184,7 +184,7 @@ static UINT INDICATORS[] =
 };
 
 
-static UINT BASED_CODE FILE_BUTTONS[] =
+static unsigned BASED_CODE FILE_BUTTONS[] =
 {
 	ID_FILE_OPEN,
 	ID_FILE_SAVE,
@@ -196,7 +196,7 @@ static UINT BASED_CODE FILE_BUTTONS[] =
 };
 
 
-static UINT BASED_CODE EDIT_BUTTONS[] =
+static unsigned BASED_CODE EDIT_BUTTONS[] =
 {
 	ID_EDIT_CUT,
 	ID_EDIT_COPY,
@@ -211,7 +211,7 @@ static UINT BASED_CODE EDIT_BUTTONS[] =
 };
 
 
-static UINT BASED_CODE  BROWSE_BUTTONS[] =
+static unsigned BASED_CODE  BROWSE_BUTTONS[] =
 {
 	IDC_BROWSE_COLLAPSE_ITEM,
 	ID_SEPARATOR,
@@ -225,14 +225,14 @@ static UINT BASED_CODE  BROWSE_BUTTONS[] =
 };
 
 
-static UINT BASED_CODE VIEW_BUTTONS[] =
+static unsigned BASED_CODE VIEW_BUTTONS[] =
 {
 	ID_VIEW_TREE,
 	ID_VIEW_STATISTIC,
 };
 
 
-static UINT BASED_CODE SHORT_BUTTONS[] =
+static unsigned BASED_CODE SHORT_BUTTONS[] =
 {
 	ID_TOOLS_RUN_GAME,
 	ID_EXPORT_TO_PACK,
@@ -400,7 +400,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	}
 
 	//create status bar
-	if ( !wndStatusBar.Create( this ) || !wndStatusBar.SetIndicators( INDICATORS, sizeof( INDICATORS ) / sizeof( UINT ) ) )
+	if ( !wndStatusBar.Create( this ) || !wndStatusBar.SetIndicators( INDICATORS, sizeof( INDICATORS ) / sizeof( unsigned ) ) )
 	{
 		return -1;
 	}
@@ -420,7 +420,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	// Dockable window
 	uint32_t dwStyle = WS_CHILD | WS_VISIBLE | CBRS_RIGHT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
 	uint32_t dwStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
-	UINT nID = SECControlBar::GetUniqueBarID( this, 100 );
+	unsigned nID = SECControlBar::GetUniqueBarID( this, 100 );
 	CString strDockingWindowTitle;
 	strDockingWindowTitle.LoadString( IDS_ELK_TREE_WINDOW_TITLE );
 	if ( !wndBaseTree.Create( this, strDockingWindowTitle, dwStyle, dwStyleEx, nID ) )
@@ -921,7 +921,7 @@ void CMainFrame::OnFileOpen()
 }
 
 
-void CMainFrame::OnRecentElk( UINT nID ) 
+void CMainFrame::OnRecentElk( unsigned nID ) 
 {
 	int nRecentCount = 0;
 	for ( list<string>::const_iterator itRecent = params.recentList.begin(); itRecent != params.recentList.end(); ++itRecent )
@@ -1085,7 +1085,7 @@ void CMainFrame::OnFileDelete()
 }
 
 
-LRESULT CMainFrame::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CMainFrame::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	if ( message == WM_INPUT_FORM_NOTIFY )
 	{
@@ -1267,7 +1267,7 @@ int CMainFrame::OnIFNStateChanged( int nState )
 }
 
 
-int CMainFrame::OnTENKeyDown( UINT nChar )
+int CMainFrame::OnTENKeyDown( unsigned nChar )
 {
 	if ( nChar == 'N' )
 	{
@@ -1570,11 +1570,11 @@ void CMainFrame::OnUpdateBrowseCollapseItem(CCmdUI* pCmdUI)
 }
 
 
-int32_t CMainFrame::OnCreateCombo(UINT wParam, int32_t lParam)
+int32_t CMainFrame::OnCreateCombo(unsigned wParam, int32_t lParam)
 {
 	HWND hWnd = reinterpret_cast<HWND>( lParam );
-	UINT nNotifyCode = HIWORD( wParam );
-	UINT nIDCtl = LOWORD( wParam );
+	unsigned nNotifyCode = HIWORD( wParam );
+	unsigned nIDCtl = LOWORD( wParam );
 	NI_ASSERT( ::IsWindow(hWnd), StrFmt( _T( "CMainFrame::OnCreateCombo(), not a window" ) ) );
 	CWnd *pWnd = CWnd::FromHandle( hWnd );
 	

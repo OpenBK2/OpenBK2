@@ -75,33 +75,33 @@ public:
 	};
 	/**/
 	//
-	static const UINT INPUT_STATE_LABEL_ID[IS_COUNT];
-	static const UINT TERRAIN_INPUT_SUSBSTATE_LABEL_ID[TERRAIN_ISS_COUNT];
-	static const UINT OBJECT_INPUT_SUSBSTATE_LABEL_ID[OBJECT_ISS_COUNT];
-	static const UINT GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT];
-	static const UINT SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT];
-	//static const UINT MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT];
-	//static const UINT ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT];
+	static const unsigned INPUT_STATE_LABEL_ID[IS_COUNT];
+	static const unsigned TERRAIN_INPUT_SUSBSTATE_LABEL_ID[TERRAIN_ISS_COUNT];
+	static const unsigned OBJECT_INPUT_SUSBSTATE_LABEL_ID[OBJECT_ISS_COUNT];
+	static const unsigned GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT];
+	static const unsigned SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT];
+	//static const unsigned MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT];
+	//static const unsigned ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT];
 	//
-	static const UINT DEFAULT_INPUT_STATE;
-	static const UINT INPUT_SUBSTATE_COUNT[IS_COUNT];
-	static const UINT DEFAULT_INPUT_SUBSTATE[IS_COUNT];
+	static const unsigned DEFAULT_INPUT_STATE;
+	static const unsigned INPUT_SUBSTATE_COUNT[IS_COUNT];
+	static const unsigned DEFAULT_INPUT_SUBSTATE[IS_COUNT];
 
 	//CMultiInputState
 	void Enter();
 	void Enter2();
 	void Leave();
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	void CancelSelection();
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

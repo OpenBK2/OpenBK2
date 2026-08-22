@@ -12,15 +12,15 @@ namespace NDrawToolsDC
 	static CPen *s_pOldPen;
 	static CFont *s_pOldFont;
 
-	const UINT LABEL_BORDER_COLOR		= RGB(0, 0, 0);
-	const UINT LABEL_BG_COLOR				= RGB(255, 255, 221);
-	const UINT LABEL_MAIN_FONT			= ANSI_VAR_FONT;
+	const unsigned LABEL_BORDER_COLOR		= RGB(0, 0, 0);
+	const unsigned LABEL_BG_COLOR				= RGB(255, 255, 221);
+	const unsigned LABEL_MAIN_FONT			= ANSI_VAR_FONT;
 	//
-	//const UINT SIMPLE_TEXT_COLOR		= RGB(255, 128, 64);
-	const UINT SIMPLE_TEXT_COLOR		= RGB(255, 255, 255);
-	const UINT SIMPLE_FONT_TYPE			= ANSI_VAR_FONT;
+	//const unsigned SIMPLE_TEXT_COLOR		= RGB(255, 128, 64);
+	const unsigned SIMPLE_TEXT_COLOR		= RGB(255, 255, 255);
+	const unsigned SIMPLE_FONT_TYPE			= ANSI_VAR_FONT;
 	//
-	const UINT BORDER_BG_COLOR			= RGB(127, 127, 127);
+	const unsigned BORDER_BG_COLOR			= RGB(127, 127, 127);
 
 	void BackupDCSettings( CPaintDC *pDC )
 	{

@@ -407,7 +407,7 @@ void CVSOWindow::EnableHeight( bool bEnableHeight )
 }
 
 
-bool CVSOWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CVSOWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -485,7 +485,7 @@ bool CVSOWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CVSOWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CVSOWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CVSOWindow::UpdateCommand(), pbCheck == 0" );
@@ -531,7 +531,7 @@ bool CVSOWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 }
 
 
-void CVSOWindow::OnSize( UINT nType, int cx, int cy ) 
+void CVSOWindow::OnSize( unsigned nType, int cx, int cy ) 
 {
 	CResizeDialog::OnSize( nType, cx, cy );
 	//

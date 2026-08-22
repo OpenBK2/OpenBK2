@@ -9,7 +9,7 @@
 namespace NBSU
 {
 
-static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam );
+static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam );
 
 struct SExceptionDlgInitParams
 {
@@ -53,7 +53,7 @@ EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 	}
 }
 
-static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam ) 
+static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam ) 
 { 
 	switch (message) 
 	{ 

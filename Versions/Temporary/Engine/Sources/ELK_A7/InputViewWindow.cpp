@@ -74,7 +74,7 @@ void CInputViewWindow::OnDestroy()
 }
 
 
-void CInputViewWindow::OnSize(UINT nType, int cx, int cy) 
+void CInputViewWindow::OnSize(unsigned nType, int cx, int cy) 
 {
 	CWnd::OnSize( nType, cx, cy );
 	

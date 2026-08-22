@@ -55,7 +55,7 @@ bool CMultiManipulator::IDExists( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::NameExists( UINT nID ) const
+bool CMultiManipulator::NameExists( unsigned nID ) const
 {
 	if ( manipulatorMap.empty() )
 	{
@@ -393,7 +393,7 @@ bool CMultiManipulator::GetType( const string &rszName, string *pszType ) const
 }
 
 
-UINT CMultiManipulator::GetID( const string &rszName ) const
+unsigned CMultiManipulator::GetID( const string &rszName ) const
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -418,7 +418,7 @@ UINT CMultiManipulator::GetID( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::GetName( UINT nID, string *pszName ) const
+bool CMultiManipulator::GetName( unsigned nID, string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMultiManipulator::GetName(): pszName == 0" );
 	if ( pActiveManipulator != 0 )
@@ -775,7 +775,7 @@ bool CMultiManipulatorIterator::GetType( string *pszType ) const
 }
 
 
-UINT CMultiManipulatorIterator::GetID() const
+unsigned CMultiManipulatorIterator::GetID() const
 {
 	if ( pManipulatorIterator != 0 )
 	{

@@ -11,7 +11,7 @@ class CDefaultChildFrame : public SECWorksheet
 
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT &rCreateStruct );
-	virtual BOOL OnCmdMsg( UINT nID, int nCode, void *pExtra, AFX_CMDHANDLERINFO *pHandlerInfo );
+	virtual BOOL OnCmdMsg( unsigned nID, int nCode, void *pExtra, AFX_CMDHANDLERINFO *pHandlerInfo );
 
 public:
 	CDefaultChildFrame() : pwndContents( 0 ) {}

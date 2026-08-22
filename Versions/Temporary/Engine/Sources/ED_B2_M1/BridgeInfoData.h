@@ -29,7 +29,7 @@ namespace NMapInfoEditor
 			DIRECTION_FREE		= 3,
 		};
 
-		UINT nBridgeID;
+		unsigned nBridgeID;
 
 		OBJECT_BASIC_METHODS( SBridgeInfo );
 		

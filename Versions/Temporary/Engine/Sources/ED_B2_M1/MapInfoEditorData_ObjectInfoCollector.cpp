@@ -107,9 +107,9 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	UINT SObjectInfoCollector::GetLinkIDByObjectIndex( int nObjectIndex, IManipulator *pManipulator, bool bObject )
+	unsigned SObjectInfoCollector::GetLinkIDByObjectIndex( int nObjectIndex, IManipulator *pManipulator, bool bObject )
 	{
-		UINT nLinkID = INVALID_NODE_ID;
+		unsigned nLinkID = INVALID_NODE_ID;
 		if ( pManipulator != 0 )
 		{
 			if ( bObject )
@@ -191,7 +191,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	UINT SObjectInfoCollector::Pick( UINT nSceneID ) const
+	unsigned SObjectInfoCollector::Pick( unsigned nSceneID ) const
 	{
 		CSceneIDMap::const_iterator itSceneID = sceneIDMap.find( nSceneID );
 		if ( itSceneID != sceneIDMap.end() )
@@ -206,7 +206,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	SObjectInfo* SObjectInfoCollector::GetObjectInfo( const UINT nObjectInfoID )
+	SObjectInfo* SObjectInfoCollector::GetObjectInfo( const unsigned nObjectInfoID )
 	{
 		if ( nObjectInfoID != INVALID_NODE_ID )
 		{
@@ -220,7 +220,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	SObjectInfo* SObjectInfoCollector::GetObjectInfoByLinkID( const UINT nLinkID )
+	SObjectInfo* SObjectInfoCollector::GetObjectInfoByLinkID( const unsigned nLinkID )
 	{
 		if ( nLinkID != INVALID_NODE_ID )
 		{
@@ -234,7 +234,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	SObjectInfo* SObjectInfoCollector::GetObjectInfoBySceneID( const UINT nSceneID )
+	SObjectInfo* SObjectInfoCollector::GetObjectInfoBySceneID( const unsigned nSceneID )
 	{
 		if ( nSceneID != INVALID_NODE_ID )
 		{
@@ -248,7 +248,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::UpdateDB( UINT nObjectInfoID, bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfoCollector::UpdateDB( unsigned nObjectInfoID, bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -258,7 +258,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfoCollector::Draw( UINT nObjectInfoID, CSceneDrawTool *pEditorSceneDrawTool )
+	void SObjectInfoCollector::Draw( unsigned nObjectInfoID, CSceneDrawTool *pEditorSceneDrawTool )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -267,7 +267,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::Move( UINT nObjectInfoID,
+	bool SObjectInfoCollector::Move( unsigned nObjectInfoID,
 																	 const SObjectEditInfo *pObjectEditInfo, const CVec3 &rvNewPosition,
 																	 bool bMoveLinkedObjects,
 																	 bool bUpdateScene, IEditorScene *pEditorScene,
@@ -284,7 +284,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::Rotate( UINT nObjectInfoID,
+	bool SObjectInfoCollector::Rotate( unsigned nObjectInfoID,
 																		 const SObjectEditInfo *pObjectEditInfo, float fNewDirection,
 																		 bool bRotateLinkedObjects,
 																		 bool bUpdateScene, IEditorScene *pEditorScene,
@@ -301,7 +301,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::CheckLinkCapability( UINT nObjectInfoID, UINT nLinkToSceneID )
+	bool SObjectInfoCollector::CheckLinkCapability( unsigned nObjectInfoID, unsigned nLinkToSceneID )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -311,7 +311,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::InsertLink( UINT nObjectInfoID, UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfoCollector::InsertLink( unsigned nObjectInfoID, unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -321,7 +321,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::RemoveLinks( UINT nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfoCollector::RemoveLinks( unsigned nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -331,7 +331,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::RemoveLinkTo( UINT nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfoCollector::RemoveLinkTo( unsigned nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 		{
@@ -755,7 +755,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::CheckSelectionLinkCapability( UINT nLinkToSceneID )
+	bool SObjectInfoCollector::CheckSelectionLinkCapability( unsigned nLinkToSceneID )
 	{
 		bool bResult = false;
 		for ( CObjectSelectionPartMap::const_iterator itObjectSelectionPart = objectSelection.objectSelectionPartMap.begin(); itObjectSelectionPart != objectSelection.objectSelectionPartMap.end(); ++itObjectSelectionPart )
@@ -772,7 +772,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SObjectInfoCollector::InsertSelectionLink( UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool SObjectInfoCollector::InsertSelectionLink( unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		bool bResult = true;
 		for ( CObjectSelectionPartMap::const_iterator itObjectSelectionPart = objectSelection.objectSelectionPartMap.begin(); itObjectSelectionPart != objectSelection.objectSelectionPartMap.end(); ++itObjectSelectionPart )
@@ -887,9 +887,9 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfoCollector::UpdateObjectByController( int nObjectIndex, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
+	void SObjectInfoCollector::UpdateObjectByController( int nObjectIndex, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
-		UINT nLinkID = GetLinkIDByObjectIndex( nObjectIndex, pManipulator, true );
+		unsigned nLinkID = GetLinkIDByObjectIndex( nObjectIndex, pManipulator, true );
 		if ( SObjectInfo *pObjectInfo = GetObjectInfoByLinkID( nLinkID ) )
 		{
 			return pObjectInfo->UpdateByController( nLinkID, nFlags, pEditorScene, pManipulator );
@@ -897,9 +897,9 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfoCollector::UpdateSpotByController( int nSpotIndex, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
+	void SObjectInfoCollector::UpdateSpotByController( int nSpotIndex, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
-		UINT nLinkID = GetLinkIDByObjectIndex( nSpotIndex, pManipulator, false );
+		unsigned nLinkID = GetLinkIDByObjectIndex( nSpotIndex, pManipulator, false );
 		if ( SObjectInfo *pObjectInfo = GetObjectInfoByLinkID( nLinkID ) )
 		{
 			return pObjectInfo->UpdateByController( nLinkID, nFlags, pEditorScene, pManipulator );
@@ -911,7 +911,7 @@ namespace NMapInfoEditor
 	{
 		for( CIndicesList::const_iterator itIndex = rIndices.begin(); itIndex != rIndices.end(); ++itIndex )
 		{
-			UINT nLinkID = GetLinkIDByObjectIndex( *itIndex, pManipulator, bObject );
+			unsigned nLinkID = GetLinkIDByObjectIndex( *itIndex, pManipulator, bObject );
 			if ( nLinkID != INVALID_NODE_ID )
 			{
 				if ( SObjectInfo *pObjectInfo = GetObjectInfoByLinkID( nLinkID ) )

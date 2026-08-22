@@ -112,7 +112,7 @@ void CPCStringMultibuttonEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCStringMultibuttonEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCStringMultibuttonEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -313,7 +313,7 @@ void CPCStringMultibuttonEditor::SetDefaultValue()
 }
 
 
-bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCStringMultibuttonEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -342,7 +342,7 @@ bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, uint32_t dwData
 }
 
 
-bool CPCStringMultibuttonEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCStringMultibuttonEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringMultibuttonEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCStringMultibuttonEditor::UpdateCommand(), pbCheck == 0" );

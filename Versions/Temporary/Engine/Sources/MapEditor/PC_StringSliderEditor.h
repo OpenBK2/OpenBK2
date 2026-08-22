@@ -15,7 +15,7 @@ class CPCStringSliderEditor : public CEdit, public CPCItemEditor, public IComman
 protected:
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg void OnKillFocus( CWnd* pNewWnd );
-	afx_msg void OnChar( UINT nChar, UINT nRepCnt, UINT nFlags );
+	afx_msg void OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	afx_msg void OnEnChange();
 	//
 	afx_msg LRESULT OnMessageEditorSliderChange( WPARAM wParam, LPARAM lParam );
@@ -40,11 +40,11 @@ public:
 	virtual void GetValue( CVariant *pValue );
 	virtual void SetDefaultValue();
 	//
-	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam );
+	void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 private:
 	virtual void OnChangePos( int nPos ) = 0;

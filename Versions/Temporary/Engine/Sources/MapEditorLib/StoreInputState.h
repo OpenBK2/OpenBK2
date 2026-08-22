@@ -52,12 +52,12 @@ public:
 		// common data
 		EInputStateType nType;
 		EInputStateEvent nEventType;
-		UINT nFlags;
+		unsigned nFlags;
 		short zDelta;
 		CTPoint<int> point;
 
-		UINT nChar;
-		UINT nRepCnt;
+		unsigned nChar;
+		unsigned nRepCnt;
 
 		SInputStateEventInfo()
 			: nType( IST_UNKNOWN ),
@@ -92,27 +92,27 @@ public:
 	};
 
 	//IInputState interface
-	virtual void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual bool OnMouseWheel			( UINT nFlags, short zDelta, CTPoint<int> &rMousePoint );
+	virtual void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual bool OnMouseWheel			( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint );
 	//
-	virtual void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnMButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
-	virtual void OnKeyUp					( UINT nChar, UINT nRepCnt, UINT nFlags );
-	virtual void OnChar						( UINT nChar, UINT nRepCnt, UINT nFlags );
-	virtual void OnSysKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
-	virtual void OnSysKeyUp				( UINT nChar, UINT nRepCnt, UINT nFlags );
-	virtual void OnSysChar				( UINT nChar, UINT nRepCnt, UINT nFlags );
+	virtual void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnChar						( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnSysKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnSysKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnSysChar				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint );
 

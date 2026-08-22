@@ -241,7 +241,7 @@ void CMiniMapWindow::OnPaint()
 	dc.SelectObject( pOldBitmap );
 }
 
-void CMiniMapWindow::OnLButtonDown( UINT nFlags, CPoint point )
+void CMiniMapWindow::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	CWnd::OnLButtonDown( nFlags, point );
 	CVec2 vAIPosition;
@@ -249,7 +249,7 @@ void CMiniMapWindow::OnLButtonDown( UINT nFlags, CPoint point )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_CAMERA_POSITION, PackCoords( vAIPosition ) );
 }
 
-void CMiniMapWindow::OnMouseMove( UINT nFlags, CPoint point )
+void CMiniMapWindow::OnMouseMove( unsigned nFlags, CPoint point )
 {
 	CWnd::OnMouseMove( nFlags, point );
 	if ( nFlags & MK_LBUTTON )
@@ -261,7 +261,7 @@ void CMiniMapWindow::OnMouseMove( UINT nFlags, CPoint point )
 	}
 }
 
-void CMiniMapWindow::OnLButtonUp( UINT nFlags, CPoint point )
+void CMiniMapWindow::OnLButtonUp( unsigned nFlags, CPoint point )
 {
 	CWnd::OnLButtonUp( nFlags, point );
 }
@@ -284,7 +284,7 @@ void CMiniMapWindow::OnContextMenu( CWnd* pWnd, CPoint point )
 }
 
 
-bool CMiniMapWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMiniMapWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -300,7 +300,7 @@ bool CMiniMapWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMiniMapWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMiniMapWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMiniMapWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMiniMapWindow::UpdateCommand(), pbCheck == 0" );

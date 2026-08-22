@@ -7,7 +7,7 @@ BEGIN_MESSAGE_MAP(CDefaultDockingWindow, SECControlBar)
 END_MESSAGE_MAP()
 
 
-void CDefaultDockingWindow::OnSize( UINT nType, int cx, int cy ) 
+void CDefaultDockingWindow::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 

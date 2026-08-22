@@ -45,7 +45,7 @@ public:
 
 		typedef vector<string> CPlayerList;
 
-		UINT nFlags;
+		unsigned nFlags;
 		//
 		EDirectionType eDirectionType;
 		CPlayerList playerList;
@@ -85,7 +85,7 @@ public:
 	SEditParameters* GetEditParameters();
 	class CMapInfoEditor* pMapInfoEditor;
 
-	void UpdateEditParameters( UINT nFlags );
+	void UpdateEditParameters( unsigned nFlags );
 
 	//конструкторы и операторы присваивания
 	CMapObjectMultiState( CMapInfoEditor* _pMapInfoEditor = 0 )
@@ -129,8 +129,8 @@ public:
 
 public:
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

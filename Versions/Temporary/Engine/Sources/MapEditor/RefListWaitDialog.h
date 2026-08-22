@@ -15,14 +15,14 @@ class CRefListWaitDialog : public CResizeDialog
 	list<string> *pResultList;
 	IResourceManager *pResourceManager;
 	bool bComplete;
-	UINT nTimer;
+	unsigned nTimer;
 protected:
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();
 	//
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer( unsigned nIDEvent );
 
 	//
 	// CResizeDialog

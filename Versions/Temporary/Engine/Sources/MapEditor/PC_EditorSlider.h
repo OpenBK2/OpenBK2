@@ -10,7 +10,7 @@ class CPCEditorSlider : public CSliderCtrl
 
 protected:
 	afx_msg void OnKillFocus( CWnd* pNewWnd );
-	afx_msg void ParentNotify ( UINT message, LPARAM lParam );
+	afx_msg void ParentNotify ( unsigned message, LPARAM lParam );
 public:
 	CPCEditorSlider();	
 	virtual ~CPCEditorSlider();

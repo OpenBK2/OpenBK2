@@ -7,11 +7,11 @@
 class CDefault3DTabWindow : public SEC3DTabWnd
 {
 	vector<CWnd*> tabList;
-	UINT nCommandHandlerID;
-	UINT nCommandID;
+	unsigned nCommandHandlerID;
+	unsigned nCommandID;
 
 protected:
-	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 	void OnNotifyChangeTab( WPARAM wParam, LPARAM lParam );
 
 	DECLARE_MESSAGE_MAP()
@@ -35,9 +35,9 @@ public:
 	void RemoveAllTabs();
 	CWnd* GetTabWindow( int nTabIndex );
 
-	void SetCommandHandlerID( UINT _nCommandHandlerID, UINT _nCommandID ) { nCommandHandlerID = _nCommandHandlerID; nCommandID = _nCommandID; }
-	UINT GetCommandHandlerID() { return nCommandHandlerID; }
-	UINT GetCommand() { return nCommandID; }
+	void SetCommandHandlerID( unsigned _nCommandHandlerID, unsigned _nCommandID ) { nCommandHandlerID = _nCommandHandlerID; nCommandID = _nCommandID; }
+	unsigned GetCommandHandlerID() { return nCommandHandlerID; }
+	unsigned GetCommand() { return nCommandID; }
 };
 
 

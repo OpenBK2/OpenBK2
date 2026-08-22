@@ -46,17 +46,17 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 
 protected:
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// IInputState interface
 	virtual void Enter();
 	virtual void Leave();
 	virtual void Draw( class CPaintDC *pPaintDC );
 	virtual void PostDraw( class CPaintDC *pPaintDC );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	bool IsCameraPlacementInDB( int nCamera );
 	void GetCameraPlacementByID( NCamera::CCameraPlacement *pCamera, int nID );

@@ -44,7 +44,7 @@ namespace NRandom
 	// cheap counter-only accessor for hot-path diagnostics
 	uint64_t GetRandomCallsCounter();
 	// get random value
-	UINT Random()
+	unsigned Random()
 	{
 		++nRandomCallsTotal;
 		//DEBUG{

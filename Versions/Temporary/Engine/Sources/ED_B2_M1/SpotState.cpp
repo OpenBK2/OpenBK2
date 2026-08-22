@@ -52,14 +52,14 @@ bool CSpotState::CanAddSpot()
 }
 
 
-bool CSpotState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSpotState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return false;
 }
 
 
-bool CSpotState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{
@@ -95,7 +95,7 @@ bool CSpotState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
 			spotCreateInfo.bRotateTo90Degree = GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
 			spotCreateInfo.bFitToGrid = GetMapInfoEditor()->editorSettings.bFitToGrid;
 			spotCreateInfo.spotSquare = terrainSpotInstance.points;
-			UINT nSpotInfoID = INVALID_NODE_ID;
+			unsigned nSpotInfoID = INVALID_NODE_ID;
 			if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 			{
 				if ( NMapInfoEditor::SSpotInfo *pSpotInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo*>( 0 ), &nSpotInfoID ) )
@@ -126,13 +126,13 @@ bool CSpotState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
 }
 
 
-bool CSpotState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSpotState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	return true;
 }
 
 
-bool CSpotState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
+bool CSpotState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( nChar == VK_ESCAPE )
 	{

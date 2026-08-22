@@ -36,8 +36,8 @@ public:
 	void Segment();
 
 	//{{AFX_MSG(CConsole)
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnMouseMove(unsigned nFlags, CPoint point);
+	afx_msg void OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

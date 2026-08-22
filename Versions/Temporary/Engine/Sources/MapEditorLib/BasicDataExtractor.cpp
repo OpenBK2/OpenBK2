@@ -123,14 +123,14 @@ bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectT
 }
 
 
-UINT CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
+unsigned CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 																				 class CBitmap *pSmallBitmap,
 																				 CString *pstrLabel,
 																				 const string &rszObjectTypeName,
 																				 const string &rszObjectName,
 																				 const string &rszDataExtractorType )
 {
-	UINT nResult = 0;
+	unsigned nResult = 0;
 	CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rszObjectName );
 	if ( pObjectManipulator == 0 )
 	{

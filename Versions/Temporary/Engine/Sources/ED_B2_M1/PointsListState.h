@@ -16,8 +16,8 @@
 class CPointsListState : public CDefaultInputState, public ICommandHandler
 {
 	CPtr<CMaskManipulator> pMaskManipulator;
-	UINT nCHID;
-	UINT nInstanceID;
+	unsigned nCHID;
+	unsigned nInstanceID;
 	SPointListDialogData currDialogData;
 	CObj<SMarkerSet> pMarkers;
 	//
@@ -33,11 +33,11 @@ protected:
 	void Enter();
 	void Leave();
 	void PostDraw( CPaintDC *pPaintDC );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// CPointsListState 
 	bool GetPointListDialogData( SPointListDialogData *pData );
@@ -53,7 +53,7 @@ public:
 	{
 		NI_ASSERT( 0, "CPointsListState()" );
 	}
-	CPointsListState( UINT nCHID, UINT nInstanceID, CBuildingEditor* _pBuildingEditor );
+	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor* _pBuildingEditor );
 	virtual ~CPointsListState();
 
 	virtual void Draw( CPaintDC *pPaintDC ) {}

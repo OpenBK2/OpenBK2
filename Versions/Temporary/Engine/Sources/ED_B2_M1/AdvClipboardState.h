@@ -279,11 +279,11 @@ public:
 	virtual void Enter();
 	virtual void Leave();
 	virtual void Draw( CPaintDC *pPaintDC );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CPolygonState
 	virtual bool CanEdit() { return bCanEdit && !bPasteMode; }
@@ -296,12 +296,12 @@ public:
 	virtual bool PrepareControlPoints( CControlPointList *pControlPointList ) { return true; }
 	virtual void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) {}
 	virtual void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
-	virtual UINT InsertPolygon( const CControlPointList &rControlPointList ) { return INVALID_NODE_ID; }
+	virtual unsigned InsertPolygon( const CControlPointList &rControlPointList ) { return INVALID_NODE_ID; }
 	virtual void RemovePolygon( int nPolygonID );
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 /**/

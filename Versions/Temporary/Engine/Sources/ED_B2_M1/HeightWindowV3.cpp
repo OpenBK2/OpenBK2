@@ -282,7 +282,7 @@ void CHeightWindowV3::SetTileListStyle( int _nStyle )
 }
 
 
-void CHeightWindowV3::OnSize( UINT nType, int cx, int cy )
+void CHeightWindowV3::OnSize( unsigned nType, int cx, int cy )
 {
 	CResizeDialog::OnSize( nType, cx, cy );
 	//
@@ -369,7 +369,7 @@ void CHeightWindowV3::OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-void CHeightWindowV3::OnTimer( UINT nIDEvent ) 
+void CHeightWindowV3::OnTimer( unsigned nIDEvent ) 
 {
   if ( nIDEvent == GetHeightID() )
 	{
@@ -402,7 +402,7 @@ void CHeightWindowV3::OnHeightTimer()
 }
 
 
-bool CHeightWindowV3::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -477,7 +477,7 @@ bool CHeightWindowV3::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CHeightWindowV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CHeightWindowV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CHeightWindowV3::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CHeightWindowV3::UpdateCommand(), pbCheck == 0" );

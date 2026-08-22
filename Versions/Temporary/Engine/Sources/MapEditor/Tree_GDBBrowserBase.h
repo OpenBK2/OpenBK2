@@ -32,7 +32,7 @@ public:
 	bool bNeedTranslateAccelerators;
 	bool bModal;
 	//
-	static const UINT		TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT];
+	static const unsigned		TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT];
 	static const int		TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT];
 	static const int		TABGDBB_TREE_COLUMN_WIDTH [TABGDBB_TREE_COLUMN_COUNT];
 
@@ -76,7 +76,7 @@ private:
 
 	int nGDBBrowserID;
 	bool bCreateControls;
-	UINT nPCDialogCommandHandlerID;
+	unsigned nPCDialogCommandHandlerID;
 	//
 	HTREEITEM hLabelEditItem;
 	string szItemTextFromBeginLabelEdit;
@@ -89,9 +89,9 @@ private:
 	bool bCreateTreeSelectionChanged;
 	string szIgnoreSelectionName;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
-  inline UINT GetCreateTreeTimerID() { return 100; }
-  inline UINT GetCreateTreeTimerInterval() { return 100; }	// Частота в миллисекундах
-  inline UINT GetCreateTreeTimerCount() { return 1000000; }		// Количество считываний за один раз
+  inline unsigned GetCreateTreeTimerID() { return 100; }
+  inline unsigned GetCreateTreeTimerInterval() { return 100; }	// Частота в миллисекундах
+  inline unsigned GetCreateTreeTimerCount() { return 1000000; }		// Количество считываний за один раз
   void SetCreateTreeTimer();
   void KillCreateTreeTimer();
   void OnCreateTreeTimer();
@@ -99,8 +99,8 @@ private:
   //Таймер для отложенного обновления поля поcле редактирования метки
 	int32_t nLabelEditSortTimer;
 	HTREEITEM hLabelEditSortTimerItem;
-  inline UINT GetLabelEditSortTimerID() { return 101; }
-  inline UINT GetLabelEditSortTimerInterval() { return 10; }
+  inline unsigned GetLabelEditSortTimerID() { return 101; }
+  inline unsigned GetLabelEditSortTimerInterval() { return 10; }
   void SetLabelEditSortTimer();
   void KillLabelEditSortTimer();
   void OnLabelEditSortTimer();
@@ -150,16 +150,16 @@ private:
 protected:
 	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer( unsigned nIDEvent );
 	//
-	afx_msg void OnMouseMove( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonUp( UINT nFlags, CPoint point );
-	afx_msg void OnRButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnLButtonDblClk( UINT nFlags, CPoint point );
+	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
+	afx_msg void OnRButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonDblClk( unsigned nFlags, CPoint point );
 	//
-	afx_msg void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	afx_msg void OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags );
+	afx_msg void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	afx_msg void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 	//
@@ -174,7 +174,7 @@ protected:
 	afx_msg void OnSelChanged( NMHDR *pNotifyStruct, LRESULT *pResult );
 	afx_msg void OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult );
 	//
-	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 	//
 	EGDBOType GetTreeItemType( HTREEITEM hItem );
 	
@@ -203,7 +203,7 @@ public:
 	bool GetCurrentTreeItemName( string *pszName );
 	bool SetCurrentTreeItemName( const string &rszName, bool bUpdateSelection = true );
 	//
-	void SetPCDialogCommandHandlerID( UINT _nPCDialogCommandHandlerID, bool bUpdate );
+	void SetPCDialogCommandHandlerID( unsigned _nPCDialogCommandHandlerID, bool bUpdate );
 	//
 	bool GetCurrentObjectSet( SObjectSet *pObjectSet );
 	bool GetCurrentSelectionSet( SSelectionSet *pSelectionSet );
@@ -211,8 +211,8 @@ public:
 	void UpdateSelectionManipulator( bool bUpdate );
 	
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// Создание Undo Operation
 	virtual CFolderController* CreateController() { return CDefaultView::CreateController<CFolderController>( static_cast<CFolderController*>( 0 ) ); }

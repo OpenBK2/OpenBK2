@@ -59,13 +59,13 @@ public:
 	void PostDraw( CPaintDC *pPaintDC );
 	void DrawLabel( CPaintDC *pPaintDC, const string &szLabel, const CVec2 &pos );
 	
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	//	ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	//	CCameraPositionState 
 	CCameraPositionState( CMapInfoEditor* _pMapInfoEditor = 0 );

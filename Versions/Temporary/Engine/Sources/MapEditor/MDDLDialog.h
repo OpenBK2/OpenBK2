@@ -7,7 +7,7 @@ class CMDDLDialog : public CDialog
 {
 	CListBox wndValueList;
 	
-	UINT nCommandID;
+	unsigned nCommandID;
 	CDescriptionList valueList;
 
 protected:
@@ -24,7 +24,7 @@ public:
 	enum { IDD = IDD_MENU_DROP_DOWN_LIST };
 
 	CMDDLDialog();
-	void SetParams( UINT _nCommandID, const CDescriptionList &rValueList );
+	void SetParams( unsigned _nCommandID, const CDescriptionList &rValueList );
 	void CreateList();
 	DECLARE_MESSAGE_MAP()
 };

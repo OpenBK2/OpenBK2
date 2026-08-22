@@ -10,7 +10,7 @@
 #include "Tree_GDBLinkBrowser.h"
 #include "MapEditorLib/Tools_HashSet.h"
 
-const UINT	CPCDBLinkDialog::PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
+const unsigned	CPCDBLinkDialog::PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCDBLinkDialog::PC_DBL_TREE_COLUMN_FORMAT[PC_DBL_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };
 const int		CPCDBLinkDialog::PC_DBL_TREE_COLUMN_WIDTH [PC_DBL_TREE_COLUMN_COUNT] = { 100, 50, 100 };
 
@@ -487,7 +487,7 @@ void CPCDBLinkDialog::OnDestroy()
 }
 
 
-void CPCDBLinkDialog::OnSize( UINT nType, int cx, int cy ) 
+void CPCDBLinkDialog::OnSize( unsigned nType, int cx, int cy ) 
 {
 	CResizeDialog::OnSize( nType, cx, cy );
 	//

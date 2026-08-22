@@ -100,8 +100,8 @@ public:
 	void Redo( IController* pController );
 	
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData ) { return false; }
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData ) { return false; }
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 
 	// methods
 	bool UOBegin( IManipulator *pManipulator, const string &rObjectTypeName, const CDBID &rDBID );

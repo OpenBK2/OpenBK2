@@ -33,7 +33,7 @@ int CDWPropertyBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 }
 
 
-void CDWPropertyBrowser::OnSize( UINT nType, int cx, int cy ) 
+void CDWPropertyBrowser::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 	

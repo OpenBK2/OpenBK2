@@ -4,7 +4,7 @@ template<class TID>
 class CIndexCollector
 {
 public:
-	typedef hash_map<TID, UINT> CIDToIndexMap;
+	typedef hash_map<TID, unsigned> CIDToIndexMap;
 	//
 private:
 	TID invalidID;
@@ -14,7 +14,7 @@ public:
 
 	const CIDToIndexMap& GetIDToIndexMap() { return idToIndexMap; }
 	// медленные операции
-	bool Insert( const TID &rID, UINT nIndex, bool bSearchIndices )
+	bool Insert( const TID &rID, unsigned nIndex, bool bSearchIndices )
 	{
 		if ( ( rID == invalidID ) || ( nIndex == INVALID_NODE_ID ) )
 		{
@@ -51,7 +51,7 @@ public:
 		{
 			return false;
 		}
-		const UINT nIndex = posID->second;
+		const unsigned nIndex = posID->second;
 		idToIndexMap.erase( posID );
 		if ( bSearchIndices )
 		{
@@ -84,13 +84,13 @@ public:
 		{
 			return false;
 		}
-		const UINT nIndex = posID0->second;
+		const unsigned nIndex = posID0->second;
 		posID0->second = posID1->second;
 		posID1->second = nIndex;
 		return true;
 	}
 	//
-	bool Move( const TID &rID, const UINT nNewIndex, bool bSearchIndices )
+	bool Move( const TID &rID, const unsigned nNewIndex, bool bSearchIndices )
 	{
 		if ( ( rID == invalidID ) || ( nIndex == invalidID ) )
 		{
@@ -104,7 +104,7 @@ public:
 		}
 		if ( bSearchIndices )
 		{
-			const UINT nOldIndex = posID->second;
+			const unsigned nOldIndex = posID->second;
 			if ( nNewIndex < nOldIndex )
 			{
 				for ( CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
@@ -130,7 +130,7 @@ public:
 		return true;
 	}
 	// быстрые операции
-	UINT Get( const TID &rID ) const
+	unsigned Get( const TID &rID ) const
 	{
 		if ( rID == invalidID )
 		{
@@ -147,7 +147,7 @@ public:
 		}
 	}
 	// медленные операции
-	TID GetID( const UINT nIndex ) const
+	TID GetID( const unsigned nIndex ) const
 	{
 		for ( CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 		{
@@ -160,7 +160,7 @@ public:
 	}
 
 	//
-	UINT Size() const
+	unsigned Size() const
 	{
 		return idToIndexMap.size();
 	}
@@ -182,7 +182,7 @@ public:
 			indices[itID->second] = itID->first;
 		}
 		DebugTrace( "index collector, begin" );
-		for ( UINT i = 0; i <= nMaxIndex; ++i )
+		for ( unsigned i = 0; i <= nMaxIndex; ++i )
 		{
 			if ( indices[i] != invalidID )
 			{

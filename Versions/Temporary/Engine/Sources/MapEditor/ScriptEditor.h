@@ -60,14 +60,14 @@ protected:
 public:
 	CLuaEditor m_LuaEditor;
 	void EnableEdit( bool bEnable );
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnChar(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
+	afx_msg void OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
 	CEdit m_ctrlErrLog;
 	afx_msg void OnEnSelchangeEditText(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnEnChangeEditText();
 	afx_msg void OnCnCharAdded(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnCnModified(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnSize(unsigned nType, int cx, int cy);
 	CButton m_ctrlOK;
 	CButton m_ctrlCancel;
 };

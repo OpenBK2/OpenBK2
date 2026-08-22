@@ -82,7 +82,7 @@ struct IPCItemEditor : public CObjectBase
 	virtual bool IsEditEnabled() = 0;
 	// Различного рода сообщения приходящие от контролов, которые не связяны c основным редактором
 	// Используется для получения сообщений от Slider
-	virtual void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) = 0;
+	virtual void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam ) = 0;
 };
 
 

@@ -32,13 +32,13 @@ public:
 	STDMETHOD(SetNPatchMode)( FLOAT NumSegments );
 	STDMETHOD(SetFVF)(unsigned long FVF );
 	STDMETHOD(SetVertexShader)( LPDIRECT3DVERTEXSHADER9 pShader );
-	STDMETHOD(SetVertexShaderConstantF)( UINT RegisterIndex, CONST FLOAT *pConstantData, UINT RegisterCount );
-	STDMETHOD(SetVertexShaderConstantI)( UINT RegisterIndex, CONST INT *pConstantData, UINT RegisterCount );
-	STDMETHOD(SetVertexShaderConstantB)( UINT RegisterIndex, CONST BOOL *pConstantData, UINT RegisterCount );
+	STDMETHOD(SetVertexShaderConstantF)( unsigned RegisterIndex, CONST FLOAT *pConstantData, unsigned RegisterCount );
+	STDMETHOD(SetVertexShaderConstantI)( unsigned RegisterIndex, CONST INT *pConstantData, unsigned RegisterCount );
+	STDMETHOD(SetVertexShaderConstantB)( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount );
 	STDMETHOD(SetPixelShader)( LPDIRECT3DPIXELSHADER9 pShader );
-	STDMETHOD(SetPixelShaderConstantF)( UINT RegisterIndex, CONST FLOAT *pConstantData, UINT RegisterCount );
-	STDMETHOD(SetPixelShaderConstantI)( UINT RegisterIndex, CONST INT *pConstantData, UINT RegisterCount );
-	STDMETHOD(SetPixelShaderConstantB)( UINT RegisterIndex, CONST BOOL *pConstantData, UINT RegisterCount );
+	STDMETHOD(SetPixelShaderConstantF)( unsigned RegisterIndex, CONST FLOAT *pConstantData, unsigned RegisterCount );
+	STDMETHOD(SetPixelShaderConstantI)( unsigned RegisterIndex, CONST INT *pConstantData, unsigned RegisterCount );
+	STDMETHOD(SetPixelShaderConstantB)( unsigned RegisterIndex, CONST BOOL *pConstantData, unsigned RegisterCount );
 };
 
 } // NAMESPACE

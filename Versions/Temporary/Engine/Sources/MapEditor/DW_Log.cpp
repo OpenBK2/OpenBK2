@@ -48,7 +48,7 @@ int CDWLog::OnCreate( LPCREATESTRUCT pCreateStruct )
 }
 
 
-void CDWLog::OnSize( UINT nType, int cx, int cy ) 
+void CDWLog::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 	
@@ -134,7 +134,7 @@ void CDWLog::Append( const NLog::SLogBuffer &rLogBuffer )
 }
 
 
-bool CDWLog::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CDWLog::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( ( Singleton<IUserDataContainer>() == 0 ) ||
 			 ( Singleton<IUserDataContainer>()->Get() == 0 ) )
@@ -165,7 +165,7 @@ bool CDWLog::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CDWLog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CDWLog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CDWLog::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CDWLog::UpdateCommand(), pbCheck == 0" );

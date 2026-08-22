@@ -91,7 +91,7 @@ void CDWGDBBrowser::OnDestroy()
 }
 
 
-void CDWGDBBrowser::OnSize( UINT nType, int cx, int cy ) 
+void CDWGDBBrowser::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 	//
@@ -138,7 +138,7 @@ BOOL CDWGDBBrowser::OnGripperClose()
 }
 
 
-void CDWGDBBrowser::OnLButtonDown( UINT nFlags, CPoint point )
+void CDWGDBBrowser::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	SECControlBar::OnLButtonDown( nFlags, point );
 	//
@@ -149,7 +149,7 @@ void CDWGDBBrowser::OnLButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CDWGDBBrowser::OnRButtonDown( UINT nFlags, CPoint point )
+void CDWGDBBrowser::OnRButtonDown( unsigned nFlags, CPoint point )
 {
 	SECControlBar::OnRButtonDown( nFlags, point );
 	//
@@ -160,7 +160,7 @@ void CDWGDBBrowser::OnRButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CDWGDBBrowser::OnRButtonUp( UINT nFlags, CPoint point )
+void CDWGDBBrowser::OnRButtonUp( unsigned nFlags, CPoint point )
 {
 	SECControlBar::OnRButtonUp( nFlags, point );
 
@@ -733,7 +733,7 @@ void CDWGDBBrowser::OnGetLatest()
 }
 
 
-bool CDWGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CDWGDBBrowser::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
@@ -879,7 +879,7 @@ bool CDWGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CDWGDBBrowser::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CDWGDBBrowser::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CDWGDBBrowser::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CDWGDBBrowser::UpdateCommand(), pbCheck == 0" );
@@ -1037,7 +1037,7 @@ void CDWGDBBrowser::LocateObject()
 
 /**
 CWMMnemonicCodes mnemonicCodes;
-LRESULT CDWGDBBrowser::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CDWGDBBrowser::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	if ( message == WM_NOTIFY )
 	{

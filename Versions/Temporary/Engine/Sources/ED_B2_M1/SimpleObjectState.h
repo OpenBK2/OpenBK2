@@ -11,7 +11,7 @@ class CSimpleObjectState : public CMapObjectState
 
 	struct SSceneObject
 	{
-		UINT nID;
+		unsigned nID;
 		CVec3 vPosition;
 		float fDirection;
 	};
@@ -38,10 +38,10 @@ protected:
 	void InsertObjectLeave();
 	void InsertObjectDraw( class CPaintDC *pPaintDC );
 	//	
-	bool InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos );
 };
 
 

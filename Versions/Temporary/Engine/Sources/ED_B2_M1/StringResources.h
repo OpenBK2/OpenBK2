@@ -2,7 +2,7 @@
 
 #define RCSTR(s)	(s)
 
-inline CString RCStr( const UINT nStringID )
+inline CString RCStr( const unsigned nStringID )
 {
 	extern HINSTANCE theEDB2M1DllInstance;
 

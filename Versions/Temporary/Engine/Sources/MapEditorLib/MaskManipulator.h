@@ -25,7 +25,7 @@ private:
 
 		string szName;																	// Короткое имя свойства
 		string szType;																	// Имя типа (если есть)
-		UINT nID;																				// ID (если есть)
+		unsigned nID;																				// ID (если есть)
 		bool bHidden;																		// Скрытое ли поле?
 
 		SProperty() : bFilled( false ), nID( INVALID_NODE_ID ), bHidden( false ) {}
@@ -64,7 +64,7 @@ public:
 	// Конструирование манипулятора 
 	CMaskManipulator( const string& rszMask,  IManipulator *_pTargetManipulator, EMaskMode _maskMode );
 	// Добавление имен ( имена могут быть длинными, а могут быть короткими, по усмотрению.
-	bool AddName( const string &rszName, bool bFilled, const string& rszType, UINT nID, bool bHidden );
+	bool AddName( const string &rszName, bool bFilled, const string& rszType, unsigned nID, bool bHidden );
 	// Установление типа работы (как воспринимаются все имена в методах IManipulator), возвращает старый тип работы
 	inline EMaskMode SetMode( EMaskMode newMaskMode ) { const EMaskMode oldMaskMode = maskMode; maskMode = newMaskMode; return oldMaskMode; }
 	// Получение типа работы (как воспринимаются все имена в методах IManipulator)
@@ -82,8 +82,8 @@ public:
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
 	const SIteratorDesc* GetDesc( const string &szName ) const;
 	bool GetType( const string &rszName, string *pszType ) const;
-	UINT GetID( const string &rszName ) const;
-	bool GetName( UINT nID, string *pszName ) const;
+	unsigned GetID( const string &rszName ) const;
+	bool GetName( unsigned nID, string *pszName ) const;
 	//
 	bool InsertNode( const string &szName, int nNodeIndex = NODE_ADD_INDEX );
 	bool RemoveNode( const string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
@@ -116,7 +116,7 @@ public:
 	const SIteratorDesc* GetDesc() const;
 	bool GetName( string *pszName ) const;
 	bool GetType( string *pszType ) const;
-	UINT GetID() const;
+	unsigned GetID() const;
 	bool IsFolder() const { return false; }
 };
 

@@ -51,7 +51,7 @@ public:
 			STATS_CUSTOM	= 1,
 		};
 		//
-		UINT nFlags;
+		unsigned nFlags;
 		EPointNumber ePointNumber;
 		EStatsType eStatsType;
 		float fWidth;
@@ -95,7 +95,7 @@ public:
 	SEditParameters* GetEditParameters();
 	class CMapInfoEditor* pMapInfoEditor;
 
-	void UpdateEditParameters( UINT nFlags );
+	void UpdateEditParameters( unsigned nFlags );
 
 	//конструкторы и операторы присваивания
 	CVSOMultiState( CMapInfoEditor* _pMapInfoEditor = 0 )
@@ -138,11 +138,11 @@ public:
 	virtual void Leave();
 
 public:
-	bool PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
+	bool PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

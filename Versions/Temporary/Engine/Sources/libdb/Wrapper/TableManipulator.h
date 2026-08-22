@@ -30,8 +30,8 @@ public:
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
 	const SIteratorDesc* GetDesc( const std::string &szName ) const { return 0; }
 	bool GetType( const std::string &rszName, std::string *pszType ) const { return false; }
-	UINT GetID( const std::string &rszName ) const;
-	bool GetName( UINT nID, std::string *pszName ) const;
+	unsigned GetID( const std::string &rszName ) const;
+	bool GetName( unsigned nID, std::string *pszName ) const;
 	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX ) { return false; }
 	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX ) { return false; }
 	bool RemoveNodeByID( const std::string &szName, int nNodeID ) { return false; }
@@ -62,7 +62,7 @@ public:
 	const SIteratorDesc* GetDesc() const { return 0; }
 	bool GetName( std::string *pszName ) const;
 	bool GetType( std::string *pszType ) const {	return false;	}
-	UINT GetID() const { return itCurrType->second->nClassTypeID; }
+	unsigned GetID() const { return itCurrType->second->nClassTypeID; }
 	bool IsFolder() const { return false; }
 };
 

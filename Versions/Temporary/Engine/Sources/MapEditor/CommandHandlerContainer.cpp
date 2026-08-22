@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID )
+void CCommandHandlerContainer::Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID )
 {
 	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
 	if ( posCommandHandlerIDToCommandID == commandHandlerIDToCommandIDMap.end() )
@@ -17,11 +17,11 @@ void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT 
 	{
 		if ( nFirstCommandID > nLastCommandID )
 		{
-			UINT nCommandID = nFirstCommandID;
+			unsigned nCommandID = nFirstCommandID;
 			nFirstCommandID = nLastCommandID;
 			nLastCommandID = nCommandID;
 		}
-		for ( UINT nCommandID = nFirstCommandID; nCommandID <= nLastCommandID; ++nCommandID )
+		for ( unsigned nCommandID = nFirstCommandID; nCommandID <= nLastCommandID; ++nCommandID )
 		{
 			InsertHashSetElement( &( posCommandHandlerIDToCommandID->second.commandIDSet ), nCommandID );
 			commandIDToCommandHandlerIDMap[nCommandID] = nType;
@@ -30,7 +30,7 @@ void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT 
 }
 
 
-void CCommandHandlerContainer::UnRegister( UINT nType )
+void CCommandHandlerContainer::UnRegister( unsigned nType )
 {
 	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
 	if ( posCommandHandlerIDToCommandID != commandHandlerIDToCommandIDMap.end() )
@@ -48,7 +48,7 @@ void CCommandHandlerContainer::UnRegister( UINT nType )
 }
 
 
-void CCommandHandlerContainer::Set( UINT nType, ICommandHandler *pCommandHandler )
+void CCommandHandlerContainer::Set( unsigned nType, ICommandHandler *pCommandHandler )
 { 
 	if ( pCommandHandler == 0 )
 	{
@@ -61,7 +61,7 @@ void CCommandHandlerContainer::Set( UINT nType, ICommandHandler *pCommandHandler
 }
 
 
-void CCommandHandlerContainer::Remove( UINT nType, ICommandHandler *pCommandHandler )
+void CCommandHandlerContainer::Remove( unsigned nType, ICommandHandler *pCommandHandler )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
 	if ( posCommandHandler != commandHandlerMap.end() )
@@ -74,7 +74,7 @@ void CCommandHandlerContainer::Remove( UINT nType, ICommandHandler *pCommandHand
 }
 
 
-void CCommandHandlerContainer::Remove( UINT nType )
+void CCommandHandlerContainer::Remove( unsigned nType )
 { 
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
 	if ( posCommandHandler != commandHandlerMap.end() )
@@ -84,7 +84,7 @@ void CCommandHandlerContainer::Remove( UINT nType )
 }
 
 
-ICommandHandler* CCommandHandlerContainer::Get( UINT nType )
+ICommandHandler* CCommandHandlerContainer::Get( unsigned nType )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
 	if ( posCommandHandler != commandHandlerMap.end() )
@@ -95,7 +95,7 @@ ICommandHandler* CCommandHandlerContainer::Get( UINT nType )
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData )
+bool CCommandHandlerContainer::HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData )
 {
 //	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
 	ICommandHandler *pCommandHandler = Get( nType );
@@ -110,7 +110,7 @@ bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, uint3
 }
 
 
-bool CCommandHandlerContainer::UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CCommandHandlerContainer::UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	ICommandHandler *pCommandHandler = Get( nType );
 	if ( pCommandHandler )
@@ -121,7 +121,7 @@ bool CCommandHandlerContainer::UpdateCommand( UINT nType, UINT nCommandID, bool 
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CCommandHandlerContainer::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )
@@ -132,7 +132,7 @@ bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CCommandHandlerContainer::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CCommandHandlerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )

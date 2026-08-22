@@ -27,7 +27,7 @@ namespace NCA
 														 const string &rszTreeItemDivider,
 														 const string &rszColumnDivider,
 														 const SECTreeCtrl *pTreeControl );
-	bool TranslateAccelerators( bool bModal, UINT nMessage, WPARAM wParam, LPARAM lParam );
+	bool TranslateAccelerators( bool bModal, unsigned nMessage, WPARAM wParam, LPARAM lParam );
 };
 
 

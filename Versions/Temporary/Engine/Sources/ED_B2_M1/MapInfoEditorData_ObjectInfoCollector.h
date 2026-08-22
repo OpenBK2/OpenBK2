@@ -14,19 +14,19 @@ namespace NMapInfoEditor
 {
 	struct SObjectInfoCollector
 	{
-		typedef hash_map<UINT, CPtr<SObjectInfo> > CObjectInfoMap;
-		typedef hash_map<string, UINT> CObjectTypeMap;
-		typedef hash_map<UINT, UINT> CSceneIDMap;
-		typedef hash_map<UINT, UINT> CLinkIDMap;
+		typedef hash_map<unsigned, CPtr<SObjectInfo> > CObjectInfoMap;
+		typedef hash_map<string, unsigned> CObjectTypeMap;
+		typedef hash_map<unsigned, unsigned> CSceneIDMap;
+		typedef hash_map<unsigned, unsigned> CLinkIDMap;
 		//
 		CObjectInfoMap objectInfoMap;												// Список SObjectInfo
 		CLinkIDMap linkIDMap;																// Список LinkID->SObjectInfoID
 		CSceneIDMap sceneIDMap;															// Список SceneID->SObjectInfoID
 		//
-		CIndexCollector<UINT> linkIDToIndexCollector;				// Список индексов объектов ( прямое отображение LinkID->Index )
-		CIndexCollector<UINT> bridgeIDToIndexCollector;			// Список индексов мостов ( прямое отображение ID->Index )
-		CIndexCollector<UINT> trenchIDToIndexCollector;			// Список индексов окопов ( прямое отображение ID->Index )
-		CIndexCollector<UINT> spotIDToIndexCollector;				// Список индексов spots ( прямое отображение ID->Index )
+		CIndexCollector<unsigned> linkIDToIndexCollector;				// Список индексов объектов ( прямое отображение LinkID->Index )
+		CIndexCollector<unsigned> bridgeIDToIndexCollector;			// Список индексов мостов ( прямое отображение ID->Index )
+		CIndexCollector<unsigned> trenchIDToIndexCollector;			// Список индексов окопов ( прямое отображение ID->Index )
+		CIndexCollector<unsigned> spotIDToIndexCollector;				// Список индексов spots ( прямое отображение ID->Index )
 		//
 		CFreeIDCollector objectInfoIDCollector;							// для создания и идентификации новых SMapOnjectInfo
 		CFreeIDCollector linkIDCollector;										// для создания и идентификации новых object link ID
@@ -52,14 +52,14 @@ namespace NMapInfoEditor
 		void SetMapInfoEditor( const CMapInfoEditor *_pMapInfoEditor );
 		//
 		// вспомогательные методы
-		UINT GetLinkIDByObjectIndex( int nObjectIndex, IManipulator *pManipulator, bool bObject );
+		unsigned GetLinkIDByObjectIndex( int nObjectIndex, IManipulator *pManipulator, bool bObject );
 		// методы общей загрузки карты
 		bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// методы добавления и удаления элементов
 		template<class TObjectInfo>
-		TObjectInfo* Insert( TObjectInfo *pCreatedObjectInfo, UINT *pnObjectInfoID )
+		TObjectInfo* Insert( TObjectInfo *pCreatedObjectInfo, unsigned *pnObjectInfoID )
 		{
 			TObjectInfo *pObjectInfo = pCreatedObjectInfo;
 			// создаем если необходимо
@@ -78,7 +78,7 @@ namespace NMapInfoEditor
 			}
 			return pObjectInfo;
 		}
-		SObjectInfo* Insert( SObjectInfo *pCreatedObjectInfo, UINT *pnObjectInfoID )
+		SObjectInfo* Insert( SObjectInfo *pCreatedObjectInfo, unsigned *pnObjectInfoID )
 		{
 			if ( pCreatedObjectInfo == 0 )
 			{
@@ -97,7 +97,7 @@ namespace NMapInfoEditor
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		void Remove( UINT nObjectInfoID,
+		void Remove( unsigned nObjectInfoID,
 								 bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 		{
@@ -119,31 +119,31 @@ namespace NMapInfoEditor
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		void Pick( list<int> *pEditorSceneIDList, const CTPoint<int> &rMousePoint ) const;
 		void Pick( list<int> *pEditorSceneIDList, const CTRect<int> &rFrame ) const;
-		UINT Pick( UINT nSceneID ) const;
+		unsigned Pick( unsigned nSceneID ) const;
 		//
-		SObjectInfo* GetObjectInfo( const UINT nObjectInfoID );
-		SObjectInfo* GetObjectInfoByLinkID( const UINT nLinkID );
-		SObjectInfo* GetObjectInfoBySceneID( const UINT nSceneID );
+		SObjectInfo* GetObjectInfo( const unsigned nObjectInfoID );
+		SObjectInfo* GetObjectInfoByLinkID( const unsigned nLinkID );
+		SObjectInfo* GetObjectInfoBySceneID( const unsigned nSceneID );
 		//
-		bool UpdateDB( UINT nObjectInfoID, bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		bool UpdateDB( unsigned nObjectInfoID, bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//
-		void Draw( UINT nObjectInfoID, CSceneDrawTool *pEditorSceneDrawTool );
+		void Draw( unsigned nObjectInfoID, CSceneDrawTool *pEditorSceneDrawTool );
 		//
-		bool Move( UINT nObjectInfoID,
+		bool Move( unsigned nObjectInfoID,
 							 const SObjectEditInfo *pObjectEditInfo, const CVec3 &rvNewPosition,
 							 bool bMoveLinkedObjects,
 							 bool bUpdateScene, IEditorScene *pEditorScene,
 							 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		bool Rotate( UINT nObjectInfoID,
+		bool Rotate( unsigned nObjectInfoID,
 								 const SObjectEditInfo *pObjectEditInfo, float fNewDirection,
 								 bool bRotateLinkedObjects,
 								 bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//		
-		bool CheckLinkCapability( UINT nObjectInfoID, UINT nLinkToSceneID );
-		bool InsertLink( UINT nObjectInfoID, UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		bool RemoveLinks( UINT nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		bool RemoveLinkTo( UINT nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		bool CheckLinkCapability( unsigned nObjectInfoID, unsigned nLinkToSceneID );
+		bool InsertLink( unsigned nObjectInfoID, unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		bool RemoveLinks( unsigned nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		bool RemoveLinkTo( unsigned nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// work with selection
@@ -167,7 +167,7 @@ namespace NMapInfoEditor
 			CObjectInfoIDSet existingObjectInfoIDSet;
 			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
-				const UINT nObjectInfoID = Pick( *itObjectSceneID );
+				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				if ( objectSelection.objectSelectionPartMap.find( nObjectInfoID ) == objectSelection.objectSelectionPartMap.end() )
 				{
 					InsertHashSetElement( &newObjectInfoIDSet, nObjectInfoID );
@@ -185,7 +185,7 @@ namespace NMapInfoEditor
 				// добавим элементы
 				for ( CObjectInfoIDSet::const_iterator itNewObjectInfoID = newObjectInfoIDSet.begin(); itNewObjectInfoID != newObjectInfoIDSet.end(); ++itNewObjectInfoID )
 				{
-					const UINT nObjectInfoID = itNewObjectInfoID->first;
+					const unsigned nObjectInfoID = itNewObjectInfoID->first;
 					if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 					{
 						SObjectSelectionPart objectSelectionPart;
@@ -205,7 +205,7 @@ namespace NMapInfoEditor
 				// удалим элементы
 				for ( CObjectInfoIDSet::const_iterator itExistingObjectInfoID = existingObjectInfoIDSet.begin(); itExistingObjectInfoID != existingObjectInfoIDSet.end(); ++itExistingObjectInfoID )
 				{
-					const UINT nObjectInfoID = itExistingObjectInfoID->first;
+					const unsigned nObjectInfoID = itExistingObjectInfoID->first;
 					CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 					if ( posObjectSelectionPart != objectSelection.objectSelectionPartMap.end() )
 					{
@@ -227,7 +227,7 @@ namespace NMapInfoEditor
 			// удалим элементы
 			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
-				const UINT nObjectInfoID = Pick( *itObjectSceneID );
+				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 				if ( posObjectSelectionPart != objectSelection.objectSelectionPartMap.end() )
 				{
@@ -270,7 +270,7 @@ namespace NMapInfoEditor
 				}
 				if ( bInside )
 				{
-					const UINT nObjectInfoID = itObject->first;
+					const unsigned nObjectInfoID = itObject->first;
 					if ( objectSelection.objectSelectionPartMap.find( nObjectInfoID ) == objectSelection.objectSelectionPartMap.end() )
 					{
 						InsertHashSetElement( &newObjectInfoIDSet, nObjectInfoID );
@@ -290,7 +290,7 @@ namespace NMapInfoEditor
 				// добавим элементы
 				for ( CObjectInfoIDSet::const_iterator itNewObjectInfoID = newObjectInfoIDSet.begin(); itNewObjectInfoID != newObjectInfoIDSet.end(); ++itNewObjectInfoID )
 				{
-					const UINT nObjectInfoID = itNewObjectInfoID->first;
+					const unsigned nObjectInfoID = itNewObjectInfoID->first;
 					if ( SObjectInfo *pObjectInfo = GetObjectInfo( nObjectInfoID ) )
 					{
 						SObjectSelectionPart objectSelectionPart;
@@ -310,7 +310,7 @@ namespace NMapInfoEditor
 				// удалим элементы
 				for ( CObjectInfoIDSet::const_iterator itExistingObjectInfoID = existingObjectInfoIDSet.begin(); itExistingObjectInfoID != existingObjectInfoIDSet.end(); ++itExistingObjectInfoID )
 				{
-					const UINT nObjectInfoID = itExistingObjectInfoID->first;
+					const unsigned nObjectInfoID = itExistingObjectInfoID->first;
 					CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 					if ( posObjectSelectionPart != objectSelection.objectSelectionPartMap.end() )
 					{
@@ -346,7 +346,7 @@ namespace NMapInfoEditor
 				}
 				if ( bInside )
 				{
-					const UINT nObjectInfoID = itObject->first;
+					const unsigned nObjectInfoID = itObject->first;
 					CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 					if ( posObjectSelectionPart != objectSelection.objectSelectionPartMap.end() )
 					{
@@ -364,7 +364,7 @@ namespace NMapInfoEditor
 		{
 			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
-				const UINT nObjectInfoID = Pick( *itObjectSceneID );
+				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				CObjectSelectionPartMap::const_iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 				if ( posObjectSelectionPart == objectSelection.objectSelectionPartMap.end() )
 				{
@@ -375,9 +375,9 @@ namespace NMapInfoEditor
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline bool IsInSelection( UINT nSceneID ) const
+		inline bool IsInSelection( unsigned nSceneID ) const
 		{
-			const UINT nObjectInfoID = Pick( nSceneID );
+			const unsigned nObjectInfoID = Pick( nSceneID );
 			CObjectSelectionPartMap::const_iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 			if ( posObjectSelectionPart == objectSelection.objectSelectionPartMap.end() )
 			{
@@ -389,7 +389,7 @@ namespace NMapInfoEditor
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		inline bool IsInSelection( int nSceneID ) const
 		{
-			const UINT nObjectInfoID = Pick( nSceneID );
+			const unsigned nObjectInfoID = Pick( nSceneID );
 			CObjectSelectionPartMap::const_iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
 			if ( posObjectSelectionPart == objectSelection.objectSelectionPartMap.end() )
 			{
@@ -425,16 +425,16 @@ namespace NMapInfoEditor
 													bool bUpdateScene, IEditorScene *pEditorScene,
 													bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//
-		bool CheckSelectionLinkCapability( UINT nLinkToSceneID );
-		bool InsertSelectionLink( UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		bool CheckSelectionLinkCapability( unsigned nLinkToSceneID );
+		bool InsertSelectionLink( unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		bool RemoveSelectionLinks( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		bool RemoveSelectionLinkTo( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//
 		void ShowSelectionPropertyManipulator( IManipulator *pManipulator, const SObjectSet &rObjectSet );
 		void HideSelectionPropertyManipulator();
 		//
-		void UpdateObjectByController( int nObjectIndex, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
-		void UpdateSpotByController( int nSpotIndex, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
+		void UpdateObjectByController( int nObjectIndex, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
+		void UpdateSpotByController( int nSpotIndex, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
 		void PostLoadByController( const CIndicesList &rIndices, IEditorScene *pEditorScene, IManipulator *pManipulator, bool bObject );
 		void UpdateSelectionByController();
 		//

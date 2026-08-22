@@ -33,7 +33,7 @@ class CResizeDialog : public CDialog
 		virtual int operator&( IXmlSaver &xs );
 	};
 
-	hash_map<UINT, SControlStyle> resizeDialogControlStyles;
+	hash_map<unsigned, SControlStyle> resizeDialogControlStyles;
 	CTPoint<int> resizeDialogOriginalSize;
 	string szToolTipText;
 
@@ -64,9 +64,9 @@ class CResizeDialog : public CDialog
 		DEFAULT_STYLE							= ANCHORE_LEFT_TOP,
 	};
 
-	CResizeDialog( UINT nIDTemplate, CWnd* pParent = 0 );
+	CResizeDialog( unsigned nIDTemplate, CWnd* pParent = 0 );
 	
-	void SetControlStyle( UINT nControlID, uint32_t dwStyle = DEFAULT_STYLE, float fHorCenterAnchorRatio = 0.5f, float fVerCenterAnchorRatio = 0.5f, float fHorResizeRatio = 1.0f, float fVerResizeRatio = 1.0f ); //Add and style control to inner structure
+	void SetControlStyle( unsigned nControlID, uint32_t dwStyle = DEFAULT_STYLE, float fHorCenterAnchorRatio = 0.5f, float fVerCenterAnchorRatio = 0.5f, float fHorResizeRatio = 1.0f, float fVerResizeRatio = 1.0f ); //Add and style control to inner structure
 	void LoadResizeDialogOptions();
 	void SaveResizeDialogOptions();
 	
@@ -92,16 +92,16 @@ protected:
 	virtual bool IsRestoreSize() { return true; }
 
 	virtual HINSTANCE GetResourceHandle() { return 0; }
-	virtual bool GetToolTipText( string *pszToolTipText, const UINT nControlID ) { return false; }
+	virtual bool GetToolTipText( string *pszToolTipText, const unsigned nControlID ) { return false; }
 	
 	virtual void DoDataExchange( CDataExchange* pDX );
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();
-	afx_msg void OnSize( UINT nType, int cx, int cy );
-	afx_msg void OnSizing( UINT fwSide, LPRECT pRect );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
+	afx_msg void OnSizing( unsigned fwSide, LPRECT pRect );
 	afx_msg void OnPaint();
-	afx_msg BOOL OnNeedToolTipText( UINT id, NMHDR *pTTTStruct, LRESULT *pResult );
+	afx_msg BOOL OnNeedToolTipText( unsigned id, NMHDR *pTTTStruct, LRESULT *pResult );
 	afx_msg BOOL OnEraseBkgnd( CDC* pDC );
 
 	DECLARE_MESSAGE_MAP()

@@ -94,7 +94,7 @@ void CScriptAreaWindow::OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-bool CScriptAreaWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CScriptAreaWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SScriptAreaWindowData *pData = reinterpret_cast<SScriptAreaWindowData*>( dwData );
 	//
@@ -122,7 +122,7 @@ bool CScriptAreaWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CScriptAreaWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CScriptAreaWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptAreaWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CScriptAreaWindow::UpdateCommand(), pbCheck == 0" );
@@ -205,7 +205,7 @@ void CScriptAreaWindow::SetDialogData( const SScriptAreaWindowData *pData )
 		{
 			lcAreas.SetItemState( i, ~LVIS_SELECTED, LVIS_SELECTED );
 			//
-			UINT nScriptAreaID = lcAreas.GetItemData( i );
+			unsigned nScriptAreaID = lcAreas.GetItemData( i );
 			for ( int a = 0; a < pData->selectedScriptAreaIDList.size(); ++a )
 			{
 				if ( pData->selectedScriptAreaIDList[a] == nScriptAreaID )

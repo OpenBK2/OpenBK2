@@ -107,7 +107,7 @@ void CPCGUIDEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCGUIDEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCGUIDEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -221,7 +221,7 @@ void CPCGUIDEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCGUIDEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCGUIDEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -250,7 +250,7 @@ bool CPCGUIDEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCGUIDEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCGUIDEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCGUIDEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCGUIDEditor::UpdateCommand(), pbCheck == 0" );

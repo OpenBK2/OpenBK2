@@ -26,7 +26,7 @@ class CMultiManipulator : public IManipulator
 	bool DescExists( const string &rszName ) const;
 	bool TypeExists( const string &rszName ) const;
 	bool IDExists( const string &rszName ) const;
-	bool NameExists( UINT nID ) const;
+	bool NameExists( unsigned nID ) const;
 	bool NameExists( const string &rszName ) const;
 	int GetMinimalCount( const string &rszName, bool *pbMultiVariant ) const;
 	bool GetMultiValue( const string &rszName, CVariant *pValue ) const;
@@ -60,8 +60,8 @@ public:
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
 	const SIteratorDesc* GetDesc( const string &rszName ) const;
 	bool GetType( const string &rszName, string *pszType ) const;
-	UINT GetID( const string &rszName ) const;
-	bool GetName( UINT nID, string *pszName ) const;
+	unsigned GetID( const string &rszName ) const;
+	bool GetName( unsigned nID, string *pszName ) const;
 	//
 	bool InsertNode( const string &rszName, int nNodeIndex = NODE_ADD_INDEX );
 	bool RemoveNode( const string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX );
@@ -94,7 +94,7 @@ public:
 	const SIteratorDesc* GetDesc() const;
 	bool GetName( string *pszName ) const;
 	bool GetType( string *pszType ) const;
-	UINT GetID() const;
+	unsigned GetID() const;
 	bool IsFolder() const { return false; }
 };
 

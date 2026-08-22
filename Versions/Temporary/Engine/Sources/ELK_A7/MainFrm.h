@@ -13,8 +13,8 @@ class CMainFrame : public SECFrameWnd
 protected: 
 	DECLARE_DYNAMIC(CMainFrame)
 
-	UINT*	pDefButtonGroup;	// toolbar default button group
-	UINT	nDefButtonCount;	// the number of elementList in m_pDefaultButtons
+	unsigned*	pDefButtonGroup;	// toolbar default button group
+	unsigned	nDefButtonCount;	// the number of elementList in m_pDefaultButtons
 	
 	HICON hIcon;
 
@@ -99,18 +99,18 @@ protected:
 	afx_msg void OnUpdateFileDelete(CCmdUI* pCmdUI);
 	afx_msg void OnToolsChooseFons();
 	afx_msg void OnUpdateToolsChooseFons(CCmdUI* pCmdUI);
-	afx_msg void OnRecentElk( UINT nID );
+	afx_msg void OnRecentElk( unsigned nID );
 	afx_msg void OnUpdateRecentElkRange( CCmdUI* pCmdUI );
   afx_msg int32_t OnFindReplace( WPARAM wParam, LPARAM lParam );
 
-	afx_msg int32_t OnCreateCombo( UINT wParam, int32_t lParam );
+	afx_msg int32_t OnCreateCombo( unsigned wParam, int32_t lParam );
 	afx_msg void OnChangeFilter();
 	DECLARE_MESSAGE_MAP()
 
 	int OnETNTextSelected( int nState );
 	int OnETNFolderSelected( int nState );
 	int OnIFNStateChanged( int nState );
-	int OnTENKeyDown( UINT nChar );
+	int OnTENKeyDown( unsigned nChar );
 
 	void OnExportToPAKInternal( bool bUseFilter = false );
 
@@ -133,7 +133,7 @@ public:
 	public:
 	virtual BOOL PreCreateWindow( CREATESTRUCT& cs );
 	protected:
-	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 };
 
 

@@ -33,7 +33,7 @@ const STypeClass* CTableManipulatorWrapper::GetType( int nTypeID ) const
 	return pos == idsMap.end() ? 0 : pos->second;
 }
 
-UINT CTableManipulatorWrapper::GetID( const std::string &szName ) const
+unsigned CTableManipulatorWrapper::GetID( const std::string &szName ) const
 {
 	const STypeClass *pType = GetType( szName );
 	if ( pType )
@@ -46,7 +46,7 @@ UINT CTableManipulatorWrapper::GetID( const std::string &szName ) const
 }
 
 
-bool CTableManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
+bool CTableManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 {
 	const STypeClass *pType = GetType( nID );
 	if ( pType )

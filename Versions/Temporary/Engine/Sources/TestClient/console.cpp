@@ -125,7 +125,7 @@ void CConsole::SetStyles()
 	Sci(SCI_STYLESETEOLFILLED, ES_END_OF_NOT_CLOSED_STR, 1 );
 }
 
-void CConsole::OnMouseMove(UINT nFlags, CPoint point) 
+void CConsole::OnMouseMove(unsigned nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
 	if ( m_bShowCalltips )
@@ -209,7 +209,7 @@ void CConsole::AddText( const string &szText )
 	Sci( SCI_GOTOPOS, nTextEnd );
 }
 
-void CConsole::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CConsole::OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 {
 	const int nLineNum = Sci( SCI_LINEFROMPOSITION, Sci(SCI_GETCURRENTPOS) );
 	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);

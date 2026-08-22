@@ -109,7 +109,7 @@ int CVSOStateEx::GetFreeVSOID()
 }
 
 
-void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags )
+void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags )
 {
 	if ( CanEdit() )
 	{

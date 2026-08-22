@@ -151,7 +151,7 @@ void CAdvClipboardWindow::SetDialogData( const SAdvClipboardWindowData *pData )
 }
 
 
-bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CAdvClipboardWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -175,7 +175,7 @@ bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CAdvClipboardWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CAdvClipboardWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAdvClipboardWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAdvClipboardWindow::UpdateCommand(), pbCheck == 0" );

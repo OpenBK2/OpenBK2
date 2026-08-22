@@ -26,11 +26,11 @@
 #include <cstdint>
 
 /**
-const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };
+const	unsigned  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT };
 const int		CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_WIDTH [TABGDBB_TREE_COLUMN_COUNT] = { 100, 50 };
 /**/
-const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0 };
+const	unsigned  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0 };
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT };
 const int		CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_WIDTH [TABGDBB_TREE_COLUMN_COUNT] = { 150 };
 
@@ -148,7 +148,7 @@ CTreeGDBBrowserBase::~CTreeGDBBrowserBase()
 }
 
 
-LRESULT CTreeGDBBrowserBase::WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CTreeGDBBrowserBase::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam )
 {
 	if ( IsNotEditLabel() )
 	{
@@ -201,7 +201,7 @@ void CTreeGDBBrowserBase::OnDestroy()
 }
 
 
-void CTreeGDBBrowserBase::OnTimer( UINT nIDEvent ) 
+void CTreeGDBBrowserBase::OnTimer( unsigned nIDEvent ) 
 {
   if ( nIDEvent == GetLabelEditSortTimerID() )
 	{
@@ -269,7 +269,7 @@ void CTreeGDBBrowserBase::KillCreateTreeTimer()
 }
 
 
-void CTreeGDBBrowserBase::OnMouseMove( UINT nFlags, CPoint point )
+void CTreeGDBBrowserBase::OnMouseMove( unsigned nFlags, CPoint point )
 {
 	CSortTreeControl::OnMouseMove( nFlags, point );
 	//
@@ -277,7 +277,7 @@ void CTreeGDBBrowserBase::OnMouseMove( UINT nFlags, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnLButtonDown( UINT nFlags, CPoint point )
+void CTreeGDBBrowserBase::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	CSortTreeControl::OnLButtonDown( nFlags, point );
 	//	
@@ -285,7 +285,7 @@ void CTreeGDBBrowserBase::OnLButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnLButtonUp( UINT nFlags, CPoint point )
+void CTreeGDBBrowserBase::OnLButtonUp( unsigned nFlags, CPoint point )
 {
 	CSortTreeControl::OnLButtonUp( nFlags, point );
 	//
@@ -293,7 +293,7 @@ void CTreeGDBBrowserBase::OnLButtonUp( UINT nFlags, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnLButtonDblClk( UINT nFlags, CPoint point ) 
+void CTreeGDBBrowserBase::OnLButtonDblClk( unsigned nFlags, CPoint point ) 
 {
 	CSortTreeControl::OnLButtonDblClk( nFlags, point );
 	//
@@ -301,7 +301,7 @@ void CTreeGDBBrowserBase::OnLButtonDblClk( UINT nFlags, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnRButtonDown( UINT nFlags, CPoint point )
+void CTreeGDBBrowserBase::OnRButtonDown( unsigned nFlags, CPoint point )
 {
 	CSortTreeControl::OnRButtonDown( nFlags, point );
 	//
@@ -309,7 +309,7 @@ void CTreeGDBBrowserBase::OnRButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTreeGDBBrowserBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CSortTreeControl::OnKeyDown( nChar, nRepCnt, nFlags );
 	//
@@ -326,7 +326,7 @@ void CTreeGDBBrowserBase::OnContextMenu( CWnd *pwnd, CPoint point )
 }
 
 
-void CTreeGDBBrowserBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTreeGDBBrowserBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CSortTreeControl::OnKeyUp( nChar, nRepCnt, nFlags );
 	//
@@ -636,7 +636,7 @@ void CTreeGDBBrowserBase::OnSelChanged( NMHDR *pNotifyStruct, LRESULT *pResult )
 }
 
 
-void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( UINT _nPCDialogCommandHandlerID, bool bUpdate )
+void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( unsigned _nPCDialogCommandHandlerID, bool bUpdate )
 {
 	if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 	{
@@ -2123,7 +2123,7 @@ bool CTreeGDBBrowserBase::CanExport( bool bForce )
 }
 
 
-bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CTreeGDBBrowserBase::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -2314,7 +2314,7 @@ bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CTreeGDBBrowserBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CTreeGDBBrowserBase::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CTreeGDBBrowserBase::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CTreeGDBBrowserBase::UpdateCommand(), pbCheck == 0" );

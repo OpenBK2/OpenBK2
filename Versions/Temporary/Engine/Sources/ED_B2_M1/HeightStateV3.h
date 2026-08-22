@@ -34,8 +34,8 @@ class CHeightTileStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -52,10 +52,10 @@ class CHeightUpStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -72,10 +72,10 @@ class CHeightDownStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -92,10 +92,10 @@ class CHeightRoundStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -112,10 +112,10 @@ class CHeightPlatoStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -165,7 +165,7 @@ public:
 			BT_CIRCLE	= 0,
 			BT_SQUARE	= 1,
 		};
-		UINT nFlags;
+		unsigned nFlags;
 		//
 		EBrush eBrush;
 		EBrushSize eBrushSize;
@@ -216,8 +216,8 @@ private:
 	SEditParameters* GetEditParameters();
 	bool CanEdit();
 	void UpdatePlatoHeight();
-	void GetEditParameters( UINT nFlags ); // editParameters -> editorSettings
-	void SetEditParameters( UINT nFlags ); // editorSettings -> editParameters
+	void GetEditParameters( unsigned nFlags ); // editParameters -> editorSettings
+	void SetEditParameters( unsigned nFlags ); // editorSettings -> editParameters
 	void CreateMapInfoController();
 
 	int GetTileBrushSize( SEditParameters::EBrushSize eBrushSize );
@@ -237,19 +237,19 @@ protected:
 	void Leave();
 	void Draw( class CPaintDC *pPaintDC );
 	//
-	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown		( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnKeyUp			( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonUp	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown		( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:
 	CHeightStateV3( CMapInfoEditor* _pMapInfoEditor = 0 ) : pMapInfoEditor( _pMapInfoEditor ), bEscaped( false ), bTileEditStarted( false ), bHeightEditStarted( false )

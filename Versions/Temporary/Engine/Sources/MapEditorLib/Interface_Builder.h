@@ -23,7 +23,7 @@ struct IView;
 
 struct SBuildDataParams
 {
-	UINT nFlags;										// Параметры редактрования
+	unsigned nFlags;										// Параметры редактрования
 	std::string szObjectTypeName;				// Тип объекта
 	// имя формируется следующим образом:
 	// string szFileName = szObjectNamePrefix + szObjectName + szObjectNamePostfix;

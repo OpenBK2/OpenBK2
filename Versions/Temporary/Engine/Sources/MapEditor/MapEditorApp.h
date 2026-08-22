@@ -9,7 +9,7 @@ struct SCursomToolBarInfo
 {
 	CString strName;
 	int nCount;
-	const UINT *pButtons;
+	const unsigned *pButtons;
 
 	SCursomToolBarInfo() : nCount( 0 ), pButtons( 0 ) {}
 	SCursomToolBarInfo( const SCursomToolBarInfo &rCursomToolBarInfo ) 

@@ -622,7 +622,7 @@ void CModelWindow::OnClickedTerrainColorButton()
 }
 
 
-void CModelWindow::OnTimer( UINT nIDEvent ) 
+void CModelWindow::OnTimer( unsigned nIDEvent ) 
 {
   if ( nIDEvent == GetSceneColorID() )
 	{
@@ -740,7 +740,7 @@ void CModelWindow::OnFOVTimer()
 }
 
 
-bool CModelWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CModelWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -769,7 +769,7 @@ bool CModelWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CModelWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CModelWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CModelState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CModelState::UpdateCommand(), pbCheck == 0" );

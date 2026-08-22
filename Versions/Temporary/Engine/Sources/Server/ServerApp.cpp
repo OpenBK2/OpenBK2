@@ -27,7 +27,7 @@ CServerApp::CServerApp()
 }
 
 
-void CALLBACK TimerProc( HWND hwnd, UINT uMsg, UINT idEvent, uint32_t dwTime )
+void CALLBACK TimerProc( HWND hwnd, unsigned uMsg, unsigned idEvent, uint32_t dwTime )
 {
 	theApp.Segment();
 }

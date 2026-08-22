@@ -73,7 +73,7 @@ void CFenceState::InsertFence()
 				objectCreateInfo.bFitToGrid = GetMapInfoEditor()->editorSettings.bFitToGrid;
 				objectCreateInfo.bRotateTo90Degree = GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
 				//
-				UINT nSimpleObjectInfoID = INVALID_NODE_ID;
+				unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
 				{
 					if ( !pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator ) )
@@ -93,7 +93,7 @@ void CFenceState::InsertFence()
 }
 
 
-bool CFenceState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CFenceState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -119,7 +119,7 @@ bool CFenceState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CFenceState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CFenceState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFenceState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CFenceState::UpdateCommand(), pbCheck == 0" );
@@ -200,7 +200,7 @@ void CFenceState::InsertObjectDraw( CPaintDC *pPaintDC )
 }
 
 
-void CFenceState::FillScene( UINT nFlags, const CVec3 &rTerrainPos )
+void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{
@@ -232,7 +232,7 @@ void CFenceState::FillScene( UINT nFlags, const CVec3 &rTerrainPos )
 						MakeOrientation( &qRotation, DWORDToVec3( dwNormal ) );
 					}
 					//
-					const UINT nObjectSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
+					const unsigned nObjectSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
 					if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 					{
 						pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -270,7 +270,7 @@ void CFenceState::FillScene( UINT nFlags, const CVec3 &rTerrainPos )
 }
 
 
-bool CFenceState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
+bool CFenceState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{
@@ -287,7 +287,7 @@ bool CFenceState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
 }
 
 
-bool CFenceState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos )
+bool CFenceState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( !designTool.bRay )
 	{
@@ -315,7 +315,7 @@ bool CFenceState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos
 }
 
 
-bool CFenceState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CFenceState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( designTool.bRay )
 	{
@@ -334,7 +334,7 @@ bool CFenceState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
 }
 
 
-bool CFenceState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
+bool CFenceState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{

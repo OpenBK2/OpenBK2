@@ -64,7 +64,7 @@ void CPCStringComboEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCStringComboEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCStringComboEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -196,7 +196,7 @@ void CPCStringComboEditor::SetDefaultValue()
 }
 
 
-bool CPCStringComboEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCStringComboEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -225,7 +225,7 @@ bool CPCStringComboEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCStringComboEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCStringComboEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringComboEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCStringComboEditor::UpdateCommand(), pbCheck == 0" );

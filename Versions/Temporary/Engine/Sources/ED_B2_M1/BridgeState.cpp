@@ -100,7 +100,7 @@ void CBridgeState::InsertObjectDraw( CPaintDC *pPaintDC )
 }
 
 
-bool CBridgeState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
+bool CBridgeState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( bPlaceBridge )
 	{
@@ -116,7 +116,7 @@ bool CBridgeState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos 
 }
 
 
-bool CBridgeState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos )
+bool CBridgeState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() && CanAddBridge() )
 	{
@@ -144,7 +144,7 @@ bool CBridgeState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPo
 
 
 
-bool CBridgeState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CBridgeState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( bPlaceBridge )
 	{
@@ -161,7 +161,7 @@ bool CBridgeState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos 
 }
 
 
-bool CBridgeState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
+bool CBridgeState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() && CanAddBridge() )
 	{
@@ -306,7 +306,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				bridgeCreateInfo.fHP = 1.0f;
 				bridgeCreateInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 				bridgeCreateInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
-				UINT nBridgeInfoID = INVALID_NODE_ID;
+				unsigned nBridgeInfoID = INVALID_NODE_ID;
 				if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 				{
 					if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo*>( 0 ), &nBridgeInfoID ) )
@@ -340,7 +340,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 					//
 					for ( int nTerminatorIndex = 0; nTerminatorIndex < TERMINATOR_COUNT; ++nTerminatorIndex )
 					{
-						const UINT nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
+						const unsigned nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
 						if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 						{
 							pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -383,7 +383,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 					NMapInfoEditor::CSceneIDList newSceneIDList;
 					for ( int nTerminatorIndex = 0; nTerminatorIndex < nAdditionalSpanCount; ++nTerminatorIndex )
 					{
-						const UINT nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
+						const unsigned nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
 						if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 						{
 							pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -420,7 +420,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				{
 					for ( int nTerminatorIndex = 0; nTerminatorIndex < abs( nAdditionalSpanCount ); ++nTerminatorIndex )
 					{
-						const UINT nSceneID = sceneIDlist.back();
+						const unsigned nSceneID = sceneIDlist.back();
 						if ( CPtr<SAIDissapearObjUpdate> pUpdate = new SAIDissapearObjUpdate() )
 						{
 							pUpdate->eUpdateType = ACTION_NOTIFY_DISSAPEAR_OBJ;

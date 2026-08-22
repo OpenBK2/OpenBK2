@@ -10,8 +10,8 @@ public:
 public:
 	virtual ~CTranslateEdit();
 protected:
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
+	afx_msg void OnChar(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
 
 	DECLARE_MESSAGE_MAP()
 
@@ -27,8 +27,8 @@ public:
 public:
 	virtual ~CTranslateButton();
 protected:
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
+	afx_msg void OnChar(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
 
 	DECLARE_MESSAGE_MAP()
 

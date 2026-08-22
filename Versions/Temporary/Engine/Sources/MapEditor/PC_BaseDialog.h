@@ -8,8 +8,8 @@ struct IView;
 class CPCBaseDialog : public ICommandHandler
 {
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	// Получить указатель на дерево
 	virtual IView* GetView() = 0;

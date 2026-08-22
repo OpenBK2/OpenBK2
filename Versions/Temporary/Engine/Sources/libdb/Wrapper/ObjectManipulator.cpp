@@ -130,7 +130,7 @@ static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBa
 	return true;
 }
 
-UINT CObjectManipulatorWrapper::GetID( const std::string &rszName ) const
+unsigned CObjectManipulatorWrapper::GetID( const std::string &rszName ) const
 {
 	return INVALID_NODE_ID;
 }
@@ -241,7 +241,7 @@ void CObjectManipulatorWrapper::ClearCache()
 {
 }
 
-bool CObjectManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
+bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 { 
 	if ( nID != -1 )
 		return false;

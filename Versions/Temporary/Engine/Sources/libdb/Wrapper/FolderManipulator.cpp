@@ -71,12 +71,12 @@ bool CFolderManipulatorWrapper::SetValue( const std::string &szName, const CVari
 	return true;
 }
 
-UINT CFolderManipulatorWrapper::GetID( const std::string &szName ) const
+unsigned CFolderManipulatorWrapper::GetID( const std::string &szName ) const
 {
 	return INVALID_NODE_ID;
 }
 
-bool CFolderManipulatorWrapper::GetName( UINT nID, std::string *pszName ) const
+bool CFolderManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 {
 	return false;
 }
@@ -195,7 +195,7 @@ bool CFolderManipulatorIteratorWrapper::GetType( std::string *pszType ) const
 	return true;
 }
 
-UINT CFolderManipulatorIteratorWrapper::GetID() const
+unsigned CFolderManipulatorIteratorWrapper::GetID() const
 {
 	return INVALID_NODE_ID;
 }

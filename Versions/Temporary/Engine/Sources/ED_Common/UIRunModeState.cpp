@@ -50,7 +50,7 @@ void CUIRunModeState::Leave()
 }
 
 
-void CUIRunModeState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CUIRunModeState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch( nChar )
 	{

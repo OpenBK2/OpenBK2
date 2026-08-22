@@ -2,7 +2,7 @@
 
 #include "Tools_SysCodes.h"
 
-CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<UINT>( 0, "" )
+CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<unsigned>( 0, "" )
 {
 	Insert( WM_NULL, "WM_NULL" );
 	Insert( WM_CREATE, "WM_CREATE" );
@@ -210,7 +210,7 @@ CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<UINT>( 0, "" )
 }
 
 
-string CWMMnemonicCodes::Get( UINT nMessage )
+string CWMMnemonicCodes::Get( unsigned nMessage )
 {
 	string szMnemonic = GetMnemonic( nMessage );
 	szMnemonic += StrFmt( "( 0x%X( %u ) )", nMessage, nMessage );

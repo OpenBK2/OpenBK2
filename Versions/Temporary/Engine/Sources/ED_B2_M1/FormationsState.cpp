@@ -270,7 +270,7 @@ void CFormationsState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SQUAD_FORMATIONS_STATE );
 }
 
-bool CFormationsState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CFormationsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -327,7 +327,7 @@ void CFormationsState::RefreshState( bool bForce )
 	}
 }
 
-bool CFormationsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CFormationsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFormationsState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CFormationsState::UpdateCommand(), pbCheck == 0" );
@@ -364,7 +364,7 @@ void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 	pPaintDC->SetBkMode( nOldBkMode );
 }
 
-void CFormationsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CFormationsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
 	{
@@ -380,7 +380,7 @@ void CFormationsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-void CFormationsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CFormationsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
 		return;
@@ -411,7 +411,7 @@ void CFormationsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_UPDATE_VALUES, 0 );
 }
 
-void CFormationsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CFormationsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON ) 
 		return;

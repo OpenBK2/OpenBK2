@@ -26,9 +26,9 @@ class CPolygonSelectState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -50,11 +50,11 @@ class CPolygonEditState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -78,11 +78,11 @@ class CPolygonAddState : public CDefaultInputState
 	void InsertPolygon();
 
 	//IInputState interface
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -107,7 +107,7 @@ protected:
 	static const uint32_t CONTROL_POINT_COLOR;
 	static const uint32_t CONTROL_LINE_COLOR;
 	//
-	typedef vector<UINT> CPolygonIDList;
+	typedef vector<unsigned> CPolygonIDList;
 	typedef vector<CVec3> CControlPointList;
 
 public:
@@ -195,7 +195,7 @@ protected:
 	// Обновить полигон (были изменены его контрольгные точки)
 	virtual void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType ) = 0;
 	// Добавить полигон (возвращает ID добавленного полигона)
-	virtual UINT InsertPolygon( const CControlPointList &rControlPointList ) = 0;
+	virtual unsigned InsertPolygon( const CControlPointList &rControlPointList ) = 0;
 	// Удалить полигон по указанному ID
 	virtual void RemovePolygon( int nPolygonID ) = 0;
 public:
@@ -233,8 +233,8 @@ public:
 	}
 
 	//ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

@@ -81,7 +81,7 @@ CMapObjectWindow::~CMapObjectWindow()
 
 /**
 CWMMnemonicCodes mnemonicCodes;
-LRESULT CMapObjectWindow::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CMapObjectWindow::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	DebugTrace( "Message: %s, wParam: 0x%X(%u), lParam: 0x%X\n", mnemonicCodes.Get( message ).c_str(), wParam, wParam, lParam );
 	return CResizeDialog::WindowProc( message, wParam, lParam );
@@ -395,7 +395,7 @@ void CMapObjectWindow::ClearSelection()
 }
 
 
-bool CMapObjectWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapObjectWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -470,7 +470,7 @@ bool CMapObjectWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMapObjectWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapObjectWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapObjectWindow::UpdateCommand(), pbCheck == 0" );
@@ -512,7 +512,7 @@ bool CMapObjectWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 }
 
 
-void CMapObjectWindow::OnSize( UINT nType, int cx, int cy ) 
+void CMapObjectWindow::OnSize( unsigned nType, int cx, int cy ) 
 {
 	CResizeDialog::OnSize( nType, cx, cy );
 	//

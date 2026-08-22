@@ -23,7 +23,7 @@
 
 const char CFieldState::FIELD_TYPE_NAME[] = "Field";
 
-void CFieldState::UpdateEditParameters( UINT nFlags )
+void CFieldState::UpdateEditParameters( unsigned nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -263,7 +263,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 }
 
 
-bool CFieldState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CFieldState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -305,7 +305,7 @@ bool CFieldState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CFieldState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CFieldState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFieldState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CFieldState::UpdateCommand(), pbCheck == 0" );
@@ -1045,7 +1045,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											objectCreateInfo.fHP = 1.0f;
 											objectCreateInfo.bRotateTo90Degree = pMapInfoEditor->editorSettings.bRotateTo90Degree;
 											objectCreateInfo.bFitToGrid = pMapInfoEditor->editorSettings.bFitToGrid;
-											UINT nSimpleObjectInfoID = INVALID_NODE_ID;
+											unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 											if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
 											{
 												pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator );
@@ -1088,7 +1088,7 @@ int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 	xs.Add( "FillHeights", &bFillHeights );
 	//
 	//do not serialise this fields:
-	// UINT nFlags;
+	// unsigned nFlags;
 	//CFieldList fieldList;
 	//float fMinLength;
 	//float fWidth;

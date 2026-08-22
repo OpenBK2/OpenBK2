@@ -45,7 +45,7 @@ public:
 	bool Draw( HDC *pHDC );
 };
 
-LRESULT CALLBACK SplashScreenWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK SplashScreenWndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
 {
 	CSplashScreen* pSplashScreen = reinterpret_cast<CSplashScreen*>( ::GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
 	switch ( uMsg ) 

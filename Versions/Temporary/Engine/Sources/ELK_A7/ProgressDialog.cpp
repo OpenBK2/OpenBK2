@@ -90,7 +90,7 @@ void CProgressDialog::IterateProgressPosition()
 }
 
 
-void CProgressDialog::OnTimer(UINT nIDEvent) 
+void CProgressDialog::OnTimer(unsigned nIDEvent) 
 {
   if ( nIDEvent == START_TIMER_ID )
 	{

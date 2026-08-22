@@ -58,7 +58,7 @@ REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 #define GAME_CFG_BACKUP_FILE_PATH "Editor\\Game.cfg.backup"
 
 
-const UINT TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = 
+const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = 
 {
 	ID_TOOLS_RESET_CAMERA,
 	ID_TOOLS_UPDATE_VSO,
@@ -74,7 +74,7 @@ const UINT TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUN
 };
 
 
-const UINT TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] = 
+const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] = 
 {
 	ID_MI_VIEW_MINIMAP,
 	ID_MI_VIEW_TOOL,
@@ -115,7 +115,7 @@ void CMapInfoEditor::CreateControls()
 	// создаем minimap docking window
 	//const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
-	UINT nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
+	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
 	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MiniMap", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.2f, 265 ) )
 	{
 		if ( wndMiniMap.Create( pwndMiniMap ) )
@@ -644,7 +644,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 }
 
 
-bool CMapInfoEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -919,7 +919,7 @@ bool CMapInfoEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 	return false;
 }
 
-bool CMapInfoEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoEditor::UpdateCommand(), pbCheck == 0" );
@@ -1839,7 +1839,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 					objectLoadInfo.fDirection = AI2VisRad( wDirection );
 					CManipulatorManager::GetValue( &( objectLoadInfo.nLinkWith ), pManipulator, szObjectPrefix + ".Link.LinkWith" );
-					UINT nSimpleObjectInfoID = INVALID_NODE_ID;
+					unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 					if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
 					{
 						pSimpleObjectInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
@@ -1856,7 +1856,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 				objectLoadInfo.nObjectIndex = nBridgeIndex;
 				objectLoadInfo.bSearchIndices = true;
-				UINT nBridgeInfoID = INVALID_NODE_ID;
+				unsigned nBridgeInfoID = INVALID_NODE_ID;
 				if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo*>( 0 ), &nBridgeInfoID ) )
 				{
 					pBridgeInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
@@ -1872,7 +1872,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 				objectLoadInfo.nObjectIndex = nEntrenchmentIndex;
 				objectLoadInfo.bSearchIndices = true;
-				UINT nEntrenchmentInfoID = INVALID_NODE_ID;
+				unsigned nEntrenchmentInfoID = INVALID_NODE_ID;
 				if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SEntrenchmentInfo*>( 0 ), &nEntrenchmentInfoID ) )
 				{
 					pEntrenchmentInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
@@ -1973,7 +1973,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				spotLoadInfo.szRPGStatsTypeName = szRPGStatsTypeName;
 				spotLoadInfo.rpgStatsDBID = CDBID( szRPGStatsName );
 				spotLoadInfo.spotSquare = spotSquare;
-				UINT nSpotInfoID = INVALID_NODE_ID;
+				unsigned nSpotInfoID = INVALID_NODE_ID;
 				if ( NMapInfoEditor::SSpotInfo *pSpotInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo*>( 0 ), &nSpotInfoID ) )
 				{
 					pSpotInfo->Load( &spotLoadInfo, pEditorScene, pManipulator );
@@ -2341,17 +2341,17 @@ void CMapInfoEditor::RunGame()
 
 		/**
 		// удаляемые объекты убираем из добавляемых
-		for ( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			{
-				hash_map<UINT,int>::iterator posObjectIndex = insertedObjectMap.find( itObjectIndex->first );
+				hash_map<unsigned,int>::iterator posObjectIndex = insertedObjectMap.find( itObjectIndex->first );
 				if ( posObjectIndex != insertedObjectMap.end() )
 				{
 					insertedObjectMap.erase( posObjectIndex );
 				}
 			}
 			{
-				hash_map<UINT,UINT>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+				hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 				if ( posObjectIndex != changedObjectMap.end() )
 				{
 					changedObjectMap.erase( posObjectIndex );
@@ -2359,38 +2359,38 @@ void CMapInfoEditor::RunGame()
 			}
 		}
 		// добавляемые и убираемые объекты убираем из обновляемых
-		for ( hash_map<UINT,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
+		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
-			hash_map<UINT,UINT>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+			hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 			if ( posObjectIndex != changedObjectMap.end() )
 			{
 				changedObjectMap.erase( posObjectIndex );
 			}
 		}
-		for ( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
-			hash_map<UINT,UINT>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+			hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 			if ( posObjectIndex != changedObjectMap.end() )
 			{
 				changedObjectMap.erase( posObjectIndex );
 			}
 		}
 		// добавляем объекты
-		for( hash_map<UINT,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
+		for( hash_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.InsertObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
 		// удаляем объекты
-		for( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.RemoveObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
 		// добавляем мосты
-		for( hash_map<UINT,int>::const_iterator itBridgeIndex = insertedBridgeMap.begin(); itBridgeIndex != insertedBridgeMap.end(); ++itBridgeIndex )
+		for( hash_map<unsigned,int>::const_iterator itBridgeIndex = insertedBridgeMap.begin(); itBridgeIndex != insertedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
 		// удаляем мосты
-		for( hash_map<UINT,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
+		for( hash_map<unsigned,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
 		/**/

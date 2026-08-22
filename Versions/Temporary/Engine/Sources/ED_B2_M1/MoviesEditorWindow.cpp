@@ -181,7 +181,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 }
 
 
-bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMoviesEditorWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -249,7 +249,7 @@ bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMoviesEditorWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMoviesEditorWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMoviesEditorWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMoviesEditorWindow::UpdateCommand(), pbCheck == 0" );
@@ -324,7 +324,7 @@ void CMoviesEditorWindow::GetTimeSliderRect( CRect* pRect ) const
 }
 
 
-void CMoviesEditorWindow::OnLButtonDown( UINT nFlags, CPoint point )
+void CMoviesEditorWindow::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	SetCapture();
 	CResizeDialog::OnLButtonDown( nFlags, point );
@@ -380,7 +380,7 @@ void CMoviesEditorWindow::OnLButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CMoviesEditorWindow::OnLButtonUp( UINT nFlags, CPoint point )
+void CMoviesEditorWindow::OnLButtonUp( unsigned nFlags, CPoint point )
 {
 	ReleaseCapture();
 	CResizeDialog::OnLButtonUp( nFlags, point );
@@ -420,7 +420,7 @@ void CMoviesEditorWindow::OnLButtonUp( UINT nFlags, CPoint point )
 }
 
 
-void CMoviesEditorWindow::OnMouseMove( UINT nFlags, CPoint point )
+void CMoviesEditorWindow::OnMouseMove( unsigned nFlags, CPoint point )
 {
 	CResizeDialog::OnMouseMove( nFlags, point );
 
@@ -465,7 +465,7 @@ void CMoviesEditorWindow::OnMouseMove( UINT nFlags, CPoint point )
 }
 
 
-void CMoviesEditorWindow::OnMButtonDown( UINT nFlags, CPoint point )
+void CMoviesEditorWindow::OnMButtonDown( unsigned nFlags, CPoint point )
 {
 	SetCapture();
 	CResizeDialog::OnMButtonDown( nFlags, point );
@@ -490,7 +490,7 @@ void CMoviesEditorWindow::OnMButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CMoviesEditorWindow::OnMButtonUp( UINT nFlags, CPoint point )
+void CMoviesEditorWindow::OnMButtonUp( unsigned nFlags, CPoint point )
 {
 	ReleaseCapture();
 	CResizeDialog::OnMButtonUp( nFlags, point );
@@ -504,7 +504,7 @@ void CMoviesEditorWindow::OnMButtonUp( UINT nFlags, CPoint point )
 }
 
 
-BOOL CMoviesEditorWindow::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
+BOOL CMoviesEditorWindow::OnMouseWheel( unsigned nFlags, short zDelta, CPoint point )
 {
 	// special move cursor
 	CRect customRect;
@@ -524,7 +524,7 @@ BOOL CMoviesEditorWindow::OnMouseWheel( UINT nFlags, short zDelta, CPoint point 
 }
 
 
-void CMoviesEditorWindow::OnTimer( UINT nIDEvent )
+void CMoviesEditorWindow::OnTimer( unsigned nIDEvent )
 {
 	if ( nIDEvent == GetMovieTimerID() )
 	{
@@ -782,7 +782,7 @@ void CMoviesEditorWindow::ResetDialog()
 }
 
 
-void CMoviesEditorWindow::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrollBar )
+void CMoviesEditorWindow::OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar *pScrollBar )
 {
 	wndTimeSliderControl.SetStartTime( (wndTimeSliderControl.GetLength() * wndTimeSliderControl.GetScale()) * GetSliderPercent(wndSliderTime) );
 	wndTimeSliderControl.SetScale( pow(MOVED_DEF_SCALING, (GetSliderPercent(wndSliderScale) - 1.0f) * MOVED_DEF_SCALING) );

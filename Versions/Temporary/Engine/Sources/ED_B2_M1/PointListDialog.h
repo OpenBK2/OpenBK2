@@ -20,7 +20,7 @@ class CPointListDialog : public CResizeDialog, public ICommandHandler
 	CListCtrl pointsList;
 	CString szLabel;
 
-	UINT nInstanceID;
+	unsigned nInstanceID;
 
 	static list<CPointListDialog*> otherDialogs;
 
@@ -45,15 +45,15 @@ public:
 	{	
 		NI_ASSERT( pParentWindow, "CPointListDialog::CPointListDialog() :: Empty constructor call" );
 	}
-	CPointListDialog( UINT nInstanceID, const CString &rszLabel );
+	CPointListDialog( unsigned nInstanceID, const CString &rszLabel );
 	virtual ~CPointListDialog();
 	
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();
 
 	//ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();

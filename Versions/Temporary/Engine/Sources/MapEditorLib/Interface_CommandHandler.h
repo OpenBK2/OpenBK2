@@ -11,9 +11,9 @@ struct ICommandHandler
 	virtual ~ICommandHandler() {}
 	//
 	// Обработать команду от User Interface, если вернули false, то команда не обработана
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData ) = 0;
 	// Можно ли сейчас обрабатывать команду? Если вернули false, то команда не обработана
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
 
 
@@ -24,25 +24,25 @@ struct ICommandHandlerContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A381 };
 	// Зарегистрироать обработчик в MainFrame ( команды от пользовательского интерфейса )
-	virtual void Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID ) = 0;
+	virtual void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID ) = 0;
 	// Удалить регистрацию обработчика из Mainframe
-	virtual void UnRegister( UINT nType ) = 0;
+	virtual void UnRegister( unsigned nType ) = 0;
 	// Установить обработчик команды от User Interface
-	virtual void Set( UINT nType, ICommandHandler *pCommandHandler ) = 0;
+	virtual void Set( unsigned nType, ICommandHandler *pCommandHandler ) = 0;
 	// Удалить обработчик команды, при условии что указанный pCommandHandler является owner
-	virtual void Remove( UINT nType, ICommandHandler *pCommandHandler ) = 0;
+	virtual void Remove( unsigned nType, ICommandHandler *pCommandHandler ) = 0;
 	// Удалить обработчик команды
-	virtual void Remove( UINT nType ) = 0;
+	virtual void Remove( unsigned nType ) = 0;
 	// Получить обработчик команды 
-	virtual ICommandHandler* Get( UINT nType ) = 0;
+	virtual ICommandHandler* Get( unsigned nType ) = 0;
 	// Передать команду на обработку, последнему зарегистрированному обработчику
-	virtual bool HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData ) = 0;
 	// Проверить возможность обработки команды у последнего зарегистрированного обработчика
-	virtual bool UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
+	virtual bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 	// Передать команду на обработку, обработчик получить из ранее зарегистрированных
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData ) = 0;
 	// Проверить возможность обработки команды, обработчик получить из ранее зарегистрированных
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
 
 

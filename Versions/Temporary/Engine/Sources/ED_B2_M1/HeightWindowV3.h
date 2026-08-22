@@ -44,8 +44,8 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	virtual void DoDataExchange( CDataExchange* pDX );
 	//
 	virtual BOOL OnInitDialog();
-	afx_msg void OnTimer( UINT nIDEvent );
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 	//
 	afx_msg void OnBrushRadio();
@@ -56,8 +56,8 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 
 	int32_t nHeightTimer;
 	uint32_t dwHeightData;
-  inline UINT GetHeightID() { return 2; }
-  inline UINT GetHeightTimerInterval() { return 100; }	// Частота в миллисекундах
+  inline unsigned GetHeightID() { return 2; }
+  inline unsigned GetHeightTimerInterval() { return 100; }	// Частота в миллисекундах
   void SetHeightTimer();
   void KillHeightTimer();
   void OnHeightTimer();
@@ -79,8 +79,8 @@ public:
 	~CHeightWindowV3();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

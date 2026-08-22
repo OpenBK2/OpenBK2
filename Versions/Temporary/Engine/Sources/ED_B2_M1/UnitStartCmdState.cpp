@@ -257,7 +257,7 @@ void CUnitStartCmdState::Leave()
 }
 
 
-bool CUnitStartCmdState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( CMapObjectState::HandleCommand(nCommandID, dwData) )
 		return true;
@@ -310,7 +310,7 @@ bool CUnitStartCmdState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CUnitStartCmdState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CUnitStartCmdState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CUnitStartCmdState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CUnitStartCmdState::UpdateCommand(), pbCheck == 0" );
@@ -337,7 +337,7 @@ bool CUnitStartCmdState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 }
 
 
-void CUnitStartCmdState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bEdCmdVisible )
 	{
@@ -384,7 +384,7 @@ void CUnitStartCmdState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CUnitStartCmdState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CUnitStartCmdState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bEdCmdVisible )
 	{
@@ -427,7 +427,7 @@ void CUnitStartCmdState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CUnitStartCmdState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bEdCmdVisible )
 	{
@@ -950,7 +950,7 @@ string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 		itElem != pMO->mapInfoElementMap.end(); ++itElem )
 	{
 		SObjectInfo::SMapInfoElement *pElem = &itElem->second;
-		const UINT nPlayer = pElem->nPlayer;
+		const unsigned nPlayer = pElem->nPlayer;
 		const string szType = pElem->szRPGStatsTypeName;
 		const string szName = pElem->rpgStatsDBID.ToString();
 		szResult += StrFmt( "plr(%d) %s:%s\n", nPlayer, szType.c_str(), szName.c_str() );

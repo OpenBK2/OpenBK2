@@ -39,7 +39,7 @@
 #include "MapEditor/ProgressHook.h"
 #include "MapEditor/ProgressDlg.h"
 
-const UINT CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 
+const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 
 {
 	IDS_IS_TERRAIN_LABEL,
 	IDS_IS_OBJECT_LABEL,
@@ -49,21 +49,21 @@ const UINT CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] =
 };
 
 
-const UINT CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[TERRAIN_ISS_COUNT] =
+const unsigned CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[TERRAIN_ISS_COUNT] =
 {
 	IDS_TERRAIN_ISS_HEIGHT_V3_LABEL,
 	IDS_TERRAIN_ISS_FIELD_LABEL,
 };
 
 
-const UINT CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[OBJECT_ISS_COUNT] =
+const unsigned CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[OBJECT_ISS_COUNT] =
 {
 	IDS_OBJECT_ISS_MAP_OBJECT_LABEL,
 	IDS_OBJECT_ISS_VSO_LABEL,
 };
 
 
-const UINT CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT] = 
+const unsigned CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT] = 
 {
 	IDS_GP_ISS_REINF_POINTS_LABEL,
 	IDS_GP_ISS_START_CAMERA_LABEL,
@@ -72,31 +72,31 @@ const UINT CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT] 
 };
 
 
-const UINT CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] = 
+const unsigned CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] = 
 {
 	IDS_SCRIPT_ISS_SCRIPT_AREAS_LABEL,
 	IDS_SCRIPT_ISS_SCRIPT_MOVIES_LABEL
 };
 
 
-//const UINT CMapInfoState::MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT] = 
+//const unsigned CMapInfoState::MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT] = 
 //{
 //	IDS_MOV_EDITOR_ISS_EDITOR_LABEL
 //};
 
 /**
 
-const UINT CMapInfoState::ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT] =
+const unsigned CMapInfoState::ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT] =
 {
 	IDS_ADV_ISS_CLIPBOARD
 };
 /**/
 
 
-const UINT CMapInfoState::DEFAULT_INPUT_STATE = IS_OBJECT;
+const unsigned CMapInfoState::DEFAULT_INPUT_STATE = IS_OBJECT;
 
 
-const UINT CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] = 
+const unsigned CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] = 
 {
 	TERRAIN_ISS_COUNT,
 	OBJECT_ISS_COUNT,
@@ -106,7 +106,7 @@ const UINT CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] =
 };
 
 
-const UINT CMapInfoState::DEFAULT_INPUT_SUBSTATE[IS_COUNT] =
+const unsigned CMapInfoState::DEFAULT_INPUT_SUBSTATE[IS_COUNT] =
 {
 	TERRAIN_ISS_HEIGHT_V3,
 	OBJECT_ISS_MAP_OBJECT,
@@ -459,7 +459,7 @@ void CMapInfoState::Enter()
 		const int nSpotCount = pMapInfoEditor->pMapInfo->spots.size();
 		//
 		// Заполняем массив LinkID объектов
-		for ( UINT nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
+		for ( unsigned nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 		{
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
 			{
@@ -508,7 +508,7 @@ void CMapInfoState::Enter()
 		NProgress::IteratePosition(); // 10
 		DebugTrace( "CMapInfoState::Enter(): get spot LinkIDs: %g", NHPTimer::GetTimePassed( &time ) );
 		//
-		for ( UINT nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
+		for ( unsigned nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 		{
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
 			{
@@ -538,7 +538,7 @@ void CMapInfoState::Enter()
 				objectLoadInfo.fHP = pMapInfoEditor->pMapInfo->objects[nObjectIndex].fHP;
 				objectLoadInfo.vPosition = pMapInfoEditor->pMapInfo->objects[nObjectIndex].vPos;
 				objectLoadInfo.fDirection = AI2VisRad( pMapInfoEditor->pMapInfo->objects[nObjectIndex].nDir );
-				UINT nSimpleObjectInfoID = INVALID_NODE_ID;
+				unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
 				{
 					pSimpleObjectInfo->Load( &objectLoadInfo, pScene, pMapInfoManipulator );
@@ -564,7 +564,7 @@ void CMapInfoState::Enter()
 			spotLoadInfo.szRPGStatsTypeName = NDb::GetClassTypeName( spotLoadInfo.rpgStatsDBID );
 			spotLoadInfo.spotSquare = pMapInfoEditor->pMapInfo->spots[nSpotIndex].points;
 			spotLoadInfo.bSearchIndices = false;
-			UINT nSpotInfoID = INVALID_NODE_ID;
+			unsigned nSpotInfoID = INVALID_NODE_ID;
 			if ( NMapInfoEditor::SSpotInfo *pSpotInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo*>( 0 ), &nSpotInfoID ) )
 			{
 				pSpotInfo->Load( &spotLoadInfo, pScene, pMapInfoManipulator );
@@ -577,12 +577,12 @@ void CMapInfoState::Enter()
 		// Мосты
 		int nBidgeCount = 0;
 		CManipulatorManager::GetValue( &nBidgeCount, pMapInfoManipulator, "Bridges" );
-		for ( UINT nBridgeIndex = 0; nBridgeIndex < nBidgeCount; ++nBridgeIndex )
+		for ( unsigned nBridgeIndex = 0; nBridgeIndex < nBidgeCount; ++nBridgeIndex )
 		{
 			NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 			objectLoadInfo.nObjectIndex = nBridgeIndex;
 			objectLoadInfo.bSearchIndices = false;
-			UINT nBridgeInfoID = INVALID_NODE_ID;
+			unsigned nBridgeInfoID = INVALID_NODE_ID;
 			if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo*>( 0 ), &nBridgeInfoID ) )
 			{
 				pBridgeInfo->Load( &objectLoadInfo, pScene, pMapInfoManipulator );
@@ -594,12 +594,12 @@ void CMapInfoState::Enter()
 		//
 		// Окопы
 		const int nEntrenchmentCount = pMapInfoEditor->pMapInfo->entrenchments.size();
-		for ( UINT nEntrenchmentIndex = 0; nEntrenchmentIndex < nEntrenchmentCount; ++nEntrenchmentIndex )
+		for ( unsigned nEntrenchmentIndex = 0; nEntrenchmentIndex < nEntrenchmentCount; ++nEntrenchmentIndex )
 		{
 			NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 			objectLoadInfo.nObjectIndex = nEntrenchmentIndex;
 			objectLoadInfo.bSearchIndices = false;
-			UINT nEntrenchmentInfoID = INVALID_NODE_ID;
+			unsigned nEntrenchmentInfoID = INVALID_NODE_ID;
 			if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SEntrenchmentInfo*>( 0 ), &nEntrenchmentInfoID ) )
 			{
 				pEntrenchmentInfo->Load( &objectLoadInfo, pScene, pMapInfoManipulator );
@@ -693,14 +693,14 @@ void CMapInfoState::Leave()
 }
 
 
-bool CMapInfoState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapInfoState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
 		case ID_MIS_CHANGE_STATE:
 		{
-			UINT nShortcutIndex = HIWORD( dwData );
-			UINT nTabIndex = LOWORD( dwData );
+			unsigned nShortcutIndex = HIWORD( dwData );
+			unsigned nTabIndex = LOWORD( dwData );
 			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) &&
 					 ( nShortcutIndex >= 0 ) &&
 					 ( nShortcutIndex < GetCount() ) )
@@ -727,7 +727,7 @@ bool CMapInfoState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMapInfoState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapInfoState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoState::UpdateCommand(), pbCheck == 0" );
@@ -745,42 +745,42 @@ bool CMapInfoState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChec
 }
 
 
-void CMapInfoState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 1 );
 	CMultiInputState::OnLButtonDown( nFlags, rMousePoint );
 }
 
 
-void CMapInfoState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 0 );
 	CMultiInputState::OnLButtonUp( nFlags, rMousePoint );
 }
 
 
-void CMapInfoState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 1 );
 	CMultiInputState::OnRButtonDown( nFlags, rMousePoint );
 }
 
 
-void CMapInfoState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 0 );
 	CMultiInputState::OnRButtonUp( nFlags, rMousePoint );
 }
 
 
-void CMapInfoState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 1 );
 	CMultiInputState::OnMButtonDown( nFlags, rMousePoint );
 }
 
 
-void CMapInfoState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapInfoState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 0 );
 	CMultiInputState::OnMButtonUp( nFlags, rMousePoint );
@@ -832,7 +832,7 @@ namespace NTest
 				CQuat qRot = CQuat( AI2VisRad( pMapInfo->objects[nObjectIndex].nDir ), V3_AXIS_Z );
 				MakeOrientation( &qRot, DWORDToVec3( EditorScene()->GetHeights()->GetNormal( vPos.x, vPos.y ) ) );
 
-				UINT nSceneObjectID = 0;
+				unsigned nSceneObjectID = 0;
 				// add through MOObj
 				// the reason is we need to execute some special functions for artists inside of CMapObj::Create
 				if ( szObjectTypeName == "BuildingRPGStats" || szObjectTypeName == "ObjectRPGStats" )
@@ -965,8 +965,8 @@ namespace NTest
 			/**
 			string szRPGStatsTypeName;
 			string szRPGStatsName;
-			UINT nObjectRPGStatsTypeID = INVALID_NODE_ID;
-			UINT nObjectRPGStatsID = INVALID_NODE_ID;
+			unsigned nObjectRPGStatsTypeID = INVALID_NODE_ID;
+			unsigned nObjectRPGStatsID = INVALID_NODE_ID;
 			CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pMapInfoManipulator, &szRPGStatsTypeName, &szRPGStatsName, &nObjectRPGStatsTypeID, &nObjectRPGStatsID, 0 );
 			if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 			{

@@ -32,7 +32,7 @@ struct IObjectCollectorCallback
 struct IObjectDataExtractor : public CObjectBase
 {
 	// возвращает данные объекта, в качестве возвращаемого значение - битовая маска, что заполнено
-	virtual UINT GetObjectData( class CBitmap *pNormalBitmap,
+	virtual unsigned GetObjectData( class CBitmap *pNormalBitmap,
 															class CBitmap *pSmallBitmap,
 															CString *pstrLabel,
 															const string &rszObjectTypeName,

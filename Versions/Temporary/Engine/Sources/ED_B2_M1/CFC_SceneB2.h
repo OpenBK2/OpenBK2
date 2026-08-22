@@ -10,7 +10,7 @@ class CCFCSceneB2 : public CChildFrameWndBase
 	void UpdateCamera( uint32_t dwData );
 	void UpdateCameraPosition( uint32_t dwData );
 	void ClearScene();
-	bool KeyPressed( UINT nChar, uint32_t dwData );
+	bool KeyPressed( unsigned nChar, uint32_t dwData );
 
 protected:
 
@@ -19,8 +19,8 @@ public:
 	virtual ~CCFCSceneB2();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// CChildFrameWndBase
 	bool OnCreateChildFrameWnd();

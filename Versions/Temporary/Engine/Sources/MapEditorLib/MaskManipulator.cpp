@@ -9,7 +9,7 @@ CMaskManipulator::CMaskManipulator( const string& rszMask,  IManipulator* _pTarg
 }
 	
 
-bool CMaskManipulator::AddName( const string &rszName, bool bFilled, const string& rszType, UINT nID, bool bHidden )
+bool CMaskManipulator::AddName( const string &rszName, bool bFilled, const string& rszType, unsigned nID, bool bHidden )
 {
 	propertyList.push_back( rszName );
 	//
@@ -131,7 +131,7 @@ bool CMaskManipulator::GetType( const string &rszName, string *pszType ) const
 }
 
 
-UINT CMaskManipulator::GetID( const string &rszName ) const
+unsigned CMaskManipulator::GetID( const string &rszName ) const
 {
 	string szMaskName = rszName;
 	if ( !SetToMaskName( &szMaskName ) )
@@ -151,7 +151,7 @@ UINT CMaskManipulator::GetID( const string &rszName ) const
 }
 
 
-bool CMaskManipulator::GetName( UINT nID, string *pszName ) const
+bool CMaskManipulator::GetName( unsigned nID, string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "GetName::GetType() pszName == 0" );
 	string szName;
@@ -351,7 +351,7 @@ bool CMaskManipulatorIterator::GetType( string *pszType ) const
 }
 
 
-UINT CMaskManipulatorIterator::GetID() const
+unsigned CMaskManipulatorIterator::GetID() const
 {
 	const string szMaskName = ( *propertyIterator );
 	CMaskManipulator::CPropertyMap::const_iterator posProperty = pMaskManipulator->propertyMap.find( szMaskName );

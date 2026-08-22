@@ -65,7 +65,7 @@ int CTreeDockWindow::OnCreate( LPCREATESTRUCT lpCreateStruct )
 }
 
 
-void CTreeDockWindow::OnSize( UINT nType, int cx, int cy ) 
+void CTreeDockWindow::OnSize( unsigned nType, int cx, int cy ) 
 {
 	SECControlBar::OnSize( nType, cx, cy );
 	

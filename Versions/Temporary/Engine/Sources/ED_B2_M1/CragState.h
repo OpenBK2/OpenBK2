@@ -124,7 +124,7 @@ protected:
 	bool CanUpdateVSO( int nVSOID ) { return true; }
 	bool CanRemoveVSO( int nVSOID ) { return true; }
 	NDb::SVSOInstance* GetVSO( int nVSOID );
-	void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags );
+	void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags );
 	void PrepareInsertVSO();
 	int InsertVSO( const vector<CVec3> &rControlPointList );
 	void RemoveVSO( int nVSOID );

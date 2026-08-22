@@ -134,7 +134,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 }
 
 
-bool CSimpleObjectState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSimpleObjectState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{
@@ -181,7 +181,7 @@ bool CSimpleObjectState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerra
 }
 
 
-bool CSimpleObjectState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
 	{
@@ -225,7 +225,7 @@ bool CSimpleObjectState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerra
 			objectCreateInfo.bRotateTo90Degree = GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
 			objectCreateInfo.bFitToGrid = GetMapInfoEditor()->editorSettings.bFitToGrid;
 			//
-			UINT nSimpleObjectInfoID = INVALID_NODE_ID;
+			unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 			if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 			{
 				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
@@ -256,13 +256,13 @@ bool CSimpleObjectState::InsertObjectLButtonUp( UINT nFlags, const CVec3 &rTerra
 }
 
 
-bool CSimpleObjectState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
+bool CSimpleObjectState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	return true;
 }
 
 
-bool CSimpleObjectState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
+bool CSimpleObjectState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( nChar == VK_ESCAPE )
 	{
@@ -362,7 +362,7 @@ void CSimpleObjectState::InsertObjectEnter()
 									MakeOrientation( &qObjectSceneRotation, DWORDToVec3( dwNormal ) );
 								}
 								//
-								const UINT nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
+								const unsigned nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
 								if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 								{
 									pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -414,7 +414,7 @@ void CSimpleObjectState::InsertObjectEnter()
 					MakeOrientation( &qRotation, DWORDToVec3( dwNormal ) );
 				}
 				//
-				const UINT nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
+				const unsigned nSceneID = GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.LockID();
 				if ( CPtr<SAINewUnitUpdate> pUpdate = new SAINewUnitUpdate() )
 				{
 					pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
@@ -499,7 +499,7 @@ void CSimpleObjectState::InsertObjectDraw( class CPaintDC *pPaintDC )
 
 void CMapObjectAddState::InsertMapObject()
 {
-	UINT nNewMapObjectID = INVALID_NODE_ID;
+	unsigned nNewMapObjectID = INVALID_NODE_ID;
 	if ( pParentState->PrepareControlPoints( &( pParentState->controlPointList ) ) )
 	{
 		bool bMapObjectIsValid = true;

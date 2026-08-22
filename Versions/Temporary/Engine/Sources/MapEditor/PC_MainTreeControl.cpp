@@ -289,7 +289,7 @@ void CPCMainTreeControl::OnDestroy()
 }
 
 
-void CPCMainTreeControl::OnTimer( UINT nIDEvent ) 
+void CPCMainTreeControl::OnTimer( unsigned nIDEvent ) 
 {
   if ( nIDEvent == GetCreateTreeTimerID() )
 	{
@@ -1655,7 +1655,7 @@ bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
 }
 
 
-void CPCMainTreeControl::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar ) 
+void CPCMainTreeControl::OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar ) 
 {
 	if ( pScrollBar == GetScrollBarCtrl( SB_HORZ ) )
 	{
@@ -1672,7 +1672,7 @@ void CPCMainTreeControl::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 }
 
 
-void CPCMainTreeControl::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar ) 
+void CPCMainTreeControl::OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar ) 
 {
 	if ( pScrollBar == GetScrollBarCtrl( SB_VERT ) )
 	{
@@ -1682,7 +1682,7 @@ void CPCMainTreeControl::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 }
 
 
-BOOL CPCMainTreeControl::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt ) 
+BOOL CPCMainTreeControl::OnMouseWheel( unsigned nFlags, short zDelta, CPoint pt ) 
 {
 	bool bresult = CSortTreeControl::OnMouseWheel( nFlags, zDelta, pt );
 	UpdatePCItemEditorPosition( 0 );
@@ -1690,14 +1690,14 @@ BOOL CPCMainTreeControl::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt )
 }
 
 
-void CPCMainTreeControl::OnSize( UINT nType, int cx, int cy ) 
+void CPCMainTreeControl::OnSize( unsigned nType, int cx, int cy ) 
 {
 	CSortTreeControl::OnSize( nType, cx, cy );
 	UpdatePCItemEditorPosition( 0 );
 }
 
 
-void CPCMainTreeControl::OnLButtonDown( UINT nFlags, CPoint point ) 
+void CPCMainTreeControl::OnLButtonDown( unsigned nFlags, CPoint point ) 
 {
 	CSortTreeControl::OnLButtonDown( nFlags, point );
 
@@ -1734,7 +1734,7 @@ void CPCMainTreeControl::OnLButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CPCMainTreeControl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCMainTreeControl::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( nChar != VK_ESCAPE )
 	{
@@ -1821,7 +1821,7 @@ void CPCMainTreeControl::OnContextMenu( CWnd *pwnd, CPoint point )
 
 
 //CWMMnemonicCodes mnemonicCodes;
-LRESULT CPCMainTreeControl::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CPCMainTreeControl::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	//DebugTrace( "Message: %s, wParam: 0x%X(%u), lParam: 0x%X\n", mnemonicCodes.Get( message ).c_str(), wParam, wParam, lParam );
 	if ( bNeedTranslateAccelerators && ( message == WM_KEYDOWN ) && ( ::AfxGetMainWnd() != 0 ) )
@@ -1971,7 +1971,7 @@ void CPCMainTreeControl::SelectAll()
 }
 
 
-bool CPCMainTreeControl::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCMainTreeControl::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( !GetViewManipulator() )
 	{
@@ -2090,7 +2090,7 @@ bool CPCMainTreeControl::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCMainTreeControl::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCMainTreeControl::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCMainTreeControl::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCMainTreeControl::UpdateCommand(), pbCheck == 0" );

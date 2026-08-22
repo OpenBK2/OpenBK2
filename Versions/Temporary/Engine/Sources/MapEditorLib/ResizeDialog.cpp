@@ -36,7 +36,7 @@ int CResizeDialog::SOptions::operator&( IXmlSaver &xs )
 }
 
 
-CResizeDialog::CResizeDialog( UINT nIDTemplate, CWnd* pParent )
+CResizeDialog::CResizeDialog( unsigned nIDTemplate, CWnd* pParent )
 	: CDialog( nIDTemplate, pParent ),
 	resizeDialogOriginalSize( 0, 0 )
 {
@@ -83,7 +83,7 @@ void CResizeDialog::UpdateControlPositions()
  	resizeDialogOriginalSize.x = clientRect.right - clientRect.left;
 	resizeDialogOriginalSize.y = clientRect.bottom - clientRect.top;
 
-	for ( hash_map<UINT, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
+	for ( hash_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
 	{
 		if ( CWnd* pControlWnd = GetDlgItem( itControlStyle->first ) )
 		{
@@ -120,7 +120,7 @@ void CResizeDialog::OnCancel()
 }
 
 
-void CResizeDialog::SetControlStyle( UINT nControlID, uint32_t dwStyle, float fHorCenterAnchorRatio, float fVerCenterAnchorRatio, float fHorResizeRatio, float fVerResizeRatio )
+void CResizeDialog::SetControlStyle( unsigned nControlID, uint32_t dwStyle, float fHorCenterAnchorRatio, float fVerCenterAnchorRatio, float fHorResizeRatio, float fVerResizeRatio )
 {
 	SControlStyle controlStyle;
 	controlStyle.position = CTRect<int>( 0, 0 ,0, 0 );
@@ -138,12 +138,12 @@ void CResizeDialog::SetControlStyle( UINT nControlID, uint32_t dwStyle, float fH
 //ANCHORE_HOR_CENTER	resize - относительно центральной линии ( центральная линия - fHorCenterAnchorRatio)
 //RESIZE_HOR					дополнительно меняем размер на fHorResizeRatio
 
-void CResizeDialog::OnSize( UINT nType, int cx, int cy ) 
+void CResizeDialog::OnSize( unsigned nType, int cx, int cy ) 
 {
 	CDialog::OnSize( nType, cx, cy );
 	
 	CTPoint<int> dSize( ( cx - resizeDialogOriginalSize.x ), ( cy - resizeDialogOriginalSize.y ) );
-	for ( hash_map<UINT, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
+	for ( hash_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
 	{
 		if ( CWnd* pControlWnd = GetDlgItem( itControlStyle->first ) )
 		{
@@ -257,7 +257,7 @@ void CResizeDialog::OnSize( UINT nType, int cx, int cy )
 }
 
 
-void CResizeDialog::OnSizing( UINT fwSide, LPRECT pRect ) 
+void CResizeDialog::OnSizing( unsigned fwSide, LPRECT pRect ) 
 {
 	CDialog::OnSizing( fwSide, pRect );
 
@@ -414,12 +414,12 @@ void CResizeDialog::OnPaint()
 }
 
 
-BOOL CResizeDialog::OnNeedToolTipText( UINT id, NMHDR *pTTTStruct, LRESULT *pResult )
+BOOL CResizeDialog::OnNeedToolTipText( unsigned id, NMHDR *pTTTStruct, LRESULT *pResult )
 {
 	if ( pTTTStruct )
 	{
 		TOOLTIPTEXT *pTTT = (TOOLTIPTEXT*)( pTTTStruct );
-		UINT nID = pTTTStruct->idFrom;
+		unsigned nID = pTTTStruct->idFrom;
 		if ( ( pTTT->uFlags & TTF_IDISHWND ) != 0 )
 		{
 			nID = ::GetDlgCtrlID( (HWND)( nID ) );

@@ -623,7 +623,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 }
 
 
-bool CVisObjBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -649,7 +649,7 @@ bool CVisObjBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CVisObjBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CVisObjBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAnimationBuilder::UpdateCommand(), pbCheck == 0" );

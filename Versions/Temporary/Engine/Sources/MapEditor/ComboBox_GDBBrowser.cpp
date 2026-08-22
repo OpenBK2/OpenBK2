@@ -46,7 +46,7 @@ void CComboBoxGDBBrowser::MoveWindow( const CRect &rRect )
 }
 
 
-bool CComboBoxGDBBrowser::Create( CWnd *_pwndParent, UINT _nControlID )
+bool CComboBoxGDBBrowser::Create( CWnd *_pwndParent, unsigned _nControlID )
 {
 	pwndParent = _pwndParent;
 	nControlID = _nControlID;
@@ -287,7 +287,7 @@ bool CComboBoxGDBBrowser::GetSelectionSet( SSelectionSet *pSelectionSet )
 }
 
 
-bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CComboBoxGDBBrowser::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -301,7 +301,7 @@ bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CComboBoxGDBBrowser::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CComboBoxGDBBrowser::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "C3DTabGDBBrowser::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "C3DTabGDBBrowser::UpdateCommand(), pbCheck == 0" );

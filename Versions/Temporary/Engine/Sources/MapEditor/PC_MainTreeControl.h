@@ -46,9 +46,9 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	string szCreateTreeParentName;
 	ENewElementExpandMode newElementExpandMode;
 	HTREEITEM hCreateTreeParentItem;
-  inline UINT GetCreateTreeTimerID() { return 200; }
-  inline UINT GetCreateTreeTimerInterval() { return 20; }	// Частота в миллисекундах
-	inline UINT GetCreateTreeTimerCount() { return ( bShowHidden ? 100 : 20 ); }		// Количество считываний за один раз
+  inline unsigned GetCreateTreeTimerID() { return 200; }
+  inline unsigned GetCreateTreeTimerInterval() { return 20; }	// Частота в миллисекундах
+	inline unsigned GetCreateTreeTimerCount() { return ( bShowHidden ? 100 : 20 ); }		// Количество считываний за один раз
   void SetCreateTreeTimer();
   void KillCreateTreeTimer();
   void OnCreateTreeTimer();
@@ -102,16 +102,16 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 
 protected:
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer( unsigned nIDEvent );
 	//
-	afx_msg void OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar );
-	afx_msg void OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar );
-	afx_msg BOOL OnMouseWheel( UINT nFlags, short zDelta, CPoint pt );
+	afx_msg void OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
+	afx_msg void OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
+	afx_msg BOOL OnMouseWheel( unsigned nFlags, short zDelta, CPoint pt );
 	//
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	//
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg void OnKillFocus( CWnd* pNewWnd );
@@ -122,7 +122,7 @@ protected:
 	afx_msg void OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult );
 	afx_msg void OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult );
 	//	
-	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 	//void OnPCItemChange( WPARAM wParam, LPARAM lParam );
 
 	// CSortTreeControl
@@ -152,8 +152,8 @@ public:
 	CWnd* GetStatusStringWindow() { return pwndStatusStringWindow; }
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	// Создание Undo Operation
 	virtual CObjectController* CreateController() { return CDefaultView::CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) ); }

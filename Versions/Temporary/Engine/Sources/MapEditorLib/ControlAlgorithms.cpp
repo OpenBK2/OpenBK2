@@ -360,7 +360,7 @@ namespace NCA
 		}
 	}
 	//
-	bool TranslateAccelerators( bool bModal, UINT nMessage, WPARAM wParam, LPARAM lParam )
+	bool TranslateAccelerators( bool bModal, unsigned nMessage, WPARAM wParam, LPARAM lParam )
 	{
 		if ( HACCEL hAcceleratorTable = ::LoadAccelerators( ::AfxGetResourceHandle(), bModal ? MAKEINTRESOURCE( IDA_MODAL ) : MAKEINTRESOURCE( IDA_MAIN ) ) )
 		{

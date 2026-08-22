@@ -111,7 +111,7 @@ NDb::SVSOInstance* CCoastState::GetVSO( int nVSOID, int *pnVSOIndex )
 }
 
 
-void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags )
+void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags )
 {
 	if ( CanEdit() )
 	{
@@ -180,7 +180,7 @@ int CCoastState::InsertVSO( const vector<CVec3> &rControlPointList )
 		{
 			if ( objectSet.szObjectTypeName == "CoastDesc" )
 			{
-				const UINT nObjectTypeID = NDb::SCoastDesc::typeID;
+				const unsigned nObjectTypeID = NDb::SCoastDesc::typeID;
 				//
 				//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 				//

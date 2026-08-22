@@ -29,7 +29,7 @@ struct KBDLLHOOKSTRUCT
 // keyboard low-level hook to disable fast task switching
 static HHOOK hHook = 0;
 // previous state of the SPI_SETSCREENSAVERRUNNING
-static UINT nPreviousState = 0;
+static unsigned nPreviousState = 0;
 // current enable state
 static bool bCurrEnable = true;
 

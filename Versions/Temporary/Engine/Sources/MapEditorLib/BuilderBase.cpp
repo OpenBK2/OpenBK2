@@ -47,7 +47,7 @@ bool HierarchicalDelete( const string &szObjectTypeName, const string &szObjectN
 	if ( CPtr<IManipulator> pMan = pRM->CreateObjectManipulator(szObjectTypeName, szObjectName) ) 
 	{
 		CManipulatorManager::CReferenceInfoList refsList;
-		const UINT nFlags = REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_TYPE_NAME | REFINFO_OBJECT_NAME;
+		const unsigned nFlags = REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_TYPE_NAME | REFINFO_OBJECT_NAME;
 		CManipulatorManager::EnumReferences( &refsList, pMan, nFlags, true, ECT_CACHE_LOCAL );
 
 		if ( Singleton<IBuilderContainer>()->RemoveObject( szObjectTypeName, szObjectName, pFolderCallback ) )

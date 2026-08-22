@@ -205,7 +205,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 						{
 							string szBoneName = itAttribute->szBoneName;
 							NStr::ToUpper( &szBoneName );
-							UINT nNumber = INVALID_NODE_ID;
+							unsigned nNumber = INVALID_NODE_ID;
 							NDb::EAnimationType animationType = typeMayaAnimationMnemonics.Get( szBoneName, 0, &nNumber );
 							bResult = ( animationType != NDb::ANIMATION_UNKNOWN );
 							if ( bResult )
@@ -338,7 +338,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 }
 
 
-bool CAnimationBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -364,7 +364,7 @@ bool CAnimationBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CAnimationBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAnimationBuilder::UpdateCommand(), pbCheck == 0" );
@@ -397,7 +397,7 @@ bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) const
 {
 	uint32_t dwWeaponBits = 0;
-	for ( UINT nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL; nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER; ++nWeaponTypeIndex )
+	for ( unsigned nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL; nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER; ++nWeaponTypeIndex )
 	{
 		string szMnemonic = typeMayaWeaponMnemonics.GetMnemonic( nWeaponTypeIndex );
 		NStr::ToLowerASCII( &szMnemonic );

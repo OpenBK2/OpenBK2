@@ -108,8 +108,8 @@ protected:
 	void NotifyHandler();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:
 	enum { IDD = IDD_TAB_MI_REINF_POINTS };
@@ -124,7 +124,7 @@ public:
 	int GetMinimumYDimension() { return 130; }
 	bool IsDrawGripper() { return false; }
 
-	virtual void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	virtual void OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags);
 
 	virtual void OnOK() {}
 	virtual void OnCancel() {}

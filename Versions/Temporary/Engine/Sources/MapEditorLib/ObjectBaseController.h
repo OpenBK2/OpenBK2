@@ -112,11 +112,11 @@ public:
 	}
 	//
 	template<> 
-	bool AddChangeValueOperation( const string &rszPropertyName, const UINT &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeValueOperation( const string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
 		//
-		UINT oldData;
+		unsigned oldData;
 		if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, rszPropertyName ) )
 		{
 			return false;

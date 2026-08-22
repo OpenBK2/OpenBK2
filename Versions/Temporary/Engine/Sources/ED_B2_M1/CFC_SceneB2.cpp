@@ -114,7 +114,7 @@ void CCFCSceneB2::OnResizeChildFrameWnd( int cx, int cy )
 }
 
 
-bool CCFCSceneB2::KeyPressed( UINT nChar, uint32_t dwData )
+bool CCFCSceneB2::KeyPressed( unsigned nChar, uint32_t dwData )
 {
 	return ( ( dwData == nChar ) || ( ( GetAsyncKeyState( nChar ) & 0x8000 ) > 0 ) );
 }
@@ -273,7 +273,7 @@ void CCFCSceneB2::ClearScene()
 }
 
 
-bool CCFCSceneB2::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CCFCSceneB2::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -294,7 +294,7 @@ bool CCFCSceneB2::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CCFCSceneB2::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CCFCSceneB2::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCFCSceneB2::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CCFCSceneB2::UpdateCommand(), pbCheck == 0" );

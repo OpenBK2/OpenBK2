@@ -21,7 +21,7 @@
 const uint32_t CMapObjectState::SELECTION_LINE_COLOR	= 0xFF00FF00;
 
 
-void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType )
+void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
@@ -71,7 +71,7 @@ void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &
 			pParentState->selector.Clear();
 			pParentState->nSelectedSceneID = sceneIDList.front();
 			//
-			list<UINT> selectedObjectSceneIDList;
+			list<unsigned> selectedObjectSceneIDList;
 			selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 			//
 			if ( !( pParentState->GetObjectInfoCollector()->IsInSelection( selectedObjectSceneIDList ) ) )
@@ -134,7 +134,7 @@ void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &
 }
 
 
-void CMapObjectSelectState::OnMouseButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType )
+void CMapObjectSelectState::OnMouseButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType )
 {
 	if ( pParentState->selector.IsValid() )
 	{
@@ -195,7 +195,7 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 }
 
 
-void CMapObjectSelectState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -251,7 +251,7 @@ void CMapObjectSelectState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -262,7 +262,7 @@ void CMapObjectSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMou
 }
 
 
-void CMapObjectSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -273,7 +273,7 @@ void CMapObjectSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -284,7 +284,7 @@ void CMapObjectSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMou
 }
 
 
-void CMapObjectSelectState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -295,7 +295,7 @@ void CMapObjectSelectState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectSelectState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectSelectState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -313,7 +313,7 @@ void CMapObjectSelectState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMou
 }
 
 
-void CMapObjectSelectState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -382,7 +382,7 @@ void CMapObjectSelectState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->nSelectedSceneID != INVALID_NODE_ID )
 	{
@@ -393,17 +393,17 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 			pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, rMousePoint );
 			if ( !sceneIDList.empty() )
 			{
-				const UINT nNewSelectedObjectSceneID = pParentState->GetNextSceneID( pParentState->nSelectedSceneID, &sceneIDList );
+				const unsigned nNewSelectedObjectSceneID = pParentState->GetNextSceneID( pParentState->nSelectedSceneID, &sceneIDList );
 				if ( nNewSelectedObjectSceneID != pParentState->nSelectedSceneID )
 				{
 					// удаляем старый объект
 					if ( ( nFlags & MK_SHIFT ) == 0 )
 					{
-						list<UINT> selectedObjectSceneIDList;
+						list<unsigned> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->RemoveFromSelection( selectedObjectSceneIDList );
 						// записываем его положение в базу:
-						const UINT nMapObjectInfoID = pParentState->GetObjectInfoCollector()->Pick( pParentState->nSelectedSceneID );
+						const unsigned nMapObjectInfoID = pParentState->GetObjectInfoCollector()->Pick( pParentState->nSelectedSceneID );
 						if ( nMapObjectInfoID != INVALID_NODE_ID )
 						{
 							if ( CPtr<CObjectBaseController> pObjectController = pParentState->GetMapInfoEditor()->CreateController() )
@@ -422,7 +422,7 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 					pParentState->nSelectedSceneID = nNewSelectedObjectSceneID;
 					// вставляем новывй
 					{
-						list<UINT> selectedObjectSceneIDList;
+						list<unsigned> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->InsertToSelection( selectedObjectSceneIDList, false );
 					}
@@ -438,7 +438,7 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 }
 
 
-void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMousePoint, bool bSave )
+void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint, bool bSave )
 {
 	if ( ( nFlags & MK_LBUTTON ) > 0 )
 	{
@@ -509,7 +509,7 @@ void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMo
 }
 
 
-void CMapObjectEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -523,7 +523,7 @@ void CMapObjectEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CMapObjectEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -537,7 +537,7 @@ void CMapObjectEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -557,7 +557,7 @@ void CMapObjectEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CMapObjectEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -571,7 +571,7 @@ void CMapObjectEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -590,7 +590,7 @@ void CMapObjectEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CMapObjectEditState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectEditState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -608,7 +608,7 @@ void CMapObjectEditState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 }
 
 
-void CMapObjectEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -720,7 +720,7 @@ void CMapObjectAddState::OnKillFocus( CWnd* pOldWnd )
 }
 
 
-void CMapObjectAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -737,7 +737,7 @@ void CMapObjectAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CMapObjectAddState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -754,7 +754,7 @@ void CMapObjectAddState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -771,7 +771,7 @@ void CMapObjectAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CMapObjectAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -788,7 +788,7 @@ void CMapObjectAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 }
 
 
-void CMapObjectAddState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -805,7 +805,7 @@ void CMapObjectAddState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -822,7 +822,7 @@ void CMapObjectAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CMapObjectAddState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -839,7 +839,7 @@ void CMapObjectAddState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 }
 
 
-void CMapObjectAddState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -856,7 +856,7 @@ void CMapObjectAddState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectAddState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -873,7 +873,7 @@ void CMapObjectAddState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CMapObjectAddState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectAddState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -890,7 +890,7 @@ void CMapObjectAddState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 }
 
 
-void CMapObjectAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -928,7 +928,7 @@ void CMapObjectAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CMapObjectAddState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CMapObjectAddState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -991,7 +991,7 @@ void CMapObjectPasteState::Leave()
 }
 
 
-void CMapObjectPasteState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectPasteState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1015,7 +1015,7 @@ void CMapObjectPasteState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectPasteState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectPasteState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1043,7 +1043,7 @@ void CMapObjectPasteState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectPasteState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CMapObjectPasteState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1053,7 +1053,7 @@ void CMapObjectPasteState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CMapObjectPasteState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CMapObjectPasteState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1268,7 +1268,7 @@ void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 }
 
 
-void CMapObjectState::InsertSelectionLink( UINT nLinkToSceneID )
+void CMapObjectState::InsertSelectionLink( unsigned nLinkToSceneID )
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 	{
@@ -1395,7 +1395,7 @@ void CMapObjectState::SwitchToAddState()
 }
 
 
-bool CMapObjectState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapObjectState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -1440,7 +1440,7 @@ bool CMapObjectState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMapObjectState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapObjectState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapObjectState::UpdateCommand(), pbCheck == 0" );

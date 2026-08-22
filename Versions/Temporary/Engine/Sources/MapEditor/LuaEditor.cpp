@@ -45,7 +45,7 @@ void CLuaEditor::InitScintilla()
 
 // CLuaEditor message handlers
 
-BOOL CLuaEditor::Create(CWnd *pParentWnd, UINT nCtrlId)
+BOOL CLuaEditor::Create(CWnd *pParentWnd, unsigned nCtrlId)
 {
 	BOOL bCreated = CreateEx(0, "Scintilla","", WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_CLIPSIBLINGS,
 		CRect(0,0,0,0),pParentWnd,nCtrlId);
@@ -401,7 +401,7 @@ void CLuaEditor::SetLuaLexer()
 }
 
 
-void CLuaEditor::OnMouseMove(UINT nFlags, CPoint point) 
+void CLuaEditor::OnMouseMove(unsigned nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
 	if ( m_bShowCalltips /*&& pFrame->GetMode()==CMainFrame::modeDebugBreak*/ )
@@ -504,7 +504,7 @@ void CLuaEditor::NewLineIndent()
 	}
 }
 
-void CLuaEditor::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CLuaEditor::OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 {
 	if ( ::IsWindow( findDlg.m_hWnd ) && nChar == VK_F3 )
 	{

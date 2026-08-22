@@ -20,7 +20,7 @@ public:
 	void SetValue( const CVariant &rValue );
 	void GetValue( CVariant *pValue );
 	//
-	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) {}
+	void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam ) {}
 };
 
 

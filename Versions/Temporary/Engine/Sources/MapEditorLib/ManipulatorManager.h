@@ -21,7 +21,7 @@ class CManipulatorManager
 public:
 	struct SReferenceInfo
 	{
-		UINT nFlags;
+		unsigned nFlags;
 		string szName;
 		//
 		string szObjectTypeName;
@@ -96,7 +96,7 @@ public:
 	// получить список ссылок из манипулятора
 	static bool EnumReferences( CReferenceInfoList *pReferenceInfoList,
 															const struct IManipulator* pSourceManipulator,
-															const UINT nFlags,
+															const unsigned nFlags,
 															const bool bEnumHidden,
 															const ECacheType eCacheType );
 	//
@@ -333,7 +333,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( UINT *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( unsigned *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -342,7 +342,7 @@ public:
 		bResult = bResult && ( value.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
-			( *pData ) = (UINT)(int)value;
+			( *pData ) = (unsigned)(int)value;
 		}
 		return bResult;
 	}

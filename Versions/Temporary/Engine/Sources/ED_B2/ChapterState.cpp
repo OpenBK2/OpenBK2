@@ -148,7 +148,7 @@ void CChapterState::PostDraw( class CPaintDC *pPaintDC )
 	CDefaultInputState::PostDraw( pPaintDC );
 }
 
-void CChapterState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CChapterState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	CVec2 vScreenPos;
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2(rMousePoint.x, rMousePoint.y), &vScreenPos );
@@ -205,7 +205,7 @@ void CChapterState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 	UpdateMaskManipulator();
 }
 
-void CChapterState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CChapterState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
 	{
@@ -229,7 +229,7 @@ void CChapterState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	CDefaultInputState::OnLButtonUp( nFlags, rMousePoint );
 }
 
-void CChapterState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CChapterState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pPickedMission = 0;
 
@@ -238,7 +238,7 @@ void CChapterState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 	CDefaultInputState::OnRButtonDown( nFlags, rMousePoint );
 }
 
-void CChapterState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CChapterState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
 	{
@@ -262,7 +262,7 @@ void CChapterState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 	CDefaultInputState::OnMouseMove( nFlags, rMousePoint );
 }
 
-void CChapterState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChapterState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWaitCursor wc;
 	switch( nChar )

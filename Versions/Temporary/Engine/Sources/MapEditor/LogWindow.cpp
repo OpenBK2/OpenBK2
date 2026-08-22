@@ -38,7 +38,7 @@ void CLogWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 }
 
 
-bool CLogWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CLogWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -57,7 +57,7 @@ bool CLogWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CLogWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CLogWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CLogWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CLogWindow::UpdateCommand(), pbCheck == 0" );

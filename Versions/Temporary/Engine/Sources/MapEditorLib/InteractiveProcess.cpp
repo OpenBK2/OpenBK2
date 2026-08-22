@@ -91,7 +91,7 @@ namespace
 	/**/
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void GetErrorMessage( string *pszText, UINT nErrorID )
+	void GetErrorMessage( string *pszText, unsigned nErrorID )
 	{
 		NI_ASSERT( pszText, "Supplied string pointer is null" );
 		LPVOID lpMsgBuf;

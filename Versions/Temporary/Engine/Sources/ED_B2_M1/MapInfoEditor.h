@@ -18,8 +18,8 @@
 #define TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT 11
 #define TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT 2
 
-EXTERNVAR const UINT TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT];
-EXTERNVAR const UINT TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT];
+EXTERNVAR const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT];
+EXTERNVAR const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT];
 
 using namespace NMapInfoEditor;
 
@@ -82,8 +82,8 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 		pMapInfo = 0;
 	}
 	// другие переменные
-	UINT nMapInfoToolsToolbarID;
-	UINT nMapInfoViewToolbarID;
+	unsigned nMapInfoToolsToolbarID;
+	unsigned nMapInfoViewToolbarID;
 	SECControlBar *pwndMiniMap; // MiniMap docking window
 	SECControlBar *pwndShortcutBar;
 	SECControlBar *pwndMoviesEditor;	// Script MovieEditor docking window
@@ -136,8 +136,8 @@ public:
 	void Redo( IController* pController );
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	////////////////////////////
 	bool CreateMinimapImage();

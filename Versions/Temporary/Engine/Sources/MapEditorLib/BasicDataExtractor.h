@@ -19,7 +19,7 @@ protected:
 	//
 	bool LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &szFileName, ELoadImageMethod eMethod );
 public:
-	UINT GetObjectData( class CBitmap *pNormalBitmap,
+	unsigned GetObjectData( class CBitmap *pNormalBitmap,
 											class CBitmap *pSmallBitmap,
 											CString *pstrLabel,
 											const string &rszObjectTypeName,

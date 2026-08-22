@@ -259,7 +259,7 @@ void CReinfPointsState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CReinfPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CReinfPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -344,7 +344,7 @@ bool CReinfPointsState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CReinfPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CReinfPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CReinfPointsState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CReinfPointsState::UpdateCommand(), pbCheck == 0" );
@@ -521,7 +521,7 @@ void CReinfPointsState::PostDraw( CPaintDC *pPaintDC )
 }
 
 
-void CReinfPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CReinfPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
 		return;
@@ -580,7 +580,7 @@ void CReinfPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CReinfPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
 		return;
@@ -654,7 +654,7 @@ void CReinfPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CReinfPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CReinfPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
 		return;
@@ -721,7 +721,7 @@ bool CReinfPointsState::EditPointTypedTemplate()
 }
 
 
-void CReinfPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CReinfPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{

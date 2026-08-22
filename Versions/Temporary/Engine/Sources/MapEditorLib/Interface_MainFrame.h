@@ -46,34 +46,34 @@ struct IMainFrame : public ILogger
 {
 	// Наити координаты только что нажатой кнопки на toolbar
 	virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
-																							UINT nButtonID,
+																							unsigned nButtonID,
 																							CTPoint<int> *pLeftBottomPos ) = 0;
 	// Работа с ChildFrame
-	virtual class SECWorksheet* CreateChildFrame( UINT nResource ) = 0;
+	virtual class SECWorksheet* CreateChildFrame( unsigned nResource ) = 0;
 	virtual bool SetChildFrameWindowContents( class SECWorksheet* pwndChildWindow, class CWnd *pwndContents ) = 0;
 	// Работа с Docking Window
-	virtual class SECControlBar* CreateControlBar( UINT *pnID,
+	virtual class SECControlBar* CreateControlBar( unsigned *pnID,
 																								 const CString &rstrTitle,
-																								 const UINT nStyle,
-																								 const UINT nPlace,
+																								 const unsigned nStyle,
+																								 const unsigned nPlace,
 																								 const float fRate,
 																								 const int nWidth ) = 0;
 	virtual bool SetControlBarWindowContents( class SECControlBar* pwndDockingWindow, class CWnd *pwndContents ) = 0;
 	// Работа с Menu Bar ( 1 - 20 )
-	virtual bool AddMenuResources( vector<UINT> &rMenuIDList ) = 0;
-	virtual void ShowMenu( const UINT nResourceID ) = 0;
+	virtual bool AddMenuResources( vector<unsigned> &rMenuIDList ) = 0;
+	virtual void ShowMenu( const unsigned nResourceID ) = 0;
 	// Работа с Tool Bar
-	virtual bool AddToolBarResource( const UINT nStandartResourceID, const UINT nLargeResourceID ) = 0;
-	virtual void CreateToolBar( UINT *pnID,
+	virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID ) = 0;
+	virtual void CreateToolBar( unsigned *pnID,
 															const CString &rstrTitle,
-															const UINT nButtonCount,
-															const UINT* pButtonIDMap,
+															const unsigned nButtonCount,
+															const unsigned* pButtonIDMap,
 															const uint32_t dwAlignment,
-															const UINT nStyle,
+															const unsigned nStyle,
 															const bool bDocked,
 															const bool bVisible,
 															const bool bMainToolBar ) = 0;
-	virtual class SECCustomToolBar* GetToolBar( UINT nID ) = 0;
+	virtual class SECCustomToolBar* GetToolBar( unsigned nID ) = 0;
 	// Работа с Элементами оформления
 	virtual void SetStatusBarText( int nPaneIndex, const string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;

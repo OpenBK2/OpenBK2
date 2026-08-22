@@ -69,7 +69,7 @@ namespace NMapInfoEditor
 		// создаем SMapInfoElement и заполняем его данными
 		bool bResult = true;
 		{
-			UINT nLinkID = INVALID_NODE_ID;
+			unsigned nLinkID = INVALID_NODE_ID;
 			SObjectInfo::SMapInfoElement mapInfoElement;
 			if ( pObjectLoadInfo->bAdditionalDataFilled )
 			{

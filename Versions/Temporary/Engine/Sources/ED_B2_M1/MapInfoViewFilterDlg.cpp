@@ -92,12 +92,12 @@ void CMapInfoViewFilterDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoViewFilterDlg::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapInfoViewFilterDlg::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	return false;
 }
 
-bool CMapInfoViewFilterDlg::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapInfoViewFilterDlg::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoViewFilterDlg::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoViewFilterDlg::UpdateCommand(), pbCheck == 0" );

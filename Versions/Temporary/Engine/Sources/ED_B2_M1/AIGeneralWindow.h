@@ -117,8 +117,8 @@ public:
 	void OnCancel() {}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	void NotifyHandler( SAIGeneralPointsWindowData::EAIGenPointsLastAction eAction );
 

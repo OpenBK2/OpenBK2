@@ -17,7 +17,7 @@
 
 namespace NExtraDraw
 {
-	void DrawVector( CSceneDrawTool *pSceneDrawTool, UINT uColor, const vector<CVec3> &vPoints )
+	void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const vector<CVec3> &vPoints )
 	{
 		if ( vPoints.size() < 2 )
 			return;
@@ -39,7 +39,7 @@ namespace NExtraDraw
 		pSceneDrawTool->DrawLine( (*vPoints.begin()), (*itPointPrev), uColor, false );
 	}
 	//
-	void DrawArray( CSceneDrawTool *pSceneDrawTool, UINT uColor, const CArray2D<float> &array, const float fTileSize )
+	void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<float> &array, const float fTileSize )
 	{
 		const int nSizeX = array.GetSizeX();
 		const int nSizeY = array.GetSizeY();
@@ -60,7 +60,7 @@ namespace NExtraDraw
 };
 
 
-void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -91,7 +91,7 @@ void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CVSOSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -116,7 +116,7 @@ void CVSOSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint 
 }
 
 
-void CVSOSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -138,7 +138,7 @@ void CVSOSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -386,7 +386,7 @@ void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -473,7 +473,7 @@ void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 }
 
 
-void CVSOEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -501,7 +501,7 @@ void CVSOEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -550,7 +550,7 @@ void CVSOEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 }
 
 
-void CVSOEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -578,7 +578,7 @@ void CVSOEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -622,7 +622,7 @@ void CVSOEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoin
 }
 
 
-void CVSOEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -837,7 +837,7 @@ void CVSOAddState::OnKillFocus( CWnd* pOldWnd )
 }
 
 
-void CVSOAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -852,7 +852,7 @@ void CVSOAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -866,7 +866,7 @@ void CVSOAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -892,7 +892,7 @@ void CVSOAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 }
 
 
-void CVSOAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CVSOAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -906,7 +906,7 @@ void CVSOAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CVSOAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CVSOAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1101,13 +1101,13 @@ CMapInfoEditor* CVSOState::GetMapInfoEditor()
 }
 
 
-bool CVSOState::PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
+bool CVSOState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 { 
 	return pParentState->PickOtherVSO( nFlags, rMousePoint, rvPos );
 }
 
 
-void CVSOState::EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
+void CVSOState::EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
 	if ( CanEdit() )
 	{
@@ -1256,7 +1256,7 @@ void CVSOState::SwitchToAddState()
 }
 
 
-bool CVSOState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CVSOState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -1275,7 +1275,7 @@ bool CVSOState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CVSOState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CVSOState::UpdateCommand(), pbCheck == 0" );

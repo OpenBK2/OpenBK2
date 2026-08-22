@@ -27,7 +27,7 @@ struct SScriptAreaWindowData
 		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
 	};
 	vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
-	vector<UINT> selectedScriptAreaIDList;		// ID поселекченных областей
+	vector<unsigned> selectedScriptAreaIDList;		// ID поселекченных областей
 	//
 	enum EChangeMask	// что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
 	{
@@ -91,8 +91,8 @@ public:
 	virtual void OnCancel() {}
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult );

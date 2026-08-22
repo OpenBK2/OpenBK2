@@ -134,7 +134,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 			{
 				string szBoneName = itAttribute->szBoneName;
 				NStr::ToUpper( &szBoneName );
-				UINT nNumber = INVALID_NODE_ID;
+				unsigned nNumber = INVALID_NODE_ID;
 				NDb::EAnimationType animationType = typeMayaAnimationMnemonics.Get( szBoneName, 0, &nNumber );
 				bResult = ( animationType != NDb::ANIMATION_UNKNOWN );
 				if ( bResult )

@@ -29,14 +29,14 @@ class CDWGDBBrowser : public SECControlBar, public ICommandHandler
 protected:
 	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
 	afx_msg void OnDestroy();
-	afx_msg void OnSize( UINT nType, int cx, int cy );
-	afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnRButtonDown( UINT nFlags, CPoint point );
-	afx_msg void OnRButtonUp( UINT nFlags, CPoint point );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
+	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnRButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnRButtonUp( unsigned nFlags, CPoint point );
 	afx_msg LRESULT OnTabSelected( WPARAM wParam, LPARAM lParam );
 	afx_msg void OnTabSelected();
 
-	//virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam) ;
+	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam) ;
 
 	void CreateTabs();
 	void SelectTables();
@@ -61,8 +61,8 @@ public:
 	void EnableEdit( bool bEnable ) { wndContents.EnableEdit( bEnable ); }
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

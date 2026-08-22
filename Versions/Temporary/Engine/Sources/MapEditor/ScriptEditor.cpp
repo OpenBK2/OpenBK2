@@ -261,13 +261,13 @@ END_MESSAGE_MAP()
 // CScriptEditor message handlers
 
 
-void CScriptEditor::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CScriptEditor::OnChar(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 {
 
 	CResizeDialog::OnChar(nChar, nRepCnt, nFlags);
 }
 
-void CScriptEditor::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CScriptEditor::OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 {
 
 	CResizeDialog::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -346,7 +346,7 @@ void CScriptEditor::OnCnCharAdded(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
-void CScriptEditor::OnSize(UINT nType, int cx, int cy)
+void CScriptEditor::OnSize(unsigned nType, int cx, int cy)
 {
 	CResizeDialog::OnSize(nType, cx, cy);
 

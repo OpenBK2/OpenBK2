@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "StoreInputState.h"
 
-void CStoreInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -14,7 +14,7 @@ void CStoreInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-bool CStoreInputState::OnMouseWheel( UINT nFlags, short zDelta, CTPoint<int> &rMousePoint )
+bool CStoreInputState::OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -29,7 +29,7 @@ bool CStoreInputState::OnMouseWheel( UINT nFlags, short zDelta, CTPoint<int> &rM
 }
 
 
-void CStoreInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -42,7 +42,7 @@ void CStoreInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CStoreInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -55,7 +55,7 @@ void CStoreInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CStoreInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -68,7 +68,7 @@ void CStoreInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CStoreInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -81,7 +81,7 @@ void CStoreInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CStoreInputState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -94,7 +94,7 @@ void CStoreInputState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CStoreInputState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -107,7 +107,7 @@ void CStoreInputState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CStoreInputState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -120,7 +120,7 @@ void CStoreInputState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 }
 
 
-void CStoreInputState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -133,7 +133,7 @@ void CStoreInputState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 }
 
 
-void CStoreInputState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CStoreInputState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_MOUSE;
@@ -146,7 +146,7 @@ void CStoreInputState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CStoreInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;
@@ -160,7 +160,7 @@ void CStoreInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CStoreInputState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;
@@ -174,7 +174,7 @@ void CStoreInputState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CStoreInputState::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;
@@ -188,7 +188,7 @@ void CStoreInputState::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CStoreInputState::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;
@@ -202,7 +202,7 @@ void CStoreInputState::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CStoreInputState::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;
@@ -216,7 +216,7 @@ void CStoreInputState::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CStoreInputState::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CStoreInputState::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
 	inputStateEventInfo.nType = IST_KEYBOARD;

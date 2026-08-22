@@ -3,7 +3,7 @@
 
 #include "libdb/Manipulator.h"
 
-bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const UINT nID )
+bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const unsigned nID )
 {
 	if ( nID == INVALID_NODE_ID )
 	{
@@ -24,11 +24,11 @@ bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedI
 }
 
 
-UINT CFreeIDCollector::LockID()
+unsigned CFreeIDCollector::LockID()
 {
 	if ( lockedIDNodeList.empty() )
 	{
-		UINT nLockID = GetFirstID();
+		unsigned nLockID = GetFirstID();
 		CLockedIDNodeList::iterator itLockedIDNode = lockedIDNodeList.insert( lockedIDNodeList.end(), SLockedIDNode() );
 		itLockedIDNode->nFirstID = nLockID;
 		itLockedIDNode->nLastID = nLockID;
@@ -44,7 +44,7 @@ UINT CFreeIDCollector::LockID()
 				return GetFirstID();
 			}
 		}
-		UINT nLockID = GetNextID( itLockedIDNode->nLastID );
+		unsigned nLockID = GetNextID( itLockedIDNode->nLastID );
 		itLockedIDNode->nLastID = nLockID;
 		//
 		CLockedIDNodeList::iterator itNextLockedIDNode = itLockedIDNode;
@@ -62,7 +62,7 @@ UINT CFreeIDCollector::LockID()
 }	
 
 
-bool CFreeIDCollector::LockID( UINT nID )
+bool CFreeIDCollector::LockID( unsigned nID )
 {
 	if ( ( nID == INVALID_NODE_ID ) || ( nID < GetFirstID() ) )
 	{
@@ -145,7 +145,7 @@ bool CFreeIDCollector::LockID( UINT nID )
 }
 
 
-void CFreeIDCollector::FreeID( const UINT nID )
+void CFreeIDCollector::FreeID( const unsigned nID )
 {
 	if ( nID == INVALID_NODE_ID )
 	{

@@ -14,7 +14,7 @@ public:
 	int nTeamSize; // 0 - random
 	std::list<int> techLevels;
 	std::list<int> maps;
-	UINT uCheckSum;
+	unsigned uCheckSum;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSide); f.Add(3,&bHistoricity); f.Add(4,&nTeamSize); f.Add(5,&techLevels); f.Add(6,&maps); f.Add(7,&uCheckSum); return 0; }
 	int operator&( IXmlSaver &f ) { 
 		f.Add( "nSide", &nSide ); f.Add( "bHistoricity", &bHistoricity ); f.Add( "nTeamSize", &nTeamSize );
@@ -22,7 +22,7 @@ public:
 		return 0;
 	}
 	CLadderInfoPacket() {}
-	CLadderInfoPacket( const int nClientID, const int _nSide, const bool _bHistoricity, const int _nTeamSize, const std::list<int> &_techLevels, const std::list<int> &_maps, const UINT _uCheckSum )
+	CLadderInfoPacket( const int nClientID, const int _nSide, const bool _bHistoricity, const int _nTeamSize, const std::list<int> &_techLevels, const std::list<int> &_maps, const unsigned _uCheckSum )
 		: CNetPacket( nClientID ), nSide( _nSide ), bHistoricity( _bHistoricity ), nTeamSize( _nTeamSize ), techLevels( _techLevels ), maps( _maps ), uCheckSum( _uCheckSum ) {} 
 };
 

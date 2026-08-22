@@ -28,24 +28,24 @@ class CFreeIDCollector
 {
 	struct SLockedIDNode
 	{
-		UINT nFirstID;
-		UINT nLastID;
+		unsigned nFirstID;
+		unsigned nLastID;
 	};
 	typedef list<SLockedIDNode> CLockedIDNodeList;
 
 	CLockedIDNodeList lockedIDNodeList;
 
-	inline UINT GetFirstID() { return 1; }
-	inline UINT GetNextID( const UINT nID ) { return ( nID + 1 ); }
-	inline UINT GetPreviousID( const UINT nID ) { return ( nID - 1 ); }
-	bool FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const UINT nID );
+	inline unsigned GetFirstID() { return 1; }
+	inline unsigned GetNextID( const unsigned nID ) { return ( nID + 1 ); }
+	inline unsigned GetPreviousID( const unsigned nID ) { return ( nID - 1 ); }
+	bool FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const unsigned nID );
 public:
 
 	inline void Clear() { lockedIDNodeList.clear(); }
-	inline bool IsIDLocked( const UINT nID ) { return FindLockedIDNode( 0, nID ); }
-	UINT LockID();
-	bool LockID( UINT nID );
-	void FreeID( const UINT nID );
+	inline bool IsIDLocked( const unsigned nID ) { return FindLockedIDNode( 0, nID ); }
+	unsigned LockID();
+	bool LockID( unsigned nID );
+	void FreeID( const unsigned nID );
 	//
 	void Trace() const
 	{

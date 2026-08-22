@@ -20,9 +20,9 @@ public:
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
 	const SIteratorDesc* GetDesc( const std::string &szName ) const;
 	bool GetType( const std::string &rszName, std::string *pszType ) const;
-	UINT GetID( const std::string &rszName ) const;
+	unsigned GetID( const std::string &rszName ) const;
 	CDBID GetDBID() const;
-	bool GetName( UINT nID, std::string *pszName ) const;
+	bool GetName( unsigned nID, std::string *pszName ) const;
 	bool GetValue( const std::string &szName, CVariant *pValue ) const;
 	bool SetValue( const std::string &szName, const CVariant &value );
 	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const;
@@ -53,7 +53,7 @@ public:
 	const SIteratorDesc* GetDesc() const;
 	bool GetType( std::string *pszType ) const;
 	bool GetName( std::string *pszName ) const;
-	UINT GetID() const { return INVALID_NODE_ID; }
+	unsigned GetID() const { return INVALID_NODE_ID; }
 	bool IsFolder() const { return false; }
 };
 

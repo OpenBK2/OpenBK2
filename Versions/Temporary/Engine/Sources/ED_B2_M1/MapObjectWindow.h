@@ -13,7 +13,7 @@ class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 		string szObjectTypeName;
 		CDBID objectDBID;
 	};
-	typedef hash_map<UINT, SObjectListElement> CObjectListElementMap;
+	typedef hash_map<unsigned, SObjectListElement> CObjectListElementMap;
 
 	bool bCreateControls;
 	bool bFull;
@@ -41,12 +41,12 @@ class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 	void ClearSelection();
 
 protected:
-	//virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
+	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
 	virtual void DoDataExchange( CDataExchange* pDX );
 	virtual BOOL OnInitDialog();
 	//
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	afx_msg void OnSelchangeFilterComboBox();
 	afx_msg void OnDirectionRadio();
 	afx_msg void OnChangeDirection();
@@ -72,8 +72,8 @@ public:
 	~CMapObjectWindow();
 
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

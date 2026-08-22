@@ -126,19 +126,19 @@ void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomT
 		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
 		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MAPINFO_TOOLS );
 		itCursomToolBarInfo->nCount = TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const UINT*>( TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID );
+		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID );
 	}
 	{
 		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
 		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MAPINFO_VIEW );
 		itCursomToolBarInfo->nCount = TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const UINT*>( TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID );
+		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID );
 	}
 	{
 		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
 		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MODEL );
 		itCursomToolBarInfo->nCount = TOOLBAR_MODEL_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const UINT*>( TOOLBAR_MODEL_ELEMENTS_ID );
+		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MODEL_ELEMENTS_ID );
 	}
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
@@ -147,7 +147,7 @@ void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomT
 void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 {
 	AfxSetResourceHandle( theEDB2M1Instance );
-	vector<UINT> nIDs;
+	vector<unsigned> nIDs;
 	nIDs.push_back( IDM_MAIN );
 	nIDs.push_back( IDM_MAPINFO );
 	nIDs.push_back( IDM_MODEL );

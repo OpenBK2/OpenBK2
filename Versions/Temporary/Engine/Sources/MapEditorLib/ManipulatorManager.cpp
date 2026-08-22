@@ -262,7 +262,7 @@ bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator>
 
 bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList,
 																					const IManipulator* pSourceManipulator,
-																					const UINT nFlags,
+																					const unsigned nFlags,
 																					const bool bEnumHidden,
 																					const ECacheType eCacheType )
 {
@@ -270,7 +270,7 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
   NI_ASSERT( pSourceManipulator != 0, "EnumReferences() pSourceManipulator == 0" );
 	//
 	string szRefValue;
-	hash_map<string, UINT> propertyMap;
+	hash_map<string, unsigned> propertyMap;
 	if ( nFlags & REFINFO_MAKE_UNIQUE_LIST )
 	{
 		for ( CReferenceInfoList::const_iterator itReferenceInfo = pReferenceInfoList->begin(); itReferenceInfo != pReferenceInfoList->end(); ++itReferenceInfo )

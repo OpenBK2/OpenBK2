@@ -32,7 +32,7 @@ namespace NExtraDraw
 	const uint32_t EC_LOWS			= 0xFF00FFFF; // CYAN
 	const uint32_t EC_UPS			= 0xFFFF00FF; // MAGENTA
 
-	void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, UINT uMode );
+	void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, unsigned uMode );
 }
 
 class CVSOSelectState : public CDefaultInputState
@@ -53,9 +53,9 @@ class CVSOSelectState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
 
 
@@ -77,13 +77,13 @@ class CVSOEditState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -110,11 +110,11 @@ class CVSOAddState : public CDefaultInputState
 	void OnSetFocus				( class CWnd* pNewWnd );
 	void OnKillFocus			( class CWnd* pOldWnd );
 
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -260,7 +260,7 @@ protected:
 	// Получить доступ к VSO
 	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex ) = 0;
 	// Обновить геометрические данные ( они были изменены )
-	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags ) = 0;
+	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags ) = 0;
 	// Подготовить данные для вставки
 	virtual void PrepareInsertVSO() = 0;
 	// Добавить VSO	( возвращает nVSOID добавленного VSO
@@ -307,11 +307,11 @@ public:
 	//
 	virtual class CMapInfoEditor* GetMapInfoEditor();
 	
-	bool PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
-	void EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
+	bool PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
+	void EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

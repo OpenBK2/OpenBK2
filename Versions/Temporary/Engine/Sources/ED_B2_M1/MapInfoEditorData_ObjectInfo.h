@@ -17,8 +17,8 @@ namespace NMapInfoEditor
 		{
 			string szRPGStatsTypeName;
 			CDBID rpgStatsDBID;
-			UINT nFrameIndex;																						// Frame index
-			UINT nPlayer;																								// Player
+			unsigned nFrameIndex;																						// Frame index
+			unsigned nPlayer;																								// Player
 			float fHP;																									// Hit points ( 0.0f ... 1.0f )
 			//
 			CVec3 vPosition;																						// Относительная позиция объекта (в AI точках)
@@ -28,7 +28,7 @@ namespace NMapInfoEditor
 			float fAdditionalDirection;																	// Относительное направление объекта ( применяется при выравнивании на 90 градусов ) (в радианах)
 			//
 			CLinkIDList linkedLinkIDIist;																// Список залинкованных объектов
-			UINT nLinkToLinkID;																					// Объект к которому залинкованы
+			unsigned nLinkToLinkID;																					// Объект к которому залинкованы
 			//
 			SMapInfoElement()
 				:	nFrameIndex( INVALID_NODE_ID ),
@@ -170,12 +170,12 @@ namespace NMapInfoEditor
 		};
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		typedef hash_map<UINT, SMapInfoElement> CMapInfoElementMap;		// Соответствие LinkID объектв в структуре ObjectInfoCollector к данным об объекте
-		typedef hash_map<UINT, SSceneElement> CSceneElementMap;				// Соответствие SceneID визуальной части к данным об визуальной части
-		typedef hash_map<UINT, UINT> CSceneIDToLinkIDMap;							// Хранилище пересчета визуальных составляющих в элементы объекта
+		typedef hash_map<unsigned, SMapInfoElement> CMapInfoElementMap;		// Соответствие LinkID объектв в структуре ObjectInfoCollector к данным об объекте
+		typedef hash_map<unsigned, SSceneElement> CSceneElementMap;				// Соответствие SceneID визуальной части к данным об визуальной части
+		typedef hash_map<unsigned, unsigned> CSceneIDToLinkIDMap;							// Хранилище пересчета визуальных составляющих в элементы объекта
 		//
 		struct SObjectInfoCollector *pObjectInfoCollector;						// родительская структура
-		UINT nObjectInfoID;																						// ID объекта в родительской структуре
+		unsigned nObjectInfoID;																						// ID объекта в родительской структуре
 		CVec3 vPosition;																							// Позиция объекта (в AI точках)
 		float fDirection;																							// Направление объекта (в радианах)
 		//
@@ -189,7 +189,7 @@ namespace NMapInfoEditor
 		void MakeRelative();
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline UINT GetLinkIDBySceneID( UINT nSceneID )
+		inline unsigned GetLinkIDBySceneID( unsigned nSceneID )
 		{
 			if ( nSceneID != INVALID_NODE_ID )
 			{
@@ -203,7 +203,7 @@ namespace NMapInfoEditor
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline SMapInfoElement* GetMapInfoElementByLinkID( UINT nLinkID )
+		inline SMapInfoElement* GetMapInfoElementByLinkID( unsigned nLinkID )
 		{
 			if ( nLinkID != INVALID_NODE_ID )
 			{
@@ -217,13 +217,13 @@ namespace NMapInfoEditor
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline SMapInfoElement* GetMapInfoElementBySceneID( UINT nSceneID )
+		inline SMapInfoElement* GetMapInfoElementBySceneID( unsigned nSceneID )
 		{
 			return GetMapInfoElementByLinkID( GetLinkIDBySceneID( nSceneID ) );
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline SSceneElement* GetSceneElementBySceneID( UINT nSceneID )
+		inline SSceneElement* GetSceneElementBySceneID( unsigned nSceneID )
 		{
 			if ( nSceneID != INVALID_NODE_ID )
 			{
@@ -238,7 +238,7 @@ namespace NMapInfoEditor
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// если присутствует объект сцены с указанным ID возвращает true
-		virtual bool Pick( UINT nSceneID );
+		virtual bool Pick( unsigned nSceneID );
 		virtual bool Pick( const CVec3 &rvPos ) { return false; }
 		virtual bool Pick( const CSelectionSquare &rSelectionSquare ) { return false; }
 		// рисует объект
@@ -329,15 +329,15 @@ namespace NMapInfoEditor
 		virtual void Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 												 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		// проверить на возможность создания линка для этого объекта
-		virtual bool CheckLinkCapability( UINT nLinkToSceneID ) const;
+		virtual bool CheckLinkCapability( unsigned nLinkToSceneID ) const;
 		// добавить линк на указанный объект
-		virtual bool InsertLink( bool bUpdateDB, UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+		virtual bool InsertLink( bool bUpdateDB, unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		// Удалить линки у объектов на этоот объкт, которые ссылаются на объект, после вызова этого метода на объект никто не ссылается
 		virtual bool RemoveLinks( bool bUpdateLinkedObjects, bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
 		virtual bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//
-		virtual void UpdateByController( UINT nLinkID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
+		virtual void UpdateByController( unsigned nLinkID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
 		//
 		virtual void CopySelf();
 		virtual void PasteLinkIDList( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap );

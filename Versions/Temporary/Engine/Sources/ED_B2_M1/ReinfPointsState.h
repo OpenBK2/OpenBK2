@@ -56,12 +56,12 @@ public:
 	void Draw( CPaintDC *pPaintDC );
 	void PostDraw( CPaintDC *pPaintDC );
 
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	void RefreshReinfPointsWindow();
 	bool EditPointDeployTemplate();

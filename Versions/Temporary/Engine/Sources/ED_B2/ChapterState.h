@@ -58,11 +58,11 @@ public:
 	void Enter();
 	void Leave();
 	void PostDraw( class CPaintDC *pPaintDC );
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 

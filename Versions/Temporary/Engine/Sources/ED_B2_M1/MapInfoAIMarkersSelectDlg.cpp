@@ -80,12 +80,12 @@ void CMapInfoAIMarkersSelectDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoAIMarkersSelectDlg::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapInfoAIMarkersSelectDlg::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	return false;
 }
 
-bool CMapInfoAIMarkersSelectDlg::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapInfoAIMarkersSelectDlg::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoAIMarkersSelectDlg::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoAIMarkersSelectDlg::UpdateCommand(), pbCheck == 0" );

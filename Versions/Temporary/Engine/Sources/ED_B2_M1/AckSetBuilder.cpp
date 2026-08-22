@@ -426,7 +426,7 @@ bool CAcksBuilder::UpdateAckSets( const string &rszAnimationFolder )
 }
 
 
-bool CAcksBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CAcksBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -452,7 +452,7 @@ bool CAcksBuilder::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CAcksBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CAcksBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAcksBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAcksBuilder::UpdateCommand(), pbCheck == 0" );

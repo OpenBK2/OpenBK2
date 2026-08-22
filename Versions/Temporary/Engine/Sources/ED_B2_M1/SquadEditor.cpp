@@ -84,12 +84,12 @@ void CSquadEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-bool CSquadEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CSquadEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	return false;
 }
 
-bool CSquadEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CSquadEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CSquadEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CSquadEditor::UpdateCommand(), pbCheck == 0" );
@@ -148,7 +148,7 @@ bool CSquadEditor::RemoveModel( int nID )
 
 void CSquadEditor::CreateControls()
 {
-	UINT nID = ID_SQUAD_EDITOR_DW;
+	unsigned nID = ID_SQUAD_EDITOR_DW;
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->
 		CreateControlBar( &nID, "SquadEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
 	{

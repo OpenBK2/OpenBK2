@@ -11,7 +11,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	struct SCommandRange
 	{
 		// CRAP{ HASH_SET
-		typedef hash_map<UINT, int> CCommandIDSet; // важно наличие
+		typedef hash_map<unsigned, int> CCommandIDSet; // важно наличие
 		// CRAP} HASH_SET
 		CCommandIDSet commandIDSet;
 
@@ -27,9 +27,9 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 		}	
 	};
 	//
-	typedef hash_map<UINT, SCommandRange> CCommandHandlerIDToCommandIDMap;
-	typedef hash_map<UINT, UINT> CCommandIDToCommandHandlerIDMap;
-	typedef hash_map<UINT, ICommandHandler*> CCommandHandlerMap;
+	typedef hash_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
+	typedef hash_map<unsigned, unsigned> CCommandIDToCommandHandlerIDMap;
+	typedef hash_map<unsigned, ICommandHandler*> CCommandHandlerMap;
 	//
 	CCommandHandlerIDToCommandIDMap commandHandlerIDToCommandIDMap;
 	CCommandIDToCommandHandlerIDMap commandIDToCommandHandlerIDMap;
@@ -37,16 +37,16 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	
 public:
 	// ICommandHandlerContainer
-	void Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID );
-	void UnRegister( UINT nType );
-	void Set( UINT nType, ICommandHandler *pCommandHandler );
-	void Remove( UINT nType, ICommandHandler *pCommandHandler );
-	void Remove( UINT nType );
-	ICommandHandler* Get( UINT nType );
-	bool HandleCommand( UINT nType, UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck );
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID );
+	void UnRegister( unsigned nType );
+	void Set( unsigned nType, ICommandHandler *pCommandHandler );
+	void Remove( unsigned nType, ICommandHandler *pCommandHandler );
+	void Remove( unsigned nType );
+	ICommandHandler* Get( unsigned nType );
+	bool HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

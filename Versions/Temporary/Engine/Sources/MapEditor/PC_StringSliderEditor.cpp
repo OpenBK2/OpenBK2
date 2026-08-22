@@ -76,7 +76,7 @@ void CPCStringSliderEditor::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CPCStringSliderEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CPCStringSliderEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
 	{		
@@ -219,7 +219,7 @@ void CPCStringSliderEditor::SetDefaultValue()
 }
 
 
-void CPCStringSliderEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam )
+void CPCStringSliderEditor::ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam )
 {
 	if ( !bCreateControls )
 	{
@@ -238,7 +238,7 @@ void CPCStringSliderEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM
 }
 
 
-bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CPCStringSliderEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -267,7 +267,7 @@ bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CPCStringSliderEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CPCStringSliderEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringSliderEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCStringSliderEditor::UpdateCommand(), pbCheck == 0" );

@@ -39,8 +39,8 @@ namespace NMapInfoEditor
 		for ( int nBridgeElementIndex = 0; nBridgeElementIndex < bridgeElementList.size(); ++nBridgeElementIndex )
 		{
 			// получаем расположенние объекта в базе данных
-			const UINT nLinkID = bridgeElementList[nBridgeElementIndex];
-			const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
+			const unsigned nLinkID = bridgeElementList[nBridgeElementIndex];
+			const unsigned nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
 			if ( nObjectIndex == INVALID_NODE_ID )
 			{
 				NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Invalid index for LinkID in bridge: %d\n", nLinkID ) );
@@ -212,7 +212,7 @@ namespace NMapInfoEditor
 	bool SBridgeInfo::RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		bool bResult = SObjectInfo::RemoveFromDB( pObjectController, pManipulator );
-		const UINT nBridgeIndex = pObjectInfoCollector->bridgeIDToIndexCollector.Get( nBridgeID );
+		const unsigned nBridgeIndex = pObjectInfoCollector->bridgeIDToIndexCollector.Get( nBridgeID );
 		if ( nBridgeIndex != INVALID_NODE_ID )
 		{
 			bResult = bResult && pObjectController->AddRemoveOperation( "Bridges", nBridgeIndex, pManipulator );
@@ -290,7 +290,7 @@ namespace NMapInfoEditor
 		vDirection = vDirection / fSize;
 		//
 		const float fMiddleSize = fSize - fEndSize;
-		const UINT nCenterCount = fMiddleSize > 0.0f ? UINT( 0.5f + ( fMiddleSize / fCenterSize ) ) : 0;
+		const unsigned nCenterCount = fMiddleSize > 0.0f ? unsigned( 0.5f + ( fMiddleSize / fCenterSize ) ) : 0;
 		const float fBridgeSize = ( fEndSize * 2 ) + ( fCenterSize * nCenterCount );
 		CVec3 vbridgeStart = VNULL3;
 		if ( bFixStartPoint )

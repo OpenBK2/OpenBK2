@@ -6,7 +6,7 @@ class CDefaultDockingWindow : public SECControlBar
 	CWnd* pwndContents;
 
 protected:
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 
 public:
 	CDefaultDockingWindow() : pwndContents( 0 ) {}

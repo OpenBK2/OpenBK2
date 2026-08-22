@@ -76,7 +76,7 @@ void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 
 void CBuildingEditor::CreateControls()
 {
-	UINT nID = ID_BUILDING_EDITOR_DW;
+	unsigned nID = ID_BUILDING_EDITOR_DW;
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->
 		CreateControlBar( &nID, "BuildingEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
 	{
@@ -176,12 +176,12 @@ void CBuildingEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-bool CBuildingEditor::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CBuildingEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	return false;
 }
 
-bool CBuildingEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CBuildingEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CBuildingEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CBuildingEditor::UpdateCommand(), pbCheck == 0" );

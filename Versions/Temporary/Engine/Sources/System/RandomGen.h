@@ -52,7 +52,7 @@ namespace NRandom
 	// cheap counter-only accessor for hot-path ASYNC diagnostics
 	SYSTEM_EXPORT uint64_t GetRandomCallsCounter();
 	// get random value
-	SYSTEM_EXPORT UINT Random();
+	SYSTEM_EXPORT unsigned Random();
 	// random w/o checks
 	BOOST_FORCEINLINE unsigned int Random( const unsigned int uMax ) { return Random() % uMax; }
 	BOOST_FORCEINLINE int Random( const int nMin, const int nMax ) { return nMin + (int)Random( (unsigned int)(nMax - nMin + 1) ); }

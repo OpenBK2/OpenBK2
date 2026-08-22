@@ -73,7 +73,7 @@ BOOL CUnitStartCmdWindow::OnInitDialog()
 }
 
 
-bool CUnitStartCmdWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CUnitStartCmdWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SUnitStartCmdWindowData *pData = reinterpret_cast<SUnitStartCmdWindowData*>( dwData );
 	//
@@ -100,7 +100,7 @@ bool CUnitStartCmdWindow::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CUnitStartCmdWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CUnitStartCmdWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CUnitStartCmdWindow::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CUnitStartCmdWindow::UpdateCommand(), pbCheck == 0" );

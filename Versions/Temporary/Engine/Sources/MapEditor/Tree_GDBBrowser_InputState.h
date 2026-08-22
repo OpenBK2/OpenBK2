@@ -20,8 +20,8 @@ private:
 	HCURSOR hCopyCursor;
 	HCURSOR hErrorCursor;
 
-	void BeginDrag( UINT nFlags );
-	void ContinueDrag( const CTPoint<int> &rMousePoint, UINT nFlags );
+	void BeginDrag( unsigned nFlags );
+	void ContinueDrag( const CTPoint<int> &rMousePoint, unsigned nFlags );
 	void EndDrag( bool bSuccess );
 
 public:
@@ -34,16 +34,16 @@ public:
 	void Enter();
 	void Leave();
 	//
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnKeyUp					( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	void OnContextMenu		( const CTPoint<int> &rMousePoint );
 };

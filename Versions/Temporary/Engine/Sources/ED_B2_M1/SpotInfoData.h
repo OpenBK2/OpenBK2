@@ -48,7 +48,7 @@ namespace NMapInfoEditor
 	public:
 		string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
-		UINT nLinkID;
+		unsigned nLinkID;
 		CSpotSquare spotSquare;
 		CVec3 vAdditionalPosition;
 		//
@@ -133,15 +133,15 @@ namespace NMapInfoEditor
 		void Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		// проверить на возможность создания линка для этого объекта
-		bool CheckLinkCapability( UINT nSceneObjectIDLinkTo ) { return false; }
+		bool CheckLinkCapability( unsigned nSceneObjectIDLinkTo ) { return false; }
 		// добавить линк на указанный объект
-		bool InsertLink( bool bUpdateDB, UINT nSceneObjectIDLinkTo, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
+		bool InsertLink( bool bUpdateDB, unsigned nSceneObjectIDLinkTo, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
 		// Удалить линки у объектов на этоот объкт, которые ссылаются на объект, после вызова этого метода на объект никто не ссылается
 		bool RemoveLinks( bool bUpdateLinkedObjects, bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
 		// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
 		bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
 		//
-		void UpdateByController( UINT nSpotID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
+		void UpdateByController( unsigned nSpotID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
 		//
 		void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
 		void RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure );

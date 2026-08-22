@@ -13,7 +13,7 @@
 
 #include <zconf.h>
 
-void CMapObjectMultiState::UpdateEditParameters( UINT nFlags )
+void CMapObjectMultiState::UpdateEditParameters( unsigned nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -123,7 +123,7 @@ void CMapObjectMultiState::Leave()
 }
 
 
-bool CMapObjectMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -170,7 +170,7 @@ bool CMapObjectMultiState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CMapObjectMultiState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CMapObjectMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectMultiState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapObjectMultiState::UpdateCommand(), pbCheck == 0" );
@@ -208,7 +208,7 @@ int CMapObjectMultiState::SEditParameters::operator&( IXmlSaver &xs )
 	xs.Add( "Thumbnails", &bThumbnails );
 	//
 	//do not serialise this fields:
-	//UINT nFlags;
+	//unsigned nFlags;
 	//CPlayerList playerList;
 	return 0;
 }

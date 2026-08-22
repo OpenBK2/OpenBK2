@@ -19,7 +19,7 @@ BEGIN_MESSAGE_MAP(CTranslateEdit, CEdit)
 END_MESSAGE_MAP()
 
 
-void CTranslateEdit::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CTranslateEdit::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	SHORT keyStatus = ::GetKeyState( VK_CONTROL );
 	if ( ( keyStatus < 0 ) || ( nChar == VK_F7 ) || ( nChar == VK_F1 ) )
@@ -50,7 +50,7 @@ void CTranslateEdit::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CTranslateEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTranslateEdit::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( bIgnoreSymbol )
 	{
@@ -78,7 +78,7 @@ BEGIN_MESSAGE_MAP(CTranslateButton, CButton)
 END_MESSAGE_MAP()
 
 
-void CTranslateButton::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags ) 
+void CTranslateButton::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
 {
 	SHORT keyStatus = ::GetKeyState( VK_CONTROL );
 	if ( ( keyStatus < 0 ) || ( nChar == VK_F7 ) || ( nChar == VK_F1 ) )
@@ -109,7 +109,7 @@ void CTranslateButton::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CTranslateButton::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTranslateButton::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( bIgnoreSymbol )
 	{

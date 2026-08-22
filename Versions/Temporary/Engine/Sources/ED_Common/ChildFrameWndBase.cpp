@@ -123,7 +123,7 @@ void CChildFrameWndBase::OnDestroy()
 }
 
 
-void CChildFrameWndBase::OnTimer( UINT nIDEvent ) 
+void CChildFrameWndBase::OnTimer( unsigned nIDEvent ) 
 {
 	if ( nIDEvent == GetUpdateSceneTimerID() )
 	{
@@ -163,7 +163,7 @@ void CChildFrameWndBase::OnKillFocus( CWnd* pNewWnd )
 }
 
 
-void CChildFrameWndBase::OnMouseMove( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMouseMove( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnMouseMove( nFlags, point );
 	if ( bInputEnabled )
@@ -184,7 +184,7 @@ void CChildFrameWndBase::OnMouseMove( UINT nFlags, CPoint point )
 }
 
 
-BOOL CChildFrameWndBase::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
+BOOL CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, CPoint point )
 {
 	const BOOL bResult = CWnd::OnMouseWheel( nFlags, zDelta, point );
 	if ( bResult )
@@ -205,7 +205,7 @@ BOOL CChildFrameWndBase::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnLButtonDown( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonDown( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonDown( nFlags, point );
 	if ( bInputEnabled )
@@ -223,7 +223,7 @@ void CChildFrameWndBase::OnLButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnLButtonUp( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonUp( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonUp( nFlags, point );
 	if ( bInputEnabled )
@@ -240,7 +240,7 @@ void CChildFrameWndBase::OnLButtonUp( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnLButtonDblClk( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonDblClk( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
@@ -257,7 +257,7 @@ void CChildFrameWndBase::OnLButtonDblClk( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnRButtonDown( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonDown( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonDown( nFlags, point );
 	if ( bInputEnabled )
@@ -275,7 +275,7 @@ void CChildFrameWndBase::OnRButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnRButtonUp( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonUp( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonUp( nFlags, point );
 	if ( bInputEnabled )
@@ -292,7 +292,7 @@ void CChildFrameWndBase::OnRButtonUp( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnRButtonDblClk( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonDblClk( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
@@ -309,7 +309,7 @@ void CChildFrameWndBase::OnRButtonDblClk( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnMButtonDown( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonDown( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonDown( nFlags, point );
 	if ( bInputEnabled )
@@ -323,7 +323,7 @@ void CChildFrameWndBase::OnMButtonDown( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnMButtonUp( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonUp( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonUp( nFlags, point );
 	if ( bInputEnabled )
@@ -336,7 +336,7 @@ void CChildFrameWndBase::OnMButtonUp( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnMButtonDblClk( UINT nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
@@ -349,7 +349,7 @@ void CChildFrameWndBase::OnMButtonDblClk( UINT nFlags, CPoint point )
 }
 
 
-void CChildFrameWndBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnKeyDown( nChar, nRepCnt, nFlags );
 	if ( nChar == 'Q' )
@@ -389,7 +389,7 @@ void CChildFrameWndBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CChildFrameWndBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnKeyUp( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
@@ -402,7 +402,7 @@ void CChildFrameWndBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CChildFrameWndBase::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnChar( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
@@ -422,7 +422,7 @@ void CChildFrameWndBase::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CChildFrameWndBase::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnSysKeyDown( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
@@ -436,7 +436,7 @@ void CChildFrameWndBase::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CChildFrameWndBase::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnSysKeyUp( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
@@ -449,7 +449,7 @@ void CChildFrameWndBase::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
-void CChildFrameWndBase::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CChildFrameWndBase::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CWnd::OnSysChar( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
@@ -523,7 +523,7 @@ void CChildFrameWndBase::OnPaint()
 }
 
 
-void CChildFrameWndBase::OnSize( UINT nType, int cx, int cy )
+void CChildFrameWndBase::OnSize( unsigned nType, int cx, int cy )
 {
 	if ( bIsSettingUp )
 		return;
@@ -767,7 +767,7 @@ void CChildFrameWndBase::GetDimensions( uint32_t dwData )
 }
 
 
-bool CChildFrameWndBase::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -848,7 +848,7 @@ bool CChildFrameWndBase::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CChildFrameWndBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CChildFrameWndBase::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CChildFrameWndBase::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CChildFrameWndBase::UpdateCommand(), pbCheck == 0" );
@@ -924,7 +924,7 @@ bool CChildFrameWndBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 }
 
 
-void CChildFrameWndBase::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
+void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar )
 {
 	if ( bEnableScroll )
 	{
@@ -982,7 +982,7 @@ void CChildFrameWndBase::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 }
 
 
-void CChildFrameWndBase::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
+void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar )
 {
 	if ( bEnableScroll )
 	{

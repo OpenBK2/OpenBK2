@@ -52,16 +52,16 @@ public:
 		POINTS_ISS_COUNT
 	};
 
-	static const UINT INPUT_STATE_LABEL_ID[IS_COUNT];
-	static const UINT POINTS_INPUT_SUSBSTATE_LABEL_ID[POINTS_ISS_COUNT];
+	static const unsigned INPUT_STATE_LABEL_ID[IS_COUNT];
+	static const unsigned POINTS_INPUT_SUSBSTATE_LABEL_ID[POINTS_ISS_COUNT];
 
 	//CMultiInputState
 	void Enter();
 	void Leave();
 
 	//ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

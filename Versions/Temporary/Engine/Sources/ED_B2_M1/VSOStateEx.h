@@ -25,7 +25,7 @@ protected:
 	virtual bool CanInsertVSO();
 	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex );
 	virtual int GetFreeVSOID();
-	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags );
+	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags );
 	virtual int InsertVSO( const vector<CVec3> &rControlPointList );
 	virtual void RemoveVSO( int nVSOID );
 

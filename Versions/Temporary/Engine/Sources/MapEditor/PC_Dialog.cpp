@@ -5,14 +5,14 @@
 
 #include "port/time.h"
 
-const UINT	CPCDialog::PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
+const unsigned	CPCDialog::PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCDialog::PC_TREE_COLUMN_FORMAT[PC_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };
 const int		CPCDialog::PC_TREE_COLUMN_WIDTH [PC_TREE_COLUMN_COUNT] = { 100, 50, 100 };
 
 
 /**
 static MSG staticPCDialogMsg;
-LRESULT CPCDialog::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
+LRESULT CPCDialog::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
 {
 	if ( ( message == WM_KEYDOWN ) && ( AfxGetMainWnd() != 0 ) )
 	{

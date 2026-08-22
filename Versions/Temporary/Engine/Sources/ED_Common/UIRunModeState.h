@@ -12,7 +12,7 @@ public:
 	//IInputState
 	void Enter();
 	void Leave();
-	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	// members
 protected:

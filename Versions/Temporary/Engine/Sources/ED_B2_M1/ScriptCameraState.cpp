@@ -95,7 +95,7 @@ void CScriptCameraState::Leave()
 }
 
 
-bool CScriptCameraState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -406,7 +406,7 @@ bool CScriptCameraState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CScriptCameraState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CScriptCameraState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptCameraState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CScriptCameraState::UpdateCommand(), pbCheck == 0" );
@@ -1036,7 +1036,7 @@ void CScriptCameraState::RefreshDialogData( bool bNeedUpdateFromDB )
 }
 
 
-void CScriptCameraState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CScriptCameraState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{
@@ -1235,7 +1235,7 @@ void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 }
 
 
-void CScriptCameraState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CScriptCameraState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	return;
   
@@ -1273,7 +1273,7 @@ void CScriptCameraState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 }
 
 
-void CScriptCameraState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CScriptCameraState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	return;
 

@@ -9,7 +9,7 @@
 
 class CPCDBLinkDialog : public CResizeDialog, public CPCBaseDialog
 {
-	static const UINT	PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT];
+	static const unsigned	PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT];
 	static const int	PC_DBL_TREE_COLUMN_FORMAT[PC_DBL_TREE_COLUMN_COUNT];
 	static const int	PC_DBL_TREE_COLUMN_WIDTH [PC_DBL_TREE_COLUMN_COUNT];
 
@@ -64,7 +64,7 @@ protected:
 	afx_msg LRESULT OnTabSelected( WPARAM wParam, LPARAM lParam );
 	afx_msg void OnTabSelected();
 	afx_msg void OnBnClickedSetEmptyButton();
-	afx_msg void OnSize( UINT nType, int cx, int cy );
+	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	//
 	// CResizeDialog
 	int GetMinimumXDimension() { return 400; }

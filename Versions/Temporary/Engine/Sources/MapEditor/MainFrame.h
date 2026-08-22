@@ -28,28 +28,28 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 {
 	static const int WM_SECTOOLBARWNDNOTIFY;
 	//
-	static const UINT TOOLBAR_ID[TOOLBARS_COUNT];
-	static const UINT TOOLBAR_CONTROL_ID[TOOLBARS_COUNT];
-	static const UINT TOOLBAR_CONTROL_ID_TO_ARRANGE;
-	static const UINT TOOLBAR_NAME_ID[TOOLBARS_COUNT];
+	static const unsigned TOOLBAR_ID[TOOLBARS_COUNT];
+	static const unsigned TOOLBAR_CONTROL_ID[TOOLBARS_COUNT];
+	static const unsigned TOOLBAR_CONTROL_ID_TO_ARRANGE;
+	static const unsigned TOOLBAR_NAME_ID[TOOLBARS_COUNT];
 	static const uint32_t TOOLBAR_STYLE[TOOLBARS_COUNT];
 	static const bool TOOLBAR_SHOW[TOOLBARS_COUNT];
 	//
-	static const UINT TOOLBAR_MAIN_ELEMENTS_ID[TOOLBAR_MAIN_ELEMENTS_COUNT];
-	static const UINT TOOLBAR_SELECTION_ELEMENTS_ID[TOOLBAR_SELECTION_ELEMENTS_COUNT];
-	static const UINT TOOLBAR_CC_ELEMENTS_ID[TOOLBAR_CC_ELEMENTS_COUNT];
-	static const UINT TOOLBAR_OBJECT_ELEMENTS_ID[TOOLBAR_OBJECT_ELEMENTS_COUNT];
-	static const UINT TOOLBAR_PC_ELEMENTS_ID[TOOLBAR_PC_ELEMENTS_COUNT];
-	static const UINT TOOLBAR_VIEW_ELEMENTS_ID[TOOLBAR_VIEW_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_MAIN_ELEMENTS_ID[TOOLBAR_MAIN_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_SELECTION_ELEMENTS_ID[TOOLBAR_SELECTION_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_CC_ELEMENTS_ID[TOOLBAR_CC_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_OBJECT_ELEMENTS_ID[TOOLBAR_OBJECT_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_PC_ELEMENTS_ID[TOOLBAR_PC_ELEMENTS_COUNT];
+	static const unsigned TOOLBAR_VIEW_ELEMENTS_ID[TOOLBAR_VIEW_ELEMENTS_COUNT];
 	//
 	static const uint32_t TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT];
-	static const UINT* TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT];
+	static const unsigned* TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT];
 	//
-	static const UINT STATUSBAR_INDICATORS_ID[STATUSBAR_ELEMENTS];
-	static const UINT STATUSBAR_INDICATORS_SIZE[STATUSBAR_ELEMENTS];
+	static const unsigned STATUSBAR_INDICATORS_ID[STATUSBAR_ELEMENTS];
+	static const unsigned STATUSBAR_INDICATORS_SIZE[STATUSBAR_ELEMENTS];
 	//
-	static const UINT DOCKING_WINDOWS_DOCK_STYLE[DOCKING_WINDOWS_COUNT];
-	static const UINT DOCKING_WINDOWS_DOCK_PLACE[DOCKING_WINDOWS_COUNT];
+	static const unsigned DOCKING_WINDOWS_DOCK_STYLE[DOCKING_WINDOWS_COUNT];
+	static const unsigned DOCKING_WINDOWS_DOCK_PLACE[DOCKING_WINDOWS_COUNT];
 	static const float DOCKING_WINDOWS_RATE[DOCKING_WINDOWS_COUNT];
 	static const int DOCKING_WINDOWS_WIDTH[DOCKING_WINDOWS_COUNT];
 	
@@ -81,19 +81,19 @@ protected:
 	//
 	afx_msg	LRESULT OnSECToolBarNotify( WPARAM wParam, LPARAM lParam );
 	//
-	afx_msg void OnUserCommand( UINT nCommandID );
+	afx_msg void OnUserCommand( unsigned nCommandID );
 	afx_msg void OnUpdateUserCommand( CCmdUI *pCmdUI );
 	//
 	afx_msg void OnToolsCustomize();
 	//
-	afx_msg void OnViewToolBar( UINT nCommandID );
+	afx_msg void OnViewToolBar( unsigned nCommandID );
 	afx_msg void OnUpdateViewToolBar( CCmdUI *pCmdUI );
 	//
 	//afx_msg void OnShowDWGDBBrowser();
 	//afx_msg void OnUpdateShowDWGDBBrowser( CCmdUI* pCmdUI );
 	afx_msg void OnDWGDBBrowserNew();
 	afx_msg void OnDWGDBBrowserRemove();
-	afx_msg void OnDWGDBBrowserWindow( UINT nCommandID );
+	afx_msg void OnDWGDBBrowserWindow( unsigned nCommandID );
 	afx_msg void OnUpdateDWGDBBrowserNew( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDWGDBBrowserRemove( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDWGDBBrowserWindow( CCmdUI *pCmdUI );
@@ -104,7 +104,7 @@ protected:
 	afx_msg void OnUpdateShowDWLog( CCmdUI* pCmdUI );
 
 	virtual BOOL PreCreateWindow(CREATESTRUCT &rCreateStruct );
-	//virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam);
+	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam);
 
 public:
 	CMainFrame();
@@ -116,30 +116,30 @@ public:
 
 	//IMainFrame
 	bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
-																			UINT nButtonID,
+																			unsigned nButtonID,
 																			CTPoint<int> *pLeftBottomPos );
-	SECWorksheet* CreateChildFrame( UINT nResource );
+	SECWorksheet* CreateChildFrame( unsigned nResource );
 	bool SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, class CWnd *pwndContents );
-	SECControlBar* CreateControlBar( UINT *pnID,
+	SECControlBar* CreateControlBar( unsigned *pnID,
 																	 const CString &rstrTitle,
-																	 const UINT nStyle,
-																	 const UINT nPlace,
+																	 const unsigned nStyle,
+																	 const unsigned nPlace,
 																	 const float fRate,
 																	 const int nWidth );
 	bool SetControlBarWindowContents( SECControlBar* _pwndDockingWindow, class CWnd *pwndContents );
-	bool AddMenuResources( vector<UINT> &rMenuIDList );
-	void ShowMenu( const UINT nResourceID );
-	bool AddToolBarResource( const UINT nStandartResourceID, const UINT nLargeResourceID );
-	void CreateToolBar( UINT *pnID,
+	bool AddMenuResources( vector<unsigned> &rMenuIDList );
+	void ShowMenu( const unsigned nResourceID );
+	bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID );
+	void CreateToolBar( unsigned *pnID,
 											const CString &rstrTitle,
-											const UINT nButtonCount,
-											const UINT* pButtonIDMap,
+											const unsigned nButtonCount,
+											const unsigned* pButtonIDMap,
 											const uint32_t dwAlignment,
-											const UINT nStyle,
+											const unsigned nStyle,
 											const bool bDocked,
 											const bool bVisible,
 											const bool bMainToolBar );
-	SECCustomToolBar* GetToolBar( UINT nID );
+	SECCustomToolBar* GetToolBar( unsigned nID );
 	void SetStatusBarText( int nPaneIndex, const string &szText );
 	void SetWindowTitle( const SSWTParams &rSWTParams );
 	//
@@ -164,8 +164,8 @@ public:
 	void IterateProgressDialogPosition();
 	//
 	// ICommandHandler
-	bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	DECLARE_MESSAGE_MAP()
 };

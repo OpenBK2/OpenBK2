@@ -37,18 +37,18 @@ class CMapObjectSelectState : public CDefaultInputState
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
-	void OnMouseButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType );
-	void OnMouseButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType );
+	void OnMouseButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType );
+	void OnMouseButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType );
 
 	void UpdateSelectionBySelector( bool bShiftPressed );
 	//IInputState interface
-	void OnMouseMove		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -69,17 +69,17 @@ class CMapObjectEditState : public CDefaultInputState
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
 	}
 
-	void RecalculateSelection( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OperateSelection( UINT nFlags, const CTPoint<int> &rMousePoint, bool bSave );
+	void RecalculateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OperateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint, bool bSave );
 
 	//IInputState interface
-	void OnMouseMove		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -104,20 +104,20 @@ class CMapObjectAddState : public CDefaultInputState
 	void OnSetFocus				( class CWnd* pNewWnd );
 	void OnKillFocus			( class CWnd* pOldWnd );
 	//
-	void OnMouseMove			( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	void OnLButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp			( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDblClk	( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
-	void OnKeyUp					( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -142,10 +142,10 @@ class CMapObjectPasteState : public CDefaultInputState
 	void Enter();
 	void Leave();
 
-	void OnMouseMove		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp		( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
+	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
 
 
@@ -201,7 +201,7 @@ protected:
 		inline bool IsTerrainSelector() { return bTerrainSelector; }
 	};
 
-	UINT nSelectedSceneID;
+	unsigned nSelectedSceneID;
 	SSelector selector;
 	CSceneDrawTool sceneDrawTool;
 	bool bDrawShootAreas;
@@ -225,7 +225,7 @@ protected:
 	// Установить всоты объекта в ноль
 	virtual void SetSelectionHeightsToZero( bool bSave );
 	// Установить линк
-	virtual void InsertSelectionLink( UINT nLinkToSceneID );
+	virtual void InsertSelectionLink( unsigned nLinkToSceneID );
 	// Удалить линки
 	virtual void RemoveSelectionLinks();
 	// Удалить линк
@@ -244,18 +244,18 @@ protected:
 	virtual bool InsertObjectSetFocus				( class CWnd* pNewWnd ) { return false; }
 	virtual bool InsertObjectKillFocus			( class CWnd* pOldWnd ) { return false; }
 	//
-	virtual bool InsertObjectMouseMove			( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonDown		( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonUp			( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonDblClk	( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonDown		( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonUp			( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonDblClk	( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonDown		( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonUp			( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonDblClk	( UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectKeyDown				( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectKeyUp					( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectMouseMove			( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectLButtonDown		( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectLButtonUp			( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectLButtonDblClk	( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectRButtonDown		( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectRButtonUp			( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectRButtonDblClk	( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectMButtonDown		( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectMButtonUp			( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectMButtonDblClk	( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectKeyDown				( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectKeyUp					( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
 	//
 	//virtual void DrawShootAreas() {}
 public:
@@ -304,8 +304,8 @@ public:
 	virtual CMapInfoEditor* GetMapInfoEditor();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
 

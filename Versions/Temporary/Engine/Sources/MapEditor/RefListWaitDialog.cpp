@@ -14,7 +14,7 @@ CRefListWaitDialog::CRefListWaitDialog( CWnd* pParent )
 	SetControlStyle( IDOK, ANCHORE_BOTTOM | ANCHORE_HOR_CENTER );
 }
 
-void CRefListWaitDialog::OnTimer( UINT nIDEvent ) 
+void CRefListWaitDialog::OnTimer( unsigned nIDEvent ) 
 {
 	if ( !bComplete )
 	{

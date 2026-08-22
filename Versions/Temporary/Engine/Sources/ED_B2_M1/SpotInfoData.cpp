@@ -104,7 +104,7 @@ namespace NMapInfoEditor
 			ClearAdditionalPosition( false );
 			MakeRelativeSpotSquare( true );
 			// Create dummy scene object and grab some sceneID
-			UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+			unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 			SObjectInfo::SSceneElement sceneElement;
 			sceneElement.vPosition = VNULL3;
 			sceneElement.vAdditionalPosition = vAdditionalPosition;
@@ -180,7 +180,7 @@ namespace NMapInfoEditor
 				ClearAdditionalPosition( false );
 				MakeRelativeSpotSquare( true );
 				// Create dummy scene object and grab some sceneID
-				UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+				unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 				SObjectInfo::SSceneElement sceneElement;
 				sceneElement.vPosition = VNULL3;
 				sceneElement.vAdditionalPosition = vAdditionalPosition;
@@ -348,7 +348,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SSpotInfo::UpdateByController( UINT nSpotID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
+	void SSpotInfo::UpdateByController( unsigned nSpotID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
 		const int nSpotIndex = pObjectInfoCollector->spotIDToIndexCollector.Get( nLinkID );
 		if ( ( nSpotIndex != INVALID_NODE_ID ) && ( nFlags > 0 ) )
@@ -379,7 +379,7 @@ namespace NMapInfoEditor
 		ClearAdditionalPosition( false );
 		MakeRelativeSpotSquare( true );
 
-		UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+		unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 		SObjectInfo::SSceneElement sceneElement;
 		sceneElement.vPosition = VNULL3;
 		sceneElement.vAdditionalPosition = vAdditionalPosition;
@@ -421,7 +421,7 @@ namespace NMapInfoEditor
 		{
 			return;
 		}
-		const UINT nOldLinkID = nLinkID;
+		const unsigned nOldLinkID = nLinkID;
 		nLinkID = pObjectInfoCollector->linkIDCollector.LockID();
 		( *pNew2OldLinkIDMap )[nLinkID] = nOldLinkID;
 		( *pOld2NewLinkIDMap )[nOldLinkID] = nLinkID;
@@ -472,7 +472,7 @@ namespace NMapInfoEditor
 				MakeRelativeSpotSquare( true );
 
 				// Create dummy scene object and grab some sceneID
-				UINT nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
+				unsigned nSceneID = pObjectInfoCollector->sceneIDCollector.LockID();
 				SObjectInfo::SSceneElement sceneElement;
 				sceneElement.vPosition = VNULL3;
 				sceneElement.vAdditionalPosition = vAdditionalPosition;

@@ -263,7 +263,7 @@ struct SEnumFilesInDataStorageParameter
 };
 
 
-typedef std::unordered_map<std::string, std::unordered_map<std::string, UINT> > CEnumFolderMap;
+typedef std::unordered_map<std::string, std::unordered_map<std::string, unsigned> > CEnumFolderMap;
 struct SEnumFolderStructureParameter
 {
 	int nIgnoreFolderCount;

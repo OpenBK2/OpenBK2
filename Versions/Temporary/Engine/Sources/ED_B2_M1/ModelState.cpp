@@ -669,17 +669,17 @@ void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 }
 
 
-void CModelState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CModelState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 }
 
 
-void CModelState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CModelState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 }
 
 
-void CModelState::GetEditParameters( UINT nFlags ) // editParameters -> editorSettings
+void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> editorSettings
 {
 	if ( pModelEditor == 0 )
 	{
@@ -966,7 +966,7 @@ void CModelState::GetEditParameters( UINT nFlags ) // editParameters -> editorSe
 }
 
 
-void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editParameters
+void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> editParameters
 {
 	if ( pModelEditor == 0 )
 	{
@@ -1160,7 +1160,7 @@ void CModelState::SetEditParameters( UINT nFlags ) // editorSettings -> editPara
 }
 
 
-bool CModelState::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CModelState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	if ( pModelEditor == 0 )
 	{
@@ -1272,7 +1272,7 @@ bool CModelState::HandleCommand( UINT nCommandID, uint32_t dwData )
 }
 
 
-bool CModelState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CModelState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CModelState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CModelState::UpdateCommand(), pbCheck == 0" );

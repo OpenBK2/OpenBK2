@@ -53,7 +53,7 @@ void CTreeGDBBrowserInputState::Leave()
 }
 
 
-void CTreeGDBBrowserInputState::BeginDrag( UINT nFlags )
+void CTreeGDBBrowserInputState::BeginDrag( unsigned nFlags )
 {
 	if ( NGlobal::GetVar( "enable_drag_and_drop", 0 ) != 1 )
 	{
@@ -76,7 +76,7 @@ void CTreeGDBBrowserInputState::BeginDrag( UINT nFlags )
 }
 
 
-void CTreeGDBBrowserInputState::ContinueDrag( const CTPoint<int> &rMousePoint, UINT nFlags )
+void CTreeGDBBrowserInputState::ContinueDrag( const CTPoint<int> &rMousePoint, unsigned nFlags )
 {
 	CRect clientRect;
 	pTargetWindow->GetClientRect( &clientRect );
@@ -176,7 +176,7 @@ void CTreeGDBBrowserInputState::EndDrag( bool bSuccess )
 }
 
 
-void CTreeGDBBrowserInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CTreeGDBBrowserInputState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pTargetWindow )
 	{
@@ -184,7 +184,7 @@ void CTreeGDBBrowserInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rM
 		{
 			if ( bEnabled )
 			{
-				UINT hitTestFlags = 0;
+				unsigned hitTestFlags = 0;
 				HTREEITEM newTargetItem = pTargetWindow->HitTest( CPoint( rMousePoint.x, rMousePoint.y ), &hitTestFlags );
 				//bool bErrorTarget = true;
 				if ( ( newTargetItem != 0 ) &&
@@ -216,11 +216,11 @@ void CTreeGDBBrowserInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rM
 }
 
 
-void CTreeGDBBrowserInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CTreeGDBBrowserInputState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pTargetWindow )
 	{
-		UINT hitTestFlags = 0;
+		unsigned hitTestFlags = 0;
 		sourceItem = pTargetWindow->HitTest( CPoint( rMousePoint.x, rMousePoint.y ), &hitTestFlags );
 		if ( sourceItem )
 		{
@@ -244,7 +244,7 @@ void CTreeGDBBrowserInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &
 }
 
 
-void CTreeGDBBrowserInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CTreeGDBBrowserInputState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pTargetWindow )
 	{
@@ -256,11 +256,11 @@ void CTreeGDBBrowserInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rM
 }
 
 
-void CTreeGDBBrowserInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CTreeGDBBrowserInputState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pTargetWindow )
 	{
-		UINT hitTestFlags = 0;
+		unsigned hitTestFlags = 0;
 		sourceItem = pTargetWindow->HitTest( CPoint( rMousePoint.x, rMousePoint.y ), &hitTestFlags );
 		if ( sourceItem )
 		{
@@ -274,7 +274,7 @@ void CTreeGDBBrowserInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int>
 }
 
 
-void CTreeGDBBrowserInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
+void CTreeGDBBrowserInputState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pTargetWindow )
 	{
@@ -289,7 +289,7 @@ void CTreeGDBBrowserInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &
 }
 
 
-void CTreeGDBBrowserInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTreeGDBBrowserInputState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pTargetWindow )
 	{
@@ -337,7 +337,7 @@ void CTreeGDBBrowserInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags
 }
 
 
-void CTreeGDBBrowserInputState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
+void CTreeGDBBrowserInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pTargetWindow )
 	{

@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-bool SetGetEditParameters( uint32_t pEditParameters, UINT nCommandHandlerType, int nCmdID )
+bool SetGetEditParameters( uint32_t pEditParameters, unsigned nCommandHandlerType, int nCmdID )
 {
 	NI_ASSERT( pEditParameters != 0, "CObjectState::GetEditParameters(): pEditParameters == 0" );
 	return Singleton<ICommandHandlerContainer>()->HandleCommand( nCommandHandlerType, nCmdID, pEditParameters );

@@ -111,13 +111,13 @@ protected:
 	virtual void Leave();
 	virtual void Draw( CPaintDC *pDC );
 	
-	void OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint ) {}
-	void OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint ) {}
-	void OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint ) {}
-	void OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint ) {}
-	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CMapObjectState
 	bool CanEdit() { return true; }
@@ -128,8 +128,8 @@ protected:
 	CMapInfoEditor* GetMapInfoEditor();
 
 	// ICommandHandler
-	virtual bool HandleCommand( UINT nCommandID, uint32_t dwData );
-	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
+	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:
 	void OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EDlgEvents eEvt );

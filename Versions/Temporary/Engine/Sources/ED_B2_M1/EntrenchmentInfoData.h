@@ -29,7 +29,7 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SEntrenchmentInfo : public SObjectInfo
 	{
-		UINT nEntrenchmentID;
+		unsigned nEntrenchmentID;
 		CSegmentLinkIDListList segmentLinkIDListList;				// LinkID List List (used in advanced clipoard)
 
 		OBJECT_BASIC_METHODS( SEntrenchmentInfo );

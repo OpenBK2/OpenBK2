@@ -140,14 +140,14 @@ void CTimeSliderControl::OnPaint()
 }
 
 
-bool CTimeSliderControl::HandleCommand( UINT nCommandID, uint32_t dwData )
+bool CTimeSliderControl::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	//
 	return false;
 }
 
 
-bool CTimeSliderControl::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
+bool CTimeSliderControl::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CTimeSliderControl::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CTimeSliderControl::UpdateCommand(), pbCheck == 0" );
@@ -156,19 +156,19 @@ bool CTimeSliderControl::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 }
 
 
-void CTimeSliderControl::OnLButtonDown( UINT nFlags, CPoint point )
+void CTimeSliderControl::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	//
 }
 
 
-void CTimeSliderControl::OnLButtonUp( UINT nFlags, CPoint point )
+void CTimeSliderControl::OnLButtonUp( unsigned nFlags, CPoint point )
 {
 	//
 }
 
 
-void CTimeSliderControl::OnMouseMove( UINT nFlags, CPoint point )
+void CTimeSliderControl::OnMouseMove( unsigned nFlags, CPoint point )
 {
 	//
 }
@@ -261,7 +261,7 @@ void CTimeSliderControl::ClearControl()
 }
 
 
-void CTimeSliderControl::OnSize( UINT nType, int cx, int cy )
+void CTimeSliderControl::OnSize( unsigned nType, int cx, int cy )
 {
 	CStatic::OnSize( nType, cx, cy );
 	//
