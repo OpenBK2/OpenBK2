@@ -57,3 +57,5 @@ if(WIN32)
 endif()
 install(TARGETS System DESTINATION bin)
 add_version_info(System)
+
+add_subdirectory(test)
