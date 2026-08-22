@@ -7,7 +7,6 @@ set(SOURCES
     BitStreams.cpp
     CheckSumLog.cpp
     ChunklessSaver.cpp
-    CmdLine.cpp
     CombinerVFS.cpp
     Commands.cpp
     ConsoleBufferInternal.cpp
