@@ -129,8 +129,10 @@ void CConsoleBuffer::DumpLog()
 		{
 			if ( lines[k].bPersistent )
 			{
-				std::string sz = NStr::ToMBCS( lines[k].szText );
-				fprintf( file, sz.c_str() );
+				// the console line is data, not a format: it carries unit names,
+				// file paths and error text, any of which can hold a %
+				const std::string sz = NStr::ToMBCS( lines[k].szText );
+				fprintf( file, "%s", sz.c_str() );
 			}
 		}
 		fclose( file );
