@@ -6,7 +6,11 @@
 // CMappedStream, so this header does not stand on its own without it
 #include "Streams.h"
 
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+
 #include <cstdint>
+#include <string>
 
 enum EStreamAccess
 {
@@ -14,28 +18,45 @@ enum EStreamAccess
 	STREAM_ACCESS_READ_WRITE
 };
 
+// A file that can be mapped, identified by name rather than by an open handle.
+//
+// Holding a handle open would be the obvious thing, and the Win32 version did,
+// resizing through it with SetEndOfFile. That is not available here: growing
+// the file is a separate step now, and resizing a file by name fails on Windows
+// while anything else holds it open. So the name is the handle, and the
+// invariant that used to be "no mapping object exists" is kept explicitly.
 class SYSTEM_EXPORT CMMFile
 {
-	HANDLE hFile, hMapping;
-
-	CMMFile( const CMMFile& ) { ASSERT(0); }
-	void operator=( const CMMFile& ) { ASSERT(0); }
+	boost::interprocess::file_mapping mapping;
+	std::string szFileName;
+	int nFileSize = 0;
+	bool bValid = false;
+	bool bMapped = false;
 public:
-	CMMFile() : hFile(INVALID_HANDLE_VALUE), hMapping(0) {}
+	CMMFile( const CMMFile& ) = delete;
+	void operator=( const CMMFile& ) = delete;
+
+	CMMFile() = default;
 	CMMFile( const char *pszName, EStreamAccess access );
-	~CMMFile();
+	~CMMFile() = default;
+
 	int GetFileSize();
 	void SetFileSize( int nSize );
 	void MapFile( int nSize, bool bCanWrite );
 	void UnmapFile();
-	HANDLE GetMapping() const { return hMapping; }
-	HANDLE GetFile() const { return hFile; }
-	bool IsOk() const { return hFile != INVALID_HANDLE_VALUE; }
+
+	boost::interprocess::file_mapping& GetMapping() { return mapping; }
+	//! Whether MapFile last succeeded. A fragment reads the file directly when
+	//! this is false, which is how archives were read before mapping them.
+	bool IsMapped() const { return bMapped; }
+	bool IsOk() const { return bValid; }
+	const std::string& GetFileName() const { return szFileName; }
 };
 
 class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 {
 	CMMFile file;
+	boost::interprocess::mapped_region region;
 
 	int GetFileSize() { return file.GetFileSize(); }
 	void SetFileSize( int nSize )
@@ -45,33 +66,13 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 			return;
 		file.SetFileSize( nSize );
 	}
-	void *MapFile( int nSize )
-	{
-		file.MapFile( nSize, CanWrite() );
-		uint32_t dwVFlags = 0;
-		if ( CanWrite() )
-			dwVFlags = FILE_MAP_ALL_ACCESS;
-		else
-			dwVFlags = FILE_MAP_READ;
-		return MapViewOfFile( file.GetMapping(), dwVFlags, 0, 0, 0 );
-	}
-	void UnmapFile( void *p )
-	{
-		if ( p )
-		{
-			bool bTest = UnmapViewOfFile( p );
-			ASSERT( bTest );
-		}
-		file.UnmapFile();
-	}
-	void FlushFile( void *p )
-	{
-		bool bTest = FlushViewOfFile( p, 0 );
-		ASSERT( bTest );
-	}
-	CMemoryMappedFile( const CMemoryMappedFile& );
-	void operator=( const CMemoryMappedFile& );
+	void *MapFile( int nSize );
+	void UnmapFile( void *p );
+	void FlushFile( void *p );
 public:
+	CMemoryMappedFile( const CMemoryMappedFile& ) = delete;
+	void operator=( const CMemoryMappedFile& ) = delete;
+
 	CMemoryMappedFile( const char *pszName, EStreamAccess access = STREAM_ACCESS_READ_WRITE ) : file( pszName, access )
 	{
 		if ( !file.IsOk() )
@@ -87,10 +88,19 @@ public:
 	~CMemoryMappedFile() { FinishAccess(); }
 };
 
+// A window onto part of a file. The offset is arbitrary while a mapping can
+// only start at a multiple of the allocation granularity; mapped_region keeps
+// that difference itself and hands back an address inside the region, so there
+// is no alignment arithmetic here.
 class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 {
 	CMMFile *pFile;
 	int nOffset, nSize;
+
+	boost::interprocess::mapped_region region;
+	//! Set when the file is not mapped and the window was read into memory
+	//! instead, in which case the buffer is owned rather than borrowed.
+	unsigned char *pOwnedBuffer = nullptr;
 
 	virtual int GetFileSize() { return nSize; }
 	virtual void SetFileSize( int nSize ) { ASSERT(0); }

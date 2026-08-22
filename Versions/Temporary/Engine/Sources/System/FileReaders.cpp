@@ -1,137 +1,233 @@
 #include "stdafx.h"
 #include "FileReaders.h"
-#include "Misc/Win32Helper.h"
+
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 #include <cstdint>
-#include <mutex>
+#include <filesystem>
+#include <fstream>
+#include <system_error>
+
+namespace
+{
+	namespace bip = boost::interprocess;
+
+	//! The mapping constructors report failure by throwing; every caller here
+	//! wants a broken stream instead, which is what the layer above expects
+	//! from a file it cannot open.
+	template < class T, class TMake >
+	bool TryMake( T *pDest, TMake makeIt )
+	{
+		try
+		{
+			*pDest = makeIt();
+			return true;
+		}
+		catch ( const bip::interprocess_exception & )
+		{
+			*pDest = T();
+			return false;
+		}
+	}
+}
+
+// CMMFile
+
+CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : szFileName( pszName )
+{
+	const std::filesystem::path path( szFileName );
+	std::error_code ec;
+
+	if ( access == STREAM_ACCESS_READ_WRITE )
+	{
+		// CreateFile( OPEN_ALWAYS ) created the file when it was missing and
+		// left it alone when it was not. Opening with std::ios::app rather
+		// than the default does the same: the default truncates, which would
+		// discard the contents of every file the VFS opens for writing.
+		if ( !std::filesystem::exists( path, ec ) )
+		{
+			std::ofstream create( path, std::ios::binary | std::ios::app );
+			if ( !create )
+			{
+				return;
+			}
+		}
+		// The Win32 version stamped the last-access and last-write times with
+		// the current time on opening, so opening a save or profile counted as
+		// touching it whether or not anything was written. Only the write time
+		// can be set portably; the access time is dropped.
+		std::filesystem::last_write_time( path, std::filesystem::file_time_type::clock::now(), ec );
+		ec.clear();
+	}
+
+	const std::uintmax_t nSize = std::filesystem::file_size( path, ec );
+	if ( ec )
+	{
+		return;
+	}
+	nFileSize = static_cast< int >( nSize );
+	bValid = true;
+}
 
 int CMMFile::GetFileSize()
 {
-	return ::GetFileSize( hFile, 0 );
+	std::error_code ec;
+	const std::uintmax_t nSize = std::filesystem::file_size( std::filesystem::path( szFileName ), ec );
+	nFileSize = ec ? 0 : static_cast< int >( nSize );
+	return nFileSize;
 }
 
 void CMMFile::SetFileSize( int nSize )
 {
-	ASSERT( hMapping == 0 );
-	SetFilePointer( hFile, nSize, 0, FILE_BEGIN );
-	SetEndOfFile( hFile );
+	// Resizing by name fails on Windows while a mapping object holds the file
+	// open, so this has to happen between UnmapFile and the next MapFile.
+	// CMappedStream::ReleaseBuf already unmaps first; the assert catches any
+	// other caller that does not.
+	ASSERT( !bMapped );
+	if ( nSize < 0 )
+	{
+		return;
+	}
+	std::error_code ec;
+	std::filesystem::resize_file( std::filesystem::path( szFileName ), static_cast< std::uintmax_t >( nSize ), ec );
+	if ( !ec )
+	{
+		nFileSize = nSize;
+	}
 }
 
 void CMMFile::MapFile( int nSize, bool bCanWrite )
 {
-	uint32_t dwFFlags = 0;
-	if ( bCanWrite )
-		dwFFlags = PAGE_READWRITE;
-	else
-		dwFFlags = PAGE_READONLY;
-	hMapping = CreateFileMapping( hFile, 0, dwFFlags|SEC_COMMIT, 0, nSize, 0 );
+	bMapped = false;
+	if ( !bValid || nSize <= 0 )
+	{
+		return;
+	}
+	if ( bCanWrite && nSize > GetFileSize() )
+	{
+		// CreateFileMapping extended the file to the requested size on its own.
+		// Nothing here does, and a mapping covers only what the file already
+		// holds, so growth is now an explicit step that has to come first.
+		SetFileSize( nSize );
+		if ( nFileSize < nSize )
+		{
+			return;
+		}
+	}
+	bMapped = TryMake( &mapping, [&]
+	{
+		return bip::file_mapping( szFileName.c_str(), bCanWrite ? bip::read_write : bip::read_only );
+	} );
 }
 
 void CMMFile::UnmapFile()
 {
-	if ( hMapping != 0 )
-	{
-		CloseHandle( hMapping );
-		hMapping = 0;
-	}
+	mapping = bip::file_mapping();
+	bMapped = false;
 }
 
-CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : hFile(INVALID_HANDLE_VALUE), hMapping(0)
+// CMemoryMappedFile
+
+void *CMemoryMappedFile::MapFile( int nSize )
 {
-	if ( access == STREAM_ACCESS_READ_WRITE )
+	file.MapFile( nSize, CanWrite() );
+	if ( !file.IsMapped() )
 	{
-		hFile = ::CreateFile( pszName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0 );
-		FILETIME createTime, lastAccessTime, lastWriteTime;
-		if ( hFile != INVALID_HANDLE_VALUE && GetFileTime( hFile, &createTime, &lastAccessTime, &lastWriteTime ) )
-		{
-			FILETIME currentTime;
-			GetSystemTimeAsFileTime( &currentTime );
-			SetFileTime( hFile, &createTime, &currentTime, &currentTime );
-		}
+		return 0;
 	}
-	else
-		hFile = ::CreateFile( pszName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+	const bool bMade = TryMake( &region, [&]
+	{
+		return bip::mapped_region( file.GetMapping(), CanWrite() ? bip::read_write : bip::read_only,
+		                           0, static_cast< std::size_t >( nSize ) );
+	} );
+	if ( !bMade )
+	{
+		file.UnmapFile();
+		return 0;
+	}
+	return region.get_address();
 }
 
-CMMFile::~CMMFile()
+void CMemoryMappedFile::UnmapFile( void *p )
 {
-	ASSERT( hMapping == 0 );
-	if ( hFile != INVALID_HANDLE_VALUE )
-		CloseHandle( hFile );
+	// The region has to go before the mapping it was taken from, and both have
+	// to go before the file can be resized.
+	region = bip::mapped_region();
+	file.UnmapFile();
+}
+
+void CMemoryMappedFile::FlushFile( void *p )
+{
+	if ( region.get_address() == 0 )
+	{
+		return;
+	}
+	const bool bTest = region.flush();
+	ASSERT( bTest );
 }
 
 // CMemoryMappedFileFragment
 
-static int GetAllocGranularity()
-{
-	static int nAllocGranularity;
-	static int nCalced;
-	if ( !nCalced )
-	{
-		SYSTEM_INFO sysInfo;
-		GetSystemInfo( &sysInfo );
-		nAllocGranularity = sysInfo.dwAllocationGranularity;
-		nCalced = 1;
-	}
-	return nAllocGranularity;
-}
-
 void *CMemoryMappedFileFragment::MapFile( int nSize )
 {
-	if ( nSize == 0 )
+	if ( nSize <= 0 )
+	{
 		return 0;
-	HANDLE hMapping = pFile->GetMapping();
-	if ( hMapping )
-	{
-		int nAllocGranularity = GetAllocGranularity();
-		int nBaseOffset = nOffset & ~( nAllocGranularity - 1 );
-		int nShift = nOffset - nBaseOffset;
-		unsigned char *p = (unsigned char*) MapViewOfFile( pFile->GetMapping(), FILE_MAP_READ, 0, nBaseOffset, nSize + nShift );
-		return p + nShift;
 	}
-	else
+	if ( pFile->IsMapped() )
 	{
-		static std::mutex directRead;
-		std::lock_guard dr( directRead );
-		ASSERT( !CanWrite() );
-		char *pszBuf = new char[ nSize ];
-		HANDLE hFile = pFile->GetFile();
-		SetFilePointer( hFile, nOffset, 0, FILE_BEGIN );
-		unsigned long dwRes;
-		bool bRead = ReadFile( hFile, pszBuf, nSize, &dwRes, 0 );
-		ASSERT( bRead && dwRes == nSize );
-		return pszBuf;
+		// nOffset is arbitrary and a view can only start at a multiple of the
+		// allocation granularity. mapped_region rounds down itself and offsets
+		// the address it returns, which is the arithmetic this used to do by
+		// hand with dwAllocationGranularity.
+		const bool bMade = TryMake( &region, [&]
+		{
+			return bip::mapped_region( pFile->GetMapping(), bip::read_only, nOffset,
+			                           static_cast< std::size_t >( nSize ) );
+		} );
+		return bMade ? region.get_address() : 0;
 	}
+
+	// The file is not mapped, so read the window out of it instead. The Win32
+	// version seeked a shared handle under a lock; opening a stream per call
+	// carries its own position and needs no lock.
+	ASSERT( !CanWrite() );
+	std::ifstream f( std::filesystem::path( pFile->GetFileName() ), std::ios::binary );
+	if ( !f.seekg( nOffset ) )
+	{
+		return 0;
+	}
+	pOwnedBuffer = new unsigned char[ nSize ];
+	if ( !f.read( reinterpret_cast< char * >( pOwnedBuffer ), nSize ) )
+	{
+		ASSERT( 0 );
+		delete[] pOwnedBuffer;
+		pOwnedBuffer = 0;
+		return 0;
+	}
+	return pOwnedBuffer;
 }
 
 void CMemoryMappedFileFragment::UnmapFile( void *p )
 {
-	if ( p == 0 )
+	if ( pOwnedBuffer )
+	{
+		delete[] pOwnedBuffer;
+		pOwnedBuffer = 0;
 		return;
-	HANDLE hMapping = pFile->GetMapping();
-	if ( hMapping )
-	{
-		int nAllocGranularity = GetAllocGranularity();
-		int nShift = nOffset & ( nAllocGranularity - 1 );
-		void *pAligned = (void*)( ((intptr_t)p) - nShift );
-		bool bTest = UnmapViewOfFile( pAligned );
-		ASSERT( bTest );
 	}
-	else
-	{
-		delete[] (char*)p;
-	}
+	region = bip::mapped_region();
 }
 
 void CMemoryMappedFileFragment::FlushFile( void *p )
 {
-	HANDLE hMapping = pFile->GetMapping();
-	if ( hMapping )
+	// A fragment is read-only, so there is never anything to flush; reaching
+	// here means someone opened one for writing.
+	ASSERT( pFile->IsMapped() );
+	if ( region.get_address() != 0 )
 	{
-		bool bTest = FlushViewOfFile( p, 0 );
+		const bool bTest = region.flush();
 		ASSERT( bTest );
 	}
-	else
-		ASSERT(0);
 }
-

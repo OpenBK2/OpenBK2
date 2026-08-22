@@ -19,12 +19,8 @@
 #include <system_error>
 #include <vector>
 
+// Streams.h uses ASSERT and std::string without including either
 #include "Misc/Asserts.h"
-// FileReaders.h still calls MapViewOfFile and friends from its inline methods,
-// so it needs the Windows headers in scope. Replacing that with a portable
-// mapping API is what removes this include.
-#include <windows.h>
-
 #include "System/FileReaders.h"
 
 #include <gtest/gtest.h>
@@ -191,4 +187,70 @@ TEST( MappedFragment, MissingFileIsNotOk )
 
 	CMMFile file( path.string().c_str(), STREAM_ACCESS_READ );
 	EXPECT_FALSE( file.IsOk() );
+}
+
+// A fragment of a file that was never mapped reads straight out of the file.
+// CZipFile takes that path only on the Windows 9x family, so nothing running
+// today exercises it and a mistake in it would go unnoticed until the version
+// check that guards it is removed.
+TEST( MappedFragment, UnmappedFileIsReadDirectly )
+{
+	const auto path = TempFile( "unmapped.bin" );
+	const size_t nFileSize = 128u * 1024u;
+	MakeFile( path, nFileSize );
+
+	CMMFile file( path.string().c_str(), STREAM_ACCESS_READ );
+	ASSERT_TRUE( file.IsOk() );
+	ASSERT_FALSE( file.IsMapped() ) << "the file was mapped without being asked to";
+
+	const size_t offsets[] = { 0, 1, 4097, 65536, 70000, nFileSize - 1 };
+	for ( const size_t nOffset : offsets )
+	{
+		const size_t nWanted = ( std::min )( size_t( 4096 ), nFileSize - nOffset );
+		SCOPED_TRACE( "offset " + std::to_string( nOffset ) );
+
+		CMemoryMappedFileFragment frag( &file, static_cast<int>( nOffset ),
+		                                static_cast<int>( nWanted ) );
+		ASSERT_TRUE( frag.IsOk() );
+		ASSERT_EQ( static_cast<size_t>( frag.GetSize() ), nWanted );
+
+		const unsigned char *p = frag.GetBuffer();
+		ASSERT_NE( p, nullptr );
+		for ( size_t i = 0; i < nWanted; ++i )
+		{
+			ASSERT_EQ( p[i], ByteAt( nOffset + i ) ) << "byte " << i;
+		}
+	}
+}
+
+// Mapping and then unmapping puts the file back into the state the direct-read
+// path expects, rather than leaving a stale mapping behind that later windows
+// would keep using.
+TEST( MappedFragment, UnmapFileReturnsToDirectReads )
+{
+	const auto path = TempFile( "remap.bin" );
+	const size_t nFileSize = 64u * 1024u;
+	MakeFile( path, nFileSize );
+
+	CMMFile file( path.string().c_str(), STREAM_ACCESS_READ );
+	ASSERT_TRUE( file.IsOk() );
+
+	file.MapFile( static_cast<int>( nFileSize ), false );
+	ASSERT_TRUE( file.IsMapped() );
+	{
+		CMemoryMappedFileFragment frag( &file, 1000, 256 );
+		ASSERT_TRUE( frag.IsOk() );
+		ASSERT_EQ( frag.GetBuffer()[0], ByteAt( 1000 ) );
+	}
+
+	file.UnmapFile();
+	EXPECT_FALSE( file.IsMapped() );
+	{
+		CMemoryMappedFileFragment frag( &file, 1000, 256 );
+		ASSERT_TRUE( frag.IsOk() );
+		for ( size_t i = 0; i < 256; ++i )
+		{
+			ASSERT_EQ( frag.GetBuffer()[i], ByteAt( 1000 + i ) ) << "byte " << i;
+		}
+	}
 }
