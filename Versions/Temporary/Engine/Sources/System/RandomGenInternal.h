@@ -2,17 +2,19 @@
 
 #include "RandomGen.h"
 
+#include <cstdint>
+
 const int RANDSIZL = 8;
 const int RANDSIZ = 1 << RANDSIZL;
 
 struct SRandData
 {
-	unsigned _int32 randcnt;
-	unsigned _int32 randrsl[RANDSIZ];
-	unsigned _int32 randmem[RANDSIZ];
-	unsigned _int32 randa;
-	unsigned _int32 randb;
-	unsigned _int32 randc;
+	uint32_t randcnt;
+	uint32_t randrsl[RANDSIZ];
+	uint32_t randmem[RANDSIZ];
+	uint32_t randa;
+	uint32_t randb;
+	uint32_t randc;
 };
 
 class CRandomGenSeed : public IRandomSeed

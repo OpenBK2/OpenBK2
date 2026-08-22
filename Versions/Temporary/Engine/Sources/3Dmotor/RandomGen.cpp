@@ -59,7 +59,7 @@ CRandomGenerator random;
 
 const LPCSTR PSZ_MASK_TO_FIND_FILES = "C:\\*.*";
 
-#define ind(mm,x)  (*(unsigned int *)(( unsigned _int8 *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
+#define ind(mm,x)  (*(unsigned int *)(( uint8_t *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
 
 #define rngstep(mix,a,b,mm,m,m2,r,x) \
 { \
