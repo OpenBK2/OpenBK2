@@ -1,5 +1,11 @@
 #pragma once
 
+#include "System_export.h"
+
+// CMemoryMappedFile and CMemoryMappedFileFragment derive from
+// CMappedStream, so this header does not stand on its own without it
+#include "Streams.h"
+
 #include <cstdint>
 
 enum EStreamAccess
@@ -8,7 +14,7 @@ enum EStreamAccess
 	STREAM_ACCESS_READ_WRITE
 };
 
-class CMMFile
+class SYSTEM_EXPORT CMMFile
 {
 	HANDLE hFile, hMapping;
 
@@ -27,7 +33,7 @@ public:
 	bool IsOk() const { return hFile != INVALID_HANDLE_VALUE; }
 };
 
-class CMemoryMappedFile : public CMappedStream
+class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 {
 	CMMFile file;
 
@@ -81,7 +87,7 @@ public:
 	~CMemoryMappedFile() { FinishAccess(); }
 };
 
-class CMemoryMappedFileFragment : public CMappedStream
+class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 {
 	CMMFile *pFile;
 	int nOffset, nSize;
