@@ -36,6 +36,7 @@ include(cmake/sdl.cmake)
 include(cmake/sdl_mixer.cmake)
 
 include(cmake/googletest.cmake)
+include(cmake/unittest.cmake)
 include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
 include(cmake/mimalloc.cmake)
