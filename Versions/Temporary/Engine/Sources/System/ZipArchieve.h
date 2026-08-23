@@ -45,6 +45,12 @@ public:
 	//
 	void GetFileName( int nIndex, std::string *pString ) const;
 	int GetFileLen( int nIndex ) const;
+	// The external attributes word is host-system dependent, and for the DOS and
+	// Windows hosts its low byte holds MS-DOS attribute bits, where 0x10 marks a
+	// directory. Win32 inherited that same value as FILE_ATTRIBUTE_DIRECTORY, but
+	// this is a field read out of the archive rather than a question for the
+	// operating system, so it is named here instead of taken from a Windows header.
+	enum { DOS_ATTR_DIRECTORY = 0x10 };
 	uint32_t GetFileAttribs( int nIndex ) const;
 	uint32_t GetModDateTime( int nIndex ) const;	// high word - date, low word - time
 

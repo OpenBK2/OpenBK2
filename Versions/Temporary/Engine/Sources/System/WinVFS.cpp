@@ -162,7 +162,7 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 		for ( int i = 0; i < zip.GetNumFiles(); ++i )
 		{
 			// check for non-directory
-			if ( zip.GetFileAttribs( i ) & FILE_ATTRIBUTE_DIRECTORY ) 
+			if ( zip.GetFileAttribs( i ) & CZipFile::DOS_ATTR_DIRECTORY )
 				continue;
 			// check for non-zero file length
 			if ( zip.GetFileLen( i ) <= 0 )
