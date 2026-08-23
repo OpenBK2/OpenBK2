@@ -2,12 +2,25 @@
 
 #include <cstdint>
 
+// The BGR colours here were spelled COLORREF, which is Windows' name for a DWORD
+// holding 0x00BBGGRR. uint32_t says the same width and the same lack of sign, and
+// says it without a Windows header; the ARGB half of this file already used it.
+
 template<class TColor>
-COLORREF GetBGRColorFromARGBColor( TColor nColor ){ return RGB( 0xFF & ( ( nColor & 0xFF0000 ) >> 16 ), 0xFF & ( ( nColor & 0xFF00 ) >> 8 ), nColor & 0xFF ); }
+uint32_t GetBGRColorFromARGBColor( TColor nColor )
+{
+	// RGB() packed red | green << 8 | blue << 16, the same 0x00BBGGRR order that
+	// MakeBGRColor below writes out; it is spelled here rather than taken from a
+	// Windows header, since none of this needs one otherwise.
+	const uint32_t nRed = 0xFF & ( ( nColor & 0xFF0000 ) >> 16 );
+	const uint32_t nGreen = 0xFF & ( ( nColor & 0xFF00 ) >> 8 );
+	const uint32_t nBlue = nColor & 0xFF;
+	return nRed | ( nGreen << 8 ) | ( nBlue << 16 );
+}
 
 
 template<class TColor>
-void UpdateARGBColorFromBGRColor( COLORREF color, TColor *pColor )
+void UpdateARGBColorFromBGRColor( uint32_t color, TColor *pColor )
 {
 	if ( pColor )
 	{
@@ -17,14 +30,14 @@ void UpdateARGBColorFromBGRColor( COLORREF color, TColor *pColor )
 
 
 template<class TColor>
-void MakeBGRColor( COLORREF *pnColor, TColor nRed, TColor nGreen, TColor nBlue )
+void MakeBGRColor( uint32_t *pnColor, TColor nRed, TColor nGreen, TColor nBlue )
 { 
 	( *pnColor ) = ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) + 
 								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
 								 ( ( nRed & 0xFF ) & 0x000000FF );
 }
 template<class TColor>
-COLORREF MakeBGRColor( TColor nRed, TColor nGreen, TColor nBlue )
+uint32_t MakeBGRColor( TColor nRed, TColor nGreen, TColor nBlue )
 { 
 	return ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) + 
 				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
@@ -43,7 +56,7 @@ inline uint32_t GetARGBColorFromVec4( const CVec4 &vColor )
 }
 
 
-inline COLORREF GetBGRFromVec4( const CVec4 &vColor )
+inline uint32_t GetBGRFromVec4( const CVec4 &vColor )
 {
 	return (
 		( ( int( vColor.b * 255 ) << 16 ) & 0x00FF0000 ) +
@@ -132,9 +145,9 @@ template<class TColor>
 uint32_t GetBlueFromARGBColor( TColor nColor ) { return ( nColor & 0x000000FF ); }
 
 
-inline uint32_t GetRedFromBGRColor( COLORREF color ) { return ( color & 0x0000FF ); }
-inline uint32_t GetGreenFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0x00FF00 ) >> 8 ) ); }
-inline uint32_t GetBlueFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0xFF0000 ) >> 16 ) ); }
+inline uint32_t GetRedFromBGRColor( uint32_t color ) { return ( color & 0x0000FF ); }
+inline uint32_t GetGreenFromBGRColor( uint32_t color ) { return ( 0xFF & ( ( color & 0x00FF00 ) >> 8 ) ); }
+inline uint32_t GetBlueFromBGRColor( uint32_t color ) { return ( 0xFF & ( ( color & 0xFF0000 ) >> 16 ) ); }
 
 
 template<class TColor>
