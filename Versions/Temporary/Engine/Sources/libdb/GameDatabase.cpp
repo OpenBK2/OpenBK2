@@ -232,7 +232,7 @@ bool CGameDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 {
 	if ( DoesObjectExist(dbid) == false )
-		return false;
+		return nullptr;
 	else
 	{
 		CElementsMap::iterator posElement = elementsMap.find( dbid );

@@ -463,10 +463,10 @@ void SetPartLM( CObjectBase *_p, CPtrFuncBase<NGfx::CTexture> *pLM )//CFuncBase<
 CObjectBase *GetPartGeometry( CObjectBase *_pA )
 {
 	if ( !_pA )
-		return false;
+		return nullptr;
 	CDynamicCast<IPart> pA(_pA);
 	if ( !pA )
-		return false;
+		return nullptr;
 	return pA->GetObjectInfoNode();
 }
 }

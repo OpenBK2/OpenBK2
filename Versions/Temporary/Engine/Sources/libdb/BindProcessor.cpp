@@ -216,10 +216,10 @@ CBindArray *SBindProcessor::GetBindArray( const std::string &szName )
 	NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 	// TODO{ add here ptr processing
 	if ( pos == pMetaInfo->fields.end() )
-		return false;
+		return nullptr;
 	// TODO}
 	if ( pos->second.GetType() != NTypeDef::TYPE_TYPE_ARRAY )
-		return false;
+		return nullptr;
 	UValue &value = ownValues[ pos->second.GetOwnValueIndex() ];
 	return value.pArray;
 }

@@ -202,7 +202,7 @@ IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string 
 	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::CreateManipulatorFromReference(): GetManipulatorFromRef == 0" );
 	if ( pSourceManipulator == 0 )
 	{
-		return false;
+		return nullptr;
 	}
 	string szRefObjectTypeName;
 	string szRefObjectName;
