@@ -23,8 +23,6 @@
 namespace NFile
 {
 
-const uint32_t BUFFER_SIZE = 1024;
-static char buffer[BUFFER_SIZE];
 
 // ************************************************************************************************************************ //
 // **
@@ -298,16 +296,21 @@ void GetFullName( std::string *pResult, const std::string &szPath )
 
 std::string GetTempPath()
 {
-	int nLength = ::GetTempPath( BUFFER_SIZE, buffer );
-	if ( nLength == 0 )
-		return ".\\";
-	else if ( buffer[nLength - 1] != '\\' )
+	std::error_code ec;
+	std::filesystem::path temp = std::filesystem::temp_directory_path( ec );
+	if ( ec )
 	{
-		buffer[nLength] = '\\';
-		++nLength;
+		// the working directory, as before, when there is no temp directory to find
+		temp = ".";
 	}
-	buffer[nLength] = 0;
-	return buffer;
+	std::string szRes = temp.make_preferred().string();
+	// Callers append a file name straight onto this, so the separator belongs
+	// here. temp_directory_path is not specified to include one.
+	if ( szRes.empty() || !IsFolderSeparator( szRes[szRes.size() - 1] ) )
+	{
+		szRes += char( std::filesystem::path::preferred_separator );
+	}
+	return szRes;
 }
 std::string GetTempFileName()
 {
