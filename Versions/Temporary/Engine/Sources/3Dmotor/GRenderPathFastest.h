@@ -18,7 +18,7 @@ struct SParticleLMRenderTargetInfo;
 class CDirectionalLight;
 struct SRTClearParams;
 class CTransparentRenderer;
-enum ETransparentMode;
+enum ETransparentMode : int;
 
 void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, 
 	IRender *pRender, CSceneFragments &scene, const SParticleLMRenderTargetInfo &particleLM,

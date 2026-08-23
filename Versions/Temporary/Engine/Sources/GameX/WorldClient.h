@@ -21,7 +21,7 @@ struct IMissionSuperWeapon;
 
 typedef	det_map< NDb::EUserAction, std::string, SEnumHash > CEventsMap;
 
-enum EActionMode
+enum EActionMode : int
 {
 	EAM_SELECT,
 	EAM_REINF,

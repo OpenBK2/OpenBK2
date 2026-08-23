@@ -11,7 +11,7 @@ struct IXmlSaver;
 namespace NDb
 {
 
-	enum EUserAction
+	enum EUserAction : int
 	{
 		USER_ACTION_UNKNOWN = 0,
 		USER_ACTION_MOVE = 1,
@@ -114,7 +114,7 @@ namespace NDb
 		USER_ACTION_USE_FLAMETHROWER = 98,
 	};
 
-	enum ESpecialAbilityParam
+	enum ESpecialAbilityParam : int
 	{
 		PARAM_ABILITY_ON = 0,
 		PARAM_ABILITY_OFF = 1,

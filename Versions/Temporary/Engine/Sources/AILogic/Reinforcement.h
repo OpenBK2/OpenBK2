@@ -3,9 +3,9 @@
 namespace NDb
 {
 	struct SAIGameConsts;
-	enum EDBUnitRPGType;
-	enum EReinforcementType;
-	enum EUnitRPGType;
+	enum EDBUnitRPGType : int;
+	enum EReinforcementType : int;
+	enum EUnitRPGType : int;
 }
 
 namespace NReinforcement

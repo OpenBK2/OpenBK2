@@ -9,7 +9,7 @@ namespace NDb
 	struct SHPObjectRPGStats;
 	struct SAnimB2;
 	struct SModel;
-	enum ESeason;
+	enum ESeason : int;
 	struct SVisObj;
 }
 class CUserActions;

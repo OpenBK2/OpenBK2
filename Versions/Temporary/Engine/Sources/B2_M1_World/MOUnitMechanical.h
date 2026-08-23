@@ -12,7 +12,7 @@ namespace NAnimation
 }
 namespace NDb
 {
-	enum EAnimationType;
+	enum EAnimationType : int;
 }
 
 class CMOUnitMechanical : public CMOUnit

@@ -10,14 +10,14 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum ENotificationType;
+	enum ENotificationType : int;
 	struct SComplexSoundDesc;
 	struct STexture;
 	struct SNotification;
-	enum ENotificationEventType;
-	enum EMinimapFigureType;
+	enum ENotificationEventType : int;
+	enum EMinimapFigureType : int;
 
-	enum ENotificationType
+	enum ENotificationType : int
 	{
 		NTF_OBJECTIVE_RECEIVED = 0,
 		NTF_OBJECTIVE_COMPLETED = 1,
@@ -39,7 +39,7 @@ namespace NDb
 		NTF_COUNT = 17,
 	};
 
-	enum EMinimapFigureType
+	enum EMinimapFigureType : int
 	{
 		MFT_TRIANGLE = 0,
 		MFT_SQUARE = 1,
@@ -82,7 +82,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
-	enum ENotificationEventType
+	enum ENotificationEventType : int
 	{
 		NEVT_OBJECTIVE_COMPLETED = 0,
 		NEVT_OBJECTIVE_RECEIVED = 1,

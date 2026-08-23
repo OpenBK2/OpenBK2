@@ -10,7 +10,7 @@ namespace NDb
 	struct SAIGameConsts;
 	struct SMapInfo;
 	struct SMapPlayerInfo;
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 };
 struct ICollisionsCollector;
 

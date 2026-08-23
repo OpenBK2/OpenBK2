@@ -9,12 +9,12 @@ struct IXmlSaver;
 namespace NDb
 {
 	struct SHeightRange;
-	enum EPlanesAttitude;
+	enum EPlanesAttitude : int;
 	struct SDirectionRange;
 	struct SDistanceRange;
-	enum EManuverDestination;
+	enum EManuverDestination : int;
 	struct SSpeedRange;
-	enum EManuverID;
+	enum EManuverID : int;
 
 	enum ESpeedRelation
 	{
@@ -25,19 +25,19 @@ namespace NDb
 		_ESR_COUNT = 4,
 	};
 
-	enum EPlanesAttitude
+	enum EPlanesAttitude : int
 	{
 		EPA_ATTACK = 0,
 		EPA_RETREAT = 1,
 	};
 
-	enum EManuverDestination
+	enum EManuverDestination : int
 	{
 		EMD_PREDICTED_POINT = 0,
 		EMD_MANUVER_DEPENDENT = 1,
 	};
 
-	enum EManuverID
+	enum EManuverID : int
 	{
 		DB_EMID_GENERIC = 0,
 		DB_EMID_STEEP_CLIMB = 1,

@@ -21,11 +21,11 @@ namespace NAnimation
 	struct ISkeletonAnimator;
 }
 
-enum EScene;
-enum ESceneMarkerType;
-enum ESceneMode;
-enum ESceneObjAnimMode;
-enum ESceneShow;
+enum EScene : int;
+enum ESceneMarkerType : int;
+enum ESceneMode : int;
+enum ESceneObjAnimMode : int;
+enum ESceneShow : int;
 struct ITerraManager;
 
 struct IEditorScene : public CObjectBase

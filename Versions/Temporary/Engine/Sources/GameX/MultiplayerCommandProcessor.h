@@ -3,7 +3,7 @@
 
 #include "Misc/HashFuncs.h"
 
-enum EMPUIMessageType;
+enum EMPUIMessageType : int;
 struct SMPUIMessage;
 
 #define REGISTER_MPUI_MESSAGE_HANDLER( msgType, msgClass, proc ) \

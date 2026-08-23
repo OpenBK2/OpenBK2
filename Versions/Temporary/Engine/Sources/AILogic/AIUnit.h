@@ -16,13 +16,13 @@ struct ICollisionsCollector;
 
 namespace NDb
 {
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 	struct SUnitStatsModifier;
 	struct SAmphibianStats;
-	enum EUnitSpecialAbility;
+	enum EUnitSpecialAbility : int;
 	struct SUnitBaseRPGStats;
 };
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 
 class CAIUnit: public CCommonUnit
 {

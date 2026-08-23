@@ -7,8 +7,8 @@
 
 namespace NDb
 {
-	enum EAckClass;
-	enum EAckPosition;
+	enum EAckClass : int;
+	enum EAckPosition : int;
 	struct SAckParameter;
 	struct SClientGameConsts;
 	struct SComplexSoundDesc;

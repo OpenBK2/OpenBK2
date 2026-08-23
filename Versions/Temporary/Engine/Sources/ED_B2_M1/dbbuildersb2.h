@@ -12,10 +12,10 @@ namespace NDb
 	struct SObjectRPGStats;
 	struct SVisObj;
 	struct SBuildingRPGStats;
-	enum ESeason;
-	enum EDayNight;
+	enum ESeason : int;
+	enum EDayNight : int;
 	struct SInfantryRPGStats;
-	enum EBuildingType;
+	enum EBuildingType : int;
 	struct SPartyDependentInfo;
 	struct SMechUnitRPGStats;
 }

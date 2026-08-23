@@ -8,7 +8,7 @@ struct IXmlSaver;
 namespace NDb
 {
 
-	enum EAnimationType
+	enum EAnimationType : int
 	{
 		ANIMATION_UNKNOWN = 0,
 		ANIMATION_IDLE = 1,

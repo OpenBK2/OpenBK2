@@ -11,7 +11,7 @@ class CLightmapsHolder;
 class CLightmapsLoader;
 class CLightmapsTempHolder;
 
-enum ELightmapQuality;
+enum ELightmapQuality : int;
 CLightmapsTempHolder *CreateLightmapsTempHolder();
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder );
 CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, int nUserID, 

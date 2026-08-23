@@ -16,7 +16,7 @@ class CMilitaryCar;
 class CAITransportUnit;
 namespace NDb
 {
-	enum EMineType;
+	enum EMineType : int;
 }
 
 class CTransportStatesFactory : public IStatesFactory

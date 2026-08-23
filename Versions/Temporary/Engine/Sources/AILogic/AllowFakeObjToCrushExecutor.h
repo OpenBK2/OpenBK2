@@ -3,7 +3,7 @@
 #include "Executor.h"
 
 class CFakeCorpseStaticObject;
-enum EStaticObjType;
+enum EStaticObjType : int;
 
 class CAllowFakeObjToCrushExecutor : public CExecutor
 {

@@ -13,7 +13,7 @@ enum EUnitRPGClass
 	RPG_CLASS_SNIPER					= 3,
 	RPG_CLASS_FORCE_DWORD	= 0x7fffffff
 };
-enum EUnitRPGType
+enum EUnitRPGType : int
 {
 	// main types
 	RPG_TYPE_INFANTRY						= 0x00010000,

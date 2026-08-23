@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	enum ESelectionType;
+	enum ESelectionType : int;
 };
 
 class CTerrainManager;

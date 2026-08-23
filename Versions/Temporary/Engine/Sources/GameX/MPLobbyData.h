@@ -2,7 +2,7 @@
 #include "InterfaceMPBase.h"
 #include "UI/UIComponents.h"
 
-enum EMPChatStatus;
+enum EMPChatStatus : int;
 
 class CClientListData : public CObjectBase
 {

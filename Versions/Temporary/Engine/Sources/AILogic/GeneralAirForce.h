@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 }
 
 class CAIUnit;

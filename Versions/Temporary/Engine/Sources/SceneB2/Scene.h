@@ -20,7 +20,7 @@ namespace NDb
 	struct SMaterial;
 	struct SSceneConsts;
 	struct SWeatherDesc;
-	enum ESelectionType;
+	enum ESelectionType : int;
 };
 namespace NGScene
 {
@@ -39,7 +39,7 @@ namespace NAIVisInfo
 	class CDebugCircle;
 	class CDebugMarker;
 
-	enum EColor;
+	enum EColor : int;
 };
 
 struct IVisObj;

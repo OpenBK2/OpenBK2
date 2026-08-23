@@ -224,7 +224,7 @@ CPtrFuncBase<CParticleEffect> *GetParticleAnimator( CObjectBase *p );
 class CLightmapsHolder;
 class CLightmapsLoader;
 class CLightmapsTempHolder; 
-enum ELightmapQuality;
+enum ELightmapQuality : int;
 CLightmapsTempHolder *CreateLightmapsTempHolder();
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder );
 CLightmapsHolder *CalcLightmaps( IGScene *pScene, CObjectBase *pUser, int nUserID, const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder );

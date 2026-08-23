@@ -16,7 +16,7 @@ namespace NDb
 	struct SStaticObjectRPGStats;
 }
 
-enum EStaticObjType 
+enum EStaticObjType : int 
 { 
 	ESOT_COMMON, 
 	ESOT_BUILDING, 

@@ -18,7 +18,7 @@
 // если в команде выставлен старший бит 0x8000, то это self-action
 
 // значения должны быть не больше, чем 65535!
-enum EActionCommand
+enum EActionCommand : int
 {
 	ACTION_COMMAND_MOVE_TO									= 0,		// move to location
 	ACTION_COMMAND_ATTACK_UNIT							= 1,		// attack unit

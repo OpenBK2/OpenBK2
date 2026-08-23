@@ -1,6 +1,6 @@
 #pragma once
 
-enum ESceneObjAnimMode
+enum ESceneObjAnimMode : int
 {
 	OBJ_ANIM_MODE_DEFAULT,
 	OBJ_ANIM_MODE_FORCE_NON_ANIMATED,

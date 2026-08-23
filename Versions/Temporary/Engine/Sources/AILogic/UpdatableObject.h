@@ -12,7 +12,7 @@ namespace NDb
 	struct SHPObjectRPGStats;
 }
 
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 class CUpdatableObj : public CAIObjectBase
 {
 	ZDATA

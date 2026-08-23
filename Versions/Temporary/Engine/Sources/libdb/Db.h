@@ -12,7 +12,7 @@ namespace NVFS
 namespace NDb
 {
 
-enum EDatabaseMode
+enum EDatabaseMode : int
 {
 	DATABASE_MODE_EDITOR = 1,
 	DATABASE_MODE_GAME = 2,

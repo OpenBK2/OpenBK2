@@ -20,11 +20,11 @@ class CArtillery;
 class CSoldier;
 class CFormation;
 class CEntrenchmentPart;
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 namespace NDb
 {
-	enum EUnitSpecialAbility;
-	enum EMineType;
+	enum EUnitSpecialAbility : int;
+	enum EMineType : int;
 }
 
 struct IEngineerFormationState : public IUnitState

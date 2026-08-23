@@ -11,14 +11,14 @@ struct IXmlSaver;
 namespace NDb
 {
 	struct SReinforcement;
-	enum EHistoricalSide;
+	enum EHistoricalSide : int;
 	struct SPartyDependentInfo;
 	struct STexture;
 	struct SAIExpLevel;
 	struct SBackground;
 	struct SMedal;
 
-	enum EHistoricalSide
+	enum EHistoricalSide : int
 	{
 		HS_ALLIES = 0,
 		HS_AXIS = 1,

@@ -8,8 +8,8 @@ struct IUnitState;
 namespace NDb
 {
 	struct SUnitSpecialAblityDesc;
-	enum EUnitSpecialAbility;
-	enum EUnitAckType;
+	enum EUnitSpecialAbility : int;
+	enum EUnitAckType : int;
 }
 
 class CQueueUnit

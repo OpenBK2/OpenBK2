@@ -15,10 +15,10 @@ namespace NDb
 	struct SEntrenchmentRPGStats;
 	struct SSquadRPGStats;
 	struct SUnitStatsModifier;
-	enum EReinforcementType;
-	enum EDesignUnitType;
+	enum EReinforcementType : int;
+	enum EDesignUnitType : int;
 	struct SObjectBaseRPGStats;
-	enum EDBUnitRPGType;
+	enum EDBUnitRPGType : int;
 	struct SMineRPGStats;
 	struct SAIExpLevel;
 	struct SInfantryRPGStats;

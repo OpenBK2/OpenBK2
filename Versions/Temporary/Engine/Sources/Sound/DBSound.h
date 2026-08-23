@@ -9,9 +9,9 @@ struct IXmlSaver;
 namespace NDb
 {
 	struct SSoundDesc;
-	enum ESoundType;
+	enum ESoundType : int;
 
-	enum ESoundType
+	enum ESoundType : int
 	{
 		NORMAL = 0,
 		PEACEFULL = 1,

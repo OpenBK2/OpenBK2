@@ -8,9 +8,9 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EM1UnitBaseType;
+	enum EM1UnitBaseType : int;
 
-	enum EM1UnitBaseType
+	enum EM1UnitBaseType : int
 	{
 		M1_MECH = 0,
 		M1_SOLDIER = 1,

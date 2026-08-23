@@ -34,7 +34,7 @@ namespace NDb
 	struct SMaterial;
 	struct SUIDesc;
 	struct SWindowShared;
-	enum EButtonSubstateType;
+	enum EButtonSubstateType : int;
 	struct SUIStateSequence;
 	struct SText;
 	struct STexture;

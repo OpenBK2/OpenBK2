@@ -11,10 +11,10 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EImageScaleMethod;
-	enum EMinimapLayerType;
+	enum EImageScaleMethod : int;
+	enum EMinimapLayerType : int;
 
-	enum EMinimapLayerType
+	enum EMinimapLayerType : int
 	{
 		LAYER_UNKNOWN = 0,
 		LAYER_BRIDGE = 1,
@@ -30,7 +30,7 @@ namespace NDb
 		LAYER_TERRAIN = 11,
 	};
 
-	enum EImageScaleMethod
+	enum EImageScaleMethod : int
 	{
 		IMAGE_SCALE_METHOD_DEFAULT = 0,
 		IMAGE_SCALE_METHOD_FILTER = 1,

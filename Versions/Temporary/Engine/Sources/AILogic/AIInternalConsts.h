@@ -8,7 +8,7 @@
 
 namespace NDb
 {
-	enum EDesignUnitType;
+	enum EDesignUnitType : int;
 	struct SUnitTypePriority;
 }
 struct SConsts : public SAIConsts

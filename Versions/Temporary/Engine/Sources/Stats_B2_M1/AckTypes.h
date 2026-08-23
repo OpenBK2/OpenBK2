@@ -8,10 +8,10 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EUnitAckType;
+	enum EUnitAckType : int;
 	struct SComplexSoundDesc;
 
-	enum EUnitAckType
+	enum EUnitAckType : int
 	{
 		ACK_NONE = 0,
 		ACK_BORED_ATTACK = 1,
@@ -85,7 +85,7 @@ namespace NDb
 		ACK_CANNOT_UNLOAD = 69,
 	};
 
-	enum EAckClass
+	enum EAckClass : int
 	{
 		ACKT_POSITIVE = 0,
 		ACKT_NEGATIVE = 1,
@@ -94,7 +94,7 @@ namespace NDb
 		ACKT_BORED = 4,
 	};
 
-	enum EAckPosition
+	enum EAckPosition : int
 	{
 		ACK_POS_UNIT = 0,
 		ACK_POS_INTERFACE = 1,

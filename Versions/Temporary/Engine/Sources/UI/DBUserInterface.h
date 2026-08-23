@@ -13,13 +13,13 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EPositionAllign;
+	enum EPositionAllign : int;
 	struct SUIStateBase;
 	struct SUIStateBaseShared;
 	struct SForegroundTextString;
 	struct SWindowMSButton;
 
-	enum EPositionAllign
+	enum EPositionAllign : int
 	{
 		EPA_LOW_END = 0,
 		ERA_CENTER = 1,
@@ -296,7 +296,7 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const { return 0; }
 	};
-	enum EPositionAllign;
+	enum EPositionAllign : int;
 
 	struct UI_EXPORT SBackgroundSimpleTexture : public SBackground
 	{
@@ -1292,9 +1292,9 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const { return 0; }
 	};
-	enum ETextEntryType;
+	enum ETextEntryType : int;
 
-	enum ETextEntryType
+	enum ETextEntryType : int
 	{
 		ETET_ALL = 0,
 		ETET_NUMERIC = 1,
@@ -1831,11 +1831,11 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const { return 0; }
 	};
-	enum EButtonSubstateType;
+	enum EButtonSubstateType : int;
 	struct STextFormat;
-	enum EButtonChangeStateType;
+	enum EButtonChangeStateType : int;
 
-	enum EButtonSubstateType
+	enum EButtonSubstateType : int
 	{
 		BST_NORMAL = 0,
 		BST_MOUSE_OVER = 1,
@@ -1844,7 +1844,7 @@ namespace NDb
 		BST_RIGHT_DOWN = 4,
 	};
 
-	enum EButtonChangeStateType
+	enum EButtonChangeStateType : int
 	{
 		BCST_ON_PUSH = 0,
 		BCST_ON_RELEASE = 1,
@@ -2064,7 +2064,7 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const { return 0; }
 	};
-	enum EButtonSubstateType;
+	enum EButtonSubstateType : int;
 
 	struct SUISButtonSubstate : public SUIStateBase
 	{

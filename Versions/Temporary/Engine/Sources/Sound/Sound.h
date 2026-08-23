@@ -6,7 +6,7 @@
 class CSubstSound;
 namespace NDb
 {
-	enum ESoundType;
+	enum ESoundType : int;
 };
 
 //звук

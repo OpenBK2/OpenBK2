@@ -12,8 +12,8 @@
 namespace NDb
 {
 	struct SComplexSoundDesc;
-	enum EUnitAckType;
-	enum EReinforcementType;
+	enum EUnitAckType : int;
+	enum EReinforcementType : int;
 };
 // optimisation (singleton cache)
 typedef class CConstructorInfo * PCConstructorInfo;
@@ -88,7 +88,7 @@ inline float GetPositiveRandom( float fAverage, int nRandom )
 namespace NDb
 {
 	struct SUnitSpecialAblityDesc;
-	enum EUnitSpecialAbility;
+	enum EUnitSpecialAbility : int;
 	struct SAIGameConsts;
 	struct SAckSetRPGStats;
 };

@@ -14,7 +14,7 @@ enum ESceneRenderMode
 	SRM_SHOWPOLYCOUNT,
 	SRM_LAST
 };
-enum ERenderPath
+enum ERenderPath : int
 {
 	RP_TNL,
 //	RP_FASTEST,
@@ -41,7 +41,7 @@ enum EHSRMode
 	HSR_DYNAMIC,
 	HSR_LAST
 };
-enum ETransparentMode
+enum ETransparentMode : int
 {
 	TRM_NONE,
 	TRM_NORMAL,
@@ -71,7 +71,7 @@ enum EAlphaMode2D
 	AM2D_NORMAL,
 	AM2D_PREMUL,
 };
-enum ELightmapQuality
+enum ELightmapQuality : int
 {
 	LM_QUALITY_DRAFT,
 	LM_QUALITY_RADIOSITY,

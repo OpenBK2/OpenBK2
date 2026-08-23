@@ -3,10 +3,10 @@
 namespace NDb
 {
 	struct SUnitStatsModifier;
-	enum EDBUnitRPGType;
+	enum EDBUnitRPGType : int;
 	struct SReinforcement;
 	struct SPartyDependentInfo;
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 	struct SObjectBaseRPGStats;
 }
 

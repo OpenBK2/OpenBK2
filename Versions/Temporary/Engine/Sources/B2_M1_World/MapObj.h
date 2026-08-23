@@ -38,7 +38,7 @@ struct SAIBasicUpdate;
 namespace NDb
 {
 	struct SHPObjectRPGStats;
-	enum EUnitAckType;
+	enum EUnitAckType : int;
 	struct SAnimB2;
 	struct SUnitSpecialAblityDesc;
 }

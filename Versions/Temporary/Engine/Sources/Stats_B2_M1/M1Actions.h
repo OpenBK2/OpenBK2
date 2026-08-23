@@ -11,7 +11,7 @@ struct IXmlSaver;
 namespace NDb
 {
 
-	enum EM1Action
+	enum EM1Action : int
 	{
 		M1_ACTION_UNKNOWN = 0,
 		M1_ACTION_MOVE = 1,

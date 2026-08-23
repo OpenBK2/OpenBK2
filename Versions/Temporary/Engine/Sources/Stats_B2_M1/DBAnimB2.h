@@ -11,7 +11,7 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EAnimationType;
+	enum EAnimationType : int;
 
 	struct SAnimAABB
 	{

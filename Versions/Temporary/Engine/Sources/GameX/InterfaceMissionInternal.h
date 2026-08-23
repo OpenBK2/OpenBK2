@@ -14,11 +14,11 @@ struct SObjectStatus;
 class CMissionReinf;
 struct IScenarioTracker;
 class CMissionSuperWeapon;
-enum EActionMode;
+enum EActionMode : int;
 
 namespace NDb
 {
-	enum EActionButtonPanel;
+	enum EActionButtonPanel : int;
 	struct SUIConstsB2;
 	struct SMapInfo;
 	struct SWeaponRPGStats;

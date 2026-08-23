@@ -15,7 +15,7 @@
 namespace NDb
 {
 	struct SMechUnitRPGStats;
-	enum EManuverID;
+	enum EManuverID : int;
 }
 class CPlanePreferences 
 {

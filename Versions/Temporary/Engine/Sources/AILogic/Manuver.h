@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	enum EManuverDestination;
+	enum EManuverDestination : int;
 }
 // IManuver will return member data in this struct
 struct SFormationMemberInfo

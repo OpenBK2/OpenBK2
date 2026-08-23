@@ -11,6 +11,6 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EEntrenchSegmType;
+	enum EEntrenchSegmType : int;
 }
 

@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-	enum EPlanesAttitude;
+	enum EPlanesAttitude : int;
 	struct SManuverDescriptor;
 };
 

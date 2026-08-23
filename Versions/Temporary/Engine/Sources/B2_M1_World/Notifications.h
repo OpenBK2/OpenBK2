@@ -9,7 +9,7 @@ namespace NTimer
 
 namespace NDb
 {
-	enum ENotificationEventType;
+	enum ENotificationEventType : int;
 }
 class CMapObj;
 

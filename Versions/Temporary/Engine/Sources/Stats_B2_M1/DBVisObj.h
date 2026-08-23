@@ -12,7 +12,7 @@ struct IXmlSaver;
 namespace NDb
 {
 	struct SModel;
-	enum ESeason;
+	enum ESeason : int;
 
 	struct SVisObj : public CResource
 	{

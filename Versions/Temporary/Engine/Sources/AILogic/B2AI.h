@@ -19,7 +19,7 @@ struct SShootAreas;
 
 struct ICheckSumLog;
 struct IProgressHook;
-enum EActionCommand;
+enum EActionCommand : int;
 
 struct IAILogic : public ICommonB2M1AI
 {

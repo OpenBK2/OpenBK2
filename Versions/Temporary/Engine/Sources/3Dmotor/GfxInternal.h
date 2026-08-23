@@ -12,8 +12,8 @@ namespace NGfx
 	class CGeometry;
 	class CTexture;
 	class CCubeTexture;
-	enum EFace;
-	enum EWrap;
+	enum EFace : int;
+	enum EWrap : int;
 	extern NWin32Helper::com_ptr<IDirect3D9> pD3D;
 	extern NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 	extern bool bNoTexture;

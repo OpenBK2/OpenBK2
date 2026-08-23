@@ -14,7 +14,7 @@ struct IScriptWrapper;
 class Script;
 struct SRegFunction;
 struct IGlobeScriptHandler;
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 
 struct IEnumerator
 {

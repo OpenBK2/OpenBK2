@@ -12,7 +12,7 @@ class CGroupSmoothPath;
 class CSoldier;
 class CMineStaticObject;
 class CAITransportUnit;
-enum EActionCommand;
+enum EActionCommand : int;
 struct ICollisionsCollector;
 namespace NDb
 {

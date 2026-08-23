@@ -8,7 +8,7 @@ namespace NAnimation
 }
 namespace NDb
 {
-	enum EAnimationType;
+	enum EAnimationType : int;
 	struct SMechUnitRPGStats;
 	struct SM1UnitHelicopter;
 }

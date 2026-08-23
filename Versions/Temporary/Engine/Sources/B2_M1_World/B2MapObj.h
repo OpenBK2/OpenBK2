@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-	enum EUnitAckType;
+	enum EUnitAckType : int;
 	struct SHPObjectRPGStats;
 }
 

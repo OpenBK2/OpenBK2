@@ -77,7 +77,7 @@ class CBaseParticlesGeometry;
 class CShaderParticlesGeometry;
 class CTnLParticlesGeometry;
 class CParticlesTriList;
-enum ERenderPath;
+enum ERenderPath : int;
 struct SLightInfo;
 struct SRenderPathContext;
 struct STransparentRenderContext

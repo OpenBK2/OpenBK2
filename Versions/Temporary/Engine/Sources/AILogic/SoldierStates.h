@@ -10,11 +10,11 @@ class CEntrenchment;
 class CMineStaticObject;
 class CMilitaryCar;
 class CFormation;
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 namespace NDb
 {
 	struct SInfantryRPGStats;
-	enum EMineType;
+	enum EMineType : int;
 }
 
 class CSoldierStatesFactory : public IStatesFactory

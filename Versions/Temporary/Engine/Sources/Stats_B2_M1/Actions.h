@@ -8,7 +8,7 @@ namespace NDb
 {
 	struct SWeaponRPGStats;
 	struct SHPObjectRPGStats;
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 }
 
 // ************************************************************************************************************************ //

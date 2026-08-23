@@ -19,7 +19,7 @@ struct IXmlSaver;
 namespace NDb
 {
 
-	enum EMPGameType
+	enum EMPGameType : int
 	{
 		MP_GT_STANDARD = 0,
 		MP_GT_COUNT = 1,
@@ -43,26 +43,26 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 	struct SDBConstructorProfile;
-	enum ESeason;
+	enum ESeason : int;
 	struct SMissionBonus;
 	struct SMaterial;
 	struct SComplexEffect;
-	enum EParcelType;
-	enum EReinforcementType;
+	enum EParcelType : int;
+	enum EReinforcementType : int;
 	struct SReinforcement;
 	struct SObjectBaseRPGStats;
-	enum EDayNight;
+	enum EDayNight : int;
 	struct SMapMusic;
 	struct SDeployTemplate;
-	enum EDBUnitRPGType;
+	enum EDBUnitRPGType : int;
 	struct SHPObjectRPGStats;
-	enum EScriptAreaTypes;
+	enum EScriptAreaTypes : int;
 	struct SMissionObjective;
 	struct SPartyDependentInfo;
 	struct STexture;
 	struct SPlayerRank;
 	struct SVisObj;
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 	struct SMapInfo;
 	struct SReinforcement;
 	struct SMissionBonus;
@@ -363,7 +363,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EScriptAreaTypes
+	enum EScriptAreaTypes : int
 	{
 		EAT_RECTANGLE = 0,
 		EAT_CIRCLE = 1,
@@ -487,7 +487,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EParcelType
+	enum EParcelType : int
 	{
 		EPATCH_UNKNOWN = 0,
 		EPATCH_DEFENCE = 1,

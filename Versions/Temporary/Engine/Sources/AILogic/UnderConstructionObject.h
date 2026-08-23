@@ -4,7 +4,7 @@ class CLongObjectCreation;
 class CGivenPassabilityStObject;
 struct SAIObjectsUnderConstructionUpdate;
 class CAILogic;
-enum EActionCommand;
+enum EActionCommand : int;
 
 // stores objects under construction (that player is being ordered to build)
 // untill played issues command to actually build this object

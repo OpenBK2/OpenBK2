@@ -13,7 +13,7 @@ class CSceneFragments;
 struct SParticleLMRenderTargetInfo;
 class CDirectionalLight;
 class CTransparentRenderer;
-enum ETransparentMode;
+enum ETransparentMode : int;
 
 void RenderTnL( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, 
 	IRender *pRender, CSceneFragments &scene, CTransparentRenderer *pTransp, ETransparentMode trMode, NGfx::CCubeTexture *_pSky );

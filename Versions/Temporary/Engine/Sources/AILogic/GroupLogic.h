@@ -10,7 +10,7 @@
 class CCommonUnit;
 class CAIUnit;
 struct ICollisionsCollector;
-enum EActionNotify;
+enum EActionNotify : unsigned int;
 
 class CFreeGroupIDs
 {

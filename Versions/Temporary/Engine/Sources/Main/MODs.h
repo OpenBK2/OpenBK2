@@ -10,7 +10,7 @@
 struct IXmlSaver;
 namespace NDb
 {
-	enum EDatabaseMode;
+	enum EDatabaseMode : int;
 }
 namespace NMOD
 {

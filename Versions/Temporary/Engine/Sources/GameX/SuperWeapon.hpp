@@ -6,7 +6,7 @@
 
 namespace NDb
 {
-	enum ESeason;
+	enum ESeason : int;
 }
 class CWorldClient;
 

@@ -144,7 +144,7 @@ struct S3DTriangle;
 class CPixelShader;
 class CVertexShader;
 
-enum EFace;
+enum EFace : int;
 
 class IQuery : public CObjectBase
 {

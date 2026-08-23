@@ -13,7 +13,7 @@ namespace NGScene
 namespace NGfx
 {
 class CTexture;
-enum ETextureUsage;
+enum ETextureUsage : int;
 }
 namespace NDb
 {

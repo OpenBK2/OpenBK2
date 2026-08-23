@@ -17,9 +17,9 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum ESpecialAbilityParam;
-	enum EUserAction;
-	enum EM1Action;
+	enum ESpecialAbilityParam : int;
+	enum EUserAction : int;
+	enum EM1Action : int;
 
 	struct SARSetSpecialAbility : public SUIDesc
 	{
@@ -68,17 +68,17 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const { return 0; }
 	};
-	enum EReinforcementType;
-	enum ESeason;
-	enum EActionButtonPanel;
-	enum EUserAction;
+	enum EReinforcementType : int;
+	enum ESeason : int;
+	enum EActionButtonPanel : int;
+	enum EUserAction : int;
 	struct STexture;
-	enum EM1Action;
+	enum EM1Action : int;
 	struct SWindowMSButton;
-	enum EMPGameType;
+	enum EMPGameType : int;
 	struct SActionButtonInfo;
 
-	enum EActionButtonPanel
+	enum EActionButtonPanel : int
 	{
 		ACTION_BTN_PANEL_DEFAULT = 0,
 		ACTION_BTN_PANEL_ESC = 1,

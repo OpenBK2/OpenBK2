@@ -2,7 +2,7 @@
 #pragma once
 namespace NDb
 {
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 }
 
 class CStatistics

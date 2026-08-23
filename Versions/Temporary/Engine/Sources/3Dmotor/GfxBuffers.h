@@ -10,7 +10,7 @@ struct IDirect3DSurface9;
 
 namespace NGfx
 {
-	enum ETextureUsage
+	enum ETextureUsage : int
 	{
 		REGULAR,
 		TARGET,
@@ -26,7 +26,7 @@ namespace NGfx
 		INPLACE,
 		INPLACE_READONLY
 	};
-	enum EFace
+	enum EFace : int
 	{
 		POSITIVE_X,
 		POSITIVE_Y,
@@ -35,7 +35,7 @@ namespace NGfx
 		NEGATIVE_Y,
 		NEGATIVE_Z
 	};
-	enum EWrap
+	enum EWrap : int
 	{
 		CLAMP = 0,
 		WRAP_X = 1,

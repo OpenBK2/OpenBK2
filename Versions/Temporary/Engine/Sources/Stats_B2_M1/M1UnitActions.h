@@ -13,7 +13,7 @@ struct IXmlSaver;
 namespace NDb
 {
 	struct SM1UnitStatsModifier;
-	enum EM1Action;
+	enum EM1Action : int;
 	struct SM1UnitSpecAction;
 
 	struct SM1UnitSpecAction : public CResource

@@ -9,7 +9,7 @@ namespace NDb
 	struct SReinforcementPosition;
 	struct SReinforcement;
 	struct SReinforcementEntry;
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 }
 
 namespace NAI4Globe

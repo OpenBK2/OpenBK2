@@ -2,14 +2,14 @@
 
 #include "System/Dg.h"
 
-enum ESceneMode
+enum ESceneMode : int
 {
 	SCENE_MODE_CONFIG,
 	SCENE_MODE_FULLSCREEN,
 	SCENE_MODE_WINDOWED,
 };
 
-enum EScene
+enum EScene : int
 {
 	SCENE_MISSION = 0,
 	SCENE_2D,							// loading screens etc.
@@ -22,7 +22,7 @@ enum
 	OBJECT_ID_FORGET		= 0,
 };
 
-enum ESceneShow
+enum ESceneShow : int
 {
 	SCENE_SHOW_BBOXES,
 	SCENE_SHOW_GRID,
@@ -39,7 +39,7 @@ enum ESceneShow
 	SCENE_SHOW_PASS_MARKERS
 };
 
-enum ESceneMarkerType
+enum ESceneMarkerType : int
 {
 	ESMT_SHOOT_AREA,
 	ESMT_LINE,

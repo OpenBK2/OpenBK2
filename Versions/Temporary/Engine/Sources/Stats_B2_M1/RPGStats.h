@@ -25,18 +25,18 @@ struct IXmlSaver;
 
 namespace NDb
 {
-	enum EUnitSpecialAbility;
-	enum EUnitSpecialAbilityGroup;
+	enum EUnitSpecialAbility : int;
+	enum EUnitSpecialAbilityGroup : int;
 	struct SUnitStatsModifier;
 	struct SWeaponRPGStats;
-	enum EObjectVisType;
-	enum EObjGameType;
-	enum ESeason;
+	enum EObjectVisType : int;
+	enum EObjGameType : int;
+	enum ESeason : int;
 	struct SComplexSoundDesc;
 	struct SEffect;
 	struct SIconsSet;
 	struct SComplexEffect;
-	enum ESelectionType;
+	enum ESelectionType : int;
 	struct SBurningFuel;
 	struct SModel;
 	struct SVisObj;
@@ -46,29 +46,29 @@ namespace NDb
 	struct SCraterSet;
 	struct SAttachedModelVisObj;
 	struct SDynamicDebrisSet;
-	enum EDesignBuildingType;
-	enum EBuildingType;
+	enum EDesignBuildingType : int;
+	enum EBuildingType : int;
 	struct SArmorPattern;
-	enum EUnitPoliticalSide;
+	enum EUnitPoliticalSide : int;
 	struct SUnitSpecialAblityDesc;
-	enum EDBUnitRPGType;
+	enum EDBUnitRPGType : int;
 	struct SArmorPatternPlacement;
 	struct SM1UnitType;
 	struct SM1UnitActions;
 	struct SAnimBase;
 	struct SM1UnitSpecific;
-	enum EEncyclopediaFilterUnitType;
+	enum EEncyclopediaFilterUnitType : int;
 	struct SAckSetRPGStats;
 	struct SUnitActions;
-	enum EDesignUnitType;
+	enum EDesignUnitType : int;
 	struct SComplexSeasonedEffect;
-	enum EReinforcementType;
-	enum EUserAction;
+	enum EReinforcementType : int;
+	enum EUserAction : int;
 	struct SPartyDependentInfo;
 	struct SMechUnitRPGStats;
 	struct SInfantryRPGStats;
 
-	enum EUnitSpecialAbility
+	enum EUnitSpecialAbility : int
 	{
 		ABILITY_NOT_ABILITY = 0,
 		ABILITY_PLACE_CHARGE = 1,
@@ -136,7 +136,7 @@ namespace NDb
 		_ABILITY_COUNT = 63,
 	};
 
-	enum EUnitSpecialAbilityGroup
+	enum EUnitSpecialAbilityGroup : int
 	{
 		ABILITY_GROUP_NOGROUP = 0,
 		ABILITY_GROUP_CAMOFLAGE = 1,
@@ -205,7 +205,7 @@ namespace NDb
 		RPG_BOTTOM = 5,
 	};
 
-	enum EObjGameType
+	enum EObjGameType : int
 	{
 		SGVOGT_UNKNOWN = 0,
 		SGVOGT_UNIT = 1,
@@ -229,7 +229,7 @@ namespace NDb
 		SGVOGT_FLORA = 19,
 	};
 
-	enum EObjectVisType
+	enum EObjectVisType : int
 	{
 		SGVOT_MESH = 0,
 		SGVOT_SPRITE = 1,
@@ -346,7 +346,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
-	enum ESelectionType
+	enum ESelectionType : int
 	{
 		SELECTION_TYPE_GROUND = 0,
 		SELECTION_TYPE_WATER = 1,
@@ -1127,7 +1127,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EBuildingType
+	enum EBuildingType : int
 	{
 		TYPE_BULDING = 0,
 		TYPE_MAIN_RU_STORAGE = 1,
@@ -1135,7 +1135,7 @@ namespace NDb
 		TYPE_DOT = 3,
 	};
 
-	enum EDesignBuildingType
+	enum EDesignBuildingType : int
 	{
 		BUILDING_TYPE_UNKNOWN = 0,
 		Small = 1,
@@ -1594,7 +1594,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EEntrenchSegmType
+	enum EEntrenchSegmType : int
 	{
 		EST_LINE = 0,
 		EST_FIREPLACE = 1,
@@ -1789,7 +1789,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EMineType
+	enum EMineType : int
 	{
 		MT_INFANTRY = 0,
 		MT_TECHNICS = 1,
@@ -1905,7 +1905,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EDBUnitRPGType
+	enum EDBUnitRPGType : int
 	{
 		DB_RPG_TYPE_SOLDIER = 0,
 		DB_RPG_TYPE_ENGINEER = 1,
@@ -1948,7 +1948,7 @@ namespace NDb
 		DB_RPG_TYPE_COUNT = 38,
 	};
 
-	enum EUnitPoliticalSide
+	enum EUnitPoliticalSide : int
 	{
 		POLITICAL_SIDE_UNKNOWN = 0,
 		POLITICAL_SIDE_ALLIES = 1,
@@ -1958,7 +1958,7 @@ namespace NDb
 		POLITICAL_SIDE_USA = 5,
 	};
 
-	enum EEncyclopediaFilterUnitType
+	enum EEncyclopediaFilterUnitType : int
 	{
 		EFUT_UNKNOWN = 0,
 		EFUT_ARTILLERY = 1,
@@ -2226,7 +2226,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EDesignUnitType
+	enum EDesignUnitType : int
 	{
 		UNIT_TYPE_UNKNOWN = 0,
 		Heavy_Anti_Aircraft_Gun = 1,
@@ -2800,7 +2800,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EReinforcementType
+	enum EReinforcementType : int
 	{
 		RT_MAIN_INFANTRY = 0,
 		RT_ASSAULT_INFANTRY = 1,

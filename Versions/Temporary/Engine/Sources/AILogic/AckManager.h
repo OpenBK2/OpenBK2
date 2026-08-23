@@ -6,7 +6,7 @@
 class CAIUnit;
 namespace NDb
 {
-	enum EUnitAckType;
+	enum EUnitAckType : int;
 }
 
 class CAckManager

@@ -12,10 +12,10 @@ namespace NDb
 	struct SMapInfo;
 	struct SAmbientLight;
 	struct SPreLight;
-	enum ESeason;
+	enum ESeason : int;
 	struct STGTerraSet;
 	struct SWater;
-	enum EDayNight;
+	enum EDayNight : int;
 	struct SSkeleton;
 	struct SMinimap;
 }

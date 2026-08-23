@@ -11,7 +11,7 @@ namespace NDebugInfo
 		OBJECT_ID_FORGET		= 0,
 	};
 
-	enum EColor
+	enum EColor : int
 	{
 		BLACK,
 		BLUE,

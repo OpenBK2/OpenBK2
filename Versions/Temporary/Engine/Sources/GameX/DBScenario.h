@@ -155,14 +155,14 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const;
 	};
-	enum EReinforcementType;
+	enum EReinforcementType : int;
 	struct SMapInfo;
-	enum EMissionEnableType;
-	enum EDBUnitRPGType;
+	enum EMissionEnableType : int;
+	enum EDBUnitRPGType : int;
 	struct SChapterBonus;
 	struct STexture;
 	struct SReinforcement;
-	enum EChapterBonusType;
+	enum EChapterBonusType : int;
 
 	struct SUnitClassEntry
 	{
@@ -201,7 +201,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EMissionEnableType
+	enum EMissionEnableType : int
 	{
 		MET_REGULAR = 0,
 		MET_CHAPTER_START = 1,
@@ -330,7 +330,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EChapterBonusType
+	enum EChapterBonusType : int
 	{
 		CBT_REINF_DISABLE = 0,
 		CBT_REINF_CHANGE = 1,

@@ -10,7 +10,7 @@ namespace NDb
 	struct SMapInfo;
 }
 
-enum EMPUIMessageType
+enum EMPUIMessageType : int
 {
 	EMUI_UNKNOWN,
 
@@ -356,7 +356,7 @@ public:
 	SMPUIChatChannelNicksMessage(): SMPUIMessage ( EMUI_CHAT_NICKS ) {} // serialization only
 };
 
-enum EMPChatStatus { EMPS_ONLINE,	EMPS_OFFLINE,	EMPS_BUSY };
+enum EMPChatStatus : int { EMPS_ONLINE,	EMPS_OFFLINE,	EMPS_BUSY };
 
 struct SMPUIChatChannelNicksChangeMessage : public SMPUIMessage
 {

@@ -6,7 +6,7 @@
 
 namespace NDb
 {
-	enum EUnitAckType;
+	enum EUnitAckType : int;
 	struct SComplexSoundDesc;
 	struct SClientGameConsts;
 };

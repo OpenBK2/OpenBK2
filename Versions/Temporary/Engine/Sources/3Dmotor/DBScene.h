@@ -21,7 +21,7 @@ namespace NDb
 	struct SSkeleton;
 	struct SAIGeometry;
 	struct SAmbientLight;
-	enum EConvertionType;
+	enum EConvertionType : int;
 	struct SDistanceFog;
 	struct SModel;
 	struct SParticleInstance;
@@ -54,7 +54,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
-	enum EConvertionType
+	enum EConvertionType : int
 	{
 		CONVERT_ORDINARY = 0,
 		CONVERT_BUMP = 1,

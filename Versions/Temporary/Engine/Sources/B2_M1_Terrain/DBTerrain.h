@@ -22,7 +22,7 @@ namespace NDb
 	struct SLightInstance;
 	struct STGTerraSet;
 	struct SPreLight;
-	enum EWeatherType;
+	enum EWeatherType : int;
 	struct SComplexSoundDesc;
 	struct SWater;
 
@@ -100,7 +100,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EWeatherType
+	enum EWeatherType : int
 	{
 		WEATHER_RAIN = 0,
 		WEATHER_SNOW = 1,

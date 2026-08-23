@@ -11,7 +11,7 @@ struct IXmlSaver;
 namespace NDb
 {
 
-	enum ESeason
+	enum ESeason : int
 	{
 		SEASON_WINTER = 0,
 		SEASON_SPRING = 1,
@@ -21,7 +21,7 @@ namespace NDb
 		SEASON_ASIA = 5,
 	};
 
-	enum EDayNight
+	enum EDayNight : int
 	{
 		DAY_MORNING = 0,
 		DAY_DAY = 1,

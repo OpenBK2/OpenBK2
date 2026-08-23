@@ -19,8 +19,8 @@ class CBuilding;
 class CEntrenchment;
 namespace NDb
 {
-	enum EUnitSpecialAbility;
-	enum ESpecialAbilityParam;
+	enum EUnitSpecialAbility : int;
+	enum ESpecialAbilityParam : int;
 }
 
 struct SBehaviour
