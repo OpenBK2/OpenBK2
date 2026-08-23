@@ -218,16 +218,18 @@ bool DoesFolderExist( const std::string &szFolderName )
 	return true;
 }
 
+// A whitelist, so what it accepts is a name every target platform can hold. This
+// is the game's own policy for names it creates, not a reading of any one
+// operating system's rules.
 bool IsValidFileName( const std::string &szFileName )
 {
-	const char *pszFileName = szFileName.c_str();
-	const char *_pszFileName = (std::max)( strrchr( pszFileName, '\\' ), strrchr( pszFileName, '/' ) );
-	if ( 0 == _pszFileName )
-		_pszFileName = pszFileName;
-	else
-		++ _pszFileName;
-	static char szValidCharSet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_0123456789 ";
-	return 0 == _strspnp( _pszFileName, szValidCharSet );
+	// only the name is checked, any directory part in front of it is not
+	const std::string::size_type nSlash = szFileName.find_last_of( "/" "\\" );
+	const std::string::size_type nStart = ( nSlash == std::string::npos ) ? 0 : nSlash + 1;
+	static const char szValidCharSet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_0123456789 ";
+	// _strspnp answered with a pointer to the first character outside the set, and
+	// a null one when there was none. find_first_not_of answers the same question.
+	return szFileName.find_first_not_of( szValidCharSet, nStart ) == std::string::npos;
 }
 
 static const char *pszWrongNames[] = {
@@ -237,7 +239,12 @@ static const char *pszWrongNames[] = {
 	0
 };
 
-// is valid win32 file name
+// Whether the game will accept this as a name to create, which is deliberately
+// stricter than any single platform requires. Linux would take almost all of
+// what is rejected here, but a profile or save directory is copied between
+// machines, and a name made on one has to still open on the others; the device
+// names above are in the list for that reason rather than because this is
+// Windows.
 bool IsValidDirName( const std::string &_szName )
 {
 	std::string szName = _szName;
