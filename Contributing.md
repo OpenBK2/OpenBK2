@@ -114,7 +114,9 @@ other small utilities:
 - [FontGen](Versions/Temporary/Engine/Sources/FontGen) - font generator (in the format game understands)
 - [ShaderCompiler](Versions/Temporary/Engine/Sources/ShaderCompiler) - compiles shaders from custom format, shaders are in [GfxShaders.txt](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.txt), compiled shaders are in [GfxShaders.cpp](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.cpp)
 
-test code:
+test code (see also the unit tests and benchmarks section below):
+- [3Dmotor/test](Versions/Temporary/Engine/Sources/3Dmotor/test) - unit tests for the ported SIMD and MMX routines, checked against the original assembly
+- [3Dmotor/benchmark](Versions/Temporary/Engine/Sources/3Dmotor/benchmark) - benchmarks for the same routines
 - [TestClient](Versions/Temporary/Engine/Sources/TestClient) - test application for headless multiplayer testing
 - [TestDB](Versions/Temporary/Engine/Sources/TestDB) - some tests for database routines ([libdb](Versions/Temporary/Engine/Sources/libdb) library)
 - [TestParsing](Versions/Temporary/Engine/Sources/TestDB) - some tests for parsing routines ([Parser](Versions/Temporary/Engine/Sources/Parser) library)
@@ -129,6 +131,82 @@ the naming convention (see also [NivalProjectNames.doc](Versions/Temporary/Engin
 - Blitzkrieg II: `A10`, `B2`
 
 `M1` seems to be a reference to another version of engine or game, see `VERSION_DEV_M1`, which modifies behavior in several places.
+
+# unit tests and benchmarks
+
+tests and benchmarks are `EXCLUDE_FROM_ALL`, so a normal build never touches them.
+build and run them with:
+
+```
+cmake --build out/build/Windows-x64-Debug --target run-unittests
+cmake --build out/build/Windows-x64-Release --target run-benchmarks
+```
+
+these are ordinary targets, so they also work from an IDE target list. underneath they
+are `ctest` with a label:
+
+```
+ctest --test-dir out/build/Windows-x64-Debug -L obk2-test
+ctest --test-dir out/build/Windows-x64-Release -L obk2-benchmark
+ctest --test-dir out/build/Windows-x64-Debug -L obk2            # both
+```
+
+the label matters because the dependencies register tests of their own. `-L` takes a
+regular expression, which is why the two labels are `obk2-test` and `obk2-benchmark`
+rather than `obk2` and `obk2-benchmark`: the shorter name would match both.
+
+## adding one
+
+a test is one line in the test directory's `CMakeLists.txt`:
+
+```cmake
+add_unit_test(MyThing 3Dmotor Misc)                       # links these libraries
+add_unit_test(MyThing 3Dmotor Misc SOURCES extra.cpp)     # and compiles these too
+```
+
+a benchmark is either `add_benchmark(MyThing)`, which builds it three times with
+`/arch:SSE2`, `/arch:AVX` and `/arch:AVX2`, or a plain `add_executable` followed by
+`register_benchmark(MyThing_benchmark)`.
+
+either way it is picked up automatically: built by the aggregate target, run by label,
+and included in the table posted to a pull request. nothing needs adding to the
+workflow, and nothing lists executables by name.
+
+## writing them
+
+things that have gone wrong here before:
+
+- **seed fixed, not random.** `test/random.h` seeds from `std::random_device`, so a
+  failure it finds cannot be reproduced. these comparisons are the kind that fail on
+  one input in a million. use a local generator with a literal seed.
+- **cover the tail.** the SIMD kernels process two or four elements per iteration and
+  handle the remainder separately, which is where indexing goes wrong. run counts
+  1..17 as well as a large one, not just a round number.
+- **measure a tolerance, do not guess one.** where an implementation cannot be
+  bit-exact, assert a bound and print the worst difference actually seen, so a
+  regression that widens it shows as a number rather than as a pass. an approximation
+  like `_mm_rcp_ss` has *relative* error, so the bound usually has to scale with the
+  value rather than being a constant.
+- **benchmark in Release only.** a debug build inverts SIMD-versus-scalar comparisons:
+  templated code gets no inlining at `/Od`. the same benchmark reported glm 10x slower
+  than the original MMX in Debug and 3.3x faster in Release.
+- **build the inputs outside the timed loop.** generating a random rotation matrix
+  costs far more than transforming a vector by one. a benchmark that did this inside
+  the loop reported two implementations as near equal no matter what they did.
+  `benchmark::DoNotOptimize` on the result, and tune runs with Google Benchmark's
+  environment variables (`BENCHMARK_MIN_TIME`, `BENCHMARK_REPETITIONS`) rather than
+  hard-coded flags.
+
+## MMX references and x86
+
+several tests compare a port against the original MMX. MSVC accepts inline `__asm` on
+x86 only, so anything using it cannot build for x64 and is registered for x86 alone.
+new references belong in `Versions/Temporary/Engine/Sources/3Dmotor/test/original/`,
+written as SSE2 intrinsics: SSE2 defines these integer operations exactly as MMX does,
+and unlike MASM it builds on every compiler and every platform that targets x86.
+`test/original/MMXPrimitives.h` is the worked example.
+`test/original/sentinel` exists to prove such a replacement matches the assembly it
+replaces, on x86, where both forms can run side by side.
 
 # branches
 
