@@ -5,7 +5,11 @@
 // two candidate implementations against the original for the single-transform case
 // first, where the answer is not confounded by weighting:
 //
-//   glm   the shipping implementation: full float matrix, float normalize
+//   ship  whatever the engine actually compiles. HAS_SSE2 is 1 on both x86 and x64
+//         with default flags, so for the single-transform case this is the SSE2
+//         intrinsic MMXTransformVector, not the glm one in the #else branch, which
+//         no supported configuration ever builds. MMXTransformVector2 and 3 have no
+//         SSE2 variant, so those two really are glm.
 //   emu   the same pipeline written with the mmx:: integer helpers
 //
 // The original quantises the matrix to 16-bit fixed point in Assign() before it
@@ -23,6 +27,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 
 namespace {
 
@@ -126,7 +131,7 @@ int main()
 {
     enum { iterations = 200000 };
 
-    SStats glmStats{ "glm" }, emuStats{ "emu" };
+    SStats shipStats{ "ship" }, emuStats{ "emu" };
 
     for ( int i = 0; i < iterations; ++i )
     {
@@ -145,20 +150,20 @@ int main()
         viaEmu.dw = EmulateTransform1( src.dw, fixups, compactTransform, nNormalizeTable );
         viaEmu.w = src.w;
 
-        Accumulate( glmStats, ref, viaGlm );
+        Accumulate( shipStats, ref, viaGlm );
         Accumulate( emuStats, ref, viaEmu );
     }
 
     printf( "MMXTransformVector, %d random normal/rotation pairs, vs the original MMX\n\n",
         static_cast<int>( iterations ) );
-    Report( glmStats );
+    Report( shipStats );
     Report( emuStats );
 
     // MMXTransformVector2 and 3, against the legacy inline __asm in original.h, with
     // the same weight distribution MMXTransformVector_test uses. This is the divergence
     // that test has been failing on; measuring it against the inline original shows the
     // failure has nothing to do with the move to MASM.
-    SStats glm2{ "glm2" }, glm3{ "glm3" };
+    SStats ship2{ "glm2" }, ship3{ "glm3" };
     for ( int i = 0; i < iterations; ++i )
     {
         NGfx::SCompactVector src{};
@@ -174,18 +179,126 @@ int main()
         const uint8_t w2 = static_cast<uint8_t>( 255 - w1 );
         original::MMXTransformVector2( ref, src, m1, w1, m2, w2 );
         MMXTransformVector2( got, src, m1, w1, m2, w2 );
-        Accumulate( glm2, ref, got );
+        Accumulate( ship2, ref, got );
 
         const uint8_t v1 = static_cast<uint8_t>( random_uint8() / 2 );
         const uint8_t v2 = static_cast<uint8_t>( random_uint8() / 2 );
         const uint8_t v3 = static_cast<uint8_t>( 255 - v1 - v2 );
         original::MMXTransformVector3( ref, src, m1, v1, m2, v2, m3, v3 );
         MMXTransformVector3( got, src, m1, v1, m2, v2, m3, v3 );
-        Accumulate( glm3, ref, got );
+        Accumulate( ship3, ref, got );
     }
 
     printf( "\nweighted variants, weights as MMXTransformVector_test draws them\n\n" );
-    Report( glm2 );
-    Report( glm3 );
+    Report( ship2 );
+    Report( ship3 );
+
+    // How far apart are the two blended transforms? Independent random rotations are
+    // the worst case and not what skinning does: neighbouring bones differ by a small
+    // angle, and a blend of two nearly aligned rotations is well conditioned. Bucket
+    // the error by the relative rotation angle to see which regime the big errors are
+    // in. Angle comes from trace(R1^T R2) = 1 + 2 cos(theta) on the 3x3 parts.
+    struct SBucket { long long n = 0, exact = 0; int worst = 0; };
+    SBucket buckets[9];
+    for ( int i = 0; i < iterations; ++i )
+    {
+        NGfx::SCompactVector src{};
+        SHMatrix m1{}, m2{};
+        randomizeNormalVector( src );
+        randomizeMatrix( m1 );
+        randomizeMatrix( m2 );
+
+        double fTrace = 0;
+        for ( int r = 0; r < 3; ++r )
+        {
+            for ( int c = 0; c < 3; ++c )
+                fTrace += (double)m1.m[r][c] * m2.m[r][c];
+        }
+        double fCos = ( fTrace - 1.0 ) * 0.5;
+        fCos = fCos > 1.0 ? 1.0 : ( fCos < -1.0 ? -1.0 : fCos );
+        const double fDeg = acos( fCos ) * 180.0 / 3.14159265358979;
+        int b = (int)( fDeg / 20.0 );
+        if ( b > 8 ) b = 8;
+
+        NGfx::SCompactVector ref{}, got{};
+        const uint8_t w1 = random_uint8();
+        const uint8_t w2 = (uint8_t)( 255 - w1 );
+        original::MMXTransformVector2( ref, src, m1, w1, m2, w2 );
+        MMXTransformVector2( got, src, m1, w1, m2, w2 );
+
+        const int d0 = abs( (int)ref.x - (int)got.x );
+        const int d1 = abs( (int)ref.y - (int)got.y );
+        const int d2 = abs( (int)ref.z - (int)got.z );
+        const int dm = d0 > d1 ? ( d0 > d2 ? d0 : d2 ) : ( d1 > d2 ? d1 : d2 );
+        SBucket &bk = buckets[b];
+        ++bk.n;
+        if ( dm == 0 ) ++bk.exact;
+        if ( dm > bk.worst ) bk.worst = dm;
+    }
+
+    printf( "\n\nMMXTransformVector2 error vs angle between the two transforms\n" );
+    printf( "  angle      samples   exact     worst |diff|\n" );
+    for ( int b = 0; b < 9; ++b )
+    {
+        const SBucket &bk = buckets[b];
+        if ( bk.n == 0 ) continue;
+        printf( "  %3d-%3d  %10lld  %6.2f%%  %6d\n", b * 20, b * 20 + 20,
+            bk.n, ( 100.0 * bk.exact ) / bk.n, bk.worst );
+    }
+
+    // Is the original stable where glm is not? Bucket the same two-bone comparison by
+    // the length of the blended normal before normalization. A near-zero blend has no
+    // meaningful direction, so if the large errors live there, both implementations are
+    // producing an arbitrary normal and they merely disagree about which one.
+    struct SLenBucket { long long n = 0, exact = 0; int worst = 0; };
+    SLenBucket lens[6];
+    for ( int i = 0; i < iterations; ++i )
+    {
+        NGfx::SCompactVector src{};
+        SHMatrix m1{}, m2{};
+        randomizeNormalVector( src );
+        randomizeMatrix( m1 );
+        randomizeMatrix( m2 );
+        const uint8_t w1 = random_uint8();
+        const uint8_t w2 = (uint8_t)( 255 - w1 );
+
+        // The same blend MMXTransformVector2 forms, in float, before it normalizes.
+        const glm::vec4 v = LoadCompactVector( src );
+        const glm::vec4 r1 = LoadMatrix( m1 ) * v;
+        const glm::vec4 r2 = LoadMatrix( m2 ) * v;
+        const glm::vec4 blended = r1 * ( w1 / 255.f ) + r2 * ( w2 / 255.f );
+        const float fLen = glm::length( glm::vec3( blended.x, blended.y, blended.z ) );
+
+        int b;
+        if ( fLen < 0.01f )      b = 0;
+        else if ( fLen < 0.05f ) b = 1;
+        else if ( fLen < 0.10f ) b = 2;
+        else if ( fLen < 0.25f ) b = 3;
+        else if ( fLen < 0.50f ) b = 4;
+        else                     b = 5;
+
+        NGfx::SCompactVector ref{}, got{};
+        original::MMXTransformVector2( ref, src, m1, w1, m2, w2 );
+        MMXTransformVector2( got, src, m1, w1, m2, w2 );
+        const int d0 = abs( (int)ref.x - (int)got.x );
+        const int d1 = abs( (int)ref.y - (int)got.y );
+        const int d2 = abs( (int)ref.z - (int)got.z );
+        const int dm = d0 > d1 ? ( d0 > d2 ? d0 : d2 ) : ( d1 > d2 ? d1 : d2 );
+        SLenBucket &bk = lens[b];
+        ++bk.n;
+        if ( dm == 0 ) ++bk.exact;
+        if ( dm > bk.worst ) bk.worst = dm;
+    }
+
+    static const char *pszLen[6] =
+        { "     < 0.01", "0.01 - 0.05", "0.05 - 0.10", "0.10 - 0.25", "0.25 - 0.50", "     > 0.50" };
+    printf( "\n\nMMXTransformVector2 error vs blended normal length before normalize\n" );
+    printf( "  length         samples   exact     worst |diff|\n" );
+    for ( int b = 0; b < 6; ++b )
+    {
+        if ( lens[b].n == 0 ) continue;
+        printf( "  %s  %10lld  %6.2f%%  %6d\n", pszLen[b], lens[b].n,
+            ( 100.0 * lens[b].exact ) / lens[b].n, lens[b].worst );
+    }
     return 0;
 }
