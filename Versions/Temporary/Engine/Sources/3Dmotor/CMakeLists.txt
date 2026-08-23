@@ -122,9 +122,8 @@ target_link_libraries(3Dmotor PRIVATE
     granny::granny
     Boost::sort
     Boost::uuid
-    fmt::fmt-header-only
 )
-target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)
+target_link_libraries(3Dmotor PUBLIC glm::glm-header-only fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(3Dmotor PRIVATE
         dxsdk::d3d9

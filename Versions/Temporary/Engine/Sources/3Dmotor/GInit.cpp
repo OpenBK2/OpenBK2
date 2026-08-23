@@ -130,8 +130,10 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	gfxRTInfo.nRegisters = 1;
 	int nBPP = bUse16BitMode ? 16 : 32;
 	bool bRes = NGfx::SetMode( NGfx::SVideoMode( nModeX, nModeY, nBPP, fullScreen ), gfxRTInfo );
-	D3DASSERT( bRes ? S_OK : E_FAIL, "NGfx::SetMode failed with X: %d Y: %d BPP: %d FULLSCREEN: %d (REG %d, F-REG %d TGTS %d)", 
-		nModeX, nModeY, nBPP, fullScreen, gfxRTInfo.nRegisters, gfxRTInfo.nFloatRegisters, gfxRTInfo.targets.size() );
+	// Qualified: this file sits outside NGfx and used to reach D3DASSERT by argument
+	// dependent lookup on the EFS argument, which is now an int.
+	NGfx::D3DASSERT( bRes ? S_OK : E_FAIL, "NGfx::SetMode failed with X: %d Y: %d BPP: %d FULLSCREEN: %d (REG %d, F-REG %d TGTS %d)", 
+		nModeX, nModeY, nBPP, fmt::underlying( fullScreen ), gfxRTInfo.nRegisters, gfxRTInfo.nFloatRegisters, gfxRTInfo.targets.size() );
 
 	if ( !bRes )
 	{

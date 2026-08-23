@@ -147,7 +147,7 @@ bool CScene::CheckObjExist( int nObjectID ) const
 	if ( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end() )
 		return false;
 	const auto message = fmt::format( "Object 0x{:.8x} already exist", nObjectID );
-	DebugTrace( message.c_str() );
+	DebugTrace( "%s", message.c_str() );
 	return true;
 #else
 	return data[eScene]->visObjects.find(nObjectID) != data[eScene]->visObjects.end();

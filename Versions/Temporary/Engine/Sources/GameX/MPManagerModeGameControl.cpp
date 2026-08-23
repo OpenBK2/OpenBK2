@@ -616,7 +616,7 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 	{
 		szDebugOut += fmt::format( " {},", order[i] );
 	}
-	DebugTrace( szDebugOut.c_str() );
+	DebugTrace( "%s", szDebugOut.c_str() );
 
 	std::vector<SMPSlot> newSlots;
 	newSlots.resize( slots.size() );

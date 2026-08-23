@@ -85,7 +85,7 @@ CLogStream& CLogStream::operator<< ( const std::wstring &szText )
 		{
 			nID++;
 //			AddConsoleLine( SConsoleLine( nID, eType, false, wsStreamBuffer ) );
-			DebugTrace( "%S", wsStreamBuffer.c_str() );
+			DebugTrace( "%s", WideToUTF8( wsStreamBuffer ).c_str() );
 			Singleton<IConsoleBuffer>()->Write( nStream, wsStreamBuffer.c_str() );
 			wsStreamBuffer.clear();
 		}

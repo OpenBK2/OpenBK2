@@ -15,20 +15,20 @@ void Trace2DByteArray( const CArray2DType &rArray, const string &rszAdditionalMe
 		{
 			szTrace += StrFmt( " %02x", rArray[y][x] );
 		}
-		DebugTrace( szTrace.c_str() );
+		DebugTrace( "%s", szTrace.c_str() );
 	}
 	string szTrace = ( "   -" );
 	for ( int x = 0; x < size.x; ++x )
 	{
 		szTrace += "---";
 	}
-	DebugTrace( szTrace.c_str() );
+	DebugTrace( "%s", szTrace.c_str() );
 	szTrace = ( "    " );
 	for ( int x = 0; x < size.x; ++x )
 	{
 		szTrace += StrFmt( " %02d", x );
 	}
-	DebugTrace( szTrace.c_str() );
+	DebugTrace( "%s", szTrace.c_str() );
 }
 
 
@@ -44,20 +44,20 @@ void Trace2DFloatArray( const CArray2DType &rArray, const string &rszAdditionalM
 		{
 			szTrace += StrFmt( " %06.03f", rArray[y][x] );
 		}
-		DebugTrace( szTrace.c_str() );
+		DebugTrace( "%s", szTrace.c_str() );
 	}
 	string szTrace = ( "   -" );
 	for ( int x = 0; x < size.x; ++x )
 	{
 		szTrace += "-------";
 	}
-	DebugTrace( szTrace.c_str() );
+	DebugTrace( "%s", szTrace.c_str() );
 	szTrace = ( "    " );
 	for ( int x = 0; x < size.x; ++x )
 	{
 		szTrace += StrFmt( "     %02d", x );
 	}
-	DebugTrace( szTrace.c_str() );
+	DebugTrace( "%s", szTrace.c_str() );
 }
 
 

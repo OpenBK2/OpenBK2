@@ -10,6 +10,7 @@
 #include "SceneB2/Scene.h"
 
 #include "port/time.h"
+#include "port/unicode.h"
 
 #include "GameX_export.h"
 
@@ -70,9 +71,9 @@ void CSinglePlayerTransceiver::DoSegments()
 	std::wstring szString;
 	while ( ReadFromPipe( PIPE_NET_CHAT, &szString, 0 ) )
 	{
-		DebugTrace( "Got type: %S\n", szString.c_str() );
+		DebugTrace( "Got type: %s\n", WideToUTF8( szString ).c_str() );
 		if ( ReadFromPipe( PIPE_NET_CHAT, &szString, 0 ) )
-			DebugTrace( "Got msg: %S\n", szString.c_str() );
+			DebugTrace( "Got msg: %s\n", WideToUTF8( szString ).c_str() );
 		else
 			DebugTrace( "Error: no msg" );
 	}

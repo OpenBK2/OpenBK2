@@ -2813,7 +2813,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		}
 		break;
 	default:
-		DebugTrace( "Unknown ability %i", nAbility );
+		DebugTrace( "Unknown ability %i", fmt::underlying( nAbility ) );
 //		NI_ASSERT( false, StrFmt( "Unknown ability %i", nAbility ) );
 	}
 }

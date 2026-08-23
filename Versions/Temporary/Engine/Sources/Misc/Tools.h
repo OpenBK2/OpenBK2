@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <boost/core/bit.hpp>
 #include <boost/math/special_functions/sign.hpp>
+#include <fmt/printf.h>
 
 // square root of the 2 and 3
 #define SQRT_2		1.41421356237309504880
@@ -272,12 +273,26 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
   return true;
 }
 
-MISC_EXPORT void PORT_STDCALL DbgTrc( const char *pszFormat, ... );
+// fmt::printf_args is a type erased argument pack: it crosses the DLL boundary the
+// way the old va_list did, except that every argument still carries its own type.
+// That is what lets "%d" with a size_t print the right number instead of reading the
+// wrong number of bytes off the stack. Formatting itself stays inside Misc, so the
+// call sites instantiate nothing but the two line wrapper below.
+MISC_EXPORT void PORT_STDCALL DbgTrcArgs( fmt::string_view fmtStr, fmt::printf_args args );
+
+template < typename... TArgs >
+void DbgTrc( fmt::string_view fmtStr, const TArgs &... args )
+{
+	DbgTrcArgs( fmtStr, fmt::make_printf_args( args... ) );
+}
 
 #ifndef _FINALRELEASE
 #define DebugTrace DbgTrc
 #else
-inline void PORT_STDCALL DebugTrace( const char *pszFormat, ... ) {  }
+// Still a template taking the same arguments, so a call that compiles in one
+// configuration compiles in the other.
+template < typename... TArgs >
+void DebugTrace( fmt::string_view, const TArgs &... ) {  }
 #endif // _FINALRELEASE
 
 #ifdef NIVAL_DLL

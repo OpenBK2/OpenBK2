@@ -444,7 +444,7 @@ public:
 				ASSERT( 0 );
 			ASSERT( D3D_OK == hRes );
 		}
-		D3DASSERT( hRes, "CreateTexture failed with X: %d Y: %d Levels: %d Usage: %d Format: %d Pool: %d", _nXSize, _nYSize, _nLevels, dwUsage, _format, pool );
+		D3DASSERT( hRes, "CreateTexture failed with X: %d Y: %d Levels: %d Usage: %d Format: %d Pool: %d", _nXSize, _nYSize, _nLevels, dwUsage, fmt::underlying( _format ), fmt::underlying( pool ) );
 		bInitOk &= SUCCEEDED(hRes);
 	}
 	

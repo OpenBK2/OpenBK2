@@ -436,7 +436,7 @@ void CVariant::Trace() const
 		for ( CMultiVariantMap::const_iterator itMultiVariant = m_pmvar->m_pMultiVariantMap->begin(); 
 			    itMultiVariant != m_pmvar->m_pMultiVariantMap->end(); ++itMultiVariant )
 		{
-			DebugTrace( "%d", itMultiVariant->first );
+			DebugTrace( "%s", itMultiVariant->first.ToString().c_str() );
 		}
 	}
 }

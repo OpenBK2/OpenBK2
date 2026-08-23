@@ -17,6 +17,7 @@
 #include "port/debugging.h"
 
 #include <cstdint>
+#include <string>
 
 namespace NGfx
 {
@@ -153,7 +154,7 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 #endif
 			pPP,
 			pRes->GetAddr() );
-		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", DEVICE_TYPE, D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE );
+		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", fmt::underlying( DEVICE_TYPE ), D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE );
 	}
 	if ( FAILED( hr ) )
 	{
@@ -165,7 +166,7 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 			pPP,
 			pRes->GetAddr() );
-		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", DEVICE_TYPE, D3DCREATE_SOFTWARE_VERTEXPROCESSING );
+		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", fmt::underlying( DEVICE_TYPE ), D3DCREATE_SOFTWARE_VERTEXPROCESSING );
 	}
 	return hr;
 }
@@ -974,21 +975,16 @@ void Done3D()
 	DeviceFinalRelease();
 }
 
-void D3DASSERT( HRESULT hRes, const char *pDescr, ... )
+void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args args )
 {
+	// Only ever reached with a failed hRes, so under a debugger the assert always
+	// fires, which is what the old unconditional test amounted to.
 	if ( is_debugger_present() )
 		ASSERT( hRes == D3D_OK );
 	////
-	if ( hRes == D3D_OK )
-		return;
+	const std::string buff = fmt::vsprintf( fmtStr, args );
 	////
-	static char buff[256] = { '\0' };
-	va_list va;
-	va_start( va, pDescr );
-	_vsnprintf( buff, 255, pDescr, va );
-	va_end( va );
-	////
-	csSystem << "ERROR: " << buff << ". ";
+	csSystem << "ERROR: " << buff.c_str() << ". ";
 	csSystem << "CODE: " << DXGetErrorString( hRes ) << ". ";
 	csSystem << "DESCRIPTION: " << DXGetErrorDescription( hRes ) << endl;
 }

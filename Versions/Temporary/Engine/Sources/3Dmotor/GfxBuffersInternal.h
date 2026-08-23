@@ -117,7 +117,7 @@ public:
 			obj.GetAddr(),
 			0
 			);
-		D3DASSERT( hRes, "CreateVertexBuffer failed with SIZE: %d USAGE: %d", nSize, eUsage );
+		D3DASSERT( hRes, "CreateVertexBuffer failed with SIZE: %d USAGE: %d", nSize, fmt::underlying( eUsage ) );
 		bInitOk &= SUCCEEDED(hRes);
 
 		if ( bInitOk )
@@ -148,7 +148,7 @@ public:
 			obj.GetAddr(),
 			0
 			);
-		D3DASSERT( hRes, "CreateIndexBuffer failed with SIZE: %d FORMAT: %d USAGE: %d", _nSize, TFormat, eUsage );
+		D3DASSERT( hRes, "CreateIndexBuffer failed with SIZE: %d FORMAT: %d USAGE: %d", _nSize, TFormat, fmt::underlying( eUsage ) );
 		bInitOk &= SUCCEEDED(hRes);
 
 		if ( bInitOk )

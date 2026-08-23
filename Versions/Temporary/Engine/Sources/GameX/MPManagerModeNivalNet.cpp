@@ -175,7 +175,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 			szDebugOut += fmt::format( "Connect( {} != {} )", slots[0].wConnectedTo, slots[nOwnSlot].wConnectedTo );
 		}
 	}
-	DebugTrace( szDebugOut.c_str() );
+	DebugTrace( "%s", szDebugOut.c_str() );
 }
 
 void CMPManagerModeNivalNet::OnLeaveGame()
@@ -1054,7 +1054,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	mySlot.bRandomCountry = true;
 	bLadderGame = true;
 
-	DebugTrace( szDebugLadder.c_str() );
+	DebugTrace( "%s", szDebugLadder.c_str() );
 	DebugTrace( "+++ LadderInvite: my slot %d, country %d", nOwnSlot, mySlot.nCountry );
 
 	if ( pendingClients.size() > 0 )

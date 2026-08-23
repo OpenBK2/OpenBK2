@@ -633,7 +633,7 @@ void CEventUpdater::DumpSizes()
 		str2 = str2 + fmt::format( "\t{}/{}", itUpd->second.nValidCount, itUpd->second.nInvalidCount );
 	}
 
-	DebugTrace( str1.c_str() );
+	DebugTrace( "%s", str1.c_str() );
 	for ( std::vector<int>::const_iterator it = objectsID.begin(); it != objectsID.end(); ++it )
 	{
 		std::string str;
@@ -652,9 +652,9 @@ void CEventUpdater::DumpSizes()
 			else
 				str = str +  "\t-/-" ;
 		}
-		DebugTrace( str.c_str() );
+		DebugTrace( "%s", str.c_str() );
 	}
-	DebugTrace( str2.c_str() );
+	DebugTrace( "%s", str2.c_str() );
 }
 
 //Serialization

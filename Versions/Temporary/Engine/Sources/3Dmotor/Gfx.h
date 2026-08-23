@@ -4,6 +4,8 @@
 
 #include "GPixelFormat.h"
 
+#include <fmt/printf.h>
+
 namespace NGfx
 {
 
@@ -95,7 +97,22 @@ bool IsDXTSupported();
 bool Is8888FormatSupported();
 const int GetAdapterToUse();
 
-void D3DASSERT( HRESULT hRes, const char *pDescr, ... );
+void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args args );
+
+template < typename... TArgs >
+void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &... args )
+{
+	// The success path formats nothing. D3DASSERT wraps calls made per draw, and the
+	// old body reached its formatting only after this same test, so the cost stays
+	// where it was. is_debugger_present() and the ASSERT it guards used to run ahead
+	// of the test, but both are no-ops on success, so they move as well.
+	//
+	// S_OK rather than D3D_OK, which d3d9.h defines as S_OK: the test lives in this
+	// header now, and Gfx.h is included by modules that have no reason to see d3d9.h.
+	if ( hRes == S_OK )
+		return;
+	D3DAssertFailed( hRes, fmtStr, fmt::make_printf_args( args... ) );
+}
 
 struct SRenderStats
 {
