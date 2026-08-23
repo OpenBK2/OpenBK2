@@ -45,6 +45,12 @@ public :
 template <int nMaxNumMatrices>
 class CMatrixStack43: public CBaseMatrixStack<nMaxNumMatrices, SHMatrix>
 {
+protected:
+	// The base depends on the template parameter, so unqualified lookup does not reach
+	// its members, here or in the definitions at the bottom of this file. Naming them
+	// once is the alternative to writing this-> at every use.
+	using CBaseMatrixStack<nMaxNumMatrices, SHMatrix>::matrices;
+	using CBaseMatrixStack<nMaxNumMatrices, SHMatrix>::nCurrentMatrix;
 public :
 	CMatrixStack43() { for ( int i = 0; i < nMaxNumMatrices; i++ ) Identity( matrices + i ); }
 	void Push43( const SHMatrix &matrix );
@@ -61,6 +67,9 @@ template <int nMaxNumMatrices>
 class CFBMatrixStack: public CBaseMatrixStack<nMaxNumMatrices, SFBTransform>
 {
 protected:
+	// as above: the base is dependent, so its members have to be named to be found
+	using CBaseMatrixStack<nMaxNumMatrices, SFBTransform>::matrices;
+	using CBaseMatrixStack<nMaxNumMatrices, SFBTransform>::nCurrentMatrix;
 	void SetToFirst() { ASSERT( nCurrentMatrix >= 0 ); nCurrentMatrix = 0; }
 public :
 	CFBMatrixStack() {}
