@@ -1,3 +1,5 @@
+add_subdirectory(original)
+
 # The per-vertex lighting kernels are compiled into the tests that need them rather
 # than reached through the 3Dmotor DLL. The tests supply their own nCubicRoot table,
 # and comparing a kernel against the reference is only meaningful when both index the
@@ -19,7 +21,7 @@ else()
 endif()
 
 add_unit_test(MultiplyOnColor 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
-add_unit_test(CalcDirectionalLighting 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(CalcDirectionalLighting 3Dmotor Misc OriginalMMX SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(CalcPointLightColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(AddColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(ScaleColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})

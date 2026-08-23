@@ -55,6 +55,18 @@ struct SPerVertexLightState
 	float GetWarFogBlend() const;
 };
 
+// The MMX reference implementations under test/original/ reach these six words as
+// [pDirData + n * 8] rather than by name, so their order and packing is part of that
+// interface. Pin it here: a reordered member or a padded SMMXWord would silently feed
+// the reference the wrong operands instead of failing to build.
+static_assert( sizeof( NGfx::SMMXWord ) == 8 );
+static_assert( offsetof( SPerVertexLightState, ambient ) == 0 );
+static_assert( offsetof( SPerVertexLightState, lightColor ) == 8 );
+static_assert( offsetof( SPerVertexLightState, incidentShadowColor ) == 16 );
+static_assert( offsetof( SPerVertexLightState, shadeColor ) == 24 );
+static_assert( offsetof( SPerVertexLightState, dirLight ) == 32 );
+static_assert( offsetof( SPerVertexLightState, shift ) == 40 );
+
 struct SCacheLightingInfo
 {
 	// can not be changed on the fly

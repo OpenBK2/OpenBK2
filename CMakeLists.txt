@@ -1,5 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
-project(b2)
+# ASM_MASM is for the MMX reference implementations under 3Dmotor/test/original/.
+# MSVC accepts __asm on x86 only, so keeping those references as inline assembly
+# made the bit-exactness tests unbuildable on x64.
+project(b2 LANGUAGES C CXX ASM_MASM)
 
 enable_testing()
 
@@ -13,9 +16,11 @@ include(cmake/arch.cmake)
 if(MSVC)
   add_compile_options("/nologo")
   add_link_options("/nologo")
-  add_compile_options("/wd4251")
-  add_compile_options("/wd4275")
-  add_compile_options("/FS")
+  # Scoped to the compilers that understand them: ml/ml64 rejects each of these
+  # with warning A4018 now that ASM_MASM is an enabled language.
+  add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/wd4251>")
+  add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/wd4275>")
+  add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/FS>")
   foreach(flag_var
           CMAKE_CXX_FLAGS_DEBUG
           CMAKE_C_FLAGS_DEBUG)
