@@ -33,8 +33,6 @@ public:
 	// current file attributes check
 	uint32_t GetAttribs() const { return findinfo.dwFileAttributes; }
 	bool IsReadOnly() const { return ( GetAttribs() & FILE_ATTRIBUTE_READONLY ) != 0; }
-	bool IsSystem() const { return ( GetAttribs() & FILE_ATTRIBUTE_SYSTEM ) != 0; }
-	bool IsHidden() const { return ( GetAttribs() & FILE_ATTRIBUTE_HIDDEN ) != 0; }
 	bool IsDirectory() const { return ( GetAttribs() & FILE_ATTRIBUTE_DIRECTORY ) != 0; }
 	// special kind of directory: '.' - this dir and '..' - parent dir
 	bool IsDots() const
@@ -56,7 +54,6 @@ public:
 	// file name (title + ext), full path (absolute path + name)
 	std::string GetFileName() const { return findinfo.cFileName; }
 	std::string GetFullName() const { return szPath + findinfo.cFileName; }
-	const std::string& GetBasePath() const { return szPath; }
 	const std::string& GetBaseMask() const { return szMask; }
 };
 
