@@ -132,6 +132,17 @@ static constexpr SMMXFixups fixups = {
 	{shiftedFixupValue, shiftedFixupValue, shiftedFixupValue, 0}
 };
 
+// MMXTransformVector.asm reaches these as [pFixups + 0] normalFixup, [pFixups + 8]
+// shiftedFixup and [pTrans + 0/8/16] for a, b, c, so the packing is part of that
+// interface rather than an implementation detail.
+static_assert( sizeof( SMMXFixups ) == 16 );
+static_assert( offsetof( SMMXFixups, normalFixup ) == 0 );
+static_assert( offsetof( SMMXFixups, shiftedFixup ) == 8 );
+static_assert( sizeof( NGfx::SCompactTransformer ) == 24 );
+static_assert( offsetof( NGfx::SCompactTransformer, a ) == 0 );
+static_assert( offsetof( NGfx::SCompactTransformer, b ) == 8 );
+static_assert( offsetof( NGfx::SCompactTransformer, c ) == 16 );
+
 static int FloatToMMXTransformScale(const float value) {
 	// multiply by 2048 (2^11) to integer fixed point
 	return Float2Int( value * 0x800 );

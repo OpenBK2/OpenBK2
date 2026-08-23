@@ -12,7 +12,8 @@ endif()
 # CMake picks an ar-style archive rule and hands lib.exe an "cr" argument, which
 # fails as LNK1181. Object libraries have no archive step at all.
 add_library(OriginalMMX OBJECT EXCLUDE_FROM_ALL
-    CalcDirectionalLighting${ASM_SUFFIX}.asm)
+    CalcDirectionalLighting${ASM_SUFFIX}.asm
+    MMXTransformVector${ASM_SUFFIX}.asm)
 set_target_properties(OriginalMMX PROPERTIES FOLDER "unittest")
 
 # The wrappers `include` the shared body by bare filename, so ml/ml64 has to be able
@@ -27,11 +28,14 @@ target_include_directories(OriginalMMX PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     add_executable(OriginalMMXSentinel EXCLUDE_FROM_ALL
         sentinel/Sentinel.cpp
-        sentinel/InlineRef.cpp)
+        sentinel/InlineRef.cpp
+        # nNormalizeTable has to be the table the engine actually builds, not a
+        # zeroed stand-in, or the MMXTransformVector comparison proves nothing.
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../GSSEtransform.cpp)
     # Misc only, for the CVec2/CVec4 constructors that Geom.h's axis constants call
     # from their dynamic initializers. Comparing the primitives rather than the C++
     # loops keeps SPerVertexLightState, and therefore 3Dmotor, out of the link.
-    target_link_libraries(OriginalMMXSentinel PRIVATE OriginalMMX Misc)
+    target_link_libraries(OriginalMMXSentinel PRIVATE OriginalMMX Misc glm::glm-header-only)
     set_target_properties(OriginalMMXSentinel PROPERTIES FOLDER "unittest")
     add_custom_command(TARGET OriginalMMXSentinel POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different

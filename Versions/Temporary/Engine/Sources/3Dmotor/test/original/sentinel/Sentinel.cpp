@@ -92,5 +92,46 @@ int main()
 
     printf( "CalcDirectionalLightingMMX: %d random cases bit-identical\n",
         static_cast<int>( iterations ) );
+
+    // MMXTransformVector. The inline form clobbers ebx and reads nNormalizeTable by
+    // name; the .asm saves ebx itself and takes the table as an argument, so this
+    // check covers the extraction and the parameterisation together. The table has to
+    // be the one the engine actually builds, which is why GSSEtransform.cpp is in
+    // this target rather than a zeroed stand-in.
+    NGfx::SCompactTransformer trans;
+    for ( int i = 0; i < iterations; ++i )
+    {
+        RandomMMXWord( trans.a );
+        RandomMMXWord( trans.b );
+        RandomMMXWord( trans.c );
+        trans.a.nW = trans.b.nW = trans.c.nW = 0;
+        const uint32_t nSrc = NextU32();
+
+        const uint32_t nInline = InlineMMXTransformVectorMMX( nSrc, &fixups, &trans );
+        const uint32_t nAsm = MMXTransformVectorMMX( nSrc, &fixups, &trans, nNormalizeTable );
+
+        if ( nInline == nAsm )
+            continue;
+
+        printf( "MISMATCH iteration %d: src %08lX inline %08lX asm %08lX\n",
+            i, static_cast<unsigned long>( nSrc ),
+            static_cast<unsigned long>( nInline ),
+            static_cast<unsigned long>( nAsm ) );
+        if ( ++nFailures > 10 )
+        {
+            printf( "too many mismatches, stopping\n" );
+            break;
+        }
+    }
+
+    if ( nFailures != 0 )
+    {
+        printf( "MMXTransformVectorMMX: FAILED, %d mismatching results\n", nFailures );
+        return 1;
+    }
+
+    printf( "MMXTransformVectorMMX: %d random cases bit-identical\n",
+        static_cast<int>( iterations ) );
+
     return 0;
 }
