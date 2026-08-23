@@ -7,6 +7,11 @@ FetchContent_Declare(
         GIT_PROGRESS TRUE
 )
 
+# zlib-ng registers 90-odd tests of its own with add_test. They are not ours to run
+# and they drown out this project's tests in ctest.
+set(ZLIB_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+set(WITH_GTEST OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(zlibng)
 
 FetchContent_GetProperties(zlibng SOURCE_DIR ZLIB_SOURCE_DIR)
