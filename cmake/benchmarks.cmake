@@ -33,3 +33,23 @@ function(register_benchmark target_name)
         --benchmark_out_format=json)
     set_tests_properties(${target_name} PROPERTIES LABELS "obk2-benchmark")
 endfunction()
+
+# Convenience targets, so "run only this project's tests" is a target you pick in an
+# IDE rather than a ctest invocation you have to remember. CLion, Visual Studio and
+# the command line all get the same thing:
+#
+#   cmake --build <dir> --target run-unittests
+#   cmake --build <dir> --target run-benchmarks
+#
+# USES_TERMINAL so output streams as it runs instead of arriving in one lump.
+function(add_suite_runner name label depends)
+    if(TARGET ${name})
+        return()
+    endif()
+    add_custom_target(${name}
+        COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${CMAKE_BINARY_DIR}
+                -L ${label} --output-on-failure
+        DEPENDS ${depends}
+        USES_TERMINAL
+        COMMENT "ctest -L ${label}")
+endfunction()
