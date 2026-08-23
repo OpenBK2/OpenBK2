@@ -121,7 +121,7 @@ private:
 	bool ExecuteTreeOperation( const STreeOperation &rTreeOperation );
 	bool ExecuteTreeOperations( const CTreeOperationList &rTreeOperationList );
 	//
-	HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM hStartItem );
+	HTREEITEM FindFirstItem( const string &rszSearch, HTREEITEM hStartItem );
 	//
 	void ShowContextMenu( const CTPoint<int> &rPoint );
 	void NewFolder( HTREEITEM hParentItem );

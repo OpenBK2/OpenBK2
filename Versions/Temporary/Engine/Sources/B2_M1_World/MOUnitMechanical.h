@@ -56,7 +56,7 @@ private:
 	void AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const;
 	void UpdateWaterMoveEffects( const struct SAINotifyPlacement &placement, IScene *pScene );
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
-	const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2( 
+	const NDb::SAnimB2* GetAnimB2( 
 		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 		const NDb::EAnimationType eAnimType, const int nAnimID, bool skipAnimdescs = false );
 

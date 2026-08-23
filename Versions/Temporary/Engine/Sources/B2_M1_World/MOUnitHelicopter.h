@@ -40,7 +40,7 @@ class CMOUnitHelicopter :public CMOUnit
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); f.Add(2,&pStats); f.Add(3,&pHelicopterStats); f.Add(4,&vPassangers); f.Add(5,&vPropellers); f.Add(6,&fPropSpeed); f.Add(7,&smokeTrails); f.Add(8,&bMove); return 0; }
 private:
-	const int CMOUnitHelicopter::GetMechPassangersCount() const;
+	const int GetMechPassangersCount() const;
 	bool IsInside( const int nID );
 	void SetPropellersSpeed( const float fPropSpeed, NDb::ESeason eSeason );
 	/*

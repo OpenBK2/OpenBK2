@@ -188,7 +188,7 @@ namespace NImage
 
 	};// End of CReadPSD definition
 
-	int NImage::RecognizeFormatPSD( CDataStream *pStream )
+	int RecognizeFormatPSD( CDataStream *pStream )
 	{
 		// 0 - Not PSD-image at all
 		// 1 - Valid PSD-image (RGB, 8-bit per channel)

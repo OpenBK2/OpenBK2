@@ -171,7 +171,7 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	CPtr<CBuilding> pBestBuilding;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pCurEnemy); f.Add(4,&vCenter); f.Add(5,&bestForGuns); f.Add(6,&bestForBombs); f.Add(7,&bestAviation); f.Add(8,&buildings); f.Add(9,&pBestBuilding); return 0; }
 
-	const float CPlaneShturmovikShootEstimator::CalcTimeToOpenFire( CAIUnit *pEnemy ) const;
+	const float CalcTimeToOpenFire( CAIUnit *pEnemy ) const;
 	void CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const uint32_t dwPossibleGuns );
 	const float CalcRating( CAIUnit *pEnemy, const uint32_t dwPossibleGuns ) const;
 public:

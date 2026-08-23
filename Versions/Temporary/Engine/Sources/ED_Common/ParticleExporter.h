@@ -12,7 +12,7 @@ class CParticleExporter : public CStoreObjectExporter
 	typedef hash_map<string, string> CExportedFilesMap;
 	CExportedFilesMap exportedFilesMap;
 	//
-	bool CParticleExporter::ImportInfoToDBAfterRefs( const string &szObjName,
+	bool ImportInfoToDBAfterRefs( const string &szObjName,
 																									 const string &szDstFileName,
 																									 IManipulator *pManipulator );
 	//
