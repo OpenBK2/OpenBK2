@@ -27,8 +27,6 @@ function(add_benchmark filename)
     add_benchmark_arch(${filename} "/arch:AVX2" "_avx2")
 endfunction()
 
-add_benchmark(MMXTransformVector)
-
 # One target rather than three /arch: variants: each kernel set already lives in its
 # own translation unit with its own flags, so building the comparison three times over
 # would measure the same three implementations three times.
@@ -60,8 +58,12 @@ add_custom_command(TARGET LightingKernels_benchmark POST_BUILD
     VERBATIM)
 register_benchmark(LightingKernels_benchmark)
 
-# The MMX reference the benchmark measures against is assembled, not inline, so
-# every variant has to link it.
-target_link_libraries(MMXTransformVector_benchmark PRIVATE OriginalMMX)
-target_link_libraries(MMXTransformVector_benchmark_avx PRIVATE OriginalMMX)
-target_link_libraries(MMXTransformVector_benchmark_avx2 PRIVATE OriginalMMX)
+# The MMX reference this one measures against is assembled, not inline, so the
+# benchmark exists only where MASM does and every variant has to link it. It is also
+# the only caller of add_benchmark(), whose /arch: flags are MSVC spellings.
+if(HAVE_MASM)
+    add_benchmark(MMXTransformVector)
+    target_link_libraries(MMXTransformVector_benchmark PRIVATE OriginalMMX)
+    target_link_libraries(MMXTransformVector_benchmark_avx PRIVATE OriginalMMX)
+    target_link_libraries(MMXTransformVector_benchmark_avx2 PRIVATE OriginalMMX)
+endif()

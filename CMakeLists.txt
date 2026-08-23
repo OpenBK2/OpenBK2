@@ -2,10 +2,24 @@
 # the documented build and CI configure this, so nothing older has worked
 # here in a long time. It also covers TARGET_RUNTIME_DLLS, added in 3.21.
 CMAKE_MINIMUM_REQUIRED(VERSION 3.23)
+project(b2 LANGUAGES C CXX)
+
 # ASM_MASM is for the MMX reference implementations under 3Dmotor/test/original/.
 # MSVC accepts __asm on x86 only, so keeping those references as inline assembly
 # made the bit-exactness tests unbuildable on x64.
-project(b2 LANGUAGES C CXX ASM_MASM)
+#
+# ml and ml64 ship with MSVC and nothing else assembles MASM syntax, so naming the
+# language in project() failed configure outright on every other toolchain. Enable it
+# only where it exists; HAVE_MASM then gates the references themselves and the three
+# targets that link them. Section 5 of docs/vertex-skinning-findings.md has the plan
+# to convert those references to SSE2 intrinsics, which would retire this entirely.
+if(MSVC)
+  enable_language(ASM_MASM)
+  set(HAVE_MASM ON)
+else()
+  set(HAVE_MASM OFF)
+  message(STATUS "MASM unavailable: the MMX reference tests and benchmark are skipped")
+endif()
 
 enable_testing()
 

@@ -1,4 +1,6 @@
-add_subdirectory(original)
+if(HAVE_MASM)
+    add_subdirectory(original)
+endif()
 
 # The per-vertex lighting kernels are compiled into the tests that need them rather
 # than reached through the 3Dmotor DLL. The tests supply their own nCubicRoot table,
@@ -35,8 +37,7 @@ else()
     add_unit_test(SampleWarFog 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 endif()
 
-# Both architectures: their MMX references are assembled or intrinsic, not inline.
-add_unit_test(CalcDirectionalLighting 3Dmotor Misc OriginalMMX SOURCES ${LIGHTING_KERNEL_SOURCES})
+# Both architectures: their MMX reference is intrinsic, not inline.
 add_unit_test(MMXhelpers 3Dmotor Misc)
 # Drives refLightingKernels / sse2LightingKernels / avx2LightingKernels directly,
 # rather than whatever GetLightingKernels() picks, so the sets the running CPU is
@@ -45,5 +46,11 @@ add_unit_test(MMXhelpers 3Dmotor Misc)
 # kernels take by reference and which the 3Dmotor DLL does not export.
 add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
-add_unit_test(MMXTransformVector 3Dmotor Misc OriginalMMX)
 add_unit_test(BitOps Misc)
+
+# These two check against the MASM references under original/, so they exist only
+# where ml/ml64 does. On both architectures there, unlike the inline-__asm group.
+if(HAVE_MASM)
+    add_unit_test(CalcDirectionalLighting 3Dmotor Misc OriginalMMX SOURCES ${LIGHTING_KERNEL_SOURCES})
+    add_unit_test(MMXTransformVector 3Dmotor Misc OriginalMMX)
+endif()
