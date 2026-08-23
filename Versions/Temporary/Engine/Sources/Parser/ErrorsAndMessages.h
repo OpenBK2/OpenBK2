@@ -50,19 +50,3 @@ namespace NErrors
 }
 
 
-extern bool bInTestMode;
-
-inline void Msg( char *s, ... )
-{
-	if ( !bInTestMode )
-	{
-		static char buff[10000];
-		va_list va;
-		va_start( va, s );
-		vsprintf( buff, s, va );
-		va_end( va );
-		printf( "%s\n", buff );
-	}
-}
-
-
