@@ -4,7 +4,9 @@
 #include "3Dmotor/GLightPerVertex.cpp"
 
 #include "random.h"
-#include "original.h"
+// The MMX reference now lives in original/CalcDirectionalLighting.asm rather than
+// an __asm block, so this test builds and runs on x64 as well as x86.
+#include "original/CalcDirectionalLighting.h"
 
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];
