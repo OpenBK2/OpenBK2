@@ -108,72 +108,6 @@ private:
 			SInt2Type<N_KNOWN_ENUM> separator;
 			CallRawObjectSerialize( idChunk, nChunkNumber, p, &separator );
 		}
-	// simple built-in data specialization
-	template <> 
-		void PORT_CDECL CallObjectSerialize<boost::uuids::uuid>( const chunk_id idChunk, int nChunkNumber, boost::uuids::uuid *pData, SInt2Type<1> *pp )
-		{
-			DataChunk( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<bool>( const chunk_id idChunk, int nChunkNumber, bool *pData, SInt2Type<1> *pp )
-		{
-			AddBoolData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<char>( const chunk_id idChunk, int nChunkNumber, char *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<signed char>( const chunk_id idChunk, int nChunkNumber, signed char *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<unsigned char>( const chunk_id idChunk, int nChunkNumber, unsigned char *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<short>( const chunk_id idChunk, int nChunkNumber, short *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<unsigned short>( const chunk_id idChunk, int nChunkNumber, unsigned short *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<long>( const chunk_id idChunk, int nChunkNumber, long *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<unsigned long>( const chunk_id idChunk, int nChunkNumber, unsigned long *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<int>( const chunk_id idChunk, int nChunkNumber, int *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<unsigned int>( const chunk_id idChunk, int nChunkNumber, unsigned int *pData, SInt2Type<1> *pp )
-		{
-			AddIntData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<float>( const chunk_id idChunk, int nChunkNumber, float *pData, SInt2Type<1> *pp )
-		{
-			AddFPData( idChunk, pData, nChunkNumber );
-		}
-	template <> 
-		void PORT_CDECL CallObjectSerialize<double>( const chunk_id idChunk, int nChunkNumber, double *pData, SInt2Type<1> *pp )
-		{
-			AddFPData( idChunk, pData, nChunkNumber );
-		}
 	//
 	template<class T>
 		void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, ... )
@@ -546,6 +480,63 @@ public:
 			FinishChunk();
 		}
 };
+
+// The built-in specializations of CallObjectSerialize above. An explicit
+// specialization has to sit at namespace scope, which MSVC does not insist on;
+// qualifying them keeps them members of IXmlSaver, so they still reach the private
+// AddBoolData, AddIntData, AddFPData and DataChunk they are written in terms of.
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<boost::uuids::uuid>( const chunk_id idChunk, int nChunkNumber, boost::uuids::uuid *pData, SInt2Type<1> *pp )
+{
+	DataChunk( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<bool>( const chunk_id idChunk, int nChunkNumber, bool *pData, SInt2Type<1> *pp )
+{
+	AddBoolData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<char>( const chunk_id idChunk, int nChunkNumber, char *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<signed char>( const chunk_id idChunk, int nChunkNumber, signed char *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned char>( const chunk_id idChunk, int nChunkNumber, unsigned char *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<short>( const chunk_id idChunk, int nChunkNumber, short *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned short>( const chunk_id idChunk, int nChunkNumber, unsigned short *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<long>( const chunk_id idChunk, int nChunkNumber, long *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned long>( const chunk_id idChunk, int nChunkNumber, unsigned long *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<int>( const chunk_id idChunk, int nChunkNumber, int *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned int>( const chunk_id idChunk, int nChunkNumber, unsigned int *pData, SInt2Type<1> *pp )
+{
+	AddIntData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<float>( const chunk_id idChunk, int nChunkNumber, float *pData, SInt2Type<1> *pp )
+{
+	AddFPData( idChunk, pData, nChunkNumber );
+}
+template <> inline void PORT_CDECL IXmlSaver::CallObjectSerialize<double>( const chunk_id idChunk, int nChunkNumber, double *pData, SInt2Type<1> *pp )
+{
+	AddFPData( idChunk, pData, nChunkNumber );
+}
 
 template <class T>
 inline char operator&( T &c, IXmlSaver &ss ) { return 0; }
