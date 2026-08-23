@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "HPTimer.h"
 
-#include "port/time.h"
-
 #include <cstdint>
 #include <thread>
 #include <chrono>
@@ -23,7 +21,23 @@
 #endif
 
 using namespace NHPTimer;
+
+// Seconds per TSC tick, refined by UpdateHPTimerFrequency.
 static double fProcFreq1 = 1;
+
+namespace
+{
+	// The clock the TSC is calibrated against. This was QueryPerformanceCounter,
+	// which is what MSVC implements steady_clock on, so on Windows the reference
+	// has not actually changed.
+	//
+	// The TSC stays the thing being read: it is a register read of a few
+	// nanoseconds, where clock_gettime is only comparable while the kernel's
+	// clocksource is tsc. When it falls back to hpet or acpi_pm the vDSO cannot
+	// serve the call from user space and every reading becomes a syscall, which
+	// is exactly the cost this timer exists to avoid.
+	using CRefClock = std::chrono::steady_clock;
+}
 
 double NHPTimer::GetSeconds( const NHPTimer::STime &a )
 {
@@ -56,38 +70,29 @@ double NHPTimer::GetTimePassed( STime *pTime )
 
 void NHPTimer::UpdateHPTimerFrequency()
 {
-	static int64_t freq, start, fin;
-	static double fTStart, fTFinish, fPassed;
-	static STime tStart;
-	static uint32_t dwStart;
+	// How long a sample has to run before the tick ratio is worth believing.
+	static const double F_MIN_SAMPLE_SECONDS = 0.05;
+
+	static CRefClock::time_point refStart;
+	static STime tscStart;
 	static bool bUpdateInitiated = false;
 	if ( bUpdateInitiated )
 	{
-		STime tTest( tStart );
-		fPassed = GetTimePassed( &tTest );
-		QueryPerformanceCounter( (_LARGE_INTEGER*) &fin );
-		uint32_t dwFinish = GetCurrentTimeMilliseconds();
-		if ( dwFinish - dwStart < 50 )
+		const double fRefPassed =
+			std::chrono::duration<double>( CRefClock::now() - refStart ).count();
+		// Too short to be useful: keep the baseline where it is and let the next
+		// call measure across a longer span rather than restarting the sample.
+		if ( fRefPassed < F_MIN_SAMPLE_SECONDS )
 			return;
-		fTStart = double( start );
-		fTFinish = double( fin );
-		float fTickTime = ( dwFinish - dwStart ) / 1024.0f;
-		float fPCTime = (float)( ( fTFinish - fTStart ) / static_cast<double>( freq ) );
-		if ( fabs( fTickTime - fPCTime ) < 0.05f )
-		{
-			double fProcFreq = (fPassed) * (static_cast<double>( freq )) / (fTFinish-fTStart) / fProcFreq1;
-			fProcFreq1 = 1 / fProcFreq;
-		}
+		STime tscNow;
+		GetTime( &tscNow );
+		const STime tscPassed = tscNow - tscStart;
+		if ( tscPassed > 0 )
+			fProcFreq1 = fRefPassed / static_cast<double>( tscPassed );
 	}
-	else
-	{
-		QueryPerformanceFrequency( (_LARGE_INTEGER*) &freq );
-	}
-//	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	bUpdateInitiated = true;
-	dwStart = GetCurrentTimeMilliseconds();
-	GetTime( &tStart );
-	QueryPerformanceCounter( (_LARGE_INTEGER*) &start );
+	refStart = CRefClock::now();
+	GetTime( &tscStart );
 }
 
 static void InitHPTimer()
