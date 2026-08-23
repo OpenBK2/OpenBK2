@@ -34,63 +34,6 @@ void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &r
 //
 void DrawLine( CArray2D<uint32_t> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
 //
-//все одного размера!
-template<class TArray>
-void FastComposeImagesByAlpha( CArray2D<uint32_t> *pDestImage, const TArray &rSourceImageList, uint32_t dwMinAlpha )
-{
-	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
-	//
-	const CTPoint<int> size( pDestImage->GetSizeX(), pDestImage->GetSizeY() );
-	//
-	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
-	{
-		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
-		{
-			for ( typename TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.end(); ++itSourceImage )
-			{
-				if ( GetAlphaFromARGBColor( ( *( *itSourceImage ) )[nYIndex][nXIndex] ) >= dwMinAlpha )
-				{
-					( *pDestImage )[nYIndex][nXIndex] = ( *( *itSourceImage ) )[nYIndex][nXIndex];
-					break;
-				}
-			}
-		}
-	}
-}
-//все одного размера!
-template<class TArray>
-void FastComposeImagesByColor( CArray2D<uint32_t> *pDestImage, const TArray &rSourceImageList, uint32_t dwColor, bool bInclude )
-{
-	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
-	//
-	const CTPoint<int> size( pDestImage->GetSizeX(), pDestImage->GetSizeY() );
-	//
-	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
-	{
-		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
-		{
-			for ( typename TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.end(); ++itSourceImage )
-			{
-				if ( ( *( *itSourceImage ) )[nYIndex][nXIndex] == dwColor )
-				{
-					if ( bInclude )
-					{
-						( *pDestImage )[nYIndex][nXIndex] = ( *( *itSourceImage ) )[nYIndex][nXIndex];
-						break;
-					}
-				}
-				else
-				{
-					if ( !bInclude )
-					{
-						( *pDestImage )[nYIndex][nXIndex] = ( *( *itSourceImage ) )[nYIndex][nXIndex];
-						break;
-					}
-				}
-			}
-		}
-	}
-}
 
 template<class TFunctuinal, class TWBCFunctional>
 void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFunctuinal *pFunctional, TWBCFunctional  *pWBCFunctional )
