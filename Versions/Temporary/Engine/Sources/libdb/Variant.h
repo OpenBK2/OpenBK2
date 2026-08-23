@@ -65,7 +65,10 @@ private:
 		{
 			if(m_bDelete)
 			{
-				delete[] m_ptr;
+				// every allocation of m_ptr is new uint8_t[], in the two constructors
+				// above and in operator&, so this is the matching delete. Deleting
+				// through the void* the member is declared as would be undefined.
+				delete[] static_cast< uint8_t * >( m_ptr );
 			}
 		}
 
