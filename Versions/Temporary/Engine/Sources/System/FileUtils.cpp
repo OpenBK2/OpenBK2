@@ -138,6 +138,15 @@ const CFileIterator& CFileIterator::Next()
 // Windows standard library maps that attribute onto these bits. Adding it where it
 // is already set costs nothing, so the read-only test that the attribute query used
 // to answer is no longer needed, and neither are GetAttribs and IsReadOnly.
+// One call for both, where Win32 needed DeleteFile for a file and RemoveDirectory
+// for a directory: remove takes either, and takes a directory only when it is empty,
+// which is the same condition RemoveDirectory had.
+static void RemoveOne( const std::string &szName )
+{
+	std::error_code ec;
+	std::filesystem::remove( szName, ec );
+}
+
 static void MakeWritable( const std::string &szName )
 {
 	std::error_code ec;
@@ -158,13 +167,13 @@ public:
 		{
 			if ( bDeleteRO )
 				MakeWritable( it.GetFullName() );
-			DeleteFile( it.GetFullName().c_str() );
+			RemoveOne( it.GetFullName() );
 		}
 		else if ( bDeleteDir )
 		{
 			if ( bDeleteRO )
 				MakeWritable( it.GetFullName() );
-			RemoveDirectory( it.GetFullName().c_str() );
+			RemoveOne( it.GetFullName() );
 		}
 	}
 };
@@ -177,7 +186,7 @@ void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive 
 void DeleteDirectory( const std::string &szDir )
 {
 	EnumerateFiles( szDir, "*.*", CDeleteFiles(true, true), true );
-	RemoveDirectory( szDir.c_str() );
+	RemoveOne( szDir );
 }
 
 // The two flags this carried are gone with GetDirectoryDirs, which was the only
@@ -200,22 +209,17 @@ void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<s
 
 bool DoesFileExist( const std::string &szFileName )
 {
-	//return _access( szFileName.c_str(), 0 ) != -1;
-	HANDLE hFile = ::CreateFile( szFileName.c_str(), GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
-	if ( hFile == INVALID_HANDLE_VALUE )
-		return false;
-	::CloseHandle( hFile );
-	return true;
+	// is_regular_file, not exists: the CreateFile this replaces asked for a file
+	// without FILE_FLAG_BACKUP_SEMANTICS, which is the flag that lets a directory be
+	// opened, so a directory has always answered false here.
+	std::error_code ec;
+	return std::filesystem::is_regular_file( szFileName, ec );
 }
 
 bool DoesFolderExist( const std::string &szFolderName )
 {
-	//return _access( szFileName.c_str(), 0 ) != -1;
-	HANDLE hFile = ::CreateFile( szFolderName.c_str(), GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0 );
-	if ( hFile == INVALID_HANDLE_VALUE )
-		return false;
-	::CloseHandle( hFile );
-	return true;
+	std::error_code ec;
+	return std::filesystem::is_directory( szFolderName, ec );
 }
 
 // A whitelist, so what it accepts is a name every target platform can hold. This
