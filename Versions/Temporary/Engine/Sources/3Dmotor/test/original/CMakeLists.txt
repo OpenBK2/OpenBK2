@@ -13,7 +13,8 @@ endif()
 # fails as LNK1181. Object libraries have no archive step at all.
 add_library(OriginalMMX OBJECT EXCLUDE_FROM_ALL
     CalcDirectionalLighting${ASM_SUFFIX}.asm
-    MMXTransformVector${ASM_SUFFIX}.asm)
+    MMXTransformVector${ASM_SUFFIX}.asm
+    MMXTransformVectorWeighted${ASM_SUFFIX}.asm)
 set_target_properties(OriginalMMX PROPERTIES FOLDER "unittest")
 
 # The wrappers `include` the shared body by bare filename, so ml/ml64 has to be able
@@ -29,6 +30,8 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     add_executable(OriginalMMXSentinel EXCLUDE_FROM_ALL
         sentinel/Sentinel.cpp
         sentinel/InlineRef.cpp
+        sentinel/LegacyTransformRef.cpp
+        sentinel/AsmTransformRef.cpp
         # nNormalizeTable has to be the table the engine actually builds, not a
         # zeroed stand-in, or the MMXTransformVector comparison proves nothing.
         ${CMAKE_CURRENT_SOURCE_DIR}/../../GSSEtransform.cpp)
@@ -37,6 +40,15 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     # loops keeps SPerVertexLightState, and therefore 3Dmotor, out of the link.
     target_link_libraries(OriginalMMXSentinel PRIVATE OriginalMMX Misc glm::glm-header-only)
     set_target_properties(OriginalMMXSentinel PROPERTIES FOLDER "unittest")
+    # A measurement, not a check: reports how far the shipping MMXTransformVector
+    # implementations sit from the original MMX and whether an integer emulation
+    # closes the gap. Same x86-only constraint, same reason.
+    add_executable(MMXTransformVectorDivergence EXCLUDE_FROM_ALL
+        divergence/Divergence.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../GSSEtransform.cpp)
+    target_link_libraries(MMXTransformVectorDivergence PRIVATE Misc glm::glm-header-only)
+    set_target_properties(MMXTransformVectorDivergence PROPERTIES FOLDER "unittest")
+
     add_custom_command(TARGET OriginalMMXSentinel POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 $<TARGET_RUNTIME_DLLS:OriginalMMXSentinel> $<TARGET_FILE_DIR:OriginalMMXSentinel>
