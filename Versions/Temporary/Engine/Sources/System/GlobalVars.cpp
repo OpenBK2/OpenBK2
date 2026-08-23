@@ -34,7 +34,7 @@ std::wstring GetAlias( const std::string &szAliasName )
 }
 
 // TODO{ move it to strproc - after alpha version
-template <class TChar, class TBrackets = SBracketsTest<TChar> >
+template <class TChar, class TBrackets = NStr::SBracketsTest<TChar> >
 class CBracketMulticharSeparator
 {
 	std::vector<TChar> stc;										// close brackets stack
