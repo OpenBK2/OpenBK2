@@ -237,7 +237,7 @@ bool ProcessCommandLine( LPSTR lpCmdLine )
 		if ( szString == "-show-version" )
 		{
 			std::string szVersion = fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
-			printf( szVersion.c_str() );
+			fmt::print( "{}", szVersion );
 			return false;
 		}
 		else if ( szString == "-show-version-mb" )

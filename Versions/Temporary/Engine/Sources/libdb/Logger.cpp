@@ -2,6 +2,8 @@
 
 #include "Logger.h"
 
+#include <fmt/format.h>
+
 CLogger theLogger;
 
 CLogger::CLogger()
@@ -21,7 +23,7 @@ void CLogger::WriteLog( const std::string &szLog, bool bAppendNL )
 	{
 		szResult += "\n";
 	}
-	printf( szResult.c_str() );
+	fmt::print( "{}", szResult );
 	DbgTrcRaw( szResult.c_str() );
 	memoryStream.Write( szResult.c_str(), szResult.length() );
 	if ( pStream != 0 )

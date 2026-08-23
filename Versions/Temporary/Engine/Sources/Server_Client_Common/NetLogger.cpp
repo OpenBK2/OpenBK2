@@ -75,7 +75,7 @@ void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 		FILE *pFile = iter->second;
 		if ( pFile )
 		{
-			fprintf( pFile, szStr.c_str() );
+			fmt::print( pFile, "{}", szStr );
 			fflush( pFile );
 		}
 	}

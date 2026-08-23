@@ -147,21 +147,8 @@ void CBalanceTest::PrintBalanceTestData()
 
 	std::string szSeparator;
 	szSeparator.resize( szTitle.size(), '-' );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSeparator.c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szTitle.c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSeparator.c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSide[0].c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSeparator.c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSide[1].c_str() );
-	fprintf( pFile, "\n" );
-	fprintf( pFile, szSeparator.c_str() );
-	fprintf( pFile, "\n" );
+	fmt::print( pFile, "\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n",
+		szSeparator, szTitle, szSeparator, szSide[0], szSeparator, szSide[1], szSeparator );
 
 	fclose( pFile );
 }
