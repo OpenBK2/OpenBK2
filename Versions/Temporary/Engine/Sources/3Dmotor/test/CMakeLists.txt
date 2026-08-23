@@ -27,5 +27,12 @@ add_unit_test(AddColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(ScaleColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(SampleWarFogInt 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
 add_unit_test(SampleWarFog 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
+# Drives refLightingKernels / sse2LightingKernels / avx2LightingKernels directly,
+# rather than whatever GetLightingKernels() picks, so the sets the running CPU is
+# not dispatching to still get checked.
+# GLightPerVertex.cpp comes along for SPerVertexLightState's constructor, which the
+# kernels take by reference and which the 3Dmotor DLL does not export.
+add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 add_unit_test(MMXTransformVector 3Dmotor Misc OriginalMMX)
 add_unit_test(MMXhelpers 3Dmotor Misc)
