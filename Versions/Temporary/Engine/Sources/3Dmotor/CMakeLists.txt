@@ -127,5 +127,11 @@ else()
     set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
+# GLightPerVertexAVX2.cpp is the only source in this target with a compile line
+# of its own, and MSVC rejects a translation unit whose options disagree with
+# the ones the precompiled header was built on (C2855). The file includes
+# stdafx.h itself, so dropping the PCH costs it only the parse.
+set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+
 add_subdirectory(test)
 add_subdirectory(benchmark)
