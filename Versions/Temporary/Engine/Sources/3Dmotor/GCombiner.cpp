@@ -9,6 +9,8 @@
 
 #include <boost/sort/spreadsort/integer_sort.hpp>
 
+#include <cstdint>
+
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;
 
@@ -205,13 +207,14 @@ static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, co
 static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SRealVertexWeight *pWeight, const std::vector<SHMatrix> &blends )
 {
 	int nCount = srcPos.size();
-#pragma warning(disable: 4311 4302)
-	if ( nCount > 0 && bIsSSEPresent && (((int)(&blends[0]))&0xf) == 0 )
+	// SSESkinning requires the matrix array to be 16-byte aligned. The address was cast
+	// to int, which truncates a 64-bit pointer (C4311/C4302) and only happened to keep
+	// the low bits the test looks at; uintptr_t carries the whole address instead.
+	if ( nCount > 0 && bIsSSEPresent && ( reinterpret_cast<std::uintptr_t>( &blends[0] ) & 0xf ) == 0 )
 	{
 		ASSERT( sizeof(SSSEVertexWeight) == sizeof(SRealVertexWeight) );
 		SSESkinning( &srcPos[0], pRes, (SSSEVertexWeight*)pWeight, blends, nCount );
 	}
-#pragma warning(default: 4311 4302)
 	else
 	{
 		for ( int k = 0; k < nCount; ++k, ++pWeight )
