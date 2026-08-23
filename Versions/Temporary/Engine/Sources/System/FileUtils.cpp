@@ -270,19 +270,30 @@ bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
 		std::filesystem::copy_options::overwrite_existing, ec );
 }
 
+// What GetFullPathName did: resolve against the working directory and fold away '.'
+// and '..', without requiring the path to exist. absolute does the first and
+// lexically_normal the second, and neither touches the filesystem, so a name that is
+// not there yet still resolves. Callers depend on that, they build output paths with
+// it. A trailing separator survives, which the log path in NetLogger relies on.
+//
+// canonical would be the wrong tool twice over: it insists the path exists, and it
+// resolves symlinks, which GetFullPathName never did.
+static std::string MakeFullPathName( const std::string &szPath )
+{
+	std::error_code ec;
+	const std::filesystem::path full =
+		std::filesystem::absolute( szPath, ec ).lexically_normal().make_preferred();
+	return ec ? szPath : full.string();
+}
+
 std::string GetFullName( const std::string &szPath )
 {
-	char *pszBufferFileName = 0;
-	GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
-	return buffer;
+	return MakeFullPathName( szPath );
 }
 
 void GetFullName( std::string *pResult, const std::string &szPath )
 {
-	char *pszBufferFileName = 0;
-	const uint32_t dwLength = GetFullPathName( szPath.c_str(), 1024, buffer, &pszBufferFileName );
-	pResult->resize( dwLength );
-	memcpy( &((*pResult)[0]), buffer, dwLength );
+	*pResult = MakeFullPathName( szPath );
 }
 
 std::string GetTempPath()
