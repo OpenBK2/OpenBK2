@@ -1,7 +1,5 @@
 #pragma once
 
-#include <comutil.h>
-
 #include <cstdint>
 
 #include <boost/uuid/uuid.hpp>
