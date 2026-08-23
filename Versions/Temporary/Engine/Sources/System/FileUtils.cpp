@@ -263,7 +263,11 @@ bool IsValidDirName( const std::string &_szName )
 bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
 {
 	CreatePath( GetFilePath( szDstName ) );
-	return ::CopyFile( szSrcName.c_str(), szDstName.c_str(), false ) != 0;
+	// overwrite_existing because ::CopyFile was called with bFailIfExists false, so
+	// an existing destination was always replaced rather than reported.
+	std::error_code ec;
+	return std::filesystem::copy_file( szSrcName, szDstName,
+		std::filesystem::copy_options::overwrite_existing, ec );
 }
 
 std::string GetFullName( const std::string &szPath )
