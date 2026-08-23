@@ -116,9 +116,9 @@ void CTriVertexCacheOptimizer::MeasureEfficiency( const std::vector<STriangle> &
 		cache.Push( q.i3 );
 		nTotal += 3;
 	}
-	char szBuf[1024];
-	sprintf( szBuf, "vertices per triangle = %g\n", 3 * nMisses / (float)(nTotal) );
-	OutputDebugString( szBuf );
+	// DebugTrace picks OutputDebugString or stderr per platform and adds the
+	// newline itself, so the buffer this formatted into is not needed either.
+	DebugTrace( "vertices per triangle = %g", 3 * nMisses / (float)( nTotal ) );
 }
 
 bool CTriVertexCacheOptimizer::OutputVertex( int n )
