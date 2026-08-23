@@ -200,3 +200,49 @@ means nothing. The vertex format has to be read through the Granny SDK. Link
 
 The `.xdb` database files are **UTF-8**, not UTF-16, and a geometry record names its
 model in a `<uid>` element whose value is the `.gr2` filename.
+
+## 5. Finishing the x64 test coverage, and why not with MASM
+
+Six tests still compare against the inline `__asm` in `test/original.h` and so are
+registered on x86 only: `MultiplyOnColor`, `CalcPointLightColors` (both overloads),
+`AddColors`, `ScaleColors`, `SampleWarFogInt` and `SampleWarFog`. Between them that is
+seven functions, 2 to 4 `__asm` blocks each and at most 39 instructions:
+
+| function | asm blocks | instructions | globals it names | callee-saved registers |
+|---|---|---|---|---|
+| `MultiplyOnColor` | 2 | ~10 | - | esi |
+| `SampleWarFogInt` | 1 | small | - | - |
+| `SampleWarFog` | 1 | ~5 | - | edi, esi |
+| `CalcPointLightColors` (indexed) | 3 | ~34 | - | edi, esi |
+| `CalcPointLightColors` (uniform) | 4 | ~39 | - | edi, esi |
+| `AddColors` | 3 | ~38 | `nCubicRoot` | ebx, esi |
+| `ScaleColors` | 4 | ~17 | - | esi |
+
+**Prefer SSE2 intrinsics over MASM.** MASM fixes the architecture and nothing else: it
+is `ml`/`ml64` only, so a Linux or macOS port would need every one of these written a
+second time in NASM or GAS syntax. Every operation these functions use is from the set
+already shown to translate exactly - see `test/original/MMXPrimitives.h`, which
+replaced thirty inline wrappers with intrinsics and passes on both architectures. SSE2
+defines these integer operations as MMX does, and they are all either lane-wise or
+shift within a 64-bit lane, so the low half of an `__m128i` reproduces the 64-bit MMX
+result.
+
+Two wrinkles to expect:
+
+- The multi-block functions load loop-invariant values into MMX registers before the
+  loop and use them inside it (`CalcPointLightColors` does this with `mm7` and `mm5`).
+  A separate function cannot inherit register state, so those get reloaded per call.
+  That costs speed and changes no results, which is the right trade for a reference.
+- `punpckhwd` and the two packs need the handling documented in `MMXPrimitives.h`.
+
+Verify the same way each time: transliterate, then have `test/original/sentinel` compare
+the new form against the inline `__asm` on x86 before trusting it on x64.
+
+The MASM already written for `CalcDirectionalLighting` and `MMXTransformVector` works
+and is proven bit-identical over 200000 cases each, but carries the same portability
+cost. It could be converted on the same argument, keeping the assembly alongside as the
+thing the conversion is checked against and dropping it once both architectures are
+green. `MMXTransformVector` is the weakest candidate: its `nNormalizeTable` lookup and
+`ebx` handling are captured literally by the assembly, where intrinsics would express
+them as C++ around the SIMD - still verifiable, but a transliteration rather than a
+transcription.
