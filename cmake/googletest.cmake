@@ -7,6 +7,8 @@ FetchContent_Declare(
         GIT_PROGRESS TRUE
 )
 
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(googletest)
 
 FetchContent_GetProperties(googletest SOURCE_DIR GOOGLETEST_SOURCE_DIR)

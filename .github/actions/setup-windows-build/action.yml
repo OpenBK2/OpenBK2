@@ -1,0 +1,45 @@
+name: Setup Windows build environment
+description: >
+  MSVC, Ninja and the DirectX SDK, which every Windows job here needs and which are
+  easy to get subtly wrong. Kept in one place so the build and test workflows cannot
+  drift apart: they did once, and the tests failed because they were missing the SDK
+  and were on a different compiler.
+
+inputs:
+  arch:
+    description: x64 or x86
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup MSVC dev command prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ inputs.arch }}
+
+    - name: Install Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v6
+
+    - name: Set DXSDK env
+      shell: bash
+      run: |
+        DXSDK_ROOT_WIN=$(cygpath -w $HOME/cache)
+        echo "DXSDK_ROOT=$DXSDK_ROOT_WIN" >> $GITHUB_ENV
+
+    - name: Cache DXSDK
+      uses: actions/cache@v5
+      with:
+        path: $HOME/cache
+        key: DXSDK-Jun2010
+
+    - name: Install 7z
+      uses: milliewalky/setup-7-zip@v2
+
+    - name: Install DirectX SDK (June 2010)
+      shell: bash
+      run: |
+        curl -L "https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe" -o DXSDK_Jun10.exe
+        7z x DXSDK_Jun10.exe DXSDK/Include -o_DX2010_
+        7z x DXSDK_Jun10.exe DXSDK/Lib -o_DX2010_
+        mv _DX2010_/DXSDK $HOME/cache

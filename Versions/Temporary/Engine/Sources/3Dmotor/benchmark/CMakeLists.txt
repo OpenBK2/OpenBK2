@@ -18,6 +18,7 @@ function(add_benchmark_arch filename flag suffix)
                     $<TARGET_RUNTIME_DLLS:${target_name}> $<TARGET_FILE_DIR:${target_name}>
             COMMAND_EXPAND_LISTS
             VERBATIM)
+    register_benchmark(${target_name})
 endfunction()
 
 function(add_benchmark filename)
@@ -57,6 +58,7 @@ add_custom_command(TARGET LightingKernels_benchmark POST_BUILD
             $<TARGET_FILE_DIR:LightingKernels_benchmark>
     COMMAND_EXPAND_LISTS
     VERBATIM)
+register_benchmark(LightingKernels_benchmark)
 
 # The MMX reference the benchmark measures against is assembled, not inline, so
 # every variant has to link it.
