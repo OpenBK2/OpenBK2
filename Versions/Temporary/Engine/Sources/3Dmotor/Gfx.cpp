@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "3DLib/3DLib_export.h"
+#include "3DLib_export.h"
 
 #include <D3D9.h>
 #include <ddraw.h>

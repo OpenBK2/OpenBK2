@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "GameX_export.h"
-#include "Main/Main_export.h"
+#include "Main_export.h"
 
 #include "Misc/2Darray.h"
 #include "stats_b2_m1/IconsSet.h"

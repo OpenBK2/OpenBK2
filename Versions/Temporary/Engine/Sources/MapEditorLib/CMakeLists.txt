@@ -53,9 +53,8 @@ set(SOURCES
     Tools_SysCodes.cpp
     Tools_UniqueList.cpp
 )
-include(GenerateExportHeader)
 add_library(MapEditorLib SHARED ${SOURCES})
-generate_export_header(MapEditorLib EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MapEditorLib_export.h)
+add_export_header(MapEditorLib)
 target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System winapi)
 install(TARGETS MapEditorLib DESTINATION bin)
 add_version_info(MapEditorLib)

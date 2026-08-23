@@ -4,9 +4,8 @@ set(SOURCES
     SymAccess.cpp
     Trace.cpp
 )
-include(GenerateExportHeader)
 add_library(MemoryLib SHARED ${SOURCES})
 target_link_libraries(MemoryLib PRIVATE DbgHelp winapi)
-generate_export_header(MemoryLib EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MemoryLib_export.h)
+add_export_header(MemoryLib)
 install(TARGETS MemoryLib DESTINATION bin)
 add_version_info(MemoryLib)

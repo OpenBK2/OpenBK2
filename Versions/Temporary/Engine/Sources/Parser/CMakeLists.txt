@@ -11,9 +11,8 @@ set(SOURCES
     stdafx.cpp
     StringNumbers.cpp
 )
-include(GenerateExportHeader)
 add_library(Parser SHARED ${SOURCES})
-generate_export_header(Parser EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Parser_export.h)
+add_export_header(Parser)
 target_link_libraries(Parser PRIVATE MemoryLib Misc System zlib winapi)
 install(TARGETS Parser DESTINATION bin)
 add_version_info(Parser)

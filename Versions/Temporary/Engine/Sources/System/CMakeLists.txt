@@ -47,9 +47,8 @@ set(SOURCES
     XmlUtils.cpp
     ZipArchieve.cpp
 )
-include(GenerateExportHeader)
 add_library(System SHARED ${SOURCES})
-generate_export_header(System EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/System_export.h)
+add_export_header(System)
 target_link_libraries(System PRIVATE MemoryLib Misc zlib winapi)
 install(TARGETS System DESTINATION bin)
 add_version_info(System)

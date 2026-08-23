@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "3Dmotor/3Dmotor_export.h"
+#include "3Dmotor_export.h"
 
 #include "UI/commandparam.h"
 #include "UI/dbuserinterface.h"

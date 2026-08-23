@@ -25,9 +25,8 @@ set(SOURCES
     ScriptWrapperInternal.cpp
     StdAfx.cpp
 )
-include(GenerateExportHeader)
 add_library(Script SHARED ${SOURCES})
-generate_export_header(Script EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Script_export.h)
+add_export_header(Script)
 target_link_libraries(Script PRIVATE MemoryLib Misc System winapi)
 install(TARGETS Script DESTINATION bin)
 add_version_info(Script)

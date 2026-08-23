@@ -84,9 +84,8 @@ set(SOURCES
     WindController.cpp
     WingScaleMutator.cpp
 )
-include(GenerateExportHeader)
 add_library(SceneB2 SHARED ${SOURCES})
-generate_export_header(SceneB2 EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/SceneB2_export.h)
+add_export_header(SceneB2)
 target_link_libraries(SceneB2 PRIVATE 3DLib 3Dmotor B2_M1_Terrain DebugTools Image Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib granny)
 install(TARGETS SceneB2 DESTINATION bin)
 add_version_info(SceneB2)

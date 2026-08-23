@@ -11,9 +11,8 @@ set(SOURCES
     ServerClient.cpp
     StdAfx.cpp
 )
-include(GenerateExportHeader)
 add_library(Client SHARED ${SOURCES})
-generate_export_header(Client EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Client_export.h)
+add_export_header(Client)
 target_link_libraries(Client PRIVATE MemoryLib Misc Net Server_Client_Common System winapi)
 install(TARGETS Client DESTINATION bin)
 add_version_info(Client)

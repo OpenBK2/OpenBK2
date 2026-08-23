@@ -38,9 +38,8 @@ set(SOURCES
     Wrapper/ResourceManagerInternal.cpp
     Wrapper/TableManipulator.cpp
 )
-include(GenerateExportHeader)
 add_library(libdb SHARED ${SOURCES})
-generate_export_header(libdb EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/libdb_export.h)
+add_export_header(libdb)
 target_include_directories(libdb PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(libdb PRIVATE MemoryLib Misc Parser System zlib winapi)
 install(TARGETS libdb DESTINATION bin)

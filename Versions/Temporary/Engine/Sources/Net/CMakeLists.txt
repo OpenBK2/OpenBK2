@@ -11,9 +11,8 @@ set(SOURCES
     NetStream.cpp
     stdafx.cpp
 )
-include(GenerateExportHeader)
 add_library(Net SHARED ${SOURCES})
-generate_export_header(Net EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Net_export.h)
+add_export_header(Net)
 target_link_libraries(Net PRIVATE MemoryLib Misc System Ws2_32)
 install(TARGETS Net DESTINATION bin)
 add_version_info(Net)
