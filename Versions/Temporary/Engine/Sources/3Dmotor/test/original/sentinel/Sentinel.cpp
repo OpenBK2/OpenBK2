@@ -19,6 +19,8 @@
 #include <cstdio>
 #include <random>
 
+#include "../../random.h"
+
 namespace {
 
 // Fixed seed on purpose: a sentinel that fails differently on every run is not one
@@ -132,6 +134,58 @@ int main()
 
     printf( "MMXTransformVectorMMX: %d random cases bit-identical\n",
         static_cast<int>( iterations ) );
+
+
+    // MMXTransformVector2 and 3. These were never made bit-exact against the shipping
+    // glm implementations; that is a separate question. What is checked here is only
+    // that moving their MMX out of __asm and into MASM changed nothing.
+    {
+        SHMatrix m1, m2, m3;
+        NGfx::SCompactVector src{};
+        NGfx::SCompactVector legacy{}, viaAsm{};
+        int nWeighted = 0;
+        for ( int i = 0; i < iterations; ++i )
+        {
+            randomizeNormalVector( src );
+            randomizeMatrix( m1 );
+            randomizeMatrix( m2 );
+            randomizeMatrix( m3 );
+            const uint8_t w1 = static_cast<uint8_t>( NextU32() );
+            const uint8_t w2 = static_cast<uint8_t>( NextU32() );
+            const uint8_t w3 = static_cast<uint8_t>( NextU32() );
+
+            LegacyTransform2( legacy, src, m1, w1, m2, w2 );
+            AsmTransform2( viaAsm, src, m1, w1, m2, w2 );
+            if ( legacy.dw != viaAsm.dw )
+            {
+                printf( "MISMATCH MMXTransformVector2 iteration %d: legacy %08lX asm %08lX\n",
+                    i, static_cast<unsigned long>( legacy.dw ),
+                    static_cast<unsigned long>( viaAsm.dw ) );
+                if ( ++nFailures > 10 )
+                    break;
+            }
+
+            LegacyTransform3( legacy, src, m1, w1, m2, w2, m3, w3 );
+            AsmTransform3( viaAsm, src, m1, w1, m2, w2, m3, w3 );
+            if ( legacy.dw != viaAsm.dw )
+            {
+                printf( "MISMATCH MMXTransformVector3 iteration %d: legacy %08lX asm %08lX\n",
+                    i, static_cast<unsigned long>( legacy.dw ),
+                    static_cast<unsigned long>( viaAsm.dw ) );
+                if ( ++nFailures > 10 )
+                    break;
+            }
+            ++nWeighted;
+        }
+
+        if ( nFailures != 0 )
+        {
+            printf( "MMXTransformVector2/3: FAILED, %d mismatching results\n", nFailures );
+            return 1;
+        }
+        printf( "MMXTransformVector2MMX: %d random cases bit-identical\n", nWeighted );
+        printf( "MMXTransformVector3MMX: %d random cases bit-identical\n", nWeighted );
+    }
 
     return 0;
 }

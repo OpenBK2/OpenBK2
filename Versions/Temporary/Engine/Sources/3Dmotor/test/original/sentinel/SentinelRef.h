@@ -34,3 +34,18 @@ extern "C" uint32_t MMXTransformVectorMMX(
     const SMMXFixups *pFixups,
     const NGfx::SCompactTransformer *pTrans,
     const short *pNormalizeTable );
+
+// MMXTransformVector2 and 3 are compared through wrappers instead of a transcription:
+// each side is compiled in its own translation unit (LegacyTransformRef.cpp and
+// AsmTransformRef.cpp) because both define these in namespace original.
+void LegacyTransform2( NGfx::SCompactVector &res, const NGfx::SCompactVector &src,
+    const SHMatrix &m1, uint8_t w1, const SHMatrix &m2, uint8_t w2 );
+void LegacyTransform3( NGfx::SCompactVector &res, const NGfx::SCompactVector &src,
+    const SHMatrix &m1, uint8_t w1, const SHMatrix &m2, uint8_t w2,
+    const SHMatrix &m3, uint8_t w3 );
+
+void AsmTransform2( NGfx::SCompactVector &res, const NGfx::SCompactVector &src,
+    const SHMatrix &m1, uint8_t w1, const SHMatrix &m2, uint8_t w2 );
+void AsmTransform3( NGfx::SCompactVector &res, const NGfx::SCompactVector &src,
+    const SHMatrix &m1, uint8_t w1, const SHMatrix &m2, uint8_t w2,
+    const SHMatrix &m3, uint8_t w3 );
