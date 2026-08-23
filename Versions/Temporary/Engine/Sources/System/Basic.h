@@ -132,7 +132,7 @@ public:
 		virtual int GetSizeOf() const { return sizeof(classname); }						\
 protected:                                                                           \
 		CObjectBase* MakeCopy() const { return new classname(*this); }                   \
-		virtual void DestroyContents() { classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
+		virtual void DestroyContents() { this->classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
 		virtual ~classname() {}                                                          \
 	private:
 #define OBJECT_NOCOPY_METHODS(classname)                                             \
@@ -140,7 +140,7 @@ protected:                                                                      
 		static CObjectBase* New##classname() { return new classname(); }                 \
 		virtual int GetSizeOf() const { return sizeof(classname); }						\
 	protected:                                                                         \
-	virtual void DestroyContents() { classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
+	virtual void DestroyContents() { this->classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
 	private:
 #define BASIC_REGISTER_CLASS(module, classname) \
 template<> module##_EXPORT CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
