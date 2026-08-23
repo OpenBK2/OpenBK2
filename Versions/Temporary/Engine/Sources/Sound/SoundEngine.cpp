@@ -173,7 +173,7 @@ bool CSoundEngine::SearchDevices()
 {
 	if ( FSOUND_GetVersion() < FMOD_VERSION )
 	{
-		OutputDebugString( "Error : You are using the wrong DLL version!\n" );
+		DebugTrace( "Error : You are using the wrong DLL version!" );
 		return false;
 	}
 	FSOUND_SetOutput( FSOUND_OUTPUT_DSOUND );
@@ -220,7 +220,7 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 
 	if ( !FSOUND_Init( nMixRate, 128, 0 ) )
 	{
-		OutputDebugString( "NFMSound::Start():error!\n" );
+		DebugTrace( "NFMSound::Start():error!" );
 		//NI_ASSERT( 0, StrFmt("Failed to init FMOD: %d", FSOUND_GetError()) );
 		//soft reaction on error: sound card not found.
 		bSoundCardPresent = false;
@@ -229,40 +229,42 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 	}
 
 #ifdef _DEBUG
-	OutputDebugString( "Using \"" );
-	OutputDebugString( drivers[nDriver].szDriverName.c_str() );
-	OutputDebugString( "\" sound driver.\n" );
+	// One call per line, where this used to build the driver line and the mixer
+	// line from several writes each: DebugTrace terminates every call, so writing
+	// them piecewise would now produce a line apiece.
+	DebugTrace( "Using \"%s\" sound driver.", drivers[nDriver].szDriverName.c_str() );
 	if ( drivers[nDriver].isHardware3DAccelerated )
-		OutputDebugString("- Driver supports hardware 3D sound!\n" );
+		DebugTrace( "- Driver supports hardware 3D sound!" );
 	if ( drivers[nDriver].supportEAXReverb )
-		OutputDebugString("- Driver supports EAX reverb!\n" );
+		DebugTrace( "- Driver supports EAX reverb!" );
 	if ( drivers[nDriver].supportReverb )
-		OutputDebugString("- Driver supports EAX 2.0 !\n" );
+		DebugTrace( "- Driver supports EAX 2.0 !" );
 	if ( drivers[nDriver].supportEAX3 )
-		OutputDebugString("- Driver supports EAX 3.0 !\n" );
-	
-	OutputDebugString("Mixer = ");
+		DebugTrace( "- Driver supports EAX 3.0 !" );
+
+	const char *pszMixer = "unknown";
 	switch ( FSOUND_GetMixer() )
 	{
-		case FSOUND_MIXER_BLENDMODE:	
-			OutputDebugString("FSOUND_MIXER_BLENDMODE\n"); 
+		case FSOUND_MIXER_BLENDMODE:
+			pszMixer = "FSOUND_MIXER_BLENDMODE";
 			break;
-		case FSOUND_MIXER_MMXP5:		
-			OutputDebugString("FSOUND_MIXER_MMXP5\n"); 
+		case FSOUND_MIXER_MMXP5:
+			pszMixer = "FSOUND_MIXER_MMXP5";
 			break;
-		case FSOUND_MIXER_MMXP6:		
-			OutputDebugString("FSOUND_MIXER_MMXP6\n"); 
+		case FSOUND_MIXER_MMXP6:
+			pszMixer = "FSOUND_MIXER_MMXP6";
 			break;
-		case FSOUND_MIXER_QUALITY_FPU:	
-			OutputDebugString("FSOUND_MIXER_QUALITY_FPU\n"); 
+		case FSOUND_MIXER_QUALITY_FPU:
+			pszMixer = "FSOUND_MIXER_QUALITY_FPU";
 			break;
 		case FSOUND_MIXER_QUALITY_MMXP5:
-			OutputDebugString("FSOUND_MIXER_QUALITY_MMXP5\n"); 
+			pszMixer = "FSOUND_MIXER_QUALITY_MMXP5";
 			break;
 		case FSOUND_MIXER_QUALITY_MMXP6:
-			OutputDebugString("FSOUND_MIXER_QUALITY_MMXP6\n"); 
+			pszMixer = "FSOUND_MIXER_QUALITY_MMXP6";
 			break;
 	};
+	DebugTrace( "Mixer = %s", pszMixer );
 #endif
 
 	//

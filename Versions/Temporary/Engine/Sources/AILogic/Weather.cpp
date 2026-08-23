@@ -80,7 +80,7 @@ void CWeather::Off()
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_WEATHER_CHANGED, 0, 0 );
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Bad weather stopped" );
 		theUnitCreation.ApplyWeatherModifier( false );
-		OutputDebugString( "Bad weather turning off\n" );
+		DebugTrace( "Bad weather turning off" );
 	}
 }
 
@@ -103,7 +103,7 @@ void CWeather::On()
 			bReturnPlane = (*it)->GetPlayer() == theDipl.GetMyNumber() && (*it)->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0;
 		if ( bReturnPlane )
 			updater.AddUpdate( new SPlaneReturnsUpdate, ACTION_NOTIFY_PLANE_RETURNS_DUE_WEATHER, 0, 0 );
-		OutputDebugString( "Bad weather turning on\n" );
+		DebugTrace( "Bad weather turning on" );
 	}
 }
 

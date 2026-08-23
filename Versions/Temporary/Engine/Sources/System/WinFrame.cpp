@@ -35,10 +35,10 @@ static void Report( const char *pszText, int nVal = -0x7fffffff )
 {
 	std::string message;
 	if ( nVal != -0x7fffffff )
-		message = fmt::format( "{}{}\n", pszText, nVal );
+		message = fmt::format( "{}{}", pszText, nVal );
 	else
-		message = fmt::format( "{}\n", pszText );
-	OutputDebugString( message.c_str() );
+		message = pszText;
+	DebugTrace( "%s", message.c_str() );
 }
 
 bool NWinFrame::GetMessage( SWindowsMsg *pRes )

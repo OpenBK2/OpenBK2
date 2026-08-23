@@ -30,12 +30,10 @@ static int Script_LOG(lua_State* state)
 {
 	Script script(state);
 	Script::Object obj = script.GetObject(script.GetTop());
-#ifdef WIN32
-	OutputDebugStringA(obj.GetString());
-	OutputDebugStringA("\n");
-#else
-	printf("%s\n", obj.GetString());
-#endif
+	// Was its own copy of the same platform split. Off Windows this now reaches
+	// stderr rather than stdout, which is where the rest of the engine's tracing
+	// goes and keeps it apart from what the game itself prints.
+	DebugTrace( "%s", obj.GetString() );
 	return 0;
 }
 

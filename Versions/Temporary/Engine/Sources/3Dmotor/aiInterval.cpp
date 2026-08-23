@@ -28,7 +28,7 @@ void CalcResult(
 		if ( enter.size() != exit.size() )
 		{
 			//ASSERT( 0 );
-			OutputDebugString( "non closed AI model encountered\n" );
+			DebugTrace( "non closed AI model encountered" );
 		}
 	}
 	else
@@ -45,7 +45,7 @@ void CalcResult(
 		if ( enter.size() != exit.size() )
 		{
 			//ASSERT( 0 );
-			OutputDebugString( "trace does not support fragmented non closed models\n" );
+			DebugTrace( "trace does not support fragmented non closed models" );
 		}
 	}
 }
@@ -67,7 +67,7 @@ void FillIntersectionResults( std::vector<SInterval> *pRes,
 		// due to cheating with degenerate cases and computation errors this might happen
 		//ASSERT( enter[i].fT <= exit[i].fT );
 		if ( enter[i].fT > exit[i].fT )
-			OutputDebugString( "AI tracing, something went wrong\n" );
+			DebugTrace( "AI tracing, something went wrong" );
 		exit[i].fT = (std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}

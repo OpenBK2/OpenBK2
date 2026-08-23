@@ -69,7 +69,7 @@ void DumpGrannyMemory()
 {
 	if ( pGrannyMemoryMap == 0 )
 	{
-		OutputDebugString( "Granny memory statistics is not initialized.\n" );
+		DebugTrace( "Granny memory statistics is not initialized." );
 		return;
 	}
 
@@ -96,19 +96,17 @@ void DumpGrannyMemory()
 
 	std::sort( MemoryRequestArray.begin(), MemoryRequestArray.end(), SGrannyMemoryRequestComparer() );
 
-	OutputDebugString( "source file\tline\tsize\n" );
+	DebugTrace( "source file\tline\tsize" );
 
 	int nTotalSize = 0;
 	for ( int i = 0; i < MemoryRequestArray.size(); ++i )
 	{
 		const std::pair<std::string, int> &tmp = MemoryRequestArray[i];
-		sprintf( szBuf, "%s\t%d\n", tmp.first.data(), tmp.second );
-		OutputDebugString( szBuf );
+		DebugTrace( "%s\t%d", tmp.first.data(), tmp.second );
 		nTotalSize += tmp.second;
 	}
 
-	sprintf( szBuf, "total\t\t%d\n", nTotalSize );
-	OutputDebugString( szBuf );
+	DebugTrace( "total\t\t%d", nTotalSize );
 }
 
 

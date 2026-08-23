@@ -30,15 +30,19 @@ void PORT_STDCALL DbgTrcArgs( fmt::string_view fmtStr, fmt::printf_args args )
 		szLine += "\": ";
 		szLine += e.what();
 	}
-#if BOOST_OS_WINDOWS
-	// the debugger output pane is a Windows concept, and
 	// OutputDebugString takes no format, so the newline is a second call
-	OutputDebugString( szLine.c_str() );
-	OutputDebugString( "\n" );
+	DbgTrcRaw( szLine.c_str() );
+	DbgTrcRaw( "\n" );
+}
+
+void PORT_STDCALL DbgTrcRaw( const char *pszText )
+{
+#if BOOST_OS_WINDOWS
+	// the debugger output pane is a Windows concept
+	OutputDebugString( pszText );
 #else
 	// stderr is the closest equivalent: unbuffered, and kept apart from
 	// whatever the game itself writes to stdout
-	std::fputs( szLine.c_str(), stderr );
-	std::fputc( '\n', stderr );
+	std::fputs( pszText, stderr );
 #endif
 }

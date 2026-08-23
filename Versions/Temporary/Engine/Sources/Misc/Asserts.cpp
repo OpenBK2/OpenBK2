@@ -12,21 +12,17 @@
 
 static void TypeDebugTrace( const char *buff, const char *pszWhat, const std::vector<SCallStackEntry> &entries )
 {
-	OutputDebugString( "*********************************************************************************************************\n" );
-	OutputDebugString( buff );
-	OutputDebugString( "\n" );
-	OutputDebugString( pszWhat );
-	OutputDebugString( "\n" );
-	OutputDebugString( "CallStack entries dump:\n" );
+	DebugTrace( "*********************************************************************************************************" );
+	DebugTrace( "%s", buff );
+	DebugTrace( "%s", pszWhat );
+	DebugTrace( "CallStack entries dump:" );
 	for ( int i = 0; i < entries.size(); ++i )
 	{
 		const SCallStackEntry &e = entries[i];
-		char buff[1024];
-		sprintf( buff, "%s(%d): %s\n", e.szFile.szStr, e.nLine, e.szFunc.szStr );
-		OutputDebugString( buff );
+		DebugTrace( "%s(%d): %s", e.szFile.szStr, e.nLine, e.szFunc.szStr );
 	}
-	OutputDebugString( "CallStack entries dump done\n" );
-	OutputDebugString( "*********************************************************************************************************\n" );
+	DebugTrace( "CallStack entries dump done" );
+	DebugTrace( "*********************************************************************************************************" );
 }
 
 namespace NBSU

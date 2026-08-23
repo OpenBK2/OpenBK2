@@ -803,9 +803,7 @@ void Flip()
 		if ( (nTotalFrames&N_SLOW_FPS_TYPE) == 0 )
 		{
 			float fFPS = N_SLOW_FPS_TYPE / fTotalFrameTime;
-			char szBuf[1024];
-			sprintf( szBuf, "FPS = %f\n", fFPS );
-			OutputDebugString( szBuf );
+			DebugTrace( "FPS = %f", fFPS );
 			nTotalFrames = 0;
 			fTotalFrameTime = 0;
 		}

@@ -260,8 +260,7 @@ void CLMGeometryGen::Recalc()
 		{
 			if ( NVFS::GetMainFileCreator() )
 			{
-				OutputDebugString( str );
-				OutputDebugString( "\n" );
+				DebugTrace( "%s", str );
 				CFileStream stream( NVFS::GetMainFileCreator(), str );
 				NGScene::CObjectInfo::SBinData sBinD;
 				pValue->AssignTo( &sBinD );

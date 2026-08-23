@@ -7,6 +7,11 @@
 
 #include <string>
 
+// Declared here rather than by including Misc/Tools.h, which is where it lives:
+// Tools.h uses ASSERT, so including it from this header forms a cycle and leaves
+// whichever of the two the translation unit reaches first without the other.
+MISC_EXPORT void PORT_STDCALL DbgTrcRaw( const char *pszText );
+
 // native John Robbins's BSU functions
 
 // our wrapper for BSU - smart asserts
@@ -51,7 +56,7 @@ if ( !(x) )                                                           \
 	{                                                                   \
 		if ( is_debugger_present() )                                      \
 		{																																	\
-			OutputDebugString( szAssertText.c_str() );																	\
+			DbgTrcRaw( szAssertText.c_str() );																	\
 			breakpoint();                                                   \
 		}																																	\
 		else                                                              \

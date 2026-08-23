@@ -64,7 +64,7 @@ static void f_luaopen (lua_State *L, void *ud)
 		stacksize += LUA_MINSTACK;
 	L->nGT = luaH_new(L, 10);	/* table of globals */
 
-	OutputDebugString("Opening LUA stack f_luaOpen\n");
+	DebugTrace( "Opening LUA stack f_luaOpen" );
 	luaX_init(L);
 	luaT_init(L);
 	lua_newtable(L);
@@ -95,7 +95,7 @@ lua_State *lua_open (int stacksize, const char* instanceName)
 	lua_setThread( L, pThr );
 	f_luaopen( L, &stacksize );
 	L->nGCAvoid = 0;
- 	OutputDebugString("Opening LUA stack (new thread)\n");
+ 	DebugTrace( "Opening LUA stack (new thread)" );
 	return L;
 }
 
@@ -108,7 +108,7 @@ void lua_close (lua_State *L)
 	LUA_ASSERT( L->tables.empty(), "list should be empty");
 	L->callInfos.clear();
 
-	OutputDebugString("Freeing LUA stack\n");
+	DebugTrace( "Freeing LUA stack" );
 	delete L;
 }
 

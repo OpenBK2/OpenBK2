@@ -280,6 +280,11 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 // call sites instantiate nothing but the two line wrapper below.
 MISC_EXPORT void PORT_STDCALL DbgTrcArgs( fmt::string_view fmtStr, fmt::printf_args args );
 
+// Writes the text exactly as given, with no newline of its own. For the few callers
+// that already place their own line breaks, or that deliberately leave a line open.
+// Everything else wants DbgTrc, which terminates each call.
+MISC_EXPORT void PORT_STDCALL DbgTrcRaw( const char *pszText );
+
 template < typename... TArgs >
 void DbgTrc( fmt::string_view fmtStr, const TArgs &... args )
 {

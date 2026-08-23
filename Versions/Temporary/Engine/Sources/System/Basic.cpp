@@ -234,8 +234,7 @@ void PrintObjectsStatistics()
 
 	sort( statistics.begin(), statistics.end(), STypeStatsComparer() );
 
-	char szBuf[1024];
-	OutputDebugString( "type name\tobjects number\tvalid\tinvalid\tsizeof\tsizeof*number\tserialize size\n" );
+	DebugTrace( "type name\tobjects number\tvalid\tinvalid\tsizeof\tsizeof*number\tserialize size" );
 	int nTotalObjects = 0;
 	int nTotalValidsNumber = 0;
 	int nTotalInvalidsNumber = 0;
@@ -246,16 +245,14 @@ void PrintObjectsStatistics()
 		const std::pair<std::string, STypeStats> &tmp = statistics[i];
 		const STypeStats &stats = tmp.second;
 		const int nNumberXSizeOf = stats.nObjectsNumber*stats.nSizeOf;
-		sprintf( szBuf, "%s\t%d\t%d\t%d\t%d\t%d\t%d\n", tmp.first.data(), stats.nObjectsNumber, stats.nValidsNumber, stats.nInvalidsNumber, stats.nSizeOf, nNumberXSizeOf, stats.nSerializeSize );
-		OutputDebugString( szBuf );
+		DebugTrace( "%s\t%d\t%d\t%d\t%d\t%d\t%d", tmp.first.data(), stats.nObjectsNumber, stats.nValidsNumber, stats.nInvalidsNumber, stats.nSizeOf, nNumberXSizeOf, stats.nSerializeSize );
 		nTotalObjects += stats.nObjectsNumber;
 		nTotalValidsNumber += stats.nValidsNumber;
 		nTotalInvalidsNumber += stats.nInvalidsNumber;
 		nTotalSizeOf += nNumberXSizeOf;
 		nTotalSerializeSize += stats.nSerializeSize;
 	}
-	sprintf( szBuf, "total (%d types)\t%d\t%d\t%d\t%d\t\t%d\t%d\n", statistics.size(), nTotalObjects, nTotalValidsNumber, nTotalInvalidsNumber, nTotalSizeOf, nTotalSerializeSize );
-	OutputDebugString( szBuf );
+	DebugTrace( "total (%d types)\t%d\t%d\t%d\t%d\t\t%d\t%d", statistics.size(), nTotalObjects, nTotalValidsNumber, nTotalInvalidsNumber, nTotalSizeOf, nTotalSerializeSize );
 }
 
 #endif // TRACK_OBJECTS_STATISTICS

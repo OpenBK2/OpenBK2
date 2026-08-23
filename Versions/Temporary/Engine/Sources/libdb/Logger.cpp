@@ -22,7 +22,7 @@ void CLogger::WriteLog( const std::string &szLog, bool bAppendNL )
 		szResult += "\n";
 	}
 	printf( szResult.c_str() );
-	OutputDebugString( szResult.c_str() );
+	DbgTrcRaw( szResult.c_str() );
 	memoryStream.Write( szResult.c_str(), szResult.length() );
 	if ( pStream != 0 )
 	{
