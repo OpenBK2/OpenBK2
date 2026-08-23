@@ -5,7 +5,7 @@
 struct IDirect3DDevice9;
 namespace NGfx
 {
-	enum EPixelFormat;
+	enum EPixelFormat : int;
 }
 
 namespace NImage

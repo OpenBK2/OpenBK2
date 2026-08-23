@@ -5,7 +5,13 @@
 namespace NGfx
 {
 
-enum EPixelFormat
+// The underlying type is spelled out so the declarations in Image can be legal
+// C++: an enum can only be declared without its definition when it is fixed.
+// int is also what MSVC already picked here, where GCC picks unsigned for an
+// unfixed enum whose enumerators are all non-negative, so this makes the two
+// agree rather than changing either. CF_FORCE_DWORD below now says the same
+// thing twice and is kept only because removing an enumerator is its own call.
+enum EPixelFormat : int
 {
 	CF_DXT1     = 1,
 	CF_DXT2     = 2,
