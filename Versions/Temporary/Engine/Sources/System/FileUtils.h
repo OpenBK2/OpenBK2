@@ -86,7 +86,6 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 	}
 }
 
-void GetDirectoryDirs( const char *pszDirName, std::list<std::string> *pNames, bool bRecursive = true );
 SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse = true );
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive );
 SYSTEM_EXPORT void DeleteDirectory( const std::string &szDir );
@@ -115,7 +114,5 @@ public:
 	~CCurrDirHolder() { SetCurrDir( szDir ); }
 };
 
-// return number of bytes, free for the caller on the selected drive
-double GetFreeDiskSpace( const char *pszDrive );
 }
 

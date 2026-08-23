@@ -231,11 +231,6 @@ void AppendSlash( std::string *pFilePath, const char cSlash )
 	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) )
 		(*pFilePath) += cSlash;
 }
-void RemoveSlash( std::string *pFilePath, const char cSlash )
-{
-	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) )
-		pFilePath->resize( pFilePath->size() - 1 );
-}
 void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo )
 {
 	for ( std::string::iterator it = pFilePath->begin(); it != pFilePath->end(); ++it )

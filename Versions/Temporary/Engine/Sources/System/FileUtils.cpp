@@ -121,58 +121,22 @@ void DeleteDirectory( const std::string &szDir )
 	RemoveDirectory( szDir.c_str() );
 }
 
+// The two flags this carried are gone with GetDirectoryDirs, which was the only
+// caller that ever asked for directories.
 class CDirFileEnum
 {
 	std::list<std::string> *pNames;			// store names here
-	bool bDir;														// enumerate dirs
-	bool bFile;														// enumerate files
 public:
-	CDirFileEnum( std::list<std::string> *_pNames, bool _bDir, bool _bFile )
-		: pNames( _pNames ), bDir( _bDir ), bFile( _bFile ) {  }
+	CDirFileEnum( std::list<std::string> *_pNames ) : pNames( _pNames ) {  }
 	void operator()( const CFileIterator &it )
 	{
-		if ( it.IsDirectory() )
-		{
-			if ( bDir )
-				pNames->push_back( it.GetFullName() );
-		}
-		else if ( bFile )
+		if ( !it.IsDirectory() )
 			pNames->push_back( it.GetFullName() );
 	}
 };
-void GetDirectoryDirs( const char *pszDirName, std::list<std::string> *pNames, bool bRecursive )
-{
-	EnumerateFiles( pszDirName, "*.*", CDirFileEnum(pNames, true, false), bRecursive );
-}
 void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse )
 {
-	EnumerateFiles( pszDirName, pszMask, CDirFileEnum(pNames, false, true), bRecurse );
-}
-
-// return number of bytes, free for the caller on the selected drive
-double GetFreeDiskSpace( const char *pszDrive )
-{
-	typedef BOOL (WINAPI *GDFSE)( LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER );
-
-	GDFSE pfnGetDiskFreeSpaceEx = (GDFSE)GetProcAddress( GetModuleHandle("kernel32.dll"), "GetDiskFreeSpaceExA" );
-	bool bRetVal = false;
-	double fRetVal = 0;
-	if ( pfnGetDiskFreeSpaceEx )
-	{
-	 ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
-	 bRetVal = (*pfnGetDiskFreeSpaceEx)( pszDrive, &i64FreeBytesToCaller,
-																	     &i64TotalBytes, &i64FreeBytes );
-	 fRetVal = double( int64_t(i64FreeBytesToCaller.QuadPart) );
-	}
-	else
-	{
-		unsigned long dwSectPerClust, dwBytesPerSect, dwFreeClusters, dwTotalClusters;
-		bRetVal = GetDiskFreeSpace( pszDrive, &dwSectPerClust, &dwBytesPerSect,
-																&dwFreeClusters, &dwTotalClusters );
-		fRetVal = double( dwFreeClusters ) * double( dwSectPerClust ) * double( dwBytesPerSect );
-	}
-
-	return ( bRetVal == 0 ? 0 : fRetVal );
+	EnumerateFiles( pszDirName, pszMask, CDirFileEnum(pNames), bRecurse );
 }
 
 bool DoesFileExist( const std::string &szFileName )

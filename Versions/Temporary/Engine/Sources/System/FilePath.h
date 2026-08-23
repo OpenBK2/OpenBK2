@@ -64,7 +64,6 @@ SYSTEM_EXPORT void NormalizePath( std::string *pRes, const std::string &szFilePa
 BOOST_FORCEINLINE void NormalizePath( std::string *pFilePath ) { NormalizePath( pFilePath, *pFilePath ); }
 
 void AppendSlash( std::string *pFilePath, const char cSlash = '\\' );
-void RemoveSlash( std::string *pFilePath, const char cSlash = '\\' );
 SYSTEM_EXPORT void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo );
 
 //! Create every missing directory in the path. True if the path exists
