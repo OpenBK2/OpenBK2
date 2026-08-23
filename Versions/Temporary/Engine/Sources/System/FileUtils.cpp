@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdint>
+#include <filesystem>
+#include <system_error>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -275,9 +277,16 @@ std::string GetTempFileName()
 
 std::string GetCurrDir()
 {
-	char buffer[1024];
-	const int nLen = GetCurrentDirectory( 1024, buffer );
-	return nLen == 0 ? "" : buffer;
+	// The error_code overload, as in NFile::CreatePath: the throwing one would raise
+	// at callers that have only ever tested for an empty string, and this does fail
+	// in practice, on a working directory deleted out from under the process.
+	//
+	// The fixed 1024 byte buffer goes with it, and a bug with it: GetCurrentDirectory
+	// writes nothing and returns the size it wanted when the path does not fit, which
+	// is not zero, so a path over 1024 characters returned uninitialised stack.
+	std::error_code ec;
+	const std::filesystem::path currDir = std::filesystem::current_path( ec );
+	return ec ? std::string() : currDir.string();
 }
 
 std::string GetNormalizedCurrDir()
@@ -290,7 +299,10 @@ std::string GetNormalizedCurrDir()
 
 void SetCurrDir( const std::string &szDir )
 {
-	SetCurrentDirectory( szDir.c_str() );
+	// SetCurrentDirectory returned a BOOL this never read, and the signature leaves
+	// nowhere to report one, so a failure stays as quiet as it already was.
+	std::error_code ec;
+	std::filesystem::current_path( szDir, ec );
 }
 
 }; // namespace NFile ends
