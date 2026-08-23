@@ -165,7 +165,7 @@ namespace NMapInfoEditor
 			// проверим, что некоторые элементы необходимо добавить
 			CObjectInfoIDSet newObjectInfoIDSet;
 			CObjectInfoIDSet existingObjectInfoIDSet;
-			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
+			for ( typename Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
 				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				if ( objectSelection.objectSelectionPartMap.find( nObjectInfoID ) == objectSelection.objectSelectionPartMap.end() )
@@ -225,7 +225,7 @@ namespace NMapInfoEditor
 			// установим абсолютные координаты
 			objectSelection.MakeAbsolute();
 			// удалим элементы
-			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
+			for ( typename Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
 				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
@@ -362,7 +362,7 @@ namespace NMapInfoEditor
 		template<class Type>
 		bool IsInSelection( const Type &rObjectSceneIDList ) const
 		{
-			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
+			for ( typename Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
 				const unsigned nObjectInfoID = Pick( *itObjectSceneID );
 				CObjectSelectionPartMap::const_iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );

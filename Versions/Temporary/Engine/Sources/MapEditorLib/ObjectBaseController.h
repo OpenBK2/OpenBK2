@@ -304,7 +304,7 @@ public:
 			return false;
 		}
 		int nElementIndex = 0;
-		for ( TValue::const_iterator itElement = rNewData.begin(); itElement != rNewData.end(); ++itElement )
+		for ( typename TValue::const_iterator itElement = rNewData.begin(); itElement != rNewData.end(); ++itElement )
 		{
 			// вставляем элемент если необходимо
 			if ( nElementIndex >= nExistingElementCount )

@@ -63,7 +63,7 @@ void SetComboBoxEditParameters( const TList &rList, const int nIndex, TControl *
 			{
 				pControl->ResetContent();
 				int nListIndex = 0;
-				for ( TList::const_iterator itString = rList.begin(); itString != rList.end(); ++itString )
+				for ( typename TList::const_iterator itString = rList.begin(); itString != rList.end(); ++itString )
 				{
 					const int nControlIndex = pControl->AddString( itString->c_str() );
 					pControl->SetItemData( nControlIndex, nListIndex );

@@ -204,7 +204,7 @@ public:
 	template<class TPointList>
 	void DrawPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
-		TPointList::const_iterator itTestPoint = rPolintList.begin();
+		typename TPointList::const_iterator itTestPoint = rPolintList.begin();
 		// нет точек
 		if ( itTestPoint == rPolintList.end() )
 		{
@@ -218,7 +218,7 @@ public:
 		}
 		//
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
-		for ( TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
+		for ( typename TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
 		{
 			const CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3*>( 0 ) );
 			posNewPolyline->points.push_back( vPoint );
@@ -236,7 +236,7 @@ public:
 	template<class TPointList>
 	void Draw3DPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
-		TPointList::const_iterator itTestPoint = rPolintList.begin();
+		typename TPointList::const_iterator itTestPoint = rPolintList.begin();
 		// нет точек
 		if ( itTestPoint == rPolintList.end() )
 		{
@@ -250,7 +250,7 @@ public:
 		}
 		//
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
-		for ( TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
+		for ( typename TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
 		{
 			CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3*>( 0 ) );
 			vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );

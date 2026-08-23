@@ -1089,7 +1089,7 @@ void CGScene::MakePolycountRenderList( CTransformStack *pTS, CSceneFragments *pL
 template<class T> int PrecacheMaterialsForSet( const T &s, ILoadingCounter *pCounter )
 {
 	int nRes = 0;
-	for ( T::const_iterator i = s.begin(); i != s.end(); ++i )
+	for ( typename T::const_iterator i = s.begin(); i != s.end(); ++i )
 	{
 		if ( IsValid( *i ) )
 			(*i)->GetMaterial()->Precache();
@@ -1565,7 +1565,7 @@ template<class T>
 inline int GetNotLoadedCount( const T &stuff )
 {
 	int nCount = 0;
-	for ( T::const_iterator i = stuff.begin(); i != stuff.end(); ++i )
+	for ( typename T::const_iterator i = stuff.begin(); i != stuff.end(); ++i )
 	{
 		if ( IsValid(*i) && !(*i)->HasLoadedObjectInfo() )
 			nCount++;
@@ -1900,7 +1900,7 @@ void CGScene::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 template<class T>
 static void AddNotLoaded( std::vector<IPart*> *pRes, const T &data )
 {
-	for ( T::const_iterator i = data.begin(); i != data.end(); ++i )
+	for ( typename T::const_iterator i = data.begin(); i != data.end(); ++i )
 	{
 		ISomePart *pPart = *i;
 		//ASSERT( IsValid(pPart) );

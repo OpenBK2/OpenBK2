@@ -195,7 +195,7 @@ public:
 		if ( bResult )
 		{
 			int nElementIndex = 0;
-			for ( TValue::const_iterator itElement = rData.begin(); itElement != rData.end(); ++itElement )
+			for ( typename TValue::const_iterator itElement = rData.begin(); itElement != rData.end(); ++itElement )
 			{
 				if ( nElementIndex >= nExistingElementCount )
 				{

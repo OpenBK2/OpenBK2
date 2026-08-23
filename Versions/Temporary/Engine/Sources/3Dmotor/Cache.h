@@ -224,7 +224,7 @@ private:
 		if ( alloc(p).elem.SameSize( _elem ) )
 			return p;
 		TElement elem(_elem);
-		TElement::ESplitType t = elem.Up();
+		typename TElement::ESplitType t = elem.Up();
 		ASSERT( _elem.GetHash() < nodes.size() );
 		pointer pHigher = GetAllocNode( p, elem );
 		Split( pHigher, t );
@@ -310,7 +310,7 @@ private:
 	}
 	void SplitOnUsable( pointer pNode )
 	{
-		TElement::ESplitType t = alloc( pNode ).elem.GetUsableSplit();
+		typename TElement::ESplitType t = alloc( pNode ).elem.GetUsableSplit();
 		if ( t != TElement::NONE )
 			Split( pNode, t );
 	}

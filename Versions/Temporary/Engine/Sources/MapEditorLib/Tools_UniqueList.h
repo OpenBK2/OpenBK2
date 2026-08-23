@@ -40,7 +40,7 @@ public:
 			}
 		}
 		{
-			TList::iterator posElement = elementList.find( rElement );
+			typename TList::iterator posElement = elementList.find( rElement );
 			if ( posElement != elementList.end() )
 			{
 				elementList.erase( posElement );

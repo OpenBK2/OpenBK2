@@ -46,7 +46,7 @@ void FastComposeImagesByAlpha( CArray2D<uint32_t> *pDestImage, const TArray &rSo
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 		{
-			for ( TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.begin(); ++itSourceImage )
+			for ( typename TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.end(); ++itSourceImage )
 			{
 				if ( GetAlphaFromARGBColor( ( *( *itSourceImage ) )[nYIndex][nXIndex] ) >= dwMinAlpha )
 				{
@@ -69,7 +69,7 @@ void FastComposeImagesByColor( CArray2D<uint32_t> *pDestImage, const TArray &rSo
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 		{
-			for ( TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.begin(); ++itSourceImage )
+			for ( typename TArray::const_iterator itSourceImage = rSourceImageList.begin(); itSourceImage != rSourceImageList.end(); ++itSourceImage )
 			{
 				if ( ( *( *itSourceImage ) )[nYIndex][nXIndex] == dwColor )
 				{

@@ -444,7 +444,7 @@ private:
 	template<class T, class TSet>
 	void DrawSet( T *pRes, TSet *pSet )
 	{
-		for ( TSet::iterator iTemp = pSet->begin(); iTemp != pSet->end(); )
+		for ( typename TSet::iterator iTemp = pSet->begin(); iTemp != pSet->end(); )
 		{
 			if ( IsValid( *iTemp ) )
 			{

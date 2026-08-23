@@ -15,7 +15,7 @@ void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 template<class TContainer> 
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
-	for ( TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
+	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
 	{
 		if ( ( *itElement ) >= nIndex )
 		{
@@ -29,7 +29,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 template<class TContainer, class TElement> 
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
-	for ( TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
+	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
 	{
 		if ( itElement->nIndex >= nIndex )
 		{
@@ -43,7 +43,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 template<class TContainer, class TElement> 
 void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 {
-	for ( TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
+	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
 	{
 		if ( itElement->nIndex > nIndex )
 		{
