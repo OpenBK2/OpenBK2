@@ -33,11 +33,11 @@ else()
     add_unit_test(ScaleColors 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
     add_unit_test(SampleWarFogInt 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
     add_unit_test(SampleWarFog 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES})
-    add_unit_test(MMXhelpers 3Dmotor Misc)
 endif()
 
-# Both architectures: their MMX references are assembled, not inline.
+# Both architectures: their MMX references are assembled or intrinsic, not inline.
 add_unit_test(CalcDirectionalLighting 3Dmotor Misc OriginalMMX SOURCES ${LIGHTING_KERNEL_SOURCES})
+add_unit_test(MMXhelpers 3Dmotor Misc)
 # Drives refLightingKernels / sse2LightingKernels / avx2LightingKernels directly,
 # rather than whatever GetLightingKernels() picks, so the sets the running CPU is
 # not dispatching to still get checked.
