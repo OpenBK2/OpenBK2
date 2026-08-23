@@ -79,6 +79,21 @@ uint32_t EmulateTransform1( uint32_t nSrc, const SMMXFixups &fx,
     return static_cast<uint32_t>( nPacked & 0xffffffffu ) | nW;
 }
 
+// The glm implementation from the #else branch of GSSEtransform.h, reproduced here so
+// it can be measured. No supported configuration compiles it - HAS_SSE2 is 1 on x86 and
+// x64 alike - but it is kept as the fallback a future Linux or ARM port would use, and
+// something nothing builds is something nothing tests.
+void GlmTransformVector( NGfx::SCompactVector &res, const NGfx::SCompactVector &src,
+    const SHMatrix &transform1 )
+{
+    glm::mat4 matrix1 = LoadMatrix( transform1 );
+    glm::vec4 vec = LoadCompactVector( src );
+    glm::vec4 result = matrix1 * vec;
+    glm::vec3 normal = glm::normalize( glm::vec3{ result.x, result.y, result.z } );
+    res = SaveCompactVector( normal );
+    res.w = src.w;
+}
+
 struct SStats
 {
     const char *pszName;
@@ -131,7 +146,10 @@ int main()
 {
     enum { iterations = 200000 };
 
-    SStats shipStats{ "ship" }, emuStats{ "emu" };
+    SStats shipStats{ "sse2" }, emuStats{ "mmx emu" }, glmStats{ "glm" };
+    // The SSE2 version was written to reproduce glm's evaluation order deliberately.
+    // Whether it succeeded is worth stating rather than inferring from equal summaries.
+    int nSse2EqualsGlm = 0;
 
     for ( int i = 0; i < iterations; ++i )
     {
@@ -150,14 +168,23 @@ int main()
         viaEmu.dw = EmulateTransform1( src.dw, fixups, compactTransform, nNormalizeTable );
         viaEmu.w = src.w;
 
+        NGfx::SCompactVector viaGlmBranch{};
+        GlmTransformVector( viaGlmBranch, src, transform );
+
+        if ( viaGlm.dw == viaGlmBranch.dw )
+            ++nSse2EqualsGlm;
         Accumulate( shipStats, ref, viaGlm );
         Accumulate( emuStats, ref, viaEmu );
+        Accumulate( glmStats, ref, viaGlmBranch );
     }
 
     printf( "MMXTransformVector, %d random normal/rotation pairs, vs the original MMX\n\n",
         static_cast<int>( iterations ) );
     Report( shipStats );
+    Report( glmStats );
     Report( emuStats );
+    printf( "\nsse2 and glm agree with each other on %s of cases\n",
+        nSse2EqualsGlm == iterations ? "100%" : "NOT all" );
 
     // MMXTransformVector2 and 3, against the legacy inline __asm in original.h, with
     // the same weight distribution MMXTransformVector_test uses. This is the divergence
