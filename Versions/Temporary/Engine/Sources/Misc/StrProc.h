@@ -118,6 +118,14 @@ MISC_EXPORT int ToInt( const char *pszString );
 inline int ToInt( const std::string &szString ) { return ToInt( szString.c_str() ); }
 unsigned long ToULong( const char *pszString );
 inline unsigned long ToULong( const std::string &szString ) { return ToULong( szString.c_str() ); }
+// Decimal only, which is what atol and _wtol did. Deliberately not ToInt above:
+// that reads the radix from a prefix, so "010" is 8 there and 10 here. Markup and
+// configuration values are written by hand and a leading zero in them is padding,
+// not a base.
+MISC_EXPORT int ToIntDec( const char *pszString );
+inline int ToIntDec( const std::string &szString ) { return ToIntDec( szString.c_str() ); }
+// markup parameters arrive wide, and a number in them is ASCII either way
+inline int ToIntDec( const std::wstring &wszString ) { return ToIntDec( WideToUTF8( wszString ) ); }
 // convert 'string', which represents FP value to 'float' and 'double'
 MISC_EXPORT float ToFloat( const char *pszString );
 inline float ToFloat( const std::string &szString ) { return ToFloat( szString.c_str() ); }

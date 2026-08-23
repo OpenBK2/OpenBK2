@@ -128,7 +128,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 		else if ( wsID.compare( L"outlinesize" ) == 0  )
 		{
 			nFlags |= N_FONTOBJECT_OUTLINESIZE;
-			nOutlineSize = _wtol( wsParam.c_str() );
+			nOutlineSize = NStr::ToIntDec( wsParam );
 		}
 		else if ( wsID.compare( L"outlinecolor" ) == 0  )
 		{
@@ -158,7 +158,7 @@ void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, cons
 	if ( paramsSet[2].compare( L"=" ) == 0  )
 		return;
 
-	int nMinFontSize = _wtol( paramsSet[3].c_str() );
+	int nMinFontSize = NStr::ToIntDec( paramsSet[3] );
 	pLayout->AddObject( CreateMinFontSizeObject( nMinFontSize ) );
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "UIML.h"
 
+#include "Misc/StrProc.h"
+
 #include "port/unicode.h"
 
 inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade = 1.0f )
@@ -190,7 +192,7 @@ public:
 				else if ( wsID.compare( L"face" ) == 0  )
 					sState.sFont.szName = WideToUTF8( wsParam );
 				else if ( wsID.compare( L"outlinesize" ) == 0  )
-					sState.nOutlineBorder = _wtol( wsParam.c_str() );
+					sState.nOutlineBorder = NStr::ToIntDec( wsParam );
 				else if ( wsID.compare( L"outlinecolor" ) == 0  )
 					sState.sOutlineColor = StringToColor( wsParam );
 				else if ( wsID.compare( L"forcefontsize" ) == 0  )
@@ -242,11 +244,11 @@ public:
 //				else if ( wsID.compare( L"id" ) == 0  )
 //					pTexture = NDb::STexture::Get( _wtol( wsParam.c_str() ) );
 				else if ( wsID.compare( L"width" ) == 0  )
-					nWidth = _wtol( wsParam.c_str() );
+					nWidth = NStr::ToIntDec( wsParam );
 				else if ( wsID.compare( L"height" ) == 0  )
-					nHeight = _wtol( wsParam.c_str() );
+					nHeight = NStr::ToIntDec( wsParam );
 				else if ( wsID.compare( L"border" ) == 0  )
-					nBorder = _wtol( wsParam.c_str() );
+					nBorder = NStr::ToIntDec( wsParam );
 
 				nTemp += 3;
 			}
@@ -286,7 +288,7 @@ public:
 				const std::wstring &wsID = paramsSet[nTemp];
 				const std::wstring &wsParam = paramsSet[nTemp + 2];
 				if ( wsID.compare( L"size" ) == 0  )
-					sState.nMinFontSize = _wtol( wsParam.c_str() );
+					sState.nMinFontSize = NStr::ToIntDec( wsParam );
 
 				nTemp += 3;
 			}

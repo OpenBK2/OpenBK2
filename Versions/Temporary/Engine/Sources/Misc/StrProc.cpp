@@ -143,6 +143,22 @@ int ToInt( const char *pszString )
 	}
 	return bNegative ? -static_cast<int>( nMagnitude ) : static_cast<int>( nMagnitude );
 }
+int ToIntDec( const char *pszString )
+{
+	const char *p = SkipSpace( pszString );
+	const bool bNegative = ( *p == '-' );
+	if ( *p == '+' || *p == '-' )
+	{
+		++p;
+	}
+	unsigned int nMagnitude = 0;
+	const std::from_chars_result res = std::from_chars( p, p + strlen( p ), nMagnitude, 10 );
+	if ( res.ec != std::errc() )
+	{
+		return 0;
+	}
+	return bNegative ? -static_cast<int>( nMagnitude ) : static_cast<int>( nMagnitude );
+}
 float ToFloat( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
