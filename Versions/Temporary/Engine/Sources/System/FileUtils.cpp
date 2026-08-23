@@ -34,57 +34,118 @@ static char buffer[BUFFER_SIZE];
 // **
 // ************************************************************************************************************************ //
 
-const CFileIterator& CFileIterator::FindFirstFile( const std::string &_szMask )
+// FindFirstFile's mask semantics, as the callers here use them. "*" and "*.*" both
+// mean everything, including a name with no dot at all, which a literal reading of
+// "*.*" would exclude. '?' and a '*' elsewhere in the pattern work too, though no
+// caller writes one today.
+//
+// Case-insensitive, as FindFirstFile was: a "*.sav" search has always found Foo.SAV,
+// and on a case-sensitive filesystem a plain suffix compare would stop finding it.
+static bool MatchesMask( const std::string &szName, const std::string &szMask )
 {
-	szPath = _szMask;
-	NStr::ReplaceAllChars( &szPath, '/', '\\' );
-	int pos = szPath.rfind( '\\' );
-	if ( pos == std::string::npos )
+	if ( szMask.empty() || szMask == "*" || szMask == "*.*" )
+		return true;
+	const char *pszName = szName.c_str();
+	const char *pszMask = szMask.c_str();
+	const char *pszStar = 0;
+	const char *pszRetry = 0;
+	while ( *pszName != 0 )
 	{
-		szMask = _szMask;
-		szPath.clear();
+		if ( *pszMask == '?' || NStr::ASCII_tolower( *pszMask ) == NStr::ASCII_tolower( *pszName ) )
+		{
+			++pszMask;
+			++pszName;
+		}
+		else if ( *pszMask == '*' )
+		{
+			// remember where to resume if the rest of the pattern turns out not to fit
+			pszStar = pszMask++;
+			pszRetry = pszName;
+		}
+		else if ( pszStar != 0 )
+		{
+			pszMask = pszStar + 1;
+			pszName = ++pszRetry;
+		}
+		else
+		{
+			return false;
+		}
 	}
-	else
+	while ( *pszMask == '*' )
 	{
-		szMask = szPath.substr( pos + 1 );
-		szPath = szPath.substr( 0, pos );
+		++pszMask;
 	}
-	//
-	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' )
-		szPath += "\\";
-	// create absolute path from the relative one
-	NFile::GetFullName( &szPath, szPath );
-	//
-	if ( !szPath.empty() && szPath[szPath.size() - 1] != '\\' )
-		szPath += "\\";
-	//
-	hFind = ::FindFirstFile( _szMask.c_str(), &findinfo );
-	return *this;
+	return *pszMask == 0;
+}
+
+void CFileIterator::Open( const std::string &szFullMask )
+{
+	const size_t nPos = szFullMask.find_last_of( "/" "\\" );
+	const std::string szDir = ( nPos == std::string::npos ) ? std::string() : szFullMask.substr( 0, nPos + 1 );
+	szMask = ( nPos == std::string::npos ) ? szFullMask : szFullMask.substr( nPos + 1 );
+
+	// Absolute, because this has always handed back absolute names and callers open
+	// files by them. lexically_normal rather than canonical: the directory need not
+	// exist, and that case has to end as an empty iteration rather than an error.
+	std::error_code ec;
+	const std::filesystem::path dir =
+		std::filesystem::absolute( szDir.empty() ? std::filesystem::path( "." ) : std::filesystem::path( szDir ), ec )
+			.lexically_normal()
+			.make_preferred();
+	if ( ec )
+		return;
+	it = std::filesystem::directory_iterator( dir, ec );
+	if ( ec )
+	{
+		it = std::filesystem::directory_iterator();
+		return;
+	}
+	SkipToMatch();
+}
+
+void CFileIterator::SkipToMatch()
+{
+	const std::filesystem::directory_iterator itEnd;
+	std::error_code ec;
+	while ( it != itEnd && !MatchesMask( it->path().filename().string(), szMask ) )
+	{
+		it.increment( ec );
+		if ( ec )
+		{
+			it = itEnd;
+			return;
+		}
+	}
 }
 
 const CFileIterator& CFileIterator::Next()
 {
-	if ( !IsValid() )
+	if ( IsEnd() )
 		return *this;
-	if ( ::FindNextFile(hFind, &findinfo) == 0 )
-		Close();
+	std::error_code ec;
+	it.increment( ec );
+	if ( ec )
+		it = std::filesystem::directory_iterator();
+	else
+		SkipToMatch();
 	return *this;
-}
-
-bool CFileIterator::Close()
-{
-	if ( IsValid() )
-	{
-		const bool bRet = ::FindClose( hFind ) != 0;
-		hFind = INVALID_HANDLE_VALUE;
-		return bRet;
-	}
-	return true;
 }
 
 // ************************************************************************************************************************ //
 //                                         external file utilites
 // ************************************************************************************************************************ //
+
+// Adding the write permission is what clearing FILE_ATTRIBUTE_READONLY was: the
+// Windows standard library maps that attribute onto these bits. Adding it where it
+// is already set costs nothing, so the read-only test that the attribute query used
+// to answer is no longer needed, and neither are GetAttribs and IsReadOnly.
+static void MakeWritable( const std::string &szName )
+{
+	std::error_code ec;
+	std::filesystem::permissions( szName, std::filesystem::perms::owner_write,
+		std::filesystem::perm_options::add, ec );
+}
 
 class CDeleteFiles
 {
@@ -97,14 +158,14 @@ public:
 	{
 		if ( !it.IsDirectory() )
 		{
-			if ( bDeleteRO && it.IsReadOnly() )
-				SetFileAttributes( it.GetFullName().c_str(), it.GetAttribs() & ~FILE_ATTRIBUTE_READONLY );
+			if ( bDeleteRO )
+				MakeWritable( it.GetFullName() );
 			DeleteFile( it.GetFullName().c_str() );
 		}
 		else if ( bDeleteDir )
 		{
-			if ( bDeleteRO && it.IsReadOnly() )
-				SetFileAttributes( it.GetFullName().c_str(), it.GetAttribs() & ~FILE_ATTRIBUTE_READONLY );
+			if ( bDeleteRO )
+				MakeWritable( it.GetFullName() );
 			RemoveDirectory( it.GetFullName().c_str() );
 		}
 	}

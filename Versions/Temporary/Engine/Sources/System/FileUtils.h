@@ -4,56 +4,64 @@
 
 #include <cstdint>
 #include <ctime>
+#include <filesystem>
+#include <string>
+#include <system_error>
 
 #include <boost/filesystem/operations.hpp>
 
 namespace NFile
 {
 
+// One directory, filtered by a FindFirstFile style mask. The mask names the
+// directory and the pattern together, "dir/*.xdb", as it did when this wrapped
+// FindFirstFile; the directory is resolved to an absolute path once, so every name
+// handed back is absolute.
+//
+// A directory that cannot be opened, which callers do pass, leaves the iterator at
+// its end rather than throwing, matching the INVALID_HANDLE_VALUE this used to get.
 class SYSTEM_EXPORT CFileIterator
 {
-	HANDLE hFind;													// find file handle of the last search result
-	WIN32_FIND_DATA findinfo;							// last search info
-	std::string szPath;                   // path to the file
-	std::string szMask;
+	std::filesystem::directory_iterator it;	// default constructed is the end
+	std::string szMask;															// the pattern, without the directory
 
-	bool IsValid() const { return hFind != INVALID_HANDLE_VALUE; }
-	CFileIterator( const CFileIterator &a ) {}
-	void operator=( const CFileIterator &a ) {}
-	bool Close();
-	const CFileIterator& FindFirstFile( const std::string &szMask );
+	CFileIterator( const CFileIterator &a ) = delete;
+	void operator=( const CFileIterator &a ) = delete;
+	void Open( const std::string &szFullMask );
+	void SkipToMatch();
 public:
-	CFileIterator() : hFind( INVALID_HANDLE_VALUE ) {  }
-	CFileIterator( const std::string &szMask ) { FindFirstFile( szMask ); }
-	~CFileIterator() { Close(); }
+	CFileIterator() {  }
+	CFileIterator( const std::string &szFullMask ) { Open( szFullMask ); }
 	// file enumeration
 	const CFileIterator& Next();
-	bool IsEnd() const { return !IsValid(); }
+	bool IsEnd() const { return it == std::filesystem::directory_iterator(); }
 	const CFileIterator& operator++() { return Next(); }
-	// current file attributes check
-	uint32_t GetAttribs() const { return findinfo.dwFileAttributes; }
-	bool IsReadOnly() const { return ( GetAttribs() & FILE_ATTRIBUTE_READONLY ) != 0; }
-	bool IsDirectory() const { return ( GetAttribs() & FILE_ATTRIBUTE_DIRECTORY ) != 0; }
-	// special kind of directory: '.' - this dir and '..' - parent dir
-	bool IsDots() const
+	bool IsDirectory() const
 	{
-		return ( ( findinfo.cFileName[0] == '.' ) && 
-			       ( (findinfo.cFileName[1] == '\0') || 
-						   ((findinfo.cFileName[1] == '.') && (findinfo.cFileName[2] == '\0')) ) );
+		std::error_code ec;
+		return it->is_directory( ec );
 	}
-	// file time attributes. findinfo holds the bare name, so the full path has
-	// to be rebuilt before asking the filesystem about it
+	// directory_iterator never yields '.' or '..', so the callers that skip them are
+	// asking something that can no longer be true. Kept so those tests still read
+	// correctly rather than being deleted out from under them.
+	bool IsDots() const { return false; }
+	// file time attributes
 	std::time_t GetLastWriteTime() const
 	{
 		boost::system::error_code ec;
 		const std::time_t t = boost::filesystem::last_write_time( GetFullName(), ec );
 		return ec ? 0 : t;
 	}
-	// file length
-	int GetLength() const { return findinfo.nFileSizeLow; }
+	// file length. still an int, and so still truncating past 2 GB, as the
+	// nFileSizeLow it replaces did
+	int GetLength() const
+	{
+		std::error_code ec;
+		return static_cast< int >( it->file_size( ec ) );
+	}
 	// file name (title + ext), full path (absolute path + name)
-	std::string GetFileName() const { return findinfo.cFileName; }
-	std::string GetFullName() const { return szPath + findinfo.cFileName; }
+	std::string GetFileName() const { return it->path().filename().string(); }
+	std::string GetFullName() const { return it->path().string(); }
 	const std::string& GetBaseMask() const { return szMask; }
 };
 
@@ -76,7 +84,9 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 		{
 			// dive into recurse
 			if ( bRecurse )
-				EnumerateFiles( (it.GetFullName() +  "\\").c_str(), pszMask, callback, bRecurse );
+				// '/' rather than a backslash: off Windows a backslash is an ordinary
+				// character in a file name, and this path is about to be split again
+				EnumerateFiles( (it.GetFullName() + "/").c_str(), pszMask, callback, bRecurse );
 			//
 			callback( it );
 		}
