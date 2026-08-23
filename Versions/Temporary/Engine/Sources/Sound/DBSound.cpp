@@ -29,7 +29,7 @@ std::string EnumToString( NDb::ESoundType eValue )
 	}
 }
 
-NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const std::string &szValue )
+NDb::ESoundType StringToEnum_NDb_ESoundType( const std::string &szValue )
 {
 	if ( szValue == "NORMAL" )
 		return NDb::NORMAL;

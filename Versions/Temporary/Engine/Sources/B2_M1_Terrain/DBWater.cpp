@@ -110,7 +110,7 @@ std::string EnumToString( NDb::SWater::EWaterType eValue )
 	}
 }
 
-NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const std::string &szValue )
+NDb::SWater::EWaterType StringToEnum_NDb_SWater_EWaterType( const std::string &szValue )
 {
 	if ( szValue == "WT_OCEAN" )
 		return NDb::SWater::WT_OCEAN;

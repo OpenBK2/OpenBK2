@@ -217,7 +217,7 @@ std::string EnumToString( NDb::EUserAction eValue )
 	}
 }
 
-NDb::EUserAction NDb::StringToEnum_NDb_EUserAction( const std::string &szValue )
+NDb::EUserAction StringToEnum_NDb_EUserAction( const std::string &szValue )
 {
 	if ( szValue == "USER_ACTION_UNKNOWN" )
 		return NDb::USER_ACTION_UNKNOWN;
@@ -437,7 +437,7 @@ std::string EnumToString( NDb::ESpecialAbilityParam eValue )
 	}
 }
 
-NDb::ESpecialAbilityParam NDb::StringToEnum_NDb_ESpecialAbilityParam( const std::string &szValue )
+NDb::ESpecialAbilityParam StringToEnum_NDb_ESpecialAbilityParam( const std::string &szValue )
 {
 	if ( szValue == "PARAM_ABILITY_ON" )
 		return NDb::PARAM_ABILITY_ON;

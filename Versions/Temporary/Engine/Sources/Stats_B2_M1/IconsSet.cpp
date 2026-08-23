@@ -51,7 +51,7 @@ std::string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
 	}
 }
 
-NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const std::string &szValue )
+NDb::SIconsSet::SIconType::EIconTypeEnum StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const std::string &szValue )
 {
 	if ( szValue == "ICONTYPE_NONE" )
 		return NDb::SIconsSet::SIconType::ICONTYPE_NONE;
@@ -214,7 +214,7 @@ std::string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eVa
 	}
 }
 
-NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const std::string &szValue )
+NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const std::string &szValue )
 {
 	if ( szValue == "VOIT_NONE" )
 		return NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE;

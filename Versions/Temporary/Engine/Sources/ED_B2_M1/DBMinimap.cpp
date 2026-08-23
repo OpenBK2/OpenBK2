@@ -45,7 +45,7 @@ string EnumToString( NDb::EMinimapLayerType eValue )
 	}
 }
 
-NDb::EMinimapLayerType NDb::StringToEnum_NDb_EMinimapLayerType( const string &szValue )
+NDb::EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const string &szValue )
 {
 	if ( szValue == "LAYER_UNKNOWN" )
 		return NDb::LAYER_UNKNOWN;
@@ -99,7 +99,7 @@ string EnumToString( NDb::EImageScaleMethod eValue )
 	}
 }
 
-NDb::EImageScaleMethod NDb::StringToEnum_NDb_EImageScaleMethod( const string &szValue )
+NDb::EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const string &szValue )
 {
 	if ( szValue == "IMAGE_SCALE_METHOD_DEFAULT" )
 		return NDb::IMAGE_SCALE_METHOD_DEFAULT;

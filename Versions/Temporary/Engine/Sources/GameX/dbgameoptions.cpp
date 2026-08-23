@@ -75,7 +75,7 @@ std::string EnumToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EO
 	}
 }
 
-NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const std::string &szValue )
+NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( const std::string &szValue )
 {
 	if ( szValue == "OPTION_EDITOR_EDITLINE" )
 		return NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITLINE;

@@ -31,7 +31,7 @@ std::string EnumToString( NDb::ESeason eValue )
 	}
 }
 
-NDb::ESeason NDb::StringToEnum_NDb_ESeason( const std::string &szValue )
+NDb::ESeason StringToEnum_NDb_ESeason( const std::string &szValue )
 {
 	if ( szValue == "SEASON_WINTER" )
 		return NDb::SEASON_WINTER;
@@ -65,7 +65,7 @@ std::string EnumToString( NDb::EDayNight eValue )
 	}
 }
 
-NDb::EDayNight NDb::StringToEnum_NDb_EDayNight( const std::string &szValue )
+NDb::EDayNight StringToEnum_NDb_EDayNight( const std::string &szValue )
 {
 	if ( szValue == "DAY_MORNING" )
 		return NDb::DAY_MORNING;

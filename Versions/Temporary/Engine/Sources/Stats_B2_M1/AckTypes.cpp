@@ -161,7 +161,7 @@ std::string EnumToString( NDb::EUnitAckType eValue )
 	}
 }
 
-NDb::EUnitAckType NDb::StringToEnum_NDb_EUnitAckType( const std::string &szValue )
+NDb::EUnitAckType StringToEnum_NDb_EUnitAckType( const std::string &szValue )
 {
 	if ( szValue == "ACK_NONE" )
 		return NDb::ACK_NONE;
@@ -325,7 +325,7 @@ std::string EnumToString( NDb::EAckClass eValue )
 	}
 }
 
-NDb::EAckClass NDb::StringToEnum_NDb_EAckClass( const std::string &szValue )
+NDb::EAckClass StringToEnum_NDb_EAckClass( const std::string &szValue )
 {
 	if ( szValue == "ACKT_POSITIVE" )
 		return NDb::ACKT_POSITIVE;
@@ -353,7 +353,7 @@ std::string EnumToString( NDb::EAckPosition eValue )
 	}
 }
 
-NDb::EAckPosition NDb::StringToEnum_NDb_EAckPosition( const std::string &szValue )
+NDb::EAckPosition StringToEnum_NDb_EAckPosition( const std::string &szValue )
 {
 	if ( szValue == "ACK_POS_UNIT" )
 		return NDb::ACK_POS_UNIT;

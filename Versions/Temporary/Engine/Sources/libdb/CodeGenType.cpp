@@ -110,7 +110,11 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	pCode->cpp << "}" << endl;
 
 	pCode->cpp << separator;
-	pCode->cpp << szFullQualifiedName << " " << szUnderlinedName << "( const string &szValue )" << endl;
+	// szUnderlinedNameWithoutNDB, not szUnderlinedName: this definition is emitted
+	// inside namespace NDb, and a declarator cannot name the scope it is already in.
+	// The qualified spelling is still right at the two places it is used above, both
+	// of which sit outside the namespace.
+	pCode->cpp << szFullQualifiedName << " " << szUnderlinedNameWithoutNDB << "( const string &szValue )" << endl;
 	pCode->cpp << "{" << endl;
 	for ( int i = 0; i < pEnum->entries.size(); ++i )
 	{

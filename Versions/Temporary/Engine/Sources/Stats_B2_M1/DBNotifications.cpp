@@ -59,7 +59,7 @@ std::string EnumToString( NDb::ENotificationType eValue )
 	}
 }
 
-NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const std::string &szValue )
+NDb::ENotificationType StringToEnum_NDb_ENotificationType( const std::string &szValue )
 {
 	if ( szValue == "NTF_OBJECTIVE_RECEIVED" )
 		return NDb::NTF_OBJECTIVE_RECEIVED;
@@ -115,7 +115,7 @@ std::string EnumToString( NDb::EMinimapFigureType eValue )
 	}
 }
 
-NDb::EMinimapFigureType NDb::StringToEnum_NDb_EMinimapFigureType( const std::string &szValue )
+NDb::EMinimapFigureType StringToEnum_NDb_EMinimapFigureType( const std::string &szValue )
 {
 	if ( szValue == "MFT_TRIANGLE" )
 		return NDb::MFT_TRIANGLE;
@@ -235,7 +235,7 @@ std::string EnumToString( NDb::ENotificationEventType eValue )
 	}
 }
 
-NDb::ENotificationEventType NDb::StringToEnum_NDb_ENotificationEventType( const std::string &szValue )
+NDb::ENotificationEventType StringToEnum_NDb_ENotificationEventType( const std::string &szValue )
 {
 	if ( szValue == "NEVT_OBJECTIVE_COMPLETED" )
 		return NDb::NEVT_OBJECTIVE_COMPLETED;

@@ -27,7 +27,7 @@ std::string EnumToString( NDb::EHistoricalSide eValue )
 	}
 }
 
-NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const std::string &szValue )
+NDb::EHistoricalSide StringToEnum_NDb_EHistoricalSide( const std::string &szValue )
 {
 	if ( szValue == "HS_ALLIES" )
 		return NDb::HS_ALLIES;

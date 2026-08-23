@@ -27,7 +27,7 @@ std::string EnumToString( NDb::EMPGameType eValue )
 	}
 }
 
-NDb::EMPGameType NDb::StringToEnum_NDb_EMPGameType( const std::string &szValue )
+NDb::EMPGameType StringToEnum_NDb_EMPGameType( const std::string &szValue )
 {
 	if ( szValue == "MP_GT_STANDARD" )
 		return NDb::MP_GT_STANDARD;
@@ -640,7 +640,7 @@ std::string EnumToString( NDb::EScriptAreaTypes eValue )
 	}
 }
 
-NDb::EScriptAreaTypes NDb::StringToEnum_NDb_EScriptAreaTypes( const std::string &szValue )
+NDb::EScriptAreaTypes StringToEnum_NDb_EScriptAreaTypes( const std::string &szValue )
 {
 	if ( szValue == "EAT_RECTANGLE" )
 		return NDb::EAT_RECTANGLE;
@@ -883,7 +883,7 @@ std::string EnumToString( NDb::EParcelType eValue )
 	}
 }
 
-NDb::EParcelType NDb::StringToEnum_NDb_EParcelType( const std::string &szValue )
+NDb::EParcelType StringToEnum_NDb_EParcelType( const std::string &szValue )
 {
 	if ( szValue == "EPATCH_UNKNOWN" )
 		return NDb::EPATCH_UNKNOWN;
@@ -1158,7 +1158,7 @@ std::string EnumToString( NDb::ESuperWeaponType eValue )
 	}
 }
 
-NDb::ESuperWeaponType NDb::StringToEnum_NDb_ESuperWeaponType( const std::string &szValue )
+NDb::ESuperWeaponType StringToEnum_NDb_ESuperWeaponType( const std::string &szValue )
 {
 	if ( szValue == "SUPER_WEAPON_BOMBER" )
 		return NDb::SUPER_WEAPON_BOMBER;
@@ -1555,7 +1555,7 @@ std::string EnumToString( NDb::EBonusType eValue )
 	}
 }
 
-NDb::EBonusType NDb::StringToEnum_NDb_EBonusType( const std::string &szValue )
+NDb::EBonusType StringToEnum_NDb_EBonusType( const std::string &szValue )
 {
 	if ( szValue == "BT_REPLACE_REINFORCEMENT" )
 		return NDb::BT_REPLACE_REINFORCEMENT;

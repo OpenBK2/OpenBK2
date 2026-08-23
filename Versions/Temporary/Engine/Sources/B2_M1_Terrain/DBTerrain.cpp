@@ -160,7 +160,7 @@ std::string EnumToString( NDb::EWeatherType eValue )
 	}
 }
 
-NDb::EWeatherType NDb::StringToEnum_NDb_EWeatherType( const std::string &szValue )
+NDb::EWeatherType StringToEnum_NDb_EWeatherType( const std::string &szValue )
 {
 	if ( szValue == "WEATHER_RAIN" )
 		return NDb::WEATHER_RAIN;

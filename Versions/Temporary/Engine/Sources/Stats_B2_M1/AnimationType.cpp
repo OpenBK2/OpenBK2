@@ -109,7 +109,7 @@ std::string EnumToString( NDb::EAnimationType eValue )
 	}
 }
 
-NDb::EAnimationType NDb::StringToEnum_NDb_EAnimationType( const std::string &szValue )
+NDb::EAnimationType StringToEnum_NDb_EAnimationType( const std::string &szValue )
 {
 	if ( szValue == "ANIMATION_UNKNOWN" )
 		return NDb::ANIMATION_UNKNOWN;

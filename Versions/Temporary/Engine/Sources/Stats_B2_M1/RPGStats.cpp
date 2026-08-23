@@ -158,7 +158,7 @@ std::string EnumToString( NDb::EUnitSpecialAbility eValue )
 	}
 }
 
-NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const std::string &szValue )
+NDb::EUnitSpecialAbility StringToEnum_NDb_EUnitSpecialAbility( const std::string &szValue )
 {
 	if ( szValue == "ABILITY_NOT_ABILITY" )
 		return NDb::ABILITY_NOT_ABILITY;
@@ -304,7 +304,7 @@ std::string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
 	}
 }
 
-NDb::EUnitSpecialAbilityGroup NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( const std::string &szValue )
+NDb::EUnitSpecialAbilityGroup StringToEnum_NDb_EUnitSpecialAbilityGroup( const std::string &szValue )
 {
 	if ( szValue == "ABILITY_GROUP_NOGROUP" )
 		return NDb::ABILITY_GROUP_NOGROUP;
@@ -420,7 +420,7 @@ std::string EnumToString( NDb::EArmorDirection eValue )
 	}
 }
 
-NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const std::string &szValue )
+NDb::EArmorDirection StringToEnum_NDb_EArmorDirection( const std::string &szValue )
 {
 	if ( szValue == "RPG_FRONT" )
 		return NDb::RPG_FRONT;
@@ -486,7 +486,7 @@ std::string EnumToString( NDb::EObjGameType eValue )
 	}
 }
 
-NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const std::string &szValue )
+NDb::EObjGameType StringToEnum_NDb_EObjGameType( const std::string &szValue )
 {
 	if ( szValue == "SGVOGT_UNKNOWN" )
 		return NDb::SGVOGT_UNKNOWN;
@@ -544,7 +544,7 @@ std::string EnumToString( NDb::EObjectVisType eValue )
 	}
 }
 
-NDb::EObjectVisType NDb::StringToEnum_NDb_EObjectVisType( const std::string &szValue )
+NDb::EObjectVisType StringToEnum_NDb_EObjectVisType( const std::string &szValue )
 {
 	if ( szValue == "SGVOT_MESH" )
 		return NDb::SGVOT_MESH;
@@ -753,7 +753,7 @@ std::string EnumToString( NDb::ESelectionType eValue )
 	}
 }
 
-NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const std::string &szValue )
+NDb::ESelectionType StringToEnum_NDb_ESelectionType( const std::string &szValue )
 {
 	if ( szValue == "SELECTION_TYPE_GROUND" )
 		return NDb::SELECTION_TYPE_GROUND;
@@ -1453,7 +1453,7 @@ std::string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 	}
 }
 
-NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const std::string &szValue )
+NDb::SWeaponRPGStats::SShell::ETrajectoryType StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const std::string &szValue )
 {
 	if ( szValue == "TRAJECTORY_LINE" )
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
@@ -1491,7 +1491,7 @@ std::string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue 
 	}
 }
 
-NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const std::string &szValue )
+NDb::SWeaponRPGStats::SShell::EShellDamageType StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const std::string &szValue )
 {
 	if ( szValue == "DAMAGE_HEALTH" )
 		return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
@@ -1663,7 +1663,7 @@ std::string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
 	}
 }
 
-NDb::SWeaponRPGStats::EWeaponType NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const std::string &szValue )
+NDb::SWeaponRPGStats::EWeaponType StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const std::string &szValue )
 {
 	if ( szValue == "WEAPON_PISTOL" )
 		return NDb::SWeaponRPGStats::WEAPON_PISTOL;
@@ -2300,7 +2300,7 @@ std::string EnumToString( NDb::EBuildingType eValue )
 	}
 }
 
-NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const std::string &szValue )
+NDb::EBuildingType StringToEnum_NDb_EBuildingType( const std::string &szValue )
 {
 	if ( szValue == "TYPE_BULDING" )
 		return NDb::TYPE_BULDING;
@@ -2330,7 +2330,7 @@ std::string EnumToString( NDb::EDesignBuildingType eValue )
 	}
 }
 
-NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const std::string &szValue )
+NDb::EDesignBuildingType StringToEnum_NDb_EDesignBuildingType( const std::string &szValue )
 {
 	if ( szValue == "BUILDING_TYPE_UNKNOWN" )
 		return NDb::BUILDING_TYPE_UNKNOWN;
@@ -2751,7 +2751,7 @@ std::string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
 	}
 }
 
-NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( const std::string &szValue )
+NDb::SBridgeRPGStats::EDirection StringToEnum_NDb_SBridgeRPGStats_EDirection( const std::string &szValue )
 {
 	if ( szValue == "VERTICAL" )
 		return NDb::SBridgeRPGStats::VERTICAL;
@@ -2773,7 +2773,7 @@ std::string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType e
 	}
 }
 
-NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const std::string &szValue )
+NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const std::string &szValue )
 {
 	if ( szValue == "SLAB" )
 		return NDb::SBridgeRPGStats::SSegmentRPGStats::SLAB;
@@ -3215,7 +3215,7 @@ std::string EnumToString( NDb::EEntrenchSegmType eValue )
 	}
 }
 
-NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const std::string &szValue )
+NDb::EEntrenchSegmType StringToEnum_NDb_EEntrenchSegmType( const std::string &szValue )
 {
 	if ( szValue == "EST_LINE" )
 		return NDb::EST_LINE;
@@ -3355,7 +3355,7 @@ std::string EnumToString( NDb::EFenceDirection eValue )
 	}
 }
 
-NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const std::string &szValue )
+NDb::EFenceDirection StringToEnum_NDb_EFenceDirection( const std::string &szValue )
 {
 	if ( szValue == "FENCE_DIRECTION_0" )
 		return NDb::FENCE_DIRECTION_0;
@@ -3385,7 +3385,7 @@ std::string EnumToString( NDb::EFenceDamageType eValue )
 	}
 }
 
-NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const std::string &szValue )
+NDb::EFenceDamageType StringToEnum_NDb_EFenceDamageType( const std::string &szValue )
 {
 	if ( szValue == "FENCE_TYPE_NORMAL" )
 		return NDb::FENCE_TYPE_NORMAL;
@@ -3411,7 +3411,7 @@ std::string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
 	}
 }
 
-NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const std::string &szValue )
+NDb::SFenceRPGStats::EFencePlacementMode StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const std::string &szValue )
 {
 	if ( szValue == "FENCE_PLACE_ON_TERRAIN" )
 		return NDb::SFenceRPGStats::FENCE_PLACE_ON_TERRAIN;
@@ -3645,7 +3645,7 @@ std::string EnumToString( NDb::EMineType eValue )
 	}
 }
 
-NDb::EMineType NDb::StringToEnum_NDb_EMineType( const std::string &szValue )
+NDb::EMineType StringToEnum_NDb_EMineType( const std::string &szValue )
 {
 	if ( szValue == "MT_INFANTRY" )
 		return NDb::MT_INFANTRY;
@@ -3946,7 +3946,7 @@ std::string EnumToString( NDb::EDBUnitRPGType eValue )
 	}
 }
 
-NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const std::string &szValue )
+NDb::EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const std::string &szValue )
 {
 	if ( szValue == "DB_RPG_TYPE_SOLDIER" )
 		return NDb::DB_RPG_TYPE_SOLDIER;
@@ -4050,7 +4050,7 @@ std::string EnumToString( NDb::EUnitPoliticalSide eValue )
 	}
 }
 
-NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const std::string &szValue )
+NDb::EUnitPoliticalSide StringToEnum_NDb_EUnitPoliticalSide( const std::string &szValue )
 {
 	if ( szValue == "POLITICAL_SIDE_UNKNOWN" )
 		return NDb::POLITICAL_SIDE_UNKNOWN;
@@ -4092,7 +4092,7 @@ std::string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
 	}
 }
 
-NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( const std::string &szValue )
+NDb::EEncyclopediaFilterUnitType StringToEnum_NDb_EEncyclopediaFilterUnitType( const std::string &szValue )
 {
 	if ( szValue == "EFUT_UNKNOWN" )
 		return NDb::EFUT_UNKNOWN;
@@ -4643,7 +4643,7 @@ std::string EnumToString( NDb::EDesignUnitType eValue )
 	}
 }
 
-NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const std::string &szValue )
+NDb::EDesignUnitType StringToEnum_NDb_EDesignUnitType( const std::string &szValue )
 {
 	if ( szValue == "UNIT_TYPE_UNKNOWN" )
 		return NDb::UNIT_TYPE_UNKNOWN;
@@ -5489,7 +5489,7 @@ std::string EnumToString( NDb::EEvent eValue )
 	}
 }
 
-NDb::EEvent NDb::StringToEnum_NDb_EEvent( const std::string &szValue )
+NDb::EEvent StringToEnum_NDb_EEvent( const std::string &szValue )
 {
 	if ( szValue == "HIT_NEAR" )
 		return NDb::HIT_NEAR;
@@ -5519,7 +5519,7 @@ std::string EnumToString( NDb::EDesignSquadType eValue )
 	}
 }
 
-NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const std::string &szValue )
+NDb::EDesignSquadType StringToEnum_NDb_EDesignSquadType( const std::string &szValue )
 {
 	if ( szValue == "SQUAD_TYPE_UNKNOWN" )
 		return NDb::SQUAD_TYPE_UNKNOWN;
@@ -5565,7 +5565,7 @@ std::string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
 	}
 }
 
-NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( const std::string &szValue )
+NDb::SSquadRPGStats::ESquadType StringToEnum_NDb_SSquadRPGStats_ESquadType( const std::string &szValue )
 {
 	if ( szValue == "RIFLEMANS" )
 		return NDb::SSquadRPGStats::RIFLEMANS;
@@ -5646,7 +5646,7 @@ std::string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eV
 	}
 }
 
-NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const std::string &szValue )
+NDb::SSquadRPGStats::SFormation::EFormationMoveType StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const std::string &szValue )
 {
 	if ( szValue == "DEFAULT" )
 		return NDb::SSquadRPGStats::SFormation::DEFAULT;
@@ -5924,7 +5924,7 @@ std::string EnumToString( NDb::EReinforcementType eValue )
 	}
 }
 
-NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const std::string &szValue )
+NDb::EReinforcementType StringToEnum_NDb_EReinforcementType( const std::string &szValue )
 {
 	if ( szValue == "RT_MAIN_INFANTRY" )
 		return NDb::RT_MAIN_INFANTRY;

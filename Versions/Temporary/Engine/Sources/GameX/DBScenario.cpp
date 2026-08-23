@@ -387,7 +387,7 @@ std::string EnumToString( NDb::EMissionEnableType eValue )
 	}
 }
 
-NDb::EMissionEnableType NDb::StringToEnum_NDb_EMissionEnableType( const std::string &szValue )
+NDb::EMissionEnableType StringToEnum_NDb_EMissionEnableType( const std::string &szValue )
 {
 	if ( szValue == "MET_REGULAR" )
 		return NDb::MET_REGULAR;
@@ -423,7 +423,7 @@ std::string EnumToString( NDb::EMissionType eValue )
 	}
 }
 
-NDb::EMissionType NDb::StringToEnum_NDb_EMissionType( const std::string &szValue )
+NDb::EMissionType StringToEnum_NDb_EMissionType( const std::string &szValue )
 {
 	if ( szValue == "EMT_FINAL" )
 		return NDb::EMT_FINAL;
@@ -459,7 +459,7 @@ std::string EnumToString( NDb::EMissionWeather eValue )
 	}
 }
 
-NDb::EMissionWeather NDb::StringToEnum_NDb_EMissionWeather( const std::string &szValue )
+NDb::EMissionWeather StringToEnum_NDb_EMissionWeather( const std::string &szValue )
 {
 	if ( szValue == "EMW_SUN" )
 		return NDb::EMW_SUN;
@@ -489,7 +489,7 @@ std::string EnumToString( NDb::EMissionDayTime eValue )
 	}
 }
 
-NDb::EMissionDayTime NDb::StringToEnum_NDb_EMissionDayTime( const std::string &szValue )
+NDb::EMissionDayTime StringToEnum_NDb_EMissionDayTime( const std::string &szValue )
 {
 	if ( szValue == "EMDT_DAY" )
 		return NDb::EMDT_DAY;
@@ -519,7 +519,7 @@ std::string EnumToString( NDb::EMissionDifficulty eValue )
 	}
 }
 
-NDb::EMissionDifficulty NDb::StringToEnum_NDb_EMissionDifficulty( const std::string &szValue )
+NDb::EMissionDifficulty StringToEnum_NDb_EMissionDifficulty( const std::string &szValue )
 {
 	if ( szValue == "EMD_EASY" )
 		return NDb::EMD_EASY;
@@ -706,7 +706,7 @@ std::string EnumToString( NDb::EChapterBonusType eValue )
 	}
 }
 
-NDb::EChapterBonusType NDb::StringToEnum_NDb_EChapterBonusType( const std::string &szValue )
+NDb::EChapterBonusType StringToEnum_NDb_EChapterBonusType( const std::string &szValue )
 {
 	if ( szValue == "CBT_REINF_DISABLE" )
 		return NDb::CBT_REINF_DISABLE;

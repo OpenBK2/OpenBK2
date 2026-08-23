@@ -93,7 +93,7 @@ string EnumToString( NDb::SUnitBase::EUnitType eValue )
 	}
 }
 
-NDb::SUnitBase::EUnitType NDb::StringToEnum_NDb_SUnitBase_EUnitType( const string &szValue )
+NDb::SUnitBase::EUnitType StringToEnum_NDb_SUnitBase_EUnitType( const string &szValue )
 {
 	if ( szValue == "UNIT_TYPE_UNKNOWN" )
 		return NDb::SUnitBase::UNIT_TYPE_UNKNOWN;

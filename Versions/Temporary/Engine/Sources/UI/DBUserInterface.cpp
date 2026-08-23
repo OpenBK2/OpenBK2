@@ -29,7 +29,7 @@ std::string EnumToString( NDb::EPositionAllign eValue )
 	}
 }
 
-NDb::EPositionAllign NDb::StringToEnum_NDb_EPositionAllign( const std::string &szValue )
+NDb::EPositionAllign StringToEnum_NDb_EPositionAllign( const std::string &szValue )
 {
 	if ( szValue == "EPA_LOW_END" )
 		return NDb::EPA_LOW_END;
@@ -2189,7 +2189,7 @@ std::string EnumToString( NDb::ETextEntryType eValue )
 	}
 }
 
-NDb::ETextEntryType NDb::StringToEnum_NDb_ETextEntryType( const std::string &szValue )
+NDb::ETextEntryType StringToEnum_NDb_ETextEntryType( const std::string &szValue )
 {
 	if ( szValue == "ETET_ALL" )
 		return NDb::ETET_ALL;
@@ -3057,7 +3057,7 @@ std::string EnumToString( NDb::EButtonSubstateType eValue )
 	}
 }
 
-NDb::EButtonSubstateType NDb::StringToEnum_NDb_EButtonSubstateType( const std::string &szValue )
+NDb::EButtonSubstateType StringToEnum_NDb_EButtonSubstateType( const std::string &szValue )
 {
 	if ( szValue == "BST_NORMAL" )
 		return NDb::BST_NORMAL;
@@ -3085,7 +3085,7 @@ std::string EnumToString( NDb::EButtonChangeStateType eValue )
 	}
 }
 
-NDb::EButtonChangeStateType NDb::StringToEnum_NDb_EButtonChangeStateType( const std::string &szValue )
+NDb::EButtonChangeStateType StringToEnum_NDb_EButtonChangeStateType( const std::string &szValue )
 {
 	if ( szValue == "BCST_ON_PUSH" )
 		return NDb::BCST_ON_PUSH;

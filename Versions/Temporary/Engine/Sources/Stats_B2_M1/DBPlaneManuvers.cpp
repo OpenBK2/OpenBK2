@@ -33,7 +33,7 @@ std::string EnumToString( NDb::ESpeedRelation eValue )
 	}
 }
 
-NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const std::string &szValue )
+NDb::ESpeedRelation StringToEnum_NDb_ESpeedRelation( const std::string &szValue )
 {
 	if ( szValue == "ESR_NEAR_STALL" )
 		return NDb::ESR_NEAR_STALL;
@@ -61,7 +61,7 @@ std::string EnumToString( NDb::EPlanesAttitude eValue )
 	}
 }
 
-NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const std::string &szValue )
+NDb::EPlanesAttitude StringToEnum_NDb_EPlanesAttitude( const std::string &szValue )
 {
 	if ( szValue == "EPA_ATTACK" )
 		return NDb::EPA_ATTACK;
@@ -83,7 +83,7 @@ std::string EnumToString( NDb::EManuverDestination eValue )
 	}
 }
 
-NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const std::string &szValue )
+NDb::EManuverDestination StringToEnum_NDb_EManuverDestination( const std::string &szValue )
 {
 	if ( szValue == "EMD_PREDICTED_POINT" )
 		return NDb::EMD_PREDICTED_POINT;
@@ -105,7 +105,7 @@ std::string EnumToString( NDb::EManuverID eValue )
 	}
 }
 
-NDb::EManuverID NDb::StringToEnum_NDb_EManuverID( const std::string &szValue )
+NDb::EManuverID StringToEnum_NDb_EManuverID( const std::string &szValue )
 {
 	if ( szValue == "DB_EMID_GENERIC" )
 		return NDb::DB_EMID_GENERIC;

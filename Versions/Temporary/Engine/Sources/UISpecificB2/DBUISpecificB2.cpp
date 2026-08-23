@@ -96,7 +96,7 @@ std::string EnumToString( NDb::EActionButtonPanel eValue )
 	}
 }
 
-NDb::EActionButtonPanel NDb::StringToEnum_NDb_EActionButtonPanel( const std::string &szValue )
+NDb::EActionButtonPanel StringToEnum_NDb_EActionButtonPanel( const std::string &szValue )
 {
 	if ( szValue == "ACTION_BTN_PANEL_DEFAULT" )
 		return NDb::ACTION_BTN_PANEL_DEFAULT;
