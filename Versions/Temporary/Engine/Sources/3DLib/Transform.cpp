@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Transform.h"
 
+#include <cstring>
+
 SFBTransform MakeTransform( const CVec3 &ptPos )
 {
 	CFBMatrixStack<4> mStack;
@@ -316,7 +318,7 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 	Q = far_plane/(far_plane - near_plane);
  
 	SHMatrix ret;
-	ZeroMemory(&ret, sizeof(ret));
+	memset( &ret, 0, sizeof(ret) );
 	ret._11 = w;
 	ret._22 = h;
 	ret._33 = Q;
@@ -340,7 +342,7 @@ void CTransformStack::MakeProjective( const CVec2 &screenRect, float fFovX, floa
 void CTransformStack::MakeParallel( float fWidth, float fHeight, float fZMin, float fZMax )
 {
 	SHMatrix ret;
-	ZeroMemory(&ret, sizeof(ret));
+	memset( &ret, 0, sizeof(ret) );
 	ret._11 = 2 / fWidth;
 	ret._22 = 2 / fHeight;
 	ret._33 = 1 / ( fZMax - fZMin );
@@ -360,7 +362,7 @@ void CTransformStack::MakeDirect( const CVec2 &screenRect )
 	fWidth = (std::max)( fWidth, 1.0f );
 	fHeight = (std::max)( fHeight, 1.0f );
 	SHMatrix ret;
-	ZeroMemory(&ret, sizeof(ret));
+	memset( &ret, 0, sizeof(ret) );
 	ret._11 = 2 / fWidth;
 	ret._14 = -1;
 	ret._22 = -2 / fHeight;

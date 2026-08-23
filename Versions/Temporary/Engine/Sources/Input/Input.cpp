@@ -4,6 +4,8 @@
 #include "Input/Input.h"
 #include "Input/GameMessage.h"
 #include "Misc/Win32Helper.h"
+
+#include <cstring>
 #include "Misc/StrProc.h"
 
 #include "port/debugging.h"
@@ -836,13 +838,13 @@ static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize
 	DIDEVCAPS didCaps;
 	DIDEVICEINSTANCE didInstance;
 
-	ZeroMemory( &didInstance, sizeof( DIDEVICEINSTANCE ) );
+	memset( &didInstance, 0, sizeof( DIDEVICEINSTANCE ) );
 	didInstance.dwSize = sizeof( DIDEVICEINSTANCE );
 	hRes = pdiDevice->GetDeviceInfo( &didInstance );
 	if ( FAILED( hRes ) )
 		return;
 
-	ZeroMemory( &didCaps, sizeof( DIDEVCAPS ) );
+	memset( &didCaps, 0, sizeof( DIDEVCAPS ) );
 	didCaps.dwSize = sizeof( DIDEVCAPS );
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )
@@ -870,13 +872,13 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	DIDEVCAPS didCaps;
 	DIDEVICEINSTANCE didInstance;
 	
-	ZeroMemory( &didInstance, sizeof( DIDEVICEINSTANCE ) );
+	memset( &didInstance, 0, sizeof( DIDEVICEINSTANCE ) );
 	didInstance.dwSize = sizeof( DIDEVICEINSTANCE );
 	hRes = pdiDevice->GetDeviceInfo( &didInstance );
 	if ( FAILED( hRes ) )
 		return;
 	
-	ZeroMemory( &didCaps, sizeof( DIDEVCAPS ) );
+	memset( &didCaps, 0, sizeof( DIDEVCAPS ) );
 	didCaps.dwSize = sizeof( DIDEVCAPS );
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )

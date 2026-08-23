@@ -4,6 +4,8 @@
 #include "ResourceDefines.h"
 
 #include "PC_StringDirRefEditor.h"
+
+#include <cstring>
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
 
@@ -129,10 +131,10 @@ void CPCStringDirRefEditor::OnBrowse()
 				if( SUCCEEDED( hResult ) )
 				{
 					TCHAR pBuffer[_MAX_PATH];
-					::ZeroMemory( pBuffer, sizeof( pBuffer ) );
+					memset( pBuffer, 0, sizeof( pBuffer ) );
 
 					BROWSEINFO bi;
-					::ZeroMemory( &bi, sizeof( bi ) );
+					memset( &bi, 0, sizeof( bi ) );
 
 					bi.hwndOwner = AfxGetMainWnd()->m_hWnd;
 					bi.pidlRoot = 0;

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <cstring>
+
 string CMapEditorSingletonBase::MAP_FILE_NAME = "CMapEditorSingletonBase_B2MapEditor_1.0";
 const uint32_t CMapEditorSingletonBase::MAP_FILE_MAX_SIZE = 0xFFF;
 
@@ -77,7 +79,7 @@ bool CMapEditorSingletonApp::CreateMapFile( HWND hWndApp )
     return false;
   }
 
-  ::ZeroMemory( pMapFileData, MAP_FILE_MAX_SIZE );
+  memset( pMapFileData, 0, MAP_FILE_MAX_SIZE );
   *( static_cast<HWND*>( pMapFileData ) ) = hWndApp;
   
 	return true;
