@@ -13,7 +13,9 @@
 
 #include <cstdint>
 #include <ctime>
+#include <filesystem>
 #include <mutex>
+#include <system_error>
 
 #include <boost/filesystem/operations.hpp>
 
@@ -382,7 +384,10 @@ bool CWinFileCreator::RemoveFile( const std::string &_szPath )
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	const std::string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
 	//
-	return ::DeleteFile( szFullFilePath.c_str() ) != FALSE;
+	// remove reports false both when the file was not there and when it could not be
+	// removed, which is what DeleteFile returning FALSE meant to this caller.
+	std::error_code ec;
+	return std::filesystem::remove( szFullFilePath, ec );
 }
 
 IVFS* CreateWinVFS( const std::string &szBasePath )
