@@ -44,6 +44,10 @@ set(SOURCES
     GLightmapCalc.cpp
     GLightmapLoader.cpp
     GLightPerVertex.cpp
+    GLightPerVertexAVX2.cpp
+    GLightPerVertexDispatch.cpp
+    GLightPerVertexRef.cpp
+    GLightPerVertexSSE2.cpp
     GLMLightState.cpp
     GLocale.cpp
     GMaterial.cpp
@@ -111,6 +115,17 @@ target_link_libraries(3Dmotor PRIVATE 3DLib Image libdb MemoryLib Misc System zl
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)
 install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)
+
+# GLightPerVertexAVX2.cpp is the only translation unit allowed to contain AVX2
+# instructions, and it is reached only through avx2LightingKernels after
+# GetLightingKernels() has confirmed CPUID and XGETBV agree. Applying /arch:AVX2
+# any wider than this single file would put AVX2 code on paths that run before
+# and without that check.
+if(MSVC)
+    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+else()
+    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "-mavx2")
+endif()
 
 add_subdirectory(test)
 add_subdirectory(benchmark)
