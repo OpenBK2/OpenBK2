@@ -44,6 +44,7 @@
 
 #include "stdafx.h"
 #include <malloc.h>
+#include <cstdarg>
 #include "LangToken.h"
 #include "lang.tab.h"
 #include "ParseOperations.h"
