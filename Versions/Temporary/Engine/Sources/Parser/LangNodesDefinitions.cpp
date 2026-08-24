@@ -286,7 +286,7 @@ CTypeNode* CTypeDefNode::GetReferencedType( bool bRecursive ) const
 		NI_VERIFY( pReferencedType != 0, "null referenced type", return 0 );
 		
 		CDynamicCast<CTypeDefNode> pType = pReferencedType;
-		return pType ? pType->GetReferencedType( true ) : pReferencedType;
+		return pType ? pType->GetReferencedType( true ) : pReferencedType.GetPtr();
 	}
 }
 

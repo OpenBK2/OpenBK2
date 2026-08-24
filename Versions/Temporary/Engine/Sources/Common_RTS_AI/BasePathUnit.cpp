@@ -182,7 +182,7 @@ void CBasePathUnit::SetDirection( const uint16_t _wDirection, const bool bNeedUp
 			UnlockTiles();
 
 		wDirection = _wDirection;
-		wFrontDirection = IsGoForward() ? wDirection : wDirection + 32768;
+		wFrontDirection = IsGoForward() ? uint16_t( wDirection ) : wDirection + 32768;
 
 		if ( bNeedLockTiles )
 			LockTiles();

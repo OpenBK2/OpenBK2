@@ -20,7 +20,7 @@ public:
 	CTypeNode( const std::string &szName, bool _bForward, const std::string &szFile, int nLine ) : CLangNode( szName, szFile, nLine ), bForward( _bForward ) { }
 
 	bool IsForward() const { return bForward; }
-	CTypeNode* GetRealType() { return bForward ? pRealTypeIfForward : this; }
+	CTypeNode* GetRealType() { return bForward ? pRealTypeIfForward.GetPtr() : this; }
 	void SetRealType( CTypeNode *pRealType );
 };
 

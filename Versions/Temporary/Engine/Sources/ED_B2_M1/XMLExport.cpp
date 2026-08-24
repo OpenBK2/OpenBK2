@@ -376,7 +376,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 									// special case - convert int value of VecColor to CVec3 {x, y, z}
 									if ( GetTypeName(pDesc, szFullFieldName) == "VecColor" )
 									{
-										const int nData = value.GetType() == CVariant::VT_NULL ? 0 : value;
+										const int nData = value.GetType() == CVariant::VT_NULL ? 0 : int( value );
 										CVec3 vColor;
 										vColor.r = float( ( nData >> 16 ) & 0x000000ff ) / 255.0f;
 										vColor.g = float( ( nData >> 8 ) & 0x000000ff ) / 255.0f;

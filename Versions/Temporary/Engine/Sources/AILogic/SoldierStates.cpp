@@ -1015,7 +1015,7 @@ void CSoldierMoveToState::Segment()
 			
 			if ( pUnit->GetNextCommand() == 0 )
 			{
-				const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? wDirToPoint : wDirToPoint + 32768;
+				const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? uint16_t( wDirToPoint ) : wDirToPoint + 32768;
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD, pUnit->GetCenterPlain(), wDir ), pUnit, false );
 				if ( bLongMove )
 					pUnit->SendAcknowledgement( NDb::ACK_MOVE_END, pUnit->GetPlayer() == theDipl.GetMyNumber() );

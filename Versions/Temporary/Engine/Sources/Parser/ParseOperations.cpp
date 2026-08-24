@@ -183,7 +183,7 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 					return );
 
 	CDynamicCast<CTypeDefNode> pTypeDefNode = pRawType;
-	CTypeNode *pRealType = pTypeDefNode ? pTypeDefNode->GetReferencedType( true ) : pType;
+	CTypeNode *pRealType = pTypeDefNode ? pTypeDefNode->GetReferencedType( true ) : pType.GetPtr();
 
 	std::list< CPtr<CVariable> > &varList = pVarListNode->GetNodes();
 	for ( std::list< CPtr<CVariable> >::iterator iter = varList.begin(); iter != varList.end(); ++iter )

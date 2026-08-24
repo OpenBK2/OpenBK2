@@ -1764,7 +1764,7 @@ void CFormationGunCrewState::Segment()
 
 	const CVec2 vGunDir =  bReloaderRotatesWithTurret ? vTurretDir : GetVectorByDirection( pArtillery->GetFrontDirection() );
 
-	const uint16_t wCurBaseDir = bReloaderRotatesWithTurret ? wGunTurretDir : pArtillery->GetFrontDirection();
+	const uint16_t wCurBaseDir = bReloaderRotatesWithTurret ? uint16_t( wGunTurretDir ) : pArtillery->GetFrontDirection();
 	const CVec2 vCurGunPos = pArtillery->GetCenterPlain();
 	bool bRecalcPoints = wCurTuttetDir != wGunTurretDir || wGunBaseDir != wCurBaseDir || vCurGunPos != vGunPos;
 	vGunPos = vCurGunPos;
