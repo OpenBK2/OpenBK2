@@ -342,7 +342,7 @@ static void MMXTransformVector(
 	const __m128i resultBytes = _mm_packus_epi16( resultWords, resultWords );
 
 	const uint8_t sourceW = src.w;
-	res.dw = static_cast<DWORD>( _mm_cvtsi128_si32( resultBytes ) );
+	res.dw = static_cast<uint32_t>( _mm_cvtsi128_si32( resultBytes ) );
 	res.w = sourceW;
 }
 #else
