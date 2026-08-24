@@ -40,7 +40,7 @@ class CTexShare
 
 	void Refresh()
 	{
-		for ( CTexHash::iterator i = textureHash.begin(); i != textureHash.end(); ++i )
+		for ( typename CTexHash::iterator i = textureHash.begin(); i != textureHash.end(); ++i )
 		{
 			int nRes = i->second.nResolution;
 			int nPixelFormatID = i->second.nPixelFormatID;
@@ -51,7 +51,7 @@ class CTexShare
 public:
 	T *GetTexture( const std::string &sz )
 	{
-		CTexHash::iterator i = textureHash.find( sz );
+		typename CTexHash::iterator i = textureHash.find( sz );
 		if ( i == textureHash.end() )
 		{
 			ASSERT(0);

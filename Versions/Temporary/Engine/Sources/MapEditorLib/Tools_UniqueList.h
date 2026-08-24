@@ -33,7 +33,7 @@ public:
 	void Remove( const TElement &rElement )
 	{
 		{
-			CElementMap::iterator posElement = elementMap.find( rElement );
+			typename CElementMap::iterator posElement = elementMap.find( rElement );
 			if ( posElement != elementMap.end() )
 			{
 				elementMap.erase( posElement );

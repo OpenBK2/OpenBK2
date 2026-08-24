@@ -20,7 +20,7 @@ public:
 	const CControlSelectionDataMap& Get() const { return controlSelectionDataMap; }
 	TData* GetData( const TID &rID )
 	{
-		CControlSelectionDataMap::const_iterator posControlSelectionData = controlSelectionDataMap.find( rItem );
+		typename CControlSelectionDataMap::const_iterator posControlSelectionData = controlSelectionDataMap.find( rItem );
 		if ( posControlSelectionData != controlSelectionDataMap.end() )
 		{
 			return &( posControlSelectionData->second.data );
@@ -40,7 +40,7 @@ public:
 	//
 	void Insert( const TID &rID, const TData &rData )
 	{
-		CControlSelectionDataMap::iterator posControlSelectionData = controlSelectionDataMap.find( rID );
+		typename CControlSelectionDataMap::iterator posControlSelectionData = controlSelectionDataMap.find( rID );
 		if ( posControlSelectionData == controlSelectionDataMap.end() )
 		{
 			controlSelectionDataMap[rID] = SControlSelectionData();
@@ -52,7 +52,7 @@ public:
 	//
 	void Remove( const TID &rID )
 	{
-		CControlSelectionDataMap::iterator posControlSelectionData = controlSelectionDataMap.find( rID );
+		typename CControlSelectionDataMap::iterator posControlSelectionData = controlSelectionDataMap.find( rID );
 		if ( posControlSelectionData != controlSelectionDataMap.end() )
 		{
 			controlSelectionDataMap.erase( posControlSelectionData );

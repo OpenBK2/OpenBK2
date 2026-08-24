@@ -20,14 +20,14 @@ public:
 		{
 			return false;
 		}
-		CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
+		typename CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
 		if ( posID != idToIndexMap.end() )
 		{
 			return false;
 		}
 		if ( bSearchIndices )
 		{
-			for ( CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+			for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 			{
 				if ( itID->second >= nIndex )
 				{
@@ -46,7 +46,7 @@ public:
 			return false;
 		}
 		//
-		CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
+		typename CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
 		if ( posID == idToIndexMap.end() )
 		{
 			return false;
@@ -55,7 +55,7 @@ public:
 		idToIndexMap.erase( posID );
 		if ( bSearchIndices )
 		{
-			for ( CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+			for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 			{
 				if ( itID->second > nIndex )
 				{
@@ -78,8 +78,8 @@ public:
 			return false;
 		}
 		//
-		CIDToIndexMap::iterator posID0 = idToIndexMap.find( rID0 );
-		CIDToIndexMap::iterator posID1 = idToIndexMap.find( rID1 );
+		typename CIDToIndexMap::iterator posID0 = idToIndexMap.find( rID0 );
+		typename CIDToIndexMap::iterator posID1 = idToIndexMap.find( rID1 );
 		if ( ( posID0 == idToIndexMap.end() ) || ( posID1 == idToIndexMap.end() ) )
 		{
 			return false;
@@ -97,7 +97,7 @@ public:
 			return false;
 		}
 		//
-		CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
+		typename CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
 		if ( posID == idToIndexMap.end() )
 		{
 			return false;
@@ -107,7 +107,7 @@ public:
 			const unsigned nOldIndex = posID->second;
 			if ( nNewIndex < nOldIndex )
 			{
-				for ( CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+				for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 				{
 					if ( ( itID->second >= nNewIndex ) && ( itID->second < nOldIndex ) )
 					{
@@ -117,7 +117,7 @@ public:
 			}
 			else if ( nNewIndex > nOldIndex )
 			{
-				for ( CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+				for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 				{
 					if ( ( itID->second <= nNewIndex ) && ( itID->second > nOldIndex ) )
 					{
@@ -136,7 +136,7 @@ public:
 		{
 			return invalidID;
 		}
-		CIDToIndexMap::const_iterator posID = idToIndexMap.find( rID );
+		typename CIDToIndexMap::const_iterator posID = idToIndexMap.find( rID );
 		if ( posID == idToIndexMap.end() )
 		{
 			return invalidID;
@@ -149,7 +149,7 @@ public:
 	// медленные операции
 	TID GetID( const unsigned nIndex ) const
 	{
-		for ( CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+		for ( typename CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 		{
 			if ( itID->second == nIndex )
 			{
@@ -168,7 +168,7 @@ public:
 	void Trace() const
 	{
 		int nMaxIndex = 0;
-		for ( CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+		for ( typename CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 		{
 			if ( itID->second > nMaxIndex )
 			{
@@ -177,7 +177,7 @@ public:
 		}
 		vector<TID> indices;
 		indices.resize( nMaxIndex + 1, invalidID );
-		for ( CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
+		for ( typename CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 		{
 			indices[itID->second] = itID->first;
 		}

@@ -22,7 +22,7 @@ private:
 public:
 	bool GetItem( TItem *pItem, const TID &rID ) const
 	{
-		CItemMap::const_iterator posItem = itemMap.find( rID );
+		typename CItemMap::const_iterator posItem = itemMap.find( rID );
 		if ( posControlItemData != itemMap.end() )
 		{
 			if ( pItem != 0 )
@@ -36,7 +36,7 @@ public:
 	//
 	TData* GetDataByItem( const TItem &rItem )
 	{
-		CControlItemDataMap::const_iterator posControlItemData = controlItemDataMap.find( rItem );
+		typename CControlItemDataMap::const_iterator posControlItemData = controlItemDataMap.find( rItem );
 		if ( posControlItemData != controlItemDataMap.end() )
 		{
 			return &( posControlItemData->second.data );
@@ -52,7 +52,7 @@ public:
 	//
 	void Insert( const TItem &rItem, const TID &rID, const TData &rData )
 	{
-		CControlItemDataMap::iterator posControlItemDataData = controlItemDataMap.find( rItem );
+		typename CControlItemDataMap::iterator posControlItemDataData = controlItemDataMap.find( rItem );
 		if ( posControlItemData == controlItemDataMap.end() )
 		{
 			controlItemDataMap[rItem] = SControlItemData();
@@ -67,10 +67,10 @@ public:
 	//
 	void Remove( const TItem &rItem )
 	{
-		CControlItemDataMap::iterator posControlItemDataData = controlItemDataMap.find( rItem );
+		typename CControlItemDataMap::iterator posControlItemDataData = controlItemDataMap.find( rItem );
 		if ( posControlItemData != controlItemDataMap.end() )
 		{
-			CItemMap::iterator posItem = itemMap.find( posControlItemData->second.id );
+			typename CItemMap::iterator posItem = itemMap.find( posControlItemData->second.id );
 			if ( itemMap != posItem.end() )
 			{
 				itemMap.erase( posItem );
@@ -91,7 +91,7 @@ public:
 	//
 	bool GetID( TID *pID, const TItem &rItem ) const
 	{
-		CControlItemDataMap::const_iterator posControlItemData = controlItemDataMap.find( rItem );
+		typename CControlItemDataMap::const_iterator posControlItemData = controlItemDataMap.find( rItem );
 		if ( posControlItemData != controlItemDataMap.end() )
 		{
 			if ( pID != 0 )

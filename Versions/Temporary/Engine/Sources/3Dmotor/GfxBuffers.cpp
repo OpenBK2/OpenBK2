@@ -142,7 +142,7 @@ public:
 		//NCache::MRU_TYPE nBestMRU = NCache::MRU_LAST;
 		NCache::CFibElement el;
 		el.nSize = NCache::GetMajorFib( nSize );
-		CCache::SCachePlace best;
+		typename CCache::SCachePlace best;
 		if ( !pCache->GetPlace( el, &best ) )
 		{
 			ASSERT( 0 );
@@ -217,14 +217,14 @@ public:
 	void DrawRU( CTexture *pTarget )
 	{
 		CTextureLock<SPixel8888> tl( pTarget, 0, INPLACE );
-		std::vector<CCache::SStatePlace> places;
+		std::vector<typename CCache::SStatePlace> places;
 		pCache->GetState( &places );
 		for ( int y = 0; y < tl.GetSizeY(); ++y )
 			for ( int x = 0; x < tl.GetSizeX(); ++x )
 				tl[y][x] = SPixel8888( 255,255,255 );
 		for ( int k = 0; k < places.size(); ++k )
 		{
-			const CCache::SStatePlace &p = places[k];
+			const typename CCache::SStatePlace &p = places[k];
 			SPixel8888 color;
 			if ( p.pUser )
 			{

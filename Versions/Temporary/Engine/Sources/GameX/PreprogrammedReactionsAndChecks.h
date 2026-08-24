@@ -63,14 +63,14 @@ public:
 	}
 	int Check( const std::string &szCheckName ) const
 	{
-		CChecks::const_iterator pos = checks.find( szCheckName );
+		typename CChecks::const_iterator pos = checks.find( szCheckName );
 		if ( pos != checks.end() )
 			return pos->second->Execute( this );
 		return 0;
 	}
 	bool Execute( const std::string &szSender, const std::string &szReaction )
 	{
-		CReactions::iterator pos = reactions.find( szReaction );
+		typename CReactions::iterator pos = reactions.find( szReaction );
 		if ( pos != reactions.end() )
 		{
 			pos->second->Execute( this, szSender );

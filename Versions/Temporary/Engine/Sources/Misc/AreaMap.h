@@ -27,7 +27,7 @@ private:
 	void AddTo( int nX, int nY, TYPE *pObj )
 	{
 		CDataList &data = (*this)[nY][nX];
-		CDataList::const_iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional(pObj) );
+		typename CDataList::const_iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional(pObj) );
 		if ( pos == data.end() )
 			data.push_back( pObj );
 	}
@@ -37,7 +37,7 @@ private:
 		if ( (nX < 0) || (nX >= GetSizeX()) || (nY < 0) || (nY >= GetSizeY()) )
 			return;
 		CDataList &data = (*this)[nY][nX];
-		CDataList::iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional(pObj) );
+		typename CDataList::iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional(pObj) );
 		if ( pos != data.end() )
 			data.erase( pos );
 	}
@@ -130,7 +130,7 @@ private:
 	void AddTo( int nX, int nY, const TYPE &obj )
 	{
 		CDataList &data = (*this)[nY][nX];
-		CDataList::const_iterator pos = find_if( data.begin(), data.end(), TComparator(obj) );
+		typename CDataList::const_iterator pos = find_if( data.begin(), data.end(), TComparator(obj) );
 		if ( pos == data.end() )
 			data.push_back( obj );
 	}
@@ -140,7 +140,7 @@ private:
 		if ( (nX < 0) || (nX >= GetSizeX()) || (nY < 0) || (nY >= GetSizeY()) )
 			return;
 		CDataList &data = (*this)[nY][nX];
-		CDataList::iterator pos = find_if( data.begin(), data.end(), TComparator(obj) );
+		typename CDataList::iterator pos = find_if( data.begin(), data.end(), TComparator(obj) );
 		if ( pos != data.end() )
 			data.erase( pos );
 	}

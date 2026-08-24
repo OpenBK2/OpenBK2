@@ -12,7 +12,7 @@ public:
 	void Push( const T& el )
 	{
 		// find first element that TCmp is true for it
-		CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
+		typename CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
 		elements.insert( it, el );
 	}
 	void Remove( const T& el )
