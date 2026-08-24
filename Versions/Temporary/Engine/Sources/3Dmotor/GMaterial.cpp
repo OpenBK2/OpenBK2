@@ -701,7 +701,7 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 			pInfo->fSecondUVMult = fDetailScale;
 		}
 		ASSERT( pInfo->pLM == 0 );
-		CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex = frag.vars.pLM;
+		CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex = frag.vars.pLM.GetPtr();
 		pTex.Refresh();
 		pInfo->pLM = pTex->GetValue();
 	}

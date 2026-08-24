@@ -20,7 +20,7 @@ void RenderShowLightmap( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 			continue;
 		if ( !frag.vars.pLM )
 			continue;
-		CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex = frag.vars.pLM;
+		CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex = frag.vars.pLM.GetPtr();
 		pTex.Refresh();
 		op.AddOperation( RO_G3_SHOW_LM, 10, 0, 0, pTex->GetValue() );
 	}

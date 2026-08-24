@@ -22,7 +22,7 @@ bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDe
 	int nCnt = 0;
 	for ( int i = 0; i < pTypes->size(); ++i )
 	{
-		CPtr<NDb::NTypeDef::STypeDef> pTypeDef = (*pTypes)[i];
+		CPtr<NDb::NTypeDef::STypeDef> pTypeDef = (*pTypes)[i].GetPtr();
 		if ( pTermTypesDesc->IsTerminalType( pTypeDef ) )
 		{
 			(*pTypes)[nCnt++] = pTypeDef;

@@ -2202,7 +2202,7 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 			std::unordered_map<int, CObj<CObjectBase> >::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
 			if ( pos != laserMarks.end() && posMesh != laserMarksMeshes.end() )
 			{
-				CPtr<CLaserMarkTrace> pTrace = pos->second;
+				CPtr<CLaserMarkTrace> pTrace = pos->second.GetPtr();
 				pTrace->UpdatePoints( vStart, vTarget );
 			}
 			else

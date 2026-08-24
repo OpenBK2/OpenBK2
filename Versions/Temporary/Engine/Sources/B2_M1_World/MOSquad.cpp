@@ -52,7 +52,7 @@ CMOSquad::~CMOSquad(void)
 {
 	while ( !units.empty() ) 
 	{
-		CObj<IMOUnit> pUnit = units.back();
+		CObj<IMOUnit> pUnit = units.back().GetPtr();
 		units.pop_back();
 		pUnit->SetSquad( 0 );
 	}
