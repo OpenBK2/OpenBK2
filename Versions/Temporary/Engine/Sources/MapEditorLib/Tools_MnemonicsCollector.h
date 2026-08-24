@@ -38,7 +38,7 @@ public:
 	//
 	const string& GetMnemonic( const TValue &rValue ) const
 	{
-		hash_map<TValue, string>::const_iterator it = direct.find( rValue );
+		typename hash_map<TValue, string>::const_iterator it = direct.find( rValue );
 		if ( it == direct.end() )
 		{
 			return defaultMnemonic;
@@ -51,7 +51,7 @@ public:
 	//
 	const TValue &GetValue( const string &rszMnemonic ) const
 	{
-		hash_map<string, TValue>::const_iterator it = reverse.find( rszMnemonic );
+		typename hash_map<string, TValue>::const_iterator it = reverse.find( rszMnemonic );
 		if ( it == reverse.end() )
 		{
 			return defaultValue;
@@ -65,7 +65,7 @@ public:
 	void Trace() const
 	{
 		DebugTrace( "mnemonic collector, begin" );
-		for ( hash_map<string, TValue>::const_iterator it = reverse.begin(); it != reverse.end(); ++it )
+		for ( typename hash_map<string, TValue>::const_iterator it = reverse.begin(); it != reverse.end(); ++it )
 		{
 			DebugTrace( "<%s>, %d", it->first.c_str(), it->second );
 		}

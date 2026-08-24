@@ -31,7 +31,7 @@ struct CBiMap
 	template<class C1, class C2>
 		const C2 &Get( const C1 &k, const hash_map<C1,C2> &M ) const
 	{
-		hash_map<C1, C2>::const_iterator it = M.find( k );
+		typename hash_map<C1, C2>::const_iterator it = M.find( k );
 		if ( it != M.end() )
 		{
 			return it->second;
@@ -71,7 +71,7 @@ struct CBiMap
 	template<class C1, class C2>
 		void Del( const C1 &c1, hash_map<C1,C2> &M12, hash_map<C2,C1> &M21 )
 	{
-		hash_map<C1, C2>::iterator it = M12.find( c1 );
+		typename hash_map<C1, C2>::iterator it = M12.find( c1 );
 		if ( it != M12.end() )
 		{
 			const C2 &c2 = it->second;

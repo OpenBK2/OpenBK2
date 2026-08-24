@@ -358,7 +358,7 @@ void CQueuesSet<T>::Clear()
 template< class T >
 inline int CQueuesSet<T>::Push( const int queueNum, const T &el )
 {
-	CListsSet<T>::tEnumerator pos = cListsSet.Add( queueNum, el );
+	typename CListsSet<T>::tEnumerator pos = cListsSet.Add( queueNum, el );
 
 	// pos is the head of this queue
 	if ( cListsSet.GetNext( pos ) == cListsSet.end() )

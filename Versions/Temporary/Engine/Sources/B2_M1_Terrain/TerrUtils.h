@@ -182,7 +182,7 @@ inline CVec2 GetVec2( const CVec3 &v )
 template <class TYPE>
 inline bool PushBackUnique( std::vector<TYPE> *arr, const TYPE &elem )
 {
-	for ( std::vector<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( typename std::vector<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
 			return false;
@@ -242,7 +242,7 @@ inline int AddUnique( std::vector<TYPE> *arr, const TYPE &elem )
 template <class TYPE>
 inline void AddUnique( std::list<TYPE> *arr, const TYPE &elem )
 {
-	for ( std::list<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
+	for ( typename std::list<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
 			return;

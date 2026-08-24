@@ -14,13 +14,13 @@ protected: // сериализовать хочется.
 	//
 	const T1& GetType1( const T2 &t2 ) const
 	{
-		std::unordered_map<T2, T1, TH2>::const_iterator pos = t2_t1.find( t2 );
+		typename std::unordered_map<T2, T1, TH2>::const_iterator pos = t2_t1.find( t2 );
 		NI_ASSERT( pos != t2_t1.end(), "Can't find type1 from type2" );
 		return pos->second;
 	}
 	const T2& GetType2( const T1 &t1 ) const
 	{
-		std::unordered_map<T1, T2, TH1>::const_iterator pos = t1_t2.find( t1 );
+		typename std::unordered_map<T1, T2, TH1>::const_iterator pos = t1_t2.find( t1 );
 		NI_ASSERT( pos != t1_t2.end(), "Can't find type2 from type1" );
 		return pos->second;
 	}

@@ -89,7 +89,7 @@ class CTGARawLoader
 		std::vector<TInColor> buffer( nNumElements );
 		const int nBytesToRead = nNumElements * sizeof( TInColor );
 		pStream->Read( &(buffer[0]), nBytesToRead );
-		for ( std::vector<TInColor>::const_iterator it = buffer.begin(); it != buffer.end(); ++it )
+		for ( typename std::vector<TInColor>::const_iterator it = buffer.begin(); it != buffer.end(); ++it )
 			*pColors++ = convertor( *it );
 		return true;
 	}

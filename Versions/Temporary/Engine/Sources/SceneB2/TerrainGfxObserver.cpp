@@ -31,7 +31,7 @@ bool HasSpotVSO( const int nID, const std::vector<NDb::STerrainSpotInstance> &in
 template <class TYPE>
 bool RemoveVSO( const int nID, std::vector<TYPE> &vsos )
 {
-	for ( std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
+	for ( typename std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
 		if ( it->GetID() == nID ) 
 		{
@@ -45,7 +45,7 @@ bool RemoveVSO( const int nID, std::vector<TYPE> &vsos )
 template <class TYPE>
 bool UpdateVSO( const int nVSOID, std::vector<TYPE> &vsos, NGScene::IGameView *pGameView )
 {
-	for ( std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
+	for ( typename std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
 		if ( it->GetID() == nVSOID ) 
 		{

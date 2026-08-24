@@ -84,7 +84,7 @@ struct IObjMan : public CObjectBase
 		if ( SetValue( szName, int( container.size() ) ) == false )
 			return false;
 		int i = 0;
-		for ( TContainer<TValue>::const_iterator it = container.begin(); it != container.end(); ++it, ++i )
+		for ( typename TContainer<TValue>::const_iterator it = container.begin(); it != container.end(); ++it, ++i )
 		{
 			if ( SetValue(szName + fmt::format(".[{}]", i), *it) == false )
 				return false;

@@ -116,7 +116,7 @@ public:
 		const CSyncSrc<T> &src = *pSource;
 		for ( int nID = src.objects[0].nNext; nID != 0; nID = src.objects[nID].nNext )
 		{
-			const CSyncSrc<T>::SObject &o = src.objects[nID];
+			const typename CSyncSrc<T>::SObject &o = src.objects[nID];
 			if ( o.nVersion <= nVersion )
 				break;
 			CPtr<T> pHold(o.pObject);
