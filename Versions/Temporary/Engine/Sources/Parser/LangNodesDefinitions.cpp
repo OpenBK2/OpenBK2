@@ -18,7 +18,11 @@ template <typename T>
 struct SListOperations
 {
 	typedef std::list< CPtr<T> > TList;
-	static TList emptyList;
+	// inline, so the three out-of-class definitions this used to need are gone.
+	// Writing them as `SListOperations<X>::TList SListOperations<X>::emptyList;`
+	// with no `template<>` was an MSVC extension, and it had to be repeated for
+	// every T anyone instantiated; C++17 lets the class definition serve.
+	inline static TList emptyList;
 
 	typename TList::const_iterator	Begin( CNodesList<T> *pNodesList )
 	{
@@ -30,10 +34,6 @@ struct SListOperations
 		return pNodesList ? pNodesList->GetNodes().end() : emptyList.end();
 	}
 };
-
-SListOperations<CEnumEntryNode>::TList SListOperations<CEnumEntryNode>::emptyList;
-SListOperations<CAttributeNode>::TList SListOperations<CAttributeNode>::emptyList;
-SListOperations<CComplexTypeNode>::TList SListOperations<CComplexTypeNode>::emptyList;
 
 //*******************************************************************
 //*                     CNamespace                                  *
