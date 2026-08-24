@@ -86,6 +86,12 @@ inline float SRand::GetFloat( float fpMin, float fpMax )
 	return fpMin + float( Get( 0xFFFF ) * ( ( fpMax - fpMin ) * (1/double(0xFFFF)) ) );
 }
 
-extern CRandomGenerator random;
+// Not `random`: POSIX declares `long random( void )` in <stdlib.h>, which arrives
+// through <cstdlib> in the prelude, and an object cannot share the name.
+//
+// Presentation only, and deliberately not reproducible - Init seeds from a
+// non-deterministic source. Nothing the simulation reads may come from here, or
+// clients diverge; AILogic uses System/RandomGen.h and NRandom for that.
+extern CRandomGenerator randomGen;
 
 

@@ -82,9 +82,9 @@ void CPointGlowAnimator::CalcSize()
 		else
 			bIsVisible = true;
 		if ( bShortInterval )
-			tNextCheck = tCur + random.Get( 80, 150 );
+			tNextCheck = tCur + randomGen.Get( 80, 150 );
 		else
-			tNextCheck = tCur + random.Get( 500, 1000 );
+			tNextCheck = tCur + randomGen.Get( 500, 1000 );
 	}
 	expFader.Update( tCur, bIsVisible ? 1 : 0 );
 

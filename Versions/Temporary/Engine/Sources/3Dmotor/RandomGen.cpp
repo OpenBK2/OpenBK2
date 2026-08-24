@@ -55,7 +55,7 @@ int CRoulette::operator&( CStructureSaver &f )
 	return 0;
 }
 
-CRandomGenerator random;
+CRandomGenerator randomGen;
 
 const LPCSTR PSZ_MASK_TO_FIND_FILES = "C:\\*.*";
 
