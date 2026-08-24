@@ -14,8 +14,6 @@ class CTransformStack;
 
 namespace NAI
 {
-const int MUST_BE_IN_OBJECT = -100;
-
 class CBSPTree;
 class CExplVoxelRenderer;
 class CVisionVoxelRenderer;
@@ -81,8 +79,6 @@ public:
 	virtual void TraceGrid( CFastRenderer *pRes, int nMask, ESort sort, const CFloorsSet &fs = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
 	// fRadiusKoef - (1 - touches frustrum, 0 - center inside, -1 - whole inside)
 	virtual void Select( std::vector<SSelectedObject> *pRes, const CTransformStack &ts, float fRadiusKoef, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
-	virtual bool GetUnitHLPos( CVec3 *pRes, CObjectBase *_pUserData, int nUserID ) = 0;
-	virtual void GetAccessibleUnitHL( std::vector<int> *pRes, const CVec3 &ptFrom, CObjectBase *_pUserData, float fMaxDistance ) = 0;
 	virtual bool CalcIntersection( const CVec3 &ptCenter, float fRadius, int s, CObjectBase *pIgnoreUser = 0 ) = 0;
 	virtual void AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bool bInformOnDoorFlip = false ) = 0;
 	virtual void SelectHullPointers( std::vector<CPtr<CObjectBase> > *pRes, const SBound &b, int nMaskOr, int nMaskNot ) = 0;

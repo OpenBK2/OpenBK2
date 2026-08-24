@@ -11,7 +11,6 @@
 #include "GMesh.h"
 #include "SuperCollider.h"
 #include "3DLib/Bound.h"
-#include "RandomGen.h"
 #include "3DLib/MemObject.h"
 
 #include <boost/config.hpp>
@@ -28,7 +27,6 @@ CBasicShare<CDBPtr<NDb::SAIGeometry>, CFileSkinPointsLoadFromGranny, SDBPtrHash>
 //CBasicShare<int, CLoadTwoBSPTrees> shareBSPTrees(117);
 
 class CConvexHull;
-static bool IsValidInCurrentState( CConvexHull *p );
 class CUserHullsTracker : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CUserHullsTracker);
@@ -50,20 +48,6 @@ public:
 			i->second.erase( k );
 		if ( i->second.empty() )
 			data.erase( i );
-	}
-	void GetHulls( CObjectBase *pUser, std::vector<CConvexHull*> *pRes, bool bCheckValid = true ) const
-	{
-		pRes->resize(0);
-		SUserHash::const_iterator i = data.find( pUser );
-		if ( i == data.end() )
-			return;
-		pRes->resize( 0 );
-		for ( int k = 0; k < i->second.size(); ++k )
-		{
-			CConvexHull *p = i->second[k];
-			if ( !bCheckValid || IsValidInCurrentState( p ) )
-				pRes->push_back( p );
-		}
 	}
 };
 
@@ -332,10 +316,6 @@ inline static bool IsValidInCurrentState( int nFlags )
 {
 	return true;//( ( nFlags & ( NWorld::TS_STATE_OPEN | NWorld::TS_STATE_CLOSED ) ) == 0 ) ||	( nFlags & NWorld::TS_DOOR_HULL_VALID );
 }
-inline static bool IsValidInCurrentState( CConvexHull *p )
-{
-	return IsValidInCurrentState( p->src.nTSFlags );
-}
 
 class CAIMap: public IAIMap
 {
@@ -410,7 +390,6 @@ class CAIMap: public IAIMap
 		}
 	void FlipDoorWindow( CObjectBase *pWhat, bool bOpen, CVolumeNode *pNode, std::vector<CConvexHull*> *pCallInformForThem );
 	void SelectHullPointers( std::vector<CPtr<CObjectBase> > *pRes, const SBound &b, int nMaskOr, int nMaskNot, CVolumeNode *pNode );
-	bool GetHLPosFromHull( CVec3 *pRes, CConvexHull *pHull, int nUserID ) const;
 public:
 	CAIMap(): nMaxFloor(0), nAllTrackersMask(0) {}
 	CAIMap( int );
@@ -419,8 +398,6 @@ public:
 	virtual void Trace( const CRay &, std::vector<SInterval> *pIntersections, int nMask, const CFloorsSet &fs, ESplitTerrainHGroups shg );
 	virtual void TraceGrid( CFastRenderer *pRes, int nMask, ESort sort, const CFloorsSet &fs = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG );
 	virtual void Select( std::vector<SSelectedObject> *pRes, const CTransformStack &ts, float fRadiusKoef, int nMask, const CFloorsSet &hg );
-	virtual bool GetUnitHLPos( CVec3 *pRes, CObjectBase *_pUserData, int nUserID );
-	virtual void GetAccessibleUnitHL( std::vector<int> *pRes, const CVec3 &ptFrom, CObjectBase *_pUserData, float fMaxDistance );
 	virtual bool CalcIntersection( const CVec3 &ptCenter, float fRadius, int s, CObjectBase *pIgnoreUser );
 	virtual void AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bool bInformOnDoorFlip = false );
 	virtual void SelectHullPointers( std::vector<CPtr<CObjectBase> > *pRes, const SBound &b, int nMaskOr, int nMaskNot );
@@ -981,90 +958,6 @@ static bool CalcModelSphereIntersection( const SConvexHull &h, const CVec3 &ptCe
 			return true;
 	}
 	return false;
-}
-
-static CVec3 GetAnyPointIn( const SBound &b )
-{
-	CVec3 ptMin = b.s.ptCenter - b.ptHalfBox, ptMax = b.s.ptCenter + b.ptHalfBox;
-	return CVec3(	random.GetFloat( ptMin.x, ptMax.x ), random.GetFloat( ptMin.y, ptMax.y ), random.GetFloat( ptMin.z, ptMax.z ) );
-}
-
-bool CAIMap::GetUnitHLPos( CVec3 *pRes, CObjectBase *_pUserData, int nUserID )
-{
-	std::vector<CConvexHull*> hulls;
-	pUserHullsTracker->GetHulls( _pUserData, &hulls );
-	ASSERT( hulls.size() == 1 );
-	return !hulls.empty() && GetHLPosFromHull( pRes, hulls[ 0 ], nUserID );
-}
-
-bool CAIMap::GetHLPosFromHull( CVec3 *pRes, CConvexHull *pHull, int nUserID ) const
-{
-	*pRes = CVec3(0,0,0);
-	ASSERT( IsValid( pHull ) );
-	if ( !IsValid( pHull ) )
-		return false;
-	pHull->pGeometry.Refresh();
-	CGeometryInfo *pGeom = pHull->pGeometry->GetValue();
-	CVec3 tmp = pGeom->bound.s.ptCenter;
-	SPiece *pPiece = pGeom->GetPiece( nUserID );
-	if ( pPiece )
-	{
-		ASSERT( nUserID != MUST_BE_IN_OBJECT );
-		SSphere s;
-		CalcBound( &s, pPiece->points, SGetSelf<CVec3>() );
-		tmp = s.ptCenter;
-	}
-	else if ( nUserID == MUST_BE_IN_OBJECT )
-	{
-		// надо найти точку, которая точно находится внутри объекта
-		bool bIntersect= false;
-		int nTimes = 10;
-		while ( nTimes > 0 && !bIntersect )
-		{
-			for ( CGeometryInfo::CPieceMap::const_iterator i = pGeom->pieces.begin(); i != pGeom->pieces.end(); ++i )
-			{
-				SConvexHull ch( i->second.points, i->second.edges, pHull->pos, pHull->src, i->first );//, i->second.precalc );
-				if ( CalcModelSphereIntersection( ch, tmp, 0.05f ) )
-				{
-					bIntersect = true;
-					break;
-				}
-			}
-			if ( !bIntersect )
-			{
-				tmp = GetAnyPointIn( pGeom->bound );
-				--nTimes;
-			}
-		}
-		if ( !bIntersect )
-			tmp = pGeom->bound.s.ptCenter;
-	}
-	pHull->pos.RotateHVector( pRes, tmp );
-	return true;
-}
-
-void CAIMap::GetAccessibleUnitHL( std::vector<int> *pRes, const CVec3 &ptFrom, CObjectBase *_pUserData, float fMaxDistance )
-{
-	pRes->resize(0);
-	std::vector<CConvexHull*> hulls;
-	pUserHullsTracker->GetHulls( _pUserData, &hulls );
-	if ( hulls.empty() )
-		return;
-	ASSERT( hulls.size() == 1 );
-	CConvexHull *pHull = hulls[0];
-	ASSERT( IsValid(pHull) );
-	pHull->pGeometry.Refresh();
-	CGeometryInfo *pGeom = pHull->pGeometry->GetValue();
-	for ( CGeometryInfo::CPieceMap::const_iterator i = pGeom->pieces.begin(); i != pGeom->pieces.end(); ++i )
-	{
-		const SPiece &piece = i->second;
-		SSphere s;
-		CalcBound( &s, piece.points, SGetSelf<CVec3>() );
-		CVec3 tmp;
-		pHull->pos.RotateHVector( &tmp, s.ptCenter );
-		if ( fabs( tmp - ptFrom ) < fMaxDistance )
-			pRes->push_back( i->first );
-	}
 }
 
 struct SSphereSphere
