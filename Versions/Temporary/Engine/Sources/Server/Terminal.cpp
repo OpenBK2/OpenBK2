@@ -6,6 +6,8 @@
 
 #include <chrono>
 #include <cstdint>
+
+#include <cstdarg>
 #include <mutex>
 #include <thread>
 

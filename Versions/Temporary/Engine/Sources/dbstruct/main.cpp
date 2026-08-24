@@ -11,6 +11,8 @@
 #include "port/cdecl.h"
 #include "port/stdcall.h"
 
+#include <cstdarg>
+
 namespace
 {
 

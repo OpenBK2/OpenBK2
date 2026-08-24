@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <cstdarg>
+
 extern NTimer::STime timeToLogStart;
 extern NTimer::STime timeToLogFinish;
 

@@ -8,6 +8,8 @@
 
 #include <cinttypes>
 
+#include <cstdarg>
+
 //
 namespace NScript
 {

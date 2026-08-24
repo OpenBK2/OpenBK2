@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include <cstdarg>
+
 namespace NGfx
 {
 
