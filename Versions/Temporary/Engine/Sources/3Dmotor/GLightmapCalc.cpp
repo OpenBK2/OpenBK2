@@ -454,7 +454,7 @@ static void RenderPointLightShadowed(
 	RenderLight( pTarget, lightInfo, RO_CL_PNT_LIGHT_SHADOWED, RO_CL_PNT_LIGHT_SHADOWED, &info, DPM_NONE|ABM_NONE );
 }
 
-static void MakeLMTS( CTransformStack *pTS, CVec4 &vZ, int nLMSize )
+static void MakeLMTS( CTransformStack *pTS, const CVec4 &vZ, int nLMSize )
 {
 	CTransformStack &ts = *pTS;
 	SHMatrix m;

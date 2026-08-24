@@ -101,7 +101,7 @@ if ( !(bCond) )																																												\
 }
 
 
-static const std::string Convert2Param( Script::Object &object )
+static const std::string Convert2Param( const Script::Object &object )
 {
 	if ( object.IsNumber() )
 		return object.GetString();

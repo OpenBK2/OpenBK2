@@ -137,7 +137,11 @@ void CUnitTorpedo::Die( const bool fromExplosion, const float fDamage )
 	{
 		CAIUnit::Die( false, fDamage );
 		CVec3 vExplPoint( vContactPoint, GetHeights()->GetZ( vContactPoint ) );
-		theShellsStore.AddShell( CMomentShell( new CBurstExpl( this, pShooterStats, vExplPoint, vExplPoint, 0, true, 1, true ) ) );
+		// AddShell explodes the shell, so its reference cannot be const and a temporary
+		// cannot bind to it. Naming the shell changes nothing else: this is AddShell's
+		// only caller, so no one has ever seen the mutation.
+		CMomentShell shell( new CBurstExpl( this, pShooterStats, vExplPoint, vExplPoint, 0, true, 1, true ) );
+		theShellsStore.AddShell( shell );
 		updater.AddUpdate( 0, ACTION_NOTIFY_DISSAPEAR_OBJ, this, 1 );
 	}
 	else			// reached edge of map
