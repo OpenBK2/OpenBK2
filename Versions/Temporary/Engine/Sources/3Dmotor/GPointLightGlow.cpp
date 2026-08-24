@@ -25,25 +25,25 @@ void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 {
 	pParent->CalcSize();
 
-	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
+	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
 	CVec3 vRes[4];
-	CVec3 vNearPos( vPos - or.vBasic[3] );
-	float fLeng = vNearPos * or.vBasic[2];
+	CVec3 vNearPos( vPos - orientation.vBasic[3] );
+	float fLeng = vNearPos * orientation.vBasic[2];
 	if ( fLeng <= F_NEAR_CLIP )
 		return;
-	vNearPos = vPos;//or.vBasic[3] + vNearPos * ( F_NEAR_CLIP / fLeng );
+	vNearPos = vPos;//orientation.vBasic[3] + vNearPos * ( F_NEAR_CLIP / fLeng );
 	float fS = fSize;// * F_NEAR_CLIP / fLeng;
-	vRes[0] = vNearPos - or.vBasic[0] * fS - or.vBasic[1] * fS;
-	vRes[1] = vNearPos + or.vBasic[0] * fS - or.vBasic[1] * fS;
-	vRes[2] = vNearPos + or.vBasic[0] * fS + or.vBasic[1] * fS;
-	vRes[3] = vNearPos - or.vBasic[0] * fS + or.vBasic[1] * fS;
+	vRes[0] = vNearPos - orientation.vBasic[0] * fS - orientation.vBasic[1] * fS;
+	vRes[1] = vNearPos + orientation.vBasic[0] * fS - orientation.vBasic[1] * fS;
+	vRes[2] = vNearPos + orientation.vBasic[0] * fS + orientation.vBasic[1] * fS;
+	vRes[3] = vNearPos - orientation.vBasic[0] * fS + orientation.vBasic[1] * fS;
 	CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex( textures[0] );
 	if ( !IsValid( pTex ) )
 		return;
 	pTex.Refresh();
 	STransparentTexturePlace tPlace;
 	GetTransparentTexturePlace( &tPlace, pTex->GetValue() );
-	pRender->AddParticle( vRes, 0xffffff | (nAlpha<<24), tPlace, F_PARTICLE_OVER );//or.vDepth * or.vBasic[3] );
+	pRender->AddParticle( vRes, 0xffffff | (nAlpha<<24), tPlace, F_PARTICLE_OVER );//orientation.vDepth * orientation.vBasic[3] );
 }
 
 // CPointGlowAnimator

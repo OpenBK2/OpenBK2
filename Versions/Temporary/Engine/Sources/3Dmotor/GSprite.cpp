@@ -24,10 +24,10 @@ public:
 
 void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 {
-	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
+	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
 	////
 	Normalize( &sDir );
-	CVec3 sNormal = sDir ^ or.vBasic[2];
+	CVec3 sNormal = sDir ^ orientation.vBasic[2];
 	Normalize( &sNormal );
 	sDir *= sSize.x;
 	sNormal *= sSize.y;
@@ -44,7 +44,7 @@ void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 	pTex.Refresh();
 	STransparentTexturePlace sTexPlace;
 	GetTransparentTexturePlace( &sTexPlace, pTex->GetValue() );
-	pRender->AddParticle( sRes, 0xFFFFFFFF, sTexPlace, or.vDepth * sPos );
+	pRender->AddParticle( sRes, 0xFFFFFFFF, sTexPlace, orientation.vDepth * sPos );
 }
 
 // CSpriteAnimator

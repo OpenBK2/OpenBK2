@@ -157,7 +157,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 
 	}
 
-	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
+	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
 	std::vector<STransparentTexturePlace> texturePlaces( textures.size() );
 	InitTexturePlaces( &texturePlaces, textures );
 	
@@ -165,8 +165,8 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 	CVec3 vWrapCenter;
 	if ( bDoWrap )
 	{
-		vWrapCenter = or.vBasic[3];
-		const CVec3 &vDir = or.vBasic[2];
+		vWrapCenter = orientation.vBasic[3];
+		const CVec3 &vDir = orientation.vBasic[2];
 		if ( vDir.z != 0 )
 			vWrapCenter -= vDir * ( vWrapCenter.z / vDir.z );
 	}
@@ -329,9 +329,9 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			float x = fTPivotX + xx * fTScaleXX + yy * fTScaleYX;\
 			float y = fTPivotY + xx * fTScaleXY + yy * fTScaleYY;\
 			float fDZ = fRandomShifts[ nRnd ] * fZShiftScale;\
-			vPos[N].x = pos.x + x * or.vBasic[0].x + y * or.vBasic[1].x + fDZ * or.vBasic[2].x;\
-			vPos[N].y = pos.y + x * or.vBasic[0].y + y * or.vBasic[1].y + fDZ * or.vBasic[2].y;\
-			vPos[N].z = pos.z + x * or.vBasic[0].z + y * or.vBasic[1].z + fDZ * or.vBasic[2].z;\
+			vPos[N].x = pos.x + x * orientation.vBasic[0].x + y * orientation.vBasic[1].x + fDZ * orientation.vBasic[2].x;\
+			vPos[N].y = pos.y + x * orientation.vBasic[0].y + y * orientation.vBasic[1].y + fDZ * orientation.vBasic[2].y;\
+			vPos[N].z = pos.z + x * orientation.vBasic[0].z + y * orientation.vBasic[1].z + fDZ * orientation.vBasic[2].z;\
 			nRnd = ( nRnd + nRndStep ) & 7;\
 			}
 			ONE_VERTEX( 0, -1 , -1 )
@@ -339,7 +339,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			ONE_VERTEX( 2,  1 ,  1 )
 			ONE_VERTEX( 3, -1 ,  1 )
 #undef ONE_VERTEX
-			pRender->AddParticle( vPos, dwColor, texturePlaces[nSprite], pos * or.vDepth + (float)nPriority * F_PRIORITY_DIST );
+			pRender->AddParticle( vPos, dwColor, texturePlaces[nSprite], pos * orientation.vDepth + (float)nPriority * F_PRIORITY_DIST );
 		}
 	}
 }
@@ -349,18 +349,18 @@ const float FP_DROP_W = 0.033f; // 0.033f
 static float fRainDropShifts[4][2] = { { 0, 0 }, {FP_DROP_W,0}, {FP_DROP_W, FP_DROP_H}, {0,FP_DROP_H} };
 void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 {
-	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
+	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
 	std::vector<STransparentTexturePlace> texturePlaces( textures.size() );
 	InitTexturePlaces( &texturePlaces, textures );
 	for ( int nParticle = 0; nParticle < positions.size(); ++nParticle )
 	{
 		CVec3 pos = positions[ nParticle ];
-		CVec3 vSide = ( pos - or.vBasic[3] ) ^ CVec3(0,0,1);
+		CVec3 vSide = ( pos - orientation.vBasic[3] ) ^ CVec3(0,0,1);
 		Normalize( &vSide );
 		CVec3 vPos[4];
 		for ( int i = 0; i < 4; ++i )
 			vPos[i] = pos + fRainDropShifts[i][0] * vSide + directions[nParticle] * fRainDropShifts[i][1];
-		pRender->AddParticle( vPos, 0xffffffff, texturePlaces[ faces[nParticle] ], pos * or.vDepth );
+		pRender->AddParticle( vPos, 0xffffffff, texturePlaces[ faces[nParticle] ], pos * orientation.vDepth );
 	}
 }
 
