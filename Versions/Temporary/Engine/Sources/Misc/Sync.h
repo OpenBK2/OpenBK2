@@ -184,7 +184,6 @@ private:
 protected:
 	virtual void PostVisit( int nID, T *pObject ) {}
 	const std::vector<CObj<CObjectBase> >& GetObjects( int nID ) const { return view[nID]; }
-	const std::vector<CObj<CObjectBase> >& GetCurrentObjects() const { ASSERT(pStuff); return *pStuff; }
 public:
 	COrdinarySyncDst() : CSyncDst<T>(0) {}
 	COrdinarySyncDst( CSyncSrc<T> *p, TVisitor *_pVisitor ): CSyncDst<T>(p), pVisitor(_pVisitor) {}
