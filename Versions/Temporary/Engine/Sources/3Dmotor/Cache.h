@@ -22,7 +22,7 @@ template<class T>
 class CShortPtrAllocator
 {
 public:
-	typename typedef uint32_t pointer;
+	typedef uint32_t pointer;
 	enum EPointer
 	{
 		NIL = 0xffffffff
@@ -111,8 +111,8 @@ class CGatheringCache: public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CGatheringCache);
 	struct SElement;
-	typename typedef TAlloc<SElement> Alloc;
-	typename typedef Alloc::pointer pointer;
+	typedef TAlloc<SElement> Alloc;
+	typedef typename Alloc::pointer pointer;
 	struct SElement
 	{
 		ZDATA
