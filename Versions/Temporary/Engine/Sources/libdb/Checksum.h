@@ -104,7 +104,11 @@ template <class TUserObj, typename TPtr>
 uint32_t CDBPtr<TUserObj,TPtr>::CalcCheckSum() const
 {
 	if ( pObj == 0 )
-		return GetDefaultCheckSum();
+		// qualified: CDBPtr is declared at global scope, so this body is outside NDb
+		// and unqualified lookup does not reach NDb::GetDefaultCheckSum. The call does
+		// not depend on the template parameters either, so it is looked up here rather
+		// than at each instantiation, which is what MSVC does and how it found it.
+		return NDb::GetDefaultCheckSum();
 	else
 		return GetBarePtr()->CalcCheckSum();
 }
