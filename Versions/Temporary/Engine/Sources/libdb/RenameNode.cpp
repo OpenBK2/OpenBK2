@@ -95,8 +95,17 @@ public:
 			pChangedObjs->push_back( CDBID( szName ) );
 
 			std::vector<CDBID> refObjs;
+			// only the map editor registers this singleton, and Singleton returns 0 when
+			// nothing did; EditorDatabase and ResourceManagerInternal already treat that
+			// as a failure instead of calling through it
+			NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>();
+			if ( pClient == 0 )
+			{
+				bOk = false;
+				return;
+			}
 			NDBWatcherClient::IDBWatcherClient::EResult eClientResult;
-			while ( ( eClientResult = Singleton<NDBWatcherClient::IDBWatcherClient>()->GetReferencingObjects( szName, &refObjs ) )
+			while ( ( eClientResult = pClient->GetReferencingObjects( szName, &refObjs ) )
 				== NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY );
 			const bool bResult = ( eClientResult == NDBWatcherClient::IDBWatcherClient::EResult::COMPLETE );
 			if ( !bResult )
@@ -310,7 +319,13 @@ bool RenameNode2( const std::string &_szName, const std::string &_szNewName )
 	else
 	{
 		std::vector<CDBID> refObjs;
-		while ( Singleton<NDBWatcherClient::IDBWatcherClient>()->GetReferencingObjects( szName, &refObjs ) ==
+		// see the note in CXDBEnumeration::operator() above
+		NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>();
+		if ( pClient == 0 )
+		{
+			return false;
+		}
+		while ( pClient->GetReferencingObjects( szName, &refObjs ) ==
 			NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY );
 		referencingObjs.insert( referencingObjs.end(), refObjs.begin(), refObjs.end() );
 		changedObjs.push_back( szName );
