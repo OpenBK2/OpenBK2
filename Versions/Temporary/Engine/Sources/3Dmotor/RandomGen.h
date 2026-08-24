@@ -30,8 +30,7 @@ public:
 
 /*
  	Random generator class header
-	Uses ISAAC random generator, (c) Bob Jenkins with
-	with using random file for initial random seeds
+	Uses the ISAAC random generator, (c) Bob Jenkins, seeded from std::random_device
 
 	Written by [REDACTED]
 	[REDACTED], 1998
@@ -58,10 +57,9 @@ public:
 	bool Check( int nCheck, int nRange = 100 ) { return Get(nRange) < nCheck; }
 	bool NegCheck( int nCheck, int nRange = 100 ) { return Get(nRange) >= nCheck; }
 private:
-	void Init();  // very slow operation
+	void Init();
 	void Isaac();
 	void FillRandRsl();
-	bool RecFindFile( std::string &szFoundName, const char *pszBaseDir, int nToFind, int* pnTotFinded );
 };
 
 inline unsigned int CRandomGenerator::Get()

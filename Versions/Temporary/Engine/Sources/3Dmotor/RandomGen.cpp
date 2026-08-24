@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "RandomGen.h"
 
+#include <random>
+
 #include "port/time.h"
 
 #include <cstdint>
@@ -56,8 +58,6 @@ int CRoulette::operator&( CStructureSaver &f )
 }
 
 CRandomGenerator randomGen;
-
-const LPCSTR PSZ_MASK_TO_FIND_FILES = "C:\\*.*";
 
 #define ind(mm,x)  (*(unsigned int *)(( uint8_t *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
 
@@ -144,92 +144,24 @@ void CRandomGenerator::Init()
 }
 
 // --------------------------- FillRandRsl() ---------------------------------------------------------------
-const int N_FROM_START = 1024;
 
-bool CRandomGenerator::RecFindFile( std::string &szFoundName, const char *pszBaseMask, int nToFind, int* pnTotFinded )
-{
-	WIN32_FIND_DATA ff;
-	HANDLE hf = FindFirstFile( pszBaseMask, &ff );
-	std::string szPath( pszBaseMask );
-	szPath = szPath.substr( 0, szPath.length() - 3 );
-	if ( hf != INVALID_HANDLE_VALUE )
-	{
-		for ( bool bCont = true; bCont; bCont = FindNextFile( hf, &ff ) )
-		{
-			if ( ff.cFileName[0] == '.' || (ff.dwFileAttributes & (FILE_ATTRIBUTE_HIDDEN|FILE_ATTRIBUTE_SYSTEM)) != 0 )
-				continue;
-			if ( ff.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-			{
-				if ( RecFindFile( szFoundName, (szPath + ff.cFileName + "\\*.*").c_str(), nToFind, pnTotFinded ) == TRUE )
-					return true;
-				continue;
-			}
-			if ( *pnTotFinded >= nToFind )
-			{
-				if ( ff.nFileSizeLow >= N_FROM_START + sizeof( randrsl ) )
-				{
-					szFoundName = szPath + ff.cFileName;
-					return true;
-				}
-				( *pnTotFinded )--;
-			}
-			( *pnTotFinded )++;
-		}
-		FindClose( hf );
-	}
-	return false;
-}
-
-// The purpose of this func is to fill randrsl[RANDSIZ] arrays
-// with initial random values
-// It's uses first RANDSIZ values from random file for this
+// ISAAC wants RANDSIZ words of seed material and does not care where they come from.
+//
+// What used to be here walked the whole of C:\ recursively, counted off a rand() number
+// of entries to pick a file over a kilobyte, seeked to a random offset inside it and read
+// a kilobyte of its contents, retrying up to ten times. That is what the header meant by
+// "very slow operation", and it means nothing on a machine with no C: drive.
+// std::random_device is the portable entropy source that did not exist when this was
+// written in 1998.
+//
+// Only glow timing and lightmap sampling draw from this generator, so the quality bar is
+// low and reproducibility is explicitly not wanted. Simulation randomness lives in
+// System/RandomGen.h and must never come from here.
 void CRandomGenerator::FillRandRsl()
 {
-	srand( GetCurrentTimeMilliseconds() );
-	int n = GetCurrentTimeMilliseconds();
+	std::random_device rd;
 	for ( int k = 0; k < RANDSIZ; ++k )
-	{
-		randrsl[k] = n;
-		n = n * 124325 + 12341289;
-	}
-	std::string szFoundName;
-	for ( int nSafe = 0; nSafe < 10; ++nSafe )
-	{
-		int nTotFinded = 0;
-		if ( !RecFindFile( szFoundName, PSZ_MASK_TO_FIND_FILES, rand() % 512 + 1, &nTotFinded ) )
-		{
-			if ( nTotFinded < 2 )
-				break;
-			int nToFind = rand() % ( nTotFinded - 1 ) + 1;
-			nTotFinded = 0;
-			if ( !RecFindFile( szFoundName, PSZ_MASK_TO_FIND_FILES, nToFind, &nTotFinded ) )
-				continue;
-		}
-		HANDLE hf = CreateFile( szFoundName.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0 );
-		if ( hf != INVALID_HANDLE_VALUE )
-		{
-			bool bIsRead = true;
-			SetFilePointer( hf, N_FROM_START - rand() % ( N_FROM_START - 512 ), 0, FILE_BEGIN );
-			unsigned long dwRes;
-			if ( !ReadFile( hf, randrsl, sizeof(randrsl ), &dwRes, 0 ) )
-				bIsRead = false;
-			CloseHandle( hf );
-			if ( !bIsRead )
-				continue;
-		}
-		bool bHaveNotZero = false;
-		for ( int i = 0; i < RANDSIZ; i++ )
-			if ( randrsl[i] )
-			{
-				bHaveNotZero = true;
-				break;
-			}
-		if ( !bHaveNotZero )
-			continue;
-		break;
-	}
-	for ( int i = 0; i < RANDSIZ; i++ )
-		randrsl[i] ^= rand();
+		randrsl[k] = rd();
 }
 
 
