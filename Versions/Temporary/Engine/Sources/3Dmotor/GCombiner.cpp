@@ -383,22 +383,22 @@ struct SPartTransformer : public T
 		switch ( p->GetTransformType() )
 		{
 		case TT_NONE:
-			CopyTransform( pObjInfo, &srcVerts[0], srcVerts.size(),
+			this->CopyTransform( pObjInfo, &srcVerts[0], srcVerts.size(),
 				&p->cacheLighting, bv,
 				pRes );
 			break;
 		case TT_SIMPLE:
-			SimpleTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
+			this->SimpleTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 				&p->cacheLighting, bv,
 				p->GetSimplePos(), pRes );
 			break;
 		case TT_SINGLE_SKIN:
 			if ( T::PASS_MMX_BLENDS )
-				SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
+				this->SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 					&p->cacheLighting, bv,
 					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), p->GetMMXAnimation(), pRes );
 			else
-				SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
+				this->SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 					&p->cacheLighting, bv,
 					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), *(std::vector<NGfx::SCompactTransformer>*)0, pRes );
 			break;
@@ -434,7 +434,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 		}
 		if ( bLowRAM )
 		{
-			int nTransformed = DoTransform( p, &geom[nVert], transformed );
+			int nTransformed = this->DoTransform( p, &geom[nVert], transformed );
 			ASSERT( nTransformed == nPartVerts );
 		}
 		else
@@ -443,7 +443,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 			if ( p->gfxData.GetSize() != nSize )
 			{
 				p->gfxData.Resize( nSize );
-				int nTransformed = DoTransform( p, (TVertex*)&p->gfxData[0], transformed );
+				int nTransformed = this->DoTransform( p, (TVertex*)&p->gfxData[0], transformed );
 				ASSERT( nTransformed == nPartVerts );
 			}
 			std::memcpy(&geom[nVert], &p->gfxData[0], nSize);
