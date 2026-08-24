@@ -51,32 +51,6 @@ struct IObjMan : public CObjectBase
 	{
 		return SetValue( szName, CVariant( value ) );
 	}
-	template <>
-		bool SetValue<CVec2>( const std::string &szName, const CVec2 &value )
-	{
-		return SetValue( szName + ".x", CVariant( value.x ) ) &&
-			SetValue( szName + ".y", CVariant( value.y ) );
-	}
-	template <>
-		bool SetValue<CVec3>( const std::string &szName, const CVec3 &value )
-	{
-		return SetValue( szName + ".x", CVariant( value.x ) ) &&
-			SetValue( szName + ".y", CVariant( value.y ) ) &&
-			SetValue( szName + ".z", CVariant( value.z ) );
-	}
-	template <>
-		bool SetValue<CVec4>( const std::string &szName, const CVec4 &value )
-	{
-		return SetValue( szName + ".x", CVariant( value.x ) ) &&
-			SetValue( szName + ".y", CVariant( value.y ) ) &&
-			SetValue( szName + ".z", CVariant( value.z ) ) &&
-			SetValue( szName + ".w", CVariant( value.w ) );
-	}
-	template <>
-		bool SetValue<CQuat>( const std::string &szName, const CQuat &value )
-	{
-		return SetValue( szName, value.GetInternalVector() );
-	}
 	//
 	template <template <typename TYPE> class TContainer, typename TValue>
 		bool SetValue( const std::string &szName, const TContainer<TValue> &container )
@@ -91,16 +65,6 @@ struct IObjMan : public CObjectBase
 		}
 		return true;
 	}
-	template <>
-		bool SetValue<std::basic_string, char>( const std::string &szName, const std::basic_string<char> &value )
-	{
-		return SetValue( szName, CVariant( value ) );
-	}
-	template <>
-		bool SetValue<std::basic_string, wchar_t>( const std::string &szName, const std::basic_string<wchar_t> &value )
-	{
-		return SetValue( szName, CVariant( value ) );
-	}
 	// 'get' family
 	template <class TYPE>
 		bool GetValue( const std::string &szName, TYPE *pValue )
@@ -109,97 +73,6 @@ struct IObjMan : public CObjectBase
 		if ( GetValue( szName, &value ) == false )
 			return false;
 		*pValue = (TYPE)value;
-		return true;
-	}
-	template <>
-		bool GetValue<std::string>( const std::string &szName, std::string *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName, &value ) == false )
-			return false;
-		*pValue = value.GetStr();
-		return true;
-	}
-	template <>
-		bool GetValue<std::wstring>( const std::string &szName, std::wstring *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName, &value ) == false )
-			return false;
-		*pValue = value.GetWStr();
-		return true;
-	}
-	template <>
-		bool GetValue<boost::uuids::uuid>( const std::string &szName, boost::uuids::uuid *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName, &value ) == false )
-			return false;
-		NI_VERIFY( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == sizeof(boost::uuids::uuid), "Incorrect BLOB for GUID", return false );
-		memcpy( pValue, value.GetPtr(), sizeof(boost::uuids::uuid) );
-		return true;
-	}
-	template <>
-		bool GetValue<CDBID>( const std::string &szName, CDBID *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName, &value ) == false )
-			return false;
-		*pValue = value.GetDBID();
-		return true;
-	}
-	template <>
-		bool GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName + ".x", &value ) == false )
-			return false;
-		pValue->x = (float)value;
-		if ( GetValue( szName + ".y", &value ) == false )
-			return false;
-		pValue->y = (float)value;
-		return true;
-	}
-	template <>
-		bool GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName + ".x", &value ) == false )
-			return false;
-		pValue->x = (float)value;
-		if ( GetValue( szName + ".y", &value ) == false )
-			return false;
-		pValue->y = (float)value;
-		if ( GetValue( szName + ".z", &value ) == false )
-			return false;
-		pValue->z = (float)value;
-		return true;
-	}
-	template <>
-		bool GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
-	{
-		CVariant value;
-		if ( GetValue( szName + ".x", &value ) == false )
-			return false;
-		pValue->x = (float)value;
-		if ( GetValue( szName + ".y", &value ) == false )
-			return false;
-		pValue->y = (float)value;
-		if ( GetValue( szName + ".z", &value ) == false )
-			return false;
-		pValue->z = (float)value;
-		if ( GetValue( szName + ".w", &value ) == false )
-			return false;
-		pValue->w = (float)value;
-		return true;
-	}
-	template <>
-		bool GetValue<CQuat>( const std::string &szName, CQuat *pValue )
-	{
-		CVec4 vRes;
-		if ( GetValue(szName, &vRes) == false )
-			return false;
-		*pValue = CQuat( vRes );
 		return true;
 	}
 	//
@@ -218,25 +91,142 @@ struct IObjMan : public CObjectBase
 		}
 		return true;
 	}
-	template <>
-		bool GetValue<std::basic_string, char>( const std::string &szName, std::basic_string<char> *pValue )
-	{
-		CVariant var;
-		if ( GetValue( szName, &var ) == false )
-			return false;
-		*pValue = var.GetStr();
-		return true;
-	}
-	template <>
-		bool GetValue<std::basic_string, wchar_t>( const std::string &szName, std::basic_string<wchar_t> *pValue )
-	{
-		CVariant var;
-		if ( GetValue( szName, &var ) == false )
-			return false;
-		*pValue = var.GetWStr();
-		return true;
-	}
 };
+
+// The explicit specializations of SetValue and GetValue that used to sit in the
+// class body above. An explicit specialization has to appear at namespace scope,
+// which MSVC does not insist on; qualifying them keeps them members of IObjMan, so
+// the unqualified SetValue and GetValue calls in their bodies still resolve to the
+// pure virtuals and to each other.
+template <> inline bool IObjMan::SetValue<CVec2>( const std::string &szName, const CVec2 &value )
+{
+	return SetValue( szName + ".x", CVariant( value.x ) ) &&
+		SetValue( szName + ".y", CVariant( value.y ) );
+}
+template <> inline bool IObjMan::SetValue<CVec3>( const std::string &szName, const CVec3 &value )
+{
+	return SetValue( szName + ".x", CVariant( value.x ) ) &&
+		SetValue( szName + ".y", CVariant( value.y ) ) &&
+		SetValue( szName + ".z", CVariant( value.z ) );
+}
+template <> inline bool IObjMan::SetValue<CVec4>( const std::string &szName, const CVec4 &value )
+{
+	return SetValue( szName + ".x", CVariant( value.x ) ) &&
+		SetValue( szName + ".y", CVariant( value.y ) ) &&
+		SetValue( szName + ".z", CVariant( value.z ) ) &&
+		SetValue( szName + ".w", CVariant( value.w ) );
+}
+template <> inline bool IObjMan::SetValue<CQuat>( const std::string &szName, const CQuat &value )
+{
+	return SetValue( szName, value.GetInternalVector() );
+}
+template <> inline bool IObjMan::SetValue<std::basic_string, char>( const std::string &szName, const std::basic_string<char> &value )
+{
+	return SetValue( szName, CVariant( value ) );
+}
+template <> inline bool IObjMan::SetValue<std::basic_string, wchar_t>( const std::string &szName, const std::basic_string<wchar_t> &value )
+{
+	return SetValue( szName, CVariant( value ) );
+}
+template <> inline bool IObjMan::GetValue<std::string>( const std::string &szName, std::string *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName, &value ) == false )
+		return false;
+	*pValue = value.GetStr();
+	return true;
+}
+template <> inline bool IObjMan::GetValue<std::wstring>( const std::string &szName, std::wstring *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName, &value ) == false )
+		return false;
+	*pValue = value.GetWStr();
+	return true;
+}
+template <> inline bool IObjMan::GetValue<boost::uuids::uuid>( const std::string &szName, boost::uuids::uuid *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName, &value ) == false )
+		return false;
+	NI_VERIFY( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == sizeof(boost::uuids::uuid), "Incorrect BLOB for GUID", return false );
+	memcpy( pValue, value.GetPtr(), sizeof(boost::uuids::uuid) );
+	return true;
+}
+template <> inline bool IObjMan::GetValue<CDBID>( const std::string &szName, CDBID *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName, &value ) == false )
+		return false;
+	*pValue = value.GetDBID();
+	return true;
+}
+template <> inline bool IObjMan::GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName + ".x", &value ) == false )
+		return false;
+	pValue->x = (float)value;
+	if ( GetValue( szName + ".y", &value ) == false )
+		return false;
+	pValue->y = (float)value;
+	return true;
+}
+template <> inline bool IObjMan::GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName + ".x", &value ) == false )
+		return false;
+	pValue->x = (float)value;
+	if ( GetValue( szName + ".y", &value ) == false )
+		return false;
+	pValue->y = (float)value;
+	if ( GetValue( szName + ".z", &value ) == false )
+		return false;
+	pValue->z = (float)value;
+	return true;
+}
+template <> inline bool IObjMan::GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
+{
+	CVariant value;
+	if ( GetValue( szName + ".x", &value ) == false )
+		return false;
+	pValue->x = (float)value;
+	if ( GetValue( szName + ".y", &value ) == false )
+		return false;
+	pValue->y = (float)value;
+	if ( GetValue( szName + ".z", &value ) == false )
+		return false;
+	pValue->z = (float)value;
+	if ( GetValue( szName + ".w", &value ) == false )
+		return false;
+	pValue->w = (float)value;
+	return true;
+}
+template <> inline bool IObjMan::GetValue<CQuat>( const std::string &szName, CQuat *pValue )
+{
+	CVec4 vRes;
+	if ( GetValue(szName, &vRes) == false )
+		return false;
+	*pValue = CQuat( vRes );
+	return true;
+}
+template <> inline bool IObjMan::GetValue<std::basic_string, char>( const std::string &szName, std::basic_string<char> *pValue )
+{
+	CVariant var;
+	if ( GetValue( szName, &var ) == false )
+		return false;
+	*pValue = var.GetStr();
+	return true;
+}
+template <> inline bool IObjMan::GetValue<std::basic_string, wchar_t>( const std::string &szName, std::basic_string<wchar_t> *pValue )
+{
+	CVariant var;
+	if ( GetValue( szName, &var ) == false )
+		return false;
+	*pValue = var.GetWStr();
+	return true;
+}
 
 struct IArrayObjMan : public IObjMan
 {
