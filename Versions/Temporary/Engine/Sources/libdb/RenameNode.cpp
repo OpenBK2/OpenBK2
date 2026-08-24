@@ -11,45 +11,59 @@ class CString;	// без такой ботвы #include "../../MapEditorLib/Inte
 #include "System/VFSOperations.h"
 
 #include <cstdint>
+#include <filesystem>
+#include <system_error>
 
 #include <fmt/format.h>
 
 namespace NFolderManipulator
 {
 
-bool CheckedFileOperation( const std::string &szOperationDescription, bool bFileOperationResult )
+// std::filesystem reports through an error_code, whose message() is the same text
+// FormatMessage produced, without the LocalFree that had to follow it.
+//
+// The original built that string and then dropped it: nothing ever read
+// szErrorMessage. Keeping it dead would mean an unused local, so it is traced now,
+// which is plainly what the code was written to do.
+bool CheckedFileOperation( const std::string &szOperationDescription, const std::error_code &ec )
 {
-	if ( !bFileOperationResult )
+	if ( ec )
 	{
-		LPVOID lpMsgBuf;
-		uint32_t dw = GetLastError();
-
-		FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM,
-			NULL,
-			dw,
-			0,
-			(LPTSTR) &lpMsgBuf,
-			0, NULL );
-
-		std::string szErrorMessage = fmt::format( "rename failed: {}, {}", szOperationDescription, lpMsgBuf );
-		LocalFree(lpMsgBuf);
-
+		DbgTrc( "rename failed: %s, %s", szOperationDescription.c_str(), ec.message().c_str() );
 		return false;
 	}
 
 	return true;
 }
 
+// ::DeleteFile returned FALSE for a file that was not there, and all four call sites
+// below ignored that, as they ignore it now. This is the same shape as NFile's own
+// private RemoveOne.
+static void RemoveFile( const std::string &szName )
+{
+	std::error_code ec;
+	std::filesystem::remove( szName, ec );
+}
+
 bool CheckedMove( const std::string &szFrom, const std::string &szTo )
 {
-	return CheckedFileOperation( fmt::format( "move {} -> {}", szFrom, szTo ), MoveFile( szFrom.c_str(), szTo.c_str() ) );
+	// ::MoveFile refused to overwrite an existing destination and rename replaces one,
+	// but both call sites remove the destination immediately beforehand - which is why
+	// that remove is there at all - so the reachable behaviour is the same.
+	std::error_code ec;
+	std::filesystem::rename( szFrom, szTo, ec );
+	return CheckedFileOperation( fmt::format( "move {} -> {}", szFrom, szTo ), ec );
 }
 
 bool CheckedCopy( const std::string &szFrom, const std::string &szTo )
 {
-	return CheckedFileOperation( fmt::format( "copy {} -> {}", szFrom, szTo ), CopyFile( szFrom.c_str(), szTo.c_str(), false ) );
+	// overwrite_existing because ::CopyFile was called with bFailIfExists false. Not
+	// NFile::CopyFile, which is otherwise this exact call: it creates the destination
+	// path first, which ::CopyFile never did, and both callers here have already done
+	// that themselves through NFile::CreatePath.
+	std::error_code ec;
+	std::filesystem::copy_file( szFrom, szTo, std::filesystem::copy_options::overwrite_existing, ec );
+	return CheckedFileOperation( fmt::format( "copy {} -> {}", szFrom, szTo ), ec );
 }
 
 struct SReplaceEntry
@@ -130,7 +144,7 @@ static bool ReplaceEntriesInFile( const std::string &szFileName, const std::stri
 	{
 		if ( szFileName != szNewFileName )
 		{
-			DeleteFile( (szStorageDir + szNewFileName).c_str() );
+			RemoveFile( szStorageDir + szNewFileName );
 			return CheckedCopy( szStorageDir + szFileName, szStorageDir + szNewFileName );
 		}
 		return true;
@@ -155,7 +169,7 @@ static bool ReplaceEntriesInFile( const std::string &szFileName, const std::stri
 		newStream.Write( &(buffer[nLastPos]), buffer.size() - nLastPos );
 	}
 
-	DeleteFile( (szStorageDir + szNewFileName).c_str() );
+	RemoveFile( szStorageDir + szNewFileName );
 
 	return CheckedMove( szStorageDir + szNewTempFileName, szStorageDir + szNewFileName );
 }
@@ -247,7 +261,7 @@ static bool FixChangedFile( const std::string &szOldName, const std::string &szN
 {
 	if ( NFile::GetFilePath( szOldName ) == NFile::GetFilePath( szNewName ) )
 	{
-		DeleteFile( (szStorageDir+szNewName).c_str() );
+		RemoveFile( szStorageDir + szNewName );
 		return CheckedCopy( szStorageDir + szOldName, szStorageDir + szNewName );
 	}
 
@@ -357,7 +371,7 @@ bool RenameNode2( const std::string &_szName, const std::string &_szNewName )
 		std::string szNewObjName = changedObjs[i].ToString();
 		szNewObjName.replace( 0, szNewObjName.size(), szNewName );
 		if ( changedObjs[i].ToString() != szNewObjName )
-			DeleteFile( (szStorageDir + changedObjs[i].ToString()).c_str() );
+			RemoveFile( szStorageDir + changedObjs[i].ToString() );
 	}
 
 	for ( int i = 0; i < changedObjs.size(); ++i )
