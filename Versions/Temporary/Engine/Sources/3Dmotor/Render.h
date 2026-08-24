@@ -266,7 +266,11 @@ class CRasterizer
 		case 7:
 			break;
 		default:
-			__assume(0);
+			// nTemp is a three bit mask and Raster only reaches here for 1 to 7, so the
+			// seven cases above are exhaustive. Boost's spelling of this is __assume(0)
+			// on MSVC and __builtin_unreachable() elsewhere, and carries its own
+			// semicolon; boost/config.hpp is already included at the top of this file.
+			BOOST_UNREACHABLE_RETURN()
 			break;
 		}
 	}
