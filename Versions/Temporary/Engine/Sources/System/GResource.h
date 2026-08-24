@@ -42,36 +42,6 @@ public:
 	int operator&( IBinSaver &f ) { f.Add( 1, &key ); return 0; }
 };
 
-class CFileRequest;
-template <class TKey, class TValue>
-class CLazyResourceLoader : public CResourceLoader<TKey,TValue>
-{
-	typedef CResourceLoader<TKey,TValue> TParent;
-	CObj<CFileRequest> pRequest;
-protected:
-	virtual CFileRequest* CreateRequest() = 0;
-	virtual void RecalcValue( CFileRequest *p ) = 0;
-	virtual void Recalc()
-	{
-		if ( IsValid(pRequest) )
-		{
-			if ( !pRequest->IsReady() )
-				return;
-			RecalcValue( pRequest );
-			pRequest = 0;
-			ReleaseFileRequestHolder();
-		}
-		else
-		{
-			pRequest = CreateRequest();
-			if ( pRequest )
-				AddFileRequest( pRequest );
-		}
-	}
-	bool NeedUpdate() { TParent::NeedUpdate(); if ( !IsValid(pValue) && IsValid(pRequest) && pRequest->IsReady() ) return true; return false; }
-public:
-};
-
 class IPrecache : public CObjectBase
 {
 public:
@@ -192,6 +162,42 @@ SYSTEM_EXPORT void AddFileRequest( NGScene::CFileRequest *pReq );
 SYSTEM_EXPORT bool HasFileRequestsInFly();
 SYSTEM_EXPORT int CountFileRequestsInFly();
 SYSTEM_EXPORT void LoadPrecached();
+
+// Below CFileRequest and the free functions rather than above them: this template
+// calls ReleaseFileRequestHolder and AddFileRequest and dereferences a
+// CObj<CFileRequest>, none of which depend on its parameters, so they are looked up
+// where the template is written and not where it is instantiated. MSVC parses the
+// body late and never noticed. It used to sit directly under CResourceLoader with a
+// forward declaration of CFileRequest for company, which is not enough to call a
+// member on one.
+template <class TKey, class TValue>
+class CLazyResourceLoader : public CResourceLoader<TKey,TValue>
+{
+	typedef CResourceLoader<TKey,TValue> TParent;
+	CObj<CFileRequest> pRequest;
+protected:
+	virtual CFileRequest* CreateRequest() = 0;
+	virtual void RecalcValue( CFileRequest *p ) = 0;
+	virtual void Recalc()
+	{
+		if ( IsValid(pRequest) )
+		{
+			if ( !pRequest->IsReady() )
+				return;
+			RecalcValue( pRequest );
+			pRequest = 0;
+			ReleaseFileRequestHolder();
+		}
+		else
+		{
+			pRequest = CreateRequest();
+			if ( pRequest )
+				AddFileRequest( pRequest );
+		}
+	}
+	bool NeedUpdate() { TParent::NeedUpdate(); if ( !IsValid(this->pValue) && IsValid(pRequest) && pRequest->IsReady() ) return true; return false; }
+public:
+};
 }
 
 typedef NGScene::SResKey<int> SIntResKey;
