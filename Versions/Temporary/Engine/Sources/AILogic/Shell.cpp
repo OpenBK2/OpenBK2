@@ -27,6 +27,8 @@
 
 #include <cstdint>
 
+#include <zlib.h>
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E3, CHitInfo );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D446, CFakeBallisticTraj );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D447, CBombBallisticTraj );

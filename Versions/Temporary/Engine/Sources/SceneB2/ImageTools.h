@@ -2,7 +2,10 @@
 
 #include <cstdint>
 
-#include <zconf.h>
+// zlib.h, not zconf.h: zconf.h carries the types and configuration macros and
+// none of the prototypes, so z_stream, deflate and inflate are not declared by
+// it. This header calls all three.
+#include <zlib.h>
 
 namespace NImageTools
 {

@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-#include <zconf.h>
+#include <zlib.h>
 
 namespace NMinimapImage
 {

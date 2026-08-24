@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <zlib.h>
+
 #include <fmt/format.h>
 
 SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;

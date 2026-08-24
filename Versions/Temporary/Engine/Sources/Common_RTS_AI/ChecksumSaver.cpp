@@ -7,6 +7,8 @@
 #include "port/debugging.h"
 
 #include <cstdint>
+
+#include <zlib.h>
 using object_storage_type = det_map<int, CObjectBase*>;
 
 object_storage_type & GetStorage()

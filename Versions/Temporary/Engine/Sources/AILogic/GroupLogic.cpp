@@ -32,6 +32,8 @@
 
 #include <fmt/format.h>
 
+#include <zlib.h>
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
 CGroupLogic theGroupLogic;
 extern CEventUpdater updater;

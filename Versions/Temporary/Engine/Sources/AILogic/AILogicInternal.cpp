@@ -75,6 +75,8 @@ extern CUnderConstructionObject theUnderConstructionObject;
 
 #include <cstdint>
 
+#include <zlib.h>
+
 #include <fmt/format.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D441, CAILogic );
