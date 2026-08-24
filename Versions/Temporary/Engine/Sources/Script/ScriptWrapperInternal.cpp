@@ -26,7 +26,11 @@ void RegisterCommonFunctionsToSaveLoad()
 	AddScriptFunctionsToSaveLoad( NScript::pCommonRegList );
 }
 
-SRegFunction pLuaPtrTagFuncList[] = { (0,0) };
+// A tag with no functions of its own, so the list is just the terminator every
+// other SRegFunction list here ends with. It was written (0,0) rather than
+// { 0, 0 }: a parenthesised comma expression, which C++03 still counted as a null
+// pointer constant and C++11 narrowed to an integer literal, leaving this an int.
+SRegFunction pLuaPtrTagFuncList[] = { { 0, 0 } };
 
 
 Script * GetScript()
