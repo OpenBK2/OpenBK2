@@ -5,6 +5,8 @@
 
 namespace NDb
 {
+
+enum EDBUnitRPGType : int;
 enum EUnitRPGClass
 {
 	RPG_CLASS_UNKNOWN					= 0,

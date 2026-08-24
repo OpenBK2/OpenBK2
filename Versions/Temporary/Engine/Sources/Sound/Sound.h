@@ -3,6 +3,7 @@
 #include "SFX.h"
 #include "DBSound.h"
 
+enum ESoundMixType : int;
 class CSubstSound;
 namespace NDb
 {

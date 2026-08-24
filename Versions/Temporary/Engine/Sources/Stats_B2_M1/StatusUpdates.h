@@ -5,7 +5,7 @@
 
 #include "AIUpdates.h"
 
-enum EUnitStatus
+enum EUnitStatus : unsigned int
 {
 	EUS_UNDEFINED         = 0x00000000,
 

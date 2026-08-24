@@ -8,6 +8,8 @@
 #include "AIDebugInfo.h"
 #include "WeatherVisual.h"
 
+enum ESoundSceneMode : int;
+
 #include <cstdint>
 
 #define SCREEN_VIRTUAL_WIDTH 1024.0f

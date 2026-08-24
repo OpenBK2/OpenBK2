@@ -3,6 +3,8 @@
 
 #include "InterfaceScreenBase.h"
 
+enum EMissionObjectiveState : int;
+
 class CInterfaceMissionObjectives : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionObjectives );

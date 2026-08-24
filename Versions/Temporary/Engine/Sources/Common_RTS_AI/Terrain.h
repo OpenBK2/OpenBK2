@@ -19,7 +19,7 @@ enum ETerrainTypes
 	ETT_MARINE_TERRAIN = 2,
 };	
 
-enum EFreeTileInfo
+enum EFreeTileInfo : int
 {
 	FREE_NONE    = 0x00,
 	FREE_TERRAIN = 0x01,

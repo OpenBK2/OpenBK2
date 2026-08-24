@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-enum ESoundSceneMode
+enum ESoundSceneMode : int
 {
 	ESSM_INTERMISSION_INTERFACE,
 	ESSM_INGAME,
@@ -17,7 +17,7 @@ enum
 	SFX_PLAY_LIST = 0x11079300,
 };
 
-enum ESoundMixType
+enum ESoundMixType : int
 {
 	SFX_MIX_IF_TIME_EQUALS,
 	SFX_MIX_SUBSTITUTE,

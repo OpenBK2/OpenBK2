@@ -66,7 +66,7 @@ enum EGeometryAttributes
 {
 	GATTR_VERTEX_COLOR = 13
 };
-enum EAlphaMode2D
+enum EAlphaMode2D : int
 {
 	AM2D_NORMAL,
 	AM2D_PREMUL,

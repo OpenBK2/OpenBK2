@@ -6,6 +6,7 @@
 
 #include <cstdint>
 
+enum EFreeTileInfo : int;
 struct IPointChecking;
 class CAIMap;
 class CTerrain;

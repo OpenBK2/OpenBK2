@@ -10,6 +10,7 @@ namespace NDb
 	struct SAIGameConsts;
 }
 
+enum EActionNotify : unsigned int;
 struct SMiniMapUnitInfo;
 struct SAIAcknowledgment;
 struct SAIBoredAcknowledgement;

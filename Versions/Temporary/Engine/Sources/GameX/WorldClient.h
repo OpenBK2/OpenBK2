@@ -13,6 +13,7 @@ namespace NDb
 	struct SMapInfo;
 };
 
+enum EKeyboardFlags : int;
 struct ITransceiver;
 struct IVisualNotifications;
 struct IAILogic;

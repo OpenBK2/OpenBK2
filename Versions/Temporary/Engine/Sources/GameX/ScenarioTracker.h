@@ -12,6 +12,7 @@ namespace NDb
 {
 	struct SBackground;
 }
+enum EMissionObjectiveState : int;
 class CMapObj;
 
 typedef std::vector<CDBPtr<NDb::SMapInfo> > CMissions;

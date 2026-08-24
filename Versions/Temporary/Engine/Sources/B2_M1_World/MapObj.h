@@ -18,6 +18,8 @@
 
 #include <zconf.h>
 
+enum EUnitStatus : unsigned int;
+
 const int ARMOR_FRONT				= 0;
 const int ARMOR_SIDE_1			= 1;
 const int ARMOR_BACK				= 2;

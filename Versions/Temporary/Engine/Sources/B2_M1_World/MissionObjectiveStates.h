@@ -1,6 +1,6 @@
 #pragma once
 
-enum EMissionObjectiveState
+enum EMissionObjectiveState : int
 {
 	EMOS_MIN				= 0,
 

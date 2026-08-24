@@ -7,6 +7,7 @@
 
 #include "SceneB2/CameraInternal.h"
 
+enum EMissionObjectiveState : int;
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;
 struct ICommonB2M1AI;

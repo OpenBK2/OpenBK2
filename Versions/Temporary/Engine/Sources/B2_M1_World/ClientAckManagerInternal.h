@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+enum ESoundMixType : int;
+
 namespace NDb
 {
 	enum EAckClass : int;

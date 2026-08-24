@@ -8,7 +8,7 @@
 
 #include <fmt/format.h>
 
-enum EKeyboardFlags
+enum EKeyboardFlags : int
 {
 	EKF_NONE		= 0,
 	EKF_SHIFT		= 1,

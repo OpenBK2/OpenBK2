@@ -9,6 +9,8 @@ namespace NGfx
 namespace NGScene
 {
 
+enum EAlphaMode2D : int;
+
 class I2DScene: public CObjectBase
 {
 public:
