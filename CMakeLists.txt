@@ -96,6 +96,7 @@ include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)
 include(cmake/exportheader.cmake)
 include(cmake/pch.cmake)
+include(cmake/ccache.cmake)
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
 
