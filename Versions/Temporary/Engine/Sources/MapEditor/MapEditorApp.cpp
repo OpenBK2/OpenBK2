@@ -191,7 +191,6 @@ bool CEditorApp::CreateSingletons()
 		IResourceManager::SDBConfig dbconfig;
 		dbconfig.szSrcFilePath = pUserData->constUserData.szExportSourceFolder;
 		dbconfig.szDstFilePath = pUserData->constUserData.szExportDestinationFolder;
-		dbconfig.szObjectRecordIDsPath = pUserData->constUserData.szObjectRecordIDsFolder;
 		Singleton<IResourceManager>()->SetConfig( dbconfig );
 	}
 	//

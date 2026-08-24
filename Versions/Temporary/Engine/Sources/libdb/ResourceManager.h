@@ -12,7 +12,6 @@ struct IResourceManager : CObjectBase
 	{
 		std::string szSrcFilePath;
 		std::string szDstFilePath;
-		std::string szObjectRecordIDsPath;
 	};
 
 	// starts up ResourceManager, return true if it has been bootstrapped and ready

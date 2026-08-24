@@ -8,7 +8,6 @@
 #include "System/FilePath.h"
 
 #include "EditorDb.h"
-#include "ObjectRecordIDAllocator.h"
 #include "DBWatcherClient.h"
 
 #include "ResourceManagerInternal.h"
@@ -56,11 +55,6 @@ void CResourceManagerWrapper::SetConfig( const SDBConfig &config )
 {
 	szSrcPath = config.szSrcFilePath;
 	szDstPath = config.szDstFilePath;
-	//
-	if ( !config.szObjectRecordIDsPath.empty() )
-		NDb::NObjectIDAllocator::SetObjectRecordIDsFolderName( config.szObjectRecordIDsPath );
-	else
-		NDb::NObjectIDAllocator::SetObjectRecordIDsFolderName( szSrcPath );
 }
 
 IManipulator* CResourceManagerWrapper::CreateTableManipulator()

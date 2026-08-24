@@ -21,7 +21,6 @@ set(SOURCES
     GameDBIterator.cpp
     Hungarian.cpp
     Logger.cpp
-    ObjectRecordIDAllocator.cpp
     RenameNode.cpp
     ReportMetaInfo.cpp
     stdafx.cpp
