@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/time.h"
+
 #include <thread>
 #include <chrono>
 
@@ -938,11 +940,11 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	CCameraMapIterator itCamera( ToRadian(fFOV), ToRadian(fYaw), ToRadian(fPitch), fDist, 
 															 NGfx::GetScreenRect(), fMaxSizeX, fMaxSizeY );
 	//
-	SYSTEMTIME systime;
-	GetLocalTime( &systime );
+	std::tm systime = {};
+	GetLocalTime( &systime, std::time( 0 ) );
 	const std::string szFileName = fmt::format( "screenshots\\mapshot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
-		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
-		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
+		systime.tm_year + 1900, systime.tm_mon + 1, systime.tm_mday,
+		systime.tm_hour, systime.tm_min, systime.tm_sec );
 	//
 	try
 	{

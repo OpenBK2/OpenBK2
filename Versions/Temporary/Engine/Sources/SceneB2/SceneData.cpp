@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/time.h"
+
 #include "3Dmotor/Gfx.h"
 #include "Image/Targa.h"
 #include "System/VFSOperations.h"
@@ -27,12 +29,12 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 		for ( int y = 0; y < data.GetSizeY(); ++y )
 			data[y][x].a = 0xFF;
 
-	SYSTEMTIME systime;
-	GetLocalTime( &systime );
+	std::tm systime = {};
+	GetLocalTime( &systime, std::time( 0 ) );
 	const std::string szFileName =
 		fmt::format( "screenshots\\shot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
-		int(systime.wYear), int(systime.wMonth), int(systime.wDay),
-		int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
+		systime.tm_year + 1900, systime.tm_mon + 1, systime.tm_mday,
+		systime.tm_hour, systime.tm_min, systime.tm_sec );
 
 	CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
 	NImage::SaveAsTGA( data, &stream );
