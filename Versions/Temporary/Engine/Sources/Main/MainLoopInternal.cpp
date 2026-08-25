@@ -230,8 +230,7 @@ static bool ProcessEvent( const SGameMessage &msg )
 static void LimitInterfaceFrameRate( bool bActive )
 {
 	static const int nMaxInterfaceFPS = 720;
-	static LARGE_INTEGER frequency;
-	static LARGE_INTEGER timeLastFrame;
+	static std::chrono::steady_clock::time_point timeLastFrame;
 	static bool bHaveLastFrame = false;
 
 	IInterfaceBase *pInterface = GetTopInterface();
@@ -241,14 +240,7 @@ static void LimitInterfaceFrameRate( bool bActive )
 		return;
 	}
 
-	if ( frequency.QuadPart == 0 )
-	{
-		if ( !QueryPerformanceFrequency( &frequency ) || frequency.QuadPart == 0 )
-			return;
-	}
-
-	LARGE_INTEGER timeNow;
-	QueryPerformanceCounter( &timeNow );
+	std::chrono::steady_clock::time_point timeNow = std::chrono::steady_clock::now();
 
 	if ( !bHaveLastFrame )
 	{
@@ -257,20 +249,22 @@ static void LimitInterfaceFrameRate( bool bActive )
 		return;
 	}
 
-	const LONGLONG nFrameTicks = ( frequency.QuadPart + nMaxInterfaceFPS - 1 ) / nMaxInterfaceFPS;
-	LONGLONG nElapsedTicks = timeNow.QuadPart - timeLastFrame.QuadPart;
+	// Rounded up, as the tick count was, so a frame lasts at least its share of
+	// the second rather than at most.
+	const std::chrono::nanoseconds frameTime( ( 1000000000LL + nMaxInterfaceFPS - 1 ) / nMaxInterfaceFPS );
+	std::chrono::nanoseconds elapsed = timeNow - timeLastFrame;
 
-	while ( nElapsedTicks < nFrameTicks )
+	while ( elapsed < frameTime )
 	{
-		const LONGLONG nTicksLeft = nFrameTicks - nElapsedTicks;
-		const uint32_t nSleepMS = uint32_t( nTicksLeft * 1000 / frequency.QuadPart );
+		const std::chrono::nanoseconds left = frameTime - elapsed;
+		const int64_t nSleepMS = std::chrono::duration_cast<std::chrono::milliseconds>( left ).count();
 		if ( nSleepMS > 1 )
 			std::this_thread::sleep_for( std::chrono::milliseconds( nSleepMS - 1 ) );
 		else
 			std::this_thread::yield();
 
-		QueryPerformanceCounter( &timeNow );
-		nElapsedTicks = timeNow.QuadPart - timeLastFrame.QuadPart;
+		timeNow = std::chrono::steady_clock::now();
+		elapsed = timeNow - timeLastFrame;
 	}
 
 	timeLastFrame = timeNow;
