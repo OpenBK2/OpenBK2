@@ -453,7 +453,7 @@ void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 		nLevel = 3;
-#endif _FINALRELEASE
+#endif // _FINALRELEASE
 }
 
 void CMOUnit::SetNewAbility( bool _bNewAbility )

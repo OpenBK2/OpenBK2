@@ -126,7 +126,7 @@ private:
 	std::list< std::pair< int, CMemoryStream > > msgToSendDirect;
 
 	bool AnalyzeLags();
-#endif __TEST_LAGS__
+#endif // __TEST_LAGS__
 
 	//
 	void KillThread();

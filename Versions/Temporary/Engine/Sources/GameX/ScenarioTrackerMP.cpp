@@ -481,7 +481,7 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 		return N_MAX_XP_LEVEL;
-#endif _FINALRELEASE
+#endif // _FINALRELEASE
 	if ( eType == NDb::RT_ENGINEERING
 		// --- Extra Max Level Ground ---
 		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_1

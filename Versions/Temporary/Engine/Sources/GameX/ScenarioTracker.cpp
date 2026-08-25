@@ -898,7 +898,7 @@ int CScenarioTracker::GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementT
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 			return N_MAX_XP_LEVEL;
-#endif _FINALRELEASE
+#endif // _FINALRELEASE
 		return 0;
 	}
 	
@@ -1819,7 +1819,7 @@ int CScenarioTracker::GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 			return N_MAX_XP_LEVEL;
-#endif _FINALRELEASE
+#endif // _FINALRELEASE
 		return -1;
 	}
 
