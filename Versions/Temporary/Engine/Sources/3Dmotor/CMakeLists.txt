@@ -137,8 +137,10 @@ if(WIN32)
         winapi
     )
 else()
-    # d3d9.h and the windows.h shim; there is no d3dx9 to link against
-    target_link_libraries(3Dmotor PRIVATE dxvk::d3d9)
+    # d3d9.h and the windows.h shim; there is no d3dx9 to link against.
+    # SDL because port/window.h reaches the window Gfx sizes, HWND being
+    # SDL_Window* under DXVK Native.
+    target_link_libraries(3Dmotor PRIVATE dxvk::d3d9 SDL3::SDL3-shared)
 endif()
 install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)

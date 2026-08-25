@@ -10,6 +10,7 @@
 #include "Gfx.h"
 #include "GfxInternal.h"
 #include "D3DError.h"
+#include "port/window.h"
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
 
