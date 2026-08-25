@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <cmath>
+
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "B2_M1_World/MapObj.h"
 #include "3DLib/Transform.h"
@@ -144,7 +146,7 @@ static bool ProjectWorldPointToScreen( CVec2 *pScreenPos, const CTransformStack 
 
 	pScreenPos->x = vProjected.x / fW * vScreenRect.x * 0.5f + vScreenRect.x * 0.5f;
 	pScreenPos->y = -vProjected.y / fW * vScreenRect.y * 0.5f + vScreenRect.y * 0.5f;
-	return _finite( pScreenPos->x ) != 0 && _finite( pScreenPos->y ) != 0;
+	return std::isfinite( pScreenPos->x ) && std::isfinite( pScreenPos->y );
 }
 
 static bool AddProjectedPointToScreenRect( CVec2 *pMin, CVec2 *pMax, bool *pHasRect,

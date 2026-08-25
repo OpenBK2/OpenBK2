@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <cmath>
+
 #include <float.h>
 #include "CameraInternal.h"
 #include "Misc/StrProc.h"
@@ -209,7 +211,7 @@ void CCamera::SetOrthographicTransform( float _fWidth, float _fHeight, float _fN
 void CCamera::GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScreenPos ) const
 {
 	MakeProjectiveRay( pvDir, pvOrig, transformStack, CVec2(fScreenWidth, fScreenHeight), vScreenPos );
-	if ( fabs2(*pvDir) < 0.000001 || _finite(pvDir->x) == 0 || _finite(pvDir->y) == 0 || _finite(pvDir->z) == 0 )
+	if ( fabs2(*pvDir) < 0.000001 || !std::isfinite( pvDir->x ) || !std::isfinite( pvDir->y ) || !std::isfinite( pvDir->z ) )
 	{
 		*pvDir = VNULL3;
 		return;
