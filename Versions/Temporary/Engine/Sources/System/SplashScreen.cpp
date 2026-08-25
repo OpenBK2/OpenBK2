@@ -2,9 +2,18 @@
 
 #include "SplashScreen.h"
 
+#include <boost/predef.h>
+
+#if !BOOST_OS_WINDOWS
+#include "SdlVideo.h"
+
+#include <SDL3/SDL.h>
+#endif
+
 
 namespace NSplash
 {
+#if BOOST_OS_WINDOWS
 static const char *pszSplashScreenWindowClass = "SplashScreen_WindowClass_DEFAULT";
 
 class CSplashScreen : public CObjectBase
@@ -293,4 +302,112 @@ CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopM
 	return pSplash;
 }
 
+#else
+
+namespace
+{
+// Every Win32 detail above that is not "show this image in the middle of the
+// screen" is either 8bpp palette handling, which no display has needed this
+// century, or the paint plumbing a window class requires. Neither has an SDL
+// counterpart to find, so this is written to the same contract rather than
+// translated call by call: the only entry point either version offers is
+// CreateSplashScreen, and its only caller creates one and later releases it.
+class CSplashScreen : public CObjectBase
+{
+	OBJECT_NOCOPY_METHODS( CSplashScreen );
+	//
+	SDL_Window *pWindow;
+	SDL_Surface *pImage;
+public:
+	CSplashScreen(): pWindow( 0 ), pImage( 0 ) {}
+	~CSplashScreen();
+
+	bool Create( const std::string &rszImageFileName, bool bTopMost );
+};
+
+CSplashScreen::~CSplashScreen()
+{
+	if ( pWindow != 0 )
+	{
+		SDL_DestroyWindow( pWindow );
+		pWindow = 0;
+	}
+	if ( pImage != 0 )
+	{
+		SDL_DestroySurface( pImage );
+		pImage = 0;
+	}
+}
+
+bool CSplashScreen::Create( const std::string &rszImageFileName, bool bTopMost )
+{
+	if ( !NSdl::EnsureVideo() )
+	{
+		return false;
+	}
+	// a filesystem path rather than a VFS one, which is what LoadImage with
+	// LR_LOADFROMFILE took, and what main.cpp still passes
+	pImage = SDL_LoadBMP( rszImageFileName.c_str() );
+	if ( pImage == 0 )
+	{
+		csSystem << CC_RED << "Cannot load the splash image " << rszImageFileName.c_str()
+		         << ": " << SDL_GetError() << endl;
+		return false;
+	}
+
+	// Borderless for WS_POPUP, utility to stay out of the task bar the way
+	// WS_EX_TOOLWINDOW did, on top only when the caller asked, and centred.
+	//
+	// Position goes in at creation rather than through SDL_SetWindowPosition
+	// afterwards, which a window manager is free to apply late or not at all
+	// once the window is mapped. It is still a request: Wayland gives clients no
+	// way to place their own windows, and some X11 managers place small windows
+	// themselves, so the centring is what the compositor allows.
+	SDL_PropertiesID props = SDL_CreateProperties();
+	SDL_SetStringProperty( props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "" );
+	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED );
+	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED );
+	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, pImage->w );
+	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, pImage->h );
+	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true );
+	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_UTILITY_BOOLEAN, true );
+	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_ALWAYS_ON_TOP_BOOLEAN, bTopMost );
+	pWindow = SDL_CreateWindowWithProperties( props );
+	SDL_DestroyProperties( props );
+	if ( pWindow == 0 )
+	{
+		csSystem << CC_RED << "Cannot create the splash window: " << SDL_GetError() << endl;
+		return false;
+	}
+
+	// Straight to the window surface: there is one static frame and no input,
+	// so a renderer would buy nothing. This is the BitBlt the WM_PAINT handler
+	// used to do, done once, since nothing here pumps a message loop and no
+	// second paint is ever going to arrive.
+	SDL_Surface *pWindowSurface = SDL_GetWindowSurface( pWindow );
+	if ( pWindowSurface == 0 )
+	{
+		csSystem << CC_RED << "Cannot reach the splash window surface: " << SDL_GetError() << endl;
+		return false;
+	}
+	SDL_BlitSurface( pImage, 0, pWindowSurface, 0 );
+	SDL_UpdateWindowSurface( pWindow );
+	// let the window reach the compositor before the caller goes back to loading
+	SDL_PumpEvents();
+	return true;
+}
+}
+
+CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopMost )
+{
+	CSplashScreen *pSplash = new CSplashScreen();
+	if ( !pSplash->Create( _szImageFileName, bTopMost ) )
+	{
+		delete pSplash;
+		pSplash = 0;
+	}
+	//
+	return pSplash;
+}
+#endif
 }
