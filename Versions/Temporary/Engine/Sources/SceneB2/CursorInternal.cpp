@@ -5,6 +5,10 @@
 #if BOOST_OS_WINDOWS
 #include <wtypes.h>
 #include <winuser.h>
+#else
+#include "port/window.h"
+
+#include <SDL3/SDL.h>
 #endif
 
 #include "CursorInternal.h"
@@ -27,7 +31,7 @@ CCursor::~CCursor()
 	for ( CModesMap::iterator it = modes.begin(); it != modes.end(); ++it )
 	{
 		if ( it->second != 0 ) 
-			::DestroyCursor( it->second );
+			NWinCursor::DestroyCursor( it->second );
 	}
 	modes.clear();
 }
@@ -39,7 +43,7 @@ void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 		return;
 
 	//
-	HCURSOR hCursor = NWinCursor::LoadCursor( szFileName );
+	NWinCursor::TCursor hCursor = NWinCursor::LoadCursor( szFileName );
 	NI_ASSERT( hCursor != 0, fmt::format("Can't load cursor \"{}\" from file", szFileName) );
 	if ( hCursor != 0 ) 
 	{
@@ -98,10 +102,29 @@ void CCursor::SetBounds( const int x1, const int y1, const int x2, const int y2 
 
 void CCursor::AcquireLocal()
 {
+#if BOOST_OS_WINDOWS
 	if ( bAcquired ) 
 		::ClipCursor( (const RECT*)&rcClip );
 	else
 		::ClipCursor( 0 );
+#else
+	// SDL confines the pointer to a rectangle inside a window rather than to one
+	// on the screen, and takes a width and a height where Win32 takes a second
+	// corner. The game window is borderless and covers the display, so the two
+	// coordinate systems coincide: the callers pass 0,0 to the screen size, or a
+	// one pixel box when the camera wants the pointer held still while it drags.
+	SDL_Window *pWindow = AsSdlWindow( NWinFrame::GetWnd() );
+	if ( pWindow == 0 )
+		return;
+	if ( bAcquired )
+	{
+		const SDL_Rect rect = { static_cast<int>( rcClip.left ), static_cast<int>( rcClip.top ),
+			static_cast<int>( rcClip.right - rcClip.left ), static_cast<int>( rcClip.bottom - rcClip.top ) };
+		SDL_SetWindowMouseRect( pWindow, &rect );
+	}
+	else
+		SDL_SetWindowMouseRect( pWindow, 0 );
+#endif
 }
 
 void CCursor::Acquire( const bool bAcquire )
@@ -112,14 +135,31 @@ void CCursor::Acquire( const bool bAcquire )
 
 void CCursor::SetPos( const int nX, const int nY )
 {
+#if BOOST_OS_WINDOWS
 	::SetCursorPos( nX, nY );
+#else
+	// Warped within the window rather than globally. A Wayland compositor does
+	// not let a client place the pointer on the screen, and it does not have to:
+	// the callers work in the coordinates of a window that covers the display.
+	SDL_Window *pWindow = AsSdlWindow( NWinFrame::GetWnd() );
+	if ( pWindow != 0 )
+		SDL_WarpMouseInWindow( pWindow, static_cast<float>( nX ), static_cast<float>( nY ) );
+#endif
 }
 
 const CVec2 CCursor::GetPos() const
 {
+#if BOOST_OS_WINDOWS
 	POINT point;
 	::GetCursorPos( &point );
 	return CVec2( point.x, point.y );
+#else
+	// Window relative for the same reason SetPos warps that way, and because the
+	// global position is not something every backend will answer.
+	float fX = 0, fY = 0;
+	SDL_GetMouseState( &fX, &fY );
+	return CVec2( fX, fY );
+#endif
 }
 
 int CCursor::operator&( IBinSaver &saver )

@@ -1,10 +1,6 @@
 #pragma once
 
-#include <boost/predef.h>
-
-#if BOOST_OS_WINDOWS
-#include <wtypes.h>
-#endif
+#include "System/WinCursor.h"
 
 #include "Cursor.h"
 
@@ -12,13 +8,13 @@ class CCursor : public ICursor
 {
 	OBJECT_NOCOPY_METHODS( CCursor )
 	//
-	typedef std::unordered_map<int, HCURSOR> CModesMap;
+	typedef std::unordered_map<int, NWinCursor::TCursor> CModesMap;
 	CModesMap modes;											// registered modes
 	
 	std::unordered_map<int, std::string> modesFiles;
 	//
 	int nCurrMode;												// current cursor mode
-	HCURSOR hCurrCursor;									// current cursor
+	NWinCursor::TCursor hCurrCursor;			// current cursor
 	CTRect<long> rcClip;									// current cursor clip area
 	bool bAcquired;												// is control over cursor acquired?
 	bool bShow;														// do we need show cursor?
