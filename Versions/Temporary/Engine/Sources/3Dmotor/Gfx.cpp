@@ -5,11 +5,11 @@
 #include "3DLib_export.h"
 
 #include <d3d9.h>
-#include <dxerr.h>
 #include "Misc/2Darray.h"
 #include "System/Commands.h"
 #include "Gfx.h"
 #include "GfxInternal.h"
+#include "D3DError.h"
 #include "Misc/HPTimer.h"
 #include "GfxBuffers.h"
 
@@ -982,8 +982,8 @@ void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args ar
 	const std::string buff = fmt::vsprintf( fmtStr, args );
 	////
 	csSystem << "ERROR: " << buff.c_str() << ". ";
-	csSystem << "CODE: " << DXGetErrorString( hRes ) << ". ";
-	csSystem << "DESCRIPTION: " << DXGetErrorDescription( hRes ) << endl;
+	csSystem << "CODE: " << fmt::format( "0x{:08X}", static_cast<uint32_t>( hRes ) ).c_str() << ". ";
+	csSystem << "DESCRIPTION: " << D3DErrorToString( hRes ) << endl;
 }
 
 // Commands/Vars

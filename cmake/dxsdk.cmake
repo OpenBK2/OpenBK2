@@ -26,17 +26,5 @@ endfunction()
 
 add_dxsdk_library(dxsdk::d3d9 d3d9)
 add_dxsdk_library(dxsdk::d3dx9 d3dx9)
-add_dxsdk_library(dxsdk::dxerr dxerr)
-if(MSVC)
-  # DxErr.lib is from the June 2010 SDK and calls _vsnprintf, which the UCRT does not
-  # export: <stdio.h> defines it as an inline, so the symbol only exists in an object
-  # that calls it itself. Gfx.cpp used to be that object by accident, and dropping its
-  # call left the reference unresolved with LNK2019. legacy_stdio_definitions is the
-  # supported way to supply the legacy names, and it stays attached here rather than
-  # to whichever translation unit happens to pull one in: no engine code calls them
-  # now, and any other old library that needs one is covered the same way.
-  set_property(TARGET dxsdk::dxerr APPEND PROPERTY
-    INTERFACE_LINK_LIBRARIES legacy_stdio_definitions)
-endif()
 add_dxsdk_library(dxsdk::dxguid dxguid)
 add_dxsdk_library(dxsdk::dinput8 dinput8)

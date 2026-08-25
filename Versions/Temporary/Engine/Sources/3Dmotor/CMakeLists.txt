@@ -31,6 +31,7 @@ set(SOURCES
     GDecal.cpp
     GDecalGeometry.cpp
     GFont.cpp
+    D3DError.h
     Gfx.cpp
     GfxBenchmark.cpp
     GfxBuffers.cpp
@@ -128,7 +129,6 @@ if(WIN32)
     target_link_libraries(3Dmotor PRIVATE
         dxsdk::d3d9
         dxsdk::d3dx9
-        dxsdk::dxerr
         dxsdk::dxguid
         winapi
     )
