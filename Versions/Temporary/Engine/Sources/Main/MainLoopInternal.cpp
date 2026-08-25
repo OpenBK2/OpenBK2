@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <filesystem>
+#include <system_error>
+
 #include <thread>
 #include <chrono>
 
@@ -77,15 +80,15 @@ const std::string& GetBaseDir()
 
 void InitMainLoop()
 {
-	char buffer[1024];
-	GetCurrentDirectory( 1024, buffer );
+	std::error_code error;
+	const std::string szCurrentDir = std::filesystem::current_path( error ).string();
 	//
-	const std::string szLogFileName = std::string(buffer) + "\\log.txt";
-	const std::string szErrorFileName = std::string(buffer) + "\\error.txt";
-	DeleteFile( szErrorFileName.c_str() );
-	DeleteFile( szLogFileName.c_str() );
+	const std::string szLogFileName = szCurrentDir + "\\log.txt";
+	const std::string szErrorFileName = szCurrentDir + "\\error.txt";
+	std::filesystem::remove( szErrorFileName, error );
+	std::filesystem::remove( szLogFileName, error );
 	//
-	std::string szTemp = buffer;
+	std::string szTemp = szCurrentDir;
 	NI_ASSERT( !szTemp.empty(), "Can't get current directory" );
 	if ( szTemp[szTemp.size() - 1] != '\\' )
 		szTemp += '\\';
