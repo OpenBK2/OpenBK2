@@ -104,8 +104,8 @@ static std::string GetProfileDir( const std::wstring &szName )
 		}
 	}
 	// copy configs from default
-	::CopyFile( (GetDefaultProfileDir() + "user.cfg").c_str(), (szResDir + "user.cfg").c_str(), false );
-	::CopyFile( (GetDefaultProfileDir() + "input.cfg").c_str(), (szResDir + "input.cfg").c_str(), false );
+	NFile::CopyFile( GetDefaultProfileDir() + "user.cfg", szResDir + "user.cfg" );
+	NFile::CopyFile( GetDefaultProfileDir() + "input.cfg", szResDir + "input.cfg" );
 	return szResDir;
 }
 

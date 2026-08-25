@@ -102,7 +102,7 @@ bool DoesFolderExist( const std::string &szFolderName );bool IsValidFileName( co
 // is valid win32 file name
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
-bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
+SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
 
 SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
 SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );
