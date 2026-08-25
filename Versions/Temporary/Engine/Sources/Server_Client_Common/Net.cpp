@@ -160,7 +160,7 @@ void CNet::SendZipped( const int nClientID, const CMemoryStream &memStream )
 {
 	CPtr<CZipPacket> pZipPacket = new CZipPacket( nClientID );
 	pZipPacket->Zip( memStream );
-	CPtr<CNetPacket> pNetPacket = pZipPacket;
+	CPtr<CNetPacket> pNetPacket = pZipPacket.GetPtr();
 	CMemoryStream memStreamToSend;
 	{
 		CPtr<IBinSaver> pSaver = CreateNetSaver( &memStreamToSend, SAVER_MODE_WRITE );

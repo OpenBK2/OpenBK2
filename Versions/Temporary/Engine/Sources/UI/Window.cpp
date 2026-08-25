@@ -771,7 +771,7 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 	NI_ASSERT( nButton >= 0, fmt::format( "don't understand such buttons {}", nButton) );
 	pressed.resize( (std::max)( (int)pressed.size(), nButton + 1 ) );
 
-	CPtr<CWindow> pTmp = pressed[nButton];
+	CPtr<CWindow> pTmp = pressed[nButton].GetPtr();
 	pressed[nButton] = PickInternal( vPos, false );
 
 	bool bHandledByChild = false;
