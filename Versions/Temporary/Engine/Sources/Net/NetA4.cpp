@@ -141,9 +141,8 @@ static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 // **
 // ************************************************************************************************************************ //
 
-static unsigned long WINAPI TheThreadProc( LPVOID lpParameter )
+static void TheThreadProc( CNetDriver *pNet )
 {
-	CNetDriver *pNet = reinterpret_cast<CNetDriver*>(lpParameter);
 	// run finction
 	pNet->StartThread();
 	while ( pNet->CanWork()  )
@@ -152,7 +151,6 @@ static unsigned long WINAPI TheThreadProc( LPVOID lpParameter )
 		pNet->Step();
 	}
 	pNet->FinishThread();
-	return 0;
 }
 
 IDriver::EState CNetDriver::GetState() const 
@@ -164,47 +162,37 @@ IDriver::EState CNetDriver::GetState() const
 
 void CNetDriver::StartThread()
 {
-	SetEvent( hThreadReport );
+	threadStarted.set_value();
 }
 
 bool CNetDriver::CanWork()
 {
-	return IsValid(this) && WaitForSingleObject( hStopCommand, 0 ) != WAIT_OBJECT_0;
+	return IsValid(this) && !bStopRequested;
 }
 
 void CNetDriver::FinishThread()
 {
-	SetEvent( hThreadReport );
-}
-
-void CNetDriver::CreateEvents()
-{
-	hThread = 0;
-	hThreadReport = CreateEvent( 0, true, false, 0 );
-	hStopCommand = CreateEvent( 0, true, false, 0 );
+	// Nothing to report. The waiter is KillThread, and it joins, which waits for
+	// the thread to have returned rather than for a signal raised just before it
+	// does.
 }
 
 CNetDriver::CNetDriver() : serverInfo( 0 ), login( 0 ), state( INACTIVE )
 {
-	CreateEvents();
 	bIsBroadcast = true;
 }
 
 CNetDriver::CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast ) 
 : serverInfo( 0 ), login( 0 ), state( INACTIVE ), consts(_consts), bIsBroadcast(_bIsBroadcast)
 {
-	CreateEvents();
 }
 
 void CNetDriver::KillThread()
 {
-	if ( hThread )
+	if ( thread.joinable() )
 	{
-		SetEvent( hStopCommand );
-		WaitForSingleObject( hThreadReport, INFINITE );
-
-		CloseHandle( hThread );
-		hThread = 0;
+		bStopRequested = true;
+		thread.join();
 	}
 }
 
@@ -239,8 +227,6 @@ CNetDriver::~CNetDriver()
 			break;
 	}
 
-	CloseHandle( hThreadReport );
-	CloseHandle( hStopCommand );
 }
 
 void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort, bool bClientOnly, ILinksManager *pLinksManager )
@@ -269,12 +255,14 @@ void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort
 	bReceiveNow = false;
 #endif // __TEST_LAGS__
 
-	unsigned long dwThreadId;
-	ResetEvent( hStopCommand );
-	ResetEvent( hThreadReport );
-	hThread = CreateThread( 0, 1024*1024, TheThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );
-	WaitForSingleObject( hThreadReport, INFINITE );
-	ResetEvent( hThreadReport );
+	// Init is reached again on a driver that has already run, so the previous
+	// thread is stopped first and the promise remade: a promise is satisfied once.
+	KillThread();
+	bStopRequested = false;
+	threadStarted = std::promise<void>();
+	std::future<void> started = threadStarted.get_future();
+	thread = std::thread( TheThreadProc, this );
+	started.wait();
 }
 
 CNetDriver::SPeer* CNetDriver::GetClientByAddr( const CNodeAddress &addr )

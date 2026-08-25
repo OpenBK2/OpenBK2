@@ -7,6 +7,10 @@
 
 #include "Misc/HPTimer.h"
 
+#include <atomic>
+#include <future>
+#include <thread>
+
 #if !defined(_FINALRELEASE) || defined(_DEVVERSION)
 //#define __TEST_LAGS__
 #endif // !defined(_FINALRELEASE) || defined(_DEVVERSION)
@@ -95,9 +99,14 @@ private:
 
 	//
 	// thread
-	HANDLE hThread;
-	HANDLE hThreadReport;
-	HANDLE hStopCommand;
+	std::thread thread;
+	// set once to ask the loop to stop, which is all hStopCommand was used for:
+	// it was only ever polled with a zero timeout
+	std::atomic<bool> bStopRequested;
+	// satisfied when the thread reaches its loop, so Init does not return before
+	// the driver is running. The other half of what hThreadReport did, waiting
+	// for the thread to finish, is what join does.
+	std::promise<void> threadStarted;
 
 	// CRAP{ for traffic to winsock measurement
 	NTimer::STime lastTrafficCheckTime;
@@ -120,7 +129,6 @@ private:
 #endif __TEST_LAGS__
 
 	//
-	void CreateEvents();
 	void KillThread();
 
 	void StartGameInfoSend( const CMemoryStream &data );
