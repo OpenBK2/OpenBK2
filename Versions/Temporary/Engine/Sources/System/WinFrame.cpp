@@ -1,26 +1,40 @@
 #include "stdafx.h"
 #include "WinFrame.h"
-#include "Misc/Win32Helper.h"
 #include "Commands.h"
+
+#include "port/virtualkey.h"
 
 #include <cstdint>
 #include <mutex>
 
 #include <fmt/format.h>
 
+#if BOOST_OS_WINDOWS
+#include "Misc/Win32Helper.h"
+#else
+#include "SdlVideo.h"
+
+#include "port/window.h"
+
+#include <SDL3/SDL.h>
+#endif
+
 using namespace NWinFrame;
-using namespace NWin32Helper;
 
 static HWND hWnd = 0;                            // window handle
-static HWND hWndSplashScreen;
-static HINSTANCE hInstance = 0;                  // instance handle
-static ATOM atomWndClassName = 0;                // atom window class name identification (assigned during registration)
 static volatile bool bExit = false;
 static volatile bool bActive = true;
 static std::mutex msgs;
 static std::list< SWindowsMsg > msgList;
-static HCURSOR hCursor;
+static NWinCursor::TCursor hCursor;
 static bool bManageCursor = true;
+
+#if BOOST_OS_WINDOWS
+using namespace NWin32Helper;
+
+static HWND hWndSplashScreen;
+static HINSTANCE hInstance = 0;                  // instance handle
+static ATOM atomWndClassName = 0;                // atom window class name identification (assigned during registration)
 
 // Force disable app minimisation - alt + tab is still ok though
 static bool s_bMinimizeOnDeactivate = false;
@@ -40,6 +54,7 @@ static void Report( const char *pszText, int nVal = -0x7fffffff )
 		message = pszText;
 	DebugTrace( "%s", message.c_str() );
 }
+#endif
 
 bool NWinFrame::GetMessage( SWindowsMsg *pRes )
 {
@@ -60,6 +75,41 @@ bool NWinFrame::IsAppActive()
 	return bActive;
 }
 
+bool NWinFrame::IsExit()
+{
+	return bExit;
+}
+
+void NWinFrame::ResetExit()
+{
+	bExit = false;
+}
+
+HWND NWinFrame::GetWnd()
+{
+	return hWnd;
+}
+
+static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
+{
+	NHPTimer::STime time;
+	NHPTimer::GetTime( &time );
+	std::lock_guard lock( msgs );
+	SWindowsMsg &m = msgList.emplace_back();
+	m.time = time;
+	m.msg = msg;
+	m.x = x;
+	m.y = y;
+	m.dwFlags = dwFlags;
+}
+
+void NWinFrame::EnableCursorManagement( bool bEnable )
+{
+	bManageCursor = bEnable;
+}
+
+#if BOOST_OS_WINDOWS
+
 static void SetActive( bool _bActive )
 {
 	return; // no mimising/sleep allowed!
@@ -73,16 +123,6 @@ static void SetActive( bool _bActive )
 		if ( !bActive )
 			ShowWindow( hWnd, SW_MINIMIZE );
 	}
-}
-
-bool NWinFrame::IsExit()
-{
-	return bExit;
-}
-
-void NWinFrame::ResetExit()
-{
-	bExit = false;
 }
 
 void NWinFrame::PumpMessages()
@@ -107,11 +147,6 @@ void NWinFrame::PumpMessages()
 	}
 }
 
-HWND NWinFrame::GetWnd()
-{
-	return hWnd;
-}
-
 namespace NWinFrame
 {
 void SetEditorWnd( HWND _hWnd )
@@ -124,19 +159,6 @@ void NWinFrame::Exit()
 {
 	PostQuitMessage(0);
 	//bClientExitReq = true;
-}
-
-static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
-{
-	NHPTimer::STime time;
-	NHPTimer::GetTime( &time );
-	std::lock_guard lock( msgs );
-	SWindowsMsg &m = msgList.emplace_back();
-	m.time = time;
-	m.msg = msg;
-	m.x = x;
-	m.y = y;
-	m.dwFlags = dwFlags;
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam );
@@ -191,7 +213,6 @@ static void SetClipCursorRect( HWND _hWnd )
 	}
 }
 
-// did not know how to return NCHitTest
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
 {
 	//Report( "WndProc_", uMsg );
@@ -384,11 +405,6 @@ void NWinFrame::ShowCursor( bool bShow )
 		::ShowCursor( FALSE );
 }
 
-void NWinFrame::EnableCursorManagement( bool bEnable )
-{
-	bManageCursor = bEnable;
-}
-
 void NWinFrame::FlashTaskbarIfInactive()
 {
 	HWND hwnd = NWinFrame::GetWnd();
@@ -403,10 +419,219 @@ void NWinFrame::FlashTaskbarIfInactive()
 	}
 }
 
+#else
+namespace
+{
+//! The SDL window behind the handle, which is what an HWND holds off Windows.
+SDL_Window *Window()
+{
+	return AsSdlWindow( hWnd );
+}
+
+void AddMouseButton( const SDL_MouseButtonEvent &rEvent )
+{
+	// SDL counts the clicks rather than sending a separate double-click message,
+	// which is what CS_DBLCLKS made Windows do.
+	const bool bDouble = rEvent.clicks == 2;
+	SWindowsMsg::EMsg msg;
+	if ( rEvent.button == SDL_BUTTON_LEFT )
+	{
+		msg = rEvent.down ? ( bDouble ? SWindowsMsg::LB_DBLCLK : SWindowsMsg::LB_DOWN ) : SWindowsMsg::LB_UP;
+	}
+	else if ( rEvent.button == SDL_BUTTON_RIGHT )
+	{
+		msg = rEvent.down ? ( bDouble ? SWindowsMsg::RB_DBLCLK : SWindowsMsg::RB_DOWN ) : SWindowsMsg::RB_UP;
+	}
+	else
+	{
+		// The middle and extra buttons have no window message here either: the
+		// game reads them through the bindings, which go at the mouse directly.
+		return;
+	}
+	AddMsg( msg, static_cast<int>( rEvent.x ), static_cast<int>( rEvent.y ), 0 );
+}
+
+void AddText( const char *pszText )
+{
+	// One event, several characters. Windows sends a WM_CHAR per character and
+	// the conversion downstream is one to one; SDL hands over a UTF-8 string,
+	// which a dead key or an input method can make longer than the keystroke
+	// that produced it. Each code point becomes its own CHAR message, so what
+	// reaches the UI is shaped the way it has always been.
+	size_t nLeft = SDL_strlen( pszText );
+	while ( nLeft > 0 )
+	{
+		const Uint32 nCodePoint = SDL_StepUTF8( &pszText, &nLeft );
+		if ( nCodePoint == 0 || nCodePoint == SDL_INVALID_UNICODE_CODEPOINT )
+		{
+			continue;
+		}
+		AddMsg( SWindowsMsg::CHAR, static_cast<int>( nCodePoint ), 1, 0 );
+	}
+}
+}
+
+void NWinFrame::Exit()
+{
+	bExit = true;
+}
+
+bool NWinFrame::SFLB1_InitApplication( HINSTANCE, const char *pszAppName, const char *, LPCSTR )
+{
+	if ( !NSdl::EnsureVideo() )
+	{
+		return false;
+	}
+	// Sized to the desktop rather than to the 10000 by 10000 the Windows path
+	// asks for. The size is provisional either way, since Gfx resizes the window
+	// to the back buffer on the first SetMode, and a window larger than every
+	// monitor is a Win32 way of saying borderless that SDL says directly.
+	int nWidth = 1024, nHeight = 768;
+	const SDL_DisplayMode *pDesktop = SDL_GetDesktopDisplayMode( SDL_GetPrimaryDisplay() );
+	if ( pDesktop != 0 )
+	{
+		nWidth = pDesktop->w;
+		nHeight = pDesktop->h;
+	}
+	SDL_Window *pWindow = SDL_CreateWindow( pszAppName != 0 ? pszAppName : "", nWidth, nHeight,
+	                                        SDL_WINDOW_BORDERLESS );
+	if ( pWindow == 0 )
+	{
+		csSystem << CC_RED << "Cannot create the game window: " << SDL_GetError() << endl;
+		return false;
+	}
+	hWnd = pWindow;
+	// text arrives only while this is on, and the console and the edit line want it
+	SDL_StartTextInput( pWindow );
+	return true;
+}
+
+void NWinFrame::PumpMessages()
+{
+	SDL_Event event;
+	while ( SDL_PollEvent( &event ) )
+	{
+		switch ( event.type )
+		{
+		case SDL_EVENT_QUIT:
+			bExit = true;
+			break;
+
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+			AddMsg( SWindowsMsg::CLOSE, 0, 0, 0 );
+			break;
+
+		case SDL_EVENT_MOUSE_MOTION:
+			AddMsg( SWindowsMsg::MOUSE_MOVE, static_cast<int>( event.motion.x ),
+			        static_cast<int>( event.motion.y ), 0 );
+			break;
+
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
+			AddMouseButton( event.button );
+			break;
+
+		case SDL_EVENT_MOUSE_WHEEL:
+			// Posted for the same reason the Windows path posts it, and read by
+			// as much: ConvertMessage has no case for MOUSE_WHEEL, so it is
+			// dropped. The wheel the game acts on is the bindings' MOUSE_AXIS_Z.
+			AddMsg( SWindowsMsg::MOUSE_WHEEL, static_cast<int>( event.wheel.mouse_x ),
+			        static_cast<int>( event.wheel.mouse_y ), 0 );
+			break;
+
+		case SDL_EVENT_KEY_DOWN:
+		case SDL_EVENT_KEY_UP:
+		{
+			// From the scancode. port/virtualkey.h says why not from the keycode.
+			const int nKey = SdlScancodeToVirtualKey( event.key.scancode );
+			if ( nKey != 0 )
+			{
+				// Windows folds auto-repeat into a count that the readers loop
+				// over; SDL sends one event per repeat, so the count is one.
+				AddMsg( event.key.down ? SWindowsMsg::KEY_DOWN : SWindowsMsg::KEY_UP, nKey, 1,
+				        event.key.scancode );
+			}
+			break;
+		}
+
+		case SDL_EVENT_TEXT_INPUT:
+			AddText( event.text.text );
+			break;
+
+		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+			// This has no counterpart on Windows, where a window is the size it
+			// was told to be. A compositor may answer a size request with a
+			// different size, leaving the back buffer no longer matching the
+			// window. Gfx::CheckBackBufferSize already watches for exactly that,
+			// so all this has to do is not treat it as impossible the way
+			// WM_ENTERSIZEMOVE does.
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
+void NWinFrame::SetCursor( NWinCursor::TCursor _hCursor )
+{
+	if ( !bManageCursor )
+	{
+		return;
+	}
+	if ( hCursor == _hCursor )
+	{
+		return;
+	}
+	hCursor = _hCursor;
+	if ( hCursor != 0 )
+	{
+		SDL_SetCursor( hCursor );
+	}
+}
+
+void NWinFrame::ShowCursor( bool bShow )
+{
+	if ( !bManageCursor )
+	{
+		return;
+	}
+	static bool bIsShown = (bool)3;
+	if ( bIsShown == bShow )
+	{
+		return;
+	}
+	bIsShown = bShow;
+	if ( bShow )
+	{
+		SDL_ShowCursor();
+		if ( hCursor != 0 )
+		{
+			SDL_SetCursor( hCursor );
+		}
+	}
+	else
+	{
+		SDL_HideCursor();
+	}
+}
+
+void NWinFrame::FlashTaskbarIfInactive()
+{
+	SDL_Window *pWindow = Window();
+	if ( pWindow == 0 )
+	{
+		return;
+	}
+	if ( ( SDL_GetWindowFlags( pWindow ) & SDL_WINDOW_INPUT_FOCUS ) == 0 )
+	{
+		SDL_FlashWindow( pWindow, SDL_FLASH_BRIEFLY );
+	}
+}
+#endif
+
 // no sleep or mimizing!!!
 // START_REGISTER(WinFrame)
 // REGISTER_VAR_EX( "minimize_on_deactivate", NGlobal::VarBoolHandler, &s_bMinimizeOnDeactivate, true, STORAGE_NONE );
 // REGISTER_VAR_EX( "app_always_active", NGlobal::VarBoolHandler, &bAppAlwaysActive, false, STORAGE_USER );
 // FINISH_REGISTER
-
-

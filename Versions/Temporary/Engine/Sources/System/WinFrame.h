@@ -2,7 +2,12 @@
 
 #include "System_export.h"
 
+// HWND, HINSTANCE and LPCSTR below. On Windows every stdafx.h has already
+// pulled this in before anything reaches here; off Windows it is DXVK Native.
+#include <windows.h>
+
 #include "Misc/HPTimer.h"
+#include "WinCursor.h"
 
 #include <cstdint>
 
@@ -45,7 +50,7 @@ namespace NWinFrame
 	SYSTEM_EXPORT HWND GetWnd();
 	SYSTEM_EXPORT void PumpMessages();
 	SYSTEM_EXPORT bool SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon );
-	SYSTEM_EXPORT void SetCursor( HCURSOR _hCursor );
+	SYSTEM_EXPORT void SetCursor( NWinCursor::TCursor _hCursor );
 	void ShowCursor( bool bShow );
 	void EnableCursorManagement( bool bEnable );
 	SYSTEM_EXPORT void FlashTaskbarIfInactive();
