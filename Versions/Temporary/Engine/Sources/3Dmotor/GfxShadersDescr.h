@@ -7,9 +7,9 @@
 struct SVShader
 {
 	int nID;
-	unsigned long*pShader11, *pShader20;
+	DWORD*pShader11, *pShader20;
 	
-	SVShader( int _nID, unsigned long*_pShader11, unsigned long*_pShader20 ): nID(_nID), pShader11(_pShader11), pShader20(_pShader20) {}
+	SVShader( int _nID, DWORD*_pShader11, DWORD*_pShader20 ): nID(_nID), pShader11(_pShader11), pShader20(_pShader20) {}
 };
 
 // should be global variable
@@ -27,14 +27,14 @@ struct STextureStageState
 struct SPShader
 {
 	int nID;
-	unsigned long *pShader11, *pShader14, *pShader20, *pShader20a;
+	DWORD *pShader11, *pShader14, *pShader20, *pShader20a;
 	SRenderState *pShaRS;
 	STextureStageState *pShaTSS;
 	SRenderState *pStateRS;
 	STextureStageState *pStateTSS;
 	
 	SPShader( 
-		int _nID, unsigned long*_pShader11, unsigned long*_pShader14, unsigned long*_pShader20, unsigned long*_pShader20a,
+		int _nID, DWORD*_pShader11, DWORD*_pShader14, DWORD*_pShader20, DWORD*_pShader20a,
 		SRenderState *_pShaRS, STextureStageState *_pShaTSS, 
 		SRenderState *_pStateRS, STextureStageState *_pStateTSS )
 		:nID(_nID), pShader11(_pShader11), pShader14(_pShader14), pShader20(_pShader20), pShader20a(_pShader20a),

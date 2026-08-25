@@ -58,7 +58,7 @@ static int nDeviceCreationID = 1;
 static SSystemInfo systemInfo;
 static bool bIsDebugRuntime;
 static bool bCanDoFastScreenshot = false;
-static unsigned long nFSAA, nMaxFSAA;
+static DWORD nFSAA, nMaxFSAA;
 static int nWinXPos = 0;
 static int nAdapterToUse = D3DADAPTER_DEFAULT;
 
@@ -363,7 +363,7 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 {
 	if ( nFSAA > 0 && nMaxFSAA > 0 )
 	{
-		unsigned long nFront, nDepth;
+		DWORD nFront, nDepth;
 		if ( 
 			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
 				pRes->BackBufferFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nFront ) ) &&
@@ -629,7 +629,7 @@ static bool CheckDeviceCaps()
 	b8888Supported = 
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) );
 
-	unsigned long nFrontFSAA, nDepthFSAA;
+	DWORD nFrontFSAA, nDepthFSAA;
 	if ( 
 		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8,
 			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&

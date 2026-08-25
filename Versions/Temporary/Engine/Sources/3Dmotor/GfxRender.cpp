@@ -1326,7 +1326,7 @@ void CRenderContext::Use() const
 static void DoValidateDevice( int nPID, int nVID )
 {
 	HRESULT hr;
-	unsigned long dwPasses;
+	DWORD dwPasses;
 	hr = pDevice->ValidateDevice( &dwPasses );
 	char szBuf[1024];
 	sprintf( szBuf, "D3D validate device failed ps = %d,  vs = %d", nPID, nVID );
@@ -1622,7 +1622,7 @@ static void InitStateBlocks()
 		for ( int k = 0; k < std::size(psAllShaders); ++k )
 		{
 			const SPShader &sha = *psAllShaders[k];
-			unsigned long *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
+			DWORD *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
 			if ( bHardwarePixelShaders14 && sha.pShader14 != 0 )
 				pShader = sha.pShader14;
 			if ( bHardwarePixelShaders20a && pShader == 0 )
@@ -1647,7 +1647,7 @@ static void InitStateBlocks()
 		for ( int k = 0; k < std::size(vsAllShaders); ++k )
 		{
 			const SVShader &sha = *vsAllShaders[k];
-			unsigned long *pShader = sha.pShader11;
+			DWORD *pShader = sha.pShader11;
 			if ( !pShader )
 				continue;
 			HRESULT hr;
