@@ -1328,10 +1328,8 @@ static void DoValidateDevice( int nPID, int nVID )
 	HRESULT hr;
 	DWORD dwPasses;
 	hr = pDevice->ValidateDevice( &dwPasses );
-	char szBuf[1024];
-	sprintf( szBuf, "D3D validate device failed ps = %d,  vs = %d", nPID, nVID );
 	if ( D3D_OK != hr )
-		MessageBox( 0, szBuf, 0, MB_OK );
+		DebugTrace( "D3D validate device failed ps = %d,  vs = %d\n", nPID, nVID );
 	ASSERT( D3D_OK == hr && dwPasses == 1 );
 }
 
