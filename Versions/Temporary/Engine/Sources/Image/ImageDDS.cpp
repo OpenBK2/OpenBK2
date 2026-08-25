@@ -9,7 +9,6 @@
 #include "DDS.h"
 #include "System/FilePath.h"
 #include "GUnpackDXT.h"
-#include "ImageMip.h"
 #include "3Dmotor/GfxInternal.h" // ePixelFormat->D3DFormat
 #include "ImageScale.h"
 
@@ -216,117 +215,10 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 // **
 // ************************************************************************************************************************ //
 
-static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pFormat )
-{
-	switch ( format ) 
-	{
-		case CF_DXT1:
-			*pFormat = DDSPF_DXT1;
-			break;
-		case CF_DXT2:
-			*pFormat = DDSPF_DXT2;
-			break;
-		case CF_DXT3:
-			*pFormat = DDSPF_DXT3;
-			break;
-		case CF_DXT4:
-			*pFormat = DDSPF_DXT4;
-			break;
-		case CF_DXT5:
-			*pFormat = DDSPF_DXT5;
-			break;
-		case CF_A8R8G8B8:
-			*pFormat = DDSPF_A8R8G8B8;
-			break;
-		case CF_A4R4G4B4:
-			*pFormat = DDSPF_A4R4G4B4;
-			break;
-		case CF_A1R5G5B5:
-			*pFormat = DDSPF_A1R5G5B5;
-			break;
-		case CF_R5G6B5:
-			*pFormat = DDSPF_R5G6B5;
-			break;
-		default:
-			return false;
-	}
-	return true;
-}
-
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	const int nMaxPossible = GetMSB( (std::min)(nWidth, nHeight) ) - ( (ePixelFormat >= CF_DXT1) && (ePixelFormat <= CF_DXT5) ? 2 : 0 );
 	return nNumMipLevels <= 0 ? nMaxPossible : (std::min)( nNumMipLevels, nMaxPossible );
-}
-
-// ************************************************************************************************************************ //
-// **
-// ** special image processing for improved DDS texture-oriented quality
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-//! Prepare image for compression in accordance with type
-void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType, 
-																bool bWrapX, bool bWrapY, float fMappingSize )
-{
-	switch ( eImageType )
-	{
-	case IMAGE_TYPE_PICTURE:
-		break;
-	case IMAGE_TYPE_BUMP:
-		GenerateNormals( pSrc, CVec4(1, 0, 0, 0), fMappingSize, bWrapX, bWrapY );
-		break;
-	case IMAGE_TYPE_TRANSPARENT:
-		for ( int y = 0; y < pSrc->GetSizeY(); ++y )
-		{
-			for ( int x = 0; x < pSrc->GetSizeX(); ++x )
-			{
-				CVec4 &v = (*pSrc)[y][x];
-				v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, v.a );
-			}
-		}
-		break;
-	case IMAGE_TYPE_TRANSPARENT_ADD:
-		for ( int y = 0; y < pSrc->GetSizeY(); ++y )
-		{
-			for ( int x = 0; x < pSrc->GetSizeX(); ++x )
-			{
-				CVec4 &v = (*pSrc)[y][x];
-				v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, 0 );
-			}
-		}
-		break;
-	default:
-		ASSERT(0);
-		break;
-	}
-}
-
-void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint32_t> > *pMips, const CArray2D<CVec4> &srcImage,
-																								EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, 
-																								bool bWrapX, bool bWrapY, float fMappingSize )
-{
-	const int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
-	pMips->resize( nNumMipLevels );
-
-	// generate mip-map levels and process it
-	CArray2D<CVec4> mip( srcImage ), src( srcImage );
-	//NHPTimer::STime tStart;
-	for ( int i = 0; i < nNumMipLevels; ++i )
-	{
-		// process current mip-map level
-		PrepareImageForCompression( &src, eImageType, bWrapX, bWrapY, fMappingSize );
-		// convert to packed uint32_t image and store to i-th mip image
-		CArray2D<uint32_t> &dst = (*pMips)[i];
-		dst.SetSizes( src.GetSizeX(), src.GetSizeY() );
-		Convert( &dst, src );
-
-		// generate next mip level
-		GenerateMipLevel( &src, mip, bWrapX, bWrapY );
-		mip = src;
-	}
 }
 
 // ************************************************************************************************************************ //
@@ -393,16 +285,6 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 	{
 		NI_ASSERTHR( hr, fmt::format("Can't write final DXT texture \"{}\", DXT conversion failed", szFileName) );
 	}
-}
-
-static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<CVec4> &srcImage,
-	EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
-{
-	std::vector<CArray2D<uint32_t> > mips;
-	GenerateMipLevelsAndPrepareForCompression( &mips, srcImage, eImageType, ePixelFormat, 
-		                                         _nNumMipLevels, bWrapX, bWrapY, fMappingSize );
-
-	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
 
 static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
