@@ -2,7 +2,7 @@ std::vector< SSlot > aiSlots;
 
 std::vector<int> aiSlotToSlot;		// index - AI slot, value - index in slot[]
 
-void SBuildingRPGStats::ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor )
 {
 	eGameType = SGVOGT_BUILDING;
 	SObjectBaseRPGStats::ToAIUnits( bInEditor );

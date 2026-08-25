@@ -410,7 +410,7 @@ protected:
 	//
 	void AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pModel, const SHMatrix &matr );
 	//
-	CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const std::string &szBoneName );
+	CFuncBase<SFBTransform> *GetParentTransform( const int nTargetID, const std::string &szBoneName );
 	//	
 	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime timeStart,
 												CFuncBase<SFBTransform> **pTransrform, int *pnBoneIndex, const bool bConstantOffset );
