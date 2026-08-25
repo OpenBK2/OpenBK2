@@ -1256,7 +1256,7 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 	if ( !IsValid( pSunFlaresTime ) || !IsValid( pCamera ) )
 		return;
 	////
-	CDGPtr<CFuncBase<CVec4> > pCameraPos = pCamera;
+	CDGPtr<CFuncBase<CVec4> > pCameraPos = pCamera.GetPtr();
 	pCameraPos.Refresh();
 	pSunFlaresTime.Refresh();
 	////
@@ -1779,7 +1779,7 @@ void CGScene::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 		useParticleTarget.vKernelSize = pTransp->GetKernelLightInfo().vLightSize;
 		NGfx::CTexture *pParticleLight = 0;
 		if ( trMode != TRM_NONE )
-			pParticleLight = bUseFakeParticleLM ? pFakeParticleLM->GetValue() : particleLM.pParticleLMs;
+			pParticleLight = bUseFakeParticleLM ? pFakeParticleLM->GetValue() : particleLM.pParticleLMs.GetPtr();
 
 		//static bool bTwilight = true;
 
