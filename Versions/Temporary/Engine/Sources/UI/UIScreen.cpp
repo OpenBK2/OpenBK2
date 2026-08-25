@@ -3,6 +3,8 @@
 
 
 #include "stdafx.h"
+
+#include "port/virtualkey.h"
 #include "UIScreen.h"
 
 //#include "Cursor.h"

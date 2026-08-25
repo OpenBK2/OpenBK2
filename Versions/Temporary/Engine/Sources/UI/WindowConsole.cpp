@@ -2,6 +2,8 @@
 //
 
 #include "stdafx.h"
+
+#include "port/virtualkey.h"
 #include "WindowConsole.h"
 #include "WindowEditLine.h"
 
