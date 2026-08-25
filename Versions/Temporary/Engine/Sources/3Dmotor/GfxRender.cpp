@@ -408,7 +408,7 @@ static void SetVertexShader( CGeometry *pVB, int nShaderID )
 // render modes application
 
 template<>
-static void Apply( const SFBTransform &trans )
+void Apply( const SFBTransform &trans )
 {
 	if ( bTnLDevice )
 	{
@@ -427,7 +427,7 @@ static void Apply( const SFBTransform &trans )
 }
 
 template<>
-static void Apply( const EWireframe &wireFrame )
+void Apply( const EWireframe &wireFrame )
 {
 	if ( wireFrame == WIREFRAME_ON )
 		ApplyRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME );
@@ -436,7 +436,7 @@ static void Apply( const EWireframe &wireFrame )
 }
 
 template<>
-static void Apply( const EDithering &a )
+void Apply( const EDithering &a )
 {
 	if ( a == DITHER_ON )
 		ApplyRenderState( D3DRS_DITHERENABLE, TRUE );
@@ -445,7 +445,7 @@ static void Apply( const EDithering &a )
 }
 
 template<>
-static void Apply( const EAlphaCombineMode &alphaMode )
+void Apply( const EAlphaCombineMode &alphaMode )
 {
 	switch ( alphaMode )
 	{
@@ -501,7 +501,7 @@ static void Apply( const EAlphaCombineMode &alphaMode )
 }
 
 template<>
-static void Apply( const SStencilMode &m )
+void Apply( const SStencilMode &m )
 {
 	switch ( m.mode )
 	{
@@ -644,7 +644,7 @@ static void Apply( const SStencilMode &m )
 }
 
 template<>
-static void Apply( const EDepthMode &depth )
+void Apply( const EDepthMode &depth )
 {
 	switch ( depth )
 	{
@@ -692,7 +692,7 @@ static void Apply( const EDepthMode &depth )
 }
 
 template<>
-static void Apply( const ECullMode &cull )
+void Apply( const ECullMode &cull )
 {
   switch ( cull )
   {
@@ -709,7 +709,7 @@ static void Apply( const ECullMode &cull )
 }
 
 template<>
-static void Apply( const EColorWriteMask &colorMode )
+void Apply( const EColorWriteMask &colorMode )
 {
 	uint32_t dwFlags =
 		(( colorMode & COLORWRITE_RED ) ? D3DCOLORWRITEENABLE_RED : 0) |
@@ -720,7 +720,7 @@ static void Apply( const EColorWriteMask &colorMode )
 }
 
 template<>
-static void Apply( const SFogParams &fog )
+void Apply( const SFogParams &fog )
 {
 	if ( IsTnLDevice() )
 		return;
@@ -751,7 +751,7 @@ static void Apply( const SFogParams &fog )
 }
 
 template<>
-static void Apply( const EFogMode &fog )
+void Apply( const EFogMode &fog )
 {
 	if ( IsTnLDevice() )
 		return;

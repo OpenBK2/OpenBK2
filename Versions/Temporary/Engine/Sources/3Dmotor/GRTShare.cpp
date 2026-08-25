@@ -16,12 +16,12 @@ namespace NGScene
 
 template<class T> void CreateTex( CObj<T> *pRes, int nSize, int nPixelFormatID ) { ASSERT(0); }
 template<>
-static void CreateTex<NGfx::CTexture>( CObj<NGfx::CTexture> *pRes, int nSize, int nPixelFormatID )
+void CreateTex<NGfx::CTexture>( CObj<NGfx::CTexture> *pRes, int nSize, int nPixelFormatID )
 {
 	*pRes = NGfx::MakeTexture( nSize, nSize, 1, nPixelFormatID, NGfx::TARGET, NGfx::CLAMP );
 }
 template<>
-static void CreateTex<NGfx::CCubeTexture>( CObj<NGfx::CCubeTexture> *pRes, int nSize, int nPixelFormatID )
+void CreateTex<NGfx::CCubeTexture>( CObj<NGfx::CCubeTexture> *pRes, int nSize, int nPixelFormatID )
 {
 	*pRes = NGfx::MakeCubeTexture( nSize, 1, nPixelFormatID, NGfx::TARGET );
 }
