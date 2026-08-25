@@ -164,7 +164,7 @@ class CGMFunBoolObserver2 : public IGMObserver
 	T2 p2;
 public:
 	CGMFunBoolObserver2() {  }
-	CGMFunBoolObserver2( bool (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMFunBoolObserver2( bool (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
 		: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return (*pfnFun)( _msg, p1, p2 ); }
@@ -205,7 +205,7 @@ class CGMFunObserver2 : public IGMObserver
 	T2 p2;
 public:
 	CGMFunObserver2() {  }
-	CGMFunObserver2( void (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMFunObserver2( void (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
 		: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { (*pfnFun)( _msg, p1, p2 ); return true; }
