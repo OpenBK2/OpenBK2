@@ -296,7 +296,7 @@ public:
 	void Set1() 
 	{ 
 		//array.FillEvery( unsigned int(-1) );
-		memset( &(array[0][0]), unsigned int(-1), array.GetSizeX() * array.GetSizeY());
+		memset( &(array[0][0]), static_cast<unsigned int>( -1 ), array.GetSizeX() * array.GetSizeY());
 	};
 
 	int GetSizeX() const { return xSize; }
