@@ -130,7 +130,6 @@ set(SOURCES
     ManuverBuilder.cpp
     ManuverInternal.cpp
     ManuverStateDesc.cpp
-    MemoryConsumeCheck.cpp
     Mine.cpp
     MountedGun.cpp
     MountedGunsSerialize.cpp
