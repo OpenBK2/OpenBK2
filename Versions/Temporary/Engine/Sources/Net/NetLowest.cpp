@@ -13,7 +13,7 @@ bool CNodeAddressSet::GetAddress( int n, CNodeAddress *pRes ) const
 	sockaddr_in *p = (sockaddr_in*)pRes->GetSockAddr();
 	p->sin_family = AF_INET;
 	p->sin_port = nPort;
-	p->sin_addr.S_un.S_addr = ips[n];
+	p->sin_addr.s_addr = ips[n];
 	return true;
 }
 
@@ -21,12 +21,12 @@ std::string CNodeAddress::GetIP()
 {
 	sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
 	char szBuf[1024];
-	in_addr &ia = nameRemote.sin_addr;
+	const unsigned char *pOctets = AddressOctets( &nameRemote.sin_addr );
 	sprintf( szBuf, "%i.%i.%i.%i", 
-		(int) ia.S_un.S_un_b.s_b1,
-		(int) ia.S_un.S_un_b.s_b2,
-		(int) ia.S_un.S_un_b.s_b3,
-		(int) ia.S_un.S_un_b.s_b4 );
+		(int) pOctets[0],
+		(int) pOctets[1],
+		(int) pOctets[2],
+		(int) pOctets[3] );
 	return szBuf;
 }
 

@@ -8,6 +8,11 @@
 namespace NNet
 {
 
+// Winsock alone needs starting before a socket exists, and there is nothing to
+// start on POSIX, so this object is Windows-only rather than a pair of no-ops.
+// It runs as a static constructor, before main, which is where the requirement
+// puts it: the first socket may be created from anywhere.
+#if BOOST_OS_WINDOWS
 static struct SWSAInit
 {
 	SWSAInit()
@@ -24,6 +29,7 @@ static struct SWSAInit
 		WSACleanup();
 	}
 } wsaInit;
+#endif
 
 CLinksManagerCommon::CLinksManagerCommon()
 {
@@ -50,21 +56,22 @@ CLinksManagerCommon::CLinksManagerCommon()
 	unsigned long *pAddr = (unsigned long*)( he->h_addr_list[0] );
 	//for ( ; *pAddr; pAddr++ )
 	{
-		name.sin_addr.S_un.S_addr = pAddr[0];
-		unsigned char bClass = name.sin_addr.S_un.S_un_b.s_b1;
+		name.sin_addr.s_addr = pAddr[0];
+		unsigned char *pOctets = AddressOctets( &name.sin_addr );
+		unsigned char bClass = pOctets[0];
 		if ( bClass >= 1 && bClass <= 126 )
 		{
-			name.sin_addr.S_un.S_un_b.s_b2 = 255;
-			name.sin_addr.S_un.S_un_b.s_b3 = 255;
-			name.sin_addr.S_un.S_un_b.s_b4 = 255;
+			pOctets[1] = 255;
+			pOctets[2] = 255;
+			pOctets[3] = 255;
 		}
 		if ( bClass >= 128 && bClass <= 191 )
 		{
-			name.sin_addr.S_un.S_un_b.s_b3 = 255;
-			name.sin_addr.S_un.S_un_b.s_b4 = 255;
+			pOctets[2] = 255;
+			pOctets[3] = 255;
 		}
 		if ( bClass >= 192 && bClass <= 223 )
-			name.sin_addr.S_un.S_un_b.s_b4 = 255;
+			pOctets[3] = 255;
 		broadcastAddr = addr;
 	}
 }
@@ -84,7 +91,7 @@ bool CLinksManagerCommon::Init( const int nPort )
 	sockaddr_in name;
 	memset( &name, 0, sizeof(name) );
 	name.sin_family = AF_INET;
-	name.sin_addr.S_un.S_addr = INADDR_ANY;
+	name.sin_addr.s_addr = INADDR_ANY;
 	name.sin_port = htons( nPort );
 	if ( nPort > 0 )
 	{
@@ -122,14 +129,14 @@ bool CLinksManagerCommon::MakeBroadcastAddr( CNodeAddress *pRes, int nPort ) con
 bool CLinksManagerCommon::IsLocalAddr( const CNodeAddress &test ) const
 {
 	const sockaddr_in &nt = *(sockaddr_in*)&test.addr;
-	if ( nt.sin_addr.S_un.S_addr == 0x0100007f )
+	if ( nt.sin_addr.s_addr == 0x0100007f )
 		return true;
 	//for ( int i = 0; i < broadcastAddr.size(); ++i )
 	{
 		const CNodeAddress &broad = broadcastAddr;//[ i ];
 		const sockaddr_in &nb = *(sockaddr_in*)&broad.addr;
-		uint32_t dwB = nb.sin_addr.S_un.S_addr;
-		uint32_t dwT = nt.sin_addr.S_un.S_addr;
+		uint32_t dwB = nb.sin_addr.s_addr;
+		uint32_t dwT = nt.sin_addr.s_addr;
 		uint32_t dwMask = 0;
 		for ( int k = 3; k >= 0; k-- )
 		{
@@ -152,7 +159,7 @@ bool CLinksManagerCommon::GetSelfAddress( CNodeAddressSet *pRes ) const
 {
 	pRes->Clear();
 	sockaddr_in addr;
-	int nBufLeng = sizeof(sockaddr_in);
+	socket_length_t nBufLeng = sizeof(sockaddr_in);
 	if ( getsockname( s, (sockaddr*)&addr, &nBufLeng ) != 0 )
 		return false;
 	pRes->nPort = addr.sin_port;
@@ -230,7 +237,7 @@ bool CLinksManagerCommon::Recv( CNodeAddress *pSrc, CMemoryStream *pPkt ) const
 	ASSERT( pSrc );
 	ASSERT( pPkt );
 
-	int nAddrSize;
+	socket_length_t nAddrSize;
 	pPkt->Seek( 2048 );
 	nAddrSize = sizeof( pSrc->addr );
 	int nRes = recvfrom( s, (char*)pPkt->GetBufferForWrite(), 2048, 0, &pSrc->addr, &nAddrSize );

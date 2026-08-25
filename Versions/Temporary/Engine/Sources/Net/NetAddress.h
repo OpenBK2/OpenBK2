@@ -3,7 +3,7 @@
 #include "Net_export.h"
 
 
-#include <winsock.h>
+#include "port/socket.h"
 
 namespace NNet
 {

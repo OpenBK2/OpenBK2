@@ -26,14 +26,14 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 		szAddr.resize( nIdx );
 	}
 	// determine host
-	nameRemote.sin_addr.S_un.S_addr = inet_addr( szAddr.c_str() ); 
-	if( nameRemote.sin_addr.S_un.S_addr == INADDR_NONE )  // not resolved?
+	nameRemote.sin_addr.s_addr = inet_addr( szAddr.c_str() ); 
+	if( nameRemote.sin_addr.s_addr == INADDR_NONE )  // not resolved?
 	{
 		hostent *he;
 		he = gethostbyname( szAddr.c_str() ); // m.b. it is string comp.domain
 		if( he == NULL )
 			return false;
-		nameRemote.sin_addr.S_un.S_addr = *( unsigned long* )( he->h_addr_list[0] );
+		nameRemote.sin_addr.s_addr = *( unsigned long* )( he->h_addr_list[0] );
 	}
 	nameRemote.sin_port = htons( nPort );
 	return true;
@@ -49,12 +49,12 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 	char szBuf[1024];
 	if( he == 0 || he->h_name == 0 )
 	{
-		in_addr &ia = nameRemote.sin_addr;
+		const unsigned char *pOctets = AddressOctets( &nameRemote.sin_addr );
 		sprintf( szBuf, "%i.%i.%i.%i:%i", 
-			(int) ia.S_un.S_un_b.s_b1,
-			(int) ia.S_un.S_un_b.s_b2,
-			(int) ia.S_un.S_un_b.s_b3,
-			(int) ia.S_un.S_un_b.s_b4,
+			(int) pOctets[0],
+			(int) pOctets[1],
+			(int) pOctets[2],
+			(int) pOctets[3],
 			(int) ntohs( nameRemote.sin_port ) );
 	}
 	else
