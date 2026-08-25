@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "port/meminfo.h"
 #include "Gfx.h"
 #include "GfxRender.h"
 #include "GfxBuffers.h"
@@ -200,9 +202,11 @@ static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 
 static bool IsLowRAM()
 {
-	MEMORYSTATUS memoryStatus;
-	GlobalMemoryStatus( &memoryStatus );
-	return memoryStatus.dwTotalPhys <= 256 * 1024 * 1024;
+	// A failed query reports 0, which is treated as "not low": the caller uses
+	// this to drop quality settings, and guessing downward on a machine we
+	// could not measure would be the worse mistake.
+	const uint64_t nTotalPhys = total_physical_memory();
+	return nTotalPhys != 0 && nTotalPhys <= 256ull * 1024 * 1024;
 }
 
 // code currently happens to require DXT support
