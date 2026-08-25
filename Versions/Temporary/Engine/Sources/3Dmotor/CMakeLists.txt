@@ -83,7 +83,6 @@ set(SOURCES
     GSceneInternal.cpp
     GSceneParticles.cpp
     GSceneUtils.cpp
-    GShaderFX.cpp
     GShadowMap.cpp
     GShadowVolume.cpp
     GSkeleton.cpp
@@ -126,6 +125,11 @@ target_link_libraries(3Dmotor PRIVATE
 )
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only fmt::fmt-header-only)
 if(WIN32)
+    # GShaderFX is built on the D3DX Effects framework, which DXVK does not
+    # implement: it ships the d3dx9 headers through mingw-directx-headers and no
+    # library, and those headers do not compile off Windows either, wanting GDI
+    # types its windows.h shim has no reason to carry.
+    target_sources(3Dmotor PRIVATE GShaderFX.cpp)
     target_link_libraries(3Dmotor PRIVATE
         dxsdk::d3d9
         dxsdk::d3dx9
