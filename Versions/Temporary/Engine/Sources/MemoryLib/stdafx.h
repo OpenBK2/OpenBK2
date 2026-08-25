@@ -22,6 +22,7 @@
 #include <cassert>
 
 #include "port/debugging.h"
+#include "port/messagebox.h"
 
 
 #ifdef _DEBUG

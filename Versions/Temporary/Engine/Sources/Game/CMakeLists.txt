@@ -14,6 +14,9 @@ target_link_libraries(Game PRIVATE mimalloc 3DLib 3Dmotor AILogic B2_M1_Terrain 
 target_link_libraries(Game PRIVATE crashpad_client)
 if(WIN32)
     target_link_libraries(Game PRIVATE winapi)
+else()
+    # port/messagebox.h reports the startup failures main.cpp cannot log
+    target_link_libraries(Game PRIVATE SDL3::SDL3-shared)
 endif()
 install(TARGETS Game DESTINATION bin)
 

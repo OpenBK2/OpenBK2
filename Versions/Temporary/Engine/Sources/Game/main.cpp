@@ -33,6 +33,7 @@
 #include "System/VFSOperations.h"
 
 #include "System/SplashScreen.h"
+#include "port/messagebox.h"
 #include "Main/MODs.h"
 
 #include "port/debugging.h"
