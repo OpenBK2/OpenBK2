@@ -55,6 +55,7 @@ if(WIN32)
     target_link_libraries(System PRIVATE winapi)
 else()
     # WinCursor decodes .cur itself and hands the pixels to SDL_CreateColorCursor
+    target_sources(System PRIVATE SdlVideo.cpp)
     target_link_libraries(System PRIVATE SDL3::SDL3-shared)
 endif()
 install(TARGETS System DESTINATION bin)
