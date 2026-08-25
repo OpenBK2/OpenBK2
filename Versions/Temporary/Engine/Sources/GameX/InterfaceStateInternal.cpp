@@ -20,9 +20,12 @@
 
 #include <fmt/format.h>
 
-#define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
-#define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
-#define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
+// pre_name is a prefix ending in "." or "->", placed next to the name rather
+// than pasted onto it: ## must produce one valid preprocessing token, and
+// "->" followed by an identifier is not one. See System/Text.h.
+#define GET_ARRAY_SIZE( pre_name, name ) ( pre_name name##FileRefs.size() )
+#define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name name##FileRefs[index] ) )
+#define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name name##FileRefs.empty() )
 
 const wchar_t* FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // общепринятое допустимое в обществе ругательство
 

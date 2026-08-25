@@ -18,9 +18,12 @@
 
 BASIC_REGISTER_CLASS(GAMEX, IAIScenarioTracker)
 
-#define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##s.empty() ? pre_name##name##FileRefs.size() : pre_name##name##s.size() )
-#define GET_ARRAY_ELEMENT( pre_name, name, index ) ( pre_name##name##s.empty() ? NText::GetText( pre_name##name##FileRefs[index] ) : pre_name##name##s[index]->wszText )
-#define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##s.empty() ? pre_name##name##FileRefs.empty() : true )
+// pre_name is a prefix ending in "." or "->", placed next to the name rather
+// than pasted onto it: ## must produce one valid preprocessing token, and
+// "->" followed by an identifier is not one. See System/Text.h.
+#define GET_ARRAY_SIZE( pre_name, name ) ( pre_name name##s.empty() ? pre_name name##FileRefs.size() : pre_name name##s.size() )
+#define GET_ARRAY_ELEMENT( pre_name, name, index ) ( pre_name name##s.empty() ? NText::GetText( pre_name name##FileRefs[index] ) : pre_name name##s[index]->wszText )
+#define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name name##s.empty() ? pre_name name##FileRefs.empty() : true )
 //#define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
 //#define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
 //#define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
