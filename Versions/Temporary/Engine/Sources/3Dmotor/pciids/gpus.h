@@ -592,7 +592,7 @@ enum EVideoCard
 	VC_ELLESMERE_RADEON_RX_470480570570X580580X590,
 	VC_NAVI_32_RADEON_PRO_W7700,
 	VC_NAVI_10_RADEON_PRO_W5700X,
-	////b'Advanced Micro Devices, Inc. [AMD/ATI]'
+	////Advanced Micro Devices, Inc. [AMD/ATI]
 	VC_GF110_GEFORCE_GTX_580,
 	VC_TU106M_GEFORCE_RTX_2060_MAXQ,
 	VC_NV35_GEFORCE_FX_5900ZT,
@@ -1319,23 +1319,23 @@ enum EVideoCard
 	VC_NV36_GEFORCE_FX_5700VE,
 	VC_NV34M_GEFORCE_FX_GO5200_32M64M,
 	VC_GK107M_GEFORCE_820M,
-	////b'NVIDIA Corporation'
+	////NVIDIA Corporation
 	VC_RADEON_RX_9070_GAMING_OC_16G,
 	VC_ELLESMERE_RADEON_RX_480,
 	VC_AOURUS_RADEON_RX6900XT_XTREME_WATERFORCE_WB_16G,
-	////b'Gigabyte Technology Co., Ltd'
+	////Gigabyte Technology Co., Ltd
 	VC_RADEON_RX_580_GAMING_X_8G,
-	////b'Micro-Star International Co., Ltd. [MSI]'
+	////Micro-Star International Co., Ltd. [MSI]
 	VC_AXRX_5700_XT_8GBD63DHEOC_POWERCOLOR_RED_DEVIL_RADEON_RX_5700_XT,
 	VC_RADEON_RX_590_RED_DEVIL,
-	////b'Tul Corporation / PowerColor'
+	////Tul Corporation / PowerColor
 	VC_RADEON_5700_XT_THICC_III_ULTRA,
 	VC_RADEON_RX_580,
-	////b'XFX Pine Group Inc.'
+	////XFX Pine Group Inc.
 	VC_SAPPHIRE_RADEON_RX_6700,
 	VC_RADEON_RX_7800_XT_PULSE,
 	VC_RADEON_R7_250,
-	////b'Sapphire Technology Limited'
+	////Sapphire Technology Limited
 	VC_ARROW_LAKES_INTEL_GRAPHICS,
 	VC_ALDER_LAKEUP3_GT2_UHD_GRAPHICS,
 	VC_HD_GRAPHICS_630,
@@ -1434,6 +1434,6 @@ enum EVideoCard
 	VC_WHISKEY_LAKEU_GT1_UHD_GRAPHICS_610,
 	VC_TIGER_LAKELP_GT2_UHD_GRAPHICS_G4,
 	VC_HD_GRAPHICS_620,
-	////b'Intel Corporation'
+	////Intel Corporation
 };
 }
