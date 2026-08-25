@@ -22,4 +22,11 @@ target_link_libraries(dxvk::d3d9 INTERFACE PkgConfig::DXVK_D3D9)
 list(APPEND CMAKE_BUILD_RPATH ${DXVK_D3D9_LIBRARY_DIRS})
 list(APPEND CMAKE_INSTALL_RPATH ${DXVK_D3D9_LIBRARY_DIRS})
 
+# Off Windows these headers are the platform SDK: windows.h there is DXVK's own
+# four-line shim over windows_base.h, which is where HWND, HRESULT, LONG and S_OK
+# come from. Every module that includes 3Dmotor/Gfx.h needs them, and that reaches
+# SceneB2, UISpecificB2, ED_B2_M1 and Game, so the include directory is global the
+# way the Windows SDK is on Windows. Only 3Dmotor links the library.
+include_directories(${DXVK_D3D9_INCLUDE_DIRS})
+
 message(STATUS "using DXVK ${DXVK_D3D9_VERSION} from ${DXVK_D3D9_LIBRARY_DIRS}")
