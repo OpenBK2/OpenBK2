@@ -26,7 +26,6 @@
 #include "System/Commands.h"
 #include <algorithm>
 #include <d3d9.h>
-#include <d3dx9.h>
 
 #include "GShaderFX.h"
 #include "GPostEffects.h"

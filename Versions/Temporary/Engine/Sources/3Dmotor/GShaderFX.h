@@ -1,5 +1,4 @@
 #pragma once
-#include <d3dx9.h>
 #include "Misc/Win32Helper.h"
 
 typedef LPCSTR D3DXHANDLE;
