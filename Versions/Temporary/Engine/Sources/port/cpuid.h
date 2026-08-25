@@ -23,29 +23,58 @@
 // BOOST_COMP_GNUC are the *_EMULATED variants and evaluate to 0, so a compiler
 // test would include neither header.
 //
-// x86 only, as the callers are: everything here is a dispatch between MMX, SSE2
-// and AVX2 kernels, and there is nothing to ask CPUID about on a target that has
-// none of them.
-#if BOOST_OS_WINDOWS
-#include <intrin.h>
-#else
-#include <cpuid.h>
+// Deliberately not GCC's __get_cpuid and __get_cpuid_count, which do the
+// max-leaf check themselves and return a success flag: that would leave the GCC
+// build checking something the MSVC build does not. The check belongs in the
+// caller, where both platforms run it. See DetectAVX2 in
+// 3Dmotor/GLightPerVertexDispatch.cpp, which does exactly that before reaching
+// for leaf 7.
+//
+// No EFLAGS.ID test for whether CPUID exists at all. It arrived on the late 486
+// and is architectural on x86-64; on 32-bit, cmake/arch.cmake leaves
+// ARCHITECTURE at NONE, so no /arch: flag is passed and MSVC's x86 default of
+// /arch:SSE2 applies. Anything that can execute this binary postdates CPUID by
+// about a decade, so the test could never take its false branch.
+//
+// Everything the callers ask about lives in the basic leaves and means the same
+// thing on Intel and AMD: SSE2 is leaf 1 EDX[26], OSXSAVE leaf 1 ECX[27], AVX
+// ECX[28], AVX2 leaf 7 subleaf 0 EBX[5]. The vendor split is in the extended
+// 0x80000000 leaves, which are AMD's, and in cache and topology enumeration.
+// Neither is queried here, so there is no vendor branch.
+#if BOOST_ARCH_X86
+#	if BOOST_OS_WINDOWS
+#		include <intrin.h>
+#	else
+#		include <cpuid.h>
+#	endif
 #endif
 
 //! CPUID for a leaf that takes no subleaf. Fills eax, ebx, ecx, edx in that order.
 inline void cpuid( int cpuInfo[4], int nLeaf )
 {
-#if BOOST_OS_WINDOWS
+#if !BOOST_ARCH_X86
+	// Nothing to ask. Reporting all-zero leaves every caller here on its
+	// reference path, which is the honest answer on a target that has none of
+	// the instruction sets this exists to detect.
+	(void)nLeaf;
+	cpuInfo[0] = cpuInfo[1] = cpuInfo[2] = cpuInfo[3] = 0;
+#elif BOOST_OS_WINDOWS
 	__cpuid( cpuInfo, nLeaf );
 #else
 	__cpuid( nLeaf, cpuInfo[0], cpuInfo[1], cpuInfo[2], cpuInfo[3] );
 #endif
 }
 
-//! CPUID for a leaf that takes a subleaf in ecx.
+//! CPUID for a leaf that takes a subleaf in ecx. Check the leaf against the
+//! maximum reported by leaf 0 first: an out-of-range leaf does not fault, it
+//! returns whatever the highest supported leaf holds.
 inline void cpuid_count( int cpuInfo[4], int nLeaf, int nSubLeaf )
 {
-#if BOOST_OS_WINDOWS
+#if !BOOST_ARCH_X86
+	(void)nLeaf;
+	(void)nSubLeaf;
+	cpuInfo[0] = cpuInfo[1] = cpuInfo[2] = cpuInfo[3] = 0;
+#elif BOOST_OS_WINDOWS
 	__cpuidex( cpuInfo, nLeaf, nSubLeaf );
 #else
 	__cpuid_count( nLeaf, nSubLeaf, cpuInfo[0], cpuInfo[1], cpuInfo[2], cpuInfo[3] );
@@ -57,7 +86,10 @@ inline void cpuid_count( int cpuInfo[4], int nLeaf, int nSubLeaf )
 //! so check that first.
 inline unsigned long long xgetbv( unsigned int nXcr )
 {
-#if BOOST_OS_WINDOWS
+#if !BOOST_ARCH_X86
+	(void)nXcr;
+	return 0;
+#elif BOOST_OS_WINDOWS
 	return _xgetbv( nXcr );
 #else
 	// Written out rather than calling the _xgetbv that GCC and clang put in
