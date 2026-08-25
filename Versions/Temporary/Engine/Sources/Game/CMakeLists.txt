@@ -2,7 +2,6 @@ project(Game)
 set(SOURCES
     main.cpp
     stdafx.cpp
-    SysKeys.cpp
     Test.cpp
     WinFrame2Input.cpp
     dpi_aware.manifest
