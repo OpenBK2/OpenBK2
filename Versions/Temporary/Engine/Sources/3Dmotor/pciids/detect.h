@@ -11,7 +11,7 @@ struct SAutoDetectCfg
 
 	int n16bppMode;
 	////
-	char *pszName;
+	const char *pszName;
 };
 static SAutoDetectCfg configAutoDetect[] =
 {
