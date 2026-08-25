@@ -25,8 +25,8 @@
 #include "GRenderPathPolycount.h"
 #include "System/Commands.h"
 #include <algorithm>
-#include <D3D9.h>
-#include <D3DX9.h>
+#include <d3d9.h>
+#include <d3dx9.h>
 
 #include "GShaderFX.h"
 #include "GPostEffects.h"

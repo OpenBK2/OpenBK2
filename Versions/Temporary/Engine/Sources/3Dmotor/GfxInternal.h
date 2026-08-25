@@ -1,7 +1,7 @@
 #pragma once
 // full description of buffers & textures for internal use & some internal data access
 
-#include <D3D9.h>
+#include <d3d9.h>
 #include "Misc/Win32Helper.h"
 #include "GPixelFormat.h"
 

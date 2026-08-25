@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <D3D9.h>
+#include <d3d9.h>
 #include "GfxRender.h"
 #include "GfxInternal.h"
 #include "GfxBuffers.h"

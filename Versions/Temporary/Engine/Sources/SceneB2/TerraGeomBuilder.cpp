@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <Limits.h>
+#include <limits.h>
 #include "GenTerrain.h"
 #include "Misc/HPTimer.h"
 
