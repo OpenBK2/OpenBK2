@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include "GeneralArtillery.h"
 #include "UnitStates.h"
 #include "Guns.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "port/wordpack.h"
+
 
 // sends UI message
 // SBUIMessage( cmd.szParam1, 

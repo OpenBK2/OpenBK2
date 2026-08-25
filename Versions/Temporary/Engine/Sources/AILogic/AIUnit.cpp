@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include <cmath>
 
 #include "Stats_B2_M1/AnimationType.h"

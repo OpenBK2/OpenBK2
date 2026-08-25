@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include "StaticObjects.h"
 #include "UnitsIterators.h"
 #include "NewUpdater.h"

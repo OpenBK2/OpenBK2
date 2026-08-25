@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include "SingleReinforcement.h"
 #include "NewUpdater.h"
 #include "General.h"

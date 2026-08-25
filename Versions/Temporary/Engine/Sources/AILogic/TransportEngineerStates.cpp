@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include <float.h>
 
 #include "PathFinder.h"

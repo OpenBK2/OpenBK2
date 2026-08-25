@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "port/wordpack.h"
+
 #include "System/Time.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "port/wordpack.h"
+
 #include <cstdint>
 
 #pragma pack( push, 4 )
