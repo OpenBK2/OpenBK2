@@ -132,6 +132,9 @@ if(WIN32)
         dxsdk::dxguid
         winapi
     )
+else()
+    # d3d9.h and the windows.h shim; there is no d3dx9 to link against
+    target_link_libraries(3Dmotor PRIVATE dxvk::d3d9)
 endif()
 install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)
