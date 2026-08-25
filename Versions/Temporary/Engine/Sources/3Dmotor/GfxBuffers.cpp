@@ -928,7 +928,7 @@ public:
 	void Clear() { textures.clear(); }
 	void Walk()
 	{
-		for ( std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( typename std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			ASSERT( IsValid( i->pTB ) );
 			if ( !IsValid( i->pTexture ) )
@@ -940,7 +940,7 @@ public:
 		// pick best
 		NCache::MRU_TYPE nBest = nCurrentFrame - 1; //MRU_LAST;
 		STex *pBest = 0;
-		for ( std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( typename std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			if ( !IsValid( i->pTexture ) )
 			{
