@@ -3,6 +3,14 @@
 
 
 #include "stdafx.h"
+
+#include "port/virtualkey.h"
+
+#include <boost/predef.h>
+
+#if !BOOST_OS_WINDOWS
+#include <SDL3/SDL.h>
+#endif
 #include "3Dmotor/RectLayout.h"
 #include "WindowEditLine.h"
 
@@ -281,55 +289,123 @@ bool CWindowEditLine::OnReturn()
 	return RunAnimationAndCommands( pInstance->sequienceOnReturn, pInstance->szOnReturn, false, false );
 }
 
+namespace
+{
+//! The clipboard's text, or false when there is none to take.
+bool GetClipboardText( std::wstring *pRes )
+{
+#if BOOST_OS_WINDOWS
+	if ( !IsClipboardFormatAvailable( CF_TEXT ) )
+		return false;
+	if ( !OpenClipboard( 0 ) )
+		return false;
+	HANDLE h = GetClipboardData( CF_TEXT );
+	if ( h == NULL )
+	{
+		CloseClipboard();
+		return false;
+	}
+	LPTSTR lptstr = (LPTSTR)GlobalLock( h );
+	if ( lptstr == NULL )
+	{
+		CloseClipboard();
+		return false;
+	}
+	*pRes = NStr::ToUnicode( lptstr );
+	GlobalUnlock( h );
+	CloseClipboard();
+	return true;
+#else
+	// SDL owns the buffer and hands over UTF-8, so there is no handle to open,
+	// lock or close, and nothing to allocate.
+	if ( !SDL_HasClipboardText() )
+		return false;
+	char *pszText = SDL_GetClipboardText();
+	if ( pszText == 0 )
+		return false;
+	const char *pszRead = pszText;
+	size_t nLeft = SDL_strlen( pszText );
+	while ( nLeft > 0 )
+	{
+		const Uint32 nCodePoint = SDL_StepUTF8( &pszRead, &nLeft );
+		if ( nCodePoint == 0 || nCodePoint == SDL_INVALID_UNICODE_CODEPOINT )
+			continue;
+		// wchar_t is four bytes here, so a code point is one of them
+		*pRes += static_cast<wchar_t>( nCodePoint );
+	}
+	SDL_free( pszText );
+	return true;
+#endif
+}
+
+void SetClipboardText( const std::wstring &wszText )
+{
+#if BOOST_OS_WINDOWS
+	if ( !OpenClipboard( 0 ) )
+		return;
+	EmptyClipboard();
+
+	// Allocate a global memory object for the text.
+	HGLOBAL hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( wszText.size() + 1 ) * sizeof(char) );
+	if ( hglbCopy == NULL )
+	{
+		CloseClipboard();
+		return;
+	}
+	const std::string szToCopy( NStr::ToMBCS( wszText ) );
+
+	// Lock the handle and copy the text to the buffer.
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock( hglbCopy );
+
+	memcpy( lptstrCopy, szToCopy.c_str(), ( szToCopy.size() ) * sizeof(char) );
+	lptstrCopy[szToCopy.size()] = (char) 0;    // null character
+	GlobalUnlock( hglbCopy );
+
+	SetClipboardData( CF_TEXT, hglbCopy );
+	CloseClipboard();
+#else
+	std::string szUtf8;
+	char szCodePoint[8];
+	for ( std::wstring::const_iterator it = wszText.begin(); it != wszText.end(); ++it )
+	{
+		const char *pszEnd = SDL_UCS4ToUTF8( static_cast<Uint32>( *it ), szCodePoint );
+		szUtf8.append( szCodePoint, pszEnd - szCodePoint );
+	}
+	SDL_SetClipboardText( szUtf8.c_str() );
+#endif
+}
+}
+
 void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
 		return;
 
-	if ( !IsClipboardFormatAvailable(CF_TEXT) ) 
-		return; 
-	if ( !OpenClipboard( 0 ) ) 
-		return; 
+	std::wstring szInserted;
+	if ( !GetClipboardText( &szInserted ) )
+		return;
 
-	HANDLE h = GetClipboardData( CF_TEXT );
-	if ( NULL != h )
+	const std::wstring wszOldText = wszFullText;
+	const int nOldCursorPos = nCursorPos;
+	const int nStrLen = szInserted.size();
+	for ( int i = 0; i < nStrLen; ++i )
 	{
-		LPTSTR lptstr = (LPTSTR)GlobalLock(h); 
-		if ( lptstr != NULL ) 
-		{ 
-			const std::wstring szInserted( NStr::ToUnicode(lptstr) );
-			GlobalUnlock(h); 
-			CloseClipboard();
-
-			const std::wstring wszOldText = wszFullText;
-			const int nOldCursorPos = nCursorPos;
-			const int nStrLen = szInserted.size();
-			for ( int i = 0; i < nStrLen; ++i )
-			{
-				if ( !IsValidSymbol( szInserted[i] ) )
-					return;
-			}
-			
-			DeleteSelection();
-			wszFullText.insert( (std::max)(0,nBeginText+nCursorPos), szInserted.c_str() );
-
-			nCursorPos+= szInserted.size();
-			if ( !CheckTextInsideEditLine() )
-			{
-				wszFullText = wszOldText;
-				nCursorPos = nOldCursorPos;
-				EnsureCursorVisible();
-				return ;
-			}
-			EnsureCursorVisible();
-		}
-		else
-			GlobalUnlock(h); 
-		CloseClipboard();
+		if ( !IsValidSymbol( szInserted[i] ) )
+			return;
 	}
-	else
-		CloseClipboard();
 
+	DeleteSelection();
+	wszFullText.insert( (std::max)(0,nBeginText+nCursorPos), szInserted.c_str() );
+
+	nCursorPos+= szInserted.size();
+	if ( !CheckTextInsideEditLine() )
+	{
+		wszFullText = wszOldText;
+		nCursorPos = nOldCursorPos;
+		EnsureCursorVisible();
+		return ;
+	}
+	EnsureCursorVisible();
 }
 
 void CWindowEditLine::OnCopy( const struct SGameMessage &msg )
@@ -362,39 +438,17 @@ void CWindowEditLine::OnSelectAll( const struct SGameMessage &msg )
 
 void CWindowEditLine::CopySelectionToClipboard()
 {
-	if ( pInstance->bPassword || !OpenClipboard( 0 ) ) 
-		return; 
+	if ( pInstance->bPassword )
+		return;
 
 	// If text is selected
 	if ( nBeginSel == nEndSel )
-	{
-		CloseClipboard();
 		return;
-	}
-	EmptyClipboard(); 
-
-	// Allocate a global memory object for the text. 
-	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (nEndSel - nBeginSel + 1) * sizeof(char)); 
-	if ( hglbCopy == NULL ) 
-	{ 
-		CloseClipboard(); 
-		return; 
-	} 
 
 	// get selection
 	std::wstring wszToCopy = &wszFullText[nBeginSel];
 	wszToCopy.resize( nEndSel - nBeginSel );
-	const std::string szToCopy( NStr::ToMBCS( wszToCopy ) );
-
-	// Lock the handle and copy the text to the buffer. 
-	LPTSTR lptstrCopy = (LPTSTR)GlobalLock( hglbCopy ); 
-
-	memcpy( lptstrCopy, szToCopy.c_str(), (szToCopy.size()) * sizeof(char) ); 
-	lptstrCopy[szToCopy.size()] = (char) 0;    // null character 
-	GlobalUnlock( hglbCopy ); 
-
-	SetClipboardData( CF_TEXT, hglbCopy ); 
-	CloseClipboard(); 
+	SetClipboardText( wszToCopy );
 }
 
 void CWindowEditLine::OnTab( const struct SGameMessage &msg )
