@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GLightPerVertexKernels.h"
 
-#include <intrin.h>
+#include "port/cpuid.h"
 
 namespace NGScene
 {
@@ -16,28 +16,28 @@ enum { XCR0_SSE_STATE = 1 << 1, XCR0_AVX_STATE = 1 << 2 };
 bool DetectSSE2()
 {
 	int cpuInfo[4];
-	__cpuid( cpuInfo, 1 );
+	cpuid( cpuInfo, 1 );
 	return 0 != ( cpuInfo[3] & CPUID_1_EDX_SSE2 );
 }
 
 bool DetectAVX2()
 {
 	int cpuInfo[4];
-	__cpuid( cpuInfo, 0 );
+	cpuid( cpuInfo, 0 );
 	// Leaf 7 carries the AVX2 bit; older parts do not implement it at all.
 	if ( cpuInfo[0] < 7 )
 		return false;
-	__cpuid( cpuInfo, 1 );
+	cpuid( cpuInfo, 1 );
 	// XGETBV itself faults unless the OS enabled XSAVE, so OSXSAVE has to be
 	// checked before the call, not after it.
 	if ( 0 == ( cpuInfo[2] & CPUID_1_ECX_OSXSAVE ) || 0 == ( cpuInfo[2] & CPUID_1_ECX_AVX ) )
 		return false;
 	// The CPU can have AVX2 while the OS declines to preserve YMM across a context
 	// switch; using it then silently corrupts the upper halves.
-	const unsigned long long nXcr0 = _xgetbv( 0 );
+	const unsigned long long nXcr0 = xgetbv( 0 );
 	if ( ( nXcr0 & ( XCR0_SSE_STATE | XCR0_AVX_STATE ) ) != ( XCR0_SSE_STATE | XCR0_AVX_STATE ) )
 		return false;
-	__cpuidex( cpuInfo, 7, 0 );
+	cpuid_count( cpuInfo, 7, 0 );
 	return 0 != ( cpuInfo[1] & CPUID_7_EBX_AVX2 );
 }
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GPixelFormat.h"
 
-#include <intrin.h>
+#include "port/cpuid.h"
 
 namespace {
 	bool IsSSEPresent() {
@@ -9,7 +9,7 @@ namespace {
 		enum { CPUID_SSE_FEATURE_PRESENT = 1 << 25 };
 
 		int cpuinfo[4];
-		__cpuid(cpuinfo, 1);
+		cpuid(cpuinfo, 1);
 		return 0 != (cpuinfo[3] & CPUID_SSE_FEATURE_PRESENT);
 	}
 }
