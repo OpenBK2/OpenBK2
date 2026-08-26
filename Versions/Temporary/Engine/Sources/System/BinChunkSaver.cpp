@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "port/unicode.h"
 #include "BinChunkSaver.h"
 #include "Cruncher.h"
 
@@ -340,15 +342,22 @@ void CStructureSaver::DataChunkString( stdString &str )
 
 void CStructureSaver::DataChunkString( stdWString &str )
 {
+	// Two bytes per character on disk, which is UTF-16LE and not wchar_t. The
+	// two are the same type on Windows and the conversion is the copy this used
+	// to do; off Windows wchar_t is four bytes, and reinterpreting the buffer
+	// read twice the chunk's length and produced garbage from every character.
+	//
+	// The chunk id and the byte count are unchanged either way, so this reads
+	// and writes the same file both platforms always did.
 	if ( IsReading() )
 	{
 		SChunkLevel &res = chunks.back();
-		const wchar_t *pStr = (wchar_t*) ( data.GetBuffer() + res.nStart );
-		str.assign( pStr, res.nLength / 2 );
+		str = UTF16LEToWide( data.GetBuffer() + res.nStart, res.nLength );
 	}
 	else
 	{
-		WriteRawData( str.data(), str.size() * 2 );
+		const std::string utf16 = WideToUTF16LE( str );
+		WriteRawData( utf16.data(), utf16.size() );
 	}
 }
 
