@@ -1,5 +1,8 @@
 #pragma once
 
+// for the NMath::Cos and NMath::Sin that CSmoothRotatedArray2D::Init names
+#include "System/FastMath.h"
+
 #include <cstdint>
 
 #include <fmt/format.h>
