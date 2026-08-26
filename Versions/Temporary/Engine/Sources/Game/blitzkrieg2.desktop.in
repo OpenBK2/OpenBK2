@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Blitzkrieg II
+GenericName=Real-time strategy game
+Comment=Nival's World War II real-time strategy game
+Exec=@CMAKE_INSTALL_PREFIX@/bin/Game
+Path=@CMAKE_INSTALL_PREFIX@/bin
+Icon=@CMAKE_INSTALL_PREFIX@/share/blitzkrieg2/main.ico
+Terminal=false
+Categories=Game;StrategyGame;

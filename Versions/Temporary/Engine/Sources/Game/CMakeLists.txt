@@ -20,6 +20,29 @@ else()
 endif()
 install(TARGETS Game DESTINATION bin)
 
+# A desktop entry, so the game has a name and a launcher entry rather than being
+# an anonymous binary. It also matters for the window icon: a Wayland compositor
+# without xdg_toplevel_icon_v1 takes the icon from the desktop file that matches
+# the window's app id, and there is nowhere else for it to look.
+#
+# Path= is not optional here. The game resolves everything against the working
+# directory: main.cpp opens "..\\profiles\\startup.cfg" and
+# NMainLoop::GetBaseDir is the parent of the current directory, so launching from
+# anywhere else finds no data at all.
+#
+# Icon= is the absolute path of the installed .ico rather than a themed name.
+# The icon theme spec wants PNG, XPM or SVG under share/icons/hicolor, and the
+# .ico is the file this tree actually has; GTK and KDE both read it through their
+# image loaders. A generated PNG in the themed location is the tidier form and can
+# replace this without touching anything else.
+if(UNIX AND NOT APPLE)
+    configure_file(blitzkrieg2.desktop.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/blitzkrieg2.desktop @ONLY)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/blitzkrieg2.desktop
+            DESTINATION share/applications)
+    install(FILES main.ico DESTINATION share/blitzkrieg2)
+endif()
+
 # Ship the third-party DLLs Game loads at runtime. Boost is the reason this is
 # needed: FetchContent builds the whole distribution, so naming the pieces by
 # hand would go stale, while TARGET_RUNTIME_DLLS resolves exactly the ones in
