@@ -696,48 +696,6 @@ struct SEdge
 	operator float() const { return fDist; }
 };
 
-bool IsLoadCommand( const EActionCommand &cmd )
-{
-	return cmd == ACTION_COMMAND_LOAD || cmd == ACTION_COMMAND_ENTER;
-}
-
-struct SGetNAvailableSeats
-{
-	const int operator()( CMilitaryCar *pCar ) { return pCar->GetNAvailableSeats(); }
-	const int operator()( CBuilding *pBuilding ) { return pBuilding->GetNFreePlaces(); }
-	const int operator()( CEntrenchment *pEntrenchment ) { return 1000000; }
-	const int operator()( CObjectBase *pObj ) { NI_ASSERT( false, fmt::format( "Unknown object ({}) to get number of seats", typeid( *pObj ).name() ) ); return 0; }
-};
-struct SGetLoadPoint
-{
-	template<class T>
-		const CVec2 operator()( T *pObj ) { return CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ; }
-};
-
-template<class T, class TResult>
-const TResult GetLoadInfo( CAICommand *pCommand, T &functor, TResult* )
-{
-	SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	switch ( cmd.nCmdType )
-	{
-	case ACTION_COMMAND_LOAD: return functor( dynamic_cast_ptr<CMilitaryCar*>(cmd.pObject) );
-	case ACTION_COMMAND_ENTER:
-		{
-			CStaticObject *pObj = dynamic_cast_ptr<CStaticObject*>(cmd.pObject);
-			switch ( pObj->GetObjectType() )
-			{
-			case ESOT_ENTRENCHMENT: return functor( dynamic_cast<CEntrenchment*>( pObj ) );
-			case ESOT_ENTR_PART:		return functor( dynamic_cast<CEntrenchmentPart*>(pObj)->GetOwner() );
-			case ESOT_BUILDING:			return functor( dynamic_cast<CBuilding*>(pObj) );
-			default: NI_ASSERT( false, fmt::format( "Can't enter to object of type {}", pObj->GetObjectType() ) );
-			}
-		}
-	default: NI_ASSERT( false, fmt::format( "Unknown load command ({})", cmd.nCmdType ) ); return TResult();
-	}
-	else
-		CFormationCenter::UnitCommand( pCommand, bPlaceInQueue, false );
-}
-
 void CFormation::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
 {
 	if ( !bPlaceInQueue && Size() == 1 && pCommand->ToUnitCmd().nCmdType < 1000 )
