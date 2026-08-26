@@ -130,8 +130,13 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 	std::string szDir = _szBasePath;
 	std::string szExt;
 	{
-		NStr::ReplaceAllChars( &szDir, '/', '\\' );
-		const int nPos = szDir.rfind( '\\' );
+		// To the platform's separator, not always to a backslash. The split
+		// below finds the last one, and off Windows a backslash is an ordinary
+		// filename character, so converting to it turned the whole absolute
+		// path into a single relative name and every lookup that concatenated
+		// onto szBasePath afterwards missed.
+		NStr::ReplaceAllChars( &szDir, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
+		const int nPos = szDir.rfind( NFile::PATH_SEPARATOR );
 		if ( nPos != szDir.size() - 1 )
 		{
 			szExt = szDir.substr( nPos + 1 );
@@ -273,7 +278,12 @@ class CProfiler
 	const std::string szPath;
 	const uint32_t dwStartTime;
 public:
-	CProfiler( const std::string &_szPath ) : szPath( szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
+	// szPath( szPath ) initialised the member from itself, reading an
+	// uninitialised std::string's length and asking the allocator for whatever
+	// that garbage happened to be. Undefined behaviour since it was written;
+	// MSVC left values benign enough to survive it, and GCC at -O0 handed over
+	// a two terabyte length, which mimalloc then tried to zero.
+	CProfiler( const std::string &_szPath ) : szPath( _szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
 	~CProfiler()
 	{
 		const float fLoadTime = float(GetCurrentTimeMilliseconds() - dwStartTime)/1000.0f;
