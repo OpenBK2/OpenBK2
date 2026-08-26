@@ -19,10 +19,17 @@
 // through ID3DXEffect's technique and pass machinery.
 //
 // DXVK cannot supply that. What DXVK translates is compiled D3D9 shader
-// bytecode, which it turns into SPIR-V itself - so if this engine loaded
-// prebuilt shaders there would be nothing to do here. What is missing is D3DX,
-// which is the HLSL compiler in front of that and the .fx effect runtime around
-// it. Neither is part of Direct3D and neither is in DXVK.
+// bytecode, which it turns into SPIR-V itself. What is missing is D3DX, which is
+// the HLSL compiler in front of that and the .fx effect runtime around it;
+// neither is part of Direct3D and neither is in DXVK.
+//
+// This engine's *other* shader system needs none of it and already works here.
+// GfxShaders.txt is a shader assembly macro language that ShaderCompiler turns
+// into the D3D9 bytecode arrays committed in GfxShaders.cpp, which GfxRender.cpp
+// hands to CreatePixelShader and CreateVertexShader directly and DXVK compiles
+// to SPIR-V. That path is build-time, its output is in the repository, and the
+// original 3Dmotor.vcproj marks its custom build step ExcludedFromBuild in every
+// configuration, so nothing has to run ShaderCompiler to build the game.
 //
 // **The path is dead, three times over, and this stub is what the Windows build
 // already does rather than a reduction of it:**
@@ -32,12 +39,21 @@
 //     in GView.cpp and the only line that would ever have set it true,
 //     `pScene->SetTwilight( rand() & 1 )`, is commented out beside it.
 //     IView::SetTwilight has no caller anywhere outside 3Dmotor.
-//  2. The shaders do not ship. Neither FX/GfxPS.fx nor FX/GfxVS.fx exists
-//     anywhere in this repository, in the data or in a pak. The two .fx files
-//     that do exist, 3Dmotor/GfxMainPS.fx and GfxMainVS.fx, are different
-//     shaders under different names, are not installed, and contain no
-//     `technique` block at all, so they are not even in the format
-//     D3DXCreateEffect reads.
+//  2. The shaders do not ship, and never did. Neither FX/GfxPS.fx nor
+//     FX/GfxVS.fx exists in this repository, and neither is in any pak of a
+//     retail install either - data.pak of Fall of the Reich is 1.5 GB and
+//     contains no "GfxPS", no "GfxVS", no "technique" and no "vs_1_1", while
+//     ".xdb" appears 323407 times in it, so the absence is real rather than an
+//     artefact of how the archive stores names.
+//
+//     The two .fx files that do exist, 3Dmotor/GfxMainPS.fx and GfxMainVS.fx,
+//     belong to the other shader system and not to this one. They are the
+//     inputs named by the [HLSL] Main section of GfxShaders.txt, which
+//     ShaderCompiler turns into the vsHLSLMain0 and vsHLSLMain1 bytecode
+//     committed in GfxShaders.cpp. That is why they carry no `technique` block:
+//     they were never effect files. Monochrome, Twilight, GausianBlur and
+//     Render2DVS appear nowhere in GfxShaders.txt either, so not even the
+//     build-time shader source ever had them.
 //  3. If it did run it would crash. InitShaderFX logs "Couldn't open file" for
 //     each missing .fx and then returns **true** with pPSEffect and pVSEffect
 //     left null, and CPixelShader's constructor dereferences pPSEffect with no
