@@ -49,10 +49,6 @@ class CProgrammedReactionsAndChecks : public IProgrammedReactionsAndChecks
 	typedef std::unordered_map<std::string, CPtr<CCheckObserver<TObj> > > CChecks;
 	CChecks checks;
 public:
-	void SetInterface( TObj *_pInterface ) 
-	{
-		pInterface = _pInterface;
-	}
 	void AddCheck( const std::string &szCheck, int (TObj::*_pfnMemFun)()const )
 	{
 		checks[szCheck] = new CCheckObserver<TObj>( _pfnMemFun );
