@@ -35,12 +35,16 @@ install(TARGETS Game DESTINATION bin)
 # .ico is the file this tree actually has; GTK and KDE both read it through their
 # image loaders. A generated PNG in the themed location is the tidier form and can
 # replace this without touching anything else.
+#
+# main.ico sits beside splash.bmp at the top of the install rather than under
+# share, because that is where this game keeps the files it opens at run time and
+# the window icon is read from it too. One file, both readers.
 if(UNIX AND NOT APPLE)
     configure_file(blitzkrieg2.desktop.in
                    ${CMAKE_CURRENT_BINARY_DIR}/blitzkrieg2.desktop @ONLY)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/blitzkrieg2.desktop
             DESTINATION share/applications)
-    install(FILES main.ico DESTINATION share/blitzkrieg2)
+    install(FILES main.ico DESTINATION .)
 endif()
 
 # Ship the third-party DLLs Game loads at runtime. Boost is the reason this is
