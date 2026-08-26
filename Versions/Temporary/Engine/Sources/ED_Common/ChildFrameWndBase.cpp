@@ -670,7 +670,7 @@ void CChildFrameWndBase::EnableRunMode( uint32_t dwData )
 	bRunModeEnabled = ( dwData != 0 );
 	if ( bRunModeEnabled )
 	{
-		NInput::InitInput( m_hWnd, false, true );
+		NInput::InitInput( m_hWnd, true );
 		NInput::SetSection( "editor_mapeditor" );
 	}
 	else
@@ -684,7 +684,7 @@ void CChildFrameWndBase::EnableRunMode( uint32_t dwData )
 
 void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 {
-	NInput::InitInput( m_hWnd, false, true );
+	NInput::InitInput( m_hWnd, true );
 	NInput::SetSection( "editor_mapeditor" );
 	if ( pInterfaceCommand != 0 )
 	{

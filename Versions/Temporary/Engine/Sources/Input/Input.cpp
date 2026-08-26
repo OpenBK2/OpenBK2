@@ -15,7 +15,6 @@
 
 #include <fmt/format.h>
 
-bool bMouseDisabledDebug = false;
 static const int POV_RANGE_VALUE = 1000;
 static const int AXIS_RANGE_VALUE = 10000;
 static const int SAMPLE_BUFFER_SIZE = 1024;
@@ -289,7 +288,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 //
 
 // Инициализировать DirectInput
-bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampleBufferSize )
+bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 {
 	HRESULT hRes;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
@@ -304,55 +303,33 @@ bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampl
 	if( FAILED(hRes) )
 		return false;
 
-	// disable mouse in debugger for win2k and earlier versions
-	bool bMouseEnabled = true;
-	if ( is_debugger_present() && !bDebugMouse )
+	hRes = pdiInput->CreateDevice( GUID_SysMouse, pdiTempDevice.GetAddr(), 0 );
+	if ( SUCCEEDED( hRes ) )
 	{
-		// Figure out which OS we are on.
-		OSVERSIONINFO stOSVI;
-		memset( &stOSVI , NULL , sizeof(OSVERSIONINFO) );
-		stOSVI.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-		if ( !GetVersionEx( &stOSVI ) )
-			bMouseEnabled = false;
-		else
-		{
-			if ( stOSVI.dwMajorVersion < 5 || ( stOSVI.dwMajorVersion == 5 && stOSVI.dwMinorVersion == 0 ) )
-				bMouseEnabled = false;
-		}
-	}
-	
-	bMouseDisabledDebug = !bMouseEnabled;
+		hRes = pdiTempDevice->SetDataFormat( &c_dfDIMouse2 );
+		if( FAILED(hRes) )
+			return false;
 
-	if ( bMouseEnabled )
-	{
-		hRes = pdiInput->CreateDevice( GUID_SysMouse, pdiTempDevice.GetAddr(), 0 );
-		if ( SUCCEEDED( hRes ) )
-		{
-			hRes = pdiTempDevice->SetDataFormat( &c_dfDIMouse2 );
-			if( FAILED(hRes) )
-				return false;
+		DIPROPDWORD sProp;
+		sProp.diph.dwSize       = sizeof(DIPROPDWORD);
+		sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		sProp.diph.dwObj        = 0;
+		sProp.diph.dwHow        = DIPH_DEVICE;
+		sProp.dwData            = DIPROPAXISMODE_ABS;
+		hRes = pdiTempDevice->SetProperty( DIPROP_AXISMODE, &sProp.diph );
+		if( FAILED(hRes) )
+			return false;
 
-			DIPROPDWORD sProp;
-			sProp.diph.dwSize       = sizeof(DIPROPDWORD);
-			sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-			sProp.diph.dwObj        = 0;
-			sProp.diph.dwHow        = DIPH_DEVICE;
-			sProp.dwData            = DIPROPAXISMODE_ABS;
-			hRes = pdiTempDevice->SetProperty( DIPROP_AXISMODE, &sProp.diph );
-			if( FAILED(hRes) )
-				return false;
+		sProp.diph.dwSize       = sizeof(DIPROPDWORD);
+		sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		sProp.diph.dwObj        = 0;
+		sProp.diph.dwHow        = DIPH_DEVICE;
+		sProp.dwData            = nSampleBufferSize > 0 ? nSampleBufferSize : SAMPLE_BUFFER_SIZE;
+		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
+		if( FAILED(hRes) )
+			return false;
 
-			sProp.diph.dwSize       = sizeof(DIPROPDWORD);
-			sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-			sProp.diph.dwObj        = 0;
-			sProp.diph.dwHow        = DIPH_DEVICE;
-			sProp.dwData            = nSampleBufferSize > 0 ? nSampleBufferSize : SAMPLE_BUFFER_SIZE;
-			hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
-			if( FAILED(hRes) )
-				return false;
-
-			AddDeviceInfo( pdiTempDevice, c_dfDIMouse2.dwDataSize );
-		}
+		AddDeviceInfo( pdiTempDevice, c_dfDIMouse2.dwDataSize );
 	}
 
 	hRes = pdiInput->CreateDevice( GUID_SysKeyboard, pdiTempDevice.GetAddr(), 0 );
@@ -743,21 +720,6 @@ std::string GetControlLocalName( int nAction )
 	return "";
 }
 
-void StartSaveInput( CDataStream *pStream )
-{
-}
-
-void StopSaveInput()
-{
-}
-
-void StartEmulateInput( CDataStream *pStream )
-{
-}
-
-void StopEmulateInput()
-{
-}
 
 //
 //	Internal functions
@@ -1159,12 +1121,6 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 
 	return DIENUM_CONTINUE;
 }
-
-bool IsMouseDisabledDebug()
-{
-	return bMouseDisabledDebug;
-}
-
 
 bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
 {
