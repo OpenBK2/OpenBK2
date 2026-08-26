@@ -446,9 +446,9 @@ public:
 	void Init( const int nDecks );
 	void Clear();
 	
-	void IncreaseDecksNum( const int nSize ) { IncreaseQueuesNum( nSize ); }
-	const int GetDecksNum() const { return GetQueuesNum(); }
-	void DelDeck( const int deckNum ) { DelQueue( deckNum ); }
+	void IncreaseDecksNum( const int nSize ) { this->IncreaseQueuesNum( nSize ); }
+	const int GetDecksNum() const { return this->GetQueuesNum(); }
+	void DelDeck( const int deckNum ) { this->DelQueue( deckNum ); }
 	
 	void PushFront( const int deckNum, const T &el );
 
@@ -473,19 +473,19 @@ void CDecksSet<T>::Clear()
 template< class T >
 void CDecksSet<T>::PushFront( const int deckNum, const T &el )
 {
-	currentPos[deckNum] = cListsSet.InsertAfter( deckNum, currentPos[deckNum], el );
+	this->currentPos[deckNum] = this->cListsSet.InsertAfter( deckNum, this->currentPos[deckNum], el );
 }
 
 template< class T >
 T& CDecksSet<T>::GetLastEl( const int nDeckNum )
 {
-	return cListsSet.GetEl( cListsSet.begin( nDeckNum ) );
+	return this->cListsSet.GetEl( this->cListsSet.begin( nDeckNum ) );
 }
 
 template< class T >
 const T& CDecksSet<T>::GetLastEl( const int nDeckNum ) const
 {
-	return cListsSet.GetEl( cListsSet.begin( nDeckNum ) );
+	return this->cListsSet.GetEl( this->cListsSet.begin( nDeckNum ) );
 }
 
 //*******************************************************************

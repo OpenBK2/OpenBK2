@@ -34,7 +34,7 @@ private:
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, TYPE *pObj )
 	{
-		if ( (nX < 0) || (nX >= GetSizeX()) || (nY < 0) || (nY >= GetSizeY()) )
+		if ( (nX < 0) || (nX >= this->GetSizeX()) || (nY < 0) || (nY >= this->GetSizeY()) )
 			return;
 		CDataList &data = (*this)[nY][nX];
 		typename CDataList::iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional(pObj) );
@@ -102,7 +102,7 @@ public:
 	const bool IsInArea( const TPosition &vPos ) const
 	{
 		return ( vPos.x >= 0.0f ) && ( vPos.y >= 0.0f ) &&
-			(vPos.x < GetSizeX() * tCellSize ) && ( vPos.y < GetSizeY() * tCellSize );
+			(vPos.x < this->GetSizeX() * tCellSize ) && ( vPos.y < this->GetSizeY() * tCellSize );
 	}
 };
 
@@ -137,7 +137,7 @@ private:
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, const TYPE &obj )
 	{
-		if ( (nX < 0) || (nX >= GetSizeX()) || (nY < 0) || (nY >= GetSizeY()) )
+		if ( (nX < 0) || (nX >= this->GetSizeX()) || (nY < 0) || (nY >= this->GetSizeY()) )
 			return;
 		CDataList &data = (*this)[nY][nX];
 		typename CDataList::iterator pos = find_if( data.begin(), data.end(), TComparator(obj) );
@@ -202,7 +202,7 @@ public:
 	//
 	const bool IsInArea( const TPosition &vPos ) const
 	{
-		return ( vPos.x >= 0 ) && (vPos.y >= 0) && (vPos.x < GetSizeX()*tCellSize) && (vPos.y < GetSizeY()*tCellSize);
+		return ( vPos.x >= 0 ) && (vPos.y >= 0) && (vPos.x < this->GetSizeX()*tCellSize) && (vPos.y < this->GetSizeY()*tCellSize);
 	}
 };
 

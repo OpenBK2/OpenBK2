@@ -207,7 +207,7 @@ CExistingObject* CStObjIter<bOnlyContainers>::operator*()
 
 template<bool bOnlyContainers>
 CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
-: CStObjIter<bOnlyContainers>( 0, GetAreaMap().GetSizeX() - 1, 0, GetAreaMap().GetSizeY() - 1 )
+: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
 {
 }
 
@@ -218,12 +218,12 @@ CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
 template<bool bOnlyContainers>
 CStObjCircleIter<bOnlyContainers>::CStObjCircleIter( const CVec2 &vCenter, const float fR )
 {
-	const int nBigCellSize = SConsts::TILE_SIZE * GetCellSize();
+	const int nBigCellSize = SConsts::TILE_SIZE * this->GetCellSize();
 
 	const int nMinX = (std::max)( 0, int( (vCenter.x - fR) / nBigCellSize ) );
-	const int nMaxX = (std::min)( GetAreaMap().GetSizeX() - 1, int( (vCenter.x + fR) / nBigCellSize ) );
+	const int nMaxX = (std::min)( this->GetAreaMap().GetSizeX() - 1, int( (vCenter.x + fR) / nBigCellSize ) );
 	const int nMinY = (std::max)( 0, int( ( vCenter.y - fR ) / nBigCellSize ) );
-	const int nMaxY = (std::min)( GetAreaMap().GetSizeY() - 1, int( ( vCenter.y + fR ) / nBigCellSize ) );
+	const int nMaxY = (std::min)( this->GetAreaMap().GetSizeY() - 1, int( ( vCenter.y + fR ) / nBigCellSize ) );
 
 	CStObjIter<bOnlyContainers>::Init( nMinX, nMaxX, nMinY, nMaxY );
 }
