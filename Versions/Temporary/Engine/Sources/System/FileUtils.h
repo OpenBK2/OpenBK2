@@ -118,9 +118,13 @@ SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath 
 std::string GetTempPath();
 std::string GetTempFileName();
 
-std::string GetCurrDir();
-std::string GetNormalizedCurrDir();
-void SetCurrDir( const std::string &szDir );
+// exported because every caller of these three is outside System: Game reads the
+// normalized one for its log paths, MapEditor sets the directory, and dbcodegen,
+// dbstruct and TestParsing read it. Without the macro they link only inside the
+// DLL that defines them, which MSVC reports and GCC does not
+SYSTEM_EXPORT std::string GetCurrDir();
+SYSTEM_EXPORT std::string GetNormalizedCurrDir();
+SYSTEM_EXPORT void SetCurrDir( const std::string &szDir );
 class CCurrDirHolder
 {
 	std::string szDir;
