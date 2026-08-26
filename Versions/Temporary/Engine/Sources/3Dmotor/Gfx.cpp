@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <cstdlib>
+
 #include <thread>
 
 #include "3DLib_export.h"
@@ -643,6 +645,29 @@ static bool CheckDeviceCaps()
 
 static bool InitD3D()
 {
+#if !BOOST_OS_WINDOWS
+	// DXVK Native picks its window system backend from this and refuses to
+	// start without it: Direct3DCreate9 throws "DXVK_WSI_DRIVER environment
+	// variable unset" out of dxvk::wsi::init, before it has enumerated an
+	// adapter or written a line to its own log.
+	//
+	// The answer is not the caller's to know. This game is an SDL3 application,
+	// System/WinFrame.cpp creates an SDL_Window and the HWND handed to Init3D is
+	// that window, so SDL3 is the only backend that can present to it.
+	//
+	// Set only when unset, so that someone testing DXVK against another backend
+	// can still say so from the environment.
+	//
+	// The throw itself cannot be caught. dxvk::DxvkError does not derive from
+	// std::exception, and libdxvk_d3d9 carries its own unwinder, which aborts in
+	// phase two rather than finding the handler in Game; see the RunGameGuarded
+	// comment in Game/main.cpp. So this has to be prevented rather than handled.
+	if ( getenv( "DXVK_WSI_DRIVER" ) == 0 )
+	{
+		setenv( "DXVK_WSI_DRIVER", "SDL3", 0 );
+	}
+#endif
+
 	pD3D.Create( Direct3DCreate9( D3D_SDK_VERSION ) );
 	if ( pD3D == 0 )
 	{
