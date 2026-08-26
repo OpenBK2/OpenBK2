@@ -135,11 +135,6 @@ class CSmoothRotatedArray2D
 public:
 	// array - passability/visibility
 	CSmoothRotatedArray2D() { }
-	void Clear()
-	{
-		*array
-
-	}
 	CSmoothRotatedArray2D( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		Init( _array, _wAngle, _vOrigin, _vCenter );
