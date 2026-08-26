@@ -4,6 +4,8 @@
 
 #include <boost/config.hpp>
 
+#include <string>
+
 namespace NFile
 {
 
@@ -11,6 +13,75 @@ namespace NFile
 BOOST_FORCEINLINE bool IsFolderSeparator( const char chr )
 {
 	return chr == '/' || chr == '\\';
+}
+
+//! The separator this tree builds paths with, on every platform.
+//!
+//! Forward slash rather than the platform's own, and that is not a compromise
+//! for the sake of one side. Windows file APIs take it; ComparePathEq and
+//! MakeRelativePath already fold a backslash to one before comparing, in
+//! ConvertFolderSeparator; GetNormalizedCurrDir already hands one back. This is
+//! the separator the tree had settled on without ever writing it down.
+//!
+//! A literal backslash in a path is a bug off Windows, where it is an ordinary
+//! filename character and turns the whole path into one nonexistent name. It is
+//! also silent: nothing reports a file it could not open.
+constexpr char PATH_SEPARATOR = '/';
+
+// The directories the game keeps its files in, spelled once each.
+//
+// Case matters off Windows, and this tree did not previously agree with itself:
+// Game/main.cpp asked for "profiles" while Main/Profiles.cpp built "Profiles",
+// and Main/MODs.cpp used both "MODs" and "Mods" four lines apart. All four
+// worked on Windows and none of the disagreements were visible there.
+//
+// The spelling here follows Versions/Current, which is what this repository
+// ships and what CopyData.bat lays down. A distribution that spells them
+// differently - the retail Fall of the Reich tree uses "data", "profiles" and
+// "mods" - has to be renamed to match, because nothing here will guess.
+constexpr char DIR_DATA[] = "Data";
+constexpr char DIR_PROFILES[] = "Profiles";
+constexpr char DIR_MODS[] = "MODs";
+
+//! Append one component to a path being built, with exactly one separator
+//! between them.
+//!
+//! Tolerates what the callers actually have: an empty component, a base that
+//! already ends in a separator, which is what GetBaseDir and GetProfileRootDir
+//! hand back, and a component that begins with one.
+inline void AppendPathPart( std::string *pRes, const std::string &szPart )
+{
+	if ( szPart.empty() )
+	{
+		return;
+	}
+	// A leading separator is dropped only when there is already something to
+	// join onto. On the first component it is the root, and stripping it turned
+	// every absolute path into a relative one.
+	const size_t nSkip = !pRes->empty() && IsFolderSeparator( szPart[0] ) ? 1 : 0;
+	if ( !pRes->empty() && !IsFolderSeparator( ( *pRes )[pRes->size() - 1] ) )
+	{
+		*pRes += PATH_SEPARATOR;
+	}
+	pRes->append( szPart, nSkip, std::string::npos );
+}
+
+//! Join path components with PATH_SEPARATOR.
+//!
+//! JoinPath( GetBaseDir(), DIR_PROFILES, "startup.cfg" ) rather than a
+//! concatenation with the separator written out at each site, which is how the
+//! backslashes got in and stayed.
+//!
+//! Does not append a trailing separator. A caller that wants a directory to
+//! concatenate against says so, with AppendSlash or by joining the next
+//! component instead.
+template <typename... TParts>
+std::string JoinPath( const TParts &...parts )
+{
+	std::string result;
+	// fold over the pack, left to right
+	( AppendPathPart( &result, parts ), ... );
+	return result;
 }
 
 //! Get folder path from full file path name (c:/mydir/myfile.txt => c:/mydir/).

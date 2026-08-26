@@ -23,7 +23,7 @@ namespace NProfile
 {
 static std::string GetProfileRootDir()
 {
-	return NMainLoop::GetBaseDir() + "Profiles/";
+	return NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_PROFILES );
 }
 
 // directory name with default profile settings
@@ -42,7 +42,7 @@ static bool IsDefaultProfileName( const std::string &szName )
 
 static std::wstring GetProfileName( const std::string &szDir, const std::string &_szDirName )
 {
-	CFileStream stream( szDir + "/" + _szDirName + "/name.txt", CFileStream::WIN_READ_ONLY );
+	CFileStream stream( NFile::JoinPath( szDir, _szDirName, "name.txt" ), CFileStream::WIN_READ_ONLY );
 	if  ( stream.IsOk() )
 	{
 		int nLength = stream.GetSize();
@@ -64,7 +64,7 @@ static std::wstring GetProfileName( const std::string &szDir, const std::string 
 
 std::string GetDefaultProfileDir()
 {
-	std::string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "/";
+	std::string szDefaultDir = NFile::JoinPath( GetProfileRootDir(), szDefaultProfileName ) + NFile::PATH_SEPARATOR;
 	return szDefaultDir;
 }
 
@@ -76,7 +76,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 	std::string szNameAscii = NStr::ToMBCS( szName );
 	if ( NFile::IsValidDirName( szNameAscii ) && !IsDefaultProfileName( szNameAscii ) )
 	{
-		szResDir = szRoot + szNameAscii + "/";
+		szResDir = NFile::JoinPath( szRoot, szNameAscii ) + NFile::PATH_SEPARATOR;
 		if ( NFile::DoesFileExist( szResDir + "user.cfg" ) )
 			return szResDir;
 		else
@@ -88,7 +88,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 	}
 	else
 	{
-		for ( NFile::CFileIterator it( ( szRoot + "*.*" ) ); !it.IsEnd(); ++it )
+		for ( NFile::CFileIterator it( NFile::JoinPath( szRoot, "*.*" ) ); !it.IsEnd(); ++it )
 		{
 			if ( !it.IsDirectory() || it.IsDots() )
 				continue;
@@ -97,7 +97,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 		}
 		// create dir
 		const auto guid = boost::uuids::random_generator()();
-		szResDir = szRoot + boost::uuids::to_string(guid) + '/';
+		szResDir = NFile::JoinPath( szRoot, boost::uuids::to_string(guid) ) + NFile::PATH_SEPARATOR;
 		NFile::CreatePath( szResDir );
 		// write name
 		{
@@ -136,7 +136,7 @@ static void LoadUserConfig( const std::string &szProfileDir )
 
 void LoadProfile()
 {
-	NGlobal::LoadConfig( GetProfileRootDir() + "global.cfg", STORAGE_GLOBAL );
+	NGlobal::LoadConfig( NFile::JoinPath( GetProfileRootDir(), "global.cfg" ), STORAGE_GLOBAL );
 	OnProfileChange();
 	std::string szProfileDir = GetProfileDir( GetCurrentProfileName() );
 	if ( NFile::DoesFileExist( szProfileDir + "user.cfg" ) )
@@ -147,7 +147,7 @@ void LoadProfile()
 
 void SaveProfile()
 {
-	std::string szGlobalCfg = GetProfileRootDir() + "global.cfg";
+	std::string szGlobalCfg = NFile::JoinPath( GetProfileRootDir(), "global.cfg" );
 	std::string szUserCfg = GetProfileDir( GetCurrentProfileName() ) + "user.cfg";
 	NGlobal::SaveAllVars( szGlobalCfg, szUserCfg );
 }
@@ -186,7 +186,7 @@ void GetAllProfiles( std::vector<std::wstring> *pRes )
 {
 	std::string szRoot = GetProfileRootDir();
 	pRes->resize( 0 );
-	for ( NFile::CFileIterator it( ( szRoot + "*.*" ) ); !it.IsEnd(); ++it )
+	for ( NFile::CFileIterator it( NFile::JoinPath( szRoot, "*.*" ) ); !it.IsEnd(); ++it )
 	{
 		if ( !it.IsDirectory() || it.IsDots() )
 			continue;

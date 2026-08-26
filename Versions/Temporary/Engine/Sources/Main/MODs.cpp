@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "System/FilePath.h"
 #include "MODs.h"
 #include "Main/MainLoop.h"
 #include "System/FileUtils.h"
@@ -29,7 +31,7 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 		szFullFolderName += '/';
 	//
 	pMOD->szFullFolderPath = szFullFolderName;
-	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NMainLoop::GetBaseDir() + "MODs/" );
+	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) );
 	// name
 	{
 		CFileStream stream( szFullFolderName + "name.txt", CFileStream::WIN_READ_ONLY );
@@ -44,7 +46,7 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 
 void GetAllMODs( std::vector<SMOD> *pMODs )
 {
-	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods/";
+	const std::string szMODsBaseDir = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS );
 	// iterate through all files by mask
 	for ( NFile::CFileIterator it( (szMODsBaseDir + "*.*").c_str() ); !it.IsEnd(); ++it )
 	{
@@ -124,7 +126,7 @@ public:
 	//
 	void Exec()
 	{
-		AttachMODInternal( NMainLoop::GetBaseDir() + "Data/", szFullFolderPath, eMode );
+		AttachMODInternal( NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA ), szFullFolderPath, eMode );
 		auto modConfigPath = std::filesystem::path( szFullFolderPath.c_str() ) / "mod_config.cfg";
 		if ( std::filesystem::exists( modConfigPath ) )
 		{

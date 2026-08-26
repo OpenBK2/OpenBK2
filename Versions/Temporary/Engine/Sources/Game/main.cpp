@@ -270,7 +270,7 @@ static int RunGame( const std::vector<std::string> &arguments )
     // replace the CRT allocator for every game module before initialization.
     (void)mi_version();
 
-	NGlobal::LoadConfig( "../profiles/startup.cfg" );
+	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
 	StoreBuildInfo();
 	// crashpad will generate a crash report and write minidump
 	InitCrashpad();
@@ -354,12 +354,12 @@ static int RunGame( const std::vector<std::string> &arguments )
 	//
 	std::string szMOD2Attach = NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") );
 	if ( !szMOD2Attach.empty() )
-		szMOD2Attach = NMainLoop::GetBaseDir() + "MODs\\" + szMOD2Attach;
+		szMOD2Attach = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS, szMOD2Attach );
 	if ( NMOD::DoesMODAttached(szMOD2Attach) == false )
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
 	//
-	NGlobal::LoadConfig( "../profiles/autoexec.cfg" );
-	NGlobal::LoadConfig( "../profiles/game.cfg" );
+	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "autoexec.cfg" ) );
+	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "game.cfg" ) );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
