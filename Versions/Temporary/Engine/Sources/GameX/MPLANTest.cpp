@@ -22,7 +22,7 @@
 
 
 #ifdef LAN_TEST_ENABLED
-	#include <ShellAPI.h>
+	#include "port/process.h"
 #endif
 
 //
@@ -148,12 +148,11 @@ void CLANTester::CreateGame()
 void CLANTester::RunShellCommand( const std::wstring &wszCommand  )
 {
 #ifdef LAN_TEST_ENABLED
-	if ( wszCommand != L"" )
+	const std::string szCommand = NStr::ToMBCS( wszCommand );
+	if ( !szCommand.empty() && !LaunchDetached( szCommand ) )
 	{
-		std::vector<TCHAR> winCommand( wszCommand.begin(), wszCommand.end() );
-		winCommand.push_back( '\0' );
-		ShellExecute( 0, "open", &( winCommand[0] ), "", "", SW_SHOWNORMAL );
-	}	
+		csSystem << CC_RED << "LANTEST: cannot run " << szCommand << endl;
+	}
 #endif
 }
 
