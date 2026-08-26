@@ -135,11 +135,23 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	CreateAI();
 	//
 	// initialize win app
-	if ( !NWinFrame::SFLB1_InitApplication(hInstance, " Blitzkrieg II", "NIVAL_RTS_ENGINE", MAKEINTRESOURCE(IDI_MAIN)) )
+#if BOOST_OS_WINDOWS
+	// icon.rc compiles main.ico into the executable, and MAKEINTRESOURCE names it
+	// by id. That is also what Explorer and the task bar show for the file.
+	LPCSTR pIcon = MAKEINTRESOURCE( IDI_MAIN );
+#else
+	// an ELF has no resource section, so the window class gets no icon here and
+	// the same picture is set from a file once the window exists
+	LPCSTR pIcon = 0;
+#endif
+	if ( !NWinFrame::SFLB1_InitApplication(hInstance, " Blitzkrieg II", "NIVAL_RTS_ENGINE", pIcon) )
 	{
 		MessageBox( 0, "InitApplication", "Error", MB_OK );
 		return 0xDEAD;
 	}
+	// main.ico is installed beside the game's other run-time files. Does nothing
+	// on Windows, where the resource above already covered it.
+	NWinFrame::SetIcon( NMainLoop::GetBaseDir() + "main.ico" );
 	// init graphics
 	if ( !NGfx::Init3D(NWinFrame::GetWnd()) )
 	{

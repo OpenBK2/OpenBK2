@@ -13,10 +13,15 @@
 #include "Misc/Win32Helper.h"
 #else
 #include "SdlVideo.h"
+#include "WinImageFormats.h"
 
 #include "port/window.h"
 
 #include <SDL3/SDL.h>
+
+#include <fstream>
+#include <iterator>
+#include <vector>
 #endif
 
 using namespace NWinFrame;
@@ -377,6 +382,11 @@ bool NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppNa
 	return true;
 }
 
+void NWinFrame::SetIcon( const std::string & )
+{
+	// nothing to do: SFLB2_CreateWin took the icon from the resource section
+}
+
 void NWinFrame::SetCursor( HCURSOR _hCursor )
 {
 	if ( !bManageCursor )
@@ -504,6 +514,89 @@ bool NWinFrame::SFLB1_InitApplication( HINSTANCE, const char *pszAppName, const 
 	// text arrives only while this is on, and the console and the edit line want it
 	SDL_StartTextInput( pWindow );
 	return true;
+}
+
+void NWinFrame::SetIcon( const std::string &szFileName )
+{
+	if ( hWnd == 0 )
+	{
+		return;
+	}
+	// a filesystem path, not a VFS one, the same as the splash image: this file
+	// is installed beside the executable's data rather than packed
+	std::ifstream file( szFileName.c_str(), std::ios::binary );
+	const std::vector<uint8_t> buffer( ( std::istreambuf_iterator<char>( file ) ),
+	                                   std::istreambuf_iterator<char>() );
+	std::vector<NWinImage::SImageInfo> infos;
+	if ( buffer.empty() || !NWinImage::GetImages( &infos, &buffer[0], buffer.size(), 0 ) )
+	{
+		csSystem << CC_RED << "Cannot read the window icon " << szFileName.c_str() << endl;
+		return;
+	}
+	// Every size the file carries is handed over, not just one. SDL keeps them
+	// as alternates and lets the desktop take whichever fits the slot it is
+	// filling, which is the reason the container holds more than one to begin
+	// with: a task bar button and an alt-tab panel are not the same size.
+	//
+	// The largest is the one passed to SDL_SetWindowIcon, because that is the
+	// one SDL falls back to scaling when no alternate matches, and scaling down
+	// keeps more than scaling up.
+	std::vector<NWinImage::SImage> images;
+	std::vector<SDL_Surface *> surfaces;
+	for ( int i = 0; i < infos.size(); ++i )
+	{
+		NWinImage::SImage image;
+		if ( !NWinImage::DecodeImage( &image, &buffer[0], buffer.size(), 0, i ) )
+		{
+			continue;
+		}
+		images.push_back( image );
+	}
+	// the pixels have to outlive every surface, so no surface is made until the
+	// vector holding them has stopped growing and moving them about
+	for ( int i = 0; i < images.size(); ++i )
+	{
+		SDL_Surface *pSurface = SDL_CreateSurfaceFrom( images[i].nWidth, images[i].nHeight,
+			SDL_PIXELFORMAT_ARGB8888, &images[i].pixels[0],
+			images[i].nWidth * static_cast<int>( sizeof( uint32_t ) ) );
+		if ( pSurface != 0 )
+		{
+			surfaces.push_back( pSurface );
+		}
+	}
+	if ( surfaces.empty() )
+	{
+		csSystem << CC_RED << "No usable image in the window icon " << szFileName.c_str() << endl;
+		return;
+	}
+	int nLargest = 0;
+	for ( int i = 1; i < surfaces.size(); ++i )
+	{
+		if ( surfaces[i]->w > surfaces[nLargest]->w )
+		{
+			nLargest = i;
+		}
+	}
+	for ( int i = 0; i < surfaces.size(); ++i )
+	{
+		if ( i != nLargest )
+		{
+			SDL_AddSurfaceAlternateImage( surfaces[nLargest], surfaces[i] );
+		}
+	}
+	// On X11 this becomes _NET_WM_ICON and every window manager reads it. On
+	// Wayland it needs xdg_toplevel_icon_v1, which not every compositor has;
+	// where it is missing SDL says so and the icon comes from the desktop file
+	// matched to the app id NSdl::InitVideo sets instead.
+	if ( !SDL_SetWindowIcon( AsSdlWindow( hWnd ), surfaces[nLargest] ) )
+	{
+		csSystem << CC_RED << "Cannot set the window icon: " << SDL_GetError() << endl;
+	}
+	// SDL_SetWindowIcon copies what it is given, so all of this can go now
+	for ( int i = 0; i < surfaces.size(); ++i )
+	{
+		SDL_DestroySurface( surfaces[i] );
+	}
 }
 
 void NWinFrame::PumpMessages()

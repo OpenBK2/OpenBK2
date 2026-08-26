@@ -10,6 +10,7 @@
 #include "WinCursor.h"
 
 #include <cstdint>
+#include <string>
 
 //
 namespace NWinFrame
@@ -50,6 +51,13 @@ namespace NWinFrame
 	SYSTEM_EXPORT HWND GetWnd();
 	SYSTEM_EXPORT void PumpMessages();
 	SYSTEM_EXPORT bool SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon );
+	//! Give the window an icon, read from a .ico on the filesystem.
+	//!
+	//! Does nothing on Windows: SFLB1_InitApplication already put the icon out
+	//! of the executable's resource section into the window class, which is also
+	//! what Explorer shows for the file itself. ELF has no resource section, so
+	//! off Windows the same picture arrives as a file.
+	SYSTEM_EXPORT void SetIcon( const std::string &szFileName );
 	SYSTEM_EXPORT void SetCursor( NWinCursor::TCursor _hCursor );
 	void ShowCursor( bool bShow );
 	void EnableCursorManagement( bool bEnable );
