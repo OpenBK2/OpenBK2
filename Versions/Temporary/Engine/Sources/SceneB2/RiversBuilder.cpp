@@ -790,7 +790,7 @@ void CTerraGen::AddAllRivers()
 	terrainInfo.rivers.clear();
 }*/
 
-inline const NDb::SVSOInstance* CTerraGen::FindRiver( int nID ) const
+const NDb::SVSOInstance* CTerraGen::FindRiver( int nID ) const
 {
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->rivers.begin(); it != pDesc->rivers.end(); ++it )
 	{

@@ -620,7 +620,7 @@ void CTerraGen::AddAllCrags()
 		AddCrag( &(*it), GetVSOSeed(&*it) );
 }
 
-inline const NDb::SVSOInstance* CTerraGen::FindCrag( int nID ) const
+const NDb::SVSOInstance* CTerraGen::FindCrag( int nID ) const
 {
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->crags.begin(); it != pDesc->crags.end(); ++it )
 	{
@@ -631,7 +631,7 @@ inline const NDb::SVSOInstance* CTerraGen::FindCrag( int nID ) const
 	return 0;
 }
 
-inline STerrainInfo::SCrag* CTerraGen::FindCragInfo( int nID )
+STerrainInfo::SCrag* CTerraGen::FindCragInfo( int nID )
 {
 	for ( std::list<STerrainInfo::SCrag>::iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
 	{
