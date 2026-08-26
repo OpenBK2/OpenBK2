@@ -166,5 +166,21 @@ endif()
 # stdafx.h itself, so dropping the PCH costs it only the parse.
 set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
+# GLightPerVertexSSE2.cpp drops the precompiled header for an unrelated reason,
+# and only a build with no optimisation needs it to.
+#
+# _mm_slli_si128 and _mm_srli_si128 are __always_inline__ wrappers around
+# __builtin_ia32_pslldqi128 and psrldqi128, which take the shift as `count * 8`
+# and require a genuine compile time constant. The call sites here already pass
+# a literal, but when the declaration arrives through a GCC precompiled header
+# and there is no optimisation pass to fold the multiply, the argument reaches
+# the builtin unfolded and GCC rejects it with "the last argument must be an
+# 8-bit immediate". Removing either the header or the -O0 makes it fold.
+#
+# Dropping the header is the one that does not change what the file compiles to,
+# so a Debug build stays steppable. Release never hit this, which is why it went
+# unnoticed: -O3 folds the multiply long before the builtin sees it.
+set_source_files_properties(GLightPerVertexSSE2.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+
 add_subdirectory(test)
 add_subdirectory(benchmark)
