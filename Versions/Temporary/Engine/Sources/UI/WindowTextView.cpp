@@ -87,7 +87,11 @@ bool CWindowTextView::InitText()
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( wszCustomText, 0 );
 
-	CTRect<float> rc = VirtualToScreen( &GetWindowRect() );
+	// GetWindowRect returns by value, so the pointer overload was being handed the
+	// address of a temporary, which only MSVC accepts. The two argument overload
+	// takes the source by const reference and says the same thing.
+	CTRect<float> rc;
+	VirtualToScreen( GetWindowRect(), &rc );
 	pGfxText->Generate( rc.Width() + 0.5f );
 
 	if ( !pInstance->bResizeOnTextSet )
