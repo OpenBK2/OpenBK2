@@ -9,6 +9,7 @@
 #include "ScenarioTracker.h"
 #include "System/Text.h"
 #include "3Dmotor/ScreenShot.h"
+#include "port/time.h"
 
 #include "GameX_export.h"
 
@@ -52,13 +53,10 @@ bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegame
 
 bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 )
 {
-	FILETIME fileTime1;
-	FILETIME fileTime2;
-	SystemTimeToFileTime( &save1.time, &fileTime1 );
-	SystemTimeToFileTime( &save2.time, &fileTime2 );
-	ULARGE_INTEGER val = *(ULARGE_INTEGER*)(&fileTime1);
-	ULARGE_INTEGER val2 = *(ULARGE_INTEGER*)(&fileTime2);
-	return val.QuadPart > val2.QuadPart;
+	// newest first, which is what converting both to FILETIME and comparing the two
+	// 64 bit values as unsigned did. The reversed operands are the descending order,
+	// not a change of sense.
+	return save2.time < save1.time;
 }
 
 // CInterfaceSaveLoadMenu
@@ -437,7 +435,7 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 
 	sg.wszName = wszSaveName;
 
-	GetLocalTime( &sg.time );
+	GetLocalSystemTime( &sg.time );
 
 	if ( nSelected >= 0 && nSelected < saves.size() ) 				//if replacing a save
 	{																													//delete old files and entry

@@ -258,8 +258,6 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 	// Get Saved Games list
 	std::string szPath = GetSavePath();
 	std::list<std::string>								names;
-	WIN32_FILE_ATTRIBUTE_DATA		fileAttr;
-	FILETIME										fileTimeLocal;
 	int													nNamePos, nExtPos;
 
 	NFile::GetDirectoryFiles( szPath.c_str(), "*.sav", &names, false );
@@ -286,9 +284,14 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 		// Get screenshot & info
 		sg.info.screenShot.Clear();
 
-		GetFileAttributesEx( sg.szFileName.c_str(), GetFileExInfoStandard, &fileAttr );
-		FileTimeToLocalFileTime( &fileAttr.ftLastWriteTime, &fileTimeLocal );
-		FileTimeToSystemTime( &fileTimeLocal, &sg.time );
+		// GetFileAttributesEx, FileTimeToLocalFileTime and FileTimeToSystemTime, in
+		// one call. The result was never checked here, and a file that cannot be
+		// stat'ed left the caller with whatever the previous iteration wrote, so
+		// zeroing it is the safer reading of the same code.
+		if ( !GetLocalSystemTime( &sg.time, NFile::GetLastWriteTime( sg.szFileName ) ) )
+		{
+			sg.time = SSystemTime();
+		}
 
 		// get extra info
 		sg.szInfoFileName = szPath + sg.szFileTitle + NSaveLoad::INFO_FILE_EXTENSION;
@@ -408,12 +411,12 @@ void GetReplayList( CReplays *pReplays )
 			replay.szFileName = szFullFileName.substr( nNamePos + 1, nExtPos - nNamePos - 1);
 			if ( NFile::DoesFileExist( szPath + replay.szFileName + REPLAY_EXTENSION ) )
 			{
-				WIN32_FILE_ATTRIBUTE_DATA fileAttr;
-				if ( GetFileAttributesEx( szFullFileName.c_str(), GetFileExInfoStandard, &fileAttr ) )
+				// GetFileAttributesEx returning FALSE skipped the replay entirely, and
+				// a zero last write time means the same thing here: the file could not
+				// be stat'ed.
+				const std::time_t timeWrite = NFile::GetLastWriteTime( szFullFileName );
+				if ( timeWrite != 0 && GetLocalSystemTime( &replay.timeFile, timeWrite ) )
 				{
-					FILETIME fileTimeLocal;
-					FileTimeToLocalFileTime( &fileAttr.ftLastWriteTime, &fileTimeLocal );
-					FileTimeToSystemTime( &fileTimeLocal, &replay.timeFile );
 					if ( SerializeReplayInfo( &replay.replayInfo, replay.szFileName, true ) )
 						pReplays->push_back( replay );
 				}

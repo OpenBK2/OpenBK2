@@ -3,6 +3,7 @@
 
 #include "InterfaceScreenBase.h"
 #include "CommandsHistory.h"
+#include "port/time.h"
 
 class CInterfaceReplaySaveLoad : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
@@ -12,7 +13,7 @@ private:
 	{
 		ZDATA
 		std::string												szName;
-		SYSTEMTIME										time;
+		SSystemTime										time;
 		CPtr<IWindow>									pItem;
 		SMultiplayerReplayInfo				info;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&time); f.Add(4,&pItem); f.Add(5,&info); return 0; }

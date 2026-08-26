@@ -5,6 +5,7 @@
 #include "UI/UI.h"
 #include "UI/BackgroundMutableTexture.h"
 #include "CommandsHistory.h"
+#include "port/time.h"
 
 namespace NDb
 {
@@ -94,7 +95,7 @@ struct SSavegameEntry
 	std::string					szFileName;
 	std::string					szInfoFileName;
 	std::string					szFileTitle;			//without path or extension
-	SYSTEMTIME			time;
+	SSystemTime			time;
 	CPtr< IWindow >	pWindow;
 	SSaveInfo				info;
 	int nID;
@@ -130,7 +131,7 @@ struct SReplayInfo
 {
 	ZDATA
 		std::string szFileName;
-		SYSTEMTIME timeFile;
+		SSystemTime timeFile;
 		SMultiplayerReplayInfo replayInfo;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szFileName); f.Add(3,&timeFile); f.Add(4,&replayInfo); return 0; }
 };

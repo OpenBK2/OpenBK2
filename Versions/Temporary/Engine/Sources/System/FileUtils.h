@@ -98,6 +98,10 @@ void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive 
 SYSTEM_EXPORT void DeleteDirectory( const std::string &szDir );
 
 SYSTEM_EXPORT bool DoesFileExist( const std::string &szFileName );
+// last write time of one named file, as CFileIterator reports it for an enumerated
+// one. 0 when the file cannot be stat'ed, which is what GetFileAttributesEx
+// returning FALSE left the caller's FILETIME as.
+SYSTEM_EXPORT std::time_t GetLastWriteTime( const std::string &szFileName );
 bool DoesFolderExist( const std::string &szFolderName );bool IsValidFileName( const std::string &szFileName );
 // is valid win32 file name
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );

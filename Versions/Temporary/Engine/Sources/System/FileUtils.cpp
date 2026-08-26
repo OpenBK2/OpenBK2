@@ -216,6 +216,17 @@ bool DoesFileExist( const std::string &szFileName )
 	return std::filesystem::is_regular_file( szFileName, ec );
 }
 
+std::time_t GetLastWriteTime( const std::string &szFileName )
+{
+	// boost::filesystem rather than std::filesystem, because the standard one hands
+	// back a file_time_type whose clock is unspecified before C++20 and so cannot be
+	// turned into a time_t portably. CFileIterator::GetLastWriteTime made the same
+	// choice for the same reason.
+	boost::system::error_code ec;
+	const std::time_t t = boost::filesystem::last_write_time( szFileName, ec );
+	return ec ? 0 : t;
+}
+
 bool DoesFolderExist( const std::string &szFolderName )
 {
 	std::error_code ec;
