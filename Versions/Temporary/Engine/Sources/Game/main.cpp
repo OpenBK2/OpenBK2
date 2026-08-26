@@ -37,6 +37,13 @@
 
 #include "port/debugging.h"
 
+#include <exception>
+#include <typeinfo>
+
+#if !BOOST_OS_WINDOWS
+#include <cxxabi.h>
+#endif
+
 #include <client/crashpad_client.h>
 #include <client/crash_report_database.h>
 #include <client/settings.h>
@@ -60,6 +67,7 @@ namespace NGameX
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
+static int RunGameGuarded( const std::vector<std::string> &arguments );
 static void StoreBuildInfo()
 {
 	const std::string szVersion = fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
@@ -92,6 +100,81 @@ namespace {
 		crashpad::CrashpadClient client;
 		return client.StartHandler(handler, db, metrics, "", "", {}, {}, true, false);
 	}
+}
+
+//! The name of the type currently being thrown, for the catch all below.
+//!
+//! DXVK is why this exists. dxvk::DxvkError does not derive from std::exception,
+//! so it has no what() to read and a plain catch ( ... ) could only report that
+//! something was thrown. The Itanium ABI can still name the type, and the name
+//! alone says which subsystem to go and look at.
+static std::string CurrentExceptionTypeName()
+{
+#if BOOST_OS_WINDOWS
+	// MSVC has no equivalent of __cxa_current_exception_type
+	return "unknown";
+#else
+	const std::type_info *pType = abi::__cxa_current_exception_type();
+	if ( pType == 0 )
+	{
+		return "unknown";
+	}
+	int nStatus = 0;
+	char *pszDemangled = abi::__cxa_demangle( pType->name(), 0, 0, &nStatus );
+	if ( pszDemangled == 0 )
+	{
+		// the mangled name is still better than nothing
+		return pType->name();
+	}
+	const std::string szName( pszDemangled );
+	free( pszDemangled );
+	return szName;
+#endif
+}
+
+//! Say that the game is stopping, everywhere someone might be looking.
+//!
+//! Three places on purpose. stderr always works, including before the console
+//! buffer exists and after the renderer has failed. csSystem reaches log.txt,
+//! which is what a user will be asked for. The message box is what the other
+//! startup failures in RunGame use, and is the only one of the three that a
+//! player launching from a desktop entry will ever see.
+static void ReportFatalError( const std::string &szWhat )
+{
+	const std::string szMessage = "Fatal: " + szWhat;
+
+	fmt::print( stderr, "{}\n", szMessage );
+	fflush( stderr );
+
+	if ( Singleton<IConsoleBuffer>() != 0 )
+	{
+		csSystem << CC_RED << szMessage.c_str() << endl;
+	}
+
+	MessageBox( 0, szMessage.c_str(), "Error", MB_OK | MB_ICONERROR );
+}
+
+//! Run the game, and turn anything thrown out of it into a report.
+//!
+//! Without this an exception that reaches the entry point calls std::terminate,
+//! which prints one line naming the type and aborts, taking the log, the message
+//! box and the exit code with it. That is what a DXVK initialisation failure did.
+static int RunGameGuarded( const std::vector<std::string> &arguments )
+{
+	try
+	{
+		return RunGame( arguments );
+	}
+	catch ( const std::exception &e )
+	{
+		ReportFatalError( fmt::format( "{}: {}", CurrentExceptionTypeName(), e.what() ) );
+	}
+	catch ( ... )
+	{
+		// Where DXVK lands. There is no message to be had, only the type.
+		ReportFatalError( fmt::format( "unhandled exception of type {}", CurrentExceptionTypeName() ) );
+	}
+	return 0xDEAD;
 }
 
 #if BOOST_OS_WINDOWS
@@ -128,7 +211,7 @@ static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
 // is now asked for by the one place that wants it.
 int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
 {
-	return RunGame( SplitCommandLine( lpCmdLine ) );
+	return RunGameGuarded( SplitCommandLine( lpCmdLine ) );
 }
 
 #else
@@ -136,7 +219,7 @@ int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
 int main( int argc, char *argv[] )
 {
 	// argv[0] is the program itself, which WinMain is not given either
-	return RunGame( std::vector<std::string>( argv + 1, argv + argc ) );
+	return RunGameGuarded( std::vector<std::string>( argv + 1, argv + argc ) );
 }
 
 #endif
