@@ -28,6 +28,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EDITOR "build editor" OFF)
 
+# Every engine module is a shared library and they are installed beside the
+# executable, which is where Windows looks by default and ELF does not. Recording
+# $ORIGIN means the installed game finds its own libraries without the caller
+# having to set LD_LIBRARY_PATH first.
+#
+# Appended rather than assigned, and set before anything else touches it, because
+# cmake/dxvk.cmake adds the directory DXVK was found in and both entries have to
+# survive.
+if(NOT WIN32)
+    list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN")
+endif()
+
 include(cmake/arch.cmake)
 
 # std::thread and std::condition_variable need an explicit threading

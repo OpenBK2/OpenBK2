@@ -74,6 +74,42 @@ if(WIN32)
                 $<TARGET_RUNTIME_DLLS:Game> $<TARGET_FILE_DIR:Game>
         COMMAND_EXPAND_LISTS
         VERBATIM)
+else()
+    # The same problem as the Windows branch above, and for the same reason:
+    # FetchContent builds whole distributions, so naming the pieces by hand goes
+    # stale. Boost is the one that bites today, since System links
+    # boost_filesystem and nothing was installing it, but the list is not
+    # something to maintain by hand.
+    #
+    # TARGET_RUNTIME_DLLS has no ELF counterpart, so this is the documented
+    # equivalent: resolve the closure at install time from the build tree copy of
+    # Game, which is the one carrying a RUNPATH that can find everything, and
+    # install whatever came from outside the system directories.
+    #
+    # The engine's own modules are resolved too and installed a second time over
+    # the copies their own install(TARGETS) put there. That is harmless, and
+    # cheaper than a rule that tries to tell them apart.
+    install(CODE "set(GAME_BINARY \"$<TARGET_FILE:Game>\")")
+    install(CODE [[
+        file(GET_RUNTIME_DEPENDENCIES
+             EXECUTABLES "${GAME_BINARY}"
+             RESOLVED_DEPENDENCIES_VAR resolved_runtime_deps
+             UNRESOLVED_DEPENDENCIES_VAR unresolved_runtime_deps
+             POST_EXCLUDE_REGEXES "^/lib" "^/usr/lib" "^/lib64" "^/usr/lib64")
+        foreach(dependency IN LISTS resolved_runtime_deps)
+            file(INSTALL
+                 DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+                 TYPE SHARED_LIBRARY
+                 FOLLOW_SYMLINK_CHAIN
+                 FILES "${dependency}")
+        endforeach()
+        # Reported rather than fatal: an unresolved name here is usually a system
+        # library the exclusions above did not match, which the loader will find
+        # anyway.
+        foreach(dependency IN LISTS unresolved_runtime_deps)
+            message(STATUS "not installed, expected from the system: ${dependency}")
+        endforeach()
+    ]])
 endif()
 add_version_info(Game)
 if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4)
