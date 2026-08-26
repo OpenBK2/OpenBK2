@@ -1,23 +1,40 @@
 #include "stdafx.h"
 
-#include <dinput.h>
 #include "Input/Input.h"
 #include "Input/GameMessage.h"
-#include "Misc/Win32Helper.h"
 
 #include <cstring>
 #include "Misc/StrProc.h"
 
 #include "port/debugging.h"
+#include "port/dinput.h"
 #include "port/time.h"
 
 #include <cstdint>
 
 #include <fmt/format.h>
 
+#if BOOST_OS_WINDOWS
+#include "Misc/Win32Helper.h"
+#else
+#include "System/SdlVideo.h"
+
+#include "port/window.h"
+
+#include <SDL3/SDL.h>
+
+#include <cstddef>
+#include <mutex>
+#endif
+
 static const int POV_RANGE_VALUE = 1000;
 static const int AXIS_RANGE_VALUE = 10000;
 static const int SAMPLE_BUFFER_SIZE = 1024;
+// WHEEL_DELTA: what DIPROP_GRANULARITY reports for the mouse wheel, and what one
+// notch is worth. Every bindconfigure of MOUSE_AXIS_Z is scaled against it.
+static const int MOUSE_WHEEL_GRANULARITY = 120;
+// as many buttons as SInputDataFormat below has room for
+static const int JOYSTICK_BUTTON_COUNT = 32;
 const uint32_t TIME_DIFF_DBL_CLK = 500;
 // DDSSOOOO
 #define INPUT_KEYID( vID, vOFFS )								( ( ( vID & 0xFF ) << 24 ) | ( vOFFS ) )
@@ -228,10 +245,21 @@ struct SInputDevice
 	std::string szName;
 	uint32_t dwDevType;
 	uint32_t dwFormatSize;
+#if BOOST_OS_WINDOWS
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiDevice;
+#else
+	// null for the keyboard and the mouse, which SDL reports without a handle
+	SDL_Joystick *pJoystick;
+	SDL_JoystickID joystickID;
+#endif
 	//
+#if BOOST_OS_WINDOWS
 	SInputDevice(): bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pdiDevice( 0 ) {  }
+#else
+	SInputDevice(): bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pJoystick( 0 ), joystickID( 0 ) {  }
+#endif
 };
+#if BOOST_OS_WINDOWS
 struct SInputDeviceEnum
 {
 	int nID;
@@ -241,6 +269,7 @@ struct SInputDeviceEnum
 
 	SInputDeviceEnum(): nID( 0 ), nNumControls( 0 ), szName( "" ) {}
 };
+#endif
 struct SInputDataFormat
 {
 	int32_t  lX;
@@ -267,7 +296,9 @@ static bool bInitialized = false;
 static bool bFocusCaptured = false;
 static bool bCoopLevelSet = false;
 static CDevicesList devices;
+#if BOOST_OS_WINDOWS
 static NWin32Helper::com_ptr<IDirectInput8> pdiInput;
+#endif
 ///
 static STime sLastEventTime = 0;
 static CEventList events;
@@ -277,27 +308,94 @@ static bool SetCoopLevel();
 static bool SetFocus( bool bFocus );
 static void ReleaseKeyboardState();
 static void ResyncDevice( const SInputDevice &sDevice );
+static void AddDeviceKeys( int nID, int nDevType );
+static void AddDeviceControl( int nDeviceID, int nDevType, int nOfs, EControlType eType, const std::string &szName );
+static std::string MakeDeviceEnumName( int nDevType );
+
+// The device layer, which is the only part of this file that differs between
+// platforms. Everything above it - the name table, the action registry, the
+// double click synthesis, the POV decomposition and the message list - is shared.
+//
+//! Open every device the machine has and register its controls. Called once.
+static bool OpenDevices( int nSampleBufferSize );
+//! Let go of them all, on the way out.
+static void CloseDevices();
+//! Take or give up whatever claim the platform makes on the devices.
+static bool AcquireDevices( bool bAcquire );
+//! Whether the game's window is the one the keyboard is going to.
+static bool IsWindowFocused();
+//! Give the platform a chance to move what the hardware has produced into
+//! whatever ReadDeviceData is going to read it out of.
+static void PumpDeviceEvents();
+//! The events buffered since the last call, ordered as the device produced
+//! them, up to *pdwElements of them. False when the device gave nothing usable,
+//! which is not an error: a device can be lost and re-acquired at any moment.
+static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects, unsigned long *pdwElements );
+//! The device's state right now, laid out by control offset, which is how
+//! ResyncDevice indexes it. The buffer is already sized to dwFormatSize.
+static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *pBuffer );
+//! The step between two reported values of an axis. One everywhere except the
+//! mouse wheel, which moves in notches.
+static float ReadControlGranularity( const SKey &sKey );
+//! What the driver calls this control, for the tutorial screen to show. Empty
+//! when the platform will not say.
+static std::string ReadControlLocalName( int nAction );
+
+#if BOOST_OS_WINDOWS
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize );
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice );
-static void AddDeviceKeys( int nID, int nDevType );
 static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext );
 static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lpdidObject, PVOID pContext );
+#endif
 
 //
 // Initialization / Deinitialization / message handling
 //
 
-// Инициализировать DirectInput
+// Инициализировать устройства ввода
 bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 {
-	HRESULT hRes;
-	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
-	
 	if ( bInitialized )
 		return true;
 
 	hWindow = hWnd;
 	bNonExclusiveMode = _bNonExclusiveMode;
+
+	if ( !OpenDevices( nSampleBufferSize ) )
+		return false;
+
+	bInitialized = true;
+	SetFocus( true );
+	
+	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+		ResyncDevice( *iTempDevice );
+
+	events.resize( SAMPLE_BUFFER_SIZE * devices.size() );
+	messages.clear();
+
+	return true;
+}
+
+bool DoneInput()
+{
+	if ( !bInitialized )
+		return true;
+
+	SetFocus( false );
+	CloseDevices();
+	devices.clear();
+	bInitialized = false;
+
+	return true;
+}
+
+#if BOOST_OS_WINDOWS
+
+// Открыть DirectInput и все его устройства
+static bool OpenDevices( int nSampleBufferSize )
+{
+	HRESULT hRes;
+	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
 
 	hRes = DirectInput8Create( GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)pdiInput.GetAddr(), 0 );
 	if( FAILED(hRes) )
@@ -353,30 +451,13 @@ bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 	}
 
 	pdiInput->EnumDevices( DI8DEVCLASS_GAMECTRL, EnumDevicesCallback, NULL, DIEDFL_ATTACHEDONLY );
-	
-	bInitialized = true;
-	SetFocus( true );
-	
-	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-		ResyncDevice( *iTempDevice );
-
-	events.resize( SAMPLE_BUFFER_SIZE * devices.size() );
-	messages.clear();
 
 	return true;
 }
 
-bool DoneInput()
+static void CloseDevices()
 {
-	if ( !bInitialized )
-		return true;
-
-	SetFocus( false );
-	devices.clear();
 	pdiInput = 0;
-	bInitialized = false;
-
-	return true;
 }
 
 static bool SetCoopLevel()
@@ -408,6 +489,68 @@ static bool SetCoopLevel()
 	return true;
 }
 
+static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects, unsigned long *pdwElements )
+{
+	if ( sDevice.bPoll )
+	{
+		if ( FAILED( sDevice.pdiDevice->Poll() ) )
+			sDevice.pdiDevice->Acquire();
+	}
+
+	const HRESULT hRes = sDevice.pdiDevice->GetDeviceData( sizeof( DIDEVICEOBJECTDATA ), pObjects, pdwElements, 0 );
+	if ( hRes == DI_BUFFEROVERFLOW )
+		sDevice.bNeedResync = true;
+	if ( SUCCEEDED( hRes ) )
+		return true;
+
+	sDevice.pdiDevice->Acquire();
+	return false;
+}
+
+static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *pBuffer )
+{
+	sDevice.pdiDevice->GetDeviceState( sDevice.dwFormatSize, &( ( *pBuffer )[0] ) );
+}
+
+static float ReadControlGranularity( const SKey &sKey )
+{
+	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
+		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
+			continue;
+
+		DIPROPDWORD diProp;
+		diProp.diph.dwSize = sizeof( DIPROPDWORD );
+		diProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+		diProp.diph.dwHow = DIPH_BYOFFSET;
+		diProp.diph.dwObj = INPUT_GETACTIONOFFS( sKey.nAction );
+		HRESULT hRes = iTempDevice->pdiDevice->GetProperty( DIPROP_GRANULARITY, (DIPROPHEADER*)&diProp );
+		if ( SUCCEEDED(hRes) )
+			return (float)diProp.dwData;
+	}
+
+	return 1.0f;
+}
+
+static std::string ReadControlLocalName( int nAction )
+{
+	const SKey &sKey = actionIDs[nAction];
+
+	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
+		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
+			continue;
+		DIDEVICEOBJECTINSTANCE objInstance;
+		memset( &objInstance, 0, sizeof(objInstance) );
+		objInstance.dwSize = sizeof( objInstance );
+		HRESULT hRes = iTempDevice->pdiDevice->GetObjectInfo( &objInstance, INPUT_GETACTIONOFFS(nAction), DIPH_BYOFFSET );
+		return SUCCEEDED(hRes) ? objInstance.tszName : "";
+	}
+	return "";
+}
+
+#endif // BOOST_OS_WINDOWS
+
 // выкачать все event'ы, произошедшие с последней выкачки
 struct SSeqNumberLessThenFunctional
 {
@@ -434,14 +577,12 @@ static void FillEventInfo( SInputEvent &sEvent, SKey &sKey, const DIDEVICEOBJECT
 static uint32_t dwPrevPump;
 void PumpMessages( bool bFocus )
 {
-	HRESULT hRes;
-	
 	if ( !bInitialized )
 		return;
 
 	// Background simulation may keep bFocus true after the window is deactivated.
-	// DirectInput focus must still follow the actual foreground window.
-	SetFocus( bFocus && GetForegroundWindow() == hWindow );
+	// Input focus must still follow the window the keyboard is actually going to.
+	SetFocus( bFocus && IsWindowFocused() );
 	if ( !bFocusCaptured )
 		return;
 
@@ -450,6 +591,8 @@ void PumpMessages( bool bFocus )
 		return;
 	dwPrevPump = dwTest;
 
+	PumpDeviceEvents();
+
 	int nNumEvents = 0;
 	events.resize( SAMPLE_BUFFER_SIZE * devices.size() * 2 );
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
@@ -457,17 +600,7 @@ void PumpMessages( bool bFocus )
 		unsigned long dwElements = SAMPLE_BUFFER_SIZE;
 		DIDEVICEOBJECTDATA didObjects[SAMPLE_BUFFER_SIZE];
 
-		if ( iTempDevice->bPoll )
-		{
-			hRes = iTempDevice->pdiDevice->Poll();
-			if ( FAILED( hRes ) )
-				iTempDevice->pdiDevice->Acquire();
-		}
-
-		hRes = iTempDevice->pdiDevice->GetDeviceData( sizeof( DIDEVICEOBJECTDATA ), didObjects, &dwElements, 0 );
-		if ( hRes == DI_BUFFEROVERFLOW )
-			iTempDevice->bNeedResync = true;
-    if ( SUCCEEDED( hRes ) ) 
+		if ( ReadDeviceData( *iTempDevice, didObjects, &dwElements ) )
 		{
 			for ( int nTemp = 0; nTemp < dwElements; ++nTemp )
 			{
@@ -512,8 +645,6 @@ void PumpMessages( bool bFocus )
 				}
 			}
 		}
-		else
-			iTempDevice->pdiDevice->Acquire();
 	}
 	events.resize( nNumEvents );
 	///
@@ -568,7 +699,7 @@ static void ResyncDevice( const SInputDevice &sDevice )
 	std::vector<uint8_t> sBuffer;
 	sBuffer.resize( sDevice.dwFormatSize );
 
-	sDevice.pdiDevice->GetDeviceState( sDevice.dwFormatSize, &( sBuffer[0] ) );
+	ReadDeviceState( sDevice, &sBuffer );
 
 	for ( std::unordered_map<uint32_t, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); iTemp++ )
 	{
@@ -657,8 +788,6 @@ int GetControlID( const std::string &sCommand )
 
 void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 {
-	DIPROPDWORD diProp;
-
 	if ( actionIDs.find( nAction ) == actionIDs.end() )
 	{
 		*pcType = CT_UNKNOWN;
@@ -677,25 +806,8 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 			*pfGranularity = POV_RANGE_VALUE;
 			return;
 		default:
-			*pfGranularity = 1.0f;
+			*pfGranularity = ReadControlGranularity( sKey );
 			break;
-	}
-
-	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-	{
-		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
-			continue;
-
-		diProp.diph.dwSize = sizeof( DIPROPDWORD );
-		diProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
-		diProp.diph.dwHow = DIPH_BYOFFSET;
-		diProp.diph.dwObj = INPUT_GETACTIONOFFS( nAction );
-		HRESULT hRes = iTempDevice->pdiDevice->GetProperty( DIPROP_GRANULARITY, (DIPROPHEADER*)&diProp );
-		if ( SUCCEEDED(hRes) )
-		{
-			*pfGranularity = (float)diProp.dwData;
-			break;
-		}
 	}
 
 	return;
@@ -705,19 +817,8 @@ std::string GetControlLocalName( int nAction )
 {
 	if ( actionIDs.find( nAction ) == actionIDs.end() )
 		return "";
-	const SKey &sKey = actionIDs[nAction];
 
-	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-	{
-		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
-			continue;
-		DIDEVICEOBJECTINSTANCE objInstance;
-		memset( &objInstance, 0, sizeof(objInstance) );
-		objInstance.dwSize = sizeof( objInstance );
-		HRESULT hRes = iTempDevice->pdiDevice->GetObjectInfo( &objInstance, INPUT_GETACTIONOFFS(nAction), DIPH_BYOFFSET );
-		return SUCCEEDED(hRes) ? objInstance.tszName : "";
-	}
-	return "";
+	return ReadControlLocalName( nAction );
 }
 
 
@@ -728,44 +829,63 @@ std::string GetControlLocalName( int nAction )
 // получит / отдать контроль над девайсами
 static bool SetFocus( bool bFocus )
 {
-	HRESULT hRes;
-
 	if ( !bInitialized )
 		return false;
 	if ( bFocusCaptured == bFocus )
 		return true;
 	if ( bFocus )
 	{
-		if ( !SetCoopLevel() )
+		if ( !AcquireDevices( true ) )
 			return false;
 
 		for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-		{
-			hRes = iTempDevice->pdiDevice->Acquire();
-			if( FAILED( hRes ) )
-				return false;
-
 			ResyncDevice( *iTempDevice );
-		}
 	}
 	else
 	{
-		// Key-up events are not delivered after DirectInput loses foreground access.
-		// Release every tracked keyboard key so Alt+Tab cannot leave a bind active.
+		// Key-up events are not delivered once the window stops being the one the
+		// keyboard goes to. Release every tracked keyboard key so Alt+Tab cannot
+		// leave a bind active.
 		ReleaseKeyboardState();
 
-		for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-		{
-			hRes = iTempDevice->pdiDevice->Unacquire();
-			if ( FAILED( hRes ) )
-				return false;
-		}
+		if ( !AcquireDevices( false ) )
+			return false;
 	}
 
 	bFocusCaptured = bFocus;
 
 	return true;
 }
+
+#if BOOST_OS_WINDOWS
+
+static bool AcquireDevices( bool bAcquire )
+{
+	if ( bAcquire && !SetCoopLevel() )
+		return false;
+
+	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
+		const HRESULT hRes = bAcquire ? iTempDevice->pdiDevice->Acquire() : iTempDevice->pdiDevice->Unacquire();
+		if ( FAILED( hRes ) )
+			return false;
+	}
+
+	return true;
+}
+
+static bool IsWindowFocused()
+{
+	return GetForegroundWindow() == hWindow;
+}
+
+static void PumpDeviceEvents()
+{
+	// Nothing to do: a DirectInput device fills its own buffer whether or not
+	// anyone asks, and GetDeviceData reads it straight out.
+}
+
+#endif
 
 static void ReleaseKeyboardState()
 {
@@ -792,6 +912,8 @@ static void ReleaseKeyboardState()
 		sKey.dwLastPressed = 0;
 	}
 }
+
+#if BOOST_OS_WINDOWS
 
 // добавить информацию про девайс
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize )
@@ -860,25 +982,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	
 	SInputDeviceEnum sDeviceEnum;
 	sDeviceEnum.nID = siDevice.nID;
-	switch( GET_DIDEVICE_TYPE( didInstance.dwDevType ) )
-	{
-	case DI8DEVTYPE_GAMEPAD:
-		sDeviceEnum.szName = fmt::format( "GAMEPAD{}", nCounter[0] );
-		nCounter[0]++;
-		break;
-	case DI8DEVTYPE_DRIVING:
-		sDeviceEnum.szName = fmt::format( "DRIVING{}", nCounter[1] );
-		nCounter[1]++;
-		break;
-	case DI8DEVTYPE_JOYSTICK:
-		sDeviceEnum.szName = fmt::format( "JOYSTICK{}", nCounter[2] );
-		nCounter[2]++;
-		break;
-	default:
-		sDeviceEnum.szName = fmt::format( "GAMECTRL{}", nCounter[3] );
-		nCounter[3]++;
-		break;
-	}
+	sDeviceEnum.szName = MakeDeviceEnumName( GET_DIDEVICE_TYPE( didInstance.dwDevType ) );
 
 	hRes = pdiDevice->EnumObjects( EnumDeviceObjectsCallback, &sDeviceEnum, DIDFT_ALL );
 	if ( FAILED(hRes) )
@@ -922,9 +1026,11 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	}
 
 	devices.push_back( siDevice );
-	
+
 	return;
 }
+
+#endif // BOOST_OS_WINDOWS
 
 // Занести в hash действия для данного устройства
 static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlType cType, const char *pszName )
@@ -937,6 +1043,64 @@ static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlT
 	sActionKey.nDevType = nDevType;
 	nameIDs[ pszName ] = nAction;
 	idNames[ nAction ] = pszName;
+}
+
+// Имя устройства, под которым будут перечислены его контролы
+//
+// The counters are per kind, so a second gamepad is GAMEPAD1. A user's cfg binds
+// these names, so the numbering is the order the devices were enumerated in and
+// nothing else: plug a stick in after the config has been read and its binds do
+// not attach.
+static std::string MakeDeviceEnumName( int nDevType )
+{
+	switch( nDevType )
+	{
+	case DI8DEVTYPE_GAMEPAD:
+		return fmt::format( "GAMEPAD{}", nCounter[0]++ );
+	case DI8DEVTYPE_DRIVING:
+		return fmt::format( "DRIVING{}", nCounter[1]++ );
+	case DI8DEVTYPE_JOYSTICK:
+		return fmt::format( "JOYSTICK{}", nCounter[2]++ );
+	default:
+		return fmt::format( "GAMECTRL{}", nCounter[3]++ );
+	}
+}
+
+// Занести в hash один контрол игрового устройства
+//
+// A POV gets two more actions beside itself, the X and Y an axis binding reads;
+// PumpMessages fills them from the cosine and sine of the reported angle.
+static void AddDeviceControl( int nDeviceID, int nDevType, int nOfs, EControlType eType, const std::string &szName )
+{
+	SKey sKey;
+	sKey.eType = eType;
+	sKey.nAction = INPUT_KEYID( nDeviceID, nOfs );
+	sKey.nDevType = nDevType;
+
+	nameIDs[szName] = sKey.nAction;
+	idNames[ sKey.nAction ] = szName;
+	actionIDs[ sKey.nAction ] = sKey;
+
+	DebugTrace("INPUT:\tNew control found! Add new control %s\n", szName.c_str() );
+
+	if ( eType != CT_POV )
+		return;
+
+	sKey.nAction = INPUT_KEYIDEX( nDeviceID, nOfs, 1 );
+	sKey.ePOVAxis = PA_X;
+	nameIDs[szName + "_X"] = sKey.nAction;
+	idNames[ sKey.nAction ] = szName + "_X";
+	actionIDs[ sKey.nAction ] = sKey;
+
+	DebugTrace("INPUT:\tNew control found! Add new control %s\n", ( szName + "_X" ).c_str() );
+
+	sKey.nAction = INPUT_KEYIDEX( nDeviceID, nOfs, 2 );
+	sKey.ePOVAxis = PA_Y;
+	nameIDs[szName + "_Y"] = sKey.nAction;
+	idNames[ sKey.nAction ] = szName + "_Y";
+	actionIDs[ sKey.nAction ] = sKey;
+
+	DebugTrace("INPUT:\tNew control found! Add new control %s\n", ( szName + "_Y" ).c_str() );
 }
 
 static void AddDeviceKeys( int nID, int nDevType )
@@ -958,6 +1122,8 @@ static void AddDeviceKeys( int nID, int nDevType )
 		nTemp++;
 	}
 }
+
+#if BOOST_OS_WINDOWS
 
 static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext )
 {
@@ -1085,42 +1251,635 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	psDeviceEnum->nNumControls++;
 	psDeviceEnum->vectorObjects.push_back( diObjectFormat );
 
-	SKey sKey;
-	sKey.eType = eType;
-	sKey.nAction = INPUT_KEYID( psDeviceEnum->nID, diObjectFormat.dwOfs );
-	sKey.nDevType = GET_DIDEVICE_TYPE( diObjectFormat.dwType );
-
-	nameIDs[szControlName] = sKey.nAction;
-	idNames[ sKey.nAction ] = szControlName;
-	actionIDs[ INPUT_KEYID( psDeviceEnum->nID, diObjectFormat.dwOfs ) ] = sKey;
-
-	DebugTrace("INPUT:\tNew control found! Add new control %s\n", szControlName );
-
-	if ( eType == CT_POV )
-	{
-		SKey sKey;
-		sKey.eType = eType;
-		sKey.nDevType = GET_DIDEVICE_TYPE( diObjectFormat.dwType );
-
-		sKey.nAction = INPUT_KEYIDEX( psDeviceEnum->nID, diObjectFormat.dwOfs, 1 );
-		sKey.ePOVAxis = PA_X;
-		nameIDs[szControlName + "_X"] = sKey.nAction;
-		idNames[ sKey.nAction ] = szControlName + "_X";
-		actionIDs[ INPUT_KEYIDEX( psDeviceEnum->nID, diObjectFormat.dwOfs, 1 ) ] = sKey;
-
-		DebugTrace("INPUT:\tNew control found! Add new control %s\n", szControlName + "_X" );
-
-		sKey.nAction = INPUT_KEYIDEX( psDeviceEnum->nID, diObjectFormat.dwOfs, 2 );
-		sKey.ePOVAxis = PA_Y;
-		nameIDs[szControlName + "_Y"] = sKey.nAction;
-		idNames[ sKey.nAction ] = szControlName + "_Y";
-		actionIDs[ INPUT_KEYIDEX( psDeviceEnum->nID, diObjectFormat.dwOfs, 2 ) ] = sKey;
-
-		DebugTrace("INPUT:\tNew control found! Add new control %s\n", szControlName + "_Y" );
-	}
+	AddDeviceControl( psDeviceEnum->nID, GET_DIDEVICE_TYPE( diObjectFormat.dwType ), diObjectFormat.dwOfs, eType, szControlName );
 
 	return DIENUM_CONTINUE;
 }
+
+#endif // BOOST_OS_WINDOWS
+
+#if !BOOST_OS_WINDOWS
+
+//
+// Устройства ввода поверх SDL
+//
+// DirectInput hands out a per-device ring buffer that the driver fills behind
+// the application's back and GetDeviceData drains on demand. SDL's event queue
+// is the same thing: the backend appends every transition with a timestamp of
+// its own and nothing is lost between two drains. What it is not is a second
+// queue - there is one, and System/WinFrame is already polling it for the
+// window and for the logical keys the UI reads.
+//
+// So this does not poll. It registers an event watch, which SDL calls as each
+// event is pushed, and copies the device events it cares about into a buffer of
+// its own. WinFrame goes on polling and sees everything it saw before, and
+// PumpMessages below drains this buffer on exactly the schedule GetDeviceData
+// was drained on. The watch may run on whichever thread pumped the event, hence
+// the mutex; watchMutex covers watchedEvents, dwWatchSequence, nMouseState and
+// bWatchOverflow, and nothing else.
+//
+// Immediate state - SDL_GetKeyboardState and friends - is deliberately not the
+// path here. Every SMessage this module emits is an edge rather than a level,
+// the double click synthesis in PumpMessages needs the time a key went down,
+// and the accumulators in Input/BindInternal.h integrate power over the gap
+// between two event timestamps. Polled state carries none of that and would
+// drop any press shorter than a frame. It is used only by ReadDeviceState,
+// which asks what is held down right now, which is what it wants to know.
+
+namespace
+{
+
+//! One buffered event, tagged with the device that produced it.
+struct SWatchedEvent
+{
+	int nDeviceID;
+	DIDEVICEOBJECTDATA did;
+};
+
+std::mutex watchMutex;
+std::vector<SWatchedEvent> watchedEvents;
+uint32_t dwWatchSequence = 0;
+bool bWatchOverflow = false;
+
+// The mouse axes as DIPROPAXISMODE_ABS reported them: running totals rather than
+// deltas, because FillEventInfo takes the difference between an event's value
+// and the last one it saw. The wheel is one of them, which is why it has to be
+// accumulated as well rather than passed straight through.
+int32_t nMouseState[3] = { 0, 0, 0 };
+
+int nKeyboardDeviceID = -1;
+int nMouseDeviceID = -1;
+
+//! An SDL event timestamp on the clock GetCurrentTimeMilliseconds returns.
+//!
+//! SDL counts nanoseconds from its own initialisation and the engine counts
+//! milliseconds from an unspecified steady_clock epoch, so the two cannot be
+//! compared. Converting through the event's age rather than through the epochs
+//! keeps the spacing between two events in a frame, which is what the
+//! accumulators integrate over.
+uint32_t EventTimeMilliseconds( uint64_t nTimestampNs )
+{
+	const uint64_t nNowNs = SDL_GetTicksNS();
+	const uint64_t nAgeNs = nNowNs > nTimestampNs ? nNowNs - nTimestampNs : 0;
+	return GetCurrentTimeMilliseconds() - (uint32_t)( nAgeNs / 1000000 );
+}
+
+//! A stick axis on the range AddDeviceEnum asks DirectInput for.
+//!
+//! Not cosmetic. POWER_MIN_LIMIT in Input/BindInternal.h is an absolute
+//! threshold on the accumulated power, and every bindconfigure coefficient a cfg
+//! sets is calibrated against this range, so reporting SDL's own would move both
+//! by a factor of three.
+int32_t ScaleJoystickAxis( int16_t nValue )
+{
+	return ( (int32_t)nValue * AXIS_RANGE_VALUE ) / 32767;
+}
+
+//! A hat position as a POV angle in hundredths of a degree, clockwise from up,
+//! which is how DirectInput reports one. 0xFFFFFFFF is centred.
+uint32_t HatToPov( uint8_t nHat )
+{
+	switch ( nHat )
+	{
+	case SDL_HAT_UP: return 0;
+	case SDL_HAT_RIGHTUP: return 4500;
+	case SDL_HAT_RIGHT: return 9000;
+	case SDL_HAT_RIGHTDOWN: return 13500;
+	case SDL_HAT_DOWN: return 18000;
+	case SDL_HAT_LEFTDOWN: return 22500;
+	case SDL_HAT_LEFT: return 27000;
+	case SDL_HAT_LEFTUP: return 31500;
+	default: return 0xFFFFFFFF;
+	}
+}
+
+//! The control offset of a stick axis within SInputDataFormat, or -1 for an axis
+//! past the six that format names. DirectInput gave those to sliders, which
+//! EnumDeviceObjectsCallback declines to register, so they are dropped here too.
+int JoystickAxisOffset( int nAxis )
+{
+	switch ( nAxis )
+	{
+	case 0: return (int)offsetof( SInputDataFormat, lX );
+	case 1: return (int)offsetof( SInputDataFormat, lY );
+	case 2: return (int)offsetof( SInputDataFormat, lZ );
+	case 3: return (int)offsetof( SInputDataFormat, lRX );
+	case 4: return (int)offsetof( SInputDataFormat, lRY );
+	case 5: return (int)offsetof( SInputDataFormat, lRZ );
+	default: return -1;
+	}
+}
+
+//! The device type DirectInput would have reported, which decides the name
+//! prefix a cfg binds: GAMEPAD0, DRIVING0, JOYSTICK0 or GAMECTRL0.
+int JoystickDeviceType( SDL_JoystickType eType )
+{
+	switch ( eType )
+	{
+	case SDL_JOYSTICK_TYPE_GAMEPAD: return DI8DEVTYPE_GAMEPAD;
+	case SDL_JOYSTICK_TYPE_WHEEL: return DI8DEVTYPE_DRIVING;
+	case SDL_JOYSTICK_TYPE_ARCADE_STICK:
+	case SDL_JOYSTICK_TYPE_FLIGHT_STICK: return DI8DEVTYPE_JOYSTICK;
+	default: return DI8DEVTYPE_DEVICE;
+	}
+}
+
+//! The device an SDL joystick event came from, or null once it has been removed.
+SInputDevice *FindJoystick( SDL_JoystickID id )
+{
+	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
+		if ( iTempDevice->pJoystick != 0 && iTempDevice->joystickID == id )
+		{
+			return &( *iTempDevice );
+		}
+	}
+	return 0;
+}
+
+//! Buffer one transition. Called with watchMutex held.
+void PushEvent( int nDeviceID, uint32_t dwOfs, uint32_t dwData, uint64_t nTimestampNs )
+{
+	if ( nDeviceID < 0 )
+	{
+		return;
+	}
+	// The same bound DIPROP_BUFFERSIZE puts on a DirectInput device, and the
+	// same consequence when it is reached: the transition is lost and every
+	// device is resynced from its current state, rather than the buffer growing
+	// without limit. ReadDeviceData below is what acts on the flag.
+	if ( watchedEvents.size() >= (size_t)SAMPLE_BUFFER_SIZE * devices.size() )
+	{
+		bWatchOverflow = true;
+		return;
+	}
+
+	SWatchedEvent sEvent;
+	sEvent.nDeviceID = nDeviceID;
+	sEvent.did.dwOfs = dwOfs;
+	sEvent.did.dwData = dwData;
+	sEvent.did.dwTimeStamp = EventTimeMilliseconds( nTimestampNs );
+	// One counter across every device, because PumpMessages sorts the events of
+	// all of them together and a per-device counter would interleave wrongly.
+	sEvent.did.dwSequence = dwWatchSequence++;
+	watchedEvents.push_back( sEvent );
+}
+
+bool SDLCALL EventWatch( void *pUserData, SDL_Event *pEvent )
+{
+	std::lock_guard<std::mutex> lock( watchMutex );
+
+	switch ( pEvent->type )
+	{
+	case SDL_EVENT_KEY_DOWN:
+	case SDL_EVENT_KEY_UP:
+	{
+		// Auto repeat is the window system's, not the keyboard's. A DirectInput
+		// device reports one transition down and one up however long a key is
+		// held, and the bindings are written against that: a repeat here would
+		// re-fire every event bind for as long as the key was down.
+		if ( pEvent->key.repeat )
+		{
+			break;
+		}
+		const int nKey = SdlScancodeToDirectInputKey( pEvent->key.scancode );
+		if ( nKey != 0 )
+		{
+			PushEvent( nKeyboardDeviceID, nKey, pEvent->key.down ? 0x80 : 0, pEvent->key.timestamp );
+		}
+		break;
+	}
+
+	case SDL_EVENT_MOUSE_MOTION:
+		if ( pEvent->motion.xrel != 0.0f )
+		{
+			nMouseState[0] += (int32_t)pEvent->motion.xrel;
+			PushEvent( nMouseDeviceID, DIMOFS_X, (uint32_t)nMouseState[0], pEvent->motion.timestamp );
+		}
+		if ( pEvent->motion.yrel != 0.0f )
+		{
+			nMouseState[1] += (int32_t)pEvent->motion.yrel;
+			PushEvent( nMouseDeviceID, DIMOFS_Y, (uint32_t)nMouseState[1], pEvent->motion.timestamp );
+		}
+		break;
+
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+	case SDL_EVENT_MOUSE_BUTTON_UP:
+	{
+		// The button's own count is ignored: the double click a bind can name is
+		// synthesized in PumpMessages from TIME_DIFF_DBL_CLK, so that a cfg
+		// written against the Windows build means the same thing here.
+		const int nOfs = SdlMouseButtonToOffset( pEvent->button.button );
+		if ( nOfs >= 0 )
+		{
+			PushEvent( nMouseDeviceID, nOfs, pEvent->button.down ? 0x80 : 0, pEvent->button.timestamp );
+		}
+		break;
+	}
+
+	case SDL_EVENT_MOUSE_WHEEL:
+	{
+		// SDL counts notches and DirectInput counts a notch as WHEEL_DELTA, which
+		// is what ReadControlGranularity reports and what every bindconfigure of
+		// MOUSE_AXIS_Z is scaled against.
+		float fDelta = pEvent->wheel.y;
+		if ( pEvent->wheel.direction == SDL_MOUSEWHEEL_FLIPPED )
+		{
+			fDelta = -fDelta;
+		}
+		if ( fDelta != 0.0f )
+		{
+			nMouseState[2] += (int32_t)( fDelta * MOUSE_WHEEL_GRANULARITY );
+			PushEvent( nMouseDeviceID, DIMOFS_Z, (uint32_t)nMouseState[2], pEvent->wheel.timestamp );
+		}
+		break;
+	}
+
+	case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+	{
+		const SInputDevice *pDevice = FindJoystick( pEvent->jaxis.which );
+		const int nOfs = JoystickAxisOffset( pEvent->jaxis.axis );
+		if ( pDevice != 0 && nOfs >= 0 )
+		{
+			PushEvent( pDevice->nID, nOfs, (uint32_t)ScaleJoystickAxis( pEvent->jaxis.value ), pEvent->jaxis.timestamp );
+		}
+		break;
+	}
+
+	case SDL_EVENT_JOYSTICK_HAT_MOTION:
+	{
+		// SInputDataFormat has room for one POV, so a second hat is not reported.
+		const SInputDevice *pDevice = FindJoystick( pEvent->jhat.which );
+		if ( pDevice != 0 && pEvent->jhat.hat == 0 )
+		{
+			PushEvent( pDevice->nID, (uint32_t)offsetof( SInputDataFormat, lPOV ), HatToPov( pEvent->jhat.value ),
+			           pEvent->jhat.timestamp );
+		}
+		break;
+	}
+
+	case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+	case SDL_EVENT_JOYSTICK_BUTTON_UP:
+	{
+		const SInputDevice *pDevice = FindJoystick( pEvent->jbutton.which );
+		if ( pDevice != 0 && pEvent->jbutton.button < JOYSTICK_BUTTON_COUNT )
+		{
+			PushEvent( pDevice->nID, (uint32_t)( offsetof( SInputDataFormat, bButton ) + pEvent->jbutton.button ),
+			           pEvent->jbutton.down ? 0x80 : 0, pEvent->jbutton.timestamp );
+		}
+		break;
+	}
+
+	default:
+		break;
+	}
+
+	// The watch is an observer. Returning true leaves the event on the queue for
+	// System/WinFrame to poll, which is where the window and the UI's keys come
+	// from; filtering it out here would take those with it.
+	return true;
+}
+
+//! Register the keyboard and the mouse, which SDL reports without a handle.
+void AddSystemDevice( int nDevType, uint32_t dwFormatSize, const char *pszName, int *pnDeviceID )
+{
+	SInputDevice siDevice;
+	siDevice.nID = devices.size();
+	siDevice.szName = pszName;
+	siDevice.dwDevType = nDevType;
+	siDevice.dwFormatSize = dwFormatSize;
+
+	AddDeviceKeys( siDevice.nID, nDevType );
+
+	*pnDeviceID = siDevice.nID;
+	devices.push_back( siDevice );
+}
+
+//! Register one stick, and synthesize a control name for each of its axes, hats
+//! and buttons the way EnumDeviceObjectsCallback does on Windows.
+void AddJoystickDevice( SDL_Joystick *pJoystick )
+{
+	SInputDevice siDevice;
+	siDevice.nID = devices.size();
+	const char *pszJoystickName = SDL_GetJoystickName( pJoystick );
+	siDevice.szName = pszJoystickName != 0 ? pszJoystickName : "";
+	siDevice.dwDevType = JoystickDeviceType( SDL_GetJoystickType( pJoystick ) );
+	siDevice.dwFormatSize = sizeof( SInputDataFormat );
+	siDevice.pJoystick = pJoystick;
+	siDevice.joystickID = SDL_GetJoystickID( pJoystick );
+
+	const int nDevType = GET_DIDEVICE_TYPE( siDevice.dwDevType );
+	const std::string szDeviceName = MakeDeviceEnumName( nDevType );
+
+	DebugTrace( "INPUT: New device found! Add new device %s as %s\n", siDevice.szName.c_str(), szDeviceName.c_str() );
+
+	// The axis suffixes are DirectInput's object names, in its own order, because
+	// that is what a cfg binds. SDL numbers a stick's axes rather than naming
+	// them, and on every device that reports six the numbering is the same one.
+	static const char *pszAxisSuffix[] = { "_AXIS_X", "_AXIS_Y", "_AXIS_Z", "_AXIS_RX", "_AXIS_RY", "_AXIS_RZ" };
+	const int nAxes = SDL_GetNumJoystickAxes( pJoystick );
+	for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
+	{
+		const int nOfs = JoystickAxisOffset( nAxis );
+		if ( nOfs < 0 )
+		{
+			continue;
+		}
+		AddDeviceControl( siDevice.nID, nDevType, nOfs, CT_LIMAXIS, szDeviceName + pszAxisSuffix[nAxis] );
+	}
+
+	if ( SDL_GetNumJoystickHats( pJoystick ) > 0 )
+	{
+		AddDeviceControl( siDevice.nID, nDevType, (int)offsetof( SInputDataFormat, lPOV ), CT_POV,
+		                  szDeviceName + "_POV" );
+	}
+
+	const int nButtons = SDL_GetNumJoystickButtons( pJoystick );
+	for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
+	{
+		AddDeviceControl( siDevice.nID, nDevType, (int)( offsetof( SInputDataFormat, bButton ) + nButton ), CT_KEY,
+		                  szDeviceName + fmt::format( "_BUTTON{}", nButton ) );
+	}
+
+	devices.push_back( siDevice );
+}
+
+}
+
+static bool OpenDevices( int nSampleBufferSize )
+{
+	// nSampleBufferSize sets DIPROP_BUFFERSIZE on Windows. Here the buffer is
+	// SDL's own event queue, which grows as it needs to, and the cap PushEvent
+	// applies is derived from SAMPLE_BUFFER_SIZE like the keyboard's is there.
+	(void)nSampleBufferSize;
+
+	if ( !NSdl::EnsureVideo() )
+	{
+		return false;
+	}
+
+	AddSystemDevice( DI8DEVTYPE_MOUSE, DIMOUSESTATE2_SIZE, "System Mouse", &nMouseDeviceID );
+	AddSystemDevice( DI8DEVTYPE_KEYBOARD, DIKEYBOARDSTATE_SIZE, "System Keyboard", &nKeyboardDeviceID );
+
+	// A machine with no stick attached is the normal case, so a joystick
+	// subsystem that will not start is not a reason to fail: the game is
+	// playable on the keyboard and the mouse, which are already registered.
+	//
+	// Enumerated once, as DirectInput's EnumDevices was. A stick plugged in
+	// later is not picked up, because the names here are positional - GAMEPAD0
+	// is whichever gamepad was first - and a cfg that has already been read has
+	// resolved those names to action ids that cannot be handed to a new device.
+	if ( NSdl::EnsureJoystick() )
+	{
+		int nCount = 0;
+		SDL_JoystickID *pIDs = SDL_GetJoysticks( &nCount );
+		if ( pIDs != 0 )
+		{
+			for ( int i = 0; i < nCount; ++i )
+			{
+				SDL_Joystick *pJoystick = SDL_OpenJoystick( pIDs[i] );
+				if ( pJoystick != 0 )
+				{
+					AddJoystickDevice( pJoystick );
+				}
+			}
+			SDL_free( pIDs );
+		}
+		SDL_SetJoystickEventsEnabled( true );
+	}
+
+	if ( !SDL_AddEventWatch( EventWatch, 0 ) )
+	{
+		csSystem << CC_RED << "Cannot watch SDL input events: " << SDL_GetError() << endl;
+		return false;
+	}
+
+	return true;
+}
+
+static void CloseDevices()
+{
+	SDL_RemoveEventWatch( EventWatch, 0 );
+
+	{
+		std::lock_guard<std::mutex> lock( watchMutex );
+		watchedEvents.clear();
+		bWatchOverflow = false;
+	}
+
+	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
+		if ( iTempDevice->pJoystick != 0 )
+		{
+			SDL_CloseJoystick( iTempDevice->pJoystick );
+			iTempDevice->pJoystick = 0;
+		}
+	}
+
+	nKeyboardDeviceID = -1;
+	nMouseDeviceID = -1;
+}
+
+static bool SetCoopLevel()
+{
+	// SDL has no cooperative level to set. Nor is one needed: SetCoopLevel on
+	// Windows asks for DISCL_EXCLUSIVE only for a game controller, and always
+	// DISCL_NONEXCLUSIVE for the keyboard and the mouse.
+	bCoopLevelSet = true;
+	return true;
+}
+
+static bool AcquireDevices( bool bAcquire )
+{
+	// There is nothing to acquire: SDL stops delivering keyboard and mouse events
+	// on its own when the window is no longer the one being typed into. What
+	// Unacquire also did was discard whatever the device had buffered, so that
+	// nothing from before the switch arrived after it, and that part is real.
+	if ( !bAcquire )
+	{
+		std::lock_guard<std::mutex> lock( watchMutex );
+		watchedEvents.clear();
+	}
+	return true;
+}
+
+static bool IsWindowFocused()
+{
+	if ( hWindow == 0 )
+	{
+		return false;
+	}
+	return ( SDL_GetWindowFlags( AsSdlWindow( hWindow ) ) & SDL_WINDOW_INPUT_FOCUS ) != 0;
+}
+
+static void PumpDeviceEvents()
+{
+	// What moves transitions out of the window system and onto SDL's queue, which
+	// is what runs the watch above. Called here rather than relying on WinFrame's
+	// poll so that this drain keeps its own schedule, which is what PurgeEvents
+	// and PurgeUIEvents expect when they pump and read in one go.
+	SDL_PumpEvents();
+}
+
+static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects, unsigned long *pdwElements )
+{
+	std::lock_guard<std::mutex> lock( watchMutex );
+
+	if ( bWatchOverflow )
+	{
+		// Whatever was dropped could have belonged to any of them, so they all
+		// have to be read back from their current state.
+		bWatchOverflow = false;
+		for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+		{
+			iTempDevice->bNeedResync = true;
+		}
+	}
+
+	const unsigned long dwMax = *pdwElements;
+	unsigned long dwCount = 0;
+	std::vector<SWatchedEvent> rest;
+	rest.reserve( watchedEvents.size() );
+	for ( std::vector<SWatchedEvent>::const_iterator iTempEvent = watchedEvents.begin(); iTempEvent != watchedEvents.end();
+	      ++iTempEvent )
+	{
+		if ( iTempEvent->nDeviceID == sDevice.nID && dwCount < dwMax )
+		{
+			pObjects[dwCount++] = iTempEvent->did;
+		}
+		else
+		{
+			rest.push_back( *iTempEvent );
+		}
+	}
+	watchedEvents.swap( rest );
+
+	*pdwElements = dwCount;
+	return true;
+}
+
+static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *pBuffer )
+{
+	uint8_t *pData = &( ( *pBuffer )[0] );
+	memset( pData, 0, pBuffer->size() );
+
+	switch ( GET_DIDEVICE_TYPE( sDevice.dwDevType ) )
+	{
+	case DI8DEVTYPE_KEYBOARD:
+	{
+		// Read live rather than from anything this file kept, because the point
+		// of a resync is to find out what changed while events were not arriving.
+		int nKeys = 0;
+		const bool *pKeys = SDL_GetKeyboardState( &nKeys );
+		if ( pKeys == 0 )
+		{
+			break;
+		}
+		for ( int i = 0; i < DIRECT_INPUT_KEY_COUNT; ++i )
+		{
+			const SDL_Scancode scancode = directInputKeys[i].scancode;
+			if ( (int)scancode < nKeys && pKeys[scancode] )
+			{
+				pData[directInputKeys[i].nKey] = 0x80;
+			}
+		}
+		break;
+	}
+
+	case DI8DEVTYPE_MOUSE:
+	{
+		// The axes come from the running totals rather than from the pointer's
+		// position, so that regaining focus does not read as one enormous move.
+		{
+			std::lock_guard<std::mutex> lock( watchMutex );
+			memcpy( pData + DIMOFS_X, &nMouseState[0], sizeof( int32_t ) );
+			memcpy( pData + DIMOFS_Y, &nMouseState[1], sizeof( int32_t ) );
+			memcpy( pData + DIMOFS_Z, &nMouseState[2], sizeof( int32_t ) );
+		}
+		const SDL_MouseButtonFlags dwButtons = SDL_GetMouseState( 0, 0 );
+		for ( int nButton = SDL_BUTTON_LEFT; nButton <= SDL_BUTTON_X2; ++nButton )
+		{
+			const int nOfs = SdlMouseButtonToOffset( nButton );
+			if ( nOfs >= 0 && ( dwButtons & SDL_BUTTON_MASK( nButton ) ) != 0 )
+			{
+				pData[nOfs] = 0x80;
+			}
+		}
+		break;
+	}
+
+	default:
+	{
+		if ( sDevice.pJoystick == 0 )
+		{
+			break;
+		}
+		const int nAxes = SDL_GetNumJoystickAxes( sDevice.pJoystick );
+		for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
+		{
+			const int nOfs = JoystickAxisOffset( nAxis );
+			if ( nOfs < 0 )
+			{
+				continue;
+			}
+			const int32_t nValue = ScaleJoystickAxis( SDL_GetJoystickAxis( sDevice.pJoystick, nAxis ) );
+			memcpy( pData + nOfs, &nValue, sizeof( nValue ) );
+		}
+		if ( SDL_GetNumJoystickHats( sDevice.pJoystick ) > 0 )
+		{
+			const uint32_t dwPov = HatToPov( SDL_GetJoystickHat( sDevice.pJoystick, 0 ) );
+			memcpy( pData + offsetof( SInputDataFormat, lPOV ), &dwPov, sizeof( dwPov ) );
+		}
+		const int nButtons = SDL_GetNumJoystickButtons( sDevice.pJoystick );
+		for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
+		{
+			if ( SDL_GetJoystickButton( sDevice.pJoystick, nButton ) )
+			{
+				pData[offsetof( SInputDataFormat, bButton ) + nButton] = 0x80;
+			}
+		}
+		break;
+	}
+	}
+}
+
+static float ReadControlGranularity( const SKey &sKey )
+{
+	// The wheel is the only control that does not move one unit at a time, and
+	// DIPROP_GRANULARITY is how the Windows path learns the same thing.
+	if ( sKey.nDevType == DI8DEVTYPE_MOUSE && INPUT_GETACTIONOFFS( sKey.nAction ) == DIMOFS_Z )
+	{
+		return MOUSE_WHEEL_GRANULARITY;
+	}
+	return 1.0f;
+}
+
+static std::string ReadControlLocalName( int nAction )
+{
+	const SKey &sKey = actionIDs[nAction];
+
+	// For a key this is better than what GetObjectInfo answers on Windows: SDL
+	// names the key by what the current layout prints on it, so a tutorial line
+	// naming a key reads correctly on a keyboard that is not a US one.
+	if ( sKey.nDevType == DI8DEVTYPE_KEYBOARD )
+	{
+		const SDL_Scancode scancode = DirectInputKeyToSdlScancode( INPUT_GETACTIONOFFS( sKey.nAction ) & ~DIK_DBLCLK_MODIFIER );
+		if ( scancode == SDL_SCANCODE_UNKNOWN )
+		{
+			return "";
+		}
+		const char *pszName = SDL_GetKeyName( SDL_GetKeyFromScancode( scancode, SDL_KMOD_NONE, false ) );
+		return pszName != 0 ? pszName : "";
+	}
+
+	// SDL names a stick but not the individual axes and buttons on it, so the
+	// name this module synthesized is the most specific thing there is to give.
+	std::unordered_map<int, std::string>::const_iterator iTempName = idNames.find( nAction );
+	return iTempName != idNames.end() ? iTempName->second : "";
+}
+
+#endif // !BOOST_OS_WINDOWS
+
 
 bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
 {

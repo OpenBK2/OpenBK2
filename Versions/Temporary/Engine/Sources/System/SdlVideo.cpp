@@ -33,6 +33,17 @@ bool InitVideo()
 	csSystem << CC_RED << "SDL video is unavailable: " << SDL_GetError() << endl;
 	return false;
 }
+
+bool InitJoystick()
+{
+	if ( SDL_InitSubSystem( SDL_INIT_JOYSTICK ) )
+	{
+		return true;
+	}
+	// Not red: no stick attached is not a fault, and the game plays without one.
+	csSystem << "SDL joysticks are unavailable: " << SDL_GetError() << endl;
+	return false;
+}
 }
 
 bool EnsureVideo()
@@ -46,6 +57,14 @@ bool EnsureVideo()
 	// and whatever a mod created are all holders, and they do not come down in
 	// a known order. The subsystem lives until the process does.
 	static const bool bReady = InitVideo();
+	return bReady;
+}
+
+bool EnsureJoystick()
+{
+	// Computed on first call, for the same reason EnsureVideo's is, and never
+	// released for the same reason either.
+	static const bool bReady = InitJoystick();
 	return bReady;
 }
 }

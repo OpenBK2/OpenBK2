@@ -15,4 +15,11 @@ namespace NSdl
 	//! wherever the sound engine is first touched. Nothing can assume it runs
 	//! first, so every entry point asks and the answer is computed once.
 	SYSTEM_EXPORT bool EnsureVideo();
+
+	//! Bring SDL's joystick subsystem up, once, and report whether it is usable.
+	//!
+	//! Separate from EnsureVideo because a machine with no stick attached is the
+	//! normal case and must not cost the window: the game asks for this only
+	//! when Input enumerates devices, and carries on without it.
+	SYSTEM_EXPORT bool EnsureJoystick();
 }
