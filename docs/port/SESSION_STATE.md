@@ -28,69 +28,77 @@ in both clones. It has to be re-pointed by hand after the next verified run.
 
 `linux2-strays` at `1f97a93c6` still holds the parked scratch files.
 
-## Where the game stops, traced end to end
+## Where the game stops
 
-The renderer comes up and the game reaches `NProfile::LoadProfile`, then
-segfaults. The chain, from the symptom back to the cause:
+**The whole loading chain works.** The VFS mounts `Data`, opens `data.pak` and
+the five patch paks, reads `types.xml` and `index.bin`, the database loads
+objects, seven config files execute including the two that follow `LoadProfile`,
+the profile's own `user.cfg` and `input.cfg` are read, and the game gets as far
+as building its UI. The file trace ends on window definitions:
 
 ```
-main.cpp        RunGame -> NProfile::LoadProfile
-Profiles.cpp    OnProfileChange -> ProcessCommand( L"autodetect" )
-InterfaceOptionsMenu.cpp  CommandAutodetect -> ProcessCommand( L"set_quality 0.000000" )
-InterfaceOptionsMenu.cpp:755  CommandQuality:  pGameRoot->pGameOptions
-Basic.h:173     CPtrBase copy -> AddRef( ptr ) -> SIGSEGV
+UI/Game/Debug/DebugWindow_WindowSimple.xdb
+UI/GameStatsWindow_WindowStatsSystem.xdb
+UI/DebugStatsWindow_WindowStatsSystemShared.xdb
 ```
 
-`pGameRoot` is `{ ptr = 0x0, bLoaded = true }`: null, and marked loaded. It comes
-from `GetConsts<SGameRoot>( "game_root" )`, which returns 0 when the variable is
-unset or the record is not in the database.
+It then segfaults **during teardown**, unwinding the interface stack:
 
-**The database is never opened.** `NDb::OpenDatabase` **returns false**, and
-every caller discards the result. Inside, `CGameDatabase::OpenDatabase` returns
-what `LoadTypesMap()` gives it, and that is `!topLevelTypes.empty()` - false
-because `types.xml` was never read. **strace shows `types.xml` is not even
-attempted**, though it is there, 1.5 MB, at `<install>/Data/types.xml`. So the
-VFS built over the data directory has no entry for it, and the failure is in the
-enumeration rather than in the read.
+```
+UIScreen.h:29   CWindowScreen::DestroyContents
+Basic.cpp:124   CObjectBase::DestroyDelayed
+Basic.cpp:69    CObjectBase::ReleaseObj
+                ~CObj<IInterfaceBase>, from NMainLoop::interfaces
+```
 
-Two things point at the same cause. A directory open in the trace,
-`openat( "<install>/bin/\home\sse4\bk2\", O_DIRECTORY ) = ENOENT`, is an
-absolute path converted to backslashes and then used relative. And
-`Parser/ParseOperations.cpp:71` does exactly that conversion,
-`NFile::ConvertSlashes( &szDir, '/', BS )`, before enumerating.
+Nothing is logged before it. `UIScreen.h:29` is the `OBJECT_NOCOPY_METHODS`
+macro, so `DestroyContents` is generated: it calls the destructor explicitly,
+saves `nRefData` and `nObjData`, placement-news the object back, and restores
+them. The crash is inside that, so the next question is whether it is the
+destructor or the reconstruction, and which member.
 
-**The next thing to look at is `NVFS::CreateWinVFS` and how it enumerates a
-directory.** Everything above it is understood.
+**Two things to be careful of here.** The stack is being torn down at all, which
+means something upstream decided to exit and did not say why; that may be the
+real fault and this only its consequence. And `DestroyContents` reads
+`this->nRefData` after the destructor has run, which is reading a destroyed
+object - benign for a POD in practice, on both platforms, but worth knowing
+before trusting anything it reports.
 
-### What was fixed getting this far
+### How it got here, and what each fix was
 
-Each of these was silent, and each hid the next.
+Every one of these was silent, and each hid the next.
 
-- **`DXVK_WSI_DRIVER` unset.** `Direct3DCreate9` threw before enumerating an
-  adapter or logging a line. Found with `catch throw` under gdb, because the
-  abort backtrace stopped in DXVK's own unwinder. Fixed in `81d792220`.
-- **Backslash separators in code.** Every path in the startup chain was built
-  with a literal backslash, so nothing was read: zero config files loaded and
-  `LoadConfig` reports nothing when a file will not open. Fixed at the call
-  sites in `5fe3d15c1`, then given constants and a `JoinPath` helper in
-  `5bb2331ff`.
-- **UTF-16 read as wchar_t.** `CStructureSaver::DataChunkString` read
-  `nLength / 2` characters through a `wchar_t *`, which off Windows reads twice
-  the chunk. `port/unicode.h` gained `UTF16LEToWide` and `WideToUTF16LE`;
-  `8eb019d46`.
+| what | where |
+|---|---|
+| `DXVK_WSI_DRIVER` unset, `Direct3DCreate9` threw before logging a line | `81d792220` |
+| backslash separators through the whole startup chain; **zero** config files loaded | `5fe3d15c1`, then constants and `JoinPath` in `5bb2331ff` |
+| UTF-16 data read as `wchar_t`, which is four bytes off Windows | `8eb019d46` |
+| nothing said when a file could not be opened | `673a0d373` |
+| VFS base path concatenation, and my own `JoinPath` regression | `e92f9f8e8` |
+| VFS base path converted to backslashes, so every lookup missed | `ac1c5698e` |
+| `CProfiler( ... ) : szPath( szPath )`, initialised from itself | `ac1c5698e` |
 
-### Backslashes are also in the shipped data
+That last one is worth reading twice. It has been undefined behaviour since it
+was written, Windows survived it because the stack happened to be benign, and
+GCC at `-O0` handed the allocator a **two terabyte** length. mimalloc took it as
+a huge page request and sat zeroing it, which presents as a slow debug build and
+is not one.
 
-`Profiles/startup.cfg` contains `exec .\profiles\consts.cfg`, and
-`GlobalVars.cpp`'s `CmdLoadConfig` prefixes `"..\\"` to it. The trace shows
-`"..\.\profiles\aliases.cfg"` and `consts.cfg` failing.
+**How that was told apart from slowness, since the first guess was wrong:** over
+eight seconds the log did not grow by a byte, `/proc/<pid>/io` `read_bytes`
+stayed at zero, and one thread held every jiffy. A parse reads and prints; a spin
+does neither. Check that before believing a build is merely slow.
 
-That cannot be fixed at the call sites the way the code was, because the
-separators come from **data** this project does not author. Either `LoadConfig`
-normalises what it is given, which is the narrow version of the rule
-`System/FilePath.cpp` deliberately rejected for `CreatePath`, or every shipped
-cfg is rewritten. **This one needs a decision.** Note the data also says
-`profiles` in lower case while `Versions/Current` ships `Profiles`.
+### Debugging notes for this codebase
+
+- **Every module is a shared library**, so a gdb breakpoint set before `run`
+  does not resolve and silently does not exist. Use
+  `set breakpoint pending on`, or conclude wrongly that the code never ran.
+  That mistake was made twice here.
+- `OPENBK2_FILE_TRACE=1` gives a line per file open, successes included, and
+  covers VFS lookups that never reach a syscall so strace cannot see them.
+- `timeout` without `-s KILL` leaves the game running after the shell dies.
+  Three stale processes accumulated before this was noticed.
 
 ## Handing over to a real Linux machine
 
