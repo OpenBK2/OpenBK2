@@ -70,8 +70,17 @@ TCursor LoadCursor( const std::string &szFileName )
 	{
 		nBase = 0;
 	}
+	// 32 is the size every cursor in the shipped data is drawn at. Each of those
+	// files holds exactly one image, so the choice only begins to matter for a
+	// cursor that ships more than one.
+	std::vector<NWinImage::SImageInfo> images;
+	if ( !NWinImage::GetImages( &images, &buffer[0], buffer.size(), nBase ) )
+	{
+		return 0;
+	}
+	const int nIndex = NWinImage::SelectImage( images, 32 );
 	NWinImage::SImage image;
-	if ( !NWinImage::DecodeFirstImage( &image, &buffer[0], buffer.size(), nBase ) )
+	if ( nIndex < 0 || !NWinImage::DecodeImage( &image, &buffer[0], buffer.size(), nBase, nIndex ) )
 	{
 		return 0;
 	}
