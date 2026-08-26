@@ -67,9 +67,20 @@ static void StoreBuildInfo()
 
 namespace {
 	bool InitCrashpad() {
-		base::FilePath handler(L"crashpad_handler.exe");
-		base::FilePath db(L"crashpad_db");
-		base::FilePath metrics(L"crashpad_metrics");
+		// base::FilePath holds a wstring on Windows and a string everywhere else,
+		// which is what FILE_PATH_LITERAL is for: it adds the L only where one
+		// belongs. The handler is a real executable, so its name carries the
+		// platform suffix; the other two name directories and do not.
+		//
+		// All three stay relative, resolved against the working directory, which is
+		// where the handler is installed beside the game.
+#if BOOST_OS_WINDOWS
+		base::FilePath handler( FILE_PATH_LITERAL( "crashpad_handler.exe" ) );
+#else
+		base::FilePath handler( FILE_PATH_LITERAL( "crashpad_handler" ) );
+#endif
+		base::FilePath db( FILE_PATH_LITERAL( "crashpad_db" ) );
+		base::FilePath metrics( FILE_PATH_LITERAL( "crashpad_metrics" ) );
 
 		auto database = crashpad::CrashReportDatabase::Initialize(db);
 		if (!database) {
