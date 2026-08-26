@@ -1,6 +1,9 @@
 #pragma once
 
 #include "StaticObjects.h"
+// CStObjIter<T>::Init calls CExistingObject::UpdateGlobalMark, and StaticObjects.h
+// only forward declares the class
+#include "StaticObject.h"
 
 //
 // Итераторы, не cэйвятся!
