@@ -372,11 +372,13 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
-bool NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
+bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
 {
 	int nXSize = 10000;
 	int nYSize = 10000;
-	::hInstance = hInstance;
+	// The module handle of the executable, which is what WinMain was handed back
+	// when it was the only entry point this game had.
+	::hInstance = GetModuleHandle( 0 );
 	if ( !SFLB2_CreateWin( pszAppName, pszWndName, nXSize, nYSize, nIcon ) )
 		return false;
 	return true;
@@ -486,7 +488,7 @@ void NWinFrame::Exit()
 	bExit = true;
 }
 
-bool NWinFrame::SFLB1_InitApplication( HINSTANCE, const char *pszAppName, const char *, LPCSTR )
+bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPCSTR )
 {
 	if ( !NSdl::EnsureVideo() )
 	{

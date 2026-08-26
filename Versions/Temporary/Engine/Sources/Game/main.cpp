@@ -58,7 +58,8 @@ namespace NGameX
 	void PostStorageInitialize();
 };
 
-bool ProcessCommandLine( LPSTR lpCmdLine );
+static bool ProcessCommandLine( const std::vector<std::string> &arguments );
+static int RunGame( const std::vector<std::string> &arguments );
 static void StoreBuildInfo()
 {
 	const std::string szVersion = fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
@@ -93,7 +94,54 @@ namespace {
 	}
 }
 
-int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+#if BOOST_OS_WINDOWS
+
+//! The command line as a list of arguments, which is what every other platform
+//! hands the program already.
+//!
+//! Windows does not: WinMain is given one string with the arguments still in it,
+//! so the quoting has to be undone here. Off Windows the shell has already done
+//! it, and better, because it knows what the user actually typed.
+static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
+{
+	std::vector<std::string> arguments;
+	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char> > > it( lpCmdLine, ' ' );
+	      !it.IsEnd(); it.Next() )
+	{
+		std::string szArgument;
+		it.Get( &szArgument );
+		NStr::TrimBoth( szArgument );
+		if ( !szArgument.empty() )
+		{
+			arguments.push_back( szArgument );
+		}
+	}
+	return arguments;
+}
+
+// WinMain rather than wWinMain: utf8.manifest sets the process code page to
+// UTF-8, so the narrow command line is already the encoding the rest of the tree
+// reads, and a wide entry point would only mean converting it back.
+//
+// hPrevInstance has meant nothing since 16 bit Windows, nCmdShow is not consulted
+// because the window is created borderless at the desktop's size, and hInstance
+// is now asked for by the one place that wants it.
+int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
+{
+	return RunGame( SplitCommandLine( lpCmdLine ) );
+}
+
+#else
+
+int main( int argc, char *argv[] )
+{
+	// argv[0] is the program itself, which WinMain is not given either
+	return RunGame( std::vector<std::string>( argv + 1, argv + argc ) );
+}
+
+#endif
+
+static int RunGame( const std::vector<std::string> &arguments )
 {
     // Keep mimalloc in the executable's import table so its redirect DLL can
     // replace the CRT allocator for every game module before initialization.
@@ -111,7 +159,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	SetErrorMode( SEM_FAILCRITICALERRORS );
 #endif
 	//
-	if ( ProcessCommandLine(lpCmdLine) == false )
+	if ( ProcessCommandLine( arguments ) == false )
 		return 0xDEAD;
 
 	std::string szLogFileName, szErrorFileName;
@@ -137,7 +185,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	NGScene::SFLB3_RunResourceLoadingThread();
 	// show splash screen during program starting
-//	NWinFrame::ShowSplashScreen( hInstance, true );
+//	NWinFrame::ShowSplashScreen( true );
 	// load and initialize all dll modules, register and initialize singletons
 	NGameX::Initialize();
 	//
@@ -155,7 +203,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// the same picture is set from a file once the window exists
 	LPCSTR pIcon = 0;
 #endif
-	if ( !NWinFrame::SFLB1_InitApplication(hInstance, " Blitzkrieg II", "NIVAL_RTS_ENGINE", pIcon) )
+	if ( !NWinFrame::SFLB1_InitApplication(" Blitzkrieg II", "NIVAL_RTS_ENGINE", pIcon) )
 	{
 		MessageBox( 0, "InitApplication", "Error", MB_OK );
 		return 0xDEAD;
@@ -241,16 +289,13 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	return 0;
 }
 
-bool ProcessCommandLine( LPSTR lpCmdLine )
+static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 {
-	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char> > > it(lpCmdLine, ' ');
-	      !it.IsEnd(); it.Next() )
+	for ( std::vector<std::string>::const_iterator it = arguments.begin(); it != arguments.end(); ++it )
 	{
 		// get string
-		std::string szString;
-		it.Get( &szString );
-		NStr::TrimBoth( szString );
-		if ( szString.empty() ) 
+		std::string szString = *it;
+		if ( szString.empty() )
 			continue;
 		// check for '-' at the begining
 		if ( szString == "-show-version" )

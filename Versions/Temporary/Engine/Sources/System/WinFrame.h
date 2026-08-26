@@ -50,7 +50,13 @@ namespace NWinFrame
 	SYSTEM_EXPORT void ResetExit(); // b2`s cheat to show movie on exit
 	SYSTEM_EXPORT HWND GetWnd();
 	SYSTEM_EXPORT void PumpMessages();
-	SYSTEM_EXPORT bool SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon );
+	//! Create the game window.
+	//!
+	//! Took an HINSTANCE until the entry point stopped being WinMain everywhere.
+	//! Off Windows there is no such thing, and on Windows the only value ever
+	//! passed was WinMain's own, which is what GetModuleHandle(0) returns, so the
+	//! Windows implementation asks for it rather than being handed it.
+	SYSTEM_EXPORT bool SFLB1_InitApplication( const char *pszAppName, const char *pszWndName, LPCSTR nIcon );
 	//! Give the window an icon, read from a .ico on the filesystem.
 	//!
 	//! Does nothing on Windows: SFLB1_InitApplication already put the icon out
