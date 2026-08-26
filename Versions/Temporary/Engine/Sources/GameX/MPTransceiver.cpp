@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "MPTransceiver.h"
+#include "Misc/Win32Helper.h"
 #include "Client/ServerClientInterface.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "AILogic/B2AI.h"
@@ -161,11 +162,7 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 // perform segments for AI
 void CMPTransceiver::DoSegments()
 {
-#ifdef _M_AMD64
-	_controlfp(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM);
-#else
-	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
-#endif
+	NWin32Helper::MaskAllFloatingPointExceptions();
 	pClient->Segment();
 	if ( !IsGameRunning() )
 	{
@@ -244,11 +241,7 @@ void CMPTransceiver::ApplyScheduledPlayerRemovals()
 
 void CMPTransceiver::ExecuteCommands( int nFromSegment )
 {
-#ifdef _M_AMD64
-	_controlfp(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM);
-#else
-	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
-#endif
+	NWin32Helper::MaskAllFloatingPointExceptions();
 	bool bHasCommands = false;
 	for ( int i = 0; i < cmds.GetSizeX(); ++i )
 	{

@@ -85,6 +85,47 @@ public:
 	}
 };
 
+// Mask every floating point exception, so arithmetic yields Inf or NaN rather
+// than trapping.
+//
+// This decides whether arithmetic **traps**, not what it **computes**. A masked
+// divide by zero produces Inf and an unmasked one raises, and the bits are the
+// same either way; measured on this tree, across inexact, divide by zero,
+// invalid, overflow and underflow, masking changed no result bit. What it
+// protects against is one client dying where its peers did not, which is a
+// divergence in control flow rather than in the numbers.
+//
+// All masked is the state every target starts in, so this is defensive: D3D9 and
+// some drivers have been known to unmask behind the process's back, which is why
+// the simulation re-asserts it every segment rather than once at startup.
+//
+// Three arms, and the split is the one that was already here:
+//
+//   Windows x86 writes the whole control word, mask 0xfffff, which also pins the
+//   precision field to _PC_24 and the rounding field to nearest. That precision
+//   setting has no equivalent anywhere else, and is the standing reason an x86
+//   build does not compute what an x64 build computes.
+//
+//   Windows x64 touches the exception mask alone, because x87 precision control
+//   means nothing under SSE2.
+//
+//   Elsewhere, fedisableexcept is the exact analogue of the x64 call: measured,
+//   it moves the mask bits of MXCSR and of the x87 control word and leaves the
+//   rounding, precision and denormal fields where it found them. It is a GNU
+//   extension rather than standard C; nothing in <cfenv> masks selectively, and
+//   feholdexcept is the wrong tool because it also clears the status flags and is
+//   built to pair with feupdateenv.
+inline void MaskAllFloatingPointExceptions()
+{
+#if BOOST_OS_WINDOWS && BOOST_ARCH_X86_32
+	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
+#elif BOOST_OS_WINDOWS
+	_controlfp( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM );
+#else
+	fedisableexcept( FE_ALL_EXCEPT );
+#endif
+}
+
 }
 
 
