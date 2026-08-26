@@ -71,40 +71,6 @@ CAIUnit* CGlobalIter::operator*() const
 }
 
 //*******************************************************************
-//*													CLineIter																*
-//*******************************************************************
-
-bool CLineIter::Cells::operator() ( long x, long y ) 
-{ 
-	const SVector v( x, y );
-	if ( units.IsBigCellInside( v ) )
-		push_back( v ); 
-	return true; 
-}
-
-void CLineIter::GetNext()
-{
-	cells.pop_front();
-	if ( !cells.empty() )
-		vCurPoint = *cells.begin();
-}
-
-const bool CLineIter::IsFinished() const
-{ 
-	return cells.empty(); 
-}
-
-CLineIter::CLineIter( const CVec2 &vStart, const CVec2 &vFinish )
-{
-	const SVector vBigStart( AICellsTiles::GetBigCell( vStart.x, vStart.y ) );
-	const SVector vBigEnd( AICellsTiles::GetBigCell( vFinish.x, vFinish.y ) );
-	MakeLine2( vBigStart.x, vBigStart.y, vBigEnd.x, vBigEnd.y, cells );
-	
-	if ( !cells.empty() )
-		vCurPoint = *cells.begin();
-}
-
-//*******************************************************************
 //*													CPlanesIter															*
 //*******************************************************************
 

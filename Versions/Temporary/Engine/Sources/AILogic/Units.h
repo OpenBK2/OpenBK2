@@ -9,12 +9,8 @@
 class CAIUnit;
 class CAviation;
 
-class CCircleIter;
-class CRectIter;
-class CLineIter;
 class CFormation;
 
-template<class T> class CIter;
 class CGlobalIter;
 class CPlanesIter;
 class CDeadPlanesIter;
@@ -137,9 +133,6 @@ public:
 	void CheckUnitCell();
 	void WriteSpatialCellDebugInfo( FILE* f );
 	
-	friend class CIter<CCircleIter>;
-	friend class CIter<CRectIter>;
-	friend class CIter<CLineIter>;
   friend class CGlobalIter;
 	friend class CPlanesIter;
 	friend class CDeadPlanesIter;
