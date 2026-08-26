@@ -444,6 +444,11 @@ inline int SdlMouseButtonToOffset( int nButton )
 	case SDL_BUTTON_MIDDLE: return DIMOFS_BUTTON2;
 	case SDL_BUTTON_X1: return DIMOFS_BUTTON3;
 	case SDL_BUTTON_X2: return DIMOFS_BUTTON4;
+	// SDL numbers anything past X2 straight on, and DIMOUSESTATE2 has three more
+	// bytes for them. kiKeyInfoList names all three, so a cfg can bind them.
+	case 6: return DIMOFS_BUTTON5;
+	case 7: return DIMOFS_BUTTON6;
+	case 8: return DIMOFS_BUTTON7;
 	default: return -1;
 	}
 }

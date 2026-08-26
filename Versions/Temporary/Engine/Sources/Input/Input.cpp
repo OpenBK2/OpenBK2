@@ -1796,6 +1796,8 @@ static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *
 			memcpy( pData + DIMOFS_Y, &nMouseState[1], sizeof( int32_t ) );
 			memcpy( pData + DIMOFS_Z, &nMouseState[2], sizeof( int32_t ) );
 		}
+		// SDL_GetMouseState answers for the five buttons it has a mask for, which
+		// is where SdlMouseButtonToOffset stops being able to ask.
 		const SDL_MouseButtonFlags dwButtons = SDL_GetMouseState( 0, 0 );
 		for ( int nButton = SDL_BUTTON_LEFT; nButton <= SDL_BUTTON_X2; ++nButton )
 		{
