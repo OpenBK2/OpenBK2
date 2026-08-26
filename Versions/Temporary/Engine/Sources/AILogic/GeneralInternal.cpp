@@ -29,7 +29,6 @@ extern CPlayerReinforcementArray theReinfArray;
 extern NAI::CTimeCounter timeCounter;
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
-extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
 
 //BASIC_REGISTER_CLASS( AILOGIC, CGeneral );

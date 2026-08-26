@@ -19,7 +19,6 @@
 //#define N_GRIDCELL_SIZE 8
 
 CEventUpdater updater;
-extern CGroupLogic theGroupLogic;
 extern CDiplomacy theDipl;
 extern SCheats theCheats;
 

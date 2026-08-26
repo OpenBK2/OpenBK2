@@ -5,7 +5,6 @@
 
 #include "AILogic_export.h"
 
-extern CGroupLogic theGroupLogic;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
