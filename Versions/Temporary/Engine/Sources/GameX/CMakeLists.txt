@@ -17,9 +17,6 @@ set(SOURCES
     DBScenario.cpp
     DBWrapReinf.cpp
     DummyInterface.cpp
-    FontChars.cpp
-    FontData.cpp
-    FontInfo.cpp
     GameRoomData.cpp
     Initialization.cpp
     InterfaceArmyBranchDlg.cpp

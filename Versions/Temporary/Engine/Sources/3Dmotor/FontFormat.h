@@ -2,13 +2,6 @@
 
 #include <cstdint>
 
-class CFontFormatInfo;
-namespace NFontGen
-{
-	class CFontInfo;
-	void CreateFontFormat( CFontFormatInfo *pRes, const CFontInfo &fi );
-}
-
 #pragma pack( 4 )
 // complete necessary one letter description
 struct STFCharacter
@@ -64,8 +57,6 @@ public:
 	int GetMaxCharWidth() const { return nMaxCharWidth; }
 	//
 	int operator&( CStructureSaver &f );
-	//
-	friend void NFontGen::CreateFontFormat( CFontFormatInfo *pRes, const NFontGen::CFontInfo &fi );
 };
 
 
