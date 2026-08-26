@@ -1,6 +1,10 @@
 
 #pragma once
 
+// HWND in ISFX::Init below, and in CSoundEngine::Init through this header.
+// On Windows every translation unit that reaches here had already pulled it in
+// through its stdafx; off Windows it is DXVK Native.
+#include <windows.h>
 
 #include "Sound_export.h"
 
