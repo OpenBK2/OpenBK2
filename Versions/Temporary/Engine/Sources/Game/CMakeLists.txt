@@ -20,6 +20,15 @@ else()
 endif()
 install(TARGETS Game DESTINATION bin)
 
+# The crash handler is a separate executable that the game starts at run time,
+# by the relative name main.cpp passes to CrashpadClient::StartHandler. Nothing
+# was installing it: the copy in an existing Windows install tree got there by
+# hand, and a fresh install of either platform had none, so the handler never
+# started and crashes went unreported.
+if(TARGET crashpad_handler)
+    install(PROGRAMS $<TARGET_FILE:crashpad_handler> DESTINATION bin)
+endif()
+
 # A desktop entry, so the game has a name and a launcher entry rather than being
 # an anonymous binary. It also matters for the window icon: a Wayland compositor
 # without xdg_toplevel_icon_v1 takes the icon from the desktop file that matches
