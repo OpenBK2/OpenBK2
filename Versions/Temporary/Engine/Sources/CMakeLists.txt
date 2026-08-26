@@ -12,7 +12,6 @@ add_subdirectory("Script")
 add_subdirectory("3Dmotor")
 add_subdirectory("MemoryLib")
 add_subdirectory("3DLib")
-add_subdirectory("Scintilla")
 add_subdirectory("SceneB2")
 add_subdirectory("UI")
 add_subdirectory("Sound")
@@ -30,6 +29,10 @@ add_subdirectory("Parser")
 
 if(BUILD_EDITOR)
     add_subdirectory("vendor/stingray")
+
+    # Scintilla is the map editor's script text control. Nothing outside this
+    # block links it: not Game, and no source in a shipped module names it.
+    add_subdirectory("Scintilla")
 
     add_subdirectory("MapEditorLib")
     add_subdirectory("ED_Common")
