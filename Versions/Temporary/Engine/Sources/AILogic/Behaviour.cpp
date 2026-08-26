@@ -2,6 +2,7 @@
 
 #include "Behaviour.h"
 #include "UnitsIterators2.h"
+#include "GroupLogic.h"
 #include "Guns.h"
 #include "Aviation.h"
 #include "HitsStore.h"
