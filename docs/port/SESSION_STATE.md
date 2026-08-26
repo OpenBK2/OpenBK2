@@ -28,6 +28,70 @@ in both clones. It has to be re-pointed by hand after the next verified run.
 
 `linux2-strays` at `1f97a93c6` still holds the parked scratch files.
 
+## Where the game stops, traced end to end
+
+The renderer comes up and the game reaches `NProfile::LoadProfile`, then
+segfaults. The chain, from the symptom back to the cause:
+
+```
+main.cpp        RunGame -> NProfile::LoadProfile
+Profiles.cpp    OnProfileChange -> ProcessCommand( L"autodetect" )
+InterfaceOptionsMenu.cpp  CommandAutodetect -> ProcessCommand( L"set_quality 0.000000" )
+InterfaceOptionsMenu.cpp:755  CommandQuality:  pGameRoot->pGameOptions
+Basic.h:173     CPtrBase copy -> AddRef( ptr ) -> SIGSEGV
+```
+
+`pGameRoot` is `{ ptr = 0x0, bLoaded = true }`: null, and marked loaded. It comes
+from `GetConsts<SGameRoot>( "game_root" )`, which returns 0 when the variable is
+unset or the record is not in the database.
+
+**The database is never opened.** `NDb::OpenDatabase` **returns false**, and
+every caller discards the result. Inside, `CGameDatabase::OpenDatabase` returns
+what `LoadTypesMap()` gives it, and that is `!topLevelTypes.empty()` - false
+because `types.xml` was never read. **strace shows `types.xml` is not even
+attempted**, though it is there, 1.5 MB, at `<install>/Data/types.xml`. So the
+VFS built over the data directory has no entry for it, and the failure is in the
+enumeration rather than in the read.
+
+Two things point at the same cause. A directory open in the trace,
+`openat( "<install>/bin/\home\sse4\bk2\", O_DIRECTORY ) = ENOENT`, is an
+absolute path converted to backslashes and then used relative. And
+`Parser/ParseOperations.cpp:71` does exactly that conversion,
+`NFile::ConvertSlashes( &szDir, '/', BS )`, before enumerating.
+
+**The next thing to look at is `NVFS::CreateWinVFS` and how it enumerates a
+directory.** Everything above it is understood.
+
+### What was fixed getting this far
+
+Each of these was silent, and each hid the next.
+
+- **`DXVK_WSI_DRIVER` unset.** `Direct3DCreate9` threw before enumerating an
+  adapter or logging a line. Found with `catch throw` under gdb, because the
+  abort backtrace stopped in DXVK's own unwinder. Fixed in `81d792220`.
+- **Backslash separators in code.** Every path in the startup chain was built
+  with a literal backslash, so nothing was read: zero config files loaded and
+  `LoadConfig` reports nothing when a file will not open. Fixed at the call
+  sites in `5fe3d15c1`, then given constants and a `JoinPath` helper in
+  `5bb2331ff`.
+- **UTF-16 read as wchar_t.** `CStructureSaver::DataChunkString` read
+  `nLength / 2` characters through a `wchar_t *`, which off Windows reads twice
+  the chunk. `port/unicode.h` gained `UTF16LEToWide` and `WideToUTF16LE`;
+  `8eb019d46`.
+
+### Backslashes are also in the shipped data
+
+`Profiles/startup.cfg` contains `exec .\profiles\consts.cfg`, and
+`GlobalVars.cpp`'s `CmdLoadConfig` prefixes `"..\\"` to it. The trace shows
+`"..\.\profiles\aliases.cfg"` and `consts.cfg` failing.
+
+That cannot be fixed at the call sites the way the code was, because the
+separators come from **data** this project does not author. Either `LoadConfig`
+normalises what it is given, which is the narrow version of the rule
+`System/FilePath.cpp` deliberately rejected for `CreatePath`, or every shipped
+cfg is rewritten. **This one needs a decision.** Note the data also says
+`profiles` in lower case while `Versions/Current` ships `Profiles`.
+
 ## Handing over to a real Linux machine
 
 **WSL is out of road.** It builds, installs and starts the game, but it has no
