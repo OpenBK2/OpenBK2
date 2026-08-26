@@ -130,9 +130,9 @@ int CWaterPatch::Process( const long nTime )
 	{
 		for ( int i = 0; i < waterSurf.GetSizeX(); ++i )
 		{
-			grid[nCount].z = fBaseHeight;
+			grid[nCount].pos.z = fBaseHeight;
 			for ( int k = 0; k < waves.size(); ++k )
-				grid[nCount].z += waves[k].fAmplitude * waterSurf[g][i].amplitude[k] *
+				grid[nCount].pos.z += waves[k].fAmplitude * waterSurf[g][i].amplitude[k] *
 													GetWaveProfile( GetFracPart(waterSurf[g][i].phase[k] + fCurTime * waves[k].fInvPeriod) );
 			++nCount;
 		}
@@ -266,10 +266,10 @@ int CWaterPatch::Process( const long nTime )
 	float fMinHeight = FP_MAX_VALUE;
 	for ( std::vector<SGridType>::const_iterator it = grid.begin(); it != grid.end(); ++it )
 	{
-		if ( it->z < fMinHeight )
-			fMinHeight = it->z;
-		if ( it->z > fMaxHeight )
-			fMaxHeight = it->z;
+		if ( it->pos.z < fMinHeight )
+			fMinHeight = it->pos.z;
+		if ( it->pos.z > fMaxHeight )
+			fMaxHeight = it->pos.z;
 	}
 
 	// create coast
@@ -280,13 +280,13 @@ int CWaterPatch::Process( const long nTime )
 		for ( int i = 0; i < waterSurf.GetSizeX(); ++i )
 		{
 			nCount = (long)g * waterSurf.GetSizeX() + i;
-			grid[nCount].y = grid[nCount + waterSurf.GetSizeX()].y - dGridSize.y;
-			if ( grid[nCount].z > 0.0f )
-				grid[nCount].y -= grid[nCount].z * ( 1.0f - d1 ) * 1.5f;
+			grid[nCount].pos.y = grid[nCount + waterSurf.GetSizeX()].pos.y - dGridSize.y;
+			if ( grid[nCount].pos.z > 0.0f )
+				grid[nCount].pos.y -= grid[nCount].pos.z * ( 1.0f - d1 ) * 1.5f;
 			else
-				grid[nCount].y -= grid[nCount].z * ( 1.0f - d1 ) * 1.5f;
-			grid[nCount].z *= d1;
-			grid[nCount].z += 0.15f * ( 1.0f - d1 );
+				grid[nCount].pos.y -= grid[nCount].pos.z * ( 1.0f - d1 ) * 1.5f;
+			grid[nCount].pos.z *= d1;
+			grid[nCount].pos.z += 0.15f * ( 1.0f - d1 );
 		}
 	}
 
@@ -559,7 +559,7 @@ int CWaterPatch::Process( const long nTime )
 
 			{
 				const float fAlp2 = (float)( grid[nGridInd].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const float fCoeff = fabs2( Clamp( ( grid[nGridInd].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
 				uint32_t dwGridColor = grid[ nGridInd ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
@@ -568,7 +568,7 @@ int CWaterPatch::Process( const long nTime )
 
 			{
 				const float fAlp2 = (float)( grid[nGridInd+1].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
 				uint32_t dwGridColor = grid[ nGridInd + 1 ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
@@ -577,7 +577,7 @@ int CWaterPatch::Process( const long nTime )
 
 			{
 				const float fAlp2 = (float)( grid[nGridInd+1+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1+waterSurf.GetSizeX()].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1+waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
 				uint32_t dwGridColor = grid[ nGridInd + 1 + waterSurf.GetSizeX() ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
@@ -586,7 +586,7 @@ int CWaterPatch::Process( const long nTime )
 
 			{
 				const float fAlp2 = (float)( grid[nGridInd+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+waterSurf.GetSizeX()].z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
 				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
 				uint32_t dwGridColor = grid[ nGridInd + waterSurf.GetSizeX() ].color;
 				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
@@ -679,9 +679,9 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 	{
 		for ( int i = 0; i < nSX; ++i )
 		{
-			grid[nCount].x = (float)i * dsize.x;
-			grid[nCount].y = (float)g * dsize.y;
-			grid[nCount].z = fBaseHeight;
+			grid[nCount].pos.x = (float)i * dsize.x;
+			grid[nCount].pos.y = (float)g * dsize.y;
+			grid[nCount].pos.z = fBaseHeight;
 			grid[nCount].color = 0xffffffff;
 			++nCount;
 		}
@@ -881,7 +881,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					const unsigned int nGridInd = g * waterSurf.GetSizeX() + i;
 					{
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nGridInd].x, grid[nGridInd].y, grid[nGridInd].z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set( grid[nGridInd].pos.x, grid[nGridInd].pos.y, grid[nGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -889,7 +889,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + 1;
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].x, grid[nNextGridInd].y, grid[nNextGridInd].z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -897,7 +897,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + 1 + waterSurf.GetSizeX();
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].x, grid[nNextGridInd].y, grid[nNextGridInd].z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -905,7 +905,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + waterSurf.GetSizeX();
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].x, grid[nNextGridInd].y, grid[nNextGridInd].z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;

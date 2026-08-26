@@ -63,21 +63,16 @@ class CWaterPatch : public CVersioningBase
 	NGScene::CObjectInfo::SData objDataWater;
 	NGScene::CObjectInfo::SData objDataSurf;
 	//
+	// This was an anonymous union of two anonymous structs, "float x, y, z" beside
+	// "CVec3 pos", each followed by its own uint32_t color. Neither half is legal:
+	// the two colors are one name declared twice in the enclosing class, and CVec3
+	// has a user provided default constructor, which an anonymous aggregate cannot
+	// hold. CVec3 is three floats, so naming pos.x, pos.y and pos.z gives the same
+	// members at the same offsets, and the type is unchanged at sixteen bytes.
 	struct SGridType
 	{
-		union
-		{
-			struct
-			{
-				float x, y, z;
-				uint32_t color;
-			};
-			struct
-			{
-				CVec3 pos;
-				uint32_t color;
-			};
-		};
+		CVec3 pos;
+		uint32_t color;
 		SGridType() {}
 	};
 	//
