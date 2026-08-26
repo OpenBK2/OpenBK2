@@ -137,6 +137,10 @@ if(WIN32)
         winapi
     )
 else()
+    # GShaderFX.cpp above is all D3DX, which DXVK does not supply, so its nine
+    # entry points come from a stub instead. GShaderFXStub.cpp records why that
+    # loses nothing: the path it serves is unreachable on Windows too.
+    target_sources(3Dmotor PRIVATE GShaderFXStub.cpp)
     # d3d9.h and the windows.h shim; there is no d3dx9 to link against.
     # SDL because port/window.h reaches the window Gfx sizes, HWND being
     # SDL_Window* under DXVK Native.
