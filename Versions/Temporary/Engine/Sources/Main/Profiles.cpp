@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "port/unicode.h"
 #include "Profiles.h"
 #include "Misc/StrProc.h"
 #include "MainLoop.h"
@@ -21,7 +23,7 @@ namespace NProfile
 {
 static std::string GetProfileRootDir()
 {
-	return NMainLoop::GetBaseDir() + "Profiles\\";
+	return NMainLoop::GetBaseDir() + "Profiles/";
 }
 
 // directory name with default profile settings
@@ -40,19 +42,21 @@ static bool IsDefaultProfileName( const std::string &szName )
 
 static std::wstring GetProfileName( const std::string &szDir, const std::string &_szDirName )
 {
-	CFileStream stream( szDir + "\\" + _szDirName + "\\name.txt", CFileStream::WIN_READ_ONLY );
+	CFileStream stream( szDir + "/" + _szDirName + "/name.txt", CFileStream::WIN_READ_ONLY );
 	if  ( stream.IsOk() )
 	{
 		int nLength = stream.GetSize();
 		if ( nLength > 0 )
 		{
-			wchar_t buffer[1280];
-			int len = (std::min)( std::size(buffer)-1, nLength / sizeof( wchar_t ) );
-			stream.Read( buffer, len * sizeof( wchar_t ) );
-			buffer[len] = 0;
-			std::wstring szName;
-			szName.assign( &buffer[1], (std::max)( 0, len - 1 ) );
-			return szName;
+			// name.txt is UTF-16LE behind a 0xFEFF BOM, which is two bytes per
+			// character and not sizeof( wchar_t ): the same thing on Windows, and
+			// half of it off Windows, where the old arithmetic read a quarter of
+			// the file and skipped two characters for a one character mark.
+			std::vector<char> buffer( (std::min)( size_t( 2560 ), size_t( nLength ) ) );
+			stream.Read( &buffer[0], buffer.size() );
+			const std::wstring szName = UTF16LEToWide( &buffer[0], buffer.size() );
+			// drop the byte order mark, which the writer below puts there
+			return szName.empty() || szName[0] != L'\xFEFF' ? szName : szName.substr( 1 );
 		}
 	}
 	return NStr::ToUnicode( _szDirName );
@@ -60,7 +64,7 @@ static std::wstring GetProfileName( const std::string &szDir, const std::string 
 
 std::string GetDefaultProfileDir()
 {
-	std::string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "\\";
+	std::string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "/";
 	return szDefaultDir;
 }
 
@@ -72,7 +76,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 	std::string szNameAscii = NStr::ToMBCS( szName );
 	if ( NFile::IsValidDirName( szNameAscii ) && !IsDefaultProfileName( szNameAscii ) )
 	{
-		szResDir = szRoot + szNameAscii + "\\";
+		szResDir = szRoot + szNameAscii + "/";
 		if ( NFile::DoesFileExist( szResDir + "user.cfg" ) )
 			return szResDir;
 		else
@@ -89,18 +93,24 @@ static std::string GetProfileDir( const std::wstring &szName )
 			if ( !it.IsDirectory() || it.IsDots() )
 				continue;
 			if ( GetProfileName( szRoot, it.GetFileName() ) == szName )
-				return it.GetFullName() + "\\";
+				return it.GetFullName() + "/";
 		}
 		// create dir
 		const auto guid = boost::uuids::random_generator()();
-		szResDir = szRoot + boost::uuids::to_string(guid) + '\\';
+		szResDir = szRoot + boost::uuids::to_string(guid) + '/';
 		NFile::CreatePath( szResDir );
 		// write name
 		{
 			CFileStream stream( szResDir + "name.txt", CFileStream::WIN_CREATE );
 			uint16_t wUnicodeMagic = 0xFEFF;
 			stream.Write( &wUnicodeMagic, 2 );
-			stream.Write( szName.data(), sizeof(wchar_t) * szName.size() );
+			// UTF-16LE to match the mark just written, rather than whatever width
+			// wchar_t happens to be on this platform
+			const std::string utf16 = WideToUTF16LE( szName );
+			if ( !utf16.empty() )
+			{
+				stream.Write( utf16.data(), utf16.size() );
+			}
 		}
 	}
 	// copy configs from default

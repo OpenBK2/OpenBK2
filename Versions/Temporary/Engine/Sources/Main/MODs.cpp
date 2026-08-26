@@ -25,11 +25,11 @@ namespace NMOD
 void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 {
 	std::string szFullFolderName = _szFullFolderName;
-	if ( !szFullFolderName.empty() && szFullFolderName[szFullFolderName.size() - 1] != '\\' )
-		szFullFolderName += '\\';
+	if ( !szFullFolderName.empty() && szFullFolderName[szFullFolderName.size() - 1] != '/' )
+		szFullFolderName += '/';
 	//
 	pMOD->szFullFolderPath = szFullFolderName;
-	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NMainLoop::GetBaseDir() + "MODs\\" );
+	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NMainLoop::GetBaseDir() + "MODs/" );
 	// name
 	{
 		CFileStream stream( szFullFolderName + "name.txt", CFileStream::WIN_READ_ONLY );
@@ -44,7 +44,7 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 
 void GetAllMODs( std::vector<SMOD> *pMODs )
 {
-	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
+	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods/";
 	// iterate through all files by mask
 	for ( NFile::CFileIterator it( (szMODsBaseDir + "*.*").c_str() ); !it.IsEnd(); ++it )
 	{
@@ -116,15 +116,15 @@ public:
 		szFullFolderPath = pszConfig == 0 ? "" : pszConfig; 
 		if ( szFullFolderPath.size() > 1 && 
 			   szFullFolderPath[szFullFolderPath.size() - 1] != '/' && 
-				 szFullFolderPath[szFullFolderPath.size() - 1] != '\\' )
+				 szFullFolderPath[szFullFolderPath.size() - 1] != '/' )
 		{
-			szFullFolderPath += "\\";
+			szFullFolderPath += "/";
 		}
 	}
 	//
 	void Exec()
 	{
-		AttachMODInternal( NMainLoop::GetBaseDir() + "Data\\", szFullFolderPath, eMode );
+		AttachMODInternal( NMainLoop::GetBaseDir() + "Data/", szFullFolderPath, eMode );
 		auto modConfigPath = std::filesystem::path( szFullFolderPath.c_str() ) / "mod_config.cfg";
 		if ( std::filesystem::exists( modConfigPath ) )
 		{

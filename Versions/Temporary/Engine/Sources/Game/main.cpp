@@ -270,7 +270,7 @@ static int RunGame( const std::vector<std::string> &arguments )
     // replace the CRT allocator for every game module before initialization.
     (void)mi_version();
 
-	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
+	NGlobal::LoadConfig( "../profiles/startup.cfg" );
 	StoreBuildInfo();
 	// crashpad will generate a crash report and write minidump
 	InitCrashpad();
@@ -358,8 +358,8 @@ static int RunGame( const std::vector<std::string> &arguments )
 	if ( NMOD::DoesMODAttached(szMOD2Attach) == false )
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
 	//
-	NGlobal::LoadConfig( "..\\profiles\\autoexec.cfg" );
-	NGlobal::LoadConfig( "..\\profiles\\game.cfg" );
+	NGlobal::LoadConfig( "../profiles/autoexec.cfg" );
+	NGlobal::LoadConfig( "../profiles/game.cfg" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
