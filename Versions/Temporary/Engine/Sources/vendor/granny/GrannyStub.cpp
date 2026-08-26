@@ -134,6 +134,13 @@ auto Loggable( T v )
 	{
 		return v != 0 ? std::string( v ) : std::string( "(null)" );
 	}
+	else if constexpr ( std::is_pointer_v<T> && std::is_function_v<std::remove_pointer_t<T>> )
+	{
+		// A function pointer is not an object pointer and cannot be cast to
+		// void*. granny_allocate_callback is one of these, and GrannySetAllocator
+		// is where the engine installs its own, so it is worth seeing.
+		return reinterpret_cast<uintptr_t>( v );
+	}
 	else if constexpr ( std::is_pointer_v<T> )
 	{
 		return static_cast<const void *>( v );
