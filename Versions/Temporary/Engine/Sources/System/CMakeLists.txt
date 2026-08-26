@@ -39,6 +39,7 @@ set(SOURCES
     VFSOperations.cpp
     WinCursor.cpp
     WinFrame.cpp
+    WinImageFormats.cpp
     WinVFS.cpp
     XMLChunkSaver.cpp
     XMLReader.cpp
