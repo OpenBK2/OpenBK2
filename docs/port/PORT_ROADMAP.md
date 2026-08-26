@@ -56,6 +56,7 @@ so they do not churn cherry-pick context.
 | [ ] | `cmake/versioninfo.cmake` sets `BUILD_DATE_TIME` at line 10 but reads `${BUILD_DATETIME}` at line 47. The names do not match, so `BUILD_DATE_TIME_STR` compiles as `""` and no binary carries a build date, CI included. One-line fix, but note it would make CI's per-run timestamp bust the ccache for every target using `add_version_info` |  |
 | [ ] | The benchmark harness ignores its own `/arch:` flag, so the AVX and AVX2 variants are really SSE2 | [The benchmark harness](#the-benchmark-harness-ignores-its-own-arch-flag) |
 | [ ] | `dbcodegen/main.cpp` and `dbstruct/main.cpp` include `System/CmdLine.h`, which row 52 deleted. Neither has CMake wiring, so nothing reports it; `boost::program_options` is the replacement when either is revived | [Commit 52](PORT_REPLAY.md#commit-52-deletes-a-parser-two-unbuilt-utilities-still-call) |
+| [ ] | **No pinned ISA baseline off Windows.** `cmake/arch.cmake` and `AILogic`'s `/fp:strict` are both inside `if(MSVC)`, so no `-march` is passed and `-DARCHITECTURE=` does nothing. Nothing is wrong today, since the unflagged baseline has no FMA to contract into, but the ISA then comes from whatever the distribution configured GCC with | [The build has no pinned ISA baseline](#the-build-has-no-pinned-isa-baseline-off-windows-and-that-is-a-determinism-item) |
 | [ ] | Two dead OS version checks left after row 56: `Game/SysKeys.cpp:66` and `FontGen/FontGen.cpp:294`. The third, `Input/Input.cpp:310`, went with `619b571b9`. The fourth, `GameX/FontInfo.cpp:117`, went with `6472aa3b8`. All test for Windows 9x or 2000. `GetVersionEx` is also deprecated and reports 6.2 on Windows 8.1 and later without a compatibility manifest, so three of them do not measure what they read as measuring | [Commit 56](PORT_REPLAY.md#commit-56-the-fallback-is-not-dead-code-after-all) |
 | [ ] | `Common_RTS_AI/ChecksumSaver.cpp:143` and `:197` call `breakpoint()` bare, on a checksum mismatch. With no debugger attached that terminates the process on every platform, so an ASYNC diagnostic kills the client instead of logging. They look like they want `breakpoint_if_debugging()`, but that changes when the game dies during a desync, so it is a decision rather than a fix | [Commit 48](PORT_REPLAY.md#commits-48-and-49-are-one-commit-they-are-halves-of-the-same-paper) |
 | [ ] | Every file size in the mapping and archive path is `int`: `CMMFile::GetFileSize`, `CZipFile::nTotalSize`, `CDataStream`'s four pointers' arithmetic. An archive of 2 GB or more overflows and the failure is silent. `data.pak` is already ~954 MB in a full install, so this is one repack away, not hypothetical | [Commit 56](PORT_REPLAY.md#commit-56-the-fallback-is-not-dead-code-after-all) |
@@ -164,6 +165,45 @@ File counts across `Engine/Sources` at the time:
 | MMX/SSE intrinsics | 1 | mostly already ported in `3Dmotor` |
 
 Plus Granny (proprietary, Windows-only) for model loading.
+
+### The build has no pinned ISA baseline off Windows, and that is a determinism item
+
+Parked 2026-08-26, deliberately not implemented. Written down because it is
+invisible until it bites and easy to lose across a machine handover.
+
+`cmake/arch.cmake` puts every `/arch:` flag inside `if(MSVC)`, and
+`AILogic/CMakeLists.txt` does the same with `/fp:strict`. Off Windows that means
+**no architecture flag is passed at all**, and `-DARCHITECTURE=AVX2` silently
+does nothing.
+
+The trap is not that the build follows the machine it runs on: nothing passes
+`-march=native`. It is that with no `-march` at all, GCC uses **the default its
+distribution configured it with**, and those have been drifting upward - RHEL 9
+builds for `x86-64-v2`, and there is steady pressure toward `v3` elsewhere. Same
+source, same compiler version, two distributions, different baseline ISA. For a
+lockstep simulation that has to agree with an MSVC build bit for bit, that is
+worse than a machine-dependent default would be, because it is stable enough to
+look correct until somebody else builds it.
+
+Measured on 2026-08-26, nothing is wrong yet. The Linux build passes no `-march`,
+so the baseline is plain x86-64 with SSE2 and no FMA in the instruction set, and
+`objdump` finds zero `vfmadd` or `vfmsub` in `libAILogic.so`. GCC's default
+`-ffp-contract=fast` has nothing to contract into. It is a loaded gun rather than
+a fired one.
+
+What the wiring will want, when it is time:
+
+- **`-march=x86-64`** pinned in a non-MSVC branch, which is the baseline MSVC
+  targets on x64. An explicit `-march=x86-64-v2` is equally defensible as long as
+  it is chosen rather than inherited.
+- **`-ffp-contract=off`**, which is the one GCC default that actually diverges
+  from `/fp:strict` once FMA becomes reachable. Clang also wants
+  `-ffp-model=strict`.
+- **`-mtune=` left alone.** It changes scheduling, not results, so it can stay
+  generic without costing determinism.
+
+Note that clang-cl would pick `/fp:strict` up on its own, since CMake sets `MSVC`
+true for it. Linux clang would not.
 
 ### Floating-point control - better news than it looks, and now done
 
