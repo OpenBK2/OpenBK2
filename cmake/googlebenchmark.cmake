@@ -11,6 +11,12 @@ FetchContent_Declare(
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
 set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+# Google Benchmark compiles itself with -Werror by default, which makes any
+# warning the compiler decides to emit into a failure of this project's build.
+# GCC 15 with AddressSanitizer reports maybe-uninitialized inside libstdc++'s
+# own std_function.h, from std::regex internals, and that stopped an ASan tree
+# from building at all. Nothing here can fix a warning in a system header.
+set(BENCHMARK_ENABLE_WERROR OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googlebenchmark)
 

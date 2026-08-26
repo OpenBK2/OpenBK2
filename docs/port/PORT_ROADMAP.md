@@ -56,6 +56,7 @@ so they do not churn cherry-pick context.
 | [ ] | `cmake/versioninfo.cmake` sets `BUILD_DATE_TIME` at line 10 but reads `${BUILD_DATETIME}` at line 47. The names do not match, so `BUILD_DATE_TIME_STR` compiles as `""` and no binary carries a build date, CI included. One-line fix, but note it would make CI's per-run timestamp bust the ccache for every target using `add_version_info` |  |
 | [ ] | The benchmark harness ignores its own `/arch:` flag, so the AVX and AVX2 variants are really SSE2 | [The benchmark harness](#the-benchmark-harness-ignores-its-own-arch-flag) |
 | [ ] | `dbcodegen/main.cpp` and `dbstruct/main.cpp` include `System/CmdLine.h`, which row 52 deleted. Neither has CMake wiring, so nothing reports it; `boost::program_options` is the replacement when either is revived | [Commit 52](PORT_REPLAY.md#commit-52-deletes-a-parser-two-unbuilt-utilities-still-call) |
+| [ ] | **A pointer through an `int`** at `AILogic/Scripts.cpp:2943`, truncating to 32 bits. Broken on Windows x64 too, and the only instance in the tree. Not fixed because nothing calls `ReturnScriptIDs` - it appears in no shipped pak - so it cannot be reached | [A pointer through an int](#a-pointer-through-an-int-in-cscriptsreturnscriptids) |
 | [ ] | **Reading the shipped data on a case sensitive filesystem.** The engine's own paths are fixed, but the data carries backslashes and its own casing - `startup.cfg` says `exec .\profiles\consts.cfg` - and this project does not author the data. Normalise on the way in, convert the data once, or mount it case insensitively | [Reading the shipped data](#reading-the-shipped-data-on-a-case-sensitive-filesystem) |
 | [ ] | **No pinned ISA baseline off Windows.** `cmake/arch.cmake` and `AILogic`'s `/fp:strict` are both inside `if(MSVC)`, so no `-march` is passed and `-DARCHITECTURE=` does nothing. Nothing is wrong today, since the unflagged baseline has no FMA to contract into, but the ISA then comes from whatever the distribution configured GCC with | [The build has no pinned ISA baseline](#the-build-has-no-pinned-isa-baseline-off-windows-and-that-is-a-determinism-item) |
 | [ ] | Two dead OS version checks left after row 56: `Game/SysKeys.cpp:66` and `FontGen/FontGen.cpp:294`. The third, `Input/Input.cpp:310`, went with `619b571b9`. The fourth, `GameX/FontInfo.cpp:117`, went with `6472aa3b8`. All test for Windows 9x or 2000. `GetVersionEx` is also deprecated and reports 6.2 on Windows 8.1 and later without a compatibility manifest, so three of them do not measure what they read as measuring | [Commit 56](PORT_REPLAY.md#commit-56-the-fallback-is-not-dead-code-after-all) |
@@ -166,6 +167,49 @@ File counts across `Engine/Sources` at the time:
 | MMX/SSE intrinsics | 1 | mostly already ported in `3Dmotor` |
 
 Plus Granny (proprietary, Windows-only) for model loading.
+
+### A pointer through an int in CScripts::ReturnScriptIDs
+
+Found 2026-08-26, not fixed, because nothing can reach it. Recorded so that the
+next person to read the line does not have to work out whether it matters.
+
+`AILogic/Scripts.cpp:2943`:
+
+```cpp
+const int nPtr = script.GetObject( i );
+CObjectBase *pObj = reinterpret_cast<CObjectBase*>( nPtr );
+```
+
+`Script::Object::operator int()` is `GetInteger()`, so a pointer that arrives as
+a Lua number is truncated to 32 bits and the `dynamic_cast` on the next line
+runs on the remains. **This is broken on Windows x64 as well**, not only off
+Windows: it is a 32 bit era assumption rather than a platform one, and it can
+only ever have worked in the x86 build.
+
+The type that would have carried it was already to hand. A Lua number is a
+`double`, `Object::GetNumber()` returns one, and a double holds 53 bits exactly,
+which is enough for every pointer any of these platforms hands out.
+
+**Why it is not fixed:**
+
+- **It is the only one.** A sweep of every built module for a pointer cast to or
+  from `int` returns this single line. Everything else already uses a type that
+  is wide enough. It is a defect, not a class.
+- **Nothing calls it.** `ReturnScriptIDs` is reachable only from Lua, and the
+  string appears in no shipped `.pak` - not in the 1.5 GB `data.pak`, not in any
+  of the five patches. No push side that would put a `CObjectBase *` into a Lua
+  number could be found either, so the mechanism looks half built rather than
+  used.
+
+So it cannot be a current crash, with this data or any data that ships.
+
+**If it is ever touched, deleting it is probably the answer** rather than
+widening the type to `intptr_t`. Widening preserves a mechanism with no caller
+in code, no reference in data, and no working counterpart, which is the case the
+standing instruction covers: if a function has no callers anywhere, delete it
+rather than port it. That is the call already made for the font generator and
+the D3DX shader effects. Checking `origin/main` would settle whether the push
+side ever existed.
 
 ### Reading the shipped data on a case sensitive filesystem
 
