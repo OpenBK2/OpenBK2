@@ -29,7 +29,7 @@
 #define LAN_PORT 4201
 #define LAN_TIMEOUT_SEC 20
 
-UINT64 nAsyncTime;
+uint64_t nAsyncTime;
 const uint32_t ASYNC_EXIT_TIMEOUT = 20000;
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19243482, CMPManagerModeLAN );
