@@ -227,6 +227,15 @@ std::time_t GetLastWriteTime( const std::string &szFileName )
 	return ec ? 0 : t;
 }
 
+bool RemoveFile( const std::string &szFileName )
+{
+	// remove reports false both for a file that was not there and for one it could
+	// not remove, where DeleteFile returned FALSE for both as well. The one caller
+	// that looks at the result only asserts on it.
+	std::error_code ec;
+	return std::filesystem::remove( szFileName, ec );
+}
+
 bool DoesFolderExist( const std::string &szFolderName )
 {
 	std::error_code ec;

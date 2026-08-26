@@ -102,6 +102,10 @@ SYSTEM_EXPORT bool DoesFileExist( const std::string &szFileName );
 // one. 0 when the file cannot be stat'ed, which is what GetFileAttributesEx
 // returning FALSE left the caller's FILETIME as.
 SYSTEM_EXPORT std::time_t GetLastWriteTime( const std::string &szFileName );
+// remove one file. Win32's DeleteFile, which cannot be spelled that way here:
+// windows.h rewrites the name to DeleteFileA, and a translation unit that has not
+// included it would then look for a symbol nobody defines.
+SYSTEM_EXPORT bool RemoveFile( const std::string &szFileName );
 bool DoesFolderExist( const std::string &szFolderName );bool IsValidFileName( const std::string &szFileName );
 // is valid win32 file name
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );

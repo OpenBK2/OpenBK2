@@ -290,11 +290,11 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 		case CONFIRM_DELETE:
 			{
 				//Delete file
-				bool bResult = DeleteFile( saves[nSelected].szFileName.c_str() );
+				bool bResult = NFile::RemoveFile( saves[nSelected].szFileName );
 				NI_ASSERT( bResult, "File removal failed");
 
 				//Remove extra-info file
-				DeleteFile( saves[nSelected].szInfoFileName.c_str() );		//Result is irrelevant
+				NFile::RemoveFile( saves[nSelected].szInfoFileName );		//Result is irrelevant
 
 				//Delete screen entry
 				NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;
@@ -441,8 +441,8 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 	{																													//delete old files and entry
 		sg.szFileTitle = saves[nSelected].szFileTitle;
 
-		DeleteFile( saves[nSelected].szFileName.c_str() );
-		DeleteFile( saves[nSelected].szInfoFileName.c_str() );		//Result is irrelevant
+		NFile::RemoveFile( saves[nSelected].szFileName );
+		NFile::RemoveFile( saves[nSelected].szInfoFileName );		//Result is irrelevant
 
 		//Delete screen entry
 		NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;

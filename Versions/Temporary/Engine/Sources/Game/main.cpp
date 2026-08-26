@@ -120,8 +120,8 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		//
 		szLogFileName = std::string(buffer) + "\\log.txt";
 		szErrorFileName = std::string(buffer) + "\\error.txt";
-		DeleteFile( szErrorFileName.c_str() );
-		DeleteFile( szLogFileName.c_str() );
+		NFile::RemoveFile( szErrorFileName );
+		NFile::RemoveFile( szLogFileName );
 	}
 	if ( IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>() )
 	{

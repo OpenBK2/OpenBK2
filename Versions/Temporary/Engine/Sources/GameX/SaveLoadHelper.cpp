@@ -429,8 +429,8 @@ bool DeleteReplay( const std::string &szFileName )
 {
 	const std::string szReplayFile = GetReplayPath() + szFileName + REPLAY_EXTENSION;
 	const std::string szReplayInfoFile = GetReplayPath() + szFileName + REPLAY_INFO_EXTENSION;
-	const bool bResult1 = DeleteFile( szReplayFile.c_str() );
-	const bool bResult2 = DeleteFile( szReplayInfoFile.c_str() );
+	const bool bResult1 = NFile::RemoveFile( szReplayFile );
+	const bool bResult2 = NFile::RemoveFile( szReplayInfoFile );
 	return bResult1 && bResult2;
 }
 
