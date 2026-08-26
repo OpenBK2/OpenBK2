@@ -17,6 +17,27 @@ if(WIN32)
 else()
     # port/messagebox.h reports the startup failures main.cpp cannot log
     target_link_libraries(Game PRIVATE SDL3::SDL3-shared)
+
+    # Boost.Stacktrace, for the throw point of an exception that reaches main.
+    #
+    # stacktrace_from_exception is the part that matters: it overrides
+    # __cxa_throw and keeps a trace per live exception, so from_current_exception
+    # reports where the throw happened rather than where it was caught. That is
+    # Itanium ABI machinery and has no MSVC counterpart, which is why this is
+    # here rather than beside the Windows link line.
+    #
+    # The backend decides how readable the trace is. libbacktrace resolves
+    # function, file and line out of the DWARF in the binary and is the best of
+    # them; addr2line shells out per frame; basic gives symbol names only.
+    #
+    # None of them invent debug information. A build configured as plain Release
+    # has no -g and resolves to library names and offsets, which still says which
+    # library threw but not where. RelWithDebInfo, which is what the Release
+    # presets map to, carries -g.
+    target_link_libraries(Game PRIVATE
+        Boost::stacktrace_from_exception
+        Boost::stacktrace_backtrace)
+    target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_BACKTRACE)
 endif()
 install(TARGETS Game DESTINATION bin)
 

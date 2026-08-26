@@ -44,6 +44,14 @@
 #include <cxxabi.h>
 #endif
 
+#if !BOOST_OS_WINDOWS
+// Captured where the exception was thrown rather than where it was caught, which
+// is the difference between a stack that names the failure and one that names
+// this file. Boost records it by overriding __cxa_throw, so it needs no
+// cooperation from whatever threw, and no MSVC equivalent exists.
+#include <boost/stacktrace/stacktrace.hpp>
+#endif
+
 #include <client/crashpad_client.h>
 #include <client/crash_report_database.h>
 #include <client/settings.h>
@@ -132,6 +140,33 @@ static std::string CurrentExceptionTypeName()
 #endif
 }
 
+//! Where the exception being handled was thrown, if that can be recovered.
+//!
+//! boost_stacktrace_from_exception keeps a trace for every live exception, taken
+//! at the throw, and this looks up the one currently being handled. It comes back
+//! empty when the throw happened before that library was loaded, when the trace
+//! could not be stored, or when the process was not built with the frame
+//! information to walk.
+//!
+//! **The names in it are only as good as the debug information.** A build with no
+//! -g gives addresses and shared library names and nothing else, which still
+//! locates the failure to a library but not to a line. The Windows presets map
+//! Release to RelWithDebInfo, so those carry -g; a Linux build directory
+//! configured as plain Release does not.
+static std::string CurrentExceptionStack()
+{
+#if BOOST_OS_WINDOWS
+	return "";
+#else
+	const boost::stacktrace::stacktrace trace = boost::stacktrace::stacktrace::from_current_exception();
+	if ( !trace )
+	{
+		return "";
+	}
+	return boost::stacktrace::to_string( trace );
+#endif
+}
+
 //! Say that the game is stopping, everywhere someone might be looking.
 //!
 //! Three places on purpose. stderr always works, including before the console
@@ -143,14 +178,19 @@ static void ReportFatalError( const std::string &szWhat )
 {
 	const std::string szMessage = "Fatal: " + szWhat;
 
-	fmt::print( stderr, "{}\n", szMessage );
+	const std::string szStack = CurrentExceptionStack();
+	const std::string szFull = szStack.empty() ? szMessage : szMessage + "\nthrown from:\n" + szStack;
+
+	fmt::print( stderr, "{}\n", szFull );
 	fflush( stderr );
 
 	if ( Singleton<IConsoleBuffer>() != 0 )
 	{
-		csSystem << CC_RED << szMessage.c_str() << endl;
+		csSystem << CC_RED << szFull.c_str() << endl;
 	}
 
+	// The box gets the message without the stack: it is for a player, and the
+	// stack is for whoever reads log.txt afterwards.
 	MessageBox( 0, szMessage.c_str(), "Error", MB_OK | MB_ICONERROR );
 }
 
