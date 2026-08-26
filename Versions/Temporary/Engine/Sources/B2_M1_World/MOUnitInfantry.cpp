@@ -494,7 +494,7 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 	GetPlacement( &vParachutePos, &qParachuteRot, &vParachuteScale );
 	nParachuteID = Scene()->AddObject( OBJECT_ID_GENERATE, pParachuteModel, 
 		vParachutePos, qParachuteRot, vParachuteScale, 
-		OBJ_ANIM_MODE_FORCE_ANIMATED, 0, false );
+		OBJ_ANIM_MODE_FORCE_ANIMATED, 0, 0 );
 	//
 	const NTimer::STime timeBegin = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	// change animation for main model

@@ -40,7 +40,7 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 	}
 
 	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1), 
-		                  bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED, 0, false );
+		                  bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED, 0, 0 );
 	SetModel( pModel );
 
   return true;
