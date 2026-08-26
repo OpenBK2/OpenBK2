@@ -27,6 +27,29 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EDITOR "build editor" OFF)
+option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
+option(ENABLE_ASAN "build with AddressSanitizer" OFF)
+
+# AddressSanitizer installs its own allocator to see every allocation and
+# free, so it cannot share a process with mimalloc, which replaces the same
+# thing. Turning one on turns the other off rather than leaving a combination
+# that builds and then reports nothing useful.
+if(ENABLE_ASAN AND USE_MIMALLOC)
+    message(STATUS "ENABLE_ASAN: mimalloc switched off, AddressSanitizer replaces the allocator")
+    set(USE_MIMALLOC OFF CACHE BOOL "replace the process allocator with mimalloc" FORCE)
+endif()
+
+if(ENABLE_ASAN)
+    # -g because a sanitizer report without symbols names an address and
+    # nothing else, and no-omit-frame-pointer because the stack it prints is
+    # walked rather than read from debug info.
+    if(MSVC)
+        add_compile_options(/fsanitize=address /Zi)
+    else()
+        add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g)
+        add_link_options(-fsanitize=address)
+    endif()
+endif()
 
 # Every engine module is a shared library and they are installed beside the
 # executable, which is where Windows looks by default and ELF does not. Recording
@@ -95,7 +118,9 @@ include(cmake/unittest.cmake)
 include(cmake/benchmarks.cmake)
 include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
-include(cmake/mimalloc.cmake)
+if(USE_MIMALLOC)
+    include(cmake/mimalloc.cmake)
+endif()
 include(cmake/glm.cmake)
 if(WIN32)
 include(cmake/dxsdk.cmake)

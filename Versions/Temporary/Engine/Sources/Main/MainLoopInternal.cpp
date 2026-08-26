@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include <typeinfo>
+#include <cstdlib>
 
 #include <filesystem>
 #include <system_error>
@@ -205,6 +207,22 @@ void AfterLoad()
 		(interfaces.back())->OnGetFocus( true );
 }
 
+//! Whether to write a line for every interface command executed.
+//!
+//! Off by default and read once, like OPENBK2_FILE_TRACE. Set
+//! OPENBK2_CMD_TRACE=1 to turn it on.
+//!
+//! The registered type id is what to compare across platforms. It is the number
+//! given to REGISTER_SAVELOAD_CLASS, the same on Windows and off it, so two logs
+//! can be diffed directly and the first line that differs is where the two
+//! builds part company. The class name is printed beside it for reading, and is
+//! not comparable: MSVC and the Itanium ABI spell typeid names differently.
+static bool IsCommandTraceEnabled()
+{
+	static const bool bEnabled = getenv( "OPENBK2_CMD_TRACE" ) != 0;
+	return bEnabled;
+}
+
 static bool ProcessInterfaceCmds()
 {
 	while ( !icmds.empty() )
@@ -213,8 +231,17 @@ static bool ProcessInterfaceCmds()
 		icmds.pop_front();
 		if ( !IsValid(pCmd) )
 		{
+			// Reported whatever the trace flag says. This throws away the whole
+			// interface stack and stops the main loop, and until now it did so
+			// without a word, which is indistinguishable from an ordinary exit.
+			csSystem << CC_RED << "icmd: invalid command, resetting the interface stack" << endl;
 			ResetStack();
 			return false;
+		}
+		if ( IsCommandTraceEnabled() )
+		{
+			csSystem << "icmd: " << fmt::format( "{:#010x}", NObjectFactory::GetObjectTypeID( pCmd ) ).c_str()
+			         << " " << typeid( *pCmd ).name() << endl;
 		}
 		pCmd->Exec();
 	}

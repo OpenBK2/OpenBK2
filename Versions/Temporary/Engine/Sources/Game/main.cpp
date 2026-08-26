@@ -3,7 +3,11 @@
 #include <thread>
 #include <chrono>
 
+#if USE_MIMALLOC
+// Overrides operator new and delete for this translation unit, which is what
+// puts mimalloc in front of the process allocator.
 #include <mimalloc-new-delete.h>
+#endif
 #include "resource.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -266,9 +270,11 @@ int main( int argc, char *argv[] )
 
 static int RunGame( const std::vector<std::string> &arguments )
 {
+#if USE_MIMALLOC
     // Keep mimalloc in the executable's import table so its redirect DLL can
     // replace the CRT allocator for every game module before initialization.
     (void)mi_version();
+#endif
 
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
 	StoreBuildInfo();
