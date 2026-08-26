@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include <cstring>
+#include <cstdlib>
+#include <cerrno>
 #include "Streams.h"
 #include "FileReaders.h"
 #include "VFS.h"
@@ -220,6 +223,52 @@ void CMappedStream::Flush()
 // **
 // ************************************************************************************************************************ //
 
+namespace
+{
+
+//! Whether to write a line for every file this process opens.
+//!
+//! Off by default and read once. The engine probes for files that are allowed
+//! to be missing - a mod config, a user profile - so a permanent record of every
+//! failure would be noise. It is the failures that are not allowed to happen
+//! that are worth an hour, and until now none of them said anything at all: a
+//! config that could not be opened produced no line in the log, no message on
+//! the console, and no clue that the path was wrong.
+//!
+//! Set OPENBK2_FILE_TRACE=1 in the environment to turn it on. Every open is
+//! reported, successes included, because knowing which of two candidate paths
+//! was tried is usually the question.
+bool IsFileTraceEnabled()
+{
+	static const bool bEnabled = getenv( "OPENBK2_FILE_TRACE" ) != 0;
+	return bEnabled;
+}
+
+//! One line per open: how it was opened, what was asked for, and what happened.
+//!
+//! pszWhy is the reason a failure failed, where there is one to give. The VFS
+//! has none beyond "no such entry"; an operating system file has errno, which
+//! separates a missing file from a directory that cannot be searched, and those
+//! want different fixes.
+void TraceFileOpen( const char *pszHow, const std::string &szFileName, const bool bOk, const char *pszWhy )
+{
+	if ( !IsFileTraceEnabled() )
+	{
+		return;
+	}
+	if ( bOk )
+	{
+		csSystem << "file: opened  " << pszHow << " " << szFileName.c_str() << endl;
+	}
+	else
+	{
+		csSystem << CC_ORANGE << "file: FAILED  " << pszHow << " " << szFileName.c_str()
+		         << " (" << ( pszWhy != 0 ? pszWhy : "no reason given" ) << ")" << endl;
+	}
+}
+
+}
+
 CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
 : CDataStream( F_Broken )
 {
@@ -227,6 +276,7 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
 	pStream = pVFS->OpenFile( szFileName );
 	if ( pStream )
 		SyncWith( *pStream );
+	TraceFileOpen( "vfs", szFileName, pStream != 0, "no such entry in the VFS" );
 }
 
 CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName )
@@ -236,28 +286,38 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &s
 	pStream = pFileCreator->CreateFile( szFileName );
 	if ( pStream )
 		SyncWith( *pStream );
+	TraceFileOpen( "create", szFileName, pStream != 0, "the file creator refused it" );
 }
 
 CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode )
 : CDataStream( F_Broken )
 {
+	// Captured before anything else can overwrite it, since the checks below and
+	// the tracing itself both make calls of their own.
+	errno = 0;
+	bool bOk = false;
 	if ( eWinMode == WIN_READ_ONLY )
 	{
 		pStream = new CMemoryMappedFile( szFileName.c_str(), STREAM_ACCESS_READ );
-		if ( !pStream->CanRead() )
+		bOk = pStream->CanRead();
+		if ( !bOk )
 			pStream->SetBroken();
 	}
 	else
 	{
 		NFile::CreatePath( NFile::GetFilePath(szFileName) );
 		pStream = new CMemoryMappedFile( szFileName.c_str(), STREAM_ACCESS_READ_WRITE );
-		if ( pStream->CanWrite() )
+		bOk = pStream->CanWrite();
+		if ( bOk )
 			pStream->Trunc();
 		else
 			pStream->SetBroken();
 	}
+	const int nErrno = errno;
 
 	SyncWith( *pStream );
+	TraceFileOpen( eWinMode == WIN_READ_ONLY ? "read" : "create",
+	               szFileName, bOk, nErrno != 0 ? strerror( nErrno ) : 0 );
 }
 
 CFileStream::~CFileStream()

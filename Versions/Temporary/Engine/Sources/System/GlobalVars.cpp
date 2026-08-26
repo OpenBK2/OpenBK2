@@ -335,7 +335,14 @@ void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
   const int nSize = stream.GetSize();
 	if ( nSize == 0 )
+	{
+		// Said nothing at all until now, which is how a whole startup chain of
+		// unreadable paths stayed invisible: this returns before the "Executing"
+		// line below, so a config that could not be opened left no trace.
+		csSystem << CC_ORANGE << "config not read: " << szFileName.c_str()
+		         << " (missing, empty, or unreadable)" << endl;
 		return;
+	}
   szBuffer.resize( nSize );
   stream.Read( &(szBuffer[0]), nSize );
 
@@ -508,7 +515,7 @@ void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &par
 static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
-		NGlobal::LoadConfig( "..\\" + NStr::ToMBCS( paramsSet[nTemp] ) );
+		NGlobal::LoadConfig( NFile::JoinPath( "..", NStr::ToMBCS( paramsSet[nTemp] ) ) );
 }
 
 static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
