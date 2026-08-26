@@ -3,7 +3,30 @@
 #include "vendor/granny/include/granny.h"
 #include "WingScaleMutator.h"
 
+#include "Misc/StrProc.h"
+
 #include "SceneB2_export.h"
+
+// strnicmp is an MSVC CRT extension. The names being matched are Granny bone names,
+// which are ASCII, so ASCII_tolower answers the same question strnicmp did.
+//
+// strnicmp stopped at the terminator, so a name shorter than the prefix never
+// matched; the size test below is that.
+static bool StartsWithNoCase( const std::string &szName, const std::string &szPrefix )
+{
+	if ( szName.size() < szPrefix.size() )
+	{
+		return false;
+	}
+	for ( std::string::size_type i = 0; i < szPrefix.size(); ++i )
+	{
+		if ( NStr::ASCII_tolower( szName[i] ) != NStr::ASCII_tolower( szPrefix[i] ) )
+		{
+			return false;
+		}
+	}
+	return true;
+}
 
 bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName )
 {
@@ -14,7 +37,7 @@ bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const std::string &
 		pGetBone->GetBoneNames( &names );
 		for ( std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it )
 		{
-			if ( strnicmp( it->c_str(), szScaledWingPrefix.c_str(), szScaledWingPrefix.length() ) == 0 )
+			if ( StartsWithNoCase( *it, szScaledWingPrefix ) )
 				scaledWings.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
 		}
 		nStaticWing = pGetBone->GetBoneIndex( szStaticWingName.c_str() );
