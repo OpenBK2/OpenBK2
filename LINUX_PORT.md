@@ -29,6 +29,17 @@ DXVK; the window, the cursor, the splash screen, the window icon and now the inp
 through SDL. **There are no platform blockers left**: `intrin.h`, D3D9, Win32 windowing and
 DirectInput are all done.
 
+**The game runs.** As of 2026-08-26 it starts, brings up DXVK on a real GPU, mounts the data
+paks, loads the database, reads its profile and configs, builds its UI and steps frames in the
+main loop. It then crashes releasing a screen, on the way back out of a menu; the resume point
+has the AddressSanitizer report and what it names.
+
+Two instruments exist for this and both are permanent: `OPENBK2_FILE_TRACE=1` and
+`OPENBK2_CMD_TRACE=1` log what the game opens and which interface commands run, on both
+platforms, and `scripts/port/diff-platform-trace.py` compares two such logs. That comparison is
+what established the data path is finished: the two platforms load identical files in identical
+order, so what is left is code.
+
 **`Game` links.** A whole-tree `ninja -k 0` succeeds and produces an ELF 64-bit executable
 with all 187 of its shared library dependencies resolved. That had never happened before
 2026-08-26. The link went 107 undefined symbols, then 66, 63, 54, 0: the system FFmpeg

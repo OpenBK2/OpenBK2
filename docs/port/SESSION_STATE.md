@@ -13,12 +13,12 @@ This is the resume point, nothing else. What is still to do lives in
 
 | | |
 |---|---|
-| `linux2` | see `git log -1`. The last of the day is the exception stack trace |
+| `linux2` | see `git log -1` |
 | Windows clone `C:\projects\OpenBK2` | same |
 | WSL clone `~/src/OpenBK2` | same |
-| `origin/linux2` | `b9b480aab`, **fifty-one** commits behind, a plain fast-forward. The user asked to hold the push |
+| `origin/linux2` | `b9b480aab`, **eighty-five** commits behind, a plain fast-forward. The user asked to hold the push |
 | `netcode_bugfixes` (base) | `48e12ca2b` |
-| commits on `linux2` past the base | 230 |
+| commits on `linux2` past the base | 264 |
 
 An earlier note said `origin/linux2` was at `f119e72ac` and forty-eight commits
 behind. It is not: the user pushed `b9b480aab` themselves after that was written.
@@ -160,6 +160,23 @@ does neither. Check that before believing a build is merely slow.
   covers VFS lookups that never reach a syscall so strace cannot see them.
 - `timeout` without `-s KILL` leaves the game running after the shell dies.
   Three stale processes accumulated before this was noticed.
+
+## One uncommitted change, left on purpose
+
+`System/Streams.cpp` has a local override forcing the file trace on:
+
+```cpp
+static const bool bEnabled = true;// getenv( "OPENBK2_FILE_TRACE" ) != 0;
+```
+
+**Do not commit it.** `OPENBK2_FILE_TRACE=1` in the environment does the same
+thing, and a build that always traces every file open is not what anyone else
+wants. It is left in the working tree rather than reverted because it belongs to
+whoever put it there, and because a Windows run is easier to capture with the
+flag hardcoded than with an environment variable.
+
+Revert it with `git checkout -- Versions/Temporary/Engine/Sources/System/Streams.cpp`
+when it has served its purpose.
 
 ## Handing over to a real Linux machine
 
