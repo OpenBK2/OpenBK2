@@ -55,7 +55,11 @@ class CBasicGun : public CBasicGunCRAPSaver
 {
 
 	enum EShootState { EST_TURNING, EST_AIMING, WAIT_FOR_ACTION_POINT, EST_SHOOTING, EST_REST };
+protected:
+	// parallelGuns below is protected, so the type that names it has to be too:
+	// CTurretGun::TraceAim iterates it.
 	typedef std::list< CPtr<CBasicGun> > CParallelGuns;
+private:
 
 	ZDATA_(CBasicGunCRAPSaver)
 protected:
