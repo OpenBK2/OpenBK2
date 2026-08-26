@@ -350,7 +350,12 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(dbPlayer.,LocalizedPlayerName) )
 		wszPlayerName = GET_TEXT_PRE(dbPlayer.,LocalizedPlayerName);
 	if ( bPlayer && wszPlayerName.empty() )
-		wszPlayerName = NGlobal::GetVar( "profile_name", L"" );
+	{
+		// GetString, not the conversion operator: assigning a CValue to an existing
+		// wstring can go through operator std::wstring or through operator float and
+		// basic_string::operator=( wchar_t ), one user conversion either way.
+		wszPlayerName = NGlobal::GetVar( "profile_name", L"" ).GetString();
+	}
 
 	std::wstring wszRankTag;
 	std::wstring wszPlayerRank;
