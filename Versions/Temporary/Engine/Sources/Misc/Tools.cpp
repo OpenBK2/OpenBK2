@@ -40,6 +40,7 @@ void PORT_STDCALL DbgTrcRaw( const char *pszText )
 #if BOOST_OS_WINDOWS
 	// the debugger output pane is a Windows concept
 	OutputDebugString( pszText );
+	std::fputs( pszText, stderr );
 #else
 	// stderr is the closest equivalent: unbuffered, and kept apart from
 	// whatever the game itself writes to stdout
