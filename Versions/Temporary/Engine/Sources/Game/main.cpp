@@ -3,7 +3,6 @@
 #include <thread>
 #include <chrono>
 
-#include <crtdbg.h>
 #include <mimalloc-new-delete.h>
 #include "resource.h"
 #include "Misc/2Darray.h"
@@ -92,12 +91,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	StoreBuildInfo();
-	//
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
-	const int nLeakId = -1;
-	_CrtSetBreakAlloc( nLeakId );
-
 	// crashpad will generate a crash report and write minidump
 	InitCrashpad();
 
