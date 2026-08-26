@@ -56,6 +56,7 @@ so they do not churn cherry-pick context.
 | [ ] | `cmake/versioninfo.cmake` sets `BUILD_DATE_TIME` at line 10 but reads `${BUILD_DATETIME}` at line 47. The names do not match, so `BUILD_DATE_TIME_STR` compiles as `""` and no binary carries a build date, CI included. One-line fix, but note it would make CI's per-run timestamp bust the ccache for every target using `add_version_info` |  |
 | [ ] | The benchmark harness ignores its own `/arch:` flag, so the AVX and AVX2 variants are really SSE2 | [The benchmark harness](#the-benchmark-harness-ignores-its-own-arch-flag) |
 | [ ] | `dbcodegen/main.cpp` and `dbstruct/main.cpp` include `System/CmdLine.h`, which row 52 deleted. Neither has CMake wiring, so nothing reports it; `boost::program_options` is the replacement when either is revived | [Commit 52](PORT_REPLAY.md#commit-52-deletes-a-parser-two-unbuilt-utilities-still-call) |
+| [ ] | **Reading the shipped data on a case sensitive filesystem.** The engine's own paths are fixed, but the data carries backslashes and its own casing - `startup.cfg` says `exec .\profiles\consts.cfg` - and this project does not author the data. Normalise on the way in, convert the data once, or mount it case insensitively | [Reading the shipped data](#reading-the-shipped-data-on-a-case-sensitive-filesystem) |
 | [ ] | **No pinned ISA baseline off Windows.** `cmake/arch.cmake` and `AILogic`'s `/fp:strict` are both inside `if(MSVC)`, so no `-march` is passed and `-DARCHITECTURE=` does nothing. Nothing is wrong today, since the unflagged baseline has no FMA to contract into, but the ISA then comes from whatever the distribution configured GCC with | [The build has no pinned ISA baseline](#the-build-has-no-pinned-isa-baseline-off-windows-and-that-is-a-determinism-item) |
 | [ ] | Two dead OS version checks left after row 56: `Game/SysKeys.cpp:66` and `FontGen/FontGen.cpp:294`. The third, `Input/Input.cpp:310`, went with `619b571b9`. The fourth, `GameX/FontInfo.cpp:117`, went with `6472aa3b8`. All test for Windows 9x or 2000. `GetVersionEx` is also deprecated and reports 6.2 on Windows 8.1 and later without a compatibility manifest, so three of them do not measure what they read as measuring | [Commit 56](PORT_REPLAY.md#commit-56-the-fallback-is-not-dead-code-after-all) |
 | [ ] | `Common_RTS_AI/ChecksumSaver.cpp:143` and `:197` call `breakpoint()` bare, on a checksum mismatch. With no debugger attached that terminates the process on every platform, so an ASYNC diagnostic kills the client instead of logging. They look like they want `breakpoint_if_debugging()`, but that changes when the game dies during a desync, so it is a decision rather than a fix | [Commit 48](PORT_REPLAY.md#commits-48-and-49-are-one-commit-they-are-halves-of-the-same-paper) |
@@ -165,6 +166,59 @@ File counts across `Engine/Sources` at the time:
 | MMX/SSE intrinsics | 1 | mostly already ported in `3Dmotor` |
 
 Plus Granny (proprietary, Windows-only) for model loading.
+
+### Reading the shipped data on a case sensitive filesystem
+
+Open, and the largest thing between the port and a running game. Raised
+2026-08-26 after the code side of it was cleared.
+
+The engine's own paths are fixed: `NFile::PATH_SEPARATOR`, `DIR_DATA`,
+`DIR_PROFILES`, `DIR_MODS` and `JoinPath` give it one spelling and one
+separator. **The data has neither**, and this project does not author the data.
+
+Two ways it bites, both seen:
+
+- **Separators.** `Profiles/startup.cfg` says `exec .\profiles\consts.cfg`.
+  A backslash is an ordinary filename character off Windows, so the whole thing
+  is one name that does not exist.
+- **Case.** The same line says `profiles` while `Versions/Current` ships
+  `Profiles`. Retail Fall of the Reich ships `data`, `profiles` and `mods` in
+  lower case, so the two distributions do not even agree with each other. On
+  Windows all of it worked and none of it was visible.
+
+And it is not only the configs. Map, mod and campaign data reference paths the
+same way, and a `.xdb` written by the editor will carry whatever the author's
+filesystem gave it.
+
+**Three ways to answer it, none free:**
+
+1. **Normalise on the way in.** Every path the engine accepts from data gets
+   separators folded and is resolved case insensitively against the real
+   directory. Robust against data nobody controls, and it is the only option
+   that works on data already published. It is also the rule
+   `System/FilePath.cpp` deliberately rejected for `CreatePath`, on the grounds
+   that rewriting separators "would hide those callers rather than fix them" -
+   which is right for a caller in this repository and wrong for a string that
+   arrived from a file.
+2. **Convert the data once**, at install or in a tool.
+   `scripts/port/patch_cfg.py` is the throwaway version of this and rewrote four
+   configs. It cannot reach inside `.pak` archives, and it makes every
+   third-party mod a thing that has to be converted before it will load.
+3. **A case insensitive view of the data directory**, from the packaging rather
+   than the engine: a `ciopfs` mount, or a normalising overlay. No code changes,
+   and it moves the problem onto whoever installs the game.
+
+**Note the asymmetry that decides it.** The engine's own paths are a closed set
+this repository can fix once. The data's are an open set: a map published in
+2007 cannot be recompiled, and a mod published tomorrow will be authored on
+Windows by someone who will never test it anywhere else. So whatever is chosen
+has to make unmodified, unmodifiable data work.
+
+Option 1 restricted to the *data* boundary - the VFS, the config reader, the
+`.xdb` loader - and not applied to paths this repository builds itself, is
+probably the answer. That keeps the FilePath.cpp reasoning intact: the callers
+inside the tree are still fixed rather than hidden, and only what arrives from
+outside is forgiven.
 
 ### The build has no pinned ISA baseline off Windows, and that is a determinism item
 
