@@ -5,8 +5,6 @@
 
 CTerraAIObserverInEditor::CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY )
 {
-	CTerraAIObserver::CTerraAIObserver();
-
 	pAIMap = new CAIMap( nAIMapSizeX, nAIMapSizeY, AI_TILE_SIZE, MAXIMUM_UNIT_TILE_RADIUS, MAXIMUM_MAP_SIZE );
 	pTerrain = pAIMap->GetTerrain();
 	pHeights = pAIMap->GetHeights();
