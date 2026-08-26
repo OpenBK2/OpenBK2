@@ -1,5 +1,11 @@
 #include "stdafx.h"
 
+// Before GShaderFX.h, and not optional. That header spells its handle type
+// LPCSTR, which arrives with DXVK's windows.h shim, and CVertexShader holds a
+// com_ptr<IDirect3DVertexShader9> whose Assign and Free call AddRef and Release,
+// so the interface has to be complete and not merely forward declared.
+#include <d3d9.h>
+
 #include "GShaderFX.h"
 
 #include "3Dmotor_export.h"
