@@ -55,8 +55,6 @@ protected:
 public:
 	// handles incoming message
 	bool HandleMessage( SMPUIMessage *pMsg );
-
-	int operator&( IBinSaver *saver ) { NI_ASSERT( 0, "Never store this class" ); }
 };
 
 class CMPUIMessageProcessor : public CMPUIMessageTranslator
