@@ -71,79 +71,6 @@ inline float fabsxyz( const CVec4 &a ) { return fabs( a.x, a.y, a.z ); }
 inline float fabsxy2( const CVec4 &a ) { return fabs2( a.x, a.y ); }
 inline float fabsxy( const CVec4 &a ) { return fabs( a.x, a.y ); }
 
-// ************************************************************************************************************************ //
-// **
-// ** bresenham's line algorithm classes and functions for 2D and 3D lines
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-class CBresenham3
-{
-	int x1, y1, z1;
-	const int x2, y2, z2;
-	const int xlen, ylen, zlen, len;
-	const int xinc, yinc, zinc;
-	int xerr, yerr, zerr;
-public:
-	CBresenham3( int _x1, int _y1, int _z1, int _x2, int _y2, int _z2 )
-		: x1( _x1 ), y1( _y1 ), z1( _z1 ), x2( _x2 ), y2( _y2 ), z2( _z2 ),
-		  xlen( abs(x2 - x1) + 1 ), ylen( abs(y2 - y1) + 1 ), zlen( abs(z2 - z1) + 1 ), len( (std::max)((std::max)(xlen, ylen), zlen) ),
-		  xinc( boost::math::sign(x2 - x1) ), yinc( boost::math::sign(y2 - y1) ), zinc( boost::math::sign(z2 - z1) ),
-			xerr( 0 ), yerr( 0 ), zerr( 0 ) {  }
-	//
-	void Next()
-	{
-		// x component
-		xerr += xlen;
-		if ( xerr >= len )
-			x1 += xinc, xerr -= len;
-		// y component
-		yerr += ylen;
-		if ( yerr >= len )
-			y1 += yinc, yerr -= len;
-		// z component
-		zerr += zlen;
-		if ( zerr >= len )
-			z1 += zinc, zerr -= len;
-	}
-	// check for line's end
-	bool IsEnd() const { return (x1 == x2) && (y1 == y2) && (z1 == z2); }
-	// coords access
-	int GetX() const { return x1; }
-	int GetY() const { return y1; }
-	int GetZ() const { return z1; }
-};
-template <class TFunctional>
-	void MakeLine3( int x1, int y1, int z1, int x2, int y2, int z3, TFunctional &func )
-{
-	CBresenham3 line( x1, y1, z1, x2, y2, z2 );
-	// first point
-	func( line.GetX(), line.GetY(), line.GetZ() );
-	// iterate line
-	while ( !line.IsEnd() )
-	{
-		line.Next();
-		func( line.GetX(), line.GetY(), line.GetZ() );
-	}
-}
-template <class TFunctional>
-	void ScanLine3( int x1, int y1, int z1, int x2, int y2, int z3, TFunctional &func )
-{
-	CBresenham3 line( x1, y1, z1, x2, y2, z2 );
-	// first point
-	if ( func( line.GetX(), line.GetY(), line.GetZ() ) == false )
-		return;
-	// iterate line
-	while ( !line.IsEnd() )
-	{
-		line.Next();
-		if ( func( line.GetX(), line.GetY(), line.GetZ() ) == false )
-			break;
-	}
-}
-
 #pragma pack(pop)
 
 // ************************************************************************************************************************ //
@@ -274,52 +201,6 @@ void BresenhamEllipse( int nCenterX, int nCenterY, int nXRadius, float fY2XRatio
 	// last 4 points
 	func( nCenterX - nXRadius, nCenterY );
 	func( nCenterX + nXRadius, nCenterY );
-	func( nCenterX, nCenterY - nXRadius * fY2XRatio );
-	func( nCenterX, nCenterY + nXRadius * fY2XRatio );
-}
-
-
-template <class TFunctional>
-void BresenhamFilledEllipse( int nCenterX, int nCenterY, int nRadius, float fY2XRatio, TFunctional &func )
-{
-	int x = 0, y = nXRadius;
-	int d = 3 - 2*y;
-	//
-	do
-	{
-		if ( d < 0 )
-			d += 4*x + 6;
-		else
-		{
-			d += 4*(x - y) + 10;
-			--y;
-		}
-		++x;
-		//
-		for ( int index = ( nCenterX - x ); index <= ( nCenterX + x * fY2XRatio ); ++index )
-		{
-			func( index, nCenterY + y * fY2XRatio );
-		}
-
-		for ( int index = ( nCenterX - x ); index <= ( nCenterX + x * fY2XRatio ); ++index )
-		{
-			func( index, nCenterY - y * fY2XRatio );
-		}
-		for ( int index = ( nCenterX - y ); index <= ( nCenterX + y * fY2XRatio ); ++index )
-		{
-			func( index, nCenterY + x * fY2XRatio );
-		}
-		for ( int index = ( nCenterX - y ); index <= ( nCenterX + y * fY2XRatio ); ++index )
-		{
-			func( index, nCenterY - x * fY2XRatio );
-		}
-		//
-	}	while ( x <= y );
-	// last 4 points
-	for ( int index = ( nCenterX - nRadius ); index <= ( nCenterX + nRadius ); ++index )
-	{
-		func( index, nCenterY );
-	}
 	func( nCenterX, nCenterY - nXRadius * fY2XRatio );
 	func( nCenterX, nCenterY + nXRadius * fY2XRatio );
 }
