@@ -4,9 +4,10 @@
 #include "System/FilePath.h"
 #include "LogSaver.h"
 #include "NetLogger.h"
-#include <time.h>
-#include <sys/types.h>
-#include <sys/timeb.h>
+#include "port/time.h"
+
+#include <chrono>
+#include <ctime>
 
 #include <fmt/format.h>
 
@@ -59,16 +60,24 @@ void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 	{
 		std::string szStr;
 		
-		static char buf[1024];
-		_strdate( buf );
-		szStr = buf;
+		// _strdate wrote "MM/DD/YY", _strtime "HH:MM:SS", and _ftime64 supplied the
+		// milliseconds. One reading of the clock serves all three here where the
+		// original took three, so the stamp can no longer straddle a second boundary
+		// and carry the seconds of one with the milliseconds of the next.
+		const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+		std::tm tmLocal;
+		if ( GetLocalTime( &tmLocal, std::chrono::system_clock::to_time_t( now ) ) )
+		{
+			char buf[32];
+			if ( std::strftime( buf, sizeof( buf ), "%m/%d/%y %H:%M:%S", &tmLocal ) != 0 )
+			{
+				szStr = buf;
+			}
+		}
 
-		_strtime( buf );
-		szStr += std::string(" ") + buf;
-
-		struct __timeb64 tstruct;
-		_ftime64( &tstruct );
-		szStr += fmt::format(".{}\n", tstruct.millitm );
+		const std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+			now.time_since_epoch() ) % std::chrono::seconds( 1 );
+		szStr += fmt::format( ".{}\n", ms.count() );
 
 		szStr += "\t" + szLog + "\n";
 
