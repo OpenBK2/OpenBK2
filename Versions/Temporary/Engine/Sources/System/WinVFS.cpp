@@ -144,8 +144,11 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 			szExt = "*.pak";
 	}
 	//
-	if ( szDir[szDir.size() - 1] != '\\' )
-		szDir += '\\';
+	// The platform's own separator, and any separator counts as one already
+	// being there. Forcing a backslash off Windows appended one to a path that
+	// already ended in a slash, and every lookup below concatenates onto this.
+	if ( !NFile::IsFolderSeparator( szDir[szDir.size() - 1] ) )
+		szDir += NFile::PATH_SEPARATOR;
 	//
 	szBasePath = szDir;
 	// enumerate all ZIP files and retrieve packed files from them
@@ -239,7 +242,11 @@ CDataStream* CWinVFS::OpenFileDirect( const std::string &_szPath )
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	//
-	NStr::ReplaceAllChars( &szPath, '/', '\\' );
+	// To the platform's own separator, not always to a backslash. The entry map
+	// this then looks the name up in is keyed by what the directory scan found,
+	// and off Windows that scan reports forward slashes, so converting the other
+	// way made every lookup miss.
+	NStr::ReplaceAllChars( &szPath, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
 	//
 	if ( ePath == STREAM_PATH_RELATIVE ) 
 	{

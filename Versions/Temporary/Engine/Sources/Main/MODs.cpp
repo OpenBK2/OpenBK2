@@ -31,7 +31,7 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 		szFullFolderName += '/';
 	//
 	pMOD->szFullFolderPath = szFullFolderName;
-	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) );
+	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR );
 	// name
 	{
 		CFileStream stream( szFullFolderName + "name.txt", CFileStream::WIN_READ_ONLY );
@@ -46,7 +46,7 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 
 void GetAllMODs( std::vector<SMOD> *pMODs )
 {
-	const std::string szMODsBaseDir = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS );
+	const std::string szMODsBaseDir = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR;
 	// iterate through all files by mask
 	for ( NFile::CFileIterator it( (szMODsBaseDir + "*.*").c_str() ); !it.IsEnd(); ++it )
 	{
@@ -126,7 +126,11 @@ public:
 	//
 	void Exec()
 	{
-		AttachMODInternal( NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA ), szFullFolderPath, eMode );
+		// A trailing separator, because CWinVFS and CWinFileCreator build a full
+		// path by concatenating this with the name they are asked for. JoinPath
+		// does not add one, which is right for a file path and wrong for a base.
+		AttachMODInternal( NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA ) + NFile::PATH_SEPARATOR,
+		                   szFullFolderPath, eMode );
 		auto modConfigPath = std::filesystem::path( szFullFolderPath.c_str() ) / "mod_config.cfg";
 		if ( std::filesystem::exists( modConfigPath ) )
 		{
