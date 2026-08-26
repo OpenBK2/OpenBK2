@@ -94,8 +94,12 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// crashpad will generate a crash report and write minidump
 	InitCrashpad();
 
-	// disable system-critical errors displaying - just send it to calling process
+	// Suppress the shell's own error boxes for a missing DLL or an unreadable
+	// drive, so the failure goes to the calling process instead. Windows only:
+	// there is no equivalent notion off it, and nothing takes its place.
+#if BOOST_OS_WINDOWS
 	SetErrorMode( SEM_FAILCRITICALERRORS );
+#endif
 	//
 	if ( ProcessCommandLine(lpCmdLine) == false )
 		return 0xDEAD;
