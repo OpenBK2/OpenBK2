@@ -1,6 +1,10 @@
 #pragma once
 
 #include "AIMap.h"
+// AIMap.h only forward declares CArray2D1Bit, which is all its own declarations
+// need. The bodies below construct one and call GetData and SetData on it, so
+// they need the definition.
+#include "Misc/BitData.h"
 #include "Misc/Bresenham.h"
 
 inline bool operator < ( const SVector &cell1, const SVector &cell2 );
