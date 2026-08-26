@@ -231,10 +231,13 @@ static bool ProcessInterfaceCmds()
 		icmds.pop_front();
 		if ( !IsValid(pCmd) )
 		{
-			// Reported whatever the trace flag says. This throws away the whole
-			// interface stack and stops the main loop, and until now it did so
-			// without a word, which is indistinguishable from an ordinary exit.
-			csSystem << CC_RED << "icmd: invalid command, resetting the interface stack" << endl;
+			// This is how the game is asked to stop: an invalid command throws
+			// away the interface stack and ends the main loop. A Windows trace
+			// recorded on 2026-08-26 ends on exactly this line after a normal
+			// quit, so it is the ordinary exit path and not a fault. Reported
+			// anyway, and not in red, because it is the only record that the
+			// loop ended deliberately rather than crashed.
+			csSystem << "icmd: invalid command, interface stack reset (this is how the game exits)" << endl;
 			ResetStack();
 			return false;
 		}

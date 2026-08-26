@@ -30,6 +30,67 @@ in both clones. It has to be re-pointed by hand after the next verified run.
 
 ## Where the game stops
 
+**The data path is finished.** A Windows trace recorded on 2026-08-26 and a
+Linux one, compared with `scripts/port/diff-platform-trace.py`, are **identical
+for all 100 events Linux produces**. Same files, same order. Linux gets exactly
+as far as Windows and stops where Windows goes on to build the main menu:
+
+```
+ui/game/menu/mainmenu_windowscreen.xdb        <- Windows continues here
+ui/game/menu/mainmenu/mainmenu_windowsimple.xdb
+ui/game/menu/main/exit_windowmsbutton.xdb
+```
+
+So there is no missing file, no wrong path and no remaining case problem. **The
+fault is in code**, at main menu construction.
+
+Getting there took one rename: the code asks for `Cursors/` and the install had
+`cursors/`, which cleared **27 of 74** VFS failures. The other 47 were never
+real, being served from inside the paks. Only the directory case differed; every
+filename already matched.
+
+### What AddressSanitizer says
+
+`-DENABLE_ASAN=ON` builds and runs. The report:
+
+```
+ERROR: AddressSanitizer: SEGV on unknown address 0x1dd93b82da05
+The signal is caused by a READ memory access.
+    #0  virtual thunk to CWindowScreen::DestroyContents()
+    #1  CObjectBase::DestroyDelayed()          Basic.cpp:124
+    #2  CObjectBase::ReleaseObj(int, int)      Basic.cpp:69
+    ...
+    #11 NMainLoop::PopInterface()              MainLoopInternal.cpp:141
+    #12 CICPreviousMenu::Exec()                GameX/InterfaceMisc.cpp:219
+    #13 ProcessInterfaceCmds                   MainLoopInternal.cpp:246
+```
+
+**Three things in that the plain backtrace did not give:**
+
+- **`CICPreviousMenu::Exec()` is what starts it.** The game is going *back* a
+  menu, so `PopInterface` pops the interface stack and releases the screen. The
+  crash is on the way out of a screen, not the way into one.
+- **The faulting frame is a virtual thunk**, the multiple inheritance `this`
+  adjustment for `CWindowScreen : public CWindow, public IScreen`. A thunk
+  faulting on a read means the object it was handed is not what it claims to be:
+  a garbage or already-freed vtable pointer, rather than a fault inside the
+  function body.
+- **`rcx = 0xf5f5f5f5f5f5f5f5`** in the register dump, a poison fill. Consistent
+  with the object having already been destroyed.
+
+ASan calls it "SEGV on unknown address" rather than a use-after-free, which
+means the memory is not one of its tracked heap allocations. That fits an object
+the engine destroyed through its own machinery: `DestroyDelayed` keeps
+`toDestroy` and `toInvalidate` lists, and an object reaching either twice would
+produce exactly this - `DestroyContents` called on a corpse.
+
+**So the next question is whether this is a double release.** `CObjectBase`
+self-deletes through `delete this`, and `DestroyContents` destroys in place and
+placement-news the object back while preserving the refcounts. A watchpoint on
+that object's refcount through `CICPreviousMenu::Exec` would settle it.
+
+## Superseded: where the game stopped before the traces were compared
+
 **The whole loading chain works.** The VFS mounts `Data`, opens `data.pak` and
 the five patch paks, reads `types.xml` and `index.bin`, the database loads
 objects, seven config files execute including the two that follow `LoadProfile`,
