@@ -82,7 +82,6 @@ namespace {
 	}
 }
 
-static std::string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
     // Keep mimalloc in the executable's import table so its redirect DLL can
@@ -106,17 +105,16 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	std::string szLogFileName, szErrorFileName;
 	{
-		char buffer[1024];
-		GetCurrentDirectory( 1024, buffer );
-		szLaunchDirectory = buffer;
-		if ( !szLaunchDirectory.empty() ) 
-		{
-			if ( szLaunchDirectory[szLaunchDirectory.size() - 1] != '\\' ) 
-				szLaunchDirectory += '\\';
-		}
+		// NFile::GetNormalizedCurrDir is what the rest of the tree uses in place of
+		// GetCurrentDirectory. It hands back forward slashes with one on the end,
+		// so the backslash that was concatenated here is gone too, and it fixes
+		// the bug the 1024 byte buffer carried: GetCurrentDirectory wrote nothing
+		// and returned the size it wanted when the path did not fit, leaving
+		// uninitialised stack behind.
+		const std::string szDir = NFile::GetNormalizedCurrDir();
 		//
-		szLogFileName = std::string(buffer) + "\\log.txt";
-		szErrorFileName = std::string(buffer) + "\\error.txt";
+		szLogFileName = szDir + "log.txt";
+		szErrorFileName = szDir + "error.txt";
 		NFile::RemoveFile( szErrorFileName );
 		NFile::RemoveFile( szLogFileName );
 	}
