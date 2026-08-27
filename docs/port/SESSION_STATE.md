@@ -1,6 +1,6 @@
 # Where the port stopped
 
-Written 2026-08-26. Part of the Linux port notes; see
+Written 2026-08-26, updated 2026-08-27. Part of the Linux port notes; see
 [LINUX_PORT.md](../../LINUX_PORT.md) for the index.
 
 This is the resume point, nothing else. What is still to do lives in
@@ -16,12 +16,24 @@ This is the resume point, nothing else. What is still to do lives in
 | `linux2` | see `git log -1` |
 | Windows clone `C:\projects\OpenBK2` | same |
 | WSL clone `~/src/OpenBK2` | same |
-| `origin/linux2` | `b9b480aab`, **eighty-five** commits behind, a plain fast-forward. The user asked to hold the push |
+| `origin/linux2` | `cd342b672`, which is **no longer on the branch**. Three commits were rewritten on 2026-08-27, so the next push is a `--force-with-lease` and not a fast-forward. The user asked to hold it |
 | `netcode_bugfixes` (base) | `48e12ca2b` |
-| commits on `linux2` past the base | 264 |
+| commits on `linux2` past the base | 256 |
 
-An earlier note said `origin/linux2` was at `f119e72ac` and forty-eight commits
-behind. It is not: the user pushed `b9b480aab` themselves after that was written.
+**`origin/linux2` has diverged, and it is this side that moved.** `fe3d005224`
+had committed a local debug override, `IsCommandTraceEnabled` forced to `true`
+with the `getenv` commented out beside it. It was amended and its two children
+replayed, so `fe3d005224`, `81717325f` and `cd342b672` became `a35c9bcee`,
+`0f15e0e0c` and `2c924a5af`. The rewritten tree differs from the old one by that
+one line and nothing else, which `git diff cd342b672 HEAD` was used to confirm
+before anything was built on top.
+
+Earlier notes said `origin/linux2` was at `f119e72ac`, then `b9b480aab`. Both
+are superseded: the user pushed up to `cd342b672` themselves.
+
+A clone that already has the old commits needs `git reset --hard windows/linux2`
+rather than `git merge --ff-only`. The WSL clone was reset this way on
+2026-08-27 and `git fetch` reported the forced update as expected.
 
 `linux2-verified` is at `e72702cd7`, still the pre-rebase tip and still orphaned
 in both clones. It has to be re-pointed by hand after the next verified run.
@@ -30,64 +42,107 @@ in both clones. It has to be re-pointed by hand after the next verified run.
 
 ## Where the game stops
 
-**The data path is finished.** A Windows trace recorded on 2026-08-26 and a
-Linux one, compared with `scripts/port/diff-platform-trace.py`, are **identical
-for all 100 events Linux produces**. Same files, same order. Linux gets exactly
-as far as Windows and stops where Windows goes on to build the main menu:
+**Solved 2026-08-27 in `c0b327375`.** The teardown crash was not a double
+release. It was `DestroyContents` reading a virtual base's member after the
+destructor had run. The game now gets through the main menu and into a mission,
+and stops in the Granny stub, which is a known and separate item.
+
+[What DestroyContents was doing](#what-destroycontents-was-doing) below has the
+mechanism. What follows first is where it stops **now**.
+
+### Where it stops now
 
 ```
-ui/game/menu/mainmenu_windowscreen.xdb        <- Windows continues here
-ui/game/menu/mainmenu/mainmenu_windowsimple.xdb
-ui/game/menu/main/exit_windowmsbutton.xdb
+load: 1.105988 sec in segment, 2474 objs loaded
+Triggers manager was started
+Win / Loose checks loaded
+Bad weather turning on
+SUMMARY: AddressSanitizer: SEGV 3Dmotor/GObjectInfo.cpp:504
+         in NGScene::CGrannyMeshLoader::Recalc()
 ```
 
-So there is no missing file, no wrong path and no remaining case problem. **The
-fault is in code**, at main menu construction.
+The swapchain comes up at 1366x768, a segment loads 2474 objects, Lua starts and
+the triggers manager runs. Then the first model wants real geometry and there is
+none.
 
-Getting there took one rename: the code asks for `Cursors/` and the install had
-`cursors/`, which cleared **27 of 74** VFS failures. The other 47 were never
-real, being served from inside the paks. Only the directory case differed; every
-filename already matched.
-
-### What AddressSanitizer says
-
-`-DENABLE_ASAN=ON` builds and runs. The report:
+This was predicted. See
+[A failed resource load is a crash](PORT_ROADMAP.md#a-failed-resource-load-is-a-crash),
+written before the run that reached it: `CGrannyMeshLoader::Recalc` guards the
+loader but not the file inside it, so a null `granny_file` reaches
+`GrannyGetFileInfo`, which returns null in its turn, and `pData->Models[0]`
+dereferences it. `granny_calls.log` from that run is three lines long and says
+exactly this:
 
 ```
-ERROR: AddressSanitizer: SEGV on unknown address 0x1dd93b82da05
-The signal is caused by a READ memory access.
-    #0  virtual thunk to CWindowScreen::DestroyContents()
-    #1  CObjectBase::DestroyDelayed()          Basic.cpp:124
-    #2  CObjectBase::ReleaseObj(int, int)      Basic.cpp:69
-    ...
-    #11 NMainLoop::PopInterface()              MainLoopInternal.cpp:141
-    #12 CICPreviousMenu::Exec()                GameX/InterfaceMisc.cpp:219
-    #13 ProcessInterfaceCmds                   MainLoopInternal.cpp:246
+     1  GrannyReadEntireFileFromMemory( MemorySize=293795 Memory=0x7bbb43826800 )
+     2  GrannyReadEntireFileFromMemory( MemorySize=5511 Memory=0x7e0b4962b100 )
+     3  GrannyGetFileInfo( File=0x0 )
 ```
 
-**Three things in that the plain backtrace did not give:**
+So it is the stub, not a port defect. Two of the 54 entry points have ever been
+reached. See
+[Granny, and the log that says what to port](PORT_ROADMAP.md#granny-and-the-log-that-says-what-to-port).
 
-- **`CICPreviousMenu::Exec()` is what starts it.** The game is going *back* a
-  menu, so `PopInterface` pops the interface stack and releases the screen. The
-  crash is on the way out of a screen, not the way into one.
-- **The faulting frame is a virtual thunk**, the multiple inheritance `this`
-  adjustment for `CWindowScreen : public CWindow, public IScreen`. A thunk
-  faulting on a read means the object it was handed is not what it claims to be:
-  a garbage or already-freed vtable pointer, rather than a fault inside the
-  function body.
-- **`rcx = 0xf5f5f5f5f5f5f5f5`** in the register dump, a poison fill. Consistent
-  with the object having already been destroyed.
+### What DestroyContents was doing
 
-ASan calls it "SEGV on unknown address" rather than a use-after-free, which
-means the memory is not one of its tracked heap allocations. That fits an object
-the engine destroyed through its own machinery: `DestroyDelayed` keeps
-`toDestroy` and `toInvalidate` lists, and an object reaching either twice would
-produce exactly this - `DestroyContents` called on a corpse.
+The symptom was a virtual thunk to `CWindowScreen::DestroyContents` faulting one
+frame below `CObjectBase::DestroyDelayed`, reached from `CICPreviousMenu::Exec`
+by way of `NMainLoop::PopInterface`. That reads like a double release, and the
+note that used to stand here said the next question was whether it was one.
 
-**So the next question is whether this is a double release.** `CObjectBase`
-self-deletes through `delete this`, and `DestroyContents` destroys in place and
-placement-news the object back while preserving the refcounts. A watchpoint on
-that object's refcount through `CICPreviousMenu::Exec` would settle it.
+**It is not.** An `OPENBK2_OBJ_TRACE` build was written to answer exactly that,
+logging every branch of `ReleaseObj`, `ReleaseRef` and both drain loops and
+checking each object against both queues on every event. Over 5523 destruction
+events it produced **no hits at all**: nothing reached `toDestroy` and
+`toInvalidate` together, and nothing was queued twice. That negative result is
+what redirected the search, and the trace was dropped once it had.
+
+The real cause was one line of `Basic.h`, and the disassembly of the thunk is
+the whole proof, because the entire function body is inlined into it:
+
+```
+call CWindowScreen::~CWindowScreen()   # destructor runs
+mov  (%rbx),%rax                       # vptr, read again from a dead object
+mov  -0x20(%rax),%rsi                  # "virtual base offset", a wild number
+lea  0xc(%rsi),%rdi                    # &this->nRefData
+movzbl shadow(%rdi)                    # SEGV
+```
+
+`nObjData` and `nRefData` live in `CObjectBase`, and `CObjectBase` is a
+**virtual** base of most of the UI: `IWindow`, `IScreen`, `IClickNotify`,
+`IDataViewer` and the rest all say `virtual public CObjectBase`. Reaching a
+virtual base's member through `this->` compiles to a vptr load plus an offset
+lookup, and after the destructor there is no vptr left to load. GCC reloads it
+anyway.
+
+The fix takes the two addresses **before** the destructor, where the vptr is
+still valid, and reads through them afterwards. A member's offset within
+`CObjectBase` is fixed and the storage does not move across either the
+destructor or the placement new, so the cached pointers stay correct and no vptr
+is needed. The read still happens after the destructor, deliberately: the
+destructor can drop references to the object and those decrements have to carry
+over.
+
+**Two things in the old analysis were wrong and are worth naming.**
+
+- `rcx = 0xf5f5f5f5f5f5f5f5` in the register dump was read as a poison fill
+  proving the object had already been destroyed. It proves nothing. `rcx` is the
+  register the faulting instruction was about to write, so it simply still held
+  whatever had been in it.
+- The note below, that `DestroyContents` reads `nRefData` after the destructor
+  and that this is "benign for a POD in practice", had the right observation and
+  the wrong conclusion. It is benign only while `CObjectBase` is a non-virtual
+  base, which is most classes and not the UI.
+
+MSVC survives the old code, which is why this stood for twenty years. It has
+always been undefined.
+
+**How it was verified.** Windows x64 and x86 both build clean with the change,
+612/612 and 636/636. On Linux the whole ASan tree was rebuilt from the committed
+sources, with no trace compiled in anywhere: `strings libSystem.so` finds zero
+`OPENBK2_OBJ_TRACE` and zero `drain-invalidate`, and a run with
+`OPENBK2_OBJ_TRACE=1` deliberately set produces no trace lines and reaches the
+Granny stop above.
 
 ## Superseded: where the game stopped before the traces were compared
 
@@ -122,8 +177,16 @@ destructor or the reconstruction, and which member.
 means something upstream decided to exit and did not say why; that may be the
 real fault and this only its consequence. And `DestroyContents` reads
 `this->nRefData` after the destructor has run, which is reading a destroyed
-object - benign for a POD in practice, on both platforms, but worth knowing
-before trusting anything it reports.
+object.
+
+**That second one was the bug, and this paragraph used to end by calling it
+"benign for a POD in practice, on both platforms".** It is benign only where
+`CObjectBase` is an ordinary base. Where it is a virtual base, which is most of
+the UI, the read needs a vptr the destructor has already taken away. Fixed in
+`c0b327375`; see
+[What DestroyContents was doing](#what-destroycontents-was-doing). The wrong
+half is left standing because getting within one sentence of the cause and then
+dismissing it is the part worth remembering.
 
 ### How it got here, and what each fix was
 
@@ -161,22 +224,23 @@ does neither. Check that before believing a build is merely slow.
 - `timeout` without `-s KILL` leaves the game running after the shell dies.
   Three stale processes accumulated before this was noticed.
 
-## One uncommitted change, left on purpose
+## The uncommitted override is gone
 
-`System/Streams.cpp` has a local override forcing the file trace on:
+`System/Streams.cpp` carried a local override forcing the file trace on:
 
 ```cpp
 static const bool bEnabled = true;// getenv( "OPENBK2_FILE_TRACE" ) != 0;
 ```
 
-**Do not commit it.** `OPENBK2_FILE_TRACE=1` in the environment does the same
-thing, and a build that always traces every file open is not what anyone else
-wants. It is left in the working tree rather than reverted because it belongs to
-whoever put it there, and because a Windows run is easier to capture with the
-flag hardcoded than with an environment variable.
+**Reverted 2026-08-27**, having served its purpose. `OPENBK2_FILE_TRACE=1` in
+the environment does the same thing. The working tree is clean apart from the
+two ELK strays noted at the end of this file.
 
-Revert it with `git checkout -- Versions/Temporary/Engine/Sources/System/Streams.cpp`
-when it has served its purpose.
+A second one was written and never committed: an `OPENBK2_OBJ_TRACE` build of
+`System/Basic.cpp` logging every destruction. It answered its question, which
+was that the teardown crash is not a double release, and was dropped rather than
+kept. A permanent trace of every object destruction is a lot of machinery for a
+question that is now closed.
 
 ## Handing over to a real Linux machine
 
@@ -541,13 +605,12 @@ says to copy `Versions/Current/Profiles`, `Versions/Current/Data` and
 `splash.bmp` into the prefix by hand. The splash failure in the run above is
 that, not a bug.
 
-Once it draws, the next thing is the game will
-stop somewhere, and `granny_calls.log` beside the executable will say which
-Granny entry points were reached, in what order, and with what arguments. That
-list, in that order, is the porting plan for Granny.
-
-Expect it to stop during loading. Everything below `GrannyReadEntireFile`
-returns null, so the first model to be loaded is likely where it ends.
+**This happened, and the prediction was right.** It drew, it stopped during
+loading, and `granny_calls.log` named the place. The log is three lines: two
+`GrannyReadEntireFileFromMemory` calls that return null because the stub returns
+null, and one `GrannyGetFileInfo( File=0x0 )` that is handed the result. Two of
+the 54 entry points have ever been reached, and the porting plan for Granny
+starts with those two. See [Where it stops now](#where-it-stops-now).
 
 Two things to check when it does run, both recorded as unknowns rather than
 problems:
@@ -597,5 +660,14 @@ the source tree. They are the same two the Windows clone has, they are not at a
 path any commit adds, and they do not block a fast-forward. The Windows clone
 carries the strays it has carried all along; nothing is half-applied to recover.
 
-The port notes live under `docs/port/`, which `.git/info/exclude` keeps
-untracked, so nothing in this directory is ever part of a commit.
+The port notes used to live outside version control: `docs/port/` and
+`LINUX_PORT.md` were in `.git/info/exclude`. **They are tracked now**, committed
+so that they travel with the branch to a real Linux machine. The exclude entries
+are still there and are inert, because git ignores them for files it already
+tracks. `build.sh` and `launch.sh` were carried across the same way on
+2026-08-27, in `a50272433`, and are temporary.
+
+Still excluded and still local: `linux-configure.sh`, `xcheck_docs.sh`,
+`scope.py`, `built_files.txt`. `build.sh` only builds and installs into an
+already configured `linux-build`, so `linux-configure.sh` is the one it depends
+on and the obvious next candidate if the scripts are to be useful elsewhere.
