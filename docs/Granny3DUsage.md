@@ -1,6 +1,19 @@
 # Inspect Granny3D animation usage
 
-> This game uses Granny3D as a 3D model format (granny 2 - .gr2) & management library. I want you to inspect the code around granny3D functions it uses (most, if not all of it is probably in [3Dmotor](Versions/Temporary/Engine/Sources/3Dmotor/) project) and tell me, is it using granny as just the 3D format utility or does it also use its animation system and such (or does the game have its own animation system)?
+> **Status.** Written 2026-08-16 and re-verified against `port` on 2026-08-27. The
+> findings held; what changed is corrections to three file citations, and the
+> Granny-removal section, which predated the Linux stub that pinned the link
+> surface at 54 entry points. Sections added since the original: the
+> `SGrannySkeletonPose` leak, the two GR2 readers outside `CObjectInfo`, and the
+> save-format coupling.
+>
+> **Sequel.** [GrannyReplacement.md](GrannyReplacement.md) covers the other half of
+> the question: six open source GR2 libraries measured against this game's data, the
+> corpus censuses, bit-exact validation against `granny2.dll`, and a staged plan for
+> a native reader. It supersedes this document wherever the two disagree, since it
+> was measured on the retail game rather than the repository's beta snapshot.
+
+> This game uses Granny3D as a 3D model format (granny 2 - .gr2) & management library. I want you to inspect the code around granny3D functions it uses (most, if not all of it is probably in [3Dmotor](../Versions/Temporary/Engine/Sources/3Dmotor/) project) and tell me, is it using granny as just the 3D format utility or does it also use its animation system and such (or does the game have its own animation system)?
 > I'm asking because I want to know how feasable would it be to add a new 3D format support to the game (probably GLTF), and keeping granny only as a legacy, backwards compatibility thing. Don't change any code, just inspect well. Don't fret to give me a nice chunky description of how the thing works.
 
 <details><summary>10 previous messages</summary>
@@ -226,7 +239,7 @@ Granny reads GR2 file and exposes file_info
 
 ### Geometry loading
 
-The game reads the complete resource into memory and passes it to `GrannyReadEntireFileFromMemory` in [GObjectInfo.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp:32).
+The game reads the complete resource into memory and passes it to `GrannyReadEntireFileFromMemory` in [GObjectInfo.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp#L51).
 
 It then copies the Granny mesh into the engine’s own representation:
 
@@ -238,7 +251,7 @@ It then copies the Granny mesh into the engine’s own representation:
 - Material-group partitioning
 - Bone indices and weights
 
-That conversion is in [GObjectInfo.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp:139). The destination is `CObjectInfo`, whose native vertex and skin-weight formats are defined in [GGeometry.h](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3DLib/GGeometry.h:10).
+That conversion is in [GObjectInfo.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp#L142). The destination is `CObjectInfo`, whose native vertex and skin-weight formats are defined in [GGeometry.h](../Versions/Temporary/Engine/Sources/3DLib/GGeometry.h#L13).
 
 Important restrictions of the existing renderer include:
 
@@ -249,15 +262,15 @@ Important restrictions of the existing renderer include:
 - Only the first UV set is copied by the normal GR2 loader
 - Mesh primitives/material groups must remain in the order expected by the model database
 
-For skinned meshes, the loader maps Granny mesh bone bindings to the selected external skeleton by **bone name**. This means geometry and skeleton resources can be stored independently. See [GObjectInfo.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp:232).
+For skinned meshes, the loader maps Granny mesh bone bindings to the selected external skeleton by **bone name**. This means geometry and skeleton resources can be stored independently. See [GObjectInfo.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp#L235).
 
-Once converted, Granny no longer participates in drawing the mesh. Granny materials and textures are effectively ignored; the game’s DB model records and engine material system supply those separately in [DBScene.h](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/DBScene.h:29).
+Once converted, Granny no longer participates in drawing the mesh. Granny materials and textures are effectively ignored; the game’s DB model records and engine material system supply those separately in [DBScene.h](../Versions/Temporary/Engine/Sources/3Dmotor/DBScene.h#L33).
 
 ### Skeletal animation
 
 The animation side remains much more deeply tied to Granny.
 
-`CSkeletonAnimator` creates a Granny model instance around the selected skeleton in [GAnimation.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp:119).
+`CSkeletonAnimator` creates a Granny model instance around the selected skeleton in [GAnimation.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp#L161).
 
 When an animation is added, it uses Granny’s controlled-animation API:
 
@@ -268,9 +281,9 @@ When an animation is added, it uses Granny’s controlled-animation API:
 - Ease-in and ease-out
 - Completion and end-time handling
 
-That path begins in [GAnimation.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp:424).
+That path begins in [GAnimation.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp#L453).
 
-Every pose update eventually calls `GrannySampleModelAnimations`, producing a `granny_local_pose` in [GAnimation.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp:313).
+Every pose update eventually calls `GrannySampleModelAnimations`, producing a `granny_local_pose` in [GAnimation.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp#L336).
 
 The game then applies its own additions:
 
@@ -279,7 +292,7 @@ The game then applies its own additions:
 - Procedural per-bone transformations
 - Special object-specific pose mutators
 
-Finally, Granny constructs the hierarchical world pose and composite skinning matrices in [GBind.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GBind.cpp:23).
+Finally, Granny constructs the hierarchical world pose and composite skinning matrices in [GBind.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GBind.cpp#L51).
 
 Those composite matrices account for the skeleton hierarchy and inverse bind matrices.
 
@@ -287,9 +300,9 @@ Those composite matrices account for the skeleton hierarchy and inverse bind mat
 
 The resulting matrices are converted into the engine’s `SSkeletonMatrices`. The renderer performs the actual vertex skinning itself.
 
-The CPU linear-blend skinning implementation is in [GCombiner.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GCombiner.cpp:205). It blends up to four bone matrices per vertex, transforms positions and normal bases, and uploads the transformed vertices to a dynamic buffer.
+The CPU linear-blend skinning implementation is in [GCombiner.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GCombiner.cpp#L211). It blends up to four bone matrices per vertex, transforms positions and normal bases, and uploads the transformed vertices to a dynamic buffer.
 
-The same engine matrix representation is also used to deform animated collision/AI geometry in [aiObjectLoader.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/aiObjectLoader.cpp:169).
+The same engine matrix representation is also used to deform animated collision/AI geometry in [aiObjectLoader.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/aiObjectLoader.cpp#L171).
 
 This separation is encouraging for glTF support: the renderer already consumes native geometry plus a vector of matrices. It does not need Granny objects directly.
 
@@ -315,16 +328,41 @@ This separation is encouraging for glTF support: the renderer already consumes n
 | Animated collision hulls | Game |
 | Bone locators and attachments | Game using Granny-produced poses |
 
-The public animation abstraction is not cleanly format-independent. `IAnimMutator` directly exposes `granny_local_pose*` in [GAnimation.hpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.hpp:30).
+The public animation abstraction is not cleanly format-independent. `IAnimMutator` directly exposes `granny_local_pose*` in [GAnimation.hpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.hpp#L30).
 
 Several gameplay modules depend on that:
 
-- [MechUnitJoggingMutator.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/SceneB2/MechUnitJoggingMutator.cpp:63)
-- [TreeWindMutator.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/SceneB2/TreeWindMutator.cpp:24)
-- [TreeFallingMutator.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/SceneB2/TreeFallingMutator.cpp:87)
-- [WingScaleMutator.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/SceneB2/WingScaleMutator.cpp:25)
+- [MechUnitJoggingMutator.cpp](../Versions/Temporary/Engine/Sources/SceneB2/MechUnitJoggingMutator.cpp#L65)
+- [TreeWindMutator.cpp](../Versions/Temporary/Engine/Sources/SceneB2/TreeWindMutator.cpp#L24)
+- [TreeFallingMutator.cpp](../Versions/Temporary/Engine/Sources/SceneB2/TreeFallingMutator.cpp#L89)
+- [WingScaleMutator.cpp](../Versions/Temporary/Engine/Sources/SceneB2/WingScaleMutator.cpp#L50)
+
+The mutator interface is not the widest leak, though. `ISkeletonAnimator` derives from `CFuncBase<SGrannySkeletonPose>`, and `SGrannySkeletonPose` is itself a Granny type in all but name:
+
+```cpp
+struct SGrannySkeletonPose
+{
+    float poseGlobal[16];
+    granny_local_pose *pPose;
+};
+```
+
+See [GSkeleton.h](../Versions/Temporary/Engine/Sources/3Dmotor/GSkeleton.h#L29). So the *value the animator publishes* is a `granny_local_pose*`, not just the argument the mutators receive. Neutralizing `IAnimMutator` alone does not produce a format-independent seam; this struct has to be replaced at the same time, and it is what `GAnimUtils`, `GBind` and every pose consumer read.
 
 Furthermore, `CSkeletonAnimator` is the only implementation of `ISkeletonAnimator` I found. So the interface resembles an abstraction, but the implementation and some consumers still expose Granny types.
+
+### Three GR2 readers, not one
+
+The diagram above shows the `CObjectInfo` path, which is the main one but not the only one. Two further paths parse `granny_mesh` themselves and never produce a `CObjectInfo`:
+
+- **AI/collision geometry.** `CLoadAIGeometryFromGranny` and `CFileSkinPointsLoadFromGranny` in [aiObjectLoader.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/aiObjectLoader.cpp#L171) walk `granny_file_info->Meshes[]` directly and call `ConvertAIGeomVerticesFromGranny` / `ConvertAIGeomTrisFromGranny`, plus `ConvertWeightsFromGrannyEx` for the skinned variant.
+- **Terrain/debris meshes.** [TerraTools.cpp](../Versions/Temporary/Engine/Sources/SceneB2/TerraTools.cpp#L68) has its own `GetGrannyTypedefOffset` and a `LoadGrannyModel` that returns bare vertices and triangles. It is live in the game, not editor-only: [DebrisBuilder.cpp](../Versions/Temporary/Engine/Sources/SceneB2/DebrisBuilder.cpp#L119) calls it, alongside the editor's `PassabilityProfile.cpp`.
+
+This matters for scoping: "static glTF models load" is not true across the game until all three are covered.
+
+### Save-format coupling
+
+`SAnimHandle` and `SGrannySkeletonHandle` are `IBinSaver` types with fixed chunk ids ([GAnimation.hpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.hpp#L19), [GSkeleton.h](../Versions/Temporary/Engine/Sources/3Dmotor/GSkeleton.h#L36)). Both serialize a `CDBPtr` to a DB record plus an index *into the GR2 file* (`nAnimNumber`, `nModelInFile`). A second backend has to either keep those chunks meaning the same thing or version them; per the repo's serialization rules, the ids themselves are never renumbered or reused.
 
 ## What the game adds above Granny
 
@@ -340,7 +378,7 @@ Animation database entries carry gameplay-specific information such as:
 - Animated bounding boxes
 - Movement speed
 
-Those records are in [DBAnimB2.h](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/Stats_B2_M1/DBAnimB2.h:35).
+Those records are in [DBAnimB2.h](../Versions/Temporary/Engine/Sources/Stats_B2_M1/DBAnimB2.h#L37).
 
 The engine also:
 
@@ -357,7 +395,7 @@ Therefore, replacing Granny animation does not require replacing all game animat
 
 ## Resource and exporter considerations
 
-The game’s VFS resources do not normally retain extensions. A resource is loaded from a path such as `bin\geometries\<UID>` in [GResource.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/System/GResource.cpp:27).
+The game’s VFS resources do not normally retain extensions. A resource is loaded from a path such as `bin\geometries\<UID>` in [GResource.cpp](../Versions/Temporary/Engine/Sources/System/GResource.cpp#L34).
 
 Consequently, adding `.gltf` versus `.gr2` extension dispatch is not sufficient. You would need one of:
 
@@ -370,9 +408,9 @@ For new content I would strongly favor **GLB as authoring input**, followed by o
 
 The editor/exporter is also Granny-oriented. Geometry, skeleton, animation, and AI-geometry exporters run Granny’s Maya exporter and then store the resulting GR2 bytes under extensionless resource names. For example:
 
-- [GeometryExporter.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/ED_Common/GeometryExporter.cpp:11)
-- [AnimationExporter.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/ED_Common/AnimationExporter.cpp:12)
-- [SkeletonExporter.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/ED_Common/SkeletonExporter.cpp:19)
+- [GeometryExporter.cpp](../Versions/Temporary/Engine/Sources/ED_B2_M1/GeometryExporter.cpp#L11)
+- [AnimationExporter.cpp](../Versions/Temporary/Engine/Sources/ED_B2_M1/AnimationExporter.cpp#L12)
+- [SkeletonExporter.cpp](../Versions/Temporary/Engine/Sources/ED_B2_M1/SkeletonExporter.cpp#L21)
 
 The runtime performs essentially raw coordinate copies from Granny. That suggests the existing Maya/Granny exporter bakes the engine’s expected coordinate convention. A glTF importer will need explicit axis, handedness, winding, scale, quaternion, tangent-sign, and inverse-bind conversions. Those conversions should be calibrated against a known existing asset rather than guessed.
 
@@ -384,7 +422,7 @@ This is the easiest and cleanest first milestone.
 
 A glTF/GLB loader or offline compiler can produce the same `CObjectInfo` data that the Granny mesh loader currently creates. Everything after that—materials, culling, rendering, and collision—can remain unchanged.
 
-There is even precedent for loading native serialized `CObjectInfo::SBinData` before falling back to Granny in [GObjectInfo.cpp](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp:433), although the current lightmap cache format should probably not be repurposed unchanged as the final asset format.
+There is even precedent for loading native serialized `CObjectInfo::SBinData` before falling back to Granny in [GObjectInfo.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GObjectInfo.cpp#L436), although the current lightmap cache format should probably not be repurposed unchanged as the final asset format.
 
 ### glTF skinned meshes using an existing Granny skeleton: possible but fragile
 
@@ -420,11 +458,41 @@ This is not just adding another geometry decoder. A new backend must supply equi
 
 The renderer would largely survive unchanged. The animation runtime is the part that needs refactoring.
 
-### Eliminating Granny completely: much harder
+### Eliminating Granny completely: hard, but the surface is smaller than it looks
 
-Keeping Granny as a legacy backend is realistic. But the proprietary DLL will still have to ship whenever legacy GR2 files are supported; the build explicitly imports it in [granny.cmake](/C:/Users/Adam/Desktop/BK2_Open/OpenBK2/cmake/granny.cmake:1).
+Keeping Granny as a legacy backend is realistic. On Windows the build imports the proprietary DLL directly ([granny.cmake](../cmake/granny.cmake)), so it still has to ship wherever legacy GR2 files are supported.
 
-Removing the DLL while continuing to consume arbitrary legacy GR2 assets would require a compatible GR2 reader and animation decoder, or a one-time conversion of all legacy assets.
+Removing the DLL while continuing to consume arbitrary legacy GR2 assets would require a compatible GR2 reader and animation decoder, or a one-time conversion of all legacy assets. That sounds like reimplementing Granny. It is much narrower than that, and the Linux port has already measured how much narrower.
+
+**The tree needs 54 entry points, not the several hundred `granny211.h` declares.** `cmake/granny.cmake` now has a non-Windows branch that links [GrannyStub.cpp](../Versions/Temporary/Engine/Sources/vendor/granny/GrannyStub.cpp) instead, defining exactly those 54 as no-ops. That is the whole link-time surface:
+
+```
+Decode      ReadEntireFile{,FromMemory} GetFileInfo FreeFile MeshIsRigid
+            GetMeshTriangleGroupCount GetTotalObjectSize GetMemberTypeSize
+            FindBoneByName GetAllocator SetAllocator
+Instance    InstantiateModel FreeModelInstance SetModelClock
+Controls    BeginControlledAnimation EndControlledAnimation FreeControl
+            FreeControlOnceUnused SetControlActive SetControlSpeed GetControlSpeed
+            SetControlRawLocalClock GetControlClampedLocalClock GetControlDuration
+            GetControlDurationLeft GetControlEffectiveWeight SetControlLoopCount
+            SetControlForceClampedLooping CompleteControlAt ControlIsComplete
+            EaseControlIn EaseControlOut SetControlEaseIn SetControlEaseOut
+            SetControlEaseInCurve SetControlEaseOutCurve
+Tracks      SetTrackGroupTarget SetTrackGroupAccumulation SetTrackGroupModelMask
+            NewTrackMask SetSkeletonTrackMaskFromTrackGroup
+Sampling    SampleModelAnimations EvaluateCurveAtT
+Pose        NewLocalPose FreeLocalPose GetLocalPoseBoneCount GetLocalPoseTransform
+            NewWorldPose FreeWorldPose BuildWorldPose GetWorldPose4x4
+            GetWorldPoseComposite4x4 MakeIdentity PostMultiplyBy
+```
+
+Two things are worth reading off that list. There is **nothing for materials, textures, lights, cameras or drawing** - which independently confirms the ownership table above. And the shape of a replacement is visible in it: a `.gr2` parser, a keyframe evaluator, a controls/clock layer, and a hierarchy walk.
+
+**A reference is not a call, and the surface is likely narrower still.** Some of the 54 sit on paths the shipped data cannot reach, and a linker cannot tell the difference. So each stub records that it was called, with a global ordinal, its arguments (`char const*` logged as the string, since that names the model), and a per-function count dumped at exit, to `granny_calls.log`.
+
+The first run that reached a model produced a three-line log: `GrannyReadEntireFileFromMemory` twice and `GrannyGetFileInfo` once, the last of which is already the crash - the stub returned null, and the caller dereferenced the result. **That is a floor, not the answer**: the log stops because the process does, so it says which entry point to implement *first* and nothing yet about the other 52. The narrowing only becomes real once a failed load degrades instead of crashing and a longer log can be read. Details and the current state are in [PORT_ROADMAP.md](port/PORT_ROADMAP.md#granny-and-the-log-that-says-what-to-port).
+
+There is a second, weaker narrowing available on top of the count: an entry point that is only ever called with one shape of argument does not need a general implementation. `GrannySetTrackGroupAccumulation` is only ever passed `GrannyNoAccumulation` ([GAnimation.cpp](../Versions/Temporary/Engine/Sources/3Dmotor/GAnimation.cpp#L457)), for instance, so accumulation modes need not exist at all. The argument log is what makes that checkable per function rather than guessed.
 
 ## Recommended architecture
 
@@ -473,11 +541,11 @@ These should live in the existing DB, a sidecar, or a defined glTF `extras`/cust
 
 Adding glTF support is very plausible because the rendering half is already largely format-independent.
 
-- **Static glTF support:** good fit and moderate work.
+- **Static glTF support:** good fit and moderate work, provided all three GR2 read paths are covered and not just `CObjectInfo`.
 - **glTF meshes on existing legacy skeletons:** possible, but requires strict bind-pose compatibility.
 - **Fully native glTF animation:** feasible, but requires a real alternative skeletal-animation backend.
 - **Keeping Granny only for legacy:** a sensible architecture.
-- **Removing Granny entirely while retaining GR2 compatibility:** a separate and significantly harder undertaking.
+- **Removing Granny entirely while retaining GR2 compatibility:** still the hardest of these, but bounded: 54 entry points, none of them touching materials or rendering, and probably fewer once the call log runs past the first model.
 
 The key insight is that the proper seam is not merely “GR2 loader versus glTF loader.” It is:
 

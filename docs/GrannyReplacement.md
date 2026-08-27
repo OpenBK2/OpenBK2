@@ -1,0 +1,578 @@
+# Replacing Granny 3D: findings, evidence and plan
+
+> **Provenance.** Everything below was measured on 2026-08-27 against the game data
+> installed on this machine, not inferred from documentation. Where a number is
+> quoted, the method that produced it is given in [Reproducing the
+> measurements](#reproducing-the-measurements). Companion document:
+> [Granny3DUsage.md](Granny3DUsage.md) describes how the engine *uses* Granny; this
+> one describes how to *replace* it.
+
+## Summary
+
+Replacing Granny in this engine is a smaller and much lower risk job than it looks,
+because the reverse engineering has already been done by other projects and is now
+verified correct against RAD's own DLL on this game's assets.
+
+- The game uses **exactly one GR2 dialect**: File Format 6, little endian, 32-bit
+  pointers, `fileInfoSize` 56. No BitKnit, no big endian, no 64-bit files, in any
+  corpus including mods.
+- Two independent clean-room decoders (`blendergranny`, Python; `granny-ro-js`, JS)
+  produce **byte-identical output to `granny2.dll`** on this game's data.
+- The animation curves are the **pre-`curve2` legacy layout** everywhere, which
+  makes the sampler far smaller than any reference library implements.
+- **Animation is presentation-only.** It never reaches `AILogic`, so a replacement
+  does not need bit-exactness with the DLL, only visual correctness.
+- The genuinely unsolved part is the **playback and blending layer** (roughly 30 of
+  the 54 entry points), which no open source project implements, because importers
+  and viewers never need it.
+
+Estimate for a working replacement: **27 to 44 working days**, see [Plan](#plan).
+
+## The corpora
+
+Four bodies of data were surveyed. `Versions/Current/Data/` in this repository is a
+**pre-release beta snapshot and is not representative of the shipped game**, since
+its compression mix is inverted relative to retail. Measure against the installed
+games.
+
+| corpus | location | paks | unique GR2 |
+|---|---|---|---|
+| repo beta | `Versions/Current/Data/bin/` | loose files | 15,742 |
+| retail base | `C:\Games\bk2` | 30 | 15,678 |
+| Fall of the Reich | `C:\Games\BK2-FoTR` | 29 | 15,692 |
+| Total Conversion | `C:\Games\Blitzkrieg 2 -  Total Conversion` | 250 | 51,814 |
+
+Universal MOD-18 and MPBMod6 are installed under `mods/` in both the base game and
+FoTR, so they are included in those counts. Total across the three installs:
+**83,184 unique GR2 files, 15.5 GB of paks.**
+
+### `.pak` files are ZIP archives
+
+They begin with `PK\x03\x04`. Some entries are stored, some deflated. Python's
+`zipfile` reads them directly with no format reversing required, which is how every
+census below was taken. GR2 resources live under `bin/Geometries/`,
+`bin/Animations/`, `bin/Skeletons/`, `bin/AIGeometries/` with extensionless GUID
+names.
+
+### Compression, per file
+
+| corpus | Oodle0 | Oodle1 | other |
+|---|---|---|---|
+| repo beta | 14,113 (89.7%) | 1,629 (10.3%) | none |
+| retail base | 6,015 (38.4%) | 9,662 (61.6%) | 1 file mixed `none`+`oodle0` |
+| Total Conversion | 6,012 (11.6%) | 45,798 (88.4%) | 3 uncompressed, 1 mixed |
+
+Two consequences for an implementation:
+
+1. **Both codecs are mandatory.** Oodle1 is the majority path in shipped data;
+   Oodle0 still covers 38% of the retail game.
+2. **Dispatch per section, not per file.** Mixed-compression files exist. They are
+   vanishingly rare (one file), which is exactly why the assumption is dangerous.
+
+### Non-GR2 files live in the GR2 directories
+
+A handful of entries under `bin/Geometries/` and friends have other magics, for
+example `636F4C5B 7A696C61` (ASCII `[Localiz...`). The loader **must reject a bad
+magic gracefully**. Per `port/PORT_ROADMAP.md` a failed resource load currently
+crashes, so this is a live hazard rather than a theoretical one.
+
+## The format, as it actually appears in this game
+
+### One dialect, four struct tags
+
+Every GR2 in every corpus: magic `CAB067B8 0FB16DF8 7E8C7284 1E00195E` (File Format
+6, LE, 32-bit pointers), `format` 6, `fileInfoSize` 56.
+
+The `tag` field at offset 68 identifies the structure version:
+
+| tag | beta | base | fotr | tc |
+|---|---|---|---|---|
+| `0x8000000F` | 484 | 315 | 310 | 312 |
+| `0x80000010` | 13,883 | 5,944 | 5,930 | 5,948 |
+| `0x80000011` | - | - | - | 3 |
+| `0x80000013` | 1,375 | 9,419 | 9,452 | 45,551 |
+
+Four tags in the wild, one of which appears only in mod content. **Resolve struct
+members by name through the file's own type section rather than by hardcoded
+offset.** This is the single most important parser design decision: it is why
+`blendergranny` reads these files correctly and why `nwn2mdk`, which hardcodes
+offsets for NWN2's `0x80000015`, reads skeletons correctly but produces garbage
+transform tracks.
+
+### Granny structs are packed
+
+The in-memory structures have **no padding**. `granny211.h` states this indirectly
+via assertions of the form `GrannyTypeSizeCheck(sizeof(granny_file_info) ==
+sizeof(a) + sizeof(b) + ...)`. Reading them with natural alignment silently yields
+plausible garbage: a first attempt here reported `SkeletonCount = 398` instead of 1.
+
+Verified sizes with `_pack_ = 1` on x64:
+
+| struct | size |
+|---|---|
+| `granny_variant` | 16 |
+| `granny_transform` | 68 |
+| `granny_bone` | 164 |
+| `granny_skeleton` | 40 |
+| `granny_model` | 112 |
+| `granny_animation` | 56 |
+| `granny_file_info` | 148 |
+
+### Curves are the pre-`curve2` legacy layout
+
+This game predates `granny_curve2`. A transform track on disk is **64 bytes**:
+
+```c
+struct TransformTrack {          // 4 + 3*20 = 64 bytes
+    char*    name;
+    OldCurve position, orientation, scale_shear;
+};
+struct OldCurve {                // 20 bytes
+    int32_t  degree;
+    int32_t  knots_count;    float* knots;
+    int32_t  controls_count; float* controls;
+};
+```
+
+For contrast, `nwn2mdk` models the newer form at **28 bytes** (`{name, 3 x {keys*,
+curve_data*}}`) with a format byte selecting among twelve compressed encodings.
+Feeding this game's data through that layout yields a correct first track, then a
+null name, then a crash. Confirmed by re-reading the same file with the 64-byte
+layout and recovering all twelve track names cleanly.
+
+### The exact curve matrix
+
+Census over 4,500 animations and 148,415 curves (18% of base and FoTR animations, 5%
+of TC's), plus a cross-tabulation over 1,200 animations:
+
+```
+codec: LegacyCurve32f, 100%.  No granny_curve2 variant appears anywhere.
+
+pos  dim=3  degree=0   19540      pos  dim=3  degree=2    3832
+rot  dim=4  degree=0    8466      rot  dim=4  degree=2    6717
+scl  dim=9  degree=0    1511      scl  dim=9  degree=1      21
+```
+
+Six combinations, and the cross is deliberately not full:
+
+- **Dimension is determined by the slot.** Position is always 3, orientation always
+  4, scale-shear always 9. No dimension dispatch is needed.
+- **Degree 1 occurs only on scale-shear**, and scale-shear is never degree 2.
+- **74% of all curves are degree 0**, meaning constant. Only 26% interpolate at all,
+  and the risk concentrates in the 6,717 degree-2 quaternion curves.
+
+So the sampler needs:
+
+```
+position    (3-vector)   : constant  |  quadratic B-spline
+orientation (quaternion) : constant  |  quadratic B-spline + neighbourhooding
+scale-shear (9-vector)   : constant  |  linear
+```
+
+**Scale-shear is animated** in 2.0% (base) to 4.4% (TC) of curves, so the
+`granny_transform.Flags` bits must be honoured; scale cannot be assumed identity.
+`SceneB2/WingScaleMutator.cpp` exists for this reason.
+
+## Library survey
+
+Seven open source GR2 implementations were examined and, where possible, built and
+run against this game's data.
+
+| | opengr2 | MacLarian | nwn2mdk | Knit | blendergranny | granny-ro-js | noclip |
+|---|---|---|---|---|---|---|---|
+| language | C | Rust | C++ | C# | Python | JS | TypeScript |
+| licence | MPL-2.0 | PolyForm-NC | Apache-2.0 | EUPL-1.2 | **MIT** | MIT | MIT |
+| FF6 / our magic | yes | **no**, FF7 only | yes | yes | yes | yes | yes |
+| Oodle0 | **corrupts heap** | no | no | no | **yes, verified** | **yes, verified** | **refuses** |
+| Oodle1 | yes | no | yes | yes | **yes, verified** | out of scope | **refuses** |
+| BitKnit | no | yes | no | yes | yes | no | no |
+| structs for our tags | generic tree only | FF7 offsets | partial | yes | **yes** | yes | yes |
+| meshes | no | yes (FF7) | **no** | yes | yes | yes | yes |
+| animation | no | **no** | yes (`curve2`) | yes | yes | yes | yes |
+| pose / skinning runtime | no | no | no | no | no | **yes** | **yes** |
+| blending / controls | no | no | no | no | no | no | no |
+| 64-bit host | yes | yes | **no, x86 only** | yes | yes | yes | yes |
+
+Notes on each:
+
+- **opengr2** (2,926 lines C). Generic type-tree parser, correct FF6 magic, and a
+  sound virtual-pointer scheme for 32-bit files on 64-bit hosts. But `gr2_read.c:284`
+  falls `COMPRESSION_TYPE_OODLE0` through into the Oodle1 decoder (the real Oodle0
+  case is `#if 0`'d out), which produced access violations and heap corruption on
+  60 of 60 Oodle0 files tested. No high-level structs, no animation. **Do not fork**:
+  its element-tree abstraction is not what this engine needs, and roughly 90% of the
+  work would remain.
+- **MacLarian / MacPak** (Rust, BG3 tooling). Rejects these files twice over: its
+  `LE32` magic is the File Format 7 constant, and it returns
+  `"Oodle compression not supported"` for both Oodle codecs. No animation at all;
+  its writer literally emits `// Animations (empty)`. Its GR2-to-glTF mapping is
+  good *reference* for skeleton and vertex-attribute conversion. PolyForm-NC is not
+  an open source licence.
+- **nwn2mdk** (C++, Apache-2.0). Magic is byte-identical to ours; NWN2 and BK2 are
+  the same Granny generation. Reads this game's skeletons and animations correctly
+  (verified: `Basis`, 10 bones, `Basis` then `Turret` then `GunCarriage` then
+  `MainBarrel`). Refuses Oodle0. Has no mesh structs, since NWN2 keeps meshes in MDB.
+  Its `virtual_ptr` stores a `uint32_t` cast to `void*`, so the **x64 build crashes
+  immediately** while x86 works. Best source for FF6 struct definitions and for an
+  already-C++ Oodle1 decoder.
+- **Knit** (C#, EUPL-1.2 with an MPL-2.0 Oodle file). The only project that
+  *documents* Oodle0, describing it as "functionally the same as Oodle1" modulo
+  endianness. **That claim does not hold for this game's files**: its decoder throws
+  or emits zeros on them while succeeding on Oodle1. Presumably true of modern
+  Granny, not of the 2002-era codec. Architecturally the cleanest design of the six,
+  being type-definition driven. Requires a .NET 11 preview SDK for its CLI tools;
+  the library itself builds on .NET 10.
+- **blendergranny** (Python, MIT). **All four codecs**, meshes, skeletons,
+  animations, our exact format version, and an explicit clean-room provenance policy
+  in `docs/PROVENANCE.md`. The `io_scene_gr2/gr2/` package is Blender-independent
+  and imports under plain CPython. **The reference implementation for M1 and M2.**
+- **granny-ro-js** (JS, MIT). Scoped to precisely our dialect: "Granny format 6,
+  little-endian, 32-bit pointers, Oodle0". Its Oodle0 is a port of blendergranny's.
+  Uniquely, it implements a **pose runtime** validated against the real DLL, with
+  the DLL's float quirks documented inline (fast one-Newton-step quaternion
+  normalise, no second renormalise when building the bone matrix, f64 FK cascade).
+  **The reference implementation for M3.** One diligence note: a comment in
+  `GrannyOodle0.js` cites a leaked RAD source path as an "asm-cite oracle"; prefer
+  blendergranny's upstream version, which carries the explicit no-leaked-source
+  policy.
+- **noclip.website** (TypeScript, MIT, `src/RagnarokOnline/granny*.ts`, about 1,430
+  lines). A real-time renderer for the same Granny generation, so a second opinion on
+  the pose path. **No decompression at all**: `granny.ts` throws on either Oodle
+  codec, since it expects files pre-expanded offline by `tools/gr2_decompress.c`, a
+  Win32 shim around the real DLL. Reads `degree` and then **ignores it**, sampling
+  every curve as piecewise interpolation between the two bracketing control points:
+  `vec3.lerp` for position, `quat.slerp` for orientation, component-wise lerp for
+  scale-shear. Resolves members by name through the type tree throughout, and
+  dispatches on the curve slot for dimension, independently confirming both design
+  calls above. Its LICENSE notes that some implementations are reverse engineered and
+  not clean-room, which matters if vendoring from it. Nothing here needs vendoring.
+
+**Recommended sources:** blendergranny for codecs and parsing, nwn2mdk for FF6
+struct definitions and an existing C++ Oodle1, granny-ro-js for pose, noclip for the
+viewer-grade sampling fallback described below, opengr2 for the virtual-pointer idea
+only (about 30 lines, read it, take nothing else).
+
+## Validation against `granny2.dll`
+
+The DLL can be driven directly from Python with `ctypes`, which makes it a scriptable
+oracle. `granny_int32x` is 32-bit even on x64, so no thunking is needed, and the
+structs are packed (see above).
+
+### Decompression: bit-exact
+
+| comparison | result |
+|---|---|
+| blendergranny vs DLL, repo beta | **15,742 of 15,742 identical SHA-256** |
+| DLL over base + FoTR + TC | **83,184 files decompressed, 0 failures** |
+| blendergranny vs DLL, base / fotr / tc | 784 / 783 / 2,590 identical, 0 mismatches (1-in-20 sample) |
+| DLL vs blendergranny vs granny-ro-js, Oodle0 | **240 of 240 identical** |
+| DLL vs blendergranny, Oodle1 | **160 of 160 identical** |
+
+The DLL processes the whole beta corpus in 18 seconds; blendergranny takes about
+144 ms per file, so a full pure-Python pass is roughly 40 minutes.
+
+### Pose: close, but not faithful on all clips
+
+The full DLL pose chain is also scriptable: `ReadEntireFileFromMemory`,
+`GetFileInfo`, `InstantiateModel`, `BeginControlledAnimation`, `SetTrackGroupTarget`,
+`EndControlledAnimation`, `SetModelClock`, `SampleModelAnimations`, `BuildWorldPose`,
+`GetWorldPoseComposite4x4`.
+
+Compared against granny-ro-js `poseAt()` over 18 clips and 318 bones:
+
+- Positions agree to **3.7e-07** everywhere, essentially exact.
+- 12 of 18 clips agree at float32 ULP level (about 1.2e-07); one clip is
+  bit-identical throughout.
+- **3 clips diverge** through quaternion double-cover sign flips.
+
+Dense re-sampling of those three (200 samples per clip rather than 9) found the true
+magnitude:
+
+| unit | bone | clip length | peak error |
+|---|---|---|---|
+| M5 Satan | `Turret` | 0.633 s | **47.3 deg** at t=0.53 |
+| 4.5 inch Gun (GB) | `RearWheels02` | 1.300 s | **44.8 deg** at t=0.24 |
+| Pz III Ausf J | `Turret` | 0.633 s | **44.4 deg** at t=0.38 |
+
+**Cause.** A quaternion and its negation are the same rotation, so a sign flip on a
+final pose is invisible. It becomes visible during *interpolation*: if adjacent
+B-spline control points sit in opposite hemispheres, the blend travels the long way
+round the sphere. Granny neighbourhoods control points so consecutive ones have
+positive dot product; granny-ro-js does not, on these clips. The measured error
+profile confirms it, being near zero at the knots and peaking mid-segment:
+
+```
+M5_Satan / Turret, error in degrees over a 0.633 s clip
+0.00=0  0.09=2  0.18=1  0.27=1  0.36=1  0.40=4  0.45=12  0.49=29  0.53=45  0.58=20  0.62=6
+```
+
+**Fix.** Walk the control points once at parse time and negate any whose dot product
+with the previous one is negative.
+
+**Confirmed by a third implementation.** noclip.website samples the same era of files
+and never exhibits this, because it ignores `degree` entirely and slerps between the
+two bracketing control points; `gl-matrix`'s `quat.slerp` negates its second operand
+when the dot product is negative, so it takes the short path for free. That isolates
+the defect to the missing neighbourhooding pass rather than anything deeper in the
+spline evaluation:
+
+| | curve model | short path | against the DLL |
+|---|---|---|---|
+| `granny2.dll` | degree-2 B-spline, neighbourhooded controls | yes | reference |
+| granny-ro-js | degree-2 B-spline, DLL-faithful float behaviour | **missing** | 47 deg on 3 of 18 clips |
+| noclip | ignores degree, piecewise slerp | free, via `gl-matrix` | never faithful, never broken |
+
+**A viewer-grade fallback exists.** Since animation is presentation-only, noclip's
+approach is a legitimate option if degree-2 B-spline evaluation proves awkward: it is
+what a shipping renderer actually does. The caveat is that a B-spline does not pass
+through its control points, so on the 26% of curves that are not constant this will
+visibly differ from the DLL. Measure the difference with the oracle before choosing
+it rather than assuming it is acceptable.
+
+**User-visible symptom.** A turret or wheel snaps roughly 45 degrees off axis and
+back over about 0.2 s, part way through a short clip. Children inherit it, so a
+tank's whole turret assembly swings. If the clip loops or replays per shot the
+twitch recurs, reading as rhythmic jerking. It does **not** produce NaN, vanishing
+geometry, or frozen models; none were observed.
+
+**Harness lesson.** The original 9-samples-per-clip pass reported a residual of
+3.6e-02 in quaternion components, which reads as "1 to 4 degrees, minor". Dense
+sampling found 47 degrees. Coarse sampling lands near knots, which is exactly where
+this class of bug hides. **Sample densely, between knots.**
+
+## Determinism: animation is presentation-only
+
+This determines the acceptance bar for a replacement, so it was traced explicitly.
+
+1. **`AILogic` does not link `3Dmotor`.** Its dependencies are `B2_M1_Terrain
+   B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script
+   Stats_B2_M1 System zlib fmt`. It cannot call the animation runtime.
+2. **`Common_RTS_AI`**, which holds the simulation's real collision and pathfinding
+   (`AIMap`, `Collision`, `CollisionInternal2`, `CommonPathFinder`, `BasePathUnit`),
+   links only `DebugTools Image libdb MemoryLib Misc System zlib fmt`. Also no
+   `3Dmotor`.
+3. **There are two unrelated `CAIMap` classes.** `AILogic` uses
+   `Common_RTS_AI/AIMap.h`. The one in `3Dmotor/aiMap.cpp` is file-local, implements
+   `NAI::IAIMap`, and is the one holding animated skinned hulls via `CSkinner`. It is
+   populated by `SceneB2`'s `CAIMapVisitor`, which syncs from `IVisObj`, that is from
+   visual objects.
+4. **Both bridge modules are clean.** `B2_M1_Terrain` has zero animation usage, its
+   only `CAIMap` mention being commented out. `B2_M1_World` uses animation heavily
+   but is client side, linking `SceneB2`, `Sound`, `Main` and `3Dmotor`, and
+   `AILogic`'s entire surface into it is one header, `CommonB2M1AI.h`, declaring a
+   single abstract interface with no geometry payload. The direction is inverted from
+   what it looks like: `IAILogic : public ICommonB2M1AI`, so the client calls into
+   the simulation through it.
+5. **Every `GetBonePosition` call site is presentation**: sound placement
+   (`MapObj.cpp:972` into `SoundScene()->AddSound`), muzzle effects and recoil in
+   `AIUpdateShot` reacting to an `SAINotifyMechShot`, smoke trails, and
+   `GetFirePoint` feeding `CLaserMarkTrace` shot-trace rendering
+   (`UpdatableWorld.cpp:2198`).
+6. The codebase marks the boundary explicitly with `AI2Vis` and `Vis2AI` conversions.
+
+**Consequence: a replacement does not need bit-exactness with `granny2.dll`.** The
+granny-ro-js divergence above is a visual quality bug, not an ASYNC risk. Comparisons
+against the DLL should be tolerance based and *reported as a metric*, not pass/fail.
+
+## Plan
+
+### Architecture decisions
+
+**Implement the Granny API shape first, refactor to a neutral one later.** Exposing
+the same 54 entry points with the same signatures means `GAnimation.cpp`,
+`GBind.cpp`, `GObjectInfo.cpp`, `aiObjectLoader.cpp`, `TerraTools.cpp` and the four
+`SceneB2` mutators compile untouched. The reason is validation, not laziness: on
+Windows both implementations can run side by side in one process and be asserted
+call for call. That leverage disappears the moment the API changes.
+
+Note there are two distinct "C API" surfaces with different lifetimes:
+
+- **The data structs** (`granny_file_info`, `granny_mesh`, `granny_bone` and so on).
+  The engine walks these by hand in twenty-odd places. These must be produced
+  exactly, and they remain until `GObjectInfo` and friends are refactored.
+- **The function surface** (opaque handles, builders, controls). Pure scaffolding,
+  to be deleted at M6.
+
+**Parse into owned native structs; do not memory-map the file.** The files store
+32-bit pointers and x64 needs 8-byte ones. Since the replacement implements
+`GrannyGetFileInfo` itself, it can simply allocate and populate. The 32/64 problem
+disappears, x86 and x64 share one path, and the assets are tiny, the largest geometry
+being 65 KB compressed.
+
+**Resolve fields through the type tree, not hardcoded offsets.** See the four tags
+above.
+
+**GLM is already a dependency** (`cmake/glm.cmake`, used in
+`3Dmotor/GSSEtransform.h`, which already has a `LoadMatrix()` handling the row-major
+to column-major conversion). Use it for quaternion-to-matrix, matrix multiply,
+inverse and normalise. It does **not** help with the B-spline-over-quaternions
+sampler, which is the actual hard part of M3. Two traps: three matrix conventions are
+in play (`SHMatrix` row-major, GLM column-major, `granny_matrix_4x4` row-vector), so
+convert at exactly one boundary; and Granny stores quaternions `x,y,z,w` while
+`glm::quat(w,x,y,z)` takes w first. Keep GLM out of the public headers and expose
+plain float arrays.
+
+### Repository layout
+
+Start in this repository, structured so that extraction later is free:
+
+```
+libgr2/
+  LICENSE            MIT, independent of the Nival grant
+  CMakeLists.txt     builds standalone and via add_subdirectory
+  src/               C++17 core: container, codecs, type tree, parse, pose, blend
+  compat/            optional target: extern "C" Granny-shaped facade
+  tests/             fixtures and harness, no game required
+```
+
+Top level, **not** under `Versions/Temporary/Engine/Sources/`, which is Nival's code.
+Hold one rule: `libgr2/src/` includes nothing from the engine. No `System/Basic.h`,
+no `CObjectBase`, no `CPtr<T>`, no `IBinSaver`. Pure C++17 and the standard library.
+Then `git subtree split --prefix=libgr2` extracts it with history intact once the API
+has settled.
+
+### Milestones and estimates
+
+Assumes one experienced C++ developer already fluent in this tree; "day" is about six
+focused hours.
+
+| stage | work | estimate | confidence |
+|---|---|---|---|
+| **M0** header | 54 prototypes plus about 15 packed structs and the enums the engine touches. `scripts/port/gen-granny-stub.py` already parses every signature. Validate by building the engine against it while still linking the real DLL | **1 day** | high |
+| **M1a** container | sections, fixups, marshalling, parse into owned structs | **2-3 days** | high |
+| **M1b** Oodle1 | `nwn2mdk/gr2_decompress.cpp` is already C++, 330 lines, Apache-2.0, verified on this data | **0.5 day** | high |
+| **M1c** Oodle0 | transliterate `blendergranny/oodle0.py`, 470 lines. Varbits, adaptive arithmetic decoder, LZ dictionary | **2-4 days** | medium |
+| **M2** geometry | type-tree walker and struct population; the five small query functions. **Game draws static models** | **3-5 days** | medium-high |
+| **M3** pose | curve sampling (six cases above), local pose, world pose, composite skinning, quaternion neighbourhooding | **3-5 days** | medium |
+| **M4** controls | about 30 entry points. No prior art. Bounded by what `CSkeletonAnimator` actually does | **5-10 days** | **low** |
+| **harness** | golden record and replay, corpus sweep, live A/B shim, malformed-input fuzzing | **5-7 days** | medium-high |
+| **M5** integration | CMake, delete `granny.cmake` and the DLL and the `uesp-esoapps` submodule, x86 and x64 CI green | **2-3 days** | medium |
+| **tail** | visual bugs found in play | **3-5 days** | low |
+
+**Total: 27 to 44 working days**, roughly 6 to 9 weeks full time, 200 to 350 hours.
+At 10 hours a week that is 5 to 8 months; at 20, about 2.5 to 4 months.
+
+Visible milestones: files parse and validate at about 1.5 weeks; static models render
+at about 3 weeks; things animate at about 4 weeks; blending correct and the DLL
+deleted at 6 to 9 weeks.
+
+**What moves the number.** Taking nwn2mdk's container and Oodle1 wholesale is the
+single biggest saving. Because animation is presentation-only, M4 can ship crude, a
+linear weight ramp without faithful ease curves, turning 10 days into about 3. The
+main technical risk is Oodle0 transliteration, mitigated by the per-section DLL
+oracle, which bisects to the exact file, section and diverging byte. The larger risk
+is M4 hiding state semantics that only appear in game, which is what golden record
+and replay exists to catch. **Build the harness before M4, not after.**
+
+Not included: the neutral-layer refactor (M6), editor-side exporter work, or a GR2
+writer.
+
+For calibration: blendergranny is about 3,000 lines of Python covering M1 to M2 plus
+parsing; granny-ro-js about 8,000 lines of JS covering M1 to M3 including pose.
+Expect 3,000 to 4,000 lines of C++ for M1 to M3, plus M4 which nobody has written.
+
+## Test harness design
+
+Three approaches, complementary rather than alternative, in priority order.
+
+**1. Golden record and replay, build this first.** `scripts/port/gen-granny-stub.py`
+already parses all 54 signatures and `GrannyStub.cpp` already records call name,
+global ordinal, arguments and per-function counts. Extending it from logging to
+recording inputs *and outputs* is an incremental change to code that exists. It
+captures the real input distribution including call sequences and object lifetimes,
+and crucially **it replays offline with no DLL and no game, so it runs in CI on
+Linux**, which neither other approach can. Record output hashes for the hot functions
+(`SampleModelAnimations` and `GetWorldPose4x4` run per bone per frame) and full
+detail for rare ones; bound capture to a window.
+
+**2. Offline corpus sweep.** For anything derived purely from a file, the corpus *is*
+the input space; enumeration is exhaustive and cheap. Widen beyond the base game:
+TC alone is 3.3x the corpus and exercises tag `0x80000011`.
+
+**3. Live side by side.** Highest fidelity, worst ergonomics: Windows only, needs the
+game running, cannot run in CI. Build it as a *debugger* for when a golden replay
+fails and you need to see where divergence first appears, not as a regression suite.
+
+**Fuzzing, narrowly.** Do not fuzz the API surface; the engine reaches a tiny
+stereotyped corner of it, for example `GrannySetTrackGroupAccumulation` has one call
+site and is only ever passed `GrannyNoAccumulation`. Two useful places: malformed
+file robustness, where the oracle is "does not crash" rather than "matches", since
+the real DLL happily returns null and lets callers dereference it; and blend-space
+sampling within ranges `CSkeletonAnimator` can actually generate.
+
+**Comparison policy.** Structural data (bone names, counts, parent indices, topology,
+vertex counts, material grouping) compares **exactly**. Float data compares with a
+**tolerance reported as a metric**. "12 of 18 clips at 1e-07, 3 clips at 47 degrees
+on `Turret`" is far more useful than "FAIL".
+
+**The corpus cannot be committed.** 83,184 files, 15.5 GB, and it is Nival's
+copyrighted data. Commit *manifests*, mapping path to SHA-256 of decompressed
+sections, and hand-author a few tiny GR2 fixtures: one per tag, one per compression
+type, one malformed.
+
+## Licensing notes
+
+Not legal advice; this records what was observed.
+
+**Patents are probably not the issue.** Oodle0 and Oodle1 date to roughly 1999-2004.
+A US utility patent runs 20 years from filing, so anything covering them has expired.
+LZ77 and arithmetic coding are long out of patent. No patent search was performed;
+that would need an assignee search on RAD Game Tools and Epic Games.
+
+**Reverse engineering for interoperability is well supported.** EU Software Directive
+2009/24/EC Art. 6 permits decompilation for interoperability and Art. 5(3) permits
+observation and study. In the US, *Sega v. Accolade* and *Sony v. Connectix*
+established intermediate copying for interoperability as fair use.
+
+**The concrete exposure is what is already in the tree.** `cmake/granny.cmake` does
+`install(FILES "${DLL}" DESTINATION bin)`, redistributing RAD's `granny2.dll`
+(version 2.11.8.0, "Copyright 1999-2017 RAD Game Tools"), sourced from
+`third_party/uesp-esoapps`, that is the copy licensed to ZeniMax for Elder Scrolls
+Online. `granny2_static.lib` at 6.8 MB, `gstate.lib` and `granny211.h` are in the
+same submodule. Writing a minimal header with the 54 prototypes is both the
+interoperability-necessary subset and a way to delete RAD's 6,000-line SDK header on
+day one.
+
+Do not name a replacement "Granny"; that is RAD's trademark. The compatibility facade
+may declare Granny-named *functions* for source compatibility.
+
+Note also that `LICENSE.md` is a Nival non-commercial grant that the licensor may
+revoke at will with three days' notice. That is the main argument for keeping
+`libgr2/` under its own MIT licence and eventually in its own repository, and it
+matters most for attracting outside help on Oodle0 and the blend layer.
+
+## Reproducing the measurements
+
+The DLL oracle used throughout is committed as
+[`scripts/port/granny_dll_oracle.py`](../scripts/port/granny_dll_oracle.py). It
+exposes decompression and the full pose chain, and needs a 64-bit Python.
+
+```powershell
+# decompress every section of a file through the real DLL, print SHA-256
+python scripts/port/granny_dll_oracle.py hash <file.gr2> ...
+
+# dump local transforms, world matrices and composite skinning matrices as JSON
+python scripts/port/granny_dll_oracle.py pose <file.gr2> <t0> <t1> ...
+```
+
+Census scripts were written ad hoc; the shapes worth keeping are:
+
+- `.pak` files open with Python `zipfile`; filter entries on
+  `bin/(geometries|animations|skeletons|aigeometries)/`, de-duplicate on
+  `(basename, CRC, size)`.
+- Header census needs only the first 512 bytes per entry, so `z.open(info).read(512)`
+  stops deflate early.
+- Curve census uses `blendergranny`: `read_gr2_bytes`, then `load_sections`, then
+  `extract_animation_set`, then `CurveMetadata.codec` / `.degree` / `.dimension`.
+
+External references, all read-only clones:
+
+| project | path | licence |
+|---|---|---|
+| opengr2 | `/c/projects/opengr2` | MPL-2.0 |
+| MacPak / MacLarian | `/c/projects/MacPak` | PolyForm-NC |
+| nwn2mdk | `/c/projects/nwn2mdk` | Apache-2.0 |
+| Knit | `/c/projects/Knit` | EUPL-1.2 |
+| blendergranny | `/c/projects/blendergranny` | MIT |
+| granny-ro-js | `/c/projects/granny-ro-js` | MIT |
+| noclip.website | `/c/projects/noclip.website` | MIT, not clean-room |

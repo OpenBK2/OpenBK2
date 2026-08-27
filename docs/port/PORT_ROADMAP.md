@@ -16,7 +16,7 @@ so they do not churn cherry-pick context.
 
 | | item | where |
 |---|---|---|
-| [ ] | **Granny 3D** is proprietary and Windows-only. **Stubbed 2026-08-26, which is what made `Game` link.** The 54 entry points return nothing and log every call. **The log has now been read: two of the 54 are reached, `GrannyReadEntireFileFromMemory` and `GrannyGetFileInfo`, and the run stops on the second.** [Granny, and the log that says what to port](#granny-and-the-log-that-says-what-to-port). Candidate replacement: [opengr2](https://github.com/arves100/opengr2). How the engine uses it: [docs/Granny3DUsage.md](../Granny3DUsage.md) | [Hard blockers beyond tier 1](#hard-blockers-beyond-tier-1) |
+| [ ] | **Granny 3D** is proprietary and Windows-only. **Stubbed 2026-08-26, which is what made `Game` link.** The 54 entry points return nothing and log every call. **The log has now been read: two of the 54 are reached, `GrannyReadEntireFileFromMemory` and `GrannyGetFileInfo`, and the run stops on the second.** [Granny, and the log that says what to port](#granny-and-the-log-that-says-what-to-port). Candidate replacement: [opengr2](https://github.com/arves100/opengr2). How the engine uses it: [docs/Granny3DUsage.md](../Granny3DUsage.md). **How to replace it, with measurements: [docs/GrannyReplacement.md](../GrannyReplacement.md) - Oodle0 is solved, two clean-room decoders are byte-exact against the DLL on 83,184 files.** | [Hard blockers beyond tier 1](#hard-blockers-beyond-tier-1) |
 | [x] | ~~**D3D9** - the guard was only ever applied to the link line; the D3D9 `.cpp` files are still in `3Dmotor`'s `SOURCES`~~ done in "add cmake/dxvk.cmake and use DXVK for D3D9 off Windows". 3Dmotor builds and links. DXVK implements no d3dx9, so `GShaderFX.cpp` became Windows-only, and its nine entry points are stubbed off Windows because the path is unreachable there too: [D3DX, and why the shader effects needed a stub](#d3dx-and-why-the-shader-effects-needed-a-stub-rather-than-a-port) | [DXVK.md](DXVK.md) |
 | [x] | ~~**HWND and the message loop**, 44 files. The largest single surface~~ done for the window in "give WinFrame an SDL implementation off Windows", with `SplashScreen` and `WinCursor` beside it; System links. DXVK's `windows.h` supplies the types elsewhere | [DXVK.md](DXVK.md) |
 | [x] | ~~**DirectInput.** The last platform blocker~~ Done 2026-08-26. Bindings are keyed by name, so nothing had to migrate - but the `DIK_*` codes stayed rather than becoming `SDL_Scancode`, because `kiKeyInfoList` is a two hundred line table and one copy is checkable where two are not | [DirectInput over SDL](#directinput-over-sdl---done) |
@@ -1988,6 +1988,13 @@ points out of 54, and the third call is already the failure: the stub returned
 null from both reads, so `GrannyGetFileInfo` is handed `File=0x0` and the caller
 dereferences what it returns. See
 [A failed resource load is a crash](#a-failed-resource-load-is-a-crash).
+
+**Superseded in part.** The log still says what to implement first, but the
+wider question is now answered outside this file: `blendergranny` and
+`granny-ro-js` both decode Oodle0 and Oodle1 byte-identically to
+`granny2.dll` across every corpus this game has, so the remaining work is
+transliteration rather than reverse engineering. See
+[docs/GrannyReplacement.md](../GrannyReplacement.md).
 
 **This is a floor, not the answer.** The log stops because the process does. It
 says which entry point to implement *first*, and nothing yet about the rest,
