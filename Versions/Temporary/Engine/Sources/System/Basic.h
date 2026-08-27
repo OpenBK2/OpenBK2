@@ -125,6 +125,31 @@ public:
 
 // macro that helps to create neccessary members for proper operation of refcount system
 // if class needs special destructor, use CFundament
+
+// DestroyContents saves the two refcounts across the rebuild, and it has to
+// address them through pointers taken before the destructor runs rather than
+// through this->.
+//
+// nObjData and nRefData live in CObjectBase, and CObjectBase is a *virtual*
+// base of a good deal of the UI (IWindow, IScreen, IClickNotify and the rest
+// all say "virtual public CObjectBase"). Reaching a virtual base's member
+// through this-> means reading the object's vptr to find where that base sits.
+// After ~classname() has run there is no vptr left to read: the destructor
+// walks it down through each base and the storage is dead. GCC reloads it
+// anyway, gets whatever the destructor left there, and the "virtual base
+// offset" it computes from that is a wild number.
+//
+// That is not theoretical. It is the crash the Linux port sat on at main menu
+// teardown: a virtual thunk to CWindowScreen::DestroyContents faulting at the
+// first read of this->nRefData, with the whole body inlined into the thunk.
+// MSVC survives it, which is why this went twenty years without being noticed,
+// but it has always been undefined.
+//
+// The offset of a member within CObjectBase is fixed, so a pointer taken while
+// the object was still alive stays correct across both the destructor and the
+// placement new, and needs no vptr. Reading after the destructor is deliberate:
+// the destructor can drop references to this object, and those decrements have
+// to be carried over.
 #define OBJECT_BASIC_METHODS(classname)                                              \
 	public:                                                                            \
 		static CObjectBase* New##classname() { return new classname(); }                 \
@@ -132,7 +157,7 @@ public:
 		virtual int GetSizeOf() const { return sizeof(classname); }						\
 protected:                                                                           \
 		CObjectBase* MakeCopy() const { return new classname(*this); }                   \
-		virtual void DestroyContents() { this->classname::~classname(); int nHoldRefs = this->nRefData, nHoldObjs = this->nObjData; new(this) classname(); this->nRefData += nHoldRefs; this->nObjData += nHoldObjs; }\
+		virtual void DestroyContents() { int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; this->classname::~classname(); int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData; new(this) classname(); this->nRefData += nHoldRefs; this->nObjData += nHoldObjs; }\
 		virtual ~classname() {}                                                          \
 	private:
 #define OBJECT_NOCOPY_METHODS(classname)                                             \
@@ -140,7 +165,7 @@ protected:                                                                      
 		static CObjectBase* New##classname() { return new classname(); }                 \
 		virtual int GetSizeOf() const { return sizeof(classname); }						\
 	protected:                                                                         \
-	virtual void DestroyContents() { this->classname::~classname(); int nHoldRefs = this->nRefData, nHoldObjs = this->nObjData; new(this) classname(); this->nRefData += nHoldRefs; this->nObjData += nHoldObjs; }\
+	virtual void DestroyContents() { int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; this->classname::~classname(); int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData; new(this) classname(); this->nRefData += nHoldRefs; this->nObjData += nHoldObjs; }\
 	private:
 #define BASIC_REGISTER_CLASS(module, classname) \
 template<> module##_EXPORT CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
