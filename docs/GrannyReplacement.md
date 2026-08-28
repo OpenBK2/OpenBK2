@@ -250,6 +250,50 @@ scale-shear (9-vector)   : constant  |  linear
 `granny_transform.Flags` bits must be honoured; scale cannot be assumed identity.
 `SceneB2/WingScaleMutator.cpp` exists for this reason.
 
+### Three exporter vintages, over the whole corpus
+
+The census above sampled. Converting the animation structures needed all 21,720
+files, and the full pass found a **third** version of the track group that the
+sample had missed. Every file's type tree, counted by member list:
+
+| files | track group | animation | scalar track |
+|---|---|---|---|
+| 15,457 | `VectorTracks`, `TransformLODErrors`, `RootMotion` | `Oversampling` | `Dimension` |
+| 5,948 | `ScalarTracks`, `RootMotion` | no `Oversampling` | no `Dimension` |
+| 315 | `ScalarTracks` | no `Oversampling` | no `Dimension` |
+
+The transform track, the curve, the text track, the text track entry and the
+periodic loop are the **same shape in all 21,720**, and the curve is the
+pre-`curve2` layout in every one of them: no file carries a `granny_curve2`
+variant, so there is exactly one conversion to write and not eighteen.
+
+Reading members by name is what lets one converter serve all three. Reading by
+offset would need three tables and would silently produce plausible garbage on
+whichever vintage it was not written for.
+
+What the real DLL does with the members no file has, over 11,400 animated files,
+11,360 track groups, 257,581 transform tracks and 772,743 curves:
+
+- `animation.Oversampling` is read where the member exists (2.0 in 8,410, 1.0 in
+  6) and **0.0** in the 2,984 animated files that lack it.
+- `animation.DefaultLoopCount`, `animation.Flags`, `transform_track.Flags`,
+  `vector_track.TrackKey` and `track_group.TransformLODErrorCount` are **0**
+  everywhere, and `ExtendedData` and `PeriodicLoop` are null everywhere.
+- `track_group.Flags` is the file's `AccumulationFlags` renamed: 2 in 11,189
+  groups and 0 in 171.
+- Every curve comes back **`DaK32fC32f`**, format byte 1, with `Degree`, `Knots`
+  and `Controls` copied straight out of the old curve. `Padding` is left
+  uninitialised: three curves of one file returned 16414, -17102 and 0.
+- An animation's `TrackGroups` are the same objects as the file's, in all 11,360.
+
+Two things the corpus cannot check, because it contains none: a **text track**
+(zero in 21,720 files) and a **periodic loop** (null in every track group). Both
+are converted from the type tree, which every file carries whether it uses it or
+not, and covered only by authored fixtures in `test/Animation.cpp`. A vector
+track is nearly as rare, 24 of them in 5 files, and all 24 are in the newest
+vintage, so what the DLL puts in `Dimension` for a file that lacks the member was
+not observable.
+
 ## Library survey
 
 Seven open source GR2 implementations were examined and, where possible, built and

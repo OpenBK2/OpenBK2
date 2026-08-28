@@ -20,13 +20,18 @@
 // fixed offset. A member the file does not have simply is not found, and the
 // default stands, which is what makes one converter serve every struct tag.
 //
-// Scope. This is the static geometry path, which is what the engine reaches
-// first: file info, models, meshes, vertex data, topology, materials, textures,
-// skeletons and bones. Track groups and animations are left unconverted, because
-// the pose runtime that would read them does not exist yet and half-converted
-// animation data would be worse than none. A texture's pixel bytes are left too,
-// for the opposite reason: nothing reads them, and they are the one part that
-// would cost real memory to carry.
+// Reading by name is not a nicety here. Three exporter vintages are in this
+// corpus and they disagree about the animation structures: 15,457 files call a
+// track group's scalar tracks VectorTracks and carry TransformLODErrors and an
+// animation's Oversampling, 5,948 call them ScalarTracks and have neither, and
+// the oldest 315 also drop the track group's RootMotion. One converter reads all
+// three because it asks the file what it has.
+//
+// Scope. Everything the root object reaches: file info, models, meshes, vertex
+// data, topology, materials, textures, skeletons, bones, track groups,
+// animations and their curves. A texture's pixel bytes are the exception:
+// nothing reads them, the engine takes its textures from the database, and they
+// are the one part that would cost real memory to carry.
 //
 // Identity is preserved, not just content. FindFirstAppropriateModel in
 // 3Dmotor/GObjectInfo.cpp finds a mesh's model by comparing
@@ -55,6 +60,35 @@ struct SObject
 	SReference At;
 };
 
+//! The type definition every converted curve's variant points at.
+//!
+//! In the real DLL this is the exported global GrannyCurveDataDaK32fC32fType,
+//! one address shared by all 772,743 curves in the corpus, and the four members
+//! and their reference types below were read out of it. Nothing in the engine
+//! walks it; it is here because a variant with a null type is not the same
+//! object as one with a type, and reproducing it costs a static array.
+SDataTypeDefinition *CurveDataDaK32fC32fType()
+{
+	static SDataTypeDefinition Header[] = {
+		{ MEMBER_UINT8, "Format", nullptr, 0, {}, 0 },
+		{ MEMBER_UINT8, "Degree", nullptr, 0, {}, 0 },
+		{ MEMBER_END, nullptr, nullptr, 0, {}, 0 },
+	};
+	static SDataTypeDefinition Real32[] = {
+		{ MEMBER_REAL32, "Real32", nullptr, 0, {}, 0 },
+		{ MEMBER_END, nullptr, nullptr, 0, {}, 0 },
+	};
+	static SDataTypeDefinition Curve[] = {
+		// Named for the format, not for the member, which is how the DLL has it.
+		{ MEMBER_INLINE, "CurveDataHeader_DaK32fC32f", Header, 0, {}, 0 },
+		{ MEMBER_INT16, "Padding", nullptr, 0, {}, 0 },
+		{ MEMBER_REFERENCE_TO_ARRAY, "Knots", Real32, 0, {}, 0 },
+		{ MEMBER_REFERENCE_TO_ARRAY, "Controls", Real32, 0, {}, 0 },
+		{ MEMBER_END, nullptr, nullptr, 0, {}, 0 },
+	};
+	return Curve;
+}
+
 //! No shipped file comes near this. It exists so a corrupt count cannot ask for
 //! a terabyte before anything notices.
 constexpr int32_t MAX_ARRAY = 4 * 1024 * 1024;
@@ -78,6 +112,9 @@ private:
 	void Real32Array( const SObject &object, const char *pszName, float *pOut,
 	                  uint32_t nCount ) const;
 	void Transform( const SObject &object, const char *pszName, STransform *pOut ) const;
+
+	//! One curve member, which on disk is an inline granny_old_curve.
+	void Curve( const SObject &object, const char *pszName, SCurve2 *pOut );
 
 	void Int32Array( const SObject &object, const char *pszName, int32_t *pOut,
 	                 uint32_t nCount ) const;
@@ -121,6 +158,9 @@ private:
 	STriTopology *MakeTriTopology( const SObject &object );
 	SMesh *MakeMesh( const SObject &object );
 	SModel *MakeModel( const SObject &object );
+	SPeriodicLoop *MakePeriodicLoop( const SObject &object );
+	STrackGroup *MakeTrackGroup( const SObject &object );
+	SAnimation *MakeAnimation( const SObject &object );
 
 	//! The vertex type array, which the engine walks itself.
 	SDataTypeDefinition *MakeTypeArray( const SReference &typeRef );
@@ -205,6 +245,46 @@ void CConverter::Transform( const SObject &object, const char *pszName, STransfo
 	// Identical on disk and in memory: no pointers, and every field four bytes.
 	m_File.ReadBytes( SReference{ object.At.nSection, object.At.nOffset + pMember->nOffset },
 	                  pOut, sizeof( *pOut ) );
+}
+
+void CConverter::Curve( const SObject &object, const char *pszName, SCurve2 *pOut )
+{
+	pOut->CurveData.pType = nullptr;
+	pOut->CurveData.pObject = nullptr;
+
+	// A 2.5 curve is a granny_old_curve stored in place: a degree and two float
+	// arrays. A 2.11 curve is a variant, one of eighteen formats, and the one
+	// that holds exactly a degree and two float arrays is DaK32fC32f. So the
+	// conversion is a change of container and not of representation, which is
+	// what the real DLL was measured doing: Format is 1 for every curve in the
+	// corpus, and Degree is whatever the file said.
+	SObject curve;
+	if ( !InlineAt( object, pszName, &curve ) && !Follow( object, pszName, &curve ) )
+	{
+		return;
+	}
+
+	SCurveDataDaK32fC32f *pData = Alloc<SCurveDataDaK32fC32f>();
+	if ( pData == nullptr )
+	{
+		return;
+	}
+
+	const int32_t nDegree = Int32( curve, "Degree" );
+	pData->Header.nFormat = CURVE_DA_K32F_C32F;
+	pData->Header.nDegree = static_cast<uint8_t>( nDegree );
+	// The DLL leaves this uninitialised, and three curves in one file came back
+	// 16414, -17102 and 0. Zero rather than whatever the arena happens to hold.
+	pData->nPadding = 0;
+	// In place, like indices and vertices: knots and controls are floats and
+	// need no conversion, and the file outlives everything this returns. An
+	// empty curve keeps a real object with both counts zero, which is what the
+	// DLL produces for the 228,061 scale-shear curves that have no data.
+	pData->pKnots = RawArray<float>( curve, "Knots", &pData->nKnotCount );
+	pData->pControls = RawArray<float>( curve, "Controls", &pData->nControlCount );
+
+	pOut->CurveData.pType = CurveDataDaK32fC32fType();
+	pOut->CurveData.pObject = pData;
 }
 
 void CConverter::Int32Array( const SObject &object, const char *pszName, int32_t *pOut,
@@ -760,6 +840,202 @@ SModel *CConverter::MakeModel( const SObject &object )
 	return p;
 }
 
+SPeriodicLoop *CConverter::MakePeriodicLoop( const SObject &object )
+{
+	SPeriodicLoop *p = static_cast<SPeriodicLoop *>( m_File.m_Converted[object.At] );
+	p->fRadius = Real32( object, "Radius" );
+	p->fdAngle = Real32( object, "dAngle" );
+	p->fdZ = Real32( object, "dZ" );
+	Real32Array( object, "BasisX", p->BasisX, 3 );
+	Real32Array( object, "BasisY", p->BasisY, 3 );
+	Real32Array( object, "Axis", p->Axis, 3 );
+	return p;
+}
+
+STrackGroup *CConverter::MakeTrackGroup( const SObject &object )
+{
+	STrackGroup *p = static_cast<STrackGroup *>( m_File.m_Converted[object.At] );
+	p->pszName = String( object, "Name" );
+	Transform( object, "InitialPlacement", &p->InitialPlacement );
+	Real32Array( object, "LoopTranslation", p->LoopTranslation, 3 );
+
+	// Renamed in 2.11, so the file's name is tried first and the new one after,
+	// which is the same order the bone's Transform and InverseWorldTransform use.
+	// 11,189 groups in the corpus have 2 here and 171 have 0.
+	p->nFlags = Int32( object, "AccumulationFlags" );
+	if ( Member( object, "AccumulationFlags" ) == nullptr )
+	{
+		p->nFlags = Int32( object, "Flags" );
+	}
+
+	SObject loop;
+	if ( Follow( object, "PeriodicLoop", &loop ) )
+	{
+		p->pPeriodicLoop = Intern( loop, &CConverter::MakePeriodicLoop );
+	}
+	// Present in 15,457 of the 21,720 files and empty in every one of them, so
+	// this is only ever the zero the older files get by not having the member.
+	p->pTransformLODErrors =
+		RawArray<float>( object, "TransformLODErrors", &p->nTransformLODErrorCount );
+
+	// RootMotion is dropped the way a bone's LightInfo is: 2.11 has nowhere to
+	// put it. It is a member of 21,405 of the 21,720 files' track groups, and the
+	// oldest 315 do not have it either.
+
+	int32_t nCount = 0;
+	SObject first;
+	bool bOfReferences = false;
+
+	// Renamed in 2.11: 6,263 files call these ScalarTracks and 15,457 call them
+	// VectorTracks, which is one reason members are resolved by name here.
+	if ( Array( object, "VectorTracks", &nCount, &first, &bOfReferences )
+	     || Array( object, "ScalarTracks", &nCount, &first, &bOfReferences ) )
+	{
+		SVectorTrack *pTracks = Alloc<SVectorTrack>( static_cast<size_t>( nCount ) );
+		if ( pTracks != nullptr )
+		{
+			for ( int32_t i = 0; i < nCount; ++i )
+			{
+				SObject track;
+				if ( !Element( first, bOfReferences, i, &track ) )
+				{
+					continue;
+				}
+				pTracks[i].pszName = String( track, "Name" );
+				// Only the newer files carry Dimension, and every vector track in
+				// the corpus is in one of those, so what the DLL does without it
+				// was not observable. TrackKey is in no file at all and the DLL
+				// reports 0 for all 24 of them.
+				pTracks[i].nDimension = Int32( track, "Dimension" );
+				pTracks[i].nTrackKey = static_cast<uint32_t>( Int32( track, "TrackKey" ) );
+				Curve( track, "ValueCurve", &pTracks[i].ValueCurve );
+			}
+			p->nVectorTrackCount = nCount;
+			p->pVectorTracks = pTracks;
+		}
+	}
+
+	if ( Array( object, "TransformTracks", &nCount, &first, &bOfReferences ) )
+	{
+		STransformTrack *pTracks = Alloc<STransformTrack>( static_cast<size_t>( nCount ) );
+		if ( pTracks != nullptr )
+		{
+			for ( int32_t i = 0; i < nCount; ++i )
+			{
+				SObject track;
+				if ( !Element( first, bOfReferences, i, &track ) )
+				{
+					continue;
+				}
+				pTracks[i].pszName = String( track, "Name" );
+				// Absent from every file, and 0 in all 257,581 tracks of the DLL's
+				// reading of them.
+				pTracks[i].nFlags = Int32( track, "Flags" );
+				Curve( track, "PositionCurve", &pTracks[i].PositionCurve );
+				Curve( track, "OrientationCurve", &pTracks[i].OrientationCurve );
+				Curve( track, "ScaleShearCurve", &pTracks[i].ScaleShearCurve );
+			}
+			p->nTransformTrackCount = nCount;
+			p->pTransformTracks = pTracks;
+		}
+	}
+
+	// No file in the corpus has a single text track, so this path is written
+	// from the type tree, which every file carries whether it uses it or not,
+	// and is the one part of this conversion the corpus cannot check.
+	if ( Array( object, "TextTracks", &nCount, &first, &bOfReferences ) )
+	{
+		STextTrack *pTracks = Alloc<STextTrack>( static_cast<size_t>( nCount ) );
+		if ( pTracks != nullptr )
+		{
+			for ( int32_t i = 0; i < nCount; ++i )
+			{
+				SObject track;
+				if ( !Element( first, bOfReferences, i, &track ) )
+				{
+					continue;
+				}
+				pTracks[i].pszName = String( track, "Name" );
+
+				int32_t nEntries = 0;
+				SObject firstEntry;
+				bool bEntriesOfReferences = false;
+				if ( !Array( track, "Entries", &nEntries, &firstEntry,
+				             &bEntriesOfReferences ) )
+				{
+					continue;
+				}
+				// An entry holds a string, so unlike knots and controls it cannot
+				// be handed over in place: the pointer in it is 32-bit on disk.
+				STextTrackEntry *pEntries =
+					Alloc<STextTrackEntry>( static_cast<size_t>( nEntries ) );
+				if ( pEntries == nullptr )
+				{
+					continue;
+				}
+				for ( int32_t e = 0; e < nEntries; ++e )
+				{
+					SObject entry;
+					if ( !Element( firstEntry, bEntriesOfReferences, e, &entry ) )
+					{
+						continue;
+					}
+					pEntries[e].fTimeStamp = Real32( entry, "TimeStamp" );
+					pEntries[e].pszText = String( entry, "Text" );
+				}
+				pTracks[i].nEntryCount = nEntries;
+				pTracks[i].pEntries = pEntries;
+			}
+			p->nTextTrackCount = nCount;
+			p->pTextTracks = pTracks;
+		}
+	}
+
+	return p;
+}
+
+SAnimation *CConverter::MakeAnimation( const SObject &object )
+{
+	SAnimation *p = static_cast<SAnimation *>( m_File.m_Converted[object.At] );
+	p->pszName = String( object, "Name" );
+	p->fDuration = Real32( object, "Duration" );
+	p->fTimeStep = Real32( object, "TimeStep" );
+	// 2.11 added this and 15,457 of the files have it; the other 6,263 get the
+	// 0.0 the DLL reports for them. Where it is present it is real data: 2.0 in
+	// 8,410 animations, 1.0 in 6.
+	p->fOversampling = Real32( object, "Oversampling" );
+	// In no file, and 0 in all 11,400 animations the DLL read.
+	p->nDefaultLoopCount = Int32( object, "DefaultLoopCount" );
+	p->nFlags = Int32( object, "Flags" );
+
+	int32_t nCount = 0;
+	SObject first;
+	bool bOfReferences = false;
+	if ( !Array( object, "TrackGroups", &nCount, &first, &bOfReferences ) )
+	{
+		return p;
+	}
+
+	STrackGroup **ppGroups = Alloc<STrackGroup *>( static_cast<size_t>( nCount ) );
+	if ( ppGroups == nullptr )
+	{
+		return p;
+	}
+	for ( int32_t i = 0; i < nCount; ++i )
+	{
+		SObject group;
+		if ( Element( first, bOfReferences, i, &group ) )
+		{
+			// The same objects the file-level TrackGroups array holds, in all
+			// 11,360 groups of the corpus, which interning is what preserves.
+			ppGroups[i] = Intern( group, &CConverter::MakeTrackGroup );
+		}
+	}
+	p->nTrackGroupCount = nCount;
+	p->ppTrackGroups = ppGroups;
+	return p;
+}
+
 SFileInfo *CConverter::ConvertRoot()
 {
 	const SObject root{ m_File.RootObjectType(), m_File.RootObject() };
@@ -788,17 +1064,8 @@ SFileInfo *CConverter::ConvertRoot()
 		p->pExporterInfo = Intern( child, &CConverter::MakeExporterInfo );
 	}
 
-	// Each top level array in turn. The counts are set even where the elements
-	// are not converted, so that anything reading a count and iterating still
-	// agrees with the pointer beside it, which is why TrackGroups and Animations
-	// are left at zero rather than counted and null.
-	struct SArrayTarget
-	{
-		const char *pszName;
-		int32_t *pnCount;
-		void ***pppItems;
-	};
-
+	// Each top level array in turn. The counts are set from the same pass that
+	// converts the elements, so a count and the pointer beside it never disagree.
 	int32_t nTextures = 0;
 	int32_t nMaterials = 0;
 	int32_t nSkeletons = 0;
@@ -806,6 +1073,8 @@ SFileInfo *CConverter::ConvertRoot()
 	int32_t nTriTopologies = 0;
 	int32_t nMeshes = 0;
 	int32_t nModels = 0;
+	int32_t nTrackGroups = 0;
+	int32_t nAnimations = 0;
 
 	const struct
 	{
@@ -815,10 +1084,11 @@ SFileInfo *CConverter::ConvertRoot()
 		{ "Textures", &nTextures },       { "Materials", &nMaterials },
 		{ "Skeletons", &nSkeletons },     { "VertexDatas", &nVertexDatas },
 		{ "TriTopologies", &nTriTopologies }, { "Meshes", &nMeshes },
-		{ "Models", &nModels },
+		{ "Models", &nModels },           { "TrackGroups", &nTrackGroups },
+		{ "Animations", &nAnimations },
 	};
 
-	void **ppConverted[7] = {};
+	void **ppConverted[9] = {};
 	for ( size_t a = 0; a < sizeof( arrays ) / sizeof( arrays[0] ); ++a )
 	{
 		int32_t nCount = 0;
@@ -849,7 +1119,9 @@ SFileInfo *CConverter::ConvertRoot()
 				case 3: ppItems[i] = Intern( item, &CConverter::MakeVertexData ); break;
 				case 4: ppItems[i] = Intern( item, &CConverter::MakeTriTopology ); break;
 				case 5: ppItems[i] = Intern( item, &CConverter::MakeMesh ); break;
-				default: ppItems[i] = Intern( item, &CConverter::MakeModel ); break;
+				case 6: ppItems[i] = Intern( item, &CConverter::MakeModel ); break;
+				case 7: ppItems[i] = Intern( item, &CConverter::MakeTrackGroup ); break;
+				default: ppItems[i] = Intern( item, &CConverter::MakeAnimation ); break;
 			}
 		}
 		*arrays[a].pnCount = nCount;
@@ -870,10 +1142,10 @@ SFileInfo *CConverter::ConvertRoot()
 	p->ppMeshes = reinterpret_cast<SMesh **>( ppConverted[5] );
 	p->nModelCount = nModels;
 	p->ppModels = reinterpret_cast<SModel **>( ppConverted[6] );
-
-	// TrackGroups and Animations stay empty. The pose runtime that would read
-	// them does not exist, and a count without converted elements behind it is
-	// worse than a zero.
+	p->nTrackGroupCount = nTrackGroups;
+	p->ppTrackGroups = reinterpret_cast<STrackGroup **>( ppConverted[7] );
+	p->nAnimationCount = nAnimations;
+	p->ppAnimations = reinterpret_cast<SAnimation **>( ppConverted[8] );
 	return p;
 }
 

@@ -44,8 +44,8 @@ import struct
 import sys
 import zipfile
 from collections import Counter
-from ctypes import (POINTER, c_bool, c_char_p, c_float, c_int32, c_uint16, c_uint32,
-                    c_void_p)
+from ctypes import (POINTER, c_bool, c_char_p, c_float, c_int16, c_int32, c_uint8,
+                    c_uint16, c_uint32, c_void_p)
 
 MAGIC = bytes.fromhex('b867b0caf86db10f84728c7e5e19001e')
 
@@ -167,6 +167,78 @@ class Model(C.Structure):
                 ('MeshBindings', POINTER(ModelMeshBinding)), ('ExtendedData', Variant)]
 
 
+class Curve2(C.Structure):
+    _pack_ = 1
+    _fields_ = [('CurveData', Variant)]
+
+
+class CurveDataDaK32fC32f(C.Structure):
+    """The one curve format these files produce: floats in, floats out.
+
+    Granny has eighteen, most of them quantised. A 2.5 curve is a
+    granny_old_curve, a degree and two float arrays, and this is the 2.11 format
+    with the same three fields, which is what the real DLL turns every one of
+    them into.
+    """
+    _pack_ = 1
+    _fields_ = [('Format', c_uint8), ('Degree', c_uint8), ('Padding', c_int16),
+                ('KnotCount', c_int32), ('Knots', POINTER(c_float)),
+                ('ControlCount', c_int32), ('Controls', POINTER(c_float))]
+
+
+class VectorTrack(C.Structure):
+    _pack_ = 1
+    _fields_ = [('Name', c_char_p), ('TrackKey', c_uint32), ('Dimension', c_int32),
+                ('ValueCurve', Curve2)]
+
+
+class TransformTrack(C.Structure):
+    _pack_ = 1
+    _fields_ = [('Name', c_char_p), ('Flags', c_int32), ('OrientationCurve', Curve2),
+                ('PositionCurve', Curve2), ('ScaleShearCurve', Curve2)]
+
+
+class TextTrackEntry(C.Structure):
+    _pack_ = 1
+    _fields_ = [('TimeStamp', c_float), ('Text', c_char_p)]
+
+
+class TextTrack(C.Structure):
+    _pack_ = 1
+    _fields_ = [('Name', c_char_p), ('EntryCount', c_int32),
+                ('Entries', POINTER(TextTrackEntry))]
+
+
+class PeriodicLoop(C.Structure):
+    _pack_ = 1
+    _fields_ = [('Radius', c_float), ('dAngle', c_float), ('dZ', c_float),
+                ('BasisX', c_float * 3), ('BasisY', c_float * 3), ('Axis', c_float * 3)]
+
+
+class TrackGroup(C.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ('Name', c_char_p),
+        ('VectorTrackCount', c_int32), ('VectorTracks', POINTER(VectorTrack)),
+        ('TransformTrackCount', c_int32), ('TransformTracks', POINTER(TransformTrack)),
+        ('TransformLODErrorCount', c_int32), ('TransformLODErrors', POINTER(c_float)),
+        ('TextTrackCount', c_int32), ('TextTracks', POINTER(TextTrack)),
+        ('InitialPlacement', Transform),
+        ('Flags', c_int32), ('LoopTranslation', c_float * 3),
+        ('PeriodicLoop', POINTER(PeriodicLoop)), ('ExtendedData', Variant),
+    ]
+
+
+class Animation(C.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ('Name', c_char_p), ('Duration', c_float), ('TimeStep', c_float),
+        ('Oversampling', c_float),
+        ('TrackGroupCount', c_int32), ('TrackGroups', POINTER(POINTER(TrackGroup))),
+        ('DefaultLoopCount', c_int32), ('Flags', c_int32), ('ExtendedData', Variant),
+    ]
+
+
 class FileInfo(C.Structure):
     _pack_ = 1
     _fields_ = [
@@ -178,15 +250,18 @@ class FileInfo(C.Structure):
         ('TriTopologyCount', c_int32), ('TriTopologies', POINTER(POINTER(TriTopology))),
         ('MeshCount', c_int32), ('Meshes', POINTER(POINTER(Mesh))),
         ('ModelCount', c_int32), ('Models', POINTER(POINTER(Model))),
-        ('TrackGroupCount', c_int32), ('TrackGroups', c_void_p),
-        ('AnimationCount', c_int32), ('Animations', c_void_p),
+        ('TrackGroupCount', c_int32), ('TrackGroups', POINTER(POINTER(TrackGroup))),
+        ('AnimationCount', c_int32), ('Animations', POINTER(POINTER(Animation))),
         ('ExtendedData', Variant),
     ]
 
 
 _SIZES = ((Variant, 16), (Transform, 68), (DataType, 44), (Bone, 164), (Skeleton, 40),
           (Model, 112), (FileInfo, 148), (Mesh, 76), (VertexData, 44),
-          (TriTopology, 132), (BoneBinding, 44), (TriMaterialGroup, 12))
+          (TriTopology, 132), (BoneBinding, 44), (TriMaterialGroup, 12),
+          (Curve2, 16), (CurveDataDaK32fC32f, 28), (VectorTrack, 32),
+          (TransformTrack, 60), (TextTrackEntry, 12), (TextTrack, 20),
+          (PeriodicLoop, 48), (TrackGroup, 164), (Animation, 56))
 for _t, _n in _SIZES:
     assert C.sizeof(_t) == _n, '%s is %d, expected %d' % (_t.__name__, C.sizeof(_t), _n)
 
@@ -277,6 +352,12 @@ class Granny(object):
         # MeshBindings[i].Mesh against a pointer, and the pointers themselves are
         # different numbers in the two implementations.
         meshes = [C.addressof(info.Meshes[i].contents) for i in range(info.MeshCount)]
+        # The same trick for track groups. An animation's TrackGroups point at
+        # the file's own, in all 11,360 groups of the corpus, and an
+        # implementation that converted each one twice would still read
+        # correctly while breaking anything that compares the pointers.
+        groups = [C.addressof(info.TrackGroups[i].contents)
+                  for i in range(info.TrackGroupCount)]
 
         return {
             'FromFileName': _s(info.FromFileName),
@@ -284,8 +365,13 @@ class Granny(object):
                 'Textures': info.TextureCount, 'Materials': info.MaterialCount,
                 'Skeletons': info.SkeletonCount, 'VertexDatas': info.VertexDataCount,
                 'TriTopologies': info.TriTopologyCount, 'Meshes': info.MeshCount,
-                'Models': info.ModelCount,
+                'Models': info.ModelCount, 'TrackGroups': info.TrackGroupCount,
+                'Animations': info.AnimationCount,
             },
+            'TrackGroups': [self._track_group(info.TrackGroups[i])
+                            for i in range(info.TrackGroupCount)],
+            'Animations': [self._animation(info.Animations[i].contents, groups)
+                           for i in range(info.AnimationCount)],
             'Skeletons': [self._skeleton(info.Skeletons[i])
                           for i in range(info.SkeletonCount)],
             'Meshes': [self._mesh(info.Meshes[i], meshes)
@@ -331,6 +417,121 @@ class Granny(object):
             'LocalTransform': _transform(bone.LocalTransform),
             'InverseWorld4x4': list(bone.InverseWorld4x4),
         }
+
+    def _animation(self, animation, group_addresses):
+        return {
+            'Name': _s(animation.Name),
+            'Duration': animation.Duration,
+            'TimeStep': animation.TimeStep,
+            'Oversampling': animation.Oversampling,
+            'DefaultLoopCount': animation.DefaultLoopCount,
+            'Flags': animation.Flags,
+            'HasExtendedData': bool(animation.ExtendedData.Type
+                                    or animation.ExtendedData.Object),
+            'TrackGroupCount': animation.TrackGroupCount,
+            # As indices into the file's own array, which is the only comparable
+            # form: the addresses themselves differ between implementations.
+            'TrackGroupIndices': [
+                group_addresses.index(C.addressof(animation.TrackGroups[i].contents))
+                if C.addressof(animation.TrackGroups[i].contents) in group_addresses
+                else -1
+                for i in range(animation.TrackGroupCount)],
+        }
+
+    def _track_group(self, group_ptr):
+        g = group_ptr.contents
+        out = {
+            'Name': _s(g.Name),
+            'Flags': g.Flags,
+            'InitialPlacement': _transform(g.InitialPlacement),
+            'LoopTranslation': list(g.LoopTranslation),
+            'TransformLODErrorCount': g.TransformLODErrorCount,
+            'TransformLODErrors': [g.TransformLODErrors[i]
+                                   for i in range(min(g.TransformLODErrorCount, 32))]
+                                  if g.TransformLODErrors else [],
+            'HasExtendedData': bool(g.ExtendedData.Type or g.ExtendedData.Object),
+            'VectorTrackCount': g.VectorTrackCount,
+            'TransformTrackCount': g.TransformTrackCount,
+            'TextTrackCount': g.TextTrackCount,
+        }
+        if g.PeriodicLoop:
+            p = g.PeriodicLoop.contents
+            out['PeriodicLoop'] = {
+                'Radius': p.Radius, 'dAngle': p.dAngle, 'dZ': p.dZ,
+                'BasisX': list(p.BasisX), 'BasisY': list(p.BasisY),
+                'Axis': list(p.Axis),
+            }
+        else:
+            out['PeriodicLoop'] = None
+
+        out['VectorTracks'] = [{
+            'Name': _s(g.VectorTracks[i].Name),
+            'TrackKey': g.VectorTracks[i].TrackKey,
+            'Dimension': g.VectorTracks[i].Dimension,
+            'ValueCurve': self._curve(g.VectorTracks[i].ValueCurve),
+        } for i in range(g.VectorTrackCount)]
+
+        out['TransformTracks'] = [{
+            'Name': _s(g.TransformTracks[i].Name),
+            'Flags': g.TransformTracks[i].Flags,
+            'PositionCurve': self._curve(g.TransformTracks[i].PositionCurve),
+            'OrientationCurve': self._curve(g.TransformTracks[i].OrientationCurve),
+            'ScaleShearCurve': self._curve(g.TransformTracks[i].ScaleShearCurve),
+        } for i in range(g.TransformTrackCount)]
+
+        out['TextTracks'] = [{
+            'Name': _s(g.TextTracks[i].Name),
+            'EntryCount': g.TextTracks[i].EntryCount,
+            'Entries': [[g.TextTracks[i].Entries[e].TimeStamp,
+                         _s(g.TextTracks[i].Entries[e].Text)]
+                        for e in range(min(g.TextTracks[i].EntryCount, 64))]
+                       if g.TextTracks[i].Entries else [],
+        } for i in range(g.TextTrackCount)]
+        return out
+
+    def _curve(self, curve):
+        """A curve2, read through the type its variant points at.
+
+        The type is the DLL's own global and its address means nothing across
+        implementations, so what is compared is its member list: a variant with a
+        null type is not the same object as one with a type, and the format byte
+        is what tells eighteen curve encodings apart.
+        """
+        if not curve.CurveData.Type and not curve.CurveData.Object:
+            return None
+        out = {'TypeMembers': self._type_members(curve.CurveData.Type)}
+        if not curve.CurveData.Object:
+            out['Data'] = None
+            return out
+        k = C.cast(curve.CurveData.Object, POINTER(CurveDataDaK32fC32f)).contents
+        out['Data'] = {
+            'Format': k.Format, 'Degree': k.Degree,
+            'KnotCount': k.KnotCount, 'ControlCount': k.ControlCount,
+            # The whole of both arrays. They are the animation, and a curve that
+            # points at the wrong offset in the file is the failure this is here
+            # to catch; the largest in the corpus is a few hundred floats.
+            'Knots': [k.Knots[i] for i in range(k.KnotCount)] if k.Knots else [],
+            'Controls': [k.Controls[i] for i in range(k.ControlCount)]
+                        if k.Controls else [],
+        }
+        # Padding is uninitialised in the real DLL, which returned 16414, -17102
+        # and 0 for three curves of one file, so it is deliberately not compared.
+        return out
+
+    def _type_members(self, type_ptr, depth=0):
+        # Depth capped because a type tree may name itself, and this walks
+        # reference types rather than tracking which it has already seen.
+        if not type_ptr or depth > 4:
+            return None
+        out = []
+        p = C.cast(type_ptr, POINTER(DataType))
+        i = 0
+        while i < 64 and p[i].Type != 0:
+            out.append([p[i].Type, _s(p[i].Name), p[i].ArrayWidth,
+                        self._type_members(C.cast(p[i].ReferenceType, c_void_p).value,
+                                           depth + 1)])
+            i += 1
+        return out
 
     def _mesh(self, mesh_ptr, mesh_addresses):
         mesh = mesh_ptr.contents

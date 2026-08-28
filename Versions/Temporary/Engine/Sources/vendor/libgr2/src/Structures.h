@@ -284,6 +284,129 @@ struct SMaterial
 	SVariant ExtendedData;
 };
 
+//! What a granny_curve2's variant points at, and the first byte of every curve
+//! object whatever its format.
+//!
+//! Granny has eighteen curve formats, most of them quantised. These files carry
+//! none of them: a 2.5 curve is a granny_old_curve, a degree with two float
+//! arrays, and the real DLL turns every one of them into the one uncompressed
+//! 2.11 format that has the same three fields.
+struct SCurveDataHeader
+{
+	uint8_t nFormat;
+	uint8_t nDegree;
+};
+
+//! granny_curve_data_format, in the order granny211.h declares the type globals
+//! in. Only the second is produced here, and the real DLL was measured writing
+//! exactly that value.
+enum ECurveFormat
+{
+	CURVE_DA_KEYFRAMES_32F = 0,
+	CURVE_DA_K32F_C32F = 1,
+};
+
+//! Knots and controls as plain floats, which is what an old curve already is.
+//!
+//! Padding is genuinely padding: the DLL leaves whatever was in the allocation
+//! there, and three curves in one file came back 16414, -17102 and 0. Nothing
+//! reads it, and reproducing uninitialised memory is not a goal, so it is 0.
+struct SCurveDataDaK32fC32f
+{
+	SCurveDataHeader Header;
+	int16_t nPadding;
+	int32_t nKnotCount;
+	float *pKnots;
+	int32_t nControlCount;
+	float *pControls;
+};
+
+struct SCurve2
+{
+	SVariant CurveData;
+};
+
+struct SVectorTrack
+{
+	const char *pszName;
+	//! Absent from these files: 2.11 added both.
+	uint32_t nTrackKey;
+	int32_t nDimension;
+	SCurve2 ValueCurve;
+};
+
+struct STransformTrack
+{
+	const char *pszName;
+	//! Absent from these files.
+	int32_t nFlags;
+	// Declared in this order by granny211.h, and in the order Position,
+	// Orientation, ScaleShear by the file. Members are read by name, so the two
+	// orders never have to agree.
+	SCurve2 OrientationCurve;
+	SCurve2 PositionCurve;
+	SCurve2 ScaleShearCurve;
+};
+
+struct STextTrackEntry
+{
+	float fTimeStamp;
+	const char *pszText;
+};
+
+struct STextTrack
+{
+	const char *pszName;
+	int32_t nEntryCount;
+	STextTrackEntry *pEntries;
+};
+
+struct SPeriodicLoop
+{
+	float fRadius;
+	float fdAngle;
+	float fdZ;
+	float BasisX[3];
+	float BasisY[3];
+	float Axis[3];
+};
+
+struct STrackGroup
+{
+	const char *pszName;
+	//! The file calls these ScalarTracks.
+	int32_t nVectorTrackCount;
+	SVectorTrack *pVectorTracks;
+	int32_t nTransformTrackCount;
+	STransformTrack *pTransformTracks;
+	//! Absent from these files: 2.11 added them for LOD.
+	int32_t nTransformLODErrorCount;
+	float *pTransformLODErrors;
+	int32_t nTextTrackCount;
+	STextTrack *pTextTracks;
+	STransform InitialPlacement;
+	//! The file calls this AccumulationFlags.
+	int32_t nFlags;
+	float LoopTranslation[3];
+	SPeriodicLoop *pPeriodicLoop;
+	SVariant ExtendedData;
+	// RootMotion has nowhere to go in 2.11, the way a bone's LightInfo does not.
+};
+
+struct SAnimation
+{
+	const char *pszName;
+	float fDuration;
+	float fTimeStep;
+	//! Absent from these files: 2.11 added all three.
+	float fOversampling;
+	int32_t nTrackGroupCount;
+	STrackGroup **ppTrackGroups;
+	int32_t nDefaultLoopCount;
+	int32_t nFlags;
+	SVariant ExtendedData;
+};
+
 struct SFileInfo
 {
 	SArtToolInfo *pArtToolInfo;
@@ -304,9 +427,9 @@ struct SFileInfo
 	int32_t nModelCount;
 	SModel **ppModels;
 	int32_t nTrackGroupCount;
-	void **ppTrackGroups;
+	STrackGroup **ppTrackGroups;
 	int32_t nAnimationCount;
-	void **ppAnimations;
+	SAnimation **ppAnimations;
 	SVariant ExtendedData;
 };
 
@@ -327,6 +450,14 @@ static_assert( sizeof( SMesh ) == 76, "granny_mesh" );
 static_assert( sizeof( SVertexData ) == 44, "granny_vertex_data" );
 static_assert( sizeof( STriTopology ) == 132, "granny_tri_topology" );
 static_assert( sizeof( SBoneBinding ) == 44, "granny_bone_binding" );
+static_assert( sizeof( SCurve2 ) == 16, "granny_curve2" );
+static_assert( sizeof( SCurveDataDaK32fC32f ) == 28, "granny_curve_data_da_k32f_c32f" );
+static_assert( sizeof( SVectorTrack ) == 32, "granny_vector_track" );
+static_assert( sizeof( STransformTrack ) == 60, "granny_transform_track" );
+static_assert( sizeof( STextTrackEntry ) == 12, "granny_text_track_entry" );
+static_assert( sizeof( STextTrack ) == 20, "granny_text_track" );
+static_assert( sizeof( STrackGroup ) == 164, "granny_track_group" );
+static_assert( sizeof( SAnimation ) == 56, "granny_animation" );
 #else
 static_assert( sizeof( SVariant ) == 8, "granny_variant" );
 static_assert( sizeof( STransform ) == 68, "granny_transform" );
@@ -339,10 +470,20 @@ static_assert( sizeof( SMesh ) == 44, "granny_mesh" );
 static_assert( sizeof( SVertexData ) == 28, "granny_vertex_data" );
 static_assert( sizeof( STriTopology ) == 88, "granny_tri_topology" );
 static_assert( sizeof( SBoneBinding ) == 36, "granny_bone_binding" );
+static_assert( sizeof( SCurve2 ) == 8, "granny_curve2" );
+static_assert( sizeof( SCurveDataDaK32fC32f ) == 20, "granny_curve_data_da_k32f_c32f" );
+static_assert( sizeof( SVectorTrack ) == 20, "granny_vector_track" );
+static_assert( sizeof( STransformTrack ) == 32, "granny_transform_track" );
+static_assert( sizeof( STextTrackEntry ) == 8, "granny_text_track_entry" );
+static_assert( sizeof( STextTrack ) == 12, "granny_text_track" );
+static_assert( sizeof( STrackGroup ) == 132, "granny_track_group" );
+static_assert( sizeof( SAnimation ) == 40, "granny_animation" );
 #endif
 
 static_assert( sizeof( STriMaterialGroup ) == 12, "granny_tri_material_group" );
 static_assert( sizeof( SPixelLayout ) == 36, "granny_pixel_layout" );
+static_assert( sizeof( SCurveDataHeader ) == 2, "granny_curve_data_header" );
+static_assert( sizeof( SPeriodicLoop ) == 48, "granny_periodic_loop" );
 
 }
 

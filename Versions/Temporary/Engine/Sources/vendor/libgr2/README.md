@@ -182,7 +182,7 @@ each gains its real definition in the milestone that first needs it.
 | `src/File.cpp` | 4 | container, fixups and file info |
 | `src/Oodle0.cpp` | 0 | the codec 6,016 of 21,720 files use |
 | `src/Oodle1.cpp` | 0 | the codec the other 15,704 use |
-| `src/Convert.cpp` | 0 | the file's structures into granny211.h's |
+| `src/Convert.cpp` | 0 | the file's structures into granny211.h's, three exporter vintages of them |
 | `src/TypeTree.cpp` | 2 | members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | triangle group count, and whether a mesh needs skinning |
 | `src/Skeleton.cpp` | 1 | bone lookup by name |
