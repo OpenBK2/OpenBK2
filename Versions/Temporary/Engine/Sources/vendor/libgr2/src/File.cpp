@@ -5,10 +5,12 @@
 // pointers, so nothing here memory-maps: it allocates and populates, which is
 // what lets x86 and x64 share one path.
 //
-// GrannyReadEntireFileFromMemory is the entry point the engine reaches first
-// after the allocator, since every model arrives out of a .pak already in
-// memory. GrannyReadEntireFile exists for the same reason it does in Granny, a
-// loose file on disk, and is the cheaper of the two to write.
+// GrannyReadEntireFileFromMemory is the first entry point the game reaches, and
+// a traced run says so: it is call 1, with nothing before it, not even the
+// allocator. Every model arrives out of a .pak already in memory, so this is the
+// form that matters. GrannyReadEntireFile exists for the same reason it does in
+// Granny, a loose file on disk; the editor and SceneB2/TerraTools.cpp use it, the
+// game never does, and it is the cheaper of the two to write.
 
 #include <gr2/granny.h>
 

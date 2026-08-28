@@ -128,8 +128,10 @@ typedef enum granny_accumulation_mode
 	Grannyaccumulation_mode_forceint = 0x7fffffff
 } granny_accumulation_mode;
 
-// The engine installs its own allocator through GrannySetAllocator, so these are
-// called back into engine code and have to keep Granny's __cdecl.
+// An installed allocator is called back into the caller's code, so these keep
+// Granny's __cdecl rather than the __stdcall of the entry points around them.
+// The engine has a pair of these ready in 3Dmotor/GrannyMemoryMap.cpp and never
+// installs them, but the signatures are part of the ABI either way.
 typedef GR2_CALLBACK( void * ) granny_allocate_callback( char const *File, granny_int32x Line,
                                                         granny_uintaddrx Alignment,
                                                         granny_uintaddrx Size,
@@ -137,7 +139,7 @@ typedef GR2_CALLBACK( void * ) granny_allocate_callback( char const *File, grann
 typedef GR2_CALLBACK( void ) granny_deallocate_callback( char const *File, granny_int32x Line,
                                                          void *Memory );
 
-// Memory. M0.
+// Memory. Exported because the engine links them, but never called by it.
 GR2_API( void ) GrannyGetAllocator( granny_allocate_callback **AllocateCallback,
                                     granny_deallocate_callback **DeallocateCallback );
 GR2_API( void ) GrannySetAllocator( granny_allocate_callback *AllocateCallback,

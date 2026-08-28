@@ -57,6 +57,27 @@ level; it defaults to `trace`, and every line is flushed, because the process
 this is meant to observe is expected to stop abruptly and the tail is the part
 worth reading.
 
+### What the first run said
+
+Three calls before the game gave up on the null files it got back:
+
+```
+1  GrannyReadEntireFileFromMemory( MemorySize=293795 ... )
+2  GrannyReadEntireFileFromMemory( MemorySize=5511 ... )
+3  GrannyGetFileInfo( File=0x0 )
+```
+
+`GrannyReadEntireFileFromMemory` is therefore the first Granny function the game
+calls, with nothing at all before it. In particular **the allocator entry points
+are dead**: `InitializeGrannyMemoryMap` in `3Dmotor/GrannyMemoryMap.cpp` is the
+only caller of `GrannyGetAllocator` and `GrannySetAllocator`, and nothing calls
+`InitializeGrannyMemoryMap`. They still have to be exported, since the engine
+links them, but they can stay stubs indefinitely and Granny's own allocator is
+the one that runs.
+
+This is the trace earning its keep on its first outing, and it says the order to
+work in: everything begins at `src/File.cpp`.
+
 ## Shape
 
 The public header, `include/gr2/granny.h`, reproduces the Granny API rather than
@@ -79,7 +100,7 @@ each gains its real definition in the milestone that first needs it.
 
 | file | entry points | milestone |
 |---|---|---|
-| `src/Allocator.cpp` | 2 | M0, the engine installs its own allocator first |
+| `src/Allocator.cpp` | 2 | linked, never called, see the trace above |
 | `src/File.cpp` | 4 | M1, container, fixups, the two Oodle codecs |
 | `src/TypeTree.cpp` | 2 | M1, members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | M2, geometry |
