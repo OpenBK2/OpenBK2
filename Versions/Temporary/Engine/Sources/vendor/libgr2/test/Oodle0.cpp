@@ -1,26 +1,27 @@
-// The Oodle0 decoder.
+// The Oodle0 decoder, against streams the real compressor produced.
 //
-// Oodle1 gets committed test vectors because granny2.dll still has an Oodle1
-// *compressor*: authored bytes go in, a real stream comes out, and the fixture
-// owes nothing to anybody's data. Oodle0 gets none, because the 2.11 DLL can
-// decode it and cannot encode it. GrannyBeginFileCompression accepts
+// Getting a real Oodle0 stream took two goes. granny2.dll 2.11 decodes this
+// codec and cannot encode it: GrannyBeginFileCompression accepts
 // GrannyOodle1Compression and refuses GrannyOodle0Compression, and no
-// GrannyOodle0Compress is exported at all. There is no way to make a stream.
+// GrannyOodle0Compress is exported at all. The 2.5 DLL can, because Oodle0 was
+// the codec of its day, and it is better than a 2.11 encoder would have been:
+// 2.5 is the exporter generation that wrote this game's files, so these vectors
+// are the exact dialect the decoder has to read.
 //
-// So this tests against files the repository already ships. Versions/Current/Data
-// is a pre-release beta snapshot, 14,115 of whose GR2 files are pure Oodle0, and
-// they are in the tree already; a checksum of what they expand to adds nothing
-// copyrightable and gives the decoder a byte-exact test that needs no DLL. That is
-// the manifest strategy docs/GrannyReplacement.md recommends, at the smallest
-// useful scale.
+// 2.5 is x86 only and its compression API differs from 2.11's, so the generator
+// was a small 32-bit program: GrannyNewFileWriter, then
+// GrannyBeginFileCompression with four arguments rather than five, then
+// GrannyCompressContentsOfFile per stage. The inputs were authored here, so what
+// is committed is a mechanical transform of our own bytes and nothing of
+// Nival's; only the compressed side is committed, and the plain side is
+// regenerated below from a rule two lines long.
 //
-// The checksums came out of granny2.dll. FNV-1a rather than SHA-256 because the
-// test has to compute the same thing in ten lines and nothing here is
-// adversarial. If the beta data is absent, as it is in an extracted copy of this
-// library, these skip.
-//
-// Agreement with the DLL over the whole corpus is measured separately and is the
-// stronger statement: scripts/port/gr2diff.py, 21,720 files, both codecs.
+// Two layers of test, then. These vectors run anywhere, with no DLL and no game
+// data. Below them, a checksum test over GR2 files this repository already
+// ships, which covers larger and more varied content than anything worth
+// pasting in as hex. And beyond both, agreement with the real DLL over the whole
+// corpus, which is the strongest statement and needs both the DLL and the data:
+// scripts/port/gr2diff.py, 21,720 files, both codecs, no differences.
 
 #include "MinimalGr2.h"
 
@@ -37,8 +38,159 @@
 
 #include <gtest/gtest.h>
 
+using NGr2::Oodle0Decompress;
+
 namespace
 {
+
+// TEXT: 270 bytes in, 220 compressed
+const uint8_t COMPRESSED_TEXT[] = {
+	0x00, 0xf1, 0xff, 0x07, 0x1d, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x80, 0xd3, 0x1b, 0x8a, 0x13, 0x9a, 0xa7, 0xbc, 0xa0, 0x58, 0x60, 0x0c,
+	0xcb, 0x57, 0xd8, 0xba, 0xfa, 0xa7, 0x6f, 0xfb, 0xb8, 0x6e, 0x8c, 0xb4,
+	0xb9, 0xc3, 0xb2, 0xa6, 0xd5, 0x12, 0x4e, 0x50, 0x11, 0xce, 0x69, 0xa6,
+	0xfb, 0x72, 0xef, 0x9e, 0x0c, 0xa8, 0xed, 0x67, 0x65, 0xb5, 0xd2, 0x12,
+	0xe5, 0x66, 0x45, 0x49, 0xdd, 0x83, 0x1e, 0x75, 0xb5, 0x58, 0x05, 0xaf,
+	0xf7, 0x4f, 0x72, 0x33, 0xee, 0x5b, 0x7d, 0xb9, 0x63, 0x67, 0xbe, 0xf9,
+	0xbe, 0x0c, 0x65, 0x73, 0x40, 0x10, 0x52, 0x88, 0x68, 0x42, 0x47, 0x7c,
+	0xf3, 0xe2, 0xd7, 0xa1, 0x59, 0x05, 0xbb, 0x8f, 0x46, 0x4f, 0x15, 0xae,
+	0x23, 0x8f, 0x28, 0xd7, 0x6a, 0x97, 0x62, 0xe7, 0x19, 0x57, 0x8f, 0x73,
+	0xfe, 0xa3, 0x0f, 0x56, 0xa8, 0x1d, 0x32, 0x73, 0x2f, 0xff, 0xc6, 0xbe,
+	0xe8, 0xaa, 0xa6, 0x1c, 0x09, 0x82, 0xc7, 0xdb, 0xec, 0xdb, 0x83, 0x8c,
+	0x74, 0x44, 0xe9, 0xc9, 0x5e, 0x66, 0xc3, 0x37, 0x1f, 0x2d, 0xb1, 0xba,
+	0x3e, 0x68, 0xbf, 0x22, 0x82, 0x69, 0x6b, 0xa4, 0xfd, 0x8a, 0x00, 0x96,
+	0xab, 0xd8, 0x60, 0x21, 0x1a, 0xed, 0xf3, 0x08, 0x1e, 0xcb, 0xf9, 0xb5,
+	0x5b, 0x19, 0x08, 0x01, 0x15, 0xf8, 0x84, 0x78, 0xcb, 0xb2, 0xc7, 0x5b,
+	0x0d, 0x00, 0x00, 0x00,
+};
+constexpr uint32_t STOP0_TEXT = 270;
+constexpr uint32_t STOP1_TEXT = 270;
+constexpr uint32_t PLAIN_TEXT = 270;
+
+// LONGRUN: 2048 bytes in, 48 compressed
+const uint8_t COMPRESSED_LONGRUN[] = {
+	0x00, 0xf1, 0xff, 0x07, 0x02, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x80, 0x66, 0x66, 0xa6, 0xf5, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x02,
+};
+constexpr uint32_t STOP0_LONGRUN = 2048;
+constexpr uint32_t STOP1_LONGRUN = 2048;
+constexpr uint32_t PLAIN_LONGRUN = 2048;
+
+// RECORDS: 512 bytes in, 436 compressed
+const uint8_t COMPRESSED_RECORDS[] = {
+	0x00, 0xf1, 0xff, 0x07, 0xb8, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x00, 0x60, 0x89, 0x12, 0x0a, 0x58, 0x71, 0xba, 0xd7, 0x6e, 0x3d, 0x02,
+	0xf6, 0x71, 0xcc, 0xe6, 0x76, 0x68, 0x4c, 0xac, 0x62, 0x65, 0x58, 0xe9,
+	0x89, 0x7b, 0x7d, 0x12, 0x25, 0x4a, 0xb7, 0x95, 0xdf, 0x03, 0x87, 0x9c,
+	0x9c, 0xaa, 0xff, 0xee, 0x74, 0x63, 0x33, 0xd5, 0x2a, 0xb1, 0x11, 0x1e,
+	0x85, 0x70, 0xa7, 0x95, 0x94, 0x78, 0x57, 0x7f, 0xad, 0x25, 0xb8, 0xbe,
+	0x03, 0x21, 0xcf, 0xf5, 0xbc, 0x80, 0x87, 0xb7, 0x84, 0x70, 0x3f, 0xc9,
+	0xba, 0xe5, 0x50, 0x1d, 0xf9, 0x1f, 0x80, 0x2d, 0xda, 0xa9, 0x38, 0x07,
+	0xc4, 0x59, 0x3c, 0x3f, 0xa3, 0x59, 0x10, 0x5e, 0xf9, 0x90, 0x6c, 0x36,
+	0x7e, 0x4e, 0xe1, 0xf4, 0x05, 0xbe, 0x1a, 0xc5, 0xe3, 0xe0, 0x73, 0x0d,
+	0x06, 0x00, 0x5e, 0x1d, 0x4a, 0xeb, 0x4e, 0x11, 0x32, 0xa5, 0x31, 0xfb,
+	0x18, 0x54, 0x6e, 0x19, 0x3e, 0xe7, 0xfb, 0xa8, 0x72, 0x0d, 0x46, 0xbd,
+	0xf3, 0xe4, 0x28, 0xd9, 0xa0, 0x39, 0x11, 0x06, 0xc1, 0x9c, 0x64, 0xc4,
+	0xfa, 0xbe, 0xaf, 0xf0, 0x9f, 0xb3, 0x43, 0x1a, 0x69, 0xbd, 0xbf, 0x5c,
+	0x52, 0x83, 0xa8, 0x55, 0x0f, 0xf1, 0xe7, 0xe5, 0x97, 0x9a, 0x31, 0x77,
+	0x0e, 0x79, 0x45, 0x34, 0xcb, 0xf2, 0x26, 0x71, 0xef, 0xb1, 0x91, 0x67,
+	0x5a, 0xe9, 0x89, 0x9e, 0x8b, 0x7c, 0x5f, 0x4e, 0xf1, 0xe8, 0x0c, 0xdc,
+	0x82, 0xbb, 0x78, 0x7a, 0x5b, 0xfc, 0x6e, 0x29, 0x54, 0xd9, 0xc0, 0x20,
+	0xdf, 0xab, 0x56, 0x01, 0x0b, 0x63, 0x27, 0xe8, 0xa1, 0x0c, 0xbd, 0xa3,
+	0x59, 0xa2, 0x4e, 0xe7, 0xd9, 0x2c, 0xf0, 0x02, 0x4f, 0xf0, 0x3b, 0xa0,
+	0xb1, 0xcf, 0x1a, 0xb1, 0xba, 0xbe, 0xca, 0xbb, 0x83, 0x84, 0x68, 0x92,
+	0x2c, 0x31, 0x6a, 0x3a, 0x4f, 0x93, 0xd0, 0x2e, 0x74, 0x57, 0x19, 0x98,
+	0x0a, 0x11, 0xf7, 0xd6, 0xd7, 0x1d, 0xa0, 0xe4, 0xb5, 0x0a, 0x1c, 0xd3,
+	0x3a, 0x69, 0x41, 0x20, 0xb7, 0xe8, 0x13, 0x4e, 0x10, 0x44, 0x07, 0x6d,
+	0x0c, 0xe8, 0xf8, 0xb7, 0xa8, 0x02, 0xad, 0xc8, 0xda, 0x0e, 0x18, 0x26,
+	0x37, 0x80, 0x30, 0x36, 0xc5, 0xfe, 0x47, 0x66, 0xee, 0xef, 0xf3, 0x0b,
+	0x36, 0xd6, 0x6e, 0xc6, 0x72, 0x75, 0x70, 0x64, 0xf8, 0x7b, 0xf5, 0x5d,
+	0x5f, 0x88, 0x02, 0x88, 0xfa, 0xd4, 0xda, 0xe2, 0xa3, 0x47, 0x69, 0x9a,
+	0x92, 0x80, 0xa1, 0x25, 0x45, 0xde, 0x20, 0xe7, 0x7d, 0xfd, 0xec, 0x3d,
+	0x0f, 0x17, 0xa8, 0x4a, 0xdb, 0x1c, 0xa0, 0x62, 0x62, 0x2b, 0x1c, 0x5f,
+	0x55, 0xb1, 0xc4, 0xd6, 0x0d, 0x80, 0x2e, 0x71, 0x80, 0x0f, 0xdb, 0x4b,
+	0x59, 0x17, 0x59, 0xd9, 0x8c, 0x94, 0x05, 0xf4, 0x59, 0x22, 0xb2, 0x17,
+	0xb5, 0x6a, 0x8e, 0x48, 0x8e, 0xc2, 0x2d, 0x3e, 0x2b, 0x89, 0xcc, 0x0b,
+	0xbe, 0xd4, 0x56, 0x05, 0x2c, 0x61, 0x5a, 0x64, 0x9b, 0xdd, 0xa2, 0xa5,
+	0x28, 0x00, 0x00, 0x00,
+};
+constexpr uint32_t STOP0_RECORDS = 512;
+constexpr uint32_t STOP1_RECORDS = 512;
+constexpr uint32_t PLAIN_RECORDS = 512;
+
+// THREESTAGES: 620 bytes in, 320 compressed
+const uint8_t COMPRESSED_THREESTAGES[] = {
+	0x00, 0xf1, 0xff, 0x07, 0x0a, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x09, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x09, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x80, 0xe3, 0x4f, 0x49, 0x39, 0x93, 0x12, 0x2b, 0xcc, 0x7a, 0x7f, 0x41,
+	0x04, 0xd7, 0x6e, 0x55, 0xac, 0x7d, 0x98, 0xda, 0x8d, 0xb9, 0x56, 0xc6,
+	0x37, 0x50, 0xdc, 0x23, 0xc5, 0x04, 0x58, 0x7a, 0x91, 0xcd, 0x7e, 0x09,
+	0x4e, 0xf5, 0x37, 0x34, 0x0e, 0xec, 0x9c, 0xf9, 0x1e, 0x13, 0x5f, 0xea,
+	0x95, 0x68, 0x8b, 0x77, 0xa0, 0xf9, 0x87, 0x42, 0xc2, 0x7f, 0xd7, 0x01,
+	0x21, 0x4e, 0xd6, 0xa7, 0x2d, 0x3a, 0x40, 0x9e, 0x88, 0x00, 0xf3, 0x53,
+	0x30, 0xc1, 0xa2, 0x47, 0xdf, 0xa5, 0x02, 0xaf, 0x90, 0x75, 0xe6, 0xcf,
+	0x9a, 0x20, 0x6d, 0x6d, 0xc1, 0x90, 0x32, 0x69, 0xe4, 0xeb, 0xf4, 0x16,
+	0x3a, 0x9b, 0x12, 0xb3, 0xcc, 0xae, 0x82, 0x32, 0x6e, 0x98, 0x4f, 0xc4,
+	0x0f, 0xce, 0xbe, 0x8d, 0xaf, 0x0c, 0x97, 0x58, 0xaf, 0x81, 0x91, 0x32,
+	0x82, 0xb5, 0x31, 0x24, 0x59, 0xbc, 0x51, 0xba, 0x6f, 0xf3, 0x46, 0xf9,
+	0xb3, 0x38, 0x5d, 0x98, 0x07, 0x41, 0xb7, 0x12, 0xa5, 0x7a, 0xb3, 0xbd,
+	0x00, 0x12, 0x9d, 0x4b, 0xbc, 0x8c, 0xbc, 0xb5, 0xb1, 0x0b, 0x6b, 0x68,
+	0x3b, 0x5a, 0xb7, 0xfe, 0xf2, 0x98, 0x20, 0xdd, 0xee, 0x11, 0x0e, 0xbe,
+	0x86, 0x01, 0xb5, 0x73, 0x2b, 0x10, 0x59, 0xef, 0x93, 0xd3, 0x65, 0x6b,
+	0xd5, 0x1c, 0x64, 0xab, 0x51, 0x7f, 0x7d, 0x3f, 0x08, 0x30, 0x03, 0xe1,
+	0xa2, 0x45, 0x00, 0x61, 0x74, 0x7b, 0x95, 0x64, 0x55, 0xd6, 0xe8, 0x4d,
+	0x41, 0x3a, 0x28, 0x3f, 0x4d, 0xe1, 0x2d, 0xa1, 0x44, 0xb6, 0x95, 0x96,
+	0xd9, 0x54, 0x18, 0xb0, 0x53, 0x62, 0x55, 0x17, 0x20, 0x69, 0x67, 0x90,
+	0x01, 0x2d, 0xf6, 0x23, 0x33, 0xd6, 0x3d, 0xe9, 0x9b, 0x99, 0x31, 0x8a,
+	0x55, 0x1a, 0x2c, 0x23, 0x1e, 0x74, 0xe3, 0xf6, 0x30, 0xa3, 0x11, 0x11,
+	0xc7, 0x33, 0x64, 0x78, 0x87, 0x54, 0x81, 0x41, 0xf6, 0x32, 0xdb, 0x9e,
+	0x99, 0x0f, 0x52, 0xb2, 0x01, 0x9c, 0x31, 0xe7, 0x6e, 0x32, 0xa2, 0x75,
+	0x6f, 0x7b, 0xd4, 0xe8, 0x08, 0x00, 0x00, 0x00,
+};
+constexpr uint32_t STOP0_THREESTAGES = 220;
+constexpr uint32_t STOP1_THREESTAGES = 420;
+constexpr uint32_t PLAIN_THREESTAGES = 620;
+
+// NOISE: 256 bytes in, 320 compressed
+const uint8_t COMPRESSED_NOISE[] = {
+	0x00, 0xf1, 0xff, 0x07, 0x9b, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x00, 0xf1, 0xff, 0x07, 0x01, 0x02, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
+	0x80, 0xef, 0x71, 0x9d, 0xc1, 0x06, 0x64, 0x67, 0x59, 0x8e, 0x4b, 0x34,
+	0xa1, 0x3b, 0x59, 0xb4, 0x96, 0x0c, 0x06, 0xf8, 0x29, 0x5e, 0x9c, 0x78,
+	0xc3, 0x94, 0x9b, 0x9a, 0x14, 0xd6, 0xf8, 0xad, 0xa2, 0x0e, 0x03, 0x3f,
+	0xd1, 0x7b, 0x61, 0x50, 0x95, 0x7a, 0xbd, 0x34, 0xe7, 0x71, 0x5e, 0xf2,
+	0x4a, 0x06, 0xf4, 0x2d, 0xf9, 0x49, 0x7b, 0xf9, 0x1c, 0x09, 0x52, 0x25,
+	0xaf, 0x17, 0x9e, 0x2e, 0x7c, 0x9b, 0x00, 0x42, 0x31, 0xd5, 0xbe, 0x2d,
+	0x01, 0x24, 0x1f, 0x95, 0xc9, 0x38, 0x29, 0xb9, 0xb7, 0x0c, 0x26, 0xa0,
+	0x07, 0xf4, 0x44, 0xc8, 0xa4, 0x4c, 0xbf, 0x22, 0x1f, 0xab, 0x66, 0x3c,
+	0xa6, 0xdb, 0x24, 0xc1, 0x2b, 0x1f, 0x56, 0x45, 0xb8, 0xd4, 0xdb, 0xac,
+	0xb4, 0xcb, 0xc7, 0x7e, 0x2a, 0xbf, 0x91, 0x47, 0x9a, 0xe6, 0xc7, 0x95,
+	0x16, 0xc5, 0x27, 0x71, 0x92, 0x6c, 0x79, 0xb1, 0x6b, 0x85, 0x7e, 0x79,
+	0x5d, 0x39, 0x4f, 0x86, 0xad, 0x29, 0xb2, 0xb6, 0xb7, 0xdd, 0x8b, 0x44,
+	0xcb, 0x79, 0x88, 0x6c, 0xb2, 0x11, 0xa5, 0x0c, 0x9c, 0xb6, 0x01, 0x67,
+	0xa2, 0x6a, 0x6d, 0x04, 0xb3, 0x43, 0x0d, 0x5e, 0x15, 0xaa, 0xc0, 0x72,
+	0x70, 0xed, 0x7b, 0xb4, 0x3c, 0x56, 0x26, 0xc8, 0x8b, 0xa8, 0xfd, 0x3a,
+	0xbe, 0x64, 0xc8, 0xa0, 0x1c, 0x25, 0x50, 0x71, 0x42, 0x31, 0xf0, 0xfb,
+	0xb8, 0x43, 0xc7, 0xdc, 0xd3, 0x96, 0xc0, 0xe8, 0x02, 0xfd, 0x65, 0x53,
+	0x71, 0x6c, 0x91, 0x18, 0x95, 0x43, 0x1b, 0x99, 0xd0, 0x96, 0x08, 0x6b,
+	0x51, 0x49, 0xc1, 0xea, 0xca, 0x93, 0xe3, 0x26, 0xb2, 0xca, 0xbe, 0xeb,
+	0x9d, 0xcb, 0xb3, 0xa1, 0x3c, 0x6e, 0xc2, 0x12, 0x70, 0x14, 0xa2, 0xa2,
+	0x9d, 0xba, 0xe0, 0x95, 0xae, 0x54, 0xf3, 0x6e, 0xb3, 0xc3, 0x7e, 0x57,
+	0x16, 0x45, 0xd4, 0x8a, 0xb6, 0x2a, 0xe7, 0x26, 0x6c, 0x6c, 0x98, 0xc6,
+	0x03, 0xcc, 0x40, 0xe0, 0x19, 0xb9, 0x91, 0x22, 0xb3, 0x30, 0x61, 0xdb,
+	0xfa, 0x57, 0x4a, 0xf4, 0x5a, 0x1a, 0x00, 0x00,
+};
+constexpr uint32_t STOP0_NOISE = 256;
+constexpr uint32_t STOP1_NOISE = 256;
+constexpr uint32_t PLAIN_NOISE = 256;
 
 //! One file the repository ships, and what it expands to.
 struct SExpected
@@ -48,8 +200,11 @@ struct SExpected
 	uint64_t nChecksum;
 };
 
-// Generated from files this repository already ships, by decompressing them
-// through granny2.dll and checksumming the result. See the comment above.
+// Generated by decompressing files this repository already ships through
+// granny2.dll and checksumming the result. Versions/Current/Data is a
+// pre-release beta snapshot and 14,115 of its GR2 files are pure Oodle0, so a
+// checksum of what they expand to adds nothing copyrightable and covers content
+// far larger than the vectors above.
 const SExpected EXPECTED[] = {
 	{ "Versions/Current/Data/bin/Geometries/5A313713-BF5A-402D-9C1F-9DAF34F5F743",
 	  7104, 0x901e1bb9844acdfdull },
@@ -65,6 +220,8 @@ const SExpected EXPECTED[] = {
 	  708728, 0xa8b4ad48a294c415ull },
 };
 
+//! FNV-1a, because the test has to compute it in ten lines and nothing here is
+//! adversarial.
 uint64_t Fnv1a( const uint8_t *pBytes, size_t nBytes )
 {
 	uint64_t nHash = 0xcbf29ce484222325ull;
@@ -75,7 +232,7 @@ uint64_t Fnv1a( const uint8_t *pBytes, size_t nBytes )
 	return nHash;
 }
 
-//! Where the repository's beta data is, or an empty string if it is not there.
+//! Where the repository is, or empty if its beta data is not there.
 //!
 //! LIBGR2_REPO_DATA_DIR is defined by CMake only when the directory exists, so an
 //! extracted copy of this library compiles and skips rather than failing.
@@ -111,10 +268,263 @@ std::vector<uint8_t> AllSections( granny_file *pFile )
 	return out;
 }
 
+//! Repeat pszText until nTimes copies exist. Every vector input is one of these,
+//! or one of the two loops after it.
+std::vector<uint8_t> Repeat( const char *pszText, uint32_t nTimes )
+{
+	const std::string one( pszText );
+	std::vector<uint8_t> bytes;
+	for ( uint32_t i = 0; i < nTimes; ++i )
+	{
+		bytes.insert( bytes.end(), one.begin(), one.end() );
+	}
+	return bytes;
+}
+
+//! Four byte records: a constant, a counter, a stride and a zero.
+std::vector<uint8_t> Records( uint32_t nCount )
+{
+	std::vector<uint8_t> bytes;
+	for ( uint32_t i = 0; i < nCount; ++i )
+	{
+		bytes.push_back( 0x01 );
+		bytes.push_back( static_cast<uint8_t>( i & 0xff ) );
+		bytes.push_back( static_cast<uint8_t>( ( i * 7 ) & 0xff ) );
+		bytes.push_back( 0x00 );
+	}
+	return bytes;
+}
+
+//! The Numerical Recipes LCG, taking bits 16 to 23, which is what the generator
+//! used and the only reason this can be regenerated rather than committed.
+std::vector<uint8_t> Noise( uint32_t nBytes, uint32_t nSeed )
+{
+	std::vector<uint8_t> bytes;
+	uint32_t x = nSeed;
+	for ( uint32_t i = 0; i < nBytes; ++i )
+	{
+		x = x * 1664525u + 1013904223u;
+		bytes.push_back( static_cast<uint8_t>( ( x >> 16 ) & 0xff ) );
+	}
+	return bytes;
+}
+
+//! Decompress into a buffer with a guard byte after it, and check the guard.
+::testing::AssertionResult Expand( const uint8_t *pCompressed, uint32_t nCompressedSize,
+                                   uint32_t nStop0, uint32_t nStop1,
+                                   const std::vector<uint8_t> &expected )
+{
+	std::vector<uint8_t> out( expected.size() + 1, 0 );
+	out.back() = 0xa5;
+
+	if ( !Oodle0Decompress( pCompressed, nCompressedSize, nStop0, nStop1, out.data(),
+	                        static_cast<uint32_t>( expected.size() ) ) )
+	{
+		return ::testing::AssertionFailure() << "Oodle0Decompress refused the stream";
+	}
+	if ( out.back() != 0xa5 )
+	{
+		return ::testing::AssertionFailure() << "wrote past the end of the output";
+	}
+
+	out.pop_back();
+	for ( size_t i = 0; i < out.size(); ++i )
+	{
+		if ( out[i] != expected[i] )
+		{
+			return ::testing::AssertionFailure()
+				<< "first difference at byte " << i << ": got 0x" << std::hex
+				<< static_cast<int>( out[i] ) << ", expected 0x"
+				<< static_cast<int>( expected[i] );
+		}
+	}
+	return ::testing::AssertionSuccess();
+}
+
+}
+
+TEST( Oodle0, DecodesText )
+{
+	EXPECT_TRUE( Expand( COMPRESSED_TEXT, sizeof( COMPRESSED_TEXT ), STOP0_TEXT, STOP1_TEXT,
+	                     Repeat( "the quick brown fox jumps over the lazy dog. ", 6 ) ) );
+}
+
+TEST( Oodle0, DecodesALongRun )
+{
+	// 2,048 copies of one byte in 48, so the long length codes and the shortest
+	// possible offset are both being exercised.
+	EXPECT_TRUE( Expand( COMPRESSED_LONGRUN, sizeof( COMPRESSED_LONGRUN ), STOP0_LONGRUN,
+	                     STOP1_LONGRUN, std::vector<uint8_t>( 2048, 0x5a ) ) );
+	EXPECT_LT( sizeof( COMPRESSED_LONGRUN ), 64u );
+}
+
+TEST( Oodle0, DecodesFourByteRecords )
+{
+	EXPECT_TRUE( Expand( COMPRESSED_RECORDS, sizeof( COMPRESSED_RECORDS ), STOP0_RECORDS,
+	                     STOP1_RECORDS, Records( 128 ) ) );
+}
+
+TEST( Oodle0, DecodesAllThreeStages )
+{
+	// No shipped section looks like this, since first16Bit and first8Bit are equal
+	// in all 20,630 of them and the middle stage is always empty. The format
+	// allows it and each stage builds its models from scratch, so a decoder that
+	// carried state across a boundary would fail here and nowhere else.
+	std::vector<uint8_t> expected = Repeat( "stage zero ", 20 );
+	const std::vector<uint8_t> one = Repeat( "stage one ", 20 );
+	const std::vector<uint8_t> two = Repeat( "stage two ", 20 );
+	expected.insert( expected.end(), one.begin(), one.end() );
+	expected.insert( expected.end(), two.begin(), two.end() );
+
+	EXPECT_EQ( 220u, STOP0_THREESTAGES );
+	EXPECT_EQ( 420u, STOP1_THREESTAGES );
+	EXPECT_TRUE( Expand( COMPRESSED_THREESTAGES, sizeof( COMPRESSED_THREESTAGES ),
+	                     STOP0_THREESTAGES, STOP1_THREESTAGES, expected ) );
+}
+
+TEST( Oodle0, DecodesIncompressibleData )
+{
+	// Nothing repeats, so every symbol is a literal and the model keeps taking the
+	// escape path, which is the part of it that only this case reaches.
+	EXPECT_TRUE( Expand( COMPRESSED_NOISE, sizeof( COMPRESSED_NOISE ), STOP0_NOISE,
+	                     STOP1_NOISE, Noise( 256, 20260828 ) ) );
+	EXPECT_GT( sizeof( COMPRESSED_NOISE ), 256u );
+}
+
+TEST( Oodle0, SurvivesEveryTruncationOfAStream )
+{
+	// Truncation is not detectable here at all, and the reason is worth stating,
+	// because it is stronger than the same caveat on Oodle1.
+	//
+	// The bit reader zero pads past the end of its buffer, which the format
+	// requires: the encoder's last symbols sit in a partly filled word. Zeros are
+	// a perfectly good bit pattern, so a truncated stream does not run out, it
+	// carries on decoding whatever the zeros happen to mean and fills the output
+	// to the length it was told. Oodle1's models mostly wander into an invalid
+	// symbol before that happens; Oodle0's do not, and a prefix of a tenth of the
+	// stream still "succeeds".
+	//
+	// So a decoder cannot tell you the section was short, and this asserts only
+	// what it can: it terminates, and it never writes past the output. Length is
+	// the container's job, which is why granny_file checks every section's extent
+	// against the buffer before any of this runs.
+	const std::vector<uint8_t> plain =
+		Repeat( "the quick brown fox jumps over the lazy dog. ", 6 );
+
+	uint32_t nCorrect = 0;
+	for ( uint32_t n = 0; n < sizeof( COMPRESSED_TEXT ); ++n )
+	{
+		std::vector<uint8_t> out( plain.size() + 1, 0 );
+		out.back() = 0xa5;
+
+		const bool bOk = Oodle0Decompress( COMPRESSED_TEXT, n, STOP0_TEXT, STOP1_TEXT,
+		                                   out.data(), PLAIN_TEXT );
+		ASSERT_EQ( 0xa5, out.back() ) << "prefix of " << n << " bytes wrote past the end";
+
+		if ( bOk )
+		{
+			out.pop_back();
+			nCorrect += ( out == plain ) ? 1 : 0;
+		}
+	}
+
+	// The whole stream is one of them, and the tail slack accounts for a few more.
+	// What would be wrong is every prefix decoding correctly, which would mean the
+	// later bytes were never read.
+	EXPECT_GT( nCorrect, 0u );
+	EXPECT_LT( nCorrect, sizeof( COMPRESSED_TEXT ) / 4 )
+		<< "far more prefixes decoded correctly than the tail slack can explain";
+}
+
+TEST( Oodle0, SurvivesEveryBitFlip )
+{
+	// Not every corruption has to be detected, since a range coder will happily
+	// decode nonsense. What must hold is that it terminates and stays inside the
+	// buffers.
+	std::vector<uint8_t> corrupted( COMPRESSED_TEXT,
+	                                COMPRESSED_TEXT + sizeof( COMPRESSED_TEXT ) );
+	const std::vector<uint8_t> plain =
+		Repeat( "the quick brown fox jumps over the lazy dog. ", 6 );
+
+	for ( size_t i = 0; i < corrupted.size(); ++i )
+	{
+		for ( int nBit = 0; nBit < 8; ++nBit )
+		{
+			corrupted[i] ^= static_cast<uint8_t>( 1 << nBit );
+
+			std::vector<uint8_t> out( plain.size() + 1, 0 );
+			out.back() = 0xa5;
+			Oodle0Decompress( corrupted.data(), static_cast<uint32_t>( corrupted.size() ),
+			                  STOP0_TEXT, STOP1_TEXT, out.data(),
+			                  static_cast<uint32_t>( plain.size() ) );
+			ASSERT_EQ( 0xa5, out.back() )
+				<< "byte " << i << " bit " << nBit << " wrote past the end";
+
+			corrupted[i] ^= static_cast<uint8_t>( 1 << nBit );
+		}
+	}
+}
+
+TEST( Oodle0, RefusesNonsenseArguments )
+{
+	std::vector<uint8_t> out( 64, 0 );
+
+	EXPECT_FALSE( Oodle0Decompress( nullptr, 64, 0, 0, out.data(), 64 ) );
+	EXPECT_FALSE( Oodle0Decompress( COMPRESSED_TEXT, sizeof( COMPRESSED_TEXT ), 0, 0,
+	                                nullptr, 64 ) );
+	// Fewer bytes than the three twelve-byte parameter blocks every stream starts
+	// with.
+	EXPECT_FALSE( Oodle0Decompress( COMPRESSED_TEXT, 35, 0, 0, out.data(), 64 ) );
+}
+
+TEST( Oodle0, RefusesAStreamOfZeros )
+{
+	// All-zero parameters describe a model with no symbols, so the first read has
+	// nowhere to land. What matters is that it says so rather than looping.
+	const std::vector<uint8_t> stream( 512, 0 );
+	std::vector<uint8_t> out( 1024 + 1, 0 );
+	out.back() = 0xa5;
+
+	EXPECT_FALSE( Oodle0Decompress( stream.data(), static_cast<uint32_t>( stream.size() ),
+	                                0, 0, out.data(), 1024 ) );
+	EXPECT_EQ( 0xa5, out.back() );
+}
+
+TEST( Oodle0, StaysInsideTheBufferWhateverSizeItIsTold )
+{
+	// A lied-about length is the same problem as truncation and has the same
+	// answer: the decoder cannot tell, because zeros decode. Asked for more than
+	// the stream holds it invents the rest; asked for less it stops early. Neither
+	// is detectable from inside the codec, and neither may touch the guard byte.
+	//
+	// This is why the container validates first, and why a section's
+	// expandedDataSize is taken from the file rather than from anything here.
+	for ( uint32_t nSize : { PLAIN_TEXT + 64, PLAIN_TEXT - 64, 1u } )
+	{
+		std::vector<uint8_t> out( nSize + 1, 0 );
+		out.back() = 0xa5;
+		Oodle0Decompress( COMPRESSED_TEXT, sizeof( COMPRESSED_TEXT ), STOP0_TEXT,
+		                  STOP1_TEXT, out.data(), nSize );
+		EXPECT_EQ( 0xa5, out.back() ) << "asked for " << nSize << " bytes";
+	}
+}
+
+TEST( Oodle0, DecodesTheSameBytesEveryTime )
+{
+	// No state survives a call: the models are built per stage and the coder is a
+	// local, so two runs of one stream cannot differ.
+	const std::vector<uint8_t> expected = Records( 128 );
+	for ( int i = 0; i < 4; ++i )
+	{
+		EXPECT_TRUE( Expand( COMPRESSED_RECORDS, sizeof( COMPRESSED_RECORDS ),
+		                     STOP0_RECORDS, STOP1_RECORDS, expected ) );
+	}
 }
 
 TEST( Oodle0, ExpandsTheFilesThisRepositoryShips )
 {
+	// Larger and more varied than anything worth pasting in as hex: the last of
+	// these expands to 708 kilobytes.
 	const std::string sRoot = RepoRoot();
 	if ( sRoot.empty() )
 	{
@@ -124,8 +534,7 @@ TEST( Oodle0, ExpandsTheFilesThisRepositoryShips )
 	int nChecked = 0;
 	for ( const SExpected &expected : EXPECTED )
 	{
-		const std::string sPath = sRoot + "/" + expected.pszPath;
-		const std::vector<uint8_t> bytes = ReadFile( sPath );
+		const std::vector<uint8_t> bytes = ReadFile( sRoot + "/" + expected.pszPath );
 		if ( bytes.empty() )
 		{
 			continue;
@@ -145,134 +554,4 @@ TEST( Oodle0, ExpandsTheFilesThisRepositoryShips )
 	}
 
 	EXPECT_GT( nChecked, 0 ) << "none of the listed files were found under " << sRoot;
-}
-
-TEST( Oodle0, DecodesTheSameBytesEveryTime )
-{
-	// No state survives a call: the models are built per stage and the coder is a
-	// local, so two runs of one stream cannot differ.
-	const std::string sRoot = RepoRoot();
-	if ( sRoot.empty() )
-	{
-		GTEST_SKIP() << "Versions/Current/Data is not present";
-	}
-	const std::vector<uint8_t> bytes = ReadFile( sRoot + "/" + EXPECTED[0].pszPath );
-	if ( bytes.empty() )
-	{
-		GTEST_SKIP() << "the file is not there";
-	}
-
-	std::vector<uint8_t> first;
-	for ( int i = 0; i < 3; ++i )
-	{
-		granny_file *pFile = GrannyReadEntireFileFromMemory(
-			static_cast<granny_int32x>( bytes.size() ), bytes.data() );
-		ASSERT_NE( nullptr, pFile );
-		const std::vector<uint8_t> expanded = AllSections( pFile );
-		if ( i == 0 )
-		{
-			first = expanded;
-		}
-		else
-		{
-			EXPECT_EQ( first, expanded ) << "run " << i;
-		}
-		GrannyFreeFile( pFile );
-	}
-}
-
-TEST( Oodle0, RefusesNonsenseArguments )
-{
-	std::vector<uint8_t> stream( 256, 0 );
-	std::vector<uint8_t> out( 256, 0 );
-
-	EXPECT_FALSE( NGr2::Oodle0Decompress( nullptr, 256, 0, 0, out.data(), 256 ) );
-	EXPECT_FALSE( NGr2::Oodle0Decompress( stream.data(), 256, 0, 0, nullptr, 256 ) );
-	// Fewer bytes than the three twelve-byte parameter blocks every stream starts
-	// with.
-	EXPECT_FALSE( NGr2::Oodle0Decompress( stream.data(), 35, 0, 0, out.data(), 256 ) );
-}
-
-TEST( Oodle0, RefusesAStreamOfZeros )
-{
-	// All-zero parameters describe a model with no symbols, so the first read has
-	// nowhere to land. What matters is that it says so rather than looping.
-	const std::vector<uint8_t> stream( 512, 0 );
-	std::vector<uint8_t> out( 1024 + 1, 0 );
-	out.back() = 0xa5;
-
-	EXPECT_FALSE( NGr2::Oodle0Decompress( stream.data(),
-	                                      static_cast<uint32_t>( stream.size() ), 0, 0,
-	                                      out.data(), 1024 ) );
-	EXPECT_EQ( 0xa5, out.back() ) << "wrote past the end of the output";
-}
-
-TEST( Oodle0, SurvivesEveryTruncationOfARealStream )
-{
-	// Truncation is not reliably detectable in an arithmetic coder, the same as
-	// for Oodle1, so this asserts what a loader can rely on: it terminates, it
-	// never writes past the output, and a stream too short to hold the message is
-	// refused.
-	const std::string sRoot = RepoRoot();
-	if ( sRoot.empty() )
-	{
-		GTEST_SKIP() << "Versions/Current/Data is not present";
-	}
-	const std::vector<uint8_t> bytes = ReadFile( sRoot + "/" + EXPECTED[0].pszPath );
-	if ( bytes.empty() )
-	{
-		GTEST_SKIP() << "the file is not there";
-	}
-
-	// Every prefix, in steps, since the smallest of these files is still four
-	// kilobytes and every single length would be slow without saying more.
-	for ( uint32_t n = 0; n < bytes.size(); n += 37 )
-	{
-		const std::vector<uint8_t> prefix( bytes.begin(),
-		                                   bytes.begin() + static_cast<ptrdiff_t>( n ) );
-		granny_file *pFile = GrannyReadEntireFileFromMemory(
-			static_cast<granny_int32x>( prefix.size() ), prefix.data() );
-		if ( pFile != nullptr )
-		{
-			// A prefix that still loads has to be self-consistent, which is what
-			// the container's own length checks are for.
-			GrannyFreeFile( pFile );
-		}
-	}
-}
-
-TEST( Oodle0, WritesNoMoreThanItWasGiven )
-{
-	// The decoder is handed a buffer with a guard byte after it, and a length one
-	// byte short of what the section says. It must refuse rather than fill the
-	// space it was promised.
-	const std::string sRoot = RepoRoot();
-	if ( sRoot.empty() )
-	{
-		GTEST_SKIP() << "Versions/Current/Data is not present";
-	}
-	const std::vector<uint8_t> bytes = ReadFile( sRoot + "/" + EXPECTED[0].pszPath );
-	if ( bytes.empty() )
-	{
-		GTEST_SKIP() << "the file is not there";
-	}
-
-	// The first section's compressed bytes, taken straight out of the file.
-	const uint32_t nArrayBegin = NGr2Test::HEADER_OFFSET
-	                             + *reinterpret_cast<const uint32_t *>(
-									 bytes.data() + NGr2Test::OFF_SECTION_ARRAY_OFFSET );
-	const uint32_t *pSection =
-		reinterpret_cast<const uint32_t *>( bytes.data() + nArrayBegin );
-	const uint32_t nDataOffset = pSection[1];
-	const uint32_t nDataSize = pSection[2];
-	const uint32_t nExpanded = pSection[3];
-	ASSERT_GT( nExpanded, 1u );
-
-	std::vector<uint8_t> out( nExpanded + 1, 0 );
-	out.back() = 0xa5;
-	EXPECT_FALSE( NGr2::Oodle0Decompress( bytes.data() + nDataOffset, nDataSize,
-	                                      pSection[5], pSection[6], out.data(),
-	                                      nExpanded - 1 ) )
-		<< "a section does not fit in one byte less than it needs";
-	EXPECT_EQ( 0xa5, out.back() );
 }
