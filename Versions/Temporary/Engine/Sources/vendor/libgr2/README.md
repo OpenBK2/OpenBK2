@@ -50,6 +50,31 @@ library's export table and fails unless it holds exactly the 54 names in
 The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
 the vendored DLL, because the engine loads it by name.
 
+## Checking it against the real thing
+
+`scripts/port/gr2diff.py` loads both this library and the vendored
+`granny2_x64.dll` into one process, reads every `.gr2` it can find through each,
+and reports where they disagree. That is possible because this library
+reproduces the Granny API rather than inventing a neutral one: the same bindings
+drive either, and the structures compared are `granny211.h`'s, which is the
+contract both have to meet.
+
+```powershell
+python scripts/port/gr2diff.py --jobs 8            every install it knows about
+python scripts/port/gr2diff.py --limit 500         a quick sample
+python scripts/port/gr2diff.py --report out.json   every difference, in full
+```
+
+It prints a histogram before a list, since over eighty thousand files what is
+useful is "InverseWorld4x4 differs in 12 files" rather than twelve thousand
+lines. Files this library refuses because of a codec it does not implement yet
+are counted apart from files the two read differently, because during a port most
+of those are one milestone away rather than wrong.
+
+This is the measurement that matters for this project, and it cannot be a unit
+test: it needs the DLL and it needs the corpus, and the corpus is 83,184 files of
+Nival's copyrighted data. The unit tests are what run without either.
+
 ## Tests
 
 googletest, fetched at the pin the rest of the tree uses, or reused from the

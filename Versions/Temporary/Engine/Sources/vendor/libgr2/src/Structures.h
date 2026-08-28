@@ -223,17 +223,54 @@ struct SModel
 	SVariant ExtendedData;
 };
 
-//! Only as much of granny_material as the geometry path needs.
-//!
-//! Maps and textures hang off it and nothing on this path follows them, so they
-//! are left empty rather than half converted. The rest arrives with the material
-//! system, which does not exist yet.
+struct SPixelLayout
+{
+	int32_t nBytesPerPixel;
+	int32_t ShiftForComponent[4];
+	int32_t BitsForComponent[4];
+};
+
+struct SMipLevel
+{
+	int32_t nStride;
+	int32_t nPixelByteCount;
+	void *pPixelBytes;
+};
+
+struct STextureImage
+{
+	int32_t nMIPLevelCount;
+	SMipLevel *pMIPLevels;
+};
+
+struct STexture
+{
+	const char *pszFromFileName;
+	int32_t nTextureType;
+	int32_t nWidth;
+	int32_t nHeight;
+	int32_t nEncoding;
+	int32_t nSubFormat;
+	SPixelLayout Layout;
+	int32_t nImageCount;
+	STextureImage *pImages;
+	SVariant ExtendedData;
+};
+
+struct SMaterial;
+
+struct SMaterialMap
+{
+	const char *pszUsage;
+	SMaterial *pMaterial;
+};
+
 struct SMaterial
 {
 	const char *pszName;
 	int32_t nMapCount;
-	void *pMaps;
-	void *pTexture;
+	SMaterialMap *pMaps;
+	STexture *pTexture;
 	SVariant ExtendedData;
 };
 
@@ -295,6 +332,7 @@ static_assert( sizeof( SBoneBinding ) == 36, "granny_bone_binding" );
 #endif
 
 static_assert( sizeof( STriMaterialGroup ) == 12, "granny_tri_material_group" );
+static_assert( sizeof( SPixelLayout ) == 36, "granny_pixel_layout" );
 
 }
 

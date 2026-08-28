@@ -52,6 +52,13 @@ Universal MOD-18 and MPBMod6 are installed under `mods/` in both the base game a
 FoTR, so they are included in those counts. Total across the three installs:
 **83,184 unique GR2 files, 15.5 GB of paks.**
 
+**Careful with that number: it is a sum of per-install counts, so a file present
+in all three is counted three times.** Deduplicated by content across the three,
+`scripts/port/gr2diff.py` finds **21,720 distinct GR2 files**, of which 15,704 are
+Oodle1 and 6,016 Oodle0. The larger figure is the right one for "how much data is
+out there"; the smaller one is the right one for "how much has to be validated",
+and the difference is nearly four to one.
+
 ### `.pak` files are ZIP archives
 
 They begin with `PK\x03\x04`. Some entries are stored, some deflated. Python's

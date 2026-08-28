@@ -21,10 +21,12 @@
 // default stands, which is what makes one converter serve every struct tag.
 //
 // Scope. This is the static geometry path, which is what the engine reaches
-// first: file info, models, meshes, vertex data, topology, materials, skeletons
-// and bones. Track groups and animations are converted as far as their counts
-// and left null, because the pose runtime that would read them does not exist
-// yet and half-converted animation data would be worse than none.
+// first: file info, models, meshes, vertex data, topology, materials, textures,
+// skeletons and bones. Track groups and animations are left unconverted, because
+// the pose runtime that would read them does not exist yet and half-converted
+// animation data would be worse than none. A texture's pixel bytes are left too,
+// for the opposite reason: nothing reads them, and they are the one part that
+// would cost real memory to carry.
 //
 // Identity is preserved, not just content. FindFirstAppropriateModel in
 // 3Dmotor/GObjectInfo.cpp finds a mesh's model by comparing
@@ -77,6 +79,13 @@ private:
 	                  uint32_t nCount ) const;
 	void Transform( const SObject &object, const char *pszName, STransform *pOut ) const;
 
+	void Int32Array( const SObject &object, const char *pszName, int32_t *pOut,
+	                 uint32_t nCount ) const;
+
+	//! An Inline member, which is a sub-object stored in place rather than
+	//! pointed at, so it needs no fixup and its type is the member's.
+	bool InlineAt( const SObject &object, const char *pszName, SObject *pOut ) const;
+
 	//! The object a Reference member points at, with its element type.
 	bool Follow( const SObject &object, const char *pszName, SObject *pOut ) const;
 
@@ -105,6 +114,7 @@ private:
 
 	SArtToolInfo *MakeArtToolInfo( const SObject &object );
 	SExporterInfo *MakeExporterInfo( const SObject &object );
+	STexture *MakeTexture( const SObject &object );
 	SMaterial *MakeMaterial( const SObject &object );
 	SSkeleton *MakeSkeleton( const SObject &object );
 	SVertexData *MakeVertexData( const SObject &object );
@@ -195,6 +205,32 @@ void CConverter::Transform( const SObject &object, const char *pszName, STransfo
 	// Identical on disk and in memory: no pointers, and every field four bytes.
 	m_File.ReadBytes( SReference{ object.At.nSection, object.At.nOffset + pMember->nOffset },
 	                  pOut, sizeof( *pOut ) );
+}
+
+void CConverter::Int32Array( const SObject &object, const char *pszName, int32_t *pOut,
+                             uint32_t nCount ) const
+{
+	const SMember *pMember = Member( object, pszName );
+	if ( pMember == nullptr || pMember->nSize < 4 * nCount )
+	{
+		return;
+	}
+	m_File.ReadBytes( SReference{ object.At.nSection, object.At.nOffset + pMember->nOffset },
+	                  pOut, 4 * nCount );
+}
+
+bool CConverter::InlineAt( const SObject &object, const char *pszName, SObject *pOut ) const
+{
+	const SMember *pMember = Member( object, pszName );
+	if ( pMember == nullptr || pMember->nType != MEMBER_INLINE
+	     || !pMember->bHasReferenceType )
+	{
+		return false;
+	}
+	pOut->Type = pMember->ReferenceType;
+	pOut->At.nSection = object.At.nSection;
+	pOut->At.nOffset = object.At.nOffset + pMember->nOffset;
+	return true;
 }
 
 bool CConverter::Follow( const SObject &object, const char *pszName, SObject *pOut ) const
@@ -405,12 +441,74 @@ SExporterInfo *CConverter::MakeExporterInfo( const SObject &object )
 	return p;
 }
 
+STexture *CConverter::MakeTexture( const SObject &object )
+{
+	STexture *p = static_cast<STexture *>( m_File.m_Converted[object.At] );
+	p->pszFromFileName = String( object, "FromFileName" );
+	p->nTextureType = Int32( object, "TextureType" );
+	p->nWidth = Int32( object, "Width" );
+	p->nHeight = Int32( object, "Height" );
+	p->nEncoding = Int32( object, "Encoding" );
+	p->nSubFormat = Int32( object, "SubFormat" );
+
+	SObject layout;
+	if ( InlineAt( object, "Layout", &layout ) )
+	{
+		p->Layout.nBytesPerPixel = Int32( layout, "BytesPerPixel" );
+		Int32Array( layout, "ShiftForComponent", p->Layout.ShiftForComponent, 4 );
+		Int32Array( layout, "BitsForComponent", p->Layout.BitsForComponent, 4 );
+	}
+
+	// The pixels themselves are not converted. Nothing reads them: the engine
+	// takes its textures from the database, not from the GR2, and the images are
+	// the one part of a texture that would cost real memory to carry. ImageCount
+	// stays 0 rather than being set with a null array beside it, so that a count
+	// and its pointer never disagree.
+	return p;
+}
+
 SMaterial *CConverter::MakeMaterial( const SObject &object )
 {
 	SMaterial *p = static_cast<SMaterial *>( m_File.m_Converted[object.At] );
 	p->pszName = String( object, "Name" );
-	// Maps and textures are left alone. Nothing on the geometry path follows
-	// them, and half converting them would look like data rather than absence.
+
+	SObject texture;
+	if ( Follow( object, "Texture", &texture ) )
+	{
+		p->pTexture = Intern( texture, &CConverter::MakeTexture );
+	}
+
+	int32_t nCount = 0;
+	SObject first;
+	bool bOfReferences = false;
+	// Renamed in 2.11: the file calls this member Map and granny211.h calls the
+	// thing it points at Material.
+	if ( !Array( object, "Maps", &nCount, &first, &bOfReferences ) )
+	{
+		return p;
+	}
+
+	SMaterialMap *pMaps = Alloc<SMaterialMap>( static_cast<size_t>( nCount ) );
+	if ( pMaps == nullptr )
+	{
+		return p;
+	}
+	for ( int32_t i = 0; i < nCount; ++i )
+	{
+		SObject map;
+		SObject material;
+		if ( !Element( first, bOfReferences, i, &map ) )
+		{
+			continue;
+		}
+		pMaps[i].pszUsage = String( map, "Usage" );
+		if ( Follow( map, "Map", &material ) || Follow( map, "Material", &material ) )
+		{
+			pMaps[i].pMaterial = Intern( material, &CConverter::MakeMaterial );
+		}
+	}
+	p->nMapCount = nCount;
+	p->pMaps = pMaps;
 	return p;
 }
 
@@ -701,6 +799,7 @@ SFileInfo *CConverter::ConvertRoot()
 		void ***pppItems;
 	};
 
+	int32_t nTextures = 0;
 	int32_t nMaterials = 0;
 	int32_t nSkeletons = 0;
 	int32_t nVertexDatas = 0;
@@ -713,12 +812,13 @@ SFileInfo *CConverter::ConvertRoot()
 		const char *pszName;
 		int32_t *pnCount;
 	} arrays[] = {
-		{ "Materials", &nMaterials },   { "Skeletons", &nSkeletons },
-		{ "VertexDatas", &nVertexDatas }, { "TriTopologies", &nTriTopologies },
-		{ "Meshes", &nMeshes },         { "Models", &nModels },
+		{ "Textures", &nTextures },       { "Materials", &nMaterials },
+		{ "Skeletons", &nSkeletons },     { "VertexDatas", &nVertexDatas },
+		{ "TriTopologies", &nTriTopologies }, { "Meshes", &nMeshes },
+		{ "Models", &nModels },
 	};
 
-	void **ppConverted[6] = {};
+	void **ppConverted[7] = {};
 	for ( size_t a = 0; a < sizeof( arrays ) / sizeof( arrays[0] ); ++a )
 	{
 		int32_t nCount = 0;
@@ -743,11 +843,12 @@ SFileInfo *CConverter::ConvertRoot()
 			}
 			switch ( a )
 			{
-				case 0: ppItems[i] = Intern( item, &CConverter::MakeMaterial ); break;
-				case 1: ppItems[i] = Intern( item, &CConverter::MakeSkeleton ); break;
-				case 2: ppItems[i] = Intern( item, &CConverter::MakeVertexData ); break;
-				case 3: ppItems[i] = Intern( item, &CConverter::MakeTriTopology ); break;
-				case 4: ppItems[i] = Intern( item, &CConverter::MakeMesh ); break;
+				case 0: ppItems[i] = Intern( item, &CConverter::MakeTexture ); break;
+				case 1: ppItems[i] = Intern( item, &CConverter::MakeMaterial ); break;
+				case 2: ppItems[i] = Intern( item, &CConverter::MakeSkeleton ); break;
+				case 3: ppItems[i] = Intern( item, &CConverter::MakeVertexData ); break;
+				case 4: ppItems[i] = Intern( item, &CConverter::MakeTriTopology ); break;
+				case 5: ppItems[i] = Intern( item, &CConverter::MakeMesh ); break;
 				default: ppItems[i] = Intern( item, &CConverter::MakeModel ); break;
 			}
 		}
@@ -755,22 +856,24 @@ SFileInfo *CConverter::ConvertRoot()
 		ppConverted[a] = ppItems;
 	}
 
+	p->nTextureCount = nTextures;
+	p->ppTextures = ppConverted[0];
 	p->nMaterialCount = nMaterials;
-	p->ppMaterials = reinterpret_cast<SMaterial **>( ppConverted[0] );
+	p->ppMaterials = reinterpret_cast<SMaterial **>( ppConverted[1] );
 	p->nSkeletonCount = nSkeletons;
-	p->ppSkeletons = reinterpret_cast<SSkeleton **>( ppConverted[1] );
+	p->ppSkeletons = reinterpret_cast<SSkeleton **>( ppConverted[2] );
 	p->nVertexDataCount = nVertexDatas;
-	p->ppVertexDatas = reinterpret_cast<SVertexData **>( ppConverted[2] );
+	p->ppVertexDatas = reinterpret_cast<SVertexData **>( ppConverted[3] );
 	p->nTriTopologyCount = nTriTopologies;
-	p->ppTriTopologies = reinterpret_cast<STriTopology **>( ppConverted[3] );
+	p->ppTriTopologies = reinterpret_cast<STriTopology **>( ppConverted[4] );
 	p->nMeshCount = nMeshes;
-	p->ppMeshes = reinterpret_cast<SMesh **>( ppConverted[4] );
+	p->ppMeshes = reinterpret_cast<SMesh **>( ppConverted[5] );
 	p->nModelCount = nModels;
-	p->ppModels = reinterpret_cast<SModel **>( ppConverted[5] );
+	p->ppModels = reinterpret_cast<SModel **>( ppConverted[6] );
 
-	// Textures, TrackGroups and Animations stay empty. Nothing on the static
-	// geometry path reads them, and a count without converted elements behind it
-	// is worse than a zero.
+	// TrackGroups and Animations stay empty. The pose runtime that would read
+	// them does not exist, and a count without converted elements behind it is
+	// worse than a zero.
 	return p;
 }
 
