@@ -1,0 +1,83 @@
+# libgr2
+
+A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
+ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
+
+**Status: skeleton.** Header, build and export set only. All 54 entry points are
+stubs that return a null, a zero or a false, and report themselves once on stderr
+when first called. Nothing is wired into the engine: `Sources/CMakeLists.txt` does
+not reference this directory, and the game still links the vendored DLL.
+
+The background is in [docs/GrannyReplacement.md](../../../../../../docs/GrannyReplacement.md),
+which measured this game's corpus (83,184 unique GR2 files across three installs,
+one dialect: File Format 6, little endian, 32-bit pointers), surveyed seven open
+source implementations, and set out the milestones referred to below. How the
+engine uses Granny today is in
+[docs/Granny3DUsage.md](../../../../../../docs/Granny3DUsage.md).
+
+## Building
+
+Standalone, and it needs nothing but a C++17 compiler:
+
+```powershell
+cmake -S Versions/Temporary/Engine/Sources/vendor/libgr2 -B out/build/libgr2 -G Ninja
+cmake --build out/build/libgr2
+cmake --build out/build/libgr2 --target libgr2-verify-exports
+```
+
+`libgr2-verify-exports` is the acceptance test for this stage: it reads the built
+library's export table and fails unless it holds exactly the 54 names in
+`exports.txt`. On x86 it accounts for MSVC decorating `__stdcall` exports as
+`_Name@N`, which is what the real `granny2.dll` exports too.
+
+The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
+the vendored DLL, because the engine loads it by name.
+
+## Shape
+
+The public header, `include/gr2/granny.h`, reproduces the Granny API rather than
+inventing a neutral one. Same names, same signatures, same `__stdcall`, same DLL
+file name. That is a deliberate and temporary choice: it means the engine can be
+relinked without touching a line of `3Dmotor` or `SceneB2`, and on Windows both
+implementations can be loaded into one process and asserted against each other
+call for call. That leverage disappears the moment the API changes, so the
+refactor onto a format-neutral skeleton and pose interface comes last, not first.
+
+Types split two ways. The runtime handles (`granny_file`, `granny_control`,
+`granny_local_pose`, and so on) are opaque permanently: this library owns them
+and the engine only holds pointers. The data records (`granny_file_info`,
+`granny_mesh`, `granny_skeleton`, `granny_transform`, `granny_curve2`, and the
+rest) are opaque only for now: the engine walks their fields directly in
+twenty-odd places, so each has a layout that has to be reproduced exactly, and
+each gains its real definition in the milestone that first needs it.
+
+## Layout
+
+| file | entry points | milestone |
+|---|---|---|
+| `src/Allocator.cpp` | 2 | M0, the engine installs its own allocator first |
+| `src/File.cpp` | 4 | M1, container, fixups, the two Oodle codecs |
+| `src/TypeTree.cpp` | 2 | M1, members resolved through the file's own type tree |
+| `src/Mesh.cpp` | 2 | M2, geometry |
+| `src/Skeleton.cpp` | 1 | M2, bone lookup by name |
+| `src/Transform.cpp` | 2 | M3, position, orientation, scale-shear |
+| `src/Model.cpp` | 3 | M3, model instances and their clock |
+| `src/Pose.cpp` | 11 | M3, curve sampling, local and world pose, skinning matrices |
+| `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
+| `src/Control.cpp` | 20 | M4, playback, looping, ease curves |
+
+M4 is the part no open source project has written, because importers and viewers
+never need a playback layer. Build the record-and-replay harness before it.
+
+## Constraints
+
+- **Nothing from the engine.** No `System/Basic.h`, no `CObjectBase`, no
+  `CPtr<T>`, no `IBinSaver`, no Boost. Pure C++17 and the standard library, so
+  that `git subtree split --prefix=...` extracts this with its history intact
+  once the API has settled.
+- **Presentation only.** Animation in this engine never reaches `AILogic`, so a
+  replacement has to be visually correct, not bit-exact against `granny2.dll`.
+  The container and the codecs are the opposite: those are byte-exact or wrong.
+- **32-bit files, on both hosts.** The files store 32-bit pointers. Nothing here
+  memory-maps; it allocates and populates, which is what lets x86 and x64 share
+  one path.
