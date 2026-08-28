@@ -19,9 +19,11 @@
 #include <gr2/granny.h>
 
 #include "LocalPose.h"
+#include "ModelInstance.h"
 #include "Structures.h"
 #include "Trace.h"
 
+#include <cstdint>
 #include <new>
 
 using namespace NGr2;
@@ -152,8 +154,53 @@ GR2_API( void ) GrannySampleModelAnimations( granny_model_instance const *ModelI
                                              granny_int32x FirstBone, granny_int32x BoneCount,
                                              granny_local_pose *Result )
 {
-	GR2_STUB( "ModelInstance={} FirstBone={} BoneCount={} Result={}",
-	           ModelInstance, FirstBone, BoneCount, Result );
+	GR2_TRACE( "ModelInstance={} FirstBone={} BoneCount={} Result={}", ModelInstance,
+	           FirstBone, BoneCount, Result );
+
+	// Both of these access violate in the real DLL, writing offset 0x10 of a null
+	// pose and reading offset 8 of a null instance. Not reproduced.
+	if ( ModelInstance == 0 || Result == 0 )
+	{
+		return;
+	}
+	if ( ModelInstance->pModel == nullptr
+	     || ModelInstance->pModel->pSkeleton == nullptr )
+	{
+		return;
+	}
+
+	const SSkeleton *pSkeleton = ModelInstance->pModel->pSkeleton;
+	const int64_t nLast = int64_t( FirstBone ) + BoneCount;
+
+	// A request that does not fit writes nothing at all, rather than as much of it
+	// as fits. Measured: a skeleton of four asked for ten bones leaves the pose
+	// untouched, and so does a pose of two asked for four. FirstBone indexes the
+	// skeleton and the pose identically, so one range check covers both.
+	if ( FirstBone < 0 || BoneCount < 0 || nLast > pSkeleton->nBoneCount
+	     || nLast > static_cast<int64_t>( Result->Transforms.size() ) )
+	{
+		Logger().warn( "SampleModelAnimations: bones {}..{} of a skeleton of {} into a "
+		               "pose of {}",
+		               FirstBone, nLast, pSkeleton->nBoneCount,
+		               Result->Transforms.size() );
+		return;
+	}
+
+	// The rest pose, and with no controls bound that is the whole answer rather
+	// than a placeholder for one. Measured against the DLL: with nothing playing
+	// it copies each bone's LocalTransform verbatim, Flags included, and the
+	// instance clock makes no difference.
+	//
+	// This is where the blend goes when controls exist. Each active control
+	// samples its animation's curves at the instance clock and accumulates into
+	// these transforms by weight, and the rest pose is what remains where no
+	// control reaches. Nothing here has to change for that; it grows a loop after
+	// this one.
+	for ( granny_int32x i = FirstBone; i < FirstBone + BoneCount; ++i )
+	{
+		Result->Transforms[static_cast<size_t>( i )] =
+			pSkeleton->pBones[i].LocalTransform;
+	}
 }
 
 GR2_API( void ) GrannyEvaluateCurveAtT( granny_int32x Dimension, bool Normalize, bool BackwardsLoop,

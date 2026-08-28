@@ -10,10 +10,13 @@ with the conversion behind it. `GrannyGetMemberTypeSize` and
 `GrannyGetTotalObjectSize` come with it. The other 48 entry points are stubs that
 return a null, a zero or a false.
 
-What is left is animation. The pose and control entry points are still stubs, so
-track groups and animations are read into the file and not converted.
-`GrannyMakeIdentity` and `GrannyPostMultiplyBy` are written, since they are pure
-transform maths and the same measurements settled them.
+Models also instantiate, and sampling one with nothing bound gives the skeleton's
+rest pose, which is what `granny2.dll` gives too. So every model can be drawn in
+bind pose.
+
+What is left is animation proper. Track groups and animations are read into the
+file and not converted, and the control entry points that would bind a clip to an
+instance are still stubs, so nothing moves.
 
 **All 21,720 unique GR2 files across the three installs read identically to the
 real `granny2.dll`**, in every field compared: names, counts, parent indices,
@@ -185,7 +188,7 @@ each gains its real definition in the milestone that first needs it.
 | `src/Skeleton.cpp` | 1 | bone lookup by name |
 | `src/Transform.cpp` | 2 | position, orientation, scale-shear, and composing two |
 | `src/Model.cpp` | 3 | M3, model instances and their clock |
-| `src/Pose.cpp` | 11 | M3, curve sampling, local and world pose, skinning matrices |
+| `src/Pose.cpp` | 11 | local pose and rest-pose sampling done; curves, world pose and skinning matrices left |
 | `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
 | `src/Control.cpp` | 20 | M4, playback, looping, ease curves |
 

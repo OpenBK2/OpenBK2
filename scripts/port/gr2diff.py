@@ -223,6 +223,22 @@ class Granny(object):
         self.dll.GrannyFindBoneByName.restype = c_bool
         self.dll.GrannyMakeIdentity.argtypes = [c_void_p]
         self.dll.GrannyPostMultiplyBy.argtypes = [c_void_p, c_void_p]
+        # The pose path, as far as it goes. Sampling with nothing bound produces
+        # the skeleton's rest pose, which is what the game gets today and what
+        # every model will be drawn in until controls exist.
+        self.dll.GrannyInstantiateModel.argtypes = [c_void_p]
+        self.dll.GrannyInstantiateModel.restype = c_void_p
+        self.dll.GrannyFreeModelInstance.argtypes = [c_void_p]
+        self.dll.GrannySetModelClock.argtypes = [c_void_p, c_float]
+        self.dll.GrannyNewLocalPose.argtypes = [c_int32]
+        self.dll.GrannyNewLocalPose.restype = c_void_p
+        self.dll.GrannyFreeLocalPose.argtypes = [c_void_p]
+        self.dll.GrannyGetLocalPoseBoneCount.argtypes = [c_void_p]
+        self.dll.GrannyGetLocalPoseBoneCount.restype = c_int32
+        self.dll.GrannyGetLocalPoseTransform.argtypes = [c_void_p, c_int32]
+        self.dll.GrannyGetLocalPoseTransform.restype = c_void_p
+        self.dll.GrannySampleModelAnimations.argtypes = [c_void_p, c_int32, c_int32,
+                                                         c_void_p]
 
     def walk(self, data):
         """Read a file and describe what GrannyGetFileInfo gave back.
@@ -267,6 +283,8 @@ class Granny(object):
                        for i in range(info.MeshCount)],
             'Models': [self._model(info.Models[i].contents, meshes)
                        for i in range(info.ModelCount)],
+            'Poses': [self.sampled_pose(info.Models[i])
+                      for i in range(info.ModelCount)],
         }
 
     def _skeleton(self, skeleton_ptr):
@@ -410,6 +428,67 @@ class Granny(object):
             self.dll.GrannyPostMultiplyBy(C.cast(first, c_void_p),
                                           C.cast(second, c_void_p))
             out['PostMultiplyBy'].append(list(struct.unpack('<I16f', first.raw[:68])))
+        return out
+
+    def sampled_pose(self, model_ptr):
+        """Instantiate a model, sample it with nothing bound, read the pose back.
+
+        Every entry point on the render path that has one, in the order the engine
+        calls them: InstantiateModel, NewLocalPose, SetModelClock,
+        SampleModelAnimations, GetLocalPoseTransform. With no controls the answer
+        is the skeleton's rest pose, so this checks the sampler's range handling
+        and its copy against real skeletons rather than hand built ones.
+        """
+        model = model_ptr.contents
+        if not model.Skeleton:
+            return None
+        bone_count = model.Skeleton.contents.BoneCount
+        if bone_count <= 0:
+            return {'BoneCount': bone_count}
+
+        instance = self.dll.GrannyInstantiateModel(C.cast(model_ptr, c_void_p))
+        if not instance:
+            return {'Instantiated': False}
+        pose = self.dll.GrannyNewLocalPose(bone_count)
+        if not pose:
+            self.dll.GrannyFreeModelInstance(instance)
+            return {'Pose': False}
+
+        out = {'BoneCount': self.dll.GrannyGetLocalPoseBoneCount(pose)}
+        # A clock that is not zero, to confirm it changes nothing while nothing
+        # is bound.
+        self.dll.GrannySetModelClock(instance, 1.25)
+        self.dll.GrannySampleModelAnimations(instance, 0, bone_count, pose)
+
+        transforms = []
+        for i in range(min(bone_count, 64)):
+            p = self.dll.GrannyGetLocalPoseTransform(pose, i)
+            transforms.append(list(struct.unpack('<I16f', C.string_at(p, 68)))
+                              if p else None)
+        out['Transforms'] = transforms
+
+        # A partial range, which is where the two could disagree about whether
+        # FirstBone indexes the pose or only the skeleton.
+        if bone_count >= 3:
+            partial = self.dll.GrannyNewLocalPose(bone_count)
+            self.dll.GrannySampleModelAnimations(instance, 1, 2, partial)
+            out['Partial'] = []
+            for i in range(min(bone_count, 4)):
+                p = self.dll.GrannyGetLocalPoseTransform(partial, i)
+                out['Partial'].append(list(struct.unpack('<I16f', C.string_at(p, 68)))
+                                      if p else None)
+            self.dll.GrannyFreeLocalPose(partial)
+
+            # And a range that does not fit, which must leave the pose alone.
+            refused = self.dll.GrannyNewLocalPose(bone_count)
+            self.dll.GrannySampleModelAnimations(instance, 0, bone_count + 1, refused)
+            p = self.dll.GrannyGetLocalPoseTransform(refused, 0)
+            out['Refused'] = (list(struct.unpack('<I16f', C.string_at(p, 68)))
+                              if p else None)
+            self.dll.GrannyFreeLocalPose(refused)
+
+        self.dll.GrannyFreeLocalPose(pose)
+        self.dll.GrannyFreeModelInstance(instance)
         return out
 
     def _model(self, model, mesh_addresses):
