@@ -13,7 +13,7 @@ FetchContent_GetProperties(fmt SOURCE_DIR FMT_SOURCE_DIR)
 
 include(cmake/get_all_targets.cmake)
 
-get_all_targets(fmt_targets ${SDL_MIXER_SOURCE_DIR})
+get_all_targets(fmt_targets ${FMT_SOURCE_DIR})
 foreach(target IN LISTS fmt_targets)
     set_target_properties(${target} PROPERTIES FOLDER "third_party/fmt")
 endforeach()
