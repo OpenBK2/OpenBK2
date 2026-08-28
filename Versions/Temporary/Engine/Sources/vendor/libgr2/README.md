@@ -33,6 +33,35 @@ library's export table and fails unless it holds exactly the 54 names in
 The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
 the vendored DLL, because the engine loads it by name.
 
+## Tests
+
+googletest, fetched at the pin the rest of the tree uses, or reused from the
+engine build when there is one. `LIBGR2_BUILD_TESTS` is on standalone and off
+when this is a subdirectory of something else.
+
+```powershell
+cmake --build out/build/libgr2 --target libgr2-tests
+ctest --test-dir out/build/libgr2 -L obk2-test --output-on-failure
+```
+
+Tests link `gr2_static`, a second static build of the same sources, rather than
+the DLL. The container, the type tree walker and the two Oodle decoders are
+internal and none of them is among the 54 exports, and a static link needs no DLL
+beside the executable, which is what lets these run on a machine that has never
+seen `granny2.dll`.
+
+`test/MinimalGr2.h` records the file layout as measured, with the census behind
+each constant, and builds a buffer shaped like a shipped `.gr2` for tests to
+break one field of. The corpus itself cannot be committed, so the positive tests
+that need real data take a directory from `LIBGR2_TEST_GR2_DIR` and skip when it
+is unset. A `.pak` is an ordinary ZIP archive, so extracting one is a one-liner.
+
+The suite is green against the stub, and two things keep that from reading as
+progress. Tests that cannot pass until a milestone lands are `DISABLED_`, so they
+are the written-down acceptance criteria rather than a permanently red suite. And
+`ReadEntireFileFromMemory.StillAStub` asserts the loader still returns null, so
+the day M1 works it fails and says which tests to enable.
+
 ## The call trace
 
 Every entry point records the call before it returns, so a run against this

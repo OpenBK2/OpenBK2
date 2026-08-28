@@ -18,6 +18,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# On by default standalone, where building this project at all means working on
+# it, and off when it is a subdirectory of something else, which does not want
+# googletest fetched on its behalf.
+option(LIBGR2_BUILD_TESTS "build libgr2's unit tests" ${PROJECT_IS_TOP_LEVEL})
+
 # The shipped game loads granny2.dll by name, and the engine's import library is
 # generated from the same name, so the replacement has to answer to it. The x64
 # suffix is the vendored DLL's own convention, kept so that the two builds can
@@ -43,7 +48,7 @@ if(NOT TARGET spdlog::spdlog_header_only)
     FetchContent_MakeAvailable(spdlog)
 endif()
 
-add_library(gr2 SHARED
+set(GR2_SOURCES
     src/Allocator.cpp
     src/Animation.cpp
     src/Control.cpp
@@ -58,6 +63,7 @@ add_library(gr2 SHARED
     src/TypeTree.cpp
     include/gr2/granny.h)
 
+add_library(gr2 SHARED ${GR2_SOURCES})
 add_library(gr2::gr2 ALIAS gr2)
 
 target_include_directories(gr2
@@ -113,3 +119,40 @@ add_custom_target(libgr2-verify-exports
     DEPENDS gr2
     VERBATIM
     COMMENT "checking ${GR2_OUTPUT_NAME} exports against exports.txt")
+
+if(LIBGR2_BUILD_TESTS)
+    enable_testing()
+
+    # The same code again, statically, for the tests to link. A second target
+    # rather than an object library shared with gr2, because the two differ in a
+    # compile definition: GR2_BUILD_SHARED makes GR2_API an export and GR2_STATIC
+    # makes it neither an export nor an import, and an object library fixes its
+    # definitions at compile time and so cannot serve both.
+    #
+    # The cost is compiling twelve small files twice, which is worth paying for
+    # tests that reach the internals the 54 exports do not expose and that need no
+    # DLL on PATH to run.
+    add_library(gr2_static STATIC EXCLUDE_FROM_ALL ${GR2_SOURCES})
+    target_include_directories(gr2_static
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+    # PUBLIC, unlike gr2's GR2_BUILD_SHARED: a test including gr2/granny.h has to
+    # agree with the library about what GR2_API means, and here it means neither
+    # dllexport nor dllimport.
+    target_compile_definitions(gr2_static PUBLIC GR2_STATIC)
+    target_link_libraries(gr2_static PRIVATE spdlog::spdlog_header_only)
+    set_target_properties(gr2_static PROPERTIES FOLDER "vendor/libgr2")
+    if(MSVC)
+        target_compile_options(gr2_static PRIVATE /W4)
+    else()
+        target_compile_options(gr2_static PRIVATE -Wall -Wextra)
+    endif()
+    if(GR2_SPDLOG_INCLUDES)
+        target_include_directories(gr2_static SYSTEM PRIVATE ${GR2_SPDLOG_INCLUDES})
+        if(MSVC)
+            target_compile_options(gr2_static PRIVATE /external:W0)
+        endif()
+    endif()
+
+    add_subdirectory(test)
+endif()
