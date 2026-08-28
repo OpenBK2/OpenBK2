@@ -150,6 +150,29 @@ alongside `GrannyDataTypesAreEqual` and `GrannyDataTypeBeginsWith`; that is the
 machinery it converts with. `GrannyOldCurveType` is exported too, which is how a
 2017 build still reads the 20-byte curves below.
 
+**The conversion was measured, not inferred.** Load a 134-bone skeleton through
+`granny2_x64.dll`, take `Skeletons[0]->Bones`, and read the array at both
+strides. At 164 bytes, the 2.11 layout, `ParentIndex` is a valid parent chain
+(`-1, 0, 1, 0, 3, ...`) and all 134 names read; at 176, the file's layout on a
+64-bit host, it is noise. Every bone also comes back with `LODError` = 1.0, a
+member that appears nowhere in the file: `LODError` is not among its strings at
+all. Granny is synthesising it.
+
+So 2.11 does not misread these files. It converts them, which is what the
+self-describing type tree is for, and it is load-bearing rather than lucky: the
+engine indexes `Bones[i]`, so a wrong stride would break every bone after the
+first. What the conversion drops costs nothing here, because `LightInfo` and
+`CameraInfo` are null in all 2,472 bones of a 250-file sample, and no engine
+code reads `LODError`.
+
+Two different transformations are involved and it is worth keeping them apart.
+`granny_file_info` has the *same members* in both, and differs only in
+representation: 92 bytes against 148, because pointers double and each
+`ArrayOfReferences` becomes a separate count and pointer. That is marshalling,
+and it applies to every structure. `granny_bone` differs in its *members*. That
+is a version change, and it applies only to the eight listed under "Which
+`granny2.dll`" below.
+
 **Consequence for M2.** The type tree walk produces objects in the file's shape,
 and a second step lays them out in the shape `granny211.h` describes. The
 mapping between the two is per type and has to be written by hand for the eight
