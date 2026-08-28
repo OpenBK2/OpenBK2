@@ -20,13 +20,13 @@ extern "C"
 GR2_API( void ) GrannySetAllocator( granny_allocate_callback *AllocateCallback,
                                     granny_deallocate_callback *DeallocateCallback )
 {
-	GR2_TRACE( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
+	GR2_STUB( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
 }
 
 GR2_API( void ) GrannyGetAllocator( granny_allocate_callback **AllocateCallback,
                                     granny_deallocate_callback **DeallocateCallback )
 {
-	GR2_TRACE( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
+	GR2_STUB( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
 }
 
 }

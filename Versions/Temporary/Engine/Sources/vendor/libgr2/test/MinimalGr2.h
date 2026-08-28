@@ -5,30 +5,35 @@
 // The corpus cannot be committed: 83,184 files, 15.5 GB, and it is Nival's
 // copyrighted data. So the fixtures are hand authored, and every constant below
 // was read out of shipped files rather than out of a specification. The census
-// that produced them ran over the 7,442 GR2 resources in
-// C:\Games\bk2\Data\data.pak on 2026-08-28:
+// that produced them ran over the 7,844 GR2 resources in the retail
+// C:\Games\bk2\Data paks on 2026-08-28:
 //
-//   magic         b867b0ca f86db10f 84728c7e 5e19001e, in all 7,442
-//   headerFormat  0, in all 7,442
-//   version       6, in all 7,442
-//   sectionArrayOffset  56, in all 7,442
-//   sectionArrayCount   8 in 7,127, 6 in 315
-//   typeTag       0x80000010 in 5,944, 0x80000013 in 1,183, 0x8000000f in 315
+//   magic         b867b0ca f86db10f 84728c7e 5e19001e, in all 7,844
+//   headerFormat  0, in all 7,844
+//   version       6, in all 7,844
+//   totalSize     equal to the file's length, in all 7,844
+//   headerSize    equal to the end of the section array, in all 7,844
+//   sectionArrayOffset  56, in all 7,844
+//   sectionArrayCount   8, or 6 in the 0x8000000f files
+//   typeTag       0x80000010, 0x80000013, 0x8000000f
 //
-// The two derived sizes were confirmed by arithmetic that only closes if they
-// are right. headerSize is 440 in a file with 8 sections, and
-// 32 + 56 + 44 * 8 = 440 exactly, which fixes the magic block at 32 bytes, the
-// header at 56 and a section record at 44. A pointer fixup entry is 12 bytes
-// because section 0 of one file puts 110 of them at offset 440 and its data at
-// 1760, and 440 + 110 * 12 = 1760; section 6 of the same file agrees
-// independently, 6632 + 191 * 12 = 8924.
+// Three sizes were confirmed by arithmetic that only closes if they are right.
+// headerSize is 440 in a file with 8 sections, and 32 + 56 + 44 * 8 = 440
+// exactly, which fixes the magic block at 32 bytes, the header at 56 and a
+// section record at 44. A pointer fixup entry is 12 bytes because section 0 of
+// one file puts 110 of them at offset 440 and its data at 1760, and
+// 440 + 110 * 12 = 1760; section 6 of the same file agrees independently,
+// 6632 + 191 * 12 = 8924. A mixed marshalling entry is 16 bytes because section 3
+// of bin/AIGeometries/2B95A3C1-314F-4721-9A9F-D37390307B86 puts one at 2008 and
+// its data at 2024.
 //
-// What this builder does NOT claim is that its output is a file the real
-// granny2.dll would accept. It reproduces the layout up to the end of the
-// section array, which is all a rejection test needs, since the mutation under
-// test is then the only thing wrong with the buffer. Anything past that, a CRC
-// that validates, a type section that parses, a root object, is left for M1 and
-// for fixtures generated against the oracle.
+// The layout the builder emits follows the same files: the magic block, the
+// header, the section array, then per section its pointer fixups, its marshalling
+// fixups and its data, in that order.
+//
+// These constants are deliberately a second copy of the ones in src/File.h. A
+// test that read the implementation's own numbers could not catch one of them
+// being wrong.
 
 #include <gr2/granny.h>
 
@@ -47,6 +52,7 @@ constexpr uint32_t HEADER_OFFSET = MAGIC_BLOCK_SIZE;
 constexpr uint32_t HEADER_SIZE = 56;
 constexpr uint32_t SECTION_RECORD_SIZE = 44;
 constexpr uint32_t POINTER_FIXUP_SIZE = 12;
+constexpr uint32_t MIXED_MARSHALLING_FIXUP_SIZE = 16;
 
 // Absolute byte offsets of the fields, magic block then header. Absolute rather
 // than relative to each struct because that is how a test reaches them, and
@@ -88,21 +94,37 @@ constexpr uint32_t TYPE_TAG_11 = 0x80000011u;
 constexpr uint32_t TYPE_TAG_13 = 0x80000013u;
 
 // Per section compression. 0, 1 and 2 all occur; which of 1 and 2 is Oodle0 and
-// which is Oodle1 is an M1 question and deliberately not asserted here. What is
-// asserted is that a value outside this set is not a thing the loader may
-// silently accept.
+// which is Oodle1 is not established, so the names here say the number.
 constexpr uint32_t COMPRESSION_NONE = 0;
-constexpr uint32_t COMPRESSION_MAX_KNOWN = 2;
+constexpr uint32_t COMPRESSION_OODLE_1 = 1;
+constexpr uint32_t COMPRESSION_OODLE_2 = 2;
 
-//! A buffer laid out like a shipped .gr2 up to the end of the section array.
+//! A buffer laid out the way a shipped .gr2 is.
 //!
-//! Every section is empty and uncompressed, so the file ends where the section
-//! array does. Tests take a copy and break one thing about it.
+//! Fresh from the constructor it has the requested number of empty uncompressed
+//! sections, and nothing but a header and a section array. Sections gain content
+//! through SetSectionData and references through AddPointerFixup, each of which
+//! lays the file out again; after that a test can reach in with SetU32 and break
+//! one field, which is what the rejection tests do.
 class CHeaderShapedFile
 {
 public:
 	//! \param nSectionCount 8 in almost every shipped file, 6 in the 0x8000000f ones.
 	explicit CHeaderShapedFile( uint32_t nSectionCount = 8 );
+
+	//! Uncompressed content for one section.
+	void SetSectionData( uint32_t nSection, std::vector<uint8_t> data );
+
+	//! A four byte pointer slot at nSection:nFromOffset, pointing at nTo.
+	//!
+	//! What the slot itself contains is left alone, since that is exactly what a
+	//! reader must not depend on: the fixup array is what says which words are
+	//! pointers and where they lead.
+	void AddPointerFixup( uint32_t nSection, uint32_t nFromOffset, uint32_t nToSection,
+	                      uint32_t nToOffset );
+
+	void SetRootObject( uint32_t nSection, uint32_t nOffset );
+	void SetTypeTag( uint32_t nTag );
 
 	const void *Data() const { return m_Bytes.data(); }
 	granny_int32x Size() const { return static_cast<granny_int32x>( m_Bytes.size() ); }
@@ -124,8 +146,27 @@ public:
 	void TruncateTo( uint32_t nSize );
 
 private:
+	void Build();
+
+	struct SFixup
+	{
+		uint32_t nFromOffset;
+		uint32_t nToSection;
+		uint32_t nToOffset;
+	};
+
+	uint32_t m_nSectionCount;
+	uint32_t m_nRootSection = 0;
+	uint32_t m_nRootOffset = 0;
+	uint32_t m_nRootTypeSection = 0;
+	uint32_t m_nTypeTag = TYPE_TAG_13;
+	std::vector<std::vector<uint8_t>> m_SectionData;
+	std::vector<std::vector<SFixup>> m_Fixups;
 	std::vector<uint8_t> m_Bytes;
 };
+
+//! Bytes with some structure to them, so a wrong offset shows up as wrong content.
+std::vector<uint8_t> Pattern( uint32_t nBytes, uint8_t nSeed = 0 );
 
 //! A buffer with a magic that is not Granny's at all.
 //!

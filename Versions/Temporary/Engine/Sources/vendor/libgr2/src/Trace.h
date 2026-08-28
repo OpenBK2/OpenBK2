@@ -81,12 +81,18 @@ auto Loggable( T v )
 //! why it names them through decltype: writing {} for a pointer that Loggable
 //! turns into a std::string still has to compile, and a genuine mismatch still
 //! has to fail the build rather than the run.
+//!
+//! \param bStub whether the function has anything behind it, which is what
+//! decides between the two levels described at the top of this file.
 template <typename... TArgs>
-void TraceCall( const char *pszFunction,
+void TraceCall( const char *pszFunction, bool bStub,
                 fmt::format_string<decltype( Loggable( std::declval<TArgs>() ) )...> fmtArgs,
                 TArgs... args )
 {
-	ReportUnimplemented( pszFunction );
+	if ( bStub )
+	{
+		ReportUnimplemented( pszFunction );
+	}
 	if ( Logger().should_log( spdlog::level::trace ) )
 	{
 		Logger().trace( "{:>8}  {}( {} )", NextCallOrdinal(), pszFunction,
@@ -96,8 +102,14 @@ void TraceCall( const char *pszFunction,
 
 }
 
-//! Trace the call this expands inside, naming its arguments.
+//! Trace a call to an entry point that is implemented.
 //!
-//! A statement rather than an expression, so that a stub with a return value
-//! still writes its own return and reads as the body that will replace it.
-#define GR2_TRACE( ... ) ::NGr2::TraceCall( __func__, __VA_ARGS__ )
+//! A statement rather than an expression, so that it reads as the first line of
+//! the body rather than as something wrapped around it.
+#define GR2_TRACE( ... ) ::NGr2::TraceCall( __func__, false, __VA_ARGS__ )
+
+//! Trace a call to an entry point that is not written yet, and say so once.
+//!
+//! The difference from GR2_TRACE is the whole point of running at warn: that
+//! level then lists exactly the entry points a run reached and still needs.
+#define GR2_STUB( ... ) ::NGr2::TraceCall( __func__, true, __VA_ARGS__ )

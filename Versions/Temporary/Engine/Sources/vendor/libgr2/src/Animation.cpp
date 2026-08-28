@@ -22,14 +22,14 @@ extern "C"
 GR2_API( granny_controlled_animation_builder * )
 	GrannyBeginControlledAnimation( granny_real32 StartTime, granny_animation const *Animation )
 {
-	GR2_TRACE( "StartTime={} Animation={}", StartTime, Animation );
+	GR2_STUB( "StartTime={} Animation={}", StartTime, Animation );
 	return 0;
 }
 
 GR2_API( granny_control * )
 	GrannyEndControlledAnimation( granny_controlled_animation_builder *Builder )
 {
-	GR2_TRACE( "Builder={}", Builder );
+	GR2_STUB( "Builder={}", Builder );
 	return 0;
 }
 
@@ -37,27 +37,27 @@ GR2_API( void ) GrannySetTrackGroupTarget( granny_controlled_animation_builder *
                                            granny_int32x TrackGroupIndex,
                                            granny_model_instance *Model )
 {
-	GR2_TRACE( "Builder={} TrackGroupIndex={} Model={}", Builder, TrackGroupIndex, Model );
+	GR2_STUB( "Builder={} TrackGroupIndex={} Model={}", Builder, TrackGroupIndex, Model );
 }
 
 GR2_API( void ) GrannySetTrackGroupAccumulation( granny_controlled_animation_builder *Builder,
                                                  granny_int32x TrackGroupIndex,
                                                  granny_accumulation_mode Mode )
 {
-	GR2_TRACE( "Builder={} TrackGroupIndex={} Mode={}", Builder, TrackGroupIndex, Mode );
+	GR2_STUB( "Builder={} TrackGroupIndex={} Mode={}", Builder, TrackGroupIndex, Mode );
 }
 
 GR2_API( void ) GrannySetTrackGroupModelMask( granny_controlled_animation_builder *Builder,
                                               granny_int32x TrackGroupIndex,
                                               granny_track_mask *ModelMask )
 {
-	GR2_TRACE( "Builder={} TrackGroupIndex={} ModelMask={}", Builder, TrackGroupIndex, ModelMask );
+	GR2_STUB( "Builder={} TrackGroupIndex={} ModelMask={}", Builder, TrackGroupIndex, ModelMask );
 }
 
 GR2_API( granny_track_mask * ) GrannyNewTrackMask( granny_real32 DefaultWeight,
                                                    granny_int32x BoneCount )
 {
-	GR2_TRACE( "DefaultWeight={} BoneCount={}", DefaultWeight, BoneCount );
+	GR2_STUB( "DefaultWeight={} BoneCount={}", DefaultWeight, BoneCount );
 	return 0;
 }
 
@@ -68,7 +68,7 @@ GR2_API( void ) GrannySetSkeletonTrackMaskFromTrackGroup( granny_track_mask *Mas
                                                           granny_real32 ConstantValue,
                                                           granny_real32 AnimatedValue )
 {
-	GR2_TRACE( "Mask={} Skeleton={} TrackGroup={} IdentityValue={} ConstantValue={} "
+	GR2_STUB( "Mask={} Skeleton={} TrackGroup={} IdentityValue={} ConstantValue={} "
 	           "AnimatedValue={}",
 	           Mask, Skeleton, TrackGroup, IdentityValue, ConstantValue, AnimatedValue );
 }

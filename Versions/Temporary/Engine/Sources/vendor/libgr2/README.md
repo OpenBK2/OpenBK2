@@ -3,10 +3,18 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: skeleton.** Header, build, export set and call trace only. All 54 entry
-points are stubs that return a null, a zero or a false. Nothing is wired into the
-engine: `Sources/CMakeLists.txt` does not reference this directory, and the game
-still links the vendored DLL.
+**Status: the container reads.** `GrannyReadEntireFileFromMemory`,
+`GrannyReadEntireFile` and `GrannyFreeFile` are written: header validation, the
+section array, section bytes and the pointer fixups. The other 51 entry points are
+stubs that return a null, a zero or a false.
+
+Two things stand between that and a shipped file. Neither Oodle codec exists, so a
+compressed section is refused, and nearly every shipped section is compressed. And
+nothing walks the type tree yet, so `GrannyGetFileInfo` still returns null even
+for a file that loaded.
+
+Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
+directory, and the game still links the vendored DLL.
 
 The background is in [docs/GrannyReplacement.md](../../../../../../docs/GrannyReplacement.md),
 which measured this game's corpus (83,184 unique GR2 files across three installs,
@@ -51,16 +59,21 @@ beside the executable, which is what lets these run on a machine that has never
 seen `granny2.dll`.
 
 `test/MinimalGr2.h` records the file layout as measured, with the census behind
-each constant, and builds a buffer shaped like a shipped `.gr2` for tests to
-break one field of. The corpus itself cannot be committed, so the positive tests
-that need real data take a directory from `LIBGR2_TEST_GR2_DIR` and skip when it
-is unset. A `.pak` is an ordinary ZIP archive, so extracting one is a one-liner.
+each constant, and builds a buffer shaped like a shipped `.gr2`: sections with
+content, pointer fixups between them, and a header a test can reach in and break
+one field of. `ReadEntireFileFromMemory.cpp` drives the public entry points and
+`FileContainer.cpp` checks what a successful load produced, which is why the
+tests link the static library.
 
-The suite is green against the stub, and two things keep that from reading as
-progress. Tests that cannot pass until a milestone lands are `DISABLED_`, so they
-are the written-down acceptance criteria rather than a permanently red suite. And
-`ReadEntireFileFromMemory.StillAStub` asserts the loader still returns null, so
-the day M1 works it fails and says which tests to enable.
+The corpus itself cannot be committed, so the sweep over real data takes a
+directory from `LIBGR2_TEST_GR2_DIR` and skips when it is unset. A `.pak` is an
+ordinary ZIP archive, so extracting one is a one-liner.
+
+Tests that cannot pass until a milestone lands are `DISABLED_`, so they are
+written-down acceptance criteria rather than a permanently red suite. Two live
+tests mark what is still missing and fail the day it arrives:
+`GetFileInfo.StillReturnsNull`, and
+`ReadEntireFileFromMemory.RefusesCompressedSectionsUntilTheCodecsExist`.
 
 ## The call trace
 
@@ -130,7 +143,7 @@ each gains its real definition in the milestone that first needs it.
 | file | entry points | milestone |
 |---|---|---|
 | `src/Allocator.cpp` | 2 | linked, never called, see the trace above |
-| `src/File.cpp` | 4 | M1, container, fixups, the two Oodle codecs |
+| `src/File.cpp` | 4 | container and fixups done, Oodle codecs and file info left |
 | `src/TypeTree.cpp` | 2 | M1, members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | M2, geometry |
 | `src/Skeleton.cpp` | 1 | M2, bone lookup by name |

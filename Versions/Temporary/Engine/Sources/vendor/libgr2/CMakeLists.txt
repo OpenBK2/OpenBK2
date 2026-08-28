@@ -53,6 +53,7 @@ set(GR2_SOURCES
     src/Animation.cpp
     src/Control.cpp
     src/File.cpp
+    src/File.h
     src/Mesh.cpp
     src/Model.cpp
     src/Pose.cpp

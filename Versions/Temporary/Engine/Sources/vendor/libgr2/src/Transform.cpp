@@ -19,13 +19,13 @@ extern "C"
 
 GR2_API( void ) GrannyMakeIdentity( granny_transform *Result )
 {
-	GR2_TRACE( "Result={}", Result );
+	GR2_STUB( "Result={}", Result );
 }
 
 GR2_API( void ) GrannyPostMultiplyBy( granny_transform *Transform,
                                       granny_transform const *PostMult )
 {
-	GR2_TRACE( "Transform={} PostMult={}", Transform, PostMult );
+	GR2_STUB( "Transform={} PostMult={}", Transform, PostMult );
 }
 
 }

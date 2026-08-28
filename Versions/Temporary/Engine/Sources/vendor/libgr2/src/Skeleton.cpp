@@ -17,7 +17,7 @@ extern "C"
 GR2_API( bool ) GrannyFindBoneByName( granny_skeleton const *Skeleton, char const *BoneName,
                                       granny_int32x *BoneIndex )
 {
-	GR2_TRACE( "Skeleton={} BoneName={} BoneIndex={}", Skeleton, BoneName, BoneIndex );
+	GR2_STUB( "Skeleton={} BoneName={} BoneIndex={}", Skeleton, BoneName, BoneIndex );
 	return false;
 }
 

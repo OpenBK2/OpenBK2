@@ -17,14 +17,14 @@ extern "C"
 
 GR2_API( granny_int32x ) GrannyGetMemberTypeSize( granny_data_type_definition const *MemberType )
 {
-	GR2_TRACE( "MemberType={}", MemberType );
+	GR2_STUB( "MemberType={}", MemberType );
 	return 0;
 }
 
 GR2_API( granny_int32x )
 	GrannyGetTotalObjectSize( granny_data_type_definition const *TypeDefinition )
 {
-	GR2_TRACE( "TypeDefinition={}", TypeDefinition );
+	GR2_STUB( "TypeDefinition={}", TypeDefinition );
 	return 0;
 }
 
