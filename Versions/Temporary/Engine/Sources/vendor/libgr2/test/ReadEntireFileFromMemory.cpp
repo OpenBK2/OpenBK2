@@ -160,11 +160,12 @@ TEST( ReadEntireFileFromMemory, AcceptsAPointerTargetOnePastTheEnd )
 
 TEST( ReadEntireFileFromMemory, RefusesCompressedSectionsUntilTheCodecsExist )
 {
-	// Both Oodle codecs are still ahead, and this is what says so out loud: 61% of
-	// retail sections take one and 38% the other, so this refusal is why almost
-	// nothing shipped loads yet. When the codecs land, these two become positive
-	// cases and this test goes away with the DISABLED_ sweep coming back.
-	for ( uint32_t nCodec : { COMPRESSION_OODLE_1, COMPRESSION_OODLE_2 } )
+	// Both Oodle codecs are still ahead, and this is what says so out loud. Of the
+	// 13,582 unique GR2 in the retail install, 7,566 are entirely Oodle1 and 6,016
+	// entirely Oodle0, so this refusal is why nothing shipped loads yet. Each codec
+	// that lands turns one of these into a positive case; the second one to land
+	// takes this test with it and brings the DISABLED_ sweep back.
+	for ( uint32_t nCodec : { COMPRESSION_OODLE0, COMPRESSION_OODLE1 } )
 	{
 		CHeaderShapedFile file;
 		file.SetSectionData( 0, Pattern( 32 ) );

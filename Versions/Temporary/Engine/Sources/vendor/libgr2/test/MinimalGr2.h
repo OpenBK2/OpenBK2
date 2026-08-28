@@ -93,11 +93,11 @@ constexpr uint32_t TYPE_TAG_10 = 0x80000010u;
 constexpr uint32_t TYPE_TAG_11 = 0x80000011u;
 constexpr uint32_t TYPE_TAG_13 = 0x80000013u;
 
-// Per section compression. 0, 1 and 2 all occur; which of 1 and 2 is Oodle0 and
-// which is Oodle1 is not established, so the names here say the number.
+// Per section compression, from granny_compression_type in granny211.h. Note the
+// offset: Oodle0 is 1 and Oodle1 is 2, since the enum starts at no compression.
 constexpr uint32_t COMPRESSION_NONE = 0;
-constexpr uint32_t COMPRESSION_OODLE_1 = 1;
-constexpr uint32_t COMPRESSION_OODLE_2 = 2;
+constexpr uint32_t COMPRESSION_OODLE0 = 1;
+constexpr uint32_t COMPRESSION_OODLE1 = 2;
 
 //! A buffer laid out the way a shipped .gr2 is.
 //!

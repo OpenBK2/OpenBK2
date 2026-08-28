@@ -48,13 +48,15 @@ constexpr uint32_t FILE_VERSION = 6;
 
 //! What a section's bytes were compressed with.
 //!
-//! Which of the two Oodles is 1 and which is 2 is not established, so the names
-//! say the number rather than guessing. Both are unimplemented either way.
+//! Read the numbers twice: Oodle0 is 1 and Oodle1 is 2, because Granny counts
+//! from GrannyNoCompression. These are its own names and values, from
+//! granny_compression_type in granny211.h, which also lists BitKnit as 3 and
+//! BitKnit2 as 4. Neither BitKnit appears in this game's data, both postdating it.
 enum ECompression
 {
 	COMPRESSION_NONE = 0,
-	COMPRESSION_OODLE_1 = 1,
-	COMPRESSION_OODLE_2 = 2,
+	COMPRESSION_OODLE0 = 1,
+	COMPRESSION_OODLE1 = 2,
 };
 
 //! One 44-byte entry of the section array.

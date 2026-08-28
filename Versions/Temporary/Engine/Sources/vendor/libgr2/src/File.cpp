@@ -183,17 +183,18 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		section.nMixedMarshallingOffset = ReadU32( pBytes, nBase + 36 );
 		section.nMixedMarshallingCount = ReadU32( pBytes, nBase + 40 );
 
-		if ( section.nCompression > COMPRESSION_OODLE_2 )
+		if ( section.nCompression > COMPRESSION_OODLE1 )
 		{
 			return Reject( "section {} compression {}, no such codec", i, section.nCompression );
 		}
 		if ( section.nCompression != COMPRESSION_NONE )
 		{
-			// The one thing between this and the shipped corpus. 61% of retail
-			// sections take one codec and 38% the other, so almost nothing real
-			// loads until both are written.
-			return Reject( "section {} needs Oodle codec {}, which is not implemented", i,
-			               section.nCompression );
+			// The one thing between this and the shipped corpus. Of the 13,582
+			// unique GR2 in the retail install, 7,566 are entirely Oodle1 and 6,016
+			// entirely Oodle0, and none mixes the two, so each codec unlocks its own
+			// half of the game and neither unlocks any of the other's.
+			return Reject( "section {} needs Oodle{} compression, which is not implemented", i,
+			               section.nCompression - 1 );
 		}
 		if ( section.nExpandedDataSize != section.nDataSize )
 		{
