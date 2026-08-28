@@ -72,6 +72,7 @@ set(GR2_SOURCES
     src/Transform.cpp
     src/TypeTree.cpp
     src/TypeTree.h
+    src/WorldPose.h
     include/gr2/granny.h)
 
 add_library(gr2 SHARED ${GR2_SOURCES})

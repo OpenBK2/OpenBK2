@@ -40,6 +40,16 @@ struct SVariant
 	void *pObject;
 };
 
+//! granny_transform_flags. Each bit says whether the matching part of a
+//! transform is meaningful; a part whose bit is clear is the identity whatever
+//! the bytes say, which GrannyBuildWorldPose was measured to honour.
+enum ETransformFlags
+{
+	TRANSFORM_HAS_POSITION = 0x1,
+	TRANSFORM_HAS_ORIENTATION = 0x2,
+	TRANSFORM_HAS_SCALESHEAR = 0x4,
+};
+
 struct STransform
 {
 	uint32_t nFlags;

@@ -10,9 +10,9 @@ with the conversion behind it. `GrannyGetMemberTypeSize` and
 `GrannyGetTotalObjectSize` come with it. The other 48 entry points are stubs that
 return a null, a zero or a false.
 
-Models also instantiate, and sampling one with nothing bound gives the skeleton's
-rest pose, which is what `granny2.dll` gives too. So every model can be drawn in
-bind pose.
+Models also instantiate, sampling one with nothing bound gives the skeleton's
+rest pose, and the skeleton hierarchy walks into world and skinning matrices. So
+every model can be drawn in bind pose, skinned.
 
 What is left is animation proper. Track groups and animations are read into the
 file and not converted, and the control entry points that would bind a clip to an
@@ -188,7 +188,7 @@ each gains its real definition in the milestone that first needs it.
 | `src/Skeleton.cpp` | 1 | bone lookup by name |
 | `src/Transform.cpp` | 2 | position, orientation, scale-shear, and composing two |
 | `src/Model.cpp` | 3 | M3, model instances and their clock |
-| `src/Pose.cpp` | 11 | local pose and rest-pose sampling done; curves, world pose and skinning matrices left |
+| `src/Pose.cpp` | 11 | local pose, rest-pose sampling and world pose done; curve sampling left |
 | `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
 | `src/Control.cpp` | 20 | M4, playback, looping, ease curves |
 

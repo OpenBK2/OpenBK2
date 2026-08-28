@@ -239,6 +239,15 @@ class Granny(object):
         self.dll.GrannyGetLocalPoseTransform.restype = c_void_p
         self.dll.GrannySampleModelAnimations.argtypes = [c_void_p, c_int32, c_int32,
                                                          c_void_p]
+        self.dll.GrannyNewWorldPose.argtypes = [c_int32]
+        self.dll.GrannyNewWorldPose.restype = c_void_p
+        self.dll.GrannyFreeWorldPose.argtypes = [c_void_p]
+        self.dll.GrannyBuildWorldPose.argtypes = [c_void_p, c_int32, c_int32, c_void_p,
+                                                  c_void_p, c_void_p]
+        self.dll.GrannyGetWorldPose4x4.argtypes = [c_void_p, c_int32]
+        self.dll.GrannyGetWorldPose4x4.restype = c_void_p
+        self.dll.GrannyGetWorldPoseComposite4x4.argtypes = [c_void_p, c_int32]
+        self.dll.GrannyGetWorldPoseComposite4x4.restype = c_void_p
 
     def walk(self, data):
         """Read a file and describe what GrannyGetFileInfo gave back.
@@ -487,6 +496,40 @@ class Granny(object):
                               if p else None)
             self.dll.GrannyFreeLocalPose(refused)
 
+        # The world pose, which is where the skeleton hierarchy actually gets
+        # walked. An offset that is not the identity, so that its placement in the
+        # chain is checked rather than cancelling out.
+        offset = (c_float * 16)(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 7, 11, 13, 1)
+        world = self.dll.GrannyNewWorldPose(bone_count)
+        if world:
+            skeleton_ptr = C.cast(model.Skeleton, c_void_p)
+            self.dll.GrannyBuildWorldPose(skeleton_ptr, 0, bone_count, pose,
+                                          offset, world)
+            out['World'] = []
+            out['Composite'] = []
+            for i in range(min(bone_count, 48)):
+                p = self.dll.GrannyGetWorldPose4x4(world, i)
+                out['World'].append(list(struct.unpack('<16f', C.string_at(p, 64)))
+                                    if p else None)
+                p = self.dll.GrannyGetWorldPoseComposite4x4(world, i)
+                out['Composite'].append(list(struct.unpack('<16f', C.string_at(p, 64)))
+                                        if p else None)
+            # Past the end must be null, which CAddBoneFilter::Recalc depends on.
+            out['PastTheEnd'] = self.dll.GrannyGetWorldPose4x4(world, bone_count) is None
+            self.dll.GrannyFreeWorldPose(world)
+
+        # A world pose smaller than the skeleton, which is exactly what
+        # CAddBoneFilter allocates: nAddBone + 1 entries for a full skeleton.
+        if bone_count >= 2:
+            small = self.dll.GrannyNewWorldPose(bone_count - 1)
+            if small:
+                self.dll.GrannyBuildWorldPose(C.cast(model.Skeleton, c_void_p), 0,
+                                              bone_count - 1, pose, offset, small)
+                p = self.dll.GrannyGetWorldPose4x4(small, bone_count - 2)
+                out['SmallWorldLast'] = (list(struct.unpack('<16f', C.string_at(p, 64)))
+                                         if p else None)
+                self.dll.GrannyFreeWorldPose(small)
+
         self.dll.GrannyFreeLocalPose(pose)
         self.dll.GrannyFreeModelInstance(instance)
         return out
@@ -547,45 +590,50 @@ def _f32(value):
 def differences(a, b, path=''):
     """Every place the two disagree, as (path, reference, candidate, relative).
 
-    `relative` is the relative difference for two numbers and None for anything
-    else, which is what lets a caller separate a rounding difference from a wrong
-    answer. docs/GrannyReplacement.md sets the policy this implements: structural
-    data compares exactly, float data compares with a tolerance reported as a
-    metric.
+    `relative` and `absolute` are the two ways two numbers can differ, and None
+    for anything that is not a number. Both are needed. Relative alone is
+    meaningless near zero, and a skinning matrix is full of entries that should be
+    zero and come out at 1e-8 because a bind pose is undone by its own inverse:
+    comparing those relatively reports a 20% difference between two numbers that
+    are both noise. Absolute alone is meaningless for a translation of a thousand
+    units.
 
-    That distinction is not academic here. Container and codec output is byte
-    exact or wrong, and so is everything derived from it by copying. Transform
-    composition is float arithmetic, where two correct implementations differ in
-    the last bit or two because they multiply in a different order, and the real
-    DLL is not always the more accurate of the two.
+    docs/GrannyReplacement.md sets the policy this implements: structural data
+    compares exactly, float data compares with a tolerance reported as a metric.
+    That distinction is not academic. Container and codec output is byte exact or
+    wrong, and so is everything derived from it by copying. Matrix composition is
+    float arithmetic, where two correct implementations differ in the last bit
+    because they multiply in a different order, and the real DLL is not always the
+    more accurate of the two.
     """
     out = []
     if isinstance(a, dict) and isinstance(b, dict):
         for key in sorted(set(a) | set(b)):
             if key not in a:
-                out.append(('%s.%s' % (path, key), 'absent', 'present', None))
+                out.append(('%s.%s' % (path, key), 'absent', 'present', None, None))
             elif key not in b:
-                out.append(('%s.%s' % (path, key), 'present', 'absent', None))
+                out.append(('%s.%s' % (path, key), 'present', 'absent', None, None))
             else:
                 out += differences(a[key], b[key], '%s.%s' % (path, key))
     elif isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
-            out.append((path + '[]', '%d entries' % len(a), '%d entries' % len(b), None))
+            out.append((path + '[]', '%d entries' % len(a), '%d entries' % len(b), None,
+                        None))
         else:
             for i, (x, y) in enumerate(zip(a, b)):
                 out += differences(x, y, '%s[%d]' % (path, i))
     elif isinstance(a, bool) or isinstance(b, bool):
         if a is not b:
-            out.append((path, a, b, None))
+            out.append((path, a, b, None, None))
     elif isinstance(a, (int, float)) and isinstance(b, (int, float)):
         # As float32, which is what both sides hold. Comparing the decimal forms
         # would report differences that are not there.
         x, y = _f32(a), _f32(b)
         if x != y:
             scale = max(abs(x), abs(y), 1e-30)
-            out.append((path, a, b, abs(x - y) / scale))
+            out.append((path, a, b, abs(x - y) / scale, abs(x - y)))
     elif a != b:
-        out.append((path, a, b, None))
+        out.append((path, a, b, None, None))
     return out
 
 
@@ -728,9 +776,13 @@ def _compare_one(item):
     found = differences(want, got) + _WORKER['transforms']
     if not found:
         return label, 'same', found
-    worst = max((d[3] for d in found if d[3] is not None), default=None)
-    if worst is not None and all(d[3] is not None for d in found):
-        if worst <= _WORKER['tolerance']:
+    if all(d[3] is not None for d in found):
+        # Rounding when the gap fits inside an absolute floor plus a relative
+        # allowance, which is the usual form and the only one that behaves at
+        # both ends of the scale.
+        tolerance = _WORKER['tolerance']
+        if all(d[4] <= tolerance + tolerance * max(abs(_f32(d[1])), abs(_f32(d[2])))
+               for d in found):
             return label, 'near', found
     return label, 'differs', found
 
@@ -750,10 +802,11 @@ def main(argv):
     parser.add_argument('--pattern', default='*', help='only labels matching this glob')
     parser.add_argument('--report', default=None, help='write every difference here')
     parser.add_argument('--show', type=int, default=10, help='differing files to print')
-    parser.add_argument('--tolerance', type=float, default=1e-6,
-                        help='relative float difference counted as rounding rather '
-                             'than as a wrong answer (default 1e-6, a few float32 '
-                             'ulps)')
+    parser.add_argument('--tolerance', type=float, default=1e-5,
+                        help='float gap counted as rounding rather than as a wrong '
+                             'answer, used as both an absolute floor and a relative '
+                             'allowance (default 1e-5, about eighty float32 ulps at '
+                             'magnitude one)')
     args = parser.parse_args(argv[1:])
 
     if struct.calcsize('P') != 8:
@@ -802,16 +855,16 @@ def main(argv):
         outcomes[outcome] += 1
         if outcome == 'differs':
             differing.append((label, found))
-            for path, want, got, _relative in found:
+            for path, want, got, _relative, _absolute in found:
                 key = generalise(path)
                 histogram[key] += 1
                 examples.setdefault(key, (label, want, got))
         elif outcome == 'near':
-            for path, want, got, relative in found:
+            for path, want, got, relative, absolute in found:
                 key = generalise(path)
                 worst = rounding.get(key)
-                if worst is None or relative > worst[0]:
-                    rounding[key] = (relative, label, want, got)
+                if worst is None or absolute > worst[1]:
+                    rounding[key] = (relative, absolute, label, want, got)
         if total % 2000 == 0:
             sys.stderr.write('  %d files...\n' % total)
 
@@ -824,10 +877,10 @@ def main(argv):
         print('  %-28s %6d  %5.1f%%' % (outcome, count, 100.0 * count / max(total, 1)))
 
     if rounding:
-        print('\nfields that differ only by rounding, worst relative difference:')
-        for key, (relative, label, want, got) in sorted(rounding.items(),
-                                                        key=lambda kv: -kv[1][0]):
-            print('  %-46s %.3g' % (key, relative))
+        print('\nfields that differ only by rounding, worst gap:')
+        for key, (relative, absolute, label, want, got) in sorted(
+                rounding.items(), key=lambda kv: -kv[1][1]):
+            print('  %-44s %.3g absolute, %.3g relative' % (key, absolute, relative))
             print('      e.g. %s: reference %r, candidate %r' % (label, want, got))
 
     if histogram:
@@ -841,10 +894,11 @@ def main(argv):
         print('\nfirst %d differing files:' % min(args.show, len(differing)))
         for label, found in differing[:args.show]:
             print('  %s' % label)
-            for path, want, got, relative in found[:4]:
+            for path, want, got, relative, absolute in found[:4]:
                 print('      %s: %r vs %r%s'
                       % (path, want, got,
-                         '' if relative is None else '  (relative %.3g)' % relative))
+                         '' if relative is None
+                         else '  (%.3g absolute, %.3g relative)' % (absolute, relative)))
             if len(found) > 4:
                 print('      ... %d more' % (len(found) - 4))
 
@@ -852,14 +906,16 @@ def main(argv):
         with io.open(args.report, 'w', encoding='utf-8') as f:
             json.dump({'outcomes': dict(outcomes),
                        'histogram': dict(histogram),
-                       'rounding': {k: {'relative': v[0], 'file': v[1],
-                                        'reference': v[2], 'candidate': v[3]}
+                       'rounding': {k: {'relative': v[0], 'absolute': v[1],
+                                        'file': v[2], 'reference': v[3],
+                                        'candidate': v[4]}
                                     for k, v in rounding.items()},
                        'differences': [{'file': label,
                                         'differences': [{'path': p, 'reference': w,
                                                          'candidate': g,
-                                                         'relative': r}
-                                                        for p, w, g, r in found]}
+                                                         'relative': r,
+                                                         'absolute': s}
+                                                        for p, w, g, r, s in found]}
                                        for label, found in differing]},
                       f, indent=1, default=str)
         print('\nwrote %s' % args.report)
