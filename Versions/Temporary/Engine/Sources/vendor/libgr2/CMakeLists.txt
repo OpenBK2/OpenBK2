@@ -58,6 +58,7 @@ set(GR2_SOURCES
     src/File.h
     src/Mesh.cpp
     src/Model.cpp
+    src/ModelInstance.h
     src/Oodle0.cpp
     src/Oodle0.h
     src/Oodle1.cpp
