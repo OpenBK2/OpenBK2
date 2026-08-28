@@ -201,6 +201,15 @@ never need a playback layer. Build the record-and-replay harness before it.
 - **Presentation only.** Animation in this engine never reaches `AILogic`, so a
   replacement has to be visually correct, not bit-exact against `granny2.dll`.
   The container and the codecs are the opposite: those are byte-exact or wrong.
+- **Reproduce the original's defined behaviour, refuse its undefined behaviour.**
+  `granny2.dll` access violates on a null model, a null pose, a null model
+  instance and a negative bone count, among others. None of that is reproduced.
+  A crash, a hang or an out of bounds read is not a contract, and any caller that
+  depended on one was already broken. Where the DLL does define an answer, even
+  an odd one, that answer is matched and the measurement is recorded next to the
+  code: `GrannyGetLocalPoseTransform` returning null outside the range,
+  `GrannyFindBoneByName` writing the bone count on a miss, a fresh local pose
+  being zeroed rather than set to identity.
 - **32-bit files, on both hosts.** The files store 32-bit pointers. Nothing here
   memory-maps; it allocates and populates, which is what lets x86 and x64 share
   one path.

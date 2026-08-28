@@ -56,6 +56,7 @@ set(GR2_SOURCES
     src/Convert.h
     src/File.cpp
     src/File.h
+    src/LocalPose.h
     src/Mesh.cpp
     src/Model.cpp
     src/ModelInstance.h

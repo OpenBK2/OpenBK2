@@ -18,33 +18,101 @@
 
 #include <gr2/granny.h>
 
+#include "LocalPose.h"
+#include "Structures.h"
 #include "Trace.h"
+
+#include <new>
+
+using namespace NGr2;
+
+//! No skeleton comes near this. It exists so a corrupt or wild bone count cannot
+//! ask for a hundred gigabytes before anything notices; the largest skeleton in
+//! the corpus has 134 bones.
+static const granny_int32x MAX_POSE_BONES = 1 << 20;
 
 extern "C"
 {
 
 GR2_API( granny_local_pose * ) GrannyNewLocalPose( granny_int32x BoneCount )
 {
-	GR2_STUB( "BoneCount={}", BoneCount );
-	return 0;
+	GR2_TRACE( "BoneCount={}", BoneCount );
+
+	// A negative count access violates in the real DLL. Not reproduced: this port
+	// does not emulate the original's undefined behaviour, only its defined
+	// behaviour. Zero is defined and does work there, giving an empty pose that
+	// reports a bone count of zero, so that case is matched rather than refused.
+	if ( BoneCount < 0 || BoneCount > MAX_POSE_BONES )
+	{
+		Logger().warn( "NewLocalPose: {} bones is not a count", BoneCount );
+		return 0;
+	}
+
+	granny_local_pose *pPose = new ( std::nothrow ) granny_local_pose;
+	if ( pPose == nullptr )
+	{
+		return 0;
+	}
+
+	// Zeroed, which is what the DLL leaves: a fresh pose has a (0,0,0,0)
+	// orientation rather than an identity one. See LocalPose.h.
+	pPose->Transforms.assign( static_cast<size_t>( BoneCount ), STransform() );
+	return pPose;
 }
 
 GR2_API( void ) GrannyFreeLocalPose( granny_local_pose *LocalPose )
 {
-	GR2_STUB( "LocalPose={}", LocalPose );
+	GR2_TRACE( "LocalPose={}", LocalPose );
+
+	// Null is safe in the real DLL too, and CSkeletonAnimator's destructor guards
+	// it anyway.
+	delete LocalPose;
 }
 
 GR2_API( granny_int32x ) GrannyGetLocalPoseBoneCount( granny_local_pose const *LocalPose )
 {
-	GR2_STUB( "LocalPose={}", LocalPose );
-	return 0;
+	GR2_TRACE( "LocalPose={}", LocalPose );
+
+	// Null access violates in the real DLL. Not reproduced.
+	if ( LocalPose == 0 )
+	{
+		return 0;
+	}
+	return static_cast<granny_int32x>( LocalPose->Transforms.size() );
 }
 
 GR2_API( granny_transform * ) GrannyGetLocalPoseTransform( granny_local_pose const *LocalPose,
                                                            granny_int32x BoneIndex )
 {
-	GR2_STUB( "LocalPose={} BoneIndex={}", LocalPose, BoneIndex );
-	return 0;
+	GR2_TRACE( "LocalPose={} BoneIndex={}", LocalPose, BoneIndex );
+
+	// Null access violates in the real DLL. Not reproduced.
+	if ( LocalPose == 0 )
+	{
+		return 0;
+	}
+
+	// The range check is the DLL's own, measured: it returns null for an index at
+	// or past the bone count and for a negative one. That is not a courtesy to
+	// match optionally, it is the contract, because GAnimation.cpp writes
+	//
+	//     granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( pose, i );
+	//     if ( pBoneTransform ) { ... }
+	//
+	// and treats null as "this bone is not in the pose".
+	if ( BoneIndex < 0
+	     || static_cast<size_t>( BoneIndex ) >= LocalPose->Transforms.size() )
+	{
+		return 0;
+	}
+
+	// const in Granny's signature, and the caller writes through the result: the
+	// engine sets Position, Orientation and Flags on what this returns. The const
+	// is about the pose's shape rather than its contents, and the cast stays here
+	// rather than becoming a mutable alias in the header.
+	granny_local_pose *pPose = const_cast<granny_local_pose *>( LocalPose );
+	return reinterpret_cast<granny_transform *>(
+		&pPose->Transforms[static_cast<size_t>( BoneIndex )] );
 }
 
 GR2_API( granny_world_pose * ) GrannyNewWorldPose( granny_int32x BoneCount )
