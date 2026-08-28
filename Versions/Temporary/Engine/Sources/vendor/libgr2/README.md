@@ -85,7 +85,7 @@ the vendored DLL, because the engine loads it by name.
 
 The verification column says how each was checked. *corpus* is
 `scripts/port/gr2diff.py` over all 21,720 distinct GR2 files, comparing against
-the real DLL. *replay* is the companion harness, which scripts both
+the real DLL. *replay* is `scripts/port/gr2control.py`, which scripts both
 implementations through fifteen call sequences per file and compares the
 transcripts. Everything also has unit tests.
 

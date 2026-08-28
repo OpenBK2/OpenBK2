@@ -5,11 +5,10 @@
 // they assert is the arithmetic written down in Control.h, which was measured out
 // of granny2.dll by scripting the same call sequences against it.
 //
-// The corpus side of that measurement is scripts/port/gr2diff.py's companion,
-// which replays fifteen scenarios per file against both implementations. It
-// cannot be a unit test: it needs the DLL and it needs the corpus. What it
-// reported, including the three things that still differ, is in the commit that
-// added this file and in docs/GrannyReplacement.md.
+// The corpus side of that measurement is scripts/port/gr2control.py, which
+// replays fifteen scenarios per file against both implementations. It cannot be
+// a unit test: it needs the DLL and it needs the corpus. What it reported,
+// including the two things that still differ, is in docs/GrannyReplacement.md.
 
 #include "Control.h"
 #include "ModelInstance.h"

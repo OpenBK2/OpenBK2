@@ -363,9 +363,9 @@ and that is not reproduced.
 No open source project implements this, so all of it was measured by scripting
 `granny2.dll` through the sequences `CSkeletonAnimator` issues, advancing the
 model clock forwards only, and reading the observables after every step. The
-harness replays fifteen scenarios per file against both implementations and
-compares the transcripts; it is the record-and-replay rig this document asked for
-before M4 rather than after.
+harness is `scripts/port/gr2control.py`: it replays fifteen scenarios per file
+against both implementations and compares the transcripts, and it is the
+record-and-replay rig this document asked for before M4 rather than after.
 
 The clock, with `raw = (modelClock - startTime) * speed` floored at zero:
 
