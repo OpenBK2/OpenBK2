@@ -8,10 +8,9 @@
 // game never does.
 //
 // What is here is the container and nothing above it: header validation, the
-// section array, section bytes expanded through Oodle1 where they need it, and
-// the pointer fixups. What is not here yet is Oodle0, which is the other half of
-// the corpus, and the type tree walk that would turn the root object into a
-// granny_file_info, so GrannyGetFileInfo still returns null.
+// section array, section bytes expanded through whichever Oodle codec each one
+// names, and the pointer fixups. Turning the root object into a granny_file_info
+// is Convert.cpp's job, reached from here through ConvertFileInfo.
 //
 // Every rejection says why. A file this refuses is either corrupt or a dialect
 // nobody has seen, and both are worth a line in the trace rather than a silent
