@@ -154,9 +154,19 @@ machinery it converts with. `GrannyOldCurveType` is exported too, which is how a
 `granny2_x64.dll`, take `Skeletons[0]->Bones`, and read the array at both
 strides. At 164 bytes, the 2.11 layout, `ParentIndex` is a valid parent chain
 (`-1, 0, 1, 0, 3, ...`) and all 134 names read; at 176, the file's layout on a
-64-bit host, it is noise. Every bone also comes back with `LODError` = 1.0, a
-member that appears nowhere in the file: `LODError` is not among its strings at
-all. Granny is synthesising it.
+64-bit host, it is noise. Every bone also comes back with a `LODError`, a member
+that appears nowhere in the file: the string is not in it at all. Granny is
+synthesising it, and the value it synthesises is **0.0**, measured over 60 files
+through a struct whose `sizeof` was asserted against `granny211.h` first. A
+first attempt read it at offset 140 and reported 1.0, which is
+`InverseWorld4x4[15]`, the bottom right of an identity matrix; `LODError` is at
+144.
+
+The other members the conversion has to invent, measured the same way:
+`skeleton.LODType` 0, `animation.DefaultLoopCount` 0, `animation.Flags` 0, and
+`ExtendedData` null on `file_info`, `model`, `skeleton`, `bone` and `animation`.
+`animation.Oversampling` is 0.0 or 2.0, because two versions of that structure
+appear in the corpus and only one of them carries the member.
 
 So 2.11 does not misread these files. It converts them, which is what the
 self-describing type tree is for, and it is load-bearing rather than lucky: the
