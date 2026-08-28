@@ -76,7 +76,7 @@ public:
 		int nUserID;
 	};
 	virtual void Sync( ESyncType st = ST_NORMAL ) = 0;
-	virtual void GetEntities( std::list<SObjectInfo> *pRes, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
+	virtual void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
 	virtual void Trace( const CRay &, std::vector<SInterval> *pIntersections, int nMask, const CFloorsSet &hg = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
 	virtual void TraceGrid( CFastRenderer *pRes, int nMask, ESort sort, const CFloorsSet &fs = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
 	// fRadiusKoef - (1 - touches frustrum, 0 - center inside, -1 - whole inside)
@@ -88,7 +88,7 @@ public:
 	virtual void SelectHullPointers( std::vector<CPtr<CObjectBase> > *pRes, const SBound &b, int nMaskOr, int nMaskNot ) = 0;
 	//virtual void DebugInformTrackers( const SBound &b ) = 0;
 };
-void GetGeometry( std::list<SObjectInfo> *pRes, std::vector<SMassSphere> *pSpheres, const NDb::SAIGeometry * pAIGeom, bool *pbClosed = 0 );
+void GetGeometry( std::vector<SObjectInfo> *pRes, std::vector<SMassSphere> *pSpheres, const NDb::SAIGeometry * pAIGeom, bool *pbClosed = 0 );
 void GetSpheres( const NDb::SModel *pModel, std::vector<SMassSphere> *pRes, CVec3 *pMassCenter );
 
 _3DMOTOR_EXPORT IAIMap* CreateAIMap();

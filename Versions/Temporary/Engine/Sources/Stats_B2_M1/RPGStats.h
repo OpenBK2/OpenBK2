@@ -858,6 +858,7 @@ namespace NDb
 		float fDispersion;
 		float fAimingTime;
 		int nAmmoPerBurst;
+		bool bForcePlayAllBurstEffects;
 		float fRangeMax;
 		float fRangeMin;
 		int nCeiling;
@@ -875,6 +876,7 @@ namespace NDb
 			fDispersion( 0.0f ),
 			fAimingTime( 0.0f ),
 			nAmmoPerBurst( 0 ),
+			bForcePlayAllBurstEffects( false ),
 			fRangeMax( 0.0f ),
 			fRangeMin( 0.0f ),
 			nCeiling( 0 ),

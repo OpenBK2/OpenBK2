@@ -39,3 +39,12 @@ if(BUILD_EDITOR)
     add_subdirectory("MapEditor")
     add_subdirectory("B2_MapEditor")
 endif()
+
+# Both aggregates exist by now, so the "run everything of ours" targets can be
+# defined. See cmake/benchmarks.cmake.
+if(TARGET unittests)
+    add_suite_runner(run-unittests obk2-test unittests)
+endif()
+if(TARGET benchmarks)
+    add_suite_runner(run-benchmarks obk2-benchmark benchmarks)
+endif()

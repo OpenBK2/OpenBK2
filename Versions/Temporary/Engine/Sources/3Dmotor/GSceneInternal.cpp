@@ -22,6 +22,7 @@
 #include "GPostProcessors.h"
 #include "GRenderPathPolycount.h"
 #include "System/Commands.h"
+#include <algorithm>
 #include <D3D9.h>
 #include <D3DX9.h>
 
@@ -272,11 +273,11 @@ static bool DoesIntersect( const SSphere &s, const SRayInfo &r )
 	return true;
 }
 
-static bool TestParts( const std::list<CPtr<CCombinedPart> > &elements, const SGroupSelect &mask, const SRayInfo &r,
+static bool TestParts( const std::vector<CPtr<CCombinedPart> > &elements, const SGroupSelect &mask, const SRayInfo &r,
 	float *pfT, CVec3 *pNormal, SFullGroupInfo *pGroupInfo, CObjectBase **ppPart )
 {
 	bool bRes = false;
-	for ( std::list<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
+	for ( std::vector<CPtr<CCombinedPart> >::const_iterator i = elements.begin(); i != elements.end(); ++i )
 	{
 		CCombinedPart *pCPart = *i;
 		IVBCombiner *pVB = pCPart->GetVBCombiner();
@@ -372,7 +373,7 @@ static bool CheckOI( CPtrFuncBase<CObjectInfo> *pInfo )//, SBound *pBV )
 
 void CGScene::WalkNotLoadedObjects()
 {
-	for ( std::list< CPtr<ISomePart> >::iterator i = toBeLoaded.begin(); i != toBeLoaded.end(); )
+	for ( std::vector< CPtr<ISomePart> >::iterator i = toBeLoaded.begin(); i != toBeLoaded.end(); )
 	{
 		ISomePart *pPart = *i;
 		if ( IsValid(pPart) )
@@ -411,7 +412,7 @@ void CGScene::WalkNotLoadedObjects()
 		else
 			i = toBeLoaded.erase( i );
 	}
-	for ( std::list< CPtr<CStaticAnimatedPart> >::iterator i = toBeLoadedAnimated.begin(); i != toBeLoadedAnimated.end(); )
+	for ( std::vector< CPtr<CStaticAnimatedPart> >::iterator i = toBeLoadedAnimated.begin(); i != toBeLoadedAnimated.end(); )
 	{
 		CStaticAnimatedPart *pPart = *i;
 		if ( IsValid(pPart) )
@@ -672,7 +673,7 @@ static void CalcOpaque( CPartFlags *pRes, CCombinedPart *p )
 	}
 }
 
-static void AddParts( CTransformStack *pTS, std::list<SRenderPartSet> *pRes,
+static void AddParts( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes,
 	const std::vector<CObj<CCombinedPart> > &elems, const SGroupSelect &mask )
 {
 	for ( std::vector<CObj<CCombinedPart> >::const_iterator i = elems.begin(); i != elems.end(); ++i )
@@ -716,7 +717,7 @@ void CGScene::SelectNodes( CTransformStack *pTS, CVolumeNode *pNode, std::vector
 	pTS->PopClipHint();
 }
 
-void CGScene::MakePartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, ERLRequest eReq, const SGroupSelect &mask )
+void CGScene::MakePartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, ERLRequest eReq, const SGroupSelect &mask )
 {
 	std::vector<CVolumeNode*> volumeNodes;
 	SelectNodes( pTS, pVolume, &volumeNodes );
@@ -969,16 +970,15 @@ void CGScene::MakeRenderList( CTransformStack *pTS, SSceneFragmentGroupInfo *pFr
 		if ( req & RN_STATIC )
 			pFragmentsInfo->AddMaterialHolder( pTS, pNode->staticParts, req, nIgnoreMark );
 
-		for ( std::list<CPtr<CParticles> >::iterator k = pNode->particles.begin(); k != pNode->particles.end(); )
+		bool bHasInvalidParticles = false;
+		for ( std::vector<CPtr<CParticles> >::iterator k = pNode->particles.begin(); k != pNode->particles.end(); ++k )
 		{
-			CParticles *pPart =*k;
-			if ( !IsValid( pPart ) )
+			if ( !IsValid( *k ) )
 			{
-				k = pNode->particles.erase( k );
+				bHasInvalidParticles = true;
 				continue;
 			}
-			else
-				++k;
+			CParticles *pPart = *k;
 			if ( !pPart->GetGroup().IsMaskMatch( pFragmentsInfo->mask ) )
 				continue;
 			// check type
@@ -999,13 +999,15 @@ void CGScene::MakeRenderList( CTransformStack *pTS, SSceneFragmentGroupInfo *pFr
 				ASSERT( pTransp );
 				if ( pTransp )
 				{
+					// Keep the particle alive if AddParticles unlinks it from the node.
+					CPtr<CParticles> pParticle = *k;
 					CSceneFragments *pAddList = pFragmentsInfo->pList;
 
 					if ( req & RN_DEPTH )
 					{
 						pAddList->SetLitParticlesMaterial( pTransparentMaterial );
 						SLitParticlesAdder adder( pAddList, pTS );
-						pTransp->AddParticles( pPart, true, bv, &adder );
+						pTransp->AddParticles( pParticle, true, bv, &adder );
 					}
 					else
 					{
@@ -1013,13 +1015,22 @@ void CGScene::MakeRenderList( CTransformStack *pTS, SSceneFragmentGroupInfo *pFr
 						{
 							pAddList->SetLitParticlesMaterial( pTransparentMaterial );
 							SLitParticlesAdder adder( pAddList, pTS );
-							pTransp->AddParticles( pPart, true, bv, &adder );
+							pTransp->AddParticles( pParticle, true, bv, &adder );
 						}
 						else
-							pTransp->AddParticles( pPart, false, bv, 0 );
+							pTransp->AddParticles( pParticle, false, bv, 0 );
 					}
 				}
 			}
+			if ( !*k )
+				bHasInvalidParticles = true;
+		}
+		if ( bHasInvalidParticles )
+		{
+			// Compact once after traversal so vector iterator invalidation cannot affect rendering.
+			pNode->particles.erase( std::remove_if( pNode->particles.begin(), pNode->particles.end(),
+				[]( const CPtr<CParticles> &pParticle ) { return !IsValid( pParticle ); } ),
+				pNode->particles.end() );
 		}
 	}
 	if ( pFragmentsInfo->pTransp )
@@ -1091,7 +1102,7 @@ int CGScene::PrecacheMaterials( CVolumeNode *pNode, ILoadingCounter *pCounter )
 	if ( !IsValid(pNode) )
 		return 0;
 	int nRes = 0;
-	for ( std::list<CPtr<CCombinedPart> >::iterator i = pNode->staticParts.elements.begin(); i != pNode->staticParts.elements.end(); ++i )
+	for ( std::vector<CPtr<CCombinedPart> >::iterator i = pNode->staticParts.elements.begin(); i != pNode->staticParts.elements.end(); ++i )
 	{
 		CCombinedPart *p = *i;
 		for ( int i = 0; i < p->GetMaterialsNumber(); ++i )
@@ -1193,10 +1204,24 @@ void CGScene::DrawPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC, 
 {
 	if ( postprocessors.empty() )
 		return;
-	UpdateSet( &postprocessors, this );
+
+	auto writeFader = postprocessors.begin();
+	for ( auto readFader = postprocessors.begin(); readFader != postprocessors.end(); ++readFader )
+	{
+		if ( IsValid( *readFader ) && (*readFader)->Update( this ) )
+		{
+			if ( writeFader != readFader )
+				*writeFader = *readFader;
+			++writeFader;
+		}
+	}
+	postprocessors.erase( writeFader, postprocessors.end() );
+
+	// UpdateSet( &postprocessors, this );
+
 	typedef std::unordered_map<CPtr<IPostProcess>, std::vector<IPostProcess::SObject>> CPostHash;
 	CPostHash postHash;
-	for ( std::list< CPtr<CPostProcessBinder> >::iterator i = postprocessors.begin(); i != postprocessors.end(); ++i )
+	for ( std::vector< CPtr<CPostProcessBinder> >::iterator i = postprocessors.begin(); i != postprocessors.end(); ++i )
 		(*i)->Store( &postHash[ (*i)->GetPostProcessor() ], pTS, mask );
 	SPostProcessData data;
 	for ( CPostHash::iterator i = postHash.begin(); i != postHash.end(); ++i )
@@ -1358,9 +1383,9 @@ void CGScene::DrawLines( NGfx::CRenderContext *pRC )
 {
 	pRC->SetAlphaCombine( NGfx::COMBINE_SMART_ALPHA );
 	pRC->SetStencil( NGfx::STENCIL_NONE );
-	typedef std::unordered_map<SLineDrawIdx, std::list<CPolyline*>,SLineDrawHash> CColorHash;
+	typedef std::unordered_map<SLineDrawIdx, std::vector<CPolyline*>,SLineDrawHash> CColorHash;
 	CColorHash hashSel;
-	for ( std::list< CPtr<CPolyline> >::iterator i = lines.begin(); i != lines.end(); )
+	for ( std::vector< CPtr<CPolyline> >::iterator i = lines.begin(); i != lines.end(); )
 	{
 		CPolyline *p = *i;
 		if ( IsValid(p) )
@@ -1385,8 +1410,8 @@ void CGScene::DrawLines( NGfx::CRenderContext *pRC )
 		NGfx::SEffConstLight d;
 		d.color = k->first.vColor;
 		pRC->SetEffect( &d );
-		const std::list<CPolyline*> &l = k->second;
-		for ( std::list<CPolyline*>::const_iterator i = l.begin(); i != l.end(); ++i )
+		const std::vector<CPolyline*> &l = k->second;
+		for ( std::vector<CPolyline*>::const_iterator i = l.begin(); i != l.end(); ++i )
 			(*i)->Render( pRC );
 		pRC->Flush();
 	}
@@ -1471,7 +1496,7 @@ void CGScene::GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet
 {
 	WalkNotLoadedObjects();
 
-	std::list<SRenderPartSet> res;
+	std::vector<SRenderPartSet> res;
 	SGroupSelect gs = MakeSelectAll();
 	//gs.nMaskEvery |= N_MASK_OPAQUE;
 
@@ -1491,7 +1516,7 @@ void CGScene::GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet
 		GeneratePartList( &rw, _info.vCenter, _info.fRadius, &res, IRender::DT_ALL, gs );
 	}
 
-	for ( std::list<SRenderPartSet>::const_iterator i = res.begin(); i != res.end(); ++i )
+	for ( std::vector<SRenderPartSet>::const_iterator i = res.begin(); i != res.end(); ++i )
 	{
 		const SRenderPartSet &r = *i;
 		for ( int k = 0; k < r.pParts->size(); ++k )
@@ -1917,9 +1942,9 @@ static void CollectAllParts( std::vector<CObjectBase*> *pRes, CVolumeNode *p )
 	if ( p == 0 )
 		return;
 
-	for ( std::list<CPtr<CCombinedPart> >::const_iterator i = p->staticParts.elements.begin(); i != p->staticParts.elements.end(); ++i )
+	for ( std::vector<CPtr<CCombinedPart> >::const_iterator i = p->staticParts.elements.begin(); i != p->staticParts.elements.end(); ++i )
 		CollectAllParts( pRes, (*i) );
-	for ( std::list<CPtr<CCombinedPart> >::const_iterator i = p->dynamicParts.elements.begin(); i != p->dynamicParts.elements.end(); ++i )
+	for ( std::vector<CPtr<CCombinedPart> >::const_iterator i = p->dynamicParts.elements.begin(); i != p->dynamicParts.elements.end(); ++i )
 		CollectAllParts( pRes, (*i) );
 
 	for ( int k = 0; k < 8; ++k )
@@ -1970,7 +1995,7 @@ CFuncBase<SPerVertexLightState> *CGScene::GetLightState() const
 
 // CRenderWrapper
 
-void CRenderWrapper::FormPartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask )
+void CRenderWrapper::FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask )
 {
 	switch ( dt )
 	{

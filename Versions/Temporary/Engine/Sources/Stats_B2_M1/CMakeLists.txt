@@ -36,9 +36,9 @@ set(SOURCES
     UnitTypes.cpp
     UserActions.cpp
 )
-include(GenerateExportHeader)
 add_library(Stats_B2_M1 SHARED ${SOURCES})
-generate_export_header(Stats_B2_M1 EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Stats_B2_M1_export.h)
+add_stdafx_pch(Stats_B2_M1)
+add_export_header(Stats_B2_M1)
 target_link_libraries(Stats_B2_M1 PRIVATE 3Dmotor B2_M1_Terrain libdb MemoryLib Misc Sound System UI zlib winapi)
 install(TARGETS Stats_B2_M1 DESTINATION bin)
 add_version_info(Stats_B2_M1)

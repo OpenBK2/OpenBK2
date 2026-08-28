@@ -60,9 +60,22 @@ set(SOURCES
     WindowTooltip.cpp
 )
 
-include(GenerateExportHeader)
 add_library(UI SHARED ${SOURCES})
-generate_export_header(UI EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/UI_export.h)
+add_stdafx_pch(UI)
+# These four explicitly specialize CastToObjectBaseImpl and friends, through
+# BASIC_REGISTER_CLASS and the REGISTER_*_CLASS macros built on it. UI/Specific.h
+# is part of the prelude and pulls in UIFactory.h and DBUserInterface.h, so the
+# PCH has already instantiated those templates for the module's own types before
+# the specialization is seen, and MSVC rejects that (C2375, C2908). UI is the only
+# module where the prelude reaches its own registered types this way: the same
+# macros compile fine under a PCH in the other 462 translation units that use them.
+set_source_files_properties(
+    DBUIConsts.cpp
+    DBUserInterface.cpp
+    UIFactory.cpp
+    UIML.cpp
+    PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+add_export_header(UI)
 target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib winapi ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared)
 install(TARGETS UI DESTINATION bin)
 add_version_info(UI)

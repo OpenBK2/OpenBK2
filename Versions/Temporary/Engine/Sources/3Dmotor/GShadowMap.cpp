@@ -64,7 +64,7 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 static void Split( SPolyhedron *pRes, const SPlane &p )
 {
 	SPolyhedron src = *pRes;
-	std::list<SEdge> edges;
+	std::vector<SEdge> edges;
 	pRes->facets.resize(0);
 	for ( int k = 0; k < src.facets.size(); ++k )
 	{
@@ -132,7 +132,7 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 		{
 			CVec4 v = onPlane.vertices.back();
 			bool bFound = false;
-			for ( std::list<SEdge>::iterator i = edges.begin(); i != edges.end(); ++i )
+			for ( std::vector<SEdge>::iterator i = edges.begin(); i != edges.end(); ++i )
 			{
 				if ( v == i->vStart )
 				{

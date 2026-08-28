@@ -1,7 +1,11 @@
 #include "3Dmotor/MMXhelpers.h"
 
 #include "random.h"
-#include "mmx.h"
+// The reference used to be test/mmx.h, which is inline __asm and so x86 only.
+// original/MMXPrimitives.h is the same reference in SSE2 intrinsics: still real
+// hardware rather than a model of it, but it builds on x64, and on any compiler
+// rather than only MSVC, which matters for the Linux and macOS ports.
+#include "original/MMXPrimitives.h"
 
 #include <gtest/gtest.h>
 

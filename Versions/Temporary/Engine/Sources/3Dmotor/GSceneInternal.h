@@ -105,7 +105,7 @@ class CGScene: public IGScene, public IDecalQuery
 	ZDATA
 	SFullStaticTrackers trackers;
 	CObj<CVolumeNode> pVolume;
-	std::list< CPtr<CPolyline> > lines;
+	std::vector< CPtr<CPolyline> > lines;
 	ESceneRenderMode renderMode;
 	CObj<CCVec4> pCamera;
 	SHMatrix mHoldTransform;
@@ -116,13 +116,13 @@ class CGScene: public IGScene, public IDecalQuery
 	CObj<IMaterial> pTransparentMaterial;
 	CDGPtr<CFakeParticleLMTexture> pFakeParticleLM;
 	int nFrameCounter;
-	std::list< CPtr<CPostProcessBinder> > postprocessors;
-	std::list< CPtr<ISomePart> > toBeLoaded;
+	std::vector< CPtr<CPostProcessBinder> > postprocessors;
+	std::vector< CPtr<ISomePart> > toBeLoaded;
 	CObj<CDecalsManager> pDecalsManager;
 	CObj<CAmbientAnimator> pAmbientAnimator;
 	//CObj<CDirectionalLight> pDirectionalLight;
 	CObj<CLightStateNode> pLightState;
-	std::list< CPtr<CStaticAnimatedPart> > toBeLoadedAnimated;
+	std::vector< CPtr<CStaticAnimatedPart> > toBeLoadedAnimated;
 	CObj<CSunFlares> pSunFlares;
 	CDGPtr<CFuncBase<STime> > pSunFlaresTime;
 	STime sSunFlareTime;
@@ -163,7 +163,7 @@ class CGScene: public IGScene, public IDecalQuery
 	};
 
 	void SelectNodes( CTransformStack *pTS, CVolumeNode *pNode, std::vector<CVolumeNode*> *pRes );
-	void MakePartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, ERLRequest req, const SGroupSelect &mask );
+	void MakePartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, ERLRequest req, const SGroupSelect &mask );
 	void MakeRenderList( CTransformStack *pTS, SSceneFragmentGroupInfo *pFragmentsInfo, ERLRequest req, int nIgnoreMark );
 	void MakePolycountRenderList( CTransformStack *pTS, CSceneFragments *pList );
 	void RecalcRenderStats( int nSceneTris, int nParticles, int nLitParticles );
@@ -250,7 +250,7 @@ public:
 	CRenderWrapper( CGScene *_pScene ): pScene(_pScene) {}
 
 	virtual CFuncBase<SPerVertexLightState> *GetLightState() const { return pScene->GetLightState(); }
-	virtual void FormPartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask );
+	virtual void FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask );
 	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes );
 	virtual void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender );
 	virtual void GetNotLoaded( std::vector<IPart*> *pRes ) { pScene->GetNotLoaded( pRes ); }

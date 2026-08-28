@@ -278,10 +278,10 @@ public:
 	friend class CRasterizer<CPartsRender>;
 };
 
-static int CountParts( const std::list<SRenderPartSet> &l )
+static int CountParts( const std::vector<SRenderPartSet> &l )
 {
 	int nRes = 0;
-	for ( std::list<SRenderPartSet>::const_iterator i = l.begin(); i != l.end(); ++i )
+	for ( std::vector<SRenderPartSet>::const_iterator i = l.begin(); i != l.end(); ++i )
 		nRes += i->pParts->size();
 	return nRes;
 }
@@ -299,21 +299,22 @@ struct SCompareRPS
 		return false;
 	}
 };
-static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pTS, std::list<SRenderPartSet> *pListParts,
+static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pTS, std::vector<SRenderPartSet> *pListParts,
 	float fDensityLimit, float fMaxR2, CHZBuffer *pHZOptimize )
 {
-	std::list<SRenderPartSet> &listParts = *pListParts;
+	std::vector<SRenderPartSet> &listParts = *pListParts;
 	SHMatrix sRes;
 	sRes = pTS->Get().forward;
 	sRes.x = ( sRes.x * 0.5f + sRes.w * 0.5f ) * pr.GetWidth();
 	sRes.y = ( sRes.y * 0.5f + sRes.w * 0.5f ) * pr.GetHeight();
-	listParts.sort( SCompareRPS(sRes.w) );
+	// listParts.sort( SCompareRPS(sRes.w) );
+	std::stable_sort(listParts.begin(), listParts.end(), SCompareRPS(sRes.w) );
 
 	pr.InitRefs( CountParts( listParts ) + 1 );
 	int nIDCounter = 0;
 	int nPrevFloorMask = 0;
 	bool bFirstPass = true;
-	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 
@@ -381,7 +382,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 }
 
 void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
-	std::list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
+	std::vector<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
 {
 	CPartsRender pr( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT, F_ZBUF_SCALE_LOW );
 	nodes.clear();
@@ -395,7 +396,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		sTransform.MakeProjective( CVec2( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT ), 90, 0.1f, fRadius * 2.0f );
 		sTransform.SetCamera( cameraTransf );
 	
-		std::list<SRenderPartSet> listParts;
+		std::vector<SRenderPartSet> listParts;
 		pRender->FormPartList( &sTransform, &listParts, eType, mask );
 		pr.InitZBuffer( sTransform.GetProjection().forward, fRadius );
 		RenderStuff( pr, pRender, &sTransform, &listParts, 0, 0, 0 );
@@ -404,10 +405,10 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		pHZ->BuildHZ();
 
 		int nID = 0;
-		for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+		for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 		{
 			SRenderPartSet &rps = *i, *pDst = 0;
-			for ( std::list<SRenderPartSet>::iterator k = pRes->begin(); k != pRes->end(); ++k )
+			for ( std::vector<SRenderPartSet>::iterator k = pRes->begin(); k != pRes->end(); ++k )
 			{
 				if ( k->pNode == rps.pNode )
 				{
@@ -473,7 +474,7 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	CObj<IHZBuffer> *pHZBuffer )
 {
 	CPartsRender pr( Clamp( (int)screenSize.x / 2, 4, 400 ), Clamp( (int)screenSize.y / 2, 4, 300 ), F_ZBUF_SCALE );
-	std::list<SRenderPartSet> listParts;
+	std::vector<SRenderPartSet> listParts;
 	pRender->FormPartList( pTS, &listParts,IRender::DT_STATIC, _mask );
 	pr.FastInitZBuffer();
 	CHZBuffer *pHZ = pr.GetHZBuffer();
@@ -483,7 +484,7 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	*pHZBuffer = pHZ;
 
 	int nID = 0;
-	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		CIgnorePartsHash::iterator res = pIgnore->end();
@@ -518,7 +519,7 @@ void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
 	CObj<IHZBuffer> *pHZBuffer )
 {
 	CPartsRender pr( Clamp( (int)screenSize.x / 2, 4, 400 ), Clamp( (int)screenSize.y / 2, 4, 300 ), F_ZBUF_SCALE );
-	std::list<SRenderPartSet> listParts;
+	std::vector<SRenderPartSet> listParts;
 	pRender->FormPartList( pTS, &listParts,IRender::DT_STATIC, _mask );
 	pr.FastInitZBuffer();
 	CHZBuffer *pHZ = pr.GetHZBuffer();
@@ -528,7 +529,7 @@ void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
 	*pHZBuffer = pHZ;
 
 	int nID = 0;
-	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		CIgnorePartsHash::iterator res = pIgnore->end();
@@ -821,7 +822,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 	CIgnorePartsHash *pIgnore )
 {
 	CShadowVolumeBuilder shadowBuilder( vCenter, fRadius, pVertices, pTris );
-	std::list<SRenderPartSet> listParts;
+	std::vector<SRenderPartSet> listParts;
 
 	if ( pIgnore )
 		pIgnore->clear();
@@ -830,7 +831,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 		GeneratePartList( pRender, vCenter, fRadius, &listParts, eType, mask );
 		if ( pIgnore )
 		{
-			for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+			for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 			{
 				SRenderPartSet &rps = *i;
 				// if there are skipped parts, fill them with 1
@@ -852,7 +853,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 	//pList->clear();
 	//pVertices->clear();
 	//pCoverFaces->clear();
-	for ( std::list<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
+	for ( std::vector<SRenderPartSet>::iterator i = listParts.begin(); i != listParts.end(); i++ )
 	{
 		SRenderPartSet &rps = *i;
 		for ( int k = 0; k < rps.pParts->size(); ++k )

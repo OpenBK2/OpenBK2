@@ -461,7 +461,7 @@ void CWindowMSButton::Enable( const bool bEnable )
 	{
 		if ( states.empty() )
 			return;
-		
+
 		if ( states[GetState()].eSubState == NDb::BST_DISABLED )
 			SwitchSubState( NDb::BST_NORMAL );
 	}

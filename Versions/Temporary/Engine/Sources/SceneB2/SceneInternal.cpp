@@ -1049,13 +1049,13 @@ void CScene::UpdateAIGeometry()
 		
 	data[eScene]->pAIMapVisitor->Sync();
 	data[eScene]->pAIMap->Sync();
-	std::list<NAI::SObjectInfo> ent;
+	std::vector<NAI::SObjectInfo> ent;
 	data[eScene]->pAIMap->GetEntities( &ent, -1 );
 	
 	SFBTransform idPos;
 	Identity( &idPos.forward );
 	Identity( &idPos.backward );
-	for( std::list<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
+	for( std::vector<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
 	{
 		const NAI::SObjectInfo &obj = *it;
 		CObj<CMemObject> pMemObject = new CMemObject;

@@ -90,9 +90,9 @@ set(SOURCES
     UserDataContainer.cpp
     ViewContainer.cpp
 )
-include(GenerateExportHeader)
 add_library(MapEditor SHARED ${SOURCES})
-generate_export_header(MapEditor EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MapEditor_export.h)
+add_stdafx_pch(MapEditor)
+add_export_header(MapEditor)
 target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Scintilla Script System winapi)
 install(TARGETS MapEditor DESTINATION bin)
 add_version_info(MapEditor)

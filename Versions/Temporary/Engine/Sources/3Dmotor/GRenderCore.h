@@ -116,7 +116,7 @@ public:
 	};
 	
 	virtual CFuncBase<SPerVertexLightState> *GetLightState() const = 0;
-	virtual void FormPartList( CTransformStack *pTS, std::list<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask ) = 0;
+	virtual void FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask ) = 0;
 	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes ) = 0;
 	virtual void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender ) = 0;
 	virtual void GetNotLoaded( std::vector<IPart*> *pRes ) = 0;

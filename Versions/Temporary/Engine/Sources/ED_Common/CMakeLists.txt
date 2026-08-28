@@ -32,9 +32,9 @@ set(SOURCES
     WindowSimpleSharedEditor.cpp
     WindowSimpleSharedState.cpp
 )
-include(GenerateExportHeader)
 add_library(ED_Common SHARED ${SOURCES})
-generate_export_header(ED_Common EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ED_Common_export.h)
+add_stdafx_pch(ED_Common)
+add_export_header(ED_Common)
 target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc System stingray winapi)
 install(TARGETS ED_Common DESTINATION bin)
 add_version_info(ED_Common)

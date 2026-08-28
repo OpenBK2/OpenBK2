@@ -109,9 +109,9 @@ set(SOURCES
     WorldClient.cpp
     WorldClientActions.cpp
 )
-include(GenerateExportHeader)
 add_library(GameX SHARED ${SOURCES})
-generate_export_header(GameX EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/GameX_export.h)
+add_export_header(GameX)
+add_stdafx_pch(GameX)
 target_link_libraries(GameX PRIVATE 3DLib 3Dmotor AILogic B2_M1_World Client Common_RTS_AI DebugTools Image Input libdb Main MemoryLib Misc Net SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib winapi)
 install(TARGETS GameX DESTINATION bin)
 add_version_info(GameX)

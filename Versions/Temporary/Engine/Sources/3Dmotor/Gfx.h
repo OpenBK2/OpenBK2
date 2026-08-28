@@ -79,7 +79,7 @@ _3DMOTOR_EXPORT bool Is3DActive();
 _3DMOTOR_EXPORT void SetGamma( bool bGamma );
 _3DMOTOR_EXPORT void SetGammaRamp( const std::vector<NGfx::SPixel8888> &ramp );
 bool SetMode( const SVideoMode &m_, const SRenderTargetsInfo &_rtInfo );
-_3DMOTOR_EXPORT void GetModesList( std::list<SVideoMode> *pRes, int nBpp = 32 );
+_3DMOTOR_EXPORT void GetModesList( std::vector<SVideoMode> *pRes, int nBpp = 32 );
 int GetMaxAnisotropicLevel();
 _3DMOTOR_EXPORT CVec2 GetScreenRect();
 void Flip();

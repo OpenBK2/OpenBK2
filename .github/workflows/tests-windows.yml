@@ -1,0 +1,144 @@
+name: tests
+
+# Separate from build-windows.yml on purpose. That workflow's job is to prove the game
+# still builds and to publish artifacts; this one runs the unit tests and benchmarks,
+# which are EXCLUDE_FROM_ALL and so are never built by it.
+
+on:
+  push:
+    branches: [ port, netcode_bugfixes ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-2025-vs2026
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # x86 runs the whole suite. Several tests still compare against inline __asm,
+          # which MSVC accepts on x86 only, so x64 registers a subset - see
+          # 3Dmotor/test/CMakeLists.txt.
+          - preset: Windows-x86-Debug
+            arch: x86
+          - preset: Windows-x64-Debug
+            arch: x64
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      # MSVC, Ninja and the DirectX SDK. 3Dmotor links dxsdk::d3d9, and the tests link
+      # 3Dmotor, so they need the SDK exactly as the game build does.
+      - uses: ./.github/actions/setup-windows-build
+        with:
+          arch: ${{ matrix.arch }}
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build tests
+        # add_unit_test puts every test into this aggregate target, so a new test needs
+        # no change here. -k 0 goes after --, since it is Ninja's keep-going flag and not
+        # a cmake --build option; cmake prints its usage and does nothing otherwise.
+        run: cmake --build out/build/${{ matrix.preset }} --parallel --target unittests -- -k 0
+
+      - name: Run tests
+        run: >
+          ctest --test-dir out/build/${{ matrix.preset }}
+          -L obk2-test --output-on-failure
+          --output-junit ${{ github.workspace }}/tests-${{ matrix.arch }}.xml
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tests-${{ matrix.arch }}
+          path: tests-${{ matrix.arch }}.xml
+
+  benchmark:
+    runs-on: windows-2025-vs2026
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: ./.github/actions/setup-windows-build
+        with:
+          arch: x64
+
+      - name: Configure
+        # Release, because these compare a scalar reference against SIMD and a debug
+        # build reverses the answer: templated code gets no inlining at /Od.
+        run: cmake --preset Windows-x64-Release
+
+      - name: Build benchmarks
+        # Same idea: register_benchmark adds each one to this target.
+        run: cmake --build out/build/Windows-x64-Release --parallel --target benchmarks -- -k 0
+
+      - name: Run benchmarks
+        # ctest runs them by label and each writes its own JSON, whose path CMake baked
+        # in. Everything else is tuned through Google Benchmark environment variables,
+        # so the flags are not repeated per benchmark: short and repeated, because a
+        # shared runner is noisy and a median of a few beats one long run.
+        env:
+          BENCHMARK_MIN_TIME: 0.05s
+          BENCHMARK_REPETITIONS: 3
+          BENCHMARK_REPORT_AGGREGATES_ONLY: 1
+        run: >
+          ctest --test-dir out/build/Windows-x64-Release
+          -L obk2-benchmark --output-on-failure
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmarks
+          path: out/build/Windows-x64-Release/benchmark-results/
+
+  report:
+    needs: [ test, benchmark ]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Render report
+        run: |
+          python scripts/ci_report.py \
+            --junit "artifacts/tests-x86/tests-x86.xml=Windows x86 Debug" \
+                    "artifacts/tests-x64/tests-x64.xml=Windows x64 Debug" \
+            --benchmark-dir "artifacts/benchmarks=Windows x64 Release" \
+            --title "Unit tests and benchmarks" > report.md
+          cat report.md
+
+      - name: Comment on the pull request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('report.md', 'utf8');
+            // One comment per pull request, edited in place, so a branch with many
+            // pushes does not accumulate a wall of near-identical tables.
+            const marker = '<!-- obk2-test-report -->';
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            const payload = marker + '\n' + body;
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body: payload,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body: payload,
+              });
+            }

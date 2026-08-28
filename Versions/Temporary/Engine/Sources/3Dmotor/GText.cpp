@@ -96,7 +96,7 @@ private:
 	SState sState;
 	SFontInfo sFontInfo;
 	EAlignStyle eAlignStyle;
-	std::list<SChunk> chunksList;
+	std::vector<SChunk> chunksList;
 	CTPoint<int> sSize;
 	CTPoint<float> sRealSize;
 public:
@@ -417,7 +417,7 @@ struct SWString
 	SWString( ECharType _eType, const std::wstring &_wsString ): eType( _eType ), wsString( _wsString ) {}
 };
 
-void SplitString( const std::wstring &wsString, std::list<SWString> *pParts )
+void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )
 {
 	int nTemp = 0, nWordBegin = 0;
 	bool bBracketsBlock = false;
@@ -454,11 +454,11 @@ void SplitString( const std::wstring &wsString, std::list<SWString> *pParts )
 
 void CTextFormater::TagFont( const std::wstring &wsTag )
 {
-	std::list<SWString> partsList;
+	std::vector<SWString> partsList;
 	SplitString( wsTag, &partsList );
 
 	SFont sNewFont( sState.sFont );
-	for ( std::list<SWString>::iterator iTemp = partsList.begin(); iTemp != partsList.end(); iTemp++ )
+	for ( std::vector<SWString>::iterator iTemp = partsList.begin(); iTemp != partsList.end(); iTemp++ )
 	{
 		if ( iTemp->eType != CHAR_ALNUM )
 			continue;
@@ -518,10 +518,10 @@ void CTextFormater::TagFont( const std::wstring &wsTag )
 
 void CTextFormater::TagColor( const std::wstring &wsTag )
 {
-	std::list<SWString> partsList;
+	std::vector<SWString> partsList;
 	SplitString( wsTag, &partsList );
 
-	std::list<SWString>::iterator iTemp = partsList.begin();
+	std::vector<SWString>::iterator iTemp = partsList.begin();
 	iTemp++;
 	if ( ( iTemp->eType != CHAR_PUNCTUATION ) || ( iTemp->wsString.compare( L"=" ) != 0 ) )
 		return;

@@ -4,9 +4,9 @@ set(SOURCES
     MapEditorModule.cpp
     stdafx.cpp
 )
-include(GenerateExportHeader)
 add_library(ED_RTS SHARED ${SOURCES})
-generate_export_header(ED_RTS EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ED_RTS_export.h)
+add_stdafx_pch(ED_RTS)
+add_export_header(ED_RTS)
 target_link_libraries(ED_RTS PRIVATE MapEditorLib MemoryLib Misc SceneB2 System winapi)
 install(TARGETS ED_RTS DESTINATION bin)
 add_version_info(ED_RTS)

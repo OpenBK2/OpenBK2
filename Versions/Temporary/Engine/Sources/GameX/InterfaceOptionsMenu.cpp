@@ -539,18 +539,18 @@ void CInterfaceOptionsMenu::OnControlChange( const std::string &szSender )
 				pButtonControl = dynamic_cast<IButton*>( pWindow );
 				if ( pOption->szProgName == "gfx_resolution" )
 				{
-					std::list<NGfx::SVideoMode> modeList;
+					std::vector<NGfx::SVideoMode> modeList;
 					NGfx::GetModesList( &modeList, 32 );
-					std::list<std::string> resolutions;
-					for ( std::list<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
+					std::vector<std::string> resolutions;
+					for ( std::vector<NGfx::SVideoMode>::iterator it = modeList.begin(); it != modeList.end(); ++it )
 					{
 						if ( it->nXSize > 600 && it->nYSize > 450 )
 							resolutions.push_back( StrFmt( "%dx%d", it->nXSize, it->nYSize ) );
 					}
 					const NGlobal::CValue resolutionValue = NGlobal::GetVar( "gfx_resolution", "1024x768" );
 					const std::string szCurrentMode = NStr::ToMBCS( resolutionValue.GetString() );
-					std::list<std::string>::iterator nextModeIt = resolutions.end();
-					for ( std::list<std::string>::iterator it = resolutions.begin(); it != resolutions.end(); ++it )
+					std::vector<std::string>::iterator nextModeIt = resolutions.end();
+					for ( std::vector<std::string>::iterator it = resolutions.begin(); it != resolutions.end(); ++it )
 					{
 						if ( *it == szCurrentMode )
 						{

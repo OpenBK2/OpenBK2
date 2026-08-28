@@ -456,7 +456,22 @@ void CBasicGun::WaitForActionPoint()
 		pCommonGunInfo->lastShoot = curTime - GetFireRate();
 
 		vLastShotPoint = CVec3( target, z );
-		// Non-grenade shot effects are sent after each actual Fire() call in Shooting().
+
+		// Preserve the legacy one-effect-per-burst behavior unless this unit type or
+		// weapon explicitly requests a visual event for every shot.
+		const bool bPlayAllBurstEffects = pWeapon->bForcePlayAllBurstEffects ||
+			pOwner->GetStats()->etype == RPG_TYPE_ART_AAGUN ||
+			pOwner->GetStats()->etype == RPG_TYPE_ART_ROCKET;
+		if ( !bPlayAllBurstEffects )
+		{
+			if ( pOwner->GetStats()->IsInfantry() )
+			{
+				if ( pCommonGunInfo->nGun != 1 ) // animation for grenades is played in advance
+					updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, -1 );
+			}
+			else
+				updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
+		}
 	}
 }
 
@@ -479,9 +494,12 @@ void CBasicGun::Shooting()
 
 	// время для выстрела и ещё есть патроны в очереди
 
+	const bool bPlayAllBurstEffects = pWeapon->bForcePlayAllBurstEffects ||
+		pOwner->GetStats()->etype == RPG_TYPE_ART_AAGUN ||
+		pOwner->GetStats()->etype == RPG_TYPE_ART_ROCKET;
+
 	while ( curTime - pCommonGunInfo->lastShoot >= GetFireRate() && nShotsLast > 0 && pCommonGunInfo->nAmmo > 0 )
 	{
-		const bool bFirstShotInBurst = nShotsLast == pWeapon->nAmmoPerBurst;
 		bool bShowBombEffect = true;
 		if ( pOwner && pOwner->GetStats() &&
 			( pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER || pOwner->GetStats()->etype == NDb::RPG_TYPE_AVIA_STRAT_BOMBER ) &&
@@ -510,19 +528,20 @@ void CBasicGun::Shooting()
 			}
 		}
 
+		if ( bPlayAllBurstEffects )
+		{
+			if ( pOwner->GetStats()->IsInfantry() )
+			{
+				if ( pCommonGunInfo->nGun != 1 ) // grenade animation/effect is started in advance
+					updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, -1 );
+			}
+			else
+				updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, -1 );
+		}
+
 		--nShotsLast;
 
 		pCommonGunInfo->lastShoot += GetFireRate();
-
-		// Emit one visual event per successful logical shot for every owner type. The
-		// exact scheduled time preserves burst spacing when several shots share an AI tick.
-		if ( pOwner->GetStats()->IsInfantry() )
-		{
-			if ( pCommonGunInfo->nGun != 1 ) // grenade animation/effect is started in advance
-				updater.AddUpdate( 0, ACTION_NOTIFY_INFANTRY_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
-		}
-		else
-			updater.AddUpdate( 0, ACTION_NOTIFY_MECH_SHOOT, this, bFirstShotInBurst ? 1 : 0, pCommonGunInfo->lastShoot );
 		
 		// Subtract appropriate number of shells
 		pCommonGunInfo->nAmmo -= (std::min)( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );

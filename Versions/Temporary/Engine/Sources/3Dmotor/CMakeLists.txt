@@ -44,6 +44,10 @@ set(SOURCES
     GLightmapCalc.cpp
     GLightmapLoader.cpp
     GLightPerVertex.cpp
+    GLightPerVertexAVX2.cpp
+    GLightPerVertexDispatch.cpp
+    GLightPerVertexRef.cpp
+    GLightPerVertexSSE2.cpp
     GLMLightState.cpp
     GLocale.cpp
     GMaterial.cpp
@@ -104,13 +108,30 @@ set(SOURCES
     VolumeContainer.cpp
     WindDeformer.cpp
 )
-include(GenerateExportHeader)
 add_library(3Dmotor SHARED ${SOURCES})
-generate_export_header(3Dmotor EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/3Dmotor_export.h)
+add_export_header(3Dmotor)
+add_stdafx_pch(3Dmotor)
 target_link_libraries(3Dmotor PRIVATE 3DLib Image libdb MemoryLib Misc System zlib granny::granny dxsdk::d3d9 dxsdk::d3dx9 dxsdk::dxerr dxsdk::dxguid winapi Boost::sort fmt::fmt-header-only)
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only)
 install(TARGETS 3Dmotor DESTINATION bin)
 add_version_info(3Dmotor)
+
+# GLightPerVertexAVX2.cpp is the only translation unit allowed to contain AVX2
+# instructions, and it is reached only through avx2LightingKernels after
+# GetLightingKernels() has confirmed CPUID and XGETBV agree. Applying /arch:AVX2
+# any wider than this single file would put AVX2 code on paths that run before
+# and without that check.
+if(MSVC)
+    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+else()
+    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "-mavx2")
+endif()
+
+# GLightPerVertexAVX2.cpp is the only source in this target with a compile line
+# of its own, and MSVC rejects a translation unit whose options disagree with
+# the ones the precompiled header was built on (C2855). The file includes
+# stdafx.h itself, so dropping the PCH costs it only the parse.
+set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
 add_subdirectory(test)
 add_subdirectory(benchmark)

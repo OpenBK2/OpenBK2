@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "MemoryLib/MemoryLib_export.h"
+#include "MemoryLib_export.h"
 
 #include "UI/UI.h"
 #include "Misc/StrProc.h"

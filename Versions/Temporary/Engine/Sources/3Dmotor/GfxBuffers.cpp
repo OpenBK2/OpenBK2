@@ -17,7 +17,7 @@ static void OnThrashing();
 
 // INew2DTexAllocCallback
 
-static std::list<INew2DTexAllocCallback*> alloc2Dcallback;
+static std::vector<INew2DTexAllocCallback*> alloc2Dcallback;
 INew2DTexAllocCallback::INew2DTexAllocCallback()
 {
 	alloc2Dcallback.push_back( this );
@@ -25,17 +25,20 @@ INew2DTexAllocCallback::INew2DTexAllocCallback()
 
 INew2DTexAllocCallback::~INew2DTexAllocCallback()
 {
-	alloc2Dcallback.remove( this );
+	// alloc2Dcallback.remove( this );
+	auto this_pos = std::find(alloc2Dcallback.begin(), alloc2Dcallback.end(), this);
+	if ( this_pos != alloc2Dcallback.end() )
+		alloc2Dcallback.erase(this_pos);
 }
 
 static void InformNew2DTextureAlloc()
 {
-	for ( std::list<INew2DTexAllocCallback*>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
+	for ( std::vector<INew2DTexAllocCallback*>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
 		(*i)->NewTextureWasAllocated();
 }
 
 
-static std::list<CPtr<CLockable> > lockableList;
+static std::vector<CPtr<CLockable> > lockableList;
 bool bWasLinearBufferLock;
 
 template <class T>
@@ -48,7 +51,7 @@ T* RegisterDXBuffer( T *p )
 void FreeLinearBuffers()
 {
 	EraseInvalidRefs( &lockableList );
-	for ( std::list<CPtr<CLockable> >::iterator i = lockableList.begin(); i != lockableList.end(); )
+	for ( std::vector<CPtr<CLockable> >::iterator i = lockableList.begin(); i != lockableList.end(); )
 	{
 		CLockable *p = *i;
 		if ( IsValid( p ) )
@@ -80,7 +83,7 @@ class CLinearBuffer : public CObjectBase
 	{
 		std::vector<CObj<TUserObject> > data;
 	};
-	std::list<SBuffersPerFrame> frames;
+	std::deque<SBuffersPerFrame> frames;
 public:
 	CLinearBuffer() {}
 	CLinearBuffer( int _nSize, int _nStride, int _nFormatID, ETrueBufferUsage usage ) : nFormatID(_nFormatID), nStride(_nStride), bIsThrashing(false)
@@ -309,7 +312,7 @@ class CTriListWrapper;
 class CTriListWrapperHandle
 {
 	int nSlowCheck;
-	std::list<CMObj<CTriListWrapper> > wrappers;
+	std::vector<CMObj<CTriListWrapper> > wrappers;
 public:
 	template<class T>
 	CTriListWrapper* NewWrapper( T *pThis, int nTris )
@@ -910,7 +913,7 @@ class CLRUBuffersSet
 
 		STex( TBuf *_pTB ): pTB(_pTB) {}
 	};
-	std::list<STex> textures;
+	std::vector<STex> textures;
 protected:
 	void AddBuffer( TBuf *_pTB ) { textures.push_back( STex( _pTB ) ); }
 	virtual THandle* CreateHandle( TBuf *p ) = 0;
@@ -918,7 +921,7 @@ public:
 	void Clear() { textures.clear(); }
 	void Walk()
 	{
-		for ( std::list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			ASSERT( IsValid( i->pTB ) );
 			if ( !IsValid( i->pTexture ) )
@@ -930,7 +933,7 @@ public:
 		// pick best
 		NCache::MRU_TYPE nBest = nCurrentFrame - 1; //MRU_LAST;
 		STex *pBest = 0;
-		for ( std::list<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
+		for ( std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
 		{
 			if ( !IsValid( i->pTexture ) )
 			{
@@ -1267,8 +1270,8 @@ struct SGeometryTypeHash
 
 
 // all DX buffers
-static std::list< CMObj<CObjectBase> > lostable;
-static std::list< CMObj<CObjectBase> > managed;
+static std::vector< CMObj<CObjectBase> > lostable;
+static std::vector< CMObj<CObjectBase> > managed;
 typedef std::unordered_map<CPtr<CTB>, CObj<CTexture>> CTexContainerHash;
 static CTexContainerHash texContainers;
 typedef std::unordered_map<SRenderTargetDesc, CTextureBuffersSet, SRTDescHash> CRTCache;
@@ -1823,7 +1826,7 @@ void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *_pSr
 int CalcTouchedTextureSize()
 {
 	int nRes = 0;
-	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::vector< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
@@ -1835,7 +1838,7 @@ int CalcTouchedTextureSize()
 int CalcTotalTextureSize( int *pnTexturesCount )
 {
 	int nRes = 0, nCount = 0;
-	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::vector< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) )
@@ -1852,7 +1855,7 @@ int CalcTotalTextureSize( int *pnTexturesCount )
 int CalcTouchedTextureSizeNotSetMip( int nMip )
 {
 	int nRes = 0;
-	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::vector< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
@@ -1863,7 +1866,7 @@ int CalcTouchedTextureSizeNotSetMip( int nMip )
 
 void SetLODToAllTextures( int nLOD )
 {
-	for ( std::list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
+	for ( std::vector< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) )

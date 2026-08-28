@@ -7,6 +7,8 @@
 #include "GSSETransform.h"
 #include "3DLib/Bound.h"
 
+#include "GLightPerVertexKernels.h"
+
 #include <algorithm>
 
 template<class T>
@@ -148,6 +150,12 @@ static void MultiplyOnColor( std::vector<DWORD> *pRes, const std::vector<DWORD> 
 // calc colors
 
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x * b.x, a.y * b.y, a.z * b.z ); }
+
+// Adapters between the engine's std::vector based call sites and the kernel table.
+// They own every allocation and every float-to-fixed conversion, so the kernel
+// translation units stay free of std::vector and CArray2D - see the note in
+// GLightPerVertexKernels.h for why that matters to the AVX2 build.
+
 static void CalcDirectionalLighting(
 	const std::vector<WORD> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals,
@@ -156,103 +164,15 @@ static void CalcDirectionalLighting(
 {
 	pResColors->resize( posIndices.size() );
 	pResShadow->resize( posIndices.size() );
-	DWORD dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
-	const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
-	NGfx::SMMXWord transHolder{};
+	if ( posIndices.empty() )
+		return;
+	NGfx::SMMXWord translucentShade = ls.shadeColor;
 	if ( bTranslucent )
-	{
-		ConvertColor( &transHolder, MulPerComp( ls.vLightColor, vTranslucentColor ) );
-		pTranslucentShade = &transHolder;
-	}
-	for ( int k = 0; k < posIndices.size(); ++k )
-	{
-		DWORD dwNormal = _normals[k].dw;
-		if ( dwNormal != dwPrevNormal )
-		{
-			uint64_t normal = mmx::punpcklbw(dwNormal, dwNormal);
-
-			auto combine_mmx_word = [](auto w) { return mmx::combine64(w.nZ, w.nY, w.nX, w.nW); };
-
-			uint64_t shift = combine_mmx_word(ls.shift);
-			uint64_t shadeColor = combine_mmx_word(ls.shadeColor);
-			uint64_t dirLight = combine_mmx_word(ls.dirLight);
-			uint64_t ambient = combine_mmx_word(ls.ambient);
-			uint64_t lightColor = combine_mmx_word(ls.lightColor);
-			uint64_t incidentShadowColor = combine_mmx_word(ls.incidentShadowColor);
-			uint64_t translucentShade = combine_mmx_word(*pTranslucentShade);
-			uint64_t vResShadow = ambient;
-			uint64_t vRes = ambient;
-
-			uint64_t shifted_normal = mmx::psubw(normal, shift);
-			shifted_normal = mmx::pmaddwd(shifted_normal, dirLight);
-			uint64_t normal_high = mmx::psrlq(shifted_normal, 32);
-			shifted_normal = mmx::paddd(shifted_normal, normal_high);
-			shifted_normal = mmx::psrad(shifted_normal, 15);
-			shifted_normal = mmx::punpcklwd(shifted_normal, shifted_normal);
-			shifted_normal = mmx::punpckldq(shifted_normal, shifted_normal);
-			uint64_t sign = mmx::psraw(shifted_normal, 16);
-			uint64_t negative_f = mmx::pand(shifted_normal, sign);
-			uint64_t f = mmx::pandn(sign, shifted_normal);
-			const uint64_t mask = 0xFFFF'FFFF'FFFF'FFFFULL;
-			negative_f = mmx::pxor(negative_f, mask);
-
-			lightColor = mmx::pmulhw(lightColor, f);
-			incidentShadowColor = mmx::pmulhw(incidentShadowColor, f);
-			translucentShade = mmx::pmulhw(translucentShade, negative_f);
-			shadeColor = mmx::pmulhw(shadeColor, negative_f);
-
-			vRes = mmx::paddw(vRes, lightColor);
-			vResShadow = mmx::paddw(vResShadow, incidentShadowColor);
-			vRes = mmx::paddw(vRes, translucentShade);
-			vResShadow = mmx::paddw(vResShadow, shadeColor);
-			vRes = mmx::psraw(vRes, 4);
-			vResShadow = mmx::psraw(vResShadow, 4);
-
-			dwColor = mmx::packuswb(vRes, vRes);
-			dwShadowColor = mmx::packuswb(vResShadow, vResShadow);
-		}
-
-		(*pResColors)[k] = dwColor;
-		(*pResShadow)[k] = dwShadowColor;
-		dwPrevNormal = dwNormal;
-	}
+		ConvertColor( &translucentShade, MulPerComp( ls.vLightColor, vTranslucentColor ) );
+	GetLightingKernels().pCalcDirectionalLighting(
+		&_normals[0], posIndices.size(), ls, translucentShade,
+		&(*pResColors)[0], &(*pResShadow)[0] );
 }
-
-// sample fog of war array with bilinear filteration and store result to pRes
-#pragma warning( disable : 4799 )
-static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
-{
-	ASSERT( fog.GetSizeX() == fog.GetSizeY() );
-	ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
-	uint64_t zero = 0;
-	unsigned char *pRes = &(*_pRes)[0];
-	int nMask = fog.GetSizeX() - 2;
-	for ( const int *pTmp = &intCoords[0], *pTmpEnd = pTmp + nVertices * 2; pTmp < pTmpEnd; pTmp += 2, ++pRes )
-	{
-		int nY = pTmp[1];
-		int nYU = ( nY >> 14 ) & nMask;
-		int nYfi = nY & 0x3fff;
-		uint64_t nYf = ( 0x4000 - nYfi ) | (nYfi << 16);
-		int nX = pTmp[0];
-		int nXL = ( nX >> 14 ) & nMask;
-		int nXfi = nX & 0x3fff;
-		uint64_t nXf = ( 0x4000 - nXfi ) | (nXfi << 16) ;
-		const unsigned char *pUp = (&fog[nYU][0]) + nXL;
-		const unsigned char *pDown = pUp + nMask + 2;
-
-		uint64_t nData = mmx::punpckldq(
-			mmx::punpcklbw(  *(unsigned short*)pUp , zero ),
-			mmx::punpcklbw(  *(unsigned short*)pDown , zero )
-			);
-		nXf = mmx::punpckldq( nXf, nXf );
-		nData = mmx::pmaddwd( nData, nXf );
-		nData = mmx::psrad( nData, 14 );
-		nData = mmx::packssdw( nData, zero );
-		nData = mmx::pmaddwd( nData, nYf );
-		*pRes = nData >> 14;
-	}
-}
-#pragma warning( default : 4799 )
 
 static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
 	std::vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
@@ -269,68 +189,36 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::v
 	if ( tmp.size() < nVertices * 2 )
 		tmp.resize( nVertices * 2 );
 
-	// calc integer x & y
-	float fpScale = fScale * 0x4000;
+	const SLightingKernels &kernels = GetLightingKernels();
+	kernels.pSampleWarFogCoords( &srcPos[0], nVertices, fScale, &tmp[0] );
 
-	int *out = tmp.data();
-	for (const CVec3 &v : srcPos) {
-		*out++ = static_cast<int>(std::lrintf(v.x * fpScale));
-		*out++ = static_cast<int>(std::lrintf(v.y * fpScale));
-	}
-
-	SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
+	ASSERT( fog1.GetSizeX() == fog1.GetSizeY() );
+	kernels.pSampleWarFogInt( &tmp[0], &fog1[0][0], fog1.GetSizeX(), &(*_pRes1)[0], nVertices );
 	if ( _pRes2 )
-		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
+	{
+		ASSERT( fog2.GetSizeX() == fog2.GetSizeY() );
+		kernels.pSampleWarFogInt( &tmp[0], &fog2[0][0], fog2.GetSizeX(), &(*_pRes2)[0], nVertices );
+	}
 }
 
-const float F_PL_RADIUS2 = 64;
-const float F_PL_MIN_DISTANCE_NORMALIZED = 0.25f;
-const int N_PL_ATTENUATION_SCALE = 8191;
 static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes, const std::vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
 {
 	int nSize = srcPos.size();
 	pRes->resize( nSize );
-	float fScale = F_PL_RADIUS2 / sqr( _fRadius );
-	for ( int k = 0; k < nSize; ++k )
-	{
-		CVec3 v = _vCenter - srcPos[k];
-		float f = fabs2( v );
-		float fCut = (std::max)( 0.0f, sqr(_fRadius) - f ) * ( 1 / sqr(_fRadius ) );
-		float fAttenuation = fCut / ( f * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / sqrt( f );
-		NGfx::SMMXWord &n = (*pRes)[k];
-		n.nX = Float2Int( v.x * fAttenuation * N_PL_ATTENUATION_SCALE );
-		n.nY = Float2Int( v.y * fAttenuation * N_PL_ATTENUATION_SCALE );
-		n.nZ = Float2Int( v.z * fAttenuation * N_PL_ATTENUATION_SCALE );
-		n.nW = 0;
-	}
+	if ( nSize == 0 )
+		return;
+	GetLightingKernels().pCalcPointLightAttenuation(
+		&(*pRes)[0], &srcPos[0], nSize, _vCenter, _fRadius );
 }
 
-static void CalculateLightColor(uint32_t dwNormal, uint64_t shift, uint64_t shift1, uint64_t lightColor, uint64_t att, NGfx::SMMXWord *pResColor) {
-
-	uint64_t resColor = mmx::combine64( pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW );
-
-	uint64_t normal = mmx::punpcklbw(dwNormal, dwNormal);
-	normal = mmx::psubw(normal, shift);
-	normal = mmx::pmaddwd(normal, att);
-	uint64_t normal_high = mmx::psrlq(normal, 32);
-	normal = mmx::paddd(normal, normal_high);
-	normal = mmx::psrad(normal, 15);
-	normal = mmx::packssdw(normal, normal);
-	normal = mmx::punpcklwd(normal, normal);
-	normal = mmx::punpckldq(normal, normal);
-	uint64_t mask = mmx::pcmpgtw(normal, 0);
-	normal = mmx::pand(normal, mask);
-	uint64_t low = mmx::pmullw(normal, lightColor);
-	uint64_t high = mmx::pmulhw(normal, lightColor);
-	uint64_t unpacked_low = mmx::punpcklwd(low, high);
-	uint64_t unpacked_high = mmx::punpckhwd(low, high);
-	unpacked_low = mmx::paddd(unpacked_low, shift1);
-	unpacked_high = mmx::paddd(unpacked_high, shift1);
-	unpacked_low = mmx::psrad(unpacked_low, 13);
-	unpacked_high = mmx::psrad(unpacked_high, 13);
-	uint64_t result = mmx::packssdw(unpacked_low, unpacked_high);
-	result = mmx::paddsw(result, resColor);
-	mmx::split64(result, pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW);
+static NGfx::SMMXWord MakePointLightColor( const CVec3 &vColor )
+{
+	NGfx::SMMXWord lightColor{};
+	lightColor.nX = Float2Int( vColor.x * 32767 );
+	lightColor.nY = Float2Int( vColor.y * 32767 );
+	lightColor.nZ = Float2Int( vColor.z * 32767 );
+	lightColor.nW = 0;
+	return lightColor;
 }
 
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
@@ -338,94 +226,48 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const std::vector<NGfx::SCompactVector> &_normals,
 	const CVec3 &_vColor )
 {
-	uint64_t shift = mmx::combine64(static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), 0);
-	uint64_t shift1 = mmx::combine64(1 << 12, 0, 1 << 12, 0);
-	uint64_t lightColor = mmx::combine64( Float2Int( _vColor.z * 32767 ), Float2Int( _vColor.y * 32767 ), Float2Int( _vColor.x * 32767 ), 0 );
-
-	for ( int k = 0; k < posIndices.size(); ++k )
-	{
-		DWORD dwNormal = _normals[k].dw;
-		const NGfx::SMMXWord *pAtt = &attenuation[ posIndices[k] ];
-		uint64_t att = mmx::combine64( pAtt->nZ, pAtt->nY, pAtt->nX, pAtt->nW );
-
-		NGfx::SMMXWord *pResColor = &(*pRes)[k];
-		CalculateLightColor(dwNormal, shift, shift1, lightColor, att, pResColor);
-	}
+	if ( posIndices.empty() )
+		return;
+	GetLightingKernels().pCalcPointLightColorsIndexed(
+		&(*pRes)[0], &attenuation[0], &posIndices[0], &_normals[0],
+		posIndices.size(), MakePointLightColor( _vColor ) );
 }
 
 static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 	const NGfx::SMMXWord &attenuation, const SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
 {
-	uint64_t shift = mmx::combine64(static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), static_cast<int16_t>(0x8000), 0);
-	uint64_t shift1 = mmx::combine64(1 << 12, 0, 1 << 12, 0);
-	uint64_t lightColor = mmx::combine64( Float2Int( _vColor.z * 32767 ), Float2Int( _vColor.y * 32767 ), Float2Int( _vColor.x * 32767 ), 0 );
-
-	DWORD dwPrevNormal = 0;
-	NGfx::SMMXWord prevColor{};
-	const NGfx::SMMXWord *pAtt = &attenuation;
-	for ( int k = 0; k < _nSize; ++k )
-	{
-		DWORD dwNormal = pSrc[k].normal.dw;
-		NGfx::SMMXWord *pResColor = &(*pRes)[k];
-		if ( dwNormal != dwPrevNormal )
-		{
-			uint64_t att = mmx::combine64( pAtt->nZ, pAtt->nY, pAtt->nX, pAtt->nW );
-			NGfx::SMMXWord *pResColor = &(*pRes)[k];
-
-			CalculateLightColor(dwNormal, shift, shift1, lightColor, att, pResColor);
-			dwPrevNormal = dwNormal;
-		}
-		else
-		{
-			uint64_t resColor = mmx::combine64( pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW );
-			uint64_t prev = mmx::combine64( prevColor.nZ, prevColor.nY, prevColor.nX, prevColor.nW );
-			resColor = mmx::paddsw(resColor, prev);
-			mmx::split64(resColor, pResColor->nZ, pResColor->nY, pResColor->nX, pResColor->nW);
-		}
-	}
+	if ( _nSize <= 0 )
+		return;
+	// The kernel walks normals with a stride, so it never needs to know SUVInfo.
+	GetLightingKernels().pCalcPointLightColorsUniform(
+		&(*pRes)[0], attenuation, &pSrc[0].normal, sizeof( SUVInfo ), _nSize,
+		MakePointLightColor( _vColor ) );
 }
 
 static void AddColors( std::vector<DWORD> *pRes, const std::vector<DWORD> &src, const std::vector<NGfx::SMMXWord> &add )
 {
 	ASSERT( pRes->size() >= add.size() );
 	ASSERT( src.size() >= add.size() );
-	int nSize = add.size();
-	DWORD *pResPtr = &(*pRes)[0];
-	const DWORD *pSrcPtr = &src[0];
-	const NGfx::SMMXWord *pAdd = &add[0];
+	if ( add.empty() )
+		return;
+	// pRes and src alias at two call sites; every kernel reads a block before it
+	// writes that same block, so in-place accumulation is safe.
+	GetLightingKernels().pAddColors( &(*pRes)[0], &src[0], &add[0], add.size() );
+}
 
-	uint64_t mask = 0x4000'4000'4000'4000ULL;
-
-	for ( DWORD *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
-	{
-		DWORD dwColor = *pSrcPtr;
-		uint64_t addColor = mmx::combine64(pAdd->nZ, pAdd->nY, pAdd->nX, pAdd->nW);
-
-		uint64_t color = mmx::punpcklbw(dwColor, dwColor);
-		color = mmx::psrlw(color, 1);
-		uint64_t color_square = mmx::pmulhw(color, color);
-		color_square = mmx::psllw(color_square, 1);
-		uint64_t color_cube_high = mmx::pmulhw(color_square, color);
-		uint64_t color_cube_low = mmx::pmullw(color_square, color);
-		color_cube_high = mmx::psllw(color_cube_high, 1);
-		color_cube_high = mmx::paddsw(color_cube_high, addColor);
-		color_cube_high = mmx::psrlw(color_cube_high, 1);
-		color_cube_low = mmx::psrlw(color_cube_low, 2);
-		color_cube_low = mmx::por(color_cube_low, mask);
-		uint64_t eq = mmx::pcmpeqw(color_cube_high, 0);
-		color_cube_low = mmx::pand(color_cube_low, eq);
-		color_cube_high = mmx::pandn(eq, color_cube_high);
-		uint64_t color_cube = mmx::por(color_cube_high, color_cube_low);
-		color_cube_high = mmx::psrlq(color_cube, 32);
-		uint32_t index1 = color_cube & 0x7FFF;
-		uint32_t index2 = (color_cube >> 16) & 0x7FFF;
-		uint32_t index3 = color_cube_high & 0x7FFF;
-		uint8_t c1 = nCubicRoot[index1];
-		uint8_t c2 = nCubicRoot[index2];
-		uint8_t c3 = nCubicRoot[index3];
-		dwColor = c1 | (c2 << 8) | (c3 << 16);
-		*pResPtr = dwColor;
-	}
+static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
+	unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
+	bool bMultiplyOnTransparency )
+{
+	int nSize = posIndices.size();
+	if ( pRes->size() < nSize )
+		pRes->resize( nSize );
+	if ( nSize == 0 )
+		return;
+	ASSERT( sizeof(DWORD) == sizeof(transp[0]) );
+	GetLightingKernels().pScaleColors(
+		&(*pRes)[0], _pSrc, nSrcStride, pScale, nScaleMask,
+		&posIndices[0], &transp[0], nSize, bMultiplyOnTransparency );
 }
 
 static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
@@ -749,53 +591,6 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	}
 	//NHPTimer::GetTime( &tFinish );
 	//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );
-}
-
-static void ScaleColors( std::vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride,
-	unsigned char *pScale, int nScaleMask, const std::vector<WORD> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
-	bool bMultiplyOnTransparency )
-{
-	int nSize = posIndices.size();
-	if ( pRes->size() < nSize )
-		pRes->resize( nSize );
-	DWORD *p = &(*pRes)[0], *pEnd = p + nSize;
-	const DWORD *pSrc = _pSrc;
-	ASSERT( sizeof(DWORD) == sizeof(transp[0]) );
-	const NGfx::SCompactVector *pTransp = &transp[0];
-	const WORD *pPosIndices = &posIndices[0];
-	NGfx::SMMXWord mTransp;
-	mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0x1ff;
-	uint64_t transparency = mmx::combine64(mTransp.nZ, mTransp.nY, mTransp.nX, mTransp.nW);
-
-	if ( bMultiplyOnTransparency )
-	{
-		mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0;
-	}
-	else
-	{
-		mTransp.nX = mTransp.nY = mTransp.nZ = 0x7fff; mTransp.nW = 0;
-	}
-	uint64_t multiplyTransparency = mmx::combine64(mTransp.nZ, mTransp.nY, mTransp.nX, mTransp.nW);
-
-	for ( ; p < pEnd; ++p, pSrc += nSrcStride / 4, ++pPosIndices, ++pTransp )
-	{
-		int nScaleIndex = (*pPosIndices) & nScaleMask;
-		uint64_t n = ((int) (pScale[ nScaleIndex ]) ) << 2;
-		uint64_t nScale = pTransp->w << 7;
-
-		uint64_t src = mmx::punpcklbw(*pSrc, *pSrc);
-		src = mmx::psrlw(src, 1);
-		n = mmx::punpcklwd(n, n);
-		n = mmx::punpckldq(n, n);
-		src = mmx::pmulhw(src, n);
-		src = mmx::por(src, transparency);
-		nScale = mmx::punpcklwd(nScale, nScale);
-		nScale = mmx::punpckldq(nScale, nScale);
-		nScale = mmx::por(nScale, multiplyTransparency);
-		src = mmx::pmulhw(src, nScale);
-		src = mmx::packuswb(src, src);
-		*p = src & 0xFFFFFFFFUL;
-	}
 }
 
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,

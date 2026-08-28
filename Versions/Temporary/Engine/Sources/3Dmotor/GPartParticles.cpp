@@ -16,7 +16,14 @@ CParticleEffect* CParticles::GetEffect()
 void CParticles::Unlink()
 {
 	if ( IsValid( pNode ) )
-		pNode->particles.remove( this );
+	{
+		std::vector<CPtr<CParticles> >::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
+		if ( i != pNode->particles.end() )
+		{
+			// Rendering may unlink this particle while iterating the vector; defer compaction until that pass ends.
+			*i = 0;
+		}
+	}
 	pNode = 0;
 }
 
@@ -36,7 +43,11 @@ bool CParticles::Update( CVolumeNode *pVolume )
 		{
 			pNewNode->particles.push_back( this );
 			if ( pNode )
-				pNode->particles.remove( this );
+			{
+				std::vector<CPtr<CParticles> >::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
+				if ( i != pNode->particles.end() )
+					pNode->particles.erase( i );
+			}
 			pNode = pNewNode;
 		}
 	}
@@ -44,4 +55,3 @@ bool CParticles::Update( CVolumeNode *pVolume )
 	return !pParticles->GetValue()->bEnd;
 }
 }
-

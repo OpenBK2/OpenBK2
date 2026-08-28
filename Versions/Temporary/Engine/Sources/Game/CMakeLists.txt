@@ -8,7 +8,9 @@ set(SOURCES
     dpi_aware.manifest
 )
 add_executable(Game WIN32 ${SOURCES})
-target_link_libraries(Game PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools GameX Image Input libdb Main MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib winapi)
+add_stdafx_pch(Game)
+# Keep mimalloc first so its Windows redirect is loaded before other runtime users.
+target_link_libraries(Game PRIVATE mimalloc 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools GameX Image Input libdb Main MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib winapi)
 target_link_libraries(Game PRIVATE crashpad_client)
 install(TARGETS Game DESTINATION bin)
 add_version_info(Game)

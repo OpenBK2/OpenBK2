@@ -12,9 +12,9 @@ set(SOURCES
     Profiles.cpp
     stdafx.cpp
 )
-include(GenerateExportHeader)
 add_library(Main SHARED ${SOURCES})
-generate_export_header(Main EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Main_export.h)
+add_stdafx_pch(Main)
+add_export_header(Main)
 target_link_libraries(Main PRIVATE Image Input libdb MemoryLib Misc Net System UI zlib winapi)
 install(TARGETS Main DESTINATION bin)
 add_version_info(Main)

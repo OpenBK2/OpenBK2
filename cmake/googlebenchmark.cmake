@@ -7,6 +7,11 @@ FetchContent_Declare(
         GIT_PROGRESS TRUE
 )
 
+# Same for googlebenchmark: we want the library, not its own test suite.
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(googlebenchmark)
 
 FetchContent_GetProperties(googlebenchmark SOURCE_DIR GOOGLEBENCHMARK_SOURCE_DIR)

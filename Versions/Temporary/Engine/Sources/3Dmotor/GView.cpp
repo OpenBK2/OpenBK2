@@ -213,7 +213,7 @@ class CGameView: public IGameView
 	OBJECT_BASIC_METHODS(CGameView);
 	ZDATA
 	CObj<IGScene> pScene;
-	std::list<CPtr<CRenderNode> > nodes; // if object is just created and no refs are stored it should not become leak
+	std::vector<CPtr<CRenderNode> > nodes; // if object is just created and no refs are stored it should not become leak
 	ZSKIP
 	//list<CPtr<CGrassTracker> > grassTrackers;
 	CObj<CMaterialShare> pMaterials;
@@ -233,9 +233,9 @@ class CGameView: public IGameView
 	ESceneRenderMode renderMode;
 	bool bForceFastest;
 	ZSKIP
-	std::list<CPtr<CRenderNode> > precacheObjects;
+	std::vector<CPtr<CRenderNode> > precacheObjects;
 	CObj<CFuncBase<STime> > pPrevLightTime;
-	std::list<CPtr<CObjectFader> > faders;
+	std::vector<CPtr<CObjectFader> > faders;
 	CObj<CObjectBase> pRain;
 	CObj<SDepthOfField> pDepthOfField;
 	CObj<ISkyDome> pSkyDome;
@@ -1019,7 +1019,7 @@ void CGameView::Precache( const NDb::SEffect *pEffect )
 
 void CGameView::TouchPrecached()
 {
-	for ( std::list<CPtr<CRenderNode> >::iterator i = precacheObjects.begin(); i != precacheObjects.end(); )
+	for ( std::vector<CPtr<CRenderNode> >::iterator i = precacheObjects.begin(); i != precacheObjects.end(); )
 	{
 		CRenderNode *p = *i;
 		bool bOk = true;
@@ -1122,7 +1122,19 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 {
 	LoadEverythingInt();
 	TouchPrecached();
-	UpdateSet( &faders, (void *)0 );
+
+	// Compact surviving faders in place so removal stays linear for the vector.
+	std::vector<CPtr<CObjectFader> >::iterator writeFader = faders.begin();
+	for ( std::vector<CPtr<CObjectFader> >::iterator readFader = faders.begin(); readFader != faders.end(); ++readFader )
+	{
+		if ( IsValid( *readFader ) && (*readFader)->Update( (void *)0 ) )
+		{
+			if ( writeFader != readFader )
+				*writeFader = *readFader;
+			++writeFader;
+		}
+	}
+	faders.erase( writeFader, faders.end() );
 
 	//for ( list<CPtr<CGrassTracker> >::iterator i = grassTrackers.begin(); i != grassTrackers.end(); ++i )
 	//	(*i)->Update();
