@@ -61,6 +61,78 @@ library's export table and fails unless it holds exactly the 54 names in
 The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
 the vendored DLL, because the engine loads it by name.
 
+## The 54 entry points
+
+**52 implemented, 2 stubs, 0 reached-but-missing.** A run of the game logs no
+"not implemented" line at all.
+
+The verification column says how each was checked. *corpus* is
+`scripts/port/gr2diff.py` over all 21,720 distinct GR2 files, comparing against
+the real DLL. *replay* is the companion harness, which scripts both
+implementations through fifteen call sequences per file and compares the
+transcripts. Everything also has unit tests.
+
+### Reached by the game (38)
+
+| entry point | verified |
+|---|---|
+| `GrannyReadEntireFileFromMemory`, `GrannyFreeFile` | corpus |
+| `GrannyGetFileInfo` | corpus |
+| `GrannyGetTotalObjectSize`, `GrannyGetMemberTypeSize` | corpus |
+| `GrannyGetMeshTriangleGroupCount`, `GrannyMeshIsRigid` | corpus |
+| `GrannyFindBoneByName` | corpus |
+| `GrannyMakeIdentity` | corpus |
+| `GrannyInstantiateModel`, `GrannyFreeModelInstance`, `GrannySetModelClock` | corpus |
+| `GrannyNewLocalPose`, `GrannyFreeLocalPose`, `GrannyGetLocalPoseBoneCount`, `GrannyGetLocalPoseTransform` | corpus |
+| `GrannySampleModelAnimations` | corpus + replay |
+| `GrannyNewWorldPose`, `GrannyFreeWorldPose`, `GrannyBuildWorldPose` | corpus |
+| `GrannyGetWorldPose4x4`, `GrannyGetWorldPoseComposite4x4` | corpus |
+| `GrannyBeginControlledAnimation`, `GrannySetTrackGroupTarget`, `GrannySetTrackGroupAccumulation`, `GrannyNewTrackMask`, `GrannySetSkeletonTrackMaskFromTrackGroup`, `GrannySetTrackGroupModelMask`, `GrannyEndControlledAnimation` | replay |
+| `GrannyControlIsComplete`, `GrannyGetControlClampedLocalClock`, `GrannyGetControlDurationLeft`, `GrannyGetControlEffectiveWeight` | replay |
+| `GrannySetControlSpeed`, `GrannySetControlLoopCount`, `GrannySetControlForceClampedLooping` | replay |
+| `GrannyFreeControlOnceUnused` | replay |
+| `GrannyFreeControl` | unit tests |
+
+### Implemented but not reached in a normal run (16)
+
+Reachability was worked out from the engine sources rather than from the absence
+of a log line, since one run is not every map.
+
+| entry point | reachable? | what reaches it |
+|---|---|---|
+| `GrannyPostMultiplyBy` | **yes** | bone mutators, from `SetBoneMutator`: six sites in `B2_M1_World` for helicopter and mechanical-unit gun recoil. It appears in traces of runs where something fires |
+| `GrannyGetControlSpeed` | **yes** | `CSkeletonAnimator::GetMarkTimes`, which has callers, and `ApplyGlobalMovementCorrection` |
+| `GrannyEvaluateCurveAtT` | **only on some data** | needs a track group with vector tracks. Exactly 5 of the corpus's 21,720 files have any, and the three that are not mod content are in the Total Conversion install. The base game and Fall of the Reich never reach it |
+| `GrannyReadEntireFile` | **editor only** | `SceneB2/TerraTools.cpp` compiles it into a game module, but its only callers are `CreateDebris` and `PassabilityProfile`, both under `ED_B2_M1`, and `BUILD_EDITOR` does not build |
+| `GrannySetControlEaseIn`, `GrannySetControlEaseInCurve`, `GrannySetControlEaseOut`, `GrannySetControlEaseOutCurve` | no | gated on `fTransitHalfDuration > 0`, and the only thing that writes it, `CSkeletonAnimator::SetGlobalAnimTransit`, has no callers |
+| `GrannyEaseControlIn`, `GrannyEaseControlOut` | no | only `CSkeletonAnimator::FadeIn` and `FadeOut`, whose only callers are inside `GAnimation.cpp`'s own restore path, gated on flags only they set |
+| `GrannyCompleteControlAt` | no | needs an `AddAnimation` caller passing `tEndTime`, and every one of them takes the `-1` default; `SetEndTime` has no callers either |
+| `GrannySetControlActive` | no | only fires when `GrannyControlIsComplete`, which needs `GrannyCompleteControlAt` |
+| `GrannySetControlRawLocalClock` | no | only `CSkeletonAnimator::SetLocalTime`, which has no callers |
+| `GrannyGetControlDuration` | no | only `CSkeletonAnimator::GetDuration`, which has no callers |
+| `GrannyGetAllocator`, `GrannySetAllocator` | no, **and still stubs** | only `InitializeGrannyMemoryMap` in `3Dmotor/GrannyMemoryMap.cpp`, which nothing calls. Granny's own allocator is the one that runs |
+
+`Script/` has no binding to the animator, so nothing reaches these from a
+scenario either.
+
+The twelve dead ones are all one feature: **animation transitions**. Cross-fades,
+timed clips and scrubbing are built into `CSkeletonAnimator` and never switched
+on. They are implemented and replay-verified here anyway, because they are what
+the engine would need the moment anything calls `SetGlobalAnimTransit`.
+
+The two stubs can stay stubs. They have to be *exported*, because the engine
+links them, but nothing calls them.
+
+### Where the two implementations still differ
+
+Both are invisible to the game and neither is on a path it takes. See
+docs/GrannyReplacement.md, "What still differs", for the measurements.
+
+- A local clock landing exactly on a multiple of the period. A float knife edge,
+  and the same pose either way for a looping clip.
+- The sign of a sampled quaternion, on 1.3% of samples. q and -q are the same
+  rotation, and every consumer here is invariant to it.
+
 ## Checking it against the real thing
 
 `scripts/port/gr2diff.py` loads both this library and the vendored
@@ -143,6 +215,15 @@ on Windows also to the debugger's output window. `LIBGR2_LOG_LEVEL` sets the
 level; it defaults to `trace`, and every line is flushed, because the process
 this is meant to observe is expected to stop abruptly and the tail is the part
 worth reading.
+
+**The per-call trace is compiled in for Debug builds only**, or for any build
+configured with `-DLIBGR2_TRACE=ON`. It was unconditional while this library was
+a set of stubs and the log was the whole deliverable. Now that the entry points
+do work it is a formatted, flushed line on a function the game calls 17,880 times
+in a few seconds of play, which makes the game a slide show and animation
+impossible to judge. The warn-once "not implemented" line is not affected and
+stays in every build, because a release build reaching something unwritten is
+exactly what somebody needs to be told about.
 
 ### What the first run said
 

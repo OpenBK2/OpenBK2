@@ -23,6 +23,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # googletest fetched on its behalf.
 option(LIBGR2_BUILD_TESTS "build libgr2's unit tests" ${PROJECT_IS_TOP_LEVEL})
 
+# Recording every call was the whole deliverable while this was a set of stubs.
+# Now that the entry points do work it is a per-call format and a flushed write
+# on a function the game calls 17,880 times in a few seconds, which turns the
+# game into a slide show and makes animation impossible to judge. So it is a
+# Debug-build thing, plus this switch for turning it on in a Release build when
+# something needs diagnosing. The warn-once "not implemented" line is not
+# affected and stays in every build.
+option(LIBGR2_TRACE "record every entry point call, in any build type" OFF)
+
 # The shipped game loads granny2.dll by name, and the engine's import library is
 # generated from the same name, so the replacement has to answer to it. The x64
 # suffix is the vendored DLL's own convention, kept so that the two builds can
@@ -90,6 +99,12 @@ target_include_directories(gr2
 # names again.
 target_compile_definitions(gr2 PRIVATE GR2_BUILD_SHARED)
 
+# The per-call trace, on for Debug and for -DLIBGR2_TRACE=ON. A generator
+# expression rather than an if(), so that it is right under a multi-config
+# generator as well as under Ninja.
+set(GR2_TRACE_CONDITION $<OR:$<CONFIG:Debug>,$<BOOL:${LIBGR2_TRACE}>>)
+target_compile_definitions(gr2 PRIVATE $<${GR2_TRACE_CONDITION}:LIBGR2_TRACE_CALLS>)
+
 # Header only, so that this library stays a single DLL with no runtime of its
 # own to install beside it. PRIVATE because none of it reaches gr2/granny.h.
 target_link_libraries(gr2 PRIVATE spdlog::spdlog_header_only)
@@ -155,6 +170,10 @@ if(LIBGR2_BUILD_TESTS)
     # agree with the library about what GR2_API means, and here it means neither
     # dllexport nor dllimport.
     target_compile_definitions(gr2_static PUBLIC GR2_STATIC)
+    # The tests get the same trace decision as the DLL, so that a Debug test run
+    # says what it called and a Release one runs at speed.
+    target_compile_definitions(gr2_static
+        PRIVATE $<${GR2_TRACE_CONDITION}:LIBGR2_TRACE_CALLS>)
     target_link_libraries(gr2_static PRIVATE spdlog::spdlog_header_only)
     set_target_properties(gr2_static PROPERTIES FOLDER "vendor/libgr2")
     if(MSVC)

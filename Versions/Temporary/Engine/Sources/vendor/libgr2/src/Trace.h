@@ -13,6 +13,12 @@
 // Two levels, so that one run serves both questions. Every call is logged at
 // trace. The first call to each entry point is also logged at warn, so that
 // running at warn gives the list of entry points reached and nothing else.
+//
+// The per-call trace is compiled out unless LIBGR2_TRACE_CALLS is defined, which
+// the build does for Debug and for -DLIBGR2_TRACE=ON. It was unconditional while
+// the library was a set of stubs and the log was the whole deliverable; now that
+// the entry points do work, leaving it in makes the game a slide show and
+// animation impossible to judge. The warn-once path stays in every build.
 
 #include <spdlog/spdlog.h>
 
@@ -100,16 +106,41 @@ void TraceCall( const char *pszFunction, bool bStub,
 	}
 }
 
+//! Swallow the arguments of a trace that is compiled out.
+//!
+//! Not an empty macro. Several entry points touch a parameter only in their
+//! trace line, and an empty macro would leave those unused and /W4 would say so
+//! at every one of them. Passing them here is a use, and an empty inline
+//! function with no side effects compiles to nothing.
+template <typename... TArgs>
+void TraceIgnored( TArgs &&... )
+{
+}
+
 }
 
 //! Trace a call to an entry point that is implemented.
 //!
 //! A statement rather than an expression, so that it reads as the first line of
 //! the body rather than as something wrapped around it.
-#define GR2_TRACE( ... ) ::NGr2::TraceCall( __func__, false, __VA_ARGS__ )
+//!
+//! Compiled out unless LIBGR2_TRACE_CALLS is defined, which the build does for
+//! Debug and for -DLIBGR2_TRACE=ON. It is not a cheap thing to leave in: it
+//! formats and writes a line per call, and flushes each one, and the busiest
+//! entry point here is called 17,880 times in a few seconds of play. With it on,
+//! the game is a slide show and animation cannot be judged at all.
+#if defined( LIBGR2_TRACE_CALLS )
+	#define GR2_TRACE( ... ) ::NGr2::TraceCall( __func__, false, __VA_ARGS__ )
+#else
+	#define GR2_TRACE( ... ) ::NGr2::TraceIgnored( __VA_ARGS__ )
+#endif
 
 //! Trace a call to an entry point that is not written yet, and say so once.
 //!
 //! The difference from GR2_TRACE is the whole point of running at warn: that
 //! level then lists exactly the entry points a run reached and still needs.
+//!
+//! This one is never compiled out. It fires once per entry point rather than
+//! once per call, so it costs nothing, and a release build reaching something
+//! that is not written is exactly what somebody needs to be told about.
 #define GR2_STUB( ... ) ::NGr2::TraceCall( __func__, true, __VA_ARGS__ )

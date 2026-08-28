@@ -1,46 +1,38 @@
-# for now I took granny from https://github.com/uesp/uesp-esoapps
-# for the record, it's Windows only and proprietary
-# can switch to a fork: https://github.com/arves100/opengr2
+# Granny comes from libgr2 now, this tree's own replacement for RAD Game Tools'
+# proprietary granny2.dll, rather than from the DLL vendored under
+# third_party/uesp-esoapps. That DLL is Windows only and non-redistributable,
+# and it was the last thing keeping the engine off other platforms.
+#
+# granny211.h stays on the include path and stays the header the engine compiles
+# against. It is the ABI libgr2 reproduces: the layouts in
+# vendor/libgr2/src/Structures.h are asserted against the sizes it declares, and
+# every entry point matches its signature and its decoration. So nothing on the
+# engine side changes; only what answers the calls does.
+#
+# On Windows granny211.h declares the entry points __declspec(dllimport) and
+# __stdcall, and libgr2 exports them __declspec(dllexport) and __stdcall under
+# the same file name the engine loads by, granny2.dll on x86 and granny2_x64.dll
+# on x64. Off Windows both sides are plain C linkage with default visibility.
+#
+# The old vendored DLL and the stub that stood in for it off Windows are gone.
+# third_party/uesp-esoapps is still a submodule because granny211.h lives in it;
+# see docs/GrannyReplacement.md for what remains before it can be dropped too.
 
 set(GRANNY_ROOT "${CMAKE_SOURCE_DIR}/third_party/uesp-esoapps/common/granny")
 
-if(WIN32)
-    add_library(granny SHARED IMPORTED)
-    target_include_directories(granny INTERFACE ${GRANNY_ROOT})
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(IMP ${GRANNY_ROOT}/win64/granny2_x64.lib)
-        set(DLL ${GRANNY_ROOT}/win64/granny2_x64.dll)
-    else()
-        set(IMP ${GRANNY_ROOT}/win32/granny2.lib)
-        set(DLL ${GRANNY_ROOT}/win32/granny2.dll)
-    endif()
+# libgr2 is a standalone project, so it configures and builds on its own as well
+# as from here. As a subdirectory its tests stay off and it reuses this tree's
+# spdlog rather than fetching another, which is why this file is included after
+# cmake/spdlog.cmake rather than before it.
+add_subdirectory(
+    "${CMAKE_SOURCE_DIR}/Versions/Temporary/Engine/Sources/vendor/libgr2"
+    "${CMAKE_BINARY_DIR}/vendor/libgr2")
 
-    set_target_properties(granny PROPERTIES IMPORTED_IMPLIB ${IMP} IMPORTED_LOCATION ${DLL})
-    install(FILES "${DLL}" DESTINATION bin)
-else()
-    # There is no Granny to link off Windows: it ships as a .lib and a .dll and
-    # nothing else, and the only fork is a partial reimplementation. Until that
-    # is a project of its own, the 54 entry points this tree references are
-    # stubbed, and each one records that it was called, in what order and with
-    # what arguments.
-    #
-    # The point is triage. Linking narrowed several hundred declarations to 54,
-    # but a reference is not a call: some of those sit on paths the shipped data
-    # cannot reach, and the linker cannot tell. Running the game against these
-    # stubs says which are real and in what order they are first needed, which
-    # is the order to port them in.
-    #
-    # Nothing here does any work, so the game will not animate and will very
-    # likely stop during loading. The log up to that point is the deliverable.
-    add_library(granny STATIC
-        ${CMAKE_SOURCE_DIR}/Versions/Temporary/Engine/Sources/vendor/granny/GrannyStub.cpp)
-    target_include_directories(granny PUBLIC
-        ${GRANNY_ROOT}
-        ${CMAKE_SOURCE_DIR}/Versions/Temporary/Engine/Sources)
-    target_link_libraries(granny PRIVATE fmt::fmt-header-only)
-    # a static library linked into a shared one
-    set_target_properties(granny PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    set_target_properties(granny PROPERTIES FOLDER "third_party/granny")
-endif()
+add_library(granny INTERFACE)
+target_include_directories(granny INTERFACE ${GRANNY_ROOT})
+target_link_libraries(granny INTERFACE gr2)
+
+# Beside the executable, under both names, since the engine loads it by name.
+install(TARGETS gr2 RUNTIME DESTINATION bin LIBRARY DESTINATION bin)
 
 add_library(granny::granny ALIAS granny)

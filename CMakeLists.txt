@@ -128,9 +128,11 @@ else()
 include(cmake/dxvk.cmake)
 endif()
 include(cmake/fmod.cmake)
-include(cmake/granny.cmake)
 include(cmake/fmt.cmake)
 include(cmake/spdlog.cmake)
+# After spdlog: libgr2 carries its call trace on it and reuses this tree's copy
+# rather than fetching a second one.
+include(cmake/granny.cmake)
 include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)
