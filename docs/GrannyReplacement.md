@@ -1,8 +1,10 @@
 # Replacing Granny 3D: findings, evidence and plan
 
 > **Provenance.** Everything below was measured on 2026-08-27 against the game data
-> installed on this machine, not inferred from documentation. Where a number is
-> quoted, the method that produced it is given in [Reproducing the
+> installed on this machine, not inferred from documentation, except [Which
+> granny2.dll](#which-granny2dll-and-what-changed-since-the-game-shipped), measured
+> 2026-08-28 against the DLL copies and SDK archives on this machine. Where a number
+> is quoted, the method that produced it is given in [Reproducing the
 > measurements](#reproducing-the-measurements). Companion document:
 > [Granny3DUsage.md](Granny3DUsage.md) describes how the engine *uses* Granny; this
 > one describes how to *replace* it.
@@ -25,6 +27,10 @@ verified correct against RAD's own DLL on this game's assets.
 - The genuinely unsolved part is the **playback and blending layer** (roughly 30 of
   the 54 entry points), which no open source project implements, because importers
   and viewers never need it.
+- The engine no longer targets the Granny the game shipped with. It was moved from
+  **2.5.0.5** to **2.11.8.0**, and eight of the structures it walks changed shape
+  between the two. A replacement reproduces 2.11's layouts. See
+  [Which granny2.dll](#which-granny2dll-and-what-changed-since-the-game-shipped).
 
 Estimate for a working replacement: **27 to 44 working days**, see [Plan](#plan).
 
@@ -252,11 +258,71 @@ struct definitions and an existing C++ Oodle1, granny-ro-js for pose, noclip for
 viewer-grade sampling fallback described below, opengr2 for the virtual-pointer idea
 only (about 30 lines, read it, take nothing else).
 
+## Which `granny2.dll`, and what changed since the game shipped
+
+Measured 2026-08-28 over every copy on this machine. By SHA-256 there are **two**
+distinct binaries, not five.
+
+| version | size | PE link date | architectures | where |
+|---|---|---|---|---|
+| **2.5.0.5** | 400,951 | 2004-11-12 | **x86 only** | FoTR `bin_`, Total Conversion `Bin.original`, and `vendor.rar` |
+| **2.11.8.0** | 672,256 / 803,328 | 2017-09-28 | x86 and x64 | `third_party/uesp-esoapps`, and `Granny_Common_2_11_8_0_Release.zip` |
+
+Both rows are byte-identical within themselves, and `third_party`'s `granny211.h` is
+byte-identical to the 2.11.8.0 SDK's `include/granny.h`. So the vendored Granny is
+simply that SDK release, and **`vendor.rar` is the original Nival vendor SDK**: the
+2.5 DLL the game shipped with, plus its `granny.h`, `gr2_viewer.exe`, `grn2gr2` and
+`granny2.chm`.
+
+**A minor version number covering a major break.** 682 exports become 836: 146
+disappear, 300 arrive, and 51 of the 536 that survive change argument size. Among the
+54 this engine uses, all 54 exist in both, and exactly one changed shape:
+`GrannyEvaluateCurveAtT`, from five arguments taking a `granny_curve *` to nine
+taking a `granny_curve2 *`.
+
+The engine was moved to 2.11 in commit `62ff1e13e`, and that commit is the complete
+list of what the move cost: the `GrannyEvaluateCurveAtT` call, the allocator callback
+gaining `AllocationIntent` with `granny_uintaddrx` sizes, the opaque handles moving
+into a `granny::` namespace so forward declarations had to change, and
+`GetModelNameOfSkeleton` returning `const char *`.
+
+**Eight structures changed layout**, which is what matters for M2 and M3. A wrong
+offset is silent: the engine walks these by hand in twenty-odd places, so it reads
+plausible garbage rather than failing.
+
+| structure | 2.5 to 2.11 |
+|---|---|
+| `granny_bone` | 7 fields to 6: `LightInfo` and `CameraInfo` dropped, `LODError` added |
+| `granny_skeleton` | 3 to 5: `LODType` and `ExtendedData` added |
+| `granny_model` | 5 to 6: `ExtendedData` added |
+| `granny_animation` | 6 to 9: `DefaultLoopCount`, `Flags`, `ExtendedData` added |
+| `granny_track_group` | 15 to 14: `RootMotion` dropped |
+| `granny_tri_topology` | 18 to 22: polygon index arrays added, `IndexCount16` renamed `Index16Count` |
+| `granny_transform_track` | `granny_curve` becomes `granny_curve2`, `Flags` added |
+| `granny_data_type_definition` | `TraversalID` (`granny_uint32`) becomes `Ignored_Ignored` (`granny_uintaddrx`), so its size differs between x86 and x64 |
+
+Unchanged apart from `const` on name pointers: `granny_file_info`, `granny_mesh`,
+`granny_vertex_data`, `granny_transform`, `granny_tri_material_group`,
+`granny_bone_binding`.
+
+Three consequences:
+
+- **Reproduce 2.11's layouts, not 2.5's.** The engine compiles against
+  `granny211.h`. blendergranny and nwn2mdk remain the sources for the *file* format,
+  which is unchanged, but not for the in-memory structures.
+- **Going back is not an option for x64.** Granny 2.5 has no 64-bit build at all, so
+  there is nothing to fall back to.
+- **The blend layer is documented after all.** Both SDKs carry `granny2.chm`, 2.5 MB
+  and 4.7 MB. That covers the control and ease API that M4 needs and that no open
+  source project implements. It is documentation, not source, so reading it is not a
+  clean-room problem the way leaked source would be.
+
 ## Validation against `granny2.dll`
 
 The DLL can be driven directly from Python with `ctypes`, which makes it a scriptable
 oracle. `granny_int32x` is 32-bit even on x64, so no thunking is needed, and the
-structs are packed (see above).
+structs are packed (see above). The oracle drives **2.11.8.0**, the version the engine
+now targets, rather than the 2.5.0.5 the game shipped with.
 
 ### Decompression: bit-exact
 
@@ -527,9 +593,12 @@ established intermediate copying for interoperability as fair use.
 **The concrete exposure is what is already in the tree.** `cmake/granny.cmake` does
 `install(FILES "${DLL}" DESTINATION bin)`, redistributing RAD's `granny2.dll`
 (version 2.11.8.0, "Copyright 1999-2017 RAD Game Tools"), sourced from
-`third_party/uesp-esoapps`, that is the copy licensed to ZeniMax for Elder Scrolls
-Online. `granny2_static.lib` at 6.8 MB, `gstate.lib` and `granny211.h` are in the
-same submodule. Writing a minimal header with the 54 prototypes is both the
+`third_party/uesp-esoapps`, whose copy is licensed to ZeniMax for Elder Scrolls
+Online. The binary itself is byte-identical to the general 2.11.8.0 SDK release, so
+nothing about it is specific to that game, but the copy being redistributed is theirs.
+Note that this ships a *newer* Granny than the one the game was licensed with:
+Blitzkrieg 2 shipped 2.5.0.5. `granny2_static.lib` at 6.8 MB, `gstate.lib` and
+`granny211.h` are in the same submodule. Writing a minimal header with the 54 prototypes is both the
 interoperability-necessary subset and a way to delete RAD's 6,000-line SDK header on
 day one.
 
@@ -554,6 +623,15 @@ python scripts/port/granny_dll_oracle.py hash <file.gr2> ...
 # dump local transforms, world matrices and composite skinning matrices as JSON
 python scripts/port/granny_dll_oracle.py pose <file.gr2> <t0> <t1> ...
 ```
+
+The version comparison needs no tooling beyond what ships with Visual Studio.
+`Get-FileHash` collapses the five DLL copies to two; `(Get-Item $dll).VersionInfo`
+gives the version, and bytes 8 to 12 past the PE header offset at `0x3C` give the link
+date. Export sets come from `dumpbin /exports`, matching `_(Granny\w+)@(\d+)`: on x86
+the `@N` is the argument size in bytes, so comparing those across two DLLs finds every
+changed signature without reading a header. Structure layouts were diffed between
+`vendor.rar`'s `granny.h` and `granny211.h`, matching `^struct granny_(\w+)` in the
+first and `GRANNY_STRUCT\(struct\) granny_(\w+)` in the second.
 
 Census scripts were written ad hoc; the shapes worth keeping are:
 
