@@ -3,32 +3,33 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: every shipped file loads, static geometry converts.** The loading path
-is written end to end: `GrannyReadEntireFileFromMemory`, `GrannyReadEntireFile`,
-`GrannyFreeFile`, both Oodle codecs, the type tree walk, and `GrannyGetFileInfo`
-with the conversion behind it. `GrannyGetMemberTypeSize` and
-`GrannyGetTotalObjectSize` come with it. The other 48 entry points are stubs that
-return a null, a zero or a false.
+**Status: every shipped file loads and converts in full, and curves sample.** The
+loading path is written end to end: `GrannyReadEntireFileFromMemory`,
+`GrannyReadEntireFile`, `GrannyFreeFile`, both Oodle codecs, the type tree walk,
+and `GrannyGetFileInfo` with the conversion behind it, which now covers track
+groups, animations and their curves as well as the geometry.
 
-Models also instantiate, sampling one with nothing bound gives the skeleton's
-rest pose, and the skeleton hierarchy walks into world and skinning matrices. So
-every model can be drawn in bind pose, skinned.
+Models instantiate, sampling one with nothing bound gives the skeleton's rest
+pose, the hierarchy walks into world and skinning matrices, and
+`GrannyEvaluateCurveAtT` evaluates a curve at a time. So every model can be drawn
+in bind pose, skinned, and the engine can read a scalar channel out of a clip.
 
-What is left is animation proper. Track groups and animations are read into the
-file and not converted, and the control entry points that would bind a clip to an
-instance are still stubs, so nothing moves.
+What is left is the playback layer: binding a clip to an instance, the control
+that drives it, and `GrannySampleModelAnimations` blending bound controls instead
+of copying the rest pose. Those are still stubs, so nothing moves yet.
 
 **All 21,720 unique GR2 files across the three installs read identically to the
 real `granny2.dll`**, in every field compared: names, counts, parent indices,
 transforms, vertex strides and their component lists, vertex bytes, triangle
-groups and indices, bone bindings, and mesh pointer identity. See
-`scripts/port/gr2diff.py` below.
+groups and indices, bone bindings, mesh pointer identity, every track group and
+animation, and every curve sampled at nine values of t drawn from its own knots.
+See `scripts/port/gr2diff.py` below.
 
 Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
 directory, and the game still links the vendored DLL.
 
 The background is in [docs/GrannyReplacement.md](../../../../../../docs/GrannyReplacement.md),
-which measured this game's corpus (83,184 unique GR2 files across three installs,
+which measured this game's corpus (21,720 unique GR2 files across three installs,
 one dialect: File Format 6, little endian, 32-bit pointers), surveyed seven open
 source implementations, and set out the milestones referred to below. How the
 engine uses Granny today is in
@@ -74,7 +75,7 @@ are counted apart from files the two read differently, because during a port mos
 of those are one milestone away rather than wrong.
 
 This is the measurement that matters for this project, and it cannot be a unit
-test: it needs the DLL and it needs the corpus, and the corpus is 83,184 files of
+test: it needs the DLL and it needs the corpus, and the corpus is 21,720 files of
 Nival's copyrighted data. The unit tests are what run without either.
 
 ## Tests
@@ -188,7 +189,8 @@ each gains its real definition in the milestone that first needs it.
 | `src/Skeleton.cpp` | 1 | bone lookup by name |
 | `src/Transform.cpp` | 2 | position, orientation, scale-shear, and composing two |
 | `src/Model.cpp` | 3 | M3, model instances and their clock |
-| `src/Pose.cpp` | 11 | local pose, rest-pose sampling and world pose done; curve sampling left |
+| `src/Curve.cpp` | 1 | curve sampling: constant, linear, and a non-uniform quadratic B-spline |
+| `src/Pose.cpp` | 10 | local pose, rest-pose sampling, world pose and the composite matrices |
 | `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
 | `src/Control.cpp` | 20 | M4, playback, looping, ease curves |
 

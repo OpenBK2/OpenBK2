@@ -12,9 +12,9 @@
 // nothing here feeds back into AILogic, so this has to be visually right, not
 // bit-exact against granny2.dll.
 //
-// GrannyEvaluateCurveAtT sits here rather than in a file of its own because it
-// is the same sampler that GrannySampleModelAnimations drives internally. The
-// engine calls it directly as well, to read named scalar channels out of a clip.
+// GrannyEvaluateCurveAtT is next door in Curve.cpp. It is the same sampler this
+// file drives internally once controls exist, and the engine calls it directly
+// as well, to read named scalar channels out of a clip.
 
 #include <gr2/granny.h>
 
@@ -407,17 +407,6 @@ GR2_API( void ) GrannySampleModelAnimations( granny_model_instance const *ModelI
 		Result->Transforms[static_cast<size_t>( i )] =
 			pSkeleton->pBones[i].LocalTransform;
 	}
-}
-
-GR2_API( void ) GrannyEvaluateCurveAtT( granny_int32x Dimension, bool Normalize, bool BackwardsLoop,
-                                        granny_curve2 const *Curve, bool ForwardsLoop,
-                                        granny_real32 CurveDuration, granny_real32 t,
-                                        granny_real32 *Result, granny_real32 const *IdentityVector )
-{
-	GR2_STUB( "Dimension={} Normalize={} BackwardsLoop={} Curve={} ForwardsLoop={} "
-	           "CurveDuration={} t={} Result={} IdentityVector={}",
-	           Dimension, Normalize, BackwardsLoop, Curve, ForwardsLoop, CurveDuration, t, Result,
-	           IdentityVector );
 }
 
 }

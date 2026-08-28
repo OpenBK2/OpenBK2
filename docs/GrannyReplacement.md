@@ -294,6 +294,70 @@ track is nearly as rare, 24 of them in 5 files, and all 24 are in the newest
 vintage, so what the DLL puts in `Dimension` for a file that lacks the member was
 not observable.
 
+### What GrannyEvaluateCurveAtT computes
+
+Measured, not derived. Setting one control to one and the rest to zero and
+sweeping t reads `basis_i(t)` straight out of `granny2.dll`, which pins the
+formula without any hypothesis about which spline RAD picked.
+
+Degree 0 is constant and degree 1 is linear. Degree 2 is a **non-uniform**
+quadratic B-spline, in span *i* with `u = (t - k[i]) / (k[i+1] - k[i])` and
+`h = k[i+1] - k[i]`:
+
+```
+w-  =  h (1-u)^2 / ( k[i+1] - k[i-1] )      on control i-1
+w+  =  h u^2     / ( k[i+2] - k[i]   )      on control i+1
+w0  =  1 - w- - w+                          on control i
+```
+
+The trap is that a typical curve's later spans are evenly spaced, where this
+reduces to the uniform basis `((1-u)²/2, (1+2u-2u²)/2, u²/2)`. A uniform
+implementation therefore agrees on most samples of most curves and is wrong at
+both ends and wherever a span's neighbour is a different length.
+
+Off the ends the sequence is **clamped**: `k[-1] = k[0]` with `c[-1] = c[0]`, and
+`k[n] = k[n-1]`. Reflecting the last span instead is the natural guess and is
+wrong; it was caught by solving for the divisor the measured weights imply, which
+came back as the last knot exactly.
+
+**Looping** replaces the clamp with a wrap of period `CurveDuration`. Every
+multi-knot curve in the corpus ends exactly at its animation's duration, in all
+134,098 of them, so the last control is the same keyframe as the first and the
+cycle has n-1 entries:
+
+```
+BackwardsLoop:  k[-1] = k[n-2] - CurveDuration,  c[-1] = c[n-2]
+ForwardsLoop:   k[n]  = k[1]   + CurveDuration,  c[n-1] -> c[0]
+```
+
+At degree 1 only the control identification survives; a straight line needs no
+knot outside its own span, and `BackwardsLoop` was measured to change nothing.
+
+Three more things, each of which an implementation gets wrong by default:
+
+- **`Normalize` does not reach the constant path**, nor the empty-curve identity
+  path. A degree-0 control of length 5 comes back with length 5 even when
+  normalization is asked for. Normalizing it disagrees with the DLL on 2,884
+  files.
+- **The stride is the caller's `Dimension`**, not the curve's. A curve stores a
+  knot count and a control count and no dimension, and asking a three-wide curve
+  for one component returns the first float of each *control*, not the first
+  component of each key.
+- **At `Dimension` 3 the DLL's `Normalize` is not a normalization.** It is
+  deterministic and it does not write past the result, but the divisor it implies
+  ranges from -10.6 to 47,000 times the vector's own length and sometimes flips
+  the sign. There is no rule there to reproduce. The engine passes `Normalize`
+  false, and the sampler only ever normalizes quaternions, so nothing reaches it.
+
+Shapes the sampler has to survive, from a census of all 772,767 curves: 322,479
+are empty; 316,190 are degree 0 and every one has exactly one knot; degree 1
+never has fewer than 2 knots and degree 2 never fewer than 3; **38 curves have two
+knots at the same time**, a zero-length span that divides by zero if unguarded;
+and every non-empty curve starts at knot 0.0, which is why `t` below the first
+knot never arises. The real DLL answers from an essentially arbitrary span there
+— span 0 just below the first knot, span 23 at t = -1, the last span at t = -10 —
+and that is not reproduced.
+
 ## Library survey
 
 Seven open source GR2 implementations were examined and, where possible, built and

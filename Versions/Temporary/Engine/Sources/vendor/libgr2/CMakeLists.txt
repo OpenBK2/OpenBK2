@@ -54,6 +54,7 @@ set(GR2_SOURCES
     src/Control.cpp
     src/Convert.cpp
     src/Convert.h
+    src/Curve.cpp
     src/File.cpp
     src/File.h
     src/LocalPose.h
