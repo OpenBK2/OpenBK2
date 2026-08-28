@@ -386,7 +386,48 @@ Three consequences:
 - **The blend layer is documented after all.** Both SDKs carry `granny2.chm`, 2.5 MB
   and 4.7 MB. That covers the control and ease API that M4 needs and that no open
   source project implements. It is documentation, not source, so reading it is not a
-  clean-room problem the way leaked source would be.
+  clean-room problem the way leaked source would be. See below.
+
+### The documentation, and how it may be used
+
+Both `granny2.chm` files decompile with `hh.exe -decompile <dir> granny2.chm`, which
+is a standard Windows tool, into one HTML page per entry point:
+
+| | pages | version stamped on each page |
+|---|---|---|
+| `vendor.rar`, the original Nival SDK | 984 | 2.5.0.5 |
+| `Granny_Common_2_11_8_0_Release.zip` | 1,274 | 2.11.8.0 |
+
+**All 54 entry points this port needs are documented in both.** The 2.11 set also
+carries a `Compatibility` page and a changelog covering the 2.5 to 2.11 breaking
+changes, which is RAD's own account of the migration this document reconstructed by
+diffing headers and probing the DLL, and therefore a cross-check on the eight
+changed structures listed above.
+
+The content is substantive rather than a signature dump. `GrannyEaseControlIn`, for
+one, gives the ease curves as Beziers with explicit start and end times, start and
+end values and tangents, and states that easing a control does not set its weight,
+only the curves that modify it. That is the part of M4 the plan called low
+confidence for want of prior art. There is prior art: it is the vendor's manual.
+
+**Reading it is the cleanest provenance available here, not the most doubtful.**
+Documentation exists to tell an implementer what a function does; using a documented
+behaviour is using a fact, and facts and interfaces are not the protected part. It is
+a strictly better source than what this port has mostly relied on so far, which is
+inferring behaviour by probing a binary. Where the two disagree, the binary wins,
+because the binary is what the game links against.
+
+What is not allowed, and matches the policy `blendergranny` states in its
+`docs/PROVENANCE.md` and this project follows:
+
+- **The CHM and anything extracted from it stay out of the repository.** They are
+  RAD's copyrighted text and committing them would be redistribution. Keep them
+  beside the DLLs, as a local reference.
+- **No prose copied into comments, and no sample code copied into implementations.**
+  Read it, understand it, write our own. That costs nothing and removes the question
+  entirely.
+- **Cite the fact, not the page.** A comment saying what a function does is a
+  statement about the API; a comment quoting the manual is a copy of it.
 
 ## Validation against `granny2.dll`
 
@@ -581,7 +622,7 @@ focused hours.
 | **M1c** Oodle0 | transliterate `blendergranny/oodle0.py`, 470 lines. Varbits, adaptive arithmetic decoder, LZ dictionary | **2-4 days** | medium |
 | **M2** geometry | type-tree walker and struct population; the five small query functions. **Game draws static models** | **3-5 days** | medium-high |
 | **M3** pose | curve sampling (six cases above), local pose, world pose, composite skinning, quaternion neighbourhooding | **3-5 days** | medium |
-| **M4** controls | about 30 entry points. No prior art. Bounded by what `CSkeletonAnimator` actually does | **5-10 days** | **low** |
+| **M4** controls | about 30 entry points. No open source prior art, but all of them are documented in `granny2.chm`, ease curves included. Bounded by what `CSkeletonAnimator` actually does | **5-10 days** | medium |
 | **harness** | golden record and replay, corpus sweep, live A/B shim, malformed-input fuzzing | **5-7 days** | medium-high |
 | **M5** integration | CMake, delete `granny.cmake` and the DLL and the `uesp-esoapps` submodule, x86 and x64 CI green | **2-3 days** | medium |
 | **tail** | visual bugs found in play | **3-5 days** | low |
