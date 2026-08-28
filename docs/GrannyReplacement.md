@@ -124,6 +124,37 @@ Verified sizes with `_pack_ = 1` on x64:
 | `granny_animation` | 56 |
 | `granny_file_info` | 148 |
 
+### The structures in the file are not the structures the engine reads
+
+`GrannyGetFileInfo` cannot hand back a pointer into the loaded file. It has to
+convert, because the two ends disagree about what these structures are.
+
+`Versions/Temporary/Engine/Sources/vendor/granny/include/granny.h` is a two-line
+shim that includes `granny211.h`, so the engine reads **2.11** layouts. The files
+were written by a 2.5-era exporter and carry 2.5-era type trees. Dumped from a
+shipped geometry file with `scripts/port/gr2info.py types`:
+
+| in the file | in `granny211.h` |
+|---|---|
+| `Name`, `ParentIndex` | same |
+| `Transform` | `LocalTransform` |
+| `InverseWorldTransform` | `InverseWorld4x4` |
+| `LightInfo`, reference | `LODError`, real32 |
+| `CameraInfo`, reference | `ExtendedData` |
+| `ExtendedData` | absent |
+
+Seven members against six, and the ones that survived were renamed, so a
+conversion cannot be driven by matching member names alone. The real DLL carries
+its own type definitions as exported globals, `GrannyBoneType` and its siblings,
+alongside `GrannyDataTypesAreEqual` and `GrannyDataTypeBeginsWith`; that is the
+machinery it converts with. `GrannyOldCurveType` is exported too, which is how a
+2017 build still reads the 20-byte curves below.
+
+**Consequence for M2.** The type tree walk produces objects in the file's shape,
+and a second step lays them out in the shape `granny211.h` describes. The
+mapping between the two is per type and has to be written by hand for the eight
+structures that changed, which are listed under "Which `granny2.dll`" below.
+
 ### Curves are the pre-`curve2` legacy layout
 
 This game predates `granny_curve2`. A transform track on disk is **64 bytes**:
