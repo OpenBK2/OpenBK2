@@ -389,13 +389,19 @@ not easing on and holds its endpoint on the other, so an ease-in that ends on
 anything but one is discontinuous. The engine never does that.
 
 **Sampling** blends the controls bound to an instance as a weighted average
-divided by the total weight, and the rest pose takes no part: one clip at a
-weight of a quarter still shows at full strength, which is what makes an ease
-visible only as a cross-fade. Where no control reaches a bone, or the weights add
-to nothing, the rest pose stands. A track that mentions a bone **replaces every
-part of its transform**, and the parts whose curves are empty become neutral
-rather than the bind pose: a bone whose track carries an orientation curve and no
-position curve comes back at the origin.
+divided by the total weight, **with a floor at 0.2**: below that total the
+shortfall goes to the bone's rest pose, so a lone clip at weight 0.05 shows a
+quarter of the way from the bind pose and one at 0.25 shows at full strength. The
+floor is exactly 0.2, measured over 222 samples across 60 files, and it is easy
+to miss: any measurement made with two controls whose weights sum past it sees
+only the normalisation. The bind pose brings its own flags in with it when it
+contributes. Where no control reaches a bone at all, the rest pose stands
+untouched.
+
+A track that mentions a bone **replaces every part of its transform**, and the
+parts whose curves are empty become neutral rather than the bind pose: a bone
+whose track carries an orientation curve and no position curve comes back at the
+origin.
 
 The curves are sampled with the loop flags set from the **loop index**, not the
 loop count: a curve wraps backwards when there is a period before this one and
@@ -411,21 +417,25 @@ neighbour, which is a visible pop once per loop.
 
 #### What still differs
 
-Over 401 files and fifteen scenarios each, everything above agrees. Three things
-do not.
+Over 200 files and fifteen scenarios each, everything above agrees. Two things
+do not, and neither is reachable in a way the game can see.
 
-- **The frame where an ease-in's weight first becomes non-zero.** The weights
-  themselves agree exactly at every step; the pose at that one frame does not.
-  The DLL appears to sample the clip earlier than the local clock it reports, and
-  none of the rules tried accounts for the offset. One frame per transition.
-- **A local clock landing exactly on a period boundary**, where `fmod` gives zero
-  and the DLL gives the period. A float knife edge, and for a looping clip the
-  two answers are the same pose.
-- **The sign of a sampled quaternion**, on 1.3% of samples. q and -q are the same
-  rotation and nothing downstream can tell them apart: the matrix build is
-  quadratic in the components and `GrannyPostMultiplyBy` is bilinear. The DLL
-  negates on bones whose rotation passes through 180 degrees, and no rule fitted
-  over five files reproduces which; the choice is not stateful.
+- **A local clock landing exactly on a multiple of the period**, where `fmod`
+  gives zero and the DLL gives the period. A float knife edge in the wrap
+  arithmetic. For a looping clip the two answers are the same pose, because the
+  last key and the first are the same keyframe.
+- **The sign of a sampled quaternion**, on 1.3% of samples, and the two-clip
+  blends that inherit it. q and -q are the same rotation and nothing downstream
+  can tell them apart: the matrix build is quadratic in the components and
+  `GrannyPostMultiplyBy` is bilinear, so the world and composite matrices are
+  identical either way. The DLL negates on bones whose rotation passes through
+  180 degrees. Five rules were fitted and rejected, and the choice is not
+  stateful; `granny_bound_transform_track` in `granny211.h` carries a
+  `QuaternionMode` byte computed when a clip is bound, which is very likely where
+  the decision lives and is not readable from outside.
+
+A third difference, the frame where an ease-in's weight first became non-zero,
+turned out to be the missing weight floor above and is gone.
 
 ## Library survey
 

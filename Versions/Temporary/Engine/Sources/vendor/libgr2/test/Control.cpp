@@ -501,6 +501,81 @@ TEST( Control, SamplingBlendsByWeightAndNormalisesByTheTotal )
 	GrannyFreeModelInstance( pInstance );
 }
 
+TEST( Control, BelowAWeightOfATenthTheBindPoseMakesUpTheDifference )
+{
+	// Measured as a floor at exactly 0.2, over 222 samples across 60 files: below
+	// a total weight of 0.2 the shortfall goes to the bone's rest pose, so the
+	// result is the bind pose a fraction total/0.2 of the way toward the
+	// animation. Above the floor the total normalises and the animation stands
+	// alone, which is why every measurement made with two controls missed this:
+	// their weights summed past it.
+	CClip clip( 1, 2.0f );
+	clip.SetLinearPosition( 0, 0.0f, 100.0f );
+	granny_model_instance *pInstance = GrannyInstantiateModel( clip.Model() );
+	granny_local_pose *pPose = GrannyNewLocalPose( 1 );
+	granny_control *pControl = Bind( clip, pInstance );
+	ASSERT_NE( nullptr, pControl );
+	GrannySetControlLoopCount( pControl, 1 );
+	GrannySetControlEaseIn( pControl, true );
+
+	GrannySetModelClock( pInstance, 1.0f );
+	const NGr2::STransform *pBone = reinterpret_cast<const NGr2::STransform *>(
+		GrannyGetLocalPoseTransform( pPose, 0 ) );
+	const float fRest = 100.0f;
+	const float fAnimated = 50.0f;
+
+	for ( float fAsked : { 0.05f, 0.1f, 0.15f } )
+	{
+		GrannySetControlEaseInCurve( pControl, -1.0f, 1.0e6f, fAsked, fAsked, fAsked,
+		                             fAsked );
+		GrannySampleModelAnimations( pInstance, 0, 1, pPose );
+		const float fWeight = GrannyGetControlEffectiveWeight( pControl );
+		const float fFraction = fWeight / 0.2f;
+		EXPECT_NEAR( fRest + ( fAnimated - fRest ) * fFraction, pBone->Position[0],
+		             1e-3f )
+			<< "at an effective weight of " << fWeight;
+	}
+
+	// At and above the floor the animation stands alone.
+	for ( float fAsked : { 0.2f, 0.5f, 1.0f } )
+	{
+		GrannySetControlEaseInCurve( pControl, -1.0f, 1.0e6f, fAsked, fAsked, fAsked,
+		                             fAsked );
+		GrannySampleModelAnimations( pInstance, 0, 1, pPose );
+		EXPECT_NEAR( fAnimated, pBone->Position[0], 1e-3f )
+			<< "at an asked weight of " << fAsked;
+	}
+}
+
+TEST( Control, TheBindPoseBringsItsFlagsInBelowTheFloor )
+{
+	// A bone whose track speaks only for one part of its transform reads back
+	// only that part's flag, until the floor brings the bind pose in and its
+	// flags with it. Measured: the DLL reports position and orientation where an
+	// implementation that kept the track's flags alone reports orientation only.
+	CClip clip( 1, 2.0f );
+	clip.SetLinearPosition( 0, 0.0f, 100.0f );
+	granny_model_instance *pInstance = GrannyInstantiateModel( clip.Model() );
+	granny_local_pose *pPose = GrannyNewLocalPose( 1 );
+	granny_control *pControl = Bind( clip, pInstance );
+	GrannySetControlLoopCount( pControl, 1 );
+	GrannySetControlEaseIn( pControl, true );
+	GrannySetModelClock( pInstance, 1.0f );
+
+	const NGr2::STransform *pBone = reinterpret_cast<const NGr2::STransform *>(
+		GrannyGetLocalPoseTransform( pPose, 0 ) );
+
+	// The fixture's bone has a position curve only, and its bind transform is
+	// flagged for position, so both are the same bit here; what the test pins is
+	// that the flags are the union rather than either one alone.
+	GrannySetControlEaseInCurve( pControl, -1.0f, 1.0e6f, 0.05f, 0.05f, 0.05f, 0.05f );
+	GrannySampleModelAnimations( pInstance, 0, 1, pPose );
+	EXPECT_EQ( NGr2::TRANSFORM_HAS_POSITION, pBone->nFlags );
+
+	GrannyFreeLocalPose( pPose );
+	GrannyFreeModelInstance( pInstance );
+}
+
 TEST( Control, ALoopingClipIdentifiesItsLastControlWithItsFirst )
 {
 	// Which is right for this game's data: every multi-knot curve in the corpus

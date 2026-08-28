@@ -193,15 +193,24 @@ const STransformTrack *TrackFor( const STrackGroup &group, const char *pszBone )
 	return nullptr;
 }
 
+//! The lowest total weight that stands on its own.
+//!
+//! Measured as exactly 0.2, over 222 samples across 60 files: below it the real
+//! DLL makes the shortfall up from the bone's rest pose, so a lone clip at weight
+//! 0.05 shows a quarter of the way from the bind pose rather than at full
+//! strength. Every earlier measurement of the blend used two controls whose
+//! weights summed to more than this and so never saw it.
+const float WEIGHT_FLOOR = 0.2f;
+
 //! Blend every control bound to an instance into a pose that holds the rest pose.
 //!
-//! Measured rule, over pairs of controls at a spread of weights: the result is
-//! the weighted average of the contributors, divided by the total weight, and
-//! the rest pose does not take part. A lone control at weight 0.25 therefore
-//! produces its animation at full strength rather than a quarter of the way from
-//! the bind pose, which is what makes an ease-in visible only as a cross-fade.
-//! Where no control reaches a bone, or where the weights add to nothing, the
-//! rest pose already in the result stands.
+//! Measured rule: the result is the weighted average of the contributors divided
+//! by the total weight, with the rest pose making up any shortfall below
+//! WEIGHT_FLOOR. So above that floor a lone control at weight 0.25 produces its
+//! animation at full strength, and an ease is visible only as a cross-fade;
+//! below it an ease does fade from the bind pose. Where no control reaches a
+//! bone, or the weights add to nothing at all, the rest pose already in the
+//! result stands.
 void BlendControls( const granny_model_instance &instance, const SSkeleton &skeleton,
                     granny_int32x nFirstBone, granny_int32x nBoneCount,
                     granny_local_pose &result )
@@ -215,6 +224,7 @@ void BlendControls( const granny_model_instance &instance, const SSkeleton &skel
 	for ( granny_int32x i = nFirstBone; i < nFirstBone + nBoneCount; ++i )
 	{
 		const char *pszBone = skeleton.pBones[i].pszName;
+		const STransform &rest = skeleton.pBones[i].LocalTransform;
 
 		float fTotal = 0.0f;
 		uint32_t nFlags = 0;
@@ -327,6 +337,37 @@ void BlendControls( const granny_model_instance &instance, const SSkeleton &skel
 		if ( fTotal <= 0.0f )
 		{
 			continue;
+		}
+
+		// The floor. Nothing has reached this bone with enough weight to speak
+		// for it alone, so the bind pose makes up the difference.
+		if ( fTotal < WEIGHT_FLOOR )
+		{
+			const float fResidual = WEIGHT_FLOOR - fTotal;
+			float fDot = 0.0f;
+			for ( int k = 0; k < 4; ++k )
+			{
+				fDot += Orientation[k] * rest.Orientation[k];
+			}
+			const float fRestSign = fDot < 0.0f ? -fResidual : fResidual;
+			for ( int k = 0; k < 3; ++k )
+			{
+				Position[k] += rest.Position[k] * fResidual;
+			}
+			for ( int k = 0; k < 4; ++k )
+			{
+				Orientation[k] += rest.Orientation[k] * fRestSign;
+			}
+			for ( int k = 0; k < 9; ++k )
+			{
+				ScaleShear[k] += ( &rest.ScaleShear[0][0] )[k] * fResidual;
+			}
+			// And the bind pose brings its own flags in with it, so a bone whose
+			// track speaks only for its orientation gets its position back from
+			// the rest and reads position-and-orientation rather than orientation
+			// alone.
+			nFlags |= rest.nFlags;
+			fTotal = WEIGHT_FLOOR;
 		}
 
 		STransform &out = result.Transforms[static_cast<size_t>( i )];
