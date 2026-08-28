@@ -6,7 +6,7 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
@@ -14,17 +14,13 @@ extern "C"
 GR2_API( void ) GrannySetAllocator( granny_allocate_callback *AllocateCallback,
                                     granny_deallocate_callback *DeallocateCallback )
 {
-	GR2_STUB();
-	(void)AllocateCallback;
-	(void)DeallocateCallback;
+	GR2_TRACE( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
 }
 
 GR2_API( void ) GrannyGetAllocator( granny_allocate_callback **AllocateCallback,
                                     granny_deallocate_callback **DeallocateCallback )
 {
-	GR2_STUB();
-	(void)AllocateCallback;
-	(void)DeallocateCallback;
+	GR2_TRACE( "AllocateCallback={} DeallocateCallback={}", AllocateCallback, DeallocateCallback );
 }
 
 }

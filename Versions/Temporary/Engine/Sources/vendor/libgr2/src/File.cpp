@@ -12,37 +12,32 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
 
 GR2_API( granny_file * ) GrannyReadEntireFile( char const *FileName )
 {
-	GR2_STUB();
-	(void)FileName;
+	GR2_TRACE( "FileName={}", FileName );
 	return 0;
 }
 
 GR2_API( granny_file * ) GrannyReadEntireFileFromMemory( granny_int32x MemorySize,
                                                          void const *Memory )
 {
-	GR2_STUB();
-	(void)MemorySize;
-	(void)Memory;
+	GR2_TRACE( "MemorySize={} Memory={}", MemorySize, Memory );
 	return 0;
 }
 
 GR2_API( void ) GrannyFreeFile( granny_file *File )
 {
-	GR2_STUB();
-	(void)File;
+	GR2_TRACE( "File={}", File );
 }
 
 GR2_API( granny_file_info * ) GrannyGetFileInfo( granny_file *File )
 {
-	GR2_STUB();
-	(void)File;
+	GR2_TRACE( "File={}", File );
 	return 0;
 }
 

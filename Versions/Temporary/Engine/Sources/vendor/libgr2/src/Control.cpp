@@ -15,137 +15,108 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
 
 GR2_API( void ) GrannyFreeControl( granny_control *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 }
 
 GR2_API( void ) GrannyFreeControlOnceUnused( granny_control *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 }
 
 GR2_API( bool ) GrannyControlIsComplete( granny_control const *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return false;
 }
 
 GR2_API( void ) GrannyCompleteControlAt( granny_control *Control, granny_real32 AtSeconds )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)AtSeconds;
+	GR2_TRACE( "Control={} AtSeconds={}", Control, AtSeconds );
 }
 
 GR2_API( void ) GrannySetControlActive( granny_control *Control, bool Active )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)Active;
+	GR2_TRACE( "Control={} Active={}", Control, Active );
 }
 
 GR2_API( granny_real32 ) GrannyGetControlClampedLocalClock( granny_control *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return 0.0f;
 }
 
 GR2_API( void ) GrannySetControlRawLocalClock( granny_control *Control, granny_real32 LocalClock )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)LocalClock;
+	GR2_TRACE( "Control={} LocalClock={}", Control, LocalClock );
 }
 
 GR2_API( granny_real32 ) GrannyGetControlDuration( granny_control const *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return 0.0f;
 }
 
 GR2_API( granny_real32 ) GrannyGetControlDurationLeft( granny_control *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return 0.0f;
 }
 
 GR2_API( granny_real32 ) GrannyGetControlEffectiveWeight( granny_control const *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return 0.0f;
 }
 
 GR2_API( granny_real32 ) GrannyGetControlSpeed( granny_control const *Control )
 {
-	GR2_STUB();
-	(void)Control;
+	GR2_TRACE( "Control={}", Control );
 	return 0.0f;
 }
 
 GR2_API( void ) GrannySetControlSpeed( granny_control *Control, granny_real32 Speed )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)Speed;
+	GR2_TRACE( "Control={} Speed={}", Control, Speed );
 }
 
 GR2_API( void ) GrannySetControlLoopCount( granny_control *Control, granny_int32x LoopCount )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)LoopCount;
+	GR2_TRACE( "Control={} LoopCount={}", Control, LoopCount );
 }
 
 GR2_API( void ) GrannySetControlForceClampedLooping( granny_control *Control, bool Clamp )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)Clamp;
+	GR2_TRACE( "Control={} Clamp={}", Control, Clamp );
 }
 
 GR2_API( granny_real32 ) GrannyEaseControlIn( granny_control *Control, granny_real32 Duration,
                                               bool FromCurrent )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)Duration;
-	(void)FromCurrent;
+	GR2_TRACE( "Control={} Duration={} FromCurrent={}", Control, Duration, FromCurrent );
 	return 0.0f;
 }
 
 GR2_API( granny_real32 ) GrannyEaseControlOut( granny_control *Control, granny_real32 Duration )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)Duration;
+	GR2_TRACE( "Control={} Duration={}", Control, Duration );
 	return 0.0f;
 }
 
 GR2_API( void ) GrannySetControlEaseIn( granny_control *Control, bool EaseIn )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)EaseIn;
+	GR2_TRACE( "Control={} EaseIn={}", Control, EaseIn );
 }
 
 GR2_API( void ) GrannySetControlEaseOut( granny_control *Control, bool EaseOut )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)EaseOut;
+	GR2_TRACE( "Control={} EaseOut={}", Control, EaseOut );
 }
 
 GR2_API( void ) GrannySetControlEaseInCurve( granny_control *Control, granny_real32 StartSeconds,
@@ -153,14 +124,9 @@ GR2_API( void ) GrannySetControlEaseInCurve( granny_control *Control, granny_rea
                                              granny_real32 StartTangent, granny_real32 EndTangent,
                                              granny_real32 EndValue )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)StartSeconds;
-	(void)EndSeconds;
-	(void)StartValue;
-	(void)StartTangent;
-	(void)EndTangent;
-	(void)EndValue;
+	GR2_TRACE( "Control={} StartSeconds={} EndSeconds={} StartValue={} StartTangent={} "
+	           "EndTangent={} EndValue={}",
+	           Control, StartSeconds, EndSeconds, StartValue, StartTangent, EndTangent, EndValue );
 }
 
 GR2_API( void ) GrannySetControlEaseOutCurve( granny_control *Control, granny_real32 StartSeconds,
@@ -168,14 +134,9 @@ GR2_API( void ) GrannySetControlEaseOutCurve( granny_control *Control, granny_re
                                               granny_real32 StartTangent, granny_real32 EndTangent,
                                               granny_real32 EndValue )
 {
-	GR2_STUB();
-	(void)Control;
-	(void)StartSeconds;
-	(void)EndSeconds;
-	(void)StartValue;
-	(void)StartTangent;
-	(void)EndTangent;
-	(void)EndValue;
+	GR2_TRACE( "Control={} StartSeconds={} EndSeconds={} StartValue={} StartTangent={} "
+	           "EndTangent={} EndValue={}",
+	           Control, StartSeconds, EndSeconds, StartValue, StartTangent, EndTangent, EndValue );
 }
 
 }

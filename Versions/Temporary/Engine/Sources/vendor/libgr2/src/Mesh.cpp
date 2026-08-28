@@ -11,22 +11,20 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
 
 GR2_API( granny_int32x ) GrannyGetMeshTriangleGroupCount( granny_mesh const *Mesh )
 {
-	GR2_STUB();
-	(void)Mesh;
+	GR2_TRACE( "Mesh={}", Mesh );
 	return 0;
 }
 
 GR2_API( bool ) GrannyMeshIsRigid( granny_mesh const *Mesh )
 {
-	GR2_STUB();
-	(void)Mesh;
+	GR2_TRACE( "Mesh={}", Mesh );
 	return false;
 }
 

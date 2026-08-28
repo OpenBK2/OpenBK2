@@ -28,6 +28,21 @@ else()
     set(GR2_OUTPUT_NAME granny2)
 endif()
 
+# spdlog carries the call trace. When this is configured from the engine tree the
+# root CMakeLists has already brought it in, so take that one and stay on the
+# version the rest of the build uses; standalone, fetch it at the same pin as
+# cmake/spdlog.cmake.
+if(NOT TARGET spdlog::spdlog_header_only)
+    include(FetchContent)
+    FetchContent_Declare(
+            spdlog
+            GIT_REPOSITORY https://github.com/gabime/spdlog.git
+            GIT_TAG 486b55554f11c9cccc913e11a87085b2a91f706f
+            GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(spdlog)
+endif()
+
 add_library(gr2 SHARED
     src/Allocator.cpp
     src/Animation.cpp
@@ -37,10 +52,10 @@ add_library(gr2 SHARED
     src/Model.cpp
     src/Pose.cpp
     src/Skeleton.cpp
+    src/Trace.cpp
+    src/Trace.h
     src/Transform.cpp
     src/TypeTree.cpp
-    src/Unimplemented.cpp
-    src/Unimplemented.h
     include/gr2/granny.h)
 
 add_library(gr2::gr2 ALIAS gr2)
@@ -53,6 +68,10 @@ target_include_directories(gr2
 # PRIVATE because a consumer that inherited it would try to export the same
 # names again.
 target_compile_definitions(gr2 PRIVATE GR2_BUILD_SHARED)
+
+# Header only, so that this library stays a single DLL with no runtime of its
+# own to install beside it. PRIVATE because none of it reaches gr2/granny.h.
+target_link_libraries(gr2 PRIVATE spdlog::spdlog_header_only)
 
 set_target_properties(gr2 PROPERTIES
     OUTPUT_NAME ${GR2_OUTPUT_NAME}
@@ -67,6 +86,19 @@ if(MSVC)
     target_compile_options(gr2 PRIVATE /W4)
 else()
     target_compile_options(gr2 PRIVATE -Wall -Wextra)
+endif()
+
+# spdlog's bundled fmt is not ours to warn about. On a 32-bit build its
+# size_t narrowing alone produces five C4244s per translation unit, which buries
+# anything this library says about its own code. Marking the headers as system
+# takes MSVC's /external:I path, and /external:W0 is what actually lowers the
+# level once they are on it.
+get_target_property(GR2_SPDLOG_INCLUDES spdlog::spdlog_header_only INTERFACE_INCLUDE_DIRECTORIES)
+if(GR2_SPDLOG_INCLUDES)
+    target_include_directories(gr2 SYSTEM PRIVATE ${GR2_SPDLOG_INCLUDES})
+    if(MSVC)
+        target_compile_options(gr2 PRIVATE /external:W0)
+    endif()
 endif()
 
 # The acceptance test for the skeleton: the DLL exports these names, all of them,

@@ -12,23 +12,20 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
 
 GR2_API( void ) GrannyMakeIdentity( granny_transform *Result )
 {
-	GR2_STUB();
-	(void)Result;
+	GR2_TRACE( "Result={}", Result );
 }
 
 GR2_API( void ) GrannyPostMultiplyBy( granny_transform *Transform,
                                       granny_transform const *PostMult )
 {
-	GR2_STUB();
-	(void)Transform;
-	(void)PostMult;
+	GR2_TRACE( "Transform={} PostMult={}", Transform, PostMult );
 }
 
 }

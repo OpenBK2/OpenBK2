@@ -8,30 +8,26 @@
 
 #include <gr2/granny.h>
 
-#include "Unimplemented.h"
+#include "Trace.h"
 
 extern "C"
 {
 
 GR2_API( granny_model_instance * ) GrannyInstantiateModel( granny_model const *Model )
 {
-	GR2_STUB();
-	(void)Model;
+	GR2_TRACE( "Model={}", Model );
 	return 0;
 }
 
 GR2_API( void ) GrannyFreeModelInstance( granny_model_instance *ModelInstance )
 {
-	GR2_STUB();
-	(void)ModelInstance;
+	GR2_TRACE( "ModelInstance={}", ModelInstance );
 }
 
 GR2_API( void ) GrannySetModelClock( granny_model_instance const *ModelInstance,
                                      granny_real32 NewClock )
 {
-	GR2_STUB();
-	(void)ModelInstance;
-	(void)NewClock;
+	GR2_TRACE( "ModelInstance={} NewClock={}", ModelInstance, NewClock );
 }
 
 }

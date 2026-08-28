@@ -3,10 +3,10 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: skeleton.** Header, build and export set only. All 54 entry points are
-stubs that return a null, a zero or a false, and report themselves once on stderr
-when first called. Nothing is wired into the engine: `Sources/CMakeLists.txt` does
-not reference this directory, and the game still links the vendored DLL.
+**Status: skeleton.** Header, build, export set and call trace only. All 54 entry
+points are stubs that return a null, a zero or a false. Nothing is wired into the
+engine: `Sources/CMakeLists.txt` does not reference this directory, and the game
+still links the vendored DLL.
 
 The background is in [docs/GrannyReplacement.md](../../../../../../docs/GrannyReplacement.md),
 which measured this game's corpus (83,184 unique GR2 files across three installs,
@@ -32,6 +32,30 @@ library's export table and fails unless it holds exactly the 54 names in
 
 The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
 the vendored DLL, because the engine loads it by name.
+
+## The call trace
+
+Every entry point records the call before it returns, so a run against this
+library says which of the 54 are actually reached, in what order, and with what
+arguments. The engine references all 54, but a reference is not a call: some sit
+on paths the shipped data never takes, and the linker cannot tell. That is what
+orders the milestones above.
+
+Two levels, so one run answers both questions:
+
+- **trace**, every call, as `<ordinal>  Name( Arg=value ... )`. Strings are
+  printed as strings, since they name the file being read or the bone being
+  looked up; other pointers become addresses, which is enough to match a later
+  call against an earlier one.
+- **warn**, once per entry point, `Name is not implemented`. Running at warn
+  gives the list of entry points reached and nothing else, which is what stays
+  useful once some of them are real.
+
+The log goes to `granny_calls.log` beside the executable, truncated per run, and
+on Windows also to the debugger's output window. `LIBGR2_LOG_LEVEL` sets the
+level; it defaults to `trace`, and every line is flushed, because the process
+this is meant to observe is expected to stop abruptly and the tail is the part
+worth reading.
 
 ## Shape
 
