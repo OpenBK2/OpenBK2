@@ -53,3 +53,21 @@ gr2_add_test(ReadEntireFileFromMemory)
 gr2_add_test(FileContainer)
 gr2_add_test(Oodle1)
 gr2_add_test(FileInfo)
+gr2_add_test(Oodle0)
+
+# Oodle0 has no committed stream fixtures, because granny2.dll 2.11 decodes that
+# codec and cannot encode it: GrannyBeginFileCompression refuses it and no
+# GrannyOodle0Compress is exported. The test uses GR2 files this repository
+# already ships instead, 14,115 of which are pure Oodle0, checked against
+# checksums taken from the real DLL. Defined only when that data is present, so an
+# extracted copy of this library compiles and skips.
+# test -> libgr2 -> vendor -> Sources -> Engine -> Temporary -> Versions -> repo
+get_filename_component(LIBGR2_REPO_ROOT
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../.. ABSOLUTE)
+if(EXISTS ${LIBGR2_REPO_ROOT}/Versions/Current/Data/bin)
+    target_compile_definitions(Oodle0_test
+        PRIVATE LIBGR2_REPO_DATA_DIR="${LIBGR2_REPO_ROOT}")
+    message(STATUS "libgr2: Oodle0 tests will read ${LIBGR2_REPO_ROOT}/Versions/Current/Data")
+else()
+    message(STATUS "libgr2: no Versions/Current/Data, the Oodle0 data tests will skip")
+endif()

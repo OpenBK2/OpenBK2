@@ -3,24 +3,21 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: static geometry, for half the shipped corpus.** The loading path is
-written end to end: `GrannyReadEntireFileFromMemory`, `GrannyReadEntireFile`,
-`GrannyFreeFile`, the Oodle1 codec, the type tree walk, and `GrannyGetFileInfo`
+**Status: every shipped file loads, static geometry converts.** The loading path
+is written end to end: `GrannyReadEntireFileFromMemory`, `GrannyReadEntireFile`,
+`GrannyFreeFile`, both Oodle codecs, the type tree walk, and `GrannyGetFileInfo`
 with the conversion behind it. `GrannyGetMemberTypeSize` and
 `GrannyGetTotalObjectSize` come with it. The other 48 entry points are stubs that
 return a null, a zero or a false.
 
-Two things stand between that and a running game. Oodle0 is not written, and it
-is what the other 6,016 of the retail install's 13,582 GR2 files use; no file
-mixes the two codecs, so each unlocks its own half. And nothing animates: the
-pose and control entry points are still stubs, so track groups and animations are
-counted but not converted.
+What is left is animation. The pose and control entry points are still stubs, so
+track groups and animations are read into the file and not converted.
 
-Both halves are checked against the real DLL rather than against themselves.
-Oodle1: 8,636 files, 140.9 MB, decoded through both and compared byte for byte.
-`GrannyGetFileInfo`: 600 files walked through both and compared field by field,
-including names, counts, parent indices, transforms, vertex strides, triangle
-groups, bone bindings and mesh pointer identity. All identical.
+**All 21,720 unique GR2 files across the three installs read identically to the
+real `granny2.dll`**, in every field compared: names, counts, parent indices,
+transforms, vertex strides and their component lists, vertex bytes, triangle
+groups and indices, bone bindings, and mesh pointer identity. See
+`scripts/port/gr2diff.py` below.
 
 Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
 directory, and the game still links the vendored DLL.
@@ -178,7 +175,8 @@ each gains its real definition in the milestone that first needs it.
 |---|---|---|
 | `src/Allocator.cpp` | 2 | linked, never called, see the trace above |
 | `src/File.cpp` | 4 | container, fixups and file info |
-| `src/Oodle1.cpp` | 0 | the codec 7,566 of 13,582 retail files use |
+| `src/Oodle0.cpp` | 0 | the codec 6,016 of 21,720 files use |
+| `src/Oodle1.cpp` | 0 | the codec the other 15,704 use |
 | `src/Convert.cpp` | 0 | the file's structures into granny211.h's |
 | `src/TypeTree.cpp` | 2 | members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | M2, geometry |

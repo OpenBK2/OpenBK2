@@ -20,6 +20,7 @@
 #include "File.h"
 
 #include "Convert.h"
+#include "Oodle0.h"
 #include "Oodle1.h"
 #include "Trace.h"
 
@@ -228,18 +229,6 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		{
 			return Reject( "section {} compression {}, no such codec", i, section.nCompression );
 		}
-		if ( section.nCompression == COMPRESSION_OODLE0 )
-		{
-			// The remaining half of the game. Of the 13,582 unique GR2 in the retail
-			// install, 7,566 are entirely Oodle1 and 6,016 entirely Oodle0, and none
-			// mixes the two, so each codec unlocks its own half and neither unlocks
-			// any of the other's. Named rather than numbered, with the number kept
-			// because that is what the section record holds and what a hex dump of
-			// the file shows.
-			return Reject( "section {} needs Oodle0 compression (type {}), which is not "
-			               "implemented",
-			               i, section.nCompression );
-		}
 		if ( section.nCompression == COMPRESSION_NONE
 		     && section.nExpandedDataSize != section.nDataSize )
 		{
@@ -283,12 +272,22 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 			// which is why the section record carries them at all. They are equal in
 			// every section of this game's data, so the middle stage is always empty.
 			pFile->m_SectionData[i].assign( section.nExpandedDataSize, 0 );
-			if ( !Oodle1Decompress( pBytes + section.nDataOffset, section.nDataSize,
-			                        section.nFirst16Bit, section.nFirst8Bit,
-			                        pFile->m_SectionData[i].data(), section.nExpandedDataSize ) )
+
+			const bool bOk =
+				section.nCompression == COMPRESSION_OODLE0
+					? Oodle0Decompress( pBytes + section.nDataOffset, section.nDataSize,
+					                    section.nFirst16Bit, section.nFirst8Bit,
+					                    pFile->m_SectionData[i].data(),
+					                    section.nExpandedDataSize )
+					: Oodle1Decompress( pBytes + section.nDataOffset, section.nDataSize,
+					                    section.nFirst16Bit, section.nFirst8Bit,
+					                    pFile->m_SectionData[i].data(),
+					                    section.nExpandedDataSize );
+			if ( !bOk )
 			{
-				return Reject( "section {}: {} Oodle1 bytes did not expand to {}", i,
-				               section.nDataSize, section.nExpandedDataSize );
+				return Reject( "section {}: {} Oodle{} bytes did not expand to {}", i,
+				               section.nDataSize, section.nCompression - 1,
+				               section.nExpandedDataSize );
 			}
 		}
 	}
