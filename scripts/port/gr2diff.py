@@ -21,8 +21,15 @@ files the two read differently, because during a port most of them are one
 milestone away rather than wrong. Where the reason is a codec that is not
 implemented yet, that is a "not supported" line and not a failure.
 
-Output is a histogram before it is a list: over eighty thousand files, what is
+Output is a histogram before it is a list: over twenty thousand files, what is
 useful is "InverseWorld4x4 differs in 12 files", not twelve thousand lines.
+
+Files whose only differences are float rounding are reported as "near" with the
+worst relative difference, rather than as failures. Transform composition is
+float arithmetic and two correct implementations differ in the last bit or two;
+the real DLL is not reliably the more accurate one. --tolerance sets where that
+line falls. Everything derived by copying bytes still compares exactly, because
+there rounding is not a thing that can happen.
 """
 
 import argparse
@@ -37,7 +44,8 @@ import struct
 import sys
 import zipfile
 from collections import Counter
-from ctypes import POINTER, c_char_p, c_float, c_int32, c_uint16, c_uint32, c_void_p
+from ctypes import (POINTER, c_bool, c_char_p, c_float, c_int32, c_uint16, c_uint32,
+                    c_void_p)
 
 MAGIC = bytes.fromhex('b867b0caf86db10f84728c7e5e19001e')
 
@@ -204,6 +212,17 @@ class Granny(object):
         self.dll.GrannyGetTotalObjectSize.restype = c_int32
         self.dll.GrannyGetMemberTypeSize.argtypes = [c_void_p]
         self.dll.GrannyGetMemberTypeSize.restype = c_int32
+        # The small queries. Compared as well as the structures, because the
+        # engine calls them and a structure that reads correctly says nothing
+        # about a function that summarises it.
+        self.dll.GrannyGetMeshTriangleGroupCount.argtypes = [c_void_p]
+        self.dll.GrannyGetMeshTriangleGroupCount.restype = c_int32
+        self.dll.GrannyMeshIsRigid.argtypes = [c_void_p]
+        self.dll.GrannyMeshIsRigid.restype = c_bool
+        self.dll.GrannyFindBoneByName.argtypes = [c_void_p, c_char_p, POINTER(c_int32)]
+        self.dll.GrannyFindBoneByName.restype = c_bool
+        self.dll.GrannyMakeIdentity.argtypes = [c_void_p]
+        self.dll.GrannyPostMultiplyBy.argtypes = [c_void_p, c_void_p]
 
     def walk(self, data):
         """Read a file and describe what GrannyGetFileInfo gave back.
@@ -242,21 +261,39 @@ class Granny(object):
                 'TriTopologies': info.TriTopologyCount, 'Meshes': info.MeshCount,
                 'Models': info.ModelCount,
             },
-            'Skeletons': [self._skeleton(info.Skeletons[i].contents)
+            'Skeletons': [self._skeleton(info.Skeletons[i])
                           for i in range(info.SkeletonCount)],
-            'Meshes': [self._mesh(info.Meshes[i].contents, meshes)
+            'Meshes': [self._mesh(info.Meshes[i], meshes)
                        for i in range(info.MeshCount)],
             'Models': [self._model(info.Models[i].contents, meshes)
                        for i in range(info.ModelCount)],
         }
 
-    def _skeleton(self, sk):
-        return {
+    def _skeleton(self, skeleton_ptr):
+        sk = skeleton_ptr.contents
+        out = {
             'Name': _s(sk.Name),
             'LODType': sk.LODType,
             'BoneCount': sk.BoneCount,
             'Bones': [self._bone(sk.Bones[i]) for i in range(sk.BoneCount)],
         }
+
+        # GrannyFindBoneByName, for every bone by its own name and for one that
+        # is not there. The engine turns a mesh's bone binding name into an index
+        # this way, so a wrong answer is a limb on the wrong joint.
+        address = C.cast(skeleton_ptr, c_void_p)
+        lookups = []
+        for i in range(min(sk.BoneCount, 64)):
+            index = c_int32(-99)
+            found = self.dll.GrannyFindBoneByName(address, sk.Bones[i].Name,
+                                                  C.byref(index))
+            lookups.append([bool(found), index.value])
+        index = c_int32(-99)
+        found = self.dll.GrannyFindBoneByName(address, b'\x01no such bone',
+                                              C.byref(index))
+        lookups.append([bool(found), index.value])
+        out['FindBoneByName'] = lookups
+        return out
 
     @staticmethod
     def _bone(bone):
@@ -268,9 +305,13 @@ class Granny(object):
             'InverseWorld4x4': list(bone.InverseWorld4x4),
         }
 
-    def _mesh(self, mesh, mesh_addresses):
+    def _mesh(self, mesh_ptr, mesh_addresses):
+        mesh = mesh_ptr.contents
+        address = C.cast(mesh_ptr, c_void_p)
         out = {
             'Name': _s(mesh.Name),
+            'TriangleGroupCount': self.dll.GrannyGetMeshTriangleGroupCount(address),
+            'IsRigid': bool(self.dll.GrannyMeshIsRigid(address)),
             'MorphTargetCount': mesh.MorphTargetCount,
             'MaterialBindingCount': mesh.MaterialBindingCount,
             'BoneBindingCount': mesh.BoneBindingCount,
@@ -333,6 +374,44 @@ class Granny(object):
             i += 1
         return out
 
+    def transforms(self):
+        """GrannyMakeIdentity and GrannyPostMultiplyBy on authored inputs.
+
+        Independent of any file, but checked through the same path so that
+        pointing gr2diff at a new implementation covers them without a second
+        tool. The inputs are the ones that told the two conventions apart:
+        a rotation composed with a translation, a shear with a translation, and
+        a scaled rotation with a scale.
+        """
+        s = 0.7071067811865476
+
+        def make(flags, pos=(0, 0, 0), ori=(0, 0, 0, 1),
+                 ss=(1, 0, 0, 0, 1, 0, 0, 0, 1)):
+            return struct.pack('<I16f', flags, *(list(pos) + list(ori) + list(ss)))
+
+        identity = C.create_string_buffer(68)
+        self.dll.GrannyMakeIdentity(C.cast(identity, c_void_p))
+        out = {'MakeIdentity': list(struct.unpack('<I16f', identity.raw[:68]))}
+
+        cases = [
+            (make(1, pos=(1, 2, 3)), make(1, pos=(10, 20, 30))),
+            (make(2, ori=(0, 0, s, s)), make(1, pos=(1, 0, 0))),
+            (make(2, ori=(0, 0, s, s)), make(2, ori=(s, 0, 0, s))),
+            (make(4, ss=(1, 1, 0, 0, 1, 0, 0, 0, 1)), make(1, pos=(1, 0, 0))),
+            (make(6, ori=(0, 0, s, s), ss=(2, 0, 0, 0, 3, 0, 0, 0, 1)),
+             make(4, ss=(5, 0, 0, 0, 7, 0, 0, 0, 1))),
+            (make(7, pos=(1, 2, 3), ori=(0, 0, s, s), ss=(2, 0, 0, 0, 2, 0, 0, 0, 2)),
+             make(7, pos=(4, 5, 6), ori=(s, 0, 0, s), ss=(3, 0, 0, 0, 3, 0, 0, 0, 3))),
+        ]
+        out['PostMultiplyBy'] = []
+        for a, b in cases:
+            first = C.create_string_buffer(a, 68)
+            second = C.create_string_buffer(b, 68)
+            self.dll.GrannyPostMultiplyBy(C.cast(first, c_void_p),
+                                          C.cast(second, c_void_p))
+            out['PostMultiplyBy'].append(list(struct.unpack('<I16f', first.raw[:68])))
+        return out
+
     def _model(self, model, mesh_addresses):
         bindings = []
         for i in range(model.MeshBindingCount):
@@ -387,32 +466,47 @@ def _f32(value):
 
 
 def differences(a, b, path=''):
-    """Every place the two disagree, as dotted paths."""
+    """Every place the two disagree, as (path, reference, candidate, relative).
+
+    `relative` is the relative difference for two numbers and None for anything
+    else, which is what lets a caller separate a rounding difference from a wrong
+    answer. docs/GrannyReplacement.md sets the policy this implements: structural
+    data compares exactly, float data compares with a tolerance reported as a
+    metric.
+
+    That distinction is not academic here. Container and codec output is byte
+    exact or wrong, and so is everything derived from it by copying. Transform
+    composition is float arithmetic, where two correct implementations differ in
+    the last bit or two because they multiply in a different order, and the real
+    DLL is not always the more accurate of the two.
+    """
     out = []
     if isinstance(a, dict) and isinstance(b, dict):
         for key in sorted(set(a) | set(b)):
             if key not in a:
-                out.append(('%s.%s' % (path, key), 'absent', 'present'))
+                out.append(('%s.%s' % (path, key), 'absent', 'present', None))
             elif key not in b:
-                out.append(('%s.%s' % (path, key), 'present', 'absent'))
+                out.append(('%s.%s' % (path, key), 'present', 'absent', None))
             else:
                 out += differences(a[key], b[key], '%s.%s' % (path, key))
     elif isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
-            out.append((path + '[]', '%d entries' % len(a), '%d entries' % len(b)))
+            out.append((path + '[]', '%d entries' % len(a), '%d entries' % len(b), None))
         else:
             for i, (x, y) in enumerate(zip(a, b)):
                 out += differences(x, y, '%s[%d]' % (path, i))
     elif isinstance(a, bool) or isinstance(b, bool):
         if a is not b:
-            out.append((path, a, b))
+            out.append((path, a, b, None))
     elif isinstance(a, (int, float)) and isinstance(b, (int, float)):
         # As float32, which is what both sides hold. Comparing the decimal forms
         # would report differences that are not there.
-        if _f32(a) != _f32(b):
-            out.append((path, a, b))
+        x, y = _f32(a), _f32(b)
+        if x != y:
+            scale = max(abs(x), abs(y), 1e-30)
+            out.append((path, a, b, abs(x - y) / scale))
     elif a != b:
-        out.append((path, a, b))
+        out.append((path, a, b, None))
     return out
 
 
@@ -516,9 +610,13 @@ def codecs_used(data):
 _WORKER = {}
 
 
-def _init_worker(reference, candidate):
+def _init_worker(reference, candidate, tolerance):
     _WORKER['reference'] = Granny(reference)
     _WORKER['candidate'] = Granny(candidate)
+    _WORKER['tolerance'] = tolerance
+    _WORKER['transforms'] = differences(_WORKER['reference'].transforms(),
+                                        _WORKER['candidate'].transforms(),
+                                        'transforms')
 
 
 def _compare_one(item):
@@ -548,8 +646,14 @@ def _compare_one(item):
                 names.get(c, str(c)) for c in unsupported), []
         return label, 'candidate-refused', []
 
-    found = differences(want, got)
-    return label, ('same' if not found else 'differs'), found
+    found = differences(want, got) + _WORKER['transforms']
+    if not found:
+        return label, 'same', found
+    worst = max((d[3] for d in found if d[3] is not None), default=None)
+    if worst is not None and all(d[3] is not None for d in found):
+        if worst <= _WORKER['tolerance']:
+            return label, 'near', found
+    return label, 'differs', found
 
 
 def main(argv):
@@ -567,6 +671,10 @@ def main(argv):
     parser.add_argument('--pattern', default='*', help='only labels matching this glob')
     parser.add_argument('--report', default=None, help='write every difference here')
     parser.add_argument('--show', type=int, default=10, help='differing files to print')
+    parser.add_argument('--tolerance', type=float, default=1e-6,
+                        help='relative float difference counted as rounding rather '
+                             'than as a wrong answer (default 1e-6, a few float32 '
+                             'ulps)')
     args = parser.parse_args(argv[1:])
 
     if struct.calcsize('P') != 8:
@@ -599,13 +707,14 @@ def main(argv):
     histogram = Counter()
     examples = {}
     differing = []
+    rounding = {}
 
     if args.jobs > 1:
         pool = multiprocessing.Pool(args.jobs, _init_worker,
-                                    (args.reference, args.candidate))
+                                    (args.reference, args.candidate, args.tolerance))
         results = pool.imap_unordered(_compare_one, unique(), chunksize=8)
     else:
-        _init_worker(args.reference, args.candidate)
+        _init_worker(args.reference, args.candidate, args.tolerance)
         results = (_compare_one(item) for item in unique())
 
     total = 0
@@ -614,10 +723,16 @@ def main(argv):
         outcomes[outcome] += 1
         if outcome == 'differs':
             differing.append((label, found))
-            for path, want, got in found:
+            for path, want, got, _relative in found:
                 key = generalise(path)
                 histogram[key] += 1
                 examples.setdefault(key, (label, want, got))
+        elif outcome == 'near':
+            for path, want, got, relative in found:
+                key = generalise(path)
+                worst = rounding.get(key)
+                if worst is None or relative > worst[0]:
+                    rounding[key] = (relative, label, want, got)
         if total % 2000 == 0:
             sys.stderr.write('  %d files...\n' % total)
 
@@ -628,6 +743,13 @@ def main(argv):
     print('%d unique GR2 files\n' % total)
     for outcome, count in outcomes.most_common():
         print('  %-28s %6d  %5.1f%%' % (outcome, count, 100.0 * count / max(total, 1)))
+
+    if rounding:
+        print('\nfields that differ only by rounding, worst relative difference:')
+        for key, (relative, label, want, got) in sorted(rounding.items(),
+                                                        key=lambda kv: -kv[1][0]):
+            print('  %-46s %.3g' % (key, relative))
+            print('      e.g. %s: reference %r, candidate %r' % (label, want, got))
 
     if histogram:
         print('\nwhat differs, by field:')
@@ -640,8 +762,10 @@ def main(argv):
         print('\nfirst %d differing files:' % min(args.show, len(differing)))
         for label, found in differing[:args.show]:
             print('  %s' % label)
-            for path, want, got in found[:4]:
-                print('      %s: %r vs %r' % (path, want, got))
+            for path, want, got, relative in found[:4]:
+                print('      %s: %r vs %r%s'
+                      % (path, want, got,
+                         '' if relative is None else '  (relative %.3g)' % relative))
             if len(found) > 4:
                 print('      ... %d more' % (len(found) - 4))
 
@@ -649,10 +773,14 @@ def main(argv):
         with io.open(args.report, 'w', encoding='utf-8') as f:
             json.dump({'outcomes': dict(outcomes),
                        'histogram': dict(histogram),
+                       'rounding': {k: {'relative': v[0], 'file': v[1],
+                                        'reference': v[2], 'candidate': v[3]}
+                                    for k, v in rounding.items()},
                        'differences': [{'file': label,
                                         'differences': [{'path': p, 'reference': w,
-                                                         'candidate': g}
-                                                        for p, w, g in found]}
+                                                         'candidate': g,
+                                                         'relative': r}
+                                                        for p, w, g, r in found]}
                                        for label, found in differing]},
                       f, indent=1, default=str)
         print('\nwrote %s' % args.report)

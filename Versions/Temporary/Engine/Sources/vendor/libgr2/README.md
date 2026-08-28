@@ -12,6 +12,8 @@ return a null, a zero or a false.
 
 What is left is animation. The pose and control entry points are still stubs, so
 track groups and animations are read into the file and not converted.
+`GrannyMakeIdentity` and `GrannyPostMultiplyBy` are written, since they are pure
+transform maths and the same measurements settled them.
 
 **All 21,720 unique GR2 files across the three installs read identically to the
 real `granny2.dll`**, in every field compared: names, counts, parent indices,
@@ -179,9 +181,9 @@ each gains its real definition in the milestone that first needs it.
 | `src/Oodle1.cpp` | 0 | the codec the other 15,704 use |
 | `src/Convert.cpp` | 0 | the file's structures into granny211.h's |
 | `src/TypeTree.cpp` | 2 | members resolved through the file's own type tree |
-| `src/Mesh.cpp` | 2 | M2, geometry |
-| `src/Skeleton.cpp` | 1 | M2, bone lookup by name |
-| `src/Transform.cpp` | 2 | M3, position, orientation, scale-shear |
+| `src/Mesh.cpp` | 2 | triangle group count, and whether a mesh needs skinning |
+| `src/Skeleton.cpp` | 1 | bone lookup by name |
+| `src/Transform.cpp` | 2 | position, orientation, scale-shear, and composing two |
 | `src/Model.cpp` | 3 | M3, model instances and their clock |
 | `src/Pose.cpp` | 11 | M3, curve sampling, local and world pose, skinning matrices |
 | `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
