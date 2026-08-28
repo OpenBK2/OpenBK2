@@ -33,8 +33,24 @@ groups and indices, bone bindings, mesh pointer identity, every track group and
 animation, and every curve sampled at nine values of t drawn from its own knots.
 See `scripts/port/gr2diff.py` below.
 
-Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
-directory, and the game still links the vendored DLL.
+**The engine links this and not the vendored DLL.** `cmake/granny.cmake` adds
+this directory and points `granny::granny` at it, so a normal build of the tree
+builds and links libgr2. `granny211.h` is still the header every translation unit
+compiles against, because it is the ABI this reproduces; only what answers the
+calls changed.
+
+That removes the last Windows-only, non-redistributable dependency from the
+engine's link line. libgr2 builds clean with GCC and runs its full suite on
+Linux, which the proprietary DLL could never do:
+
+```
+$ cmake -S Versions/Temporary/Engine/Sources/vendor/libgr2 -B build -G Ninja
+$ cmake --build build && cmake --build build --target libgr2-verify-exports
+-- libgranny2_x64.so: all 54 expected exports present, 54 in total
+$ cmake --build build --target libgr2-tests
+$ ctest --test-dir build -L obk2-test
+100% tests passed, 0 tests failed out of 12
+```
 
 The background is in [docs/GrannyReplacement.md](../../../../../../docs/GrannyReplacement.md),
 which measured this game's corpus (21,720 unique GR2 files across three installs,
@@ -45,7 +61,8 @@ engine uses Granny today is in
 
 ## Building
 
-Standalone, and it needs nothing but a C++17 compiler:
+Standalone, and it needs nothing but a C++17 compiler. Built and tested on MSVC
+x64 and x86 and on GCC 15 under Linux:
 
 ```powershell
 cmake -S Versions/Temporary/Engine/Sources/vendor/libgr2 -B out/build/libgr2 -G Ninja
