@@ -3,19 +3,24 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: half the shipped corpus loads.** `GrannyReadEntireFileFromMemory`,
-`GrannyReadEntireFile` and `GrannyFreeFile` are written, along with the Oodle1
-codec: header validation, the section array, section bytes expanded where they
-need it, and the pointer fixups. The other 51 entry points are stubs that return
-a null, a zero or a false.
+**Status: static geometry, for half the shipped corpus.** The loading path is
+written end to end: `GrannyReadEntireFileFromMemory`, `GrannyReadEntireFile`,
+`GrannyFreeFile`, the Oodle1 codec, the type tree walk, and `GrannyGetFileInfo`
+with the conversion behind it. `GrannyGetMemberTypeSize` and
+`GrannyGetTotalObjectSize` come with it. The other 48 entry points are stubs that
+return a null, a zero or a false.
 
-Two things stand between that and the whole corpus. Oodle0 is not written, and it
+Two things stand between that and a running game. Oodle0 is not written, and it
 is what the other 6,016 of the retail install's 13,582 GR2 files use; no file
-mixes the two codecs, so each unlocks its own half. And nothing walks the type
-tree yet, so `GrannyGetFileInfo` still returns null even for a file that loaded.
+mixes the two codecs, so each unlocks its own half. And nothing animates: the
+pose and control entry points are still stubs, so track groups and animations are
+counted but not converted.
 
-Oodle1 is checked against the real DLL rather than against itself: 1,828 retail
-files, 39.7 MB, decoded through both and compared byte for byte, all identical.
+Both halves are checked against the real DLL rather than against themselves.
+Oodle1: 8,636 files, 140.9 MB, decoded through both and compared byte for byte.
+`GrannyGetFileInfo`: 600 files walked through both and compared field by field,
+including names, counts, parent indices, transforms, vertex strides, triangle
+groups, bone bindings and mesh pointer identity. All identical.
 
 Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
 directory, and the game still links the vendored DLL.
@@ -147,9 +152,10 @@ each gains its real definition in the milestone that first needs it.
 | file | entry points | milestone |
 |---|---|---|
 | `src/Allocator.cpp` | 2 | linked, never called, see the trace above |
-| `src/File.cpp` | 4 | container and fixups done, file info left |
+| `src/File.cpp` | 4 | container, fixups and file info |
 | `src/Oodle1.cpp` | 0 | the codec 7,566 of 13,582 retail files use |
-| `src/TypeTree.cpp` | 2 | M1, members resolved through the file's own type tree |
+| `src/Convert.cpp` | 0 | the file's structures into granny211.h's |
+| `src/TypeTree.cpp` | 2 | members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | M2, geometry |
 | `src/Skeleton.cpp` | 1 | M2, bone lookup by name |
 | `src/Transform.cpp` | 2 | M3, position, orientation, scale-shear |

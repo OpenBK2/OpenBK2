@@ -52,6 +52,8 @@ set(GR2_SOURCES
     src/Allocator.cpp
     src/Animation.cpp
     src/Control.cpp
+    src/Convert.cpp
+    src/Convert.h
     src/File.cpp
     src/File.h
     src/Mesh.cpp
@@ -60,10 +62,12 @@ set(GR2_SOURCES
     src/Oodle1.h
     src/Pose.cpp
     src/Skeleton.cpp
+    src/Structures.h
     src/Trace.cpp
     src/Trace.h
     src/Transform.cpp
     src/TypeTree.cpp
+    src/TypeTree.h
     include/gr2/granny.h)
 
 add_library(gr2 SHARED ${GR2_SOURCES})

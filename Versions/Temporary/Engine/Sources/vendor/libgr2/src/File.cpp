@@ -19,6 +19,7 @@
 
 #include "File.h"
 
+#include "Convert.h"
 #include "Oodle1.h"
 #include "Trace.h"
 
@@ -39,8 +40,11 @@ const uint8_t FILE_MAGIC[MAGIC_SIZE] = { 0xb8, 0x67, 0xb0, 0xca, 0xf8, 0x6d, 0xb
 namespace
 {
 
-//! A little-endian uint32 at nOffset. The caller has already bounds checked.
-uint32_t ReadU32( const uint8_t *pBytes, uint32_t nOffset )
+//! A little-endian uint32 at nOffset in a raw buffer.
+//!
+//! Named apart from granny_file::ReadU32, which reads a loaded section and bounds
+//! checks; this one is for the header, before there is a file to read from.
+uint32_t ReadHeaderU32( const uint8_t *pBytes, uint32_t nOffset )
 {
 	uint32_t nValue = 0;
 	memcpy( &nValue, pBytes + nOffset, sizeof( nValue ) );
@@ -66,6 +70,42 @@ granny_file *Reject( fmt::format_string<TArgs...> fmtArgs, TArgs... args )
 	return 0;
 }
 
+}
+
+void *CArena::Alloc( size_t nBytes )
+{
+	const size_t nRounded = ( nBytes + ALIGNMENT - 1 ) & ~( ALIGNMENT - 1 );
+	if ( nRounded < nBytes )
+	{
+		return nullptr;
+	}
+
+	if ( nRounded > m_nLeft )
+	{
+		// A block of its own for anything that would not leave room worth having,
+		// so one large vertex array does not strand most of a fresh block.
+		const size_t nBlock = nRounded > BLOCK_SIZE / 2 ? nRounded : BLOCK_SIZE;
+		std::unique_ptr<uint8_t[]> block( new ( std::nothrow ) uint8_t[nBlock]() );
+		if ( !block )
+		{
+			return nullptr;
+		}
+		uint8_t *pBlock = block.get();
+		m_Blocks.push_back( std::move( block ) );
+
+		if ( nRounded > BLOCK_SIZE / 2 )
+		{
+			// Kept out of the running block, which still has whatever it had.
+			return pBlock;
+		}
+		m_pNext = pBlock;
+		m_nLeft = nBlock;
+	}
+
+	uint8_t *pResult = m_pNext;
+	m_pNext += nRounded;
+	m_nLeft -= nRounded;
+	return pResult;
 }
 
 }
@@ -103,8 +143,8 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		return Reject( "{} bytes, too short for the {}-byte header", nBytes, PREFIX_SIZE );
 	}
 
-	const uint32_t nHeaderSize = ReadU32( pBytes, 16 );
-	const uint32_t nHeaderFormat = ReadU32( pBytes, 20 );
+	const uint32_t nHeaderSize = ReadHeaderU32( pBytes, 16 );
+	const uint32_t nHeaderFormat = ReadHeaderU32( pBytes, 20 );
 	if ( nHeaderFormat != 0 )
 	{
 		// A non-zero headerFormat means the header itself is compressed. It is 0 in
@@ -113,13 +153,13 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		return Reject( "headerFormat {}, only 0 is supported", nHeaderFormat );
 	}
 
-	const uint32_t nVersion = ReadU32( pBytes, HEADER_OFFSET + 0 );
+	const uint32_t nVersion = ReadHeaderU32( pBytes, HEADER_OFFSET + 0 );
 	if ( nVersion != FILE_VERSION )
 	{
 		return Reject( "file format {}, expected {}", nVersion, FILE_VERSION );
 	}
 
-	const uint32_t nTotalSize = ReadU32( pBytes, HEADER_OFFSET + 4 );
+	const uint32_t nTotalSize = ReadHeaderU32( pBytes, HEADER_OFFSET + 4 );
 	if ( nTotalSize > nBytes )
 	{
 		// Truncated. A short file is short, not rewritten, so its header still
@@ -130,8 +170,8 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 	// checks it, over what range and with which polynomial, is unestablished, and a
 	// check invented now could refuse files the game has always loaded.
 
-	const uint32_t nSectionArrayOffset = ReadU32( pBytes, HEADER_OFFSET + 12 );
-	const uint32_t nSectionCount = ReadU32( pBytes, HEADER_OFFSET + 16 );
+	const uint32_t nSectionArrayOffset = ReadHeaderU32( pBytes, HEADER_OFFSET + 12 );
+	const uint32_t nSectionCount = ReadHeaderU32( pBytes, HEADER_OFFSET + 16 );
 	if ( nSectionCount == 0 )
 	{
 		return Reject( "no sections" );
@@ -158,11 +198,11 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		return Reject( "out of memory" );
 	}
 
-	pFile->m_RootObjectType.nSection = ReadU32( pBytes, HEADER_OFFSET + 20 );
-	pFile->m_RootObjectType.nOffset = ReadU32( pBytes, HEADER_OFFSET + 24 );
-	pFile->m_RootObject.nSection = ReadU32( pBytes, HEADER_OFFSET + 28 );
-	pFile->m_RootObject.nOffset = ReadU32( pBytes, HEADER_OFFSET + 32 );
-	pFile->m_nTypeTag = ReadU32( pBytes, HEADER_OFFSET + 36 );
+	pFile->m_RootObjectType.nSection = ReadHeaderU32( pBytes, HEADER_OFFSET + 20 );
+	pFile->m_RootObjectType.nOffset = ReadHeaderU32( pBytes, HEADER_OFFSET + 24 );
+	pFile->m_RootObject.nSection = ReadHeaderU32( pBytes, HEADER_OFFSET + 28 );
+	pFile->m_RootObject.nOffset = ReadHeaderU32( pBytes, HEADER_OFFSET + 32 );
+	pFile->m_nTypeTag = ReadHeaderU32( pBytes, HEADER_OFFSET + 36 );
 
 	pFile->m_Sections.resize( nSectionCount );
 	pFile->m_SectionData.resize( nSectionCount );
@@ -172,17 +212,17 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 	{
 		const uint32_t nBase = static_cast<uint32_t>( nArrayBegin ) + SECTION_RECORD_SIZE * i;
 		SSection &section = pFile->m_Sections[i];
-		section.nCompression = ReadU32( pBytes, nBase + 0 );
-		section.nDataOffset = ReadU32( pBytes, nBase + 4 );
-		section.nDataSize = ReadU32( pBytes, nBase + 8 );
-		section.nExpandedDataSize = ReadU32( pBytes, nBase + 12 );
-		section.nInternalAlignment = ReadU32( pBytes, nBase + 16 );
-		section.nFirst16Bit = ReadU32( pBytes, nBase + 20 );
-		section.nFirst8Bit = ReadU32( pBytes, nBase + 24 );
-		section.nPointerFixupOffset = ReadU32( pBytes, nBase + 28 );
-		section.nPointerFixupCount = ReadU32( pBytes, nBase + 32 );
-		section.nMixedMarshallingOffset = ReadU32( pBytes, nBase + 36 );
-		section.nMixedMarshallingCount = ReadU32( pBytes, nBase + 40 );
+		section.nCompression = ReadHeaderU32( pBytes, nBase + 0 );
+		section.nDataOffset = ReadHeaderU32( pBytes, nBase + 4 );
+		section.nDataSize = ReadHeaderU32( pBytes, nBase + 8 );
+		section.nExpandedDataSize = ReadHeaderU32( pBytes, nBase + 12 );
+		section.nInternalAlignment = ReadHeaderU32( pBytes, nBase + 16 );
+		section.nFirst16Bit = ReadHeaderU32( pBytes, nBase + 20 );
+		section.nFirst8Bit = ReadHeaderU32( pBytes, nBase + 24 );
+		section.nPointerFixupOffset = ReadHeaderU32( pBytes, nBase + 28 );
+		section.nPointerFixupCount = ReadHeaderU32( pBytes, nBase + 32 );
+		section.nMixedMarshallingOffset = ReadHeaderU32( pBytes, nBase + 36 );
+		section.nMixedMarshallingCount = ReadHeaderU32( pBytes, nBase + 40 );
 
 		if ( section.nCompression > COMPRESSION_OODLE1 )
 		{
@@ -269,9 +309,9 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		{
 			const uint32_t nBase = section.nPointerFixupOffset + POINTER_FIXUP_SIZE * k;
 			SPointerFixup &fixup = fixups[k];
-			fixup.nFromOffset = ReadU32( pBytes, nBase + 0 );
-			fixup.To.nSection = ReadU32( pBytes, nBase + 4 );
-			fixup.To.nOffset = ReadU32( pBytes, nBase + 8 );
+			fixup.nFromOffset = ReadHeaderU32( pBytes, nBase + 0 );
+			fixup.To.nSection = ReadHeaderU32( pBytes, nBase + 4 );
+			fixup.To.nOffset = ReadHeaderU32( pBytes, nBase + 8 );
 
 			// A pointer slot is four bytes wide in the file whatever the host is, so
 			// the whole slot has to fit, not just its first byte.
@@ -314,6 +354,69 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 	}
 
 	return pFile.release();
+}
+
+const uint8_t *granny_file::Raw( const SReference &at, uint32_t nBytes ) const
+{
+	if ( at.nSection >= SectionCount() )
+	{
+		return nullptr;
+	}
+	const std::vector<uint8_t> &data = m_SectionData[at.nSection];
+	if ( at.nOffset > data.size() || nBytes > data.size() - at.nOffset )
+	{
+		return nullptr;
+	}
+	return data.data() + at.nOffset;
+}
+
+bool granny_file::ReadBytes( const SReference &at, void *pDest, uint32_t nBytes ) const
+{
+	const uint8_t *pSource = Raw( at, nBytes );
+	if ( pSource == nullptr )
+	{
+		return false;
+	}
+	memcpy( pDest, pSource, nBytes );
+	return true;
+}
+
+bool granny_file::ReadU32( uint32_t nSection, uint32_t nOffset, uint32_t *pnValue ) const
+{
+	return ReadBytes( SReference{ nSection, nOffset }, pnValue, sizeof( *pnValue ) );
+}
+
+bool granny_file::ReadI32( uint32_t nSection, uint32_t nOffset, int32_t *pnValue ) const
+{
+	return ReadBytes( SReference{ nSection, nOffset }, pnValue, sizeof( *pnValue ) );
+}
+
+bool granny_file::ReadReal32( uint32_t nSection, uint32_t nOffset, float *pfValue ) const
+{
+	return ReadBytes( SReference{ nSection, nOffset }, pfValue, sizeof( *pfValue ) );
+}
+
+const char *granny_file::ReadString( uint32_t nSection, uint32_t nOffset ) const
+{
+	SReference target;
+	if ( !ResolvePointer( nSection, nOffset, &target ) || target.nSection >= SectionCount() )
+	{
+		return nullptr;
+	}
+
+	const std::vector<uint8_t> &data = m_SectionData[target.nSection];
+	if ( target.nOffset >= data.size() )
+	{
+		return nullptr;
+	}
+	// The terminator has to be inside the section, or the engine would read off
+	// the end of it looking for one.
+	const void *pEnd = memchr( data.data() + target.nOffset, 0, data.size() - target.nOffset );
+	if ( pEnd == nullptr )
+	{
+		return nullptr;
+	}
+	return reinterpret_cast<const char *>( data.data() + target.nOffset );
 }
 
 bool granny_file::ResolvePointer( uint32_t nSection, uint32_t nOffset, SReference *pTarget ) const
@@ -385,13 +488,15 @@ GR2_API( void ) GrannyFreeFile( granny_file *File )
 
 GR2_API( granny_file_info * ) GrannyGetFileInfo( granny_file *File )
 {
-	GR2_STUB( "File={}", File );
+	GR2_TRACE( "File={}", File );
 
-	// Needs the type tree walk that turns the root object into native structures.
-	// The file is loaded and the root object's location is known; the layout to
-	// read it with is what is missing. Until then the engine gets the same null it
-	// got when nothing at all was implemented.
-	return 0;
+	if ( File == 0 )
+	{
+		return 0;
+	}
+	// Converted rather than pointed at: the file carries 2.5-era structures and
+	// the engine reads 2.11 ones. Convert.cpp is where one becomes the other.
+	return reinterpret_cast<granny_file_info *>( ConvertFileInfo( *File ) );
 }
 
 }

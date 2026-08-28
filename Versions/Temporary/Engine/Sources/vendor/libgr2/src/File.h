@@ -22,6 +22,8 @@
 #include <gr2/granny.h>
 
 #include <cstdint>
+#include <map>
+#include <memory>
 #include <vector>
 
 namespace NGr2
@@ -80,6 +82,82 @@ struct SReference
 {
 	uint32_t nSection = 0;
 	uint32_t nOffset = 0;
+
+	//! Ordered so that a reference can key a map, which is how types and
+	//! converted objects are cached.
+	bool operator<( const SReference &other ) const
+	{
+		return nSection != other.nSection ? nSection < other.nSection
+		                                  : nOffset < other.nOffset;
+	}
+	bool operator==( const SReference &other ) const
+	{
+		return nSection == other.nSection && nOffset == other.nOffset;
+	}
+};
+
+//! Memory that lives exactly as long as the file it was converted out of.
+//!
+//! Everything GrannyGetFileInfo hands back points into here, so GrannyFreeFile
+//! is a delete of the file and nothing else has to be tracked. Blocks are never
+//! resized, because the whole point is that the pointers stay put.
+class CArena
+{
+public:
+	//! Zeroed, and aligned enough for anything in Structures.h. Null on failure.
+	void *Alloc( size_t nBytes );
+
+private:
+	static constexpr size_t BLOCK_SIZE = 64 * 1024;
+	static constexpr size_t ALIGNMENT = 8;
+
+	std::vector<std::unique_ptr<uint8_t[]>> m_Blocks;
+	uint8_t *m_pNext = nullptr;
+	size_t m_nLeft = 0;
+};
+
+//! granny_member_type, from granny211.h, in the enum's own order.
+enum EMemberType
+{
+	MEMBER_END = 0,
+	MEMBER_INLINE,
+	MEMBER_REFERENCE,
+	MEMBER_REFERENCE_TO_ARRAY,
+	MEMBER_ARRAY_OF_REFERENCES,
+	MEMBER_VARIANT_REFERENCE,
+	MEMBER_UNSUPPORTED_REMOVE,
+	MEMBER_REFERENCE_TO_VARIANT_ARRAY,
+	MEMBER_STRING,
+	MEMBER_TRANSFORM,
+	MEMBER_REAL32,
+	MEMBER_INT8,
+	MEMBER_UINT8,
+	MEMBER_BINORMAL_INT8,
+	MEMBER_NORMAL_UINT8,
+	MEMBER_INT16,
+	MEMBER_UINT16,
+	MEMBER_BINORMAL_INT16,
+	MEMBER_NORMAL_UINT16,
+	MEMBER_INT32,
+	MEMBER_UINT32,
+	MEMBER_REAL16,
+	MEMBER_EMPTY_REFERENCE,
+	MEMBER_ONE_PAST_LAST,
+};
+
+//! One 32-byte type definition entry, plus where its member sits in the object.
+struct SMember
+{
+	//! Points into the file's own bytes, which outlive every use of it.
+	const char *pszName = nullptr;
+	uint32_t nType = MEMBER_END;
+	//! Where the referenced type is, meaningful when bHasReferenceType.
+	SReference ReferenceType;
+	bool bHasReferenceType = false;
+	int32_t nArrayWidth = 0;
+	//! Both on disk, so both with 32-bit pointers.
+	uint32_t nOffset = 0;
+	uint32_t nSize = 0;
 };
 
 //! One 12-byte pointer fixup: the slot at nFromOffset points at nTo.
@@ -137,6 +215,49 @@ struct granny_file
 	{
 		return m_PointerFixups[nSection];
 	}
+
+	//! Reading primitives, bounds checked against the section they name.
+	//!
+	//! False means the read would have run off the end, which on a file this has
+	//! already accepted means a structure pointing somewhere a fixup did not.
+	bool ReadU32( uint32_t nSection, uint32_t nOffset, uint32_t *pnValue ) const;
+	bool ReadI32( uint32_t nSection, uint32_t nOffset, int32_t *pnValue ) const;
+	bool ReadReal32( uint32_t nSection, uint32_t nOffset, float *pfValue ) const;
+	bool ReadBytes( const NGr2::SReference &at, void *pDest, uint32_t nBytes ) const;
+
+	//! The string the pointer slot at nSection:nOffset leads to, or null.
+	//!
+	//! Points into the file's own section bytes, which live as long as this
+	//! object, so the converted structures can hold it without copying. That is
+	//! also why nothing here ever reallocates a section.
+	const char *ReadString( uint32_t nSection, uint32_t nOffset ) const;
+
+	//! A pointer into a section's bytes, for arrays the engine reads in place.
+	//!
+	//! Indices and vertices need no conversion, being plain integers and floats,
+	//! so the engine can be handed the file's own bytes rather than a copy.
+	const uint8_t *Raw( const NGr2::SReference &at, uint32_t nBytes ) const;
+
+	// Internal state, public because this header is internal and the type tree
+	// walker and the converter are as much a part of this object as its methods.
+
+	//! Type definitions already read, keyed by where they are. Also the guard
+	//! against a type tree that reaches itself.
+	std::map<NGr2::SReference, std::vector<NGr2::SMember>> m_Types;
+
+	//! Objects already converted, keyed by where they came from.
+	//!
+	//! Identity matters, not just content: the engine finds a mesh's model by
+	//! comparing MeshBindings[i].Mesh against a mesh pointer it already has, so
+	//! one file object has to become exactly one native object.
+	std::map<NGr2::SReference, void *> m_Converted;
+
+	//! Everything the conversion allocated.
+	NGr2::CArena m_Arena;
+
+	//! The converted root, built on the first GrannyGetFileInfo and kept.
+	void *m_pFileInfo = nullptr;
+	bool m_bConversionFailed = false;
 
 private:
 	granny_file() = default;
