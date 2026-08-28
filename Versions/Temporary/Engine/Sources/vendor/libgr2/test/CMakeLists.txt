@@ -51,3 +51,4 @@ endfunction()
 
 gr2_add_test(ReadEntireFileFromMemory)
 gr2_add_test(FileContainer)
+gr2_add_test(Oodle1)

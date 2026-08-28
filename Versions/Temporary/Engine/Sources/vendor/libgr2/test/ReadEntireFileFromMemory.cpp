@@ -160,11 +160,14 @@ TEST( ReadEntireFileFromMemory, AcceptsAPointerTargetOnePastTheEnd )
 
 TEST( ReadEntireFileFromMemory, RefusesCompressedSectionsUntilTheCodecsExist )
 {
-	// Both Oodle codecs are still ahead, and this is what says so out loud. Of the
-	// 13,582 unique GR2 in the retail install, 7,566 are entirely Oodle1 and 6,016
-	// entirely Oodle0, so this refusal is why nothing shipped loads yet. Each codec
-	// that lands turns one of these into a positive case; the second one to land
-	// takes this test with it and brings the DISABLED_ sweep back.
+	// Oodle0 is still ahead, and this is what says so out loud. Of the 13,582 unique
+	// GR2 in the retail install, 6,016 are entirely Oodle0, so this refusal is why
+	// not quite half of the game still fails to load. When the codec lands, delete
+	// this and bring back the DISABLED_ sweep.
+	//
+	// The Oodle1 case here is not a refusal of the codec, it is a refusal of these
+	// particular bytes, which are a pattern rather than a stream. Oodle1 against
+	// real streams is Oodle1.cpp's job.
 	for ( uint32_t nCodec : { COMPRESSION_OODLE0, COMPRESSION_OODLE1 } )
 	{
 		CHeaderShapedFile file;
@@ -499,9 +502,10 @@ TEST( ReadEntireFileFromMemory, DISABLED_RejectsWrongCrc )
 
 TEST( ReadEntireFileFromMemory, DISABLED_ReadsEveryFileInADirectory )
 {
-	// Waiting on the two Oodle codecs: nearly every shipped section is compressed,
-	// so this would currently fail on almost all of them for the one reason that is
-	// already known. Enable it with the second codec.
+	// Waiting on Oodle0. Oodle1 files load now, but 6,016 of the retail install's
+	// 13,582 take the other codec, so a sweep over a whole directory still fails on
+	// almost half of it for the one reason that is already known. Enable it with
+	// the second codec.
 	//
 	// Point LIBGR2_TEST_GR2_DIR at a directory of extracted .gr2 resources. For
 	// anything derived purely from a file the corpus is the input space, so

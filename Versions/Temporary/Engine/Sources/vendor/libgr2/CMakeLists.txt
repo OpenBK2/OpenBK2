@@ -56,6 +56,8 @@ set(GR2_SOURCES
     src/File.h
     src/Mesh.cpp
     src/Model.cpp
+    src/Oodle1.cpp
+    src/Oodle1.h
     src/Pose.cpp
     src/Skeleton.cpp
     src/Trace.cpp

@@ -3,15 +3,19 @@
 A native reader and animation runtime for the Granny 2 (`.gr2`) files Blitzkrieg 2
 ships, meant to replace RAD Game Tools' proprietary `granny2.dll`.
 
-**Status: the container reads.** `GrannyReadEntireFileFromMemory`,
-`GrannyReadEntireFile` and `GrannyFreeFile` are written: header validation, the
-section array, section bytes and the pointer fixups. The other 51 entry points are
-stubs that return a null, a zero or a false.
+**Status: half the shipped corpus loads.** `GrannyReadEntireFileFromMemory`,
+`GrannyReadEntireFile` and `GrannyFreeFile` are written, along with the Oodle1
+codec: header validation, the section array, section bytes expanded where they
+need it, and the pointer fixups. The other 51 entry points are stubs that return
+a null, a zero or a false.
 
-Two things stand between that and a shipped file. Neither Oodle codec exists, so a
-compressed section is refused, and nearly every shipped section is compressed. And
-nothing walks the type tree yet, so `GrannyGetFileInfo` still returns null even
-for a file that loaded.
+Two things stand between that and the whole corpus. Oodle0 is not written, and it
+is what the other 6,016 of the retail install's 13,582 GR2 files use; no file
+mixes the two codecs, so each unlocks its own half. And nothing walks the type
+tree yet, so `GrannyGetFileInfo` still returns null even for a file that loaded.
+
+Oodle1 is checked against the real DLL rather than against itself: 1,828 retail
+files, 39.7 MB, decoded through both and compared byte for byte, all identical.
 
 Nothing is wired into the engine: `Sources/CMakeLists.txt` does not reference this
 directory, and the game still links the vendored DLL.
@@ -143,7 +147,8 @@ each gains its real definition in the milestone that first needs it.
 | file | entry points | milestone |
 |---|---|---|
 | `src/Allocator.cpp` | 2 | linked, never called, see the trace above |
-| `src/File.cpp` | 4 | container and fixups done, Oodle codecs and file info left |
+| `src/File.cpp` | 4 | container and fixups done, file info left |
+| `src/Oodle1.cpp` | 0 | the codec 7,566 of 13,582 retail files use |
 | `src/TypeTree.cpp` | 2 | M1, members resolved through the file's own type tree |
 | `src/Mesh.cpp` | 2 | M2, geometry |
 | `src/Skeleton.cpp` | 1 | M2, bone lookup by name |

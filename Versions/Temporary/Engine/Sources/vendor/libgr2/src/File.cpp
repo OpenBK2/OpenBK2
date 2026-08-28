@@ -8,10 +8,10 @@
 // game never does.
 //
 // What is here is the container and nothing above it: header validation, the
-// section array, section bytes, and the pointer fixups. What is not here yet is
-// the two Oodle codecs, so a compressed section is refused, and the type tree
-// walk that would turn the root object into a granny_file_info, so
-// GrannyGetFileInfo still returns null.
+// section array, section bytes expanded through Oodle1 where they need it, and
+// the pointer fixups. What is not here yet is Oodle0, which is the other half of
+// the corpus, and the type tree walk that would turn the root object into a
+// granny_file_info, so GrannyGetFileInfo still returns null.
 //
 // Every rejection says why. A file this refuses is either corrupt or a dialect
 // nobody has seen, and both are worth a line in the trace rather than a silent
@@ -19,6 +19,7 @@
 
 #include "File.h"
 
+#include "Oodle1.h"
 #include "Trace.h"
 
 #include <algorithm>
@@ -187,16 +188,20 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 		{
 			return Reject( "section {} compression {}, no such codec", i, section.nCompression );
 		}
-		if ( section.nCompression != COMPRESSION_NONE )
+		if ( section.nCompression == COMPRESSION_OODLE0 )
 		{
-			// The one thing between this and the shipped corpus. Of the 13,582
-			// unique GR2 in the retail install, 7,566 are entirely Oodle1 and 6,016
-			// entirely Oodle0, and none mixes the two, so each codec unlocks its own
-			// half of the game and neither unlocks any of the other's.
-			return Reject( "section {} needs Oodle{} compression, which is not implemented", i,
-			               section.nCompression - 1 );
+			// The remaining half of the game. Of the 13,582 unique GR2 in the retail
+			// install, 7,566 are entirely Oodle1 and 6,016 entirely Oodle0, and none
+			// mixes the two, so each codec unlocks its own half and neither unlocks
+			// any of the other's. Named rather than numbered, with the number kept
+			// because that is what the section record holds and what a hex dump of
+			// the file shows.
+			return Reject( "section {} needs Oodle0 compression (type {}), which is not "
+			               "implemented",
+			               i, section.nCompression );
 		}
-		if ( section.nExpandedDataSize != section.nDataSize )
+		if ( section.nCompression == COMPRESSION_NONE
+		     && section.nExpandedDataSize != section.nDataSize )
 		{
 			return Reject( "section {} is uncompressed but expands {} to {}", i, section.nDataSize,
 			               section.nExpandedDataSize );
@@ -220,8 +225,32 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 			               nBytes );
 		}
 
-		pFile->m_SectionData[i].assign( pBytes + section.nDataOffset,
-		                                pBytes + section.nDataOffset + section.nDataSize );
+		if ( section.nExpandedDataSize == 0 )
+		{
+			// Nothing to expand. Most sections of most files are empty and still
+			// carry a codec in their record, so this is the common case rather than
+			// an oddity, and handing zero bytes to a decoder would fail on the
+			// missing parameter block.
+		}
+		else if ( section.nCompression == COMPRESSION_NONE )
+		{
+			pFile->m_SectionData[i].assign( pBytes + section.nDataOffset,
+			                                pBytes + section.nDataOffset + section.nDataSize );
+		}
+		else
+		{
+			// first16Bit and first8Bit are the two stage boundaries the codec needs,
+			// which is why the section record carries them at all. They are equal in
+			// every section of this game's data, so the middle stage is always empty.
+			pFile->m_SectionData[i].assign( section.nExpandedDataSize, 0 );
+			if ( !Oodle1Decompress( pBytes + section.nDataOffset, section.nDataSize,
+			                        section.nFirst16Bit, section.nFirst8Bit,
+			                        pFile->m_SectionData[i].data(), section.nExpandedDataSize ) )
+			{
+				return Reject( "section {}: {} Oodle1 bytes did not expand to {}", i,
+				               section.nDataSize, section.nExpandedDataSize );
+			}
+		}
 	}
 
 	// The mixed marshalling fixups are bounds checked above and then ignored. They
