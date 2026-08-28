@@ -21,6 +21,8 @@
 
 #include "Structures.h"
 
+#include <vector>
+
 //! Completes the opaque handle, the same way granny_file does in File.h.
 struct granny_model_instance
 {
@@ -30,7 +32,14 @@ struct granny_model_instance
 	//! Where this instance is in time, in seconds.
 	//!
 	//! Zero at instantiation. Nothing among the 54 entry points reads it back, so
-	//! its only visible effect is on sampling, which is why it is stored and
-	//! otherwise untouched until the pose runtime exists.
+	//! its only visible effect is on sampling, and every control bound here reads
+	//! its own clock and weight out of it.
 	float fClock = 0.0f;
+
+	//! The clips playing against this instance, in the order they were bound.
+	//!
+	//! GrannySetTrackGroupTarget is what puts one here, by way of the builder.
+	//! Owned: freeing the instance frees them, since the engine frees the
+	//! instance and never the controls. GrannyFreeControl removes one early.
+	std::vector<granny_control *> Controls;
 };

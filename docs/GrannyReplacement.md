@@ -358,6 +358,75 @@ knot never arises. The real DLL answers from an essentially arbitrary span there
 — span 0 just below the first knot, span 23 at t = -1, the last span at t = -10 —
 and that is not reproduced.
 
+### The playback layer, measured
+
+No open source project implements this, so all of it was measured by scripting
+`granny2.dll` through the sequences `CSkeletonAnimator` issues, advancing the
+model clock forwards only, and reading the observables after every step. The
+harness replays fifteen scenarios per file against both implementations and
+compares the transcripts; it is the record-and-replay rig this document asked for
+before M4 rather than after.
+
+The clock, with `raw = (modelClock - startTime) * speed` floored at zero:
+
+| | |
+|---|---|
+| clamped local clock | `raw` modulo the duration, except that once `raw` reaches `loopCount` whole periods it stops at the duration instead of wrapping. A loop count of zero never stops |
+| `GetControlDuration` | `loopCount * duration / abs(speed)`, and the bit pattern `0x7f0fffff` when the loop count is zero |
+| `GetControlDurationLeft` | that duration minus `modelClock - startTime`, which is model time and not local time, and which goes negative |
+| `IsComplete` | **only ever true after `CompleteControlAt`**, and only once the clock reaches the time it was given. A clip that has simply finished playing is not complete |
+| `FreeControlOnceUnused` | no observable effect at all. The control keeps running and stays valid, which is what the engine depends on: it calls this on every clip with no end time and then goes on using the pointer |
+| `ForceClampedLooping` | no observable effect either, at any loop count |
+
+The **ease curves are cubic Beziers** over their four numbers in the Bernstein
+basis, fitted over a grid rather than guessed: `(1,0,0,0)` evaluates to
+`(1-u)^3`, `(0,0,0,1)` to `u^3`, and the engine's own `(0,0,1,1)` to
+`3u^2 - 2u^3`. The four numbers are **stored as bytes**,
+`floor(v * 255 + 0.5) / 255`, which is why asking for a weight of 0.5 gives back
+0.501961, and 0.7 gives 0.701961 rather than the 0.698039 that rounding half to
+even would produce. Outside its interval each curve is **one** on the side it is
+not easing on and holds its endpoint on the other, so an ease-in that ends on
+anything but one is discontinuous. The engine never does that.
+
+**Sampling** blends the controls bound to an instance as a weighted average
+divided by the total weight, and the rest pose takes no part: one clip at a
+weight of a quarter still shows at full strength, which is what makes an ease
+visible only as a cross-fade. Where no control reaches a bone, or the weights add
+to nothing, the rest pose stands. A track that mentions a bone **replaces every
+part of its transform**, and the parts whose curves are empty become neutral
+rather than the bind pose: a bone whose track carries an orientation curve and no
+position curve comes back at the origin.
+
+The curves are sampled with the loop flags set from the **loop index**, not the
+loop count: a curve wraps backwards when there is a period before this one and
+forwards when there is one after. So the first pass of a clip that plays twice
+does not wrap at its start and the second does.
+
+One thing the public curve entry point does not do, and the sampler must: at a
+wrap the control brought in from the far end of the curve can be on the opposite
+side of the quaternion sign ambiguity from the local ones. One bone in this
+corpus has orientation keys whose `w` runs from +1.0007 at the first to -1.0035
+at the last. Blended raw, the wrap frame produces a rotation unrelated to either
+neighbour, which is a visible pop once per loop.
+
+#### What still differs
+
+Over 401 files and fifteen scenarios each, everything above agrees. Three things
+do not.
+
+- **The frame where an ease-in's weight first becomes non-zero.** The weights
+  themselves agree exactly at every step; the pose at that one frame does not.
+  The DLL appears to sample the clip earlier than the local clock it reports, and
+  none of the rules tried accounts for the offset. One frame per transition.
+- **A local clock landing exactly on a period boundary**, where `fmod` gives zero
+  and the DLL gives the period. A float knife edge, and for a looping clip the
+  two answers are the same pose.
+- **The sign of a sampled quaternion**, on 1.3% of samples. q and -q are the same
+  rotation and nothing downstream can tell them apart: the matrix build is
+  quadratic in the components and `GrannyPostMultiplyBy` is bilinear. The DLL
+  negates on bones whose rotation passes through 180 degrees, and no rule fitted
+  over five files reproduces which; the choice is not stateful.
+
 ## Library survey
 
 Seven open source GR2 implementations were examined and, where possible, built and

@@ -14,9 +14,17 @@ pose, the hierarchy walks into world and skinning matrices, and
 `GrannyEvaluateCurveAtT` evaluates a curve at a time. So every model can be drawn
 in bind pose, skinned, and the engine can read a scalar channel out of a clip.
 
-What is left is the playback layer: binding a clip to an instance, the control
-that drives it, and `GrannySampleModelAnimations` blending bound controls instead
-of copying the rest pose. Those are still stubs, so nothing moves yet.
+The playback layer is written too: a clip binds to an instance through the
+builder, a `granny_control` carries its clock, speed, loop count and two ease
+curves, and `GrannySampleModelAnimations` blends every control bound to an
+instance by weight. So models move.
+
+None of that layer has prior art. Every open source Granny project stops at
+reading a file, because an importer or a viewer never needs playback. It was
+measured instead, by scripting the real DLL through the sequences the engine
+issues and reading the observables after every step, and the same scripts replay
+against both implementations. Three things still differ and they are listed in
+docs/GrannyReplacement.md under "What still differs".
 
 **All 21,720 unique GR2 files across the three installs read identically to the
 real `granny2.dll`**, in every field compared: names, counts, parent indices,
@@ -188,14 +196,15 @@ each gains its real definition in the milestone that first needs it.
 | `src/Mesh.cpp` | 2 | triangle group count, and whether a mesh needs skinning |
 | `src/Skeleton.cpp` | 1 | bone lookup by name |
 | `src/Transform.cpp` | 2 | position, orientation, scale-shear, and composing two |
-| `src/Model.cpp` | 3 | M3, model instances and their clock |
+| `src/Model.cpp` | 3 | model instances, their clock and the controls bound to them |
 | `src/Curve.cpp` | 1 | curve sampling: constant, linear, and a non-uniform quadratic B-spline |
 | `src/Pose.cpp` | 10 | local pose, rest-pose sampling, world pose and the composite matrices |
-| `src/Animation.cpp` | 7 | M4, binding a clip to a model, track masks |
-| `src/Control.cpp` | 20 | M4, playback, looping, ease curves |
+| `src/Animation.cpp` | 7 | binding a clip to a model instance, and track masks |
+| `src/Control.cpp` | 20 | playback: the clock, speed, looping, and the ease curves |
 
-M4 is the part no open source project has written, because importers and viewers
-never need a playback layer. Build the record-and-replay harness before it.
+The playback layer is the part no open source project has written, because
+importers and viewers never need one. It was measured with a record-and-replay
+harness rather than derived.
 
 ## Constraints
 

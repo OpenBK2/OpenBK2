@@ -18,13 +18,17 @@
 
 #include <gr2/granny.h>
 
+#include "Control.h"
+#include "Curve.h"
 #include "LocalPose.h"
 #include "ModelInstance.h"
 #include "Structures.h"
 #include "Trace.h"
 #include "WorldPose.h"
 
+#include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <new>
 
 using namespace NGr2;
@@ -135,6 +139,224 @@ void Multiply4x4( const float pLeft[16], const float pRight[16], float pResult[1
 
 const float IDENTITY_4X4[16] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
                                  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+
+//! Which of a transform track's three curves have any keys.
+//!
+//! The flags a sampled bone comes back with are exactly this, measured: a bone
+//! whose track has a position curve and an orientation curve but an empty
+//! scale-shear curve reads back Flags 3, and one whose track is position only
+//! reads back 1.
+uint32_t FlagsOf( const STransformTrack &track )
+{
+	uint32_t nFlags = 0;
+	const SCurveDataDaK32fC32f *pPosition =
+		static_cast<const SCurveDataDaK32fC32f *>( track.PositionCurve.CurveData.pObject );
+	const SCurveDataDaK32fC32f *pOrientation = static_cast<const SCurveDataDaK32fC32f *>(
+		track.OrientationCurve.CurveData.pObject );
+	const SCurveDataDaK32fC32f *pScaleShear = static_cast<const SCurveDataDaK32fC32f *>(
+		track.ScaleShearCurve.CurveData.pObject );
+	if ( pPosition != nullptr && pPosition->nKnotCount > 0 )
+	{
+		nFlags |= TRANSFORM_HAS_POSITION;
+	}
+	if ( pOrientation != nullptr && pOrientation->nKnotCount > 0 )
+	{
+		nFlags |= TRANSFORM_HAS_ORIENTATION;
+	}
+	if ( pScaleShear != nullptr && pScaleShear->nKnotCount > 0 )
+	{
+		nFlags |= TRANSFORM_HAS_SCALESHEAR;
+	}
+	return nFlags;
+}
+
+//! The transform track for a bone, by name, or null.
+//!
+//! Linear, per bone, per control. Track groups here have at most 134 tracks and
+//! a pose is sampled once per animated object per frame, so this is not the
+//! expensive part; if it becomes one the answer is a map built when the control
+//! is bound rather than a cleverer search.
+const STransformTrack *TrackFor( const STrackGroup &group, const char *pszBone )
+{
+	if ( pszBone == nullptr || group.pTransformTracks == nullptr )
+	{
+		return nullptr;
+	}
+	for ( int32_t i = 0; i < group.nTransformTrackCount; ++i )
+	{
+		const STransformTrack &track = group.pTransformTracks[i];
+		if ( track.pszName != nullptr && strcmp( track.pszName, pszBone ) == 0 )
+		{
+			return &track;
+		}
+	}
+	return nullptr;
+}
+
+//! Blend every control bound to an instance into a pose that holds the rest pose.
+//!
+//! Measured rule, over pairs of controls at a spread of weights: the result is
+//! the weighted average of the contributors, divided by the total weight, and
+//! the rest pose does not take part. A lone control at weight 0.25 therefore
+//! produces its animation at full strength rather than a quarter of the way from
+//! the bind pose, which is what makes an ease-in visible only as a cross-fade.
+//! Where no control reaches a bone, or where the weights add to nothing, the
+//! rest pose already in the result stands.
+void BlendControls( const granny_model_instance &instance, const SSkeleton &skeleton,
+                    granny_int32x nFirstBone, granny_int32x nBoneCount,
+                    granny_local_pose &result )
+{
+	if ( instance.Controls.empty() )
+	{
+		return;
+	}
+	const float fClock = instance.fClock;
+
+	for ( granny_int32x i = nFirstBone; i < nFirstBone + nBoneCount; ++i )
+	{
+		const char *pszBone = skeleton.pBones[i].pszName;
+
+		float fTotal = 0.0f;
+		uint32_t nFlags = 0;
+		float Position[3] = { 0.0f, 0.0f, 0.0f };
+		float Orientation[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		float ScaleShear[9] = {};
+
+		for ( size_t c = 0; c < instance.Controls.size(); ++c )
+		{
+			const granny_control *pControl = instance.Controls[c];
+			if ( pControl == nullptr || pControl->pTrackGroup == nullptr )
+			{
+				continue;
+			}
+			const STransformTrack *pTrack = TrackFor( *pControl->pTrackGroup, pszBone );
+			if ( pTrack == nullptr )
+			{
+				continue;
+			}
+
+			float fWeight = pControl->EffectiveWeight( fClock );
+			if ( pControl->pMask != nullptr )
+			{
+				fWeight *= pControl->pMask->WeightFor( static_cast<int32_t>( i ) );
+			}
+			if ( fWeight <= 0.0f )
+			{
+				continue;
+			}
+
+			// An empty curve evaluates to the identity vector, and the identity
+			// is Granny's neutral value rather than the bone's rest transform.
+			// Measured: a bone whose track has an orientation curve and an empty
+			// position curve comes back with a position of exactly zero, not with
+			// the bind translation it would keep if the rest pose were the
+			// identity. So a track that mentions a bone at all replaces every part
+			// of its transform, and the parts it says nothing about become neutral.
+			const float fLocal = pControl->ClampedLocalClock( fClock );
+			const float fDuration = pControl->AnimationDuration();
+			bool bForwards = false;
+			bool bBackwards = false;
+			pControl->LoopFlags( fClock, &bForwards, &bBackwards );
+
+			float SampledPosition[3];
+			float SampledOrientation[4];
+			float SampledScaleShear[9];
+			static const float NEUTRAL_POSITION[3] = { 0.0f, 0.0f, 0.0f };
+			static const float NEUTRAL_ORIENTATION[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+			static const float NEUTRAL_SCALESHEAR[9] = { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+			                                             0.0f, 0.0f, 0.0f, 1.0f };
+			GrannyEvaluateCurveAtT(
+				3, false, bBackwards,
+				reinterpret_cast<const granny_curve2 *>( &pTrack->PositionCurve ),
+				bForwards, fDuration, fLocal, SampledPosition, NEUTRAL_POSITION );
+			// Not the public entry point, for the orientation alone: at a loop
+			// wrap the control brought in from the far end of the curve can be on
+			// the opposite side of the quaternion sign ambiguity from the local
+			// ones, and blending them raw produces a rotation unrelated to either.
+			// See Curve.h.
+			EvaluateQuaternion( pTrack->OrientationCurve, fLocal, bForwards,
+			                    bBackwards, fDuration, NEUTRAL_ORIENTATION,
+			                    SampledOrientation );
+			GrannyEvaluateCurveAtT(
+				9, false, bBackwards,
+				reinterpret_cast<const granny_curve2 *>( &pTrack->ScaleShearCurve ),
+				bForwards, fDuration, fLocal, SampledScaleShear, NEUTRAL_SCALESHEAR );
+
+			// A quaternion and its negation are the same rotation, so a second
+			// contribution has to join the sum on the near side of what is
+			// already there, or two equal rotations average to nothing.
+			//
+			// The first contribution is taken as the curve gives it. The real DLL
+			// sometimes negates it, on bones whose rotation passes through 180
+			// degrees, and no rule fitted over five files reproduces which:
+			// against the rest orientation, against the first control, and a
+			// chain along the controls each fit some files and not others, and
+			// the choice is not stateful. It is left alone here because that is
+			// what matches most of the corpus, and because the sign of a
+			// quaternion is not observable downstream: ToMatrix4x4 is quadratic in
+			// it, so q and -q build the same world and composite matrices, and
+			// GrannyPostMultiplyBy composes the same rotation from either.
+			// docs/GrannyReplacement.md records how often the two differ.
+			float fSign = 1.0f;
+			if ( fTotal > 0.0f )
+			{
+				float fDot = 0.0f;
+				for ( int k = 0; k < 4; ++k )
+				{
+					fDot += Orientation[k] * SampledOrientation[k];
+				}
+				fSign = fDot < 0.0f ? -1.0f : 1.0f;
+			}
+
+			for ( int k = 0; k < 3; ++k )
+			{
+				Position[k] += SampledPosition[k] * fWeight;
+			}
+			for ( int k = 0; k < 4; ++k )
+			{
+				Orientation[k] += SampledOrientation[k] * fWeight * fSign;
+			}
+			for ( int k = 0; k < 9; ++k )
+			{
+				ScaleShear[k] += SampledScaleShear[k] * fWeight;
+			}
+			nFlags |= FlagsOf( *pTrack );
+			fTotal += fWeight;
+		}
+
+		if ( fTotal <= 0.0f )
+		{
+			continue;
+		}
+
+		STransform &out = result.Transforms[static_cast<size_t>( i )];
+		out.nFlags = nFlags;
+		const float fScale = 1.0f / fTotal;
+		for ( int k = 0; k < 3; ++k )
+		{
+			out.Position[k] = Position[k] * fScale;
+		}
+		for ( int k = 0; k < 9; ++k )
+		{
+			( &out.ScaleShear[0][0] )[k] = ScaleShear[k] * fScale;
+		}
+		// A sum of unit quaternions is not one, so this normalises rather than
+		// dividing by the weight, which comes to the same direction.
+		float fLengthSquared = 0.0f;
+		for ( int k = 0; k < 4; ++k )
+		{
+			fLengthSquared += Orientation[k] * Orientation[k];
+		}
+		if ( fLengthSquared > 0.0f )
+		{
+			const float fNormalise = 1.0f / sqrtf( fLengthSquared );
+			for ( int k = 0; k < 4; ++k )
+			{
+				out.Orientation[k] = Orientation[k] * fNormalise;
+			}
+		}
+	}
+}
 
 }
 
@@ -392,21 +614,17 @@ GR2_API( void ) GrannySampleModelAnimations( granny_model_instance const *ModelI
 		return;
 	}
 
-	// The rest pose, and with no controls bound that is the whole answer rather
-	// than a placeholder for one. Measured against the DLL: with nothing playing
-	// it copies each bone's LocalTransform verbatim, Flags included, and the
-	// instance clock makes no difference.
-	//
-	// This is where the blend goes when controls exist. Each active control
-	// samples its animation's curves at the instance clock and accumulates into
-	// these transforms by weight, and the rest pose is what remains where no
-	// control reaches. Nothing here has to change for that; it grows a loop after
-	// this one.
+	// The rest pose first, and with no controls bound that is the whole answer
+	// rather than a placeholder for one. Measured against the DLL: with nothing
+	// playing it copies each bone's LocalTransform verbatim, Flags included, and
+	// the instance clock makes no difference.
 	for ( granny_int32x i = FirstBone; i < FirstBone + BoneCount; ++i )
 	{
 		Result->Transforms[static_cast<size_t>( i )] =
 			pSkeleton->pBones[i].LocalTransform;
 	}
+
+	BlendControls( *ModelInstance, *pSkeleton, FirstBone, BoneCount, *Result );
 }
 
 }

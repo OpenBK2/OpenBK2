@@ -52,6 +52,7 @@
 
 #include <gr2/granny.h>
 
+#include "Curve.h"
 #include "Structures.h"
 #include "Trace.h"
 
@@ -116,9 +117,24 @@ void AddScaled( float *pResult, const float *pControl, float fWeight, int32_t nD
 	}
 }
 
-void EvaluateDegree2( const SCurveDataDaK32fC32f *pCurve, int32_t nDimension, float fT,
-                      bool bForwardsLoop, bool bBackwardsLoop, float fCurveDuration,
-                      float *pResult )
+//! Which three controls a degree-2 span reaches, and with what weights.
+//!
+//! Split out of the evaluation so that the quaternion path in Curve.h can use
+//! the same spans and weights while correcting the controls' signs first. A
+//! control index of -1 means the clamped case, where the weight belongs to the
+//! middle control because the control before the first is the first.
+struct SSpan
+{
+	int32_t nPrev;
+	int32_t nMiddle;
+	int32_t nNext;
+	float fBelow;
+	float fMiddle;
+	float fAbove;
+};
+
+SSpan SpanAt( const SCurveDataDaK32fC32f *pCurve, float fT, bool bForwardsLoop,
+              bool bBackwardsLoop, float fCurveDuration )
 {
 	const int32_t nKnots = pCurve->nKnotCount;
 	const float *pKnots = pCurve->pKnots;
@@ -173,25 +189,37 @@ void EvaluateDegree2( const SCurveDataDaK32fC32f *pCurve, int32_t nDimension, fl
 	}
 
 	const float fSpan = pKnots[i + 1] - pKnots[i];
-	const float fBelow = fPrevKnot < pKnots[i + 1]
-	                         ? fSpan * ( 1.0f - fU ) * ( 1.0f - fU )
-	                               / ( pKnots[i + 1] - fPrevKnot )
-	                         : 0.0f;
-	const float fAbove =
+	SSpan span;
+	span.nPrev = nPrevControl;
+	span.nMiddle = i;
+	span.nNext = nNextControl;
+	span.fBelow = fPrevKnot < pKnots[i + 1]
+	                  ? fSpan * ( 1.0f - fU ) * ( 1.0f - fU ) / ( pKnots[i + 1] - fPrevKnot )
+	                  : 0.0f;
+	span.fAbove =
 		fNextKnot > pKnots[i] ? fSpan * fU * fU / ( fNextKnot - pKnots[i] ) : 0.0f;
-	const float fMiddle = 1.0f - fBelow - fAbove;
+	span.fMiddle = 1.0f - span.fBelow - span.fAbove;
+	return span;
+}
+
+void EvaluateDegree2( const SCurveDataDaK32fC32f *pCurve, int32_t nDimension, float fT,
+                      bool bForwardsLoop, bool bBackwardsLoop, float fCurveDuration,
+                      float *pResult )
+{
+	const SSpan span = SpanAt( pCurve, fT, bForwardsLoop, bBackwardsLoop, fCurveDuration );
 
 	memset( pResult, 0, sizeof( float ) * static_cast<size_t>( nDimension ) );
 	// Control i, plus the clamped neighbour where there is no control before the
 	// first: the weight is real, it just lands on the same control.
-	AddScaled( pResult, Control( pCurve, i, nDimension ),
-	           nPrevControl < 0 ? fMiddle + fBelow : fMiddle, nDimension );
-	if ( nPrevControl >= 0 )
+	AddScaled( pResult, Control( pCurve, span.nMiddle, nDimension ),
+	           span.nPrev < 0 ? span.fMiddle + span.fBelow : span.fMiddle, nDimension );
+	if ( span.nPrev >= 0 )
 	{
-		AddScaled( pResult, Control( pCurve, nPrevControl, nDimension ), fBelow,
+		AddScaled( pResult, Control( pCurve, span.nPrev, nDimension ), span.fBelow,
 		           nDimension );
 	}
-	AddScaled( pResult, Control( pCurve, nNextControl, nDimension ), fAbove, nDimension );
+	AddScaled( pResult, Control( pCurve, span.nNext, nDimension ), span.fAbove,
+	           nDimension );
 }
 
 void EvaluateDegree1( const SCurveDataDaK32fC32f *pCurve, int32_t nDimension, float fT,
@@ -218,6 +246,79 @@ void EvaluateDegree1( const SCurveDataDaK32fC32f *pCurve, int32_t nDimension, fl
 	}
 }
 
+}
+
+void EvaluateQuaternion( const SCurve2 &curve, float fT, bool bForwardsLoop,
+                         bool bBackwardsLoop, float fCurveDuration,
+                         const float *pIdentity, float *pResult )
+{
+	const SCurveDataDaK32fC32f *pCurve =
+		static_cast<const SCurveDataDaK32fC32f *>( curve.CurveData.pObject );
+
+	// Everything but the interpolating degree-2 case is the public entry point's
+	// job: an empty curve, a constant, and a straight line between two controls
+	// have no third control to disagree with.
+	if ( pCurve == nullptr || pCurve->nKnotCount <= 1 || pCurve->Header.nDegree != 2
+	     || pCurve->pControls == nullptr || pCurve->pKnots == nullptr )
+	{
+		GrannyEvaluateCurveAtT( 4, true, bBackwardsLoop,
+		                        reinterpret_cast<const granny_curve2 *>( &curve ),
+		                        bForwardsLoop, fCurveDuration, fT, pResult, pIdentity );
+		return;
+	}
+
+	const SSpan span = SpanAt( pCurve, fT, bForwardsLoop, bBackwardsLoop, fCurveDuration );
+
+	// The span's middle control is the one the others join. Each of the outer two
+	// goes in on its near side, which is what makes the wrap continuous: at the
+	// wrap the control from the far end of the curve is the far-side one, and a
+	// rotation that has turned most of the way round ends on the opposite side
+	// from where it started.
+	const float *pMiddle = Control( pCurve, span.nMiddle, 4 );
+	float fWeightOfMiddle = span.fMiddle;
+	if ( span.nPrev < 0 )
+	{
+		fWeightOfMiddle += span.fBelow;
+	}
+	for ( int32_t i = 0; i < 4; ++i )
+	{
+		pResult[i] = pMiddle[i] * fWeightOfMiddle;
+	}
+
+	const int32_t Outer[2] = { span.nPrev, span.nNext };
+	const float Weights[2] = { span.fBelow, span.fAbove };
+	for ( int32_t k = 0; k < 2; ++k )
+	{
+		if ( Outer[k] < 0 )
+		{
+			continue;
+		}
+		const float *pControl = Control( pCurve, Outer[k], 4 );
+		float fDot = 0.0f;
+		for ( int32_t i = 0; i < 4; ++i )
+		{
+			fDot += pMiddle[i] * pControl[i];
+		}
+		const float fWeight = fDot < 0.0f ? -Weights[k] : Weights[k];
+		for ( int32_t i = 0; i < 4; ++i )
+		{
+			pResult[i] += pControl[i] * fWeight;
+		}
+	}
+
+	float fLengthSquared = 0.0f;
+	for ( int32_t i = 0; i < 4; ++i )
+	{
+		fLengthSquared += pResult[i] * pResult[i];
+	}
+	if ( fLengthSquared > 0.0f )
+	{
+		const float fScale = 1.0f / sqrtf( fLengthSquared );
+		for ( int32_t i = 0; i < 4; ++i )
+		{
+			pResult[i] *= fScale;
+		}
+	}
 }
 
 }

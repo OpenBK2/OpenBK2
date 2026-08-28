@@ -52,9 +52,11 @@ set(GR2_SOURCES
     src/Allocator.cpp
     src/Animation.cpp
     src/Control.cpp
+    src/Control.h
     src/Convert.cpp
     src/Convert.h
     src/Curve.cpp
+    src/Curve.h
     src/File.cpp
     src/File.h
     src/LocalPose.h

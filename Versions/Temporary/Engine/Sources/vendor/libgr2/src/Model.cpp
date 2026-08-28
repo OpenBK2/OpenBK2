@@ -13,6 +13,7 @@
 
 #include <gr2/granny.h>
 
+#include "Control.h"
 #include "ModelInstance.h"
 #include "Structures.h"
 #include "Trace.h"
@@ -68,6 +69,17 @@ GR2_API( void ) GrannyFreeModelInstance( granny_model_instance *ModelInstance )
 
 	// Null is safe in the real DLL too, and CSkeletonAnimator's destructor guards
 	// it anyway.
+	if ( ModelInstance != 0 )
+	{
+		// The controls bound to it go with it. The engine frees its instance in
+		// CSkeletonAnimator's destructor and frees no controls of its own except
+		// through GrannyFreeControl on a clip it drops early, so this is the only
+		// place most of them are released.
+		for ( size_t i = 0; i < ModelInstance->Controls.size(); ++i )
+		{
+			delete ModelInstance->Controls[i];
+		}
+	}
 	delete ModelInstance;
 }
 
