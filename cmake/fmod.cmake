@@ -8,12 +8,6 @@ target_include_directories(fmod PUBLIC ${FLESSD_ROOT}/include)
 
 target_link_libraries(fmod PUBLIC SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared)
 
-# SDL3 is imported from the system off Windows, see cmake/sdl.cmake, so there is
-# no SDL3-shared target of this build's own to install there.
-if(WIN32)
-    install(TARGETS SDL3-shared SDL3_mixer-shared DESTINATION bin)
-else()
-    install(TARGETS SDL3_mixer-shared DESTINATION bin)
-endif()
+install(TARGETS SDL3-shared SDL3_mixer-shared DESTINATION bin)
 
 set_target_properties(fmod PROPERTIES FOLDER "third_party/fmod")

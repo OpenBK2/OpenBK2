@@ -71,7 +71,7 @@ Missing, all of it in the distro repository:
 | `meson` | 1.10.1 | the build system |
 | `glslang-tools` | 16.2.0 | provides both `glslang` and `glslangValidator`; `meson.build` does `find_program('glslang', 'glslangValidator')` and targets `vulkan1.3` |
 | `libvulkan-dev` | 1.4.341.0 | the Vulkan loader and its `vulkan` pkg-config module |
-| `libsdl3-dev` | 3.4.2 | the WSI backend, and since `cmake/sdl.cmake` now uses `find_package(SDL3)` off Windows, a build requirement of this project too |
+| `libsdl3-dev` | 3.4.2 | the WSI backend. DXVK's requirement, not this project's: `cmake/sdl.cmake` builds its own SDL3 |
 | `vulkan-tools` | 1.4.341.0 | `vulkaninfo`, only to check the machine before blaming DXVK |
 
 ```bash
@@ -160,9 +160,8 @@ Accepted values are `SDL3`, `SDL2` and `GLFW`.
 
 ## The SDL3 duplication problem, settled
 
-`cmake/sdl.cmake` used to FetchContent libsdl-org/SDL at a pinned commit and
-build it as part of this project, while DXVK was compiled against the
-distribution's.
+`cmake/sdl.cmake` builds libsdl-org/SDL from a pinned commit as part of this
+project, on every platform, while DXVK was compiled against the distribution's.
 
 The mechanism is worth being exact about, because the obvious guess is wrong.
 DXVK does not link SDL3: `libdxvk_d3d9.so` lists only `libm`, `libc` and the
@@ -171,24 +170,37 @@ loader in its `NEEDED` entries, and reaches SDL3 through
 with `libvulkan.so.1` and `DXVK_WSI_DRIVER environment variable unset`, which
 is why the backend is an environment variable rather than a build option.
 
-So there would not have been two SDL3 instances: the loader returns whichever
-library with that soname is already mapped, which would be the game's own. The
-hazard is version skew instead. DXVK was compiled against 3.4.2 and resolves
-every entry point by name at runtime, so handing it a differently-versioned
-`libSDL3.so.0` means a `dlsym` can come back null for something it needs.
+So there are not two SDL3 instances. The loader returns whichever library with
+that soname is already mapped, and by the time D3D9 initialises that is the
+game's own, pulled in as a `NEEDED` of `Game` and of every module that links it.
+Confirmed against an installed tree: `ldd` resolves `libSDL3.so.0` to
+`<prefix>/bin/libSDL3.so.0` for both `Game` and `libSDL3_mixer.so.0`, `$ORIGIN`
+in the `RUNPATH` being searched ahead of the default directories.
 
-Settled off Windows in favour of the system copy: `cmake/sdl.cmake` now calls
-`find_package(SDL3 REQUIRED CONFIG)` there and keeps the FetchContent build for
-Windows, which has no distribution to ask. The package config defines
-`SDL3::SDL3-shared`, the same name `cmake/fmod.cmake` and `UI/CMakeLists.txt`
-already link, so nothing downstream changed.
+What is left is version skew, and it cuts one way only. DXVK resolves every
+entry point by name at runtime against a library it was not compiled against, so
+a `dlsym` can come back null if that library is *older*. SDL 3 keeps ABI
+compatibility going forward, so anything at least as new resolves everything.
+**Keep the pin ahead of the SDL3 the DXVK in use was compiled against.**
 
-**`libsdl3-dev` is therefore a build requirement on Linux and configure fails
-without it.**
+Taking the system copy instead was tried and reverted. It fails outright on a
+distribution that is behind: SDL_mixer 3.4.0 uses `SDL_ALIGNED`,
+`SDL_PutAudioStreamPlanarData`, `SDL_PutAudioStreamDataNoCopy` and
+`SDL_PROP_AUDIOSTREAM_AUTO_CLEANUP_BOOLEAN`, none of which exist in SDL 3.2, and
+Debian trixie is on 3.2.10 where Ubuntu 26.04 is on 3.4.2. Nothing catches that
+at configure time, either, because SDL_mixer runs its own version check only
+when no SDL3 target exists yet and `cmake/sdl.cmake` has always made one by
+then, so it surfaces fourteen files into compiling the mixer.
 
-SDL_mixer stays FetchContent on both platforms: Ubuntu 26.04 has no
-`libsdl3-mixer-dev`, only `libsdl3-dev`. `SDLMIXER_VENDORED` is already off, so
-SDL_mixer resolves SDL3 through `find_package` and builds against the same one.
+The deeper objection is that it made the dependency graph a property of the
+machine. Same source, two hosts, two different libraries, and nothing in the
+build saying so. ABI compatibility is not behavioural compatibility, and this
+engine is a deterministic simulation.
+
+SDL_mixer is FetchContent on both platforms for the simpler reason that no
+`libsdl3-mixer` package exists yet. `SDLMIXER_VENDORED` is off, so it resolves
+SDL3 through `find_package`, which finds the target this build has already
+created.
 
 ## Wiring it into this build
 
