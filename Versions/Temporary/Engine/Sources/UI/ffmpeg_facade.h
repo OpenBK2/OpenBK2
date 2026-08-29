@@ -452,7 +452,7 @@ struct FFmpeg
                         swr_context_.get(),
                         &out_buf,
                         out_samples,
-                        frame->data,
+                        (const uint8_t**)frame->data,
                         frame->nb_samples
                     );
 
