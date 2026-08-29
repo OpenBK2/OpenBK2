@@ -69,6 +69,7 @@ commits on 2026-08-22.
 | document | what it is for | open it when |
 |---|---|---|
 | [docs/port/SESSION_STATE.md](docs/port/SESSION_STATE.md) | where work stopped: branch and commit state, the working loop, the standing instructions, the next error | picking the port back up after a break |
+| [docs/port/LINUX_BUILD_TLDR.md](docs/port/LINUX_BUILD_TLDR.md) | the commands, in order, from a bare machine to a running `Game`: packages, DXVK, configure, data, launch | building on Linux for the first time, or on a new box |
 | [docs/port/PORT_SETUP.md](docs/port/PORT_SETUP.md) | environment, prerequisites, building on Linux, the d3d9 stub, Windows/WSL sync, the verification budget | setting the machine up, or syncing the two clones |
 | [docs/port/PORT_ROADMAP.md](docs/port/PORT_ROADMAP.md) | everything still to do, split into large items that need a decision and small items that are merely mechanical | looking for the next piece of work |
 | [docs/port/DXVK.md](docs/port/DXVK.md) | building DXVK native, the packages it needs, wiring it in place of the DXSDK stub, and what it does not cover | starting on D3D9, windowing or input |
