@@ -2,6 +2,10 @@
 
 #include "Misc_export.h"
 
+// ASSERT, used inline below. Asserts.h deliberately does not include this
+// header back, declaring the one thing it needs from it instead, so naming it
+// here is the direction that does not form a cycle.
+#include "Asserts.h"
 #include "port/stdcall.h"
 
 #include <cmath>
