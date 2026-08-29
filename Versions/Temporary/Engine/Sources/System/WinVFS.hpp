@@ -33,10 +33,18 @@ class CWinVFS : public IVFS
 	class CWinFileEntry : public CFileEntry
 	{
 		const std::string &szBasePath;
+		// The name as it is spelled on disk, which is not always the name the entry
+		// is filed under. The map's key folds case and separators, so an entry found
+		// through it can have been asked for by a spelling no open() would accept,
+		// and the szPathName parameter below carries that spelling rather than this
+		// one. Storing it is what makes the two able to differ.
+		//
+		// It used to be left out on the grounds that the hash map held it already.
+		// That was true while the only lookup that could succeed was an exact one.
+		const NFile::CFilePath szRealPath;
 	public:
-		CWinFileEntry( const uint32_t _dwCheckTime, const std::string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
-		// мы не храним имя файла, а передаём его в виде параметра, т.к. оно итак хранится в hash_map от storage, 
-		// а эту хрень вызывают только здесь и только я... (теперь уже не только ты -)
+		CWinFileEntry( const uint32_t _dwCheckTime, const std::string &_szBasePath, const NFile::CFilePath &_szRealPath )
+			: CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ), szRealPath( _szRealPath ) {  }
 		CDataStream* OpenStream( const std::string &szPathName );
 		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const;
 	};
@@ -76,15 +84,17 @@ class CWinVFS : public IVFS
 			const uint32_t dwCheckTime = PackFileTime( it.GetLastWriteTime() );
 			NFile::CFilePath szFileName = it.GetFullName();
 			szFileName.erase( 0, szBasePath.size() );
+			// szFileName came from the directory scan, so it is already the real
+			// spelling and is both the key and the name to open by.
 			CStreamEntriesMap::iterator pos = pVFS->streamEntriesMap.find( szFileName );
-			if ( pos == pVFS->streamEntriesMap.end() ) 
-				pVFS->streamEntriesMap[szFileName] = new CWinFileEntry( dwCheckTime, szBasePath );
+			if ( pos == pVFS->streamEntriesMap.end() )
+				pVFS->streamEntriesMap[szFileName] = new CWinFileEntry( dwCheckTime, szBasePath, szFileName );
 			else
 			{
 				if ( pos->second->GetCheckTime() < dwCheckTime )
 				{
 					delete pos->second;
-					pos->second = new CWinFileEntry( dwCheckTime, szBasePath );
+					pos->second = new CWinFileEntry( dwCheckTime, szBasePath, szFileName );
 					pos->second->SetChecked();
 				}
 			}

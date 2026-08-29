@@ -14,7 +14,10 @@
 #include <cstdlib>
 #include <cstdint>
 #include <filesystem>
+#include <map>
+#include <mutex>
 #include <system_error>
+#include <utility>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -324,6 +327,136 @@ void GetFullName( std::string *pResult, const std::string &szPath )
 {
 	*pResult = MakeFullPathName( szPath );
 }
+
+#if BOOST_OS_WINDOWS
+
+bool ResolveDataPathCase( std::string *, const std::string &, const std::string & )
+{
+	return false;
+}
+
+#else
+
+namespace
+{
+
+// One directory's names, folded to what a case insensitive lookup compares, so a
+// path that has to be searched for costs one scan per directory rather than one
+// per component per lookup.
+//
+// writeTime is what says the listing is still current. A directory's modification
+// time changes exactly when an entry is added or removed, which is the only thing
+// that can invalidate this, so re-reading it is a stat rather than a rescan.
+struct SFoldedDir
+{
+	std::filesystem::file_time_type writeTime;
+	// folded name -> the name as it is spelled on disk
+	std::map<std::string, std::string> names;
+};
+
+std::mutex g_FoldedDirsMutex;
+std::map<std::string, SFoldedDir> g_FoldedDirs;
+
+std::string FoldName( const std::string &szName )
+{
+	std::string szRes;
+	NStr::ToLowerASCII( &szRes, szName );
+	return szRes;
+}
+
+// The listing for one directory, read once and then reused until the directory
+// changes. Null when the directory cannot be read at all, which a caller treats
+// the same way as a name that is not in it.
+const SFoldedDir *GetFoldedDir( const std::string &szDir )
+{
+	std::error_code ec;
+	const std::filesystem::file_time_type writeTime = std::filesystem::last_write_time( szDir, ec );
+	if ( ec )
+	{
+		return 0;
+	}
+	std::map<std::string, SFoldedDir>::iterator pos = g_FoldedDirs.find( szDir );
+	if ( pos != g_FoldedDirs.end() && pos->second.writeTime == writeTime )
+	{
+		return &pos->second;
+	}
+	SFoldedDir dir;
+	dir.writeTime = writeTime;
+	for ( std::filesystem::directory_iterator it( szDir, ec ), end; !ec && it != end; it.increment( ec ) )
+	{
+		const std::string szName = it->path().filename().string();
+		// Smallest wins, rather than whichever the directory listed first, so the
+		// choice does not depend on the order the filesystem happens to return.
+		const std::pair<std::map<std::string, std::string>::iterator, bool> ins =
+			dir.names.emplace( FoldName( szName ), szName );
+		if ( !ins.second && szName < ins.first->second )
+		{
+			ins.first->second = szName;
+		}
+	}
+	return &( g_FoldedDirs[szDir] = dir );
+}
+
+}
+
+bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath )
+{
+	std::lock_guard csLock( g_FoldedDirsMutex );
+	// szReal is the part resolved so far, relative to szBaseDir; szDir is the same
+	// thing as an absolute directory to scan, which is what the listing is keyed by.
+	std::string szReal;
+	std::string szDir = szBaseDir;
+	size_t nPos = 0;
+	while ( nPos < szRelPath.size() )
+	{
+		size_t nEnd = nPos;
+		while ( nEnd < szRelPath.size() && !IsFolderSeparator( szRelPath[nEnd] ) )
+		{
+			++nEnd;
+		}
+		const std::string szPart = szRelPath.substr( nPos, nEnd - nPos );
+		nPos = nEnd + 1;
+		// A doubled separator names nothing, and "." and ".." name something that
+		// has no case to get wrong, so neither is worth a scan.
+		if ( szPart.empty() || szPart == "." || szPart == ".." )
+		{
+			if ( !szPart.empty() )
+			{
+				AppendPathPart( &szReal, szPart );
+				szDir += szPart;
+				szDir += PATH_SEPARATOR;
+			}
+			continue;
+		}
+		std::string szFound = szPart;
+		std::error_code ec;
+		if ( !std::filesystem::exists( szDir + szPart, ec ) || ec )
+		{
+			const SFoldedDir *pDir = GetFoldedDir( szDir );
+			if ( pDir == 0 )
+			{
+				return false;
+			}
+			const std::map<std::string, std::string>::const_iterator it = pDir->names.find( FoldName( szPart ) );
+			if ( it == pDir->names.end() )
+			{
+				return false;
+			}
+			szFound = it->second;
+		}
+		AppendPathPart( &szReal, szFound );
+		szDir += szFound;
+		szDir += PATH_SEPARATOR;
+	}
+	if ( szReal.empty() )
+	{
+		return false;
+	}
+	*pRes = szReal;
+	return true;
+}
+
+#endif
 
 std::string GetTempPath()
 {

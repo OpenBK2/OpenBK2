@@ -115,6 +115,36 @@ SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &sz
 SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
 SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );
 
+//! Respell a path that arrived from the game data so that it matches what is
+//! actually on disk, forgiving the separator and the case its author's
+//! filesystem accepted.
+//!
+//! szBaseDir is the directory szRelPath is relative to and must end in a
+//! separator; on success *pRes is szRelPath respelled, so szBaseDir + *pRes
+//! opens the file. Both '/' and '\' are accepted on the way in and the result
+//! uses PATH_SEPARATOR throughout.
+//!
+//! For the *data* boundary only, and deliberately not for paths this repository
+//! builds itself. The engine's own paths are a closed set that is spelled
+//! correctly at the source; the data's are an open set, since a map published in
+//! 2007 cannot be recompiled and a mod published tomorrow will be authored on
+//! Windows and never tested anywhere else. Forgiving the second is the only way
+//! unmodifiable data loads at all; forgiving the first would hide callers that
+//! should be fixed. See docs/port/PORT_ROADMAP.md.
+//!
+//! An exact match is always preferred, and only a component that has none is
+//! searched for case insensitively, so nothing that already resolves changes
+//! meaning. Where several names differ only in case - which Windows cannot
+//! produce but a Linux checkout can - the lexicographically smallest wins, so
+//! two machines with the same tree resolve to the same file rather than to
+//! whichever the directory happened to list first. That matters beyond
+//! tidiness: the file that loads here feeds a simulation that has to stay
+//! bit-identical across machines.
+//!
+//! Always false on Windows, where the filesystem has already done this and a
+//! miss means the file is genuinely absent, so scanning would only cost time.
+SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath );
+
 std::string GetTempPath();
 std::string GetTempFileName();
 

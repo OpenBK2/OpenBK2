@@ -104,14 +104,17 @@ bool DoesWinFileExist( const std::string &szPath )
 	return NFile::DoesFileExist( szPath );
 }
 
+// szPathName is how the caller asked for the file, which the map's folded key lets
+// differ from how it is spelled on disk. Only the latter opens, so that is what
+// these two use and the parameter goes unread.
 CDataStream* CWinVFS::CWinFileEntry::OpenStream( const std::string &szPathName )
 {
-	return OpenWinFileDirect( szBasePath + szPathName, true );
+	return OpenWinFileDirect( szBasePath + szRealPath, true );
 }
 
 bool CWinVFS::CWinFileEntry::GetStats( SFileStats *pStats, const std::string &szPathName ) const
 {
-	return pStats == 0 ? false : GetWinFileStats( pStats, szBasePath + szPathName );
+	return pStats == 0 ? false : GetWinFileStats( pStats, szBasePath + szRealPath );
 }
 
 
@@ -220,7 +223,7 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 			if ( GetWinFileStats(&fileStats, szBasePath + szPath) != false && pos->second->GetCheckTime() < fileStats.mtime )
 			{
 				delete pos->second;
-				pos->second = new CWinFileEntry( fileStats.mtime, szBasePath );
+				pos->second = new CWinFileEntry( fileStats.mtime, szBasePath, szPath );
 			}
 		}
 		pos->second->SetChecked();
@@ -232,7 +235,24 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 		SFileStats fileStats;
 		if ( GetWinFileStats(&fileStats, szBasePath + szPath) != false )
 		{
-			CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath );
+			CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath, szPath );
+			pEntry->SetChecked();
+			streamEntriesMap[szPath] = pEntry;
+			return pEntry;
+		}
+		// Nothing is spelled that way, but the data does not agree with the disk
+		// about spelling and never had to: the shipped tree has UI/MainMenuMovie
+		// while the database asks for UI/mainmenumovie, and on Windows the
+		// filesystem settled it. Ask again for whatever is really there.
+		//
+		// Filed under the name that was asked for rather than the one that was
+		// found, because that is the lookup that has to hit next time and the key
+		// folds case anyway, so both spellings reach this one entry.
+		NFile::CFilePath szRealPath;
+		if ( NFile::ResolveDataPathCase( &szRealPath, szBasePath, szPath ) &&
+			   GetWinFileStats( &fileStats, szBasePath + szRealPath ) != false )
+		{
+			CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath, szRealPath );
 			pEntry->SetChecked();
 			streamEntriesMap[szPath] = pEntry;
 			return pEntry;
