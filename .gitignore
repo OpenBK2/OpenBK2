@@ -79,5 +79,6 @@ cmake-build-*
 # CMake
 *_export.h
 
-# build folder
+# build folders
 build/
+linux-build/
