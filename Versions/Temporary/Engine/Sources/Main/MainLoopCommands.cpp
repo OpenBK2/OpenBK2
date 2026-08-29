@@ -68,7 +68,7 @@ IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<
 
 static std::string GetSavePathName( const std::string &szName )
 {
-	return NProfile::GetCurrentProfileDir() + "Saves\\" + szName + ".sav";
+	return NProfile::GetSaveDir() + szName + ".sav";
 }
 
 class CICSave : public CICSaveBase

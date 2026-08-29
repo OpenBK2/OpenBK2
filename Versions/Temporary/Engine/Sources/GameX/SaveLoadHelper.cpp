@@ -41,20 +41,17 @@ const char* REPLAY_NAME_PREFIX = "replay_";
 
 SWaitLoadData g_WaitLoadData;
 
+// Both directories are named in one place now, NProfile, because the other two
+// places that opened a savegame spelled the path their own way and off Windows
+// the three did not agree.
 std::string GetSavePath()
 {
-	std::string szProfileDir = NProfile::GetCurrentProfileDir();
-	if ( !szProfileDir.empty() && szProfileDir[szProfileDir.size() - 1] != '\\')
-		szProfileDir += '\\';
-	return szProfileDir + "Saves\\";
+	return NProfile::GetSaveDir();
 }
 
 std::string GetReplayPath()
 {
-	std::string szProfileDir = NProfile::GetCurrentProfileDir();
-	if ( !szProfileDir.empty() && szProfileDir[szProfileDir.size() - 1] != '\\')
-		szProfileDir += '\\';
-	return szProfileDir + "Replays\\";
+	return NProfile::GetReplayDir();
 }
 
 // SSaveInfo
@@ -269,13 +266,12 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 		sg.nID = *pnLastID;
 		++(*pnLastID);
 
-		// Get file title (w/o path or extension)
-		nNamePos = sg.szFileName.rfind( '\\' );
-		nExtPos = sg.szFileName.rfind( '.' );
-		if ( (nNamePos != std::string::npos) && (nExtPos != std::string::npos) && (nExtPos > nNamePos) )
+		// Get file title (w/o path or extension). Split by the same rule as the
+		// rest of the tree, which takes either separator; looking for a backslash
+		// found none off Windows and titled every save "???".
+		sg.szFileTitle = NFile::GetFileTitle( sg.szFileName );
+		if ( sg.szFileTitle.empty() )
 		{
-			sg.szFileTitle = sg.szFileName.substr( nNamePos + 1, nExtPos - nNamePos - 1);
-		} else {
 			sg.szFileTitle = "???";
 		}
 
@@ -404,11 +400,11 @@ void GetReplayList( CReplays *pReplays )
 		SReplayInfo replay;
 		const std::string szFullFileName = *it;
 
-		const int nNamePos = szFullFileName.rfind( '\\' );
-		const int nExtPos = szFullFileName.rfind( '.' );
-		if ( (nNamePos != std::string::npos) && (nExtPos != std::string::npos) && (nExtPos > nNamePos) )
+		// Either separator, as everywhere else. A backslash is not one off Windows,
+		// so this found nothing and no replay was ever listed.
+		replay.szFileName = NFile::GetFileTitle( szFullFileName );
+		if ( !replay.szFileName.empty() )
 		{
-			replay.szFileName = szFullFileName.substr( nNamePos + 1, nExtPos - nNamePos - 1);
 			if ( NFile::DoesFileExist( szPath + replay.szFileName + REPLAY_EXTENSION ) )
 			{
 				// GetFileAttributesEx returning FALSE skipped the replay entirely, and

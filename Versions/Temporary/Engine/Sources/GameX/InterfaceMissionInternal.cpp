@@ -4283,7 +4283,7 @@ OMG_I_USE_GOTO_AGAIN:
 			// read first save
 			{
 				NStr::ToMBCS( &szParam, paramsSet[0] );
-				const std::string szPathName = NProfile::GetCurrentProfileDir() + "Saves\\" + szParam + ".sav";
+				const std::string szPathName = NProfile::GetSaveDir() + szParam + ".sav";
 
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
@@ -4301,7 +4301,7 @@ OMG_I_USE_GOTO_AGAIN:
 			// read next save
 			{
 				NStr::ToMBCS( &szParam, paramsSet[1] );
-				const std::string szPathName = NProfile::GetCurrentProfileDir() + "Saves\\" + szParam + ".sav";
+				const std::string szPathName = NProfile::GetSaveDir() + szParam + ".sav";
 
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );

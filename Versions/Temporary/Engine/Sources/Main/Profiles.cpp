@@ -206,6 +206,16 @@ std::string GetCurrentProfileDir()
 	return GetProfileDir( GetCurrentProfileName() );
 }
 
+std::string GetSaveDir()
+{
+	return NFile::JoinPath( GetCurrentProfileDir(), "Saves" ) + NFile::PATH_SEPARATOR;
+}
+
+std::string GetReplayDir()
+{
+	return NFile::JoinPath( GetCurrentProfileDir(), "Replays" ) + NFile::PATH_SEPARATOR;
+}
+
 static void RemoveProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
