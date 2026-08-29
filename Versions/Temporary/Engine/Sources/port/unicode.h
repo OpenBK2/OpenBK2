@@ -35,7 +35,17 @@ public:
 	void operator=( const CIconv& ) = delete;
 
 	CIconv( const char *pszTo, const char *pszFrom ) : cd( ::iconv_open( pszTo, pszFrom ) ) {}
-	~CIconv() { if ( IsOk() ) { ::iconv_close( cd ); } }
+	// Marked closed as well as closed, so that a conversion asked for after this
+	// has run reports failure instead of handing libc a freed descriptor.
+	//
+	// Every holder is a thread_local static, and the main thread's are destroyed
+	// before the shared libraries' own statics are. A destructor in one of those
+	// that logs anything reaches this object after this point: libSound's
+	// CAckTuning writes acklog.bin as it goes, the file trace turns that into a
+	// log line, and the line is converted here. Without the store that was an
+	// iconv call on a closed descriptor and a segfault at every exit, after the
+	// game had already shut down cleanly.
+	~CIconv() { if ( IsOk() ) { ::iconv_close( cd ); cd = (iconv_t)-1; } }
 
 	bool IsOk() const { return cd != (iconv_t)-1; }
 
