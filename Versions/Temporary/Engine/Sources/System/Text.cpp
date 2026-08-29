@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include "port/unicode.h"
+
 #include "Text.h"
 #include "FilePath.h"
 #include "VFSOperations.h"
@@ -25,8 +28,15 @@ bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream )
 			pwszRes->clear();
 		else
 		{
-			pwszRes->resize( nSize / sizeof(wchar_t) );
-			pStream->Read( &((*pwszRes)[0]), nSize );
+			// The BOM says UTF-16LE, so the body is two bytes per character and
+			// not sizeof( wchar_t ). The two are the same on Windows and this is
+			// the copy it always was; off Windows wchar_t is four bytes, so the
+			// old reinterpret packed two characters into each wchar_t, dropped
+			// half the string, and overran the buffer by two bytes whenever the
+			// character count was odd.
+			std::vector<char> buffer( nSize );
+			pStream->Read( &buffer[0], nSize );
+			*pwszRes = UTF16LEToWide( &buffer[0], buffer.size() );
 		}
 		return true;
 	}
