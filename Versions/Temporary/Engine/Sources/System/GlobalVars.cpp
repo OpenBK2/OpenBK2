@@ -2,6 +2,7 @@
 
 #include "GlobalVars.h"
 #include "FilePath.h"
+#include "FileUtils.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
 
@@ -515,7 +516,21 @@ void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &par
 static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
-		NGlobal::LoadConfig( NFile::JoinPath( "..", NStr::ToMBCS( paramsSet[nTemp] ) ) );
+	{
+		// The argument is a path out of a config file, so it is spelled however its
+		// author's filesystem accepted it and not how this one does. Retail ships
+		// "exec .\profiles\consts.cfg" beside a Profiles directory, which is both
+		// separators and case wrong at once, and startup.cfg is the first thing the
+		// game reads: consts.cfg and aliases.cfg went missing before anything else
+		// happened.
+		//
+		// Respelt here because this is the boundary. LoadConfig's other callers pass
+		// paths this repository builds, which are already right and take the exact
+		// match, so forgiving this one does not forgive those.
+		const std::string szAsWritten = NFile::JoinPath( "..", NStr::ToMBCS( paramsSet[nTemp] ) );
+		std::string szOnDisk;
+		NGlobal::LoadConfig( NFile::ResolveDataPathCase( &szOnDisk, "", szAsWritten ) ? szOnDisk : szAsWritten );
+	}
 }
 
 static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )

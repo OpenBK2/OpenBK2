@@ -367,8 +367,12 @@ std::string FoldName( const std::string &szName )
 // The listing for one directory, read once and then reused until the directory
 // changes. Null when the directory cannot be read at all, which a caller treats
 // the same way as a name that is not in it.
-const SFoldedDir *GetFoldedDir( const std::string &szDir )
+const SFoldedDir *GetFoldedDir( const std::string &szDirName )
 {
+	// An empty base directory means the path is relative to the working directory,
+	// which is what a config path that starts with a name rather than a separator
+	// is. Naming it lets the same code scan it.
+	const std::string szDir = szDirName.empty() ? std::string( "." ) : szDirName;
 	std::error_code ec;
 	const std::filesystem::file_time_type writeTime = std::filesystem::last_write_time( szDir, ec );
 	if ( ec )
