@@ -94,7 +94,7 @@ SYSTEM_EXPORT std::string GetFileName( const std::string &szFullFilePath );
 
 //! Get file title full file path name (c:/mydir/myfile.txt => myfile)
 //! \return File title or empty string (in the case of folder path)
-std::string GetFileTitle( const std::string &szFullFilePath );
+SYSTEM_EXPORT std::string GetFileTitle( const std::string &szFullFilePath );
 
 //! Get file extension full file path name (c:/mydir/myfile.txt => .txt)
 //! \return File extension or empty string (in the case of folder path or extension-less file name)
@@ -102,7 +102,7 @@ SYSTEM_EXPORT std::string GetFileExt( const std::string &szFullFilePath );
 
 //! Cut file's extension (any part before '.' (and this '.' must be before path separator))
 //! \return File full path without extension
-std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt );
+SYSTEM_EXPORT std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt );
 
 //! Split full file path into parts.
 SYSTEM_EXPORT void SplitPath( std::list<std::string> *pRes, const std::string &szFullFilePath );
@@ -117,7 +117,7 @@ BOOST_FORCEINLINE bool ComparePathEq( const std::string &szPath1, const std::str
 
 //! Compare (sub)pathes on less-then, ignore case and path separator type.
 //! \return True if first (sub)path are less then second one and false in other case
-bool ComparePathLt( const int nStart1, const int nLength1, const std::string &szPath1,
+SYSTEM_EXPORT bool ComparePathLt( const int nStart1, const int nLength1, const std::string &szPath1,
 									 const int nStart2, const int nLength2, const std::string &szPath2 );
 //! Compare full pathes on less-then, ignore case and path separator type.
 //! \return True if first path are less then second and false in other case
