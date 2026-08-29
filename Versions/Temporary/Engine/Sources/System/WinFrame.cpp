@@ -505,8 +505,14 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPC
 		nWidth = pDesktop->w;
 		nHeight = pDesktop->h;
 	}
+	// SDL_WINDOW_VULKAN is not optional here even though nothing in this file
+	// touches Vulkan. D3D9 is DXVK off Windows, and its SDL3 backend presents by
+	// calling SDL_Vulkan_CreateSurface on this window; SDL rejects that outright
+	// for a window created without the flag, and DXVK reports the refusal as
+	// VK_ERROR_OUT_OF_HOST_MEMORY, so CreateDevice fails with a message that
+	// points at memory rather than at the window.
 	SDL_Window *pWindow = SDL_CreateWindow( pszAppName != 0 ? pszAppName : "", nWidth, nHeight,
-	                                        SDL_WINDOW_BORDERLESS );
+	                                        SDL_WINDOW_BORDERLESS | SDL_WINDOW_VULKAN );
 	if ( pWindow == 0 )
 	{
 		csSystem << CC_RED << "Cannot create the game window: " << SDL_GetError() << endl;
