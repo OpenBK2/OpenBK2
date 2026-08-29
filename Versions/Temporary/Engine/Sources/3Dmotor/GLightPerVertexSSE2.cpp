@@ -188,26 +188,32 @@ static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScal
 	if ( nVertices <= 0 )
 		return;
 
+	// Multiplied in single precision, as the reference is: it computes
+	// v.x * fpScale with both operands float and rounds that, so the product is
+	// rounded to a float before lrintf ever sees it. Widening to double first
+	// keeps a product the reference has already rounded away, and where the two
+	// land on opposite sides of a half they disagree by one - which is what the
+	// unit test caught, a warfog coordinate of -12295 against -12296.
+	//
+	// _mm_cvtps_epi32 rounds by MXCSR and lrintf by the current rounding mode,
+	// which on x86-64 is the same register and the same round-to-nearest-even.
+	// The conversion to double was also work: this is one multiply and one
+	// convert for four values, where that was two of each for the same four.
 	const float fpScale = fScale * 0x4000;
-	const __m128d scale = _mm_set1_pd( static_cast<double>( fpScale ) );
+	const __m128 scale = _mm_set1_ps( fpScale );
 	int k = 0;
 	for ( ; k + 1 < nVertices; k += 2 )
 	{
 		const __m128 positions = _mm_set_ps(
 			pSrcPos[k + 1].y, pSrcPos[k + 1].x, pSrcPos[k].y, pSrcPos[k].x );
-		const __m128d positions0 = _mm_cvtps_pd( positions );
-		const __m128d positions1 = _mm_cvtps_pd( _mm_movehl_ps( positions, positions ) );
-		const __m128i coords0 = _mm_cvtpd_epi32( _mm_mul_pd( positions0, scale ) );
-		const __m128i coords1 = _mm_cvtpd_epi32( _mm_mul_pd( positions1, scale ) );
-		const __m128i coords = _mm_unpacklo_epi64( coords0, coords1 );
+		const __m128i coords = _mm_cvtps_epi32( _mm_mul_ps( positions, scale ) );
 		_mm_storeu_si128( reinterpret_cast<__m128i*>( &pIntCoords[k * 2] ), coords );
 	}
 
 	if ( k < nVertices )
 	{
 		const __m128 positions = _mm_set_ps( 0, 0, pSrcPos[k].y, pSrcPos[k].x );
-		const __m128d positionsDouble = _mm_cvtps_pd( positions );
-		const __m128i coords = _mm_cvtpd_epi32( _mm_mul_pd( positionsDouble, scale ) );
+		const __m128i coords = _mm_cvtps_epi32( _mm_mul_ps( positions, scale ) );
 		_mm_storel_epi64( reinterpret_cast<__m128i*>( &pIntCoords[k * 2] ), coords );
 	}
 }

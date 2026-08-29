@@ -205,21 +205,19 @@ static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScal
 	if ( nVertices <= 0 )
 		return;
 
+	// Single precision, matching the reference and the SSE2 kernel. See the
+	// comment in GLightPerVertexSSE2.cpp for why the double the two of these
+	// used to widen to disagreed with the reference by one.
 	const float fpScale = fScale * 0x4000;
-	const __m256d scale = _mm256_set1_pd( static_cast<double>( fpScale ) );
+	const __m256 scale = _mm256_set1_ps( fpScale );
 	int k = 0;
 	for ( ; k + 3 < nVertices; k += 4 )
 	{
-		const __m128 positions01 = _mm_set_ps(
+		const __m256 positions = _mm256_set_ps(
+			pSrcPos[k + 3].y, pSrcPos[k + 3].x, pSrcPos[k + 2].y, pSrcPos[k + 2].x,
 			pSrcPos[k + 1].y, pSrcPos[k + 1].x, pSrcPos[k].y, pSrcPos[k].x );
-		const __m128 positions23 = _mm_set_ps(
-			pSrcPos[k + 3].y, pSrcPos[k + 3].x, pSrcPos[k + 2].y, pSrcPos[k + 2].x );
-		const __m128i coords01 = _mm256_cvtpd_epi32(
-			_mm256_mul_pd( _mm256_cvtps_pd( positions01 ), scale ) );
-		const __m128i coords23 = _mm256_cvtpd_epi32(
-			_mm256_mul_pd( _mm256_cvtps_pd( positions23 ), scale ) );
-		_mm_storeu_si128( reinterpret_cast<__m128i*>( &pIntCoords[k * 2] ), coords01 );
-		_mm_storeu_si128( reinterpret_cast<__m128i*>( &pIntCoords[k * 2 + 4] ), coords23 );
+		const __m256i coords = _mm256_cvtps_epi32( _mm256_mul_ps( positions, scale ) );
+		_mm256_storeu_si256( reinterpret_cast<__m256i*>( &pIntCoords[k * 2] ), coords );
 	}
 
 	if ( k < nVertices )
@@ -234,10 +232,9 @@ static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScal
 			0.0f, 0.0f,
 			remaining > 2 ? pSrcPos[k + 2].y : 0.0f,
 			remaining > 2 ? pSrcPos[k + 2].x : 0.0f );
-		const __m128i coords01 = _mm256_cvtpd_epi32(
-			_mm256_mul_pd( _mm256_cvtps_pd( positions01 ), scale ) );
-		const __m128i coords23 = _mm256_cvtpd_epi32(
-			_mm256_mul_pd( _mm256_cvtps_pd( positions23 ), scale ) );
+		const __m128 scale128 = _mm256_castps256_ps128( scale );
+		const __m128i coords01 = _mm_cvtps_epi32( _mm_mul_ps( positions01, scale128 ) );
+		const __m128i coords23 = _mm_cvtps_epi32( _mm_mul_ps( positions23, scale128 ) );
 		if ( remaining >= 2 )
 			_mm_storeu_si128( reinterpret_cast<__m128i*>( &pIntCoords[k * 2] ), coords01 );
 		else
