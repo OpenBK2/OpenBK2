@@ -145,39 +145,165 @@ bool ReadEntry( SEntryLayout *pLayout, bool *pbSupported, const uint8_t *pData,
 	return true;
 }
 
+// The two "anih" flags that matter. AF_ICON says the frames are whole cursors
+// rather than bare bitmaps; AF_SEQUENCE says a "seq " chunk is present.
+const uint32_t ANI_FLAG_ICON = 1;
+const uint32_t ANI_FLAG_SEQUENCE = 2;
+const size_t ANIH_SIZE = 36;
+
+// Where a RIFF chunk of nChunk bytes starting at nPos ends, given that chunks
+// are padded to an even length. Zero when that lands outside the data or wraps,
+// which is how a truncated or malformed file ends the walk instead of looping.
+size_t NextChunk( size_t nPos, uint32_t nChunk, size_t nSize )
+{
+	const size_t nNext = nPos + 8 + nChunk + ( nChunk & 1 );
+	if ( nNext <= nPos || nNext > nSize )
+	{
+		return 0;
+	}
+	return nNext;
 }
 
-bool FindFirstAniFrame( size_t *pnOffset, const uint8_t *pData, size_t nSize )
+// The "rate" and "seq " chunks are both plain arrays of little-endian u32.
+void ReadU32Array( std::vector<uint32_t> *pValues, const uint8_t *pData, size_t nBody, size_t nEnd )
 {
+	pValues->clear();
+	for ( size_t n = nBody; n + 4 <= nEnd; n += 4 )
+	{
+		pValues->push_back( ReadU32( pData + n ) );
+	}
+}
+
+// A jiffy is 1/60 s.
+//
+// Clamped at both ends, because a caller may advance a deadline by this and a
+// zero would be a step that never ends. A zero is what the file says; the upper
+// clamp is because the multiplication below would otherwise wrap, and a wrap
+// can land back on the zero the lower clamp just ruled out. A minute is longer
+// than any cursor means.
+int JiffiesToMilliseconds( uint32_t nJiffies )
+{
+	const uint32_t MAX_JIFFIES = 60 * 60;
+	if ( nJiffies == 0 )
+	{
+		nJiffies = 1;
+	}
+	else if ( nJiffies > MAX_JIFFIES )
+	{
+		nJiffies = MAX_JIFFIES;
+	}
+	return static_cast<int>( nJiffies * 1000 / 60 );
+}
+
+}
+
+bool ReadAni( SAniInfo *pInfo, const uint8_t *pData, size_t nSize )
+{
+	pInfo->frameOffsets.clear();
+	pInfo->sequence.clear();
+	pInfo->delays.clear();
 	if ( nSize < 12 || memcmp( pData, "RIFF", 4 ) != 0 || memcmp( pData + 8, "ACON", 4 ) != 0 )
 	{
 		return false;
 	}
+
+	uint32_t nDefaultRate = 0;
+	uint32_t nFlags = 0;
+	bool bHaveHeader = false;
+	std::vector<uint32_t> rates;
+	std::vector<uint32_t> sequence;
+
+	// The chunks may come in any order, so all of them are collected first and
+	// reconciled afterwards.
 	size_t nPos = 12;
 	while ( nPos + 8 <= nSize )
 	{
 		const uint32_t nChunk = ReadU32( pData + nPos + 4 );
-		if ( memcmp( pData + nPos, "LIST", 4 ) == 0 && nPos + 12 <= nSize &&
-		     memcmp( pData + nPos + 8, "fram", 4 ) == 0 )
+		const size_t nBody = nPos + 8;
+		const size_t nEnd = (std::min)( nSize, nBody + static_cast<size_t>( nChunk ) );
+		if ( memcmp( pData + nPos, "anih", 4 ) == 0 && nBody + ANIH_SIZE <= nSize )
 		{
-			size_t nSub = nPos + 12;
-			const size_t nListEnd = (std::min)( nSize, nPos + 8 + static_cast<size_t>( nChunk ) );
-			while ( nSub + 8 <= nListEnd )
+			// cbSize, nFrames, nSteps, cx, cy, cBitCount, cPlanes, jifRate,
+			// flags. The two counts are ignored: they are the part of the file
+			// most likely to disagree with what is actually stored, and what is
+			// stored can be counted.
+			nDefaultRate = ReadU32( pData + nBody + 28 );
+			nFlags = ReadU32( pData + nBody + 32 );
+			bHaveHeader = true;
+		}
+		else if ( memcmp( pData + nPos, "rate", 4 ) == 0 )
+		{
+			ReadU32Array( &rates, pData, nBody, nEnd );
+		}
+		else if ( memcmp( pData + nPos, "seq ", 4 ) == 0 )
+		{
+			ReadU32Array( &sequence, pData, nBody, nEnd );
+		}
+		else if ( memcmp( pData + nPos, "LIST", 4 ) == 0 && nBody + 4 <= nSize &&
+		          memcmp( pData + nBody, "fram", 4 ) == 0 )
+		{
+			// Only the frame list is descended into. An ACON also carries a LIST
+			// INFO of author and title strings, whose chunks are not frames.
+			size_t nSub = nBody + 4;
+			while ( nSub + 8 <= nEnd )
 			{
 				const uint32_t nSubSize = ReadU32( pData + nSub + 4 );
 				if ( memcmp( pData + nSub, "icon", 4 ) == 0 )
 				{
-					*pnOffset = nSub + 8;
-					return true;
+					pInfo->frameOffsets.push_back( nSub + 8 );
 				}
-				// RIFF chunks are padded to an even length
-				nSub += 8 + nSubSize + ( nSubSize & 1 );
+				nSub = NextChunk( nSub, nSubSize, nEnd );
+				if ( nSub == 0 )
+				{
+					break;
+				}
 			}
-			return false;
 		}
-		nPos += 8 + nChunk + ( nChunk & 1 );
+		nPos = NextChunk( nPos, nChunk, nSize );
+		if ( nPos == 0 )
+		{
+			break;
+		}
 	}
-	return false;
+
+	if ( !bHaveHeader || pInfo->frameOffsets.empty() )
+	{
+		return false;
+	}
+	// Without AF_ICON the frames are bare BITMAPINFOHEADERs with no directory in
+	// front of them, which is not the container GetImages reads. Nothing in the
+	// game's data is stored that way.
+	if ( ( nFlags & ANI_FLAG_ICON ) == 0 )
+	{
+		return false;
+	}
+
+	const uint32_t nFrames = static_cast<uint32_t>( pInfo->frameOffsets.size() );
+	if ( ( nFlags & ANI_FLAG_SEQUENCE ) == 0 || sequence.empty() )
+	{
+		// No sequence, so each frame is shown once in the order it is stored.
+		sequence.clear();
+		for ( uint32_t i = 0; i < nFrames; ++i )
+		{
+			sequence.push_back( i );
+		}
+	}
+	pInfo->sequence.reserve( sequence.size() );
+	pInfo->delays.reserve( sequence.size() );
+	for ( size_t i = 0; i < sequence.size(); ++i )
+	{
+		// A step naming a frame that is not there is dropped rather than clamped
+		// onto a neighbour: one step short beats one step wrong.
+		if ( sequence[i] >= nFrames )
+		{
+			continue;
+		}
+		pInfo->sequence.push_back( static_cast<int>( sequence[i] ) );
+		// A "rate" shorter than the sequence falls back to the header's rate for
+		// the steps it does not reach, which is also what a missing one does.
+		pInfo->delays.push_back( JiffiesToMilliseconds( i < rates.size() ? rates[i] : nDefaultRate ) );
+	}
+	return !pInfo->sequence.empty();
 }
 
 bool GetImages( std::vector<SImageInfo> *pImages, const uint8_t *pData, size_t nSize, size_t nBase )

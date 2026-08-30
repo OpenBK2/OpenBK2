@@ -64,7 +64,7 @@ namespace NWinFrame
 	//! what Explorer shows for the file itself. ELF has no resource section, so
 	//! off Windows the same picture arrives as a file.
 	SYSTEM_EXPORT void SetIcon( const std::string &szFileName );
-	SYSTEM_EXPORT void SetCursor( NWinCursor::TCursor _hCursor );
+	SYSTEM_EXPORT void SetCursor( NWinCursor::TFrame _hCursor );
 	void ShowCursor( bool bShow );
 	void EnableCursorManagement( bool bEnable );
 	SYSTEM_EXPORT void FlashTaskbarIfInactive();

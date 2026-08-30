@@ -31,7 +31,7 @@ static volatile bool bExit = false;
 static volatile bool bActive = true;
 static std::mutex msgs;
 static std::list< SWindowsMsg > msgList;
-static NWinCursor::TCursor hCursor;
+static NWinCursor::TFrame hCursor;
 static bool bManageCursor = true;
 
 #if BOOST_OS_WINDOWS
@@ -674,7 +674,7 @@ void NWinFrame::PumpMessages()
 	}
 }
 
-void NWinFrame::SetCursor( NWinCursor::TCursor _hCursor )
+void NWinFrame::SetCursor( NWinCursor::TFrame _hCursor )
 {
 	if ( !bManageCursor )
 	{

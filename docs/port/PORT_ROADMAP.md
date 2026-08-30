@@ -33,7 +33,7 @@ so they do not churn cherry-pick context.
 | [ ] | Retire the printf family. Steps 1 and 4 landed together as "format debug traces with fmt instead of va_list and _vsnprintf"; steps 2, 3 and 5 remain | [Retiring the printf family](#retiring-the-printf-family-what-is-actually-left-and-with-what) |
 | [x] | ~~1703 `-Wwrite-strings` warnings~~ done in "make the autodetect card name const": 1699 of them were one `char *` field in `pciids/detect.h`, one per row of a 1700 row table. A 3Dmotor build now emits 2 warnings |  |
 | [x] | ~~The `GetObject`/`C4273` items~~ overtaken: `NFile::CopyFile` turned out to be missing `SYSTEM_EXPORT`, which is what the `CopyFileA` link error actually was. The `-A` analysis stands and nothing else is broken by it | [The Windows SDK's -A macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
-| [ ] | Animated cursors are static off Windows. The six `.ani` files decode to their first frame; animation needs a timer driving `SDL_SetCursor` | [Animated cursors off Windows](#animated-cursors-off-windows) |
+| [x] | ~~Animated cursors are static off Windows~~ done in "animate the .ani cursors off Windows": `ReadAni` reads every frame plus `rate` and `seq `, and `CCursor::Step` advances them from the game loop. No timer and no thread - the shipped cursors run at 6 to 12 fps | [Animated cursors off Windows](#animated-cursors-off-windows) |
 | [ ] | The clipboard is ANSI on Windows and UTF-8 off it, so the two disagree about what can be copied. `CF_UNICODETEXT` closes it | [The clipboard loses characters on Windows](#the-clipboard-loses-characters-on-windows) |
 | [x] | ~~`SYSTEMTIME` is a field in three structures that `IBinSaver` writes, so replacing it changes a stored layout~~ done in "replace SYSTEMTIME in the savegame and replay lists with a portable struct" (`a3cf61a8f`). The layout was kept: those structures do reach a savegame | [SYSTEMTIME inside serialised structures](#systemtime-inside-serialised-structures---done-and-what-it-settled) |
 | [ ] | 7 `-Wformat-security` sites, all original code. `AILogic/MPLog.h` also calls unbounded `vsprintf` into a 2048-byte static | [-Wformat-security](#-wformat-security-7-sites-all-original-plus-two-other-bugs-found-beside-them) |
@@ -845,20 +845,57 @@ Worth doing with the rest of the narrow-string encoding work, since the same
 `System/WinCursor.cpp` decodes cursors itself off Windows, because SDL manages
 cursors but parses no cursor file format. A `.cur` is read in full. A `.ani` is a
 RIFF `ACON` whose `fram` list holds one `icon` chunk per frame, each of them a
-complete `.cur`, and only the first is taken.
+complete `.cur`, so decoding a frame is the same work as decoding a `.cur`.
 
-So the six animated cursors in `Versions/Current/Data/Cursors` show as a still
-frame off Windows: `AttackNotValid`, `AttackValid`, `Default`, `Move`,
-`reinforcement`, `test`. Windows is unaffected, keeping `LoadCursorFromFile`,
-which animates.
+Only the first frame used to be taken, leaving the six animated cursors in
+`Versions/Current/Data/Cursors` as stills. `NWinImage::ReadAni` now reads the
+whole animation - every frame offset, the `anih` default rate, the optional
+`rate` chunk of per step delays and the optional `seq ` chunk of per step frame
+indices, converting the file's jiffies of 1/60 s to milliseconds on the way out.
+A step is not a frame: `AttackValid` plays `0 1 2 3 3 1 0`, and `Default` stores
+24 frames but steps through only the first 8.
 
-SDL has no animated cursor and will not grow one: the frames would have to be
-decoded into an array of `SDL_Cursor*` and a timer would call `SDL_SetCursor` on
-each tick. The frame delays live in the `anih` header's default rate and in the
-optional `rate` chunk, in units of 1/60 s, and the `seq` chunk can reorder frames,
-so a faithful version reads both rather than assuming a fixed interval.
+**No timer and no thread.** What the shipped data actually asks for is 6 to 12
+fps:
 
-Worth doing only once something runs and someone can see the cursor.
+| file | frames | steps | delay |
+|---|---|---|---|
+| `Default` | 24 | 24 | 167 ms |
+| `AttackNotValid` | 8 | 8 | 133 ms |
+| `Move` | 8 | 8 | 133 ms |
+| `AttackValid` | 7 | 7 | 150 ms, one 167 |
+| `reinforcement` | 4 | 4 | 167 ms |
+| `test` | 5 | 5 | 83 ms |
+
+A poll once per iteration of the loop in `Game/main.cpp` oversamples that by 3x
+even at 20 FPS, and the slowest the loop ever runs is the inactive branch's 40 ms
+sleep - by which point the cursor on screen is not ours anyway. So
+`ICursor::Step` is called from the loop, gated on `bAppActive`.
+
+`CCursor::Step` advances against a `steady_clock` deadline rather than counting
+frames, so the animation runs at the file's rate whatever the frame rate is and a
+hitch skips the steps it slept through instead of falling permanently behind.
+`JiffiesToMilliseconds` clamps to at least one jiffy so that loop always
+terminates.
+
+Two things this deliberately does not do, both of which would need the thread:
+
+- The cursor freezes while the main thread is blocked, on a long load or a hitch.
+  Windows keeps animating because the animation lives in win32k, not in the
+  process. This is the one visible behavioural difference.
+- `SDL_SetCursor` is main-thread-only, and `SDL_AddTimer` callbacks run on SDL's
+  timer thread, so a timer could only store a step index for the main thread to
+  apply - which does not help during a stall either, since a blocked main thread
+  applies nothing.
+
+Mid-frame cursor changes are a non-issue: the cursor is not in the swapchain.
+`SDL_SetCursor` is `XDefineCursor` or `wl_pointer.set_cursor`, composited by the
+server on (usually) a hardware cursor plane, so it cannot tear a game frame.
+
+`NWinCursor::TCursor` is now a loaded cursor and `TFrame` one displayable image
+of it; on Windows both are still `HCURSOR` and `GetStepCount` always answers 1,
+so `Step` returns immediately there and `LoadCursorFromFile` keeps doing the
+work. `NWinFrame::SetCursor` takes a `TFrame` and knows nothing about animation.
 
 ### Windows types in code added after the type sweep
 

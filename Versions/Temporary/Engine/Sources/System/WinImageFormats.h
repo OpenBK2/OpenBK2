@@ -59,16 +59,37 @@ struct SImage
 	SImage() : nWidth( 0 ), nHeight( 0 ), nHotX( 0 ), nHotY( 0 ) { }
 };
 
-// The offset of the first complete cursor inside a .ani.
+// What a .ani says about its animation, once the RIFF has been walked.
 //
-// A .ani is a RIFF ACON whose "fram" list holds one "icon" chunk per frame, and
-// each of those chunks is a whole .cur. Only the first frame is reported: it is
-// what a caller with no animation to drive can use, and finding the rest is a
-// separate piece of work.
+// A .ani is a RIFF ACON. Its "anih" header carries a default delay and a flags
+// word; its "fram" list holds one "icon" chunk per frame, each of those chunks a
+// whole .cur; and the optional "rate" and "seq " chunks give a per step delay
+// and a per step frame index, which is how a file dwells on one frame or plays
+// its frames out of order.
 //
-// False when the data is not a RIFF ACON, or has no frame list, in which case
-// the caller should treat the file as a plain .cur or .ico from offset zero.
-SYSTEM_EXPORT bool FindFirstAniFrame( size_t *pnOffset, const uint8_t *pData, size_t nSize );
+// So a step is not the same thing as a frame. Every shipped cursor has more
+// steps than the frames they name: Default.ani stores 24 frames and steps
+// through 8 of them, twice, pausing on the last.
+struct SAniInfo
+{
+	// Where each stored frame begins, ready to be handed to GetImages as nBase.
+	std::vector<size_t> frameOffsets;
+	// One entry per step of the animation, indexing frameOffsets. Never empty
+	// for a file this accepted, and every entry is in range.
+	std::vector<int> sequence;
+	// How long each step is shown, in milliseconds, one per sequence entry. The
+	// file counts in jiffies of 1/60 s; that is converted here because nothing
+	// outside this reader has any reason to know the unit.
+	std::vector<int> delays;
+};
+
+// Read the animation out of a .ani.
+//
+// False when the data is not a RIFF ACON, holds no frame this can use, or
+// stores its frames as bare bitmaps rather than as cursors (the AF_ICON flag
+// clear), in which case the caller should treat the file as a plain .cur or
+// .ico from offset zero.
+SYSTEM_EXPORT bool ReadAni( SAniInfo *pInfo, const uint8_t *pData, size_t nSize );
 
 // Read the directory of the ICO container at nBase, without decoding anything.
 // False when the data is not that container.

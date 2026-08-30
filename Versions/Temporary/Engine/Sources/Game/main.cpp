@@ -387,6 +387,16 @@ static int RunGame( const std::vector<std::string> &arguments )
 		convert.Do();
 
 		const bool bAppActive = NWinFrame::IsAppActive();
+		// Off Windows an animated cursor is a set of frames this loop steps
+		// through, so it needs a tick; on Windows it is one handle USER32
+		// animates and this does nothing. Only while focused, because that is
+		// the only time the cursor being shown is ours. Cheap either way: the
+		// shipped cursors run at 6 to 12 fps, so at any playable frame rate the
+		// great majority of these calls find nothing to do and return.
+		if ( bAppActive )
+		{
+			Cursor()->Step();
+		}
 		if ( NWinFrame::IsExit() )
 		{
 			NWinFrame::ResetExit();

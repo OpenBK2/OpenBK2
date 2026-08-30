@@ -12,6 +12,9 @@ struct ICursor : public CObjectBase
 	virtual void RegisterMode( const int nMode, const std::string &szFileName ) = 0;
 	virtual bool SetMode( const int nMode ) = 0;
 	virtual void OnSetCursor() = 0;
+	// advance an animated cursor to whatever frame the clock says. Call once a
+	// frame; does nothing on Windows, which animates its own cursors
+	virtual void Step() = 0;
 	// show/hide cursor
 	virtual void Show( const bool bShow ) = 0;
 	// set movement bounds
