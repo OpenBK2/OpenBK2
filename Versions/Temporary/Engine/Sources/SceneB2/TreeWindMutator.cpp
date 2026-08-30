@@ -21,7 +21,7 @@ void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3,
 		leafBones.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
 }
 
-void CTreeWindMutator::MutateSkeletonPose( granny_local_pose *pPose )
+void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
@@ -52,18 +52,18 @@ void CTreeWindMutator::MutateSkeletonPose( granny_local_pose *pPose )
 	qInverseRot.UnitInverse();
 	CQuat qRndRot( fMagnitude * fCoeffSinRnd * fMaxTurn * 0.3f, fCoeffCos, fCoeffSin, 2.0f, true );
 
-	granny_transform *pTransform = GrannyGetLocalPoseTransform( pPose, 0 );
+	NAnimation::SBoneTransform *pTransform = pPose->GetBone( 0 );
 	TransformRootBone( pTransform, qRot );
 	for ( std::vector<int>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
 		if ( *it == -1 )
 			continue;
-		pTransform = GrannyGetLocalPoseTransform( pPose, *it );
+		pTransform = pPose->GetBone( *it );
 		TransformLeafBone( pTransform, qInverseRot * qRndRot );
 	}
 }
 
-void CTreeWindMutator::TransformRootBone( granny_transform *pTransform, const CQuat &qRot )
+void CTreeWindMutator::TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
@@ -78,11 +78,11 @@ void CTreeWindMutator::TransformRootBone( granny_transform *pTransform, const CQ
 	pTransform->Position[0] = vBonePos.x;
 	pTransform->Position[1] = vBonePos.y;
 	pTransform->Position[2] = vBonePos.z;
-	pTransform->Flags |= GrannyHasPosition;
-	pTransform->Flags |= GrannyHasOrientation;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_POSITION;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_ORIENTATION;
 }
 
-void CTreeWindMutator::TransformLeafBone( granny_transform *pTransform, const CQuat &qRot )
+void CTreeWindMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
 	if ( !pTransform )
 		return;
@@ -93,7 +93,7 @@ void CTreeWindMutator::TransformLeafBone( granny_transform *pTransform, const CQ
 	pTransform->Orientation[1] = vBoneOrientation.y;
 	pTransform->Orientation[2] = vBoneOrientation.z;
 	pTransform->Orientation[3] = vBoneOrientation.w;
-	pTransform->Flags |= GrannyHasOrientation;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_ORIENTATION;
 }
 
 bool CTreeWindMutator::NeedUpdate()

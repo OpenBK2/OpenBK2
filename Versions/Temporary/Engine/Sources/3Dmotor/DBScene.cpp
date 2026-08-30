@@ -619,6 +619,7 @@ void SSkeleton::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Animations", &animations, pThis );
 	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -627,6 +628,7 @@ int SSkeleton::operator&( IXmlSaver &saver )
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
 	saver.Add( "Animations", &animations );
 	saver.Add( "uid", &uid );
+	saver.Add( "ModelFileRef", &szModelFileRef );
 
 	return 0;
 }
@@ -635,6 +637,7 @@ int SSkeleton::operator&( IBinSaver &saver )
 {
 	saver.Add( 3, &animations );
 	AddUuidChunk( saver, 4, &uid );
+	saver.Add( 5, &szModelFileRef );
 
 	return 0;
 }
@@ -1200,6 +1203,7 @@ void SAIGeometry::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "AABBCenter", &vAABBCenter, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "AABBHalfSize", &vAABBHalfSize, pThis ); 
 	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
+	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1211,6 +1215,7 @@ int SAIGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "AABBCenter", &vAABBCenter );
 	saver.Add( "AABBHalfSize", &vAABBHalfSize );
 	saver.Add( "uid", &uid );
+	saver.Add( "ModelFileRef", &szModelFileRef );
 
 	return 0;
 }
@@ -1222,6 +1227,7 @@ int SAIGeometry::operator&( IBinSaver &saver )
 	saver.Add( 5, &vAABBCenter );
 	saver.Add( 6, &vAABBHalfSize );
 	AddUuidChunk( saver, 7, &uid );
+	saver.Add( 8, &szModelFileRef );
 
 	return 0;
 }
@@ -1242,6 +1248,7 @@ void SGeometry::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshNames", &meshNames, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshAnimated", &meshAnimated, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshWindAffected", &meshWindAffected, pThis );
+	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1257,6 +1264,7 @@ int SGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "MeshNames", &meshNames );
 	saver.Add( "MeshAnimated", &meshAnimated );
 	saver.Add( "MeshWindAffected", &meshWindAffected );
+	saver.Add( "ModelFileRef", &szModelFileRef );
 
 	return 0;
 }
@@ -1272,6 +1280,7 @@ int SGeometry::operator&( IBinSaver &saver )
 	saver.Add( 9, &meshNames );
 	saver.Add( 10, &meshAnimated );
 	saver.Add( 11, &meshWindAffected );
+	saver.Add( 12, &szModelFileRef );
 
 	return 0;
 }

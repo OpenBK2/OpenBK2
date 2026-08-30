@@ -55,7 +55,7 @@ float CTreeFallingMutator::GetCoeffForTime( int nTime )
 	return 1.0 - fResult * fCoeff;
 }
 
-void CTreeFallingMutator::TransformRootBone( granny_transform *pTransform, const CQuat &qRot )
+void CTreeFallingMutator::TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
@@ -70,11 +70,11 @@ void CTreeFallingMutator::TransformRootBone( granny_transform *pTransform, const
 	pTransform->Position[0] = vBonePos.x;
 	pTransform->Position[1] = vBonePos.y;
 	pTransform->Position[2] = vBonePos.z;
-	pTransform->Flags |= GrannyHasPosition;
-	pTransform->Flags |= GrannyHasOrientation;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_POSITION;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_ORIENTATION;
 }
 
-void CTreeFallingMutator::TransformLeafBone( granny_transform *pTransform, const CQuat &qRot )
+void CTreeFallingMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
@@ -83,17 +83,17 @@ void CTreeFallingMutator::TransformLeafBone( granny_transform *pTransform, const
 	pTransform->Orientation[1] = vBoneOrientation.y;
 	pTransform->Orientation[2] = vBoneOrientation.z;
 	pTransform->Orientation[3] = vBoneOrientation.w;
-	pTransform->Flags |= GrannyHasOrientation;
+	pTransform->Flags |= NAnimation::SBoneTransform::HAS_ORIENTATION;
 }
 
-void CTreeFallingMutator::MutateSkeletonPose( granny_local_pose *pPose )
+void CTreeFallingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 {	
 	float fCoeff = GetCoeffForTime( pTimer->GetGameTime() - nStartTime );
 
 	CQuat qRot( fCoeff * fEndAngle, vRotAxis );
 	CQuat qEffectRot( fCoeff * fEndAngle, vEffectRotAxis );
 
-	granny_transform *pTransform = GrannyGetLocalPoseTransform( pPose, 0 );
+	NAnimation::SBoneTransform *pTransform = pPose->GetBone( 0 );
 	TransformRootBone( pTransform, qRot );
 	for ( std::list<SLeafMutatorData>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
@@ -101,7 +101,7 @@ void CTreeFallingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 			continue;
 		CQuat qInverseRot( -fCoeff * it->fNormalRotAngle, vRotAxis );
 		CQuat qRndRot( fCoeff * it->fMaxRotAngle, 0.0f, 0.0f, 1.0f );
-		pTransform = GrannyGetLocalPoseTransform( pPose, it->nBoneIndex );
+		pTransform = pPose->GetBone( it->nBoneIndex );
 		TransformLeafBone( pTransform, qInverseRot * qRndRot );
 	}
 	

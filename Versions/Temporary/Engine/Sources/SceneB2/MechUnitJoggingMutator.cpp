@@ -62,7 +62,7 @@ bool CMechUnitJoggingMutator::NeedUpdate()
 	return !bStopped && pTimer->GetPauseType() == -1 && pTimer->GetSegmentTime() > nStartTime ;
 }
 
-void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
+void CMechUnitJoggingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 {
 	const NTimer::STime nDeltaTime = bStopped ? nStopTime - nStartTime : GameTimer()->GetSegmentTime() - nStartTime;
 
@@ -74,7 +74,7 @@ void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 	const CQuat qY( ToRadian(fValueY), V3_AXIS_Y );
 	qResult *= qY;
 
-	granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, nBasisBoneIndex );
+	NAnimation::SBoneTransform *pRootTransform = pPose->GetBone( nBasisBoneIndex );
 	CQuat qBoneOrientation;
 	memcpy( &qBoneOrientation, &(pRootTransform->Orientation), sizeof( float ) * 4 );
 	qBoneOrientation *= qResult;
@@ -84,8 +84,8 @@ void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 	SHMatrix mTrans( qResult );
 	mTrans.RotateVector( &vBonePos, vOldBonePos );
 	memcpy( &(pRootTransform->Position), &vBonePos, sizeof( float ) * 3 );
-	pRootTransform->Flags |= GrannyHasPosition;
-	pRootTransform->Flags |= GrannyHasOrientation;
+	pRootTransform->Flags |= NAnimation::SBoneTransform::HAS_POSITION;
+	pRootTransform->Flags |= NAnimation::SBoneTransform::HAS_ORIENTATION;
 }
 
 void CMechUnitJoggingMutator::Play()

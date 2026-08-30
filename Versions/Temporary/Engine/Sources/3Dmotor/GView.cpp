@@ -5,6 +5,7 @@
 #include "GSceneUtils.h"
 #include "GScene.h"
 #include "GView.h"
+#include "GltfFormat.h"
 #include "GTexture.h"
 #include "GBind.h"
 #include "System/BasicShare.h"
@@ -17,6 +18,7 @@
 #include "GPointLightGlow.h"
 #include "GAnimUtils.h"
 #include "GParticlesRain.h"
+#include "System/VFSOperations.h"
 #include "LoadingCounter.h"
 #include "GMatShare.h"
 #include "GPolyline.h"
@@ -410,13 +412,19 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 	if (!pGeometry) {
 		return;
 	}
-	if ( !CResourceFileOpener::DoesExist( "Geometries", GetIntResKey( pGeometry ) ) )
+	if ( pGeometry->szModelFileRef.empty()
+		? !CResourceFileOpener::DoesExist( "Geometries", GetIntResKey(pGeometry) )
+		: !NVFS::GetMainVFS()->DoesFileExist( pGeometry->szModelFileRef ) )
 	{
 		//ASSERT(0 & "Geometry);
 		return;
 	}
 
 	const int nSkelInFile = (pModel->pSkeleton ? 0 : -1);
+	// The external document is authoritative for its mesh-node count; the old
+	// generated count may still contain values from an earlier GR2 export.
+	const int nMeshCount = !pGeometry->szModelFileRef.empty()
+		? NGltf::GetMeshCount( pGeometry->szModelFileRef ) : pGeometry->nNumMeshes;
 
 	const std::vector<int> &materialQuantities = pGeometry->materialQuantities;
 	if ( materialQuantities.empty() )
@@ -424,7 +432,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 		// B2-ish way: 1 to 1 correspondence between meshes and materials.
 		// (And for any mesh that is out of correspondence last material in the list is set.
 		//
-		for ( int nMesh = 0; nMesh < pModel->pGeometry->nNumMeshes; ++nMesh )
+		for ( int nMesh = 0; nMesh < nMeshCount; ++nMesh )
 		{
 			const int nModelMaterial = (std::min<int>)( nMesh, pModel->materials.size() - 1 );
 			if ( pModel->materials.empty() || ( pModel->materials[nModelMaterial] == 0 ) )
@@ -446,7 +454,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 		// but we will survive if it's not.
 
 		int nModelMaterial = 0;
-		for ( int nMesh = 0; nMesh < pGeometry->nNumMeshes; ++nMesh )
+		for ( int nMesh = 0; nMesh < nMeshCount; ++nMesh )
 		{
 			if ( nMesh < materialQuantities.size() && materialQuantities[nMesh] )
 			{

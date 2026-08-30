@@ -1177,6 +1177,47 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>ModelFileRef</Name>
+					<ChunkID>8</ChunkID>
+					<Description>Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>filepath</Key>
+									<Data>
+										<Type>04000000</Type>
+										<Data>true</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+								<Item>
+									<Key>typeRename</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>NFile::CFilePath</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>268954752</TypeID>
 		</Item>
@@ -4245,6 +4286,47 @@
 					<DefaultValue>
 						<Type>02000000</Type>
 						<Data>0.07</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>ModelFileRef</Name>
+					<ChunkID>11</ChunkID>
+					<Description>Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>filepath</Key>
+									<Data>
+										<Type>04000000</Type>
+										<Data>true</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+								<Item>
+									<Key>typeRename</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>NFile::CFilePath</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
 					</DefaultValue>
 					<ComplexDefaultValue>
 						<Type>00000000</Type>
@@ -15900,6 +15982,47 @@
 									<Data>
 										<Type>03000000</Type>
 										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>ModelFileRef</Name>
+					<ChunkID>12</ChunkID>
+					<Description>Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>filepath</Key>
+									<Data>
+										<Type>04000000</Type>
+										<Data>true</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+								<Item>
+									<Key>typeRename</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>NFile::CFilePath</Data>
 									</Data>
 								</Item>
 							</Attributes>
@@ -31820,6 +31943,47 @@
 									<Data>
 										<Type>03000000</Type>
 										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>ModelFileRef</Name>
+					<ChunkID>5</ChunkID>
+					<Description>Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>filepath</Key>
+									<Data>
+										<Type>04000000</Type>
+										<Data>true</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+								<Item>
+									<Key>typeRename</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>NFile::CFilePath</Data>
 									</Data>
 								</Item>
 							</Attributes>

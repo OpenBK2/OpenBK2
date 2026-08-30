@@ -47,29 +47,29 @@ bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const std::string &
 	return !scaledWings.empty() && nStaticWing != -1;
 }
 
-void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
+void CWingScaleMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 {
 	for ( std::vector<int>::const_iterator it = scaledWings.begin(); it != scaledWings.end(); ++it )
 	{
-		granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, *it );
+		NAnimation::SBoneTransform *pRootTransform = pPose->GetBone( *it );
 		pRootTransform->ScaleShear[0][0] = fScale;
-		pRootTransform->Flags |= GrannyHasScaleShear;
+		pRootTransform->Flags |= NAnimation::SBoneTransform::HAS_SCALE_SHEAR;
 	}
 
-	granny_transform *pRootTransform = GrannyGetLocalPoseTransform( pPose, nStaticWing );
+	NAnimation::SBoneTransform *pRootTransform = pPose->GetBone( nStaticWing );
 	if ( !bShowStatic )
 	{
 		pRootTransform->ScaleShear[0][0] = 0.0f;
 		pRootTransform->ScaleShear[1][1] = 0.0f;
 		pRootTransform->ScaleShear[2][2] = 0.0f;
-		pRootTransform->Flags |= GrannyHasScaleShear;
+		pRootTransform->Flags |= NAnimation::SBoneTransform::HAS_SCALE_SHEAR;
 	}
 	else
 	{
 		pRootTransform->ScaleShear[0][0] = 1.0f;
 		pRootTransform->ScaleShear[1][1] = 1.0f;
 		pRootTransform->ScaleShear[2][2] = 1.0f;
-		pRootTransform->Flags |= GrannyHasScaleShear;
+		pRootTransform->Flags |= NAnimation::SBoneTransform::HAS_SCALE_SHEAR;
 	}
 }
 

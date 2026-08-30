@@ -377,6 +377,7 @@ namespace NDb
 		enum { typeID = 0x12069B8A };
 		std::vector< CDBPtr< SAnimBase > > animations;
 		boost::uuids::uuid uid;
+		NFile::CFilePath szModelFileRef;
 
 		SSkeleton() { }
 		//
@@ -710,6 +711,7 @@ namespace NDb
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
 		boost::uuids::uuid uid;
+		NFile::CFilePath szModelFileRef;
 
 		SAIGeometry() :
 			fVolume( 0.0f ),
@@ -741,6 +743,7 @@ namespace NDb
 		std::vector< std::string > meshNames;
 		std::vector< int > meshAnimated;
 		std::vector< int > meshWindAffected;
+		NFile::CFilePath szModelFileRef;
 
 		SGeometry() :
 			vSize( VNULL3 ),
