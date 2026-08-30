@@ -60,3 +60,4 @@
 	- RT_EXTRA_MAXLVL_MIXED_4 = 54
 	- RT_EXTRA_MAXLVL_MIXED_5 = 55
 	- _RT_NONE = 56 (it was moved)
+- Restored the single-player cheats. The password check compared the entered password against a hash and a salt that were both scrubbed from the released source, so no input could ever match and every cheat silently did nothing. The expected checksum is now rebuilt from the known password. Open the console with the tilde key, type `password Barbarossa`, and the script commands become available, for example `@God(0,2)` for one-shot kills or `@Win(0)` to finish a mission. `@Password("Barbarossa")` is accepted as well; previously the `@` route refused to run anything until the cheats were already unlocked, which locked out the very call that unlocks them. Cheats remain disabled in network games, as before.

@@ -121,34 +121,50 @@ uint8_t s_cKey2[s_nKey2Length] = { /* [REMOVED_SECRET_KEY] */ };
 //uLong ulPass = 3702409162;
 uLong ulPass = 0; /* [REMOVED_SECRET_PASSWORD_HASH] */
 
-const unsigned long SCheats::MakeCheckSum( const std::string &_szPassword )
-{
-/*
-//	string szPassword = "123456";
-	string szPassword = "654321";
+// The single-player cheat password. Both halves of the check above were scrubbed
+// before this source was released: s_cKey2 is 20 zero bytes and ulPass is 0. crc32
+// of a non-empty buffer is never 0, so the comparison in CheckPassword could not
+// succeed for any input at all, bPasswordOK stayed false for the whole run, and
+// every cheat setter guarded by it - SetImmortals, SetFirstShoot, SetWarFog,
+// SetLoadObjects, SetTurnOffWarFog - accepted its call and silently did nothing.
+// The commented-out 3702409162 is the retail hash, but it was computed over the
+// salt that is gone, so it cannot be matched any more. The plaintext password is
+// known, so the expected checksum is rebuilt from it below, over whatever salt this
+// build actually carries. Should a genuine s_cKey2/ulPass pair ever be restored,
+// ulPass is non-zero again and takes precedence, so this stays a fallback.
+static const char s_szCheatPassword[] = "Barbarossa";
 
-	vector<uint8_t> checksum;
-	checksum.reserve( 100 );
-	checksum.insert( checksum.end(), szPassword.begin(), szPassword.end() );
-	checksum.insert( checksum.end(), s_cKey2, s_cKey2 + s_nKey2Length );
-	const uLong uCheckSum = crc32( 0L, &(checksum[0]), checksum.size() );
-
-	return uCheckSum;
-*/
-	return 0;
-}
-
-void SCheats::CheckPassword( const std::string &szPassword )
+// Checksum of a candidate password, exactly as the original check computed it:
+// crc32 over the password bytes followed by the salt.
+static uLong CalcPasswordCheckSum( const std::string &szPassword )
 {
 	std::vector<uint8_t> checksum;
 	checksum.reserve( 100 );
 	checksum.insert( checksum.end(), szPassword.begin(), szPassword.end() );
 	checksum.insert( checksum.end(), s_cKey2, s_cKey2 + s_nKey2Length );
-	const uLong uCheckSum = crc32( 0L, &(checksum[0]), checksum.size() );
 
-	bPasswordOK = ( uCheckSum == ulPass );
+	return crc32( 0L, &( checksum[0] ), checksum.size() );
+}
+
+const unsigned long SCheats::MakeCheckSum( const std::string &_szPassword )
+{
+	// Was a commented-out stub that hashed a hardcoded "654321" and returned 0. It is
+	// a developer helper for printing the hash of a candidate password, so it now
+	// hashes the password it was handed.
+	return CalcPasswordCheckSum( _szPassword );
+}
+
+void SCheats::CheckPassword( const std::string &szPassword )
+{
+	const uLong uCheckSum = CalcPasswordCheckSum( szPassword );
+	// ulPass == 0 means this build carries no usable hash, see the comment above.
+	const uLong uExpected = ( ulPass != 0 ) ? ulPass : CalcPasswordCheckSum( s_szCheatPassword );
+
+	bPasswordOK = ( uCheckSum == uExpected );
 	if ( bPasswordOK )
+	{
 		NGlobal::SetVar( "VVP", 1 );
+	}
 }
 
 

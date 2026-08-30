@@ -458,6 +458,33 @@ bool CWindowConsole::OnShowConsole( const struct SGameMessage &msg )
 	return true;
 }
 
+// True for a script call of the form "Password( ... )", ignoring leading whitespace
+// and letter case. See the use below for why this one call is special.
+static bool IsPasswordScriptCall( const std::string &szScriptCommand )
+{
+	static const std::string szPassword = "password";
+
+	std::string szCommand( szScriptCommand );
+	NStr::TrimLeft( szCommand );
+	if ( szCommand.size() < szPassword.size() )
+	{
+		return false;
+	}
+	for ( size_t i = 0; i < szPassword.size(); ++i )
+	{
+		if ( NStr::ASCII_tolower( szCommand[i] ) != szPassword[i] )
+		{
+			return false;
+		}
+	}
+	// Require the opening bracket, so an identifier that merely starts with those
+	// letters is not mistaken for the call.
+	std::string szRest = szCommand.substr( szPassword.size() );
+	NStr::TrimLeft( szRest );
+
+	return !szRest.empty() && szRest[0] == '(';
+}
+
 void CWindowConsole::ParseCommand( const std::wstring &szExtCommand )
 {
 	nBeginCommand = -1;
@@ -469,8 +496,16 @@ void CWindowConsole::ParseCommand( const std::wstring &szExtCommand )
 	// check for special commands
 	if ( szCommandString[0] == '@' )
 	{
-		if ( NGlobal::GetVar("VVP", 0) == 1 )
-			WriteToPipe( PIPE_SCRIPT_CMDS, szCommandString.c_str() + 1 );
+		// Script calls need VVP, which nothing but a correct cheat password sets. That
+		// locked out @Password( ... ) itself, the one call able to set it, leaving the
+		// bare "password <...>" console command as the only way in and making the
+		// documented @Password( 'Barbarossa' ) look broken. Let that one call through
+		// while still locked; every other script call keeps waiting for VVP.
+		const std::string szScriptCommand( szCommandString.c_str() + 1 );
+		if ( NGlobal::GetVar( "VVP", 0 ) == 1 || IsPasswordScriptCall( szScriptCommand ) )
+		{
+			WriteToPipe( PIPE_SCRIPT_CMDS, szScriptCommand );
+		}
 		return;
 	}
 	else if ( szCommandString[0] == '#' )
