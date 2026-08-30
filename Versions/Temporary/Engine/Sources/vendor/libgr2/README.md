@@ -319,10 +319,44 @@ python scripts/port/gr2logdiff.py vanilla.log libgr2.log
 `gr2logdiff.py` normalises away timestamps, addresses and the shim's own startup
 line, and compares floats with a tolerance, so what it prints is a real
 difference in what the engine asked for or what it was told. Two recordings of
-the same work come out identical.
+the same work come out identical. It streams, because a minute of play is
+sixteen million lines and two gigabytes.
 
-The two runs cannot be the same play unless the play is the same, which is what
-makes a replay or a scripted mission worth more here than free play.
+### What to compare, and what not to
+
+A positional diff of two *played* sessions is worth less than it looks. The
+recordings agree while the work is deterministic, which is startup and mission
+load, and separate the moment frames begin, because the model clock follows
+wall-clock time. Two sessions also stream resources in a slightly different
+order, so even the file manifest comes out permuted rather than equal.
+
+`--manifest` is the mode that survives all of that. It matches files by their
+content hash and asks whether the two implementations parsed each into the same
+skeletons, bones, models, meshes, animations and track groups:
+
+```powershell
+python scripts/port/gr2logdiff.py vanilla.log libgr2.log --manifest
+```
+
+Over one recording of the first Soviet mission, both runs to the menu, into the
+mission and out again:
+
+```
+loaded by both: 458
+parsed differently by the two implementations: 0
+```
+
+458 shipped resources, both Oodle codecs, skeletons of one to twenty-one bones,
+meshes, animations and track groups, all read the same way by both. That is a
+stronger statement about the loader than the offline corpus sweep makes, because
+these are the files the game actually asked for, in the shapes it actually reads
+them in. The handful of files unique to one run were different BMW R75 and pistol
+clips, which is a measure of how alike the two *sessions* were rather than the
+two implementations.
+
+For a line-for-line comparison of the animation runtime, a replay or a scripted
+mission is worth far more than free play, since only then is the work itself the
+same.
 
 ### What the first run said
 

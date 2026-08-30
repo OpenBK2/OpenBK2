@@ -879,7 +879,38 @@ frame, and libgr2 refuses the request and writes nothing. Driven with the same
 21-bone infantry skeleton, a 21-transform pose and a request for 22, the real DLL
 writes nothing either. So the refusal is not a divergence and whatever object
 does this is as frozen under the shipped DLL as under this one; the request is an
-engine-side fault that predates the replacement.
+engine-side fault that predates the replacement. It is also rarer than the log it
+came from suggested: a recording of the first Soviet mission made 762,862
+`SampleModelAnimations` calls without hitting it once.
+
+**What the first pair of recordings measured.** The same mission played twice,
+once against each DLL, compared with `gr2logdiff.py --manifest`, which matches
+files by content hash rather than by position because two played sessions stream
+the same resources in a different order:
+
+```
+loaded by both: 458
+parsed differently by the two implementations: 0
+```
+
+458 shipped resources, both Oodle codecs, skeletons of one to twenty-one bones,
+meshes, animations and track groups, all producing identical structure. That is a
+stronger statement about the loader than the offline sweep makes, because these
+are the files the game asked for rather than the files a directory walk found.
+
+It also says what a *positional* diff of played sessions is worth, which is
+little. A trace lines up only while the work is deterministic, and the model
+clock follows wall-clock time from the first frame. For the animation runtime the
+comparison has to be driven by something reproducible: a replay, a scripted
+mission, or `gr2control.py` offline.
+
+Two entry points dominate a real run, which is where optimisation effort belongs
+if it is ever needed. Of 16.5 million calls in about seventy-five seconds:
+`GrannyGetWorldPoseComposite4x4` 8,415,022, `GrannyGetLocalPoseTransform`
+2,639,496, `GrannyGetLocalPoseBoneCount` 2,208,826, `GrannyBuildWorldPose`
+981,041, `GrannySetModelClock` and `GrannySampleModelAnimations` 762,862 each.
+**39 of the 54 entry points were reached**, so the other fifteen remain
+unexercised by normal play.
 
 **Fuzzing, narrowly.** Do not fuzz the API surface; the engine reaches a tiny
 stereotyped corner of it, for example `GrannySetTrackGroupAccumulation` has one call
