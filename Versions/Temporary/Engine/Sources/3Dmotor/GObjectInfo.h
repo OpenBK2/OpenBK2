@@ -123,13 +123,7 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	bool   bLightMapped;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGrannyFile); f.Add(3,&key); f.Add(4,&pSkeletonFileInfo); f.Add(5,&sLightMapped); f.Add(6,&bLightMapped); return 0; }
 protected:
-	bool NeedUpdate() 
-	{ 
-		TParent::NeedUpdate();
-		if ( pSkeletonFileInfo )
-			return pGrannyFile.Refresh() | pSkeletonFileInfo.Refresh();
-		return pGrannyFile.Refresh(); 
-	}
+	bool NeedUpdate();
 	
 public:
 	void Recalc();

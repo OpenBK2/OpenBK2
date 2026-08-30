@@ -15,8 +15,8 @@ class CTreeWindMutator: public ITreeWindMutator
 	NTimer::STime lastUpdateTime;
 	float fMagnitude;							//Cached
 
-	void TransformRootBone( granny_transform *pTransform, const CQuat &qRot );
-	void TransformLeafBone( granny_transform *pTransform, const CQuat &qRot );
+	void TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
+	void TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
 
 public:
 	CTreeWindMutator() {}
@@ -24,7 +24,7 @@ public:
 	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames );
 
 	bool NeedUpdate();
-	void MutateSkeletonPose( granny_local_pose *pPose );
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 	int operator&( IBinSaver &saver );
 };
 

@@ -98,6 +98,7 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	granny_skeleton *pSkeleton;
 	granny_model model;
 	granny_model_instance *pModelInstance;
+	granny_local_pose *pGrannyPose;
 	granny_world_pose *pGlobalPose;
 	int nBones;
 	CObj<IAnimMutator> pSpecMutator;
@@ -120,7 +121,9 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void RefreshWorldPose();
 	//void SetSpeedFactor( const STime &tCurrent, float fSpeed, SAnimID animID );
 	void CheckJustLoaded();
-	void Create( const SGrannySkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
+	void Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
+	void CopyPoseFromGranny();
+	void CopyPoseToGranny();
 	void ClearAnimVector();
 	void FreezeAllMutators();
 	bool DoesWantToUpdate( const STime &t ) const;
@@ -140,7 +143,7 @@ protected:
 	virtual void Recalc();
 
 public:
-	CSkeletonAnimator( const SGrannySkeletonHandle &modelH, CFuncBase<STime> *_pTime );
+	CSkeletonAnimator( const SSkeletonHandle &modelH, CFuncBase<STime> *_pTime );
 	~CSkeletonAnimator();
 
 	int operator&( CStructureSaver &f );

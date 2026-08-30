@@ -12,6 +12,7 @@
 #include "SuperCollider.h"
 #include "3DLib/Bound.h"
 #include "3DLib/MemObject.h"
+#include "System/VFSOperations.h"
 
 #include <boost/config.hpp>
 
@@ -24,7 +25,25 @@ namespace NAI
 {
 CBasicShare<CDBPtr<NDb::SAIGeometry>, CLoadAIGeometryFromGranny, SDBPtrHash> shareAIModel(107); // используется также в MakeBuilding для определения какие куски присутсвуют в геометрии
 CBasicShare<CDBPtr<NDb::SAIGeometry>, CFileSkinPointsLoadFromGranny, SDBPtrHash> shareSkinPoints(108);
+CBasicShare<SAISkinKey, CFileSkinPointsLoadFromGranny, SAISkinKeyHash> shareGltfSkinPoints(121);
 //CBasicShare<int, CLoadTwoBSPTrees> shareBSPTrees(117);
+
+static bool DoesAIGeometryExist( const NDb::SAIGeometry *pGeometry )
+{
+	if ( !pGeometry )
+		return false;
+	return pGeometry->szModelFileRef.empty()
+		? NGScene::CResourceFileOpener::DoesExist( "AIGeometries", GetIntResKey(pGeometry) )
+		: NVFS::GetMainVFS()->DoesFileExist( pGeometry->szModelFileRef );
+}
+
+static CPtrFuncBase<CFileSkinPoints> *GetSkinPoints( const NDb::SAIGeometry *pGeometry,
+	const NAnimation::SSkeletonHandle &skeletonH )
+{
+	return pGeometry && !pGeometry->szModelFileRef.empty()
+		? shareGltfSkinPoints.Get( SAISkinKey(pGeometry, skeletonH) )
+		: shareSkinPoints.Get( pGeometry );
+}
 
 class CConvexHull;
 class CUserHullsTracker : public CObjectBase
@@ -228,7 +247,8 @@ void GetSpheres( const NDb::SModel *pModel, std::vector<SMassSphere> *pRes, CVec
 		return;
 	if ( pModel->pSkeleton )
 	{
-		CDGPtr< CPtrFuncBase<CFileSkinPoints> > pGeom = shareSkinPoints.Get( pAIGeom );
+		const NAnimation::SSkeletonHandle skeletonH( pModel->pSkeleton, 0 );
+		CDGPtr< CPtrFuncBase<CFileSkinPoints> > pGeom = GetSkinPoints( pAIGeom, skeletonH );
 		pGeom.Refresh();
 		CFileSkinPoints *pInfo = pGeom->GetValue();
 		for ( int i = 0; i < pInfo->spheres.size(); ++i )
@@ -730,7 +750,7 @@ CObjectBase *CAIMap::AddHull( const NDb::SAIGeometry *pAIGeom,
 {
 	if ( !pAIGeom )
 		return 0;
-	if ( !NGScene::CResourceFileOpener::DoesExist( "AIGeometries", GetIntResKey( pAIGeom ) ) )
+	if ( !DoesAIGeometryExist(pAIGeom) )
 		return 0;
 	RegisterFloor( nFloor );
 	CConvexHull *pRes = new CStaticConvexHull( pUserHullsTracker, shareAIModel.Get( pAIGeom ), pos, pArmor, 
@@ -769,12 +789,12 @@ CObjectBase *CAIMap::AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAn
 {
 	if ( !pAIGeom )
 		return 0;
-	if ( !NGScene::CResourceFileOpener::DoesExist( "AIGeometries", GetIntResKey( pAIGeom ) ) )
+	if ( !DoesAIGeometryExist(pAIGeom) )
 		return 0;
 	ASSERT( IsValid( pAnimation ) );
 	NGScene::CBind *pBind = new NGScene::CBind( pAnimation, skeletonH );
 	CSkinner *pSkin = new CSkinner( 
-		shareSkinPoints.Get( pAIGeom ),
+		GetSkinPoints( pAIGeom, skeletonH ),
 		pBind );
 	
 	SHMatrix id;

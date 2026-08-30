@@ -30,10 +30,10 @@ struct SAnimHandle
 struct IAnimMutator : public CObjectBase
 {
 	virtual bool NeedUpdate() { return true; }
-	virtual void MutateSkeletonPose( granny_local_pose *pPose ) = 0;
+	virtual void MutateSkeletonPose( SSkeletonPose *pPose ) = 0;
 };
 
-struct ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChannelAnimator
+struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnimator
 {
 	typedef int SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
 
@@ -87,6 +87,6 @@ struct ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChanne
 };
 
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
-	const SGrannySkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
+	const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace
 

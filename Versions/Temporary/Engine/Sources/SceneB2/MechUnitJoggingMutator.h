@@ -41,7 +41,7 @@ public:
 	void Play();
 	void Stop();
 
-	void MutateSkeletonPose( granny_local_pose *pPose );
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 
 	int operator&( IBinSaver &saver );
 };

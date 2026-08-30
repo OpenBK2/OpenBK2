@@ -23,6 +23,8 @@ set(SOURCES
     G2DView.cpp
     GAnimation.cpp
     GAnimFormat.cpp
+    GltfAnimation.cpp
+    GltfFormat.cpp
     GAnimLight.cpp
     GAnimUtils.cpp
     GAutoDetect.cpp
@@ -120,6 +122,7 @@ target_link_libraries(3Dmotor PRIVATE
     System
     zlib
     granny::granny
+    fastgltf::fastgltf
     Boost::sort
     Boost::uuid
 )

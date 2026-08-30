@@ -1,0 +1,748 @@
+#include "stdafx.h"
+
+#include "GltfAnimation.h"
+
+#include "DBScene.h"
+#include "GAnimUtils.h"
+
+#include <fastgltf/tools.hpp>
+
+#include <algorithm>
+#include <cmath>
+
+namespace NAnimation
+{
+namespace
+{
+template <class TValue>
+std::vector<TValue> ReadAccessor( const fastgltf::Asset &asset, std::size_t accessorIndex )
+{
+	std::vector<TValue> result;
+	if ( accessorIndex >= asset.accessors.size() )
+		return result;
+	const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
+	result.reserve( accessor.count );
+	for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
+		result.push_back( value );
+	return result;
+}
+
+struct SKeyInterval
+{
+	std::size_t first;
+	std::size_t second;
+	float factor;
+	float delta;
+};
+
+SKeyInterval FindInterval( const std::vector<float> &times, float time )
+{
+	if ( times.size() < 2 || time <= times.front() )
+		return SKeyInterval{ 0, 0, 0.0f, 0.0f };
+	if ( time >= times.back() )
+		return SKeyInterval{ times.size() - 1, times.size() - 1, 0.0f, 0.0f };
+	const auto upper = std::upper_bound( times.begin(), times.end(), time );
+	const std::size_t second = static_cast<std::size_t>(upper - times.begin());
+	const std::size_t first = second - 1;
+	const float delta = times[second] - times[first];
+	return SKeyInterval{ first, second, delta > FP_EPSILON ? (time - times[first]) / delta : 0.0f, delta };
+}
+
+float Hermite( float p0, float out0, float p1, float in1, float t, float delta )
+{
+	const float t2 = t * t;
+	const float t3 = t2 * t;
+	return (2.0f * t3 - 3.0f * t2 + 1.0f) * p0
+		+ (t3 - 2.0f * t2 + t) * delta * out0
+		+ (-2.0f * t3 + 3.0f * t2) * p1
+		+ (t3 - t2) * delta * in1;
+}
+
+fastgltf::math::fvec3 SampleVector( const std::vector<fastgltf::math::fvec3> &values,
+	const SKeyInterval &key, fastgltf::AnimationInterpolation interpolation )
+{
+	if ( values.empty() )
+		return fastgltf::math::fvec3( 0.0f );
+	if ( interpolation == fastgltf::AnimationInterpolation::CubicSpline )
+	{
+		const std::size_t first = key.first * 3;
+		const std::size_t second = key.second * 3;
+		if ( second + 1 >= values.size() )
+			return values[(std::min)(first + 1, values.size() - 1)];
+		fastgltf::math::fvec3 result;
+		for ( int i = 0; i < 3; ++i )
+			result[i] = Hermite( values[first + 1][i], values[first + 2][i],
+				values[second + 1][i], values[second][i], key.factor, key.delta );
+		return result;
+	}
+	const fastgltf::math::fvec3 &first = values[(std::min)(key.first, values.size() - 1)];
+	const fastgltf::math::fvec3 &second = values[(std::min)(key.second, values.size() - 1)];
+	if ( interpolation == fastgltf::AnimationInterpolation::Step || key.first == key.second )
+		return first;
+	return first * (1.0f - key.factor) + second * key.factor;
+}
+
+CQuat RawQuaternion( const fastgltf::math::fvec4 &value, bool normalize )
+{
+	CQuat result;
+	result.FromComponents( -value[0], -value[2], -value[1], value[3] );
+	if ( normalize )
+		result.Normalize();
+	return result;
+}
+
+CQuat SampleQuaternion( const std::vector<fastgltf::math::fvec4> &values,
+	const SKeyInterval &key, fastgltf::AnimationInterpolation interpolation )
+{
+	if ( values.empty() )
+		return QNULL;
+	if ( interpolation == fastgltf::AnimationInterpolation::CubicSpline )
+	{
+		const std::size_t first = key.first * 3;
+		const std::size_t second = key.second * 3;
+		if ( second + 1 >= values.size() )
+			return RawQuaternion( values[(std::min)(first + 1, values.size() - 1)], true );
+		fastgltf::math::fvec4 result;
+		for ( int i = 0; i < 4; ++i )
+			result[i] = Hermite( values[first + 1][i], values[first + 2][i],
+				values[second + 1][i], values[second][i], key.factor, key.delta );
+		return RawQuaternion( result, true );
+	}
+	const CQuat first = RawQuaternion( values[(std::min)(key.first, values.size() - 1)], true );
+	if ( interpolation == fastgltf::AnimationInterpolation::Step || key.first == key.second )
+		return first;
+	const CQuat second = RawQuaternion( values[(std::min)(key.second, values.size() - 1)], true );
+	CQuat result;
+	result.Interpolate( first, second, key.factor );
+	result.Normalize();
+	return result;
+}
+
+SHMatrix GlobalMatrix( const SSkeletonPose &pose )
+{
+	SHMatrix result;
+	result.Set(
+		pose.poseGlobal[0], pose.poseGlobal[4], pose.poseGlobal[8], pose.poseGlobal[12],
+		pose.poseGlobal[1], pose.poseGlobal[5], pose.poseGlobal[9], pose.poseGlobal[13],
+		pose.poseGlobal[2], pose.poseGlobal[6], pose.poseGlobal[10], pose.poseGlobal[14],
+		pose.poseGlobal[3], pose.poseGlobal[7], pose.poseGlobal[11], pose.poseGlobal[15] );
+	return result;
+}
+
+void BuildBoneWorld( std::size_t boneIndex, const NGltf::SSkeletonDefinition &skeleton,
+	const SSkeletonPose &pose, const SHMatrix &global,
+	std::vector<unsigned char> *pState, NGScene::SSkeletonMatrices *pWorld )
+{
+	if ( boneIndex >= pose.localPose.size() || (*pState)[boneIndex] == 2 )
+		return;
+	const SHMatrix local = NGltf::MakeLocalMatrix( pose.localPose[boneIndex] );
+	if ( (*pState)[boneIndex] == 1 )
+	{
+		// Invalid cyclic skin hierarchies are detached instead of reading an
+		// uninitialized parent matrix.
+		(*pWorld)[boneIndex] = global * local;
+		(*pState)[boneIndex] = 2;
+		return;
+	}
+	(*pState)[boneIndex] = 1;
+	const int parent = boneIndex < skeleton.parents.size() ? skeleton.parents[boneIndex] : -1;
+	if ( parent >= 0 && parent < static_cast<int>(pose.localPose.size()) )
+	{
+		BuildBoneWorld( static_cast<std::size_t>(parent), skeleton, pose, global, pState, pWorld );
+		(*pWorld)[boneIndex] = (*pWorld)[parent] * local;
+	}
+	else
+		(*pWorld)[boneIndex] = global * local;
+	(*pState)[boneIndex] = 2;
+}
+}
+
+CGltfSkeletonAnimator::SAnimationHolder::SAnimationHolder() :
+	tStartTime(0), tEndTime(-1), tFadeStart(0), tFadeDuration(0),
+	fSpeed(1.0f), fWeight(1.0f), fDuration(0.0f),
+	bFadeIn(false), bFadeOut(false), nLoopCount(1)
+{
+}
+
+int CGltfSkeletonAnimator::SAnimationHolder::operator&( IBinSaver &f )
+{
+	f.Add( 2, &tStartTime );
+	f.Add( 3, &tEndTime );
+	f.Add( 4, &tFadeStart );
+	f.Add( 5, &tFadeDuration );
+	f.Add( 6, &fSpeed );
+	f.Add( 7, &fWeight );
+	f.Add( 8, &fDuration );
+	f.Add( 9, &bFadeIn );
+	f.Add( 10, &bFadeOut );
+	f.Add( 11, &nLoopCount );
+	f.Add( 12, &hAnimation );
+	return 0;
+}
+
+CGltfSkeletonAnimator::CGltfSkeletonAnimator() :
+	bBoneMutatorsEnabled(false), bSmthChanged(true), bJustLoaded(false),
+	nAnimWithMovement(-1), fGlobalMovementSpeed(0.0f), tTransitDuration(0)
+{
+}
+
+CGltfSkeletonAnimator::CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH,
+	CFuncBase<STime> *_pTime ) :
+	bBoneMutatorsEnabled(false), bSmthChanged(true), bJustLoaded(false),
+	nAnimWithMovement(-1), fGlobalMovementSpeed(0.0f), tTransitDuration(0)
+{
+	Create( _skeletonH, _pTime );
+	SHMatrix identity;
+	Identity( &identity );
+	SetGlobalPositionInternal( identity );
+}
+
+void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
+{
+	skeletonH = _skeletonH;
+	pTime = _pTime;
+	skeleton = NGltf::SSkeletonDefinition();
+	pSkeletonFile.reset();
+	if ( !_skeletonH.pSkeleton || _skeletonH.pSkeleton->szModelFileRef.empty() )
+		return;
+	pSkeletonFile = NGltf::LoadFile( _skeletonH.pSkeleton->szModelFileRef );
+	if ( !NGltf::BuildSkeleton(pSkeletonFile, _skeletonH.nModelInFile, &skeleton) )
+	{
+		DebugTrace( "glTF: could not create skin %d from %s", _skeletonH.nModelInFile,
+			_skeletonH.pSkeleton->szModelFileRef.c_str() );
+		pSkeletonFile.reset();
+		return;
+	}
+	value.localPose = skeleton.restPose;
+	value.worldPose.resize( skeleton.restPose.size() );
+	value.compositePose.resize( skeleton.restPose.size() );
+	boneMutators.resize( skeleton.restPose.size() );
+	for ( SSimpleBoneMutator &mutator : boneMutators )
+		mutator.Enable( false );
+	for ( SAnimationHolder &holder : animations )
+		BindAnimation( &holder );
+	bJustLoaded = false;
+	bSmthChanged = true;
+}
+
+bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
+{
+	pHolder->pFile.reset();
+	if ( !pHolder->hAnimation.pAnimFile ||
+		pHolder->hAnimation.pAnimFile->GetModelFileRef().empty() )
+		return false;
+	pHolder->pFile = NGltf::LoadFile( pHolder->hAnimation.pAnimFile->GetModelFileRef() );
+	if ( !pHolder->pFile || pHolder->hAnimation.nAnimNumber < 0 ||
+		pHolder->hAnimation.nAnimNumber >= static_cast<int>(pHolder->pFile->asset.animations.size()) )
+		return false;
+
+	const fastgltf::Animation &animation =
+		pHolder->pFile->asset.animations[pHolder->hAnimation.nAnimNumber];
+	pHolder->fDuration = 0.0f;
+	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
+	{
+		const std::vector<float> times = ReadAccessor<float>( pHolder->pFile->asset, sampler.inputAccessor );
+		if ( !times.empty() )
+			pHolder->fDuration = (std::max)( pHolder->fDuration, times.back() );
+	}
+	return true;
+}
+
+float CGltfSkeletonAnimator::GetEffectiveWeight( const SAnimationHolder &holder, STime time ) const
+{
+	float weight = holder.fWeight;
+	if ( holder.bFadeIn && holder.tFadeDuration > 0 )
+		weight *= (std::clamp)( (time - holder.tFadeStart) / static_cast<float>(holder.tFadeDuration), 0.0f, 1.0f );
+	if ( holder.bFadeOut )
+	{
+		if ( holder.tFadeDuration <= 0 )
+			return 0.0f;
+		weight *= 1.0f - (std::clamp)( (time - holder.tFadeStart) / static_cast<float>(holder.tFadeDuration), 0.0f, 1.0f );
+	}
+	if ( tTransitDuration > 0 )
+	{
+		weight *= (std::clamp)( (time - holder.tStartTime) / static_cast<float>(tTransitDuration), 0.0f, 1.0f );
+		if ( holder.tEndTime != -1 )
+			weight *= (std::clamp)( (holder.tEndTime - time) / static_cast<float>(tTransitDuration), 0.0f, 1.0f );
+	}
+	return (std::clamp)( weight, 0.0f, 1.0f );
+}
+
+float CGltfSkeletonAnimator::GetLocalTime( const SAnimationHolder &holder, STime time, bool *pActive ) const
+{
+	*pActive = holder.pFile && time >= holder.tStartTime &&
+		(holder.tEndTime == -1 || time <= holder.tEndTime) && holder.fDuration > 0.0f;
+	if ( !*pActive )
+		return 0.0f;
+	float local = (time - holder.tStartTime) * 0.001f * holder.fSpeed;
+	if ( holder.nLoopCount == 0 )
+		return fmodf( (std::max)(local, 0.0f), holder.fDuration );
+	const float total = holder.fDuration * holder.nLoopCount;
+	if ( local >= total )
+	{
+		*pActive = false;
+		return holder.fDuration;
+	}
+	if ( holder.nLoopCount > 1 )
+		local = fmodf( (std::max)(local, 0.0f), holder.fDuration );
+	return (std::clamp)( local, 0.0f, holder.fDuration );
+}
+
+void CGltfSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &m )
+{
+	value.poseGlobal[0] = m._11; value.poseGlobal[4] = m._12; value.poseGlobal[8] = m._13; value.poseGlobal[12] = m._14;
+	value.poseGlobal[1] = m._21; value.poseGlobal[5] = m._22; value.poseGlobal[9] = m._23; value.poseGlobal[13] = m._24;
+	value.poseGlobal[2] = m._31; value.poseGlobal[6] = m._32; value.poseGlobal[10] = m._33; value.poseGlobal[14] = m._34;
+	value.poseGlobal[3] = m._41; value.poseGlobal[7] = m._42; value.poseGlobal[11] = m._43; value.poseGlobal[15] = m._44;
+}
+
+void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, float localTime, float weight )
+{
+	const fastgltf::Asset &asset = holder.pFile->asset;
+	const fastgltf::Animation &animation = asset.animations[holder.hAnimation.nAnimNumber];
+	for ( const fastgltf::AnimationChannel &channel : animation.channels )
+	{
+		if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= asset.nodes.size() ||
+			channel.samplerIndex >= animation.samplers.size() )
+			continue;
+		const fastgltf::Node &node = asset.nodes[*channel.nodeIndex];
+		const std::string nodeName = node.name.empty()
+			? "Node_" + std::to_string(*channel.nodeIndex) : std::string(node.name);
+		const int boneIndex = skeleton.FindBone( nodeName );
+		SBoneTransform *pBone = value.GetBone( boneIndex );
+		if ( !pBone )
+			continue;
+
+		const fastgltf::AnimationSampler &sampler = animation.samplers[channel.samplerIndex];
+		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+		if ( times.empty() )
+			continue;
+		const SKeyInterval key = FindInterval( times, localTime );
+		if ( channel.path == fastgltf::AnimationPath::Translation ||
+			channel.path == fastgltf::AnimationPath::Scale )
+		{
+			const std::vector<fastgltf::math::fvec3> values =
+				ReadAccessor<fastgltf::math::fvec3>( asset, sampler.outputAccessor );
+			const fastgltf::math::fvec3 sampled = SampleVector( values, key, sampler.interpolation );
+			const CVec3 converted = channel.path == fastgltf::AnimationPath::Translation
+				? NGltf::ConvertPosition(sampled) : NGltf::ConvertScale(sampled);
+			float *pTarget = channel.path == fastgltf::AnimationPath::Translation
+				? pBone->Position : &pBone->ScaleShear[0][0];
+			if ( channel.path == fastgltf::AnimationPath::Translation )
+			{
+				pTarget[0] += (converted.x - pTarget[0]) * weight;
+				pTarget[1] += (converted.y - pTarget[1]) * weight;
+				pTarget[2] += (converted.z - pTarget[2]) * weight;
+			}
+			else
+			{
+				pBone->ScaleShear[0][0] += (converted.x - pBone->ScaleShear[0][0]) * weight;
+				pBone->ScaleShear[1][1] += (converted.y - pBone->ScaleShear[1][1]) * weight;
+				pBone->ScaleShear[2][2] += (converted.z - pBone->ScaleShear[2][2]) * weight;
+			}
+		}
+		else if ( channel.path == fastgltf::AnimationPath::Rotation )
+		{
+			const std::vector<fastgltf::math::fvec4> values =
+				ReadAccessor<fastgltf::math::fvec4>( asset, sampler.outputAccessor );
+			const CQuat sampled = SampleQuaternion( values, key, sampler.interpolation );
+			CQuat current;
+			current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
+				pBone->Orientation[2], pBone->Orientation[3] );
+			CQuat blended;
+			blended.Interpolate( current, sampled, weight );
+			blended.Normalize();
+			memcpy( pBone->Orientation, &blended, sizeof(pBone->Orientation) );
+		}
+	}
+}
+
+void CGltfSkeletonAnimator::ApplyBoneMutators( STime time )
+{
+	if ( !bBoneMutatorsEnabled )
+		return;
+	for ( int i = 0; i < static_cast<int>(boneMutators.size()); ++i )
+	{
+		if ( !boneMutators[i].IsEnabled() )
+			continue;
+		CQuat deltaRotation;
+		CVec3 deltaPosition;
+		boneMutators[i].GetAtTime( time, &deltaRotation, &deltaPosition );
+		SBoneTransform *pBone = value.GetBone( i );
+		CQuat current;
+		current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
+			pBone->Orientation[2], pBone->Orientation[3] );
+		current *= deltaRotation;
+		current.Normalize();
+		memcpy( pBone->Orientation, &current, sizeof(pBone->Orientation) );
+		pBone->Position[0] += deltaPosition.x;
+		pBone->Position[1] += deltaPosition.y;
+		pBone->Position[2] += deltaPosition.z;
+	}
+}
+
+void CGltfSkeletonAnimator::BuildMatrices()
+{
+	const SHMatrix global = GlobalMatrix( value );
+	value.worldPose.resize( value.localPose.size() );
+	value.compositePose.resize( value.localPose.size() );
+	std::vector<unsigned char> state( value.localPose.size(), 0 );
+	for ( std::size_t i = 0; i < value.localPose.size(); ++i )
+		BuildBoneWorld( i, skeleton, value, global, &state, &value.worldPose );
+	for ( std::size_t i = 0; i < value.localPose.size(); ++i )
+		value.compositePose[i] = i < skeleton.inverseBindMatrices.size()
+			? value.worldPose[i] * skeleton.inverseBindMatrices[i] : value.worldPose[i];
+}
+
+bool CGltfSkeletonAnimator::NeedUpdate()
+{
+	CheckJustLoaded();
+	const bool timeChanged = pTime.Refresh();
+	const bool transformChanged = pGlobalTransform && pGlobalTransform.Refresh();
+	if ( bSmthChanged )
+	{
+		bSmthChanged = false;
+		return true;
+	}
+	if ( transformChanged )
+		return true;
+	if ( IsValid(pSpecMutator) && pSpecMutator->NeedUpdate() )
+		return true;
+	return timeChanged;
+}
+
+void CGltfSkeletonAnimator::Recalc()
+{
+	CheckJustLoaded();
+	if ( skeleton.restPose.empty() )
+		return;
+	const STime time = pTime->GetValue();
+	if ( pGlobalTransform )
+	{
+		pGlobalTransform.Refresh();
+		SetGlobalPositionInternal( pGlobalTransform->GetValue().forward );
+	}
+	value.localPose = skeleton.restPose;
+	for ( const SAnimationHolder &holder : animations )
+	{
+		bool active = false;
+		const float local = GetLocalTime( holder, time, &active );
+		const float weight = GetEffectiveWeight( holder, time );
+		if ( active && weight > FP_EPSILON )
+			ApplyAnimation( holder, local, weight );
+	}
+	ApplyBoneMutators( time );
+	if ( IsValid(pSpecMutator) )
+		pSpecMutator->MutateSkeletonPose( &value );
+	else
+		pSpecMutator = 0;
+
+	if ( nAnimWithMovement >= 0 && nAnimWithMovement < static_cast<int>(animations.size()) )
+	{
+		bool active = false;
+		const SAnimationHolder &holder = animations[nAnimWithMovement];
+		const float local = GetLocalTime( holder, time, &active );
+		if ( active && fabsf(holder.fSpeed) > FP_EPSILON )
+		{
+			const float y = fGlobalMovementSpeed * local *
+				GetEffectiveWeight(holder, time) / holder.fSpeed;
+			value.poseGlobal[12] += value.poseGlobal[4] * y;
+			value.poseGlobal[13] += value.poseGlobal[5] * y;
+			value.poseGlobal[14] += value.poseGlobal[6] * y;
+		}
+	}
+	BuildMatrices();
+}
+
+CGltfSkeletonAnimator::SAnimID CGltfSkeletonAnimator::AddAnimation( STime tStartTime,
+	const SAnimHandle &h, bool bLoop, float fSpeed, float fWeight, STime tEndTime )
+{
+	Touch();
+	SAnimationHolder holder;
+	holder.tStartTime = tStartTime;
+	holder.tEndTime = tEndTime;
+	holder.fSpeed = fSpeed;
+	holder.fWeight = fWeight;
+	holder.nLoopCount = bLoop ? 0 : 1;
+	holder.hAnimation = h;
+	if ( !BindAnimation(&holder) )
+	{
+		if ( h.pAnimFile )
+			DebugTrace( "glTF: failed to bind animation resource %s", h.pAnimFile->GetDBID().ToString().c_str() );
+		return -1;
+	}
+	animations.push_back( holder );
+	return static_cast<int>(animations.size()) - 1;
+}
+
+void CGltfSkeletonAnimator::ClearAllAnimations()
+{
+	Touch();
+	animations.clear();
+	nAnimWithMovement = -1;
+	for ( SSimpleBoneMutator &mutator : boneMutators )
+		mutator.Enable( false );
+	bBoneMutatorsEnabled = false;
+}
+
+void CGltfSkeletonAnimator::FadeIn( const STime &duration, SAnimID id )
+{
+	if ( id < 0 || id >= static_cast<int>(animations.size()) )
+		return;
+	Touch();
+	animations[id].bFadeIn = true;
+	animations[id].bFadeOut = false;
+	animations[id].tFadeStart = pTime->GetValue();
+	animations[id].tFadeDuration = duration;
+}
+
+void CGltfSkeletonAnimator::FadeOut( const STime &duration, SAnimID id )
+{
+	if ( id < 0 || id >= static_cast<int>(animations.size()) )
+		return;
+	Touch();
+	animations[id].bFadeOut = true;
+	animations[id].bFadeIn = false;
+	animations[id].tFadeStart = pTime->GetValue();
+	animations[id].tFadeDuration = duration;
+}
+
+void CGltfSkeletonAnimator::FadeOutAllAnimations( const STime &duration )
+{
+	for ( int i = 0; i < static_cast<int>(animations.size()); ++i )
+		FadeOut( duration, i );
+}
+
+void CGltfSkeletonAnimator::SetSpeedFactorForAllAnimations( const STime &currentTime, float speed )
+{
+	for ( int i = 0; i < static_cast<int>(animations.size()); ++i )
+	{
+		SAnimationHolder &holder = animations[i];
+		const float localMilliseconds = (currentTime - holder.tStartTime) * holder.fSpeed;
+		holder.fSpeed = speed;
+		if ( fabsf(speed) > FP_EPSILON )
+			holder.tStartTime = currentTime - static_cast<STime>(localMilliseconds / speed);
+	}
+	Touch();
+}
+
+float CGltfSkeletonAnimator::GetDuration( const SAnimID id )
+{
+	return id >= 0 && id < static_cast<int>(animations.size()) && fabsf(animations[id].fSpeed) > FP_EPSILON
+		? animations[id].fDuration / fabsf(animations[id].fSpeed) : 0.0f;
+}
+
+unsigned int CGltfSkeletonAnimator::GetMarkTimes( std::vector<float> *pResult,
+	const SAnimID, const std::string & )
+{
+	pResult->clear();
+	return 0;
+}
+
+unsigned int CGltfSkeletonAnimator::EnumMarks( std::vector<std::string> *pResult, const SAnimID )
+{
+	pResult->clear();
+	return 0;
+}
+
+void CGltfSkeletonAnimator::SetSpeedFactor( const SAnimID id, float speed )
+{
+	if ( id >= 0 && id < static_cast<int>(animations.size()) )
+	{
+		Touch();
+		SAnimationHolder &holder = animations[id];
+		const STime currentTime = pTime->GetValue();
+		const float localMilliseconds = (currentTime - holder.tStartTime) * holder.fSpeed;
+		holder.fSpeed = speed;
+		if ( fabsf(speed) > FP_EPSILON )
+			holder.tStartTime = currentTime - static_cast<STime>(localMilliseconds / speed);
+	}
+}
+
+void CGltfSkeletonAnimator::SetLocalTime( const SAnimID id, const STime time )
+{
+	if ( id >= 0 && id < static_cast<int>(animations.size()) && fabsf(animations[id].fSpeed) > FP_EPSILON )
+	{
+		Touch();
+		// Match Granny: tTime is an unscaled elapsed clock in milliseconds.
+		animations[id].tStartTime = pTime->GetValue() - time;
+	}
+}
+
+void CGltfSkeletonAnimator::SetEndTime( const SAnimID id, const STime endTime )
+{
+	if ( id >= 0 && id < static_cast<int>(animations.size()) )
+	{
+		Touch();
+		animations[id].tEndTime = endTime;
+	}
+}
+
+void CGltfSkeletonAnimator::SetLoopCount( const SAnimID id, const int count )
+{
+	if ( id >= 0 && id < static_cast<int>(animations.size()) )
+	{
+		Touch();
+		animations[id].nLoopCount = count;
+	}
+}
+
+void CGltfSkeletonAnimator::SetGlobalAnimTransit( const STime duration )
+{
+	Touch();
+	tTransitDuration = duration;
+}
+
+void CGltfSkeletonAnimator::SetGlobalPosition( const SHMatrix &position )
+{
+	Touch();
+	SetGlobalPositionInternal( position );
+}
+
+void CGltfSkeletonAnimator::SetGlobalTransform( CFuncBase<SFBTransform> *pTransform )
+{
+	Touch();
+	pGlobalTransform = pTransform;
+}
+
+void CGltfSkeletonAnimator::SetGlobMoveAnimation( const SAnimID id, const float movementSpeed )
+{
+	if ( id >= 0 && id < static_cast<int>(animations.size()) )
+	{
+		Touch();
+		nAnimWithMovement = id;
+		fGlobalMovementSpeed = movementSpeed * 1000.0f;
+	}
+}
+
+int CGltfSkeletonAnimator::GetBoneIndex( const char *pszName )
+{
+	CheckJustLoaded();
+	return pszName ? skeleton.FindBone( pszName ) : -1;
+}
+
+void CGltfSkeletonAnimator::GetBoneNames( std::vector<std::string> *pNames )
+{
+	CheckJustLoaded();
+	pNames->insert( pNames->end(), skeleton.boneNames.begin(), skeleton.boneNames.end() );
+}
+
+bool CGltfSkeletonAnimator::GetBonePosition( int index, SHMatrix *pResult )
+{
+	CheckJustLoaded();
+	BuildMatrices();
+	if ( index < 0 || index >= static_cast<int>(value.worldPose.size()) )
+		return false;
+	*pResult = value.worldPose[index];
+	return true;
+}
+
+bool CGltfSkeletonAnimator::GetBonePosition( int index, CVec3 *pResult )
+{
+	SHMatrix matrix;
+	if ( !GetBonePosition(index, &matrix) )
+		return false;
+	*pResult = matrix.GetTranslation();
+	return true;
+}
+
+bool CGltfSkeletonAnimator::GetBonePosition( const char *name, SHMatrix *pResult )
+{
+	return GetBonePosition( GetBoneIndex(name), pResult );
+}
+
+bool CGltfSkeletonAnimator::GetBonePosition( const char *name, CVec3 *pResult )
+{
+	return GetBonePosition( GetBoneIndex(name), pResult );
+}
+
+bool CGltfSkeletonAnimator::GetLocalBonePosition( const char *name, SHMatrix *pResult )
+{
+	CheckJustLoaded();
+	BuildMatrices();
+	const int index = GetBoneIndex( name );
+	if ( index < 0 || index >= static_cast<int>(value.localPose.size()) )
+		return false;
+	*pResult = NGltf::MakeLocalMatrix( value.localPose[index] );
+	return true;
+}
+
+void CGltfSkeletonAnimator::SetBoneMutator( const char *name, const STime &start,
+	const std::vector<SDesiredBoneMove> &mutation )
+{
+	SetBoneMutator( GetBoneIndex(name), start, mutation );
+}
+
+void CGltfSkeletonAnimator::SetBoneMutator( const int index, const STime &start,
+	const std::vector<SDesiredBoneMove> &mutation )
+{
+	if ( index < 0 || index >= static_cast<int>(boneMutators.size()) )
+		return;
+	Touch();
+	bBoneMutatorsEnabled = true;
+	CQuat currentRotation = QNULL;
+	CVec3 currentPosition = VNULL3;
+	if ( boneMutators[index].IsEnabled() )
+		boneMutators[index].GetAtTime( start, &currentRotation, &currentPosition );
+	boneMutators[index].Clear();
+	boneMutators[index].AddBoneTimePose( start, currentRotation, currentPosition );
+	STime end = start;
+	for ( const SDesiredBoneMove &move : mutation )
+	{
+		end += move.tDuration;
+		boneMutators[index].AddBoneTimePose( end, move.finalRot, move.finalPos );
+	}
+}
+
+void CGltfSkeletonAnimator::SetSpecialMutator( IAnimMutator *pMutator )
+{
+	Touch();
+	pSpecMutator = pMutator;
+}
+
+CFuncBase<SFBTransform> *CGltfSkeletonAnimator::CreateTransform( const std::string &name )
+{
+	return CreateTransform( GetBoneIndex(name.c_str()) );
+}
+
+CFuncBase<SFBTransform> *CGltfSkeletonAnimator::CreateTransform( int index )
+{
+	if ( index < 0 || index >= static_cast<int>(skeleton.boneNames.size()) )
+		return 0;
+	return new CAddBoneFilter( this, skeletonH, index );
+}
+
+int CGltfSkeletonAnimator::operator&( CStructureSaver &f )
+{
+	f.Add( 2, &pTime );
+	f.Add( 3, &skeletonH );
+	f.Add( 4, &pSpecMutator );
+	f.Add( 5, &animations );
+	for ( int i = 0; i < 16; ++i )
+		f.Add( 6, &value.poseGlobal[i], i + 1 );
+	f.Add( 7, &pGlobalTransform );
+	f.Add( 8, &nAnimWithMovement );
+	f.Add( 9, &fGlobalMovementSpeed );
+	f.Add( 10, &tTransitDuration );
+	f.Add( 11, &boneMutators );
+	f.Add( 12, &bBoneMutatorsEnabled );
+	if ( f.IsReading() )
+		bJustLoaded = true;
+	return 0;
+}
+
+void CGltfSkeletonAnimator::CheckJustLoaded()
+{
+	if ( !bJustLoaded )
+		return;
+	const std::vector<SSimpleBoneMutator> savedMutators = boneMutators;
+	Create( skeletonH, pTime );
+	if ( savedMutators.size() == boneMutators.size() )
+		boneMutators = savedMutators;
+	bJustLoaded = false;
+}
+
+}
+
+using namespace NAnimation;
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x71321150, CGltfSkeletonAnimator )

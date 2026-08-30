@@ -68,6 +68,7 @@ void SAnimB2::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "aabb_a", &aabb_a, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( "aabb_d", &aabb_d, pThis ); 
 	NMetaInfo::ReportMetaInfo( "MoveSpeed", (uint8_t*)&fMoveSpeed - pThis, sizeof(fMoveSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -83,6 +84,7 @@ int SAnimB2::operator&( IXmlSaver &saver )
 	saver.Add( "aabb_a", &aabb_a );
 	saver.Add( "aabb_d", &aabb_d );
 	saver.Add( "MoveSpeed", &fMoveSpeed );
+	saver.Add( "ModelFileRef", &szModelFileRef );
 
 	return 0;
 }
@@ -98,6 +100,7 @@ int SAnimB2::operator&( IBinSaver &saver )
 	saver.Add( 8, &aabb_a );
 	saver.Add( 9, &aabb_d );
 	saver.Add( 10, &fMoveSpeed );
+	saver.Add( 11, &szModelFileRef );
 
 	return 0;
 }

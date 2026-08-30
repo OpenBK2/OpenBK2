@@ -15,6 +15,30 @@ namespace NAI
 {
 class CGeometryInfo;
 
+// Animated AI geometry is cached per target skeleton because glTF joint indices
+// are local to the source skin and have to be rebound by bone name.
+struct SAISkinKey
+{
+	ZDATA
+	CDBPtr<NDb::SAIGeometry> pGeometry;
+	NAnimation::SSkeletonHandle skeletonH;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeometry); f.Add(3,&skeletonH); return 0; }
+
+	SAISkinKey() {}
+	SAISkinKey( const NDb::SAIGeometry *_pGeometry, const NAnimation::SSkeletonHandle &_skeletonH ) :
+		pGeometry( _pGeometry ), skeletonH( _skeletonH ) {}
+	bool operator==( const SAISkinKey &other ) const
+	{
+		return pGeometry == other.pGeometry && skeletonH.pSkeleton == other.skeletonH.pSkeleton &&
+			skeletonH.nModelInFile == other.skeletonH.nModelInFile;
+	}
+};
+
+struct SAISkinKeyHash
+{
+	std::size_t operator()( const SAISkinKey &key ) const;
+};
+
 class CLoadAIGeometryFromA5Exporter : public NGScene::CResourceLoader<int, CGeometryInfo>
 {
 	OBJECT_BASIC_METHODS(CLoadAIGeometryFromA5Exporter);
@@ -29,8 +53,9 @@ class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 
 	ZDATA
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pData;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); return 0; }
-	bool NeedUpdate() { return TParent::NeedUpdate() | pData.Refresh(); }
+	CDBPtr<NDb::SAIGeometry> pGeometry;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&pGeometry); return 0; }
+	bool NeedUpdate();
 	void Recalc();
 public:
 	void SetKey( const NDb::SAIGeometry *pGeometry );
@@ -87,11 +112,15 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 	
 	ZDATA
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pData;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); return 0; }
-	bool NeedUpdate() { return TParent::NeedUpdate() | pData.Refresh(); }
+	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pSkeletonData;
+	SAISkinKey key;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&pSkeletonData); f.Add(4,&key); return 0; }
+	bool NeedUpdate();
 	void Recalc();
 public:
+	// Legacy Granny cache key overload retained for save/replay compatibility.
 	void SetKey( const NDb::SAIGeometry *pGeometry );
+	void SetKey( const SAISkinKey &_key );
 };
 
 class CSkinner: public CPtrFuncBase<CGeometryInfo>

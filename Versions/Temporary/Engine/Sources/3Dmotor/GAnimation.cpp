@@ -5,6 +5,7 @@
 #include "vendor/granny/include/granny.h"
 #include "GAnimation.h"
 #include "GAnimUtils.h"
+#include "GltfAnimation.h"
 #include "DBScene.h"
 
 #include <fmt/format.h>
@@ -71,7 +72,7 @@ STime SSimpleBoneMutator::GetEnd() const
 
 // CSkeletonAnimator
 
-CSkeletonAnimator::CSkeletonAnimator() : bJustLoaded(false)
+CSkeletonAnimator::CSkeletonAnimator() : pGrannyPose(0), bJustLoaded(false)
 {
 	// global movement
 	nAnimWithMovement = -1;
@@ -96,7 +97,8 @@ CSkeletonAnimator::CSkeletonAnimator() : bJustLoaded(false)
 
 }
 
-CSkeletonAnimator::CSkeletonAnimator( const SGrannySkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
+CSkeletonAnimator::CSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime ) :
+	pGrannyPose(0)
 {
 	// global movement
 	nAnimWithMovement = -1;
@@ -117,7 +119,7 @@ CSkeletonAnimator::CSkeletonAnimator( const SGrannySkeletonHandle &_skeletonH, C
 	SetGlobalPositionInternal( id );
 }
 
-void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
+void CSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
 {
 	pTime = _pTime;
 	bJustLoaded = false;
@@ -160,6 +162,9 @@ void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBa
 	model.MeshBindings = 0;
 	pModelInstance = GrannyInstantiateModel( &model );
 	nBones = pSkeleton->BoneCount;
+	value.localPose.resize( nBones );
+	value.worldPose.resize( nBones );
+	value.compositePose.resize( nBones );
 
 	pGlobalPose = 0;
 	bGlobalPoseValid = false;
@@ -190,10 +195,10 @@ CSkeletonAnimator::~CSkeletonAnimator()
 	ClearAnimVector();
 	if ( pModelInstance )
 		GrannyFreeModelInstance( pModelInstance );
-	if ( value.pPose )
+	if ( pGrannyPose )
 	{
-		GrannyFreeLocalPose( value.pPose );
-		value.pPose = 0;
+		GrannyFreeLocalPose( pGrannyPose );
+		pGrannyPose = 0;
 	}
 	if ( pGlobalPose )
 		GrannyFreeWorldPose( pGlobalPose );
@@ -206,6 +211,37 @@ void CSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &mGlobal )
 	value.poseGlobal[1] = mGlobal._21; value.poseGlobal[5] = mGlobal._22; value.poseGlobal[9] = mGlobal._23; value.poseGlobal[13] = mGlobal._24;
 	value.poseGlobal[2] = mGlobal._31; value.poseGlobal[6] = mGlobal._32; value.poseGlobal[10] = mGlobal._33; value.poseGlobal[14] = mGlobal._34;
 	value.poseGlobal[3] = mGlobal._41; value.poseGlobal[7] = mGlobal._42; value.poseGlobal[11] = mGlobal._43; value.poseGlobal[15] = mGlobal._44;
+}
+
+void CSkeletonAnimator::CopyPoseFromGranny()
+{
+	value.localPose.resize( nBones );
+	for ( int i = 0; i < nBones; ++i )
+	{
+		const granny_transform *pSource = GrannyGetLocalPoseTransform( pGrannyPose, i );
+		SBoneTransform &target = value.localPose[i];
+		if ( !pSource )
+			continue;
+		target.Flags = pSource->Flags;
+		memcpy( target.Position, pSource->Position, sizeof(target.Position) );
+		memcpy( target.Orientation, pSource->Orientation, sizeof(target.Orientation) );
+		memcpy( target.ScaleShear, pSource->ScaleShear, sizeof(target.ScaleShear) );
+	}
+}
+
+void CSkeletonAnimator::CopyPoseToGranny()
+{
+	for ( int i = 0; i < nBones; ++i )
+	{
+		granny_transform *pTarget = GrannyGetLocalPoseTransform( pGrannyPose, i );
+		const SBoneTransform *pSource = value.GetBone( i );
+		if ( !pTarget || !pSource )
+			continue;
+		pTarget->Flags = pSource->Flags;
+		memcpy( pTarget->Position, pSource->Position, sizeof(pTarget->Position) );
+		memcpy( pTarget->Orientation, pSource->Orientation, sizeof(pTarget->Orientation) );
+		memcpy( pTarget->ScaleShear, pSource->ScaleShear, sizeof(pTarget->ScaleShear) );
+	}
 }
 
 void CSkeletonAnimator::SetGlobalPosition( const SHMatrix &mGlobal ) 
@@ -294,9 +330,9 @@ bool CSkeletonAnimator::NeedUpdate()
 	bool bNewTime = pTime.Refresh(), bNewGP = false;
 	if ( pGlobalTransform )
 		bNewGP = pGlobalTransform.Refresh();
-	if ( !value.pPose )
+	if ( !pGrannyPose )
 		return true;
-	if ( GrannyGetLocalPoseBoneCount( value.pPose ) != nBones )
+	if ( GrannyGetLocalPoseBoneCount( pGrannyPose ) != nBones )
 		return true;
 	if ( !bNewTime && !bNewGP )
 		return false;
@@ -322,8 +358,8 @@ void CSkeletonAnimator::Recalc()
 		SetGlobalPositionInternal( pGlobalTransform->GetValue().forward );
 	}
 
-	if ( !value.pPose )
-		value.pPose = GrannyNewLocalPose( nBones );
+	if ( !pGrannyPose )
+		pGrannyPose = GrannyNewLocalPose( nBones );
 
 	bGlobalPoseValid = false;
 
@@ -333,7 +369,7 @@ void CSkeletonAnimator::Recalc()
 		if ( GrannyControlIsComplete( animHolders[id].pControl ) )
 			GrannySetControlActive( animHolders[id].pControl, false );
 	}
-	GrannySampleModelAnimations( pModelInstance, 0, nBones, value.pPose );
+	GrannySampleModelAnimations( pModelInstance, 0, nBones, pGrannyPose );
 
 	if ( nAnimWithMovement != -1 )
 	{
@@ -358,7 +394,7 @@ void CSkeletonAnimator::Recalc()
 				CQuat qRot;
 				CVec3 vPos;
 				boneMutators[i].GetAtTime( time, &qRot, &vPos );
-				granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( value.pPose, i );
+				granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( pGrannyPose, i );
 				if ( pBoneTransform ) 
 				{
 					granny_transform tr;
@@ -373,10 +409,18 @@ void CSkeletonAnimator::Recalc()
 		}
 	}
 
+	// Special mutators now operate on the same engine pose for every format.
+	CopyPoseFromGranny();
 	if ( IsValid( pSpecMutator ) )
-		pSpecMutator->MutateSkeletonPose( value.pPose );
+	{
+		pSpecMutator->MutateSkeletonPose( &value );
+		CopyPoseToGranny();
+	}
 	else
 		pSpecMutator = 0;
+
+	// Publish world and skinning matrices as part of the neutral pose value.
+	RefreshWorldPose();
 }
 
 void CSkeletonAnimator::ApplyGlobalMovementCorrection()
@@ -425,6 +469,9 @@ void CSkeletonAnimator::AddAnnotationTrack( SAnimationHolder *pH, granny_track_g
 bool CSkeletonAnimator::AddAnimationInternal( CSkeletonAnimator::SAnimationHolder *pH )
 {
 	SAnimationHolder &newHolder = *pH;
+	if ( newHolder.hAnimation.pAnimFile &&
+		!newHolder.hAnimation.pAnimFile->GetModelFileRef().empty() )
+		return false;
 
 	newHolder.pAnimFileLoader = shareAnimations.Get( newHolder.hAnimation.pAnimFile );
 	newHolder.pAnimFileLoader.Refresh();
@@ -808,7 +855,30 @@ void CSkeletonAnimator::RefreshWorldPose()
 	bGlobalPoseValid = true;
 	if ( !pGlobalPose )
 		pGlobalPose = GrannyNewWorldPose( nBones );
-	GrannyBuildWorldPose( pSkeleton, 0, nBones, value.pPose, value.poseGlobal, pGlobalPose );
+	GrannyBuildWorldPose( pSkeleton, 0, nBones, pGrannyPose, value.poseGlobal, pGlobalPose );
+	value.worldPose.resize( nBones );
+	value.compositePose.resize( nBones );
+	for ( int i = 0; i < nBones; ++i )
+	{
+		const granny_real32 *pWorld = GrannyGetWorldPose4x4( pGlobalPose, i );
+		const granny_real32 *pComposite = GrannyGetWorldPoseComposite4x4( pGlobalPose, i );
+		if ( pWorld )
+		{
+			SHMatrix &m = value.worldPose[i];
+			m._11 = pWorld[0]; m._12 = pWorld[4]; m._13 = pWorld[8]; m._14 = pWorld[12];
+			m._21 = pWorld[1]; m._22 = pWorld[5]; m._23 = pWorld[9]; m._24 = pWorld[13];
+			m._31 = pWorld[2]; m._32 = pWorld[6]; m._33 = pWorld[10]; m._34 = pWorld[14];
+			m._41 = pWorld[3]; m._42 = pWorld[7]; m._43 = pWorld[11]; m._44 = pWorld[15];
+		}
+		if ( pComposite )
+		{
+			SHMatrix &m = value.compositePose[i];
+			m._11 = pComposite[0]; m._12 = pComposite[4]; m._13 = pComposite[8]; m._14 = pComposite[12];
+			m._21 = pComposite[1]; m._22 = pComposite[5]; m._23 = pComposite[9]; m._24 = pComposite[13];
+			m._31 = pComposite[2]; m._32 = pComposite[6]; m._33 = pComposite[10]; m._34 = pComposite[14];
+			m._41 = pComposite[3]; m._42 = pComposite[7]; m._43 = pComposite[11]; m._44 = pComposite[15];
+		}
+	}
 }
 
 bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, SHMatrix *pRes )
@@ -817,13 +887,9 @@ bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, SHMatrix *pRes )
 	if ( nBoneIndex < 0 || nBoneIndex >= nBones )
 		return false;
 	RefreshWorldPose();
-	granny_real32 *pMatrix = GrannyGetWorldPose4x4( pGlobalPose, nBoneIndex );
-	if ( !pMatrix )
+	if ( nBoneIndex >= static_cast<int>(value.worldPose.size()) )
 		return false;
-	pRes->_11 = pMatrix[0]; pRes->_12 = pMatrix[4]; pRes->_13 = pMatrix[8]; pRes->_14 = pMatrix[12]; 
-	pRes->_21 = pMatrix[1]; pRes->_22 = pMatrix[5]; pRes->_23 = pMatrix[9]; pRes->_24 = pMatrix[13]; 
-	pRes->_31 = pMatrix[2]; pRes->_32 = pMatrix[6]; pRes->_33 = pMatrix[10]; pRes->_34 = pMatrix[14]; 
-	pRes->_41 = pMatrix[3]; pRes->_42 = pMatrix[7]; pRes->_43 = pMatrix[11]; pRes->_44 = pMatrix[15]; 
+	*pRes = value.worldPose[nBoneIndex];
 	return true;
 }
 
@@ -833,12 +899,11 @@ bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, CVec3 *pResTranslation 
 	if ( nBoneIndex < 0 || nBoneIndex >= nBones )
 		return false;
 	RefreshWorldPose();
-	granny_real32 *pMatrix = GrannyGetWorldPose4x4( pGlobalPose, nBoneIndex );
-	if ( !pMatrix )
+	if ( nBoneIndex >= static_cast<int>(value.worldPose.size()) )
 		return false;
-	pResTranslation->x = pMatrix[12];
-	pResTranslation->y = pMatrix[13];
-	pResTranslation->z = pMatrix[14]; 
+	pResTranslation->x = value.worldPose[nBoneIndex]._14;
+	pResTranslation->y = value.worldPose[nBoneIndex]._24;
+	pResTranslation->z = value.worldPose[nBoneIndex]._34;
 	return true;
 }
 
@@ -850,7 +915,7 @@ bool CSkeletonAnimator::GetLocalBonePosition( const char *pszBoneName, SHMatrix 
 		return false;
 
 	RefreshWorldPose();
-	granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( value.pPose, nBoneIndex );
+	const SBoneTransform *pBoneTransform = value.GetBone( nBoneIndex );
 	if ( !pBoneTransform )
 		return false;
 
@@ -1024,14 +1089,27 @@ bool CSkeletonAnimator::DoesWantToUpdate( const STime &t ) const
 
 
 ISkeletonAnimator *CreateSkeletonAnimator(
-	const SGrannySkeletonHandle &modelH, CFuncBase<STime> *_pTime )
+	const SSkeletonHandle &modelH, CFuncBase<STime> *_pTime )
 {
+	if ( modelH.pSkeleton && !modelH.pSkeleton->szModelFileRef.empty() )
+	{
+		CGltfSkeletonAnimator *pAnimator = new CGltfSkeletonAnimator( modelH, _pTime );
+		if ( !pAnimator->HasSkeleton() )
+		{
+			delete pAnimator;
+			return 0;
+		}
+		return pAnimator;
+	}
 	CSkeletonAnimator *pAnimator = 0;
 
 	// try & catch were removed
 	pAnimator = new CSkeletonAnimator( modelH, _pTime );
 	if ( !pAnimator->HasSkeleton() )
+	{
+		delete pAnimator;
 		return 0;
+	}
 	return pAnimator;
 //	return new CSkeletonAnimator( modelH, _pTime );
 }

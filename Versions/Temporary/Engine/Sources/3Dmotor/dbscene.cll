@@ -219,6 +219,8 @@ class SSkeleton
 	[noCode; hidden] bool _MSRFormat = true;
 	SAnimBase *_Animations[];
 	[readonly] GUID _uid;
+	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
+	FilePathRef _ModelFileRef;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -421,6 +423,8 @@ class SAIGeometry
 	[readonly] CVec3 _AABBHalfSize;
 	//[typeRename = "GUID"; numBytes = 16; editorControl = "guid"]
 	[readonly] GUID _uid;
+	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
+	FilePathRef _ModelFileRef;
 };
 
 [typeID = 0x12069B85; no_checksum]
@@ -441,6 +445,8 @@ class SGeometry
 	[hidden] string _MeshNames[];
 	[hidden] int _MeshAnimated[];
 	[hidden] int _MeshWindAffected[];
+	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
+	FilePathRef _ModelFileRef;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

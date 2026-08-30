@@ -47,6 +47,7 @@ namespace NDb
 		SAnimAABB aabb_a;
 		SAnimAABB aabb_d;
 		float fMoveSpeed;
+		NFile::CFilePath szModelFileRef;
 
 		SAnimB2() :
 			eType( ANIMATION_UNKNOWN ),
@@ -58,6 +59,7 @@ namespace NDb
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
+		const NFile::CFilePath &GetModelFileRef() const override { return szModelFileRef; }
 		//
 		void ReportMetaInfo() const;
 		//
