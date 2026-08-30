@@ -238,6 +238,7 @@ GR2_API( void ) GrannyFreeControl( granny_control *Control )
 			}
 		}
 	}
+	NGr2::RetireHandle( Control );
 	delete Control;
 }
 

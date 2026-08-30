@@ -858,6 +858,29 @@ TC alone is 3.3x the corpus and exercises tag `0x80000011`.
 game running, cannot run in CI. Build it as a *debugger* for when a golden replay
 fails and you need to see where divergence first appears, not as a regression suite.
 
+*This one exists now, as the `gr2-shim` target.* It is a `granny2_x64.dll` that
+logs and forwards to the real one, generated from `include/gr2/granny.h` by
+`scripts/port/gen-granny-shim.py` and sharing `Trace.cpp` and `Identify.cpp` with
+the library so that the two logs are line-for-line comparable. Record the same
+play twice, once with each DLL, and diff with `scripts/port/gr2logdiff.py`. Two
+recordings of the same work come out identical.
+
+What made it worth building is that a log of addresses answers nothing. Objects
+now carry a number assigned on first sight and counted per kind, which is the
+same in both runs, and every file is named by the FNV-1a hash of its bytes,
+because the engine hands this library a naked buffer out of a pak and the bytes
+are the only identity there is. `scripts/port/gr2whois.py` turns a hash back into
+a pak entry, an `.xdb` record and the units that reference it, which is how a
+warning becomes a unit name.
+
+The first question it settled: the engine asks `GrannySampleModelAnimations` for
+**one bone more than the skeleton has** on some object in a real run, once a
+frame, and libgr2 refuses the request and writes nothing. Driven with the same
+21-bone infantry skeleton, a 21-transform pose and a request for 22, the real DLL
+writes nothing either. So the refusal is not a divergence and whatever object
+does this is as frozen under the shipped DLL as under this one; the request is an
+engine-side fault that predates the replacement.
+
 **Fuzzing, narrowly.** Do not fuzz the API surface; the engine reaches a tiny
 stereotyped corner of it, for example `GrannySetTrackGroupAccumulation` has one call
 site and is only ever passed `GrannyNoAccumulation`. Two useful places: malformed

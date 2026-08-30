@@ -68,6 +68,8 @@ set(GR2_SOURCES
     src/Curve.h
     src/File.cpp
     src/File.h
+    src/Identify.cpp
+    src/Identify.h
     src/LocalPose.h
     src/Mesh.cpp
     src/Model.cpp
@@ -149,6 +151,67 @@ add_custom_target(libgr2-verify-exports
     DEPENDS gr2
     VERBATIM
     COMMENT "checking ${GR2_OUTPUT_NAME} exports against exports.txt")
+
+# The recording shim: the same 54 names, the same log, forwarded to the real
+# granny2. It is what makes a libgr2 log worth diffing, since on its own a log
+# says what this library did and not what it should have done. Windows only,
+# because the DLL it forwards to is.
+#
+# Not EXCLUDE_FROM_ALL. It is four small files and it shares three of them with
+# the library, so building it costs almost nothing, and a diagnostic that has to
+# be asked for is a diagnostic that quietly stops compiling.
+option(LIBGR2_BUILD_SHIM "build the recording shim over the real granny2" ${WIN32})
+
+if(LIBGR2_BUILD_SHIM AND WIN32)
+    add_library(gr2-shim SHARED
+        src/Shim.cpp
+        src/ShimLoader.cpp
+        src/ShimLoader.h
+        src/Identify.cpp
+        src/Identify.h
+        src/Trace.cpp
+        src/Trace.h
+        src/Structures.h
+        include/gr2/granny.h)
+    target_include_directories(gr2-shim
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    # Always traced. A shim with the per-call trace compiled out forwards
+    # everything and records nothing, which is the one thing it must not do.
+    target_compile_definitions(gr2-shim PRIVATE GR2_BUILD_SHARED LIBGR2_TRACE_CALLS)
+    target_link_libraries(gr2-shim PRIVATE spdlog::spdlog_header_only)
+    set_target_properties(gr2-shim PROPERTIES
+        OUTPUT_NAME ${GR2_OUTPUT_NAME}
+        # The same file name as the library, since both stand in for the same
+        # DLL, so they cannot share a directory.
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/shim
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/shim
+        FOLDER "vendor/libgr2")
+    if(MSVC)
+        # Not /W4. Shim.cpp is generated, and holding generated code to the same
+        # standard as written code means editing the generator to satisfy a
+        # warning about code nobody reads.
+        target_compile_options(gr2-shim PRIVATE /W3)
+    endif()
+    if(GR2_SPDLOG_INCLUDES)
+        target_include_directories(gr2-shim SYSTEM PRIVATE ${GR2_SPDLOG_INCLUDES})
+        if(MSVC)
+            target_compile_options(gr2-shim PRIVATE /external:W0)
+        endif()
+    endif()
+
+    # The same acceptance test as the library's, which is what catches a
+    # generator that quietly dropped an entry point.
+    add_custom_target(libgr2-verify-shim-exports
+        COMMAND ${CMAKE_COMMAND}
+                -DGR2_LIBRARY=$<TARGET_FILE:gr2-shim>
+                -DGR2_EXPECTED=${CMAKE_CURRENT_SOURCE_DIR}/exports.txt
+                -DGR2_MSVC=$<BOOL:${MSVC}>
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/VerifyExports.cmake
+        DEPENDS gr2-shim
+        VERBATIM
+        COMMENT "checking the shim's exports against exports.txt")
+endif()
 
 if(LIBGR2_BUILD_TESTS)
     enable_testing()

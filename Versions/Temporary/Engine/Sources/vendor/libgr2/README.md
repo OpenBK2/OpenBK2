@@ -221,17 +221,54 @@ Two levels, so one run answers both questions:
 
 - **trace**, every call, as `<ordinal>  Name( Arg=value ... )`. Strings are
   printed as strings, since they name the file being read or the bone being
-  looked up; other pointers become addresses, which is enough to match a later
-  call against an earlier one.
-- **warn**, once per entry point, `Name is not implemented`. Running at warn
-  gives the list of entry points reached and nothing else, which is what stays
-  useful once some of them are real.
+  looked up. Objects this API hands out are printed as `pose#7@0x1035b8`: a
+  number counted per kind and assigned on first sight, so that two runs of the
+  same play give the same numbers, and the address beside it for correlating a
+  line with a debugger. Everything else is a bare address.
+- **info**, one line per file, naming it by the hash of its bytes and saying how
+  many skeletons, models, meshes and animations came out of it, with the bone
+  count of each skeleton. This costs nothing per call and is in every build, so
+  a release build run at info gives the resources a level loaded and the
+  warnings, and nothing else.
+- **warn**, once per entry point, `Name is not implemented`, and every refused
+  request, each naming the file the object involved came from.
 
-The log goes to `granny_calls.log` beside the executable, truncated per run, and
-on Windows also to the debugger's output window. `LIBGR2_LOG_LEVEL` sets the
-level; it defaults to `trace`, and every line is flushed, because the process
-this is meant to observe is expected to stop abruptly and the tail is the part
-worth reading.
+The log goes to `granny_calls.log` beside the executable, truncated per run.
+`LIBGR2_LOG_LEVEL` sets the level and defaults to `trace`; `LIBGR2_LOG_FILE`
+puts it somewhere else, which is what recording the same play twice needs.
+Warnings and errors are flushed as they are written, since the process this
+observes is expected to stop abruptly; trace lines are not, because a flush per
+call is the difference between recording a session and watching a slide show.
+`LIBGR2_LOG_FLUSH=always` flushes everything, for when the last few calls before
+a crash are the question. The debugger's output window gets the log too, but only
+when a debugger is actually attached: `OutputDebugString` is a kernel transition
+and a process-wide lock whether or not anybody is listening.
+
+### Why files are named by a hash
+
+The engine never says what it is loading. `CGrannyMemFileLoader::RecalcValue`
+pulls a resource out of a pak through the VFS and hands over a naked buffer, so
+the bytes are the only identity there is. `Identify.cpp` hashes every file as it
+arrives, registers the objects converted out of it, and every later message names
+the file rather than an address:
+
+```
+[info] file#3 6599883324a5ec0b "J:/Complete/Units/Infantry/Animations/RIFLE/2.mb"
+       6645 bytes: skeletons=1 bones=[21] models=1 meshes=0 animations=0 trackgroups=0
+[warning] SampleModelAnimations: bones 0..22 of a skeleton of 21 into a pose of
+       21, on model "Hip" with skeleton "Hip" of 21 bones, from file#3 6599883...
+```
+
+The exporter's own name is worth having but does not identify anything on its
+own: every RIFLE resource in the game says `RIFLE/2.mb`, and every human infantry
+skeleton has 21 bones and is called `Hip` after its root joint. The hash is what
+tells them apart, and `scripts/port/gr2whois.py` turns one back into a pak entry,
+the `.xdb` record carrying its GUID, and the units that reference it.
+
+```powershell
+python scripts/port/gr2whois.py 64e8bff3602e8561
+python scripts/port/gr2whois.py --log granny_calls.log --warned
+```
 
 **The per-call trace is compiled in for Debug builds only**, or for any build
 configured with `-DLIBGR2_TRACE=ON`. It was unconditional while this library was
@@ -241,6 +278,51 @@ in a few seconds of play, which makes the game a slide show and animation
 impossible to judge. The warn-once "not implemented" line is not affected and
 stays in every build, because a release build reaching something unwritten is
 exactly what somebody needs to be told about.
+
+## Recording the same session twice
+
+`gr2diff.py` and `gr2control.py` compare the two implementations offline, over
+files and over scripted control sequences. Neither can tell you what the *game*
+asked for, and some questions only the game raises: which model was being sampled
+when a warning fired, whether a request the engine makes is one the real DLL
+tolerates, whether a difference in play is this library's or was always there.
+
+The `gr2-shim` target answers those. It is a `granny2_x64.dll` that logs every
+call in exactly the format above and then forwards it to the real DLL, so the
+same play can be recorded twice and the two logs diffed. It shares `Trace.cpp`
+and `Identify.cpp` with the library, which is what makes the logs comparable:
+same stable object numbers, same file hashes, same line format. `src/Shim.cpp`
+itself is generated by `scripts/port/gen-granny-shim.py` from
+`include/gr2/granny.h`, so the 54 signatures cannot drift apart, and it is
+committed so that the build does not need Python.
+
+```powershell
+# libgr2 needs a build with the per-call trace compiled in
+cmake -S Versions/Temporary/Engine/Sources/vendor/libgr2 -B out/build/libgr2-trace `
+      -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DLIBGR2_TRACE=ON
+cmake --build out/build/libgr2-trace --target gr2 gr2-shim
+
+# record with the real DLL, which the shim finds as granny2_x64.dll.orig beside
+# itself unless LIBGR2_SHIM_TARGET says otherwise
+copy out\build\libgr2-trace\shim\granny2_x64.dll C:\Games\bk2\bin\
+set LIBGR2_LOG_FILE=vanilla.log
+... play ...
+
+# and again with libgr2
+copy out\build\libgr2-trace\granny2_x64.dll C:\Games\bk2\bin\
+set LIBGR2_LOG_FILE=libgr2.log
+... play ...
+
+python scripts/port/gr2logdiff.py vanilla.log libgr2.log
+```
+
+`gr2logdiff.py` normalises away timestamps, addresses and the shim's own startup
+line, and compares floats with a tolerance, so what it prints is a real
+difference in what the engine asked for or what it was told. Two recordings of
+the same work come out identical.
+
+The two runs cannot be the same play unless the play is the same, which is what
+makes a replay or a scripted mission worth more here than free play.
 
 ### What the first run said
 

@@ -181,6 +181,12 @@ GR2_API( granny_control * )
 	}
 	// The builder is consumed whatever happens, so an early return below still
 	// releases it.
+	//
+	// Its trace id goes back with it. The real DLL's allocator hands the same
+	// address out again for the next builder, and without this the second one
+	// inherits the first one's number, which is a difference between the two
+	// logs that says nothing about either implementation.
+	RetireHandle( Builder );
 	std::unique_ptr<granny_controlled_animation_builder> builder( Builder );
 
 	const SAnimation *pAnimation = builder->pAnimation;

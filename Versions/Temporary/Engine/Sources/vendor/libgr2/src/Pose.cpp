@@ -20,6 +20,7 @@
 
 #include "Control.h"
 #include "Curve.h"
+#include "Identify.h"
 #include "LocalPose.h"
 #include "ModelInstance.h"
 #include "Structures.h"
@@ -434,6 +435,10 @@ GR2_API( void ) GrannyFreeLocalPose( granny_local_pose *LocalPose )
 {
 	GR2_TRACE( "LocalPose={}", LocalPose );
 
+	// The id goes back before the object does, so that the next pose to land on
+	// this address is a new one in the log rather than this one again.
+	NGr2::RetireHandle( LocalPose );
+
 	// Null is safe in the real DLL too, and CSkeletonAnimator's destructor guards
 	// it anyway.
 	delete LocalPose;
@@ -511,6 +516,8 @@ GR2_API( void ) GrannyFreeWorldPose( granny_world_pose *WorldPose )
 {
 	GR2_TRACE( "WorldPose={}", WorldPose );
 
+	NGr2::RetireHandle( WorldPose );
+
 	// Null is safe in the real DLL too.
 	delete WorldPose;
 }
@@ -540,9 +547,10 @@ GR2_API( void ) GrannyBuildWorldPose( granny_skeleton const *Skeleton, granny_in
 	     || nLast > static_cast<int64_t>( Result->BoneCount() ) )
 	{
 		Logger().warn( "BuildWorldPose: bones {}..{} of a skeleton of {}, a local pose "
-		               "of {} and a world pose of {}",
+		               "of {} and a world pose of {}, on {}",
 		               FirstBone, nLast, pSkeleton->nBoneCount,
-		               LocalPose->Transforms.size(), Result->BoneCount() );
+		               LocalPose->Transforms.size(), Result->BoneCount(),
+		               DescribeSkeleton( pSkeleton ) );
 		return;
 	}
 
@@ -648,10 +656,17 @@ GR2_API( void ) GrannySampleModelAnimations( granny_model_instance const *ModelI
 	if ( FirstBone < 0 || BoneCount < 0 || nLast > pSkeleton->nBoneCount
 	     || nLast > static_cast<int64_t>( Result->Transforms.size() ) )
 	{
+		// The whole reason this library carries a file registry. The engine asks
+		// for one bone more than the skeleton has on some object in a real run,
+		// and nothing about "a skeleton of 21" says which: every human infantry
+		// skeleton in this game has 21 bones and every one of them is named
+		// "Hip". The file the skeleton came from is what identifies it, and
+		// scripts/port/gr2whois.py turns that back into a unit.
 		Logger().warn( "SampleModelAnimations: bones {}..{} of a skeleton of {} into a "
-		               "pose of {}",
+		               "pose of {}, on {}",
 		               FirstBone, nLast, pSkeleton->nBoneCount,
-		               Result->Transforms.size() );
+		               Result->Transforms.size(),
+		               DescribeModel( ModelInstance->pModel ) );
 		return;
 	}
 

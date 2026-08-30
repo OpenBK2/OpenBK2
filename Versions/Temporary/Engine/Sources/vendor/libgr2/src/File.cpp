@@ -19,6 +19,7 @@
 #include "File.h"
 
 #include "Convert.h"
+#include "Identify.h"
 #include "Oodle0.h"
 #include "Oodle1.h"
 #include "Trace.h"
@@ -463,20 +464,35 @@ GR2_API( granny_file * ) GrannyReadEntireFile( char const *FileName )
 	// and SceneB2/TerraTools.cpp do.
 	const std::vector<uint8_t> bytes( ( std::istreambuf_iterator<char>( in ) ),
 	                                  std::istreambuf_iterator<char>() );
-	return granny_file::ReadFromMemory( bytes.data(),
-	                                    static_cast<granny_int32x>( bytes.size() ) );
+	granny_file *pFile = granny_file::ReadFromMemory( bytes.data(),
+	                                                  static_cast<granny_int32x>( bytes.size() ) );
+	// The path and the hash both, since this route has a path to record and the
+	// hash is what the offline tooling matches on.
+	NGr2::NoteFileName( pFile, FileName );
+	NGr2::NoteFileBytes( pFile, bytes.data(), bytes.size() );
+	return pFile;
 }
 
 GR2_API( granny_file * ) GrannyReadEntireFileFromMemory( granny_int32x MemorySize,
                                                          void const *Memory )
 {
 	GR2_TRACE( "MemorySize={} Memory={}", MemorySize, Memory );
-	return granny_file::ReadFromMemory( Memory, MemorySize );
+	granny_file *pFile = granny_file::ReadFromMemory( Memory, MemorySize );
+	// The only identity this route has. The engine reads a resource out of a pak
+	// and hands over a buffer with no name attached, so the hash of the bytes is
+	// what says which resource it was.
+	NGr2::NoteFileBytes( pFile, Memory,
+	                     MemorySize > 0 ? static_cast<size_t>( MemorySize ) : 0u );
+	return pFile;
 }
 
 GR2_API( void ) GrannyFreeFile( granny_file *File )
 {
 	GR2_TRACE( "File={}", File );
+
+	// Both before the delete, while the pointer still means something.
+	NGr2::ForgetFile( File );
+	NGr2::RetireHandle( File );
 
 	// Null is expected rather than defended against. CGrannyMemFileLoader::
 	// RecalcValue stores whatever the read returned and CGrannyFile::~CGrannyFile
@@ -494,7 +510,12 @@ GR2_API( granny_file_info * ) GrannyGetFileInfo( granny_file *File )
 	}
 	// Converted rather than pointed at: the file carries 2.5-era structures and
 	// the engine reads 2.11 ones. Convert.cpp is where one becomes the other.
-	return reinterpret_cast<granny_file_info *>( ConvertFileInfo( *File ) );
+	void *pInfo = ConvertFileInfo( *File );
+	// Here rather than in the read, because this is where the objects a later
+	// message will have to name first exist. Idempotent, so the engine's repeated
+	// calls describe the file once.
+	NGr2::NoteFileInfo( File, static_cast<const NGr2::SFileInfo *>( pInfo ) );
+	return reinterpret_cast<granny_file_info *>( pInfo );
 }
 
 }

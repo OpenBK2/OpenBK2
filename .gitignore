@@ -82,3 +82,6 @@ cmake-build-*
 # build folders
 build/
 linux-build/
+
+# gr2whois.py's index of the installed games, tens of megabytes and derived
+scripts/port/.gr2cache/

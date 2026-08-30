@@ -14,6 +14,7 @@
 #include <gr2/granny.h>
 
 #include "Control.h"
+#include "Identify.h"
 #include "ModelInstance.h"
 #include "Structures.h"
 #include "Trace.h"
@@ -44,8 +45,8 @@ GR2_API( granny_model_instance * ) GrannyInstantiateModel( granny_model const *M
 		// This one the DLL does check, and it returns null. Measured, because a
 		// skeleton-less model is exactly what a half-converted file would produce
 		// and guessing either way would have been a coin toss.
-		Logger().warn( "InstantiateModel: the model {} has no skeleton",
-		               pModel->pszName != nullptr ? pModel->pszName : "(unnamed)" );
+		Logger().warn( "InstantiateModel: {}, so there is nothing to instantiate",
+		               DescribeModel( pModel ) );
 		return 0;
 	}
 
@@ -77,9 +78,11 @@ GR2_API( void ) GrannyFreeModelInstance( granny_model_instance *ModelInstance )
 		// place most of them are released.
 		for ( size_t i = 0; i < ModelInstance->Controls.size(); ++i )
 		{
+			NGr2::RetireHandle( ModelInstance->Controls[i] );
 			delete ModelInstance->Controls[i];
 		}
 	}
+	NGr2::RetireHandle( ModelInstance );
 	delete ModelInstance;
 }
 

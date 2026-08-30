@@ -20,6 +20,8 @@
 // the entry points do work, leaving it in makes the game a slide show and
 // animation impossible to judge. The warn-once path stays in every build.
 
+#include <gr2/granny.h>
+
 #include <spdlog/spdlog.h>
 
 #include <cstdint>
@@ -29,6 +31,60 @@
 
 namespace NGr2
 {
+
+//! What kind of thing a handle is, or null for a pointer that is not one.
+//!
+//! Specialised below for the objects worth counting. Anything else, a caller's
+//! buffer or a pointer into a pose, keeps its bare address: those are unbounded
+//! in number and naming them would fill the id table with things nobody refers
+//! to twice.
+template <typename T>
+struct SHandleKind
+{
+	static constexpr const char *NAME = nullptr;
+};
+
+#define GR2_HANDLE_KIND( type, name )              \
+	template <>                                    \
+	struct SHandleKind<type>                       \
+	{                                              \
+		static constexpr const char *NAME = name;  \
+	};
+
+GR2_HANDLE_KIND( granny_file, "file" )
+GR2_HANDLE_KIND( granny_file_info, "info" )
+GR2_HANDLE_KIND( granny_model_instance, "instance" )
+GR2_HANDLE_KIND( granny_local_pose, "pose" )
+GR2_HANDLE_KIND( granny_world_pose, "worldpose" )
+GR2_HANDLE_KIND( granny_control, "control" )
+GR2_HANDLE_KIND( granny_controlled_animation_builder, "builder" )
+GR2_HANDLE_KIND( granny_track_mask, "mask" )
+GR2_HANDLE_KIND( granny_skeleton, "skeleton" )
+GR2_HANDLE_KIND( granny_model, "model" )
+GR2_HANDLE_KIND( granny_animation, "animation" )
+GR2_HANDLE_KIND( granny_track_group, "trackgroup" )
+GR2_HANDLE_KIND( granny_mesh, "mesh" )
+
+#undef GR2_HANDLE_KIND
+
+//! "pose#7@0x1035b8": a number that survives the run, and the address that does not.
+//!
+//! Addresses are what a log has always carried, and they are useless for the one
+//! thing this log is now for. They differ between two runs of the same build, and
+//! they differ far more between this library and the real DLL, so two traces of
+//! the same play cannot be diffed. The number is assigned on a handle's first
+//! appearance and counted per kind, so given the same sequence of calls both
+//! implementations produce the same ids. The address stays for correlating a
+//! line with a debugger or a crash dump.
+std::string HandleName( const char *pszKind, const void *pHandle );
+
+//! Give up a handle's id, because the object behind it has been freed.
+//!
+//! Without this the next object to land on that address inherits the dead one's
+//! name, which reads as one long-lived object rather than two. Called from the
+//! entry points that free something, and only from those: whoever frees is the
+//! one that knows.
+void RetireHandle( const void *pHandle );
 
 //! Where the trace goes. Built on first use, never destroyed.
 //!
@@ -50,9 +106,10 @@ void ReportUnimplemented( const char *pszFunction );
 //! An argument in a form fmt can print.
 //!
 //! A string is worth more than the pointer to it, since it names the file being
-//! read or the bone being looked up, so those are passed through. Every other
-//! pointer becomes an opaque address, which is enough to match a later call
-//! against an earlier one, and an enum becomes its number.
+//! read or the bone being looked up, so those are passed through. A pointer to
+//! one of the objects this API hands out becomes a stable name and its address,
+//! see HandleName; every other pointer becomes the address alone, and an enum
+//! becomes its number.
 template <typename T>
 auto Loggable( T v )
 {
@@ -69,7 +126,15 @@ auto Loggable( T v )
 	}
 	else if constexpr ( std::is_pointer_v<T> )
 	{
-		return static_cast<const void *>( v );
+		using TObject = std::remove_cv_t<std::remove_pointer_t<T>>;
+		if constexpr ( SHandleKind<TObject>::NAME != nullptr )
+		{
+			return HandleName( SHandleKind<TObject>::NAME, static_cast<const void *>( v ) );
+		}
+		else
+		{
+			return fmt::format( "{}", static_cast<const void *>( v ) );
+		}
 	}
 	else if constexpr ( std::is_enum_v<T> )
 	{
