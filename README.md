@@ -9,11 +9,17 @@ The game is still available on [Steam](https://store.steampowered.com/app/313500
 In 2025, the game's source code was released under a [special license](LICENSE.md) that prohibits commercial use but is completely open for the game's community, education and research.
 Please review the terms of the [license agreement](LICENSE.md) carefully before using it.
 
+## Supported operating systems (native support)
+- Windows (both 32 bit and 64 bit)
+- Linux
+
 ## Tech stack
+
+NOTE: all proprietary libraries that the old game binaries depended on were replaced by open source alternatives  
 
 - **Game engine**: Custom 3D "Enigma" engine, mostly written in C++
 - **Scripting language**: Lua
-- **Animation**: Granny Animation (RAD Game Tools) - from [uesp-esoapps](https://github.com/uesp/uesp-esoapps.git)
+- **Animation**: Granny Animation (RAD Game Tools) - from our custom `libgr2` implementation, in the future, game will support modern GLTF 3D format too
 - **Audio**: FLESSD sound system - Open source version of FMOD (based on [SDL3](https://wiki.libsdl.org/SDL3/FrontPage))
 - **Video**: [FFMPEG](https://www.ffmpeg.org/) video library
 
