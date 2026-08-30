@@ -139,13 +139,23 @@ def find_ahead(side, target, window, tolerance):
     return None
 
 
-def compare(a, b, tolerance, window, show):
+def compare(a, b, tolerance, window, show, limit):
     differing = 0
     shown = 0
     first = None
     matched = 0
+    gave_up = False
 
     while True:
+        # Past a real fork there is nothing more to learn, and every mismatched
+        # line costs a full resynchronisation window of comparisons. Measured the
+        # hard way: two recordings of separately played sessions diverge early,
+        # and without this the run spent twenty-five minutes on a pair of traces
+        # and would not have finished. The number that matters is where they
+        # first stopped agreeing, and that is already known by this point.
+        if differing >= limit:
+            gave_up = True
+            break
         x, y = a.peek(), b.peek()
         if x is None or y is None:
             break
@@ -191,9 +201,11 @@ def compare(a, b, tolerance, window, show):
                 a.take()
                 b.take()
 
-    tail_a = a.drain()
-    tail_b = b.drain()
-    return differing, first, matched, tail_a, tail_b
+    if gave_up:
+        # Not drained. Counting the rest of two gigabyte logs says nothing once
+        # the comparison has given up on them.
+        return differing, first, matched, None, None
+    return differing, first, matched, a.drain(), b.drain()
 
 
 MANIFEST_RE = re.compile(
@@ -282,6 +294,8 @@ def main(argv):
     parser.add_argument('--window', type=int, default=200,
                         help='lines to look ahead when resynchronising (default 200)')
     parser.add_argument('--show', type=int, default=40, help='differing lines to print')
+    parser.add_argument('--max-diff', type=int, default=1000, dest='limit',
+                        help='stop after this many differing lines (default 1000)')
     args = parser.parse_args(argv[1:])
 
     if args.manifest:
@@ -290,12 +304,16 @@ def main(argv):
     a = Side(args.reference, args.only)
     b = Side(args.candidate, args.only)
     differing, first, matched, tail_a, tail_b = compare(a, b, args.tolerance,
-                                                        args.window, args.show)
+                                                        args.window, args.show,
+                                                        args.limit)
 
     print('\n%s: %d lines compared' % (args.reference, a.consumed))
     print('%s: %d lines compared' % (args.candidate, b.consumed))
     print('%d lines matched' % matched)
-    if tail_a or tail_b:
+    if tail_a is None:
+        print('gave up after %d differing lines, the rest of both logs unread'
+              % differing)
+    elif tail_a or tail_b:
         print('%d lines left over in %s, %d in %s, after the comparison stopped'
               % (tail_a, args.reference, tail_b, args.candidate))
     if differing == 0 and not tail_a and not tail_b:

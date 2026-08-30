@@ -324,11 +324,24 @@ sixteen million lines and two gigabytes.
 
 ### What to compare, and what not to
 
-A positional diff of two *played* sessions is worth less than it looks. The
-recordings agree while the work is deterministic, which is startup and mission
-load, and separate the moment frames begin, because the model clock follows
-wall-clock time. Two sessions also stream resources in a slightly different
-order, so even the file manifest comes out permuted rather than equal.
+A positional diff of two *played* sessions is worth less than it looks. Measured
+on one pair, the two traces are identical for 537 calls and then part company
+here:
+
+```
+-  569  GrannySetModelClock( ModelInstance=instance#4 NewClock=0.42000002 )
++  569  GrannySetModelClock( ModelInstance=instance#3 NewClock=0.46300003 )
+```
+
+which is not a difference between implementations at all. The clock follows
+wall-clock time, so the first frame of the second run lands somewhere else, and
+everything after it is noise. Two sessions also stream resources in a slightly
+different order, so even the file manifest comes out permuted rather than equal.
+
+`--max-diff` stops the comparison once that has clearly happened, because each
+mismatched line costs a full resynchronisation window of comparisons and there is
+nothing left to learn: without it, a pair of gigabyte traces ran for twenty-five
+minutes and would not have finished.
 
 `--manifest` is the mode that survives all of that. It matches files by their
 content hash and asks whether the two implementations parsed each into the same
