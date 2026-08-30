@@ -16,9 +16,11 @@ int GetSeed()
 	return s_holdrand;
 }
 
-unsigned int Random() 
-{ 
-	return ( ((s_holdrand = s_holdrand * 214013L + 2531011L) >> 16) & 0x7fff );
+unsigned int Random()
+{
+	// masked with the same constant the float overload scales by, so the two
+	// cannot drift apart
+	return ( ((s_holdrand = s_holdrand * 214013L + 2531011L) >> 16) & N_RANDOM_MAX );
 }
 
 static SRandomFunc rndFunc;
