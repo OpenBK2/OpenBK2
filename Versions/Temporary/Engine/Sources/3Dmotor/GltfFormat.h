@@ -10,6 +10,11 @@
 #include <unordered_map>
 #include <vector>
 
+namespace NDb
+{
+	class CResource;
+}
+
 namespace NGltf
 {
 
@@ -40,7 +45,14 @@ struct SSkeletonDefinition
 	int FindBone( const std::string &name ) const;
 };
 
-TGltfFilePtr LoadFile( const NFile::CFilePath &path );
+// ModelFileRef first searches beside its owning DB resource. If that candidate
+// is absent, the supplied path is used directly (including absolute paths).
+NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef );
+bool DoesModelFileExist( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef );
+TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef );
 // A non-empty selector is matched case-sensitively and includes mesh-bearing descendants.
 bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 	std::vector<std::size_t> *pResult );
@@ -49,7 +61,8 @@ bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 // skinned vertices in their bind-pose mesh space for the animator.
 bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
 	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax );
-int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName );
+int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
+	const std::string &rootNodeName );
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
 bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
 	int nFallbackSkin, SSkeletonDefinition *pResult );

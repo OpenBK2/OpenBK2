@@ -92,7 +92,8 @@ bool BuildTargetBoneMap( const SAISkinKey &key,
 		return false;
 	if ( !key.skeletonH.pSkeleton->szModelFileRef.empty() )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.skeletonH.pSkeleton->szModelFileRef );
+		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.skeletonH.pSkeleton,
+			key.skeletonH.pSkeleton->szModelFileRef );
 		NGltf::SSkeletonDefinition skeleton;
 		if ( !NGltf::BuildSkeleton(file, key.skeletonH.pSkeleton->szRootJoint,
 			key.skeletonH.nModelInFile, &skeleton) )
@@ -261,7 +262,7 @@ void CLoadAIGeometryFromGranny::Recalc()
 	pValue = new CGeometryInfo;
 	if ( pGeometry && !pGeometry->szModelFileRef.empty() )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( pGeometry->szModelFileRef );
+		const NGltf::TGltfFilePtr file = NGltf::LoadFile( pGeometry, pGeometry->szModelFileRef );
 		std::vector<std::size_t> meshNodes;
 		if ( !NGltf::GetMeshNodes(file, pGeometry->szRootMesh, &meshNodes) )
 			return;
@@ -394,7 +395,8 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 	pValue = new CFileSkinPoints;
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry->szModelFileRef );
+		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry,
+			key.pGeometry->szModelFileRef );
 		std::vector<std::size_t> meshNodes;
 		if ( !NGltf::GetMeshNodes(file, key.pGeometry->szRootMesh, &meshNodes) )
 			return;

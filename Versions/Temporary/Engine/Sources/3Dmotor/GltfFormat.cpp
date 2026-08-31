@@ -2,6 +2,7 @@
 
 #include "GltfFormat.h"
 
+#include "System/DB.h"
 #include "System/Streams.h"
 #include "System/VFSOperations.h"
 
@@ -210,8 +211,50 @@ int SSkeletonDefinition::FindBone( const std::string &name ) const
 	return it == boneByName.end() ? -1 : it->second;
 }
 
-TGltfFilePtr LoadFile( const NFile::CFilePath &path )
+NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef )
 {
+	if ( modelFileRef.empty() )
+		return NFile::CFilePath();
+
+	NFile::CFilePath normalizedRef;
+	NFile::NormalizePath( &normalizedRef, modelFileRef );
+	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
+	if ( !pOwner || !pVFS )
+		return normalizedRef;
+
+	const bool bAbsolute = NFile::IsFolderSeparator(normalizedRef[0]) ||
+		(normalizedRef.size() > 2 && normalizedRef[1] == ':' &&
+			NFile::IsFolderSeparator(normalizedRef[2]));
+	const std::string ownerFolder = NFile::GetFilePath( NDb::GetFileName(pOwner->GetDBID()) );
+	const int nOwnerFolderLength = static_cast<int>(ownerFolder.size());
+	const bool bAlreadyInOwnerFolder = !ownerFolder.empty() &&
+		normalizedRef.size() >= ownerFolder.size() &&
+		NFile::ComparePathEq( 0, nOwnerFolderLength, ownerFolder,
+			0, nOwnerFolderLength, normalizedRef );
+	if ( !bAbsolute && !ownerFolder.empty() && !bAlreadyInOwnerFolder )
+	{
+		NFile::CFilePath localPath = NFile::JoinPath( ownerFolder, normalizedRef );
+		NFile::NormalizePath( &localPath );
+		if ( pVFS->DoesFileExist(localPath) )
+			return localPath;
+	}
+
+	// The VFS also passes Windows drive-qualified paths through to the OS.
+	return normalizedRef;
+}
+
+bool DoesModelFileExist( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef )
+{
+	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
+	return pVFS && pVFS->DoesFileExist( ResolveModelFilePath(pOwner, modelFileRef) );
+}
+
+TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
+	const NFile::CFilePath &modelFileRef )
+{
+	const NFile::CFilePath path = ResolveModelFilePath( pOwner, modelFileRef );
 	if ( path.empty() )
 		return TGltfFilePtr();
 	{
@@ -379,9 +422,10 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeNa
 	return bHaveVertex;
 }
 
-int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName )
+int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
+	const std::string &rootNodeName )
 {
-	const TGltfFilePtr file = LoadFile( path );
+	const TGltfFilePtr file = LoadFile( pOwner, modelFileRef );
 	std::vector<std::size_t> meshNodes;
 	return GetMeshNodes(file, rootNodeName, &meshNodes)
 		? static_cast<int>(meshNodes.size()) : 0;

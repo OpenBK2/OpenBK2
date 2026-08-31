@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Skeleton>
+	<SrcName href="/1.mb" />
+	<RootJoint>Basis</RootJoint>
+	<MSRFormat>true</MSRFormat>
+	<Animations>
+		<Item href="Anim1.xdb#xpointer(/AnimB2)" />
+		<Item href="Anim2.xdb#xpointer(/AnimB2)" />
+		<Item href="Anim4.xdb#xpointer(/AnimB2)" />
+	</Animations>
+	<uid>BF74EC93-BC3B-49DE-BB20-2EDAC2DCC2A6</uid>
+	<ModelFileRef href="/trex_split.glb" />
+</Skeleton>
