@@ -495,7 +495,8 @@ bool GetTargetBoneMap( const SPartAndSkeletonKey &key,
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pSkeleton->szModelFileRef );
 		NGltf::SSkeletonDefinition skeleton;
-		if ( !NGltf::BuildSkeleton(file, key.nSkeletonPart, &skeleton) )
+		if ( !NGltf::BuildSkeleton(file, key.pSkeleton->szRootJoint,
+			key.nSkeletonPart, &skeleton) )
 			return false;
 		*pResult = skeleton.boneByName;
 		return true;
@@ -712,10 +713,11 @@ bool LoadGltfMesh( const SPartAndSkeletonKey &key,
 	CObjectInfo::SData *pResult )
 {
 	const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry->szModelFileRef );
-	if ( !file || key.nGeometryPart < 0 ||
-		key.nGeometryPart >= static_cast<int>(file->meshNodes.size()) )
+	std::vector<std::size_t> meshNodes;
+	if ( !NGltf::GetMeshNodes(file, key.pGeometry->szRootMesh, &meshNodes) ||
+		key.nGeometryPart < 0 || key.nGeometryPart >= static_cast<int>(meshNodes.size()) )
 		return false;
-	const std::size_t nodeIndex = file->meshNodes[key.nGeometryPart];
+	const std::size_t nodeIndex = meshNodes[key.nGeometryPart];
 	const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 	if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
 		return false;

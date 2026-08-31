@@ -4332,6 +4332,20 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>ClipName</Name>
+					<ChunkID>14</ChunkID>
+					<Description>A case-sensitive GLTF animation name. When set, it takes precedence over the frame range.</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>269038720</TypeID>
 		</Item>

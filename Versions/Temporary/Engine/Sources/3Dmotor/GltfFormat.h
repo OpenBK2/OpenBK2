@@ -41,8 +41,13 @@ struct SSkeletonDefinition
 };
 
 TGltfFilePtr LoadFile( const NFile::CFilePath &path );
-int GetMeshCount( const NFile::CFilePath &path );
+// A non-empty selector is matched case-sensitively and includes mesh-bearing descendants.
+bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
+	std::vector<std::size_t> *pResult );
+int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName );
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
+bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
+	int nFallbackSkin, SSkeletonDefinition *pResult );
 
 CVec3 ConvertPosition( const fastgltf::math::fvec3 &value );
 CVec3 ConvertDirection( const fastgltf::math::fvec3 &value );

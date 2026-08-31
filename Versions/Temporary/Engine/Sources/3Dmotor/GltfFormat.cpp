@@ -52,6 +52,94 @@ void CollectMeshNodes( const fastgltf::Asset &asset, std::size_t nodeIndex,
 		CollectMeshNodes( asset, child, pVisited, pResult );
 }
 
+bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName,
+	std::size_t *pResult )
+{
+	bool found = false;
+	for ( std::size_t i = 0; i < file->asset.nodes.size(); ++i )
+	{
+		if ( std::string(file->asset.nodes[i].name) != nodeName )
+			continue;
+		if ( found )
+		{
+			DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(),
+				file->sourcePath.c_str() );
+			return false;
+		}
+		found = true;
+		*pResult = i;
+	}
+	if ( !found )
+		DebugTrace( "glTF: node selector %s was not found in %s", nodeName.c_str(),
+			file->sourcePath.c_str() );
+	return found;
+}
+
+void CollectSkinIndices( const fastgltf::Asset &asset, std::size_t nodeIndex,
+	std::vector<bool> *pVisited, std::unordered_set<std::size_t> *pResult )
+{
+	if ( nodeIndex >= asset.nodes.size() || (*pVisited)[nodeIndex] )
+		return;
+	(*pVisited)[nodeIndex] = true;
+	const fastgltf::Node &node = asset.nodes[nodeIndex];
+	if ( node.skinIndex.has_value() && *node.skinIndex < asset.skins.size() )
+		pResult->insert( *node.skinIndex );
+	for ( std::size_t child : node.children )
+		CollectSkinIndices( asset, child, pVisited, pResult );
+}
+
+bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
+{
+	int current = static_cast<int>(nodeIndex);
+	while ( current >= 0 && current < static_cast<int>(file.nodeParents.size()) )
+	{
+		if ( static_cast<std::size_t>(current) == ancestor )
+			return true;
+		current = file.nodeParents[current];
+	}
+	return false;
+}
+
+bool ResolveSkinIndex( const TGltfFilePtr &file, const std::string &rootNodeName,
+	int nFallbackSkin, int *pResult )
+{
+	if ( rootNodeName.empty() )
+	{
+		*pResult = nFallbackSkin;
+		return true;
+	}
+
+	std::size_t rootNode = 0;
+	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
+		return false;
+	std::unordered_set<std::size_t> candidates;
+	std::vector<bool> visited( file->asset.nodes.size(), false );
+	// RootJoint may name either the armature/joint hierarchy or its skinned mesh.
+	CollectSkinIndices( file->asset, rootNode, &visited, &candidates );
+	for ( std::size_t skinIndex = 0; skinIndex < file->asset.skins.size(); ++skinIndex )
+	{
+		const fastgltf::Skin &skin = file->asset.skins[skinIndex];
+		if ( skin.skeleton.has_value() && *skin.skeleton == rootNode )
+			candidates.insert( skinIndex );
+		for ( std::size_t joint : skin.joints )
+		{
+			if ( IsAncestorOf(*file, rootNode, joint) )
+			{
+				candidates.insert( skinIndex );
+				break;
+			}
+		}
+	}
+	if ( candidates.size() != 1 )
+	{
+		DebugTrace( "glTF: RootJoint %s resolves to %d skins in %s; exactly one is required",
+			rootNodeName.c_str(), static_cast<int>(candidates.size()), file->sourcePath.c_str() );
+		return false;
+	}
+	*pResult = static_cast<int>(*candidates.begin());
+	return true;
+}
+
 SHMatrix ResolveNodeWorld( const fastgltf::Asset &asset, const std::vector<int> &parents,
 	std::size_t nodeIndex, std::vector<SHMatrix> *pWorld, std::vector<unsigned char> *pState )
 {
@@ -198,10 +286,38 @@ TGltfFilePtr LoadFile( const NFile::CFilePath &path )
 	return result;
 }
 
-int GetMeshCount( const NFile::CFilePath &path )
+bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
+	std::vector<std::size_t> *pResult )
+{
+	if ( !file || !pResult )
+		return false;
+	pResult->clear();
+	if ( rootNodeName.empty() )
+	{
+		*pResult = file->meshNodes;
+		return true;
+	}
+
+	std::size_t rootNode = 0;
+	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
+		return false;
+	std::vector<bool> visited( file->asset.nodes.size(), false );
+	CollectMeshNodes( file->asset, rootNode, &visited, pResult );
+	if ( pResult->empty() )
+	{
+		DebugTrace( "glTF: RootMesh %s has no mesh-bearing nodes in %s",
+			rootNodeName.c_str(), file->sourcePath.c_str() );
+		return false;
+	}
+	return true;
+}
+
+int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName )
 {
 	const TGltfFilePtr file = LoadFile( path );
-	return file ? static_cast<int>(file->meshNodes.size()) : 0;
+	std::vector<std::size_t> meshNodes;
+	return GetMeshNodes(file, rootNodeName, &meshNodes)
+		? static_cast<int>(meshNodes.size()) : 0;
 }
 
 CVec3 ConvertPosition( const fastgltf::math::fvec3 &value )
@@ -361,6 +477,17 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 		}
 	}
 	return true;
+}
+
+bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
+	int nFallbackSkin, SSkeletonDefinition *pResult )
+{
+	if ( !file )
+		return false;
+	int skinIndex = nFallbackSkin;
+	if ( !ResolveSkinIndex(file, rootNodeName, nFallbackSkin, &skinIndex) )
+		return false;
+	return BuildSkeleton( file, skinIndex, pResult );
 }
 
 }

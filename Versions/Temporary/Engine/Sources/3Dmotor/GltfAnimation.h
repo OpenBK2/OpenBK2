@@ -19,6 +19,9 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		float fSpeed;
 		float fWeight;
 		float fDuration;
+		// Derived from the current GLB resource during binding, so these are not serialized.
+		float fSourceStart;
+		int nAnimationIndex;
 		bool bFadeIn;
 		bool bFadeOut;
 		int nLoopCount;

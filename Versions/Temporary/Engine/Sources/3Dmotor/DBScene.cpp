@@ -620,6 +620,7 @@ void SSkeleton::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Animations", &animations, pThis );
 	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "RootJoint", (uint8_t*)&szRootJoint - pThis, sizeof(szRootJoint), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -629,6 +630,7 @@ int SSkeleton::operator&( IXmlSaver &saver )
 	saver.Add( "Animations", &animations );
 	saver.Add( "uid", &uid );
 	saver.Add( "ModelFileRef", &szModelFileRef );
+	saver.Add( "RootJoint", &szRootJoint );
 
 	return 0;
 }
@@ -638,6 +640,8 @@ int SSkeleton::operator&( IBinSaver &saver )
 	saver.Add( 3, &animations );
 	AddUuidChunk( saver, 4, &uid );
 	saver.Add( 5, &szModelFileRef );
+	// Keep the legacy chunks stable; GLB-only selectors are appended.
+	saver.Add( 6, &szRootJoint );
 
 	return 0;
 }
@@ -1204,6 +1208,7 @@ void SAIGeometry::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "AABBHalfSize", &vAABBHalfSize, pThis ); 
 	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "RootMesh", (uint8_t*)&szRootMesh - pThis, sizeof(szRootMesh), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1216,6 +1221,7 @@ int SAIGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "AABBHalfSize", &vAABBHalfSize );
 	saver.Add( "uid", &uid );
 	saver.Add( "ModelFileRef", &szModelFileRef );
+	saver.Add( "RootMesh", &szRootMesh );
 
 	return 0;
 }
@@ -1228,6 +1234,8 @@ int SAIGeometry::operator&( IBinSaver &saver )
 	saver.Add( 6, &vAABBHalfSize );
 	AddUuidChunk( saver, 7, &uid );
 	saver.Add( 8, &szModelFileRef );
+	// Keep the legacy chunks stable; GLB-only selectors are appended.
+	saver.Add( 9, &szRootMesh );
 
 	return 0;
 }
@@ -1249,6 +1257,7 @@ void SGeometry::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshAnimated", &meshAnimated, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "MeshWindAffected", &meshWindAffected, pThis );
 	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "RootMesh", (uint8_t*)&szRootMesh - pThis, sizeof(szRootMesh), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1265,6 +1274,7 @@ int SGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "MeshAnimated", &meshAnimated );
 	saver.Add( "MeshWindAffected", &meshWindAffected );
 	saver.Add( "ModelFileRef", &szModelFileRef );
+	saver.Add( "RootMesh", &szRootMesh );
 
 	return 0;
 }
@@ -1281,6 +1291,8 @@ int SGeometry::operator&( IBinSaver &saver )
 	saver.Add( 10, &meshAnimated );
 	saver.Add( 11, &meshWindAffected );
 	saver.Add( 12, &szModelFileRef );
+	// Keep the legacy chunks stable; GLB-only selectors are appended.
+	saver.Add( 13, &szRootMesh );
 
 	return 0;
 }

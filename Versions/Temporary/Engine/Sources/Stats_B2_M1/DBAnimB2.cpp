@@ -69,6 +69,9 @@ void SAnimB2::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "aabb_d", &aabb_d, pThis ); 
 	NMetaInfo::ReportMetaInfo( "MoveSpeed", (uint8_t*)&fMoveSpeed - pThis, sizeof(fMoveSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "FirstFrame", (uint8_t*)&nFirstFrame - pThis, sizeof(nFirstFrame), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "LastFrame", (uint8_t*)&nLastFrame - pThis, sizeof(nLastFrame), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "ClipName", (uint8_t*)&szClipName - pThis, sizeof(szClipName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -85,6 +88,9 @@ int SAnimB2::operator&( IXmlSaver &saver )
 	saver.Add( "aabb_d", &aabb_d );
 	saver.Add( "MoveSpeed", &fMoveSpeed );
 	saver.Add( "ModelFileRef", &szModelFileRef );
+	saver.Add( "FirstFrame", &nFirstFrame );
+	saver.Add( "LastFrame", &nLastFrame );
+	saver.Add( "ClipName", &szClipName );
 
 	return 0;
 }
@@ -101,6 +107,10 @@ int SAnimB2::operator&( IBinSaver &saver )
 	saver.Add( 9, &aabb_d );
 	saver.Add( 10, &fMoveSpeed );
 	saver.Add( 11, &szModelFileRef );
+	// Keep the legacy chunks stable; these settings only affect GLB animation binding.
+	saver.Add( 12, &nFirstFrame );
+	saver.Add( 13, &nLastFrame );
+	saver.Add( 14, &szClipName );
 
 	return 0;
 }
