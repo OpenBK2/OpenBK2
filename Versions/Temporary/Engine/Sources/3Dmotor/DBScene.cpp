@@ -5,6 +5,7 @@
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
 #include "DBScene.h"
+#include "GltfFormat.h"
 
 #include "System/UuidChunk.h"
 
@@ -14,6 +15,41 @@
 
 namespace NDb
 {
+	namespace
+	{
+		bool CalculateGltfHalfBounds( const NFile::CFilePath &modelFileRef,
+			const std::string &rootMesh, bool bApplyNodeTransformsToSkinnedMeshes,
+			CVec3 *pCenter, CVec3 *pHalfSize )
+		{
+			if ( modelFileRef.empty() )
+				return false;
+			CVec3 vMin;
+			CVec3 vMax;
+			const NGltf::TGltfFilePtr file = NGltf::LoadFile( modelFileRef );
+			if ( !NGltf::GetMeshBoundingBox(file, rootMesh,
+				bApplyNodeTransformsToSkinnedMeshes, &vMin, &vMax) )
+				return false;
+			*pCenter = (vMax + vMin) / 2.0f;
+			*pHalfSize = (vMax - vMin) / 2.0f;
+			return true;
+		}
+
+		void CalculateGltfBounds( SAIGeometry *pGeometry )
+		{
+			// The static AI loader places every selected GLB node in world/model space.
+			CalculateGltfHalfBounds( pGeometry->szModelFileRef, pGeometry->szRootMesh,
+				true, &pGeometry->vAABBCenter, &pGeometry->vAABBHalfSize );
+		}
+
+		void CalculateGltfBounds( SGeometry *pGeometry )
+		{
+			CVec3 vHalfSize;
+			// Match the render loader: skinned vertices stay in bind-pose mesh space.
+			if ( CalculateGltfHalfBounds(pGeometry->szModelFileRef, pGeometry->szRootMesh,
+				false, &pGeometry->vCenter, &vHalfSize) )
+				pGeometry->vSize = vHalfSize * 2.0f;
+		}
+	}
 
 
 
@@ -1222,6 +1258,8 @@ int SAIGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "uid", &uid );
 	saver.Add( "ModelFileRef", &szModelFileRef );
 	saver.Add( "RootMesh", &szRootMesh );
+	if ( saver.IsReading() && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
 
 	return 0;
 }
@@ -1236,6 +1274,8 @@ int SAIGeometry::operator&( IBinSaver &saver )
 	saver.Add( 8, &szModelFileRef );
 	// Keep the legacy chunks stable; GLB-only selectors are appended.
 	saver.Add( 9, &szRootMesh );
+	if ( saver.IsReading() && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
 
 	return 0;
 }
@@ -1275,6 +1315,8 @@ int SGeometry::operator&( IXmlSaver &saver )
 	saver.Add( "MeshWindAffected", &meshWindAffected );
 	saver.Add( "ModelFileRef", &szModelFileRef );
 	saver.Add( "RootMesh", &szRootMesh );
+	if ( saver.IsReading() && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
 
 	return 0;
 }
@@ -1293,6 +1335,8 @@ int SGeometry::operator&( IBinSaver &saver )
 	saver.Add( 12, &szModelFileRef );
 	// Keep the legacy chunks stable; GLB-only selectors are appended.
 	saver.Add( 13, &szRootMesh );
+	if ( saver.IsReading() && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
 
 	return 0;
 }

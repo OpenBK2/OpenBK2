@@ -44,6 +44,11 @@ TGltfFilePtr LoadFile( const NFile::CFilePath &path );
 // A non-empty selector is matched case-sensitively and includes mesh-bearing descendants.
 bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 	std::vector<std::size_t> *pResult );
+// Calculates bounds in the same engine vertex space used by the GLB loaders.
+// Static AI geometry applies every node transform, while render geometry keeps
+// skinned vertices in their bind-pose mesh space for the animator.
+bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
+	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax );
 int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName );
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
 bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
