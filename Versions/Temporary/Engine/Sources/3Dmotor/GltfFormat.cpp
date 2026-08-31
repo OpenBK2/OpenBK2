@@ -312,6 +312,73 @@ bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 	return true;
 }
 
+bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
+	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax )
+{
+	if ( !file || !pMin || !pMax )
+		return false;
+
+	std::vector<std::size_t> meshNodes;
+	if ( !GetMeshNodes(file, rootNodeName, &meshNodes) )
+		return false;
+
+	bool bHaveVertex = false;
+	for ( std::size_t nodeIndex : meshNodes )
+	{
+		if ( nodeIndex >= file->asset.nodes.size() )
+			continue;
+		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
+		if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
+			continue;
+
+		const bool bApplyNodeTransform = bApplyNodeTransformsToSkinnedMeshes || !node.skinIndex.has_value();
+		for ( const fastgltf::Primitive &primitive : file->asset.meshes[*node.meshIndex].primitives )
+		{
+			// These are the primitive types consumed by both GLB geometry loaders.
+			if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
+				primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
+				primitive.type != fastgltf::PrimitiveType::TriangleFan )
+				continue;
+			const auto position = primitive.findAttribute( "POSITION" );
+			if ( position == primitive.attributes.end() || position->accessorIndex >= file->asset.accessors.size() )
+				continue;
+			const fastgltf::Accessor &positionAccessor = file->asset.accessors[position->accessorIndex];
+
+			for ( const fastgltf::math::fvec3 &source :
+				fastgltf::iterateAccessor<fastgltf::math::fvec3>(file->asset, positionAccessor) )
+			{
+				CVec3 point = ConvertPosition( source );
+				if ( bApplyNodeTransform )
+				{
+					CVec3 transformed;
+					file->nodeWorldTransforms[nodeIndex].RotateHVector( &transformed, point );
+					point = transformed;
+				}
+
+				if ( !bHaveVertex )
+				{
+					*pMin = *pMax = point;
+					bHaveVertex = true;
+				}
+				else
+				{
+					if ( point.x < pMin->x ) pMin->x = point.x;
+					if ( point.y < pMin->y ) pMin->y = point.y;
+					if ( point.z < pMin->z ) pMin->z = point.z;
+					if ( point.x > pMax->x ) pMax->x = point.x;
+					if ( point.y > pMax->y ) pMax->y = point.y;
+					if ( point.z > pMax->z ) pMax->z = point.z;
+				}
+			}
+		}
+	}
+
+	if ( !bHaveVertex )
+		DebugTrace( "glTF: selected meshes have no supported POSITION vertices in %s",
+			file->sourcePath.c_str() );
+	return bHaveVertex;
+}
+
 int GetMeshCount( const NFile::CFilePath &path, const std::string &rootNodeName )
 {
 	const TGltfFilePtr file = LoadFile( path );
