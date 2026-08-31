@@ -17,7 +17,8 @@ namespace NDb
 {
 	namespace
 	{
-		bool CalculateGltfHalfBounds( const NFile::CFilePath &modelFileRef,
+		bool CalculateGltfHalfBounds( const CResource *pOwner,
+			const NFile::CFilePath &modelFileRef,
 			const std::string &rootMesh, bool bApplyNodeTransformsToSkinnedMeshes,
 			CVec3 *pCenter, CVec3 *pHalfSize )
 		{
@@ -25,7 +26,7 @@ namespace NDb
 				return false;
 			CVec3 vMin;
 			CVec3 vMax;
-			const NGltf::TGltfFilePtr file = NGltf::LoadFile( modelFileRef );
+			const NGltf::TGltfFilePtr file = NGltf::LoadFile( pOwner, modelFileRef );
 			if ( !NGltf::GetMeshBoundingBox(file, rootMesh,
 				bApplyNodeTransformsToSkinnedMeshes, &vMin, &vMax) )
 				return false;
@@ -37,7 +38,7 @@ namespace NDb
 		void CalculateGltfBounds( SAIGeometry *pGeometry )
 		{
 			// The static AI loader places every selected GLB node in world/model space.
-			CalculateGltfHalfBounds( pGeometry->szModelFileRef, pGeometry->szRootMesh,
+			CalculateGltfHalfBounds( pGeometry, pGeometry->szModelFileRef, pGeometry->szRootMesh,
 				true, &pGeometry->vAABBCenter, &pGeometry->vAABBHalfSize );
 		}
 
@@ -45,7 +46,7 @@ namespace NDb
 		{
 			CVec3 vHalfSize;
 			// Match the render loader: skinned vertices stay in bind-pose mesh space.
-			if ( CalculateGltfHalfBounds(pGeometry->szModelFileRef, pGeometry->szRootMesh,
+			if ( CalculateGltfHalfBounds(pGeometry, pGeometry->szModelFileRef, pGeometry->szRootMesh,
 				false, &pGeometry->vCenter, &vHalfSize) )
 				pGeometry->vSize = vHalfSize * 2.0f;
 		}

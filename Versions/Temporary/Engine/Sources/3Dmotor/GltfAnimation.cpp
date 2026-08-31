@@ -251,7 +251,8 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 	pSkeletonFile.reset();
 	if ( !_skeletonH.pSkeleton || _skeletonH.pSkeleton->szModelFileRef.empty() )
 		return;
-	pSkeletonFile = NGltf::LoadFile( _skeletonH.pSkeleton->szModelFileRef );
+	pSkeletonFile = NGltf::LoadFile( _skeletonH.pSkeleton,
+		_skeletonH.pSkeleton->szModelFileRef );
 	if ( !NGltf::BuildSkeleton(pSkeletonFile, _skeletonH.pSkeleton->szRootJoint,
 		_skeletonH.nModelInFile, &skeleton) )
 	{
@@ -286,7 +287,8 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 	if ( !pHolder->hAnimation.pAnimFile ||
 		pHolder->hAnimation.pAnimFile->GetModelFileRef().empty() )
 		return false;
-	pHolder->pFile = NGltf::LoadFile( pHolder->hAnimation.pAnimFile->GetModelFileRef() );
+	pHolder->pFile = NGltf::LoadFile( pHolder->hAnimation.pAnimFile,
+		pHolder->hAnimation.pAnimFile->GetModelFileRef() );
 	if ( !pHolder->pFile || pHolder->pFile->asset.animations.empty() )
 		return false;
 

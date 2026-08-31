@@ -9,6 +9,7 @@
 #include "DBScene.h"
 #include "3DLib/Transform.h"
 #include "GMesh.h"
+#include "GltfFormat.h"
 #include "SuperCollider.h"
 #include "3DLib/Bound.h"
 #include "3DLib/MemObject.h"
@@ -34,7 +35,7 @@ static bool DoesAIGeometryExist( const NDb::SAIGeometry *pGeometry )
 		return false;
 	return pGeometry->szModelFileRef.empty()
 		? NGScene::CResourceFileOpener::DoesExist( "AIGeometries", GetIntResKey(pGeometry) )
-		: NVFS::GetMainVFS()->DoesFileExist( pGeometry->szModelFileRef );
+		: NGltf::DoesModelFileExist( pGeometry, pGeometry->szModelFileRef );
 }
 
 static CPtrFuncBase<CFileSkinPoints> *GetSkinPoints( const NDb::SAIGeometry *pGeometry,

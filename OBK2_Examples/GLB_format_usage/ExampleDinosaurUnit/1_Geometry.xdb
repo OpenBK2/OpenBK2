@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Geometry>
+	<SrcName href="/1.mb" />
+	<uid>0C9AEE60-1C92-4F2E-9BD4-7EF351BD318B</uid>
+	<RootMesh>Basis</RootMesh>
+	<RootJoint>Basis</RootJoint>
+	<Size>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</Size>
+	<Center>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</Center>
+	<AIGeometry href="1_AIGeometry.xdb#xpointer(/AIGeometry)" />
+	<NumMeshes>0</NumMeshes>
+	<MaterialQuantities />
+	<MeshNames />
+	<MeshAnimated />
+	<MeshWindAffected />
+	<ModelFileRef href="/trex_split.glb" />
+</Geometry>

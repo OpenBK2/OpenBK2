@@ -493,7 +493,7 @@ bool GetTargetBoneMap( const SPartAndSkeletonKey &key,
 	pResult->clear();
 	if ( key.pSkeleton && !key.pSkeleton->szModelFileRef.empty() )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pSkeleton->szModelFileRef );
+		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pSkeleton, key.pSkeleton->szModelFileRef );
 		NGltf::SSkeletonDefinition skeleton;
 		if ( !NGltf::BuildSkeleton(file, key.pSkeleton->szRootJoint,
 			key.nSkeletonPart, &skeleton) )
@@ -712,7 +712,7 @@ bool LoadGltfMesh( const SPartAndSkeletonKey &key,
 	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
 	CObjectInfo::SData *pResult )
 {
-	const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry->szModelFileRef );
+	const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry, key.pGeometry->szModelFileRef );
 	std::vector<std::size_t> meshNodes;
 	if ( !NGltf::GetMeshNodes(file, key.pGeometry->szRootMesh, &meshNodes) ||
 		key.nGeometryPart < 0 || key.nGeometryPart >= static_cast<int>(meshNodes.size()) )
