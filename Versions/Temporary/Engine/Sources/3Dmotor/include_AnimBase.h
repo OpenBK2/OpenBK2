@@ -14,5 +14,4 @@ virtual const std::string &GetClipName() const
 }
 virtual int GetFirstFrame() const { return 0; }
 virtual int GetLastFrame() const { return 0; }
-virtual int GetLengthMilliseconds() const { return 0; }
 

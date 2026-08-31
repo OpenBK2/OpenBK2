@@ -68,7 +68,6 @@ namespace NDb
 		const std::string &GetClipName() const override { return szClipName; }
 		int GetFirstFrame() const override { return nFirstFrame; }
 		int GetLastFrame() const override { return nLastFrame; }
-		int GetLengthMilliseconds() const override { return nLength; }
 		//
 		void ReportMetaInfo() const;
 		//
