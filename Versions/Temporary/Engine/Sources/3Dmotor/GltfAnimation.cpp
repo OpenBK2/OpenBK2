@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <unordered_set>
 
 namespace NAnimation
 {
@@ -25,6 +26,50 @@ std::vector<TValue> ReadAccessor( const fastgltf::Asset &asset, std::size_t acce
 	for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
 		result.push_back( value );
 	return result;
+}
+
+bool InferBakedFrameTimeline( const fastgltf::Asset &asset,
+	const fastgltf::Animation &animation, float animationStart, float animationEnd,
+	float *pTimelineStart, float *pSecondsPerFrame, std::size_t *pFrameCount )
+{
+	std::unordered_set<std::size_t> visitedAccessors;
+	std::size_t bestFrameCount = 0;
+	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
+	{
+		if ( !visitedAccessors.insert(sampler.inputAccessor).second )
+			continue;
+		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+		if ( times.size() < 3 || times.back() - times.front() <= FP_EPSILON )
+			continue;
+
+		const float secondsPerFrame = (times.back() - times.front()) /
+			static_cast<float>(times.size() - 1);
+		const float tolerance = (std::max)( 0.00001f, secondsPerFrame * 0.001f );
+		if ( fabsf(times.front() - animationStart) > tolerance ||
+			fabsf(times.back() - animationEnd) > tolerance )
+			continue;
+
+		bool uniformlySampled = true;
+		for ( std::size_t i = 1; i < times.size(); ++i )
+		{
+			const float delta = times[i] - times[i - 1];
+			if ( delta <= 0.0f || fabsf(delta - secondsPerFrame) > tolerance )
+			{
+				uniformlySampled = false;
+				break;
+			}
+		}
+		if ( uniformlySampled && times.size() > bestFrameCount )
+		{
+			// Blender's sampled export produces one timestamp per source frame. The
+			// densest full-duration sampler therefore defines the shared frame clock.
+			bestFrameCount = times.size();
+			*pTimelineStart = times.front();
+			*pSecondsPerFrame = secondsPerFrame;
+		}
+	}
+	*pFrameCount = bestFrameCount;
+	return bestFrameCount != 0;
 }
 
 struct SKeyInterval
@@ -308,30 +353,31 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 
 	const int firstFrame = pHolder->hAnimation.pAnimFile->GetFirstFrame();
 	const int lastFrame = pHolder->hAnimation.pAnimFile->GetLastFrame();
-	const int lengthMilliseconds = pHolder->hAnimation.pAnimFile->GetLengthMilliseconds();
 	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
-	if ( lastFrame > firstFrame && firstFrame >= 0 && lengthMilliseconds > 0 )
+	float timelineStart = 0.0f;
+	float secondsPerFrame = 0.0f;
+	std::size_t frameCount = 0;
+	const bool haveBakedTimeline = InferBakedFrameTimeline( pHolder->pFile->asset,
+		animation, animationStart, animationEnd, &timelineStart, &secondsPerFrame, &frameCount );
+	if ( lastFrame > firstFrame && firstFrame >= 0 && haveBakedTimeline &&
+		static_cast<std::size_t>(lastFrame) < frameCount )
 	{
-		// Length is engine time in milliseconds. Together with the configured frame
-		// span it defines the source timeline rate without assuming an export FPS.
-		const float secondsPerFrame = lengthMilliseconds * 0.001f /
-			static_cast<float>(lastFrame - firstFrame);
-		const float sourceStart = firstFrame * secondsPerFrame;
-		const float sourceEnd = lastFrame * secondsPerFrame;
-		const float timeTolerance = 0.001f;
-		if ( sourceStart >= animationStart - timeTolerance &&
-			sourceEnd <= animationEnd + timeTolerance )
-		{
-			pHolder->fSourceStart = (std::max)( sourceStart, animationStart );
-			const float clampedEnd = (std::min)( sourceEnd, animationEnd );
-			pHolder->fDuration = clampedEnd - pHolder->fSourceStart;
-			return pHolder->fDuration > FP_EPSILON;
-		}
+		// FirstFrame/LastFrame address the Blender frame clock directly. Length is
+		// gameplay metadata and must never change which GLB poses are sampled.
+		pHolder->fSourceStart = timelineStart + firstFrame * secondsPerFrame;
+		const float sourceEnd = timelineStart + lastFrame * secondsPerFrame;
+		pHolder->fDuration = sourceEnd - pHolder->fSourceStart;
+		return pHolder->fDuration > FP_EPSILON;
 	}
 	if ( rangeWasSpecified )
 	{
-		DebugTrace( "glTF: invalid frame range %d..%d (Length %d ms) for %s; using the full first animation",
-			firstFrame, lastFrame, lengthMilliseconds, pHolder->pFile->sourcePath.c_str() );
+		if ( !haveBakedTimeline )
+			DebugTrace( "glTF: cannot infer a baked frame timeline in %s; export with animation sampling enabled or use ClipName",
+				pHolder->pFile->sourcePath.c_str() );
+		else
+			DebugTrace( "glTF: invalid frame range %d..%d for the inferred 0..%d timeline in %s; using the full first animation",
+				firstFrame, lastFrame, static_cast<int>(frameCount - 1),
+				pHolder->pFile->sourcePath.c_str() );
 	}
 	return true;
 }

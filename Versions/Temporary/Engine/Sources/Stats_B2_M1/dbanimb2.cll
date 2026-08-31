@@ -34,7 +34,7 @@ class SAnimB2 : public SAnimBase
 	float _MoveSpeed = 0.07;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	FilePathRef _ModelFileRef;
-	// GLB-only range in the first animation timeline. Length supplies its duration in milliseconds.
+	// GLB-only range in the first sampled animation timeline. Length remains gameplay metadata.
 	int _FirstFrame;
 	int _LastFrame;
 	// A case-sensitive GLTF animation name. When set, it takes precedence over the frame range.
