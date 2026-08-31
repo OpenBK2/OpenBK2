@@ -159,7 +159,8 @@ void BuildBoneWorld( std::size_t boneIndex, const NGltf::SSkeletonDefinition &sk
 
 CGltfSkeletonAnimator::SAnimationHolder::SAnimationHolder() :
 	tStartTime(0), tEndTime(-1), tFadeStart(0), tFadeDuration(0),
-	fSpeed(1.0f), fWeight(1.0f), fDuration(0.0f),
+	fSpeed(1.0f), fWeight(1.0f), fDuration(0.0f), fSourceStart(0.0f),
+	nAnimationIndex(-1),
 	bFadeIn(false), bFadeOut(false), nLoopCount(1)
 {
 }
@@ -206,10 +207,16 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 	if ( !_skeletonH.pSkeleton || _skeletonH.pSkeleton->szModelFileRef.empty() )
 		return;
 	pSkeletonFile = NGltf::LoadFile( _skeletonH.pSkeleton->szModelFileRef );
-	if ( !NGltf::BuildSkeleton(pSkeletonFile, _skeletonH.nModelInFile, &skeleton) )
+	if ( !NGltf::BuildSkeleton(pSkeletonFile, _skeletonH.pSkeleton->szRootJoint,
+		_skeletonH.nModelInFile, &skeleton) )
 	{
-		DebugTrace( "glTF: could not create skin %d from %s", _skeletonH.nModelInFile,
-			_skeletonH.pSkeleton->szModelFileRef.c_str() );
+		if ( _skeletonH.pSkeleton->szRootJoint.empty() )
+			DebugTrace( "glTF: could not create skin %d from %s", _skeletonH.nModelInFile,
+				_skeletonH.pSkeleton->szModelFileRef.c_str() );
+		else
+			DebugTrace( "glTF: could not create skin for RootJoint %s from %s",
+				_skeletonH.pSkeleton->szRootJoint.c_str(),
+				_skeletonH.pSkeleton->szModelFileRef.c_str() );
 		pSkeletonFile.reset();
 		return;
 	}
@@ -228,22 +235,103 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 {
 	pHolder->pFile.reset();
+	pHolder->nAnimationIndex = -1;
+	pHolder->fSourceStart = 0.0f;
+	pHolder->fDuration = 0.0f;
 	if ( !pHolder->hAnimation.pAnimFile ||
 		pHolder->hAnimation.pAnimFile->GetModelFileRef().empty() )
 		return false;
 	pHolder->pFile = NGltf::LoadFile( pHolder->hAnimation.pAnimFile->GetModelFileRef() );
-	if ( !pHolder->pFile || pHolder->hAnimation.nAnimNumber < 0 ||
-		pHolder->hAnimation.nAnimNumber >= static_cast<int>(pHolder->pFile->asset.animations.size()) )
+	if ( !pHolder->pFile || pHolder->pFile->asset.animations.empty() )
 		return false;
 
+	int animationIndex = 0;
+	const std::string &clipName = pHolder->hAnimation.pAnimFile->GetClipName();
+	if ( !clipName.empty() )
+	{
+		animationIndex = -1;
+		for ( std::size_t i = 0; i < pHolder->pFile->asset.animations.size(); ++i )
+		{
+			if ( std::string(pHolder->pFile->asset.animations[i].name) != clipName )
+				continue;
+			if ( animationIndex >= 0 )
+			{
+				DebugTrace( "glTF: animation name %s is ambiguous in %s", clipName.c_str(),
+					pHolder->pFile->sourcePath.c_str() );
+				return false;
+			}
+			animationIndex = static_cast<int>(i);
+		}
+		if ( animationIndex < 0 )
+		{
+			DebugTrace( "glTF: animation %s was not found in %s", clipName.c_str(),
+				pHolder->pFile->sourcePath.c_str() );
+			return false;
+		}
+	}
+
 	const fastgltf::Animation &animation =
-		pHolder->pFile->asset.animations[pHolder->hAnimation.nAnimNumber];
-	pHolder->fDuration = 0.0f;
+		pHolder->pFile->asset.animations[animationIndex];
+	bool haveTimes = false;
+	float animationStart = 0.0f;
+	float animationEnd = 0.0f;
 	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
 	{
 		const std::vector<float> times = ReadAccessor<float>( pHolder->pFile->asset, sampler.inputAccessor );
 		if ( !times.empty() )
-			pHolder->fDuration = (std::max)( pHolder->fDuration, times.back() );
+		{
+			if ( !haveTimes )
+			{
+				animationStart = times.front();
+				animationEnd = times.back();
+				haveTimes = true;
+			}
+			else
+			{
+				animationStart = (std::min)( animationStart, times.front() );
+				animationEnd = (std::max)( animationEnd, times.back() );
+			}
+		}
+	}
+	if ( !haveTimes || animationEnd - animationStart <= FP_EPSILON )
+	{
+		DebugTrace( "glTF: animation %d in %s has no usable time range", animationIndex,
+			pHolder->pFile->sourcePath.c_str() );
+		return false;
+	}
+
+	pHolder->nAnimationIndex = animationIndex;
+	pHolder->fSourceStart = animationStart;
+	pHolder->fDuration = animationEnd - animationStart;
+	if ( !clipName.empty() )
+		return true;
+
+	const int firstFrame = pHolder->hAnimation.pAnimFile->GetFirstFrame();
+	const int lastFrame = pHolder->hAnimation.pAnimFile->GetLastFrame();
+	const int lengthMilliseconds = pHolder->hAnimation.pAnimFile->GetLengthMilliseconds();
+	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
+	if ( lastFrame > firstFrame && firstFrame >= 0 && lengthMilliseconds > 0 )
+	{
+		// Length is engine time in milliseconds. Together with the configured frame
+		// span it defines the source timeline rate without assuming an export FPS.
+		const float secondsPerFrame = lengthMilliseconds * 0.001f /
+			static_cast<float>(lastFrame - firstFrame);
+		const float sourceStart = firstFrame * secondsPerFrame;
+		const float sourceEnd = lastFrame * secondsPerFrame;
+		const float timeTolerance = 0.001f;
+		if ( sourceStart >= animationStart - timeTolerance &&
+			sourceEnd <= animationEnd + timeTolerance )
+		{
+			pHolder->fSourceStart = (std::max)( sourceStart, animationStart );
+			const float clampedEnd = (std::min)( sourceEnd, animationEnd );
+			pHolder->fDuration = clampedEnd - pHolder->fSourceStart;
+			return pHolder->fDuration > FP_EPSILON;
+		}
+	}
+	if ( rangeWasSpecified )
+	{
+		DebugTrace( "glTF: invalid frame range %d..%d (Length %d ms) for %s; using the full first animation",
+			firstFrame, lastFrame, lengthMilliseconds, pHolder->pFile->sourcePath.c_str() );
 	}
 	return true;
 }
@@ -299,7 +387,8 @@ void CGltfSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &m )
 void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, float localTime, float weight )
 {
 	const fastgltf::Asset &asset = holder.pFile->asset;
-	const fastgltf::Animation &animation = asset.animations[holder.hAnimation.nAnimNumber];
+	const fastgltf::Animation &animation = asset.animations[holder.nAnimationIndex];
+	const float sourceTime = holder.fSourceStart + localTime;
 	for ( const fastgltf::AnimationChannel &channel : animation.channels )
 	{
 		if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= asset.nodes.size() ||
@@ -317,7 +406,7 @@ void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, floa
 		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
 		if ( times.empty() )
 			continue;
-		const SKeyInterval key = FindInterval( times, localTime );
+		const SKeyInterval key = FindInterval( times, sourceTime );
 		if ( channel.path == fastgltf::AnimationPath::Translation ||
 			channel.path == fastgltf::AnimationPath::Scale )
 		{

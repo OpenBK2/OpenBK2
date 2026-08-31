@@ -48,6 +48,9 @@ namespace NDb
 		SAnimAABB aabb_d;
 		float fMoveSpeed;
 		NFile::CFilePath szModelFileRef;
+		int nFirstFrame;
+		int nLastFrame;
+		std::string szClipName;
 
 		SAnimB2() :
 			eType( ANIMATION_UNKNOWN ),
@@ -55,11 +58,17 @@ namespace NDb
 			nLength( 0 ),
 			bLooped( false ),
 			nWeaponsToUseWith( 0 ),
-			fMoveSpeed( 0.0700f )
+			fMoveSpeed( 0.0700f ),
+			nFirstFrame( 0 ),
+			nLastFrame( 0 )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		const NFile::CFilePath &GetModelFileRef() const override { return szModelFileRef; }
+		const std::string &GetClipName() const override { return szClipName; }
+		int GetFirstFrame() const override { return nFirstFrame; }
+		int GetLastFrame() const override { return nLastFrame; }
+		int GetLengthMilliseconds() const override { return nLength; }
 		//
 		void ReportMetaInfo() const;
 		//

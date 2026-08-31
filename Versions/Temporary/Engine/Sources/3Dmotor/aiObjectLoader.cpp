@@ -94,7 +94,8 @@ bool BuildTargetBoneMap( const SAISkinKey &key,
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.skeletonH.pSkeleton->szModelFileRef );
 		NGltf::SSkeletonDefinition skeleton;
-		if ( !NGltf::BuildSkeleton(file, key.skeletonH.nModelInFile, &skeleton) )
+		if ( !NGltf::BuildSkeleton(file, key.skeletonH.pSkeleton->szRootJoint,
+			key.skeletonH.nModelInFile, &skeleton) )
 			return false;
 		*pResult = skeleton.boneByName;
 		return true;
@@ -261,11 +262,12 @@ void CLoadAIGeometryFromGranny::Recalc()
 	if ( pGeometry && !pGeometry->szModelFileRef.empty() )
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( pGeometry->szModelFileRef );
-		if ( !file )
+		std::vector<std::size_t> meshNodes;
+		if ( !NGltf::GetMeshNodes(file, pGeometry->szRootMesh, &meshNodes) )
 			return;
-		for ( std::size_t i = 0; i < file->meshNodes.size(); ++i )
+		for ( std::size_t i = 0; i < meshNodes.size(); ++i )
 		{
-			const std::size_t nodeIndex = file->meshNodes[i];
+			const std::size_t nodeIndex = meshNodes[i];
 			const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 			if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
 				continue;
@@ -393,15 +395,16 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry->szModelFileRef );
-		if ( !file )
+		std::vector<std::size_t> meshNodes;
+		if ( !NGltf::GetMeshNodes(file, key.pGeometry->szRootMesh, &meshNodes) )
 			return;
 		std::unordered_map<std::string, int> targetBones;
 		NAnimation::CGrannyFileInfo *pGrannySkeleton =
 			pSkeletonData ? pSkeletonData->GetValue() : 0;
 		const bool bHaveTargetBones = BuildTargetBoneMap( key, pGrannySkeleton, &targetBones );
-		for ( std::size_t i = 0; i < file->meshNodes.size(); ++i )
+		for ( std::size_t i = 0; i < meshNodes.size(); ++i )
 		{
-			const std::size_t nodeIndex = file->meshNodes[i];
+			const std::size_t nodeIndex = meshNodes[i];
 			const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 			if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
 				continue;

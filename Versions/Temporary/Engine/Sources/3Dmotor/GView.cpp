@@ -424,7 +424,8 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 	// The external document is authoritative for its mesh-node count; the old
 	// generated count may still contain values from an earlier GR2 export.
 	const int nMeshCount = !pGeometry->szModelFileRef.empty()
-		? NGltf::GetMeshCount( pGeometry->szModelFileRef ) : pGeometry->nNumMeshes;
+		? NGltf::GetMeshCount( pGeometry->szModelFileRef, pGeometry->szRootMesh )
+		: pGeometry->nNumMeshes;
 
 	const std::vector<int> &materialQuantities = pGeometry->materialQuantities;
 	if ( materialQuantities.empty() )

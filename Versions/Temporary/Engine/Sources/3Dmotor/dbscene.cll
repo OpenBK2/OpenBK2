@@ -214,13 +214,13 @@ class SDistanceFog
 class SSkeleton
 {
 	[noCode] SceneFileRef _SrcName;
-	// Root joint (single-skin) or root mesh (bodyparts) to export
-	[noCode] string _RootJoint;
 	[noCode; hidden] bool _MSRFormat = true;
 	SAnimBase *_Animations[];
 	[readonly] GUID _uid;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	FilePathRef _ModelFileRef;
+	// GLB-only root joint or skinned mesh selector. Empty selects the first skin.
+	string _RootJoint;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -413,8 +413,6 @@ class SFont
 class SAIGeometry
 {
 	[noCode] SceneFileRef _SrcName;
-	// Root AI mesh to export
-	[noCode] string _RootMesh;
 	// Root joint (single-skin) to export
 	[noCode] string _RootJoint;
 	[hidden] float _Volume;
@@ -425,6 +423,8 @@ class SAIGeometry
 	[readonly] GUID _uid;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	FilePathRef _ModelFileRef;
+	// GLB-only root node; its mesh and mesh-bearing descendants form the AI geometry.
+	string _RootMesh;
 };
 
 [typeID = 0x12069B85; no_checksum]
@@ -433,8 +433,6 @@ class SGeometry
 	[noCode] SceneFileRef _SrcName;
 	//[typeRename = "GUID"; numBytes = 16; editorControl = "guid"]
 	[readonly] GUID _uid;
-	// Root mesh to export
-	[noCode] string _RootMesh;
 	// Root joint (single-skin) or root mesh (bodyparts) to export. In the case of bodyparts this must be equal to 'RootMesh'
 	[noCode] string _RootJoint;
 	[readonly] CVec3 _Size;
@@ -447,6 +445,8 @@ class SGeometry
 	[hidden] int _MeshWindAffected[];
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	FilePathRef _ModelFileRef;
+	// GLB-only root node; its mesh and mesh-bearing descendants are loaded.
+	string _RootMesh;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
