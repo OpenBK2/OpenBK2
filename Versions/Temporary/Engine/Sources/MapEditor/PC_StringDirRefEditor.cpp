@@ -120,8 +120,8 @@ void CPCStringDirRefEditor::OnBrowse()
 			if ( SUCCEEDED( hResult ) )
 			{
 				LPITEMIDLIST pidl = NULL;
-				uint32_t dwEaten   = 0;
-				uint32_t dwAttribs = 0;
+				ULONG dwEaten   = 0;
+				ULONG dwAttribs = 0;
 
 				// no _MAX_PATH buffer to overflow, and no silent truncation of
 				// a longer path either
