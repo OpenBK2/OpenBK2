@@ -2,7 +2,9 @@
 
 #include "Interface_Editor.h"
 
-class CEditorBase : public IEditor
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CEditorBase : public IEditor
 {
 	bool bEditorBaseModified;	
 
