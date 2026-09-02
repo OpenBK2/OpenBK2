@@ -182,7 +182,7 @@ set(SOURCES
 add_library(ED_B2_M1 SHARED ${SOURCES})
 add_stdafx_pch(ED_B2_M1)
 add_export_header(ED_B2_M1)
-target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Scintilla Stats_B2_M1 stingray System UISpecificB2 UI zlib fmt::fmt-header-only)
+target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Scintilla Stats_B2_M1 stingray System UISpecificB2 UI zlib fmt::fmt-header-only granny::granny)
 if(WIN32)
     target_link_libraries(ED_B2_M1 PRIVATE winapi)
 endif()
