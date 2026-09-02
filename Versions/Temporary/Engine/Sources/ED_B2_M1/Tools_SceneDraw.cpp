@@ -25,7 +25,7 @@ void CSceneDrawTool::Draw()
 	{
 		for ( CModelInfoList::const_iterator itModelInfo = modelInfoList.begin(); itModelInfo != modelInfoList.end(); ++itModelInfo )
 		{
-			const nModelID = pScene->AddObject( -1, itModelInfo->pModel, itModelInfo->vPos, itModelInfo->qRot, itModelInfo->vScale, OBJ_ANIM_MODE_DEFAULT, 0 );
+			const int nModelID = pScene->AddObject( -1, itModelInfo->pModel, itModelInfo->vPos, itModelInfo->qRot, itModelInfo->vScale, OBJ_ANIM_MODE_DEFAULT, 0 );
 			if ( nModelID != ( -1 ) )
 			{
 				InsertHashSetElement( &modelIDSet, nModelID );
@@ -34,7 +34,7 @@ void CSceneDrawTool::Draw()
 		//
 		for ( CPolylineInfoList::const_iterator itPolylineInfo = polylineInfoList.begin(); itPolylineInfo != polylineInfoList.end(); ++itPolylineInfo )
 		{
-			const nPolylineID = pScene->AddPolyline( -1, itPolylineInfo->points, CVec4(itPolylineInfo->vColor, 1), itPolylineInfo->bDepthCheck );
+			const int nPolylineID = pScene->AddPolyline( -1, itPolylineInfo->points, CVec4(itPolylineInfo->vColor, 1), itPolylineInfo->bDepthCheck );
 			if ( nPolylineID != ( -1 ) )
 			{
 				InsertHashSetElement( &polylineIDSet, nPolylineID );

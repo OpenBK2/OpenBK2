@@ -791,7 +791,7 @@ bool CWindowSimpleSharedState::MakeSharedName( const std::string & szSharedTypeN
 	std::string objName = rDBID.ToString();
 	CStringManager::GetRefValueFromTypeAndName( pSharedFullName, szSharedTypeName, objName, TYPE_SEPARATOR_CHAR );
 
-	const slashPos = objName.rfind( PATH_SEPARATOR_CHAR );
+	const size_t slashPos = objName.rfind( PATH_SEPARATOR_CHAR );
 	*pSharedShortName = (slashPos == std::string::npos) ? objName : objName.substr( slashPos+1 );
 
 	return true;
