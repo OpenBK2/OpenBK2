@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBField.h"
 
+#include "ED_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -258,5 +260,5 @@ int SField::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x14130C40, SField ) 
+REGISTER_DATABASE_CLASS( ED_B2_M1, 0x14130C40, SField ) 
 
