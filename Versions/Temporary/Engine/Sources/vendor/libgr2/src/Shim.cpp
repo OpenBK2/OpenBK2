@@ -83,6 +83,19 @@ GR2_API( bool ) GrannyControlIsComplete( granny_control const *Control )
 	return Result;
 }
 
+GR2_API( void ) GrannyConvertSingleObject( granny_data_type_definition const *SourceType, void const *SourceObject, granny_data_type_definition const *DestType, void *DestObject, granny_conversion_handler *OverrideHandler )
+{
+	GR2_TRACE( "SourceType={} SourceObject={} DestType={} DestObject={} OverrideHandler={}", SourceType, SourceObject, DestType, DestObject, OverrideHandler );
+
+	typedef void ( __stdcall *TFn )( granny_data_type_definition const *SourceType, void const *SourceObject, granny_data_type_definition const *DestType, void *DestObject, granny_conversion_handler *OverrideHandler );
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyConvertSingleObject" ) );
+	if ( pfn == 0 )
+	{
+		return;
+	}
+	pfn( SourceType, SourceObject, DestType, DestObject, OverrideHandler );
+}
+
 GR2_API( granny_real32 ) GrannyEaseControlIn( granny_control *Control, granny_real32 Duration, bool FromCurrent )
 {
 	GR2_TRACE( "Control={} Duration={} FromCurrent={}", Control, Duration, FromCurrent );

@@ -6,7 +6,7 @@
 //
 // This header is the whole public surface. It is C, it includes nothing from
 // the engine, and it deliberately reproduces the *shape* of the Granny API it
-// replaces: the same 54 entry points, same names, same signatures, same calling
+// replaces: the same 55 entry points, same names, same signatures, same calling
 // convention, and a DLL with the same file name. That is what lets the engine be
 // relinked against this library without a single source change, and, on Windows,
 // lets both implementations run side by side in one process so that every call
@@ -139,6 +139,13 @@ typedef GR2_CALLBACK( void * ) granny_allocate_callback( char const *File, grann
 typedef GR2_CALLBACK( void ) granny_deallocate_callback( char const *File, granny_int32x Line,
                                                          void *Memory );
 
+// Called per member by GrannyConvertSingleObject, to take over the conversion of
+// one member the caller wants handled its own way. __cdecl for the same reason
+// as the allocator callbacks above.
+typedef GR2_CALLBACK( bool ) granny_conversion_handler(
+	granny_data_type_definition const *SourceType, void const *SourceMember,
+	granny_data_type_definition const *DestType, void *DestMember );
+
 // Memory. Exported because the engine links them, but never called by it.
 GR2_API( void ) GrannyGetAllocator( granny_allocate_callback **AllocateCallback,
                                     granny_deallocate_callback **DeallocateCallback );
@@ -157,6 +164,11 @@ GR2_API( granny_file_info * ) GrannyGetFileInfo( granny_file *File );
 GR2_API( granny_int32x ) GrannyGetMemberTypeSize( granny_data_type_definition const *MemberType );
 GR2_API( granny_int32x )
 	GrannyGetTotalObjectSize( granny_data_type_definition const *TypeDefinition );
+GR2_API( void ) GrannyConvertSingleObject( granny_data_type_definition const *SourceType,
+                                           void const *SourceObject,
+                                           granny_data_type_definition const *DestType,
+                                           void *DestObject,
+                                           granny_conversion_handler *OverrideHandler );
 
 // Geometry. M2.
 GR2_API( granny_int32x ) GrannyGetMeshTriangleGroupCount( granny_mesh const *Mesh );

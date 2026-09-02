@@ -46,7 +46,7 @@ Linux, which the proprietary DLL could never do:
 ```
 $ cmake -S Versions/Temporary/Engine/Sources/vendor/libgr2 -B build -G Ninja
 $ cmake --build build && cmake --build build --target libgr2-verify-exports
--- libgranny2_x64.so: all 54 expected exports present, 54 in total
+-- libgranny2_x64.so: all 55 expected exports present, 55 in total
 $ cmake --build build --target libgr2-tests
 $ ctest --test-dir build -L obk2-test
 100% tests passed, 0 tests failed out of 12
@@ -71,16 +71,16 @@ cmake --build out/build/libgr2 --target libgr2-verify-exports
 ```
 
 `libgr2-verify-exports` is the acceptance test for this stage: it reads the built
-library's export table and fails unless it holds exactly the 54 names in
+library's export table and fails unless it holds exactly the 55 names in
 `exports.txt`. On x86 it accounts for MSVC decorating `__stdcall` exports as
 `_Name@N`, which is what the real `granny2.dll` exports too.
 
 The output is named `granny2.dll` on x86 and `granny2_x64.dll` on x64, matching
 the vendored DLL, because the engine loads it by name.
 
-## The 54 entry points
+## The 55 entry points
 
-**52 implemented, 2 stubs, 0 reached-but-missing.** A run of the game logs no
+**52 implemented, 3 stubs, 0 reached-but-missing.** A run of the game logs no
 "not implemented" line at all.
 
 The verification column says how each was checked. *corpus* is
@@ -110,7 +110,7 @@ transcripts. Everything also has unit tests.
 | `GrannyFreeControlOnceUnused` | replay |
 | `GrannyFreeControl` | unit tests |
 
-### Implemented but not reached in a normal run (16)
+### Implemented but not reached in a normal run (17)
 
 Reachability was worked out from the engine sources rather than from the absence
 of a log line, since one run is not every map.
@@ -128,6 +128,7 @@ of a log line, since one run is not every map.
 | `GrannySetControlRawLocalClock` | no | only `CSkeletonAnimator::SetLocalTime`, which has no callers |
 | `GrannyGetControlDuration` | no | only `CSkeletonAnimator::GetDuration`, which has no callers |
 | `GrannyGetAllocator`, `GrannySetAllocator` | no, **and still stubs** | only `InitializeGrannyMemoryMap` in `3Dmotor/GrannyMemoryMap.cpp`, which nothing calls. Granny's own allocator is the one that runs |
+| `GrannyConvertSingleObject` | **editor only, and still a stub** | `GetAttributesFromBone` in `ED_Common/TempAttributesTool.cpp`, reading Maya attributes out of a bone's `ExtendedData`. Nothing in the game names it |
 
 `Script/` has no binding to the animator, so nothing reaches these from a
 scenario either.
@@ -137,8 +138,16 @@ timed clips and scrubbing are built into `CSkeletonAnimator` and never switched
 on. They are implemented and replay-verified here anyway, because they are what
 the engine would need the moment anything calls `SetGlobalAnimTransit`.
 
-The two stubs can stay stubs. They have to be *exported*, because the engine
-links them, but nothing calls them.
+The allocator pair can stay stubs. They have to be *exported*, because the
+engine links them, but nothing calls them.
+
+`GrannyConvertSingleObject` is a stub for a different reason: the map editor
+links it and could call it, but every bone in this corpus has a null
+`ExtendedData`, measured against the real DLL, so there is nothing for it to
+read. Writing it needs two answers the source cannot give, what 2.11 does with
+an unmatched destination member and whether it converts between member types,
+and both are measurable against the vendored DLL when the editor's Maya export
+path is worth having.
 
 ### Where the two implementations still differ
 
@@ -188,7 +197,7 @@ ctest --test-dir out/build/libgr2 -L obk2-test --output-on-failure
 
 Tests link `gr2_static`, a second static build of the same sources, rather than
 the DLL. The container, the type tree walker and the two Oodle decoders are
-internal and none of them is among the 54 exports, and a static link needs no DLL
+internal and none of them is among the 55 exports, and a static link needs no DLL
 beside the executable, which is what lets these run on a machine that has never
 seen `granny2.dll`.
 
@@ -212,8 +221,9 @@ tests mark what is still missing and fail the day it arrives:
 ## The call trace
 
 Every entry point records the call before it returns, so a run against this
-library says which of the 54 are actually reached, in what order, and with what
-arguments. The engine references all 54, but a reference is not a call: some sit
+library says which of the 55 are actually reached, in what order, and with what
+arguments. The engine references 54 of them and the map editor the last one, but
+a reference is not a call: some sit
 on paths the shipped data never takes, and the linker cannot tell. That is what
 orders the milestones above.
 
@@ -293,7 +303,7 @@ same play can be recorded twice and the two logs diffed. It shares `Trace.cpp`
 and `Identify.cpp` with the library, which is what makes the logs comparable:
 same stable object numbers, same file hashes, same line format. `src/Shim.cpp`
 itself is generated by `scripts/port/gen-granny-shim.py` from
-`include/gr2/granny.h`, so the 54 signatures cannot drift apart, and it is
+`include/gr2/granny.h`, so the 55 signatures cannot drift apart, and it is
 committed so that the build does not need Python.
 
 ```powershell
