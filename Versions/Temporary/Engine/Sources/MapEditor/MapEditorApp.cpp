@@ -64,7 +64,6 @@ END_MESSAGE_MAP()
 // **
 // ************************************************************************************************************************ //
 
-void DisableFastMemAlloc(); // defined in memory mgr
 CEditorApp::CEditorApp() : pMainFrame( 0 )
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -73,7 +72,6 @@ CEditorApp::CEditorApp() : pMainFrame( 0 )
 	//
 	int *pInitMem = new int;
 	delete pInitMem;
-	DisableFastMemAlloc();
 
 	//NGlobal::SetVar( "fixrandom", 1 );
 }
