@@ -517,7 +517,7 @@ void CPassabilityProfileCreator::FormPolygon()
 		}
 	}
 
-	cover.push_back();
+	cover.emplace_back();
 	SPolygon &polygon = cover.back();
 	polygon.points.push_back( point.vPoint );
 	SConnectedPoint predPoint( CVec2( point.vPoint.x - fInfinity, point.vPoint.y ), -1 );
