@@ -21,7 +21,10 @@
 //
 struct SHTREEITEMHash
 {
-	int operator()( const HTREEITEM hTreeItem ) const { return int( hTreeItem ); }
+	std::size_t operator()( const HTREEITEM hTreeItem ) const
+	{
+		return std::hash<const void *>()( hTreeItem );
+	}
 };
 //
 struct SData
