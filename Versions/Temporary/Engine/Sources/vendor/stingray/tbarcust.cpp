@@ -3,6 +3,7 @@
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
+#include "logging.h"
 
 
 BOOL SECCustomToolBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID, DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd, CCreateContext* pContext) {

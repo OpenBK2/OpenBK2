@@ -2,6 +2,7 @@ project(stingray)
 
 add_library(stingray STATIC
     logging.cpp
+    logging.h
     olbar.cpp # SECShortcutBar
     swinfrm.cpp # SECFrameWnd
     swinmdi.cpp # SECMDIFrameWnd
