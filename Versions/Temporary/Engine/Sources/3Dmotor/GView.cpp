@@ -427,6 +427,15 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 		? NGltf::GetMeshCount( pGeometry, pGeometry->szModelFileRef, pGeometry->szRootMesh )
 		: pGeometry->nNumMeshes;
 
+	bool bRigidGltfModel = false;
+	if ( !pGeometry->szModelFileRef.empty() && pModel->pSkeleton &&
+		!pModel->pSkeleton->szModelFileRef.empty() && !pModel->pSkeleton->szRootJoint.empty() )
+	{
+		const NGltf::TGltfFilePtr skeletonFile = NGltf::LoadFile( pModel->pSkeleton,
+			pModel->pSkeleton->szModelFileRef );
+		bRigidGltfModel = skeletonFile && skeletonFile->asset.skins.empty();
+	}
+
 	const std::vector<int> &materialQuantities = pGeometry->materialQuantities;
 	if ( materialQuantities.empty() )
 	{
@@ -444,7 +453,9 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 			SPartAndSkeletonKey key( pGeometry, nMesh, -1, pModel->pSkeleton, nSkelInFile, bIsLightMapped ? 1 : 0 );
 			p.pGeometry = shareGrannyMeshes.Get( key );
 			p.pMaterial = CreateMaterial( pModel->materials[nModelMaterial] );
-			p.bAnimated = bWholeAnimated;
+			// Every node can be an animated parent in a skinless GLTF hierarchy,
+			// so legacy per-mesh flags must not route rigid parts as static geometry.
+			p.bAnimated = bWholeAnimated || bRigidGltfModel;
 		}
 	}
 	else
@@ -484,9 +495,9 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 					p.nOrigMeshIndex = nMesh;
 
 					if ( nMesh < pGeometry->meshAnimated.size() )
-						p.bAnimated = pGeometry->meshAnimated[nMesh];
+						p.bAnimated = pGeometry->meshAnimated[nMesh] || bRigidGltfModel;
 					else
-						p.bAnimated = bWholeAnimated;
+						p.bAnimated = bWholeAnimated || bRigidGltfModel;
 
 					if ( nMesh < pGeometry->meshWindAffected.size() )
 						p.bWindAffected = pGeometry->meshWindAffected[nMesh];
@@ -506,9 +517,9 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 				p.nOrigMeshIndex = nMesh;
 
 				if ( nMesh < pGeometry->meshAnimated.size() )
-					p.bAnimated = pGeometry->meshAnimated[nMesh];
+					p.bAnimated = pGeometry->meshAnimated[nMesh] || bRigidGltfModel;
 				else
-					p.bAnimated = bWholeAnimated;
+					p.bAnimated = bWholeAnimated || bRigidGltfModel;
 
 				if ( nMesh < pGeometry->meshWindAffected.size() )
 					p.bWindAffected = pGeometry->meshWindAffected[nMesh];

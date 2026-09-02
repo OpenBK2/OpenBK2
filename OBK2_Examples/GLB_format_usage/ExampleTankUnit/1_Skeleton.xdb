@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Skeleton>
+	<SrcName href="/1.mb" />
+	<RootJoint>Basis</RootJoint>
+	<MSRFormat>true</MSRFormat>
+	<Animations>
+		<Item href="Death01.xdb#xpointer(/AnimB2)" />
+		<Item href="Death02.xdb#xpointer(/AnimB2)" />
+	</Animations>
+	<uid>F4A41262-ED8C-441C-926D-288BF6370288</uid>
+	<ModelFileRef href="/model.glb" />
+</Skeleton>

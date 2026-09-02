@@ -21,7 +21,7 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		float fDuration;
 		// Derived from the current GLB resource during binding, so these are not serialized.
 		float fSourceStart;
-		int nAnimationIndex;
+		std::vector<int> animationIndices;
 		bool bFadeIn;
 		bool bFadeOut;
 		int nLoopCount;

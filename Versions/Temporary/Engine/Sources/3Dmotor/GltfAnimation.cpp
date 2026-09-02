@@ -28,6 +28,30 @@ std::vector<TValue> ReadAccessor( const fastgltf::Asset &asset, std::size_t acce
 	return result;
 }
 
+bool GetAnimationTimeRange( const fastgltf::Asset &asset,
+	const fastgltf::Animation &animation, float *pStart, float *pEnd )
+{
+	bool haveTimes = false;
+	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
+	{
+		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+		if ( times.empty() )
+			continue;
+		if ( !haveTimes )
+		{
+			*pStart = times.front();
+			*pEnd = times.back();
+			haveTimes = true;
+		}
+		else
+		{
+			*pStart = (std::min)( *pStart, times.front() );
+			*pEnd = (std::max)( *pEnd, times.back() );
+		}
+	}
+	return haveTimes && *pEnd - *pStart > FP_EPSILON;
+}
+
 bool InferBakedFrameTimeline( const fastgltf::Asset &asset,
 	const fastgltf::Animation &animation, float animationStart, float animationEnd,
 	float *pTimelineStart, float *pSecondsPerFrame, std::size_t *pFrameCount )
@@ -205,7 +229,6 @@ void BuildBoneWorld( std::size_t boneIndex, const NGltf::SSkeletonDefinition &sk
 CGltfSkeletonAnimator::SAnimationHolder::SAnimationHolder() :
 	tStartTime(0), tEndTime(-1), tFadeStart(0), tFadeDuration(0),
 	fSpeed(1.0f), fWeight(1.0f), fDuration(0.0f), fSourceStart(0.0f),
-	nAnimationIndex(-1),
 	bFadeIn(false), bFadeOut(false), nLoopCount(1)
 {
 }
@@ -260,7 +283,7 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 			DebugTrace( "glTF: could not create skin %d from %s", _skeletonH.nModelInFile,
 				_skeletonH.pSkeleton->szModelFileRef.c_str() );
 		else
-			DebugTrace( "glTF: could not create skin for RootJoint %s from %s",
+			DebugTrace( "glTF: could not create skeleton for RootJoint %s from %s",
 				_skeletonH.pSkeleton->szRootJoint.c_str(),
 				_skeletonH.pSkeleton->szModelFileRef.c_str() );
 		pSkeletonFile.reset();
@@ -281,7 +304,7 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 {
 	pHolder->pFile.reset();
-	pHolder->nAnimationIndex = -1;
+	pHolder->animationIndices.clear();
 	pHolder->fSourceStart = 0.0f;
 	pHolder->fDuration = 0.0f;
 	if ( !pHolder->hAnimation.pAnimFile ||
@@ -292,82 +315,125 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 	if ( !pHolder->pFile || pHolder->pFile->asset.animations.empty() )
 		return false;
 
-	int animationIndex = 0;
 	const std::string &clipName = pHolder->hAnimation.pAnimFile->GetClipName();
+	const int firstFrame = pHolder->hAnimation.pAnimFile->GetFirstFrame();
+	const int lastFrame = pHolder->hAnimation.pAnimFile->GetLastFrame();
+	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
+	const bool bNodeSkeleton = pSkeletonFile && pSkeletonFile->asset.skins.empty();
 	if ( !clipName.empty() )
 	{
-		animationIndex = -1;
 		for ( std::size_t i = 0; i < pHolder->pFile->asset.animations.size(); ++i )
 		{
 			if ( std::string(pHolder->pFile->asset.animations[i].name) != clipName )
 				continue;
-			if ( animationIndex >= 0 )
-			{
-				DebugTrace( "glTF: animation name %s is ambiguous in %s", clipName.c_str(),
-					pHolder->pFile->sourcePath.c_str() );
-				return false;
-			}
-			animationIndex = static_cast<int>(i);
+			pHolder->animationIndices.push_back( static_cast<int>(i) );
 		}
-		if ( animationIndex < 0 )
+		if ( pHolder->animationIndices.empty() )
 		{
 			DebugTrace( "glTF: animation %s was not found in %s", clipName.c_str(),
 				pHolder->pFile->sourcePath.c_str() );
 			return false;
 		}
+		if ( pHolder->animationIndices.size() > 1 && !bNodeSkeleton )
+		{
+			DebugTrace( "glTF: animation name %s is ambiguous in %s", clipName.c_str(),
+				pHolder->pFile->sourcePath.c_str() );
+			return false;
+		}
+	}
+	else
+	{
+		pHolder->animationIndices.push_back( 0 );
+		if ( bNodeSkeleton && rangeWasSpecified )
+		{
+			// Blender may store one action per animated object. Frame slicing
+			// denotes a shared timeline, so compose all of those records.
+			for ( std::size_t i = 1; i < pHolder->pFile->asset.animations.size(); ++i )
+				pHolder->animationIndices.push_back( static_cast<int>(i) );
+		}
 	}
 
-	const fastgltf::Animation &animation =
-		pHolder->pFile->asset.animations[animationIndex];
 	bool haveTimes = false;
 	float animationStart = 0.0f;
 	float animationEnd = 0.0f;
-	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
+	for ( int animationIndex : pHolder->animationIndices )
 	{
-		const std::vector<float> times = ReadAccessor<float>( pHolder->pFile->asset, sampler.inputAccessor );
-		if ( !times.empty() )
+		const fastgltf::Animation &animation =
+			pHolder->pFile->asset.animations[animationIndex];
+		float localStart = 0.0f;
+		float localEnd = 0.0f;
+		if ( GetAnimationTimeRange(pHolder->pFile->asset, animation, &localStart, &localEnd) )
 		{
 			if ( !haveTimes )
 			{
-				animationStart = times.front();
-				animationEnd = times.back();
+				animationStart = localStart;
+				animationEnd = localEnd;
 				haveTimes = true;
 			}
 			else
 			{
-				animationStart = (std::min)( animationStart, times.front() );
-				animationEnd = (std::max)( animationEnd, times.back() );
+				animationStart = (std::min)( animationStart, localStart );
+				animationEnd = (std::max)( animationEnd, localEnd );
 			}
 		}
 	}
-	if ( !haveTimes || animationEnd - animationStart <= FP_EPSILON )
+	if ( !haveTimes )
 	{
-		DebugTrace( "glTF: animation %d in %s has no usable time range", animationIndex,
+		DebugTrace( "glTF: selected animation in %s has no usable time range",
 			pHolder->pFile->sourcePath.c_str() );
 		return false;
 	}
 
-	pHolder->nAnimationIndex = animationIndex;
 	pHolder->fSourceStart = animationStart;
 	pHolder->fDuration = animationEnd - animationStart;
 	if ( !clipName.empty() )
 		return true;
 
-	const int firstFrame = pHolder->hAnimation.pAnimFile->GetFirstFrame();
-	const int lastFrame = pHolder->hAnimation.pAnimFile->GetLastFrame();
-	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
 	float timelineStart = 0.0f;
 	float secondsPerFrame = 0.0f;
 	std::size_t frameCount = 0;
-	const bool haveBakedTimeline = InferBakedFrameTimeline( pHolder->pFile->asset,
-		animation, animationStart, animationEnd, &timelineStart, &secondsPerFrame, &frameCount );
+	for ( int animationIndex : pHolder->animationIndices )
+	{
+		const fastgltf::Animation &animation =
+			pHolder->pFile->asset.animations[animationIndex];
+		float localStart = 0.0f;
+		float localEnd = 0.0f;
+		if ( !GetAnimationTimeRange(pHolder->pFile->asset, animation, &localStart, &localEnd) )
+			continue;
+		float candidateStart = 0.0f;
+		float candidateSecondsPerFrame = 0.0f;
+		std::size_t candidateFrameCount = 0;
+		if ( InferBakedFrameTimeline(pHolder->pFile->asset, animation, localStart, localEnd,
+			&candidateStart, &candidateSecondsPerFrame, &candidateFrameCount) &&
+			candidateFrameCount > frameCount )
+		{
+			timelineStart = candidateStart;
+			secondsPerFrame = candidateSecondsPerFrame;
+			frameCount = candidateFrameCount;
+		}
+	}
+	const bool haveBakedTimeline = frameCount != 0;
+	int timelineFirstFrame = 0;
+	if ( haveBakedTimeline && secondsPerFrame > FP_EPSILON )
+	{
+		// Blender writes timestamps on its absolute frame clock. For example, an
+		// export starting at frame 1 begins at 1 / FPS, not at logical frame zero.
+		const float firstFrameEstimate = timelineStart / secondsPerFrame;
+		const int roundedFirstFrame = static_cast<int>(floorf(firstFrameEstimate + 0.5f));
+		const float tolerance = (std::max)( 0.00001f, secondsPerFrame * 0.001f );
+		if ( fabsf(timelineStart - roundedFirstFrame * secondsPerFrame) <= tolerance )
+			timelineFirstFrame = roundedFirstFrame;
+	}
+	const int timelineLastFrame = timelineFirstFrame + static_cast<int>(frameCount) - 1;
 	if ( lastFrame > firstFrame && firstFrame >= 0 && haveBakedTimeline &&
-		static_cast<std::size_t>(lastFrame) < frameCount )
+		firstFrame >= timelineFirstFrame && lastFrame <= timelineLastFrame )
 	{
 		// FirstFrame/LastFrame address the Blender frame clock directly. Length is
 		// gameplay metadata and must never change which GLB poses are sampled.
-		pHolder->fSourceStart = timelineStart + firstFrame * secondsPerFrame;
-		const float sourceEnd = timelineStart + lastFrame * secondsPerFrame;
+		pHolder->fSourceStart = timelineStart +
+			(firstFrame - timelineFirstFrame) * secondsPerFrame;
+		const float sourceEnd = timelineStart +
+			(lastFrame - timelineFirstFrame) * secondsPerFrame;
 		pHolder->fDuration = sourceEnd - pHolder->fSourceStart;
 		return pHolder->fDuration > FP_EPSILON;
 	}
@@ -377,8 +443,8 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 			DebugTrace( "glTF: cannot infer a baked frame timeline in %s; export with animation sampling enabled or use ClipName",
 				pHolder->pFile->sourcePath.c_str() );
 		else
-			DebugTrace( "glTF: invalid frame range %d..%d for the inferred 0..%d timeline in %s; using the full first animation",
-				firstFrame, lastFrame, static_cast<int>(frameCount - 1),
+			DebugTrace( "glTF: invalid frame range %d..%d for the inferred %d..%d Blender timeline in %s; using the full selected animation",
+				firstFrame, lastFrame, timelineFirstFrame, timelineLastFrame,
 				pHolder->pFile->sourcePath.c_str() );
 	}
 	return true;
@@ -416,7 +482,8 @@ float CGltfSkeletonAnimator::GetLocalTime( const SAnimationHolder &holder, STime
 	const float total = holder.fDuration * holder.nLoopCount;
 	if ( local >= total )
 	{
-		*pActive = false;
+		// Completed non-looping Granny controls continue contributing their
+		// clamped final sample until explicitly cleared or faded out.
 		return holder.fDuration;
 	}
 	if ( holder.nLoopCount > 1 )
@@ -435,61 +502,66 @@ void CGltfSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &m )
 void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, float localTime, float weight )
 {
 	const fastgltf::Asset &asset = holder.pFile->asset;
-	const fastgltf::Animation &animation = asset.animations[holder.nAnimationIndex];
 	const float sourceTime = holder.fSourceStart + localTime;
-	for ( const fastgltf::AnimationChannel &channel : animation.channels )
+	for ( int animationIndex : holder.animationIndices )
 	{
-		if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= asset.nodes.size() ||
-			channel.samplerIndex >= animation.samplers.size() )
+		if ( animationIndex < 0 || animationIndex >= static_cast<int>(asset.animations.size()) )
 			continue;
-		const fastgltf::Node &node = asset.nodes[*channel.nodeIndex];
-		const std::string nodeName = node.name.empty()
-			? "Node_" + std::to_string(*channel.nodeIndex) : std::string(node.name);
-		const int boneIndex = skeleton.FindBone( nodeName );
-		SBoneTransform *pBone = value.GetBone( boneIndex );
-		if ( !pBone )
-			continue;
+		const fastgltf::Animation &animation = asset.animations[animationIndex];
+		for ( const fastgltf::AnimationChannel &channel : animation.channels )
+		{
+			if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= asset.nodes.size() ||
+				channel.samplerIndex >= animation.samplers.size() )
+				continue;
+			const fastgltf::Node &node = asset.nodes[*channel.nodeIndex];
+			const std::string nodeName = node.name.empty()
+				? "Node_" + std::to_string(*channel.nodeIndex) : std::string(node.name);
+			const int boneIndex = skeleton.FindBone( nodeName );
+			SBoneTransform *pBone = value.GetBone( boneIndex );
+			if ( !pBone )
+				continue;
 
-		const fastgltf::AnimationSampler &sampler = animation.samplers[channel.samplerIndex];
-		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
-		if ( times.empty() )
-			continue;
-		const SKeyInterval key = FindInterval( times, sourceTime );
-		if ( channel.path == fastgltf::AnimationPath::Translation ||
-			channel.path == fastgltf::AnimationPath::Scale )
-		{
-			const std::vector<fastgltf::math::fvec3> values =
-				ReadAccessor<fastgltf::math::fvec3>( asset, sampler.outputAccessor );
-			const fastgltf::math::fvec3 sampled = SampleVector( values, key, sampler.interpolation );
-			const CVec3 converted = channel.path == fastgltf::AnimationPath::Translation
-				? NGltf::ConvertPosition(sampled) : NGltf::ConvertScale(sampled);
-			float *pTarget = channel.path == fastgltf::AnimationPath::Translation
-				? pBone->Position : &pBone->ScaleShear[0][0];
-			if ( channel.path == fastgltf::AnimationPath::Translation )
+			const fastgltf::AnimationSampler &sampler = animation.samplers[channel.samplerIndex];
+			const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+			if ( times.empty() )
+				continue;
+			const SKeyInterval key = FindInterval( times, sourceTime );
+			if ( channel.path == fastgltf::AnimationPath::Translation ||
+				channel.path == fastgltf::AnimationPath::Scale )
 			{
-				pTarget[0] += (converted.x - pTarget[0]) * weight;
-				pTarget[1] += (converted.y - pTarget[1]) * weight;
-				pTarget[2] += (converted.z - pTarget[2]) * weight;
+				const std::vector<fastgltf::math::fvec3> values =
+					ReadAccessor<fastgltf::math::fvec3>( asset, sampler.outputAccessor );
+				const fastgltf::math::fvec3 sampled = SampleVector( values, key, sampler.interpolation );
+				const CVec3 converted = channel.path == fastgltf::AnimationPath::Translation
+					? NGltf::ConvertPosition(sampled) : NGltf::ConvertScale(sampled);
+				float *pTarget = channel.path == fastgltf::AnimationPath::Translation
+					? pBone->Position : &pBone->ScaleShear[0][0];
+				if ( channel.path == fastgltf::AnimationPath::Translation )
+				{
+					pTarget[0] += (converted.x - pTarget[0]) * weight;
+					pTarget[1] += (converted.y - pTarget[1]) * weight;
+					pTarget[2] += (converted.z - pTarget[2]) * weight;
+				}
+				else
+				{
+					pBone->ScaleShear[0][0] += (converted.x - pBone->ScaleShear[0][0]) * weight;
+					pBone->ScaleShear[1][1] += (converted.y - pBone->ScaleShear[1][1]) * weight;
+					pBone->ScaleShear[2][2] += (converted.z - pBone->ScaleShear[2][2]) * weight;
+				}
 			}
-			else
+			else if ( channel.path == fastgltf::AnimationPath::Rotation )
 			{
-				pBone->ScaleShear[0][0] += (converted.x - pBone->ScaleShear[0][0]) * weight;
-				pBone->ScaleShear[1][1] += (converted.y - pBone->ScaleShear[1][1]) * weight;
-				pBone->ScaleShear[2][2] += (converted.z - pBone->ScaleShear[2][2]) * weight;
+				const std::vector<fastgltf::math::fvec4> values =
+					ReadAccessor<fastgltf::math::fvec4>( asset, sampler.outputAccessor );
+				const CQuat sampled = SampleQuaternion( values, key, sampler.interpolation );
+				CQuat current;
+				current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
+					pBone->Orientation[2], pBone->Orientation[3] );
+				CQuat blended;
+				blended.Interpolate( current, sampled, weight );
+				blended.Normalize();
+				memcpy( pBone->Orientation, &blended, sizeof(pBone->Orientation) );
 			}
-		}
-		else if ( channel.path == fastgltf::AnimationPath::Rotation )
-		{
-			const std::vector<fastgltf::math::fvec4> values =
-				ReadAccessor<fastgltf::math::fvec4>( asset, sampler.outputAccessor );
-			const CQuat sampled = SampleQuaternion( values, key, sampler.interpolation );
-			CQuat current;
-			current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
-				pBone->Orientation[2], pBone->Orientation[3] );
-			CQuat blended;
-			blended.Interpolate( current, sampled, weight );
-			blended.Normalize();
-			memcpy( pBone->Orientation, &blended, sizeof(pBone->Orientation) );
 		}
 	}
 }
@@ -509,12 +581,29 @@ void CGltfSkeletonAnimator::ApplyBoneMutators( STime time )
 		CQuat current;
 		current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
 			pBone->Orientation[2], pBone->Orientation[3] );
-		current *= deltaRotation;
-		current.Normalize();
-		memcpy( pBone->Orientation, &current, sizeof(pBone->Orientation) );
-		pBone->Position[0] += deltaPosition.x;
-		pBone->Position[1] += deltaPosition.y;
-		pBone->Position[2] += deltaPosition.z;
+
+		// Match GrannyPostMultiplyBy exactly: mutation translation is expressed
+		// in the bone's current local frame, followed by current * delta rotation.
+		const CVec3 scaledDelta(
+			pBone->ScaleShear[0][0] * deltaPosition.x +
+				pBone->ScaleShear[0][1] * deltaPosition.y +
+				pBone->ScaleShear[0][2] * deltaPosition.z,
+			pBone->ScaleShear[1][0] * deltaPosition.x +
+				pBone->ScaleShear[1][1] * deltaPosition.y +
+				pBone->ScaleShear[1][2] * deltaPosition.z,
+			pBone->ScaleShear[2][0] * deltaPosition.x +
+				pBone->ScaleShear[2][1] * deltaPosition.y +
+				pBone->ScaleShear[2][2] * deltaPosition.z );
+		const CVec3 rotatedDelta = current.Rotate( scaledDelta );
+		pBone->Position[0] += rotatedDelta.x;
+		pBone->Position[1] += rotatedDelta.y;
+		pBone->Position[2] += rotatedDelta.z;
+
+		// CQuat::operator*= pre-multiplies, so use the binary operator here for
+		// Granny's current * delta order.
+		CQuat composed = current * deltaRotation;
+		composed.Normalize();
+		memcpy( pBone->Orientation, &composed, sizeof(pBone->Orientation) );
 	}
 }
 
@@ -617,9 +706,22 @@ void CGltfSkeletonAnimator::ClearAllAnimations()
 	Touch();
 	animations.clear();
 	nAnimWithMovement = -1;
+	if ( !bBoneMutatorsEnabled || !IsValid(pTime) )
+		return;
+
+	// Granny freezes active mutators when controls are cleared. Turret aiming
+	// therefore survives routine idle/movement animation changes.
+	const STime freezeTime = pTime->GetValue();
 	for ( SSimpleBoneMutator &mutator : boneMutators )
-		mutator.Enable( false );
-	bBoneMutatorsEnabled = false;
+	{
+		if ( !mutator.IsEnabled() )
+			continue;
+		CQuat rotation;
+		CVec3 position;
+		mutator.GetAtTime( freezeTime, &rotation, &position );
+		mutator.Clear();
+		mutator.AddBoneTimePose( freezeTime, rotation, position );
+	}
 }
 
 void CGltfSkeletonAnimator::FadeIn( const STime &duration, SAnimID id )

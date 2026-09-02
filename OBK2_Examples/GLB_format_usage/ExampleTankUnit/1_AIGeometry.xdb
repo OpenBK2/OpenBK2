@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AIGeometry>
+	<SrcName href="/1.mb" />
+	<RootMesh>AABB</RootMesh>
+	<RootJoint>AABB</RootJoint>
+	<Volume>0</Volume>
+	<SolidPart>0</SolidPart>
+	<AABBCenter>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</AABBCenter>
+	<AABBHalfSize>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</AABBHalfSize>
+	<uid>12B92FF6-6CE7-4914-B607-85F20FFB8D77</uid>
+	<ModelFileRef href="/model.glb" />
+</AIGeometry>
