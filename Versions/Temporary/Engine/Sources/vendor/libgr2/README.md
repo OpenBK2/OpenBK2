@@ -142,11 +142,9 @@ links them, but nothing calls them.
 
 ### Where the two implementations still differ
 
-Both are invisible to the game and neither is on a path it takes. See
+One known difference remains, and it is invisible to the game. See
 docs/GrannyReplacement.md, "What still differs", for the measurements.
 
-- A local clock landing exactly on a multiple of the period. A float knife edge,
-  and the same pose either way for a looping clip.
 - The sign of a sampled quaternion, on 1.3% of samples. q and -q are the same
   rotation, and every consumer here is invariant to it.
 

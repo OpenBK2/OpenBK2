@@ -11,10 +11,19 @@
 //
 // What was measured, in the terms below:
 //
-//   raw local clock  = ( modelClock - fStartTime ) * fSpeed, floored at zero
-//   clamped local    = raw modulo the animation's duration, except that once raw
-//                      reaches nLoopCount whole periods it stops at the duration
-//                      instead of wrapping. A loop count of zero never stops.
+//   model clock changes are queued as float deltas on every bound control
+//   raw local clock  advances by pendingDelta * fSpeed when it is next read
+//   loop wrapping    subtracts whole float periods and updates nLoopIndex
+//   clamped local    is the resulting raw clock clamped to [0, duration]
+//
+// That stateful order is significant. It is not equivalent to calculating
+// fmod((modelClock - startTime) * speed, duration): float rounding can leave the
+// original DLL one ULP below the end of a period for one sample. The game reads
+// that value for infantry root motion, so replacing it with zero makes the model
+// jump by a full stride at the loop boundary.
+//
+// A finite control stops wrapping on its last period and therefore clamps at the
+// duration. A loop count of zero wraps forever.
 //   GetControlDuration     = nLoopCount * animation duration / |speed|, and a
 //                            sentinel near 1.9e38 when the loop count is zero
 //   GetControlDurationLeft = that duration minus ( modelClock - fStartTime ),
@@ -116,6 +125,14 @@ struct granny_control
 
 	//! Model time at which the clip's local clock is zero.
 	float fStartTime = 0.0f;
+	//! Last model clock assigned to this control and the delta not yet consumed by
+	//! a local-clock query. GrannySetModelClock updates both for every bound clip.
+	float fClock = 0.0f;
+	mutable float fPendingClockDelta = 0.0f;
+	//! Stateful local time and loop number. Mutable because Granny's clock getters
+	//! consume the pending model-clock delta in the original implementation.
+	mutable float fLocalClock = 0.0f;
+	mutable int32_t nLoopIndex = 0;
 	float fSpeed = 1.0f;
 	//! Whole periods to play. Zero means forever, which is what the engine sets
 	//! for a looping clip.
@@ -136,6 +153,10 @@ struct granny_control
 	float AnimationDuration() const;
 	//! nLoopCount periods at this speed, or the sentinel for an endless clip.
 	float Duration() const;
+	//! Queues a model-clock change exactly as GrannySetModelClock does.
+	void SetClock( float fNewClock );
+	//! Applies the queued delta and performs Granny's stateful loop-index update.
+	void UpdateLocalClock() const;
 	float RawLocalClock( float fModelClock ) const;
 	float ClampedLocalClock( float fModelClock ) const;
 	float EffectiveWeight( float fModelClock ) const;

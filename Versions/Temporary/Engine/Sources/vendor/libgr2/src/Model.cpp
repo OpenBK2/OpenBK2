@@ -105,6 +105,16 @@ GR2_API( void ) GrannySetModelClock( granny_model_instance const *ModelInstance,
 	// alias through the header.
 	granny_model_instance *pInstance =
 		const_cast<granny_model_instance *>( ModelInstance );
+	// The original stores a per-control model clock and queues the difference for
+	// the next local-clock read. Incremental float rounding at loop boundaries is
+	// observable through the engine's infantry root-motion correction.
+	for ( size_t i = 0; i < pInstance->Controls.size(); ++i )
+	{
+		if ( pInstance->Controls[i] != nullptr )
+		{
+			pInstance->Controls[i]->SetClock( NewClock );
+		}
+	}
 	pInstance->fClock = NewClock;
 }
 

@@ -143,10 +143,81 @@ float granny_control::Duration() const
 	return static_cast<float>( nLoopCount ) * AnimationDuration() / fRate;
 }
 
+void granny_control::SetClock( float fNewClock )
+{
+	// Granny queues model time rather than deriving local time from an absolute
+	// timestamp. Several SetModelClock calls may therefore accumulate before a
+	// clock query or pose sample consumes the delta.
+	fPendingClockDelta += fNewClock - fClock;
+	fClock = fNewClock;
+}
+
+void granny_control::UpdateLocalClock() const
+{
+	if ( fPendingClockDelta == 0.0f )
+	{
+		return;
+	}
+
+	// Keep the multiply and add as separate float operations. Granny performs a
+	// mulss followed by addss; preserving both roundings is what retains the
+	// near-end sample that infantry root-motion correction depends on.
+	volatile float fAdvance = fPendingClockDelta * fSpeed;
+	volatile float fAdvancedClock = fLocalClock + fAdvance;
+	fLocalClock = fAdvancedClock;
+
+	const float fPeriod = AnimationDuration();
+	if ( fPeriod > 0.0f )
+	{
+		const bool bBeforePeriod = fLocalClock < 0.0f;
+		const bool bAfterPeriod = fLocalClock >= fPeriod;
+		const bool bCanWrapBackwards = nLoopCount == 0 || nLoopIndex > 0;
+		const bool bCanWrapForwards =
+			nLoopCount == 0 || nLoopIndex < nLoopCount - 1;
+
+		if ( ( bBeforePeriod && bCanWrapBackwards )
+		     || ( bAfterPeriod && bCanWrapForwards ) )
+		{
+			// Granny truncates the quotient, then subtracts one more period for
+			// any negative clock. Clamp the absolute loop index only for a finite
+			// control; an endless one is allowed to run in either direction.
+			int32_t nNewLoopIndex =
+				nLoopIndex + static_cast<int32_t>( fLocalClock / fPeriod );
+			if ( fLocalClock < 0.0f )
+			{
+				--nNewLoopIndex;
+			}
+			if ( nLoopCount > 0 )
+			{
+				if ( nNewLoopIndex < 0 )
+				{
+					nNewLoopIndex = 0;
+				}
+				else if ( nNewLoopIndex >= nLoopCount )
+				{
+					nNewLoopIndex = nLoopCount - 1;
+				}
+			}
+
+			const int32_t nPeriods = nNewLoopIndex - nLoopIndex;
+			if ( nPeriods != 0 )
+			{
+				nLoopIndex = nNewLoopIndex;
+				volatile float fWrappedPeriods =
+					static_cast<float>( nPeriods ) * fPeriod;
+				fLocalClock -= fWrappedPeriods;
+			}
+		}
+	}
+
+	fPendingClockDelta = 0.0f;
+}
+
 float granny_control::RawLocalClock( float fModelClock ) const
 {
-	const float fRaw = ( fModelClock - fStartTime ) * fSpeed;
-	return fRaw > 0.0f ? fRaw : 0.0f;
+	(void)fModelClock;
+	UpdateLocalClock();
+	return fLocalClock;
 }
 
 float granny_control::ClampedLocalClock( float fModelClock ) const
@@ -158,13 +229,17 @@ float granny_control::ClampedLocalClock( float fModelClock ) const
 	}
 
 	const float fRaw = RawLocalClock( fModelClock );
-	// A finite clip stops at its last frame once it has played its loops out,
-	// rather than wrapping back to the start. A loop count of zero never does.
-	if ( nLoopCount > 0 && fRaw >= static_cast<float>( nLoopCount ) * fPeriod )
+	if ( fRaw <= 0.0f )
+	{
+		return 0.0f;
+	}
+	// A finite clip stops wrapping on its last pass; its accumulated raw clock
+	// can then exceed one period, and the public getter holds the final frame.
+	if ( fRaw >= fPeriod )
 	{
 		return fPeriod;
 	}
-	return fmodf( fRaw, fPeriod );
+	return fRaw;
 }
 
 void granny_control::LoopFlags( float fModelClock, bool *pbForwards,
@@ -186,15 +261,10 @@ void granny_control::LoopFlags( float fModelClock, bool *pbForwards,
 	{
 		return;
 	}
-	// Which period this is. Past the last one the clip holds its final frame, so
-	// the index stops at the last rather than running on.
-	int32_t nIndex = static_cast<int32_t>( RawLocalClock( fModelClock ) / fPeriod );
-	if ( nIndex > nLoopCount - 1 )
-	{
-		nIndex = nLoopCount - 1;
-	}
-	*pbBackwards = nIndex > 0;
-	*pbForwards = nIndex < nLoopCount - 1;
+	// A clock read consumes any pending model delta and updates nLoopIndex.
+	RawLocalClock( fModelClock );
+	*pbBackwards = nLoopIndex > 0;
+	*pbForwards = nLoopIndex < nLoopCount - 1;
 }
 
 float granny_control::EffectiveWeight( float fModelClock ) const
@@ -304,15 +374,14 @@ GR2_API( void ) GrannySetControlRawLocalClock( granny_control *Control,
 {
 	GR2_TRACE( "Control={} LocalClock={}", Control, LocalClock );
 
-	if ( Control == 0 || Control->pTarget == nullptr || Control->fSpeed == 0.0f )
+	if ( Control == 0 )
 	{
 		return;
 	}
-	// Move the start time so that right now the local clock reads this, and let
-	// it carry on from there. Measured: setting it to 0.658 at a model clock of
-	// 1.0 and advancing to 1.5 gives 1.158, so the offset persists rather than
-	// the clock being pinned.
-	Control->fStartTime = Control->pTarget->fClock - LocalClock / Control->fSpeed;
+	// The original writes the local clock directly and discards any queued model
+	// delta. Later SetModelClock calls continue advancing it from this value.
+	Control->fLocalClock = LocalClock;
+	Control->fPendingClockDelta = 0.0f;
 }
 
 GR2_API( granny_real32 ) GrannyGetControlDuration( granny_control const *Control )

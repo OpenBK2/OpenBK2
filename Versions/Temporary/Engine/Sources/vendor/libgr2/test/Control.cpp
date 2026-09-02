@@ -8,7 +8,7 @@
 // The corpus side of that measurement is scripts/port/gr2control.py, which
 // replays fifteen scenarios per file against both implementations. It cannot be
 // a unit test: it needs the DLL and it needs the corpus. What it reported,
-// including the two things that still differ, is in docs/GrannyReplacement.md.
+// including the remaining known difference, is in docs/GrannyReplacement.md.
 
 #include "Control.h"
 #include "ModelInstance.h"
@@ -236,6 +236,36 @@ TEST( Control, TheLocalClockClampsAtOnePeriodAndWrapsWhenLooping )
 	GrannyFreeModelInstance( pInstance );
 }
 
+TEST( Control, FractionalLoopBoundariesAdvanceLikeTheOriginalDll )
+{
+	// Infantry root motion reads this clock. Granny advances float deltas, so at
+	// this boundary it exposes a near-end sample where absolute fmod gives zero.
+	CClip clip( 3, 0.3f );
+	granny_model_instance *pInstance = GrannyInstantiateModel( clip.Model() );
+	granny_control *pControl = Bind( clip, pInstance );
+	ASSERT_NE( nullptr, pControl );
+	GrannySetControlLoopCount( pControl, 0 );
+	GrannySetControlSpeed( pControl, 1.5f );
+
+	float fBoundaryLocal = 0.0f;
+	for ( int32_t i = 0; i <= 16; ++i )
+	{
+		const float fClock = static_cast<float>(
+			static_cast<double>( i ) * static_cast<double>( clip.Duration() ) / 6.0 );
+		GrannySetModelClock( pInstance, fClock );
+		fBoundaryLocal = GrannyGetControlClampedLocalClock( pControl );
+	}
+	EXPECT_GT( fBoundaryLocal, 0.99f * clip.Duration() );
+
+	const float fNextClock = static_cast<float>(
+		17.0 * static_cast<double>( clip.Duration() ) / 6.0 );
+	GrannySetModelClock( pInstance, fNextClock );
+	EXPECT_NEAR( 0.25f * clip.Duration(),
+	             GrannyGetControlClampedLocalClock( pControl ), 1e-6f );
+
+	GrannyFreeModelInstance( pInstance );
+}
+
 TEST( Control, SpeedScalesTheClockAndTheDuration )
 {
 	CClip clip( 3, 2.0f );
@@ -251,14 +281,14 @@ TEST( Control, SpeedScalesTheClockAndTheDuration )
 	GrannySetControlSpeed( pControl, 0.5f );
 	EXPECT_FLOAT_EQ( 4.0f, GrannyGetControlDuration( pControl ) );
 	GrannySetModelClock( pInstance, 1.0f );
-	EXPECT_FLOAT_EQ( 0.5f, GrannyGetControlClampedLocalClock( pControl ) );
+	EXPECT_FLOAT_EQ( 0.875f, GrannyGetControlClampedLocalClock( pControl ) );
 
-	// A negative speed keeps the duration positive, which is measured and not
-	// obvious: the clip simply never advances.
+	// A speed change applies to subsequent model-clock deltas rather than
+	// recalculating the control from its absolute start time.
 	GrannySetControlSpeed( pControl, -1.0f );
 	EXPECT_FLOAT_EQ( 2.0f, GrannyGetControlDuration( pControl ) );
-	GrannySetModelClock( pInstance, 1.0f );
-	EXPECT_FLOAT_EQ( 0.0f, GrannyGetControlClampedLocalClock( pControl ) );
+	GrannySetModelClock( pInstance, 1.25f );
+	EXPECT_FLOAT_EQ( 0.625f, GrannyGetControlClampedLocalClock( pControl ) );
 
 	GrannyFreeModelInstance( pInstance );
 }

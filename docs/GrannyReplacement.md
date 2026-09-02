@@ -367,11 +367,16 @@ harness is `scripts/port/gr2control.py`: it replays fifteen scenarios per file
 against both implementations and compares the transcripts, and it is the
 record-and-replay rig this document asked for before M4 rather than after.
 
-The clock, with `raw = (modelClock - startTime) * speed` floored at zero:
+The clock is stateful. Each `SetModelClock` queues the float difference from the
+control's previous model clock. On the next local-clock read, the control adds
+`pendingDelta * speed` to its stored local clock, updates its loop index, and
+subtracts whole float periods when another loop is available. This order and its
+intermediate float roundings match the original DLL; an absolute
+`fmod((modelClock - startTime) * speed, duration)` does not.
 
 | | |
 |---|---|
-| clamped local clock | `raw` modulo the duration, except that once `raw` reaches `loopCount` whole periods it stops at the duration instead of wrapping. A loop count of zero never stops |
+| clamped local clock | the stateful local clock clamped to `[0, duration]`; wrapping has already updated it, except on the last pass of a finite control, which holds at the duration. A loop count of zero wraps forever |
 | `GetControlDuration` | `loopCount * duration / abs(speed)`, and the bit pattern `0x7f0fffff` when the loop count is zero |
 | `GetControlDurationLeft` | that duration minus `modelClock - startTime`, which is model time and not local time, and which goes negative |
 | `IsComplete` | **only ever true after `CompleteControlAt`**, and only once the clock reaches the time it was given. A clip that has simply finished playing is not complete |
@@ -417,22 +422,15 @@ neighbour, which is a visible pop once per loop.
 
 #### What still differs
 
-Over 200 files and fifteen scenarios each, everything above agrees. Two things
-do not, and neither is reachable in a way the game can see.
-
-- **A local clock landing exactly on a multiple of the period**, where `fmod`
-  gives zero and the DLL gives the period. A float knife edge in the wrap
-  arithmetic. For a looping clip the two answers are the same pose, because the
-  last key and the first are the same keyframe.
-- **The sign of a sampled quaternion**, on 1.3% of samples, and the two-clip
-  blends that inherit it. q and -q are the same rotation and nothing downstream
-  can tell them apart: the matrix build is quadratic in the components and
-  `GrannyPostMultiplyBy` is bilinear, so the world and composite matrices are
-  identical either way. The DLL negates on bones whose rotation passes through
-  180 degrees. Five rules were fitted and rejected, and the choice is not
-  stateful; `granny_bound_transform_track` in `granny211.h` carries a
-  `QuaternionMode` byte computed when a clip is bound, which is very likely where
-  the decision lives and is not readable from outside.
+The remaining known difference is **the sign of a sampled quaternion**, on 1.3%
+of samples, and the two-clip blends that inherit it. q and -q are the same
+rotation and nothing downstream can tell them apart: the matrix build is
+quadratic in the components and `GrannyPostMultiplyBy` is bilinear, so the world
+and composite matrices are identical either way. The DLL negates on bones whose
+rotation passes through 180 degrees. Five rules were fitted and rejected, and
+the choice is not stateful; `granny_bound_transform_track` in `granny211.h`
+carries a `QuaternionMode` byte computed when a clip is bound, which is very
+likely where the decision lives and is not readable from outside.
 
 A third difference, the frame where an ease-in's weight first became non-zero,
 turned out to be the missing weight floor above and is gone.

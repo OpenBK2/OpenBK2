@@ -31,9 +31,8 @@ struct granny_model_instance
 
 	//! Where this instance is in time, in seconds.
 	//!
-	//! Zero at instantiation. Nothing among the 54 entry points reads it back, so
-	//! its only visible effect is on sampling, and every control bound here reads
-	//! its own clock and weight out of it.
+	//! Zero at instantiation. Ease, completion, and duration-left queries read it;
+	//! SetModelClock also queues its change on every control for stateful sampling.
 	float fClock = 0.0f;
 
 	//! The clips playing against this instance, in the order they were bound.

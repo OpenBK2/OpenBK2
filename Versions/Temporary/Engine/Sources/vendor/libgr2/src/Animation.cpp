@@ -219,6 +219,9 @@ GR2_API( granny_control * )
 		pControl->pMask = group.pMask;
 		pControl->nAccumulation = group.nAccumulation;
 		pControl->fStartTime = builder->fStartTime;
+		// Granny initializes the control's own model clock at the requested start
+		// time; later model-clock assignments are queued as deltas from here.
+		pControl->fClock = builder->fStartTime;
 
 		group.pTarget->Controls.push_back( pControl );
 		if ( pFirst == nullptr )
