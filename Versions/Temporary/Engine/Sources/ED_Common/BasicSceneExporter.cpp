@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "BasicSceneExporter.h"
 #include "MapEditorLib/ManipulatorManager.h"
@@ -152,7 +153,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	// check source sife existance
 	if ( !NFile::DoesFileExist( szSrcScenePath ) ) 
 	{
-		const std::string szError = StrFmt( "Object \"%s\" (of type \"%s\") source file \"%s\" doesn't exist!\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szSrcScenePath.c_str() );
+		const std::string szError = fmt::format( "Object \"{}\" (of type \"{}\") source file \"{}\" doesn't exist!\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szSrcScenePath.c_str() );
 		Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
@@ -163,7 +164,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 		std::string _szDestinationPath = szDestinationFolder + std::to_string(  pManipulator->GetID( "" ) );
 		if ( !NFile::DoesFileExist( _szDestinationPath ) ) 
 		{
-			const std::string szError = StrFmt( "Object \"%s\" (of type \"%s\") destination file \"%s\" doesn't exist (not exported yet?)\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szDestinationPath.c_str() );
+			const std::string szError = fmt::format( "Object \"{}\" (of type \"{}\") destination file \"{}\" doesn't exist (not exported yet?)\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szDestinationPath.c_str() );
 			Log( LT_ERROR, szError );
 			return ER_FAIL;
 		}
@@ -176,7 +177,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	}
 	catch ( ... ) 
 	{
-		const std::string szError = StrFmt( "General fail during check object \"%s\" of type \"%s\"\n", szObjName.c_str(), rszObjectTypeName.c_str() );
+		const std::string szError = fmt::format( "General fail during check object \"{}\" of type \"{}\"\n", szObjName.c_str(), rszObjectTypeName.c_str() );
 		Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}

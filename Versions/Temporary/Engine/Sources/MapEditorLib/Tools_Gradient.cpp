@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "Tools_Gradient.h"
@@ -61,7 +62,7 @@ void SGradient::UpdateHeightRanges()
 
 bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange )
 {
-	NI_ASSERT( ( rRange.max - rRange.min ) > FP_EPSILON, StrFmt( "Invalid range: %g %g\n", rRange.min, rRange.max ) );
+	NI_ASSERT( ( rRange.max - rRange.min ) > FP_EPSILON, fmt::format( "Invalid range: {:g} {:g}\n", rRange.min, rRange.max ) );
 	if ( ( rRange.max - rRange.min ) <= FP_EPSILON )
 	{
 		return false;
@@ -100,13 +101,13 @@ bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint
 
 bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated ) const
 {
-	NI_ASSERT( pfValue != 0, StrFmt( "Invalid parameter: pfValue == 0" ) );
+	NI_ASSERT( pfValue != 0, fmt::format( "Invalid parameter: pfValue == 0" ) );
 	NI_ASSERT( ( ( heightList.size() > 2 ) && isSquareInterpolated ) ||
 						 ( ( heightList.size() > 1 ) && !isSquareInterpolated ),
-						 StrFmt( "HeightList size not enough: %d", heightList.size() ) );
-	NI_ASSERT( range.min != range.max, StrFmt( "Invalid range: (%g, %g)", range.min, range.max ) );
+						 fmt::format( "HeightList size not enough: {}", heightList.size() ) );
+	NI_ASSERT( range.min != range.max, fmt::format( "Invalid range: ({:g}, {:g})", range.min, range.max ) );
 	NI_ASSERT( ( range.min <= fPosition ) && ( range.max >= fPosition ),
-						 StrFmt( "Invalid parameter: %g, must be in range: (%g, %g)", fPosition, range.min, range.max ) );
+						 fmt::format( "Invalid parameter: {:g}, must be in range: ({:g}, {:g})", fPosition, range.min, range.max ) );
 	if ( pfValue == 0 )
 	{
 		return false;

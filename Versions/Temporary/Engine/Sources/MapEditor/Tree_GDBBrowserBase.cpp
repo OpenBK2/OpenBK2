@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
@@ -1065,7 +1066,7 @@ void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const std::strin
 		//
 		while ( bExists )
 		{
-			( *pszName ) = szBaseName + StrFmt( " (%u)", nNumber );
+			( *pszName ) = szBaseName + fmt::format( " ({})", nNumber );
       if ( bExtendExtention ) 
 			{
 				CStringManager::ExtendFileExtention( pszName, ".xdb" );

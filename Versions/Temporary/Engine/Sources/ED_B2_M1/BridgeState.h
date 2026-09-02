@@ -1,6 +1,7 @@
 
 #pragma once
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
 #include "BridgeInfoData.h"
@@ -36,7 +37,7 @@ class CBridgeState : public CMapObjectState
 	//конструкторы и операторы присваивания
 	CBridgeState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
-		NI_ASSERT( pParentState != 0, StrFmt( "CBridgeState(): pParentState == 0" ) );
+		NI_ASSERT( pParentState != 0, fmt::format( "CBridgeState(): pParentState == 0" ) );
 		ClearData();
 	}
 	//

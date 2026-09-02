@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -289,7 +290,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		//
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = 0;
 		pBridgeRPGStats = dynamic_cast<const NDb::SBridgeRPGStats*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
-		NI_ASSERT( pBridgeRPGStats != 0, StrFmt( "%s not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) ); 
+		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) ); 
 		//
 		if ( bPlace )
 		{

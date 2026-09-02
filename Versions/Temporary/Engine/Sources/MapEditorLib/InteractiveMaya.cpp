@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include <algorithm>
 
@@ -171,7 +172,7 @@ bool CInteractiveMaya::TransactCommand( const std::string &szScript, const std::
 			else
 			{
 				pLogger->Log( LT_ERROR,
-						StrFmt("\nCommand FAILED: result must be \"%s\" (actual: \"%s\")\n", szExpectedResult.c_str(), szResult.c_str())
+						fmt::format("\nCommand FAILED: result must be \"{}\" (actual: \"{}\")\n", szExpectedResult.c_str(), szResult.c_str())
 						);
 			}
 		}

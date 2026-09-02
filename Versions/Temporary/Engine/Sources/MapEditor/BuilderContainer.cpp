@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/BuilderFactory.h"
 #include "MapEditorLib/StringManager.h"
@@ -138,7 +139,7 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 	}
 	else
 	{
-		( *pszBuildDataName ) = StrFmt( "Editor\\Builder\\%s.xdb", pszBuildDataTypeName->c_str() );
+		( *pszBuildDataName ) = fmt::format( "Editor\\Builder\\{}.xdb", pszBuildDataTypeName->c_str() );
 		rBuildDataTypeNameMap[( *pszBuildDataTypeName )] = ( *pszBuildDataName );
 	}
 	//
@@ -152,7 +153,7 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 		objectSet.szObjectTypeName = ( *pszBuildDataName ); 
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( *pszBuildDataName ) );
 		//
-		const std::string szTemporaryLabel = StrFmt( "%s%c%s", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
+		const std::string szTemporaryLabel = fmt::format( "{}{:c}{}", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
 		//
 		CPCBuildDataDialog buildDataDialog( AfxGetMainWnd() );
 		buildDataDialog.SetBuildDataParams( pBuildDataParams );

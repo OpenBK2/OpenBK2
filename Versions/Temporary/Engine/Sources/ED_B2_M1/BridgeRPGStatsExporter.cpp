@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
@@ -25,7 +26,7 @@ REGISTER_EXPORTER_IN_DLL( BridgeRPGStats, CBridgeRPGStatsExporter )
 void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryName, const std::string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry )
 {
 	NI_ASSERT( pszAIGeometryName != 0, "CBridgeRPGStatsExporter::GetTempAIGeometryName() pszAIGeometryName == 0" );
-	const std::string szKey = StrFmt( "%s%s\\%s", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
+	const std::string szKey = fmt::format( "{}{}\\{}", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
 	CTempNamesMap::const_iterator pos = tempNamesMap.find( szKey );
 	if ( pos != tempNamesMap.end() )
 		*pszAIGeometryName = pos->second;
@@ -67,7 +68,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, con
 		return;
 	}
 	CVec2 vDifference = ( rvSource - rvDestination ); 
-	NI_ASSERT( ( vDifference.x > 0.0f ) || ( vDifference.y > 0.0f ), StrFmt( "CBridgeRPGStatsExporter:EnlargeArray() wrong sign: (%g,%g)", vDifference.x, vDifference.y ) );
+	NI_ASSERT( ( vDifference.x > 0.0f ) || ( vDifference.y > 0.0f ), fmt::format( "CBridgeRPGStatsExporter:EnlargeArray() wrong sign: ({:g},{:g})", vDifference.x, vDifference.y ) );
 	CTPoint<int> difference( 0.5f + ( vDifference.x / AI_TILE_SIZE ), 0.5f + ( vDifference.y / AI_TILE_SIZE ) );
 	if ( ( difference.x == 0 ) && ( difference.y == 0 ) )
 	{
@@ -186,7 +187,7 @@ void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination, con
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::SetArrayInfo() pDestination == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
 	CTPoint<int> sourceSize( rSource.GetSizeX(), rSource.GetSizeY() );
-	NI_ASSERT( size == sourceSize, StrFmt( "CBridgeRPGStatsExporter::SetArrayInfo() wrong size: dest:(%d,%d), source(%d,%d) ", size.x, size.y, sourceSize.x, sourceSize.y ) );
+	NI_ASSERT( size == sourceSize, fmt::format( "CBridgeRPGStatsExporter::SetArrayInfo() wrong size: dest:({},{}), source({},{}) ", size.x, size.y, sourceSize.x, sourceSize.y ) );
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 	{
 		for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
@@ -357,9 +358,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		bResult = bResult && CreateObjectPassability( szMAIDestination, &bridgePassabilityArray, &vBridgePassabilityOrigin );
 		bResult = bResult && CreateObjectPassability( szCenterDestination, &centerPassabilityArray, &vCenterPassabilityOrigin );
 		bResult = bResult && CreateObjectPassability( szBorderDestination, &borderPassabilityArray, &vBorderPassabilityOrigin );
-		//Trace2DByteArray( bridgePassabilityArray, StrFmt( " (%g,%g)", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
-		//Trace2DByteArray( centerPassabilityArray, StrFmt( " (%g,%g)", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
-		//Trace2DByteArray( borderPassabilityArray, StrFmt( " (%g,%g)", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
+		//Trace2DByteArray( bridgePassabilityArray, fmt::format( " ({:g},{:g})", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
+		//Trace2DByteArray( centerPassabilityArray, fmt::format( " ({:g},{:g})", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
+		//Trace2DByteArray( borderPassabilityArray, fmt::format( " ({:g},{:g})", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
 		if ( bResult &&
 			( ( bridgePassabilityArray.GetSizeX() > 0 ) && ( bridgePassabilityArray.GetSizeY() > 0 ) ) &&
 			( ( centerPassabilityArray.GetSizeX() > 0 ) && ( centerPassabilityArray.GetSizeY() > 0 ) ) &&
@@ -431,9 +432,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			{
 				return ER_SUCCESS;
 			}
-			//Trace2DByteArray( bridgePassabilityArray, StrFmt( " (%g,%g)", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
-			//Trace2DByteArray( centerPassabilityArray, StrFmt( " (%g,%g)", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
-			//Trace2DByteArray( borderPassabilityArray, StrFmt( " (%g,%g)", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
+			//Trace2DByteArray( bridgePassabilityArray, fmt::format( " ({:g},{:g})", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
+			//Trace2DByteArray( centerPassabilityArray, fmt::format( " ({:g},{:g})", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
+			//Trace2DByteArray( borderPassabilityArray, fmt::format( " ({:g},{:g})", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
 			// находим максимальный origin
 			vPassabilityOrigin = vBridgePassabilityOrigin;
 			if ( vCenterPassabilityOrigin.x > vPassabilityOrigin.x )
@@ -478,17 +479,17 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			EnlargeArray( &bridgePassabilityArray, size );
 			EnlargeArray( &centerPassabilityArray, size );
 			EnlargeArray( &borderPassabilityArray, size );
-			//Trace2DByteArray( bridgePassabilityArray, StrFmt( " (%g,%g)", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
-			//Trace2DByteArray( centerPassabilityArray, StrFmt( " (%g,%g)", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
-			//Trace2DByteArray( borderPassabilityArray, StrFmt( " (%g,%g)", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
+			//Trace2DByteArray( bridgePassabilityArray, fmt::format( " ({:g},{:g})", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
+			//Trace2DByteArray( centerPassabilityArray, fmt::format( " ({:g},{:g})", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
+			//Trace2DByteArray( borderPassabilityArray, fmt::format( " ({:g},{:g})", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
 			passabilityArray.SetSizes( size.x, size.y );
 			passabilityArray.FillZero();
 			SetArrayInfo( &passabilityArray, bridgePassabilityArray, SHIP_LOCK_TILE );
 			SetArrayInfo( &passabilityArray, centerPassabilityArray, UNLOCK_TILE );
 			SetArrayInfo( &passabilityArray, borderPassabilityArray, LOCK_TILE );
-			//Trace2DByteArray( passabilityArray, StrFmt( " (%g,%g)", vPassabilityOrigin.x, vPassabilityOrigin.y ) );
+			//Trace2DByteArray( passabilityArray, fmt::format( " ({:g},{:g})", vPassabilityOrigin.x, vPassabilityOrigin.y ) );
 			EnlargeXSide( &passabilityArray, &vPassabilityOrigin, 2 );
-			//Trace2DByteArray( passabilityArray, StrFmt( " (%g,%g)", vPassabilityOrigin.x, vPassabilityOrigin.y ) );
+			//Trace2DByteArray( passabilityArray, fmt::format( " ({:g},{:g})", vPassabilityOrigin.x, vPassabilityOrigin.y ) );
 			NormalizePassabilityArray( &passabilityArray, &vPassabilityOrigin );
 			//vPassabilityOrigin.y = int( vPassabilityOrigin.y + 0.5f );
 			passabilityArrayList.push_back( passabilityArray );
@@ -550,7 +551,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			bResult = bResult && CManipulatorManager::SetVec2(		*itPassabilityOrigin,	pManipulator, ( *itVisualObject ) + ".Origin" );
 			bResult = bResult && CManipulatorManager::SetVec2(		*itSize,							pManipulator, ( *itVisualObject ) + ".Size" );
 			//
-			Trace2DByteArray( *itPassabilityArray, StrFmt( " (%g,%g)", itPassabilityOrigin->x, itPassabilityOrigin->y ) );
+			Trace2DByteArray( *itPassabilityArray, fmt::format( " ({:g},{:g})", itPassabilityOrigin->x, itPassabilityOrigin->y ) );
 			//
 			++itPassabilityArray;
 			++itPassabilityOrigin;

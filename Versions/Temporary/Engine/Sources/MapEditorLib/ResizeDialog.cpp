@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Tools_Registry.h"
 #include "Interface_UserData.h"
@@ -327,19 +328,19 @@ void CResizeDialog::LoadResizeDialogOptions()
 			for ( int nParameterIndex = 0; nParameterIndex < nParameters; ++nParameterIndex )
 			{
 				std::vector<int>::iterator pos = resizeDialogOptions.nParameters.insert( resizeDialogOptions.nParameters.end(), 0 );
-				std::string szFormat = StrFmt( "nParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "nParam{}", nParameterIndex );
 				registrySection.LoadNumber( szFormat.c_str(), "%d", &( *pos ), 0 );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < szParameters; ++nParameterIndex )
 			{
 				std::vector<std::string>::iterator pos = resizeDialogOptions.szParameters.insert( resizeDialogOptions.szParameters.end(), "" );
-				std::string szFormat = StrFmt( "szParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "szParam{}", nParameterIndex );
 				registrySection.LoadString( szFormat.c_str(), &( *pos ), "" );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < fParameters; ++nParameterIndex )
 			{
 				std::vector<float>::iterator pos = resizeDialogOptions.fParameters.insert( resizeDialogOptions.fParameters.end(), 0.0f );
-				std::string szFormat = StrFmt( "fParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "fParam{}", nParameterIndex );
 				registrySection.LoadNumber( szFormat.c_str(), "%g", &( *pos ), 0.0f );
 			}
 		}
@@ -372,17 +373,17 @@ void CResizeDialog::SaveResizeDialogOptions()
 			registrySection.SaveNumber( "fParams", "%d", resizeDialogOptions.fParameters.size() );
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.nParameters.size(); ++nParameterIndex )
 			{
-				std::string szFormat = StrFmt( "nParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "nParam{}", nParameterIndex );
 				registrySection.SaveNumber( szFormat.c_str(), "%d", resizeDialogOptions.nParameters[nParameterIndex] );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.szParameters.size(); ++nParameterIndex )
 			{
-				std::string szFormat = StrFmt( "szParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "szParam{}", nParameterIndex );
 				registrySection.SaveString( szFormat.c_str(), resizeDialogOptions.szParameters[nParameterIndex] );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.fParameters.size(); ++nParameterIndex )
 			{
-				std::string szFormat = StrFmt( "fParam%d", nParameterIndex );
+				std::string szFormat = fmt::format( "fParam{}", nParameterIndex );
 				registrySection.SaveNumber( szFormat.c_str(), "%g", resizeDialogOptions.fParameters[nParameterIndex] );
 			}
 		}

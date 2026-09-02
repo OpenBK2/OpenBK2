@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -521,7 +522,7 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 		std::string szIndices;
 		for ( int i = 0; i < xposList.size(); ++i )
 		{
-			szIndices += StrFmt( "%d ", xposList[i] );
+			szIndices += fmt::format( "{} ", xposList[i] );
 		}
 		DebugTrace( "%d: %s", xposList.size(), szIndices.c_str() );
 		// проверяем на четность
@@ -932,7 +933,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	{
 		NI_ASSERT( ( pTileMap->GetSizeX() >= terrainSize.x ) &&
 							 ( pTileMap->GetSizeY() >= terrainSize.y ),
-							 StrFmt( "FillObjectSet(): TileMap.size: [%d. %d], terrainSize: [%d, %d]",
+							 fmt::format( "FillObjectSet(): TileMap.size: [{}. {}], terrainSize: [{}, {}]",
 											 pTileMap->GetSizeX(),
 											 pTileMap->GetSizeY(),
 											 terrainSize.x,

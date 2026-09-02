@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Tools_Resources.h"
 #include "Misc/StrProc.h"
@@ -223,7 +224,7 @@ bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnu
 
 void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
-	NI_ASSERT( pEnumFolderMap != 0, StrFmt( "Wrong parameter: %x\n", pEnumFolderMap ) );
+	NI_ASSERT( pEnumFolderMap != 0, fmt::format( "Wrong parameter: {:x}\n", pEnumFolderMap ) );
 	if ( pEnumFolderMap )
 	{
 		( *pEnumFolderMap )[rszFolder][rszRelativeFolder] = 0;
@@ -313,7 +314,7 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 				}
 			}
 		}
-		StrFmt( "Count: %d", nCount );
+		fmt::format( "Count: {}", nCount );
 	}
 }
 

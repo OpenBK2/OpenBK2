@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -176,7 +177,7 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 		// Запускаем Maya
 		const std::string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
 		const std::string szGUIMode = bGUIMode ? " " : " -batch ";
-		const std::string szCommandLine = StrFmt( "%s%s-script \"%s\" -log \"%s\"", 
+		const std::string szCommandLine = fmt::format( "{}{}-script \"{}\" -log \"{}\"", 
 																				szUserDataToolFileName.c_str(),
 																				szGUIMode.c_str(),
 																				szScriptFileName.c_str(),
@@ -293,7 +294,7 @@ bool BuildSrcFilePath( std::string *pszFilePath, IManipulator *pManipulator, con
 	{
 		std::string szType;
 		pManipulator->GetType( std::string(), &szType );
-		NI_ASSERT( false, StrFmt("Field %s not found in object of type %s", szRefFieldDBPath.c_str(), szType.c_str()) );
+		NI_ASSERT( false, fmt::format("Field {} not found in object of type {}", szRefFieldDBPath.c_str(), szType.c_str()) );
 	}
 
 	return false;
@@ -321,7 +322,7 @@ void GetMayaInstallPath( std::string *szPath, const std::string &szMayaVersion )
 	int nSize = nMaxSize;
 	uint8_t buffer[nMaxSize];
 	int32_t error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
-			StrFmt("SOFTWARE\\Alias|Wavefront\\Maya\\%s\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()),
+			fmt::format("SOFTWARE\\Alias|Wavefront\\Maya\\{}\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()).c_str(),
 			0, &type,
 			buffer, (LPDWORD)&nSize
 			);
@@ -353,7 +354,7 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 			{
 				std::string szLocalMayaScriptPath( szMayaScriptPath );
 				NormalizeFilePath( &szLocalMayaScriptPath );
-				szScript += StrFmt( "putenv \"MAYA_SCRIPT_PATH\" (\"%s;\" + `getenv \"MAYA_SCRIPT_PATH\"`)",
+				szScript += fmt::format( "putenv \"MAYA_SCRIPT_PATH\" (\"{};\" + `getenv \"MAYA_SCRIPT_PATH\"`)",
 						szLocalMayaScriptPath.c_str()
 						);
 				szScript += ";\n";
@@ -415,8 +416,8 @@ bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool
 	// error - stream doesn't exist
 	ILogger *pLogger = NLog::GetLogger();
 	const ELogOutputType eLogType = bReportAsError ? LT_ERROR : LT_IMPORTANT;
-	pLogger->Log( eLogType, StrFmt("Can't access file - possibly it still not exist\n") );
-	pLogger->Log( eLogType, StrFmt("\tFile name: %s\n", szFileName.c_str()) );
+	pLogger->Log( eLogType, fmt::format("Can't access file - possibly it still not exist\n") );
+	pLogger->Log( eLogType, fmt::format("\tFile name: {}\n", szFileName.c_str()) );
 	return false;
 }
 

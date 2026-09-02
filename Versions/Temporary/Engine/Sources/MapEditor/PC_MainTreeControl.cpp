@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
 #include "PC_Constants.h"
@@ -1278,7 +1279,7 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 		return false;
 	}
 	//
-	szNewText = StrFmt( "[%d]", nNewIndex );
+	szNewText = fmt::format( "[{}]", nNewIndex );
 	szNewNodeName = szArrayName + LEVEL_SEPARATOR_CHAR + szNewText;
 	EPCIEType nType = typePCIEMnemonics.Get( pDesc, true );
 	//
@@ -1300,7 +1301,7 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 		++nNewIndex;
 		while ( hSiblingItem )
 		{
-			szNewText = StrFmt( "[%d]", nNewIndex );
+			szNewText = fmt::format( "[{}]", nNewIndex );
 			SetItemText( hSiblingItem, szNewText.c_str() );
 			hSiblingItem = GetNextSiblingItem( hSiblingItem );
 			++nNewIndex;
@@ -1333,7 +1334,7 @@ bool CPCMainTreeControl::DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 		HTREEITEM hSiblingItem = GetNextSiblingItem( hItem );
 		while ( hSiblingItem )
 		{
-			szNewText = StrFmt( "[%d]", nDeleteIndex );
+			szNewText = fmt::format( "[{}]", nDeleteIndex );
 			SetItemText( hSiblingItem, szNewText.c_str() );
 			hSiblingItem = GetNextSiblingItem( hSiblingItem );
 			++nDeleteIndex;
@@ -1629,22 +1630,22 @@ bool CPCMainTreeControl::GetSelectedPCItemDescription( std::string *pszName )
 			{
 				if ( szGUID.empty() )
 				{
-					szObjectID =  StrFmt( "%s:%d ", GetObjectSet().szObjectTypeName.c_str(), GetObjectSet().objectNameSet.begin()->first );
+					szObjectID =  fmt::format( "{}:{} ", GetObjectSet().szObjectTypeName.c_str(), GetObjectSet().objectNameSet.begin()->first );
 				}
 				else
 				{
-					szObjectID =  StrFmt( "%s:%d {%s} ", GetObjectSet().szObjectTypeName.c_str(), GetObjectSet().objectNameSet.begin()->first, szGUID.c_str() );
+					szObjectID =  fmt::format( "{}:{} {{{}}} ", GetObjectSet().szObjectTypeName.c_str(), GetObjectSet().objectNameSet.begin()->first, szGUID.c_str() );
 				}
 			}
 			GetTreeItemName( hItem, &szObjectPropertyName );
 			const std::string szDescription = GetItemText( hItem, 2 );
 			if ( !szDescription.empty() )
 			{
-				( *pszName ) =  StrFmt( "%s%s (%s)", szObjectID.c_str(), szObjectPropertyName.c_str(), szDescription.c_str() );
+				( *pszName ) =  fmt::format( "{}{} ({})", szObjectID.c_str(), szObjectPropertyName.c_str(), szDescription.c_str() );
 			}
 			else
 			{
-				( *pszName ) = StrFmt( "%s%s", szObjectID.c_str(), szObjectPropertyName.c_str() );
+				( *pszName ) = fmt::format( "{}{}", szObjectID.c_str(), szObjectPropertyName.c_str() );
 			}	
 			/**/
 			return true;

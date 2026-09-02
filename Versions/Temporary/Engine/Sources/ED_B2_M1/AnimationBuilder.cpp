@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
@@ -127,13 +128,13 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 		NFile::CreatePath( szAnimParamsFolder.c_str() );
 		//
 		MEStartScript( &szScriptText, false );
-		szScriptText += StrFmt( "sysFile -del \"%s\";\r\n", szAnimParamsDestination.c_str() );
-		szScriptText += StrFmt( "file -o -f \"%s\";\r\n", szSource.c_str() );
-		szScriptText += StrFmt( "triangulateAll;\r\n" );
-		szScriptText += StrFmt( "string $AnimParamsMeshFFFFFFFF[] = `ls -dag -tr \"%s\"`;\r\n", ANIMATIONS_ROOT_JOINT );
-		szScriptText += StrFmt( "select -r $AnimParamsMeshFFFFFFFF;\r\n" );
-		szScriptText += StrFmt( "GrannyLoadSettings \"%s\";\r\n", GetGrannyExportSettingsFileName("Attribs").c_str() );
-		szScriptText += StrFmt( "GrannyExport -s on \"%s\";\r\n", szAnimParamsDestination.c_str() );
+		szScriptText += fmt::format( "sysFile -del \"{}\";\r\n", szAnimParamsDestination.c_str() );
+		szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
+		szScriptText += fmt::format( "triangulateAll;\r\n" );
+		szScriptText += fmt::format( "string $AnimParamsMeshFFFFFFFF[] = `ls -dag -tr \"{}\"`;\r\n", ANIMATIONS_ROOT_JOINT );
+		szScriptText += fmt::format( "select -r $AnimParamsMeshFFFFFFFF;\r\n" );
+		szScriptText += fmt::format( "GrannyLoadSettings \"{}\";\r\n", GetGrannyExportSettingsFileName("Attribs").c_str() );
+		szScriptText += fmt::format( "GrannyExport -s on \"{}\";\r\n", szAnimParamsDestination.c_str() );
 		MEFinishScript( &szScriptText, false );
 		bResult = MERunScript( szScriptText, "Skeleton", true, false );
 		if ( bResult )
@@ -183,7 +184,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 					CGrannyBoneAttributesList attributesList;
 					if ( ReadAttributes( &attributesList, szAnimParamsDestination, ANIMATIONS_ROOT_JOINT, false ) == false )
 					{
-						const std::string szError = StrFmt( "Can't open animation params file \"%s\" to build/update animation\n", szAnimParamsDestination.c_str() );
+						const std::string szError = fmt::format( "Can't open animation params file \"{}\" to build/update animation\n", szAnimParamsDestination.c_str() );
 						NLog::GetLogger()->Log( LT_ERROR, szError );
 						return false;
 					}
@@ -215,7 +216,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 								NStr::ToLowerASCII( &szMnemonic );
 								if ( nNumber != INVALID_NODE_ID )
 								{
-									szAnimationName = StrFmt( "%s_%02d", szMnemonic.c_str(), nNumber ); 
+									szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber ); 
 								}
 								else
 								{
@@ -229,8 +230,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 									itAttribute->GetAttribute( "aabbindex", &nAABBIndex );
 									if ( nAABBIndex != INVALID_NODE_ID )
 									{
-										szAABBAName = StrFmt( "AABB_A%02d", nAABBIndex );
-										szAABBDName = StrFmt( "AABB_D%02d", nAABBIndex );
+										szAABBAName = fmt::format( "AABB_A{:02d}", nAABBIndex );
+										szAABBDName = fmt::format( "AABB_D{:02d}", nAABBIndex );
 									}
 								}
 								if ( bResult )
@@ -306,7 +307,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 				}
 				catch ( ... ) 
 				{
-					const std::string szError = StrFmt( "General error during build/update animation(s) from params file \"%s\"\n", szAnimParamsDestination.c_str() );
+					const std::string szError = fmt::format( "General error during build/update animation(s) from params file \"{}\"\n", szAnimParamsDestination.c_str() );
 					NLog::GetLogger()->Log( LT_ERROR, szError );
 					bResult = false;
 				}

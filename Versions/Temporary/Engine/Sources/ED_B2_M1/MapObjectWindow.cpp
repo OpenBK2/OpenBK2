@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -211,7 +212,7 @@ bool CMapObjectWindow::GetEditParameters( CMapObjectMultiState::SEditParameters 
 			{
 				pEditParameters->fDirection = 360.0f;
 			}
-			SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, StrFmt( "%g", pEditParameters->fDirection ) );
+			SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", pEditParameters->fDirection ) );
 			bCreateControls = false;
 		}
 	}
@@ -239,7 +240,7 @@ bool CMapObjectWindow::SetEditParameters( const CMapObjectMultiState::SEditParam
 	}
 	if ( ( rEditParameters.nFlags & MIMOSEP_DIRECTION ) > 0 )
 	{
-		SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, StrFmt( "%g", rEditParameters.fDirection ) );
+		SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", rEditParameters.fDirection ) );
 	}
 	if ( ( rEditParameters.nFlags & MIMOSEP_THUMBNAILS ) > 0 )
 	{

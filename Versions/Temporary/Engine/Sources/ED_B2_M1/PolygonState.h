@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tools_SceneDraw.h"
+#include <fmt/format.h>
 #include "MapEditorLib/MultiInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapInfoStoreInputState.h"
@@ -204,21 +205,21 @@ public:
 	CPolygonState() : nSelectedIndex( INVALID_NODE_ID ), nSelectedControlPoint( INVALID_NODE_ID )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
-		NI_ASSERT( pStoreInputState != 0, StrFmt( "CPolygonState(): pStoreInputState == 0" ) );
+		NI_ASSERT( pStoreInputState != 0, fmt::format( "CPolygonState(): pStoreInputState == 0" ) );
 		
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
 		
 		CPolygonSelectState *pPolygonSelectState = new CPolygonSelectState( this );
 		nStateIndex = AddInputState( pPolygonSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, StrFmt( "CPolygonState(): Wrong state number: %d (%d)", nStateIndex, IS_SELECT ) );
+		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CPolygonState(): Wrong state number: {} ({})", nStateIndex, IS_SELECT ) );
 
 		CPolygonEditState *pPolygonEditState = new CPolygonEditState( this );
 		nStateIndex = AddInputState( pPolygonEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, StrFmt( "CPolygonState(): Wrong state number: %d, (%d)", nStateIndex, IS_EDIT ) );
+		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, IS_EDIT ) );
 		
 		CPolygonAddState *pPolygonAddState = new CPolygonAddState( this );
 		nStateIndex = AddInputState( pPolygonAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, StrFmt( "CPolygonState(): Wrong state number: %d, (%d)", nStateIndex, IS_ADD ) );
+		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, IS_ADD ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

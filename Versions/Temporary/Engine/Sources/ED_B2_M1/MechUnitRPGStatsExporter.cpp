@@ -94,6 +94,7 @@
 
 */
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
@@ -209,7 +210,7 @@ struct SGunInfo
 				// два мэйнгана на одной платформе
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, "There are two main guns on one platform\n" );
-				pLogger->Log( LT_ERROR, StrFmt("\tPlatform: %s\n", szPlatform.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("\tPlatform: {}\n", szPlatform.c_str()) );
 				return (nMainGunIdx < nMainGunIdx2); 
 			}
 		}
@@ -231,7 +232,7 @@ struct SGunInfo
 					else
 					{
 						ILogger *pLogger = NLog::GetLogger();
-						pLogger->Log( LT_ERROR, StrFmt("Can't classify gun: %s\n", szShootPoint.c_str()) );
+						pLogger->Log( LT_ERROR, fmt::format("Can't classify gun: {}\n", szShootPoint.c_str()) );
 						return true;
 					}
 				}
@@ -253,7 +254,7 @@ struct SGunInfo
 				else
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt("Can't classify gun: %s\n", rOther.szShootPoint.c_str()) );
+					pLogger->Log( LT_ERROR, fmt::format("Can't classify gun: {}\n", rOther.szShootPoint.c_str()) );
 					return true;
 				}
 			}
@@ -689,7 +690,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	pItUnit->GetValue( "animdescs", &var );
 	int nNumDescs = var;
 	for ( int i = 0; i < nNumDescs; ++i )
-		pItUnit->RemoveNode( StrFmt( "animdescs.[%d].anims", i ) );
+		pItUnit->RemoveNode( fmt::format( "animdescs.[{}].anims", i ) );
 	pItUnit->RemoveNode( "animdescs" );
 	for ( int i = 0; i < NDb::__ANIMATION_TYPE_COUNTER; ++i )
 		pItUnit->InsertNode( "animdescs" );
@@ -713,7 +714,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	int nNumDamageLevels = var;
 	for ( int i = 0; i < nNumDamageLevels; ++i )
 	{
-		pItUnit->GetValue( StrFmt( "DamageLevels.[%d].VisObj", i ), &var );
+		pItUnit->GetValue( fmt::format( "DamageLevels.[{}].VisObj", i ), &var );
 		if ( !IsDBIDEmpty(var) )
 			visObjects.push_back( var.GetStr() );
 	}
@@ -743,7 +744,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 		int nNumAnimations = var;
 		for ( int j = 0; j < nNumAnimations; ++j )
 		{
-			pItSkeleton->GetValue( StrFmt( "Animations.[%d]", j ), &var );
+			pItSkeleton->GetValue( fmt::format( "Animations.[{}]", j ), &var );
 			if ( !IsDBIDEmpty(var) )
 			{
 				std::string szAddr = var.GetStr();
@@ -754,10 +755,10 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 				//get type and create entry
 				pAnimMan->GetValue( "Type", &var );
 				int nAnimType = typeAnimationMnemonics.GetValue( (std::string)var.GetStr() );
-				std::string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
+				std::string szDescName = fmt::format( "animdescs.[{}].anims", nAnimType );
 				pItUnit->InsertNode( szDescName );
 				pItUnit->GetValue( szDescName, &var );
-				szDescName += StrFmt( ".[%d]", ((int)var) - 1 );
+				szDescName += fmt::format( ".[{}]", ((int)var) - 1 );
 				//create aabb's and write indexes
 				pAnimMan->GetValue( "AABBAName", &var );
 				std::string szAABBAName = var.GetStr();
@@ -767,8 +768,8 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 				{
 					pItUnit->InsertNode( "aabb_as" );
 					pItUnit->InsertNode( "aabb_ds" );
-					CopyAABB2D( pAnimMan, pItUnit, "aabb_a", StrFmt( "aabb_as.[%d]", nAnimCounter ) );
-					CopyAABB2D( pAnimMan, pItUnit, "aabb_d", StrFmt( "aabb_ds.[%d]", nAnimCounter ) );
+					CopyAABB2D( pAnimMan, pItUnit, "aabb_a", fmt::format( "aabb_as.[{}]", nAnimCounter ) );
+					CopyAABB2D( pAnimMan, pItUnit, "aabb_d", fmt::format( "aabb_ds.[{}]", nAnimCounter ) );
 					var = CVariant( nAnimCounter );
 					pItUnit->SetValue( szDescName + ".AABB_A", var );
 					pItUnit->SetValue( szDescName + ".AABB_D", var );
@@ -802,16 +803,16 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 	for ( int i = 0; i< nPlatforms; ++i )
 	{
 		CPtr<IManipulator> pAttachedPlatformManipulator = 
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "platforms.[%d].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
 			ProcessMechUnitAnimations( pAttachedPlatformManipulator );
 
-		pUnitManipulator->GetValue( StrFmt( "platforms.[%d].guns", i ), &var );
+		pUnitManipulator->GetValue( fmt::format( "platforms.[{}].guns", i ), &var );
 		const int nGuns = var;
 		for ( int j = 0; j < nGuns; ++j )
 		{
 			CPtr<IManipulator> pAttachedGunManipulator = 
-				CManipulatorManager::CreateManipulatorFromReference( StrFmt( "platforms.[%d].guns.[%d].AttachedGunVisObj", i, j ), pUnitManipulator, 0, 0, 0 );
+				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].guns.[{}].AttachedGunVisObj", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
 				ProcessMechUnitAnimations( pAttachedGunManipulator );
 		}
@@ -826,9 +827,9 @@ static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAtt
 	for ( int i = 0; i < nVisObjects; ++i )
 	{
 		CPtr<IManipulator> pUnitSkeletonManipulator =
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "Models.[%d].Model.Skeleton", i ), pUnitManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "Models.[{}].Model.Skeleton", i ), pUnitManipulator, 0, 0, 0 );
 		CPtr<IManipulator> pAttachedSkeletonManipulator =
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "Models.[%d].Model.Skeleton", i ), pAttachedManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "Models.[{}].Model.Skeleton", i ), pAttachedManipulator, 0, 0, 0 );
 
 		if ( pUnitSkeletonManipulator && pAttachedSkeletonManipulator )
 		{
@@ -839,8 +840,8 @@ static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAtt
 			{
 				pAttachedSkeletonManipulator->InsertNode( "Animations" );
 
-				pUnitSkeletonManipulator->GetValue( StrFmt( "Animations[%d]", j ), &var );
-				pAttachedSkeletonManipulator->SetValue( StrFmt( "Animations[%d]", j ), var );
+				pUnitSkeletonManipulator->GetValue( fmt::format( "Animations[{}]", j ), &var );
+				pAttachedSkeletonManipulator->SetValue( fmt::format( "Animations[{}]", j ), var );
 			}
 		}
 	}
@@ -862,9 +863,9 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToObject( IManipulator *pUnitManip
 		pAttachedManipulator->InsertNode( "DamageLevels" );
 
 		CPtr<IManipulator> pObjDamageLevelManipulator = 
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "DamageLevels.[%d]", j ), pUnitManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "DamageLevels.[{}]", j ), pUnitManipulator, 0, 0, 0 );
 		CPtr<IManipulator> pAttachedDamagedLevelManipulator =
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "DamageLevels.[%d]", j ), pAttachedManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "DamageLevels.[{}]", j ), pAttachedManipulator, 0, 0, 0 );
 		CopyAnimationsTo( pUnitManipulator, pAttachedManipulator, "VisObj" );
 	}
 
@@ -878,16 +879,16 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 	for ( int i = 0; i< nPlatforms; ++i )
 	{
 		CPtr<IManipulator> pAttachedPlatformManipulator = 
-			CManipulatorManager::CreateManipulatorFromReference( StrFmt( "platforms.[%d].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
+			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
 			CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
 
-		pUnitManipulator->GetValue( StrFmt( "platforms.[%d].guns", i ), &var );
+		pUnitManipulator->GetValue( fmt::format( "platforms.[{}].guns", i ), &var );
 		const int nGuns = var;
 		for ( int j = 0; j < nGuns; ++j )
 		{
 			CPtr<IManipulator> pAttachedGunManipulator = 
-				CManipulatorManager::CreateManipulatorFromReference( StrFmt( "platforms.[%d].guns.[%d]", i, j ), pUnitManipulator, 0, 0, 0 );
+				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].guns.[{}]", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
 				CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
 		}
@@ -908,7 +909,7 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Can't find platform for gun\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tGun: %s\n", rGunLocator.szName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tGun: {}\n", rGunLocator.szName.c_str()) );
 	}
 	// возможная причина - пушка прикреплена к basis, хотя в модели есть basis_a
 
@@ -921,7 +922,7 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 
 static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std::vector<SGunInfo> &rGuns )
 {
-	const std::string szGunsDba = StrFmt( "platforms.[%d].guns", nPlatformIdx );
+	const std::string szGunsDba = fmt::format( "platforms.[{}].guns", nPlatformIdx );
 	
 	CVariant v;
 	if ( !pManipulator->GetValue( szGunsDba, &v ) )
@@ -931,12 +932,12 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 	std::vector<uint8_t> gunProcessed( rGuns.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
-		std::string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, i );
-		std::string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, i );
-		std::string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, i );
-		std::string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, i );
-		std::string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, i );
-		std::string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, i );
+		std::string szLocNameDBA = fmt::format( "platforms.[{}].guns.[{}].ShootPoint", nPlatformIdx, i );
+		std::string szDirectionDBA = fmt::format( "platforms.[{}].guns.[{}].Direction", nPlatformIdx, i );
+		std::string szRecoilPointDBA = fmt::format( "platforms.[{}].guns.[{}].RecoilPoint", nPlatformIdx, i );
+		std::string szRecoilLengthDBA = fmt::format( "platforms.[{}].guns.[{}].RecoilLength", nPlatformIdx, i );
+		std::string szRecoilDBA = fmt::format( "platforms.[{}].guns.[{}].Recoil", nPlatformIdx, i );
+		std::string szRotatePointDBA = fmt::format( "platforms.[{}].guns.[{}].RotatePoint", nPlatformIdx, i );
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
@@ -1001,12 +1002,12 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 		if ( !pManipulator->InsertNode( szGunsDba ) )
 			continue;
 
-		std::string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, nNewElemIdx );
-		std::string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, nNewElemIdx );
-		std::string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, nNewElemIdx );
-		std::string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, nNewElemIdx );
-		std::string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, nNewElemIdx );
-		std::string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, nNewElemIdx );
+		std::string szLocNameDBA = fmt::format( "platforms.[{}].guns.[{}].ShootPoint", nPlatformIdx, nNewElemIdx );
+		std::string szDirectionDBA = fmt::format( "platforms.[{}].guns.[{}].Direction", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilPointDBA = fmt::format( "platforms.[{}].guns.[{}].RecoilPoint", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilLengthDBA = fmt::format( "platforms.[{}].guns.[{}].RecoilLength", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilDBA = fmt::format( "platforms.[{}].guns.[{}].Recoil", nPlatformIdx, nNewElemIdx );
+		std::string szRotatePointDBA = fmt::format( "platforms.[{}].guns.[{}].RotatePoint", nPlatformIdx, nNewElemIdx );
 
 		bool bRes;
 		CVariant v;
@@ -1055,25 +1056,25 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 	std::string szWarnMsg;
 
 	v = pP->constraint[0];
-	szDBA = StrFmt( "platforms.[%d].constraint.Min", nElementIndex );
+	szDBA = fmt::format( "platforms.[{}].constraint.Min", nElementIndex );
 	bRes = pManipulator->SetValue( szDBA, v );
 	szWarnMsg = "WARNING: can't write: " + szDBA;
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
 
 	v = pP->constraint[1];
-	szDBA = StrFmt( "platforms.[%d].constraint.Max", nElementIndex );
+	szDBA = fmt::format( "platforms.[{}].constraint.Max", nElementIndex );
 	bRes = pManipulator->SetValue( szDBA, v );
 	szWarnMsg = "WARNING: can't write: " + szDBA;
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
 
 	v = pP->constraintVertical[0];
-	szDBA = StrFmt( "platforms.[%d].constraintVertical.Min", nElementIndex );
+	szDBA = fmt::format( "platforms.[{}].constraintVertical.Min", nElementIndex );
 	bRes = pManipulator->SetValue( szDBA, v );
 	szWarnMsg = "WARNING: can't write: " + szDBA;
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
 
 	v = pP->constraintVertical[1];
-	szDBA = StrFmt( "platforms.[%d].constraintVertical.Max", nElementIndex );
+	szDBA = fmt::format( "platforms.[{}].constraintVertical.Max", nElementIndex );
 	bRes = pManipulator->SetValue( szDBA, v );
 	szWarnMsg = "WARNING: can't write: " + szDBA;
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
@@ -1090,9 +1091,9 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 	std::vector<uint8_t> platformProcessed( rPlatforms.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
-		std::string szLocNameDBA = StrFmt( "platforms.[%d].RotatePoint", i );
-		std::string szConstraintDBA = StrFmt( "platforms.[%d].constraint", i );
-		std::string szConstraintVerticalDBA = StrFmt( "platforms.[%d].constraintVertical", i );
+		std::string szLocNameDBA = fmt::format( "platforms.[{}].RotatePoint", i );
+		std::string szConstraintDBA = fmt::format( "platforms.[{}].constraint", i );
+		std::string szConstraintVerticalDBA = fmt::format( "platforms.[{}].constraintVertical", i );
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
@@ -1133,7 +1134,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 			continue;
 
 		CVariant v = pP->szRotatePoint;
-		std::string szDBA = StrFmt( "platforms.[%d].RotatePoint", nNewElemIdx );
+		std::string szDBA = fmt::format( "platforms.[{}].RotatePoint", nNewElemIdx );
 		bool bRes = pManipulator->SetValue( szDBA, v );
 		std::string szWarnMsg = "WARNING: can't write: " + szDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
@@ -1329,7 +1330,7 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 	for ( int i = 0; i < nPlatforms; ++i )
 	{
 		// set platform position
-		const std::string szPlatformName = StrFmt( "platforms.[%d].", i );
+		const std::string szPlatformName = fmt::format( "platforms.[{}].", i );
 		
 		std::string szRotateBone;
 		if ( !CManipulatorManager::GetValue( &szRotateBone, pManipulator, szPlatformName + "RotatePoint" ) )
@@ -1348,7 +1349,7 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 			const int nGuns = v;
 			for ( int j = 0; j < nGuns; ++j )
 			{
-				const std::string szGunName = szPlatformName + StrFmt( "guns.[%d].", j );
+				const std::string szGunName = szPlatformName + fmt::format( "guns.[{}].", j );
 				std::string szShootBone;
 
 				if ( CManipulatorManager::GetValue( &szShootBone, pManipulator, szGunName + "RotatePoint" ) )
@@ -1453,8 +1454,8 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator
 			if ( fDivingAngle == 0 ) 
 			{
 				pLogger->Log( LT_ERROR, "Invalid diving angle for ground attack plane\n" );
-				pLogger->Log( LT_ERROR, StrFmt("\tMechUnit: %s\n", rszObjectName.c_str()) );
-				pLogger->Log( LT_ERROR, StrFmt("\tDiving angle: %g\n", fDivingAngle) );
+				pLogger->Log( LT_ERROR, fmt::format("\tMechUnit: {}\n", rszObjectName.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("\tDiving angle: {:g}\n", fDivingAngle) );
 			}
 		}
 	}

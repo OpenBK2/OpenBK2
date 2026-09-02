@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapInfoBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"
@@ -163,14 +164,14 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, s
 			 ( nPlayerCount < MIN_PLAYER_COUNT ) ||
 			 ( nPlayerCount > MAX_PLAYER_COUNT ) )
 	{
-		( *pszDescription ) = StrFmt( "<Players> count must be in range [%d...%d].", MIN_PLAYER_COUNT, MAX_PLAYER_COUNT );
+		( *pszDescription ) = fmt::format( "<Players> count must be in range [{}...{}].", MIN_PLAYER_COUNT, MAX_PLAYER_COUNT );
 		return false;
 	}
 	else
 	{
 		for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 		{
-			if ( CheckStringValue(pszDescription, StrFmt("Players.[%d]", nPlayerIndex), pBuildDataManipulator) == false ) 
+			if ( CheckStringValue(pszDescription, fmt::format("Players.[{}]", nPlayerIndex), pBuildDataManipulator) == false ) 
 			{
 				return false;
 			}
@@ -280,15 +281,15 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
 				std::string szParty;
-				bResult = bResult && CManipulatorManager::GetValue( &szParty, pBuildDataManipulator, StrFmt( "Players.[%d]", nPlayerIndex ) );
-				bResult = bResult && CManipulatorManager::SetValue( szParty, pMapInfoManipulator, StrFmt( "Players.[%d].PartyInfo", nPlayerIndex ), true );
+				bResult = bResult && CManipulatorManager::GetValue( &szParty, pBuildDataManipulator, fmt::format( "Players.[{}]", nPlayerIndex ) );
+				bResult = bResult && CManipulatorManager::SetValue( szParty, pMapInfoManipulator, fmt::format( "Players.[{}].PartyInfo", nPlayerIndex ), true );
 				// set automatic diplomacy
 				int nPlayerDiplomacySide = 1;
 				if ( nPlayerIndex < nNumFriendlyPlayers )
 					nPlayerDiplomacySide = 0;
 				else if ( nPlayerIndex == nNeutralPlayerIndex )
 					nPlayerDiplomacySide = 2;
-				bResult = bResult && CManipulatorManager::SetValue( nPlayerDiplomacySide, pMapInfoManipulator, StrFmt( "Players.[%d].DiplomacySide", nPlayerIndex ) );
+				bResult = bResult && CManipulatorManager::SetValue( nPlayerDiplomacySide, pMapInfoManipulator, fmt::format( "Players.[{}].DiplomacySide", nPlayerIndex ) );
 				if ( !bResult ) break;
 			}
 		}
@@ -305,10 +306,10 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			bResult = bResult && pMapInfoManipulator->SetValue( "Diplomacies.[0]", 0 );
 			for ( int nDiplomacyIndex = 1; nDiplomacyIndex < ( nPlayerCount - 1 ); ++nDiplomacyIndex )
 			{
-				bResult = bResult && pMapInfoManipulator->SetValue( StrFmt( "Diplomacies.[%d]", nDiplomacyIndex ), 1 );
+				bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", nDiplomacyIndex ), 1 );
 				if ( !bResult ) break;
 			}
-			bResult = bResult && pMapInfoManipulator->SetValue( StrFmt( "Diplomacies.[%d]", ( nPlayerCount - 1 ) ), 2 );
+			bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", ( nPlayerCount - 1 ) ), 2 );
 		}
 		// make new minimap material and texture
 		std::string szMinimapMaterialName;

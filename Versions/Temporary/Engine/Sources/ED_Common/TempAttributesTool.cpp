@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "TempAttributesTool.h"
 
@@ -158,11 +159,11 @@ granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 	for ( int i = 0; i < nNumSeasons; ++i )
 	{
 		std::string szSeason;
-		CManipulatorManager::GetValue( &szSeason, pMan, StrFmt("Models.[%d].Season", i) );
+		CManipulatorManager::GetValue( &szSeason, pMan, fmt::format("Models.[{}].Season", i) );
 		if ( szSeason == "SEASON_SUMMER" )
 		{
 			CPtr<IManipulator> pModelMan = 
-				CManipulatorManager::CreateManipulatorFromReference( StrFmt( "Models.[%d].Model", i ), pMan, 0, 0, 0 );
+				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "Models.[{}].Model", i ), pMan, 0, 0, 0 );
 			return GetAttribsByModel( pModelMan );
 		}
 	}

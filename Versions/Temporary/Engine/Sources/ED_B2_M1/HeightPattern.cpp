@@ -1,10 +1,11 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "HeightPattern.h"
 
 bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGradient &rGradient )
 {
-	NI_ASSERT( nGridLines > 0, StrFmt( "Invalid GridLines Number: %d\n", nGridLines ) );
+	NI_ASSERT( nGridLines > 0, fmt::format( "Invalid GridLines Number: {}\n", nGridLines ) );
 	if ( nGridLines < 0 )
 	{
 		return false;	
@@ -16,14 +17,14 @@ bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGrad
 	//
 	SCreateHeightPatternByGradientFunctional functional( this, &rGradient, fValue, true );
 	const bool bResult = ApplyInRadius( CTRect<int>( 0, 0, nGridLines, nGridLines ), functional );
-	//Trace2DFloatArray( heights, StrFmt( "SHeightPattern::CreateByGradient(): %s", bResult ? "true" : "false" ) ); 
+	//Trace2DFloatArray( heights, fmt::format( "SHeightPattern::CreateByGradient(): {}", bResult ? "true" : "false" ) ); 
 	return bResult;
 }
 
 
 bool SHeightPattern::CreateByValue( float fValue, int nGridLines, bool bEllipse )
 {
-	NI_ASSERT( nGridLines > 0, StrFmt( "Invalid GridLines Number: %d\n", nGridLines ) );
+	NI_ASSERT( nGridLines > 0, fmt::format( "Invalid GridLines Number: {}\n", nGridLines ) );
 	if ( nGridLines < 0 )
 	{
 		return false;	

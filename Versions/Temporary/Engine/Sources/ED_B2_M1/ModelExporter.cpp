@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ModelExporter.h"
 #include "ExporterMethods.h"
@@ -31,7 +32,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		if ( pGeomMan == 0 || szGeometryName.empty() ) 
 		{
 			Log( LT_ERROR, "Can't extract geometry from model\n" );
-			Log( LT_ERROR, StrFmt("\tModel name: %s\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 			return ER_FAIL;
 		}
 		int nNumGeometryMeshes = 0;
@@ -39,7 +40,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		if ( nNumGeometryMeshes == 0 ) 
 		{
 			Log( LT_ERROR, "Empty 'NumMeshes' in geometry\n" );
-			Log( LT_ERROR, StrFmt("\tModel name: %s\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 			return ER_FAIL;
 		}
 		int nNumGeomMaterials = 0;
@@ -51,13 +52,13 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		if ( nNumGeomMaterials == 0 && PatMat( szModelName.c_str(), "*section??" ) == 0 ) 
 		{
 			Log( LT_ERROR, "Empty material list in model\n" );
-			Log( LT_ERROR, StrFmt("\tModel name: %s\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 			return ER_FAIL;
 		}
 		// load geometry
 		CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 		CGrannyFileInfoGuard pInfo( NBinResources::GetExistentBinaryFileName( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\geometries", pGeometry->GetRecordID(), pGeometry->uid ) ); // uid
-		//CGrannyFileInfoGuard pInfo( pUserData->szExportDestinationFolder + StrFmt( "bin\\geometries\\%d", nGeomID ) );
+		//CGrannyFileInfoGuard pInfo( pUserData->szExportDestinationFolder + fmt::format( "bin\\geometries\\{}", nGeomID ) );
 		int nNumGrannyMeshes = pInfo->MeshCount;
 		//
 		if ( nNumGrannyMeshes != nNumGeometryMeshes ) 
@@ -70,7 +71,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 	catch ( ... ) 
 	{
 		Log( LT_ERROR, "General fail during model check\n" );
-		Log( LT_ERROR, StrFmt("\tModel name: %s\n", rszObjectName.c_str()) );
+		Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	//
@@ -118,7 +119,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	std::list<SMaterialInfo> materials;
 	for ( int i = 0; i < nNumModelMaterials; ++i ) 
 	{
-		const std::string szMaterialRefName = StrFmt( "Materials.[%d]", i );
+		const std::string szMaterialRefName = fmt::format( "Materials.[{}]", i );
 		std::string szMaterialName;
 		CManipulatorManager::GetValue( &szMaterialName, pModelMan, szMaterialRefName );
 		if ( szMaterialName.empty() || szMaterialName == " " )
@@ -147,7 +148,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 			if ( MakeMaterialCopy( materials.front().szName, szTransparentMaterialName ) == false )
 			{
 				Log( LT_ERROR, "Can't make material copy to create transparent material\n" );
-				Log( LT_ERROR, StrFmt("\tMaterial name: %s\n", szTransparentMaterialName.c_str()) );
+				Log( LT_ERROR, fmt::format("\tMaterial name: {}\n", szTransparentMaterialName.c_str()) );
 				return ER_FAIL;
 			}
 			pTranspMaterialMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
@@ -195,7 +196,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		bool bTransparent = meshTranspInfoMap[szBoneName];
 		//
 		std::string szMaterialName;
-		const std::string szMaterialRefName = StrFmt( "Materials.[%d]", i );
+		const std::string szMaterialRefName = fmt::format( "Materials.[{}]", i );
 		if ( i >= nNumModelMaterials ) 
 		{
 			if ( pModelMan->InsertNode("Materials") == false )

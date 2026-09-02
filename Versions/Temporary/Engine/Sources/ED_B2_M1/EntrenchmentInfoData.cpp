@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
@@ -139,7 +140,7 @@ namespace NMapInfoEditor
 		// Устанавливаем общие параметры
 		vPosition = VNULL3; // будет заполняться в CreateSceneObject()
 		fDirection = 0.0f;
-		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", pObjectLoadInfo->nObjectIndex );
+		const std::string szEntrenchmentPrefix = fmt::format( "Entrenchments.[{}]", pObjectLoadInfo->nObjectIndex );
 		nEntrenchmentID = pObjectInfoCollector->trenchIDCollector.LockID();
 		if ( nEntrenchmentID == INVALID_NODE_ID )
 		{
@@ -152,7 +153,7 @@ namespace NMapInfoEditor
 		for ( int nSectionIndex = 0; nSectionIndex < nSectionsNumber; ++nSectionIndex )
 		{
 			CSegmentLinkIDListList::iterator itSegmentLinkIDList = segmentLinkIDListList.insert( segmentLinkIDListList.end(), CSegmentLinkIDList() );
-			CManipulatorManager::GetArray<CSegmentLinkIDList, int>( &( *itSegmentLinkIDList ), pManipulator, szEntrenchmentPrefix + StrFmt( ".sections.[%d].data", nSectionIndex ) );
+			CManipulatorManager::GetArray<CSegmentLinkIDList, int>( &( *itSegmentLinkIDList ), pManipulator, szEntrenchmentPrefix + fmt::format( ".sections.[{}].data", nSectionIndex ) );
 			//
 			// Добавляем объекты базы
 			for ( CSegmentLinkIDList::const_iterator itSegmentLinkID = itSegmentLinkIDList->begin(); itSegmentLinkID != itSegmentLinkIDList->end(); ++itSegmentLinkID )
@@ -160,12 +161,12 @@ namespace NMapInfoEditor
 				// получаем расположенние объекта в базе данных
 				const unsigned nLinkID = *itSegmentLinkID;
 				const unsigned nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
-				NI_ASSERT( nObjectIndex != INVALID_NODE_ID, StrFmt( "Invalid trench index for LinkID: %d", nLinkID ) );
+				NI_ASSERT( nObjectIndex != INVALID_NODE_ID, fmt::format( "Invalid trench index for LinkID: {}", nLinkID ) );
 				if ( nObjectIndex == INVALID_NODE_ID )
 				{
 					continue;
 				}
-				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 				// создаем SMapInfoElement и заполняем его данными
 				SObjectInfo::SMapInfoElement mapInfoElement;
 				std::string szRPGStatsTypeName;
@@ -373,7 +374,7 @@ namespace NMapInfoEditor
 				{
 					continue;
 				}
-				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 				// Insert
 				bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 				//Change
@@ -432,7 +433,7 @@ namespace NMapInfoEditor
 			//Добавляем информацию в секцию окопов
 			int nEntrenchmentIndex = INVALID_NODE_ID;
 			bResult = bResult && CManipulatorManager::GetValue( &nEntrenchmentIndex, pManipulator, "Entrenchments" );
-			const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+			const std::string szEntrenchmentPrefix = fmt::format( "Entrenchments.[{}]", nEntrenchmentIndex );
 			bResult = bResult && pObjectController->AddInsertOperation( "Entrenchments", NODE_ADD_INDEX, pManipulator );
 			int nLinkListCount = 0;
 			for ( CSegmentLinkIDListList::const_iterator itLinkList = segmentLinkIDListList.begin(); itLinkList != segmentLinkIDListList.end(); ++itLinkList )
@@ -440,7 +441,7 @@ namespace NMapInfoEditor
 				if ( !itLinkList->empty() )
 				{
 					bResult = bResult && pObjectController->AddInsertOperation( szEntrenchmentPrefix + ".sections", NODE_ADD_INDEX, pManipulator );
-					bResult = bResult && pObjectController->AddChangeArrayOperation<CSegmentLinkIDList, int>( szEntrenchmentPrefix + StrFmt( ".sections.[%d].data", nLinkListCount ), ( *itLinkList ), pManipulator );
+					bResult = bResult && pObjectController->AddChangeArrayOperation<CSegmentLinkIDList, int>( szEntrenchmentPrefix + fmt::format( ".sections.[{}].data", nLinkListCount ), ( *itLinkList ), pManipulator );
 					if( bResult )
 					{
 						++nLinkListCount;
@@ -517,7 +518,7 @@ namespace NMapInfoEditor
 		}
 		int nEntrenchmentIndex = INVALID_NODE_ID;
 		bool bResult = CManipulatorManager::GetValue( &nEntrenchmentIndex, pManipulator, "Entrenchments" );
-		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+		const std::string szEntrenchmentPrefix = fmt::format( "Entrenchments.[{}]", nEntrenchmentIndex );
 		bResult = bResult && pObjectController->AddInsertOperation( "Entrenchments", NODE_ADD_INDEX, pManipulator );
 		int nLinkListCount = 0;
 		for ( CSegmentLinkIDListList::iterator itLinkList = segmentLinkIDListList.begin(); itLinkList != segmentLinkIDListList.end(); ++itLinkList )
@@ -529,7 +530,7 @@ namespace NMapInfoEditor
 					( *itLinkID ) = ( *pOld2NewLinkIDMap )[*itLinkID];
 				}
 				bResult = bResult && pObjectController->AddInsertOperation( szEntrenchmentPrefix + ".sections", NODE_ADD_INDEX, pManipulator );
-				bResult = bResult && pObjectController->AddChangeArrayOperation<CSegmentLinkIDList, int>( szEntrenchmentPrefix + StrFmt( ".sections.[%d].data", nLinkListCount ), ( *itLinkList ), pManipulator );
+				bResult = bResult && pObjectController->AddChangeArrayOperation<CSegmentLinkIDList, int>( szEntrenchmentPrefix + fmt::format( ".sections.[{}].data", nLinkListCount ), ( *itLinkList ), pManipulator );
 				if( bResult )
 				{
 					++nLinkListCount;

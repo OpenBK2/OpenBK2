@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "Stats_B2_M1/IconsSet.h"
 #include "libdb/Manipulator.h"
 #include "MapEditorLib/MultiInputState.h"
@@ -264,25 +265,25 @@ public:
 	CMapObjectState( class CMapObjectMultiState *_pParentState = 0 ) : pParentState( _pParentState ), nSelectedSceneID( INVALID_NODE_ID ), bDrawShootAreas( true )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
-		NI_ASSERT( pStoreInputState != 0, StrFmt( "CMapObjectState(): pStoreInputState == 0" ) );
+		NI_ASSERT( pStoreInputState != 0, fmt::format( "CMapObjectState(): pStoreInputState == 0" ) );
 		
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
 		
 		CMapObjectSelectState *pMapObjectSelectState = new CMapObjectSelectState( this );
 		nStateIndex = AddInputState( pMapObjectSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, StrFmt( "CMapObjectState(): Wrong state number: %d (%d)", nStateIndex, IS_SELECT ) );
+		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, IS_SELECT ) );
 
 		CMapObjectEditState *pMapObjectEditState = new CMapObjectEditState( this );
 		nStateIndex = AddInputState( pMapObjectEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, StrFmt( "CMapObjectState(): Wrong state number: %d, (%d)", nStateIndex, IS_EDIT ) );
+		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, IS_EDIT ) );
 		
 		CMapObjectAddState *pMapObjectAddState = new CMapObjectAddState( this );
 		nStateIndex = AddInputState( pMapObjectAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, StrFmt( "CMapObjectState(): Wrong state number: %d, (%d)", nStateIndex, IS_ADD ) );
+		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, IS_ADD ) );
 
 		CMapObjectPasteState *pMapObjectPasteState = new CMapObjectPasteState( this );
 		nStateIndex = AddInputState( pMapObjectPasteState );
-		NI_ASSERT( nStateIndex == IS_PASTE, StrFmt( "CMapObjectState(): Wrong state number: %d (%d)", nStateIndex, IS_PASTE ) );
+		NI_ASSERT( nStateIndex == IS_PASTE, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, IS_PASTE ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

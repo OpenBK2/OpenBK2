@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -134,7 +135,7 @@ bool CVSOWindow::GetEditParameters( CVSOMultiState::SEditParameters *pEditParame
 			{
 				pEditParameters->fWidth = CVSOManager::DEFAULT_WIDTH;
 			}
-			SetDlgItemText( IDC_TMIVSO_WIDTH, StrFmt( "%g", pEditParameters->fWidth ) );
+			SetDlgItemText( IDC_TMIVSO_WIDTH, fmt::format( "{:g}", pEditParameters->fWidth ) );
 			bCreateControls = false;
 		}
 	}
@@ -153,17 +154,17 @@ bool CVSOWindow::GetEditParameters( CVSOMultiState::SEditParameters *pEditParame
 				if ( pEditParameters->fOpacity < 0.0f )
 				{
 					pEditParameters->fOpacity = 0.0f;
-					SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%g", pEditParameters->fOpacity ) );
+					SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:g}", pEditParameters->fOpacity ) );
 				}
 				else if ( pEditParameters->fOpacity > 100.0f )
 				{
 					pEditParameters->fOpacity = 100.0f;
-					SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%g", pEditParameters->fOpacity ) );
+					SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:g}", pEditParameters->fOpacity ) );
 					pEditParameters->fOpacity = 1.0f;
 				}
 				else
 				{
-					SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%g", pEditParameters->fOpacity ) );
+					SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:g}", pEditParameters->fOpacity ) );
 				}
 				bCreateControls = false;
 			}
@@ -197,7 +198,7 @@ bool CVSOWindow::GetEditParameters( CVSOMultiState::SEditParameters *pEditParame
 				{
 					pEditParameters->fHeight = AI_TILE_SIZE * 2.0f * 16.0f;
 				}
-				SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%g", pEditParameters->fHeight ) );
+				SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:g}", pEditParameters->fHeight ) );
 				bCreateControls = false;
 			}
 		}
@@ -229,14 +230,14 @@ bool CVSOWindow::SetEditParameters( const CVSOMultiState::SEditParameters &rEdit
 	//
 	if ( ( rEditParameters.nFlags & MIVSOSEP_WIDTH ) > 0 )
 	{
-		SetDlgItemText( IDC_TMIVSO_WIDTH, StrFmt( "%.2f", rEditParameters.fWidth ) );
+		SetDlgItemText( IDC_TMIVSO_WIDTH, fmt::format( "{:.2f}", rEditParameters.fWidth ) );
 	}
 	//
 	if ( ( rEditParameters.nFlags & MIVSOSEP_OPACITY ) > 0 )
 	{
 		if ( !bEnableHeight )
 		{
-			SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%.2f", rEditParameters.fOpacity * 100.0f ) );
+			SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:.2f}", rEditParameters.fOpacity * 100.0f ) );
 		}
 	}
 	//
@@ -244,7 +245,7 @@ bool CVSOWindow::SetEditParameters( const CVSOMultiState::SEditParameters &rEdit
 	{
 		if ( bEnableHeight )
 		{
-			SetDlgItemText( IDC_TMIVSO_OPACITY, StrFmt( "%.2f", rEditParameters.fHeight ) );
+			SetDlgItemText( IDC_TMIVSO_OPACITY, fmt::format( "{:.2f}", rEditParameters.fHeight ) );
 		}
 	}
 	if ( ( rEditParameters.nFlags & MIVSOSEP_THUMBNAILS ) > 0 )

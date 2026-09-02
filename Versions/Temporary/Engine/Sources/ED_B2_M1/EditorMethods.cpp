@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "EditorMethods.h"
@@ -139,7 +140,7 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pXS == 0 ) 
 	{
-		NI_ASSERT( pXS != 0, StrFmt("Can't open stream \"%s\" to read", szFileName.c_str()) );
+		NI_ASSERT( pXS != 0, fmt::format("Can't open stream \"{}\" to read", szFileName.c_str()) );
 		return false;
 	}
 	pXS->Add( "Fields", pCmdTypes );

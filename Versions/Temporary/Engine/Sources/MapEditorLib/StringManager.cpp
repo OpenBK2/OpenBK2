@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "StringManager.h"
 #include "Misc/StrProc.h"
@@ -494,12 +495,12 @@ std::string CStringManager::GetFloatStringWithPrecision( const float fValue, con
 {
 	if ( nPrecision > 0 ) 
 	{
-		const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+		const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 		return StrFmt( szFormat.c_str(), fValue );
 	}
 	else
 	{
-		return StrFmt( "%g", fValue );
+		return fmt::format( "{:g}", fValue );
 	}
 }
 

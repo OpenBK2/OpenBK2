@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 //#include "../misc/strproc.h"
 //#include "../misc/2darray.h"
@@ -31,7 +32,7 @@ REGISTER_EXPORTER_IN_DLL( MapInfo, CMapInfoExporter )
 
 bool CMapInfoExporter::SReGenerateGeometry::operator()( const std::string &rszObjectTypeName, const CDBID &rDBID )
 {
-	NLog::GetLogger()->Log( LT_NORMAL, StrFmt("Regenerating map: %s\n", rDBID.ToString().c_str() ) );
+	NLog::GetLogger()->Log( LT_NORMAL, fmt::format("Regenerating map: {}\n", rDBID.ToString().c_str() ) );
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
@@ -55,7 +56,7 @@ bool CMapInfoExporter::SReGenerateGeometry::operator()( const std::string &rszOb
 			{
 				pTerraManager->ReGenerate();
 				NEditor::SaveTerrain( pTerraManager );
-				NLog::GetLogger()->Log( LT_IMPORTANT, StrFmt("Map regenerated successfully in %g seconds\n", NHPTimer::GetTimePassed(&time)) );
+				NLog::GetLogger()->Log( LT_IMPORTANT, fmt::format("Map regenerated successfully in {:g} seconds\n", NHPTimer::GetTimePassed(&time)) );
 				return true;
 			}
     }
@@ -79,7 +80,7 @@ bool CMapInfoExporter::SCheck::operator()( const std::string &rszObjectTypeName,
 	//CIndexCollector<unsigned> entrenchmentIDToIndexCollector( INVALID_NODE_ID );
 	CIndexCollector<unsigned> entrenchmentLinkIDToIndexCollector( INVALID_NODE_ID );
 
-	NLog::GetLogger()->Log( LT_NORMAL, StrFmt( "Check map: %s\n", szObjectName.c_str() ) );
+	NLog::GetLogger()->Log( LT_NORMAL, fmt::format( "Check map: {}\n", szObjectName.c_str() ) );
 
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
@@ -88,22 +89,22 @@ bool CMapInfoExporter::SCheck::operator()( const std::string &rszObjectTypeName,
 	CManipulatorManager::GetValue( &nObjectCount, pObjectManipulator, "Objects" );
 	for ( unsigned nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 	{
-		const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+		const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 		//
 		std::string szRPGStatsTypeName;
 		std::string szRPGStatsName;
 		CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pObjectManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 		if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, StrFmt("\tEmpty object: %d\n", nObjectIndex) );
+			NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tEmpty object: {}\n", nObjectIndex) );
 			continue;
 		}
 		//
 		unsigned nObjectLinkID = INVALID_NODE_ID;
-		CManipulatorManager::GetValue( &nObjectLinkID, pObjectManipulator, StrFmt("%s.Link.LinkID", szObjectPrefix.c_str()) );
+		CManipulatorManager::GetValue( &nObjectLinkID, pObjectManipulator, fmt::format("{}.Link.LinkID", szObjectPrefix.c_str()) );
 		if ( nObjectLinkID == INVALID_NODE_ID )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, StrFmt("\tInvalid object LinkID: %d\n", nObjectIndex) );
+			NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tInvalid object LinkID: {}\n", nObjectIndex) );
 			continue;
 		}
 		//
@@ -118,21 +119,21 @@ bool CMapInfoExporter::SCheck::operator()( const std::string &rszObjectTypeName,
 	CManipulatorManager::GetValue( &nEntrenchmentCount, pObjectManipulator, "Entrenchments" );
 	for ( unsigned nEntrenchmentIndex = 0; nEntrenchmentIndex < nObjectCount; ++nEntrenchmentIndex )
 	{
-		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+		const std::string szEntrenchmentPrefix = fmt::format( "Entrenchments.[{}]", nEntrenchmentIndex );
 		//
 		int nSectionCount = 0;
-		CManipulatorManager::GetValue( &nSectionCount, pObjectManipulator, StrFmt("%s.sections", szEntrenchmentPrefix.c_str()) );
+		CManipulatorManager::GetValue( &nSectionCount, pObjectManipulator, fmt::format("{}.sections", szEntrenchmentPrefix.c_str()) );
 		for ( unsigned nSectionIndex = 0; nSectionIndex < nSectionCount; ++nSectionIndex )
 		{
-			const std::string szSectionPrefix = StrFmt( "%s.sections.[%d]", szEntrenchmentPrefix.c_str(), nSectionIndex );
+			const std::string szSectionPrefix = fmt::format( "{}.sections.[{}]", szEntrenchmentPrefix.c_str(), nSectionIndex );
 			//
 			std::vector<int> sectionPartList;
-			CManipulatorManager::GetArray<std::vector<int>, int>( &sectionPartList, pObjectManipulator, StrFmt("%s.data", szSectionPrefix.c_str()) );
+			CManipulatorManager::GetArray<std::vector<int>, int>( &sectionPartList, pObjectManipulator, fmt::format("{}.data", szSectionPrefix.c_str()) );
 			for ( int nSectionPartIndex = 0; nSectionPartIndex < sectionPartList.size(); ++nSectionPartIndex )
 			{
 				if ( entrenchmentLinkIDToIndexCollector.Get(sectionPartList[nSectionPartIndex]) == INVALID_NODE_ID )
 				{
-					NLog::GetLogger()->Log( LT_ERROR, StrFmt("\tInvalid entrenchment part: entrenchment: %d section: %d, part: %d\n", nEntrenchmentIndex, nSectionIndex, nSectionPartIndex) );
+					NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tInvalid entrenchment part: entrenchment: {} section: {}, part: {}\n", nEntrenchmentIndex, nSectionIndex, nSectionPartIndex) );
 				}
 				entrenchmentUsedLinkIDList[sectionPartList[nSectionPartIndex]] = 0;
 			}
@@ -142,7 +143,7 @@ bool CMapInfoExporter::SCheck::operator()( const std::string &rszObjectTypeName,
 	{
 		if ( entrenchmentUsedLinkIDList.find( itIDToIndex->first ) == entrenchmentUsedLinkIDList.end() )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, StrFmt("\tInvalid entrenchment part: object index: %d\n", itIDToIndex->second) );
+			NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tInvalid entrenchment part: object index: {}\n", itIDToIndex->second) );
 		}
 	}
 	NLog::GetLogger()->Log( LT_NORMAL, "Done.\n" );
@@ -188,7 +189,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 	if ( CManipulatorManager::GetValue(&szMapFilesPath, pManipulator, "MapFilesPath") == false || szMapFilesPath.empty() )
 		return ER_FAIL;
 	const std::string szSrcPath = pUserData->constUserData.szExportSourceFolder + szMapFilesPath + "map.b2m";
-	//const std::string szDstPath = pUserData->szExportDestinationFolder + StrFmt( "bin\\maps\\%d", nObjectID );
+	//const std::string szDstPath = pUserData->szExportDestinationFolder + fmt::format( "bin\\maps\\{}", nObjectID );
 	CVariant vtGUID;
 	if ( pManipulator->GetValue( "uid", &vtGUID ) == false || vtGUID.GetType() != CVariant::VT_POINTER || vtGUID.GetBlobSize() != 16 )
 		return ER_FAIL;
@@ -204,7 +205,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Can't export map\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tName: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tName: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	//

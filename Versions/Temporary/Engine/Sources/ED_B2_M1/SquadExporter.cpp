@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "SquadExporter.h"
 
@@ -22,15 +23,15 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 	int nNumFormations = 0;
 	if ( CManipulatorManager::GetValue( &nNumFormations, pManipulator, "formations" ) == false )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Can't get number of formations for squad\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tSquad: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Can't get number of formations for squad\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tSquad: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	// check number of formations
 	if ( nNumFormations == 0 ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Empty formations array for squad\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tSquad: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Empty formations array for squad\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tSquad: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	//
@@ -39,39 +40,39 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 	for ( int i = 0; i < nNumFormations; ++i ) 
 	{
 		std::string szFormationMoveType;
-		CManipulatorManager::GetValue( &szFormationMoveType, pManipulator, StrFmt("formations.[%d].type", i) );
+		CManipulatorManager::GetValue( &szFormationMoveType, pManipulator, fmt::format("formations.[{}].type", i) );
 		if ( !szFormationMoveType.empty() && szFormationMoveType != " " ) 
 			formationTypes.push_back( szFormationMoveType );
 		//
 		int nNumChangesByEvent = 0;
-		if ( CManipulatorManager::GetValue( &nNumChangesByEvent, pManipulator, StrFmt("formations.[%d].changesByEvent", i) ) == false )
+		if ( CManipulatorManager::GetValue( &nNumChangesByEvent, pManipulator, fmt::format("formations.[{}].changesByEvent", i) ) == false )
 		{
-			pLogger->Log( LT_ERROR, StrFmt("Can't get number of 'changesByEvent' for formation in squad\n") );
-			pLogger->Log( LT_ERROR, StrFmt("\tSquad: %s\n", rszObjectName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tFormation: %d\n", i) );
+			pLogger->Log( LT_ERROR, fmt::format("Can't get number of 'changesByEvent' for formation in squad\n") );
+			pLogger->Log( LT_ERROR, fmt::format("\tSquad: {}\n", rszObjectName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFormation: {}\n", i) );
 			return ER_FAIL;
 		}
 		//
 		for ( int j = 0; j < nNumChangesByEvent; ++j ) 
 		{
 			int nFormation = -1;
-			CManipulatorManager::GetValue( &nFormation, pManipulator, StrFmt("formations.[%d].changesByEvent.[%d]", i, j) );
+			CManipulatorManager::GetValue( &nFormation, pManipulator, fmt::format("formations.[{}].changesByEvent.[{}]", i, j) );
 			if ( nFormation < -1 || nFormation >= nNumFormations ) 
 			{
-				pLogger->Log( LT_ERROR, StrFmt("Invalid 'changesByEvent' - no formation to change to\n") );
-				pLogger->Log( LT_ERROR, StrFmt("\tSquad: %s\n", rszObjectName.c_str()) );
-				pLogger->Log( LT_ERROR, StrFmt("\tFormation: %d\n", i) );
-				pLogger->Log( LT_ERROR, StrFmt("\tchangesByEvent: %d\n", j) );
-				pLogger->Log( LT_ERROR, StrFmt("\tValue: %d\n", nFormation) );
+				pLogger->Log( LT_ERROR, fmt::format("Invalid 'changesByEvent' - no formation to change to\n") );
+				pLogger->Log( LT_ERROR, fmt::format("\tSquad: {}\n", rszObjectName.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("\tFormation: {}\n", i) );
+				pLogger->Log( LT_ERROR, fmt::format("\tchangesByEvent: {}\n", j) );
+				pLogger->Log( LT_ERROR, fmt::format("\tValue: {}\n", nFormation) );
 				return ER_FAIL;
 			}
 		}
 		/*
 		if ( nNumChangesByEvent == 0 ) 
 		{
-			pLogger->Log( LT_ERROR, StrFmt("Formation must have at least one 'changesByEvent' (-1)\n") );
-			pLogger->Log( LT_ERROR, StrFmt("\tObject: %s\n", rszObjectName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tFormation: %d\n", i) );
+			pLogger->Log( LT_ERROR, fmt::format("Formation must have at least one 'changesByEvent' (-1)\n") );
+			pLogger->Log( LT_ERROR, fmt::format("\tObject: {}\n", rszObjectName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFormation: {}\n", i) );
 		}
 		*/
 	}
@@ -82,9 +83,9 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 		{
 			if ( (*it1) == (*it2) )
 			{
-				pLogger->Log( LT_ERROR, StrFmt("Non-unique formation type\n") );
-				pLogger->Log( LT_ERROR, StrFmt("\tObject: %s\n", rszObjectName.c_str()) );
-				pLogger->Log( LT_ERROR, StrFmt("\tFormation type: %s\n", it1->c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("Non-unique formation type\n") );
+				pLogger->Log( LT_ERROR, fmt::format("\tObject: {}\n", rszObjectName.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("\tFormation type: {}\n", it1->c_str()) );
 				return ER_FAIL;
 			}
 		}

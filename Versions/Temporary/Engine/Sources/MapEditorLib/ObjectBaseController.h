@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DefaultController.h"
+#include <fmt/format.h>
 #include "ManipulatorManager.h"
 #include "MapEditorLib_export.h"
 
@@ -145,7 +146,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cx", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}x", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.x;
 			posNewUndoData->oldValue = vOldData.x;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -157,7 +158,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cy", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}y", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.y;
 			posNewUndoData->oldValue = vOldData.y;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -182,7 +183,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cx", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}x", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.x;
 			posNewUndoData->oldValue = vOldData.x;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -194,7 +195,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cy", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}y", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.y;
 			posNewUndoData->oldValue = vOldData.y;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -206,7 +207,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cz", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}z", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.z;
 			posNewUndoData->oldValue = vOldData.z;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -231,7 +232,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cx", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}x", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.x;
 			posNewUndoData->oldValue = vOldData.x;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -243,7 +244,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cy", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}y", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.y;
 			posNewUndoData->oldValue = vOldData.y;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -255,7 +256,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cz", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}z", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.z;
 			posNewUndoData->oldValue = vOldData.z;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -267,7 +268,7 @@ public:
 		{
 			CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 			posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-			posNewUndoData->szName = StrFmt( "%s%cw", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
+			posNewUndoData->szName = fmt::format( "{}{:c}w", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR );
 			posNewUndoData->newValue = rvNewData.w;
 			posNewUndoData->oldValue = vOldData.w;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -322,7 +323,7 @@ public:
 			}
 			// Устанавливаем значение
 			{
-				const std::string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
+				const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
 				TElementType oldData;
 				if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, szElementName ) )
 				{
@@ -342,7 +343,7 @@ public:
 			++nElementIndex;
 		}
 		// Удаляем лишние элементы 
-		const std::string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
+		const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
 		for ( ;nElementIndex < nExistingElementCount; --nExistingElementCount )
 		{
 			TElementType oldData;

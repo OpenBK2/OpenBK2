@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "Stats_B2_M1/RPGStats.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "ED_Common/Tools_Granny.h"
@@ -127,7 +128,7 @@ bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const s
 		{
 			for ( int nSeasonIndex = 0; nSeasonIndex < nSeasonCount; ++nSeasonIndex )
 			{
-				szDataPrefix = StrFmt( "%s%c%c%d%c", rszSeasonArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nSeasonIndex, ARRAY_NODE_END_CHAR );
+				szDataPrefix = fmt::format( "{}{:c}{:c}{}{:c}", rszSeasonArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nSeasonIndex, ARRAY_NODE_END_CHAR );
 				std::string szSeasonName;
 				bResult = bResult && CManipulatorManager::GetValue( &szSeasonName, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
 				if ( !bResult )

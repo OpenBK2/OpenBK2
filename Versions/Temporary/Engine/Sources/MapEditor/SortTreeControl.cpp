@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "SortTreeControl.h"
 #include "libdb/Manipulator.h"
@@ -234,11 +235,11 @@ void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, std::string *pszWi
 			//
 			if ( szClipboardPrefix.empty() )
 			{
-				( *pszWindowClipboardText ) += StrFmt( "%s", szHashName.c_str() );
+				( *pszWindowClipboardText ) += fmt::format( "{}", szHashName.c_str() );
 			}
 			else
 			{
-				( *pszWindowClipboardText ) += StrFmt( "%s\t%s", szClipboardPrefix.c_str(), szHashName.c_str() );
+				( *pszWindowClipboardText ) += fmt::format( "{}\t{}", szClipboardPrefix.c_str(), szHashName.c_str() );
 			}
 			//
 			if ( nColumnCount > 1 )

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
@@ -39,12 +40,12 @@ const std::string CVisObjBuilder::RESOURCE_PREFIX[RT_COUNT] =
 	CVisObjBuilder::GEOMETRY_TYPE_NAME,
 	CVisObjBuilder::AIGEOMETRY_TYPE_NAME,
 	CVisObjBuilder::SKELETON_TYPE_NAME,
-//	StrFmt( "%s", CVisObjBuilder::MODEL_TYPE_NAME ),
-//	StrFmt( "%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME ),
-//	StrFmt( "%s\\%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME, CVisObjBuilder::TEXTURE_TYPE_NAME ),
-//	StrFmt( "%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME ),
-//	StrFmt( "%s\\%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME, CVisObjBuilder::AIGEOMETRY_TYPE_NAME ),
-//	StrFmt( "%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::SKELETON_TYPE_NAME ),
+//	fmt::format( "{}", CVisObjBuilder::MODEL_TYPE_NAME ),
+//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME ),
+//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME, CVisObjBuilder::TEXTURE_TYPE_NAME ),
+//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME ),
+//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME, CVisObjBuilder::AIGEOMETRY_TYPE_NAME ),
+//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::SKELETON_TYPE_NAME ),
 };
 
 
@@ -336,7 +337,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		bResult = bResult && CManipulatorManager::GetValue( &nModelCount, pVisObjManipulator, "Models" );
 		if ( bResult && ( nModelCount > 0 ) )
 		{
-			const std::string szVisObjeEntryName = StrFmt( "Models.[%d].", ( nModelCount - 1 ) );
+			const std::string szVisObjeEntryName = fmt::format( "Models.[{}].", ( nModelCount - 1 ) );
 			bResult = bResult && pVisObjManipulator->SetValue( szVisObjeEntryName + "Model", szModelName );
 			bResult = bResult && pVisObjManipulator->SetValue( szVisObjeEntryName + "Season", szSeasonName );
 		}
@@ -477,11 +478,11 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			//определяем количество mb и tga файлов
 			int nMBFileCount = 0;
 			int nTGAFileCount = 0;
-			while ( NFile::DoesFileExist( StrFmt( "%s%d.mb", ( pUserData->constUserData.szExportSourceFolder + szMBFileFolder ).c_str(), nMBFileCount + 1 ) ) )
+			while ( NFile::DoesFileExist( fmt::format( "{}{}.mb", ( pUserData->constUserData.szExportSourceFolder + szMBFileFolder ).c_str(), nMBFileCount + 1 ) ) )
 			{
 				++nMBFileCount;
 			}	
-			while ( NFile::DoesFileExist( StrFmt( "%s%d.tga", ( pUserData->constUserData.szExportSourceFolder + szTGAFileFolder ).c_str(), nTGAFileCount + 1 ) ) )
+			while ( NFile::DoesFileExist( fmt::format( "{}{}.tga", ( pUserData->constUserData.szExportSourceFolder + szTGAFileFolder ).c_str(), nTGAFileCount + 1 ) ) )
 			{
 				++nTGAFileCount;
 			}	
@@ -542,9 +543,9 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			{
 				for ( int nTGAFileIndex = 3; nTGAFileIndex <= nTGAFileCount; ++nTGAFileIndex )
 				{
-					const std::string szVisObjName = szVisObjFolder + StrFmt( "damaged%d.xdb", nTGAFileIndex - 2 );
+					const std::string szVisObjName = szVisObjFolder + fmt::format( "damaged{}.xdb", nTGAFileIndex - 2 );
 					const std::string szMBFullFileName = szMBFileFolder + "1.mb";
-					const std::string szTGAFullFileName = szTGAFileFolder + StrFmt( "%d.tga", nTGAFileIndex );
+					const std::string szTGAFullFileName = szTGAFileFolder + fmt::format( "{}.tga", nTGAFileIndex );
 					//
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
 					{
@@ -772,7 +773,7 @@ bool CVisObjBuilder::RemoveSkeleton( const std::string &rszObjectTypeName, const
 		{
 			for ( int nAnimationIndex = 0; nAnimationIndex < nAnimationCount; ++nAnimationIndex )
 			{
-				const std::string szRefValueName = StrFmt( "Animations.[%d]", nAnimationIndex );
+				const std::string szRefValueName = fmt::format( "Animations.[{}]", nAnimationIndex );
 				std::string szAnimationName;
 				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAnimationTypeName, &szAnimationName, 0 ); 
 				if ( !szAnimationName.empty() )
@@ -811,7 +812,7 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 		{
 			for ( int nMaterialIndex = 0; nMaterialIndex < nMaterialCount; ++nMaterialIndex )
 			{
-				const std::string szRefValueName = StrFmt( "Materials.[%d]", nMaterialIndex );
+				const std::string szRefValueName = fmt::format( "Materials.[{}]", nMaterialIndex );
 				std::string szMaterialName;
 				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szMaterialTypeName, &szMaterialName, 0 ); 
 				if ( !szMaterialName.empty() )
@@ -872,7 +873,7 @@ bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 		{
 			for ( int nModelIndex = 0; nModelIndex < nModelCount; ++nModelIndex )
 			{
-				const std::string szRefValueName = StrFmt( "Models.[%d].Model", nModelIndex );
+				const std::string szRefValueName = fmt::format( "Models.[{}].Model", nModelIndex );
 				std::string szModelName;
 				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szModelTypeName, &szModelName, 0 ); 
 				if ( !szModelName.empty() )

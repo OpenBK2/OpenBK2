@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SimpleObjectState.h"
+#include <fmt/format.h>
 #include "EntrenchmentInfoData.h"
 
 #include <cstdint>
@@ -103,7 +104,7 @@ class CEntrenchmentState : public CMapObjectState
 	///
 	CEntrenchmentState::CEntrenchmentState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
-		NI_ASSERT( pParentState != 0, StrFmt( "CEntrenchmentState(): pParentState == 0" ) );
+		NI_ASSERT( pParentState != 0, fmt::format( "CEntrenchmentState(): pParentState == 0" ) );
 		ClearData();
 	}
 protected:

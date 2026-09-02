@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
 #include "SimpleObjectState.h"
@@ -91,7 +92,7 @@ class CFenceState : public CMapObjectState
 public:
 	CFenceState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
-		NI_ASSERT( pParentState != 0, StrFmt( "CFenceState(): pParentState == 0" ) );
+		NI_ASSERT( pParentState != 0, fmt::format( "CFenceState(): pParentState == 0" ) );
 		ClearData();
 	}
 	//

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
@@ -527,23 +528,23 @@ void CAIGeneralPointsState::SaveDataToDB()
 					const SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = player.parcels[nParcel];
 					const std::string szType = typeAIGeneralParcel.GetMnemonic((int)dialogData.players[nPlayer].parcels[nParcel].eType).c_str();
 
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Type", nPlayer, nParcel), std::string(szType), pManipulator );
-					bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( StrFmt("Players.[%d].general.parcels.[%d].Center", nPlayer, nParcel), CVec2(parcel.vCenter.x, parcel.vCenter.y), pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Radius", nPlayer, nParcel), float(parcel.fRadius) , pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].DefenceDirection", nPlayer, nParcel), float(parcel.fDefenceDirection) , pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Importance", nPlayer, nParcel), float(parcel.fImportance) , pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", nPlayer, nParcel), std::string(szType), pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].Center", nPlayer, nParcel), CVec2(parcel.vCenter.x, parcel.vCenter.y), pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Radius", nPlayer, nParcel), float(parcel.fRadius) , pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].DefenceDirection", nPlayer, nParcel), float(parcel.fDefenceDirection) , pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Importance", nPlayer, nParcel), float(parcel.fImportance) , pManipulator );
 
 					for ( int nReinforcePoint = 0; nReinforcePoint < parcel.reinforcePoints.size(); ++nReinforcePoint )
 					{
 						const NDb::SReinforcePoint &reinfPoint = parcel.reinforcePoints[nReinforcePoint];
 
-						bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints.[%d].Center", nPlayer, nParcel, nReinforcePoint), CVec2(reinfPoint.vCenter.x, reinfPoint.vCenter.y), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints.[%d].Direction", nPlayer, nParcel, nReinforcePoint), float(reinfPoint.fDirection), pManipulator );
+						bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center", nPlayer, nParcel, nReinforcePoint), CVec2(reinfPoint.vCenter.x, reinfPoint.vCenter.y), pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction", nPlayer, nParcel, nReinforcePoint), float(reinfPoint.fDirection), pManipulator );
 					}
 				}
 				for ( int nScriptID = 0; nScriptID < dialogData.players[nPlayer].mobileScriptIDs.size(); ++nScriptID )
 				{
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.mobileScriptIDs.[%d]", nPlayer, nScriptID), int(player.mobileScriptIDs[nScriptID]), pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.mobileScriptIDs.[{}]", nPlayer, nScriptID), int(player.mobileScriptIDs[nScriptID]), pManipulator );
 				}
 			}
 			if ( bResult )
@@ -583,9 +584,9 @@ void CAIGeneralPointsState::AddID()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddInsertOperation(StrFmt("Players.[%d].general.mobileScriptIDs", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
+				if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
 				{
-					bool bResult = pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.mobileScriptIDs.[%d]", dialogData.CurrentPlayer(), dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1),
+					bool bResult = pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.mobileScriptIDs.[{}]", dialogData.CurrentPlayer(), dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1),
 																																dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs[dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1], pManipulator );
 
 					if ( bResult )
@@ -625,17 +626,17 @@ void CAIGeneralPointsState::AddParcel()
 		{
 			bool bResult = true;
 
-			if ( pObjectController->AddInsertOperation(StrFmt("Players.[%d].general.parcels", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
+			if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.parcels", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
 			{
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Type", dialogData.CurrentPlayer(), nParcel), 
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", dialogData.CurrentPlayer(), nParcel), 
 																																		std::string(typeAIGeneralParcel.GetMnemonic((int)newParcel.eType).c_str()), pManipulator );
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( StrFmt("Players.[%d].general.parcels.[%d].Center", dialogData.CurrentPlayer(), nParcel),
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].Center", dialogData.CurrentPlayer(), nParcel),
 																																											newParcel.vCenter, pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Radius", dialogData.CurrentPlayer(), nParcel),
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Radius", dialogData.CurrentPlayer(), nParcel),
 																																		float(newParcel.fRadius), pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].DefenceDirection", dialogData.CurrentPlayer(), nParcel),
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].DefenceDirection", dialogData.CurrentPlayer(), nParcel),
 																																		float(newParcel.fDefenceDirection), pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].Importance", dialogData.CurrentPlayer(), nParcel),
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Importance", dialogData.CurrentPlayer(), nParcel),
 																																		float(newParcel.fImportance), pManipulator );
 			}
 			if ( bResult )
@@ -666,14 +667,14 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 	{
 		if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 		{
-			if ( pObjectController->AddInsertOperation(StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), NODE_ADD_INDEX, pManipulator) )
+			if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), NODE_ADD_INDEX, pManipulator) )
 			{
 				int nPointsNewCount = GetMapInfoEditor()->pMapInfo->players[dialogData.CurrentPlayer()].general.parcels[dialogData.CurrentParcel()].reinforcePoints.size();
 
 				bool bResult = true;
 
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints.[%d].Center", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1),newReinfPoint.vCenter, pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints.[%d].Direction", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1), newReinfPoint.fDirection, pManipulator );
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1),newReinfPoint.vCenter, pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1), newReinfPoint.fDirection, pManipulator );
 
 				dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].nCurrentPoint = nPointsNewCount - 1;
 
@@ -715,7 +716,7 @@ void CAIGeneralPointsState::DeletePoint()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(StrFmt("Players.[%d].general.parcels.[%d].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), dialogData.CurrentID(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), dialogData.CurrentID(), pManipulator) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );
@@ -753,7 +754,7 @@ void CAIGeneralPointsState::DeleteID()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(StrFmt("Players.[%d].general.mobileScriptIDs"), dialogData.CurrentID(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.mobileScriptIDs"), dialogData.CurrentID(), pManipulator) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );
@@ -791,7 +792,7 @@ void CAIGeneralPointsState::DeleteParcel()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(StrFmt("Players.[%d].general.parcels", dialogData.CurrentPlayer()), dialogData.CurrentParcel(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.parcels", dialogData.CurrentPlayer()), dialogData.CurrentParcel(), pManipulator) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );

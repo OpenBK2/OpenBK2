@@ -1,6 +1,7 @@
 
 #pragma once
 #include "System/RandomGen.h"
+#include <fmt/format.h>
 #include "Misc/Win32Random.h"
 
 //Темплейт для создания векторов обьектов с весами,
@@ -169,7 +170,7 @@ namespace NWV
 		{
 			int nElementIndex = GetRandomIndex( bBinarySearch );
 			NI_ASSERT( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-								StrFmt( "Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
+								fmt::format( "Index ({}) miss in SWeightVector ({})", nElementIndex, elements.size() ) );
 			return elements[nElementIndex];
 		}
 	};

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "GeometryExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -24,9 +25,9 @@ bool CGeometryExporter::FormScript( std::string *pScriptText,
 	if ( szSettingsFileName.empty() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
-		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, StrFmt("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tExport type: %s\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
+		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
 		return false;
 	}
 	//
@@ -64,19 +65,19 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		CGrannyFileInfoGuard fileInfo( szDstFileName );
 		if ( fileInfo->MeshCount == 0 ) 
 		{
-			pLogger->Log( LT_ERROR, StrFmt("Geometry has 0 meshes - invalid scene or root mesh name\n") );
-			pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tDestination file: %s\n", szDstFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("Geometry has 0 meshes - invalid scene or root mesh name\n") );
+			pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDstFileName.c_str()) );
 			return false;
 		}
 		for ( int i = 0; i < fileInfo->MeshCount; ++i ) 
 		{
 			if ( fileInfo->Meshes[i]->PrimaryTopology->GroupCount != 1 ) 
 			{
-				pLogger->Log( LT_ERROR, StrFmt("Geometry has invalid number of topology groups in mesh, (must have 1)\n") );
-				pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-				pLogger->Log( LT_ERROR, StrFmt("\tNumber of topology groups: %d\n", fileInfo->Meshes[i]->PrimaryTopology->GroupCount) );
-				pLogger->Log( LT_ERROR, StrFmt("\tMesh: %s\n", fileInfo->Meshes[i]->Name) );
+				pLogger->Log( LT_ERROR, fmt::format("Geometry has invalid number of topology groups in mesh, (must have 1)\n") );
+				pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("\tNumber of topology groups: {}\n", fileInfo->Meshes[i]->PrimaryTopology->GroupCount) );
+				pLogger->Log( LT_ERROR, fmt::format("\tMesh: {}\n", fileInfo->Meshes[i]->Name) );
 			}
 		}
 		CVariant value;
@@ -94,9 +95,9 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	}
 	catch ( ... ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("General fail during importing DB data for geometry\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tFile name: %s\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("General fail during importing DB data for geometry\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}\n", szDstFileName.c_str()) );
 		return false;
 	}
 	return true;
@@ -113,27 +114,27 @@ EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
 	// check for number of skeletons in file
 	if ( fileInfo->SkeletonCount != 1 )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Incorrect number of skeletons\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSkeletons count: %d\n", fileInfo->SkeletonCount) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource File: %s\n", szSrcScenePath.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tDestination File: %s\n", szDestinationPath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Incorrect number of skeletons\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSkeletons count: {}\n", fileInfo->SkeletonCount) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tDestination File: {}\n", szDestinationPath.c_str()) );
 		return ER_FAIL;
 	}
 	// check for number of bones
 	if ( fileInfo->Skeletons[0]->BoneCount == 0 ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Empty bones list - check \"RootMesh\" and \"RootJoint\"\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource File: %s\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Empty bones list - check \"RootMesh\" and \"RootJoint\"\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
 		return ER_FAIL;
 	}
 	// check number of meshes
 	if ( fileInfo->MeshCount == 0 )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Empty meshes list - check \"RootMesh\"\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tGeometry: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource File: %s\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Empty meshes list - check \"RootMesh\"\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
 		return ER_FAIL;
 	}
 	return ER_SUCCESS;

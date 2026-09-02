@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -625,11 +626,11 @@ void CPCDBLinkDialog::UpdateCurrentObjectLabel()
 {
 	if ( bMultiRef )
 	{
-		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, StrFmt( "%s%c%s", szCurrentTable.c_str(), TYPE_SEPARATOR_CHAR, szCurrentObject.c_str() ) );
+		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szCurrentTable.c_str(), TYPE_SEPARATOR_CHAR, szCurrentObject.c_str() ) );
 	}
 	else
 	{
-		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, StrFmt( "%s", szCurrentObject.c_str() ) );
+		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}", szCurrentObject.c_str() ) );
 	}
 }
 
@@ -640,11 +641,11 @@ void CPCDBLinkDialog::UpdatePreviousObjectLabel()
 	{
 		if ( bMultiRef )
 		{
-			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, StrFmt( "%s%c%s", szPreviousTable.c_str(), TYPE_SEPARATOR_CHAR, szPreviousObject.c_str() ) );
+			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szPreviousTable.c_str(), TYPE_SEPARATOR_CHAR, szPreviousObject.c_str() ) );
 		}
 		else
 		{
-			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, StrFmt( "%s", szPreviousObject.c_str() ) );
+			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}", szPreviousObject.c_str() ) );
 		}
 	}
 	else

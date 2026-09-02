@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ParticleExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -31,7 +32,7 @@ bool CParticleExporter::StartExport( const std::string &rszObjectTypeName, bool 
 	bNeedExport = false;
 	MEStartScript( &szScriptText, true );
 	//
-	szScriptText += StrFmt( "loadPlugin \"%s\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginFileName).c_str() );
+	szScriptText += fmt::format( "loadPlugin \"{}\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginFileName).c_str() );
 	return true;
 }
 
@@ -76,14 +77,14 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	std::string szExportPrefix;
 	CManipulatorManager::GetValue( &szExportPrefix, pManipulator, "ExportPrefix" );
 	//
-	szScriptText += StrFmt( "print \"%s\";\r\n", szObjectName.c_str() );
-//	szScriptText += StrFmt( "sysFile -del \"%s\";\r\n", szDestination.c_str() );
-	szScriptText += StrFmt( "file -o -f \"%s\";\r\n", szSource.c_str() );
-	szScriptText += StrFmt( "string $list[] = `ls -type objectSet \"%s*\"`;\r\n", szExportPrefix.c_str() );
-	szScriptText += StrFmt( "select -cl;\r\n" );
-	szScriptText += StrFmt( "for ($item in $list)\r\n" );
-	szScriptText += StrFmt( "  select -add -ne $item;\r\n" );
-	szScriptText += StrFmt( "file -es -f -typ \"%s\" -op \"particles=1;%s;\" \"%s\";\r\n",
+	szScriptText += fmt::format( "print \"{}\";\r\n", szObjectName.c_str() );
+//	szScriptText += fmt::format( "sysFile -del \"{}\";\r\n", szDestination.c_str() );
+	szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
+	szScriptText += fmt::format( "string $list[] = `ls -type objectSet \"{}*\"`;\r\n", szExportPrefix.c_str() );
+	szScriptText += fmt::format( "select -cl;\r\n" );
+	szScriptText += fmt::format( "for ($item in $list)\r\n" );
+	szScriptText += fmt::format( "  select -add -ne $item;\r\n" );
+	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"particles=1;{};\" \"{}\";\r\n",
 			GetOption( &SUserData::SMayaExportData::szOldPluginName ).c_str(), 
 			GetOption( &SUserData::SMayaExportData::szOldPluginParticleFixYZOption ).c_str(),
 			szTempDstName.c_str()
@@ -110,7 +111,7 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 	{
 		if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, it->first ) )
 		{
-			//std::string szDstFileName = StrFmt( "%s%d", szParticleFolder.c_str(), nObjectID );
+			//std::string szDstFileName = fmt::format( "{}{}", szParticleFolder.c_str(), nObjectID );
 			std::string szDstFileName = BuildDestFilePath( pManipulator, szParticleFolder );  // uid
 			NFile::NormalizePath( &szDstFileName );
 			const std::string szTempFileName = exportedFilesMap[szDstFileName];

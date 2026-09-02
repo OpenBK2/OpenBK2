@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "PC_Constants.h"
 #include "PC_ItemEditor.h"
@@ -61,11 +62,11 @@ bool GetPCItemStringValue( std::string *pszValue,
 			const int b = nValue & 0xFF;
 			if ( nType == PCIE_INT_COLOR_WITH_ALPHA )
 			{
-				( *pszValue ) = StrFmt( "%d, %d, %d, %d", a, r, g, b );
+				( *pszValue ) = fmt::format( "{}, {}, {}, {}", a, r, g, b );
 			}
 			else
 			{
-				( *pszValue ) = StrFmt( "%d, %d, %d", r, g, b );
+				( *pszValue ) = fmt::format( "{}, {}, {}", r, g, b );
 			}
 			return true;
 		}
@@ -85,7 +86,7 @@ bool GetPCItemStringValue( std::string *pszValue,
 				nPrecision = PCSV_DEFAULT_RECISION;
 			}
 			( *pszValue ) = CStringManager::GetFloatStringWithPrecision( (float)rValue, nPrecision );
-//			const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//			const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 //			( *pszValue ) = StrFmt( szFormat.c_str(), (float)rValue );
 			return true;
 		}

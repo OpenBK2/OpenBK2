@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MusicTrackExporter.h"
 
 #include "MapEditorLib/ExporterFactory.h"
@@ -42,7 +43,7 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
 	std::string szSoundPath;
 	if ( !CManipulatorManager::GetValue( &szSoundPath, pManipulator, "SoundPath" ) || szSoundPath.empty() || szSoundPath == " " )
 	{
-		const std::string szError = StrFmt( "Can't get sound path or sound path empty for MusicTrack object \"%s\"\n", rszObjectName.c_str() );
+		const std::string szError = fmt::format( "Can't get sound path or sound path empty for MusicTrack object \"{}\"\n", rszObjectName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
@@ -64,11 +65,11 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
 	if ( NFile::CopyFile( szSource, szDestination ) == false )
 	{
 		uint32_t dwErrorCode = ::GetLastError();
-		pLogger->Log( LT_ERROR, StrFmt("Can't copy Music Track object\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tMusicTrack: %s\n", rszObjectName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSource.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tDestination file: %s\n", szDestination.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tError code: %d\n", dwErrorCode) );
+		pLogger->Log( LT_ERROR, fmt::format("Can't copy Music Track object\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tMusicTrack: {}\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSource.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDestination.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tError code: {}\n", dwErrorCode) );
 		return ER_FAIL;
 	}
 	//

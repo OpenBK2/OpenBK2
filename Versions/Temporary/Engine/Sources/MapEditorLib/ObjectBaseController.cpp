@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "PCIEMnemonics.h"
 #include "ObjectBaseController.h"
@@ -525,7 +526,7 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 		}
 		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 )
 		{
-			const std::string szStartNodeName = StrFmt( "%s%c%c%d%c",
+			const std::string szStartNodeName = fmt::format( "{}{:c}{:c}{}{:c}",
 																						posNewUndoData->szName.c_str(),
 																						LEVEL_SEPARATOR_CHAR,
 																						ARRAY_NODE_START_CHAR,

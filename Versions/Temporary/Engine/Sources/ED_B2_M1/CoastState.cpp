@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -293,7 +294,7 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 		//
 		std::string szVSODescName = rVSO.pDescriptor->GetDBID().ToString();
 		//
-		const std::string szNewVSOLabel =	StrFmt( "Coast." );
+		const std::string szNewVSOLabel =	fmt::format( "Coast." );
 		if ( !szVSODescName.empty() )
 		{
 			bool bResult = true;
@@ -307,7 +308,7 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 				// Add ControlPoints
 				for ( int nPointIndex = 0; nPointIndex < rVSO.controlPoints.size(); ++nPointIndex )
 				{
-					const std::string szControlPointLabel = szNewVSOLabel + StrFmt( "ControlPoints.[%d]", nPointIndex );
+					const std::string szControlPointLabel = szNewVSOLabel + fmt::format( "ControlPoints.[{}]", nPointIndex );
 					//Add
 					bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "ControlPoints", NODE_ADD_INDEX, pManipulator );
 					//Set
@@ -320,7 +321,7 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 				// Add ponts
 				for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
 				{
-					const std::string szPointLabel =  szNewVSOLabel + StrFmt( "points.[%d].", nPointIndex );
+					const std::string szPointLabel =  szNewVSOLabel + fmt::format( "points.[{}].", nPointIndex );
 					//Add
 					bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "points", NODE_ADD_INDEX, pManipulator );
 					//Set Pos
@@ -369,7 +370,7 @@ bool CCoastState::RemoveVSOFromBase( class CObjectBaseController *pObjectControl
 		{
 			IManipulator *pManipulator = GetMapInfoEditor()->GetViewManipulator();
 			//
-			const std::string szVSOLabel =	StrFmt( "Coast." );
+			const std::string szVSOLabel =	fmt::format( "Coast." );
 			//Delete
 			bResult = bResult && pObjectController->AddChangeValueOperation<CVariant>( szVSOLabel + "Descriptor", CVariant(), pManipulator );
 			bResult = bResult && pObjectController->AddChangeValueOperation<int>( szVSOLabel + "VSOID", INVALID_NODE_ID, pManipulator );

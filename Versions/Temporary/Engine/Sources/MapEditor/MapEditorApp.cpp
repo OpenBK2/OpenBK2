@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "Scintilla/Platform.h"
@@ -139,12 +140,12 @@ bool CEditorApp::CreateSingletons()
 	if ( IUserDataContainer *pUserDataContainer = Singleton<IUserDataContainer>() )
 	{
 		const SUserData::SConstUserData &cfg = pUserDataContainer->Get()->constUserData;
-		theLogger.WriteLog( StrFmt("%s %s", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str()) );
+		theLogger.WriteLog( fmt::format("{} {}", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str()) );
 		theLogger.WriteLog( "" );
-		theLogger.WriteLog( StrFmt("StartFolder:             %s", cfg.szStartFolder.c_str()) );
-		theLogger.WriteLog( StrFmt("DataStorageFolder:       %s", cfg.szDataStorageFolder.c_str()) );
-		theLogger.WriteLog( StrFmt("ExportSourceFolder:      %s", cfg.szExportSourceFolder.c_str()) );
-		theLogger.WriteLog( StrFmt("ExportDestinationFolder: %s", cfg.szExportDestinationFolder.c_str()) );
+		theLogger.WriteLog( fmt::format("StartFolder:             {}", cfg.szStartFolder.c_str()) );
+		theLogger.WriteLog( fmt::format("DataStorageFolder:       {}", cfg.szDataStorageFolder.c_str()) );
+		theLogger.WriteLog( fmt::format("ExportSourceFolder:      {}", cfg.szExportSourceFolder.c_str()) );
+		theLogger.WriteLog( fmt::format("ExportDestinationFolder: {}", cfg.szExportDestinationFolder.c_str()) );
 		theLogger.WriteLog( "" );
 
 		NHPTimer::GetTimePassed( &time );
@@ -168,10 +169,10 @@ bool CEditorApp::CreateSingletons()
 		//	{
 		//		theLogger.WriteLog( "ERROR: Failed to open game database from $DataStorageFolder" );
 		//		::MessageBox( ::GetDesktopWindow(),
-		//				StrFmt("Couldn't open game database.\n\n"
+		//				fmt::format("Couldn't open game database.\n\n"
 		//						"(DB location was specified as : %s)\n\n"
 		//						"Most probably it's configuration error.\nRefer to the developers for help.", cfg.szDataStorageFolder.c_str()),
-		//				"Error",//StrFmt("%s %s Error", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str()),
+		//				"Error",//fmt::format("{} {} Error", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str()),
 		//				MB_OK  | MB_ICONERROR
 		//				);
 		//		return false;
@@ -328,7 +329,7 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 	strPath.LoadString( IDS_REGISTRY_PATH );
 	CString strTitle;
 	strTitle.LoadString( AFX_IDS_APP_TITLE );
-	const std::string szRegistryKey = StrFmt( "Software\\%s\\%s\\%s",
+	const std::string szRegistryKey = fmt::format( "Software\\{}\\{}\\{}",
 																			 LPCTSTR( strPath ),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
 																			 LPCTSTR( strTitle ) );
@@ -415,7 +416,7 @@ BOOL CEditorApp::InitInstance()
 	// Установить рабочий раздел Registry
 	CString strPath;
 	strPath.LoadString( IDS_REGISTRY_PATH );
-	const std::string szRegistryKey = StrFmt( "%s\\%s",
+	const std::string szRegistryKey = fmt::format( "{}\\{}",
 																			 LPCTSTR( strPath ),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() );
 	SetRegistryKey( szRegistryKey.c_str() );

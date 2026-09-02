@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_MainFrame.h"
@@ -171,7 +172,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 	for ( int nAnimSpeedIndex = -10; nAnimSpeedIndex <= 10; ++nAnimSpeedIndex )
 	{
 		if ( nAnimSpeedIndex > 0 )
-			speeds.push_back( StrFmt( "+%d", nAnimSpeedIndex ) );
+			speeds.push_back( fmt::format( "+{}", nAnimSpeedIndex ) );
 		else
 			speeds.push_back( std::to_string(  nAnimSpeedIndex ) );
 	}
@@ -704,11 +705,11 @@ void CMoviesEditorWindow::SetDialogData( const SScriptMovieEditorData &rDialogDa
 	int i = -1;
 	for ( i = 0; i < dialogData.scriptMoviesData.scriptMovieSequences.size(); ++i )
 	{
-		const int nStringNumber = wndMovieCombo.AddString( StrFmt("%d", i) );
+		const int nStringNumber = wndMovieCombo.AddString( fmt::format("{}", i) );
 		wndMovieCombo.SetItemData( nStringNumber, i );
 	}
 	if ( (dialogData.nActiveMovie <= i) && (dialogData.nActiveMovie >= 0) )
-		wndMovieCombo.SelectString( 0, StrFmt("%d", dialogData.nActiveMovie) );
+		wndMovieCombo.SelectString( 0, fmt::format("{}", dialogData.nActiveMovie) );
 	else if ( i > 0 )
 		wndMovieCombo.SelectString( 0, "0" );
 
@@ -756,7 +757,7 @@ void CMoviesEditorWindow::UpdateDialogData()
 		}
 	}
 	const float fCurrTime = wndTimeSliderControl.GetCursorPos();
-	SetDlgItemText( IDC_DMOVED_TIME_EDIT, StrFmt("%g", fCurrTime) );
+	SetDlgItemText( IDC_DMOVED_TIME_EDIT, fmt::format("{:g}", fCurrTime) );
 }
 
 

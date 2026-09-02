@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -63,7 +64,7 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 	if ( !NGfx::Init3D( m_hWnd ) )
 	{
 		// DX not found
-		NLog::GetLogger()->Log( LT_ERROR, StrFmt( "CCFCSceneB2::OnCreateChildFrameWnd(): Failed to initialize Direct3D9" ) );
+		NLog::GetLogger()->Log( LT_ERROR, fmt::format( "CCFCSceneB2::OnCreateChildFrameWnd(): Failed to initialize Direct3D9" ) );
 		return false;
 	}
 	// init input system
@@ -150,7 +151,7 @@ void CCFCSceneB2::UpdateCameraPosition( uint32_t dwData )
 	}
 	else
 	{
-		NLog::GetLogger()->Log( LT_ERROR, StrFmt( "CCFCSceneB2::UpdateCameraPosition(): dwData is not packed 2D coords" ) );
+		NLog::GetLogger()->Log( LT_ERROR, fmt::format( "CCFCSceneB2::UpdateCameraPosition(): dwData is not packed 2D coords" ) );
 	}
 }
 
@@ -342,8 +343,8 @@ void CCFCSceneB2::DrawStatistic( CPaintDC *pDC )
 
 	//NGScene::SRenderStats sStats;
 	//NGScene::GetRenderStats( &sStats );
-	//pDC->TextOut( nX, nY + nYStep * 0, StrFmt( "nVertices: %d", sStats.nVertices ) );
-	//pDC->TextOut( nX, nY + nYStep * 1, StrFmt( "nTris: %d", sStats.nTris ) );
+	//pDC->TextOut( nX, nY + nYStep * 0, fmt::format( "nVertices: {}", sStats.nVertices ) );
+	//pDC->TextOut( nX, nY + nYStep * 1, fmt::format( "nTris: {}", sStats.nTris ) );
 
 	if ( CPtr<ICamera> pCamera = Camera() )
 	{
@@ -358,15 +359,15 @@ void CCFCSceneB2::DrawStatistic( CPaintDC *pDC )
 
 		NDrawToolsDC::DrawTextDC( pDC, "Camera params:", vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, StrFmt("Position: (%.0f, %.0f, %.0f)", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, StrFmt("Distance: %.0f", fCamDist), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, StrFmt("Yaw: %.0f", fCamYaw), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, StrFmt("Pitch: %.0f", fCamPitch), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, StrFmt("FOV: %.0f", fFOV), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pDC, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
 	}
 }
 

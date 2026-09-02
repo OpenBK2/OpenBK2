@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "libdb/ResourceManager.h"
 #include "ManipulatorManager.h"
@@ -386,14 +387,14 @@ bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, cons
 	{
 		return false;
 	}
-	const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+	const std::string sz2DArrayName = fmt::format( "{}{:c}data", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 	int nExistingXCount = 0;
 	bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
 	if ( bResult )
 	{
 		for ( int nXIndex = 0; nXIndex < nExistingXCount; ++nXIndex )
 		{
-			const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+			const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 			bResult = pManipulator->RemoveNode( szArrayName );
 			if ( !bResult )
 			{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface_UserData.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib_export.h"
 
@@ -11,10 +12,10 @@ void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditio
 	DebugTrace( "size:[%dx%d]%s", size.x, size.y, rszAdditionalMessage.c_str() );
 	for ( int y = size.y - 1; y >= 0; --y )
 	{
-		std::string szTrace = StrFmt( "%02d |", y );
+		std::string szTrace = fmt::format( "{:02d} |", y );
 		for ( int x = 0; x < size.x; ++x )
 		{
-			szTrace += StrFmt( " %02x", rArray[y][x] );
+			szTrace += fmt::format( " {:02x}", rArray[y][x] );
 		}
 		DebugTrace( "%s", szTrace.c_str() );
 	}
@@ -27,7 +28,7 @@ void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditio
 	szTrace = ( "    " );
 	for ( int x = 0; x < size.x; ++x )
 	{
-		szTrace += StrFmt( " %02d", x );
+		szTrace += fmt::format( " {:02d}", x );
 	}
 	DebugTrace( "%s", szTrace.c_str() );
 }
@@ -40,10 +41,10 @@ void Trace2DFloatArray( const CArray2DType &rArray, const std::string &rszAdditi
 	DebugTrace( "size:[%dx%d]%s", size.x, size.y, rszAdditionalMessage.c_str() );
 	for ( int y = size.y - 1; y >= 0; --y )
 	{
-		std::string szTrace = StrFmt( "%02d |", y );
+		std::string szTrace = fmt::format( "{:02d} |", y );
 		for ( int x = 0; x < size.x; ++x )
 		{
-			szTrace += StrFmt( " %06.03f", rArray[y][x] );
+			szTrace += fmt::format( " {:06.3f}", rArray[y][x] );
 		}
 		DebugTrace( "%s", szTrace.c_str() );
 	}
@@ -56,7 +57,7 @@ void Trace2DFloatArray( const CArray2DType &rArray, const std::string &rszAdditi
 	szTrace = ( "    " );
 	for ( int x = 0; x < size.x; ++x )
 	{
-		szTrace += StrFmt( "     %02d", x );
+		szTrace += fmt::format( "     {:02d}", x );
 	}
 	DebugTrace( "%s", szTrace.c_str() );
 }
@@ -132,13 +133,13 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 			if ( objectHookFunctional( rObjectSet.szObjectTypeName, itObject->first ) == false )
 			{
 				pLogger->Log( LT_ERROR, "ForEachObject() processing failed\n" );
-				pLogger->Log( LT_ERROR, StrFmt("\tType: %s, ID: %d\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
+				pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
 			}
 		}
 		catch ( ... ) 
 		{
 			pLogger->Log( LT_ERROR, "ForEachObject processing general fail\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tType: %s, ID: %d\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
+			pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
 		}
 	}
 	return true;

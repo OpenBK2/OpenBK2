@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -82,7 +83,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 			}
 			if ( !bResult )
 			{
-				NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Object have no visual part: %s%c%s\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 			}
 		}
 		if ( bResult )
@@ -97,7 +98,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 					if ( pVisObjectManipulator == 0 )
 					{
 						bResult = false;
-						NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Object have no visual part: %s%c%s\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+						NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 					}
 				}
 			}
@@ -112,11 +113,11 @@ bool CSimpleObjectState::CanAddSimpleObject()
 					{
 						for ( int nMemberIndex = 0; nMemberIndex < nMemberCount; ++nMemberIndex )
 						{
-							CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( StrFmt( "members.[%d]", nMemberIndex ), pRPGStatsManipulator, 0, 0, 0 );
+							CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( fmt::format( "members.[{}]", nMemberIndex ), pRPGStatsManipulator, 0, 0, 0 );
 							if ( pVisObjectManipulator == 0 )
 							{
 								bResult = false;
-								NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Object have no visual part: %s%c%s.member[%d]\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str(), nMemberIndex ) );
+								NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}.member[{}]\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str(), nMemberIndex ) );
 								break;
 							}
 						}
@@ -124,7 +125,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 					else
 					{
 						bResult = false;
-						NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Object have no visual part: %s%c%s\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+						NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 					}
 				}
 			}

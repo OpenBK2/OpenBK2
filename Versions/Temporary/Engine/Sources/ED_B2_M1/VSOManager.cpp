@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/Win32Random.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -329,7 +330,7 @@ void CVSOManager::SampleCurve( const std::vector<CVec3> &rControlPointList,
 															 bool bComplete )
 {
 	NI_ASSERT( rControlPointList.size() > 1,
-						 StrFmt( "CVSOManager::SampleCurve(): Invalid size: rControlPointList: %d\n",
+						 fmt::format( "CVSOManager::SampleCurve(): Invalid size: rControlPointList: {}\n",
 										 rControlPointList.size() ) );
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SampleCurve(): Wrong parameter: pVSOPointList == 0" );
 
@@ -729,7 +730,7 @@ bool CVSOManager::GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const 
 {
 	NI_ASSERT( pBoundingPolygon != 0, "CVSOManager::GetBoundingPolygon(): Wrong parameter: pBoundingPolygon == 0" );
 	NI_ASSERT( ( nPointIndex >= 0 ) && ( nPointIndex < rVSOPointList.size() ),
-						 StrFmt( "CVSOManager::GetBoundingPolygon(): Invalid argument: nPointIndex: %d (%d)\n",
+						 fmt::format( "CVSOManager::GetBoundingPolygon(): Invalid argument: nPointIndex: {} ({})\n",
 										 nPointIndex,
 										 rVSOPointList.size() ) );
 	pBoundingPolygon->clear();

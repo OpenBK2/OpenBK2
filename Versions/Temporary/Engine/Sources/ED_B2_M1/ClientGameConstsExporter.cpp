@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ClientGameConstsExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -30,7 +31,7 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulato
 		std::string szFileName;
 		for ( int i = 0; i < nNumCursors; ++i ) 
 		{
-			const std::string szName = StrFmt( "Cursors.[%d].FileName", i );
+			const std::string szName = fmt::format( "Cursors.[{}].FileName", i );
 			if ( CManipulatorManager::GetValue( &szFileName, pManipulator, szName ) ) 
 			{
 				const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szFileName;

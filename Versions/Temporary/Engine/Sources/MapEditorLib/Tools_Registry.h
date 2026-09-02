@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <fmt/format.h>
 
 #include "MapEditorLib_export.h"
 
@@ -75,7 +76,7 @@ class MAPEDITORLIB_EXPORT CRegistrySection
 			if ( ( eResult == ERROR_SUCCESS ) && ( !szBuffer.empty() ) )
 			{
 				if ( sscanf( szBuffer.c_str(),
-										 StrFmt( "%s %s %s %s", pszMask, pszMask, pszMask, pszMask ),
+										 fmt::format( "{} {} {} {}", pszMask, pszMask, pszMask, pszMask ).c_str(),
 										 &( pLoadValue->minx ),
 										 &( pLoadValue->miny ),
 										 &( pLoadValue->maxx ),
@@ -96,7 +97,7 @@ class MAPEDITORLIB_EXPORT CRegistrySection
 	template<class TValue>
   int32_t SaveRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const CTRect<TValue> &rSaveValue ) const
 	{
-		const std::string szFormat = StrFmt( "%s %s %s %s", pszMask, pszMask, pszMask, pszMask );
+		const std::string szFormat = fmt::format( "{} {} {} {}", pszMask, pszMask, pszMask, pszMask );
 		const std::string szBuffer = StrFmt( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );
 		return SaveString( pszRegistryKey, szBuffer );
 	}

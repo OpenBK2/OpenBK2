@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
@@ -79,7 +80,7 @@ namespace NMapInfoEditor
 			return false;
 		}
 		// Устанавливаем общие параметры
-		const std::string szSpotPrefix = StrFmt( "Spots.[%d]", pSpotLoadInfo->nObjectIndex );
+		const std::string szSpotPrefix = fmt::format( "Spots.[{}]", pSpotLoadInfo->nObjectIndex );
 		// Добавляем объекты базы
 		nLinkID = INVALID_NODE_ID;
 		// создаем SMapInfoElement и заполняем его данными
@@ -147,7 +148,7 @@ namespace NMapInfoEditor
 		// создаем SMapInfoElements и заполняем их данными
 		bool bResult = true;
 		{
-			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = fmt::format( "Spots.[{}]", nSpotIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Spots", NODE_ADD_INDEX, pManipulator );
 			//Change
@@ -156,7 +157,7 @@ namespace NMapInfoEditor
 			for ( int nSpotPoint = 0; nSpotPoint < 4; ++nSpotPoint )
 			{
 				//bResult = bResult && pObjectController->AddInsertOperation( szSpotPrefix + ".points", NODE_ADD_INDEX, pManipulator );
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + StrFmt( ".points.[%d]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + fmt::format( ".points.[{}]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
 			}
 			if ( bResult )
 			{
@@ -297,11 +298,11 @@ namespace NMapInfoEditor
 		{
 			MakeAbsoluteSpotSquare();
 			//
-			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = fmt::format( "Spots.[{}]", nSpotIndex );
 			bool bResult = true;
 			for ( int nSpotPoint = 0; nSpotPoint < 4; ++nSpotPoint )
 			{
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + StrFmt( ".points.[%d]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + fmt::format( ".points.[{}]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
 			}
 			//
 			MakeRelativeSpotSquare( false );
@@ -353,7 +354,7 @@ namespace NMapInfoEditor
 		const int nSpotIndex = pObjectInfoCollector->spotIDToIndexCollector.Get( nLinkID );
 		if ( ( nSpotIndex != INVALID_NODE_ID ) && ( nFlags > 0 ) )
 		{
-			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = fmt::format( "Spots.[{}]", nSpotIndex );
 			CManipulatorManager::GetArray<CSpotSquare, CVec2>( &spotSquare, pManipulator, szSpotPrefix + ".points" );
 			ClearAdditionalPosition( false );
 			MakeRelativeSpotSquare( true );
@@ -448,7 +449,7 @@ namespace NMapInfoEditor
 		// создаем SMapInfoElements и заполняем их данными
 		bool bResult = true;
 		{
-			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = fmt::format( "Spots.[{}]", nSpotIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Spots", NODE_ADD_INDEX, pManipulator );
 			//Change
@@ -456,7 +457,7 @@ namespace NMapInfoEditor
 			bResult = bResult && pObjectController->AddChangeOperation( szSpotPrefix + ".SpotID", (int)( nLinkID ), pManipulator );
 			for ( int nSpotPoint = 0; nSpotPoint < 4; ++nSpotPoint )
 			{
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + StrFmt( ".points.[%d]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( szSpotPrefix + fmt::format( ".points.[{}]", nSpotPoint ), spotSquare[nSpotPoint], pManipulator );
 			}
 			if ( bResult )
 			{

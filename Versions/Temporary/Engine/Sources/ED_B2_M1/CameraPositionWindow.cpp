@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "CommandHandlerDefines.h"
 #include "CameraPositionWindow.h"
@@ -91,7 +92,7 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 		const int nStringNumber = wndPalyerComboBox.AddString( std::to_string(  nPlayerIndex ) );
 		wndPalyerComboBox.SetItemData( nStringNumber, nPlayerIndex );
 	}
-	wndPalyerComboBox.SelectString( 0, StrFmt("%d", pData->nPlayerIndex) );
+	wndPalyerComboBox.SelectString( 0, fmt::format("{}", pData->nPlayerIndex) );
 	CheckRadioButton( IDC_OW_POSITION_ONLY_RADIO, IDC_OW_ALL_PARAMS_RADIO, pData->bAllParams ? IDC_OW_ALL_PARAMS_RADIO : IDC_OW_POSITION_ONLY_RADIO );
 	bIsDataSetting = false;
 }

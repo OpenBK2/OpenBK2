@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "AIGenParcelDlg.h"
 #include "AIGeneralTypes.h"
@@ -38,7 +39,7 @@ BOOL CAIGenParcelDlg::OnInitDialog()
 		comboType.SetItemData( nIdx, i );
 	}
 	comboType.SelectString( 0, typeAIGeneralParcel.GetMnemonic(*pType).c_str() );
-	edImportance.SetWindowText( StrFmt("%f", *pImportance) );
+	edImportance.SetWindowText( fmt::format("{:f}", *pImportance) );
 
 	return true;
 }

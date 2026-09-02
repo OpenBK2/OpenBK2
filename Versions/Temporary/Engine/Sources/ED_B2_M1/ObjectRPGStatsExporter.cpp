@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
@@ -38,7 +39,7 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 				std::string szSkeletonName;
 				if ( CManipulatorManager::GetParamsFromReference( "Skeleton", pModelMan, 0, &szSkeletonName, 0 ) && !szSkeletonName.empty() )
 				{
-					//const std::string szSkeletonFileName = pUserData->szExportDestinationFolder + StrFmt( "bin\\skeletons\\%d", nSkeletonID );
+					//const std::string szSkeletonFileName = pUserData->szExportDestinationFolder + fmt::format( "bin\\skeletons\\{}", nSkeletonID );
 					const std::string szSkeletonFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\skeletons\\";
 					CDBPtr<NDb::SSkeleton> pDBSkeleton = NDb::Get<NDb::SSkeleton>( CDBID( szSkeletonName ) );
 					std::string szSkeletonFileName = NBinResources::GetBinaryFileName( szSkeletonFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid ); // uid
@@ -58,14 +59,14 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 						for ( int i = 0; i < nNumSpecificJoints; ++i ) 
 						{
 							std::string szJointName;
-							if ( CManipulatorManager::GetValue( &szJointName, pManipulator, StrFmt("SpecificJoints.[%d]", i) ) && !szJointName.empty() )
+							if ( CManipulatorManager::GetValue( &szJointName, pManipulator, fmt::format("SpecificJoints.[{}]", i) ) && !szJointName.empty() )
 							{
 								if ( bonesMap.find( szJointName ) == bonesMap.end() )
 								{
 									pLogger->Log( LT_ERROR, "Specific joint doesn't exist in object's skeleton\n" );
-									pLogger->Log( LT_ERROR, StrFmt("\tObject: %s\n", rszObjectName.c_str()) );
-									pLogger->Log( LT_ERROR, StrFmt("\tSpecific joint name: %s\n", szJointName.c_str()) );
-									pLogger->Log( LT_ERROR, StrFmt("\tSpecific joint index: %d\n", i) );
+									pLogger->Log( LT_ERROR, fmt::format("\tObject: {}\n", rszObjectName.c_str()) );
+									pLogger->Log( LT_ERROR, fmt::format("\tSpecific joint name: {}\n", szJointName.c_str()) );
+									pLogger->Log( LT_ERROR, fmt::format("\tSpecific joint index: {}\n", i) );
 								}
 							}
 						}

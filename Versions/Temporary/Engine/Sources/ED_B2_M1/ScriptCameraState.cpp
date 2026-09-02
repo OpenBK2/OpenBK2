@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "SceneB2/Scene.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -436,8 +437,8 @@ void CScriptCameraState::FixDBMoviesIndexes( int nDeletedKey )
 			bool bResult = pManipulator->RemoveNode( "ScriptMovies.ScriptCameraPlacements", nDeletedKey );
 			for ( int nPlacementID = nDeletedKey; nPlacementID < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size(); ++nPlacementID )
 			{
-				bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Name", nPlacementID),
-																																		StrFmt("%d", nPlacementID), pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Name", nPlacementID),
+																																		fmt::format("{}", nPlacementID), pManipulator );
 			}
 
 			for ( int nSeqID = 0; nSeqID < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size(); ++nSeqID )
@@ -449,7 +450,7 @@ void CScriptCameraState::FixDBMoviesIndexes( int nDeletedKey )
 					NI_VERIFY( nDeletedKey != nPosIndex, "Error movie in DB", return )
 					if ( seq.posKeys[nPosKeyID].nPositionIndex > nDeletedKey )
 					{
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].PositionIndex", nSeqID, nPosKeyID),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqID, nPosKeyID),
 																																				(int)(nPosIndex - 1), pManipulator );
 					}
 				}
@@ -481,23 +482,23 @@ bool CScriptCameraState::AddSequence()
 			bResult = bResult && AddScriptPlacement();	//	sequence finish camera
 			const int nFinishCameraIndex = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() - 1;
 
-			if ( bResult && pObjectController->AddInsertOperation(StrFmt("ScriptMovies.ScriptMovieSequences"), NODE_ADD_INDEX, pManipulator) )
+			if ( bResult && pObjectController->AddInsertOperation(fmt::format("ScriptMovies.ScriptMovieSequences"), NODE_ADD_INDEX, pManipulator) )
 			{
 				if ( (nStartCameraIndex >= 0) && (nFinishCameraIndex >= 0) )
 				{
 					const int nSeqIndex = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size() - 1;
-					if ( pObjectController->AddInsertOperation(StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys", nSeqIndex), NODE_ADD_INDEX, pManipulator) &&
-							 pObjectController->AddInsertOperation(StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys", nSeqIndex), NODE_ADD_INDEX, pManipulator) )
+					if ( pObjectController->AddInsertOperation(fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys", nSeqIndex), NODE_ADD_INDEX, pManipulator) &&
+							 pObjectController->AddInsertOperation(fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys", nSeqIndex), NODE_ADD_INDEX, pManipulator) )
 					{
 						// start
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[0].StartTime", nSeqIndex),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[0].StartTime", nSeqIndex),
 																																				(float)(0.0f), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[0].PositionIndex", nSeqIndex),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[0].PositionIndex", nSeqIndex),
 																																				(int)nStartCameraIndex, pManipulator );
 						// end
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[1].StartTime", nSeqIndex),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[1].StartTime", nSeqIndex),
 																																				(float)(MOV_ED_DEF_LEN), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[1].PositionIndex", nSeqIndex),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[1].PositionIndex", nSeqIndex),
 																																				(int)nFinishCameraIndex, pManipulator );
 					}
 				}
@@ -558,7 +559,7 @@ bool CScriptCameraState::AddScriptPlacement()
 		{
 			if ( CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator() )
 			{
-				if ( pObjectController->AddInsertOperation(StrFmt("ScriptMovies.ScriptCameraPlacements"), NODE_ADD_INDEX, pManipulator) )
+				if ( pObjectController->AddInsertOperation(fmt::format("ScriptMovies.ScriptCameraPlacements"), NODE_ADD_INDEX, pManipulator) )
 				{
 					int nCamerasCount = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size();
 
@@ -567,15 +568,15 @@ bool CScriptCameraState::AddScriptPlacement()
 					GetCameraPlacement( &newCamera );
 
 					bool bResult = true;
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Name", nCamerasCount - 1),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Name", nCamerasCount - 1),
 																																			(std::string)newCamera.szName, pManipulator );
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Position", nCamerasCount - 1 ),
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Position", nCamerasCount - 1 ),
 																																												newCamera.vPosition, pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Yaw", nCamerasCount - 1),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Yaw", nCamerasCount - 1),
 																																			(float)newCamera.fYaw, pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Pitch", nCamerasCount - 1),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Pitch", nCamerasCount - 1),
 																																			(float)newCamera.fPitch, pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].FOV", nCamerasCount - 1),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].FOV", nCamerasCount - 1),
 																																			(float)newCamera.fFOV, pManipulator );
 
 					SetCameraPlacement( newCamera );
@@ -609,13 +610,13 @@ bool CScriptCameraState::UpdateScriptPlacement( int nCamera )
 		if ( CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator() )
 		{
 			bool bResult = true;
-			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Position", nCamera),
+			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Position", nCamera),
 																																										updatedCamera.vPosition, pManipulator );
-			bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Yaw", nCamera),
+			bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Yaw", nCamera),
 																																	updatedCamera.fYaw, pManipulator );
-			bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Pitch", nCamera),
+			bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].Pitch", nCamera),
 																																	updatedCamera.fPitch, pManipulator );
-			bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].FOV", nCamera),
+			bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptCameraPlacements.[{}].FOV", nCamera),
 																																	updatedCamera.fFOV, pManipulator );
 
 			if ( bResult )
@@ -647,7 +648,7 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 
 		CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator();
 		CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController();
-		if ( pObjectController->AddRemoveOperation(StrFmt("ScriptMovies.ScriptCameraPlacements" ), nCamera, GetMapInfoEditor()->GetViewManipulator()) )
+		if ( pObjectController->AddRemoveOperation(fmt::format("ScriptMovies.ScriptCameraPlacements" ), nCamera, GetMapInfoEditor()->GetViewManipulator()) )
 		{
 			pObjectController->Redo( false, true, 0 );
 			Singleton<IControllerContainer>()->Add( pObjectController );
@@ -681,11 +682,11 @@ bool CScriptCameraState::AddPosKey( float fTime, int nSeqIndex )
 					{
 						if ( fTime <= posKeys[nKeyIndex].fStartTime )
 						{
-							if ( pObjectController->AddInsertOperation(StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys", nSeqIndex), nKeyIndex, pManipulator) )
+							if ( pObjectController->AddInsertOperation(fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys", nSeqIndex), nKeyIndex, pManipulator) )
 							{
-								bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].StartTime", nSeqIndex, nKeyIndex),
+								bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, nKeyIndex),
 																																						(float)(fTime), pManipulator );
-								bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].PositionIndex", nSeqIndex, nKeyIndex),
+								bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqIndex, nKeyIndex),
 																																						(int)(nCameraIndex), pManipulator );
 							}
 							if ( bResult )
@@ -725,7 +726,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 		{
 			NI_VERIFY( (i >= 0) && (i < actSeq.posKeys.size()), "Active key couldn't be found in DB!\n", return false )
 			NDb::SScriptMovieKeyPos *pActKey = &(actSeq.posKeys[i]);
-			std::string szKeyName = StrFmt( "Movie %d, Key %d", nSeqIndex, i );
+			std::string szKeyName = fmt::format( "Movie {}, Key {}", nSeqIndex, i );
       
 			CMovEditorKeySettingsDlg dlg(	Singleton<IMainFrameContainer>()->GetSECWorkbook(), pActKey, &szKeyName );
 			if ( dlg.DoModal() == IDOK )
@@ -735,15 +736,15 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 					if ( CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator() )
 					{
 						bool bResult = true;
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].StartTime", nSeqIndex, i),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, i),
 																																				(float)(pActKey->fStartTime), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].PositionIndex", nSeqIndex, i),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqIndex, i),
 																																				(int)(pActKey->nPositionIndex), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].IsTangentIn", nSeqIndex, i),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, i),
 																																				(bool)pActKey->bIsTangentIn, pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].IsTangentOut", nSeqIndex, i),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentOut", nSeqIndex, i),
 																																				(bool)pActKey->bIsTangentOut, pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].KeyParam", nSeqIndex, i),
+						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].KeyParam", nSeqIndex, i),
 																																				pActKey->szKeyParam, pManipulator );
 						if ( bResult )
 						{
@@ -792,7 +793,7 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 						{
 							int nDeletedIndex = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys[i].nPositionIndex;
 							//
-							bResult = bResult && pManipulator->RemoveNode( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys", nSeqIndex), i );
+							bResult = bResult && pManipulator->RemoveNode( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys", nSeqIndex), i );
 							if ( bResult )
 							{
 								FixDBMoviesIndexes( nDeletedIndex );
@@ -827,7 +828,7 @@ bool CScriptCameraState::SetSequenceLength( float fNewLength, int nSeqIndex )
 				{
 					// just move the final key
 					const int nLastKeyIndex = posKeys.size() - 1;
-					if ( pObjectController->AddChangeOperation(StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].StartTime", nSeqIndex, nLastKeyIndex), (float)(fNewLength), pManipulator) )
+					if ( pObjectController->AddChangeOperation(fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, nLastKeyIndex), (float)(fNewLength), pManipulator) )
 					{
 						pObjectController->Redo( false, true, GetMapInfoEditor() );
 						Singleton<IControllerContainer>()->Add( pObjectController );
@@ -847,10 +848,10 @@ bool CScriptCameraState::SetSequenceLength( float fNewLength, int nSeqIndex )
 							break;
 						}
 					}
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].StartTime", nSeqIndex, nLastKeyIndex), (float)(fNewLength), pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, nLastKeyIndex), (float)(fNewLength), pManipulator );
 					for ( int i = nLastKeyIndex + 1; i < posKeys.size(); ++i )
 					{
-						bResult = bResult && pManipulator->RemoveNode( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys", nSeqIndex), i );
+						bResult = bResult && pManipulator->RemoveNode( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys", nSeqIndex), i );
 					}
 
 					if ( bResult )
@@ -911,13 +912,13 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 				bool bResult = true;
 				for ( int i = 0; i < posKeys.size(); ++i )
 				{
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].StartTime", nSeqIndex, i),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, i),
 																																			(float)(posKeys[i].fStartTime), pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].PositionIndex", nSeqIndex, i),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqIndex, i),
 																																			(int)(posKeys[i].nPositionIndex), pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].IsTangentIn", nSeqIndex, i),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, i),
 																																			(bool)(posKeys[i].bIsTangentIn), pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptMovieSequences.[%d].posKeys.[%d].IsTangentIn", nSeqIndex, i),
+					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, i),
 																																			(bool)(posKeys[i].bIsTangentOut), pManipulator );
 				}
 				if ( bResult )
@@ -1006,7 +1007,7 @@ void CScriptCameraState::PostDraw( CPaintDC *pPaintDC )
 		CVec2 res = VNULL2;
 
 		if ( TestRayInFrustrum( vEyePos, pCam->GetTransform(), EditorScene()->GetScreenRect(), &res ) )
-			NDrawToolsDC::DrawLabelDC( pPaintDC, StrFmt("%s", it->szName), res );
+			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format("{}", it->szName), res );
 	}
 }
 

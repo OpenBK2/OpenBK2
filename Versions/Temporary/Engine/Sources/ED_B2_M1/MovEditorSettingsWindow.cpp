@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MovEditorSettingsWindow.h"
 
@@ -31,7 +32,7 @@ void CMovEditorSettingsDlg::OnOK()
 
 BOOL CMovEditorSettingsDlg::OnInitDialog()
 {
-	SetDlgItemText( IDC_MOVEDS_LEN_EDIT, StrFmt("%g", (*pLength)) );
+	SetDlgItemText( IDC_MOVEDS_LEN_EDIT, fmt::format("{:g}", (*pLength)) );
 	return true;
 }
 

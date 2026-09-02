@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "BasicDataExtractor.h"
 #include "libdb/ResourceManager.h"
@@ -59,7 +60,7 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 																							 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + fmt::format( "Editor\\IconCache\\{}\\{}", rszObjectTypeName.c_str(), rszObjectName.c_str() );
 	//
 	if ( NFile::DoesFileExist( szCacheFileName ) )
 	{
@@ -96,7 +97,7 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 																						 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + fmt::format( "Editor\\IconCache\\{}\\{}", rszObjectTypeName.c_str(), rszObjectName.c_str() );
 	//
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, szCacheFileName );

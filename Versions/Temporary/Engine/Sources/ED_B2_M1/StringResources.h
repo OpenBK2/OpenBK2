@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/format.h>
+
 #define RCSTR(s)	(s)
 
 inline CString RCStr( const unsigned nStringID )
@@ -11,7 +13,7 @@ inline CString RCStr( const unsigned nStringID )
 
 	if ( s.IsEmpty() )
 	{
-		std::string szMsg = StrFmt( "WARNING: can't find string resource (ID=%d)", nStringID );
+		std::string szMsg = fmt::format( "WARNING: can't find string resource (ID={})", nStringID );
 		NI_ASSERT( 0, szMsg.c_str() );
 	}
 

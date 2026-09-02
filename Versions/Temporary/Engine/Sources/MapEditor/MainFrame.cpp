@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "WMDefines.h"
@@ -382,7 +383,7 @@ LRESULT CMainFrame::OnSECToolBarNotify( WPARAM wParam, LPARAM lParam )
 	unsigned nControlID = LOWORD( wParam );
 	
 	HWND hWnd	= reinterpret_cast<HWND>( lParam );
-	NI_ASSERT( ::IsWindow( hWnd ), StrFmt( "Not a window: 0x%X", hWnd ) );
+	NI_ASSERT( ::IsWindow( hWnd ), fmt::format( "Not a window: 0x{:X}", hWnd ) );
 	CWnd *pwnd = CWnd::FromHandle( hWnd );
 	/**/
 
@@ -1482,7 +1483,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
 	SUserData::CRefPathMap &rRefPathMap = pUserData->refPathMap;
-	const std::string szRefKey = StrFmt( "_OPEN:%s", szObjectTypeName.c_str() );
+	const std::string szRefKey = fmt::format( "_OPEN:{}", szObjectTypeName.c_str() );
 	//
 	CPCDBLinkDialog pcDBLinkDialog( bEnableEmpty ? CPCDBLinkDialog::TYPE_LINK : CPCDBLinkDialog::TYPE_OPEN, false, false, 0, 0, AfxGetMainWnd() );
 	CTableSet tableSet;

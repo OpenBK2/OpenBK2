@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "Misc/PlaneGeometry.h"
@@ -93,7 +94,7 @@ void CPointsListState::SetPointMarkers()
 
 	int nActiveIndex = GetSelectedPointIndex();
 
-	std::string szScrText = GetPointsArrayFieldName() + StrFmt( " [Variant ID = %d]", nActiveIndex );
+	std::string szScrText = GetPointsArrayFieldName() + fmt::format( " [Variant ID = {}]", nActiveIndex );
 	pBuildingEditor->SetScreenTitle( szScrText );
 
 	pMarkers = new SMarkerSet( pBuildingEditor->GetBuildingPos(), vBuildingOrigin );
@@ -105,11 +106,11 @@ void CPointsListState::SetPointMarkers()
 		for ( int i = 0; i < nNumElems; ++i )
 		{
 			CVec3 pos = VNULL3;
-			CManipulatorManager::GetValue( &pos, pManipulator, StrFmt("%s.[%d].%s", GetPointsArrayFieldName().c_str(), i, GetPositionFieldName().c_str()) ); 
+			CManipulatorManager::GetValue( &pos, pManipulator, fmt::format("{}.[{}].{}", GetPointsArrayFieldName().c_str(), i, GetPositionFieldName().c_str()) ); 
 
 			CVariant dir = 0.0f;
 			if ( !GetDirectionFieldName().empty() )
-				pManipulator->GetValue( StrFmt("%s.[%d].%s", GetPointsArrayFieldName().c_str(), i, GetDirectionFieldName().c_str()), &dir );
+				pManipulator->GetValue( fmt::format("{}.[{}].{}", GetPointsArrayFieldName().c_str(), i, GetDirectionFieldName().c_str()), &dir );
 
 			bool bMarkerIsActive		= (i == nActiveIndex);
 			bool bOriginInUse				= IsOriginInUse();
@@ -193,7 +194,7 @@ void CPointsListState::SetMaskManipulator()
 
 	pMaskManipulator = 0;	
 
-	const std::string szMask = StrFmt( "%s.[%d].", GetPointsArrayFieldName().c_str(), GetSelectedPointIndex() );
+	const std::string szMask = fmt::format( "{}.[{}].", GetPointsArrayFieldName().c_str(), GetSelectedPointIndex() );
 	
 	pMaskManipulator = new CMaskManipulator( szMask, pBuildingEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
@@ -458,8 +459,8 @@ void CSurfacePointsState::AddPointSpecificMarker( IManipulator *pManipulator, in
 	point.vPos = VNULL3;
 	point.vOrient = VNULL4;
 
-	CManipulatorManager::GetValue( &point.vPos, pManipulator, StrFmt("SurfacePoints.[%d].Pos", nPointIndex) );
-	CManipulatorManager::GetValue( &point.vOrient, pManipulator, StrFmt("SurfacePoints.[%d].Orient", nPointIndex) );
+	CManipulatorManager::GetValue( &point.vPos, pManipulator, fmt::format("SurfacePoints.[{}].Pos", nPointIndex) );
+	CManipulatorManager::GetValue( &point.vOrient, pManipulator, fmt::format("SurfacePoints.[{}].Orient", nPointIndex) );
 
 	surfPoints.push_back( point );
 }
@@ -498,7 +499,7 @@ void CDamageLevelsState::RefreshState()
 	pNewStats.fFuel = 0.0f;
 	pNewStats.time = GameTimer()->GetAbsTime();
 	if ( nActiveIndex > 0 ) // ( != -1) && ( != 0)
-		CManipulatorManager::GetValue( &pNewStats.fHitPoints, pManipulator, StrFmt("%s.[%d].DamageHP", GetPointsArrayFieldName().c_str(), nActiveIndex-1) );
+		CManipulatorManager::GetValue( &pNewStats.fHitPoints, pManipulator, fmt::format("{}.[{}].DamageHP", GetPointsArrayFieldName().c_str(), nActiveIndex-1) );
 
 	pNewStats.fHitPoints *= static_cast<CMapObj*>(pBuilding)->GetStats()->fMaxHP;
 	pProcess = pBuilding->AIUpdateRPGStats( pNewStats, 0, static_cast<NDb::ESeason>(typeSeasonMnemonics.GetValue(pBuildingEditor->GetCurrSeason())) );

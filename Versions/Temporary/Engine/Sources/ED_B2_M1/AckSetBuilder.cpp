@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_MOD.h"
@@ -182,7 +183,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 		for ( int i = 0; i < nNumTypes; ++i )
 		{
 			CDBID dbidComplexSoundDesc;
-			pAckSetMan->GetValue( StrFmt("types.[%d].Ack", i), &dbidComplexSoundDesc );
+			pAckSetMan->GetValue( fmt::format("types.[{}].Ack", i), &dbidComplexSoundDesc );
 			if ( !dbidComplexSoundDesc.IsEmpty() )
 			{
 				oldComplexSoundDescs[dbidComplexSoundDesc] = dbidComplexSoundDesc.ToString();
@@ -193,7 +194,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 					for ( int j = 0; j < nNumSounds; ++j )
 					{
 						CDBID dbidSoundDesc;
-						pComplexSoundDescMan->GetValue( StrFmt("sounds.[%d].PathName", j), &dbidSoundDesc );
+						pComplexSoundDescMan->GetValue( fmt::format("sounds.[{}].PathName", j), &dbidSoundDesc );
 						if ( !dbidSoundDesc.IsEmpty() )
 							oldSoundDescs[dbidSoundDesc] = dbidSoundDesc.ToString();
 					}
@@ -233,7 +234,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 	// update old ack sets and create new ones
 	for ( CAckSetsMap::const_iterator itAckSet = newAckSets.begin(); itAckSet != newAckSets.end(); ++itAckSet )
 	{
-		const std::string szAckSetFolder = szFolderInEditor + StrFmt( "%s\\%s%d_voice%d\\", itAckSet->first.szTypeName.c_str(), itAckSet->first.szTypeName.c_str(), itAckSet->first.nSubtype, itAckSet->first.nVoiceID );
+		const std::string szAckSetFolder = szFolderInEditor + fmt::format( "{}\\{}{}_voice{}\\", itAckSet->first.szTypeName.c_str(), itAckSet->first.szTypeName.c_str(), itAckSet->first.nSubtype, itAckSet->first.nVoiceID );
 		const std::string szAckSetName = szAckSetFolder + "AckSetRPGStats.xdb";
 		const CDBID dbidAckSet( szAckSetName );
 //		DebugTrace( szAckSetName.c_str() );
@@ -264,7 +265,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 				{
 					if ( pAckSetMan->Insert( "types", MAN_APPEND ) == false )
 						continue;
-					const std::string szAckEntryName = StrFmt( "types.[%d]", nTypeNumber );
+					const std::string szAckEntryName = fmt::format( "types.[{}]", nTypeNumber );
 					pAckSetMan->SetValue( szAckEntryName + ".AckType", szAckSituationName );
 					pAckSetMan->SetValue( szAckEntryName + ".Ack", dbidComplexSoundDesc );
 					pComplexSoundDescMan->Remove( "sounds", MAN_REMOVE_ALL );
@@ -284,7 +285,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 						{
 							if ( pComplexSoundDescMan->Insert( "sounds", MAN_APPEND ) == false )
 								continue;
-							const std::string szSoundEntryName = StrFmt( "sounds.[%d]", nSoundNumber );
+							const std::string szSoundEntryName = fmt::format( "sounds.[{}]", nSoundNumber );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".Probability", itAck->fProbability );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".soundType", std::string("NORMAL") );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".PathName", szSoundDescName );

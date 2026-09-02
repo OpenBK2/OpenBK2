@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "ResourceDefines.h"
 
 #include "MapEditorLib/Tools_Registry.h"
@@ -21,7 +22,7 @@ void SMainFrameParams::GetRegistryKey( std::string *pszRegistryKey )
 	strTitle.LoadString( AFX_IDS_APP_TITLE );
 	CString strKey;
 	strKey.LoadString( IDS_REGISTRY_KEY );
-	( *pszRegistryKey ) = StrFmt( "Software\\%s\\%s\\%s\\%s",
+	( *pszRegistryKey ) = fmt::format( "Software\\{}\\{}\\{}\\{}",
 																LPCTSTR( strPath ),
 																Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
 																LPCTSTR( strTitle ),
@@ -78,12 +79,12 @@ void SMainFrameParams::Load( bool bFromRegistry )
 		{
 			int nRecentCount = 0;
 			strKey.LoadString( IDS_REGISTRY_KEY_RECENT_LIST );
-			szFormat = StrFmt( "%ss", LPCTSTR( strKey ) );
+			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
 			registrySection.LoadNumber( szFormat.c_str(), "%d", &nRecentCount, 0 );
 			recentList.clear();
 			for ( int nRecentIndex = 0; nRecentIndex < nRecentCount; ++nRecentIndex )
 			{
-				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nRecentIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				recentList.push_back( szValue );
@@ -93,12 +94,12 @@ void SMainFrameParams::Load( bool bFromRegistry )
 		{
 			int nTablesCount = 0;
 			strKey.LoadString( IDS_REGISTRY_KEY_TABLE );
-			szFormat = StrFmt( "%ss", LPCTSTR( strKey ) );
+			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
 			registrySection.LoadNumber( szFormat.c_str(), "%d", &nTablesCount, 0 );
 			tables.clear();
 			for ( int nTableIndex = 0; nTableIndex < nTablesCount; ++nTableIndex )
 			{
-				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nTableIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				InsertHashSetElement( &tables, szValue );
@@ -140,12 +141,12 @@ void SMainFrameParams::Save(  bool bToRegistry )
 		{
 			int nRecentCount = recentList.size();
 			strKey.LoadString( IDS_REGISTRY_KEY_RECENT_LIST );
-			szFormat = StrFmt( "%ss", LPCTSTR( strKey ) );
+			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
 			registrySection.SaveNumber( szFormat.c_str(), "%d", nRecentCount );
 			int nRecentIndex = 0;
 			for ( std::list<std::string>::const_iterator itRecent = recentList.begin(); itRecent != recentList.end(); ++itRecent )
 			{
-				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nRecentIndex );
 				registrySection.SaveString( szFormat.c_str(), ( *itRecent ) );
 				++nRecentIndex;
 			}
@@ -155,12 +156,12 @@ void SMainFrameParams::Save(  bool bToRegistry )
 		{
 			int nTablesCount = tables.size();
 			strKey.LoadString( IDS_REGISTRY_KEY_TABLE );
-			szFormat = StrFmt( "%ss", LPCTSTR( strKey ) );
+			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
 			registrySection.SaveNumber( szFormat.c_str(), "%d", nTablesCount );
 			int nTableIndex = 0;
 			for ( CTableSet::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 			{
-				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nTableIndex );
 				registrySection.SaveString( szFormat.c_str(), itTable->first );
 				++nTableIndex;
 			}
