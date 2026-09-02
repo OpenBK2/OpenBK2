@@ -368,7 +368,7 @@ bool CInteractiveProcess::Execute( const std::string &szScript, const std::strin
 					// некоторого количества (а именно (szResponseEndMark.size() - 1)) уже прочтённых символов
 					int nMarkCharCount = szResponseEndMark.size();
 					int nStartSearchPos = pszOutput->size() - nBytesReadTotal - (nMarkCharCount - 1);
-					nStartSearchPos = max(0, nStartSearchPos);
+					nStartSearchPos = (std::max)(0, nStartSearchPos);
 
 					const int nMarkCount = StringCountSubstring( pszOutput->c_str() + nStartSearchPos, szResponseEndMark.c_str(), nMarkCharCount );
 					nLineCount -= nMarkCount;

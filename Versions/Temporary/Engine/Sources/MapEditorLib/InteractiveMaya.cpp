@@ -43,7 +43,7 @@ void CInteractiveMaya::SetResponseTimeout( int nResponseWaitTimeout )
 
 void CInteractiveMaya::SetExecutionQuota( int n )
 {
-	nExecutionCounter = nExecutionQuota = max(0, n);
+	nExecutionCounter = nExecutionQuota = (std::max)(0, n);
 }
 
 
