@@ -152,7 +152,7 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 																 0 );
 		if ( hFile != INVALID_HANDLE_VALUE )
 		{
-			uint32_t dwBytesWritten = 0;
+			DWORD dwBytesWritten = 0;
 			bResult = WriteFile( hFile, rszScriptText.c_str(), rszScriptText.size(), &dwBytesWritten, 0 );
 			if ( bResult )
 			{
@@ -317,14 +317,14 @@ std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &sz
 
 void GetMayaInstallPath( std::string *szPath, const std::string &szMayaVersion )
 {
-	uint32_t type;
+	DWORD type;
 	const int nMaxSize = 512;
-	int nSize = nMaxSize;
+	DWORD nSize = nMaxSize;
 	uint8_t buffer[nMaxSize];
 	int32_t error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
 			fmt::format("SOFTWARE\\Alias|Wavefront\\Maya\\{}\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()).c_str(),
 			0, &type,
-			buffer, (LPDWORD)&nSize
+			buffer, &nSize
 			);
 	if ( error == ERROR_SUCCESS && type == REG_SZ )
 	{

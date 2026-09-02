@@ -7,7 +7,7 @@
 CRegistrySection::CRegistrySection( HKEY hKey, REGSAM samDesired, LPCTSTR pszRegistrySection )
 {
   int32_t eResult = ERROR_SUCCESS;
-  uint32_t dwDisposition;
+  DWORD dwDisposition;
   eResult = ::RegCreateKeyEx( hKey,
 														 pszRegistrySection,
 														 0,
@@ -40,8 +40,8 @@ int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, std::string *pszLo
 	{
 		( *pszLoadValue ) = rszDefaultValue;
 
-		uint32_t dwLoadValueType;
-		uint32_t dwLoadValueLength = 0xFFF;
+		DWORD dwLoadValueType;
+		DWORD dwLoadValueLength = 0xFFF;
 		uint8_t pBuffer[0xFFF];
 		int32_t eResult = ERROR_SUCCESS;
 		eResult = ::RegQueryValueEx( hRegistrySection,
@@ -84,8 +84,8 @@ int32_t CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadVa
 	{
 		( *pdwLoadValue ) = dwDefaultValue;
 
-		uint32_t dwLoadValueType;
-		uint32_t dwLoadValueLength = 0xFFF;
+		DWORD dwLoadValueType;
+		DWORD dwLoadValueLength = 0xFFF;
 		uint8_t pBuffer[0xFFF];
 		int32_t eResult = ERROR_SUCCESS;
 		eResult = ::RegQueryValueEx( hRegistrySection,
