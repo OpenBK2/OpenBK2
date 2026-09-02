@@ -35,7 +35,7 @@ protected:
 	//
 	afx_msg void OnDestroy();
 	afx_msg void OnClearAll();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	DECLARE_MESSAGE_MAP()
 
 	void UpdateDialog();

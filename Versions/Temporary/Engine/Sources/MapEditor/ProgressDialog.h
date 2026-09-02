@@ -25,7 +25,7 @@ protected:
 	
 	virtual void DoDataExchange( CDataExchange* pDX );
 	virtual BOOL OnInitDialog();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	DECLARE_MESSAGE_MAP()
 
 public:

@@ -83,7 +83,7 @@ public:
 	afx_msg void OnChangePitch();
 	afx_msg void OnChangeFOV();
 	//
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 };
 
 

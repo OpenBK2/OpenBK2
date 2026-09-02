@@ -524,7 +524,7 @@ BOOL CMoviesEditorWindow::OnMouseWheel( unsigned nFlags, short zDelta, CPoint po
 }
 
 
-void CMoviesEditorWindow::OnTimer( unsigned nIDEvent )
+void CMoviesEditorWindow::OnTimer( UINT_PTR nIDEvent )
 {
 	if ( nIDEvent == GetMovieTimerID() )
 	{

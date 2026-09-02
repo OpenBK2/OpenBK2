@@ -49,7 +49,7 @@ protected:
 	virtual BOOL PreCreateWindow( CREATESTRUCT &rCreateStruct );
 	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	//
 	afx_msg void OnSetFocus			( CWnd* pOldWnd );
 	afx_msg void OnKillFocus		( CWnd* pNewWnd );

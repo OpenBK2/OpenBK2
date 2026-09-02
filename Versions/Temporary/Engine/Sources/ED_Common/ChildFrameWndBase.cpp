@@ -123,7 +123,7 @@ void CChildFrameWndBase::OnDestroy()
 }
 
 
-void CChildFrameWndBase::OnTimer( unsigned nIDEvent ) 
+void CChildFrameWndBase::OnTimer( UINT_PTR nIDEvent ) 
 {
 	if ( nIDEvent == GetUpdateSceneTimerID() )
 	{

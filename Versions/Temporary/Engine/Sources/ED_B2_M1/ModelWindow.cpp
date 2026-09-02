@@ -622,7 +622,7 @@ void CModelWindow::OnClickedTerrainColorButton()
 }
 
 
-void CModelWindow::OnTimer( unsigned nIDEvent ) 
+void CModelWindow::OnTimer( UINT_PTR nIDEvent ) 
 {
   if ( nIDEvent == GetSceneColorID() )
 	{

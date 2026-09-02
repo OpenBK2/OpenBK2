@@ -102,7 +102,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 
 protected:
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	//
 	afx_msg void OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
 	afx_msg void OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
