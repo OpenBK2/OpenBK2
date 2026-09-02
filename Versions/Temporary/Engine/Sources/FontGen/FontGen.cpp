@@ -3,7 +3,7 @@
 #include "Image/Targa.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
-#include "Misc/nalgoritm.h"
+#include <algorithm>
 #include "System/FileUtils.h"
 
 #include "port/cdecl.h"

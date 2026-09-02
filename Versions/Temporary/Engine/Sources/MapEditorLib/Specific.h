@@ -1,6 +1,6 @@
 #pragma once
 //
-#include "Misc/nalgoritm.h"
+#include <algorithm>
 
 //#define _SECDLL
 #include "vendor/stingray/Include/Toolkit/ot_dockingwindows.h"

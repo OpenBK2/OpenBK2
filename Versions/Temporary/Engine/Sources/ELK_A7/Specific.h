@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Misc/nalgoritm.h"
+#include <algorithm>
 //#define _SECDLL
 // alternative to above: if you want to include ALL OT headers, uncomment this line
 // to use the classic OT inclusion method (will increase build time)
