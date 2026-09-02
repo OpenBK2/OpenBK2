@@ -2178,7 +2178,7 @@ void CMapInfoEditor::ApplyViewFilter()
 		//
 		const int nMapSizeX = pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH;
 		const int nMapSizeY = pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH;
-		const int nMaxMapSize = Max( nMapSizeX, nMapSizeY );
+		const int nMaxMapSize = (std::max)( nMapSizeX, nMapSizeY );
 		const int nWarFogSize = GetNextPow2( nMaxMapSize );
 		const float fWarFogCellSize = AI_TILES_IN_VIS_TILE * VIS_TILES_IN_PATCH * VIS_TILE_SIZE / AI_TILES_IN_PATCH;
 

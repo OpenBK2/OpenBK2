@@ -186,12 +186,12 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 
 			// Normalize colour
 			float fMaxValue = 0.0f;
-			tmpLight.vPointLightColour.x = Max( tmpLight.vPointLightColour.x, 0.0f );
-			tmpLight.vPointLightColour.y = Max( tmpLight.vPointLightColour.y, 0.0f );
-			tmpLight.vPointLightColour.z = Max( tmpLight.vPointLightColour.z, 0.0f );
-			fMaxValue = Max( fMaxValue, tmpLight.vPointLightColour.x );
-			fMaxValue = Max( fMaxValue, tmpLight.vPointLightColour.y );
-			fMaxValue = Max( fMaxValue, tmpLight.vPointLightColour.z );
+			tmpLight.vPointLightColour.x = (std::max)( tmpLight.vPointLightColour.x, 0.0f );
+			tmpLight.vPointLightColour.y = (std::max)( tmpLight.vPointLightColour.y, 0.0f );
+			tmpLight.vPointLightColour.z = (std::max)( tmpLight.vPointLightColour.z, 0.0f );
+			fMaxValue = (std::max)( fMaxValue, tmpLight.vPointLightColour.x );
+			fMaxValue = (std::max)( fMaxValue, tmpLight.vPointLightColour.y );
+			fMaxValue = (std::max)( fMaxValue, tmpLight.vPointLightColour.z );
 			fMaxValue /= 255.0f;
 			tmpLight.vPointLightColour.x /= fMaxValue;
 			tmpLight.vPointLightColour.y /= fMaxValue;
