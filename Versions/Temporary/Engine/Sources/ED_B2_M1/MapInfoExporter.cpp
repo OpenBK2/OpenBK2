@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <boost/uuid/uuid_io.hpp>
 
 //#include "../misc/strproc.h"
 //#include "../misc/2darray.h"
@@ -193,12 +194,11 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 	CVariant vtGUID;
 	if ( pManipulator->GetValue( "uid", &vtGUID ) == false || vtGUID.GetType() != CVariant::VT_POINTER || vtGUID.GetBlobSize() != 16 )
 		return ER_FAIL;
-	GUID guid = *( (GUID*)vtGUID.GetPtr() );
+	const boost::uuids::uuid guid = *( static_cast<const boost::uuids::uuid*>( vtGUID.GetPtr() ) );
 //	const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( nObjectID );
 //	if ( !pMapInfo )
 //		return ER_FAIL;
-	std::string szGUID;
-	NStr::GUID2String( &szGUID, guid );
+	const std::string szGUID = boost::uuids::to_string( guid );
 	const std::string szDstPath = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\maps\\" + szGUID;
 	//
 	if ( NFile::CopyFile( szSrcPath, szDstPath ) == 0 )

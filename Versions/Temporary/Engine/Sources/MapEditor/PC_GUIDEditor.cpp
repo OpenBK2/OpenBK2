@@ -8,6 +8,8 @@
 #include "Misc/StrProc.h"
 
 #include <cstdint>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 bool CPCGUIDEditor::GetPCItemStringValue( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
@@ -16,8 +18,8 @@ bool CPCGUIDEditor::GetPCItemStringValue( std::string *pszValue, const CVariant 
 
 	try
 	{
-		const GUID *pValue = static_cast<const GUID*>( rValue.GetPtr() );
-		NStr::GUID2String( pszValue, *pValue );
+		const boost::uuids::uuid *pValue = static_cast<const boost::uuids::uuid*>( rValue.GetPtr() );
+		*pszValue = boost::uuids::to_string( *pValue );
 	}
 	catch ( ... )
 	{
@@ -35,12 +37,12 @@ bool CPCGUIDEditor::GetPCItemValue( CVariant *pValue, const std::string &rszValu
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
 	( *pValue ) = CVariant();
-	uint8_t * pData = new uint8_t[sizeof( GUID )];
-	GUID value;
+	uint8_t * pData = new uint8_t[sizeof( boost::uuids::uuid )];
+	boost::uuids::uuid value;
 	try
 	{
-		NStr::String2GUID( rszValue, &value ); 
-		memcpy( pData, &value, sizeof( GUID ) );
+		value = boost::uuids::string_generator()( rszValue );
+		memcpy( pData, &value, sizeof( boost::uuids::uuid ) );
 	}
 	catch ( ... )
 	{

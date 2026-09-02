@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <boost/uuid/uuid.hpp>
 
 #include "ParticleExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -137,7 +138,7 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 	CVariant varUID;
 	if ( CManipulatorManager::GetValue( &varUID, pManipulator, "uid" ) )
 	{
-		GUID uid;
+		boost::uuids::uuid uid;
 		memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
 		pParticle->SetKey( SIntResKey( uid, pManipulator->GetID( "" ) ) );
 	}

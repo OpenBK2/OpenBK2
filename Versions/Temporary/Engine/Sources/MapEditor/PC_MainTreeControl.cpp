@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <boost/uuid/uuid_io.hpp>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
 #include "PC_Constants.h"
@@ -2278,9 +2279,9 @@ void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, co
 			// дополнительная защита от не GUID полей и multivariant.
 			if ( varUID.GetType() == CVariant::VT_POINTER )
 			{
-				GUID uid;
+				boost::uuids::uuid uid;
 				memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
-				NStr::GUID2String( &szGUID, uid ); 
+				szGUID = boost::uuids::to_string( uid ); 
 			}
 		}
 	}
