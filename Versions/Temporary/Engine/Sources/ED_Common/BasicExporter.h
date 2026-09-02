@@ -4,7 +4,9 @@
 #include "MapEditorLib/InteractiveMaya.h"
 #include "MapEditorLib/TextMapSettings.h"
 
-class CBasicExporter : public IExporter
+#include "ED_Common_export.h"
+
+class ED_COMMON_EXPORT CBasicExporter : public IExporter
 {
 	CPtr<CInteractiveMaya> pMayaProcess;
 	std::string szObjectTypeName;

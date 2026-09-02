@@ -2,7 +2,9 @@
 
 #include "DefaultInputState.h"
 
-class CStoreInputState : public CDefaultInputState
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CStoreInputState : public CDefaultInputState
 {
 public:
 	enum EInputStateType

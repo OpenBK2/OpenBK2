@@ -2,7 +2,9 @@
 
 #include "Interface_InputState.h"
 
-class CMultiInputState : public IInputState
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CMultiInputState : public IInputState
 {
 	typedef std::vector<IInputState*> CInputStateList;
 	CInputStateList inputStateList;	

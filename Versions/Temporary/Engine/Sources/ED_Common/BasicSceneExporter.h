@@ -2,7 +2,9 @@
 
 #include "BasicExporter.h"
 
-class CBasicSceneExporter : public CBasicExporter
+#include "ED_Common_export.h"
+
+class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 {
 	virtual bool Validate( IManipulator *pManipulator );
 	bool ExportFromMaya( const std::string &szTypeName, 
