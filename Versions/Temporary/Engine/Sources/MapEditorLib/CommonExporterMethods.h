@@ -133,13 +133,13 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 			if ( objectHookFunctional( rObjectSet.szObjectTypeName, itObject->first ) == false )
 			{
 				pLogger->Log( LT_ERROR, "ForEachObject() processing failed\n" );
-				pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
+				pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
 			}
 		}
 		catch ( ... ) 
 		{
 			pLogger->Log( LT_ERROR, "ForEachObject processing general fail\n" );
-			pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first ) );
+			pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
 		}
 	}
 	return true;

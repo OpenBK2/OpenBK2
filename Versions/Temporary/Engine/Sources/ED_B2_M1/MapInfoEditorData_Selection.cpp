@@ -133,7 +133,7 @@ namespace NMapInfoEditor
 								bBackupCreated ? "true" : "false", vBackupPosition.x, vBackupPosition.y, vBackupPosition.z, fBackupDirection );
 		//
 		DebugTrace( "selection, type: %d, diffPos: ( %g, %g, %g ), diffDir: %g",
-								eSelectionType, vPositionDifference.x, vPositionDifference.y, vPositionDifference.z, fDirectionDifference );
+								static_cast<int>( eSelectionType ), vPositionDifference.x, vPositionDifference.y, vPositionDifference.z, fDirectionDifference );
 	}
 };
 
