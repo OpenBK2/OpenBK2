@@ -106,7 +106,7 @@ void CPCStringComboEditor::OnSelchange()
 
 // CPCItemEditor
 
-bool CPCStringComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCStringComboEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -178,7 +178,7 @@ void CPCStringComboEditor::GetValue( CVariant *pValue )
 	{
 		CString strText;
 		GetLBText( nSelectedText, strText );
-		*pValue = string( strText );
+		*pValue = std::string( strText );
 	}
 	else
 	{

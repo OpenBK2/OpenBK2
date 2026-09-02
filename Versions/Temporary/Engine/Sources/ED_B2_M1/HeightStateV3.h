@@ -172,11 +172,11 @@ public:
 		EBrushType eBrushType;
 		float fLevelTo;
 		bool bUpdateHeight;
-		vector<string> tileList;
+		std::vector<std::string> tileList;
 		int nTileIndex;
 		bool bThumbnails;
-		vector<int> tileBrushSizeList;
-		vector<int> heightBrushSizeList;
+		std::vector<int> tileBrushSizeList;
+		std::vector<int> heightBrushSizeList;
 
 		SEditParameters() 
 			: nFlags( MITHV3EP_ALL ),

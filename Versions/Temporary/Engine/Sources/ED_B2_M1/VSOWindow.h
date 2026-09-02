@@ -11,7 +11,7 @@ class CVSOWindow : public CResizeDialog, public ICommandHandler
 public:
 	struct SObjectListElement
 	{
-		string szObjectTypeName;
+		std::string szObjectTypeName;
 		CDBID objectDBID;
 	};
 	typedef std::unordered_map<int, SObjectListElement> CObjectListElementMap;
@@ -55,7 +55,7 @@ protected:
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 
 	//CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CVSOWindow"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CVSOWindow"; }
 	bool IsDrawGripper() { return false; }
 
 public:

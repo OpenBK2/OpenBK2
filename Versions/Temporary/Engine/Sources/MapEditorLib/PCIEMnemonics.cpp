@@ -56,7 +56,7 @@ EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, bool bArrayNode )
 }
 
 
-EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, const string &rszName )
+EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, const std::string &rszName )
 {
 	if ( rszName.empty() )
 	{

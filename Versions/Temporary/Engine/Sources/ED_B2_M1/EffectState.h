@@ -6,7 +6,7 @@ class CEffectEditor;
 class CEffectState : public CDefaultInputState
 {
 	//Данные специфичные для данного редактрора
-	list<int> effectIDList;
+	std::list<int> effectIDList;
 	// Данные общего назначения 
 	CEffectEditor *pEffectEditor;
 public:

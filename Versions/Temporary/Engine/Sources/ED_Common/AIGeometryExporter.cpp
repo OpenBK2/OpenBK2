@@ -17,14 +17,14 @@ const char *CAIGeometryExporter::GetAddPath() const
 	return "bin\\aigeometries\\";
 }
 
-bool CAIGeometryExporter::FormScript( string *pScriptText,
-																			const string &szTypeName,
-																			const string &szObjName,
-																			const string &szDstPath,
-																			const string &szSrcPath,
+bool CAIGeometryExporter::FormScript( std::string *pScriptText,
+																			const std::string &szTypeName,
+																			const std::string &szObjName,
+																			const std::string &szDstPath,
+																			const std::string &szSrcPath,
 																 	    IManipulator *pManipulator )
 {
-	string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
+	std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() ) 
 	{
 		szSettingsFileName = GetOption( &SUserData::SMayaExportData::szAIGeomSettingsFileName );
@@ -40,9 +40,9 @@ bool CAIGeometryExporter::FormScript( string *pScriptText,
 		return false;
 	}
 	//
-	string szRootMesh;
-	string szRootJoint;
-	const string szScriptTemplate = GetScriptTemplate( "ExportAIGeometry" );
+	std::string szRootMesh;
+	std::string szRootJoint;
+	const std::string szScriptTemplate = GetScriptTemplate( "ExportAIGeometry" );
 	if ( CManipulatorManager::GetValue( &szRootMesh, pManipulator, "RootMesh" ) == false )
 		szRootMesh.clear();
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
@@ -59,9 +59,9 @@ bool CAIGeometryExporter::FormScript( string *pScriptText,
 	return true;
 }
 
-bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const string &szGeomObjName, 
-																									  const string &szSrcScenePath,
-																										const string &szDstFileName,
+bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObjName, 
+																									  const std::string &szSrcScenePath,
+																										const std::string &szDstFileName,
 																										IManipulator *pManipulator )
 {
 	try
@@ -89,17 +89,17 @@ bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const string &szGeomObjName,
 	return false;
 }
 
-EXPORT_RESULT CAIGeometryExporter::CustomCheck( const string &szTypeName,
-																								const string &szObjName, 
-																								const string &szSrcScenePath,
-																								const string &szDestinationPath, 
+EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
+																								const std::string &szObjName, 
+																								const std::string &szSrcScenePath,
+																								const std::string &szDestinationPath, 
 																								IManipulator *pManipulator )
 {
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );
 	for ( int nMeshIndex = 0; nMeshIndex < fileInfo->MeshCount; ++nMeshIndex )
 	{
-		vector<CVec3> vertexList;
-		vector<STriangle> triangleList;
+		std::vector<CVec3> vertexList;
+		std::vector<STriangle> triangleList;
 		granny_mesh *pMesh = fileInfo->Meshes[nMeshIndex];
 		GetVerticesFromGrannyMesh( pMesh, &vertexList );
 		GetTrianglesFromGrannyMesh( pMesh, &triangleList );
@@ -108,7 +108,7 @@ EXPORT_RESULT CAIGeometryExporter::CustomCheck( const string &szTypeName,
 		if ( !edgesInfo.IsClosed() )
 		{
 			ILogger *pLogger = NLog::GetLogger();
-			string szSrcScenePath;
+			std::string szSrcScenePath;
 			pLogger->Log( LT_ERROR, "AI Geometry is not closed\n" );
 			pLogger->Log( LT_ERROR, StrFmt("\tObject name: %s\n", szObjName.c_str()) );
 			pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSrcScenePath.c_str()) );

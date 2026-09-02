@@ -26,7 +26,7 @@ struct SPointListDialogData
 struct SFormationWindowDialogData
 {
 	NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation;
-	vector<NDb::SSquadRPGStats::SFormation::EFormationMoveType> squadFormations;
+	std::vector<NDb::SSquadRPGStats::SFormation::EFormationMoveType> squadFormations;
 	bool bChkPropmask;
     
 	SFormationWindowDialogData() :

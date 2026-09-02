@@ -32,7 +32,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	//
 	bool bCreateControls;
 	bool bShowHidden;
-	string szGUID;
+	std::string szGUID;
 	//
 	CWnd* pwndStatusStringWindow;
 	CPtr<IPCItemEditor> pActiveItemEditor;
@@ -43,7 +43,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	bool bCreateTree;
 	bool bAsync;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
-	string szCreateTreeParentName;
+	std::string szCreateTreeParentName;
 	ENewElementExpandMode newElementExpandMode;
 	HTREEITEM hCreateTreeParentItem;
   inline unsigned GetCreateTreeTimerID() { return 200; }
@@ -78,9 +78,9 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	EPCIEType GetTreeItemType( HTREEITEM hItem );
 	bool GetTreeItemEditorPlace( HTREEITEM hItem, CTRect<int> *pRect );
 	//
-	HTREEITEM AddTreeItem( const string &rszName, EPCIEType nType, const SPropertyDesc *pDesc );
+	HTREEITEM AddTreeItem( const std::string &rszName, EPCIEType nType, const SPropertyDesc *pDesc );
 	bool ItemMustBeExpand( HTREEITEM hItem );
-	HTREEITEM AddTreeItemInternal( HTREEITEM hRootItem, const string &rszAdditionalName, EPCIEType nType, const SPropertyDesc *pDesc );
+	HTREEITEM AddTreeItemInternal( HTREEITEM hRootItem, const std::string &rszAdditionalName, EPCIEType nType, const SPropertyDesc *pDesc );
 	//
 	void SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pDesc );
 	IPCItemEditor* CreatePCItemEditor( HTREEITEM hItem );
@@ -89,7 +89,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	void ClosePCItemEditor( bool bAcceptChanges );
 	//
 	bool ForceRelativeParam_ReadOnly( HTREEITEM hItem, bool bDefaultValue );
-	string ForceRelativeParam_StringParam( HTREEITEM hItem, const string &rszDefaultValue );
+	std::string ForceRelativeParam_StringParam( HTREEITEM hItem, const std::string &rszDefaultValue );
 	int ForceRelativeParam_IntParam( HTREEITEM hItem, int nDefaultValue );
 	//
 	void PickTextColors( LvPaintContext* pPC );
@@ -97,8 +97,8 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	void UpdateMultilineStringEditor();
 	void UpdateStatusStringWindow();
 	//
-	bool GetValue( const string &rszName, CVariant *pVariant );
-	bool AddChangeOperation( const string &rszName, const CVariant &rValue, CObjectBaseController *pObjectController );
+	bool GetValue( const std::string &rszName, CVariant *pVariant );
+	bool AddChangeOperation( const std::string &rszName, const CVariant &rValue, CObjectBaseController *pObjectController );
 
 protected:
 	afx_msg void OnDestroy();
@@ -126,9 +126,9 @@ protected:
 	//void OnPCItemChange( WPARAM wParam, LPARAM lParam );
 
 	// CSortTreeControl
-	HTREEITEM GetTreeItem( const string &rszName );
-	void GetClipboardPrefix( string *pszClipboardPrefix ) {}
-	bool GetTreeItemName( HTREEITEM hItem, string *pszName );
+	HTREEITEM GetTreeItem( const std::string &rszName );
+	void GetClipboardPrefix( std::string *pszClipboardPrefix ) {}
+	bool GetTreeItemName( HTREEITEM hItem, std::string *pszName );
 	bool IsIgnoreCase() { return false; }
 
 public:
@@ -138,12 +138,12 @@ public:
 	~CPCMainTreeControl();
 	//
 	void CreateTree( HTREEITEM hParentItem, bool _bCreateTree, bool bAsync );
-	bool SelectPCItem( const string &rszItemName );
+	bool SelectPCItem( const std::string &rszItemName );
 	//
-	bool GetSelectedPCItemName( string *pszItemName );
-	bool GetSelectedPCItemDescription( string *pszItemName );
+	bool GetSelectedPCItemName( std::string *pszItemName );
+	bool GetSelectedPCItemDescription( std::string *pszItemName );
 	//
-	bool UpdateValue( const string &rszItemName );
+	bool UpdateValue( const std::string &rszItemName );
 	//
 	void SetMultilineStringEditor( IPCItemEditor* _pMultilineStringEditor );
 	IPCItemEditor* GetMultilineStringEditor() { return pMultilineStringEditor; }
@@ -158,7 +158,7 @@ public:
 	// Создание Undo Operation
 	virtual CObjectController* CreateController() { return CDefaultView::CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) ); }
 	// CDefaultView
-	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel );
+	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const std::string &rszTemporaryLabel );
 	void Undo( IController* pController ); 
 	void Redo( IController* pController ); 
 

@@ -15,7 +15,7 @@ namespace NMapInfoEditor
 	{
 		struct SMapInfoElement
 		{
-			string szRPGStatsTypeName;
+			std::string szRPGStatsTypeName;
 			CDBID rpgStatsDBID;
 			unsigned nFrameIndex;																						// Frame index
 			unsigned nPlayer;																								// Player
@@ -300,7 +300,7 @@ namespace NMapInfoEditor
 		// заполнить свойствами MaskManipulator
 		virtual void InsertMaskManipulators( CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator );
 		virtual void FillMaskManipulator( CMaskManipulator *pMaskManipulator ) = 0;
-		virtual void GetMask( string *pszMask ) = 0;
+		virtual void GetMask( std::string *pszMask ) = 0;
 		virtual void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
 		virtual void SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity );
 		// методы имеющие реализацию поумолчанию

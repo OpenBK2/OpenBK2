@@ -21,7 +21,7 @@ public:
 	{
 		NDb::EScriptAreaTypes eType;
 		int nScriptAreaID;
-		string szName;
+		std::string szName;
 		CPolygonState::CControlPointList cpList; // (2шт. макс.)
 		bool bSelected;
 		//
@@ -56,7 +56,7 @@ private:
 	void Clear();
 	void GetScriptAreaMap();
 	void UpdateScriptArea( unsigned nScriptAreaID );
-	unsigned InsertScriptArea( NDb::EScriptAreaTypes eType, const string &rszName, const CVec3 &rStart, const CVec3 &rFinish );
+	unsigned InsertScriptArea( NDb::EScriptAreaTypes eType, const std::string &rszName, const CVec3 &rStart, const CVec3 &rFinish );
 	void RemoveScriptArea( unsigned nScriptAreaID );
 
 public:

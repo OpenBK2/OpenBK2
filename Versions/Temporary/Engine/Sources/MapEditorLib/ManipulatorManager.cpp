@@ -49,10 +49,10 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	{
 		return false;
 	}
-	string szName;
+	std::string szName;
 	//собираем данные по массивам ( сколько нужно каких массивов )
-	list<string> sourceArrayList;
-	list<int> sourceArraySizeList;
+	std::list<std::string> sourceArrayList;
+	std::list<int> sourceArraySizeList;
 	{
 		CPtr<IManipulatorIterator> pSourceManipulatorIterator = pSourceManipulator->Iterate( true, ECT_CACHE_LOCAL );
 		while ( !pSourceManipulatorIterator->IsEnd() )
@@ -75,8 +75,8 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	}
 	
 	//создаем все необходимые массивы
-	list<string>::const_iterator itSourceArray = sourceArrayList.begin();
-	list<int>::const_iterator itSourceArraySize = sourceArraySizeList.begin();
+	std::list<std::string>::const_iterator itSourceArray = sourceArrayList.begin();
+	std::list<int>::const_iterator itSourceArraySize = sourceArraySizeList.begin();
 	while ( ( itSourceArray != sourceArrayList.end() ) && ( itSourceArraySize != sourceArraySizeList.end() ) )
 	{
 		//DebugTrace( "CloneDBManipulator(): Add array <%s>: %d", itSourceArray->c_str(), ( *itSourceArraySize ) );
@@ -90,7 +90,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	}
 
 	//создаем список полей
-	std::unordered_map<string, uint32_t> destinationFields;
+	std::unordered_map<std::string, uint32_t> destinationFields;
 	if ( !bEqual )
 	{
 		CPtr<IManipulatorIterator> pDestinationManipulatorIterator = pDestinationManipulator->Iterate( true, ECT_CACHE_LOCAL );
@@ -115,7 +115,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	//копируем поля
 	{
 		CPtr<IManipulatorIterator> pSourceManipulatorIterator = pSourceManipulator->Iterate( true, ECT_CACHE_LOCAL );
-		list<string> arrays; // стек по массивам
+		std::list<std::string> arrays; // стек по массивам
 		while ( !pSourceManipulatorIterator->IsEnd() )
 		{
 			pSourceManipulatorIterator->GetName( &szName );
@@ -144,10 +144,10 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 }
 
 
-bool CManipulatorManager::GetParamsFromReference( const string &rszRefValueName,
+bool CManipulatorManager::GetParamsFromReference( const std::string &rszRefValueName,
 																									const IManipulator *pSourceManipulator,
-																									string *pszRefObjectTypeName,
-																									string *pszRefObjectName,
+																									std::string *pszRefObjectTypeName,
+																									std::string *pszRefObjectName,
 																									const SPropertyDesc **ppRefDesc )
 {
 	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::GetParamsFromReference(): GetManipulatorFromRef == 0" );
@@ -165,8 +165,8 @@ bool CManipulatorManager::GetParamsFromReference( const string &rszRefValueName,
 			{
 				if ( !IsDBIDEmpty(refValue) ) 
 				{
-					string szRefObjectTypeName;
-					string szRefObjectName;
+					std::string szRefObjectTypeName;
+					std::string szRefObjectName;
 					CStringManager::GetTypeAndNameFromRefValue( &szRefObjectTypeName,
 																											&szRefObjectName,
 																											refValue.GetStr(),
@@ -193,10 +193,10 @@ bool CManipulatorManager::GetParamsFromReference( const string &rszRefValueName,
 }
 
 
-IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string &rszRefValueName,
+IManipulator* CManipulatorManager::CreateManipulatorFromReference( const std::string &rszRefValueName,
 																																	 const IManipulator *pSourceManipulator,
-																																	 string *pszRefObjectTypeName,
-																																	 string *pszRefObjectName,
+																																	 std::string *pszRefObjectTypeName,
+																																	 std::string *pszRefObjectName,
 																																	 const SPropertyDesc **ppRefDesc )
 {
 	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::CreateManipulatorFromReference(): GetManipulatorFromRef == 0" );
@@ -204,8 +204,8 @@ IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string 
 	{
 		return nullptr;
 	}
-	string szRefObjectTypeName;
-	string szRefObjectName;
+	std::string szRefObjectTypeName;
+	std::string szRefObjectName;
 	if ( GetParamsFromReference( rszRefValueName, pSourceManipulator, &szRefObjectTypeName, &szRefObjectName, ppRefDesc ) )
 	{
 		if ( pszRefObjectTypeName != 0 )
@@ -224,13 +224,13 @@ IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string 
 
 bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator> *pResultManipulator,
 																															IManipulator *pManipulator,
-																															const string &szTableName,
-																															const string &szFieldName,
-																															const string &szReferenceName,
-																															string *pszResultName )
+																															const std::string &szTableName,
+																															const std::string &szFieldName,
+																															const std::string &szReferenceName,
+																															std::string *pszResultName )
 {
-	string sManipulatorName, sManipulatorCurrentName;
-	string sExt;
+	std::string sManipulatorName, sManipulatorCurrentName;
+	std::string sExt;
 
 	if ( pManipulator->GetName( -1, &sManipulatorName ) )
 	{
@@ -269,8 +269,8 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
   NI_ASSERT( pReferenceInfoList != 0, "EnumReferences() pReferenceInfoList == 0" );
   NI_ASSERT( pSourceManipulator != 0, "EnumReferences() pSourceManipulator == 0" );
 	//
-	string szRefValue;
-	std::unordered_map<string, unsigned> propertyMap;
+	std::string szRefValue;
+	std::unordered_map<std::string, unsigned> propertyMap;
 	if ( nFlags & REFINFO_MAKE_UNIQUE_LIST )
 	{
 		for ( CReferenceInfoList::const_iterator itReferenceInfo = pReferenceInfoList->begin(); itReferenceInfo != pReferenceInfoList->end(); ++itReferenceInfo )
@@ -282,14 +282,14 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 	//
 	if ( const CPtr<IManipulatorIterator> pManipulatorIterator = const_cast<IManipulator*>( pSourceManipulator )->Iterate( bEnumHidden, eCacheType ) )
 	{
-		string szName;
+		std::string szName;
 		while ( !pManipulatorIterator->IsEnd() )
 		{
 			szName.clear();
 			pManipulatorIterator->GetName( &szName );
 			//
-			string szObjectTypeName;
-			string szObjectName;
+			std::string szObjectTypeName;
+			std::string szObjectName;
 			const SPropertyDesc *pRefDesc = 0;
 			//
 			if ( GetParamsFromReference( szName,
@@ -347,7 +347,7 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 }
 
 
-bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManipulator, const string &rszArrayName )
+bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManipulator, const std::string &rszArrayName )
 {
 	int nExistingCount = 0;
 	bool bResult = GetValue( &nExistingCount, pManipulator, rszArrayName );
@@ -379,21 +379,21 @@ bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManip
 }
 
 
-bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, const string &rszName )
+bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, const std::string &rszName )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Remove2DArray(): pManipulator == 0" );
 	if ( pManipulator == 0 )
 	{
 		return false;
 	}
-	const string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+	const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 	int nExistingXCount = 0;
 	bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
 	if ( bResult )
 	{
 		for ( int nXIndex = 0; nXIndex < nExistingXCount; ++nXIndex )
 		{
-			const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+			const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 			bResult = pManipulator->RemoveNode( szArrayName );
 			if ( !bResult )
 			{
@@ -406,7 +406,7 @@ bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, cons
 }
 
 
-void CManipulatorManager::Trace( const string &rszPrefix, IManipulator* pManipulator )
+void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator* pManipulator )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Trace(): pManipulator == 0" );
 	if ( pManipulator == 0 )
@@ -419,7 +419,7 @@ void CManipulatorManager::Trace( const string &rszPrefix, IManipulator* pManipul
 		const int nPrefixSize = rszPrefix.size();
 		while ( !pManipulatorIterator->IsEnd() )
  		{
-			string szName;
+			std::string szName;
 			pManipulatorIterator->GetName( &szName );
 			if ( !rszPrefix.empty() )
 			{

@@ -21,8 +21,8 @@ CInteractiveMaya * CInteractiveMaya::Get()
 }
 
 
-const string CInteractiveMaya::INTERACTIVE_MAYA_PROMPT("mel: ");         // leading space is important
-const string CInteractiveMaya::INTERACTIVE_MAYA_RESULT_MARK("Result: "); // leading space is important
+const std::string CInteractiveMaya::INTERACTIVE_MAYA_PROMPT("mel: ");         // leading space is important
+const std::string CInteractiveMaya::INTERACTIVE_MAYA_RESULT_MARK("Result: "); // leading space is important
 
 
 CInteractiveMaya::CInteractiveMaya()
@@ -48,13 +48,13 @@ void CInteractiveMaya::SetExecutionQuota( int n )
 
 bool CInteractiveMaya::Start()
 {
-	string szErrorMessage;
+	std::string szErrorMessage;
 	ILogger *pLogger = NLog::GetLogger();
 	pLogger->Log( LT_IMPORTANT, "Starting Maya interactive session...\n" );
 	if ( process.Start( INTERACTIVE_MAYA_INVOKE, &szErrorMessage ) )
 	{
-		string szOutput;
-		string szErrorOutput;
+		std::string szOutput;
+		std::string szErrorOutput;
 		if ( process.Execute( "", INTERACTIVE_MAYA_PROMPT, &szOutput, &szErrorOutput, &szErrorMessage ) )
 		{
 			pLogger->Log( LT_NORMAL, szOutput );
@@ -70,11 +70,11 @@ bool CInteractiveMaya::Start()
 }
 
 
-bool CInteractiveMaya::Execute( const string &szScript, string *pszOutput, string *pszErrorOutput )
+bool CInteractiveMaya::Execute( const std::string &szScript, std::string *pszOutput, std::string *pszErrorOutput )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	pLogger->Log( LT_IMPORTANT, szScript );
-	string szErrorMessage;
+	std::string szErrorMessage;
 	if ( process.Execute( szScript, INTERACTIVE_MAYA_PROMPT, pszOutput, pszErrorOutput, &szErrorMessage ) )
 	{
 		pLogger->Log( LT_NORMAL, *pszOutput );
@@ -117,10 +117,10 @@ bool CInteractiveMaya::Stop()
 }
 
 
-bool CInteractiveMaya::ExtractResult( string *pszResult, const string &szOutput )
+bool CInteractiveMaya::ExtractResult( std::string *pszResult, const std::string &szOutput )
 {
 	const size_t promptPos = szOutput.find( INTERACTIVE_MAYA_PROMPT, (szOutput.size() - INTERACTIVE_MAYA_PROMPT.size()) );
-	if ( promptPos != string::npos )
+	if ( promptPos != std::string::npos )
 	{
 		const char *pBlockFirst = szOutput.c_str();
 		const char *pBlockLast = pBlockFirst + promptPos;
@@ -154,14 +154,14 @@ bool CInteractiveMaya::ExtractResult( string *pszResult, const string &szOutput 
 }
 
 
-bool CInteractiveMaya::TransactCommand( const string &szScript, const string &szExpectedResult )
+bool CInteractiveMaya::TransactCommand( const std::string &szScript, const std::string &szExpectedResult )
 {
-	string szOutput;
-	string szErrorOutput;
+	std::string szOutput;
+	std::string szErrorOutput;
 	ILogger *pLogger = NLog::GetLogger();
 	if ( Execute( szScript, &szOutput, &szErrorOutput ) )
 	{
-		string szResult;
+		std::string szResult;
 		if ( ExtractResult( &szResult, szOutput ) )
 		{
 			if ( szResult == szExpectedResult )
@@ -180,10 +180,10 @@ bool CInteractiveMaya::TransactCommand( const string &szScript, const string &sz
 }
 
 
-bool CInteractiveMaya::TransactQuery( const string &szScript, string *pszResult )
+bool CInteractiveMaya::TransactQuery( const std::string &szScript, std::string *pszResult )
 {
-	string szOutput;
-	string szErrorOutput;
+	std::string szOutput;
+	std::string szErrorOutput;
 	if ( Execute( szScript, &szOutput, &szErrorOutput ) )
 	{
 		if ( ExtractResult( pszResult, szOutput ) )

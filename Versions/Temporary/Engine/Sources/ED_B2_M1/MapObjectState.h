@@ -207,7 +207,7 @@ protected:
 	bool bDrawShootAreas;
 	//
 	void ClearSelection();
-	int GetNextSceneID( int nSceneID, list<int> *pSceneIDList );
+	int GetNextSceneID( int nSceneID, std::list<int> *pSceneIDList );
 
 	//IInputState interface
 	virtual void Enter();

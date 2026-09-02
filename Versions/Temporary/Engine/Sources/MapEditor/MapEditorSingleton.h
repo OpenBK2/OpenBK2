@@ -7,7 +7,7 @@ class CMapEditorSingletonBase
 protected:
   bool SendCommand( HWND hWndDst, HWND hWndSrc, uint32_t dwCommand, uint32_t dwDataLength, const void* pData ) const;
 
-  static string MAP_FILE_NAME;
+  static std::string MAP_FILE_NAME;
   static const uint32_t MAP_FILE_MAX_SIZE;
 public:
 	enum ECommandType
@@ -15,7 +15,7 @@ public:
     OPEN_FILE = 0x10,
   };
 
-	static void SetMapFileName( const string &szMapFileName );
+	static void SetMapFileName( const std::string &szMapFileName );
 };
 
 class CMapEditorSingletonApp : public CMapEditorSingletonBase
@@ -40,6 +40,6 @@ private:
 
 public:
   bool BringAppOnTop() const;
-	bool OpenFileOnApp( const string &rszFilePath ) const;
+	bool OpenFileOnApp( const std::string &rszFilePath ) const;
 };
 

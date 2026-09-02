@@ -34,7 +34,7 @@ CRegistrySection::~CRegistrySection()
 }
 
 
-int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const
+int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, std::string *pszLoadValue, const std::string &rszDefaultValue ) const
 {
   if ( ( pszLoadValue != 0 ) && ( hRegistrySection != 0 ) )
 	{
@@ -56,7 +56,7 @@ int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadVal
 		}
 		else
 		{
-			( *pszLoadValue ) = string( reinterpret_cast<LPCTSTR>( pBuffer ) );
+			( *pszLoadValue ) = std::string( reinterpret_cast<LPCTSTR>( pBuffer ) );
 		}
 		return eResult;
 	}
@@ -67,7 +67,7 @@ int32_t CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadVal
 }
 
 
-int32_t CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const
+int32_t CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const std::string &szSaveValue ) const
 {
 	return ::RegSetValueEx( hRegistrySection,
 													pszRegistryKey,

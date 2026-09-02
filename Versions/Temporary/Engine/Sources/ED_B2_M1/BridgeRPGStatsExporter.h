@@ -24,11 +24,11 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 		AIG_COUNT		= 3,
 	};
 	//
-	typedef std::unordered_map<string, string> CTempNamesMap;
+	typedef std::unordered_map<std::string, std::string> CTempNamesMap;
 	CTempNamesMap tempNamesMap;
 
-	void GetTempAIGeometryName( string *pszAIGeometryPrefix, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry );
-	void GetVisObjectNameList( list<string> *pVisOblectNameList, struct IManipulator *pManipulator );
+	void GetTempAIGeometryName( std::string *pszAIGeometryPrefix, const std::string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry );
+	void GetVisObjectNameList( std::list<std::string> *pVisOblectNameList, struct IManipulator *pManipulator );
 	//
 	void EnlargeArray( CArray2D<uint8_t> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource );
 	void EnlargeArray( CArray2D<uint8_t> *pDestination, const CTPoint<int>  &rSourceSize );
@@ -39,17 +39,17 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	//
 	void SetArrayInfo( CArray2D<uint8_t> *pDestination, const CArray2D<uint8_t> &rSource, LOCK_TYPE lockType );
 	//
-	void ExportAdditionalInfo( IManipulator *pManipulator, const string &rszObjectName, const CDBID &rDBID );
+	void ExportAdditionalInfo( IManipulator *pManipulator, const std::string &rszObjectName, const CDBID &rDBID );
 protected:
 	bool NeedCreatePassability() { return false; }
 	//
 	CBridgeRPGStatsExporter() {}
 public:
 	//CStaticObjectRPGStatsExporter
-	void FinishExport( const string &rszObjectTypeName, bool bForce );
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce );
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 };

@@ -5,8 +5,8 @@ struct IManipulator;
 
 class CBasicDataExtractor : public IObjectDataExtractor
 {
-	bool LoadImagesFromCache( class CBitmap *pNormalBitmap, class CBitmap *pSmallBitmap, const string &rszObjectTypeName, const string &rszObjectName );
-	void SaveImagesToCache( CArray2D<uint32_t> &rImageSmall, CArray2D<uint32_t> &rImageNormal, const string &rszObjectTypeName, const string &rszObjectName );
+	bool LoadImagesFromCache( class CBitmap *pNormalBitmap, class CBitmap *pSmallBitmap, const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	void SaveImagesToCache( CArray2D<uint32_t> &rImageSmall, CArray2D<uint32_t> &rImageNormal, const std::string &rszObjectTypeName, const std::string &rszObjectName );
 protected:
 	enum ELoadImageMethod
 	{
@@ -14,17 +14,17 @@ protected:
 		LOAD_IMAGE_SCALE,
 	};
 	//
-	virtual bool GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator ) = 0;
-	virtual bool GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator );
+	virtual bool GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator ) = 0;
+	virtual bool GetLabel( CString *pstrLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator );
 	//
-	bool LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &szFileName, ELoadImageMethod eMethod );
+	bool LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &szFileName, ELoadImageMethod eMethod );
 public:
 	unsigned GetObjectData( class CBitmap *pNormalBitmap,
 											class CBitmap *pSmallBitmap,
 											CString *pstrLabel,
-											const string &rszObjectTypeName,
-											const string &rszObjectName,
-											const string &rszDataExtractorType );
+											const std::string &rszObjectTypeName,
+											const std::string &rszObjectName,
+											const std::string &rszDataExtractorType );
 };
 
 

@@ -22,23 +22,23 @@ static const char BRIDGE_FOLDER[] = "bin\\Bridges\\";
 REGISTER_EXPORTER_IN_DLL( BridgeRPGStats, CBridgeRPGStatsExporter )
 
 
-void CBridgeRPGStatsExporter::GetTempAIGeometryName( string *pszAIGeometryName, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry )
+void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryName, const std::string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry )
 {
 	NI_ASSERT( pszAIGeometryName != 0, "CBridgeRPGStatsExporter::GetTempAIGeometryName() pszAIGeometryName == 0" );
-	const string szKey = StrFmt( "%s%s\\%s", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
+	const std::string szKey = StrFmt( "%s%s\\%s", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
 	CTempNamesMap::const_iterator pos = tempNamesMap.find( szKey );
 	if ( pos != tempNamesMap.end() )
 		*pszAIGeometryName = pos->second;
 	else
 	{
-		const string szTempFileName = NFile::GetTempFileName() + ".gr2";
+		const std::string szTempFileName = NFile::GetTempFileName() + ".gr2";
 		tempNamesMap[szKey] = szTempFileName;
 		*pszAIGeometryName = szTempFileName;
 	}
 }
 
 
-void CBridgeRPGStatsExporter::GetVisObjectNameList( list<string> *pVisOblectNameList, IManipulator *pManipulator )
+void CBridgeRPGStatsExporter::GetVisObjectNameList( std::list<std::string> *pVisOblectNameList, IManipulator *pManipulator )
 {
 	NI_ASSERT( pVisOblectNameList != 0, "CBridgeRPGStatsExporter::GetVisObjectNameList() pVisOblectNameList == 0" );
 	NI_ASSERT( pManipulator != 0, "CBridgeRPGStatsExporter::GetVisObjectNameList() pManipulator == 0" );
@@ -216,18 +216,18 @@ void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination, con
 }
 
 
-void CBridgeRPGStatsExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
+void CBridgeRPGStatsExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	CStaticObjectRPGStatsExporter::FinishExport( rszObjectTypeName, bForce );
 	//
 }
 
 
-void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, const string &rszObjectName, const CDBID &rDBID )
+void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, const std::string &rszObjectName, const CDBID &rDBID )
 {
-	list<string> visualObjectNameList;
+	std::list<std::string> visualObjectNameList;
 	GetVisObjectNameList( &visualObjectNameList, pManipulator );
-	for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 	{
 		// Получаем манипулятор на VisObject
 		CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( ( *itVisualObject ) + ".VisualObjects.[0]", pManipulator, 0, 0, 0 );
@@ -242,7 +242,7 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 			return;
 		}
 		// Получаем Геометрию, чтобы определить имя файла со сценой
-		string szSorceValue;
+		std::string szSorceValue;
 		{
 			if ( CPtr<IManipulator> pGeometryManipulator = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelManipulator, 0, 0, 0 ) )
 			{
@@ -251,31 +251,31 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 		}
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		//
-		const string szScriptTemplate = GetTextTemplate( "ExportAIGeometry" );
-		const string szSettingsFileName = GetGrannyExportSettingsFileName( "AIGeometry" );
+		const std::string szScriptTemplate = GetTextTemplate( "ExportAIGeometry" );
+		const std::string szSettingsFileName = GetGrannyExportSettingsFileName( "AIGeometry" );
 		// Формируем тело скрипта
-		string szTempMAIGeometryName;
-		string szTempCenterAIGeometryName;
-		string szTempBorderAIGeometryName;
+		std::string szTempMAIGeometryName;
+		std::string szTempCenterAIGeometryName;
+		std::string szTempBorderAIGeometryName;
 		GetTempAIGeometryName( &szTempMAIGeometryName, *itVisualObject, rDBID, AIG_MAI );
 		GetTempAIGeometryName( &szTempCenterAIGeometryName, *itVisualObject, rDBID, AIG_CENTER );
 		GetTempAIGeometryName( &szTempBorderAIGeometryName, *itVisualObject, rDBID, AIG_BORDER );
 		//
-		string szObjectName = rszObjectName;
+		std::string szObjectName = rszObjectName;
 		NStr::ReplaceAllChars( &szObjectName, '\\', '/' );
-		string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
+		std::string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
 		NStr::ReplaceAllChars( &szSource, '\\', '/' );
-		string szMAIDestination = szTempMAIGeometryName;
+		std::string szMAIDestination = szTempMAIGeometryName;
 		NStr::ReplaceAllChars( &szMAIDestination, '\\', '/' );
-		string szCenterDestination = szTempCenterAIGeometryName;
+		std::string szCenterDestination = szTempCenterAIGeometryName;
 		NStr::ReplaceAllChars( &szCenterDestination, '\\', '/' );
-		string szBorderDestination = szTempBorderAIGeometryName;
+		std::string szBorderDestination = szTempBorderAIGeometryName;
 		NStr::ReplaceAllChars( &szBorderDestination, '\\', '/' );
-		string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
+		std::string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
 		NFile::CreatePath( szBridgeFolder.c_str() );
 
 		// main AI geometry
-		string szScriptText = StrFmt( szScriptTemplate.c_str(),
+		std::string szScriptText = StrFmt( szScriptTemplate.c_str(),
 			szObjectName.c_str(), szMAIDestination.c_str(), szSource.c_str(),
 			AI_GEOMETRY_PREFIX[AIG_MAI], "",
 			szSettingsFileName.c_str() );
@@ -300,8 +300,8 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 }
 
 EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																										 const string &rszObjectTypeName,
-																										 const string &rszObjectName,
+																										 const std::string &rszObjectTypeName,
+																										 const std::string &rszObjectName,
 																										 bool bForce,
 																										 EXPORT_TYPE exportType )
 {
@@ -317,32 +317,32 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	// Формируем тело скрипта
-	const string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
-	//const string szGeometryFolder = pUserData->szExportDestinationFolder + GEOMETRY_FOLDER;
+	const std::string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
+	//const std::string szGeometryFolder = pUserData->szExportDestinationFolder + GEOMETRY_FOLDER;
 	bool bResult = true;
 	//
-	list<string> visualObjectNameList;
+	std::list<std::string> visualObjectNameList;
 	GetVisObjectNameList( &visualObjectNameList, pManipulator );
 	float fHeight = 0.0f;
 	bool bHeightCalculated = false;
 	//
-	list<CArray2D<uint8_t> > passabilityArrayList;
-	list<CVec2> passabilityOriginList;
-	list<CVec2> sizeList;
+	std::list<CArray2D<uint8_t> > passabilityArrayList;
+	std::list<CVec2> passabilityOriginList;
+	std::list<CVec2> sizeList;
 	//
-	for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 	{
-		string szTempMAIGeometryName;
-		string szTempCenterAIGeometryName;
-		string szTempBorderAIGeometryName;
+		std::string szTempMAIGeometryName;
+		std::string szTempCenterAIGeometryName;
+		std::string szTempBorderAIGeometryName;
 		GetTempAIGeometryName( &szTempMAIGeometryName, *itVisualObject, objectDBID, AIG_MAI );
 		GetTempAIGeometryName( &szTempCenterAIGeometryName, *itVisualObject, objectDBID, AIG_CENTER );
 		GetTempAIGeometryName( &szTempBorderAIGeometryName, *itVisualObject, objectDBID, AIG_BORDER );
 		//
-		//const string szDestination = szGeometryFolder + std::to_string(  nGeometryID );
-		const string szMAIDestination = szTempMAIGeometryName;
-		const string szCenterDestination = szTempCenterAIGeometryName;
-		const string szBorderDestination = szTempBorderAIGeometryName;
+		//const std::string szDestination = szGeometryFolder + std::to_string(  nGeometryID );
+		const std::string szMAIDestination = szTempMAIGeometryName;
+		const std::string szCenterDestination = szTempCenterAIGeometryName;
+		const std::string szBorderDestination = szTempBorderAIGeometryName;
 		//
 		CVec2 vPassabilityOrigin = VNULL2;
 		CVec2 vSize = VNULL2;
@@ -508,7 +508,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	{
 		int nMaxYSize = 0;
 		{
-			list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+			std::list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
 				if ( nMaxYSize < itPassabilityArray->GetSizeY() )
@@ -519,8 +519,8 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			}
 		}
 		{
-			list<CArray2D<uint8_t> >::iterator itPassabilityArray = passabilityArrayList.begin();
-			list<CVec2>::iterator itPassabilityOrigin = passabilityOriginList.begin();
+			std::list<CArray2D<uint8_t> >::iterator itPassabilityArray = passabilityArrayList.begin();
+			std::list<CVec2>::iterator itPassabilityOrigin = passabilityOriginList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
 				if ( nMaxYSize > itPassabilityArray->GetSizeY() )
@@ -537,11 +537,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	}
 	// Прописываем данные
 	{
-		list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
-		list<CVec2>::const_iterator itPassabilityOrigin = passabilityOriginList.begin();
-		list<CVec2>::const_iterator itSize = sizeList.begin();
+		std::list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+		std::list<CVec2>::const_iterator itPassabilityOrigin = passabilityOriginList.begin();
+		std::list<CVec2>::const_iterator itSize = sizeList.begin();
 		//
-		for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+		for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 		{
 			// Удаляем старый массив
 			bResult = bResult && CManipulatorManager::Remove2DArray( pManipulator, ( *itVisualObject ) + ".Passability" );
@@ -562,18 +562,18 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		}
 	}
 	// Удаляем созданные временные файлы
-	for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 	{
-		string szTempMAIGeometryName;
-		string szTempCenterAIGeometryName;
-		string szTempBorderAIGeometryName;
+		std::string szTempMAIGeometryName;
+		std::string szTempCenterAIGeometryName;
+		std::string szTempBorderAIGeometryName;
 		GetTempAIGeometryName( &szTempMAIGeometryName, *itVisualObject, objectDBID, AIG_MAI );
 		GetTempAIGeometryName( &szTempCenterAIGeometryName, *itVisualObject, objectDBID, AIG_CENTER );
 		GetTempAIGeometryName( &szTempBorderAIGeometryName, *itVisualObject, objectDBID, AIG_BORDER );
 		//
-		const string szMAIDestination = szTempMAIGeometryName;
-		const string szCenterDestination = szTempCenterAIGeometryName;
-		const string szBorderDestination = szTempBorderAIGeometryName;
+		const std::string szMAIDestination = szTempMAIGeometryName;
+		const std::string szCenterDestination = szTempCenterAIGeometryName;
+		const std::string szBorderDestination = szTempBorderAIGeometryName;
 		//
 		::DeleteFile( szMAIDestination.c_str() );
 		::DeleteFile( szCenterDestination.c_str() );
@@ -581,7 +581,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	}
 	// Удаляем временный каталог ( только если он пустой )
 	{
-		list<string> szFileNameList;
+		std::list<std::string> szFileNameList;
 		NFile::GetDirectoryFiles( szBridgeFolder.c_str(), "*", &szFileNameList, true );
 		if ( szFileNameList.empty() )
 		{

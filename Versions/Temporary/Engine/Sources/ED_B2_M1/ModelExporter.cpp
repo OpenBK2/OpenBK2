@@ -14,8 +14,8 @@ namespace NModelExporter
 {
 
 EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
-																						const string &rszObjectTypeName,
-																						const string &rszObjectName,
+																						const std::string &rszObjectTypeName,
+																						const std::string &rszObjectName,
 																						bool bForce,
 																						EXPORT_TYPE exportType )
 {
@@ -26,7 +26,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 	try
 	{
 		// first, check number of meshes and number of materials
-		string szGeometryName;
+		std::string szGeometryName;
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pManipulator, 0, &szGeometryName, 0 );
 		if ( pGeomMan == 0 || szGeometryName.empty() ) 
 		{
@@ -45,7 +45,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		int nNumGeomMaterials = 0;
 		CManipulatorManager::GetValue( &nNumGeomMaterials, pManipulator, "Materials" );
 
-		string szModelName = "";
+		std::string szModelName = "";
 		CManipulatorManager::GetValue( &szModelName, pGeomMan, "RootMesh" );
 
 		if ( nNumGeomMaterials == 0 && PatMat( szModelName.c_str(), "*section??" ) == 0 ) 
@@ -77,18 +77,18 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-bool MakeMaterialCopy( const string &szSrcName, const string &szDstName )
+bool MakeMaterialCopy( const std::string &szSrcName, const std::string &szDstName )
 {
 	return Singleton<IFolderCallback>()->CopyObject( "Material", szDstName, szSrcName );
 }
 
 struct SMaterialInfo
 {
-	string szName;
-	string szType;
+	std::string szName;
+	std::string szType;
 	//
 	SMaterialInfo() {}
-	SMaterialInfo( const string &_szName, const string &_szType )
+	SMaterialInfo( const std::string &_szName, const std::string &_szType )
 		: szName( _szName ), szType( _szType ) {}
 };
 
@@ -100,7 +100,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel(pModelMan), "", true );
 	// find opacity attribute for each mesh
 	bool bHasTransparency = false;
-	std::unordered_map<string, bool> meshTranspInfoMap;
+	std::unordered_map<std::string, bool> meshTranspInfoMap;
 	for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
 	{
 		SGrannyBoneAttributes::CAttributeMap::const_iterator posAttribute = it->attributeMap.find( "transparent" );
@@ -112,14 +112,14 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	if ( !bHasTransparency ) 
 		return true;
 	// collect all materials from model
-	string szTransparentMaterialName, szOpaqueMaterialName;
+	std::string szTransparentMaterialName, szOpaqueMaterialName;
 	int nNumModelMaterials = 0;
 	CManipulatorManager::GetValue( &nNumModelMaterials, pModelMan, "Materials" );
-	list<SMaterialInfo> materials;
+	std::list<SMaterialInfo> materials;
 	for ( int i = 0; i < nNumModelMaterials; ++i ) 
 	{
-		const string szMaterialRefName = StrFmt( "Materials.[%d]", i );
-		string szMaterialName;
+		const std::string szMaterialRefName = StrFmt( "Materials.[%d]", i );
+		std::string szMaterialName;
 		CManipulatorManager::GetValue( &szMaterialName, pModelMan, szMaterialRefName );
 		if ( szMaterialName.empty() || szMaterialName == " " )
 		{
@@ -128,7 +128,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		}
 		//
 		CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( szMaterialRefName, pModelMan, 0, 0, 0 );
-		string szMaterialType;
+		std::string szMaterialType;
 		CManipulatorManager::GetValue( &szMaterialType, pMaterialMan, "AlphaMode" );
 		//
 		if ( szMaterialType == "AM_TRANSPARENT" ) 
@@ -154,29 +154,29 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		}
 		//
 		if ( pTranspMaterialMan != 0 ) 
-			CManipulatorManager::SetValue( string("AM_TRANSPARENT"), pTranspMaterialMan, "AlphaMode" );
+			CManipulatorManager::SetValue( std::string("AM_TRANSPARENT"), pTranspMaterialMan, "AlphaMode" );
 		// change texture export params to achive transparency
 		CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
 		CPtr<IManipulator> pTextureMan = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialMan, 0, 0, 0 );
 		bool bNeedConvertTexture = false;
-		string szConversionType;
+		std::string szConversionType;
 		CManipulatorManager::GetValue( &szConversionType, pTextureMan, "ConversionType" );
 		if ( szConversionType != "CONVERT_TRANSPARENT" ) 
 		{
-			CManipulatorManager::SetValue( string("CONVERT_TRANSPARENT"), pTextureMan, "ConversionType" );
+			CManipulatorManager::SetValue( std::string("CONVERT_TRANSPARENT"), pTextureMan, "ConversionType" );
 			bNeedConvertTexture = true;
 		}
-		string szTextureFormat;
+		std::string szTextureFormat;
 		CManipulatorManager::GetValue( &szTextureFormat, pTextureMan, "Format" );
 		if ( szTextureFormat != "TF_DXT3" ) 
 		{
-			CManipulatorManager::SetValue( string("TF_DXT3"), pTextureMan, "Format" );
+			CManipulatorManager::SetValue( std::string("TF_DXT3"), pTextureMan, "Format" );
 			bNeedConvertTexture = true;
 		}
 		//
 		if ( bNeedConvertTexture ) 
 		{
-			string szTextureName;
+			std::string szTextureName;
 			CManipulatorManager::GetValue( &szTextureName, pMaterialMan, "Texture" );
 			Singleton<IExporterContainer>()->ExportObject( pTextureMan, "Texture", szTextureName, true, NOT_EXPORT_REFERENCES );
 		}
@@ -190,12 +190,12 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	
 	for ( int i = 0; i < pInfo->Models[0]->MeshBindingCount; ++i )
 	{
-		string szBoneName = pInfo->Models[0]->MeshBindings[i].Mesh->BoneBindings[0].BoneName;
+		std::string szBoneName = pInfo->Models[0]->MeshBindings[i].Mesh->BoneBindings[0].BoneName;
 		NStr::ToLower( &szBoneName );
 		bool bTransparent = meshTranspInfoMap[szBoneName];
 		//
-		string szMaterialName;
-		const string szMaterialRefName = StrFmt( "Materials.[%d]", i );
+		std::string szMaterialName;
+		const std::string szMaterialRefName = StrFmt( "Materials.[%d]", i );
 		if ( i >= nNumModelMaterials ) 
 		{
 			if ( pModelMan->InsertNode("Materials") == false )

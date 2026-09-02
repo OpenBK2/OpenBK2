@@ -9,22 +9,22 @@
 REGISTER_BUILDER_IN_DLL( ObjectRPGStats, CObjectRPGStatsBuilder )
 
 
-const string CObjectRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "ObjectRPGStatsBuilder";
+const std::string CObjectRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "ObjectRPGStatsBuilder";
 
 
-bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
 	// Считываем данные
-	string szVisualObject;
+	std::string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
 	{
 		( *pszDescription ) = "<VisualObject> must be filled.";
 		return false;
 	}
-	string szSource;
+	std::string szSource;
 	if ( !CManipulatorManager::GetValue( &szSource, pBuildDataManipulator, "Source" ) || szSource.empty() )
 	{
 		( *pszDescription ) = "Warning! <Source> is empty!";
@@ -34,8 +34,8 @@ bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulat
 }
 
 
-bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
-																									 string *pszUniqueObjectName,
+bool CObjectRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeName,
+																									 std::string *pszUniqueObjectName,
 																									 bool bFromMainMenu,
 																									 bool *pbCanChangeObjectName,
 																									 bool *pbNeedExport,
@@ -48,14 +48,14 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
-	string szDescription;
+	std::string szDescription;
 	if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 	{
 		return false;
 	}
 	// Считываем данные
-	string szVisualObject;
-	string szSource;
+	std::string szVisualObject;
+	std::string szSource;
 	CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" );
 	CManipulatorManager::GetValue( &szSource, pBuildDataManipulator, "Source" );
 	//
@@ -73,7 +73,7 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 			}
 		}
 		// Проставляем основные параметры
-		bResult = bResult && pObjectRPGStatsManipulator->SetValue( "GameType", string( "SGVOGT_OBJECT" ) );
+		bResult = bResult && pObjectRPGStatsManipulator->SetValue( "GameType", std::string( "SGVOGT_OBJECT" ) );
 		bResult = bResult && pObjectRPGStatsManipulator->SetValue( "visualObject", szVisualObject );
 	}
 	return bResult;

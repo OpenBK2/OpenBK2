@@ -3,7 +3,7 @@
 #include "MapEditorLib/Interface_View.h"
 
 typedef std::unordered_map<CDBID, CViewSet> CViewSetMap;
-typedef std::unordered_map<string, CViewSetMap> CViewSetMapTypeMap;
+typedef std::unordered_map<std::string, CViewSetMap> CViewSetMapTypeMap;
 
 
 class CViewContainer : public IViewContainer
@@ -12,9 +12,9 @@ class CViewContainer : public IViewContainer
 
 	CViewSetMapTypeMap viewSetMapTypeMap;
 
-	void Add( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID );
-	void Remove( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID );
-	bool GetViewSet( CViewSet *pViewSet, const string &rszObjectTypeName, const CDBID &rObjectDBID ) const;
+	void Add( IView *pView, const std::string &rszObjectTypeName, const CDBID &rObjectDBID );
+	void Remove( IView *pView, const std::string &rszObjectTypeName, const CDBID &rObjectDBID );
+	bool GetViewSet( CViewSet *pViewSet, const std::string &rszObjectTypeName, const CDBID &rObjectDBID ) const;
 
 public:
 	void Add( IView *pView, const SObjectSet &rObjectSet );

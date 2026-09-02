@@ -74,7 +74,7 @@ static bool GetExcelODBCDriverName( CString *pRes )
 	return false;
 }
 
-bool LoadAcksTable( vector<SAckEntry> *pRes, const string &szFileName )
+bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName )
 {
 	CDatabase database;
 	CString strDriver;
@@ -88,10 +88,10 @@ bool LoadAcksTable( vector<SAckEntry> *pRes, const string &szFileName )
 		//
 		CAckRecordset rs( &database );
 		rs.Open( CRecordset::forwardOnly, 0, CRecordset::readOnly );
-		string szLastNormalSituationCode;
+		std::string szLastNormalSituationCode;
 		while( !rs.IsEOF() )
 		{
-			vector<SAckEntry>::iterator pos = pRes->insert( pRes->end(), SAckEntry() );
+			std::vector<SAckEntry>::iterator pos = pRes->insert( pRes->end(), SAckEntry() );
 			//
 			pos->szSituationCode = (LPCSTR)rs.m_szSituationCode;
 			if ( pos->szSituationCode.empty() )

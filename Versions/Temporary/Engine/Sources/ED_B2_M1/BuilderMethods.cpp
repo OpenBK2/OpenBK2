@@ -4,9 +4,9 @@
 
 #include "MapEditorLib/ManipulatorManager.h"
 
-bool CheckStringValue( string *pszDescription, const string &szValueName, IManipulator *pBuilderMan )
+bool CheckStringValue( std::string *pszDescription, const std::string &szValueName, IManipulator *pBuilderMan )
 {
-	string szValue;
+	std::string szValue;
 	if ( !CManipulatorManager::GetValue( &szValue, pBuilderMan, szValueName ) || szValue.empty() )
 	{
 		( *pszDescription ) = StrFmt( "<%s> must be filled.", szValueName.c_str() );
@@ -16,7 +16,7 @@ bool CheckStringValue( string *pszDescription, const string &szValueName, IManip
 	return true;
 }
 
-bool CheckIntValue( string *pszDescription, const string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan )
+bool CheckIntValue( std::string *pszDescription, const std::string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan )
 {
 	int nValue = 0;
 	if ( !CManipulatorManager::GetValue( &nValue, pBuilderMan, szValueName ) || ( nValue < nMin ) || ( nValue > nMax ) )

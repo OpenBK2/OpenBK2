@@ -4,14 +4,14 @@
 
 class CObjectBaseRPGStatsExporter : public CStaticObjectRPGStatsExporter
 {
-	bool ExportDynamicDebris( IManipulator *pManipulator, const string &szObjectName );
+	bool ExportDynamicDebris( IManipulator *pManipulator, const std::string &szObjectName );
 protected:
 	virtual bool NeedCreatePassability() = 0;
 public:
 	// CStaticObjectRPGStatsExporter
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 };

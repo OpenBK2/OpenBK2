@@ -3,7 +3,7 @@
 #include "BasicExporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 
-void CBasicExporter::Log( ELogOutputType eLogOutputType, const string &szText ) const
+void CBasicExporter::Log( ELogOutputType eLogOutputType, const std::string &szText ) const
 {
 	NLog::GetLogger()->Log( eLogOutputType, szText );
 }
@@ -18,7 +18,7 @@ bool CBasicExporter::LoadExporterSettings() const
 		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD	);
 		if ( textMapSettings.IsEmpty() )
 		{
-			string szText = StrFmt("Can't get %s exporter settings,\n"
+			std::string szText = StrFmt("Can't get %s exporter settings,\n"
 				"check UserData.xml in \"ObjectTypeDataMap\" section.\n",
 				szObjectTypeName.c_str()
 				);
@@ -37,7 +37,7 @@ const char *CBasicExporter::GetTextTemplate( const char *pszTemplateName ) const
 		return "";
 }
 
-bool CBasicExporter::ExecuteMayaScript( const string &szScript )
+bool CBasicExporter::ExecuteMayaScript( const std::string &szScript )
 {
 	if ( StartupMayaProcess( pMayaProcess ) )
 	{
@@ -50,14 +50,14 @@ bool CBasicExporter::ExecuteMayaScript( const string &szScript )
 	return true;
 }
 
-bool CBasicExporter::StartExport( const string &rszObjectTypeName, bool bForce )
+bool CBasicExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	pMayaProcess = CInteractiveMaya::Get();
 	szObjectTypeName = rszObjectTypeName;
 	return true;
 }
 
-void CBasicExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
+void CBasicExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	pMayaProcess = 0;
 }

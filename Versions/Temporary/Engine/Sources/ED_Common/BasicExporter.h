@@ -7,30 +7,30 @@
 class CBasicExporter : public IExporter
 {
 	CPtr<CInteractiveMaya> pMayaProcess;
-	string szObjectTypeName;
+	std::string szObjectTypeName;
 	mutable CTextMapSettings textMapSettings; // to load on-demand from const functions
 	//
 	bool LoadExporterSettings() const;
 protected:
-	void Log( ELogOutputType eLogOutputType, const string &szText ) const;
+	void Log( ELogOutputType eLogOutputType, const std::string &szText ) const;
 	const char *GetTextTemplate( const char *pszTemplateName ) const;
-	bool ExecuteMayaScript( const string &szScript );
+	bool ExecuteMayaScript( const std::string &szScript );
 public:
 	CBasicExporter() {}
 	// IExporter
-	bool StartExport( const string &rszObjectTypeName, bool bForce );
-	void FinishExport( const string &rszObjectTypeName, bool bForce );
+	bool StartExport( const std::string &rszObjectTypeName, bool bForce );
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce );
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 	// checker
-	bool StartCheck( const string &rszObjectTypeName, bool bExport ) { return true; }
-	void FinishCheck( const string &rszObjectTypeName, bool bExport ) {}
+	bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
+	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
 	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bExport,
 															EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };

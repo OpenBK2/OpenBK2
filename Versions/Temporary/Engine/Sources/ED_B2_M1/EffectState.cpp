@@ -87,7 +87,7 @@ void CEffectState::Leave()
 	//
 	CDefaultInputState::Leave();
 	// Выгружаем Эффект
-	for ( list<int>::const_iterator itEffectID = effectIDList.begin(); itEffectID != effectIDList.end(); ++itEffectID )
+	for ( std::list<int>::const_iterator itEffectID = effectIDList.begin(); itEffectID != effectIDList.end(); ++itEffectID )
 	{
 		pScene->RemoveObject( *itEffectID );
 	}

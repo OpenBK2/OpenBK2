@@ -13,8 +13,8 @@ class CMultiManipulator : public IManipulator
 	OBJECT_BASIC_METHODS( CMultiManipulator )
 
 	typedef std::unordered_map<CDBID, CPtr<IManipulator> > CManipulatorMap;
-	typedef list<string> CNameMap;
-	typedef CUniqueList<CNameMap, string> CUniqueNameList;
+	typedef std::list<std::string> CNameMap;
+	typedef CUniqueList<CNameMap, std::string> CUniqueNameList;
 	
 	CManipulatorMap manipulatorMap;
 	CDBID activeDBID;
@@ -23,15 +23,15 @@ class CMultiManipulator : public IManipulator
 	CPtr<IManipulator> pPropertyDescManipulator;
 	CPtr<IManipulator> pFirstManipulator;
 
-	bool DescExists( const string &rszName ) const;
-	bool TypeExists( const string &rszName ) const;
-	bool IDExists( const string &rszName ) const;
+	bool DescExists( const std::string &rszName ) const;
+	bool TypeExists( const std::string &rszName ) const;
+	bool IDExists( const std::string &rszName ) const;
 	bool NameExists( unsigned nID ) const;
-	bool NameExists( const string &rszName ) const;
-	int GetMinimalCount( const string &rszName, bool *pbMultiVariant ) const;
-	bool GetMultiValue( const string &rszName, CVariant *pValue ) const;
-	bool SetMultiValue( const string &rszName, const CVariant &rValue );
-	bool CheckMultiValue( const string &rszName, const CVariant &rValue, bool *pResult ) const;
+	bool NameExists( const std::string &rszName ) const;
+	int GetMinimalCount( const std::string &rszName, bool *pbMultiVariant ) const;
+	bool GetMultiValue( const std::string &rszName, CVariant *pValue ) const;
+	bool SetMultiValue( const std::string &rszName, const CVariant &rValue );
+	bool CheckMultiValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const;
 
 public:
 	// Конструирование манипулятора 
@@ -58,21 +58,21 @@ public:
 
 	// IManipulator
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc* GetDesc( const string &rszName ) const;
-	bool GetType( const string &rszName, string *pszType ) const;
-	unsigned GetID( const string &rszName ) const;
-	bool GetName( unsigned nID, string *pszName ) const;
+	const SIteratorDesc* GetDesc( const std::string &rszName ) const;
+	bool GetType( const std::string &rszName, std::string *pszType ) const;
+	unsigned GetID( const std::string &rszName ) const;
+	bool GetName( unsigned nID, std::string *pszName ) const;
 	//
-	bool InsertNode( const string &rszName, int nNodeIndex = NODE_ADD_INDEX );
-	bool RemoveNode( const string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const string &rszName, int nNodeID ) { return false; };
-	bool RenameNode( const string &rszName, const string &rszNewName );
+	bool InsertNode( const std::string &rszName, int nNodeIndex = NODE_ADD_INDEX );
+	bool RemoveNode( const std::string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX );
+	bool RemoveNodeByID( const std::string &rszName, int nNodeID ) { return false; };
+	bool RenameNode( const std::string &rszName, const std::string &rszNewName );
 	//
-	bool GetValue( const string &rszName, CVariant *pValue ) const;
-	bool SetValue( const string &rszName, const CVariant &rValue );
-	bool CheckValue( const string &rszName, const CVariant &rValue, bool *pResult ) const;
+	bool GetValue( const std::string &rszName, CVariant *pValue ) const;
+	bool SetValue( const std::string &rszName, const CVariant &rValue );
+	bool CheckValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const;
 	NDb::IObjMan* GetObjMan();
-	bool IsNameExists( const string &rszName ) const;
+	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( IManipulator::CNameMap *pNameMap ) const;
 };
 
@@ -92,8 +92,8 @@ public:
 	bool Next();
 	bool IsEnd() const;
 	const SIteratorDesc* GetDesc() const;
-	bool GetName( string *pszName ) const;
-	bool GetType( string *pszType ) const;
+	bool GetName( std::string *pszName ) const;
+	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;
 	bool IsFolder() const { return false; }
 };

@@ -25,7 +25,7 @@ CParticleExporter::CParticleExporter() : bNeedExport( false )
 }
 
 
-bool CParticleExporter::StartExport( const string &rszObjectTypeName, bool bForce )
+bool CParticleExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	CStoreObjectExporter::StartExport( rszObjectTypeName, bForce );
 	bNeedExport = false;
@@ -37,8 +37,8 @@ bool CParticleExporter::StartExport( const string &rszObjectTypeName, bool bForc
 
 
 EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
-																							 const string &rszObjectTypeName,
-																							 const string &rszObjectName,
+																							 const std::string &rszObjectTypeName,
+																							 const std::string &rszObjectName,
 																							 bool bForce,
 																							 EXPORT_TYPE exportType )
 {
@@ -51,13 +51,13 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
 	// Формируем тело скрипта
-	string szSorceValue;
+	std::string szSorceValue;
 	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
-	string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
+	std::string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
 	NFile::NormalizePath( &szSource );
-	const string szParticleFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
-	//const string szDestination = szParticleFolder + std::to_string(  nObjectID );
-	string szDestination = BuildDestFilePath( pManipulator, szParticleFolder ); // uid
+	const std::string szParticleFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
+	//const std::string szDestination = szParticleFolder + std::to_string(  nObjectID );
+	std::string szDestination = BuildDestFilePath( pManipulator, szParticleFolder ); // uid
 	NFile::NormalizePath( &szDestination );
 	// check for source and destination times if not forced mode
 	if ( CheckFilesUpdated( szSource, szDestination, bForce ) )
@@ -67,13 +67,13 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	//
 	NFile::CreatePath( szParticleFolder.c_str() );
 	//
-	string szTempDstName = NFile::GetTempFileName() + ".ptc";
+	std::string szTempDstName = NFile::GetTempFileName() + ".ptc";
 	NFile::NormalizePath( &szTempDstName );
 	//
-	string szObjectName;
+	std::string szObjectName;
 	NFile::NormalizePath( &szObjectName, rszObjectName );
 	//
-	string szExportPrefix;
+	std::string szExportPrefix;
 	CManipulatorManager::GetValue( &szExportPrefix, pManipulator, "ExportPrefix" );
 	//
 	szScriptText += StrFmt( "print \"%s\";\r\n", szObjectName.c_str() );
@@ -95,7 +95,7 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-void CParticleExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
+void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	MEFinishScript( &szScriptText, true );
 	MERunScript( szScriptText, rszObjectTypeName, bNeedExport, true );
@@ -104,16 +104,16 @@ void CParticleExporter::FinishExport( const string &rszObjectTypeName, bool bFor
 		return;
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string szParticleFolder	= Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
+	const std::string szParticleFolder	= Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
 	//
 	for ( CObjectNameSet::const_iterator it = GetObjectSet().objectNameSet.begin(); it != GetObjectSet().objectNameSet.end(); ++it )
 	{
 		if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, it->first ) )
 		{
-			//string szDstFileName = StrFmt( "%s%d", szParticleFolder.c_str(), nObjectID );
-			string szDstFileName = BuildDestFilePath( pManipulator, szParticleFolder );  // uid
+			//std::string szDstFileName = StrFmt( "%s%d", szParticleFolder.c_str(), nObjectID );
+			std::string szDstFileName = BuildDestFilePath( pManipulator, szParticleFolder );  // uid
 			NFile::NormalizePath( &szDstFileName );
-			const string szTempFileName = exportedFilesMap[szDstFileName];
+			const std::string szTempFileName = exportedFilesMap[szDstFileName];
 			if ( WaitForFile(szTempFileName, 10000, true) != false )
 			{
 				MoveTempFileToDestination( szTempFileName, szDstFileName );
@@ -127,8 +127,8 @@ void CParticleExporter::FinishExport( const string &rszObjectTypeName, bool bFor
 }
 
 
-bool CParticleExporter::ImportInfoToDBAfterRefs( const string &szObjName, 
-																								 const string &szDstFileName,
+bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName, 
+																								 const std::string &szDstFileName,
 																								 IManipulator *pManipulator )
 {
 	CPtr<NGScene::CParticlesLoader> pParticle = new NGScene::CParticlesLoader;

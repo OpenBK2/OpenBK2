@@ -12,8 +12,8 @@ protected:
 	bool NeedCreatePassability() { return true; }
 public:
 	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-														 const string &rszObjectTypeName,
-														 const string &rszObjectName,
+														 const std::string &rszObjectTypeName,
+														 const std::string &rszObjectName,
 														 bool bExport,
 														 EXPORT_TYPE exportType );
 };

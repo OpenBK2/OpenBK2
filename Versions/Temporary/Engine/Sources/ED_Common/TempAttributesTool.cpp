@@ -21,8 +21,8 @@ class CTempAttributesTool : public IExportTool
 	//
 	struct SDesc
 	{
-		string szRootMesh;
-		string szRootJoint;
+		std::string szRootMesh;
+		std::string szRootJoint;
 		granny_file *pFile;
 		granny_file_info *pFileInfo;
 		//
@@ -30,11 +30,11 @@ class CTempAttributesTool : public IExportTool
 		~SDesc() { if ( pFile ) GrannyFreeFile( pFile ); }
 	};
 	//
-	string szAttribsExportTemplate;
-	string szAttribsExportSettings;
+	std::string szAttribsExportTemplate;
+	std::string szAttribsExportSettings;
 	//
-	typedef list<SDesc> CDescsList;
-	typedef std::unordered_map<string, CDescsList> CDescsMap; 
+	typedef std::list<SDesc> CDescsList;
+	typedef std::unordered_map<std::string, CDescsList> CDescsMap; 
 	CDescsMap descsMap;
 	// load export settings and script template
 	bool LoadSettings()
@@ -55,16 +55,16 @@ class CTempAttributesTool : public IExportTool
 		return !szAttribsExportTemplate.empty() && !szAttribsExportSettings.empty();
 	}
 	// export granny with desired root mesh and root joint and add 
-	bool AddGrannyFile( SDesc *pDesc, const string &szFileName, const string &szRootMesh, const string &szRootJoint )
+	bool AddGrannyFile( SDesc *pDesc, const std::string &szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 	{
 		if ( LoadSettings() == false )
 			return false;
 		// form script to export temp file
-		string szDstFileName = NFile::GetTempFileName() + ".gr2";
+		std::string szDstFileName = NFile::GetTempFileName() + ".gr2";
 		NStr::ReplaceAllChars( &szDstFileName, '\\', '/' );
-		string szSrcFileName = szFileName;
+		std::string szSrcFileName = szFileName;
 		NStr::ReplaceAllChars( &szSrcFileName, '\\', '/' );
-		string szScript = StrFmt( szAttribsExportTemplate.c_str(), szDstFileName.c_str(), szSrcFileName.c_str(),
+		std::string szScript = StrFmt( szAttribsExportTemplate.c_str(), szDstFileName.c_str(), szSrcFileName.c_str(),
 			                        szRootMesh.c_str(), szRootJoint.c_str(), szAttribsExportSettings.c_str() );
 		szScript += ";\n";
 		NFile::CreatePath( NFile::GetFilePath(szDstFileName) );
@@ -90,11 +90,11 @@ public:
 	void StartExportTool() {}
 	void FinishExportTool() { descsMap.clear(); }
 	//
-	granny_file_info *GetAttribs( const string &_szFileName, const string &szRootMesh, const string &szRootJoint )
+	granny_file_info *GetAttribs( const std::string &_szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 	{
 		if ( szRootMesh.empty() && szRootJoint.empty() )
 			return 0;
-		string szFileName;
+		std::string szFileName;
 		NStr::ToLower( &szFileName, _szFileName );
 		NStr::ReplaceAllChars( &szFileName, '\\', '/' );
 		CDescsMap::iterator posList = descsMap.find( szFileName );
@@ -157,7 +157,7 @@ granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 	// try summer model
 	for ( int i = 0; i < nNumSeasons; ++i )
 	{
-		string szSeason;
+		std::string szSeason;
 		CManipulatorManager::GetValue( &szSeason, pMan, StrFmt("Models.[%d].Season", i) );
 		if ( szSeason == "SEASON_SUMMER" )
 		{
@@ -185,9 +185,9 @@ granny_file_info *GetAttribsBySkeleton( IManipulator *pMan )
 {
 	if ( pMan == 0 )
 		return 0;
-	string szSrcFileName;
+	std::string szSrcFileName;
 	CManipulatorManager::GetValue( &szSrcFileName, pMan, "SrcName" );
-	string szRootJoint;
+	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pMan, "RootJoint" );
 	if ( szSrcFileName.empty() || szRootJoint.empty() )
 		return 0;
@@ -200,11 +200,11 @@ granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 {
 	if ( pMan == 0 )
 		return 0;
-	string szSrcFileName;
+	std::string szSrcFileName;
 	CManipulatorManager::GetValue( &szSrcFileName, pMan, "SrcName" );
-	string szRootMesh;
+	std::string szRootMesh;
 	CManipulatorManager::GetValue( &szRootMesh, pMan, "RootMesh" );
-	string szRootJoint;
+	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pMan, "RootJoint" );
 	if ( szSrcFileName.empty() || szRootJoint.empty() || szRootMesh.empty() )
 		return 0;
@@ -213,7 +213,7 @@ granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 	return GetAttribs( pUD->constUserData.szExportSourceFolder + szSrcFileName, szRootMesh, szRootJoint );
 }
 
-granny_file_info *GetAttribs( const string &szFileName, const string &szRootMesh, const string &szRootJoint )
+granny_file_info *GetAttribs( const std::string &szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 {
 	if ( szFileName.empty() || (pTempAttributesTool == 0) )
 		return 0;
@@ -223,7 +223,7 @@ granny_file_info *GetAttribs( const string &szFileName, const string &szRootMesh
 
 void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **ppszAttribNames, const int nNumAttribs )
 {
-	vector<granny_data_type_definition> gdtd( nNumAttribs + 1 );
+	std::vector<granny_data_type_definition> gdtd( nNumAttribs + 1 );
 	memset( &(gdtd[0]), 0, sizeof(gdtd[0]) * gdtd.size() );
 
 	for ( int i = 0; i < nNumAttribs; ++i )

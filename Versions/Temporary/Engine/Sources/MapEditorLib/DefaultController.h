@@ -12,7 +12,7 @@ class CDefaultController : public IController
 	// Operation Description it the Undo List
 	CString strDescription;
 	// Метка для последующего удаления Undo Operation из очереди
-	string szTemporaryLabel;
+	std::string szTemporaryLabel;
 	// Список масок ( задается манипулятором при создании Controller )
 	IManipulator::CNameMap nameMap;
 	// Набор изменяемых объектов
@@ -34,12 +34,12 @@ public:
 	virtual void GetDescription( CString *pstrDescription ) const  { if ( pstrDescription ) { ( *pstrDescription ) = strDescription; } }
 	virtual void SetDescription( const CString &rstrDescription ) { strDescription = rstrDescription; }
 	//
-	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) const  { if ( pszTemporaryLabel ) { ( *pszTemporaryLabel ) = szTemporaryLabel; } }
-	virtual void SetTemporaryLabel( const string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
+	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const  { if ( pszTemporaryLabel ) { ( *pszTemporaryLabel ) = szTemporaryLabel; } }
+	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
 	//
 	virtual IManipulator::CNameMap& GetNameList() { return nameMap; }
 	virtual SetNameList( const IManipulator::CNameMap &rNameList ) { nameMap = rNameList; }
-	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const string &rszName ) const;
+	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const std::string &rszName ) const;
 };
 
 

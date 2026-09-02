@@ -93,7 +93,7 @@ void CBuildingState::Enter()
 	//unsigned nMapID = -1;
 	//if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
 	//{
-	//	string szMapName = NEditorOptions::GetBgMap( pBuildingEditor->GetCurrSeason() );
+	//	std::string szMapName = NEditorOptions::GetBgMap( pBuildingEditor->GetCurrSeason() );
 	//	nMapID = pFolderMan->GetID( szMapName );
 	//}
 	//CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( pBuildingEditor->GetCurrSeason() );
@@ -127,7 +127,7 @@ void CBuildingState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_BUILDING_STATE );
 	
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
-	const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 

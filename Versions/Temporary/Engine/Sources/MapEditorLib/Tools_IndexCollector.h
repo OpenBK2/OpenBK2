@@ -175,7 +175,7 @@ public:
 				nMaxIndex = itID->second;
 			}
 		}
-		vector<TID> indices;
+		std::vector<TID> indices;
 		indices.resize( nMaxIndex + 1, invalidID );
 		for ( typename CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
 		{

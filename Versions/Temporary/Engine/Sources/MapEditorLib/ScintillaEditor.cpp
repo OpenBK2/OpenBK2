@@ -89,7 +89,7 @@ int CScintillaEditorWindow::Command( int nCommand, int wParam, int lParam )
 }
 
 
-void CScintillaEditorWindow::SetText( const string &rszText )
+void CScintillaEditorWindow::SetText( const std::string &rszText )
 {
 	const bool bReadOnly = Command( SCI_GETREADONLY );
 	Command( SCI_SETREADONLY, 0, 0 );
@@ -100,7 +100,7 @@ void CScintillaEditorWindow::SetText( const string &rszText )
 }
 
 
-int CScintillaEditorWindow::GetText( string *pszText )
+int CScintillaEditorWindow::GetText( std::string *pszText )
 {
 	if ( pszText != 0 )
 	{

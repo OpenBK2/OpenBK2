@@ -21,7 +21,7 @@ CProgressHook::~CProgressHook()
 }
 
 
-void CProgressHook::Create( const string &rszActionName, CWnd *pWnd )
+void CProgressHook::Create( const std::string &rszActionName, CWnd *pWnd )
 {
 	DebugTrace( "CProgressHook:: Creating dialog" );
 	//
@@ -101,7 +101,7 @@ void CProgressHook::ClearLog()
 }
 
 
-void CProgressHook::AddLog( const string &rszLogMessage )
+void CProgressHook::AddLog( const std::string &rszLogMessage )
 {
 	DebugTrace( "CProgressHook:: AddLog" );
 	//

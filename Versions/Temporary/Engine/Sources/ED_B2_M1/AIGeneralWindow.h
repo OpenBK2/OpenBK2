@@ -25,8 +25,8 @@ struct SAIGeneralPointsWindowData
 			}
 		};
 
-		vector<int> mobileScriptIDs;
-		vector<SAIParcel> parcels;
+		std::vector<int> mobileScriptIDs;
+		std::vector<SAIParcel> parcels;
 		int nCurrentID;
 		int nCurrentParcel;
 		//
@@ -57,7 +57,7 @@ struct SAIGeneralPointsWindowData
 		AIGP_PLAYER_JUMP
 	};
 
-	vector<SAIPlayerInfo> players;
+	std::vector<SAIPlayerInfo> players;
 	int nCurrentPlayer;
 	EAIGenPointsLastAction eLastAction;
 

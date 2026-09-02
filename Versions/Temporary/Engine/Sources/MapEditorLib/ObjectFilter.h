@@ -13,21 +13,21 @@ class CObjectFilter
 			OPERATION_DIFFERENCE
 		};
 		EOperationType eOpType;
-		string szClassType;
-		vector<string> matches;
+		std::string szClassType;
+		std::vector<std::string> matches;
 		//
-		bool Match( const string &szFullName, const string &szClassTypeName ) const;
+		bool Match( const std::string &szFullName, const std::string &szClassTypeName ) const;
 		int operator&( IXmlSaver &saver );
 	};
 	//
-	wstring wszName;
-	vector<SEntry> entries;
+	std::wstring wszName;
+	std::vector<SEntry> entries;
 	//
 public:
-	const wstring &GetName() const { return wszName; }
-	void SetName( const wstring &_wszName ) { wszName = _wszName; }
+	const std::wstring &GetName() const { return wszName; }
+	void SetName( const std::wstring &_wszName ) { wszName = _wszName; }
 	// does this object name matches filter?
-	bool Match( const string &szFullName, const string &szClassTypeName ) const;
+	bool Match( const std::string &szFullName, const std::string &szClassTypeName ) const;
 	//
 	int operator&( IXmlSaver &saver );
 };

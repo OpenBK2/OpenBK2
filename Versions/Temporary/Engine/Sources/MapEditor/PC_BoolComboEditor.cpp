@@ -5,7 +5,7 @@
 
 // CPCItemEditor
 
-bool CPCBoolComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCBoolComboEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	if ( CPCStringComboEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
@@ -22,7 +22,7 @@ bool CPCBoolComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditor
 
 void CPCBoolComboEditor::SetValue( const CVariant &rValue )
 {
-	CVariant value = string( (bool)rValue ? PCSV_TRUE : PCSV_FALSE );
+	CVariant value = std::string( (bool)rValue ? PCSV_TRUE : PCSV_FALSE );
 	CPCStringComboEditor::SetValue( value );
 }
 
@@ -33,7 +33,7 @@ void CPCBoolComboEditor::GetValue( CVariant *pValue )
 	{
 		CVariant value;
 		CPCStringComboEditor::GetValue( &value );
-		*pValue = (bool)( (string)(value.GetStr()) == PCSV_TRUE );
+		*pValue = (bool)( (std::string)(value.GetStr()) == PCSV_TRUE );
 	}
 }
 

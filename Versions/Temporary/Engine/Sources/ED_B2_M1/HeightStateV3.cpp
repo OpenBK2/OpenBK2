@@ -832,7 +832,7 @@ void CHeightStateV3::SetEditParameters( unsigned nFlags )
 				if ( CPtr<IManipulator> pTerrainSetManipulator = CManipulatorManager::CreateManipulatorFromReference( "TerraSet", pMapInfoEditor->GetViewManipulator(), 0, 0, 0 ) )
 				{
 					pEditParameters->tileList.clear();
-					CManipulatorManager::GetArray<vector<string>, string>( &( pEditParameters->tileList ), pTerrainSetManipulator, "TerraTypes" );
+					CManipulatorManager::GetArray<std::vector<std::string>, std::string>( &( pEditParameters->tileList ), pTerrainSetManipulator, "TerraTypes" );
 				}
 			}
 		}
@@ -1107,7 +1107,7 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 				//	const CVec3 vMin( 0, 0, 0 );
 				//	const CVec3 vMax( 100, 100, 0 );
 				//	//
-				//	list<unsigned> objectsSceneIDList;
+				//	std::list<unsigned> objectsSceneIDList;
 				//	pMapInfoEditor->objectInfoCollector.CreateSelection( objectsSceneIDList );
 				//	//
 				//	NMapInfoEditor::SObjectEditInfo objectEditInfo;
@@ -1339,14 +1339,14 @@ void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 	//	{
 	//		if ( const NDb::STerrain *pTerraDesc = pTerraManager->GetDesc() )
 	//		{
-	//			for ( vector< NDb::SVSOInstance >::const_iterator it = pTerraDesc->crags.begin(); it != pTerraDesc->crags.end(); ++it )
+	//			for ( std::vector< NDb::SVSOInstance >::const_iterator it = pTerraDesc->crags.begin(); it != pTerraDesc->crags.end(); ++it )
 	//			{
 	//				const float DEF_TILE_SIZE = 2.75f;
-	//				vector<CVec3> vVerts;
-	//				vector<CVec3> vNorms;
-	//				vector<CVec3> vRidges;
-	//				vector<float> vHeights;
-	//				vector<NDb::SVSOPoint> vPoints;
+	//				std::vector<CVec3> vVerts;
+	//				std::vector<CVec3> vNorms;
+	//				std::vector<CVec3> vRidges;
+	//				std::vector<float> vHeights;
+	//				std::vector<NDb::SVSOPoint> vPoints;
 	//				pTerraManager->GetCragPrecVerts( &vVerts, it->nVSOID );
 	//				pTerraManager->GetCragPrecNorms( &vRidges, it->nVSOID );
 	//				pTerraManager->GetCragHeights( &vHeights, it->nVSOID );
@@ -1719,7 +1719,7 @@ int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 	//
 	//do not serialise this fields:
 	// unsigned nFlags;
-	// vector<string> tileList;
+	// std::vector<std::string> tileList;
 	return 0;
 }
 

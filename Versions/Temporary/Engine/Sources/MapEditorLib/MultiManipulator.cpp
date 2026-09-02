@@ -3,7 +3,7 @@
 #include "MultiManipulator.h"
 #include "PCIEMnemonics.h"
 
-bool CMultiManipulator::DescExists( const string &rszName ) const
+bool CMultiManipulator::DescExists( const std::string &rszName ) const
 {
 	if ( manipulatorMap.empty() )
 	{
@@ -20,13 +20,13 @@ bool CMultiManipulator::DescExists( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::TypeExists( const string &rszName ) const
+bool CMultiManipulator::TypeExists( const std::string &rszName ) const
 {
 	if ( manipulatorMap.empty() )
 	{
 		return false;
 	}
-	string szType;
+	std::string szType;
 	for ( CManipulatorMap::const_iterator itManipulator = manipulatorMap.begin(); itManipulator != manipulatorMap.end(); ++itManipulator )
 	{
 		if ( !itManipulator->second->GetType( rszName, &szType ) )
@@ -38,7 +38,7 @@ bool CMultiManipulator::TypeExists( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::IDExists( const string &rszName ) const
+bool CMultiManipulator::IDExists( const std::string &rszName ) const
 {
 	if ( manipulatorMap.empty() )
 	{
@@ -61,7 +61,7 @@ bool CMultiManipulator::NameExists( unsigned nID ) const
 	{
 		return false;
 	}
-	string szName;
+	std::string szName;
 	for ( CManipulatorMap::const_iterator itManipulator = manipulatorMap.begin(); itManipulator != manipulatorMap.end(); ++itManipulator )
 	{
 		if ( !itManipulator->second->GetName( nID, &szName ) )
@@ -73,7 +73,7 @@ bool CMultiManipulator::NameExists( unsigned nID ) const
 }
 
 
-int CMultiManipulator::GetMinimalCount( const string &rszName, bool *pbMultiVariant ) const
+int CMultiManipulator::GetMinimalCount( const std::string &rszName, bool *pbMultiVariant ) const
 {
 	if ( pbMultiVariant )
 	{
@@ -114,7 +114,7 @@ int CMultiManipulator::GetMinimalCount( const string &rszName, bool *pbMultiVari
 }
 
 
-bool CMultiManipulator::NameExists( const string &rszName ) const
+bool CMultiManipulator::NameExists( const std::string &rszName ) const
 {
 	if ( manipulatorMap.empty() )
 	{
@@ -131,7 +131,7 @@ bool CMultiManipulator::NameExists( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::GetMultiValue( const string &rszName, CVariant *pValue ) const
+bool CMultiManipulator::GetMultiValue( const std::string &rszName, CVariant *pValue ) const
 {
 	NI_ASSERT( pValue != 0, "CMultiManipulator::GetMultiValue(): pValue == 0" );
 	if ( manipulatorMap.empty() )
@@ -181,7 +181,7 @@ bool CMultiManipulator::GetMultiValue( const string &rszName, CVariant *pValue )
 }
 
 
-bool CMultiManipulator::SetMultiValue( const string &rszName, const CVariant &rValue )
+bool CMultiManipulator::SetMultiValue( const std::string &rszName, const CVariant &rValue )
 {
 	if ( manipulatorMap.empty() )
 	{
@@ -215,7 +215,7 @@ bool CMultiManipulator::SetMultiValue( const string &rszName, const CVariant &rV
 }
 
 
-bool CMultiManipulator::CheckMultiValue( const string &rszName, const CVariant &rValue, bool *pResult ) const
+bool CMultiManipulator::CheckMultiValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const
 {
 	NI_ASSERT( pResult != 0, "CMultiManipulator::CheckMultiValue(): pResult == 0" );
 	if ( manipulatorMap.empty() )
@@ -342,7 +342,7 @@ IManipulatorIterator* CMultiManipulator::Iterate( bool bShowHidden, ECacheType e
 }
 
 
-const SIteratorDesc* CMultiManipulator::GetDesc( const string &rszName ) const
+const SIteratorDesc* CMultiManipulator::GetDesc( const std::string &rszName ) const
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -367,7 +367,7 @@ const SIteratorDesc* CMultiManipulator::GetDesc( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::GetType( const string &rszName, string *pszType ) const
+bool CMultiManipulator::GetType( const std::string &rszName, std::string *pszType ) const
 {
 	NI_ASSERT( pszType != 0, "CMultiManipulator::GetType(): pszType == 0" );
 	if ( pActiveManipulator != 0 )
@@ -393,7 +393,7 @@ bool CMultiManipulator::GetType( const string &rszName, string *pszType ) const
 }
 
 
-unsigned CMultiManipulator::GetID( const string &rszName ) const
+unsigned CMultiManipulator::GetID( const std::string &rszName ) const
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -418,7 +418,7 @@ unsigned CMultiManipulator::GetID( const string &rszName ) const
 }
 
 
-bool CMultiManipulator::GetName( unsigned nID, string *pszName ) const
+bool CMultiManipulator::GetName( unsigned nID, std::string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMultiManipulator::GetName(): pszName == 0" );
 	if ( pActiveManipulator != 0 )
@@ -444,7 +444,7 @@ bool CMultiManipulator::GetName( unsigned nID, string *pszName ) const
 }
 
 
-bool CMultiManipulator::InsertNode( const string &rszName, int nNodeIndex )
+bool CMultiManipulator::InsertNode( const std::string &rszName, int nNodeIndex )
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -474,7 +474,7 @@ bool CMultiManipulator::InsertNode( const string &rszName, int nNodeIndex )
 }
 
 
-bool CMultiManipulator::RemoveNode( const string &rszName, int nNodeIndex )
+bool CMultiManipulator::RemoveNode( const std::string &rszName, int nNodeIndex )
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -537,7 +537,7 @@ bool CMultiManipulator::RemoveNode( const string &rszName, int nNodeIndex )
 }
 
 
-bool CMultiManipulator::RenameNode( const string &rszName, const string &rszNewName )
+bool CMultiManipulator::RenameNode( const std::string &rszName, const std::string &rszNewName )
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -562,7 +562,7 @@ bool CMultiManipulator::RenameNode( const string &rszName, const string &rszNewN
 }
 
 
-bool CMultiManipulator::GetValue( const string &rszName, CVariant *pValue ) const
+bool CMultiManipulator::GetValue( const std::string &rszName, CVariant *pValue ) const
 {
 	NI_ASSERT( pValue != 0, "CMultiManipulator::GetValue(): pValue == 0" );
 	if ( pActiveManipulator != 0 )
@@ -588,7 +588,7 @@ bool CMultiManipulator::GetValue( const string &rszName, CVariant *pValue ) cons
 }
 
 
-bool CMultiManipulator::SetValue( const string &rszName, const CVariant &rValue )
+bool CMultiManipulator::SetValue( const std::string &rszName, const CVariant &rValue )
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -612,7 +612,7 @@ bool CMultiManipulator::SetValue( const string &rszName, const CVariant &rValue 
 }
 
 
-bool CMultiManipulator::CheckValue( const string &rszName, const CVariant &rValue, bool *pResult ) const
+bool CMultiManipulator::CheckValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const
 {
 	NI_ASSERT( pResult != 0, "CMultiManipulator::CheckValue(): pResult == 0" );
 	if ( pActiveManipulator != 0 )
@@ -650,7 +650,7 @@ NDb::IObjMan* CMultiManipulator::GetObjMan()
 }
 
 
-bool CMultiManipulator::IsNameExists( const string &rszName ) const
+bool CMultiManipulator::IsNameExists( const std::string &rszName ) const
 {
 	if ( pActiveManipulator != 0 )
 	{
@@ -708,7 +708,7 @@ bool CMultiManipulatorIterator::Next()
 		}
 		else
 		{
-			string szName;
+			std::string szName;
 			while( pManipulatorIterator->Next() )
 			{
 				if ( pManipulatorIterator->IsEnd() )
@@ -753,7 +753,7 @@ const SIteratorDesc* CMultiManipulatorIterator::GetDesc() const
 }
 
 
-bool CMultiManipulatorIterator::GetName( string *pszName ) const
+bool CMultiManipulatorIterator::GetName( std::string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMultiManipulatorIterator::GetName(): pszName == 0" );
 	if ( pManipulatorIterator != 0 )
@@ -764,7 +764,7 @@ bool CMultiManipulatorIterator::GetName( string *pszName ) const
 }
 
 
-bool CMultiManipulatorIterator::GetType( string *pszType ) const
+bool CMultiManipulatorIterator::GetType( std::string *pszType ) const
 {
 	NI_ASSERT( pszType != 0, "CMultiManipulatorIterator::GetType(): pszType == 0" );
 	if ( pManipulatorIterator != 0 )

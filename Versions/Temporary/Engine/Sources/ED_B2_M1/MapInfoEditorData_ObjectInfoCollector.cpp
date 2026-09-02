@@ -150,7 +150,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfoCollector::Pick( list<int> *pEditorSceneIDList, const CTPoint<int> &rMousePoint ) const
+	void SObjectInfoCollector::Pick( std::list<int> *pEditorSceneIDList, const CTPoint<int> &rMousePoint ) const
 	{
 		CVec3 vTerrainPos = VNULL3;
 		Get2DPosOnMapHeights( &vTerrainPos, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -166,7 +166,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SObjectInfoCollector::Pick( list<int> *pEditorSceneIDList, const CTRect<int> &rFrame ) const
+	void SObjectInfoCollector::Pick( std::list<int> *pEditorSceneIDList, const CTRect<int> &rFrame ) const
 	{
 		CSelectionSquare selectionSquare;
 		CVec3 vTerrainPos = VNULL3;
@@ -853,7 +853,7 @@ namespace NMapInfoEditor
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
-				pView->SetViewManipulator( pPropertyManipulator, rObjectSet, string() );
+				pView->SetViewManipulator( pPropertyManipulator, rObjectSet, std::string() );
 			}
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, bCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 0 );

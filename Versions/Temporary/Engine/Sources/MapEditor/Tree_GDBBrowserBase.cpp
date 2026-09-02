@@ -67,8 +67,8 @@ int CTreeGDBBrowserBase::SortItemText( const CString &rstrText0, EGDBOType nType
 		{
 			if ( IsIgnoreCase() )
 			{
-				string szText0 = rstrText0;
-				string szText1 = rstrText1;
+				std::string szText0 = rstrText0;
+				std::string szText1 = rstrText1;
 				NStr::ToLower( &szText0 );
 				NStr::ToLower( &szText1 );
 				return strcmpi( szText0.c_str(), szText1.c_str() );
@@ -98,7 +98,7 @@ CTreeGDBBrowserBase::CGDBOMnemonics::CGDBOMnemonics() : CMnemonicsCollector<int>
 }
 
 
-CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::CGDBOMnemonics::Get( const string &rszGDBOMnemonic )
+CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::CGDBOMnemonics::Get( const std::string &rszGDBOMnemonic )
 {
 	return static_cast<EGDBOType>( GetValue( rszGDBOMnemonic ) );
 }
@@ -341,7 +341,7 @@ void CTreeGDBBrowserBase::ShowContextMenu( const CTPoint<int> &rPoint )
 	CMenu *pMenu = mainPopupMenu.GetSubMenu( MCMN_TREE_GDB_BROWSER );
 	if ( pMenu )
 	{
-		string szLabel;
+		std::string szLabel;
 		GetLoadContextMenuLabel( &szLabel );
 		MENUITEMINFO menuItemInfo;
 		menuItemInfo.cbSize = sizeof( MENUITEMINFO );
@@ -379,19 +379,19 @@ void CTreeGDBBrowserBase::OnEndLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResult
 	LPNMTVDISPINFO pTVDi = reinterpret_cast<LPNMTVDISPINFO>( pNotifyStruct );
 	if ( pTVDi->item.pszText )
 	{
-		const string szItemTextFromEndLabelEdit = string( pTVDi->item.pszText );
+		const std::string szItemTextFromEndLabelEdit = std::string( pTVDi->item.pszText );
 		const EGDBOType nType = GetTreeItemType( pTVDi->item.hItem );
 		if ( ( !szItemTextFromEndLabelEdit.empty() ) &&
 				 ( szItemTextFromBeginLabelEdit != szItemTextFromEndLabelEdit ) &&
 				 ( FindName( GetParentItem( pTVDi->item.hItem ), szItemTextFromEndLabelEdit, nType, false, pTVDi->item.hItem ) == 0 ) )
 		{
-			string szParentName;	
+			std::string szParentName;	
 			GetTreeItemName( GetParentItem( pTVDi->item.hItem ), &szParentName );
 			//
 			CPtr<CFolderController> pFolderController = CreateController();
 			//
-			string szDestination = szParentName + szItemTextFromEndLabelEdit;
-			string szSource = szParentName + szItemTextFromBeginLabelEdit;
+			std::string szDestination = szParentName + szItemTextFromEndLabelEdit;
+			std::string szSource = szParentName + szItemTextFromBeginLabelEdit;
 			if ( nType == GDBO_FOLDER )
 			{
 				szDestination += PATH_SEPARATOR_CHAR;
@@ -484,7 +484,7 @@ bool CTreeGDBBrowserBase::GetCurrentObjectSet( SObjectSet *pObjectSet )
 			HTREEITEM hSelectedItem = GetFirstSelectedItem();
 			while ( hSelectedItem )
 			{
-				string szName;
+				std::string szName;
 				GetTreeItemName( hSelectedItem, &szName ); 
 				if ( ( !szName.empty() ) && 
 						 ( szName[szName.size() - 1] != PATH_SEPARATOR_CHAR ) )
@@ -510,7 +510,7 @@ bool CTreeGDBBrowserBase::GetCurrentSelectionSet( SSelectionSet *pSelectionSet )
 		pSelectionSet->objectNameList.clear();
 		if ( GetSelectedCount() == 1 )
 		{
-			string szName;
+			std::string szName;
 			HTREEITEM hSelectedItem = GetFirstSelectedItem();
 			while ( hSelectedItem )
 			{
@@ -532,7 +532,7 @@ void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 {
 	//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator()" );
 	// Может быть ноль ( если нет выделенных объектов )
-	string szCurrentObject;
+	std::string szCurrentObject;
 	GetCurrentTreeItemName( &szCurrentObject );
 	if ( GetStrongSelection() && ( szCurrentObject != Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentObject ) )
 	{
@@ -550,7 +550,7 @@ void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 			if ( pView != 0 )
 			{
 				//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator() SetViewManipulator( %d )", bUpdate );
-				pView->SetViewManipulator( pObjectManipulator, objectSet, string() );
+				pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
 				if ( bUpdate )
 				{
 					Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_CREATE_TREE, 0 );
@@ -577,7 +577,7 @@ void CTreeGDBBrowserBase::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult )
 			HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 			bool bExpanded = ( pNMTreeView->itemNew.state & TVIS_EXPANDED ) > 0;
 
-			string szCurrentObject;
+			std::string szCurrentObject;
 			GetTreeItemName( hItem, &szCurrentObject );
 
 			SUserData::SObjectTypeData::CExpandedObjectSet &rExpandedObjectSet = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].expandedObjectSet;
@@ -617,7 +617,7 @@ void CTreeGDBBrowserBase::OnSelChanged( NMHDR *pNotifyStruct, LRESULT *pResult )
 		{
 			if ( HTREEITEM hFocusedItem = GetSelectedItem() )
 			{
-				string szCurrentObject;
+				std::string szCurrentObject;
 				GetTreeItemName( hFocusedItem, &szCurrentObject );
 				Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentObject = szCurrentObject;
 			}
@@ -670,7 +670,7 @@ CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::GetTreeItemType( HTREEITEM h
 
 // CSortTreeControl
 
-HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const string &rszName )
+HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const std::string &rszName )
 {
 	if ( rszName.empty() )
 	{
@@ -686,26 +686,26 @@ HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const string &rszName )
 	{
 		HTREEITEM hParentItem = TVI_ROOT;
 		
-		string szAdditionalName = rszName;
+		std::string szAdditionalName = rszName;
 		if ( szAdditionalName[szAdditionalName.size() - 1] == PATH_SEPARATOR_CHAR )
 		{
 			szAdditionalName = szAdditionalName.substr( 0, szAdditionalName.size() - 1 );
 		}
 
-		int nDividerPos = string::npos;
+		int nDividerPos = std::string::npos;
 		do
 		{
 			nDividerPos = szAdditionalName.find( PATH_SEPARATOR_CHAR );
-			const string szName = szAdditionalName.substr( 0, nDividerPos );
+			const std::string szName = szAdditionalName.substr( 0, nDividerPos );
 			
 			HTREEITEM hItem = GetChildItem( hParentItem );
 			while ( hItem != 0 )
 			{
-				string szText = GetItemText( hItem );
+				std::string szText = GetItemText( hItem );
 				if ( IsIgnoreCase() )
 				{
-					string szTextIgnoreCase = szText;
-					string szNameIgnoreCase = szName;
+					std::string szTextIgnoreCase = szText;
+					std::string szNameIgnoreCase = szName;
 					NStr::ToLower( &szTextIgnoreCase );
 					NStr::ToLower( &szNameIgnoreCase );
 					if ( szTextIgnoreCase == szNameIgnoreCase )
@@ -729,19 +729,19 @@ HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const string &rszName )
 			}
 			szAdditionalName = szAdditionalName.substr( nDividerPos + 1 );
 		}
-		while ( nDividerPos != string::npos );
+		while ( nDividerPos != std::string::npos );
 		return hParentItem;
 	}
 }
 
 
-bool CTreeGDBBrowserBase::GetTreeItemName( HTREEITEM hItem, string *pszName )
+bool CTreeGDBBrowserBase::GetTreeItemName( HTREEITEM hItem, std::string *pszName )
 {
 	if ( ( hItem == 0 ) || ( hItem == TVI_ROOT ) || ( hItem == TVI_FIRST ) || ( hItem == TVI_LAST ) )
 	{
 		return true;
 	}
-	string szItemText = GetItemText( hItem );
+	std::string szItemText = GetItemText( hItem );
 	EGDBOType nType = GetTreeItemType( hItem );
 	if ( nType == GDBO_OBJECT )
 	{
@@ -762,7 +762,7 @@ bool CTreeGDBBrowserBase::GetTreeItemName( HTREEITEM hItem, string *pszName )
 }
 
 
-bool CTreeGDBBrowserBase::GetCurrentTreeItemName( string *pszName )
+bool CTreeGDBBrowserBase::GetCurrentTreeItemName( std::string *pszName )
 {
 	if ( GetSelectedCount() == 1 )
 	{
@@ -776,7 +776,7 @@ bool CTreeGDBBrowserBase::GetCurrentTreeItemName( string *pszName )
 }
 
 
-bool CTreeGDBBrowserBase::SetCurrentTreeItemName( const string &rszName, bool bUpdateSelection )
+bool CTreeGDBBrowserBase::SetCurrentTreeItemName( const std::string &rszName, bool bUpdateSelection )
 {
 	if ( bUpdateSelection )
 	{
@@ -820,7 +820,7 @@ void CTreeGDBBrowserBase::CreateTree()
 		if ( !GetObjectSet().szObjectTypeName.empty() )
 		{	
 			bool bNeedStartTimer = false;
-			const string szCurrentObject = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentObject;
+			const std::string szCurrentObject = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentObject;
 			if ( ( !szCurrentObject.empty() ) && 
 					 ( szCurrentObject[szCurrentObject.size() - 1] != PATH_SEPARATOR_CHAR ) )
 			{
@@ -870,8 +870,8 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 		{
 			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( nCount < GetCreateTreeTimerCount() ) )
 			{
-				string szName;
-				string szType;
+				std::string szName;
+				std::string szType;
 				pCreateTreeManipulatorIterator->GetName( &szName );
 				pCreateTreeManipulatorIterator->GetType( &szType );
 				//DebugTrace("Tree: %s:%s", szType.c_str(), szName.c_str() );
@@ -880,8 +880,8 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 				{
 					if ( IsIgnoreCase() )
 					{
-						string szNameIgnoreCase = szName;
-						string szIgnoreSelectionNameIgnoreCase = szIgnoreSelectionName;
+						std::string szNameIgnoreCase = szName;
+						std::string szIgnoreSelectionNameIgnoreCase = szIgnoreSelectionName;
 						NStr::ToLower( &szNameIgnoreCase );
 						NStr::ToLower( &szIgnoreSelectionNameIgnoreCase );
 						bNeedAddTreeItem = ( szNameIgnoreCase != szIgnoreSelectionNameIgnoreCase );
@@ -943,7 +943,7 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 }
 
 
-HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &rszAdditionalName, EGDBOType nType, const SIteratorDesc *pDesc )
+HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const std::string &rszAdditionalName, EGDBOType nType, const SIteratorDesc *pDesc )
 {
 	HTREEITEM hAddedItem = 0;
 	if ( rszAdditionalName.empty() )
@@ -951,18 +951,18 @@ HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &r
 		return hAddedItem;
 	}
 	const int nDividerPos = rszAdditionalName.find( PATH_SEPARATOR_CHAR );
-	const string szShortName = rszAdditionalName.substr( 0, nDividerPos );
-	if ( nDividerPos != string::npos )
+	const std::string szShortName = rszAdditionalName.substr( 0, nDividerPos );
+	if ( nDividerPos != std::string::npos )
 	{
-		const string szAdditionalName = rszAdditionalName.substr( nDividerPos + 1 );
+		const std::string szAdditionalName = rszAdditionalName.substr( nDividerPos + 1 );
 		HTREEITEM hItem = GetChildItem( hRootItem );
 		while ( hItem != 0 )
 		{
-			const string szItemText = GetItemText( hItem );
+			const std::string szItemText = GetItemText( hItem );
 			if ( IsIgnoreCase() )
 			{
-				string szItemTextIgnoreCase = szItemText;
-				string szShortNameIgnoreCase = szShortName;
+				std::string szItemTextIgnoreCase = szItemText;
+				std::string szShortNameIgnoreCase = szShortName;
 				NStr::ToLower( &szItemTextIgnoreCase );
 				NStr::ToLower( &szShortNameIgnoreCase );
 				if ( szItemTextIgnoreCase == szShortNameIgnoreCase )
@@ -990,7 +990,7 @@ HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &r
 			if ( hItem && !GetObjectSet().szObjectTypeName.empty() )
 			{
 				SetTreeItemView( hItem, 0 );
-				string szName;
+				std::string szName;
 				GetTreeItemName( hItem, &szName ); 
 				const SUserData::SObjectTypeData::CExpandedObjectSet &rExpandedObjectSet = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].expandedObjectSet;
 				const bool bExpand = ( rExpandedObjectSet.find( szName ) != rExpandedObjectSet.end() );
@@ -1026,7 +1026,7 @@ HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &r
 }
 
 
-void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const string *pszName )
+void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const std::string *pszName )
 {
 	if ( hItem != 0 )
 	{
@@ -1037,7 +1037,7 @@ void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const string *pszNam
 		}
 		else
 		{
-			string szName;
+			std::string szName;
 			if ( pszName == 0 )
 			{
 				GetTreeItemName( hItem, &szName );
@@ -1052,7 +1052,7 @@ void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const string *pszNam
 }
 
 
-void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, string *pszName )
+void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType, std::string *pszName )
 {
 	if ( pszName )
 	{
@@ -1060,7 +1060,7 @@ void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rs
 		bool bExists = ( FindName( hParentItem, ( *pszName ), nType, true, 0 ) != 0 );
 		uint32_t nNumber = 2;
 		//
-		string szBaseName = rszName;
+		std::string szBaseName = rszName;
 		const bool bExtendExtention = CStringManager::CutFileExtention( &szBaseName, ".xdb" );
 		//
 		while ( bExists )
@@ -1077,19 +1077,19 @@ void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rs
 }
 
 
-HTREEITEM CTreeGDBBrowserBase::FindName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, bool bCheckType, HTREEITEM hItemToSkip )
+HTREEITEM CTreeGDBBrowserBase::FindName( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType, bool bCheckType, HTREEITEM hItemToSkip )
 {
 	HTREEITEM hItem = GetChildItem( hParentItem );
 	while( hItem != 0 )
 	{
 		if ( hItem != hItemToSkip )
 		{
-			string szText = GetItemText( hItem );
+			std::string szText = GetItemText( hItem );
 			EGDBOType nLocalType = GetTreeItemType( hItem );
 			if ( IsIgnoreCase() )
 			{
-				string szNameIgnoreCase = rszName;
-				string szTextIgnoreCase = szText;
+				std::string szNameIgnoreCase = rszName;
+				std::string szTextIgnoreCase = szText;
 				NStr::ToLower( &szNameIgnoreCase );
 				NStr::ToLower( &szTextIgnoreCase );
 				if ( ( szNameIgnoreCase == szTextIgnoreCase ) && ( bCheckType ? ( nLocalType == nType ) : true ) )
@@ -1111,7 +1111,7 @@ HTREEITEM CTreeGDBBrowserBase::FindName( HTREEITEM hParentItem, const string &rs
 }
 
 
-HTREEITEM CTreeGDBBrowserBase::FindPlaceToInsert( HTREEITEM hParentItem, const string &rszName, EGDBOType nType )
+HTREEITEM CTreeGDBBrowserBase::FindPlaceToInsert( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType )
 {
 	CString strName = rszName.c_str();
 	HTREEITEM hItemToReturn = TVI_FIRST;
@@ -1154,7 +1154,7 @@ void CTreeGDBBrowserBase::PickTextColors( LvPaintContext* pPC )
 						COLORREF color = RGB( 0, 0, 0 );
 						if ( !GetTreeItemColor( pTvPC->tvi.hItem, &color ) )
 						{
-							string szName;	
+							std::string szName;	
 							GetTreeItemName( pTvPC->tvi.hItem, &szName );
 							int nColor = 0;
 							if ( CManipulatorManager::GetValue( &nColor, GetViewManipulator(), szName ) )
@@ -1199,7 +1199,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			if ( GetChildItem( rTreeOperation.hDestination ) == 0 )
 			{
 				EGDBOType nType = GetTreeItemType( rTreeOperation.hDestination );
-				string szObjectName;
+				std::string szObjectName;
 				GetTreeItemName( rTreeOperation.hDestination, &szObjectName );
 				if ( nType == GDBO_FOLDER )
 				{
@@ -1246,7 +1246,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			}
 			if ( GetTreeItemType( rTreeOperation.hDestination ) == GDBO_OBJECT )
 			{
-				string szObjectName;
+				std::string szObjectName;
 				GetTreeItemName( rTreeOperation.hDestination, &szObjectName );
 				//
 				if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, szObjectName ) )
@@ -1280,7 +1280,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			}
 			if ( GetTreeItemType( rTreeOperation.hDestination ) == GDBO_OBJECT )
 			{
-				string szObjectName;
+				std::string szObjectName;
 				GetTreeItemName( rTreeOperation.hDestination, &szObjectName );
 				//
 				if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, szObjectName ) )
@@ -1298,7 +1298,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 		case STreeOperation::TYPE_COLOR:
 		{
 			{
-				string szObjectName;
+				std::string szObjectName;
 				GetTreeItemName( rTreeOperation.hDestination, &szObjectName );
 				//
 				CPtr<CFolderController> pFolderController = CreateController();
@@ -1309,12 +1309,12 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 		}
 		case STreeOperation::TYPE_COPY:
 		{
-			string szDestination;
-			string szSource;
+			std::string szDestination;
+			std::string szSource;
 			GetTreeItemName( rTreeOperation.hDestination, &szDestination );
 			GetTreeItemName( rTreeOperation.hSource, &szSource );
 			//
-			string szText = GetItemText( rTreeOperation.hSource );
+			std::string szText = GetItemText( rTreeOperation.hSource );
 			EGDBOType nType = GetTreeItemType( rTreeOperation.hSource );
 			HTREEITEM hNewItem = FindName( rTreeOperation.hDestination, szText, nType, true, 0 );
 			bool bNeedCopy = true;
@@ -1330,7 +1330,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			{
 				if ( nType == GDBO_OBJECT )
 				{
-					string szNewText;
+					std::string szNewText;
 					GetUniqueName( rTreeOperation.hDestination, szText, nType, &szNewText );
 					szDestination += szNewText;
 				}
@@ -1338,11 +1338,11 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 				{
 					// проверяем на тождественность ссылок
 					// копирование папки происходит только при копировании в того же родителя
-					string szDestinationName;
+					std::string szDestinationName;
 					GetTreeItemName( hNewItem, &szDestinationName );
 					if ( szDestinationName == szSource )
 					{
-						string szNewText;
+						std::string szNewText;
 						GetUniqueName( rTreeOperation.hDestination, szText, nType, &szNewText );
 						szDestination += szNewText + PATH_SEPARATOR_CHAR;
 					}
@@ -1363,7 +1363,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 				}
 				else
 				{
-					string szObjectName;
+					std::string szObjectName;
 					GetTreeItemName( rTreeOperation.hDestination, &szObjectName );
 					//
 					Singleton<IFolderCallback>()->ClearUndoData();
@@ -1398,12 +1398,12 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 		}
 		case STreeOperation::TYPE_RENAME:
 		{
-			string szDestination;
-			string szSource;
+			std::string szDestination;
+			std::string szSource;
 			GetTreeItemName( rTreeOperation.hDestination, &szDestination );
 			GetTreeItemName( rTreeOperation.hSource, &szSource );
 			//
-			string szText = GetItemText( rTreeOperation.hSource );
+			std::string szText = GetItemText( rTreeOperation.hSource );
 			EGDBOType nType = GetTreeItemType( rTreeOperation.hSource );
 			HTREEITEM hNewItem = FindName( rTreeOperation.hDestination, szText, nType, true, 0 );
 			bool bNeedRename = true;
@@ -1430,13 +1430,13 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			else
 			{
 				// проверяем на тождественность ссылок
-				string szDestinationName;
+				std::string szDestinationName;
 				GetTreeItemName( hNewItem, &szDestinationName );
 				if ( szDestinationName != szSource )
 				{
 					if ( nType == GDBO_OBJECT )
 					{
-						string szNewText;
+						std::string szNewText;
 						GetUniqueName( rTreeOperation.hDestination, szText, nType, &szNewText );
 						szDestination += szNewText;
 					}
@@ -1523,11 +1523,11 @@ void CTreeGDBBrowserBase::NewFolder( HTREEITEM hParentItem )
 	}
 	CString strNewName;
 	strNewName.LoadString( IDS_TREE_GDB_BROWSE_NEW_FOLDER );
-	const string szNewName = strNewName;
-	string szNewFolderName;
+	const std::string szNewName = strNewName;
+	std::string szNewFolderName;
 	GetUniqueName( hParentItem, szNewName, GDBO_FOLDER, &szNewFolderName );
 	szNewFolderName += PATH_SEPARATOR_CHAR;
-	string szUniqueObjectName = szNewFolderName;
+	std::string szUniqueObjectName = szNewFolderName;
 	// Расштряем имя до полного
 	GetTreeItemName( hParentItem, &szUniqueObjectName );
 	
@@ -1561,9 +1561,9 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 	}
 	CString strNewName;
 	strNewName.LoadString( IDS_TREE_GDB_BROWSE_NEW_RESOURCE );
-	const string szNewName = strNewName;
-	string szObjectTypeName = GetObjectSet().szObjectTypeName;
-	string szUniqueObjectName;
+	const std::string szNewName = strNewName;
+	std::string szObjectTypeName = GetObjectSet().szObjectTypeName;
+	std::string szUniqueObjectName;
 	GetUniqueName( hParentItem, szNewName, GDBO_OBJECT, &szUniqueObjectName );
 	CStringManager::ExtendFileExtention( &szUniqueObjectName, ".xdb" );
 	GetTreeItemName( hParentItem, &szUniqueObjectName );
@@ -1858,7 +1858,7 @@ void CTreeGDBBrowserBase::Color()
 	{
 		HTREEITEM hFocusedItem = GetSelectedItem();
 		//
-		string szName;
+		std::string szName;
 		GetTreeItemName( hFocusedItem, &szName );
 		int nColor = 0;
 		CManipulatorManager::GetValue( &nColor, GetViewManipulator(), szName );
@@ -1889,12 +1889,12 @@ void CTreeGDBBrowserBase::Color()
 }
 
 
-HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM hStartItem )
+HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const std::string &rszSearch, HTREEITEM hStartItem )
 {
 	int nSearchSize = rszSearch.size();
 	if ( nSearchSize != 0 )
 	{
-		string szSearch = rszSearch;
+		std::string szSearch = rszSearch;
 		NStr::ToLower( &szSearch );
 		NStr::ReplaceAllChars( &szSearch, '/', '\\' );
 		//
@@ -1914,13 +1914,13 @@ HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM
 		{
 			if ( hItem != 0 )
 			{
-				string szName;
+				std::string szName;
 				if ( GetTreeItemName( hItem, &szName ) )
 				{
 					if ( szName.size() >= nSearchSize	 )
 					{
 						NStr::ToLower( &szName );
-						if ( szName.find( szSearch ) != string::npos )
+						if ( szName.find( szSearch ) != std::string::npos )
 						{
 							if ( ( hStartItem == 0 ) || ( hItem != hStartItem  ) )
 							{
@@ -1963,7 +1963,7 @@ HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM
 
 void CTreeGDBBrowserBase::Find()
 {
-	string szSearch = Singleton<IUserDataContainer>()->Get()->szLastSearchedText;
+	std::string szSearch = Singleton<IUserDataContainer>()->Get()->szLastSearchedText;
 	CSearchObjectDialog searchObjectDialog;
 	searchObjectDialog.SetText( szSearch );
 	if ( searchObjectDialog.DoModal() == IDOK )
@@ -2017,11 +2017,11 @@ void CTreeGDBBrowserBase::GotoID()
 void CTreeGDBBrowserBase::LookupReferences()
 {
 	CWaitCursor	wait;
-	const string &szObjectTypeName = GetObjectSet().szObjectTypeName;
-	string szObjectName;
+	const std::string &szObjectTypeName = GetObjectSet().szObjectTypeName;
+	std::string szObjectName;
 	GetTreeItemName( GetSelectedItem(), &szObjectName );
 	//
-	list<string> referenceObjectsList;
+	std::list<std::string> referenceObjectsList;
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	NI_VERIFY( pResourceManager, "Cannot find resource manager", return )
 	CRefListWaitDialog xdbAskDlg( this );
@@ -2483,7 +2483,7 @@ void CTreeGDBBrowserBase::InternalUndo( IController* pController )
 	bool bResult = true;
 	if ( CFolderController *pFolderController = dynamic_cast<CFolderController*>( pController ) )
 	{
-		string szTypeLabel;
+		std::string szTypeLabel;
 		GetSaveHeaderWidthLabel( &szTypeLabel );
 		if ( pFolderController->GetObjectSet().szObjectTypeName == szTypeLabel )
 		{
@@ -2527,7 +2527,7 @@ void CTreeGDBBrowserBase::InternalRedo( IController* pController )
 	bool bResult = true;
 	if ( CFolderController *pFolderController = dynamic_cast<CFolderController*>( pController ) )
 	{
-		string szTypeLabel;
+		std::string szTypeLabel;
 		GetSaveHeaderWidthLabel( &szTypeLabel );
 		if ( pFolderController->GetObjectSet().szObjectTypeName == szTypeLabel )
 		{
@@ -2614,10 +2614,10 @@ void CTreeGDBBrowserBase::InternalRedo( IController* pController )
 								if ( hSource != 0 )
 								{
 									HTREEITEM hParent = GetParentItem( hSource );
-									string szParentName;
+									std::string szParentName;
 									GetTreeItemName( hParent, &szParentName );
 									const int nPos = szParentName.size();
-									string szDestination = itUndoData->szDestination;
+									std::string szDestination = itUndoData->szDestination;
 									if ( nPos > 0 )
 									{
 										szDestination = szDestination.substr( nPos );
@@ -2666,7 +2666,7 @@ void CTreeGDBBrowserBase::InternalRedo( IController* pController )
 }
 
 
-void CTreeGDBBrowserBase::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel )
+void CTreeGDBBrowserBase::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const std::string &rszTemporaryLabel )
 {
 	KillCreateTreeTimer();
 	CDefaultView::SetViewManipulator( _pViewManipulator, rObjectSet, rszTemporaryLabel );

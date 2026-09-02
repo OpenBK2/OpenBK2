@@ -48,7 +48,7 @@ struct SAdvClipboardWindowData
 		LA_LOAD_CLIP
 	};
 	ELastAction eLastAction;
-	vector<string> clipNames;
+	std::vector<std::string> clipNames;
 	int nSelectedClip;
 	SAdvClipboardPasteSettings pasteSettings;
 	///

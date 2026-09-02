@@ -24,7 +24,7 @@ END_MESSAGE_MAP()
 //}
 
 
-CProgressThread::CProgressThread( const string &rszName, CWnd *pParentWindow )
+CProgressThread::CProgressThread( const std::string &rszName, CWnd *pParentWindow )
 {
 	pDialog = new CProgressDlg( rszName );
 	pDialog->Create( pParentWindow );
@@ -148,7 +148,7 @@ void CProgressThread::ClearLog()
 }
 
 
-void CProgressThread::AddLog( const string &rszLogMessage )
+void CProgressThread::AddLog( const std::string &rszLogMessage )
 {
 	DebugTrace( "CProgressThread:: AddLog" );
 	//

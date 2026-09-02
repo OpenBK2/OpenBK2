@@ -89,7 +89,7 @@ int GetGrannyAnimationLength( granny_file_info *pInfo )
 	return int( pAnimation->Duration * 1000.0f );
 }
 
-bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo, const string &szMeshName )
+bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo, const std::string &szMeshName )
 {
 	NI_ASSERT( pvMin != 0, "GetGrannyMeshBoundidngBox(): mMin == 0" );
 	NI_ASSERT( pvMax != 0, "GetGrannyMeshBoundidngBox(): pMax == 0" );
@@ -137,7 +137,7 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 	return bResult;
 }
 
-void GetVerticesFromGrannyMesh( granny_mesh *pMesh, vector<CVec3> *pVertexList )
+void GetVerticesFromGrannyMesh( granny_mesh *pMesh, std::vector<CVec3> *pVertexList )
 {
 	NI_ASSERT( pMesh != 0, "GetVerticesFromGrannyMesh(): pMesh == 0" );
 	NI_ASSERT( pVertexList != 0, "GetVerticesFromGrannyMesh(): pVertexList == 0" );
@@ -160,7 +160,7 @@ void GetVerticesFromGrannyMesh( granny_mesh *pMesh, vector<CVec3> *pVertexList )
 }
 
 
-void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, vector<STriangle> *pTriangleList )
+void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, std::vector<STriangle> *pTriangleList )
 {
 	NI_ASSERT( pMesh != 0, "GetTrianglesFromGrannyMesh(): pMesh == 0" );
 	NI_ASSERT( pTriangleList != 0, "GetTrianglesFromGrannyMesh(): pTriangleList == 0" );
@@ -176,7 +176,7 @@ void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, vector<STriangle> *pTriangl
 	int nGlobalIndex = 0;
 	for ( int nTriangleIndex = 0; nTriangleIndex < nTriangleCount; ++nTriangleIndex )
 	{
-		vector<STriangle>::iterator posTriangle = pTriangleList->insert( pTriangleList->end(), STriangle() );
+		std::vector<STriangle>::iterator posTriangle = pTriangleList->insert( pTriangleList->end(), STriangle() );
 		posTriangle->i1 = pTriTopology->Indices[ nGlobalIndex + 0 ];
 		posTriangle->i2 = pTriTopology->Indices[ nGlobalIndex + 1 ];
 		posTriangle->i3 = pTriTopology->Indices[ nGlobalIndex + 2 ];
@@ -184,7 +184,7 @@ void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, vector<STriangle> *pTriangl
 	}
 }
 
-bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const string &rszFileName, const string &rszDesiredSkeletonName, bool bFromRoot )
+bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const std::string &rszFileName, const std::string &rszDesiredSkeletonName, bool bFromRoot )
 {
 	granny_file *pFile = GrannyReadEntireFile( rszFileName.c_str() );
 	if ( pFile == 0 ) 
@@ -199,7 +199,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const string &rszFile
 	return bRetVal;
 }
 
-bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pInfo, const string &rszDesiredSkeletonName, bool bFromRoot )
+bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pInfo, const std::string &rszDesiredSkeletonName, bool bFromRoot )
 {
 	NI_ASSERT( pBoneList != 0, "ReadAttributes() pBoneList == 0" );
 	//
@@ -208,9 +208,9 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 	//
 	if ( !rszDesiredSkeletonName.empty() )
 	{
-		string szSkeletonName = pInfo->Skeletons[0]->Name;
+		std::string szSkeletonName = pInfo->Skeletons[0]->Name;
 		NStr::ToLowerASCII( &szSkeletonName );
-		string szDesiredSkeletonName = rszDesiredSkeletonName;
+		std::string szDesiredSkeletonName = rszDesiredSkeletonName;
 		NStr::ToLowerASCII( &szDesiredSkeletonName );
 		if ( szDesiredSkeletonName != szSkeletonName )
 			return false;
@@ -222,7 +222,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 	pBoneList->reserve( pBoneList->size() + pInfo->Skeletons[0]->BoneCount );
 	for ( int i = nStartFromBone; i < pInfo->Skeletons[0]->BoneCount; ++i ) 
 	{
-		string szBoneName = pInfo->Skeletons[0]->Bones[i].Name;
+		std::string szBoneName = pInfo->Skeletons[0]->Bones[i].Name;
 		NStr::ToLowerASCII( &szBoneName );
 		CGrannyBoneAttributesList::iterator posBone = pBoneList->insert( pBoneList->end(), SGrannyBoneAttributes() );
 		posBone->szBoneName = szBoneName;
@@ -232,7 +232,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 		{
 			if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyReal32Member ) 
 			{
-				string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
+				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
 				/**
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
@@ -246,7 +246,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 			}
 			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyInt32Member ) 
 			{
-				string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
+				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
 				/**
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
@@ -265,7 +265,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 //				const int nTotalSize = GrannyGetTotalObjectSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
 //				bool bHasPointers = GrannyMemberHasPointers( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
 //				ILogger *pLogger = NLog::GetLogger();
-//				pLogger->Log( LT_ERROR, StrFmt("Attribute of type 'string' for \"%s\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
+//				pLogger->Log( LT_ERROR, StrFmt("Attribute of type 'std::string' for \"%s\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
 //				break;
 			}
 			else
@@ -279,7 +279,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 }
 
 
-bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, float *pfValue ) const
+bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, float *pfValue ) const
 {
 	SGrannyBoneAttributes::CAttributeMap::const_iterator posAttribute = attributeMap.find( rszAttributeName );
 	if ( posAttribute != attributeMap.end() )
@@ -297,7 +297,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, float 
 }
 
 
-bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, int *pnValue ) const
+bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, int *pnValue ) const
 {
 	float fAttributeValue = 0.0f;
 	if ( GetAttribute( rszAttributeName, &fAttributeValue ) )
@@ -312,7 +312,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, int *p
 }
 
 
-bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, bool *pbValue ) const
+bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, bool *pbValue ) const
 {
 	float fAttributeValue = 0.0f;
 	if ( GetAttribute( rszAttributeName, &fAttributeValue ) )
@@ -335,7 +335,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, bool *
 // **
 // ************************************************************************************************************************ //
 
-CGrannyFileInfoGuard::CGrannyFileInfoGuard( const string &szFileName )
+CGrannyFileInfoGuard::CGrannyFileInfoGuard( const std::string &szFileName )
 {
 	pFile = GrannyReadEntireFile( szFileName.c_str() );
 	pInfo = GrannyGetFileInfo( pFile );

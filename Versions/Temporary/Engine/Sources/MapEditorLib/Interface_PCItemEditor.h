@@ -51,7 +51,7 @@ enum EPCIEType
 struct IPCItemEditor : public CObjectBase
 {
 	// Получить значение имени элемента дерева ( для совместимости )
-	virtual const string& GetName() const = 0;
+	virtual const std::string& GetName() const = 0;
 	// Получить значение типа элемента дерева ( для совместимости )
 	virtual EPCIEType GetItemEditorType() const = 0;
 	// Получить описатель элемента дерева ( для совместимости )
@@ -62,7 +62,7 @@ struct IPCItemEditor : public CObjectBase
 	virtual class CWnd* GetTargetWindow() = 0;
 	//
 	// Создать окно редактора ( CDialog - для того чтобы можно было перескакивать по контролам )
-	virtual bool CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, class CWnd *_pwndTargetWindow ) = 0;
+	virtual bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, class CWnd *_pwndTargetWindow ) = 0;
 	// Разместить окно редактора в произвольной области
 	virtual bool PlaceEditor( const CTRect<int> &rPlaceRect ) = 0;
 	// Перевести фокус на окно редактора

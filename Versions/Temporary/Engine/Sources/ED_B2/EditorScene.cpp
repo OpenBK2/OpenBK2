@@ -76,12 +76,12 @@ void CEditorScene::RemoveObject( const int nID )
 	Scene()->RemoveObject( nID );
 }
 
-void CEditorScene::SetFadedObjects( const list<int> &objects )
+void CEditorScene::SetFadedObjects( const std::list<int> &objects )
 {
 	Scene()->SetFadedObjects( objects );
 }
 
-void CEditorScene::SetFadedObjects( const list<int> &objects, float fFade )
+void CEditorScene::SetFadedObjects( const std::list<int> &objects, float fFade )
 {
 	Scene()->SetFadedObjects( objects, fFade );
 }
@@ -91,12 +91,12 @@ int CEditorScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer:
 	return Scene()->AddEffect( nID, pEffect, timeStart, vPos, qRot );
 }
 
-int CEditorScene::AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck )
+int CEditorScene::AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck )
 {
 	return Scene()->AddPolyline( nID, points, vColor, bDepthCheck );
 }
 
-int CEditorScene::AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
+int CEditorScene::AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	return Scene()->AddIndexedPolyline( nID, points, indices, vColor, bDepthCheck );
 }
@@ -176,12 +176,12 @@ void CEditorScene::Draw( NGScene::CRTPtr *pTarget )
 	Scene()->Draw( pTarget );
 }
 
-void CEditorScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos )
+void CEditorScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos )
 {
 	Scene()->PickObjects( pickObjects, vScreenPos );
 }
 
-void CEditorScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 )
+void CEditorScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 )
 {
 	Scene()->PickObjects( pickObjects, vScreenPos1, vScreenPos2, IScene::PO_CENTER_INSIDE );
 }

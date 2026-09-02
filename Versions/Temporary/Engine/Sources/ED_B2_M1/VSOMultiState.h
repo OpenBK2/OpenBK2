@@ -132,7 +132,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_MULTI_STATE );
 	}
 
-	void SwitchState( const string &rszObjectTypeName );
+	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface
 	virtual void Enter();
 	virtual void Leave();

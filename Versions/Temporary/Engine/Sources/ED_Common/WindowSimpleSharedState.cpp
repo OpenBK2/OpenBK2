@@ -278,7 +278,7 @@ void CWindowSimpleSharedState::OnKeyEnter()
 	if ( pPickedWindow != 0 )
 	{
 		const CDBID sharedDBID = pPickedWindow->GetSharedDesc()->GetDBID();
-		const string szSharedTypeName = NDb::GetClassTypeName( sharedDBID );
+		const std::string szSharedTypeName = NDb::GetClassTypeName( sharedDBID );
 		//
 		if ( IsPushableType( szSharedTypeName ) )
 		{
@@ -378,7 +378,7 @@ void CWindowSimpleSharedState::OnRButtonDown( unsigned nFlags, const CTPoint<int
 void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 {
 	CDBID sharedDBID;
-	string szSharedTypeName;
+	std::string szSharedTypeName;
 	if ( pMainWindow && pMainWindow->GetSharedDesc() )
 	{
 		sharedDBID = pMainWindow->GetSharedDesc()->GetDBID();
@@ -403,7 +403,7 @@ void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 
 		if ( pView->GetViewManipulator() != pManipulator )
 		{
-			pView->SetViewManipulator( pManipulator, objectSet, string() );
+			pView->SetViewManipulator( pManipulator, objectSet, std::string() );
 			bHardUpdate = true;
 		}
 		uint32_t dwCommand = bHardUpdate ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES;
@@ -503,14 +503,14 @@ void CWindowSimpleSharedState::RemoveChild( IWindow *pWindow )
 	CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 	NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedEditor::RemoveChild: pTableManipulator == 0" );
 
-	string typeName = NDb::GetClassTypeName( pWindow->GetDesc()->GetDBID() );
+	std::string typeName = NDb::GetClassTypeName( pWindow->GetDesc()->GetDBID() );
 
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( typeName );
 	NI_ASSERT( pFolderManipulator != 0, "CWindowSimpleSharedEditor::IsUniqueChild: pFolderManipulator == 0" );
 
-	string objName = pWindow->GetDesc()->GetDBID().ToString();
+	std::string objName = pWindow->GetDesc()->GetDBID().ToString();
 
-	string fullNameOfPicked;
+	std::string fullNameOfPicked;
 	CStringManager::GetRefValueFromTypeAndName( &fullNameOfPicked, typeName, objName, TYPE_SEPARATOR_CHAR );
 
 	CVariant value;
@@ -519,10 +519,10 @@ void CWindowSimpleSharedState::RemoveChild( IWindow *pWindow )
 
 	for ( int i = 0; i < nChildren; ++i )
 	{
-		const string itemName = StrFmt( "Children.[%d]", i );
+		const std::string itemName = StrFmt( "Children.[%d]", i );
 		if ( pEditor->GetViewManipulator()->GetValue( itemName, &value ) )
 		{
-			const string fullName = value.GetStr();
+			const std::string fullName = value.GetStr();
 
 			if ( fullName == fullNameOfPicked )
 			{
@@ -548,7 +548,7 @@ void CWindowSimpleSharedState::ReplaceChild( IWindow *pWindow, const CTPoint<int
 	if ( const NDb::SUIDesc *pInstanceDesc = pWindow->GetDesc() )
 	{
 		CDBID instanceDBID = pInstanceDesc->GetDBID();
-		string szInstanceTypeName = NDb::GetClassTypeName( instanceDBID );
+		std::string szInstanceTypeName = NDb::GetClassTypeName( instanceDBID );
 		if ( CPtr<IManipulator> pInstanceManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szInstanceTypeName, instanceDBID ) )
 		{
 			CVariant value;
@@ -617,7 +617,7 @@ void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 
 	if ( CheckInsertChild( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
 	{
-		string instanceTypeName;
+		std::string instanceTypeName;
 		FindInstanceTypeNameByShared( objectSet.szObjectTypeName, &instanceTypeName );
 
 		CDBID instanceDBID;
@@ -632,9 +632,9 @@ void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 }
 
 
-bool CWindowSimpleSharedState::CheckInsertChild( const string & szTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedState::CheckInsertChild( const std::string & szTypeName, const CDBID &rDBID )
 {
-	string instanceTypeName;
+	std::string instanceTypeName;
 	if ( !FindInstanceTypeNameByShared( szTypeName, &instanceTypeName ) )
 	{
 		// selected item cannot be accepted as child window
@@ -651,7 +651,7 @@ bool CWindowSimpleSharedState::CheckInsertChild( const string & szTypeName, cons
 }
 
 
-bool CWindowSimpleSharedState::FindInstanceTypeNameByShared( const string & szSharedName, string * szInstanceName )
+bool CWindowSimpleSharedState::FindInstanceTypeNameByShared( const std::string & szSharedName, std::string * szInstanceName )
 {
 	for ( int i = 0; 0 != tblChildTypes[i].szSharedName; ++i )
 	{
@@ -665,7 +665,7 @@ bool CWindowSimpleSharedState::FindInstanceTypeNameByShared( const string & szSh
 }
 
 
-bool CWindowSimpleSharedState::IsPushableType( const string & szTypeName )
+bool CWindowSimpleSharedState::IsPushableType( const std::string & szTypeName )
 {
 	for ( int i = 0; 0 != tblPushableTypes[i]; ++i )
 	{
@@ -679,13 +679,13 @@ bool CWindowSimpleSharedState::IsPushableType( const string & szTypeName )
 
 
 
-bool CWindowSimpleSharedState::InsertChildInstanceToDB( const string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID )
+bool CWindowSimpleSharedState::InsertChildInstanceToDB( const std::string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID )
 {
-	string instanceTypeName;
+	std::string instanceTypeName;
 	if ( !FindInstanceTypeNameByShared( szSharedTypeName, &instanceTypeName ) )
 		return false;
 
-	string instanceFullName;
+	std::string instanceFullName;
 	if ( !GenerateChildInstance( szSharedTypeName, rSharedDBID, &instanceFullName, pInstanceDBID ) )
 		return false;
 
@@ -713,7 +713,7 @@ bool CWindowSimpleSharedState::InsertChildInstanceToDB( const string & szSharedT
 }
 
 
-IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const string & szInstanceTypeName, const CDBID &rInstanceDBID )
+IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const std::string & szInstanceTypeName, const CDBID &rInstanceDBID )
 {
 	CPtr<IWindow> pChildWindow;
 
@@ -745,7 +745,7 @@ IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const string & szIn
 }
 
 
-bool CWindowSimpleSharedState::GetEditorObjName( string *pObjName )
+bool CWindowSimpleSharedState::GetEditorObjName( std::string *pObjName )
 {
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( WINDOW_SIMPLE_SHARED_TYPE_NAME );
 	NI_ASSERT( pFolderManipulator != 0, "CWindowSimpleSharedEditor::GenerateChildInstanceName: pFolderManipulator == 0" );
@@ -755,18 +755,18 @@ bool CWindowSimpleSharedState::GetEditorObjName( string *pObjName )
 }
 
 
-bool CWindowSimpleSharedState::MakeInstanceName( const string & szInstanceTypeName, const string & szSharedShortName, string *pShortName, string *pFullName, string *pObjName )
+bool CWindowSimpleSharedState::MakeInstanceName( const std::string & szInstanceTypeName, const std::string & szSharedShortName, std::string *pShortName, std::string *pFullName, std::string *pObjName )
 {
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szInstanceTypeName );
 	NI_ASSERT( pFolderManipulator != 0, "CWindowSimpleSharedEditor::GenerateChildInstanceName: pFolderManipulator == 0" );
 
-	string editorObjName;
+	std::string editorObjName;
 	if ( !GetEditorObjName( &editorObjName ) )
 		return false;
 
 	int index = 0;
-	string shortName;
-	string objName;
+	std::string shortName;
+	std::string objName;
 
 	do
 	{
@@ -775,7 +775,7 @@ bool CWindowSimpleSharedState::MakeInstanceName( const string & szInstanceTypeNa
 		++index;
 	} while ( pFolderManipulator->GetID( objName ) != INVALID_NODE_ID );
 
-	string refValue;
+	std::string refValue;
 	CStringManager::GetRefValueFromTypeAndName( &refValue, szInstanceTypeName, objName, TYPE_SEPARATOR_CHAR );
 
 	*pFullName  = refValue;
@@ -786,29 +786,29 @@ bool CWindowSimpleSharedState::MakeInstanceName( const string & szInstanceTypeNa
 }
 
 
-bool CWindowSimpleSharedState::MakeSharedName( const string & szSharedTypeName, const CDBID &rDBID, string *pSharedShortName, string *pSharedFullName )
+bool CWindowSimpleSharedState::MakeSharedName( const std::string & szSharedTypeName, const CDBID &rDBID, std::string *pSharedShortName, std::string *pSharedFullName )
 {
-	string objName = rDBID.ToString();
+	std::string objName = rDBID.ToString();
 	CStringManager::GetRefValueFromTypeAndName( pSharedFullName, szSharedTypeName, objName, TYPE_SEPARATOR_CHAR );
 
 	const slashPos = objName.rfind( PATH_SEPARATOR_CHAR );
-	*pSharedShortName = (slashPos == string::npos) ? objName : objName.substr( slashPos+1 );
+	*pSharedShortName = (slashPos == std::string::npos) ? objName : objName.substr( slashPos+1 );
 
 	return true;
 }
 
 
-bool CWindowSimpleSharedState::GenerateChildInstance( const string & szSharedTypeName, const CDBID &rSharedDBID, string *szInstanceFullName, CDBID *pInstanceDBID )
+bool CWindowSimpleSharedState::GenerateChildInstance( const std::string & szSharedTypeName, const CDBID &rSharedDBID, std::string *szInstanceFullName, CDBID *pInstanceDBID )
 {
-	string instanceTypeName;
+	std::string instanceTypeName;
 	if ( !FindInstanceTypeNameByShared( szSharedTypeName, &instanceTypeName ) )
 		return false;
 
-	string sharedShortName, sharedFullName;
+	std::string sharedShortName, sharedFullName;
 	if ( !MakeSharedName( szSharedTypeName, rSharedDBID, &sharedShortName, &sharedFullName ) )
 		return false;
 
-	string shortName, fullName, objName;
+	std::string shortName, fullName, objName;
 	if ( !MakeInstanceName( instanceTypeName, sharedShortName, &shortName, &fullName, &objName ) )
 		return false;
 
@@ -849,7 +849,7 @@ bool CWindowSimpleSharedState::GenerateChildInstance( const string & szSharedTyp
 			const int nVisualStates = (int)value;
 			for ( int i = 0; i < nVisualStates; ++i )
 			{
-				//bResult = bResult && pEditor->UOInsertNode( "ButtonStates", string(), 0 );
+				//bResult = bResult && pEditor->UOInsertNode( "ButtonStates", std::string(), 0 );
 				bResult = bResult && pManipulator->InsertNode( "ButtonStates" );
 			}
 		}
@@ -863,21 +863,21 @@ bool CWindowSimpleSharedState::GenerateChildInstance( const string & szSharedTyp
 }
 
 
-void CWindowSimpleSharedState::UndoChange( const string & szTypeName, const CDBID &rDBID, const string & szName, const CVariant & oldValue )
+void CWindowSimpleSharedState::UndoChange( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName, const CVariant & oldValue )
 {
 	/**
-	if ( string::npos != szName.find( "Placement.Position.First." ) )
+	if ( std::string::npos != szName.find( "Placement.Position.First." ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 		NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedState::UndoChange: pTableManipulator == 0" );
 		if ( CPtr<IWindow> pChild = pMainWindow->GetChild( szTypeName, rDBID, false ) )
 		{
 			const int nValue = (int)(float)oldValue;
-			if ( string::npos != szName.find( ".x" ) )
+			if ( std::string::npos != szName.find( ".x" ) )
 			{
 				pChild->SetPlacement( nValue, 0, 0, 0, EWPF_POS_X );
 			}
-			else if ( string::npos != szName.find( ".y" ) )
+			else if ( std::string::npos != szName.find( ".y" ) )
 			{
 				pChild->SetPlacement( 0, nValue, 0, 0, EWPF_POS_Y );
 			}
@@ -888,10 +888,10 @@ void CWindowSimpleSharedState::UndoChange( const string & szTypeName, const CDBI
 }
 
 
-void CWindowSimpleSharedState::UndoInsert( const string & szTypeName, const CDBID &rDBID, const string & szName )
+void CWindowSimpleSharedState::UndoInsert( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName )
 {
 	/**
-	if ( string::npos != szName.find( "Children" ) )
+	if ( std::string::npos != szName.find( "Children" ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 		NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedState::UndoInsert: pTableManipulator == 0" );
@@ -907,10 +907,10 @@ void CWindowSimpleSharedState::UndoInsert( const string & szTypeName, const CDBI
 }
 
 
-void CWindowSimpleSharedState::UndoRemove( const string & szTypeName, const CDBID &rDBID, const string & szName )
+void CWindowSimpleSharedState::UndoRemove( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName )
 {
 	/**
-	if ( string::npos != szName.find( "Children" ) )
+	if ( std::string::npos != szName.find( "Children" ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 		NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedState::UndoRemove: pTableManipulator == 0" );

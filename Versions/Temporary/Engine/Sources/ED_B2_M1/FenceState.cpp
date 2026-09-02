@@ -45,7 +45,7 @@ void CFenceState::InsertFence()
 		{
 			return;
 		}
-		vector<CFenceDesignTool::SFenceSectionInfo> segInfo;
+		std::vector<CFenceDesignTool::SFenceSectionInfo> segInfo;
 		designTool.GetSectionsInfo( &segInfo, selectedFenceInfo.pFenceRPGStats->ePlacementType ); 
 		if ( segInfo.empty() )
 		{
@@ -56,7 +56,7 @@ void CFenceState::InsertFence()
 			pEditParameters->nFlags = MIMOSEP_PLAYER_INDEX;
 			GetEditParameters( pEditParameters, CHID_MAPINFO_MAPOBJECT_WINDOW );
 			//
-			for ( vector<CFenceDesignTool::SFenceSectionInfo>::iterator itTE = segInfo.begin(); itTE!= segInfo.end(); ++itTE )
+			for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator itTE = segInfo.begin(); itTE!= segInfo.end(); ++itTE )
 			{
 				CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &(*itTE);
 				pSectionInfo->vPosition.z = 0.0f;
@@ -214,12 +214,12 @@ void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 		//
 		if ( IEditorScene *pScene = EditorScene() )
 		{
-			vector<CFenceDesignTool::SFenceSectionInfo> sectionsInfo;
+			std::vector<CFenceDesignTool::SFenceSectionInfo> sectionsInfo;
 			designTool.GetSectionsInfo( &sectionsInfo, selectedFenceInfo.pFenceRPGStats->ePlacementType );
 			//
 			if ( !sectionsInfo.empty() )
 			{
-				for ( vector<CFenceDesignTool::SFenceSectionInfo>::iterator it = sectionsInfo.begin(); it != sectionsInfo.end(); ++it )
+				for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator it = sectionsInfo.begin(); it != sectionsInfo.end(); ++it )
 				{
 					CFenceDesignTool::SFenceSectionInfo *pSectionInfo = it;
 					pSectionInfo->vPosition.z = GetTerrainHeight( pSectionInfo->vPosition.x, pSectionInfo->vPosition.y );
@@ -578,7 +578,7 @@ bool CFenceDesignTool::IsComplete()
 }
 
 
-void CFenceDesignTool::GetSectionsInfo( vector<SFenceSectionInfo> *pSectionInfo, 
+void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, 
 																			  NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode )
 {
 	if ( ( !bEnabled ) || ( !bRay ) )

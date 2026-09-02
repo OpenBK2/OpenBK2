@@ -17,7 +17,7 @@ bool CMODContainer::CanNewMOD()
 
 bool CMODContainer::CanOpenMOD()
 {
-	vector<NMOD::SMOD> modList;
+	std::vector<NMOD::SMOD> modList;
 	NMOD::GetAllMODs( &modList );
 	return ( !modList.empty() );
 }
@@ -38,7 +38,7 @@ bool CMODContainer::NewMOD()
 	CCreateMODDialog createMODDialog;
 	if	( createMODDialog.DoModal() == IDOK )
 	{
-		string szMODFolder = createMODDialog.GetFolder();
+		std::string szMODFolder = createMODDialog.GetFolder();
 		CString strName = createMODDialog.GetName();
 		CString strDescriotion = createMODDialog.GetDescription();
 		if ( !szMODFolder.empty() && !strName.IsEmpty() )
@@ -149,7 +149,7 @@ void CMODContainer::CloseMOD()
 
 /**
 
-bool CMODContainer::IsValidFolder( const string &rszFolder )
+bool CMODContainer::IsValidFolder( const std::string &rszFolder )
 {
 	if ( NMOD::DoesAnyMODAttached() )
 	{
@@ -162,15 +162,15 @@ bool CMODContainer::IsValidFolder( const string &rszFolder )
 }
 
 
-bool CMODContainer::IsValidPath( const string &rszPath )
+bool CMODContainer::IsValidPath( const std::string &rszPath )
 {
-	string szFolder;
+	std::string szFolder;
 	CStringManager::SplitFileName( &szFolder, 0, 0, rszPath );
 	return IsValidFolder( szFolder );
 }
 /**/
 
-string CMODContainer::GetDataFolder( SUserData::ENormalizePathType eNormalizePathType )
+std::string CMODContainer::GetDataFolder( SUserData::ENormalizePathType eNormalizePathType )
 {
 	if ( NMOD::DoesAnyMODAttached() )
 	{
@@ -188,7 +188,7 @@ string CMODContainer::GetDataFolder( SUserData::ENormalizePathType eNormalizePat
 				return mod.szFullFolderPath;
 			}
 		}
-		return string();
+		return std::string();
 	}
 	else
 	{

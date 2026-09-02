@@ -10,8 +10,8 @@ REGISTER_EXPORTER_IN_DLL( EntrenchmentRPGStats, CEntrenchmentExporter )
 
 
 EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
-																									 const string &rszObjectTypeName,
-																									 const string &rszObjectName,
+																									 const std::string &rszObjectTypeName,
+																									 const std::string &rszObjectName,
  																									 bool bForce,
 																									 EXPORT_TYPE exportType )
 {
@@ -29,8 +29,8 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 			CManipulatorManager::GetValue( &nSegments, pManipulator, "segments" );
 			for ( int nSegmentIndex = 0; nSegmentIndex < nSegments; ++nSegmentIndex )
 			{
-				const string szSegmentName = StrFmt( "segments.[%d].", nSegmentIndex );
-				string szObjName;
+				const std::string szSegmentName = StrFmt( "segments.[%d].", nSegmentIndex );
+				std::string szObjName;
 				if ( CManipulatorManager::GetValue( &szObjName, pManipulator, szSegmentName + "VisObj" ) && ( !szObjName.empty() ) )
 				{
 					CPtr<IManipulator> pVisObjMan = pResourceManager->CreateObjectManipulator( "VisObj", szObjName );
@@ -66,7 +66,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 							if ( !pManipulator->InsertNode( "fireplaces" ) ) 
 								continue;
 
-							string szNodeName = szSegmentName + StrFmt( "fireplaces.[%d]", nFireplaceIndex );
+							std::string szNodeName = szSegmentName + StrFmt( "fireplaces.[%d]", nFireplaceIndex );
 							CVec2 vPos( 0, 0 );
 
 							it->GetAttribute( "translatex", &vPos.x );

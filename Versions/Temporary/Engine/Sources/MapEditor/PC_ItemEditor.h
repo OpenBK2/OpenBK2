@@ -6,7 +6,7 @@
 class CPCItemEditor : public IPCItemEditor
 {
 private:
-	string szName;
+	std::string szName;
 	EPCIEType nEditorType;
 	const SPropertyDesc* pPropertyDesc;
 	int nControlID;
@@ -21,13 +21,13 @@ public:
 	CPCItemEditor() : nEditorType( PCIE_UNKNOWN ), pPropertyDesc( 0 ), nControlID( -1 ), pwndTargetWindow( 0 ), bDefaultValue( true ), bEnableEdit( true ) {}
 
 	// IPCItemEditor
-	const string& GetName() const { return szName; }
+	const std::string& GetName() const { return szName; }
 	EPCIEType GetItemEditorType() const { return nEditorType; }
 	const	SPropertyDesc* GetPropertyDesc() const { return pPropertyDesc; }
 	int GetControlID() const { return nControlID; }
 	CWnd* GetTargetWindow() { return pwndTargetWindow; }
 	//	
-	virtual bool CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
+	virtual bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 	virtual void SetDefaultValue() { bDefaultValue = true; }
 	virtual bool IsDefaultValue() { return bDefaultValue; }
 	virtual void EnableEdit( bool bEnable ) { bEnableEdit = bEnable; }
@@ -36,19 +36,19 @@ public:
 	void SetValueChanged() { bDefaultValue = false; }
 };
 
-bool GetPCItemStringValue( string *pszValue,
+bool GetPCItemStringValue( std::string *pszValue,
 													 const CVariant &rValue,
-													 const string &rszDefaultValue,
+													 const std::string &rszDefaultValue,
 													 EPCIEType nType,
 													 const SPropertyDesc *pDesc,
 													 bool bMultiline );
 
 bool GetPCItemValue( CVariant *pValue,
-										 const string &rszValue,
+										 const std::string &rszValue,
 										 const CVariant &rDefaultValue,
 										 EPCIEType nType,
 										 const SPropertyDesc *pDesc );
 
-//bool CheckPCValue( IManipulator *pManipulator, const string &rszName, const CVariant &rValue );
+//bool CheckPCValue( IManipulator *pManipulator, const std::string &rszName, const CVariant &rValue );
 
 

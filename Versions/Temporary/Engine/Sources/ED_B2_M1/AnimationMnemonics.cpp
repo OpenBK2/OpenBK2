@@ -100,13 +100,13 @@ CAnimationMnemonics::CAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIM
 };
 
 
-NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType, string *pszMnemonicLabel, unsigned *pnNumber )
+NDb::EAnimationType CMayaAnimationMnemonics::Get( const std::string &rszMnemonicType, std::string *pszMnemonicLabel, unsigned *pnNumber )
 {
 	int nPos = 0;
-	while( nPos != string::npos )
+	while( nPos != std::string::npos )
 	{
 		nPos = rszMnemonicType.find_first_of( DECIMAL_NUMBERS, nPos );
-		const string szMnemonic = rszMnemonicType.substr( 0, nPos );
+		const std::string szMnemonic = rszMnemonicType.substr( 0, nPos );
 		NDb::EAnimationType animationType = (NDb::EAnimationType)( GetValue( szMnemonic ) );
 		if ( animationType != NDb::ANIMATION_UNKNOWN )
 		{
@@ -114,7 +114,7 @@ NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType,
 			{
 				if ( nPos != -1 ) 
 				{
-					const string szNumber = rszMnemonicType.substr( nPos );
+					const std::string szNumber = rszMnemonicType.substr( nPos );
 
 					unsigned nNumber = INVALID_NODE_ID;
 					if ( sscanf( szNumber.c_str(), "%d", &nNumber ) == 1 )
@@ -131,7 +131,7 @@ NDb::EAnimationType CMayaAnimationMnemonics::Get( const string &rszMnemonicType,
 			}
 			return animationType;
 		}
-		if ( nPos != string::npos )
+		if ( nPos != std::string::npos )
 			++nPos;
 	}
 	//

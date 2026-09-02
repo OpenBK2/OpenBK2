@@ -11,8 +11,8 @@ public:
 	CUserDataContainer();
 	~CUserDataContainer();
 
-	void GetXMLFilePath( string *pszXMLFilePath );
-	void GetConstXMLFilePath( string *pszConstXMLFilePath );
+	void GetXMLFilePath( std::string *pszXMLFilePath );
+	void GetConstXMLFilePath( std::string *pszConstXMLFilePath );
 
 	// IUserDataContainer
 	SUserData* Get() { return &userData; }

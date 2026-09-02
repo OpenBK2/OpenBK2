@@ -26,7 +26,7 @@ protected:
 	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex );
 	virtual int GetFreeVSOID();
 	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags );
-	virtual int InsertVSO( const vector<CVec3> &rControlPointList );
+	virtual int InsertVSO( const std::vector<CVec3> &rControlPointList );
 	virtual void RemoveVSO( int nVSOID );
 
 	virtual bool InsertVSOToBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
@@ -45,9 +45,9 @@ public:
 	// real time updare in terrain while editing
 	virtual bool IsRealtimeUpdate() const = 0;
 	// array name in MapInfo structure (like "roads" )
-	virtual const string GetVSOName() const = 0;
+	virtual const std::string GetVSOName() const = 0;
 	// VSO DB type name ( like "RoadDesc" )
-	virtual const string GetVSOTypeName() const = 0;
+	virtual const std::string GetVSOTypeName() const = 0;
 	// VSO DB type ID ( like NDb::SRoadDesc::nID )
 	virtual int GetVSOTypeID() const = 0;
 	// VSO type in CMapInfoController::SVSOUndoData structure (like CMapInfoController::SVSOUndoData::VSO_ROAD )

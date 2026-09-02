@@ -15,7 +15,7 @@ namespace NMapInfoEditor
 	struct SObjectInfoCollector
 	{
 		typedef std::unordered_map<unsigned, CPtr<SObjectInfo> > CObjectInfoMap;
-		typedef std::unordered_map<string, unsigned> CObjectTypeMap;
+		typedef std::unordered_map<std::string, unsigned> CObjectTypeMap;
 		typedef std::unordered_map<unsigned, unsigned> CSceneIDMap;
 		typedef std::unordered_map<unsigned, unsigned> CLinkIDMap;
 		//
@@ -117,8 +117,8 @@ namespace NMapInfoEditor
 		const NDb::SMapObjectInfo* GetObjectStatusBarParams( int nSceneID );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		void Pick( list<int> *pEditorSceneIDList, const CTPoint<int> &rMousePoint ) const;
-		void Pick( list<int> *pEditorSceneIDList, const CTRect<int> &rFrame ) const;
+		void Pick( std::list<int> *pEditorSceneIDList, const CTPoint<int> &rMousePoint ) const;
+		void Pick( std::list<int> *pEditorSceneIDList, const CTRect<int> &rFrame ) const;
 		unsigned Pick( unsigned nSceneID ) const;
 		//
 		SObjectInfo* GetObjectInfo( const unsigned nObjectInfoID );

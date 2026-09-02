@@ -15,7 +15,7 @@ public:
 	CProgressHook();
 	virtual ~CProgressHook();
 
-	virtual void Create( const string &rszActionName, CWnd *pWnd );
+	virtual void Create( const std::string &rszActionName, CWnd *pWnd );
 	virtual CProgressDlg* GetProgressDialog() const;
 	//
 	virtual void SetCancel( bool bHasCancel ) { bHasCancelButton = bHasCancel; }
@@ -27,7 +27,7 @@ public:
 	virtual void IterateProgressPosition();
 	//
 	virtual void ClearLog();
-	virtual void AddLog( const string &rszLogMessage );
+	virtual void AddLog( const std::string &rszLogMessage );
 };
 
 

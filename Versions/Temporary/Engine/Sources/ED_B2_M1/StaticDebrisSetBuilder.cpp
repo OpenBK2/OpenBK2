@@ -6,10 +6,10 @@
 //REGISTER_BUILDER_IN_DLL( StaticDebrisSet, CStaticDebrisSetBuilder )
 
 
-const string CStaticDebrisSetBuilder::BUILD_DATA_TYPE_NAME = "StaticDebrisSetBuilder";
+const std::string CStaticDebrisSetBuilder::BUILD_DATA_TYPE_NAME = "StaticDebrisSetBuilder";
 
 
-bool CStaticDebrisSetBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CStaticDebrisSetBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CStaticDebrisSetBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CStaticDebrisSetBuilder::IsValidBuildData() pszDescription == 0" );
@@ -18,8 +18,8 @@ bool CStaticDebrisSetBuilder::IsValidBuildData( IManipulator *pBuildDataManipula
 }
 
 
-bool CStaticDebrisSetBuilder::InternalInsertObject( string *pszObjectTypeName,
-																										string *pszUniqueObjectName,
+bool CStaticDebrisSetBuilder::InternalInsertObject( std::string *pszObjectTypeName,
+																										std::string *pszUniqueObjectName,
 																										bool bFromMainMenu,
 																										bool *pbCanChangeObjectName,
 																										bool *pbNeedExport,
@@ -31,7 +31,7 @@ bool CStaticDebrisSetBuilder::InternalInsertObject( string *pszObjectTypeName,
 	NI_ASSERT( pBuildDataManipulator != 0, "CStaticDebrisSetBuilder::InternalInsertObject() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	//
-	string szDescription;
+	std::string szDescription;
 	if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 	{
 		return false;

@@ -19,7 +19,7 @@ protected:
 public:
 	DECLARE_DYNAMIC( CProgressThread )
 
-	CProgressThread( const string &rszName, CWnd *pParentWindow );
+	CProgressThread( const std::string &rszName, CWnd *pParentWindow );
 	virtual ~CProgressThread();
 
 	virtual BOOL InitInstance();
@@ -38,7 +38,7 @@ public:
 	void IterateProgressPosition();
 	//
 	void ClearLog();
-	void AddLog( const string &rszLogMessage );
+	void AddLog( const std::string &rszLogMessage );
 
 protected:
 	DECLARE_MESSAGE_MAP()

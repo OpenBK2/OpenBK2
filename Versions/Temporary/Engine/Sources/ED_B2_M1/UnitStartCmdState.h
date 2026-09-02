@@ -16,7 +16,7 @@
 struct SStartCommand
 {
 	int nCmdType;											// тип команды
-	vector<int> unitLinkIDs;				// LinkID юнитов, для которых эта команда
+	std::vector<int> unitLinkIDs;				// LinkID юнитов, для которых эта команда
 	int nTgtLinkID;										// LinkID объекта назначения команды (допустим грузовика для посадки взводов)
 	CVec2 vTgtPos;										// точка назначения для команды
 	int nData;														// добавочный параметр (интерпретация зависит от типа команды)
@@ -29,13 +29,13 @@ struct SStartCommand
 };
 struct SStartCommandList
 {
-	vector<SStartCommand> commands;
+	std::vector<SStartCommand> commands;
 	///
 	SStartCommandList();
 	void Init();
 	bool UpdateDB( IManipulator *pManipulator );
 	bool LoadFromDB( IManipulator *pManipulator );
-	void RemoveCommands( const vector<int> &rIndices );
+	void RemoveCommands( const std::vector<int> &rIndices );
 };
 enum EMoveDir
 {
@@ -65,23 +65,23 @@ class CUnitStartCmdState : public CMapObjectState
 	CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor = 0 );
 	//
 	typedef int CMapObjID;
-	vector<CMapObjID> currCmdUnits;
+	std::vector<CMapObjID> currCmdUnits;
 	CMapObjID nCurrTargetUnit;
 	CVec3 vCurrTargetPos;
-	void GetSelectedUnitIDs( vector<CMapObjID> *pIDs );
+	void GetSelectedUnitIDs( std::vector<CMapObjID> *pIDs );
 	//
 	SStartCommandList commandsList;
 	//
 	void ResetStateData();
 	//
-	void RefreshDockingWindow( const vector<int> *pSelection );
+	void RefreshDockingWindow( const std::vector<int> *pSelection );
 	void FilterCommandsyBySelection();
 	//
-	bool GetLinkIDs( vector<int> *pLinkIDs  );
+	bool GetLinkIDs( std::vector<int> *pLinkIDs  );
 	//
 	struct SCmdMarker
 	{
-		vector<CVec3> unitPositions;
+		std::vector<CVec3> unitPositions;
     CVec3 vTargetPos;
 		bool bTargetIsUnit; // false -- target is position
 		bool bTargetSelected;
@@ -93,15 +93,15 @@ class CUnitStartCmdState : public CMapObjectState
 		{
 		}
 	};
-	vector<SCmdMarker> markers;
+	std::vector<SCmdMarker> markers;
 	SCmdMarker currentCmdMarker;
 	void DrawCommandMarkers();
 	void DrawCommandMarker( const SCmdMarker &rMarker );
 	void ClearCmdMarkers();
 	void UpdateCmdMarkers();
 	//
-	string GetMapObjectName( SObjectInfo *pMOI );
-	bool GetMapObjectElementIDs( int nObjectID, vector<int> *pRes );
+	std::string GetMapObjectName( SObjectInfo *pMOI );
+	bool GetMapObjectElementIDs( int nObjectID, std::vector<int> *pRes );
 	//
 	const SUnitCommandTypeInfo* GetCurrentCommandType();
 

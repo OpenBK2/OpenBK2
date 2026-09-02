@@ -43,7 +43,7 @@ public:
 			DT_CUSTOM	= 1,
 		};
 
-		typedef vector<string> CPlayerList;
+		typedef std::vector<std::string> CPlayerList;
 
 		unsigned nFlags;
 		//
@@ -122,7 +122,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE );
 	}
 
-	void SwitchState( const string &rszObjectTypeName );
+	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface
 	virtual void Enter();
 	virtual void Leave();

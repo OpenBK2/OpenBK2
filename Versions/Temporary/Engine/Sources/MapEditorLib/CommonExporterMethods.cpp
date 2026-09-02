@@ -18,18 +18,18 @@
 #include <cstdint>
 #include <thread>
 
-string GetGrannyExportSettingsFileName( const string &szTypeName )
+std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	SUserData::SMayaExportData::CGrannyExportSettingsMap::const_iterator pos = 
 		pUserData->constUserData.mayaExportData.grannyExportSettings.find( szTypeName );
-	string szSettingsFileName = pos == pUserData->constUserData.mayaExportData.grannyExportSettings.end() ? "" : pos->second;
+	std::string szSettingsFileName = pos == pUserData->constUserData.mayaExportData.grannyExportSettings.end() ? "" : pos->second;
 	NStr::ReplaceAllChars( &szSettingsFileName, '\\', '/' );
 	return szSettingsFileName;
 }
 
 
-bool CheckFilesUpdated( const string &szSrc, const string &szDst, bool bForced )
+bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced )
 {
 	if ( bForced ) 
 		return false;
@@ -41,11 +41,11 @@ bool CheckFilesUpdated( const string &szSrc, const string &szDst, bool bForced )
 	return src.mtime < dst.mtime;
 }
 
-void MakeDoubleSlash( string *pszPath )
+void MakeDoubleSlash( std::string *pszPath )
 {
   NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
 	//	
-	for ( string::iterator itChar = pszPath->begin(); itChar != pszPath->end(); ++itChar )
+	for ( std::string::iterator itChar = pszPath->begin(); itChar != pszPath->end(); ++itChar )
 	if ( ( *itChar ) == '\\' )
 	{
 		int nCount = 0;
@@ -62,7 +62,7 @@ void MakeDoubleSlash( string *pszPath )
 }
 
 
-void MEStartScript( string *pszScriptText, bool bGUIMode )
+void MEStartScript( std::string *pszScriptText, bool bGUIMode )
 {
 	NI_ASSERT( pszScriptText != 0, "MEStartScript() pszScriptText == 0" );
 	//
@@ -72,7 +72,7 @@ void MEStartScript( string *pszScriptText, bool bGUIMode )
 }
 
 
-void MEFinishScript(string *pszScriptText, bool bGUIMode )
+void MEFinishScript(std::string *pszScriptText, bool bGUIMode )
 {
   NI_ASSERT( pszScriptText != 0, "MEFinishScript() pszScriptText == 0" );
 	//
@@ -85,16 +85,16 @@ void MEFinishScript(string *pszScriptText, bool bGUIMode )
 }
 
 
-bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode )
+bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 
 	// Записываем тело скрипта в файл
-	const string &szUserDataScriptFileName = GetOption( &SUserData::SMayaExportData::szScriptFileName );
-	const string &szUserDataLogFileName = GetOption( &SUserData::SMayaExportData::szLogFileName );
+	const std::string &szUserDataScriptFileName = GetOption( &SUserData::SMayaExportData::szScriptFileName );
+	const std::string &szUserDataLogFileName = GetOption( &SUserData::SMayaExportData::szLogFileName );
 
-	string szScriptFileName;
-	string szLogFileName;
+	std::string szScriptFileName;
+	std::string szLogFileName;
 	if ( rszFileNamePostfix.empty() )
 	{
 		szScriptFileName = szUserDataScriptFileName;
@@ -105,7 +105,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 		//szScriptFileName
 		{
 			const int nPointPos = szUserDataScriptFileName.rfind( '.' );
-			if ( nPointPos != string::npos )
+			if ( nPointPos != std::string::npos )
 			{
 				szScriptFileName = szUserDataScriptFileName.substr( 0, nPointPos );
 			}
@@ -114,7 +114,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 				szScriptFileName = szUserDataScriptFileName;
 			}
 			szScriptFileName += rszFileNamePostfix;
-			if ( nPointPos != string::npos )
+			if ( nPointPos != std::string::npos )
 			{
 				szScriptFileName += szUserDataScriptFileName.substr( nPointPos );
 			}
@@ -122,7 +122,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 		//szLogFileName
 		{
 			const int nPointPos = szUserDataLogFileName.rfind( '.' );
-			if ( nPointPos != string::npos )
+			if ( nPointPos != std::string::npos )
 			{
 				szLogFileName = szUserDataLogFileName.substr( 0, nPointPos );
 			}
@@ -131,7 +131,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 				szLogFileName = szUserDataLogFileName;
 			}
 			szLogFileName += rszFileNamePostfix;
-			if ( nPointPos != string::npos )
+			if ( nPointPos != std::string::npos )
 			{
 				szLogFileName += szUserDataLogFileName.substr( nPointPos );
 			}
@@ -174,9 +174,9 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 	if ( bNeedExport )
 	{
 		// Запускаем Maya
-		const string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
-		const string szGUIMode = bGUIMode ? " " : " -batch ";
-		const string szCommandLine = StrFmt( "%s%s-script \"%s\" -log \"%s\"", 
+		const std::string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
+		const std::string szGUIMode = bGUIMode ? " " : " -batch ";
+		const std::string szCommandLine = StrFmt( "%s%s-script \"%s\" -log \"%s\"", 
 																				szUserDataToolFileName.c_str(),
 																				szGUIMode.c_str(),
 																				szScriptFileName.c_str(),
@@ -200,7 +200,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 
 
 // Получить размер картинки
-bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
+bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( szImageFileName, CFileStream::WIN_READ_ONLY );
 	if ( stream.IsOk() ) 
@@ -221,7 +221,7 @@ bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 
 
 // Получить размер картинки
-bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize )
+bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( NVFS::GetMainVFS(), szImageFileName );
 	if ( stream.IsOk() ) 
@@ -241,10 +241,10 @@ bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 }
 
 
-void CutExtension( string *pFileName, const char *pszExt )
+void CutExtension( std::string *pFileName, const char *pszExt )
 {
 	const int nPos = pFileName->rfind( '.' );
-	if ( nPos == string::npos ) 
+	if ( nPos == std::string::npos ) 
 		return;
 	//
 	if ( pFileName->compare(nPos + 1, -1, pszExt) == 0 )
@@ -253,9 +253,9 @@ void CutExtension( string *pFileName, const char *pszExt )
 
 
 
-void NormalizeFilePath( string *pszPath )
+void NormalizeFilePath( std::string *pszPath )
 {
-	for ( string::iterator i = pszPath->begin(); i != pszPath->end(); ++i )
+	for ( std::string::iterator i = pszPath->begin(); i != pszPath->end(); ++i )
 	{
 		if ( *i == '\\' )
 		{
@@ -265,7 +265,7 @@ void NormalizeFilePath( string *pszPath )
 }
 
 
-bool BuildSrcFilePath( string *pszFilePath, const string &szRefValue )
+bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue )
 {
 	if ( szRefValue.size() )
 	{
@@ -277,7 +277,7 @@ bool BuildSrcFilePath( string *pszFilePath, const string &szRefValue )
 }
 
 
-bool BuildSrcFilePath( string *pszFilePath, IManipulator *pManipulator, const string &szRefFieldDBPath )
+bool BuildSrcFilePath( std::string *pszFilePath, IManipulator *pManipulator, const std::string &szRefFieldDBPath )
 {
 	if ( CManipulatorManager::GetValue( pszFilePath, pManipulator, szRefFieldDBPath ) )
 	{
@@ -291,8 +291,8 @@ bool BuildSrcFilePath( string *pszFilePath, IManipulator *pManipulator, const st
 	}
 	else
 	{
-		string szType;
-		pManipulator->GetType( string(), &szType );
+		std::string szType;
+		pManipulator->GetType( std::string(), &szType );
 		NI_ASSERT( false, StrFmt("Field %s not found in object of type %s", szRefFieldDBPath.c_str(), szType.c_str()) );
 	}
 
@@ -300,7 +300,7 @@ bool BuildSrcFilePath( string *pszFilePath, IManipulator *pManipulator, const st
 }
 
 
-string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder )
+std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &szDestFolder )
 {
 	CVariant varUID;
 	bool bResult = CManipulatorManager::GetValue( &varUID, pManipulator, "uid" );
@@ -314,7 +314,7 @@ string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder
 }
 
 
-void GetMayaInstallPath( string *szPath, const string &szMayaVersion )
+void GetMayaInstallPath( std::string *szPath, const std::string &szMayaVersion )
 {
 	uint32_t type;
 	const int nMaxSize = 512;
@@ -344,14 +344,14 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 
 		if ( pMayaProcess->Start() )
 		{
-			const string &szMayaScriptPath = GetOption( &SUserData::SMayaExportData::szMayaScriptPath );
-			const string &szStartupScript = GetOption( &SUserData::SMayaExportData::szStartupScript );
+			const std::string &szMayaScriptPath = GetOption( &SUserData::SMayaExportData::szMayaScriptPath );
+			const std::string &szStartupScript = GetOption( &SUserData::SMayaExportData::szStartupScript );
 			int nMayaExecutionQuota = GetOption( &SUserData::SMayaExportData::nMayaExecutionQuota );
 
-			string szScript;
+			std::string szScript;
 			if ( !szMayaScriptPath.empty() )
 			{
-				string szLocalMayaScriptPath( szMayaScriptPath );
+				std::string szLocalMayaScriptPath( szMayaScriptPath );
 				NormalizeFilePath( &szLocalMayaScriptPath );
 				szScript += StrFmt( "putenv \"MAYA_SCRIPT_PATH\" (\"%s;\" + `getenv \"MAYA_SCRIPT_PATH\"`)",
 						szLocalMayaScriptPath.c_str()
@@ -391,7 +391,7 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 }
 
 
-bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bReportAsError )
+bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool bReportAsError )
 {
 	NHPTimer::STime timeCurr, timeOriginal;
 	NHPTimer::GetTime( &timeOriginal );
@@ -420,7 +420,7 @@ bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bRep
 	return false;
 }
 
-bool ExecuteMayaScript( const string &szScript )
+bool ExecuteMayaScript( const std::string &szScript )
 {
 	CInteractiveMaya *pMayaProcess = CInteractiveMaya::Get();
 	ILogger *pLogger = NLog::GetLogger();
@@ -437,7 +437,7 @@ bool ExecuteMayaScript( const string &szScript )
 }
 
 
-bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName )
+bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectTypeName )
 {
 	NI_ASSERT( pObjectSet != 0, "GetSelectedObjects(): SObjectSet == 0" );
 	//
@@ -454,7 +454,7 @@ bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName 
 	return bResult;
 }
 
-void MoveTempFileToDestination( const string &szTempFileFullName, const string &szDstFileFullName )
+void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName )
 {
 	const bool bAddToRCS = NFile::DoesFileExist( szDstFileFullName ) == false;
 	NFile::CopyFile( szTempFileFullName, szDstFileFullName );

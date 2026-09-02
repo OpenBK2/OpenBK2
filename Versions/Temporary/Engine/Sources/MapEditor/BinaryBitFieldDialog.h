@@ -6,15 +6,15 @@
 
 #include <cstdint>
 
-typedef std::unordered_map< string, int > CIniValues;
+typedef std::unordered_map< std::string, int > CIniValues;
 
 class CBinaryBitFieldDialog : public CResizeDialog
 {
 	bool bCreateControls;
 	CCheckListBox wndTablesList;
-	string szFileName;
-	std::unordered_map< string, int > name2value;
-	std::unordered_map< int, string > value2name;
+	std::string szFileName;
+	std::unordered_map< std::string, int > name2value;
+	std::unordered_map< int, std::string > value2name;
 	const uint8_t *pData;
 	int nSize;
 
@@ -22,7 +22,7 @@ protected:
 	int GetMinimumXDimension() { return 204; }
 	int GetMinimumYDimension() { return 106; }
 
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CBinaryBitFieldDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CBinaryBitFieldDialog"; }
 	bool IsDrawGripper() { return true; }
 
 	virtual void DoDataExchange( CDataExchange* pDX );
@@ -32,7 +32,7 @@ protected:
 public:
 	enum { IDD = IDD_BIT_FIELD };
 
-	CBinaryBitFieldDialog( const string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent  );
+	CBinaryBitFieldDialog( const std::string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent  );
 	~CBinaryBitFieldDialog();
 
 	DECLARE_MESSAGE_MAP()

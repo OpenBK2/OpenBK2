@@ -6,7 +6,7 @@ class CTerrainEditor;
 class CTerrainState : public CDefaultInputState
 {
 	//Данные специфичные для данного редактрора
-	list<int> effectIDList;
+	std::list<int> effectIDList;
 	// Данные общего назначения 
 	CTerrainEditor *pTerrainEditor;
 public:

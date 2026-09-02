@@ -25,7 +25,7 @@ bool CMapClip::SaveMapClipToDB(  CObjectBaseController *pObjectController ) cons
 	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Clip name", "Clip name" );
 	if ( enterNameDialog.DoModal() != IDOK )
 		return false;
-  string szClipName;
+  std::string szClipName;
 	enterNameDialog.GetName( &szClipName );
 	if ( szClipName.empty() )
 		return false;
@@ -146,12 +146,12 @@ bool CMapClip::LoadMapClipFromDB( int nMapClipID )
 bool CMapClip::SavePasteRegionToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	bool bResult = true;
-	const vector<CVec3> &region =	GetRegion();
+	const std::vector<CVec3> &region =	GetRegion();
 	bResult = bResult  && pObjectController->AddRemoveOperation( "PasteRegion", -1, pManipulator );
 	for ( int i = 0; i < region.size(); ++i )
 	{
 		CVec2 v = CVec2( region[i].x, region[i].y );
-		const string szObjectPrefix = StrFmt( "PasteRegion.[%d]", i );
+		const std::string szObjectPrefix = StrFmt( "PasteRegion.[%d]", i );
 		bResult = bResult && pObjectController->AddInsertOperation( "PasteRegion", NODE_ADD_INDEX, pManipulator );
 		bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2,float>( szObjectPrefix, v, pManipulator );
 		if ( !bResult )
@@ -173,7 +173,7 @@ bool CMapClip::LoadPasteRegionFromDB( IManipulator *pManipulator )
 	for ( int i = 0; i < nPointsNum; ++i )
 	{
 		CVec2 p; 
-		string szDBA = StrFmt( "PasteRegion.[%d]", i );
+		std::string szDBA = StrFmt( "PasteRegion.[%d]", i );
 		if ( !CManipulatorManager::GetVec2<CVec2,float>( &p, pManipulator, szDBA ) )
 			return false;
 		pasteRegion.push_back( CVec3( p.x, p.y, 0 ) );
@@ -265,27 +265,27 @@ bool CMapClip::SaveVSOToDB(  CObjectBaseController *pObjectController, IManipula
 
 		bResult = bResult && pObjectController->AddInsertOperation( "vsoArray", NODE_ADD_INDEX, pManipulator );
 
-		string szDBA = StrFmt( "vsoArray.[%d]", i );
+		std::string szDBA = StrFmt( "vsoArray.[%d]", i );
 		bResult = bResult && pObjectController->AddChangeOperation( szDBA + ".Type", vso.szType, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szDBA + ".TypeID", vso.nTypeID, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szDBA + ".DescID", vso.nDescID, pManipulator );
 
 		szDBA = StrFmt( "vsoArray.[%d].vsoInstance", i );
-		string szDescriptor = StrFmt( "%s%c%c%d", vso.szType.c_str(), TYPE_SEPARATOR_CHAR, ID_PREFIX_CHAR, vso.nDescID );
+		std::string szDescriptor = StrFmt( "%s%c%c%d", vso.szType.c_str(), TYPE_SEPARATOR_CHAR, ID_PREFIX_CHAR, vso.nDescID );
 		bResult = bResult && pObjectController->AddChangeOperation( szDBA + ".Descriptor", szDescriptor, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szDBA + ".VSOID", -1, pManipulator );
 
 		for ( int p = 0; p < instance.controlPoints.size(); ++p )
 		{
 			bResult = bResult && pObjectController->AddInsertOperation( szDBA + ".ControlPoints", NODE_ADD_INDEX, pManipulator );
-			string szPointDBA = szDBA + StrFmt( ".ControlPoints.[%d]", p );
+			std::string szPointDBA = szDBA + StrFmt( ".ControlPoints.[%d]", p );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szPointDBA, instance.controlPoints[p], pManipulator );
 		}
 
 		for ( int p = 0; p < instance.points.size(); ++p )
 		{
 			bResult = bResult && pObjectController->AddInsertOperation( szDBA + ".points", NODE_ADD_INDEX, pManipulator );
-			string szPointDBA = szDBA + StrFmt( ".points.[%d]", p );
+			std::string szPointDBA = szDBA + StrFmt( ".points.[%d]", p );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szPointDBA + ".Pos", instance.points[p].vPos, pManipulator );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szPointDBA + ".Norm", instance.points[p].vNorm, pManipulator );
 			bResult = bResult && pObjectController->AddChangeOperation( szPointDBA + ".Width", instance.points[p].fWidth, pManipulator );
@@ -313,7 +313,7 @@ bool CMapClip::LoadVSOFromDB( IManipulator *pManipulator )
 		SClipboardVSO vso;
 		NDb::SVSOInstance &instance = vso.vsoInstance;
 
-		string szDBA = StrFmt( "vsoArray.[%d]", i );
+		std::string szDBA = StrFmt( "vsoArray.[%d]", i );
 		bResult = bResult && CManipulatorManager::GetValue( &vso.szType, pManipulator, szDBA + ".Type" );
 		bResult = bResult && CManipulatorManager::GetValue( &vso.nTypeID, pManipulator, szDBA + ".TypeID" );
 		bResult = bResult && CManipulatorManager::GetValue( &vso.nDescID, pManipulator, szDBA + ".DescID" );
@@ -333,7 +333,7 @@ bool CMapClip::LoadVSOFromDB( IManipulator *pManipulator )
 		bResult = bResult && CManipulatorManager::GetValue( &nPointsNum, pManipulator, szDBA + ".points" );
 		for ( int p = 0; p < nPointsNum; ++p )
 		{
-			string szDBAPoint = szDBA + StrFmt( ".points.[%d]", p );
+			std::string szDBAPoint = szDBA + StrFmt( ".points.[%d]", p );
 
 			NDb::SVSOPoint vsoPoint;
 			bResult = bResult && CManipulatorManager::GetVec3<CVec3,float>( &vsoPoint.vPos, pManipulator, szDBAPoint  + ".Pos" );
@@ -365,12 +365,12 @@ bool CMapClip::SaveEntrenchmentsToDB(  CObjectBaseController *pObjectController,
 	{
 		const SClipboardEntrenchment &tr = entrenchments[i];
 
-		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", i );
-		const string szObjectPrefix = szEntrenchmentPrefix + ".ObjectInfo";
+		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", i );
+		const std::string szObjectPrefix = szEntrenchmentPrefix + ".ObjectInfo";
 
 		bResult = bResult && pObjectController->AddInsertOperation( "Entrenchments", NODE_ADD_INDEX, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Object", 
-			string( StrFmt( "%s%c%c%d", tr.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
+			std::string( StrFmt( "%s%c%c%d", tr.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
 			ID_PREFIX_CHAR, tr.nRPGStatsID ) ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".FrameIndex", (int)( tr.nFrameIndex ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Player", (int)( tr.nPlayer ), pManipulator );
@@ -384,14 +384,14 @@ bool CMapClip::SaveEntrenchmentsToDB(  CObjectBaseController *pObjectController,
 //			bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Link.LinkID", nObjectLinkID, pManipulator );
 //		}
 		//
-		vector<NMapInfoEditor::SEntrenchmentSegInfo> segmentsInfo( tr.segmentsInfo.begin(), tr.segmentsInfo.end() );
+		std::vector<NMapInfoEditor::SEntrenchmentSegInfo> segmentsInfo( tr.segmentsInfo.begin(), tr.segmentsInfo.end() );
 		for ( int p = 0; p < segmentsInfo.size(); ++p )
 		{
 			NMapInfoEditor::SEntrenchmentSegInfo seg = segmentsInfo[p];
 			bResult = bResult && pObjectController->AddInsertOperation( szEntrenchmentPrefix + ".segmentsInfo", NODE_ADD_INDEX, pManipulator );
-			string szDBAPoint = szEntrenchmentPrefix + StrFmt( ".segmentsInfo.[%d]", p );
+			std::string szDBAPoint = szEntrenchmentPrefix + StrFmt( ".segmentsInfo.[%d]", p );
 
-			string szSegType = typeEntrenchmentSegment.GetMnemonic( seg.eSegType );
+			std::string szSegType = typeEntrenchmentSegment.GetMnemonic( seg.eSegType );
 			bResult = bResult && pObjectController->AddChangeOperation( szDBAPoint + ".SegType", szSegType, pManipulator );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szDBAPoint + ".Pos0", seg.vPos0, pManipulator );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szDBAPoint + ".Pos1", seg.vPos1, pManipulator );
@@ -424,8 +424,8 @@ bool CMapClip::LoadEntrenchmentsFromDB( IManipulator *pManipulator )
 	{
 		SClipboardEntrenchment tr;
 
-		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", i );
-		const string szObjectPrefix = szEntrenchmentPrefix + ".ObjectInfo";
+		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", i );
+		const std::string szObjectPrefix = szEntrenchmentPrefix + ".ObjectInfo";
 
 		bResult = bResult && CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator,
 			&tr.szRPGStatsTypeName, 0, &tr.nRPGStatsTypeID, &tr.nRPGStatsID, 0 );
@@ -440,9 +440,9 @@ bool CMapClip::LoadEntrenchmentsFromDB( IManipulator *pManipulator )
 		{
 			NMapInfoEditor::SEntrenchmentSegInfo seg;
 
-			string szDBAPoint = szEntrenchmentPrefix + StrFmt( ".segmentsInfo.[%d]", p );
+			std::string szDBAPoint = szEntrenchmentPrefix + StrFmt( ".segmentsInfo.[%d]", p );
 
-			string szSegType;
+			std::string szSegType;
 			bResult = bResult && CManipulatorManager::GetValue( &szSegType, pManipulator, szDBAPoint + ".SegType" );
 			seg.eSegType = static_cast<NDb::EEntrenchSegmType>( typeEntrenchmentSegment.GetValue( szSegType ) );
 			
@@ -476,12 +476,12 @@ bool CMapClip::SaveBridgesToDB(  CObjectBaseController *pObjectController, IMani
 	{
 		const SClipboardBridge &br = bridges[i];
 
-		const string szBridgePrefix = StrFmt( "Bridges.[%d]", i );
-		const string szObjectPrefix = szBridgePrefix + ".ObjectInfo";
+		const std::string szBridgePrefix = StrFmt( "Bridges.[%d]", i );
+		const std::string szObjectPrefix = szBridgePrefix + ".ObjectInfo";
 
 		bResult = bResult && pObjectController->AddInsertOperation( "Bridges", NODE_ADD_INDEX, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Object", 
-			string( StrFmt( "%s%c%c%d", br.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
+			std::string( StrFmt( "%s%c%c%d", br.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
 			ID_PREFIX_CHAR, br.nRPGStatsID ) ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".FrameIndex", (int)( br.nFrameIndex ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Player", (int)( br.nPlayer ), pManipulator );
@@ -490,11 +490,11 @@ bool CMapClip::SaveBridgesToDB(  CObjectBaseController *pObjectController, IMani
 		//
 		bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2,float>( szBridgePrefix + ".CenterSize", br.vCenterSize, pManipulator );
 		bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2,float>( szBridgePrefix + ".EndSize", br.vEndSize, pManipulator );
-		vector<CVec3> centerPointList( br.centerPointList.begin(), br.centerPointList.end() );
+		std::vector<CVec3> centerPointList( br.centerPointList.begin(), br.centerPointList.end() );
 		for ( int p = 0; p < centerPointList.size(); ++p )
 		{
 			bResult = bResult && pObjectController->AddInsertOperation( szBridgePrefix + ".centerPointList", NODE_ADD_INDEX, pManipulator );
-			string szDBAPoint = szBridgePrefix + StrFmt( ".centerPointList.[%d]", p );
+			std::string szDBAPoint = szBridgePrefix + StrFmt( ".centerPointList.[%d]", p );
 			bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3,float>( szDBAPoint, centerPointList[p], pManipulator );
 		}
 		//
@@ -523,8 +523,8 @@ bool CMapClip::LoadBridgesFromDB( IManipulator *pManipulator )
 	{
 		SClipboardBridge br;
 
-		const string szBridgePrefix = StrFmt( "Bridges.[%d]", i );
-		const string szObjectPrefix = szBridgePrefix + ".ObjectInfo";
+		const std::string szBridgePrefix = StrFmt( "Bridges.[%d]", i );
+		const std::string szObjectPrefix = szBridgePrefix + ".ObjectInfo";
 
 		bResult = bResult && CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &br.szRPGStatsTypeName, 0,
 			&br.nRPGStatsTypeID, &br.nRPGStatsID, 0 );
@@ -543,7 +543,7 @@ bool CMapClip::LoadBridgesFromDB( IManipulator *pManipulator )
 		for ( int p = 0; p < nNumCenterPoints; ++p )
 		{
 			CVec3 vPos = VNULL3;
-			string szDBAPoint = szBridgePrefix + StrFmt( ".centerPointList.[%d]", p );
+			std::string szDBAPoint = szBridgePrefix + StrFmt( ".centerPointList.[%d]", p );
 			bResult = bResult && CManipulatorManager::GetVec3<CVec3,float>( &vPos, pManipulator, szDBAPoint );
 			br.centerPointList.push_back( vPos );
 		}
@@ -564,9 +564,9 @@ bool CMapClip::SaveSpotsToDB(  CObjectBaseController *pObjectController, IManipu
 		if ( !pSpot )
 			continue;
 		bResult = bResult && pObjectController->AddInsertOperation( "TerraSpots", NODE_ADD_INDEX, pManipulator );
-		const string szNewSpotProperty = StrFmt( "TerraSpots.[%d].", nNewSpotIndex );
+		const std::string szNewSpotProperty = StrFmt( "TerraSpots.[%d].", nNewSpotIndex );
 		// Insert
-		bResult = bResult && pObjectController->AddChangeOperation( szNewSpotProperty + "spotInstance.Descriptor", string( StrFmt( "%s%c%c%d", pSpot->szType.c_str(), TYPE_SEPARATOR_CHAR, ID_PREFIX_CHAR, pSpot->nDescID ) ), pManipulator );
+		bResult = bResult && pObjectController->AddChangeOperation( szNewSpotProperty + "spotInstance.Descriptor", std::string( StrFmt( "%s%c%c%d", pSpot->szType.c_str(), TYPE_SEPARATOR_CHAR, ID_PREFIX_CHAR, pSpot->nDescID ) ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szNewSpotProperty + "spotInstance.SpotID", int(0), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szNewSpotProperty + "Type", pSpot->szType, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szNewSpotProperty + "TypeID", pSpot->nTypeID, pManipulator );
@@ -592,7 +592,7 @@ bool CMapClip::LoadSpotsFromDB( IManipulator *pManipulator )
 	bResult = bResult && CManipulatorManager::GetValue( &nNumSpots, pManipulator, "TerraSpots" );
 	for ( int i = 0; i < nNumSpots; ++i )
 	{
-		const string szSpotProperty = StrFmt( "TerraSpots.[%d].", i );
+		const std::string szSpotProperty = StrFmt( "TerraSpots.[%d].", i );
 		SClipboardTerraSpot spot;
 		spot.spotInstance.pDescriptor = 0; // дескриптор будет получен позже по DescID
 		spot.spotInstance.nSpotID = 0; // не имеет значения
@@ -603,7 +603,7 @@ bool CMapClip::LoadSpotsFromDB( IManipulator *pManipulator )
 		bResult = bResult && CManipulatorManager::GetValue( &nPointsNum, pManipulator, (szSpotProperty + "spotInstance.points") );
 		for ( int p = 0; p < nPointsNum; ++p )
 		{
-			string szDBA = (szSpotProperty + StrFmt( "spotInstance.points.[%d]", p ));
+			std::string szDBA = (szSpotProperty + StrFmt( "spotInstance.points.[%d]", p ));
 			CVec2 v = VNULL2;
 			bResult = bResult && CManipulatorManager::GetVec2<CVec2,float>( &v, pManipulator, szDBA );
 			spot.spotInstance.points.push_back( v );
@@ -624,10 +624,10 @@ bool CMapClip::SaveObjectsToDB(  CObjectBaseController *pObjectController, IMani
 	{
 		const SClipboardObjectInfo &oi = (*GetObj(nObjectIndex));
 		//
-		const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+		const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 		bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Object", 
-			string( StrFmt( "%s%c%c%d", oi.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
+			std::string( StrFmt( "%s%c%c%d", oi.szRPGStatsTypeName.c_str(), TYPE_SEPARATOR_CHAR, 
 			ID_PREFIX_CHAR, oi.nRPGStatsID ) ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".FrameIndex", (int)( oi.nFrameIndex ), pManipulator );
 		bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Player", (int)( oi.nPlayer ), pManipulator );
@@ -660,7 +660,7 @@ bool CMapClip::LoadObjectsFromDB( IManipulator *pManipulator )
 
 	for ( int i = 0; i < nObjNum; ++i )
 	{
-		string szDBA = StrFmt( "Objects.[%d]", i );
+		std::string szDBA = StrFmt( "Objects.[%d]", i );
 		SClipboardObjectInfo oi;
 
 		bResult = bResult && CManipulatorManager::GetVec3<CVec3,float>( &oi.vPosition, pManipulator, szDBA + ".Pos" );

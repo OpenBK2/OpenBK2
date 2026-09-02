@@ -43,19 +43,19 @@ int CMapInfoEditorSettings::operator&( IXmlSaver &xs )
 
 /**
 
-bool CMapInfoEditorSettings::MustOrientToNormale( const string &rsObjectTypeName )
+bool CMapInfoEditorSettings::MustOrientToNormale( const std::string &rsObjectTypeName )
 {
 	return true;
 }
 
 
-bool CMapInfoEditorSettings::MustFitToGrid( const string &rsObjectTypeName )
+bool CMapInfoEditorSettings::MustFitToGrid( const std::string &rsObjectTypeName )
 {
 	return true;
 }
 
 
-bool CMapInfoEditorSettings::MustRotateTo90Degrees( const string &rsObjectTypeName )
+bool CMapInfoEditorSettings::MustRotateTo90Degrees( const std::string &rsObjectTypeName )
 {
 	return true;
 }

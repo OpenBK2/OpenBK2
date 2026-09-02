@@ -57,9 +57,9 @@ public:
 		NDb::SVSOInstance oldValue;
 	};
 	//
-	typedef list<STileUndoData> CTileUndoDataList;
-	typedef list<SHeightUndoData> CHeightUndoDataList;
-	typedef list<SVSOUndoData> CVSOUndoDataList;
+	typedef std::list<STileUndoData> CTileUndoDataList;
+	typedef std::list<SHeightUndoData> CHeightUndoDataList;
+	typedef std::list<SVSOUndoData> CVSOUndoDataList;
 
 	// список данных подвергнутых изменениям
 	CTileUndoDataList tileUndoDataList;

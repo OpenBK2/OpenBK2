@@ -7,8 +7,8 @@ class CStaticObjectRPGStatsExporter : public CHPObjectRPGStatsExporter
 public:
 	// IExporter
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 	//

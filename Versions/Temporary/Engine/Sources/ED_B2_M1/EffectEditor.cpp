@@ -41,12 +41,12 @@ void CEffectEditor::Create()
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	// check, do we have desired MapInfo object
-	const string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
+	const std::string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
 	/**
 	unsigned nMapID = -1;
 	if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
 	{
-		string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
+		std::string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
 		nMapID = pFolderMan->GetID( szMapName );
 	}
 	// 

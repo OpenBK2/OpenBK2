@@ -12,15 +12,15 @@ public:
 	inline const SObjectSet& GetObjectSet() const { return objectSet; }
 	
 	// IExporter
-	virtual bool StartExport( const string &rszObjectTypeName, bool bForce )
+	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce )
 	{
 		objectSet.szObjectTypeName = rszObjectTypeName;
 		objectSet.objectNameSet.clear();
 		return true;
 	}
 	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-																			const string &rszObjectTypeName,
-																			const string &rszObjectName,
+																			const std::string &rszObjectTypeName,
+																			const std::string &rszObjectName,
 																			bool bForce,
 																			EXPORT_TYPE exportType )
 	{
@@ -33,11 +33,11 @@ public:
 		return ER_SUCCESS;
 	}
 	//
-	virtual bool StartCheck( const string &rszObjectTypeName, bool bExport ) { return true; }
-	virtual void FinishCheck( const string &rszObjectTypeName, bool bExport ) {}
+	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
+	virtual void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
 	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-																		 const string &rszObjectTypeName,
-																		 const string &rszObjectName,
+																		 const std::string &rszObjectTypeName,
+																		 const std::string &rszObjectName,
 																		 bool bExport,
 																		 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };

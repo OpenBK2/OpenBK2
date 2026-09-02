@@ -167,7 +167,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 	wndSliderScale.SetPos( wndSliderScale.GetRangeMax() );
 
 	// timer speed combo
-	vector<string> speeds( 0 );
+	std::vector<std::string> speeds( 0 );
 	for ( int nAnimSpeedIndex = -10; nAnimSpeedIndex <= 10; ++nAnimSpeedIndex )
 	{
 		if ( nAnimSpeedIndex > 0 )
@@ -667,7 +667,7 @@ void CMoviesEditorWindow::GetDialogData( SScriptMovieEditorData *pDialogData )
 	pDialogData->activeKeysList.SetSize( wndTimeSliderControl.data.keys.size() );
 	pDialogData->activeKeysList.FillZero();
 	int i = 0;
-	for ( vector<SMovieKeyData>::const_iterator itKey = wndTimeSliderControl.data.keys.begin();
+	for ( std::vector<SMovieKeyData>::const_iterator itKey = wndTimeSliderControl.data.keys.begin();
 																							itKey != wndTimeSliderControl.data.keys.end(); ++itKey, ++i )
 	{
 		if ( itKey->bActive )
@@ -720,7 +720,7 @@ void CMoviesEditorWindow::SetDialogData( const SScriptMovieEditorData &rDialogDa
 		wndTimeSliderControl.SetLength( seq.GetLength() );
 
 		wndTimeSliderControl.data.keys.resize( 0 );
-		for ( vector<NDb::SScriptMovieKeyPos >::const_iterator itKey = seq.posKeys.begin(); itKey != seq.posKeys.end(); ++itKey )
+		for ( std::vector<NDb::SScriptMovieKeyPos >::const_iterator itKey = seq.posKeys.begin(); itKey != seq.posKeys.end(); ++itKey )
 		{
 			SMovieKeyData newKey;
 

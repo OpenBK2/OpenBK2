@@ -68,14 +68,14 @@ public:
 
 	void Print(bool showDialog);
 	CharacterRange GetSelection();
-	string GetText();
+	std::string GetText();
 	void AddFunctionNames( const char *pList, int nFuncSet );
-	void SetAutoComplete( const vector<string> &vszKeywords, const string &szKeywords );
+	void SetAutoComplete( const std::vector<std::string> &vszKeywords, const std::string &szKeywords );
 	void Find();
-	void FindNext( const string &szText, bool bWholeWord, bool bMatchCase );
+	void FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase );
 	void Replace();
-	bool Replace( const string &szReplaceWith );
-	void ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase );
+	bool Replace( const std::string &szReplaceWith );
+	void ReplaceAll( const std::string &szText, const std::string &szWith, bool bWholeWord, bool bMatchCase );
 
 protected:
 	int (*m_fnScintilla)(void*,int,int,int);
@@ -83,13 +83,13 @@ protected:
 	CUIntArray	m_pages;
 	BOOL m_bShowCalltips;
 	CString m_strCallTip;
-	string szAutoComplete;
+	std::string szAutoComplete;
 	CFindTextDlg findDlg;
 	CReplaceTextDlg replaceDlg;
-	string szLastTextToFind;
+	std::string szLastTextToFind;
 	bool bLastMatchCase;
 	bool bLastWholeWord;
-	vector<string> vszScriptKeywords;
+	std::vector<std::string> vszScriptKeywords;
 
 	int Sci(int nCmd, int wParam=0, int lParam=0);
 

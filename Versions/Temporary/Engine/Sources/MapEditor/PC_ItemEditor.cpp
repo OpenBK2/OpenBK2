@@ -14,7 +14,7 @@
 #include "PC_ExTextFileEditor.h"
 #include "PC_Vec3ColorEditor.h"
 
-bool CPCItemEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCItemEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	szName = rszName;
 	nEditorType = _nEditorType;
@@ -27,9 +27,9 @@ bool CPCItemEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType,
 }
 
 
-bool GetPCItemStringValue( string *pszValue,
+bool GetPCItemStringValue( std::string *pszValue,
 													 const CVariant &rValue,
-													 const string &rszDefaultValue,
+													 const std::string &rszDefaultValue,
 													 EPCIEType nType,
 													 const SPropertyDesc *pDesc,
 													 bool bMultiline )
@@ -73,7 +73,7 @@ bool GetPCItemStringValue( string *pszValue,
 		case PCIE_FLOAT_SLIDER:
 		case PCIE_FLOAT_COMBO:
 		{
-			string szValues = pDesc->szStringParam;
+			std::string szValues = pDesc->szStringParam;
 			NStr::ToLowerASCII( &szValues );
 			int nPrecision = CStringManager::GetIntValueFromString( szValues, PCSPL_PRECISION, 0, PCSP_DIVIDERS, PCSV_DEFAULT_RECISION );
 			if ( nPrecision > PCSV_MAX_RECISION )
@@ -85,7 +85,7 @@ bool GetPCItemStringValue( string *pszValue,
 				nPrecision = PCSV_DEFAULT_RECISION;
 			}
 			( *pszValue ) = CStringManager::GetFloatStringWithPrecision( (float)rValue, nPrecision );
-//			const string szFormat = StrFmt( "%%.%df", nPrecision );
+//			const std::string szFormat = StrFmt( "%%.%df", nPrecision );
 //			( *pszValue ) = StrFmt( szFormat.c_str(), (float)rValue );
 			return true;
 		}
@@ -119,7 +119,7 @@ bool GetPCItemStringValue( string *pszValue,
 			return true;
 		case PCIE_STRING_BIG_INPUT:
 		{
-			string szValue = rValue.GetStringRecode();
+			std::string szValue = rValue.GetStringRecode();
 			if ( !bMultiline )
 			{
 				szValue = szValue.substr( 0, szValue.find_first_of( "\r\n" ) );
@@ -152,7 +152,7 @@ bool GetPCItemStringValue( string *pszValue,
 
 
 bool GetPCItemValue( CVariant *pValue,
-										 const string &rszValue,
+										 const std::string &rszValue,
 										 const CVariant &rDefaultValue,
 										 EPCIEType nType,
 										 const SPropertyDesc *pDesc )
@@ -336,7 +336,7 @@ bool GetPCItemValue( CVariant *pValue,
 
 
 /**
-bool CheckPCValue( IManipulator *pManipulator, const string &rszName, const CVariant &rValue )
+bool CheckPCValue( IManipulator *pManipulator, const std::string &rszName, const CVariant &rValue )
 {
 	bool bResult = true;
 	const SPropertyDesc *pDesc = pManipulator->GetPropertyDesc( rszName.c_str() );
@@ -428,21 +428,21 @@ bool CheckPCValue( IManipulator *pManipulator, const string &rszName, const CVar
 	}
 	if ( ( pDesc->dwChecks & SPropertyDesc::PCT_FS_NAME ) > 0 )
 	{
-		if ( ( ( string)rValue ).find_first_of( FS_EXLUDE_SYMBOLS ) != string::npos )
+		if ( ( ( std::string)rValue ).find_first_of( FS_EXLUDE_SYMBOLS ) != std::string::npos )
 		{
 			bResult = false;
 		}
 	}
 	if ( ( pDesc->dwChecks & SPropertyDesc::PCT_EXLUDE_SYMBOLS ) > 0 )
 	{
-		if ( ( ( string)rValue ).find_first_of( pDesc->szSymbols ) != string::npos )
+		if ( ( ( std::string)rValue ).find_first_of( pDesc->szSymbols ) != std::string::npos )
 		{
 			bResult = false;
 		}
 	}
 	else if ( ( pDesc->dwChecks & SPropertyDesc::PCT_INCLUDE_SYMBOLS ) > 0 )
 	{
-		if ( ( ( string)rValue ).find_first_not_of( pDesc->szSymbols ) != string::npos )
+		if ( ( ( std::string)rValue ).find_first_not_of( pDesc->szSymbols ) != std::string::npos )
 		{
 			bResult = false;
 		}

@@ -16,7 +16,7 @@
 
 #include <zconf.h>
 
-void CCoastState::GetWaterPos( const NDb::SMapInfo *pMapInfo, const vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos )
+void CCoastState::GetWaterPos( const NDb::SMapInfo *pMapInfo, const std::vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos )
 {
 	if ( pMapInfo && pWaterPos )
 	{
@@ -71,7 +71,7 @@ void CCoastState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 		if ( pPickVSOIDList )
 		{
 			pPickVSOIDList->clear();
-			list<CVec3> boundingPolygon;
+			std::list<CVec3> boundingPolygon;
 			CVSOManager::GetBoundingPolygon( &boundingPolygon, GetMapInfoEditor()->VSOCollector.coast.points, CVSOManager::PT_NORMALE, 1.0f );
 			if ( ClassifyPolygon( boundingPolygon, rvPos ) != CP_OUTSIDE )
 			{
@@ -170,7 +170,7 @@ void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 }
 
 
-int CCoastState::InsertVSO( const vector<CVec3> &rControlPointList )
+int CCoastState::InsertVSO( const std::vector<CVec3> &rControlPointList )
 {
 	int nNewVSOID = 0;
 	if ( CanEdit() )
@@ -291,9 +291,9 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 		NHPTimer::STime time = 0;
 		NHPTimer::GetTime( &time );
 		//
-		string szVSODescName = rVSO.pDescriptor->GetDBID().ToString();
+		std::string szVSODescName = rVSO.pDescriptor->GetDBID().ToString();
 		//
-		const string szNewVSOLabel =	StrFmt( "Coast." );
+		const std::string szNewVSOLabel =	StrFmt( "Coast." );
 		if ( !szVSODescName.empty() )
 		{
 			bool bResult = true;
@@ -301,13 +301,13 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 			{
 				IManipulator *pManipulator = GetMapInfoEditor()->GetViewManipulator();
 				//Set Descriptor name
-				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "Descriptor", string( "CoastDesc:" ) + szVSODescName, pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "Descriptor", std::string( "CoastDesc:" ) + szVSODescName, pManipulator );
 				//Set ID
 				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "VSOID", rVSO.nVSOID, pManipulator );
 				// Add ControlPoints
 				for ( int nPointIndex = 0; nPointIndex < rVSO.controlPoints.size(); ++nPointIndex )
 				{
-					const string szControlPointLabel = szNewVSOLabel + StrFmt( "ControlPoints.[%d]", nPointIndex );
+					const std::string szControlPointLabel = szNewVSOLabel + StrFmt( "ControlPoints.[%d]", nPointIndex );
 					//Add
 					bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "ControlPoints", NODE_ADD_INDEX, pManipulator );
 					//Set
@@ -320,7 +320,7 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 				// Add ponts
 				for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
 				{
-					const string szPointLabel =  szNewVSOLabel + StrFmt( "points.[%d].", nPointIndex );
+					const std::string szPointLabel =  szNewVSOLabel + StrFmt( "points.[%d].", nPointIndex );
 					//Add
 					bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "points", NODE_ADD_INDEX, pManipulator );
 					//Set Pos
@@ -369,7 +369,7 @@ bool CCoastState::RemoveVSOFromBase( class CObjectBaseController *pObjectControl
 		{
 			IManipulator *pManipulator = GetMapInfoEditor()->GetViewManipulator();
 			//
-			const string szVSOLabel =	StrFmt( "Coast." );
+			const std::string szVSOLabel =	StrFmt( "Coast." );
 			//Delete
 			bResult = bResult && pObjectController->AddChangeValueOperation<CVariant>( szVSOLabel + "Descriptor", CVariant(), pManipulator );
 			bResult = bResult && pObjectController->AddChangeValueOperation<int>( szVSOLabel + "VSOID", INVALID_NODE_ID, pManipulator );

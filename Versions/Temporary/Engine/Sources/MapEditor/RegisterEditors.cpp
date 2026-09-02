@@ -28,7 +28,7 @@ CRegisterEditorsSemiAutoMagic::CRegisterEditorsSemiAutoMagic()
 CRegisterEditorsSemiAutoMagic::~CRegisterEditorsSemiAutoMagic()
 {
 	// UI
-	for ( vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
+	for ( std::vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
 	{
 		const SUIEditor &editor = *it;
 		NEditorFactory::UnRegisterEditorType( editor.szInstance );
@@ -41,7 +41,7 @@ void CRegisterEditorsSemiAutoMagic::Load()
 		GetLabel(), *this );
 		
 	// UI
-	for ( vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
+	for ( std::vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
 	{
 		const SUIEditor &editor = *it;
 		NEditorFactory::StartRegisterEditor();

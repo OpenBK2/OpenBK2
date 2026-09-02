@@ -8,7 +8,7 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/ObjectBaseController.h"
 
-bool CPCVec3ColorEditor::GetColorValue( int *pnColor, IManipulator *pManipulator, const string &rszName )
+bool CPCVec3ColorEditor::GetColorValue( int *pnColor, IManipulator *pManipulator, const std::string &rszName )
 {
 	if ( pnColor && pManipulator )
 	{
@@ -34,7 +34,7 @@ bool CPCVec3ColorEditor::GetColorValue( int *pnColor, IManipulator *pManipulator
 }
 
 
-bool CPCVec3ColorEditor::AddChangeOperation( const string &rszName,const int nColor, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+bool CPCVec3ColorEditor::AddChangeOperation( const std::string &rszName,const int nColor, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 {
 	if ( pObjectController && pManipulator )
 	{
@@ -67,7 +67,7 @@ void CPCVec3ColorEditor::SetValue( const CVariant &rValue )
 	const int r = ( nValue >> 16 ) & 0xFF;
 	const int g = ( nValue >> 8 ) & 0xFF;
 	const int b = nValue & 0xFF;
-	CVariant colorValue = string( StrFmt( "%d, %d, %d", r, g, b ) );
+	CVariant colorValue = std::string( StrFmt( "%d, %d, %d", r, g, b ) );
 	CPCStringBrowseEditor::SetValue( colorValue );
 }
 

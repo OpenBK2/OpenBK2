@@ -9,7 +9,7 @@
 #include "libdb/ObjManIterator.h"
 #include "Misc/HPTimer.h"
 
-void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName, IManipulator *pObjectManipulator )
+void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -28,7 +28,7 @@ void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName,
 		{
 			while ( !pSubObjManIterator->IsEnd() )
 			{
-				string szName = szStartNodeName + LEVEL_SEPARATOR_CHAR + pSubObjManIterator->GetName();
+				std::string szName = szStartNodeName + LEVEL_SEPARATOR_CHAR + pSubObjManIterator->GetName();
 				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pObjectManipulator->GetDesc( szName ) ) )
 				{
 					EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );
@@ -60,7 +60,7 @@ void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName,
 			bool bFound = false;
 			while ( !pObjectManipulatorIterator->IsEnd() )
 			{
-				string szName;
+				std::string szName;
 				pObjectManipulatorIterator->GetName( &szName );
 				if ( szName.compare( 0, szStartNodeName.size(), szStartNodeName ) == 0 )
 				{
@@ -373,7 +373,7 @@ void CObjectBaseController::GetDescription( CString *pstrDescription ) const
 						}
 						return;
 					case SUndoData::TYPE_CHANGE:
-					{	string szText;
+					{	std::string szText;
 						rUndoData.newValue.ToText( &szText );
 						pstrDescription->Format( "Set to %s", szText.c_str() );
 						return;
@@ -448,7 +448,7 @@ bool CObjectBaseController::RedoWithoutUpdateViews()
 }
 
 
-bool CObjectBaseController::AddInsertOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -484,7 +484,7 @@ bool CObjectBaseController::AddInsertOperation( const string &rszArrayName, cons
 }
 
 
-bool CObjectBaseController::AddRemoveOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -525,7 +525,7 @@ bool CObjectBaseController::AddRemoveOperation( const string &rszArrayName, cons
 		}
 		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 )
 		{
-			const string szStartNodeName = StrFmt( "%s%c%c%d%c",
+			const std::string szStartNodeName = StrFmt( "%s%c%c%d%c",
 																						posNewUndoData->szName.c_str(),
 																						LEVEL_SEPARATOR_CHAR,
 																						ARRAY_NODE_START_CHAR,
@@ -544,7 +544,7 @@ bool CObjectBaseController::AddRemoveOperation( const string &rszArrayName, cons
 }
 
 
-bool CObjectBaseController::AddChangeOperation( const string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -574,7 +574,7 @@ bool CObjectBaseController::AddChangeOperation( const string &rszPropertyName, c
 }
 
 
-bool CObjectBaseController::AddExpandOperation( const string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	posNewUndoData->eType = SUndoData::TYPE_EXPAND;

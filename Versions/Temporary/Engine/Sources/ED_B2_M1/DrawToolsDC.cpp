@@ -40,7 +40,7 @@ namespace NDrawToolsDC
 		pDC->SetBkMode( s_nOldBkMode );
 	}
 	//
-	void DrawLabelDC( CPaintDC *pDC, const string &szLabel, const CVec2 &vScreenPos )
+	void DrawLabelDC( CPaintDC *pDC, const std::string &szLabel, const CVec2 &vScreenPos )
 	{
 		BackupDCSettings( pDC );
 
@@ -71,7 +71,7 @@ namespace NDrawToolsDC
 		RestoreDCSettings( pDC );
 	}
 	//
-	void DrawTextDC( CPaintDC *pDC, const string &szText, const CVec2 &vScreenPos )
+	void DrawTextDC( CPaintDC *pDC, const std::string &szText, const CVec2 &vScreenPos )
 	{
 		BackupDCSettings( pDC );
 

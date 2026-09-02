@@ -49,7 +49,7 @@ CBuildingEditor::~CBuildingEditor()
 {
 }
 
-const string &CBuildingEditor::GetCurrSeason() const
+const std::string &CBuildingEditor::GetCurrSeason() const
 {
 	return szCurrSeason;
 }
@@ -57,7 +57,7 @@ const string &CBuildingEditor::GetCurrSeason() const
 void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 {
 	szCurrSeason = typeSeasonMnemonics.GetMnemonic( eSeason );
-	string szMapName = NEditorOptions::GetBgMap( GetCurrSeason() );
+	std::string szMapName = NEditorOptions::GetBgMap( GetCurrSeason() );
 	CVec3 vCameraAnchor( NEditorOptions::GetBgMapAnchor(GetCurrSeason()) );
 	if ( vCameraAnchor == VNULL3 ) 
 	{
@@ -321,7 +321,7 @@ void CBuildingEditor::DrawPassability( class CPaintDC *pPaintDC )
 	pPaintDC->SetBkMode( nOldBkMode );
 }
 
-void CBuildingEditor::ReloadTerrain( const string &rszMapInfoName, const CVec3 &_vLastCameraAnchor )
+void CBuildingEditor::ReloadTerrain( const std::string &rszMapInfoName, const CVec3 &_vLastCameraAnchor )
 {
 	vLastCameraAnchor = _vLastCameraAnchor;
 	//
@@ -334,7 +334,7 @@ void CBuildingEditor::ReloadTerrain( const string &rszMapInfoName, const CVec3 &
 	terrainSize.y = bgMapSize.y;
 }
 
-void CBuildingEditor::SetScreenTitle( const string &rszScreenTitle )
+void CBuildingEditor::SetScreenTitle( const std::string &rszScreenTitle )
 {
 	szScreenTitle = rszScreenTitle;
 }

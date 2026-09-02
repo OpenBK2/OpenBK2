@@ -4,9 +4,9 @@
 class IFindNextEvent: public CObjectBase
 {
 public:
-	virtual void FindNext( const string &szText, bool bWholeWord, bool bMatchCase ) {};
-	virtual void Replace( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase ) {};
-	virtual void ReplaceAll( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase ) {};
+	virtual void FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase ) {};
+	virtual void Replace( const std::string &szText, const std::string &szReplaceWith, bool bWholeWord, bool bMatchCase ) {};
+	virtual void ReplaceAll( const std::string &szText, const std::string &szReplaceWith, bool bWholeWord, bool bMatchCase ) {};
 };
 
 
@@ -18,9 +18,9 @@ class CFindNext: public IFindNextEvent
 public:
 	CFindNext( CLuaEditor *_pEditor = 0 ): pEditor(_pEditor) {}
 
-	virtual void FindNext( const string &szText, bool bWholeWord, bool bMatchCase );
-	virtual void Replace( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase );
-	virtual void ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase );
+	virtual void FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase );
+	virtual void Replace( const std::string &szText, const std::string &szReplaceWith, bool bWholeWord, bool bMatchCase );
+	virtual void ReplaceAll( const std::string &szText, const std::string &szWith, bool bWholeWord, bool bMatchCase );
 };
 
 // CFindTextDlg dialog

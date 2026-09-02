@@ -10,11 +10,11 @@ BEGIN_MESSAGE_MAP(CSortTreeControl, SECTreeCtrl)
 END_MESSAGE_MAP()
 
 
-HTREEITEM CSortTreeControl::GetTreeItem( const string &rszName )
+HTREEITEM CSortTreeControl::GetTreeItem( const std::string &rszName )
 {
 	if ( !rszName.empty() )
 	{
-		string szName = rszName;
+		std::string szName = rszName;
 		if ( IsIgnoreCase() )
 		{
 			NStr::ToLower( &szName );
@@ -30,9 +30,9 @@ HTREEITEM CSortTreeControl::GetTreeItem( const string &rszName )
 }
 
 
-void CSortTreeControl::ClearNameCache( const string &rszName )
+void CSortTreeControl::ClearNameCache( const std::string &rszName )
 {
-	string szName = rszName;
+	std::string szName = rszName;
 	if ( IsIgnoreCase() )
 	{
 		NStr::ToLower( &szName );
@@ -59,7 +59,7 @@ void CSortTreeControl::ClearNameCache( const string &rszName )
 }
 
 
-void CSortTreeControl::SetNameCache( const string &rszName, HTREEITEM hItem )
+void CSortTreeControl::SetNameCache( const std::string &rszName, HTREEITEM hItem )
 {
 	if ( !rszName.empty() &&
 			 ( hItem != 0 ) && 
@@ -67,7 +67,7 @@ void CSortTreeControl::SetNameCache( const string &rszName, HTREEITEM hItem )
 			 ( hItem != TVI_FIRST ) && 
 			 ( hItem != TVI_LAST ) )
 	{	
-		string szName = rszName;
+		std::string szName = rszName;
 		if ( IsIgnoreCase() )
 		{
 			NStr::ToLower( &szName );
@@ -80,7 +80,7 @@ void CSortTreeControl::SetNameCache( const string &rszName, HTREEITEM hItem )
 
 void CSortTreeControl::RemoveTreeItemFromMaps( HTREEITEM hItem )
 {
-	string szHashName;
+	std::string szHashName;
 	if ( GetTreeItemName( hItem, &szHashName ) && !szHashName.empty() )
 	{
 		if ( IsIgnoreCase() )
@@ -142,7 +142,7 @@ HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nS
 	{
 		SetItemData( hItem, reinterpret_cast<uint32_t>( hItem ) );
 		//
-		string szHashName;
+		std::string szHashName;
 		if ( GetTreeItemName( hItem, &szHashName ) )
 		{
 			SetNameCache( szHashName, hItem );
@@ -154,10 +154,10 @@ HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nS
 }
 
 
-bool CSortTreeControl::RenameTreeItem( const string &rszDestination, const string &rszSource )
+bool CSortTreeControl::RenameTreeItem( const std::string &rszDestination, const std::string &rszSource )
 {
-	string szDestination = rszDestination;
-	string szSource = rszSource;
+	std::string szDestination = rszDestination;
+	std::string szSource = rszSource;
 	if ( IsIgnoreCase() )
 	{
 		NStr::ToLower( &szDestination );
@@ -211,7 +211,7 @@ bool CSortTreeControl::IsTopSelection( HTREEITEM hItem, HTREEITEM hItemToSkip )
 }
 
 
-void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, string *pszWindowClipboardText )
+void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, std::string *pszWindowClipboardText )
 {
 	HTREEITEM hChildItem = GetChildItem( hItem );
 	if ( hChildItem )
@@ -226,9 +226,9 @@ void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, string *pszWindowC
 	{
 		if ( pszWindowClipboardText )
 		{
-			string szClipboardPrefix;
+			std::string szClipboardPrefix;
 			GetClipboardPrefix( &szClipboardPrefix );
-			string szHashName;
+			std::string szHashName;
 			GetTreeItemName( hItem, &szHashName );
 			const int nColumnCount = GetColumnCount();
 			//
@@ -245,7 +245,7 @@ void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, string *pszWindowC
 			{
 				for ( int nColumnIndex = 1; nColumnIndex < nColumnCount; ++nColumnIndex )
 				{
-					const string szText = GetItemText( hItem, nColumnIndex );
+					const std::string szText = GetItemText( hItem, nColumnIndex );
 					( *pszWindowClipboardText ) += "\t" + szText;
 				}
 			}
@@ -260,10 +260,10 @@ void CSortTreeControl::FillClipboard( bool _bClipboardCut )
 {
 	clipboardTreeItemMap.clear();
 	HTREEITEM hSelectedItem = GetFirstSelectedItem();
-	string szWindowClipboardText;
+	std::string szWindowClipboardText;
 	while ( hSelectedItem != 0 )
 	{
-		string szHashName;
+		std::string szHashName;
 		GetTreeItemName( hSelectedItem, &szHashName );
 		if ( IsIgnoreCase() )
 		{

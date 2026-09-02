@@ -16,7 +16,7 @@
 
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 																							  CArray2D<uint32_t> *pNormalImage,
-																								const string &szFileName,
+																								const std::string &szFileName,
 																								ELoadImageMethod eMethod )
 {
 	if ( szFileName.empty() || ( szFileName == " " ) )
@@ -55,11 +55,11 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 
 bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 																							 class CBitmap *pSmallBitmap,
-																							 const string &rszObjectTypeName,
-																							 const string &rszObjectName )
+																							 const std::string &rszObjectTypeName,
+																							 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
 	//
 	if ( NFile::DoesFileExist( szCacheFileName ) )
 	{
@@ -92,11 +92,11 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 
 void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 																						 CArray2D<uint32_t> &rImageNormal,
-																						 const string &rszObjectTypeName,
-																						 const string &rszObjectName )
+																						 const std::string &rszObjectTypeName,
+																						 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + StrFmt( "Editor\\IconCache\\%s\\%s", rszObjectTypeName.c_str(), rszObjectName.c_str() );
 	//
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, szCacheFileName );
@@ -111,10 +111,10 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 }
 
 
-bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	int nPos = rszObjectName.rfind( PATH_SEPARATOR_CHAR );
-	if ( nPos != string::npos )
+	if ( nPos != std::string::npos )
 	{
 		( *pstrLabel ) = rszObjectName.substr( nPos + 1 ).c_str(); 
 		return true;
@@ -126,9 +126,9 @@ bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectT
 unsigned CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 																				 class CBitmap *pSmallBitmap,
 																				 CString *pstrLabel,
-																				 const string &rszObjectTypeName,
-																				 const string &rszObjectName,
-																				 const string &rszDataExtractorType )
+																				 const std::string &rszObjectTypeName,
+																				 const std::string &rszObjectName,
+																				 const std::string &rszDataExtractorType )
 {
 	unsigned nResult = 0;
 	CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rszObjectName );

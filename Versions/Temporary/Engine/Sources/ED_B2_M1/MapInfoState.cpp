@@ -312,7 +312,7 @@ void CMapInfoState::Enter2()
 	{
 		if ( !pIt->IsFolder() )
 		{
-			string szName;
+			std::string szName;
 			if ( pIt->GetName(&szName) != false )
 			{
 				NHPTimer::STime time = 0;
@@ -470,7 +470,7 @@ void CMapInfoState::Enter()
 			{
 				const int nLinkID = pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID();
 				CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
-				const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 				if ( pObjectController->AddChangeOperation( szObjectPrefix + ".Link.LinkID", nLinkID, pMapInfoManipulator ) )
 				{
 					pObjectController->Redo( false, true, pMapInfoEditor );
@@ -495,7 +495,7 @@ void CMapInfoState::Enter()
 			{
 				int nLinkID = pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID();
 				CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
-				const string szObjectPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+				const std::string szObjectPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
 				if ( pObjectController->AddChangeOperation( szObjectPrefix + ".SpotID", nLinkID, pMapInfoManipulator ) )
 				{
 					pObjectController->Redo( false, true, pMapInfoEditor );
@@ -515,7 +515,7 @@ void CMapInfoState::Enter()
 				continue;				
 			}
 			CDBID objectRPGStatsDBID = pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject->GetDBID();
-			string szObjectRPGStatsTypeName = NDb::GetClassTypeName( objectRPGStatsDBID );
+			std::string szObjectRPGStatsTypeName = NDb::GetClassTypeName( objectRPGStatsDBID );
 			// создаем записи в mapInfo в зависимости от типа объекта
 			if ( ( szObjectRPGStatsTypeName == "MineRPGStats" )					||
 					 ( szObjectRPGStatsTypeName == "BuildingRPGStats" )			||
@@ -612,7 +612,7 @@ void CMapInfoState::Enter()
 		pMapInfoEditor->objectInfoCollector.PostLoad( pScene, pMapInfoManipulator );
 		//
 		NProgress::IteratePosition(); // 15
-		const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+		const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 		const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 		if ( bShowMiniMap )
 		{
@@ -676,7 +676,7 @@ void CMapInfoState::Leave()
 	pMapInfoEditor->ClearMapInfoData();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	//
-	const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	if ( bShowMiniMap )
 	{
@@ -963,8 +963,8 @@ namespace NTest
 	freeIDCollector.Trace();
 /**/
 			/**
-			string szRPGStatsTypeName;
-			string szRPGStatsName;
+			std::string szRPGStatsTypeName;
+			std::string szRPGStatsName;
 			unsigned nObjectRPGStatsTypeID = INVALID_NODE_ID;
 			unsigned nObjectRPGStatsID = INVALID_NODE_ID;
 			CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pMapInfoManipulator, &szRPGStatsTypeName, &szRPGStatsName, &nObjectRPGStatsTypeID, &nObjectRPGStatsID, 0 );

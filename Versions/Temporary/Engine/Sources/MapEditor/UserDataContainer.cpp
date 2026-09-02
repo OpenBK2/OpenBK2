@@ -8,28 +8,28 @@
 
 #define START_FOLDER_TOKEN "%START%\\"
 
-typedef std::unordered_map<string, string> CTokensMap;
+typedef std::unordered_map<std::string, std::string> CTokensMap;
 static CTokensMap s_TokensMap;
 
-void AddToken( const string &szName, const string &szValue )
+void AddToken( const std::string &szName, const std::string &szValue )
 {
 	s_TokensMap[szName] = szValue;
 }
 
-void ReplaceToken( string *pInput, const string &szToken, const string &szReplace )
+void ReplaceToken( std::string *pInput, const std::string &szToken, const std::string &szReplace )
 {
 	const int nPos = pInput->find( szToken );
-	if ( nPos != string::npos )
+	if ( nPos != std::string::npos )
 		pInput->replace( pInput->begin() + nPos, pInput->begin() + szToken.size(), szReplace );
 }
 
-void ReplaceTokens( string *pszString )
+void ReplaceTokens( std::string *pszString )
 {
 	const int nPos = pszString->find( '%' );
-	if ( nPos == string::npos )
+	if ( nPos == std::string::npos )
 		return;
 	const int nLastPos = pszString->find( '%', nPos + 1 );
-	const string szTokenName = pszString->substr( nPos + 1, nLastPos - nPos - 1 );
+	const std::string szTokenName = pszString->substr( nPos + 1, nLastPos - nPos - 1 );
 	CTokensMap::const_iterator posToken = s_TokensMap.find( szTokenName );
 	if ( posToken != s_TokensMap.end() )
 		pszString->replace( pszString->begin() + nPos, pszString->begin() + nLastPos + 1, posToken->second );		
@@ -46,14 +46,14 @@ CUserDataContainer::~CUserDataContainer()
 }
 
 
-void CUserDataContainer::GetXMLFilePath( string *pszXMLFilePath )
+void CUserDataContainer::GetXMLFilePath( std::string *pszXMLFilePath )
 {
 	NI_ASSERT( pszXMLFilePath != 0, "CUserDataContainer::GetXMLFilePath() pszXMLFilePath is NULL" );
 	( *pszXMLFilePath ) = "Editor\\UserData";
 }
 
 
-void CUserDataContainer::GetConstXMLFilePath( string *pszConstXMLFilePath )
+void CUserDataContainer::GetConstXMLFilePath( std::string *pszConstXMLFilePath )
 {
 	NI_ASSERT( pszConstXMLFilePath != 0, "CUserDataContainer::GetXMLFilePath() pszXMLFilePath is NULL" );
 	( *pszConstXMLFilePath ) = "Editor\\ConstUserData";
@@ -62,21 +62,21 @@ void CUserDataContainer::GetConstXMLFilePath( string *pszConstXMLFilePath )
 
 void CUserDataContainer::Load()
 {
-	string szStartFolder = NMainLoop::GetBaseDir();
+	std::string szStartFolder = NMainLoop::GetBaseDir();
 	if ( ( !szStartFolder.empty() ) &&
 			 ( szStartFolder[ szStartFolder.size() - 1] != '\\' ) )
 	{
 		szStartFolder += '\\';
 	}
-	string szTokenSTART = szStartFolder.substr( 0, szStartFolder.size() - 1 );
+	std::string szTokenSTART = szStartFolder.substr( 0, szStartFolder.size() - 1 );
 	NFile::NormalizePath( &szTokenSTART );
 	AddToken( "BasePath", szTokenSTART );
 	//
-	string szXMLFilePath;
+	std::string szXMLFilePath;
 	GetXMLFilePath( &szXMLFilePath );
 	LoadXMLResource( szStartFolder + szXMLFilePath, ".xml", "UserData", userData );
 	// загружаем константную часть
-	string szConstXMLFilePath;
+	std::string szConstXMLFilePath;
 	GetConstXMLFilePath( &szConstXMLFilePath );
 	LoadXMLResource(  szStartFolder + szConstXMLFilePath, ".xml", "ConstUserData", userData.constUserData );
 	{
@@ -118,7 +118,7 @@ void CUserDataContainer::Save()
 	ReplaceToken( &userData.constUserData.szExportDestinationFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
 	ReplaceToken( &userData.constUserData.szDataStorageFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
 	//
-	string szXMLFilePath;
+	std::string szXMLFilePath;
 	GetXMLFilePath( &szXMLFilePath );
 	SaveXMLResource( userData.constUserData.szStartFolder + szXMLFilePath, ".xml", "UserData", userData );
 }

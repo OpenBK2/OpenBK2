@@ -29,12 +29,12 @@ public:
 												 const bool bHasReflection = false );
 	virtual bool MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3(1, 1, 1) );
 	virtual void RemoveObject( const int nID );
-	virtual void SetFadedObjects( const list<int> &objects );
-	virtual void SetFadedObjects( const list<int> &objects, float fFade );
+	virtual void SetFadedObjects( const std::list<int> &objects );
+	virtual void SetFadedObjects( const std::list<int> &objects, float fFade );
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
 
-	virtual int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
+	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
+	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
 	virtual void RemovePolyline( const int nID );
 	virtual bool ToggleShow( ESceneShow eShow );
 	virtual bool ToggleAIGeometryMode();
@@ -53,8 +53,8 @@ public:
 	virtual void ClearScene( const EScene eScene2Clear );
 	virtual void Draw( NGScene::CRTPtr *pTarget );
 
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos );
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 );
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos );
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 );
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
 
 	virtual void ShowObject( const int nID, const bool bShow );

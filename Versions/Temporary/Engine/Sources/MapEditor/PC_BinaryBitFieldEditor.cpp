@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
+bool CPCBinaryBitFieldEditor::GetPCItemStringValue( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCBinaryBitFieldEditor::GetPCItemStringValue() pszValue == 0" );
 	pszValue->clear();
@@ -34,7 +34,7 @@ bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVar
 }
 
 
-bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
+bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const std::string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
 	( *pValue ) = CVariant();
@@ -87,7 +87,7 @@ bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const string &rs
 
 void CPCBinaryBitFieldEditor::SetValue( const CVariant &rValue )
 {
-	string szValue;
+	std::string szValue;
 	GetPCItemStringValue( &szValue, rValue, GetPropertyDesc() );
 	CPCStringBrowseEditor::SetValue( szValue );
 }
@@ -98,7 +98,7 @@ void CPCBinaryBitFieldEditor::GetValue( CVariant *pValue )
 	if ( pValue )
 	{
 		CPCStringBrowseEditor::GetValue( pValue );
-		const string szValue = pValue->GetStr();
+		const std::string szValue = pValue->GetStr();
 		GetPCItemValue( pValue, szValue, GetPropertyDesc() );
 	}
 }
@@ -110,7 +110,7 @@ void CPCBinaryBitFieldEditor::OnBrowse()
 	CBinaryBitFieldDialog binaryBitFieldDialog( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam, static_cast<const uint8_t*>( value.GetPtr() ), GetPropertyDesc()->nSize, GetTargetWindow() );
 	if ( ( binaryBitFieldDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
 	{
-		string szValue;
+		std::string szValue;
 		GetPCItemStringValue( &szValue, value, GetPropertyDesc() );
 		SetWindowText( szValue.c_str() );
 	}

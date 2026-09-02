@@ -9,7 +9,7 @@ class CFreeIDCollector
 		TID nFirst;
 		TID nLast;
 	}
-	typedef list<SLockedIDNode> CLockedIDNodeList;
+	typedef std::list<SLockedIDNode> CLockedIDNodeList;
 
 	CLockedIDNodeList lockedIDNodeList;
 public:
@@ -31,7 +31,7 @@ class CFreeIDCollector
 		unsigned nFirstID;
 		unsigned nLastID;
 	};
-	typedef list<SLockedIDNode> CLockedIDNodeList;
+	typedef std::list<SLockedIDNode> CLockedIDNodeList;
 
 	CLockedIDNodeList lockedIDNodeList;
 

@@ -11,20 +11,20 @@ class CSkeletonExporter : public CBasicSceneExporter
 	CAnimationRefMap animations;
 	//
 	const char *GetAddPath() const;
-	bool FormScript( string *pScriptText,
-									 const string &szTypeName,
-									 const string &szObjName, 
-		               const string &szDstPath,
-									 const string &szSrcPath,
+	bool FormScript( std::string *pScriptText,
+									 const std::string &szTypeName,
+									 const std::string &szObjName, 
+		               const std::string &szDstPath,
+									 const std::string &szSrcPath,
 		               IManipulator *pManipulator );
-	bool ImportInfoToDBBeforeRefs( const string &szGeomObjName, 
-		                             const string &szSrcScenePath,
-																 const string &szDstFileName,
+	bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName, 
+		                             const std::string &szSrcScenePath,
+																 const std::string &szDstFileName,
 																 IManipulator *pManipulator );
-	EXPORT_RESULT CustomCheck( const string &szTypeName,
-														 const string &szObjName, 
-														 const string &szSrcScenePath,
-														 const string &szDestinationPath, 
+	EXPORT_RESULT CustomCheck( const std::string &szTypeName,
+														 const std::string &szObjName, 
+														 const std::string &szSrcScenePath,
+														 const std::string &szDestinationPath, 
 														 IManipulator *pManipulator );
 	CSkeletonExporter() {}
 };

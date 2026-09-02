@@ -10,8 +10,8 @@ class CNewObjectDialog : public CResizeDialog
 	bool bCreateControls;
 	bool bEnableType;
 	int nObjectTypeNameIndex;
-	string szObjectTypeNamePostrfix;
-	vector<string> objectTypeNameList;
+	std::string szObjectTypeNamePostrfix;
+	std::vector<std::string> objectTypeNameList;
 
 	CComboBox wndObjectTypeComboBox;
 	CString	strName;
@@ -40,10 +40,10 @@ public:
 	int GetMinimumXDimension() { return 335; }
 	int GetMinimumYDimension() { return 105; }
 
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CNewObjectDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CNewObjectDialog"; }
 	bool IsDrawGripper() { return true; }
 
-	void SetBuildDataParams( const vector<string> &rObjectTypeNameList, int _nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams );
+	void SetBuildDataParams( const std::vector<std::string> &rObjectTypeNameList, int _nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams );
 	//
 	DECLARE_MESSAGE_MAP()
 };

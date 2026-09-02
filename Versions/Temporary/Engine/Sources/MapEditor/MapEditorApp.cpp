@@ -124,7 +124,7 @@ bool CEditorApp::CreateSingletons()
 	DebugTrace( "EditorApp() Start: %g", NHPTimer::GetTimePassed( &time ) );
 
 	//
-	const string &szBaseDir = NMainLoop::GetBaseDir();
+	const std::string &szBaseDir = NMainLoop::GetBaseDir();
 	// Create logging stream
 	{
 		CDataStream *pStream = new CFileStream( szBaseDir + "\\MapEditor.log", CFileStream::WIN_CREATE );
@@ -228,7 +228,7 @@ bool CEditorApp::CreateSingletons()
 		pCommandHandlerContainer->Register( CHID_VIEW, ID_VIEW_FIRST_COMMAND_ID, ID_VIEW_LAST_COMMAND_ID );
 	}
 	//
-	const vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule*> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModuleCreate();
@@ -246,7 +246,7 @@ void CEditorApp::DestroySingletons()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	const vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule*> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModuleDestroy();
@@ -316,17 +316,17 @@ void CEditorApp::DestroySingletons()
 }
 
 
-bool CEditorApp::ParseCommandLine( const string &rszCommandLine )
+bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 {
-	const string szValidRegistryVersion = "1";
-	string szRegistryVersion;
+	const std::string szValidRegistryVersion = "1";
+	std::string szRegistryVersion;
 	CString strKey;
 
 	CString strPath;
 	strPath.LoadString( IDS_REGISTRY_PATH );
 	CString strTitle;
 	strTitle.LoadString( AFX_IDS_APP_TITLE );
-	const string szRegistryKey = StrFmt( "Software\\%s\\%s\\%s",
+	const std::string szRegistryKey = StrFmt( "Software\\%s\\%s\\%s",
 																			 LPCTSTR( strPath ),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
 																			 LPCTSTR( strTitle ) );
@@ -337,7 +337,7 @@ bool CEditorApp::ParseCommandLine( const string &rszCommandLine )
 		registrySection.LoadString( strKey, &szRegistryVersion, "" );
 	}
 	//
-	if ( ( rszCommandLine.find( "-reg" ) != string::npos ) || ( szRegistryVersion != szValidRegistryVersion ) )
+	if ( ( rszCommandLine.find( "-reg" ) != std::string::npos ) || ( szRegistryVersion != szValidRegistryVersion ) )
 	{
 		SHDeleteKey( HKEY_CURRENT_USER, szRegistryKey.c_str() ); 
 	}
@@ -346,8 +346,8 @@ bool CEditorApp::ParseCommandLine( const string &rszCommandLine )
 		char buffer[2048];
 		memset( buffer, 0, 2048 );
 		::GetModuleFileName( 0, buffer, 2048 );
-		string szAppName = buffer;
-		string szFilePath;
+		std::string szAppName = buffer;
+		std::string szFilePath;
 		CStringManager::SplitFileName( &szFilePath, 0, 0, szAppName );
 		NStr::TrimBoth( szFilePath, "\\/" );
 		NFile::SetCurrDir( szFilePath );
@@ -373,7 +373,7 @@ BOOL CEditorApp::InitInstance()
 	CWinApp::InitInstance();
 	RWSetDotNetStyle( false );
 	// Получаем командную строку
-	string szCommandLine( m_lpCmdLine );
+	std::string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
 	// проверяем наличие предыдущего редактора
@@ -413,7 +413,7 @@ BOOL CEditorApp::InitInstance()
 	// Установить рабочий раздел Registry
 	CString strPath;
 	strPath.LoadString( IDS_REGISTRY_PATH );
-	const string szRegistryKey = StrFmt( "%s\\%s",
+	const std::string szRegistryKey = StrFmt( "%s\\%s",
 																			 LPCTSTR( strPath ),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() );
 	SetRegistryKey( szRegistryKey.c_str() );
@@ -449,7 +449,7 @@ BOOL CEditorApp::InitInstance()
 	DebugTrace( "EditorApp() GameXPostStorageInitialize(): %g", NHPTimer::GetTimePassed( &time ) );
 	//	
 	// after main frame initialization
-	const vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule*> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModulePostCreateMainFrame();
@@ -467,7 +467,7 @@ BOOL CEditorApp::InitInstance()
 	// И показываем основное окно
 	m_nCmdShow = SW_SHOWNORMAL;
 	/**
-	if ( szCommandLine.find( "-topmost" ) != string::npos )
+	if ( szCommandLine.find( "-topmost" ) != std::string::npos )
 	{
 		pMainFrame->ModifyStyleEx( 0, WS_EX_TOPMOST, 0 );
 	}
@@ -514,7 +514,7 @@ BOOL CEditorApp::SaveAllModified()
 	return TRUE;
 }
 
-void CEditorApp::SetMapFileName( const string &szMapFileName )
+void CEditorApp::SetMapFileName( const std::string &szMapFileName )
 {
 	CMapEditorSingletonBase::SetMapFileName( szMapFileName );
 }

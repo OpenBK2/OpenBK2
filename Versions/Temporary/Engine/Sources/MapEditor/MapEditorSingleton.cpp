@@ -5,10 +5,10 @@
 
 #include <cstring>
 
-string CMapEditorSingletonBase::MAP_FILE_NAME = "CMapEditorSingletonBase_B2MapEditor_1.0";
+std::string CMapEditorSingletonBase::MAP_FILE_NAME = "CMapEditorSingletonBase_B2MapEditor_1.0";
 const uint32_t CMapEditorSingletonBase::MAP_FILE_MAX_SIZE = 0xFFF;
 
-void CMapEditorSingletonBase::SetMapFileName( const string &szMapFileName )
+void CMapEditorSingletonBase::SetMapFileName( const std::string &szMapFileName )
 {
 	MAP_FILE_NAME = szMapFileName;
 }
@@ -134,7 +134,7 @@ bool CMapEditorSingletonChecker::BringAppOnTop() const
 }
 
 
-bool CMapEditorSingletonChecker::OpenFileOnApp( const string &rszFilePath ) const
+bool CMapEditorSingletonChecker::OpenFileOnApp( const std::string &rszFilePath ) const
 {
   const HWND hWndApp = GetAppHwnd();
 	if ( hWndApp != 0 )

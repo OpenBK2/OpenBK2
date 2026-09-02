@@ -71,12 +71,12 @@ void CHeightContainer::AddStack()
 {
 	++nStackCount;
 	{
-		vector<CArray2D<uint32_t> >::iterator posPlaneStack = blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<uint32_t>() );
+		std::vector<CArray2D<uint32_t> >::iterator posPlaneStack = blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
 	{
-		vector<CArray2D<uint32_t> >::iterator posPlaneStack = redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<uint32_t>() );
+		std::vector<CArray2D<uint32_t> >::iterator posPlaneStack = redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
@@ -166,16 +166,16 @@ struct SModifyBitFunctional
 };
 
 
-void CHeightContainer::FillPlane( int nPlaneIndex, const vector<CVec2> &rBlackPolygon, const vector<CVec2> &rRedPolygon )
+void CHeightContainer::FillPlane( int nPlaneIndex, const std::vector<CVec2> &rBlackPolygon, const std::vector<CVec2> &rRedPolygon )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
 	const CTRect<int> rect( 0, 0, planeSize.x, planeSize.y );
-	ApplyPointsInPolygon<SModifyBitFunctional, vector<CVec2>, CVec2>( rect, rBlackPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( blackPlaneStackList[nStackIndex] ) ) );  
-	ApplyPointsInPolygon<SModifyBitFunctional, vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) ) );  
+	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rBlackPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( blackPlaneStackList[nStackIndex] ) ) );  
+	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) ) );  
 }
 
 
-void CHeightContainer::GetBits( vector<uint32_t> *pBitsList, const int x, const int y )
+void CHeightContainer::GetBits( std::vector<uint32_t> *pBitsList, const int x, const int y )
 {
 	pBitsList->resize( nStackCount );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
@@ -185,7 +185,7 @@ void CHeightContainer::GetBits( vector<uint32_t> *pBitsList, const int x, const 
 }
 
 
-void CHeightContainer::AddBitsToString( string *pszMessage, const uint32_t dwBits ) const
+void CHeightContainer::AddBitsToString( std::string *pszMessage, const uint32_t dwBits ) const
 {
 	for ( int nBit = 0; nBit < STACK_SIZE; ++nBit )
 	{
@@ -226,7 +226,7 @@ void CHeightContainer::Mark( const int x, const int y )
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
 	GetBits( &markedBitslList, point.x, point.y );
 	/**
-	string szMessage = StrFmt( "CHeightContainer::Mark( %d, %d ), marked Bits: ", x, y );
+	std::string szMessage = StrFmt( "CHeightContainer::Mark( %d, %d ), marked Bits: ", x, y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
 		if ( nStackIndex != 0 )
@@ -243,7 +243,7 @@ void CHeightContainer::Mark( const int x, const int y )
 bool CHeightContainer::Compare( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
-	vector<uint32_t> bitsList;
+	std::vector<uint32_t> bitsList;
 	GetBits( &bitsList, point.x, point.y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
@@ -256,7 +256,7 @@ bool CHeightContainer::Compare( const int x, const int y )
 }
 
 
-void CHeightContainer::InsertPolygon( const vector<CVec2> &rBlackPolygon, const vector<CVec2> &rRedPolygon, int nPolygonID )
+void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon, const std::vector<CVec2> &rRedPolygon, int nPolygonID )
 {
 	if ( ( planeSize.x == 0 ) || ( planeSize.y == 0 ) )
 	{
@@ -315,7 +315,7 @@ void CHeightContainer::InsertPolygon( const vector<CVec2> &rBlackPolygon, const 
 				MakeLine2( start.x, start.y, finish.x, finish.y, STraceImageFunctor( 0xFF0000FF, &traceImage ) );
 			}
 		}
-		const string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\bigPlane%03d.tga", nPlaneIndex );
+		const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\bigPlane%03d.tga", nPlaneIndex );
 		CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 		NImage::FlipY( traceImage );
 		NImage::SaveAsTGA( traceImage, &imageStream );
@@ -353,8 +353,8 @@ bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 	CTRect<int> rect( rRect );	
 	ValidateRect( CTRect<int>( 0, 0, planeSize.x, planeSize.y ), &rect );
 	//
-	vector<uint32_t> blackBitsList;
-	vector<uint32_t> redBitsList;
+	std::vector<uint32_t> blackBitsList;
+	std::vector<uint32_t> redBitsList;
 	blackBitsList.resize( nStackCount, 0 );
 	redBitsList.resize( nStackCount, 0 );
 	for ( int y = rect.miny; y < rect.maxy; ++y )
@@ -380,8 +380,8 @@ void CHeightContainer::InsertVSO( const NDb::SVSOInstance &rVSO )
 {
 	if ( const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *( rVSO.pDescriptor ) ) ) )
 	{
-		vector<CVec2> blackPolygon;
-		vector<CVec2> redPolygon;
+		std::vector<CVec2> blackPolygon;
+		std::vector<CVec2> redPolygon;
 		CVSOManager::GetCragBoundingPolygon( &blackPolygon, rVSO.points, pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE, 1.0f, rVSO.nVSOID );
 		CVSOManager::GetCragBoundingPolygon( &redPolygon, rVSO.points, pCragDesc->bLeftSided ? CVSOManager::PT_NORMALE : CVSOManager::PT_OPNORMALE, 1.0f, rVSO.nVSOID );
 		InsertPolygon( blackPolygon, redPolygon, rVSO.nVSOID );
@@ -396,7 +396,7 @@ void CHeightContainer::Trace()
 	DebugTrace( "plane size: (%d, %d)", planeSize.x, planeSize.y );
 	DebugTrace( "stack count: %d", nStackCount );
 	DebugTrace( "tile size: %g", fTileSize );
-	string szMessage = "marked Bits: ";
+	std::string szMessage = "marked Bits: ";
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
 		if ( nStackIndex != 0 )
@@ -442,14 +442,14 @@ void CHeightContainer::Trace()
 					}
 				}
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\blackPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\blackPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( blackPlane );
 					NImage::SaveAsTGA( blackPlane, &imageStream );
 					DebugTrace( "%s created", szFileName.c_str() );
 				}
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\redPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\redPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( redPlane );
 					NImage::SaveAsTGA( redPlane, &imageStream );

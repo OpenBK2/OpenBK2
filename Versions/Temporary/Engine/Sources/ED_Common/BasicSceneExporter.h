@@ -5,31 +5,31 @@
 class CBasicSceneExporter : public CBasicExporter
 {
 	virtual bool Validate( IManipulator *pManipulator );
-	bool ExportFromMaya( const string &szTypeName, 
-											 const string &szObjName,
-											 const string &_szDstPath,
-											 const string &_szSrcPath,
+	bool ExportFromMaya( const std::string &szTypeName, 
+											 const std::string &szObjName,
+											 const std::string &_szDstPath,
+											 const std::string &_szSrcPath,
 											 IManipulator *pManipulator );
 	virtual const char *GetAddPath() const = 0;
 	//
-	virtual bool FormScript( string *pScriptText, 
-													 const string &szTypeName,
-													 const string &szObjName,
-													 const string &szDstPath,
-													 const string &szSrcPath,
+	virtual bool FormScript( std::string *pScriptText, 
+													 const std::string &szTypeName,
+													 const std::string &szObjName,
+													 const std::string &szDstPath,
+													 const std::string &szSrcPath,
 													 IManipulator *pManipulator ) = 0;
-	virtual bool ImportInfoToDBBeforeRefs( const string &szGeomObjName, 
-		                                     const string &szSrcScenePath,
-																				 const string &szDstFileName,
+	virtual bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName, 
+		                                     const std::string &szSrcScenePath,
+																				 const std::string &szDstFileName,
 																				 IManipulator *pManipulator ) { return true; }
-	virtual bool ImportInfoToDBAfterRefs( const string &szGeomObjName, 
-		                                    const string &szSrcScenePath,
-																				const string &szDstFileName,
+	virtual bool ImportInfoToDBAfterRefs( const std::string &szGeomObjName, 
+		                                    const std::string &szSrcScenePath,
+																				const std::string &szDstFileName,
 																				IManipulator *pManipulator ) { return true; }
-	virtual EXPORT_RESULT CustomCheck( const string &szTypeName, 
-																		 const string &szObjName,
-																		 const string &szSrcScenePath,
-																		 const string &szDestinationPath,
+	virtual EXPORT_RESULT CustomCheck( const std::string &szTypeName, 
+																		 const std::string &szObjName,
+																		 const std::string &szSrcScenePath,
+																		 const std::string &szDestinationPath,
 																		 IManipulator *pManipulator ) { return ER_SUCCESS; }
 protected:
 	const char *GetScriptTemplate( const char *pszTemplateName ) const { return GetTextTemplate( pszTemplateName ); }
@@ -38,14 +38,14 @@ protected:
 public:
 	// IExporter
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 	// checker
 	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bExport,
 															EXPORT_TYPE exportType );
 };

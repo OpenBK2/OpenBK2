@@ -5,10 +5,10 @@
 
 struct IReportCollector : public CObjectBase
 {
-	virtual void AddReport( const string &szObjectType,
-													const string &szObjectName, 
+	virtual void AddReport( const std::string &szObjectType,
+													const std::string &szObjectName, 
 		                      const int nObjectID,
-													const string &szUserReport ) = 0;
+													const std::string &szUserReport ) = 0;
 };
 /**/
 
@@ -80,16 +80,16 @@ struct IExporter : public CObjectBase
 	// true - все нормально
 	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта 
 	// возвращает ER_FAIL, FinishExport не вызывается
-	virtual bool StartExport( const string &rszObjectTypeName, bool bForce ) = 0;
+	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce ) = 0;
 	// Вызывается после конвертации данных
-	virtual void FinishExport( const string &rszObjectTypeName, bool bForce ) = 0;
+	virtual void FinishExport( const std::string &rszObjectTypeName, bool bForce ) = 0;
 	// Вызывается на каждый объект
 	// ER_FAIL - не вызывается экспорт ссылок и экспорт после ссылок
 	// ER_BREAK - немедленное прекращение текущего экспорта
 	// ER_SUCCES - все впорядке, можно продолжать
 	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-																			const string &rszObjectTypeName,
-																			const string &rszObjectName,
+																			const std::string &rszObjectTypeName,
+																			const std::string &rszObjectName,
 																			bool bForce,
 																			EXPORT_TYPE exportType ) = 0;
 	// Вызывается перед проверкой даных
@@ -97,17 +97,17 @@ struct IExporter : public CObjectBase
 	// true - все нормально
 	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта
 	// возвращает ER_FAIL, FinishExport не вызывается
-	virtual bool StartCheck( const string &rszObjectTypeName, bool bExport ) = 0;
+	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) = 0;
 	// Вызывается после конвертации данных
-	virtual void FinishCheck( const string &rszObjectTypeName, bool bExport ) = 0;
+	virtual void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) = 0;
 	// Вызывается на каждый объект
 	// bExport - вызывается после экспорта объекта
 	// ER_FAIL - не вызывается экспорт ссылок и экспорт после ссылок
 	// ER_BREAK - немедленное прекращение текущего экспорта
 	// ER_SUCCES - все впорядке, можно продолжать
 	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-																			const string &rszObjectTypeName,
-																			const string &rszObjectName,
+																			const std::string &rszObjectTypeName,
+																			const std::string &rszObjectName,
 																			bool bExport,
 																			EXPORT_TYPE exportType ) = 0;
 };
@@ -127,48 +127,48 @@ struct IExporterContainer : public CObjectBase
 	enum { tidTypeID = 0x1408A3C1 };
 	//
 	// Проверить на возможность конвертирования объекта
-	virtual bool CanExportObject( const string &rszObjectTypeName ) = 0;
+	virtual bool CanExportObject( const std::string &rszObjectTypeName ) = 0;
 	//Получить конкретный экспортер
-	virtual IExporter* GetExporter( const string &rszObjectTypeName ) = 0;
+	virtual IExporter* GetExporter( const std::string &rszObjectTypeName ) = 0;
 	//
 	// Методы создания и удаления експортеров
-	virtual void Create( const string &rszObjectTypeName ) = 0;
-	virtual void Destroy( const string &rszObjectTypeName ) = 0;
+	virtual void Create( const std::string &rszObjectTypeName ) = 0;
+	virtual void Destroy( const std::string &rszObjectTypeName ) = 0;
 	//
 	// Методы регистрирования ExportTool
 	virtual void RegisterExportTool( IExportTool *pExportTool ) = 0;
 	virtual void UnRegisterExportTool( IExportTool *pExportTool ) = 0;
 	//
 	// Методы для экпорта по умолчанию, так запускается иерархический экспорт
-	virtual bool StartExport( const string &rszObjectTypeName, 
+	virtual bool StartExport( const std::string &rszObjectTypeName, 
 														bool bForce, 
 														bool bStartTools, 
 														bool bExportReferences ) = 0;
-	virtual void FinishExport( const string &rszObjectTypeName, 
+	virtual void FinishExport( const std::string &rszObjectTypeName, 
 														bool bForce, 
 														bool bFinishTools, 
 														bool bExportReferences ) = 0;
 	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-																			const string &rszObjectTypeName,
-																			const string &rszObjectName,
+																			const std::string &rszObjectTypeName,
+																			const std::string &rszObjectName,
 																			bool bForce,
 																			bool bExportReferences ) = 0;
 	// Методы для проверки по умолчанию, так запускается иерархическая проверка
-	virtual bool StartCheck( const string &rszObjectTypeName, 
+	virtual bool StartCheck( const std::string &rszObjectTypeName, 
 													bool bStartTools, 
 													bool bCheckReferences ) = 0;
-	virtual void FinishCheck( const string &rszObjectTypeName, 
+	virtual void FinishCheck( const std::string &rszObjectTypeName, 
 														bool bFinishTools, 
 														bool bCheckReferences ) = 0;
 	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-																		 const string &rszObjectTypeName,
-																		 const string &rszObjectName,
+																		 const std::string &rszObjectTypeName,
+																		 const std::string &rszObjectName,
 																		 bool bCheckReferences ) = 0;
 	//
 	// Проверить на удачность конвертации данного объекта ( имя объекта в формате: szObjectTypeName:szObjectName )
-	virtual EXPORT_RESULT GetExportResult( const string &rszObjectRefName ) = 0;
+	virtual EXPORT_RESULT GetExportResult( const std::string &rszObjectRefName ) = 0;
 	// Проверить на удачность конвертации данного объекта
-	virtual EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName ) = 0;
+	virtual EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
 };
 
 

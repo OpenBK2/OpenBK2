@@ -27,7 +27,7 @@ void CPCExTextFileEditor::GetValue( CVariant *pValue )
 		if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
 		{
 			CPCString3ButtonEditor::GetValue( pValue );
-			string szFilePath = pValue->GetStr();
+			std::string szFilePath = pValue->GetStr();
 			bool bResult = false;
 			if ( !szFilePath.empty() )
 			{
@@ -41,10 +41,10 @@ void CPCExTextFileEditor::GetValue( CVariant *pValue )
 					( *pValue ) = szFilePath;
 					//
 					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-					const string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
-					string szObjectNamePrefix;
+					const std::string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
+					std::string szObjectNamePrefix;
 					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
-					string szMask;
+					std::string szMask;
 					if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) || szMask.empty() )
 					{
 						szMask = "All Files (*.*)|*.*||";
@@ -73,17 +73,17 @@ void CPCExTextFileEditor::OnNew()
 {
 	if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
 	{
-		string szValues = GetPropertyDesc()->szStringParam;
+		std::string szValues = GetPropertyDesc()->szStringParam;
 		NStr::ToLowerASCII( &szValues );
-		string szEditor;
+		std::string szEditor;
 		if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, "", &szEditor ) )
 		{
 			szEditor.clear();
 		}
-		const string szExtention = ( szEditor == "lua" ) ? ".lua" : ".txt";
+		const std::string szExtention = ( szEditor == "lua" ) ? ".lua" : ".txt";
 		//
-		string szFilePath = GetObjectSet().objectNameSet.begin()->first.ToString();
-		string szObjectNamePrefix;
+		std::string szFilePath = GetObjectSet().objectNameSet.begin()->first.ToString();
+		std::string szObjectNamePrefix;
 		CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFilePath );
 		szFilePath = szObjectNamePrefix + GetName();
 		CStringManager::ExtendFileExtention( &szFilePath, szExtention );
@@ -110,11 +110,11 @@ void CPCExTextFileEditor::OnNew()
 			}
 			SetWindowText( szFilePath.c_str() );
 			// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-			const string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
-			string szObjectNamePrefix;
+			const std::string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
+			std::string szObjectNamePrefix;
 			CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
 			SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-			string szMask;
+			std::string szMask;
 			if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) || szMask.empty() )
 			{
 				szMask = "All Files (*.*)|*.*||";
@@ -135,7 +135,7 @@ void CPCExTextFileEditor::OnEdit()
 	{
 		CVariant value;
 		CPCString3ButtonEditor::GetValue( &value );
-		string szFilePath = value.GetStr();
+		std::string szFilePath = value.GetStr();
 		bool bResult = false;
 		if ( !szFilePath.empty() )
 		{
@@ -146,20 +146,20 @@ void CPCExTextFileEditor::OnEdit()
 			}
 			if ( ::IsValidFileName( szFilePath, false ) )
 			{
-				string szText;
+				std::string szText;
 				bool bUnicode = true;
 				File2String( &szText, &bUnicode, szFilePath, ::GetACP(), false );
 				//
-				string szValues = GetPropertyDesc()->szStringParam;
+				std::string szValues = GetPropertyDesc()->szStringParam;
 				NStr::ToLowerASCII( &szValues );
 				//
-				string szEditor;
+				std::string szEditor;
 				if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, "", &szEditor ) )
 				{
 					szEditor.clear();
 				}
 				//
-				string szNewText;
+				std::string szNewText;
 				bool bResult = false;
 				//
 				if ( szEditor == "lua" )
@@ -226,16 +226,16 @@ void CPCExTextFileEditor::OnBrowse()
 	{
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE );
-		string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = StrFmt( strTitle, GetName() );
 		//
-		string szMask;
+		std::string szMask;
 		if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) || szMask.empty() )
 		{
 			szMask = "All Files (*.*)|*.*||";
 		}
 		//
 		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-		const string szInitialDir = rFilePathMap[szMask];
+		const std::string szInitialDir = rFilePathMap[szMask];
 		//
 		{
 			NFile::CCurrDirHolder currDirHolder;
@@ -257,15 +257,15 @@ void CPCExTextFileEditor::OnBrowse()
 					{
 						pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
 					}
-					const string szFullFilePath = fileDialog.GetNextPathName( position );
-					const string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
+					const std::string szFullFilePath = fileDialog.GetNextPathName( position );
+					const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
 					if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
 					{
-						string szFilePath = szFullFilePath.substr( szDataFolder.size() );
+						std::string szFilePath = szFullFilePath.substr( szDataFolder.size() );
 						SetWindowText( szFilePath.c_str() );
 						//
 						// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-						string szObjectNamePrefix;
+						std::string szObjectNamePrefix;
 						CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
 						rFilePathMap[szMask] = szObjectNamePrefix;
 					}
@@ -280,14 +280,14 @@ void CPCExTextFileEditor::OnBrowse()
 }
 
 
-bool CPCExTextFileEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
+bool CPCExTextFileEditor::GetPCItemStringValue( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	( *pszValue ) = rValue.GetStringRecode();
 	return true;
 }
 
 
-bool CPCExTextFileEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
+bool CPCExTextFileEditor::GetPCItemValue( CVariant *pValue, const std::string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	( *pValue ) = rszValue;
 	return true;

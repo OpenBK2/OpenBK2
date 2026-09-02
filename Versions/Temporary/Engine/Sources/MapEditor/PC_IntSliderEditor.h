@@ -13,7 +13,7 @@ public:
 	CPCIntSliderEditor();
 
 	//CPCItemEditor
-	bool CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
+	bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 	void SetValue( const CVariant &rValue );
 	void GetValue( CVariant *pValue );
 

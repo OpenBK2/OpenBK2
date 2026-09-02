@@ -21,7 +21,7 @@ public:
 	CDWLog();
 	virtual ~CDWLog();
 
-	void Log( ELogOutputType eLogOutputType, const string &szText );
+	void Log( ELogOutputType eLogOutputType, const std::string &szText );
 	void ClearLog();
 
 	// ICommandHandler

@@ -42,11 +42,11 @@ private:
 	CPtr<CPCMultilineStringEditor> pPCMultilineStringEditor;
 	//
 	CTableSet selectedTables;
-	list<string> tables;
-	string szPreviousTable;
-	string szCurrentTable;
-	string szPreviousObject;
-	string szCurrentObject;
+	std::list<std::string> tables;
+	std::string szPreviousTable;
+	std::string szCurrentTable;
+	std::string szPreviousObject;
+	std::string szCurrentObject;
 	//
 	void InitImageLists();
 	void UpdateDialogTitle();
@@ -69,18 +69,18 @@ protected:
 	// CResizeDialog
 	int GetMinimumXDimension() { return 400; }
 	int GetMinimumYDimension() { return 300; }
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CPCDBLinkDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CPCDBLinkDialog"; }
 	bool IsDrawGripper() { return true; }
 
 public:
 	CPCDBLinkDialog( EType _eType, bool _bMultiRef, bool _bTextEditor = false, int _nFixedWidth = 0, int _nFixedHeight = 0, CWnd* pParent = NULL );
 	//
 	void SetSelectedTables( const CTableSet &rSelectedTables );
-	void SetCurrentTable( const string &rszCurrentTable );
-	void SetCurrentObject( const string &rszCurrentObject );
+	void SetCurrentTable( const std::string &rszCurrentTable );
+	void SetCurrentObject( const std::string &rszCurrentObject );
 	//
-	void GetCurrentTable( string *pszCurrentTable );
-	void GetCurrentObject( string *pszCurrentObject );
+	void GetCurrentTable( std::string *pszCurrentTable );
+	void GetCurrentObject( std::string *pszCurrentObject );
 	bool IsEmpty() { return bEmpty; }
 
 	//CPCBaseDialog

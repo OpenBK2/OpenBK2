@@ -20,11 +20,11 @@ struct IChildFrameContainer : public CObjectBase
 	enum { tidTypeID = 0x1408B400 };
 	//
 	// Проверить на возможность создания
-	virtual bool CanCreate( const string &rszChildFrameTypeName ) = 0;
+	virtual bool CanCreate( const std::string &rszChildFrameTypeName ) = 0;
 	// Проверить что именно этот редактор сейчас активен
-	virtual bool IsActive( const string &rszChildFrameTypeName ) = 0;
+	virtual bool IsActive( const std::string &rszChildFrameTypeName ) = 0;
 	// Создать Сhild frame
-	virtual bool Create( const string &rszChildFrameTypeName ) = 0;
+	virtual bool Create( const std::string &rszChildFrameTypeName ) = 0;
 	// Удалить Child Frame
 	virtual void Destroy() = 0;
 	//

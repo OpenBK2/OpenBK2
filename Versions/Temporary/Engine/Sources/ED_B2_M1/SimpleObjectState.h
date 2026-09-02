@@ -15,9 +15,9 @@ class CSimpleObjectState : public CMapObjectState
 		CVec3 vPosition;
 		float fDirection;
 	};
-	typedef list<SSceneObject> CSceneObjectList;
+	typedef std::list<SSceneObject> CSceneObjectList;
 	CSceneObjectList sceneObjectlist;
-	string szRPGStatsTypeName;
+	std::string szRPGStatsTypeName;
 	CDBID rpgStatsDBID;
 	//
 	void ClearData();

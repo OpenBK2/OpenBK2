@@ -5,18 +5,18 @@
 
 template <class TValue> class CMnemonicsCollector
 {
-	std::unordered_map<TValue, string> direct;
-	std::unordered_map<string, TValue> reverse;
+	std::unordered_map<TValue, std::string> direct;
+	std::unordered_map<std::string, TValue> reverse;
 
 public:
 	TValue defaultValue;
-	string defaultMnemonic;
+	std::string defaultMnemonic;
 	//
 	CMnemonicsCollector() {}
-	CMnemonicsCollector( const TValue &rDefaultValue, const string &rszDefaultMnemonic )
+	CMnemonicsCollector( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
 		: defaultValue( rDefaultValue ), defaultMnemonic( rszDefaultMnemonic ) {}
 	//
-	void Clear( const TValue &rDefaultValue, const string &rszDefaultMnemonic )
+	void Clear( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
 	{
 		defaultValue = rDefaultValue;
 		defaultMnemonic = rszDefaultMnemonic;
@@ -25,7 +25,7 @@ public:
 		reverse.clear();
 	}
 	//
-	void Insert( const TValue &rValue, const string &rszMnemonic )
+	void Insert( const TValue &rValue, const std::string &rszMnemonic )
 	{
 		direct[rValue] = rszMnemonic;
 		reverse[rszMnemonic] = rValue;
@@ -36,9 +36,9 @@ public:
 		return direct.size();
 	}
 	//
-	const string& GetMnemonic( const TValue &rValue ) const
+	const std::string& GetMnemonic( const TValue &rValue ) const
 	{
-		typename std::unordered_map<TValue, string>::const_iterator it = direct.find( rValue );
+		typename std::unordered_map<TValue, std::string>::const_iterator it = direct.find( rValue );
 		if ( it == direct.end() )
 		{
 			return defaultMnemonic;
@@ -49,9 +49,9 @@ public:
 		}
 	}
 	//
-	const TValue &GetValue( const string &rszMnemonic ) const
+	const TValue &GetValue( const std::string &rszMnemonic ) const
 	{
-		typename std::unordered_map<string, TValue>::const_iterator it = reverse.find( rszMnemonic );
+		typename std::unordered_map<std::string, TValue>::const_iterator it = reverse.find( rszMnemonic );
 		if ( it == reverse.end() )
 		{
 			return defaultValue;
@@ -65,7 +65,7 @@ public:
 	void Trace() const
 	{
 		DebugTrace( "mnemonic collector, begin" );
-		for ( typename std::unordered_map<string, TValue>::const_iterator it = reverse.begin(); it != reverse.end(); ++it )
+		for ( typename std::unordered_map<std::string, TValue>::const_iterator it = reverse.begin(); it != reverse.end(); ++it )
 		{
 			DebugTrace( "<%s>, %d", it->first.c_str(), it->second );
 		}

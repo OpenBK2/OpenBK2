@@ -6,7 +6,7 @@
 
 class CDefault3DTabWindow : public SEC3DTabWnd
 {
-	vector<CWnd*> tabList;
+	std::vector<CWnd*> tabList;
 	unsigned nCommandHandlerID;
 	unsigned nCommandID;
 

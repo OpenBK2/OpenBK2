@@ -17,14 +17,14 @@ class CMechUnitRPGStatsExporter : public CHPObjectRPGStatsExporter
 public:
 	// IExporter
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 	//
 	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bExport,
 															EXPORT_TYPE exportType );
 };

@@ -1,12 +1,12 @@
 #pragma once
 
-typedef void (*RegisterEditorType)( const string &szName, ObjectFactoryNewFunc pfnNewFunc );
-typedef void (*UnRegisterEditorType)( const string &szName );
+typedef void (*RegisterEditorType)( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );
+typedef void (*UnRegisterEditorType)( const std::string &szName );
 
 struct IEditorModuleRegistrator
 {
-	virtual void RegisterTypes( const string &szType, RegisterEditorType pfnRegistrator ) const = 0;
-	virtual void UnRegisterTypes( const string &szType, UnRegisterEditorType pfnUnRegistrator ) const = 0;
+	virtual void RegisterTypes( const std::string &szType, RegisterEditorType pfnRegistrator ) const = 0;
+	virtual void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const = 0;
 };
 
 struct IEditorModule

@@ -100,7 +100,7 @@ bool CSquadEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 void CSquadEditor::ReloadTerrain()
 {
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
-	NEditor::LoadBgMap( "SEASON_SUMMER", string(), 0 );
+	NEditor::LoadBgMap( "SEASON_SUMMER", std::string(), 0 );
 	// точку куда смотрит камера будем использовать как центр для постановки взвода
 	vSquadCenterPos = Camera()->GetAnchor();
 	Vis2AI( &vSquadCenterPos );
@@ -137,7 +137,7 @@ bool CSquadEditor::RemoveModel( int nID )
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nID;
 
-	list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
+	std::list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
 	if ( fndIt != membersInfo.end() )
 	{
 		membersInfo.erase(fndIt);
@@ -229,7 +229,7 @@ CVec3 CSquadEditor::GetModelPosition( int nID )
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nID;
 
-	list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
+	std::list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
 	if ( fndIt != membersInfo.end() )
 	{
 		return fndIt->pos;
@@ -247,7 +247,7 @@ bool CSquadEditor::SetModelPosition( int nID, const CVec3 &rvPos )
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nID;
 
-	list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
+	std::list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
 	if ( fndIt != membersInfo.end() )
 	{
 		fndIt->pos = rvPos;
@@ -261,7 +261,7 @@ int CSquadEditor::GetModelMemberIndex( int nID )
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nID;
 
-	list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
+	std::list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
 	if ( fndIt != membersInfo.end() )
 	{
 		return fndIt->nMemberIndex;
@@ -283,7 +283,7 @@ void CSquadEditor::HideAxis()
 
 int CSquadEditor::GetMemberIndexBySceneID( int nSceneID )
 {
-	for ( list<SSquadMemberInfo>::const_iterator it = membersInfo.begin(); it != membersInfo.end(); ++it )
+	for ( std::list<SSquadMemberInfo>::const_iterator it = membersInfo.begin(); it != membersInfo.end(); ++it )
 	{
 		const SSquadMemberInfo *pMembInf = &(*it);
 		if ( pMembInf->nSceneObjectID == nSceneID )

@@ -165,7 +165,7 @@ void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstan
 }
 
 
-void CSpotState::CreateSpotPointsList( list<CVec3> *pPointList, const NDb::STerrainSpotInstance &rTerrainSpotInstance )
+void CSpotState::CreateSpotPointsList( std::list<CVec3> *pPointList, const NDb::STerrainSpotInstance &rTerrainSpotInstance )
 {
 	if ( pPointList )
 	{
@@ -228,7 +228,7 @@ void CSpotState::InsertObjectEnter()
 				terrainSpotInstance.pDescriptor = pTerrainSpotDesc;
 				terrainSpotInstance.nSpotID = 0;
 				/**
-				list<CVec3> pointList;
+				std::list<CVec3> pointList;
 				CreateSpotPointsList( &pointList, terrainSpotInstance );
 				ModifySpotSquare( &terrainSpotInstance, vPosition, fDirection );
 				/**/
@@ -263,7 +263,7 @@ void CSpotState::InsertObjectDraw( class CPaintDC *pPaintDC )
 																terrainSpotInstance.pDescriptor->pMaterial->pTexture->nHeight * terrainSpotInstance.pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff ); 
 				//
 				ModifySpotSquare( &terrainSpotInstance, vPosition, fDirection );
-				list<CVec3> pointList;
+				std::list<CVec3> pointList;
 				CreateSpotPointsList( &pointList, terrainSpotInstance );
 				sceneDrawTool.DrawPolyline( pointList, NMapInfoEditor::PLACEMENT_COLOR, true, false );
 			}

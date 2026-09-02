@@ -231,7 +231,7 @@ bool SaveTypedSuperBINResource( const std::string &rszResourceFileName, TResourc
 }
 
 
-//bool CheckLatestBINResource( const string &rszResourceFileName, const string &rszXMLExtention, const string &rszBINExtention );
+//bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::string &rszXMLExtention, const std::string &rszBINExtention );
 
 
 // возвращаемое значение:

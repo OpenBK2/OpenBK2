@@ -9,7 +9,7 @@ class CPCIEMnemonics : public CMnemonicsCollector<int>
 	public:
 	CPCIEMnemonics();
 	EPCIEType Get( const SPropertyDesc *pDesc, bool bArrayNode );
-	EPCIEType Get( const SPropertyDesc *pDesc, const string &rszName );
+	EPCIEType Get( const SPropertyDesc *pDesc, const std::string &rszName );
 	bool IsPointer( EPCIEType nType );
 	bool IsLeaf( EPCIEType nType );
 	bool IsRef( EPCIEType nType );

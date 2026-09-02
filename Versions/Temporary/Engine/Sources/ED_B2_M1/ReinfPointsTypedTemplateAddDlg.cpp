@@ -10,7 +10,7 @@
 
 IMPLEMENT_DYNAMIC( CReinfPointsTypedTemplateAddDlg, CResizeDialog )
 
-CReinfPointsTypedTemplateAddDlg::CReinfPointsTypedTemplateAddDlg( CWnd *pParentWindow, string *pTypeDlgData, CMapInfoEditor *_pMapInfoEditor )
+CReinfPointsTypedTemplateAddDlg::CReinfPointsTypedTemplateAddDlg( CWnd *pParentWindow, std::string *pTypeDlgData, CMapInfoEditor *_pMapInfoEditor )
 	: CResizeDialog( CReinfPointsTypedTemplateAddDlg::IDD, pParentWindow ),
 	pMapInfoEditor( _pMapInfoEditor ),
 	pDlgData( pTypeDlgData )
@@ -35,9 +35,9 @@ BOOL CReinfPointsTypedTemplateAddDlg::OnInitDialog()
 	CResizeDialog::OnInitDialog();
 
 	// get typedTemplate from DB
-	string szType = (*pDlgData).c_str();
+	std::string szType = (*pDlgData).c_str();
 	szType += ".Type";
-	string szTempl = (*pDlgData).c_str();
+	std::string szTempl = (*pDlgData).c_str();
 	szTempl += ".Template";
 
 	CManipulatorManager::GetValue( &typedTemplate.szTemplateType, pMapInfoEditor->GetViewManipulator(), szType );
@@ -64,20 +64,20 @@ BOOL CReinfPointsTypedTemplateAddDlg::OnInitDialog()
 
 void CReinfPointsTypedTemplateAddDlg::OnBnClickedOk()
 {
-	string szType = (*pDlgData).c_str();
+	std::string szType = (*pDlgData).c_str();
 	szType += ".Type";
-	string szTempl = (*pDlgData).c_str();
+	std::string szTempl = (*pDlgData).c_str();
 	szTempl += ".Template";
 
 	// set type
 	int nSel = wndComboType.GetCurSel();
 	CString szNewType;
 	wndComboType.GetLBText( nSel, szNewType ); // new type value is in szNewType
-	CManipulatorManager::SetValue( static_cast<string>(szNewType), pMapInfoEditor->GetViewManipulator(), szType, true );
+	CManipulatorManager::SetValue( static_cast<std::string>(szNewType), pMapInfoEditor->GetViewManipulator(), szType, true );
 	// set Template
 	CString szNewTemplate;
 	GetDlgItemText( IDC_EDIT_TEMPLATE, szNewTemplate );
-	CManipulatorManager::SetValue( static_cast<string>(szNewTemplate), pMapInfoEditor->GetViewManipulator(), szTempl, true );
+	CManipulatorManager::SetValue( static_cast<std::string>(szNewTemplate), pMapInfoEditor->GetViewManipulator(), szTempl, true );
 
 	OnOK();
 }
@@ -85,7 +85,7 @@ void CReinfPointsTypedTemplateAddDlg::OnBnClickedOk()
 
 void CReinfPointsTypedTemplateAddDlg::OnBnClickedTemplate()
 {
-	string szTempl = (*pDlgData).c_str();
+	std::string szTempl = (*pDlgData).c_str();
 	szTempl += ".Template";
 
 	// browse link

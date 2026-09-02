@@ -43,32 +43,32 @@ public:
 		//
 		struct SArrayData
 		{
-			string szName;
+			std::string szName;
 			int nCount;
 		};
 		//
 		struct SValueData
 		{
-			string szName;
+			std::string szName;
 			CVariant value;
 		};
 		//
-		typedef list<SArrayData> CArrayDataList;
-		typedef list<SValueData> CValueDataList;
+		typedef std::list<SArrayData> CArrayDataList;
+		typedef std::list<SValueData> CValueDataList;
 
 		EType eType;
-		string szName;
+		std::string szName;
 		CVariant oldValue;
 		CVariant newValue;
 		CArrayDataList arrayList;
 		CValueDataList valueList;
 		
-		void FillLists( const string &szStartNodeName, IManipulator *pObjectManipulator );
+		void FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator );
 		bool Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 		bool Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 	};
 	//
-	typedef list<SUndoData> CUndoDataList;
+	typedef std::list<SUndoData> CUndoDataList;
 	
 	// список данных подвергнутых изменениям
 	CUndoDataList undoDataList;
@@ -87,13 +87,13 @@ public:
 	virtual void GetDescription( CString *pstrDescription ) const;
 
 	// Helpers
-	bool AddInsertOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
-	bool AddRemoveOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
-	bool AddExpandOperation( const string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator );
-	bool AddChangeOperation( const string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
+	bool AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
+	bool AddRemoveOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
+	bool AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator );
+	bool AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
 	//
 	template<class TValue> 
-	bool AddChangeValueOperation( const string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeValueOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
 		//
@@ -112,7 +112,7 @@ public:
 	}
 	//
 	template<> 
-	bool AddChangeValueOperation( const string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeValueOperation( const std::string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
 		//
@@ -131,7 +131,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	bool AddChangeVec2Operation( const string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	bool AddChangeVec2Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec2Operation() pObjectManipulator == 0" );
 		//
@@ -168,7 +168,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	bool AddChangeVec3Operation( const string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	bool AddChangeVec3Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec3Operation() pObjectManipulator == 0" );
 		//
@@ -217,7 +217,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	bool AddChangeVec4Operation( const string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	bool AddChangeVec4Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec4Operation() pObjectManipulator == 0" );
 		//
@@ -278,23 +278,23 @@ public:
 	}
 	//
 	template<> 
-		bool AddChangeValueOperation( const string &rszPropertyName, const CVec2 &vNewData, IManipulator *pObjectManipulator )
+		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec2 &vNewData, IManipulator *pObjectManipulator )
 	{
 		return AddChangeVec2Operation<CVec2, float>( rszPropertyName, vNewData, pObjectManipulator );
 	}
 	template<> 
-		bool AddChangeValueOperation( const string &rszPropertyName, const CVec3 &vNewData, IManipulator *pObjectManipulator )
+		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec3 &vNewData, IManipulator *pObjectManipulator )
 	{
 		return AddChangeVec3Operation<CVec3, float>( rszPropertyName, vNewData, pObjectManipulator );
 	}
 	template<> 
-		bool AddChangeValueOperation( const string &rszPropertyName, const CVec4 &vNewData, IManipulator *pObjectManipulator )
+		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec4 &vNewData, IManipulator *pObjectManipulator )
 	{
 		return AddChangeVec4Operation<CVec4, float>( rszPropertyName, vNewData, pObjectManipulator );
 	}
 	//
 	template<class TValue, class TElementType> 
-	bool AddChangeArrayOperation( const string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeArrayOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeArrayOperation() pObjectManipulator == 0" );
 		//
@@ -321,7 +321,7 @@ public:
 			}
 			// Устанавливаем значение
 			{
-				const string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
+				const std::string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
 				TElementType oldData;
 				if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, szElementName ) )
 				{
@@ -341,7 +341,7 @@ public:
 			++nElementIndex;
 		}
 		// Удаляем лишние элементы 
-		const string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
+		const std::string szElementName = StrFmt( "%s%c%c%d%c", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
 		for ( ;nElementIndex < nExistingElementCount; --nExistingElementCount )
 		{
 			TElementType oldData;
@@ -373,14 +373,14 @@ public:
 		return true;
 	}
 	template <class TValue> 
-		bool AddChangeValueOperation( const string &rszPropertyName, const vector<TValue> &rNewData, IManipulator *pObjectManipulator )
+		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::vector<TValue> &rNewData, IManipulator *pObjectManipulator )
 	{
-		return AddChangeArrayOperation<vector<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
+		return AddChangeArrayOperation<std::vector<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
 	template <class TValue> 
-		bool AddChangeValueOperation( const string &rszPropertyName, const list<TValue> &rNewData, IManipulator *pObjectManipulator )
+		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::list<TValue> &rNewData, IManipulator *pObjectManipulator )
 	{
-		return AddChangeArrayOperation<list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
+		return AddChangeArrayOperation<std::list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
 };
 

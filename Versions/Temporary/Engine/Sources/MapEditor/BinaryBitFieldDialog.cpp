@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-CBinaryBitFieldDialog::CBinaryBitFieldDialog( const string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent )
+CBinaryBitFieldDialog::CBinaryBitFieldDialog( const std::string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent )
 	: CResizeDialog( CBinaryBitFieldDialog::IDD, pwndParent ),
 		bCreateControls( true ),
 		szFileName( _szFileName ),
@@ -37,11 +37,11 @@ END_MESSAGE_MAP()
 
 struct SBinaryBitField
 {
-	string szName;
+	std::string szName;
 	int nValue;
 
 	SBinaryBitField() : szName( "" ), nValue( -1 ) {}
-	SBinaryBitField( const string &_szName, const int _nValue )	: szName( _szName ), nValue( _nValue ) {}
+	SBinaryBitField( const std::string &_szName, const int _nValue )	: szName( _szName ), nValue( _nValue ) {}
 	SBinaryBitField( const char *_szName, const int _nValue )	: nValue( _nValue )
 	{
 		szName.assign( _szName );
@@ -62,7 +62,7 @@ BOOL CBinaryBitFieldDialog::OnInitDialog()
 
 	CResizeDialog::OnInitDialog();
 
-	vector<SBinaryBitField> fields;
+	std::vector<SBinaryBitField> fields;
 	CFileStream stream( NVFS::GetMainVFS(), szFileName.c_str() );
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pXS == 0 ) 
@@ -112,7 +112,7 @@ void CBinaryBitFieldDialog::OnOK()
 		if ( wndTablesList.GetCheck( nStringIndex ) )
 		{
 			wndTablesList.GetText( nStringIndex, strString );
-			std::unordered_map<string, int>::const_iterator pos = name2value.find( string( strString ) );
+			std::unordered_map<std::string, int>::const_iterator pos = name2value.find( std::string( strString ) );
 			if ( pos != name2value.end() ) 
 			{
 				const int nValue = pos->second;

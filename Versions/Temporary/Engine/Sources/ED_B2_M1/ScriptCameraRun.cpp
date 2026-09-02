@@ -39,7 +39,7 @@ BOOL CScriptCameraRunDlg::OnInitDialog()
 	cbStartCam.ResetContent();
 	cbFinishCam.ResetContent();
 	int i = 0;
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = pDialogData->scriptCameras.begin(); it < pDialogData->scriptCameras.end(); ++it, ++i )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = pDialogData->scriptCameras.begin(); it < pDialogData->scriptCameras.end(); ++it, ++i )
 	{
 		const NCamera::CCameraPlacement &camera = (*it);
 		//

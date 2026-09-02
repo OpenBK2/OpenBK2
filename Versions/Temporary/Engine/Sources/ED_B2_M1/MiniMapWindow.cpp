@@ -61,7 +61,7 @@ void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 		mapAISize.cy = pTerrainDesc->nNumPatchesY * AI_TILES_IN_PATCH;
 		//
 		const STerrainInfo *pTerrainInfo = Scene()->GetTerraManager()->GetTerraInfo() ;
-		//const string szTerrainBinFileName = GetTerrainBinFileName( pTerrainDesc );
+		//const std::string szTerrainBinFileName = GetTerrainBinFileName( pTerrainDesc );
 		//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
 		//if ( stream.IsOk() )
 		//{

@@ -19,10 +19,10 @@ class CEditorTestEditor : public CEditorBase, public CDefaultView
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
 	IView* GetView() { return this; }
 	IInputState* GetInputState() { return pEditorTestState; }
-	void GetChildFrameType( string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	void CreateControls() {}
 	void PostCreateControls() {}
 	void PreDestroyControls() {}

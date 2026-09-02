@@ -51,12 +51,12 @@ class CSceneDrawTool
 			return *this;
 		}	
 	};
-	typedef list<SModelInfo> CModelInfoList;
+	typedef std::list<SModelInfo> CModelInfoList;
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SPolylineInfo
 	{
-		vector<CVec3> points;
+		std::vector<CVec3> points;
 		CVec3 vColor;
 		bool bDepthCheck;
 		//		
@@ -76,7 +76,7 @@ class CSceneDrawTool
 			return *this;
 		}	
 	};
-	typedef list<SPolylineInfo> CPolylineInfoList;
+	typedef std::list<SPolylineInfo> CPolylineInfoList;
 	
 	CModelIDSet modelIDSet;
 	CPolylineIDSet polylineIDSet;

@@ -53,7 +53,7 @@ void CPointsListState::Enter()
 	currDialogData.bChkPassability = false;
 	currDialogData.bChkPropmask = true;
 	//
-	string szCurSeason = pBuildingEditor->GetCurrSeason();
+	std::string szCurSeason = pBuildingEditor->GetCurrSeason();
 	currDialogData.eSeason = NDb::ESeason( typeSeasonMnemonics.GetValue(szCurSeason) );
 
 	SetPointListDialogData( &currDialogData );
@@ -93,7 +93,7 @@ void CPointsListState::SetPointMarkers()
 
 	int nActiveIndex = GetSelectedPointIndex();
 
-	string szScrText = GetPointsArrayFieldName() + StrFmt( " [Variant ID = %d]", nActiveIndex );
+	std::string szScrText = GetPointsArrayFieldName() + StrFmt( " [Variant ID = %d]", nActiveIndex );
 	pBuildingEditor->SetScreenTitle( szScrText );
 
 	pMarkers = new SMarkerSet( pBuildingEditor->GetBuildingPos(), vBuildingOrigin );
@@ -126,7 +126,7 @@ void CPointsListState::SetPointMarkers()
 }
 
 
-int CPointsListState::GetPointsNum( const string &rszField )
+int CPointsListState::GetPointsNum( const std::string &rszField )
 {
 	const SObjectSet &objSet = pBuildingEditor->GetObjectSet();
 	if ( objSet.objectNameSet.empty() )
@@ -158,7 +158,7 @@ void CPointsListState::ClearMaskManipulator()
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();
-			pView->SetViewManipulator( pBuildingEditor->CreateBuildingManipulator(), pBuildingEditor->GetObjectSet(), string() );
+			pView->SetViewManipulator( pBuildingEditor->CreateBuildingManipulator(), pBuildingEditor->GetObjectSet(), std::string() );
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																													ID_PC_DIALOG_CREATE_TREE, 0 );
@@ -193,16 +193,16 @@ void CPointsListState::SetMaskManipulator()
 
 	pMaskManipulator = 0;	
 
-	const string szMask = StrFmt( "%s.[%d].", GetPointsArrayFieldName().c_str(), GetSelectedPointIndex() );
+	const std::string szMask = StrFmt( "%s.[%d].", GetPointsArrayFieldName().c_str(), GetSelectedPointIndex() );
 	
 	pMaskManipulator = new CMaskManipulator( szMask, pBuildingEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
-	vector<string> maskFields;
+	std::vector<std::string> maskFields;
 	GetMaskFields( &maskFields );
 
-	for ( vector<string>::iterator it = maskFields.begin(); it < maskFields.end(); ++it )
+	for ( std::vector<std::string>::iterator it = maskFields.begin(); it < maskFields.end(); ++it )
 	{
-		string szM = (*it);
+		std::string szM = (*it);
 		pMaskManipulator->AddName( szM, false, "", INVALID_NODE_ID, false );
 	}
 	
@@ -213,7 +213,7 @@ void CPointsListState::SetMaskManipulator()
 	if ( pView != 0 )
 	{
 		bNeedCreateTree = ( pView->GetViewManipulator() != pMaskManipulator );
-		pView->SetViewManipulator( pMaskManipulator, pBuildingEditor->GetObjectSet(), string() );
+		pView->SetViewManipulator( pMaskManipulator, pBuildingEditor->GetObjectSet(), std::string() );
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 0 );
@@ -338,7 +338,7 @@ void CPointsListState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFl
 //
 //
 
-void CSmokePointsState::GetMaskFields(vector<string> *pMaskFields )
+void CSmokePointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 {
 	pMaskFields->clear();
 	//
@@ -360,7 +360,7 @@ void CSmokePointsState::GetMaskFields(vector<string> *pMaskFields )
 //
 //
 
-void CSlotPointsState::GetMaskFields(vector<string> *pMaskFields )
+void CSlotPointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 {
 	pMaskFields->clear();
 	//
@@ -393,7 +393,7 @@ void CSlotPointsState::GetMaskFields(vector<string> *pMaskFields )
 //
 //
 
-void CEntrancePointsState::GetMaskFields(vector<string> *pMaskFields )
+void CEntrancePointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 {
 	pMaskFields->clear();
 	//
@@ -411,7 +411,7 @@ void CEntrancePointsState::GetMaskFields(vector<string> *pMaskFields )
 //
 //
 
-void CSurfacePointsState::GetMaskFields(vector<string> *pMaskFields )
+void CSurfacePointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 {
 	pMaskFields->clear();
 	//
@@ -427,7 +427,7 @@ void CSurfacePointsState::GetMaskFields(vector<string> *pMaskFields )
 
 void CSurfacePointsState::Draw( CPaintDC *pPaintDC )
 {
-	for ( vector<NDb::SHPObjectRPGStats::SModelSurfacePoint>::iterator it = surfPoints.begin(); it < surfPoints.end(); ++it )
+	for ( std::vector<NDb::SHPObjectRPGStats::SModelSurfacePoint>::iterator it = surfPoints.begin(); it < surfPoints.end(); ++it )
 	{
 		NDb::SHPObjectRPGStats::SModelSurfacePoint &point = *it;
 
@@ -471,7 +471,7 @@ void CSurfacePointsState::AddPointSpecificMarker( IManipulator *pManipulator, in
 //
 //
 
-void CDamageLevelsState::GetMaskFields(vector<string> *pMaskFields )
+void CDamageLevelsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 {
 	pMaskFields->clear();
 	//

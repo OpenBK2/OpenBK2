@@ -319,7 +319,7 @@ void CSimpleObjectState::InsertObjectEnter()
 		// вставляем объект
 		if ( !rpgStatsDBID.IsEmpty() )
 		{
-			string szSeason;
+			std::string szSeason;
 			CManipulatorManager::GetValue( &szSeason, pManipulator, "Season" );
 			const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
 			// заполняем сцену и проставляем ссылки в mapInfo
@@ -448,7 +448,7 @@ void CSimpleObjectState::InsertObjectEnter()
 				itSceneObject->fDirection = 0.0f;
 			}
 			//
-			list<int> sceneIDlist;
+			std::list<int> sceneIDlist;
 			for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin(); itSceneObject != sceneObjectlist.end(); ++itSceneObject )
 			{
 				sceneIDlist.push_back( itSceneObject->nID );

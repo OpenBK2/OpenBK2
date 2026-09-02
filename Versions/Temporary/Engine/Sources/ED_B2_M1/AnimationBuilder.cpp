@@ -42,13 +42,13 @@ CAnimationBuilder::~CAnimationBuilder()
 
 
 //CRAP{ PLAIN_TEXT
-bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
 	// Считываем данные
-	string szSrcName;
+	std::string szSrcName;
 	if ( !CManipulatorManager::GetValue( &szSrcName, pBuildDataManipulator, "SrcName" ) || szSrcName.empty() )
 	{
 		( *pszDescription ) = "<SrcName> must be filled.";
@@ -59,7 +59,7 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 		( *pszDescription ) = "<SrcName> is invalid file name. Can't find file.";
 		return false;
 	}
-	string szRootJoint;
+	std::string szRootJoint;
 	if ( !CManipulatorManager::GetValue( &szRootJoint, pBuildDataManipulator, "RootJoint" ) || szRootJoint.empty() )
 	{
 		( *pszDescription ) = "<RootJoint> must be filled.";
@@ -70,20 +70,20 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 //CRAP} PLAIN_TEXT
 
 
-bool CAnimationBuilder::IsUniqueObjectName( const string &szObjectType, const string &szObjectName )
+bool CAnimationBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
 
 
-bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
+bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
-	string szAnimationTypeName = "AnimB2";
-	string szSrcName;
-	string szRootJoint;
+	std::string szAnimationTypeName = "AnimB2";
+	std::string szSrcName;
+	std::string szRootJoint;
 	CPtr<IManipulator> pAnimationFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szAnimationTypeName );
 	if ( !pAnimationFolderManipulator )
 	{
@@ -96,13 +96,13 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 	buildDataParams.bNeedExport = false;
 	buildDataParams.bNeedEdit = false;
 	//
-	string szBuildDataTypeName = "AnimB2Builder";
-	string szBuildDataName;
+	std::string szBuildDataTypeName = "AnimB2Builder";
+	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
 		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
-			string szDescription;
+			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 			{
 				if ( !CManipulatorManager::GetValue( &szSrcName, pBuildDataManipulator, "SrcName" ) )
@@ -120,10 +120,10 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 	// Формируем файл с атрибутами анимаций
 	if ( !szSrcName.empty() && !szRootJoint.empty() )
 	{
-		string szScriptText;
-		const string szSource = pUserData->constUserData.szExportSourceFolder + szSrcName;
-		const string szAnimParamsFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Animations\\Params\\";
-		const string szAnimParamsDestination = szAnimParamsFolder + "FFFFFFFF";
+		std::string szScriptText;
+		const std::string szSource = pUserData->constUserData.szExportSourceFolder + szSrcName;
+		const std::string szAnimParamsFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Animations\\Params\\";
+		const std::string szAnimParamsDestination = szAnimParamsFolder + "FFFFFFFF";
 		NFile::CreatePath( szAnimParamsFolder.c_str() );
 		//
 		MEStartScript( &szScriptText, false );
@@ -139,7 +139,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 		if ( bResult )
 		{
 			// CRAP{ HASH_SET
-			typedef std::unordered_map<string, int> CAnimationMap;
+			typedef std::unordered_map<std::string, int> CAnimationMap;
 			CAnimationMap animationMap;
 			// CRAP} HASH_SET
 			// Находим все анимации в текущем каталоге
@@ -149,14 +149,14 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 				bool bFound = false;
 				while( !pIterator->IsEnd() )
 				{
-					string szName;
+					std::string szName;
 					if ( pIterator->GetName( &szName ) )
 					{
 						if ( szName.compare( 0, rszAnimationFolder.size(), rszAnimationFolder ) == 0 )
 						{
 							bFound = true;
 							if ( ( szName != rszAnimationFolder ) &&
-									 ( szName.find( '\\', nSize ) == string::npos ) )
+									 ( szName.find( '\\', nSize ) == std::string::npos ) )
 							{
 								InsertHashSetElement( &animationMap, szName );
 								DebugTrace( "CAnimationBuilder::UpdateAminations() found animation: <%s>", szName.c_str() );
@@ -183,7 +183,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 					CGrannyBoneAttributesList attributesList;
 					if ( ReadAttributes( &attributesList, szAnimParamsDestination, ANIMATIONS_ROOT_JOINT, false ) == false )
 					{
-						const string szError = StrFmt( "Can't open animation params file \"%s\" to build/update animation\n", szAnimParamsDestination.c_str() );
+						const std::string szError = StrFmt( "Can't open animation params file \"%s\" to build/update animation\n", szAnimParamsDestination.c_str() );
 						NLog::GetLogger()->Log( LT_ERROR, szError );
 						return false;
 					}
@@ -191,19 +191,19 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 					int nAnimationRefCount = 0;
 					for ( CGrannyBoneAttributesList::const_iterator itAttribute = attributesList.begin(); itAttribute != attributesList.end(); ++itAttribute )
 					{
-						string szAnimationName;
+						std::string szAnimationName;
 						//
-						string szAnimationType;
+						std::string szAnimationType;
 						int nFirstFrame = -1;
 						int nLastFrame = -1;
-						string szAABBAName;
-						string szAABBDName;
+						std::string szAABBAName;
+						std::string szAABBDName;
 						uint32_t dwWeaponBits = 0;
 						bool bLooped = 0;
 						int nActionFrame = 0;
 						float fSpeed = 1.0f;
 						{
-							string szBoneName = itAttribute->szBoneName;
+							std::string szBoneName = itAttribute->szBoneName;
 							NStr::ToUpper( &szBoneName );
 							unsigned nNumber = INVALID_NODE_ID;
 							NDb::EAnimationType animationType = typeMayaAnimationMnemonics.Get( szBoneName, 0, &nNumber );
@@ -211,7 +211,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 							if ( bResult )
 							{
 								szAnimationType = typeAnimationMnemonics.GetMnemonic( animationType );
-								string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
+								std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
 								NStr::ToLowerASCII( &szMnemonic );
 								if ( nNumber != INVALID_NODE_ID )
 								{
@@ -306,7 +306,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 				}
 				catch ( ... ) 
 				{
-					const string szError = StrFmt( "General error during build/update animation(s) from params file \"%s\"\n", szAnimParamsDestination.c_str() );
+					const std::string szError = StrFmt( "General error during build/update animation(s) from params file \"%s\"\n", szAnimParamsDestination.c_str() );
 					NLog::GetLogger()->Log( LT_ERROR, szError );
 					bResult = false;
 				}
@@ -346,12 +346,12 @@ bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		{	
 			SSelectionSet selectionSet;
 			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
-			const string szObjectTypeName = selectionSet.szObjectTypeName;
+			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
 			if ( bResult )
 			{
-				const string szObjectName = selectionSet.objectNameList.front().ToString();
+				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
 				bResult = bResult && ( szObjectName )[szObjectName.size() - 1] == PATH_SEPARATOR_CHAR;
 				bResult = bResult && UpdateAminations( szObjectName );
 			}
@@ -375,12 +375,12 @@ bool CAnimationBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool
 		{
 			SSelectionSet selectionSet;
 			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
-			const string szObjectTypeName = selectionSet.szObjectTypeName;
+			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
 			if ( bResult )
 			{
-				const string szObjectName = selectionSet.objectNameList.front().ToString();
+				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
 				bResult = bResult && ( szObjectName )[szObjectName.size() - 1] == PATH_SEPARATOR_CHAR;
 				( *pbEnable ) = bResult;
 				( *pbCheck ) = false;
@@ -399,7 +399,7 @@ uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) c
 	uint32_t dwWeaponBits = 0;
 	for ( unsigned nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL; nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER; ++nWeaponTypeIndex )
 	{
-		string szMnemonic = typeMayaWeaponMnemonics.GetMnemonic( nWeaponTypeIndex );
+		std::string szMnemonic = typeMayaWeaponMnemonics.GetMnemonic( nWeaponTypeIndex );
 		NStr::ToLowerASCII( &szMnemonic );
 		float fAttributeValue = 0;
 		if ( gba.GetAttribute( szMnemonic, &fAttributeValue ) && ( fAttributeValue > 0.0f ) )

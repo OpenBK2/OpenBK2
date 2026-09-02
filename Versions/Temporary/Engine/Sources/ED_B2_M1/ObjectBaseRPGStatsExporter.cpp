@@ -41,16 +41,16 @@ static bool SetObjectHeight( IManipulator *pObjectBaseRPGStatsManipulator, grann
 	return pObjectBaseRPGStatsManipulator->SetValue( "ObjectHeight", v );
 }
 
-bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulator, const string &szObjectName )
+bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulator, const std::string &szObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string szGeometriesFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
-	const string szObjectPath = NFile::GetFilePath( szObjectName );
+	const std::string szGeometriesFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szObjectPath = NFile::GetFilePath( szObjectName );
 
-	string szGeometryName;
+	std::string szGeometryName;
 	{
-		string szVisObj = "";
+		std::string szVisObj = "";
 		CManipulatorManager::GetValue( &szVisObj, pManipulator, "visualObject" );
 		int nDamageLevels = 0;
 		CManipulatorManager::GetValue( &nDamageLevels, pManipulator, "DamageLevels" );
@@ -88,11 +88,11 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 		{
 			int nOldCount = 0;
 			CManipulatorManager::GetValue( &nOldCount, pManipulator, "DynamicDebris.Masks" );
-			list<string> oldMaterials;
-			list<string> oldTextures;
+			std::list<std::string> oldMaterials;
+			std::list<std::string> oldTextures;
 			for ( int i = 0; i < nOldCount; ++i )
 			{
-				string szOldMaterial = "";
+				std::string szOldMaterial = "";
 				CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( StrFmt( "DynamicDebris.Masks.[%d].Material", i ), pManipulator, 0, &szOldMaterial, 0 );
 				if ( pMaterialMan != 0 )
 				{
@@ -100,17 +100,17 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 					CVariant var;
 					pMaterialMan->GetValue( "Bump", &var );
 					if ( !IsDBIDEmpty(var) )
-						oldTextures.push_back( string( var.GetStr() ) );
+						oldTextures.push_back( std::string( var.GetStr() ) );
 				}
 			}
 			pManipulator->RemoveNode( "DynamicDebris.Masks" );
-			for ( list<string>::const_iterator it = oldMaterials.begin(); it != oldMaterials.end(); ++it )					
+			for ( std::list<std::string>::const_iterator it = oldMaterials.begin(); it != oldMaterials.end(); ++it )					
 				pMaterialFolderManipulator->RemoveNode( *it );
-			for ( list<string>::const_iterator it = oldTextures.begin(); it != oldTextures.end(); ++it )					
+			for ( std::list<std::string>::const_iterator it = oldTextures.begin(); it != oldTextures.end(); ++it )					
 				pTextureFolderManipulator->RemoveNode( *it );
 			int nNewCount = 0;
 			CManipulatorManager::GetValue( &nNewCount, pDebrisSet, "Debris" );
-			typedef std::unordered_map< string, pair<string, float> > CSeasonDebrisMap;
+			typedef std::unordered_map< std::string, std::pair<std::string, float> > CSeasonDebrisMap;
 			CSeasonDebrisMap debrisTextures;
 			for ( int i = 0; i < nNewCount; ++i )
 			{
@@ -118,9 +118,9 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 				pDebrisSet->GetValue( StrFmt( "Debris.[%d].Texture", i ), &var );
 				if ( !IsDBIDEmpty(var) )
 				{
-					string szSeason;
+					std::string szSeason;
 					CManipulatorManager::GetValue( &szSeason, pDebrisSet, StrFmt( "Debris.[%d].Season", i ) );
-					debrisTextures[szSeason].first = string( var.GetStr() );
+					debrisTextures[szSeason].first = std::string( var.GetStr() );
 					float fWidth;
 					CManipulatorManager::GetValue( &fWidth, pDebrisSet, StrFmt( "Debris.[%d].Width", i ) );
 					debrisTextures[szSeason].second = fWidth;
@@ -130,12 +130,12 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 			for ( CSeasonDebrisMap::const_iterator it = debrisTextures.begin(); it != debrisTextures.end(); ++it, ++nEntryCounter )
 			{
 				CVec2 vDynamicDebrisOrigin( 0, 0 );
-				string szDynamicDebrisTextureFileName = StrFmt( "%sDynDebris_%d.tga", szObjectPath.c_str(), nEntryCounter );
+				std::string szDynamicDebrisTextureFileName = StrFmt( "%sDynDebris_%d.tga", szObjectPath.c_str(), nEntryCounter );
 				CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
-				const string szGeometryFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
+				const std::string szGeometryFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 				CreateObjectDynamicDebris( szGeometryFileName, pUserData->constUserData.szExportSourceFolder + szDynamicDebrisTextureFileName, &vDynamicDebrisOrigin, it->second.second );
-				const string szMaterialName = StrFmt( "%sDynDebris%d_Material.xdb", szObjectPath.c_str(), nEntryCounter );
-				const string szTextureName = StrFmt( "%sDynDebris%d_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
+				const std::string szMaterialName = StrFmt( "%sDynDebris%d_Material.xdb", szObjectPath.c_str(), nEntryCounter );
+				const std::string szTextureName = StrFmt( "%sDynDebris%d_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
 				pTextureFolderManipulator->InsertNode( szTextureName );
 				CPtr<IManipulator> pTextureMan = pResourceManager->CreateObjectManipulator( "Texture", szTextureName );
 				CManipulatorManager::SetValue( szDynamicDebrisTextureFileName, pTextureMan, "SrcName", false );
@@ -169,8 +169,8 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 }
 
 EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																												const string &rszObjectTypeName,
-																												const string &rszObjectName,
+																												const std::string &rszObjectTypeName,
+																												const std::string &rszObjectName,
 																												bool bForce,
 																												EXPORT_TYPE exportType )
 {
@@ -196,13 +196,13 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		return ER_SUCCESS;
 	}
 	// Получаем ID Геометрии, чтобы вычислить путь до файла c бинарными данными
-	string szGeometryName;
-	string szGeometryTypeName;
+	std::string szGeometryName;
+	std::string szGeometryTypeName;
 	CManipulatorManager::GetParamsFromReference( "Geometry", pModelManipulator, &szGeometryTypeName, &szGeometryName, 0 );
 	//
-	const string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
-	string szDestination = NBinResources::GetBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
+	std::string szDestination = NBinResources::GetBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 	// Проверяем файл на открываемость
 	try
 	{
@@ -218,31 +218,31 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		return ER_SUCCESS;
 	}
 	// Получаем каталоги материалов, текстур и файлов текстур
-	string szMaterialFolder;
-	string szTextureFolder;
-	string szTextureFileFolder;
+	std::string szMaterialFolder;
+	std::string szTextureFolder;
+	std::string szTextureFileFolder;
 	int nMaterialCount = 0;
 	CManipulatorManager::GetValue( &nMaterialCount, pModelManipulator, "Materials" );	
 	if ( nMaterialCount > 0 )
 	{
-		string szMaterialName;
+		std::string szMaterialName;
 		if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelManipulator, 0, &szMaterialName, 0 ) )
 		{
-			string szTextureName;
+			std::string szTextureName;
 			if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, &szTextureName, 0 ) )
 			{
 				CManipulatorManager::GetValue( &szTextureFileFolder, pTextureManipulator, "SrcName" );
 				if ( !szTextureFileFolder.empty() )
 				{
 					CStringManager::CutFileExtention( &szTextureFileFolder );
-					szTextureFileFolder += string( "_" );
+					szTextureFileFolder += std::string( "_" );
 				}
 				//
 				szTextureFolder = szTextureName;
-				szTextureFolder += string( "_" );
+				szTextureFolder += std::string( "_" );
 			}
 			szMaterialFolder = szMaterialName;
-			szMaterialFolder += string( "_" );
+			szMaterialFolder += std::string( "_" );
 		}
 	}
 	// Записываем прервый параметр - статический модификатор земли под статическим объектом
@@ -263,17 +263,17 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 				// пробегаем по списку установленных 
 				for ( int nDebrisIndex = 0; nDebrisIndex < nDebrisCount; ++nDebrisIndex )
 				{
-					const string szDebrisPrefix = StrFmt( "Debris.[%d]", nDebrisIndex );
-					const string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nDebrisIndex );
+					const std::string szDebrisPrefix = StrFmt( "Debris.[%d]", nDebrisIndex );
+					const std::string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nDebrisIndex );
 
-					string szSeasonName;
+					std::string szSeasonName;
 					float fWidth = 20;
 					bResult = bResult && CManipulatorManager::GetValue( &szSeasonName, pDebrisManipulator, szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
 					bResult = bResult && CManipulatorManager::GetValue( &fWidth, pDebrisManipulator, szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Width" );
 					//
 					CVec2 vMaskOrigin = VNULL2;
-					const string szSeasonFilePostfix = typeSeasonFilePostfixMnemonics.GetMnemonic( typeSeasonMnemonics.GetValue( szSeasonName ) );
-					const string szMaskFileName = szSeasonFilePostfix.empty() ? StrFmt( "%sStaticDebris.tga", szTextureFileFolder.c_str() ) : StrFmt( "%sStaticDebris_%s.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
+					const std::string szSeasonFilePostfix = typeSeasonFilePostfixMnemonics.GetMnemonic( typeSeasonMnemonics.GetValue( szSeasonName ) );
+					const std::string szMaskFileName = szSeasonFilePostfix.empty() ? StrFmt( "%sStaticDebris.tga", szTextureFileFolder.c_str() ) : StrFmt( "%sStaticDebris_%s.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
 					bResult = bResult && CreateObjectStaticDebris( szDestination, pUserData->constUserData.szExportSourceFolder + szMaskFileName, &vMaskOrigin, (int)fWidth );
 					//
 					bResult = bResult && CManipulatorManager::SetValue( szSeasonName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
@@ -293,9 +293,9 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 			bResult = bResult && CManipulatorManager::GetValue( &nMasksCount, pManipulator, "StaticDebris.Masks" );
 			for ( int nMasksIndex = 0; nMasksIndex < nMasksCount; ++nMasksIndex )
 			{
-				const string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nMasksIndex );
+				const std::string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nMasksIndex );
 				//
-				string szMaskFileName;
+				std::string szMaskFileName;
 				if ( CManipulatorManager::GetValue( &szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" ) )
 				{
 					if ( !szMaskFileName.empty() && ( szMaskFileName[0] != ' ' ) )

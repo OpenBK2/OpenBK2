@@ -5,7 +5,7 @@
 
 void CDefaultView::SetViewManipulator( IManipulator* _pViewManipulator,
 																			 const SObjectSet &rObjectSet,
-																			 const string &rszTemporaryLabel )
+																			 const std::string &rszTemporaryLabel )
 {
 	//DebugTrace( "CDefaultView::SetViewManipulator:<%s>:%d, UOLabel:<%s>, controller:%d", rObjectSet.szObjectTypeName.c_str(), rObjectSet.objectNameSet.size(), rszTemporaryLabel.c_str(), bController );
 	Singleton<IViewContainer>()->Remove( this, objectSet );

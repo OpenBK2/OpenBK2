@@ -8,7 +8,7 @@
 class CMovEditorKeySettingsDlg : public CResizeDialog
 {
 	NDb::SScriptMovieKeyPos *pKey;
-	string *pszName;
+	std::string *pszName;
 
 	// CDialog controls
 	CEdit wndEditName;
@@ -31,7 +31,7 @@ class CMovEditorKeySettingsDlg : public CResizeDialog
 public:
 	enum { IDD = IDD_DLG_MOVED_KEY_SETTINGS };
 
-	CMovEditorKeySettingsDlg( CWnd *pParentWindow, NDb::SScriptMovieKeyPos *_pKey, string *_pszName );
+	CMovEditorKeySettingsDlg( CWnd *pParentWindow, NDb::SScriptMovieKeyPos *_pKey, std::string *_pszName );
 	virtual ~CMovEditorKeySettingsDlg() {}
 
 	//DECLARE_MESSAGE_MAP()

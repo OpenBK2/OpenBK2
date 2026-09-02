@@ -13,18 +13,18 @@ bool SetGetEditParameters( uint32_t pEditParameters, unsigned nCommandHandlerTyp
 }
 
 
-void CreateRefKey( string *pszKey, const SPropertyDesc *pPropertyDesc )
+void CreateRefKey( std::string *pszKey, const SPropertyDesc *pPropertyDesc )
 {
 	if ( ( pszKey != 0 ) && ( pPropertyDesc != 0 ) )
 	{
-		list<string> refTypeList;
+		std::list<std::string> refTypeList;
 		for ( SPropertyDesc::CTypesMap::const_iterator itRefType = pPropertyDesc->refTypes.begin(); itRefType != pPropertyDesc->refTypes.end(); ++itRefType )
 		{
 			refTypeList.push_back( itRefType->first );
 		}
 		refTypeList.sort();
 		pszKey->clear();
-		for ( list<string>::const_iterator itRefType = refTypeList.begin(); itRefType != refTypeList.end(); ++itRefType )
+		for ( std::list<std::string>::const_iterator itRefType = refTypeList.begin(); itRefType != refTypeList.end(); ++itRefType )
 		{
 			if ( pszKey->empty() )
 			{

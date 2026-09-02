@@ -19,8 +19,8 @@ struct SUnitStartCmdWindowData
 	struct SCmd // данные для создания row в списке команд
 	{
 		int nIndex;					// индекс команды в MapInfo.startCommandList[]
-		string szType;			// тип команды
-		string szTarget;	// местоназначение команды - имя юнита или координаты
+		std::string szType;			// тип команды
+		std::string szTarget;	// местоназначение команды - имя юнита или координаты
 		//
 		SCmd()
 			:	nIndex(-1),
@@ -29,7 +29,7 @@ struct SUnitStartCmdWindowData
 		}
 		bool operator== ( const SCmd &cmd ) const { return ( this->nIndex == cmd.nIndex ); }
 	};
-	vector<SCmd> commands;
+	std::vector<SCmd> commands;
 	//
 	enum EAction
 	{
@@ -42,7 +42,7 @@ struct SUnitStartCmdWindowData
 		SEL_CHANGE
 	};
 	EAction eLastAction;							// последнее событие интерфейса пользователя
-	vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
+	std::vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
 	//
 	SUnitStartCmdWindowData() 
 	{

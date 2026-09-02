@@ -550,7 +550,7 @@ bool CScriptCameraState::AddScriptPlacement()
 {
 	bool bReturn = false;
 
-	string szNewCameraName = std::to_string(  GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
+	std::string szNewCameraName = std::to_string(  GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
 	//CScriptCameraAddDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szNewCameraName, dialogData.scriptCameras );
 	//if ( dlg.DoModal() == IDOK )
 	{
@@ -568,7 +568,7 @@ bool CScriptCameraState::AddScriptPlacement()
 
 					bool bResult = true;
 					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Name", nCamerasCount - 1),
-																																			(string)newCamera.szName, pManipulator );
+																																			(std::string)newCamera.szName, pManipulator );
 					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Position", nCamerasCount - 1 ),
 																																												newCamera.vPosition, pManipulator );
 					bResult = bResult && pObjectController->AddChangeOperation( StrFmt("ScriptMovies.ScriptCameraPlacements.[%d].Yaw", nCamerasCount - 1),
@@ -675,7 +675,7 @@ bool CScriptCameraState::AddPosKey( float fTime, int nSeqIndex )
 			{
 				if ( (nSeqIndex >= 0) && (nSeqIndex < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size()) )
 				{
-					const vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
+					const std::vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
 
 					for ( int nKeyIndex = 0; nKeyIndex < posKeys.size(); ++nKeyIndex )
 					{
@@ -725,7 +725,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 		{
 			NI_VERIFY( (i >= 0) && (i < actSeq.posKeys.size()), "Active key couldn't be found in DB!\n", return false )
 			NDb::SScriptMovieKeyPos *pActKey = &(actSeq.posKeys[i]);
-			string szKeyName = StrFmt( "Movie %d, Key %d", nSeqIndex, i );
+			std::string szKeyName = StrFmt( "Movie %d, Key %d", nSeqIndex, i );
       
 			CMovEditorKeySettingsDlg dlg(	Singleton<IMainFrameContainer>()->GetSECWorkbook(), pActKey, &szKeyName );
 			if ( dlg.DoModal() == IDOK )
@@ -779,7 +779,7 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 			{
 				if ( (nSeqIndex >= 0) && (nSeqIndex < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size()) )
 				{
-					const vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
+					const std::vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
 
 					bool bResult = true;
 
@@ -818,9 +818,9 @@ bool CScriptCameraState::SetSequenceLength( float fNewLength, int nSeqIndex )
 		{
 			if ( (nSeqIndex >= 0) && (nSeqIndex < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size()) )
 			{
-				const vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
+				const std::vector<NDb::SScriptMovieKeyPos> &posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
 
-				vector<NDb::SScriptMovieKeyPos>::const_iterator itLastKey = posKeys.end();
+				std::vector<NDb::SScriptMovieKeyPos>::const_iterator itLastKey = posKeys.end();
 				--itLastKey;
 
 				if ( itLastKey->fStartTime <= fNewLength )
@@ -877,11 +877,11 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 		{
 			if ( (nSeqIndex >= 0) && (nSeqIndex < GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences.size()) )
 			{
-				vector<NDb::SScriptMovieKeyPos> posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
+				std::vector<NDb::SScriptMovieKeyPos> posKeys = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptMovieSequences[nSeqIndex].posKeys;
 
 				// change data copy
 				int i = 0;
-				for ( vector<NDb::SScriptMovieKeyPos>::iterator itKey = posKeys.begin(); itKey != posKeys.end(); ++itKey, ++i )
+				for ( std::vector<NDb::SScriptMovieKeyPos>::iterator itKey = posKeys.begin(); itKey != posKeys.end(); ++itKey, ++i )
 				{
 					if ( i == 0 )
 						continue;
@@ -952,7 +952,7 @@ void CScriptCameraState::Draw( CPaintDC *pPaintDC )
 
 	int i = 0;
 	//
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
 	{
 		// draw camera
 		CVec3 vEyePos(it->vPosition);
@@ -992,7 +992,7 @@ void CScriptCameraState::PostDraw( CPaintDC *pPaintDC )
 	if ( !bDrawMarkers )
 		return;
 
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it )
 	{
 		// draw label
 		CVec3 vEyePos(it->vPosition);
@@ -1114,7 +1114,7 @@ void CScriptCameraState::GetDBData()
 		if ( dialogData.nCurrentCamera >= GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() )
 			dialogData.nCurrentCamera = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() - 1;
 
-		for ( vector<NDb::SScriptCameraPlacement>::const_iterator itCamPos = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.begin();
+		for ( std::vector<NDb::SScriptCameraPlacement>::const_iterator itCamPos = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.begin();
 																															itCamPos != GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.end(); ++itCamPos )
 		{
 			const NDb::SScriptCameraPlacement &camPos = (*itCamPos);
@@ -1139,7 +1139,7 @@ void CScriptCameraState::GetDBData()
 void CScriptCameraState::GetCameraPlacementByID( NCamera::CCameraPlacement *pCamera, int nID )
 {
 	int i = 0;
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
 	{
 		if ( i == nID )
 		{
@@ -1154,7 +1154,7 @@ void CScriptCameraState::DeleteScriptCameraMarkers()
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
 		return;
-	for ( vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
+	for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 	{
 		pScene->RemoveObject( (*it).nMarkerID ); 
 	}
@@ -1173,7 +1173,7 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 	if ( !pManipulator )
 		return;
 
-	string szModelName;
+	std::string szModelName;
 	if ( !CManipulatorManager::GetParamsFromReference( "UtilityModels.CameraModel", pManipulator, 0, &szModelName, 0 ) )
 		return;
 	const NDb::SModel *pModel = NDb::Get<const NDb::SModel>( CDBID( szModelName ) );
@@ -1185,7 +1185,7 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 	if ( dialogData.scriptCameras.size() == 0 )
 		return;
 
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
 	{
 		if ( it->fFOV <= 0 )
 		{
@@ -1241,19 +1241,19 @@ void CScriptCameraState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
   
 	if ( CPtr<IEditorScene> pScene = EditorScene() )
 	{
-		list<int> sceneIDList;
+		std::list<int> sceneIDList;
 		pScene->PickObjects( sceneIDList, CVec2(rMousePoint.x, rMousePoint.y) );
 
 		if ( !sceneIDList.empty() )
 		{
-			for ( list<int>::const_iterator itObj = sceneIDList.begin(); itObj != sceneIDList.end(); ++itObj )
+			for ( std::list<int>::const_iterator itObj = sceneIDList.begin(); itObj != sceneIDList.end(); ++itObj )
 			{
 				int nObjID = (*itObj);
 				if ( (dialogData.nCurrentCamera != -1) && (cameraMarkers.size() > dialogData.nCurrentCamera) )
 					if ( cameraMarkers[dialogData.nCurrentCamera].nMarkerID == nObjID )
 						continue;
 
-				for ( vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
+				for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 				{
 					if ( (*it).nMarkerID == nObjID )
 					{
@@ -1279,16 +1279,16 @@ void CScriptCameraState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 
 	if ( CPtr<IEditorScene> pScene = EditorScene() )
 	{
-		list<int> sceneIDList;
+		std::list<int> sceneIDList;
 		pScene->PickObjects( sceneIDList, CVec2(rMousePoint.x, rMousePoint.y) );
 
 		if ( !sceneIDList.empty() )
 		{
-			for ( list<int>::const_iterator itObj = sceneIDList.begin(); itObj != sceneIDList.end(); ++itObj )
+			for ( std::list<int>::const_iterator itObj = sceneIDList.begin(); itObj != sceneIDList.end(); ++itObj )
 			{
 				int nObjID = (*itObj);
 
-				for ( vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
+				for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 				{
 					if ( (*it).nMarkerID == nObjID )
 					{
@@ -1406,7 +1406,7 @@ int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) c
 	NI_VERIFY( (nMovieID >= 0)  && (nMovieID < moviesData.scriptMoviesData.scriptMovieSequences.size()), "Error getting movie", return -1 )
 
 	const NDb::SScriptMovieSequence &movie = moviesData.scriptMoviesData.scriptMovieSequences[nMovieID];
-	for ( vector<NDb::SScriptMovieKeyPos>::const_iterator itKey = movie.posKeys.begin(); itKey != movie.posKeys.end(); ++itKey )
+	for ( std::vector<NDb::SScriptMovieKeyPos>::const_iterator itKey = movie.posKeys.begin(); itKey != movie.posKeys.end(); ++itKey )
   {
 		if ( fabs(itKey->fStartTime - fTime) <= DEF_SEL_RAD )
 			return itKey->nPositionIndex;

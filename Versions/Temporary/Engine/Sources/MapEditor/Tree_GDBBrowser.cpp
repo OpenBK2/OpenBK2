@@ -58,7 +58,7 @@ bool CTreeGDBBrowser::CanLoad()
 			const EGDBOType nType = GetTreeItemType( hFocusedItem );
 			if ( nType == GDBO_OBJECT )
 			{
-				string szLocalObjectTypeName = GetObjectSet().szObjectTypeName;
+				std::string szLocalObjectTypeName = GetObjectSet().szObjectTypeName;
 				//
 				return ( Singleton<IEditorContainer>()->CanCreate( szLocalObjectTypeName ) ||
 								 ( Singleton<IEditorContainer>()->GetActiveEditor() != 0 ) );
@@ -69,7 +69,7 @@ bool CTreeGDBBrowser::CanLoad()
 }
 
 
-bool CTreeGDBBrowser::GetLoadContextMenuLabel( string *pszLabel )
+bool CTreeGDBBrowser::GetLoadContextMenuLabel( std::string *pszLabel )
 {
 	if ( pszLabel )
 	{
@@ -81,7 +81,7 @@ bool CTreeGDBBrowser::GetLoadContextMenuLabel( string *pszLabel )
 }
 
 
-bool CTreeGDBBrowser::GetSaveHeaderWidthLabel( string *pszLabel )
+bool CTreeGDBBrowser::GetSaveHeaderWidthLabel( std::string *pszLabel )
 {
 	if ( pszLabel )
 	{

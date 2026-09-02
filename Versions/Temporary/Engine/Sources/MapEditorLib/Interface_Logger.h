@@ -7,9 +7,9 @@ namespace NLog
 	struct SLogBuffer
 	{
 		ELogOutputType eLogOutputType;
-		string szText;
+		std::string szText;
 	};
-	typedef list<SLogBuffer> CLogBufferList;
+	typedef std::list<SLogBuffer> CLogBufferList;
 	//
 	struct ILoggerSink : public CObjectBase
 	{

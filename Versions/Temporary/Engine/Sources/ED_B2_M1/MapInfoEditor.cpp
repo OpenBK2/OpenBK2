@@ -113,7 +113,7 @@ void CMapInfoEditor::CreateControls()
 	}
 
 	// создаем minimap docking window
-	//const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+	//const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
 	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MiniMap", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.2f, 265 ) )
@@ -489,7 +489,7 @@ void CMapInfoEditor::DestroyControls()
 	wndShortcutBar.DestroyWindow();
 
 	// разрушаем minimap docking window
-	const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	if ( bShowMiniMap )
 	{
@@ -1077,7 +1077,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 
 void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo )
 {
-	string szControllerTemporaryLabel;
+	std::string szControllerTemporaryLabel;
 	pObjectController->GetTemporaryLabel( &szControllerTemporaryLabel );
 	if ( szControllerTemporaryLabel == CMapInfoController::TEMPORARY_LABEL )
 	{
@@ -1498,19 +1498,19 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		GetViewManipulator()->GetNameList( &manipulatorNameMap );
 		//
 		char pPostfix[0xFFF];
-		string szPostfix;
+		std::string szPostfix;
 		//
-		const string szPlayersLabel				= "Players";
-		const string szObjectsLabel				= "Objects";
-		const string szBridgesLabel				= "Bridges";
-		const string szEntrenchmentsLabel	= "Entrenchments";
-		const string szDirectionLabel			= "Dir";
-		const string szPositionLabel			= "Pos";
-		const string szLinkLabel					= "Link";
-		const string szPlayerLabel				= "Player";
-		const string szFrameIndexLabel		= "FrameIndex";
-		const string szSpotsLabel					= "Spots";
-		const string szStartCommandLabel	= "startCommandsList";
+		const std::string szPlayersLabel				= "Players";
+		const std::string szObjectsLabel				= "Objects";
+		const std::string szBridgesLabel				= "Bridges";
+		const std::string szEntrenchmentsLabel	= "Entrenchments";
+		const std::string szDirectionLabel			= "Dir";
+		const std::string szPositionLabel			= "Pos";
+		const std::string szLinkLabel					= "Link";
+		const std::string szPlayerLabel				= "Player";
+		const std::string szFrameIndexLabel		= "FrameIndex";
+		const std::string szSpotsLabel					= "Spots";
+		const std::string szStartCommandLabel	= "startCommandsList";
 		//
 		bool bUpdatePlayerList = false;
 		bool bUpdateStartCommandList = false;
@@ -1547,7 +1547,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			//
 			for ( IManipulator::CNameMap::const_iterator posName = nameMap.begin(); posName != nameMap.end(); ++posName )
 			{
-				string szName = posName->first;
+				std::string szName = posName->first;
 				//
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): type: %d, name: <%s>", posUndoData->eType, szName.c_str() );
 				if ( szName == szPlayersLabel )
@@ -1789,7 +1789,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				{
 					changedObjectList.erase( posControllerChangeInfo );
 				}
-				//const string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				//const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, pManipulator, true );
 				objectInfoCollector.linkIDCollector.LockID( nLinkID );
 				objectInfoCollector.linkIDToIndexCollector.Insert( nLinkID, *itIndex, true );
@@ -1804,9 +1804,9 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map object %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
 					continue;				
 				}
-				const string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
-				string szRPGStatsTypeName;
-				string szRPGStatsName;
+				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				std::string szRPGStatsTypeName;
+				std::string szRPGStatsName;
 				CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
@@ -1887,7 +1887,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &objectList, *itIndex );
 			}
 			removedObjectBackList.clear();
-			list<int> nObjectIDToRemoveList;
+			std::list<int> nObjectIDToRemoveList;
 			for ( NMapInfoEditor::CIndicesList::iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
 			{
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, 0, true );
@@ -1897,7 +1897,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				}
 			}
 			// Удаляем объекты
-			for ( list<int>::iterator itObjectNameToRemove = nObjectIDToRemoveList.begin(); itObjectNameToRemove != nObjectIDToRemoveList.end(); ++itObjectNameToRemove )
+			for ( std::list<int>::iterator itObjectNameToRemove = nObjectIDToRemoveList.begin(); itObjectNameToRemove != nObjectIDToRemoveList.end(); ++itObjectNameToRemove )
 			{
 				if ( const NMapInfoEditor::SObjectInfo* pObjectInfo = objectInfoCollector.GetObjectInfoByLinkID( *itObjectNameToRemove ) )
 				{
@@ -1931,7 +1931,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				{
 					changedSpotList.erase( posControllerChangeInfo );
 				}
-				//const string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				//const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, pManipulator, false );
 				objectInfoCollector.linkIDCollector.LockID( nLinkID );
 				objectInfoCollector.spotIDToIndexCollector.Insert( nLinkID, *itIndex, true );
@@ -1946,9 +1946,9 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map spot %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
 					continue;				
 				}
-				const string szSpotPrefix = StrFmt( "Spots.[%d]", *itIndex );
-				string szRPGStatsTypeName;
-				string szRPGStatsName;
+				const std::string szSpotPrefix = StrFmt( "Spots.[%d]", *itIndex );
+				std::string szRPGStatsTypeName;
+				std::string szRPGStatsName;
 				CManipulatorManager::GetParamsFromReference( szSpotPrefix + ".Descriptor", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
@@ -1963,7 +1963,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( CDBID( szRPGStatsName ) ) );
 				terrainSpotInstance.nSpotID = posSpotIndexToLinkID->second;
 				terrainSpotInstance.points = spotSquare;
-				//vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.begin() + *itIndex, terrainSpotInfoInstance );
+				//std::vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.begin() + *itIndex, terrainSpotInfoInstance );
 				pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
 				//
 				NMapInfoEditor::SSpotLoadInfo spotLoadInfo;
@@ -2251,10 +2251,10 @@ void CMapInfoEditor::ApplyViewFilter()
 		return;
 
 	// получить idшники типов объектов, которые должны быть скрыты фильтром
-	std::unordered_map<string,bool> filterSettings;
+	std::unordered_map<std::string,bool> filterSettings;
 	for ( int t = 0; t < editorSettings.viewFilterData.objTypeFilter.size(); ++t )
 	{
-		string szTypeName = editorSettings.viewFilterData.objTypeFilter[t].szObjTypeName;
+		std::string szTypeName = editorSettings.viewFilterData.objTypeFilter[t].szObjTypeName;
 		if ( szTypeName.empty()  )
 		{
 			continue;
@@ -2282,8 +2282,8 @@ void CMapInfoEditor::ApplyViewFilter()
 				continue;
 			NMapInfoEditor::SObjectInfo::SMapInfoElement *pElement = &(itElement->second);
 			//
-			const string szElementTypeName = pElement->szRPGStatsTypeName;
-			std::unordered_map<string,bool>::iterator itFilter = filterSettings.find( szElementTypeName );
+			const std::string szElementTypeName = pElement->szRPGStatsTypeName;
+			std::unordered_map<std::string,bool>::iterator itFilter = filterSettings.find( szElementTypeName );
 			if ( itFilter == filterSettings.end() || itFilter->second == true )
 				pEditorScene->ShowObject( nSceneID, true );
 			else
@@ -2299,7 +2299,7 @@ void CMapInfoEditor::RunGame()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true );
 	/**
-	const string szStartFolder = Singleton<IUserDataContainer>()->Get()->szStartFolder;
+	const std::string szStartFolder = Singleton<IUserDataContainer>()->Get()->szStartFolder;
 	//
 	SConfigFile configFile;	
 	configFile.Load( szStartFolder + GAME_CFG_FILE_PATH, STREAM_PATH_ABSOLUTE );
@@ -2308,7 +2308,7 @@ void CMapInfoEditor::RunGame()
 	configFile.AddKeyword( "map", std::to_string(  GetObjectSet().objectNameSet.begin()->first ) );
 	configFile.Save( szStartFolder + GAME_CFG_NEW_FILE_PATH, STREAM_PATH_ABSOLUTE );
 	//
-	const string szRunGameBatFilePath = szStartFolder + RUN_GAME_BAT_FILE_PATH;
+	const std::string szRunGameBatFilePath = szStartFolder + RUN_GAME_BAT_FILE_PATH;
 	::ShellExecute( 0, "open", szRunGameBatFilePath.c_str(), NULL, NULL, SW_SHOWNORMAL );
 	/**/
 	/**
@@ -2331,7 +2331,7 @@ void CMapInfoEditor::RunGame()
 		EditorScene()->SetSceneConsts( pEditorSceneConsts );
 	Camera()->Init();
 	//
-	const wstring wszCommand = NStr::ToUnicode( StrFmt( "map %d", GetObjectSet().objectNameSet.begin()->first ) );
+	const std::wstring wszCommand = NStr::ToUnicode( StrFmt( "map %d", GetObjectSet().objectNameSet.begin()->first ) );
 	NGlobal::ProcessCommand( wszCommand );
 	/**/
 }

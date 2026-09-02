@@ -179,7 +179,7 @@ LRESULT CPCStringMultibuttonEditor::OnMessageEditorButtonChange( WPARAM wParam, 
 
 // CPCItemEditor
 
-bool CPCStringMultibuttonEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCStringMultibuttonEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -300,7 +300,7 @@ void CPCStringMultibuttonEditor::GetValue( CVariant *pValue )
 
 	CString strText;
 	GetWindowText( strText );
-	*pValue = string( strText );
+	*pValue = std::string( strText );
 }
 
 

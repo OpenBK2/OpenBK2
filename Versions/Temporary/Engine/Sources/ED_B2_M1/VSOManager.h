@@ -10,7 +10,7 @@
 
 #include <zconf.h>
 
-typedef vector<NDb::SVSOPoint> CVSOPointList;
+typedef std::vector<NDb::SVSOPoint> CVSOPointList;
 //
 class CVSOManager
 {
@@ -50,7 +50,7 @@ private:
 
 		bool CreateFromDirection( const CVec2 &vBegin, const CVec2 &vEnd, float _fRadius, EClassifyRotation _classifyRotation, bool bBegin = true );
 		bool GetTangentPoint( const CVec2 &v, CVec2 *pTangentPoint ) const;
-		bool GetPointsSequence( const CVec2 &v, int nSegmentsCount, list<CVec2> *pPointsSequence ) const;
+		bool GetPointsSequence( const CVec2 &v, int nSegmentsCount, std::list<CVec2> *pPointsSequence ) const;
 	};
 	//
 public:
@@ -76,7 +76,7 @@ public:
 				return *this;
 			}	
 		};
-		typedef list<SKeyPoint> CKeyPointList;
+		typedef std::list<SKeyPoint> CKeyPointList;
 
 		CKeyPointList keyPointList;
 
@@ -162,19 +162,19 @@ public:
 			return *this;
 		}
 	};
-	typedef list<SVSOSelectionParam> CVSOSelectionParamList;
+	typedef std::list<SVSOSelectionParam> CVSOSelectionParamList;
 
 private:
-	static void SmoothCurve( const vector<int> &rKeyPointList, vector<float> *pPointList, bool bCircle, bool bComplete );
+	static void SmoothCurve( const std::vector<int> &rKeyPointList, std::vector<float> *pPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveWidth( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveHeight( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveOpacity( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 
 	static int SliceSpline( const class CAnalyticBSpline2 &rSpline,
-													list<NDb::SVSOPoint> *pPoints,
+													std::list<NDb::SVSOPoint> *pPoints,
 													float *pfRest,
 													const float fStep );
-	static void SampleCurve( const vector<CVec3> &rControlPointList,
+	static void SampleCurve( const std::vector<CVec3> &rControlPointList,
 													 CVSOPointList *pVSOPointList,
 													 float fStep, 
 													 float fWidth,
@@ -183,10 +183,10 @@ private:
 													 bool bCircle,
 													 bool bComplete );
 
-	static bool GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, list<CVec2> *pPointsSequence );
+	static bool GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, std::list<CVec2> *pPointsSequence );
 	static bool GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, float fRadius0, int nSegmentsCount0, bool bBegin0,
 																 const CVec2 &vBegin1, const CVec2 &vEnd1, float fRadius1, int nSegmentsCount1, bool bBegin1,
-																 list<CVec2> *pPointsSequence );
+																 std::list<CVec2> *pPointsSequence );
 
 	//
 public:
@@ -217,15 +217,15 @@ public:
 											bool bComplete );
 	static bool MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRect<float> &rRect, float fStepOut, bool bBothEdges, bool bFixedStepOut );
 	//
-	static bool GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static bool GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static void GetBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static void GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID );
+	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth );
+	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
+	static void GetBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
+	static void GetCragBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID );
 	//
 	static bool FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegin0,
 												const CVec2 &vBegin1, const CVec2 &vEnd1, bool bBegin1,
 												float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance, 
-												list<CVec2> *pPointsSequence, const vector<vector<CVec2> > &rLockedPolygons, list<CVec2> *pUsedPoints,
+												std::list<CVec2> *pPointsSequence, const std::vector<std::vector<CVec2> > &rLockedPolygons, std::list<CVec2> *pUsedPoints,
 												int nDepth = 0 );
 	//не симметричный метод, первый VSO продолжается на две точки по отношению ко второму с соблюдением ширины
 	//на обоих концах проставляется нулевая opacity
@@ -233,7 +233,7 @@ public:
 	//вернуть первую не нулевую высоту
 	static float GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst );
 	// Необходим для генерации дорог ( используется не правильно )	
-	static string GetDescriptionName( const string &rszBeginVSODesc, const string &rszEndVSODesc )
+	static std::string GetDescriptionName( const std::string &rszBeginVSODesc, const std::string &rszEndVSODesc )
 	{
 		return rszBeginVSODesc;
 	}

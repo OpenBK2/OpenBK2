@@ -67,7 +67,7 @@ void CDWLog::OnSize( unsigned nType, int cx, int cy )
 }
 
 
-void CDWLog::Log( ELogOutputType eLogOutputType, const string &szText )
+void CDWLog::Log( ELogOutputType eLogOutputType, const std::string &szText )
 {
 	if ( !szText.empty() )
 	{

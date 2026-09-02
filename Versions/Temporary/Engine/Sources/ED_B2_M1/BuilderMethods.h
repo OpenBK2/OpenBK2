@@ -2,8 +2,8 @@
 
 struct IManipulator;
 
-bool CheckStringValue( string *pszDescription, const string &szValueName, IManipulator *pBuilderMan );
-bool CheckIntValue( string *pszDescription, const string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan );
+bool CheckStringValue( std::string *pszDescription, const std::string &szValueName, IManipulator *pBuilderMan );
+bool CheckIntValue( std::string *pszDescription, const std::string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan );
 
 
 

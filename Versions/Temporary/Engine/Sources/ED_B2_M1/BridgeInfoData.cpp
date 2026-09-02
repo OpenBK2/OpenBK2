@@ -21,15 +21,15 @@ namespace NMapInfoEditor
 		// Устанавливаем общие параметры
 		vPosition = VNULL3;
 		fDirection = 0.0f;
-		const string szBridgePrefix = StrFmt( "Bridges.[%d]", pObjectLoadInfo->nObjectIndex );
+		const std::string szBridgePrefix = StrFmt( "Bridges.[%d]", pObjectLoadInfo->nObjectIndex );
 		nBridgeID = pObjectInfoCollector->bridgeIDCollector.LockID();
 		if ( nBridgeID == INVALID_NODE_ID )
 		{
 			return false;
 		}
 		//
-		vector<int> bridgeElementList;
-		CManipulatorManager::GetArray<vector<int>, int>( &bridgeElementList,  pManipulator, szBridgePrefix + ".data" );
+		std::vector<int> bridgeElementList;
+		CManipulatorManager::GetArray<std::vector<int>, int>( &bridgeElementList,  pManipulator, szBridgePrefix + ".data" );
 		if ( bridgeElementList.size() < 2 )
 		{
 			return false;
@@ -46,11 +46,11 @@ namespace NMapInfoEditor
 				NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Invalid index for LinkID in bridge: %d\n", nLinkID ) );
 				continue;
 			}
-			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 			// создаем SMapInfoElement и заполняем его данными
 			SObjectInfo::SMapInfoElement mapInfoElement;
-			string szRPGStatsTypeName;
-			string szRPGStatsName;
+			std::string szRPGStatsTypeName;
+			std::string szRPGStatsName;
 			bResult = bResult && CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 			mapInfoElement.szRPGStatsTypeName = szRPGStatsTypeName;
 			mapInfoElement.rpgStatsDBID = CDBID( szRPGStatsName );
@@ -127,15 +127,15 @@ namespace NMapInfoEditor
 		// Устанавливаем общие параметры
 		vPosition = VNULL3;
 		fDirection = pBridgeCreateInfo->fDirection;
-		for ( list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
+		for ( std::list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
 		{
 			vPosition += *itBridgeElementCenterPoint;
 		}
 		vPosition /= ( 1.0f * nBridgeElementCount );
 		// Добавляем объекты базы
 		int nBridgeElementIndex = 0;
-		list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
-		for ( list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
+		std::list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
+		for ( std::list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
 		{
 			int nObjectIndex = INVALID_NODE_ID;
 			CManipulatorManager::GetValue( &nObjectIndex, pManipulator, "Objects" );
@@ -168,7 +168,7 @@ namespace NMapInfoEditor
 			//
 			mapInfoElement.FixInvalidPos( pObjectInfoCollector->mapSize, vPosition );
 			//
-			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 			// Insert
 			bool bResult = pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 			//Change
@@ -197,9 +197,9 @@ namespace NMapInfoEditor
 		//Добавляем информацию в секцию мостов
 		int nBridgeIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nBridgeIndex, pManipulator, "Bridges" );
-		const string szBridgePrefix = StrFmt( "Bridges.[%d]", nBridgeIndex );
+		const std::string szBridgePrefix = StrFmt( "Bridges.[%d]", nBridgeIndex );
 		bool bResult = pObjectController->AddInsertOperation( "Bridges", NODE_ADD_INDEX, pManipulator );
-		bResult = bResult && pObjectController->AddChangeArrayOperation<list<int>, int>( szBridgePrefix + ".data", bridgeLinkIDList, pManipulator );
+		bResult = bResult && pObjectController->AddChangeArrayOperation<std::list<int>, int>( szBridgePrefix + ".data", bridgeLinkIDList, pManipulator );
 		if ( bResult )
 		{
 			nBridgeID = pObjectInfoCollector->bridgeIDCollector.LockID();
@@ -357,16 +357,16 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
+		std::list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			bridgeLinkIDList.push_back( itMapInfoElement->first );
 		}
 		int nBridgeIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nBridgeIndex, pManipulator, "Bridges" );
-		const string szBridgePrefix = StrFmt( "Bridges.[%d]", nBridgeIndex );
+		const std::string szBridgePrefix = StrFmt( "Bridges.[%d]", nBridgeIndex );
 		bool bResult = pObjectController->AddInsertOperation( "Bridges", NODE_ADD_INDEX, pManipulator );
-		bResult = bResult && pObjectController->AddChangeArrayOperation<list<int>, int>( szBridgePrefix + ".data", bridgeLinkIDList, pManipulator );
+		bResult = bResult && pObjectController->AddChangeArrayOperation<std::list<int>, int>( szBridgePrefix + ".data", bridgeLinkIDList, pManipulator );
 		if ( bResult )
 		{
 			nBridgeID = pObjectInfoCollector->bridgeIDCollector.LockID();

@@ -14,8 +14,8 @@ REGISTER_EXPORTER_IN_DLL( MusicTrack, CMusicTrackExporter )
 
 
 EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
-																							 const string &rszObjectTypeName,
-																							 const string &rszObjectName,
+																							 const std::string &rszObjectTypeName,
+																							 const std::string &rszObjectName,
 																							 bool bForce,
 																							 EXPORT_TYPE exportType )
 {
@@ -39,10 +39,10 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
 	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
-	string szSoundPath;
+	std::string szSoundPath;
 	if ( !CManipulatorManager::GetValue( &szSoundPath, pManipulator, "SoundPath" ) || szSoundPath.empty() || szSoundPath == " " )
 	{
-		const string szError = StrFmt( "Can't get sound path or sound path empty for MusicTrack object \"%s\"\n", rszObjectName.c_str() );
+		const std::string szError = StrFmt( "Can't get sound path or sound path empty for MusicTrack object \"%s\"\n", rszObjectName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
@@ -52,10 +52,10 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
 	{
 		return ER_FAIL;
 	}
-	const string szSourceFolder = pUserData->constUserData.szExportSourceFolder;
-	const string szDestinationFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
-	string szSource = szSourceFolder + szSoundPath;
-	string szDestination = szDestinationFolder + szSoundPath;
+	const std::string szSourceFolder = pUserData->constUserData.szExportSourceFolder;
+	const std::string szDestinationFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
+	std::string szSource = szSourceFolder + szSoundPath;
+	std::string szDestination = szDestinationFolder + szSoundPath;
 	//
 	// check for source and destination times if not forced mode
 	if ( (szSource == szDestination) || CheckFilesUpdated( szSource, szDestination, bForce ) )

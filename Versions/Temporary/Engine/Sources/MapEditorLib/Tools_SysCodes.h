@@ -6,7 +6,7 @@ class CWMMnemonicCodes : public CMnemonicsCollector<unsigned>
 {
 	public:
 	CWMMnemonicCodes();
-	string Get( unsigned nMessage );
+	std::string Get( unsigned nMessage );
 };
 
 

@@ -107,8 +107,8 @@ protected:
 	static const uint32_t CONTROL_POINT_COLOR;
 	static const uint32_t CONTROL_LINE_COLOR;
 	//
-	typedef vector<unsigned> CPolygonIDList;
-	typedef vector<CVec3> CControlPointList;
+	typedef std::vector<unsigned> CPolygonIDList;
+	typedef std::vector<CVec3> CControlPointList;
 
 public:
 	enum EUpdateType

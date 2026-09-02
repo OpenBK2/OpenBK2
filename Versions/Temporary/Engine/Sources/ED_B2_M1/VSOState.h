@@ -136,7 +136,7 @@ private:
 
 protected:
 	//
-	typedef vector<int> CVSOIDList;
+	typedef std::vector<int> CVSOIDList;
 
 public:
 	enum EUpdateType
@@ -264,7 +264,7 @@ protected:
 	// Подготовить данные для вставки
 	virtual void PrepareInsertVSO() = 0;
 	// Добавить VSO	( возвращает nVSOID добавленного VSO
-	virtual int InsertVSO( const vector<CVec3> &rControlPointList ) = 0;
+	virtual int InsertVSO( const std::vector<CVec3> &rControlPointList ) = 0;
 	// Удалить VSO
 	virtual void RemoveVSO( int nVSOID ) = 0;
 

@@ -23,8 +23,8 @@ private:
 	{
 		bool bFilled;																		// Сигнализирует о заполненности информации
 
-		string szName;																	// Короткое имя свойства
-		string szType;																	// Имя типа (если есть)
+		std::string szName;																	// Короткое имя свойства
+		std::string szType;																	// Имя типа (если есть)
 		unsigned nID;																				// ID (если есть)
 		bool bHidden;																		// Скрытое ли поле?
 
@@ -43,58 +43,58 @@ private:
 			return *this;
 		}	
 	};
-	typedef list<string> CPropertyList;								// для хранения порядка следования
-	typedef std::unordered_map<string, SProperty> CPropertyMap;	// для хранения данных
-	typedef std::unordered_map<int, string> CPropertyIDMap;			// для хранения данных
+	typedef std::list<std::string> CPropertyList;								// для хранения порядка следования
+	typedef std::unordered_map<std::string, SProperty> CPropertyMap;	// для хранения данных
+	typedef std::unordered_map<int, std::string> CPropertyIDMap;			// для хранения данных
 
 	EMaskMode maskMode;																// Тип путей воспринимаемых редактором
 	CPropertyList propertyList;												// Информация по последовательности полей
 	CPropertyMap propertyMap;													// Закешированная информация по полям
 	CPropertyIDMap propertyIDMap;											// Список ID объектов (заполняется только не для пустых объектов)
-	string szMask;																		// Путь добавляемый к элементам (с разделителем)
+	std::string szMask;																		// Путь добавляемый к элементам (с разделителем)
 	CPtr<IManipulator> pTargetManipulator;						// Манипулятор, который мы маскируем
 
 	// Перевести полученное имя в оригинальное в соответствии в установленным методом
-	bool SetToOriginalName( string *pszName ) const;
+	bool SetToOriginalName( std::string *pszName ) const;
 	// Перевести полученное имя в короткое в соответствии в установленным методом
-	bool SetToMaskName( string *pszName ) const;
+	bool SetToMaskName( std::string *pszName ) const;
 
 	CMaskManipulator() {}
 public:
 	// Конструирование манипулятора 
-	CMaskManipulator( const string& rszMask,  IManipulator *_pTargetManipulator, EMaskMode _maskMode );
+	CMaskManipulator( const std::string& rszMask,  IManipulator *_pTargetManipulator, EMaskMode _maskMode );
 	// Добавление имен ( имена могут быть длинными, а могут быть короткими, по усмотрению.
-	bool AddName( const string &rszName, bool bFilled, const string& rszType, unsigned nID, bool bHidden );
+	bool AddName( const std::string &rszName, bool bFilled, const std::string& rszType, unsigned nID, bool bHidden );
 	// Установление типа работы (как воспринимаются все имена в методах IManipulator), возвращает старый тип работы
 	inline EMaskMode SetMode( EMaskMode newMaskMode ) { const EMaskMode oldMaskMode = maskMode; maskMode = newMaskMode; return oldMaskMode; }
 	// Получение типа работы (как воспринимаются все имена в методах IManipulator)
 	inline EMaskMode GetMode() const { return maskMode; }
 	// Установление пути
-	inline void SetMask( const string &rszMask )
+	inline void SetMask( const std::string &rszMask )
 	{ 
 		//DebugTrace( "CMaskManipulator::SetMask(): <%s>", rszMask.c_str() );
 		szMask = rszMask;
 	}
 	// Получение пути
-	inline void GetMask( string *pszMask ) const { ( *pszMask ) = szMask; }
+	inline void GetMask( std::string *pszMask ) const { ( *pszMask ) = szMask; }
 
 	// IManipulator
 	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc* GetDesc( const string &szName ) const;
-	bool GetType( const string &rszName, string *pszType ) const;
-	unsigned GetID( const string &rszName ) const;
-	bool GetName( unsigned nID, string *pszName ) const;
+	const SIteratorDesc* GetDesc( const std::string &szName ) const;
+	bool GetType( const std::string &rszName, std::string *pszType ) const;
+	unsigned GetID( const std::string &rszName ) const;
+	bool GetName( unsigned nID, std::string *pszName ) const;
 	//
-	bool InsertNode( const string &szName, int nNodeIndex = NODE_ADD_INDEX );
-	bool RemoveNode( const string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const string &szName, int nNodeID ) { return false; };
-	bool RenameNode( const string &szName, const string &rszNewName );
+	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX );
+	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
+	bool RemoveNodeByID( const std::string &szName, int nNodeID ) { return false; };
+	bool RenameNode( const std::string &szName, const std::string &rszNewName );
 	//
-	bool GetValue( const string &szName, CVariant *pValue ) const;
-	bool SetValue( const string &szName, const CVariant &value );
-	bool CheckValue( const string &szName, const CVariant &value, bool *pResult ) const;
+	bool GetValue( const std::string &szName, CVariant *pValue ) const;
+	bool SetValue( const std::string &szName, const CVariant &value );
+	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const;
 	NDb::IObjMan* GetObjMan();
-	bool IsNameExists( const string &rszName ) const;
+	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( IManipulator::CNameMap *pNameMap ) const;
 };
 
@@ -114,8 +114,8 @@ public:
 	bool Next();
 	bool IsEnd() const;
 	const SIteratorDesc* GetDesc() const;
-	bool GetName( string *pszName ) const;
-	bool GetType( string *pszType ) const;
+	bool GetName( std::string *pszName ) const;
+	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;
 	bool IsFolder() const { return false; }
 };

@@ -4,7 +4,7 @@
 
 namespace NMapInfoEditor
 {
-	typedef list<CVec3> CBridgeCenterPointList;
+	typedef std::list<CVec3> CBridgeCenterPointList;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SBridgeCreateInfo : public SObjectCreateInfo
@@ -57,7 +57,7 @@ namespace NMapInfoEditor
 		bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
 		bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
-		void GetMask( string *pszMask ) {}
+		void GetMask( std::string *pszMask ) {}
 		bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		void Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );

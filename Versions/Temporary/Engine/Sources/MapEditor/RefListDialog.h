@@ -10,20 +10,20 @@ class CRefListDialog : public CResizeDialog
 {
 	struct SReferenceObject
 	{
-		string szTypeName;
-		string szObjectName;
+		std::string szTypeName;
+		std::string szObjectName;
 	};
 
 	CEdit fieldsCtrl;
 	CListCtrl objectsCtrl;
-	string szTargetTypeName;
-	string szTargetName;
-	string szTargetFullName;
-	vector<SReferenceObject> referenceObjects;
+	std::string szTargetTypeName;
+	std::string szTargetName;
+	std::string szTargetFullName;
+	std::vector<SReferenceObject> referenceObjects;
 	CPtr<IManipulator> pCurrentManipulator;
 	int nSelectedItem;
-	list<string> currentFields;
-	list<string> *pReferenceObjectsList;
+	std::list<std::string> currentFields;
+	std::list<std::string> *pReferenceObjectsList;
 
 	void BuildReferenceObjectsList();
 	void BuildFieldsListForObject( const SReferenceObject &object );
@@ -38,7 +38,7 @@ protected:
 	afx_msg void OnClearAll();
 	//
 	// CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CRefListDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CRefListDialog"; }
 	int GetMinimumXDimension() { return 300; }
 	int GetMinimumYDimension() { return 125; }
 	bool IsDrawGripper() { return true; }
@@ -48,7 +48,7 @@ public:
 	
 	CRefListDialog( CWnd* pParent = NULL );
 
-	void SetData( const string &szTypeName, const string &szName, list<string> *pReferenceObjectsList );
+	void SetData( const std::string &szTypeName, const std::string &szName, std::list<std::string> *pReferenceObjectsList );
 	
 	DECLARE_MESSAGE_MAP()
 };

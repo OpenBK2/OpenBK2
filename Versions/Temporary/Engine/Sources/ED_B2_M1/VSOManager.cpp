@@ -230,7 +230,7 @@ bool CVSOManager::SVSOCircle::GetTangentPoint( const CVec2 &v, CVec2 *pTangentPo
 }
 
 
-bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCount, list<CVec2> *pPointsSequence ) const
+bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCount, std::list<CVec2> *pPointsSequence ) const
 {
 	NI_ASSERT( pPointsSequence != 0,
 						 "CVSOManager::SVSOCircle::GetPointsSequence(): Wrong parameter: pPointsSequence == 0" );
@@ -272,7 +272,7 @@ bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCo
 // static methods
 
 int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
-															list<NDb::SVSOPoint> *pPoints,
+															std::list<NDb::SVSOPoint> *pPoints,
 															float *pfRest,
 															const float fStep )
 {
@@ -319,7 +319,7 @@ int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 }
 
 
-void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
+void CVSOManager::SampleCurve( const std::vector<CVec3> &rControlPointList,
 															 CVSOPointList *pVSOPointList,
 															 float fStep, 
 															 float fWidth,
@@ -334,11 +334,11 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SampleCurve(): Wrong parameter: pVSOPointList == 0" );
 
 	//collect spline points
-	vector<CVec3> splinePointList;
+	std::vector<CVec3> splinePointList;
 	if ( bCircle && ( rControlPointList.size() > 2 ) )
 	{
 		splinePointList.push_back( rControlPointList[rControlPointList.size() - 1] );
-		for( vector<CVec3>::const_iterator itControlPoint = rControlPointList.begin(); itControlPoint != rControlPointList.end(); ++itControlPoint )
+		for( std::vector<CVec3>::const_iterator itControlPoint = rControlPointList.begin(); itControlPoint != rControlPointList.end(); ++itControlPoint )
 		{
 			splinePointList.push_back( *itControlPoint );
 		}
@@ -348,7 +348,7 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 	{
 		splinePointList.push_back( rControlPointList[0] - 
 															( rControlPointList[1] - rControlPointList[0] ) );
-		for( vector<CVec3>::const_iterator itControlPoint = rControlPointList.begin(); itControlPoint != rControlPointList.end(); ++itControlPoint )
+		for( std::vector<CVec3>::const_iterator itControlPoint = rControlPointList.begin(); itControlPoint != rControlPointList.end(); ++itControlPoint )
 		{
 			splinePointList.push_back( *itControlPoint );
 		}
@@ -358,7 +358,7 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 	//form spline points
 	const float fSplineStep = fStep;
 	float fRestLength = fSplineStep - 1e-8f;
-	list<NDb::SVSOPoint> vsoPointList;
+	std::list<NDb::SVSOPoint> vsoPointList;
 	CAnalyticBSpline2 spline;
 	int nCounter = 0;
 	//
@@ -374,18 +374,18 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 		nCounter += SliceSpline( spline, &vsoPointList, &fRestLength, fSplineStep );
 		//
 		vsoPointList.back().bKeyPoint = false;
-		list<NDb::SVSOPoint>::iterator posVSOPoint = vsoPointList.insert( vsoPointList.end(), vsoPointList.front() );
+		std::list<NDb::SVSOPoint>::iterator posVSOPoint = vsoPointList.insert( vsoPointList.end(), vsoPointList.front() );
 		posVSOPoint->bKeyPoint = false;
 	}
 	else if ( bComplete )
 	{
 		vsoPointList.back().bKeyPoint = false;
-		list<NDb::SVSOPoint>::iterator posVSOPoint = vsoPointList.insert( vsoPointList.end(), vsoPointList.back() );
+		std::list<NDb::SVSOPoint>::iterator posVSOPoint = vsoPointList.insert( vsoPointList.end(), vsoPointList.back() );
 		posVSOPoint->vPos = rControlPointList.back();
 		posVSOPoint->bKeyPoint = true;
 	}
 	//
-	for ( list<NDb::SVSOPoint>::const_iterator itVSOPoint = vsoPointList.begin(); itVSOPoint != vsoPointList.end(); ++itVSOPoint )
+	for ( std::list<NDb::SVSOPoint>::const_iterator itVSOPoint = vsoPointList.begin(); itVSOPoint != vsoPointList.end(); ++itVSOPoint )
 	{
 		CVSOPointList::iterator posVSOPoint = pVSOPointList->insert( pVSOPointList->end(), *itVSOPoint );
 		if ( posVSOPoint != pVSOPointList->end() )
@@ -402,13 +402,13 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 }
 
 
-void CVSOManager::SmoothCurve( const vector<int> &rKeyPointList, vector<float> *pPointList, bool bCircle, bool bComplete )
+void CVSOManager::SmoothCurve( const std::vector<int> &rKeyPointList, std::vector<float> *pPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pPointList != 0, "CVSOManager::SmoothCurveWidth(): pPointList == 0" );
 	
 	// form indices for spline
-	vector<float> originalPointList = ( *pPointList );
-	vector<int> indexList;
+	std::vector<float> originalPointList = ( *pPointList );
+	std::vector<int> indexList;
 	indexList.reserve( rKeyPointList.size() + 4 );
 	if ( bCircle )
 	{
@@ -497,8 +497,8 @@ void CVSOManager::SmoothCurveWidth( CVSOPointList *pVSOPointList, bool bCircle, 
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveWidth(): pVSOPointList == 0" );
 
-	vector<int> keyPointList;
-	vector<float> pointList;
+	std::vector<int> keyPointList;
+	std::vector<float> pointList;
 	pointList.reserve( pVSOPointList->size() );
 	for ( int nVSOPointIndex = 0; nVSOPointIndex < pVSOPointList->size(); ++nVSOPointIndex )
 	{
@@ -523,8 +523,8 @@ void CVSOManager::SmoothCurveHeight( CVSOPointList *pVSOPointList, bool bCircle,
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveWidth(): pVSOPointList == 0" );
 
-	vector<int> keyPointList;
-	vector<float> pointList;
+	std::vector<int> keyPointList;
+	std::vector<float> pointList;
 	pointList.reserve( pVSOPointList->size() );
 	for ( int nVSOPointIndex = 0; nVSOPointIndex < pVSOPointList->size(); ++nVSOPointIndex )
 	{
@@ -563,7 +563,7 @@ void CVSOManager::SmoothCurveOpacity( CVSOPointList *pVSOPointList, bool bCircle
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveOpacity(): pVSOPointList == 0" );
 	//
-	vector<int> keyPointList;
+	std::vector<int> keyPointList;
 	int nStartPointIndex = 0;
 	while ( nStartPointIndex < pVSOPointList->size() )
 	{
@@ -675,13 +675,13 @@ bool CVSOManager::MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRec
 	int nLastIndex = pVSO->controlPoints.size() - 1;
 	if ( nLastIndex > nFirstIndex )
 	{
-		vector<int> indices;
+		std::vector<int> indices;
 		indices.push_back( nFirstIndex );
 		if ( bBothEdges )
 		{
 			indices.push_back( nLastIndex );
 		}
-		for ( vector<int>::const_iterator itIndex = indices.begin(); itIndex < indices.end(); ++itIndex )
+		for ( std::vector<int>::const_iterator itIndex = indices.begin(); itIndex < indices.end(); ++itIndex )
 		{
 			const float fX0 = pVSO->controlPoints[*itIndex].x - rRect.minx;
 			const float fXN = rRect.maxx - pVSO->controlPoints[*itIndex].x;
@@ -725,7 +725,7 @@ bool CVSOManager::MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRec
 }
 
 
-bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth )
+bool CVSOManager::GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	NI_ASSERT( pBoundingPolygon != 0, "CVSOManager::GetBoundingPolygon(): Wrong parameter: pBoundingPolygon == 0" );
 	NI_ASSERT( ( nPointIndex >= 0 ) && ( nPointIndex < rVSOPointList.size() ),
@@ -790,7 +790,7 @@ bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOP
 }
 
 
-bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
+bool CVSOManager::GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	NI_ASSERT( pBoundingPolygon != 0, "CVSOManager::GetBoundingPolygon(): Wrong parameter: pBoundingPolygon == 0" );
 	pBoundingPolygon->clear();
@@ -838,7 +838,7 @@ bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOP
 }
 
 
-void CVSOManager::GetBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
+void CVSOManager::GetBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	if ( pBoundingPolygon == 0 )
 	{
@@ -878,7 +878,7 @@ void CVSOManager::GetBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVS
 }
 
 
-void CVSOManager::GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID )
+void CVSOManager::GetCragBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID )
 {
 	if ( pBoundingPolygon == 0 )
 	{
@@ -890,7 +890,7 @@ void CVSOManager::GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const
 		GetBoundingPolygon( pBoundingPolygon, rVSOPointList, vsoPolygonType, fRelWidth );
 		return;
 	}
-	vector<CVec3> holePointList;
+	std::vector<CVec3> holePointList;
 	if ( !EditorScene()->GetTerraManager()->GetCragPrecVerts( &holePointList, nVSOID ) )
 	{
 		GetBoundingPolygon( pBoundingPolygon, rVSOPointList, vsoPolygonType, fRelWidth );
@@ -929,7 +929,7 @@ void CVSOManager::GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const
 }
 
 
-bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, list<CVec2> *pPointsSequence )
+bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, std::list<CVec2> *pPointsSequence )
 {
 	NI_ASSERT( pPointsSequence != 0,
 						 "CVSOManager::GetPointsSequence(): Wrong parameter: pPointsSequence == 0" );
@@ -989,10 +989,10 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOC
 	}
 
 	rCircleBegin.GetPointsSequence( vBeginTangentPoint, nSegmentsCountBegin, pPointsSequence );
-	list<CVec2> endPointsSequence;
+	std::list<CVec2> endPointsSequence;
 	rCircleEnd.GetPointsSequence( vEndTangentPoint, nSegmentsCountEnd, &endPointsSequence );
 	// в обратном порядке
-	for ( list<CVec2>::const_iterator itPoint = endPointsSequence.begin(); itPoint!= endPointsSequence.end(); ++itPoint )
+	for ( std::list<CVec2>::const_iterator itPoint = endPointsSequence.begin(); itPoint!= endPointsSequence.end(); ++itPoint )
 	{
 		pPointsSequence->push_front( *itPoint );
 	}
@@ -1002,7 +1002,7 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOC
 
 bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, float fRadius0, int nSegmentsCount0, bool bBegin0,
 																		 const CVec2 &vBegin1, const CVec2 &vEnd1, float fRadius1, int nSegmentsCount1, bool bBegin1,
-																		 list<CVec2> *pPointsSequence )
+																		 std::list<CVec2> *pPointsSequence )
 {
 	NI_ASSERT( pPointsSequence != 0,
 						 "CVSOManager::GetPointsSequence(): Wrong parameter: pPointsSequence == 0" );
@@ -1017,10 +1017,10 @@ bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, f
 	circle10.CreateFromDirection( vBegin1, vEnd1, fRadius1, CR_CLOCKWISE, bBegin1 );
 	circle11.CreateFromDirection( vBegin1, vEnd1, fRadius1, CR_COUNTERCLOCKWISE, bBegin1 );
 
-	list<CVec2> road0010points;
-	list<CVec2> road0011points;
-	list<CVec2> road0110points;
-	list<CVec2> road0111points;
+	std::list<CVec2> road0010points;
+	std::list<CVec2> road0011points;
+	std::list<CVec2> road0110points;
+	std::list<CVec2> road0111points;
 
 	float fPerimeter0010 = -1.0f;
 	float fPerimeter0011 = -1.0f;
@@ -1094,44 +1094,44 @@ bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, f
 bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegin0,
 														const CVec2 &vBegin1, const CVec2 &vEnd1, bool bBegin1,
 														float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance,
-														list<CVec2> *pPointsSequence, const vector<vector<CVec2> > &rLockedPolygons, list<CVec2> *pUsedPoints,
+														std::list<CVec2> *pPointsSequence, const std::vector<std::vector<CVec2> > &rLockedPolygons, std::list<CVec2> *pUsedPoints,
 														int nDepth )
 {
 	if ( nDepth < 0 )
 	{
 		return false;
 	}
-	//list<CVec2> currentPath0;
+	//std::list<CVec2> currentPath0;
 	if ( !GetPointsSequence( vBegin0, vEnd0, fRadius, nSegmentsCount, bBegin0, vBegin1, vEnd1, fRadius, nSegmentsCount, bBegin1, pPointsSequence ) )
 	{
 		return false;
 	}
-	RandomizeEdges<list<CVec2>, CVec2>( ( *pPointsSequence ), 10, fDistance, CTPoint<float>( 0.0f, fDisturbance ), pPointsSequence, fMinEdgeLength, 32 * 16 * AI_TILE_SIZE, false );
-	UniquePolygon<list<CVec2>, CVec2>( pPointsSequence, MINIMAL_POINT_DISTANCE );
+	RandomizeEdges<std::list<CVec2>, CVec2>( ( *pPointsSequence ), 10, fDistance, CTPoint<float>( 0.0f, fDisturbance ), pPointsSequence, fMinEdgeLength, 32 * 16 * AI_TILE_SIZE, false );
+	UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, MINIMAL_POINT_DISTANCE );
 	return true;
 
 	/**
-	list<CVec2>::const_iterator itCurrentPath0 = currentPath0.begin();
-	list<CVec2>::const_iterator itCurrentPath1 = currentPath0.begin();
+	std::list<CVec2>::const_iterator itCurrentPath0 = currentPath0.begin();
+	std::list<CVec2>::const_iterator itCurrentPath1 = currentPath0.begin();
 	++itCurrentPath1;
 	while ( itCurrentPath1 != currentPath0.end() )
 	{
-		for ( vector<vector<CVec2> >::const_iterator itLockedPolygon = rLockedPolygons.begin(); itLockedPolygon != rLockedPolygons.end(); ++itLockedPolygon )
+		for ( std::vector<std::vector<CVec2> >::const_iterator itLockedPolygon = rLockedPolygons.begin(); itLockedPolygon != rLockedPolygons.end(); ++itLockedPolygon )
 		{
 			if ( itLockedPolygon->size() < 2 )
 			{
 				continue;
 			}
 			
-			vector<CVec2>::const_iterator itCurrentPoint0;
-			vector<CVec2>::const_iterator itCurrentPoint1;
+			std::vector<CVec2>::const_iterator itCurrentPoint0;
+			std::vector<CVec2>::const_iterator itCurrentPoint1;
 			float fCrossPoint;
 			EClassifyIntersection classifyIntersection = ClassifyCross( ( *itLockedPolygon ), ( *itCurrentPath0 ), ( *itCurrentPath1 ), &itCurrentPoint0, &itCurrentPoint1, &fCrossPoint );
 			if ( classifyIntersection == CI_SKEW_CROSS )
 			{
 				bool bBeginUsed = false;
 				bool bEndUsed = false;
-				for ( list<CVec2>::const_iterator itUsedPoint = pUsedPoints->begin(); itUsedPoint != pUsedPoints->end(); ++itUsedPoint )
+				for ( std::list<CVec2>::const_iterator itUsedPoint = pUsedPoints->begin(); itUsedPoint != pUsedPoints->end(); ++itUsedPoint )
 				{
 					if ( ( *itUsedPoint ) == ( *itCurrentPoint0 ) )
 					{
@@ -1206,7 +1206,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 					vNewEnd1 = vTemp;
 				}
 				currentPath0.clear();
-				list<CVec2> currentPath1;				
+				std::list<CVec2> currentPath1;				
 				if ( FindPath( vBegin0, vEnd0, bBegin0,
 											 vNewBegin, vNewEnd0, true,
 											 fRadius, nSegmentsCount, fMinEdgeLength,
@@ -1222,7 +1222,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 					pPointsSequence->insert( pPointsSequence->end(), currentPath0.begin(), currentPath0.end() );
 					currentPath1.erase( currentPath1.begin() );
 					pPointsSequence->insert( pPointsSequence->end(), currentPath1.begin(), currentPath1.end() );
-					//UniquePolygon<list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
+					//UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
 					return true;
 				}
 				else
@@ -1236,7 +1236,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 	}
 	
 	pPointsSequence->insert( pPointsSequence->end(), currentPath0.begin(), currentPath0.end() );
-	//UniquePolygon<list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
+	//UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
 	return true;
 	/**/
 }
@@ -1511,7 +1511,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 	if ( IEditorScene *pScene = EditorScene() )
 	{
 		CVSOPointList *pPoints = 0;
-		vector<CVec3> *pControlPoints = 0;
+		std::vector<CVec3> *pControlPoints = 0;
 		//
 		switch ( pDrawParams->eDrawer )
 		{
@@ -1541,10 +1541,10 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 
 		if ( ( pPoints != 0 ) && ( pControlPoints != 0 ) )
 		{
-			list<CVec3> centerPointList;
-			list<CVec3> upperCenterPointList;
-			list<CVec3> normalePointList;
-			list<CVec3> opNormalePointList;
+			std::list<CVec3> centerPointList;
+			std::list<CVec3> upperCenterPointList;
+			std::list<CVec3> normalePointList;
+			std::list<CVec3> opNormalePointList;
 			for ( int nPointIndex = 0; nPointIndex < pPoints->size(); ++nPointIndex )
 			{
 				CVec3 vCenterPoint = ( *pPoints )[nPointIndex].vPos;
@@ -1633,7 +1633,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 			if ( pDrawParams->CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) || 
 				( pDrawParams->eDrawer == SVSODrawParams::VSO_IS_ADD ) )
 			{
-				list<CVec3> pointList;
+				std::list<CVec3> pointList;
 				for ( int nControlPointIndex = 0; nControlPointIndex < pControlPoints->size(); ++nControlPointIndex )
 				{
 					CVec3 vControlPoint = ( *pControlPoints )[nControlPointIndex];
@@ -1721,7 +1721,7 @@ bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 	NI_ASSERT( pVSO != 0, "CVSOManager::UpdateZ(): Wrong parameter: pVSO " );
 	
 	bool bResult = true;
-	for ( vector<CVec3>::iterator itControlPoint = pVSO->controlPoints.begin(); itControlPoint != pVSO->controlPoints.end(); ++itControlPoint )
+	for ( std::vector<CVec3>::iterator itControlPoint = pVSO->controlPoints.begin(); itControlPoint != pVSO->controlPoints.end(); ++itControlPoint )
 	{
 		UpdateTerrainHeight( &( *itControlPoint ) );
 	}

@@ -31,7 +31,7 @@ struct SMarkerSet : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( SMarkerSet );
 
-	void AttachToScene( bool bActive, const vector<SMarkerPoint> &points );
+	void AttachToScene( bool bActive, const std::vector<SMarkerPoint> &points );
 public:
 	SMarkerSet(){}
 	//
@@ -42,8 +42,8 @@ public:
 	//
 	bool bIsInScene;
 	//
-	vector<SMarkerPoint> points;
-	vector<SMarkerPoint> activePoints;
+	std::vector<SMarkerPoint> points;
+	std::vector<SMarkerPoint> activePoints;
 	CVec3 vBuildingPos;
 	CVec2 vBuildingOrigin;
 	//

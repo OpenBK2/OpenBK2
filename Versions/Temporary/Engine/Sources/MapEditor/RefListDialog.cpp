@@ -26,7 +26,7 @@ CRefListDialog::CRefListDialog( CWnd* pParent )
 }
 
 
-void CRefListDialog::SetData( const string &szObjectTypeName, const string &szObjectName, list<string> *_pReferenceObjectsList )
+void CRefListDialog::SetData( const std::string &szObjectTypeName, const std::string &szObjectName, std::list<std::string> *_pReferenceObjectsList )
 {
 	szTargetTypeName = szObjectTypeName;
 	szTargetName = szObjectName;
@@ -38,15 +38,15 @@ void CRefListDialog::BuildReferenceObjectsList()
 {
 	ASSERT( szTargetTypeName.empty() == false );
 
-	list<string> &referenceObjectsList = *pReferenceObjectsList;
+	std::list<std::string> &referenceObjectsList = *pReferenceObjectsList;
 
-	string szRefObjectTypeName;
-	string szRefObjectName;
-	string szFullName;
+	std::string szRefObjectTypeName;
+	std::string szRefObjectName;
+	std::string szFullName;
 
-	std::unordered_map<string,SReferenceObject> objsHash;
-	list<string> fullNames;
-	for ( list<string>::const_iterator i = referenceObjectsList.begin(); i != referenceObjectsList.end(); ++i )
+	std::unordered_map<std::string,SReferenceObject> objsHash;
+	std::list<std::string> fullNames;
+	for ( std::list<std::string>::const_iterator i = referenceObjectsList.begin(); i != referenceObjectsList.end(); ++i )
 	{
     CStringManager::GetTypeAndNameFromRefValue( &szRefObjectTypeName, &szRefObjectName, (*i), TYPE_SEPARATOR_CHAR, "" );
 		if ( !szRefObjectTypeName.empty() )
@@ -67,11 +67,11 @@ void CRefListDialog::BuildReferenceObjectsList()
 	fullNames.sort();
 	
 	int nElement = 0;
-	for ( list<string>::iterator it = fullNames.begin(); it != fullNames.end(); ++it )
+	for ( std::list<std::string>::iterator it = fullNames.begin(); it != fullNames.end(); ++it )
 	{
 		const SReferenceObject& obj = objsHash[*it];
     referenceObjects.push_back( obj );
-		const string szItemText = obj.szTypeName + TYPE_SEPARATOR_CHAR + obj.szObjectName;
+		const std::string szItemText = obj.szTypeName + TYPE_SEPARATOR_CHAR + obj.szObjectName;
 		objectsCtrl.InsertItem( nElement, szItemText.c_str() );
 		++nElement;
 	}
@@ -80,14 +80,14 @@ void CRefListDialog::BuildReferenceObjectsList()
 
 void CRefListDialog::BuildFieldsListForObject( const SReferenceObject &object )
 {
-	const string &szName = object.szObjectName;
-	const string &szTypeName = object.szTypeName;
+	const std::string &szName = object.szObjectName;
+	const std::string &szTypeName = object.szTypeName;
 
-	string szFieldName;
-	string szRefTargetTypeName;
-	string szRefTargetName;
+	std::string szFieldName;
+	std::string szRefTargetTypeName;
+	std::string szRefTargetName;
 
-	string szText;
+	std::string szText;
 
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	NI_VERIFY( pResourceManager, "Cannot find resource manager", return )
@@ -132,7 +132,7 @@ BOOL CRefListDialog::OnInitDialog()
 	objectsCtrl.SubclassDlgItem( IDC_REF_LIST_OBJECTS, this );
 
 	objectsCtrl.InsertColumn( 0, "Objects", LVCFMT_LEFT, 10000 );
-	string szText = "No object selected.";
+	std::string szText = "No object selected.";
 	fieldsCtrl.SetWindowText( szText.c_str() );
 
 	BuildReferenceObjectsList();
@@ -197,12 +197,12 @@ void CRefListDialog::OnSetEmptyCurrent()
 	const CVariant nullRef;
 	bool bEverythingIsOK = true;
 
-	string szText = "Clearing..\r\n";
+	std::string szText = "Clearing..\r\n";
 	if ( pCurrentManipulator )
 	{
-		for ( list<string>::iterator it = currentFields.begin(); it != currentFields.end() && bEverythingIsOK; )
+		for ( std::list<std::string>::iterator it = currentFields.begin(); it != currentFields.end() && bEverythingIsOK; )
 		{
-			szText += string( *it );
+			szText += std::string( *it );
 			if ( pCurrentManipulator->SetValue( *it, nullRef ) )
 			{
 				szText += " - ok\r\n";
@@ -222,7 +222,7 @@ void CRefListDialog::OnSetEmptyCurrent()
 		szText += "Complete.\r\n";
 		fieldsCtrl.SetWindowText( szText.c_str() );
     objectsCtrl.DeleteItem( nSelectedItem );
-		vector<SReferenceObject> temp;
+		std::vector<SReferenceObject> temp;
 		for ( int i = 0; i < referenceObjects.size(); ++i )
 		{
 			if ( i != nSelectedItem )
@@ -246,16 +246,16 @@ void CRefListDialog::OnClearAll()
 	{
 		CWaitCursor wait;
 		bool bSuccess = true;
-		string szFieldName;
-		string szRefTargetTypeName;
-		string szRefTargetName;
+		std::string szFieldName;
+		std::string szRefTargetTypeName;
+		std::string szRefTargetName;
 		const CVariant nullRef;
 		pCurrentManipulator = 0;
 		nSelectedItem = INVALID_NODE_ID;
 		for ( int i = 0; i < referenceObjects.size(); ++i )
 		{
-			const string &szName = referenceObjects[i].szObjectName;
-			const string &szTypeName = referenceObjects[i].szTypeName;
+			const std::string &szName = referenceObjects[i].szObjectName;
+			const std::string &szTypeName = referenceObjects[i].szTypeName;
 
 			IResourceManager *pResourceManager = Singleton<IResourceManager>();
 			CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( szTypeName, szName );

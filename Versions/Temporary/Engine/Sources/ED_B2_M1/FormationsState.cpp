@@ -33,7 +33,7 @@ static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const C
 	if ( (nFormationIdx < 0) || (nFormationIdx > nFormationsNumber) )
 		return false;
 
-	string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
+	std::string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
 		return false;
@@ -43,7 +43,7 @@ static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const C
 	if ( (nMemberIdx < 0) || (nMemberIdx > nOrderElemNum) )
 		return false;
 
-	string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
+	std::string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::SetVec2( rvPos, pSquadManip, szOrderPosDBA ) ) 
 		return false;
@@ -66,7 +66,7 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 	if ( (nFormationIdx < 0) || (nFormationIdx > nFormationsNumber) )
 		return false;
 
-	string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
+	std::string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
 		return false;
@@ -76,7 +76,7 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 	if ( (nMemberIdx < 0) || (nMemberIdx > nOrderElemNum) )
 		return false;
 
-	string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
+	std::string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::GetVec2<CVec2,float>( pPos, pSquadManip, szOrderPosDBA ) ) 
 		return false;
@@ -122,7 +122,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 	for ( int i = 0; i < nFormationsNumber; ++i )
 	{
-		string szOrdersDBA = StrFmt( "formations.[%d].order", i );
+		std::string szOrdersDBA = StrFmt( "formations.[%d].order", i );
 
 		CVariant numOrders;
 		if ( !pSquadManip->GetValue( szOrdersDBA, &numOrders ) )
@@ -162,7 +162,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 static int GetMembersNum( IManipulator *pSquadManip )
 {
-	string szDBA = StrFmt( "members" );
+	std::string szDBA = StrFmt( "members" );
 	CVariant v;
 	if ( pSquadManip->GetValue( szDBA, &v ) )
 		return (int)v;
@@ -173,7 +173,7 @@ static int GetMembersNum( IManipulator *pSquadManip )
 //	возвращает список моделей взвода
 //
 
-static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip )
+static void GetMembersModels( std::vector<std::string> *pModels, IManipulator *pSquadManip )
 {
 	pModels->clear();
 	int nMembNum = GetMembersNum( pSquadManip );
@@ -181,7 +181,7 @@ static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip
 
 	for ( int i = 0; i < nMembNum; ++i )
 	{
-		string szDBA = StrFmt( "members.[%d]", i );
+		std::string szDBA = StrFmt( "members.[%d]", i );
 		try
 		{
 			CPtr<IManipulator> pInfantryManip = 
@@ -194,7 +194,7 @@ static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip
 				pModels->clear();
 				return;
 			}
-			string szModelName;
+			std::string szModelName;
 			CPtr<IManipulator> pModelManip = CreateModelManipulatorFromVisObj( pVisObjManip, &szModelName );
 			(*pModels)[i] = szModelName;
 		}
@@ -217,7 +217,7 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 
 	for ( int i = 0; i < nNumForm; ++i )
 	{
-		string szTypeDBA = StrFmt( "formations.[%d].type", i );
+		std::string szTypeDBA = StrFmt( "formations.[%d].type", i );
 
 		CVariant type;
 
@@ -355,7 +355,7 @@ void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 		int nMemberIndex = pSquadEditor->GetMemberIndexBySceneID( nSceneID );
 		if ( nMemberIndex != -1 )
 		{
-			string szSelId = StrFmt( "selected squad member id = %d", nMemberIndex );
+			std::string szSelId = StrFmt( "selected squad member id = %d", nMemberIndex );
 			pPaintDC->TextOut( 8, 8, szSelId.c_str(), szSelId.length() );
 		}
 	}
@@ -433,16 +433,16 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 {
 	pSquadEditor->RemoveAllModels();
 
-	vector<string> memberModelNameList;
+	std::vector<std::string> memberModelNameList;
 	CPtr<IManipulator> pSquadManip = pSquadEditor->CreateSquadManipulator();
 	GetMembersModels( &memberModelNameList, pSquadManip );
 
-	vector<const NDb::SModel*> memberModels;
-	for ( vector<string>::iterator it = memberModelNameList.begin(); it != memberModelNameList.end(); ++it )
+	std::vector<const NDb::SModel*> memberModels;
+	for ( std::vector<std::string>::iterator it = memberModelNameList.begin(); it != memberModelNameList.end(); ++it )
 		memberModels.push_back( NDb::Get<NDb::SModel>( CDBID( *it ) ) );
 
 	// позиции
-	vector<CVec2> positions;
+	std::vector<CVec2> positions;
 	for ( int m = 0; m < memberModelNameList.size(); ++m )
 	{
 		CVec2 pos = VNULL2;
@@ -455,8 +455,8 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 
 	// расстановка
 	int nMemberIndex = 0;
-	vector<CVec2>::iterator itPos = positions.begin();
-	for (	vector<const NDb::SModel*>::iterator itModel = memberModels.begin(); 
+	std::vector<CVec2>::iterator itPos = positions.begin();
+	for (	std::vector<const NDb::SModel*>::iterator itModel = memberModels.begin(); 
 			itModel != memberModels.end(); ++itModel, ++itPos )
 	{
 		const NDb::SModel *pModel = *itModel;
@@ -498,7 +498,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 		}
 	}
 
-	const string szMask = StrFmt( "%s.[%d].", "formations", nElemIndex );
+	const std::string szMask = StrFmt( "%s.[%d].", "formations", nElemIndex );
 	
 	pMaskManipulator = new CMaskManipulator( szMask, pSquadEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
@@ -520,7 +520,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 	if ( pView != 0 )
 	{
 		bNeedCreateTree = ( pView->GetViewManipulator() != pMaskManipulator );
-		pView->SetViewManipulator( pMaskManipulator, pSquadEditor->GetObjectSet(), string() );
+		pView->SetViewManipulator( pMaskManipulator, pSquadEditor->GetObjectSet(), std::string() );
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 
@@ -548,7 +548,7 @@ void CFormationsState::ClearMaskManipulator()
 		{
 			pView->RemoveViewManipulator();
 			CPtr<IManipulator> pSquadManip = pSquadEditor->CreateSquadManipulator();
-			pView->SetViewManipulator( pSquadManip, pSquadEditor->GetObjectSet(), string() );
+			pView->SetViewManipulator( pSquadManip, pSquadEditor->GetObjectSet(), std::string() );
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 		pMaskManipulator = 0;	

@@ -12,7 +12,7 @@
 
 // CPCItemEditor
 
-bool CPCStringBigInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCStringBigInputEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bool bResult = CPCStringBrowseEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow );
 	if ( bResult )
@@ -30,10 +30,10 @@ void CPCStringBigInputEditor::OnBrowse()
 	CVariant value;
 	CPCStringBrowseEditor::GetValue( &value );
 
-	string szValues = GetPropertyDesc()->szStringParam;
+	std::string szValues = GetPropertyDesc()->szStringParam;
 	NStr::ToLowerASCII( &szValues );
 	//
-	string szEditor;
+	std::string szEditor;
 	if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_EDITOR, 0,  PCSP_DIVIDERS, "", &szEditor ) )
 	{
 		szEditor.clear();
@@ -47,7 +47,7 @@ void CPCStringBigInputEditor::OnBrowse()
 		scriptEditor.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
 		if ( ( scriptEditor.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
 		{
-			string szValue = scriptEditor.GetText();
+			std::string szValue = scriptEditor.GetText();
 			SetWindowText( szValue.c_str() );
 		}
 	}
@@ -59,7 +59,7 @@ void CPCStringBigInputEditor::OnBrowse()
 		textEditorDialog.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
 		if ( ( textEditorDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
 		{
-			string szValue;
+			std::string szValue;
 			textEditorDialog.GetText( &szValue );
 			SetWindowText( szValue.c_str() );
 		}

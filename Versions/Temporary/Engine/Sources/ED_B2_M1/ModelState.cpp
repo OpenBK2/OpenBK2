@@ -158,7 +158,7 @@ void CModelState::ClearScene( bool bClearAll )
 				nModelSceneID = INVALID_NODE_ID;
 			}
 		}
-		for ( list<int>::const_iterator itAnimModelSceneID = animModelSceneIDList.begin(); itAnimModelSceneID != animModelSceneIDList.end(); ++itAnimModelSceneID )
+		for ( std::list<int>::const_iterator itAnimModelSceneID = animModelSceneIDList.begin(); itAnimModelSceneID != animModelSceneIDList.end(); ++itAnimModelSceneID )
 		{
 			if ( ( *itAnimModelSceneID ) != INVALID_NODE_ID )
 			{
@@ -394,7 +394,7 @@ void CModelState::UpdateModels( bool bUpdateAll )
 						{
 							const int nMaxAnimationsCount = Clamp<int>( pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64 );
 							int nAnimationIndex = 0;
-							for ( vector<CDBPtr<NDb::SAnimBase> >::const_iterator itAnimation = pModel->pSkeleton->animations.begin(); itAnimation != pModel->pSkeleton->animations.end(); ++itAnimation )
+							for ( std::vector<CDBPtr<NDb::SAnimBase> >::const_iterator itAnimation = pModel->pSkeleton->animations.begin(); itAnimation != pModel->pSkeleton->animations.end(); ++itAnimation )
 							{
 								if ( nAnimationIndex >= nMaxAnimationsCount )
 								{
@@ -451,7 +451,7 @@ void CModelState::UpdateLight()
 		{
 			if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
 			{
-				string szLight = NEditorOptions::GetMiscString( "Light" );
+				std::string szLight = NEditorOptions::GetMiscString( "Light" );
 				if ( szLight.empty() ) 
 				{
 					szLight = NEditorOptions::GetLight( "SEASON_SUMMER", "DAY_DAY" );
@@ -537,7 +537,7 @@ void CModelState::SetTerrain()
 	if ( pModelEditor != 0 )
 	{
 		int nObjectID = INVALID_NODE_ID;
-		string szObjectTypeName = "MapInfo";
+		std::string szObjectTypeName = "MapInfo";
 		if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &nObjectID, &szObjectTypeName, false, true ) )
 		{
 			pModelEditor->editorSettings.nMapInfoID = nObjectID;
@@ -552,7 +552,7 @@ void CModelState::SetLight()
 {
 	if ( pModelEditor != 0 )
 	{
-		string szObjectTypeName = "AmbientLight";
+		std::string szObjectTypeName = "AmbientLight";
 		if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &( pModelEditor->editorSettings.lightDBID ), &szObjectTypeName, false, true ) )
 		{
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_LIGHT_INDEX );
@@ -984,7 +984,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 				{
 					if ( !pFolderIterator->IsFolder() )
 					{
-						string szName;
+						std::string szName;
 						if ( pFolderIterator->GetName( &szName ) )
 						{
 							editParameters.lightList.push_back( szName );
@@ -997,7 +997,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_LIGHT_INDEX )
 	{
-		const string szName = pModelEditor->editorSettings.lightDBID.ToString();
+		const std::string szName = pModelEditor->editorSettings.lightDBID.ToString();
 		if ( !szName.empty() )
 		{
 			const int nLightCount = editParameters.lightList.size();
@@ -1373,10 +1373,10 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 	{
 		if ( CObj<CMemObject> pMemObject = new CMemObject() )
 		{
-			vector<CVec3> points;
+			std::vector<CVec3> points;
 			points.reserve( ( nXStripCount + 1 ) * ( nYStripCount + 1 ) );
 			//
-			vector<STriangle> tris;
+			std::vector<STriangle> tris;
 			tris.reserve( nXStripCount * nYStripCount * ( bDoubleSided ? 4 : 2 ) );
 			//
 			const float fStepX = vSize.x / nXStripCount;
@@ -1423,10 +1423,10 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 	{
 		if ( CObj<CMemObject> pMemObject = new CMemObject() )
 		{
-			vector<CVec3> points;
+			std::vector<CVec3> points;
 			points.reserve( 4 );
 			//
-			vector<STriangle> tris;
+			std::vector<STriangle> tris;
 			tris.reserve( bDoubleSided ? 4 : 2 );
 			//
 			points.push_back( CVec3( 0.0f, 0.0f, 0.0f ) );
@@ -1466,10 +1466,10 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 	}
 	if ( CObj<CMemObject> pMemObject = new CMemObject() )
 	{
-		vector<CVec3> points;
+		std::vector<CVec3> points;
 		points.reserve( nXStripCount * nYStripCount * 4 );
 		//
-		vector<STriangle> tris;
+		std::vector<STriangle> tris;
 		tris.reserve( nXStripCount * nYStripCount * ( bDoubleSided ? 4 : 2 ) );
 		//
 		const float fStepX = vSize.x / nXStripCount;
@@ -1522,7 +1522,7 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 
 /**
 template<class TPolygon, class TPoint>
-int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, const TPoint &rvEnd, bool bPolygon, vector<float> *pIntersectionPointList )
+int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, const TPoint &rvEnd, bool bPolygon, std::vector<float> *pIntersectionPointList )
 {
 	//ноль точек
 	if ( rPolygon.empty() )
@@ -1589,7 +1589,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 	}
 	/**/
 	/**
-	vector<CVec3> vPointList;
+	std::vector<CVec3> vPointList;
 	CVec3 vBegin( 7.0f, 0.0f, 0.0f );
 	CVec3 vEnd( 7.0f, 16.0f, 0.0f );
 	const int nPointCount = 256;
@@ -1602,7 +1602,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		RotatePoint( &vPoint, nPointIndex * FP_2PI / nPointCount, vCenterPoint );
 		vPointList.push_back( vPoint );
 	}	
-	vector<float> intersectionPointList;
+	std::vector<float> intersectionPointList;
 	//
 	const int nCaseCount = 64 * 64 * 128;
 	NHPTimer::STime time = 0;

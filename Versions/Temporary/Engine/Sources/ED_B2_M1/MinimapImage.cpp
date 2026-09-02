@@ -310,12 +310,12 @@ void RenderRiver( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uin
 		//
 		if ( GetAlphaFromARGBColor( dwBorderColor ) >= dwMinAlpha )
 		{
-			list<CVec3> polygon;
+			std::list<CVec3> polygon;
 			SBooleanSetColorFunctional setColorFunctional( &riverImage, dwBorderColor );
 			for ( int nPointIndex = 0; nPointIndex < ( pMapInfo->rivers[nRiverIndex].points.size() - 1 ); ++nPointIndex )
 			{
 				CVSOManager::GetBoundingPolygon( &polygon, pMapInfo->rivers[nRiverIndex].points, nPointIndex, CVSOManager::PT_BOTH, 1.0f );
-				ApplyTilesInPolygon<SBooleanSetColorFunctional, list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
+				ApplyTilesInPolygon<SBooleanSetColorFunctional, std::list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
 			}
 		}
 	}
@@ -340,12 +340,12 @@ void RenderRiver( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, uin
 		if ( GetAlphaFromARGBColor( dwCenterColor ) >= dwMinAlpha )
 		{
 			const float fRelWidth = pRiverDesc->nMiniMapCenterWidth / 100.0f;
-			list<CVec3> polygon;
+			std::list<CVec3> polygon;
 			SBooleanSetColorFunctional setColorFunctional( &riverImage, dwCenterColor );
 			for ( int nPointIndex = 0; nPointIndex < ( pMapInfo->rivers[nRiverIndex].points.size() - 1 ); ++nPointIndex )
 			{
 				CVSOManager::GetBoundingPolygon( &polygon, pMapInfo->rivers[nRiverIndex].points, nPointIndex, CVSOManager::PT_BOTH, fRelWidth );
-				ApplyTilesInPolygon<SBooleanSetColorFunctional, list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
+				ApplyTilesInPolygon<SBooleanSetColorFunctional, std::list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
 			}
 		}
 	}
@@ -363,7 +363,7 @@ void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoa
 	//
 	CArray2D<uint32_t> roadImage( size.x, size.y );
 	roadImage.FillZero();
-	list<int> roadIndexList;
+	std::list<int> roadIndexList;
 	for ( int nRoadIndex = 0; nRoadIndex < pMapInfo->roads.size(); ++nRoadIndex )
 	{
 		if ( pMapInfo->roads[nRoadIndex].pDescriptor == 0 )
@@ -374,7 +374,7 @@ void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoa
 		if ( typeRoadType.GetRoadType( pRoadDesc->nType ) == eRoadType )
 		{
 			bool bNotInserted = true;
-			for ( list<int>::iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
+			for ( std::list<int>::iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
 			{
 				const NDb::SRoadDesc *pLocalRoadDesc = checked_cast<const NDb::SRoadDesc*>( pMapInfo->roads[*itRoadIndex].pDescriptor.GetPtr() );
 				if ( pLocalRoadDesc->nPriority > pRoadDesc->nPriority )
@@ -391,7 +391,7 @@ void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoa
 		}
 	}
 	// render all borders
-	for ( list<int>::const_iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
+	for ( std::list<int>::const_iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
 	{
 		int nRoadIndex = *itRoadIndex;
 		const NDb::SRoadDesc *pRoadDesc = checked_cast<const NDb::SRoadDesc*>( pMapInfo->roads[nRoadIndex].pDescriptor.GetPtr() );
@@ -407,17 +407,17 @@ void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoa
 		//
 		if ( GetAlphaFromARGBColor( dwBorderColor ) >= dwMinAlpha )
 		{
-			list<CVec3> polygon;
+			std::list<CVec3> polygon;
 			SBooleanSetColorFunctional setColorFunctional( &roadImage, dwBorderColor );
 			for ( int nPointIndex = 0; nPointIndex < ( pMapInfo->roads[nRoadIndex].points.size() - 1 ); ++nPointIndex )
 			{
 				CVSOManager::GetBoundingPolygon( &polygon, pMapInfo->roads[nRoadIndex].points, nPointIndex, CVSOManager::PT_BOTH, 1.0f );
-				ApplyTilesInPolygon<SBooleanSetColorFunctional, list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
+				ApplyTilesInPolygon<SBooleanSetColorFunctional, std::list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
 			}
 		}
 	}
 	// render all centers
-	for ( list<int>::const_iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
+	for ( std::list<int>::const_iterator itRoadIndex = roadIndexList.begin(); itRoadIndex != roadIndexList.end(); ++itRoadIndex )
 	{
 		int nRoadIndex = *itRoadIndex;
 		const NDb::SRoadDesc *pRoadDesc = checked_cast<const NDb::SRoadDesc*>( pMapInfo->roads[nRoadIndex].pDescriptor.GetPtr() );
@@ -434,12 +434,12 @@ void RenderRoad( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, ERoa
 		if ( GetAlphaFromARGBColor( dwCenterColor ) >= dwMinAlpha )
 		{
 			const float fRelWidth = pRoadDesc->nMiniMapCenterWidth / 100.0f;
-			list<CVec3> polygon;
+			std::list<CVec3> polygon;
 			SBooleanSetColorFunctional setColorFunctional( &roadImage, dwCenterColor );
 			for ( int nPointIndex = 0; nPointIndex < ( pMapInfo->roads[nRoadIndex].points.size() - 1 ); ++nPointIndex )
 			{
 				CVSOManager::GetBoundingPolygon( &polygon, pMapInfo->roads[nRoadIndex].points, nPointIndex, CVSOManager::PT_BOTH, fRelWidth );
-				ApplyTilesInPolygon<SBooleanSetColorFunctional, list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
+				ApplyTilesInPolygon<SBooleanSetColorFunctional, std::list<CVec3>, CVec3>( rect, polygon, AI_TILE_SIZE, setColorFunctional );
 			}
 		}
 	}
@@ -830,10 +830,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	}
 	//
 	// create render layers
-	vector<CArray2D<uint32_t>*> layerList;
+	std::vector<CArray2D<uint32_t>*> layerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.insert( layerList.end(), 0 );
+		std::vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.insert( layerList.end(), 0 );
 	}
 	// render layers
 	{
@@ -1019,10 +1019,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		}
 	}
 	// create alpha emboss layers
-	vector<CArray2D<uint32_t>*> aphaEmbossLayerList;
+	std::vector<CArray2D<uint32_t>*> aphaEmbossLayerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.insert( aphaEmbossLayerList.end(), 0 );
+		std::vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.insert( aphaEmbossLayerList.end(), 0 );
 		( *itAphaEmbossLayer ) = 0;
 		const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 		if ( pMinimapLayer != 0 )
@@ -1043,10 +1043,10 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		}
 	}
 	// create shadow layers
-	vector<CArray2D<uint32_t>*> shadowLayerList;
+	std::vector<CArray2D<uint32_t>*> shadowLayerList;
 	for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 	{
-		vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.insert( shadowLayerList.end(), 0 );
+		std::vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.insert( shadowLayerList.end(), 0 );
 		( *itShadowLayer ) = 0;
 		const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 		if ( pMinimapLayer != 0 )
@@ -1077,17 +1077,17 @@ void Create( const NDb::SMapInfo *pMapInfo,
 											 itCreateParameter->size.y,
 											 itCreateParameter->szImageFileName.c_str() ) );
 		//Collect noises
-		vector<CArray2D<uint32_t>*> noisedLayerList;
+		std::vector<CArray2D<uint32_t>*> noisedLayerList;
 		for ( int nLayerIndex = 0; nLayerIndex < LAYER_COUNT; ++nLayerIndex )
 		{
-			vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.insert( noisedLayerList.end(), 0 );
+			std::vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.insert( noisedLayerList.end(), 0 );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( (ELayerType)( nLayerIndex ), pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
 				( *itNoisedLayer ) = new CArray2D<uint32_t>( imageSize.x, imageSize.y );
 				NImage::Scale( *itNoisedLayer, ( *( layerList[nLayerIndex] ) ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 				// Noise Layer
-				const string szNoiseFileName = pUserData->constUserData.szExportSourceFolder + pMinimapLayer->szNoiseImage;
+				const std::string szNoiseFileName = pUserData->constUserData.szExportSourceFolder + pMinimapLayer->szNoiseImage;
 				CArray2D<uint32_t> noise;
 				CFileStream stream( NVFS::GetMainVFS(), szNoiseFileName );
 				if ( stream.IsOk() )
@@ -1178,7 +1178,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 				}
 				/**
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\step%d.tga", nLayerIndex );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\step%d.tga", nLayerIndex );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( minimapImage );
 					NImage::SaveAsTGA( minimapImage, &imageStream );
@@ -1200,13 +1200,13 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		// delete noises
 		{
 			int nIndex = 0;
-			for ( vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.begin(); itNoisedLayer != noisedLayerList.end(); ++itNoisedLayer )
+			for ( std::vector<CArray2D<uint32_t>*>::iterator itNoisedLayer = noisedLayerList.begin(); itNoisedLayer != noisedLayerList.end(); ++itNoisedLayer )
 			{
 				if ( ( *itNoisedLayer ) != 0 )
 				{
 					/**
 					{
-						const string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\noised%d.tga", nIndex );
+						const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\noised%d.tga", nIndex );
 						CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 						NImage::FlipY( *( *itNoisedLayer ) );
 						NImage::SaveAsTGA( *( *itNoisedLayer ), &imageStream );
@@ -1222,13 +1222,13 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete shadow layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.begin(); itShadowLayer != shadowLayerList.end(); ++itShadowLayer )
+		for ( std::vector<CArray2D<uint32_t>*>::iterator itShadowLayer = shadowLayerList.begin(); itShadowLayer != shadowLayerList.end(); ++itShadowLayer )
 		{
 			if ( ( *itShadowLayer ) != 0 )
 			{
 				/**
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\shadow%d.tga", nIndex );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\shadow%d.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itShadowLayer ) );
 					NImage::SaveAsTGA( *( *itShadowLayer ), &imageStream );
@@ -1243,13 +1243,13 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete alpha emboss layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.begin(); itAphaEmbossLayer != aphaEmbossLayerList.end(); ++itAphaEmbossLayer )
+		for ( std::vector<CArray2D<uint32_t>*>::iterator itAphaEmbossLayer = aphaEmbossLayerList.begin(); itAphaEmbossLayer != aphaEmbossLayerList.end(); ++itAphaEmbossLayer )
 		{
 			if ( ( *itAphaEmbossLayer ) != 0 )
 			{
 				/**
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\alphaEmboss%d.tga", nIndex );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\alphaEmboss%d.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itAphaEmbossLayer ) );
 					NImage::SaveAsTGA( *( *itAphaEmbossLayer ), &imageStream );
@@ -1264,13 +1264,13 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	// delete render layers
 	{
 		int nIndex = 0;
-		for ( vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.begin(); itLayer != layerList.end(); ++itLayer )
+		for ( std::vector<CArray2D<uint32_t>*>::iterator itLayer = layerList.begin(); itLayer != layerList.end(); ++itLayer )
 		{
 			if ( ( *itLayer ) != 0 )
 			{
 				/**
 				{
-					const string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\layer%d.tga", nIndex );
+					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\layer%d.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itLayer ) );
 					NImage::SaveAsTGA( *( *itLayer ), &imageStream );

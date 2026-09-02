@@ -26,25 +26,25 @@ public:
 	//
 	struct STypedTemplate
 	{
-		string szTemplateType;
-		string szTemplate;
+		std::string szTemplateType;
+		std::string szTemplate;
 	};
 	//
-	typedef vector<STypedTemplate> CTypedTemplateType;
+	typedef std::vector<STypedTemplate> CTypedTemplateType;
 	//
 	struct SReinfPoint : public NDb::SReinforcementPosition
 	{
-		vector<STypedTemplate> typedTemplates;
-		string szDeployTemplate;
+		std::vector<STypedTemplate> typedTemplates;
+		std::string szDeployTemplate;
 	};
 
 private:
-	vector<SReinfPoint> reinfPoints;						// описание reinforcement-ов текущего выбранного игрока
+	std::vector<SReinfPoint> reinfPoints;						// описание reinforcement-ов текущего выбранного игрока
 
 	bool CreateReinfPoint();
 	bool DeleteSelectedReinfPoint();
 	bool GetReinfPointsFromWindow();
-	bool SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint );
+	bool SaveCurrentReinfPoint( const std::vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint );
 
 public:
 	CReinfPointsState( CMapInfoEditor* _pMapInfoEditor = 0 );

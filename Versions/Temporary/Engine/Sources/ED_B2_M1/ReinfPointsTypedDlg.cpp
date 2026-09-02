@@ -52,7 +52,7 @@ END_MESSAGE_MAP()
 void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 {
 	// create new node in DB
-	const string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
+	const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
 	int nOldTemplatesCount;
 	CManipulatorManager::GetValue( &nOldTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
 	CPtr<CObjectBaseController> pObjectController = new CObjectController;
@@ -66,14 +66,14 @@ void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 		CManipulatorManager::GetValue( &nNewTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
 
 		// use new node in dialog
-		string szTypedName = szName + StrFmt( ".[%d]", nNewTemplatesCount - 1 );
+		std::string szTypedName = szName + StrFmt( ".[%d]", nNewTemplatesCount - 1 );
 		CReinfPointsTypedTemplateAddDlg dlgAdd( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szTypedName, pMapInfoEditor );
 		if ( dlgAdd.DoModal() == IDOK )
 		{
 			// update pDialogData
 			CReinfPointsState::STypedTemplate newTypedTemplate;
-			string szType = szTypedName + ".Type";
-			string szTempl = szTypedName + ".Template";
+			std::string szType = szTypedName + ".Type";
+			std::string szTempl = szTypedName + ".Template";
 
 			CManipulatorManager::GetValue( &newTypedTemplate.szTemplateType, pMapInfoEditor->GetViewManipulator(), szType );
 			CManipulatorManager::GetValue( &newTypedTemplate.szTemplate, pMapInfoEditor->GetViewManipulator(), szTempl );
@@ -133,7 +133,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedRemove()
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
-		const string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
+		const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
 		CPtr<CObjectBaseController> pObjectController = new CObjectController;
 		if ( pObjectController->AddRemoveOperation( szName, nSelectedTemplate, pMapInfoEditor->GetViewManipulator()) )
 		{
@@ -167,7 +167,7 @@ void CReinfPointsTypedDlg::GetDialogData()
 	int i = 0;
 	for ( CReinfPointsState::CTypedTemplateType::iterator it = pTypedTemplateDlgData->begin(); it < pTypedTemplateDlgData->end(); ++it, ++i )
 	{
-		const string szType = lcTypedTempl.GetItemText(i, 1);
+		const std::string szType = lcTypedTempl.GetItemText(i, 1);
 		it->szTemplateType = szType;
 		it->szTemplate = lcTypedTempl.GetItemText( i, 2 );
 	}

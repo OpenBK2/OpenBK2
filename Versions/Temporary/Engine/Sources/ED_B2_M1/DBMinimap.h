@@ -56,7 +56,7 @@ namespace NDb
 			ny( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -77,7 +77,7 @@ namespace NDb
 			ny( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -111,7 +111,7 @@ namespace NDb
 			eScaleMethod( IMAGE_SCALE_METHOD_DEFAULT )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -128,7 +128,7 @@ namespace NDb
 		bool bShowAllBuildingsPassability;
 		bool bShowTerrainShades;
 		int nMinAlpha;
-		vector< SMinimapLayer > layers;
+		std::vector< SMinimapLayer > layers;
 
 		SMinimap() :
 			nWoodRadius( 5 ),
@@ -150,29 +150,29 @@ namespace NDb
 
 namespace NDb
 {
-	string EnumToString( NDb::EMinimapLayerType eValue );
-	EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const string &szValue );
+	std::string EnumToString( NDb::EMinimapLayerType eValue );
+	EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EMinimapLayerType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EMinimapLayerType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EMinimapLayerType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMinimapLayerType( szValue ); }
+	static std::string ToString( NDb::EMinimapLayerType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMinimapLayerType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMinimapLayerType( szValue ); }
 };
 
 namespace NDb
 {
-	string EnumToString( NDb::EImageScaleMethod eValue );
-	EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const string &szValue );
+	std::string EnumToString( NDb::EImageScaleMethod eValue );
+	EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::EImageScaleMethod>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::EImageScaleMethod eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::EImageScaleMethod ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EImageScaleMethod( szValue ); }
+	static std::string ToString( NDb::EImageScaleMethod eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EImageScaleMethod ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EImageScaleMethod( szValue ); }
 };
 

@@ -12,7 +12,7 @@
 
 REGISTER_EXPORTER_IN_DLL( InfantryRPGStats, CInfantryExporter )
 
-static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
+static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const std::string &szSrc, const std::string &szDst )
 {
 	CVariant var;
 	bool bResult = true;
@@ -24,7 +24,7 @@ static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &
 }
 
 
-static bool CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
+static bool CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const std::string &szSrc, const std::string &szDst )
 {
 	bool bResult = true;
 	bResult = bResult && CopyVector2D( pSrc, pDst, szSrc + ".Center", szDst + ".Center" );
@@ -32,7 +32,7 @@ static bool CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &sz
 	return bResult;
 }
 
-static bool IsStringEmpty( const string &szArg )
+static bool IsStringEmpty( const std::string &szArg )
 {
 	return szArg.empty() || ( szArg == " " );
 }
@@ -49,14 +49,14 @@ void CInfantryExporter::BuildAnimsMap()
 	{
 		if ( CPtr<IManipulatorIterator> pItAnim = pAnimFolders->Iterate( true, ECT_NO_CACHE ) )
 		{
-			list<string> anims;
+			std::list<std::string> anims;
 			while ( !pItAnim->IsEnd() )
 			{
-				string szType;
+				std::string szType;
 				pItAnim->GetType( &szType );
 				if ( szType == "object" )
 				{
-					string szName;
+					std::string szName;
 					pItAnim->GetName( &szName );
 					if ( !szName.empty() )
 					{
@@ -65,7 +65,7 @@ void CInfantryExporter::BuildAnimsMap()
 				}
 				pItAnim->Next();
 			}
-			for ( list<string>::const_iterator it = anims.begin(); it != anims.end(); ++it )
+			for ( std::list<std::string>::const_iterator it = anims.begin(); it != anims.end(); ++it )
 			{
 				CVariant var;
 				if ( CPtr<IManipulator> pAnimMan = pRM->CreateObjectManipulator( "AnimB2", *it ) )
@@ -177,15 +177,15 @@ bool CInfantryExporter::ProcessShootPoint( IManipulator *pMan )
 		}
 	}
 	// Store the data
-	const string szPrefix = "guns.[0].ShootPointOffset";
+	const std::string szPrefix = "guns.[0].ShootPointOffset";
 	CManipulatorManager::SetVec3( vOffset, pMan, szPrefix ); 
 	return true;
 }
 
 
 EXPORT_RESULT CInfantryExporter::ExportObject( IManipulator* pManipulator,
-																							const string &rszObjectTypeName,
-																							const string &rszObjectName,
+																							const std::string &rszObjectTypeName,
+																							const std::string &rszObjectName,
 																							bool bForce,
 																							EXPORT_TYPE exportType )
 {
@@ -206,14 +206,14 @@ EXPORT_RESULT CInfantryExporter::ExportObject( IManipulator* pManipulator,
 }
 
 
-void CInfantryExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
+void CInfantryExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	CBasicExporter::FinishExport( rszObjectTypeName, bForce );
 	animsMap.clear();
 }
 
 
-static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMan, const string &szAnimName, int *pnAnimCounter )
+static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMan, const std::string &szAnimName, int *pnAnimCounter )
 {
 	CVariant var;
 	// get type and create entry
@@ -224,8 +224,8 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 		NLog::Log( LT_ERROR, "TransferAnimInfo2Unit(): Can't get Type" );
 		return;
 	}
-	int nAnimType = typeAnimationMnemonics.GetValue( (string)var.GetStr() );
-	string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
+	int nAnimType = typeAnimationMnemonics.GetValue( (std::string)var.GetStr() );
+	std::string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
 	bResult = bResult && pUnitMan->InsertNode( szDescName );
 	bResult = bResult && pUnitMan->GetValue( szDescName, &var );
 	if ( !bResult )
@@ -241,14 +241,14 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 		NLog::Log( LT_ERROR, "TransferAnimInfo2Unit(): Can't get AABBAName" );
 		return;
 	}
-	string szAABBAName = var.GetStr();
+	std::string szAABBAName = var.GetStr();
 	bResult = bResult && pAnimMan->GetValue( "AABBDName", &var );
 	if ( !bResult )
 	{
 		NLog::Log( LT_ERROR, "TransferAnimInfo2Unit(): Can't get AABBDName" );
 		return;
 	}
-	string szAABBDName = var.GetStr();
+	std::string szAABBDName = var.GetStr();
 	if ( !IsStringEmpty( szAABBAName ) || ! IsStringEmpty( szAABBDName ) )
 	{
 		bResult = bResult && pUnitMan->InsertNode( "aabb_as" );
@@ -349,21 +349,21 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 		return false;
 	}
 	bool bAnimationsAssigned = false;
-	if ( CPtr<IManipulator> pItWeapon = pRM->CreateObjectManipulator( "WeaponRPGStats", string( var.GetStr() ) ) )
+	if ( CPtr<IManipulator> pItWeapon = pRM->CreateObjectManipulator( "WeaponRPGStats", std::string( var.GetStr() ) ) )
 	{
 		bResult = bResult && pItWeapon->GetValue( "WeaponType", &var );
 		if ( bResult )
 		{
-			uint32_t dwWeaponMask = 0x1 << typeWeaponMnemonics.GetValue( string( var.GetStr() ) );
+			uint32_t dwWeaponMask = 0x1 << typeWeaponMnemonics.GetValue( std::string( var.GetStr() ) );
 
 			//write animation data to stats
 			int nAnimCounter = 0;
-			for ( std::unordered_map<uint32_t, list<string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
+			for ( std::unordered_map<uint32_t, std::list<std::string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
 			{
 				const uint32_t dwAnimMask = itAnimList->first;
 				if ( dwAnimMask & dwWeaponMask )
 				{
-					for ( list<string>::const_iterator itAnim = itAnimList->second.begin(); itAnim != itAnimList->second.end(); ++itAnim )
+					for ( std::list<std::string>::const_iterator itAnim = itAnimList->second.begin(); itAnim != itAnimList->second.end(); ++itAnim )
 					{
 						if ( CPtr<IManipulator> pAnimMan = pRM->CreateObjectManipulator( "AnimB2", *itAnim ) )
 						{
@@ -417,7 +417,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 		}
 	}
 	// for infantry unit we can use animations only from main visual object
-	list<string> visObjects;
+	std::list<std::string> visObjects;
 	if ( pItUnit->GetValue( "visualObject", &var ) )
 	{
 		if ( !IsDBIDEmpty(var) )
@@ -426,9 +426,9 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 		}
 	}
 	//collect skeletons
-	typedef std::unordered_map<string, bool> CSkeletonsMap;
+	typedef std::unordered_map<std::string, bool> CSkeletonsMap;
 	CSkeletonsMap skeletons;
-	for ( list<string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
+	for ( std::list<std::string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
 	{
 		if ( CPtr<IManipulator> pItVisObj = pRM->CreateObjectManipulator( "VisObj", *it ) )
 		{
@@ -464,9 +464,9 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 			{
 				if ( pItSkeleton->GetValue( StrFmt( "Animations.[%d]", j ), &var ) && !IsDBIDEmpty(var) )
 				{
-					string szAnimName = var.GetStr();
+					std::string szAnimName = var.GetStr();
 					int nTypeSepPos = szAnimName.find( ':' );
-					if ( nTypeSepPos != string::npos )
+					if ( nTypeSepPos != std::string::npos )
 					{
 						szAnimName = szAnimName.substr( nTypeSepPos + 1 );
 					}
@@ -484,8 +484,8 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 
 
 EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
-																							const string &rszObjectTypeName,
-																							const string &rszObjectName,
+																							const std::string &rszObjectTypeName,
+																							const std::string &rszObjectName,
 																							bool bExport,
 																							EXPORT_TYPE exportType )
 {
@@ -493,7 +493,7 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 		return ER_SUCCESS;
 	//
 	ILogger *pLogger = NLog::GetLogger();
-	string szArmJointName;
+	std::string szArmJointName;
 	if ( CManipulatorManager::GetValue( &szArmJointName, pManipulator, "GunBoneName" ) == false )
 	{
 		pLogger->Log( LT_ERROR, StrFmt("Can't extract 'GunBoneName' from RPG stats\n") );

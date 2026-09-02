@@ -14,8 +14,8 @@
 
 #include <zconf.h>
 
-const string CLakeState::VSO_NAME = "Lakes";
-const string CLakeState::VSO_TYPE_NAME = "LakeDesc";
+const std::string CLakeState::VSO_NAME = "Lakes";
+const std::string CLakeState::VSO_TYPE_NAME = "LakeDesc";
 
 
 /**
@@ -82,8 +82,8 @@ void CLakeState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 			NMapInfoEditor::CVSOInstanceList *pVSOList = GetVSOList();
 			for ( int nVSOIndex = 0; nVSOIndex < pVSOList->size(); ++nVSOIndex )
 			{
-				list<CVec3> boundingPolygon;
-				vector<NDb::SVSOPoint> *pVSOPointList = &( ( *pVSOList )[nVSOIndex].points );
+				std::list<CVec3> boundingPolygon;
+				std::vector<NDb::SVSOPoint> *pVSOPointList = &( ( *pVSOList )[nVSOIndex].points );
 				for ( int nPointIndex = 0; nPointIndex < pVSOPointList->size(); ++nPointIndex )
 				{
 					boundingPolygon.push_back( ( *pVSOPointList )[nPointIndex].vPos );

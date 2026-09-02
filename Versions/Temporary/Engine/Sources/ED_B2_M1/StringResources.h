@@ -11,7 +11,7 @@ inline CString RCStr( const unsigned nStringID )
 
 	if ( s.IsEmpty() )
 	{
-		string szMsg = StrFmt( "WARNING: can't find string resource (ID=%d)", nStringID );
+		std::string szMsg = StrFmt( "WARNING: can't find string resource (ID=%d)", nStringID );
 		NI_ASSERT( 0, szMsg.c_str() );
 	}
 

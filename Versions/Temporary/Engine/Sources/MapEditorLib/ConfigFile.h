@@ -7,9 +7,9 @@ struct SConfigFile
 
 	struct SConfigEntry
 	{
-		string szLine;
-		string szKeyword;
-		string szParams;
+		std::string szLine;
+		std::string szKeyword;
+		std::string szParams;
 		//
 		SConfigEntry() {}
 		SConfigEntry( const SConfigEntry &rConfigEntry )
@@ -26,27 +26,27 @@ struct SConfigFile
 			}
 			return *this;
 		}
-		void Load( const string &rszLine );
+		void Load( const std::string &rszLine );
 	};
-	typedef list<SConfigEntry> CConfigEntryList;
-	typedef list<string> CParamsList;
+	typedef std::list<SConfigEntry> CConfigEntryList;
+	typedef std::list<std::string> CParamsList;
 	//
 	CConfigEntryList configEntryList;
 	//
 	// return number of entries loadeed
 	bool Empty() { return configEntryList.empty(); }
 	void Clear() { configEntryList.clear(); }
-	int Load( const string &rszFileName );
-	void Save( const string &rszFileName );
+	int Load( const std::string &rszFileName );
+	void Save( const std::string &rszFileName );
 	//
 	// true - keyword is present
-	bool GetParams( CParamsList *pParamsList, const string &rszKeyword, bool bIgnoreCase );
+	bool GetParams( CParamsList *pParamsList, const std::string &rszKeyword, bool bIgnoreCase );
 	//
-	void AddLine( const string &rszLine );
-	void AddKeyword( const string &rszKeyword, const string &rszParams );
+	void AddLine( const std::string &rszLine );
+	void AddKeyword( const std::string &rszKeyword, const std::string &rszParams );
 	//
 	// return number of entries removed
-	int RemoveKeyword( const string &rszKeyword, bool bIgnoreCase );
+	int RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase );
 };
 
 

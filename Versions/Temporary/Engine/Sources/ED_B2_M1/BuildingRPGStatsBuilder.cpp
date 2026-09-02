@@ -12,28 +12,28 @@
 REGISTER_BUILDER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsBuilder )
 
 
-const string CBuildingRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "BuildingRPGStatsBuilder";
+const std::string CBuildingRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "BuildingRPGStatsBuilder";
 
 
-bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
 	// Считываем данные
-	string szVisualObject;
+	std::string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
 	{
 		( *pszDescription ) = "<VisualObject> must be filled.";
 		return false;
 	}
-	string szDBType;
+	std::string szDBType;
 	if ( !CManipulatorManager::GetValue( &szDBType, pBuildDataManipulator, "Type" ) || szDBType.empty() )
 	{
 		( *pszDescription ) = "<Type> must be filled.";
 		return false;
 	}
-	string szSource;
+	std::string szSource;
 	CManipulatorManager::GetValue( &szSource, pBuildDataManipulator, "Source" );
 	if ( szPreviousDBType != szDBType )
 	{
@@ -62,8 +62,8 @@ bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 }
 
 
-bool CBuildingRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
-																										 string *pszUniqueObjectName,
+bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeName,
+																										 std::string *pszUniqueObjectName,
 																										 bool bFromMainMenu,
 																										 bool *pbCanChangeObjectName,
 																										 bool *pbNeedExport,
@@ -76,24 +76,24 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
-	string szDescription;
+	std::string szDescription;
 	if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 	{
 		return false;
 	}
 	// Считываем данные
-	string szVisualObject;
-	string szDBType;
-	string szSource;
+	std::string szVisualObject;
+	std::string szDBType;
+	std::string szSource;
 	CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" );
 	CManipulatorManager::GetValue( &szDBType, pBuildDataManipulator, "Type" );
 	CManipulatorManager::GetValue( &szSource, pBuildDataManipulator, "Source" );
 
 	// default window
-	string szDefaultWindowDay = "";
-	string szDefaultWindowNight = "";
-	string szDefaultWindowDestroyed = "";
-	string szDefaultWindowEffect = "";
+	std::string szDefaultWindowDay = "";
+	std::string szDefaultWindowNight = "";
+	std::string szDefaultWindowDestroyed = "";
+	std::string szDefaultWindowEffect = "";
 	CManipulatorManager::GetValue( &szDefaultWindowDay, pBuildDataManipulator, "DefaultWindow.DayObj" );
 	CManipulatorManager::GetValue( &szDefaultWindowNight, pBuildDataManipulator, "DefaultWindow.NightObj" );
 	CManipulatorManager::GetValue( &szDefaultWindowDestroyed, pBuildDataManipulator, "DefaultWindow.DestroyedObj" );
@@ -113,7 +113,7 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 			}
 		}
 		// Проставляем основные параметры
-		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "GameType", string( "SGVOGT_BUILDING" ) );
+		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "GameType", std::string( "SGVOGT_BUILDING" ) );
 		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "type", szDBType );
 		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "visualObject", szVisualObject );
 

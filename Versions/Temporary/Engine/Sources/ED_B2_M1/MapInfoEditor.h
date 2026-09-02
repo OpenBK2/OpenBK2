@@ -105,10 +105,10 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
 	IView* GetView() { return this; }
 	IInputState* GetInputState() { return pMapInfoState; }
-	void GetChildFrameType( string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	//IEditor
 	void CreateControls();
 	void PostCreateControls();
@@ -141,7 +141,7 @@ public:
 	
 	////////////////////////////
 	bool CreateMinimapImage();
-	bool GenerateMinimapImage( const string &szFileName );
+	bool GenerateMinimapImage( const std::string &szFileName );
 	//
 };
 

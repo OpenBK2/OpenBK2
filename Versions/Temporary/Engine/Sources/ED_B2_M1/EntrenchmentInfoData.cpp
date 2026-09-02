@@ -139,7 +139,7 @@ namespace NMapInfoEditor
 		// Устанавливаем общие параметры
 		vPosition = VNULL3; // будет заполняться в CreateSceneObject()
 		fDirection = 0.0f;
-		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", pObjectLoadInfo->nObjectIndex );
+		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", pObjectLoadInfo->nObjectIndex );
 		nEntrenchmentID = pObjectInfoCollector->trenchIDCollector.LockID();
 		if ( nEntrenchmentID == INVALID_NODE_ID )
 		{
@@ -165,11 +165,11 @@ namespace NMapInfoEditor
 				{
 					continue;
 				}
-				const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 				// создаем SMapInfoElement и заполняем его данными
 				SObjectInfo::SMapInfoElement mapInfoElement;
-				string szRPGStatsTypeName;
-				string szRPGStatsName;
+				std::string szRPGStatsTypeName;
+				std::string szRPGStatsName;
 				bResult = bResult && CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				mapInfoElement.szRPGStatsTypeName = szRPGStatsTypeName;
 				mapInfoElement.rpgStatsDBID = CDBID( szRPGStatsName );
@@ -321,7 +321,7 @@ namespace NMapInfoEditor
 		//
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats = dynamic_cast<const NDb::SEntrenchmentRPGStats*>( NDb::GetObject( pObjectCreateInfo->rpgStatsDBID ) );
 		//
-		const list<SEntrenchmentSegInfo> &trenchElementsInfo = static_cast<const SEntrenchmentCreateInfo *>( pObjectCreateInfo )->segmentsInfo;
+		const std::list<SEntrenchmentSegInfo> &trenchElementsInfo = static_cast<const SEntrenchmentCreateInfo *>( pObjectCreateInfo )->segmentsInfo;
 		//
 		const int nEntrenchmentElementCount = trenchElementsInfo.size();
 		if ( nEntrenchmentElementCount > 0 )
@@ -331,7 +331,7 @@ namespace NMapInfoEditor
 			int nEntrenchmentElementIndex = 0;
 			bool bLineFound = false;
 			//
-			for ( list<SEntrenchmentSegInfo>::const_iterator itTE = trenchElementsInfo.begin(); itTE!= trenchElementsInfo.end(); ++itTE )
+			for ( std::list<SEntrenchmentSegInfo>::const_iterator itTE = trenchElementsInfo.begin(); itTE!= trenchElementsInfo.end(); ++itTE )
 			{
 				const SEntrenchmentSegInfo *pSgInfo = &(*itTE);
 				if ( ( pSgInfo->eSegType != NDb::EST_LINE ) && ( pSgInfo->eSegType != NDb::EST_FIREPLACE ) )
@@ -373,7 +373,7 @@ namespace NMapInfoEditor
 				{
 					continue;
 				}
-				const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 				// Insert
 				bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 				//Change
@@ -432,7 +432,7 @@ namespace NMapInfoEditor
 			//Добавляем информацию в секцию окопов
 			int nEntrenchmentIndex = INVALID_NODE_ID;
 			bResult = bResult && CManipulatorManager::GetValue( &nEntrenchmentIndex, pManipulator, "Entrenchments" );
-			const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+			const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
 			bResult = bResult && pObjectController->AddInsertOperation( "Entrenchments", NODE_ADD_INDEX, pManipulator );
 			int nLinkListCount = 0;
 			for ( CSegmentLinkIDListList::const_iterator itLinkList = segmentLinkIDListList.begin(); itLinkList != segmentLinkIDListList.end(); ++itLinkList )
@@ -517,7 +517,7 @@ namespace NMapInfoEditor
 		}
 		int nEntrenchmentIndex = INVALID_NODE_ID;
 		bool bResult = CManipulatorManager::GetValue( &nEntrenchmentIndex, pManipulator, "Entrenchments" );
-		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
 		bResult = bResult && pObjectController->AddInsertOperation( "Entrenchments", NODE_ADD_INDEX, pManipulator );
 		int nLinkListCount = 0;
 		for ( CSegmentLinkIDListList::iterator itLinkList = segmentLinkIDListList.begin(); itLinkList != segmentLinkIDListList.end(); ++itLinkList )

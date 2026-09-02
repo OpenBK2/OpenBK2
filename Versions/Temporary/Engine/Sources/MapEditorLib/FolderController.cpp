@@ -166,7 +166,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 }
 
 
-bool CFolderController::AddInsertOperation( const string &rszObjectName )
+bool CFolderController::AddInsertOperation( const std::string &rszObjectName )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -177,7 +177,7 @@ bool CFolderController::AddInsertOperation( const string &rszObjectName )
 }
 
 
-bool CFolderController::AddRemoveOperation( const string &rszObjectName )
+bool CFolderController::AddRemoveOperation( const std::string &rszObjectName )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -188,7 +188,7 @@ bool CFolderController::AddRemoveOperation( const string &rszObjectName )
 }
 
 
-bool CFolderController::AddCopyOperation( const string &rszDestination, const string &rszSource )
+bool CFolderController::AddCopyOperation( const std::string &rszDestination, const std::string &rszSource )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -200,7 +200,7 @@ bool CFolderController::AddCopyOperation( const string &rszDestination, const st
 }
 
 
-bool CFolderController::AddRenameOperation( const string &rszDestination, const string &rszSource, bool bNewHTREEITEM )
+bool CFolderController::AddRenameOperation( const std::string &rszDestination, const std::string &rszSource, bool bNewHTREEITEM )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -213,7 +213,7 @@ bool CFolderController::AddRenameOperation( const string &rszDestination, const 
 }
 
 
-bool CFolderController::AddColorOperation( const string &rszObjectName, int nNewColor )
+bool CFolderController::AddColorOperation( const std::string &rszObjectName, int nNewColor )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -225,7 +225,7 @@ bool CFolderController::AddColorOperation( const string &rszObjectName, int nNew
 }
 
 
-bool CFolderController::AddExpandOperation( const string &rszObjectName, bool bExpand )
+bool CFolderController::AddExpandOperation( const std::string &rszObjectName, bool bExpand )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//

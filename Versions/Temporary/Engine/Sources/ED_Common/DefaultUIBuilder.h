@@ -5,7 +5,7 @@
 
 class CDefaultUIBuilder : public CBaseUIBuilder
 {
-	static const string DEFAULT_BUILD_DATA_TYPE_NAME;
+	static const std::string DEFAULT_BUILD_DATA_TYPE_NAME;
 
 	OBJECT_NOCOPY_METHODS( CDefaultUIBuilder );
 
@@ -13,15 +13,15 @@ class CDefaultUIBuilder : public CBaseUIBuilder
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 	{
 		return false;
 	}
 
 	//CBuildDataBuilder
-	const string& GetBuildDataTypeName() { return DEFAULT_BUILD_DATA_TYPE_NAME; }
-	bool InternalInsertObject( string *pszObjectTypeName,
-														 string *pszUniqueObjectName,
+	const std::string& GetBuildDataTypeName() { return DEFAULT_BUILD_DATA_TYPE_NAME; }
+	bool InternalInsertObject( std::string *pszObjectTypeName,
+														 std::string *pszUniqueObjectName,
 														 bool bFromMainMenu,
 														 bool *pbCanChangeObjectName,
 														 bool *pbNeedExport,

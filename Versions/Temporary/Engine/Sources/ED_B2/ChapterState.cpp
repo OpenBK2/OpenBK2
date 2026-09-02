@@ -293,7 +293,7 @@ void CChapterState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 void CChapterState::LoadChapterMap()
 {
 	NI_ASSERT( Singleton<IUIScene>() != 0, "CChapterState::LoadChapterMap: Singleton<IUIScene>() == 0" );
-	const string &szTypeName = pChapterEditor->GetObjectSet().szObjectTypeName;
+	const std::string &szTypeName = pChapterEditor->GetObjectSet().szObjectTypeName;
 
 	// get pointer to selected element
 	const NDb::CResource *pSelected = NDb::GetObject( pChapterEditor->GetObjectSet().objectNameSet.begin()->first );
@@ -506,7 +506,7 @@ void CChapterState::SetMaskManipulatorMission( SChapterMapMenuHelper::SMission *
 {
 	IView *pView = ClearView();
 
-	const string szMask = fmt::format( "MissionPath.[{}].", pMission->nIndex );
+	const std::string szMask = fmt::format( "MissionPath.[{}].", pMission->nIndex );
 	pMaskManipulator = new CMaskManipulator( szMask, pChapterEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
 	pMaskManipulator->AddName( "PotentialIncomplete", false, "", INVALID_NODE_ID, false );
@@ -527,7 +527,7 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 		pMapManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( 
 			"MapInfo", pHelper->pDetailsMap->GetDBID().ToString() );
 	}
-	const string szMask = fmt::format( "Roads.[{}].", pArrow->nID );
+	const std::string szMask = fmt::format( "Roads.[{}].", pArrow->nID );
 	pMaskManipulator = new CMaskManipulator( szMask, pMapManipulator, CMaskManipulator::SMART_MODE );
 
 	pMaskManipulator->AddName( "CMArrowType", false, "", INVALID_NODE_ID, false );
@@ -564,7 +564,7 @@ void CChapterState::SetView( IView *pView )
 	if ( pView != 0 )
 	{
 		bNeedCreateTree = ( pView->GetViewManipulator() != pMaskManipulator );
-		pView->SetViewManipulator( pMaskManipulator, pChapterEditor->GetObjectSet(), string() );
+		pView->SetViewManipulator( pMaskManipulator, pChapterEditor->GetObjectSet(), std::string() );
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 
@@ -592,7 +592,7 @@ void CChapterState::ClearMaskManipulator()
 		{
 			pView->RemoveViewManipulator();
 			CPtr<IManipulator> pChapterManipulator = pChapterEditor->CreateChapterManipulator();
-			pView->SetViewManipulator( pChapterManipulator, pChapterEditor->GetObjectSet(), string() );
+			pView->SetViewManipulator( pChapterManipulator, pChapterEditor->GetObjectSet(), std::string() );
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 		pMaskManipulator = 0;

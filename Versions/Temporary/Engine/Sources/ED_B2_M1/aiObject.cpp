@@ -11,7 +11,7 @@ namespace NAI
 
 // CEdgesInfo
 
-int SelectNonZero( const vector<int> & count )
+int SelectNonZero( const std::vector<int> & count )
 {
 	for ( int i = 0; i < count.size(); ++i )
 		if ( count[i] != 0 )
@@ -19,7 +19,7 @@ int SelectNonZero( const vector<int> & count )
 	return -1;
 }
 
-inline void CountEdge( vector<int> *pRes, int n )
+inline void CountEdge( std::vector<int> *pRes, int n )
 {
 	if ( n & 0x8000 )
 		(*pRes)[n&0x7fff]--;
@@ -27,7 +27,7 @@ inline void CountEdge( vector<int> *pRes, int n )
 		(*pRes)[n&0x7fff]++;
 }
 
-int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount, vector<STriangle> *pTris)
+int PushTri( const STriangle &t, const std::vector<SEdge> &edges, std::vector<int> *pCount, std::vector<STriangle> *pTris)
 {
 	uint16_t i1, i2, i3;
 	if ( t.i1 & 0x8000 )
@@ -45,7 +45,7 @@ int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount
 	else
 		i3 = edges[ t.i2 & 0x7fff ].wFinish;
 	pTris->push_back( STriangle( i1, i2, i3 ) );
-	vector<int> &count = *pCount;
+	std::vector<int> &count = *pCount;
 	CountEdge( &count, t.i1 );
 	CountEdge( &count, t.i2 );
 	CountEdge( &count, t.i3 );
@@ -61,7 +61,7 @@ int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount
 
 bool CEdgesInfo::IsClosed() const
 {
-	vector<int> count;
+	std::vector<int> count;
 	count.resize( edges.size(), 0 );
 	for ( int i = 0; i < mesh.size(); ++i )
 	{
@@ -76,22 +76,22 @@ bool CEdgesInfo::IsClosed() const
 	return bRes;
 }
 
-void CEdgesInfo::BuildClosedMeshes( vector<vector<STriangle> > *pMeshes ) const
+void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshes ) const
 {
-	vector<vector<STriangle> > &meshes = *pMeshes;
+	std::vector<std::vector<STriangle> > &meshes = *pMeshes;
 	meshes.clear();
-	vector<STriangle> *pCurrMesh = 0;
+	std::vector<STriangle> *pCurrMesh = 0;
 	if ( !IsClosed() )
 	{
 		ASSERT(0);
-		pMeshes->push_back( vector<STriangle>() );
+		pMeshes->push_back( std::vector<STriangle>() );
 		pCurrMesh = &pMeshes->back();
 		BuildTriangleList( pCurrMesh );
 		return;
 	}
 	int nFreeTris = mesh.size();
-	vector<int> count;
-	vector<char> triUsed;
+	std::vector<int> count;
+	std::vector<char> triUsed;
 	count.resize( edges.size(), 0 );
 	triUsed.resize( nFreeTris, 0 );
 	int nEdge = -1;
@@ -101,7 +101,7 @@ void CEdgesInfo::BuildClosedMeshes( vector<vector<STriangle> > *pMeshes ) const
 		if ( nEdge == -1 )
 		{
 			// make new mesh
-			pMeshes->push_back( vector<STriangle>() );
+			pMeshes->push_back( std::vector<STriangle>() );
 			pCurrMesh = &pMeshes->back();
 			// push next free triangle
 			nTri = 0;
@@ -134,7 +134,7 @@ void CEdgesInfo::BuildClosedMeshes( vector<vector<STriangle> > *pMeshes ) const
 	ASSERT( SelectNonZero( count ) == -1 );
 }
 
-void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
+void CEdgesInfo::BuildTriangleList( std::vector<STriangle> *pRes ) const
 {
 	ASSERT( pRes != 0 );
 	pRes->resize( mesh.size() );
@@ -161,7 +161,7 @@ void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
 	}
 }
 
-uint16_t CEdgesInfo::InsertEdge( uint16_t i1, uint16_t i2, const vector<CVec3> &pts )
+uint16_t CEdgesInfo::InsertEdge( uint16_t i1, uint16_t i2, const std::vector<CVec3> &pts )
 {
 	for ( int i = 0; i < edges.size(); i++ )
 	{
@@ -204,7 +204,7 @@ uint16_t CEdgesInfo::InsertEdge( uint16_t i1, uint16_t i2, const vector<CVec3> &
 	return (edges.size() - 1) | f;
 }
 
-void CEdgesInfo::GenerateEdgeList( const vector<STriangle> &tris, const vector<CVec3> &pts )
+void CEdgesInfo::GenerateEdgeList( const std::vector<STriangle> &tris, const std::vector<CVec3> &pts )
 {
 	for ( int i = 0; i < tris.size(); ++i )
 	{
@@ -227,9 +227,9 @@ SPiece* CGeometryInfo::GetPiece( int nPieceID )
 		return 0;
 	return &i->second;
 }
-void CGeometryInfo::AddPiece( int nPieceID, const vector<CVec3> &_points, 
-	const vector<STriangle> &_tris, float fVolume, vector<SJunction> juncs, bool _bClosed )
-	//, const vector<CPtr<CPrecalcSpheres> > &spheres )
+void CGeometryInfo::AddPiece( int nPieceID, const std::vector<CVec3> &_points, 
+	const std::vector<STriangle> &_tris, float fVolume, std::vector<SJunction> juncs, bool _bClosed )
+	//, const std::vector<CPtr<CPrecalcSpheres> > &spheres )
 {
 	ASSERT( pieces.find( nPieceID ) == pieces.end() );
 	if ( _tris.empty() )
@@ -246,7 +246,7 @@ void CGeometryInfo::AddPiece( int nPieceID, const vector<CVec3> &_points,
 	/*if ( !p.pPrecalc )
 	{
 		p.pPrecalc = new CPrecalcSpheres;
-		vector<STriangle> tris;
+		std::vector<STriangle> tris;
 		p.edges.BuildTriangleList( &tris );
 		p.pPrecalc->Generate( p.points, tris );
 	}*/
@@ -270,7 +270,7 @@ void CGeometryInfo::CalcBound()
 	for ( i = pieces.begin(); i != pieces.end(); ++i )
 	{
 		SPiece &p = i->second;
-		vector<STriangle> tris;
+		std::vector<STriangle> tris;
 		p.edges.BuildTriangleList( &tris );
 		GeneratePrecalcSpheres( &p.precalc, p.points, tris );
 	}
@@ -292,7 +292,7 @@ void CGeometryInfo::CalcBound()
 
 /*void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size )
 {
-	vector<CVec3> &gpos = pRes->points;
+	std::vector<CVec3> &gpos = pRes->points;
 	gpos.resize( 8 );
 	gpos[0] = CVec3( base.x,          base.y,          base.z );
 	gpos[1] = CVec3( base.x,          base.y + size.y, base.z );
@@ -303,7 +303,7 @@ void CGeometryInfo::CalcBound()
 	gpos[6] = CVec3( base.x + size.x, base.y + size.y, base.z + size.z );
 	gpos[7] = CVec3( base.x + size.x, base.y         , base.z + size.z );
 	//
-	vector<STriangle> tris;
+	std::vector<STriangle> tris;
 	tris.resize( 12 );
 	tris[0] = STriangle( 0, 1, 2 );
 	tris[1] = STriangle( 0, 2, 3 );

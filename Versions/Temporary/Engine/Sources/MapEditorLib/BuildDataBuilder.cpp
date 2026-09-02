@@ -6,8 +6,8 @@
 #include "libdb/ResourceManager.h"
 #include "Tools_HashSet.h"
 
-bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,
-																			string *pszUniqueObjectName,
+bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
+																			std::string *pszUniqueObjectName,
 																			bool bFromMainMenu,
 																			bool *pbCanChangeObjectName,
 																			bool *pbNeedExport,
@@ -37,8 +37,8 @@ bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,
 	buildDataParams.bNeedExport = ( *pbNeedExport );
 	buildDataParams.bNeedEdit = ( *pbNeedEdit );
 	//
-	string szBuildDataTypeName = GetBuildDataTypeName();
-	string szBuildDataName;
+	std::string szBuildDataTypeName = GetBuildDataTypeName();
+	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
 		( *pszObjectTypeName ) = buildDataParams.szObjectTypeName;
@@ -47,7 +47,7 @@ bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,
 		( *pbNeedEdit ) = buildDataParams.bNeedEdit;
 		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
-			string szDescription;
+			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 			{
 				return InternalInsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit, pBuildDataManipulator );
@@ -58,7 +58,7 @@ bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,
 }
 
 
-bool CBuildDataBuilder::IsUniqueObjectName( const string &szObjectType, const string &szObjectName )
+bool CBuildDataBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }

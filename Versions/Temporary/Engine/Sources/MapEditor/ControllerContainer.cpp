@@ -67,7 +67,7 @@ bool CControllerContainer::Undo( int nCount )
 		NProgress::Create( true );
 		CString strPM;
 		strPM.LoadString( IDS_PM_UNDO );
-		NProgress::SetMessage( string( strPM ) );
+		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, nCount + 1 );
 		//
 		for ( int nIndex = 0; nIndex <= nCount; ++nIndex )
@@ -99,7 +99,7 @@ bool CControllerContainer::Redo( int nCount )
 		NProgress::Create( true );
 		CString strPM;
 		strPM.LoadString( IDS_PM_REDO );
-		NProgress::SetMessage( string( strPM ) );
+		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, nCount + 1 );
 		//
 		for ( int nIndex = 0; nIndex <= nCount; ++nIndex )
@@ -210,10 +210,10 @@ int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList
 }
 
 
-int CControllerContainer::RemoveTemporaryControllers( const string &rszTemporaryLabel )
+int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemporaryLabel )
 {
 	int nCount = 0;
-	string szTemporaryLabel;
+	std::string szTemporaryLabel;
 	// Undo list
 	{
 		for ( CControllerList::iterator itController = controllerList.begin(); itController != controllerList.end(); )

@@ -62,7 +62,7 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	CMapEditorSingletonApp mapEditorSingletonApp;
 	SMainFrameParams params;
 
-	list<CDWGDBBrowser*> gdbBrowserList;						// Окнa базы
+	std::list<CDWGDBBrowser*> gdbBrowserList;						// Окнa базы
 	CDWPropertyBrowser wndPropertyBrowser;					// Окно для показывания свойств обьекта в базе
 	CDWLog wndLog;																	// Окно лога
 	int nFreeToolbarID;
@@ -127,7 +127,7 @@ public:
 																	 const float fRate,
 																	 const int nWidth );
 	bool SetControlBarWindowContents( SECControlBar* _pwndDockingWindow, class CWnd *pwndContents );
-	bool AddMenuResources( vector<unsigned> &rMenuIDList );
+	bool AddMenuResources( std::vector<unsigned> &rMenuIDList );
 	void ShowMenu( const unsigned nResourceID );
 	bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID );
 	void CreateToolBar( unsigned *pnID,
@@ -140,25 +140,25 @@ public:
 											const bool bVisible,
 											const bool bMainToolBar );
 	SECCustomToolBar* GetToolBar( unsigned nID );
-	void SetStatusBarText( int nPaneIndex, const string &szText );
+	void SetStatusBarText( int nPaneIndex, const std::string &szText );
 	void SetWindowTitle( const SSWTParams &rSWTParams );
 	//
-	void Log( ELogOutputType eLogOutputType, const string &szText );
+	void Log( ELogOutputType eLogOutputType, const std::string &szText );
 	void ClearLog();
 	//
-	void OpenResource( const string &rszResourceName );
+	void OpenResource( const std::string &rszResourceName );
 	void SaveObjectStorage( int nGDBBrowserID );
 	void RestoreObjectStorage();
-	bool BrowseLink( string *pszResult, const string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit );
-	bool BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty );
+	bool BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit );
+	bool BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty );
 	bool SaveChanges(  bool bShowConfirmDialog );
 	void ReloadData();
 	//
 	void CreateProgressDialog();
 	void DestroyProgressDialog();
 	//
-	void SetProgressDialogTitle( const string &rszTitle );
-	void SetProgressDialogMessage( const string &rszMessage );
+	void SetProgressDialogTitle( const std::string &rszTitle );
+	void SetProgressDialogMessage( const std::string &rszMessage );
 	void SetProgressDialogRange( int nStart, int nFinish );
 	void SetProgressDialogPosition( int nPosition );
 	void IterateProgressDialogPosition();

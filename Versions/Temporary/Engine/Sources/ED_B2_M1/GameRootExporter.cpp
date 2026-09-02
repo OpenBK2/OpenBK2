@@ -10,8 +10,8 @@
 REGISTER_EXPORTER_IN_DLL( GameRoot, CGameRootExporter )
 
 EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator* pManipulator,
-																								const string &rszObjectTypeName,
-																								const string &rszObjectName,
+																								const std::string &rszObjectTypeName,
+																								const std::string &rszObjectName,
 																								bool bForce,
 																								EXPORT_TYPE exportType )
 {
@@ -26,7 +26,7 @@ EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator* pManipulator,
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		return ER_SUCCESS;
 	//
-	string szIntroMovie;
+	std::string szIntroMovie;
 	if ( CManipulatorManager::GetValue(&szIntroMovie, pManipulator, "IntroMovie") != false && !szIntroMovie.empty() )
 	{
 		if ( ExportFilesList( szIntroMovie, bForce, "Movies" ) == false )

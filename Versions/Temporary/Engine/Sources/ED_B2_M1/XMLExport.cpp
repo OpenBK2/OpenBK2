@@ -17,14 +17,14 @@ namespace NXMLExport
 
 struct SLevelDesc
 {
-	string szName;
-	string szType;
+	std::string szName;
+	std::string szType;
 	//
 	SLevelDesc() {}
-	SLevelDesc( const string &_szName, const string &_szType )
+	SLevelDesc( const std::string &_szName, const std::string &_szType )
 		: szName( _szName ), szType( _szType ) {}
 };
-typedef vector<SLevelDesc> CLevelsList;
+typedef std::vector<SLevelDesc> CLevelsList;
 inline bool IsInRect( const CLevelsList &levels )
 {
 	if ( levels.size() < 2 )
@@ -32,9 +32,9 @@ inline bool IsInRect( const CLevelsList &levels )
 	return ( levels[levels.size() - 2].szType == "Rect" );
 }
 
-void ConvertXMLSysChars( string *pString )
+void ConvertXMLSysChars( std::string *pString )
 {
-	string szRes;
+	std::string szRes;
 	szRes.reserve( pString->size() );
 	for ( int i = 0; i < pString->size(); )
 	{
@@ -86,7 +86,7 @@ void ConvertXMLSysChars( string *pString )
 	*pString = szRes;
 }
 
-void VariantToString( string *pString, const CVariant &variant, EPCIEType ePCIType, bool bConvertSysChars )
+void VariantToString( std::string *pString, const CVariant &variant, EPCIEType ePCIType, bool bConvertSysChars )
 {
 	switch ( variant.GetType() )
 	{
@@ -150,12 +150,12 @@ void PrintTabs( const int nAmount, FILE *file )
 	fprintf( file, buffer );
 }
 
-void StartLevel( const string &szName, const string &szType, CLevelsList &levels, FILE *file, int nArraySize, list< pair<string, string> > *pAtributes )
+void StartLevel( const std::string &szName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize, std::list< std::pair<std::string, std::string> > *pAtributes )
 {
-	string szAttributes;
+	std::string szAttributes;
 	if ( pAtributes && !pAtributes->empty() )
 	{
-		for ( list< pair<string, string> >::const_iterator it = pAtributes->begin(); it != pAtributes->end(); ++it )
+		for ( std::list< std::pair<std::string, std::string> >::const_iterator it = pAtributes->begin(); it != pAtributes->end(); ++it )
 			szAttributes += " " + it->first + "=\"" + it->second + "\"";
 	}
 	//
@@ -205,13 +205,13 @@ void FinishLevel( CLevelsList &levels, FILE *file )
 	levels.pop_back();
 }
 
-string MakeSimpleChunkName( const string &szFullName, CLevelsList &levels, FILE *file )
+std::string MakeSimpleChunkName( const std::string &szFullName, CLevelsList &levels, FILE *file )
 {
 	int nLastPos = 0;
 	for ( int i = NUM_SYSTEM_CHUNKS; i < levels.size(); ++i )
 	{
 		const int nPos = szFullName.find( '.', nLastPos );
-		if ( nPos == string::npos || szFullName.compare( nLastPos, nPos - nLastPos, levels[i].szName ) != 0 )
+		if ( nPos == std::string::npos || szFullName.compare( nLastPos, nPos - nLastPos, levels[i].szName ) != 0 )
 		{
 			// rollback from 'i - 1' level!
 			int nNumRollback = levels.size() - i;
@@ -221,17 +221,17 @@ string MakeSimpleChunkName( const string &szFullName, CLevelsList &levels, FILE 
 		}
 		nLastPos = nPos + 1;
 	}
-	const string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
+	const std::string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
 	return szChunkName[0] == '[' ? "Item" : szChunkName;
 }
 
-void MoveToNextLevel( const string &szFullName, const string &szType, CLevelsList &levels, FILE *file, int nArraySize )
+void MoveToNextLevel( const std::string &szFullName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize )
 {
 	int nLastPos = 0;
 	for ( int i = NUM_SYSTEM_CHUNKS; i < levels.size(); ++i )
 	{
 		const int nPos = szFullName.find( '.', nLastPos );
-		if ( nPos == string::npos || szFullName.compare( nLastPos, nPos - nLastPos, levels[i].szName ) != 0 )
+		if ( nPos == std::string::npos || szFullName.compare( nLastPos, nPos - nLastPos, levels[i].szName ) != 0 )
 		{
 			// rollback from 'i - 1' level!
 			int nNumRollback = levels.size() - i;
@@ -241,11 +241,11 @@ void MoveToNextLevel( const string &szFullName, const string &szType, CLevelsLis
 		}
 		nLastPos = nPos + 1;
 	}
-	string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
+	std::string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
 	StartLevel( szChunkName, szType, levels, file, nArraySize, 0 );
 }
 
-const string GetTypeName( const SPropertyDesc *pDesc, const string &szFullName )
+const std::string GetTypeName( const SPropertyDesc *pDesc, const std::string &szFullName )
 {
 	if ( pDesc->bArray && szFullName[szFullName.size() - 1] != ']' )
 		return "vector< " + pDesc->szTypeName + " >";
@@ -253,8 +253,8 @@ const string GetTypeName( const SPropertyDesc *pDesc, const string &szFullName )
 		return pDesc->szTypeName;
 }
 
-void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, const int nClassTypeID, 
-																			const string &szObjectName, const int nObjectID, const string &szFieldName )
+void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID, 
+																			const std::string &szObjectName, const int nObjectID, const std::string &szFieldName )
 {
 	StartExport( szObjectName, szTypeName, szFieldName );
 	//
@@ -264,8 +264,8 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 	fprintf( file, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" );
 	// base element with attribute -> ObjectRecordID
 	{
-		list< pair<string, string> > attributes;
-		attributes.push_back( pair<string, string>("ObjectRecordID", StrFmt("%d", nObjectID)) );
+		std::list< std::pair<std::string, std::string> > attributes;
+		attributes.push_back( std::pair<std::string, std::string>("ObjectRecordID", StrFmt("%d", nObjectID)) );
 		StartLevel( szTypeName, szTypeName, levels, file, -1, &attributes );
 	}
 	//
@@ -277,7 +277,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 		{
 			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>(pIt->GetDesc()) )
 			{
-				string szFullFieldName;
+				std::string szFullFieldName;
 				if ( pIt->GetName( &szFullFieldName ) != false && !szFullFieldName.empty() && szFullFieldName != " " )
 				{
 					EPCIEType ePCIType = typePCIEMnemonics.Get( pDesc, szFullFieldName );
@@ -287,12 +287,12 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 					//
 					if ( typePCIEMnemonics.IsLeaf(ePCIType) )
 					{
-						const string szChunkName = MakeSimpleChunkName( szFullFieldName, levels, file );
+						const std::string szChunkName = MakeSimpleChunkName( szFullFieldName, levels, file );
 						PrintTabs( levels.size(), file );
 						//
 						if ( typePCIEMnemonics.IsRef(ePCIType) )
 						{
-							string szRefTypeName, szRefObjName;
+							std::string szRefTypeName, szRefObjName;
 							if ( CManipulatorManager::GetParamsFromReference( szFullFieldName, pObjMan, &szRefTypeName, &szRefObjName, 0 ) != false )
 							{
 								if ( !szRefTypeName.empty() && szRefTypeName != " " && !szRefObjName.empty() && szRefObjName != " " )
@@ -300,7 +300,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 //									// hierarchical export
 //									if ( ExportObject( szRefObjName, szRefTypeName, szFullFieldName ) != false )
 									{
-										string szFullPathName = MakePathName( szRefObjName, szRefTypeName, szFullFieldName );
+										std::string szFullPathName = MakePathName( szRefObjName, szRefTypeName, szFullFieldName );
 										NStr::ToLowerASCII( &szFullPathName );
 										fprintf( file, "<%s href=\"/%s#xpointer(/%s)\"/>\n", szChunkName.c_str(), szFullPathName.c_str(), szRefTypeName.c_str() );
 									}
@@ -316,7 +316,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 						else 
 						{
 							CVariant value;
-							string szValue;
+							std::string szValue;
 							if ( pObjMan->GetValue( szFullFieldName, &value ) != false )
 							{
 								VariantToString( &szValue, value, ePCIType, true );
@@ -326,13 +326,13 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 								{
 									if ( szTypeName == "Text" && szFullFieldName == "Text" )
 									{
-										string szRawValue;
+										std::string szRawValue;
 										VariantToString( &szRawValue, value, ePCIType, false );
-										wstring wszUnicodeValue;
+										std::wstring wszUnicodeValue;
 										NStr::ToUnicode( &wszUnicodeValue, szRawValue );
 										// export text to text file
-										const string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
-										string szFullFileName = "c:\\b2\\xml\\" + szFullName;
+										const std::string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
+										std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
 										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind('.') ) + ".txt";
 										NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
 										//
@@ -347,10 +347,10 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 									}
 									else if ( szTypeName == "Script" && szFullFieldName == "ScriptText" )
 									{
-										string szRawValue;
+										std::string szRawValue;
 										VariantToString( &szRawValue, value, ePCIType, false );
-										const string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
-										string szFullFileName = "c:\\b2\\xml\\" + szFullName;
+										const std::string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
+										std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
 										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind('.') ) + ".lua";
 										NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
 										//
@@ -440,9 +440,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 	FinishExport();
 }
 
-bool CXmlExporter::ExportObject( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
+bool CXmlExporter::ExportObject( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
 {
-	const string szFullName = MakePathName( szObjectName, szClassTypeName, szFieldName );
+	const std::string szFullName = MakePathName( szObjectName, szClassTypeName, szFieldName );
 	if ( szFullName.empty() )
 		return false;
 	if ( exportedObjects.find( szFullName ) != exportedObjects.end() )
@@ -454,7 +454,7 @@ bool CXmlExporter::ExportObject( const string &szObjectName, const string &szCla
 		{
 			const int nClassTypeID = pTableMan->GetID( szClassTypeName );
 			//
-			string szFullFileName = "c:\\b2\\xml\\" + szFullName;
+			std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
 			NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
 			NFile::CreatePath( szFullFileName.substr(0, szFullFileName.rfind('\\')) );
 			if ( FILE *file = fopen(szFullFileName.c_str(), "wt") )
@@ -479,7 +479,7 @@ bool CXmlExporter::ExportObject( const string &szObjectName, const string &szCla
 	}
 }
 
-void CXmlExporter::StartExport( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
+void CXmlExporter::StartExport( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
 {
 	CObjectsStack::iterator pos = objectsStack.insert( objectsStack.end(), SObjStackEntry() );
 	pos->szClassTypeName = szClassTypeName;
@@ -497,11 +497,11 @@ static void DumpTypeNames()
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	if ( CObj<IManipulator> pTableMan = pRM->CreateTableManipulator() )
 	{
-		vector<string> typeNames;
+		std::vector<std::string> typeNames;
 		for ( CObj<IManipulatorIterator> pItTable = pTableMan->Iterate(true, ECT_CACHE_GLOBAL); 
 			pItTable != 0 && !pItTable->IsEnd(); pItTable->Next() )
 		{
-			string szTypeName;
+			std::string szTypeName;
 			if ( pItTable->GetName( &szTypeName ) != false && !szTypeName.empty() && szTypeName != " " )
 			{
 				if ( szTypeName.size() > 7 && szTypeName.compare(szTypeName.size() - 7, 7, "Builder") == 0 )
@@ -750,7 +750,7 @@ void DumpAllObjects()
 	{
 		for ( int i = 0; s_pszTypeNames[i] != 0; ++i )
 		{
-			const string szTypeName = s_pszTypeNames[i];
+			const std::string szTypeName = s_pszTypeNames[i];
 			if ( szTypeName == pszLastExportedTypeName )
 			{
 				nStartPosition = i + 1;
@@ -763,7 +763,7 @@ void DumpAllObjects()
 	// export
 	for ( int i = nStartPosition; s_pszTypeNames[i] != 0; ++i )
 	{
-		const string szTypeName = s_pszTypeNames[i];
+		const std::string szTypeName = s_pszTypeNames[i];
 		const int nClassTypeID = pTableMan->GetID( szTypeName );
 		//
 		if ( CObj<IManipulator> pFolderMan = pRM->CreateFolderManipulator(szTypeName) )
@@ -771,7 +771,7 @@ void DumpAllObjects()
 			for ( CObj<IManipulatorIterator> pItFolder = pFolderMan->Iterate(true, ECT_CACHE_GLOBAL); 
 				pItFolder != 0 && !pItFolder->IsEnd(); pItFolder->Next() )
 			{
-				string szObjectName;
+				std::string szObjectName;
 				if ( !pItFolder->IsFolder() && pItFolder->GetName( &szObjectName ) != false && 
 					!szObjectName.empty() && szObjectName != " " )
 				{

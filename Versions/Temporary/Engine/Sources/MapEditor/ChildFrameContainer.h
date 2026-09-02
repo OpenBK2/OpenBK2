@@ -6,15 +6,15 @@ class CChildFrameContainer : public IChildFrameContainer
 {
 	OBJECT_NOCOPY_METHODS( CChildFrameContainer );
 	CPtr<IChildFrame> pActiveChildFrame;
-	string szActiveChildFrameTypeName;
+	std::string szActiveChildFrameTypeName;
 	//
 public:
 	~CChildFrameContainer();
 
 	// IChildFrameContainer
-	bool CanCreate( const string &rszChildFrameTypeName );
-	bool IsActive( const string &rszChildFrameTypeName );
-	bool Create( const string &rszChildFrameTypeName );
+	bool CanCreate( const std::string &rszChildFrameTypeName );
+	bool IsActive( const std::string &rszChildFrameTypeName );
+	bool Create( const std::string &rszChildFrameTypeName );
 	void Destroy();
 	void Enter();
 	void Leave();

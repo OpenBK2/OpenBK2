@@ -6,27 +6,27 @@ class CEditorContainer : public IEditorContainer
 {
 	OBJECT_NOCOPY_METHODS( CEditorContainer );
 	//
-	typedef std::unordered_map<string, CPtr<IEditor> > CEditorMap;  // BaseObjectType -> Editor
-	typedef std::unordered_map<string, string> CExtendTypeMap;			// ExtendObjectType -> BaseObjectType
+	typedef std::unordered_map<std::string, CPtr<IEditor> > CEditorMap;  // BaseObjectType -> Editor
+	typedef std::unordered_map<std::string, std::string> CExtendTypeMap;			// ExtendObjectType -> BaseObjectType
 	CEditorMap editorMap;
 	CExtendTypeMap extendTypeMap;
-	string szActiveTypeName;
+	std::string szActiveTypeName;
 
-	string GetBaseObjectType( const string &rszExtendObjectTypeName );
+	std::string GetBaseObjectType( const std::string &rszExtendObjectTypeName );
 
 	// Методы умеют обрадаться с уже созданными редакторами и ChildFrame
-	void DestroyActiveEditor( const string &rszNewEditorTypeName, const string &rszNewChildFrameTypeName, bool bDestroyChildFrame );
-	void CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const string &rszNewChildFrameTypeName );
+	void DestroyActiveEditor( const std::string &rszNewEditorTypeName, const std::string &rszNewChildFrameTypeName, bool bDestroyChildFrame );
+	void CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const std::string &rszNewChildFrameTypeName );
 
 public:
 	~CEditorContainer() { DestroyActiveEditor( true ); }
 
 	// IEditorContainer
-	bool CanCreate( const string &rszObjectTypeName );
+	bool CanCreate( const std::string &rszObjectTypeName );
 	//
-	void Create( const string &rszObjectTypeName );
-	void AddExtendObjectType( const string &rszBaseObjectTypeName, const string &rszExtendObjectTypeName );
-	void Destroy( const string &rszObjectTypeName, bool bDestroyChildFrame );
+	void Create( const std::string &rszObjectTypeName );
+	void AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName );
+	void Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame );
 	//
 	IEditor* Create( IManipulator* _pManipulator, const SObjectSet &rObjectSet );
 	void DestroyActiveEditor( bool bDestroyChildFrame );

@@ -11,12 +11,12 @@ class CMapInfoExporter : public IExporter, public ICommandHandler
 	//
 	struct SReGenerateGeometry
 	{
-		bool operator()( const string &rszObjectTypeName, const CDBID &rDBID );
+		bool operator()( const std::string &rszObjectTypeName, const CDBID &rDBID );
 	};
 
 	struct SCheck
 	{
-		bool operator()( const string &rszObjectTypeName, const CDBID &rDBID );
+		bool operator()( const std::string &rszObjectTypeName, const CDBID &rDBID );
 	};
 
 	CMapInfoExporter();
@@ -24,19 +24,19 @@ class CMapInfoExporter : public IExporter, public ICommandHandler
 public:
 
 	// IExporter
-	bool StartExport( const string &rszObjectTypeName, bool bForce );
-	void FinishExport( const string &rszObjectTypeName, bool bForce ) {}
+	bool StartExport( const std::string &rszObjectTypeName, bool bForce );
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce ) {}
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 	//
-	bool StartCheck( const string &rszObjectTypeName, bool bExport ) { return true; }
-	void FinishCheck( const string &rszObjectTypeName, bool bExport ) {}
+	bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
+	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
 	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-														 const string &rszObjectTypeName,
-														 const string &rszObjectName,
+														 const std::string &rszObjectTypeName,
+														 const std::string &rszObjectName,
 														 bool bExport,
 														 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 

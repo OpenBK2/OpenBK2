@@ -11,7 +11,7 @@ namespace
 	const int PIPE_BUFSIZE = 4096;
 	const int SLEEP_STEP = 100;
 
-	bool RedirectStdStream( HANDLE *phParentSide, HANDLE *phChildSide, int nStdStream, string *pszErrorMessage )
+	bool RedirectStdStream( HANDLE *phParentSide, HANDLE *phChildSide, int nStdStream, std::string *pszErrorMessage )
 	{
 		// Set the bInheritHandle flag so pipe handles are inherited. 
 		SECURITY_ATTRIBUTES saAttr;
@@ -91,7 +91,7 @@ namespace
 	/**/
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void GetErrorMessage( string *pszText, unsigned nErrorID )
+	void GetErrorMessage( std::string *pszText, unsigned nErrorID )
 	{
 		NI_ASSERT( pszText, "Supplied string pointer is null" );
 		LPVOID lpMsgBuf;
@@ -115,7 +115,7 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	int StringCountNL( const string &s )
+	int StringCountNL( const std::string &s )
 	{
 		int n = 0;
 		for ( int i = 0; i < s.size(); ++i )
@@ -191,7 +191,7 @@ void CInteractiveProcess::InternalStop()
 }
 
 
-bool CInteractiveProcess::Start( const string &szCommandLine, string *pszErrorMessage )
+bool CInteractiveProcess::Start( const std::string &szCommandLine, std::string *pszErrorMessage )
 {
 	if ( IsStarted() )
 	{
@@ -247,7 +247,7 @@ bool CInteractiveProcess::Start( const string &szCommandLine, string *pszErrorMe
 
 		memset( &procInfo, 0, sizeof(PROCESS_INFORMATION) );
 
-		string szCmdLineCopy( szCommandLine );
+		std::string szCmdLineCopy( szCommandLine );
 		bResult = CreateProcess( NULL,
 			const_cast<char*>(szCmdLineCopy.c_str()),	// command line
 			0,                      // process security attributes
@@ -279,7 +279,7 @@ bool CInteractiveProcess::Start( const string &szCommandLine, string *pszErrorMe
 }
 
 
-bool CInteractiveProcess::Stop( const string &szQuitScript )
+bool CInteractiveProcess::Stop( const std::string &szQuitScript )
 {
 	if ( !IsStarted() )
 	{
@@ -316,7 +316,7 @@ bool CInteractiveProcess::Stop( const string &szQuitScript )
 //
 // pszErrorOutput can be 0, pszOutput and pszErrorMessage cannot.
 //
-bool CInteractiveProcess::Execute( const string &szScript, const string &szResponseEndMark, string *pszOutput, string *pszErrorOutput, string *pszErrorMessage )
+bool CInteractiveProcess::Execute( const std::string &szScript, const std::string &szResponseEndMark, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage )
 {
 	pszOutput->clear();
 	if ( pszErrorOutput )
@@ -371,7 +371,7 @@ bool CInteractiveProcess::Execute( const string &szScript, const string &szRespo
 
 					const int nMarkCount = StringCountSubstring( pszOutput->c_str() + nStartSearchPos, szResponseEndMark.c_str(), nMarkCharCount );
 					nLineCount -= nMarkCount;
-					if ( string::npos != pszOutput->find( szResponseEndMark, (pszOutput->size() - nMarkCharCount) ) )
+					if ( std::string::npos != pszOutput->find( szResponseEndMark, (pszOutput->size() - nMarkCharCount) ) )
 					{
 						bReadFurther = (nLineCount > 0);
 					}

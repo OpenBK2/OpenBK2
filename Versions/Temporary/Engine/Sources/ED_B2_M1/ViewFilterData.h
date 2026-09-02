@@ -5,7 +5,7 @@ struct SViewFilterData
 { 
 	struct SObjTypeFilter
 	{
-		string szObjTypeName;
+		std::string szObjTypeName;
 		bool bShow;
 		///
 		SObjTypeFilter() : bShow( false ) {}
@@ -17,9 +17,9 @@ struct SViewFilterData
 			return 0;
 		}
 	};
-	vector<SObjTypeFilter> objTypeFilter;			// показывать или нет объекты (units, buildings, static ...)
+	std::vector<SObjTypeFilter> objTypeFilter;			// показывать или нет объекты (units, buildings, static ...)
 	bool bShowGrid;														// отображать сетку
-	string szGridSize;												// тип(размер) сетки
+	std::string szGridSize;												// тип(размер) сетки
 	bool bShowBBoxes;													// показывать bounding boxes для моделей
 	bool bWireFrame;													// режим ренедеринга wireframe
 	bool bShowTerrain;												// показывать terrain
@@ -41,7 +41,7 @@ struct SViewFilterData
 		bMipmap( false ),
 		bOverdraw( false )
 	{
-		vector<string> typeNames;
+		std::vector<std::string> typeNames;
 		GetObjectTypesForFiltering( &typeNames );
 		for ( int i = 0; i < typeNames.size(); ++i )
 		{
@@ -57,7 +57,7 @@ struct SViewFilterData
 		*this = SViewFilterData();
 	}
 	///
-	void GetObjectTypesForFiltering( vector<string> *pObjTypes )
+	void GetObjectTypesForFiltering( std::vector<std::string> *pObjTypes )
 	{
 		if ( !pObjTypes )
 			return;
@@ -94,11 +94,11 @@ struct SViewFilterData
 		//
 		if ( xs.IsReading() )
 		{
-			vector<string> typeNames;
-//			vector<string> newTypeNames;
+			std::vector<std::string> typeNames;
+//			std::vector<std::string> newTypeNames;
 			GetObjectTypesForFiltering( &typeNames );
 			// очистить список считанный из файла от типов, которых нет в pszObjTypeNames[]
-			for ( vector<SObjTypeFilter>::iterator it = objTypeFilter.begin(); it != objTypeFilter.end(); )
+			for ( std::vector<SObjTypeFilter>::iterator it = objTypeFilter.begin(); it != objTypeFilter.end(); )
 			{
 				bool bInvalidType = true;
 				for ( int j = 0; j < typeNames.size() ; ++j )

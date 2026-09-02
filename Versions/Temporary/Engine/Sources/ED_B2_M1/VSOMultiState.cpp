@@ -46,7 +46,7 @@ bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePo
 }
 
 
-void CVSOMultiState::SwitchState( const string &rszObjectTypeName )
+void CVSOMultiState::SwitchState( const std::string &rszObjectTypeName )
 {
 	int nNewState = GetActiveInputStateIndex();
 	//
@@ -135,7 +135,7 @@ bool CVSOMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		}
 		case ID_MIVSO_SWITCH_MULTI_STATE:
 		{
-			string *pszObjectTypeName = reinterpret_cast<string*>( dwData );
+			std::string *pszObjectTypeName = reinterpret_cast<std::string*>( dwData );
 			if ( pszObjectTypeName != 0 )
 			{
 				SwitchState( *pszObjectTypeName );

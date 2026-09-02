@@ -9,13 +9,13 @@ class CFolderCallback : public IFolderCallback
 
 	struct SUndoData
 	{
-		string szObjectTypeName;
-		string szObjectName;
+		std::string szObjectTypeName;
+		std::string szObjectName;
 	};
-	typedef list<SUndoData> CUndoDataList;
+	typedef std::list<SUndoData> CUndoDataList;
 	CUndoDataList undoDataList;
 
-	typedef std::unordered_map<string, CObjectNameSet> CLockObjectMap;
+	typedef std::unordered_map<std::string, CObjectNameSet> CLockObjectMap;
 	CLockObjectMap lockObjectMap;
 
 protected:
@@ -24,14 +24,14 @@ protected:
 	void UndoChanges();
 	void LockObjects( const SObjectSet &rObjectSet );
 	void UnockObjects( const SObjectSet &rObjectSet );
-	bool IsObjectLocked( const string &rszTypeName, const CDBID &rDBID ) const;
-	bool IsUniqueName( const string &rszTypeName, const string &rszName );
-	bool UniqueName( const string &szTypeName, string *pszName );
-	bool InsertObject( const string &rszObjectTypeName, const string &rszObjectName );
-	bool CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource );
-	bool RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource );
-	bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName, bool bRecursive );
-	bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor );
+	bool IsObjectLocked( const std::string &rszTypeName, const CDBID &rDBID ) const;
+	bool IsUniqueName( const std::string &rszTypeName, const std::string &rszName );
+	bool UniqueName( const std::string &szTypeName, std::string *pszName );
+	bool InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
+	bool RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
+	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive );
+	bool SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor );
 };
 
 

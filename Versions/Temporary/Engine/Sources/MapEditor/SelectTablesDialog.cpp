@@ -29,7 +29,7 @@ BOOL CSelectTablesDialog::OnInitDialog()
 
 	CResizeDialog::OnInitDialog();
 
-	for ( list<string>::const_iterator itString = tables.begin(); itString != tables.end(); ++itString )
+	for ( std::list<std::string>::const_iterator itString = tables.begin(); itString != tables.end(); ++itString )
 	{
 		const int nAddedString = wndTablesList.AddString( itString->c_str() );
 		if ( selectedTables.find( *itString ) != selectedTables.end() )
@@ -60,7 +60,7 @@ void CSelectTablesDialog::OnOK()
 		{
 			CString strText;
 			wndTablesList.GetText( nStringIndex, strText );
-			InsertHashSetElement( &selectedTables, string( strText ) );
+			InsertHashSetElement( &selectedTables, std::string( strText ) );
 		}
 	}
 }

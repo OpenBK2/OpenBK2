@@ -47,7 +47,7 @@ class CCameraPositionState : public CDefaultInputState, public ICommandHandler
 	SCameraPos GetDefaultCamPos();
 	void GetDBInfo();
 	//
-	vector<SCameraPos> cameraPositions;
+	std::vector<SCameraPos> cameraPositions;
 	CSceneDrawTool sceneDrawTool;
 
 public:
@@ -57,7 +57,7 @@ public:
 	void Leave();
 	void Draw( CPaintDC *pPaintDC );
 	void PostDraw( CPaintDC *pPaintDC );
-	void DrawLabel( CPaintDC *pPaintDC, const string &szLabel, const CVec2 &pos );
+	void DrawLabel( CPaintDC *pPaintDC, const std::string &szLabel, const CVec2 &pos );
 	
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );

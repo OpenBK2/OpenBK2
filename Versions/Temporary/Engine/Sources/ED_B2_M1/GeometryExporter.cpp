@@ -13,14 +13,14 @@ const char *CGeometryExporter::GetAddPath() const
 	return "bin\\geometries\\";
 }
 
-bool CGeometryExporter::FormScript( string *pScriptText,
-																		const string &szTypeName,
-																		const string &szObjName,
-																		const string &szDstPath,
-																		const string &szSrcPath,
+bool CGeometryExporter::FormScript( std::string *pScriptText,
+																		const std::string &szTypeName,
+																		const std::string &szObjName,
+																		const std::string &szDstPath,
+																		const std::string &szSrcPath,
 																		IManipulator *pManipulator )
 {
-	const string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
+	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
@@ -30,9 +30,9 @@ bool CGeometryExporter::FormScript( string *pScriptText,
 		return false;
 	}
 	//
-	string szRootMesh;
-	string szRootJoint;
-	const string szScriptTemplate = GetScriptTemplate( "ExportGeometry" );
+	std::string szRootMesh;
+	std::string szRootJoint;
+	const std::string szScriptTemplate = GetScriptTemplate( "ExportGeometry" );
 	if ( CManipulatorManager::GetValue( &szRootMesh, pManipulator, "RootMesh" ) == false )
 		szRootMesh.clear();
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
@@ -49,9 +49,9 @@ bool CGeometryExporter::FormScript( string *pScriptText,
 	return true;
 }
 
-bool CGeometryExporter::ImportInfoToDBBeforeRefs( const string &szObjName, 
-																									const string &szSrcScenePath,
-																									const string &szDstFileName, 
+bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+																									const std::string &szSrcScenePath,
+																									const std::string &szDstFileName, 
 																									IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -102,10 +102,10 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 	return true;
 }
 
-EXPORT_RESULT CGeometryExporter::CustomCheck( const string &szTypeName,
-																						  const string &szObjName, 
-																							const string &szSrcScenePath,
-																							const string &szDestinationPath, 
+EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
+																						  const std::string &szObjName, 
+																							const std::string &szSrcScenePath,
+																							const std::string &szDestinationPath, 
 																							IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();

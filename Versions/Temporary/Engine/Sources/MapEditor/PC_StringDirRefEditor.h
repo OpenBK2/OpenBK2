@@ -12,9 +12,9 @@ class CPCStringDirRefEditor : public CPCStringBrowseEditor
 	CPCStringDirRefEditor() {}
 	OBJECT_NOCOPY_METHODS( CPCStringDirRefEditor );
 
-	string szObjectTypeName;
+	std::string szObjectTypeName;
 public:
-	CPCStringDirRefEditor( const string &rszObjectTypeName );
+	CPCStringDirRefEditor( const std::string &rszObjectTypeName );
 
 	//CPCItemEditor
 	void GetValue( CVariant *pValue );

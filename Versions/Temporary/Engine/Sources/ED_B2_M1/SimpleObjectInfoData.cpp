@@ -65,7 +65,7 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectLoadInfo != 0, "SSimpleObjectInfo::Load(), pObjectLoadInfo == 0" );
 		//
 		// Устанавливаем общие параметры
-		const string szObjectPrefix = StrFmt( "Objects.[%d]", pObjectLoadInfo->nObjectIndex );
+		const std::string szObjectPrefix = StrFmt( "Objects.[%d]", pObjectLoadInfo->nObjectIndex );
 		// создаем SMapInfoElement и заполняем его данными
 		bool bResult = true;
 		{
@@ -85,8 +85,8 @@ namespace NMapInfoEditor
 			}
 			else
 			{
-				string szRPGStatsTypeName;
-				string szRPGStatsName;
+				std::string szRPGStatsTypeName;
+				std::string szRPGStatsName;
 				bResult = bResult && CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				mapInfoElement.szRPGStatsTypeName = szRPGStatsTypeName;
 				mapInfoElement.rpgStatsDBID = CDBID( szRPGStatsName );
@@ -155,7 +155,7 @@ namespace NMapInfoEditor
 			mapInfoElement.linkedLinkIDIist.clear();
 			mapInfoElement.nLinkToLinkID = INVALID_NODE_ID;
 
-			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 			//Change
@@ -233,7 +233,7 @@ namespace NMapInfoEditor
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SSimpleObjectInfo::NeedMakeOrientation( const string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID )
+	bool SSimpleObjectInfo::NeedMakeOrientation( const std::string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID )
 	{
 		if ( rszRPGStatsTypeName == "MechUnitRPGStats" )
 		{

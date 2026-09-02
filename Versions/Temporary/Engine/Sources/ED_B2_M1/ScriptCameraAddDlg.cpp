@@ -2,7 +2,7 @@
 
 #include "ScriptCameraAddDlg.h"
 
-CScriptCameraAddDlg::CScriptCameraAddDlg( CWnd *pParentWindow, string *_pszNewCameraName, const vector<NCamera::CCameraPlacement> &rvExistingCameras )
+CScriptCameraAddDlg::CScriptCameraAddDlg( CWnd *pParentWindow, std::string *_pszNewCameraName, const std::vector<NCamera::CCameraPlacement> &rvExistingCameras )
 	: CResizeDialog( CScriptCameraAddDlg::IDD, pParentWindow ),
 	pszNewCameraName( _pszNewCameraName ),
 	vExistingCameras( rvExistingCameras )
@@ -40,7 +40,7 @@ void CScriptCameraAddDlg::OnEnChangeScriptCameraNameEdit()
 
 	CString szNewCameraInput;
 	GetDlgItemText( IDC_SCAD_EDIT_NAME, szNewCameraInput );
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = vExistingCameras.begin(); it < vExistingCameras.end(); ++it )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = vExistingCameras.begin(); it < vExistingCameras.end(); ++it )
 	{
 		if ( szNewCameraInput == it->szName.c_str() )
 		{

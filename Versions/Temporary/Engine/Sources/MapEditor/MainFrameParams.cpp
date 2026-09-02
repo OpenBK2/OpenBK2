@@ -12,7 +12,7 @@ SMainFrameParams::SMainFrameParams()
 }
 
 
-void SMainFrameParams::GetRegistryKey( string *pszRegistryKey )
+void SMainFrameParams::GetRegistryKey( std::string *pszRegistryKey )
 {
 	NI_ASSERT( pszRegistryKey != 0, "SMainFrameParams::GetRegistryKey() pszRegistryKey is NULL" );
 	CString strPath;
@@ -29,7 +29,7 @@ void SMainFrameParams::GetRegistryKey( string *pszRegistryKey )
 }
 
 
-void SMainFrameParams::GetXMLFilePath( string *pszXMLFilePath )
+void SMainFrameParams::GetXMLFilePath( std::string *pszXMLFilePath )
 {
 	NI_ASSERT( pszXMLFilePath != 0, "SMainFrameParams::GetXMLFilePath() pszXMLFilePath is NULL" );
 	( *pszXMLFilePath ) = "Editor\\MainFrameParams";
@@ -56,14 +56,14 @@ void SMainFrameParams::Load( bool bFromRegistry )
 {
 	if ( bFromRegistry )
 	{
-		string szRegistryKey;
+		std::string szRegistryKey;
 		GetRegistryKey( &szRegistryKey );
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
 
 		CString strKey;
-		string szFormat;
+		std::string szFormat;
 		int nValue = 0;
-		string szValue;
+		std::string szValue;
 
 		nValue = 0;
 		strKey.LoadString( IDS_REGISTRY_KEY_MAXIMIZE );
@@ -83,7 +83,7 @@ void SMainFrameParams::Load( bool bFromRegistry )
 			recentList.clear();
 			for ( int nRecentIndex = 0; nRecentIndex < nRecentCount; ++nRecentIndex )
 			{
-				string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				recentList.push_back( szValue );
@@ -98,7 +98,7 @@ void SMainFrameParams::Load( bool bFromRegistry )
 			tables.clear();
 			for ( int nTableIndex = 0; nTableIndex < nTablesCount; ++nTableIndex )
 			{
-				string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				InsertHashSetElement( &tables, szValue );
@@ -110,7 +110,7 @@ void SMainFrameParams::Load( bool bFromRegistry )
 	}
 	else
 	{
-		string szXMLFilePath;
+		std::string szXMLFilePath;
 		GetXMLFilePath( &szXMLFilePath );
 		LoadXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + szXMLFilePath, ".xml", "MainFrameParams", ( *this ) );
 	}
@@ -121,13 +121,13 @@ void SMainFrameParams::Save(  bool bToRegistry )
 {
 	if ( bToRegistry )
 	{
-		string szRegistryKey;
+		std::string szRegistryKey;
 		GetRegistryKey( &szRegistryKey );
 		::RegDeleteKey( HKEY_CURRENT_USER, szRegistryKey.c_str() );
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_WRITE, szRegistryKey.c_str() );
 
 		CString strKey;
-		string szFormat;
+		std::string szFormat;
 
 		strKey.LoadString( IDS_REGISTRY_KEY_MAXIMIZE );
 		registrySection.SaveNumber( strKey, "%d", bMaximized );
@@ -143,9 +143,9 @@ void SMainFrameParams::Save(  bool bToRegistry )
 			szFormat = StrFmt( "%ss", LPCTSTR( strKey ) );
 			registrySection.SaveNumber( szFormat.c_str(), "%d", nRecentCount );
 			int nRecentIndex = 0;
-			for ( list<string>::const_iterator itRecent = recentList.begin(); itRecent != recentList.end(); ++itRecent )
+			for ( std::list<std::string>::const_iterator itRecent = recentList.begin(); itRecent != recentList.end(); ++itRecent )
 			{
-				string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nRecentIndex );
 				registrySection.SaveString( szFormat.c_str(), ( *itRecent ) );
 				++nRecentIndex;
 			}
@@ -160,7 +160,7 @@ void SMainFrameParams::Save(  bool bToRegistry )
 			int nTableIndex = 0;
 			for ( CTableSet::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 			{
-				string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = StrFmt( "%s%d", LPCTSTR( strKey ), nTableIndex );
 				registrySection.SaveString( szFormat.c_str(), itTable->first );
 				++nTableIndex;
 			}
@@ -171,7 +171,7 @@ void SMainFrameParams::Save(  bool bToRegistry )
 	}
 	else
 	{
-		string szXMLFilePath;
+		std::string szXMLFilePath;
 		GetXMLFilePath( &szXMLFilePath );
 		SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + szXMLFilePath, ".xml", "MainFrameParams", ( *this ) );
 	}

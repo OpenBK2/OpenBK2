@@ -16,15 +16,15 @@ const char *CAnimationExporter::GetAddPath() const
 static const char PARAMS_AABBA[] = ".aabba";
 static const char PARAMS_AABBD[] = ".aabbd";
 
-bool CAnimationExporter::FormScript( string *pScriptText,
-																		const string &szTypeName,
-																		const string &szObjName,
-                                    const string &szDstPath,
-																		const string &szSrcPath,
+bool CAnimationExporter::FormScript( std::string *pScriptText,
+																		const std::string &szTypeName,
+																		const std::string &szObjName,
+                                    const std::string &szDstPath,
+																		const std::string &szSrcPath,
                                     IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
-	const string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
+	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
 		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
@@ -33,20 +33,20 @@ bool CAnimationExporter::FormScript( string *pScriptText,
 		return false;
 	}
 	//
-	string szRootJoint;
+	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" );
 	int nFirstFrame = 0, nLastFrame = 0;
 	CManipulatorManager::GetValue( &nFirstFrame, pManipulator , "FirstFrame" );
 	CManipulatorManager::GetValue( &nLastFrame, pManipulator , "LastFrame" );
 	// main script - export animation
-	string szScriptTemplate = GetScriptTemplate( "ExportAnimation" );
+	std::string szScriptTemplate = GetScriptTemplate( "ExportAnimation" );
 	*pScriptText = StrFmt( szScriptTemplate.c_str(),
 		szDstPath.c_str(), szSrcPath.c_str(),
 		szRootJoint.c_str(), nFirstFrame, nLastFrame,
 		szSettingsFileName.c_str() );
 	*pScriptText += ";\n";
 	// additional script - export AABB_A & AABB_D params
-	const string szAttribSettingsFileName = GetGrannyExportSettingsFileName( "Attribs" );
+	const std::string szAttribSettingsFileName = GetGrannyExportSettingsFileName( "Attribs" );
 	if ( szAttribSettingsFileName.empty() )
 	{
 		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
@@ -56,17 +56,17 @@ bool CAnimationExporter::FormScript( string *pScriptText,
 	}
 	//
 	szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
-	string szAABBAName;
+	std::string szAABBAName;
 	if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator , "AABBAName" ) && !szAABBAName.empty() )
 	{
-		const string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
+		const std::string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
 		*pScriptText += StrFmt( szScriptTemplate.c_str(),
 			(szDstPath + PARAMS_AABBA).c_str(), szSrcPath.c_str(),
 			szAABBAName.c_str(), "", 
 			szAttribSettingsFileName.c_str() );
 		*pScriptText += ";\n";
 	}
-	string szAABBDName;
+	std::string szAABBDName;
 	if ( CManipulatorManager::GetValue( &szAABBDName, pManipulator , "AABBDName" ) && !szAABBDName.empty() )
 	{
 		*pScriptText += StrFmt( szScriptTemplate.c_str(),
@@ -78,9 +78,9 @@ bool CAnimationExporter::FormScript( string *pScriptText,
 	return true;
 }
 
-bool CAnimationExporter::ImportInfoToDBBeforeRefs( const string &szObjName, 
-																									 const string &szSrcScenePath,
-																									 const string &szDstFileName,
+bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+																									 const std::string &szSrcScenePath,
+																									 const std::string &szDstFileName,
 															                     IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -102,10 +102,10 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 			CManipulatorManager::SetValue( nActionTime, pManipulator , "Action" );
 		}
 		//
-		string szAABBAName;
+		std::string szAABBAName;
 		if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator, "AABBAName" ) && !szAABBAName.empty() )
 		{
-			const string szAttribsFileName = szDstFileName + PARAMS_AABBA;
+			const std::string szAttribsFileName = szDstFileName + PARAMS_AABBA;
 			WaitForFile( szAttribsFileName, 10000 );
 			CGrannyFileInfoGuard fileInfo( szAttribsFileName );
 			//
@@ -124,10 +124,10 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 			pManipulator->SetValue( "aabb_a.HalfSize.y", vHalfSize.y );
 			pManipulator->SetValue( "aabb_a.HalfSize.z", vHalfSize.z );
 		}
-		string szAABBDName;
+		std::string szAABBDName;
 		if ( CManipulatorManager::GetValue( &szAABBDName, pManipulator, "AABBDName" ) && ( !szAABBDName.empty() ) )
 		{
-			const string szAttribsFileName = szDstFileName + PARAMS_AABBD;
+			const std::string szAttribsFileName = szDstFileName + PARAMS_AABBD;
 			WaitForFile( szAttribsFileName, 10000 );
 			CGrannyFileInfoGuard fileInfo( szAttribsFileName );
 			//
@@ -158,10 +158,10 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 	return bResult;
 }
 
-EXPORT_RESULT CAnimationExporter::CustomCheck( const string &szTypeName,
-																							 const string &szObjName, 
-																							 const string &szSrcScenePath,
-																							 const string &szDestinationPath, 
+EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
+																							 const std::string &szObjName, 
+																							 const std::string &szSrcScenePath,
+																							 const std::string &szDestinationPath, 
 																							 IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();

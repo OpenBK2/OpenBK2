@@ -23,14 +23,14 @@ const char *CSkeletonExporter::GetAddPath() const
 	return "bin\\skeletons\\";
 }
 
-bool CSkeletonExporter::FormScript( string *pScriptText,
-																		const string &szTypeName,
-																		const string &szObjName, 
-                                    const string &szDstPath,
-																		const string &szSrcPath,
+bool CSkeletonExporter::FormScript( std::string *pScriptText,
+																		const std::string &szTypeName,
+																		const std::string &szObjName, 
+                                    const std::string &szDstPath,
+																		const std::string &szSrcPath,
                                     IManipulator *pManipulator )
 {
-	const string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
+	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
 		NLog::Log( LT_ERROR, "Granny exporter settings file is not specified\n" );
@@ -39,13 +39,13 @@ bool CSkeletonExporter::FormScript( string *pScriptText,
 		return false;
 	}
 	//
-	string szRootJoint;
+	std::string szRootJoint;
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
 	{
 		szRootJoint.clear();
 	}
 	// main script - export skeleton
-	string szScriptTemplate = GetScriptTemplate( "ExportSkeleton" );
+	std::string szScriptTemplate = GetScriptTemplate( "ExportSkeleton" );
 	*pScriptText = StrFmt( szScriptTemplate.c_str(),
 		szDstPath.c_str(), szSrcPath.c_str(),
 		"", szRootJoint.c_str(),
@@ -59,7 +59,7 @@ bool CSkeletonExporter::FormScript( string *pScriptText,
 	CManipulatorManager::GetValue( &nRefCount, pManipulator, "Animations" );
 	for ( int nRefIndex = 0; nRefIndex < nRefCount; ++nRefIndex )
 	{
-		string szRef;
+		std::string szRef;
 		CManipulatorManager::GetValue( &szRef, pManipulator, StrFmt("Animations.[%d]", nRefIndex) );
 		if ( !szRef.empty() )
 			animations[szRef] = 1;
@@ -69,14 +69,14 @@ bool CSkeletonExporter::FormScript( string *pScriptText,
 	return true;
 }
 
-bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName, 
-																									const string &szSrcScenePath,
-																									const string &szDstFileName, 
+bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+																									const std::string &szSrcScenePath,
+																									const std::string &szDstFileName, 
 																									IManipulator *pManipulator )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	bool bResult = true;
-	const string szAnimationTypeName = "AnimB2";
+	const std::string szAnimationTypeName = "AnimB2";
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( "Skeleton" );
 	if ( !pFolderManipulator )
 	{
@@ -89,16 +89,16 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 	}
 	//
 	// 
-	string szSrcName;
-	string szRootJoint;
+	std::string szSrcName;
+	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szSrcName, pManipulator, "SrcName" );
 	CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" );
 	//
 	if ( PatMat( szRootJoint.c_str(), "*section??" ) )
 		return true;
 	//
-	string szAnimationNamePrefix = NFile::CutFileExt( szObjName, 0 );
-	const string szSkeletonPostfix = "_skeleton";
+	std::string szAnimationNamePrefix = NFile::CutFileExt( szObjName, 0 );
+	const std::string szSkeletonPostfix = "_skeleton";
 	if ( NFile::ComparePathEq(szAnimationNamePrefix.size() - szSkeletonPostfix.size(), szSkeletonPostfix.size(), 
 		                        szAnimationNamePrefix, 0, szSkeletonPostfix.size(), szSkeletonPostfix) != false )
 	{
@@ -106,7 +106,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 	}
 	//
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
-	string szSrcFileName = pUD->constUserData.szExportSourceFolder + szSrcName;
+	std::string szSrcFileName = pUD->constUserData.szExportSourceFolder + szSrcName;
 	NStr::ReplaceAllChars( &szSrcFileName, '\\', '/' );
 	try
 	{
@@ -120,19 +120,19 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 		{
 			bool bResult = true;
 			//
-			string szAnimationName;
+			std::string szAnimationName;
 			//
-			string szAnimationType;
+			std::string szAnimationType;
 			int nFirstFrame = -1;
 			int nLastFrame = -1;
-			string szAABBAName;
-			string szAABBDName;
+			std::string szAABBAName;
+			std::string szAABBDName;
 			uint32_t dwWeaponBits = 0;
 			bool bLooped = false;
 			float fSpeed = 1.0f;
 			int nActionFrame = 0;
 			{
-				string szBoneName = itAttribute->szBoneName;
+				std::string szBoneName = itAttribute->szBoneName;
 				NStr::ToUpper( &szBoneName );
 				unsigned nNumber = INVALID_NODE_ID;
 				NDb::EAnimationType animationType = typeMayaAnimationMnemonics.Get( szBoneName, 0, &nNumber );
@@ -140,7 +140,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 				if ( bResult )
 				{
 					szAnimationType = typeAnimationMnemonics.GetMnemonic( animationType );
-					string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
+					std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
 					NStr::ToLowerASCII( &szMnemonic );
 					if ( nNumber != INVALID_NODE_ID )
 						szAnimationName = StrFmt( "%s_%02d", szMnemonic.c_str(), nNumber ); 
@@ -182,7 +182,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 				if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) ) 
 				{
 					// Удалим анимацию из списка несуществующих анимаций
-					string szTypeAndName;
+					std::string szTypeAndName;
 					CStringManager::GetRefValueFromTypeAndName( &szTypeAndName, szAnimationTypeName, szAnimationName, TYPE_SEPARATOR_CHAR );
 					CAnimationRefMap::iterator posAnimationName = animations.find( szAnimationName );
 					if ( posAnimationName != animations.end() )
@@ -212,7 +212,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 		for ( CAnimationRefMap::iterator itAnimationName = animations.begin(); itAnimationName != animations.end(); ++itAnimationName ) 
 		{
 			pFolderCallback->RemoveObject( "AnimB2", itAnimationName->first.ToString(),  false );
-			const string szFileName = NDb::GetFileName( itAnimationName->first );
+			const std::string szFileName = NDb::GetFileName( itAnimationName->first );
 			::DeleteFile( (pUD->constUserData.szDataStorageFolder + szFileName).c_str() );
 			//
 			NLog::Log( LT_IMPORTANT, "Removing old animation: %s\n", szFileName.c_str() );
@@ -230,10 +230,10 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 	return bResult;
 }
 
-EXPORT_RESULT CSkeletonExporter::CustomCheck( const string &szTypeName,
-																							const string &szObjName, 
-																							const string &szSrcScenePath,
-																							const string &szDestinationPath, 
+EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
+																							const std::string &szObjName, 
+																							const std::string &szSrcScenePath,
+																							const std::string &szDestinationPath, 
 																							IManipulator *pManipulator )
 {
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );

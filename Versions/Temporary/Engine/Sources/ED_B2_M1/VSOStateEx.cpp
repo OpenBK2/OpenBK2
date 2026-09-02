@@ -34,7 +34,7 @@ void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 			NMapInfoEditor::CVSOInstanceList *pVSOList = GetVSOList();
 			for ( int nVSOIndex = 0; nVSOIndex < pVSOList->size(); ++nVSOIndex )
 			{
-				list<CVec3> boundingPolygon;
+				std::list<CVec3> boundingPolygon;
 				CVSOManager::GetBoundingPolygon( &boundingPolygon, ( *pVSOList )[nVSOIndex].points, CVSOManager::PT_BOTH, 1.0f );
 				if ( ClassifyPolygon( boundingPolygon, rvPos ) != CP_OUTSIDE )
 				{
@@ -181,7 +181,7 @@ void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 }
 
 
-int CVSOStateEx::InsertVSO( const vector<CVec3> &rControlPointList )
+int CVSOStateEx::InsertVSO( const std::vector<CVec3> &rControlPointList )
 {
 	int nFreeVSOID = INVALID_NODE_ID;
 	if ( CanEdit() && CanInsertVSO() )
@@ -286,11 +286,11 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 			NHPTimer::STime time = 0;
 			NHPTimer::GetTime( &time );
 			//
-			string szVSODescName = rVSO.pDescriptor->GetDBID().ToString();
+			std::string szVSODescName = rVSO.pDescriptor->GetDBID().ToString();
 			//
 			NMapInfoEditor::CVSOInstanceList *pVSOList = GetVSOList();
 			const int nNewVSOIndex = ( nVSOIndex == NODE_ADD_INDEX ) ? ( pVSOList->size() - 1 ) : nVSOIndex;
-			const string szNewVSOLabel =	StrFmt( "%s.[%d].", GetVSOName().c_str(), nNewVSOIndex );
+			const std::string szNewVSOLabel =	StrFmt( "%s.[%d].", GetVSOName().c_str(), nNewVSOIndex );
 			if ( !szVSODescName.empty() )
 			{
 				bool bResult = true;
@@ -298,7 +298,7 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 				//Add
 				bResult = bResult && pObjectController->AddInsertOperation( GetVSOName(), nVSOIndex, pManipulator );
 				//Set Descriptor name
-				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "Descriptor", string( StrFmt( "%s:%s", GetVSOTypeName().c_str(), szVSODescName.c_str() ) ), pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "Descriptor", std::string( StrFmt( "%s:%s", GetVSOTypeName().c_str(), szVSODescName.c_str() ) ), pManipulator );
 				//Set ID
 				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "VSOID", rVSO.nVSOID, pManipulator );
 				// Add ControlPoints
@@ -306,7 +306,7 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.controlPoints.size(); ++nPointIndex )
 					{
-						const string szControlPointLabel = szNewVSOLabel + StrFmt( "ControlPoints.[%d]", nPointIndex );
+						const std::string szControlPointLabel = szNewVSOLabel + StrFmt( "ControlPoints.[%d]", nPointIndex );
 						//Add
 						bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "ControlPoints", NODE_ADD_INDEX, pManipulator );
 						//Set
@@ -322,7 +322,7 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
 					{
-						const string szPointLabel =  szNewVSOLabel + StrFmt( "points.[%d].", nPointIndex );
+						const std::string szPointLabel =  szNewVSOLabel + StrFmt( "points.[%d].", nPointIndex );
 						//Add
 						bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "points", NODE_ADD_INDEX, pManipulator );
 						//Set Pos

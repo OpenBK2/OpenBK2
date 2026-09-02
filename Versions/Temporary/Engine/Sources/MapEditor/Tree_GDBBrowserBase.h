@@ -45,7 +45,7 @@ private:
 	{
 		public:
 		CGDBOMnemonics();
-		EGDBOType Get( const string &rszGDBOMnemonic );
+		EGDBOType Get( const std::string &rszGDBOMnemonic );
 	};
 	//
 	struct STreeOperation
@@ -69,8 +69,8 @@ private:
 		EType nType;
 		bool bExportReferences;
 	};
-	typedef list<STreeOperation> CTreeOperationList;
-	//typedef list<SGDBOperation> SGDBOperationList;
+	typedef std::list<STreeOperation> CTreeOperationList;
+	//typedef std::list<SGDBOperation> SGDBOperationList;
 	//
 	CTreeGDBBrowserInputState dragAndDropState;
 
@@ -79,7 +79,7 @@ private:
 	unsigned nPCDialogCommandHandlerID;
 	//
 	HTREEITEM hLabelEditItem;
-	string szItemTextFromBeginLabelEdit;
+	std::string szItemTextFromBeginLabelEdit;
 	CGDBOMnemonics typeMnemonics;
 	//
 	bool bStrongSelection; // selection in open / resent list operations
@@ -87,7 +87,7 @@ private:
 	// Таймер дла отложенного считывания полей структур из базы
 	int32_t nCreateTreeTimer;
 	bool bCreateTreeSelectionChanged;
-	string szIgnoreSelectionName;
+	std::string szIgnoreSelectionName;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
   inline unsigned GetCreateTreeTimerID() { return 100; }
   inline unsigned GetCreateTreeTimerInterval() { return 100; }	// Частота в миллисекундах
@@ -105,7 +105,7 @@ private:
   void KillLabelEditSortTimer();
   void OnLabelEditSortTimer();
 	//
-	HTREEITEM AddTreeItem( HTREEITEM hRootItem, const string &rszAdditionalName, EGDBOType nType, const SIteratorDesc *pDesc );
+	HTREEITEM AddTreeItem( HTREEITEM hRootItem, const std::string &rszAdditionalName, EGDBOType nType, const SIteratorDesc *pDesc );
 	//HTREEITEM CopyTreeItems( HTREEITEM hParentItem, HTREEITEM hSourceItem, bool bClearState );
 	//void DeleteTreeItems( HTREEITEM hItem );
 	//	
@@ -113,15 +113,15 @@ private:
 	//
 	void SaveHeaderWidthInternal();
 	//
-	void GetUniqueName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, string *pszName );
-	HTREEITEM FindName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, bool bCheckType, HTREEITEM hItemToSkip );
-	HTREEITEM FindPlaceToInsert( HTREEITEM hParentItem, const string &rszName, EGDBOType nType );
+	void GetUniqueName( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType, std::string *pszName );
+	HTREEITEM FindName( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType, bool bCheckType, HTREEITEM hItemToSkip );
+	HTREEITEM FindPlaceToInsert( HTREEITEM hParentItem, const std::string &rszName, EGDBOType nType );
 	void PickTextColors( LvPaintContext* pPC );
 	//
 	bool ExecuteTreeOperation( const STreeOperation &rTreeOperation );
 	bool ExecuteTreeOperations( const CTreeOperationList &rTreeOperationList );
 	//
-	HTREEITEM FindFirstItem( const string &rszSearch, HTREEITEM hStartItem );
+	HTREEITEM FindFirstItem( const std::string &rszSearch, HTREEITEM hStartItem );
 	//
 	void ShowContextMenu( const CTPoint<int> &rPoint );
 	void NewFolder( HTREEITEM hParentItem );
@@ -182,9 +182,9 @@ protected:
 	void InternalRedo( IController* pController ); 
 	
 	// CSortTreeControl
-	HTREEITEM GetTreeItem( const string &rszName );
-	void GetClipboardPrefix( string *pszClipboardPrefix ) { if ( pszClipboardPrefix ) ( *pszClipboardPrefix ) = GetObjectSet().szObjectTypeName; }
-	bool GetTreeItemName( HTREEITEM hItem, string *pszName );
+	HTREEITEM GetTreeItem( const std::string &rszName );
+	void GetClipboardPrefix( std::string *pszClipboardPrefix ) { if ( pszClipboardPrefix ) ( *pszClipboardPrefix ) = GetObjectSet().szObjectTypeName; }
+	bool GetTreeItemName( HTREEITEM hItem, std::string *pszName );
 	bool IsIgnoreCase() { return true; }
 
 public:
@@ -197,11 +197,11 @@ public:
 	bool IsTreeCreated() { return GetViewManipulator() != 0; }
 	void CreateTree();
 	// pszName = 0 необходимо самостоятельно получать имя
-	void SetTreeItemView( HTREEITEM hItem, const string *pszName );
+	void SetTreeItemView( HTREEITEM hItem, const std::string *pszName );
 
 	// Для работы классов потомков
-	bool GetCurrentTreeItemName( string *pszName );
-	bool SetCurrentTreeItemName( const string &rszName, bool bUpdateSelection = true );
+	bool GetCurrentTreeItemName( std::string *pszName );
+	bool SetCurrentTreeItemName( const std::string &rszName, bool bUpdateSelection = true );
 	//
 	void SetPCDialogCommandHandlerID( unsigned _nPCDialogCommandHandlerID, bool bUpdate );
 	//
@@ -217,7 +217,7 @@ public:
 	// Создание Undo Operation
 	virtual CFolderController* CreateController() { return CDefaultView::CreateController<CFolderController>( static_cast<CFolderController*>( 0 ) ); }
 	// CDefaultView
-	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel );
+	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const std::string &rszTemporaryLabel );
 	void Undo( IController* pController );
 	void Redo( IController* pController );
 	//void Update( IController* pController );
@@ -226,8 +226,8 @@ public:
 	virtual void Load() = 0;
 	virtual bool CanLoad() = 0;
 	virtual	bool CanAutoLoadAfterBuildingObject() = 0;
-	virtual bool GetLoadContextMenuLabel( string *pszLabel ) = 0;
-	virtual bool GetSaveHeaderWidthLabel( string *pszLabel ) = 0;
+	virtual bool GetLoadContextMenuLabel( std::string *pszLabel ) = 0;
+	virtual bool GetSaveHeaderWidthLabel( std::string *pszLabel ) = 0;
 	virtual void LoadHeaderWidth() = 0;
 	virtual void SaveHeaderWidth() = 0;
 	DECLARE_MESSAGE_MAP()

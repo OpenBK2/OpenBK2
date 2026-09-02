@@ -20,14 +20,14 @@ struct SScriptAreaWindowData
 	//
 	struct SScriptArea	// данные для создания row в списке областей
 	{
-		string szName;
+		std::string szName;
 		int nScriptAreaID;
 		NDb::EScriptAreaTypes eType;
 		//
 		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
 	};
-	vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
-	vector<unsigned> selectedScriptAreaIDList;		// ID поселекченных областей
+	std::vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
+	std::vector<unsigned> selectedScriptAreaIDList;		// ID поселекченных областей
 	//
 	enum EChangeMask	// что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
 	{

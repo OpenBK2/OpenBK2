@@ -30,8 +30,8 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	CBuildingState *pBuildingState;
 	CBuildingRPGStatsEditorSettings editorSettings;
 	CVec3 vLastCameraAnchor;
-	string szLastTerrainName;
-	string szCurrSeason;
+	std::string szLastTerrainName;
+	std::string szCurrSeason;
 	//
 	SECControlBar *pwndShortcutBar;
 	CDefaultShortcutBar wndShortcutBar;
@@ -45,7 +45,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	bool bDrawPassability;
 	CArray2D<uint8_t> modelPassability;
 	//
-	string szScreenTitle;
+	std::string szScreenTitle;
 	//
 	bool IsModelValid() const { return pBuilding != 0; }
 	//
@@ -55,12 +55,12 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 public:
 	//IEditor
 	CObj<CMOBuilding> &GetBuildingPtr() { return pBuilding; };
-	const string &GetCurrSeason() const;
+	const std::string &GetCurrSeason() const;
 
-	void GetTemporaryLabel( string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
 	IView* GetView() { return this; }
 	IInputState* GetInputState() { return reinterpret_cast<IInputState*>(pBuildingState); }
-	void GetChildFrameType( string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	void CreateControls();
 	void PostCreateControls() {}
 	void PreDestroyControls() {}
@@ -78,12 +78,12 @@ public:
 
 	//CBuildingEditor
 	void ReloadModel( NDb::ESeason eSeason );
-	void ReloadTerrain( const string &rszMapInfoName, const CVec3 &vLastCameraAnchor );
+	void ReloadTerrain( const std::string &rszMapInfoName, const CVec3 &vLastCameraAnchor );
 	//
 	void DrawPassability( class CPaintDC *pPaintDC );
 	void SetDrawPassability( bool bSet ) { bDrawPassability = bSet; }
 	//
-	void SetScreenTitle( const string &rszScreenTitle );
+	void SetScreenTitle( const std::string &rszScreenTitle );
 	//
 	void SetBuildingOrigin( const CVec2 &rvOrigin );
 	CVec2 GetBuildingOrigin();

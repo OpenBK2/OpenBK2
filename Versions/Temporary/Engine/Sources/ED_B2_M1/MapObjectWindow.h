@@ -10,7 +10,7 @@ class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 {
 	struct SObjectListElement
 	{
-		string szObjectTypeName;
+		std::string szObjectTypeName;
 		CDBID objectDBID;
 	};
 	typedef std::unordered_map<unsigned, SObjectListElement> CObjectListElementMap;
@@ -55,7 +55,7 @@ protected:
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 	
 	//CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CMapObjectWindow"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CMapObjectWindow"; }
 	bool IsDrawGripper() { return false; }
 
 public:

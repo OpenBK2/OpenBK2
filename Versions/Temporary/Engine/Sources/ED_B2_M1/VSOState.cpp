@@ -17,13 +17,13 @@
 
 namespace NExtraDraw
 {
-	void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const vector<CVec3> &vPoints )
+	void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vector<CVec3> &vPoints )
 	{
 		if ( vPoints.size() < 2 )
 			return;
 
-		vector<CVec3>::const_iterator itPoint = vPoints.begin();
-		vector<CVec3>::const_iterator itPointPrev = itPoint;
+		std::vector<CVec3>::const_iterator itPoint = vPoints.begin();
+		std::vector<CVec3>::const_iterator itPointPrev = itPoint;
 		++itPoint;
 
 		while ( 1 )
@@ -770,7 +770,7 @@ bool CVSOAddState::InsertVSO()
 	NHPTimer::GetTime( &time );
 	//
 	bool bResult = true;
-	UniquePolygon<vector<CVec3>, CVec3>( &( pParentState->startVSOInstance.controlPoints ), CVSOManager::DEFAULT_POINT_RADIUS );
+	UniquePolygon<std::vector<CVec3>, CVec3>( &( pParentState->startVSOInstance.controlPoints ), CVSOManager::DEFAULT_POINT_RADIUS );
 	//
 	DebugTrace( "CVSOAddState::InsertVSO(): UniquePolygon: %g", NHPTimer::GetTimePassed( &time ) );
 	//
@@ -1138,7 +1138,7 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			int nMinCount = INVALID_NODE_ID;
 			int nMaxCount = INVALID_NODE_ID;
 			GetControlPointBounds( &nMinCount, &nMaxCount );
-			//UniquePolygon<vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
+			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
 			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) && 
 					( pVSO->controlPoints.size() > 1 ) )
 			{
@@ -1226,7 +1226,7 @@ void CVSOState::Draw( CPaintDC *pPaintDC )
 	//{
 	//	if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 	//	{
-	//		vector<CVec3> hole;
+	//		std::vector<CVec3> hole;
 	//		pTerraManager->GetHoleSamples( &hole );
 	//	}
 	//}	
